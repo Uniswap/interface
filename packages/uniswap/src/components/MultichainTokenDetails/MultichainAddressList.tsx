@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AnimatedCopyLabel, Text } from 'ui/src'
+import { AnimatedCopyLabel, Text, type SpaceTokens } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { MultichainOptionRow } from 'uniswap/src/components/MultichainTokenDetails/MultichainOptionRow'
 import { MultichainScrollableList } from 'uniswap/src/components/MultichainTokenDetails/MultichainScrollableList'
@@ -17,6 +17,7 @@ interface MultichainAddressListProps {
   showInlineFeedback?: boolean
   /** Pass true when rendered inside a Modal to enable BottomSheetScrollView on native. */
   renderedInModal?: boolean
+  padding?: SpaceTokens | number
 }
 
 /**
@@ -29,6 +30,7 @@ export function MultichainAddressList({
   onCopyAddress,
   showInlineFeedback = true,
   renderedInModal,
+  padding,
 }: MultichainAddressListProps): JSX.Element {
   const { t } = useTranslation()
   const [copiedChainId, setCopiedChainId] = useState<UniverseChainId | null>(null)
@@ -59,6 +61,7 @@ export function MultichainAddressList({
         return (
           <MultichainOptionRow
             chainId={entry.chainId}
+            addressMenuPadding={padding}
             rightContent={
               <Text color="$neutral3" variant="body2">
                 {t('common.unavailable')}
@@ -75,6 +78,7 @@ export function MultichainAddressList({
         <MultichainOptionRow
           chainId={entry.chainId}
           testID={TestID.MultichainCopyAddress}
+          addressMenuPadding={padding}
           rightContent={
             <AnimatedCopyLabel
               isCopied={isCopied}
@@ -88,8 +92,15 @@ export function MultichainAddressList({
         />
       )
     },
-    [copiedChainId, handleCopy, showInlineFeedback, t],
+    [padding, copiedChainId, handleCopy, showInlineFeedback, t],
   )
 
-  return <MultichainScrollableList data={chains} renderItem={renderAddressRow} renderedInModal={renderedInModal} />
+  return (
+    <MultichainScrollableList
+      data={chains}
+      renderItem={renderAddressRow}
+      renderedInModal={renderedInModal}
+      padding={padding}
+    />
+  )
 }

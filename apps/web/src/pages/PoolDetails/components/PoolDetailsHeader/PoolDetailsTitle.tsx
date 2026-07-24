@@ -11,12 +11,15 @@ import { getTokenDetailsURL } from '~/appGraphql/data/util'
 import { HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constants'
 import { getHeaderTitleVariant } from '~/components/StickyCollapsibleHeader/getHeaderLogoSize'
 import { LiquidityPositionInfoBadges } from '~/features/Liquidity/LiquidityPositionInfoBadges'
-import { ClickableTamaguiStyle } from '~/theme/components/styles'
+import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from '~/theme/components/styles'
 
 const StyledLink = styled(Link, {
   color: '$neutral1',
+  minWidth: 0,
+  flexShrink: 1,
   ...ClickableTamaguiStyle,
   '$platform-web': {
+    display: 'flex',
     textDecoration: 'none',
   },
 })
@@ -27,6 +30,7 @@ export function PoolDetailsTitle({
   chainId,
   feeTier,
   protocolVersion,
+  protocolFeePips,
   toggleReversed,
   hookAddress,
   isCompact,
@@ -36,6 +40,7 @@ export function PoolDetailsTitle({
   chainId?: UniverseChainId
   feeTier?: FeeData
   protocolVersion?: GraphQLApi.ProtocolVersion
+  protocolFeePips?: number
   toggleReversed: React.DispatchWithoutAction
   hookAddress?: string
   isCompact: boolean
@@ -45,15 +50,21 @@ export function PoolDetailsTitle({
   const graphQLChain = toGraphQLChain(chainId ?? defaultChainId)
   const titleVariant = getHeaderTitleVariant({ isCompact, media })
   return (
-    <Flex row gap="$spacing12" alignItems="center" width="max-content">
-      <Flex row>
+    <Flex row gap="$spacing12" alignItems="center" minWidth={0} shrink>
+      <Flex row minWidth={0} shrink>
         <StyledLink
           to={getTokenDetailsURL({
             address: token0?.address,
             chain: graphQLChain,
           })}
         >
-          <Text variant={titleVariant} transition={HEADER_TRANSITION}>
+          <Text
+            variant={titleVariant}
+            transition={HEADER_TRANSITION}
+            minWidth={0}
+            flexShrink={1}
+            {...EllipsisTamaguiStyle}
+          >
             {token0?.symbol} /{' '}
           </Text>
         </StyledLink>
@@ -63,13 +74,26 @@ export function PoolDetailsTitle({
             chain: graphQLChain,
           })}
         >
-          <Text variant={titleVariant} transition={HEADER_TRANSITION}>
+          <Text
+            variant={titleVariant}
+            transition={HEADER_TRANSITION}
+            minWidth={0}
+            flexShrink={1}
+            {...EllipsisTamaguiStyle}
+          >
             {token1?.symbol}
           </Text>
         </StyledLink>
       </Flex>
       <Flex row gap="$spacing2">
-        <LiquidityPositionInfoBadges version={protocolVersion} v4hook={hookAddress} feeTier={feeTier} size="default" />
+        <LiquidityPositionInfoBadges
+          version={protocolVersion}
+          v4hook={hookAddress}
+          chainId={chainId}
+          feeTier={feeTier}
+          protocolFeePips={protocolFeePips}
+          size="default"
+        />
       </Flex>
       <TouchableArea
         hoverable

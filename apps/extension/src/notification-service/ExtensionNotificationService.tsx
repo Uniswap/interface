@@ -7,7 +7,6 @@ import {
   provideSessionService,
   SharedQueryClient,
 } from '@universe/api'
-import { SESSION_INIT_QUERY_KEY } from '@universe/api/src/components/ApiInit'
 import { REQUEST_SOURCE } from '@universe/environment'
 import { getIsSessionServiceEnabled } from '@universe/gating'
 import {
@@ -19,6 +18,7 @@ import {
   getNotificationQueryOptions,
   type NotificationService,
 } from '@universe/notifications'
+import { SESSION_INIT_QUERY_KEY } from '@universe/sessions'
 import ms from 'ms'
 import { getConfig } from 'src/app/config'
 import { UnitagClaimRoutes } from 'src/app/navigation/constants'
@@ -31,7 +31,7 @@ import { extensionNotificationStore } from 'src/notification-service/notificatio
 import { getNotificationTelemetry } from 'src/notification-service/notification-telemetry/getNotificationTelemetry'
 import { createExtensionLocalTriggerDataSource } from 'src/notification-service/triggers/createExtensionLocalTriggerDataSource'
 import { getReduxStore } from 'src/store/store'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { mapLocaleToBackendLocale } from 'uniswap/src/features/language/constants'
 import { getLocale } from 'uniswap/src/features/language/navigatorLocale'
 import { selectCurrentLanguage } from 'uniswap/src/features/settings/selectors'
@@ -141,7 +141,7 @@ function provideExtensionNotificationService(ctx: {
     // Handle explore paths by opening in web interface
     if (url.startsWith('/explore/')) {
       focusOrCreateUniswapInterfaceTab({
-        url: `${uniswapUrls.requestOriginUrl}${url}`,
+        url: `${UniswapStaticUrls.requestOriginUrl}${url}`,
       }).catch((error) => {
         getLogger().error(error, {
           tags: {

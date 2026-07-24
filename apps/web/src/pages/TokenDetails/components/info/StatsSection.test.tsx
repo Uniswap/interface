@@ -1,7 +1,6 @@
 import { useFeatureFlag } from '@universe/gating'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
-import { useTokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
-import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenSpotPriceWrapper'
+import { useTokenMarketStats, useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { StatsSection } from '~/pages/TokenDetails/components/info/StatsSection'
 import { useTDPEffectiveCurrency } from '~/pages/TokenDetails/hooks/useTDPEffectiveCurrency'
@@ -27,12 +26,9 @@ vi.mock('~/pages/TokenDetails/hooks/useTDPPreferProjectMarketData', () => ({
   useTDPPreferProjectMarketData: vi.fn(),
 }))
 
-vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenSpotPriceWrapper', () => ({
-  useTokenSpotPrice: vi.fn(),
-}))
-
 vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData', async (importOriginal) => ({
   ...(await importOriginal<typeof import('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData')>()),
+  useTokenSpotPrice: vi.fn(),
   useTokenMarketStats: vi.fn(),
 }))
 
@@ -40,23 +36,29 @@ const POPULATED_STATS = {
   marketCap: 5_000_000_000,
   fdv: 10_000_000_000,
   volume: 250_000_000,
+  volumeSource: 'market' as const,
   high52w: 12.34,
   low52w: 4.56,
+  tvl: 1_000_000_000,
 }
 
 const EMPTY_STATS = {
   marketCap: undefined,
   fdv: undefined,
   volume: undefined,
+  volumeSource: undefined,
   high52w: undefined,
   low52w: undefined,
+  tvl: undefined,
 }
 
 const MARKET_SOURCE_AGGREGATED = {
   showAggregatedStats: true,
+  isMultichainAggregateView: true,
   filteredDeploymentMarket: undefined,
   networkFilterName: '',
   marketStatsInput: undefined,
+  multichainId: undefined,
 }
 
 describe('StatsSection', () => {
@@ -117,12 +119,48 @@ describe('StatsSection', () => {
 
     render(<StatsSection tokenQueryData={undefined} />)
 
-    expect(useTokenSpotPrice).toHaveBeenCalledWith(expect.any(String), { preferProjectMarketData: true })
+    expect(useTokenSpotPrice).toHaveBeenCalledWith(expect.any(String), {
+      preferProjectMarketData: true,
+      isMultichainAggregateView: true,
+    })
     expect(useTokenMarketStats).toHaveBeenCalledWith(
       expect.any(String),
       expect.objectContaining({
         currentPriceOverride: 123,
         preferProjectMarketData: true,
+      }),
+    )
+  })
+
+  it('discards the per-chain spot price on the all-networks view when V2 tokens are disabled', () => {
+    // Matches the chart header: legacy GraphQL has no cross-chain aggregate price, so the
+    // per-chain price is discarded here too rather than showing an arbitrary chain's price.
+    mocked(useTokenSpotPrice).mockReturnValue(123)
+    mocked(useTokenMarketStats).mockReturnValue(POPULATED_STATS)
+
+    render(<StatsSection tokenQueryData={undefined} />)
+
+    expect(useTokenMarketStats).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        currentPriceOverride: undefined,
+      }),
+    )
+  })
+
+  it('uses the REST spot price directly on the all-networks view when V2 tokens are enabled', () => {
+    // V2 REST has no cross-chain aggregate price endpoint, so the per-chain REST price is
+    // authoritative even on the aggregate view instead of falling back to legacy GraphQL/CoinGecko.
+    mocked(useFeatureFlag).mockReturnValue(true)
+    mocked(useTokenSpotPrice).mockReturnValue(123)
+    mocked(useTokenMarketStats).mockReturnValue(POPULATED_STATS)
+
+    render(<StatsSection tokenQueryData={undefined} />)
+
+    expect(useTokenMarketStats).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        currentPriceOverride: 123,
       }),
     )
   })

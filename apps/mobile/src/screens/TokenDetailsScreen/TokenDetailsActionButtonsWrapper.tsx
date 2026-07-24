@@ -1,24 +1,19 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { GatedFeature, useIsFeatureGated } from '@universe/compliance'
+import { FeatureFlags } from '@universe/gating'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeInDown } from 'react-native-reanimated'
 import { MODAL_OPEN_WAIT_TIME } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import {
-  TokenDetailsBuySellButtons,
-  TokenDetailsSwapButtons,
-} from 'src/components/TokenDetails/TokenDetailsActionButtons'
+import { TokenDetailsBuySellButtons } from 'src/components/TokenDetails/TokenDetailsActionButtons'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
-import {
-  useMultichainBuyVariant,
-  useTokenDetailsCTAVariant,
-} from 'src/components/TokenDetails/useTokenDetailsCTAVariant'
-import { useTokenDetailsCurrentChainBalance } from 'src/components/TokenDetails/useTokenDetailsCurrentChainBalance'
+import { useMultichainBuyVariant } from 'src/components/TokenDetails/useTokenDetailsCTAVariant'
+import { useGatedTokenDetailsRWAMatch } from 'src/components/TokenDetails/useTokenDetailsRWAMatch'
 import { NetworkBalanceSheetContent } from 'src/screens/TokenDetailsScreen/NetworkBalanceSheetContent'
 import { useHighestTvlChain } from 'src/screens/TokenDetailsScreen/useHighestTvlChain'
 import { useNetworkBalanceSheet } from 'src/screens/TokenDetailsScreen/useNetworkBalanceSheet'
 import { useIsScreenNavigationReady } from 'src/utils/useIsScreenNavigationReady'
-import { ArrowDownCircle, ArrowUpCircle, Bank, QrCode, SendRoundedAirplane } from 'ui/src/components/icons'
+import { ArrowUpCircle, Bank, QrCode, SendRoundedAirplane } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import type { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -27,6 +22,7 @@ import { useTokenBasicInfoPartsFragment } from 'uniswap/src/data/graphql/uniswap
 import { useBridgingTokenWithHighestBalance } from 'uniswap/src/features/bridging/hooks/tokens'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { type PortfolioBalance, TokenList } from 'uniswap/src/features/dataApi/types'
 import { useIsSupportedFiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/hooks'
 import { useChainGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToken'
@@ -35,6 +31,7 @@ import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { buildCurrencyId, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { useEvent } from 'utilities/src/react/hooks'
+import { noop } from 'utilities/src/react/noop'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -48,7 +45,6 @@ export const TokenDetailsActionButtonsWrapper = memo(
     const insets = useAppInsets()
     const activeAddress = useActiveAccountAddressWithThrow()
     const { isTestnetModeEnabled } = useEnabledChains()
-    const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
 
     const { currencyId, chainId, address, currencyInfo, openTokenWarningModal, tokenColorLoading, navigation } =
       useTokenDetailsContext()
@@ -56,6 +52,7 @@ export const TokenDetailsActionButtonsWrapper = memo(
     const { navigateToFiatOnRamp, navigateToSwapFlow, navigateToSend, navigateToReceive } = useWalletNavigation()
 
     const token = useTokenBasicInfoPartsFragment({ currencyId }).data
+    const metadata = useTokenMetadata(currencyId, { legacyToken: { symbol: token.symbol } })
 
     const isBlocked = currencyInfo?.safetyInfo?.tokenList === TokenList.Blocked
 
@@ -67,8 +64,6 @@ export const TokenDetailsActionButtonsWrapper = memo(
 
     const { currency: nativeFiatOnRampCurrency, isLoading: isNativeFiatOnRampCurrencyLoading } =
       useIsSupportedFiatOnRampCurrency(buildCurrencyId(chainId, nativeCurrencyAddress))
-
-    const currentChainBalance = useTokenDetailsCurrentChainBalance()
 
     const { currency: fiatOnRampCurrency, isLoading: isFiatOnRampCurrencyLoading } =
       useIsSupportedFiatOnRampCurrency(currencyId)
@@ -90,21 +85,24 @@ export const TokenDetailsActionButtonsWrapper = memo(
       onSelectNetwork,
     } = useNetworkBalanceSheet({ currencyId, chainId })
 
-    const hasTokenBalance = multichainTokenUxEnabled ? allChainBalances.length > 0 : Boolean(currentChainBalance)
+    const hasTokenBalance = allChainBalances.length > 0
 
     // For multichain UX: resolve the chain with the highest balance (computed once, used by multiple handlers)
     const highestBalanceEntry = useMemo(() => {
-      if (!multichainTokenUxEnabled || !allChainBalances.length) {
+      if (!allChainBalances.length) {
         return null
       }
       return getHighestBalanceEntry(allChainBalances)
-    }, [multichainTokenUxEnabled, allChainBalances])
+    }, [allChainBalances])
 
     const highestBalanceCurrencyId = highestBalanceEntry?.currencyInfo.currencyId ?? currencyId
 
     const { currency: highestBalanceFiatCurrency } = useIsSupportedFiatOnRampCurrency(highestBalanceCurrencyId)
 
-    const { chainId: highestTvlChainId, address: highestTvlAddress } = useHighestTvlChain({ currencyId })
+    const { chainId: highestTvlChainId, address: highestTvlAddress } = useHighestTvlChain({
+      currencyId,
+      accountAddress: activeAddress,
+    })
 
     const onPressSwap = useEvent((currencyField: CurrencyField) => {
       if (isBlocked) {
@@ -112,10 +110,6 @@ export const TokenDetailsActionButtonsWrapper = memo(
       } else {
         navigateToSwapFlow({ currencyField, currencyAddress: address, currencyChainId: chainId })
       }
-    })
-
-    const onPressBuyFiatOnRamp = useEvent((isOfframp: boolean = false): void => {
-      navigateToFiatOnRamp({ prefilledCurrency: fiatOnRampCurrency, isOfframp })
     })
 
     const onPressGet = useEvent(() => {
@@ -126,7 +120,7 @@ export const TokenDetailsActionButtonsWrapper = memo(
     })
 
     const onPressSend = useEvent(() => {
-      if (multichainTokenUxEnabled && hasMultiChainBalances) {
+      if (hasMultiChainBalances) {
         openSendSheet()
       } else {
         navigateToSend({ currencyAddress: address, chainId })
@@ -150,11 +144,11 @@ export const TokenDetailsActionButtonsWrapper = memo(
         openTokenWarningModal()
         return
       }
-      if (multichainTokenUxEnabled && highestBalanceEntry) {
+      if (highestBalanceEntry) {
         const { currency } = highestBalanceEntry.currencyInfo
         const currencyAddress = currency.isToken ? currency.address : getNativeAddress(currency.chainId)
         navigateToSwapFlow({ currencyField: CurrencyField.OUTPUT, currencyAddress, currencyChainId: currency.chainId })
-      } else if (multichainTokenUxEnabled && highestTvlChainId) {
+      } else if (highestTvlChainId) {
         const currencyAddress = highestTvlAddress ?? getNativeAddress(highestTvlChainId)
         navigateToSwapFlow({ currencyField: CurrencyField.OUTPUT, currencyAddress, currencyChainId: highestTvlChainId })
       } else {
@@ -163,7 +157,7 @@ export const TokenDetailsActionButtonsWrapper = memo(
     })
 
     const onPressSell = useEvent(() => {
-      if (multichainTokenUxEnabled && hasMultiChainBalances) {
+      if (hasMultiChainBalances) {
         openSellSheet()
       } else {
         onPressSwap(CurrencyField.INPUT)
@@ -182,67 +176,12 @@ export const TokenDetailsActionButtonsWrapper = memo(
 
     const isScreenNavigationReady = useIsScreenNavigationReady({ navigation })
 
-    const getCTAVariant = useTokenDetailsCTAVariant({
-      hasTokenBalance,
-      isNativeCurrency,
-      nativeFiatOnRampCurrency,
-      fiatOnRampCurrency,
-      bridgingTokenWithHighestBalance,
-      hasZeroGasBalance,
-      tokenSymbol: token.symbol,
-      onPressBuyFiatOnRamp,
-      onPressGet,
-      onPressSwap,
-    })
-
-    const actionMenuOptions: MenuOptionItem[] = useMemo(() => {
-      const actions: MenuOptionItem[] = []
-
-      if (fiatOnRampCurrency) {
-        actions.push({
-          label: t('common.button.buy'),
-          Icon: Bank,
-          onPress: onPressBuyFiatOnRamp,
-        })
-      }
-
-      if (bridgedWithdrawalInfo && hasTokenBalance) {
-        actions.push({
-          label: t('common.withdraw'),
-          Icon: ArrowUpCircle,
-          onPress: onPressWithdraw,
-          subheader: t('bridgedAsset.wormhole.toNativeChain', { nativeChainName: bridgedWithdrawalInfo.chain }),
-          actionType: 'external-link',
-          height: 56,
-        })
-      }
-
-      if (hasTokenBalance && fiatOnRampCurrency) {
-        actions.push({
-          label: t('common.button.sell'),
-          Icon: ArrowUpCircle,
-          onPress: () => onPressBuyFiatOnRamp(true),
-        })
-      }
-
-      if (hasTokenBalance) {
-        actions.push({ label: t('common.button.send'), Icon: SendRoundedAirplane, onPress: onPressSend })
-      }
-
-      // All cases have a receive action
-      actions.push({ label: t('common.button.receive'), Icon: ArrowDownCircle, onPress: navigateToReceive })
-
-      return actions
-    }, [
-      fiatOnRampCurrency,
-      t,
-      bridgedWithdrawalInfo,
-      hasTokenBalance,
-      onPressWithdraw,
-      onPressSend,
-      navigateToReceive,
-      onPressBuyFiatOnRamp,
-    ])
+    // Trading is geo-restricted for whitelisted RWA stocks in blocked regions; the swap flow
+    // already enforces this, so surface it on the CTA instead of letting users tap into a dead end.
+    // Region comes from compliance v2 (ISSUER_SPECIFIC_RWA); the RWA-token check is the whitelist match.
+    const rwaMatch = useGatedTokenDetailsRWAMatch(FeatureFlags.RWATdp)
+    const isRWARegionBlocked = useIsFeatureGated(GatedFeature.ISSUER_SPECIFIC_RWA)
+    const isRWATradeBlocked = Boolean(rwaMatch) && isRWARegionBlocked
 
     const multichainActionMenuOptions: MenuOptionItem[] = useMemo(() => {
       const actions: MenuOptionItem[] = []
@@ -309,7 +248,7 @@ export const TokenDetailsActionButtonsWrapper = memo(
       fiatOnRampCurrency,
       bridgingTokenWithHighestBalance,
       hasZeroGasBalance,
-      tokenSymbol: token.symbol,
+      tokenSymbol: metadata.symbol,
       onPressBuyWithCash,
       onPressGet,
       onPressBuy,
@@ -317,26 +256,19 @@ export const TokenDetailsActionButtonsWrapper = memo(
 
     return hideActionButtons ? null : (
       <AnimatedFlex mb={insets.bottom} backgroundColor="$surface1" entering={FadeInDown}>
-        {multichainTokenUxEnabled ? (
-          <TokenDetailsBuySellButtons
-            actionMenuOptions={multichainActionMenuOptions}
-            buyButtonIcon={multichainBuyVariant.icon}
-            buyButtonTitle={multichainBuyVariant.title}
-            userHasBalance={hasTokenBalance}
-            onPressBuy={multichainBuyVariant.onPress}
-            onPressDisabled={onPressDisabled}
-            onPressSell={onPressSell}
-          />
-        ) : (
-          <TokenDetailsSwapButtons
-            actionMenuOptions={actionMenuOptions}
-            ctaButton={getCTAVariant}
-            userHasBalance={hasTokenBalance}
-            onPressDisabled={onPressDisabled}
-          />
-        )}
+        <TokenDetailsBuySellButtons
+          actionMenuOptions={multichainActionMenuOptions}
+          buyButtonDisabled={isRWATradeBlocked}
+          buyButtonIcon={isRWATradeBlocked ? undefined : multichainBuyVariant.icon}
+          buyButtonTitle={isRWATradeBlocked ? t('tdp.button.unavailableToTrade') : multichainBuyVariant.title}
+          sellButtonDisabled={isRWATradeBlocked}
+          userHasBalance={hasTokenBalance}
+          onPressBuy={isRWATradeBlocked ? noop : multichainBuyVariant.onPress}
+          onPressDisabled={isRWATradeBlocked ? undefined : onPressDisabled}
+          onPressSell={isRWATradeBlocked ? noop : onPressSell}
+        />
 
-        {multichainTokenUxEnabled && isNetworkSheetOpen && (
+        {isNetworkSheetOpen && (
           <Modal
             overrideInnerContainer
             enableDynamicSizing

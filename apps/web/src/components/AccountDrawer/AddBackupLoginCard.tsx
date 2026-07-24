@@ -5,36 +5,66 @@ import { AppleLogo } from 'ui/src/components/icons/AppleLogo'
 import { Envelope } from 'ui/src/components/icons/Envelope'
 import { GoogleLogoGradient } from 'ui/src/components/icons/GoogleLogoGradient'
 import { iconSizes } from 'ui/src/theme'
-import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { hasActiveNeckKey as checkHasActiveNeckKey } from 'uniswap/src/features/passkey/deviceSession'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useListAuthenticatorsQuery } from '~/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery'
 import { getPrivyAppId } from '~/config'
-import { useAccount } from '~/hooks/useAccount'
+import { useIsEmbeddedWallet } from '~/hooks/useIsEmbeddedWallet'
 import { useIsPortfolioZero } from '~/pages/Portfolio/Overview/hooks/useIsPortfolioZero'
 import { setOpenModal } from '~/state/application/reducer'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
+
+/**
+ * Decides whether the "Add a backup login" card is visible.
+ *
+ * Fail closed: the card is only shown when a valid listAuthenticators response
+ * confirms the wallet has no recovery method yet (matches TroubleLoggingInModule).
+ * A skipped or not-yet-fetched query — e.g. right after logging out and into a
+ * different wallet, before its NECK key is active — must not imply "no recovery
+ * method": a disabled query reports `isLoading: false` with `authData: undefined`.
+ */
+export function getShowAddBackupLoginCard({
+  isEmbeddedWallet,
+  isPortfolioZero,
+  isLoading,
+  isError,
+  authData,
+  hasPrivyAppId,
+}: {
+  isEmbeddedWallet: boolean
+  isPortfolioZero: boolean
+  isLoading: boolean
+  isError: boolean
+  authData: { recoveryMethods: readonly unknown[] } | undefined
+  hasPrivyAppId: boolean
+}): boolean {
+  const confirmedNoRecoveryMethod = !isLoading && !isError && !!authData && authData.recoveryMethods.length === 0
+  return isEmbeddedWallet && !isPortfolioZero && confirmedNoRecoveryMethod && hasPrivyAppId
+}
 
 export function AddBackupLoginCard(): JSX.Element | null {
   const { t } = useTranslation()
   const dispatch = useDispatch()
 
-  const account = useAccount()
-  const isEmbeddedWallet = account.connector?.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID
+  const isEmbeddedWallet = useIsEmbeddedWallet()
   const isPortfolioZero = useIsPortfolioZero()
   const { walletId } = useEmbeddedWalletState()
   const hasActiveNeckKey = !!walletId && checkHasActiveNeckKey(walletId)
   const { data: authData, isLoading, isError } = useListAuthenticatorsQuery({ skip: !hasActiveNeckKey })
-  const hasRecoveryMethod = (authData?.recoveryMethods.length ?? 0) > 0
 
   const onPressCard = useEvent(() => {
     dispatch(setOpenModal({ name: ModalName.AddBackupLogin }))
   })
-
-  const showCard =
-    isEmbeddedWallet && !isPortfolioZero && !isLoading && !isError && !hasRecoveryMethod && !!getPrivyAppId()
+  const showCard = getShowAddBackupLoginCard({
+    isEmbeddedWallet,
+    isPortfolioZero,
+    isLoading,
+    isError,
+    authData,
+    hasPrivyAppId: !!getPrivyAppId(),
+  })
 
   if (!showCard) {
     return null

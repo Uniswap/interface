@@ -9,6 +9,7 @@ import { spacing } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { EarnSwapUpsellToast } from '~/components/Popups/EarnSwapUpsellToast'
 import { MismatchToastItem } from '~/components/Popups/MismatchToastItem'
 import {
   FailedNetworkSwitchPopup,
@@ -71,6 +72,16 @@ export function PopupItem({ content, onClose }: { content: PopupContent; popKey:
           onDismiss={onClose}
           icon={<AlertTriangleFilled color="$statusCritical" size="$icon.24" />}
           text={content.error}
+        />
+      )
+    }
+    case PopupType.EarnSwapUpsell: {
+      return (
+        <EarnSwapUpsellToast
+          outputCurrencyId={content.outputCurrencyId}
+          swapAmountUsd={content.swapAmountUsd}
+          transactionId={content.transactionId}
+          onDismiss={onClose}
         />
       )
     }

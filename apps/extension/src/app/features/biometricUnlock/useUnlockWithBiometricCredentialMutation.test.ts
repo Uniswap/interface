@@ -3,13 +3,14 @@ import { waitFor } from '@testing-library/react'
 import { BiometricUnlockStorage } from 'src/app/features/biometricUnlock/BiometricUnlockStorage'
 import { useUnlockWithBiometricCredentialMutation } from 'src/app/features/biometricUnlock/useUnlockWithBiometricCredentialMutation'
 import { renderHookWithProviders } from 'src/test/render'
+import type { Mocked } from 'vitest'
 import { encodeForStorage, encrypt, generateNew256BitRandomBuffer } from 'wallet/src/features/wallet/Keyring/crypto'
 
-jest.mock('src/app/features/biometricUnlock/BiometricUnlockStorage')
+vi.mock('src/app/features/biometricUnlock/BiometricUnlockStorage')
 
-const mockUnlockWithPassword = jest.fn()
-jest.mock('src/app/features/lockScreen/useUnlockWithPassword', () => ({
-  useUnlockWithPassword: jest.fn(() => mockUnlockWithPassword),
+const mockUnlockWithPassword = vi.fn()
+vi.mock('src/app/features/lockScreen/useUnlockWithPassword', () => ({
+  useUnlockWithPassword: vi.fn(() => mockUnlockWithPassword),
 }))
 
 // Mock the Web Crypto API with Node.js built-in
@@ -18,13 +19,13 @@ Object.defineProperty(globalThis, 'crypto', {
 })
 
 // Mock the WebAuthn API
-const mockCredentialsGet = jest.fn()
+const mockCredentialsGet = vi.fn()
 Object.defineProperty(navigator, 'credentials', {
   writable: true,
   value: { get: mockCredentialsGet },
 })
 
-const mockBiometricUnlockStorage = BiometricUnlockStorage as jest.Mocked<typeof BiometricUnlockStorage>
+const mockBiometricUnlockStorage = BiometricUnlockStorage as Mocked<typeof BiometricUnlockStorage>
 
 // Mock AuthenticatorAssertionResponse
 class MockAuthenticatorAssertionResponse {

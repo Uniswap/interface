@@ -1,5 +1,4 @@
 import type { Currency } from '@uniswap/sdk-core'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { currencyForSelectedMultichainDeployment } from '~/pages/TokenDetails/components/header/currencyForSelectedMultichainDeployment'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
@@ -13,7 +12,6 @@ import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultich
  * balances exist, then to the URL-path currency.
  */
 export function useTDPSwapCurrency(): Currency {
-  const isMultichainTokenUx = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const { currency, multiChainMap, selectedMultichainChainId, tokenQuery } = useTDPStore((s) => ({
     currency: s.currency!,
     multiChainMap: s.multiChainMap,
@@ -25,7 +23,7 @@ export function useTDPSwapCurrency(): Currency {
   const isMultiChainAsset = multichainEntries.length > 1
 
   const targetEntry = useMemo(() => {
-    if (!isMultichainTokenUx || !isMultiChainAsset) {
+    if (!isMultiChainAsset) {
       return undefined
     }
 
@@ -40,7 +38,6 @@ export function useTDPSwapCurrency(): Currency {
       getHighestVolumeChain(tokenQuery.data?.token?.project?.tokens, multichainEntries)
     )
   }, [
-    isMultichainTokenUx,
     isMultiChainAsset,
     selectedMultichainChainId,
     multichainEntries,

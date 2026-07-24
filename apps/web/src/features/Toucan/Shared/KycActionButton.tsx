@@ -19,7 +19,7 @@ export function KycActionButton({ kycStatus, onPress }: { kycStatus: AuctionKycS
           icon={<UserLock size="$icon.16" />}
           flex={1}
           onPress={onPress}
-          isDisabled={kycStatus.kycButtonDisabled}
+          disabled={kycStatus.kycButtonDisabled}
           group
         >
           <Flex alignItems="flex-start" position="relative">
@@ -37,7 +37,7 @@ export function KycActionButton({ kycStatus, onPress }: { kycStatus: AuctionKycS
               color="$surface2"
               whiteSpace="nowrap"
             >
-              {t('toucan.kyc.requiredByTeam', { teamName: auctionDetails?.token?.currency.name })}
+              {t('toucan.kyc.requiredByTeam', { teamName: auctionDetails?.token?.currency.name ?? t('common.token') })}
             </Text>
           </Flex>
         </Button>

@@ -1,6 +1,5 @@
 import { isWebApp } from '@universe/environment'
 import { ColorTokens } from 'tamagui'
-import { TransitionItem } from 'ui/src/animations/components/AnimatePresencePager'
 import { CheckmarkCircle } from 'ui/src/components/icons/CheckmarkCircle'
 import { CopySheets } from 'ui/src/components/icons/CopySheets'
 import { Flex } from 'ui/src/components/layout'
@@ -14,6 +13,13 @@ export interface CopyIconProps {
   textColor?: ColorTokens
   dataTestId?: string
 }
+
+const iconProps = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  animateOnly: ['opacity', 'transform'] as string[],
+} as const
 
 /**
  * CopySheets icon that animates to a checkmark when copied
@@ -34,20 +40,29 @@ export function AnimatableCopyIcon({
   hideIcon,
   dataTestId,
 }: CopyIconProps): JSX.Element {
+  if (!isAnimated) {
+    return (
+      <Flex position="relative" width={size} height={size}>
+        {!hideIcon && <CopySheets color={textColor} size={size} data-testid={dataTestId} />}
+      </Flex>
+    )
+  }
+
   return (
     <Flex position="relative" width={size} height={size}>
-      {isAnimated && (
-        <TransitionItem animation="300ms" animationType={isCopied ? 'up' : 'down'} distance={5}>
-          {isCopied && <CheckmarkCircle position="absolute" top={0} left={0} color="$statusSuccess" size={size} />}
-        </TransitionItem>
-      )}
       {!hideIcon && (
-        <Flex position="absolute" top={0} left={0}>
-          <TransitionItem animation="300ms" animationType="fade">
-            {(!isAnimated || !isCopied) && <CopySheets color={textColor} size={size} data-testid={dataTestId} />}
-          </TransitionItem>
+        <Flex opacity={isCopied ? 0 : 1} animation={isCopied ? '200ms' : '200msDelayed200ms'} {...iconProps}>
+          <CopySheets color={textColor} size={size} data-testid={dataTestId} />
         </Flex>
       )}
+      <Flex
+        opacity={isCopied ? 1 : 0}
+        y={isCopied ? 0 : 5}
+        animation={isCopied ? '200msDelayed200ms' : '200ms'}
+        {...iconProps}
+      >
+        <CheckmarkCircle color="$statusSuccess" size={size} />
+      </Flex>
     </Flex>
   )
 }

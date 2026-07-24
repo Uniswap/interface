@@ -1,5 +1,6 @@
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures'
+import type { Mock, MockedFunction } from 'vitest'
 import {
   SmartWalletDelegationAction,
   useSmartWalletDelegationStatus,
@@ -11,27 +12,25 @@ import { useActiveAccount, useHasSmartWalletConsent, useSignerAccounts } from 'w
 import { ACCOUNT, readOnlyAccount, signerMnemonicAccount } from 'wallet/src/test/fixtures'
 import { renderHook, waitFor } from 'wallet/src/test/test-utils'
 
-jest.mock('wallet/src/features/wallet/hooks', () => ({
-  useActiveAccount: jest.fn(),
-  useSignerAccounts: jest.fn(),
-  useHasSmartWalletConsent: jest.fn(),
+vi.mock('wallet/src/features/wallet/hooks', () => ({
+  useActiveAccount: vi.fn(),
+  useSignerAccounts: vi.fn(),
+  useHasSmartWalletConsent: vi.fn(),
 }))
 
-jest.mock('wallet/src/features/smartWallet/hooks/useSmartWalletChains', () => ({
-  useSmartWalletChains: jest.fn(),
+vi.mock('wallet/src/features/smartWallet/hooks/useSmartWalletChains', () => ({
+  useSmartWalletChains: vi.fn(),
 }))
 
-jest.mock('wallet/src/features/smartWallet/WalletDelegationProvider', () => ({
-  useWalletDelegationContext: jest.fn(),
+vi.mock('wallet/src/features/smartWallet/WalletDelegationProvider', () => ({
+  useWalletDelegationContext: vi.fn(),
 }))
 
-const mockUseActiveAccount = useActiveAccount as jest.MockedFunction<typeof useActiveAccount>
-const mockUseSignerAccounts = useSignerAccounts as jest.MockedFunction<typeof useSignerAccounts>
-const mockUseHasSmartWalletConsent = useHasSmartWalletConsent as jest.MockedFunction<typeof useHasSmartWalletConsent>
-const mockUseSmartWalletChains = useSmartWalletChains as jest.MockedFunction<typeof useSmartWalletChains>
-const mockUseWalletDelegationContext = useWalletDelegationContext as jest.MockedFunction<
-  typeof useWalletDelegationContext
->
+const mockUseActiveAccount = useActiveAccount as MockedFunction<typeof useActiveAccount>
+const mockUseSignerAccounts = useSignerAccounts as MockedFunction<typeof useSignerAccounts>
+const mockUseHasSmartWalletConsent = useHasSmartWalletConsent as MockedFunction<typeof useHasSmartWalletConsent>
+const mockUseSmartWalletChains = useSmartWalletChains as MockedFunction<typeof useSmartWalletChains>
+const mockUseWalletDelegationContext = useWalletDelegationContext as MockedFunction<typeof useWalletDelegationContext>
 
 const READONLY_ACCOUNT = readOnlyAccount()
 const SECOND_SIGNER = signerMnemonicAccount()
@@ -50,21 +49,21 @@ function setupMocks({
   signerAccounts = [ACCOUNT] as any[],
   hasSmartWalletConsent = false,
   enabledChains = [UniverseChainId.Mainnet],
-  getDelegationDetails = jest.fn().mockReturnValue(undefined),
+  getDelegationDetails = vi.fn().mockReturnValue(undefined),
 }: {
   activeAccount?: any
   signerAccounts?: any[]
   hasSmartWalletConsent?: boolean
   enabledChains?: UniverseChainId[]
-  getDelegationDetails?: jest.Mock
-} = {}): { getDelegationDetails: jest.Mock } {
+  getDelegationDetails?: Mock
+} = {}): { getDelegationDetails: Mock } {
   mockUseActiveAccount.mockReturnValue(activeAccount)
   mockUseSignerAccounts.mockReturnValue(signerAccounts)
   mockUseHasSmartWalletConsent.mockReturnValue(hasSmartWalletConsent)
   mockUseSmartWalletChains.mockReturnValue(enabledChains)
   mockUseWalletDelegationContext.mockReturnValue({
     getDelegationDetails,
-    refreshDelegationData: jest.fn().mockResolvedValue(undefined),
+    refreshDelegationData: vi.fn().mockResolvedValue(undefined),
     isLoading: false,
     delegationDataQuery: {} as any,
   })
@@ -73,7 +72,7 @@ function setupMocks({
 
 describe(useSmartWalletDelegationStatus, () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('returns None with loading=false when there is no active account', () => {
@@ -124,7 +123,7 @@ describe(useSmartWalletDelegationStatus, () => {
 
   it('returns ShowConflict when a non-Uniswap delegation exists', async () => {
     setupMocks({
-      getDelegationDetails: jest.fn().mockReturnValue(delegation({ currentDelegationAddress: '0xNonUniswapContract' })),
+      getDelegationDetails: vi.fn().mockReturnValue(delegation({ currentDelegationAddress: '0xNonUniswapContract' })),
     })
 
     const { result } = renderHook(() => useSmartWalletDelegationStatus())
@@ -138,7 +137,7 @@ describe(useSmartWalletDelegationStatus, () => {
 
   it('returns None when already delegated to Uniswap (even without consent)', async () => {
     setupMocks({
-      getDelegationDetails: jest
+      getDelegationDetails: vi
         .fn()
         .mockReturnValue(
           delegation({ currentDelegationAddress: '0xUniswapContract', isWalletDelegatedToUniswap: true }),
@@ -155,7 +154,7 @@ describe(useSmartWalletDelegationStatus, () => {
   })
 
   it('returns ShowConflict if any chain has a non-Uniswap delegation', async () => {
-    const getDelegationDetails = jest.fn().mockImplementation((_address: string, chainId: UniverseChainId) => {
+    const getDelegationDetails = vi.fn().mockImplementation((_address: string, chainId: UniverseChainId) => {
       if (chainId === UniverseChainId.Mainnet) {
         return delegation({ currentDelegationAddress: '0xUniswapContract', isWalletDelegatedToUniswap: true })
       }
@@ -179,7 +178,7 @@ describe(useSmartWalletDelegationStatus, () => {
   it('returns PromptUpgrade when no chains have any delegation', async () => {
     setupMocks({
       enabledChains: [UniverseChainId.Mainnet, UniverseChainId.ArbitrumOne],
-      getDelegationDetails: jest.fn().mockReturnValue(delegation()),
+      getDelegationDetails: vi.fn().mockReturnValue(delegation()),
     })
 
     const { result } = renderHook(() => useSmartWalletDelegationStatus())

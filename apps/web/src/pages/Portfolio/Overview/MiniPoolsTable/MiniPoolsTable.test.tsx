@@ -123,4 +123,23 @@ describe('MiniPoolsTable', () => {
       `/portfolio/${SAMPLE_SEED_ADDRESS_1}/pools`,
     )
   })
+
+  it('should build read-only columns when viewing an external wallet', () => {
+    mocked(usePortfolioRoutes).mockReturnValue({
+      tab: PortfolioTab.Overview,
+      chainId: undefined,
+      externalAddress: { address: SAMPLE_SEED_ADDRESS_1, platform: Platform.EVM },
+      isExternalWallet: true,
+    })
+
+    render(<MiniPoolsTable account={SAMPLE_SEED_ADDRESS_1} />)
+
+    expect(mocked(useMiniPoolsTableColumns)).toHaveBeenCalledWith({ isLoading: false, readOnly: true })
+  })
+
+  it('should build editable columns when viewing the connected wallet', () => {
+    render(<MiniPoolsTable account={SAMPLE_SEED_ADDRESS_1} />)
+
+    expect(mocked(useMiniPoolsTableColumns)).toHaveBeenCalledWith({ isLoading: false, readOnly: false })
+  })
 })

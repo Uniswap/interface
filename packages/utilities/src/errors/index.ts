@@ -46,9 +46,10 @@ type TryCatchResult<T> = { data: T; error: null } | { data: null; error: Error }
 export function tryCatch<T>(valueFnOrPromise: Promise<T>): Promise<TryCatchResult<T>>
 export function tryCatch<T>(valueFnOrPromise: () => T): TryCatchResult<T>
 export function tryCatch<T>(valueFnOrPromise: Promise<T> | (() => T)): TryCatchResult<T> | Promise<TryCatchResult<T>> {
-  // Handle promises by recursively calling tryCatch
-  if (valueFnOrPromise instanceof Promise) {
-    return valueFnOrPromise
+  // Detect promises by thenable shape, not `instanceof Promise`: an async fn can return a Promise
+  // from a different realm/polyfill that fails instanceof, which would mis-route it to the call path.
+  if (typeof (valueFnOrPromise as { then?: unknown } | null)?.then === 'function') {
+    return (valueFnOrPromise as Promise<T>)
       .then((v) => tryCatch(() => v))
       .catch((e) =>
         tryCatch(() => {
@@ -58,7 +59,7 @@ export function tryCatch<T>(valueFnOrPromise: Promise<T> | (() => T)): TryCatchR
   }
 
   try {
-    return { data: valueFnOrPromise(), error: null }
+    return { data: (valueFnOrPromise as () => T)(), error: null }
   } catch (e) {
     return { data: null, error: e instanceof Error ? e : new Error(String(e)) }
   }

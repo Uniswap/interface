@@ -1,11 +1,12 @@
 /* oxlint-disable max-lines */
 import { Protocol } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { GasEstimate, GraphQLApi, TradingApi } from '@universe/api'
+import type { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
+import type { GasEstimate } from '@universe/api'
 import { providers } from 'ethers/lib/ethers'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import type { SwapRouting } from 'uniswap/src/features/telemetry/types'
+import type { AuctionCreateAnalyticsProperties, SwapRouting } from 'uniswap/src/features/telemetry/types'
 import { ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { DappRequestInfo, EthTransaction } from 'uniswap/src/types/walletConnect'
@@ -24,10 +25,6 @@ export interface TransactionId {
    */
   id: string
 }
-
-export type TransactionListQueryResponse = NonNullable<
-  NonNullable<NonNullable<GraphQLApi.TransactionListQuery['portfolios']>[0]>['assetActivities']
->[0]
 
 /**
  * Marks if a transaction was initiated natively within app, or from external source.
@@ -64,6 +61,8 @@ export interface TransactionDetailsCore extends TransactionId {
    */
   receipt?: TransactionReceipt
   networkFee?: TransactionNetworkFee
+  paymaster?: string
+  sponsorInfo?: TradingApi.SponsorMetadata
   /** Block number for polling optimization */
   lastCheckedBlockNumber?: number
 }
@@ -71,7 +70,7 @@ export interface TransactionDetailsCore extends TransactionId {
 // Platform-specific extensions
 export interface InterfaceTransactionExtensions {
   /** EIP-5792 batch transaction tracking */
-  batchInfo?: { connectorId?: string; batchId: string; chainId: UniverseChainId }
+  batchInfo?: { connectorId?: string; batchId: string; chainId: UniverseChainId; planId?: string }
   /** Transaction deadline for cleanup */
   deadline?: number
 }
@@ -256,7 +255,8 @@ export type FinalizedTransactionDetails =
   | FinalizedPlanTXDetails
 
 export type TransactionOptions = {
-  request: providers.TransactionRequest
+  // Present only for EOA-submitted txs; absent for 4337 userOps, which track via `userOpHash`.
+  request?: providers.TransactionRequest
   userSubmissionTimestampMs?: number
   rpcSubmissionTimestampMs?: number
   rpcSubmissionDelayMs?: number
@@ -355,6 +355,7 @@ export enum TransactionType {
   AuctionBid = 'auction-bid',
   AuctionClaimed = 'auction-claimed',
   AuctionExited = 'auction-exited',
+  AuctionLaunch = 'auction-launch',
 
   // Smart Wallet
   RemoveDelegation = 'remove-delegation',
@@ -422,7 +423,16 @@ export type PlanSwapTransactionInfoFields = {
   stepRouting?: SwapRouting
 }
 
-export interface BaseSwapTransactionInfo extends BaseTransactionInfo, PlanSwapTransactionInfoFields {
+/** RWA analytics captured at submit so the Swap Transaction Completed event (built at finalization) can
+ *  report them. See `getRwaSwapAnalyticsProperties`. */
+export interface RwaSwapAnalytics {
+  marketClosed?: boolean
+  priceWarning?: boolean
+  tokenInStocks?: boolean
+  tokenOutStocks?: boolean
+}
+
+export interface BaseSwapTransactionInfo extends BaseTransactionInfo, PlanSwapTransactionInfoFields, RwaSwapAnalytics {
   type: TransactionType.Swap
   tradeType?: TradeType
   inputCurrencyId: string
@@ -437,6 +447,12 @@ export interface BaseSwapTransactionInfo extends BaseTransactionInfo, PlanSwapTr
   simulationFailureReasons?: TradingApi.TransactionFailureReason[]
   dappInfo?: DappInfoTransactionDetails
 
+  /** Whether gas for this swap was sponsored, captured at submit so the finalization-time
+   *  Swap Transaction Completed/Failed event can report it. See getSponsorshipAnalyticsProperties. */
+  isSponsored?: boolean
+  /** Machine-readable sponsorship campaign id, captured at submit alongside `isSponsored`. */
+  sponsorshipCampaignId?: string
+
   /**
    * @deprecated This is used on interface only and will be deleted soon as part of WALL-7143
    * */
@@ -446,7 +462,7 @@ export interface BaseSwapTransactionInfo extends BaseTransactionInfo, PlanSwapTr
   swapStartTimestamp?: number
 }
 
-export interface BridgeTransactionInfo extends BaseTransactionInfo, PlanSwapTransactionInfoFields {
+export interface BridgeTransactionInfo extends BaseTransactionInfo, PlanSwapTransactionInfoFields, RwaSwapAnalytics {
   type: TransactionType.Bridge
   inputCurrencyId: string
   inputCurrencyAmountRaw: string
@@ -456,6 +472,11 @@ export interface BridgeTransactionInfo extends BaseTransactionInfo, PlanSwapTran
   gasUseEstimate?: string
   routingDappInfo?: DappInfoTransactionDetails
   depositConfirmed?: boolean // interface only
+  /** Whether gas for this bridge was sponsored, captured at submit so the finalization-time
+   *  Swap Transaction Completed/Failed event can report it. See getSponsorshipAnalyticsProperties. */
+  isSponsored?: boolean
+  /** Machine-readable sponsorship campaign id, captured at submit alongside `isSponsored`. */
+  sponsorshipCampaignId?: string
   /** Timestamp when the swap flow started (from Redux timing.swap.startTimestamp) */
   swapStartTimestamp?: number
 }
@@ -663,6 +684,16 @@ export type LiquidityTransactionBaseInfos =
   | MigrateV3LiquidityToV4TransactionInfo
   | CollectFeesTransactionInfo
 
+/** Runtime list of `LiquidityTransactionBaseInfos`; keep in sync with the union above. */
+export const LIQUIDITY_TRANSACTION_TYPES: TransactionType[] = [
+  TransactionType.LiquidityIncrease,
+  TransactionType.LiquidityDecrease,
+  TransactionType.CreatePair,
+  TransactionType.CreatePool,
+  TransactionType.MigrateLiquidityV3ToV4,
+  TransactionType.CollectFees,
+]
+
 export interface LpIncentivesClaimTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.LPIncentivesClaimRewards
   tokenAddress: string
@@ -686,6 +717,14 @@ export interface ToucanBidTransactionInfo extends BaseTransactionInfo {
    * Address of the bid token (zero address when bidding with native token)
    */
   bidTokenAddress: string
+  /**
+   * Address of the token being auctioned.
+   */
+  auctionTokenAddress?: string
+  /**
+   * Symbol of the token being auctioned.
+   */
+  auctionTokenSymbol?: string
   /**
    * Identifier returned from the Toucan auction service
    */
@@ -741,6 +780,25 @@ export interface AuctionExitedTransactionInfo extends BaseTransactionInfo {
   dappInfo?: DappInfoTransactionDetails
 }
 
+export interface AuctionLaunchTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.AuctionLaunch
+  requestId: string
+  predictedAuctionAddress: string
+  predictedTokenAddress: string
+  // The launched token isn't indexed at submit time, so activity UIs can't resolve its
+  // metadata from the predicted address — carry the form's display fields instead.
+  tokenName?: string
+  tokenSymbol?: string
+  tokenLogoUrl?: string
+  dappInfo?: DappInfoTransactionDetails
+  /**
+   * Snapshot of the `Auction Create Submitted` analytics properties, persisted so the activity
+   * updater can fire `Auction Create Completed` with identical values once the launch confirms —
+   * even if the create-auction flow has unmounted by then.
+   */
+  analytics?: AuctionCreateAnalyticsProperties
+}
+
 export interface MigrateV2LiquidityToV3TransactionInfo extends BaseTransactionInfo {
   type: TransactionType.MigrateLiquidityV2ToV3
   baseCurrencyId: string
@@ -760,6 +818,7 @@ export interface PlanTransactionInfo extends BaseTransactionInfo {
   outputCurrencyAmountRaw: string
   tradeType: TradeType.EXACT_INPUT
   transactionHashes?: string[]
+  earnAction?: TradingApi.EarnAction
 }
 
 export type TransactionTypeInfo =
@@ -801,6 +860,7 @@ export type TransactionTypeInfo =
   | AuctionBidTransactionInfo
   | AuctionClaimedTransactionInfo
   | AuctionExitedTransactionInfo
+  | AuctionLaunchTransactionInfo
 
 /**
  * Typeguard to check if a `TransactionTypeInfo` has a specific attribute.

@@ -10,7 +10,6 @@
     ".": "./src/index.ts",
     "./tailwind": "./tailwind.css",
     "./fonts": "./fonts.css",
-    "./fonts/*": "./fonts/*",
     "./cn": {
       "types": "./src/cn.d.ts",
       "default": "./src/index.ts"
@@ -36,6 +35,7 @@
     "@radix-ui/react-switch": "1.2.6",
     "@radix-ui/react-tabs": "1.1.13",
     "@radix-ui/react-tooltip": "1.2.8",
+    "@universe/tailwind": "workspace:*",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "lucide-react": "0.554.0",
@@ -48,18 +48,16 @@
   },
   "devDependencies": {
     "@types/node": "22.19.17",
-    "@typescript/native-preview": "7.0.0-dev.20260421.2",
-    "react": "19.1.0",
-    "tailwindcss": "4.1.16",
-    "typescript": "5.9.2"
+    "react": "19.2.3",
+    "tailwindcss": "4.1.16"
   },
   "scripts": {
     "typecheck": "nx typecheck @universe/mycelium",
     "check": "nx check @universe/mycelium",
     "check:fast": "nx check:fast @universe/mycelium",
     "check:deps:usage": "nx check:deps:usage @universe/mycelium",
-    "format": "nx format @universe/mycelium",
-    "format:check": "nx format:check @universe/mycelium",
+    "format": "nx run @universe/mycelium:format",
+    "format:check": "nx run @universe/mycelium:format:check",
     "lint": "nx lint @universe/mycelium",
     "lint:fix": "nx lint:fix @universe/mycelium"
   },

@@ -8,6 +8,7 @@ import {
   MAX_CUSTOM_SLIPPAGE_TOLERANCE,
   SLIPPAGE_CRITICAL_TOLERANCE,
 } from 'uniswap/src/constants/transactions'
+import { formatSlippage } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/slippage/utils'
 import {
   useTransactionSettingsActions,
   useTransactionSettingsAutoSlippageToleranceStore,
@@ -192,11 +193,13 @@ export function useSlippageSettings(params?: SlippageSettingsProps): {
 
       const isZero = constrainedNewSlippage === 0
 
-      updateInputWarning(constrainedNewSlippage)
+      const formattedNewSlippage = formatSlippage(constrainedNewSlippage)
 
-      setInputSlippageTolerance(constrainedNewSlippage.toString())
+      updateInputWarning(formattedNewSlippage)
+
+      setInputSlippageTolerance(formattedNewSlippage.toString())
       if (!isZero) {
-        setCustomSlippageTolerance(constrainedNewSlippage)
+        setCustomSlippageTolerance(formattedNewSlippage)
         setIsSlippageDirty(true)
       }
     },

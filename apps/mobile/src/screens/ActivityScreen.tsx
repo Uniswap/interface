@@ -1,4 +1,6 @@
+import { useIsFocused } from '@react-navigation/native'
 import { useEffect, useMemo, useState } from 'react'
+import { Freeze } from 'react-freeze'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { ESTIMATED_BOTTOM_TABS_HEIGHT } from 'src/app/navigation/tabs/CustomTabBar/constants'
@@ -21,6 +23,9 @@ export function ActivityScreen(): JSX.Element {
   const activeAccount = useActiveAccountWithThrow()
   const dispatch = useDispatch()
   const insets = useAppInsets()
+  // Tabs run with freezeOnBlur:false, so this list keeps re-rendering on every portfolio poll while blurred.
+  // Freeze it manually while off-screen.
+  const isFocused = useIsFocused()
 
   const containerProps = useMemo(
     () => ({
@@ -65,12 +70,14 @@ export function ActivityScreen(): JSX.Element {
       <Text variant="heading3" py="$padding16" px="$spacing24">
         {t('common.activity')}
       </Text>
-      <ActivityContent
-        isExternalProfile={activeAccount.type === AccountType.Readonly}
-        containerProps={containerProps}
-        owner={activeAccount.address}
-        onErrorStateChange={handleErrorStateChange}
-      />
+      <Freeze freeze={!isFocused}>
+        <ActivityContent
+          isExternalProfile={activeAccount.type === AccountType.Readonly}
+          containerProps={containerProps}
+          owner={activeAccount.address}
+          onErrorStateChange={handleErrorStateChange}
+        />
+      </Freeze>
     </Screen>
   )
 }

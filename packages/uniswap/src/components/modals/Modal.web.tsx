@@ -36,10 +36,12 @@ export function Modal({
   hideHandlebar,
   borderWidth,
   borderColor,
+  borderRadius,
   overlayOpacity,
   snapPointsMode,
   snapPoints,
   testID,
+  disableRemoveScroll,
 }: ModalProps): JSX.Element {
   const [fullyClosed, setFullyClosed] = useState(false)
 
@@ -74,8 +76,10 @@ export function Modal({
           shadowOpacity={isExtensionApp ? 0 : undefined}
           borderWidth={borderWidth !== undefined ? borderWidth : isExtensionApp ? 1 : undefined}
           borderColor={borderColor !== undefined ? borderColor : isExtensionApp ? '$surface2' : undefined}
+          borderRadius={borderRadius}
           overlayOpacity={overlayOpacity !== undefined ? overlayOpacity : isExtensionApp ? 1 : undefined}
           adaptToSheet={isWebApp}
+          disableRemoveScroll={disableRemoveScroll}
           alignment={alignment}
           backgroundColor={backgroundColor}
           height={height ?? (fullScreen ? '100%' : undefined)}

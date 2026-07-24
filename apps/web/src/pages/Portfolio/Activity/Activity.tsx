@@ -11,7 +11,8 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { ActivityFilters } from '~/pages/Portfolio/Activity/ActivityFilters'
 import { ActivityTable } from '~/pages/Portfolio/Activity/ActivityTable/ActivityTable'
-import { ActivityFilterType, TimePeriod } from '~/pages/Portfolio/Activity/Filters/utils'
+import { ActivityFilterType } from '~/pages/Portfolio/Activity/Filters/activityFilterTypes'
+import { TimePeriod } from '~/pages/Portfolio/Activity/Filters/utils'
 import { useActivityEmptyState } from '~/pages/Portfolio/Activity/hooks/useActivityEmptyState'
 import { useActivityFiltering } from '~/pages/Portfolio/Activity/hooks/useActivityFiltering'
 import { PaginationSkeletonRow } from '~/pages/Portfolio/Activity/PaginationSkeletonRow'
@@ -30,15 +31,23 @@ export function PortfolioActivity() {
   const { evmAddress, svmAddress } = usePortfolioAddresses()
   const { chainId, isExternalWallet } = usePortfolioRoutes()
 
-  const { transactionData, sectionData, showLoading, isFetchingNextPage, sentinelRef, error, dataUpdatedAt } =
-    useActivityFiltering({
-      evmAddress,
-      svmAddress,
-      chainId,
-      selectedTransactionType,
-      selectedTimePeriod,
-      searchText,
-    })
+  const {
+    transactionData,
+    sectionData,
+    showLoading,
+    isFetchingNextPage,
+    sentinelRef,
+    error,
+    dataUpdatedAt,
+    isEarnActivityDisplayEnabled,
+  } = useActivityFiltering({
+    evmAddress,
+    svmAddress,
+    chainId,
+    selectedTransactionType,
+    selectedTimePeriod,
+    searchText,
+  })
 
   const { setActivityOutage } = usePortfolioOutageContext()
   useEffect(() => {
@@ -80,7 +89,9 @@ export function PortfolioActivity() {
       section: SectionName.PortfolioActivityTab,
       ...trace,
     })
-    openTransactionDetailsModal(transaction, { isExternalProfile: isExternalWallet })
+    openTransactionDetailsModal(transaction, {
+      isExternalProfile: isExternalWallet,
+    })
   })
 
   const rowWrapper = useEvent((row: Row<TransactionDetails>, content: JSX.Element) => {
@@ -118,6 +129,7 @@ export function PortfolioActivity() {
                   loading={showLoading}
                   error={!!error && !tableData.length}
                   rowWrapper={rowWrapper}
+                  isEarnActivityDisplayEnabled={isEarnActivityDisplayEnabled}
                 />
 
                 {/* Show skeleton loading indicator while fetching next page */}

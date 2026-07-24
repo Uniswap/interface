@@ -4,6 +4,23 @@
 
 const nonceError = `processing response error (body="{"jsonrpc":"2.0","id":107,"error":{"code":-32000,"message":"gapped-nonce tx from delegated accounts"}}", error={"code":-32000}, requestBody="{"method":"eth_sendRawTransactionSync","params":["..."],"id":107,"jsonrpc":"2.0"}", requestMethod="POST", url="...", code=SERVER_ERROR, version=web/5.7.1)`
 
+// Standard geth nonce-rejection strings. NOTE: the exact prod wire strings for "nonce too low"/
+// "nonce too high"/"future transaction tries to replace pending" should be verified against
+// Datadog `category:nonce_other`/`nonce_too_*` samples (see SWAP-2471 runbook) and updated here.
+const nonceTooLow =
+  'processing response error (body="{"jsonrpc":"2.0","id":120,"error":{"code":-32000,"message":"nonce too low"}}", error={"code":-32000}, requestBody="{"method":"eth_sendRawTransaction","params":["..."],"id":120,"jsonrpc":"2.0"}", requestMethod="POST", url="...", code=SERVER_ERROR, version=web/5.7.1)'
+
+const nonceTooHigh =
+  'processing response error (body="{"jsonrpc":"2.0","id":121,"error":{"code":-32000,"message":"nonce too high"}}", error={"code":-32000}, requestBody="{"method":"eth_sendRawTransaction","params":["..."],"id":121,"jsonrpc":"2.0"}", requestMethod="POST", url="...", code=SERVER_ERROR, version=web/5.7.1)'
+
+const futureReplacePending =
+  'processing response error (body="{"jsonrpc":"2.0","id":122,"error":{"code":-32000,"message":"future transaction tries to replace pending"}}", error={"code":-32000}, requestBody="{"method":"eth_sendRawTransaction","params":["..."],"id":122,"jsonrpc":"2.0"}", requestMethod="POST", url="...", code=SERVER_ERROR, version=web/5.7.1)'
+
+// A generic nonce error that is none of the specific buckets — must fall to `nonce_other`, and
+// guards the specific-before-generic ordering in getRPCErrorCategory.
+const nonceOther =
+  'processing response error (body="{"jsonrpc":"2.0","id":123,"error":{"code":-32000,"message":"invalid sender nonce"}}", error={"code":-32000}, requestBody="{"method":"eth_sendRawTransaction","params":["..."],"id":123,"jsonrpc":"2.0"}", requestMethod="POST", url="...", code=SERVER_ERROR, version=web/5.7.1)'
+
 const missingResponseBody =
   'missing response (requestBody="{"method":"eth_blockNumber","params":[],"id":46,"jsonrpc":"2.0"}", requestMethod="POST", serverError={}, url="...", code=SERVER_ERROR, version=web/5.7.1)'
 
@@ -43,6 +60,10 @@ const rateLimited2 = 'Too Many Requests'
 
 export const rpcUtilsFixtures = {
   nonceError,
+  nonceTooLow,
+  nonceTooHigh,
+  futureReplacePending,
+  nonceOther,
   insufficientFunds1,
   insufficientFunds2,
   insufficientFunds3,

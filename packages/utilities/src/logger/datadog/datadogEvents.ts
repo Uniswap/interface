@@ -5,6 +5,10 @@
  */
 export const DDRumAction = {
   ApplicationStartJs: 'application_start_js',
+  // Custom, explicitly-named cold-start time-to-interactive action we own, so it survives
+  // Datadog RN SDK bumps (the SDK's auto @action.type:application_start stopped emitting at
+  // the v2->v3 upgrade). Carries numeric boot fields used to derive our app-start metrics.
+  AppStartTti: 'app_start_tti',
   Context: (contextName: string): string => `${contextName} Update`,
   ManualTiming: 'manual_timing',
 }
@@ -16,6 +20,8 @@ export const DDRumAction = {
  */
 export const DDRumTiming = {
   ScreenInteractive: 'screen_interactive',
+  // View timing anchored to app-launch, mirroring AppStartTti as a durable view-level signal.
+  AppStartTti: 'app_start_tti',
 }
 
 /**

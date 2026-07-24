@@ -1,15 +1,15 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { isNativeCurrency } from '@uniswap/universal-router-sdk'
-import { isExtensionApp, isMobileApp, isWebPlatform } from '@universe/environment'
+import { isMobileApp, isWebPlatform } from '@universe/environment'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { ChartBarCrossed, Flag } from 'ui/src/components/icons'
 import { CoinConvert } from 'ui/src/components/icons/CoinConvert'
 import { CopySheets } from 'ui/src/components/icons/CopySheets'
-import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
 import { Eye } from 'ui/src/components/icons/Eye'
 import { EyeOff } from 'ui/src/components/icons/EyeOff'
+import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { ReceiveAlt } from 'ui/src/components/icons/ReceiveAlt'
 import { SendAction } from 'ui/src/components/icons/SendAction'
 import { ShareArrow } from 'ui/src/components/icons/ShareArrow'
@@ -30,6 +30,7 @@ import { useTokenVisibility } from 'uniswap/src/features/visibility/hooks/useTok
 import { setTokenVisibility } from 'uniswap/src/features/visibility/slice'
 import { CurrencyField, CurrencyId } from 'uniswap/src/types/currency'
 import { areCurrencyIdsEqual, currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
+import { TdpChainSelectionType } from 'uniswap/src/utils/linking'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export enum TokenMenuActionType {
@@ -58,6 +59,7 @@ interface TokenMenuParams {
   onPressCopyAddressOverride?: () => void
   closeMenu: () => void
   disableNotifications?: boolean
+  analyticsSection?: SectionName
   recipient?: Address // Pre-filled recipient address for send action
   /**
    * Multichain aggregate row: allow "Copy address" when the primary deployment is native, as long as
@@ -84,6 +86,7 @@ export function useTokenContextMenuOptions({
   onPressCopyAddressOverride,
   closeMenu,
   disableNotifications,
+  analyticsSection = SectionName.HomeTokensTab,
   recipient,
   multichainWithCopyAddressList,
   allNativeMultichain,
@@ -133,10 +136,10 @@ export function useTokenContextMenuOptions({
   const onPressViewDetails = useCallback(() => {
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
       element: ElementName.TokenItem,
-      section: SectionName.HomeTokensTab,
+      section: analyticsSection,
     })
-    navigateToTokenDetails(currencyId)
-  }, [navigateToTokenDetails, currencyId])
+    navigateToTokenDetails(currencyId, isMultichainAsset ? { type: TdpChainSelectionType.Multichain } : undefined)
+  }, [navigateToTokenDetails, currencyId, isMultichainAsset, analyticsSection])
 
   const onPressShare = useCallback(async () => {
     handleShareToken({ currencyId })
@@ -223,6 +226,15 @@ export function useTokenContextMenuOptions({
       })
     }
 
+    if (!isTestnetModeEnabled) {
+      actions.push({
+        id: TokenMenuActionType.ViewDetails,
+        label: t('common.button.viewDetails'),
+        onPress: onPressViewDetails,
+        Icon: InfoCircleFilled,
+      })
+    }
+
     actions.push({
       id: TokenMenuActionType.Swap,
       label: t('common.button.swap'),
@@ -256,15 +268,6 @@ export function useTokenContextMenuOptions({
         label: t('common.button.share'),
         onPress: onPressShare,
         Icon: ShareArrow,
-      })
-    }
-
-    if (isExtensionApp && !isTestnetModeEnabled) {
-      actions.push({
-        id: TokenMenuActionType.ViewDetails,
-        label: t('common.button.viewDetails'),
-        onPress: onPressViewDetails,
-        Icon: ExternalLink,
       })
     }
 

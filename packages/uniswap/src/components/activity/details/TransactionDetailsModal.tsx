@@ -5,6 +5,7 @@ import { TransactionDetailsOverview } from 'uniswap/src/components/activity/deta
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useTransactionActions } from 'uniswap/src/features/activity/hooks/useTransactionActions'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
+import { useIsEarnEnabled } from 'uniswap/src/features/earn/hooks/useIsEarnEnabled'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isPlanTransactionInfo } from 'uniswap/src/features/transactions/types/utils'
@@ -19,6 +20,7 @@ export type TransactionDetailsModalProps = {
   onReportSuccess?: () => void
   onUnhideTransaction?: () => void
   onCopySuccess?: () => void
+  isEarnActivityDisplayEnabled?: boolean
 }
 
 enum TransactionDetailsView {
@@ -29,6 +31,8 @@ enum TransactionDetailsView {
 export function TransactionDetailsModal(props: TransactionDetailsModalProps): JSX.Element {
   const { transactionDetails } = props
   const { typeInfo, status } = transactionDetails
+  const isEarnEnabled = useIsEarnEnabled()
+  const isEarnActivityDisplayEnabled = props.isEarnActivityDisplayEnabled ?? isEarnEnabled
   const { renderModals, openCancelModal, menuItems } = useTransactionActions({
     ...props,
     transaction: props.transactionDetails,
@@ -50,13 +54,20 @@ export function TransactionDetailsModal(props: TransactionDetailsModalProps): JS
         {view === TransactionDetailsView.Overview && (
           <TransactionDetailsOverview
             {...props}
+            isEarnActivityDisplayEnabled={isEarnActivityDisplayEnabled}
+            menuItems={menuItems}
             openPlanView={openPlanView}
             openCancelModal={openCancelModal}
-            menuItems={menuItems}
           />
         )}
         {view === TransactionDetailsView.Plan && isPlanTransactionInfo(typeInfo) && (
-          <PlanDetailsView typeInfo={typeInfo} status={status} closePlanView={closePlanView} onClose={props.onClose} />
+          <PlanDetailsView
+            typeInfo={typeInfo}
+            status={status}
+            isEarnActivityDisplayEnabled={isEarnActivityDisplayEnabled}
+            closePlanView={closePlanView}
+            onClose={props.onClose}
+          />
         )}
       </Modal>
       {renderModals()}

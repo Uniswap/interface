@@ -3,7 +3,6 @@ import { default as React } from 'react'
 import { useTranslation } from 'react-i18next'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
-import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Person } from 'ui/src/components/icons'
 import { UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -51,7 +50,6 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
   }
 
   const showSkipButton = entryPoint === OnboardingScreens.Landing
-  useNavigationHeader(navigation, showSkipButton ? onPressSkip : undefined)
 
   const title =
     entryPoint === MobileScreens.Home
@@ -59,7 +57,12 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
       : t('unitags.onboarding.claim.title.choose')
 
   return (
-    <SafeKeyboardOnboardingScreen Icon={Person} subtitle={t('unitags.onboarding.claim.subtitle')} title={title}>
+    <SafeKeyboardOnboardingScreen
+      Icon={Person}
+      subtitle={t('unitags.onboarding.claim.subtitle')}
+      title={title}
+      onSkip={showSkipButton ? onPressSkip : undefined}
+    >
       <ClaimUnitagContent
         unitagAddress={address || onboardingAccountAddress}
         entryPoint={entryPoint}

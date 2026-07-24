@@ -1,8 +1,8 @@
 import { Link } from 'react-router'
 import { Flex } from 'ui/src'
+import { getPositionUrl } from 'uniswap/src/features/positions/getPositionUrl'
 import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { LiquidityPositionCard } from '~/features/Liquidity/LiquidityPositionCard'
-import { getPositionUrl } from '~/features/Liquidity/utils/getPositionUrl'
 
 export function PoolDetailsPositionsTable({ positions }: { positions?: PositionInfo[] }) {
   return (

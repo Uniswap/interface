@@ -36,7 +36,7 @@ import {
 } from 'uniswap/src/features/transactions/liquidity/types'
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
-import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/permitMethod'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'

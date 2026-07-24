@@ -1,0 +1,42 @@
+diff --git a/node_modules/react-scripts/.bun-tag-5fa4319f3cae716b b/.bun-tag-5fa4319f3cae716b
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/node_modules/react-scripts/.bun-tag-df40c9a3d589cfac b/.bun-tag-df40c9a3d589cfac
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/config/modules.js b/config/modules.js
+index 22820993a25b734542c64fc618a91b4eba2b6f7f..5fc29f491cce7c368cc15b3fc091262d0bd0902a 100644
+--- a/config/modules.js
++++ b/config/modules.js
+@@ -116,10 +116,10 @@ function getModules() {
+   // TypeScript project and set up the config
+   // based on tsconfig.json
+   if (hasTsConfig) {
+-    const ts = require(resolve.sync('typescript', {
+-      basedir: paths.appNodeModules,
+-    }));
+-    config = ts.readConfigFile(paths.appTsConfig, ts.sys.readFile).config;
++    // PATCH: TypeScript 7.0's native package has no classic compiler API, so the original
++    // `require(resolve.sync('typescript')).readConfigFile(...)` throws. react-scripts only reads
++    // this single tsconfig (no `extends`), and it's plain JSON, so parse it directly.
++    config = JSON.parse(fs.readFileSync(paths.appTsConfig, 'utf8'));
+     // Otherwise we'll check if there is jsconfig.json
+     // for non TS projects.
+   } else if (hasJsConfig) {
+diff --git a/config/webpack.config.js b/config/webpack.config.js
+index e465d8e7a00ec889e9c4c29ba7812019f8319a41..c8248e5a3c282a5eafb40d90cd5b84888113c5dc 100644
+--- a/config/webpack.config.js
++++ b/config/webpack.config.js
+@@ -716,7 +716,11 @@ module.exports = function (webpackEnv) {
+           maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+         }),
+       // TypeScript type checking
+-      useTypeScript &&
++      // PATCH: disabled — ForkTsChecker resolves the classic `typescript` API (which TypeScript 7's
++      // native package doesn't expose), and Storybook doesn't need type-checking (the repo runs
++      // `tsc -b` separately). `false &&` short-circuits so the `resolve.sync('typescript')` below
++      // is never evaluated.
++      false &&
+         new ForkTsCheckerWebpackPlugin({
+           async: isEnvDevelopment,
+           typescript: {

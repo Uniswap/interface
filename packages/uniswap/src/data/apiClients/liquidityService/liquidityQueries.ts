@@ -1,3 +1,4 @@
+import { type PartialMessage } from '@bufbuild/protobuf'
 import { type QueryKey, queryOptions } from '@tanstack/react-query'
 import type {
   ClaimLPRewardsRequest,
@@ -18,18 +19,28 @@ import type {
   CreatePositionResponse,
   DecreasePositionRequest,
   DecreasePositionResponse,
+  HookListRequest,
+  HookListResponse,
   IncreasePositionRequest,
   IncreasePositionResponse,
+  ListPoolsRequest,
+  ListPoolsResponse,
   LPApprovalRequest,
   LPApprovalResponse,
 } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_pb'
+import type { PoolListCursor } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
 import { type UseQueryApiHelperHookArgs } from '@universe/api'
 import {
   V1LiquidityServiceClient,
   V2LiquidityServiceClient,
 } from 'uniswap/src/data/apiClients/liquidityService/LiquidityServiceClient'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { persistableInfiniteQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 import { type QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
+
+const HOOK_LIST_STALE_TIME = 5 * ONE_MINUTE_MS
+const HOOK_LIST_GC_TIME = 30 * ONE_MINUTE_MS
 
 function getPoolInfoQueryOptions(
   client: typeof V1LiquidityServiceClient,
@@ -191,6 +202,61 @@ function getIncreasePositionQueryOptions(
   })
 }
 
+function getHookListQueryOptions(
+  client: typeof V2LiquidityServiceClient,
+  { params, ...rest }: UseQueryApiHelperHookArgs<HookListRequest, HookListResponse>,
+): QueryOptionsResult<HookListResponse, Error, HookListResponse, QueryKey> {
+  return queryOptions({
+    queryKey: [ReactQueryCacheKey.LiquidityService, 'hookList', params],
+    queryFn: async () => {
+      if (!params) {
+        throw new Error('params required')
+      }
+      return client.hookList(params)
+    },
+    staleTime: HOOK_LIST_STALE_TIME,
+    gcTime: HOOK_LIST_GC_TIME,
+    ...rest,
+  })
+}
+
+type ListPoolsInput = {
+  params?: Omit<PartialMessage<ListPoolsRequest>, 'cursor'>
+  enabled?: boolean
+}
+
+type ListPoolsQueryKey = readonly [ReactQueryCacheKey.LiquidityService, 'listPools', ListPoolsInput['params']]
+
+// Cursor-based pagination: the page param is the opaque cursor returned by the previous page
+// (undefined for the first page). It is passed straight back to the request as `cursor`.
+type ListPoolsPageParam = PoolListCursor | undefined
+
+function getListPoolsQueryOptions(
+  client: typeof V2LiquidityServiceClient,
+  { params, enabled }: ListPoolsInput,
+): ReturnType<
+  typeof persistableInfiniteQueryOptions<
+    ListPoolsResponse,
+    Error,
+    ListPoolsResponse,
+    ListPoolsQueryKey,
+    ListPoolsPageParam
+  >
+> {
+  return persistableInfiniteQueryOptions({
+    queryKey: [ReactQueryCacheKey.LiquidityService, 'listPools', params] as const,
+    queryFn: async ({ pageParam }: { pageParam: ListPoolsPageParam }): Promise<ListPoolsResponse> => {
+      if (!params) {
+        throw new Error('params required')
+      }
+      return client.listPools({ ...params, cursor: pageParam })
+    },
+    initialPageParam: undefined,
+    getNextPageParam: (lastPage: ListPoolsResponse) => lastPage.nextCursor,
+    enabled,
+  })
+}
+
 function provideLiquidityQueries(
   v1Client: typeof V1LiquidityServiceClient,
   v2Client: typeof V2LiquidityServiceClient,
@@ -225,6 +291,11 @@ function provideLiquidityQueries(
   increasePosition: (
     input: UseQueryApiHelperHookArgs<IncreasePositionRequest, IncreasePositionResponse>,
   ) => QueryOptionsResult<IncreasePositionResponse, Error, IncreasePositionResponse, QueryKey>
+  hookList: (
+    input: UseQueryApiHelperHookArgs<HookListRequest, HookListResponse>,
+  ) => QueryOptionsResult<HookListResponse, Error, HookListResponse, QueryKey>
+  // listPools is a paginated read surfaced as an infinite query, so it has a distinct input/return shape.
+  listPools: (input: ListPoolsInput) => ReturnType<typeof getListPoolsQueryOptions>
 } {
   return {
     poolInfo: (input: UseQueryApiHelperHookArgs<PoolInfoRequest, PoolInfoResponse>) =>
@@ -250,6 +321,9 @@ function provideLiquidityQueries(
     ) => getMigrateV3ToV4LPPositionQueryOptions(v1Client, input),
     increasePosition: (input: UseQueryApiHelperHookArgs<IncreasePositionRequest, IncreasePositionResponse>) =>
       getIncreasePositionQueryOptions(v2Client, input),
+    hookList: (input: UseQueryApiHelperHookArgs<HookListRequest, HookListResponse>) =>
+      getHookListQueryOptions(v2Client, input),
+    listPools: (input: ListPoolsInput) => getListPoolsQueryOptions(v2Client, input),
   }
 }
 

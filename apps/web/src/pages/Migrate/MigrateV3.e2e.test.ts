@@ -1,6 +1,6 @@
 import { getPosition } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { getUniswapServiceUrls } from '~/config'
 import { expect, getTest } from '~/playwright/fixtures'
 import { Mocks } from '~/playwright/mocks/mocks'
 
@@ -19,7 +19,7 @@ test.describe(
     test.describe('error handling', () => {
       test('should gracefully handle errors during review', async ({ page }) => {
         await page.route(
-          `${uniswapUrls.apiBaseUrlV2}/${getPosition.service.typeName}/${getPosition.name}`,
+          `${getUniswapServiceUrls().apiBaseUrlV2}/${getPosition.service.typeName}/${getPosition.name}`,
           async (route) => {
             await route.fulfill({ path: Mocks.Positions.get_v3_position })
           },

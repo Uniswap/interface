@@ -89,8 +89,8 @@ import { DappRequestType } from 'uniswap/src/types/walletConnect'
 import { createThrowingProxy } from 'utilities/src/test/utils'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 
-jest.mock('uniswap/src/i18n/utils', () => ({
-  getWalletDeviceLanguage: jest.fn(),
+vi.mock('uniswap/src/i18n/utils', () => ({
+  getWalletDeviceLanguage: vi.fn(),
 }))
 
 describe('restructureTransactionsAndNotifications', () => {
@@ -858,7 +858,7 @@ describe('updateLanguageSettings', () => {
 })
 
 describe('setWalletDeviceLanguage', () => {
-  const mockGetWalletDeviceLanguage = jest.mocked(getWalletDeviceLanguage)
+  const mockGetWalletDeviceLanguage = vi.mocked(getWalletDeviceLanguage)
 
   beforeEach(() => {
     mockGetWalletDeviceLanguage.mockReturnValue(Language.SpanishSpain)

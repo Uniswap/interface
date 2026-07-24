@@ -109,7 +109,7 @@ export function DeleteUnitagModal({
         <Flex row width="100%">
           <Button
             loading={isDeleting}
-            isDisabled={isDeleting}
+            disabled={isDeleting}
             testID={TestID.Remove}
             variant="critical"
             emphasis="secondary"

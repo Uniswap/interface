@@ -95,7 +95,7 @@ export function RecoveryLoginStep({
                 <Button
                   variant="branded"
                   size="medium"
-                  isDisabled={isPasskeyLoading || disableOauth}
+                  disabled={isPasskeyLoading || disableOauth}
                   icon={
                     isPasskeyLoading ? (
                       <SpinningLoader size={20} color="$white" />

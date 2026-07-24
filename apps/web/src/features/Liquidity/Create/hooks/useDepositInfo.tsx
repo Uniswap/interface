@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { useMaxAmountSpend } from 'uniswap/src/features/gas/hooks/useMaxAmountSpend'
 import { applyNativeTokenPercentageBuffer } from 'uniswap/src/features/gas/utils'
 import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { useNativeTokenPercentageBufferExperiment } from '~/features/Liquidity/Create/hooks/useNativeTokenPercentageBufferExperiment'
 import {
   getDependentAmountFromV2Pair,
@@ -140,13 +140,13 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
 
     if (insufficientToken0Balance) {
       return t('common.insufficientTokenBalance.error', {
-        tokenSymbol: token0?.symbol,
+        tokenSymbol: token0?.symbol ?? t('common.token'),
       })
     }
 
     if (insufficientToken1Balance) {
       return t('common.insufficientTokenBalance.error', {
-        tokenSymbol: token1?.symbol,
+        tokenSymbol: token1?.symbol ?? t('common.token'),
       })
     }
 

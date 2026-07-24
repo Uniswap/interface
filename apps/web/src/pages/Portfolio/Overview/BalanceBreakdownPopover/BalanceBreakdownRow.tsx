@@ -1,12 +1,14 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
+import type { GeneratedIcon } from 'ui/src/components/factories/createIcon'
 import { Coin } from 'ui/src/components/icons/Coin'
+import { EarnSparkle } from 'ui/src/components/icons/EarnSparkle'
 import { Pools } from 'ui/src/components/icons/Pools'
 import { iconSizes } from 'ui/src/theme'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
-import { DeltaArrow } from '~/components/DeltaArrow/DeltaArrow'
+import { DEFAULT_DELTA_COLOR, DeltaArrow, getDeltaTextColor } from '~/components/DeltaArrow/DeltaArrow'
 import { EllipsisTamaguiStyle } from '~/theme/components/styles'
 
 const PERCENT_CHANGE_COLUMN_WIDTH = 64
@@ -16,32 +18,60 @@ const MONOSPACE_NUMERIC_STYLE = {
   fontFeatureSettings: "'tnum' 1",
 } as const
 
-type BalanceBreakdownRowKind = 'tokens' | 'pools'
+type BalanceBreakdownRowKind = 'tokens' | 'earn' | 'pools'
 
 export interface BalanceBreakdownRowData {
   kind: BalanceBreakdownRowKind
   valueUSD: number
-  percentChange1d: number | undefined
+  percentChange: number | undefined
 }
 
 const ROW_TEST_ID_BY_KIND: Record<BalanceBreakdownRowKind, string> = {
   tokens: TestID.BalanceBreakdownRowTokens,
+  earn: TestID.BalanceBreakdownRowEarn,
   pools: TestID.BalanceBreakdownRowPools,
 }
 
-export function BalanceBreakdownRow({ kind, valueUSD, percentChange1d }: BalanceBreakdownRowData): JSX.Element {
+const ICON_BY_KIND: Record<BalanceBreakdownRowKind, GeneratedIcon> = {
+  tokens: Coin,
+  earn: EarnSparkle,
+  pools: Pools,
+}
+
+// EarnSparkle's glyph fills more of its viewbox, so render it a touch smaller to match the others.
+const ICON_SIZE_BY_KIND: Record<BalanceBreakdownRowKind, number> = {
+  tokens: iconSizes.icon20,
+  earn: iconSizes.icon16,
+  pools: iconSizes.icon20,
+}
+
+export function BalanceBreakdownRow({
+  kind,
+  valueUSD,
+  percentChange,
+  // When true, color the percent text green/red by sign (used for chart scrubbing legibility).
+  semanticPercentColor = false,
+}: BalanceBreakdownRowData & { semanticPercentColor?: boolean }): JSX.Element {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted, formatPercent } = useLocalizationContext()
 
-  const Icon = kind === 'tokens' ? Coin : Pools
-  const label =
-    kind === 'tokens' ? t('portfolio.balanceBreakdown.tokenBalance') : t('portfolio.balanceBreakdown.poolsBalance')
+  const Icon = ICON_BY_KIND[kind]
+  // Literal t() calls (not a dynamic key lookup) so i18n extraction can detect these strings.
+  const labelByKind: Record<BalanceBreakdownRowKind, string> = {
+    tokens: t('portfolio.balanceBreakdown.tokenBalance'),
+    earn: t('portfolio.balanceBreakdown.earnBalance'),
+    pools: t('portfolio.balanceBreakdown.poolsBalance'),
+  }
+  const label = labelByKind[kind]
   const formattedValue = convertFiatAmountFormatted(valueUSD, NumberType.PortfolioBalance)
-  const formattedPercent = percentChange1d !== undefined ? formatPercent(Math.abs(percentChange1d)) : '-'
+  const formattedPercent = percentChange !== undefined ? formatPercent(Math.abs(percentChange)) : '-'
+  const percentColor = semanticPercentColor ? getDeltaTextColor(percentChange) : DEFAULT_DELTA_COLOR
 
   return (
     <Flex row alignItems="center" gap="$spacing8" width="100%" aria-label={label} testID={ROW_TEST_ID_BY_KIND[kind]}>
-      <Icon size={iconSizes.icon20} color="$neutral2" />
+      <Flex width={iconSizes.icon20} height={iconSizes.icon20} alignItems="center" justifyContent="center">
+        <Icon size={ICON_SIZE_BY_KIND[kind]} color="$neutral2" />
+      </Flex>
       <Text
         variant="body3"
         color="$neutral1"
@@ -59,12 +89,12 @@ export function BalanceBreakdownRow({ kind, valueUSD, percentChange1d }: Balance
         gap="$spacing4"
         justifyContent="flex-end"
         pl="$spacing8"
-        width={PERCENT_CHANGE_COLUMN_WIDTH}
+        minWidth={PERCENT_CHANGE_COLUMN_WIDTH}
       >
-        {percentChange1d !== undefined && (
-          <DeltaArrow delta={percentChange1d} formattedDelta={formattedPercent} size={12} />
+        {percentChange !== undefined && (
+          <DeltaArrow delta={percentChange} formattedDelta={formattedPercent} size={12} />
         )}
-        <Text variant="body3" color="$neutral2" style={MONOSPACE_NUMERIC_STYLE}>
+        <Text variant="body3" color={percentColor} style={MONOSPACE_NUMERIC_STYLE}>
           {formattedPercent}
         </Text>
       </Flex>

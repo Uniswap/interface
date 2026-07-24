@@ -2,8 +2,8 @@ import { getPosition } from '@uniswap/client-data-api/dist/data/v1/api-DataApiSe
 import { LiquidityService } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_connect'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { USDT } from 'uniswap/src/constants/tokens'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { getUniswapServiceUrls } from '~/config'
 import { ONE_MILLION_USDT } from '~/playwright/anvil/utils'
 import { expect, getTest } from '~/playwright/fixtures'
 import { stubLiquidityServiceEndpoint } from '~/playwright/fixtures/liquidityService'
@@ -30,7 +30,7 @@ test.describe(
       })
       await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
       await page.route(
-        `${uniswapUrls.apiBaseUrlV2}/${getPosition.service.typeName}/${getPosition.name}`,
+        `${getUniswapServiceUrls().apiBaseUrlV2}/${getPosition.service.typeName}/${getPosition.name}`,
         async (route) => {
           await route.fulfill({ path: Mocks.Positions.get_v4_position })
         },
@@ -55,7 +55,7 @@ test.describe(
         })
         await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
         await page.route(
-          `${uniswapUrls.apiBaseUrlV2}/${getPosition.service.typeName}/${getPosition.name}`,
+          `${getUniswapServiceUrls().apiBaseUrlV2}/${getPosition.service.typeName}/${getPosition.name}`,
           async (route) => {
             await route.fulfill({ path: Mocks.Positions.get_v4_position })
           },
@@ -79,7 +79,7 @@ test.describe(
         })
         await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
         await page.route(
-          `${uniswapUrls.apiBaseUrlV2}/${getPosition.service.typeName}/${getPosition.name}`,
+          `${getUniswapServiceUrls().apiBaseUrlV2}/${getPosition.service.typeName}/${getPosition.name}`,
           async (route) => {
             await route.fulfill({ path: Mocks.Positions.get_v3_position })
           },
@@ -103,7 +103,7 @@ test.describe(
         })
         await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
         await page.route(
-          `${uniswapUrls.apiBaseUrlV2}/${getPosition.service.typeName}/${getPosition.name}`,
+          `${getUniswapServiceUrls().apiBaseUrlV2}/${getPosition.service.typeName}/${getPosition.name}`,
           async (route) => {
             await route.fulfill({ path: Mocks.Positions.get_v4_position })
           },
@@ -131,14 +131,34 @@ test.describe(
     })
 
     test.describe('error handling', () => {
+      // The live IncreasePosition endpoint gas-estimates against LIVE mainnet, where
+      // the test wallet holds nothing, and 404s at quote time
+      // ("FAILED_TO_ESTIMATE_GAS: insufficient funds"), so Review never enables.
+      // Serve a recorded quote so the flow can start, and fail only the signed
+      // (post-permit) calldata request — the phase this test exists to cover.
       test('should gracefully handle errors during review', async ({ page, anvil }) => {
         await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
         await page.route(
-          `${uniswapUrls.apiBaseUrlV2}/${getPosition.service.typeName}/${getPosition.name}`,
+          `${getUniswapServiceUrls().apiBaseUrlV2}/${getPosition.service.typeName}/${getPosition.name}`,
           async (route) => {
             await route.fulfill({ path: Mocks.Positions.get_v4_position })
           },
         )
+        await page.route('**/uniswap.liquidity.v2.LiquidityService/IncreasePosition*', async (route) => {
+          const requestData = JSON.parse(route.request().postData() ?? '{}')
+          if (requestData.signature) {
+            // Hold the error response briefly so the completed approval step stays
+            // visible long enough for the 'Approved' assertion below.
+            await new Promise((resolve) => setTimeout(resolve, 1500))
+            await route.fulfill({
+              status: 500,
+              contentType: 'application/json',
+              body: JSON.stringify({ code: 'internal', message: 'simulated increase failure from e2e fixture' }),
+            })
+            return
+          }
+          await route.fulfill({ path: Mocks.LiquidityService.increase_position_eth_usdt })
+        })
         await page.goto('/positions/v4/ethereum/1')
         await page.getByRole('button', { name: 'Add liquidity' }).click()
         await page.getByTestId(TestID.AmountInputIn).nth(1).click()

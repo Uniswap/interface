@@ -5,7 +5,7 @@ import { Key } from 'ui/src/components/icons/Key'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { Page } from '~/components/NavBar/DownloadApp/Modal'
+import { Page } from '~/components/NavBar/DownloadApp/Modal/constants'
 import { ModalContent } from '~/components/NavBar/DownloadApp/Modal/Content'
 import { PrivyWatermark } from '~/components/Passkey/PrivyWatermark'
 

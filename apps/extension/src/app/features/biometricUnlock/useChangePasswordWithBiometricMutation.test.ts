@@ -4,19 +4,20 @@ import { BiometricUnlockStorage } from 'src/app/features/biometricUnlock/Biometr
 import { useChangePasswordWithBiometricMutation } from 'src/app/features/biometricUnlock/useChangePasswordWithBiometricMutation'
 import { renderHookWithProviders } from 'src/test/render'
 import { logger } from 'utilities/src/logger/logger'
+import type { Mocked } from 'vitest'
 import { encodeForStorage, encrypt, generateNew256BitRandomBuffer } from 'wallet/src/features/wallet/Keyring/crypto'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 // Mock dependencies
-jest.mock('src/app/features/biometricUnlock/BiometricUnlockStorage')
-jest.mock('wallet/src/features/wallet/Keyring/Keyring', () => ({
+vi.mock('src/app/features/biometricUnlock/BiometricUnlockStorage')
+vi.mock('wallet/src/features/wallet/Keyring/Keyring', () => ({
   Keyring: {
-    changePassword: jest.fn(),
+    changePassword: vi.fn(),
   },
 }))
-jest.mock('utilities/src/logger/logger', () => ({
+vi.mock('utilities/src/logger/logger', () => ({
   logger: {
-    error: jest.fn(),
+    error: vi.fn(),
   },
 }))
 
@@ -26,15 +27,15 @@ Object.defineProperty(globalThis, 'crypto', {
 })
 
 // Mock the WebAuthn API
-const mockCredentialsGet = jest.fn()
+const mockCredentialsGet = vi.fn()
 Object.defineProperty(navigator, 'credentials', {
   writable: true,
   value: { get: mockCredentialsGet },
 })
 
-const mockBiometricUnlockStorage = BiometricUnlockStorage as jest.Mocked<typeof BiometricUnlockStorage>
-const mockKeyring = Keyring as jest.Mocked<typeof Keyring>
-const mockLogger = logger as jest.Mocked<typeof logger>
+const mockBiometricUnlockStorage = BiometricUnlockStorage as Mocked<typeof BiometricUnlockStorage>
+const mockKeyring = Keyring as Mocked<typeof Keyring>
+const mockLogger = logger as Mocked<typeof logger>
 
 // Mock AuthenticatorAssertionResponse
 class MockAuthenticatorAssertionResponse {
@@ -118,13 +119,13 @@ describe('useChangePasswordWithBiometricMutation', () => {
     mockKeyring.changePassword.mockResolvedValue(true)
     mockBiometricUnlockStorage.set.mockResolvedValue()
 
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('successful password change', () => {
     it('should successfully change password with biometric re-encryption', async () => {
-      const onSuccess = jest.fn()
-      const onError = jest.fn()
+      const onSuccess = vi.fn()
+      const onError = vi.fn()
 
       const { result } = renderHookWithProviders(() => useChangePasswordWithBiometricMutation({ onSuccess, onError }))
 
@@ -209,7 +210,7 @@ describe('useChangePasswordWithBiometricMutation', () => {
   describe('error handling', () => {
     it('should throw error when no biometric unlock credential found', async () => {
       mockBiometricUnlockStorage.get.mockResolvedValue(null)
-      const onError = jest.fn()
+      const onError = vi.fn()
 
       const { result } = renderHookWithProviders(() => useChangePasswordWithBiometricMutation({ onError }))
 
@@ -228,7 +229,7 @@ describe('useChangePasswordWithBiometricMutation', () => {
 
     it('should throw error when biometric authentication fails', async () => {
       mockCredentialsGet.mockResolvedValue(null)
-      const onError = jest.fn()
+      const onError = vi.fn()
 
       const { result } = renderHookWithProviders(() => useChangePasswordWithBiometricMutation({ onError }))
 
@@ -248,7 +249,7 @@ describe('useChangePasswordWithBiometricMutation', () => {
       const mockAuthResponse = new MockAuthenticatorAssertionResponse(null) // No userHandle
       const mockPublicKeyCredential = new MockPublicKeyCredential(mockAuthResponse)
       mockCredentialsGet.mockResolvedValue(mockPublicKeyCredential)
-      const onError = jest.fn()
+      const onError = vi.fn()
 
       const { result } = renderHookWithProviders(() => useChangePasswordWithBiometricMutation({ onError }))
 
@@ -267,7 +268,7 @@ describe('useChangePasswordWithBiometricMutation', () => {
     it('should handle keyring password change failure', async () => {
       const keyringError = new Error('Keyring password change failed')
       mockKeyring.changePassword.mockRejectedValue(keyringError)
-      const onError = jest.fn()
+      const onError = vi.fn()
 
       const { result } = renderHookWithProviders(() => useChangePasswordWithBiometricMutation({ onError }))
 
@@ -285,7 +286,7 @@ describe('useChangePasswordWithBiometricMutation', () => {
     it('should handle biometric storage update failure', async () => {
       const storageError = new Error('Storage update failed')
       mockBiometricUnlockStorage.set.mockRejectedValue(storageError)
-      const onError = jest.fn()
+      const onError = vi.fn()
 
       const { result } = renderHookWithProviders(() => useChangePasswordWithBiometricMutation({ onError }))
 
@@ -303,7 +304,7 @@ describe('useChangePasswordWithBiometricMutation', () => {
     it('should handle WebAuthn API errors', async () => {
       const webAuthnError = new Error('WebAuthn API error')
       mockCredentialsGet.mockRejectedValue(webAuthnError)
-      const onError = jest.fn()
+      const onError = vi.fn()
 
       const { result } = renderHookWithProviders(() => useChangePasswordWithBiometricMutation({ onError }))
 
@@ -322,7 +323,7 @@ describe('useChangePasswordWithBiometricMutation', () => {
     it('should handle storage retrieval errors', async () => {
       const storageError = new Error('Storage retrieval failed')
       mockBiometricUnlockStorage.get.mockRejectedValue(storageError)
-      const onError = jest.fn()
+      const onError = vi.fn()
 
       const { result } = renderHookWithProviders(() => useChangePasswordWithBiometricMutation({ onError }))
 
@@ -376,7 +377,7 @@ describe('useChangePasswordWithBiometricMutation', () => {
     })
 
     it('should call onSuccess callback when mutation succeeds', async () => {
-      const onSuccess = jest.fn()
+      const onSuccess = vi.fn()
 
       const { result } = renderHookWithProviders(() => useChangePasswordWithBiometricMutation({ onSuccess }))
 
@@ -391,7 +392,7 @@ describe('useChangePasswordWithBiometricMutation', () => {
 
     it('should call onError callback when mutation fails', async () => {
       const testError = new Error('Test error')
-      const onError = jest.fn()
+      const onError = vi.fn()
       mockBiometricUnlockStorage.get.mockRejectedValue(testError)
 
       const { result } = renderHookWithProviders(() => useChangePasswordWithBiometricMutation({ onError }))
@@ -406,8 +407,8 @@ describe('useChangePasswordWithBiometricMutation', () => {
     })
 
     it('should call both onSuccess and onError callbacks appropriately', async () => {
-      const onSuccess = jest.fn()
-      const onError = jest.fn()
+      const onSuccess = vi.fn()
+      const onError = vi.fn()
 
       const { result } = renderHookWithProviders(() => useChangePasswordWithBiometricMutation({ onSuccess, onError }))
 
@@ -422,7 +423,7 @@ describe('useChangePasswordWithBiometricMutation', () => {
       expect(onError).not.toHaveBeenCalled()
 
       // Reset and test error case
-      jest.clearAllMocks()
+      vi.clearAllMocks()
       onSuccess.mockClear()
       onError.mockClear()
 
@@ -497,7 +498,7 @@ describe('useChangePasswordWithBiometricMutation', () => {
         expect(mockCredentialsGet).toHaveBeenCalled()
       })
 
-      const webAuthnCall = mockCredentialsGet.mock.calls[0][0]
+      const webAuthnCall = mockCredentialsGet.mock.calls[0]![0]
       expect(webAuthnCall.publicKey).toMatchObject({
         challenge: expect.any(Uint8Array),
         allowCredentials: [
@@ -521,7 +522,7 @@ describe('useChangePasswordWithBiometricMutation', () => {
         expect(mockCredentialsGet).toHaveBeenCalled()
       })
 
-      const webAuthnCall = mockCredentialsGet.mock.calls[0][0]
+      const webAuthnCall = mockCredentialsGet.mock.calls[0]![0]
       const allowedCredential = webAuthnCall.publicKey.allowCredentials[0]
       const expectedCredentialId = Uint8Array.from(atob(mockCredentialId), (c) => c.charCodeAt(0))
 

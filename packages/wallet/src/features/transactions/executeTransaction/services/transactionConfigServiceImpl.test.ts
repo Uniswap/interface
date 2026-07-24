@@ -1,95 +1,40 @@
-import { FeatureFlags } from '@universe/gating'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { logger as loggerUtil } from 'utilities/src/logger/logger'
+import type { MockedFunction } from 'vitest'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
-import { FeatureFlagService } from 'wallet/src/features/transactions/executeTransaction/services/featureFlagService'
 import { createTransactionConfigService } from 'wallet/src/features/transactions/executeTransaction/services/transactionConfigServiceImpl'
 
-// Mock the logger
-jest.mock('utilities/src/logger/logger', () => ({
-  logger: {
-    warn: jest.fn(),
-  },
-}))
-
 // Mock the providers utils
-jest.mock('wallet/src/features/providers/utils', () => ({
-  isPrivateRpcSupportedOnChain: jest.fn(),
+vi.mock('wallet/src/features/providers/utils', () => ({
+  isPrivateRpcSupportedOnChain: vi.fn(),
 }))
 
 describe('TransactionConfigService', () => {
-  let mockFeatureFlagService: jest.Mocked<FeatureFlagService>
-  let mockLogger: jest.Mocked<typeof loggerUtil>
-  let mockIsPrivateRpcSupportedOnChain: jest.MockedFunction<typeof isPrivateRpcSupportedOnChain>
+  let mockIsPrivateRpcSupportedOnChain: MockedFunction<typeof isPrivateRpcSupportedOnChain>
   let transactionConfigService: ReturnType<typeof createTransactionConfigService>
 
   beforeEach(() => {
-    // Reset all mocks
-    jest.clearAllMocks()
+    vi.clearAllMocks()
 
-    // Create mock feature flag service
-    mockFeatureFlagService = {
-      isFeatureEnabled: jest.fn(),
-      getExperimentValue: jest.fn(),
-    }
-
-    // Create mock logger
-    mockLogger = {
-      debug: jest.fn(),
-      info: jest.fn(),
-      warn: jest.fn(),
-      error: jest.fn(),
-      setDatadogEnabled: jest.fn(),
-    } as jest.Mocked<typeof loggerUtil>
-
-    // Setup mock for isPrivateRpcSupportedOnChain
-    mockIsPrivateRpcSupportedOnChain = isPrivateRpcSupportedOnChain as jest.MockedFunction<
+    mockIsPrivateRpcSupportedOnChain = isPrivateRpcSupportedOnChain as MockedFunction<
       typeof isPrivateRpcSupportedOnChain
     >
 
-    // Create service instance
-    transactionConfigService = createTransactionConfigService({
-      featureFlagService: mockFeatureFlagService,
-      logger: mockLogger,
-    })
+    transactionConfigService = createTransactionConfigService()
   })
 
   describe('isPrivateRpcEnabled', () => {
-    it('should return true when PrivateRpc feature flag is enabled', () => {
-      mockFeatureFlagService.isFeatureEnabled.mockReturnValue(true)
-
+    it('should always return true', () => {
       const result = transactionConfigService.isPrivateRpcEnabled()
 
       expect(result).toBe(true)
-      expect(mockFeatureFlagService.isFeatureEnabled).toHaveBeenCalledWith(FeatureFlags.PrivateRpc)
     })
+  })
 
-    it('should return false when PrivateRpc feature flag is disabled', () => {
-      mockFeatureFlagService.isFeatureEnabled.mockReturnValue(false)
+  describe('getPrivateRpcConfig', () => {
+    it('should return flashbots enabled by default', () => {
+      const result = transactionConfigService.getPrivateRpcConfig()
 
-      const result = transactionConfigService.isPrivateRpcEnabled()
-
-      expect(result).toBe(false)
-      expect(mockFeatureFlagService.isFeatureEnabled).toHaveBeenCalledWith(FeatureFlags.PrivateRpc)
-    })
-
-    it('should return false and log warning when feature flag service throws an error', () => {
-      const error = new Error('Feature flag service error')
-      mockFeatureFlagService.isFeatureEnabled.mockImplementation(() => {
-        throw error
-      })
-
-      const result = transactionConfigService.isPrivateRpcEnabled()
-
-      expect(result).toBe(false)
-      expect(mockLogger.warn).toHaveBeenCalledWith(
-        'TransactionConfigService',
-        'isPrivateRpcEnabled',
-        'Error checking feature flag',
-        {
-          error: 'Feature flag service error',
-        },
-      )
+      expect(result).toEqual({ flashbotsEnabled: true })
     })
   })
 
@@ -127,12 +72,10 @@ describe('TransactionConfigService', () => {
 
   describe('shouldUsePrivateRpc', () => {
     beforeEach(() => {
-      // Setup default mock behavior
-      mockFeatureFlagService.isFeatureEnabled.mockReturnValue(true)
       mockIsPrivateRpcSupportedOnChain.mockReturnValue(true)
     })
 
-    it('should return true when all conditions are met: submitViaPrivateRpc=true, private RPC enabled, and chain supports private RPC', () => {
+    it('should return true when all conditions are met: submitViaPrivateRpc=true and chain supports private RPC', () => {
       mockIsPrivateRpcSupportedOnChain.mockReturnValue(true)
 
       const result = transactionConfigService.shouldUsePrivateRpc({
@@ -144,7 +87,7 @@ describe('TransactionConfigService', () => {
       expect(mockIsPrivateRpcSupportedOnChain).toHaveBeenCalledWith(UniverseChainId.Mainnet)
     })
 
-    it('should return false when submitViaPrivateRpc is false, even if private RPC is enabled and chain supports private RPC', () => {
+    it('should return false when submitViaPrivateRpc is false, even if chain supports private RPC', () => {
       mockIsPrivateRpcSupportedOnChain.mockReturnValue(true)
 
       const result = transactionConfigService.shouldUsePrivateRpc({
@@ -155,7 +98,7 @@ describe('TransactionConfigService', () => {
       expect(result).toBe(false)
     })
 
-    it('should return false when submitViaPrivateRpc is undefined, even if private RPC is enabled and chain supports private RPC', () => {
+    it('should return false when submitViaPrivateRpc is undefined, even if chain supports private RPC', () => {
       mockIsPrivateRpcSupportedOnChain.mockReturnValue(true)
 
       const result = transactionConfigService.shouldUsePrivateRpc({
@@ -166,19 +109,7 @@ describe('TransactionConfigService', () => {
       expect(result).toBe(false)
     })
 
-    it('should return false when private RPC is disabled, even if submitViaPrivateRpc=true and chain supports private RPC', () => {
-      mockFeatureFlagService.isFeatureEnabled.mockReturnValue(false)
-      mockIsPrivateRpcSupportedOnChain.mockReturnValue(true)
-
-      const result = transactionConfigService.shouldUsePrivateRpc({
-        chainId: UniverseChainId.Mainnet,
-        submitViaPrivateRpc: true,
-      })
-
-      expect(result).toBe(false)
-    })
-
-    it('should return false when chain does not support private RPC, even if submitViaPrivateRpc=true and private RPC is enabled', () => {
+    it('should return false when chain does not support private RPC, even if submitViaPrivateRpc=true', () => {
       mockIsPrivateRpcSupportedOnChain.mockReturnValue(false)
 
       const result = transactionConfigService.shouldUsePrivateRpc({
@@ -190,8 +121,7 @@ describe('TransactionConfigService', () => {
       expect(mockIsPrivateRpcSupportedOnChain).toHaveBeenCalledWith(UniverseChainId.ArbitrumOne)
     })
 
-    it('should return false when all conditions are false: submitViaPrivateRpc=false, private RPC disabled, and chain does not support private RPC', () => {
-      mockFeatureFlagService.isFeatureEnabled.mockReturnValue(false)
+    it('should return false when all conditions are false: submitViaPrivateRpc=false and chain does not support private RPC', () => {
       mockIsPrivateRpcSupportedOnChain.mockReturnValue(false)
 
       const result = transactionConfigService.shouldUsePrivateRpc({
@@ -202,25 +132,9 @@ describe('TransactionConfigService', () => {
       expect(result).toBe(false)
     })
 
-    it('should handle error in isPrivateRpcEnabled and still return false', () => {
-      // Make isPrivateRpcEnabled throw an error (which should return false internally)
-      mockFeatureFlagService.isFeatureEnabled.mockImplementation(() => {
-        throw new Error('Feature flag error')
-      })
-      mockIsPrivateRpcSupportedOnChain.mockReturnValue(true)
-
-      const result = transactionConfigService.shouldUsePrivateRpc({
-        chainId: UniverseChainId.Mainnet,
-        submitViaPrivateRpc: true,
-      })
-
-      expect(result).toBe(false)
-    })
-
     it('should work correctly for different chains that support private RPC', () => {
       mockIsPrivateRpcSupportedOnChain.mockReturnValue(true)
 
-      // Test with a different chain that supports private RPC
       const result = transactionConfigService.shouldUsePrivateRpc({
         chainId: UniverseChainId.Polygon,
         submitViaPrivateRpc: true,

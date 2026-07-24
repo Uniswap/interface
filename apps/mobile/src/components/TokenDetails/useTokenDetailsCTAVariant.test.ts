@@ -3,9 +3,9 @@ import { useMultichainBuyVariant } from 'src/components/TokenDetails/useTokenDet
 import { Bank } from 'ui/src/components/icons'
 
 const defaultHandlers = {
-  onPressBuyWithCash: jest.fn(),
-  onPressGet: jest.fn(),
-  onPressBuy: jest.fn(),
+  onPressBuyWithCash: vi.fn(),
+  onPressGet: vi.fn(),
+  onPressBuy: vi.fn(),
 }
 
 const defaultParams = {
@@ -20,7 +20,7 @@ const defaultParams = {
 }
 
 describe(useMultichainBuyVariant, () => {
-  beforeEach(() => jest.clearAllMocks())
+  beforeEach(() => vi.clearAllMocks())
 
   it('should return onPressBuy with no custom title when user has balance', () => {
     const { result } = renderHook(() =>
@@ -42,7 +42,7 @@ describe(useMultichainBuyVariant, () => {
       }),
     )
 
-    expect(result.current.title).toBe('Buy with cash')
+    expect(result.current.title).toBe('fiatOnRamp.action.buyWithCash')
     expect(result.current.icon).toBe(Bank)
     expect(result.current.onPress).toBe(defaultHandlers.onPressBuyWithCash)
   })
@@ -56,7 +56,7 @@ describe(useMultichainBuyVariant, () => {
       }),
     )
 
-    expect(result.current.title).toBe('Buy with cash')
+    expect(result.current.title).toBe('fiatOnRamp.action.buyWithCash')
     expect(result.current.icon).toBe(Bank)
     expect(result.current.onPress).toBe(defaultHandlers.onPressBuyWithCash)
   })
@@ -71,7 +71,7 @@ describe(useMultichainBuyVariant, () => {
       }),
     )
 
-    expect(result.current.title).toBe('Get UNI')
+    expect(result.current.title).toBe('tdp.button.getToken')
     expect(result.current.onPress).toBe(defaultHandlers.onPressGet)
   })
 
@@ -85,7 +85,7 @@ describe(useMultichainBuyVariant, () => {
       }),
     )
 
-    expect(result.current.title).toBe('Get Token')
+    expect(result.current.title).toBe('tdp.button.getTokenFallback')
     expect(result.current.onPress).toBe(defaultHandlers.onPressGet)
   })
 
@@ -99,7 +99,7 @@ describe(useMultichainBuyVariant, () => {
       }),
     )
 
-    expect(result.current.title).toBe('Buy with cash')
+    expect(result.current.title).toBe('fiatOnRamp.action.buyWithCash')
     expect(result.current.onPress).toBe(defaultHandlers.onPressBuyWithCash)
   })
 
@@ -113,7 +113,7 @@ describe(useMultichainBuyVariant, () => {
       }),
     )
 
-    expect(result.current.title).toBe('Get MON')
+    expect(result.current.title).toBe('tdp.button.getToken')
     expect(result.current.onPress).toBe(defaultHandlers.onPressGet)
   })
 

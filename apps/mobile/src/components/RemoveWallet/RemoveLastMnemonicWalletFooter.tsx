@@ -35,7 +35,7 @@ export function RemoveLastMnemonicWalletFooter({
           fill
           lineHeightDisabled
           size="large"
-          isDisabled={!checkBoxAccepted}
+          disabled={!checkBoxAccepted}
           icon={inProgress ? <SpinningLoader color="$statusCritical" /> : undefined}
           testID={TestID.Confirm}
           variant="critical"

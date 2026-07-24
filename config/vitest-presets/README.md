@@ -1,6 +1,6 @@
 # Vitest Presets
 
-This package provides Vitest configuration presets that mirror the functionality of jest-presets.
+This package provides Vitest configuration presets that mirror the functionality of the (now removed) jest-presets package.
 
 ## Usage
 

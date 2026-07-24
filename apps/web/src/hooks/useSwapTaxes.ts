@@ -1,15 +1,16 @@
 import { Percent } from '@uniswap/sdk-core'
 import { WETH_ADDRESS as getWethAddress } from '@uniswap/universal-router-sdk'
 import { useEffect, useMemo, useState } from 'react'
-import FOT_DETECTOR_ABI from 'uniswap/src/abis/fee-on-transfer-detector.json'
-import { FeeOnTransferDetector } from 'uniswap/src/abis/types'
 import { EVMUniverseChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
-import { getContract } from 'utilities/src/contracts/getContract'
 import { logger } from 'utilities/src/logger/logger'
+import { type Address, type ChainContract, createContract, feeOnTransferDetectorAbi } from '~/chains'
 import { BIPS_BASE, ZERO_PERCENT } from '~/constants/misc'
 import { getInterfaceProvider } from '~/constants/providers'
 import { useAccount } from '~/hooks/useAccount'
+import { assume0xAddress } from '~/utils/wagmi'
+
+type FeeOnTransferDetectorContract = ChainContract<typeof feeOnTransferDetectorAbi>
 
 // TODO(WEB-4058): Move all of these contract addresses into the top-level wagmi config
 function getFeeOnTransferAddress(chainId?: EVMUniverseChainId) {
@@ -35,7 +36,7 @@ function getFeeOnTransferAddress(chainId?: EVMUniverseChainId) {
   }
 }
 
-function useFeeOnTransferDetectorContract(chainId?: UniverseChainId): FeeOnTransferDetector | null {
+function useFeeOnTransferDetectorContract(chainId?: UniverseChainId): FeeOnTransferDetectorContract | null {
   return useMemo(() => {
     if (!chainId || !isEVMChain(chainId)) {
       return null
@@ -46,7 +47,7 @@ function useFeeOnTransferDetectorContract(chainId?: UniverseChainId): FeeOnTrans
       return null
     }
     try {
-      return getContract({ address, ABI: FOT_DETECTOR_ABI, provider }) as FeeOnTransferDetector
+      return createContract({ address, abi: feeOnTransferDetectorAbi, provider })
     } catch (error) {
       logger.warn('useSwapTaxes', 'useFeeOnTransferDetectorContract', 'Failed to construct FOT detector', { error })
       return null
@@ -54,7 +55,7 @@ function useFeeOnTransferDetectorContract(chainId?: UniverseChainId): FeeOnTrans
   }, [chainId])
 }
 
-const AMOUNT_TO_BORROW = 10000 // smallest amount that has full precision over bps
+const AMOUNT_TO_BORROW = 10000n // smallest amount that has full precision over bps
 
 const FEE_CACHE: { [address in string]?: { sellTax?: Percent; buyTax?: Percent } } = {}
 
@@ -64,28 +65,32 @@ async function getSwapTaxes({
   outputTokenAddress,
   chainId,
 }: {
-  fotDetector: FeeOnTransferDetector
+  fotDetector: FeeOnTransferDetectorContract
   inputTokenAddress?: string
   outputTokenAddress?: string
   chainId: UniverseChainId
 }) {
-  const addresses = []
+  const addresses: Address[] = []
   if (inputTokenAddress && FEE_CACHE[inputTokenAddress] === undefined) {
-    addresses.push(inputTokenAddress)
+    addresses.push(assume0xAddress(inputTokenAddress))
   }
 
   if (outputTokenAddress && FEE_CACHE[outputTokenAddress] === undefined) {
-    addresses.push(outputTokenAddress)
+    addresses.push(assume0xAddress(outputTokenAddress))
   }
 
   try {
     if (addresses.length) {
-      const data = await fotDetector.callStatic.batchValidate(addresses, getWethAddress(chainId), AMOUNT_TO_BORROW)
+      const { result: data } = await fotDetector.simulate.batchValidate([
+        addresses,
+        assume0xAddress(getWethAddress(chainId)),
+        AMOUNT_TO_BORROW,
+      ])
 
       addresses.forEach((address, index) => {
         const { sellFeeBps, buyFeeBps } = data[index]
-        const sellTax = new Percent(sellFeeBps.toNumber(), BIPS_BASE)
-        const buyTax = new Percent(buyFeeBps.toNumber(), BIPS_BASE)
+        const sellTax = new Percent(Number(sellFeeBps), BIPS_BASE)
+        const buyTax = new Percent(Number(buyFeeBps), BIPS_BASE)
 
         FEE_CACHE[address] = { sellTax, buyTax }
       })

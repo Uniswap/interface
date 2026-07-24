@@ -3,13 +3,19 @@ import { useEffect, useMemo } from 'react'
 import { Flex } from 'ui/src'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DappRequestFooter } from 'wallet/src/components/dappRequests/DappRequestFooter'
+import { isV3NonfungiblePositionManager } from 'wallet/src/components/dappRequests/DappSendCallsScanningContent'
 import { useTypedDataWarningConfirmation } from 'wallet/src/components/dappRequests/hooks/useTypedDataWarningConfirmation'
+import { NFTPermitContent } from 'wallet/src/components/dappRequests/SignTypedData/NFTPermitContent'
 import { NonStandardTypedDataContent } from 'wallet/src/components/dappRequests/SignTypedData/NonStandardTypedDataContent'
 import { Permit2Content } from 'wallet/src/components/dappRequests/SignTypedData/Permit2Content'
 import { StandardTypedDataContent } from 'wallet/src/components/dappRequests/SignTypedData/StandardTypedDataContent'
 import { TransactionLoadingState } from 'wallet/src/components/dappRequests/TransactionLoadingState'
 import { TransactionPreviewCard } from 'wallet/src/components/dappRequests/TransactionPreviewCard'
-import { isEIP712TypedData } from 'wallet/src/components/dappRequests/types/EIP712Types'
+import {
+  type EIP712DomainType,
+  type EIP712Message,
+  isEIP712TypedData,
+} from 'wallet/src/components/dappRequests/types/EIP712Types'
 import { isPermit2 } from 'wallet/src/components/dappRequests/types/Permit2Types'
 import { useTypedDataSections } from 'wallet/src/features/dappRequests/hooks/useTypedDataSections'
 import type { TransactionRiskLevel } from 'wallet/src/features/dappRequests/types'
@@ -56,6 +62,28 @@ export function DappSignTypedDataContent({
     }
   }, [typedData])
 
+  // Detect NFT permit (V3 position approval) for enriched rendering
+  const nftPermitInfo = useMemo(():
+    | { contractAddress: string | undefined; tokenId: string; domain: EIP712DomainType; message: EIP712Message }
+    | undefined => {
+    if (!isEIP712TypedData(parsedTypedData)) {
+      return undefined
+    }
+    if (parsedTypedData.primaryType !== 'Permit' || parsedTypedData.message['tokenId'] === undefined) {
+      return undefined
+    }
+    const contractAddress = parsedTypedData.domain?.verifyingContract
+    if (!isV3NonfungiblePositionManager(contractAddress, chainId)) {
+      return undefined
+    }
+    return {
+      contractAddress,
+      tokenId: String(parsedTypedData.message['tokenId']),
+      domain: parsedTypedData.domain || {},
+      message: parsedTypedData.message,
+    }
+  }, [parsedTypedData, chainId])
+
   // Get transaction sections - handles both UniswapX and regular typed data via Blockaid
   const { sections, riskLevel, isLoading } = useTypedDataSections({
     parsedTypedData,
@@ -67,6 +95,7 @@ export function DappSignTypedDataContent({
   })
 
   const hasAssetChanges = sections.length > 0
+
   const isNonStandard = !isEIP712TypedData(parsedTypedData)
 
   // Manage warning confirmations for non-standard and risk-based warnings
@@ -101,6 +130,10 @@ export function DappSignTypedDataContent({
 
     if (isPermit2(parsedTypedData)) {
       return <Permit2Content typedData={typedData} />
+    }
+
+    if (nftPermitInfo) {
+      return <NFTPermitContent domain={nftPermitInfo.domain} message={nftPermitInfo.message} chainId={chainId} />
     }
 
     return <StandardTypedDataContent domain={parsedTypedData.domain || {}} message={parsedTypedData.message} />

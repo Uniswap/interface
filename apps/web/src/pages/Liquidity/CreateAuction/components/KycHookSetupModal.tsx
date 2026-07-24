@@ -19,15 +19,17 @@ import { Page } from 'ui/src/components/icons/Page'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { UserCheck } from 'ui/src/components/icons/UserCheck'
 import { fonts } from 'ui/src/theme/fonts'
+import { CopyHelper } from 'uniswap/src/components/CopyHelper/CopyHelper'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { AuctionQueryClient } from 'uniswap/src/data/apiClients/liquidityService/AuctionQueryClient'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress, shortenHash } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { isAddress } from '~/chains'
-import { CopyHelper } from '~/theme/components/CopyHelper'
 import { ExternalLink } from '~/theme/components/Links'
 
 const KYC_HOOK_PLACEHOLDER_ADDRESS = '0x1234567890123456789012345678901234567891'
@@ -183,25 +185,27 @@ export function KycHookSetupModal({
                     borderColor={submitError ? '$statusCritical' : '$surface3'}
                     borderRadius="$rounded16"
                   >
-                    <Input
-                      flex={1}
-                      value={draftAddress}
-                      onChangeText={(text) => {
-                        setDraftAddress(text)
-                        if (submitError) {
-                          setSubmitError(null)
-                        }
-                      }}
-                      placeholder={shortenAddress({ address: KYC_HOOK_PLACEHOLDER_ADDRESS, chars: 6 })}
-                      placeholderTextColor="$neutral3"
-                      height={fonts.subheading2.lineHeight}
-                      fontSize={fonts.subheading2.fontSize}
-                      lineHeight={fonts.subheading2.lineHeight}
-                      fontWeight={fonts.subheading2.fontWeight}
-                      color="$neutral1"
-                      px="$none"
-                      backgroundColor="$transparent"
-                    />
+                    <Trace logFocus element={ElementName.AuctionValidationHookAddress}>
+                      <Input
+                        flex={1}
+                        value={draftAddress}
+                        onChangeText={(text) => {
+                          setDraftAddress(text)
+                          if (submitError) {
+                            setSubmitError(null)
+                          }
+                        }}
+                        placeholder={shortenAddress({ address: KYC_HOOK_PLACEHOLDER_ADDRESS, chars: 6 })}
+                        placeholderTextColor="$neutral3"
+                        height={fonts.subheading2.lineHeight}
+                        fontSize={fonts.subheading2.fontSize}
+                        lineHeight={fonts.subheading2.lineHeight}
+                        fontWeight={fonts.subheading2.fontWeight}
+                        color="$neutral1"
+                        px="$none"
+                        backgroundColor="$transparent"
+                      />
+                    </Trace>
                   </Flex>
                 ) : preview ? (
                   <Flex
@@ -293,7 +297,7 @@ export function KycHookSetupModal({
                   </Text>
                 ) : null}
 
-                <ExternalLink href="https://support.uniswap.org/hc/en-us">
+                <ExternalLink href={UniswapHelpUrls.articles.toucanLaunchAuctionConfigureAuctionHelp}>
                   <Text variant="buttonLabel3" color="$accent3" textAlign="center">
                     {t('toucan.createAuction.step.configureAuction.kyc.modal.helpLink')}
                   </Text>
@@ -309,7 +313,7 @@ export function KycHookSetupModal({
                   emphasis="primary"
                   minHeight="$spacing36"
                   fill
-                  isDisabled={!canSubmitEnter}
+                  disabled={!canSubmitEnter}
                   onPress={phase === 'preview' ? handleConfirmPreview : handleValidateEnter}
                 >
                   {phase === 'enter'

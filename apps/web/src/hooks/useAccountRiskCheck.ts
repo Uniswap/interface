@@ -1,16 +1,16 @@
+import { toScreenInput, useIsBlockedAddress } from '@universe/compliance'
 import { useEffect } from 'react'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { setOpenModal } from '~/state/application/reducer'
 import { useAppDispatch } from '~/state/hooks'
 
 export function useAccountRiskCheck(addresses: { evmAddress?: string; svmAddress?: string }) {
   const dispatch = useAppDispatch()
-  const { isBlocked: isEvmBlocked, isBlockedLoading: isEvmBlockedLoading } = useIsBlocked(
-    addresses.evmAddress || undefined,
+  const { isBlocked: isEvmBlocked, isBlockedLoading: isEvmBlockedLoading } = useIsBlockedAddress(
+    toScreenInput(addresses.evmAddress),
   )
-  const { isBlocked: isSvmBlocked, isBlockedLoading: isSvmBlockedLoading } = useIsBlocked(
-    addresses.svmAddress || undefined,
+  const { isBlocked: isSvmBlocked, isBlockedLoading: isSvmBlockedLoading } = useIsBlockedAddress(
+    toScreenInput(addresses.svmAddress),
   )
 
   useEffect(() => {

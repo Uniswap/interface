@@ -4,7 +4,6 @@ import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
 import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo, useReducer, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, useMedia } from 'ui/src'
@@ -14,6 +13,7 @@ import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
@@ -34,7 +34,6 @@ import { EllipsisText, TableText } from '~/components/Table/shared/TableText'
 import { TimestampCell } from '~/components/Table/shared/TimestampCell'
 import { TokenLinkCell } from '~/components/Table/shared/TokenLinkCell'
 import { FilterHeaderRow, HeaderCell } from '~/components/Table/styled'
-import { TokenHoverCard } from '~/components/TokenHoverCard/TokenHoverCard'
 import { useUpdateManualOutage } from '~/hooks/useUpdateManualOutage'
 import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
 
@@ -64,7 +63,6 @@ export function TransactionsTable({
   isMultichainView: boolean
 }) {
   const { t } = useTranslation()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const activeLocalCurrency = useAppFiatCurrency()
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
@@ -224,7 +222,7 @@ export function TransactionsTable({
           header: () => (
             <HeaderCell justifyContent="flex-end">
               <Text variant="body3" color="$neutral2">
-                ${unwrappedReferenceToken.symbol}
+                {getSymbolDisplayText(unwrappedReferenceToken.symbol)}
               </Text>
             </HeaderCell>
           ),
@@ -256,9 +254,7 @@ export function TransactionsTable({
                   type: NumberType.TokenQuantityStats,
                 })}
               </EllipsisText>
-              <TokenHoverCard token={nonReferenceSwapLeg.token}>
-                <TokenLinkCell token={nonReferenceSwapLeg.token} />
-              </TokenHoverCard>
+              <TokenLinkCell token={nonReferenceSwapLeg.token} />
             </Flex>
           )
         },
@@ -341,7 +337,6 @@ export function TransactionsTable({
         data={data}
         loading={allDataStillLoading}
         error={combinedError}
-        v2={multichainTokenUxEnabled}
         loadMore={loadMore}
         maxHeight={600}
         defaultPinnedColumns={['timestamp', 'swap-type']}

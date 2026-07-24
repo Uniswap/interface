@@ -1,8 +1,9 @@
 import { To, useLocation } from 'react-router'
 import { UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
+import type { EarnAnalyticsEntryPoint } from 'uniswap/src/features/telemetry/types'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { getEarnVaultUrl, getTokenUrl } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
@@ -138,12 +139,18 @@ export async function focusOrCreateTokensExploreTab({ currencyId }: { currencyId
     url,
     // We want to reuse the active tab only if it's already in any other TDP.
     // oxlint-disable-next-line security/detect-non-literal-regexp
-    reuseActiveTabIfItMatches: new RegExp(`^${escapeRegExp(uniswapUrls.webInterfaceTokensUrl)}`),
+    reuseActiveTabIfItMatches: new RegExp(`^${escapeRegExp(UniswapStaticUrls.webInterfaceTokensUrl)}`),
   })
 }
 
-export async function focusOrCreateEarnVaultTab({ vault }: { vault: EarnVaultInfo }): Promise<void> {
-  const url = getEarnVaultUrl(vault)
+export async function focusOrCreateEarnVaultTab({
+  analyticsEntryPoint,
+  vault,
+}: {
+  analyticsEntryPoint?: EarnAnalyticsEntryPoint
+  vault: EarnVaultInfo
+}): Promise<void> {
+  const url = getEarnVaultUrl(vault, analyticsEntryPoint)
 
   if (!url) {
     logger.error(new Error('Failed to get earn vault URL'), {
@@ -157,7 +164,7 @@ export async function focusOrCreateEarnVaultTab({ vault }: { vault: EarnVaultInf
     url,
     // We want to reuse the active tab only if it's already in any other TDP.
     // oxlint-disable-next-line security/detect-non-literal-regexp
-    reuseActiveTabIfItMatches: new RegExp(`^${escapeRegExp(uniswapUrls.webInterfaceTokensUrl)}`),
+    reuseActiveTabIfItMatches: new RegExp(`^${escapeRegExp(UniswapStaticUrls.webInterfaceTokensUrl)}`),
   })
 }
 

@@ -28,10 +28,7 @@
       "command": "argent",
       "args": [
         "mcp"
-      ],
-      "env": {
-        "ARGENT_MCP_LOG": "~/.argent/mcp-calls.log"
-      }
+      ]
     }
   }
 }

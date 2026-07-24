@@ -1,4 +1,5 @@
 import { isWebPlatform } from '@universe/environment'
+import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
 import { CurrencyInputPanel } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel'
@@ -9,7 +10,7 @@ import { useCurrencyInputFocusedStyle } from 'uniswap/src/features/transactions/
 import { WalletRestoreButton } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/WalletRestoreButton'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
-export function SwapFormCurrencyOutputPanel(): JSX.Element {
+export const SwapFormCurrencyOutputPanel = memo(function SwapFormCurrencyOutputPanel(): JSX.Element {
   const { t } = useTranslation()
 
   const {
@@ -97,4 +98,4 @@ export function SwapFormCurrencyOutputPanel(): JSX.Element {
       </Flex>
     </Trace>
   )
-}
+})

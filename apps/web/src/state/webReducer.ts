@@ -1,3 +1,4 @@
+// oxlint-disable import/no-cycle -- sagas and redux store have many cycles, deep refactoring is needed
 import { combineReducers } from '@reduxjs/toolkit'
 import { uniswapPersistedStateList, uniswapReducers } from 'uniswap/src/state/uniswapReducer'
 import application from '~/state/application/reducer'

@@ -21,6 +21,12 @@ export { BannerTemplate } from './notification-renderer/components/BannerTemplat
 export { InlineBannerNotification } from './notification-renderer/components/InlineBannerNotification'
 export { createNotificationRenderer } from './notification-renderer/implementations/createNotificationRenderer'
 export { type NotificationRenderer } from './notification-renderer/NotificationRenderer'
+export {
+  CUSTOM_ICON_MAP,
+  getCustomIconComponent,
+  type ParsedCustomIcon,
+  parseCustomIconLink,
+} from './notification-renderer/utils/iconUtils'
 export { createNotificationService } from './notification-service/implementations/createNotificationService'
 export {
   type NotificationClickTarget,

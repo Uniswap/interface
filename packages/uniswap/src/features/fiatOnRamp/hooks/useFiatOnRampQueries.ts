@@ -21,24 +21,10 @@ import {
   WidgetUrlRequest,
   WidgetUrlResponse,
 } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { config } from 'uniswap/src/config'
 import { ForApiClient } from 'uniswap/src/data/apiClients/forApi/ForApiClient'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { ONE_HOUR_MS, ONE_MINUTE_MS } from 'utilities/src/time/time'
-
-/**
- * Returns whether sessions are ready for FOR API requests.
- * When both ForUrlMigration and ForSessionsEnabled are off (legacy mode),
- * session gating is skipped since sessions aren't required.
- */
-function useForSessionReady(): boolean {
-  const isSessionInitialized = useIsSessionInitialized()
-  const isForUrlMigration = useFeatureFlag(FeatureFlags.ForUrlMigration)
-  const isForSessionsEnabled = useFeatureFlag(FeatureFlags.ForSessionsEnabled)
-  const requiresSessionGating = isForUrlMigration || isForSessionsEnabled
-  return !requiresSessionGating || isSessionInitialized
-}
 
 /**
  * Query key factory for FOR API
@@ -136,9 +122,9 @@ export function useFiatOnRampAggregatorCryptoQuoteQuery(
   params: PlainMessage<QuoteRequest> | typeof skipToken,
   options?: QueryHookOptions,
 ): UseQueryResult<FORQuoteResponse, Error> {
-  const isSessionReady = useForSessionReady()
+  const isSessionInitialized = useIsSessionInitialized()
   const validParams = params !== skipToken ? params : undefined
-  const skip = options?.skip || !validParams || !isSessionReady
+  const skip = options?.skip || !validParams || !isSessionInitialized
 
   return useQuery<FORQuoteResponse, Error>({
     queryKey: validParams && !skip ? forQueryKeys.quote(validParams) : forQueryKeys.all,
@@ -225,9 +211,9 @@ export function useFiatOnRampAggregatorWidgetQuery(
   params: PlainMessage<WidgetUrlRequest> | typeof skipToken,
   options?: QueryHookOptions,
 ): UseQueryResult<WidgetUrlResponse, Error> {
-  const isSessionReady = useForSessionReady()
+  const isSessionInitialized = useIsSessionInitialized()
   const validParams = params !== skipToken ? params : undefined
-  const skip = options?.skip || !validParams || !isSessionReady
+  const skip = options?.skip || !validParams || !isSessionInitialized
 
   return useQuery<WidgetUrlResponse, Error>({
     queryKey: validParams && !skip ? forQueryKeys.widgetUrl(validParams) : forQueryKeys.all,
@@ -247,9 +233,9 @@ export function useFiatOnRampAggregatorTransferWidgetQuery(
   params: PlainMessage<TransferWidgetUrlRequest> | typeof skipToken,
   options?: QueryHookOptions,
 ): UseQueryResult<WidgetUrlResponse, Error> {
-  const isSessionReady = useForSessionReady()
+  const isSessionInitialized = useIsSessionInitialized()
   const validParams = params !== skipToken ? params : undefined
-  const skip = options?.skip || !validParams || !isSessionReady
+  const skip = options?.skip || !validParams || !isSessionInitialized
 
   return useQuery<WidgetUrlResponse, Error>({
     queryKey: validParams && !skip ? forQueryKeys.transferWidgetUrl(validParams) : forQueryKeys.all,
@@ -271,9 +257,9 @@ export function useFiatOnRampAggregatorTransactionQuery(
   params: (PlainMessage<TransactionRequest> & { sessionId: string }) | typeof skipToken,
   options?: QueryHookOptions,
 ): UseQueryResult<TransactionResponse, Error> {
-  const isSessionReady = useForSessionReady()
+  const isSessionInitialized = useIsSessionInitialized()
   const validParams = params !== skipToken ? params : undefined
-  const skip = options?.skip || !validParams || !isSessionReady
+  const skip = options?.skip || !validParams || !isSessionInitialized
 
   return useQuery<TransactionResponse, Error>({
     queryKey: validParams && !skip ? forQueryKeys.transaction(validParams) : forQueryKeys.all,
@@ -293,9 +279,9 @@ export function useFiatOnRampAggregatorOffRampWidgetQuery(
   params: PlainMessage<OffRampWidgetUrlRequest> | typeof skipToken,
   options?: QueryHookOptions,
 ): UseQueryResult<WidgetUrlResponse, Error> {
-  const isSessionReady = useForSessionReady()
+  const isSessionInitialized = useIsSessionInitialized()
   const validParams = params !== skipToken ? params : undefined
-  const skip = options?.skip || !validParams || !isSessionReady
+  const skip = options?.skip || !validParams || !isSessionInitialized
 
   return useQuery<WidgetUrlResponse, Error>({
     queryKey: validParams && !skip ? forQueryKeys.offRampWidgetUrl(validParams) : forQueryKeys.all,
@@ -317,9 +303,9 @@ export function useFiatOnRampAggregatorOffRampTransferDetailsQuery(
   params: PlainMessage<OffRampTransferDetailsRequest> | typeof skipToken,
   options?: QueryHookOptions,
 ): UseQueryResult<OffRampTransferDetailsResponse, Error> {
-  const isSessionReady = useForSessionReady()
+  const isSessionInitialized = useIsSessionInitialized()
   const validParams = params !== skipToken ? params : undefined
-  const skip = options?.skip || !validParams || !isSessionReady
+  const skip = options?.skip || !validParams || !isSessionInitialized
 
   return useQuery<OffRampTransferDetailsResponse, Error>({
     queryKey: validParams && !skip ? forQueryKeys.offRampTransferDetails(validParams) : forQueryKeys.all,

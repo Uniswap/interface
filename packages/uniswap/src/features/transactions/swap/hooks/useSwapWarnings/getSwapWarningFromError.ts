@@ -1,7 +1,14 @@
 import { FetchError, isRateLimitFetchError, TradingApi } from '@universe/api'
 import { TFunction } from 'i18next'
 import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { SponsoredApprovalRejectedError } from 'uniswap/src/features/transactions/errors'
+import { GasSponsorshipNotAppliedError } from 'uniswap/src/features/transactions/swap/errors'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+
+// Classic/bridge/wrap surface non-delivery as GasSponsorshipNotAppliedError; UniswapX as SponsoredApprovalRejectedError.
+export function isGasSponsorshipFailureError(error: Error): boolean {
+  return error instanceof GasSponsorshipNotAppliedError || error instanceof SponsoredApprovalRejectedError
+}
 
 export function getSwapWarningFromError({
   error,
@@ -15,6 +22,17 @@ export function getSwapWarningFromError({
   // Trade object is null for quote not found case
   const isBridgeTrade =
     derivedSwapInfo.currencies.input?.currency.chainId !== derivedSwapInfo.currencies.output?.currency.chainId
+
+  // Sponsorship promised at quote but not delivered downstream — block submission rather than charge the user.
+  if (isGasSponsorshipFailureError(error)) {
+    return {
+      type: WarningLabel.GasSponsorshipFailed,
+      severity: WarningSeverity.High,
+      action: WarningAction.DisableSubmit,
+      title: t('swap.warning.gasSponsorshipFailed.title'),
+      message: t('swap.warning.gasSponsorshipFailed.message'),
+    }
+  }
 
   if (error instanceof FetchError) {
     // Special case: rate limit errors are not parsed by errorCode

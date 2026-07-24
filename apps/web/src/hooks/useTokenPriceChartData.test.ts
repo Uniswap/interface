@@ -1,7 +1,15 @@
 import { GraphQLApi } from '@universe/api'
+import { PollingInterval } from 'uniswap/src/constants/misc'
+import { TimePeriod } from '~/appGraphql/data/util'
+import type { PriceChartData } from '~/components/Charts/PriceChart'
 import { ChartType, DataQuality, PriceChartType } from '~/components/Charts/utils'
-import { useTokenPriceChartData } from '~/hooks/useTokenPriceChartData'
-import { renderHook } from '~/test-utils/render'
+import {
+  getCalculatedPricePercentChange,
+  getDisplayedPricePercentChange,
+  toStrictlyAscendingByTime,
+  useTokenPriceChartData,
+} from '~/hooks/useTokenPriceChartData'
+import { act, renderHook } from '~/test-utils/render'
 
 const { mockUseTokenPriceQuery, mockUseTokenPriceHistoryQuery } = vi.hoisted(() => {
   const mockUseTokenPriceQuery = vi.fn()
@@ -70,6 +78,7 @@ function makeSubgraphResult(priceHistory: typeof SUBGRAPH_PRICE_HISTORY, ohlc: t
   return {
     data: { token: { market: { priceHistory, ohlc, price: { value: 12 } } } },
     loading: false,
+    refetch: vi.fn().mockResolvedValue(undefined),
   }
 }
 
@@ -94,6 +103,10 @@ describe('useTokenPriceChartData', () => {
   beforeEach(() => {
     mockUseTokenPriceQuery.mockReturnValue(makeSubgraphResult(SUBGRAPH_PRICE_HISTORY))
     mockUseTokenPriceHistoryQuery.mockReturnValue(makeCoinGeckoResult(COINGECKO_PRICE_HISTORY))
+    Object.defineProperty(document, 'visibilityState', {
+      configurable: true,
+      get: () => 'visible',
+    })
   })
 
   it('uses CoinGecko price history when it returns data', () => {
@@ -238,5 +251,181 @@ describe('useTokenPriceChartData', () => {
     expect(result.current.loading).toBe(false)
     expect(result.current.dataQuality).toBe(DataQuality.VALID)
     expect(result.current.entries[0].value).toBe(9)
+  })
+
+  it('pauses price polling when tab is hidden', () => {
+    Object.defineProperty(document, 'visibilityState', {
+      configurable: true,
+      get: () => 'hidden',
+    })
+
+    renderHook(() =>
+      useTokenPriceChartData({
+        variables: BASE_VARIABLES,
+        skip: false,
+        priceChartType: PriceChartType.LINE,
+      }),
+    )
+
+    expect(mockUseTokenPriceQuery).toHaveBeenLastCalledWith(expect.objectContaining({ pollInterval: 0 }))
+  })
+
+  it('polls at the normal rate when tab is visible', () => {
+    renderHook(() =>
+      useTokenPriceChartData({
+        variables: BASE_VARIABLES,
+        skip: false,
+        priceChartType: PriceChartType.LINE,
+      }),
+    )
+
+    expect(mockUseTokenPriceQuery).toHaveBeenLastCalledWith(
+      expect.objectContaining({ pollInterval: PollingInterval.KindaFast }),
+    )
+  })
+
+  it('fires an immediate refetch when the tab becomes visible after being hidden', async () => {
+    const mockRefetch = vi.fn().mockResolvedValue(undefined)
+    mockUseTokenPriceQuery.mockReturnValue({ ...makeSubgraphResult(SUBGRAPH_PRICE_HISTORY), refetch: mockRefetch })
+
+    Object.defineProperty(document, 'visibilityState', {
+      configurable: true,
+      get: () => 'hidden',
+    })
+
+    renderHook(() =>
+      useTokenPriceChartData({
+        variables: BASE_VARIABLES,
+        skip: false,
+        priceChartType: PriceChartType.LINE,
+      }),
+    )
+
+    expect(mockRefetch).not.toHaveBeenCalled()
+
+    Object.defineProperty(document, 'visibilityState', {
+      configurable: true,
+      get: () => 'visible',
+    })
+
+    await act(async () => {
+      document.dispatchEvent(new Event('visibilitychange'))
+    })
+
+    expect(mockRefetch).toHaveBeenCalledOnce()
+  })
+
+  it('does not refetch when skip is true and tab becomes visible', async () => {
+    const mockRefetch = vi.fn().mockResolvedValue(undefined)
+    mockUseTokenPriceQuery.mockReturnValue({ ...makeSubgraphResult(SUBGRAPH_PRICE_HISTORY), refetch: mockRefetch })
+
+    Object.defineProperty(document, 'visibilityState', {
+      configurable: true,
+      get: () => 'hidden',
+    })
+
+    renderHook(() =>
+      useTokenPriceChartData({
+        variables: BASE_VARIABLES,
+        skip: true,
+        priceChartType: PriceChartType.LINE,
+      }),
+    )
+
+    Object.defineProperty(document, 'visibilityState', {
+      configurable: true,
+      get: () => 'visible',
+    })
+
+    await act(async () => {
+      document.dispatchEvent(new Event('visibilitychange'))
+    })
+
+    expect(mockRefetch).not.toHaveBeenCalled()
+  })
+
+  it('produces strictly ascending timestamps when CoinGecko returns a duplicate trailing timestamp', () => {
+    // Upstream CoinGecko history can end with two points at the same second. lightweight-charts
+    // requires strictly-ascending times; a zero delta breaks curved-line interpolation and paints
+    // a spurious diagonal line/wedge across the chart.
+    mockUseTokenPriceHistoryQuery.mockReturnValue(
+      makeCoinGeckoResult([
+        priceHistoryEntry(1000, 20),
+        priceHistoryEntry(2000, 21),
+        priceHistoryEntry(3000, 22),
+        priceHistoryEntry(3000, 22),
+      ]),
+    )
+
+    const { result } = renderHook(() =>
+      useTokenPriceChartData({
+        variables: BASE_VARIABLES,
+        skip: false,
+        priceChartType: PriceChartType.LINE,
+      }),
+    )
+
+    const times = result.current.entries.map((entry) => entry.time)
+    for (let i = 1; i < times.length; i++) {
+      expect(times[i]).toBeGreaterThan(times[i - 1])
+    }
+  })
+})
+
+function point(time: number, close: number): PriceChartData {
+  return { time: time as PriceChartData['time'], value: close, open: close, high: close, low: close, close }
+}
+
+describe('getCalculatedPricePercentChange', () => {
+  it('returns undefined for empty entries', () => {
+    expect(getCalculatedPricePercentChange([])).toBeUndefined()
+  })
+
+  it('returns undefined when open close is zero', () => {
+    expect(getCalculatedPricePercentChange([point(1, 0), point(2, 1), point(3, 2)])).toBeUndefined()
+  })
+
+  it('returns percent change from first to last close', () => {
+    expect(getCalculatedPricePercentChange([point(1, 100), point(2, 110), point(3, 150)])).toBe(50)
+  })
+})
+
+describe('getDisplayedPricePercentChange', () => {
+  it('uses 24h change for DAY period', () => {
+    expect(
+      getDisplayedPricePercentChange({
+        timePeriod: TimePeriod.DAY,
+        priceChange24h: 5,
+        entries: [point(1, 100), point(2, 200)],
+      }),
+    ).toBe(5)
+  })
+
+  it('uses calculated change for non-DAY periods', () => {
+    expect(
+      getDisplayedPricePercentChange({
+        timePeriod: TimePeriod.WEEK,
+        priceChange24h: 99,
+        entries: [point(1, 100), point(2, 150), point(3, 400)],
+      }),
+    ).toBe(300)
+  })
+})
+
+describe('toStrictlyAscendingByTime', () => {
+  it('collapses duplicate timestamps, keeping the latest value', () => {
+    const result = toStrictlyAscendingByTime([point(1000, 10), point(2000, 11), point(3000, 12), point(3000, 13)])
+    expect(result.map((entry) => entry.time)).toEqual([1000, 2000, 3000])
+    expect(result[result.length - 1].value).toBe(13)
+  })
+
+  it('drops out-of-order timestamps', () => {
+    const result = toStrictlyAscendingByTime([point(1000, 10), point(3000, 12), point(2000, 11)])
+    expect(result.map((entry) => entry.time)).toEqual([1000, 3000])
+  })
+
+  it('leaves already-ascending data untouched', () => {
+    const entries = [point(1000, 10), point(2000, 11), point(3000, 12)]
+    expect(toStrictlyAscendingByTime(entries)).toEqual(entries)
   })
 })

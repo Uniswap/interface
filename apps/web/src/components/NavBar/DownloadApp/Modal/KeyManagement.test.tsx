@@ -1,5 +1,5 @@
 import { fireEvent } from '@testing-library/react'
-import { Page } from '~/components/NavBar/DownloadApp/Modal'
+import { Page } from '~/components/NavBar/DownloadApp/Modal/constants'
 import { KeyManagementModal } from '~/components/NavBar/DownloadApp/Modal/KeyManagement'
 import { render } from '~/test-utils/render'
 

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { iconSizes } from 'ui/src/theme'
+import { CopyHelper } from 'uniswap/src/components/CopyHelper/CopyHelper'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
@@ -17,7 +18,6 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
 import { StatusIcon } from '~/components/StatusIcon'
 import { useAccountsStore, useActiveAddresses } from '~/features/accounts/store/hooks'
-import { CopyHelper } from '~/theme/components/CopyHelper'
 import { EllipsisTamaguiStyle } from '~/theme/components/styles'
 
 function AddressDisplay({
@@ -133,9 +133,7 @@ function TooltipAccountRow({ account }: { account: AccountItem }) {
           </Text>
         </Flex>
       </Flex>
-      <CopyHelper alwaysShowIcon iconSize={iconSizes.icon16} iconPosition="right" toCopy={account.address}>
-        <></>
-      </CopyHelper>
+      <CopyHelper iconSize={iconSizes.icon16} iconPosition="right" toCopy={account.address} />
     </Flex>
   )
 }

@@ -1,5 +1,5 @@
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
-import { FlashList, FlashListProps } from '@shopify/flash-list'
+import { FlashList, FlashListProps, FlashListRef } from '@shopify/flash-list'
 import { forwardRef } from 'react'
 
 /**
@@ -12,14 +12,14 @@ type AnimatedFlashListProps = FlashListProps<any>
 
 export const AnimatedFlashList = forwardRef(function _AnimatedFlashList(
   props: AnimatedFlashListProps,
-  ref: React.Ref<FlashList<unknown>>,
+  ref: React.Ref<FlashListRef<unknown>>,
 ) {
   return <FlashList ref={ref} {...props} />
 })
 
 export const AnimatedBottomSheetFlashList = forwardRef(function _AnimatedBottomSheetFlashList(
   props: AnimatedFlashListProps,
-  ref: React.Ref<FlashList<unknown>>,
+  ref: React.Ref<FlashListRef<unknown>>,
 ) {
   return (
     <FlashList

@@ -4,8 +4,8 @@ import { SignMessageInfo } from 'wallet/src/features/wallet/signing/signing'
 import { signMessage } from 'wallet/src/features/wallet/signing/signing.web'
 
 // Mock dependencies
-jest.mock('uniswap/src/features/transactions/signing')
-jest.mock('uniswap/src/utils/addresses', () => ({
+vi.mock('uniswap/src/features/transactions/signing')
+vi.mock('uniswap/src/utils/addresses', () => ({
   ensureLeading0x: (sig: string): string => (sig.startsWith('0x') ? sig : `0x${sig}`),
 }))
 
@@ -15,16 +15,16 @@ describe('signMessage (web)', () => {
   const mockSignedSignature = `0x${mockSignature}`
 
   const mockSigner = {
-    signMessage: jest.fn().mockResolvedValue(mockSignature),
+    signMessage: vi.fn().mockResolvedValue(mockSignature),
   }
 
   const mockUnconnectedSigner = {
-    signMessage: jest.fn().mockResolvedValue(mockSignature),
-    connect: jest.fn().mockReturnValue(mockSigner),
+    signMessage: vi.fn().mockResolvedValue(mockSignature),
+    connect: vi.fn().mockReturnValue(mockSigner),
   }
 
   const mockSignerManager = {
-    getSignerForAccount: jest.fn().mockResolvedValue(mockUnconnectedSigner),
+    getSignerForAccount: vi.fn().mockResolvedValue(mockUnconnectedSigner),
   }
 
   const mockProvider = {
@@ -37,7 +37,7 @@ describe('signMessage (web)', () => {
   } as Account
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('signAsString flag', () => {

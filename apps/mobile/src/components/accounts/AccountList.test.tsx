@@ -1,45 +1,46 @@
 import { AccountList } from 'src/components/accounts/AccountList'
 import { cleanup, fireEvent, render, screen } from 'src/test/test-utils'
 import { Locale } from 'uniswap/src/features/language/constants'
-import { amounts, ON_PRESS_EVENT_PAYLOAD, portfolio } from 'uniswap/src/test/fixtures'
+import { amounts, ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
 import { mockLocalizedFormatter } from 'uniswap/src/test/mocks'
-import { createArray, queryResolvers } from 'uniswap/src/test/utils'
+import { createArray } from 'uniswap/src/test/utils'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
+import type { MockedFunction } from 'vitest'
+import { useAccountListData } from 'wallet/src/features/accounts/useAccountListData'
 import { ACCOUNT, readOnlyAccount, signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
-const tokensTotalDenominatedValue = amounts.md()
-const { resolvers } = queryResolvers({
-  portfolios: () => [portfolio({ tokensTotalDenominatedValue })],
-})
+vi.mock('wallet/src/features/accounts/useAccountListData')
+const mockUseAccountListData = useAccountListData as MockedFunction<typeof useAccountListData>
+
+const totalBalanceValue = amounts.md().value
 
 const formatter = mockLocalizedFormatter(Locale.EnglishUnitedStates)
 
 const defaultProps = {
-  onPress: jest.fn(),
-  onClose: jest.fn(),
+  onPress: vi.fn(),
+  onClose: vi.fn(),
 }
 
 // Skip entering animation of AccountIcon
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock')
-
-  Reanimated.Layout = { duration: (): object => ({}) }
-
-  return Reanimated
-})
 
 describe(AccountList, () => {
-  it('renders without error', async () => {
-    const tree = render(<AccountList {...defaultProps} accounts={[ACCOUNT]} />, {
-      resolvers,
+  beforeEach(() => {
+    mockUseAccountListData.mockReturnValue({
+      balancesByAddress: { [ACCOUNT.address]: totalBalanceValue },
+      loading: false,
+      refetch: vi.fn(),
     })
+  })
+
+  it('renders without error', async () => {
+    const tree = render(<AccountList {...defaultProps} accounts={[ACCOUNT]} />)
 
     expect(
       await screen.findByText(
         formatter.formatNumberOrString({
-          value: tokensTotalDenominatedValue.value,
+          value: totalBalanceValue,
           type: NumberType.PortfolioBalance,
           currencyCode: 'usd',
         }),
@@ -49,15 +50,14 @@ describe(AccountList, () => {
   })
 
   it('handles press on card items', async () => {
-    const onPressSpy = jest.fn()
-    render(<AccountList {...defaultProps} accounts={[ACCOUNT]} onPress={onPressSpy} />, {
-      resolvers,
-    })
+    const onPressSpy = vi.fn()
+    render(<AccountList {...defaultProps} accounts={[ACCOUNT]} onPress={onPressSpy} />)
+
     // go to success state
     expect(
       await screen.findByText(
         formatter.formatNumberOrString({
-          value: tokensTotalDenominatedValue.value,
+          value: totalBalanceValue,
           type: NumberType.PortfolioBalance,
           currencyCode: 'usd',
         }),
@@ -72,9 +72,7 @@ describe(AccountList, () => {
   describe('signer accounts', () => {
     it('renders signer accounts section if there are signer accounts', () => {
       const signerAccounts = createArray(3, signerMnemonicAccount)
-      render(<AccountList {...defaultProps} accounts={signerAccounts} />, {
-        resolvers,
-      })
+      render(<AccountList {...defaultProps} accounts={signerAccounts} />)
 
       signerAccounts.forEach((account) => {
         const address = sanitizeAddressText(shortenAddress({ address: account.address, chars: 6 }))
@@ -86,9 +84,7 @@ describe(AccountList, () => {
     })
 
     it('does not render signer accounts section if there are no signer accounts', () => {
-      render(<AccountList {...defaultProps} accounts={[readOnlyAccount()]} />, {
-        resolvers,
-      })
+      render(<AccountList {...defaultProps} accounts={[readOnlyAccount()]} />)
 
       expect(screen.queryByText('Your other wallets')).toBeFalsy()
       cleanup()
@@ -98,11 +94,9 @@ describe(AccountList, () => {
   describe('view only accounts', () => {
     it('renders view only accounts section if there are view only accounts', () => {
       const viewOnlyAccounts = createArray(3, readOnlyAccount)
-      render(<AccountList {...defaultProps} accounts={viewOnlyAccounts} />, {
-        resolvers,
-      })
+      render(<AccountList {...defaultProps} accounts={viewOnlyAccounts} />)
 
-      expect(screen.queryByText('View-only wallets')).toBeTruthy()
+      expect(screen.queryByText('account.wallet.header.viewOnly')).toBeTruthy()
 
       viewOnlyAccounts.forEach((account) => {
         const address = sanitizeAddressText(shortenAddress({ address: account.address, chars: 6 }))
@@ -114,11 +108,9 @@ describe(AccountList, () => {
     })
 
     it('does not render view only accounts section if there are no view only accounts', () => {
-      render(<AccountList {...defaultProps} accounts={[signerMnemonicAccount()]} />, {
-        resolvers,
-      })
+      render(<AccountList {...defaultProps} accounts={[signerMnemonicAccount()]} />)
 
-      expect(screen.queryByText('View-only wallets')).toBeFalsy()
+      expect(screen.queryByText('account.wallet.header.viewOnly')).toBeFalsy()
       cleanup()
     })
   })

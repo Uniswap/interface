@@ -49,6 +49,9 @@ export type DeletePasskeyModalParams = {
 type RemoveBackupLoginModalInitialState = {
   recoveryMethodType: string
   recoveryMethodIdentifier?: string
+  // Explicit wallet id for contexts without an active session (e.g. recover-with-email rotation).
+  // Falls back to the embedded-wallet store when omitted.
+  walletId?: string
 }
 
 export type RemoveBackupLoginModalParams = {

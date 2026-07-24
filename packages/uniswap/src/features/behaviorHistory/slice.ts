@@ -1,4 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import {
+  EARN_SWAP_UPSELL_MAX_DISPLAYS,
+  getOrCreateEarnSwapUpsellTokenHistory,
+  type EarnSwapUpsellHistory,
+} from 'uniswap/src/features/behaviorHistory/earn/swapUpsell'
 
 /**
  * Used to store persisted info about a users interactions with UI.
@@ -28,7 +33,6 @@ export interface UniswapBehaviorHistoryState {
   toucanIntroModalSeenByWallet?: {
     [walletAddress: string]: boolean
   }
-  hasDismissedUniswapWrapped2025Banner?: boolean
   hasDismissedCrosschainSwapsPromoBanner?: boolean
   /**
    * Per-user dismissal flag for the pools-balance coachmark on the Portfolio Overview.
@@ -37,6 +41,8 @@ export interface UniswapBehaviorHistoryState {
    * so they see it once until they dismiss.
    */
   hasDismissedPoolsBalanceCoachmark?: boolean
+  hasDismissedPoolsOutageBanner?: boolean
+  earnSwapUpsell?: EarnSwapUpsellHistory
 }
 
 export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
@@ -57,9 +63,9 @@ export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
   hasShownMismatchToast: false,
   hasShownSmartWalletNudge: false,
   hasSeenToucanIntroModal: false,
-  hasDismissedUniswapWrapped2025Banner: false,
   hasDismissedCrosschainSwapsPromoBanner: false,
   hasDismissedPoolsBalanceCoachmark: true,
+  hasDismissedPoolsOutageBanner: false,
 }
 
 const slice = createSlice({
@@ -126,14 +132,46 @@ const slice = createSlice({
     setHasDismissedBridgedAssetsBannerV2: (state, action: PayloadAction<boolean>) => {
       state.hasDismissedBridgedAssetsBannerV2 = action.payload
     },
-    setHasDismissedUniswapWrapped2025Banner: (state, action: PayloadAction<boolean>) => {
-      state.hasDismissedUniswapWrapped2025Banner = action.payload
-    },
     setHasDismissedCrosschainSwapsPromoBanner: (state, action: PayloadAction<boolean>) => {
       state.hasDismissedCrosschainSwapsPromoBanner = action.payload
     },
-    setPoolsBalanceCoachmarkDismissed: (state) => {
-      state.hasDismissedPoolsBalanceCoachmark = true
+    // Payload defaults to `true` (dismiss). Pass `false` to re-show the coachmark, e.g. from a dev tool.
+    setPoolsBalanceCoachmarkDismissed: (state, action: PayloadAction<boolean | undefined>) => {
+      state.hasDismissedPoolsBalanceCoachmark = action.payload ?? true
+    },
+    setHasDismissedPoolsOutageBanner: (state, action: PayloadAction<boolean>) => {
+      state.hasDismissedPoolsOutageBanner = action.payload
+    },
+    recordEarnSwapUpsellQualifyingSwap: (
+      state,
+      action: PayloadAction<{ tokenCurrencyId: string; transactionId: string }>,
+    ) => {
+      const tokenHistory = getOrCreateEarnSwapUpsellTokenHistory(state, action.payload.tokenCurrencyId)
+
+      tokenHistory.countedTransactionIds ??= {}
+      if (tokenHistory.countedTransactionIds[action.payload.transactionId]) {
+        return
+      }
+
+      tokenHistory.countedTransactionIds[action.payload.transactionId] = true
+      tokenHistory.qualifyingSwapCount = (tokenHistory.qualifyingSwapCount ?? 0) + 1
+    },
+    recordEarnSwapUpsellInteraction: (
+      state,
+      action: PayloadAction<{ tokenCurrencyId: string; timestampMs: number }>,
+    ) => {
+      const tokenHistory = getOrCreateEarnSwapUpsellTokenHistory(state, action.payload.tokenCurrencyId)
+
+      const interactionCount = (tokenHistory.interactionCount ?? 0) + 1
+      tokenHistory.interactionCount = interactionCount
+      tokenHistory.lastInteractionAtMs = action.payload.timestampMs
+      tokenHistory.permanentlyDismissed =
+        tokenHistory.permanentlyDismissed === true || interactionCount >= EARN_SWAP_UPSELL_MAX_DISPLAYS
+    },
+    permanentlyDismissEarnSwapUpsell: (state, action: PayloadAction<{ tokenCurrencyId: string }>) => {
+      const tokenHistory = getOrCreateEarnSwapUpsellTokenHistory(state, action.payload.tokenCurrencyId)
+
+      tokenHistory.permanentlyDismissed = true
     },
   },
 })
@@ -156,9 +194,12 @@ export const {
   setHasSeenToucanIntroModal,
   setToucanIntroModalSeenByWallet,
   setHasDismissedBridgedAssetsBannerV2,
-  setHasDismissedUniswapWrapped2025Banner,
   setHasDismissedCrosschainSwapsPromoBanner,
   setPoolsBalanceCoachmarkDismissed,
+  setHasDismissedPoolsOutageBanner,
+  recordEarnSwapUpsellQualifyingSwap,
+  recordEarnSwapUpsellInteraction,
+  permanentlyDismissEarnSwapUpsell,
 } = slice.actions
 
 export const uniswapBehaviorHistoryReducer = slice.reducer

@@ -6,8 +6,6 @@
   "tags": ["scope:gating", "type:lib"],
   "targets": {
     "typecheck": {},
-    "typecheck:tsc": {},
-    "typecheck:tsgo": {},
     "format": {},
     "format:check": {},
     "lint:oxlint": {},

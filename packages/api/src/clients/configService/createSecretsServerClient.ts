@@ -5,18 +5,13 @@
  * Only imported by server routes — never shipped to the browser.
  */
 
+import { ENTRY_GATEWAY_API_BASE_URLS } from '@universe/api/src/clients/base/urls'
 import { rpcPost } from '@universe/api/src/clients/configService/connectrpcClient'
 import { Environment } from '@universe/environment'
 
 // =============================================================================
 // Constants
 // =============================================================================
-
-const HOSTS: Record<Environment, string> = {
-  [Environment.Development]: 'https://entry-gateway.backend-dev.api.uniswap.org',
-  [Environment.Staging]: 'https://entry-gateway.backend-staging.api.uniswap.org',
-  [Environment.Production]: 'https://entry-gateway.backend-prod.api.uniswap.org',
-}
 
 const SERVICE_PATH = 'configservice.v1.SecretsService'
 
@@ -80,7 +75,7 @@ export type SecretsServerClient = ReturnType<typeof createSecretsServerClient>
 
 // oxlint-disable-next-line typescript/explicit-function-return-type
 export function createSecretsServerClient(config: SecretsServerClientConfig) {
-  const baseUrl = config.baseUrl ?? HOSTS[config.environment]
+  const baseUrl = config.baseUrl ?? ENTRY_GATEWAY_API_BASE_URLS[config.environment]
   const authHeaders = { Authorization: `Bearer ${config.apiToken}` }
 
   async function rpcCall<T>(method: string, body: unknown = {}): Promise<T> {

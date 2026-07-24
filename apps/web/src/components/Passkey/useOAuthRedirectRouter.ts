@@ -1,13 +1,14 @@
-import { usePrivy } from '@privy-io/react-auth'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MenuStateVariant, useSetMenu } from '~/components/AccountDrawer/menuState'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
+import { useMaybePrivy } from '~/hooks/useMaybePrivy'
 import { setOpenModal } from '~/state/application/reducer'
 
 export const OAUTH_PENDING_KEY = 'addBackupLogin:oauthProvider'
 export const RECOVER_OAUTH_PENDING_KEY = 'recoverWallet:oauthProvider'
+export const RECONNECT_OAUTH_PENDING_KEY = 'reconnectBackupLogin:oauthProvider'
 
 /**
  * Hook that detects an OAuth return (page reload after Privy redirect) and restores the UI:
@@ -24,7 +25,7 @@ export function useOAuthRedirectRouter(): void {
   const dispatch = useDispatch()
   const accountDrawer = useAccountDrawer()
   const setMenu = useSetMenu()
-  const { ready } = usePrivy()
+  const { ready } = useMaybePrivy()
 
   useEffect(() => {
     if (!ready) {
@@ -33,12 +34,17 @@ export function useOAuthRedirectRouter(): void {
 
     const addBackupPending = sessionStorage.getItem(OAUTH_PENDING_KEY)
     const recoverPending = sessionStorage.getItem(RECOVER_OAUTH_PENDING_KEY)
+    const reconnectPending = sessionStorage.getItem(RECONNECT_OAUTH_PENDING_KEY)
 
-    if (!addBackupPending && !recoverPending) {
+    if (!addBackupPending && !recoverPending && !reconnectPending) {
       return
     }
 
-    if (addBackupPending) {
+    if (reconnectPending) {
+      accountDrawer.open()
+      setMenu({ variant: MenuStateVariant.PASSKEYS })
+      dispatch(setOpenModal({ name: ModalName.ReconnectBackupLogin }))
+    } else if (addBackupPending) {
       accountDrawer.open()
       setMenu({ variant: MenuStateVariant.PASSKEYS })
       dispatch(setOpenModal({ name: ModalName.AddBackupLogin }))

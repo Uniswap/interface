@@ -1,32 +1,11 @@
-import { PropsWithChildren, useMemo } from 'react'
+import { PropsWithChildren, useEffect, useMemo } from 'react'
 import { breakpoints } from 'ui/src/theme'
 import { useSelectedColorScheme } from 'uniswap/src/features/appearance/hooks'
-import { createGlobalStyle, css, ThemeProvider as StyledComponentsThemeProvider } from '~/lib/deprecated-styled'
+import { createGlobalStyle, ThemeProvider as StyledComponentsThemeProvider } from '~/lib/deprecated-styled'
 import { darkTheme, lightTheme, ThemeColors } from '~/theme/colors'
-import { darkDeprecatedTheme, lightDeprecatedTheme } from '~/theme/deprecatedColors'
 import { getAccent2, getNeutralContrast } from '~/theme/utils'
 
-const MEDIA_WIDTHS = {
-  deprecated_upToExtraSmall: 500,
-  deprecated_upToSmall: 720,
-  deprecated_upToMedium: 960,
-  deprecated_upToLarge: 1280,
-}
-
 export const MAX_CONTENT_WIDTH_PX = 1200
-
-const deprecated_mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(
-  MEDIA_WIDTHS,
-).reduce((acc, size) => {
-  // oxlint-disable-next-line max-params
-  acc[size] = (a: any, b: any, c: any) => css`
-    @media (max-width: ${(MEDIA_WIDTHS as any)[size]}px) {
-      ${css(a, b, c)}
-    }
-  `
-  // oxlint-disable-next-line typescript/no-unsafe-return -- biome-parity: oxlint is stricter here
-  return acc
-}, {} as any)
 
 // deprecated - please use the ones in styles.ts file
 const transitions = {
@@ -58,26 +37,13 @@ const fonts = {
   code: 'courier, courier new, serif',
 }
 
-const gapValues = {
-  xs: '4px',
-  sm: '8px',
-  md: '12px',
-  lg: '24px',
-  xl: '32px',
-}
-export type Gap = keyof typeof gapValues
-
 function getSettings(darkMode: boolean) {
   return {
     darkMode,
-    grids: gapValues,
     fonts,
 
     // shadows
     shadow1: '#000',
-
-    // media queries
-    deprecated_mediaWidth: deprecated_mediaWidthTemplates,
 
     mobileBottomBarHeight: 48,
     maxWidth: MAX_CONTENT_WIDTH_PX,
@@ -98,10 +64,10 @@ function getSettings(darkMode: boolean) {
 }
 
 export function getTheme(darkMode: boolean, overriddenColors?: Partial<ThemeColors>) {
-  const [colors, deprecatedColors] = darkMode ? [darkTheme, darkDeprecatedTheme] : [lightTheme, lightDeprecatedTheme]
+  const colors = darkMode ? darkTheme : lightTheme
   const colorsWithOverrides = applyOverriddenColors(colors, overriddenColors)
 
-  return { ...colorsWithOverrides, ...deprecatedColors, ...getSettings(darkMode) }
+  return { ...colorsWithOverrides, ...getSettings(darkMode) }
 }
 
 function applyOverriddenColors(defaultColors: ThemeColors, overriddenColors?: Partial<ThemeColors>) {
@@ -136,6 +102,13 @@ export function ThemeProvider({ children, ...overriddenColors }: PropsWithChildr
   const darkMode = useSelectedColorScheme() === 'dark'
   // oxlint-disable-next-line react/exhaustive-deps -- Only update when darkMode or overriddenColors' entries change
   const themeObject = useMemo(() => getTheme(darkMode, overriddenColors), [darkMode, JSON.stringify(overriddenColors)])
+
+  // Mirror the active color scheme onto the <html> `.dark` class so Tailwind v4
+  // `dark:` variants and @universe/tailwind dark tokens activate in sync with
+  // the Tamagui/styled-components theme (which are React-context-only).
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', darkMode)
+  }, [darkMode])
 
   // TODO(WEB-7508): set theme for wallet connect modal
 

@@ -1,7 +1,7 @@
 import { z } from 'incur'
 import type { AuthService } from './services/auth'
 import type { KeychainService } from './services/keychain'
-import type { OktaClient } from './services/okta'
+import type { OktaClient } from './services/oktaClient'
 
 /**
  * "Vars" is incur's dependency-injection mechanism: a typed bag of runtime values that

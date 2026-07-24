@@ -1,6 +1,9 @@
 import type { WatchQueryFetchPolicy } from '@apollo/client'
+import { type PlainMessage } from '@bufbuild/protobuf'
 import type { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import type { PollingInterval } from 'uniswap/src/constants/misc'
+import { calculateTotalBalancesUsdPerChainRest } from 'uniswap/src/data/balances/utils'
 import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { useGetPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
 import type { GetPortfolioInput } from 'uniswap/src/data/rest/getPortfolio'
@@ -15,7 +18,6 @@ import {
   useRestPortfolioValueModifier,
   useRestPortfolioValueModifiers,
 } from 'uniswap/src/features/dataApi/balances/useRestPortfolioValueModifier'
-import { mapRestStatusToNetworkStatus } from 'uniswap/src/features/dataApi/balances/utils'
 import type { BaseResult, PortfolioBalance, PortfolioMultichainBalance } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency, buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
 import {
@@ -43,7 +45,7 @@ export function formatPortfolioResponseToMap({
   ownerAddress,
   useMultichainFormat,
 }: {
-  portfolioData: GetPortfolioResponse | undefined
+  portfolioData: PlainMessage<GetPortfolioResponse> | undefined
   ownerAddress: string | undefined
   useMultichainFormat: false
 }): Record<CurrencyId, PortfolioBalance> | undefined
@@ -53,7 +55,7 @@ export function formatPortfolioResponseToMap({
   useMultichainFormat,
   requestedMultichainFromBackend,
 }: {
-  portfolioData: GetPortfolioResponse | undefined
+  portfolioData: PlainMessage<GetPortfolioResponse> | undefined
   ownerAddress: string | undefined
   useMultichainFormat: true
   /** When true, only use response.multichainBalances; do not fall back to transforming legacy. */
@@ -65,7 +67,7 @@ export function formatPortfolioResponseToMap({
   useMultichainFormat,
   requestedMultichainFromBackend,
 }: {
-  portfolioData: GetPortfolioResponse | undefined
+  portfolioData: PlainMessage<GetPortfolioResponse> | undefined
   ownerAddress: string | undefined
   useMultichainFormat: boolean
   requestedMultichainFromBackend?: boolean
@@ -80,9 +82,9 @@ export function formatPortfolioResponseToMap({
     if (requestedMultichainFromBackend === true && !hasMultichainFromBackend) {
       return {}
     }
-    const transformed = shouldTransformToMultichain(portfolioData)
-      ? transformPortfolioToMultichain(portfolioData)
-      : portfolioData
+    // transformPortfolioToMultichain constructs real Message instances; the plain cache value is structurally compatible.
+    const response = portfolioData as GetPortfolioResponse
+    const transformed = shouldTransformToMultichain(response) ? transformPortfolioToMultichain(response) : response
     const multichainMap = getPortfolioMultichainBalancesById(transformed, ownerAddress)
     const byCurrencyId: Record<CurrencyId, PortfolioMultichainBalance> = {}
     if (!multichainMap) {
@@ -113,6 +115,8 @@ export function formatPortfolioResponseToMap({
 
 export type UsePortfolioDataQueryOptions = {
   skip?: boolean
+  /** Cache-only read: never fetches, but still re-renders when another observer updates the cached data. */
+  cacheOnly?: boolean
   pollInterval?: PollingInterval
   fetchPolicy?: WatchQueryFetchPolicy
   /**
@@ -123,15 +127,16 @@ export type UsePortfolioDataQueryOptions = {
   requestMultichainFromBackend?: boolean
 } & GetPortfolioInput['input']
 
-/** Internal: runs the portfolio query with a select that determines the result data type. No cast needed. */
+/** Internal: runs the portfolio query with a select that determines the result data type. */
 function usePortfolioDataQueryWithSelect<T>(
   options: UsePortfolioDataQueryOptions & {
-    select: (portfolioData: GetPortfolioResponse | undefined) => T
+    select: (portfolioData: PlainMessage<GetPortfolioResponse> | undefined) => T
   },
 ): BaseResult<T> {
-  const { evmAddress, svmAddress, select, requestMultichainFromBackend, ...queryOptions } = options
+  const { evmAddress, svmAddress, select, requestMultichainFromBackend, cacheOnly, ...queryOptions } = options
   const { chains: defaultChainIds } = useEnabledChains()
   const chainIds = queryOptions.chainIds || defaultChainIds
+  const isV2TokensEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
 
   // TODO(SWAP-388): GetPortfolio REST endpoint does not yet support modifier array; it will take 1 evm/svm address, but will apply the modifications across the board
   const modifier = useRestPortfolioValueModifier(evmAddress ?? svmAddress)
@@ -149,7 +154,8 @@ function usePortfolioDataQueryWithSelect<T>(
     isFetching: restLoading,
     refetch: restRefetch,
     error: restError,
-    status: restStatus,
+    isPending: restPending,
+    isError: restIsError,
     dataUpdatedAt,
   } = useGetPortfolioQuery({
     input: {
@@ -158,8 +164,10 @@ function usePortfolioDataQueryWithSelect<T>(
       chainIds,
       modifier,
       multichain,
+      ...(isV2TokensEnabled && { useSubstreamData: true }),
     },
     enabled: !!(evmAddress ?? svmAddress) && !queryOptions.skip,
+    cacheOnly,
     refetchInterval: internalPollInterval,
     select,
   })
@@ -167,7 +175,8 @@ function usePortfolioDataQueryWithSelect<T>(
   return {
     data: formattedData,
     loading: restLoading,
-    networkStatus: mapRestStatusToNetworkStatus(restStatus),
+    isPending: restPending,
+    isError: restIsError,
     refetch: restRefetch,
     error: restError || undefined,
     dataUpdatedAt: dataUpdatedAt || undefined,
@@ -179,8 +188,12 @@ function usePortfolioDataQueryWithSelect<T>(
  */
 export function usePortfolioData(options: UsePortfolioDataQueryOptions): PortfolioDataResult {
   const ownerAddress = options.evmAddress ?? options.svmAddress
-  const select = useEvent((portfolioData: GetPortfolioResponse | undefined) =>
-    formatPortfolioResponseToMap({ portfolioData, ownerAddress, useMultichainFormat: false }),
+  const select = useEvent((data: PlainMessage<GetPortfolioResponse> | undefined) =>
+    formatPortfolioResponseToMap({
+      portfolioData: data,
+      ownerAddress,
+      useMultichainFormat: false,
+    }),
   )
   return usePortfolioDataQueryWithSelect({ ...options, select, requestMultichainFromBackend: false })
 }
@@ -193,9 +206,9 @@ export function usePortfolioData(options: UsePortfolioDataQueryOptions): Portfol
 export function usePortfolioDataMultichain(options: UsePortfolioDataQueryOptions): PortfolioDataResultMultichain {
   const ownerAddress = options.evmAddress ?? options.svmAddress
   const requestedMultichainFromBackend = options.requestMultichainFromBackend
-  const select = useEvent((portfolioData: GetPortfolioResponse | undefined) =>
+  const select = useEvent((data: PlainMessage<GetPortfolioResponse> | undefined) =>
     formatPortfolioResponseToMap({
-      portfolioData,
+      portfolioData: data,
       ownerAddress,
       useMultichainFormat: true,
       requestedMultichainFromBackend,
@@ -204,8 +217,30 @@ export function usePortfolioDataMultichain(options: UsePortfolioDataQueryOptions
   return usePortfolioDataQueryWithSelect({ ...options, select })
 }
 
+/**
+ * Cache-only read of total balances USD per chain, for telemetry.
+ * Built on the same query plumbing as `usePortfolioData` so its cache key always matches the
+ * queries that actually fetch portfolio data (never fetches on its own).
+ */
+export function usePortfolioTotalBalancesUsdPerChain({
+  evmAddress,
+  svmAddress,
+}: {
+  evmAddress?: Address
+  svmAddress?: Address
+}): Record<string, number> | undefined {
+  const { data } = usePortfolioDataQueryWithSelect({
+    evmAddress,
+    svmAddress,
+    select: calculateTotalBalancesUsdPerChainRest,
+    requestMultichainFromBackend: false,
+    cacheOnly: true,
+  })
+  return data
+}
+
 export function convertRestBalanceToPortfolioBalance(
-  balance: NonNullable<NonNullable<GetPortfolioResponse['portfolio']>['balances'][0]>,
+  balance: NonNullable<NonNullable<PlainMessage<GetPortfolioResponse>['portfolio']>['balances'][0]>,
   address?: Address,
 ): PortfolioBalance | undefined {
   const { token, amount, pricePercentChange1d, valueUsd, isHidden } = balance
@@ -248,6 +283,8 @@ export function convertRestBalanceToPortfolioBalance(
     id: tokenBalanceId,
     cacheId: `TokenBalance:${tokenBalanceId}`,
     quantity: amount.amount,
+    // Protobuf string fields default to '' — normalize to undefined so consumers can fall back.
+    quantityRaw: amount.raw || undefined,
     balanceUSD: valueUsd,
     currencyInfo,
     relativeChange24: pricePercentChange1d,

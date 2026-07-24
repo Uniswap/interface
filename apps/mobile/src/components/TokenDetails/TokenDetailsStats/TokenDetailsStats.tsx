@@ -12,6 +12,7 @@ import {
   useTokenBasicInfoPartsFragment,
   useTokenBasicProjectPartsFragment,
 } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
+import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { Language } from 'uniswap/src/features/language/constants'
 import { useCurrentLanguage, useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
@@ -62,7 +63,8 @@ export const TokenDetailsStats = memo(function TokenDetailsStatsInner(): JSX.Ele
     descriptions?.descriptionTranslations?.descriptionZhHans ||
     descriptions?.descriptionTranslations?.descriptionZhHant
 
-  const name = offChainData?.name ?? onChainData.name
+  const metadata = useTokenMetadata(currencyId, { legacyToken: { name: offChainData?.name ?? onChainData.name } })
+  const name = metadata.name
   const currentDescription = showTranslation && translatedDescription ? translatedDescription : description
 
   return (
@@ -70,7 +72,7 @@ export const TokenDetailsStats = memo(function TokenDetailsStatsInner(): JSX.Ele
       {currentDescription && (
         <Flex gap="$spacing4">
           {name && (
-            <Text color="$neutral2" testID={TestID.TokenDetailsAboutHeader} variant="subheading2">
+            <Text color="$neutral1" testID={TestID.TokenDetailsAboutHeader} variant="subheading2">
               {t('token.stats.section.about', { token: name })}
             </Text>
           )}
@@ -78,6 +80,7 @@ export const TokenDetailsStats = memo(function TokenDetailsStatsInner(): JSX.Ele
           <Flex gap="$spacing16">
             <LongText
               gap="$spacing2"
+              color={colors.neutral2.val}
               initialDisplayedLines={5}
               linkColor={tokenColor ?? colors.neutral1.val}
               readMoreOrLessColor={tokenColor ?? colors.neutral2.val}

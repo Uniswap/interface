@@ -1,3 +1,4 @@
+import { tryProvideSession } from '@universe/api'
 import { providers as ethersProviders } from 'ethers/lib/ethers'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { EVMUniverseChainId, RPCType } from 'uniswap/src/features/chains/types'
@@ -6,7 +7,10 @@ import { defaultResolveRpcConfig } from 'uniswap/src/features/providers/resolveR
 import AppJsonRpcProvider from '~/rpc/AppJsonRpcProvider'
 import ConfiguredJsonRpcProvider from '~/rpc/ConfiguredJsonRpcProvider'
 
-const createProvider = createEthersProviderFactory({ resolveRpcConfig: defaultResolveRpcConfig })
+const createProvider = createEthersProviderFactory({
+  resolveRpcConfig: defaultResolveRpcConfig,
+  getSessionGate: tryProvideSession,
+})
 
 /**
  * Per-chain interface RPC provider. Routes through UniRPC when the gate is on

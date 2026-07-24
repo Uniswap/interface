@@ -1,8 +1,10 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
-import { fork, put, select, take, takeEvery } from 'typed-redux-saga'
+import { call, fork, put, select, take, takeEvery } from 'typed-redux-saga'
 import { FORTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { selectIncompleteTransactions } from 'uniswap/src/features/transactions/selectors'
 import {
   addTransaction,
@@ -11,11 +13,12 @@ import {
   updateTransaction,
 } from 'uniswap/src/features/transactions/slice'
 import { PlanWatcher } from 'uniswap/src/features/transactions/swap/plan/planWatcherSaga'
-import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { QueuedOrderStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { QueuedOrderStatus, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { attemptCancelRemoteUniswapXOrder } from 'wallet/src/features/transactions/cancelTransactionSaga'
+import { buildBacklogProperties } from 'wallet/src/features/transactions/telemetry/nonceTelemetry'
 import { isFORTransaction } from 'wallet/src/features/transactions/utils'
 import { OrderWatcher } from 'wallet/src/features/transactions/watcher/orderWatcherSaga'
 import { watchFiatOnRampTransaction } from 'wallet/src/features/transactions/watcher/watchFiatOnRampSaga'
@@ -45,6 +48,20 @@ export function* transactionWatcher({
   // First, fork off watchers for any incomplete txs that are already in store
   // This allows us to detect completions if a user closed the app before a tx finished
   const incompleteTransactions = yield* select(selectIncompleteTransactions)
+
+  // SWAP-2471: census the persisted incomplete-tx backlog at startup. Stuck Pending private txs survive
+  // restarts and permanently inflate locally-computed nonces — this quantifies that inflation reservoir.
+  const privatePendingTxs = incompleteTransactions.filter(
+    (tx) => isClassic(tx) && tx.status === TransactionStatus.Pending && Boolean(tx.options.submitViaPrivateRpc),
+  )
+  const backlogProperties = buildBacklogProperties({
+    totalIncomplete: incompleteTransactions.length,
+    privatePending: privatePendingTxs.map((tx) => ({ addedTime: tx.addedTime })),
+    nowMs: Date.now(),
+  })
+  logger.info('transactionWatcherSaga', 'transactionWatcher', 'Incomplete tx backlog on startup', backlogProperties)
+  yield* call(sendAnalyticsEvent, WalletEventName.PendingTransactionBacklogOnStartup, backlogProperties)
+
   for (const transaction of incompleteTransactions) {
     if (isFORTransaction(transaction)) {
       yield* fork(watchFiatOnRampTransaction, transaction as FORTransactionDetails)

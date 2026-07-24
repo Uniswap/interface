@@ -7,16 +7,14 @@ export function sleep(milliseconds: number): Promise<boolean> {
 }
 
 export async function promiseTimeout<T>(promise: Promise<T>, milliseconds: number): Promise<T | null> {
-  // Create a promise that rejects in <ms> milliseconds
+  let timeoutId: ReturnType<typeof setTimeout>
+  // Resolve to null after <ms> milliseconds if the input promise hasn't settled first.
   const timeout = new Promise<null>((resolve) => {
-    const id = setTimeout(() => {
-      clearTimeout(id)
-      resolve(null)
-    }, milliseconds)
+    timeoutId = setTimeout(() => resolve(null), milliseconds)
   })
-  // Awaits the race, which will throw on timeout
-  const result = await Promise.race([promise, timeout])
-  return result
+  // Clear the timer once the race settles, so a still-pending timeout can't keep a short-lived
+  // process (e.g. a CLI) alive after the input promise already won.
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timeoutId))
 }
 
 /**

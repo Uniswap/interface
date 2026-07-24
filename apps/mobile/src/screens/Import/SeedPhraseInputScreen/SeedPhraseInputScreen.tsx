@@ -16,7 +16,7 @@ import { useFunctionAfterNavigationTransitionEndWithDelay } from 'src/utils/hook
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Button, Flex, MobileDeviceHeight, Text, TouchableArea, useIsShortMobileDevice } from 'ui/src'
 import { PapersText, QuestionInCircleFilled } from 'ui/src/components/icons'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ElementName, MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -98,7 +98,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: SeedPhr
   )
 
   const onPressRecoveryHelpButton = useCallback(
-    () => openUri({ uri: uniswapUrls.helpArticleUrls.recoveryPhraseHowToImport }),
+    () => openUri({ uri: UniswapHelpUrls.articles.recoveryPhraseHowToImport }),
     [],
   )
 
@@ -121,7 +121,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: SeedPhr
         <Trace logPress element={ElementName.Next}>
           <Flex row>
             <Button
-              isDisabled={!isSubmitEnabled}
+              disabled={!isSubmitEnabled}
               mx="$spacing16"
               my="$spacing12"
               size="large"

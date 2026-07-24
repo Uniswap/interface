@@ -9,9 +9,9 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 
-jest.mock('utilities/src/logger/logger', () => ({
+vi.mock('utilities/src/logger/logger', () => ({
   logger: {
-    error: jest.fn(),
+    error: vi.fn(),
   },
 }))
 
@@ -26,9 +26,9 @@ const mockValues = {
 
 describe('handleUniswapX', () => {
   describe('createExternallySubmittedUniswapXOrder', () => {
-    const mockFetchLatestOpenOrder = jest.fn()
-    const mockWaitForOrder = jest.fn()
-    const mockAddTxToWatcher = jest.fn()
+    const mockFetchLatestOpenOrder = vi.fn()
+    const mockWaitForOrder = vi.fn()
+    const mockAddTxToWatcher = vi.fn()
 
     const mockContext = {
       addTxToWatcher: mockAddTxToWatcher,
@@ -63,7 +63,7 @@ describe('handleUniswapX', () => {
     }
 
     beforeEach(() => {
-      jest.clearAllMocks()
+      vi.clearAllMocks()
     })
 
     it('should process a valid order and add it to the transaction watcher', async () => {
@@ -74,7 +74,7 @@ describe('handleUniswapX', () => {
       expect(mockFetchLatestOpenOrder).toHaveBeenCalledWith(mockValues.address) // Verify addTxToWatcher was called with the correct transaction details
       expect(mockAddTxToWatcher).toHaveBeenCalledTimes(1)
 
-      const txDetails = mockAddTxToWatcher.mock.calls[0][0]
+      const txDetails = mockAddTxToWatcher.mock.calls[0]![0]
       expect(txDetails).toMatchObject({
         routing: TradingApi.Routing.DUTCH_V2,
         chainId: mockValues.chainId as UniverseChainId,

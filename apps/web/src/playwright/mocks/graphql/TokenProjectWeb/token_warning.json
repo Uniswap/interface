@@ -1,0 +1,31 @@
+{
+  "data": {
+    "token": {
+      "id": "VG9rZW46RVRIRVJFVU1fMHgxZUZCQjc4QzhiOTE3ZjY3OTg2QmNFNTRjRTU3NTA2OWMwMTQzNjgx",
+      "decimals": 18,
+      "name": "test token",
+      "chain": "ETHEREUM",
+      "address": "0x1eFBB78C8b917f67986BcE54cE575069c0143681",
+      "symbol": "test",
+      "standard": "ERC20",
+      "project": {
+        "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNXzB4MWVmYmI3OGM4YjkxN2Y2Nzk4NmJjZTU0Y2U1NzUwNjljMDE0MzY4MV8=",
+        "description": null,
+        "homepageUrl": null,
+        "twitterName": null,
+        "logoUrl": null,
+        "isSpam": false,
+        "tokens": [
+          {
+            "id": "VG9rZW46RVRIRVJFVU1fMHgxZUZCQjc4QzhiOTE3ZjY3OTg2QmNFNTRjRTU3NTA2OWMwMTQzNjgx",
+            "chain": "ETHEREUM",
+            "address": "0x1eFBB78C8b917f67986BcE54cE575069c0143681",
+            "__typename": "Token"
+          }
+        ],
+        "__typename": "TokenProject"
+      },
+      "__typename": "Token"
+    }
+  }
+}

@@ -19,7 +19,7 @@ export function useLoadCheckpointData(
   chainId: EVMUniverseChainId | undefined,
   auctionAddress: string | undefined,
 ): void {
-  const { setCheckpointData, setOnchainCheckpoint } = useAuctionStoreActions()
+  const { setCheckpointData, setOnchainCheckpoint, setTotalCleared } = useAuctionStoreActions()
 
   // Only poll when auction is actively running - data is static before start and after end
   const isAuctionActive = useAuctionStore((state) => state.progress.state === AuctionProgressState.IN_PROGRESS)
@@ -57,5 +57,8 @@ export function useLoadCheckpointData(
     setCheckpointData(checkpointResponse.simulatedCheckpoint ?? checkpointResponse.checkpoint ?? null)
     // checkpoint for in-range detection (on-chain truth)
     setOnchainCheckpoint(checkpointResponse.checkpoint ?? null)
-  }, [checkpointResponse, setCheckpointData, setOnchainCheckpoint])
+    // total tokens cleared from the response-level field (not the deprecated Checkpoint.totalCleared);
+    // feeds the "% of supply sold" metric and remaining-supply math
+    setTotalCleared(checkpointResponse.totalCleared || null)
+  }, [checkpointResponse, setCheckpointData, setOnchainCheckpoint, setTotalCleared])
 }

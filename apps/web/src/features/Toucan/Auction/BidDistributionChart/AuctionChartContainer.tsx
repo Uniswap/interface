@@ -20,6 +20,7 @@ import {
   BidTokenInfo,
 } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
+import { getAuctionTokenDecimals } from '~/features/Toucan/Auction/utils/tokenMetadata'
 import { ToucanActionButton } from '~/features/Toucan/Shared/ToucanActionButton'
 
 const PLACEHOLDER_HEIGHT = 400
@@ -148,8 +149,14 @@ export function AuctionChartContainer({
     return renderPlaceholder(t('toucan.auction.errorLoading'))
   }
 
+  const auctionTokenDecimals = getAuctionTokenDecimals(auctionDetails?.token)
+
   const isLoadingSharedDeps =
-    auctionDetailsLoadState !== AuctionDetailsLoadState.Success || bidTokenLoading || !auctionDetails || !bidTokenInfo
+    auctionDetailsLoadState !== AuctionDetailsLoadState.Success ||
+    bidTokenLoading ||
+    !auctionDetails ||
+    !bidTokenInfo ||
+    auctionTokenDecimals === undefined
 
   if (isLoadingSharedDeps) {
     return renderPlaceholder(t('common.loading'))
@@ -166,6 +173,7 @@ export function AuctionChartContainer({
                 key={`demand-${isDarkMode}`}
                 auctionDetails={auctionDetails}
                 bidTokenInfo={bidTokenInfo}
+                auctionTokenDecimals={auctionTokenDecimals}
                 tokenColor={effectiveTokenColor}
               />
             </Suspense>
@@ -177,6 +185,7 @@ export function AuctionChartContainer({
                 key={`combined-${isDarkMode}`}
                 auctionDetails={auctionDetails}
                 bidTokenInfo={bidTokenInfo}
+                auctionTokenDecimals={auctionTokenDecimals}
                 tokenColor={effectiveTokenColor}
               />
             </Suspense>
@@ -213,10 +222,12 @@ export function AuctionChartContainer({
 function BidDemandChartPanel({
   auctionDetails,
   bidTokenInfo,
+  auctionTokenDecimals,
   tokenColor,
 }: {
   auctionDetails: AuctionDetails
   bidTokenInfo: BidTokenInfo
+  auctionTokenDecimals: number
   tokenColor?: string
 }): JSX.Element {
   const userBids = useAuctionStore((state) => state.userBids)
@@ -225,6 +236,7 @@ function BidDemandChartPanel({
     <LazyBidDistributionChart
       auctionDetails={auctionDetails}
       bidTokenInfo={bidTokenInfo}
+      auctionTokenDecimals={auctionTokenDecimals}
       tokenColor={tokenColor}
       userBids={userBids}
       chartMode="demand"
@@ -235,13 +247,20 @@ function BidDemandChartPanel({
 function CombinedAuctionChartPanel({
   auctionDetails,
   bidTokenInfo,
+  auctionTokenDecimals,
   tokenColor,
 }: {
   auctionDetails: AuctionDetails
   bidTokenInfo: BidTokenInfo
+  auctionTokenDecimals: number
   tokenColor?: string
 }): JSX.Element {
   return (
-    <LazyCombinedAuctionChart auctionDetails={auctionDetails} bidTokenInfo={bidTokenInfo} tokenColor={tokenColor} />
+    <LazyCombinedAuctionChart
+      auctionDetails={auctionDetails}
+      bidTokenInfo={bidTokenInfo}
+      auctionTokenDecimals={auctionTokenDecimals}
+      tokenColor={tokenColor}
+    />
   )
 }

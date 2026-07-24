@@ -24,11 +24,11 @@ type AnimatedFlexComponent = React.ForwardRefExoticComponent<
 >
 
 /**
- * @deprecated Prefer `<Flex animation="" />`
+ * Prefer Tamagui declarative animations (`<Flex animation="..." />`) for enter/exit and transitions.
+ * Reach for AnimatedFlex only when applying an external Reanimated `useAnimatedStyle` worklet — Reanimated 4
+ * strict mode rejects animated styles on non-animated components, and this wraps Flex via createAnimatedComponent.
  *
  *    See: https://tamagui.dev/docs/core/animations
- *
- * TODO(MOB-1948): Remove this
  *
  * Platform-specific implementations:
  * - Web: Uses CSS animations (AnimatedFlex.web.tsx)

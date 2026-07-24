@@ -14,7 +14,7 @@ export interface TokenIdentifier {
  * segment user behavior by data source without joining on the Statsig experiment.
  *
  *   aurora_ws            — pushed over the live WebSocket
- *   aurora_rest_fallback — fetched via GetTokenPrices with preferQuotePrices=false
+ *   aurora_rest_fallback — fetched via GetTokenPrices without preferQuotePrices
  *   tapi_quote           — fetched via GetTokenPrices with preferQuotePrices=true
  */
 export type PriceSource = 'aurora_ws' | 'aurora_rest_fallback' | 'tapi_quote'

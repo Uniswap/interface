@@ -4,6 +4,11 @@ import { Button, Flex, Switch, Text } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import useResizeObserver from 'use-resize-observer'
 import { ErrorCallout } from '~/components/ErrorCallout'
+import {
+  NumericalInputMimic,
+  NumericalInputSymbolContainer,
+  NumericalInputWrapper,
+} from '~/components/NumericalInput/LargeAmountInput'
 import { StyledPercentInput } from '~/components/PercentInput'
 import { LiquidityModalDetailRows } from '~/features/Liquidity/LiquidityModalDetailRows'
 import { LiquidityPositionInfo } from '~/features/Liquidity/LiquidityPositionInfo'
@@ -14,7 +19,6 @@ import {
 } from '~/pages/RemoveLiquidity/RemoveLiquidityModalContext'
 import { useRemoveLiquidityTxContext } from '~/pages/RemoveLiquidity/RemoveLiquidityTxContext'
 import { PredefinedAmount } from '~/pages/Swap/Buy/PredefinedAmount'
-import { NumericalInputMimic, NumericalInputSymbolContainer, NumericalInputWrapper } from '~/pages/Swap/common/shared'
 
 const isValidPercentageInput = (value: string): boolean => {
   const numValue = Number(value)
@@ -57,7 +61,7 @@ export function RemoveLiquidityForm() {
         px="$padding16"
       >
         <Text variant="body3" color="$neutral2">
-          {t('pool.withdrawAs', { nativeWrappedSymbol: nativeCurrency.symbol })}
+          {t('pool.withdrawAs', { nativeWrappedSymbol: nativeCurrency.symbol ?? t('common.token') })}
         </Text>
         <Switch
           id="add-as-weth"
@@ -131,7 +135,7 @@ export function RemoveLiquidityForm() {
       <ErrorCallout errorMessage={error} onPress={refetch} />
       <Flex row>
         <Button
-          isDisabled={percentInvalid || !txContext?.txRequest}
+          disabled={percentInvalid || !txContext?.txRequest}
           onPress={() => setStep(DecreaseLiquidityStep.Review)}
           loading={!error && !percentInvalid && !txContext?.txRequest}
           variant="branded"

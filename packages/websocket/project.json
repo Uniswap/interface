@@ -12,8 +12,6 @@
       }
     },
     "typecheck": {},
-    "typecheck:tsc": {},
-    "typecheck:tsgo": {},
     "format": {},
     "format:check": {},
     "lint:oxlint": {},

@@ -1,7 +1,6 @@
 import { renderHook } from '@testing-library/react'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import type { PropsWithChildren, ReactElement } from 'react'
 import type { MultichainTokenEntry } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -12,11 +11,6 @@ import { TDPStoreContext, type MultiChainMap } from '~/pages/TokenDetails/contex
 import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultichainTokenEntries'
 import { useTDPSwapCurrency } from '~/pages/TokenDetails/hooks/useTDPSwapCurrency'
 import { mocked } from '~/test-utils/mocked'
-
-vi.mock('@universe/gating', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@universe/gating')>()),
-  useFeatureFlag: vi.fn(),
-}))
 
 vi.mock('~/pages/TokenDetails/hooks/useMultichainTokenEntries', () => ({
   useMultichainTokenEntries: vi.fn(),
@@ -73,19 +67,7 @@ describe('useTDPSwapCurrency', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mocked(useMultichainTokenEntries).mockReturnValue(TWO_CHAINS)
-    mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.MultichainTokenUx)
     mocked(currencyForSelectedMultichainDeployment).mockReturnValue(BASE_CURRENCY)
-  })
-
-  it('returns base currency when feature flag is off', () => {
-    mocked(useFeatureFlag).mockReturnValue(false)
-    const store = createTDPStore(createTDPState())
-
-    const { result } = renderUseTDPSwapCurrency(store)
-
-    expect(result.current).toBe(BASE_CURRENCY)
-    // currencyForSelectedMultichainDeployment called with undefined entry → returns base
-    expect(mocked(currencyForSelectedMultichainDeployment)).toHaveBeenCalledWith(BASE_CURRENCY, undefined)
   })
 
   it('returns base currency for single-chain token', () => {

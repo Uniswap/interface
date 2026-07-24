@@ -53,7 +53,7 @@ export function BuyNativeTokenButton({
     <Trace logPress element={ElementName.BuyNativeTokenButton}>
       <Flex row alignSelf="stretch">
         <Button
-          isDisabled={isDisabled}
+          disabled={isDisabled}
           backgroundColor={backgroundColor}
           borderColor="$transparent"
           size="medium"

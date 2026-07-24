@@ -2,10 +2,12 @@ import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi, TradingApi } from '@universe/api'
 import { SwapConfigKey } from '@universe/gating'
 import { TEMPO_LOGO } from 'ui/src/assets'
+import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
 import {
   DEFAULT_MS_BEFORE_WARNING,
   DEFAULT_NATIVE_ADDRESS,
   getQuicknodeEndpointUrl,
+  getUniRpcEndpointUrl,
 } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import { NetworkLayer, RPCType, UniverseChainId, UniverseChainInfo } from 'uniswap/src/features/chains/types'
@@ -26,6 +28,7 @@ const tempoTokens = buildChainTokens({
 export const TEMPO_CHAIN_INFO = {
   id: UniverseChainId.Tempo,
   platform: Platform.EVM,
+  supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   testnet: false,
   assetRepoNetworkName: 'tempo',
   backendChain: {
@@ -52,6 +55,8 @@ export const TEMPO_CHAIN_INFO = {
     logo: TEMPO_LOGO,
   },
   wrappedNativeCurrency: null,
+  // Tempo pays gas in pathUSD (6-decimal ERC-20), not a native token.
+  gasTokenOverride: tempoTokens.pathUSD,
   networkLayer: NetworkLayer.L1,
   blockTimeMs: 500,
   pendingTransactionsRetryOptions: undefined,
@@ -61,7 +66,7 @@ export const TEMPO_CHAIN_INFO = {
   supportsNFTs: false,
   urlParam: 'tempo',
   rpcUrls: {
-    [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Tempo)] },
+    [RPCType.Public]: { http: [getUniRpcEndpointUrl(UniverseChainId.Tempo)] },
     [RPCType.Default]: { http: ['https://rpc.tempo.xyz'] },
     [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Tempo)] },
   },

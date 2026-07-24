@@ -1,17 +1,22 @@
-import { GraphQLApi } from '@universe/api'
 import { useEffect, useMemo, useState } from 'react'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
+import { useWalletBalancesIncludeCategories } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+import {
+  selectTotalsByRequestedAddress,
+  toEvmWallets,
+  useGetWalletsBalancesQuery,
+} from 'uniswap/src/data/rest/getWalletsBalances/getWalletsBalances'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useRestPortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances/useRestPortfolioValueModifier'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { usePortfolioValueModifiers } from 'uniswap/src/features/portfolio/balances/hooks'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
+import { NUMBER_OF_WALLETS_TO_GENERATE } from 'wallet/src/features/onboarding/constants'
 import {
   AddressWithBalanceAndName,
   hasBalanceOrName,
   useAddressesEnsNames,
 } from 'wallet/src/features/onboarding/hooks/useImportableAccounts'
-import { NUMBER_OF_WALLETS_TO_GENERATE } from 'wallet/src/features/onboarding/OnboardingContext'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 export interface RecoveryWalletInfo extends AddressWithBalanceAndName {
@@ -93,19 +98,21 @@ export function useOnDeviceRecoveryData(mnemonicId: string | undefined): {
     [addressesWithIndex],
   )
 
-  const { gqlChains } = useEnabledChains()
+  const { chains: chainIds } = useEnabledChains()
 
-  const valueModifiers = usePortfolioValueModifiers(addresses)
-  const { data: balancesData, loading: balancesLoading } = GraphQLApi.useMultiplePortfolioBalancesQuery({
-    variables: {
-      ownerAddresses: addresses,
-      valueModifiers,
-      chains: gqlChains,
-    },
-    skip: !addresses.length,
+  const modifiers = useRestPortfolioValueModifiers(addresses)
+  const includeCategories = useWalletBalancesIncludeCategories()
+  const wallets = useMemo(() => toEvmWallets(addresses), [addresses])
+  const select = useMemo(() => selectTotalsByRequestedAddress(addresses), [addresses])
+
+  const { data: balancesByAddress, isLoading: balancesLoading } = useGetWalletsBalancesQuery({
+    input: { wallets, chainIds, modifiers, includeCategories },
+    enabled: addresses.length > 0,
+    select,
   })
-  const balances = balancesData?.portfolios?.map((portfolio) => portfolio?.tokensTotalDenominatedValue?.value ?? 0)
-  const totalBalance = balances?.reduce((acc, balance) => acc + balance, 0)
+  const totalBalance = balancesByAddress
+    ? Object.values(balancesByAddress).reduce<number>((acc, balance) => acc + (balance ?? 0), 0)
+    : undefined
 
   const { loading: ensLoading, ensMap } = useAddressesEnsNames(addresses)
 
@@ -128,18 +135,18 @@ export function useOnDeviceRecoveryData(mnemonicId: string | undefined): {
   const unitagLoading = unitagStates.some((unitagState) => unitagState.isLoading)
 
   const recoveryWalletInfos = useMemo((): RecoveryWalletInfo[] => {
-    return addressesWithIndex.map((addressWithIndex, index): RecoveryWalletInfo => {
+    return addressesWithIndex.map((addressWithIndex): RecoveryWalletInfo => {
       const { address, derivationIndex } = addressWithIndex
       return {
         address,
         derivationIndex,
-        balance: balances?.[index],
+        balance: balancesByAddress?.[address],
         ensName: ensMap ? ensMap[address] : undefined,
         unitag: unitagStates[derivationIndex]?.data?.username,
       }
     })
     // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
-  }, [addressesWithIndex, balances, balancesLoading, ensMap, unitagsCombined])
+  }, [addressesWithIndex, balancesByAddress, balancesLoading, ensMap, unitagsCombined])
 
   const significantRecoveryWalletInfos = useMemo(
     (): RecoveryWalletInfo[] => recoveryWalletInfos.filter(hasBalanceOrName),

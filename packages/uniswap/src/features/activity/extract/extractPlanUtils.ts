@@ -1,4 +1,5 @@
 import { TradingApi } from '@universe/api'
+import { AssetType } from 'uniswap/src/entities/assets'
 import {
   TransactionDetails,
   TransactionOriginType,
@@ -22,6 +23,7 @@ export function createTransactionDetails(params: {
   addedTime: number
   from: Address
   hash: string | undefined
+  stepIndex?: number
   tokenInChainId?: MaybeChainId
   tokenOutChainId?: MaybeChainId
   tokenInAddress?: Address
@@ -41,6 +43,7 @@ export function createTransactionDetails(params: {
     addedTime,
     from,
     hash,
+    stepIndex,
   } = params
 
   const validatedTokenIn = validateAndBuildCurrencyId({
@@ -106,6 +109,8 @@ export function createTransactionDetails(params: {
               outputCurrencyId: validatedOutputToken.currencyId,
               inputCurrencyAmountRaw,
               outputCurrencyAmountRaw,
+              stepIndex,
+              stepType: planStepType,
             },
           }
         }
@@ -130,6 +135,8 @@ export function createTransactionDetails(params: {
           outputCurrencyId: validatedOutputToken.currencyId,
           inputCurrencyAmountRaw,
           outputCurrencyAmountRaw,
+          stepIndex,
+          stepType: planStepType,
         },
       }
     }
@@ -150,6 +157,8 @@ export function createTransactionDetails(params: {
           outputCurrencyId: validatedOutputToken.currencyId,
           inputCurrencyAmountRaw,
           outputCurrencyAmountRaw,
+          stepIndex,
+          stepType: planStepType,
         },
       }
     }
@@ -162,6 +171,68 @@ export function createTransactionDetails(params: {
           type: TransactionType.Wrap,
           unwrapped: planStepType === TradingApi.PlanStepType.UNWRAP,
           currencyAmountRaw: inputCurrencyAmountRaw,
+        },
+      }
+    case TradingApi.Routing.CHAINED:
+      switch (planStepType) {
+        case TradingApi.PlanStepType.VAULT_DEPOSIT: {
+          const validatedVaultToken = validateAndBuildCurrencyId({
+            chainId: tokenOutChainId,
+            tokenAddress: tokenOutAddress,
+          })
+          if (!validatedVaultToken) {
+            return null
+          }
+
+          return {
+            ...baseTransactionDetails,
+            routing,
+            typeInfo: {
+              type: TransactionType.Deposit,
+              assetType: AssetType.Currency,
+              tokenAddress: validatedTokenIn.tokenAddress,
+              currencyAmountRaw: inputCurrencyAmountRaw,
+              isVault: true,
+              vaultAddress: validatedVaultToken.tokenAddress,
+            },
+          }
+        }
+        case TradingApi.PlanStepType.VAULT_WITHDRAW: {
+          const validatedOutputToken = validateAndBuildCurrencyId({
+            chainId: tokenOutChainId,
+            tokenAddress: tokenOutAddress,
+          })
+          if (!validatedOutputToken) {
+            return null
+          }
+
+          return {
+            ...baseTransactionDetails,
+            routing,
+            chainId: validatedOutputToken.chainId,
+            typeInfo: {
+              type: TransactionType.Withdraw,
+              assetType: AssetType.Currency,
+              tokenAddress: validatedOutputToken.tokenAddress,
+              currencyAmountRaw: outputCurrencyAmountRaw,
+              isVault: true,
+              vaultAddress: validatedTokenIn.tokenAddress,
+            },
+          }
+        }
+        default:
+          break
+      }
+
+      logger.warn('extractPlanUtils', 'createTransactionDetails', 'Unknown chained plan step type', {
+        planStepType,
+      })
+      return {
+        ...baseTransactionDetails,
+        routing,
+        typeInfo: {
+          type: TransactionType.Unknown,
+          tokenAddress: validatedTokenIn.tokenAddress,
         },
       }
     case TradingApi.Routing.LIMIT_ORDER:

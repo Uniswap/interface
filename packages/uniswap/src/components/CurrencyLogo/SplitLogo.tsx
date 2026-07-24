@@ -1,9 +1,9 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, ReactNode } from 'react'
 import { Flex } from 'ui/src'
 import { Shuffle } from 'ui/src/components/icons/Shuffle'
 import { zIndexes } from 'ui/src/theme'
-import { CurrencyLogo, STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
+import { STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/constants'
+import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { TransactionSummaryNetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -37,12 +37,10 @@ export function SplitLogo({
   chainId,
   customIcon,
 }: Props): JSX.Element {
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const iconSize = size / 2
-  const networkLogo =
-    chainId && (chainId !== UniverseChainId.Mainnet || multichainTokenUxEnabled) ? (
-      <TransactionSummaryNetworkLogo chainId={chainId} size={size * STATUS_RATIO} />
-    ) : undefined
+  const networkLogo = chainId ? (
+    <TransactionSummaryNetworkLogo chainId={chainId} size={size * STATUS_RATIO} />
+  ) : undefined
 
   return (
     <Flex height={size} width={size}>

@@ -155,7 +155,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
         <Flex opacity={showError ? 0 : 1} px="$spacing16">
           <Flex row>
             <Button
-              isDisabled={isContinueButtonDisabled}
+              disabled={isContinueButtonDisabled}
               variant="branded"
               size="large"
               testID={TestID.Continue}

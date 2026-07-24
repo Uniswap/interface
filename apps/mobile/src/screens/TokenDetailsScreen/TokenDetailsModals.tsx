@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -30,9 +29,8 @@ export const TokenDetailsModals = memo(function TokenDetailsModalsInner(): JSX.E
     copyAddressToClipboard,
   } = useTokenDetailsContext()
 
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const project = useTokenBasicProjectPartsFragment({ currencyId }).data.project
-  const isMultichainToken = multichainTokenUxEnabled && (project?.tokens?.length ?? 0) > 1
+  const isMultichainToken = (project?.tokens?.length ?? 0) > 1
 
   const onAcknowledgeTokenWarning = useEvent(() => {
     closeTokenWarningModal()

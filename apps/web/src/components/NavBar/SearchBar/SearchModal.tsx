@@ -1,11 +1,14 @@
-import { memo, useCallback, useEffect, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Flex, type Input, Text, TouchableArea, useMedia, useScrollbarStyles, useSporeColors } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useUpdateScrollLock } from 'uniswap/src/components/modals/ScrollLock'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { EXPANDABLE_ASSET_SEARCH_ISSUER_ROW_RIGHT_INSET_PX } from 'uniswap/src/features/expandableAsset/expandableAssetLayout'
 import { useFilterCallbacks } from 'uniswap/src/features/search/SearchModal/hooks/useFilterCallbacks'
+import type { SearchModalRowVariant } from 'uniswap/src/features/search/SearchModal/SearchModalList'
 import { SearchModalNoQueryList } from 'uniswap/src/features/search/SearchModal/SearchModalNoQueryList'
 import { SearchModalResultsList } from 'uniswap/src/features/search/SearchModal/SearchModalResultsList'
 import { SearchTab, WEB_SEARCH_TABS } from 'uniswap/src/features/search/SearchModal/types'
@@ -15,11 +18,53 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useDebounce } from 'utilities/src/time/timing'
+import { TokenHoverCard } from '~/components/TokenHoverCard/TokenHoverCard'
 import { useModalState } from '~/hooks/useModalState'
 
-export const SearchModal = memo(function SearchModalInner(): JSX.Element {
+const SEARCH_MODAL_WIDTH = {
+  default: 640,
+  small: 540,
+}
+
+const TOKEN_HOVER_CARD_OFFSET = 8
+
+// Compensates for the RWA issuer sub-row's extra nesting; imported (not hardcoded) to stay in sync with its layout.
+const RWA_ISSUER_ROW_HOVER_CARD_OFFSET = TOKEN_HOVER_CARD_OFFSET + EXPANDABLE_ASSET_SEARCH_ISSUER_ROW_RIGHT_INSET_PX
+
+function useHoverCardWrapper({ containerWidth, onNavigate }: { containerWidth: number; onNavigate: () => void }) {
+  return useCallback(
+    ({
+      element,
+      currencyInfo,
+      variant,
+    }: {
+      element: JSX.Element
+      currencyInfo: CurrencyInfo
+      variant: SearchModalRowVariant
+    }): JSX.Element => (
+      <TokenHoverCard
+        currencyInfo={currencyInfo}
+        placement="right-start"
+        offset={variant === 'rwaIssuerChild' ? RWA_ISSUER_ROW_HOVER_CARD_OFFSET : TOKEN_HOVER_CARD_OFFSET}
+        widthOffset={TOKEN_HOVER_CARD_OFFSET}
+        containerWidth={containerWidth}
+        onNavigate={onNavigate}
+      >
+        {element}
+      </TokenHoverCard>
+    ),
+    [containerWidth, onNavigate],
+  )
+}
+
+export const SearchModal = memo(function SearchModalInner({
+  isAuctionSearchEnabled,
+  placeholder,
+}: {
+  isAuctionSearchEnabled: boolean
+  placeholder: string
+}): JSX.Element {
   const colors = useSporeColors()
-  const { t } = useTranslation()
   const media = useMedia()
   const scrollbarStyles = useScrollbarStyles()
 
@@ -41,6 +86,16 @@ export const SearchModal = memo(function SearchModalInner(): JSX.Element {
   }, [isModalOpen])
 
   const [activeTab, setActiveTab] = useState<SearchTab>(SearchTab.All)
+  const searchTabs = useMemo(
+    () => (isAuctionSearchEnabled ? WEB_SEARCH_TABS : WEB_SEARCH_TABS.filter((tab) => tab !== SearchTab.Auctions)),
+    [isAuctionSearchEnabled],
+  )
+
+  useEffect(() => {
+    if (!searchTabs.includes(activeTab)) {
+      setActiveTab(SearchTab.All)
+    }
+  }, [activeTab, searchTabs])
 
   const { onChangeChainFilter, onChangeText, searchFilter, chainFilter, parsedChainFilter, parsedSearchFilter } =
     useFilterCallbacks(null, ModalName.Search)
@@ -64,8 +119,16 @@ export const SearchModal = memo(function SearchModalInner(): JSX.Element {
   }, [onChangeText, onClose])
 
   const { chains: enabledChains } = useEnabledChains()
+  const isDataLivelinessUIEnabled = useFeatureFlag(FeatureFlags.DataLivelinessUI)
 
-  // Tamagui Dialog/Sheets should remove background scroll by default but does not work to disable ArrowUp/Down key scrolling
+  const searchModalWidth =
+    isDataLivelinessUIEnabled && media.xxl ? SEARCH_MODAL_WIDTH.small : SEARCH_MODAL_WIDTH.default
+
+  const wrapWithHoverCard = useHoverCardWrapper({ containerWidth: searchModalWidth, onNavigate: onSelect })
+  const rowWrapper = isDataLivelinessUIEnabled && !media.xl ? wrapWithHoverCard : undefined
+
+  // Tamagui's lock doesn't block ArrowUp/Down key scrolling, so we lock scroll ourselves and disable
+  // Tamagui's own lock below (disableRemoveScroll) to avoid a stray scrollbar-gutter reservation.
   useUpdateScrollLock({ isModalOpen })
 
   return (
@@ -74,9 +137,10 @@ export const SearchModal = memo(function SearchModalInner(): JSX.Element {
       hideKeyboardOnDismiss
       hideKeyboardOnSwipeDown
       renderBehindBottomInset
+      disableRemoveScroll
       backgroundColor={colors.surface1.val}
       isModalOpen={isModalOpen}
-      maxWidth={640}
+      maxWidth={searchModalWidth}
       maxHeight={520}
       name={ModalName.Search}
       padding="$none"
@@ -115,7 +179,7 @@ export const SearchModal = memo(function SearchModalInner(): JSX.Element {
                 />
               </Flex>
             }
-            placeholder={t('search.input.placeholder.withWallets')}
+            placeholder={placeholder}
             px="$spacing16"
             value={searchFilter ?? ''}
             onChangeText={onChangeText}
@@ -130,7 +194,7 @@ export const SearchModal = memo(function SearchModalInner(): JSX.Element {
           />
         </Flex>
         <Flex row px="$spacing20" pt="$spacing16" pb="$spacing8" gap="$spacing16">
-          {WEB_SEARCH_TABS.map((tab) => (
+          {searchTabs.map((tab) => (
             <Trace element={ElementName.SearchTab} logPress key={tab} properties={{ search_tab: tab }}>
               <TouchableArea onPress={() => setActiveTab(tab)}>
                 <Text color={activeTab === tab ? '$neutral1' : '$neutral2'} variant="buttonLabel2">
@@ -149,15 +213,19 @@ export const SearchModal = memo(function SearchModalInner(): JSX.Element {
               debouncedSearchFilter={debouncedSearchFilter}
               searchFilter={searchFilter}
               activeTab={activeTab}
+              auctionSearchEnabled={isAuctionSearchEnabled}
               onSelect={onSelect}
               renderedInModal={false}
+              rowWrapper={rowWrapper}
             />
           ) : (
             <SearchModalNoQueryList
               chainFilter={chainFilter}
               activeTab={activeTab}
+              auctionSearchEnabled={isAuctionSearchEnabled}
               onSelect={onSelect}
               renderedInModal
+              rowWrapper={rowWrapper}
             />
           )}
         </Flex>

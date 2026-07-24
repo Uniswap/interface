@@ -6,7 +6,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ClaimUnitagContent } from 'uniswap/src/features/unitags/ClaimUnitagContent'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
-import { Page } from '~/components/NavBar/DownloadApp/Modal'
+import { Page } from '~/components/NavBar/DownloadApp/Modal/constants'
 import { ModalContent } from '~/components/NavBar/DownloadApp/Modal/Content'
 
 export function ChooseUnitagModal({

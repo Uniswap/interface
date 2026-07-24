@@ -1,9 +1,10 @@
 import type { BottomSheetView } from '@gorhom/bottom-sheet'
 import { Currency } from '@uniswap/sdk-core'
-import { isExtensionApp, isMobileApp, isMobileWeb, isWebApp, isWebPlatform } from '@universe/environment'
+import { isExtensionApp, isMobileApp, isMobileWeb, isWebApp, isWebIOS, isWebPlatform } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { ComponentProps, memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useWindowDimensions } from 'react-native'
 import { Flex, ModalCloseIcon, Text, useMedia, useScrollbarStyles, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { spacing, zIndexes } from 'ui/src/theme'
@@ -19,6 +20,7 @@ import { CrosschainSwapsPromoBanner } from 'uniswap/src/components/TokenSelector
 import { useClipboardCheck } from 'uniswap/src/components/TokenSelector/hooks/useClipboardCheck'
 import { useTokenSelectionHandler } from 'uniswap/src/components/TokenSelector/hooks/useTokenSelectionHandler'
 import { TokenSelectorListSwitch } from 'uniswap/src/components/TokenSelector/TokenSelectorListSwitch'
+import type { OnSelectRwaToken } from 'uniswap/src/components/TokenSelector/types'
 import { TokenSelectorFlow, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/types'
 import { UnsupportedChainedActionsBanner } from 'uniswap/src/components/TokenSelector/UnsupportedChainedActionsBanner'
 import { flowToModalName } from 'uniswap/src/components/TokenSelector/utils'
@@ -40,7 +42,9 @@ import { useDebounce } from 'utilities/src/time/timing'
 export const TOKEN_SELECTOR_WEB_MAX_WIDTH = 400
 export const TOKEN_SELECTOR_WEB_MAX_HEIGHT = 700
 
-export const SNAP_POINTS = ['65%', '100%']
+// Half-open snap ratio; web uses the '%' string, mobile multiplies by windowHeight (concrete px).
+export const HALF_SNAP_POINT_RATIO = 0.65
+export const SNAP_POINTS = [`${HALF_SNAP_POINT_RATIO * 100}%`, '100%']
 
 export interface TokenSelectorProps {
   variation: TokenSelectorVariation
@@ -67,6 +71,7 @@ export interface TokenSelectorProps {
     allowCrossChainPair: boolean
     isPreselectedAsset: boolean
   }) => void
+  onSelectRwaToken?: OnSelectRwaToken
 }
 
 function TokenSelectorNetworkFilter({
@@ -98,6 +103,7 @@ export function TokenSelectorContent({
   onClose,
   onSelectChain,
   onSelectCurrency,
+  onSelectRwaToken,
   renderedInModal,
 }: Omit<TokenSelectorProps, 'isModalOpen'> & {
   renderedInModal: boolean
@@ -168,6 +174,14 @@ export function TokenSelectorContent({
 
   const shouldAutoFocusSearch = isWebPlatform && !media.sm
 
+  // Mounting SearchTextInput on the same render that modal opens caused jitter on Safari mWeb.
+  // Defer one render so the modal paints first.
+  const [searchInputMounted, setSearchInputMounted] = useState(!isWebIOS)
+
+  useEffect(() => {
+    setSearchInputMounted(true)
+  }, [])
+
   const shouldShowCrosschainPromoBanner = useMemo(
     () => flow === TokenSelectorFlow.Swap && (!chainFilter || isChainSupportedForChainedActions(chainFilter)),
     [flow, chainFilter],
@@ -187,36 +201,38 @@ export function TokenSelectorContent({
               <ModalCloseIcon onClose={onClose} />
             </Flex>
           )}
-          <SearchTextInput
-            autoFocus={shouldAutoFocusSearch}
-            backgroundColor="$surface2"
-            endAdornment={
-              <Flex row alignItems="center">
-                {hasClipboardString && <PasteButton inline textVariant="buttonLabel3" onPress={handlePaste} />}
-                <TokenSelectorNetworkFilter
-                  tieredOptions={tieredNetworkOptions}
-                  networkFilterV2Enabled={networkFilterV2Enabled}
-                  includeAllNetworks={!isTestnetModeEnabled && effectiveChainIds.length > 1}
-                  chainIds={effectiveChainIds}
-                  selectedChain={chainFilter}
-                  styles={isExtensionApp || media.md ? { dropdownZIndex: zIndexes.overlay } : undefined}
-                  onPressChain={(newChainId) => {
-                    onChangeChainFilter(newChainId)
-                    onSelectChain?.(newChainId)
-                  }}
-                />
-              </Flex>
-            }
-            placeholder={t('tokens.selector.search.placeholder')}
-            px="$spacing16"
-            py="$none"
-            mx={spacing.spacing16}
-            my="$spacing4"
-            value={searchFilter ?? ''}
-            onCancel={isWebPlatform ? undefined : onCancel}
-            onChangeText={onChangeText}
-            onFocus={onFocus}
-          />
+          {searchInputMounted && (
+            <SearchTextInput
+              autoFocus={shouldAutoFocusSearch}
+              backgroundColor="$surface2"
+              endAdornment={
+                <Flex row alignItems="center">
+                  {hasClipboardString && <PasteButton inline textVariant="buttonLabel3" onPress={handlePaste} />}
+                  <TokenSelectorNetworkFilter
+                    tieredOptions={tieredNetworkOptions}
+                    networkFilterV2Enabled={networkFilterV2Enabled}
+                    includeAllNetworks={!isTestnetModeEnabled && effectiveChainIds.length > 1}
+                    chainIds={effectiveChainIds}
+                    selectedChain={chainFilter}
+                    styles={isExtensionApp || media.md ? { dropdownZIndex: zIndexes.overlay } : undefined}
+                    onPressChain={(newChainId) => {
+                      onChangeChainFilter(newChainId)
+                      onSelectChain?.(newChainId)
+                    }}
+                  />
+                </Flex>
+              }
+              placeholder={t('tokens.selector.search.placeholder')}
+              px="$spacing16"
+              py="$none"
+              mx={spacing.spacing16}
+              my="$spacing4"
+              value={searchFilter ?? ''}
+              onCancel={isWebPlatform ? undefined : onCancel}
+              onChangeText={onChangeText}
+              onFocus={onFocus}
+            />
+          )}
           {flow === TokenSelectorFlow.Limit && (
             <Flex
               row
@@ -243,6 +259,7 @@ export function TokenSelectorContent({
                   variation={variation}
                   addresses={addresses}
                   chainFilter={chainFilter}
+                  chainIds={effectiveChainIds}
                   input={input}
                   output={output}
                   renderedInModal={renderedInModal}
@@ -250,6 +267,7 @@ export function TokenSelectorContent({
                   debouncedSearchFilter={debouncedSearchFilter}
                   parsedChainFilter={parsedChainFilter}
                   onSelectCurrency={onSelectCurrencyCallback}
+                  onSelectRwaToken={onSelectRwaToken}
                   onSendEmptyActionPress={onSendEmptyActionPress}
                 />
               </>
@@ -280,6 +298,8 @@ function TokenSelectorModalContent(props: TokenSelectorProps): JSX.Element {
 function TokenSelectorModalInner(props: TokenSelectorProps): JSX.Element {
   const colors = useSporeColors()
   const { isModalOpen, onClose, focusHook } = props
+  // Fabric collapses flex/percentage height inside a nested bottom-sheet portal; pin a concrete height on native.
+  const { height: windowHeight } = useWindowDimensions()
 
   return (
     <Modal
@@ -294,12 +314,14 @@ function TokenSelectorModalInner(props: TokenSelectorProps): JSX.Element {
       maxHeight={isWebApp ? TOKEN_SELECTOR_WEB_MAX_HEIGHT : undefined}
       name={ModalName.TokenSelector}
       padding="$none"
-      snapPoints={SNAP_POINTS}
+      // Open at half and allow expanding to full, matching SNAP_POINTS. Concrete px (not '%')
+      // because Fabric doesn't reliably normalize percentage snap points in the nested portal.
+      snapPoints={isMobileApp ? [windowHeight * HALF_SNAP_POINT_RATIO, windowHeight] : SNAP_POINTS}
       height={isWebApp ? '100vh' : undefined}
       focusHook={focusHook}
       onClose={onClose}
     >
-      <Flex grow maxHeight="100%" overflow="hidden">
+      <Flex grow={!isMobileApp} height={isMobileApp ? windowHeight : undefined} maxHeight="100%" overflow="hidden">
         <TokenSelectorModalContent {...props} />
       </Flex>
     </Modal>

@@ -1,3 +1,4 @@
+// oxlint-disable import/no-cycle -- sagas and redux store have many cycles, deep refactoring is needed
 import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query/react'
 import { isDevEnv, isTestEnv } from '@universe/environment'

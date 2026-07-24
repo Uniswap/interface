@@ -32,8 +32,9 @@ vi.mock('uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery', () => (
   useUnitagsAddressQuery: vi.fn(() => ({ data: undefined, isLoading: false })),
 }))
 
-vi.mock('~/hooks/useAccount', () => ({
-  useAccount: vi.fn(() => ({ address: '0xabc' })),
+vi.mock('~/features/accounts/store/hooks', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('~/features/accounts/store/hooks')>()),
+  useActiveAddress: vi.fn(() => '0xabc'),
 }))
 
 const mockOnClose = vi.fn()

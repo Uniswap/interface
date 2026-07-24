@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ReceiveScreen renders without error 1`] = `
+exports[`ReceiveScreen > renders without error 1`] = `
 {
   "asFragment": [Function],
   "baseElement": <body>
@@ -24,17 +24,17 @@ exports[`ReceiveScreen renders without error 1`] = `
                 style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
                 tabindex="0"
               >
-                <svg
+                <div
                   fill="none"
                   stroke-width="8"
                   style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
-                  viewBox="0 0 16 16"
+                  viewbox="0 0 16 16"
                 >
-                  <path
+                  <div
                     d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
                     fill="currentColor"
                   />
-                </svg>
+                </div>
               </div>
               <div
                 class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _justifyContent-center _flexGrow-1 _mr-24px _pt-t-space-spa94665593 _pb-t-space-spa94665593"
@@ -90,38 +90,38 @@ exports[`ReceiveScreen renders without error 1`] = `
               <div
                 class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _backgroundColor-FFFFFF35 _justifyContent-center _position-relative"
               >
-                <svg
+                <div
                   height="240"
-                  viewBox="-8 -8 256 256"
+                  viewbox="-8 -8 256 256"
                   width="240"
                 >
-                  <defs>
-                    <lineargradient
-                      gradientTransform="rotate(45)"
+                  <div>
+                    <div
+                      gradienttransform="rotate(45)"
                       id="grad"
                       x1="0%"
                       x2="100%"
                       y1="0%"
                       y2="100%"
                     >
-                      <stop
+                      <div
                         offset="0"
                         stop-color="#00C3A0"
                         stop-opacity="1"
                       />
-                      <stop
+                      <div
                         offset="1"
                         stop-color="rgb(0,255,255)"
                         stop-opacity="1"
                       />
-                      <stop
+                      <div
                         offset="1"
                         stop-opacity="1"
                       />
-                    </lineargradient>
-                  </defs>
-                  <g>
-                    <rect
+                    </div>
+                  </div>
+                  <div>
+                    <div
                       fill="#FFFFFF"
                       height="256"
                       rx="24"
@@ -129,9 +129,9 @@ exports[`ReceiveScreen renders without error 1`] = `
                       x="-8"
                       y="-8"
                     />
-                  </g>
-                  <g>
-                    <path
+                  </div>
+                  <div>
+                    <div
                       d="
           M 0,3.2432432432432434
           A 3.2432432432432434,3.2432432432432434 0 1,0 6.486486486486487,3.2432432432432434
@@ -2951,7 +2951,7 @@ exports[`ReceiveScreen renders without error 1`] = `
         "
                       fill="#00C3A0"
                     />
-                    <path
+                    <div
                       d="
           M 0,3.2432432432432434
           A 3.2432432432432434,3.2432432432432434 0 1,0 6.486486486486487,3.2432432432432434
@@ -5771,161 +5771,161 @@ exports[`ReceiveScreen renders without error 1`] = `
         "
                       fill="#1313132D"
                     />
-                    <svg
+                    <div
                       x="0"
                       y="0"
                     >
-                      <g
+                      <div
                         transform="translate(0, 0) scale(1.1351351351351353)"
                       >
-                        <path
+                        <div
                           d="M0 0H40V40H0V0Z"
                           fill="#FFFFFF"
                         />
-                      </g>
-                    </svg>
-                    <svg
+                      </div>
+                    </div>
+                    <div
                       x="0"
                       y="0"
                     >
-                      <g
+                      <div
                         transform="translate(0, 0) scale(1.1351351351351353)"
                       >
-                        <path
+                        <div
                           clip-rule="evenodd"
                           d="M0 12C0 5.37258 5.37258 0 12 0H28C34.6274 0 40 5.37258 40 12V28C40 34.6274 34.6274 40 28 40H12C5.37258 40 0 34.6274 0 28V12ZM28 6.27451H12C8.8379 6.27451 6.27451 8.8379 6.27451 12V28C6.27451 31.1621 8.8379 33.7255 12 33.7255H28C31.1621 33.7255 33.7255 31.1621 33.7255 28V12C33.7255 8.8379 31.1621 6.27451 28 6.27451Z"
                           fill="#00C3A0"
                           fill-rule="evenodd"
                         />
-                        <path
+                        <div
                           d="M11 17C11 13.6863 13.6863 11 17 11H23C26.3137 11 29 13.6863 29 17V23C29 26.3137 26.3137 29 23 29H17C13.6863 29 11 26.3137 11 23V17Z"
                           fill="#00C3A0"
                         />
-                      </g>
-                    </svg>
-                    <svg
+                      </div>
+                    </div>
+                    <div
                       x="0"
                       y="0"
                     >
-                      <g
+                      <div
                         transform="translate(0, 0) scale(1.1351351351351353)"
                       >
-                        <path
+                        <div
                           clip-rule="evenodd"
                           d="M0 12C0 5.37258 5.37258 0 12 0H28C34.6274 0 40 5.37258 40 12V28C40 34.6274 34.6274 40 28 40H12C5.37258 40 0 34.6274 0 28V12ZM28 6.27451H12C8.8379 6.27451 6.27451 8.8379 6.27451 12V28C6.27451 31.1621 8.8379 33.7255 12 33.7255H28C31.1621 33.7255 33.7255 31.1621 33.7255 28V12C33.7255 8.8379 31.1621 6.27451 28 6.27451Z"
                           fill="#1313132D"
                           fill-rule="evenodd"
                         />
-                        <path
+                        <div
                           d="M11 17C11 13.6863 13.6863 11 17 11H23C26.3137 11 29 13.6863 29 17V23C29 26.3137 26.3137 29 23 29H17C13.6863 29 11 26.3137 11 23V17Z"
                           fill="#1313132D"
                         />
-                      </g>
-                    </svg>
-                    <svg
+                      </div>
+                    </div>
+                    <div
                       x="0"
                       y="97.29729729729729"
                     >
-                      <g
+                      <div
                         transform="translate(0, 97.29729729729729) scale(1.1351351351351353)"
                       >
-                        <path
+                        <div
                           d="M0 0H40V40H0V0Z"
                           fill="#FFFFFF"
                         />
-                      </g>
-                    </svg>
-                    <svg
+                      </div>
+                    </div>
+                    <div
                       x="0"
                       y="97.29729729729729"
                     >
-                      <g
+                      <div
                         transform="translate(0, 97.29729729729729) scale(1.1351351351351353)"
                       >
-                        <path
+                        <div
                           clip-rule="evenodd"
                           d="M0 12C0 5.37258 5.37258 0 12 0H28C34.6274 0 40 5.37258 40 12V28C40 34.6274 34.6274 40 28 40H12C5.37258 40 0 34.6274 0 28V12ZM28 6.27451H12C8.8379 6.27451 6.27451 8.8379 6.27451 12V28C6.27451 31.1621 8.8379 33.7255 12 33.7255H28C31.1621 33.7255 33.7255 31.1621 33.7255 28V12C33.7255 8.8379 31.1621 6.27451 28 6.27451Z"
                           fill="#00C3A0"
                           fill-rule="evenodd"
                         />
-                        <path
+                        <div
                           d="M11 17C11 13.6863 13.6863 11 17 11H23C26.3137 11 29 13.6863 29 17V23C29 26.3137 26.3137 29 23 29H17C13.6863 29 11 26.3137 11 23V17Z"
                           fill="#00C3A0"
                         />
-                      </g>
-                    </svg>
-                    <svg
+                      </div>
+                    </div>
+                    <div
                       x="0"
                       y="97.29729729729729"
                     >
-                      <g
+                      <div
                         transform="translate(0, 97.29729729729729) scale(1.1351351351351353)"
                       >
-                        <path
+                        <div
                           clip-rule="evenodd"
                           d="M0 12C0 5.37258 5.37258 0 12 0H28C34.6274 0 40 5.37258 40 12V28C40 34.6274 34.6274 40 28 40H12C5.37258 40 0 34.6274 0 28V12ZM28 6.27451H12C8.8379 6.27451 6.27451 8.8379 6.27451 12V28C6.27451 31.1621 8.8379 33.7255 12 33.7255H28C31.1621 33.7255 33.7255 31.1621 33.7255 28V12C33.7255 8.8379 31.1621 6.27451 28 6.27451Z"
                           fill="#1313132D"
                           fill-rule="evenodd"
                         />
-                        <path
+                        <div
                           d="M11 17C11 13.6863 13.6863 11 17 11H23C26.3137 11 29 13.6863 29 17V23C29 26.3137 26.3137 29 23 29H17C13.6863 29 11 26.3137 11 23V17Z"
                           fill="#1313132D"
                         />
-                      </g>
-                    </svg>
-                    <svg
+                      </div>
+                    </div>
+                    <div
                       x="97.29729729729729"
                       y="0"
                     >
-                      <g
+                      <div
                         transform="translate(97.29729729729729, 0) scale(1.1351351351351353)"
                       >
-                        <path
+                        <div
                           d="M0 0H40V40H0V0Z"
                           fill="#FFFFFF"
                         />
-                      </g>
-                    </svg>
-                    <svg
+                      </div>
+                    </div>
+                    <div
                       x="97.29729729729729"
                       y="0"
                     >
-                      <g
+                      <div
                         transform="translate(97.29729729729729, 0) scale(1.1351351351351353)"
                       >
-                        <path
+                        <div
                           clip-rule="evenodd"
                           d="M0 12C0 5.37258 5.37258 0 12 0H28C34.6274 0 40 5.37258 40 12V28C40 34.6274 34.6274 40 28 40H12C5.37258 40 0 34.6274 0 28V12ZM28 6.27451H12C8.8379 6.27451 6.27451 8.8379 6.27451 12V28C6.27451 31.1621 8.8379 33.7255 12 33.7255H28C31.1621 33.7255 33.7255 31.1621 33.7255 28V12C33.7255 8.8379 31.1621 6.27451 28 6.27451Z"
                           fill="#00C3A0"
                           fill-rule="evenodd"
                         />
-                        <path
+                        <div
                           d="M11 17C11 13.6863 13.6863 11 17 11H23C26.3137 11 29 13.6863 29 17V23C29 26.3137 26.3137 29 23 29H17C13.6863 29 11 26.3137 11 23V17Z"
                           fill="#00C3A0"
                         />
-                      </g>
-                    </svg>
-                    <svg
+                      </div>
+                    </div>
+                    <div
                       x="97.29729729729729"
                       y="0"
                     >
-                      <g
+                      <div
                         transform="translate(97.29729729729729, 0) scale(1.1351351351351353)"
                       >
-                        <path
+                        <div
                           clip-rule="evenodd"
                           d="M0 12C0 5.37258 5.37258 0 12 0H28C34.6274 0 40 5.37258 40 12V28C40 34.6274 34.6274 40 28 40H12C5.37258 40 0 34.6274 0 28V12ZM28 6.27451H12C8.8379 6.27451 6.27451 8.8379 6.27451 12V28C6.27451 31.1621 8.8379 33.7255 12 33.7255H28C31.1621 33.7255 33.7255 31.1621 33.7255 28V12C33.7255 8.8379 31.1621 6.27451 28 6.27451Z"
                           fill="#1313132D"
                           fill-rule="evenodd"
                         />
-                        <path
+                        <div
                           d="M11 17C11 13.6863 13.6863 11 17 11H23C26.3137 11 29 13.6863 29 17V23C29 26.3137 26.3137 29 23 29H17C13.6863 29 11 26.3137 11 23V17Z"
                           fill="#1313132D"
                         />
-                      </g>
-                    </svg>
-                  </g>
-                </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <div
                   class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _justifyContent-center _backgroundColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _overflowX-visible _overflowY-visible _position-absolute"
                 >
@@ -5933,7 +5933,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                     class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _alignItems-center _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _backgroundColor-surface1 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
                   >
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _position-relative _width-60px _height-60px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _position-relative _width-60px _height-60px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                       data-testid="account-icon"
                     >
                       <div
@@ -5997,17 +5997,17 @@ exports[`ReceiveScreen renders without error 1`] = `
                       >
                         Wallet address
                       </span>
-                      <svg
+                      <div
                         fill="none"
                         stroke-width="8"
                         style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
-                        viewBox="0 0 24 24"
+                        viewbox="0 0 24 24"
                       >
-                        <path
+                        <div
                           d="M18.375 6.25H9.625C7.448 6.25 6.25 7.448 6.25 9.625V18.375C6.25 20.552 7.448 21.75 9.625 21.75H18.375C20.552 21.75 21.75 20.552 21.75 18.375V9.625C21.75 7.448 20.552 6.25 18.375 6.25ZM20.25 18.375C20.25 19.707 19.707 20.25 18.375 20.25H9.625C8.293 20.25 7.75 19.707 7.75 18.375V9.625C7.75 8.293 8.293 7.75 9.625 7.75H18.375C19.707 7.75 20.25 8.293 20.25 9.625V18.375ZM3.75 5.62V14.38C3.75 15.578 4.23309 15.873 4.39209 15.971C4.74609 16.187 4.85589 16.649 4.63989 17.002C4.49789 17.233 4.25202 17.36 3.99902 17.36C3.86602 17.36 3.72991 17.324 3.60791 17.25C2.70691 16.698 2.25 15.733 2.25 14.38V5.62C2.25 3.478 3.47912 2.25 5.62012 2.25H14.3799C16.0649 2.25 16.87 2.98897 17.25 3.60797C17.466 3.96097 17.355 4.42298 17.002 4.63898C16.648 4.85598 16.1879 4.74399 15.9709 4.39099C15.8739 4.23199 15.5779 3.74902 14.3799 3.74902H5.62012C4.29212 3.75002 3.75 4.292 3.75 5.62Z"
                           fill="currentColor"
                         />
-                      </svg>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -6059,17 +6059,17 @@ exports[`ReceiveScreen renders without error 1`] = `
                      
                     networks
                   </span>
-                  <svg
+                  <div
                     fill="none"
                     stroke-width="8"
                     style="width: 12px; height: 12px; color: rgba(19, 19, 19, 0.35);"
-                    viewBox="0 0 16 16"
+                    viewbox="0 0 16 16"
                   >
-                    <path
+                    <div
                       d="M8.00001 1.33334C4.31801 1.33334 1.33334 4.318 1.33334 8C1.33334 11.682 4.31801 14.6667 8.00001 14.6667C11.682 14.6667 14.6667 11.682 14.6667 8C14.6667 4.318 11.682 1.33334 8.00001 1.33334ZM8.50001 11C8.50001 11.276 8.27601 11.5 8.00001 11.5C7.72401 11.5 7.50001 11.276 7.50001 11V7.95264C7.50001 7.67664 7.72401 7.45264 8.00001 7.45264C8.27601 7.45264 8.50001 7.67664 8.50001 7.95264V11ZM8.01336 6.33334C7.64536 6.33334 7.34327 6.03467 7.34327 5.66667C7.34327 5.29867 7.63868 5 8.00668 5H8.01336C8.38202 5 8.68002 5.29867 8.68002 5.66667C8.68002 6.03467 8.38136 6.33334 8.01336 6.33334Z"
                       fill="currentColor"
                     />
-                  </svg>
+                  </div>
                 </div>
               </div>
             </div>
@@ -6079,7 +6079,7 @@ exports[`ReceiveScreen renders without error 1`] = `
               <h2
                 class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
                 data-disable-theme="true"
-                id="Dialog--«r1d»-title"
+                id="Dialog--_r_1e_-title"
                 role="heading"
               />
             </span>
@@ -6124,17 +6124,17 @@ exports[`ReceiveScreen renders without error 1`] = `
               style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
               tabindex="0"
             >
-              <svg
+              <div
                 fill="none"
                 stroke-width="8"
                 style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
-                viewBox="0 0 16 16"
+                viewbox="0 0 16 16"
               >
-                <path
+                <div
                   d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
                   fill="currentColor"
                 />
-              </svg>
+              </div>
             </div>
             <div
               class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _justifyContent-center _flexGrow-1 _mr-24px _pt-t-space-spa94665593 _pb-t-space-spa94665593"
@@ -6190,38 +6190,38 @@ exports[`ReceiveScreen renders without error 1`] = `
             <div
               class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _backgroundColor-FFFFFF35 _justifyContent-center _position-relative"
             >
-              <svg
+              <div
                 height="240"
-                viewBox="-8 -8 256 256"
+                viewbox="-8 -8 256 256"
                 width="240"
               >
-                <defs>
-                  <lineargradient
-                    gradientTransform="rotate(45)"
+                <div>
+                  <div
+                    gradienttransform="rotate(45)"
                     id="grad"
                     x1="0%"
                     x2="100%"
                     y1="0%"
                     y2="100%"
                   >
-                    <stop
+                    <div
                       offset="0"
                       stop-color="#00C3A0"
                       stop-opacity="1"
                     />
-                    <stop
+                    <div
                       offset="1"
                       stop-color="rgb(0,255,255)"
                       stop-opacity="1"
                     />
-                    <stop
+                    <div
                       offset="1"
                       stop-opacity="1"
                     />
-                  </lineargradient>
-                </defs>
-                <g>
-                  <rect
+                  </div>
+                </div>
+                <div>
+                  <div
                     fill="#FFFFFF"
                     height="256"
                     rx="24"
@@ -6229,9 +6229,9 @@ exports[`ReceiveScreen renders without error 1`] = `
                     x="-8"
                     y="-8"
                   />
-                </g>
-                <g>
-                  <path
+                </div>
+                <div>
+                  <div
                     d="
           M 0,3.2432432432432434
           A 3.2432432432432434,3.2432432432432434 0 1,0 6.486486486486487,3.2432432432432434
@@ -9051,7 +9051,7 @@ exports[`ReceiveScreen renders without error 1`] = `
         "
                     fill="#00C3A0"
                   />
-                  <path
+                  <div
                     d="
           M 0,3.2432432432432434
           A 3.2432432432432434,3.2432432432432434 0 1,0 6.486486486486487,3.2432432432432434
@@ -11871,161 +11871,161 @@ exports[`ReceiveScreen renders without error 1`] = `
         "
                     fill="#1313132D"
                   />
-                  <svg
+                  <div
                     x="0"
                     y="0"
                   >
-                    <g
+                    <div
                       transform="translate(0, 0) scale(1.1351351351351353)"
                     >
-                      <path
+                      <div
                         d="M0 0H40V40H0V0Z"
                         fill="#FFFFFF"
                       />
-                    </g>
-                  </svg>
-                  <svg
+                    </div>
+                  </div>
+                  <div
                     x="0"
                     y="0"
                   >
-                    <g
+                    <div
                       transform="translate(0, 0) scale(1.1351351351351353)"
                     >
-                      <path
+                      <div
                         clip-rule="evenodd"
                         d="M0 12C0 5.37258 5.37258 0 12 0H28C34.6274 0 40 5.37258 40 12V28C40 34.6274 34.6274 40 28 40H12C5.37258 40 0 34.6274 0 28V12ZM28 6.27451H12C8.8379 6.27451 6.27451 8.8379 6.27451 12V28C6.27451 31.1621 8.8379 33.7255 12 33.7255H28C31.1621 33.7255 33.7255 31.1621 33.7255 28V12C33.7255 8.8379 31.1621 6.27451 28 6.27451Z"
                         fill="#00C3A0"
                         fill-rule="evenodd"
                       />
-                      <path
+                      <div
                         d="M11 17C11 13.6863 13.6863 11 17 11H23C26.3137 11 29 13.6863 29 17V23C29 26.3137 26.3137 29 23 29H17C13.6863 29 11 26.3137 11 23V17Z"
                         fill="#00C3A0"
                       />
-                    </g>
-                  </svg>
-                  <svg
+                    </div>
+                  </div>
+                  <div
                     x="0"
                     y="0"
                   >
-                    <g
+                    <div
                       transform="translate(0, 0) scale(1.1351351351351353)"
                     >
-                      <path
+                      <div
                         clip-rule="evenodd"
                         d="M0 12C0 5.37258 5.37258 0 12 0H28C34.6274 0 40 5.37258 40 12V28C40 34.6274 34.6274 40 28 40H12C5.37258 40 0 34.6274 0 28V12ZM28 6.27451H12C8.8379 6.27451 6.27451 8.8379 6.27451 12V28C6.27451 31.1621 8.8379 33.7255 12 33.7255H28C31.1621 33.7255 33.7255 31.1621 33.7255 28V12C33.7255 8.8379 31.1621 6.27451 28 6.27451Z"
                         fill="#1313132D"
                         fill-rule="evenodd"
                       />
-                      <path
+                      <div
                         d="M11 17C11 13.6863 13.6863 11 17 11H23C26.3137 11 29 13.6863 29 17V23C29 26.3137 26.3137 29 23 29H17C13.6863 29 11 26.3137 11 23V17Z"
                         fill="#1313132D"
                       />
-                    </g>
-                  </svg>
-                  <svg
+                    </div>
+                  </div>
+                  <div
                     x="0"
                     y="97.29729729729729"
                   >
-                    <g
+                    <div
                       transform="translate(0, 97.29729729729729) scale(1.1351351351351353)"
                     >
-                      <path
+                      <div
                         d="M0 0H40V40H0V0Z"
                         fill="#FFFFFF"
                       />
-                    </g>
-                  </svg>
-                  <svg
+                    </div>
+                  </div>
+                  <div
                     x="0"
                     y="97.29729729729729"
                   >
-                    <g
+                    <div
                       transform="translate(0, 97.29729729729729) scale(1.1351351351351353)"
                     >
-                      <path
+                      <div
                         clip-rule="evenodd"
                         d="M0 12C0 5.37258 5.37258 0 12 0H28C34.6274 0 40 5.37258 40 12V28C40 34.6274 34.6274 40 28 40H12C5.37258 40 0 34.6274 0 28V12ZM28 6.27451H12C8.8379 6.27451 6.27451 8.8379 6.27451 12V28C6.27451 31.1621 8.8379 33.7255 12 33.7255H28C31.1621 33.7255 33.7255 31.1621 33.7255 28V12C33.7255 8.8379 31.1621 6.27451 28 6.27451Z"
                         fill="#00C3A0"
                         fill-rule="evenodd"
                       />
-                      <path
+                      <div
                         d="M11 17C11 13.6863 13.6863 11 17 11H23C26.3137 11 29 13.6863 29 17V23C29 26.3137 26.3137 29 23 29H17C13.6863 29 11 26.3137 11 23V17Z"
                         fill="#00C3A0"
                       />
-                    </g>
-                  </svg>
-                  <svg
+                    </div>
+                  </div>
+                  <div
                     x="0"
                     y="97.29729729729729"
                   >
-                    <g
+                    <div
                       transform="translate(0, 97.29729729729729) scale(1.1351351351351353)"
                     >
-                      <path
+                      <div
                         clip-rule="evenodd"
                         d="M0 12C0 5.37258 5.37258 0 12 0H28C34.6274 0 40 5.37258 40 12V28C40 34.6274 34.6274 40 28 40H12C5.37258 40 0 34.6274 0 28V12ZM28 6.27451H12C8.8379 6.27451 6.27451 8.8379 6.27451 12V28C6.27451 31.1621 8.8379 33.7255 12 33.7255H28C31.1621 33.7255 33.7255 31.1621 33.7255 28V12C33.7255 8.8379 31.1621 6.27451 28 6.27451Z"
                         fill="#1313132D"
                         fill-rule="evenodd"
                       />
-                      <path
+                      <div
                         d="M11 17C11 13.6863 13.6863 11 17 11H23C26.3137 11 29 13.6863 29 17V23C29 26.3137 26.3137 29 23 29H17C13.6863 29 11 26.3137 11 23V17Z"
                         fill="#1313132D"
                       />
-                    </g>
-                  </svg>
-                  <svg
+                    </div>
+                  </div>
+                  <div
                     x="97.29729729729729"
                     y="0"
                   >
-                    <g
+                    <div
                       transform="translate(97.29729729729729, 0) scale(1.1351351351351353)"
                     >
-                      <path
+                      <div
                         d="M0 0H40V40H0V0Z"
                         fill="#FFFFFF"
                       />
-                    </g>
-                  </svg>
-                  <svg
+                    </div>
+                  </div>
+                  <div
                     x="97.29729729729729"
                     y="0"
                   >
-                    <g
+                    <div
                       transform="translate(97.29729729729729, 0) scale(1.1351351351351353)"
                     >
-                      <path
+                      <div
                         clip-rule="evenodd"
                         d="M0 12C0 5.37258 5.37258 0 12 0H28C34.6274 0 40 5.37258 40 12V28C40 34.6274 34.6274 40 28 40H12C5.37258 40 0 34.6274 0 28V12ZM28 6.27451H12C8.8379 6.27451 6.27451 8.8379 6.27451 12V28C6.27451 31.1621 8.8379 33.7255 12 33.7255H28C31.1621 33.7255 33.7255 31.1621 33.7255 28V12C33.7255 8.8379 31.1621 6.27451 28 6.27451Z"
                         fill="#00C3A0"
                         fill-rule="evenodd"
                       />
-                      <path
+                      <div
                         d="M11 17C11 13.6863 13.6863 11 17 11H23C26.3137 11 29 13.6863 29 17V23C29 26.3137 26.3137 29 23 29H17C13.6863 29 11 26.3137 11 23V17Z"
                         fill="#00C3A0"
                       />
-                    </g>
-                  </svg>
-                  <svg
+                    </div>
+                  </div>
+                  <div
                     x="97.29729729729729"
                     y="0"
                   >
-                    <g
+                    <div
                       transform="translate(97.29729729729729, 0) scale(1.1351351351351353)"
                     >
-                      <path
+                      <div
                         clip-rule="evenodd"
                         d="M0 12C0 5.37258 5.37258 0 12 0H28C34.6274 0 40 5.37258 40 12V28C40 34.6274 34.6274 40 28 40H12C5.37258 40 0 34.6274 0 28V12ZM28 6.27451H12C8.8379 6.27451 6.27451 8.8379 6.27451 12V28C6.27451 31.1621 8.8379 33.7255 12 33.7255H28C31.1621 33.7255 33.7255 31.1621 33.7255 28V12C33.7255 8.8379 31.1621 6.27451 28 6.27451Z"
                         fill="#1313132D"
                         fill-rule="evenodd"
                       />
-                      <path
+                      <div
                         d="M11 17C11 13.6863 13.6863 11 17 11H23C26.3137 11 29 13.6863 29 17V23C29 26.3137 26.3137 29 23 29H17C13.6863 29 11 26.3137 11 23V17Z"
                         fill="#1313132D"
                       />
-                    </g>
-                  </svg>
-                </g>
-              </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div
                 class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _justifyContent-center _backgroundColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _overflowX-visible _overflowY-visible _position-absolute"
               >
@@ -12033,7 +12033,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                   class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _alignItems-center _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _backgroundColor-surface1 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _position-relative _width-60px _height-60px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _position-relative _width-60px _height-60px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                     data-testid="account-icon"
                   >
                     <div
@@ -12097,17 +12097,17 @@ exports[`ReceiveScreen renders without error 1`] = `
                     >
                       Wallet address
                     </span>
-                    <svg
+                    <div
                       fill="none"
                       stroke-width="8"
                       style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
-                      viewBox="0 0 24 24"
+                      viewbox="0 0 24 24"
                     >
-                      <path
+                      <div
                         d="M18.375 6.25H9.625C7.448 6.25 6.25 7.448 6.25 9.625V18.375C6.25 20.552 7.448 21.75 9.625 21.75H18.375C20.552 21.75 21.75 20.552 21.75 18.375V9.625C21.75 7.448 20.552 6.25 18.375 6.25ZM20.25 18.375C20.25 19.707 19.707 20.25 18.375 20.25H9.625C8.293 20.25 7.75 19.707 7.75 18.375V9.625C7.75 8.293 8.293 7.75 9.625 7.75H18.375C19.707 7.75 20.25 8.293 20.25 9.625V18.375ZM3.75 5.62V14.38C3.75 15.578 4.23309 15.873 4.39209 15.971C4.74609 16.187 4.85589 16.649 4.63989 17.002C4.49789 17.233 4.25202 17.36 3.99902 17.36C3.86602 17.36 3.72991 17.324 3.60791 17.25C2.70691 16.698 2.25 15.733 2.25 14.38V5.62C2.25 3.478 3.47912 2.25 5.62012 2.25H14.3799C16.0649 2.25 16.87 2.98897 17.25 3.60797C17.466 3.96097 17.355 4.42298 17.002 4.63898C16.648 4.85598 16.1879 4.74399 15.9709 4.39099C15.8739 4.23199 15.5779 3.74902 14.3799 3.74902H5.62012C4.29212 3.75002 3.75 4.292 3.75 5.62Z"
                         fill="currentColor"
                       />
-                    </svg>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -12159,17 +12159,17 @@ exports[`ReceiveScreen renders without error 1`] = `
                    
                   networks
                 </span>
-                <svg
+                <div
                   fill="none"
                   stroke-width="8"
                   style="width: 12px; height: 12px; color: rgba(19, 19, 19, 0.35);"
-                  viewBox="0 0 16 16"
+                  viewbox="0 0 16 16"
                 >
-                  <path
+                  <div
                     d="M8.00001 1.33334C4.31801 1.33334 1.33334 4.318 1.33334 8C1.33334 11.682 4.31801 14.6667 8.00001 14.6667C11.682 14.6667 14.6667 11.682 14.6667 8C14.6667 4.318 11.682 1.33334 8.00001 1.33334ZM8.50001 11C8.50001 11.276 8.27601 11.5 8.00001 11.5C7.72401 11.5 7.50001 11.276 7.50001 11V7.95264C7.50001 7.67664 7.72401 7.45264 8.00001 7.45264C8.27601 7.45264 8.50001 7.67664 8.50001 7.95264V11ZM8.01336 6.33334C7.64536 6.33334 7.34327 6.03467 7.34327 5.66667C7.34327 5.29867 7.63868 5 8.00668 5H8.01336C8.38202 5 8.68002 5.29867 8.68002 5.66667C8.68002 6.03467 8.38136 6.33334 8.01336 6.33334Z"
                     fill="currentColor"
                   />
-                </svg>
+                </div>
               </div>
             </div>
           </div>
@@ -12179,7 +12179,7 @@ exports[`ReceiveScreen renders without error 1`] = `
             <h2
               class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
               data-disable-theme="true"
-              id="Dialog--«r1d»-title"
+              id="Dialog--_r_1e_-title"
               role="heading"
             />
           </span>

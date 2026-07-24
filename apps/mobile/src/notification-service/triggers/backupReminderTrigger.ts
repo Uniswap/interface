@@ -5,7 +5,7 @@ import {
   OnClick,
 } from '@uniswap/client-notification-service/dist/uniswap/notificationservice/v1/api_pb'
 import { ContentStyle, type InAppNotification, OnClickAction } from '@universe/api'
-import { type TriggerCondition } from '@universe/notifications/src/notification-data-source/implementations/createLocalTriggerDataSource'
+import { type TriggerCondition } from '@universe/notifications'
 import { type MobileState } from 'src/app/mobileReducer'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { ONE_DAY_MS } from 'utilities/src/time/time'

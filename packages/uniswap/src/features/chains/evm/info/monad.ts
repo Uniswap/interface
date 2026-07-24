@@ -2,11 +2,13 @@ import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi, TradingApi } from '@universe/api'
 import { SwapConfigKey } from '@universe/gating'
 import { MONAD_LOGO_FILLED } from 'ui/src/assets'
+import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
 import {
   DEFAULT_MS_BEFORE_WARNING,
   DEFAULT_NATIVE_ADDRESS_LEGACY,
   getQuicknodeEndpointUrl,
+  getUniRpcEndpointUrl,
 } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
@@ -30,6 +32,7 @@ const mainnetTokens = buildChainTokens({
 export const MONAD_CHAIN_INFO = {
   id: UniverseChainId.Monad,
   platform: Platform.EVM,
+  supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   testnet: false,
   assetRepoNetworkName: 'monad',
   backendChain: {
@@ -58,8 +61,9 @@ export const MONAD_CHAIN_INFO = {
   supportsNFTs: false,
   urlParam: CHAIN_ID_TO_URL_PARAM[UniverseChainId.Monad],
   rpcUrls: {
-    [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Monad)] },
-    [RPCType.Default]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Monad)] },
+    [RPCType.Public]: { http: [getUniRpcEndpointUrl(UniverseChainId.Monad)] },
+    // Default feeds wallet-connector rpc maps (cookieless). Unkeyed, CSP-allowed public endpoint.
+    [RPCType.Default]: { http: ['https://monad.drpc.org'] },
     [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Monad)] },
   },
   wrappedNativeCurrency: {

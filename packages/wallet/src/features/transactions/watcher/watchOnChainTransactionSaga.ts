@@ -1,4 +1,5 @@
 /* oxlint-disable typescript/explicit-function-return-type */
+/* oxlint-disable max-lines */
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { waitForFlashbotsProtectReceipt } from '@universe/chains'
 import { BigNumber, BigNumberish, providers } from 'ethers'
@@ -6,6 +7,9 @@ import { call, cancel, delay, fork, put, race, spawn, take } from 'typed-redux-s
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import type { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
 import { CancelableStepInfo } from 'uniswap/src/features/transactions/hooks/useIsCancelable'
 import {
   cancelPlanStep,
@@ -13,7 +17,7 @@ import {
   replaceTransaction,
   transactionActions,
 } from 'uniswap/src/features/transactions/slice'
-import { waitForPlanUpdateOrFinalizedState } from 'uniswap/src/features/transactions/swap/plan/planPollingUtils'
+import { waitForPlanUpdateOrFinalizedState } from 'uniswap/src/features/transactions/swap/plan/planWatcherSaga'
 import { isBridge, isChained, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   FinalizedTransactionDetails,
@@ -28,6 +32,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { cancelPlanStep as cancelPlanStepSaga } from 'wallet/src/features/transactions/cancelPlanStepSaga'
 import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
 import { attemptReplaceTransaction } from 'wallet/src/features/transactions/replaceTransactionSaga'
+import { buildPendingTransactionStuckProperties } from 'wallet/src/features/transactions/telemetry/nonceTelemetry'
 import { processTransactionReceipt } from 'wallet/src/features/transactions/utils'
 import { OrderWatcher } from 'wallet/src/features/transactions/watcher/orderWatcherSaga'
 import {
@@ -68,6 +73,22 @@ function* getFlashbotsTransactionStatus(transaction: TransactionDetails, hash: s
         return TransactionStatus.Success
       case 'UNKNOWN': // Transaction not found by Flashbots Protect, might have been submitted through another provider
       default:
+        // SWAP-2471: no terminal Flashbots status — the private tx may never finalize (it falls through
+        // to the Trading-API poll). Capture it as a stuck signal.
+        logger.info(
+          'watchOnChainTransactionSaga',
+          'getFlashbotsTransactionStatus',
+          'Flashbots Protect status unresolved',
+          { transactionId: transaction.id, hash, flashbotsStatus: flashbotsReceipt.status },
+        )
+        if (isClassic(transaction)) {
+          // provider_knows_tx omitted: this path only awaited the Flashbots relay, never probed the
+          // chain provider (the tx may well exist via another provider) — emitting false would mislead.
+          yield* emitPendingTransactionStuck({
+            transaction,
+            reason: 'flashbots_unknown',
+          })
+        }
         return undefined
     }
   } catch (error) {
@@ -114,14 +135,25 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
 
   // 4337 UserOp path: poll Trading API /swaps with userOpHashes
   if (transaction.userOpHash) {
-    const { status: userOpStatus, txHash: resolvedHash } = yield* call(waitForTransactionStatus, transaction)
+    const {
+      status: userOpStatus,
+      txHash: resolvedHash,
+      sponsorInfo: resolvedSponsorInfo,
+      paymaster: resolvedPaymaster,
+    } = yield* call(waitForTransactionStatus, transaction)
     const resolvedTxHash = resolvedHash ?? transaction.hash
 
     if (resolvedTxHash) {
       yield* spawn(updateTransactionWithReceipt, { ...transaction, hash: resolvedTxHash }, provider)
     }
 
-    return { ...transaction, status: userOpStatus, hash: resolvedTxHash }
+    return {
+      ...transaction,
+      status: userOpStatus,
+      hash: resolvedTxHash,
+      sponsorInfo: resolvedSponsorInfo ?? transaction.sponsorInfo,
+      paymaster: resolvedPaymaster ?? transaction.paymaster,
+    }
   }
 
   // At this point, the tx should either be a classic / bridge tx or a filled order, both of which have hashes
@@ -169,6 +201,28 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
   return { ...transaction, status: classicStatus, hash }
 }
 
+// SWAP-2471: emit the unsampled stuck-tx analytics event (the recovery-hole + Flashbots-UNKNOWN signals).
+function* emitPendingTransactionStuck(params: {
+  transaction: OnChainTransactionDetails
+  reason: UniverseEventProperties[WalletEventName.PendingTransactionStuck]['reason']
+  providerKnowsTx?: boolean
+  requestNonce?: number
+  nextNonce?: number
+}) {
+  yield* call(
+    sendAnalyticsEvent,
+    WalletEventName.PendingTransactionStuck,
+    buildPendingTransactionStuckProperties({
+      transaction: params.transaction,
+      reason: params.reason,
+      providerKnowsTx: params.providerKnowsTx,
+      requestNonce: params.requestNonce,
+      nextNonce: params.nextNonce,
+      nowMs: Date.now(),
+    }),
+  )
+}
+
 /**
  * Checks if a transaction that timed out waiting for receipt is potentially invalidated.
  * A transaction is considered invalidated if:
@@ -180,7 +234,8 @@ export function* checkIfTransactionInvalidated(
   transaction: OnChainTransactionDetails,
   provider: providers.Provider,
 ): Generator<unknown, boolean> {
-  if (transaction.options.request.nonce === undefined || !transaction.hash) {
+  const nonce = transaction.options.request?.nonce
+  if (nonce === undefined || !transaction.hash) {
     // We can't check if the transaction is invalidated
     return false
   }
@@ -198,12 +253,37 @@ export function* checkIfTransactionInvalidated(
     return true
   }
 
-  const requestNonce = BigNumber.from(transaction.options.request.nonce).toNumber()
+  const requestNonce = BigNumber.from(nonce).toNumber()
   const nextNonce = yield* call([provider, provider.getTransactionCount], transaction.from)
-  if (nextNonce > requestNonce) {
+  const invalidated = nextNonce > requestNonce
+
+  // SWAP-2471: log the invalidation decision. NOTE this uses the default 'latest' block tag, vs the
+  // 'pending' tag used at nonce derivation — both are logged deliberately for comparison.
+  logger.info('watchOnChainTransactionSaga', 'checkIfTransactionInvalidated', 'Invalidation check', {
+    transactionId: transaction.id,
+    hash: transaction.hash,
+    chainId: transaction.chainId,
+    submitViaPrivateRpc: transaction.options.submitViaPrivateRpc,
+    requestNonce,
+    nextNonce,
+    invalidated,
+  })
+
+  if (invalidated) {
     // Transaction nonce is not valid anymore, it can't be included in a future block
     return true
   }
+
+  // SWAP-2471 recovery hole: reaching here means a private tx (public txs already returned above) whose
+  // hash the provider no longer knows AND whose nonce the chain has not passed (nextNonce <= requestNonce).
+  // It stays Pending forever and inflates later nonces. Capture it.
+  yield* emitPendingTransactionStuck({
+    transaction,
+    reason: 'invalidation_check_false',
+    providerKnowsTx: false,
+    requestNonce,
+    nextNonce,
+  })
 
   // Transaction could still be around and included in a future block, so we don't consider it invalidated
   return false
@@ -310,7 +390,7 @@ export function* waitForSameNonceFinalized({ chainId, id, nonce }: WaitForParams
       !isUniswapX(payload) && // UniswapX transactions are submitted by a filler, so they cannot invalidate a transaction sent by a user.
       payload.chainId === chainId &&
       payload.id !== id &&
-      payload.options.request.nonce === nonce
+      payload.options.request?.nonce === nonce
     ) {
       return true
     }
@@ -332,7 +412,7 @@ export function* waitForBridgeSendCompleted({ chainId, id, nonce }: WaitForParam
       payload.sendConfirmed &&
       payload.chainId === chainId &&
       payload.id !== id &&
-      payload.options.request.nonce === nonce
+      payload.options.request?.nonce === nonce
     ) {
       return true
     }
@@ -419,7 +499,7 @@ export function* watchTransaction({
     updatedTransaction: call(waitForRemoteUpdate, transaction, provider),
     cancelTx: call(waitForCancellation, chainId, id),
     replace: call(waitForReplacement, chainId, id),
-    invalidated: call(waitForTxnInvalidated, { chainId, id, nonce: options?.request.nonce }),
+    invalidated: call(waitForTxnInvalidated, { chainId, id, nonce: options?.request?.nonce }),
     ...(listenForAppBackgrounded ? { appBackgrounded: call(watchForAppBackgrounded) } : {}),
   })
 

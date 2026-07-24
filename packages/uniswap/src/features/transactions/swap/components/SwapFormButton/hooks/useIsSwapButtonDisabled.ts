@@ -1,14 +1,16 @@
+import { toScreenInput, useIsBlockedAddress } from '@universe/compliance'
 import { useActiveAddress, useActiveWallet } from 'uniswap/src/features/accounts/store/hooks'
 import { SigningCapability } from 'uniswap/src/features/accounts/store/types/Wallet'
 import { useIsShowingWebFORNudge, useIsWebFORNudgeEnabled } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useIsMissingPlatformWallet } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsMissingPlatformWallet'
+import { useNeedsGeoAcknowledgment } from 'uniswap/src/features/transactions/swap/hooks/useGeoRestrictionAcknowledgment'
+import { useGeoRestrictionMode } from 'uniswap/src/features/transactions/swap/hooks/useGeoRestrictionMode'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import {
   useSwapFormStore,
   useSwapFormStoreDerivedSwapInfo,
 } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 
 const useIsReviewButtonDisabled = (): boolean => {
   const isSubmitting = useSwapFormStore((s) => s.isSubmitting)
@@ -21,7 +23,9 @@ const useIsReviewButtonDisabled = (): boolean => {
   const isMissingPlatformWallet = useIsMissingPlatformWallet(chainId)
 
   const { blockingWarning } = useParsedSwapWarnings()
-  const { isBlocked: isBlockedAccount, isBlockedLoading: isBlockedAccountLoading } = useIsBlocked(activeAccountAddress)
+  const { isBlocked: isBlockedAccount, isBlockedLoading: isBlockedAccountLoading } = useIsBlockedAddress(
+    toScreenInput(activeAccountAddress, chainId),
+  )
   const { walletNeedsRestore } = useTransactionModalContext()
 
   return (
@@ -47,11 +51,23 @@ export const useIsSwapButtonDisabled = (): boolean => {
 
   const isWebFORNudgeEnabled = useIsWebFORNudgeEnabled()
   const isShowingWebFORNudge = useIsShowingWebFORNudge()
+  const { blockingWarning } = useParsedSwapWarnings()
+  const needsGeoAcknowledgment = useNeedsGeoAcknowledgment()
+  const geoRestrictionMode = useGeoRestrictionMode()
 
-  if (isWebFORNudgeEnabled && isShowingWebFORNudge) {
-    return true
-  } else if (isWebFORNudgeEnabled && !isShowingWebFORNudge) {
+  // Geo acknowledgement keeps the button enabled so pressing it opens the attestation modal.
+  if (needsGeoAcknowledgment) {
     return false
+  }
+
+  // Must hold even when disconnected, otherwise the button below is repurposed into a clickable
+  // connect-wallet CTA and pressing it opens the connect flow for a non-tradable token.
+  if (geoRestrictionMode === 'restricted') {
+    return true
+  }
+
+  if (isWebFORNudgeEnabled && !blockingWarning) {
+    return isShowingWebFORNudge
   }
   return (
     // Only disable if the wallet is connected, review button is disabled, wallet is a signable-wallet, and there is no swap redirect callback

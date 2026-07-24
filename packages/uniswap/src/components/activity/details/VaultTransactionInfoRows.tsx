@@ -4,9 +4,11 @@ import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
 import { InfoRow } from 'uniswap/src/components/activity/details/InfoRow'
 import { InfoRowActionButton } from 'uniswap/src/components/activity/details/InfoRowActionButton'
 import { getDepositWithdrawDisplayCurrencyId } from 'uniswap/src/features/activity/utils/getDepositWithdrawDisplayCurrencyId'
+import { getEarnPlanVaultStep } from 'uniswap/src/features/activity/utils/getEarnPlanDisplayInfo'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   DepositTransactionInfo,
+  PlanTransactionInfo,
   TransactionDetails,
   TransactionType,
   WithdrawTransactionInfo,
@@ -36,6 +38,21 @@ export function getVaultTransactionInfoRows({
       ? [<VaultAddressRow key="vaultAddress" chainId={transactionDetails.chainId} address={typeInfo.vaultAddress} />]
       : []),
   ]
+}
+
+export function getEarnPlanVaultTransactionInfoRows({
+  typeInfo,
+}: {
+  typeInfo: PlanTransactionInfo
+}): [JSX.Element, ...JSX.Element[]] | undefined {
+  const vaultStep = getEarnPlanVaultStep(typeInfo)
+
+  return vaultStep
+    ? getVaultTransactionInfoRows({
+        transactionDetails: vaultStep,
+        typeInfo: vaultStep.typeInfo,
+      })
+    : undefined
 }
 
 function EarnVaultRow({

@@ -17,6 +17,14 @@ import type {
 } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 import { getCurrentTickDotY } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/tickToY'
 
+// Low-pass smoothing for the liquidity width-scale. The "max liquidity" that sets bar widths is
+// derived from only the currently-visible buckets (auto-fit), so it jumps as buckets cross the
+// viewport edge while scrolling, making bar widths pop. We ease the displayed value toward that
+// target over a short time constant so widths glide into their new fit, and keep redrawing via
+// requestAnimationFrame after scrolling stops so the value finishes converging.
+const MAX_LIQUIDITY_SMOOTHING_TAU_MS = 70 // time constant: smaller = snappier, larger = smoother
+const MAX_LIQUIDITY_SNAP_THRESHOLD = 0.005 // within 0.5% of target -> snap and stop the settle loop
+
 export function createLiquidityBarsRenderer({
   g,
   context,
@@ -30,6 +38,56 @@ export function createLiquidityBarsRenderer({
 }): Renderer {
   const barsGroup = g.append('g').attr('class', 'liquidity-bars-group')
   const { setChartError } = getActions()
+
+  // Persisted across the per-frame renderer re-init via the shared rendering context.
+  const smoothing = context.liquidityScaleSmoothing
+
+  const cancelSettleFrame = (): void => {
+    if (smoothing.settleFrameId !== undefined) {
+      cancelAnimationFrame(smoothing.settleFrameId)
+      smoothing.settleFrameId = undefined
+    }
+  }
+
+  // Redraw once on the next frame so the eased value keeps converging after scrolling stops
+  // (during active scroll, React-driven draws supply the frames and this gets superseded).
+  const scheduleSettleFrame = (): void => {
+    cancelSettleFrame()
+    smoothing.settleFrameId = requestAnimationFrame(() => {
+      smoothing.settleFrameId = undefined
+      getActions().drawAll()
+    })
+  }
+
+  // Ease the width-scale max toward `target`, returning the value to render this frame.
+  const advanceDisplayedMaxLiquidity = (target: number): number => {
+    const now = Date.now()
+    const previous = smoothing.displayedMaxLiquidity
+    const lastFrameTimeMs = smoothing.lastFrameTimeMs
+    smoothing.lastFrameTimeMs = now
+
+    // First draw or post-reset: snap, no animation.
+    if (previous === undefined || lastFrameTimeMs === undefined) {
+      cancelSettleFrame()
+      smoothing.displayedMaxLiquidity = target
+      return target
+    }
+
+    // Close enough: snap and stop the settle loop so we don't redraw forever.
+    if (Math.abs(target - previous) / target < MAX_LIQUIDITY_SNAP_THRESHOLD) {
+      cancelSettleFrame()
+      smoothing.displayedMaxLiquidity = target
+      return target
+    }
+
+    // Frame-rate-independent exponential approach (never overshoots the target).
+    const dtMs = Math.max(0, now - lastFrameTimeMs)
+    const alpha = 1 - Math.exp(-dtMs / MAX_LIQUIDITY_SMOOTHING_TAU_MS)
+    const next = previous + (target - previous) * alpha
+    smoothing.displayedMaxLiquidity = next
+    scheduleSettleFrame()
+    return next
+  }
 
   const draw = (): void => {
     try {
@@ -80,13 +138,15 @@ export function createLiquidityBarsRenderer({
         nearestUsableTick(TickMath.MIN_TICK, tickSpacing),
       ) // Bottom of viewport = lowest visible tick
 
-      // Build buckets for VISIBLE range
+      // Build buckets for the VISIBLE range on a fixed grid, so each bar keeps the same tick range
+      // as you scroll and translates smoothly with the pan instead of jittering vertically.
       const buckets = buildBuckets({
         segments,
         visibleMinTick,
         visibleMaxTick,
         desiredBars: CHART_BEHAVIOR.DESIRED_BUCKETS,
         tickSpacing,
+        fixedGrid: true,
       })
 
       // Convert to chart data with segment tracking
@@ -109,13 +169,14 @@ export function createLiquidityBarsRenderer({
         return
       }
 
-      // X scale for liquidity amounts - use max from buckets with liquidity > 0
+      // X scale for liquidity amounts - target uses max from visible buckets with liquidity > 0.
+      // Feeding that target straight into the scale makes bar widths pop as buckets cross the
+      // viewport edge during scroll; ease the displayed value toward it so widths glide instead.
       const liquidityValues = renderedBuckets.map((d) => Number(d.liquidityActive)).filter((v) => v > 0)
-      const maxLiquidity = liquidityValues.length > 0 ? Math.max(...liquidityValues) : 1
-      const liquidityXScale = d3
-        .scaleLinear()
-        .domain([0, maxLiquidity])
-        .range([0, CHART_DIMENSIONS.LIQUIDITY_CHART_WIDTH - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET])
+      const targetMaxLiquidity = liquidityValues.length > 0 ? Math.max(...liquidityValues) : 1
+      const maxLiquidity = advanceDisplayedMaxLiquidity(targetMaxLiquidity)
+      const maxBarWidth = CHART_DIMENSIONS.LIQUIDITY_CHART_WIDTH - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET
+      const liquidityXScale = d3.scaleLinear().domain([0, maxLiquidity]).range([0, maxBarWidth])
 
       // Calculate bucket height based on tick range
       // Each bucket spans [startTick, endTick], convert to Y using the linear scale
@@ -146,18 +207,19 @@ export function createLiquidityBarsRenderer({
         return d.liquidityActive <= 0 ? baseOpacity * 0.3 : baseOpacity
       }
 
-      const getBarX = (d: BucketChartEntry): number => {
-        const barWidth = Math.max(3, liquidityXScale(Number(d.liquidityActive)))
-        return (
-          dimensions.width -
-          barWidth +
-          CHART_DIMENSIONS.LIQUIDITY_CHART_WIDTH -
-          CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET
-        )
+      // Clamp to maxBarWidth so a transiently-lagging smoothed scale (while the eased value catches
+      // up to a newly-larger target) can't push bars past the chart edge.
+      const getBarWidth = (d: BucketChartEntry): number => {
+        return Math.max(3, Math.min(maxBarWidth, liquidityXScale(Number(d.liquidityActive))))
       }
 
-      const getBarWidth = (d: BucketChartEntry): number => {
-        return Math.max(3, liquidityXScale(Number(d.liquidityActive)))
+      const getBarX = (d: BucketChartEntry): number => {
+        return (
+          dimensions.width +
+          CHART_DIMENSIONS.LIQUIDITY_CHART_WIDTH -
+          CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET -
+          getBarWidth(d)
+        )
       }
 
       // Clip paths to split bars at dotY

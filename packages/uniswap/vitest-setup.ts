@@ -40,8 +40,36 @@ vi.mock('@testing-library/react-native', async () => {
     }
     const webEventName = eventMap[eventName] || eventName
     // oxlint-disable-next-line typescript/no-explicit-any -- matching React Native Testing Library's fireEvent signature
-    const fireEventFn = (rtl.fireEvent as any)[webEventName] || rtl.fireEvent
-    return fireEventFn(element, data)
+    const fireEventFn = (rtl.fireEvent as any)[webEventName]
+    if (fireEventFn) {
+      return fireEventFn(element, data)
+    }
+    // RN-only events with no DOM equivalent (layout, textLayout, ...): find the nearest fiber
+    // with a matching React prop handler and invoke it directly, like RNTL does natively
+    const handlerName = `on${eventName[0]?.toUpperCase()}${eventName.slice(1)}`
+    const fiberKey = Object.keys(element).find((k) => k.startsWith('__reactFiber$'))
+    const propsKey = Object.keys(element).find((k) => k.startsWith('__reactProps$'))
+    // oxlint-disable-next-line typescript/no-explicit-any -- traversing React fiber internals
+    let fiber = fiberKey ? (element as any)[fiberKey] : undefined
+    // the DOM node can point at the stale half of React's double buffer; __reactProps$ is always
+    // current, so use it to pick the committed fiber
+    // oxlint-disable-next-line typescript/no-explicit-any -- traversing React fiber internals
+    if (fiber && propsKey && fiber.memoizedProps !== (element as any)[propsKey] && fiber.alternate) {
+      fiber = fiber.alternate
+    }
+    for (let depth = 0; fiber && depth < 20; depth += 1) {
+      const handler = fiber.memoizedProps?.[handlerName]
+      if (typeof handler === 'function') {
+        let result: unknown
+        rtl.act(() => {
+          result = handler(data)
+        })
+        return result as boolean
+      }
+      fiber = fiber.return
+    }
+    // no matching handler: RNTL treats unhandled events as no-ops
+    return false
   }
 
   // Create fireEvent with both function call and method access
@@ -75,10 +103,6 @@ vi.mock('@testing-library/react-native', async () => {
   }
 })
 
-// Mock @testing-library/jest-native which requires React Native runtime
-// This provides custom matchers for React Native that aren't needed in jsdom
-vi.mock('@testing-library/jest-native', () => ({}))
-
 // Mock expo-secure-store before any imports that might use it
 vi.mock('expo-secure-store', () => ({
   getItemAsync: vi.fn(() => Promise.resolve(null)),
@@ -107,6 +131,9 @@ const commonTranslations: Record<string, string> = {
   'unitags.claim.error.unavailable': 'Username unavailable',
   'common.today': 'Today',
   'common.yesterday': 'Yesterday',
+  'common.stocks': 'Stocks',
+  'common.etfs': 'ETFs',
+  'common.commodities': 'Commodities',
   // Storage settings translations
   'settings.setting.storage.clearAccountHistory.title': 'Clear account history',
   'settings.setting.storage.clearAccountHistory.subtitle': 'Clear your account history',

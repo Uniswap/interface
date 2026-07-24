@@ -1,4 +1,4 @@
-import { type GasFeeResult } from '@universe/api'
+import { type GasFeeResult, type TradingApi } from '@universe/api'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
@@ -21,7 +21,7 @@ import { type EthTransaction } from 'uniswap/src/types/walletConnect'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { BatchedRequestDetailsContent } from 'wallet/src/components/BatchedTransactions/BatchedTransactionDetails'
 import { DappSendCallsScanningContent } from 'wallet/src/components/dappRequests/DappSendCallsScanningContent'
-import { type TransactionRiskLevel } from 'wallet/src/features/dappRequests/types'
+import { TransactionRiskLevel } from 'wallet/src/features/dappRequests/types'
 import { shouldDisableConfirm } from 'wallet/src/features/dappRequests/utils/riskUtils'
 
 interface SendCallsRequestContentProps {
@@ -31,6 +31,7 @@ interface SendCallsRequestContentProps {
   showSmartWalletActivation?: boolean
   gasOverrides?: GasFeeOverrides
   onChangeGasOverrides?: (overrides: GasFeeOverrides | undefined) => void
+  sponsorMetadata?: TradingApi.SponsorMetadata
   onConfirm: (transactionTypeInfo?: TransactionTypeInfo) => Promise<void>
   onCancel: () => Promise<void>
 }
@@ -46,6 +47,7 @@ function SendCallsRequestContentWithScanning({
   showSmartWalletActivation,
   gasOverrides,
   onChangeGasOverrides,
+  sponsorMetadata,
   onConfirm,
   onCancel,
 }: SendCallsRequestContentProps & { chainId: UniverseChainId }): JSX.Element {
@@ -68,6 +70,7 @@ function SendCallsRequestContentWithScanning({
       title={t('dapp.request.base.title')}
       transactionGasFeeResult={transactionGasFeeResult}
       disableConfirm={disableConfirm}
+      isCriticalRisk={riskLevel === TransactionRiskLevel.Critical}
       onCancel={onCancel}
       onConfirm={() => onConfirm()}
       showAddressFooter={false}
@@ -82,6 +85,7 @@ function SendCallsRequestContentWithScanning({
         showSmartWalletActivation={showSmartWalletActivation}
         tx={encodedTransactionRequest}
         gasOverrides={gasOverrides}
+        sponsorMetadata={sponsorMetadata}
         onChangeGasOverrides={onChangeGasOverrides}
         confirmedRisk={confirmedRisk}
         onConfirmRisk={setConfirmedRisk}
@@ -98,6 +102,7 @@ function SendCallsRequestContentFallback({
   dappRequest,
   transactionGasFeeResult,
   showSmartWalletActivation,
+  sponsorMetadata,
   onConfirm,
   onCancel,
 }: SendCallsRequestContentProps): JSX.Element {
@@ -117,6 +122,7 @@ function SendCallsRequestContentFallback({
       onConfirm={() => onConfirm()}
       contentHorizontalPadding="$none"
       showSmartWalletActivation={showSmartWalletActivation}
+      sponsorMetadata={sponsorMetadata}
     >
       <BatchedRequestDetailsContent calls={dappRequest.calls} chainId={chainId} />
     </DappRequestContent>
@@ -149,6 +155,7 @@ export function SendCallsRequestHandler({ request }: { request: DappRequestStore
     preSignedTransaction,
     unsignedUserOperation,
     isSponsoredUserOp,
+    sponsorMetadata,
   } = usePrepareAndSignSendCallsTransaction({
     request,
     account: currentAccount,
@@ -189,6 +196,7 @@ export function SendCallsRequestHandler({ request }: { request: DappRequestStore
         // withhold setter so the footer falls back to <NetworkFeeFooter />.
         gasOverrides={isOverridesEligible ? effectiveGasOverrides : undefined}
         onChangeGasOverrides={isOverridesEligible ? setGasOverrides : undefined}
+        sponsorMetadata={sponsorMetadata}
         onCancel={onCancelRequest}
         onConfirm={onConfirmRequest}
       />
@@ -201,6 +209,7 @@ export function SendCallsRequestHandler({ request }: { request: DappRequestStore
         parsedCalldata={parsedSwapCalldata}
         transactionGasFeeResult={gasFeeResult}
         showSmartWalletActivation={showSmartWalletActivation}
+        sponsorMetadata={sponsorMetadata}
         onCancel={onCancelRequest}
         onConfirm={onConfirmRequest}
       />
@@ -212,6 +221,7 @@ export function SendCallsRequestHandler({ request }: { request: DappRequestStore
       dappRequest={dappRequest}
       transactionGasFeeResult={gasFeeResult}
       showSmartWalletActivation={showSmartWalletActivation}
+      sponsorMetadata={sponsorMetadata}
       onConfirm={onConfirmRequest}
       onCancel={onCancelRequest}
     />

@@ -14,7 +14,8 @@ describe(LazyModalRenderer, () => {
       { preloadedState: preloadedMobileState() },
     )
 
-    expect(tree.toJSON()).toBeNull()
+    // under RTL/jsdom toJSON() maps to asFragment(), which is never null; assert empty render
+    expect(tree.queryByText('Rendered')).toBeNull()
   })
 
   it('renders modal when modal is open', () => {
@@ -31,10 +32,6 @@ describe(LazyModalRenderer, () => {
       },
     )
 
-    expect(tree.toJSON()).toMatchInlineSnapshot(`
-      <Text>
-        Rendered
-      </Text>
-    `)
+    expect(tree.getByText('Rendered')).toBeDefined()
   })
 })

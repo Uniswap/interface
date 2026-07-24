@@ -8,7 +8,8 @@ import { MultichainSearchResult } from 'uniswap/src/features/dataApi/types'
  * Fetches trending tokens from the TokenRankings API with multichain grouping.
  * Returns MultichainSearchResult[] for the search modal's no-query state.
  *
- * Temporary replacement for useSearchMultichainListTokens on the multichain flag path.
+ * Used when FeatureFlags.V2EndpointsTokens is off; see useSectionsForNoQuerySearch.tsx, which
+ * switches to useSearchMultichainListTokens (v2 ListTokens) when the flag is on.
  */
 export function useMultichainTrendingTokenRankings({
   pageSize,

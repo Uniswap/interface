@@ -3,50 +3,51 @@ import { useTransactionConfirmationTracker } from 'src/app/features/dappRequests
 import { useConditionalPreSignDelay } from 'src/app/features/dappRequests/hooks/useConditionalPreSignDelay'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { logger } from 'utilities/src/logger/logger'
+import type { MockInstance, Mocked, MockedFunction } from 'vitest'
 
 // Mock the TransactionConfirmationTracker hook
-jest.mock('src/app/features/dappRequests/context/TransactionConfirmationTracker', () => ({
-  useTransactionConfirmationTracker: jest.fn(),
+vi.mock('src/app/features/dappRequests/context/TransactionConfirmationTracker', () => ({
+  useTransactionConfirmationTracker: vi.fn(),
 }))
 
 // Mock the logger
-jest.mock('utilities/src/logger/logger', () => ({
+vi.mock('utilities/src/logger/logger', () => ({
   logger: {
-    error: jest.fn(),
+    error: vi.fn(),
   },
 }))
 
-const mockUseTransactionConfirmationTracker = useTransactionConfirmationTracker as jest.MockedFunction<
+const mockUseTransactionConfirmationTracker = useTransactionConfirmationTracker as MockedFunction<
   typeof useTransactionConfirmationTracker
 >
 
-const mockLogger = logger as jest.Mocked<typeof logger>
+const mockLogger = logger as Mocked<typeof logger>
 
 describe('useConditionalPreSignDelay', () => {
-  const mockCallback = jest.fn()
-  const mockGetDelayForChainId = jest.fn()
+  const mockCallback = vi.fn()
+  const mockGetDelayForChainId = vi.fn()
 
   // Mock timer functions
-  let setTimeoutSpy: jest.SpyInstance
-  let clearTimeoutSpy: jest.SpyInstance
+  let setTimeoutSpy: MockInstance
+  let clearTimeoutSpy: MockInstance
 
   beforeEach(() => {
-    jest.clearAllMocks()
-    jest.useFakeTimers()
+    vi.clearAllMocks()
+    vi.useFakeTimers()
 
-    setTimeoutSpy = jest.spyOn(global, 'setTimeout')
-    clearTimeoutSpy = jest.spyOn(global, 'clearTimeout')
+    setTimeoutSpy = vi.spyOn(global, 'setTimeout')
+    clearTimeoutSpy = vi.spyOn(global, 'clearTimeout')
 
     // Default mock implementation
     mockUseTransactionConfirmationTracker.mockReturnValue({
       getDelayForChainId: mockGetDelayForChainId,
-      markTransactionConfirmed: jest.fn(),
-      clearConfirmationTracking: jest.fn(),
+      markTransactionConfirmed: vi.fn(),
+      clearConfirmationTracking: vi.fn(),
     })
   })
 
   afterEach(() => {
-    jest.useRealTimers()
+    vi.useRealTimers()
     setTimeoutSpy.mockRestore()
     clearTimeoutSpy.mockRestore()
   })
@@ -68,7 +69,7 @@ describe('useConditionalPreSignDelay', () => {
       expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), 0)
 
       // Fast-forward timers to execute the callback
-      jest.runAllTimers()
+      vi.runAllTimers()
 
       expect(mockCallback).toHaveBeenCalledTimes(1)
     })
@@ -84,7 +85,7 @@ describe('useConditionalPreSignDelay', () => {
       expect(mockGetDelayForChainId).not.toHaveBeenCalled()
       expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), 0)
 
-      jest.runAllTimers()
+      vi.runAllTimers()
 
       expect(mockCallback).toHaveBeenCalledTimes(1)
     })
@@ -110,11 +111,11 @@ describe('useConditionalPreSignDelay', () => {
       expect(mockCallback).not.toHaveBeenCalled()
 
       // Fast-forward half the delay
-      jest.advanceTimersByTime(250)
+      vi.advanceTimersByTime(250)
       expect(mockCallback).not.toHaveBeenCalled()
 
       // Fast-forward the rest of the delay
-      jest.advanceTimersByTime(250)
+      vi.advanceTimersByTime(250)
       expect(mockCallback).toHaveBeenCalledTimes(1)
     })
 
@@ -135,7 +136,7 @@ describe('useConditionalPreSignDelay', () => {
       expect(clearTimeoutSpy).toHaveBeenCalled()
 
       // Fast-forward past the delay
-      jest.runAllTimers()
+      vi.runAllTimers()
 
       // Callback should not have been called
       expect(mockCallback).not.toHaveBeenCalled()
@@ -173,7 +174,7 @@ describe('useConditionalPreSignDelay', () => {
     })
 
     it('should clear previous timeout and set new one when callback changes', () => {
-      const secondCallback = jest.fn()
+      const secondCallback = vi.fn()
       mockGetDelayForChainId.mockReturnValue(200)
 
       const { rerender } = renderHook(
@@ -199,7 +200,7 @@ describe('useConditionalPreSignDelay', () => {
       expect(setTimeoutSpy).toHaveBeenCalledTimes(initialTimeoutCount + 1)
 
       // Fast-forward to execute the new callback
-      jest.runAllTimers()
+      vi.runAllTimers()
 
       expect(mockCallback).not.toHaveBeenCalled()
       expect(secondCallback).toHaveBeenCalledTimes(1)
@@ -241,7 +242,7 @@ describe('useConditionalPreSignDelay', () => {
       )
 
       // Rapidly change callback multiple times
-      const callbacks = [jest.fn(), jest.fn(), jest.fn()]
+      const callbacks = [vi.fn(), vi.fn(), vi.fn()]
       callbacks.forEach((cb) => {
         rerender({ callback: cb })
       })
@@ -253,7 +254,7 @@ describe('useConditionalPreSignDelay', () => {
 
   describe('edge cases', () => {
     it('should handle async callback without issues', async () => {
-      const asyncCallback = jest.fn().mockResolvedValue('success')
+      const asyncCallback = vi.fn().mockResolvedValue('success')
       mockGetDelayForChainId.mockReturnValue(0)
 
       renderHook(() =>
@@ -263,14 +264,14 @@ describe('useConditionalPreSignDelay', () => {
         }),
       )
 
-      jest.runAllTimers()
+      vi.runAllTimers()
 
       expect(asyncCallback).toHaveBeenCalledTimes(1)
     })
 
     it('should handle callback that throws an error gracefully', () => {
       const testError = new Error('Test error')
-      const errorCallback = jest.fn().mockImplementation(() => {
+      const errorCallback = vi.fn().mockImplementation(() => {
         throw testError
       })
       mockGetDelayForChainId.mockReturnValue(0)
@@ -284,7 +285,7 @@ describe('useConditionalPreSignDelay', () => {
           }),
         )
 
-        jest.runAllTimers()
+        vi.runAllTimers()
       }).not.toThrow()
 
       expect(errorCallback).toHaveBeenCalledTimes(1)

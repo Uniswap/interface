@@ -1,9 +1,12 @@
 {
   "tags": ["scope:infra", "type:lib"],
   "targets": {
+    "build": {
+      "command": "tsc -b",
+      "options": { "cwd": "{projectRoot}" },
+      "dependsOn": ["^prepare", "prepare"]
+    },
     "typecheck": {},
-    "typecheck:tsc": {},
-    "typecheck:tsgo": {},
     "format": {},
     "format:check": {},
     "lint": {},

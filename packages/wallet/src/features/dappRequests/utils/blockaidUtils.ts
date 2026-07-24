@@ -1,6 +1,7 @@
 import { type BlockaidScanTransactionResponse } from '@universe/api'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { AddressStringFormat, normalizeAddress } from 'uniswap/src/utils/addresses'
 import { formatUnits } from 'viem'
 import { TransactionErrorType } from 'wallet/src/components/dappRequests/TransactionErrorSection'
@@ -111,7 +112,8 @@ function isUnlimitedApproval(approval: string | undefined, decimals: number = 18
  * For other assets (ERC20, NFT, etc.), returns the contract address
  */
 function getAssetAddress(asset: { type: string; chain_id?: number; address?: string }): string {
-  if (asset.type === 'NATIVE' && asset.chain_id !== undefined) {
+  // Blockaid's chain_id is unvalidated input — an out-of-enum id would crash getNativeAddress
+  if (asset.type === 'NATIVE' && isUniverseChainId(asset.chain_id)) {
     return getNativeAddress(asset.chain_id)
   }
   return asset.address || ''
@@ -209,6 +211,64 @@ export function getRiskLevelFromClassification(classification?: string): Transac
   }
 
   return TransactionRiskLevel.None
+}
+
+// Rank levels numerically so multiple Blockaid signals can be combined by taking the highest.
+const RISK_SEVERITY: Record<TransactionRiskLevel, number> = {
+  [TransactionRiskLevel.None]: 0,
+  [TransactionRiskLevel.Warning]: 1,
+  [TransactionRiskLevel.Critical]: 2,
+}
+
+function maxRiskLevel(levels: TransactionRiskLevel[]): TransactionRiskLevel {
+  return levels.reduce(
+    (highest, level) => (RISK_SEVERITY[level] > RISK_SEVERITY[highest] ? level : highest),
+    TransactionRiskLevel.None,
+  )
+}
+
+// `result_type` is Blockaid's authoritative verdict, matched case-insensitively. Benign/Spam/unknown -> None.
+function getRiskLevelFromResultType(resultType?: string): TransactionRiskLevel {
+  switch (resultType?.toLowerCase()) {
+    case 'malicious':
+      return TransactionRiskLevel.Critical
+    case 'warning':
+      return TransactionRiskLevel.Warning
+    default:
+      return TransactionRiskLevel.None
+  }
+}
+
+// Defense-in-depth: a Malicious feature (e.g. HIGH_RISK_SPENDER) -> Critical, a Warning feature -> Warning.
+// `type` is a validated enum (unlike result_type), so exact match is intentional — a casing drift fails Zod upstream.
+function getRiskLevelFromFeatures(features?: { type: string }[]): TransactionRiskLevel {
+  if (!features?.length) {
+    return TransactionRiskLevel.None
+  }
+  if (features.some((feature) => feature.type === 'Malicious')) {
+    return TransactionRiskLevel.Critical
+  }
+  if (features.some((feature) => feature.type === 'Warning')) {
+    return TransactionRiskLevel.Warning
+  }
+  return TransactionRiskLevel.None
+}
+
+/**
+ * Risk level from a Blockaid validation result: the highest severity across `result_type`
+ * (authoritative verdict), `features[].type` (defense-in-depth), and a `classification` substring match.
+ */
+export function getRiskLevelFromValidation(
+  validation?: BlockaidScanTransactionResponse['validation'],
+): TransactionRiskLevel {
+  if (!validation) {
+    return TransactionRiskLevel.None
+  }
+  return maxRiskLevel([
+    getRiskLevelFromResultType(validation.result_type),
+    getRiskLevelFromFeatures(validation.features),
+    getRiskLevelFromClassification(validation.classification),
+  ])
 }
 
 /**
@@ -361,9 +421,8 @@ export function parseTransactionSections(
   scanResult: BlockaidScanTransactionResponse | null,
   chainId: UniverseChainId,
 ): ParsedTransactionData {
-  // Always check validation classification first (critical for signature requests that lack simulation)
-  const classification = scanResult?.validation?.classification
-  const riskLevel = getRiskLevelFromClassification(classification)
+  // Derive risk from validation signals; works even without a simulation (signature requests).
+  const riskLevel = getRiskLevelFromValidation(scanResult?.validation)
 
   if (!scanResult?.simulation || scanResult.simulation.status !== 'Success') {
     return {

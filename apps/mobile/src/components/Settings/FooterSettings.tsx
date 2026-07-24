@@ -1,8 +1,9 @@
+import { isDevEnv } from '@universe/environment'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { FadeInDown, FadeOutUp } from 'react-native-reanimated'
-import { getFullAppVersion } from 'src/utils/version'
+import { getFullAppVersion, isNewArchEnabled } from 'src/utils/version'
 import { Flex, Image, Text, useIsDarkMode } from 'ui/src'
 import { AVATARS_DARK, AVATARS_LIGHT } from 'ui/src/assets'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
@@ -42,17 +43,24 @@ export function FooterSettings(): JSX.Element {
           )}
         </AnimatedFlex>
       ) : null}
-      <Text
-        color="$neutral3"
-        mt="$spacing8"
-        pb="$spacing24"
-        variant="body2"
-        onLongPress={(): void => {
-          setShowSignature(true)
-        }}
-      >
-        {t('settings.version', { appVersion: getFullAppVersion({ includeBuildNumber: true }) })}
-      </Text>
+      <Flex gap="$spacing4" pb="$spacing24">
+        <Text
+          color="$neutral3"
+          mt="$spacing8"
+          variant="body2"
+          onLongPress={(): void => {
+            setShowSignature(true)
+          }}
+        >
+          {t('settings.version', { appVersion: getFullAppVersion({ includeBuildNumber: true }) })}
+        </Text>
+        {/* Dev-only diagnostic: surfaces RN architecture so QA can tell new-arch builds apart. */}
+        {isDevEnv() ? (
+          <Text color={isNewArchEnabled() ? '$statusSuccess' : '$neutral3'} variant="body3">
+            {`New Architecture: ${isNewArchEnabled() ? 'Enabled' : 'Disabled'}`}
+          </Text>
+        ) : null}
+      </Flex>
     </Flex>
   )
 }

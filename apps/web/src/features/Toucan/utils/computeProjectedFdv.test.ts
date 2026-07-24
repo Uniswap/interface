@@ -12,6 +12,7 @@ function createAuctionWithCurrencyInfo({
   clearingPrice = Q96.toString(),
   floorPrice = '0',
   auctionTokenDecimals,
+  auctionTokenSymbol = 'AUCT',
   currencyTokenDecimals = 6, // USDC has 6 decimals
   currencyPriceUsd,
   isCompleted = false,
@@ -21,6 +22,7 @@ function createAuctionWithCurrencyInfo({
   clearingPrice?: string
   floorPrice?: string
   auctionTokenDecimals?: number
+  auctionTokenSymbol?: string
   currencyTokenDecimals?: number
   currencyPriceUsd?: string
   isCompleted?: boolean
@@ -32,7 +34,7 @@ function createAuctionWithCurrencyInfo({
       clearingPrice,
       floorPrice,
       tokenDecimals: auctionTokenDecimals,
-      tokenSymbol: 'AUCT',
+      tokenSymbol: auctionTokenSymbol,
       currencyTokenDecimals,
       currencyTokenSymbol: 'USDC',
       currencyPriceUsd,
@@ -92,6 +94,39 @@ describe('computeProjectedFdvTableValue', () => {
       usd: undefined,
       formattedBidToken: '—',
     })
+  })
+
+  it('returns conservative fallback for corrupt token metadata (decimals=0 with empty name/symbol)', () => {
+    const result = computeProjectedFdvTableValue({
+      auction: createAuctionWithCurrencyInfo({
+        tokenTotalSupply: '2000000000000000000',
+        auctionTokenDecimals: 0,
+        auctionTokenSymbol: '',
+        isCompleted: true,
+      }),
+      auctionTokenUsdPrice: 3.5,
+    })
+
+    // Never computes FDV from a raw un-scaled supply
+    expect(result).toEqual({
+      raw: 0n,
+      usd: undefined,
+      formattedBidToken: '—',
+    })
+  })
+
+  it('keeps a legitimate 0-decimals token (real symbol) computing normally', () => {
+    const result = computeProjectedFdvTableValue({
+      auction: createAuctionWithCurrencyInfo({
+        tokenTotalSupply: '2',
+        auctionTokenDecimals: 0,
+        auctionTokenSymbol: 'ZERO',
+        isCompleted: true,
+      }),
+      auctionTokenUsdPrice: 3.5,
+    })
+
+    expect(result.usd).toBeCloseTo(7, 5)
   })
 
   it('falls back to clearing price path for completed auctions when market price is unavailable', () => {

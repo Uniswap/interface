@@ -1,10 +1,15 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import type { TFunction } from 'i18next'
 import { ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, FlexProps, styled, Text } from 'ui/src'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useTokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
-import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenSpotPriceWrapper'
+import {
+  resolveSpotPriceOverride,
+  useTokenMarketStats,
+  useTokenSpotPrice,
+} from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { currencyId } from 'uniswap/src/utils/currencyId'
@@ -18,6 +23,48 @@ import { useTDPPreferProjectMarketData } from '~/pages/TokenDetails/hooks/useTDP
 import { useTDPStatsMarketSource } from '~/pages/TokenDetails/hooks/useTDPStatsMarketSource'
 
 const STATS_GAP = '$gap20'
+
+function getVolumeDescription({
+  t,
+  isProjectVolume,
+  chainId,
+}: {
+  t: TFunction
+  isProjectVolume: boolean
+  chainId: UniverseChainId
+}): string {
+  if (isProjectVolume) {
+    return t('stats.volume.1d.description.coingecko')
+  }
+  if (chainId === UniverseChainId.Tempo) {
+    return t('stats.volume.1d.description.tempo')
+  }
+  return t('stats.volume.1d.description')
+}
+
+/**
+ * GraphQL-only fallback for the "filtered chain has no aggregatable data" edge case (see
+ * useTokenMarketStats' hasAggregated heuristic). Bypassed when V2 is enabled so REST-sourced
+ * stats are authoritative instead of being shadowed by this raw GraphQL read.
+ */
+function getGraphqlStatFallback<T>({
+  isV2TokensEnabled,
+  v2Value,
+  showAggregatedStats,
+  aggregatedValue,
+  filteredValue,
+}: {
+  isV2TokensEnabled: boolean
+  v2Value: T
+  showAggregatedStats: boolean
+  aggregatedValue: T
+  filteredValue: T
+}): T {
+  if (isV2TokensEnabled) {
+    return v2Value
+  }
+  return showAggregatedStats ? aggregatedValue : filteredValue
+}
 
 export const StatWrapper = ({
   tableRow = false,
@@ -52,6 +99,7 @@ const TokenStatsSection = ({ children }: { children: ReactNode }) => (
 const StatsLoadingContainer = styled(Flex, {
   row: true,
   flexWrap: 'wrap',
+  rowGap: '$spacing24',
   width: '100%',
 })
 
@@ -100,26 +148,21 @@ function Stat({
   numberType?: FiatNumberType
 }) {
   const { convertFiatAmountFormatted } = useLocalizationContext()
+  const formattedValue = convertFiatAmountFormatted(value, numberType)
 
   return (
     <StatWrapper tableRow data-cy={`${testID}`} data-testid={`${testID}`}>
       <Text variant="body3" color="$neutral2" tag="td">
         <MouseoverTooltip disabled={!description} text={description}>
-          {title}
+          {/* Wrap in a colored Text: MouseoverTooltip re-wraps string children in its own uncolored Text, which would otherwise default the label to $neutral1. */}
+          <Text variant="body3" color="$neutral2">
+            {title}
+          </Text>
         </MouseoverTooltip>
       </Text>
-      <Text
-        tag="td"
-        mt="$spacing8"
-        fontSize={28}
-        color="$neutral1"
-        fontWeight="$book"
-        $platform-web={{
-          overflowWrap: 'break-word',
-        }}
-      >
-        {convertFiatAmountFormatted(value, numberType)}
-      </Text>
+      <Flex tag="td" mt="$spacing8" data-testid={`${testID}-value`} $platform-web={{ overflowWrap: 'break-word' }}>
+        <AnimatedNumber numericValue={value ?? undefined} textVariant="$heading3" value={formattedValue} />
+      </Flex>
     </StatWrapper>
   )
 }
@@ -132,29 +175,55 @@ type StatsSectionProps = {
 
 export function StatsSection({ tokenQueryData, isLoading = false }: StatsSectionProps) {
   const { t } = useTranslation()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const effectiveCurrency = useTDPEffectiveCurrency()
+  const isV2TokensEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
 
-  const { showAggregatedStats, filteredDeploymentMarket, networkFilterName, marketStatsInput } =
-    useTDPStatsMarketSource(tokenQueryData)
+  const {
+    showAggregatedStats,
+    isMultichainAggregateView,
+    filteredDeploymentMarket,
+    networkFilterName,
+    marketStatsInput,
+  } = useTDPStatsMarketSource(tokenQueryData)
 
   const currencyIdValue = useMemo(() => currencyId(effectiveCurrency), [effectiveCurrency])
   const preferProjectMarketData = useTDPPreferProjectMarketData()
-  const spotPrice = useTokenSpotPrice(currencyIdValue, { preferProjectMarketData })
+  const spotPrice = useTokenSpotPrice(currencyIdValue, {
+    preferProjectMarketData,
+    isMultichainAggregateView,
+  })
+  // Shares its decision logic with the chart header's currentPriceOverride so both surfaces always agree.
+  const currentPriceOverride = resolveSpotPriceOverride({
+    isV2TokensEnabled,
+    isMultichainAggregateView,
+    preferProjectMarketData,
+    spotPrice,
+  })
 
   const stats = useTokenMarketStats(currencyIdValue, {
     aggregatedData: marketStatsInput,
-    currentPriceOverride: spotPrice,
+    currentPriceOverride,
     preferProjectMarketData,
+    isMultichainAggregateView,
   })
 
-  const tokenMarketVolume = showAggregatedStats
-    ? tokenQueryData?.market?.volume24H?.value
-    : filteredDeploymentMarket?.volume24H?.value
+  const tokenMarketVolume = getGraphqlStatFallback({
+    isV2TokensEnabled,
+    v2Value: undefined,
+    showAggregatedStats,
+    aggregatedValue: tokenQueryData?.market?.volume24H?.value,
+    filteredValue: filteredDeploymentMarket?.volume24H?.value,
+  })
   const volume = preferProjectMarketData ? (stats.volume ?? tokenMarketVolume) : (tokenMarketVolume ?? stats.volume)
-  const tvl = showAggregatedStats
-    ? tokenQueryData?.market?.totalValueLocked?.value
-    : filteredDeploymentMarket?.totalValueLocked?.value
+  // Guard against the second fallback below: `volume` can drop to the Uniswap value even when `stats.volumeSource` is 'project'.
+  const isProjectVolume = stats.volumeSource === 'project' && volume === stats.volume
+  const tvl = getGraphqlStatFallback({
+    isV2TokensEnabled,
+    v2Value: stats.tvl,
+    showAggregatedStats,
+    aggregatedValue: tokenQueryData?.market?.totalValueLocked?.value,
+    filteredValue: filteredDeploymentMarket?.totalValueLocked?.value,
+  })
   const { marketCap, fdv, high52w, low52w } = stats
 
   const hasStats = tvl || fdv || marketCap || volume || high52w || low52w
@@ -168,12 +237,12 @@ export function StatsSection({ tokenQueryData, isLoading = false }: StatsSection
             testID={TestID.TokenDetailsStatsTvl}
             value={tvl}
             description={
-              multichainTokenUxEnabled && networkFilterName
+              networkFilterName
                 ? t('stats.tvl.description.network', {
-                    symbol: effectiveCurrency.symbol,
+                    symbol: effectiveCurrency.symbol ?? t('common.token'),
                     network: networkFilterName,
                   })
-                : t('stats.tvl.description', { symbol: effectiveCurrency.symbol })
+                : t('stats.tvl.description', { symbol: effectiveCurrency.symbol ?? t('common.token') })
             }
             title={t('common.totalValueLocked')}
           />
@@ -192,11 +261,11 @@ export function StatsSection({ tokenQueryData, isLoading = false }: StatsSection
           <Stat
             testID={TestID.TokenDetailsStatsVolume24h}
             value={volume}
-            description={
-              effectiveCurrency.chainId === UniverseChainId.Tempo
-                ? t('stats.volume.1d.description.tempo')
-                : t('stats.volume.1d.description')
-            }
+            description={getVolumeDescription({
+              t,
+              isProjectVolume,
+              chainId: effectiveCurrency.chainId,
+            })}
             title={t('stats.volume.1d')}
           />
           <Stat

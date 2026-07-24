@@ -249,8 +249,14 @@ export function OnDeviceRecoveryScreen({
                   {t('onboarding.import.onDeviceRecovery.other_options.label')}
                 </Text>
                 <Trace logPress element={ElementName.OnDeviceRecoveryImportOther}>
-                  <TouchableArea alignItems="center" hitSlop={16} mb="$spacing12" testID={TestID.WatchWallet}>
-                    <Text color="$accent1" variant="buttonLabel2" onPress={onPressOtherWallet}>
+                  <TouchableArea
+                    alignItems="center"
+                    hitSlop={16}
+                    mb="$spacing12"
+                    testID={TestID.WatchWallet}
+                    onPress={onPressOtherWallet}
+                  >
+                    <Text color="$accent1" variant="buttonLabel2">
                       {t('onboarding.import.onDeviceRecovery.other_options')}
                     </Text>
                   </TouchableArea>

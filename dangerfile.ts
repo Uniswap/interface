@@ -1,6 +1,9 @@
-import { danger, fail, markdown, message, warn } from 'danger'
 import * as fs from 'fs'
-import { dirname } from 'path'
+import { danger, fail, markdown, message, warn } from 'danger'
+
+// Danger runs from the repo root. Resolve file checks against it instead of
+// `__dirname`/`__filename`, which are undefined now that this file loads as an ES module.
+const repoRoot = process.cwd()
 
 function getIndicesOf(searchStr: string, str: string): number[] {
   const searchStrLen = searchStr.length
@@ -90,15 +93,15 @@ function checkSplitFiles() {
     const baseFile = file.substring(0, file.indexOf(isWebFile ? '.web.ts' : '.native.ts'))
     const extension = file.indexOf('.tsx') !== -1 ? 'tsx' : 'ts'
 
-    if (isWebFile && !fs.existsSync(`${dirname(__filename)}/${baseFile}.native.${extension}`)) {
+    if (isWebFile && !fs.existsSync(`${repoRoot}/${baseFile}.native.${extension}`)) {
       fail(`\`${baseFile}.web.${extension}\` must also have a \`${baseFile}.native.${extension}\` file.`)
     }
 
-    if (isNativeFile && !fs.existsSync(`${dirname(__filename)}/${baseFile}.web.${extension}`)) {
+    if (isNativeFile && !fs.existsSync(`${repoRoot}/${baseFile}.web.${extension}`)) {
       fail(`\`${baseFile}.native.${extension}\` must also have a \`${baseFile}.web.${extension}\` file.`)
     }
 
-    if (!fs.existsSync(`${dirname(__filename)}/${baseFile}.${extension}`)) {
+    if (!fs.existsSync(`${repoRoot}/${baseFile}.${extension}`)) {
       fail(`\`${file}\` must have base stub file \`${baseFile}.${extension}\``)
     }
   })
@@ -121,7 +124,7 @@ function checkHookFilesHaveTests() {
     const baseFile = file.substring(0, file.indexOf('.ts'))
     const extension = file.indexOf('.tsx') !== -1 ? 'tsx' : 'ts'
 
-    const assumedTestFile = `${dirname(__filename)}/${baseFile}.test.${extension}`
+    const assumedTestFile = `${repoRoot}/${baseFile}.test.${extension}`
 
     if (!fs.existsSync(assumedTestFile)) {
       warn(
@@ -332,11 +335,12 @@ async function checkPRSize() {
   }
 }
 
-/* Warn about storing credentials in GH and uploading env.local to 1Password */
-const envChanged = danger.git.modified_files.includes('.env.defaults')
+/* Warn about storing credentials in GH  */
+const modified_files = danger.git.modified_files.concat(danger.git.created_files)
+const envChanged = modified_files.includes('.env')
 if (envChanged) {
   warn(
-    'Changes were made to .env.defaults. Confirm that no sensitive data is in the .env.defaults file. Sensitive data must go in .env (web) or .env.defaults.local (mobile) and then run `bun upload-env-local` to store it in 1Password.',
+    'No .env files should be committed to the repo. Store configs in the backend Config Service via the parameter manager in Mission Control',
   )
 }
 

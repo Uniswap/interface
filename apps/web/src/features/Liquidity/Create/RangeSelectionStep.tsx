@@ -251,7 +251,7 @@ const InitialPriceInput = () => {
           {defaultInitialPrice && (
             <Flex>
               <Button
-                isDisabled={priceDifference?.absoluteValue ? priceDifference.absoluteValue === 0 : !!initialPrice}
+                disabled={priceDifference?.absoluteValue ? priceDifference.absoluteValue === 0 : !!initialPrice}
                 variant="default"
                 emphasis="secondary"
                 size="xxsmall"
@@ -408,7 +408,8 @@ export const SelectPriceRangeStep = ({
   }, [priceRangeState.fullRange, priceRangeState.minTick, priceRangeState.maxTick, poolId, setFallbackRangePrices])
 
   if (protocolVersion === ProtocolVersion.V2) {
-    return <InitialPriceInput />
+    // Only a brand-new pair needs an initial price; an existing pair has nothing to set here.
+    return creatingPoolOrPair ? <InitialPriceInput /> : null
   }
 
   const isDisabled = migratingPosition?.isOutOfRange
@@ -517,7 +518,7 @@ export const SelectPriceRangeStep = ({
       </Flex>
       {onContinue && (
         <Flex row>
-          <Button onPress={onContinue} isDisabled={invalidState}>
+          <Button onPress={onContinue} disabled={invalidState}>
             {t(`common.button.continue`)}
           </Button>
         </Flex>

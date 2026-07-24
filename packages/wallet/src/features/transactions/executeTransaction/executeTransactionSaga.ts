@@ -1,3 +1,4 @@
+import type { providers } from 'ethers'
 import type { SagaIterator } from 'redux-saga'
 import { call } from 'typed-redux-saga'
 import type { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
@@ -20,7 +21,7 @@ export interface ExecuteTransactionParams {
   txId?: string
   chainId: UniverseChainId
   account: SignerMnemonicAccountMeta
-  options: TransactionOptions
+  options: TransactionOptions & { request: providers.TransactionRequest }
   transactionOriginType: TransactionOriginType
   /** When undefined, the transaction is submitted but not added to the local state */
   typeInfo?: TransactionTypeInfo

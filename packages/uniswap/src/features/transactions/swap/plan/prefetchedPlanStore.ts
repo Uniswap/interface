@@ -1,6 +1,10 @@
 import { TradingApi } from '@universe/api'
-import { PlanResponse } from '@universe/api/src/clients/trading/__generated__/models/PlanResponse'
 import { TradingApiSessionClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiSessionClient'
+import {
+  areEarnPlanReuseIdentitiesCompatible,
+  getEarnPlanReuseIdentityFromTrade,
+} from 'uniswap/src/features/transactions/swap/plan/earnPlanReuseIdentity'
+import { getCreatePlanRouting } from 'uniswap/src/features/transactions/swap/plan/utils'
 import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isChained } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { requireAcceptNewTrade } from 'uniswap/src/features/transactions/swap/utils/trade'
@@ -10,7 +14,7 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 const PREFETCH_TTL_MS = 15 * ONE_SECOND_MS
 
 interface PrefetchedPlan {
-  promise: Promise<PlanResponse>
+  promise: Promise<TradingApi.PlanResponse>
   trade: Trade
 }
 
@@ -21,15 +25,17 @@ export function prefetchPlan(trade: Trade, walletExecutionContext?: TradingApi.W
   if (!isChained(trade)) {
     return
   }
+  const earnIntent = trade.earnIntent
 
   // Clear any prior prefetch
   clearPrefetchedPlan()
 
   const promise = TradingApiSessionClient.createNewPlan({
+    // Preserve quote-response earnIntent; earnPreview is display-only.
     quote: trade.quote.quote,
-    // @ts-expect-error - CHAINED is the only supported but doesn't satisfy input param type for some reason
-    routing: trade.quote.routing,
+    routing: getCreatePlanRouting(trade.quote.routing),
     walletExecutionContext,
+    earnIntent,
   })
 
   prefetched = { promise, trade }
@@ -54,12 +60,25 @@ export function prefetchPlan(trade: Trade, walletExecutionContext?: TradingApi.W
   })
 }
 
-export async function consumePrefetchedPlan(currentTrade: Trade): Promise<PlanResponse | null> {
+export async function consumePrefetchedPlan(currentTrade: Trade): Promise<TradingApi.PlanResponse | null> {
   // One-shot: grab and null out immediately
   const current = prefetched
   prefetched = null
 
   if (!current) {
+    return null
+  }
+  if (
+    !areEarnPlanReuseIdentitiesCompatible({
+      activeIdentity: getEarnPlanReuseIdentityFromTrade(current.trade),
+      currentIdentity: getEarnPlanReuseIdentityFromTrade(currentTrade),
+    })
+  ) {
+    logger.info(
+      'prefetchedPlanStore',
+      'consumePrefetchedPlan',
+      'Prefetched plan did not match current trade, discarding',
+    )
     return null
   }
 

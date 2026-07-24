@@ -41,23 +41,34 @@ export const ChartFooter = ({ activeTab, onLearnMorePress }: ChartFooterProps) =
   const { t } = useTranslation()
   const colors = useSporeColors()
 
-  const { auctionDetails, checkpointData, tokenColor, concentrationBand, chartZoomStates, clearingPriceZoomState } =
-    useAuctionStore((state) => ({
-      auctionDetails: state.auctionDetails,
-      checkpointData: state.checkpointData,
-      tokenColor: state.tokenColor,
-      concentrationBand: state.concentrationBand,
-      chartZoomStates: state.chartZoomStates,
-      clearingPriceZoomState: state.clearingPriceZoomState,
-    }))
+  const {
+    auctionDetails,
+    totalCleared,
+    tokenColor,
+    concentrationBand,
+    chartZoomStates,
+    clearingPriceZoomState,
+    tickDetails,
+    isBidInputFocused,
+  } = useAuctionStore((state) => ({
+    auctionDetails: state.auctionDetails,
+    totalCleared: state.totalCleared,
+    tokenColor: state.tokenColor,
+    concentrationBand: state.concentrationBand,
+    chartZoomStates: state.chartZoomStates,
+    clearingPriceZoomState: state.clearingPriceZoomState,
+    tickDetails: state.tickDetails,
+    isBidInputFocused: state.isBidInputFocused,
+  }))
   const { requestChartZoom } = useAuctionStoreActions()
   const { tokenColor: auctionTokenColor } = useAuctionTokenColor()
-  const hasConcentration = concentrationBand !== null
+  // Match the chart: the concentration lines only render while a bid input is focused.
+  const hasConcentration = concentrationBand !== null && isBidInputFocused
 
   const { validTokenColor } = useColorsFromTokenColor(tokenColor)
   // Calculate progress as fraction of tokens cleared (totalCleared / auctionAmount)
   const progressPercentage = computeTotalClearedFraction({
-    totalCleared: checkpointData?.totalCleared,
+    totalCleared: totalCleared ?? undefined,
     auctionAmount: auctionDetails?.amount,
   })
   const percentSoldLabel = useMemo(() => formatPercent(progressPercentage * 100), [formatPercent, progressPercentage])
@@ -82,30 +93,61 @@ export const ChartFooter = ({ activeTab, onLearnMorePress }: ChartFooterProps) =
   }
 
   const combinedLegendColor = auctionTokenColor ?? colors.accent1.val
+  const isDemandTab = activeTab === BidDistributionChartTab.Demand
+  const hasFillColoring = (tickDetails?.length ?? 0) > 0
 
   return (
     <Flex width="100%" mt={-15}>
       <Flex row alignItems="center" justifyContent="space-between" pt="$spacing6" height={34}>
         <Flex row alignItems="center" gap="$spacing16" $sm={{ display: 'none' }}>
-          <Flex row alignItems="center" gap="$spacing6">
-            <LegendDot color={combinedLegendColor} />
-            <Text variant="body4" color="$neutral2">
-              {t('toucan.bidDistribution.legend.tokenPrice')}
-            </Text>
-          </Flex>
-          <Flex row alignItems="center" gap="$spacing6">
-            <LegendDot color={colors.neutral2.val} />
-            <Text variant="body4" color="$neutral2">
-              {t('toucan.bidDistribution.legend.bidDistribution')}
-            </Text>
-          </Flex>
-          {hasConcentration && (
-            <Flex row alignItems="center" gap="$spacing6">
-              <LegendDotDashed color={colors.neutral3.val} />
-              <Text variant="body4" color="$neutral2">
-                {t('toucan.bidDistribution.legend.bidConcentration')}
-              </Text>
-            </Flex>
+          {isDemandTab ? (
+            <>
+              <Flex row alignItems="center" gap="$spacing6">
+                <LegendDot color={combinedLegendColor} />
+                <Text variant="body4" color="$neutral2">
+                  {hasFillColoring
+                    ? t('toucan.bidDistribution.legend.filled')
+                    : t('toucan.bidDistribution.legend.inRange')}
+                </Text>
+              </Flex>
+              <Flex row alignItems="center" gap="$spacing6">
+                <LegendDot color={colors.neutral3.val} />
+                <Text variant="body4" color="$neutral2">
+                  {hasFillColoring
+                    ? t('toucan.bidDistribution.legend.remaining')
+                    : t('toucan.bidDistribution.legend.outOfRange')}
+                </Text>
+              </Flex>
+            </>
+          ) : (
+            <>
+              <Flex row alignItems="center" gap="$spacing6">
+                <LegendDot color={combinedLegendColor} />
+                <Text variant="body4" color="$neutral2">
+                  {t('toucan.bidDistribution.legend.tokenPrice')}
+                </Text>
+              </Flex>
+              <Flex row alignItems="center" gap="$spacing6">
+                <LegendDotDashed color={combinedLegendColor} />
+                <Text variant="body4" color="$neutral2">
+                  {t('toucan.bidDistribution.legend.preBidPrice')}
+                </Text>
+              </Flex>
+              <Flex row alignItems="center" gap="$spacing6">
+                <LegendDot color={colors.neutral2.val} />
+                <Text variant="body4" color="$neutral2">
+                  {t('toucan.bidDistribution.legend.bidDistribution')}
+                </Text>
+              </Flex>
+              {hasConcentration && (
+                <Flex row alignItems="center" gap="$spacing6">
+                  <LegendDotDashed color={colors.neutral3.val} />
+                  <Text variant="body4" color="$neutral2">
+                    {t('toucan.bidDistribution.legend.bidConcentration')}
+                  </Text>
+                </Flex>
+              )}
+            </>
           )}
         </Flex>
         <Flex row alignItems="center">

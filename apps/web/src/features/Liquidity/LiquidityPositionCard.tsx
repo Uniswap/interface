@@ -7,7 +7,7 @@ import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import {

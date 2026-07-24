@@ -5,6 +5,8 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, getChainLabel } from 'uniswap/src/features/chains/utils'
 import { isMultichainProjectTokens } from 'uniswap/src/features/dataApi/tokenProjects/utils/isMultichainProjectTokens'
+import { useIsEarnEnabled } from 'uniswap/src/features/earn/hooks/useIsEarnEnabled'
+import { useLogRWATokenDetailsViewed } from 'uniswap/src/features/rwa/useLogRWATokenDetailsViewed'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -18,17 +20,23 @@ import { BalanceSummary } from '~/pages/TokenDetails/components/balances/Balance
 import { ChartSection } from '~/pages/TokenDetails/components/chart/ChartSection'
 import { TokenDetailsEarnBanner } from '~/pages/TokenDetails/components/earn/TokenDetailsEarnBanner'
 import { TokenDetailsEarnSection } from '~/pages/TokenDetails/components/earn/TokenDetailsEarnSection'
+import { TokenDetailsVaultShareBanner } from '~/pages/TokenDetails/components/earn/TokenDetailsVaultShareBanner'
 import { useTokenDetailsEarnData } from '~/pages/TokenDetails/components/earn/useTokenDetailsEarnData'
+import { useTokenDetailsVaultShareData } from '~/pages/TokenDetails/components/earn/useTokenDetailsVaultShareData'
 import { TDPBreadcrumb } from '~/pages/TokenDetails/components/header/TDPBreadcrumb'
 import { TokenDetailsHeader } from '~/pages/TokenDetails/components/header/TokenDetailsHeader'
 import { BridgedAssetSection } from '~/pages/TokenDetails/components/info/BridgedAssetSection'
 import { StatsSection } from '~/pages/TokenDetails/components/info/StatsSection'
 import { TokenDescription } from '~/pages/TokenDetails/components/info/TokenDescription'
 import { TokenPerformance } from '~/pages/TokenDetails/components/performance/TokenPerformance'
+import { MoreWaysToTrade } from '~/pages/TokenDetails/components/rwa/MoreWaysToTrade'
+import { OffHoursLiquidityBanner } from '~/pages/TokenDetails/components/rwa/OffHoursLiquidityBanner'
+import { RelatedTokens } from '~/pages/TokenDetails/components/rwa/RelatedTokens'
 import { LeftPanel, RightPanel, TokenDetailsLayout } from '~/pages/TokenDetails/components/skeleton/Skeleton'
 import { TDPSwapComponent } from '~/pages/TokenDetails/components/swap/TDPSwapComponent'
 import { TokenCarousel } from '~/pages/TokenDetails/components/TokenCarousel/TokenCarousel'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
+import { useRWATokenDetailsMatch } from '~/pages/TokenDetails/hooks/useRWATokenDetailsMatch'
 
 export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
   const media = useMedia()
@@ -43,7 +51,6 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
     currency: s.currency!,
   }))
   const tokenQueryData = tokenQuery.data?.token
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const isMultichainAsset = isMultichainProjectTokens(tokenQueryData?.project?.tokens)
   const pageChainBalance = multiChainMap[currencyChain]?.balance
 
@@ -58,15 +65,24 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
   const isDesktop = !media.xl
   const showBalanceInfo = isDesktop && showTokenInfo
 
-  const isEarnEnabled = useFeatureFlag(FeatureFlags.Earn)
+  const isEarnEnabled = useIsEarnEnabled()
   const { isTestnetModeEnabled } = useEnabledChains()
   const showEarn = isEarnEnabled && !isTestnetModeEnabled
 
   const earnData = useTokenDetailsEarnData({ enabled: showEarn, tokenQueryData })
+  const vaultShareData = useTokenDetailsVaultShareData({ enabled: showEarn, tokenQueryData })
   const showRightTokenInfo = isDesktop && (showTokenInfo || earnData.userHasEarnPosition)
 
   const chainLabel = getChainLabel(chainId)
   const isTDPTokenCarouselEnabled = useFeatureFlag(FeatureFlags.TDPTokenCarousel)
+
+  const rwaMatch = useRWATokenDetailsMatch()
+  useLogRWATokenDetailsViewed({
+    rwaMatch,
+    tokenAddress: address,
+    tokenSymbol: currency.symbol,
+    chainId: currency.chainId,
+  })
 
   return (
     <Trace
@@ -77,16 +93,18 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
         tokenSymbol: currency.symbol,
         tokenName: currency.name,
         chainId: currency.chainId,
-        ...(multichainTokenUxEnabled ? { multichain: isMultichainAsset } : {}),
+        multichain: isMultichainAsset,
       }}
     >
       <TDPBreadcrumb />
       <StickyCollapsibleHeader isCompact={isCompact}>
         <TokenDetailsHeader isCompact={isCompact} />
       </StickyCollapsibleHeader>
+      {showEarn && <TokenDetailsVaultShareBanner vaultShareData={vaultShareData} />}
       <TokenDetailsLayout>
         <LeftPanel gap="$spacing40" $lg={{ gap: '$gap32' }}>
           <ChartSection />
+          <OffHoursLiquidityBanner />
           {showEarn && <TokenDetailsEarnBanner earnData={earnData} />}
 
           {!showBalanceInfo && (
@@ -102,6 +120,8 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
 
           <StatsSection tokenQueryData={tokenQueryData} isLoading={tokenQuery.loading} />
 
+          <MoreWaysToTrade />
+
           <TokenDescription />
 
           <ActivitySection />
@@ -112,6 +132,7 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
               chainId={chainId}
             />
           )}
+          <RelatedTokens />
         </LeftPanel>
         <RightPanel>
           {/* Swap always visible on desktop (uses display to preserve state) */}

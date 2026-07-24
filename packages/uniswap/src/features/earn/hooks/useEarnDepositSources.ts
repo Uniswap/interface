@@ -1,7 +1,14 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
+import {
+  getFreshPortfolioBalanceData,
+  hasFreshEnoughPortfolioBalanceData,
+} from 'uniswap/src/features/earn/depositSourceFreshness'
+import {
+  getEarnDepositSourceOptions,
+  getEarnDepositSourceOptionsBySupport,
+} from 'uniswap/src/features/earn/depositSources'
 import type { EarnDepositSourceOption, EarnVaultInfo } from 'uniswap/src/features/earn/types'
-import { getEarnDepositSourceOptions } from 'uniswap/src/features/earn/utils'
 import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
 import { areCurrencyIdsEqual } from 'uniswap/src/utils/currencyId'
 
@@ -10,6 +17,7 @@ type UseEarnDepositSourcesParams = {
   walletAddress?: Address
   isOpen?: boolean
   initialSourceCurrencyId?: string
+  minimumBalanceDataUpdatedAtMs?: number
   resetSelectionOnClose?: boolean
   skip?: boolean
 }
@@ -19,11 +27,16 @@ type UseEarnDepositSourcesResult = {
   balanceLookupHasData: boolean
   balanceLookupSettled: boolean
   depositSourceOptions: EarnDepositSourceOption[]
+  /** Includes unsupported-chain balances; use this only for informational UI. */
   hasAnyBalanceForUnderlying: boolean
+  /** Supported chains only; use this to decide whether the user can enter the deposit flow. */
+  hasSupportedBalanceForUnderlying: boolean
   projectCurrencyIds: string[]
+  refetchBalanceLookup: () => void
   selectedDepositSource: EarnDepositSourceOption | undefined
   selectedDepositSourceCurrencyId: string | undefined
   setSelectedDepositSourceCurrencyId: (currencyId: string) => void
+  unsupportedDepositSourceOptions: EarnDepositSourceOption[]
 }
 
 export function useEarnDepositSources({
@@ -31,6 +44,7 @@ export function useEarnDepositSources({
   walletAddress,
   isOpen = true,
   initialSourceCurrencyId,
+  minimumBalanceDataUpdatedAtMs,
   resetSelectionOnClose = false,
   skip = false,
 }: UseEarnDepositSourcesParams): UseEarnDepositSourcesResult {
@@ -39,25 +53,43 @@ export function useEarnDepositSources({
     () => (!shouldSkipLookups && vault?.currencyId ? [vault.currencyId] : []),
     [shouldSkipLookups, vault?.currencyId],
   )
-  const { data: tokenProject, error: tokenProjectError } = useTokenProjects(projectQueryIds)
+  const {
+    data: tokenProject,
+    error: tokenProjectError,
+    refetch: refetchTokenProjects,
+  } = useTokenProjects(projectQueryIds)
   const projectCurrencyIds = useMemo(() => tokenProject?.map((info) => info.currencyId) ?? [], [tokenProject])
 
   const portfolio = usePortfolioBalances({
     evmAddress: walletAddress,
     skip: shouldSkipLookups || !walletAddress,
   })
+  const refetchPortfolioBalances = portfolio.refetch
+  const hasFreshEnoughPortfolioData = hasFreshEnoughPortfolioBalanceData({
+    dataUpdatedAt: portfolio.dataUpdatedAt,
+    minimumBalanceDataUpdatedAtMs,
+  })
+  const freshPortfolioData = getFreshPortfolioBalanceData({
+    data: portfolio.data,
+    dataUpdatedAt: portfolio.dataUpdatedAt,
+    minimumBalanceDataUpdatedAtMs,
+  })
 
-  const depositSourceOptions = useMemo<EarnDepositSourceOption[]>(() => {
+  const allDepositSourceOptions = useMemo<EarnDepositSourceOption[]>(() => {
     if (!vault) {
       return []
     }
 
     return getEarnDepositSourceOptions({
-      portfolioBalances: portfolio.data,
+      portfolioBalances: freshPortfolioData,
       tokenProjectCurrencyIds: projectCurrencyIds,
       vault,
     })
-  }, [portfolio.data, projectCurrencyIds, vault])
+  }, [freshPortfolioData, projectCurrencyIds, vault])
+  const { supportedDepositSourceOptions: depositSourceOptions, unsupportedDepositSourceOptions } = useMemo(
+    () => getEarnDepositSourceOptionsBySupport({ depositSourceOptions: allDepositSourceOptions }),
+    [allDepositSourceOptions],
+  )
 
   // `initialSourceCurrencyId` seeds the initial pick once on mount. Callers that need to re-seed
   // (e.g. navigating back from the review sheet with a different source) trigger a fresh mount via
@@ -99,19 +131,32 @@ export function useEarnDepositSources({
     [depositSourceOptions, selectedDepositSourceCurrencyId],
   )
 
-  const balanceLookupHasData = !shouldSkipLookups && portfolio.data !== undefined && tokenProject !== undefined
+  const balanceLookupHasData =
+    !shouldSkipLookups && portfolio.data !== undefined && hasFreshEnoughPortfolioData && tokenProject !== undefined
   const balanceLookupErrored = portfolio.error !== undefined || tokenProjectError !== undefined
-  const balanceLookupSettled = balanceLookupHasData || balanceLookupErrored || !walletAddress || shouldSkipLookups
+  const canUseErroredLookupAsSettled = minimumBalanceDataUpdatedAtMs === undefined
+  const balanceLookupSettled =
+    balanceLookupHasData ||
+    (canUseErroredLookupAsSettled && balanceLookupErrored) ||
+    !walletAddress ||
+    shouldSkipLookups
+  const refetchBalanceLookup = useCallback(() => {
+    refetchPortfolioBalances()
+    refetchTokenProjects?.()
+  }, [refetchPortfolioBalances, refetchTokenProjects])
 
   return {
     balanceLookupErrored,
     balanceLookupHasData,
     balanceLookupSettled,
     depositSourceOptions,
-    hasAnyBalanceForUnderlying: depositSourceOptions.length > 0,
+    hasAnyBalanceForUnderlying: allDepositSourceOptions.length > 0,
+    hasSupportedBalanceForUnderlying: depositSourceOptions.length > 0,
     projectCurrencyIds,
+    refetchBalanceLookup,
     selectedDepositSource,
     selectedDepositSourceCurrencyId,
     setSelectedDepositSourceCurrencyId,
+    unsupportedDepositSourceOptions,
   }
 }

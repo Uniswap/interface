@@ -39,7 +39,6 @@ export const useTabsContent = (): TabsSection[] => {
   const colors = useSporeColors()
   const isPortfolioDefiTabEnabled = useFeatureFlag(FeatureFlags.PortfolioDefiTab)
   const portfolioPoolsBalancesEnabled = useFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
-  const isToucanLaunchAuctionEnabled = useFeatureFlag(FeatureFlags.ToucanLaunchAuction)
   const isAddLiquidityRevamp = useFeatureFlag(FeatureFlags.AddLiquidityRevamp)
   const entryPoint = resolveEntryPoint({ search, state })
   const isPortfolioPoolsEntryPointActive = entryPoint.kind === EntryPointKind.PortfolioPools
@@ -90,7 +89,7 @@ export const useTabsContent = (): TabsSection[] => {
       elementName: ElementName.NavbarExploreTab,
       items: [
         {
-          label: t('common.tokens'),
+          label: t('common.token.plural'),
           href: '/explore/tokens',
           internal: true,
           elementName: ElementName.NavbarExploreDropdownTokens,
@@ -135,16 +134,12 @@ export const useTabsContent = (): TabsSection[] => {
           internal: true,
           elementName: ElementName.NavbarPoolDropdownCreatePosition,
         },
-        ...(isToucanLaunchAuctionEnabled
-          ? [
-              {
-                label: t('toucan.createAuction.launchAuction'),
-                href: '/liquidity/launch-auction',
-                internal: true,
-                elementName: ElementName.NavbarPoolDropdownLaunchAuction,
-              },
-            ]
-          : []),
+        {
+          label: t('toucan.createAuction.launchAuction'),
+          href: '/liquidity/launch-auction',
+          internal: true,
+          elementName: ElementName.NavbarPoolDropdownLaunchAuction,
+        },
       ],
     },
     {
@@ -167,7 +162,7 @@ export const useTabsContent = (): TabsSection[] => {
           elementName: ElementName.NavbarPortfolioDropdownOverview,
         },
         {
-          label: t('common.tokens'),
+          label: t('common.token.plural'),
           href: buildPortfolioUrl({
             tab: PortfolioTab.Tokens,
             chainId: portfolioChainId,

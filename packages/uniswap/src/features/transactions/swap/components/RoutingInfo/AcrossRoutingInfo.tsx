@@ -9,7 +9,7 @@ import { zIndexes } from 'ui/src/theme'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 export function AcrossRoutingInfo(): JSX.Element {
@@ -44,7 +44,7 @@ export function AcrossRoutingInfo(): JSX.Element {
     () =>
       isMobileApp ? (
         <Flex centered gap="$spacing16">
-          <LearnMoreLink textVariant="buttonLabel3" url={uniswapUrls.helpArticleUrls.acrossRoutingInfo} />
+          <LearnMoreLink textVariant="buttonLabel3" url={UniswapHelpUrls.articles.acrossRoutingInfo} />
           <Flex row alignItems="center" gap="$spacing6" justifyContent="center">
             <Text color="$neutral3" variant="buttonLabel4">
               {t('swap.details.poweredBy')}

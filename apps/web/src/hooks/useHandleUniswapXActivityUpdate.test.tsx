@@ -32,6 +32,8 @@ vi.mock('@uniswap/analytics', () => ({
 vi.mock('~/state/popups/registry', () => ({
   popupRegistry: {
     addPopup: vi.fn(),
+    hasPopup: vi.fn(() => false),
+    onPopupRemoved: vi.fn(),
   },
 }))
 
@@ -280,6 +282,12 @@ describe('useHandleUniswapXActivityUpdate', () => {
           stepType: 'SwapTransaction',
         },
         transactedUSDValue: undefined,
+        rwaAnalytics: {
+          market_closed: undefined,
+          price_warning: undefined,
+          token_in_stocks: undefined,
+          token_out_stocks: undefined,
+        },
       })
     })
 
@@ -336,6 +344,12 @@ describe('useHandleUniswapXActivityUpdate', () => {
           stepType: 'SwapTransaction',
         },
         transactedUSDValue: undefined,
+        rwaAnalytics: {
+          market_closed: undefined,
+          price_warning: undefined,
+          token_in_stocks: undefined,
+          token_out_stocks: undefined,
+        },
       })
     })
 
@@ -373,6 +387,12 @@ describe('useHandleUniswapXActivityUpdate', () => {
           stepType: 'SwapTransaction',
         },
         transactedUSDValue: undefined,
+        rwaAnalytics: {
+          market_closed: undefined,
+          price_warning: undefined,
+          token_in_stocks: undefined,
+          token_out_stocks: undefined,
+        },
       })
     })
 

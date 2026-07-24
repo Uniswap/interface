@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import React
 
 // Mnemonic length bounds: HD wallets are 12 words, embedded wallets are 24.
 fileprivate let mnemonicLengthHD = 12

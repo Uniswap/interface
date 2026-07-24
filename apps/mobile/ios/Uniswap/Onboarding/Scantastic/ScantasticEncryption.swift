@@ -7,6 +7,7 @@
 
 import Foundation
 import CryptoKit
+import React
 
 enum ScantasticError: String, Error {
   case publicKeyError = "publicKeyError"

@@ -1,0 +1,37 @@
+{
+  "name": "@universe/compliance",
+  "version": "0.0.0",
+  "dependencies": {
+    "@bufbuild/protobuf": "1.10.0",
+    "@connectrpc/connect": "1.5.0",
+    "@tanstack/react-query": "5.90.20",
+    "@uniswap/client-compliancev2": "1.1.1",
+    "@universe/api": "workspace:^",
+    "@universe/environment": "workspace:^",
+    "react": "19.2.3",
+    "utilities": "workspace:^"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.17",
+    "@vitest/coverage-v8": "3.2.1",
+    "vitest": "3.2.1",
+    "vitest-presets": "workspace:^"
+  },
+  "scripts": {
+    "typecheck": "nx typecheck compliance",
+    "test": "nx test compliance",
+    "check": "nx check compliance",
+    "check:fast": "nx check:fast compliance",
+    "check:deps:usage": "nx check:deps:usage compliance",
+    "format": "nx format compliance",
+    "format:check": "nx format:check compliance",
+    "lint": "nx lint compliance",
+    "lint:fix": "nx lint:fix compliance"
+  },
+  "nx": {
+    "includedScripts": []
+  },
+  "main": "src/index.ts",
+  "private": true,
+  "sideEffects": false
+}

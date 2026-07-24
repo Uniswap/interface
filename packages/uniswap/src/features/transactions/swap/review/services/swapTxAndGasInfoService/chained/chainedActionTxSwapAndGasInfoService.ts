@@ -1,6 +1,7 @@
-import { type GasFeeResult, type GasStrategy, TradingApi } from '@universe/api'
+import { type GasFeeResult, TradingApi } from '@universe/api'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { convertGasFeeToDisplayValue } from 'uniswap/src/features/gas/hooks'
+import { convertGasFeeToDisplayValue } from 'uniswap/src/features/gas/convertGasFeeToDisplayValue'
+import { getDisplayGasStrategy } from 'uniswap/src/features/gas/utils'
 import type { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
 import { getPlanCompoundSlippageTolerance } from 'uniswap/src/features/transactions/swap/plan/slippage'
 import type { SwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/swapTxAndGasInfoService'
@@ -56,9 +57,8 @@ export function createChainedActionSwapTxAndGasInfoService(ctx?: {
       // // Preserve tradeId if previous fetch was skipped
       // planId = tradeResponse?.planId ?? planId
 
-      const gasStrategy: GasStrategy | undefined = newQuote.gasEstimates?.[0]
-        ? { ...newQuote.gasEstimates[0].strategy, displayLimitInflationFactor: 1 }
-        : undefined
+      const firstGasEstimate = newQuote.gasEstimates?.[0]
+      const gasStrategy = getDisplayGasStrategy(firstGasEstimate ? firstGasEstimate.strategy : undefined)
 
       const gasFee: GasFeeResult = {
         value: newQuote.gasFee,

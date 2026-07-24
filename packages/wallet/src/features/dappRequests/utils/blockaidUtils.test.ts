@@ -1,6 +1,8 @@
 // Mock chain info to avoid importing chain data with PNG files
-jest.mock('uniswap/src/features/chains/chainInfo', () => ({
-  getChainInfo: jest.fn((chainId: number) => ({
+vi.mock('uniswap/src/features/chains/chainInfo', () => ({
+  // Chain ids treated as supported by isUniverseChainId in these tests (Mainnet, Base)
+  ALL_CHAIN_IDS: [1, 8453],
+  getChainInfo: vi.fn((chainId: number) => ({
     nativeCurrency: {
       address: `0xNATIVE${chainId}`,
       name: 'Mock Native',
@@ -20,6 +22,7 @@ import {
   extractContractName,
   extractFunctionName,
   getRiskLevelFromClassification,
+  getRiskLevelFromValidation,
   parseApprovals,
   parseReceivingAssets,
   parseSendingAssets,
@@ -86,6 +89,172 @@ describe('blockaidUtils', () => {
     it('should return Warning for suspicious classification', () => {
       expect(getRiskLevelFromClassification('suspicious')).toBe(TransactionRiskLevel.Warning)
       expect(getRiskLevelFromClassification('Suspicious Activity')).toBe(TransactionRiskLevel.Warning)
+    })
+  })
+
+  describe('getRiskLevelFromValidation', () => {
+    it('should return None for undefined validation', () => {
+      expect(getRiskLevelFromValidation(undefined)).toBe(TransactionRiskLevel.None)
+    })
+
+    it('should map result_type Malicious to Critical (case-insensitive)', () => {
+      // Live API returns PascalCase; existing fixtures use lowercase. Both must resolve to Critical.
+      expect(
+        getRiskLevelFromValidation({
+          status: 'Success',
+          result_type: 'Malicious',
+          classification: 'untrusted_address',
+          description: '',
+          reason: '',
+          features: [],
+        }),
+      ).toBe(TransactionRiskLevel.Critical)
+      expect(
+        getRiskLevelFromValidation({
+          status: 'Success',
+          result_type: 'malicious',
+          classification: '',
+          description: '',
+          reason: '',
+          features: [],
+        }),
+      ).toBe(TransactionRiskLevel.Critical)
+    })
+
+    it('should map result_type Warning to Warning', () => {
+      expect(
+        getRiskLevelFromValidation({
+          status: 'Success',
+          result_type: 'Warning',
+          classification: 'approval_farming',
+          description: '',
+          reason: '',
+          features: [],
+        }),
+      ).toBe(TransactionRiskLevel.Warning)
+    })
+
+    it('should map result_type Benign to None', () => {
+      expect(
+        getRiskLevelFromValidation({
+          status: 'Success',
+          result_type: 'Benign',
+          classification: 'benign',
+          description: '',
+          reason: '',
+          features: [],
+        }),
+      ).toBe(TransactionRiskLevel.None)
+    })
+
+    it('should map result_type Spam to None', () => {
+      expect(
+        getRiskLevelFromValidation({
+          status: 'Success',
+          result_type: 'Spam',
+          classification: 'spam',
+          description: '',
+          reason: '',
+          features: [],
+        }),
+      ).toBe(TransactionRiskLevel.None)
+    })
+
+    it('REGRESSION (INFRA-2251): result_type Malicious with a classification lacking any legacy substring still maps to Critical', () => {
+      expect(
+        getRiskLevelFromValidation({
+          status: 'Success',
+          result_type: 'Malicious',
+          classification: 'untrusted_address',
+          description: 'The transaction is assessed as high risk for token loss',
+          reason: 'high_risk_approval',
+          features: [
+            { type: 'Malicious', feature_id: 'HIGH_RISK_SPENDER', description: 'This address is a high-risk spender' },
+          ],
+        }),
+      ).toBe(TransactionRiskLevel.Critical)
+    })
+
+    it('should elevate to Critical from a Malicious feature even when result_type is benign', () => {
+      expect(
+        getRiskLevelFromValidation({
+          status: 'Success',
+          result_type: 'Benign',
+          classification: 'benign',
+          description: '',
+          reason: '',
+          features: [{ type: 'Malicious', feature_id: 'HIGH_RISK_SPENDER', description: '' }],
+        }),
+      ).toBe(TransactionRiskLevel.Critical)
+    })
+
+    it('should elevate to Warning from a Warning feature when result_type is benign', () => {
+      expect(
+        getRiskLevelFromValidation({
+          status: 'Success',
+          result_type: 'Benign',
+          classification: 'benign',
+          description: '',
+          reason: '',
+          features: [{ type: 'Warning', feature_id: 'UNVERIFIED_CONTRACT', description: '' }],
+        }),
+      ).toBe(TransactionRiskLevel.Warning)
+    })
+
+    it('should let a Malicious feature override a Spam result_type', () => {
+      expect(
+        getRiskLevelFromValidation({
+          status: 'Success',
+          result_type: 'Spam',
+          classification: 'spam',
+          description: '',
+          reason: '',
+          features: [{ type: 'Malicious', feature_id: 'HIGH_RISK_SPENDER', description: '' }],
+        }),
+      ).toBe(TransactionRiskLevel.Critical)
+    })
+
+    it('should fall back to the classification substring when result_type is unrecognized', () => {
+      expect(
+        getRiskLevelFromValidation({
+          status: 'Success',
+          result_type: 'unknown_future_value',
+          classification: 'phishing_attack',
+          description: '',
+          reason: '',
+          features: [],
+        }),
+      ).toBe(TransactionRiskLevel.Critical)
+    })
+
+    it('should derive risk from result_type even on the Error validation arm', () => {
+      expect(
+        getRiskLevelFromValidation({
+          status: 'Error',
+          result_type: 'Malicious',
+          classification: 'untrusted_address',
+          description: '',
+          reason: '',
+          features: [],
+          error: 'simulation failed',
+        }),
+      ).toBe(TransactionRiskLevel.Critical)
+    })
+
+    it('should not over-warn on the real benign response shape (Benign result_type, empty classification, Benign/Info features)', () => {
+      expect(
+        getRiskLevelFromValidation({
+          status: 'Success',
+          result_type: 'Benign',
+          classification: '',
+          description: '',
+          reason: '',
+          features: [
+            { type: 'Benign', feature_id: 'TRUSTED_ADDRESS', description: 'A trusted address, safe to interact with' },
+            { type: 'Info', feature_id: 'EMITS_APPROVALS', description: 'The transaction approves assets' },
+          ],
+        }),
+      ).toBe(TransactionRiskLevel.None)
     })
   })
 
@@ -171,6 +340,45 @@ describe('blockaidUtils', () => {
       expect(result?.assets[0]?.address).toBe('0xNATIVE1')
       expect(result?.assets[0]?.symbol).toBe('ETH')
       expect(result?.assets[0]?.amount).toBe('1.5')
+    })
+
+    it('REGRESSION (INFRA-2850): should fall back to the asset address for a NATIVE asset with an unsupported chain_id', () => {
+      const assetsDiffs = [
+        {
+          asset: {
+            type: 'NATIVE',
+            symbol: 'FAKE',
+            name: 'Fake Chain Token',
+            address: '0xfallback',
+            chain_id: 999999,
+          },
+          out: [{ value: '1' }],
+          in: [],
+        },
+      ] as any
+
+      const result = parseSendingAssets(assetsDiffs, TEST_CHAIN_ID)
+
+      expect(result?.assets[0]?.address).toBe('0xfallback')
+    })
+
+    it('REGRESSION (INFRA-2850): should fall back to an empty address for a NATIVE asset with an unsupported chain_id and no address', () => {
+      const assetsDiffs = [
+        {
+          asset: {
+            type: 'NATIVE',
+            symbol: 'FAKE',
+            name: 'Fake Chain Token',
+            chain_id: 999999,
+          },
+          out: [{ value: '1' }],
+          in: [],
+        },
+      ] as any
+
+      const result = parseSendingAssets(assetsDiffs, TEST_CHAIN_ID)
+
+      expect(result?.assets[0]?.address).toBe('')
     })
 
     it('should skip assets with no out amount', () => {
@@ -714,6 +922,60 @@ describe('blockaidUtils', () => {
       }
 
       const result = parseTransactionSections(maliciousWithSimulation, TEST_CHAIN_ID)
+
+      expect(result.riskLevel).toBe(TransactionRiskLevel.Critical)
+      expect(result.sections).toEqual([])
+    })
+
+    it('REGRESSION (INFRA-2251): real drainer approval (result_type Malicious, classification "untrusted_address") returns Critical', () => {
+      const drainerApproval: BlockaidScanTransactionResponse = {
+        block: '25376665',
+        chain: 'ethereum',
+        validation: {
+          status: 'Success',
+          result_type: 'Malicious',
+          classification: 'untrusted_address',
+          reason: 'high_risk_approval',
+          description: 'The transaction is assessed as high risk for token loss',
+          features: [
+            {
+              type: 'Malicious',
+              feature_id: 'HIGH_RISK_SPENDER',
+              description:
+                'This address is a high-risk spender, allowing third parties or scammers to access or drain your funds',
+              address: '0x22b62136b555f9B7081e2AB6677CBFFAfD860C44',
+            },
+          ],
+        },
+        simulation: {
+          status: 'Success',
+          account_summary: { assets_diffs: [], exposures: [] },
+          address_details: {},
+          params: {},
+        } as any,
+      }
+
+      const result = parseTransactionSections(drainerApproval, TEST_CHAIN_ID)
+
+      expect(result.riskLevel).toBe(TransactionRiskLevel.Critical)
+    })
+
+    it('REGRESSION (INFRA-2251): drainer Permit2 signature with no simulation returns Critical', () => {
+      const drainerPermit: BlockaidScanTransactionResponse = {
+        block: '25376665',
+        chain: 'ethereum',
+        validation: {
+          status: 'Success',
+          result_type: 'Malicious',
+          classification: 'untrusted_address',
+          reason: 'high_risk_approval',
+          description: 'The transaction is assessed as high risk for token loss',
+          features: [{ type: 'Malicious', feature_id: 'HIGH_RISK_SPENDER', description: '' }],
+        },
+        // No simulation (typical for signature requests)
+      }
+
+      const result = parseTransactionSections(drainerPermit, TEST_CHAIN_ID)
 
       expect(result.riskLevel).toBe(TransactionRiskLevel.Critical)
       expect(result.sections).toEqual([])

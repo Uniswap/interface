@@ -1,4 +1,4 @@
-import { GraphQLApi } from '@universe/api'
+import { GraphQLApi, parseRestProtocolVersion } from '@universe/api'
 import { useCallback, useMemo, useRef } from 'react'
 import { DEFAULT_TICK_SPACING, V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/rpc'
@@ -167,6 +167,7 @@ export function usePoolsFromTokenAddress({
             volume24h: pool.volume24h?.value,
             tvl: pool.totalLiquidity?.value,
             feeTier: pool.feeTier,
+            protocolVersion: parseRestProtocolVersion(pool.protocolVersion),
           }),
           feeTier: pool.feeTier
             ? {
@@ -194,6 +195,7 @@ export function usePoolsFromTokenAddress({
             volume24h: pool.volume24h?.value,
             tvl: pool.totalLiquidity?.value,
             feeTier: pool.feeTier,
+            protocolVersion: parseRestProtocolVersion(pool.protocolVersion),
           }),
           feeTier: pool.feeTier
             ? {
@@ -219,6 +221,7 @@ export function usePoolsFromTokenAddress({
             volume24h: pool.volume24h?.value,
             tvl: pool.totalLiquidity?.value,
             feeTier: V2_DEFAULT_FEE_TIER,
+            protocolVersion: parseRestProtocolVersion(pool.protocolVersion),
           }),
           feeTier: {
             feeAmount: V2_DEFAULT_FEE_TIER,

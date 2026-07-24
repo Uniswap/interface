@@ -7,13 +7,13 @@ import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 
 describe('TransactionSignerService', () => {
   // Mock dependencies
-  const mockSignerConnect = jest.fn()
+  const mockSignerConnect = vi.fn()
 
   // Properly define mock functions
-  const mockPopulateTransaction = jest.fn()
-  const mockSignTransaction = jest.fn()
-  const mockEstimateGas = jest.fn()
-  const mockSignTypedData = jest.fn()
+  const mockPopulateTransaction = vi.fn()
+  const mockSignTransaction = vi.fn()
+  const mockEstimateGas = vi.fn()
+  const mockSignTypedData = vi.fn()
 
   const mockSigner = {
     populateTransaction: mockPopulateTransaction,
@@ -23,12 +23,12 @@ describe('TransactionSignerService', () => {
     _signTypedData: mockSignTypedData,
   } as unknown as Signer
 
-  const mockSendTransaction = jest.fn()
+  const mockSendTransaction = vi.fn()
   const mockProvider = {
     sendTransaction: mockSendTransaction,
   } as unknown as Provider
 
-  const mockGetSignerForAccount = jest.fn()
+  const mockGetSignerForAccount = vi.fn()
   const mockSignerManager = {
     getSignerForAccount: mockGetSignerForAccount,
   } as unknown as SignerManager
@@ -38,11 +38,11 @@ describe('TransactionSignerService', () => {
     type: AccountType.SignerMnemonic,
   } as SignerMnemonicAccountMeta
 
-  const mockGetProvider = jest.fn()
+  const mockGetProvider = vi.fn()
 
   // Reset mocks before each test
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockSignerConnect.mockReturnValue(mockSigner)
     mockGetSignerForAccount.mockResolvedValue(mockSigner)
     mockGetProvider.mockResolvedValue(mockProvider)

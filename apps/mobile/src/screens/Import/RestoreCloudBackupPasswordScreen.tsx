@@ -158,7 +158,7 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
       footer={
         <Flex row>
           <Button
-            isDisabled={!enteredPassword || isLockedOut || isLoading}
+            disabled={!enteredPassword || isLockedOut || isLoading}
             testID={TestID.Continue}
             variant="branded"
             size="large"

@@ -5,25 +5,32 @@ import { UniswapX } from 'ui/src/components/icons/UniswapX'
 import { UniswapXText } from 'ui/src/components/text/UniswapXText'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { TransactionDetailsTooltip as Tooltip } from 'uniswap/src/components/TransactionDetailsTooltip'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export function NetworkCostTooltip({
   chainId,
   includesDelegation,
+  includesDelegationUpgrade = false,
 }: {
   chainId: UniverseChainId
   includesDelegation: boolean
+  /** The included delegation is a smart wallet update (Calibur re-delegation) rather than a first-time activation */
+  includesDelegationUpgrade?: boolean
 }): JSX.Element {
   const { t } = useTranslation()
 
-  const learnMoreUrl = includesDelegation
-    ? uniswapUrls.helpArticleUrls.smartWalletDelegation
-    : uniswapUrls.helpArticleUrls.networkFeeInfo
-  const text = includesDelegation
-    ? t('smartWallet.banner.networkCost', { chainName: getChainInfo(chainId).label })
-    : t('transaction.networkCost.description')
+  const learnMoreUrl = includesDelegationUpgrade
+    ? UniswapHelpUrls.articles.caliburUpgrades
+    : includesDelegation
+      ? UniswapHelpUrls.articles.smartWalletDelegation
+      : UniswapHelpUrls.articles.networkFeeInfo
+  const text = includesDelegationUpgrade
+    ? t('transaction.networkCost.includesSmartWalletUpdate')
+    : includesDelegation
+      ? t('smartWallet.banner.networkCost', { chainName: getChainInfo(chainId).label })
+      : t('transaction.networkCost.description')
   return (
     <Tooltip.Outer>
       <Tooltip.Header
@@ -69,7 +76,7 @@ export function NetworkCostTooltipUniswapX({
         )}
       </Tooltip.Content>
       <Tooltip.Separator />
-      <Tooltip.Description learnMoreUrl={uniswapUrls.helpArticleUrls.uniswapXInfo} text={t('uniswapX.cost')} />
+      <Tooltip.Description learnMoreUrl={UniswapHelpUrls.articles.uniswapXInfo} text={t('uniswapX.cost')} />
     </Tooltip.Outer>
   )
 }

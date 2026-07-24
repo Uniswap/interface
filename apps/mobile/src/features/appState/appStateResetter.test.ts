@@ -12,10 +12,10 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice/slice
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
-jest.mock('expo-image', () => ({
+vi.mock('expo-image', () => ({
   Image: {
-    clearDiskCache: jest.fn(() => Promise.resolve()),
-    clearMemoryCache: jest.fn(() => Promise.resolve()),
+    clearDiskCache: vi.fn(() => Promise.resolve()),
+    clearMemoryCache: vi.fn(() => Promise.resolve()),
   },
 }))
 
@@ -23,13 +23,13 @@ const createMockApolloClient = (): ApolloClient<unknown> => {
   const client = new ApolloClient({
     cache: new InMemoryCache(),
   })
-  jest.spyOn(client, 'resetStore').mockResolvedValue([])
+  vi.spyOn(client, 'resetStore').mockResolvedValue([])
   return client
 }
 
 const createMockQueryClient = (): QueryClient => {
   const client = new QueryClient()
-  jest.spyOn(client, 'resetQueries').mockResolvedValue()
+  vi.spyOn(client, 'resetQueries').mockResolvedValue()
   return client
 }
 
@@ -50,7 +50,7 @@ describe('createMobileAppStateResetter', () => {
       apolloClient,
       queryClient,
     })
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('resetAccountHistory', () => {

@@ -60,6 +60,7 @@ interface PresetAmountButtonProps {
   transactionType?: TransactionType
   buttonProps?: ButtonProps
   actualGasFee?: string
+  isGasCovered?: boolean
 }
 
 export function PresetAmountButton({
@@ -72,6 +73,7 @@ export function PresetAmountButton({
   transactionType,
   buttonProps,
   actualGasFee,
+  isGasCovered,
 }: PresetAmountButtonProps): JSX.Element {
   const isNativeAsset = !!currencyBalance?.currency.isNative
   const [isShowingMaxNativeBalanceModal, setIsShowingMaxNativeBalanceModal] = useState(false)
@@ -80,6 +82,7 @@ export function PresetAmountButton({
     currencyAmount: currencyBalance,
     txType: transactionType,
     actualGasFee,
+    isGasCovered,
   })
   const presetValueAmount = useMemo(() => {
     if (isMaxPercentage(percentage)) {
@@ -198,7 +201,7 @@ const PresetButtonContent = memo(function PresetButtonContentInner({
           variant={variant}
           emphasis={emphasis}
           size={size}
-          isDisabled={disabled}
+          disabled={disabled}
           testID={currencyField === CurrencyField.INPUT ? TestID.SetMaxInput : TestID.SetMaxOutput}
           borderColor="$surface3"
           pressStyle={{

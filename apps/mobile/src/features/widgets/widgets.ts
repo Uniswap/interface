@@ -3,6 +3,8 @@ import { NativeModules } from 'react-native'
 import { getItem, reloadAllTimelines, setItem } from 'react-native-widgetkit'
 import { getBuildVariant } from 'src/utils/version'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -18,6 +20,7 @@ const KEY_WIDGET_CACHE = getBuildVariant() + '.widgets.configuration.cache'
 const KEY_WIDGETS_FAVORITE = getBuildVariant() + '.widgets.favorites'
 const KEY_WIDGETS_ACCOUNTS = getBuildVariant() + '.widgets.accounts'
 const KEY_WIDGETS_I18N = getBuildVariant() + '.widgets.i18n'
+const KEY_WIDGETS_CHAINS = getBuildVariant() + '.widgets.chains'
 
 const { RNWidgets } = NativeModules
 
@@ -57,7 +60,7 @@ export const setFavoritesUserDefaults = (currencyIds: CurrencyId[]): void => {
   setUserDefaults(data, KEY_WIDGETS_FAVORITE).catch(() => undefined)
 }
 
-export const setAccountAddressesUserDefaults = (accounts: Account[]): void => {
+export const setAccountAddressesUserDefaults = (accounts: Account[], activeAddress: Maybe<string>): void => {
   const userDefaultAccounts: Array<{ address: string; name: Maybe<string>; isSigner: boolean }> = accounts.map(
     (account: Account) => {
       return {
@@ -69,12 +72,18 @@ export const setAccountAddressesUserDefaults = (accounts: Account[]): void => {
   )
   const data = {
     accounts: userDefaultAccounts,
+    activeAddress: activeAddress ?? null,
   }
   setUserDefaults(data, KEY_WIDGETS_ACCOUNTS).catch(() => undefined)
 }
 
 export const setI18NUserDefaults = (i18nSettings: WidgetI18nSettings): void => {
   setUserDefaults(i18nSettings, KEY_WIDGETS_I18N).catch(() => undefined)
+}
+
+export const setChainsUserDefaults = (chainIds: UniverseChainId[]): void => {
+  const chains = chainIds.map((chainId) => ({ chainId, name: toGraphQLChain(chainId) }))
+  setUserDefaults({ chains }, KEY_WIDGETS_CHAINS).catch(() => undefined)
 }
 
 // handles edge case where there is a widget left in the cache,

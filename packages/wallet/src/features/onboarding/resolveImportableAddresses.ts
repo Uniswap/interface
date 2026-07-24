@@ -1,5 +1,4 @@
-import { ApolloClient } from '@apollo/client'
-import { GqlChainId } from 'uniswap/src/features/chains/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fetchBalancesAndUnitags } from 'wallet/src/features/onboarding/fetchBalancesAndUnitags'
 
 // Non-hook variant of the significance filter used by `useImportableAccounts`. Lets the
@@ -8,13 +7,11 @@ import { fetchBalancesAndUnitags } from 'wallet/src/features/onboarding/fetchBal
 // flow); SelectWalletScreen still runs the full check including ENS via the hook.
 export async function resolveImportableAddresses({
   addresses,
-  apolloClient,
-  gqlChains,
+  chainIds,
   requiredAddress,
 }: {
   addresses: Address[]
-  apolloClient: ApolloClient<unknown>
-  gqlChains: GqlChainId[]
+  chainIds: UniverseChainId[]
   // Address that must always appear in the returned set (e.g. the canonical embedded-wallet
   // address from WalletSignIn). Guarantees downstream lookups can find it even when the
   // significance filter returns an empty/different subset.
@@ -26,8 +23,7 @@ export async function resolveImportableAddresses({
 
   const { balanceByAddress, unitagByAddress } = await fetchBalancesAndUnitags({
     addresses,
-    apolloClient,
-    gqlChains,
+    chainIds,
   })
 
   const significant = addresses.filter((address) => {

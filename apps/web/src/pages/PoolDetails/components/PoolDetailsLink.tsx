@@ -14,13 +14,13 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
+import { useCopyClipboard } from 'utilities/src/react/useCopyClipboard'
 import { getTokenDetailsURL, gqlToCurrency } from '~/appGraphql/data/util'
 import { CurrencyLogo } from '~/components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import { LoadingBubble } from '~/components/Tokens/loading'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { useCopyClipboard } from '~/hooks/useCopyClipboard'
 import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from '~/theme/components/styles'
 import { anonymizeLink } from '~/utils/anonymizeLink'
 import { getChainUrlParam } from '~/utils/params/chainParams'
@@ -32,7 +32,7 @@ const TokenName = styled(Text, {
   $xl: {
     display: 'block',
   },
-  $xs: {
+  $sm: {
     display: 'none',
   },
 })
@@ -65,7 +65,7 @@ const SymbolText = styled(Text, {
   $xl: {
     color: '$neutral2',
   },
-  $xs: {
+  $sm: {
     color: '$neutral1',
   },
 })

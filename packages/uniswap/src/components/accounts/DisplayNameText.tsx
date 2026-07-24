@@ -12,7 +12,7 @@ type DisplayNameProps = {
   includeUnitagSuffix?: boolean
 } & FlexProps
 
-const platformAdjustedUnitagYPosition = isAndroid ? 4 : 2
+const INLINE_UNITAG_Y_OFFSET = 2
 
 export function DisplayNameText({
   displayName,
@@ -24,17 +24,37 @@ export function DisplayNameText({
   const isUnitag = displayName?.type === DisplayNameType.Unitag
   const name = isUnitag ? displayName.name.replaceAll(UNITAG_SUFFIX, '') : displayName?.name
 
+  const suffix = isUnitag && includeUnitagSuffix && (
+    <Text {...textProps} color="$neutral2" flexShrink={1}>
+      {UNITAG_SUFFIX}
+    </Text>
+  )
+
+  // Android: render the unitag icon as a row sibling. The inline View-in-Text path below relies on
+  // a y-offset that Fabric no longer honors, collapsing the icon to origin and overlapping siblings.
+  if (isAndroid) {
+    return (
+      <Flex row grow alignItems="center" {...rest}>
+        <Text {...textProps} color={textProps?.color ?? '$neutral1'} flexShrink={1} whiteSpace="initial">
+          {name}
+          {suffix}
+        </Text>
+        {isUnitag ? (
+          <Flex pl="$spacing2">
+            <Unitag size={unitagIconSize} />
+          </Flex>
+        ) : null}
+      </Flex>
+    )
+  }
+
   return (
     <Flex row grow {...rest}>
       <Text {...textProps} color={textProps?.color ?? '$neutral1'} flexShrink={1} whiteSpace="initial">
         {name}
-        {isUnitag && includeUnitagSuffix && (
-          <Text {...textProps} color="$neutral2" flexShrink={1}>
-            {UNITAG_SUFFIX}
-          </Text>
-        )}
+        {suffix}
         {isUnitag ? (
-          <Flex display="inline" y={platformAdjustedUnitagYPosition} pl="$spacing2">
+          <Flex display="inline" y={INLINE_UNITAG_Y_OFFSET} pl="$spacing2">
             <Unitag size={unitagIconSize} />
           </Flex>
         ) : null}

@@ -1,7 +1,7 @@
-import { GqlResult, GraphQLApi } from '@universe/api'
 import { useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { GQLNftAsset } from 'uniswap/src/features/nfts/types'
+import { useWalletNfts } from 'uniswap/src/features/nfts/hooks/useWalletNfts'
+import { NFTItem } from 'uniswap/src/features/nfts/types'
 
 export function useNFT({
   owner = '',
@@ -11,21 +11,16 @@ export function useNFT({
   owner?: Address
   address?: Address
   tokenId?: string
-}): GqlResult<GQLNftAsset> {
-  // TODO: [MOB-227] do a direct cache lookup in Apollo using id instead of re-querying
-  const { data, loading, refetch } = GraphQLApi.useNftsQuery({
-    variables: { ownerAddress: owner },
+}): NFTItem | undefined {
+  const { nfts } = useWalletNfts({
+    address: owner,
+    filterSpam: false,
     pollInterval: PollingInterval.Slow,
-    skip: !owner,
+    skip: !owner || !address || !tokenId,
   })
 
-  const nft = useMemo(
-    () =>
-      data?.portfolios?.[0]?.nftBalances?.find(
-        (balance) => balance?.ownedAsset?.nftContract?.address === address && balance?.ownedAsset?.tokenId === tokenId,
-      )?.ownedAsset ?? undefined,
-    [data, address, tokenId],
+  return useMemo(
+    () => nfts.find((n) => n.contractAddress === address && n.tokenId === tokenId),
+    [address, tokenId, nfts],
   )
-
-  return { data: nft, loading, refetch }
 }

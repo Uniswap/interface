@@ -87,7 +87,7 @@ export function YouNeedTokenView({
             fontWeight="$medium"
             cursor="pointer"
             onPress={() => {
-              // TODO(CONS-1781): link "Learn more" to uniswapUrls.helpArticleUrls.earn once the article exists.
+              // TODO(CONS-1781): link "Learn more" to UniswapHelpUrls.articles.earn once the article exists.
             }}
           >
             {t('common.button.learn')}
@@ -98,9 +98,10 @@ export function YouNeedTokenView({
       <Flex gap="$spacing8">
         <Button
           emphasis="primary"
-          size="medium"
+          size="large"
           fill={false}
-          isDisabled={actionsDisabled}
+          width="100%"
+          disabled={actionsDisabled}
           // tokenColor is a runtime hex string, not a Tamagui theme token — applied via `style`.
           style={{ backgroundColor: tokenColor }}
           onPress={onSwapForToken}
@@ -109,13 +110,14 @@ export function YouNeedTokenView({
         </Button>
         <Button
           emphasis="tertiary"
-          size="medium"
+          size="large"
           borderWidth="$spacing1"
           borderColor="$surface3"
           fill={false}
+          width="100%"
           backgroundColor="$surface3"
           icon={<Bank color="$neutral1" size="$icon.20" />}
-          isDisabled={actionsDisabled}
+          disabled={actionsDisabled}
           onPress={onBuyWithCash}
         >
           {t('explore.earn.needToken.buy')}

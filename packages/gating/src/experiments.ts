@@ -5,14 +5,11 @@
  */
 export enum Experiments {
   EthAsErc20UniswapX = 'eth_as_erc20_uniswapx_experiment',
-  ExploreBackendSorting = 'explore_backend_sorting',
   NativeTokenPercentageBuffer = 'lp_native_buffer',
-  PrivateRpc = 'private_rpc',
   SwapConfirmation = 'swap-confirmation',
 }
 
 export enum Layers {
-  ExplorePage = 'explore-page',
   SwapPage = 'swap-page',
 }
 
@@ -29,22 +26,12 @@ export enum ArbitrumXV2SamplingProperties {
   RoutingType = 'routingType',
 }
 
-export enum PrivateRpcProperties {
-  CalldataHintsEnabled = 'calldata_hints_enabled',
-  FlashbotsEnabled = 'flashbots_enabled',
-  RefundPercent = 'refund_percent',
-}
-
 export enum NativeTokenPercentageBufferProperties {
   BufferSize = 'bufferSize',
 }
 
 export enum SwapConfirmationProperties {
   WaitTimes = 'wait_times',
-}
-
-export enum ExploreBackendSortingProperties {
-  BackendSortingEnabled = 'backendSortingEnabled',
 }
 
 // Swap Layer experiment properties
@@ -62,16 +49,11 @@ export enum EthAsErc20UniswapXProperties {
 // Ordered alphabetically.
 export type ExperimentProperties = {
   [Experiments.EthAsErc20UniswapX]: EthAsErc20UniswapXProperties
-  [Experiments.ExploreBackendSorting]: ExploreBackendSortingProperties
   [Experiments.NativeTokenPercentageBuffer]: NativeTokenPercentageBufferProperties
-  [Experiments.PrivateRpc]: PrivateRpcProperties
   [Experiments.SwapConfirmation]: SwapConfirmationProperties
 }
 
 // will be a spread of all experiment properties in that layer
 export const LayerProperties: Record<Layers, string[]> = {
-  [Layers.ExplorePage]: Object.values({
-    ...ExploreBackendSortingProperties,
-  }),
   [Layers.SwapPage]: Object.values(SwapLayerProperties),
 }

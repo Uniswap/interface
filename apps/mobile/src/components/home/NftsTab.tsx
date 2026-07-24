@@ -1,4 +1,4 @@
-import { FlashList } from '@shopify/flash-list'
+import type { FlashListRef } from '@shopify/flash-list'
 import { isAndroid } from '@universe/environment'
 import React, { forwardRef, memo, useCallback, useMemo } from 'react'
 import { RefreshControl } from 'react-native'
@@ -8,7 +8,6 @@ import { Flex, useSporeColors } from 'ui/src'
 import { NftsList } from 'uniswap/src/components/nfts/NftsList'
 import { NftViewWithContextMenu } from 'uniswap/src/components/nfts/NftViewWithContextMenu'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useNavigateToNftExplorerLink } from 'uniswap/src/features/nfts/hooks/useNavigateToNftExplorerLink'
 import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
@@ -17,7 +16,7 @@ import { getOpenseaLink, openUri } from 'uniswap/src/utils/linking'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
 export const NftsTab = memo(
-  forwardRef<FlashList<unknown>, TabProps>(function NftsTabInner(
+  forwardRef<FlashListRef<unknown>, TabProps>(function NftsTabInner(
     {
       owner,
       containerProps,
@@ -51,7 +50,7 @@ export const NftsTab = memo(
       (item: NFTItem, index: number) => {
         const onPressNft = async (): Promise<void> => {
           const nftDetails = {
-            chainId: fromGraphQLChain(item.chain) ?? defaultChainId,
+            chainId: item.chainId ?? defaultChainId,
             contractAddress: item.contractAddress ?? '',
             tokenId: item.tokenId ?? '',
           }

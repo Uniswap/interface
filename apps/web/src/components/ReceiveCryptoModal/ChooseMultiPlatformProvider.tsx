@@ -3,7 +3,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { UNISWAP_WEB_URL, uniswapUrls } from 'uniswap/src/constants/urls'
+import { UNISWAP_WEB_URL, UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { MAINNET_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/mainnet'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { SOLANA_CHAIN_INFO } from 'uniswap/src/features/chains/svm/info/solana'
@@ -20,6 +20,7 @@ import { uuid } from 'utilities/src/primitives/uuid'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useActiveAddresses } from '~/features/accounts/store/hooks'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { getOnRampRedirectUrl } from '~/pages/Swap/Buy/onRampRedirectUrl'
 import { ProviderConnectedView } from '~/pages/Swap/Buy/ProviderConnectedView'
 import { ProviderConnectionError } from '~/pages/Swap/Buy/ProviderConnectionError'
 import { ConnectingViewWrapper } from '~/pages/Swap/Buy/shared'
@@ -64,7 +65,7 @@ function ProviderPlatform({
       serviceProvider: selectedServiceProvider.serviceProvider,
       walletAddress: address ?? '', // satisfy typecheck: useFiatOnRampAggregatorTransferWidgetQuery will only query if walletAddress is defined
       externalSessionId: externalTransactionId,
-      redirectUrl: `${UNISWAP_WEB_URL}/buy`,
+      redirectUrl: getOnRampRedirectUrl({ origin: UNISWAP_WEB_URL }),
     }
   }, [selectedServiceProvider, address, externalTransactionId])
 
@@ -212,12 +213,12 @@ export function ChooseMultiPlatformProvider({
             }}
             components={{
               tosLink: (
-                <StyledLink color={colors.neutral3.val} href={uniswapUrls.termsOfServiceUrl}>
+                <StyledLink color={colors.neutral3.val} href={UniswapStaticUrls.termsOfServiceUrl}>
                   {t('common.termsOfService')}
                 </StyledLink>
               ),
               privacyLink: (
-                <StyledLink color={colors.neutral3.val} href={uniswapUrls.privacyPolicyUrl}>
+                <StyledLink color={colors.neutral3.val} href={UniswapStaticUrls.privacyPolicyUrl}>
                   {t('common.privacyPolicy')}
                 </StyledLink>
               ),

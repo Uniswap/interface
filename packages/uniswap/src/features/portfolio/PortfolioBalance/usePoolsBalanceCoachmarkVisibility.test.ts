@@ -1,9 +1,15 @@
 import { act } from '@testing-library/react-native'
+import { SharedEventName } from '@uniswap/analytics-events'
 import { FeatureFlags } from '@universe/gating'
 import type { UniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
 import { initialUniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
 import { usePoolsBalanceCoachmarkVisibility } from 'uniswap/src/features/portfolio/PortfolioBalance/usePoolsBalanceCoachmarkVisibility'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { renderHookWithProviders } from 'uniswap/src/test/render'
+import type { Mock } from 'vitest'
+
+vi.mock('uniswap/src/features/telemetry/send')
 
 const { mockUseFeatureFlag, mockUsePortfolioBalancePart } = vi.hoisted(() => ({
   mockUseFeatureFlag: vi.fn(),
@@ -13,6 +19,8 @@ const { mockUseFeatureFlag, mockUsePortfolioBalancePart } = vi.hoisted(() => ({
 vi.mock('@universe/gating', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@universe/gating')>()),
   useFeatureFlag: mockUseFeatureFlag,
+  // usePoolsBalanceCoachmarkVisibility reads the pools flag via the exposure-disabled variant.
+  useFeatureFlagWithExposureLoggingDisabled: mockUseFeatureFlag,
 }))
 
 vi.mock('uniswap/src/features/dataApi/balances/balancesRest', () => ({
@@ -110,14 +118,14 @@ describe(usePoolsBalanceCoachmarkVisibility, () => {
     expect(result.current.shouldShow).toBe(true)
   })
 
-  it('reads from the cache without triggering a fetch (passes enabled: false to the data hook)', () => {
+  it('reads from the cache without triggering a fetch (passes cacheOnly to the data hook)', () => {
     renderHookWithProviders(() => usePoolsBalanceCoachmarkVisibility({ evmAddress: WALLET_A }), {
       preloadedState: asExistingUser(),
     })
 
     expect(mockUsePortfolioBalancePart).toHaveBeenCalledWith(
       expect.objectContaining({
-        enabled: false,
+        cacheOnly: true,
       }),
     )
   })
@@ -136,5 +144,19 @@ describe(usePoolsBalanceCoachmarkVisibility, () => {
 
     expect(store.getState().uniswapBehaviorHistory.hasDismissedPoolsBalanceCoachmark).toBe(true)
     expect(result.current.shouldShow).toBe(false)
+  })
+
+  it('fires the coachmark dismiss analytics event on dismiss', () => {
+    const { result } = renderHookWithProviders(() => usePoolsBalanceCoachmarkVisibility({ evmAddress: WALLET_A }), {
+      preloadedState: asExistingUser(),
+    })
+
+    act(() => {
+      result.current.dismiss()
+    })
+
+    expect(sendAnalyticsEvent as Mock).toHaveBeenCalledWith(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.PoolsBalanceCoachmark,
+    })
   })
 })

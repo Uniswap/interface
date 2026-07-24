@@ -2,7 +2,6 @@
 /* Usage: @import "@universe/mycelium/tailwind"; */
 /* For fonts: @import "@universe/mycelium/fonts"; */
 
-@import "./css/theme.css";
-@import "./css/variables.css";
-@import "./css/base.css";
-@import "./css/animations.css";
+/* Design tokens now live in @universe/tailwind (shared across web + native). */
+/* Mycelium re-exports the web bundle so existing consumers stay unchanged. */
+@import "@universe/tailwind/tailwind";

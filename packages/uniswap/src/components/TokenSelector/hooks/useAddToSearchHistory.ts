@@ -65,6 +65,9 @@ export function useAddToSearchHistory(): {
           }),
         )
         break
+      case OnchainItemListOptionType.Auction:
+        // TODO: Auctions don't have search history yet
+        break
     }
   }
 

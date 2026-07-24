@@ -1,6 +1,7 @@
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { useMemo } from 'react'
 import { useAppStackNavigation } from 'src/app/navigation/types'
+import { getMobileEarnWithdrawDestinationChainIds } from 'src/components/earn/earnWithdrawDestination'
 import type { EarnWithdrawNetworkSelectorModalProps } from 'src/components/earn/EarnWithdrawNetworkSelectorModalState'
 import { Flex } from 'ui/src'
 import { spacing } from 'ui/src/theme'
@@ -12,7 +13,6 @@ import type { NetworkSelectorOption, TieredNetworkOptions } from 'uniswap/src/co
 import { useNetworkFilterSearch } from 'uniswap/src/components/network/NetworkFilterV2/useNetworkFilterSearch'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { WITHDRAW_DESTINATION_CHAIN_IDS } from 'uniswap/src/features/earn/constants'
 import { useChainsWithUnderlyingBalance } from 'uniswap/src/features/earn/hooks/useChainsWithUnderlyingBalance'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -38,10 +38,15 @@ export function EarnWithdrawNetworkSelectorModal({
     evmAddress: walletAddress ?? undefined,
   })
 
+  const withdrawDestinationChainIds = useMemo(
+    () => getMobileEarnWithdrawDestinationChainIds(underlyingCurrencyId),
+    [underlyingCurrencyId],
+  )
+
   const tieredOptions = useMemo<TieredNetworkOptions>(() => {
     const withBalances: NetworkSelectorOption[] = []
     const otherNetworks: NetworkSelectorOption[] = []
-    for (const chainId of WITHDRAW_DESTINATION_CHAIN_IDS) {
+    for (const chainId of withdrawDestinationChainIds) {
       const option: NetworkSelectorOption = { chainId, label: getChainInfo(chainId).label, balanceUSD: 0 }
       if (chainsWithBalance.has(chainId)) {
         withBalances.push(option)
@@ -50,10 +55,10 @@ export function EarnWithdrawNetworkSelectorModal({
       }
     }
     return { withBalances, otherNetworks }
-  }, [chainsWithBalance])
+  }, [chainsWithBalance, withdrawDestinationChainIds])
 
   const { searchQuery, setSearchQuery, filteredChainIds, filteredTieredOptions } = useNetworkFilterSearch({
-    chainIds: WITHDRAW_DESTINATION_CHAIN_IDS,
+    chainIds: withdrawDestinationChainIds,
     tieredOptions,
   })
 
@@ -61,8 +66,7 @@ export function EarnWithdrawNetworkSelectorModal({
     if (chainId === null) {
       return
     }
-    // popTo + merge so the amount sheet's existing `vault`/`position` params survive —
-    // plain `navigate` replaces params rather than merging.
+    // Preserve the amount sheet's existing vault and position params.
     navigation.popTo(ModalName.EarnDepositAmount, { initialChainId: chainId }, { merge: true })
   })
 

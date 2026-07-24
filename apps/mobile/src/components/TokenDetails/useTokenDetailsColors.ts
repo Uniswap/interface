@@ -3,6 +3,7 @@ import {
   useTokenBasicInfoPartsFragment,
   useTokenBasicProjectPartsFragment,
 } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
+import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 
 export function useTokenDetailsColors({ currencyId }: { currencyId: string }): {
   tokenColor: Nullable<string>
@@ -13,10 +14,13 @@ export function useTokenDetailsColors({ currencyId }: { currencyId: string }): {
 
   const token = useTokenBasicInfoPartsFragment({ currencyId }).data
   const project = useTokenBasicProjectPartsFragment({ currencyId }).data.project
+  const metadata = useTokenMetadata(currencyId, {
+    legacyToken: { symbol: token.symbol, project: { logoUrl: project?.logoUrl } },
+  })
 
   const { tokenColor, tokenColorLoading } = useExtractedTokenColor({
-    imageUrl: project?.logoUrl,
-    tokenName: token.symbol,
+    imageUrl: metadata.logoUrl,
+    tokenName: metadata.symbol,
     backgroundColor: colors.surface1.val,
     defaultColor: colors.neutral3.val,
   })

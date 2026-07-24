@@ -6,48 +6,18 @@ import { EVMUniverseChainId, UniverseChainId } from 'uniswap/src/features/chains
 import { useAuctionTokenInfo } from '~/features/Toucan/Auction/hooks/useAuctionTokenInfo'
 import { AuctionDetails, AuctionDetailsLoadState } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStoreActions } from '~/features/Toucan/Auction/store/useAuctionStore'
-import { getTotalSupply } from '~/features/Toucan/Config/config'
-
-type ParsedAuctionStep = {
-  mps?: number | string
-  startBlock?: string
-  endBlock?: string
-}
-
-function computePreBidEndBlock(
-  steps: ParsedAuctionStep[] | undefined,
-  startBlock: string | undefined,
-): string | undefined {
-  if (!startBlock) {
-    return undefined
-  }
-
-  if (!steps || steps.length === 0) {
-    return startBlock
-  }
-
-  const hasMps = (step: ParsedAuctionStep) => {
-    if (step.mps === undefined) {
-      return false
-    }
-    const mpsNumber = typeof step.mps === 'string' ? Number(step.mps) : step.mps
-    return Number.isFinite(mpsNumber) && mpsNumber > 0
-  }
-
-  if (hasMps(steps[0])) {
-    return startBlock
-  }
-
-  const firstStepWithMps = steps.find(hasMps)
-  return firstStepWithMps?.startBlock ?? startBlock
-}
+import { computePreBidEndBlock, ParsedAuctionStepLike } from '~/features/Toucan/Auction/utils/preBidEndBlock'
+import { resolveAuctionTokenLogo } from '~/features/Toucan/Auction/utils/tokenMetadata'
+import { getAuctionMetadata } from '~/features/Toucan/Config/config'
+import { getPollingIntervalMs } from '~/utils/averageBlockTimeMs'
 
 /**
  * Custom hook to load auction details from API and enrich with token information.
  * Manages the complete auction loading lifecycle including load states and error handling.
  *
- * Note: This hook fetches auction data once per session (no polling).
- * Live data like clearing price is polled via useLoadCheckpointData instead.
+ * Polls at the same cadence as checkpoint data so slow-moving live fields on the auction
+ * (e.g. liquidity-lock burn totals) stay fresh. Fast-moving data like clearing price is
+ * still polled via useLoadCheckpointData.
  *
  * @param chainId - The chain ID for the auction
  * @param auctionAddress - The auction contract address
@@ -59,8 +29,9 @@ export function useLoadAuctionDetails(
   const { setAuctionDetails, setAuctionDetailsLoadState } = useAuctionStoreActions()
   const previousAuctionIdRef = useRef<string | undefined>(undefined)
 
-  // Fetch auction data from API (no polling - static data fetched once)
-  // Live data like clearing price is polled via useLoadCheckpointData
+  // Fetch auction data from API, polling at the checkpoint cadence. Unlike checkpoint polling
+  // this is not gated on the auction being active: lock/burn data keeps updating after the
+  // auction ends (burns are keeper-driven on the graduated pool).
   const {
     data: auctionData,
     error: auctionError,
@@ -72,7 +43,7 @@ export function useLoadAuctionDetails(
         address: auctionAddress?.toLowerCase(),
       }),
       enabled: Boolean(chainId && auctionAddress),
-      // No refetchInterval - auction details are static, checkpoint data handles live updates
+      refetchInterval: chainId ? getPollingIntervalMs(chainId) : false,
     }),
   )
 
@@ -140,20 +111,31 @@ export function useLoadAuctionDetails(
         ? baseAuctionDetails.clearingPrice
         : baseAuctionDetails.floorPrice
 
-    // Apply total supply override if configured for this auction
-    const tokenTotalSupply = getTotalSupply({
-      chainId: baseAuctionDetails.chainId,
-      tokenAddress: baseAuctionDetails.tokenAddress,
-      apiTotalSupply: baseAuctionDetails.tokenTotalSupply ?? baseAuctionDetails.totalSupply,
+    // Use the token total supply from the API, falling back to the auction supply when absent
+    const tokenTotalSupply = baseAuctionDetails.tokenTotalSupply ?? baseAuctionDetails.totalSupply
+
+    // Logo precedence: config override (authoritative) -> creator-uploaded API image ->
+    // indexed token logo -> TokenLogo placeholder. The override is resolved explicitly so it
+    // wins over the API image, while the API image still beats the indexed logo.
+    const overrideLogoUrl = baseAuctionDetails.tokenAddress
+      ? getAuctionMetadata({
+          chainId: baseAuctionDetails.chainId,
+          tokenAddress: baseAuctionDetails.tokenAddress,
+        })?.logoUrl
+      : undefined
+    const token = resolveAuctionTokenLogo({
+      tokenInfo,
+      overrideLogoUrl,
+      tokenImageUrl: baseAuctionDetails.tokenImageUrl,
     })
 
     const auctionDetails: AuctionDetails = {
       ...baseAuctionDetails,
       clearingPrice,
       tokenTotalSupply,
-      token: tokenInfo,
+      token,
       preBidEndBlock: computePreBidEndBlock(
-        (apiAuction as unknown as { parsedAuctionSteps?: ParsedAuctionStep[] }).parsedAuctionSteps,
+        (apiAuction as unknown as { parsedAuctionSteps?: ParsedAuctionStepLike[] }).parsedAuctionSteps,
         baseAuctionDetails.startBlock,
       ),
     }

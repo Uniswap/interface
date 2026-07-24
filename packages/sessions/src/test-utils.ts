@@ -37,6 +37,28 @@ export interface MockEndpoints {
   '/uniswap.platformservice.v1.SessionService/Signout': MockEndpointHandler
 }
 
+const throwUnexpectedEndpoint: MockEndpointHandler = async (_request, _headers) => {
+  throw new Error('unexpected SessionService mock endpoint call')
+}
+
+/**
+ * Builds a full {@link MockEndpoints} from the handlers a test actually exercises; any endpoint
+ * the test omits throws if called. Lets tests declare only the relevant RPCs without casting a
+ * partial object to `MockEndpoints`.
+ */
+export function defineMockEndpoints(handlers: Partial<MockEndpoints>): MockEndpoints {
+  return {
+    '/uniswap.platformservice.v1.SessionService/InitSession': throwUnexpectedEndpoint,
+    '/uniswap.platformservice.v1.SessionService/Challenge': throwUnexpectedEndpoint,
+    '/uniswap.platformservice.v1.SessionService/Verify': throwUnexpectedEndpoint,
+    '/uniswap.platformservice.v1.SessionService/IntrospectSession': throwUnexpectedEndpoint,
+    '/uniswap.platformservice.v1.SessionService/UpdateSession': throwUnexpectedEndpoint,
+    '/uniswap.platformservice.v1.SessionService/GetChallengeTypes': throwUnexpectedEndpoint,
+    '/uniswap.platformservice.v1.SessionService/Signout': throwUnexpectedEndpoint,
+    ...handlers,
+  }
+}
+
 // Test transport that intercepts requests and returns mock responses
 export function createTestTransport(mockEndpoints: MockEndpoints): ReturnType<typeof createConnectTransport> {
   return createConnectTransport({

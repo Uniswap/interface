@@ -52,9 +52,13 @@ export function createSwapTransactionAsyncStep(
 
 export function createSwapTransactionStepWalletCall(
   txRequests: ValidatedTransactionRequest[],
-  paymasterService?: TradingApi.PaymasterServiceCapability,
+  paymasterService?: Partial<TradingApi.PaymasterServiceCapability>,
 ): SwapTransactionStepWalletCall {
-  return { type: TransactionStepType.SwapTransactionWalletCall, walletCallTxRequests: txRequests, paymasterService }
+  return {
+    type: TransactionStepType.SwapTransactionWalletCall,
+    walletCallTxRequests: txRequests,
+    paymasterService: paymasterService?.url ? (paymasterService as TradingApi.PaymasterServiceCapability) : undefined,
+  }
 }
 
 export async function getSwapTxRequest(

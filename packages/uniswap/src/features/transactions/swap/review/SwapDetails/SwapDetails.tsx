@@ -41,7 +41,9 @@ interface SwapDetailsProps {
   setTokenWarningChecked?: (checked: boolean) => void
   txSimulationErrors?: TradingApi.TransactionFailureReason[]
   includesDelegation?: boolean
+  BannerSlot?: React.ReactNode
   NetworkCostRowSlot?: React.ReactNode
+  sponsorshipInfo?: TradingApi.SponsorshipInfo
 }
 
 export function SwapDetails({
@@ -61,15 +63,18 @@ export function SwapDetails({
   setTokenWarningChecked,
   txSimulationErrors,
   includesDelegation,
+  BannerSlot,
   NetworkCostRowSlot,
+  sponsorshipInfo,
 }: SwapDetailsProps): JSX.Element {
   const { t } = useTranslation()
 
-  const isBridgeTrade = derivedSwapInfo.trade.trade && isBridge(derivedSwapInfo.trade.trade)
-  const routing = derivedSwapInfo.trade.trade?.routing
-
-  const trade = derivedSwapInfo.trade.trade ?? derivedSwapInfo.trade.indicativeTrade
   const acceptedTrade = acceptedDerivedSwapInfo.trade.trade ?? acceptedDerivedSwapInfo.trade.indicativeTrade
+  const routedTrade = derivedSwapInfo.trade.trade
+  const trade = derivedSwapInfo.trade.trade ?? derivedSwapInfo.trade.indicativeTrade
+
+  const isBridgeTrade = routedTrade && isBridge(routedTrade)
+  const routing = routedTrade?.routing
 
   const swapFeeUsd = getSwapFeeUsdFromDerivedSwapInfo(derivedSwapInfo)
 
@@ -81,7 +86,7 @@ export function SwapDetails({
     throw new Error('Invalid render of `SwapDetails` with no `acceptedTrade`')
   }
 
-  const tradeQuote = derivedSwapInfo.trade.trade?.quote
+  const tradeQuote = routedTrade?.quote
 
   const estimatedSwapTime: number | undefined = useMemo(() => {
     if (!tradeQuote) {
@@ -106,12 +111,14 @@ export function SwapDetails({
     <HeightAnimator animationDisabled={isMobileApp || isMobileWeb}>
       <TransactionDetails
         banner={
-          newTradeRequiresAcceptance && (
+          newTradeRequiresAcceptance ? (
             <AcceptNewQuoteRow
               acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
               derivedSwapInfo={derivedSwapInfo}
               onAcceptTrade={onAcceptTrade}
             />
+          ) : (
+            BannerSlot
           )
         }
         chainId={acceptedTrade.inputAmount.currency.chainId}
@@ -135,6 +142,7 @@ export function SwapDetails({
         txSimulationErrors={txSimulationErrors}
         includesDelegation={includesDelegation}
         NetworkCostRowSlot={NetworkCostRowSlot}
+        sponsorshipInfo={sponsorshipInfo}
         CollapsedInfoRow={
           showCollapsedPriceImpactRow ? <PriceImpactRow derivedSwapInfo={acceptedDerivedSwapInfo} /> : undefined
         }

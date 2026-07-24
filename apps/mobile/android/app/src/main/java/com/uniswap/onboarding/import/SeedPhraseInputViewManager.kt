@@ -17,9 +17,10 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.ViewGroupManager
 import com.facebook.react.uimanager.ViewManager
 import com.facebook.react.uimanager.annotations.ReactProp
-import com.facebook.react.uimanager.events.RCTEventEmitter
 import com.uniswap.R
 import com.uniswap.RnEthersRs
+import com.uniswap.compose.ComposeHostView
+import com.uniswap.compose.dispatchComposeHostEvent
 import com.uniswap.theme.UniswapComponent
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -28,7 +29,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
  * View manager used to import native component into React Native code
  * for the MnemonicDisplay component used to show the seed phrases
  */
-class SeedPhraseInputViewManager : ViewGroupManager<ComposeView>() {
+class SeedPhraseInputViewManager : ViewGroupManager<ComposeHostView>() {
 
   override fun getName(): String = REACT_CLASS
 
@@ -37,31 +38,34 @@ class SeedPhraseInputViewManager : ViewGroupManager<ComposeView>() {
 
   private var rnStrings = MutableStateFlow(emptyMap<String, String>())
 
-  override fun createViewInstance(reactContext: ThemedReactContext): ComposeView {
+  override fun createViewInstance(reactContext: ThemedReactContext): ComposeHostView {
     context = reactContext
     val ethersRs = RnEthersRs(reactContext)
 
-    return ComposeView(reactContext).apply {
+    val host = ComposeHostView(reactContext).apply {
       id = R.id.seed_phrase_input_compose_id
-      viewModel = SeedPhraseInputViewModel(
-        ethersRs,
-        onInputValidated = {
-          val bundle = Arguments.createMap().apply {
-            putBoolean(FIELD_CAN_SUBMIT, it)
-          }
-          sendEvent(id, EVENT_INPUT_VALIDATED, bundle)
-        },
-        onMnemonicStored = {
-          val bundle = Arguments.createMap().apply {
-            putString(FIELD_MNEMONIC_ID, it)
-          }
-          sendEvent(id, EVENT_MNEMONIC_STORED, bundle)
-        },
-        onSubmitError = {
-          sendEvent(id, EVENT_SUBMIT_ERROR)
-        }
-      )
+    }
 
+    viewModel = SeedPhraseInputViewModel(
+      ethersRs,
+      onInputValidated = {
+        val bundle = Arguments.createMap().apply {
+          putBoolean(FIELD_CAN_SUBMIT, it)
+        }
+        sendEvent(host.id, EVENT_INPUT_VALIDATED, bundle)
+      },
+      onMnemonicStored = {
+        val bundle = Arguments.createMap().apply {
+          putString(FIELD_MNEMONIC_ID, it)
+        }
+        sendEvent(host.id, EVENT_MNEMONIC_STORED, bundle)
+      },
+      onSubmitError = {
+        sendEvent(host.id, EVENT_SUBMIT_ERROR)
+      }
+    )
+
+    val composeView = ComposeView(reactContext).apply {
       setContent {
         val density = LocalDensity.current.density
 
@@ -77,13 +81,16 @@ class SeedPhraseInputViewManager : ViewGroupManager<ComposeView>() {
                   .apply {
                     putDouble(FIELD_HEIGHT, it.height.toDouble() / density)
                   }
-                sendEvent(id, EVENT_HEIGHT_MEASURED, bundle)
+                sendEvent(host.id, EVENT_HEIGHT_MEASURED, bundle)
               }) {
             SeedPhraseInput(viewModel)
           }
         }
       }
     }
+
+    host.setComposeView(composeView)
+    return host
   }
 
   /**
@@ -123,12 +130,10 @@ class SeedPhraseInputViewManager : ViewGroupManager<ComposeView>() {
   }
 
   private fun sendEvent(id: Int, eventName: String, bundle: WritableMap? = null) {
-    context
-      .getJSModule(RCTEventEmitter::class.java)
-      .receiveEvent(id, eventName, bundle)
+    dispatchComposeHostEvent(context, id, eventName, bundle)
   }
 
-  override fun receiveCommand(root: ComposeView, commandId: String?, args: ReadableArray?) {
+  override fun receiveCommand(root: ComposeHostView, commandId: String?, args: ReadableArray?) {
     super.receiveCommand(root, commandId, args)
     when (commandId) {
       COMMAND_HANDLE_SUBMIT -> {

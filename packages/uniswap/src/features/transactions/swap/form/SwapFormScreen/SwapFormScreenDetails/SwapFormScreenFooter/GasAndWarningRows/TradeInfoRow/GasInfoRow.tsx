@@ -1,13 +1,18 @@
 import { isWebApp } from '@universe/environment'
 import { Flex, Text } from 'ui/src'
 import { Gas } from 'ui/src/components/icons/Gas'
-import { UniswapXFee } from 'uniswap/src/components/gas/NetworkFee'
+import { SponsoredFee, SponsoredFeeWithModal, UniswapXFee } from 'uniswap/src/components/gas/NetworkFee'
 import { NetworkFeeWarning } from 'uniswap/src/components/gas/NetworkFeeWarning'
 import type { GasInfo } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isZero } from 'uniswap/src/utils/number'
 
 function NetworkFeeWarningContent({ gasInfo }: { gasInfo?: GasInfo }): JSX.Element | null {
+  const sponsorMetadata = gasInfo?.sponsorshipInfo?.sponsorMetadata
+  if (sponsorMetadata) {
+    return <SponsoredFee sponsorMetadata={sponsorMetadata} preSavingsGasFee={gasInfo.fiatPriceFormatted} />
+  }
+
   if (!gasInfo?.fiatPriceFormatted) {
     return null
   }
@@ -29,8 +34,29 @@ function NetworkFeeWarningContent({ gasInfo }: { gasInfo?: GasInfo }): JSX.Eleme
 }
 
 export function GasInfoRow({ gasInfo, hidden }: { gasInfo: GasInfo; hidden?: boolean }): JSX.Element | null {
-  if (!gasInfo.fiatPriceFormatted) {
+  const { sponsorMetadata, campaign } = gasInfo.sponsorshipInfo ?? {}
+
+  if (!sponsorMetadata && !gasInfo.fiatPriceFormatted) {
     return null
+  }
+
+  if (sponsorMetadata && campaign) {
+    return (
+      <Flex
+        centered
+        row
+        animation="quick"
+        enterStyle={{ opacity: 0 }}
+        opacity={hidden ? 0 : gasInfo.isLoading ? 0.6 : 1}
+        testID={TestID.GasInfoRow}
+      >
+        <SponsoredFeeWithModal
+          sponsorMetadata={sponsorMetadata}
+          campaign={campaign}
+          preSavingsGasFee={gasInfo.fiatPriceFormatted}
+        />
+      </Flex>
+    )
   }
 
   return (

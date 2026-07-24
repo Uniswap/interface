@@ -7,6 +7,7 @@ import { ClientDetails, PermitInfo } from 'src/components/Requests/RequestModal/
 import {
   isBatchedTransactionRequest,
   isTransactionRequest,
+  isUserOpRequest,
   WalletConnectSigningRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text } from 'ui/src'
@@ -84,12 +85,12 @@ export function WalletConnectRequestModalContent({
   const permitInfo = getPermitInfo(request)
   const nativeCurrency = getChainInfo(chainId).nativeCurrency
 
-  const { animatedFooterHeight } = useBottomSheetInternal()
+  const { animatedLayoutState } = useBottomSheetInternal()
 
   const netInfo = useNetInfo()
 
   const bottomSpacerStyle = useAnimatedStyle(() => ({
-    height: animatedFooterHeight.value,
+    height: animatedLayoutState.value.footerHeight,
   }))
 
   // If link mode is supported, we can sign messages through universal links on device
@@ -295,6 +296,7 @@ function ScanningContent({
           confirmedRisk={confirmedRisk}
           tx={isBatchedTransactionRequest(request) ? { ...request.encodedTransaction, chainId } : undefined}
           gasOverrides={gasOverrides}
+          sponsorMetadata={isUserOpRequest(request) && request.gasSponsored ? request.sponsorMetadata : undefined}
           onConfirmRisk={onConfirmRisk}
           onChangeGasOverrides={onChangeGasOverrides}
           onRiskLevelChange={onRiskLevelChange}

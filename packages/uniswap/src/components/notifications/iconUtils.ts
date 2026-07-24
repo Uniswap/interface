@@ -7,4 +7,4 @@ export {
   getCustomIconComponent,
   type ParsedCustomIcon,
   parseCustomIconLink,
-} from '@universe/notifications/src/notification-renderer/utils/iconUtils'
+} from '@universe/notifications'

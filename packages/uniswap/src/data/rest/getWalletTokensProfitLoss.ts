@@ -1,4 +1,4 @@
-import { PartialMessage } from '@bufbuild/protobuf'
+import { PartialMessage, PlainMessage, toPlainMessage } from '@bufbuild/protobuf'
 import { createPromiseClient } from '@connectrpc/connect'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
@@ -24,7 +24,7 @@ type GetWalletTokensProfitLossInput = {
 
 export function useGetWalletTokensProfitLossQuery(
   params: GetWalletTokensProfitLossInput,
-): UseQueryResult<GetWalletTokensProfitLossResponse | undefined> {
+): UseQueryResult<PlainMessage<GetWalletTokensProfitLossResponse> | undefined> {
   const { input, enabled } = params
   const { isTestnetModeEnabled } = useEnabledChains()
   const transformedInput = transformInput(input)
@@ -43,7 +43,7 @@ export function useGetWalletTokensProfitLossQuery(
         if (!transformedInput) {
           return undefined
         }
-        return await profitLossClient.getWalletTokensProfitLoss(transformedInput)
+        return toPlainMessage(await profitLossClient.getWalletTokensProfitLoss(transformedInput))
       },
       enabled: !!address && !isTestnetModeEnabled && enabled !== false,
     }),

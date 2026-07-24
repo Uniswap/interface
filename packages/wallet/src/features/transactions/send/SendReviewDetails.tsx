@@ -1,5 +1,4 @@
 import { isWebPlatform } from '@universe/environment'
-/* oxlint-disable complexity */
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -29,7 +28,7 @@ import {
   TransactionScreen,
   useTransactionModalContext,
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { TransactionDetails } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
@@ -42,6 +41,7 @@ import { useSendContext } from 'wallet/src/features/transactions/contexts/SendCo
 import { useSendERC20Callback, useSendNFTCallback } from 'wallet/src/features/transactions/send/hooks/useSendCallback'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
+// oxlint-disable-next-line complexity -- multi-mode review screen
 export function SendReviewDetails({
   authTrigger,
   ButtonAuthIcon,
@@ -115,7 +115,7 @@ export function SendReviewDetails({
     txId,
     chainId: chainId as UniverseChainId,
     toAddress: recipient,
-    tokenAddress: nftIn?.nftContract?.address,
+    tokenAddress: nftIn?.contractAddress,
     tokenId: nftIn?.tokenId,
     txRequest,
     onSubmit: onNext,
@@ -336,7 +336,7 @@ export function SendReviewDetails({
         <Flex row gap="$spacing8">
           {!isWebPlatform && <IconButton icon={<BackArrow />} emphasis="secondary" size="large" onPress={onPrev} />}
           <Button
-            isDisabled={actionButtonProps.disabled}
+            disabled={actionButtonProps.disabled}
             icon={ButtonAuthIcon ?? undefined}
             size="medium"
             testID={actionButtonProps.name}

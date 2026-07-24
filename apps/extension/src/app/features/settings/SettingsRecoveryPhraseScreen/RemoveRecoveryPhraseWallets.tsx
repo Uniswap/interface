@@ -56,16 +56,12 @@ export function RemoveRecoveryPhraseWallets(): JSX.Element {
 // TODO(@thomasthachil): merge this with mobile AccountList
 function AssociatedAccountsList({ accounts }: { accounts: Account[] }): JSX.Element {
   const addresses = useMemo(() => accounts.map((account) => account.address), [accounts])
-  const { data, loading } = useAccountListData({
+  const { balancesByAddress, loading } = useAccountListData({
     addresses,
-    notifyOnNetworkStatusChange: true,
   })
 
   const sortedAddressesByBalance = addresses
-    .map((address) => {
-      const wallet = data?.portfolios?.find((portfolio) => portfolio?.ownerAddress === address)
-      return { address, balance: wallet?.tokensTotalDenominatedValue?.value }
-    })
+    .map((address) => ({ address, balance: balancesByAddress?.[address] }))
     .sort((a, b) => (b.balance ?? 0) - (a.balance ?? 0))
 
   return (

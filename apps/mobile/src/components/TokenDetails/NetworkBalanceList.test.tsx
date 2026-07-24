@@ -7,11 +7,11 @@ import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
-jest.mock('@universe/gating', () => ({
-  ...jest.requireActual('@universe/gating'),
-  useFeatureFlag: jest.fn().mockReturnValue(false),
-  useFeatureFlagWithLoading: jest.fn().mockReturnValue({ value: false, isLoading: false }),
-  useFeatureFlagWithExposureLoggingDisabled: jest.fn().mockReturnValue(false),
+vi.mock('@universe/gating', async () => ({
+  ...(await vi.importActual('@universe/gating')),
+  useFeatureFlag: vi.fn().mockReturnValue(false),
+  useFeatureFlagWithLoading: vi.fn().mockReturnValue({ value: false, isLoading: false }),
+  useFeatureFlagWithExposureLoggingDisabled: vi.fn().mockReturnValue(false),
 }))
 
 function makeBalance({
@@ -57,10 +57,10 @@ const TEST_BALANCES: PortfolioBalance[] = [
 describe(NetworkBalanceList, () => {
   const defaultProps = {
     balances: TEST_BALANCES,
-    onSelectBalance: jest.fn(),
+    onSelectBalance: vi.fn(),
   }
 
-  beforeEach(() => jest.clearAllMocks())
+  beforeEach(() => vi.clearAllMocks())
 
   it('renders chain names for each balance', () => {
     const { queryByText } = render(<NetworkBalanceList {...defaultProps} />)
@@ -77,7 +77,7 @@ describe(NetworkBalanceList, () => {
   })
 
   it('calls onSelectBalance with the correct balance when a row is pressed', () => {
-    const onSelectBalance = jest.fn()
+    const onSelectBalance = vi.fn()
     const { getAllByTestId } = render(<NetworkBalanceList {...defaultProps} onSelectBalance={onSelectBalance} />)
 
     const rows = getAllByTestId(TestID.NetworkBalanceRow)
@@ -109,7 +109,7 @@ describe(NetworkBalanceList, () => {
   })
 
   it('passes the specific pressed balance to onSelectBalance', () => {
-    const onSelectBalance = jest.fn()
+    const onSelectBalance = vi.fn()
     const { getAllByTestId } = render(<NetworkBalanceList {...defaultProps} onSelectBalance={onSelectBalance} />)
 
     const rows = getAllByTestId(TestID.NetworkBalanceRow)
@@ -143,8 +143,8 @@ describe(NetworkBalanceList, () => {
     const { getAllByText } = render(<NetworkBalanceList {...defaultProps} balances={unsortedBalances} />)
 
     const fiatTexts = getAllByText(/^\$[\d,]+/)
-    expect(fiatTexts[0]?.props['children']).toBe('$5,000.00')
-    expect(fiatTexts[1]?.props['children']).toBe('$500.00')
-    expect(fiatTexts[2]?.props['children']).toBe('$100.00')
+    expect((fiatTexts[0] as unknown as HTMLElement | undefined)?.textContent).toBe('$5,000.00')
+    expect((fiatTexts[1] as unknown as HTMLElement | undefined)?.textContent).toBe('$500.00')
+    expect((fiatTexts[2] as unknown as HTMLElement | undefined)?.textContent).toBe('$100.00')
   })
 })

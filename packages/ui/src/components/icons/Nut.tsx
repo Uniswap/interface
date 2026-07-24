@@ -1,0 +1,16 @@
+import { Path, Svg } from 'react-native-svg'
+// oxlint-disable-next-line universe-custom/no-relative-import-paths
+import { createIcon } from '../factories/createIcon'
+
+export const [Nut, AnimatedNut] = createIcon({
+  name: 'Nut',
+  getIcon: (props) => (
+    <Svg viewBox="0 0 20 20" fill="none" {...props}>
+      <Path
+        d="M15.6913 5.68334L11.108 2.81667C10.4247 2.39167 9.57467 2.39167 8.89134 2.81667L4.30801 5.68334C3.69967 6.05834 3.33301 6.73334 3.33301 7.45001V12.55C3.33301 13.2667 3.69967 13.9417 4.30801 14.3167L8.89134 17.1833C9.57467 17.6083 10.4247 17.6083 11.108 17.1833L15.6913 14.3167C16.2997 13.9417 16.6663 13.2667 16.6663 12.55V7.45001C16.6663 6.73334 16.2997 6.05834 15.6913 5.68334ZM9.99967 12.5C8.61634 12.5 7.49967 11.3833 7.49967 10C7.49967 8.61667 8.61634 7.5 9.99967 7.5C11.383 7.5 12.4997 8.61667 12.4997 10C12.4997 11.3833 11.383 12.5 9.99967 12.5Z"
+        fill="currentColor"
+      />
+    </Svg>
+  ),
+  defaultFill: '#131313',
+})

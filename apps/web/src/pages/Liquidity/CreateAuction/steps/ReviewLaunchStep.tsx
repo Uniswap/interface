@@ -1,19 +1,31 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text } from 'ui/src'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import type { AuctionCreateFailedStep } from 'uniswap/src/features/telemetry/types'
 import { useCurrencyInfo, useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
+import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
+import { useEvent } from 'utilities/src/react/hooks'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { isAddress } from '~/chains'
 import { BIPS_BASE } from '~/constants/misc'
 import { useActiveAddress } from '~/features/accounts/store/hooks'
+import {
+  getAuctionCreateAnalyticsProperties,
+  getAuctionCreateFailedDiagnostics,
+  getAuctionCreateFailedProperties,
+} from '~/pages/Liquidity/CreateAuction/analytics'
+import { LaunchAuctionErrorModal } from '~/pages/Liquidity/CreateAuction/components/LaunchAuctionErrorModal'
+import { LaunchAuctionReviewModal } from '~/pages/Liquidity/CreateAuction/components/LaunchAuctionReviewModal'
+import { LaunchAuctionSuccessModal } from '~/pages/Liquidity/CreateAuction/components/LaunchAuctionSuccessModal'
 import { ReviewCustomPriceRangeExpandable } from '~/pages/Liquidity/CreateAuction/components/ReviewCustomPriceRangeExpandable'
 import { ReviewLaunchAuctionDetailsSection } from '~/pages/Liquidity/CreateAuction/components/reviewLaunch/ReviewLaunchAuctionDetailsSection'
 import {
@@ -25,8 +37,14 @@ import {
   useCreateAuctionStore,
   useCreateAuctionStoreActions,
 } from '~/pages/Liquidity/CreateAuction/CreateAuctionContext'
+import { useCreateAuctionSubmit } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionSubmit'
 import { useCreateAuctionTokenColor } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionTokenColor'
+import { useExistingTokenWalletBalance } from '~/pages/Liquidity/CreateAuction/hooks/useExistingTokenWalletBalance'
+import { useIsQuickLaunchMode } from '~/pages/Liquidity/CreateAuction/hooks/useIsQuickLaunchMode'
+import { useLaunchAuctionFlow } from '~/pages/Liquidity/CreateAuction/hooks/useLaunchAuctionFlow'
 import { useStableRaiseUsdPrice } from '~/pages/Liquidity/CreateAuction/hooks/useStableRaiseUsdPrice'
+import { getLaunchThreshold } from '~/pages/Liquidity/CreateAuction/launchThreshold'
+import { applyQuickLaunchAuctionWindow } from '~/pages/Liquidity/CreateAuction/quickLaunch/quickLaunchPreset'
 import {
   CreateAuctionStep,
   PriceRangeStrategy,
@@ -34,17 +52,26 @@ import {
   TimeLockPreset,
   TokenMode,
 } from '~/pages/Liquidity/CreateAuction/types'
+import { getPrimaryStablecoin, getRaiseCurrencyAddress } from '~/pages/Liquidity/CreateAuction/utils'
+import { resolveTokenImageSrc } from '~/pages/Liquidity/CreateAuction/utils/resolveTokenImageSrc'
 
 // oxlint-disable-next-line complexity
 export function ReviewLaunchStep(): JSX.Element | null {
   const { t } = useTranslation()
   const tokenColor = useCreateAuctionTokenColor()
-  const { formatPercent } = useLocalizationContext()
+  const { formatNumberOrString, formatPercent } = useLocalizationContext()
   const tokenForm = useCreateAuctionStore((state) => state.tokenForm)
+  // QuickLaunch: quick launch skips the Configure/Customize steps, so their edit buttons are hidden.
+  // Effective mode (flag + new-token + switch), NOT the raw store flag, which defaults to on.
+  const quickLaunch = useIsQuickLaunchMode()
+  const [pendingQuickLaunchRetry, setPendingQuickLaunchRetry] = useState(false)
   const configureAuction = useCreateAuctionStore((state) => state.configureAuction)
   const customizePool = useCreateAuctionStore((state) => state.customizePool)
-  const { setStep } = useCreateAuctionStoreActions()
+  const xVerification = useCreateAuctionStore((state) => state.xVerification)
+  const { setStep, setStartTime, setEndTime } = useCreateAuctionStoreActions()
   const activeAddress = useActiveAddress(Platform.EVM)
+  const { evmAccount } = useWallet()
+  const trace = useTrace()
 
   const handleEditTokenInfo = useCallback(() => setStep(CreateAuctionStep.ADD_TOKEN_INFO), [setStep])
   const handleEditAuctionConfig = useCallback(() => setStep(CreateAuctionStep.CONFIGURE_AUCTION), [setStep])
@@ -93,13 +120,24 @@ export function ReviewLaunchStep(): JSX.Element | null {
   const stableRaiseUsdPrice = useStableRaiseUsdPrice({ raiseCurrency: configureAuction.raiseCurrency, chainId })
   const floorPriceNum = configureAuction.floorPrice ? parseFloat(configureAuction.floorPrice) : undefined
 
+  const launchThreshold = committed
+    ? getLaunchThreshold({
+        floorPrice: configureAuction.floorPrice,
+        raiseCurrency: configureAuction.raiseCurrency,
+        chainId,
+        auctionSupplyAmount: committed.auctionSupplyAmount,
+        postAuctionLiquidityAmount: committed.postAuctionLiquidityAmount,
+      })
+    : undefined
+  const launchThresholdAmount = launchThreshold
+    ? formatNumberOrString({ value: launchThreshold.toExact(), type: NumberType.TokenQuantityStats })
+    : undefined
+
   const nativeCurrencyInfo = useNativeCurrencyInfo(chainId)
-  const usdcCurrencyId = useMemo(() => {
-    const usdc = getChainInfo(chainId).tokens.USDC
-    return usdc ? buildCurrencyId(chainId, usdc.address) : undefined
-  }, [chainId])
-  const usdcCurrencyInfo = useCurrencyInfo(usdcCurrencyId, { skip: !usdcCurrencyId })
-  const raiseCurrencyInfo = configureAuction.raiseCurrency === RaiseCurrency.ETH ? nativeCurrencyInfo : usdcCurrencyInfo
+  const stablecoinCurrencyId = useMemo(() => buildCurrencyId(chainId, getPrimaryStablecoin(chainId).address), [chainId])
+  const stablecoinCurrencyInfo = useCurrencyInfo(stablecoinCurrencyId)
+  const raiseCurrencyInfo =
+    configureAuction.raiseCurrency === RaiseCurrency.NATIVE ? nativeCurrencyInfo : stablecoinCurrencyInfo
 
   const feeTierDisplay = formatPercent(customizePool.fee.feeAmount / BIPS_BASE, 4)
 
@@ -134,20 +172,103 @@ export function ReviewLaunchStep(): JSX.Element | null {
     return t('toucan.createAuction.step.customizePool.priceRange.fullRange')
   })()
 
+  const currencyAddress = getRaiseCurrencyAddress(configureAuction.raiseCurrency, chainId)
+
+  const getCreateFailedProperties = useEvent(
+    (args: { failedStep: AuctionCreateFailedStep; errorCode?: string | number }) =>
+      getAuctionCreateFailedProperties({ trace, chainId, tokenMode: tokenForm.mode, ...args }),
+  )
+
+  const getFailedDiagnostics = useEvent(() => getAuctionCreateFailedDiagnostics({ configureAuction, customizePool }))
+
+  // Final guard against an existing-token deposit that exceeds the wallet's held balance at launch
+  // time (e.g. tokens moved out after the Configure step). The request builder clamps to this.
+  const existingTokenCurrency =
+    tokenForm.mode === TokenMode.EXISTING ? tokenForm.existingTokenCurrencyInfo?.currency : undefined
+  const { balance: existingTokenWalletBalance } = useExistingTokenWalletBalance(existingTokenCurrency)
+  const existingTokenWalletBalanceRaw =
+    tokenForm.mode === TokenMode.EXISTING && existingTokenWalletBalance
+      ? BigInt(existingTokenWalletBalance.quotient.toString())
+      : undefined
+
+  const launchSubmit = useCreateAuctionSubmit({
+    tokenForm,
+    configureAuction,
+    customizePool,
+    walletAddress: activeAddress ?? undefined,
+    currencyAddress,
+    xVerification,
+    existingTokenWalletBalanceRaw,
+    getCreateFailedProperties,
+  })
+
+  const getLaunchAnalyticsProperties = useEvent(
+    (addresses: { predictedAuctionAddress: string; predictedTokenAddress: string }) =>
+      getAuctionCreateAnalyticsProperties({
+        trace,
+        chainId,
+        tokenMode: tokenForm.mode,
+        tokenSymbol,
+        configureAuction,
+        customizePool,
+        raiseCurrencyAddress: currencyAddress,
+        raiseUsdPrice: stableRaiseUsdPrice,
+        maxFdv: fdv,
+        ...addresses,
+      }),
+  )
+
+  // Raw form name (no display placeholder) and a persistence-safe logo URL: the gateway URL
+  // outlives the session and survives a reload, unlike the `blob:` preview the review section uses.
+  const launchTokenName =
+    (tokenForm.mode === TokenMode.CREATE_NEW ? tokenForm.name : tokenForm.existingTokenCurrencyInfo?.currency.name) ||
+    undefined
+  const launchTokenLogoUrl =
+    tokenForm.mode === TokenMode.CREATE_NEW
+      ? resolveTokenImageSrc(tokenForm.imageUrl)
+      : (tokenForm.existingTokenCurrencyInfo?.logoUrl ?? undefined)
+
+  // Quick launch has no editable start time, so a stale start is fixed by refreshing the preset
+  // window and retrying once the store update has rendered (handleRetry reads this render's props).
+  const handleQuickLaunchRetry = useEvent(() => {
+    applyQuickLaunchAuctionWindow({ setStartTime, setEndTime })
+    setPendingQuickLaunchRetry(true)
+  })
+
+  const launchFlow = useLaunchAuctionFlow({
+    evmAccount,
+    chainId,
+    getLaunchAnalyticsProperties,
+    getCreateFailedProperties,
+    getFailedDiagnostics,
+    launchSubmit,
+    tokenName: launchTokenName,
+    tokenSymbol: tokenSymbol || undefined,
+    tokenLogoUrl: launchTokenLogoUrl,
+  })
+
+  const launchFlowHandleRetry = launchFlow.handleRetry
+  useEffect(() => {
+    if (pendingQuickLaunchRetry && configureAuction.startTime && configureAuction.startTime.getTime() > Date.now()) {
+      setPendingQuickLaunchRetry(false)
+      launchFlowHandleRetry()
+    }
+  }, [pendingQuickLaunchRetry, configureAuction.startTime, launchFlowHandleRetry])
+
   if (!committed || !raiseCurrencyInfo) {
     return null
   }
 
   return (
     <Flex gap="$spacing12">
-      <Flex backgroundColor="$surface1" p="$spacing24" gap="$spacing32">
+      <Flex backgroundColor="$surface1" p="$spacing24" gap="$spacing32" $md={{ p: '$none' }}>
         <ReviewLaunchTokenInfoSection
           tokenForm={tokenForm}
           tokenName={tokenName}
           tokenSymbol={tokenSymbol}
           description={tokenForm.description}
           xProfile={tokenForm.xProfile}
-          websiteLink={tokenForm.websiteLink}
+          websiteLink={tokenForm.mode === TokenMode.EXISTING ? tokenForm.websiteLink : undefined}
           onEditTokenInfo={handleEditTokenInfo}
         />
 
@@ -157,18 +278,19 @@ export function ReviewLaunchStep(): JSX.Element | null {
           raiseCurrencyInfo={raiseCurrencyInfo}
           chainId={chainId}
           tokenSymbol={tokenSymbol}
+          isNewToken={tokenForm.mode === TokenMode.CREATE_NEW}
           tokenColor={tokenColor}
           stableRaiseUsdPrice={stableRaiseUsdPrice}
           floorPriceNum={floorPriceNum}
           fdv={fdv}
-          onEditAuctionConfig={handleEditAuctionConfig}
+          onEditAuctionConfig={quickLaunch ? undefined : handleEditAuctionConfig}
           onOpenKycHookExplorer={handleOpenKycHookExplorer}
         />
 
         <Flex gap="$spacing16">
           <SectionHeader
             title={t('toucan.createAuction.step.reviewLaunch.poolDetails')}
-            onEdit={handleEditCustomizePool}
+            onEdit={quickLaunch ? undefined : handleEditCustomizePool}
           />
 
           <ReviewRow label={t('fee.tier')}>
@@ -227,11 +349,60 @@ export function ReviewLaunchStep(): JSX.Element | null {
         </Flex>
       </Flex>
 
-      <Flex row>
-        <Button size="large" emphasis="primary" isDisabled fill backgroundColor={tokenColor}>
-          {t('toucan.createAuction.launchAuction')}
-        </Button>
+      <Flex gap="$spacing8">
+        <Flex row>
+          <Button
+            size="large"
+            emphasis="primary"
+            disabled={launchSubmit.isDisabled}
+            fill
+            backgroundColor={launchSubmit.isDisabled ? undefined : tokenColor}
+            onPress={launchFlow.openReviewModal}
+          >
+            {t('toucan.createAuction.launchAuction')}
+          </Button>
+        </Flex>
       </Flex>
+
+      <LaunchAuctionReviewModal
+        isOpen={launchFlow.isReviewModalVisible}
+        onClose={launchFlow.closeReviewModal}
+        tokenName={tokenName}
+        tokenSymbol={tokenSymbol}
+        description={tokenForm.description}
+        isNewToken={tokenForm.mode === TokenMode.CREATE_NEW}
+        committed={committed}
+        startTime={configureAuction.startTime}
+        endTime={configureAuction.endTime}
+        feeTierDisplay={feeTierDisplay}
+        raiseCurrencySymbol={raiseCurrencyInfo.currency.symbol ?? ''}
+        launchThresholdAmount={launchThresholdAmount}
+        tokenColor={tokenColor}
+        progressSteps={launchFlow.progressSteps}
+        currentProgressStepIndex={launchFlow.currentProgressStepIndex}
+        currentStepPending={launchFlow.currentStepPending}
+        isLaunching={launchFlow.isLaunching}
+        isPreparing={launchFlow.isPreparing}
+        onLaunchToken={launchFlow.handleLaunchToken}
+      />
+
+      <LaunchAuctionErrorModal
+        isOpen={launchFlow.isErrorModalOpen}
+        tokenSymbol={tokenSymbol}
+        error={launchFlow.launchError}
+        onClose={launchFlow.handleCloseErrorModal}
+        onRetry={quickLaunch ? handleQuickLaunchRetry : launchFlow.handleRetry}
+        onEditTokenInfo={handleEditTokenInfo}
+      />
+
+      <LaunchAuctionSuccessModal
+        isOpen={launchFlow.isSuccessModalOpen}
+        tokenSymbol={tokenSymbol}
+        chainId={chainId}
+        launchHash={launchFlow.launchTxHash}
+        onClose={launchFlow.handleCloseSuccessModal}
+        onViewAuction={launchFlow.handleViewAuction}
+      />
     </Flex>
   )
 }

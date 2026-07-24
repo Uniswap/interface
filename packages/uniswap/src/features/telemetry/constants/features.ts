@@ -30,6 +30,29 @@ export enum FiatOnRampEventName {
   FiatOnRampPaymentMethodFilterSelected = 'Fiat OnRamp Payment Method Filter Selected',
 }
 
+export enum EarnEventName {
+  EarnDepositCompleted = 'Earn Deposit Completed',
+  EarnDepositFailed = 'Earn Deposit Failed',
+  EarnDepositReviewed = 'Earn Deposit Reviewed',
+  EarnDepositStarted = 'Earn Deposit Started',
+  EarnDepositSubmitted = 'Earn Deposit Submitted',
+  EarnSurfaceViewed = 'Earn Surface Viewed',
+  EarnSwapUpsellConverted = 'Earn Swap Upsell Converted',
+  EarnSwapUpsellToastClicked = 'Earn Swap Upsell Toast Clicked',
+  EarnSwapUpsellToastDismissed = 'Earn Swap Upsell Toast Dismissed',
+  EarnSwapUpsellToastShown = 'Earn Swap Upsell Toast Shown',
+  EarnSwapUpsellToggleChanged = 'Earn Swap Upsell Toggle Changed',
+  EarnSwapUpsellToggleShown = 'Earn Swap Upsell Toggle Shown',
+  EarnVaultSelected = 'Earn Vault Selected',
+  EarnVaultCardShowMoreClicked = 'Earn Vault Card Show More Clicked',
+  EarnVaultDetailViewed = 'Earn Vault Detail Viewed',
+  EarnWithdrawCompleted = 'Earn Withdraw Completed',
+  EarnWithdrawFailed = 'Earn Withdraw Failed',
+  EarnWithdrawReviewed = 'Earn Withdraw Reviewed',
+  EarnWithdrawStarted = 'Earn Withdraw Started',
+  EarnWithdrawSubmitted = 'Earn Withdraw Submitted',
+}
+
 export enum SwapEventName {
   SwapAutorouterVisualizationExpanded = 'Swap Autorouter Visualization Expanded',
   SwapBlocked = 'Swap Blocked',
@@ -47,6 +70,10 @@ export enum SwapEventName {
   SwapQuoteReceived = 'Swap Quote Received',
   SwapQuoteFailed = 'Swap Quote Failed',
   SwapSigned = 'Swap Signed',
+  SponsoredApprovalRequested = 'Sponsored Approval Requested',
+  SponsoredApprovalSubmitted = 'Sponsored Approval Submitted',
+  SponsoredApprovalConfirmed = 'Sponsored Approval Confirmed',
+  SponsoredApprovalFailed = 'Sponsored Approval Failed',
   SwapSubmittedButtonClicked = 'Swap Submit Button Clicked',
   SwapTokensReversed = 'Swap Tokens Reversed',
   SwapTransactionCompleted = 'Swap Transaction Completed',
@@ -73,4 +100,15 @@ export enum AuctionEventName {
   AuctionWithdrawSubmitted = 'Auction Withdraw Submitted',
   AuctionBidSubmitted = 'Auction Bid Submitted',
   AuctionBidInputted = 'Auction Bid Inputted',
+  // Launch-auction (CCA supply-side) creation funnel
+  AuctionTokenInfoEntered = 'Auction Token Info Entered',
+  AuctionVerifyCompleted = 'Auction Verify Completed',
+  AuctionDetailsInfoEntered = 'Auction Details Info Entered',
+  PoolDetailsInfoEntered = 'Pool Details Info Entered',
+  AuctionCustomPriceRangeAdded = 'Auction Custom Price Range Added',
+  // Fired only from the launch-auction flow; the shared fee-tier modal forwards a CCA-only callback.
+  FeeTierCreated = 'Fee Tier Created',
+  AuctionCreateSubmitted = 'Auction Create Submitted',
+  AuctionCreateFailed = 'Auction Create Failed',
+  AuctionCreateCompleted = 'Auction Create Completed',
 }

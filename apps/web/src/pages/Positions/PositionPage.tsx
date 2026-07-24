@@ -1,5 +1,4 @@
 /* oxlint-disable max-lines */
-import { BigNumber } from '@ethersproject/bignumber'
 import { Position, PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
@@ -34,14 +33,17 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { EVMUniverseChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
+import { formatPositionPrice } from 'uniswap/src/features/positions/formatPositionPrice'
+import { useGetRangeDisplay } from 'uniswap/src/features/positions/hooks/useGetRangeDisplay'
 import { parseRestPosition } from 'uniswap/src/features/positions/parseRestPosition'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
@@ -54,7 +56,6 @@ import { MouseoverTooltip } from '~/components/Tooltip'
 import { BaseQuoteFiatAmount } from '~/features/Liquidity/BaseQuoteFiatAmount'
 import { WrappedLiquidityPositionRangeChart } from '~/features/Liquidity/charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { useEntryPointBreadcrumb } from '~/features/Liquidity/Create/hooks/useEntryPointBreadcrumb'
-import { useGetRangeDisplay } from '~/features/Liquidity/hooks/useGetRangeDisplay/useGetRangeDisplay'
 import { useLpIncentivesFormattedEarnings } from '~/features/Liquidity/hooks/useLpIncentivesFormattedEarnings'
 import { useReportPositionHandler } from '~/features/Liquidity/hooks/useReportPositionHandler'
 import { LiquidityPositionAmountRows } from '~/features/Liquidity/LiquidityPositionAmountRows'
@@ -92,12 +93,12 @@ const BodyWrapper = styled(Main, {
   },
 })
 
-function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
+function parseTokenId(tokenId: string | undefined): bigint | undefined {
   if (!tokenId) {
     return undefined
   }
   try {
-    return BigNumber.from(tokenId)
+    return BigInt(tokenId)
   } catch {
     return undefined
   }
@@ -365,8 +366,8 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
       <Helmet>
         <title>
           {t(`liquidityPool.positions.page.title`, {
-            quoteSymbol: currency1Amount.currency.symbol,
-            baseSymbol: currency0Amount.currency.symbol,
+            quoteSymbol: currency1Amount.currency.symbol ?? t('common.token'),
+            baseSymbol: currency0Amount.currency.symbol ?? t('common.token'),
           })}
         </title>
         {metatags.map((tag, index) => (
@@ -1051,7 +1052,14 @@ const PriceDisplay = ({
   setPriceInverted: (value: React.SetStateAction<boolean>) => void
 }) => {
   return (
-    <Flex gap="$gap4" flex={1} maxWidth="60%" minWidth={0} overflow="hidden">
+    <Flex
+      gap="$gap4"
+      flex={1}
+      maxWidth="60%"
+      minWidth={0}
+      overflow="hidden"
+      $sm={{ maxWidth: '100%', flexBasis: 'auto' }}
+    >
       <Text variant="subheading2" color="$neutral2" numberOfLines={1}>
         {labelText}
       </Text>
@@ -1100,12 +1108,14 @@ const PriceRangeSection = ({
 }) => {
   const { t } = useTranslation()
   const { formatNumberOrString } = useLocalizationContext()
+  const locale = useCurrentLocale()
   const formattedMarketPrice = useMemo(() => {
-    return formatNumberOrString({
+    return formatPositionPrice({
       value: (priceInverted ? token1CurrentPrice : token0CurrentPrice)?.toSignificant(),
-      type: NumberType.TokenTx,
+      locale,
+      formatNumberOrString,
     })
-  }, [priceInverted, token0CurrentPrice, token1CurrentPrice, formatNumberOrString])
+  }, [priceInverted, token0CurrentPrice, token1CurrentPrice, locale, formatNumberOrString])
 
   if (isFullRange) {
     return null
@@ -1116,7 +1126,7 @@ const PriceRangeSection = ({
       <Text variant="heading3" color="$neutral1">
         Price Range
       </Text>
-      <Flex row justifyContent="space-between" gap="$gap16">
+      <Flex row justifyContent="space-between" gap="$gap16" $sm={{ row: false, gap: '$gap20' }}>
         <PriceDisplay
           labelText={t('pool.minPrice')}
           price={minPrice}

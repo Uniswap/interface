@@ -1,17 +1,23 @@
 import { isWebPlatform } from '@universe/environment'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
+import { iconSizes, type FontVariantToken } from 'ui/src/theme'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { PositionItemContextMenu } from 'uniswap/src/components/portfolio/PositionItem/PositionItemContextMenu'
+import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { LiquidityPositionStatusIndicator } from 'uniswap/src/features/positions/LiquidityPositionStatusIndicator'
-import { PositionInfo } from 'uniswap/src/features/positions/types'
+import { LiquidityPositionStatusIndicator } from 'uniswap/src/features/positions/components/LiquidityPositionStatusIndicator'
+import { getPositionUrl } from 'uniswap/src/features/positions/getPositionUrl'
+import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { getFeeLabel, getProtocolVersionLabel } from 'uniswap/src/features/positions/utils'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { currencyId } from 'uniswap/src/utils/currencyId'
+import { getPoolDetailsURL, openUri } from 'uniswap/src/utils/linking'
 import { NumberType } from 'utilities/src/format/types'
+import { useEvent } from 'utilities/src/react/hooks'
 
 const TITLE_VARIANT = isWebPlatform ? 'body2' : 'body1'
 const SUBTITLE_VARIANT = isWebPlatform ? 'body3' : 'body2'
@@ -36,6 +42,7 @@ export const PositionItem = memo(function PositionItemInner({
 }: PositionItemProps): JSX.Element {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
+  const isDataLivelinessEnabled = useFeatureFlag(FeatureFlags.DataLivelinessUI)
   // Ensure items rerender when theme is switched — memoized row otherwise misses Tamagui token re-resolution.
   useIsDarkMode()
 
@@ -45,6 +52,21 @@ export const PositionItem = memo(function PositionItemInner({
     currencyId(currency0Amount.currency),
     currencyId(currency1Amount.currency),
   ])
+
+  const onManagePress = useEvent(() => {
+    void openUri({
+      uri: `${UNISWAP_WEB_URL}${getPositionUrl(positionInfo)}`,
+      openExternalBrowser: true,
+      isSafeUri: true,
+    })
+  })
+  const onPoolInfoPress = useEvent(() => {
+    void openUri({
+      uri: `${UNISWAP_WEB_URL}${getPoolDetailsURL(positionInfo.poolId, chainId)}`,
+      openExternalBrowser: true,
+      isSafeUri: true,
+    })
+  })
 
   const protocolLabel = getProtocolVersionLabel(version)
   const feeLabel = getFeeLabel({ version, feeTier, dynamicLabel: t('common.dynamic') })
@@ -65,16 +87,14 @@ export const PositionItem = memo(function PositionItemInner({
       py="$spacing8"
       testID={`PositionItem_${positionInfo.poolId}`}
     >
-      <Flex row shrink alignItems="center" gap="$spacing12" overflow="hidden">
+      <Flex row shrink alignItems="center" gap="$spacing12">
         <SplitLogo
           chainId={chainId}
           inputCurrencyInfo={currency0Info}
           outputCurrencyInfo={currency1Info}
-          inputFallbackSymbol={currency0Amount.currency.symbol}
-          outputFallbackSymbol={currency1Amount.currency.symbol}
           size={iconSizes.icon40}
         />
-        <Flex shrink alignItems="flex-start" gap="$spacing2">
+        <Flex shrink minWidth={0} alignItems="flex-start" gap="$spacing2" overflow="hidden">
           <Text ellipsizeMode="tail" numberOfLines={1} variant={TITLE_VARIANT}>
             {currency0Amount.currency.symbol} / {currency1Amount.currency.symbol}
           </Text>
@@ -97,10 +117,19 @@ export const PositionItem = memo(function PositionItemInner({
       </Flex>
 
       <Flex alignItems="flex-end" justifyContent="center">
-        {balanceFormatted ? (
-          <Text color="$neutral1" numberOfLines={1} variant={TITLE_VARIANT}>
-            {balanceFormatted}
-          </Text>
+        {balanceFormatted !== undefined ? (
+          isDataLivelinessEnabled ? (
+            <AnimatedNumber
+              color="$neutral1"
+              numericValue={totalValueUsd}
+              textVariant={`$${TITLE_VARIANT}` as FontVariantToken}
+              value={balanceFormatted}
+            />
+          ) : (
+            <Text color="$neutral1" numberOfLines={1} variant={TITLE_VARIANT}>
+              {balanceFormatted}
+            </Text>
+          )
         ) : null}
         <LiquidityPositionStatusIndicator status={status} />
       </Flex>
@@ -114,6 +143,8 @@ export const PositionItem = memo(function PositionItemInner({
         positionInfo={positionInfo}
         onReportSuccess={contextMenuActions.onReportSuccess}
         onRowPress={onPress}
+        onManagePress={onManagePress}
+        onPoolInfoPress={onPoolInfoPress}
       >
         {row}
       </PositionItemContextMenu>

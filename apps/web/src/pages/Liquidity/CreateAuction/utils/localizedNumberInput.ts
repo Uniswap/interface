@@ -12,7 +12,9 @@ type InputRef = ComponentRef<typeof Input>
  *
  * Pass `maxDecimals` to cap the fractional digits for display purposes (truncation, trailing zeros
  * trimmed). Don't pass this while the user is typing or it will eat in-progress digits — use it
- * only in unfocused / read-only renderings.
+ * only in unfocused / read-only renderings. When capping would erase every significant digit of a
+ * sub-1 value (e.g. `0.000000000000001` at `maxDecimals: 4`), the cap is extended to the first
+ * significant digits so a valid amount never renders as a misleading `0`.
  */
 export function formatLocalizedNumber({
   rawValue,
@@ -37,7 +39,15 @@ export function formatLocalizedNumber({
   const intPart = dotIdx === -1 ? rawValue : rawValue.slice(0, dotIdx)
   let fracPart = dotIdx === -1 ? '' : rawValue.slice(dotIdx + 1)
   if (maxDecimals !== undefined && fracPart.length > maxDecimals) {
-    fracPart = fracPart.slice(0, maxDecimals).replace(/0+$/, '')
+    const capped = fracPart.slice(0, maxDecimals).replace(/0+$/, '')
+    if (capped === '' && !/[1-9]/.test(intPart)) {
+      // Capping erased every significant digit, so the value would render as a misleading "0".
+      // Extend the cap to surface the first significant fractional digits instead.
+      const firstSignificant = fracPart.search(/[1-9]/)
+      fracPart = firstSignificant === -1 ? '' : fracPart.slice(0, firstSignificant + 2).replace(/0+$/, '')
+    } else {
+      fracPart = capped
+    }
   }
   const groupedInt = insertGroupSeparators(intPart, group)
   const preserveDot = dotIdx !== -1 && (maxDecimals === undefined || fracPart.length > 0)

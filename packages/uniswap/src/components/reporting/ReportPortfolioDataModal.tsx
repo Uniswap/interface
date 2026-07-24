@@ -1,5 +1,5 @@
 import { isProdEnv } from '@universe/environment'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { FeatureFlags, useFeatureFlagWithExposureLoggingDisabled } from '@universe/gating'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -28,7 +28,8 @@ export function ReportPortfolioDataModal({
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const walletAddress = useActiveAddress(Platform.EVM)
-  const portfolioPoolsBalancesEnabled = useFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
+  // Read without logging; the pools exposure is logged only where the feature is actually shown (see usePoolsTabVisibility).
+  const portfolioPoolsBalancesEnabled = useFeatureFlagWithExposureLoggingDisabled(FeatureFlags.PortfolioPoolsBalances)
 
   const submitReport = useEvent(
     ({
@@ -74,7 +75,7 @@ export function ReportPortfolioDataModal({
       ...(portfolioPoolsBalancesEnabled
         ? [
             {
-              title: t('common.tokens'),
+              title: t('common.token.plural'),
               subtitle: t('reporting.portfolio.data.options.tokens.subtitle'),
               value: PortfolioDataReportOption.Tokens,
               additionalTextInput: true,

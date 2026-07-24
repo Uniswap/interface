@@ -19,9 +19,9 @@ import { borderRadii, fonts, iconSizes } from 'ui/src/theme'
 import { InfoRow } from 'uniswap/src/components/activity/details/InfoRow'
 import { InfoRowActionButton } from 'uniswap/src/components/activity/details/InfoRowActionButton'
 import { getVisiblePlanSteps } from 'uniswap/src/components/activity/details/plan/getVisiblePlanSteps'
+import { getActivityDisplayVaultRows } from 'uniswap/src/components/activity/details/TransactionDetailsInfoRowsVaultRows'
 import { TransactionParticipantRow } from 'uniswap/src/components/activity/details/TransactionParticipantRow'
 import { SwapTypeTransactionInfo } from 'uniswap/src/components/activity/details/types'
-import { getVaultTransactionInfoRows } from 'uniswap/src/components/activity/details/VaultTransactionInfoRows'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { useNetworkFee } from 'uniswap/src/features/activity/hooks/useNetworkFee'
 import { getFormattedSwapRatio } from 'uniswap/src/features/activity/utils/swapInfo'
@@ -53,14 +53,22 @@ export function TransactionDetailsInfoRows({
   pt,
   openPlanView,
   onClose,
+  isEarnActivityDisplayEnabled = true,
 }: {
   transactionDetails: TransactionDetails
   isShowingMore: boolean
   pt?: FlexProps['pt']
   openPlanView: () => void
   onClose: () => void
+  isEarnActivityDisplayEnabled?: boolean
 }): JSX.Element {
-  const rows = useTransactionDetailsInfoRows({ transactionDetails, isShowingMore, onClose, openPlanView })
+  const rows = useTransactionDetailsInfoRows({
+    transactionDetails,
+    isShowingMore,
+    onClose,
+    openPlanView,
+    isEarnActivityDisplayEnabled,
+  })
 
   return (
     <Flex gap="$spacing8" px="$spacing8" pt={pt}>
@@ -74,11 +82,13 @@ function useTransactionDetailsInfoRows({
   isShowingMore,
   openPlanView,
   onClose,
+  isEarnActivityDisplayEnabled,
 }: {
   transactionDetails: TransactionDetails
   isShowingMore: boolean
   openPlanView: () => void
   onClose: () => void
+  isEarnActivityDisplayEnabled: boolean
 }): JSX.Element[] {
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
@@ -94,9 +104,10 @@ function useTransactionDetailsInfoRows({
     </InfoRow>,
   ]
   const specificRows: JSX.Element[] = []
-  const vaultRows = getVaultTransactionInfoRows({
+  const vaultRows = getActivityDisplayVaultRows({
     transactionDetails,
     typeInfo,
+    isEarnActivityDisplayEnabled,
   })
 
   if (vaultRows) {
@@ -256,6 +267,7 @@ function getUnknownTransactionInfoRows({
  * Row shown in the transaction details screen for the network fee.
  * If gas is paid on multiple chains, the logo will be hidden.
  * If it's a uniswapx transaction, the uniswapx UI will be shown.
+ * If the tx was sponsored by an ERC-4337 paymaster, the sponsorship UI will be shown.
  */
 function NetworkFeeRow({ transactionDetails }: { transactionDetails: TransactionDetails }): JSX.Element {
   const { t } = useTranslation()
@@ -268,6 +280,29 @@ function NetworkFeeRow({ transactionDetails }: { transactionDetails: Transaction
     : [transactionDetails.chainId]
   const showNetworkLogo = chainIds.length === 1
   const Logo = isUniswapX(transactionDetails) ? UniswapX : showNetworkLogo ? NetworkLogo : undefined
+
+  const paymaster = 'paymaster' in transactionDetails ? transactionDetails.paymaster : undefined
+  const sponsorInfo = 'sponsorInfo' in transactionDetails ? transactionDetails.sponsorInfo : undefined
+
+  // Prefer the resolved sponsor name (e.g. "Sponsored by Uniswap"); fall back to the paymaster address.
+  const sponsorName = sponsorInfo?.name ?? (paymaster ? shortenAddress({ address: paymaster }) : undefined)
+
+  if (sponsorName) {
+    return (
+      <InfoRow key="networkFee" label={t('transaction.details.networkFee')}>
+        <Flex row centered gap="$spacing4">
+          {sponsorInfo?.icon && (
+            <UniversalImage
+              size={{ width: iconSizes.icon16, height: iconSizes.icon16 }}
+              style={{ image: { borderRadius: borderRadii.roundedFull } }}
+              uri={sponsorInfo.icon}
+            />
+          )}
+          <Text variant="body3">{t('transaction.details.sponsoredBy', { name: sponsorName })}</Text>
+        </Flex>
+      </InfoRow>
+    )
+  }
 
   return (
     <InfoRow key="networkFee" label={t('transaction.details.networkFee')}>
@@ -301,7 +336,9 @@ function TransactionHashRow({
           icon={<RotatableChevron color="$neutral3" direction="right" size="$icon.16" />}
           onPress={openPlanView}
         >
-          {t('transaction.details.transactions.actions', { actionCount: stepInfosLength })}
+          {t('transaction.details.transactions.actions', {
+            actionCount: stepInfosLength,
+          })}
         </InfoRowActionButton>
       </InfoRow>
     )

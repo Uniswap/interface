@@ -1,20 +1,46 @@
+import { proto3 } from '@bufbuild/protobuf'
+import { toPlainMessage } from '@bufbuild/protobuf'
 import type { Query } from '@tanstack/react-query'
+import { ListPositionsResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { sharedDehydrateOptions } from 'uniswap/src/data/apiClients/sharedDehydrateOptions'
 
-// Mock isDevEnv so we can toggle the runtime JSON.stringify guard per-case.
+// Mock isDevEnv/isTestEnv so we can toggle the runtime guards per-case.
 const isDevEnvMock = vi.fn()
+const isTestEnvMock = vi.fn()
 vi.mock('@universe/environment', () => ({
   isDevEnv: () => isDevEnvMock(),
+  isTestEnv: () => isTestEnvMock(),
 }))
 
-// Mock the logger so the dev-only warning doesn't pollute test output and we
-// can assert it fires when expected.
+// Mock the logger so the dev-only warning/error doesn't pollute test output
+// and we can assert it fires when expected.
 const loggerWarnMock = vi.fn()
+const loggerErrorMock = vi.fn()
 vi.mock('utilities/src/logger/logger', () => ({
   logger: {
     warn: (...args: unknown[]) => loggerWarnMock(...args),
+    error: (...args: unknown[]) => loggerErrorMock(...args),
   },
 }))
+
+// Synthetic protobuf-es Message type. `isMessage(...)` recognizes instances, and
+// `getType().typeName` returns 'test.SyntheticMessage' — matches a real raw Message.
+const SyntheticMessage = proto3.makeMessageType('test.SyntheticMessage', () => [
+  { no: 1, name: 'name', kind: 'scalar', T: 9 /* string */ },
+])
+
+function makeProtobufMessage(): object {
+  return new SyntheticMessage({ name: 'unwrapped' })
+}
+
+// Wraps `value` in `levels` nested plain objects. nest(msg, 0) === msg.
+function nest(value: unknown, levels: number): unknown {
+  let wrapped = value
+  for (let i = 0; i < levels; i++) {
+    wrapped = { child: wrapped }
+  }
+  return wrapped
+}
 
 function buildQuery({
   data,
@@ -42,7 +68,9 @@ describe('sharedDehydrateOptions.shouldDehydrateQuery', () => {
 
   beforeEach(() => {
     isDevEnvMock.mockReturnValue(false)
+    isTestEnvMock.mockReturnValue(false)
     loggerWarnMock.mockReset()
+    loggerErrorMock.mockReset()
   })
 
   it('excludes queries without meta', () => {
@@ -104,6 +132,99 @@ describe('sharedDehydrateOptions.shouldDehydrateQuery', () => {
     it('does not run the guard when data is undefined (query still fetching)', () => {
       expect(shouldDehydrate(buildQuery({ data: undefined, meta: { persist: true }, status: 'pending' }))).toBe(false)
       expect(loggerWarnMock).not.toHaveBeenCalled()
+    })
+
+    describe('protobuf tripwire (findRawProtobufTypeName)', () => {
+      it('excludes a query whose data IS a raw protobuf Message and errors', () => {
+        expect(shouldDehydrate(buildQuery({ data: makeProtobufMessage(), meta: { persist: true } }))).toBe(false)
+        expect(loggerErrorMock).toHaveBeenCalledOnce()
+      })
+
+      it('surfaces the offending typeName in the logged error', () => {
+        shouldDehydrate(buildQuery({ data: makeProtobufMessage(), meta: { persist: true } }))
+        const [loggedError] = loggerErrorMock.mock.calls[0] as [Error]
+        expect(loggedError.message).toContain('test.SyntheticMessage')
+      })
+
+      it('detects a Message nested inside a plain object', () => {
+        const data = { outer: { inner: makeProtobufMessage() } }
+        expect(shouldDehydrate(buildQuery({ data, meta: { persist: true } }))).toBe(false)
+        expect(loggerErrorMock).toHaveBeenCalledOnce()
+      })
+
+      it('detects a Message nested inside an array', () => {
+        const data = { items: [{ ok: true }, makeProtobufMessage()] }
+        expect(shouldDehydrate(buildQuery({ data, meta: { persist: true } }))).toBe(false)
+        expect(loggerErrorMock).toHaveBeenCalledOnce()
+      })
+
+      it('detects a Message at the deepest scanned level (depth 8)', () => {
+        expect(shouldDehydrate(buildQuery({ data: nest(makeProtobufMessage(), 8), meta: { persist: true } }))).toBe(
+          false,
+        )
+        expect(loggerErrorMock).toHaveBeenCalledOnce()
+      })
+
+      it('does NOT detect a Message buried below the scan depth (depth 9)', () => {
+        // Past MAX_PROTOBUF_SCAN_DEPTH the scan gives up; the value still passes
+        // the jsonStringify probe (Message.toJSON serializes), so it persists.
+        expect(shouldDehydrate(buildQuery({ data: nest(makeProtobufMessage(), 9), meta: { persist: true } }))).toBe(
+          true,
+        )
+        expect(loggerErrorMock).not.toHaveBeenCalled()
+      })
+
+      it('does not flag plain serializable data with no Message', () => {
+        const data = { a: 1, nested: { b: [2, 3], c: 'x' } }
+        expect(shouldDehydrate(buildQuery({ data, meta: { persist: true } }))).toBe(true)
+        expect(loggerErrorMock).not.toHaveBeenCalled()
+      })
+
+      it('terminates on circular references and still finds a reachable Message', () => {
+        const data: Record<string, unknown> = { msg: makeProtobufMessage() }
+        data['self'] = data // WeakSet guard must prevent infinite recursion
+        expect(shouldDehydrate(buildQuery({ data, meta: { persist: true } }))).toBe(false)
+        expect(loggerErrorMock).toHaveBeenCalledOnce()
+      })
+
+      it('does not run the protobuf tripwire outside dev/test', () => {
+        isDevEnvMock.mockReturnValue(false)
+        expect(shouldDehydrate(buildQuery({ data: makeProtobufMessage(), meta: { persist: true } }))).toBe(true)
+        expect(loggerErrorMock).not.toHaveBeenCalled()
+      })
+    })
+  })
+
+  describe('raw protobuf Message tripwire', () => {
+    beforeEach(() => {
+      isDevEnvMock.mockReturnValue(true)
+    })
+
+    it('EXCLUDES queries whose data is a raw protobuf Message and logs an error naming the typeName', () => {
+      const message = new ListPositionsResponse({})
+      expect(shouldDehydrate(buildQuery({ data: message, meta: { persist: true } }))).toBe(false)
+      expect(loggerErrorMock).toHaveBeenCalledOnce()
+      const [error] = loggerErrorMock.mock.calls[0] as [Error]
+      expect(error.message).toContain(ListPositionsResponse.typeName)
+    })
+
+    it('EXCLUDES queries with a raw Message nested in an array (infinite-query pages shape)', () => {
+      const data = { pages: [new ListPositionsResponse({})], pageParams: [undefined] }
+      expect(shouldDehydrate(buildQuery({ data, meta: { persist: true } }))).toBe(false)
+      expect(loggerErrorMock).toHaveBeenCalledOnce()
+    })
+
+    it('INCLUDES queries whose Message has been converted via toPlainMessage', () => {
+      const plain = toPlainMessage(new ListPositionsResponse({}))
+      expect(shouldDehydrate(buildQuery({ data: plain, meta: { persist: true } }))).toBe(true)
+      expect(loggerErrorMock).not.toHaveBeenCalled()
+    })
+
+    it('runs the tripwire in test env even when not dev env', () => {
+      isDevEnvMock.mockReturnValue(false)
+      isTestEnvMock.mockReturnValue(true)
+      expect(shouldDehydrate(buildQuery({ data: new ListPositionsResponse({}), meta: { persist: true } }))).toBe(false)
+      expect(loggerErrorMock).toHaveBeenCalledOnce()
     })
   })
 

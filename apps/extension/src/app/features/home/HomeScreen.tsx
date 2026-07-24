@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { ActivityTab } from 'src/app/components/tabs/ActivityTab'
 import { NftsTab } from 'src/app/components/tabs/NftsTab'
+import { PoolsTab } from 'src/app/components/tabs/PoolsTab'
 import { useSmartWalletNudges } from 'src/app/context/SmartWalletNudgesContext'
 import { HomeIntroCardStack } from 'src/app/features/home/introCards/HomeIntroCardStack'
 import { PortfolioActionButtons } from 'src/app/features/home/PortfolioActionButtons'
@@ -19,14 +20,10 @@ import { useOptimizedSearchParams } from 'src/app/hooks/useOptimizedSearchParams
 import { HomeQueryParams, HomeTabs } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { ExtensionNotificationServiceManager } from 'src/notification-service/ExtensionNotificationServiceManager'
-import { Flex, Loader, styled, Text, TouchableArea } from 'ui/src'
+import { Coachmark, Flex, Loader, styled, Text, TouchableArea } from 'ui/src'
 import { SMART_WALLET_UPGRADE_VIDEO } from 'ui/src/assets'
-import { buildWrappedUrl } from 'uniswap/src/components/banners/shared/utils'
-import { UniswapWrapped2025Banner } from 'uniswap/src/components/banners/UniswapWrapped2025Banner/UniswapWrapped2025Banner'
+import { spacing } from 'ui/src/theme'
 import { NFTS_TAB_DATA_DEPENDENCIES } from 'uniswap/src/components/nfts/constants'
-import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
-import { selectHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/selectors'
-import { setHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/slice'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { DataApiOutageBanner } from 'uniswap/src/features/dataApi/outage/DataApiOutageBanner'
@@ -34,8 +31,11 @@ import { DataApiOutageModalContent } from 'uniswap/src/features/dataApi/outage/D
 import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/slice/hooks'
 import { setNotificationStatus } from 'uniswap/src/features/notifications/slice/slice'
 import { PortfolioBalance } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioBalance'
+import { usePoolsBalanceCoachmarkVisibility } from 'uniswap/src/features/portfolio/PortfolioBalance/usePoolsBalanceCoachmarkVisibility'
+import { usePoolsTabVisibility } from 'uniswap/src/features/positions/hooks/usePoolsTabVisibility'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -82,11 +82,6 @@ export const HomeScreen = memo(function HomeScreenInner(): JSX.Element {
   const [isSmartWalletEnabledModalOpen, setIsSmartWalletEnabledModalOpen] = useState(false)
   const dispatch = useDispatch()
 
-  // UniswapWrapped2025 banner state
-  const isWrappedBannerEnabled = useFeatureFlag(FeatureFlags.UniswapWrapped2025)
-  const hasDismissedWrappedBanner = useSelector(selectHasDismissedUniswapWrapped2025Banner)
-  const shouldShowWrappedBanner = isWrappedBannerEnabled && !hasDismissedWrappedBanner
-
   // Notification service feature flag
   const isNotificationServiceEnabledFlag = useFeatureFlag(FeatureFlags.NotificationService)
   const isNotificationServiceEnabled =
@@ -99,23 +94,15 @@ export const HomeScreen = memo(function HomeScreenInner(): JSX.Element {
     chainIds: chains,
   })
 
+  const { shouldShowPoolsTab, openPoolPositionsCount } = usePoolsTabVisibility(address)
+
+  const { shouldShow: shouldShowPoolsCoachmark, dismiss: dismissPoolsCoachmark } = usePoolsBalanceCoachmarkVisibility({
+    evmAddress: address,
+  })
+
   const [isOutageModalOpen, setIsOutageModalOpen] = useState(false)
   const handleOutageBannerPress = useEvent(() => setIsOutageModalOpen(true))
   const handleOutageModalClose = useEvent(() => setIsOutageModalOpen(false))
-
-  const handleDismissWrappedBanner = useCallback(() => {
-    dispatch(setHasDismissedUniswapWrapped2025Banner(true))
-  }, [dispatch])
-
-  const handlePressWrappedBanner = useCallback(() => {
-    try {
-      const url = buildWrappedUrl(UNISWAP_WEB_URL, address)
-      window.open(url, '_blank')
-      dispatch(setHasDismissedUniswapWrapped2025Banner(true))
-    } catch (error) {
-      logger.error(error, { tags: { file: 'HomeScreen', function: 'handlePressWrappedBanner' } })
-    }
-  }, [address, dispatch])
 
   useEffect(() => {
     if (selectedTab) {
@@ -182,6 +169,13 @@ export const HomeScreen = memo(function HomeScreenInner(): JSX.Element {
     }
   }, [dispatch, address, hasNotifications, selectedTab])
 
+  // Fall back to Tokens if the Pools tab is no longer shown.
+  useEffect(() => {
+    if (selectedTab === HomeTabs.Pools && !shouldShowPoolsTab) {
+      setSelectedTab(HomeTabs.Tokens)
+    }
+  }, [selectedTab, shouldShowPoolsTab, setSelectedTab])
+
   const [lastNftFetchTime, setLastNftFetchTime] = useState(0)
 
   useEffect(() => {
@@ -220,41 +214,30 @@ export const HomeScreen = memo(function HomeScreenInner(): JSX.Element {
                 <PinReminder style="popup" onClose={onClosePinRequest} />
               </Flex>
             )}
-            {shouldShowWrappedBanner && (
-              <Flex width="calc(100% + 24px)" ml={-12} mt={-12}>
-                <UniswapWrapped2025Banner
-                  handleDismiss={handleDismissWrappedBanner}
-                  handlePress={handlePressWrappedBanner}
-                  bannerHeight={80}
-                />
-                <Flex
-                  height="$spacing12"
-                  width="100%"
-                  mt={-12}
-                  mb={-12}
-                  backgroundColor="$surface1"
-                  borderTopLeftRadius={24}
-                  borderTopRightRadius={24}
-                  flexShrink={0}
-                  zIndex="$overlay"
-                />
-              </Flex>
-            )}
             <Flex grow gap="$spacing8">
               <Flex pl="$spacing4" position="relative" pt="$spacing4">
                 <PortfolioHeader address={address} />
               </Flex>
               <Flex pb="$spacing8" pl="$spacing4">
-                <PortfolioBalance evmOwner={address} />
+                <Coachmark
+                  open={shouldShowPoolsCoachmark}
+                  onDismiss={dismissPoolsCoachmark}
+                  placement="bottom-start"
+                  offset={{ mainAxis: -spacing.spacing16 }}
+                  text={t('portfolio.poolsBalance.coachmark.body')}
+                  testID={TestID.PoolsBalanceCoachmark}
+                >
+                  <PortfolioBalance evmOwner={address} />
+                </Coachmark>
               </Flex>
 
               <PortfolioActionButtons />
 
-              <HomeScreenEarningSection evmAddress={address} />
-
               <ExtensionNotificationServiceManager />
 
               {!isNotificationServiceEnabled && <HomeIntroCardStack />}
+
+              <HomeScreenEarningSection evmAddress={address} mt="$spacing8" mb="$spacing8" />
 
               <Flex flex={1} width="100%">
                 <Flex row gap="$spacing16" px="$spacing4" py="$spacing8">
@@ -271,6 +254,12 @@ export const HomeScreen = memo(function HomeScreenInner(): JSX.Element {
                   >
                     {t('home.nfts.title')}
                   </TabButton>
+
+                  {shouldShowPoolsTab && (
+                    <TabButton isActive={selectedTab === HomeTabs.Pools} onPress={() => setSelectedTab(HomeTabs.Pools)}>
+                      {t('common.pools')}
+                    </TabButton>
+                  )}
 
                   <TabButton
                     showPendingNotificationBadge
@@ -292,12 +281,26 @@ export const HomeScreen = memo(function HomeScreenInner(): JSX.Element {
                       </AnimatedTab>
 
                       <AnimatedTab
-                        hideLeft={selectedTab === HomeTabs.Activity}
+                        hideLeft={selectedTab === HomeTabs.Pools || selectedTab === HomeTabs.Activity}
                         hideRight={selectedTab === HomeTabs.Tokens}
                         isActive={selectedTab === HomeTabs.NFTs}
                       >
                         <NftsTab owner={address} skip={selectedTab !== HomeTabs.NFTs} />
                       </AnimatedTab>
+
+                      {shouldShowPoolsTab && (
+                        <AnimatedTab
+                          hideLeft={selectedTab === HomeTabs.Activity}
+                          hideRight={selectedTab === HomeTabs.Tokens || selectedTab === HomeTabs.NFTs}
+                          isActive={selectedTab === HomeTabs.Pools}
+                        >
+                          <PoolsTab
+                            address={address}
+                            skip={selectedTab !== HomeTabs.Pools}
+                            openPositionsCount={openPoolPositionsCount}
+                          />
+                        </AnimatedTab>
+                      )}
 
                       <AnimatedTab
                         hideRight={selectedTab !== HomeTabs.Activity}
@@ -426,5 +429,5 @@ function useSelectedTabState(): [HomeTabs | null, (tab: HomeTabs) => void] {
 }
 
 function isValidHomeTab(tab: unknown): tab is HomeTabs {
-  return tab === HomeTabs.Tokens || tab === HomeTabs.NFTs || tab === HomeTabs.Activity
+  return tab === HomeTabs.Tokens || tab === HomeTabs.NFTs || tab === HomeTabs.Pools || tab === HomeTabs.Activity
 }

@@ -9,14 +9,18 @@ export enum OnchainItemSectionName {
   TrendingTokens = 'trendingTokens',
   FavoriteTokens = 'favoriteTokens',
   SuggestedTokens = 'suggestedTokens',
+  Stocks = 'stocks',
   BridgingTokens = 'bridgingTokens',
   OtherChainsTokens = 'otherNetworksTokens',
 
+  Earn = 'earn',
   Tokens = 'tokens',
   Pools = 'pools',
   TrendingPools = 'trendingPools',
   Wallets = 'wallets',
   FavoriteWallets = 'favoriteWallets',
+  Auctions = 'auctions',
+  TopAuctions = 'topAuctions',
 }
 
 export type OnchainItemSection<T extends OnchainItemListOption> = {
@@ -27,4 +31,6 @@ export type OnchainItemSection<T extends OnchainItemListOption> = {
   endElement?: JSX.Element
   sectionHeader?: JSX.Element
   sectionHeaderHeight?: number
+  /** Overrides the default section icon when provided. */
+  icon?: JSX.Element
 }

@@ -229,13 +229,13 @@ export function OnboardingStepsProvider({
             {/* oxlint-disable-next-line react/forbid-elements -- probably we can replace it here */}
             <div style={{ height: 0, opacity: 0, pointerEvents: 'none' }}>{stepContents}</div>
             <Frame
-              animation="stiff"
+              animation="quickLong"
               y={y}
               onLayout={(e) => {
                 setFrameHeight(e.nativeEvent.layout.height)
               }}
             >
-              <FrameBackground height={frameHeight} />
+              <FrameBackground />
 
               {/**
                * animate the inner contents of the onboarding steps modal
@@ -309,6 +309,8 @@ const FrameBackground = styled(Flex, {
   position: 'absolute',
   top: 0,
   left: 0,
+  right: 0,
+  bottom: 0,
   width: '100%',
   backgroundColor: '$surface1',
   borderColor: '$surface3',

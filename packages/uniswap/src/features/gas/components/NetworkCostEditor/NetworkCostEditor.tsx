@@ -10,7 +10,10 @@ import { computeMaxCost } from 'uniswap/src/features/gas/components/NetworkCostE
 import { GasFieldInput } from 'uniswap/src/features/gas/components/NetworkCostEditor/GasFieldInput'
 import { weiToGwei } from 'uniswap/src/features/gas/components/NetworkCostEditor/gweiToWei'
 import { useGasFieldValidation } from 'uniswap/src/features/gas/components/NetworkCostEditor/useGasFieldValidation'
-import { useRecommendedGasFields } from 'uniswap/src/features/gas/components/NetworkCostEditor/useRecommendedGasFields'
+import {
+  type RecommendedGasFieldValues,
+  useRecommendedGasFields,
+} from 'uniswap/src/features/gas/components/NetworkCostEditor/useRecommendedGasFields'
 import { useUSDValueOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { getChainGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToken'
 import type { GasFeeOverrides } from 'uniswap/src/features/gas/types'
@@ -31,7 +34,7 @@ function MaxCostRow({
 }): JSX.Element {
   const { t } = useTranslation()
   const { value: maxCostUsd } = useUSDValueOfGasFee(chainId, maxCostWei)
-  const { formatNumberOrString } = useLocalizationContext()
+  const { formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
   const gasToken = chainId ? getChainGasToken(chainId) : undefined
   const gasTokenAmount =
     maxCostWei && gasToken
@@ -40,31 +43,27 @@ function MaxCostRow({
   const gasTokenAmountFormatted = gasTokenAmount
     ? formatNumberOrString({ value: gasTokenAmount.toExact(), type: NumberType.TokenNonTx })
     : undefined
+  // Format the fiat max cost the same way other gas-fee surfaces do: localized to
+  // the user's fiat currency and capped at 2 decimals (or "<$0.01" below a cent),
+  // rather than the raw full-precision USD string.
+  const maxCostFiatFormatted = convertFiatAmountFormatted(maxCostUsd, NumberType.FiatGasPrice, '—')
 
   return (
-    <Flex
-      row
-      alignItems="center"
-      justifyContent="space-between"
-      backgroundColor="$surface2"
-      borderRadius="$rounded12"
-      px="$spacing12"
-      py="$spacing12"
-    >
-      <Flex row alignItems="center" gap="$spacing8">
+    <Flex row alignItems="center" justifyContent="space-between">
+      <Flex row alignItems="center" gap="$spacing6">
         <Gas color="$neutral2" size="$icon.16" />
         <Text variant="body3" color="$neutral2">
           {t('gas.override.maxCost')}
         </Text>
       </Flex>
-      <Flex row alignItems="center" gap="$spacing6">
+      <Flex row alignItems="center" gap="$spacing8">
         {gasTokenAmountFormatted && gasToken && (
-          <Text variant="body3" color="$neutral2">
+          <Text variant="body3" color="$neutral3">
             {gasTokenAmountFormatted} {gasToken.symbol}
           </Text>
         )}
         <Text variant="body3" color="$neutral1">
-          {maxCostUsd ? `$${maxCostUsd}` : '—'}
+          {maxCostFiatFormatted}
         </Text>
       </Flex>
     </Flex>
@@ -194,6 +193,10 @@ export interface NetworkCostEditorProps {
   /** Which UI surface mounted this editor — used to attribute the
    *  `CustomGasOverridesApplied` analytics event to the correct flow. */
   surface: 'swap_form' | 'dapp_request'
+  /** Quote-derived recommended baseline, used when `tx` is unavailable (e.g. a
+   *  Permit2-signature swap whose `/swap` is deferred until the user signs).
+   *  Snapshotted by the caller so it doesn't jitter across quote polls. */
+  recommendedFallback?: RecommendedGasFieldValues
 }
 
 /**
@@ -219,10 +222,11 @@ export function NetworkCostEditor({
   onCancel,
   onReset,
   surface,
+  recommendedFallback,
 }: NetworkCostEditorProps): JSX.Element {
   const { t } = useTranslation()
   const { keyboardHeight } = useBottomSheetSafeKeyboard()
-  const recommended = useRecommendedGasFields({ tx })
+  const recommended = useRecommendedGasFields({ tx, fallback: recommendedFallback })
   const initialFromTx = useMemo(() => extractGasFieldsFromTx(tx), [tx])
   const usdChainId = tx?.chainId ?? chainId
 
@@ -300,12 +304,17 @@ export function NetworkCostEditor({
   )
 
   return (
-    <Flex gap="$spacing16" px="$spacing16" pt="$spacing12" pb={keyboardHeight || '$spacing12'}>
+    <Flex
+      gap="$spacing24"
+      px={isMobileApp ? '$spacing16' : '$spacing24'}
+      pt={isMobileApp ? '$spacing12' : '$spacing24'}
+      pb={keyboardHeight || (isMobileApp ? '$spacing12' : '$spacing24')}
+    >
       <Flex row alignItems="center">
         <Flex flex={1} flexDirection="row" alignItems="center" justifyContent="flex-start">
           {!isMobileApp && ResetButton}
         </Flex>
-        <Text variant="subheading2" textAlign="center">
+        <Text variant="subheading1" textAlign="center">
           {t('gas.override.title')}
         </Text>
         <Flex flex={1} flexDirection="row" alignItems="center" justifyContent="flex-end" gap="$spacing12">
@@ -318,53 +327,55 @@ export function NetworkCostEditor({
         </Flex>
       </Flex>
 
-      <GasFieldInput
-        autoFocus
-        label={t('gas.override.field.maxBaseFee')}
-        value={maxBaseFeeGwei}
-        hint={
-          recommended.recommendedMaxBaseFeeGwei
-            ? t('gas.override.current', { value: recommended.recommendedMaxBaseFeeGwei })
-            : undefined
-        }
-        unit="GWEI"
-        tooltipKey="maxBaseFee"
-        error={isDirty.maxBaseFee ? validation.maxBaseFee.error : undefined}
-        warning={isDirty.maxBaseFee ? validation.maxBaseFee.warning : undefined}
-        onChangeValue={handleChangeMaxBaseFee}
-      />
-      <GasFieldInput
-        label={t('gas.override.field.priorityFee')}
-        value={priorityFeeGwei}
-        hint={
-          recommended.recommendedPriorityFeeGwei
-            ? t('gas.override.auto', { value: recommended.recommendedPriorityFeeGwei })
-            : undefined
-        }
-        unit="GWEI"
-        tooltipKey="priorityFee"
-        error={isDirty.priorityFee ? validation.priorityFee.error : undefined}
-        warning={isDirty.priorityFee ? validation.priorityFee.warning : undefined}
-        onChangeValue={handleChangePriorityFee}
-      />
-      <GasFieldInput
-        label={t('gas.override.field.gasLimit')}
-        value={gasLimit}
-        tooltipKey="gasLimit"
-        error={isDirty.gasLimit ? validation.gasLimit.error : undefined}
-        warning={isDirty.gasLimit ? validation.gasLimit.warning : undefined}
-        onChangeValue={handleChangeGasLimit}
-      />
+      <Flex gap="$spacing20">
+        <GasFieldInput
+          autoFocus
+          label={t('gas.override.field.maxBaseFee')}
+          value={maxBaseFeeGwei}
+          hint={
+            recommended.recommendedMaxBaseFeeGwei
+              ? t('gas.override.current', { value: recommended.recommendedMaxBaseFeeGwei })
+              : undefined
+          }
+          unit="GWEI"
+          tooltipKey="maxBaseFee"
+          error={isDirty.maxBaseFee ? validation.maxBaseFee.error : undefined}
+          warning={isDirty.maxBaseFee ? validation.maxBaseFee.warning : undefined}
+          onChangeValue={handleChangeMaxBaseFee}
+        />
+        <GasFieldInput
+          label={t('gas.override.field.priorityFee')}
+          value={priorityFeeGwei}
+          hint={
+            recommended.recommendedPriorityFeeGwei
+              ? t('gas.override.auto', { value: recommended.recommendedPriorityFeeGwei })
+              : undefined
+          }
+          unit="GWEI"
+          tooltipKey="priorityFee"
+          error={isDirty.priorityFee ? validation.priorityFee.error : undefined}
+          warning={isDirty.priorityFee ? validation.priorityFee.warning : undefined}
+          onChangeValue={handleChangePriorityFee}
+        />
+        <GasFieldInput
+          label={t('gas.override.field.gasLimit')}
+          value={gasLimit}
+          tooltipKey="gasLimit"
+          error={isDirty.gasLimit ? validation.gasLimit.error : undefined}
+          warning={isDirty.gasLimit ? validation.gasLimit.warning : undefined}
+          onChangeValue={handleChangeGasLimit}
+        />
 
-      <MaxCostRow chainId={usdChainId} maxCostWei={maxCostWei} />
+        <MaxCostRow chainId={usdChainId} maxCostWei={maxCostWei} />
 
-      <Flex row gap="$spacing8">
-        <Button flex={1} emphasis="secondary" onPress={onCancel}>
-          {t('common.button.cancel')}
-        </Button>
-        <Button flex={1} emphasis="primary" isDisabled={!isDirtyAny || !validation.canSave} onPress={handleSave}>
-          {t('common.button.save')}
-        </Button>
+        <Flex row gap="$spacing8">
+          <Button flex={1} emphasis="secondary" onPress={onCancel}>
+            {t('common.button.cancel')}
+          </Button>
+          <Button flex={1} emphasis="primary" disabled={!isDirtyAny || !validation.canSave} onPress={handleSave}>
+            {t('common.button.save')}
+          </Button>
+        </Flex>
       </Flex>
     </Flex>
   )

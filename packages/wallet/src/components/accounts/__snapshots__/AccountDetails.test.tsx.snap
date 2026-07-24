@@ -1,491 +1,196 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`AccountDetails renders without error 1`] = `
-<View
-  style={
-    {
-      "alignItems": "center",
-      "flexDirection": "row",
-      "flexShrink": 1,
-      "gap": 16,
-      "justifyContent": "space-between",
-    }
-  }
->
-  <View
-    style={
-      {
-        "flex": 1,
-        "flexDirection": "row",
-        "flexShrink": 1,
-      }
-    }
+exports[`AccountDetails > renders without error 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "flexShrink": 1,
-          "gap": 8,
-        }
-      }
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _gap-t-space-spa1360334076 _justifyContent-space-betwe3241"
     >
-      <View
-        style={
-          {
-            "flexDirection": "column",
-          }
-        }
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1"
       >
-        <View
-          style={
-            {
-              "backgroundColor": "transparent",
-              "borderBottomColor": "transparent",
-              "borderBottomLeftRadius": 999999,
-              "borderBottomRightRadius": 999999,
-              "borderBottomWidth": 0,
-              "borderLeftColor": "transparent",
-              "borderLeftWidth": 0,
-              "borderRightColor": "transparent",
-              "borderRightWidth": 0,
-              "borderStyle": "solid",
-              "borderTopColor": "transparent",
-              "borderTopLeftRadius": 999999,
-              "borderTopRightRadius": 999999,
-              "borderTopWidth": 0,
-              "flexDirection": "column",
-              "height": 24,
-              "position": "relative",
-              "width": 24,
-            }
-          }
-          testID="account-icon"
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _gap-t-space-spa94665593 _alignItems-center"
         >
-          <View
-            style={
-              {
-                "flex": 1,
-                "flexDirection": "column",
-              }
-            }
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
           >
-            <svg
-              height={24}
-              viewBox="0 0 24 24"
-              width={24}
-              xmlns="http://www.w3.org/2000/svg"
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _position-relative _width-24px _height-24px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+              data-testid="account-icon"
             >
-              <g
-                style={
-                  {
-                    "transformOrigin": "center center",
-                  }
-                }
+              <div
+                class="t_unmounted  t_unmounted"
+                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: column; flex-grow: 1; opacity: 0; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
               >
-                <circle
-                  cx={12}
-                  cy={12}
-                  fill="#00C3A01F"
-                  r={12}
-                />
-                <g
-                  transform="translate(4, 4) scale(0.3333333333333333)"
-                />
-              </g>
-            </svg>
-          </View>
-        </View>
-      </View>
-      <View
-        style={
-          {
-            "flexDirection": "column",
-            "flexShrink": 1,
-            "gap": 0,
-          }
-        }
-      >
-        <View
-          style={
-            {
-              "flexDirection": "row",
-              "gap": 12,
-            }
-          }
-        >
-          <View
-            style={
-              {
-                "flexDirection": "row",
-                "flexGrow": 1,
-                "flexShrink": 1,
-                "gap": 4,
-              }
-            }
+                <svg
+                  height="24"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g
+                    style="transform-origin: center center;"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      fill="#00C3A01F"
+                      r="12"
+                    />
+                    <g
+                      transform="translate(4, 4) scale(0.3333333333333333)"
+                    />
+                  </g>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _gap-t-space-non101"
           >
-            <Text
-              adjustsFontSizeToFit={true}
-              allowFontScaling={false}
-              ellipsizeMode="tail"
-              maxFontSizeMultiplier={1.4}
-              numberOfLines={1}
-              style={
-                {
-                  "color": "#131313",
-                  "flexShrink": 1,
-                  "fontFamily": "Basel Grotesk",
-                  "fontSize": 14,
-                  "fontWeight": "400",
-                  "lineHeight": 18.2,
-                }
-              }
-              suppressHighlighting={true}
-              testID="address-display/name/undefined"
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa1360334080"
+            >
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-row _flexGrow-1 _gap-t-space-spa94665589 _flexShrink-1"
+              >
+                <span
+                  class="font_heading _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-14px _fontWeight-f-weight-bo3548 _lineHeight-18--2px _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _whiteSpace-initial _flexShrink-1"
+                  data-disable-theme="true"
+                  data-testid="address-display/name/undefined"
+                />
+              </div>
+            </div>
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
             />
-          </View>
-        </View>
-        <View
-          style={
-            {
-              "flexDirection": "column",
-            }
-          }
-        />
-      </View>
-    </View>
-  </View>
-  <View
-    style={
-      {
-        "alignItems": "center",
-        "flex": 1,
-        "flexDirection": "row",
-        "flexShrink": 1,
-        "gap": 4,
-        "justifyContent": "flex-end",
-      }
-    }
-  >
-    <Text
-      allowFontScaling={false}
-      maxFontSizeMultiplier={1.4}
-      style={
-        {
-          "color": "rgba(19, 19, 19, 0.63)",
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 14,
-          "fontWeight": "400",
-          "lineHeight": 18.2,
-        }
-      }
-      suppressHighlighting={true}
-    >
-      0x82D5...3Fa6
-    </Text>
-  </View>
-</View>
+          </div>
+        </div>
+      </div>
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _alignItems-center _gap-t-space-spa94665589 _justifyContent-flex-end"
+      >
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+          data-disable-theme="true"
+        >
+          0x82D5...3Fa6
+        </span>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;
 
-exports[`AccountDetails renders without error with chevron 1`] = `
-<View
-  style={
-    {
-      "alignItems": "center",
-      "flexDirection": "row",
-      "flexShrink": 1,
-      "gap": 16,
-      "justifyContent": "space-between",
-    }
-  }
->
-  <View
-    style={
-      {
-        "flex": 1,
-        "flexDirection": "row",
-        "flexShrink": 1,
-      }
-    }
+exports[`AccountDetails > renders without error with chevron 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "flexShrink": 1,
-          "gap": 8,
-        }
-      }
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _gap-t-space-spa1360334076 _justifyContent-space-betwe3241"
     >
-      <View
-        style={
-          {
-            "flexDirection": "column",
-          }
-        }
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1"
       >
-        <View
-          style={
-            {
-              "backgroundColor": "transparent",
-              "borderBottomColor": "transparent",
-              "borderBottomLeftRadius": 999999,
-              "borderBottomRightRadius": 999999,
-              "borderBottomWidth": 0,
-              "borderLeftColor": "transparent",
-              "borderLeftWidth": 0,
-              "borderRightColor": "transparent",
-              "borderRightWidth": 0,
-              "borderStyle": "solid",
-              "borderTopColor": "transparent",
-              "borderTopLeftRadius": 999999,
-              "borderTopRightRadius": 999999,
-              "borderTopWidth": 0,
-              "flexDirection": "column",
-              "height": 24,
-              "position": "relative",
-              "width": 24,
-            }
-          }
-          testID="account-icon"
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _gap-t-space-spa94665593 _alignItems-center"
         >
-          <View
-            style={
-              {
-                "flex": 1,
-                "flexDirection": "column",
-              }
-            }
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
           >
-            <svg
-              height={24}
-              viewBox="0 0 24 24"
-              width={24}
-              xmlns="http://www.w3.org/2000/svg"
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _position-relative _width-24px _height-24px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+              data-testid="account-icon"
             >
-              <g
-                style={
-                  {
-                    "transformOrigin": "center center",
-                  }
-                }
+              <div
+                class="t_unmounted  t_unmounted"
+                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: column; flex-grow: 1; opacity: 0; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
               >
-                <circle
-                  cx={12}
-                  cy={12}
-                  fill="#00C3A01F"
-                  r={12}
-                />
-                <g
-                  transform="translate(4, 4) scale(0.3333333333333333)"
-                />
-              </g>
-            </svg>
-          </View>
-        </View>
-      </View>
-      <View
-        style={
-          {
-            "flexDirection": "column",
-            "flexShrink": 1,
-            "gap": 0,
-          }
-        }
-      >
-        <View
-          style={
-            {
-              "flexDirection": "row",
-              "gap": 12,
-            }
-          }
-        >
-          <View
-            style={
-              {
-                "flexDirection": "row",
-                "flexGrow": 1,
-                "flexShrink": 1,
-                "gap": 4,
-              }
-            }
+                <svg
+                  height="24"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g
+                    style="transform-origin: center center;"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      fill="#00C3A01F"
+                      r="12"
+                    />
+                    <g
+                      transform="translate(4, 4) scale(0.3333333333333333)"
+                    />
+                  </g>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _gap-t-space-non101"
           >
-            <Text
-              adjustsFontSizeToFit={true}
-              allowFontScaling={false}
-              ellipsizeMode="tail"
-              maxFontSizeMultiplier={1.4}
-              numberOfLines={1}
-              style={
-                {
-                  "color": "#131313",
-                  "flexShrink": 1,
-                  "fontFamily": "Basel Grotesk",
-                  "fontSize": 14,
-                  "fontWeight": "400",
-                  "lineHeight": 18.2,
-                }
-              }
-              suppressHighlighting={true}
-              testID="address-display/name/undefined"
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa1360334080"
+            >
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-row _flexGrow-1 _gap-t-space-spa94665589 _flexShrink-1"
+              >
+                <span
+                  class="font_heading _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-14px _fontWeight-f-weight-bo3548 _lineHeight-18--2px _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _whiteSpace-initial _flexShrink-1"
+                  data-disable-theme="true"
+                  data-testid="address-display/name/undefined"
+                />
+              </div>
+            </div>
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
             />
-          </View>
-        </View>
-        <View
-          style={
-            {
-              "flexDirection": "column",
-            }
-          }
-        />
-      </View>
-    </View>
-  </View>
-  <View
-    style={
-      {
-        "alignItems": "center",
-        "flex": 1,
-        "flexDirection": "row",
-        "flexShrink": 1,
-        "gap": 4,
-        "justifyContent": "flex-end",
-      }
-    }
-  >
-    <Text
-      allowFontScaling={false}
-      maxFontSizeMultiplier={1.4}
-      style={
-        {
-          "color": "rgba(19, 19, 19, 0.63)",
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 14,
-          "fontWeight": "400",
-          "lineHeight": 18.2,
-        }
-      }
-      suppressHighlighting={true}
-    >
-      0x82D5...3Fa6
-    </Text>
-    <View
-      collapsable={false}
-      forwardedRef={[Function]}
-      jestAnimatedProps={
-        {
-          "value": {},
-        }
-      }
-      jestAnimatedStyle={
-        {
-          "value": {
-            "borderBottomLeftRadius": 999999,
-            "borderBottomRightRadius": 999999,
-            "borderTopLeftRadius": 999999,
-            "borderTopRightRadius": 999999,
-            "transform": [
-              {
-                "rotate": "180deg",
-              },
-            ],
-          },
-        }
-      }
-      jestInlineStyle={
-        [
-          {
-            "alignItems": "center",
-            "flexDirection": "column",
-            "justifyContent": "center",
-          },
-        ]
-      }
-      style={
-        [
-          {
-            "alignItems": "center",
-            "flexDirection": "column",
-            "justifyContent": "center",
-          },
-          {
-            "borderBottomLeftRadius": 999999,
-            "borderBottomRightRadius": 999999,
-            "borderTopLeftRadius": 999999,
-            "borderTopRightRadius": 999999,
-            "transform": [
-              {
-                "rotate": "180deg",
-              },
-            ],
-          },
-        ]
-      }
-    >
-      <RNSVGSvgView
-        align="xMidYMid"
-        bbHeight={24}
-        bbWidth={24}
-        fill="none"
-        focusable={false}
-        meetOrSlice={0}
-        minX={0}
-        minY={0}
-        strokeWidth={8}
-        style={
-          [
-            {
-              "backgroundColor": "transparent",
-              "borderWidth": 0,
-            },
-            {
-              "color": "rgba(19, 19, 19, 0.63)",
-              "height": 24,
-              "width": 24,
-            },
-            {
-              "flex": 0,
-              "height": 24,
-              "width": 24,
-            },
-          ]
-        }
-        vbHeight={24}
-        vbWidth={24}
+          </div>
+        </div>
+      </div>
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _alignItems-center _gap-t-space-spa94665589 _justifyContent-flex-end"
       >
-        <RNSVGGroup
-          color="rgba(19, 19, 19, 0.63)"
-          fill={null}
-          propList={
-            [
-              "fill",
-              "strokeWidth",
-            ]
-          }
-          strokeWidth={8}
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+          data-disable-theme="true"
         >
-          <RNSVGPath
-            clipRule={0}
-            d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
-            fill={
-              {
-                "type": 2,
-              }
-            }
-            fillRule={0}
-            propList={
-              [
-                "fill",
-                "fillRule",
-              ]
-            }
-          />
-        </RNSVGGroup>
-      </RNSVGSvgView>
-    </View>
-  </View>
-</View>
+          0x82D5...3Fa6
+        </span>
+        <div
+          style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); transform: rotate(180deg); transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+        >
+          <div
+            fill="none"
+            stroke-width="8"
+            style="width: 24px; height: 24px;"
+            viewbox="0 0 24 24"
+          >
+            <div
+              clip-rule="evenodd"
+              d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+              fill="currentColor"
+              fill-rule="evenodd"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;

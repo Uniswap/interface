@@ -1,4 +1,3 @@
-import { NetworkStatus } from '@apollo/client'
 import { NativeCurrency, Token } from '@uniswap/sdk-core'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
 import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
@@ -24,7 +23,8 @@ vi.mock('uniswap/src/features/portfolio/balances/hooks', async () => {
     usePortfolioBalances: vi.fn(() => ({
       data: undefined,
       loading: false,
-      networkStatus: NetworkStatus.ready,
+      isPending: false,
+      isError: false,
       refetch: vi.fn(),
       error: undefined,
     })),
@@ -46,7 +46,8 @@ describe('useTokenBalances', () => {
     mocked(usePortfolioBalances).mockReturnValue({
       data: undefined,
       loading: false,
-      networkStatus: NetworkStatus.ready,
+      isPending: false,
+      isError: false,
       refetch: vi.fn(),
       error: undefined,
     })
@@ -56,7 +57,8 @@ describe('useTokenBalances', () => {
     mocked(usePortfolioBalances).mockReturnValueOnce({
       data: undefined,
       loading: true,
-      networkStatus: NetworkStatus.loading,
+      isPending: true,
+      isError: false,
       refetch: vi.fn(),
       error: undefined,
     })
@@ -75,7 +77,8 @@ describe('useTokenBalances', () => {
     mocked(usePortfolioBalances).mockReturnValueOnce({
       data: undefined,
       loading: false,
-      networkStatus: NetworkStatus.ready,
+      isPending: false,
+      isError: false,
       refetch: vi.fn(),
       error: undefined,
     })
@@ -141,7 +144,8 @@ describe('useTokenBalances', () => {
     mocked(usePortfolioBalances).mockReturnValueOnce({
       data: mockPortfolioBalances,
       loading: false,
-      networkStatus: NetworkStatus.ready,
+      isPending: false,
+      isError: false,
       refetch: vi.fn(),
       error: undefined,
     })
@@ -183,7 +187,8 @@ describe('useTokenBalances', () => {
     mocked(usePortfolioBalances).mockReturnValueOnce({
       data: mockPortfolioBalances,
       loading: false,
-      networkStatus: NetworkStatus.ready,
+      isPending: false,
+      isError: false,
       refetch: vi.fn(),
       error: undefined,
     })

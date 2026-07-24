@@ -1,3 +1,4 @@
+import type { PlainMessage } from '@bufbuild/protobuf'
 import { GetWalletTokensProfitLossResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { DEFAULT_NATIVE_ADDRESS, DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/evm/rpc'
 import type { PortfolioChainBalance } from 'uniswap/src/features/dataApi/types'
@@ -35,7 +36,7 @@ function pnlLookupKeyFromChainBreakdown(chain: { tokenAddress: string; chainId: 
  * Values are always the multichain aggregate, not per-leg PnL.
  */
 function registerAggregatedJoinIndexForGroup(
-  group: GetWalletTokensProfitLossResponse['multichainTokenProfitLoss'][number],
+  group: PlainMessage<GetWalletTokensProfitLossResponse>['multichainTokenProfitLoss'][number],
   joinIndex: Map<string, TokenPnlSnapshot>,
 ): void {
   const aggregated = group.aggregated
@@ -65,7 +66,9 @@ function registerAggregatedJoinIndexForGroup(
   )
 }
 
-export function buildPnlLookupsFromProfitLoss(tokenProfitLossData: GetWalletTokensProfitLossResponse | undefined): {
+export function buildPnlLookupsFromProfitLoss(
+  tokenProfitLossData: PlainMessage<GetWalletTokensProfitLossResponse> | undefined,
+): {
   perChainPnlLookup: Map<string, TokenPnlSnapshot>
   aggregatedJoinByLegKey: Map<string, TokenPnlSnapshot>
 } {

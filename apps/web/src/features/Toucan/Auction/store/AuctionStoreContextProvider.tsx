@@ -24,7 +24,7 @@ function AuctionStoreProviderInner({ children }: PropsWithChildren) {
     auctionAddress: state.auctionAddress,
   }))
 
-  // Load auction details from API and enrich with token info (fetched once, not polled)
+  // Load auction details from API and enrich with token info (polled at the checkpoint cadence)
   useLoadAuctionDetails(chainId, auctionAddress)
 
   // Load checkpoint data with polling (clearing price, graduation progress, etc.)
@@ -61,9 +61,11 @@ function AuctionStoreProviderInner({ children }: PropsWithChildren) {
   // Use chainId from URL params (available immediately) for initial block fetch,
   // not chainIdFromStore (which requires API response) to avoid race condition
   // where progressState is NOT_STARTED while timestamps show "X ago"
+  const startBlock = useAuctionStore((state) => state.auctionDetails?.startBlock)
+  const startBlockNum = startBlock ? Number(startBlock) : undefined
   const endBlock = useAuctionStore((state) => state.auctionDetails?.endBlock)
   const endBlockNum = endBlock ? Number(endBlock) : undefined
-  useAuctionBlockPolling(chainId, endBlockNum)
+  useAuctionBlockPolling({ chainId, startBlock: startBlockNum, endBlock: endBlockNum })
 
   return children
 }

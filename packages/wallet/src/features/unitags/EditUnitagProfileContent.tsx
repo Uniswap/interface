@@ -59,7 +59,7 @@ export function EditUnitagProfileContent({
         stickyComponent={
           <Button
             loading={isSaving}
-            isDisabled={!profileMetadataEdited}
+            disabled={!profileMetadataEdited}
             mt="$spacing12"
             mx={isExtensionApp ? undefined : '$spacing24'}
             size="large"

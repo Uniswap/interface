@@ -1,22 +1,28 @@
-import type { MultichainToken } from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import type { SparklineMap } from '~/appGraphql/data/types'
 import type { PricePoint } from '~/appGraphql/data/util'
 
 /**
- * Builds a sparklines map from multichain tokens (multichainId -> priceHistory).
- * One entry per multichain token; no sparkline data for subrows.
+ * Builds a sparklines map (multichainId -> priceHistory) for the given tokens from the
+ * priceHistoryByMultichainId side-channel produced alongside them (see
+ * RankedMultichainTokensResult). Filters that side-channel down to the tokens currently on
+ * screen (one entry per multichain token; no sparkline data for subrows).
  */
-export function buildSparklinesFromMultichain(tokens: MultichainToken[]): SparklineMap {
+export function buildSparklinesFromMultichain(
+  tokens: RankedMultichainToken[],
+  priceHistoryByMultichainId: Partial<Record<string, PricePoint[]>>,
+): SparklineMap {
   const map: SparklineMap = {}
   for (const token of tokens) {
-    if (!token.multichainId) {
+    const multichainId = token.multichainToken?.multichainId
+    if (!multichainId) {
       continue
     }
-    const history = token.stats?.priceHistory1d
+    const history = priceHistoryByMultichainId[multichainId]
     if (!history?.length) {
       continue
     }
-    map[token.multichainId] = history.map((p): PricePoint => ({ timestamp: Number(p.timestamp), value: p.value }))
+    map[multichainId] = history
   }
   return map
 }

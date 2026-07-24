@@ -5,19 +5,20 @@ import { ShieldCheck } from 'ui/src/components/icons/ShieldCheck'
 import { UniswapX } from 'ui/src/components/icons/UniswapX'
 import { RoutingDiagram } from 'uniswap/src/components/RoutingDiagram/RoutingDiagram'
 import { TransactionDetailsTooltip as Tooltip } from 'uniswap/src/components/TransactionDetailsTooltip'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
+import type { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { useRoutingEntries, useRoutingProvider } from 'uniswap/src/utils/routingDiagram/routingRegistry'
 
-export function BestRouteTooltip(): JSX.Element | null {
+// Trade comes in as a prop rather than from useSwapTxStore: that store suppresses the trade
+// when no wallet is connected, which left the tooltip empty for logged-out users.
+export function BestRouteTooltip({ trade }: { trade: Trade }): JSX.Element | null {
   const { t } = useTranslation()
-  const trade = useSwapTxStore((s) => s.trade)
 
-  const routingProvider = useRoutingProvider({ routing: trade?.routing })
+  const routingProvider = useRoutingProvider({ routing: trade.routing })
 
   const routes = useRoutingEntries({ trade })
 
-  if (!trade || !routes || !routingProvider) {
+  if (!routes || routes.length === 0 || !routingProvider) {
     return null
   }
 
@@ -45,7 +46,7 @@ export function BestRouteTooltip(): JSX.Element | null {
       <Tooltip.Separator />
       {routingProvider.getDescription && (
         <Tooltip.Description
-          learnMoreUrl={uniswapUrls.helpArticleUrls.routingSettings}
+          learnMoreUrl={UniswapHelpUrls.articles.routingSettings}
           text={routingProvider.getDescription(t)}
         />
       )}
@@ -72,7 +73,7 @@ export function BestRouteUniswapXTooltip(): JSX.Element {
         </Tooltip.Row>
       </Tooltip.Content>
       <Tooltip.Description
-        learnMoreUrl={uniswapUrls.helpArticleUrls.uniswapXInfo}
+        learnMoreUrl={UniswapHelpUrls.articles.uniswapXInfo}
         text={t('routing.aggregateLiquidity.uniswapx')}
       />
     </Tooltip.Outer>

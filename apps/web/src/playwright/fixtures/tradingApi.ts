@@ -1,7 +1,8 @@
 /* oxlint-disable react-hooks/rules-of-hooks -- Playwright fixtures use `use()` which is not a React hook */
 // oxlint-disable-next-line no-restricted-imports -- Trading API fixtures need direct Playwright imports
 import { test as base, type Page, type Route } from '@playwright/test'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { TRADING_API_PATHS, V1_TRADING_API_PATHS } from '@universe/api'
+import { getUniswapServiceUrls } from '~/config'
 import { Mocks } from '~/playwright/mocks/mocks'
 
 const DEFAULT_TEST_GAS_LIMIT = '20000000'
@@ -67,7 +68,7 @@ export async function stubTradingApiEndpoint({
       }
 
       // Set a high gas limit to avoid OutOfGas
-      if (endpoint === uniswapUrls.tradingApiPaths.swap) {
+      if (endpoint === V1_TRADING_API_PATHS.swap) {
         responseJson.swap.gasLimit = DEFAULT_TEST_GAS_LIMIT
       }
 
@@ -88,19 +89,25 @@ export async function stubTradingApiEndpoint({
     }
   }
 
-  // Match the exact endpoint path, optionally followed by query params
-  // Avoids matching longer paths (e.g., /v1/swap should not match /v1/swappable_tokens or /v1/swaps)
-  const escapedUrl = `${uniswapUrls.tradingApiUrl}${endpoint}`.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  // The entry gateway serves trading at unversioned paths, so requests no longer carry the `/v1`
+  // prefix. Callers still pass the versioned constant; strip the version segment for matching.
+  // Match the exact endpoint path, optionally followed by query params (e.g. /swap must not
+  // match /swappable_tokens or /swaps).
+  const unversionedEndpoint = endpoint.replace(/^\/v1(?=\/)/, '')
+  const escapedUrl = `${getUniswapServiceUrls().tradingApiUrl}${unversionedEndpoint}`.replace(
+    /[.*+?^${}()|[\]\\]/g,
+    '\\$&',
+  )
   // oxlint-disable-next-line security/detect-non-literal-regexp -- escapedUrl is sanitized via regex escaping
   await page.route(new RegExp(`^${escapedUrl}(\\?.*)?$`), handler)
 }
 
 /**
- * Mocks the /v1/swap endpoint with a static mock response
+ * Mocks the /swap endpoint with a static mock response
  * Use this instead of stubTradingApiEndpoint when you need to avoid calling the real API
  */
 export async function mockTradingApiSwapResponse({ page }: { page: Page }) {
-  await page.route(`**/${uniswapUrls.tradingApiPaths.swap}`, async (route) => {
+  await page.route(`**/${TRADING_API_PATHS.swap}`, async (route) => {
     await route.fulfill({ path: Mocks.TradingApi.swap })
   })
 }
@@ -111,7 +118,7 @@ type TradingApiFixture = {
 
 export const test = base.extend<TradingApiFixture>({
   // Intercept tx polling requests to trading api and succeed
-  // https://trading-api-labs.interface.gateway.uniswap.org/v1/swaps
+  // https://entry-gateway.backend-staging.api.uniswap.org/swaps
   // {
   //     "requestId": "1b0bef68-a804-4532-b956-781bf9856229",
   //     "swaps": [
@@ -126,7 +133,7 @@ export const test = base.extend<TradingApiFixture>({
     async ({ page }, use) => {
       try {
         await page.route(
-          `${uniswapUrls.tradingApiUrl}${uniswapUrls.tradingApiPaths.swaps}?txHashes=*`,
+          `${getUniswapServiceUrls().tradingApiUrl}/${TRADING_API_PATHS.swaps}?txHashes=*`,
           async (route) => {
             try {
               const response = await route.fetch()

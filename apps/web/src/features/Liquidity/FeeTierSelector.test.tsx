@@ -90,6 +90,36 @@ describe('FeeTierSelector', () => {
     })
   })
 
+  describe('read-only mode', () => {
+    it('should show the selected fee with no expand button (e.g. fixed 0.3% for v2)', () => {
+      const { queryByText, queryByRole } = render(
+        <FeeTierSelector
+          selectedFee={staticFeeTiers[2].value}
+          onFeeSelect={noopSelect}
+          feeTiers={[]}
+          readOnly={true}
+        />,
+      )
+
+      expect(queryByText(/0.30?%/)).toBeInTheDocument()
+      expect(queryByRole('button')).not.toBeInTheDocument()
+    })
+
+    it('should not render fee tier options even when fee tiers are provided', () => {
+      const { queryByText } = render(
+        <FeeTierSelector
+          selectedFee={staticFeeTiers[2].value}
+          onFeeSelect={noopSelect}
+          feeTiers={staticFeeTiers}
+          readOnly={true}
+          isExpanded={true}
+        />,
+      )
+
+      expect(queryByText('Best for most pairs')).not.toBeInTheDocument()
+    })
+  })
+
   describe('TVL display', () => {
     it('should not show TVL labels when all fee tiers have zero TVL', () => {
       const zeroTvlTiers = staticFeeTiers.map((tier) => ({ ...tier, tvl: '0', selectionPercent: undefined }))

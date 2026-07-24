@@ -1,0 +1,66 @@
+diff --git a/src/components/bottomSheet/BottomSheet.tsx b/src/components/bottomSheet/BottomSheet.tsx
+index 4ff4142..b8285da 100644
+--- a/src/components/bottomSheet/BottomSheet.tsx
++++ b/src/components/bottomSheet/BottomSheet.tsx
+@@ -1783,6 +1783,32 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
+ 
+       handleSnapToIndex(_providedIndex);
+     }, [animateOnMount, _providedIndex, didAnimateOnMount, handleSnapToIndex]);
++
++    /**
++     * Mount-animation watchdog. On Reanimated 4, reactions/derived values can miss
++     * `.modify` updates to the layout state, so the detents/isLayoutCalculated chain
++     * never fires OnSnapPointChange and the sheet stays parked off screen with its
++     * backdrop up. The values themselves are correct (`.modify` does update them) —
++     * only the notification is lost — so re-assigning the layout state as a whole
++     * value re-fires every dependent. Only runs while the mount animation is pending.
++     */
++    // eslint-disable-next-line react-hooks/exhaustive-deps
++    useEffect(() => {
++      if (!animateOnMount) {
++        return undefined;
++      }
++      let attempts = 0;
++      const interval = setInterval(() => {
++        attempts += 1;
++        if (didAnimateOnMount.get() || attempts > 10) {
++          clearInterval(interval);
++          return;
++        }
++        animatedLayoutState.set(Object.assign({}, animatedLayoutState.get()));
++      }, 100);
++      return () => clearInterval(interval);
++      // eslint-disable-next-line react-hooks/exhaustive-deps -- mount-only watchdog
++    }, []);
+     //#endregion
+ 
+     // render
+diff --git a/src/components/bottomSheetHostingContainer/BottomSheetHostingContainer.tsx b/src/components/bottomSheetHostingContainer/BottomSheetHostingContainer.tsx
+index 879061d..6d8a540 100644
+--- a/src/components/bottomSheetHostingContainer/BottomSheetHostingContainer.tsx
++++ b/src/components/bottomSheetHostingContainer/BottomSheetHostingContainer.tsx
+@@ -8,6 +8,7 @@ import {
+   View,
+   type ViewStyle,
+ } from 'react-native';
++import { INITIAL_LAYOUT_VALUE } from '../../constants';
+ import { print } from '../../utilities';
+ import { styles } from './styles';
+ import type { BottomSheetHostingContainerProps } from './types';
+@@ -61,6 +62,16 @@ function BottomSheetHostingContainerComponent({
+         layoutState.modify(state => {
+           'worklet';
+           state.rawContainerHeight = height;
++          // `useAnimatedLayout` mirrors `rawContainerHeight` into `containerHeight`
++          // through a `useAnimatedReaction`. On Reanimated 4 that reaction can miss
++          // the initial `INITIAL_LAYOUT_VALUE` -> height transition (the handler does
++          // not fire for the first `modify`), leaving `containerHeight` at the
++          // sentinel so snap points never normalize and the sheet stays off screen.
++          // Seed a non-sentinel value here so layout can complete; the reaction still
++          // refines it (e.g. modal vertical inset) whenever it runs.
++          if (state.containerHeight === INITIAL_LAYOUT_VALUE) {
++            state.containerHeight = height;
++          }
+           return state;
+         });
+       }

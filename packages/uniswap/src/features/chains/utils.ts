@@ -1,6 +1,7 @@
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
+import { AppId, getConfig } from '@universe/config'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { ALL_CHAIN_IDS, getChainInfo, ORDERED_CHAINS } from 'uniswap/src/features/chains/chainInfo'
 import { EnabledChainsInfo, GqlChainId, NetworkLayer, UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -71,6 +72,8 @@ export function fromGraphQLChain(chain: GraphQLApi.Chain | string | undefined): 
       return UniverseChainId.Mainnet
     case GraphQLApi.Chain.Arbitrum:
       return UniverseChainId.ArbitrumOne
+    case GraphQLApi.Chain.Arc:
+      return UniverseChainId.Arc
     case GraphQLApi.Chain.Avalanche:
       return UniverseChainId.Avalanche
     case GraphQLApi.Chain.Base:
@@ -91,6 +94,8 @@ export function fromGraphQLChain(chain: GraphQLApi.Chain | string | undefined): 
       return UniverseChainId.Optimism
     case GraphQLApi.Chain.Polygon:
       return UniverseChainId.Polygon
+    case GraphQLApi.Chain.Robinhood:
+      return UniverseChainId.Robinhood
     case GraphQLApi.Chain.EthereumSepolia:
       return UniverseChainId.Sepolia
     case GraphQLApi.Chain.Unichain:
@@ -126,6 +131,8 @@ export function fromUniswapWebAppLink(network: string | null): UniverseChainId {
       return UniverseChainId.Mainnet
     case GraphQLApi.Chain.Arbitrum.toLowerCase():
       return UniverseChainId.ArbitrumOne
+    case GraphQLApi.Chain.Arc.toLowerCase():
+      return UniverseChainId.Arc
     case GraphQLApi.Chain.Avalanche.toLowerCase():
       return UniverseChainId.Avalanche
     case GraphQLApi.Chain.Base.toLowerCase():
@@ -146,6 +153,8 @@ export function fromUniswapWebAppLink(network: string | null): UniverseChainId {
       return UniverseChainId.Optimism
     case GraphQLApi.Chain.Polygon.toLowerCase():
       return UniverseChainId.Polygon
+    case GraphQLApi.Chain.Robinhood.toLowerCase():
+      return UniverseChainId.Robinhood
     case GraphQLApi.Chain.EthereumSepolia.toLowerCase():
       return UniverseChainId.Sepolia
     case GraphQLApi.Chain.Unichain.toLowerCase():
@@ -172,6 +181,7 @@ export function fromUniswapWebAppLink(network: string | null): UniverseChainId {
 
 const CHAIN_ID_TO_UNISWAP_WEB_APP_LINK: Partial<Record<UniverseChainId, string>> = {
   [UniverseChainId.ArbitrumOne]: GraphQLApi.Chain.Arbitrum.toLowerCase(),
+  [UniverseChainId.Arc]: GraphQLApi.Chain.Arc.toLowerCase(),
   [UniverseChainId.Avalanche]: GraphQLApi.Chain.Avalanche.toLowerCase(),
   [UniverseChainId.Base]: GraphQLApi.Chain.Base.toLowerCase(),
   [UniverseChainId.Blast]: GraphQLApi.Chain.Blast.toLowerCase(),
@@ -183,6 +193,7 @@ const CHAIN_ID_TO_UNISWAP_WEB_APP_LINK: Partial<Record<UniverseChainId, string>>
   [UniverseChainId.Monad]: GraphQLApi.Chain.Monad.toLowerCase(),
   [UniverseChainId.Optimism]: GraphQLApi.Chain.Optimism.toLowerCase(),
   [UniverseChainId.Polygon]: GraphQLApi.Chain.Polygon.toLowerCase(),
+  [UniverseChainId.Robinhood]: GraphQLApi.Chain.Robinhood.toLowerCase(),
   [UniverseChainId.Sepolia]: GraphQLApi.Chain.EthereumSepolia.toLowerCase(),
   [UniverseChainId.Soneium]: GraphQLApi.Chain.Soneium.toLowerCase(),
   [UniverseChainId.Tempo]: GraphQLApi.Chain.Tempo.toLowerCase(),
@@ -212,6 +223,14 @@ export function filterChainIdsByFeatureFlag(featureFlaggedChainIds: {
   })
 }
 
+export function isChainSupportedOnApp(chainId: UniverseChainId, appId: AppId): boolean {
+  return getChainInfo(chainId).supportedApps.includes(appId)
+}
+
+export function filterChainIdsByAppSupport(chainIds: UniverseChainId[], appId: AppId): UniverseChainId[] {
+  return chainIds.filter((chainId) => isChainSupportedOnApp(chainId, appId))
+}
+
 /**
  * Filters chain IDs by platform (EVM or SVM)
  * @param chainIds Array of chain IDs to filter (as numbers)
@@ -237,13 +256,21 @@ export function getEnabledChains({
   includeTestnets = false,
   isTestnetModeEnabled,
   featureFlaggedChainIds,
+  appId = getConfig().appId,
 }: {
   platform?: Platform
   isTestnetModeEnabled: boolean
   featureFlaggedChainIds: UniverseChainId[]
   includeTestnets?: boolean
+  /** Override for tests; defaults to the running app's AppId. */
+  appId?: AppId
 }): EnabledChainsInfo {
   const enabledChainInfos = ORDERED_CHAINS.filter((chainInfo) => {
+    // Filter by app support (structural — not a feature flag concern)
+    if (!chainInfo.supportedApps.includes(appId)) {
+      return false
+    }
+
     // Filter by platform
     if (platform !== undefined && platform !== chainInfo.platform) {
       return false

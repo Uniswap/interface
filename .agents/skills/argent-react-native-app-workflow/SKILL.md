@@ -151,6 +151,34 @@ Once you discover the correct build/run workflow for a project, **save it to pro
 
 For full simulator setup workflow, refer to the `argent-ios-simulator-setup` skill.
 
+### 3.6 Verifying Local Release-Variant Builds — Stale-Code Gotchas
+
+**Applies to Android local release-variant builds** (`bun mobile android:<flavor>:release:local`, i.e. `apps/mobile/scripts/runAndroidLocal.sh`). Release variants **embed the JS bundle in the APK**, so a verify-on-device loop can silently test **old code** through **two independent caching layers**. Each makes a change look like it had "no effect" when it was never in the installed APK. **Both must be defeated — disabling one alone is not enough.** `runAndroidLocal.sh` handles both by default; this section is for recognizing the symptoms if a build looks stale or you build with another command.
+
+#### Gotcha 1 — EAS build cache reinstalls a stale APK
+
+`apps/mobile/app.config.ts` sets `experiments.buildCacheProvider: 'eas'`. `expo run:android` computes a **native** fingerprint and, on a match, downloads + installs a cached APK instead of building. A **JS-only** change does not move the native fingerprint, so for a release variant it reinstalls an APK with old JS.
+
+- **Symptom (logs):** `Searching builds with matching fingerprint on EAS servers` → `Successfully downloaded cached build` → install path under `…/eas-build-run-cache/….apk`.
+- **Detection:** you changed only JS/TS, yet the install line points at an `eas-build-run-cache` path.
+- **Fix:** build via `runAndroidLocal.sh` — it exports `EXPO_LOCAL_NO_BUILD_CACHE=1`, which gates the provider off in `app.config.ts` so a real build runs. Confirm `› Building app...` in the logs (not "downloaded cached build"). If invoking `expo run:android` directly, export `EXPO_LOCAL_NO_BUILD_CACHE=1` yourself.
+
+#### Gotcha 2 — gradle `createBundle<Variant>JsAndAssets` stays UP-TO-DATE
+
+Even with the EAS cache off, gradle's incremental check misses changes to monorepo JS sources (e.g. `packages/uniswap/**`), so the bundle task stays `UP-TO-DATE` and the APK embeds the **previously-bundled** `index.android.bundle`.
+
+- **Symptom (logs):** `> Task :app:createBundleDevReleaseJsAndAssets UP-TO-DATE`.
+- **Detection:** compare the embedded bundle mtime to your edit time:
+  ```bash
+  ls -la apps/mobile/android/app/build/generated/assets/createBundle<Variant>JsAndAssets/index.android.bundle
+  ```
+- **Fix:** `runAndroidLocal.sh` deletes the bundle task outputs by default (pass `--no-clean-js` to skip for native-only rebuilds). To clear them manually, remove:
+  - `apps/mobile/android/app/build/generated/assets/createBundle<Variant>JsAndAssets`
+  - `apps/mobile/android/app/build/generated/res/createBundle<Variant>JsAndAssets`
+  - `apps/mobile/android/app/build/intermediates/assets/<variant>`
+
+  A successful regen logs `> Task :app:createBundle<Variant>JsAndAssets` (no `UP-TO-DATE`) and `Writing bundle output to …`. `<Variant>` is the capitalized gradle variant (`DevRelease`, `BetaRelease`, `ProdRelease`); `<variant>` is the camelCase form (`devRelease`, …).
+
 ---
 
 ## 4. Runtime Problems in the App

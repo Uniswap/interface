@@ -52,6 +52,8 @@ interface BasePositionInfo {
   totalValueUsd?: number
   apr?: number
   isHidden?: boolean
+  /** Per-pool protocol fee served by data-api (`PoolPosition.protocolFee`), integer pips. Unset = unavailable. */
+  protocolFee?: number
 }
 
 export type V2PairInfo = BasePositionInfo & {

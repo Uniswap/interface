@@ -1,7 +1,7 @@
 import React from 'react'
 import { ReactTestInstance } from 'react-test-renderer'
 import { LongText } from 'src/components/text/LongText'
-import { fireEvent, render, within } from 'src/test/test-utils'
+import { fireEvent, getNearestFiberProp, render, within } from 'src/test/test-utils'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const SHORT_TEXT = 'Short text'
@@ -31,12 +31,12 @@ describe(LongText, () => {
       const tree = render(<LongText initialDisplayedLines={3} text={SHORT_TEXT} />)
 
       const textInstance = tree.getByText(SHORT_TEXT)
-      expect(textInstance.props['numberOfLines']).toBeUndefined()
+      expect(getNearestFiberProp(textInstance, 'numberOfLines')).toBeUndefined()
 
       fireTextLayoutEvent(textInstance, 1) // Assume Short text is one line
 
       // the number of lines will be the same as the initialDisplayedLines
-      expect(textInstance.props['numberOfLines']).toBe(3)
+      expect(getNearestFiberProp(textInstance, 'numberOfLines')).toBe(3)
     })
 
     it('does not display the "read more" button', () => {
@@ -57,7 +57,7 @@ describe(LongText, () => {
         const textInstance = tree.getByText(LONG_TEXT)
         fireTextLayoutEvent(textInstance, 5) // Assume Some very long text is five lines
 
-        expect(textInstance.props['numberOfLines']).toBe(3)
+        expect(getNearestFiberProp(textInstance, 'numberOfLines')).toBe(3)
       })
 
       it('displays the "read more" button', () => {
@@ -67,7 +67,7 @@ describe(LongText, () => {
         const readMoreButton = tree.queryByTestId(TestID.ReadMoreButton)
 
         expect(readMoreButton).toBeTruthy()
-        expect(within(readMoreButton!).getByText('Read more')).toBeTruthy()
+        expect(within(readMoreButton!).getByText('common.longText.button.more')).toBeTruthy()
       })
     })
 
@@ -78,12 +78,12 @@ describe(LongText, () => {
         const textInstance = tree.getByText(LONG_TEXT)
         fireTextLayoutEvent(textInstance, 5) // Assume Some very long text is five lines
 
-        expect(textInstance.props['numberOfLines']).toBe(3)
+        expect(getNearestFiberProp(textInstance, 'numberOfLines')).toBe(3)
 
         const readMoreButton = tree.getByTestId(TestID.ReadMoreButton)
         fireEvent.press(readMoreButton)
 
-        expect(textInstance.props['numberOfLines']).toBeUndefined()
+        expect(getNearestFiberProp(textInstance, 'numberOfLines')).toBeUndefined()
       })
 
       it('displays the "read less" button', () => {
@@ -93,7 +93,7 @@ describe(LongText, () => {
         const readMoreButton = tree.getByTestId(TestID.ReadMoreButton)
         fireEvent.press(readMoreButton)
 
-        expect(within(readMoreButton).getByText('Read less')).toBeTruthy()
+        expect(within(readMoreButton).getByText('common.longText.button.less')).toBeTruthy()
       })
     })
 
@@ -104,15 +104,15 @@ describe(LongText, () => {
       const readMoreButton = tree.getByTestId(TestID.ReadMoreButton)
       fireEvent.press(readMoreButton) // expand
 
-      expect(tree.getByText(LONG_TEXT).props['numberOfLines']).toBeUndefined()
+      expect(getNearestFiberProp(tree.getByText(LONG_TEXT), 'numberOfLines')).toBeUndefined()
 
       fireEvent.press(readMoreButton) // collapse
 
-      expect(tree.getByText(LONG_TEXT).props['numberOfLines']).toBe(3)
+      expect(getNearestFiberProp(tree.getByText(LONG_TEXT), 'numberOfLines')).toBe(3)
 
       fireEvent.press(readMoreButton) // expand
 
-      expect(tree.getByText(LONG_TEXT).props['numberOfLines']).toBeUndefined()
+      expect(getNearestFiberProp(tree.getByText(LONG_TEXT), 'numberOfLines')).toBeUndefined()
     })
   })
 })

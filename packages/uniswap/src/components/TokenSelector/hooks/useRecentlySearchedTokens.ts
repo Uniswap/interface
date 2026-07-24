@@ -13,9 +13,16 @@ import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/curren
 
 export function useRecentlySearchedTokens(
   chainFilter: UniverseChainId | null,
-  numberOfResults = MAX_RECENT_SEARCH_RESULTS,
+  {
+    chainIds,
+    numberOfResults = MAX_RECENT_SEARCH_RESULTS,
+  }: {
+    chainIds?: UniverseChainId[]
+    numberOfResults?: number
+  } = {},
 ): TokenOption[] {
   const searchHistory = useSelector(selectSearchHistory)
+  const chainIdSet = useMemo(() => (chainIds ? new Set(chainIds) : undefined), [chainIds])
 
   const searchHistoryCurrencyInfos = useSearchHistoryToCurrencyInfos(
     searchHistory
@@ -24,7 +31,9 @@ export function useRecentlySearchedTokens(
       )
       // Filter out invalid chainIds to prevent crashes from corrupted search history data
       .filter((searchResult) => isUniverseChainId(searchResult.chainId))
-      .filter((searchResult) => (chainFilter ? searchResult.chainId === chainFilter : true))
+      .filter((searchResult) =>
+        chainFilter ? searchResult.chainId === chainFilter : (chainIdSet?.has(searchResult.chainId) ?? true),
+      )
       .slice(0, numberOfResults),
   )
 

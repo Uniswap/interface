@@ -4,6 +4,8 @@
 //
 //  Created by Chris Lee on 5/9/2025.
 //
+import React
+
 @objc(PrivateKeyDisplayManager)
 class PrivateKeyDisplayManager: RCTViewManager {
 

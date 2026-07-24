@@ -38,6 +38,10 @@ type V3LikeLiquidityInput = {
  */
 function liquidityForIndependentAmountV3Like(input: V3LikeLiquidityInput): JSBI {
   const { pool, tickLower, tickUpper, independentIsToken0, amount } = input
+  if (tickLower >= tickUpper) {
+    // Degenerate range: maxLiquidityForAmounts would divide by zero
+    return ZERO
+  }
   const sqrtRatioX96 = pool.sqrtRatioX96
   const sqrtRatioA = TickMath.getSqrtRatioAtTick(tickLower)
   const sqrtRatioB = TickMath.getSqrtRatioAtTick(tickUpper)

@@ -8,7 +8,7 @@
 		<string>com.apple.widgetkit-extension</string>
 	</dict>
 	<key>RCTNewArchEnabled</key>
-	<false/>
+	<true/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Basel-Grotesk-Book.otf</string>

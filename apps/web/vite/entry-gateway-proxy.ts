@@ -1,10 +1,13 @@
 import process from 'process'
 import type { ProxyOptions } from 'vite'
-
-// Entry Gateway API URLs
-const DEV_ENTRY_GATEWAY_API_BASE_URL = 'https://entry-gateway.backend-dev.api.uniswap.org'
-const STAGING_ENTRY_GATEWAY_API_BASE_URL = 'https://entry-gateway.backend-staging.api.uniswap.org'
-const PROD_ENTRY_GATEWAY_API_BASE_URL = 'https://entry-gateway.backend-prod.api.uniswap.org'
+// Deep import of the zero-dependency canonical module (not the @universe/api barrel):
+// this file runs at vite config load time, where vite's esbuild bundler inlines
+// TS-resolving imports — verified to load fine in plain node via loadConfigFromFile.
+import {
+  DEV_ENTRY_GATEWAY_API_BASE_URL,
+  PROD_ENTRY_GATEWAY_API_BASE_URL,
+  STAGING_ENTRY_GATEWAY_API_BASE_URL,
+} from '@universe/api/src/clients/base/entryGatewayUrls'
 
 const ENTRY_GATEWAY_PROXY_PATH = '/entry-gateway'
 
@@ -12,13 +15,14 @@ const ENTRY_GATEWAY_PROXY_PATH = '/entry-gateway'
  * Returns the appropriate Entry Gateway API URL for the default proxy target.
  * Duplicated from @universe/api to avoid pulling app config into vite.config.
  */
-function getDefaultProxyTarget(): string {
-  if (process.env.ENTRY_GATEWAY_API_URL_OVERRIDE) {
-    return process.env.ENTRY_GATEWAY_API_URL_OVERRIDE
+function getDefaultProxyTarget(env: Record<string, string>): string {
+  const override = process.env.ENTRY_GATEWAY_API_URL_OVERRIDE || env.ENTRY_GATEWAY_API_URL_OVERRIDE
+  if (override) {
+    return override
   }
 
-  const isDev = process.env.NODE_ENV === 'development'
-  const isStaging = process.env.ENVIRONMENT === 'staging'
+  const isDev = (process.env.NODE_ENV || env.NODE_ENV) === 'development'
+  const isStaging = (process.env.ENVIRONMENT || env.ENVIRONMENT) === 'staging'
 
   if (isDev || isStaging) {
     return STAGING_ENTRY_GATEWAY_API_BASE_URL
@@ -31,6 +35,10 @@ interface CreateProxyContext {
   getLogger: () => {
     log: typeof console.log
   }
+  /**
+   * Parsed env values from Vite config
+   */
+  env: Record<string, string>
 }
 
 /**
@@ -60,7 +68,12 @@ export function createEntryGatewayProxies(ctx: CreateProxyContext): Record<strin
       pathPrefix: `${ENTRY_GATEWAY_PROXY_PATH}/prod`,
     }),
     [ENTRY_GATEWAY_PROXY_PATH]: createEntryGatewayProxy(ctx, {
-      target: process.env.BACKEND_URL || process.env.VITE_BACKEND_URL || getDefaultProxyTarget(),
+      target:
+        process.env.BACKEND_URL ||
+        process.env.VITE_BACKEND_URL ||
+        ctx.env.BACKEND_URL ||
+        ctx.env.VITE_BACKEND_URL ||
+        getDefaultProxyTarget(ctx.env),
       pathPrefix: ENTRY_GATEWAY_PROXY_PATH,
     }),
   }

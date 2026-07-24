@@ -1,7 +1,7 @@
 import { OnChainTransaction } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { TradingApi } from '@universe/api'
-import { parseRestApproveTransaction } from 'uniswap/src/features/activity/parse/parseApproveTransaction'
-import { parseRestSwapTransaction } from 'uniswap/src/features/activity/parse/parseTradeTransaction'
+import { parseApproveTransaction } from 'uniswap/src/features/activity/parse/parseApproveTransaction'
+import { parseSwapTransaction } from 'uniswap/src/features/activity/parse/parseTradeTransaction'
 import { hasTwoTokenTransfersWithMintOrBurn } from 'uniswap/src/features/activity/utils/tokenTransfers'
 import { ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import {
@@ -31,7 +31,7 @@ export interface ParsedExecuteTransaction {
  *
  * Prefer displaying the swap for batched swap+approval txs; otherwise, show approval as standalone.
  */
-export function parseRestExecuteTransaction(transaction: OnChainTransaction): ParsedExecuteTransaction | undefined {
+export function parseExecuteTransaction(transaction: OnChainTransaction): ParsedExecuteTransaction | undefined {
   const hasTransfers = transaction.transfers.length > 0
   const hasApprovals = transaction.approvals.length > 0
 
@@ -42,7 +42,7 @@ export function parseRestExecuteTransaction(transaction: OnChainTransaction): Pa
   // Earn vault actions are emitted with explicit VAULT_* labels by the data-api.
   // For generic EXECUTE rows, avoid treating a two-transfer mint/burn receipt as a swap.
   if (hasTransfers && !hasTwoTokenTransfersWithMintOrBurn(transaction)) {
-    const swapInfo = parseRestSwapTransaction(transaction)
+    const swapInfo = parseSwapTransaction(transaction)
     if (swapInfo) {
       return { swapInfo }
     }
@@ -50,7 +50,7 @@ export function parseRestExecuteTransaction(transaction: OnChainTransaction): Pa
 
   // Parse approve if approvals exist
   if (hasApprovals) {
-    const approveInfo = parseRestApproveTransaction(transaction)
+    const approveInfo = parseApproveTransaction(transaction)
     if (approveInfo) {
       return { approveInfo }
     }

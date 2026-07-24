@@ -1,3 +1,4 @@
+import { PlainMessage } from '@bufbuild/protobuf'
 import {
   PairPosition,
   PoolPosition,
@@ -31,7 +32,7 @@ function getSDKPoolFromPoolPosition({
   token1,
   protocolVersion,
 }: {
-  pool?: PoolPosition
+  pool?: PlainMessage<PoolPosition>
   token0?: Token
   token1?: Token
   protocolVersion: ProtocolVersion.V3
@@ -43,7 +44,7 @@ function getSDKPoolFromPoolPosition({
   protocolVersion,
   hooks,
 }: {
-  pool?: PoolPosition
+  pool?: PlainMessage<PoolPosition>
   token0: Maybe<Currency>
   token1: Maybe<Currency>
   protocolVersion: ProtocolVersion.V4
@@ -57,14 +58,14 @@ function getSDKPoolFromPoolPosition({
   hooks,
 }:
   | {
-      pool?: PoolPosition
+      pool?: PlainMessage<PoolPosition>
       token0?: Token
       token1?: Token
       protocolVersion: ProtocolVersion.V3
       hooks?: undefined
     }
   | {
-      pool?: PoolPosition
+      pool?: PlainMessage<PoolPosition>
       token0: Maybe<Currency>
       token1: Maybe<Currency>
       protocolVersion: ProtocolVersion.V4
@@ -214,7 +215,7 @@ export function getSDKPoolFromPoolInformation({
   }
 }
 
-function parseRestToken<T extends Currency>(token: RestToken | undefined): T | undefined {
+function parseRestToken<T extends Currency>(token: PlainMessage<RestToken> | undefined): T | undefined {
   if (!token) {
     return undefined
   }
@@ -231,7 +232,7 @@ function getPairFromRest({
   token0,
   token1,
 }: {
-  pair?: PairPosition | RestPair
+  pair?: PlainMessage<PairPosition> | PlainMessage<RestPair>
   token0: Token
   token1: Token
 }): Pair | undefined {
@@ -249,7 +250,7 @@ function getPairFromRest({
  * @param position REST position with unknown version / fields.
  * @returns PositionInfo with the available fields parsed.
  */
-export function parseRestPosition(position?: RestPosition): PositionInfo | undefined {
+export function parseRestPosition(position?: PlainMessage<RestPosition>): PositionInfo | undefined {
   try {
     const positionPayload = position?.position
     if (!position || !positionPayload?.case) {
@@ -335,6 +336,7 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
         v4hook: undefined,
         owner: v3Position.owner,
         isHidden: position.isHidden,
+        protocolFee: v3Position.protocolFee,
       }
     } else {
       const v4PositionPayload = positionPayload.value
@@ -407,6 +409,7 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
         totalApr: v4Position.totalApr,
         unclaimedRewardsAmountUni: v4Position.unclaimedRewardsAmountUni,
         boostedApr: v4Position.boostedApr,
+        protocolFee: v4Position.protocolFee,
       }
     }
   } catch (e) {
@@ -416,7 +419,6 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
         function: 'parseRestPosition',
       },
       extra: {
-        // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
         ...position,
       },
     })

@@ -87,9 +87,53 @@ export function withUTCTimestamp<T extends { timestamp: number }>(entry: T): T &
   return { ...entry, time: entry.timestamp as UTCTimestamp }
 }
 
-/** Current time as lightweight-charts UTCTimestamp (seconds since epoch). */
+/** Current time as lightweight-charts UTCTimestamp (whole seconds since epoch). */
 export function getCurrentUTCTimestamp(): UTCTimestamp {
-  return (Date.now() / 1000) as UTCTimestamp
+  // lightweight-charts requires integer UTCTimestamps; Date.now() is millisecond-precision,
+  // so floor to whole seconds to avoid fractional times in the chart series.
+  return Math.floor(Date.now() / 1000) as UTCTimestamp
+}
+
+const CANDLESTICK_FALLBACK_THRESHOLD = 0.1
+
+/** Backend sometimes returns invalid OHLC data on some chains: a long run of 0-valued candles. Used to trigger a fallback to price history. */
+export function isZeroOhlcSeries(entries: { value: number }[]): boolean {
+  if (!entries.length) {
+    return true
+  }
+  const zeroCount = entries.filter((entry) => entry.value === 0).length
+  return zeroCount / entries.length > CANDLESTICK_FALLBACK_THRESHOLD
+}
+
+/**
+ * Appends (or merges into) a fresh current-value point so the series stays fresh and each time
+ * period ends with the same value. Returns a new array/entry rather than mutating in place, since
+ * callers may hold entries shared elsewhere (e.g. react-query's cached `select` output).
+ */
+export function appendCurrentValue<T extends { time: UTCTimestamp }>({
+  entries,
+  currentValue,
+  buildEntry,
+  withCurrentValue,
+}: {
+  entries: T[]
+  currentValue: number | undefined
+  buildEntry: (time: UTCTimestamp, value: number) => T
+  withCurrentValue: (entry: T, update: { time: UTCTimestamp; value: number }) => T
+}): T[] {
+  if (!currentValue || entries.length <= 1) {
+    return entries
+  }
+  const lastEntry = entries[entries.length - 1]
+  const secondToLastEntry = entries[entries.length - 2]
+  const granularity = lastEntry.time - secondToLastEntry.time
+
+  const time = getCurrentUTCTimestamp()
+  // If the current value falls within the last entry's time window, update it; otherwise append a new entry.
+  if (time - lastEntry.time < granularity) {
+    return [...entries.slice(0, -1), withCurrentValue(lastEntry, { time, value: currentValue })]
+  }
+  return [...entries, buildEntry(time, currentValue)]
 }
 
 /**

@@ -1,4 +1,4 @@
-import { createStore, Store } from '@reduxjs/toolkit'
+import { configureStore, Store } from '@reduxjs/toolkit'
 import { TradingApi } from '@universe/api'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
@@ -115,7 +115,7 @@ describe('transaction reducer', () => {
   let store: Store<TransactionsState>
 
   beforeEach(() => {
-    store = createStore(transactionReducer, initialTransactionsState)
+    store = configureStore({ reducer: transactionReducer, preloadedState: initialTransactionsState })
   })
 
   describe('addTransaction', () => {
@@ -394,7 +394,7 @@ describe('transaction reducer', () => {
         },
       }
 
-      store = createStore(transactionReducer, initialState)
+      store = configureStore({ reducer: transactionReducer, preloadedState: initialState })
       store.dispatch(interfaceClearAllTransactions({ chainId: UniverseChainId.Mainnet, address }))
 
       expect(store.getState()[address]?.[UniverseChainId.Mainnet]).toEqual({})
@@ -412,7 +412,7 @@ describe('transaction reducer', () => {
         },
       }
 
-      store = createStore(transactionReducer, initialState)
+      store = configureStore({ reducer: transactionReducer, preloadedState: initialState })
       try {
         store.dispatch(interfaceClearAllTransactions({ chainId: UniverseChainId.Optimism, address }))
       } catch (error) {
@@ -433,7 +433,7 @@ describe('transaction reducer', () => {
           },
         },
       }
-      store = createStore(transactionReducer, initialState)
+      store = configureStore({ reducer: transactionReducer, preloadedState: initialState })
       try {
         store.dispatch(interfaceClearAllTransactions({ chainId: UniverseChainId.Mainnet, address: nonExistentAddress }))
       } catch (error) {
@@ -458,7 +458,7 @@ describe('transaction reducer', () => {
         },
       }
 
-      store = createStore(transactionReducer, initialState)
+      store = configureStore({ reducer: transactionReducer, preloadedState: initialState })
       store.dispatch(
         checkedTransaction({
           chainId: UniverseChainId.Mainnet,
@@ -482,7 +482,7 @@ describe('transaction reducer', () => {
         },
       }
 
-      store = createStore(transactionReducer, initialState)
+      store = configureStore({ reducer: transactionReducer, preloadedState: initialState })
       store.dispatch(
         checkedTransaction({
           chainId: UniverseChainId.Mainnet,
@@ -506,7 +506,7 @@ describe('transaction reducer', () => {
         },
       }
 
-      store = createStore(transactionReducer, initialState)
+      store = configureStore({ reducer: transactionReducer, preloadedState: initialState })
       store.dispatch(
         checkedTransaction({
           chainId: UniverseChainId.Mainnet,
@@ -542,7 +542,7 @@ describe('transaction reducer', () => {
         },
       }
 
-      store = createStore(transactionReducer, initialState)
+      store = configureStore({ reducer: transactionReducer, preloadedState: initialState })
       expect(() => {
         store.dispatch(
           checkedTransaction({
@@ -568,7 +568,7 @@ describe('transaction reducer', () => {
         },
       }
 
-      store = createStore(transactionReducer, initialState)
+      store = configureStore({ reducer: transactionReducer, preloadedState: initialState })
       try {
         store.dispatch(
           checkedTransaction({
@@ -598,7 +598,7 @@ describe('transaction reducer', () => {
         },
       }
 
-      store = createStore(transactionReducer, initialState)
+      store = configureStore({ reducer: transactionReducer, preloadedState: initialState })
       store.dispatch(
         interfaceConfirmBridgeDeposit({
           chainId: UniverseChainId.Mainnet,
@@ -622,7 +622,7 @@ describe('transaction reducer', () => {
         },
       }
 
-      store = createStore(transactionReducer, initialState)
+      store = configureStore({ reducer: transactionReducer, preloadedState: initialState })
       try {
         store.dispatch(
           interfaceConfirmBridgeDeposit({
@@ -652,7 +652,7 @@ describe('transaction reducer', () => {
         },
       }
 
-      store = createStore(transactionReducer, initialState)
+      store = configureStore({ reducer: transactionReducer, preloadedState: initialState })
       try {
         store.dispatch(
           interfaceConfirmBridgeDeposit({
@@ -692,7 +692,7 @@ describe('transaction reducer', () => {
         inputCurrencyId: 'new',
       }
 
-      store = createStore(transactionReducer, initialState)
+      store = configureStore({ reducer: transactionReducer, preloadedState: initialState })
       store.dispatch(
         interfaceUpdateTransactionInfo({
           chainId: UniverseChainId.Mainnet,
@@ -720,7 +720,7 @@ describe('transaction reducer', () => {
         spender: '0x456',
       }
 
-      store = createStore(transactionReducer, initialState)
+      store = configureStore({ reducer: transactionReducer, preloadedState: initialState })
       try {
         store.dispatch(
           interfaceUpdateTransactionInfo({
@@ -755,7 +755,7 @@ describe('transaction reducer', () => {
         inputCurrencyId: 'new',
       }
 
-      store = createStore(transactionReducer, initialState)
+      store = configureStore({ reducer: transactionReducer, preloadedState: initialState })
       try {
         store.dispatch(
           interfaceUpdateTransactionInfo({
@@ -788,7 +788,7 @@ describe('transaction reducer', () => {
         inputCurrencyId: 'new',
       }
 
-      store = createStore(transactionReducer, initialState)
+      store = configureStore({ reducer: transactionReducer, preloadedState: initialState })
       try {
         store.dispatch(
           interfaceUpdateTransactionInfo({
@@ -821,7 +821,7 @@ describe('transaction reducer', () => {
         inputCurrencyId: 'new',
       }
 
-      store = createStore(transactionReducer, initialState)
+      store = configureStore({ reducer: transactionReducer, preloadedState: initialState })
       try {
         store.dispatch(
           interfaceUpdateTransactionInfo({
@@ -855,7 +855,7 @@ describe('transaction reducer', () => {
         },
       }
 
-      store = createStore(transactionReducer, initialState)
+      store = configureStore({ reducer: transactionReducer, preloadedState: initialState })
       store.dispatch(
         interfaceApplyTransactionHashToBatch({
           batchId: 'batch1',
@@ -879,7 +879,7 @@ describe('transaction reducer', () => {
         },
       }
 
-      store = createStore(transactionReducer, initialState)
+      store = configureStore({ reducer: transactionReducer, preloadedState: initialState })
       store.dispatch(
         interfaceApplyTransactionHashToBatch({
           batchId: 'nonexistent',
@@ -906,7 +906,7 @@ describe('transaction reducer', () => {
         },
       }
 
-      store = createStore(transactionReducer, initialState)
+      store = configureStore({ reducer: transactionReducer, preloadedState: initialState })
       store.dispatch(
         interfaceCancelTransaction({
           chainId: UniverseChainId.Mainnet,
@@ -936,7 +936,7 @@ describe('transaction reducer', () => {
           },
         },
       }
-      store = createStore(transactionReducer, initialState)
+      store = configureStore({ reducer: transactionReducer, preloadedState: initialState })
 
       try {
         store.dispatch(

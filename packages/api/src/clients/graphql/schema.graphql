@@ -186,6 +186,8 @@ enum Chain {
   XLAYER
   MEGAETH
   TEMPO
+  ROBINHOOD
+  ARC
   UNKNOWN_CHAIN
 }
 

@@ -2,16 +2,54 @@ import { GraphQLApi } from '@universe/api'
 import * as WebBrowser from 'expo-web-browser'
 import { colorsLight } from 'ui/src/theme'
 import { NATIVE_TOKEN_PLACEHOLDER } from 'uniswap/src/constants/addresses'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls, UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain, toUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
 import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { BACKEND_NATIVE_CHAIN_ADDRESS_STRING } from 'uniswap/src/features/search/utils'
+import type { EarnAnalyticsEntryPoint } from 'uniswap/src/features/telemetry/types'
 import { ServiceProviderInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyIdToChain, currencyIdToGraphQLAddress, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { canOpenURL, openURL } from 'uniswap/src/utils/link'
 import { logger } from 'utilities/src/logger/logger'
+
+export const TDP_MULTICHAIN_CHAIN_QUERY_VALUE = 'multichain'
+
+export enum TDPView {
+  Chain = 'chain',
+  Aggregate = 'aggregate',
+}
+
+/** Discriminant for {@link TdpChainSelection}. Values mirror `TDPChainSearchParam` (apps/web) for one vocabulary. */
+export enum TdpChainSelectionType {
+  Chain = 'chain', // a specific network's deployment
+  Multichain = 'multichain', // the all-networks (multichain) aggregate view
+}
+
+/**
+ * How the token-detail-page network selector should be initialized when navigating.
+ * Omit (pass `undefined`) to open the token's own chain via a path-only URL.
+ */
+export type TdpChainSelection =
+  | { type: TdpChainSelectionType.Chain; chainId: UniverseChainId }
+  | { type: TdpChainSelectionType.Multichain }
+
+/**
+ * Adapts a raw chain filter (the shape persisted for search history, `UniverseChainId | null`) into a
+ * `TdpChainSelection`. `null` -> aggregate multichain view; `undefined` -> the token's own chain (no selection).
+ */
+export function tdpChainSelectionFromFilter(
+  chainFilter: UniverseChainId | null | undefined,
+): TdpChainSelection | undefined {
+  if (chainFilter === null) {
+    return { type: TdpChainSelectionType.Multichain }
+  }
+  if (chainFilter === undefined) {
+    return undefined
+  }
+  return { type: TdpChainSelectionType.Chain, chainId: chainFilter }
+}
 
 /**
  * Checks whether a URI uses an allowed external scheme (http or https).
@@ -219,17 +257,20 @@ export function getOpenseaLink({
  * @param chain the chain of the token
  * @param chainUrlParam the chain URL parameter
  * @param inputAddress the input address
+ * @param tdpView whether the URL should open the chain-specific or aggregate TDP view
  */
 export function getTokenDetailsURL({
   address,
   chain,
   chainUrlParam,
   inputAddress,
+  tdpView,
 }: {
   address: string
   chain?: number
   chainUrlParam?: string
   inputAddress?: string | null
+  tdpView?: TDPView
 }): string {
   if (!chain) {
     return '/not-found'
@@ -237,11 +278,19 @@ export function getTokenDetailsURL({
   const chainInfo = toGraphQLChain(chain)
 
   const adjustedAddress = isNativeCurrencyAddress(chain, address) ? NATIVE_TOKEN_PLACEHOLDER : address
-  const adjustedInputAddress = isNativeCurrencyAddress(chain, inputAddress) ? NATIVE_TOKEN_PLACEHOLDER : inputAddress
+  const adjustedInputAddress =
+    inputAddress && isNativeCurrencyAddress(chain, inputAddress) ? NATIVE_TOKEN_PLACEHOLDER : inputAddress
 
   const chainName = chainUrlParam || String(chainInfo).toLowerCase() || GraphQLApi.Chain.Ethereum.toLowerCase()
-  const inputAddressSuffix = adjustedInputAddress ? `?inputCurrency=${adjustedInputAddress}` : ''
-  return `/explore/tokens/${chainName}/${adjustedAddress}${inputAddressSuffix}`
+  const params = new URLSearchParams()
+  if (adjustedInputAddress) {
+    params.set('inputCurrency', adjustedInputAddress)
+  }
+  if (tdpView === TDPView.Aggregate) {
+    params.set('chain', TDP_MULTICHAIN_CHAIN_QUERY_VALUE)
+  }
+  const query = params.toString()
+  return `/explore/tokens/${chainName}/${adjustedAddress}${query ? `?${query}` : ''}`
 }
 
 type FiatOnRampURLParams = {
@@ -282,28 +331,39 @@ export async function openTransactionLink(hash: string | undefined, chainId: Uni
 }
 
 export async function openUniswapHelpLink(): Promise<void> {
-  return openUri({ uri: uniswapUrls.helpRequestUrl })
+  return openUri({ uri: UniswapHelpUrls.requestUrl })
 }
 
 export async function openFORSupportLink(serviceProvider: ServiceProviderInfo): Promise<void> {
-  return openUri({ uri: serviceProvider.supportUrl ?? uniswapUrls.helpRequestUrl })
+  return openUri({ uri: serviceProvider.supportUrl ?? UniswapHelpUrls.requestUrl })
 }
 
 export async function openOfframpPendingSupportLink(): Promise<void> {
-  return openUri({ uri: uniswapUrls.helpArticleUrls.fiatOffRampHelp })
+  return openUri({ uri: UniswapHelpUrls.articles.fiatOffRampHelp })
 }
 
 export function getPortfolioUrl(walletAddress: string): string {
-  return `${uniswapUrls.webInterfacePortfolioUrl}/${walletAddress}`
+  return `${UniswapStaticUrls.webInterfacePortfolioUrl}/${walletAddress}`
 }
 
 const UTM_TAGS_MOBILE = 'utm_medium=mobile&utm_source=share-tdp'
 
-export function getTokenUrl(currencyId: string, addMobileUTMTags: boolean = false): string | undefined {
+type GetTokenUrlOptions = {
+  addMobileUTMTags?: boolean
+}
+
+export function getTokenUrl(
+  currencyId: string,
+  optionsOrAddMobileUTMTags: GetTokenUrlOptions | boolean = false,
+): string | undefined {
   const chainId = currencyIdToChain(currencyId)
   if (!chainId) {
     return undefined
   }
+  const options =
+    typeof optionsOrAddMobileUTMTags === 'boolean'
+      ? { addMobileUTMTags: optionsOrAddMobileUTMTags }
+      : optionsOrAddMobileUTMTags
   const network = toUniswapWebAppLink(chainId)
   try {
     let tokenAddress = currencyIdToGraphQLAddress(currencyId)
@@ -312,8 +372,15 @@ export function getTokenUrl(currencyId: string, addMobileUTMTags: boolean = fals
       // this is how web app handles native tokens
       tokenAddress = BACKEND_NATIVE_CHAIN_ADDRESS_STRING
     }
-    const tokenUrl = `${uniswapUrls.webInterfaceTokensUrl}/${network}/${tokenAddress}`
-    return addMobileUTMTags ? tokenUrl + `?${UTM_TAGS_MOBILE}` : tokenUrl
+    const tokenUrl = `${UniswapStaticUrls.webInterfaceTokensUrl}/${network}/${tokenAddress}`
+    const params = new URLSearchParams()
+    if (options.addMobileUTMTags) {
+      for (const [key, value] of new URLSearchParams(UTM_TAGS_MOBILE)) {
+        params.set(key, value)
+      }
+    }
+    const query = params.toString()
+    return query ? `${tokenUrl}?${query}` : tokenUrl
   } catch {
     return undefined
   }
@@ -326,18 +393,25 @@ export function getTokenUrl(currencyId: string, addMobileUTMTags: boolean = fals
  */
 export const EARN_VAULT_MODAL_QUERY_PARAM = 'modal'
 export const EARN_VAULT_MODAL_QUERY_VALUE = 'earn-vault'
+export const EARN_ENTRY_POINT_QUERY_PARAM = 'earnEntryPoint'
 
 /**
  * Build a Uniswap web TDP URL that auto-opens the earn vault modal for the
  * given vault's underlying token. Returns undefined if the vault's currencyId
  * cannot be resolved to a token URL.
  */
-export function getEarnVaultUrl(vault: EarnVaultInfo): string | undefined {
+export function getEarnVaultUrl(
+  vault: EarnVaultInfo,
+  analyticsEntryPoint?: EarnAnalyticsEntryPoint,
+): string | undefined {
   const tokenUrl = getTokenUrl(vault.displayCurrencyId)
   if (!tokenUrl) {
     return undefined
   }
-  return `${tokenUrl}?${EARN_VAULT_MODAL_QUERY_PARAM}=${EARN_VAULT_MODAL_QUERY_VALUE}`
+  const entryPointQuery = analyticsEntryPoint
+    ? `&${EARN_ENTRY_POINT_QUERY_PARAM}=${encodeURIComponent(analyticsEntryPoint)}`
+    : ''
+  return `${tokenUrl}?${EARN_VAULT_MODAL_QUERY_PARAM}=${EARN_VAULT_MODAL_QUERY_VALUE}${entryPointQuery}`
 }
 
 export function getTwitterLink(twitterName: string): string {

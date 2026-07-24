@@ -1,13 +1,14 @@
-import { createColumnHelper } from '@tanstack/react-table'
-import { AnimatePresence, motion } from 'framer-motion'
+import { createColumnHelper, type Row } from '@tanstack/react-table'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, Unicon, useMedia } from 'ui/src'
+import { Flex, Text, TouchableArea, Unicon, useMedia } from 'ui/src'
 import { useColorHexFromThemeKey } from 'ui/src/hooks/useColorHexFromThemeKey'
 import { zIndexes } from 'ui/src/theme'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
+import { logger } from 'utilities/src/logger/logger'
 import { formatUnits } from '~/chains'
 import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
 import { Table } from '~/components/Table'
@@ -19,6 +20,7 @@ import { useAuctionStatsData } from '~/features/Toucan/Auction/hooks/useAuctionS
 import { useBidTokenInfo } from '~/features/Toucan/Auction/hooks/useBidTokenInfo'
 import { useLoadBidActivities } from '~/features/Toucan/Auction/hooks/useLoadBidActivities'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
+import { getAuctionTokenDecimals } from '~/features/Toucan/Auction/utils/tokenMetadata'
 import { useTimeAgo } from '~/features/Toucan/Shared/TimeCell'
 
 const ROW_HEIGHT = 48
@@ -27,6 +29,7 @@ const FIXED_HEIGHT_THRESHOLD = 10
 interface BidActivityRow {
   bidId: string
   walletId: string
+  explorerLink?: string
   bidPriceInToken: number
   bidPriceFiat: number
   maxPriceInToken: number
@@ -48,18 +51,51 @@ function TableTimeCell({ timestamp }: { timestamp: string }) {
 
 function AnimatedBidRow({ children }: { children: React.ReactNode }) {
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0 }}
-      transition={{
-        layout: { duration: 0.2, ease: 'easeOut' },
-        duration: 0.2,
-      }}
-    >
+    <Flex animation="200ms" animateOnly={['transform', 'opacity']} enterStyle={{ opacity: 0, y: -20 }}>
       {children}
-    </motion.div>
+    </Flex>
+  )
+}
+
+function openBidActivityExplorerLink(explorerLink: string): void {
+  openUri({ uri: explorerLink }).catch((error) => {
+    logger.error(error, {
+      tags: { file: 'BidActivities', function: 'openBidActivityExplorerLink' },
+      extra: { explorerLink },
+    })
+  })
+}
+
+function getBidActivityExplorerLink({
+  txHash,
+  chainId,
+}: {
+  txHash: string
+  chainId: Parameters<typeof getExplorerLink>[0]['chainId'] | undefined
+}): string | undefined {
+  if (!txHash || !chainId) {
+    return undefined
+  }
+
+  return getExplorerLink({
+    chainId,
+    data: txHash,
+    type: ExplorerDataType.TRANSACTION,
+  })
+}
+
+function renderBidActivityRow(row: Row<BidActivityRow>, content: JSX.Element): JSX.Element {
+  const animatedContent = <AnimatedBidRow>{content}</AnimatedBidRow>
+  const explorerLink = row.original.explorerLink
+
+  if (!explorerLink) {
+    return animatedContent
+  }
+
+  return (
+    <TouchableArea onPress={() => openBidActivityExplorerLink(explorerLink)} cursor="pointer" pressStyle={{ scale: 1 }}>
+      {animatedContent}
+    </TouchableArea>
   )
 }
 
@@ -77,6 +113,7 @@ export const BidActivities = ({
   const { totalBidCount } = useAuctionStatsData()
   const media = useMedia()
   const surface1 = useColorHexFromThemeKey('surface1')
+  const auctionChainId = auctionDetails?.chainId
 
   // Fetch bids from API (with infinite scrolling and polling)
   const {
@@ -85,7 +122,7 @@ export const BidActivities = ({
     loading,
   } = useLoadBidActivities({
     auctionAddress: auctionDetails?.address,
-    chainId: auctionDetails?.chainId,
+    chainId: auctionChainId,
   })
 
   // --- New bid animation buffering ---
@@ -127,9 +164,9 @@ export const BidActivities = ({
     setIsHovering(false)
   }, [allActivities])
 
-  const { bidTokenInfo, loading: bidTokenInfoLoading } = useBidTokenInfo({
+  const { bidTokenInfo, loading: bidTokenLoading } = useBidTokenInfo({
     bidTokenAddress: auctionDetails?.currency,
-    chainId: auctionDetails?.chainId,
+    chainId: auctionChainId,
   })
 
   // Extract values to ensure they're captured correctly in column closures
@@ -137,19 +174,22 @@ export const BidActivities = ({
   const bidTokenSymbol = bidTokenInfo?.symbol ?? 'ETH'
   const bidTokenPriceFiat = bidTokenInfo?.priceFiat ?? 0
   const hasPriceFiat = bidTokenPriceFiat > 0
-  const auctionTokenDecimals = auctionDetails?.token?.currency.decimals ?? 18
+  const auctionTokenDecimals = getAuctionTokenDecimals(auctionDetails?.token)
+  const bidTokenInfoLoading = bidTokenLoading || auctionTokenDecimals === undefined
 
   const formattedBidActivities: BidActivityRow[] = useMemo(() => {
     return visibleActivities.map((bid) => {
       const bidPriceInToken = Number(formatUnits(BigInt(bid.baseTokenInitial), bidTokenDecimals))
       const bidPriceFiat = hasPriceFiat ? convertFiatAmount(bidPriceInToken * bidTokenPriceFiat).amount : 0
-      const maxPricePerTokenWei = q96ToRawAmount(bid.price, auctionTokenDecimals)
+      const maxPricePerTokenWei =
+        auctionTokenDecimals !== undefined ? q96ToRawAmount(bid.price, auctionTokenDecimals) : 0n
       const maxPriceInToken = Number(formatUnits(maxPricePerTokenWei, bidTokenDecimals))
       const maxPriceFiat = hasPriceFiat ? convertFiatAmount(maxPriceInToken * bidTokenPriceFiat).amount : 0
 
       return {
         bidId: bid.bidId,
         walletId: bid.wallet,
+        explorerLink: getBidActivityExplorerLink({ txHash: bid.txHash, chainId: auctionChainId }),
         bidPriceInToken,
         bidPriceFiat,
         maxPriceInToken,
@@ -157,7 +197,15 @@ export const BidActivities = ({
         timestamp: bid.createdAt,
       }
     })
-  }, [visibleActivities, bidTokenDecimals, auctionTokenDecimals, bidTokenPriceFiat, hasPriceFiat, convertFiatAmount])
+  }, [
+    visibleActivities,
+    bidTokenDecimals,
+    auctionTokenDecimals,
+    bidTokenPriceFiat,
+    hasPriceFiat,
+    convertFiatAmount,
+    auctionChainId,
+  ])
 
   const columns = useMemo(
     () => [
@@ -315,22 +363,19 @@ export const BidActivities = ({
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <AnimatePresence mode="popLayout">
-          <Table
-            columns={columns}
-            data={formattedBidActivities}
-            loading={loading}
-            v2={true}
-            hideHeader={false}
-            maxHeight={formattedBidActivities.length >= FIXED_HEIGHT_THRESHOLD ? 450 : undefined}
-            loadMore={pendingNewBidCount > 0 ? undefined : loadMore}
-            loadingRowsCount={6}
-            rowHeight={ROW_HEIGHT}
-            getRowId={(row) => row.bidId}
-            rowWrapper={(_rowId, content) => <AnimatedBidRow>{content}</AnimatedBidRow>}
-            showScrollbar
-          />
-        </AnimatePresence>
+        <Table
+          columns={columns}
+          data={formattedBidActivities}
+          loading={loading}
+          hideHeader={false}
+          maxHeight={formattedBidActivities.length >= FIXED_HEIGHT_THRESHOLD ? 450 : undefined}
+          loadMore={pendingNewBidCount > 0 ? undefined : loadMore}
+          loadingRowsCount={6}
+          rowHeight={ROW_HEIGHT}
+          getRowId={(row) => row.bidId}
+          rowWrapper={renderBidActivityRow}
+          showScrollbar
+        />
         {formattedBidActivities.length >= 6 && (
           <Flex
             position="absolute"

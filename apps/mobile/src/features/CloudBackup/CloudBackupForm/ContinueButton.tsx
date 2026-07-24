@@ -10,7 +10,7 @@ export function ContinueButton({ onPressContinue }: { onPressContinue?: () => vo
 
   return (
     <Flex row>
-      <Button isDisabled={!isInputValid} testID={TestID.Next} onPress={onPressContinue ?? onPressNext}>
+      <Button disabled={!isInputValid} testID={TestID.Next} onPress={onPressContinue ?? onPressNext}>
         {t('common.button.continue')}
       </Button>
     </Flex>

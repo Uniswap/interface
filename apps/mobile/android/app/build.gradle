@@ -16,7 +16,10 @@ react {
 
     reactNativeDir = file("$nodeModulesPath/react-native")
 
-    hermesCommand = new File(["node", "--print", "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim()).getParentFile().getAbsolutePath() + "/sdks/hermesc/%OS-BIN%/hermesc"
+    // RN 0.83+ moved hermesc to the standalone hermes-compiler package. Resolve it to an absolute
+    // path so the hoisted monorepo-root node_modules location is found (the plugin's default lookup
+    // is projectRoot-relative and misses hoisted deps).
+    hermesCommand = new File(["node", "--print", "require.resolve('hermes-compiler/package.json')"].execute(null, rootDir).text.trim()).getParentFile().getAbsolutePath() + "/hermesc/%OS-BIN%/hermesc"
 
     codegenDir = new File(["node", "--print", "require.resolve('@react-native/codegen/package.json', { paths: [require.resolve('react-native/package.json')] })"].execute(null, rootDir).text.trim()).getParentFile().getAbsoluteFile()
 
@@ -29,6 +32,17 @@ react {
 
     /* Autolinking */
     autolinkLibrariesWithApp()
+}
+
+// Pin androidx.media3 to 1.8.0: react-native-video 6.x's RNVLoadControl needs a DefaultLoadControl
+// ctor that media3 1.9.0 (pulled transitively by expo-camera's camera-video) removed.
+configurations.all {
+    resolutionStrategy.eachDependency { details ->
+        if (details.requested.group == "androidx.media3") {
+            details.useVersion "1.8.0"
+            details.because "react-native-video 6.x requires the DefaultLoadControl ctor removed in media3 1.9.0"
+        }
+    }
 }
 
 /**
@@ -67,9 +81,9 @@ if (isCI && datadogPropertiesAvailable) {
   apply from: "../../../../node_modules/@datadog/mobile-react-native/datadog-sourcemaps.gradle"
 }
 
-def devVersionName = "1.75"
-def betaVersionName = "1.75"
-def prodVersionName = "1.75"
+def devVersionName = "1.79"
+def betaVersionName = "1.79"
+def prodVersionName = "1.79"
 
 android {
     ndkVersion rootProject.ext.ndkVersion
@@ -209,6 +223,11 @@ android {
           }
         }
     }
+    externalNativeBuild {
+        cmake {
+            path "src/main/jni/CMakeLists.txt"
+        }
+    }
 }
 
 dependencies {
@@ -270,3 +289,63 @@ dependencies {
 
     implementation project(':react-native-video')
 }
+
+// @generated begin expo-build-properties-pch - expo prebuild (DO NOT MODIFY)
+def cxxDir = project.file(".cxx")
+def generateStubPCHTask = tasks.register("generateStubPCH") {
+  dependsOn("configureCMakeDebug")
+
+  doLast {
+    if (!cxxDir.exists()) {
+      return
+    }
+
+    cxxDir.eachFileRecurse { file ->
+      if (file.name != "compile_commands.json") {
+        return
+      }
+
+      new groovy.json.JsonSlurper().parseText(file.text).each { entry ->
+        if (!entry.file.endsWith("cmake_pch.hxx.cxx")) {
+          return
+        }
+
+        def pchFile = new File(entry.file.substring(0, entry.file.length() - ".cxx".length()) + ".pch")
+
+        if (!pchFile.exists() || pchFile.length() == 0) {
+          pchFile.parentFile.mkdirs()
+
+          def compiler = entry.command.split(" ")[0]
+          def target = (entry.command =~ /--target=\S+/)[0]
+          def sysroot = (entry.command =~ /--sysroot=\S+/)[0]
+
+          def stubHeader = new File(pchFile.parentFile, "stub_pch.hxx")
+          stubHeader.text = ""
+
+          def process = new ProcessBuilder(
+            compiler,
+            target,
+            sysroot,
+            "-x", "c++-header",
+            "-o", pchFile.absolutePath,
+            stubHeader.absolutePath
+          )
+            .directory(new File(entry.directory))
+            .redirectErrorStream(true)
+            .start()
+          process.outputStream.close()
+          if (process.waitFor() != 0) {
+            throw new GradleException("Stub PCH generation failed: ${process.inputStream.text}")
+          }
+        }
+
+        pchFile.setLastModified(new File(entry.file).lastModified() - 1)
+      }
+    }
+  }
+}
+
+tasks.register("prepareKotlinBuildScriptModel") {
+  dependsOn(generateStubPCHTask)
+}
+// @generated end expo-build-properties-pch

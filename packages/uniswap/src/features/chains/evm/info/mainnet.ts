@@ -4,12 +4,14 @@ import { isWebApp, isE2eTestEnv } from '@universe/environment'
 import { SwapConfigKey } from '@universe/gating'
 import { ETH_LOGO, ETHEREUM_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
+import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
 import {
   DEFAULT_MS_BEFORE_WARNING,
   DEFAULT_NATIVE_ADDRESS_LEGACY,
   getPlaywrightRpcUrls,
   getQuicknodeEndpointUrl,
+  getUniRpcEndpointUrl,
 } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
@@ -39,6 +41,7 @@ export const MAINNET_CHAIN_INFO = {
   ...mainnet,
   id: UniverseChainId.Mainnet,
   platform: Platform.EVM,
+  supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   assetRepoNetworkName: 'ethereum',
   backendChain: {
     chain: GraphQLApi.Chain.Ethereum as GqlChainId,
@@ -76,10 +79,16 @@ export const MAINNET_CHAIN_INFO = {
           http: ['https://rpc.mevblocker.io/?referrer=uniswapwallet'],
         },
         [RPCType.Public]: {
-          http: [getQuicknodeEndpointUrl(UniverseChainId.Mainnet)],
+          http: [getUniRpcEndpointUrl(UniverseChainId.Mainnet)],
         },
+        // Default feeds the wallet-connector rpc maps (WalletConnect/Binance read
+        // rpcUrls.default.http[0] from a cookieless in-page client), so it must be an
+        // unkeyed endpoint that is CORS- and CSP-allowed. Keyed QuickNode/Infura URLs
+        // leak the key into third-party traffic; rpc.ankr.com now returns "Unauthorized"
+        // for anonymous reads. *.drpc.org is on the CSP allowlist and serves these
+        // chains unauthenticated.
         [RPCType.Default]: {
-          http: [getQuicknodeEndpointUrl(UniverseChainId.Mainnet)],
+          http: ['https://eth.drpc.org', 'https://eth-mainnet.public.blastapi.io'],
         },
         [RPCType.Fallback]: {
           http: ['https://rpc.ankr.com/eth', 'https://eth-mainnet.public.blastapi.io'],
@@ -125,6 +134,7 @@ export const SEPOLIA_CHAIN_INFO = {
   ...sepolia,
   id: UniverseChainId.Sepolia,
   platform: Platform.EVM,
+  supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   assetRepoNetworkName: undefined,
   backendChain: {
     chain: GraphQLApi.Chain.EthereumSepolia as GqlChainId,
@@ -156,7 +166,7 @@ export const SEPOLIA_CHAIN_INFO = {
   pendingTransactionsRetryOptions: undefined,
   rpcUrls: {
     [RPCType.Public]: {
-      http: [getQuicknodeEndpointUrl(UniverseChainId.Sepolia)],
+      http: [getUniRpcEndpointUrl(UniverseChainId.Sepolia)],
     },
     [RPCType.Default]: {
       http: ['https://sepolia.gateway.tenderly.co'],

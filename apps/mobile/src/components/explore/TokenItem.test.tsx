@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import * as exploreHooks from 'src/components/explore/hooks'
 import { TokenItem } from 'src/components/explore/TokenItem'
 import * as tokenDetailsHooks from 'src/components/TokenDetails/hooks'
@@ -14,25 +13,25 @@ const mainnetNetworkLogoTestID = `${TestID.NetworkLogoPrefix}${UniverseChainId.M
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 
-jest.mock('@universe/gating', () => ({
-  ...jest.requireActual('@universe/gating'),
-  useFeatureFlag: jest.fn().mockReturnValue(false),
-  useFeatureFlagWithLoading: jest.fn().mockReturnValue({ value: false, isLoading: false }),
-  useFeatureFlagWithExposureLoggingDisabled: jest.fn().mockReturnValue(false),
+vi.mock('@universe/gating', async () => ({
+  ...(await vi.importActual('@universe/gating')),
+  useFeatureFlag: vi.fn().mockReturnValue(false),
+  useFeatureFlagWithLoading: vi.fn().mockReturnValue({ value: false, isLoading: false }),
+  useFeatureFlagWithExposureLoggingDisabled: vi.fn().mockReturnValue(false),
 }))
 
 describe('TokenItem', () => {
   const mockedTokenDetailsNavigation = {
-    navigate: jest.fn(),
-    navigateWithPop: jest.fn(),
-    preload: jest.fn(),
+    navigate: vi.fn(),
+    navigateWithPop: vi.fn(),
+    preload: vi.fn(),
   }
 
   beforeAll(() => {
-    jest.spyOn(tokenDetailsHooks, 'useTokenDetailsNavigation').mockReturnValue(mockedTokenDetailsNavigation)
-    jest.spyOn(exploreHooks, 'useExploreTokenContextMenu').mockReturnValue({
+    vi.spyOn(tokenDetailsHooks, 'useTokenDetailsNavigation').mockReturnValue(mockedTokenDetailsNavigation)
+    vi.spyOn(exploreHooks, 'useExploreTokenContextMenu').mockReturnValue({
       menuActions: [],
-      onContextMenuPress: jest.fn(),
+      onContextMenuPress: vi.fn(),
     })
   })
 
@@ -123,18 +122,7 @@ describe('TokenItem', () => {
   })
 
   describe('multichain network logo', () => {
-    const mockedUseFeatureFlag = useFeatureFlag as jest.Mock
-
-    function enableMultichainFlag(): void {
-      mockedUseFeatureFlag.mockImplementation((flag: FeatureFlags) => flag === FeatureFlags.MultichainTokenUx)
-    }
-
-    afterEach(() => {
-      mockedUseFeatureFlag.mockReturnValue(false)
-    })
-
-    it('should hide network logo when flag is on and networkCount > 1', () => {
-      enableMultichainFlag()
+    it('should hide network logo when networkCount > 1', () => {
       const data = tokenItemData({ chainId: UniverseChainId.ArbitrumOne, networkCount: 5 })
       const { queryByTestId } = render(
         <TokenItem eventName={MobileEventName.ExploreTokenItemSelected} index={0} tokenItemData={data} />,
@@ -143,17 +131,7 @@ describe('TokenItem', () => {
       expect(queryByTestId(arbitrumNetworkLogoTestID)).toBeFalsy()
     })
 
-    it('should show network logo when flag is off even with networkCount > 1', () => {
-      const data = tokenItemData({ chainId: UniverseChainId.ArbitrumOne, networkCount: 5 })
-      const { queryByTestId } = render(
-        <TokenItem eventName={MobileEventName.ExploreTokenItemSelected} index={0} tokenItemData={data} />,
-      )
-
-      expect(queryByTestId(arbitrumNetworkLogoTestID)).toBeTruthy()
-    })
-
-    it('should show network logo when flag is on but no networkCount', () => {
-      enableMultichainFlag()
+    it('should show network logo when no networkCount', () => {
       const data = tokenItemData({ chainId: UniverseChainId.ArbitrumOne })
       const { queryByTestId } = render(
         <TokenItem eventName={MobileEventName.ExploreTokenItemSelected} index={0} tokenItemData={data} />,
@@ -162,8 +140,7 @@ describe('TokenItem', () => {
       expect(queryByTestId(arbitrumNetworkLogoTestID)).toBeTruthy()
     })
 
-    it('should show network logo when flag is on but networkCount is 1', () => {
-      enableMultichainFlag()
+    it('should show network logo when networkCount is 1', () => {
       const data = tokenItemData({ chainId: UniverseChainId.ArbitrumOne, networkCount: 1 })
       const { queryByTestId } = render(
         <TokenItem eventName={MobileEventName.ExploreTokenItemSelected} index={0} tokenItemData={data} />,
@@ -172,23 +149,13 @@ describe('TokenItem', () => {
       expect(queryByTestId(arbitrumNetworkLogoTestID)).toBeTruthy()
     })
 
-    it('should show mainnet network logo when flag is on for single-chain mainnet asset', () => {
-      enableMultichainFlag()
+    it('should show mainnet network logo for single-chain mainnet asset', () => {
       const data = tokenItemData({ chainId: UniverseChainId.Mainnet, networkCount: 1 })
       const { queryByTestId } = render(
         <TokenItem eventName={MobileEventName.ExploreTokenItemSelected} index={0} tokenItemData={data} />,
       )
 
       expect(queryByTestId(mainnetNetworkLogoTestID)).toBeTruthy()
-    })
-
-    it('should hide mainnet network logo when flag is off for mainnet asset', () => {
-      const data = tokenItemData({ chainId: UniverseChainId.Mainnet, networkCount: 1 })
-      const { queryByTestId } = render(
-        <TokenItem eventName={MobileEventName.ExploreTokenItemSelected} index={0} tokenItemData={data} />,
-      )
-
-      expect(queryByTestId(mainnetNetworkLogoTestID)).toBeFalsy()
     })
   })
 
@@ -200,9 +167,13 @@ describe('TokenItem', () => {
     })
 
     const cases = [
-      { test: 'market cap', type: TokenMetadataDisplayType.MarketCap, expected: '$123.45 MCap' },
-      { test: 'volume', type: TokenMetadataDisplayType.Volume, expected: '$234.56 Vol' },
-      { test: 'total value locked', type: TokenMetadataDisplayType.TVL, expected: '$345.67 TVL' },
+      { test: 'market cap', type: TokenMetadataDisplayType.MarketCap, expected: 'explore.tokens.metadata.marketCap' },
+      { test: 'volume', type: TokenMetadataDisplayType.Volume, expected: 'explore.tokens.metadata.volume' },
+      {
+        test: 'total value locked',
+        type: TokenMetadataDisplayType.TVL,
+        expected: 'explore.tokens.metadata.totalValueLocked',
+      },
       { test: 'symbol', type: TokenMetadataDisplayType.Symbol, expected: data.symbol },
     ]
 

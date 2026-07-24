@@ -12,16 +12,16 @@ import { getNativeAddress, getWrappedNativeAddressWithThrow } from 'uniswap/src/
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { DAI } from 'uniswap/src/constants/tokens'
 import extractRestOnChainTransactionDetails from 'uniswap/src/features/activity/extract/extractOnChainTransactionDetails'
-import { parseRestApproveTransaction } from 'uniswap/src/features/activity/parse/parseApproveTransaction'
-import { parseRestLiquidityTransaction } from 'uniswap/src/features/activity/parse/parseLiquidityTransaction'
-import { parseRestNFTMintTransaction } from 'uniswap/src/features/activity/parse/parseMintTransaction'
-import { parseRestReceiveTransaction } from 'uniswap/src/features/activity/parse/parseReceiveTransaction'
-import { parseRestSendTransaction } from 'uniswap/src/features/activity/parse/parseSendTransaction'
+import { parseApproveTransaction } from 'uniswap/src/features/activity/parse/parseApproveTransaction'
+import { parseLiquidityTransaction } from 'uniswap/src/features/activity/parse/parseLiquidityTransaction'
+import { parseNFTMintTransaction } from 'uniswap/src/features/activity/parse/parseMintTransaction'
+import { parseReceiveTransaction } from 'uniswap/src/features/activity/parse/parseReceiveTransaction'
+import { parseSendTransaction } from 'uniswap/src/features/activity/parse/parseSendTransaction'
 import {
-  parseRestDepositTransaction,
-  parseRestSwapTransaction,
-  parseRestWithdrawTransaction,
-  parseRestWrapTransaction,
+  parseSwapTransaction,
+  parseWithdrawTransaction,
+  parseWrapTransaction,
+  parseDepositTransaction,
 } from 'uniswap/src/features/activity/parse/parseTradeTransaction'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -169,12 +169,12 @@ const MOCK_ERC20_APPROVE: OnChainTransaction = {
   },
 } as OnChainTransaction
 
-describe(parseRestApproveTransaction, () => {
+describe(parseApproveTransaction, () => {
   it('ERC20 approve: handle empty approvals', () => {
-    expect(parseRestApproveTransaction(TRANSACTION_BASE)).toBeUndefined()
+    expect(parseApproveTransaction(TRANSACTION_BASE)).toBeUndefined()
   })
   it('ERC20 approve: parse valid approval', () => {
-    expect(parseRestApproveTransaction(MOCK_ERC20_APPROVE)).toEqual({
+    expect(parseApproveTransaction(MOCK_ERC20_APPROVE)).toEqual({
       type: TransactionType.Approve,
       tokenAddress: ERC20_ASSET_ADDRESS,
       spender: TO_ADDRESS,
@@ -216,12 +216,12 @@ const MOCK_721_MINT: OnChainTransaction = {
   },
 } as OnChainTransaction
 
-describe(parseRestNFTMintTransaction, () => {
+describe(parseNFTMintTransaction, () => {
   it('NFT Mint: handle empty transfers', () => {
-    expect(parseRestNFTMintTransaction(TRANSACTION_BASE)).toBeUndefined()
+    expect(parseNFTMintTransaction(TRANSACTION_BASE)).toBeUndefined()
   })
   it('NFT Mint: parse 721 mint', () => {
-    expect(parseRestNFTMintTransaction(MOCK_721_MINT)).toEqual({
+    expect(parseNFTMintTransaction(MOCK_721_MINT)).toEqual({
       type: TransactionType.NFTMint,
       nftSummaryInfo: {
         name: 'asset_name',
@@ -301,12 +301,12 @@ const MOCK_ERC721_RECEIVE: OnChainTransaction = {
   ],
 } as OnChainTransaction
 
-describe(parseRestReceiveTransaction, () => {
+describe(parseReceiveTransaction, () => {
   it('Receive : handle empty transfers', () => {
-    expect(parseRestReceiveTransaction(TRANSACTION_BASE)).toBeUndefined()
+    expect(parseReceiveTransaction(TRANSACTION_BASE)).toBeUndefined()
   })
   it('Receive: parse ERC20 receive', () => {
-    expect(parseRestReceiveTransaction(MOCK_ERC20_RECEIVE)).toEqual({
+    expect(parseReceiveTransaction(MOCK_ERC20_RECEIVE)).toEqual({
       type: TransactionType.Receive,
       assetType: 'currency',
       tokenAddress: ERC20_ASSET_ADDRESS,
@@ -317,7 +317,7 @@ describe(parseRestReceiveTransaction, () => {
     })
   })
   it('Receive: parse spam ERC20 receive', () => {
-    expect(parseRestReceiveTransaction(MOCK_ERC20_RECEIVE_SPAM)).toEqual({
+    expect(parseReceiveTransaction(MOCK_ERC20_RECEIVE_SPAM)).toEqual({
       type: TransactionType.Receive,
       assetType: 'currency',
       tokenAddress: ERC20_ASSET_ADDRESS,
@@ -328,7 +328,7 @@ describe(parseRestReceiveTransaction, () => {
     })
   })
   it('Receive: parse ERC721 receive', () => {
-    expect(parseRestReceiveTransaction(MOCK_ERC721_RECEIVE)).toEqual({
+    expect(parseReceiveTransaction(MOCK_ERC721_RECEIVE)).toEqual({
       type: TransactionType.Receive,
       assetType: 'erc-721',
       tokenAddress: 'nft_contract_address',
@@ -385,12 +385,12 @@ const MOCK_ERC721_SEND: OnChainTransaction = {
   ],
 } as OnChainTransaction
 
-describe(parseRestSendTransaction, () => {
+describe(parseSendTransaction, () => {
   it('Send : handle empty transfers', () => {
-    expect(parseRestSendTransaction(TRANSACTION_BASE)).toBeUndefined()
+    expect(parseSendTransaction(TRANSACTION_BASE)).toBeUndefined()
   })
   it('Send: parse ERC20 send', () => {
-    expect(parseRestSendTransaction(MOCK_ERC20_SEND)).toEqual({
+    expect(parseSendTransaction(MOCK_ERC20_SEND)).toEqual({
       type: TransactionType.Send,
       assetType: 'currency',
       tokenAddress: ERC20_ASSET_ADDRESS,
@@ -401,7 +401,7 @@ describe(parseRestSendTransaction, () => {
     })
   })
   it('Send: parse ERC721 send', () => {
-    expect(parseRestSendTransaction(MOCK_ERC721_SEND)).toEqual({
+    expect(parseSendTransaction(MOCK_ERC721_SEND)).toEqual({
       type: TransactionType.Send,
       assetType: 'erc-721',
       tokenAddress: 'nft_contract_address',
@@ -563,12 +563,12 @@ const MOCK_NATIVE_WRAP: OnChainTransaction = {
   ],
 } as OnChainTransaction
 
-describe(parseRestSwapTransaction, () => {
+describe(parseSwapTransaction, () => {
   it('Swap : handle empty transfers', () => {
-    expect(parseRestSwapTransaction(TRANSACTION_BASE)).toBeUndefined()
+    expect(parseSwapTransaction(TRANSACTION_BASE)).toBeUndefined()
   })
   it('Swap: parse token swap', () => {
-    expect(parseRestSwapTransaction(MOCK_ERC20_SWAP)).toEqual({
+    expect(parseSwapTransaction(MOCK_ERC20_SWAP)).toEqual({
       type: TransactionType.Swap,
       inputCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
       outputCurrencyId: `1-${WRAPPED_NATIVE_ADDRESS}`,
@@ -578,7 +578,7 @@ describe(parseRestSwapTransaction, () => {
     })
   })
   it('Swap: parse native swap', () => {
-    expect(parseRestSwapTransaction(MOCK_NATIVE_SWAP)).toEqual({
+    expect(parseSwapTransaction(MOCK_NATIVE_SWAP)).toEqual({
       type: TransactionType.Swap,
       inputCurrencyId: `1-${NATIVE_ADDRESS}`,
       outputCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
@@ -588,7 +588,7 @@ describe(parseRestSwapTransaction, () => {
     })
   })
   it('Swap: parse UniswapX swap', () => {
-    expect(parseRestSwapTransaction(MOCK_UNISWAP_X_SWAP)).toEqual({
+    expect(parseSwapTransaction(MOCK_UNISWAP_X_SWAP)).toEqual({
       type: TransactionType.Swap,
       inputCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
       outputCurrencyId: `1-${WRAPPED_NATIVE_ADDRESS}`,
@@ -602,7 +602,7 @@ describe(parseRestSwapTransaction, () => {
     })
   })
   it('Swap: parse multi-transfer swap with same token', () => {
-    expect(parseRestSwapTransaction(MOCK_MULTI_TRANSFER_SWAP)).toEqual({
+    expect(parseSwapTransaction(MOCK_MULTI_TRANSFER_SWAP)).toEqual({
       type: TransactionType.Swap,
       inputCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
       outputCurrencyId: `1-${WRAPPED_NATIVE_ADDRESS}`,
@@ -666,7 +666,7 @@ describe(parseRestSwapTransaction, () => {
       ],
     } as OnChainTransaction
 
-    expect(parseRestSwapTransaction(MOCK_FOT_SWAP)).toEqual({
+    expect(parseSwapTransaction(MOCK_FOT_SWAP)).toEqual({
       type: TransactionType.Swap,
       inputCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
       outputCurrencyId: `1-${FOT_TOKEN_ADDRESS}`,
@@ -678,9 +678,9 @@ describe(parseRestSwapTransaction, () => {
   })
 })
 
-describe(parseRestWrapTransaction, () => {
+describe(parseWrapTransaction, () => {
   it('Wrap: parse wrap', () => {
-    expect(parseRestWrapTransaction(MOCK_NATIVE_WRAP)).toEqual({
+    expect(parseWrapTransaction(MOCK_NATIVE_WRAP)).toEqual({
       type: TransactionType.Wrap,
       unwrapped: false,
       currencyAmountRaw: '1000000000000000000',
@@ -692,7 +692,7 @@ describe(parseRestWrapTransaction, () => {
       label: OnChainTransactionLabel.UNWRAP,
       transfers: MOCK_NATIVE_WRAP.transfers,
     } as OnChainTransaction
-    expect(parseRestWrapTransaction(MOCK_NATIVE_UNWRAP)).toEqual({
+    expect(parseWrapTransaction(MOCK_NATIVE_UNWRAP)).toEqual({
       type: TransactionType.Wrap,
       unwrapped: true,
       currencyAmountRaw: '1000000000000000000',
@@ -739,12 +739,12 @@ const MOCK_ERC20_DEPOSIT: OnChainTransaction = {
   },
 } as OnChainTransaction
 
-describe(parseRestDepositTransaction, () => {
+describe(parseDepositTransaction, () => {
   it('Deposit: handle empty transfers', () => {
-    expect(parseRestDepositTransaction(TRANSACTION_BASE)).toBeUndefined()
+    expect(parseDepositTransaction(TRANSACTION_BASE)).toBeUndefined()
   })
   it('Deposit: parse ERC20 deposit', () => {
-    expect(parseRestDepositTransaction(MOCK_ERC20_DEPOSIT)).toEqual({
+    expect(parseDepositTransaction(MOCK_ERC20_DEPOSIT)).toEqual({
       type: TransactionType.Deposit,
       assetType: 'currency',
       tokenAddress: ERC20_ASSET_ADDRESS,
@@ -796,12 +796,12 @@ const MOCK_ERC20_WITHDRAW: OnChainTransaction = {
   },
 } as OnChainTransaction
 
-describe(parseRestWithdrawTransaction, () => {
+describe(parseWithdrawTransaction, () => {
   it('Withdraw: handle empty transfers', () => {
-    expect(parseRestWithdrawTransaction(TRANSACTION_BASE)).toBeUndefined()
+    expect(parseWithdrawTransaction(TRANSACTION_BASE)).toBeUndefined()
   })
   it('Withdraw: parse ERC20 withdraw', () => {
-    expect(parseRestWithdrawTransaction(MOCK_ERC20_WITHDRAW)).toEqual({
+    expect(parseWithdrawTransaction(MOCK_ERC20_WITHDRAW)).toEqual({
       type: TransactionType.Withdraw,
       assetType: 'currency',
       tokenAddress: ERC20_ASSET_ADDRESS,
@@ -813,7 +813,7 @@ describe(parseRestWithdrawTransaction, () => {
     })
   })
   it('Withdraw: does not produce TransactionType.Wrap', () => {
-    const result = parseRestWithdrawTransaction(MOCK_ERC20_WITHDRAW)
+    const result = parseWithdrawTransaction(MOCK_ERC20_WITHDRAW)
     expect(result?.type).not.toEqual(TransactionType.Wrap)
   })
   it('Withdraw: picks RECEIVE transfer even when SEND comes first', () => {
@@ -837,7 +837,7 @@ describe(parseRestWithdrawTransaction, () => {
         },
       ],
     } as OnChainTransaction
-    const result = parseRestWithdrawTransaction(reorderedWithdraw)
+    const result = parseWithdrawTransaction(reorderedWithdraw)
     expect(result).toEqual({
       type: TransactionType.Withdraw,
       assetType: 'currency',
@@ -892,14 +892,14 @@ const MOCK_BRIDGE: OnChainTransaction = {
 } as unknown as OnChainTransaction
 
 // Import the parseRestBridgeTransaction function
-import { parseRestBridgeTransaction } from 'uniswap/src/features/activity/parse/parseBridgingTransaction'
+import { parseBridgeTransaction } from 'uniswap/src/features/activity/parse/parseBridgingTransaction'
 
-describe(parseRestBridgeTransaction, () => {
+describe(parseBridgeTransaction, () => {
   it('Bridge: handle empty transfers', () => {
-    expect(parseRestBridgeTransaction(TRANSACTION_BASE)).toBeUndefined()
+    expect(parseBridgeTransaction(TRANSACTION_BASE)).toBeUndefined()
   })
   it('Bridge: parse cross-chain bridge', () => {
-    expect(parseRestBridgeTransaction(MOCK_BRIDGE)).toEqual({
+    expect(parseBridgeTransaction(MOCK_BRIDGE)).toEqual({
       type: TransactionType.Bridge,
       inputCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
       outputCurrencyId: `${ARBITRUM_CHAIN_ID}-${ERC20_ASSET_ADDRESS}`,
@@ -966,14 +966,14 @@ const MOCK_ONRAMP_TRANSFER = {
 } as unknown as FiatOnRampTransaction
 
 // Import the parseRestOnRampTransaction function
-import { parseRestOnRampTransaction } from 'uniswap/src/features/activity/parse/parseOnRampTransaction'
+import { parseOnRampTransaction } from 'uniswap/src/features/activity/parse/parseOnRampTransaction'
 
-describe(parseRestOnRampTransaction, () => {
+describe(parseOnRampTransaction, () => {
   it('OnRamp: handle empty transaction', () => {
-    expect(parseRestOnRampTransaction({} as FiatOnRampTransaction)).toBeUndefined()
+    expect(parseOnRampTransaction({} as FiatOnRampTransaction)).toBeUndefined()
   })
   it('OnRamp: parse fiat purchase', () => {
-    expect(parseRestOnRampTransaction(MOCK_ONRAMP_PURCHASE)).toEqual({
+    expect(parseOnRampTransaction(MOCK_ONRAMP_PURCHASE)).toEqual({
       type: TransactionType.OnRampPurchase,
       id: 'session_123',
       sourceAmount: 100,
@@ -994,7 +994,7 @@ describe(parseRestOnRampTransaction, () => {
     })
   })
   it('OnRamp: parse crypto transfer', () => {
-    expect(parseRestOnRampTransaction(MOCK_ONRAMP_TRANSFER)).toEqual({
+    expect(parseOnRampTransaction(MOCK_ONRAMP_TRANSFER)).toEqual({
       type: TransactionType.OnRampTransfer,
       id: 'session_789',
       sourceAmount: 50,
@@ -1185,14 +1185,14 @@ const MOCK_COLLECT_FEES_TWO_TOKENS: OnChainTransaction = {
   },
 } as OnChainTransaction
 
-describe(parseRestLiquidityTransaction, () => {
+describe(parseLiquidityTransaction, () => {
   it('Liquidity: handle empty transfers', () => {
-    const result = parseRestLiquidityTransaction(TRANSACTION_BASE)
+    const result = parseLiquidityTransaction(TRANSACTION_BASE)
     expect(result.type).toEqual(TransactionType.Unknown)
   })
 
   it('Liquidity: parse liquidity increase', () => {
-    expect(parseRestLiquidityTransaction(MOCK_LIQUIDITY_INCREASE)).toEqual({
+    expect(parseLiquidityTransaction(MOCK_LIQUIDITY_INCREASE)).toEqual({
       type: TransactionType.LiquidityIncrease,
       currency0Id: `1-${ERC20_ASSET_ADDRESS}`,
       currency1Id: `1-${WRAPPED_NATIVE_ADDRESS}`,
@@ -1207,7 +1207,7 @@ describe(parseRestLiquidityTransaction, () => {
   })
 
   it('Liquidity: parse liquidity decrease', () => {
-    expect(parseRestLiquidityTransaction(MOCK_LIQUIDITY_DECREASE)).toEqual({
+    expect(parseLiquidityTransaction(MOCK_LIQUIDITY_DECREASE)).toEqual({
       type: TransactionType.LiquidityDecrease,
       currency0Id: `1-${ERC20_ASSET_ADDRESS}`,
       currency1Id: `1-${WRAPPED_NATIVE_ADDRESS}`,
@@ -1222,7 +1222,7 @@ describe(parseRestLiquidityTransaction, () => {
   })
 
   it('Liquidity: parse create pool', () => {
-    expect(parseRestLiquidityTransaction(MOCK_CREATE_POOL)).toEqual({
+    expect(parseLiquidityTransaction(MOCK_CREATE_POOL)).toEqual({
       type: TransactionType.CreatePool,
       currency0Id: `1-${ERC20_ASSET_ADDRESS}`,
       currency1Id: `1-${WRAPPED_NATIVE_ADDRESS}`,
@@ -1237,7 +1237,7 @@ describe(parseRestLiquidityTransaction, () => {
   })
 
   it('Liquidity: parse collect fees with single token', () => {
-    expect(parseRestLiquidityTransaction(MOCK_COLLECT_FEES)).toEqual({
+    expect(parseLiquidityTransaction(MOCK_COLLECT_FEES)).toEqual({
       type: TransactionType.CollectFees,
       currency0Id: `1-${ERC20_ASSET_ADDRESS}`,
       currency1Id: undefined,
@@ -1252,7 +1252,7 @@ describe(parseRestLiquidityTransaction, () => {
   })
 
   it('Liquidity: parse collect fees with two tokens', () => {
-    expect(parseRestLiquidityTransaction(MOCK_COLLECT_FEES_TWO_TOKENS)).toEqual({
+    expect(parseLiquidityTransaction(MOCK_COLLECT_FEES_TWO_TOKENS)).toEqual({
       type: TransactionType.CollectFees,
       currency0Id: `1-${ERC20_ASSET_ADDRESS}`,
       currency1Id: `1-${WRAPPED_NATIVE_ADDRESS}`,
@@ -1685,5 +1685,16 @@ describe(extractRestOnChainTransactionDetails, () => {
       expect(txns).toHaveLength(1)
       expect(txns[0]?.typeInfo.type).toEqual(TransactionType.Unknown)
     })
+  })
+
+  it('maps sponsorship metadata to sponsorInfo, preferring it over the paymaster address', () => {
+    const txns = extractRestOnChainTransactionDetails({
+      ...TRANSACTION_BASE,
+      paymaster: { address: SAMPLE_SEED_ADDRESS_1 },
+      sponsorship: { name: 'Uniswap', logoUrl: 'https://app.uniswap.org/favicon.png' },
+    } as unknown as OnChainTransaction)
+    expect(txns).toHaveLength(1)
+    expect(txns[0]?.sponsorInfo).toEqual({ name: 'Uniswap', icon: 'https://app.uniswap.org/favicon.png' })
+    expect(txns[0]?.paymaster).toEqual(SAMPLE_SEED_ADDRESS_1)
   })
 })

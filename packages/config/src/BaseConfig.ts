@@ -1,7 +1,7 @@
 // oxlint-disable eslint-js/no-restricted-syntax -- allow process.env access here
 import { AppId } from '@universe/config/src/AppId'
 import { boolIfDefined, boolFromOne, boolFromString, optionalString } from '@universe/config/src/commonSchemas'
-import { Environment, NodeEnv } from '@universe/config/src/Environment'
+import { Environment, NodeEnv, normalizeEnvironmentWireValue } from '@universe/config/src/Environment'
 import { z } from 'zod'
 
 /**
@@ -29,6 +29,12 @@ export const BaseConfigValues = {
   isUnitTest: process.env.JEST_WORKER_ID ?? process.env.VITEST_WORKER_ID,
   isE2ETest: process.env.IS_E2E_TEST,
   isVercelEnvironment: process.env.VERCEL,
+  // Build-time channel for the extension (dev/beta/prod). Used to resolve the env of
+  // unpacked builds whose runtime extension ID matches none of the trusted IDs.
+  buildEnv: process.env.BUILD_ENV,
+  // When true, a Beta build points its APIs at prod instead of staging. Set at build time
+  // (e.g. by the on-demand beta workflow); unset/false keeps the default beta → staging in urls.ts.
+  isBetaUsingProdApi: process.env.BETA_USES_PROD_API,
 
   // API Keys
   alchemyApiKey: process.env.ALCHEMY_API_KEY ?? process.env.REACT_APP_ALCHEMY_API_KEY,
@@ -49,6 +55,7 @@ export const BaseConfigValues = {
   jupiterProxyUrl: process.env.JUPITER_PROXY_URL ?? process.env.REACT_APP_JUPITER_PROXY_URL,
   quicknodeEndpointName: process.env.QUICKNODE_ENDPOINT_NAME ?? process.env.REACT_APP_QUICKNODE_ENDPOINT_NAME,
   quicknodeEndpointToken: process.env.QUICKNODE_ENDPOINT_TOKEN ?? process.env.REACT_APP_QUICKNODE_ENDPOINT_TOKEN,
+  quicknodeSolanaRpcUrl: process.env.QUICKNODE_SOLANA_RPC_URL ?? process.env.REACT_APP_QUICKNODE_SOLANA_RPC_URL,
 
   // Feature Flags
   enableEntryGatewayProxy: process.env.ENABLE_ENTRY_GATEWAY_PROXY ?? process.env.VITE_ENABLE_ENTRY_GATEWAY_PROXY,
@@ -82,12 +89,13 @@ export const BaseConfigSchema = z.object({
   // Environment
   nodeEnv: z.enum(NodeEnv).default(NodeEnv.Development).describe('Node process runtime mode, defaults to development'),
   environment: z
-    .enum(Environment)
-    .default(Environment.Development)
-    .describe('Backend deployment environment, defaults to development'),
+    .preprocess(normalizeEnvironmentWireValue, z.enum(Environment).default(Environment.Development))
+    .describe('Backend deployment environment, defaults to development; accepts deployer short forms dev/prod'),
   isUnitTest: boolIfDefined.describe('Is the app running in a unit test (Jest or Vitest)'),
   isE2ETest: boolFromString.describe('Is the app running in E2E test mode'),
   isVercelEnvironment: boolFromOne.describe('Is the app deployed on Vercel'),
+  buildEnv: optionalString.describe('Build-time channel for the extension (dev/beta/prod)'),
+  isBetaUsingProdApi: boolFromString.describe('For Beta builds, point APIs at prod instead of staging'),
 
   // API Keys
   alchemyApiKey: optionalString.describe('API key for Alchemy'),
@@ -108,6 +116,9 @@ export const BaseConfigSchema = z.object({
   jupiterProxyUrl: optionalString.describe('URL for Jupiter proxy'),
   quicknodeEndpointName: optionalString.describe('QuickNode endpoint name'),
   quicknodeEndpointToken: optionalString.describe('QuickNode endpoint token'),
+  quicknodeSolanaRpcUrl: optionalString.describe(
+    'Dedicated QuickNode RPC URL for Solana; overrides the built-in default until UniRPC routes Solana',
+  ),
 
   // Feature Flags
   enableEntryGatewayProxy: boolFromString.describe('Is the entry gateway proxy enabled'),

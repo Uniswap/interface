@@ -1,6 +1,6 @@
 import { generateRandomBytes } from '@universe/cryptography'
 import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
-import { deriveArgon2InWorker } from 'uniswap/src/features/passkey/deriveArgon2InWorker'
+import { deriveArgon2 } from 'uniswap/src/features/passkey/deriveArgon2'
 import {
   blindPin,
   combineAndDeriveKey,
@@ -24,19 +24,38 @@ export type SetupProgress =
   | 'authenticating'
   | 'registering'
 
+/**
+ * Thrown when OprfEvaluate rejects with a user-facing `errorMessage` (rate limited / banned PIN).
+ * The message is safe to display verbatim; callers should surface it instead of a generic error.
+ */
+export class RecoveryOprfError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'RecoveryOprfError'
+  }
+}
+
 export async function encryptAndStoreRecovery({
   pin,
   email,
   accessToken,
   privyAppId,
+  rotate = false,
+  retainPrivateKey = false,
   onProgress,
 }: {
   pin: string
   email: string
   accessToken: string
   privyAppId: string
+  // Rotation: force a v2 setup-style OprfEvaluate with a fresh nonce even though a v1 config exists.
+  rotate?: boolean
+  // Return a copy of the generated auth private key so the caller can immediately reuse it (e.g. to
+  // register a device passkey right after a rotation). The internal key is still zeroed; the caller
+  // owns zeroing the returned copy.
+  retainPrivateKey?: boolean
   onProgress?: (step: SetupProgress) => void
-}): Promise<{ publicKey: string; authMethodId: string; encryptedKeyId: string }> {
+}): Promise<{ publicKey: string; authMethodId: string; encryptedKeyId: string; authPrivateKey?: Uint8Array }> {
   let privateKey: Uint8Array | undefined
   let finalKey: Uint8Array | undefined
   let oprfOutput: Uint8Array | undefined
@@ -61,19 +80,22 @@ export async function encryptAndStoreRecovery({
       {
         blindedElement,
         authMethodId,
+        rotate,
       },
       accessToken,
     )
     if (!oprfResponse.evaluatedElement) {
-      throw new Error(oprfResponse.errorMessage ?? 'OPRF evaluation failed')
+      // A server errorMessage (rate limit / banned PIN) is user-facing; surface it via a typed error.
+      if (oprfResponse.errorMessage) {
+        throw new RecoveryOprfError(oprfResponse.errorMessage)
+      }
+      throw new Error('OPRF evaluation failed')
     }
     oprfOutput = await finalizeOprf(blindState, oprfResponse.evaluatedElement)
 
-    // 4. Key derivation: Argon2id (in worker) + HKDF
-    // Uses deriveArgon2InWorker (off-main-thread) instead of deriveEncryptionKey (main-thread argon2id).
-    // HKDF step is shared via combineAndDeriveKey from pinCrypto.ts.
+    // 4. Key derivation: Argon2id + HKDF
     onProgress?.('deriving')
-    pinKey = await deriveArgon2InWorker(pin, salt1)
+    pinKey = await deriveArgon2(pin, salt1)
     finalKey = combineAndDeriveKey({ oprfOutput, pinKey, salt2 })
 
     // 5. Encrypt auth private key
@@ -84,7 +106,13 @@ export async function encryptAndStoreRecovery({
     onProgress?.('storing')
     const { keyId } = await storeEncryptedBlob({ accessToken, blob, privyAppId })
 
-    return { publicKey, authMethodId, encryptedKeyId: keyId }
+    return {
+      publicKey,
+      authMethodId,
+      encryptedKeyId: keyId,
+      // Copy before the finally zeros the original.
+      authPrivateKey: retainPrivateKey ? privateKey.slice() : undefined,
+    }
   } catch (error) {
     logger.error(error, {
       tags: { file: 'recoverySetup.ts', function: 'encryptAndStoreRecovery' },

@@ -1,4 +1,3 @@
-import { NetworkStatus } from '@apollo/client'
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import { useIsFocused } from '@react-navigation/core'
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
@@ -19,7 +18,10 @@ import { zIndexes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { EmptyTokensList } from 'uniswap/src/components/portfolio/EmptyTokensList'
 import { HiddenTokensRow } from 'uniswap/src/components/portfolio/HiddenTokensRow'
-import { TokenBalanceItem } from 'uniswap/src/components/portfolio/TokenBalanceItem/TokenBalanceItem'
+import {
+  TOKEN_BALANCE_ITEM_ESTIMATED_HEIGHT,
+  TokenBalanceItem,
+} from 'uniswap/src/components/portfolio/TokenBalanceItem/TokenBalanceItem'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import {
@@ -42,8 +44,6 @@ type TokenBalanceListProps = TabProps & {
   onPressToken: (currencyId: CurrencyId, options?: TokenBalancePressOptions) => void
   isExternalProfile?: boolean
 }
-
-const ESTIMATED_TOKEN_ITEM_HEIGHT = 64
 
 export const TokenBalanceList = forwardRef<FlatList<TokenBalanceListRow>, TokenBalanceListProps>(
   function TokenBalanceListInner({ owner, onPressToken, isExternalProfile = false, ...rest }, ref): JSX.Element {
@@ -155,8 +155,8 @@ const TokenBalanceListContent = forwardRef<FlatList<TokenBalanceListRow>, TokenB
 
     const getItemLayout = useCallback(
       (_: Maybe<ArrayLike<string>>, index: number): { length: number; offset: number; index: number } => ({
-        length: ESTIMATED_TOKEN_ITEM_HEIGHT,
-        offset: ESTIMATED_TOKEN_ITEM_HEIGHT * index,
+        length: TOKEN_BALANCE_ITEM_ESTIMATED_HEIGHT,
+        offset: TOKEN_BALANCE_ITEM_ESTIMATED_HEIGHT * index,
         index,
       }),
       [],
@@ -207,12 +207,12 @@ const TokenBalanceListContent = forwardRef<FlatList<TokenBalanceListRow>, TokenB
 
 const HeaderComponent = memo(function HeaderComponentInner(): JSX.Element | null {
   const { t } = useTranslation()
-  const { balancesById, networkStatus, refetch, isPortfolioBalancesLoading } = useTokenBalanceListContext()
+  const { balancesById, error, refetch, isPortfolioBalancesLoading } = useTokenBalanceListContext()
 
   useAppStateTrigger({ from: 'background', to: 'active', callback: refetch || noop })
 
   const hasData = !!balancesById
-  const hasErrorWithCachedValues = !isPortfolioBalancesLoading && hasData && networkStatus === NetworkStatus.error
+  const hasErrorWithCachedValues = !isPortfolioBalancesLoading && hasData && error !== undefined
 
   return hasErrorWithCachedValues ? (
     <AnimatedFlex entering={FadeInDown} exiting={FadeOut} px="$spacing24" py="$spacing8">
@@ -221,7 +221,7 @@ const HeaderComponent = memo(function HeaderComponentInner(): JSX.Element | null
   ) : null
 })
 
-const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: TokenBalanceListRow }) {
+export const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: TokenBalanceListRow }) {
   const dispatch = useDispatch()
   const { balancesById, isWarmLoading } = useTokenBalanceListContext()
 
@@ -244,7 +244,6 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
 
   const balance = balancesById?.[item]
   const currencyInfo = balance?.tokens[0]?.currencyInfo
-  const isHidden = balance?.isHidden ?? false
 
   const contextMenuActions = useMemo(() => {
     if (!currencyInfo) {
@@ -271,7 +270,7 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
     // In that case, the token is removed from the balances object, but the FlatList is still using the cached array of IDs until the view comes back into focus.
     // As soon as the view comes back into focus, the FlatList will re-render with the latest data, so users won't really see this Skeleton for more than a few milliseconds when this happens.
     return (
-      <Flex height={ESTIMATED_TOKEN_ITEM_HEIGHT} px="$spacing24">
+      <Flex height={TOKEN_BALANCE_ITEM_ESTIMATED_HEIGHT} px="$spacing24">
         <Loader.Token />
       </Flex>
     )
@@ -281,7 +280,6 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
     <TokenBalanceItem
       padded
       contextMenuActions={contextMenuActions}
-      isHidden={isHidden}
       isLoading={isWarmLoading}
       currencyInfo={currencyInfo}
       portfolioBalance={balance}

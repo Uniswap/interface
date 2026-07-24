@@ -21,6 +21,7 @@ export type QuoteWithTradeAndGasEstimate =
 export function transformQuoteToTrade(input: {
   quote: DiscriminatedQuoteResponse | null
   amountSpecified: Maybe<CurrencyAmount<Currency>>
+  earnIntent?: TradingApi.EarnIntent
   quoteCurrencyData: QuoteCurrencyData
 }): QuoteWithTradeAndGasEstimate {
   if (!input.quote) {
@@ -43,6 +44,7 @@ export function transformQuoteToTrade(input: {
           tradeType,
           deadline: inXMinutesUnix(DEFAULT_SWAP_VALIDITY_TIME_MINS), // TODO(MOB-3050): set deadline as `quoteRequestArgs.deadline`
           data: input.quote,
+          earnIntent: input.earnIntent,
         })
       : null
 

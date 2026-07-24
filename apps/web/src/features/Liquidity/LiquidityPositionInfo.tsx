@@ -9,7 +9,7 @@ import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { LiquidityPositionStatusIndicator } from 'uniswap/src/features/positions/LiquidityPositionStatusIndicator'
+import { LiquidityPositionStatusIndicator } from 'uniswap/src/features/positions/components/LiquidityPositionStatusIndicator'
 import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { currencyId } from 'uniswap/src/utils/currencyId'
@@ -93,7 +93,7 @@ export function LiquidityPositionInfo({
       return {
         fullLabel: t('pool.migrateToV3'),
         shortLabel: t('common.migrate'),
-        path: `/migrate/v2/${positionInfo.liquidityToken.address}`,
+        path: `/migrate/v2/${chainInfo.urlParam}/${positionInfo.liquidityToken.address}`,
       }
     }
 
@@ -140,7 +140,9 @@ export function LiquidityPositionInfo({
               size="small"
               version={version}
               v4hook={v4hook}
+              chainId={chainId}
               feeTier={feeTier}
+              protocolFeePips={positionInfo.protocolFee}
               cta={
                 migrateButtonConfig
                   ? {

@@ -51,7 +51,8 @@ describe('useListTransactions', () => {
     expect(result.current).toHaveProperty('data')
     expect(result.current).toHaveProperty('loading')
     expect(result.current).toHaveProperty('isFetching')
-    expect(result.current).toHaveProperty('networkStatus')
+    expect(result.current).toHaveProperty('isPending')
+    expect(result.current).toHaveProperty('isError')
     expect(result.current).toHaveProperty('refetch')
     expect(result.current).toHaveProperty('error')
     expect(result.current).toHaveProperty('fetchNextPage')
@@ -79,7 +80,9 @@ describe('useListTransactions', () => {
 
     expect(result.current).toHaveProperty('data')
     expect(result.current).toHaveProperty('loading')
-    expect(result.current).toHaveProperty('networkStatus')
+    expect(result.current).toHaveProperty('isFetching')
+    expect(result.current).toHaveProperty('isPending')
+    expect(result.current).toHaveProperty('isError')
     expect(result.current).toHaveProperty('refetch')
     expect(result.current).toHaveProperty('error')
 

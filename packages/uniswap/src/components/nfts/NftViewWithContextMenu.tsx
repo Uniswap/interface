@@ -4,7 +4,6 @@ import { Flex } from 'ui/src'
 import { ContextMenu } from 'uniswap/src/components/menus/ContextMenu'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { NftView, NftViewProps } from 'uniswap/src/components/nfts/NftView'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useNFTContextMenuItems } from 'uniswap/src/features/nfts/hooks/useNftContextMenuItems'
 import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
 import { noop } from 'utilities/src/react/noop'
@@ -26,7 +25,7 @@ export function NftViewWithContextMenu(props: NftViewWithContextMenuProps): JSX.
     walletAddresses,
     isSpam: item.isSpam,
     showNotification: true,
-    chainId: fromGraphQLChain(item.chain) ?? undefined,
+    chainId: item.chainId,
   })
 
   const openContextMenuWithHaptics = useCallback(async () => {

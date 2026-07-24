@@ -248,6 +248,9 @@ export const interruptTransactionFlow = createAction<void>(`interruptTransaction
 /** Signal that the swap modal was closed while a plan is executing. Unlike interruption, this does not stop the saga. */
 export const signalSwapModalClosed = createAction<void>(`signalSwapModalClosed`)
 
+/** Signal that the earn modal was closed while an earn plan is executing. Unlike interruption, this does not stop the saga. */
+export const signalEarnModalClosed = createAction<void>(`signalEarnModalClosed`)
+
 /**
  * Signal that a plan has been cancelled by the user from the activity history.
  * Unlike other signal actions, this includes planId because multiple plan instances can run

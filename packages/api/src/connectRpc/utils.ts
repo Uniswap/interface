@@ -134,3 +134,24 @@ export function transformInput<T extends Record<string, unknown> & { walletAccou
     ...createWalletAccount({ evmAddress, svmAddress }),
   }
 }
+
+export type WithoutWalletAccounts<T> = Omit<T, 'walletAccounts'>
+
+/**
+ * Multi-wallet variant of {@link transformInput}: transforms input that includes a `wallets`
+ * address list to use `walletAccounts` instead
+ */
+export function transformWalletsInput<T extends Record<string, unknown> & { walletAccounts?: never }>(
+  input: (T & { wallets?: { evmAddress?: string; svmAddress?: string }[] }) | undefined,
+): (Omit<T, 'wallets' | 'walletAccounts'> & { walletAccounts: PlainMessage<WalletAccount>[] }) | undefined {
+  if (!input) {
+    return undefined
+  }
+
+  const { wallets, walletAccounts: _walletAccounts, ...restInput } = input
+
+  return {
+    ...restInput,
+    walletAccounts: (wallets ?? []).map((wallet) => createWalletAccount(wallet).walletAccount),
+  }
+}

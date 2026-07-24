@@ -6,9 +6,12 @@ import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { mockPermit } from 'uniswap/src/test/fixtures/permit'
+import type { Mock, MockInstance, MockedFunction } from 'vitest'
 import { createTransactionServices } from 'wallet/src/features/transactions/factories/createTransactionServices'
 import {
   getShouldWaitBetweenTransactions,
@@ -42,20 +45,26 @@ import {
 import { DelegationType } from 'wallet/src/features/transactions/types/transactionSagaDependencies'
 
 // Mock dependencies
-jest.mock('wallet/src/features/transactions/factories/createTransactionServices')
-jest.mock('wallet/src/features/transactions/swap/confirmation')
-jest.mock('wallet/src/features/transactions/swap/submitOrderSaga')
+vi.mock('wallet/src/features/transactions/factories/createTransactionServices')
+vi.mock('wallet/src/features/transactions/swap/confirmation')
+vi.mock('wallet/src/features/transactions/swap/submitOrderSaga')
+vi.mock('uniswap/src/features/telemetry/send', () => ({
+  sendAnalyticsEvent: vi.fn(),
+  sendAppsFlyerEvent: vi.fn(),
+}))
 
 const MOCK_TIMESTAMP = 1487076708000
 const CHAIN_ID = UniverseChainId.Mainnet
 
-const mockGetShouldWaitBetweenTransactions = jest.mocked(getShouldWaitBetweenTransactions) as jest.MockedFunction<
+const mockGetShouldWaitBetweenTransactions = vi.mocked(getShouldWaitBetweenTransactions) as MockedFunction<
   typeof getShouldWaitBetweenTransactions
 >
-const mockGetSwapTransactionCount = jest.mocked(getSwapTransactionCount) as jest.MockedFunction<
-  typeof getSwapTransactionCount
->
-const mockSubmitUniswapXOrder = jest.mocked(submitUniswapXOrder) as jest.MockedFunction<typeof submitUniswapXOrder>
+// jest's expect.any returned `any`; vitest's returns AsymmetricMatcher, so cast for typed call() signatures
+const anySwapTransactionCountParams = expect.any(Object) as unknown as Parameters<typeof getSwapTransactionCount>[0]
+const anySubmitUniswapXOrderParams = expect.any(Object) as unknown as Parameters<typeof submitUniswapXOrder>[0]
+
+const mockGetSwapTransactionCount = vi.mocked(getSwapTransactionCount) as MockedFunction<typeof getSwapTransactionCount>
+const mockSubmitUniswapXOrder = vi.mocked(submitUniswapXOrder) as MockedFunction<typeof submitUniswapXOrder>
 
 const mockExecutionResult: TransactionExecutionResult = {
   hash: '0xmockhash',
@@ -68,9 +77,9 @@ const mockFailedExecutionResult: TransactionExecutionResult = {
 }
 
 describe('executeSwapSaga', () => {
-  let dateNowSpy: jest.SpyInstance
+  let dateNowSpy: MockInstance
   let executeSwapSaga: ReturnType<typeof createExecuteSwapSaga>
-  let mockPrepareAndSignSwapSaga: jest.Mock
+  let mockPrepareAndSignSwapSaga: Mock
 
   // Helper for consistent account object structure across tests
   const mockAccountObject = { address: account.address, type: AccountType.SignerMnemonic } as const
@@ -83,6 +92,7 @@ describe('executeSwapSaga', () => {
         submitViaPrivateRpc: false,
         delegationType: DelegationType.Auto,
         request: mockSwapTxRequest,
+        includeUserOpServices: false,
       }),
       {
         transactionSigner: mockTransactionSigner,
@@ -97,12 +107,12 @@ describe('executeSwapSaga', () => {
       }),
       false,
     ],
-    [call(getSwapTransactionCount, expect.any(Object)), 1],
+    [call(getSwapTransactionCount, anySwapTransactionCountParams), 1],
   ]
 
   beforeAll(() => {
-    dateNowSpy = jest.spyOn(Date, 'now').mockImplementation(() => MOCK_TIMESTAMP)
-    mockPrepareAndSignSwapSaga = jest.fn()
+    dateNowSpy = vi.spyOn(Date, 'now').mockImplementation(() => MOCK_TIMESTAMP)
+    mockPrepareAndSignSwapSaga = vi.fn()
     executeSwapSaga = createExecuteSwapSaga(mockTransactionSagaDependencies, mockPrepareAndSignSwapSaga)
   })
 
@@ -111,13 +121,13 @@ describe('executeSwapSaga', () => {
   })
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
 
     // Setup default mocks
     mockGetShouldWaitBetweenTransactions.mockResolvedValue(false)
     mockGetSwapTransactionCount.mockReturnValue(1)
     mockTransactionExecutor.executeStep.mockImplementation(function* () {
-      yield call(jest.fn())
+      yield call(vi.fn())
       return mockExecutionResult
     })
   })
@@ -217,7 +227,7 @@ describe('executeSwapSaga', () => {
       })
 
       mockTransactionExecutor.executeStep.mockImplementationOnce(function* () {
-        yield call(jest.fn())
+        yield call(vi.fn())
         return mockFailedExecutionResult
       })
 
@@ -246,7 +256,7 @@ describe('executeSwapSaga', () => {
       const params = prepareExecuteSwapSagaParams()
 
       mockTransactionExecutor.executeStep.mockImplementationOnce(function* () {
-        yield call(jest.fn())
+        yield call(vi.fn())
         return mockFailedExecutionResult
       })
 
@@ -369,7 +379,7 @@ describe('executeSwapSaga', () => {
       })
 
       mockTransactionExecutor.executeStep.mockImplementationOnce(function* () {
-        yield call(jest.fn())
+        yield call(vi.fn())
         return mockFailedExecutionResult
       })
 
@@ -403,7 +413,7 @@ describe('executeSwapSaga', () => {
       })
 
       mockTransactionExecutor.executeStep.mockImplementationOnce(function* () {
-        yield call(jest.fn())
+        yield call(vi.fn())
         return mockFailedExecutionResult
       })
 
@@ -429,7 +439,7 @@ describe('executeSwapSaga', () => {
       })
 
       await expectSaga(executeSwapSaga, params)
-        .provide([...sharedProviders, [call(submitUniswapXOrder, expect.any(Object)), undefined]])
+        .provide([...sharedProviders, [call(submitUniswapXOrder, anySubmitUniswapXOrderParams), undefined]])
         .call(params.onPending)
         .not.call(params.onSuccess)
         .not.call(params.onFailure)
@@ -466,7 +476,7 @@ describe('executeSwapSaga', () => {
       })
 
       await expectSaga(executeSwapSaga, params)
-        .provide([...sharedProviders, [call(submitUniswapXOrder, expect.any(Object)), undefined]])
+        .provide([...sharedProviders, [call(submitUniswapXOrder, anySubmitUniswapXOrderParams), undefined]])
         .call(params.onPending)
         .not.call(params.onSuccess)
         .not.call(params.onFailure)
@@ -502,7 +512,7 @@ describe('executeSwapSaga', () => {
       })
 
       mockTransactionExecutor.executeStep.mockImplementationOnce(function* () {
-        yield call(jest.fn())
+        yield call(vi.fn())
         return mockFailedExecutionResult
       })
 
@@ -630,7 +640,7 @@ describe('executeSwapSaga', () => {
       })
 
       mockTransactionExecutor.executeStep.mockImplementationOnce(function* () {
-        yield call(jest.fn())
+        yield call(vi.fn())
         return mockFailedExecutionResult
       })
 
@@ -664,7 +674,7 @@ describe('executeSwapSaga', () => {
       })
 
       mockTransactionExecutor.executeStep.mockImplementationOnce(function* () {
-        yield call(jest.fn())
+        yield call(vi.fn())
         return mockFailedExecutionResult
       })
 
@@ -716,6 +726,7 @@ describe('executeSwapSaga', () => {
               submitViaPrivateRpc: false,
               delegationType: DelegationType.Auto,
               request: mockSwapTxRequest,
+              includeUserOpServices: false,
             }),
             {
               transactionSigner: mockTransactionSigner,
@@ -796,7 +807,7 @@ describe('executeSwapSaga', () => {
       const params = prepareExecuteSwapSagaParams()
 
       mockTransactionExecutor.executeStep.mockImplementationOnce(function* () {
-        yield call(jest.fn())
+        yield call(vi.fn())
         throw new Error('Test error')
       })
 
@@ -824,6 +835,7 @@ describe('executeSwapSaga', () => {
               submitViaPrivateRpc: false,
               delegationType: DelegationType.Auto,
               request: mockSwapTxRequest,
+              includeUserOpServices: false,
             }),
             Promise.reject(error),
           ],
@@ -836,6 +848,39 @@ describe('executeSwapSaga', () => {
           tags: { file: 'executeSwapSaga', function: 'executeSwap' },
           extra: { analytics: mockAnalytics },
         }),
+      )
+    })
+  })
+
+  describe('SwapExecutionWindow telemetry (SWAP-2471)', () => {
+    it('emits a start marker then an end marker for a successful swap', async () => {
+      const params = prepareExecuteSwapSagaParams()
+
+      await expectSaga(executeSwapSaga, params).provide(sharedProviders).run()
+
+      const analyticsCalls = vi.mocked(sendAnalyticsEvent).mock.calls
+      const windowCalls = analyticsCalls.filter(([name]) => name === WalletEventName.SwapExecutionWindow)
+      expect(windowCalls).toHaveLength(2)
+      expect(windowCalls[0]?.[1]).toEqual(
+        expect.objectContaining({ saga: 'executeSwap', phase: 'start', address: params.address }),
+      )
+      expect(windowCalls[1]?.[1]).toEqual(
+        expect.objectContaining({ saga: 'executeSwap', phase: 'end', address: params.address }),
+      )
+    })
+
+    it('still emits the end marker when the swap throws (finally block)', async () => {
+      const params = prepareExecuteSwapSagaParams()
+      mockTransactionExecutor.executeStep.mockImplementationOnce(function* () {
+        yield call(vi.fn())
+        throw new Error('Test error')
+      })
+
+      await expectSaga(executeSwapSaga, params).provide(sharedProviders).run()
+
+      expect(vi.mocked(sendAnalyticsEvent)).toHaveBeenCalledWith(
+        WalletEventName.SwapExecutionWindow,
+        expect.objectContaining({ saga: 'executeSwap', phase: 'end' }),
       )
     })
   })
@@ -864,7 +909,7 @@ describe('executeSwapSaga', () => {
       })
 
       // Mock the transaction factory to capture the approval data
-      const mockCreateApprovalParams = jest.fn().mockReturnValue({
+      const mockCreateApprovalParams = vi.fn().mockReturnValue({
         typeInfo: { type: TransactionType.Approve },
         chainId: CHAIN_ID,
         account: { address: params.address, type: AccountType.SignerMnemonic },
@@ -872,7 +917,7 @@ describe('executeSwapSaga', () => {
 
       const mockDependencies = {
         ...mockTransactionSagaDependencies,
-        createTransactionParamsFactory: jest.fn().mockReturnValue({
+        createTransactionParamsFactory: vi.fn().mockReturnValue({
           ...mockTransactionParamsFactory,
           createApprovalParams: mockCreateApprovalParams,
         }),
@@ -889,6 +934,7 @@ describe('executeSwapSaga', () => {
               submitViaPrivateRpc: false,
               delegationType: DelegationType.Auto,
               request: mockSwapTxRequest,
+              includeUserOpServices: false,
             }),
             {
               transactionSigner: mockTransactionSigner,
@@ -903,7 +949,7 @@ describe('executeSwapSaga', () => {
             }),
             false,
           ],
-          [call(getSwapTransactionCount, expect.any(Object)), 1],
+          [call(getSwapTransactionCount, anySwapTransactionCountParams), 1],
         ])
         .call(params.onSuccess)
         .run()
@@ -916,7 +962,7 @@ describe('executeSwapSaga', () => {
       })
 
       // Verify the approval data passed doesn't have txId property
-      const approvalDataCall = mockCreateApprovalParams.mock.calls[0][0]
+      const approvalDataCall = mockCreateApprovalParams.mock.calls[0]?.[0]
       expect(approvalDataCall).toBeTruthy()
       expect(approvalDataCall).not.toHaveProperty('txId')
     })
@@ -947,6 +993,7 @@ describe('executeSwapSaga', () => {
               submitViaPrivateRpc: true,
               delegationType: DelegationType.Auto,
               request: mockSwapTxRequest,
+              includeUserOpServices: false,
             }),
             {
               transactionSigner: mockTransactionSigner,
@@ -968,6 +1015,7 @@ describe('executeSwapSaga', () => {
           submitViaPrivateRpc: true,
           delegationType: DelegationType.Auto,
           request: mockSwapTxRequest,
+          includeUserOpServices: false,
         })
         .call(params.onSuccess)
         .run()
@@ -977,18 +1025,18 @@ describe('executeSwapSaga', () => {
 
 describe('Sync transaction submission', () => {
   let executeSwapSaga: ReturnType<typeof createExecuteSwapSaga>
-  let mockPrepareAndSignSwapSaga: jest.Mock
+  let mockPrepareAndSignSwapSaga: Mock
 
   // Helper for consistent account object structure across tests
   const mockAccountObject = { address: account.address, type: AccountType.SignerMnemonic } as const
 
   beforeAll(() => {
-    mockPrepareAndSignSwapSaga = jest.fn()
+    mockPrepareAndSignSwapSaga = vi.fn()
     executeSwapSaga = createExecuteSwapSaga(mockTransactionSagaDependencies, mockPrepareAndSignSwapSaga)
   })
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockGetShouldWaitBetweenTransactions.mockResolvedValue(false)
     mockGetSwapTransactionCount.mockReturnValue(1)
   })
@@ -1005,7 +1053,7 @@ describe('Sync transaction submission', () => {
     })
 
     mockTransactionExecutor.executeStep.mockImplementation(function* () {
-      yield call(jest.fn())
+      yield call(vi.fn())
       return mockExecutionResult
     })
 
@@ -1018,6 +1066,7 @@ describe('Sync transaction submission', () => {
             submitViaPrivateRpc: false,
             delegationType: DelegationType.Auto,
             request: mockSwapTxRequest,
+            includeUserOpServices: false,
           }),
           {
             transactionSigner: mockTransactionSigner,
@@ -1032,7 +1081,7 @@ describe('Sync transaction submission', () => {
           }),
           false,
         ],
-        [call(getSwapTransactionCount, expect.any(Object)), 1],
+        [call(getSwapTransactionCount, anySwapTransactionCountParams), 1],
       ])
       .call(params.onSuccess)
       .run()

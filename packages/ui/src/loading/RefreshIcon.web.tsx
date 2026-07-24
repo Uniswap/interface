@@ -2,8 +2,10 @@ import { forwardRef } from 'react'
 import { IconProps } from 'ui/src/components/factories/createIcon'
 import { RotateRight } from 'ui/src/components/icons/RotateRight'
 import { Flex } from 'ui/src/components/layout'
+import { useInjectSingleStylesheet } from 'utilities/src/react/useInjectSingleStylesheet'
 
-const rotateCSS = `
+const CSS_RULE_ID = '__refresh_icon_styles__'
+const REFRESH_ICON_CSS = `
   @keyframes rotate360 {
     from {
       transform: rotate(0deg);
@@ -35,12 +37,11 @@ export const RefreshIcon = forwardRef<HTMLDivElement, IconProps & { isAnimating?
   { isAnimating = false, ...iconProps },
   ref,
 ) {
+  useInjectSingleStylesheet({ id: CSS_RULE_ID, css: REFRESH_ICON_CSS })
+
   return (
-    <>
-      <style>{rotateCSS}</style>
-      <Flex ref={ref} className={isAnimating ? 'RotateRefreshIcon' : ''}>
-        <RotateRight {...iconProps} />
-      </Flex>
-    </>
+    <Flex ref={ref} className={isAnimating ? 'RotateRefreshIcon' : ''}>
+      <RotateRight {...iconProps} />
+    </Flex>
   )
 })

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Third-party globals fixture</title>
+  </head>
+  <body>
+    <h1 id="status">loading</h1>
+    <script>
+      // Reproduces the INC-283 / PR #33221 (v1.73.1 hotfix) failure mode: real sites
+      // (e.g. Reddit) declare single-letter lexical bindings at the top level of inline
+      // scripts. A MAIN-world content script shipped without its IIFE wrapper leaks
+      // top-level `var t, e; function r() {}` declarations into the page's global
+      // lexical scope, so these `let` declarations throw
+      // "SyntaxError: Identifier 'e' has already been declared" and the site's script
+      // dies. `let` only collides with leaked var/function *declarations* — plain
+      // window property assignments (like window.ethereum) don't conflict.
+      let e, t, n, r, i, o, a, s, u, c, l, d, f, p, h, g, v, y, m, b, w
+      window.__lexicalScopeClean = true
+    </script>
+    <script>
+      // Representative feature detection that real third-party sites perform.
+      // If the extension's injected scripts leak bundler globals (process, Buffer,
+      // module, define, regeneratorRuntime, ...) into the MAIN world, sites take the
+      // wrong environment-detection branch and break (INC-283 class of incident).
+      ;(function () {
+        var report = { errors: [] }
+        try {
+          report.leakedGlobals = [
+            'process',
+            'global',
+            'Buffer',
+            'module',
+            'exports',
+            'define',
+            'regeneratorRuntime',
+            'webpackChunk',
+            '__webpack_require__',
+          ].filter(function (name) {
+            try {
+              return typeof window[name] !== 'undefined'
+            } catch (e) {
+              report.errors.push(String(e))
+              return false
+            }
+          })
+
+          // Set by the top-level-`let` script block above; stays falsy when leaked
+          // var/function declarations made that block throw a SyntaxError.
+          report.lexicalScopeClean = window.__lexicalScopeClean === true
+
+          // The classic UMD environment check: in a browser this must take the
+          // non-CommonJS branch. Leaked `module`/`exports` globals flip it.
+          report.tookCommonJsBranch = false
+          if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+            report.tookCommonJsBranch = true
+          }
+        } catch (e) {
+          report.errors.push(String(e))
+        }
+
+        window.__thirdPartyFixtureReport = report
+        document.getElementById('status').textContent = 'fixture-ok'
+      })()
+    </script>
+  </body>
+</html>

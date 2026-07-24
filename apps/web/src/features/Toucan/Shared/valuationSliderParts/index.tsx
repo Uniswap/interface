@@ -26,7 +26,7 @@ function ValuationSliderComponent({
   clearingPriceQ96,
   floorPriceQ96,
   tickSizeQ96,
-  auctionTokenDecimals = 18,
+  auctionTokenDecimals,
   tokenTotalSupply,
   bidTokenPriceFiat,
   tickGrouping,
@@ -38,7 +38,12 @@ function ValuationSliderComponent({
   // If FDV < $10K (or < 10 bid tokens when fiat is unavailable), expand the
   // slider upper bound to the price implying $1M FDV (or 1 bid token).
   const maxSliderPriceQ96 = useMemo(() => {
-    if (!clearingPriceQ96 || !tokenTotalSupply || bidTokenDecimals === undefined) {
+    if (
+      !clearingPriceQ96 ||
+      !tokenTotalSupply ||
+      bidTokenDecimals === undefined ||
+      auctionTokenDecimals === undefined
+    ) {
       return undefined
     }
 
@@ -105,6 +110,7 @@ function ValuationSliderComponent({
     !minPriceQ96 ||
     !tickSizeQ96 ||
     bidTokenDecimals === undefined ||
+    auctionTokenDecimals === undefined ||
     totalTicks === 0 ||
     tokenColorLoading
   ) {

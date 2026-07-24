@@ -1,13 +1,10 @@
 import { isTouchable, isWebApp } from '@universe/environment'
-import { useCallback, useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { LayoutChangeEvent } from 'react-native'
-import { AdaptiveWebPopoverContent, Flex, Popover, useMedia, useScrollbarStyles, useShadowPropsMedium } from 'ui/src'
-import { NetworkFilterContent } from 'uniswap/src/components/network/NetworkFilterV2/NetworkFilterContent'
+import { AdaptiveWebPopoverContent, Flex, Popover, useMedia, useShadowPropsMedium } from 'ui/src'
+import { NetworkFilterDropdownContent } from 'uniswap/src/components/network/NetworkFilterV2/NetworkFilterDropdownContent'
 import { NetworkFilterTrigger } from 'uniswap/src/components/network/NetworkFilterV2/NetworkFilterTrigger'
 import type { NetworkFilterV2Props } from 'uniswap/src/components/network/NetworkFilterV2/NetworkFilterV2'
-import { NetworkSearchBar } from 'uniswap/src/components/network/NetworkFilterV2/NetworkSearchBar'
-import { useNetworkFilterSearch } from 'uniswap/src/components/network/NetworkFilterV2/useNetworkFilterSearch'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -15,6 +12,35 @@ import { useEvent } from 'utilities/src/react/hooks'
 
 const DESKTOP_DROPDOWN_MAX_HEIGHT = 320
 const DROPDOWN_WIDTH = 240
+const DROPDOWN_OFFSET = 8
+
+function getViewportConstrainedMaxHeight({
+  triggerElement,
+  preferredMaxHeight,
+}: {
+  triggerElement: HTMLElement
+  preferredMaxHeight: number
+}): number {
+  const rect = triggerElement.getBoundingClientRect()
+  const viewportEdgeInset = DROPDOWN_OFFSET
+  const spaceBelow = window.innerHeight - rect.bottom - DROPDOWN_OFFSET - viewportEdgeInset
+  const spaceAbove = rect.top - DROPDOWN_OFFSET - viewportEdgeInset
+  const fitsBelow = preferredMaxHeight <= spaceBelow
+
+  if (fitsBelow) {
+    return Math.min(preferredMaxHeight, Math.max(0, spaceBelow))
+  }
+
+  const fitsAbove = preferredMaxHeight <= spaceAbove
+  if (fitsAbove && spaceAbove > spaceBelow) {
+    return Math.min(preferredMaxHeight, Math.max(0, spaceAbove))
+  }
+
+  const flipVertical = spaceAbove > spaceBelow
+  const availableSpace = flipVertical ? spaceAbove : spaceBelow
+
+  return Math.min(preferredMaxHeight, Math.max(0, availableSpace))
+}
 
 export function NetworkFilterV2({
   chainIds,
@@ -26,37 +52,23 @@ export function NetworkFilterV2({
   const { t } = useTranslation()
   const { defaultChainId } = useEnabledChains()
   const [isOpen, setIsOpen] = useState(false)
-  const { searchQuery, setSearchQuery, filteredChainIds, filteredTieredOptions, showAllNetworks } =
-    useNetworkFilterSearch({
-      chainIds,
-      includeAllNetworks,
-      tieredOptions,
-    })
+  const triggerRef = useRef<HTMLElement | null>(null)
+  const [dropdownMaxHeight, setDropdownMaxHeight] = useState(DESKTOP_DROPDOWN_MAX_HEIGHT)
   const media = useMedia()
-  const scrollbarStyles = useScrollbarStyles()
   const shadowProps = useShadowPropsMedium()
   const isMobileSheet = isWebApp && media.sm
-  const [desktopContentHeight, setDesktopContentHeight] = useState<number | null>(null)
   const dropdownWidth = isMobileSheet ? '100%' : DROPDOWN_WIDTH
-  const desktopListHeight =
-    desktopContentHeight === null
-      ? DESKTOP_DROPDOWN_MAX_HEIGHT
-      : Math.min(desktopContentHeight, DESKTOP_DROPDOWN_MAX_HEIGHT)
-  const hasDesktopScrollbar = desktopContentHeight !== null && desktopContentHeight > DESKTOP_DROPDOWN_MAX_HEIGHT
   const displayedChainId = selectedChain ?? (includeAllNetworks ? null : defaultChainId)
   const selectedChainTooltipLabel = displayedChainId
     ? getChainInfo(displayedChainId).label
     : t('transaction.network.all')
 
   const handleOpenChange = useEvent((nextIsOpen: boolean) => {
-    if (!nextIsOpen) {
-      setSearchQuery('')
-    }
     setIsOpen(nextIsOpen)
   })
 
   const handleClose = useEvent(() => {
-    handleOpenChange(false)
+    setIsOpen(false)
   })
 
   const handlePressChain = useEvent((chainId: UniverseChainId | null) => {
@@ -65,23 +77,47 @@ export function NetworkFilterV2({
   })
 
   const handleToggleOpen = useEvent(() => {
-    handleOpenChange(!isOpen)
+    setIsOpen(!isOpen)
   })
 
-  const handleDesktopContentLayout = useCallback(
-    (event: LayoutChangeEvent) => {
-      if (isMobileSheet) {
+  useLayoutEffect(() => {
+    if (!isOpen || isMobileSheet || !triggerRef.current) {
+      return undefined
+    }
+
+    const updateMaxHeight = (): void => {
+      if (!triggerRef.current) {
         return
       }
 
-      setDesktopContentHeight(event.nativeEvent.layout.height)
-    },
-    [isMobileSheet],
-  )
+      setDropdownMaxHeight(
+        getViewportConstrainedMaxHeight({
+          triggerElement: triggerRef.current,
+          preferredMaxHeight: DESKTOP_DROPDOWN_MAX_HEIGHT,
+        }),
+      )
+    }
+
+    updateMaxHeight()
+    window.addEventListener('resize', updateMaxHeight)
+    window.addEventListener('scroll', updateMaxHeight, true)
+
+    return () => {
+      window.removeEventListener('resize', updateMaxHeight)
+      window.removeEventListener('scroll', updateMaxHeight, true)
+    }
+  }, [isMobileSheet, isOpen])
 
   return (
-    <Popover open={isOpen} placement="bottom-end" offset={{ mainAxis: 8 }} onOpenChange={handleOpenChange}>
-      <Popover.Trigger>
+    <Popover
+      stayInFrame
+      allowFlip
+      open={isOpen}
+      placement="bottom-end"
+      offset={{ mainAxis: DROPDOWN_OFFSET }}
+      onOpenChange={handleOpenChange}
+    >
+      <Popover.Trigger ref={triggerRef}>
         <NetworkFilterTrigger
           defaultChainId={defaultChainId}
           includeAllNetworks={includeAllNetworks}
@@ -103,33 +139,28 @@ export function NetworkFilterV2({
         px="$spacing4"
         pb="$none"
         overflow="hidden"
-        webBottomSheetProps={{ onClose: handleClose, snapPoints: ['60%'] }}
+        webBottomSheetProps={{ onClose: handleClose, snapPoints: [60], snapPointsMode: 'percent' }}
       >
-        <Flex width={dropdownWidth} flex={isMobileSheet ? 1 : undefined} height={isMobileSheet ? '100%' : undefined}>
-          <NetworkSearchBar autoFocus={!isMobileSheet} value={searchQuery} onChangeText={setSearchQuery} />
-          <Flex
-            flex={isMobileSheet ? 1 : undefined}
-            height={isMobileSheet ? undefined : desktopListHeight}
-            minHeight={0}
-            pr={isMobileSheet || hasDesktopScrollbar ? '$none' : '$spacing2'}
-            style={{
-              ...scrollbarStyles,
-              scrollbarWidth: 'auto',
-              overflow: 'auto',
-              transition: isMobileSheet ? undefined : 'height 160ms ease',
-            }}
-          >
-            <Flex onLayout={handleDesktopContentLayout}>
-              <NetworkFilterContent
-                searchQuery={searchQuery}
-                chainIds={filteredChainIds}
-                selectedChain={selectedChain}
-                showAllNetworks={showAllNetworks}
-                tieredOptions={filteredTieredOptions}
-                onPressChain={handlePressChain}
-              />
-            </Flex>
-          </Flex>
+        <Flex
+          width={dropdownWidth}
+          flex={isMobileSheet ? 1 : undefined}
+          height={isMobileSheet ? '100%' : undefined}
+          maxHeight={isMobileSheet ? undefined : dropdownMaxHeight}
+          flexDirection="column"
+          minHeight={0}
+          overflow="hidden"
+        >
+          <NetworkFilterDropdownContent
+            autoFocus={!isMobileSheet}
+            chainIds={chainIds}
+            fillAvailableHeight={!isMobileSheet}
+            includeAllNetworks={includeAllNetworks}
+            isMobileSheet={isMobileSheet}
+            isOpen={isOpen}
+            selectedChain={selectedChain}
+            tieredOptions={tieredOptions}
+            onPressChain={handlePressChain}
+          />
         </Flex>
       </AdaptiveWebPopoverContent>
     </Popover>

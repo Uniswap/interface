@@ -5,12 +5,12 @@ import { Check } from 'ui/src/components/icons/Check'
 import { Faceid } from 'ui/src/components/icons/Faceid'
 import { Fingerprint } from 'ui/src/components/icons/Fingerprint'
 import { Passkey } from 'ui/src/components/icons/Passkey'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useEvent } from 'utilities/src/react/hooks'
-import { Page } from '~/components/NavBar/DownloadApp/Modal'
+import { Page } from '~/components/NavBar/DownloadApp/Modal/constants'
 import { ModalContent } from '~/components/NavBar/DownloadApp/Modal/Content'
 import { useModalState } from '~/hooks/useModalState'
 import { useSignInWithPasskey } from '~/hooks/useSignInWithPasskey'
@@ -74,7 +74,7 @@ export function PasskeyGenerationModal({
             </Flex>
           </Flex>
         }
-        learnMoreLink={uniswapUrls.helpArticleUrls.passkeysInfo}
+        learnMoreLink={UniswapHelpUrls.articles.passkeysInfo}
         onClose={onClose}
         goBack={goBack}
       >
@@ -93,7 +93,7 @@ export function PasskeyGenerationModal({
               emphasis="primary"
               variant="branded"
               size="large"
-              isDisabled={hasWalletCreationSuccess}
+              disabled={hasWalletCreationSuccess}
               loading={isPending && !hasWalletCreationSuccess}
               onPress={() => signInWithPasskey()}
             >

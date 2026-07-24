@@ -1,26 +1,17 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import React, { createContext, PropsWithChildren, useContext, useMemo } from 'react'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import type {
-  HasMismatchInput,
-  HasMismatchResult,
-  HasMismatchUtil,
-} from 'uniswap/src/features/smartWallet/mismatch/mismatch'
+import React, { PropsWithChildren, useMemo } from 'react'
+import type { HasMismatchInput, HasMismatchResult } from 'uniswap/src/features/smartWallet/mismatch/mismatch'
 import { MismatchAccountEffects } from 'uniswap/src/features/smartWallet/mismatch/MismatchAccountEffects'
+import {
+  MismatchContext,
+  type MismatchContextValue,
+} from 'uniswap/src/features/smartWallet/mismatch/MismatchContextValue'
 import { useEvent } from 'utilities/src/react/hooks'
 
-interface MismatchContextValue {
-  mismatchCallback: HasMismatchUtil
-  account: { address?: string; chainId?: number }
-  onHasAnyMismatch: () => void
-  chains: UniverseChainId[]
-  defaultChainId: UniverseChainId
-  isTestnetModeEnabled: boolean
-}
+export { useMismatchContext } from 'uniswap/src/features/smartWallet/mismatch/MismatchContextValue'
+export type { MismatchContextValue } from 'uniswap/src/features/smartWallet/mismatch/MismatchContextValue'
 
 type MismatchContextProviderProps = Omit<MismatchContextValue, 'account'> & MismatchContextValue['account']
-
-const MismatchContext = createContext<MismatchContextValue | undefined>(undefined)
 
 export const MismatchContextProvider = React.memo(function MismatchContextProvider({
   children,
@@ -62,14 +53,6 @@ export const MismatchContextProvider = React.memo(function MismatchContextProvid
 })
 
 MismatchContextProvider.displayName = 'MismatchContextProvider'
-
-export function useMismatchContext(): MismatchContextValue {
-  const value = useContext(MismatchContext)
-  if (!value) {
-    throw new Error('MismatchContext not found')
-  }
-  return value
-}
 
 function useIsMismatchForced(): boolean {
   return useFeatureFlag(FeatureFlags.ForcePermitTransactions)

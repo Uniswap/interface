@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`KeyboardKey Component renders correctly with state Highlighted 1`] = `
+exports[`KeyboardKey Component > renders correctly with state Highlighted 1`] = `
 <div>
   <span
     class=""
@@ -23,7 +23,7 @@ exports[`KeyboardKey Component renders correctly with state Highlighted 1`] = `
 </div>
 `;
 
-exports[`KeyboardKey Component renders correctly with state KeyDown 1`] = `
+exports[`KeyboardKey Component > renders correctly with state KeyDown 1`] = `
 <div>
   <span
     class=""
@@ -46,7 +46,7 @@ exports[`KeyboardKey Component renders correctly with state KeyDown 1`] = `
 </div>
 `;
 
-exports[`KeyboardKey Component renders correctly with state KeyUp 1`] = `
+exports[`KeyboardKey Component > renders correctly with state KeyUp 1`] = `
 <div>
   <span
     class=""

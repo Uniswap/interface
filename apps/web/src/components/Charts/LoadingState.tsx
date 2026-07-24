@@ -8,7 +8,12 @@ import { ChartBarCrossedWithBackground } from '~/components/Table/ErrorBox'
 
 const ERROR_WIDTH = 320
 
-function ChartErrorView({ children }: PropsWithChildren) {
+function ChartErrorView({
+  title,
+  backgroundColor = '$surface1',
+  borderColor = '$surface3',
+  children,
+}: PropsWithChildren<{ title?: ReactNode; backgroundColor?: string; borderColor?: string }>) {
   const { t } = useTranslation()
   return (
     <Flex
@@ -24,8 +29,8 @@ function ChartErrorView({ children }: PropsWithChildren) {
       transform="translate(-50%, -50%)"
       borderRadius="$rounded20"
       borderWidth={1.3}
-      borderColor="$surface3"
-      backgroundColor="$surface1"
+      borderColor={borderColor}
+      backgroundColor={backgroundColor}
       p="$spacing12"
       pr="$spacing20"
       gap="$gap12"
@@ -37,7 +42,7 @@ function ChartErrorView({ children }: PropsWithChildren) {
       <ChartBarCrossedWithBackground />
       <Flex shrink gap="$gap4">
         <Text variant="subheading2" color="$neutral1">
-          {t('chart.missingData')}
+          {title ?? t('chart.missingData')}
         </Text>
         <Text variant="body3" color="$neutral2">
           {children}
@@ -170,6 +175,10 @@ function ChartLoadingStateMask({
 
 export function ChartSkeleton({
   errorText,
+  errorTitle,
+  errorColor,
+  errorBackgroundColor,
+  errorBorderColor,
   height,
   type,
   dim,
@@ -180,6 +189,10 @@ export function ChartSkeleton({
 }: {
   height: number
   errorText?: ReactNode
+  errorTitle?: ReactNode
+  errorColor?: string
+  errorBackgroundColor?: string
+  errorBorderColor?: string
   type: ChartType
   dim?: boolean
   chartTransform?: string
@@ -188,10 +201,11 @@ export function ChartSkeleton({
   hidePriceIndicators?: boolean
 }) {
   const colors = useSporeColors()
-  const neutral3Opacified = colors.neutral3.val
+  const neutral3 = colors.neutral3.val
 
-  const fillColor = errorText || dim ? neutral3Opacified : colors.neutral3.val
-  const tickColor = errorText ? opacify(12.5, colors.neutral3.val) : neutral3Opacified
+  const defaultFillColor = errorText || dim ? neutral3 : colors.neutral3.val
+  const fillColor = errorText && errorColor ? errorColor : defaultFillColor
+  const tickColor = errorText ? (errorColor ?? opacify(12.5, colors.neutral3.val)) : neutral3
 
   const maskId = `mask-${type}-${height}`
 
@@ -211,7 +225,11 @@ export function ChartSkeleton({
           <rect width="94%" height={height} rx="4" fill={errorText ? fillColor : `url(#${maskId}-gradient)`} />
         </g>
       </svg>
-      {errorText && <ChartErrorView>{errorText}</ChartErrorView>}
+      {errorText && (
+        <ChartErrorView title={errorTitle} backgroundColor={errorBackgroundColor} borderColor={errorBorderColor}>
+          {errorText}
+        </ChartErrorView>
+      )}
     </Flex>
   )
 }

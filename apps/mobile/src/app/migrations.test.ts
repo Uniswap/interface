@@ -169,6 +169,7 @@ import {
   v95Schema,
   v96Schema,
   v97Schema,
+  v98Schema,
 } from 'src/app/schema'
 import { persistConfig } from 'src/app/store'
 import { initialBiometricsSettingsState } from 'src/features/biometricsSettings/slice'
@@ -200,6 +201,7 @@ import {
   testMigrateDismissedTokenWarnings,
   testMigrateSearchHistory,
   testRemoveTHBFromCurrency,
+  testRemoveUniswapWrapped2025BehaviorHistory,
 } from 'uniswap/src/state/uniswapMigrationTests'
 import { transactionDetails } from 'uniswap/src/test/fixtures'
 import { DappRequestType } from 'uniswap/src/types/walletConnect'
@@ -239,13 +241,14 @@ import {
 } from 'wallet/src/state/walletMigrationsTests'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
-jest.mock('uniswap/src/i18n/utils', () => {
-  const actual = jest.requireActual<typeof import('uniswap/src/i18n/utils')>('uniswap/src/i18n/utils')
-  const { Language } =
-    require('uniswap/src/features/language/constants') as typeof import('uniswap/src/features/language/constants')
+vi.mock('uniswap/src/i18n/utils', async () => {
+  const actual = await vi.importActual<typeof import('uniswap/src/i18n/utils')>('uniswap/src/i18n/utils')
+  const { Language } = await vi.importActual<typeof import('uniswap/src/features/language/constants')>(
+    'uniswap/src/features/language/constants',
+  )
   return {
     ...actual,
-    getWalletDeviceLanguage: jest.fn(() => Language.English),
+    getWalletDeviceLanguage: vi.fn(() => Language.English),
   }
 })
 
@@ -761,10 +764,14 @@ describe('Redux state migrations', () => {
   })
 
   it('migrates from v96 to v97', () => {
-    testSetWalletDeviceLanguage(migrations[97], v96Schema, jest.mocked(getWalletDeviceLanguage))
+    testSetWalletDeviceLanguage(migrations[97], v96Schema, vi.mocked(getWalletDeviceLanguage))
   })
 
   it('migrates from v97 to v98', () => {
     testAddEnableCustomGasFeeEntry(migrations[98], v97Schema)
+  })
+
+  it('migrates from v98 to v99', () => {
+    testRemoveUniswapWrapped2025BehaviorHistory(migrations[99], v98Schema)
   })
 })

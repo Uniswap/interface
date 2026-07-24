@@ -7,7 +7,7 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useEvent } from 'utilities/src/react/hooks'
 import UNIWALLET_ICON from '~/assets/wallets/uniswap-wallet-icon.png'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import { OptionContainer } from '~/components/WalletModal/UniswapWalletOptions'
+import { OptionContainer } from '~/components/WalletModal/OptionContainer'
 import { useModalState } from '~/hooks/useModalState'
 
 interface BackgroundImageProps {

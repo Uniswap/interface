@@ -30,7 +30,7 @@ export function useAuctionValueFormatters(params: {
   totalSupply?: string
   auctionTokenDecimals?: number
 }) {
-  const { bidTokenInfo, totalSupply, auctionTokenDecimals = 18 } = params
+  const { bidTokenInfo, totalSupply, auctionTokenDecimals } = params
   const { formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
   const { t } = useTranslation()
 
@@ -65,8 +65,8 @@ export function useAuctionValueFormatters(params: {
   const formatPrice = useCallback(
     (value: string, decimals: number): string => {
       try {
-        if (!totalSupply || bidTokenInfo.priceFiat === 0) {
-          // Cannot calculate FDV without total supply or price data
+        if (!totalSupply || bidTokenInfo.priceFiat === 0 || auctionTokenDecimals === undefined) {
+          // Cannot calculate FDV without total supply, price data, or resolved decimals
           return `- ${t('stats.fdv')}`
         }
 

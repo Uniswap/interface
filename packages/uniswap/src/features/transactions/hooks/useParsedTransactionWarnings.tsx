@@ -57,6 +57,10 @@ function getReviewScreenWarning(warnings: Warning[]): ParsedWarnings['reviewScre
   return getWarningWithStyle({ warning: reviewWarning, displayedInline: true })
 }
 
+// Warnings that render their own dedicated UI elsewhere on the form and should
+// not also surface as an inline form-screen warning (e.g. via the gas-row triangle).
+const WARNINGS_WITH_DEDICATED_UI: ReadonlySet<WarningLabel> = new Set([WarningLabel.GeoRestricted])
+
 // This function decides which warning to show when there is more than one.
 function getFormScreenWarning(warnings: Warning[]): ParsedWarnings['reviewScreenWarning'] | undefined {
   const insufficientBalanceWarning = warnings.find((warning) => warning.type === WarningLabel.InsufficientFunds)
@@ -70,7 +74,9 @@ function getFormScreenWarning(warnings: Warning[]): ParsedWarnings['reviewScreen
     }
   }
 
-  const formWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Low)
+  const formWarning = warnings.find(
+    (warning) => warning.severity >= WarningSeverity.Low && !WARNINGS_WITH_DEDICATED_UI.has(warning.type),
+  )
 
   if (!formWarning) {
     return undefined

@@ -28,7 +28,7 @@ export type ExploreStatVolumeAmounts = Partial<
 /** Data-only shape for token stats (display/API). Plain type so plain objects satisfy it without cast. */
 export type TokenStat = Omit<
   PlainMessage<TokenStats>,
-  'volume1Hour' | 'volume1Day' | 'volume1Week' | 'volume1Month' | 'volume1Year'
+  'volume1Hour' | 'volume1Day' | 'volume1Week' | 'volume1Month' | 'volume1Year' | 'chainTokens'
 > & {
   volume?: Amount
   priceHistory?: PricePoint[]

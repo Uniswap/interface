@@ -17,8 +17,8 @@ import {
   useSwapFormStoreDerivedSwapInfo,
 } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
+import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/permitMethod'
 import type { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isChained, isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -122,7 +122,7 @@ export function SubmitSwapButton({
         <Button
           variant={warningVariant}
           emphasis="primary"
-          isDisabled={disabled}
+          disabled={disabled}
           icon={icon}
           size={size}
           testID={TestID.Swap}
@@ -137,7 +137,7 @@ export function SubmitSwapButton({
         <Button
           variant={disabled ? 'default' : 'branded'}
           emphasis={disabled ? 'secondary' : 'primary'}
-          isDisabled={disabled}
+          disabled={disabled}
           icon={icon}
           size={size}
           testID={TestID.Swap}
@@ -154,6 +154,7 @@ export enum SwapAction {
   Wrap = 'WRAP',
   Unwrap = 'UNWRAP',
   Swap = 'SWAP',
+  SwapAndDeposit = 'SWAP_AND_DEPOSIT',
   SwapAnyway = 'SWAP_ANYWAY',
   ApproveAndSwap = 'APPROVE_AND_SWAP',
   SignAndSwap = 'SIGN_AND_SWAP',
@@ -205,6 +206,10 @@ export const getActionText = ({
     [SwapAction.Swap]: {
       default: t('swap.button.swap'),
       authenticated: t('swap.confirmSwap'),
+    },
+    [SwapAction.SwapAndDeposit]: {
+      default: t('swap.button.swapAndDeposit'),
+      authenticated: t('swap.button.swapAndDeposit'),
     },
     [SwapAction.RetryPlan]: {
       default: t('common.button.retry'),
@@ -265,7 +270,7 @@ const getSwapAction = ({
   if (isWebApp && (hasPermitTx || hasApproveTx)) {
     return SwapAction.ApproveAndSwap
   }
-  if (isWebApp && swapTxContext && isClassic(swapTxContext) && swapTxContext.unsigned) {
+  if (isWebApp && swapTxContext && isClassic(swapTxContext) && swapTxContext.hasUnsignedPermit) {
     return SwapAction.SignAndSwap
   }
   if (hasActivePlan) {
@@ -277,6 +282,11 @@ const getSwapAction = ({
 
   if (warning?.severity === WarningSeverity.High || warning?.severity === WarningSeverity.Medium) {
     return SwapAction.SwapAnyway
+  }
+
+  // Earn toggle flow: the chained trade ends in a vault deposit, so the CTA should say so.
+  if (swapTxContext && isChained(swapTxContext) && swapTxContext.trade.earnIntent !== undefined) {
+    return SwapAction.SwapAndDeposit
   }
 
   return SwapAction.Swap

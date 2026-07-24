@@ -44,9 +44,13 @@ function getTitle(
   if (priceError === LimitPriceErrorType.CALCULATION_ERROR) {
     return t('limitPrice.marketPriceNotAvailable.error.title')
   } else if (priceInverted) {
-    return t('limitPrice.buyingAboveMarketPrice.error.title', { tokenSymbol: outputCurrency.symbol })
+    return t('limitPrice.buyingAboveMarketPrice.error.title', {
+      tokenSymbol: outputCurrency.symbol ?? t('common.token'),
+    })
   } else {
-    return t('limitPrice.sellingBelowMarketPrice.error.title', { tokenSymbol: inputCurrency.symbol })
+    return t('limitPrice.sellingBelowMarketPrice.error.title', {
+      tokenSymbol: inputCurrency.symbol ?? t('common.token'),
+    })
   }
 }
 

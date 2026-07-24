@@ -1,4 +1,5 @@
 import { TradeType } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import { useMergeLocalAndRemoteTransactions } from 'uniswap/src/features/activity/hooks/useMergeLocalAndRemoteTransactions'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
@@ -304,6 +305,152 @@ describe('useMergeLocalAndRemoteTransactions', () => {
       const { result } = renderMergeHook([remoteOrder], [localOrder])
 
       // Should deduplicate and return only the filled order
+      expect(result.current).toHaveLength(1)
+      expect(result.current?.[0]?.status).toBe(TransactionStatus.Success)
+      expect(result.current?.[0]?.hash).toBe(FILL_HASH)
+    })
+  })
+
+  describe('UniswapX order finalize guard', () => {
+    it('does NOT finalize a local pending UniswapX (market) order when remote reports Failed', () => {
+      const ORDER_HASH = '0xmarketfailed'
+      const localOrder = createTestOrder({
+        id: ORDER_HASH,
+        orderHash: ORDER_HASH,
+        hash: undefined,
+        status: TransactionStatus.Pending,
+      })
+      const remoteOrder = createTestOrder({
+        id: ORDER_HASH,
+        orderHash: ORDER_HASH,
+        hash: undefined,
+        status: TransactionStatus.Failed,
+      })
+
+      const { result, store } = renderMergeHook([remoteOrder], [localOrder])
+
+      expect(result.current).toHaveLength(1)
+      expect(result.current?.[0]?.status).toBe(TransactionStatus.Pending)
+      const stored = store.getState().transactions[TEST_WALLET]?.[UniverseChainId.Mainnet]?.[ORDER_HASH]
+      expect(stored?.status).toBe(TransactionStatus.Pending)
+    })
+
+    it('does NOT finalize a local pending UniswapX (market) order when remote reports Canceled', () => {
+      const ORDER_HASH = '0xmarketcanceled'
+      const localOrder = createTestOrder({
+        id: ORDER_HASH,
+        orderHash: ORDER_HASH,
+        hash: undefined,
+        status: TransactionStatus.Pending,
+      })
+      const remoteOrder = createTestOrder({
+        id: ORDER_HASH,
+        orderHash: ORDER_HASH,
+        hash: undefined,
+        status: TransactionStatus.Canceled,
+      })
+
+      const { result, store } = renderMergeHook([remoteOrder], [localOrder])
+
+      expect(result.current).toHaveLength(1)
+      expect(result.current?.[0]?.status).toBe(TransactionStatus.Pending)
+      const stored = store.getState().transactions[TEST_WALLET]?.[UniverseChainId.Mainnet]?.[ORDER_HASH]
+      expect(stored?.status).toBe(TransactionStatus.Pending)
+    })
+
+    it('still finalizes a non-UniswapX (classic) local tx from a terminal remote status', () => {
+      const SHARED_HASH = '0xclassicfailed'
+      const localTx = createTestTransaction({ hash: SHARED_HASH, status: TransactionStatus.Pending })
+      const remoteTx = createTestTransaction({ hash: SHARED_HASH, status: TransactionStatus.Failed })
+
+      const { store } = renderMergeHook([remoteTx], [localTx])
+
+      const stored = store.getState().transactions[TEST_WALLET]?.[UniverseChainId.Mainnet]?.[localTx.id]
+      expect(stored?.status).toBe(TransactionStatus.Failed)
+    })
+  })
+
+  describe('limit order local fallback', () => {
+    const createLimitOrder = (overrides = {}) =>
+      createTestOrder({ routing: TradingApi.Routing.DUTCH_LIMIT, ...overrides })
+
+    it('shows a locally-stored pending limit order even when the remote feed omits it', () => {
+      const ORDER_HASH = '0xlimitlocalonly'
+      const localOrder = createLimitOrder({
+        id: ORDER_HASH,
+        orderHash: ORDER_HASH,
+        hash: undefined,
+        status: TransactionStatus.Pending,
+      })
+
+      // Remote feed omits this order (not yet indexed, or dropped)
+      const { result } = renderMergeHook([], [localOrder])
+
+      expect(result.current?.some((tx) => tx.id === ORDER_HASH && tx.status === TransactionStatus.Pending)).toBe(true)
+    })
+
+    it('keeps a local pending limit order pending when the remote feed reports it terminal', () => {
+      const ORDER_HASH = '0xlimitterminal'
+      const localOrder = createLimitOrder({
+        id: ORDER_HASH,
+        orderHash: ORDER_HASH,
+        hash: undefined,
+        status: TransactionStatus.Pending,
+      })
+      const remoteOrder = createLimitOrder({
+        id: ORDER_HASH,
+        orderHash: ORDER_HASH,
+        hash: undefined,
+        status: TransactionStatus.Failed,
+      })
+
+      const { result, store } = renderMergeHook([remoteOrder], [localOrder])
+
+      expect(result.current?.find((tx) => tx.id === ORDER_HASH)?.status).toBe(TransactionStatus.Pending)
+      const stored = store.getState().transactions[TEST_WALLET]?.[UniverseChainId.Mainnet]?.[ORDER_HASH]
+      expect(stored?.status).toBe(TransactionStatus.Pending)
+    })
+
+    it('keeps a local pending limit order pending when the remote feed reports it expired', () => {
+      const ORDER_HASH = '0xlimitexpired'
+      const localOrder = createLimitOrder({
+        id: ORDER_HASH,
+        orderHash: ORDER_HASH,
+        hash: undefined,
+        status: TransactionStatus.Pending,
+      })
+      const remoteOrder = createLimitOrder({
+        id: ORDER_HASH,
+        orderHash: ORDER_HASH,
+        hash: undefined,
+        status: TransactionStatus.Expired,
+      })
+
+      const { result, store } = renderMergeHook([remoteOrder], [localOrder])
+
+      expect(result.current?.find((tx) => tx.id === ORDER_HASH)?.status).toBe(TransactionStatus.Pending)
+      const stored = store.getState().transactions[TEST_WALLET]?.[UniverseChainId.Mainnet]?.[ORDER_HASH]
+      expect(stored?.status).toBe(TransactionStatus.Pending)
+    })
+
+    it('deduplicates a filled limit order so it is not shown twice', () => {
+      const ORDER_HASH = '0xlimitfilled'
+      const FILL_HASH = '0xlimitfillhash'
+      const localOrder = createLimitOrder({
+        id: ORDER_HASH,
+        orderHash: ORDER_HASH,
+        hash: undefined,
+        status: TransactionStatus.Pending,
+      })
+      const remoteOrder = createLimitOrder({
+        id: ORDER_HASH,
+        orderHash: ORDER_HASH,
+        hash: FILL_HASH,
+        status: TransactionStatus.Success,
+      })
+
+      const { result } = renderMergeHook([remoteOrder], [localOrder])
+
       expect(result.current).toHaveLength(1)
       expect(result.current?.[0]?.status).toBe(TransactionStatus.Success)
       expect(result.current?.[0]?.hash).toBe(FILL_HASH)

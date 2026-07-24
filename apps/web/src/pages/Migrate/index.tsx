@@ -17,7 +17,7 @@ import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { InterfacePageName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
 import { getErrorMessageToDisplay } from 'uniswap/src/features/transactions/liquidity/utils'
 import type { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
@@ -50,7 +50,7 @@ import {
 import { SharedCreateModals } from '~/pages/CreatePosition/CreatePosition'
 import { useMigratingPosition } from '~/pages/Migrate/hooks/useMigratingPosition'
 import { MigratePositionTxContextProvider, useMigrateTxContext } from '~/pages/Migrate/MigrateLiquidityTxContext'
-import { useSetOverrideOneClickSwapFlag } from '~/pages/Swap/settings/OneClickSwap'
+import { useSetOverrideOneClickSwapFlag } from '~/pages/Swap/Swap/settings/OneClickSwap'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { liquiditySaga } from '~/state/sagas/liquidity/liquiditySaga'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
@@ -239,6 +239,7 @@ function MigrateInner({
         confirmButtonText={t('common.migrate')}
         currencyAmounts={{ TOKEN0: currency0Amount, TOKEN1: currency1Amount }}
         currencyAmountsUSDValue={{ TOKEN0: currency0FiatAmount, TOKEN1: currency1FiatAmount }}
+        feeAmounts={{ TOKEN0: positionInfo.fee0Amount, TOKEN1: positionInfo.fee1Amount }}
         isDisabled={!txInfo?.action}
         refundedAmounts={refundedAmounts}
         transactionError={transactionError}
@@ -309,7 +310,7 @@ function Toolbar({
         emphasis="tertiary"
         fill={false}
         icon={<RotateLeft />}
-        isDisabled={isFormUnchanged}
+        disabled={isFormUnchanged}
         onPress={() => {
           setPositionState({
             ...DEFAULT_POSITION_STATE,

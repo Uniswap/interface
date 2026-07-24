@@ -1,6 +1,5 @@
 import { type ColumnDef, Row } from '@tanstack/react-table'
 import { SharedEventName } from '@uniswap/analytics-events'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableArea } from 'ui/src'
@@ -9,10 +8,12 @@ import { ElementName, SectionName, UniswapEventName } from 'uniswap/src/features
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { HiddenTokenInfoModal } from 'uniswap/src/features/transactions/modals/HiddenTokenInfoModal'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TdpChainSelectionType } from 'uniswap/src/utils/linking'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { Table } from '~/components/Table'
-import { PORTFOLIO_TABLE_ROW_HEIGHT } from '~/pages/Portfolio/constants'
+import { usePinnedColumns } from '~/components/Table/PinnedColumns/usePinnedColumns'
+import { PORTFOLIO_MULTICHAIN_CHAIN_ROW_HEIGHT, PORTFOLIO_TABLE_ROW_HEIGHT } from '~/pages/Portfolio/constants'
 import { useNavigateToTokenDetails } from '~/pages/Portfolio/Tokens/hooks/useNavigateToTokenDetails'
 import { TokenData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 import { TokenColumns, useTokenColumns } from '~/pages/Portfolio/Tokens/Table/columns/useTokenColumns'
@@ -25,6 +26,9 @@ import {
   getTokenTableRowId,
 } from '~/pages/Portfolio/Tokens/Table/tokenTableRowUtils'
 import type { TokenTableRow } from '~/pages/Portfolio/Tokens/Table/tokenTableRowUtils'
+import { usePortfolioTokenTableExpandableRow } from '~/pages/Portfolio/Tokens/Table/usePortfolioTokenTableExpandableRow'
+
+const TOKEN_COLUMN_PINNED = ['currencyInfo']
 
 export function TokensTableInner({
   tokenData,
@@ -62,8 +66,14 @@ export function TokensTableInner({
   const hasData = tokenData.length > 0
   const showLoadingSkeleton = loading || (!!error && !hasData)
   const trace = useTrace()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
-  const allowMultichainExpandRows = multichainTokenUxEnabled && !showHiddenTokensBanner
+  const allowMultichainExpandRows = !showHiddenTokensBanner
+
+  const { hasPinnedColumns } = usePinnedColumns({
+    defaultPinnedColumns: TOKEN_COLUMN_PINNED,
+    maxWidth,
+    forcePinning: false,
+  })
+
   const rows = useMemo(
     () => buildTokenTableRows(tokenData, allowMultichainExpandRows),
     [tokenData, allowMultichainExpandRows],
@@ -95,13 +105,24 @@ export function TokensTableInner({
     })
   }, [allowMultichainExpandRows, showLoadingSkeleton, tokenData, trace, analyticsContext])
 
+  const navigateToTokenDetails = useNavigateToTokenDetails()
+
+  const handleTokenNameClick = useCallback(
+    (row: Extract<TokenTableRow, { type: 'parent' }>) => {
+      navigateToTokenDetails(row.tokenData.currencyInfo.currency, { type: TdpChainSelectionType.Multichain })
+    },
+    [navigateToTokenDetails],
+  )
+
   const columns = useTokenColumns({
     hiddenColumns,
     showLoadingSkeleton,
     showUnrealizedPnlPercent,
     columnSortEnabled,
+    hasPinnedColumns,
+    unifiedExpandableRows: allowMultichainExpandRows,
+    onTokenNameClick: handleTokenNameClick,
   })
-  const navigateToTokenDetails = useNavigateToTokenDetails()
 
   const handleTokenRowClick = useCallback(
     (data: TokenData) => {
@@ -110,35 +131,64 @@ export function TokensTableInner({
         section: analyticsContext?.section ?? SectionName.PortfolioTokensTab,
         ...trace,
       })
-      navigateToTokenDetails(data.currencyInfo.currency, data.chainId)
+      navigateToTokenDetails(data.currencyInfo.currency, { type: TdpChainSelectionType.Chain, chainId: data.chainId })
     },
     [navigateToTokenDetails, trace, analyticsContext],
   )
+
+  const handleMultichainParentToggle = useCallback(
+    (_row: Row<TokenTableRow>, nextExpanded: boolean) => {
+      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+        ...trace,
+        element: ElementName.BreakdownExpanded,
+        multichainTokenRowState: nextExpanded ? 'open' : 'close',
+      })
+    },
+    [trace],
+  )
+
+  const { rowWrapper: unifiedExpandableRowWrapper, renderUnifiedExpandableRow } = usePortfolioTokenTableExpandableRow({
+    onParentToggle: handleMultichainParentToggle,
+    onChildRowPress: handleTokenRowClick,
+  })
 
   const rowWrapper = useCallback(
     (row: Row<TokenTableRow>, content: JSX.Element) => {
       if (loading) {
         return content
       }
-      const canExpand = allowMultichainExpandRows && row.getCanExpand()
-      const onPress = canExpand
-        ? () => {
-            const nextExpanded = !row.getIsExpanded()
-            row.toggleExpanded()
-            sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-              ...trace,
-              element: ElementName.BreakdownExpanded,
-              multichainTokenRowState: nextExpanded ? 'open' : 'close',
-            })
-          }
-        : () => handleTokenRowClick(getTokenDataForRow(row.original))
+
+      if (!allowMultichainExpandRows) {
+        return (
+          <TouchableArea
+            pressStyle={{ scale: 1 }}
+            onPress={() => {
+              handleTokenRowClick(getTokenDataForRow(row.original))
+            }}
+          >
+            {content}
+          </TouchableArea>
+        )
+      }
+
+      const wrappedContent = unifiedExpandableRowWrapper(row, content)
+
+      if (row.depth > 0) {
+        return wrappedContent
+      }
+
       return (
-        <TouchableArea onPress={onPress} pressStyle={{ scale: 1 }}>
-          {content}
+        <TouchableArea
+          pressStyle={{ scale: 1 }}
+          onPress={() => {
+            handleTokenRowClick(getTokenDataForRow(row.original))
+          }}
+        >
+          {wrappedContent}
         </TouchableArea>
       )
     },
-    [loading, allowMultichainExpandRows, handleTokenRowClick, trace],
+    [loading, allowMultichainExpandRows, unifiedExpandableRowWrapper, handleTokenRowClick],
   )
 
   return (
@@ -156,17 +206,17 @@ export function TokensTableInner({
         data={rows}
         loading={loading}
         error={!!error && !hasData}
-        v2={true}
         hideHeader={hideHeader}
         externalScrollSync={externalScrollSync}
         scrollGroup={scrollGroup}
         getRowId={(row: TokenTableRow) => getTokenTableRowId(row)}
         getSubRows={getSubRows}
-        singleExpandedRow
         rowWrapper={rowWrapper}
+        renderUnifiedExpandableRow={allowMultichainExpandRows ? renderUnifiedExpandableRow : undefined}
+        singleExpandedRow={allowMultichainExpandRows}
         rowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
         compactRowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
-        subRowHeight={40}
+        subRowHeight={allowMultichainExpandRows ? PORTFOLIO_MULTICHAIN_CHAIN_ROW_HEIGHT : undefined}
         defaultPinnedColumns={['currencyInfo']}
         maxWidth={maxWidth}
         maxHeight={maxHeight}

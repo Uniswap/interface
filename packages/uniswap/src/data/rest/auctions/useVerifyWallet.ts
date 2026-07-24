@@ -12,6 +12,7 @@ import {
   ValidationType,
 } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { useEffect } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { AuctionQueryClient } from 'uniswap/src/data/apiClients/liquidityService/AuctionQueryClient'
 import { AUCTION_DEFAULT_RETRY, AuctionStaleTime } from 'uniswap/src/data/rest/auctions/queryTypes'
@@ -38,11 +39,12 @@ import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
  */
 export function useVerifyWalletQuery(
   params: PartialMessage<VerifyWalletRequest>,
+  currentBlockNumber?: number,
 ): UseQueryResult<VerifyWalletResponse, Error> {
   const featureFlagEnabled = useFeatureFlag(FeatureFlags.ToucanAuctionKYC)
   const enabled = Boolean(params.walletAddress && params.auctionAddress && params.chainId) && featureFlagEnabled
 
-  return useQuery({
+  const verifyWalletQuery = useQuery({
     queryKey: [ReactQueryCacheKey.LiquidityService, 'verifyWallet', params],
     queryFn: () => {
       return AuctionQueryClient.verifyWallet({
@@ -61,6 +63,20 @@ export function useVerifyWalletQuery(
       return false
     },
   })
+
+  const presaleValidation = verifyWalletQuery.data?.validations.find(isAllowlistedValidation)
+  const expirationBlock = presaleValidation?.data.value?.expirationBlock
+  const presaleGateExpired =
+    expirationBlock !== undefined && currentBlockNumber !== undefined && currentBlockNumber > Number(expirationBlock)
+
+  const { refetch } = verifyWalletQuery
+  useEffect(() => {
+    if (enabled && presaleGateExpired) {
+      void refetch()
+    }
+  }, [enabled, presaleGateExpired, refetch])
+
+  return verifyWalletQuery
 }
 
 export function isKycValidation(v: AuctionValidation): v is AuctionValidation & {
@@ -86,6 +102,7 @@ export interface LegacyVerifyWalletResponse {
   hasPresale: boolean
   hasKycVerification: boolean
   canBid: boolean
+  allowlistEndBlock?: number
 }
 
 /**
@@ -99,6 +116,9 @@ export function toLegacyVerifyWalletResponse(validations: AuctionValidation[]): 
   const kycData = kycValidation?.data.value
   const hasKycVerification = !!kycValidation
   const hasPresale = !!presaleValidation
+
+  const expirationBlock = presaleValidation?.data.value?.expirationBlock
+  const allowlistEndBlock = expirationBlock !== undefined ? Number(expirationBlock) : undefined
 
   // All validations must pass to bid
   const canBid = validations.length > 0 && validations.every((v) => v.validationPassed)
@@ -116,5 +136,6 @@ export function toLegacyVerifyWalletResponse(validations: AuctionValidation[]): 
     hasPresale,
     hasKycVerification,
     canBid,
+    allowlistEndBlock,
   }
 }

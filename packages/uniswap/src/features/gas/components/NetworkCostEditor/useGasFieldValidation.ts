@@ -9,7 +9,7 @@ export interface GasFieldValidationResult {
   canSave: boolean
 }
 
-type TranslateFn = (key: string, vars?: Record<string, unknown>) => string
+type TranslateFn = (key: string, vars?: Record<string, string | number>) => string
 
 export function useGasFieldValidation(args: {
   values: { maxBaseFeeGwei?: string; priorityFeeGwei?: string; gasLimit?: string }

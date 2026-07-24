@@ -1,8 +1,7 @@
-import type { MultichainToken } from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -10,34 +9,56 @@ import { NumberType } from 'utilities/src/format/types'
 import { SparklineMap } from '~/appGraphql/data/types'
 import { SparklineChart } from '~/components/Charts/SparklineChart'
 import { DeltaArrow } from '~/components/DeltaArrow/DeltaArrow'
-import { multichainTokenToDisplayToken } from '~/features/Explore/state/listTokens/utils/multichainTokenToDisplayToken'
+import { pickPrimaryDeployment } from '~/features/Explore/state/listTokens/utils/pickPrimaryDeployment'
 import { useNavigateToTokenDetails } from '~/pages/Portfolio/Tokens/hooks/useNavigateToTokenDetails'
-import type { TokenStat } from '~/types/explore'
 
 export const TOKEN_CARD_WIDTH = 168
 
 export const CARD_SPACING = 12
 
-export function TokenCarouselCard({ token, sparklines }: { token: MultichainToken; sparklines: SparklineMap }) {
-  const displayToken = multichainTokenToDisplayToken({ mcToken: token })
-  if (!displayToken) {
+export function TokenCarouselCard({ token, sparklines }: { token: RankedMultichainToken; sparklines: SparklineMap }) {
+  const mc = token.multichainToken
+  const primary = mc
+    ? pickPrimaryDeployment({ addresses: mc.addresses, exploreChainId: undefined, chainStats: token.chainStats })
+    : undefined
+  if (!mc || !primary) {
     return null
   }
-  return <TokenCarouselCardContent displayToken={displayToken} sparklines={sparklines} />
+  return (
+    <TokenCarouselCardContent
+      multichainId={mc.multichainId}
+      name={mc.name}
+      chainId={primary.chainId as UniverseChainId}
+      address={primary.address}
+      price={mc.price?.spotUsd}
+      priceChange1d={mc.price?.percentChange1d}
+      sparklines={sparklines}
+    />
+  )
 }
 
 interface TokenCarouselCardContentProps {
-  displayToken: TokenStat
+  multichainId: string
+  name: string
+  chainId: UniverseChainId
+  address: string
+  price: number | undefined
+  priceChange1d: number | undefined
   sparklines: SparklineMap
 }
 
-function TokenCarouselCardContent({ displayToken, sparklines }: TokenCarouselCardContentProps) {
+function TokenCarouselCardContent({
+  multichainId,
+  name,
+  chainId,
+  address,
+  price,
+  priceChange1d,
+  sparklines,
+}: TokenCarouselCardContentProps) {
   const { formatPercent, convertFiatAmountFormatted } = useLocalizationContext()
   const navigateToTokenDetails = useNavigateToTokenDetails()
-  const currencyInfo = useCurrencyInfo(
-    buildCurrencyId(fromGraphQLChain(displayToken.chain) ?? UniverseChainId.Mainnet, displayToken.address),
-  )
-  const delta1d = displayToken.pricePercentChange1Day?.value
+  const currencyInfo = useCurrencyInfo(buildCurrencyId(chainId, address))
 
   return (
     <TouchableArea
@@ -57,24 +78,24 @@ function TokenCarouselCardContent({ displayToken, sparklines }: TokenCarouselCar
         <SparklineChart
           width={64}
           height={32}
-          tokenData={displayToken}
-          pricePercentChange={displayToken.pricePercentChange1Day?.value}
+          multichainId={multichainId}
+          pricePercentChange={priceChange1d}
           sparklineMap={sparklines}
         />
       </Flex>
       <Text numberOfLines={1} variant="body2">
-        {displayToken.name}
+        {name}
       </Text>
       <Flex gap="$gap4">
         <Flex row gap="$gap4" alignItems="center">
           <Text variant="body3" color="$neutral2">
-            {convertFiatAmountFormatted(displayToken.price?.value, NumberType.FiatTokenPrice)}
+            {convertFiatAmountFormatted(price, NumberType.FiatTokenPrice)}
           </Text>
         </Flex>
         <Flex row gap="$gap4" alignItems="center">
-          <DeltaArrow delta={delta1d} formattedDelta={formatPercent(delta1d)} />
+          <DeltaArrow delta={priceChange1d} formattedDelta={formatPercent(priceChange1d)} />
           <Text variant="body3" color="$neutral2">
-            {formatPercent(Math.abs(delta1d ?? 0))}
+            {formatPercent(Math.abs(priceChange1d ?? 0))}
           </Text>
         </Flex>
       </Flex>

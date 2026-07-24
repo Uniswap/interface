@@ -1,4 +1,3 @@
-import { isExtensionApp, isMobileApp } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import { Flex, SpaceTokens, Text, Tooltip } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons'
@@ -18,7 +17,7 @@ export function AddressFooter({
 }): JSX.Element {
   const { t } = useTranslation()
 
-  const variant = isMobileApp || isExtensionApp ? 'body3' : 'body4'
+  const variant = 'body3'
 
   const currentAccountAddress = connectedAccountAddress || activeAccountAddress
 

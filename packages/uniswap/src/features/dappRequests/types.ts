@@ -14,6 +14,9 @@ export enum DappRequestType {
   SendCalls = 'SendCalls',
   GetCallsStatus = 'GetCallsStatus',
   GetCapabilities = 'GetCapabilities',
+  // Read-only JSON-RPC (eth_call, eth_blockNumber, …) proxied to the background SW so the
+  // fetch runs in an extension-privileged context, not the dapp page's CORS-bound context.
+  ProviderDirect = 'ProviderDirect',
 }
 
 export enum DappResponseType {
@@ -32,6 +35,7 @@ export enum DappResponseType {
   SendCallsResponse = 'SendCallsResponse',
   GetCallsStatusResponse = 'GetCallsStatusResponse',
   GetCapabilitiesResponse = 'GetCapabilitiesResponse',
+  ProviderDirectResponse = 'ProviderDirectResponse',
 }
 
 export enum EthMethod {

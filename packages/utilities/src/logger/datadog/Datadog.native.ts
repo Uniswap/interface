@@ -123,5 +123,5 @@ export function attachUnhandledRejectionHandler(): void {
 }
 
 export async function setAttributesToDatadog(attributes: { [key: string]: unknown }): Promise<void> {
-  await DdSdkReactNative.setAttributes(attributes)
+  await DdSdkReactNative.addAttributes(attributes)
 }

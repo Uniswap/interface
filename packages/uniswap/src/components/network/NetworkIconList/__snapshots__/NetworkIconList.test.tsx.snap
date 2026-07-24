@@ -62,7 +62,7 @@ exports[`[object Object] > renders multiple network logos in list 1`] = `
         >
           <defs>
             <mask
-              id="«r1a»-overlap-mask"
+              id="_r_1a_-overlap-mask"
             >
               <rect
                 fill="white"
@@ -84,7 +84,7 @@ exports[`[object Object] > renders multiple network logos in list 1`] = `
           </defs>
           <foreignobject
             height="14.399999999999999"
-            mask="url(#«r1a»-overlap-mask)"
+            mask="url(#_r_1a_-overlap-mask)"
             width="14.399999999999999"
             x="0"
             y="0"
@@ -224,7 +224,7 @@ exports[`[object Object] > renders stacked network logos 1`] = `
         >
           <defs>
             <mask
-              id="«ri»-overlap-mask"
+              id="_r_i_-overlap-mask"
             >
               <rect
                 fill="white"
@@ -246,7 +246,7 @@ exports[`[object Object] > renders stacked network logos 1`] = `
           </defs>
           <foreignobject
             height="14.399999999999999"
-            mask="url(#«ri»-overlap-mask)"
+            mask="url(#_r_i_-overlap-mask)"
             width="14.399999999999999"
             x="0"
             y="0"
@@ -294,7 +294,7 @@ exports[`[object Object] > renders stacked network logos 1`] = `
         >
           <defs>
             <mask
-              id="«rq»-overlap-mask"
+              id="_r_q_-overlap-mask"
             >
               <rect
                 fill="white"
@@ -316,7 +316,7 @@ exports[`[object Object] > renders stacked network logos 1`] = `
           </defs>
           <foreignobject
             height="14.399999999999999"
-            mask="url(#«rq»-overlap-mask)"
+            mask="url(#_r_q_-overlap-mask)"
             width="14.399999999999999"
             x="0"
             y="0"

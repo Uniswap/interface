@@ -19,6 +19,7 @@ export type GetQuoteRequestArgs = ParsedTradeInput
 export type GetQuoteRequestResult = QuoteRoutingParamsResult &
   QuoteSlippageParamsResult & {
     amount: string
+    earnIntent?: TradingApi.EarnIntent
     generatePermitAsTransaction?: boolean
     // Flag-off path: legacy gasStrategies array. Omitted on the flag-on path (GasFeeOverrides).
     gasStrategies?: GasStrategy[]

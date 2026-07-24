@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useEffect, useMemo, useRef } from 'react'
 import { PortfolioMultichainBalance } from 'uniswap/src/features/dataApi/types'
 import type { SortedPortfolioBalancesMultichain } from 'uniswap/src/features/portfolio/balances/types'
@@ -10,7 +9,6 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 /**
  * Emits {@link UniswapEventName.MultichainPortfolioMetrics} when portfolio token table
  * metrics change (mobile + extension token list; skips external profiles).
- * Only runs when the MultichainTokenUx feature flag is enabled.
  */
 export function useMultichainPortfolioMetricsAnalytics({
   sortedDataForList,
@@ -21,7 +19,6 @@ export function useMultichainPortfolioMetricsAnalytics({
   isExternalProfile: boolean
   isPortfolioBalancesLoading: boolean
 }): void {
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const trace = useTrace()
   const traceRef = useRef(trace)
   traceRef.current = trace
@@ -39,7 +36,7 @@ export function useMultichainPortfolioMetricsAnalytics({
   )
 
   useEffect(() => {
-    if (!multichainTokenUxEnabled || isExternalProfile || isPortfolioBalancesLoading) {
+    if (isExternalProfile || isPortfolioBalancesLoading) {
       return
     }
 
@@ -49,5 +46,5 @@ export function useMultichainPortfolioMetricsAnalytics({
       multichain_asset_count: portfolioTableMetrics.multichainAssetCount,
       ...traceRef.current,
     })
-  }, [multichainTokenUxEnabled, isExternalProfile, isPortfolioBalancesLoading, portfolioTableMetrics])
+  }, [isExternalProfile, isPortfolioBalancesLoading, portfolioTableMetrics])
 }

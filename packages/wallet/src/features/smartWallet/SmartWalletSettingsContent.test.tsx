@@ -18,22 +18,22 @@ const mockWallets: WalletData[] = [
   },
 ]
 
-jest.mock('wallet/src/features/smartWallet/hooks/useSmartWalletData', () => ({
+vi.mock('wallet/src/features/smartWallet/hooks/useSmartWalletData', () => ({
   useSmartWalletData: (): WalletData[] => mockWallets,
 }))
 
-jest.mock('wallet/src/features/smartWallet/WalletDelegationProvider', () => ({
+vi.mock('wallet/src/features/smartWallet/WalletDelegationProvider', () => ({
   useWalletDelegationContext: () => ({
-    refreshDelegationData: jest.fn().mockResolvedValue(undefined),
+    refreshDelegationData: vi.fn().mockResolvedValue(undefined),
   }),
 }))
 
-jest.mock('wallet/src/features/smartWallet/SmartWalletModalsManager', () => ({
+vi.mock('wallet/src/features/smartWallet/SmartWalletModalsManager', () => ({
   useSmartWalletModals: () => ({
     selectedWallet: undefined,
     modalState: 'none',
-    setSelectedWallet: jest.fn(),
-    setModalState: jest.fn(),
+    setSelectedWallet: vi.fn(),
+    setModalState: vi.fn(),
   }),
   SmartWalletModalsManager: () => null,
 }))

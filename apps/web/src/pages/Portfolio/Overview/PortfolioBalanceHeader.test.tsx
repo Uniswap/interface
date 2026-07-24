@@ -1,13 +1,20 @@
-import { ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { ChartPeriod, WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { UTCTimestamp } from 'lightweight-charts'
 import type { PortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
+import { PortfolioChartCategory } from '~/pages/Portfolio/Overview/hooks/usePortfolioChartSeries'
 import { PortfolioBalanceHeader } from '~/pages/Portfolio/Overview/PortfolioBalanceHeader'
 import { render, screen } from '~/test-utils/render'
 
 const tokensWithBalance: PortfolioTotalValue = { balanceUSD: 8368.94, percentChange: -6.09, absoluteChangeUSD: -510 }
 const poolsWithBalance: PortfolioTotalValue = { balanceUSD: 7373.05, percentChange: 1.02, absoluteChangeUSD: 75 }
+const earnWithBalance: PortfolioTotalValue = { balanceUSD: 3259.01, percentChange: 2.2, absoluteChangeUSD: 70 }
+const unavailableValue: PortfolioTotalValue = {
+  balanceUSD: undefined,
+  percentChange: undefined,
+  absoluteChangeUSD: undefined,
+}
 
 const mockPriceChartDelta = vi.hoisted(() => vi.fn())
 
@@ -57,7 +64,11 @@ describe('PortfolioBalanceHeader', () => {
         portfolioTotalBalanceUSD={15741.99}
         series={makeSeries([100, 110])}
         chartPercentChange={{ percentChange: 10, absoluteChangeUSD: 10 }}
+        tokensPercentChange={undefined}
+        poolsPercentChange={undefined}
+        earnPercentChange={undefined}
         selectedPeriod={ChartPeriod.DAY}
+        selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={false}
         isLoading={false}
       />,
@@ -75,7 +86,11 @@ describe('PortfolioBalanceHeader', () => {
         portfolioTotalBalanceUSD={undefined}
         series={makeSeries([100, 110])}
         chartPercentChange={{ percentChange: 10, absoluteChangeUSD: 10 }}
+        tokensPercentChange={undefined}
+        poolsPercentChange={undefined}
+        earnPercentChange={undefined}
         selectedPeriod={ChartPeriod.DAY}
+        selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={false}
         isLoading={false}
       />,
@@ -90,7 +105,11 @@ describe('PortfolioBalanceHeader', () => {
         portfolioTotalBalanceUSD={110}
         series={makeSeries([100, 110])}
         chartPercentChange={{ percentChange: 10, absoluteChangeUSD: 10 }}
+        tokensPercentChange={undefined}
+        poolsPercentChange={undefined}
+        earnPercentChange={undefined}
         selectedPeriod={ChartPeriod.DAY}
+        selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={false}
         isLoading={false}
         hoveredData={makeSeries([105])[0]}
@@ -114,7 +133,11 @@ describe('PortfolioBalanceHeader', () => {
         portfolioTotalBalanceUSD={0}
         series={makeSeries([0, 0])}
         chartPercentChange={undefined}
+        tokensPercentChange={undefined}
+        poolsPercentChange={undefined}
+        earnPercentChange={undefined}
         selectedPeriod={ChartPeriod.DAY}
+        selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={true}
         isLoading={false}
       />,
@@ -129,7 +152,11 @@ describe('PortfolioBalanceHeader', () => {
         portfolioTotalBalanceUSD={undefined}
         series={[]}
         chartPercentChange={undefined}
+        tokensPercentChange={undefined}
+        poolsPercentChange={undefined}
+        earnPercentChange={undefined}
         selectedPeriod={ChartPeriod.DAY}
+        selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={false}
         isLoading={true}
       />,
@@ -144,7 +171,11 @@ describe('PortfolioBalanceHeader', () => {
         portfolioTotalBalanceUSD={15741.99}
         series={makeSeries([100, 110])}
         chartPercentChange={undefined}
+        tokensPercentChange={undefined}
+        poolsPercentChange={undefined}
+        earnPercentChange={undefined}
         selectedPeriod={ChartPeriod.MAX}
+        selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={false}
         isLoading={false}
       />,
@@ -164,7 +195,11 @@ describe('PortfolioBalanceHeader', () => {
         portfolioTotalBalanceUSD={1.01}
         series={makeSeries([1, 1.01])}
         chartPercentChange={{ percentChange: 1, absoluteChangeUSD: 0.01 }}
+        tokensPercentChange={undefined}
+        poolsPercentChange={undefined}
+        earnPercentChange={undefined}
         selectedPeriod={ChartPeriod.DAY}
+        selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={false}
         isLoading={false}
       />,
@@ -183,7 +218,11 @@ describe('PortfolioBalanceHeader', () => {
         portfolioTotalBalanceUSD={100}
         series={makeSeries([100])}
         chartPercentChange={undefined}
+        tokensPercentChange={undefined}
+        poolsPercentChange={undefined}
+        earnPercentChange={undefined}
         selectedPeriod={ChartPeriod.DAY}
+        selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={false}
         isLoading={false}
       />,
@@ -198,7 +237,11 @@ describe('PortfolioBalanceHeader', () => {
         portfolioTotalBalanceUSD={undefined}
         series={[]}
         chartPercentChange={undefined}
+        tokensPercentChange={undefined}
+        poolsPercentChange={undefined}
+        earnPercentChange={undefined}
         selectedPeriod={ChartPeriod.DAY}
+        selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={true}
         isLoading={false}
       />,
@@ -213,13 +256,17 @@ describe('PortfolioBalanceHeader', () => {
         portfolioTotalBalanceUSD={undefined}
         series={[]}
         chartPercentChange={undefined}
+        tokensPercentChange={undefined}
+        poolsPercentChange={undefined}
+        earnPercentChange={undefined}
         selectedPeriod={ChartPeriod.DAY}
+        selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={false}
         isLoading={true}
       />,
     )
 
-    expect(screen.getByText('-')).toBeInTheDocument()
+    expect(screen.getByText('$00.00')).toBeInTheDocument()
   })
 
   it('does not render the BalanceBreakdownPopover when only one side has a balance', () => {
@@ -230,7 +277,11 @@ describe('PortfolioBalanceHeader', () => {
         poolsValue={undefined}
         series={makeSeries([100, 110])}
         chartPercentChange={{ percentChange: 10, absoluteChangeUSD: 10 }}
+        tokensPercentChange={undefined}
+        poolsPercentChange={undefined}
+        earnPercentChange={undefined}
         selectedPeriod={ChartPeriod.DAY}
+        selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={false}
         isLoading={false}
       />,
@@ -247,7 +298,11 @@ describe('PortfolioBalanceHeader', () => {
         poolsValue={poolsWithBalance}
         series={makeSeries([100, 110])}
         chartPercentChange={{ percentChange: 10, absoluteChangeUSD: 10 }}
+        tokensPercentChange={undefined}
+        poolsPercentChange={undefined}
+        earnPercentChange={undefined}
         selectedPeriod={ChartPeriod.DAY}
+        selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={false}
         isLoading={false}
       />,
@@ -255,5 +310,146 @@ describe('PortfolioBalanceHeader', () => {
 
     expect(screen.getByTestId(TestID.BalanceBreakdownPopover)).toBeInTheDocument()
     expect(screen.getByText(/15,741\.99/)).toBeInTheDocument()
+  })
+
+  it('shows the tokens balance and hides the breakdown popover when the tokens category is selected', () => {
+    render(
+      <PortfolioBalanceHeader
+        portfolioTotalBalanceUSD={15741.99}
+        tokensValue={tokensWithBalance}
+        poolsValue={poolsWithBalance}
+        series={makeSeries([100, 110])}
+        chartPercentChange={{ percentChange: 10, absoluteChangeUSD: 10 }}
+        tokensPercentChange={undefined}
+        poolsPercentChange={undefined}
+        earnPercentChange={undefined}
+        selectedPeriod={ChartPeriod.DAY}
+        selectedCategory={PortfolioChartCategory.Tokens}
+        isPortfolioZero={false}
+        isLoading={false}
+      />,
+    )
+
+    expect(screen.getByText(/8,368\.94/)).toBeInTheDocument()
+    expect(screen.queryByText(/15,741\.99/)).not.toBeInTheDocument()
+    expect(screen.queryByTestId(TestID.BalanceBreakdownPopover)).not.toBeInTheDocument()
+  })
+
+  it('shows the pools balance and hides the breakdown popover when the pools category is selected', () => {
+    render(
+      <PortfolioBalanceHeader
+        portfolioTotalBalanceUSD={15741.99}
+        tokensValue={tokensWithBalance}
+        poolsValue={poolsWithBalance}
+        series={makeSeries([100, 110])}
+        chartPercentChange={{ percentChange: 10, absoluteChangeUSD: 10 }}
+        tokensPercentChange={undefined}
+        poolsPercentChange={undefined}
+        earnPercentChange={undefined}
+        selectedPeriod={ChartPeriod.DAY}
+        selectedCategory={PortfolioChartCategory.Pools}
+        isPortfolioZero={false}
+        isLoading={false}
+      />,
+    )
+
+    expect(screen.getByText(/7,373\.05/)).toBeInTheDocument()
+    expect(screen.queryByText(/15,741\.99/)).not.toBeInTheDocument()
+    expect(screen.queryByTestId(TestID.BalanceBreakdownPopover)).not.toBeInTheDocument()
+  })
+
+  it('shows the unavailable indicator and falls back to the sum of available categories when earn is unavailable', () => {
+    render(
+      <PortfolioBalanceHeader
+        portfolioTotalBalanceUSD={undefined}
+        tokensValue={tokensWithBalance}
+        poolsValue={poolsWithBalance}
+        earnValue={unavailableValue}
+        unavailableCategories={[WalletBalanceCategory.EARN_VAULTS]}
+        series={makeSeries([100, 110])}
+        chartPercentChange={{ percentChange: 10, absoluteChangeUSD: 10 }}
+        tokensPercentChange={undefined}
+        poolsPercentChange={undefined}
+        earnPercentChange={undefined}
+        selectedPeriod={ChartPeriod.DAY}
+        selectedCategory={PortfolioChartCategory.Total}
+        isPortfolioZero={false}
+        isLoading={false}
+      />,
+    )
+
+    expect(screen.getByTestId(TestID.BalanceUnavailableIndicator)).toBeInTheDocument()
+    // tokens (8368.94) + pools (7373.05), earn omitted from the sum
+    expect(screen.getByText(/15,741\.99/)).toBeInTheDocument()
+  })
+
+  it('hides the unavailable indicator when no category is unavailable', () => {
+    render(
+      <PortfolioBalanceHeader
+        portfolioTotalBalanceUSD={15741.99}
+        tokensValue={tokensWithBalance}
+        poolsValue={poolsWithBalance}
+        earnValue={earnWithBalance}
+        unavailableCategories={[]}
+        series={makeSeries([100, 110])}
+        chartPercentChange={{ percentChange: 10, absoluteChangeUSD: 10 }}
+        tokensPercentChange={undefined}
+        poolsPercentChange={undefined}
+        earnPercentChange={undefined}
+        selectedPeriod={ChartPeriod.DAY}
+        selectedCategory={PortfolioChartCategory.Total}
+        isPortfolioZero={false}
+        isLoading={false}
+      />,
+    )
+
+    expect(screen.queryByTestId(TestID.BalanceUnavailableIndicator)).not.toBeInTheDocument()
+  })
+
+  it('hides the unavailable indicator when viewing a single category even if another is unavailable', () => {
+    render(
+      <PortfolioBalanceHeader
+        portfolioTotalBalanceUSD={undefined}
+        tokensValue={tokensWithBalance}
+        poolsValue={poolsWithBalance}
+        earnValue={unavailableValue}
+        unavailableCategories={[WalletBalanceCategory.EARN_VAULTS]}
+        series={makeSeries([100, 110])}
+        chartPercentChange={{ percentChange: 10, absoluteChangeUSD: 10 }}
+        tokensPercentChange={undefined}
+        poolsPercentChange={undefined}
+        earnPercentChange={undefined}
+        selectedPeriod={ChartPeriod.DAY}
+        selectedCategory={PortfolioChartCategory.Tokens}
+        isPortfolioZero={false}
+        isLoading={false}
+      />,
+    )
+
+    expect(screen.queryByTestId(TestID.BalanceUnavailableIndicator)).not.toBeInTheDocument()
+  })
+
+  it('shows the earn balance and hides the breakdown popover when the earn category is selected', () => {
+    render(
+      <PortfolioBalanceHeader
+        portfolioTotalBalanceUSD={15741.99}
+        tokensValue={tokensWithBalance}
+        poolsValue={poolsWithBalance}
+        earnValue={earnWithBalance}
+        series={makeSeries([100, 110])}
+        chartPercentChange={{ percentChange: 10, absoluteChangeUSD: 10 }}
+        tokensPercentChange={undefined}
+        poolsPercentChange={undefined}
+        earnPercentChange={undefined}
+        selectedPeriod={ChartPeriod.DAY}
+        selectedCategory={PortfolioChartCategory.Earn}
+        isPortfolioZero={false}
+        isLoading={false}
+      />,
+    )
+
+    expect(screen.getByText(/3,259\.01/)).toBeInTheDocument()
+    expect(screen.queryByText(/15,741\.99/)).not.toBeInTheDocument()
+    expect(screen.queryByTestId(TestID.BalanceBreakdownPopover)).not.toBeInTheDocument()
   })
 })

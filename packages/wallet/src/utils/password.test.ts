@@ -75,15 +75,15 @@ describe(getPasswordStrength, () => {
 describe(getPasswordStrengthTextAndColor, () => {
   it('returns text and color for strength', () => {
     expect(getPasswordStrengthTextAndColor(i18n.t, PasswordStrength.WEAK)).toEqual({
-      text: 'Weak',
+      text: 'common.input.password.strength.weak',
       color: '$statusCritical',
     })
     expect(getPasswordStrengthTextAndColor(i18n.t, PasswordStrength.MEDIUM)).toEqual({
-      text: 'Medium',
+      text: 'common.input.password.strength.medium',
       color: '$statusWarning',
     })
     expect(getPasswordStrengthTextAndColor(i18n.t, PasswordStrength.STRONG)).toEqual({
-      text: 'Strong',
+      text: 'common.input.password.strength.strong',
       color: '$statusSuccess',
     })
   })

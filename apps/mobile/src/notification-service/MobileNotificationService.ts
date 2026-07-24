@@ -19,7 +19,6 @@ import {
   getNotificationQueryOptions,
   type NotificationService,
 } from '@universe/notifications'
-import { Appearance } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import { MobileState } from 'src/app/mobileReducer'
 import { store } from 'src/app/store'
@@ -33,7 +32,6 @@ import { mobileNotificationStore } from 'src/notification-service/notification-r
 import { getNotificationTelemetry } from 'src/notification-service/notification-telemetry/getNotificationTelemetry'
 import { createMobileLocalTriggerDataSource } from 'src/notification-service/triggers/createMobileLocalTriggerDataSource'
 import { getPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
-import { AppearanceSettingType } from 'uniswap/src/features/appearance/slice'
 import { mapLocaleToBackendLocale } from 'uniswap/src/features/language/constants'
 import { getLocale } from 'uniswap/src/features/language/navigatorLocale'
 import { selectCurrentLanguage } from 'uniswap/src/features/settings/selectors'
@@ -96,25 +94,13 @@ function provideMobileNotificationService(ctx: { getIsApiDataSourceEnabled: () =
     pollIntervalMs: 10 * ONE_SECOND_MS,
     // oxlint-disable-next-line typescript/no-unsafe-return
     getState: (): MobileState => store.getState(),
-    getIsDarkMode: (): boolean => {
-      const state = store.getState()
-      const appearanceSetting = state.appearanceSettings?.selectedAppearanceSettings ?? AppearanceSettingType.System
-      if (appearanceSetting === AppearanceSettingType.Dark) {
-        return true
-      }
-      if (appearanceSetting === AppearanceSettingType.Light) {
-        return false
-      }
-      // System theme - check device appearance
-      return Appearance.getColorScheme() === 'dark'
-    },
   })
 
-  // Mobile emits up to 5 LOWER_LEFT_BANNER notifications from the legacy source
-  // (NoAppFees, FundWallet, RecoveryBackup, UnitagClaim, PushNotifications). Raise the
+  // Mobile emits up to 4 LOWER_LEFT_BANNER notifications from the legacy source
+  // (FundWallet, RecoveryBackup, UnitagClaim, PushNotifications). Raise the
   // per-style cap so lower-priority banners like UnitagClaim aren't silently dropped.
   const processor = createBaseNotificationProcessor(tracker, {
-    notificationTypeLimits: { [ContentStyle.LOWER_LEFT_BANNER]: 5 },
+    notificationTypeLimits: { [ContentStyle.LOWER_LEFT_BANNER]: 4 },
   })
 
   const renderer = createMobileNotificationRenderer({

@@ -5,6 +5,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InterfaceUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
 import { createOnSetCapabilitiesByChainEffect } from '~/state/walletCapabilities/effects'
 import {
+  isAlternateGasFeesSupportedByChainId,
   isAtomicBatchingSupported,
   isAtomicBatchingSupportedByChainId,
 } from '~/state/walletCapabilities/lib/handleGetCapabilities'
@@ -61,6 +62,18 @@ export const selectIsAtomicBatchingSupportedByChainId = (state: {
     }
     const areCapabilitiesSupported = selectWalletCapabilitiesSupported(state)
     return areCapabilitiesSupported && isAtomicBatchingSupportedByChainId(state.walletCapabilities.byChain, chainId)
+  }
+}
+
+export const selectHasAlternateGasFeesByChainId = (state: {
+  walletCapabilities: WalletCapabilitiesState
+}): ((chainId: number) => boolean | undefined) => {
+  return (chainId: number) => {
+    if (selectNeedsToCheckCapabilities(state)) {
+      return undefined
+    }
+    const areCapabilitiesSupported = selectWalletCapabilitiesSupported(state)
+    return areCapabilitiesSupported && isAlternateGasFeesSupportedByChainId(state.walletCapabilities.byChain, chainId)
   }
 }
 

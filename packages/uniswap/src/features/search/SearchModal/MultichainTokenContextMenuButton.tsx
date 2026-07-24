@@ -2,27 +2,28 @@ import { isWebPlatform } from '@universe/environment'
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { AnimateTransition, Flex } from 'ui/src'
+import { Flex } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { CopyAlt } from 'ui/src/components/icons/CopyAlt'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import {
-  COPY_CLOSE_DELAY,
   TokenContextMenuAction,
   useSearchTokenMenuItems,
 } from 'uniswap/src/components/lists/items/tokens/useSearchTokenMenuItems'
 import { ContextMenu } from 'uniswap/src/components/menus/ContextMenu'
-import type { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
+import type { ContextMenuHandle, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
 import { MenuContent } from 'uniswap/src/components/menus/ContextMenuContent'
 import { ContextMenuTriggerButton } from 'uniswap/src/components/menus/ContextMenuTriggerButton'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
-import { MultichainContextMenuAddressSubview } from 'uniswap/src/components/MultichainTokenDetails/MultichainContextMenuAddressSubview'
+import { MultichainAddressTransitionPanel } from 'uniswap/src/components/MultichainTokenDetails/MultichainAddressTransitionPanel'
+import { useMultichainAddressViewState } from 'uniswap/src/components/MultichainTokenDetails/useMultichainAddressViewState'
 import { useOrderedMultichainEntries } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
 import type { MultichainTokenEntry } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
+import { COPY_CLOSE_DELAY } from 'uniswap/src/constants/misc'
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { CurrencyInfo, MultichainSearchResult } from 'uniswap/src/features/dataApi/types'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -31,11 +32,10 @@ import { useDelayedMenuClose } from 'uniswap/src/features/search/SearchModal/hoo
 import { ElementName, SectionName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
+import { TDPView } from 'uniswap/src/utils/linking'
 import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-
-type ViewState = 'actions' | 'addresses'
 
 const MULTICHAIN_ACTIONS: TokenContextMenuAction[] = [
   TokenContextMenuAction.Swap,
@@ -87,23 +87,21 @@ function useMultichainEntries(tokens: CurrencyInfo[]): MultichainTokenEntry[] {
 }
 
 interface MultichainTokenContextMenuButtonProps {
-  multichainResult: MultichainSearchResult
+  tokens: CurrencyInfo[]
   primaryCurrencyInfo: CurrencyInfo
   isVisible?: boolean
 }
 
-function MultichainTokenContextMenuButtonInner({
-  multichainResult,
-  primaryCurrencyInfo,
-  isVisible = true,
-}: MultichainTokenContextMenuButtonProps): JSX.Element | null {
+function MultichainTokenContextMenuButtonInner(
+  { tokens, primaryCurrencyInfo, isVisible = true }: MultichainTokenContextMenuButtonProps,
+  ref: React.ForwardedRef<ContextMenuHandle>,
+): JSX.Element | null {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const trace = useTrace()
 
   const { value: isOpen, setTrue: openMenu, setFalse: rawCloseMenu } = useBooleanState(false)
-  const [viewState, setViewState] = useState<ViewState>('actions')
-  const [animationType, setAnimationType] = useState<'forward' | 'backward'>('forward')
+  const { viewIndex, animationType, goToAddresses, goBack, resetView } = useMultichainAddressViewState()
   const [copiedAddress, setCopiedAddress] = useState(false)
   // When "Copy address" transitions to the addresses sub-view, DropdownMenuSheetItem
   // fires handleCloseMenu. skipNextClose prevents that single close from dismissing
@@ -111,17 +109,17 @@ function MultichainTokenContextMenuButtonInner({
   const skipNextClose = useRef(false)
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined)
 
-  const isSingleChain = multichainResult.tokens.length <= 1
-  const bestCurrency = useBestChainCurrencyInfo(multichainResult.tokens, primaryCurrencyInfo)
-  const orderedEntries = useMultichainEntries(multichainResult.tokens)
+  const isSingleChain = tokens.length <= 1
+  const bestCurrency = useBestChainCurrencyInfo(tokens, primaryCurrencyInfo)
+  const orderedEntries = useMultichainEntries(tokens)
   const allNative = orderedEntries.every((e) => e.isNative)
 
   const handleCloseMenu = useCallback(() => {
     clearTimeout(timerRef.current)
     rawCloseMenu()
-    setViewState('actions')
+    resetView()
     setCopiedAddress(false)
-  }, [rawCloseMenu])
+  }, [rawCloseMenu, resetView])
 
   useDelayedMenuClose({ isVisible, isOpen, closeMenu: handleCloseMenu })
 
@@ -143,10 +141,9 @@ function MultichainTokenContextMenuButtonInner({
       timerRef.current = setTimeout(() => setCopiedAddress(false), COPY_CLOSE_DELAY)
     } else {
       skipNextClose.current = true
-      setAnimationType('forward')
-      setViewState('addresses')
+      goToAddresses()
     }
-  }, [isSingleChain, primaryCurrencyInfo.currency, dispatch])
+  }, [isSingleChain, primaryCurrencyInfo.currency, dispatch, goToAddresses])
 
   const onCopyMultichainAddress = useCallback(
     async (address: string, chainId: UniverseChainId): Promise<void> => {
@@ -171,7 +168,11 @@ function MultichainTokenContextMenuButtonInner({
     currency: bestCurrency.currency,
     closeMenu: handleCloseMenu,
     actions: MULTICHAIN_ACTIONS,
-    shareCurrencyInfo: { currencyId: primaryCurrencyInfo.currencyId, chainId: primaryCurrencyInfo.currency.chainId },
+    shareCurrencyInfo: {
+      currencyId: primaryCurrencyInfo.currencyId,
+      chainId: primaryCurrencyInfo.currency.chainId,
+      tdpView: isSingleChain ? TDPView.Chain : TDPView.Aggregate,
+    },
   })
 
   const allMenuItems = useMemo(() => {
@@ -199,18 +200,18 @@ function MultichainTokenContextMenuButtonInner({
     allNative,
   ])
 
-  const handleBack = useCallback(() => {
-    setAnimationType('backward')
-    setViewState('actions')
-  }, [])
-
-  const viewIndex = viewState === 'actions' ? 0 : 1
-
   // Analytics props (trackItemClicks, elementName, sectionName) are passed directly to
   // MenuContent here because contentOverride bypasses ContextMenu's default MenuContent.
   const contentOverride = useMemo(
     () => (
-      <AnimateTransition currentIndex={viewIndex} animationType={animationType} animation="200ms">
+      <MultichainAddressTransitionPanel
+        viewIndex={viewIndex}
+        animationType={animationType}
+        orderedEntries={orderedEntries}
+        title={t('common.copy.address')}
+        onCopyAddress={onCopyMultichainAddress}
+        onBack={goBack}
+      >
         <MenuContent
           trackItemClicks
           items={allMenuItems}
@@ -218,24 +219,9 @@ function MultichainTokenContextMenuButtonInner({
           elementName={ElementName.SearchTokenContextMenu}
           sectionName={SectionName.NavbarSearch}
         />
-        <MultichainContextMenuAddressSubview
-          orderedEntries={orderedEntries}
-          title={t('common.copy.address')}
-          onCopyAddress={onCopyMultichainAddress}
-          onBack={handleBack}
-        />
-      </AnimateTransition>
+      </MultichainAddressTransitionPanel>
     ),
-    [
-      viewIndex,
-      animationType,
-      allMenuItems,
-      handleContentClose,
-      orderedEntries,
-      onCopyMultichainAddress,
-      handleBack,
-      t,
-    ],
+    [viewIndex, animationType, allMenuItems, handleContentClose, orderedEntries, onCopyMultichainAddress, goBack, t],
   )
 
   // Web-only: the menu content above uses <div> for event propagation control, which crashes on native.
@@ -248,6 +234,7 @@ function MultichainTokenContextMenuButtonInner({
   return (
     <Flex opacity={shouldShow ? 1 : 0} pointerEvents={shouldShow ? 'auto' : 'none'}>
       <ContextMenu
+        ref={ref}
         menuItems={[]}
         contentOverride={contentOverride}
         triggerMode={ContextMenuTriggerMode.Primary}
@@ -264,4 +251,4 @@ function MultichainTokenContextMenuButtonInner({
   )
 }
 
-export const MultichainTokenContextMenuButton = React.memo(MultichainTokenContextMenuButtonInner)
+export const MultichainTokenContextMenuButton = React.memo(React.forwardRef(MultichainTokenContextMenuButtonInner))

@@ -1,31 +1,23 @@
-import { isWebPlatform } from '@universe/environment'
-import { useTranslation } from 'react-i18next'
-import { Flex, Text, Tooltip } from 'ui/src'
-import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
+import { WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import type { IconSizeTokens } from 'ui/src/theme'
+import { BalanceUnavailableIndicator } from 'uniswap/src/features/portfolio/PortfolioBalance/BalanceUnavailableIndicator'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
-export function PoolsUnavailableIndicator(): JSX.Element {
-  const { t } = useTranslation()
+interface PoolsUnavailableIndicatorProps {
+  message?: string
+  iconSize?: IconSizeTokens
+}
 
-  const icon = (
-    <Flex testID={TestID.PoolsUnavailableIndicator}>
-      <AlertTriangleFilled color="$neutral2" size="$icon.20" />
-    </Flex>
-  )
-
-  if (!isWebPlatform) {
-    return icon
-  }
-
+export function PoolsUnavailableIndicator({
+  message,
+  iconSize,
+}: PoolsUnavailableIndicatorProps = {}): JSX.Element | null {
   return (
-    <Tooltip placement="top">
-      <Tooltip.Trigger>{icon}</Tooltip.Trigger>
-      <Tooltip.Content>
-        <Text variant="body4" color="$neutral1">
-          {t('pool.balances.unavailable')}
-        </Text>
-        <Tooltip.Arrow />
-      </Tooltip.Content>
-    </Tooltip>
+    <BalanceUnavailableIndicator
+      categories={[WalletBalanceCategory.POOLS]}
+      testID={TestID.PoolsUnavailableIndicator}
+      message={message}
+      iconSize={iconSize}
+    />
   )
 }

@@ -13,7 +13,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { parseRestPosition } from 'uniswap/src/features/positions/parseRestPosition'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -80,6 +80,7 @@ export function V2PositionPageWrapper() {
 
 export default V2PositionPageWrapper
 
+// oxlint-disable-next-line complexity
 function V2PositionPage() {
   const { pairAddress } = useParams<{ pairAddress: string }>()
   const chainId = useChainIdFromUrlParam()
@@ -169,8 +170,8 @@ function V2PositionPage() {
       <Helmet>
         <title>
           {t(`liquidityPool.positions.page.title`, {
-            quoteSymbol: currency1Amount?.currency.symbol,
-            baseSymbol: currency0Amount?.currency.symbol,
+            quoteSymbol: currency1Amount?.currency.symbol ?? t('common.token'),
+            baseSymbol: currency0Amount?.currency.symbol ?? t('common.token'),
           })}
         </title>
         {metatags.map((tag, index) => (
@@ -237,7 +238,9 @@ function V2PositionPage() {
                 </Flex>
                 <Flex row width="100%" justifyContent="space-between">
                   <Text variant="subheading2" color="$neutral2">
-                    {t('position.depositedCurrency', { currencySymbol: currency0Amount.currency.symbol })}
+                    {t('position.depositedCurrency', {
+                      currencySymbol: currency0Amount.currency.symbol ?? t('common.token'),
+                    })}
                   </Text>
                   <Flex row gap="$gap8">
                     <Text variant="body2">
@@ -248,7 +251,9 @@ function V2PositionPage() {
                 </Flex>
                 <Flex row width="100%" justifyContent="space-between">
                   <Text variant="subheading2" color="$neutral2">
-                    {t('position.depositedCurrency', { currencySymbol: currency1Amount.currency.symbol })}
+                    {t('position.depositedCurrency', {
+                      currencySymbol: currency1Amount.currency.symbol ?? t('common.token'),
+                    })}
                   </Text>
                   <Flex row gap="$gap8">
                     <Text variant="body2">

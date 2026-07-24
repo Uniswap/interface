@@ -1,7 +1,6 @@
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { GraphQLApi } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useWindowDimensions } from 'react-native'
@@ -19,8 +18,10 @@ import { useOrderedMultichainEntries } from 'uniswap/src/components/MultichainTo
 import type { MultichainTokenEntry } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
 import { useTokenProjectUrlsPartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -48,6 +49,7 @@ function useMultichainTokenEntries(currencyId: string): MultichainTokenEntry[] {
   const { data } = GraphQLApi.useTokenProjectsQuery({
     variables: { contracts: [contractInput] },
   })
+  const featureFlaggedChainIds = useFeatureFlaggedChainIds()
 
   const entries = useMemo(() => {
     const tokens = data?.tokenProjects?.[0]?.tokens
@@ -57,12 +59,13 @@ function useMultichainTokenEntries(currencyId: string): MultichainTokenEntry[] {
     const result: MultichainTokenEntry[] = []
     for (const token of tokens) {
       const chainId = fromGraphQLChain(token.chain)
-      if (chainId && token.address) {
+      // Exclude feature-gated chains (e.g. unlaunched Arc/Robinhood) so they don't appear in the network selector.
+      if (chainId && token.address && featureFlaggedChainIds.includes(chainId)) {
         result.push({ chainId, address: token.address, isNative: false })
       }
     }
     return result
-  }, [data])
+  }, [data, featureFlaggedChainIds])
 
   return useOrderedMultichainEntries(entries)
 }
@@ -80,7 +83,6 @@ export function TokenDetailsLinks(): JSX.Element {
     closeMultichainAddressSheet,
   } = useTokenDetailsContext()
 
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const multichainEntries = useMultichainTokenEntries(currencyId)
   const hasMultipleChains = multichainEntries.length > 1
 
@@ -91,7 +93,10 @@ export function TokenDetailsLinks(): JSX.Element {
     return [initialSnap, '100%']
   }, [screenHeight])
 
-  const { homepageUrl, twitterName } = useTokenProjectUrlsPartsFragment({ currencyId }).data.project ?? {}
+  const projectUrls = useTokenProjectUrlsPartsFragment({ currencyId }).data.project
+  const { homepageUrl, twitterName } = useTokenMetadata(currencyId, {
+    legacyToken: { project: { homepageUrl: projectUrls?.homepageUrl, twitterName: projectUrls?.twitterName } },
+  })
 
   const explorerLink = getExplorerLink({ chainId, data: address, type: ExplorerDataType.TOKEN })
   const explorerName = getChainInfo(chainId).explorer.name
@@ -114,7 +119,7 @@ export function TokenDetailsLinks(): JSX.Element {
   )
 
   const links = useMemo((): LinkButtonProps[] => {
-    const showMultichainDropdowns = multichainTokenUxEnabled && hasMultipleChains
+    const showMultichainDropdowns = hasMultipleChains
     const isNativeAddress = isDefaultNativeAddress({ address, platform: chainIdToPlatform(chainId) })
     const items: LinkButtonProps[] = []
 
@@ -186,7 +191,6 @@ export function TokenDetailsLinks(): JSX.Element {
     chainId,
     address,
     isNativeCurrency,
-    multichainTokenUxEnabled,
     hasMultipleChains,
     openMultichainAddressSheet,
     homepageUrl,

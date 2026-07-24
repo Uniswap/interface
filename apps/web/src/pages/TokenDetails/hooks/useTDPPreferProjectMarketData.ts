@@ -1,9 +1,8 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { useTDPRWAMatch } from '~/pages/TokenDetails/hooks/useTDPRWAMatch'
+import { usePreferProjectMarketData } from 'uniswap/src/features/rwa/usePreferProjectMarketData'
+import { useTDPRWACandidates } from '~/pages/TokenDetails/hooks/useTDPRWAMatch'
 
 export function useTDPPreferProjectMarketData(): boolean {
-  const rwaCoinGeckoDataEnabled = useFeatureFlag(FeatureFlags.RWACoinGeckoData)
-  const rwaMatch = useTDPRWAMatch({ enabled: rwaCoinGeckoDataEnabled })
+  const candidates = useTDPRWACandidates()
 
-  return rwaMatch !== undefined
+  return usePreferProjectMarketData(candidates)
 }

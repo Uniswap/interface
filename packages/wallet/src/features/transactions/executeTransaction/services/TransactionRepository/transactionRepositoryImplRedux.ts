@@ -1,4 +1,5 @@
 /* oxlint-disable @jambit/typed-redux-saga/use-typed-effects -- typed-redux-saga doesn't export these correctly */
+import { BigNumber } from 'ethers'
 import type { PutEffect, SelectEffect } from 'redux-saga/effects'
 import { put, type SagaGenerator, select } from 'typed-redux-saga'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -13,6 +14,7 @@ import {
 import type { UniswapState } from 'uniswap/src/state/uniswapReducer'
 import { logger } from 'utilities/src/logger/logger'
 import type { TransactionRepository } from 'wallet/src/features/transactions/executeTransaction/services/TransactionRepository/transactionRepository'
+import type { PrivatePendingTxSummaryInput } from 'wallet/src/features/transactions/telemetry/nonceTelemetry'
 import { RunSagaEffect } from 'wallet/src/state/createSagaEffectRunner'
 
 interface TransactionRepositoryReduxContext {
@@ -56,6 +58,10 @@ interface SagaTransactionRepository {
     address: string
     chainId: UniverseChainId
   }) => SagaGenerator<number, SelectEffect>
+  getPendingPrivateTransactionDetails: (input: {
+    address: string
+    chainId: UniverseChainId
+  }) => SagaGenerator<PrivatePendingTxSummaryInput[], SelectEffect>
   getTransactionsByAddress: (input: {
     address: string
   }) => SagaGenerator<TransactionDetails[] | undefined, SelectEffect>
@@ -134,6 +140,37 @@ function createSagaTransactionRepository(ctx: TransactionRepositoryReduxContext)
     }) as SagaGenerator<number, SelectEffect>
   }
 
+  // SWAP-2471: same filter as getPendingPrivateTransactionCount, but returns lightweight per-tx
+  // details so nonce-inflation telemetry can name WHICH stuck txs inflated the count.
+  const getPendingPrivateTransactionDetails: SagaTransactionRepository['getPendingPrivateTransactionDetails'] = (
+    input,
+  ) => {
+    return select((state: UniswapState) => {
+      const pendingTransactions = selectAddressTransactions(state, { evmAddress: input.address, svmAddress: null })
+      if (!pendingTransactions) {
+        return []
+      }
+
+      return pendingTransactions
+        .filter(isClassic)
+        .filter(
+          (tx) =>
+            tx.chainId === input.chainId &&
+            tx.status === TransactionStatus.Pending &&
+            Boolean(tx.options.submitViaPrivateRpc) &&
+            Boolean(tx.hash),
+        )
+        .map((tx) => ({
+          id: tx.id,
+          hash: tx.hash,
+          nonce:
+            tx.options.request?.nonce !== undefined ? BigNumber.from(tx.options.request.nonce).toNumber() : undefined,
+          addedTime: tx.addedTime,
+          status: tx.status,
+        }))
+    }) as SagaGenerator<PrivatePendingTxSummaryInput[], SelectEffect>
+  }
+
   const getTransactionsByAddress: SagaTransactionRepository['getTransactionsByAddress'] = (input) => {
     // Return a select effect
     return select((state: UniswapState) => {
@@ -152,6 +189,7 @@ function createSagaTransactionRepository(ctx: TransactionRepositoryReduxContext)
     updateTransaction,
     finalizeTransaction,
     getPendingPrivateTransactionCount,
+    getPendingPrivateTransactionDetails,
     getTransactionsByAddress,
   }
 }
@@ -184,6 +222,13 @@ function createAsyncTransactionRepository(ctx: {
 
     async getPendingPrivateTransactionCount(input: { address: string; chainId: UniverseChainId }): Promise<number> {
       return await ctx.runSagaEffect(ctx.sagaRepo.getPendingPrivateTransactionCount(input))
+    },
+
+    async getPendingPrivateTransactionDetails(input: {
+      address: string
+      chainId: UniverseChainId
+    }): Promise<PrivatePendingTxSummaryInput[]> {
+      return await ctx.runSagaEffect(ctx.sagaRepo.getPendingPrivateTransactionDetails(input))
     },
 
     async getTransactionsByAddress(input: { address: string }): Promise<TransactionDetails[] | undefined> {

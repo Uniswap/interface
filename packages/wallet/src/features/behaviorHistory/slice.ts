@@ -33,14 +33,14 @@ export interface BehaviorHistoryState {
     }
   }
   hasSeenSmartWalletCreatedWalletModal?: boolean
+  /** One-time reveal animation for the unfunded Earn module on Home. */
+  hasSeenUnfundedEarnCardReveal?: boolean
   /**
    * Whether the user has copied their private keys via the view private keys screen during
    * a restoration flow.
    */
   hasCopiedPrivateKeys?: boolean
   isAllSmartWalletNudgesDisabled?: boolean
-
-  hasDismissedNoAppFeesAnnouncement?: boolean
 }
 
 export const initialBehaviorHistoryState: BehaviorHistoryState = {
@@ -54,8 +54,6 @@ export const initialBehaviorHistoryState: BehaviorHistoryState = {
   hasViewedDappRequestBridgingBanner: {},
   smartWalletNudge: {},
   hasCopiedPrivateKeys: false,
-
-  hasDismissedNoAppFeesAnnouncement: false,
 }
 
 const slice = createSlice({
@@ -123,6 +121,9 @@ const slice = createSlice({
     setHasSeenSmartWalletCreatedWalletModal: (state) => {
       state.hasSeenSmartWalletCreatedWalletModal = true
     },
+    setHasSeenUnfundedEarnCardReveal: (state) => {
+      state.hasSeenUnfundedEarnCardReveal = true
+    },
     setHasShownSmartWalletHomeScreenNudge: (state, action: PayloadAction<{ walletAddress: string }>) => {
       state.smartWalletNudge ??= {}
       state.smartWalletNudge[action.payload.walletAddress] = {
@@ -150,10 +151,6 @@ const slice = createSlice({
         isAllSmartWalletNudgesDisabled: action.payload.isDisabled,
       }
     },
-
-    setHasDismissedNoAppFeesAnnouncement: (state, action: PayloadAction<boolean>) => {
-      state.hasDismissedNoAppFeesAnnouncement = action.payload
-    },
   },
 })
 
@@ -170,10 +167,9 @@ export const {
   setHasShown5792Nudge,
   setIncrementNumPostSwapNudge,
   setHasSeenSmartWalletCreatedWalletModal,
+  setHasSeenUnfundedEarnCardReveal,
   setIsAllSmartWalletNudgesDisabled,
   setHasShownSmartWalletHomeScreenNudge,
-
-  setHasDismissedNoAppFeesAnnouncement,
 } = slice.actions
 
 export const behaviorHistoryReducer = slice.reducer

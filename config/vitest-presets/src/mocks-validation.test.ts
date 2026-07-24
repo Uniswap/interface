@@ -18,8 +18,7 @@ describe('Mock validations', () => {
   describe('Expo mocks', () => {
     it('should have expo-clipboard mocked', async () => {
       const clipboard = await import('expo-clipboard')
-      expect(clipboard.setString).toBeDefined()
-      expect(vi.isMockFunction(clipboard.setString)).toBe(true)
+      expect(clipboard.setStringAsync).toBeDefined()
       expect(vi.isMockFunction(clipboard.setStringAsync)).toBe(true)
     })
 

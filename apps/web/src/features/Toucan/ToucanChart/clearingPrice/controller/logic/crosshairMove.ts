@@ -38,9 +38,11 @@ export function handleClearingPriceCrosshairMove(params: HandleCrosshairMovePara
     return
   }
 
-  // The dashed pre-bid segment and the solid clearing segment share exactly one boundary point.
-  // That's the only time both series return data for the same crosshair position.
-  const isPreBidEnd = preBidEndTime !== undefined && mainData !== undefined && preBidData !== undefined
+  const isPreBidEnd =
+    preBidEndTime !== undefined &&
+    mainData !== undefined &&
+    preBidData !== undefined &&
+    (data.time as number) >= (preBidEndTime as number)
 
   const chartWidth = chart.paneSize().width
   // Offset by Y_AXIS_LABEL_WIDTH since the tooltip is positioned inside ChartWrapper

@@ -1,3 +1,4 @@
+import { clearComplianceOverrides } from '@universe/compliance'
 import { TRUSTED_CHROME_EXTENSION_IDS } from '@universe/environment'
 import type { DynamicConfigKeys } from '@universe/gating'
 import {
@@ -15,6 +16,7 @@ import type { PropsWithChildren, ReactNode } from 'react'
 import { memo, useMemo, useState } from 'react'
 import { Button, Flex, FlexProps, Input, ModalCloseIcon, styled, Switch, Text, TouchableArea } from 'ui/src'
 import { Pin } from 'ui/src/components/icons/Pin'
+import { ComplianceOverrides } from 'uniswap/src/components/gating/ComplianceOverrides'
 import { useLayerValue } from 'uniswap/src/components/gating/Rows'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -266,6 +268,7 @@ export function FeatureFlagModal(): JSX.Element {
 
   const removeAllOverrides = useEvent(() => {
     getOverrideAdapter().removeAllOverrides()
+    clearComplianceOverrides()
   })
 
   const handleReload = useEvent(() => {
@@ -290,14 +293,12 @@ export function FeatureFlagModal(): JSX.Element {
         networkRequestsConfig: <NetworkRequestsConfig />,
         layerOptions: (
           <Flex ml="$padding8" gap="$gap8">
-            <FeatureFlagGroup name={Layers.ExplorePage}>
-              <LayerOption layerName={Layers.ExplorePage} />
-            </FeatureFlagGroup>
             <FeatureFlagGroup name={Layers.SwapPage}>
               <LayerOption layerName={Layers.SwapPage} />
             </FeatureFlagGroup>
           </Flex>
         ),
+        complianceOverrides: <ComplianceOverrides />,
       }),
     [externallyConnectableExtensionId],
   )

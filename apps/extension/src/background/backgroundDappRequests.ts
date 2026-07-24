@@ -8,6 +8,7 @@ import {
   type ChangeChainRequest,
   type DappRequest,
   type GetCapabilitiesRequest,
+  type ProviderDirectRequest,
   type RevokePermissionsRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/focusOrCreateOnboardingTab'
@@ -25,6 +26,10 @@ import {
   type DappRequestMessage,
 } from 'src/background/messagePassing/types/requests'
 import { checkAreMigrationsPending, readReduxStateFromStorage } from 'src/background/utils/persistedStateUtils'
+import {
+  executeProviderDirectMethod,
+  isProviderDirectExecutableMethod,
+} from 'src/background/utils/providerDirectMethods'
 import { getFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
 import { getEnabledChains, hexadecimalStringToInt, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { DappRequestType, DappResponseType, EthMethod } from 'uniswap/src/features/dappRequests/types'
@@ -48,7 +53,12 @@ const REQUEST_CLASSIFICATION = {
     DappRequestType.RequestPermissions,
     DappRequestType.SendCalls,
   ]),
-  silent: new Set([DappRequestType.ChangeChain, DappRequestType.RevokePermissions, DappRequestType.GetCapabilities]),
+  silent: new Set([
+    DappRequestType.ChangeChain,
+    DappRequestType.RevokePermissions,
+    DappRequestType.GetCapabilities,
+    DappRequestType.ProviderDirect,
+  ]),
 } as const
 
 const windowIdToSidebarPortMap = new Map<string, DappBackgroundPortChannel>()
@@ -249,6 +259,12 @@ async function handleSilentBackgroundRequest(request: DappRequest, senderTabInfo
         tabId: senderTabInfo.id,
       }).catch(() => {})
       return true
+    case DappRequestType.ProviderDirect:
+      handleProviderDirectRequest({
+        request,
+        tabId: senderTabInfo.id,
+      }).catch(() => {})
+      return true
     default:
       return false
   }
@@ -347,6 +363,49 @@ async function handleGetCapabilities({
 }
 
 /**
+ * Executes a read-only JSON-RPC method in the background SW (extension-privileged fetch via
+ * host_permissions) instead of the dapp's CORS-bound page context, then returns the result to
+ * the content script. The dapp's read methods carry no chain param, so chainId is the content
+ * script's active chain.
+ */
+async function handleProviderDirectRequest({
+  request,
+  tabId,
+}: {
+  request: ProviderDirectRequest
+  tabId: number
+}): Promise<void> {
+  try {
+    if (!isProviderDirectExecutableMethod(request.method)) {
+      throw rpcErrors.methodNotFound({ data: { method: request.method } })
+    }
+    const chainId = toSupportedChainId(hexadecimalStringToInt(request.chainId))
+    const provider = chainId ? walletContextValue.providers.getProvider(chainId) : undefined
+    if (!provider) {
+      await dappResponseMessageChannel.sendMessageToTab(tabId, {
+        type: DappResponseType.ProviderDirectResponse,
+        requestId: request.requestId,
+        error: serializeError(rpcErrors.internal({ message: `No provider for chain ${request.chainId}` })),
+      })
+      return
+    }
+
+    const result = await executeProviderDirectMethod({ provider, method: request.method, params: request.params })
+    await dappResponseMessageChannel.sendMessageToTab(tabId, {
+      type: DappResponseType.ProviderDirectResponse,
+      requestId: request.requestId,
+      result,
+    })
+  } catch (error) {
+    await dappResponseMessageChannel.sendMessageToTab(tabId, {
+      type: DappResponseType.ProviderDirectResponse,
+      requestId: request.requestId,
+      error: serializeError(error),
+    })
+  }
+}
+
+/**
  * Handles dapp requests asynchronously after the side panel has been opened (if needed).
  * This function contains the original async logic that was previously in the message listener.
  * Moving it here allows us to open the side panel synchronously while preserving all existing behavior.
@@ -385,8 +444,9 @@ async function handleRequestAsync({
   const windowIdString = windowId.toString()
   const isSidebarActive = Boolean(windowIdToSidebarPortMap.get(windowIdString))
 
-  // Try to handle silently if sidebar is not active
-  if (!isSidebarActive) {
+  // Try to handle silently if sidebar is not active. ProviderDirect reads are always
+  // handled here — the sidebar has no UI for them and the dapp hangs on the response.
+  if (!isSidebarActive || message.type === DappRequestType.ProviderDirect) {
     const handled = await handleSilentBackgroundRequest(message, senderTabInfo)
     if (handled) {
       return

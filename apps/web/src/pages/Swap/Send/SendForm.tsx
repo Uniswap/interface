@@ -3,11 +3,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex } from 'ui/src'
 import { GetHelpHeader } from 'uniswap/src/components/dialog/GetHelpHeader'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { useActiveAddress, useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
 import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { chainIdToPlatform, isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
+import { useRecentTransfersByAddress } from 'uniswap/src/features/send/useRecentTransfersByAddress'
 import { ElementName, InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -20,10 +21,8 @@ import { CompatibleAddressModal } from 'uniswap/src/features/transactions/modals
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import { useGroupedRecentTransfers } from '~/features/Swap/hooks/useGroupedRecentTransfers'
 import { useSendCallback } from '~/features/Swap/hooks/useSendCallback'
-import { useSendContext } from '~/features/Swap/state/send/SendContext'
-import type { CurrencyState } from '~/features/Swap/state/swap/tradeCurrencyStateTypes'
+import type { CurrencyState } from '~/features/Swap/state/types'
 import { useModalState } from '~/hooks/useModalState'
 import { NewAddressSpeedBumpModal } from '~/pages/Swap/Send/NewAddressSpeedBump'
 import { SelfSendSpeedBumpModal } from '~/pages/Swap/Send/SelfSendSpeedBump'
@@ -31,6 +30,7 @@ import { SendCurrencyInputForm } from '~/pages/Swap/Send/SendCurrencyInputForm'
 import { SendRecipientForm } from '~/pages/Swap/Send/SendRecipientForm'
 import { SendReviewModalInner } from '~/pages/Swap/Send/SendReviewModal'
 import { SmartContractSpeedBumpModal } from '~/pages/Swap/Send/SmartContractSpeedBump'
+import { useSendContext } from '~/pages/Swap/Send/state/SendContext'
 
 export type SendFormProps = {
   onCurrencyChange?: (selected: CurrencyState) => void
@@ -137,16 +137,22 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
   const { isDisconnected } = useConnectionStatus()
 
   const accountAddress = useActiveAddress(chainId)
-  const { transfers: recentTransfers, loading: transfersLoading } = useGroupedRecentTransfers(accountAddress)
+  const chainPlatform = chainIdToPlatform(chainId)
+
+  const { transfers: recentTransfers, loading: transfersLoading } = useRecentTransfersByAddress(accountAddress)
   const isRecentAddress = useMemo(() => {
     if (!recipientData?.address) {
       return undefined
     }
 
-    return !!recentTransfers?.[recipientData.address]
-  }, [recentTransfers, recipientData?.address])
+    return !!recentTransfers.find((transfer) =>
+      areAddressesEqual({
+        addressInput1: { address: transfer.address, platform: chainPlatform },
+        addressInput2: { address: recipientData.address, platform: chainPlatform },
+      }),
+    )
+  }, [recentTransfers, recipientData?.address, chainPlatform])
 
-  const chainPlatform = chainIdToPlatform(chainId)
   const isCurrentWallet = useMemo(() => {
     return areAddressesEqual({
       addressInput1: { address: accountAddress, platform: chainPlatform },
@@ -288,7 +294,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
                 emphasis="primary"
                 size="large"
                 fill
-                isDisabled={buttonDisabled}
+                disabled={buttonDisabled}
                 onPress={() => handleSendButton()}
               >
                 {sendButtonState.label}
@@ -321,7 +327,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
           closeHeaderComponent={
             <GetHelpHeader
               closeModal={handleCancelCompatibleAddressSpeedBump}
-              link={uniswapUrls.helpArticleUrls.bridgedAssets}
+              link={UniswapHelpUrls.articles.bridgedAssets}
               mb="$spacing12"
             />
           }

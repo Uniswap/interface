@@ -23,27 +23,27 @@ export interface NotificationServiceConfig {
 
 export interface NotificationService {
   // Initialize and start fetching notifications
-  initialize(): Promise<void>
+  initialize: () => Promise<void>
   /**
    * Handle a render failure (e.g., unknown notification style)
    * Cleans up the render without marking the notification as processed,
    * allowing it to be re-rendered when correct data arrives
    */
-  onRenderFailed(notificationId: string): void
+  onRenderFailed: (notificationId: string) => void
   /**
    * Handle a click on a notification (button, background, dismiss, or acknowledge)
    * Executes all actions specified in the onClick array for the clicked target
    * @param notificationId - ID of the notification that was clicked
    * @param target - What was clicked (button, background, dismiss, or acknowledge)
    */
-  onNotificationClick(notificationId: string, target: NotificationClickTarget): void
+  onNotificationClick: (notificationId: string, target: NotificationClickTarget) => void
   /**
    * Handle a notification being shown to the user
    * @param notificationId - ID of the notification that was shown
    */
-  onNotificationShown(notificationId: string): void
+  onNotificationShown: (notificationId: string) => void
   // Trigger an immediate re-poll on all data sources that support it
-  refresh(): Promise<void>
+  refresh: () => Promise<void>
   // Cleanup and teardown
-  destroy(): void
+  destroy: () => void
 }

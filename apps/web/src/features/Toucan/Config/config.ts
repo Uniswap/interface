@@ -1,115 +1,52 @@
 /**
  * Configuration overrides for Toucan auction parameters
  */
+export {
+  DEFAULT_VERIFIED_AUCTION_IDS,
+  getAuctionMetadata,
+  isTradingRestrictedUntilTge,
+  type AuctionMetadataOverride,
+} from 'uniswap/src/features/toucan/auctionMetadata'
 
 /**
- * Total supply overrides for specific auction tokens
- * Key format: "{chainId}-{tokenAddress}"
- * Value: Total supply as a string (to handle large numbers)
+ * Redemption override for an auction whose auctioned token is a virtual ERC-20
+ * (`IVirtualERC20`) that is now redeemable for a real, tradeable token.
  *
- * Use this to override the total supply returned by the API for specific auctions
- * where the on-chain data differs from what's expected.
+ * This is a deliberate, curated frontend override used until the backend serves redemption
+ * state on the `Auction` type. The real token address is NOT stored here — it is read on-chain
+ * from the virtual token's `UNDERLYING_TOKEN_ADDRESS()` (see `useAuctionRedemption`). The
+ * presence of an entry both (a) flags the auction as "ready to redeem" and (b) guards the
+ * on-chain call so we never invoke `UNDERLYING_TOKEN_ADDRESS()` on a non-virtual token.
  */
-const TOTAL_SUPPLY_OVERRIDES: Record<string, string> = {
-  // Example: '1-0x1234567890123456789012345678901234567890': '1000000000000000000000000',
-  '1-0x4647e1fe715c9e23959022c2416c71867f5a6e80': '1000000000000000',
-  '1-0x4c93b9fbf7fd1777ccbcbc538b1d0a8b58fb1ad6': '100000000000000000000000000',
+export interface AuctionRedemptionConfig {
+  /** External page where holders redeem the virtual token for the real one. */
+  redeemUrl: string
 }
 
 /**
- * Helper function to get the override key for an auction
+ * Redemption overrides keyed by the auctioned (virtual) token: "{chainId}-{tokenAddress}".
+ * This is the token address (`auctionDetails.tokenAddress` / the `/explore/tokens/...` address),
+ * NOT the auction contract address that appears in the `/explore/auctions/...` URL.
+ * Add an entry here when a virtual-token auction becomes redeemable.
  */
-function getTotalSupplyOverrideKey(chainId: number, tokenAddress: string): string {
-  return `${chainId}-${tokenAddress.toLowerCase()}`
-}
-
-/**
- * Get the total supply for an auction, using override if available
- */
-export function getTotalSupply({
-  chainId,
-  tokenAddress,
-  apiTotalSupply,
-}: {
-  chainId: number
-  tokenAddress: string
-  apiTotalSupply: string
-}): string {
-  const overrideKey = getTotalSupplyOverrideKey(chainId, tokenAddress)
-  if (overrideKey in TOTAL_SUPPLY_OVERRIDES) {
-    return TOTAL_SUPPLY_OVERRIDES[overrideKey]
-  }
-  return apiTotalSupply
-}
-
-/**
- * Metadata override for auction projects.
- * All fields are optional - if not provided, the corresponding UI section will be hidden.
- */
-export interface AuctionMetadataOverride {
-  launchedByName?: string
-  description?: string
-  website?: string
-  twitter?: string
-  logoUrl?: string
-  tokenName?: string
-  tokenSymbol?: string
-}
-
-/**
- * Metadata overrides for specific auction tokens
- * Key format: "{chainId}-{tokenAddress}"
- *
- * Use this to provide project metadata for specific auctions.
- * If no override exists for an auction, the corresponding UI sections will be hidden.
- */
-const AUCTION_METADATA_OVERRIDES: Record<string, AuctionMetadataOverride> = {
-  // Example:
-  // '1-0x1234567890123456789012345678901234567890': {
-  //   launchedByName: 'FooCorp',
-  //   description: 'Token description...',
-  //   website: 'https://example.com',
-  //   twitter: 'https://x.com/example',
-  // },
-  '8453-0xa53887f7e7c1bf5010b8627f1c1ba94fe7a5d6e0': {
-    logoUrl: '/images/logos/rainbow-token-launch-logo.png',
-  },
+const AUCTION_REDEMPTION_OVERRIDES: Record<string, AuctionRedemptionConfig> = {
+  // rCAP -> CAP. Auctioned token (rCAP) 0x9999...9999; auction contract is 0x20eEBd...cd24.
   '1-0x9999b7e3cc6979223ff1af980b7d8b90b75d9999': {
-    logoUrl: '/images/logos/cap-token-launch-logo.png',
-  },
-  '42161-0xb628b89067e8f7dfc2cb528a72bcff7d5cedce29': {
-    logoUrl: '/images/logos/idos-token-launch-logo.svg',
-  },
-  '1-0x4647e1fe715c9e23959022c2416c71867f5a6e80': {
-    logoUrl: '/images/logos/octra-token-launch-logo.svg',
-    tokenName: 'Octra',
-    tokenSymbol: 'OCT',
-  },
-  '1-0x4c93b9fbf7fd1777ccbcbc538b1d0a8b58fb1ad6': {
-    logoUrl: '/images/logos/strato-token-launch-logo.jpeg',
+    redeemUrl: 'https://redeem.caplabslimited.com/',
   },
 }
 
 /**
- * Get metadata for an auction from config overrides.
- * Returns undefined if no override exists for the given auction.
+ * Get redemption config for an auction's virtual token from config overrides.
+ * Returns undefined when the auction is not in the redeemable state.
  */
-export function getAuctionMetadata({
+export function getAuctionRedemptionConfig({
   chainId,
   tokenAddress,
 }: {
   chainId: number
   tokenAddress: string
-}): AuctionMetadataOverride | undefined {
+}): AuctionRedemptionConfig | undefined {
   const key = `${chainId}-${tokenAddress.toLowerCase()}`
-  return AUCTION_METADATA_OVERRIDES[key]
+  return AUCTION_REDEMPTION_OVERRIDES[key]
 }
-
-export const DEFAULT_VERIFIED_AUCTION_IDS = [
-  '8453_0x7e867b47a94df05188c08575e8B9a52F3F69c469',
-  '1_0x9084CB9a700a52909Cbef3113dB8BaC01C01EfD6',
-  '42161_0xc27F8a94Df88C4f57B09067e07EA6bC11CA47e11',
-  '1_0xb3079Ec6b82f22A1ABfDCA1A22659aB07Cdf2f0F',
-  '1_0xfFDab1083fCbBCEE32997795388B3D61Ebab786E',
-  '1_0x20eEBd78151EAe9Ed2380AC613204aaF5CA0cd24',
-]

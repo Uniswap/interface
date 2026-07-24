@@ -6,19 +6,18 @@ import { PricePoint } from '~/appGraphql/data/util'
 import { getPriceBounds } from '~/components/Charts/PriceChart/utils'
 import { LineChart } from '~/components/Charts/SparklineChart/LineChart'
 import { LoadingBubble } from '~/components/Tokens/loading'
-import { TokenStat } from '~/types/explore'
 
 interface SparklineChartProps {
   width: number
   height: number
-  tokenData: TokenStat
+  multichainId: string | undefined
   pricePercentChange?: number | null
   sparklineMap: SparklineMap
 }
 
-function SparklineChartInner({ width, height, tokenData, pricePercentChange, sparklineMap }: SparklineChartProps) {
+function SparklineChartInner({ width, height, multichainId, pricePercentChange, sparklineMap }: SparklineChartProps) {
   const colors = useSporeColors()
-  const pricePoints = tokenData.id ? sparklineMap[tokenData.id] : null
+  const pricePoints = multichainId ? sparklineMap[multichainId] : null
 
   // Don't display if there's one or less pricepoints
   if (!pricePoints || pricePoints.length <= 1) {

@@ -2,7 +2,7 @@ import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { isExtensionApp, isWebAppDesktop, isWebPlatform } from '@universe/environment'
 import { useCallback } from 'react'
 import { Flex, Text } from 'ui/src'
-import { spacing } from 'ui/src/theme/spacing'
+import { spacing } from 'ui/src/theme'
 import {
   AmountInputPresets,
   PRESET_BUTTON_PROPS,
@@ -10,7 +10,7 @@ import {
 import { PresetAmountButton } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/PresetAmountButton'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
 import { PRESET_PERCENTAGES } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/utils'
-import { DefaultTokenOptions } from 'uniswap/src/components/CurrencyInputPanel/DefaultTokenOptions/DefaultTokenOptions'
+import { QuickSelectDefaultTokenOptions } from 'uniswap/src/components/CurrencyInputPanel/DefaultTokenOptions/QuickSelectDefaultTokenOptions'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -25,6 +25,7 @@ interface CurrencyInputPanelHeaderProps {
   showDefaultTokenOptions: boolean
   hidePresets?: boolean
   actualGasFee?: string
+  isGasCovered?: boolean
 }
 
 export function CurrencyInputPanelHeader({
@@ -37,6 +38,7 @@ export function CurrencyInputPanelHeader({
   showDefaultTokenOptions,
   hidePresets,
   actualGasFee,
+  isGasCovered,
 }: CurrencyInputPanelHeaderProps): JSX.Element | null {
   const renderPreset = useCallback(
     (preset: PresetPercentage) => (
@@ -48,10 +50,11 @@ export function CurrencyInputPanelHeader({
         elementName={ElementName.PresetPercentage}
         buttonProps={PRESET_BUTTON_PROPS}
         actualGasFee={actualGasFee}
+        isGasCovered={isGasCovered}
         onSetPresetValue={onSetPresetValue}
       />
     ),
-    [currencyAmount, currencyBalance, currencyField, onSetPresetValue, actualGasFee],
+    [currencyAmount, currencyBalance, currencyField, onSetPresetValue, actualGasFee, isGasCovered],
   )
 
   if (!headerLabel && !showDefaultTokenOptions) {
@@ -72,11 +75,7 @@ export function CurrencyInputPanelHeader({
           <AmountInputPresets presets={PRESET_PERCENTAGES} renderPreset={renderPreset} />
         </Flex>
       )}
-      {showDefaultTokenOptions && isWebAppDesktop && (
-        <Flex position="absolute" right={0} top={-spacing.spacing6}>
-          <DefaultTokenOptions currencyField={CurrencyField.OUTPUT} />
-        </Flex>
-      )}
+      {showDefaultTokenOptions && <QuickSelectDefaultTokenOptions />}
     </Flex>
   )
 }

@@ -8,13 +8,14 @@ import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import type { MockedFunction } from 'vitest'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
-jest.mock('src/app/navigation/rootNavigation', () => ({
-  navigate: jest.fn(),
+vi.mock('src/app/navigation/rootNavigation', () => ({
+  navigate: vi.fn(),
 }))
 
-jest.mock('uniswap/src/features/settings/saga', () => ({
+vi.mock('uniswap/src/features/settings/saga', () => ({
   *getEnabledChainIdsSaga(
     _platform?: Platform,
   ): Generator<undefined, { isTestnetModeEnabled: boolean; chains: never[]; defaultChainId: number }> {
@@ -118,7 +119,7 @@ const invalidCurrencyFieldSwapUrl = formSwapUrl({
 })
 
 describe(handleSwapLink, () => {
-  const mockNavigate = navigate as jest.MockedFunction<typeof navigate>
+  const mockNavigate = navigate as MockedFunction<typeof navigate>
 
   beforeEach(() => {
     mockNavigate.mockClear()
@@ -169,7 +170,7 @@ describe(handleSwapLink, () => {
 
   describe('invalid inputs', () => {
     beforeAll(() => {
-      jest.spyOn(console, 'error').mockImplementation(() => undefined)
+      vi.spyOn(console, 'error').mockImplementation(() => undefined)
     })
 
     it('Navigates to an empty swap screen if outputCurrency is invalid', async () => {

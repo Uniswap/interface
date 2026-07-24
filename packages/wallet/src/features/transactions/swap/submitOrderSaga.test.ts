@@ -32,7 +32,7 @@ import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 const mockSignature = '0xMockSignature'
 const mockSigner = {}
 const mockSignerManager = {
-  getSignerForAccount: jest.fn(),
+  getSignerForAccount: vi.fn(),
 }
 
 const baseSubmitOrderParams = {
@@ -53,8 +53,8 @@ const baseSubmitOrderParams = {
     transactionOriginType: TransactionOriginType.Internal,
   },
   txId: '1',
-  onSuccess: jest.fn(),
-  onFailure: jest.fn(),
+  onSuccess: vi.fn(),
+  onFailure: vi.fn(),
   routing: TradingApi.Routing.DUTCH_V2,
   quote: {
     orderId: '0xMockOrderHash',
@@ -86,7 +86,7 @@ const expectedOrderRequest: TradingApi.OrderRequest = {
 describe(submitUniswapXOrder, () => {
   beforeEach(() => {
     let mockTimestamp = 1
-    Date.now = jest.fn(() => mockTimestamp++)
+    Date.now = vi.fn(() => mockTimestamp++)
   })
 
   describe('with ValidatedPermit', () => {
@@ -330,7 +330,7 @@ describe(submitUniswapXOrder, () => {
     it('updates state if order becomes stale after waiting too long', async () => {
       let nextTimestampReturnValue = 1
       // Mock more than ORDER_STALENESS_THRESHOLD seconds passing between saga start & wrap finish
-      Date.now = jest.fn(() => {
+      Date.now = vi.fn(() => {
         const timestamp = nextTimestampReturnValue
         nextTimestampReturnValue += ORDER_STALENESS_THRESHOLD + 1
         return timestamp

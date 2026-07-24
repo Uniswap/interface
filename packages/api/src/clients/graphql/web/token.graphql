@@ -108,6 +108,32 @@ query TokenWeb(
   }
 }
 
+query RWAIssuerTokens($contracts: [ContractInput!]!) {
+  tokens(contracts: $contracts) {
+    id
+    address
+    chain
+    project {
+      id
+      markets(currencies: [USD]) {
+        id
+        price {
+          id
+          value
+        }
+        marketCap {
+          id
+          value
+        }
+        volume24H: volume(duration: DAY) {
+          id
+          value
+        }
+      }
+    }
+  }
+}
+
 query TokenProjectWeb($chain: Chain!, $address: String = null) {
   token(chain: $chain, address: $address) {
     id

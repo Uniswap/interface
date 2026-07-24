@@ -7,9 +7,7 @@
   },
   "devDependencies": {
     "@types/node": "22.19.17",
-    "@typescript/native-preview": "7.0.0-dev.20260421.2",
     "@vitest/coverage-v8": "3.2.1",
-    "typescript": "5.9.2",
     "vitest": "3.2.1"
   },
   "scripts": {
@@ -18,8 +16,8 @@
     "check": "nx check websocket",
     "check:fast": "nx check:fast websocket",
     "check:deps:usage": "nx check:deps:usage websocket",
-    "format": "nx format websocket",
-    "format:check": "nx format:check websocket",
+    "format": "nx run websocket:format",
+    "format:check": "nx run websocket:format:check",
     "lint": "nx lint websocket",
     "lint:fix": "nx lint:fix websocket"
   },

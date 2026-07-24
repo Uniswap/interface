@@ -60,7 +60,7 @@ export function KycInterstitialModal({
             </Text>
             <Text variant="body3" color="$neutral2" textAlign="center">
               {t('toucan.kyc.interstitial.description', {
-                teamName: auctionDetails?.token?.currency.name,
+                teamName: auctionDetails?.token?.currency.name ?? t('common.token'),
                 provider: providerName,
               })}
             </Text>

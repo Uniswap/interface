@@ -1,13 +1,6 @@
 {
   "tags": ["scope:utilities", "type:lib"],
   "targets": {
-    "build": {
-      "command": "tsc -b",
-      "options": {
-        "cwd": "{projectRoot}"
-      },
-      "dependsOn": ["^build"]
-    },
     "check:deps:usage": {
       "dependsOn": ["check-promise-version"]
     },
@@ -20,8 +13,6 @@
       "inputs": ["{workspaceRoot}/scripts/check-promise-version.sh", "dependencies"]
     },
     "typecheck": {},
-    "typecheck:tsc": {},
-    "typecheck:tsgo": {},
     "format": {},
     "format:check": {},
     "lint:oxlint": {},

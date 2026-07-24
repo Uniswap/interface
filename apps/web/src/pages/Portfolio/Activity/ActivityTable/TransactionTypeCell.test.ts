@@ -1,4 +1,5 @@
 import { ArrowDownToLine } from 'ui/src/components/icons/ArrowDownToLine'
+import { ArrowUpToLine } from 'ui/src/components/icons/ArrowUpToLine'
 import { Receipt } from 'ui/src/components/icons/Receipt'
 import { SendAction } from 'ui/src/components/icons/SendAction'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -18,8 +19,7 @@ describe('getTransactionTypeCellIconProps', () => {
         isVaultWithdraw: true,
       }),
     ).toEqual({
-      IconComponent: ArrowDownToLine,
-      rotate: '180deg',
+      IconComponent: ArrowUpToLine,
     })
   })
 

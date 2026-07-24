@@ -8,5 +8,5 @@
     "types": ["node"],
     "paths": {}
   },
-  "references": []
+  "references": [{ "path": "../tailwind" }]
 }

@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { Flex, styled, Text, TextProps, useMedia } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { CopyHelper } from 'uniswap/src/components/CopyHelper/CopyHelper'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
-import { CopyHelper } from '~/theme/components/CopyHelper'
 
 export const BreadcrumbNavContainer = styled(Flex, {
   row: true,

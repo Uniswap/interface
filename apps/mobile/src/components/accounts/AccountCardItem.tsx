@@ -1,6 +1,4 @@
-import { useApolloClient } from '@apollo/client'
 import { SharedEventName } from '@uniswap/analytics-events'
-import { GraphQLApi } from '@universe/api'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
@@ -18,7 +16,6 @@ import { useENS } from 'uniswap/src/features/ens/useENS'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
-import { usePortfolioValueModifiers } from 'uniswap/src/features/portfolio/balances/hooks'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UnitagScreens } from 'uniswap/src/types/screens/mobile'
@@ -34,42 +31,13 @@ type AccountCardItemProps = {
 } & PortfolioValueProps
 
 type PortfolioValueProps = {
-  address: Address
   isPortfolioValueLoading: boolean
   portfolioValue: number | undefined
 }
 
-function PortfolioValue({
-  address,
-  isPortfolioValueLoading,
-  portfolioValue: providedPortfolioValue,
-}: PortfolioValueProps): JSX.Element {
+function PortfolioValue({ isPortfolioValueLoading, portfolioValue }: PortfolioValueProps): JSX.Element {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
-  const apolloClient = useApolloClient()
-  const { gqlChains } = useEnabledChains()
-  const valueModifiers = usePortfolioValueModifiers(address)
-
-  // When a new wallet is added, the parent's combined query is keyed on a new addresses tuple
-  // and `data` is briefly undefined. Read this address's value synchronously from the Apollo
-  // cache as a fallback so previously-known wallets don't flash "loading". This is a one-shot
-  // read with no subscription — re-renders are driven purely by the parent prop changing.
-  const cachedPortfolioValue = useMemo<number | undefined>(() => {
-    if (providedPortfolioValue !== undefined) {
-      return undefined
-    }
-    try {
-      const cached = apolloClient.readQuery<GraphQLApi.AccountListQuery, GraphQLApi.AccountListQueryVariables>({
-        query: GraphQLApi.AccountListDocument,
-        variables: { addresses: [address], valueModifiers, chains: gqlChains },
-      })
-      return cached?.portfolios?.[0]?.tokensTotalDenominatedValue?.value ?? undefined
-    } catch {
-      return undefined
-    }
-  }, [apolloClient, providedPortfolioValue, address, valueModifiers, gqlChains])
-
-  const portfolioValue = providedPortfolioValue ?? cachedPortfolioValue
 
   const isLoading = isPortfolioValueLoading && portfolioValue === undefined
 
@@ -120,17 +88,20 @@ function AccountCardItemInner({
   const onPressEditWalletSettings = useCallback(() => {
     onClose()
 
-    if (selectedAccount?.type === AccountType.SignerMnemonic && !onlyLabeledWallet) {
-      navigate(ModalName.EditProfileSettingsModal, {
-        address,
-        accessPoint: UnitagScreens.UnitagConfirmation,
-      })
-    } else {
-      navigate(ModalName.EditLabelSettingsModal, {
-        address,
-        accessPoint: UnitagScreens.UnitagConfirmation,
-      })
-    }
+    // Wait for AccountSwitcher and the native context menu overlay to dismiss before opening the next modal.
+    setTimeout(() => {
+      if (selectedAccount?.type === AccountType.SignerMnemonic && !onlyLabeledWallet) {
+        navigate(ModalName.EditProfileSettingsModal, {
+          address,
+          accessPoint: UnitagScreens.UnitagConfirmation,
+        })
+      } else {
+        navigate(ModalName.EditLabelSettingsModal, {
+          address,
+          accessPoint: UnitagScreens.UnitagConfirmation,
+        })
+      }
+    }, MODAL_OPEN_WAIT_TIME)
   }, [selectedAccount?.type, onlyLabeledWallet, address, onClose])
 
   const onPressConnectionSettings = useCallback(() => {
@@ -231,11 +202,7 @@ function AccountCardItemInner({
               size={iconSizes.icon32}
             />
           </Flex>
-          <PortfolioValue
-            address={address}
-            isPortfolioValueLoading={isPortfolioValueLoading}
-            portfolioValue={portfolioValue}
-          />
+          <PortfolioValue isPortfolioValueLoading={isPortfolioValueLoading} portfolioValue={portfolioValue} />
         </Flex>
       </TouchableArea>
     </ContextMenu>

@@ -1,7 +1,6 @@
 import { isMobileWeb, isWebIOS } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useAtom } from 'jotai'
-import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { AppStoreLogo } from 'ui/src/components/icons/AppStoreLogo'
@@ -16,6 +15,7 @@ import { MenuStateVariant, useSetMenu } from '~/components/AccountDrawer/menuSta
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { GooglePlayStoreLogo } from '~/components/Icons/GooglePlayStoreLogo'
 import { DownloadWalletOption } from '~/components/WalletModal/DownloadWalletOption'
+import { OptionContainer } from '~/components/WalletModal/OptionContainer'
 import { DetectedBadge } from '~/components/WalletModal/shared'
 import { UniswapBrandedIcon } from '~/components/WalletModal/UniswapBrandedIcon'
 import { useWalletWithId } from '~/features/accounts/store/hooks'
@@ -23,37 +23,6 @@ import { useConnectWallet } from '~/features/wallet/connection/hooks/useConnectW
 import { useSignInWithPasskey } from '~/hooks/useSignInWithPasskey'
 import { persistHideMobileAppPromoBannerAtom } from '~/state/application/atoms'
 import { openDownloadApp } from '~/utils/openDownloadApp'
-
-interface OptionContainerProps extends PropsWithChildren {
-  hideBackground?: boolean
-  recent?: boolean
-  onPress?: () => void
-  testID?: string
-}
-
-export function OptionContainer({ hideBackground, recent, children, onPress, testID }: OptionContainerProps) {
-  return (
-    <Flex
-      row
-      p="$spacing16"
-      gap="$gap12"
-      alignItems="center"
-      borderRadius="$rounded16"
-      borderWidth={recent ? 2 : 0}
-      borderColor="$accent2"
-      overflow="hidden"
-      maxHeight={72}
-      cursor="pointer"
-      zIndex="$default"
-      backgroundColor={!hideBackground ? '$surface2' : '$transparent'}
-      hoverStyle={{ backgroundColor: '$surface3' }}
-      onPress={onPress}
-      data-testid={testID}
-    >
-      {children}
-    </Flex>
-  )
-}
 
 function PasskeyLoginOption({ onSuccess }: { onSuccess: () => void }) {
   const { t } = useTranslation()

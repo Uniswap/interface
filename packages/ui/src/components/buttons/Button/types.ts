@@ -14,15 +14,18 @@ export type ButtonVariantProps = {
   emphasis?: ButtonEmphasis
   // This prevents trimming the string, when the language has special characters (i.e. Vietnamese)
   lineHeightDisabled?: boolean
-  // TODO(WEB-6347): change variant name back to `disabled`
+  // Internal styling flag, threaded to the inner text/icon via `buttonStyledContext`.
+  // Intentionally named differently from Tamagui's built-in `disabled` prop: Tamagui derives its
+  // disabled state (which detaches hover/press/focus handling) from the raw `disabled` prop, so a
+  // styling variant with the same name can't represent a button that looks disabled but stays
+  // interactive (see `onDisabledPress`). Consumers use the public `disabled` prop on `ButtonProps`.
   isDisabled?: boolean
   // Used for automatically setting the text color to the color that most contrasts with the custom background color provided
   'custom-background-color'?: FlexProps['backgroundColor']
 }
 
-// TODO(WEB-6347): don't allow people to set disabled prop until Tamagui issue resolved
-export type ButtonProps = Omit<CustomButtonFrameProps, 'variant' | 'disabled'> &
-  ButtonVariantProps & {
+export type ButtonProps = Omit<CustomButtonFrameProps, 'variant' | 'disabled' | 'isDisabled'> &
+  Omit<ButtonVariantProps, 'isDisabled'> & {
     /**
      * add icon before or after, passes color and size automatically if it's a Component
      */
@@ -37,6 +40,11 @@ export type ButtonProps = Omit<CustomButtonFrameProps, 'variant' | 'disabled'> &
      * Whether to apply a LayoutAnimation when the loading state changes
      */
     shouldAnimateBetweenLoadingStates?: boolean
+    /**
+     * Whether the button is disabled
+     * Displays the disabled UI state and, unless `onDisabledPress` is provided, blocks interaction
+     */
+    disabled?: boolean
     /**
      * The Datadog action name for the button
      */

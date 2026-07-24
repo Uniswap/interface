@@ -1,17 +1,20 @@
+import { type PlainMessage } from '@bufbuild/protobuf'
 import type { Token as DataApiToken } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import type {
   EarnPosition as DataApiEarnPosition,
   EarnVault as DataApiEarnVault,
+  EarnVaultExposure as DataApiEarnVaultExposure,
 } from '@uniswap/client-data-api/dist/data/v2/earn_pb'
 import { GraphQLApi } from '@universe/api'
 import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
-import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import type { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { EARN_EXPLORE_VAULT_CURRENCY_IDS } from 'uniswap/src/features/earn/launchAssets'
 import type {
-  EarnDepositSourceOption,
   EarnPositionInfo,
   EarnVaultCurator,
+  EarnVaultExposure,
   EarnVaultInfo,
 } from 'uniswap/src/features/earn/types'
 import {
@@ -27,8 +30,26 @@ function decimalRateToPercent(rate: number | undefined): number {
   return rate === undefined ? 0 : rate * 100
 }
 
+const MORPHO_HOME_URL = 'https://morpho.org/'
+export const MORPHO_FAQ_URL = 'https://morpho.org/faq/'
+const MORPHO_APP_CHAIN_SLUG_BY_CHAIN_ID: Partial<Record<UniverseChainId, string>> = {
+  [UniverseChainId.Mainnet]: 'ethereum',
+}
+
 export function getEarnVaultId({ chainId, vaultAddress }: { chainId: number; vaultAddress: string }): string {
   return `${chainId}-${normalizeTokenAddressForCache(vaultAddress)}`
+}
+
+export function getMorphoVaultUrl({
+  chainId,
+  vaultAddress,
+}: {
+  chainId: UniverseChainId
+  vaultAddress: string
+}): string | undefined {
+  const chainSlug = MORPHO_APP_CHAIN_SLUG_BY_CHAIN_ID[chainId]
+
+  return chainSlug ? `https://app.morpho.org/${chainSlug}/vault/${vaultAddress}` : undefined
 }
 
 function getCurrencyIdForToken({
@@ -36,7 +57,7 @@ function getCurrencyIdForToken({
   token,
 }: {
   chainId: UniverseChainId
-  token: DataApiToken
+  token: PlainMessage<DataApiToken>
 }): string | undefined {
   if (!token.address) {
     return undefined
@@ -46,7 +67,7 @@ function getCurrencyIdForToken({
     : buildCurrencyId(chainId, token.address)
 }
 
-export function getEarnVaultCurrencyId(vault: DataApiEarnVault): string | undefined {
+export function getEarnVaultCurrencyId(vault: PlainMessage<DataApiEarnVault>): string | undefined {
   const chainId = toSupportedChainId(vault.chainId)
   if (!chainId || !vault.underlyingToken) {
     return undefined
@@ -54,7 +75,7 @@ export function getEarnVaultCurrencyId(vault: DataApiEarnVault): string | undefi
   return getCurrencyIdForToken({ chainId, token: vault.underlyingToken })
 }
 
-function isWrappedNativeCurrencyId(currencyId: string): boolean {
+export function isWrappedNativeCurrencyId(currencyId: string): boolean {
   const chainId = currencyIdToChain(currencyId)
   const wrappedNativeCurrencyId = chainId ? buildWrappedNativeCurrencyId(chainId) : undefined
 
@@ -70,7 +91,7 @@ export function isWrappedNativeEarnVault(vault: Pick<EarnVaultInfo, 'currencyId'
   return isWrappedNativeCurrencyId(vault.currencyId)
 }
 
-function getEarnVaultCurator(dataApiVault: DataApiEarnVault): EarnVaultCurator {
+function getEarnVaultCurator(dataApiVault: PlainMessage<DataApiEarnVault>): EarnVaultCurator {
   return {
     name: dataApiVault.curatorName,
     imageUrl: dataApiVault.curatorImageUrl,
@@ -95,7 +116,7 @@ function getExposureCurrencyIds({
   fallbackCurrencyId,
 }: {
   chainId: UniverseChainId
-  exposureTokens: readonly DataApiToken[]
+  exposureTokens: readonly PlainMessage<DataApiToken>[]
   fallbackCurrencyId: string
 }): readonly string[] {
   if (exposureTokens.length === 0) {
@@ -111,7 +132,32 @@ function getExposureCurrencyIds({
   return currencyIds.length > 0 ? currencyIds : [fallbackCurrencyId]
 }
 
-export function getEarnVaultInfo(dataApiVault: DataApiEarnVault): EarnVaultInfo | undefined {
+function getExposures({
+  chainId,
+  exposures,
+}: {
+  chainId: UniverseChainId
+  exposures: readonly PlainMessage<DataApiEarnVaultExposure>[]
+}): readonly EarnVaultExposure[] {
+  const result: EarnVaultExposure[] = []
+  for (const exposure of exposures) {
+    if (!exposure.token) {
+      continue
+    }
+    const currencyId = getCurrencyIdForToken({ chainId, token: exposure.token })
+    if (!currencyId) {
+      continue
+    }
+    result.push({
+      currencyId: getEarnVaultDisplayCurrencyId(currencyId),
+      valueUsd: exposure.assetsUsd,
+      share: exposure.share,
+    })
+  }
+  return result
+}
+
+export function getEarnVaultInfo(dataApiVault: PlainMessage<DataApiEarnVault>): EarnVaultInfo | undefined {
   const chainId = toSupportedChainId(dataApiVault.chainId)
   const currencyId = getEarnVaultCurrencyId(dataApiVault)
 
@@ -134,19 +180,28 @@ export function getEarnVaultInfo(dataApiVault: DataApiEarnVault): EarnVaultInfo 
       exposureTokens: dataApiVault.exposureTokens ?? [],
       fallbackCurrencyId: getEarnVaultDisplayCurrencyId(currencyId),
     }),
+    exposures: getExposures({
+      chainId,
+      // Protobuf type marks this as non-nullable, but it can be undefined at runtime — keep the fallback.
+      // oxlint-disable-next-line typescript-eslint/no-unnecessary-condition
+      exposures: dataApiVault.exposures ?? [],
+    }),
 
     // Backend fields normalized for app display.
     vaultAddress,
     chainId,
     apyPercent,
     totalDepositsUsd: dataApiVault.totalAssetsUsd ?? 0,
+    liquidityRaw: dataApiVault.liquidityRaw || undefined,
     liquidityUsd: dataApiVault.liquidityUsd ?? 0,
     curator: getEarnVaultCurator(dataApiVault),
     deploymentDate: getEarnVaultDeploymentDate(dataApiVault.deploymentTimestamp),
+    morphoUrl: MORPHO_HOME_URL,
+    exposureAndRiskUrl: getMorphoVaultUrl({ chainId, vaultAddress }),
   }
 }
 
-export function getEarnVaultInfos(vaults: readonly DataApiEarnVault[] | undefined): EarnVaultInfo[] {
+export function getEarnVaultInfos(vaults: readonly PlainMessage<DataApiEarnVault>[] | undefined): EarnVaultInfo[] {
   const vaultInfos: EarnVaultInfo[] = []
 
   vaults?.forEach((vault) => {
@@ -159,7 +214,9 @@ export function getEarnVaultInfos(vaults: readonly DataApiEarnVault[] | undefine
   return vaultInfos
 }
 
-export function getEarnPositionInfo(position: DataApiEarnPosition | undefined): EarnPositionInfo | undefined {
+export function getEarnPositionInfo(
+  position: PlainMessage<DataApiEarnPosition> | undefined,
+): EarnPositionInfo | undefined {
   if (!position?.vault) {
     return undefined
   }
@@ -181,7 +238,7 @@ export function getEarnPositionInfo(position: DataApiEarnPosition | undefined): 
 }
 
 export function getEarnPositionInfosByVaultId(
-  positions: readonly DataApiEarnPosition[] | undefined,
+  positions: readonly PlainMessage<DataApiEarnPosition>[] | undefined,
 ): Map<string, EarnPositionInfo> {
   const positionsByVaultId = new Map<string, EarnPositionInfo>()
 
@@ -245,7 +302,7 @@ export function selectEarnVaultForToken({
   return selectedVault
 }
 
-function addCurrencyId(currencyIds: string[], currencyId: string | undefined): void {
+export function addCurrencyId(currencyIds: string[], currencyId: string | undefined): void {
   if (!currencyId) {
     return
   }
@@ -264,119 +321,6 @@ export function getEarnVaultTokenDetailsCurrencyIds(
   addCurrencyId(currencyIds, vault.currencyId)
   addCurrencyId(currencyIds, vault.displayCurrencyId)
   return currencyIds
-}
-
-export function getEarnVaultDepositSourceCurrencyIds({
-  tokenProjectCurrencyIds,
-  vault,
-}: {
-  tokenProjectCurrencyIds: readonly string[] | undefined
-  vault: Pick<EarnVaultInfo, 'currencyId' | 'displayCurrencyId'>
-}): string[] {
-  const currencyIds: string[] = []
-  const shouldAddNativeSources = isWrappedNativeEarnVault(vault)
-  const candidateCurrencyIds = [vault.currencyId, ...(tokenProjectCurrencyIds ?? [])]
-
-  candidateCurrencyIds.forEach((currencyId) => {
-    addCurrencyId(currencyIds, currencyId)
-
-    if (!shouldAddNativeSources || !isWrappedNativeCurrencyId(currencyId)) {
-      return
-    }
-
-    const chainId = currencyIdToChain(currencyId)
-    if (chainId) {
-      addCurrencyId(currencyIds, buildNativeCurrencyId(chainId))
-    }
-  })
-
-  addCurrencyId(currencyIds, vault.displayCurrencyId)
-  return currencyIds
-}
-
-export function getEarnVaultWithdrawDestinationCurrencyId({
-  destinationChainId,
-  vault,
-}: {
-  destinationChainId: UniverseChainId
-  vault: Pick<EarnVaultInfo, 'currencyId'>
-}): string {
-  return isWrappedNativeEarnVault(vault) ? buildNativeCurrencyId(destinationChainId) : vault.currencyId
-}
-
-export function getEarnDepositSourceOptions({
-  portfolioBalances,
-  tokenProjectCurrencyIds,
-  vault,
-}: {
-  portfolioBalances: Record<string, PortfolioBalance> | undefined
-  tokenProjectCurrencyIds: readonly string[] | undefined
-  vault: Pick<EarnVaultInfo, 'currencyId' | 'displayCurrencyId'>
-}): EarnDepositSourceOption[] {
-  if (!portfolioBalances) {
-    return []
-  }
-
-  const sourceCurrencyIds = getEarnVaultDepositSourceCurrencyIds({
-    tokenProjectCurrencyIds,
-    vault,
-  })
-  const options: EarnDepositSourceOption[] = []
-
-  Object.values(portfolioBalances).forEach((balance) => {
-    const isDepositSource = sourceCurrencyIds.some((currencyId) =>
-      areCurrencyIdsEqual(currencyId, balance.currencyInfo.currencyId),
-    )
-    if (!isDepositSource || balance.quantity <= 0) {
-      return
-    }
-
-    options.push({
-      id: balance.currencyInfo.currencyId,
-      chainId: balance.currencyInfo.currency.chainId,
-      currencyInfo: balance.currencyInfo,
-      balanceQuantity: balance.quantity,
-      balanceUsd: balance.balanceUSD ?? undefined,
-    })
-  })
-
-  return options.sort(compareEarnDepositSourceBalanceDesc)
-}
-
-function compareEarnDepositSourceBalanceDesc(
-  optionA: EarnDepositSourceOption,
-  optionB: EarnDepositSourceOption,
-): number {
-  // Priced rows (balanceUsd > 0) always rank above unpriced rows so that a small priced balance
-  // doesn't fall below a large unpriced one — USD and token-quantity units aren't comparable.
-  const aIsPriced = isPricedDepositSource(optionA)
-  const bIsPriced = isPricedDepositSource(optionB)
-  if (aIsPriced !== bIsPriced) {
-    return aIsPriced ? -1 : 1
-  }
-
-  const balanceDiff = aIsPriced
-    ? (optionB.balanceUsd ?? 0) - (optionA.balanceUsd ?? 0)
-    : optionB.balanceQuantity - optionA.balanceQuantity
-  if (balanceDiff !== 0) {
-    return balanceDiff
-  }
-
-  if (optionA.currencyInfo.currency.isNative !== optionB.currencyInfo.currency.isNative) {
-    return optionA.currencyInfo.currency.isNative ? -1 : 1
-  }
-
-  if (optionA.chainId !== optionB.chainId) {
-    return optionA.chainId - optionB.chainId
-  }
-
-  // Unreachable in practice: ids are `${chainId}-${address}`, so equal chainIds + same nativeness + same balance
-  // means the same currency. Kept for sort stability and to satisfy the comparator contract.
-  return optionA.id.localeCompare(optionB.id)
-}
-
-function isPricedDepositSource(option: EarnDepositSourceOption): boolean {
-  return option.balanceUsd !== undefined && option.balanceUsd > 0
 }
 
 export function getTokenBalanceUsd({
@@ -434,6 +378,18 @@ export function getEarnVaultsSortedByPosition({
   })
 }
 
+function getEarnExploreVaultRank(vault: Pick<EarnVaultInfo, 'currencyId' | 'displayCurrencyId'>): number {
+  const vaultCurrencyIds = getEarnVaultTokenDetailsCurrencyIds(vault)
+  const rank = EARN_EXPLORE_VAULT_CURRENCY_IDS.findIndex((currencyId) =>
+    vaultCurrencyIds.some((vaultCurrencyId) => areCurrencyIdsEqual(currencyId, vaultCurrencyId)),
+  )
+  return rank === -1 ? Number.MAX_SAFE_INTEGER : rank
+}
+
+export function getEarnVaultsSortedForExplore(vaults: readonly EarnVaultInfo[]): EarnVaultInfo[] {
+  return [...vaults].sort((vaultA, vaultB) => getEarnExploreVaultRank(vaultA) - getEarnExploreVaultRank(vaultB))
+}
+
 export function hasEarnPosition(position: EarnPositionInfo | undefined): boolean {
   if (!position) {
     return false
@@ -444,6 +400,45 @@ export function hasEarnPosition(position: EarnPositionInfo | undefined): boolean
   }
 
   return isPositiveRawAmount(position.depositedRaw) || isPositiveRawAmount(position.sharesRaw)
+}
+
+export function hasConfirmedEarnPositionRawBalance(
+  position: Pick<EarnPositionInfo, 'depositedRaw' | 'sharesRaw'> | undefined,
+): boolean {
+  if (!position) {
+    return false
+  }
+
+  return isPositiveRawAmount(position.depositedRaw) || isPositiveRawAmount(position.sharesRaw)
+}
+
+export function hasConfirmedEarnPositionShareBalance(
+  position: Pick<EarnPositionInfo, 'sharesRaw'> | undefined,
+): boolean {
+  if (!position) {
+    return false
+  }
+
+  return isPositiveRawAmount(position.sharesRaw)
+}
+
+/**
+ * Selects the freshest confirmed same-vault position for Earn amount and review flows, preserving
+ * the snapshot while live data is unresolved or optimistic.
+ */
+export function resolveEarnAmountPosition({
+  livePosition,
+  snapshotPosition,
+}: {
+  livePosition: EarnPositionInfo | undefined
+  snapshotPosition: EarnPositionInfo
+}): EarnPositionInfo {
+  const isLivePositionConfirmedForVault =
+    livePosition !== undefined &&
+    livePosition.vaultId === snapshotPosition.vaultId &&
+    hasConfirmedEarnPositionRawBalance(livePosition)
+
+  return isLivePositionConfirmedForVault ? livePosition : snapshotPosition
 }
 
 function isPositiveRawAmount(rawAmount: string): boolean {

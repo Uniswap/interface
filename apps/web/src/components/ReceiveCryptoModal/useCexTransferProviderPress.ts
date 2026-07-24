@@ -8,6 +8,7 @@ import { uuid } from 'utilities/src/primitives/uuid'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useOpenReceiveCryptoModal } from '~/components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
 import { useActiveAddresses } from '~/features/accounts/store/hooks'
+import { getOnRampRedirectUrl } from '~/pages/Swap/Buy/onRampRedirectUrl'
 import { useAddFiatOnRampTransaction } from '~/state/fiatOnRampTransactions/hooks'
 import { FiatOnRampTransactionStatus, FiatOnRampTransactionType } from '~/state/fiatOnRampTransactions/types'
 import { ReceiveModalState } from '~/types/receiveCryptoModal'
@@ -34,7 +35,7 @@ export function useCexTransferProviderPress(
       serviceProvider: serviceProvider?.serviceProvider ?? '',
       walletAddress: walletAddress ?? '', // satisfy typecheck: useFiatOnRampAggregatorTransferWidgetQuery will only query if walletAddress is defined
       externalSessionId: externalTransactionId,
-      redirectUrl: `${UNISWAP_WEB_URL}/buy`,
+      redirectUrl: getOnRampRedirectUrl({ origin: UNISWAP_WEB_URL }),
     }
   }, [walletAddress, serviceProvider, externalTransactionId])
 

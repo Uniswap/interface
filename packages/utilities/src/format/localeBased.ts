@@ -101,10 +101,12 @@ export function formatNumberOrString({
   return formatNumber({ input: price, locale, currencyCode, type, placeholder })
 }
 
-export function getPercentNumberType(maxDecimals: PercentNumberDecimals): PercentNumberType {
+export function getPercentNumberType(maxDecimals?: PercentNumberDecimals): PercentNumberType {
   switch (maxDecimals) {
     case 1:
       return NumberType.PercentageOneDecimal
+    case 2:
+      return NumberType.PercentageTwoDecimals
     case 3:
       return NumberType.PercentageThreeDecimals
     case 4:
@@ -117,7 +119,7 @@ export function getPercentNumberType(maxDecimals: PercentNumberDecimals): Percen
 export function formatPercent({
   rawPercentage,
   locale,
-  maxDecimals = 2,
+  maxDecimals,
 }: {
   rawPercentage: Maybe<number | string>
   locale: string

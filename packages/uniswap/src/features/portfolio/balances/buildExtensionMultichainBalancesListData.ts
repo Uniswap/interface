@@ -14,6 +14,7 @@ import {
   multichainChainTokenRowSuffix,
 } from 'uniswap/src/features/portfolio/balances/flattenMultichainToSingleChainRows'
 import { partitionMultichainTokensByVisibility } from 'uniswap/src/features/portfolio/balances/portfolioBalanceVisibility'
+import { sortMultichainBalances } from 'uniswap/src/features/portfolio/balances/sortPortfolioBalances'
 import type { SortedPortfolioBalancesMultichain } from 'uniswap/src/features/portfolio/balances/types'
 import type { CurrencyIdToVisibility } from 'uniswap/src/features/visibility/slice'
 
@@ -124,16 +125,23 @@ export function flattenPortfolioMultichainBalanceToSingleChainRows(
   return result
 }
 
-function buildHiddenFlattenedMultichainBalancesForList(
-  hiddenBalancesFromSort: PortfolioMultichainBalance[],
-  partitions: MultichainBalanceUiPartition[],
-): PortfolioMultichainBalance[] {
+function buildHiddenFlattenedMultichainBalancesForList({
+  hiddenBalancesFromSort,
+  partitions,
+  isTestnetModeEnabled,
+}: {
+  hiddenBalancesFromSort: PortfolioMultichainBalance[]
+  partitions: MultichainBalanceUiPartition[]
+  isTestnetModeEnabled: boolean
+}): PortfolioMultichainBalance[] {
   const fully = hiddenBalancesFromSort.flatMap((b) => flattenPortfolioMultichainBalanceToSingleChainRows(b))
   const partial = partitions.flatMap(({ balance, hiddenChainTokens }) =>
     hiddenChainTokens.map((ht) => buildSingleChainHiddenMultichainBalance({ parentBalance: balance, chainToken: ht })),
   )
-  // Partial-visibility per-chain hidden rows first so “flattened” multichain chains surface above fully hidden assets.
-  return [...partial, ...fully]
+  return [
+    ...sortMultichainBalances(partial, isTestnetModeEnabled),
+    ...sortMultichainBalances(fully, isTestnetModeEnabled),
+  ]
 }
 
 /**
@@ -170,7 +178,11 @@ export function buildExtensionMultichainBalancesListData({
     })
     .filter((b): b is PortfolioMultichainBalance => b !== null)
 
-  const hiddenFlattened = buildHiddenFlattenedMultichainBalancesForList(sortedBalances.hiddenBalances, partitions)
+  const hiddenFlattened = buildHiddenFlattenedMultichainBalancesForList({
+    hiddenBalancesFromSort: sortedBalances.hiddenBalances,
+    partitions,
+    isTestnetModeEnabled,
+  })
 
   const listBalancesById: Record<string, PortfolioMultichainBalance> = { ...balancesById }
   for (const v of visibleDisplayBalances) {

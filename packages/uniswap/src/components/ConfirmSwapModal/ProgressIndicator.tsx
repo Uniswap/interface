@@ -7,6 +7,7 @@ import {
   TokenApprovalTransactionStepRow,
   TokenRevocationTransactionStepRow,
 } from 'uniswap/src/components/ConfirmSwapModal/steps/Approve'
+import { EarnPlanStepRow, isEarnPlanStep } from 'uniswap/src/components/ConfirmSwapModal/steps/EarnPlanStepRow'
 import { LPTransactionStepRow } from 'uniswap/src/components/ConfirmSwapModal/steps/LP'
 import {
   Permit2SignatureStepRow,
@@ -214,6 +215,9 @@ function Step({
     case TransactionStepType.UniswapXPlanSignature:
     case TransactionStepType.SwapTransactionWalletCall:
       if (isPlanStep) {
+        if (isEarnPlanStep(step)) {
+          return <EarnPlanStepRow step={step} {...commonProps} />
+        }
         return <SwapTransactionPlanStepRow step={step as SwapSteps} {...commonProps} />
       }
       return <SwapTransactionStepRow step={step} {...commonProps} />

@@ -6,6 +6,8 @@ import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/c
 export interface ReviewNetworkCostRowProps {
   gasFeeUsd: string | undefined
   tx: TransactionRequest | undefined
+  includesDelegation?: boolean
+  includesDelegationUpgrade?: boolean
 }
 
 /**
@@ -18,7 +20,12 @@ export interface ReviewNetworkCostRowProps {
  * `useGasOverridesWarningState` hook to stay in sync with this row's warning
  * presentation.
  */
-export function ReviewNetworkCostRow({ gasFeeUsd, tx }: ReviewNetworkCostRowProps): JSX.Element {
+export function ReviewNetworkCostRow({
+  gasFeeUsd,
+  tx,
+  includesDelegation,
+  includesDelegationUpgrade,
+}: ReviewNetworkCostRowProps): JSX.Element {
   const gasOverrides = useTransactionSettingsStore((s) => s.gasOverrides)
   const { enableCustomGasFeeEntry, hasOverrides, hasWarning } = useGasOverridesWarningState({ tx, gasOverrides })
 
@@ -28,6 +35,8 @@ export function ReviewNetworkCostRow({ gasFeeUsd, tx }: ReviewNetworkCostRowProp
       enableCustomGasFeeEntry={enableCustomGasFeeEntry}
       hasOverrides={hasOverrides}
       hasWarning={hasWarning}
+      includesDelegation={includesDelegation}
+      includesDelegationUpgrade={includesDelegationUpgrade}
       pressable={false}
     />
   )

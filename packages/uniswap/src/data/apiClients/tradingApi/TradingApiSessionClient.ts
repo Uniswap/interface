@@ -1,14 +1,15 @@
 import {
-  createFetchClient,
   createTradingApiClient,
+  createTradingApiFetchClient,
   createWithSessionRetry,
   getEntryGatewayUrl,
   provideSessionService,
   reinitializeSession,
 } from '@universe/api'
-import type { PlanEndpoints } from '@universe/api/src/clients/trading/createTradingApiClient'
+import { type PlanEndpoints, tryProvideSession } from '@universe/api'
 import { getConfig } from '@universe/config'
 import { FeatureFlags, getFeatureFlag } from '@universe/gating'
+import { SessionGateSource } from '@universe/sessions'
 import { BASE_UNISWAP_HEADERS } from 'uniswap/src/data/apiClients/createUniswapFetchClient'
 import { getFeatureFlaggedHeaders } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { logger } from 'utilities/src/logger/logger'
@@ -37,7 +38,8 @@ const withSessionRetry = createWithSessionRetry({
   },
 })
 
-const entryGatewayTradingFetchClientWithSession = createFetchClient({
+// The factory sets credentials: 'include' so web requests carry the session cookie.
+const entryGatewayTradingFetchClientWithSession = createTradingApiFetchClient({
   getBaseUrl: getEntryGatewayUrl,
   getHeaders,
   getSessionService: () =>
@@ -46,9 +48,8 @@ const entryGatewayTradingFetchClientWithSession = createFetchClient({
       // Sessions are currently required for plans, so this is enabled by default. The flag exists as a safety net to disable sessions for plan if needed.
       getIsSessionServiceEnabled: () => !getFeatureFlag(FeatureFlags.DisableSessionsForPlan),
     }),
-  defaultOptions: {
-    credentials: 'include',
-  },
+  getSession: tryProvideSession,
+  source: SessionGateSource.FetchTrading,
 })
 
 const BaseTradingApiSessionClient: PlanEndpoints = createTradingApiClient({

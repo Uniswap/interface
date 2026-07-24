@@ -1,4 +1,3 @@
-import '@testing-library/jest-native'
 import { ReactNode } from 'react'
 import { Text } from 'ui/src'
 import { ActionSheetDropdown } from 'uniswap/src/components/dropdowns/ActionSheetDropdown'

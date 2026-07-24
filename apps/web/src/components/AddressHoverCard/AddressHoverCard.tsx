@@ -1,6 +1,6 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import type { ReactNode } from 'react'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { AnimatableCopyIcon, Flex, Popover, Separator, Text, TouchableArea, useIsTouchDevice } from 'ui/src'
@@ -20,8 +20,9 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
 import { NumberType } from 'utilities/src/format/types'
+import { useCopyClipboard } from 'utilities/src/react/useCopyClipboard'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { useCopyClipboard } from '~/hooks/useCopyClipboard'
+import { useCloseOnOutsideScroll } from '~/hooks/useCloseOnOutsideScroll'
 
 const iconButtonProps = {
   hitSlop: 8,
@@ -39,6 +40,7 @@ export function AddressHoverCard({ address, platform, children }: AddressHoverCa
   const dispatch = useDispatch()
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const [isOpen, setIsOpen] = useState(false)
+  const popoverContentRef = useRef<HTMLDivElement>(null)
   const [isCopied, copyToClipboard] = useCopyClipboard(ONE_SECOND_MS)
   const chainId = platform === Platform.SVM ? UniverseChainId.Solana : UniverseChainId.Mainnet
   const BlockExplorerLogo = useBlockExplorerLogo(chainId)
@@ -80,21 +82,7 @@ export function AddressHoverCard({ address, platform, children }: AddressHoverCa
     await openUri({ uri: explorerUrl })
   }, [address, chainId])
 
-  // Dismiss the popover when the user scrolls
-  useEffect(() => {
-    if (!isOpen) {
-      return undefined
-    }
-
-    const handleScroll = (): void => {
-      setIsOpen(false)
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true, capture: true })
-    return (): void => {
-      window.removeEventListener('scroll', handleScroll, { capture: true })
-    }
-  }, [isOpen])
+  useCloseOnOutsideScroll({ contentRef: popoverContentRef, isOpen, setIsOpen })
 
   // Disable hover cards on touch devices - hover interactions don't work well
   if (!address || isTouchDevice) {
@@ -116,6 +104,7 @@ export function AddressHoverCard({ address, platform, children }: AddressHoverCa
         </TouchableArea>
       </Popover.Trigger>
       <Popover.Content
+        ref={popoverContentRef}
         animation="quick"
         backgroundColor="$surface1"
         borderColor="$surface3"

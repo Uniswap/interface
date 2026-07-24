@@ -4,7 +4,11 @@ export default defineConfig({
   test: {
     watch: false,
     environment: 'edge-runtime',
-    include: ['**/session.integration.test.ts'],
+    include: [
+      '**/session.integration.test.ts',
+      '**/headlessSessionClient.integration.test.ts',
+      '**/sessionTransport.integration.test.ts',
+    ],
     testTimeout: 60000,
     hookTimeout: 60000,
   },

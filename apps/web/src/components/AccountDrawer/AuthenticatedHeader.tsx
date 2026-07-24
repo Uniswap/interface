@@ -1,4 +1,3 @@
-import { NetworkStatus } from '@apollo/client'
 import type { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useState } from 'react'
@@ -8,9 +7,7 @@ import { UNISWAP_LOGO } from 'ui/src/assets'
 import { Settings } from 'ui/src/components/icons/Settings'
 import { Shine } from 'ui/src/loading/Shine'
 import { iconSizes } from 'ui/src/theme'
-import AnimatedNumber, {
-  BALANCE_CHANGE_INDICATION_DURATION,
-} from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
@@ -24,7 +21,6 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useHasAccountMismatchOnAnyChain } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import i18next from 'uniswap/src/i18n'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 import { MultiBlockchainAddressDisplay } from '~/components/AccountDetails/MultiBlockchainAddressDisplay'
@@ -40,11 +36,11 @@ import { DelegationMismatchModal } from '~/components/delegation/DelegationMisma
 import { StatusIcon } from '~/components/StatusIcon'
 import { ExtensionRequestMethods, useUniswapExtensionRequest } from '~/components/WalletModal/useWagmiConnectorWithId'
 import { useAccountsStore } from '~/features/accounts/store/hooks'
+import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '~/features/claim/hooks'
 import { useDataApiOutageModal } from '~/hooks/useDataApiOutageModal'
 import { useIsUniswapExtensionConnected } from '~/hooks/useIsUniswapExtensionConnected'
 import { useModalState } from '~/hooks/useModalState'
 import { useIsPortfolioZero } from '~/pages/Portfolio/Overview/hooks/useIsPortfolioZero'
-import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '~/state/claim/hooks'
 
 export function AuthenticatedHeader({
   evmAddress,
@@ -67,7 +63,6 @@ export function AuthenticatedHeader({
   const isUniswapExtensionConnected = useIsUniswapExtensionConnected()
   const uniswapExtensionRequest = useUniswapExtensionRequest()
   const shouldShowExtensionButton = isUniswapExtensionConnected && !isSolanaConnected
-  const isRightToLeft = i18next.dir() === 'rtl'
 
   const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(evmAddress)
   const isUnclaimed = useUserHasAvailableClaim(evmAddress)
@@ -78,7 +73,7 @@ export function AuthenticatedHeader({
   const {
     data: portfolioData,
     error: portfolioError,
-    networkStatus: portfolioNetworkStatus,
+    isPending: portfolioPending,
     loading: portfolioLoading,
     dataUpdatedAt: portfolioDataUpdatedAt,
   } = usePortfolioTotalValue({
@@ -89,8 +84,8 @@ export function AuthenticatedHeader({
   const { percentChange, absoluteChangeUSD, balanceUSD } = portfolioData || {}
 
   // Treat error-before-first-data as loading so the skeleton stays visible
-  const isLoading = !portfolioData && (portfolioLoading || !!portfolioError)
-  const isWarmLoading = !!portfolioData && portfolioNetworkStatus === NetworkStatus.loading
+  const isLoading = !portfolioData && (portfolioPending || !!portfolioError)
+  const isWarmLoading = !!portfolioData && portfolioLoading
 
   const [activityOutage, setActivityOutage] = useState<DataApiOutageState>({
     error: undefined,
@@ -181,9 +176,7 @@ export function AuthenticatedHeader({
         <Flex flex={1} mt="$spacing16">
           <Flex gap="$spacing4" mb="$spacing16" data-testid={TestID.MiniPortfolioTotalBalance}>
             <AnimatedNumber
-              balance={balanceUSD}
-              isRightToLeft={isRightToLeft}
-              colorIndicationDuration={BALANCE_CHANGE_INDICATION_DURATION}
+              numericValue={balanceUSD}
               loading={isLoading}
               loadingPlaceholderText="000000.00"
               shouldFadeDecimals={shouldFadePortfolioDecimals}

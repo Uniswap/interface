@@ -13,7 +13,7 @@ import { NoWalletFoundStep } from 'uniswap/src/components/passkey/recovery/steps
 import { OAuthLoadingStep } from 'uniswap/src/components/passkey/recovery/steps/OAuthLoadingStep'
 import { RecoveringStep } from 'uniswap/src/components/passkey/recovery/steps/RecoveringStep'
 import { RecoveryLoginStep } from 'uniswap/src/components/passkey/recovery/steps/RecoveryLoginStep'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { authenticateWithPasskeyForWalletSignin } from 'uniswap/src/features/passkey/embeddedWallet'
 import { exportSeedPhraseWithRecovery } from 'uniswap/src/features/passkey/hpkeExport'
 import { RecoveryStep, useRecoveryFlow } from 'uniswap/src/features/passkey/useRecoveryFlow'
@@ -43,11 +43,21 @@ export function RecoveryFlowScreen({ navigation, route: { params } }: Props): JS
   const privyAppId = getPrivyConfig().appId
 
   const onPinDecryptSuccess = useEvent(
-    async ({ authPrivateKey, authMethodId }: { authPrivateKey: Uint8Array; authMethodId: string; email: string }) => {
+    async ({
+      authPrivateKey,
+      authMethodId,
+      accessToken,
+    }: {
+      authPrivateKey: Uint8Array
+      authMethodId: string
+      email: string
+      accessToken: string
+    }) => {
       try {
         const mnemonic = await exportSeedPhraseWithRecovery({
           authPrivateKey,
           authMethodId,
+          accessToken,
           generateAuthorizationSignature: privy.generateAuthorizationSignature,
         })
         const importedAddress = await Keyring.importMnemonic(mnemonic)
@@ -187,7 +197,7 @@ function HelpLink({ t }: { t: ReturnType<typeof useTranslation>['t'] }): JSX.Ele
     <TouchableArea
       hitSlop={16}
       onPress={() => {
-        void openUri({ uri: uniswapUrls.helpArticleUrls.passkeysInfo })
+        void openUri({ uri: UniswapHelpUrls.articles.passkeysInfo })
       }}
     >
       <Text color="$neutral2" variant="buttonLabel2">

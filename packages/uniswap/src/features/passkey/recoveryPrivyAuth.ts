@@ -10,6 +10,8 @@
  */
 export interface RecoveryPrivyAuth {
   ready: boolean
+  /** Privy user id of the re-authed session. Needed by the passkey-less rotation Challenge. */
+  privyUserId?: string
   getAccessToken: () => Promise<string | null>
   sendEmailCode: (email: string) => Promise<void>
   loginWithEmailCode: (code: string) => Promise<void>

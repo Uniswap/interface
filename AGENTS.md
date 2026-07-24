@@ -15,10 +15,10 @@ Uniswap Universe is a monorepo containing all Uniswap front-end interfaces:
 ### Setup
 
 ```bash
-# Initial setup (requires 1Password CLI)
+# Initial setup
 bun install
 bun local:check
-bun lfg  # Sets up mobile and extension
+bun config:login
 ```
 
 ### Development Servers
@@ -33,7 +33,6 @@ bun extension start     # Extension
 ### Building
 
 ```bash
-bun g:build                      # Build all packages
 bun web build:production    # Web production build
 bun mobile ios:bundle            # iOS bundle
 bun mobile android:release       # Android release
@@ -123,6 +122,7 @@ bun i18n:extract                # Extract localized strings (run after changing 
 3. **Python Setup**: Run `brew install python-setuptools` if you encounter Python module errors
 4. **Mobile Development**: Always run `bun mobile pod` after dependency changes
 5. **Bundle Size**: Monitor bundle size impacts when adding dependencies
+6. **Bun Version Bumps**: `.bun-version` is the single source of truth. After editing it, run `bun sync:bun-version` to rewrite the pins that can't read the file (CI runner preinstall in `.github/runs-on.yml`, `engines.bun`, EAS build profiles) — CI fails if they drift. Bump `@types/bun` and rerun `bun install` separately.
 
 ## Package Dependencies
 
@@ -164,9 +164,10 @@ Be cognizant of the app or package within which a given change is being made. Be
 
 ### Environment
 
-- Node.js v22.22.2 and Bun 1.3.11 are pre-installed and match `.nvmrc` / `.bun-version`.
+- Node.js and Bun are pre-installed and match `.nvmrc` / `.bun-version`.
 - The `tsgo` binary is at `node_modules/.bin/tsgo` (not globally in PATH). The `bun g:typecheck` script handles this automatically.
 - Set `export LEFTHOOK=0` to disable git hooks in Cloud Agent sessions (no TTY for interactive hooks).
+- Set `export SKIP_CONFIG_PULL=true` to disable remote config fetching (no Okta auth for agents)
 - All backend APIs are external (no local databases or Docker needed for development).
 
 ### Web App

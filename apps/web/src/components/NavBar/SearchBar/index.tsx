@@ -1,3 +1,4 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { Search } from 'ui/src/components/icons/Search'
@@ -41,6 +42,7 @@ const SearchIcon = deprecatedStyled.div`
 export const SearchBar = () => {
   const { t } = useTranslation()
   const isNavSearchInputVisible = useIsSearchBarVisible()
+  const isAuctionSearchEnabled = useFeatureFlag(FeatureFlags.AuctionSearch)
 
   const {
     isOpen: isModalOpen,
@@ -67,11 +69,13 @@ export const SearchBar = () => {
 
   const trace = useTrace({ section: SectionName.NavbarSearch })
 
-  const placeholderText = t('search.input.placeholder.withWallets')
+  const placeholderText = isAuctionSearchEnabled
+    ? t('search.input.placeholder.withWalletsAndAuctions')
+    : t('search.input.placeholder.withWallets')
 
   return (
     <Trace section={SectionName.NavbarSearch}>
-      <SearchModal />
+      <SearchModal isAuctionSearchEnabled={isAuctionSearchEnabled} placeholder={placeholderText} />
       {isNavSearchInputVisible ? (
         <TouchableArea onPress={openSearchModal} data-testid="nav-search-input" width={NAV_SEARCH_MIN_WIDTH}>
           <Flex

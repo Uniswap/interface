@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Flex, Text, TouchableArea, useMedia } from 'ui/src'
+import { Flex, Text, TouchableArea, useMedia, type SpaceTokens } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -15,6 +15,7 @@ interface MultichainOptionRowProps {
   tag?: string
   target?: string
   rel?: string
+  addressMenuPadding?: SpaceTokens | number
 }
 
 /**
@@ -31,6 +32,7 @@ export function MultichainOptionRow({
   tag,
   target,
   rel,
+  addressMenuPadding = '$spacing8',
 }: MultichainOptionRowProps): JSX.Element {
   const chainName = getChainInfo(chainId).label
   const media = useMedia()
@@ -44,7 +46,7 @@ export function MultichainOptionRow({
       alignItems="center"
       borderRadius="$rounded16"
       gap="$spacing8"
-      px="$spacing8"
+      px={addressMenuPadding}
       py="$spacing8"
       width="100%"
       $md={{ gap: '$spacing12', px: 0, height: '$spacing48' }}

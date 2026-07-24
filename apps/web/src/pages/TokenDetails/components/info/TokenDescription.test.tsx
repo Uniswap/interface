@@ -1,6 +1,5 @@
 import userEvent from '@testing-library/user-event'
 import { GraphQLApi } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ZERO_PERCENT } from '~/constants/misc'
@@ -22,13 +21,6 @@ vi.mock('~/pages/TokenDetails/context/useTDPStore', () => ({
   useTDPStore: vi.fn(),
 }))
 
-vi.mock('@universe/gating', async (importOriginal) => {
-  return {
-    ...(await importOriginal()),
-    useFeatureFlag: vi.fn(),
-  }
-})
-
 const SINGLE_CHAIN_MAP = {
   ETHEREUM: { address: USDC_MAINNET.address },
 }
@@ -42,7 +34,6 @@ describe('TokenDescription', () => {
   beforeEach(() => {
     mocked(useCurrency).mockReturnValue(validUSDCCurrency)
     mocked(useSwapTaxes).mockReturnValue({ inputTax: ZERO_PERCENT, outputTax: ZERO_PERCENT })
-    mocked(useFeatureFlag).mockReturnValue(false)
   })
 
   it('renders token information correctly with defaults', () => {
@@ -148,30 +139,7 @@ describe('TokenDescription', () => {
   })
 
   describe('multichain', () => {
-    it('renders single-chain pills when flag is off even with multiple chains', () => {
-      mocked(useFeatureFlag).mockReturnValue(false)
-      const mockState = {
-        address: USDC_MAINNET.address,
-        currency: USDC_MAINNET,
-        currencyChain: GraphQLApi.Chain.Ethereum,
-        tokenProjectQuery: validTokenProjectResponse,
-        multiChainMap: MULTI_CHAIN_MAP,
-      }
-      mocked(useTDPStore).mockImplementation(((selector: (s: TDPState) => unknown) =>
-        selector(mockState as TDPState)) as typeof useTDPStore)
-
-      render(<TokenDescription />)
-
-      // Single-chain behavior: shows shortened address and chain-specific explorer
-      expect(screen.getByText('0xA0b8...eB48')).toBeVisible()
-      expect(screen.getByText('Etherscan')).toBeVisible()
-      // Multichain dropdowns should NOT be present
-      expect(screen.queryByTestId(TestID.MultichainAddressDropdown)).toBeNull()
-      expect(screen.queryByTestId(TestID.MultichainExplorerDropdown)).toBeNull()
-    })
-
-    it('renders single-chain pills when flag is on but only one chain', () => {
-      mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.MultichainTokenUx)
+    it('renders single-chain pills when only one chain', () => {
       const mockState = {
         address: USDC_MAINNET.address,
         currency: USDC_MAINNET,
@@ -191,8 +159,7 @@ describe('TokenDescription', () => {
       expect(screen.queryByTestId(TestID.MultichainExplorerDropdown)).toBeNull()
     })
 
-    it('renders multichain dropdown triggers when flag is on and multiple chains exist', () => {
-      mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.MultichainTokenUx)
+    it('renders multichain dropdown triggers when multiple chains exist', () => {
       const mockState = {
         address: USDC_MAINNET.address,
         currency: USDC_MAINNET,
@@ -214,7 +181,6 @@ describe('TokenDescription', () => {
     })
 
     it('hides address pill for native token even with multichain', () => {
-      mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.MultichainTokenUx)
       const mockState = {
         address: ETH_MAINNET.wrapped.address,
         currency: ETH_MAINNET,

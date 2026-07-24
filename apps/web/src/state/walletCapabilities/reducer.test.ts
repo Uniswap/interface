@@ -1,4 +1,5 @@
-import { createStore, Store } from 'redux'
+import { configureStore } from '@reduxjs/toolkit'
+import { Store } from 'redux'
 import type { GetCapabilitiesResult } from '~/state/walletCapabilities/lib/types'
 import reducer, {
   handleResetWalletCapabilitiesState,
@@ -42,7 +43,7 @@ describe('walletCapabilities reducer', () => {
   }
 
   beforeEach(() => {
-    store = createStore(reducer)
+    store = configureStore({ reducer })
   })
 
   it('should have the correct initial state', () => {
@@ -59,7 +60,7 @@ describe('walletCapabilities reducer', () => {
       expect(store.getState().getCapabilitiesStatus).toBe(GetCapabilitiesStatus.Unsupported)
 
       // Test setCapabilitiesByChain
-      store = createStore(reducer) // Reset store
+      store = configureStore({ reducer }) // Reset store
       store.dispatch(setCapabilitiesByChain(mockCapabilities))
       expect(store.getState()).toEqual({
         getCapabilitiesStatus: 'Supported',
@@ -97,7 +98,7 @@ describe('walletCapabilities reducer', () => {
         expect(selectIsAtomicBatchingSupported(getState())).toBe(true)
 
         // No chains support atomic batching (all unsupported)
-        store = createStore(reducer)
+        store = configureStore({ reducer })
         store.dispatch(
           setCapabilitiesByChain({
             '0x1': {
@@ -128,7 +129,7 @@ describe('walletCapabilities reducer', () => {
         expect(unsupportedSelector(1)).toBe(false)
 
         // With capabilities
-        store = createStore(reducer)
+        store = configureStore({ reducer })
         store.dispatch(setCapabilitiesByChain(mockCapabilities))
         const selector = selectIsAtomicBatchingSupportedByChainId(getState())
 
@@ -155,7 +156,7 @@ describe('walletCapabilities reducer', () => {
       ]
 
       testCases.forEach(({ chainId, atomicStatus, expected }) => {
-        store = createStore(reducer)
+        store = configureStore({ reducer })
         // Create capabilities where the .atomic.status will be passed to isAtomicBatchingSupported
         const capabilities: GetCapabilitiesResult = {
           [chainId]:

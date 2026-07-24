@@ -6,6 +6,7 @@ import {
   signInWithPasskey as signInWithPasskeyAPI,
   signMessageWithPasskey,
 } from 'uniswap/src/features/passkey/embeddedWallet'
+import { isUnsupportedPasskeyCreationError } from 'uniswap/src/features/passkey/unsupportedPasskeyError'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useClaimUnitag } from 'uniswap/src/features/unitags/hooks/useClaimUnitag'
 import { isUnitagRateLimitError } from 'uniswap/src/features/unitags/utils'
@@ -128,6 +129,10 @@ export function useSignInWithPasskey({
     onError: (error: Error) => {
       if (createNewWallet) {
         logger.error(error, { tags: { file: 'useSignInWithPasskey', function: 'onError' } })
+        // Unsupported OS/browser: show the modal pointing the user to the mobile app (INFRA-2166).
+        if (isUnsupportedPasskeyCreationError(error)) {
+          dispatch(setOpenModal({ name: ModalName.UnsupportedBrowser }))
+        }
       } else {
         logger.error(error, {
           tags: { file: 'useSignInWithPasskey', function: 'onError' },

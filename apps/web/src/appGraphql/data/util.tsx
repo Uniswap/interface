@@ -167,7 +167,9 @@ export function unwrapToken<
         project?: { name?: string | null }
       }
     | undefined,
->(chainId: number, token: T): T {
+>(chain: number | { chainId: number; nativeCurrencyChainId?: number }, token: T): T {
+  const chainId = typeof chain === 'number' ? chain : chain.chainId
+
   if (!token?.address) {
     return token
   }
@@ -181,7 +183,11 @@ export function unwrapToken<
     return token
   }
 
-  const nativeToken = nativeOnChain(chainId)
+  // native currency metadata is branded per-chain (e.g. Robinhood's native ETH is named "Robinhood ETH");
+  // callers representing a token that isn't scoped to `chainId` specifically can override which chain's
+  // native currency name/symbol to display by passing `{ chainId, nativeCurrencyChainId }`
+  const nativeCurrencyChainId = typeof chain === 'number' ? chain : (chain.nativeCurrencyChainId ?? chain.chainId)
+  const nativeToken = nativeOnChain(nativeCurrencyChainId)
 
   return {
     ...token,

@@ -1,12 +1,13 @@
-import type { MultichainToken } from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import type { TFunction } from 'i18next'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
+import type { TdpChainSelection } from 'uniswap/src/utils/linking'
 import { TimePeriod } from '~/appGraphql/data/util'
 import {
-  sortMultichainTokenByVolume,
+  sortChainStatsByVolume,
   TIME_PERIOD_TO_VOLUME_KEY,
 } from '~/features/Explore/state/listTokens/utils/multichainVolume'
 
@@ -37,21 +38,21 @@ export function getChainLogoUrl(chainId: UniverseChainId | undefined): string | 
   if (!networkName) {
     return undefined
   }
-  return `${uniswapUrls.uniswapAssetsBlockchainsBaseUrl}/${networkName}/info/logo.png`
+  return `${UniswapStaticUrls.uniswapAssetsBlockchainsBaseUrl}/${networkName}/info/logo.png`
 }
 
 export function getVolumeBreakdownForPeriod(
-  mcToken: MultichainToken | undefined,
+  rankedToken: RankedMultichainToken | undefined,
   timePeriod: TimePeriod,
 ): { chainId: UniverseChainId; volume: number }[] {
-  if (!mcToken?.chainTokens.length) {
+  if (!rankedToken?.chainStats.length) {
     return []
   }
   const volumeKey = TIME_PERIOD_TO_VOLUME_KEY[timePeriod]
-  const sorted = sortMultichainTokenByVolume(mcToken, timePeriod)
-  return sorted.chainTokens
-    .filter((ct) => (ct.stats?.[volumeKey] ?? 0) > 0)
-    .map((ct) => ({ chainId: ct.chainId as UniverseChainId, volume: ct.stats?.[volumeKey] ?? 0 }))
+  const sorted = sortChainStatsByVolume(rankedToken.chainStats, timePeriod)
+  return sorted
+    .filter((cs) => (cs.stats?.[volumeKey] ?? 0) > 0)
+    .map((cs) => ({ chainId: cs.chainId as UniverseChainId, volume: cs.stats?.[volumeKey] ?? 0 }))
 }
 
 export function getPercentageDisplay(volume: number, totalVolume: number): string {
@@ -67,26 +68,26 @@ export type VolumePopoverTokenDetailsInput = { chainId: number; address: string 
 
 export type NavigateVolumePopoverToTokenDetails = (
   currency: VolumePopoverTokenDetailsInput,
-  chainFilter?: UniverseChainId,
+  chainSelection?: TdpChainSelection,
 ) => void
 
 /**
- * Opens TDP for the given chain's deployment of a multichain token, optionally setting the chain query param.
+ * Opens TDP for the given chain's deployment of a multichain token, optionally setting aggregate multichain state.
  */
 export function navigateVolumePopoverToTokenDetails({
   navigateToTokenDetails,
-  mcToken,
+  rankedToken,
   chainId,
-  chainQueryFilter,
+  chainSelection,
 }: {
   navigateToTokenDetails: NavigateVolumePopoverToTokenDetails
-  mcToken: MultichainToken | undefined
+  rankedToken: RankedMultichainToken | undefined
   chainId: UniverseChainId
-  chainQueryFilter?: UniverseChainId
+  chainSelection?: TdpChainSelection
 }): void {
-  const deployment = mcToken?.chainTokens.find((ct) => ct.chainId === chainId)
-  if (!deployment) {
+  const address = rankedToken?.multichainToken?.addresses[String(chainId)]
+  if (!address) {
     return
   }
-  navigateToTokenDetails({ chainId: deployment.chainId, address: deployment.address }, chainQueryFilter)
+  navigateToTokenDetails({ chainId, address }, chainSelection)
 }

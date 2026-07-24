@@ -5,6 +5,8 @@
 //  Created by Gary Ye on 9/15/23.
 //
 
+import React
+
 // Using a view manager written in Swift instead of bridging headers
 // because couldn't get RCT_EXTERN_METHOD to work with that approach
 @objc(SeedPhraseInputManager)

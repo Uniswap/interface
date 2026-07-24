@@ -1,7 +1,9 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { CurrencyAmount, Fraction } from '@uniswap/sdk-core'
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
+import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { usePoolPositionCacheUpdater } from 'uniswap/src/features/dataApi/balances/poolPositionCacheUpdater'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { useLiquidityPositionDropdownOptions } from '~/features/Liquidity/hooks/useLiquidityPositionDropdownOptions'
 import { useReportPositionHandler } from '~/features/Liquidity/hooks/useReportPositionHandler'
@@ -16,15 +18,24 @@ vi.mock('~/state/hooks', async (importOriginal) => ({
   useAppDispatch: vi.fn(),
 }))
 
+const { mockNavigate } = vi.hoisted(() => ({ mockNavigate: vi.fn() }))
+
 vi.mock('react-router', async (importOriginal) => ({
   ...(await importOriginal<typeof import('react-router')>()),
-  useNavigate: () => vi.fn(),
+  useNavigate: () => mockNavigate,
 }))
 
 vi.mock('~/hooks/useAccount', () => ({ useAccount: vi.fn() }))
 vi.mock('~/hooks/useSelectChain', () => ({ useSelectChain: vi.fn() }))
 vi.mock('~/features/Liquidity/hooks/useReportPositionHandler', () => ({
   useReportPositionHandler: vi.fn(),
+}))
+vi.mock('uniswap/src/features/accounts/store/hooks', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/features/accounts/store/hooks')>()),
+  useActiveAddresses: vi.fn(),
+}))
+vi.mock('uniswap/src/features/dataApi/balances/poolPositionCacheUpdater', () => ({
+  usePoolPositionCacheUpdater: vi.fn(),
 }))
 
 function buildPosition(overrides: Partial<PositionInfo> = {}): PositionInfo {
@@ -49,6 +60,8 @@ describe('useLiquidityPositionDropdownOptions', () => {
     mocked(useAccount).mockReturnValue({ chainId: UniverseChainId.Mainnet } as ReturnType<typeof useAccount>)
     mocked(useSelectChain).mockReturnValue(vi.fn() as unknown as ReturnType<typeof useSelectChain>)
     mocked(useReportPositionHandler).mockReturnValue(vi.fn())
+    mocked(useActiveAddresses).mockReturnValue({ evmAddress: '0xuser', svmAddress: undefined })
+    mocked(usePoolPositionCacheUpdater).mockReturnValue(vi.fn())
   })
 
   it('returns only the View Pool Info option when readOnly', () => {
@@ -84,5 +97,27 @@ describe('useLiquidityPositionDropdownOptions', () => {
     expect(labels).toContain('Remove liquidity')
     expect(labels).toContain('Pool info')
     expect(labels).toContain('Hide position')
+  })
+
+  it('navigates to a chain-qualified /migrate/v2 URL when migrating a V2 position', async () => {
+    const { result } = renderHook(() =>
+      useLiquidityPositionDropdownOptions({
+        liquidityPosition: buildPosition({
+          version: ProtocolVersion.V2,
+          status: PositionStatus.IN_RANGE,
+          chainId: UniverseChainId.Mainnet,
+          liquidityToken: { isToken: true, address: '0xpair' },
+        } as unknown as Partial<PositionInfo>),
+        showVisibilityOption: true,
+        isVisible: true,
+        readOnly: false,
+      }),
+    )
+
+    const migrateOption = result.current.find((option) => option.label === 'Migrate liquidity')
+    expect(migrateOption).toBeDefined()
+    await migrateOption?.onPress()
+
+    expect(mockNavigate).toHaveBeenCalledWith('/migrate/v2/ethereum/0xpair')
   })
 })

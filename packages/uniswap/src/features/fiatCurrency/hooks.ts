@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { AppTFunction } from 'ui/src/i18n/types'
@@ -6,8 +6,7 @@ import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
 import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { UniswapState } from 'uniswap/src/state/uniswapReducer'
+import type { UniswapState } from 'uniswap/src/state/uniswapReducer'
 // oxlint-disable-next-line no-restricted-imports -- legacy import will be migrated
 import { FiatCurrencyComponents, getFiatCurrencyComponents } from 'utilities/src/format/localeBased'
 
@@ -149,19 +148,4 @@ export function useAppFiatCurrencyInfo(): FiatCurrencyInfo {
   const currency = useAppFiatCurrency()
 
   return useFiatCurrencyInfo(currency)
-}
-
-/**
- * Hook to convert local fiat currency amount to USD amount
- * @returns USD amount
- */
-export const useLocalFiatToUSDConverter = (): ((fiatAmount: number) => number | undefined) => {
-  const { convertFiatAmount } = useLocalizationContext()
-  return useCallback(
-    (fiatAmount: number): number | undefined => {
-      const { amount: USDInLocalCurrency } = convertFiatAmount(1)
-      return USDInLocalCurrency ? fiatAmount / USDInLocalCurrency : undefined
-    },
-    [convertFiatAmount],
-  )
 }

@@ -42,7 +42,7 @@ export function DynamicSizeText({
 
       const text = typeof children === 'string' ? children : ''
 
-      const flattened = StyleSheet.flatten(style)
+      const flattened = StyleSheet.flatten(style) as { fontFamily?: unknown }
       const ff = flattened.fontFamily
       const fontFamily = typeof ff === 'string' ? ff : bodyFont.family
 

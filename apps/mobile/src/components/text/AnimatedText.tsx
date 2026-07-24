@@ -1,19 +1,23 @@
 import React from 'react'
 import { TextProps as RNTextProps, StyleSheet, TextInput, TextInputProps, useWindowDimensions } from 'react-native'
-import Animated, { createAnimatedPropAdapter, useAnimatedProps } from 'react-native-reanimated'
+import Animated, {
+  AnimatedProps,
+  createAnimatedPropAdapter,
+  SharedValue,
+  useAnimatedProps,
+} from 'react-native-reanimated'
 import { Flex, TextProps as TamaTextProps, TextFrame, TextLoaderWrapper, usePropsAndStyle } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 
 // base animated text component using a TextInput
 // forked from https://github.com/wcandillon/react-native-redash/blob/master/src/ReText.tsx
 // and modified to support the loading state
-Animated.addWhitelistedNativeProps({ text: true })
 
 type TextPropsBase = TamaTextProps & Omit<TextInputProps, 'value' | 'style'>
 
 type TextProps = TextPropsBase & {
-  text?: Animated.SharedValue<string>
-  style?: Animated.AnimateProps<RNTextProps>['style']
+  text?: SharedValue<string>
+  style?: AnimatedProps<RNTextProps>['style']
   loading?: boolean | 'no-shimmer'
   loadingPlaceholderText?: string
 }

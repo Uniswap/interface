@@ -7,31 +7,31 @@ import { devtools } from 'zustand/middleware'
 import { useShallow } from 'zustand/react/shallow'
 import { TimePeriod } from '~/appGraphql/data/util'
 
-export enum AuctionVerificationFilter {
+/**
+ * Single-select auction filter shared by the quick-filter pills and the Status dropdown.
+ * Pills expose All/Verified/New/Completed; the dropdown exposes All/Active/Completed.
+ */
+export enum AuctionQuickFilter {
   All = 'all',
   Verified = 'verified',
-  Unverified = 'unverified',
-}
-
-export enum AuctionStatusFilter {
-  All = 'all',
+  New = 'new',
   Active = 'active',
-  Complete = 'complete',
+  Completed = 'completed',
+  /** QuickLaunch (flag-gated chip): auctions matching the quick-launch preset fingerprint. */
+  QuickLaunch = 'quick_launch',
 }
 
 interface ExploreTablesFilterActions {
   setFilterString: (value: string) => void
   setTimePeriod: (period: TimePeriod) => void
-  setVerificationFilter: (filter: AuctionVerificationFilter) => void
-  setStatusFilter: (filter: AuctionStatusFilter) => void
+  setQuickFilter: (filter: AuctionQuickFilter) => void
   setSelectedProtocol: (protocol: ProtocolVersion) => void
 }
 
 interface ExploreTablesFilterState {
   filterString: string
   timePeriod: TimePeriod
-  verificationFilter: AuctionVerificationFilter
-  statusFilter: AuctionStatusFilter
+  quickFilter: AuctionQuickFilter
   selectedProtocol: ProtocolVersion
   actions: ExploreTablesFilterActions
 }
@@ -40,8 +40,7 @@ type ExploreTablesFilterStore = UseBoundStore<StoreApi<ExploreTablesFilterState>
 
 const INITIAL_FILTER_STRING = ''
 const INITIAL_TIME_PERIOD = TimePeriod.DAY
-const INITIAL_VERIFICATION = AuctionVerificationFilter.All
-const INITIAL_STATUS = AuctionStatusFilter.All
+const INITIAL_QUICK_FILTER = AuctionQuickFilter.All
 const INITIAL_PROTOCOL = ProtocolVersion.UNSPECIFIED
 
 export function createExploreTablesFilterStore(): ExploreTablesFilterStore {
@@ -50,14 +49,12 @@ export function createExploreTablesFilterStore(): ExploreTablesFilterStore {
       (set) => ({
         filterString: INITIAL_FILTER_STRING,
         timePeriod: INITIAL_TIME_PERIOD,
-        verificationFilter: INITIAL_VERIFICATION,
-        statusFilter: INITIAL_STATUS,
+        quickFilter: INITIAL_QUICK_FILTER,
         selectedProtocol: INITIAL_PROTOCOL,
         actions: {
           setFilterString: (value) => set({ filterString: value }),
           setTimePeriod: (period) => set({ timePeriod: period }),
-          setVerificationFilter: (filter) => set({ verificationFilter: filter }),
-          setStatusFilter: (filter) => set({ statusFilter: filter }),
+          setQuickFilter: (filter) => set({ quickFilter: filter }),
           setSelectedProtocol: (protocol) => set({ selectedProtocol: protocol }),
         },
       }),

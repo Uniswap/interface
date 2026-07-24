@@ -1,4 +1,6 @@
+import { toScreenInput, useIsBlockedAddress } from '@universe/compliance'
 import { memo, useCallback, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Flex, Text, TouchableArea, useIsShortMobileDevice, useMedia } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
@@ -12,8 +14,8 @@ import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/
 import { SwapWarningModal } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/SwapWarningModal'
 import { TradeInfoRow } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/TradeInfoRow/TradeInfoRow'
 import { useDebouncedGasInfo } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/useDebouncedGasInfo'
+import { useResetGasCta } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/useResetGasCta'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
-import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 
 /*
@@ -29,7 +31,7 @@ import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNati
  * ║                                                                           ║
  * ╚═══════════════════════════════════════════════════════════════════════════╝
  */
-export function GasAndWarningRows(): JSX.Element {
+export const GasAndWarningRows = memo(function GasAndWarningRows(): JSX.Element {
   const isShortMobileDevice = useIsShortMobileDevice()
   const isShort = useMedia().short
 
@@ -37,10 +39,13 @@ export function GasAndWarningRows(): JSX.Element {
 
   const [showWarningModal, setShowWarningModal] = useState(false)
 
-  const { isBlocked } = useIsBlocked(evmAddress)
+  const { isBlocked } = useIsBlockedAddress(toScreenInput(evmAddress))
 
   const { formScreenWarning, insufficientGasFundsWarning, warnings } = useParsedSwapWarnings()
   const showFormWarning = formScreenWarning && formScreenWarning.displayedInline && !isBlocked
+
+  const inlineWarning = showFormWarning ? formScreenWarning.warning : undefined
+  const { showResetGas, onResetGas } = useResetGasCta(inlineWarning)
 
   const debouncedGasInfo = useDebouncedGasInfo()
 
@@ -127,7 +132,9 @@ export function GasAndWarningRows(): JSX.Element {
             Icon={formScreenWarning.Icon}
             textColor={formScreenWarning.color.text}
             warningTitle={formScreenWarning.warning.title}
+            showResetGas={showResetGas}
             onSwapWarningClick={onSwapWarningClick}
+            onResetGas={onResetGas}
           />
         )}
 
@@ -143,7 +150,7 @@ export function GasAndWarningRows(): JSX.Element {
       </Flex>
     </>
   )
-}
+})
 
 // We want to optimize the swap flow as much as possible, so we split this up into its own component in order to memoize it.
 // If you modify this component, make sure you don't pass complex objects as props that would change on every render.
@@ -151,24 +158,37 @@ const FormWarning = memo(function FormWarning({
   Icon,
   textColor,
   warningTitle,
+  showResetGas,
   onSwapWarningClick,
+  onResetGas,
 }: {
   Icon?: WarningWithStyle['Icon']
   textColor: WarningWithStyle['color']['text']
   warningTitle: WarningWithStyle['warning']['title']
+  showResetGas: boolean
   onSwapWarningClick: () => void
+  onResetGas: () => void
 }): JSX.Element {
+  const { t } = useTranslation()
+
   return (
-    <TouchableArea onPress={onSwapWarningClick}>
-      <AnimatedFlex centered row entering={FadeIn} exiting={FadeOut} gap="$spacing8" px="$spacing24">
-        {Icon && <Icon color={textColor} size="$icon.16" strokeWidth={1.5} />}
-        <Flex row>
+    <AnimatedFlex centered entering={FadeIn} exiting={FadeOut} gap="$spacing4" px="$spacing24">
+      <TouchableArea onPress={onSwapWarningClick}>
+        <Flex centered row gap="$spacing8">
+          {Icon && <Icon color={textColor} size="$icon.16" strokeWidth={1.5} />}
           <Text color={textColor} textAlign="center" variant="body3">
             {warningTitle}
           </Text>
         </Flex>
-      </AnimatedFlex>
-    </TouchableArea>
+      </TouchableArea>
+      {showResetGas && (
+        <TouchableArea testID="gas-info-row-reset-gas" onPress={onResetGas}>
+          <Text color="$accent1" textAlign="center" variant="body3">
+            {t('common.button.resetGas')}
+          </Text>
+        </TouchableArea>
+      )}
+    </AnimatedFlex>
   )
 })
 

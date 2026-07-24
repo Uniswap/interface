@@ -87,7 +87,7 @@ export function EmailEntryStep({
             <Button
               variant={isValidEmail ? 'branded' : 'default'}
               size="large"
-              isDisabled={!canSubmit}
+              disabled={!canSubmit}
               onPress={() => sendCodeMutation.mutate()}
             >
               {t('common.button.continue')}

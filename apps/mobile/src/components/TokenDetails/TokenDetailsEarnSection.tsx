@@ -1,7 +1,12 @@
 import { memo, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAppStackNavigation } from 'src/app/navigation/types'
+import { Flex, Text } from 'ui/src'
 import { TokenDetailsEarnSection as SharedTokenDetailsEarnSection } from 'uniswap/src/components/tokenDetails/TokenDetailsEarnSection'
+import { EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
+import { EarnBalanceErrorState } from 'uniswap/src/features/earn/EarnBalanceErrorState'
 import { useEarnDepositSources } from 'uniswap/src/features/earn/hooks/useEarnDepositSources'
+import { useEarnPosition } from 'uniswap/src/features/earn/hooks/useEarnPosition'
 import type { TokenDetailsEarnData } from 'uniswap/src/features/earn/hooks/useTokenDetailsEarnData'
 import { EarnAction, type EarnPositionInfo, type EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -16,12 +21,21 @@ export const TokenDetailsEarnSection = memo(function TokenDetailsEarnSectionInne
   activeAddress,
   earnData,
 }: TokenDetailsEarnSectionProps): JSX.Element | null {
+  const { t } = useTranslation()
   const navigation = useAppStackNavigation()
   const { navigateToEarnVault } = useWalletNavigation()
 
   const isSectionVisible = !!earnData.earnVault && !!earnData.earnPosition && earnData.userHasEarnPosition
 
-  const { balanceLookupSettled, hasAnyBalanceForUnderlying } = useEarnDepositSources({
+  const { position: detailedPosition, isError: positionIsError } = useEarnPosition({
+    vault: earnData.earnVault,
+    walletAddress: activeAddress,
+    isConnected: !!activeAddress,
+    enabled: isSectionVisible,
+    prefetchedPosition: earnData.earnPosition,
+  })
+
+  const { balanceLookupSettled, hasSupportedBalanceForUnderlying } = useEarnDepositSources({
     vault: earnData.earnVault,
     walletAddress: activeAddress,
     isOpen: isSectionVisible,
@@ -33,29 +47,54 @@ export const TokenDetailsEarnSection = memo(function TokenDetailsEarnSectionInne
         return
       }
 
-      if (!hasAnyBalanceForUnderlying) {
+      if (!hasSupportedBalanceForUnderlying) {
         navigation.navigate(ModalName.EarnYouNeedToken, {
           currencyId: vault.displayCurrencyId,
         })
         return
       }
 
-      navigateToEarnVault({ vault, position, initialAction: EarnAction.Deposit })
+      navigateToEarnVault({
+        analyticsEntryPoint: EarnEntryPoint.TokenDetailsEarnSection,
+        vault,
+        position,
+        initialAction: EarnAction.Deposit,
+      })
     },
-    [balanceLookupSettled, hasAnyBalanceForUnderlying, navigation, navigateToEarnVault],
+    [balanceLookupSettled, hasSupportedBalanceForUnderlying, navigation, navigateToEarnVault],
   )
 
-  if (!isSectionVisible || !earnData.earnVault || !earnData.earnPosition) {
+  if (earnData.showEarnError) {
+    return (
+      <Flex gap="$spacing8" width="100%">
+        <Text variant="subheading2" color="$neutral1">
+          {t('home.earning.title')}
+        </Text>
+        <EarnBalanceErrorState onRetry={earnData.refetch} />
+      </Flex>
+    )
+  }
+
+  if (!isSectionVisible || !earnData.earnVault || !detailedPosition) {
     return null
   }
 
   return (
     <SharedTokenDetailsEarnSection
+      mobileLayout
       earnVault={earnData.earnVault}
-      earnPosition={earnData.earnPosition}
-      onPositionPress={(vault, position) => navigateToEarnVault({ vault, position })}
+      earnPosition={detailedPosition}
+      rewardsUnavailable={positionIsError && detailedPosition.lifetimePnlUsd === undefined}
+      onPositionPress={(vault, position) =>
+        navigateToEarnVault({ analyticsEntryPoint: EarnEntryPoint.TokenDetailsEarnSection, vault, position })
+      }
       onWithdrawPress={(vault, position) =>
-        navigateToEarnVault({ vault, position, initialAction: EarnAction.Withdraw })
+        navigateToEarnVault({
+          analyticsEntryPoint: EarnEntryPoint.TokenDetailsEarnSection,
+          vault,
+          position,
+          initialAction: EarnAction.Withdraw,
+        })
       }
       onDepositPress={handleDepositPress}
     />

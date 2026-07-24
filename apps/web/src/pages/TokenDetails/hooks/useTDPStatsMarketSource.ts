@@ -1,12 +1,16 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
+import {
+  adaptLegacyMarketData,
+  adaptLegacyProjectMarketData,
+} from 'uniswap/src/features/dataApi/tokenDetails/legacyMarketDataAdapters'
 import type { TokenMarketStatsAggregatedInput } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import type { TokenQueryData } from '~/appGraphql/data/Token'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultichainTokenEntries'
+import { useTDPMultichainAggregate } from '~/pages/TokenDetails/hooks/useTDPMultichainAggregate'
 
 type TokenQuery = NonNullable<TokenQueryData>
 
@@ -16,6 +20,8 @@ type TDPFilteredDeploymentMarket = NonNullable<
 
 interface UseTDPStatsMarketSourceResult {
   showAggregatedStats: boolean
+  /** True only for a genuinely multichain asset with no specific chain selected (the "all networks" view). */
+  isMultichainAggregateView: boolean
   filteredDeploymentMarket: TDPFilteredDeploymentMarket | undefined
   networkFilterName: string
   /**
@@ -28,13 +34,12 @@ interface UseTDPStatsMarketSourceResult {
 }
 
 function getTDPFilteredDeploymentMarket(ctx: {
-  multichainTokenUxEnabled: boolean
   isMultiChainAsset: boolean
   selectedMultichainChainId: UniverseChainId | undefined
   tokens: NonNullable<TokenQuery['project']>['tokens'] | undefined
 }): TDPFilteredDeploymentMarket | undefined {
-  const { multichainTokenUxEnabled, isMultiChainAsset, selectedMultichainChainId, tokens } = ctx
-  if (!multichainTokenUxEnabled || !isMultiChainAsset || selectedMultichainChainId === undefined || !tokens) {
+  const { isMultiChainAsset, selectedMultichainChainId, tokens } = ctx
+  if (!isMultiChainAsset || selectedMultichainChainId === undefined || !tokens) {
     return undefined
   }
   const gqlChain = getChainInfo(selectedMultichainChainId).backendChain.chain
@@ -47,11 +52,12 @@ function getTDPMarketStatsInput(ctx: {
   filteredDeploymentMarket: TDPFilteredDeploymentMarket | undefined
 }): TokenMarketStatsAggregatedInput | undefined {
   const { tokenQueryData, showAggregated, filteredDeploymentMarket } = ctx
+  const projectMarket = adaptLegacyProjectMarketData(tokenQueryData.project?.markets?.[0])
   if (showAggregated) {
-    return { market: tokenQueryData.market, project: tokenQueryData.project }
+    return { market: adaptLegacyMarketData(tokenQueryData.market), projectMarket }
   }
   if (filteredDeploymentMarket) {
-    return { market: filteredDeploymentMarket, project: tokenQueryData.project }
+    return { market: adaptLegacyMarketData(filteredDeploymentMarket), projectMarket }
   }
   // Filtered view but no deployment market (e.g. selected chain missing from project.tokens): intentional undefined;
   // consumers fall back; test: "does not set market stats input when selection has no matching project token row".
@@ -60,12 +66,12 @@ function getTDPMarketStatsInput(ctx: {
 
 /** Resolves TokenWeb-backed market stats input vs chain filter, plus copy helpers for the stats UI. */
 export function useTDPStatsMarketSource(tokenQueryData: TokenQueryData | undefined): UseTDPStatsMarketSourceResult {
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const multiChainMap = useTDPStore((s) => s.multiChainMap)
   const selectedMultichainChainId = useTDPStore((s) => s.selectedMultichainChainId)
 
   const multichainEntries = useMultichainTokenEntries(multiChainMap)
   const isMultiChainAsset = multichainEntries.length > 1
+  const { isMultichainAggregateView } = useTDPMultichainAggregate()
 
   const networkFilterName = selectedMultichainChainId !== undefined ? getChainLabel(selectedMultichainChainId) : ''
 
@@ -78,11 +84,10 @@ export function useTDPStatsMarketSource(tokenQueryData: TokenQueryData | undefin
       }
     }
 
-    const showAggregated = !multichainTokenUxEnabled || !isMultiChainAsset || selectedMultichainChainId === undefined
+    const showAggregated = !isMultiChainAsset || selectedMultichainChainId === undefined
 
     // oxlint-disable-next-line no-shadow
     const filteredDeploymentMarket = getTDPFilteredDeploymentMarket({
-      multichainTokenUxEnabled,
       isMultiChainAsset,
       selectedMultichainChainId,
       tokens: tokenQueryData.project?.tokens,
@@ -99,10 +104,11 @@ export function useTDPStatsMarketSource(tokenQueryData: TokenQueryData | undefin
       filteredDeploymentMarket,
       marketStatsInput,
     }
-  }, [multichainTokenUxEnabled, isMultiChainAsset, selectedMultichainChainId, tokenQueryData])
+  }, [isMultiChainAsset, selectedMultichainChainId, tokenQueryData])
 
   return {
     showAggregatedStats,
+    isMultichainAggregateView,
     filteredDeploymentMarket,
     networkFilterName,
     marketStatsInput,

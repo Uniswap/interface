@@ -1,5 +1,5 @@
+import { useIsBlockedAddress } from '@universe/compliance'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { useAccountRiskCheck } from '~/hooks/useAccountRiskCheck'
 import { setOpenModal } from '~/state/application/reducer'
 import { mocked } from '~/test-utils/mocked'
@@ -15,9 +15,13 @@ vi.mock('~/state/hooks', async () => {
   }
 })
 
-vi.mock('uniswap/src/features/trm/hooks', () => ({
-  useIsBlocked: vi.fn(),
-}))
+vi.mock('@universe/compliance', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@universe/compliance')>()
+  return {
+    ...actual,
+    useIsBlockedAddress: vi.fn(),
+  }
+})
 
 describe('useAccountRiskCheck', () => {
   beforeEach(() => {
@@ -26,8 +30,8 @@ describe('useAccountRiskCheck', () => {
 
   it('should handle blocked EVM account', async () => {
     const evmAddress = 'blocked-evm-account'
-    mocked(useIsBlocked).mockImplementation((address) => {
-      if (address === evmAddress) {
+    mocked(useIsBlockedAddress).mockImplementation((input) => {
+      if (input?.address === evmAddress) {
         return { isBlocked: true, isBlockedLoading: false }
       }
       return { isBlocked: false, isBlockedLoading: false }
@@ -41,8 +45,8 @@ describe('useAccountRiskCheck', () => {
 
   it('should handle blocked SVM account', async () => {
     const svmAddress = 'blocked-svm-account'
-    mocked(useIsBlocked).mockImplementation((address) => {
-      if (address === svmAddress) {
+    mocked(useIsBlockedAddress).mockImplementation((input) => {
+      if (input?.address === svmAddress) {
         return { isBlocked: true, isBlockedLoading: false }
       }
       return { isBlocked: false, isBlockedLoading: false }
@@ -57,7 +61,7 @@ describe('useAccountRiskCheck', () => {
   it('should handle both EVM and SVM accounts blocked', async () => {
     const evmAddress = 'blocked-evm-account'
     const svmAddress = 'blocked-svm-account'
-    mocked(useIsBlocked).mockReturnValue({ isBlocked: true, isBlockedLoading: false })
+    mocked(useIsBlockedAddress).mockReturnValue({ isBlocked: true, isBlockedLoading: false })
     renderHook(() => useAccountRiskCheck({ evmAddress, svmAddress }))
 
     // Both should be dispatched, but EVM is dispatched first
@@ -75,7 +79,7 @@ describe('useAccountRiskCheck', () => {
   it('should handle non-blocked accounts', async () => {
     const evmAddress = 'non-blocked-evm-account'
     const svmAddress = 'non-blocked-svm-account'
-    mocked(useIsBlocked).mockReturnValue({ isBlocked: false, isBlockedLoading: false })
+    mocked(useIsBlockedAddress).mockReturnValue({ isBlocked: false, isBlockedLoading: false })
     renderHook(() => useAccountRiskCheck({ evmAddress, svmAddress }))
     expect(dispatchMock).not.toHaveBeenCalled()
   })
@@ -83,7 +87,7 @@ describe('useAccountRiskCheck', () => {
   it('should not dispatch when addresses are loading', async () => {
     const evmAddress = 'evm-account'
     const svmAddress = 'svm-account'
-    mocked(useIsBlocked).mockReturnValue({ isBlocked: false, isBlockedLoading: true })
+    mocked(useIsBlockedAddress).mockReturnValue({ isBlocked: false, isBlockedLoading: true })
     renderHook(() => useAccountRiskCheck({ evmAddress, svmAddress }))
     expect(dispatchMock).not.toHaveBeenCalled()
   })
@@ -91,8 +95,8 @@ describe('useAccountRiskCheck', () => {
   it('should handle one address blocked and the other not blocked', async () => {
     const evmAddress = 'blocked-evm-account'
     const svmAddress = 'non-blocked-svm-account'
-    mocked(useIsBlocked).mockImplementation((address) => {
-      if (address === evmAddress) {
+    mocked(useIsBlockedAddress).mockImplementation((input) => {
+      if (input?.address === evmAddress) {
         return { isBlocked: true, isBlockedLoading: false }
       }
       return { isBlocked: false, isBlockedLoading: false }

@@ -22,7 +22,7 @@ export const ENTRY_GATEWAY_PROXY_ENV_SEGMENT: Record<Environment, string> = {
  * Get the FOR API URL routed through the Entry Gateway.
  * Delegates to getEntryGatewayUrl() and appends the FOR service path.
  */
-export function getMigratedForApiUrl(): string {
+export function getForApiUrl(): string {
   return `${getEntryGatewayUrl()}/FOR.v1.FORService`
 }
 

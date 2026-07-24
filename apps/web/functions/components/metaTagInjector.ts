@@ -1,5 +1,6 @@
 import { META_TAG_FETCH_TIMEOUT_MS } from 'functions/constants'
 import { Data } from 'functions/utils/cache'
+import getAuction from 'functions/utils/getAuction'
 import getPool from 'functions/utils/getPool'
 import getPosition from 'functions/utils/getPosition'
 import { getRequest } from 'functions/utils/getRequest'
@@ -17,7 +18,9 @@ function doesMatchPath(path: string): boolean {
   return regexPaths.some((regex) => new RegExp(regex).test(path))
 }
 
-function parseExplorePath(pathname: string): { type: 'token' | 'pool'; networkName: string; address: string } | null {
+function parseExplorePath(
+  pathname: string,
+): { type: 'token' | 'pool' | 'auction'; networkName: string; address: string } | null {
   const tokenMatch = pathname.match(/^\/explore\/tokens\/([^/]+)\/([^/]+)$/)
   if (tokenMatch) {
     return {
@@ -32,6 +35,14 @@ function parseExplorePath(pathname: string): { type: 'token' | 'pool'; networkNa
       type: 'pool',
       networkName: poolMatch[1],
       address: poolMatch[2],
+    }
+  }
+  const auctionMatch = pathname.match(/^\/explore\/auctions\/([^/]+)\/([^/]+)$/)
+  if (auctionMatch) {
+    return {
+      type: 'auction',
+      networkName: auctionMatch[1],
+      address: auctionMatch[2],
     }
   }
   return null
@@ -92,29 +103,34 @@ async function fetchExploreData({
   origin,
   requestUrl,
 }: {
-  type: 'token' | 'pool'
+  type: 'token' | 'pool' | 'auction'
   networkName: string
   address: string
   origin: string
   requestUrl: string
 }): Promise<MetaTagInjectorInput | null> {
-  const cacheUrl = `${origin}/${type}s/${networkName}/${address}`
+  const cachePath = type === 'auction' ? 'auctions' : `${type}s`
+  const cacheUrl = `${origin}/${cachePath}/${networkName}/${address}`
 
   const validateDataToken = (data: Data): data is NonNullable<Awaited<ReturnType<typeof getToken>>> =>
     Boolean(data.tokenData?.symbol && data.name)
 
   const validateDataPool = (data: Data): data is NonNullable<Awaited<ReturnType<typeof getPool>>> => Boolean(data.title)
+  const validateDataAuction = (data: Data): data is NonNullable<Awaited<ReturnType<typeof getAuction>>> =>
+    Boolean(data.auctionData?.tokenSymbol && data.name)
 
   const data = await getRequest({
     url: cacheUrl,
     getData: () =>
       type === 'token'
         ? getToken({ networkName, tokenAddress: address, url: cacheUrl })
-        : getPool({ networkName, poolAddress: address, url: cacheUrl }),
-    validateData: type === 'token' ? validateDataToken : validateDataPool,
+        : type === 'pool'
+          ? getPool({ networkName, poolAddress: address, url: cacheUrl })
+          : getAuction({ chainName: networkName, auctionAddress: address, url: cacheUrl }),
+    validateData: type === 'token' ? validateDataToken : type === 'pool' ? validateDataPool : validateDataAuction,
   })
 
-  return data ? { title: data.title, image: data.image, url: requestUrl } : null
+  return data ? { title: data.title, image: data.image, url: requestUrl, description: data.description } : null
 }
 
 async function fetchPositionData({

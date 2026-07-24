@@ -126,7 +126,7 @@ describe('useCreateTDPContext', () => {
   it('returns object with required TDP context keys', () => {
     const { result } = renderHookWithProviders(() => useCreateTDPContext())
 
-    expect(result.current).toMatchObject({
+    expect(result.current.state).toMatchObject({
       currency: expect.anything(),
       currencyChain: GraphQLApi.Chain.Ethereum,
       currencyChainId: UniverseChainId.Mainnet,
@@ -137,7 +137,7 @@ describe('useCreateTDPContext', () => {
       balanceError: undefined,
       selectedMultichainChainId: undefined,
     })
-    expect(Object.keys(result.current)).toContain('tokenColor')
+    expect(Object.keys(result.current.state)).toContain('tokenColor')
   })
 
   it('returns PendingTDPContext (currency undefined) when token query has no data', () => {
@@ -154,19 +154,19 @@ describe('useCreateTDPContext', () => {
 
     const { result } = renderHookWithProviders(() => useCreateTDPContext())
 
-    expect(result.current.currency).toBeUndefined()
-    expect(result.current.address).toBe(USDC_MAINNET.address)
-    expect(result.current.tokenQuery.loading).toBe(true)
-    expect(result.current.tokenProjectQuery.loading).toBe(true)
+    expect(result.current.state.currency).toBeUndefined()
+    expect(result.current.state.address).toBe(USDC_MAINNET.address)
+    expect(result.current.state.tokenQuery.loading).toBe(true)
+    expect(result.current.state.tokenProjectQuery.loading).toBe(true)
   })
 
   it('returns LoadedTDPContext (currency defined) when token query has data', () => {
     const { result } = renderHookWithProviders(() => useCreateTDPContext())
 
-    expect(result.current.currency).toBeDefined()
-    expect(result.current.currency?.symbol).toBe('USDC')
-    expect(result.current.currency?.chainId).toBe(UniverseChainId.Mainnet)
-    expect(result.current.address).toBe(USDC_MAINNET.address)
+    expect(result.current.state.currency).toBeDefined()
+    expect(result.current.state.currency?.symbol).toBe('USDC')
+    expect(result.current.state.currency?.chainId).toBe(UniverseChainId.Mainnet)
+    expect(result.current.state.address).toBe(USDC_MAINNET.address)
   })
 
   it('returns native currency when tokenAddress is NATIVE_CHAIN_ID', () => {
@@ -182,9 +182,9 @@ describe('useCreateTDPContext', () => {
 
     const { result } = renderHookWithProviders(() => useCreateTDPContext())
 
-    expect(result.current.currency).toBeDefined()
-    expect(result.current.currency?.isNative).toBe(true)
-    expect(result.current.address).toBe(NATIVE_CHAIN_ID)
+    expect(result.current.state.currency).toBeDefined()
+    expect(result.current.state.currency?.isNative).toBe(true)
+    expect(result.current.state.address).toBe(NATIVE_CHAIN_ID)
   })
 
   it('exposes the raw balance query error for stale balance UI decisions', () => {
@@ -195,6 +195,6 @@ describe('useCreateTDPContext', () => {
 
     const { result } = renderHookWithProviders(() => useCreateTDPContext())
 
-    expect(result.current.balanceError).toEqual(expect.any(Error))
+    expect(result.current.state.balanceError).toEqual(expect.any(Error))
   })
 })

@@ -33,6 +33,16 @@ vi.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({
   useCurrencyInfos: (): Array<undefined> => [undefined, undefined],
 }))
 
+// The web context-menu path renders useReportPositionAction, which reads useActiveAddresses
+// from the accounts zustand store. renderWithProviders doesn't wire that store, so stub the
+// hook here — the menu render is purely for row-content assertion, never invoked.
+vi.mock('uniswap/src/features/accounts/store/hooks', () => ({
+  useActiveAddresses: (): { evmAddress: string | undefined; svmAddress: string | undefined } => ({
+    evmAddress: undefined,
+    svmAddress: undefined,
+  }),
+}))
+
 const WETH = new Token(
   UniverseChainId.Mainnet,
   '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',

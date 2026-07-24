@@ -5,6 +5,7 @@ import { Flex, Text } from 'ui/src'
 import { EarnSparkle } from 'ui/src/components/icons/EarnSparkle'
 import { iconSizes } from 'ui/src/theme'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { getEarnPlanTransactionType } from 'uniswap/src/features/earn/planActivityTitles'
 import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isPlanTransactionInfo } from 'uniswap/src/features/transactions/types/utils'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
@@ -19,6 +20,7 @@ import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 interface ActivityAddressCellProps {
   transaction: TransactionDetails
+  isEarnActivityDisplayEnabled?: boolean
 }
 
 type EarnActivityAddressDirection = 'to' | 'from'
@@ -43,7 +45,12 @@ const EARN_ACTIVITY_ADDRESS_LABEL_KEY: Record<EarnActivityAddressDirection, stri
 
 export function getEarnActivityAddressDirection(
   transaction: TransactionDetails,
+  { isEarnActivityDisplayEnabled = true }: { isEarnActivityDisplayEnabled?: boolean } = {},
 ): EarnActivityAddressDirection | undefined {
+  if (!isEarnActivityDisplayEnabled) {
+    return undefined
+  }
+
   const { typeInfo } = transaction
 
   if (typeInfo.type === TransactionType.Deposit && typeInfo.isVault) {
@@ -52,6 +59,10 @@ export function getEarnActivityAddressDirection(
 
   if (typeInfo.type === TransactionType.Withdraw && typeInfo.isVault) {
     return 'from'
+  }
+
+  if (typeInfo.type === TransactionType.Plan && typeInfo.earnAction) {
+    return getEarnPlanTransactionType(typeInfo.earnAction) === TransactionType.Withdraw ? 'from' : 'to'
   }
 
   return undefined
@@ -66,14 +77,16 @@ function getActivityAddressDisplay({
   transaction,
   otherPartyAddress,
   protocolInfo,
+  isEarnActivityDisplayEnabled,
 }: {
   t: TFunction
   transaction: TransactionDetails
   otherPartyAddress: Address | null
   protocolInfo: ActivityProtocolInfo | null | undefined
+  isEarnActivityDisplayEnabled: boolean
 }): ActivityAddressDisplay {
   const transactionType = transaction.typeInfo.type
-  const earnActivityAddressDirection = getEarnActivityAddressDirection(transaction)
+  const earnActivityAddressDirection = getEarnActivityAddressDirection(transaction, { isEarnActivityDisplayEnabled })
 
   if (earnActivityAddressDirection) {
     return {
@@ -101,13 +114,13 @@ function getActivityAddressDisplay({
         content: transaction.hash ? { type: 'transactionHash', hash: transaction.hash } : undefined,
       }
     case TransactionType.Plan:
-      // TODO(CONS-2207): Plan rows are existing chained swap/bridge activity, not Earn vault activity. Revisit
-      // this cell if Earn vault deposits/withdrawals start returning plan transactions.
-      // https://linear.app/uniswap/issue/CONS-2207
       return {
         label: t('transaction.details.transactions'),
         content: isPlanTransactionInfo(transaction.typeInfo)
-          ? { type: 'transactionActions', actionCount: transaction.typeInfo.stepDetails.length }
+          ? {
+              type: 'transactionActions',
+              actionCount: transaction.typeInfo.stepDetails.length,
+            }
           : undefined,
       }
     default:
@@ -195,9 +208,9 @@ function PrioritizedContent({
   }
 }
 
-function ActivityAddressCellInner({ transaction }: ActivityAddressCellProps) {
+function ActivityAddressCellInner({ transaction, isEarnActivityDisplayEnabled = true }: ActivityAddressCellProps) {
   const { t } = useTranslation()
-  const { counterparty, protocolInfo } = buildActivityRowFragments(transaction)
+  const { counterparty, protocolInfo } = buildActivityRowFragments(transaction, { isEarnActivityDisplayEnabled })
 
   // Use counterparty from adapter if available, otherwise fall back to from address
   const rawAddress = counterparty ?? transaction.from
@@ -211,6 +224,7 @@ function ActivityAddressCellInner({ transaction }: ActivityAddressCellProps) {
     transaction,
     otherPartyAddress,
     protocolInfo,
+    isEarnActivityDisplayEnabled,
   })
 
   return (

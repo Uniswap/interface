@@ -1,4 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
+import { QueryStatus } from '@tanstack/react-query'
 
 export function isNonPollingRequestInFlight(networkStatus: NetworkStatus): boolean {
   return (
@@ -8,8 +9,21 @@ export function isNonPollingRequestInFlight(networkStatus: NetworkStatus): boole
   )
 }
 
-export function isWarmLoadingStatus(networkStatus: NetworkStatus): boolean {
-  return networkStatus === NetworkStatus.loading || networkStatus === NetworkStatus.refetch
+// maps GraphQL NetworkStatus to React Query QueryStatus to preserve compatibility while we support both endpoints
+export function mapGraphQLNetworkStatusToReactQueryStatus(networkStatus: NetworkStatus): QueryStatus {
+  switch (networkStatus) {
+    case NetworkStatus.ready:
+    case NetworkStatus.fetchMore:
+    case NetworkStatus.refetch:
+      return 'success'
+    case NetworkStatus.loading:
+    case NetworkStatus.setVariables:
+      return 'pending'
+    case NetworkStatus.error:
+      return 'error'
+    default:
+      return 'success'
+  }
 }
 
 /**

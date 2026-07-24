@@ -5,10 +5,13 @@ import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { StatsRow } from 'src/components/TokenDetails/TokenDetailsStats/StatsRow'
+import { useFeatureFlaggedProjectTokens } from 'src/components/TokenDetails/useFeatureFlaggedProjectTokens'
+import { useTokenDetailsPreferProjectMarketData } from 'src/components/TokenDetails/useTokenDetailsRWAMatch'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import type { IconProps } from 'ui/src/components/factories/createIcon'
 import { ChartBar, ChartPie, ChartPyramid, GlobeFilled, TrendDown, TrendUp } from 'ui/src/components/icons'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { NetworkPile } from 'uniswap/src/components/network/NetworkPile/NetworkPile'
@@ -20,6 +23,10 @@ import { selectHasViewedContractAddressExplainer } from 'uniswap/src/features/be
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import {
+  adaptLegacyMarketData,
+  adaptLegacyProjectMarketData,
+} from 'uniswap/src/features/dataApi/tokenDetails/legacyMarketDataAdapters'
 import { useTokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { isMultichainProjectTokens } from 'uniswap/src/features/dataApi/tokenProjects/utils/isMultichainProjectTokens'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
@@ -30,12 +37,11 @@ import { isDefaultNativeAddress } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 
 export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(): JSX.Element {
+  const isDataLivelinessEnabled = useFeatureFlag(FeatureFlags.DataLivelinessUI)
   const { t } = useTranslation()
   const colors = useSporeColors()
   const defaultTokenColor = colors.neutral3.get()
   const { convertFiatAmountFormatted } = useLocalizationContext()
-  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
-
   const {
     address,
     currencyId,
@@ -49,32 +55,37 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
   const token = useTokenBasicInfoPartsFragment({ currencyId }).data
   const project = useTokenBasicProjectPartsFragment({ currencyId }).data.project
   const [showVolumeInfo, setShowVolumeInfo] = useState(false)
+  const preferProjectMarketData = useTokenDetailsPreferProjectMarketData()
 
   const { data: screenData } = GraphQLApi.useTokenDetailsScreenQuery({
     variables: {
       ...currencyIdToContractInput(currencyId),
-      multichain: multichainTokenUxEnabled,
+      multichain: true,
     },
     fetchPolicy: 'cache-only',
   })
 
   const aggregatedData = useMemo(() => {
-    if (!multichainTokenUxEnabled || !screenData?.token?.multichainMarket) {
+    if (!screenData?.token?.multichainMarket) {
       return undefined
     }
     return {
-      market: screenData.token.multichainMarket,
-      project: { markets: screenData.token.project?.markets },
+      market: adaptLegacyMarketData(screenData.token.multichainMarket),
+      projectMarket: adaptLegacyProjectMarketData(screenData.token.project?.markets?.[0]),
     }
-  }, [multichainTokenUxEnabled, screenData?.token?.multichainMarket, screenData?.token?.project?.markets])
+  }, [screenData?.token?.multichainMarket, screenData?.token?.project?.markets])
+
+  // Gate out unlaunched chains (e.g. Arc/Robinhood) so they don't appear in the Networks row or
+  // make the token look multichain.
+  const featureFlaggedScreenTokens = useFeatureFlaggedProjectTokens(screenData?.token?.project?.tokens)
+  const featureFlaggedProjectTokens = useFeatureFlaggedProjectTokens(project?.tokens)
 
   const networkChainIds = useMemo((): UniverseChainId[] => {
-    const projectTokens = screenData?.token?.project?.tokens
-    if (!projectTokens?.length) {
+    if (!featureFlaggedScreenTokens.length) {
       return [chainId]
     }
     const chainIds = new Set<UniverseChainId>()
-    for (const projectToken of projectTokens) {
+    for (const projectToken of featureFlaggedScreenTokens) {
       const id = fromGraphQLChain(projectToken.chain)
       if (id !== null) {
         chainIds.add(id)
@@ -84,11 +95,11 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
       return [chainId]
     }
     return Array.from(chainIds)
-  }, [chainId, screenData?.token?.project?.tokens])
+  }, [chainId, featureFlaggedScreenTokens])
 
   const singleNetworkChainId = networkChainIds.length === 1 ? networkChainIds[0] : undefined
 
-  const isMultichainToken = multichainTokenUxEnabled && isMultichainProjectTokens(project?.tokens)
+  const isMultichainToken = isMultichainProjectTokens(featureFlaggedProjectTokens)
 
   /** Native currency pages have no contract address to copy / multichain address sheet (see TokenDetailsLinks). */
   const hasCopyableContractAddress = useMemo(() => {
@@ -120,7 +131,10 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
     token.address,
   ])
 
-  const { marketCap, fdv, volume, high52w, low52w } = useTokenMarketStats(currencyId, { aggregatedData })
+  const { marketCap, fdv, volume, high52w, low52w } = useTokenMarketStats(currencyId, {
+    aggregatedData,
+    preferProjectMarketData,
+  })
 
   const hasLimitedVolumeData = chainId === UniverseChainId.Tempo
 
@@ -138,18 +152,26 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
         label={t('token.stats.marketCap')}
         statsIcon={<ChartPie color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
       >
-        <Text textAlign="right" variant="body2">
-          {convertFiatAmountFormatted(marketCap, NumberType.FiatTokenStats)}
-        </Text>
+        <AnimatedNumber
+          alignRight
+          numericValue={marketCap ?? undefined}
+          value={convertFiatAmountFormatted(marketCap, NumberType.FiatTokenStats)}
+          textVariant="$body2"
+          disableAnimations={!isDataLivelinessEnabled}
+        />
       </StatsRow>
 
       <StatsRow
         label={t('token.stats.fullyDilutedValuation')}
         statsIcon={<ChartPyramid color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
       >
-        <Text textAlign="right" variant="body2">
-          {convertFiatAmountFormatted(fdv, NumberType.FiatTokenStats)}
-        </Text>
+        <AnimatedNumber
+          alignRight
+          numericValue={fdv ?? undefined}
+          value={convertFiatAmountFormatted(fdv, NumberType.FiatTokenStats)}
+          textVariant="$body2"
+          disableAnimations={!isDataLivelinessEnabled}
+        />
       </StatsRow>
 
       <StatsRow
@@ -157,27 +179,39 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
         statsIcon={<ChartBar color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
         labelAfter={maybeLimitedVolumeDataInfoIcon}
       >
-        <Text textAlign="right" variant="body2">
-          {convertFiatAmountFormatted(volume, NumberType.FiatTokenStats)}
-        </Text>
+        <AnimatedNumber
+          alignRight
+          numericValue={volume ?? undefined}
+          value={convertFiatAmountFormatted(volume, NumberType.FiatTokenStats)}
+          textVariant="$body2"
+          disableAnimations={!isDataLivelinessEnabled}
+        />
       </StatsRow>
 
       <StatsRow
         label={t('token.stats.priceHighYear')}
         statsIcon={<TrendUp color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
       >
-        <Text textAlign="right" variant="body2">
-          {convertFiatAmountFormatted(high52w, NumberType.FiatTokenDetails)}
-        </Text>
+        <AnimatedNumber
+          alignRight
+          numericValue={high52w ?? undefined}
+          value={convertFiatAmountFormatted(high52w, NumberType.FiatTokenDetails)}
+          textVariant="$body2"
+          disableAnimations={!isDataLivelinessEnabled}
+        />
       </StatsRow>
 
       <StatsRow
         label={t('token.stats.priceLowYear')}
         statsIcon={<TrendDown color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
       >
-        <Text textAlign="right" variant="body2">
-          {convertFiatAmountFormatted(low52w, NumberType.FiatTokenDetails)}
-        </Text>
+        <AnimatedNumber
+          alignRight
+          numericValue={low52w ?? undefined}
+          value={convertFiatAmountFormatted(low52w, NumberType.FiatTokenDetails)}
+          textVariant="$body2"
+          disableAnimations={!isDataLivelinessEnabled}
+        />
       </StatsRow>
 
       <NetworkStatsRow

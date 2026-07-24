@@ -1,5 +1,6 @@
 import { fireEvent } from '@testing-library/react-native'
 import type { GasFeeResult } from '@universe/api'
+import { useEffect } from 'react'
 import { View } from 'react-native'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useGasOverridesWarningState } from 'uniswap/src/features/gas/components/NetworkCostEditor/useGasOverridesWarningState'
@@ -80,10 +81,9 @@ describe('GasInfoRowWithCustomGasEnabled', () => {
     expect(queryByTestId('gas-info-row-custom-gas')).toBeNull()
   })
 
-  // Regression test for SWAP-2688: the modal subtree must survive a transient
-  // `!fiatPriceFormatted` state (e.g. during a /swap refetch on a new query
-  // key). If the chip returns `null` outright, the open editor sheet unmounts,
-  // user input + isDirty are wiped, and Save/Reset stop working.
+  // The modal subtree must survive a transient `!fiatPriceFormatted` state
+  // (e.g. a /swap refetch on a new query key) so an open editor sheet keeps its
+  // typed input + isDirty instead of unmounting.
   it('keeps modals mounted when fiatPriceFormatted is missing so an open editor survives a poll', () => {
     mockUseFormGasOverridesController.mockReturnValue({
       onPress: vi.fn(),
@@ -99,6 +99,99 @@ describe('GasInfoRowWithCustomGasEnabled', () => {
     )
     expect(queryByTestId('gas-info-row-custom-gas')).toBeNull()
     expect(queryByTestId('custom-gas-modals-sentinel')).not.toBeNull()
+  })
+
+  // The modal subtree must NOT remount when `fiatPriceFormatted` toggles
+  // defined/undefined/defined during a poll. A remount would wipe
+  // `useFieldState`'s typed input + isDirty inside the editor (breaking
+  // Save/Reset), so `mountCount` staying 1 across the flips proves the subtree
+  // keeps a stable position.
+  it('preserves the modal subtree across fiatPriceFormatted transitions during a poll', () => {
+    let mountCount = 0
+    function TrackedModal(): JSX.Element {
+      useEffect(() => {
+        mountCount += 1
+      }, [])
+      return <View testID="tracked-modal" />
+    }
+
+    mockUseFormGasOverridesController.mockReturnValue({
+      onPress: vi.fn(),
+      onCloseModal: vi.fn(),
+      onResetOverrides: vi.fn(),
+      isEditorOpen: true,
+      isAutoTooltipOpen: false,
+      isCrosschainOpen: false,
+      modals: <TrackedModal />,
+    })
+
+    const { rerender, queryByTestId } = renderWithProviders(
+      <GasInfoRowWithCustomGasEnabled gasInfo={{ ...baseGasInfo, fiatPriceFormatted: '$1.23' }} />,
+    )
+    expect(mountCount).toBe(1)
+    expect(queryByTestId('tracked-modal')).not.toBeNull()
+
+    // Simulate a /swap refetch that briefly clears fiatPriceFormatted.
+    rerender(<GasInfoRowWithCustomGasEnabled gasInfo={{ ...baseGasInfo, fiatPriceFormatted: undefined }} />)
+    expect(mountCount).toBe(1)
+    expect(queryByTestId('tracked-modal')).not.toBeNull()
+
+    // Simulate the refetch completing with a new gas value.
+    rerender(<GasInfoRowWithCustomGasEnabled gasInfo={{ ...baseGasInfo, fiatPriceFormatted: '$1.45' }} />)
+    expect(mountCount).toBe(1)
+    expect(queryByTestId('tracked-modal')).not.toBeNull()
+  })
+
+  // Companion to the poll test: the modal subtree must also survive an
+  // EVM↔UniswapX trade change. When the chip switches between its UniswapX and
+  // normal layouts mid-edit, the modal must both stay present and keep a stable
+  // position (`mountCount` stays 1).
+  it('preserves the modal subtree across an EVM↔UniswapX trade change', () => {
+    let mountCount = 0
+    function TrackedModal(): JSX.Element {
+      useEffect(() => {
+        mountCount += 1
+      }, [])
+      return <View testID="tracked-modal" />
+    }
+
+    mockUseFormGasOverridesController.mockReturnValue({
+      onPress: vi.fn(),
+      onCloseModal: vi.fn(),
+      onResetOverrides: vi.fn(),
+      isEditorOpen: true,
+      isAutoTooltipOpen: false,
+      isCrosschainOpen: false,
+      modals: <TrackedModal />,
+    })
+
+    // Start as a classic EVM trade with the editor open.
+    mockUseSwapTxStore.mockImplementation(((selector: (s: unknown) => unknown) =>
+      selector({ routing: 'CLASSIC', txRequests: undefined })) as typeof useSwapTxStore)
+    const { rerender, queryByTestId } = renderWithProviders(<GasInfoRowWithCustomGasEnabled gasInfo={baseGasInfo} />)
+    expect(mountCount).toBe(1)
+    expect(queryByTestId('tracked-modal')).not.toBeNull()
+
+    // Trade flips to a UniswapX route mid-edit.
+    mockUseSwapTxStore.mockImplementation(((selector: (s: unknown) => unknown) =>
+      selector({ routing: 'DUTCH_V2', gasFee: {}, gasFeeBreakdown: {} })) as typeof useSwapTxStore)
+    rerender(
+      <GasInfoRowWithCustomGasEnabled
+        gasInfo={{
+          ...baseGasInfo,
+          uniswapXGasFeeInfo: { preSavingsGasFeeFormatted: '$5.00' } as GasInfo['uniswapXGasFeeInfo'],
+        }}
+      />,
+    )
+    expect(mountCount).toBe(1)
+    expect(queryByTestId('tracked-modal')).not.toBeNull()
+
+    // …and back to a classic EVM route.
+    mockUseSwapTxStore.mockImplementation(((selector: (s: unknown) => unknown) =>
+      selector({ routing: 'CLASSIC', txRequests: undefined })) as typeof useSwapTxStore)
+    rerender(<GasInfoRowWithCustomGasEnabled gasInfo={baseGasInfo} />)
+    expect(mountCount).toBe(1)
+    expect(queryByTestId('tracked-modal')).not.toBeNull()
   })
 
   it('renders the "Auto" pill and no chevron when no overrides are saved', () => {
@@ -151,5 +244,17 @@ describe('GasInfoRowWithCustomGasEnabled', () => {
       />,
     )
     expect(queryByTestId('gas-info-row-custom-gas')).toBeNull()
+  })
+
+  // A UniswapX trade with no savings has nothing to show: no tappable chip and
+  // no fallback fee render (the chip returns null on this path).
+  it('renders nothing for a UniswapX trade without savings', () => {
+    mockUseSwapTxStore.mockImplementation(((selector: (s: unknown) => unknown) =>
+      selector({ routing: 'DUTCH_V2', gasFee: {}, gasFeeBreakdown: {} })) as typeof useSwapTxStore)
+    const { queryByTestId, queryByText } = renderWithProviders(
+      <GasInfoRowWithCustomGasEnabled gasInfo={{ ...baseGasInfo, uniswapXGasFeeInfo: undefined }} />,
+    )
+    expect(queryByTestId('gas-info-row-custom-gas')).toBeNull()
+    expect(queryByText('$1.23')).toBeNull()
   })
 })

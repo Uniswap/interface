@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { ViewDetailsTrailingArrow } from 'uniswap/src/components/portfolio/TokenBalanceItem/ViewDetailsTrailingArrow'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { OrderDirection } from '~/appGraphql/data/util'
 import { Cell } from '~/components/Table/Cell'
@@ -52,17 +53,25 @@ export enum TokenColumns {
   Actions = 'actions',
 }
 
+const EMPTY_HIDDEN_COLUMNS: TokenColumns[] = []
+
 export function useTokenColumns({
-  hiddenColumns = [],
+  hiddenColumns = EMPTY_HIDDEN_COLUMNS,
   showLoadingSkeleton,
   showUnrealizedPnlPercent = false,
   columnSortEnabled = true,
+  hasPinnedColumns = false,
+  unifiedExpandableRows = false,
+  onTokenNameClick,
 }: {
   hiddenColumns?: TokenColumns[]
   showLoadingSkeleton: boolean
   showUnrealizedPnlPercent?: boolean
   /** When false, column headers are non-interactive (e.g. overview mini table). */
   columnSortEnabled?: boolean
+  hasPinnedColumns?: boolean
+  unifiedExpandableRows?: boolean
+  onTokenNameClick?: (row: Extract<TokenTableRow, { type: 'parent' }>) => void
 }) {
   const { t } = useTranslation()
 
@@ -81,7 +90,7 @@ export function useTokenColumns({
       columns.push(
         columnHelper.accessor((row) => (row.type === 'parent' ? row.tokenData.currencyInfo : row.chainToken.chainId), {
           id: 'currencyInfo',
-          size: 180,
+          size: hasPinnedColumns ? 180 : 196,
           header: () => (
             <HeaderCell justifyContent="flex-start">
               <Text variant="body3" color="$neutral2">
@@ -110,11 +119,14 @@ export function useTokenColumns({
                     // oxlint-disable-next-line no-shadow
                     chainIds={row.tokenData.tokens.map((t) => t.chainId)}
                     isExpanded={isExpanded}
+                    unifiedExpandableRows={unifiedExpandableRows}
+                    onNameClick={onTokenNameClick ? () => onTokenNameClick(row) : undefined}
                   />
                 ) : (
-                  <Flex row alignItems="center" gap="$spacing8" ml="$spacing40">
+                  <Flex row alignItems="center" gap={14} ml="$spacing6">
                     <NetworkLogo chainId={row.chainToken.chainId} size={iconSizes.icon20} />
                     <Text variant="body3">{getChainLabel(row.chainToken.chainId)}</Text>
+                    {!unifiedExpandableRows && <ViewDetailsTrailingArrow />}
                   </Flex>
                 )}
               </Cell>
@@ -335,7 +347,7 @@ export function useTokenColumns({
           (row) => (row.type === 'parent' ? row.tokenData.unrealizedPnl : (row.chainToken.unrealizedPnl ?? null)),
           {
             id: 'unrealizedPnl',
-            size: 160,
+            size: 144,
             header: () => (
               <HeaderCell justifyContent="flex-end">
                 {columnSortEnabled ? (
@@ -373,10 +385,10 @@ export function useTokenColumns({
                 )
               }
               if (row.chainToken.unrealizedPnl === undefined) {
-                return <Cell loading={showLoadingSkeleton} />
+                return <Cell loading={showLoadingSkeleton} py="$spacing8" />
               }
               return (
-                <Cell loading={showLoadingSkeleton} justifyContent="flex-end">
+                <Cell loading={showLoadingSkeleton} justifyContent="flex-end" py="$spacing8">
                   <UnrealizedPnl
                     value={row.chainToken.unrealizedPnl}
                     percent={row.chainToken.unrealizedPnlPercent}
@@ -447,7 +459,7 @@ export function useTokenColumns({
             }
             const tokenDataForMenu = getTokenDataForRow(row)
             return (
-              <Cell loading={showLoadingSkeleton} justifyContent="center">
+              <Cell loading={showLoadingSkeleton} justifyContent="center" mr="$spacing6">
                 <ContextMenuButton key={tokenDataForMenu.id} tokenData={tokenDataForMenu} />
               </Cell>
             )
@@ -457,5 +469,16 @@ export function useTokenColumns({
     }
 
     return columns
-  }, [t, showLoadingSkeleton, hiddenColumns, showUnrealizedPnlPercent, sortMethod, orderDirection, columnSortEnabled])
+  }, [
+    t,
+    showLoadingSkeleton,
+    hiddenColumns,
+    showUnrealizedPnlPercent,
+    sortMethod,
+    orderDirection,
+    columnSortEnabled,
+    hasPinnedColumns,
+    unifiedExpandableRows,
+    onTokenNameClick,
+  ])
 }

@@ -12,6 +12,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 export const CHAIN_ID_TO_URL_PARAM: Record<UniverseChainId, string> = {
   [UniverseChainId.Mainnet]: 'ethereum',
   [UniverseChainId.ArbitrumOne]: 'arbitrum',
+  [UniverseChainId.Arc]: 'arc',
   [UniverseChainId.Avalanche]: 'avalanche',
   [UniverseChainId.Base]: 'base',
   [UniverseChainId.Blast]: 'blast',
@@ -22,6 +23,7 @@ export const CHAIN_ID_TO_URL_PARAM: Record<UniverseChainId, string> = {
   [UniverseChainId.Monad]: 'monad',
   [UniverseChainId.Optimism]: 'optimism',
   [UniverseChainId.Polygon]: 'polygon',
+  [UniverseChainId.Robinhood]: 'robinhood',
   [UniverseChainId.Sepolia]: 'ethereum_sepolia',
   [UniverseChainId.Solana]: 'solana',
   [UniverseChainId.Soneium]: 'soneium',

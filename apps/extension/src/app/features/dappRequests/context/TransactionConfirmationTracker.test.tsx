@@ -42,13 +42,13 @@ function TestHookConsumer(): JSX.Element {
 
 describe('TransactionConfirmationTracker', () => {
   beforeEach(() => {
-    jest.useFakeTimers()
-    jest.setSystemTime(new Date('2024-01-01T00:00:00.000Z'))
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2024-01-01T00:00:00.000Z'))
   })
 
   afterEach(() => {
-    jest.runOnlyPendingTimers()
-    jest.useRealTimers()
+    vi.runOnlyPendingTimers()
+    vi.useRealTimers()
     // Clean up any elements added to document.body
     const delayResults = document.querySelectorAll('[data-testid="delay-result"]')
     delayResults.forEach((element) => element.remove())
@@ -70,7 +70,7 @@ describe('TransactionConfirmationTracker', () => {
 
     it('should throw error when hook is used outside provider', () => {
       // Suppress console.error for this test
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
       expect(() => {
         renderHook(() => useTransactionConfirmationTracker())
@@ -131,7 +131,7 @@ describe('TransactionConfirmationTracker', () => {
 
       // Advance time by 2 seconds
       act(() => {
-        jest.advanceTimersByTime(2000)
+        vi.advanceTimersByTime(2000)
       })
 
       // Mark second transaction (should reset the timestamp)
@@ -179,7 +179,7 @@ describe('TransactionConfirmationTracker', () => {
 
       // Advance time by 2 seconds
       act(() => {
-        jest.advanceTimersByTime(2000)
+        vi.advanceTimersByTime(2000)
       })
 
       // Mark transaction on Polygon at T=2000
@@ -189,7 +189,7 @@ describe('TransactionConfirmationTracker', () => {
 
       // Advance time by 1 more second (total 3 seconds from start)
       act(() => {
-        jest.advanceTimersByTime(1000)
+        vi.advanceTimersByTime(1000)
       })
 
       // At T=3000: Mainnet should have 2000ms delay (5000-3000), Polygon should have 4000ms delay (5000-1000)
@@ -198,7 +198,7 @@ describe('TransactionConfirmationTracker', () => {
 
       // Advance time by 3 more seconds (total 6 seconds from start)
       act(() => {
-        jest.advanceTimersByTime(3000)
+        vi.advanceTimersByTime(3000)
       })
 
       // At T=6000: Mainnet should have 0 delay (elapsed), Polygon should have 1000ms delay remaining
@@ -247,7 +247,7 @@ describe('TransactionConfirmationTracker', () => {
 
       // Advance time by 2 seconds
       act(() => {
-        jest.advanceTimersByTime(2000)
+        vi.advanceTimersByTime(2000)
       })
 
       expect(result.current.getDelayForChainId(UniverseChainId.Mainnet, 5000)).toBe(3000)
@@ -264,7 +264,7 @@ describe('TransactionConfirmationTracker', () => {
 
       // Advance time beyond the delay period
       act(() => {
-        jest.advanceTimersByTime(6000)
+        vi.advanceTimersByTime(6000)
       })
 
       act(() => {
@@ -288,7 +288,7 @@ describe('TransactionConfirmationTracker', () => {
 
       // Advance time exactly to the delay period
       act(() => {
-        jest.advanceTimersByTime(5000)
+        vi.advanceTimersByTime(5000)
       })
 
       act(() => {

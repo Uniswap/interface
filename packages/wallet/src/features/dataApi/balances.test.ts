@@ -1,4 +1,3 @@
-import { NetworkStatus } from '@apollo/client'
 import type { Token } from '@uniswap/sdk-core'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import type { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
@@ -173,7 +172,8 @@ describe(usePortfolioBalances, () => {
     expect(result.current).toEqual({
       data: undefined,
       loading: false,
-      networkStatus: NetworkStatus.loading, // TanStack Query initial state
+      isPending: true,
+      isError: false,
       refetch: expect.any(Function),
       error: undefined,
       dataUpdatedAt: undefined,
@@ -188,7 +188,8 @@ describe(usePortfolioTotalValue, () => {
     expect(result.current).toEqual({
       data: undefined,
       loading: false,
-      networkStatus: NetworkStatus.loading, // TanStack Query initial state
+      isPending: true,
+      isError: false,
       refetch: expect.any(Function),
       error: undefined,
       dataUpdatedAt: undefined,
@@ -236,7 +237,8 @@ describe(useSortedPortfolioBalances, () => {
         hiddenBalances: [],
       },
       loading: true,
-      networkStatus: NetworkStatus.loading,
+      isPending: true,
+      isError: false,
       refetch: expect.any(Function),
     })
   })

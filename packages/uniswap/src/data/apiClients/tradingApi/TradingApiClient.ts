@@ -1,28 +1,52 @@
-import { createTradingApiClient, TradingApi, type TradingApiClient as TradingApiClientType } from '@universe/api'
-import { ChainId } from '@universe/api/src/clients/trading/__generated__'
-import { TRADING_API_PATHS } from '@universe/api/src/clients/trading/createTradingApiClient'
+import {
+  TRADING_API_PATHS,
+  TradingApi,
+  createTradingApiClient,
+  createTradingApiFetchClient,
+  provideSessionService,
+  tryProvideSession,
+  type TradingApiClient as TradingApiClientType,
+} from '@universe/api'
+import { getExperimentsClient } from '@universe/experiments'
 import {
   EthAsErc20UniswapXProperties,
   Experiments,
   FeatureFlags,
   getExperimentValueFromLayer,
   getFeatureFlag,
+  getIsSessionServiceEnabled,
   Layers,
   waitForStatsigReady,
 } from '@universe/gating'
+import { SessionGateSource } from '@universe/sessions'
 import { config } from 'uniswap/src/config'
-import { tradingApiVersionPrefix, uniswapUrls } from 'uniswap/src/constants/urls'
-import { createUniswapFetchClient } from 'uniswap/src/data/apiClients/createUniswapFetchClient'
+import { getUniswapServiceUrls } from 'uniswap/src/constants/urls'
+import { BASE_UNISWAP_HEADERS } from 'uniswap/src/data/apiClients/createUniswapFetchClient'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { filterChainIdsByPlatform } from 'uniswap/src/features/chains/utils'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { tradingApiToUniverseChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 
-const TradingFetchClient = createUniswapFetchClient({
-  baseUrl: uniswapUrls.tradingApiUrl,
-  additionalHeaders: {
+// Built through the trading factory so web requests carry the session cookie.
+const TradingFetchClient = createTradingApiFetchClient({
+  getBaseUrl: () => getUniswapServiceUrls(config).tradingApiUrl,
+  getHeaders: () => ({
+    ...BASE_UNISWAP_HEADERS,
     'x-api-key': config.tradingApiKey,
-  },
+    // Correlate experiment buckets with the trading backend (our own service): the active
+    // set rides as `x-experiments` on every trading request. Merged here, not in a shared
+    // client, so experiment data never leaks to third-party clients (Blockaid, Jupiter).
+    ...getExperimentsClient().toHeaders(),
+  }),
+  // Absorb any experiments the backend echoes or originates (BE→FE).
+  onResponse: (response) => getExperimentsClient().absorb(response),
+  getSessionService: () =>
+    provideSessionService({
+      getBaseUrl: () => getUniswapServiceUrls(config).apiBaseUrlV2,
+      getIsSessionServiceEnabled,
+    }),
+  getSession: tryProvideSession,
+  source: SessionGateSource.FetchUniswap,
 })
 
 /**
@@ -37,6 +61,7 @@ function addHeaderIfEnabled(params: { headers: Record<string, string>; key: stri
 
 export enum TradingApiHeaders {
   UniversalRouterVersion = 'x-universal-router-version',
+  RequestSwapSteps = 'x-universal-router-swapsteps',
   UniquoteEnabled = 'x-uniquote-enabled',
   ViemProviderEnabled = 'x-viem-provider-enabled',
   Erc20EthEnabled = 'x-erc20eth-enabled',
@@ -54,7 +79,7 @@ export enum TradingApiHeaders {
  */
 export const getFeatureFlaggedHeaders = async (
   tradingApiPath: (typeof TRADING_API_PATHS)[keyof typeof TRADING_API_PATHS],
-  tradingApiChainId?: ChainId,
+  tradingApiChainId?: TradingApi.ChainId,
 ): Promise<HeadersInit> => {
   await waitForStatsigReady()
   const chainId = tradingApiToUniverseChainId(tradingApiChainId)
@@ -73,6 +98,7 @@ export const getFeatureFlaggedHeaders = async (
 
   const chainedActionsEnabled = getFeatureFlag(FeatureFlags.ChainedActions)
   const unirouteEnabled = getFeatureFlag(FeatureFlags.UnirouteEnabled)
+  const shouldRequestSwapSteps = getFeatureFlag(FeatureFlags.RequestSwapSteps)
   const ethAsErc20UniswapXEnabled = getExperimentValueFromLayer<
     typeof Layers.SwapPage,
     Experiments.EthAsErc20UniswapX,
@@ -90,6 +116,7 @@ export const getFeatureFlaggedHeaders = async (
       headers[TradingApiHeaders.UniroutePulumiEnabled] = 'true'
       addHeaderIfEnabled({ headers, key: TradingApiHeaders.Erc20EthEnabled, enabled: ethAsErc20UniswapXEnabled })
       addHeaderIfEnabled({ headers, key: TradingApiHeaders.ChainedActionsEnabled, enabled: chainedActionsEnabled })
+      addHeaderIfEnabled({ headers, key: TradingApiHeaders.RequestSwapSteps, enabled: shouldRequestSwapSteps })
       addHeaderIfEnabled({
         headers,
         key: TradingApiHeaders.DisableUniswapInterfaceFees,
@@ -117,7 +144,9 @@ export const getFeatureFlaggedHeaders = async (
 export const TradingApiClient: TradingApiClientType = createTradingApiClient({
   fetchClient: TradingFetchClient,
   getFeatureFlagHeaders: getFeatureFlaggedHeaders,
-  getApiPathPrefix: () => tradingApiVersionPrefix,
+  // Entry gateway serves trading at unversioned paths (same as the session/Plan client and DataApi),
+  // so no `/v1` prefix. The legacy trading-api-labs cloudflare host required `/v1`; we no longer use it.
+  getApiPathPrefix: () => '',
 })
 
 // Default maximum amount of combinations wallet<>chainId per check delegation request

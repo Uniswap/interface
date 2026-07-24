@@ -78,3 +78,17 @@ export function testAddEnableCustomGasFeeEntry(migration: (state: any) => any, p
   const result = migration(prevSchema)
   expect(result.userSettings.enableCustomGasFeeEntry).toBe(false)
 }
+
+// Mobile: 99
+// Extension: 33
+// Web: 63
+export function testRemoveUniswapWrapped2025BehaviorHistory(migration: (state: any) => any, prevSchema: any): void {
+  const result = migration({
+    ...prevSchema,
+    uniswapBehaviorHistory: {
+      ...prevSchema?.uniswapBehaviorHistory,
+      hasDismissedUniswapWrapped2025Banner: true,
+    },
+  })
+  expect(result.uniswapBehaviorHistory).not.toHaveProperty('hasDismissedUniswapWrapped2025Banner')
+}

@@ -15,7 +15,7 @@ export function usePortfolioTabs(): PortfolioTabInfo[] {
 
   return [
     { path: '/portfolio', pageName: InterfacePageName.PortfolioPage, label: t('portfolio.overview.title') },
-    { path: '/portfolio/tokens', pageName: InterfacePageName.PortfolioTokensPage, label: t('common.tokens') },
+    { path: '/portfolio/tokens', pageName: InterfacePageName.PortfolioTokensPage, label: t('common.token.plural') },
     ...(portfolioPoolsBalancesEnabled
       ? [
           {

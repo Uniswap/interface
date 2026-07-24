@@ -1,29 +1,12 @@
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
-import { FlashList, FlashListProps } from '@shopify/flash-list'
+import { FlashList } from '@shopify/flash-list'
 import { forwardRef } from 'react'
-import type { FlatListProps } from 'react-native'
 import Animated from 'react-native-reanimated'
-
-// TODO(WALL-5764): update @gorhom/bottom-sheet to latest version so we can use their BottomSheetFlashList
+import type { AnimatedFlashListProps } from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
 
 // difficult to properly type
 // oxlint-disable-next-line typescript/no-explicit-any -- Complex type from external library requires any
 const ReanimatedFlashList = Animated.createAnimatedComponent(FlashList as any) as any
-
-// We use `any` to make list work with forwardRef, but lose correct typing.
-// Need to extend manually Pick props from FlashListProps (if not included in FlatListProps)
-// oxlint-disable-next-line typescript/no-explicit-any -- Generic FlashList props require any for flexibility
-type AnimatedFlashListProps = FlatListProps<any> &
-  Pick<
-    // oxlint-disable-next-line typescript/no-explicit-any -- Generic FlashList props require any for flexibility
-    FlashListProps<any>,
-    | 'disableAutoLayout'
-    | 'estimatedItemSize'
-    | 'estimatedListSize'
-    | 'getItemType'
-    | 'overrideItemLayout'
-    | 'drawDistance'
-  >
 
 // difficult to properly type
 export const AnimatedFlashList = forwardRef<typeof ReanimatedFlashList, AnimatedFlashListProps>(

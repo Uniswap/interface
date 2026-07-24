@@ -4,14 +4,20 @@ import { BiometricUnlockStorage } from 'src/app/features/biometricUnlock/Biometr
 import { useBiometricUnlockSetupMutation } from 'src/app/features/biometricUnlock/useBiometricUnlockSetupMutation'
 import { isUserVerifyingPlatformAuthenticatorAvailable } from 'src/app/utils/device/builtInBiometricCapabilitiesQuery'
 import { renderHookWithProviders } from 'src/test/render'
-import { decodeFromStorage, decrypt } from 'wallet/src/features/wallet/Keyring/crypto'
+import type { Mock, Mocked, MockedFunction } from 'vitest'
+import {
+  createEmptySecretPayload,
+  decodeFromStorage,
+  decrypt,
+  getEncryptionKeyFromBuffer,
+} from 'wallet/src/features/wallet/Keyring/crypto'
 
-jest.mock('src/app/features/biometricUnlock/BiometricUnlockStorage')
-jest.mock('src/app/utils/device/builtInBiometricCapabilitiesQuery')
-jest.mock('wallet/src/features/wallet/Keyring/crypto', () => ({
-  ...jest.requireActual('wallet/src/features/wallet/Keyring/crypto'),
-  createEmptySecretPayload: jest.fn(),
-  getEncryptionKeyFromBuffer: jest.fn(),
+vi.mock('src/app/features/biometricUnlock/BiometricUnlockStorage')
+vi.mock('src/app/utils/device/builtInBiometricCapabilitiesQuery')
+vi.mock('wallet/src/features/wallet/Keyring/crypto', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('wallet/src/features/wallet/Keyring/crypto')>()),
+  createEmptySecretPayload: vi.fn(),
+  getEncryptionKeyFromBuffer: vi.fn(),
 }))
 
 // Mock the Web Crypto API with Node.js built-in
@@ -20,25 +26,19 @@ Object.defineProperty(globalThis, 'crypto', {
 })
 
 // Mock the WebAuthn API
-const mockCredentialsCreate = jest.fn()
+const mockCredentialsCreate = vi.fn()
 Object.defineProperty(navigator, 'credentials', {
   writable: true,
   value: { create: mockCredentialsCreate },
 })
 
-const mockBiometricUnlockStorage = BiometricUnlockStorage as jest.Mocked<typeof BiometricUnlockStorage>
+const mockBiometricUnlockStorage = BiometricUnlockStorage as Mocked<typeof BiometricUnlockStorage>
 const mockIsUserVerifyingPlatformAuthenticatorAvailable =
-  isUserVerifyingPlatformAuthenticatorAvailable as jest.MockedFunction<
-    typeof isUserVerifyingPlatformAuthenticatorAvailable
-  >
+  isUserVerifyingPlatformAuthenticatorAvailable as MockedFunction<typeof isUserVerifyingPlatformAuthenticatorAvailable>
 
-// Mock crypto functions
-const mockCreateEmptySecretPayload = jest.requireMock(
-  'wallet/src/features/wallet/Keyring/crypto',
-).createEmptySecretPayload
-const mockGetEncryptionKeyFromBuffer = jest.requireMock(
-  'wallet/src/features/wallet/Keyring/crypto',
-).getEncryptionKeyFromBuffer
+// Mock crypto functions (the module is mocked above, so the static imports are the mocks)
+const mockCreateEmptySecretPayload = createEmptySecretPayload as Mock
+const mockGetEncryptionKeyFromBuffer = getEncryptionKeyFromBuffer as Mock
 
 // Mock PublicKeyCredential (doesn't exist in Jest environment)
 class MockPublicKeyCredential {
@@ -83,7 +83,7 @@ describe('useBiometricUnlockSetupMutation', () => {
     mockCredentialsCreate.mockResolvedValue(mockPublicKeyCredential)
     mockBiometricUnlockStorage.set.mockResolvedValue()
 
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('successful setup', () => {

@@ -9,7 +9,8 @@ import { ArrowUpInCircle } from 'ui/src/components/icons/ArrowUpInCircle'
 import { QuestionInCircle } from 'ui/src/components/icons/QuestionInCircle'
 import { Walletconnect } from 'ui/src/components/icons/Walletconnect'
 import { borderRadii, zIndexes } from 'ui/src/theme'
-import { CurrencyLogo, STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
+import { STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/constants'
+import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { TransactionSummaryNetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { DappIconPlaceholder } from 'uniswap/src/components/dapps/DappIconPlaceholder'
 import { NFTViewer } from 'uniswap/src/components/nfts/NFTViewer'
@@ -85,6 +86,7 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
   const logo = getLogo(props)
 
   const fill = txStatus === TransactionStatus.Success ? colors.statusSuccess : colors.neutral2
+  const fillToken = txStatus === TransactionStatus.Success ? ('$statusSuccess' as const) : ('$neutral2' as const)
   const color = colors.surface2
 
   let icon: JSX.Element | undefined
@@ -93,6 +95,9 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
   } else {
     let Icon: React.NamedExoticComponent<IconProps> | undefined
     let iconRotation: IconProps['rotate'] | undefined
+    // ArrowDownToLine draws a bare glyph in `color` (no built-in disc filled via `fill`), so the
+    // badge wrapper supplies the status-colored disc — otherwise it renders surface2-on-surface1.
+    let iconIsBareGlyph = false
     switch (txType) {
       case TransactionType.Approve:
       case TransactionType.NFTApprove:
@@ -105,6 +110,7 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
         break
       case TransactionType.Deposit:
         Icon = ArrowDownToLine
+        iconIsBareGlyph = true
         break
       case TransactionType.NFTTrade:
         if (assetType === AssetType.ERC721 || assetType === AssetType.ERC1155) {
@@ -128,6 +134,7 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
         if (props.isVaultTransaction) {
           Icon = ArrowDownToLine
           iconRotation = '180deg'
+          iconIsBareGlyph = true
         } else {
           Icon = ArrowDownInCircle
         }
@@ -140,13 +147,19 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
       icon = (
         <Flex
           centered
-          backgroundColor="$surface1"
+          backgroundColor={iconIsBareGlyph ? fillToken : '$surface1'}
           borderRadius="$roundedFull"
           height={statusSize}
           overflow="hidden"
           width={statusSize}
         >
-          <Icon color={color.get()} fill={fill.val} rotate={iconRotation} size={statusSize} testID="status-icon" />
+          <Icon
+            color={color.get()}
+            fill={fill.val}
+            rotate={iconRotation}
+            size={iconIsBareGlyph ? statusSize * 0.65 : statusSize}
+            testID="status-icon"
+          />
         </Flex>
       )
     }

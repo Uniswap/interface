@@ -74,9 +74,11 @@ export async function deriveEncryptionKey(params: {
   oprfOutput: Uint8Array
   salt1: Uint8Array
   salt2: Uint8Array
+  /** Test-only override — production callers must use the ARGON2_PARAMS default */
+  argon2Params?: { t: number; m: number; p: number }
 }): Promise<Uint8Array> {
   const pinBytes = new TextEncoder().encode(params.pin)
-  const pinKey = argon2id(pinBytes, params.salt1, ARGON2_PARAMS)
+  const pinKey = argon2id(pinBytes, params.salt1, params.argon2Params ?? ARGON2_PARAMS)
   const finalKey = combineAndDeriveKey({ oprfOutput: params.oprfOutput, pinKey, salt2: params.salt2 })
   pinKey.fill(0)
   return finalKey

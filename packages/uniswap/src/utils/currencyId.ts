@@ -5,7 +5,6 @@ import {
   getWrappedNativeAddress,
   getWrappedNativeAddressWithThrow,
 } from 'uniswap/src/constants/addresses'
-import { normalizeCurrencyIdForMapLookup, normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { DEFAULT_NATIVE_ADDRESS, DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/evm/defaults'
@@ -194,6 +193,36 @@ export function currencyIdToGraphQLAddress(_currencyId?: string): Address | null
 
 export function currencyIdToChain(_currencyId: string): UniverseChainId | null {
   return toSupportedChainId(_currencyId.split('-')[0])
+}
+
+export function normalizeCurrencyIdForMapLookup(id: string): string
+export function normalizeCurrencyIdForMapLookup(id: string | undefined): string | undefined
+export function normalizeCurrencyIdForMapLookup(id: string | undefined): string | undefined {
+  if (!id) {
+    return undefined
+  }
+
+  const chainId = currencyIdToChain(id)
+  const normalizedAddress = normalizeTokenAddressForCache(currencyIdToAddress(id))
+  return `${chainId}-${normalizedAddress}`
+}
+
+export function normalizeTokenAddressForCache(address: string): string
+export function normalizeTokenAddressForCache(address: null): null
+export function normalizeTokenAddressForCache(address: string | null): string | null
+export function normalizeTokenAddressForCache(address: string | null): string | null {
+  // Our graphql backend would sometimes return checksummed addresses and sometimes lowercase addresses.
+  // In order to improve local cache hits, avoid unnecessary network requests, and avoid having duplicate `Token` items stored in the cache,
+  // we use lowercase addresses when accessing the `Token` object from our local cache.
+  // Solana addresses are case sensitive though, so this only applies to EVM addresses.
+
+  if (address === 'NATIVE' || address === 'native') {
+    return 'native' // lowercased native address for lowercase consistency
+  }
+  const normalizedEvmAddress = getValidAddress({ address, platform: Platform.EVM, withEVMChecksum: false })
+
+  // if not a valid EVM address, must be SVM address
+  return normalizedEvmAddress ?? address ?? null
 }
 
 export function isDefaultNativeAddress({ address, platform }: { address: string; platform: Platform }): boolean {

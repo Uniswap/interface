@@ -1,17 +1,18 @@
 import { useSortedAccountList } from 'src/app/features/accounts/useSortedAccountList'
-import { act, renderHook } from 'src/test/test-utils'
+import { renderHook } from 'src/test/test-utils'
+import type { MockedFunction } from 'vitest'
 import { useAccountListData } from 'wallet/src/features/accounts/useAccountListData'
 
-jest.mock('wallet/src/features/accounts/useAccountListData')
-const mockUseAccountList = useAccountListData as jest.MockedFunction<typeof useAccountListData>
+vi.mock('wallet/src/features/accounts/useAccountListData')
+const mockUseAccountList = useAccountListData as MockedFunction<typeof useAccountListData>
 
 describe('useSortedAccountList', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('should sort addresses by balance in descending order', () => {
-    mockAccountList([mockPortfolio('address1', 100), mockPortfolio('address2', 200), mockPortfolio('address3', 150)])
+    mockAccountList({ address1: 100, address2: 200, address3: 150 })
 
     const addresses = ['address1', 'address2', 'address3']
     const { result } = renderHook(() => useSortedAccountList(addresses))
@@ -23,8 +24,8 @@ describe('useSortedAccountList', () => {
     ])
   })
 
-  it('should handle undefined portfolios', () => {
-    mockAccountList(undefined)
+  it('should default missing balances to 0 while data is loading', () => {
+    mockAccountList(undefined, true)
 
     const addresses = ['address1', 'address2']
     const { result } = renderHook(() => useSortedAccountList(addresses))
@@ -35,28 +36,13 @@ describe('useSortedAccountList', () => {
     ])
   })
 
-  it('should use previous data during balance updates', () => {
-    mockAccountList([mockPortfolio('address1', 100), mockPortfolio('address2', 200)])
+  it('should only include requested addresses when balances contain extra entries', () => {
+    // Placeholder data retains the previous tuple's response, so a just-removed address can still appear.
+    mockAccountList({ address1: 100, address2: 200, address3: 300 })
 
-    const addresses = ['address1', 'address2']
-    const { result, rerender } = renderHook((props) => useSortedAccountList(props), { initialProps: addresses })
-
-    expect(result.current).toEqual([
-      { address: 'address2', balance: 200 },
-      { address: 'address1', balance: 100 },
-    ])
-
-    mockAccountList([mockPortfolio('address1', 100)], true)
-    rerender(['address1'])
-
-    expect(result.current).toEqual([{ address: 'address1', balance: 100 }])
-  })
-
-  it('should keep list order when an account is removed', async () => {
-    mockAccountList([mockPortfolio('address1', 100), mockPortfolio('address2', 200), mockPortfolio('address3', 300)])
-
-    const addresses = ['address1', 'address2', 'address3']
-    const { result, rerender } = renderHook((props) => useSortedAccountList(props), { initialProps: addresses })
+    const { result, rerender } = renderHook((props) => useSortedAccountList(props), {
+      initialProps: ['address1', 'address2', 'address3'],
+    })
 
     expect(result.current).toEqual([
       { address: 'address3', balance: 300 },
@@ -64,23 +50,7 @@ describe('useSortedAccountList', () => {
       { address: 'address1', balance: 100 },
     ])
 
-    mockAccountListUndefined()
-
-    await act(async () => {
-      rerender(['address1', 'address2'])
-      await new Promise((resolve) => setTimeout(resolve, 100))
-    })
-
-    expect(result.current).toEqual([
-      { address: 'address2', balance: 200 },
-      { address: 'address1', balance: 100 },
-    ])
-
-    mockAccountList([mockPortfolio('address1', 100), mockPortfolio('address2', 200)])
-
-    await act(async () => {
-      rerender(['address1', 'address2'])
-    })
+    rerender(['address1', 'address2'])
 
     expect(result.current).toEqual([
       { address: 'address2', balance: 200 },
@@ -89,39 +59,10 @@ describe('useSortedAccountList', () => {
   })
 })
 
-function mockPortfolio(
-  ownerAddress: Address,
-  balance: number,
-): {
-  id: string
-  ownerAddress: Address
-  tokensTotalDenominatedValue: { __typename?: 'Amount'; value: number }
-} {
-  return {
-    id: ownerAddress,
-    ownerAddress,
-    tokensTotalDenominatedValue: { __typename: 'Amount', value: balance },
-  }
-}
-
-function mockAccountList(portfolios: ReturnType<typeof mockPortfolio>[] | undefined, loading = false): void {
+function mockAccountList(balancesByAddress: AddressTo<number | undefined> | undefined, loading = false): void {
   mockUseAccountList.mockReturnValue({
-    data: { portfolios },
+    balancesByAddress,
     loading,
-    networkStatus: 7,
-    refetch: jest.fn(),
-    startPolling: jest.fn(),
-    stopPolling: jest.fn(),
-  })
-}
-
-function mockAccountListUndefined(): void {
-  mockUseAccountList.mockReturnValue({
-    data: undefined,
-    loading: true,
-    networkStatus: 7,
-    refetch: jest.fn(),
-    startPolling: jest.fn(),
-    stopPolling: jest.fn(),
+    refetch: vi.fn(),
   })
 }

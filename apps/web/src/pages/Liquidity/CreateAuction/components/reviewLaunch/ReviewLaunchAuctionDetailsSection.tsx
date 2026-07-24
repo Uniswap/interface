@@ -17,6 +17,7 @@ import {
 } from '~/pages/Liquidity/CreateAuction/components/reviewLaunch/ReviewLaunchStepPrimitives'
 import { ReviewPostAuctionLiquidityExpandable } from '~/pages/Liquidity/CreateAuction/components/ReviewPostAuctionLiquidityExpandable'
 import { TokenDistributionBar } from '~/pages/Liquidity/CreateAuction/components/TokenDistributionBar'
+import { getLaunchThreshold } from '~/pages/Liquidity/CreateAuction/launchThreshold'
 import type { TokenAccentHex } from '~/pages/Liquidity/CreateAuction/tokenAccentHex'
 import {
   PostAuctionLiquidityAllocationType,
@@ -36,11 +37,13 @@ interface ReviewLaunchAuctionDetailsSectionProps {
   raiseCurrencyInfo: CurrencyInfo
   chainId: UniverseChainId
   tokenSymbol: string
+  /** New tokens show their (customizable) total supply; existing tokens omit it here. LP-960. */
+  isNewToken: boolean
   tokenColor: TokenAccentHex | undefined
   stableRaiseUsdPrice: number | null
   floorPriceNum: number | undefined
   fdv: number | undefined
-  onEditAuctionConfig: () => void
+  onEditAuctionConfig?: () => void
   onOpenKycHookExplorer: () => void
 }
 
@@ -50,6 +53,7 @@ export function ReviewLaunchAuctionDetailsSection({
   raiseCurrencyInfo,
   chainId,
   tokenSymbol,
+  isNewToken,
   tokenColor,
   stableRaiseUsdPrice,
   floorPriceNum,
@@ -60,6 +64,7 @@ export function ReviewLaunchAuctionDetailsSection({
   const { t } = useTranslation()
   const { formatNumberOrString, formatPercent } = useLocalizationContext()
   const { symbol: fiatSymbol } = useAppFiatCurrencyInfo()
+  const raiseCurrencySymbol = raiseCurrencyInfo.currency.symbol ?? ''
 
   const postAuctionLiquidityAllocation = configureAuction.postAuctionLiquidityAllocation
   const postAuctionLiquidityPercentDisplay = Math.round(
@@ -70,6 +75,17 @@ export function ReviewLaunchAuctionDetailsSection({
     value: committed.auctionSupplyAmount.toExact(),
     type: NumberType.TokenNonTx,
   })
+
+  const launchThreshold = getLaunchThreshold({
+    floorPrice: configureAuction.floorPrice,
+    raiseCurrency: configureAuction.raiseCurrency,
+    chainId,
+    auctionSupplyAmount: committed.auctionSupplyAmount,
+    postAuctionLiquidityAmount: committed.postAuctionLiquidityAmount,
+  })
+  const formattedLaunchThreshold = launchThreshold
+    ? formatNumberOrString({ value: launchThreshold.toExact(), type: NumberType.TokenQuantityStats })
+    : undefined
 
   const floorFiatAmount =
     stableRaiseUsdPrice !== null &&
@@ -100,6 +116,15 @@ export function ReviewLaunchAuctionDetailsSection({
         </ReviewRow>
       ) : null}
 
+      {isNewToken ? (
+        <ReviewRow label={t('toucan.auction.totalSupply')}>
+          <Text variant="body1" color="$neutral1">
+            {formatNumberOrString({ value: committed.totalSupply.toExact(), type: NumberType.TokenNonTx })}{' '}
+            {tokenSymbol}
+          </Text>
+        </ReviewRow>
+      ) : null}
+
       <ReviewRow label={t('toucan.createAuction.step.reviewLaunch.auctionAmount')}>
         <Text variant="body1" color="$neutral1">
           {formattedAuctionAmount} {tokenSymbol}
@@ -110,7 +135,7 @@ export function ReviewLaunchAuctionDetailsSection({
         <Flex row alignItems="center" gap="$spacing6">
           <CurrencyLogo hideNetworkLogo currencyInfo={raiseCurrencyInfo} size={CURRENCY_LOGO_SIZE} />
           <Text variant="body1" color="$neutral1">
-            {configureAuction.raiseCurrency}
+            {raiseCurrencySymbol}
           </Text>
         </Flex>
       </ReviewRow>
@@ -121,7 +146,7 @@ export function ReviewLaunchAuctionDetailsSection({
             {floorPriceNum !== undefined && Number.isFinite(floorPriceNum) ? (
               <SubscriptZeroPrice
                 value={floorPriceNum}
-                symbol={configureAuction.raiseCurrency}
+                symbol={raiseCurrencySymbol}
                 variant="body1"
                 color="$neutral1"
                 minSignificantDigits={1}
@@ -130,7 +155,7 @@ export function ReviewLaunchAuctionDetailsSection({
               />
             ) : (
               <Text variant="body1" color="$neutral1">
-                {configureAuction.floorPrice} {configureAuction.raiseCurrency}
+                {configureAuction.floorPrice} {raiseCurrencySymbol}
               </Text>
             )}
             {floorFiatAmount !== undefined ? (
@@ -162,7 +187,7 @@ export function ReviewLaunchAuctionDetailsSection({
           <Flex row alignItems="center" gap="$spacing4" flexWrap="wrap" justifyContent="flex-end">
             <SubscriptZeroPrice
               value={fdv}
-              symbol={configureAuction.raiseCurrency}
+              symbol={raiseCurrencySymbol}
               variant="body1"
               color="$neutral1"
               minSignificantDigits={1}
@@ -208,13 +233,23 @@ export function ReviewLaunchAuctionDetailsSection({
             raiseCurrency={configureAuction.raiseCurrency}
             tokenColor={tokenColor}
           />
+          {formattedLaunchThreshold !== undefined ? (
+            <ReviewRow label={t('toucan.createAuction.step.configureAuction.launchThreshold')}>
+              <Flex row alignItems="center" gap="$spacing6">
+                <CurrencyLogo hideNetworkLogo currencyInfo={raiseCurrencyInfo} size={CURRENCY_LOGO_SIZE} />
+                <Text variant="body1" color="$neutral1">
+                  {formattedLaunchThreshold} {raiseCurrencySymbol}
+                </Text>
+              </Flex>
+            </ReviewRow>
+          ) : null}
         </>
       ) : (
         <ReviewPostAuctionLiquidityExpandable
           label={t('toucan.details.postAuctionLiquidity')}
           summaryLabel={t('common.custom')}
           tiers={postAuctionLiquidityAllocation.tiers}
-          raiseCurrencySymbol={configureAuction.raiseCurrency}
+          raiseCurrencySymbol={raiseCurrencySymbol}
           raiseUsdPrice={stableRaiseUsdPrice}
         />
       )}

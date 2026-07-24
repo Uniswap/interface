@@ -1,12 +1,11 @@
-import { useApolloClient } from '@apollo/client'
 import { useQuery } from '@tanstack/react-query'
 import { useCallback, useMemo, useState } from 'react'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { queryWithoutCache } from 'utilities/src/reactQuery/queryOptions'
+import { NUMBER_OF_WALLETS_TO_GENERATE } from 'wallet/src/features/onboarding/constants'
 import { fetchBalancesAndUnitags } from 'wallet/src/features/onboarding/fetchBalancesAndUnitags'
-import { NUMBER_OF_WALLETS_TO_GENERATE } from 'wallet/src/features/onboarding/OnboardingContext'
 
 export interface AddressWithBalanceAndName {
   address: string
@@ -66,7 +65,6 @@ export function useAddressesBalanceAndNames(addresses?: Address[]): {
   refetch: () => void
 } {
   const [refetchCount, setRefetchCount] = useState(0)
-  const apolloClient = useApolloClient()
 
   const addressesArray = useMemo(() => (addresses ? addresses : []), [addresses])
 
@@ -78,13 +76,12 @@ export function useAddressesBalanceAndNames(addresses?: Address[]): {
 
   const { ensMap } = useAddressesEnsNames(addressesArray)
 
-  const { gqlChains } = useEnabledChains()
+  const { chains: chainIds } = useEnabledChains()
 
   const fetchBalanceAndUnitags = useCallback(async (): Promise<AddressTo<AddressWithBalanceAndName>> => {
     const { balanceByAddress, unitagByAddress } = await fetchBalancesAndUnitags({
       addresses: addressesArray,
-      apolloClient,
-      gqlChains,
+      chainIds,
     })
 
     return addressesArray.reduce((map, address) => {
@@ -98,7 +95,7 @@ export function useAddressesBalanceAndNames(addresses?: Address[]): {
 
     // We use `refetchCount` as a dependency to manually trigger a refetch when calling the `refetch` function.
     // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
-  }, [addressesArray, apolloClient, refetchCount, gqlChains])
+  }, [addressesArray, refetchCount, chainIds])
 
   const {
     data: balanceAndUnitags,

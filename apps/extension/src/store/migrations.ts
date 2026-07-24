@@ -11,6 +11,7 @@ import {
   migrateDismissedTokenWarnings,
   migrateSearchHistory,
   removeThaiBahtFromFiatCurrency,
+  removeUniswapWrapped2025BehaviorHistory,
   unchecksumDismissedTokenWarningKeys,
 } from 'uniswap/src/state/uniswapMigrations'
 import {
@@ -72,6 +73,7 @@ export const migrations = {
   30: migrateDismissedTokenWarnings,
   31: setLanguageToNavigatorLanguage,
   32: addEnableCustomGasFeeEntry,
+  33: removeUniswapWrapped2025BehaviorHistory,
 }
 
-export const EXTENSION_STATE_VERSION = 32
+export const EXTENSION_STATE_VERSION = 33

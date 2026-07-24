@@ -24,7 +24,7 @@ function getWcVersion(uri: string): number {
   }
 }
 
-jest.spyOn(wcUtils, 'parseUri').mockImplementation((uri) => {
+vi.spyOn(wcUtils, 'parseUri').mockImplementation((uri) => {
   return {
     version: getWcVersion(uri),
     protocol: '',

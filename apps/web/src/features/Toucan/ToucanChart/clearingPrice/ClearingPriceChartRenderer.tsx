@@ -1,6 +1,6 @@
 /* oxlint-disable max-lines */
 import { createChart, type IChartApi, type UTCTimestamp } from 'lightweight-charts'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Flex, useSporeColors } from 'ui/src'
 import { useEvent } from 'utilities/src/react/hooks'
 import { LiveDotRenderer } from '~/components/Charts/LiveDotRenderer'
@@ -26,6 +26,30 @@ import { deprecatedStyled } from '~/lib/deprecated-styled'
  * The remaining space shows blank x-axis indicating more auction time remains.
  */
 const IN_PROGRESS_DATA_WIDTH_PERCENT = 75
+
+/**
+ * Inset (px) applied to the live dot's center in full-width line mode so the 10px dot
+ * isn't half-clipped by the chart's right edge (LP-806 no-bids empty state).
+ */
+const LIVE_DOT_EDGE_INSET_PX = 6
+
+/**
+ * Percent of the fill width that stays fully solid before the horizontal right-edge fade begins,
+ * in full-width line mode. The fill is opaque up to this point, then fades to the surface color at
+ * the right edge so it reads as fading horizontally toward the edge, per design (LP-806).
+ */
+const RIGHT_EDGE_FADE_SOLID_STOP_PERCENT = 78
+
+/** Gap (px) between the flat price line and the top of the right-edge fade so the line stays visible (LP-806) */
+const RIGHT_EDGE_FADE_LINE_CLEARANCE = 2
+
+/**
+ * Fallback bottom inset (px) of the data chart within the wrapper, used only until the x-axis chart
+ * reports its real time-scale height. The actual inset is measured from the x-axis chart's time scale
+ * (see `timeScaleHeight` state) so the data plot area and the right-edge fade both stop exactly at the
+ * top of the time-axis label strip instead of bleeding over the date labels (LP-806).
+ */
+const DATA_CHART_BOTTOM_INSET = 26
 
 const ChartContainer = deprecatedStyled.div<{ height: number }>`
   width: calc(100% - ${CHART_DIMENSIONS.Y_AXIS_LABEL_WIDTH}px);
@@ -121,6 +145,8 @@ interface ClearingPriceChartRendererProps {
   totalSupply?: string
   /** Decimals of the auction token for FDV calculation in tooltip */
   auctionTokenDecimals?: number
+  /** When true (no-bids empty state), the price line extends to the chart's right edge instead of stopping at current time (LP-806) */
+  extendLineToRightEdge?: boolean
 }
 
 /**
@@ -142,6 +168,7 @@ export function ClearingPriceChartRenderer({
   disableMouseWheelInteractions,
   totalSupply,
   auctionTokenDecimals,
+  extendLineToRightEdge,
 }: ClearingPriceChartRendererProps): JSX.Element {
   const colors = useSporeColors()
   const chartContainerRef = useRef<HTMLDivElement | null>(null)
@@ -154,6 +181,10 @@ export function ClearingPriceChartRenderer({
   const [yAxisLabels, setYAxisLabels] = useState<YAxisLabel[]>([])
   const [isControllerReady, setIsControllerReady] = useState(false)
   const [lastPointCoords, setLastPointCoords] = useState<{ x: number; y: number } | null>(null)
+  // Measured height (px) of the x-axis chart's time-scale strip (date labels). The data plot area and
+  // the right-edge fade are inset by this so neither overlaps the date labels (LP-806). Falls back to
+  // DATA_CHART_BOTTOM_INSET until the x-axis chart has laid out and reported its real value.
+  const [timeScaleHeight, setTimeScaleHeight] = useState<number>(DATA_CHART_BOTTOM_INSET)
   const { chartZoomCommand, clearingPriceZoomState } = useAuctionStore((state) => ({
     chartZoomCommand: state.chartZoomCommand,
     clearingPriceZoomState: state.clearingPriceZoomState,
@@ -179,7 +210,22 @@ export function ClearingPriceChartRenderer({
     onVisiblePriceRangeChange?.(range)
   })
 
-  const dataChartWidthPercent = normalizedData.isAuctionInProgress ? IN_PROGRESS_DATA_WIDTH_PERCENT : 100
+  const dataChartWidthPercent =
+    normalizedData.isAuctionInProgress && !extendLineToRightEdge ? IN_PROGRESS_DATA_WIDTH_PERCENT : 100
+
+  // No-bids empty state: extend the flat price line to the end of the visible range
+  // so it spans the full chart width instead of stopping at current time (LP-806)
+  const seriesData = useMemo(() => {
+    const { data, visibleRangeEnd, isAuctionInProgress } = normalizedData
+    if (!extendLineToRightEdge || !isAuctionInProgress || data.length === 0 || visibleRangeEnd === undefined) {
+      return data
+    }
+    const lastPoint = data[data.length - 1]!
+    if (lastPoint.time >= visibleRangeEnd) {
+      return data
+    }
+    return [...data, { ...lastPoint, time: visibleRangeEnd }]
+  }, [normalizedData, extendLineToRightEdge])
 
   // Calculate the x-axis end time to show ~25% more time past current data
   // This creates arbitrary blank space indicating more auction time remains
@@ -187,7 +233,11 @@ export function ClearingPriceChartRenderer({
     if (!normalizedData.isAuctionInProgress) {
       return normalizedData.auctionEndTime
     }
-    const { visibleRangeStart, endTime, auctionEndTime } = normalizedData
+    const { visibleRangeStart, visibleRangeEnd, endTime, auctionEndTime } = normalizedData
+    // Full-width line mode: x-axis mirrors the data chart's range exactly (LP-806)
+    if (extendLineToRightEdge) {
+      return visibleRangeEnd ?? auctionEndTime
+    }
     if (!visibleRangeStart || !endTime) {
       return auctionEndTime
     }
@@ -264,14 +314,28 @@ export function ClearingPriceChartRenderer({
 
     xAxisChartRef.current = xAxisChart
 
+    // Report the real time-scale (date-label strip) height so the data plot area and the right-edge
+    // fade can be inset by it and stop exactly at the top of the labels (LP-806). The height is only
+    // reliable after layout settles, so read it on the next frame as well as synchronously.
+    const syncTimeScaleHeight = (): void => {
+      const measured = xAxisChart.timeScale().height()
+      if (measured > 0) {
+        setTimeScaleHeight(measured)
+      }
+    }
+    syncTimeScaleHeight()
+    const rafId = requestAnimationFrame(syncTimeScaleHeight)
+
     // Handle resize
     const resizeObserver = new ResizeObserver(() => {
       xAxisChart.applyOptions({ width: container.clientWidth })
       xAxisChart.timeScale().fitContent()
+      syncTimeScaleHeight()
     })
     resizeObserver.observe(container)
 
     return () => {
+      cancelAnimationFrame(rafId)
       resizeObserver.disconnect()
       xAxisChart.remove()
       xAxisChartRef.current = null
@@ -323,11 +387,11 @@ export function ClearingPriceChartRenderer({
   useEffect(() => {
     const controller = controllerRef.current
     if (!controller) {
-      return
+      return undefined
     }
 
     controller.update({
-      data: normalizedData.data,
+      data: seriesData,
       scaledYMin: normalizedData.scaledYMin,
       scaledYMax: normalizedData.scaledYMax,
       scaleFactor: normalizedData.scaleFactor,
@@ -347,12 +411,50 @@ export function ClearingPriceChartRenderer({
       hideXAxis: normalizedData.isAuctionInProgress,
       isZoomEnabled: !normalizedData.isAuctionInProgress,
       disableMouseWheelInteractions,
+      // Full-width line mode: snap the range to the data edges so the line spans edge to edge (LP-806)
+      snapVisibleRangeToDataEdges: Boolean(extendLineToRightEdge) && normalizedData.isAuctionInProgress,
+      // Full-width line mode: near-uniform fill that fades only horizontally toward the right (LP-806)
+      solidAreaFill: Boolean(extendLineToRightEdge) && normalizedData.isAuctionInProgress,
       preBidEndTime: normalizedData.preBidEndTime,
     })
 
-    const coords = controllerRef.current?.getLastPointCoordinates()
-    setLastPointCoords(coords ?? null)
-  }, [normalizedData, bidTokenInfo.symbol, maxFractionDigits, tokenColor, disableMouseWheelInteractions])
+    const applyLastPointCoords = (): void => {
+      const coords = controllerRef.current?.getLastPointCoordinates()
+      if (coords && extendLineToRightEdge && chartContainerRef.current) {
+        // Full-width line mode: the line is pinned to the chart's right edge by construction,
+        // so place the dot there deterministically (inset so the 10px dot isn't half-clipped).
+        // The y coordinate comes from the price scale (LP-806).
+        setLastPointCoords({
+          x: chartContainerRef.current.clientWidth - LIVE_DOT_EDGE_INSET_PX,
+          y: coords.y,
+        })
+      } else {
+        setLastPointCoords(coords ?? null)
+      }
+    }
+    applyLastPointCoords()
+
+    // The chart applies visible/price range updates asynchronously, so the coordinates read
+    // synchronously above can be stale (e.g. right after a Y-axis pan/zoom). Re-read after
+    // layout settles — same double-RAF pattern LiveDotRenderer uses on resize (LP-806).
+    if (extendLineToRightEdge) {
+      let rafId = requestAnimationFrame(() => {
+        rafId = requestAnimationFrame(() => {
+          applyLastPointCoords()
+        })
+      })
+      return () => cancelAnimationFrame(rafId)
+    }
+    return undefined
+  }, [
+    normalizedData,
+    seriesData,
+    bidTokenInfo.symbol,
+    maxFractionDigits,
+    tokenColor,
+    disableMouseWheelInteractions,
+    extendLineToRightEdge,
+  ])
 
   useEffect(() => {
     if (!normalizedData.isAuctionInProgress || !xAxisChartRef.current) {
@@ -408,8 +510,8 @@ export function ClearingPriceChartRenderer({
 
   // Create stable data key for LiveDotRenderer to track data changes
   const dataKey =
-    normalizedData.data.length > 0
-      ? `${normalizedData.data[normalizedData.data.length - 1]?.time}:${normalizedData.data[normalizedData.data.length - 1]?.value}`
+    seriesData.length > 0
+      ? `${seriesData[seriesData.length - 1]?.time}:${seriesData[seriesData.length - 1]?.value}`
       : undefined
 
   // Determine if hovering (for LiveDotRenderer to hide while hovering)
@@ -428,7 +530,11 @@ export function ClearingPriceChartRenderer({
           {/* Background: X-axis chart showing full auction time range */}
           <XAxisChartContainer ref={xAxisChartContainerRef} height={height} />
           {/* Foreground: Data chart showing actual price data */}
-          <DataChartContainer ref={chartContainerRef} height={height - 15} $widthPercent={dataChartWidthPercent} />
+          <DataChartContainer
+            ref={chartContainerRef}
+            height={height - timeScaleHeight}
+            $widthPercent={dataChartWidthPercent}
+          />
           <Flex
             position="absolute"
             top={0}
@@ -454,7 +560,27 @@ export function ClearingPriceChartRenderer({
               )}
             </TooltipContainer>
           </Flex>
-          {/* Live dot indicator — wrapper offsets by CHART_DIMENSIONS.Y_AXIS_LABEL_WIDTH to match DataChartContainer position */}
+          {/* Horizontal right-edge fade over the area fill in full-width line mode: the fill stays
+              solid across the left, then fades to the surface color toward the right edge so it reads
+              as fading horizontally (not downward). Spans the full fill width and is anchored just
+              below the flat line's exact pixel so the line and live dot stay crisp above it (LP-806). */}
+          {extendLineToRightEdge && lastPointCoords && (
+            <Flex
+              position="absolute"
+              left={CHART_DIMENSIONS.Y_AXIS_LABEL_WIDTH}
+              right={0}
+              bottom={timeScaleHeight}
+              pointerEvents="none"
+              style={{
+                top: lastPointCoords.y + RIGHT_EDGE_FADE_LINE_CLEARANCE,
+                background: `linear-gradient(to right, transparent 0%, transparent ${RIGHT_EDGE_FADE_SOLID_STOP_PERCENT}%, ${colors.surface1.val} 100%)`,
+                // lightweight-charts canvases carry z-index 1-2, so the fade needs to stack above them
+                zIndex: 3,
+              }}
+            />
+          )}
+          {/* Live dot indicator — wrapper offsets by CHART_DIMENSIONS.Y_AXIS_LABEL_WIDTH to match DataChartContainer position.
+              In full-width line mode the dot marks the end of the extended line at the right edge, per design (LP-806). */}
           {chartContainerRef.current && isControllerReady && controllerRef.current && (
             <Flex
               style={{
@@ -465,6 +591,8 @@ export function ClearingPriceChartRenderer({
                 bottom: 0,
                 pointerEvents: 'none',
                 overflow: 'hidden',
+                // Above the right-edge fade (z-index 3) so the dot and its pulse rings stay visible (LP-806)
+                zIndex: 4,
               }}
             >
               <LiveDotRenderer

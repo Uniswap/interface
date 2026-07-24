@@ -1,4 +1,5 @@
 import 'react-native-reanimated'
+import { isIOS } from '@universe/environment'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, StyleSheet } from 'react-native'
@@ -21,7 +22,13 @@ export function DappConnectionItem({
   const { t } = useTranslation()
   const { dappRequestInfo } = session
 
-  const menuActions = [{ title: t('common.button.disconnect'), systemIcon: 'trash', destructive: true }]
+  const menuActions = [
+    {
+      title: t('common.button.disconnect'),
+      destructive: true,
+      ...(isIOS ? { systemIcon: 'trash' } : { icon: 'uniswap_icon_trash' }),
+    },
+  ]
 
   const onPress = async (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>): Promise<void> => {
     if (e.nativeEvent.index === 0) {

@@ -1,6 +1,6 @@
 import { Trans } from 'react-i18next'
 import { Text } from 'ui/src'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { openUri } from 'uniswap/src/utils/linking'
 
 export function TermsOfService(): JSX.Element {
@@ -13,7 +13,7 @@ export function TermsOfService(): JSX.Element {
               key="terms-of-service"
               color="$accent1"
               variant="body4"
-              onPress={(): Promise<void> => openUri({ uri: uniswapUrls.termsOfServiceUrl })}
+              onPress={(): Promise<void> => openUri({ uri: UniswapStaticUrls.termsOfServiceUrl })}
             />
           ),
           highlightPrivacy: (
@@ -21,7 +21,7 @@ export function TermsOfService(): JSX.Element {
               key="privacy-policy"
               color="$accent1"
               variant="body4"
-              onPress={(): Promise<void> => openUri({ uri: uniswapUrls.privacyPolicyUrl })}
+              onPress={(): Promise<void> => openUri({ uri: UniswapStaticUrls.privacyPolicyUrl })}
             />
           ),
         }}

@@ -21,7 +21,6 @@
     "https://challenges.cloudflare.com",
     "https://verify.walletconnect.com/",
     "https://verify.walletconnect.org/",
-    "https://wrapped.uniswap.org",
     "https://auth.privy.io",
     "https://privy.dev.ew.unihq.org",
     "https://privy.app.corn-staging.com",
@@ -34,6 +33,7 @@
     "blob:",
     "data:",
     "https://*.alchemy.com",
+    "https://*.arc.io",
     "https://*.arbitrum.io",
     "https://*.base.org/",
     "https://*.coinbase.com",
@@ -51,6 +51,7 @@
     "https://api.avax.network/ext/bc/C/rpc",
     "https://api.moonpay.com/",
     "https://api.opensea.io",
+    "https://uploads.pinata.cloud",
     "https://bsc-dataseed.bnbchain.org",
     "https://bsc-dataseed1.bnbchain.org",
     "https://bsc-dataseed2.bnbchain.org",
@@ -77,6 +78,7 @@
     "https://rpc.scroll.io/",
     "https://rpc.sepolia.org/",
     "https://rpc.linea.build",
+    "https://rpc.mainnet.chain.robinhood.com",
     "https://rpc.soneium.org",
     "https://rpc.tempo.xyz",
     "https://sepolia.gateway.tenderly.co",
@@ -117,7 +119,9 @@
     "wss://relay.walletconnect.org",
     "wss://ws-us3.pusher.com/",
     "wss://nbstream.binance.com",
-    "wss://nbstream.binance.info"
+    "wss://nbstream.binance.info",
+    "wss://nbstream.binance.click",
+    "wss://nbstream.yshyqxx.com"
   ],
   "workerSrc": ["'self'", "blob:"]
 }

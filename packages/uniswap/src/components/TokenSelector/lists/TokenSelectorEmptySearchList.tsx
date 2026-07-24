@@ -9,12 +9,14 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 function TokenSelectorEmptySearchListInner({
   addresses,
   chainFilter,
+  chainIds,
   onSelectCurrency,
   renderedInModal,
 }: {
   addresses: AddressGroup
   onSelectCurrency: OnSelectCurrency
   chainFilter: UniverseChainId | null
+  chainIds: UniverseChainId[]
   renderedInModal: boolean
 }): JSX.Element {
   const { t } = useTranslation()
@@ -27,6 +29,7 @@ function TokenSelectorEmptySearchListInner({
   } = useTokenSectionsForEmptySearch({
     addresses,
     chainFilter,
+    chainIds,
   })
 
   return (

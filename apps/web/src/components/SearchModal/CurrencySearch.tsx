@@ -21,6 +21,12 @@ interface CurrencySearchProps {
   switchNetworkAction: SwitchNetworkAction
   onCurrencySelect: (currency: Currency) => void
   onDismiss: () => void
+  /**
+   * Parent-controlled initial network filter. Pass a chain to pin the selector's default network,
+   * `null` to default to All Networks, or omit (`undefined`) to fall back to the default
+   * account/multichain resolution.
+   */
+  chainId?: UniverseChainId | null
   chainIds?: UniverseChainId[]
   variation?: TokenSelectorVariation
   flow?: TokenSelectorFlow
@@ -32,6 +38,7 @@ export function CurrencySearch({
   switchNetworkAction,
   onCurrencySelect,
   onDismiss,
+  chainId: controlledChainId,
   chainIds,
   variation,
   flow = TokenSelectorFlow.Swap,
@@ -72,11 +79,17 @@ export function CurrencySearch({
   }, [swapTab, chainId, prevChainId, isMultichainContext, switchNetworkAction])
 
   const isSingleChainContext = chainIds?.length === 1
+  // When the parent controls the network filter (e.g. the pool browser's chain selector), use that
+  // value directly — `null` means All Networks. Only fall back to the account/multichain chain when
+  // the prop is omitted entirely.
+  const isChainControlled = controlledChainId !== undefined
   const resolvedChainId = isSingleChainContext
     ? chainIds[0]
-    : !isMultichainContext || isUserSelectedToken
-      ? chainId
-      : undefined
+    : isChainControlled
+      ? (controlledChainId ?? undefined)
+      : !isMultichainContext || isUserSelectedToken
+        ? chainId
+        : undefined
 
   return (
     <Trace logImpression eventOnTrigger={InterfaceEventName.TokenSelectorOpened} modal={ModalName.TokenSelectorWeb}>

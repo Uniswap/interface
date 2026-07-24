@@ -8,8 +8,8 @@ describe('AccountCardItem', () => {
     isPortfolioValueLoading: false,
     portfolioValue: 100,
     isViewOnly: false,
-    onPress: jest.fn(),
-    onClose: jest.fn(),
+    onPress: vi.fn(),
+    onClose: vi.fn(),
   }
 
   it('renders correctly', () => {
@@ -19,7 +19,7 @@ describe('AccountCardItem', () => {
   })
 
   it('calls onPress when address is pressed', () => {
-    const onPress = jest.fn()
+    const onPress = vi.fn()
     render(<AccountCardItem {...defaultProps} onPress={onPress} />)
 
     const address = screen.getByTestId(`account-item/${SAMPLE_SEED_ADDRESS_1}`)
@@ -36,11 +36,11 @@ describe('AccountCardItem', () => {
 
       // Select shimmer placeholder because the actual shimmer is rendered after onLayout
       // is fired and this logic is not a part of this test
-      expect(screen.queryByTestId('shimmer-placeholder')).toBeTruthy()
+      expect(screen.queryByTestId('shimmer')).toBeTruthy()
 
       rerender(<AccountCardItem {...defaultProps} isPortfolioValueLoading={false} portfolioValue={undefined} />)
 
-      expect(screen.queryByTestId('shimmer-placeholder')).toBeFalsy()
+      expect(screen.queryByTestId('shimmer')).toBeFalsy()
     })
 
     it('shows current portfolio value when available', () => {
@@ -52,7 +52,7 @@ describe('AccountCardItem', () => {
     it('shows placeholder text when portfolio value is not available', () => {
       render(<AccountCardItem {...defaultProps} portfolioValue={undefined} />)
 
-      expect(screen.queryByText('N/A')).toBeTruthy()
+      expect(screen.queryByText('common.text.notAvailable')).toBeTruthy()
     })
 
     // Cache-fallback behavior: when portfolioValue prop is undefined, PortfolioValue does a

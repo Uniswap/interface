@@ -1,31 +1,32 @@
 export {}
+import type { Mock } from 'vitest'
 
-const mockNavigate = jest.fn()
-const mockIsReady = jest.fn()
+const mockNavigate = vi.fn()
+const mockIsReady = vi.fn()
 
-jest.mock('src/app/navigation/navigationRef', () => ({
+vi.mock('src/app/navigation/navigationRef', () => ({
   navigationRef: {
     navigate: mockNavigate,
     isReady: mockIsReady,
   },
 }))
 
-const mockGetState = jest.fn()
-jest.mock('src/app/store', () => ({
+const mockGetState = vi.fn()
+vi.mock('src/app/store', () => ({
   store: {
     getState: (): unknown => mockGetState(),
   },
 }))
 
-const mockOpenUri = jest.fn()
-jest.mock('uniswap/src/utils/linking', () => ({
+const mockOpenUri = vi.fn()
+vi.mock('uniswap/src/utils/linking', () => ({
   openUri: mockOpenUri,
 }))
 
-const mockLoggerWarn = jest.fn()
-const mockLoggerError = jest.fn()
-jest.mock('utilities/src/logger/logger', () => ({
-  getLogger: (): { warn: jest.Mock; error: jest.Mock } => ({
+const mockLoggerWarn = vi.fn()
+const mockLoggerError = vi.fn()
+vi.mock('utilities/src/logger/logger', () => ({
+  getLogger: (): { warn: Mock; error: Mock } => ({
     warn: mockLoggerWarn,
     error: mockLoggerError,
   }),
@@ -34,33 +35,33 @@ jest.mock('utilities/src/logger/logger', () => ({
 describe('handleNotificationNavigation', () => {
   let handleNotificationNavigation: typeof import('./handleNotificationNavigation').handleNotificationNavigation
 
-  beforeEach(() => {
-    jest.clearAllMocks()
-    jest.resetModules()
+  beforeEach(async () => {
+    vi.clearAllMocks()
+    vi.resetModules()
 
     // Re-setup mocks after resetModules
-    jest.doMock('src/app/navigation/navigationRef', () => ({
+    vi.doMock('src/app/navigation/navigationRef', () => ({
       navigationRef: {
         navigate: mockNavigate,
         isReady: mockIsReady,
       },
     }))
-    jest.doMock('src/app/store', () => ({
+    vi.doMock('src/app/store', () => ({
       store: {
         getState: (): unknown => mockGetState(),
       },
     }))
-    jest.doMock('uniswap/src/utils/linking', () => ({
+    vi.doMock('uniswap/src/utils/linking', () => ({
       openUri: mockOpenUri,
     }))
-    jest.doMock('utilities/src/logger/logger', () => ({
-      getLogger: (): { warn: jest.Mock; error: jest.Mock } => ({
+    vi.doMock('utilities/src/logger/logger', () => ({
+      getLogger: (): { warn: Mock; error: Mock } => ({
         warn: mockLoggerWarn,
         error: mockLoggerError,
       }),
     }))
 
-    handleNotificationNavigation = require('./handleNotificationNavigation').handleNotificationNavigation
+    handleNotificationNavigation = (await import('./handleNotificationNavigation')).handleNotificationNavigation
     mockIsReady.mockReturnValue(true)
   })
 

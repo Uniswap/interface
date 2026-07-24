@@ -1,24 +1,24 @@
 import { renderHook } from '@testing-library/react'
 import { GraphQLApi } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import type { PropsWithChildren, ReactElement } from 'react'
 import type { MultichainTokenEntry } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
+import type { MarketStatsData } from 'uniswap/src/features/dataApi/tokenDetails/tokenMarketStatsUtils'
 import type { TokenQueryData } from '~/appGraphql/data/Token'
 import { createTDPStore, type TDPState } from '~/pages/TokenDetails/context/createTDPStore'
 import { TDPStoreContext } from '~/pages/TokenDetails/context/TDPContext'
 import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultichainTokenEntries'
+import { useTDPMultichainAggregate } from '~/pages/TokenDetails/hooks/useTDPMultichainAggregate'
 import { useTDPStatsMarketSource } from '~/pages/TokenDetails/hooks/useTDPStatsMarketSource'
 import { mocked } from '~/test-utils/mocked'
 
-vi.mock('@universe/gating', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@universe/gating')>()),
-  useFeatureFlag: vi.fn(),
-}))
-
 vi.mock('~/pages/TokenDetails/hooks/useMultichainTokenEntries', () => ({
   useMultichainTokenEntries: vi.fn(),
+}))
+
+vi.mock('~/pages/TokenDetails/hooks/useTDPMultichainAggregate', () => ({
+  useTDPMultichainAggregate: vi.fn(),
 }))
 
 function createTDPState(
@@ -45,6 +45,15 @@ const TWO_CHAINS: MultichainTokenEntry[] = [
 
 const rollupMarket = { __typename: 'TokenMarket' as const, id: 'rollup-market' }
 const baseDeploymentMarket = { __typename: 'TokenMarket' as const, id: 'base-deployment-market' }
+
+// Legacy TokenMarket fixtures above carry no price/volume/52w fields, so adaptLegacyMarketData
+// resolves every canonical field to undefined.
+const EMPTY_MARKET_STATS_DATA: MarketStatsData = {
+  priceUsd: undefined,
+  volumeUsd: undefined,
+  priceHigh52wUsd: undefined,
+  priceLow52wUsd: undefined,
+}
 
 type NonNullTokenQueryData = NonNullable<TokenQueryData>
 
@@ -90,7 +99,7 @@ describe(useTDPStatsMarketSource, () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mocked(useMultichainTokenEntries).mockReturnValue(ONE_CHAIN)
-    mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.MultichainTokenUx)
+    mocked(useTDPMultichainAggregate).mockReturnValue({ isMultichainAggregateView: false })
   })
 
   it('returns empty stats input when token query data is undefined', () => {
@@ -104,21 +113,6 @@ describe(useTDPStatsMarketSource, () => {
     expect(result.current.networkFilterName).toBe('')
   })
 
-  it('uses rollup market when multichain token UX is off', () => {
-    mocked(useFeatureFlag).mockReturnValue(false)
-    const tokenQueryData = buildTokenQueryData()
-    const store = createTDPStore(createTDPState())
-
-    const { result } = renderUseTDPStatsMarketSource(tokenQueryData, store)
-
-    expect(result.current.showAggregatedStats).toBe(true)
-    expect(result.current.marketStatsInput).toEqual({
-      market: rollupMarket,
-      // oxlint-disable-next-line typescript/no-unnecessary-condition -- biome-parity: oxlint is stricter here
-      project: tokenQueryData?.project,
-    })
-  })
-
   it('uses rollup market for single-chain deployment list', () => {
     mocked(useMultichainTokenEntries).mockReturnValue(ONE_CHAIN)
     const tokenQueryData = buildTokenQueryData()
@@ -127,7 +121,7 @@ describe(useTDPStatsMarketSource, () => {
     const { result } = renderUseTDPStatsMarketSource(tokenQueryData, store)
 
     expect(result.current.showAggregatedStats).toBe(true)
-    expect(result.current.marketStatsInput?.market).toBe(rollupMarket)
+    expect(result.current.marketStatsInput?.market).toEqual(EMPTY_MARKET_STATS_DATA)
   })
 
   it('uses rollup market when multichain UX is on but no network is selected', () => {
@@ -139,7 +133,16 @@ describe(useTDPStatsMarketSource, () => {
 
     expect(result.current.showAggregatedStats).toBe(true)
     expect(result.current.filteredDeploymentMarket).toBeUndefined()
-    expect(result.current.marketStatsInput?.market).toBe(rollupMarket)
+    expect(result.current.marketStatsInput?.market).toEqual(EMPTY_MARKET_STATS_DATA)
+  })
+
+  it('passes isMultichainAggregateView through from useTDPMultichainAggregate unchanged', () => {
+    mocked(useTDPMultichainAggregate).mockReturnValue({ isMultichainAggregateView: true })
+    const store = createTDPStore(createTDPState({ selectedMultichainChainId: undefined }))
+
+    const { result } = renderUseTDPStatsMarketSource(buildTokenQueryData(), store)
+
+    expect(result.current.isMultichainAggregateView).toBe(true)
   })
 
   it('uses filtered deployment market when a multichain network is selected', () => {
@@ -152,9 +155,8 @@ describe(useTDPStatsMarketSource, () => {
     expect(result.current.showAggregatedStats).toBe(false)
     expect(result.current.filteredDeploymentMarket).toBe(baseDeploymentMarket)
     expect(result.current.marketStatsInput).toEqual({
-      market: baseDeploymentMarket,
-      // oxlint-disable-next-line typescript/no-unnecessary-condition -- biome-parity: oxlint is stricter here
-      project: tokenQueryData?.project,
+      market: EMPTY_MARKET_STATS_DATA,
+      projectMarket: undefined,
     })
     expect(result.current.networkFilterName).toBe(getChainLabel(UniverseChainId.Base))
   })

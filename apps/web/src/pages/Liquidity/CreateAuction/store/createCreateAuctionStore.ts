@@ -6,6 +6,7 @@ import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { zeroAddress } from '~/chains'
 import { stripZeroPercentCustomPriceRangeEntries } from '~/pages/Liquidity/CreateAuction/customPriceRanges'
+import { applyNewTokenTotalSupply } from '~/pages/Liquidity/CreateAuction/store/applyNewTokenTotalSupply'
 import {
   buildAuctionAmountsFromLiquidityPreview,
   getPostAuctionLiquidityAmountFromAllocation,
@@ -13,6 +14,7 @@ import {
   updateCommittedPostAuctionLiquidity,
 } from '~/pages/Liquidity/CreateAuction/store/postAuctionLiquidityAllocationState'
 import { rebaseAuctionTokenAmounts } from '~/pages/Liquidity/CreateAuction/store/rebaseAuctionTokenAmounts'
+import { revokeCreateNewTokenBlobPreviewIfNeeded } from '~/pages/Liquidity/CreateAuction/store/revokeCreateNewTokenBlobPreviewIfNeeded'
 import {
   type CustomPriceRangePreset,
   CreateAuctionStep,
@@ -48,17 +50,13 @@ export const createCreateAuctionStore = (): CreateAuctionStore =>
   create<CreateAuctionStoreState>()(
     devtools(
       (set) => ({
-        step: DEFAULT_CREATE_AUCTION_STATE.step,
-        tokenForm: DEFAULT_CREATE_AUCTION_STATE.tokenForm,
-        tokenColor: DEFAULT_CREATE_AUCTION_STATE.tokenColor,
-        configureAuction: DEFAULT_CREATE_AUCTION_STATE.configureAuction,
-        customizePool: DEFAULT_CREATE_AUCTION_STATE.customizePool,
-        xVerification: DEFAULT_CREATE_AUCTION_STATE.xVerification,
+        ...DEFAULT_CREATE_AUCTION_STATE,
 
         actions: {
           setStep: (step) => {
             set({ step })
           },
+          setQuickLaunch: (quickLaunch) => set({ quickLaunch }),
           goToNextStep: () => {
             set((state) => {
               const nextStep = Math.min(state.step + 1, CreateAuctionStep.REVIEW_LAUNCH) as CreateAuctionStep
@@ -88,7 +86,8 @@ export const createCreateAuctionStore = (): CreateAuctionStore =>
             }))
           },
           setTokenMode: (mode) => {
-            set(() => {
+            set((state) => {
+              revokeCreateNewTokenBlobPreviewIfNeeded(state.tokenForm)
               if (mode === TokenMode.CREATE_NEW) {
                 return { tokenForm: DEFAULT_CREATE_AUCTION_STATE.tokenForm }
               }
@@ -256,6 +255,7 @@ export const createCreateAuctionStore = (): CreateAuctionStore =>
               }
             })
           },
+          setNewTokenTotalSupply: (totalSupply) => set(applyNewTokenTotalSupply(totalSupply)),
           setStartTime: (startTime) => {
             set((state) => ({
               configureAuction: { ...state.configureAuction, startTime },
@@ -424,16 +424,14 @@ export const createCreateAuctionStore = (): CreateAuctionStore =>
             })
           },
           setBuybackAndBurnEnabled: (buybackAndBurnEnabled: boolean) => {
-            set((state) => {
-              const { customizePool } = state
-              return {
-                customizePool: {
-                  ...customizePool,
-                  buybackAndBurnEnabled,
-                  ...(buybackAndBurnEnabled ? { feesRecipientAddress: '', sendFeesEnabled: false } : {}),
-                },
-              }
-            })
+            // Buyback and fee-forwarding are mutually exclusive (proto oneof); clear the other side's state.
+            set((state) => ({
+              customizePool: {
+                ...state.customizePool,
+                buybackAndBurnEnabled,
+                ...(buybackAndBurnEnabled ? { feesRecipientAddress: '', sendFeesEnabled: false } : {}),
+              },
+            }))
           },
           commitTokenFormAndAdvance: () => {
             set((state) => {
@@ -484,7 +482,10 @@ export const createCreateAuctionStore = (): CreateAuctionStore =>
             set({ tokenColor })
           },
           reset: () => {
-            set(DEFAULT_CREATE_AUCTION_STATE)
+            set((state) => {
+              revokeCreateNewTokenBlobPreviewIfNeeded(state.tokenForm)
+              return DEFAULT_CREATE_AUCTION_STATE
+            })
           },
         },
       }),

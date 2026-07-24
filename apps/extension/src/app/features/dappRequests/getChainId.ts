@@ -1,3 +1,5 @@
+// Saga handlers — redux-saga binds the receiver via call([obj, method]), which unbound-method can't model.
+/* oxlint-disable typescript/unbound-method */
 import { DappInfo } from 'src/app/features/dapp/store'
 import type { SenderTabInfo } from 'src/app/features/dappRequests/shared'
 import { ChainIdResponse, GetChainIdRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'

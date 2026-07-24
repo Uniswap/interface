@@ -1,11 +1,14 @@
-import { memo, useCallback, useState } from 'react'
+import { isWebApp } from '@universe/environment'
 import type { Dispatch, SetStateAction } from 'react'
+import { memo, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, ScrollView, styled, Text } from 'ui/src'
+import { Flex, styled, Text, useMedia } from 'ui/src'
 import type { FlexProps, TextProps } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import Badge from 'uniswap/src/components/badge/Badge'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { NetworkFilterDropdownContent } from 'uniswap/src/components/network/NetworkFilterV2/NetworkFilterDropdownContent'
+import type { TieredNetworkOptions } from 'uniswap/src/components/network/NetworkFilterV2/types'
 import { NetworkOption } from 'uniswap/src/components/network/NetworkOption'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useNewChainIds } from 'uniswap/src/features/chains/hooks/useNewChainIds'
@@ -40,9 +43,11 @@ type DropdownSize = DropdownSizeVariants | 'large' | 'medium' | 'small' | 'xsmal
 
 const StyledDropdown = {
   maxHeight: 350,
-  minWidth: 256,
+  minWidth: 272,
   px: 0,
   py: 0,
+  flexDirection: 'column',
+  minHeight: 0,
 } satisfies FlexProps
 
 const ButtonStyles: Record<DropdownSizeVariants, FlexProps> = {
@@ -94,10 +99,15 @@ export function NetworkFilter({
   transition,
   networks,
   customTrigger,
+  dropdownStyle,
   isTriggerStyled = true,
   tracePage,
   tab,
   forceFlipUp,
+  positionFixed,
+  showSearch = false,
+  tieredOptions,
+  forceAllNetworksLabel = false,
 }: {
   showMultichainOption?: boolean
   showDisplayName?: boolean
@@ -108,17 +118,27 @@ export function NetworkFilter({
   transition?: FlexProps['transition']
   networks?: UniverseChainId[]
   customTrigger?: JSX.Element | string
+  dropdownStyle?: FlexProps
   isTriggerStyled?: boolean
   tracePage?: InterfacePageName
   tab?: ExploreTab
   forceFlipUp?: boolean
+  positionFixed?: boolean
+  showSearch?: boolean
+  tieredOptions?: TieredNetworkOptions
+  forceAllNetworksLabel?: boolean
 }) {
   const { t } = useTranslation()
+  const media = useMedia()
   const [isMenuOpen, toggleMenu] = useState(false)
   const isSupportedChainCallback = useIsSupportedChainIdCallback()
   const filteredChainIds = useFilteredChainIds(networks)
+  const allSupportedChainIds = useFilteredChainIds()
+  const isNetworkSubset = filteredChainIds.length < allSupportedChainIds.length
+  const allNetworksDisplayChainIds = isNetworkSubset ? filteredChainIds : undefined
   const chainInfo = currentChainId ? getChainInfo(currentChainId) : null
   const isAllNetworks = chainInfo === null
+  const isMobileSheet = isWebApp && media.sm
 
   const tableNetworkItemRenderer = useCallback(
     (chainId: UniverseChainId) => {
@@ -142,7 +162,7 @@ export function NetworkFilter({
         />
       )
     },
-    [isSupportedChainCallback, onPress, currentChainId, tab, tracePage],
+    [currentChainId, isSupportedChainCallback, onPress, tab, toggleMenu, tracePage],
   )
 
   return (
@@ -174,17 +194,38 @@ export function NetworkFilter({
           }
           isTriggerStyled={isTriggerStyled}
           buttonStyle={ButtonStyles[size]}
-          dropdownStyle={StyledDropdown}
+          dropdownStyle={{ ...StyledDropdown, ...dropdownStyle, ...(showSearch ? { overflow: 'hidden' } : {}) }}
           adaptToSheet
           allowFlip
           forceFlipUp={forceFlipUp}
+          positionFixed={positionFixed}
           alignRight={position === 'right'}
         >
-          <ScrollView>
+          {showSearch ? (
+            <Flex flex={1} minHeight={0} p="$spacing4" pb="$spacing4">
+              <NetworkFilterDropdownContent
+                autoFocus={!isMobileSheet}
+                chainIds={filteredChainIds}
+                fillAvailableHeight
+                includeAllNetworks={showMultichainOption}
+                allNetworksChainIds={showMultichainOption ? allNetworksDisplayChainIds : undefined}
+                isOpen={isMenuOpen}
+                selectedChain={currentChainId ?? null}
+                tieredOptions={tieredOptions}
+                forceAllNetworksLabel={forceAllNetworksLabel}
+                onPressChain={(chainId) => {
+                  onPress(chainId ?? undefined)
+                  toggleMenu(false)
+                }}
+              />
+            </Flex>
+          ) : (
             <Flex p="$spacing8">
               {showMultichainOption && (
                 <TableNetworkItem
+                  forceAllNetworksLabel={forceAllNetworksLabel}
                   chainInfo={null}
+                  chainIds={allNetworksDisplayChainIds}
                   tab={tab}
                   toggleMenu={toggleMenu}
                   tracePage={tracePage}
@@ -194,7 +235,7 @@ export function NetworkFilter({
               )}
               {filteredChainIds.map(tableNetworkItemRenderer)}
             </Flex>
-          </ScrollView>
+          )}
         </Dropdown>
       </Trace>
     </Flex>
@@ -203,20 +244,24 @@ export function NetworkFilter({
 
 const TableNetworkItem = memo(function TableNetworkItem({
   chainInfo,
+  chainIds,
   tab,
   toggleMenu,
   tracePage,
   unsupported,
   onPress,
   currentChainId,
+  forceAllNetworksLabel,
 }: {
   chainInfo: UniverseChainInfo | null
+  chainIds?: UniverseChainId[]
   tab?: ExploreTab
   toggleMenu: Dispatch<SetStateAction<boolean>>
   tracePage?: InterfacePageName
   onPress: (chainId: UniverseChainId | undefined) => void
   unsupported?: boolean
   currentChainId?: UniverseChainId | undefined
+  forceAllNetworksLabel?: boolean
 }) {
   const { t } = useTranslation()
   const currentChainInfo = currentChainId ? getChainInfo(currentChainId) : undefined
@@ -260,8 +305,10 @@ const TableNetworkItem = memo(function TableNetworkItem({
       >
         <NetworkOption
           chainId={chainId}
+          chainIds={chainId === null ? chainIds : undefined}
           currentlySelected={isCurrentChain}
           isNew={isNew}
+          forceAllNetworksLabel={forceAllNetworksLabel}
           trailingElement={unsupported ? <Badge fontSize={10}>{t('settings.setting.beta.tooltip')}</Badge> : undefined}
         />
       </Flex>

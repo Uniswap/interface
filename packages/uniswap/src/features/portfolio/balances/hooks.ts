@@ -1,16 +1,16 @@
-import { QueryHookOptions } from '@apollo/client/react/types/types'
 import { GraphQLApi } from '@universe/api'
 import { useMemo } from 'react'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type {
   PortfolioDataResult,
   PortfolioDataResultMultichain,
+  UsePortfolioDataQueryOptions,
 } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { usePortfolioData, usePortfolioDataMultichain } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { PortfolioBalance, PortfolioMultichainBalance } from 'uniswap/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
+import { getChainGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToken'
 import {
   shouldHideMultichainPortfolioRow,
   shouldHidePortfolioBalance,
@@ -29,7 +29,7 @@ import type {
 import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { useCurrencyIdToVisibility } from 'uniswap/src/features/transactions/selectors'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { currencyId } from 'uniswap/src/utils/currencyId'
+import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
 
 /**
  * Hook that returns portfolio data using REST API (Record<CurrencyId, PortfolioBalance>).
@@ -43,10 +43,7 @@ export function usePortfolioBalances({
   evmAddress?: Address
   svmAddress?: Address
   chainIds?: UniverseChainId[]
-} & QueryHookOptions<
-  GraphQLApi.PortfolioBalancesQuery,
-  GraphQLApi.PortfolioBalancesQueryVariables
->): PortfolioDataResult {
+} & UsePortfolioDataQueryOptions): PortfolioDataResult {
   return usePortfolioData({
     evmAddress,
     svmAddress,
@@ -73,10 +70,7 @@ export function usePortfolioBalancesMultichain({
   chainIds?: UniverseChainId[]
   /** When true, request multichain from backend. Default false. */
   requestMultichainFromBackend?: boolean
-} & QueryHookOptions<
-  GraphQLApi.PortfolioBalancesQuery,
-  GraphQLApi.PortfolioBalancesQueryVariables
->): PortfolioDataResultMultichain {
+} & UsePortfolioDataQueryOptions): PortfolioDataResultMultichain {
   return usePortfolioDataMultichain({
     evmAddress,
     svmAddress,
@@ -141,19 +135,19 @@ export function usePortfolioValueModifiers(
  * Returns portfolio balances for a given address sorted by USD value.
  */
 export function useSortedPortfolioBalances(options: UseSortedPortfolioBalancesOptions): SortedPortfolioBalancesResult {
-  const { evmAddress, svmAddress, pollInterval, onCompleted, chainIds } = options
+  const { evmAddress, svmAddress, pollInterval, chainIds } = options
   const { isTestnetModeEnabled } = useEnabledChains()
 
   const {
     data: balancesById,
     loading,
-    networkStatus,
+    isPending,
+    isError,
     refetch,
   } = usePortfolioBalances({
     evmAddress,
     svmAddress,
     pollInterval,
-    onCompleted,
     fetchPolicy: 'cache-and-network',
     chainIds,
   })
@@ -195,7 +189,8 @@ export function useSortedPortfolioBalances(options: UseSortedPortfolioBalancesOp
   return {
     data,
     loading,
-    networkStatus,
+    isPending,
+    isError,
     refetch,
   }
 }
@@ -206,13 +201,14 @@ export function useSortedPortfolioBalances(options: UseSortedPortfolioBalancesOp
 export function useSortedPortfolioBalancesMultichain(
   options: UseSortedPortfolioBalancesOptions,
 ): SortedPortfolioBalancesResultMultichain {
-  const { evmAddress, svmAddress, pollInterval, onCompleted, chainIds, requestMultichainFromBackend } = options
+  const { evmAddress, svmAddress, pollInterval, chainIds, requestMultichainFromBackend } = options
   const { isTestnetModeEnabled } = useEnabledChains()
 
   const {
     data: balancesById,
     loading,
-    networkStatus,
+    isPending,
+    isError,
     refetch,
     error,
     dataUpdatedAt,
@@ -220,7 +216,6 @@ export function useSortedPortfolioBalancesMultichain(
     evmAddress,
     svmAddress,
     pollInterval,
-    onCompleted,
     fetchPolicy: 'cache-and-network',
     chainIds,
     requestMultichainFromBackend,
@@ -269,7 +264,8 @@ export function useSortedPortfolioBalancesMultichain(
     data,
     balancesById,
     loading,
-    networkStatus,
+    isPending,
+    isError,
     refetch,
     error,
     dataUpdatedAt,
@@ -328,7 +324,9 @@ export function useTokenBalancesGroupedByVisibility({
 }
 
 /**
- * Native currency id with the highest balance in the sorted portfolio list, or the chain default native when none.
+ * Currency id to preselect from the highest-balance entry in the sorted portfolio list.
+ * Prefers the native currency, then the chain's gas token, and finally falls back to the gas token of the
+ * requested chainId or the default chain when no chainId is provided.
  */
 export function useHighestBalanceNativeCurrencyId({
   evmAddress,
@@ -341,22 +339,23 @@ export function useHighestBalanceNativeCurrencyId({
 }): CurrencyId {
   const { data } = useSortedPortfolioBalances({ evmAddress, svmAddress })
   const { defaultChainId } = useEnabledChains()
-  const currencyIdFromBalance = ((): CurrencyId | undefined => {
-    const balances = data?.balances ?? []
-    for (const balance of balances) {
-      const currencyInfo = balance.currencyInfo
-      if (currencyInfo.currency.isNative && (!chainId || currencyInfo.currency.chainId === chainId)) {
-        return currencyInfo.currencyId
-      }
-    }
-    return undefined
-  })()
+  const balances = data?.balances ?? []
 
-  if (currencyIdFromBalance) {
-    return currencyIdFromBalance
+  for (const { currencyInfo } of balances) {
+    if (currencyInfo.currency.isNative && (!chainId || currencyInfo.currency.chainId === chainId)) {
+      return currencyInfo.currencyId
+    }
+  }
+
+  for (const { currencyInfo } of balances) {
+    if (
+      (!chainId || currencyInfo.currency.chainId === chainId) &&
+      areCurrencyIdsEqual(currencyInfo.currencyId, currencyId(getChainGasToken(currencyInfo.currency.chainId)))
+    ) {
+      return currencyInfo.currencyId
+    }
   }
 
   const targetChainId = chainId ?? defaultChainId
-  const nativeCurrency = nativeOnChain(targetChainId)
-  return currencyId(nativeCurrency)
+  return currencyId(getChainGasToken(targetChainId))
 }

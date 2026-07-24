@@ -1,8 +1,11 @@
+import { TradingApi } from '@universe/api'
 import { ensure0xHex, HexString, isValidHexString } from '@universe/encoding'
 import { providers, utils } from 'ethers'
 import { logger } from 'utilities/src/logger/logger'
 import {
   Address,
+  numberToHex,
+  pad,
   parseSignature,
   SignedAuthorization,
   serializeTransaction,
@@ -11,6 +14,14 @@ import {
 } from 'viem'
 import { hashAuthorization, recoverAuthorizationAddress, verifyAuthorization } from 'viem/utils'
 import { NativeSigner } from 'wallet/src/features/wallet/signing/NativeSigner'
+
+/**
+ * Which code path produced an EIP-7702 authorization, for the SWAP-2471 auth-nonce telemetry.
+ */
+export enum AuthorizationNoncePath {
+  BundledDelegation = 'bundled-delegation',
+  UserOp4337 = '4337',
+}
 
 /**
  * Converts an ethers TransactionRequest to a Viem EIP-7702 transaction
@@ -143,9 +154,11 @@ export async function createSignedAuthorization({
       signature: signedAuthorizationMessage,
     })
 
-    // normalize values if needed
-    const r = normalizeHexValue(signedAuthorization.r)
-    const s = normalizeHexValue(signedAuthorization.s)
+    // Pad r/s to a full 32 bytes. ECDSA r/s are 256-bit integers; when the high
+    // byte is zero, a minimal-hex encoding yields a short (odd-length) value that
+    // strict RPCs reject with "value length was not even".
+    const r = padHexTo32Bytes(signedAuthorization.r)
+    const s = padHexTo32Bytes(signedAuthorization.s)
 
     signedAuthorization = {
       ...signedAuthorization,
@@ -185,20 +198,11 @@ export async function createSignedAuthorization({
   }
 }
 
-// Function to normalize hex strings by removing leading zeros
-function normalizeHexValue(hexValue: HexString): HexString {
-  // Check if it's a hex string with 0x prefix
-  if (!hexValue.startsWith('0x')) {
-    return hexValue
-  }
-  // Remove 0x prefix, remove leading zeros, and add prefix back
-  const withoutPrefix = hexValue.slice(2)
-  const normalized = withoutPrefix.replace(/^0+/, '')
-  // If the result is an empty string (all zeros), return '0x0'
-  if (normalized === '') {
-    return '0x0'
-  }
-  return `0x${normalized}`
+// Left-pads a signature component hex string to a full 32 bytes (64 hex chars).
+// EIP-7702 auth r/s must be byte-aligned 32-byte values; a stripped leading zero
+// produces an odd-length value that strict RPCs reject ("value length was not even").
+function padHexTo32Bytes(hexValue: HexString): HexString {
+  return pad(ensure0xHex(hexValue), { size: 32 })
 }
 
 /**
@@ -244,4 +248,74 @@ function reconstructAuthorization({
     })
     throw error
   }
+}
+
+/**
+ * Converts a viem `SignedAuthorization` into the Trading API `Eip7702Authorization`
+ * wire shape (hex-encoded chainId/nonce/yParity), suitable for embedding in
+ * `Swap4337Request` / `Encode4337Request` / `CheckApproval4337Request`.
+ */
+export function toTradingApiEip7702Auth(auth: SignedAuthorization): TradingApi.Eip7702Authorization {
+  return {
+    address: auth.address,
+    chainId: numberToHex(auth.chainId),
+    nonce: numberToHex(auth.nonce),
+    r: auth.r,
+    s: auth.s,
+    yParity: numberToHex(auth.yParity ?? 0),
+  }
+}
+
+/**
+ * Signs a fresh EIP-7702 delegation authorization for `walletAddress` using the EOA's
+ * *pending* transaction nonce, returned in Trading API wire format.
+ *
+ * Attach this to a 4337 request (swap/encode/approval) BEFORE the backend's paymaster +
+ * bundler simulation: an undelegated account is then simulated as delegated,
+ * so a first sponsored swap/approval gets correct sponsorship + gas estimates. The signed
+ * auth round-trips back on the returned UserOp, so the later `signUserOp` step reuses it.
+ *
+ * Returns `undefined` when no `contractAddress` is provided (nothing to delegate to).
+ */
+export async function prepareDelegationAuthorization({
+  signer,
+  provider,
+  walletAddress,
+  chainId,
+  contractAddress,
+}: {
+  signer: NativeSigner
+  provider: providers.Provider
+  walletAddress: string
+  chainId: number
+  contractAddress?: string
+}): Promise<TradingApi.Eip7702Authorization | undefined> {
+  if (!contractAddress) {
+    return undefined
+  }
+
+  // EOA transaction nonce (distinct from the 4337 UserOp nonce). `pending` accounts for
+  // any in-flight EOA tx; a race between this read and bundler submission can still
+  // invalidate the auth.
+  const nonce = await provider.getTransactionCount(walletAddress, 'pending')
+
+  // SWAP-2471: the 4337/sponsored path uses the pending count directly as the auth nonce (no +1,
+  // unlike the bundled-delegation signer). Log it to compare against the bundled path in prod.
+  logger.info('eip7702Utils', 'prepareDelegationAuthorization', '7702 auth nonce', {
+    pendingNonceUsedForAuth: nonce,
+    chainId,
+    contractAddress,
+    walletAddress,
+    path: AuthorizationNoncePath.UserOp4337,
+  })
+
+  const signedAuthorization = await createSignedAuthorization({
+    signer,
+    walletAddress: walletAddress as Address,
+    chainId,
+    contractAddress: contractAddress as Address,
+    nonce,
+  })
+
+  return toTradingApiEip7702Auth(signedAuthorization)
 }

@@ -17,8 +17,14 @@ export type TokenDetailsEarnData = {
   earnPosition: EarnPositionInfo | undefined
   earnVault: EarnVaultInfo | undefined
   hasLoadedPositions: boolean
+  /** True when the underlying earn queries failed to load. */
+  isError: boolean
   isLoggedIn: boolean
   projectedAnnualEarningsUsd: number | undefined
+  /** Refetches the underlying earn queries. */
+  refetch: () => void
+  /** Gated on a vault existing so a failed vaults lookup doesn't error every token. */
+  showEarnError: boolean
   tokenSymbol: string
   userHasEarnPosition: boolean
 }
@@ -62,7 +68,9 @@ export function useTokenDetailsEarnData({
 
   const {
     hasLoadedPositions,
+    isError,
     positionsByVaultId,
+    refetch,
     vaults: earnVaults,
   } = useEarnVaults({
     account,
@@ -76,7 +84,8 @@ export function useTokenDetailsEarnData({
   const earnVaultDisplayCurrencyInfo = useCurrencyInfo(earnVault?.displayCurrencyId)
   const earnPosition = earnVault ? positionsByVaultId.get(earnVault.id) : undefined
   const isLoggedIn = !!account
-  const userHasEarnPosition = hasLoadedPositions && hasEarnPosition(earnPosition)
+  const userHasEarnPosition = hasEarnPosition(earnPosition)
+  const showEarnError = isError && !!earnVault && !userHasEarnPosition
   const balanceUsd = getTokenBalanceUsd({
     balance: aggregateBalance,
     tokenPriceUsd,
@@ -98,8 +107,11 @@ export function useTokenDetailsEarnData({
     earnPosition,
     earnVault,
     hasLoadedPositions,
+    isError,
     isLoggedIn,
     projectedAnnualEarningsUsd,
+    refetch,
+    showEarnError,
     tokenSymbol,
     userHasEarnPosition,
   }

@@ -14,7 +14,6 @@
     "@pulumi/pulumi": "3.207.0"
   },
   "devDependencies": {
-    "@types/node": "22.19.17",
-    "typescript": "5.9.2"
+    "@types/node": "22.19.17"
   }
 }

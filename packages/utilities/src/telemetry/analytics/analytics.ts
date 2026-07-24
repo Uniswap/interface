@@ -24,12 +24,13 @@ export type AnalyticsInitConfig = {
 }
 
 export interface Analytics {
-  init(config: AnalyticsInitConfig): Promise<void>
-  setAllowAnalytics(allowed: boolean): Promise<void>
-  setTestnetMode(enabled: boolean, _config: TestnetModeConfig): void
-  sendEvent(eventName: string, eventProperties: Record<string, unknown>): void
-  flushEvents(): void
-  setUserProperty(property: string, value: UserPropertyValue, insert?: boolean): void
+  init: (config: AnalyticsInitConfig) => Promise<void>
+  setAllowAnalytics: (allowed: boolean) => Promise<void>
+  setTestnetMode: (enabled: boolean, _config: TestnetModeConfig) => void
+  sendEvent: (eventName: string, eventProperties: Record<string, unknown>) => void
+  flushEvents: () => void
+  // oxlint-disable-next-line max-params
+  setUserProperty: (property: string, value: UserPropertyValue, insert?: boolean) => void
 }
 
 export const analytics: Analytics = {

@@ -17,8 +17,8 @@ import {
   setDeviceSession,
   signWithDeviceKey,
 } from 'uniswap/src/features/passkey/deviceSession'
-import { authenticateWithPasskey, refreshNeckSession } from 'uniswap/src/features/passkey/embeddedWallet'
 import { authenticatePasskey, registerPasskey } from 'uniswap/src/features/passkey/passkey'
+import { authenticateWithPasskey, refreshNeckSession } from 'uniswap/src/features/passkey/passkeySession'
 import { logger } from 'utilities/src/logger/logger'
 
 export async function listAuthenticators(walletId?: string): Promise<{

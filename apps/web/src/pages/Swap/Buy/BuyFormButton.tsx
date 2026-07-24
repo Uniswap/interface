@@ -41,7 +41,7 @@ export function BuyFormButton({ forceDisabled }: BuyFormButtonProps) {
 
   if (!inputAmount || forceDisabled || notAvailableInThisRegion || !quoteCurrency) {
     return (
-      <Button size={buttonSize} key="BuyFormButton" isDisabled>
+      <Button size={buttonSize} key="BuyFormButton" disabled>
         {notAvailableInThisRegion
           ? t('common.notAvailableInRegion.error')
           : quoteCurrency
@@ -57,7 +57,7 @@ export function BuyFormButton({ forceDisabled }: BuyFormButtonProps) {
       variant="branded"
       loading={fetchingQuotes}
       key="BuyFormButton"
-      isDisabled={Boolean(fetchingQuotes || !quotes || quotes.quotes.length === 0 || error)}
+      disabled={Boolean(fetchingQuotes || !quotes || quotes.quotes.length === 0 || error)}
       onPress={() => {
         setBuyFormState((prev) => ({ ...prev, providerModalOpen: true }))
       }}

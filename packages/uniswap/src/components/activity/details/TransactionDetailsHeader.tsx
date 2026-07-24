@@ -17,23 +17,32 @@ export function TransactionDetailsHeader({
   transactionDetails,
   transactionActions,
   hideTransactionActions = false,
+  isEarnActivityDisplayEnabled = true,
 }: {
   transactionDetails: TransactionDetails
   transactionActions: MenuOptionItem[]
   hideTransactionActions?: boolean
+  isEarnActivityDisplayEnabled?: boolean
 }): JSX.Element {
   const { t } = useTranslation()
   const { value: isContextMenuOpen, setTrue: openContextMenu, setFalse: closeContextMenu } = useBooleanState(false)
   const showTransactionActions = transactionActions.length > 0 && !hideTransactionActions
 
   const dateString = useFormattedDateTime(dayjs(transactionDetails.addedTime), FORMAT_DATE_TIME_MEDIUM)
-  const title = getTransactionSummaryTitle(transactionDetails, t)
+  const title = getTransactionSummaryTitle({
+    tx: transactionDetails,
+    t,
+    isEarnActivityDisplayEnabled,
+  })
 
   return (
     <Flex centered row justifyContent="space-between">
       <Flex centered row gap="$spacing12" flexShrink={1}>
         <Flex>
-          <TransactionDetailsHeaderLogo transactionDetails={transactionDetails} />
+          <TransactionDetailsHeaderLogo
+            transactionDetails={transactionDetails}
+            isEarnActivityDisplayEnabled={isEarnActivityDisplayEnabled}
+          />
         </Flex>
         <Flex flexDirection="column" flexShrink={1}>
           <Flex centered row gap="$spacing4" justifyContent="flex-start">

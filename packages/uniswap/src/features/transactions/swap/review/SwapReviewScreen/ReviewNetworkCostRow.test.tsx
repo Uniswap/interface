@@ -8,6 +8,8 @@ vi.mock('react-i18next', () => ({
       const translations: Record<string, string> = {
         'common.auto': 'Auto',
         'gas.override.title': 'Network cost',
+        'swap.warning.networkFee.includesDelegation': 'Includes smart wallet activation',
+        'swap.warning.networkFee.includesSmartWalletUpdate': 'Includes smart wallet update',
       }
       return translations[key] ?? key
     },
@@ -69,5 +71,25 @@ describe('ReviewNetworkCostRow', () => {
     })
     const { getByTestId } = renderWithProviders(<ReviewNetworkCostRow gasFeeUsd="$1.54" tx={undefined} />)
     expect(getByTestId('network-cost-warning-icon')).toBeTruthy()
+  })
+
+  it('renders the smart wallet activation subtitle when includesDelegation is true', () => {
+    const { getByText } = renderWithProviders(
+      <ReviewNetworkCostRow gasFeeUsd="$1.54" tx={undefined} includesDelegation />,
+    )
+    expect(getByText('Includes smart wallet activation')).toBeTruthy()
+  })
+
+  it('renders the smart wallet update subtitle when the delegation is an upgrade', () => {
+    const { getByText, queryByText } = renderWithProviders(
+      <ReviewNetworkCostRow gasFeeUsd="$1.54" tx={undefined} includesDelegation includesDelegationUpgrade />,
+    )
+    expect(getByText('Includes smart wallet update')).toBeTruthy()
+    expect(queryByText('Includes smart wallet activation')).toBeNull()
+  })
+
+  it('does not render the subtitle when includesDelegation is omitted', () => {
+    const { queryByText } = renderWithProviders(<ReviewNetworkCostRow gasFeeUsd="$1.54" tx={undefined} />)
+    expect(queryByText('Includes smart wallet activation')).toBeNull()
   })
 })

@@ -5,7 +5,6 @@ import {
   createNotificationsApiClient,
   getEntryGatewayUrl,
   provideSessionService,
-  SESSION_INIT_QUERY_KEY,
   SharedQueryClient,
 } from '@universe/api'
 import { isE2eTestEnv, REQUEST_SOURCE } from '@universe/environment'
@@ -19,10 +18,10 @@ import {
   type NotificationDataSource,
   type NotificationService,
 } from '@universe/notifications'
+import { SESSION_INIT_QUERY_KEY } from '@universe/sessions'
 import ms from 'ms'
 import { useEffect, useMemo, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router'
-import { useIsDarkMode } from 'ui/src'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { mapLocaleToBackendLocale } from 'uniswap/src/features/language/constants'
@@ -48,11 +47,11 @@ import store from '~/state'
  * Creates the notification service with all necessary dependencies
  */
 function provideWebNotificationService(ctx: {
-  getIsDarkMode: () => boolean
   navigate: (path: string) => void
   getSwapInputChainId: () => UniverseChainId | undefined
   getBlockTimestamp: () => bigint | undefined
-  getMachineTime: () => number
+  getBlockTimestampUpdatedAt: () => number
+  getStalenessCheckTimeMs: () => number
   getPathname: () => string
 }): NotificationService {
   const notifApiBaseUrl = getEntryGatewayUrl()
@@ -105,18 +104,17 @@ function provideWebNotificationService(ctx: {
     storage: createLocalStorageAdapter(),
   })
 
-  // Legacy banners that would conflict with the new notification system (Solana and Bridging)
+  // Migrates legacy banner dismissal state (Bridging) into the notification system
   const bannersDataSource = createLegacyBannersNotificationDataSource({
     tracker,
-    getIsDarkMode: ctx.getIsDarkMode,
-    pollIntervalMs: 10000,
   })
 
   // System alerts data source (chain connectivity, outages)
   const systemAlertsDataSource = createSystemAlertsDataSource({
     getSwapInputChainId: ctx.getSwapInputChainId,
     getBlockTimestamp: ctx.getBlockTimestamp,
-    getMachineTime: ctx.getMachineTime,
+    getBlockTimestampUpdatedAt: ctx.getBlockTimestampUpdatedAt,
+    getStalenessCheckTimeMs: ctx.getStalenessCheckTimeMs,
     getPathname: ctx.getPathname,
     pollIntervalMs: 5000,
   })
@@ -172,22 +170,22 @@ function provideWebNotificationService(ctx: {
  * Accepts the context needed to create the notification service
  */
 function getNotificationServiceQueryOptions(ctx: {
-  getIsDarkMode: () => boolean
   navigate: (path: string) => void
   getSwapInputChainId: () => UniverseChainId | undefined
   getBlockTimestamp: () => bigint | undefined
-  getMachineTime: () => number
+  getBlockTimestampUpdatedAt: () => number
+  getStalenessCheckTimeMs: () => number
   getPathname: () => string
 }): QueryOptionsResult<NotificationService, Error, NotificationService, [ReactQueryCacheKey.NotificationService]> {
   return queryOptions({
     queryKey: [ReactQueryCacheKey.NotificationService],
     queryFn: () =>
       provideWebNotificationService({
-        getIsDarkMode: ctx.getIsDarkMode,
         navigate: ctx.navigate,
         getSwapInputChainId: ctx.getSwapInputChainId,
         getBlockTimestamp: ctx.getBlockTimestamp,
-        getMachineTime: ctx.getMachineTime,
+        getBlockTimestampUpdatedAt: ctx.getBlockTimestampUpdatedAt,
+        getStalenessCheckTimeMs: ctx.getStalenessCheckTimeMs,
         getPathname: ctx.getPathname,
       }),
     enabled: !isE2eTestEnv(),
@@ -203,23 +201,25 @@ export function WebNotificationServiceManager(): JSX.Element | null {
   // Don't show notifications on the landing page
   const shouldRenderNotifications = location.pathname !== '/'
 
-  // Get current values for banner conditions (using refs to avoid recreating system)
-  const isDarkMode = useIsDarkMode()
-
   // Hook values that need to be passed to system alerts data source
   const { swapInputChainId } = useUniswapContext()
-  const blockTimestamp = useCurrentBlockTimestamp({ refetchInterval: ms('5min'), chainId: swapInputChainId })
+  const { blockTimestamp, blockTimestampUpdatedAt } = useCurrentBlockTimestamp({
+    refetchInterval: ms('5min'),
+    chainId: swapInputChainId,
+  })
   const machineTime = useMachineTimeMs(AVERAGE_L1_BLOCK_TIME_MS)
 
   // Store latest values in refs so getter functions always return current values
   const swapInputChainIdRef = useRef<UniverseChainId | undefined>(swapInputChainId)
   const blockTimestampRef = useRef<bigint | undefined>(blockTimestamp)
+  const blockTimestampUpdatedAtRef = useRef<number>(blockTimestampUpdatedAt)
   const machineTimeRef = useRef<number>(machineTime)
   const pathnameRef = useRef<string>(location.pathname)
 
   // Update refs on every render to ensure getters return fresh values
   swapInputChainIdRef.current = swapInputChainId
   blockTimestampRef.current = blockTimestamp
+  blockTimestampUpdatedAtRef.current = blockTimestampUpdatedAt
   machineTimeRef.current = machineTime
   pathnameRef.current = location.pathname
 
@@ -228,7 +228,8 @@ export function WebNotificationServiceManager(): JSX.Element | null {
     () => ({
       getSwapInputChainId: () => swapInputChainIdRef.current,
       getBlockTimestamp: () => blockTimestampRef.current,
-      getMachineTime: () => machineTimeRef.current,
+      getBlockTimestampUpdatedAt: () => blockTimestampUpdatedAtRef.current,
+      getStalenessCheckTimeMs: () => machineTimeRef.current,
       getPathname: () => pathnameRef.current,
     }),
     [],
@@ -236,7 +237,6 @@ export function WebNotificationServiceManager(): JSX.Element | null {
 
   const { data: notificationService } = useQuery(
     getNotificationServiceQueryOptions({
-      getIsDarkMode: () => isDarkMode,
       navigate: (path: string) => navigate(path),
       ...getters,
     }),

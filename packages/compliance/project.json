@@ -1,0 +1,26 @@
+{
+  "name": "@universe/compliance",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/compliance/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "typecheck": {},
+    "format": {},
+    "format:check": {},
+    "lint:oxlint": {},
+    "lint:oxlint:fix": {},
+    "lint:oxlint:fast": {},
+    "lint": {},
+    "lint:fix": {},
+    "check": {},
+    "check:fast": {},
+    "check:deps:usage": {},
+    "test": {
+      "command": "vitest run",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}

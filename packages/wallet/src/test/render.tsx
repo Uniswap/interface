@@ -12,6 +12,7 @@ import {
 import { GraphQLApi } from '@universe/api'
 import React, { PropsWithChildren } from 'react'
 import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
+import { createMockFn } from 'uniswap/src/test/mockFn'
 import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
 import { mockUniswapContext } from 'uniswap/src/test/render'
 import { WalletNavigationContextState, WalletNavigationProvider } from 'wallet/src/contexts/WalletNavigationContext'
@@ -29,20 +30,20 @@ type ExtendedRenderOptions = RenderOptions & {
 }
 
 const mockNavigationFunctions: WalletNavigationContextState = {
-  navigateToAccountActivityList: jest.fn(),
-  navigateToAccountTokenList: jest.fn(),
-  navigateToBuyOrReceiveWithEmptyWallet: jest.fn(),
-  navigateToExternalProfile: jest.fn(),
-  navigateToFiatOnRamp: jest.fn(),
-  navigateToNftDetails: jest.fn(),
-  navigateToSwapFlow: jest.fn(),
-  navigateToTokenDetails: jest.fn(),
-  navigateToReceive: jest.fn(),
-  navigateToSend: jest.fn(),
-  handleShareToken: jest.fn(),
-  navigateToPoolDetails: jest.fn(),
-  navigateToAdvancedSettings: jest.fn(),
-  navigateToEarnVault: jest.fn(),
+  navigateToAccountActivityList: createMockFn(),
+  navigateToAccountTokenList: createMockFn(),
+  navigateToBuyOrReceiveWithEmptyWallet: createMockFn(),
+  navigateToExternalProfile: createMockFn(),
+  navigateToFiatOnRamp: createMockFn(),
+  navigateToNftDetails: createMockFn(),
+  navigateToSwapFlow: createMockFn(),
+  navigateToTokenDetails: createMockFn(),
+  navigateToReceive: createMockFn(),
+  navigateToSend: createMockFn(),
+  handleShareToken: createMockFn(),
+  navigateToPoolDetails: createMockFn(),
+  navigateToAdvancedSettings: createMockFn(),
+  navigateToEarnVault: createMockFn(),
 }
 
 /**

@@ -55,7 +55,6 @@ export function TraceUserProperties(): null {
   const signerAccountAddresses = useMemo(() => signerAccounts.map((account) => account.address), [signerAccounts])
   const { totalBalance: signerAccountsTotalBalance } = useAccountBalances({
     addresses: signerAccountAddresses,
-    fetchPolicy: 'cache-first',
   })
 
   // Effects must check this and ensure they are setting properties for when analytics is reenabled

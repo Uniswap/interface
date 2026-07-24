@@ -1,49 +1,35 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { usePreferProjectMarketData } from 'uniswap/src/features/rwa/usePreferProjectMarketData'
 import { useTDPPreferProjectMarketData } from '~/pages/TokenDetails/hooks/useTDPPreferProjectMarketData'
-import { useTDPRWAMatch } from '~/pages/TokenDetails/hooks/useTDPRWAMatch'
+import { useTDPRWACandidates } from '~/pages/TokenDetails/hooks/useTDPRWAMatch'
 import { renderHook } from '~/test-utils/render'
 
-vi.mock('@universe/gating', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@universe/gating')>()),
-  useFeatureFlag: vi.fn(),
+vi.mock('uniswap/src/features/rwa/usePreferProjectMarketData', () => ({
+  usePreferProjectMarketData: vi.fn(() => false),
 }))
 
 vi.mock('~/pages/TokenDetails/hooks/useTDPRWAMatch', () => ({
-  useTDPRWAMatch: vi.fn(() => undefined),
+  useTDPRWACandidates: vi.fn(() => []),
 }))
 
-const mockUseFeatureFlag = vi.mocked(useFeatureFlag)
-const mockUseTDPRWAMatch = vi.mocked(useTDPRWAMatch)
+const mockUsePreferProjectMarketData = vi.mocked(usePreferProjectMarketData)
+const mockUseTDPRWACandidates = vi.mocked(useTDPRWACandidates)
 
 describe(useTDPPreferProjectMarketData, () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    mockUseFeatureFlag.mockReturnValue(false)
-    mockUseTDPRWAMatch.mockReturnValue(undefined)
+    mockUseTDPRWACandidates.mockReturnValue([])
+    mockUsePreferProjectMarketData.mockReturnValue(false)
   })
 
-  it('keeps project market data off when the flag is off', () => {
-    const { result } = renderHook(() => useTDPPreferProjectMarketData())
-
-    expect(mockUseTDPRWAMatch).toHaveBeenCalledWith({ enabled: false })
-    expect(result.current).toBe(false)
-  })
-
-  it('keeps project market data off when the token is not an RWA match', () => {
-    mockUseFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.RWACoinGeckoData)
+  it('delegates to usePreferProjectMarketData with TDP candidates', () => {
+    const candidates = [{ chainId: 1, address: '0xabc' }]
+    mockUseTDPRWACandidates.mockReturnValue(candidates)
+    mockUsePreferProjectMarketData.mockReturnValue(true)
 
     const { result } = renderHook(() => useTDPPreferProjectMarketData())
 
-    expect(mockUseTDPRWAMatch).toHaveBeenCalledWith({ enabled: true })
-    expect(result.current).toBe(false)
-  })
-
-  it('prefers project market data when the flag is on and the token is an RWA match', () => {
-    mockUseFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.RWACoinGeckoData)
-    mockUseTDPRWAMatch.mockReturnValue({} as never)
-
-    const { result } = renderHook(() => useTDPPreferProjectMarketData())
-
+    expect(mockUseTDPRWACandidates).toHaveBeenCalled()
+    expect(mockUsePreferProjectMarketData).toHaveBeenCalledWith(candidates)
     expect(result.current).toBe(true)
   })
 })

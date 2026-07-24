@@ -16,7 +16,20 @@ import {
 import { ExtractedBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
 import { SwapExecutionCallbacks } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import type { PlanSwapTransactionInfoFields } from 'uniswap/src/features/transactions/types/transactionDetails'
+import type {
+  PlanSwapTransactionInfoFields,
+  TransactionStatus,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+
+export interface PlanFinalizedCallbackParams {
+  planId: string
+  /** Final transaction status derived from the latest plan/step state; Earn uses Success for optimistic positions. */
+  status?: TransactionStatus
+  /** Latest plan response when available, so callers do not need an immediate refetch after finalization. */
+  planResponse?: TradingApi.PlanResponse
+  /** Latest finalized step status when the plan watcher has one. */
+  stepStatus?: TradingApi.PlanStepStatus
+}
 
 export interface PlanParams extends SwapExecutionCallbacks {
   address: Address
@@ -39,8 +52,10 @@ export interface PlanParams extends SwapExecutionCallbacks {
    * web and wallet so each caller will not have the same implementation.
    */
   sendToast: (appNotification: AppNotification, planId: string) => SagaGenerator<void>
-  onPlanFinalized?: (planId: string) => void
+  onPlanFinalized?: (params: PlanFinalizedCallbackParams) => void
   caip25Info: CAIP25Session | undefined
+  /** Action type the saga waits on to detect modal close. Earn passes its own modal close action. */
+  modalClosedActionType?: string
   getDisplayableError: ({
     error,
     step,
@@ -63,7 +78,16 @@ export interface PlanAnalyticsFields {
   is_final_step?: boolean
 }
 
-export type PlanSagaAnalytics = (SwapTradeBaseProperties | ExtractedBaseTradeAnalyticsProperties) & PlanAnalyticsFields
+export interface EarnPlanAnalyticsFields {
+  earn_action?: TradingApi.EarnAction
+  earn_vault_address?: string
+  earn_vault_chain_id?: TradingApi.ChainId
+  earn_withdraw_mode?: TradingApi.EarnWithdrawMode
+}
+
+export type PlanSagaAnalytics = (SwapTradeBaseProperties | ExtractedBaseTradeAnalyticsProperties) &
+  PlanAnalyticsFields &
+  EarnPlanAnalyticsFields
 
 /** Converts camelCase plan fields to snake_case analytics fields */
 export function planAnalyticsToSnakeCase(fields?: PlanSwapTransactionInfoFields): PlanAnalyticsFields {

@@ -4,8 +4,9 @@ vi.mock('~/components/AccountDrawer/MiniPortfolio/hooks', () => ({
   useAccountDrawer: vi.fn(),
 }))
 
-vi.mock('~/hooks/useAccount', () => ({
-  useAccount: vi.fn(),
+vi.mock('~/features/accounts/store/hooks', () => ({
+  useActiveAddress: vi.fn(),
+  useConnectionStatus: vi.fn(),
 }))
 
 vi.mock('~/hooks/useDisconnect', () => ({

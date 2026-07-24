@@ -12,25 +12,26 @@ import {
 } from 'src/notification-service/triggers/backupReminderTrigger'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { ONE_DAY_MS } from 'utilities/src/time/time'
+import type { MockedFunction } from 'vitest'
 import { selectBackupReminderLastSeenTs } from 'wallet/src/features/behaviorHistory/selectors'
 import { setBackupReminderLastSeenTs } from 'wallet/src/features/behaviorHistory/slice'
 import { hasExternalBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'
 
-jest.mock('wallet/src/features/behaviorHistory/selectors')
-jest.mock('wallet/src/features/wallet/selectors')
-jest.mock('wallet/src/features/wallet/accounts/utils')
+vi.mock('wallet/src/features/behaviorHistory/selectors')
+vi.mock('wallet/src/features/wallet/selectors')
+vi.mock('wallet/src/features/wallet/accounts/utils')
 
-const mockSelectBackupReminderLastSeenTs = selectBackupReminderLastSeenTs as jest.MockedFunction<
+const mockSelectBackupReminderLastSeenTs = selectBackupReminderLastSeenTs as MockedFunction<
   typeof selectBackupReminderLastSeenTs
 >
-const mockSelectActiveAccount = selectActiveAccount as jest.MockedFunction<typeof selectActiveAccount>
-const mockHasExternalBackup = hasExternalBackup as jest.MockedFunction<typeof hasExternalBackup>
+const mockSelectActiveAccount = selectActiveAccount as MockedFunction<typeof selectActiveAccount>
+const mockHasExternalBackup = hasExternalBackup as MockedFunction<typeof hasExternalBackup>
 
 describe('backupReminderTrigger', () => {
-  const mockDispatch = jest.fn()
-  const mockGetState = jest.fn<MobileState, []>()
-  const mockGetPortfolioValue = jest.fn<Promise<number>, []>()
+  const mockDispatch = vi.fn()
+  const mockGetState = vi.fn<() => MobileState>()
+  const mockGetPortfolioValue = vi.fn<() => Promise<number>>()
 
   const mockSignerAccount = {
     address: '0x1234567890abcdef1234567890abcdef12345678',
@@ -51,13 +52,13 @@ describe('backupReminderTrigger', () => {
   }
 
   beforeEach(() => {
-    jest.clearAllMocks()
-    jest.useFakeTimers()
-    jest.setSystemTime(new Date('2024-06-15T12:00:00.000Z'))
+    vi.clearAllMocks()
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2024-06-15T12:00:00.000Z'))
   })
 
   afterEach(() => {
-    jest.useRealTimers()
+    vi.useRealTimers()
   })
 
   describe('createBackupReminderTrigger', () => {

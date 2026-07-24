@@ -18,6 +18,7 @@ export function useBidFormState() {
   return {
     canPlaceBid: isAuctionInProgress,
     showMobileWithdrawButton: isAuctionEnded && hasUserBids && !allBidsClaimed,
+    showAuctionGraduated: isAuctionEnded && isGraduated && hasUserBids,
     hasUserBids,
     allBidsClaimed,
     isAuctionEnded,

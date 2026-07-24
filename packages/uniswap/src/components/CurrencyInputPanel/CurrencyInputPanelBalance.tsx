@@ -64,7 +64,7 @@ export function CurrencyInputPanelBalance({
   if (onPressBalance) {
     return (
       <TouchableArea group="item" cursor="pointer" onPress={handlePress}>
-        <Flex row width="max-content">
+        <Flex row maxContent>
           {balanceText}
         </Flex>
       </TouchableArea>

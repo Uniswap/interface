@@ -1,4 +1,6 @@
+import { PROD_ENTRY_GATEWAY_API_BASE_URL, STAGING_ENTRY_GATEWAY_API_BASE_URL } from '@universe/api'
 import { Environment } from '@universe/config'
+import { auctionImageHandler } from 'functions/api/image/auctions'
 import { poolImageHandler } from 'functions/api/image/pools'
 import { positionImageHandler } from 'functions/api/image/positions'
 import { tokenImageHandler } from 'functions/api/image/tokens'
@@ -43,18 +45,31 @@ interface AppConfig {
 // frame-ancestors cannot be enforced via <meta> CSP tags (W3C spec) — it
 // must be an HTTP response header. Cloudflare Workers returns responses
 // with immutable headers, so we clone into a mutable Response.
+// Origins allowed to iframe-embed the app. Whitelisting an embedder
+// relaxes clickjacking protection for that origin — treat additions as a
+// deliberate product/security tradeoff.
+// A wildcard host-source does not match the apex domain, so dexscreener.com
+// needs both the apex and the subdomain-wildcard entries.
+const ALLOWED_FRAME_ANCESTORS = [
+  "'self'",
+  'https://app.safe.global',
+  'https://dexscreener.com',
+  'https://*.dexscreener.com',
+]
+
 function withFrameProtection(res: Response): Response {
   const headers = new Headers(res.headers)
-  headers.set('Content-Security-Policy', "frame-ancestors 'self' https://app.safe.global")
+  headers.set('Content-Security-Policy', `frame-ancestors ${ALLOWED_FRAME_ANCESTORS.join(' ')}`)
   headers.set('X-Frame-Options', 'SAMEORIGIN')
   return new Response(res.body, { status: res.status, statusText: res.statusText, headers })
 }
 
 // ── Shared constants ─────────────────────────────────────────────────
+// Development deliberately targets the staging upstream (no dedicated dev deployment here).
 export const ENTRY_GATEWAY_URLS = {
-  development: 'https://entry-gateway.backend-staging.api.uniswap.org',
-  staging: 'https://entry-gateway.backend-staging.api.uniswap.org',
-  production: 'https://entry-gateway.backend-prod.api.uniswap.org',
+  development: STAGING_ENTRY_GATEWAY_API_BASE_URL,
+  staging: STAGING_ENTRY_GATEWAY_API_BASE_URL,
+  production: PROD_ENTRY_GATEWAY_API_BASE_URL,
 } as const
 
 // Statsig proxy via Cloudflare gateway — the URL is constant for the web app
@@ -98,6 +113,8 @@ export function createApp({ fetchSpaHtml, getEntryGatewayUrl, getWebSocketUrl, g
   app.get('/api/image/tokens/:networkName/:tokenAddress', cacheControl(604800), tokenImageHandler)
 
   app.get('/api/image/pools/:networkName/:poolAddress', cacheControl(604800), poolImageHandler)
+
+  app.get('/api/image/auctions/:chainName/:auctionAddress', cacheControl(604800), auctionImageHandler)
 
   app.get('/api/image/positions/:version/:chainName/:identifier', cacheControl(604800), positionImageHandler)
 

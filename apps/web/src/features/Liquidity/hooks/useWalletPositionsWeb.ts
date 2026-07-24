@@ -25,7 +25,7 @@ export interface UseWalletPositionsWebParams {
 
 type ForwardedFromWalletPositions = Pick<
   UseWalletPositionsResult,
-  'isFetching' | 'isPlaceholderData' | 'hasNextPage' | 'refetch'
+  'isFetching' | 'isPlaceholderData' | 'hasNextPage' | 'refetch' | 'pagesLoaded'
 >
 
 export interface UseWalletPositionsWebResult extends ForwardedFromWalletPositions {
@@ -55,6 +55,7 @@ export function useWalletPositionsWeb({
     error,
     refetch,
     fetchNextPage,
+    pagesLoaded,
   } = useWalletPositions({
     account: address ?? '',
     chainIds: chainFilter ? [chainFilter] : defaultChains,
@@ -128,5 +129,6 @@ export function useWalletPositionsWeb({
     hasErrorWithoutData,
     refetch,
     loadMorePositions,
+    pagesLoaded,
   }
 }
