@@ -66,6 +66,9 @@ export type SearchTextInputProps = InputProps & {
   cancelBehaviorType?: CancelBehaviorType
   borderColor?: ColorTokens
   borderWidth?: SpaceTokens
+  // Lets compact contexts (e.g. a search bar embedded above a list of smaller rows) match the
+  // surrounding text scale. Defaults to fonts.body1.fontSize to preserve existing call sites.
+  fontSize?: number
 }
 
 export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>(
@@ -91,6 +94,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
       value,
       hideIcon,
       minHeight = DEFAULT_MIN_HEIGHT,
+      fontSize = fonts.body1.fontSize,
       cancelBehaviorType = CancelBehaviorType.CancelButton,
       keyboardType = 'default',
       inputMode: inputModeProp,
@@ -196,8 +200,8 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
                   // Pin lineHeight to the font size: the $body token's larger lineHeight adds leading
                   // that Fabric renders above the glyph, pushing the single-line text/placeholder down
                   // and clipping it at the bottom of this tight input on iOS.
-                  fontSize={fonts.body1.fontSize}
-                  lineHeight={fonts.body1.fontSize}
+                  fontSize={fontSize}
+                  lineHeight={fontSize}
                   height="100%"
                   maxFontSizeMultiplier={fonts.body1.maxFontSizeMultiplier}
                   outlineColor="transparent"
