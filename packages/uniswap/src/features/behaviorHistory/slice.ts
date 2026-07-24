@@ -33,7 +33,6 @@ export interface UniswapBehaviorHistoryState {
   toucanIntroModalSeenByWallet?: {
     [walletAddress: string]: boolean
   }
-  hasDismissedUniswapWrapped2025Banner?: boolean
   hasDismissedCrosschainSwapsPromoBanner?: boolean
   /**
    * Per-user dismissal flag for the pools-balance coachmark on the Portfolio Overview.
@@ -64,7 +63,6 @@ export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
   hasShownMismatchToast: false,
   hasShownSmartWalletNudge: false,
   hasSeenToucanIntroModal: false,
-  hasDismissedUniswapWrapped2025Banner: false,
   hasDismissedCrosschainSwapsPromoBanner: false,
   hasDismissedPoolsBalanceCoachmark: true,
   hasDismissedPoolsOutageBanner: false,
@@ -134,9 +132,6 @@ const slice = createSlice({
     setHasDismissedBridgedAssetsBannerV2: (state, action: PayloadAction<boolean>) => {
       state.hasDismissedBridgedAssetsBannerV2 = action.payload
     },
-    setHasDismissedUniswapWrapped2025Banner: (state, action: PayloadAction<boolean>) => {
-      state.hasDismissedUniswapWrapped2025Banner = action.payload
-    },
     setHasDismissedCrosschainSwapsPromoBanner: (state, action: PayloadAction<boolean>) => {
       state.hasDismissedCrosschainSwapsPromoBanner = action.payload
     },
@@ -199,7 +194,6 @@ export const {
   setHasSeenToucanIntroModal,
   setToucanIntroModalSeenByWallet,
   setHasDismissedBridgedAssetsBannerV2,
-  setHasDismissedUniswapWrapped2025Banner,
   setHasDismissedCrosschainSwapsPromoBanner,
   setPoolsBalanceCoachmarkDismissed,
   setHasDismissedPoolsOutageBanner,

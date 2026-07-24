@@ -423,7 +423,7 @@ export function ClaimUnitagContent({
             variant="branded"
             animation="200ms"
             animateOnly={['transform', 'background-color']}
-            isDisabled={shouldBlockContinue || !isUnitagAvailable || !!unitagAvailableError}
+            disabled={shouldBlockContinue || !isUnitagAvailable || !!unitagAvailableError}
             testID={TestID.Continue}
             loading={showVerificationLoading && isCheckingUnitag} // the validation happens really quickly so only show a loading spinner when the user explicitly tries to continue and we're still checking availability
             onPress={onPressContinue}

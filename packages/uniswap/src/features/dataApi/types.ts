@@ -1,4 +1,3 @@
-import type { NetworkStatus } from '@apollo/client'
 import type { Contract } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import type { Currency } from '@uniswap/sdk-core'
 import type { GraphQLApi, SpamCode } from '@universe/api'
@@ -16,7 +15,8 @@ export type RestContract = Pick<Contract, 'chainId' | 'address'>
 export interface BaseResult<T> {
   data?: T
   loading: boolean
-  networkStatus: NetworkStatus
+  isPending: boolean
+  isError: boolean
   refetch: () => void
   error?: Error
   /** Epoch ms when the underlying query last successfully fetched data. */

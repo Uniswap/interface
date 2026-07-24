@@ -1,5 +1,3 @@
-import { NetworkStatus } from '@apollo/client'
-import { isWarmLoadingStatus } from '@universe/api'
 import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useMemo, useState } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -20,8 +18,9 @@ type TokenBalanceListContextState = {
   balancesById: Record<string, PortfolioMultichainBalance> | undefined
   expandedCurrencyIds: Set<string>
   multichainRowExpansionEnabled: boolean
-  networkStatus: NetworkStatus
   refetch: (() => void) | undefined
+  isPending: boolean
+  isError: boolean
   hiddenTokensCount: number
   hiddenTokensExpanded: boolean
   isPortfolioBalancesLoading: boolean
@@ -74,7 +73,8 @@ export function TokenBalanceListContextProvider({
   const {
     data: sortedData,
     balancesById,
-    networkStatus,
+    isPending,
+    isError,
     refetch,
     loading,
     error,
@@ -109,7 +109,7 @@ export function TokenBalanceListContextProvider({
     })
 
   const hasData = !!balancesById
-  const isWarmLoading = hasData && isWarmLoadingStatus(networkStatus) && !isExternalProfile
+  const isWarmLoading = hasData && loading && !isExternalProfile
   // Show loading skeletons when loading OR when there's an outage with no cached data
   const isPortfolioBalancesLoading = loading || (!!error && !sortedData)
 
@@ -134,7 +134,8 @@ export function TokenBalanceListContextProvider({
       hiddenBalanceRowIds,
       isPortfolioBalancesLoading,
       isWarmLoading,
-      networkStatus,
+      isPending,
+      isError,
       onPressToken,
       refetch,
       rows,
@@ -154,7 +155,8 @@ export function TokenBalanceListContextProvider({
       hiddenBalanceRowIds,
       isPortfolioBalancesLoading,
       isWarmLoading,
-      networkStatus,
+      isPending,
+      isError,
       onPressToken,
       refetch,
       rows,

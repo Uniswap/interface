@@ -69,6 +69,8 @@ export const ExploreScreenSearchResultsList = memo(function ExploreScreenSearchR
           return t('common.pools')
         case SearchTab.Wallets:
           return t('explore.search.section.wallets')
+        case SearchTab.Auctions:
+          return t('common.auctions')
       }
     },
     [t],

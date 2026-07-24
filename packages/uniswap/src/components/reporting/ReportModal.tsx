@@ -1,4 +1,4 @@
-import { isMobileApp, isMobileWeb, isWebPlatform } from '@universe/environment'
+import { isAndroid, isMobileApp, isMobileWeb, isWebPlatform } from '@universe/environment'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Checkbox, Flex, GeneratedIcon, Text, TouchableArea } from 'ui/src'
@@ -7,8 +7,11 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import type { BaseModalProps } from 'uniswap/src/components/modals/ModalProps'
 import { useBottomSheetSafeKeyboard } from 'uniswap/src/components/modals/useBottomSheetSafeKeyboard'
 import { ReportInput } from 'uniswap/src/components/reporting/input'
+import { ReportModalContent } from 'uniswap/src/components/reporting/ReportModalContent'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
+
+const ANDROID_SNAP_POINTS = ['70%', '100%']
 
 export type ReportOption<T extends string> = {
   title: string
@@ -71,8 +74,14 @@ export function ReportModal<T extends string>({
   })
 
   return (
-    <Modal name={modalName} isModalOpen={isOpen} onClose={onClose}>
-      <Flex p={isMobileApp ? '$spacing12' : undefined} pb={keyboardHeight}>
+    <Modal
+      name={modalName}
+      isModalOpen={isOpen}
+      overrideInnerContainer={isMobileApp}
+      snapPoints={isAndroid ? ANDROID_SNAP_POINTS : undefined}
+      onClose={onClose}
+    >
+      <ReportModalContent keyboardHeight={keyboardHeight}>
         {isWebPlatform && !isMobileWeb && (
           <TouchableArea alignItems="flex-end" role="none" onPress={onClose}>
             <X size="$icon.20" color="$neutral3" />
@@ -131,7 +140,7 @@ export function ReportModal<T extends string>({
             <Button
               size="medium"
               emphasis="primary"
-              isDisabled={checkedItems.size === 0}
+              disabled={checkedItems.size === 0}
               onPress={() => {
                 const sanitizedTexts = new Map<T, string>()
                 for (const [key, value] of reportTexts) {
@@ -147,7 +156,7 @@ export function ReportModal<T extends string>({
             </Button>
           </Flex>
         </Flex>
-      </Flex>
+      </ReportModalContent>
     </Modal>
   )
 }

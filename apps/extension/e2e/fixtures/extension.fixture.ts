@@ -21,5 +21,6 @@ export const freshExtensionTest = base.extend<ExtensionFixtures>({
   },
 })
 
-// Re-export the programmatic onboarded extension test fixture
+// Re-export the programmatic onboarded extension test fixtures
+export { importedExtensionTest } from './imported-extension.fixture'
 export { onboardedExtensionTest } from './onboarded-extension.fixture'

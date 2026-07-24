@@ -121,7 +121,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: SeedPhr
         <Trace logPress element={ElementName.Next}>
           <Flex row>
             <Button
-              isDisabled={!isSubmitEnabled}
+              disabled={!isSubmitEnabled}
               mx="$spacing16"
               my="$spacing12"
               size="large"

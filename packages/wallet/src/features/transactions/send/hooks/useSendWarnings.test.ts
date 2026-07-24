@@ -3,7 +3,7 @@ import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { GQLNftAsset } from 'uniswap/src/features/nfts/types'
+import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { DerivedSendInfo } from 'uniswap/src/features/transactions/send/types'
 import i18n from 'uniswap/src/i18n'
 import { uniCurrencyInfo } from 'uniswap/src/test/fixtures'
@@ -55,25 +55,12 @@ const sendState2: DerivedSendInfo = {
   nftIn: undefined,
 }
 
-const mockNFT = {
-  id: '1',
-  collection: {
-    id: '123',
-    collectionId: '123',
-    isVerified: true,
-    markets: [],
-    name: 'BAYC',
-    numAssets: 10,
-  },
+const mockNFT: NFTItem = {
   name: 'BAYC1',
+  collectionName: 'BAYC',
   tokenId: '1',
-  nftContract: { id: '2', address: '0xNFTAddress', chain: 'ETHEREUM' },
-  creator: {
-    id: '3',
-    address: '0xCreateAddress',
-    username: 'Username',
-  },
-} as GQLNftAsset
+  contractAddress: '0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D',
+}
 
 const sendNFT: DerivedSendInfo = {
   ...emptySendInfo,

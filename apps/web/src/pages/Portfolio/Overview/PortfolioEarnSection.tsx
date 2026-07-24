@@ -8,13 +8,14 @@ import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { FormattedAmountWithMutedDecimals } from 'uniswap/src/components/text/FormattedAmountWithMutedDecimals'
 import { useTokenProjectsByCurrencyId } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
-import { EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
+import { EarnAnalyticsSurface, EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
 import {
   getEarnDepositSourceOptions,
   getEarnDepositSourceOptionsBySupport,
 } from 'uniswap/src/features/earn/depositSources'
 import { useEarnLifetimeEarningsUsd } from 'uniswap/src/features/earn/hooks/useEarnLifetimeEarningsUsd'
 import { useEarnVaults } from 'uniswap/src/features/earn/hooks/useEarnVaults'
+import { useLogEarnSurfaceViewed } from 'uniswap/src/features/earn/hooks/useLogEarnSurfaceViewed'
 import { RewardsUnavailableIndicator } from 'uniswap/src/features/earn/RewardsUnavailableIndicator'
 import type { EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { hasEarnPosition } from 'uniswap/src/features/earn/utils'
@@ -29,6 +30,10 @@ import { useEarnVaultModalState } from '~/features/earn/hooks/useEarnVaultModalS
 const EARN_LOADING_ROWS = 3
 const LIFETIME_EARNINGS_DECIMAL_OPACITY = 0.5
 const VAULT_ROW_MIN_HEIGHT = 44
+
+function hasVisibleVaultRows({ isLoading, vaultCount }: { isLoading: boolean; vaultCount: number }): boolean {
+  return !isLoading && vaultCount > 0
+}
 
 export const PortfolioEarnSection = memo(function PortfolioEarnSection({ account }: { account?: string }) {
   const { t } = useTranslation()
@@ -118,6 +123,11 @@ export const PortfolioEarnSection = memo(function PortfolioEarnSection({ account
   const shouldShowVaultDivider = !shouldShowLoadingRows && eligibleVaults.length > 0 && ineligibleVaults.length > 0
   const hasNoVaultRows = !shouldShowLoadingRows && vaultsSortedByPosition.length === 0
   const shouldShowErrorState = isError && hasNoVaultRows
+  useLogEarnSurfaceViewed({
+    entryPoint: EarnEntryPoint.PortfolioEarnSection,
+    isVisible: hasVisibleVaultRows({ isLoading: shouldShowLoadingRows, vaultCount: vaultsSortedByPosition.length }),
+    surface: EarnAnalyticsSurface.Web,
+  })
   const handleVaultPress = useCallback(
     (vault: EarnVaultInfo, position: EarnPositionInfo | undefined): void => {
       if (hasEarnPosition(position)) {

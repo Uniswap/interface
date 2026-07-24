@@ -8,7 +8,6 @@
   ],
   "ignoreDependencies": [
     "typescript",
-    "@typescript/native-preview",
     "oxlint",
     "@types/.+"
   ],
@@ -18,7 +17,6 @@
         "@graphql-codegen/.+",
         "@commitlint/.+",
         "@nx/devkit",
-        "@nx/jest",
         "@nx/js",
         "@nx/plugin",
         "@nx/workspace",
@@ -107,7 +105,7 @@
         "@shopify/react-native-skia",
         "@tamagui/babel-plugin",
         "@uniswap/ethers-rs-mobile",
-        "babel-jest",
+        "agent-device",
         "babel-loader",
         "babel-plugin-react-native-web",
         "babel-plugin-transform-remove-console",
@@ -130,7 +128,6 @@
         "react-native-passkey",
         "react-native-restart",
         "sp-react-native-in-app-updates",
-        "ts-jest",
         "ts-node",
         "@ethersproject/shims",
         "@formatjs/intl-getcanonicallocales",
@@ -147,7 +144,8 @@
         "src/sideEffects.ts",
         "src/polyfills.ts",
         "src/tamagui.config.ts",
-        "functions/**/*.ts"
+        "functions/**/*.ts",
+        "scripts/anvil-fork-headers.ts"
       ],
       "vite": false,
       "ignoreDependencies": [
@@ -190,7 +188,6 @@
         "dd-trace",
         "detect-package-manager",
         "dotenv-cli",
-        "esbuild-register",
         "expo-crypto",
         "hono",
         "html-entities",
@@ -241,13 +238,14 @@
         "ws"
       ]
     },
-    "config/jest-presets": {
-      "ignoreDependencies": [
-        "@testing-library/jest-native",
-        "babel-jest",
-        "jest-svg-transformer",
-        "jest-transform-stub",
-        "ts-jest"
+    "labs/workbench": {
+      "entry": [
+        "functions/vercel-entry.ts",
+        "scripts/build-vercel.ts",
+        "scripts/vercel-ignore.ts"
+      ],
+      "ignore": [
+        "app/components/ui/**"
       ]
     },
     "config/vitest-presets": {

@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'ui/src'
 import { TokenDetailsEarnBanner as SharedTokenDetailsEarnBanner } from 'uniswap/src/components/tokenDetails/TokenDetailsEarnBanner'
-import { EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
+import { EarnAnalyticsSurface, EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
 import { EarnVaultView } from 'uniswap/src/features/earn/hooks/useEarnVaultModalFlow'
+import { useLogEarnSurfaceViewed } from 'uniswap/src/features/earn/hooks/useLogEarnSurfaceViewed'
 import { shouldShowTokenDetailsEarnBanner } from 'uniswap/src/features/earn/tokenDetails'
 import { EarnVaultModal } from '~/features/earn/EarnVaultModal'
 import { useEarnVaultConnectFlow } from '~/features/earn/hooks/useEarnVaultConnectFlow'
@@ -25,8 +26,13 @@ export function TokenDetailsEarnBanner({ earnData }: TokenDetailsEarnBannerProps
   })
   const normallyVisibleVault = shouldShowTokenDetailsEarnBanner(earnData) ? earnVault : undefined
   const canKeepOpenModalBannerVisible =
-    selectedVaultMatchesPage && !earnData.hasLoadedPositions && !earnData.userHasEarnPosition
+    selectedVaultMatchesPage && earnData.isLoggedIn && !earnData.hasLoadedPositions && !earnData.userHasEarnPosition
   const visibleVault = normallyVisibleVault ?? (canKeepOpenModalBannerVisible ? earnVault : undefined)
+  useLogEarnSurfaceViewed({
+    entryPoint: EarnEntryPoint.TokenDetailsEarnBanner,
+    isVisible: !!visibleVault,
+    surface: EarnAnalyticsSurface.Web,
+  })
 
   if (!visibleVault && !modalVault) {
     return null

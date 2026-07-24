@@ -7,38 +7,39 @@ import { preloadedMobileState } from 'src/test/fixtures'
 import { renderWithProviders } from 'src/test/render'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
+import type { Mock } from 'vitest'
 
-const mockOnClose = jest.fn()
+const mockOnClose = vi.fn()
 
-jest.mock('src/components/modals/useReactNavigationModal', () => ({
-  useReactNavigationModal: (): { onClose: jest.Mock; preventCloseRef: { current: boolean } } => ({
+vi.mock('src/components/modals/useReactNavigationModal', () => ({
+  useReactNavigationModal: (): { onClose: Mock; preventCloseRef: { current: boolean } } => ({
     onClose: mockOnClose,
     preventCloseRef: { current: false },
   }),
 }))
 
-jest.mock('src/app/navigation/rootNavigation', () => ({
-  navigate: jest.fn(),
+vi.mock('src/app/navigation/rootNavigation', () => ({
+  navigate: vi.fn(),
 }))
 
-jest.mock('@universe/gating', () => ({
-  ...jest.requireActual('@universe/gating'),
-  useFeatureFlag: jest.fn().mockReturnValue(false),
-  useFeatureFlagWithLoading: jest.fn().mockReturnValue({ value: false, isLoading: false }),
-  useFeatureFlagWithExposureLoggingDisabled: jest.fn().mockReturnValue(false),
+vi.mock('@universe/gating', async () => ({
+  ...(await vi.importActual('@universe/gating')),
+  useFeatureFlag: vi.fn().mockReturnValue(false),
+  useFeatureFlagWithLoading: vi.fn().mockReturnValue({ value: false, isLoading: false }),
+  useFeatureFlagWithExposureLoggingDisabled: vi.fn().mockReturnValue(false),
 }))
 
-const mockDispatch = jest.fn()
-jest.mock('react-redux', () => ({
-  ...jest.requireActual('react-redux'),
-  useDispatch: (): jest.Mock => mockDispatch,
+const mockDispatch = vi.fn()
+vi.mock('react-redux', async () => ({
+  ...(await vi.importActual('react-redux')),
+  useDispatch: (): Mock => mockDispatch,
 }))
 
 function createProps(entry: 'onramp' | 'offramp'): AppStackScreenProp<typeof ModalName.FiatOnRampAction> {
   return {
     navigation: {
-      navigate: jest.fn(),
-      goBack: jest.fn(),
+      navigate: vi.fn(),
+      goBack: vi.fn(),
     } as unknown as AppStackScreenProp<typeof ModalName.FiatOnRampAction>['navigation'],
     route: {
       key: 'fiat-on-ramp-action',
@@ -50,7 +51,7 @@ function createProps(entry: 'onramp' | 'offramp'): AppStackScreenProp<typeof Mod
 
 describe('FiatOnRampActionModal', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('rendering', () => {
@@ -59,10 +60,10 @@ describe('FiatOnRampActionModal', () => {
         preloadedState: preloadedMobileState({}),
       })
 
-      expect(getByText('Buy with cash')).toBeTruthy()
-      expect(getByText('Use a debit card or bank account')).toBeTruthy()
-      expect(getByText('Swap tokens')).toBeTruthy()
-      expect(getByText('Trade using your existing balance')).toBeTruthy()
+      expect(getByText('fiatOnRamp.action.buyWithCash')).toBeTruthy()
+      expect(getByText('fiatOnRamp.action.buyWithCash.description')).toBeTruthy()
+      expect(getByText('fiatOnRamp.action.swapTokens')).toBeTruthy()
+      expect(getByText('fiatOnRamp.action.swapTokens.description')).toBeTruthy()
     })
 
     it('should render Sell variant with correct text', () => {
@@ -70,10 +71,10 @@ describe('FiatOnRampActionModal', () => {
         preloadedState: preloadedMobileState({}),
       })
 
-      expect(getByText('Sell for cash')).toBeTruthy()
-      expect(getByText('Withdraw to a debit card or bank')).toBeTruthy()
-      expect(getByText('Swap tokens')).toBeTruthy()
-      expect(getByText('Trade using your existing balance')).toBeTruthy()
+      expect(getByText('fiatOnRamp.action.sellForCash')).toBeTruthy()
+      expect(getByText('fiatOnRamp.action.sellForCash.description')).toBeTruthy()
+      expect(getByText('fiatOnRamp.action.swapTokens')).toBeTruthy()
+      expect(getByText('fiatOnRamp.action.swapTokens.description')).toBeTruthy()
     })
   })
 
@@ -83,7 +84,7 @@ describe('FiatOnRampActionModal', () => {
         preloadedState: preloadedMobileState({}),
       })
 
-      fireEvent.press(getByText('Buy with cash'), ON_PRESS_EVENT_PAYLOAD)
+      fireEvent.press(getByText('fiatOnRamp.action.buyWithCash'), ON_PRESS_EVENT_PAYLOAD)
 
       expect(mockOnClose).toHaveBeenCalledTimes(1)
       expect(mockDispatch).toHaveBeenCalledWith(
@@ -108,7 +109,7 @@ describe('FiatOnRampActionModal', () => {
         preloadedState: preloadedMobileState({}),
       })
 
-      fireEvent.press(getByText('Swap tokens'), ON_PRESS_EVENT_PAYLOAD)
+      fireEvent.press(getByText('fiatOnRamp.action.swapTokens'), ON_PRESS_EVENT_PAYLOAD)
 
       expect(mockOnClose).toHaveBeenCalledTimes(1)
       expect(navigate).toHaveBeenCalledWith(ModalName.Swap)
@@ -121,7 +122,7 @@ describe('FiatOnRampActionModal', () => {
         preloadedState: preloadedMobileState({}),
       })
 
-      fireEvent.press(getByText('Sell for cash'), ON_PRESS_EVENT_PAYLOAD)
+      fireEvent.press(getByText('fiatOnRamp.action.sellForCash'), ON_PRESS_EVENT_PAYLOAD)
 
       expect(mockOnClose).toHaveBeenCalledTimes(1)
       expect(mockDispatch).toHaveBeenCalledWith(

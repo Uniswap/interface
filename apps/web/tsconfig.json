@@ -95,9 +95,6 @@
     },
     {
       "path": "../../packages/uniswap"
-    },
-    {
-      "path": "../../config/vitest-presets"
     }
   ]
 }

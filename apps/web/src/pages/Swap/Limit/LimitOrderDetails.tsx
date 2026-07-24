@@ -134,7 +134,7 @@ export function LimitOrderDetails({
               data-testid={TestID.ConfirmSwapButton}
               loading={isLoading}
               onPress={onConfirm}
-              isDisabled={disabledConfirm}
+              disabled={disabledConfirm}
               id={ElementName.ConfirmSwapButton}
             >
               {isLoading ? t('swap.finalizingQuote') : callToAction.buttonText}

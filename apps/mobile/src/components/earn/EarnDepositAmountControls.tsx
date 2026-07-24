@@ -1,42 +1,38 @@
 import type { RefObject } from 'react'
 import type { LayoutChangeEvent, TextInput as RNTextInput } from 'react-native'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { MAX_INPUT_FONT_SIZE } from 'src/components/earn/useEarnAmountInputFontSizing'
+import { Flex, SpaceTokens, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { ArrowDownArrowUp } from 'ui/src/components/icons/ArrowDownArrowUp'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { fonts, iconSizes } from 'ui/src/theme'
 import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { Pill } from 'uniswap/src/components/pill/Pill'
-import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { EarnInlineError } from 'uniswap/src/features/earn/EarnInlineError'
 import type { EarnDepositSourceOption } from 'uniswap/src/features/earn/types'
 import { WithdrawLiquidityInfoPopover } from 'uniswap/src/features/earn/WithdrawLiquidityInfoPopover'
 import type { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { openUri } from 'uniswap/src/utils/linking'
+import {
+  type LocalizationContextState,
+  useLocalizationContext,
+} from 'uniswap/src/features/language/LocalizationContext'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 
-const SUFFIX_FONT_RATIO = 0.4
 const PERCENT_OPTIONS = [0.25, 0.5, 0.75, 1] as const
 const QUICK_SELECT_ROW_MIN_HEIGHT = fonts.buttonLabel3.lineHeight + 18
 
-export function EarnHelpIconButton(): JSX.Element {
+export function EarnHelpIconButton({ onPress }: { onPress: () => void }): JSX.Element {
   return (
-    <TouchableArea
-      position="absolute"
-      right={0}
-      top="$spacing6"
-      onPress={() =>
-        openUri({ uri: UniswapHelpUrls.articles.earnHelp, openExternalBrowser: true, isSafeUri: true }).catch(
-          () => undefined,
-        )
-      }
-    >
-      <InfoCircleFilled color="$neutral3" size="$icon.20" />
-    </TouchableArea>
+    <Flex position="absolute" right={0} top={0} bottom={0} justifyContent="center">
+      <TouchableArea testID={TestID.HelpIcon} onPress={onPress}>
+        <InfoCircleFilled color="$neutral3" size="$icon.20" />
+      </TouchableArea>
+    </Flex>
   )
 }
 
@@ -45,18 +41,46 @@ export function getFormattedAlternateAmount({
   exactAmountFiat,
   exactAmountToken,
   symbol,
-  fiatCurrencyInfo,
+  currencyCode,
+  formatNumberOrString,
 }: {
   isFiatInput: boolean
   exactAmountFiat: string
   exactAmountToken: string
   symbol: string
-  fiatCurrencyInfo: FiatCurrencyInfo
+  currencyCode: string
+  formatNumberOrString: LocalizationContextState['formatNumberOrString']
 }): string {
   if (isFiatInput) {
-    return `${exactAmountToken || '0'} ${symbol}`
+    return `${formatNumberOrString({
+      value: exactAmountToken || 0,
+      type: NumberType.TokenNonTx,
+    })} ${symbol}`
   }
-  return `${fiatCurrencyInfo.symbol}${exactAmountFiat || '0'}`
+  return formatNumberOrString({
+    value: exactAmountFiat || 0,
+    type: NumberType.FiatStandard,
+    currencyCode,
+  })
+}
+
+/**
+ * Explicit spacing for the amount entry so the default layout stays pixel-equivalent to the prior
+ * uniform 12px gap + 16px padding, while short devices reclaim vertical space when the inline error
+ * mounts (which would otherwise push the network/balance selector behind the decimal keypad).
+ */
+export function getAmountEntrySpacing({
+  isShortMobileDevice,
+  hasInlineError,
+}: {
+  isShortMobileDevice: boolean
+  hasInlineError: boolean
+}): { errorGap: SpaceTokens; pb: SpaceTokens } {
+  const compact = isShortMobileDevice && hasInlineError
+  return {
+    errorGap: compact ? '$spacing4' : '$spacing12',
+    pb: compact ? '$none' : '$spacing16',
+  }
 }
 
 export function AmountEntrySection({
@@ -67,6 +91,7 @@ export function AmountEntrySection({
   inputRef,
   inlineError,
   isFiatInput,
+  isShortMobileDevice,
   maxDecimals,
   maxLabel,
   onInputLayout,
@@ -83,6 +108,7 @@ export function AmountEntrySection({
   inputRef: RefObject<RNTextInput | null>
   inlineError?: string
   isFiatInput: boolean
+  isShortMobileDevice: boolean
   maxDecimals: number
   maxLabel: string
   onInputLayout: (event: LayoutChangeEvent) => void
@@ -92,83 +118,67 @@ export function AmountEntrySection({
   symbol: string
   value: string
 }): JSX.Element {
-  const inputLineHeight = fontSize + 4
-  const showFiatPlaceholder = isFiatInput && !value
-  const focusInput = (): void => {
-    inputRef.current?.focus()
-  }
+  const { errorGap, pb } = getAmountEntrySpacing({ isShortMobileDevice, hasInlineError: Boolean(inlineError) })
 
   return (
-    <Flex alignItems="center" gap="$spacing12" py="$spacing16" onLayout={onInputLayout}>
-      <Flex row alignItems="center" justifyContent="center">
-        {showFiatPlaceholder ? (
-          <TouchableArea onPress={focusInput}>
-            <Text
-              color="$neutral3"
-              fontFamily="$heading"
-              fontSize={fontSize}
-              fontWeight="$book"
-              lineHeight={inputLineHeight}
-              maxFontSizeMultiplier={fonts.heading1.maxFontSizeMultiplier}
-            >
-              {`${fiatCurrencyInfo.symbol}0`}
-            </Text>
-          </TouchableArea>
-        ) : null}
-        {isFiatInput && !showFiatPlaceholder && (
-          <Text
-            color="$neutral1"
-            fontFamily="$heading"
-            fontSize={fontSize}
-            fontWeight="$book"
-            lineHeight={inputLineHeight}
-            maxFontSizeMultiplier={fonts.heading1.maxFontSizeMultiplier}
-          >
-            {fiatCurrencyInfo.symbol}
-          </Text>
-        )}
+    <Flex alignItems="center" pt="$spacing16" pb={pb} onLayout={onInputLayout}>
+      {/* Mirrors FiatOnRampAmountSection: center-aligned row, symbol as a TextInput sized like the
+          amount input (Text vs TextInput baselines diverge on iOS), and no lineHeight — heading1's
+          0.96 line height clips ascenders when applied to a TextInput. The key remounts the symbol
+          on mode toggle: a non-editing TextInput doesn't re-measure its intrinsic width when `value`
+          changes ($ ↔ symbol), which strands the row off-center until an unrelated re-render. */}
+      <Flex alignItems="center" justifyContent="center" flexDirection={isFiatInput ? 'row' : 'row-reverse'}>
+        <TextInput
+          key={isFiatInput ? 'fiat-symbol' : 'token-symbol'}
+          allowFontScaling
+          disabled
+          color={value ? '$neutral1' : '$neutral3'}
+          fontFamily="$heading"
+          fontSize={fontSize}
+          fontWeight="$book"
+          height={fontSize + 5}
+          maxFontSizeMultiplier={fonts.heading1.maxFontSizeMultiplier}
+          minHeight={MAX_INPUT_FONT_SIZE}
+          px="$none"
+          py="$none"
+          testID={TestID.EarnAmountSymbol}
+          value={isFiatInput ? fiatCurrencyInfo.symbol : ` ${symbol}`}
+        />
         <AmountInput
           ref={inputRef}
           adjustWidthToContent
           autoFocus
-          opacity={showFiatPlaceholder ? 0 : undefined}
-          pointerEvents={showFiatPlaceholder ? 'none' : undefined}
-          position={showFiatPlaceholder ? 'absolute' : undefined}
+          alignSelf="stretch"
           backgroundColor="$transparent"
           borderWidth="$none"
           fiatCurrencyInfo={fiatCurrencyInfo}
           fontFamily="$heading"
           fontSize={fontSize}
           fontWeight="$book"
-          height={inputLineHeight}
-          lineHeight={inputLineHeight}
+          height={fontSize + 5}
           maxDecimals={maxDecimals}
           maxFontSizeMultiplier={fonts.heading1.maxFontSizeMultiplier}
-          minHeight={inputLineHeight}
+          minHeight={MAX_INPUT_FONT_SIZE}
           placeholder="0"
           placeholderTextColor="$neutral3"
           px="$none"
           py="$none"
           returnKeyType={undefined}
           showSoftInputOnFocus={false}
+          textAlign={isFiatInput ? 'left' : 'right'}
           value={value}
           onChangeText={setActiveAmount}
         />
-        {!isFiatInput && (
-          <Text color="$neutral2" fontSize={fontSize * SUFFIX_FONT_RATIO} ml="$spacing4">
-            {symbol}
-          </Text>
-        )}
       </Flex>
 
-      <Flex centered minHeight={QUICK_SELECT_ROW_MIN_HEIGHT}>
+      <Flex centered mt="$spacing12" minHeight={QUICK_SELECT_ROW_MIN_HEIGHT}>
         {hasAmount ? (
           <TouchableArea onPress={onToggleInputMode}>
             <Flex row alignItems="center" gap="$spacing4">
-              <ArrowDownArrowUp color="$neutral2" size="$icon.16" />
-              <Text color="$neutral2" variant="subheading2">
+              <Text color="$neutral2" variant="subheading1">
                 {formattedAlternateAmount}
               </Text>
+              <ArrowDownArrowUp color="$neutral2" size="$icon.16" />
             </Flex>
           </TouchableArea>
         ) : (
@@ -184,7 +194,11 @@ export function AmountEntrySection({
         )}
       </Flex>
 
-      {inlineError && <EarnInlineError message={inlineError} />}
+      {inlineError && (
+        <Flex mt={errorGap}>
+          <EarnInlineError message={inlineError} />
+        </Flex>
+      )}
     </Flex>
   )
 }
@@ -216,7 +230,7 @@ export function DepositSourceRowContent({
       <Flex row alignItems="center" gap="$spacing12">
         <TokenLogo
           url={currencyInfo?.logoUrl}
-          size={iconSizes.icon32}
+          size={iconSizes.icon36}
           chainId={currency?.chainId}
           symbol={symbol}
           name={currency?.name}
@@ -245,17 +259,23 @@ export function DepositSourceRowContent({
             {apyLabel}
           </Text>
         )}
-        {showChevron && <RotatableChevron color="$neutral3" direction="down" size="$icon.16" />}
+        {showChevron && <RotatableChevron color="$neutral3" direction="end" size="$icon.16" />}
       </Flex>
     </Flex>
   )
 }
 
-export function DepositSourceMenuItem({ option }: { option: EarnDepositSourceOption }): JSX.Element {
+export function DepositSourceMenuItem({
+  canonicalTokenName,
+  option,
+}: {
+  canonicalTokenName?: string
+  option: EarnDepositSourceOption
+}): JSX.Element {
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
   const { currencyInfo, balanceQuantity, balanceUsd } = option
   const { currency } = currencyInfo
-  const tokenName = currency.name ?? currency.symbol ?? ''
+  const tokenName = canonicalTokenName ?? currency.name ?? currency.symbol ?? ''
   const chainScopedName = `${getChainInfo(option.chainId).label} ${currency.symbol ?? ''}`.trim()
 
   return (

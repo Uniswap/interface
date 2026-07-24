@@ -10,18 +10,23 @@ export function IssuerTableRowHoverProvider({
   hoverStyle,
   onPress,
   alignColumnsWithParentRow = false,
+  alignColumnsBleedPx = EXPANDABLE_ASSET_INNER_PADDING_X_PX,
 }: {
   children: ReactNode
   hoverStyle?: FlexProps['hoverStyle']
   onPress?: FlexProps['onPress']
   /** Pulls the table row outward so token columns line up with the parent row above. */
   alignColumnsWithParentRow?: boolean
+  /** Horizontal bleed (each side) used to align columns. RWA shells are widened by the shell padding, so
+   *  bleeding past the inner panel padding (4px) is enough. Non-widened shells must also bleed past the
+   *  shell padding (8px total) or the fixed-width sub-row overflows the shell's right edge. */
+  alignColumnsBleedPx?: number
 }): JSX.Element {
   const [isHovered, setIsHovered] = useState(false)
-  const issuerRowBleedPx = EXPANDABLE_ASSET_INNER_PADDING_X_PX * 2
+  const issuerRowBleedPx = alignColumnsBleedPx * 2
 
   const row = alignColumnsWithParentRow ? (
-    <Flex mx={-EXPANDABLE_ASSET_INNER_PADDING_X_PX} width={`calc(100% + ${issuerRowBleedPx}px)`}>
+    <Flex mx={-alignColumnsBleedPx} width={`calc(100% + ${issuerRowBleedPx}px)`}>
       {children}
     </Flex>
   ) : (

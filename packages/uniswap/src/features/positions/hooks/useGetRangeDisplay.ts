@@ -1,8 +1,9 @@
 import { Currency, Price } from '@uniswap/sdk-core'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { formatPositionPrice } from 'uniswap/src/features/positions/formatPositionPrice'
 import { Bound, useIsTickAtLimit } from 'uniswap/src/features/positions/hooks/useIsTickAtLimit'
 import { PriceOrdering } from 'uniswap/src/features/positions/types'
-import { NumberType } from 'utilities/src/format/types'
 
 function calculateInvertedValues({
   priceLower,
@@ -40,6 +41,7 @@ function useFormatTickPrice({
   direction: Bound
 }): string {
   const { formatNumberOrString } = useLocalizationContext()
+  const locale = useCurrentLocale()
 
   if (atLimit[direction]) {
     return direction === Bound.LOWER ? '0' : '∞'
@@ -49,9 +51,10 @@ function useFormatTickPrice({
     return '-'
   }
 
-  return formatNumberOrString({
+  return formatPositionPrice({
     value: price.toSignificant(),
-    type: NumberType.TokenTx,
+    locale,
+    formatNumberOrString,
   })
 }
 

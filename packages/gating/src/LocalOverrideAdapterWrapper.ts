@@ -15,8 +15,9 @@ export class LocalOverrideAdapterWrapper extends LocalOverrideAdapter {
   refreshStatsig(): void {
     const statsigClient = this.getClient()
     const statsigUser = statsigClient.getContext().user
-    // oxlint-disable-next-line typescript/no-floating-promises
-    statsigClient.updateUserAsync(statsigUser)
+    // Overrides are local, so a sync re-evaluation from cached values surfaces them
+    // immediately; updateUserAsync gated the UI update on a network round-trip.
+    statsigClient.updateUserSync(statsigUser)
   }
 
   overrideGate(name: string, value: boolean): void {

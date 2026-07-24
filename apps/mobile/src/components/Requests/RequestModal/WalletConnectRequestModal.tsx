@@ -2,7 +2,7 @@ import { useNetInfo } from '@react-native-community/netinfo'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { getSdkError } from '@walletconnect/utils'
 import { providers } from 'ethers'
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { ModalWithOverlay } from 'src/components/Requests/ModalWithOverlay/ModalWithOverlay'
@@ -23,10 +23,12 @@ import {
   isBatchedTransactionRequest,
   isTransactionRequest,
   isUserOpRequest,
+  removeRequest,
   setDidOpenFromDeepLink,
   WalletConnectSigningRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { spacing } from 'ui/src/theme'
+import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { isSelfCallWithData, isSignTypedDataRequest } from 'uniswap/src/features/dappRequests/utils'
 import { buildGasServiceUrgencyOverride } from 'uniswap/src/features/gas/components/NetworkCostEditor/buildGasServiceUrgencyOverride'
@@ -39,6 +41,7 @@ import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/const
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { DappRequestType, UwULinkMethod, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { logger } from 'utilities/src/logger/logger'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { TransactionRiskLevel } from 'wallet/src/features/dappRequests/types'
 import { shouldDisableConfirm } from 'wallet/src/features/dappRequests/utils/riskUtils'
@@ -62,6 +65,55 @@ const VALID_REQUEST_TYPES = [
 ]
 
 export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Element | null {
+  const dispatch = useDispatch()
+  const isValidChainId = isUniverseChainId(request.chainId)
+
+  // Dapps can send requests for chains outside our supported set. Rendering the modal
+  // for one crashes on chain info lookups, so decline the request back to the dapp instead.
+  useEffect(() => {
+    if (isValidChainId) {
+      return
+    }
+
+    logger.error(new Error('WalletConnect request received for unsupported chainId'), {
+      tags: { file: 'WalletConnectRequestModal', function: 'WalletConnectRequestModal' },
+      extra: {
+        chainId: request.chainId,
+        method: request.type,
+        dappUrl: request.dappRequestInfo.url,
+        dappName: request.dappRequestInfo.name,
+      },
+    })
+
+    dispatch(removeRequest({ requestInternalId: request.internalId, account: request.account }))
+
+    if (request.dappRequestInfo.requestType === DappRequestType.WalletConnectSessionRequest) {
+      wcWeb3Wallet
+        .respondSessionRequest({
+          topic: request.sessionId,
+          response: {
+            id: Number(request.internalId),
+            jsonrpc: '2.0',
+            error: getSdkError('UNSUPPORTED_CHAINS'),
+          },
+        })
+        .catch((error) =>
+          logger.error(error, {
+            tags: { file: 'WalletConnectRequestModal', function: 'respondSessionRequest' },
+            extra: { chainId: request.chainId },
+          }),
+        )
+    }
+  }, [dispatch, isValidChainId, request])
+
+  if (!isValidChainId) {
+    return null
+  }
+
+  return <ValidatedWalletConnectRequestModal request={request} onClose={onClose} />
+}
+
+function ValidatedWalletConnectRequestModal({ onClose, request }: Props): JSX.Element | null {
   const { t } = useTranslation()
   const netInfo = useNetInfo()
   const didOpenFromDeepLink = useSelector(selectDidOpenFromDeepLink)

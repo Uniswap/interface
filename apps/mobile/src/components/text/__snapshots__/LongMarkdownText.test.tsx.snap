@@ -1,119 +1,73 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`LongMarkdownText renders without error 1`] = `
-<View
-  style={
-    {
-      "flexDirection": "column",
-      "gap": 8,
-    }
-  }
->
-  <View
-    onLayout={[Function]}
-    style={
-      {
-        "flexDirection": "column",
-      }
-    }
-    testID="markdown-wrapper"
+exports[`LongMarkdownText > renders without error 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    <View
-      onLayout={[Function]}
-      pointerEvents="none"
-      style={
-        {
-          "flexDirection": "column",
-          "opacity": 0,
-          "position": "absolute",
-        }
-      }
+    <div
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665593"
     >
-      <View
-        style={
-          {
-            "height": "auto",
-            "overflow": "hidden",
-          }
-        }
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+        data-testid="markdown-wrapper"
       >
-        <View
-          style={
-            {
-              "alignItems": "flex-start",
-              "flexDirection": "row",
-              "flexWrap": "wrap",
-              "justifyContent": "flex-start",
-              "marginBottom": 0,
-              "marginTop": 0,
-              "width": "100%",
-            }
-          }
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _pointerEvents-none _position-absolute"
         >
-          <Text
-            style={{}}
+          <div
+            class="css-view-175oi2r r-height-16l9doz r-overflow-1udh08x"
           >
-            <Text
-              style={
-                [
-                  {
-                    "color": "#131313",
-                    "fontFamily": "Basel Grotesk",
-                    "fontSize": 17,
-                    "lineHeight": 22.1,
-                  },
-                  {},
-                ]
-              }
+            <div
+              class="css-view-175oi2r r-alignItems-1habvwh r-flexDirection-18u37iz r-flexWrap-1w6e6rj r-justifyContent-1h0z5md r-marginBottom-p1pxzi r-marginTop-1mnahxq r-width-13qz1uu"
             >
-              .
-            </Text>
-          </Text>
-        </View>
-      </View>
-    </View>
-    <View
-      style={
-        {
-          "height": "auto",
-          "overflow": "hidden",
-        }
-      }
-    >
-      <View
-        style={
-          {
-            "alignItems": "flex-start",
-            "flexDirection": "row",
-            "flexWrap": "wrap",
-            "justifyContent": "flex-start",
-            "marginBottom": 0,
-            "marginTop": 0,
-            "width": "100%",
-          }
-        }
-      >
-        <Text
-          style={{}}
+              <div
+                class="css-text-146c3p1"
+                dir="auto"
+              >
+                <span
+                  class="css-textHasAncestor-1jxf684"
+                  style="color: rgb(19, 19, 19); font-family: Basel Grotesk; font-size: 17px; line-height: 22.1px;"
+                >
+                  .
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="css-view-175oi2r r-height-6zrdfa r-overflow-1udh08x"
         >
-          <Text
-            style={
-              [
-                {
-                  "color": "#131313",
-                  "fontFamily": "Basel Grotesk",
-                  "fontSize": 17,
-                  "lineHeight": 22.1,
-                },
-                {},
-              ]
-            }
+          <div
+            class="css-view-175oi2r r-alignItems-1habvwh r-flexDirection-18u37iz r-flexWrap-1w6e6rj r-justifyContent-1h0z5md r-marginBottom-p1pxzi r-marginTop-1mnahxq r-width-13qz1uu"
           >
-            Some very long text
-          </Text>
-        </Text>
-      </View>
-    </View>
-  </View>
-</View>
+            <div
+              class="css-text-146c3p1"
+              dir="auto"
+            >
+              <span
+                class="css-textHasAncestor-1jxf684"
+                style="color: rgb(19, 19, 19); font-family: Basel Grotesk; font-size: 17px; line-height: 22.1px;"
+              >
+                Some very long text
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span
+        class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-t-space-non101 _mr-0px _mb-t-space-non101 _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _pt-t-space-non101 _pb-t-space-non101 _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh507465454"
+        data-disable-theme="true"
+        data-testid="read-more-button"
+        style="color: rgba(19, 19, 19, 0.63);"
+      >
+        common.longText.button.more
+      </span>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;

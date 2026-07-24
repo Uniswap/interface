@@ -40,6 +40,7 @@ import { migration59 } from '~/state/migrations/59'
 import { migration60 } from '~/state/migrations/60'
 import { migration61 } from '~/state/migrations/61'
 import { migration62 } from '~/state/migrations/62'
+import { migration63 } from '~/state/migrations/63'
 import { createLocalTransactionAndSignatureClearingMigration } from '~/state/migrations/clearLocalTransactionsAndSignatures'
 import { createLocalTransactionClearingMigration } from '~/state/migrations/createLocalTransactionClearingMigration'
 import { legacyLocalStorageMigration } from '~/state/migrations/legacy'
@@ -118,9 +119,10 @@ export const migrations: MigrationManifest = {
   60: migration60,
   61: migration61,
   62: migration62,
+  63: migration63,
 } as const
 
-export const PERSIST_VERSION = 62
+export const PERSIST_VERSION = 63
 
 export const INDEXED_DB_REDUX_TABLE_NAME = 'redux'
 

@@ -39,7 +39,7 @@ export const MiniPoolsTable = memo(function MiniPoolsTable({ account, maxPools, 
   const navigate = useNavigate()
   const trace = useTrace()
   const portfolioPoolsBalancesEnabled = useFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
-  const { chainId: routeChainId, externalAddress } = usePortfolioRoutes()
+  const { chainId: routeChainId, externalAddress, isExternalWallet } = usePortfolioRoutes()
 
   const { positions, showLoading, hasNoData } = useMiniPoolsTableData({ account, maxPools, chainId })
 
@@ -58,7 +58,7 @@ export const MiniPoolsTable = memo(function MiniPoolsTable({ account, maxPools, 
       })
     : '/positions'
 
-  const columns = useMiniPoolsTableColumns({ isLoading: showLoading })
+  const columns = useMiniPoolsTableColumns({ isLoading: showLoading, readOnly: isExternalWallet })
 
   const handleRowPress = useCallback(
     (position: PositionInfo) => {

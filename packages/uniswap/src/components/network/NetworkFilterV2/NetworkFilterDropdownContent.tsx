@@ -15,6 +15,7 @@ interface NetworkFilterDropdownContentProps {
   isOpen: boolean
   onPressChain: (chainId: UniverseChainId | null) => void
   maxHeight?: number
+  fillAvailableHeight?: boolean
   autoFocus?: boolean
   isMobileSheet?: boolean
   forceAllNetworksLabel?: boolean
@@ -29,6 +30,7 @@ export function NetworkFilterDropdownContent({
   isOpen,
   onPressChain,
   maxHeight,
+  fillAvailableHeight,
   autoFocus,
   isMobileSheet,
   forceAllNetworksLabel,
@@ -44,32 +46,47 @@ export function NetworkFilterDropdownContent({
     }
   }, [isOpen, setSearchQuery])
 
+  const scrollableList = (
+    <Flex
+      flex={fillAvailableHeight || isMobileSheet ? 1 : undefined}
+      maxHeight={!fillAvailableHeight && !isMobileSheet ? maxHeight : undefined}
+      minHeight={0}
+      style={{
+        ...scrollbarStyles,
+        scrollbarWidth: 'auto',
+        overflowY: 'auto',
+        overflow: 'auto',
+      }}
+    >
+      <NetworkFilterContent
+        searchQuery={searchQuery}
+        chainIds={filteredChainIds}
+        selectedChain={selectedChain}
+        showAllNetworks={showAllNetworks}
+        tieredOptions={filteredTieredOptions}
+        allNetworksChainIds={allNetworksChainIds}
+        forceAllNetworksLabel={forceAllNetworksLabel}
+        onPressChain={onPressChain}
+      />
+    </Flex>
+  )
+
+  // Mobile sheet must use the flex layout too: HeightAnimator renders children absolutely at natural
+  // height, so the list never gets a height bound and touch scroll does nothing inside the sheet.
+  if (fillAvailableHeight || isMobileSheet) {
+    return (
+      <Flex flex={1} flexDirection="column" minHeight={0} overflow="hidden">
+        <NetworkSearchBar autoFocus={autoFocus} value={searchQuery} onChangeText={setSearchQuery} />
+        {scrollableList}
+      </Flex>
+    )
+  }
+
   return (
     <>
       <NetworkSearchBar autoFocus={autoFocus} value={searchQuery} onChangeText={setSearchQuery} />
       <HeightAnimator useInitialHeight open>
-        <Flex
-          flex={isMobileSheet ? 1 : undefined}
-          maxHeight={isMobileSheet ? undefined : maxHeight}
-          minHeight={0}
-          style={{
-            ...scrollbarStyles,
-            scrollbarWidth: 'auto',
-            overflowY: 'auto',
-            overflowX: 'hidden',
-          }}
-        >
-          <NetworkFilterContent
-            searchQuery={searchQuery}
-            chainIds={filteredChainIds}
-            selectedChain={selectedChain}
-            showAllNetworks={showAllNetworks}
-            tieredOptions={filteredTieredOptions}
-            allNetworksChainIds={allNetworksChainIds}
-            forceAllNetworksLabel={forceAllNetworksLabel}
-            onPressChain={onPressChain}
-          />
-        </Flex>
+        {scrollableList}
       </HeightAnimator>
     </>
   )

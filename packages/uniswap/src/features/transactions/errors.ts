@@ -1,8 +1,8 @@
-import { datadogRum } from '@datadog/browser-rum'
 import { FetchError, is401Error } from '@universe/api'
 import { isWebApp } from '@universe/environment'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
+import { reportFingerprintError } from 'uniswap/src/features/transactions/reportFingerprintError'
 import { TokenApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
 import { TokenRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
@@ -91,14 +91,7 @@ export class TransactionStepFailedError extends TransactionError {
       }
     } catch (e) {
       if (isWebApp) {
-        datadogRum.addAction('Transaction Action', {
-          message: `problem determining fingerprint for ${this.step.type}`,
-          level: 'info',
-          step: this.step.type,
-          data: {
-            errorMessage: e instanceof Error ? e.message : undefined,
-          },
-        })
+        reportFingerprintError({ stepType: this.step.type, error: e })
       }
     }
 

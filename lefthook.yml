@@ -23,7 +23,7 @@ pre-commit:
     git-secrets:
       run: |
         export TERM=dumb
-        if command -v git-secrets &> /dev/null; then
+        if command -v git-secrets > /dev/null 2>&1; then
           git-secrets --register-aws > /dev/null
           echo "Running git-secrets..."
           git-secrets --pre_commit_hook -- "$@"
@@ -34,7 +34,7 @@ pre-commit:
     trufflehog:
       run: |
         export TERM=dumb
-        if command -v trufflehog &> /dev/null; then
+        if command -v trufflehog > /dev/null 2>&1; then
           # Scan staged diff via stdin so the hook works in git worktrees (where .git is
           # a file, not a directory) and actually scans the pending commit's content.
           git diff --cached --no-color | trufflehog stdin --only-verified --fail

@@ -48,6 +48,35 @@ export function WithdrawReviewDetails({
 
   return (
     <>
+      {/* Expanded-only rows sit above shared content so the sheet grows upward around the bottom-anchored controls. */}
+      {expanded && (
+        <Flex gap="$spacing12">
+          <EarnReviewSummaryRow
+            label={t('explore.earn.withdraw.vault')}
+            value={
+              <TouchableArea row alignItems="center" gap="$spacing4" onPress={onOpenVaultExplorer}>
+                <Text variant="body3">{shortenAddress({ address: vault.vaultAddress })}</Text>
+                <ExternalLink color="$neutral2" size="$icon.16" />
+              </TouchableArea>
+            }
+          />
+          <EarnReviewSummaryRow
+            label={t('explore.earn.withdraw.yourBalance')}
+            value={
+              <Flex row alignItems="center" gap="$spacing6">
+                <Text variant="body3" color="$neutral2">
+                  {formatLocalFiat(positionDepositedUsd)}
+                </Text>
+                <Text variant="body3" color="$neutral2">
+                  →
+                </Text>
+                <Text variant="body3">{formatLocalFiat(balanceAfterUsd)}</Text>
+              </Flex>
+            }
+          />
+        </Flex>
+      )}
+
       <ExpandoRow
         isExpanded={expanded}
         label={expanded ? t('explore.earn.deposit.showLess') : t('explore.earn.deposit.showMore')}
@@ -56,33 +85,6 @@ export function WithdrawReviewDetails({
       />
 
       <Flex gap="$spacing12">
-        {expanded && (
-          <>
-            <EarnReviewSummaryRow
-              label={t('explore.earn.withdraw.vault')}
-              value={
-                <TouchableArea row alignItems="center" gap="$spacing4" onPress={onOpenVaultExplorer}>
-                  <Text variant="body3">{shortenAddress({ address: vault.vaultAddress })}</Text>
-                  <ExternalLink color="$neutral2" size="$icon.16" />
-                </TouchableArea>
-              }
-            />
-            <EarnReviewSummaryRow
-              label={t('explore.earn.withdraw.yourBalance')}
-              value={
-                <Flex row alignItems="center" gap="$spacing6">
-                  <Text variant="body3" color="$neutral2">
-                    {formatLocalFiat(positionDepositedUsd)}
-                  </Text>
-                  <Text variant="body3" color="$neutral2">
-                    →
-                  </Text>
-                  <Text variant="body3">{formatLocalFiat(balanceAfterUsd)}</Text>
-                </Flex>
-              }
-            />
-          </>
-        )}
         <EarnReviewSummaryRow
           label={
             <Flex row alignItems="center" gap="$spacing4">

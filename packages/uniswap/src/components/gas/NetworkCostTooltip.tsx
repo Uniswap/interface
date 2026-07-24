@@ -12,18 +12,25 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 export function NetworkCostTooltip({
   chainId,
   includesDelegation,
+  includesDelegationUpgrade = false,
 }: {
   chainId: UniverseChainId
   includesDelegation: boolean
+  /** The included delegation is a smart wallet update (Calibur re-delegation) rather than a first-time activation */
+  includesDelegationUpgrade?: boolean
 }): JSX.Element {
   const { t } = useTranslation()
 
-  const learnMoreUrl = includesDelegation
-    ? UniswapHelpUrls.articles.smartWalletDelegation
-    : UniswapHelpUrls.articles.networkFeeInfo
-  const text = includesDelegation
-    ? t('smartWallet.banner.networkCost', { chainName: getChainInfo(chainId).label })
-    : t('transaction.networkCost.description')
+  const learnMoreUrl = includesDelegationUpgrade
+    ? UniswapHelpUrls.articles.caliburUpgrades
+    : includesDelegation
+      ? UniswapHelpUrls.articles.smartWalletDelegation
+      : UniswapHelpUrls.articles.networkFeeInfo
+  const text = includesDelegationUpgrade
+    ? t('transaction.networkCost.includesSmartWalletUpdate')
+    : includesDelegation
+      ? t('smartWallet.banner.networkCost', { chainName: getChainInfo(chainId).label })
+      : t('transaction.networkCost.description')
   return (
     <Tooltip.Outer>
       <Tooltip.Header

@@ -76,7 +76,7 @@ export function PositionsSummaryChips({
       <SummaryChip
         label={t('pool.positions.summary.totalFees')}
         action={
-          <Button emphasis="secondary" size="small" maxWidth="fit-content" isDisabled onPress={onCollectFeesNoop}>
+          <Button emphasis="secondary" size="small" maxWidth="fit-content" disabled onPress={onCollectFeesNoop}>
             {t('common.collect.button')}
           </Button>
         }
@@ -92,7 +92,7 @@ export function PositionsSummaryChips({
             emphasis="secondary"
             size="small"
             maxWidth="fit-content"
-            isDisabled={!userHasRewards || Boolean(rewardsError)}
+            disabled={!userHasRewards || Boolean(rewardsError)}
             onPress={onCollectRewards}
           >
             {t('common.collect.button')}

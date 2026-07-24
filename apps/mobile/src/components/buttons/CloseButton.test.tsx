@@ -4,13 +4,13 @@ import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
 
 describe(CloseButton, () => {
   it('renders without error', () => {
-    const tree = render(<CloseButton onPress={jest.fn()} />)
+    const tree = render(<CloseButton onPress={vi.fn()} />)
 
     expect(tree).toMatchSnapshot()
   })
 
   it('calls onPress when pressed', async () => {
-    const onPress = jest.fn()
+    const onPress = vi.fn()
     const { getByTestId } = render(<CloseButton onPress={onPress} />)
 
     const button = getByTestId('buttons/close-button')

@@ -10,7 +10,7 @@ describe(RemoveButton, () => {
   })
 
   it('calls onPress when pressed', () => {
-    const onPress = jest.fn()
+    const onPress = vi.fn()
     const { getByTestId } = render(<RemoveButton onPress={onPress} />)
 
     const button = getByTestId('explore/remove-button')

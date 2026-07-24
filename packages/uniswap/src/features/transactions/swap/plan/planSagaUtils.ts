@@ -1,6 +1,4 @@
 import { ChainedQuoteResponse, TradingApi } from '@universe/api'
-import { PlanResponse } from '@universe/api/src/clients/trading/__generated__/models/PlanResponse'
-import { WalletExecutionContext } from '@universe/api/src/clients/trading/__generated__/models/WalletExecutionContext'
 import { isProdEnv } from '@universe/environment'
 import { call, race, SagaGenerator, take } from 'typed-redux-saga'
 import { CAIP25Session } from 'uniswap/src/features/capabilities/caip25/types'
@@ -49,7 +47,7 @@ import { logger } from 'utilities/src/logger/logger'
 interface FetchAndTransformPlanParams {
   quote: ChainedQuoteResponse['quote']
   routing: ChainedQuoteResponse['routing']
-  walletExecutionContext?: WalletExecutionContext
+  walletExecutionContext?: TradingApi.WalletExecutionContext
   trade: Trade
   modalClosedActionType?: string
 }
@@ -62,7 +60,7 @@ export interface FetchAndTransformPlanResult {
   currentStep: TransactionAndPlanStep
 }
 
-export function transformPlanResponse(response: PlanResponse): FetchAndTransformPlanResult {
+export function transformPlanResponse(response: TradingApi.PlanResponse): FetchAndTransformPlanResult {
   const steps = transformSteps(response.steps)
   const { index: currentStepIndex, step: currentStep } = findFirstActiveStep(steps)
   if (!currentStep) {
@@ -272,7 +270,7 @@ export function updateGlobalPlanState({
   earnReuseIdentity,
 }: {
   activePlan: FetchAndTransformPlanResult
-  originalResponse: PlanResponse
+  originalResponse: TradingApi.PlanResponse
   earnReuseIdentity?: ActivePlanData['earnReuseIdentity']
 }): void {
   const planData = {
@@ -461,7 +459,7 @@ export function getWalletExecutionContext(
     return undefined
   }
 
-  const scopes = Object.entries(walletExecutionContext.scopes).reduce<WalletExecutionContext['scopes']>(
+  const scopes = Object.entries(walletExecutionContext.scopes).reduce<TradingApi.WalletExecutionContext['scopes']>(
     (acc, [key, scope]) => {
       if (!scope) {
         return acc

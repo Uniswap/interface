@@ -12,6 +12,9 @@ export default defineConfig({
     globals: true,
     environment: 'node',
     include: ['**/*.test.ts'],
+    // Serves canned GraphQL gateway responses to the dev-server worker when
+    // CLOUD_FUNCTIONS_GRAPHQL_ENDPOINT_OVERRIDE targets localhost (CI does).
+    globalSetup: ['./functions/fixtures/globalSetup.ts'],
     testTimeout: 360000,
     retry: 3,
     poolOptions: {

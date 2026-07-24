@@ -85,15 +85,23 @@ export function CombinedAuctionChart({
   })
 
   // ── Distribution data (same as BidDistributionChart.tsx) ──
-  const { bidDistributionData, excludedBidVolume, userBids, optimisticBid, userBidPrice, isBidInputFocused } =
-    useAuctionStore((state) => ({
-      bidDistributionData: state.bidDistributionData,
-      excludedBidVolume: state.excludedBidVolume,
-      userBids: state.userBids,
-      optimisticBid: state.optimisticBid,
-      userBidPrice: state.userBidPrice,
-      isBidInputFocused: state.isBidInputFocused,
-    }))
+  const {
+    bidDistributionData,
+    excludedBidVolume,
+    userBids,
+    optimisticBid,
+    userBidPrice,
+    isBidInputFocused,
+    auctionProgressState,
+  } = useAuctionStore((state) => ({
+    bidDistributionData: state.bidDistributionData,
+    excludedBidVolume: state.excludedBidVolume,
+    userBids: state.userBids,
+    optimisticBid: state.optimisticBid,
+    userBidPrice: state.userBidPrice,
+    isBidInputFocused: state.isBidInputFocused,
+    auctionProgressState: state.progress.state,
+  }))
 
   const clearingPrice = useAuctionStore((state) => {
     const isActive = state.progress.state === AuctionProgressState.IN_PROGRESS
@@ -232,6 +240,21 @@ export function CombinedAuctionChart({
   const scaleFactor = normalizedData?.scaleFactor ?? 1
   const chartAreaHeight = effectiveHeight - TIME_SCALE_HEIGHT
 
+  // `chartData` is only non-null once bid distribution data has loaded, so the
+  // empty state never shows while bids are still being fetched.
+  const showNoBidsState =
+    auctionProgressState !== AuctionProgressState.NOT_STARTED && chartData !== null && chartData.totalBidVolume === 0
+
+  const floorPriceDecimal = useMemo(
+    () =>
+      fromQ96ToDecimalWithTokenDecimals({
+        q96Value: floorPrice,
+        bidTokenDecimals: bidTokenInfo.decimals,
+        auctionTokenDecimals,
+      }),
+    [floorPrice, bidTokenInfo.decimals, auctionTokenDecimals],
+  )
+
   // ── Y-axis panning, zooming, and auto-grouped bars ──
   const { pannedNormalizedData, groupedBars, tickSizeDecimal, chartWheelRef, panToPrice } = useYAxisPanZoom({
     normalizedData,
@@ -241,6 +264,7 @@ export function CombinedAuctionChart({
     bidTokenDecimals: bidTokenInfo.decimals,
     auctionTokenDecimals,
     chartHeightPx: chartAreaHeight,
+    noBidsFloorPrice: showNoBidsState ? floorPriceDecimal : undefined,
   })
 
   const maxFractionDigits = pannedNormalizedData ? calculateMaxFractionDigits(pannedNormalizedData.yMax) : 0
@@ -374,8 +398,16 @@ export function CombinedAuctionChart({
 
   return (
     <Flex ref={chartWheelRef} position="relative" width="100%" height={effectiveHeight}>
-      {/* Price chart fills main area minus marker column and distribution column */}
-      <Flex position="absolute" left={CHART_LEFT_OFFSET} top={0} bottom={0} right={DISTRIBUTION_COLUMN_WIDTH}>
+      {/* Price chart fills main area minus marker column and distribution column.
+          When the auction has no bids, the distribution column is hidden and the
+          price chart extends to full width (LP-806). */}
+      <Flex
+        position="absolute"
+        left={CHART_LEFT_OFFSET}
+        top={0}
+        bottom={0}
+        right={showNoBidsState ? 0 : DISTRIBUTION_COLUMN_WIDTH}
+      >
         <ClearingPriceChartRenderer
           normalizedData={pannedNormalizedData}
           bidTokenInfo={bidTokenInfo}
@@ -386,23 +418,28 @@ export function CombinedAuctionChart({
           disableMouseWheelInteractions
           totalSupply={totalSupply}
           auctionTokenDecimals={auctionTokenDecimals}
+          extendLineToRightEdge={showNoBidsState}
         />
-        {/* Right-edge fade: masks the area fill so it doesn't clip abruptly */}
-        <Flex
-          position="absolute"
-          right={0}
-          top={0}
-          bottom={0}
-          width={80}
-          pointerEvents="none"
-          style={{
-            background: `linear-gradient(to right, transparent, ${colors.surface1.val})`,
-          }}
-        />
+        {/* Right-edge fade: masks the area fill so it doesn't clip abruptly.
+            In the no-bids state ClearingPriceChartRenderer renders the fade itself, anchored
+            to the flat line's exact pixel so the full-width line and live dot stay visible (LP-806). */}
+        {!showNoBidsState && (
+          <Flex
+            position="absolute"
+            right={0}
+            top={0}
+            bottom={0}
+            width={80}
+            pointerEvents="none"
+            style={{
+              background: `linear-gradient(to right, transparent, ${colors.surface1.val})`,
+            }}
+          />
+        )}
       </Flex>
 
-      {/* Distribution bars in 48px right column */}
-      {chartData && visiblePriceRange && (
+      {/* Distribution bars in 48px right column — hidden when the auction has no bids */}
+      {chartData && visiblePriceRange && !showNoBidsState && (
         <Flex
           position="absolute"
           right={0}

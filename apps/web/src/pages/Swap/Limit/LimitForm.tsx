@@ -577,7 +577,7 @@ function SubmitOrderButton({
           variant="branded"
           emphasis={isConnected ? 'primary' : 'secondary'}
           size={isShortMobileDevice ? 'small' : 'large'}
-          isDisabled={isDisabled}
+          disabled={isDisabled}
           onPress={!isConnected ? accountDrawer.open : handleContinueToReview}
           id={trade ? 'submit-order-button' : undefined}
           data-testid={trade ? TestID.SubmitOrderButton : undefined}

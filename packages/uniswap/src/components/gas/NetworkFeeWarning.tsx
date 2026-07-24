@@ -25,6 +25,7 @@ export function NetworkFeeWarning({
   uniswapXGasFeeInfo,
   chainId,
   includesDelegation,
+  includesDelegationUpgrade,
 }: PropsWithChildren<{
   gasFeeHighRelativeToValue?: boolean
   disabled?: boolean
@@ -33,6 +34,8 @@ export function NetworkFeeWarning({
   uniswapXGasFeeInfo?: FormattedUniswapXGasFeeInfo
   chainId: UniverseChainId
   includesDelegation?: boolean
+  /** The included delegation is a smart wallet update (Calibur re-delegation) rather than a first-time activation */
+  includesDelegationUpgrade?: boolean
 }>): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
@@ -43,18 +46,25 @@ export function NetworkFeeWarning({
     <WarningInfo
       mobileBanner={
         includesDelegation &&
-        isMobileApp && (
+        isMobileApp &&
+        (includesDelegationUpgrade ? (
+          <NetworkCostBanner
+            bannerText={t('transaction.networkCost.includesSmartWalletUpdate')}
+            url={UniswapHelpUrls.articles.caliburUpgrades}
+          />
+        ) : (
           <NetworkCostBanner
             bannerText={t('smartWallet.banner.networkCost', { chainName: getChainInfo(chainId).label })}
             url={UniswapHelpUrls.articles.smartWalletDelegation}
           />
-        )
+        ))
       }
       modalProps={{
         backgroundIconColor: showHighGasFeeUI ? colors.statusCritical2.get() : colors.surface2.get(),
         captionComponent: (
           <NetworkFeeText
             includesDelegation={includesDelegation}
+            includesDelegationUpgrade={includesDelegationUpgrade}
             showHighGasFeeUI={showHighGasFeeUI}
             uniswapXGasFeeInfo={uniswapXGasFeeInfo}
             chainId={chainId}
@@ -75,7 +85,11 @@ export function NetworkFeeWarning({
         text: uniswapXGasFeeInfo ? (
           <NetworkCostTooltipUniswapX uniswapXGasFeeInfo={uniswapXGasFeeInfo} />
         ) : (
-          <NetworkCostTooltip chainId={chainId} includesDelegation={includesDelegation ?? false} />
+          <NetworkCostTooltip
+            chainId={chainId}
+            includesDelegation={includesDelegation ?? false}
+            includesDelegationUpgrade={includesDelegationUpgrade ?? false}
+          />
         ),
         placement,
         icon: null,
@@ -92,11 +106,13 @@ export function NetworkFeeWarning({
 
 function NetworkFeeText({
   includesDelegation,
+  includesDelegationUpgrade,
   showHighGasFeeUI,
   uniswapXGasFeeInfo,
   chainId,
 }: {
   includesDelegation?: boolean
+  includesDelegationUpgrade?: boolean
   showHighGasFeeUI?: boolean
   uniswapXGasFeeInfo?: FormattedUniswapXGasFeeInfo
   chainId: UniverseChainId
@@ -123,7 +139,9 @@ function NetworkFeeText({
     )
   }
 
-  if (includesDelegation) {
+  // The activation-specific caption doesn't apply to smart wallet updates — those keep the
+  // generic caption and disclose the update via the banner card instead.
+  if (includesDelegation && !includesDelegationUpgrade) {
     return (
       <Text color="$neutral2" textAlign={isWebPlatform ? 'left' : 'center'} variant="body3">
         {t('swap.warning.networkFee.delegation.message')}

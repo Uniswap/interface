@@ -131,8 +131,6 @@
       }
     },
     "typecheck": {},
-    "typecheck:tsc": {},
-    "typecheck:tsgo": {},
     "zip": {
       "command": "wxt zip",
       "options": {
@@ -153,6 +151,12 @@
     },
     "playwright:test:smoke": {
       "command": "playwright test --config=e2e/config/playwright.config.ts e2e/tests/smoke/",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "playwright:test:publish-gate": {
+      "command": "playwright test --config=e2e/config/playwright.config.ts --grep @publish-gate",
       "options": {
         "cwd": "{projectRoot}"
       }

@@ -18,6 +18,7 @@ import { PoolData, usePoolData } from '~/appGraphql/data/pools/usePoolData'
 import { usePoolLpFeeFraction } from '~/appGraphql/data/pools/usePoolLpFeeFraction'
 import { calculateApr } from '~/appGraphql/data/pools/useTopPools'
 import { gqlToCurrency, unwrapToken } from '~/appGraphql/data/util'
+import { MOBILE_BAR_MAX_HEIGHT } from '~/components/NavBar/MobileBottomBar'
 import { StickyCollapsibleHeader } from '~/components/StickyCollapsibleHeader/StickyCollapsibleHeader'
 import { LpIncentivesPoolDetailsRewardsDistribution } from '~/features/Liquidity/LPIncentives/LpIncentivesPoolDetailsRewardsDistribution'
 import { useColor } from '~/hooks/useColor'
@@ -36,6 +37,9 @@ import { ThemeProvider } from '~/theme'
 import { ExploreTab } from '~/types/explore'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
+// Extra bottom padding so content (e.g. pool address links) can scroll above the fixed Swap/Add Liquidity CTA bar
+const STICKY_CTA_CLEARANCE = `calc(${MOBILE_BAR_MAX_HEIGHT}px + env(safe-area-inset-bottom))` as const
+
 const PageWrapper = styled(Flex, {
   row: true,
   pt: 24,
@@ -47,12 +51,13 @@ const PageWrapper = styled(Flex, {
   alignItems: 'flex-start',
   $lg: {
     px: 20,
-    pb: 52,
+    pb: STICKY_CTA_CLEARANCE,
   },
   $xl: {
     flexDirection: 'column',
     alignItems: 'center',
     gap: '$none',
+    pb: STICKY_CTA_CLEARANCE,
   },
 })
 
@@ -254,6 +259,7 @@ export function PoolDetailsPage() {
           <PoolDetailsHeader
             chainId={chainInfo.id}
             poolAddress={poolAddress}
+            poolId={poolData?.idOrAddress}
             token0={token0}
             token1={token1}
             feeTier={poolData?.feeTier}

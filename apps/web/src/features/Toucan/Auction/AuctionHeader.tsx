@@ -24,7 +24,7 @@ import { getHeaderLogoSize, getHeaderTitleVariant } from '~/components/StickyCol
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { useAuctionLiquidityLock } from '~/features/Toucan/Auction/hooks/useAuctionLiquidityLock'
 import { useAuctionRedemption } from '~/features/Toucan/Auction/hooks/useAuctionRedemption'
-import { useIsQuickLaunchExemptAuction } from '~/features/Toucan/Auction/hooks/useIsQuickLaunchExemptAuction'
+import { useIsQuickLaunchAuction } from '~/features/Toucan/Auction/hooks/useIsQuickLaunchAuction'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { LiquidityLockedBadge } from '~/features/Toucan/Shared/LiquidityLockedBadge'
 import { EllipsisTamaguiStyle } from '~/theme/components/styles'
@@ -179,7 +179,7 @@ const AuctionTokenInfo = ({
   tokenDetailsUrl,
   token,
   isCompact,
-  isQuickLaunchExempt,
+  isQuickLaunch,
 }: {
   name: string
   symbol: string
@@ -189,12 +189,13 @@ const AuctionTokenInfo = ({
   tokenDetailsUrl?: string
   token?: CurrencyInfo
   isCompact: boolean
-  isQuickLaunchExempt: boolean
+  isQuickLaunch: boolean
 }) => {
   const media = useMedia()
-  // SECURITY REVIEW REQUIRED BEFORE ENABLING FOR REAL USERS: suppresses the token-protection
-  // warning icon for quick-launch auctions (display layer only).
-  const severity = token && !isQuickLaunchExempt ? getTokenWarningSeverity(token) : WarningSeverity.None
+  // Token-protection warning icon stays on for every auction, including quick launches: the
+  // quick-launch flag is forgeable, so it must not gate a protection signal (exemption policy
+  // deferred to security review, LP-1076).
+  const severity = token ? getTokenWarningSeverity(token) : WarningSeverity.None
   const { heading: warningHeading, description: warningDescription } = useTokenWarningCardText(token)
   const logoSize = getHeaderLogoSize({ isCompact, media })
   const titleVariant = getHeaderTitleVariant({ isCompact, media })
@@ -239,8 +240,8 @@ const AuctionTokenInfo = ({
           )}
           {verified && <CheckmarkCircle size="$icon.16" color="$accent1" />}
           {/* QuickLaunch: quick-launch badge in the verified-icon slot; curated verified wins when both apply. */}
-          {!verified && isQuickLaunchExempt && <Lightning size="$icon.16" color="$statusWarning" />}
-          {isQuickLaunchExempt && !isCompact && (
+          {!verified && isQuickLaunch && <Lightning size="$icon.16" color="$statusWarning" />}
+          {isQuickLaunch && !isCompact && (
             <Flex ml="$spacing4" justifyContent="center">
               <LiquidityLockedBadge size="small" />
             </Flex>
@@ -285,7 +286,7 @@ export const AuctionHeader = ({ isCompact = false }: { isCompact?: boolean }) =>
     return verifiedAuctionIds.includes(auctionDetails.auctionId)
   }, [auctionDetails?.auctionId, verifiedAuctionIds])
 
-  const isQuickLaunchExempt = useIsQuickLaunchExemptAuction()
+  const isQuickLaunch = useIsQuickLaunchAuction()
 
   // Get the token details URL
   const tokenDetailsUrl = useMemo(() => {
@@ -322,7 +323,7 @@ export const AuctionHeader = ({ isCompact = false }: { isCompact?: boolean }) =>
         tokenDetailsUrl={tokenDetailsUrl}
         token={auctionDetails.token}
         isCompact={isCompact}
-        isQuickLaunchExempt={isQuickLaunchExempt}
+        isQuickLaunch={isQuickLaunch}
       />
       {!isCompact && <AuctionHeaderMetadataRow />}
     </Flex>

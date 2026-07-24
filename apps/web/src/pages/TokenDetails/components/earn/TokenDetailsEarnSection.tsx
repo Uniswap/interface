@@ -10,7 +10,10 @@ import { EARN_VAULT_MODAL_QUERY_PARAM, EARN_VAULT_MODAL_QUERY_VALUE } from 'unis
 import { EarnVaultModal } from '~/features/earn/EarnVaultModal'
 import { useEarnVaultConnectFlow } from '~/features/earn/hooks/useEarnVaultConnectFlow'
 import { useEarnVaultModalState } from '~/features/earn/hooks/useEarnVaultModalState'
-import { EARN_ENTRY_POINT_QUERY_PARAM } from '~/pages/TokenDetails/components/earn/earnEntryPointQuery'
+import {
+  EARN_ENTRY_POINT_QUERY_PARAM,
+  parseEarnEntryPointQuery,
+} from '~/pages/TokenDetails/components/earn/earnEntryPointQuery'
 import type { TokenDetailsEarnData } from '~/pages/TokenDetails/components/earn/useTokenDetailsEarnData'
 
 type TokenDetailsEarnSectionProps = {
@@ -22,14 +25,13 @@ export function TokenDetailsEarnSection({ earnData }: TokenDetailsEarnSectionPro
   const [searchParams, setSearchParams] = useSearchParams()
   const shouldAutoOpenModal = searchParams.get(EARN_VAULT_MODAL_QUERY_PARAM) === EARN_VAULT_MODAL_QUERY_VALUE
   const modalAnalyticsEntryPoint =
-    searchParams.get(EARN_ENTRY_POINT_QUERY_PARAM) === EarnEntryPoint.TokenDetailsVaultShareBanner
-      ? EarnEntryPoint.TokenDetailsVaultShareBanner
-      : EarnEntryPoint.TokenDetailsEarnSection
+    parseEarnEntryPointQuery(searchParams.get(EARN_ENTRY_POINT_QUERY_PARAM)) ?? EarnEntryPoint.TokenDetailsEarnSection
   const selectedVault = selectedVaultState?.vault ?? null
-  const setSelectedVault = useCallback(
-    (vault: typeof selectedVault) => {
-      if (vault) {
-        openModal(vault)
+  const setSelectedVaultState = useCallback(
+    (state: typeof selectedVaultState): void => {
+      if (state) {
+        const { vault, ...options } = state
+        openModal(vault, options)
       } else {
         closeModal()
       }
@@ -37,8 +39,8 @@ export function TokenDetailsEarnSection({ earnData }: TokenDetailsEarnSectionPro
     [closeModal, openModal],
   )
   const { onConnectWallet } = useEarnVaultConnectFlow({
-    selectedVault,
-    setSelectedVault,
+    selectedVault: selectedVaultState,
+    setSelectedVault: setSelectedVaultState,
   })
 
   const { earnPosition, earnVault, refetch, showEarnError, userHasEarnPosition } = earnData

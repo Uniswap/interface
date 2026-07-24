@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
@@ -19,15 +18,11 @@ import { Button, Flex, Popover, ScrollView, Text, TouchableArea, useSporeColors 
 import { Ellipsis, Globe, Person, TrashFilled, WalletFilled, X } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
-import { buildWrappedUrl } from 'uniswap/src/components/banners/shared/utils'
-import { UniswapWrapped2025Card } from 'uniswap/src/components/banners/UniswapWrapped2025Card/UniswapWrapped2025Card'
 import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
-import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import { AccountType, DisplayNameType } from 'uniswap/src/features/accounts/types'
-import { setHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/slice'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -66,8 +61,6 @@ export function AccountSwitcherScreen(): JSX.Element {
   const activeAccount = useActiveAccountWithThrow()
   const activeAddress = activeAccount.address
   const isViewOnly = activeAccount.type === AccountType.Readonly
-
-  const isWrappedBannerEnabled = useFeatureFlag(FeatureFlags.UniswapWrapped2025)
 
   const accounts = useSignerAccounts()
   const accountAddresses = useMemo(
@@ -163,17 +156,6 @@ export function AccountSwitcherScreen(): JSX.Element {
     },
     [connectedAccounts.length, dispatch, pendingWallet],
   )
-
-  const onPressWrappedCard = useCallback(() => {
-    try {
-      const url = buildWrappedUrl(UNISWAP_WEB_URL, activeAddress)
-      window.open(url, '_blank')
-      dispatch(setHasDismissedUniswapWrapped2025Banner(true))
-      navigate(-1)
-    } catch (error) {
-      logger.error(error, { tags: { file: 'AccountSwitcherScreen', function: 'onPressWrappedCard' } })
-    }
-  }, [activeAddress, dispatch])
 
   const addWalletMenuOptions: MenuContentItem[] = [
     {
@@ -303,12 +285,6 @@ export function AccountSwitcherScreen(): JSX.Element {
               />
             </Flex>
           </Flex>
-
-          {isWrappedBannerEnabled && (
-            <Flex pt="$spacing16">
-              <UniswapWrapped2025Card onPress={onPressWrappedCard} />
-            </Flex>
-          )}
 
           <Flex pt={activeAccountHasENS ? undefined : '$padding16'}>
             {activeAccountHasUnitag ? (

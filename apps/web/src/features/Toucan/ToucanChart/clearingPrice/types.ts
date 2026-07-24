@@ -121,6 +121,17 @@ export interface ClearingPriceChartControllerUpdateParams {
   isZoomEnabled?: boolean
   /** When true, disables mouse wheel scroll/scale so an external handler can manage Y-axis pan/zoom */
   disableMouseWheelInteractions?: boolean
+  /**
+   * When true, the visible range is set in logical (bar-index) units so the first/last data
+   * points sit exactly on the chart edges — time-based setVisibleRange adds half-bar margins
+   * that leave the line short of the edges (LP-806 no-bids full-width line).
+   */
+  snapVisibleRangeToDataEdges?: boolean
+  /**
+   * No-bids full-width state: render a vertically near-uniform area fill so it fades only
+   * horizontally toward the right edge, not downward from the line (LP-806).
+   */
+  solidAreaFill?: boolean
   /** Pre-bid end time. Data points with time < this are rendered as a dashed line (no area fill). */
   preBidEndTime?: UTCTimestamp
 }

@@ -336,6 +336,7 @@ export function parseRestPosition(position?: PlainMessage<RestPosition>): Positi
         v4hook: undefined,
         owner: v3Position.owner,
         isHidden: position.isHidden,
+        protocolFee: v3Position.protocolFee,
       }
     } else {
       const v4PositionPayload = positionPayload.value
@@ -408,6 +409,7 @@ export function parseRestPosition(position?: PlainMessage<RestPosition>): Positi
         totalApr: v4Position.totalApr,
         unclaimedRewardsAmountUni: v4Position.unclaimedRewardsAmountUni,
         boostedApr: v4Position.boostedApr,
+        protocolFee: v4Position.protocolFee,
       }
     }
   } catch (e) {

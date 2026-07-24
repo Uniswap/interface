@@ -95,16 +95,31 @@ export function createTimeScaleOptions({
   }
 }
 
+/**
+ * Fill opacities (0-100) for the no-bids full-width state. The fill reads as a near-solid block
+ * (only a subtle top→bottom falloff) so the horizontal right-edge fade — not a vertical one — is
+ * the only fade the eye sees, per design (LP-806).
+ */
+const NO_BIDS_FILL_TOP_OPACITY = 28
+const NO_BIDS_FILL_BOTTOM_OPACITY = 18
+
 export function createAreaSeriesOptions({
   colors,
   tokenColor,
   scaledYMin,
   scaledYMax,
+  solidAreaFill = false,
 }: {
   colors: ClearingPriceChartControllerCreateParams['colors']
   tokenColor?: string
   scaledYMin: number
   scaledYMax: number
+  /**
+   * No-bids full-width state: render a vertically near-uniform fill instead of the default
+   * top-opaque → bottom-transparent vertical gradient, so the fill fades only horizontally
+   * toward the right edge (LP-806).
+   */
+  solidAreaFill?: boolean
 }): Record<string, unknown> {
   const lineColor = tokenColor || colors.accent1.val
 
@@ -125,8 +140,8 @@ export function createAreaSeriesOptions({
     lineType: LineType.WithSteps,
     lineWidth: 2,
     lineColor,
-    topColor: lineColor,
-    bottomColor: opacify(0, colors.surface1.val),
+    topColor: solidAreaFill ? opacify(NO_BIDS_FILL_TOP_OPACITY, lineColor) : lineColor,
+    bottomColor: solidAreaFill ? opacify(NO_BIDS_FILL_BOTTOM_OPACITY, lineColor) : opacify(0, colors.surface1.val),
     autoscaleInfoProvider,
     // Hide default crosshair marker - we use a custom marker
     crosshairMarkerRadius: 0,

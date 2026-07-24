@@ -14,6 +14,7 @@ describe('DEFAULT_CHAINED_ACTIONS_UNSUPPORTED_CHAIN_IDS', () => {
     expect(DEFAULT_CHAINED_ACTIONS_UNSUPPORTED_CHAIN_IDS).not.toContain(UniverseChainId.Sepolia)
     expect(DEFAULT_CHAINED_ACTIONS_UNSUPPORTED_CHAIN_IDS).not.toContain(UniverseChainId.Arc)
     expect(DEFAULT_CHAINED_ACTIONS_UNSUPPORTED_CHAIN_IDS).not.toContain(UniverseChainId.Robinhood)
+    expect(DEFAULT_CHAINED_ACTIONS_UNSUPPORTED_CHAIN_IDS).not.toContain(UniverseChainId.Monad)
   })
 
   it('only contains known chain ids', () => {

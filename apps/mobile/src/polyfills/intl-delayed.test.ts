@@ -1,13 +1,13 @@
 import { loadIntlPolyfillsForLocale } from 'src/polyfills/intl-delayed'
 import * as localeBasedFormats from 'utilities/src/format/localeBasedFormats'
 
-jest.mock('uniswap/src/i18n/utils', () => ({
-  getWalletDeviceLocale: jest.fn(() => 'en-US'),
+vi.mock('uniswap/src/i18n/utils', () => ({
+  getWalletDeviceLocale: vi.fn(() => 'en-US'),
 }))
 
 describe(loadIntlPolyfillsForLocale, () => {
   it('reloads locale data and invalidates the number format cache only when the locale changes', () => {
-    const clearSpy = jest.spyOn(localeBasedFormats, 'clearNumberFormatCache')
+    const clearSpy = vi.spyOn(localeBasedFormats, 'clearNumberFormatCache')
 
     // First load has no previously-cached formatters to invalidate.
     loadIntlPolyfillsForLocale('es-ES')

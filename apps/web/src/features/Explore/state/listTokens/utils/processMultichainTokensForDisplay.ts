@@ -1,20 +1,23 @@
-import type { MultichainToken } from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { TokenSortMethod } from '~/components/Tokens/constants'
 import type { UseListTokensOptions } from '~/features/Explore/state/listTokens/types'
 import { buildTokenSortRankFromMultichain } from '~/features/Explore/state/listTokens/utils/buildTokenSortRankFromMultichain'
 import { filterMultichainTokensBySearchString } from '~/features/Explore/state/listTokens/utils/filterMultichainTokensBySearchString'
 
-function sortMultichainTokensByPrice(tokens: MultichainToken[], sortAscending: boolean): MultichainToken[] {
+function sortMultichainTokensByPrice(tokens: RankedMultichainToken[], sortAscending: boolean): RankedMultichainToken[] {
   const sorted = [...tokens].sort((a, b) => {
-    const priceA = a.stats?.price ?? 0
-    const priceB = b.stats?.price ?? 0
+    const priceA = a.multichainToken?.price?.spotUsd ?? 0
+    const priceB = b.multichainToken?.price?.spotUsd ?? 0
     return priceB - priceA
   })
   return sortAscending ? sorted.reverse() : sorted
 }
 
 /** Client-side sort only (PRICE); otherwise API / legacy order is kept. */
-function sortTokensForDisplay(tokens: MultichainToken[], options: Required<UseListTokensOptions>): MultichainToken[] {
+function sortTokensForDisplay(
+  tokens: RankedMultichainToken[],
+  options: Required<UseListTokensOptions>,
+): RankedMultichainToken[] {
   if (options.sortMethod === TokenSortMethod.PRICE) {
     return sortMultichainTokensByPrice(tokens, options.sortAscending)
   }
@@ -22,7 +25,7 @@ function sortTokensForDisplay(tokens: MultichainToken[], options: Required<UseLi
 }
 
 type ProcessMultichainTokensForDisplayResult = {
-  topTokens: MultichainToken[]
+  topTokens: RankedMultichainToken[]
   /** multichainId → 1-based rank after client sort, before search filter. */
   tokenSortRank: Record<string, number>
 }
@@ -36,7 +39,7 @@ type ProcessMultichainTokensForDisplayResult = {
  * - Backend path: BE sorts except for PRICE; we apply client-side price sort here when sortMethod is PRICE.
  */
 export function processMultichainTokensForDisplay(
-  tokens: MultichainToken[],
+  tokens: RankedMultichainToken[],
   options: Required<UseListTokensOptions>,
 ): ProcessMultichainTokensForDisplayResult {
   const sorted = sortTokensForDisplay(tokens, options)

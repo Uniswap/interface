@@ -1,11 +1,14 @@
+import type { PartialMessage } from '@bufbuild/protobuf'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import type { ListTokensRequest } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
-import { dataApiServiceClient, type ListTokensParams } from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
+import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApi/DataApiClientV2'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import type { PricePoint } from '~/appGraphql/data/util'
 import { EXPLORE_API_PAGE_SIZE } from '~/features/Explore/state/constants'
 import { useInfiniteLoadMore } from '~/features/Explore/state/hooks/useInfiniteLoadMore'
 import { createListTokensService } from '~/features/Explore/state/listTokens/services/listTokensService'
@@ -70,7 +73,7 @@ export function useListTokensService(
     return tokensV2EndpointsEnabled ? 'backend_sorted' : 'legacy'
   })
 
-  const listTokens = useEvent((params: ListTokensParams) => dataApiServiceClient.listTokens(params))
+  const listTokens = useEvent((params: PartialMessage<ListTokensRequest>) => dataApiServiceClientV2.listTokens(params))
 
   const service = useMemo(
     () =>
@@ -126,6 +129,16 @@ export function useListTokensService(
     return processMultichainTokensForDisplay(flat, effectiveOptions)
   }, [tokensV2EndpointsEnabled, data?.pages, effectiveOptions, legacyData?.multichainTokens])
 
+  const priceHistoryByMultichainId = useMemo((): Partial<Record<string, PricePoint[]>> => {
+    if (tokensV2EndpointsEnabled) {
+      return (data?.pages ?? []).reduce<Partial<Record<string, PricePoint[]>>>(
+        (acc, page) => ({ ...acc, ...page.priceHistoryByMultichainId }),
+        {},
+      )
+    }
+    return legacyData?.priceHistoryByMultichainId ?? {}
+  }, [tokensV2EndpointsEnabled, data?.pages, legacyData?.priceHistoryByMultichainId])
+
   const loadMore = useInfiniteLoadMore({
     fetchNextPage,
     hasNextPage,
@@ -141,6 +154,7 @@ export function useListTokensService(
   return {
     topTokens,
     tokenSortRank,
+    priceHistoryByMultichainId,
     isLoading,
     isError,
     loadMore: tokensV2EndpointsEnabled ? loadMore : undefined,

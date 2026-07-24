@@ -12,7 +12,7 @@ exports[`PasskeyMenu > shows 3 skeleton rows while loading 1`] = `
           Login methods
         </span>
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-pad95589114 _pl-t-space-pad95589114 _gap-t-space-spa1360334047"
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-pad95589114 _pl-t-space-pad95589114 _pb-t-space-pad95589114 _gap-t-space-spa1360334047"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa1360334076"
@@ -211,7 +211,7 @@ exports[`PasskeyMenu > shows authenticators and Add passkey button after loading
           Login methods
         </span>
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-pad95589114 _pl-t-space-pad95589114 _gap-t-space-spa1360334047"
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-pad95589114 _pl-t-space-pad95589114 _pb-t-space-pad95589114 _gap-t-space-spa1360334047"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa1360334076"

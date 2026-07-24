@@ -102,6 +102,7 @@ export const PortfolioPerformance = memo(function PortfolioPerformance() {
         isLoading={isPending}
         disclaimer={showDisclaimer ? t('pnl.noSolana') : undefined}
         periodSelector={periodSelector}
+        evmAddress={evmAddress}
       />
     </Flex>
   )

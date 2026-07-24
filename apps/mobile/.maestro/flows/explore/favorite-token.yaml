@@ -43,12 +43,14 @@ env:
 # Search for a specific token (using USDC as it's popular and should be available)
 - inputText: "USDC"
 
-# Wait for search results to load
+# Wait for search results to load. Wait on the result row's testID — a text
+# wait on ".*USDC.*" passes trivially because the search input itself contains
+# "USDC" before any result renders.
 - waitForAnimationToEnd
 - extendedWaitUntil:
     visible:
-      text: ".*USDC.*"
-    timeout: 5000
+      id: "token-option-1-USDC"
+    timeout: 15000
 
 # Tap on the USDC token result
 - runScript:
@@ -58,9 +60,11 @@ env:
       TARGET: 'USDC_Token_Result'
       PHASE: 'start'
 
+# Mainnet USDC row testID (token-option-<chainId>-<symbol>, TokenOptionItem.tsx) —
+# deterministic, unlike text "USDC" index 1 which depends on how many exact-"USDC"
+# text nodes have rendered.
 - tapOn:
-    text: "USDC"
-    index: 1
+    id: "token-option-1-USDC"
 
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js

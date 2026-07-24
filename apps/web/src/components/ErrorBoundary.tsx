@@ -107,13 +107,7 @@ const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) 
             </Flex>
           </ExternalLink>
           <Flex row flexBasis={0} flexGrow={1}>
-            <Button
-              emphasis="primary"
-              size="small"
-              loading={isReloading}
-              isDisabled={isReloading}
-              onPress={handleReload}
-            >
+            <Button emphasis="primary" size="small" loading={isReloading} disabled={isReloading} onPress={handleReload}>
               {t('common.reload.label')}
             </Button>
           </Flex>

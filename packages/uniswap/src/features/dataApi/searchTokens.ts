@@ -1,6 +1,7 @@
 import { SearchTokensResponse } from '@uniswap/client-data-api/dist/data/v1/search_pb'
 import { SearchType } from '@uniswap/client-data-api/dist/data/v1/searchTypes_pb'
 import { GqlResult } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { useSearchTokensAndPoolsQuery } from 'uniswap/src/data/rest/searchTokensAndPools'
 import { toMultichainSearchResult } from 'uniswap/src/data/rest/toMultichainSearchResult'
@@ -33,6 +34,7 @@ function useSearchTokensQuery<T>({
   const { chains: enabledChainIds } = useEnabledChains()
 
   const isSvmConnected = useConnectionStatus(Platform.SVM).isConnected
+  const isV2TokensEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
 
   const variables = useMemo(
     () => ({
@@ -43,8 +45,9 @@ function useSearchTokensQuery<T>({
       size,
       prioritizeSvm: isSvmConnected,
       multichain,
+      useSubstreamData: isV2TokensEnabled,
     }),
-    [searchQuery, chainFilter, chainIds, size, enabledChainIds, isSvmConnected, multichain],
+    [searchQuery, chainFilter, chainIds, size, enabledChainIds, isSvmConnected, multichain, isV2TokensEnabled],
   )
 
   const { data, error, isPending, refetch } = useSearchTokensAndPoolsQuery<T>({
@@ -73,11 +76,28 @@ export function useMultichainSearchTokens({
   size?: number
 }): GqlResult<MultichainSearchResult[]> {
   const select = useEvent((data: SearchTokensResponse): MultichainSearchResult[] => {
-    const multichainResponse = transformSearchToMultichain(data)
-    return multichainResponse.multichainTokens
-      .map(toMultichainSearchResult)
+    const results = transformSearchToMultichain(data)
+      .multichainTokens.map(toMultichainSearchResult)
       .filter((r): r is MultichainSearchResult => r !== undefined)
+
+    return filterMultichainResultsToChain(results, chainFilter)
   })
 
   return useSearchTokensQuery({ searchQuery, chainFilter, chainIds, skip, size, multichain: true, select })
+}
+
+export function filterMultichainResultsToChain(
+  results: MultichainSearchResult[],
+  chainFilter: UniverseChainId | null,
+): MultichainSearchResult[] {
+  if (!chainFilter) {
+    return results
+  }
+
+  return results
+    .map((result) => ({
+      ...result,
+      tokens: result.tokens.filter((token) => token.currency.chainId === chainFilter),
+    }))
+    .filter((result) => result.tokens.length > 0)
 }

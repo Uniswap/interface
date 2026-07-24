@@ -16,14 +16,13 @@ export function useOpenLimitOrders({
 }: {
   evmAddress: string
   svmAddress?: string
-}): BaseResult<UniswapXOrderDetails[]> {
+}): Omit<BaseResult<UniswapXOrderDetails[]>, 'isPending' | 'isError'> {
   const {
     data: allLimitOrders,
     loading,
     isFetching,
     error,
     refetch,
-    networkStatus,
   } = useListTransactions({
     evmAddress,
     svmAddress,
@@ -41,7 +40,6 @@ export function useOpenLimitOrders({
     data: openLimitOrders,
     loading: loading || isFetching,
     error: error ?? undefined,
-    networkStatus,
     refetch,
   }
 }

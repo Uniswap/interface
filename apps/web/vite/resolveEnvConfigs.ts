@@ -4,7 +4,7 @@ import path from 'node:path'
 import { parse as dotenvParse } from 'dotenv'
 
 // Env vars that should be read directly from process.env instead of the .env files.
-export const PROCESS_ENV_OVERRIDES = ['CI', 'IS_E2E_TEST', 'JEST_WORKER_ID', 'VITEST_WORKER_ID', 'SKIP_CSP', 'DISABLE_SOURCEMAP']
+export const PROCESS_ENV_OVERRIDES = ['CI', 'IS_E2E_TEST', 'JEST_WORKER_ID', 'VITEST_WORKER_ID', 'SKIP_CSP', 'DISABLE_SOURCEMAP', 'CLOUD_FUNCTIONS_GRAPHQL_ENDPOINT_OVERRIDE']
 
 interface ResolveEnvConfigsOptions {
   /** Directory containing .env / .env.e2e.override / .env.override (i.e. apps/web). */

@@ -1,3 +1,8 @@
+import {
+  DEV_ENTRY_GATEWAY_API_BASE_URL,
+  PROD_ENTRY_GATEWAY_API_BASE_URL,
+  STAGING_ENTRY_GATEWAY_API_BASE_URL,
+} from '@universe/api'
 import ms from 'ms'
 import { PlatformIdType } from 'uniswap/src/data/rest/conversionTracking/types'
 
@@ -6,9 +11,10 @@ export const CONVERSION_LEADS_STORAGE_KEY = 'conversion.leads'
 export const CONVERSION_LEADS_EXTERNAL_COOKIE_NAME = 'conversion.leads.external'
 export const CONVERSION_LEADS_EXTERNAL_COOKIE_DOMAIN = __DEV__ ? 'localhost' : '.uniswap.org'
 
-export const DEV_CONVERSION_PROXY_API_BASE_URL = 'https://entry-gateway.backend-dev.api.uniswap.org'
-export const STAGING_CONVERSION_PROXY_API_BASE_URL = 'https://entry-gateway.backend-staging.api.uniswap.org'
-export const PROD_CONVERSION_PROXY_API_BASE_URL = 'https://entry-gateway.backend-prod.api.uniswap.org'
+// Conversion tracking is proxied through the Entry Gateway — reuse the canonical URLs.
+export const DEV_CONVERSION_PROXY_API_BASE_URL = DEV_ENTRY_GATEWAY_API_BASE_URL
+export const STAGING_CONVERSION_PROXY_API_BASE_URL = STAGING_ENTRY_GATEWAY_API_BASE_URL
+export const PROD_CONVERSION_PROXY_API_BASE_URL = PROD_ENTRY_GATEWAY_API_BASE_URL
 
 export const DEFAULT_HEADERS = [{ key: 'content-type', value: 'application/json' }]
 

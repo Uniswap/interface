@@ -1,6 +1,13 @@
-import { ListTokensResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import { MultichainToken, TokenType } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { TokensOrderBy } from '@universe/api'
+import { TimestampedValue, TokenType } from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import { ListTokensResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
+import {
+  HistoryDuration,
+  MultichainToken,
+  RankedMultichainToken,
+  TokenPriceData,
+  TokenRankStats,
+  TokensOrderBy,
+} from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { describe, expect, it, vi } from 'vitest'
 import { TimePeriod } from '~/appGraphql/data/util'
 import { TokenSortMethod } from '~/components/Tokens/constants'
@@ -52,10 +59,7 @@ function createParams(
 }
 
 function emptyBackendListResponse(): ListTokensResponse {
-  return new ListTokensResponse({
-    tokens: [],
-    multichainTokens: [],
-  })
+  return new ListTokensResponse({ multichainTokens: [] })
 }
 
 describe('createListTokensService', () => {
@@ -80,8 +84,10 @@ describe('createListTokensService', () => {
       expect(getTokenStats).toHaveBeenCalled()
       expect(listTokens).not.toHaveBeenCalled()
       expect(result.multichainTokens).toHaveLength(1)
-      expect(result.multichainTokens[0]?.multichainId).toBe('mc:1_0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48')
-      expect(result.multichainTokens[0]?.symbol).toBe('USDC')
+      expect(result.multichainTokens[0]?.multichainToken?.multichainId).toBe(
+        'mc:1_0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+      )
+      expect(result.multichainTokens[0]?.multichainToken?.symbol).toBe('USDC')
       expect(result.nextPageToken).toBeUndefined()
     })
 
@@ -112,22 +118,19 @@ describe('createListTokensService', () => {
   })
 
   describe('backend_sorted source', () => {
-    it('should call listTokens with multichain true and return response.multichainTokens', async () => {
-      const mcToken = new MultichainToken({
-        multichainId: 'mc:1_0xABC',
-        symbol: 'MC',
-        name: 'Multichain',
-        type: TokenType.ERC20,
-        projectName: '',
-        logoUrl: '',
-        safetyLevel: 0,
-        spamCode: 0,
-        chainTokens: [],
+    it('should call listTokens and pass through response.multichainTokens (already RankedMultichainToken)', async () => {
+      const ranked = new RankedMultichainToken({
+        multichainToken: new MultichainToken({
+          multichainId: 'mc:1_0xABC',
+          symbol: 'MC',
+          name: 'Multichain',
+          type: TokenType.ERC20,
+          addresses: { '1': '0xABC' },
+        }),
       })
       const response = new ListTokensResponse({
-        tokens: [],
-        multichainTokens: [mcToken],
-        nextPageToken: 'page2',
+        multichainTokens: [ranked],
+        page: { nextPageToken: 'page2' },
       })
       const listTokens = vi.fn().mockResolvedValue(response)
 
@@ -140,17 +143,137 @@ describe('createListTokensService', () => {
       const result = await service.getListTokens(defaultParams)
 
       expect(listTokens).toHaveBeenCalledTimes(1)
-      const call = listTokens.mock.calls[0]?.[0]
-      expect(call?.multichain).toBe(true)
       expect(result.multichainTokens).toHaveLength(1)
-      expect(result.multichainTokens[0]?.multichainId).toBe('mc:1_0xABC')
-      expect(result.multichainTokens[0]?.symbol).toBe('MC')
+      expect(result.multichainTokens[0]?.multichainToken?.multichainId).toBe('mc:1_0xABC')
+      expect(result.multichainTokens[0]?.multichainToken?.symbol).toBe('MC')
       expect(result.nextPageToken).toBe('page2')
+    })
+
+    it('should backfill price.percentChange1h from stats.priceChange1h when BE omits it, so flag-on and flag-off rows read the same field', async () => {
+      const ranked = new RankedMultichainToken({
+        multichainToken: new MultichainToken({
+          multichainId: 'mc:1_0xABC',
+          symbol: 'MC',
+          name: 'Multichain',
+          type: TokenType.ERC20,
+          addresses: { '1': '0xABC' },
+          price: new TokenPriceData({ spotUsd: 1, percentChange1d: 2 }),
+        }),
+        stats: new TokenRankStats({ priceChange1h: 5 }),
+      })
+      const response = new ListTokensResponse({ multichainTokens: [ranked] })
+      const listTokens = vi.fn().mockResolvedValue(response)
+
+      const service = createListTokensService({
+        getSourceType: () => 'backend_sorted',
+        getTokenStats: vi.fn(),
+        listTokens,
+      })
+
+      const result = await service.getListTokens(defaultParams)
+
+      expect(result.multichainTokens[0]?.multichainToken?.price?.percentChange1h).toBe(5)
+      // percentChange1d is already populated by BE — must not be clobbered by the backfill.
+      expect(result.multichainTokens[0]?.multichainToken?.price?.percentChange1d).toBe(2)
+    })
+
+    it('should not overwrite price.percentChange1h when BE already populates it', async () => {
+      const ranked = new RankedMultichainToken({
+        multichainToken: new MultichainToken({
+          multichainId: 'mc:1_0xABC',
+          symbol: 'MC',
+          name: 'Multichain',
+          type: TokenType.ERC20,
+          addresses: { '1': '0xABC' },
+          price: new TokenPriceData({ spotUsd: 1, percentChange1h: 9 }),
+        }),
+        stats: new TokenRankStats({ priceChange1h: 5 }),
+      })
+      const response = new ListTokensResponse({ multichainTokens: [ranked] })
+      const listTokens = vi.fn().mockResolvedValue(response)
+
+      const service = createListTokensService({
+        getSourceType: () => 'backend_sorted',
+        getTokenStats: vi.fn(),
+        listTokens,
+      })
+
+      const result = await service.getListTokens(defaultParams)
+
+      expect(result.multichainTokens[0]?.multichainToken?.price?.percentChange1h).toBe(9)
+    })
+
+    it('should build priceHistoryByMultichainId from RankedMultichainToken.sparkline', async () => {
+      const ranked = new RankedMultichainToken({
+        multichainToken: new MultichainToken({
+          multichainId: 'mc:1_0xABC',
+          symbol: 'MC',
+          name: 'Multichain',
+          type: TokenType.ERC20,
+          addresses: { '1': '0xABC' },
+        }),
+        sparkline: [
+          new TimestampedValue({ timestamp: 1n, value: 1.1 }),
+          new TimestampedValue({ timestamp: 2n, value: 1.2 }),
+        ],
+      })
+      const response = new ListTokensResponse({ multichainTokens: [ranked] })
+      const listTokens = vi.fn().mockResolvedValue(response)
+
+      const service = createListTokensService({
+        getSourceType: () => 'backend_sorted',
+        getTokenStats: vi.fn(),
+        listTokens,
+      })
+
+      const result = await service.getListTokens(defaultParams)
+
+      expect(result.priceHistoryByMultichainId['mc:1_0xABC']).toEqual([
+        { timestamp: 1, value: 1.1 },
+        { timestamp: 2, value: 1.2 },
+      ])
+    })
+
+    it('should omit priceHistoryByMultichainId entries for tokens with an empty sparkline', async () => {
+      const ranked = new RankedMultichainToken({
+        multichainToken: new MultichainToken({
+          multichainId: 'mc:1_0xABC',
+          symbol: 'MC',
+          name: 'Multichain',
+          type: TokenType.ERC20,
+          addresses: { '1': '0xABC' },
+        }),
+      })
+      const response = new ListTokensResponse({ multichainTokens: [ranked] })
+      const listTokens = vi.fn().mockResolvedValue(response)
+
+      const service = createListTokensService({
+        getSourceType: () => 'backend_sorted',
+        getTokenStats: vi.fn(),
+        listTokens,
+      })
+
+      const result = await service.getListTokens(defaultParams)
+
+      expect(result.priceHistoryByMultichainId).toEqual({})
     })
   })
 
   describe('backend request params', () => {
-    it('should pass chainIds, pageSize, and pageToken to listTokens', async () => {
+    it('should always set sparklineDuration to DAY (required by BE)', async () => {
+      const listTokens = vi.fn().mockResolvedValue(emptyBackendListResponse())
+      const service = createListTokensService({
+        getSourceType: () => 'backend_sorted',
+        getTokenStats: vi.fn(),
+        listTokens,
+      })
+
+      await service.getListTokens(defaultParams)
+
+      expect(listTokens).toHaveBeenCalledWith(expect.objectContaining({ sparklineDuration: HistoryDuration.DAY }))
+    })
+
+    it('should pass chainIds and nested page.pageSize/page.pageToken to listTokens', async () => {
       const listTokens = vi.fn().mockResolvedValue(emptyBackendListResponse())
       const service = createListTokensService({
         getSourceType: () => 'backend_sorted',
@@ -169,14 +292,12 @@ describe('createListTokensService', () => {
       expect(listTokens).toHaveBeenCalledWith(
         expect.objectContaining({
           chainIds: [1, 8453],
-          pageSize: 25,
-          pageToken: 'pagination-token',
-          multichain: true,
+          page: { pageSize: 25, pageToken: 'pagination-token' },
         }),
       )
     })
 
-    it('should omit orderBy and ascending when sortMethod is PRICE', async () => {
+    it('should omit sort when sortMethod is PRICE', async () => {
       const listTokens = vi.fn().mockResolvedValue(emptyBackendListResponse())
       const service = createListTokensService({
         getSourceType: () => 'backend_sorted',
@@ -191,11 +312,10 @@ describe('createListTokensService', () => {
       )
 
       const call = listTokens.mock.calls[0]?.[0] as Record<string, unknown>
-      expect(call.orderBy).toBeUndefined()
-      expect(call.ascending).toBeUndefined()
+      expect(call.sort).toBeUndefined()
     })
 
-    it('should include orderBy from filterTimePeriod and ascending when sortMethod is VOLUME', async () => {
+    it('should include sort.orderBy from filterTimePeriod and sort.ascending when sortMethod is VOLUME', async () => {
       const listTokens = vi.fn().mockResolvedValue(emptyBackendListResponse())
       const service = createListTokensService({
         getSourceType: () => 'backend_sorted',
@@ -213,12 +333,12 @@ describe('createListTokensService', () => {
         }),
       )
 
-      const call = listTokens.mock.calls[0]?.[0] as Record<string, unknown>
-      expect(call.orderBy).toBe(TokensOrderBy.VOLUME_7D)
-      expect(call.ascending).toBe(true)
+      const call = listTokens.mock.calls[0]?.[0] as { sort?: { orderBy?: TokensOrderBy; ascending?: boolean } }
+      expect(call.sort?.orderBy).toBe(TokensOrderBy.VOLUME_7D)
+      expect(call.sort?.ascending).toBe(true)
     })
 
-    it('should include orderBy and ascending when sortMethod is HOUR_CHANGE', async () => {
+    it('should include sort.orderBy and sort.ascending when sortMethod is HOUR_CHANGE', async () => {
       const listTokens = vi.fn().mockResolvedValue(emptyBackendListResponse())
       const service = createListTokensService({
         getSourceType: () => 'backend_sorted',
@@ -235,12 +355,12 @@ describe('createListTokensService', () => {
         }),
       )
 
-      const call = listTokens.mock.calls[0]?.[0] as Record<string, unknown>
-      expect(call.orderBy).toBe(TokensOrderBy.PRICE_CHANGE_1H)
-      expect(call.ascending).toBe(false)
+      const call = listTokens.mock.calls[0]?.[0] as { sort?: { orderBy?: TokensOrderBy; ascending?: boolean } }
+      expect(call.sort?.orderBy).toBe(TokensOrderBy.PRICE_CHANGE_1H)
+      expect(call.sort?.ascending).toBe(false)
     })
 
-    it('should include orderBy and ascending when sortMethod is FULLY_DILUTED_VALUATION', async () => {
+    it('should include sort.orderBy and sort.ascending when sortMethod is FULLY_DILUTED_VALUATION', async () => {
       const listTokens = vi.fn().mockResolvedValue(emptyBackendListResponse())
       const service = createListTokensService({
         getSourceType: () => 'backend_sorted',
@@ -257,9 +377,9 @@ describe('createListTokensService', () => {
         }),
       )
 
-      const call = listTokens.mock.calls[0]?.[0] as Record<string, unknown>
-      expect(call.orderBy).toBe(TokensOrderBy.FDV)
-      expect(call.ascending).toBe(true)
+      const call = listTokens.mock.calls[0]?.[0] as { sort?: { orderBy?: TokensOrderBy; ascending?: boolean } }
+      expect(call.sort?.orderBy).toBe(TokensOrderBy.FDV)
+      expect(call.sort?.ascending).toBe(true)
     })
   })
 })

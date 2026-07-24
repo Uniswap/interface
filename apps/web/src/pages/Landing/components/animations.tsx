@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion'
 import { css, deprecatedStyled, keyframes } from '~/lib/deprecated-styled'
 
 type RiseInProps = {
@@ -41,21 +40,30 @@ export const RiseIn = deprecatedStyled.span<{ delay?: number }>`
   ${RiseInStyles}
 `
 
+const hoverAnimation = keyframes`
+  0% {
+    transform: translateY(-4px);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(4px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-4px);
+    opacity: 0.5;
+  }
+`
+
+const HoverContainer = deprecatedStyled.div`
+  display: inline-block;
+  position: relative;
+  animation-name: ${hoverAnimation};
+  animation-duration: 2000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+`
+
 export const Hover = (props: RiseInProps) => {
-  return (
-    <motion.div
-      animate={{
-        y: ['-4px', '4px', '-4px'],
-        opacity: [0.5, 1, 0.5],
-      }}
-      transition={{
-        duration: 2,
-        repeat: Infinity, // repeat animation forever
-        ease: 'easeInOut',
-      }}
-      style={{ display: 'inline-block', position: 'relative' }}
-    >
-      {props.children}
-    </motion.div>
-  )
+  return <HoverContainer>{props.children}</HoverContainer>
 }

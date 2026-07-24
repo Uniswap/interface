@@ -52,6 +52,7 @@ export const Mocks = {
     list_transactions: path.resolve(__dirname, '../mocks/dataApiService/list_transactions.json'),
     list_transactions_empty: path.resolve(__dirname, '../mocks/dataApiService/list_transactions_empty.json'),
     list_transactions_uniswapx: path.resolve(__dirname, '../mocks/dataApiService/list_transactions_uniswapx.json'),
+    list_pools_eth_usdt_v4: path.resolve(__dirname, '../mocks/dataApiService/list_pools_eth_usdt_v4.json'),
   },
   PoolPriceHistory: {
     eth_weeth: path.resolve(__dirname, '../mocks/graphql/PoolPriceHistory/eth_weeth.json'),
@@ -61,6 +62,15 @@ export const Mocks = {
   },
   LiquidityService: {
     pool_info_eth_weeth: path.resolve(__dirname, '../mocks/liquidityService/pool_info_eth_weeth.json'),
+    create_position_eth_weeth_low_slippage: path.resolve(
+      __dirname,
+      '../mocks/liquidityService/create_position_eth_weeth_low_slippage.json',
+    ),
+    create_position_eth_weeth_high_slippage: path.resolve(
+      __dirname,
+      '../mocks/liquidityService/create_position_eth_weeth_high_slippage.json',
+    ),
+    increase_position_eth_usdt: path.resolve(__dirname, '../mocks/liquidityService/increase_position_eth_usdt.json'),
   },
   TradingApi: {
     swap: path.resolve(__dirname, '../mocks/tradingApi/swap.json'),

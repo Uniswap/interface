@@ -8,6 +8,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain, toUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
 import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { BACKEND_NATIVE_CHAIN_ADDRESS_STRING } from 'uniswap/src/features/search/utils'
+import type { EarnAnalyticsEntryPoint } from 'uniswap/src/features/telemetry/types'
 import { ServiceProviderInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyIdToChain, currencyIdToGraphQLAddress, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { canOpenURL, openURL } from 'uniswap/src/utils/link'
@@ -392,18 +393,25 @@ export function getTokenUrl(
  */
 export const EARN_VAULT_MODAL_QUERY_PARAM = 'modal'
 export const EARN_VAULT_MODAL_QUERY_VALUE = 'earn-vault'
+export const EARN_ENTRY_POINT_QUERY_PARAM = 'earnEntryPoint'
 
 /**
  * Build a Uniswap web TDP URL that auto-opens the earn vault modal for the
  * given vault's underlying token. Returns undefined if the vault's currencyId
  * cannot be resolved to a token URL.
  */
-export function getEarnVaultUrl(vault: EarnVaultInfo): string | undefined {
+export function getEarnVaultUrl(
+  vault: EarnVaultInfo,
+  analyticsEntryPoint?: EarnAnalyticsEntryPoint,
+): string | undefined {
   const tokenUrl = getTokenUrl(vault.displayCurrencyId)
   if (!tokenUrl) {
     return undefined
   }
-  return `${tokenUrl}?${EARN_VAULT_MODAL_QUERY_PARAM}=${EARN_VAULT_MODAL_QUERY_VALUE}`
+  const entryPointQuery = analyticsEntryPoint
+    ? `&${EARN_ENTRY_POINT_QUERY_PARAM}=${encodeURIComponent(analyticsEntryPoint)}`
+    : ''
+  return `${tokenUrl}?${EARN_VAULT_MODAL_QUERY_PARAM}=${EARN_VAULT_MODAL_QUERY_VALUE}${entryPointQuery}`
 }
 
 export function getTwitterLink(twitterName: string): string {

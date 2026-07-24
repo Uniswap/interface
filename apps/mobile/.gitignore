@@ -4,6 +4,9 @@
 
 .tamagui
 
+# uniwind (regenerated on every metro/expo start)
+uniwind-types.d.ts
+
 # Xcode
 #
 build/
@@ -107,7 +110,7 @@ storybook-static/*
 ios/assets/
 ./lib/
 
-# Jest
+# Test coverage
 coverage/
 
 # Swift GraphQL codegen

@@ -81,6 +81,7 @@ describe('useEarnPlanProgressState', () => {
     const { result, unmount } = renderHookWithProviders(useEarnPlanProgressState)
 
     expect(result.current?.steps).toEqual([step])
+    expect(result.current?.currentStepIndex).toBe(0)
     expect(result.current?.currentStep).toEqual({
       step,
       accepted: true,
@@ -140,9 +141,35 @@ describe('useEarnPlanProgressState', () => {
     const { result, unmount } = renderHookWithProviders(useEarnPlanProgressState)
 
     expect(result.current?.steps).toEqual([erroredStep, nextStep])
+    expect(result.current?.currentStepIndex).toBe(0)
     expect(result.current?.currentStep).toEqual({
       step: erroredStep,
       accepted: false,
+    })
+    unmount()
+  })
+
+  it('does not treat a trailing errored step as previous while the first step is current', () => {
+    const firstStep = createPlanStep({
+      stepIndex: 0,
+      status: TradingApi.PlanStepStatus.AWAITING_ACTION,
+    })
+    const trailingErroredStep = createPlanStep({
+      stepIndex: 1,
+      status: TradingApi.PlanStepStatus.STEP_ERROR,
+    })
+    activePlanStore
+      .getState()
+      .actions.setActivePlan(
+        createActivePlan({ proofPending: true, steps: [firstStep, trailingErroredStep], currentStepIndex: 0 }),
+      )
+
+    const { result, unmount } = renderHookWithProviders(useEarnPlanProgressState)
+
+    expect(result.current?.currentStepIndex).toBe(0)
+    expect(result.current?.currentStep).toEqual({
+      step: firstStep,
+      accepted: true,
     })
     unmount()
   })

@@ -100,17 +100,16 @@ Note: If you are indeed using an Apple Silicon Mac, we recommend setting up your
 
 4. Install `bun`. We use bun as our package manager and to run scripts.
 
-    Look at the `.bun-version` file in your workspace to determine which version to install. Run the following command to install it, being mindful of the version string here (npm comes with node, so it should work if the above step has been completed correctly)
+    The version to install is pinned in the `.bun-version` file at the repo root. Run the following command from the repo root to install it (npm comes with node, so it should work if the above step has been completed correctly)
 
     ```bash
-    curl -fsSL https://bun.sh/install | bash -s "bun-v1.3.11"
+    curl -fsSL https://bun.sh/install | bash -s "bun-v$(cat .bun-version)"
     ```
 
-    Check version to verify installation
+    Verify the installed version matches `.bun-version`
 
     ```bash
     > bun -v
-    1.3.11
     ```
 
 5. Install `ruby`

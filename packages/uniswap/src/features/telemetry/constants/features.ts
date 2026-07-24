@@ -33,8 +33,10 @@ export enum FiatOnRampEventName {
 export enum EarnEventName {
   EarnDepositCompleted = 'Earn Deposit Completed',
   EarnDepositFailed = 'Earn Deposit Failed',
+  EarnDepositReviewed = 'Earn Deposit Reviewed',
   EarnDepositStarted = 'Earn Deposit Started',
   EarnDepositSubmitted = 'Earn Deposit Submitted',
+  EarnSurfaceViewed = 'Earn Surface Viewed',
   EarnSwapUpsellConverted = 'Earn Swap Upsell Converted',
   EarnSwapUpsellToastClicked = 'Earn Swap Upsell Toast Clicked',
   EarnSwapUpsellToastDismissed = 'Earn Swap Upsell Toast Dismissed',
@@ -42,8 +44,11 @@ export enum EarnEventName {
   EarnSwapUpsellToggleChanged = 'Earn Swap Upsell Toggle Changed',
   EarnSwapUpsellToggleShown = 'Earn Swap Upsell Toggle Shown',
   EarnVaultSelected = 'Earn Vault Selected',
+  EarnVaultCardShowMoreClicked = 'Earn Vault Card Show More Clicked',
+  EarnVaultDetailViewed = 'Earn Vault Detail Viewed',
   EarnWithdrawCompleted = 'Earn Withdraw Completed',
   EarnWithdrawFailed = 'Earn Withdraw Failed',
+  EarnWithdrawReviewed = 'Earn Withdraw Reviewed',
   EarnWithdrawStarted = 'Earn Withdraw Started',
   EarnWithdrawSubmitted = 'Earn Withdraw Submitted',
 }

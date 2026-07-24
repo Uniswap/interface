@@ -292,6 +292,7 @@ describe(useEarnVaults, () => {
       action: EarnAction.Deposit,
       createdAtMs: Date.now(),
       depositedUsd: 42,
+      baselineSharesRaw: '0',
       walletAddress: normalizeTokenAddressForCache(WALLET_ADDRESS),
       vaultAddress: normalizeTokenAddressForCache(USDC_VAULT_ADDRESS),
       vaultChainId: UniverseChainId.Mainnet,

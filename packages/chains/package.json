@@ -22,9 +22,7 @@
   "devDependencies": {
     "@edge-runtime/vm": "5.0.0",
     "@types/node": "22.19.17",
-    "@typescript/native-preview": "7.0.0-dev.20260421.2",
     "@uniswap/v3-core": "1.0.1",
-    "typescript": "5.9.2",
     "vitest": "3.2.1"
   },
   "scripts": {

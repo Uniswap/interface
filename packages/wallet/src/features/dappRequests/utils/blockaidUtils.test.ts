@@ -1,5 +1,7 @@
 // Mock chain info to avoid importing chain data with PNG files
 vi.mock('uniswap/src/features/chains/chainInfo', () => ({
+  // Chain ids treated as supported by isUniverseChainId in these tests (Mainnet, Base)
+  ALL_CHAIN_IDS: [1, 8453],
   getChainInfo: vi.fn((chainId: number) => ({
     nativeCurrency: {
       address: `0xNATIVE${chainId}`,
@@ -338,6 +340,45 @@ describe('blockaidUtils', () => {
       expect(result?.assets[0]?.address).toBe('0xNATIVE1')
       expect(result?.assets[0]?.symbol).toBe('ETH')
       expect(result?.assets[0]?.amount).toBe('1.5')
+    })
+
+    it('REGRESSION (INFRA-2850): should fall back to the asset address for a NATIVE asset with an unsupported chain_id', () => {
+      const assetsDiffs = [
+        {
+          asset: {
+            type: 'NATIVE',
+            symbol: 'FAKE',
+            name: 'Fake Chain Token',
+            address: '0xfallback',
+            chain_id: 999999,
+          },
+          out: [{ value: '1' }],
+          in: [],
+        },
+      ] as any
+
+      const result = parseSendingAssets(assetsDiffs, TEST_CHAIN_ID)
+
+      expect(result?.assets[0]?.address).toBe('0xfallback')
+    })
+
+    it('REGRESSION (INFRA-2850): should fall back to an empty address for a NATIVE asset with an unsupported chain_id and no address', () => {
+      const assetsDiffs = [
+        {
+          asset: {
+            type: 'NATIVE',
+            symbol: 'FAKE',
+            name: 'Fake Chain Token',
+            chain_id: 999999,
+          },
+          out: [{ value: '1' }],
+          in: [],
+        },
+      ] as any
+
+      const result = parseSendingAssets(assetsDiffs, TEST_CHAIN_ID)
+
+      expect(result?.assets[0]?.address).toBe('')
     })
 
     it('should skip assets with no out amount', () => {

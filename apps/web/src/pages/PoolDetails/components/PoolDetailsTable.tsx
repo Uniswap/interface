@@ -2,6 +2,7 @@ import { GraphQLApi } from '@universe/api'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, styled, Text, TouchableArea } from 'ui/src'
+import { fonts } from 'ui/src/theme'
 import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
 import { parseRestPosition } from 'uniswap/src/features/positions/parseRestPosition'
 import { PositionInfo } from 'uniswap/src/features/positions/types'
@@ -14,9 +15,16 @@ enum PoolDetailsTableTabs {
   POSITIONS = 'positions',
 }
 
+// Note: this intentionally scales via media-scoped fontSize/lineHeight rather than a `variant`
+// swap. Swapping to a subheading variant inside `$sm` leaks the subHeading font family (and its
+// family-relative size tokens) to all widths on web, shrinking the tabs on desktop too.
 const TableHeaderText = styled(Text, {
   variant: 'heading3',
   userSelect: 'none',
+  $sm: {
+    fontSize: fonts.subheading2.fontSize,
+    lineHeight: fonts.subheading2.lineHeight,
+  },
 })
 
 export function PoolDetailsTableTab({
@@ -44,7 +52,7 @@ export function PoolDetailsTableTab({
   return (
     <Flex gap="$gap24">
       {positions?.length ? (
-        <Flex row gap="$gap16">
+        <Flex row flexWrap="wrap" gap="$gap16">
           <TouchableArea onPress={() => setActiveTable(PoolDetailsTableTabs.TRANSACTIONS)}>
             <TableHeaderText color={activeTable === PoolDetailsTableTabs.TRANSACTIONS ? '$neutral1' : '$neutral2'}>
               {t('common.transactions')}

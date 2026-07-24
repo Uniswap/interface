@@ -1,10 +1,15 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import type { TFunction } from 'i18next'
 import { ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, FlexProps, styled, Text } from 'ui/src'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useTokenMarketStats, useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
+import {
+  resolveSpotPriceOverride,
+  useTokenMarketStats,
+  useTokenSpotPrice,
+} from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { currencyId } from 'uniswap/src/utils/currencyId'
@@ -35,6 +40,30 @@ function getVolumeDescription({
     return t('stats.volume.1d.description.tempo')
   }
   return t('stats.volume.1d.description')
+}
+
+/**
+ * GraphQL-only fallback for the "filtered chain has no aggregatable data" edge case (see
+ * useTokenMarketStats' hasAggregated heuristic). Bypassed when V2 is enabled so REST-sourced
+ * stats are authoritative instead of being shadowed by this raw GraphQL read.
+ */
+function getGraphqlStatFallback<T>({
+  isV2TokensEnabled,
+  v2Value,
+  showAggregatedStats,
+  aggregatedValue,
+  filteredValue,
+}: {
+  isV2TokensEnabled: boolean
+  v2Value: T
+  showAggregatedStats: boolean
+  aggregatedValue: T
+  filteredValue: T
+}): T {
+  if (isV2TokensEnabled) {
+    return v2Value
+  }
+  return showAggregatedStats ? aggregatedValue : filteredValue
 }
 
 export const StatWrapper = ({
@@ -147,29 +176,54 @@ type StatsSectionProps = {
 export function StatsSection({ tokenQueryData, isLoading = false }: StatsSectionProps) {
   const { t } = useTranslation()
   const effectiveCurrency = useTDPEffectiveCurrency()
+  const isV2TokensEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
 
-  const { showAggregatedStats, filteredDeploymentMarket, networkFilterName, marketStatsInput } =
-    useTDPStatsMarketSource(tokenQueryData)
+  const {
+    showAggregatedStats,
+    isMultichainAggregateView,
+    filteredDeploymentMarket,
+    networkFilterName,
+    marketStatsInput,
+  } = useTDPStatsMarketSource(tokenQueryData)
 
   const currencyIdValue = useMemo(() => currencyId(effectiveCurrency), [effectiveCurrency])
   const preferProjectMarketData = useTDPPreferProjectMarketData()
-  const spotPrice = useTokenSpotPrice(currencyIdValue, { preferProjectMarketData })
+  const spotPrice = useTokenSpotPrice(currencyIdValue, {
+    preferProjectMarketData,
+    isMultichainAggregateView,
+  })
+  // Shares its decision logic with the chart header's currentPriceOverride so both surfaces always agree.
+  const currentPriceOverride = resolveSpotPriceOverride({
+    isV2TokensEnabled,
+    isMultichainAggregateView,
+    preferProjectMarketData,
+    spotPrice,
+  })
 
   const stats = useTokenMarketStats(currencyIdValue, {
     aggregatedData: marketStatsInput,
-    currentPriceOverride: spotPrice,
+    currentPriceOverride,
     preferProjectMarketData,
+    isMultichainAggregateView,
   })
 
-  const tokenMarketVolume = showAggregatedStats
-    ? tokenQueryData?.market?.volume24H?.value
-    : filteredDeploymentMarket?.volume24H?.value
+  const tokenMarketVolume = getGraphqlStatFallback({
+    isV2TokensEnabled,
+    v2Value: undefined,
+    showAggregatedStats,
+    aggregatedValue: tokenQueryData?.market?.volume24H?.value,
+    filteredValue: filteredDeploymentMarket?.volume24H?.value,
+  })
   const volume = preferProjectMarketData ? (stats.volume ?? tokenMarketVolume) : (tokenMarketVolume ?? stats.volume)
   // Guard against the second fallback below: `volume` can drop to the Uniswap value even when `stats.volumeSource` is 'project'.
   const isProjectVolume = stats.volumeSource === 'project' && volume === stats.volume
-  const tvl = showAggregatedStats
-    ? tokenQueryData?.market?.totalValueLocked?.value
-    : filteredDeploymentMarket?.totalValueLocked?.value
+  const tvl = getGraphqlStatFallback({
+    isV2TokensEnabled,
+    v2Value: stats.tvl,
+    showAggregatedStats,
+    aggregatedValue: tokenQueryData?.market?.totalValueLocked?.value,
+    filteredValue: filteredDeploymentMarket?.totalValueLocked?.value,
+  })
   const { marketCap, fdv, high52w, low52w } = stats
 
   const hasStats = tvl || fdv || marketCap || volume || high52w || low52w

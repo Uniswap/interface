@@ -4,19 +4,20 @@ import { PrivateKeySpeedBumpModal } from 'src/components/RestoreWalletModal/Priv
 import { fireEvent, render } from 'src/test/test-utils'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import type { Mock } from 'vitest'
 
-jest.mock('src/components/modals/useReactNavigationModal', () => ({
-  useReactNavigationModal: jest.fn(),
+vi.mock('src/components/modals/useReactNavigationModal', () => ({
+  useReactNavigationModal: vi.fn(),
 }))
 
 describe('PrivateKeySpeedBumpModal', () => {
   const mockPreventCloseRef = { current: false }
-  const mockNavigation = { navigate: jest.fn() }
-  const mockOnClose = jest.fn()
+  const mockNavigation = { navigate: vi.fn() }
+  const mockOnClose = vi.fn()
 
   beforeEach(() => {
-    jest.clearAllMocks()
-    ;(useReactNavigationModal as jest.Mock).mockReturnValue({
+    vi.clearAllMocks()
+    ;(useReactNavigationModal as Mock).mockReturnValue({
       onClose: mockOnClose,
       preventCloseRef: mockPreventCloseRef,
     })

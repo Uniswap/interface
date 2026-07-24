@@ -1,5 +1,4 @@
 import { createColumnHelper, type Row } from '@tanstack/react-table'
-import { AnimatePresence, motion } from 'framer-motion'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea, Unicon, useMedia } from 'ui/src'
@@ -52,18 +51,9 @@ function TableTimeCell({ timestamp }: { timestamp: string }) {
 
 function AnimatedBidRow({ children }: { children: React.ReactNode }) {
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0 }}
-      transition={{
-        layout: { duration: 0.2, ease: 'easeOut' },
-        duration: 0.2,
-      }}
-    >
+    <Flex animation="200ms" animateOnly={['transform', 'opacity']} enterStyle={{ opacity: 0, y: -20 }}>
       {children}
-    </motion.div>
+    </Flex>
   )
 }
 
@@ -373,21 +363,19 @@ export const BidActivities = ({
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <AnimatePresence mode="popLayout">
-          <Table
-            columns={columns}
-            data={formattedBidActivities}
-            loading={loading}
-            hideHeader={false}
-            maxHeight={formattedBidActivities.length >= FIXED_HEIGHT_THRESHOLD ? 450 : undefined}
-            loadMore={pendingNewBidCount > 0 ? undefined : loadMore}
-            loadingRowsCount={6}
-            rowHeight={ROW_HEIGHT}
-            getRowId={(row) => row.bidId}
-            rowWrapper={renderBidActivityRow}
-            showScrollbar
-          />
-        </AnimatePresence>
+        <Table
+          columns={columns}
+          data={formattedBidActivities}
+          loading={loading}
+          hideHeader={false}
+          maxHeight={formattedBidActivities.length >= FIXED_HEIGHT_THRESHOLD ? 450 : undefined}
+          loadMore={pendingNewBidCount > 0 ? undefined : loadMore}
+          loadingRowsCount={6}
+          rowHeight={ROW_HEIGHT}
+          getRowId={(row) => row.bidId}
+          rowWrapper={renderBidActivityRow}
+          showScrollbar
+        />
         {formattedBidActivities.length >= 6 && (
           <Flex
             position="absolute"

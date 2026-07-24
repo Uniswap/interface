@@ -338,7 +338,7 @@ export function ClaimFeeModal() {
           <Button
             data-testid={TestID.ClaimFees}
             key="LoaderButton-animation-ClaimFeeModal-button"
-            isDisabled={!data?.claim || Boolean(currentTransactionStep)}
+            disabled={!data?.claim || Boolean(currentTransactionStep)}
             loading={calldataLoading || Boolean(currentTransactionStep)}
             size="large"
             variant="branded"

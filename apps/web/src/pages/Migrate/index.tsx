@@ -239,6 +239,7 @@ function MigrateInner({
         confirmButtonText={t('common.migrate')}
         currencyAmounts={{ TOKEN0: currency0Amount, TOKEN1: currency1Amount }}
         currencyAmountsUSDValue={{ TOKEN0: currency0FiatAmount, TOKEN1: currency1FiatAmount }}
+        feeAmounts={{ TOKEN0: positionInfo.fee0Amount, TOKEN1: positionInfo.fee1Amount }}
         isDisabled={!txInfo?.action}
         refundedAmounts={refundedAmounts}
         transactionError={transactionError}
@@ -309,7 +310,7 @@ function Toolbar({
         emphasis="tertiary"
         fill={false}
         icon={<RotateLeft />}
-        isDisabled={isFormUnchanged}
+        disabled={isFormUnchanged}
         onPress={() => {
           setPositionState({
             ...DEFAULT_POSITION_STATE,

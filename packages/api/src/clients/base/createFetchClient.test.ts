@@ -65,3 +65,41 @@ describe('createFetchClient session-id header', () => {
     expect((res as Response).status).toBe(200)
   })
 })
+
+describe('createFetchClient onResponse', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  const getSessionService = (): SessionService => ({ getSessionState: async () => null }) as unknown as SessionService
+
+  it('invokes onResponse with the raw response so callers can read headers', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response(null, { status: 200, headers: { 'x-experiments': '{"exp":{"value":{}}}' } })),
+    )
+
+    const seen: (string | null)[] = []
+    const client = createFetchClient({
+      baseUrl: 'https://example.com',
+      getSessionService,
+      onResponse: (response) => seen.push(response.headers.get('x-experiments')),
+    })
+
+    await client.fetch('/path', { method: 'GET' })
+
+    expect(seen).toEqual(['{"exp":{"value":{}}}'])
+  })
+
+  it('still resolves the response when no onResponse is provided', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response(null, { status: 200 })),
+    )
+
+    const client = createFetchClient({ baseUrl: 'https://example.com', getSessionService })
+    const res = await client.fetch('/path', { method: 'GET' })
+
+    expect((res as Response).status).toBe(200)
+  })
+})

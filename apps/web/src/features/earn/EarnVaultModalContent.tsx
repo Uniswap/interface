@@ -12,7 +12,7 @@ import { EarnVaultView } from 'uniswap/src/features/earn/hooks/useEarnVaultModal
 import { applyEarnPositionChangeOptimistically } from 'uniswap/src/features/earn/optimisticEarnPositions'
 import { getValidEarnSwapUpsellCurrencyId } from 'uniswap/src/features/earn/swapUpsell'
 import { EarnAction, type EarnPositionInfo } from 'uniswap/src/features/earn/types'
-import { resolveEarnWithdrawPosition } from 'uniswap/src/features/earn/utils'
+import { resolveEarnAmountPosition } from 'uniswap/src/features/earn/utils'
 import { WithdrawReviewView, type ExecuteEarnWithdrawParams } from 'uniswap/src/features/earn/WithdrawReviewView'
 import { YouNeedTokenView } from 'uniswap/src/features/earn/YouNeedTokenView'
 import { useLocalFiatToUSDConverter } from 'uniswap/src/features/fiatCurrency/useLocalFiatToUSDConverter'
@@ -215,6 +215,8 @@ export function EarnVaultModalContent({
       }
       return (
         <EarnVaultOverview
+          analyticsEntryPoint={analyticsEntryPoint}
+          analyticsSurface={analyticsSurface}
           onConnectWallet={onConnectWallet}
           currencyInfo={currencyInfo}
           canWithdraw={canWithdraw}
@@ -290,7 +292,7 @@ export function EarnVaultModalContent({
       )
     case EarnVaultView.WithdrawAmount: {
       // Prefer live raw balances over a zero-raw optimistic snapshot.
-      const withdrawPosition = resolveEarnWithdrawPosition({
+      const withdrawPosition = resolveEarnAmountPosition({
         livePosition: position,
         snapshotPosition: flow.position,
       })
@@ -309,7 +311,7 @@ export function EarnVaultModalContent({
     }
     case EarnVaultView.WithdrawReview: {
       // MAX_SHARES quotes need confirmed sharesRaw.
-      const withdrawPosition = resolveEarnWithdrawPosition({
+      const withdrawPosition = resolveEarnAmountPosition({
         livePosition: position,
         snapshotPosition: flow.position,
       })

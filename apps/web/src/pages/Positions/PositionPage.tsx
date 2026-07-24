@@ -33,8 +33,10 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { EVMUniverseChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
+import { formatPositionPrice } from 'uniswap/src/features/positions/formatPositionPrice'
 import { useGetRangeDisplay } from 'uniswap/src/features/positions/hooks/useGetRangeDisplay'
 import { parseRestPosition } from 'uniswap/src/features/positions/parseRestPosition'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
@@ -1050,7 +1052,14 @@ const PriceDisplay = ({
   setPriceInverted: (value: React.SetStateAction<boolean>) => void
 }) => {
   return (
-    <Flex gap="$gap4" flex={1} maxWidth="60%" minWidth={0} overflow="hidden">
+    <Flex
+      gap="$gap4"
+      flex={1}
+      maxWidth="60%"
+      minWidth={0}
+      overflow="hidden"
+      $sm={{ maxWidth: '100%', flexBasis: 'auto' }}
+    >
       <Text variant="subheading2" color="$neutral2" numberOfLines={1}>
         {labelText}
       </Text>
@@ -1099,12 +1108,14 @@ const PriceRangeSection = ({
 }) => {
   const { t } = useTranslation()
   const { formatNumberOrString } = useLocalizationContext()
+  const locale = useCurrentLocale()
   const formattedMarketPrice = useMemo(() => {
-    return formatNumberOrString({
+    return formatPositionPrice({
       value: (priceInverted ? token1CurrentPrice : token0CurrentPrice)?.toSignificant(),
-      type: NumberType.TokenTx,
+      locale,
+      formatNumberOrString,
     })
-  }, [priceInverted, token0CurrentPrice, token1CurrentPrice, formatNumberOrString])
+  }, [priceInverted, token0CurrentPrice, token1CurrentPrice, locale, formatNumberOrString])
 
   if (isFullRange) {
     return null
@@ -1115,7 +1126,7 @@ const PriceRangeSection = ({
       <Text variant="heading3" color="$neutral1">
         Price Range
       </Text>
-      <Flex row justifyContent="space-between" gap="$gap16">
+      <Flex row justifyContent="space-between" gap="$gap16" $sm={{ row: false, gap: '$gap20' }}>
         <PriceDisplay
           labelText={t('pool.minPrice')}
           price={minPrice}

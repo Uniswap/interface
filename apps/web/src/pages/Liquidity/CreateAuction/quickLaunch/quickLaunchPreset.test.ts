@@ -1,4 +1,5 @@
 import { PriceRangeStrategy as ProtoPriceRangeStrategy } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/auction_pb'
+import { QUICK_LAUNCH_DURATION_SECONDS } from '@uniswap/liquidity-launcher-sdk'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { zeroAddress } from '~/chains'
 import { buildCreateAuctionRequest } from '~/pages/Liquidity/CreateAuction/buildCreateAuctionRequest'
@@ -9,10 +10,8 @@ import {
   getQuickLaunchFloorPricePerToken,
   QUICK_LAUNCH_FALLBACK_FLOOR_ETH_PER_TOKEN,
   QUICK_LAUNCH_START_LEAD_MINUTES,
-  QUICK_LAUNCH_DURATION_MS,
 } from '~/pages/Liquidity/CreateAuction/quickLaunch/quickLaunchPreset'
 import { createCreateAuctionStore } from '~/pages/Liquidity/CreateAuction/store/createCreateAuctionStore'
-import { QuickLaunchDuration } from '~/pages/Liquidity/CreateAuction/types'
 import {
   EmissionScheduleError,
   getAuctionEmissionScheduleError,
@@ -20,11 +19,11 @@ import {
 
 const WALLET = '0x1111111111111111111111111111111111111111'
 const SALT = `0x${'22'.repeat(32)}`
+const QUICK_LAUNCH_DURATION_MS = QUICK_LAUNCH_DURATION_SECONDS * 1000
 
 function buildPresetStore(options?: {
   network?: UniverseChainId
   raiseUsdPrice?: number | null
-  duration?: QuickLaunchDuration
 }): ReturnType<typeof createCreateAuctionStore> {
   const store = createCreateAuctionStore()
   const { actions } = store.getState()
@@ -36,7 +35,7 @@ function buildPresetStore(options?: {
   }
   applyQuickLaunchPoolPreset(actions)
   actions.commitTokenFormAndAdvance()
-  const { startTime, endTime } = getQuickLaunchAuctionWindow(options?.duration, new Date('2026-07-08T12:00:00Z'))
+  const { startTime, endTime } = getQuickLaunchAuctionWindow(new Date('2026-07-08T12:00:00Z'))
   actions.setStartTime(startTime)
   actions.setEndTime(endTime)
   actions.setFloorPrice(
@@ -59,24 +58,14 @@ describe('getQuickLaunchFloorPricePerToken', () => {
 })
 
 describe('getQuickLaunchAuctionWindow', () => {
-  it('starts after the 1-minute quick-launch lead and defaults to a 30-minute window', () => {
+  it('starts after the 1-minute quick-launch lead and runs for the fixed 4h window', () => {
     const now = new Date('2026-07-08T12:00:00Z')
-    const { startTime, endTime } = getQuickLaunchAuctionWindow(undefined, now)
+    const { startTime, endTime } = getQuickLaunchAuctionWindow(now)
     expect(startTime.getTime() - now.getTime()).toBe(QUICK_LAUNCH_START_LEAD_MINUTES * 60 * 1000)
     expect(QUICK_LAUNCH_START_LEAD_MINUTES).toBe(1)
-    expect(endTime.getTime() - startTime.getTime()).toBe(QUICK_LAUNCH_DURATION_MS[QuickLaunchDuration.ThirtyMinutes])
-  })
-
-  it('runs for the selected duration preset (30 min / 1 h / 4 h)', () => {
-    const now = new Date('2026-07-08T12:00:00Z')
-    expect(QUICK_LAUNCH_DURATION_MS[QuickLaunchDuration.ThirtyMinutes]).toBe(30 * 60 * 1000)
-    expect(QUICK_LAUNCH_DURATION_MS[QuickLaunchDuration.OneHour]).toBe(60 * 60 * 1000)
-    expect(QUICK_LAUNCH_DURATION_MS[QuickLaunchDuration.FourHours]).toBe(4 * 60 * 60 * 1000)
-    for (const duration of Object.values(QuickLaunchDuration)) {
-      const { startTime, endTime } = getQuickLaunchAuctionWindow(duration, now)
-      expect(startTime.getTime() - now.getTime()).toBe(QUICK_LAUNCH_START_LEAD_MINUTES * 60 * 1000)
-      expect(endTime.getTime() - startTime.getTime()).toBe(QUICK_LAUNCH_DURATION_MS[duration])
-    }
+    expect(endTime.getTime() - startTime.getTime()).toBe(QUICK_LAUNCH_DURATION_MS)
+    // The SDK is the single source of truth for the 4h window.
+    expect(QUICK_LAUNCH_DURATION_SECONDS).toBe(14_400)
   })
 
   it('writes the derived window into the store via applyQuickLaunchAuctionWindow', () => {
@@ -84,39 +73,28 @@ describe('getQuickLaunchAuctionWindow', () => {
     try {
       const now = new Date('2026-07-08T12:00:00Z')
       vi.setSystemTime(now)
-      for (const duration of Object.values(QuickLaunchDuration)) {
-        const store = createCreateAuctionStore()
-        applyQuickLaunchAuctionWindow(store.getState().actions, duration)
-        const { startTime, endTime } = store.getState().configureAuction
-        expect(startTime?.getTime()).toBe(now.getTime() + QUICK_LAUNCH_START_LEAD_MINUTES * 60 * 1000)
-        expect((endTime?.getTime() ?? 0) - (startTime?.getTime() ?? 0)).toBe(QUICK_LAUNCH_DURATION_MS[duration])
-      }
-      // Defaults to the 30-minute preset when no duration is passed.
       const store = createCreateAuctionStore()
       applyQuickLaunchAuctionWindow(store.getState().actions)
       const { startTime, endTime } = store.getState().configureAuction
-      expect((endTime?.getTime() ?? 0) - (startTime?.getTime() ?? 0)).toBe(
-        QUICK_LAUNCH_DURATION_MS[QuickLaunchDuration.ThirtyMinutes],
-      )
+      expect(startTime?.getTime()).toBe(now.getTime() + QUICK_LAUNCH_START_LEAD_MINUTES * 60 * 1000)
+      expect((endTime?.getTime() ?? 0) - (startTime?.getTime() ?? 0)).toBe(QUICK_LAUNCH_DURATION_MS)
     } finally {
       vi.useRealTimers()
     }
   })
 
-  it('produces a valid emission schedule on supported chains for every duration preset', () => {
+  it('produces a valid emission schedule on supported chains for the 4h window', () => {
     const now = new Date()
-    for (const duration of Object.values(QuickLaunchDuration)) {
-      const { startTime, endTime } = getQuickLaunchAuctionWindow(duration, now)
-      for (const chainId of [
-        UniverseChainId.Mainnet,
-        UniverseChainId.Base,
-        UniverseChainId.Unichain,
-        UniverseChainId.Sepolia,
-      ]) {
-        expect(getAuctionEmissionScheduleError({ startTime, endTime, chainId, nowMs: now.getTime() })).not.toBe(
-          EmissionScheduleError.WindowTooShort,
-        )
-      }
+    const { startTime, endTime } = getQuickLaunchAuctionWindow(now)
+    for (const chainId of [
+      UniverseChainId.Mainnet,
+      UniverseChainId.Base,
+      UniverseChainId.Unichain,
+      UniverseChainId.Sepolia,
+    ]) {
+      expect(getAuctionEmissionScheduleError({ startTime, endTime, chainId, nowMs: now.getTime() })).not.toBe(
+        EmissionScheduleError.WindowTooShort,
+      )
     }
   })
 })
@@ -145,40 +123,22 @@ describe('quick-launch preset -> CreateAuctionRequest', () => {
       expect(request.tokenInfo.source.value.metadata?.description).toBe('one line of lore')
     }
 
-    // ETH/native raise, default 30-minute window, $5k-FDV floor
+    // ETH/native raise, fixed 4h window, $5k-FDV floor
     expect(request?.auction?.currencyAddress).toBe(zeroAddress)
     const start = request?.auction?.startTimeUnix ?? 0n
     const end = request?.auction?.endTimeUnix ?? 0n
-    expect(Number(end - start)).toBe(QUICK_LAUNCH_DURATION_MS[QuickLaunchDuration.ThirtyMinutes] / 1000)
+    expect(Number(end - start)).toBe(QUICK_LAUNCH_DURATION_SECONDS)
     expect(request?.auction?.floorPriceRaisePerToken).toBe('0.000000002')
     // No validation hook: the doc's mandated-price / bracket hook does not exist on-chain
     expect(request?.auction?.validationHook).toBeUndefined()
 
-    // Pool preset: 0.3% fee, full range + concentrated, permanently timelocked buyback & burn
+    // Pool preset: wizard-default 0.3% fee, full range + concentrated, permanently timelocked buyback & burn
     expect(request?.pool?.fee).toBe(3000)
     expect(request?.pool?.priceRangeStrategy).toBe(ProtoPriceRangeStrategy.CONCENTRATED_FULL_RANGE)
     expect(request?.pool?.liquidityLock?.mode?.case).toBe('buybackBurn')
     const unlock = request?.pool?.liquidityLock?.unlockTimeUnix ?? 0n
     // Permanent preset = auction end + 100000 years of days
     expect(Number(unlock - end)).toBe(365 * 100000 * 86400)
-  })
-
-  it('threads the selected duration preset into the request window', () => {
-    for (const duration of [QuickLaunchDuration.OneHour, QuickLaunchDuration.FourHours]) {
-      const store = buildPresetStore({ duration })
-      const { tokenForm, configureAuction, customizePool } = store.getState()
-      const request = buildCreateAuctionRequest({
-        tokenForm,
-        configureAuction,
-        customizePool,
-        walletAddress: WALLET,
-        currencyAddress: zeroAddress,
-        salt: SALT,
-      })
-      const start = request?.auction?.startTimeUnix ?? 0n
-      const end = request?.auction?.endTimeUnix ?? 0n
-      expect(Number(end - start)).toBe(QUICK_LAUNCH_DURATION_MS[duration] / 1000)
-    }
   })
 
   it('builds a valid request on Ethereum Sepolia with the oracle-less floor fallback', () => {

@@ -1,6 +1,26 @@
 import type { AppTFunction } from 'ui/src/i18n/types'
 import { NumberType } from 'utilities/src/format/types'
 
+export function getHasRequiredSelection({
+  hasConfirmedWithdrawPosition,
+  hasCurrency,
+  hasDestinationCurrency,
+  hasSelectedDepositSource,
+  isWithdrawing,
+}: {
+  hasConfirmedWithdrawPosition: boolean
+  hasCurrency: boolean
+  hasDestinationCurrency: boolean
+  hasSelectedDepositSource: boolean
+  isWithdrawing: boolean
+}): boolean {
+  if (isWithdrawing) {
+    return hasConfirmedWithdrawPosition && hasDestinationCurrency && hasCurrency
+  }
+
+  return hasSelectedDepositSource
+}
+
 export function getIsEarnAmountConversionPending({
   exactAmountFiat,
   hasInputAmount,

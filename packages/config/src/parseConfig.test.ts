@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { z } from 'zod'
+import { AppId } from './AppId'
 import { BaseConfigSchema, BaseConfigValues } from './BaseConfig'
+import { Environment } from './Environment'
 import { parseConfig } from './parseConfig'
 
 describe('parseConfig', () => {
@@ -118,6 +120,41 @@ describe('parseConfig', () => {
           extendBaseConfig: false,
         }),
       ).toThrow('Config validation failed')
+    })
+  })
+
+  describe('environment wire aliases', () => {
+    // The exact failure path of getConfig(): BaseConfigSchema parsed with
+    // extendBaseConfig: false. The backend shared deployer injects
+    // ENVIRONMENT=<stack name> ('dev'/'staging'/'prod') on every ECS container.
+    const parseEnvironment = (environment: string | undefined): unknown =>
+      parseConfig({
+        values: { appId: AppId.MissionControl, environment },
+        schema: BaseConfigSchema,
+        extendBaseConfig: false,
+      }).environment
+
+    it('parses the deployer short form "dev" as development', () => {
+      expect(parseEnvironment('dev')).toBe(Environment.Development)
+    })
+
+    it('parses the deployer short form "prod" as production', () => {
+      expect(parseEnvironment('prod')).toBe(Environment.Production)
+    })
+
+    it.each([Environment.Development, Environment.Staging, Environment.Production])(
+      'passes canonical value "%s" through unchanged',
+      (value) => {
+        expect(parseEnvironment(value)).toBe(value)
+      },
+    )
+
+    it('defaults to development when unset', () => {
+      expect(parseEnvironment(undefined)).toBe(Environment.Development)
+    })
+
+    it('still rejects unknown environment values', () => {
+      expect(() => parseEnvironment('sandbox')).toThrow('Config validation failed')
     })
   })
 

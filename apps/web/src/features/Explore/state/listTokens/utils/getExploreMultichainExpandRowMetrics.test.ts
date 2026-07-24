@@ -1,9 +1,10 @@
-import type { MultichainToken } from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { describe, expect, it } from 'vitest'
 import { getExploreMultichainExpandRowMetrics } from '~/features/Explore/state/listTokens/utils/getExploreMultichainExpandRowMetrics'
 
-function mockMc(chainTokenCount: number): MultichainToken {
-  return { chainTokens: Array.from({ length: chainTokenCount }, () => ({})) } as MultichainToken
+function mockMc(chainCount: number): RankedMultichainToken {
+  const addresses = Object.fromEntries(Array.from({ length: chainCount }, (_, i) => [String(i + 1), `0x${i}`]))
+  return { multichainToken: { addresses } } as RankedMultichainToken
 }
 
 describe('getExploreMultichainExpandRowMetrics', () => {

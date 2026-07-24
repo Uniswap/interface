@@ -455,7 +455,7 @@ export function CustomizePoolStep() {
             size="medium"
             emphasis="primary"
             onPress={handleContinue}
-            isDisabled={isContinueDisabled}
+            disabled={isContinueDisabled}
             backgroundColor={isContinueDisabled ? undefined : tokenColor}
           >
             {t('toucan.createAuction.reviewLaunch')}

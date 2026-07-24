@@ -1,8 +1,8 @@
-import { GraphQLApi } from '@universe/api'
 import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useFormattedTransactionDataForActivity } from 'uniswap/src/features/activity/hooks/useFormattedTransactionDataForActivity'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useWalletNfts } from 'uniswap/src/features/nfts/hooks/useWalletNfts'
 import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useRestOnRampAuth } from 'wallet/src/features/activity/useRestOnRampAuth'
@@ -33,7 +33,7 @@ export function useHomeScreenState(): {
   const hasUsedWalletFromCache = useSelector((state: WalletState) =>
     selectHasBalanceOrActivityForAddress(state, address),
   )
-  const { gqlChains } = useEnabledChains()
+  const { chains } = useEnabledChains()
 
   const neverCached = hasUsedWalletFromCache === undefined
 
@@ -50,18 +50,16 @@ export function useHomeScreenState(): {
     pollInterval: !hasUsedWalletFromCache ? EMPTY_WALLET_POLL_INTERVAL : undefined,
     skip: hasUsedWalletFromCache,
   })
-  const { data: nftData, loading: areNFTsLoading } = GraphQLApi.useNftsTabQuery({
-    variables: {
-      ownerAddress: address,
-      first: 1,
-      filter: { filterSpam: true },
-      chains: gqlChains,
-    },
+
+  const { nfts, loading: areNFTsLoading } = useWalletNfts({
+    address,
+    filterSpam: true,
+    chainsFilter: chains,
+    pageSize: 1,
     pollInterval: EMPTY_WALLET_POLL_INTERVAL,
-    notifyOnNetworkStatusChange: true, // Used to trigger network state / loading on refetch or fetchMore
-    errorPolicy: 'all', // Suppress non-null image.url fields from backend
     skip: hasUsedWalletFromCache,
   })
+
   const { hasData: hasActivity, isLoading: isActivityLoading } = useFormattedTransactionDataForActivity({
     evmAddress: address,
     ownerAddresses,
@@ -71,7 +69,7 @@ export function useHomeScreenState(): {
     skip: hasUsedWalletFromCache,
   })
 
-  const hasNft = !!nftData?.nftBalances?.edges.length
+  const hasNft = nfts.length > 0
   const hasTokenBalance = balancesById ? Object.keys(balancesById).length > 0 : false
   const hasUsedWalletFromRemote = hasTokenBalance || hasNft || hasActivity
   const dataIsLoading = areBalancesLoading || areNFTsLoading || isActivityLoading

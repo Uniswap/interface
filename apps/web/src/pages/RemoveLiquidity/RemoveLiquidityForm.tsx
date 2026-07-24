@@ -135,7 +135,7 @@ export function RemoveLiquidityForm() {
       <ErrorCallout errorMessage={error} onPress={refetch} />
       <Flex row>
         <Button
-          isDisabled={percentInvalid || !txContext?.txRequest}
+          disabled={percentInvalid || !txContext?.txRequest}
           onPress={() => setStep(DecreaseLiquidityStep.Review)}
           loading={!error && !percentInvalid && !txContext?.txRequest}
           variant="branded"

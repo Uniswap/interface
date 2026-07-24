@@ -14,7 +14,8 @@
   },
   "targetDefaults": {
     "prepare": {
-      "cache": true
+      "cache": true,
+      "syncGenerators": ["@universe/uniswap-nx:tsconfig-sync"]
     },
     "config:pull": {
       "dependsOn": ["^prepare"],
@@ -34,39 +35,12 @@
       "cache": true
     },
     "typecheck": {
-      "command": "if test \"$DISABLE_TSGO\" = \"true\"; then bun run nx typecheck:tsc; else bun run nx typecheck:tsgo; fi",
+      "command": "tsc -b",
       "options": {
         "cwd": "{projectRoot}"
       },
+      "syncGenerators": ["@universe/uniswap-nx:tsconfig-sync"],
       "dependsOn": ["^prepare", "prepare"],
-      "cache": false
-    },
-    "typecheck:tsc": {
-      "command": "NODE_OPTIONS=--max_old_space_size=16384 tsc -b",
-      "options": {
-        "cwd": "{projectRoot}"
-      },
-      "inputs": [
-        "{workspaceRoot}/package.json",
-        "{workspaceRoot}/config/tsconfig/*",
-        "{workspaceRoot}/tsconfig.base.json",
-        "{projectRoot}/package.json",
-        "{projectRoot}/tsconfig.*.json",
-        "{projectRoot}/**/*.ts",
-        "{projectRoot}/**/*.tsx",
-        "{projectRoot}/**/*.json",
-        {
-          "dependentTasksOutputFiles": "**/*.d.ts"
-        }
-      ],
-      "outputs": ["{workspaceRoot}/dist/out-tsc/{projectRoot}"],
-      "cache": true
-    },
-    "typecheck:tsgo": {
-      "command": "tsgo -b",
-      "options": {
-        "cwd": "{projectRoot}"
-      },
       "inputs": [
         "{workspaceRoot}/package.json",
         "{workspaceRoot}/config/tsconfig/*",
@@ -190,7 +164,6 @@
       "!{projectRoot}/**/*.spec.ts",
       "!{projectRoot}/**/*.test.tsx",
       "!{projectRoot}/**/*.test.ts",
-      "!{projectRoot}/jest.config.[jt]s",
       "!{projectRoot}/tsconfig.spec.json",
       "!{projectRoot}/**/*.stories.tsx",
       "!{projectRoot}/**/*.stories.ts"
@@ -225,7 +198,7 @@
   },
   "sync": {
     "applyChanges": true,
-    "globalGenerators": ["@nx/js:typescript-sync"]
+    "globalGenerators": ["@universe/uniswap-nx:tsconfig-sync"]
   },
   "parallel": 6,
   "defaultProject": "@universe/web",
@@ -235,18 +208,11 @@
     }
   },
   "cacheDirectory": ".nx/cache",
-  "plugins": [
-    {
-      "plugin": "@nx/js/typescript",
-      "options": {
-        "typecheck": false,
-        "build": false
-      }
-    }
-  ],
+  "plugins": [],
   "pluginsConfig": {
     "@nx/js": {
-      "analyzeSourceFiles": true
+      "// analyzeSourceFiles": "Off because typescript >= 7 (tsgo) ships no classic compiler API for nx's TS source-dependency analysis (require('typescript') resolves to a version-only stub since 7.0.2, and threw under 7.0.1-rc), so the analysis has been inoperative since the TS 7 upgrade; project deps come from package.json analysis + the tsconfig sync generator. Flipping this to true under TS 7 crashes every nx command (readConfigFile is not a function).",
+      "analyzeSourceFiles": false
     }
   }
 }

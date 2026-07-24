@@ -201,7 +201,7 @@ const PresetButtonContent = memo(function PresetButtonContentInner({
           variant={variant}
           emphasis={emphasis}
           size={size}
-          isDisabled={disabled}
+          disabled={disabled}
           testID={currencyField === CurrencyField.INPUT ? TestID.SetMaxInput : TestID.SetMaxOutput}
           borderColor="$surface3"
           pressStyle={{

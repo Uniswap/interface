@@ -1,6 +1,5 @@
-import MaskedView from '@react-native-masked-view/masked-view'
 import { LinearGradient } from 'expo-linear-gradient'
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { LayoutRectangle, StyleSheet } from 'react-native'
 import Reanimated, {
   interpolate,
@@ -19,19 +18,34 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 const LINEAR_GRADIENT_END = { x: 1, y: 0 }
 const LINEAR_GRADIENT_START = { x: 0, y: 0 }
 
-const BLACK_HEX_COLOR = '#000000'
+const WHITE_HEX_COLOR = '#FFFFFF'
 
-export function Shine({ shimmerDurationSeconds = 2, children, disabled }: ShineProps): JSX.Element {
+/**
+ * Glare sweep overlaid on the content and clipped by the container. Masking via
+ * @react-native-masked-view is not Fabric-compatible (no Fabric impl upstream; the interop
+ * layer applies the mask non-deterministically), so the shine must not depend on it.
+ *
+ * The wrapper renders even when disabled so children keep their React identity across
+ * enable/disable toggles — remounting them resets in-flight animations (e.g. digit rolls).
+ */
+export function Shine({ shimmerDurationSeconds = 2, children, disabled, ...rest }: ShineProps): JSX.Element {
   const colors = useSporeColors()
   const shimmerDuration = shimmerDurationSeconds * ONE_SECOND_MS
 
-  const [layout, setLayout] = useState<LayoutRectangle | null>()
+  const [layout, setLayout] = useState<LayoutRectangle | null>(null)
   const xPosition = useSharedValue(0)
+  const showShine = !disabled && layout !== null
 
   useEffect(() => {
+    if (!showShine) {
+      return undefined
+    }
     xPosition.value = withRepeat(withTiming(1, { duration: shimmerDuration }), Infinity, false)
+    return () => {
+      xPosition.value = 0
+    }
     // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
-  }, [shimmerDuration])
+  }, [showShine, shimmerDuration])
 
   const animatedStyle = useAnimatedStyle(() => ({
     ...StyleSheet.absoluteFill,
@@ -42,51 +56,31 @@ export function Shine({ shimmerDurationSeconds = 2, children, disabled }: ShineP
     ],
   }))
 
-  const handleOnLayout = useEvent(
-    (event: { nativeEvent: { layout: React.SetStateAction<LayoutRectangle | null | undefined> } }): void => {
-      setLayout(event.nativeEvent.layout)
-    },
-  )
+  const handleOnLayout = useEvent((event: { nativeEvent: { layout: LayoutRectangle } }): void => {
+    setLayout(event.nativeEvent.layout)
+  })
 
-  const gradientColors: [string, string, string] = useMemo(() => {
-    const hexColorForOpacifying = ((): string => {
-      const maybeColor = colors.black.val
-
-      if (maybeColor.startsWith('#') && colors.black.val.length === 7) {
-        return maybeColor
-      }
-
-      return BLACK_HEX_COLOR
-    })()
-
-    return [opacify(0, hexColorForOpacifying), opacify(44, hexColorForOpacifying), opacify(0, hexColorForOpacifying)]
-  }, [colors.black.val])
-
-  const maskedViewStyle = useMemo(() => ({ width: layout?.width, height: layout?.height }), [layout])
-
-  if (disabled) {
-    return children
-  }
-
-  if (!layout) {
-    return (
-      <Flex opacity={0} onLayout={handleOnLayout}>
-        {children}
-      </Flex>
-    )
-  }
+  const glareColor = ((): string => {
+    const maybeColor = colors.surface1.val
+    return maybeColor.startsWith('#') && maybeColor.length === 7 ? maybeColor : WHITE_HEX_COLOR
+  })()
 
   return (
-    <MaskedView maskElement={children} style={maskedViewStyle}>
-      <Flex grow backgroundColor="$neutral2" height="100%" overflow="hidden" />
-      <Reanimated.View style={animatedStyle}>
-        <LinearGradient
-          colors={gradientColors}
-          end={LINEAR_GRADIENT_END}
-          start={LINEAR_GRADIENT_START}
-          style={StyleSheet.absoluteFill}
-        />
-      </Reanimated.View>
-    </MaskedView>
+    <Flex {...rest} position="relative" onLayout={handleOnLayout}>
+      {children}
+      {showShine ? (
+        // Clip only the sweeping glare — children may intentionally overhang (e.g. rolling digits).
+        <Flex overflow="hidden" pointerEvents="none" style={StyleSheet.absoluteFill} testID="shimmer">
+          <Reanimated.View style={animatedStyle}>
+            <LinearGradient
+              colors={[opacify(0, glareColor), opacify(60, glareColor), opacify(0, glareColor)]}
+              end={LINEAR_GRADIENT_END}
+              start={LINEAR_GRADIENT_START}
+              style={StyleSheet.absoluteFill}
+            />
+          </Reanimated.View>
+        </Flex>
+      ) : null}
+    </Flex>
   )
 }

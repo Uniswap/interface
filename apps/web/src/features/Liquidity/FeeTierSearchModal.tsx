@@ -13,6 +13,8 @@ import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
 import { numericInputRegex } from 'uniswap/src/components/AmountInput/utils/numericInputEnforcer'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import type { FeeData } from 'uniswap/src/features/positions/types'
 import { LiquidityEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -25,6 +27,7 @@ import { StyledPercentInput } from '~/components/PercentInput'
 import { FeeTierSearchRow } from '~/features/Liquidity/FeeTierSearchRow'
 import { useAllFeeTierPoolData } from '~/features/Liquidity/hooks/useAllFeeTierPoolData'
 import { useHoldToStepFeeValue } from '~/features/Liquidity/hooks/useHoldToStepFeeValue'
+import { getCreateFeeTierSearchData } from '~/features/Liquidity/utils/createFeeTiers'
 import {
   calculateTickSpacingFromFeeAmount,
   getFeeTierKey,
@@ -49,7 +52,7 @@ const MIN_FONT_SIZE = 12
 interface FeeTierSearchModalProps {
   isOpen: boolean
   onClose: () => void
-  chainId?: number
+  chainId?: UniverseChainId
   protocolVersion: ProtocolVersion
   hook?: string
   sdkCurrencies: { TOKEN0: Maybe<Currency>; TOKEN1: Maybe<Currency> }
@@ -94,6 +97,7 @@ export function FeeTierSearchModal({
     onCloseProp()
   }
   const { t } = useTranslation()
+  const { formatPercent } = useLocalizationContext()
   const trace = useTrace()
   const [searchValue, setSearchValue] = useState('')
   const [createFeeValue, setCreateFeeValue] = useState('')
@@ -102,6 +106,13 @@ export function FeeTierSearchModal({
 
   const withDynamicFeeTier = Boolean(hook)
   const isLpIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
+  const isV4FeeDisplayEnabled = useFeatureFlag(FeatureFlags.V4ProtocolFeeDisplay)
+  const isL2DefaultTickSpacingEnabled = useFeatureFlag(FeatureFlags.L2DefaultTickSpacing)
+  // Newly created L2 tiers use 1x the fee tier (instead of 2x) when the flag is on; the util does the L2 check.
+  const l2TickSpacingConfig = useMemo(
+    () => ({ chainId, l2TickSpacingEnabled: isL2DefaultTickSpacingEnabled }),
+    [chainId, isL2DefaultTickSpacingEnabled],
+  )
 
   // When blocking existing pools (CCA), also check the user-entered custom tier on-chain so an
   // abandoned/zero-liquidity pool the indexed data omits still blocks the "Create" action.
@@ -110,8 +121,12 @@ export function FeeTierSearchModal({
     if (!Number.isFinite(feeAmount) || feeAmount <= 0) {
       return undefined
     }
-    return { isDynamic: false, feeAmount, tickSpacing: calculateTickSpacingFromFeeAmount(feeAmount) }
-  }, [createFeeValue])
+    return {
+      isDynamic: false,
+      feeAmount,
+      tickSpacing: calculateTickSpacingFromFeeAmount(feeAmount, l2TickSpacingConfig),
+    }
+  }, [createFeeValue, l2TickSpacingConfig])
   const additionalFeeTiersToCheck = useMemo(
     () => (createFeeTierToCheck ? [createFeeTierToCheck] : []),
     [createFeeTierToCheck],
@@ -130,6 +145,16 @@ export function FeeTierSearchModal({
   // While the existing-pool check is settling, withhold the final create/select UI so an existing
   // tier never momentarily appears selectable (CCA requires a brand-new pool).
   const isExistingPoolCheckLoading = Boolean(blockExistingPools) && isFeeTierDataLoading
+
+  // Behind V4ProtocolFeeDisplay, the create flow defaults to the new canonical tiers (an old tier stays
+  // only when its pool is deep). Mirror that here so the search list matches the inline selector. CCA
+  // (blockExistingPools) keeps the canonical tiers for its brand-new-pool gating.
+  const isV4FeeDisplay = isV4FeeDisplayEnabled && protocolVersion === ProtocolVersion.V4
+  const useNewDefaultFeeTiers = isV4FeeDisplay && !blockExistingPools
+  const displayedFeeTiers = useMemo(
+    () => getCreateFeeTierSearchData({ useNewDefaultFeeTiers, feeTierData, formatPercent, hook, l2TickSpacingConfig }),
+    [useNewDefaultFeeTiers, feeTierData, formatPercent, hook, l2TickSpacingConfig],
+  )
 
   // Stable stepper for the +/- buttons.
   const stepFee = useEvent((current: string, direction: 'up' | 'down'): string =>
@@ -150,11 +175,12 @@ export function FeeTierSearchModal({
 
   const feeHundredthsOfBips = Math.round(parseFloat(createFeeValue) * 10000)
   const feeTierAlreadyExists = Boolean(feeTierData[feeHundredthsOfBips])
+
   // feeTierData is keyed by `{fee}-{tickSpacing}` (the legacy lookup above never matches); resolve the
   // full key to block existing pools in the CCA flow, which requires a brand-new pool.
   const createFeeTierKey = getFeeTierKey({
     feeTier: feeHundredthsOfBips,
-    tickSpacing: calculateTickSpacingFromFeeAmount(feeHundredthsOfBips),
+    tickSpacing: calculateTickSpacingFromFeeAmount(feeHundredthsOfBips, l2TickSpacingConfig),
   })
   const existingPoolForCreateFee = createFeeTierKey ? feeTierData[createFeeTierKey] : undefined
   const blockedByExistingPool = Boolean(blockExistingPools && existingPoolForCreateFee?.created)
@@ -281,7 +307,7 @@ export function FeeTierSearchModal({
             <Flex row>
               <Button
                 variant="default"
-                isDisabled={
+                disabled={
                   !createFeeValue || createFeeValue === '' || blockedByExistingPool || isExistingPoolCheckLoading
                 }
                 loading={isExistingPoolCheckLoading && Boolean(createFeeValue)}
@@ -289,7 +315,7 @@ export function FeeTierSearchModal({
                   onSelectFee({
                     isDynamic: false,
                     feeAmount: feeHundredthsOfBips,
-                    tickSpacing: calculateTickSpacingFromFeeAmount(feeHundredthsOfBips),
+                    tickSpacing: calculateTickSpacingFromFeeAmount(feeHundredthsOfBips, l2TickSpacingConfig),
                   })
                   sendAnalyticsEvent(LiquidityEventName.SelectLiquidityPoolFeeTier, {
                     action: FeePoolSelectAction.Search,
@@ -377,7 +403,7 @@ export function FeeTierSearchModal({
                   <SpinningLoader color="$neutral2" />
                 </Flex>
               ) : (
-                Object.values(feeTierData)
+                displayedFeeTiers
                   .filter(
                     (data) => data.formattedFee.includes(searchValue) || (data.id && searchValue.includes(data.id)),
                   )

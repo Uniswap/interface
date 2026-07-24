@@ -131,10 +131,7 @@ export const DecimalPad = memo(function DecimalPad({
   }, [])
 
   useEffect(() => {
-    // skip resize if the layout is still the same height as before
-    if (currentHeightRef.current === currentHeight) {
-      return
-    }
+    const layoutChanged = currentHeightRef.current !== currentHeight
 
     currentHeightRef.current = currentHeight
     maxHeightRef.current = maxHeight
@@ -144,6 +141,11 @@ export const DecimalPad = memo(function DecimalPad({
     }
 
     if (currentHeight < maxHeight) {
+      // Already fits and the pad's own layout didn't change (e.g. `maxHeight` grew) — nothing to do.
+      // There's deliberately no grow-back: resizing up on accessory changes would make the pad flap.
+      if (!layoutChanged) {
+        return
+      }
       // We call `onReady` on the next frame to ensure layout has stabilized and `maxHeight` is accurate.
       requestAnimationFrame(() => {
         if (
@@ -157,6 +159,8 @@ export const DecimalPad = memo(function DecimalPad({
       return
     }
 
+    // Shrink even when only `maxHeight` changed: a consumer's accessory elements can finish
+    // measuring (or grow) after the pad has already settled at its current size.
     setSizeMultiplier({
       fontSize: sizeMultiplier.fontSize * 0.95,
       icon: sizeMultiplier.icon * 0.97,

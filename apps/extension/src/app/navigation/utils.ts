@@ -3,6 +3,7 @@ import { UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
+import type { EarnAnalyticsEntryPoint } from 'uniswap/src/features/telemetry/types'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { getEarnVaultUrl, getTokenUrl } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
@@ -142,8 +143,14 @@ export async function focusOrCreateTokensExploreTab({ currencyId }: { currencyId
   })
 }
 
-export async function focusOrCreateEarnVaultTab({ vault }: { vault: EarnVaultInfo }): Promise<void> {
-  const url = getEarnVaultUrl(vault)
+export async function focusOrCreateEarnVaultTab({
+  analyticsEntryPoint,
+  vault,
+}: {
+  analyticsEntryPoint?: EarnAnalyticsEntryPoint
+  vault: EarnVaultInfo
+}): Promise<void> {
+  const url = getEarnVaultUrl(vault, analyticsEntryPoint)
 
   if (!url) {
     logger.error(new Error('Failed to get earn vault URL'), {

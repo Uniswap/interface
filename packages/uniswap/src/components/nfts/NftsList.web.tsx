@@ -1,6 +1,4 @@
-import { NetworkStatus } from '@apollo/client'
 import { useWindowVirtualizer, Virtualizer } from '@tanstack/react-virtual'
-import { isNonPollingRequestInFlight } from '@universe/api'
 import { isMobileWeb } from '@universe/environment'
 import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -8,7 +6,6 @@ import { Flex, Loader, styled, View } from 'ui/src'
 import { NoNfts } from 'ui/src/components/icons/NoNfts'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
-import { useContainerWidth } from 'uniswap/src/components/nfts/hooks/useContainerWidth'
 import { useNftListRenderData } from 'uniswap/src/components/nfts/hooks/useNftListRenderData'
 import { useNftSearch } from 'uniswap/src/components/nfts/hooks/useNftSearch'
 import { NftsListProps } from 'uniswap/src/components/nfts/NftsList'
@@ -26,6 +23,7 @@ import { getNFTAssetKey } from 'uniswap/src/features/nfts/utils'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { useContainerWidth } from 'utilities/src/react/useContainerWidth'
 
 const estimateRowSize = (): number => NFT_GRID_ROW_HEIGHT
 
@@ -151,7 +149,6 @@ export function NftsList({
   chainsFilter,
   onFilteredCountsChange,
   renderExpandoRow,
-  nextFetchPolicy,
   onRefetchReady,
   onLoadingStateChange,
   SearchInputComponent,
@@ -172,12 +169,13 @@ export function NftsList({
     hasNextPage,
     hiddenNftsExpanded,
     setHiddenNftsExpanded,
-    networkStatus,
+    isPending,
+    isFetchingMore: isFetchingMoreNfts,
     onListEndReached,
     refetch,
     shownNfts,
     hiddenNfts,
-  } = useNftListRenderData({ owner, skip, chainsFilter, nextFetchPolicy, pollInterval })
+  } = useNftListRenderData({ owner, skip, chainsFilter, pollInterval })
 
   // Expose refetch function to parent component
   useEffect(() => {
@@ -187,7 +185,7 @@ export function NftsList({
   }, [onRefetchReady, refetch])
 
   // Expose loading state to parent component
-  const isLoadingState = isNonPollingRequestInFlight(networkStatus)
+  const isLoadingState = shownNfts.length === 0 && isPending
   useEffect(() => {
     if (onLoadingStateChange) {
       onLoadingStateChange(isLoadingState)
@@ -244,7 +242,7 @@ export function NftsList({
   const shownRowCount = Math.ceil(filteredShownNfts.length / numColumns)
   // Hidden NFTs render below the expando; matches the buildNftsArray gate (showHidden && allPagesFetched)
   const showHiddenGrid = hiddenNftsExpanded && !hasNextPage && filteredHiddenNfts.length > 0
-  const isFetchingMore = nfts.length > 0 && networkStatus === NetworkStatus.fetchMore
+  const isFetchingMore = nfts.length > 0 && isFetchingMoreNfts
 
   const rowVirtualizer = useWindowVirtualizer({
     count: shownRowCount,

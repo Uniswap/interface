@@ -6,7 +6,8 @@ import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { persistableInfiniteQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 
 export type GetWalletNftsInput = {
-  params?: Omit<PartialMessage<GetWalletNftsRequest>, 'page'>
+  params?: Omit<PartialMessage<GetWalletNftsRequest>, 'page'> & { pageSize?: number }
+  refetchInterval?: number
   enabled?: boolean
 }
 
@@ -15,6 +16,7 @@ type GetWalletNftsQueryKey = readonly [ReactQueryCacheKey.DataApiService, 'getWa
 export function getGetWalletNftsQueryOptions({
   params,
   enabled,
+  refetchInterval,
 }: GetWalletNftsInput): ReturnType<
   typeof persistableInfiniteQueryOptions<
     PlainMessage<GetWalletNftsResponse>,
@@ -31,10 +33,16 @@ export function getGetWalletNftsQueryOptions({
       if (!params) {
         throw new Error('params required')
       }
-      return toPlainMessage(await dataApiServiceClientV2.getWalletNfts({ ...params, page: { pageToken: pageParam } }))
+      return toPlainMessage(
+        await dataApiServiceClientV2.getWalletNfts({
+          ...params,
+          page: { pageToken: pageParam, pageSize: params.pageSize },
+        }),
+      )
     },
     initialPageParam: '',
     getNextPageParam: (lastPage: PlainMessage<GetWalletNftsResponse>) => lastPage.page?.nextPageToken || undefined,
     enabled,
+    refetchInterval,
   })
 }

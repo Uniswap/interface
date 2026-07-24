@@ -1,5 +1,4 @@
 import { type ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import { isWarmLoadingStatus } from '@universe/api'
 import { isWebPlatform } from '@universe/environment'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -71,7 +70,6 @@ export const PortfolioBalance = memo(function PortfolioBalanceInner({
     requestedCategories,
     loading,
     error,
-    networkStatus,
     refetch,
   } = usePortfolioBalanceBreakdown({
     evmAddress: evmOwner,
@@ -103,7 +101,7 @@ export const PortfolioBalance = memo(function PortfolioBalanceInner({
   const { convertFiatAmount, convertFiatAmountFormatted } = useLocalizationContext()
 
   const isLoading = !activeData && (loading || !!error)
-  const isWarmLoading = !!activeData && isWarmLoadingStatus(networkStatus)
+  const isWarmLoading = !!activeData && loading
 
   const walletEmpty = isEmptyWalletBalance(breakdown)
 

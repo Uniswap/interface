@@ -10,5 +10,5 @@ export function shouldShowTokenDetailsEarnBanner({
     return false
   }
 
-  return !isLoggedIn || hasLoadedPositions
+  return isLoggedIn && hasLoadedPositions
 }

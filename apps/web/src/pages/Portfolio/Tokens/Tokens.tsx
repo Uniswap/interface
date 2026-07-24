@@ -77,7 +77,6 @@ export const PortfolioTokens = memo(function PortfolioTokens() {
     hidden: hiddenTokenData,
     loading,
     refetching,
-    networkStatus,
     error,
   } = useTransformTokenTableData({
     chainIds: effectiveChainId ? [effectiveChainId] : undefined,
@@ -191,7 +190,6 @@ export const PortfolioTokens = memo(function PortfolioTokens() {
                     hidden={filteredHiddenTokenData}
                     loading={loading && !refetching}
                     refetching={refetching}
-                    networkStatus={networkStatus}
                     error={error}
                   />
                 </Trace>

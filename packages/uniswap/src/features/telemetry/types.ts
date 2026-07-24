@@ -243,6 +243,7 @@ export type EarnAnalyticsEntryPoint =
   | 'portfolio_earn_get_token'
   | 'portfolio_earn_section'
   | 'post_swap_upsell_toast'
+  | 'search'
   | 'swap_review_toggle'
   | 'tdp_earn_banner'
   | 'tdp_earn_section'
@@ -393,13 +394,15 @@ type TransferProperties = {
 
 /** Known navbar search result types */
 export enum NavBarSearchTypes {
+  AuctionSuggestion = 'auction-suggestion',
+  AuctionTrending = 'auction-trending',
   CollectionSuggestion = 'collection-suggestion',
   CollectionTrending = 'collection-trending',
+  PoolSuggestion = 'pool-suggestion',
+  PoolTrending = 'pool-trending',
   RecentSearch = 'recent',
   TokenSuggestion = 'token-suggestion',
   TokenTrending = 'token-trending',
-  PoolSuggestion = 'pool-suggestion',
-  PoolTrending = 'pool-trending',
 }
 
 export enum WalletConnectionResult {
@@ -494,7 +497,6 @@ export enum OnboardingCardLoggingName {
   RecoveryBackup = 'recovery_backup',
   ClaimUnitag = 'claim_unitag',
   EnablePushNotifications = 'enable_push_notifications',
-  NoAppFeesAnnouncement = 'no_app_fees_announcement',
 
   Unknown = 'unknown',
 }
@@ -882,12 +884,17 @@ export type UniverseEventProperties = {
   [ExtensionEventName.SidebarConnect]: Pick<DappContextProperties, 'dappUrl'>
   [ExtensionEventName.SidebarDisconnect]: undefined
   [ExtensionEventName.UnknownMethodRequest]: WindowEthereumRequestProperties
+  [EarnEventName.EarnSurfaceViewed]: Pick<EarnAnalyticsBaseProperties, 'entry_point' | 'surface'>
+  [EarnEventName.EarnVaultCardShowMoreClicked]: EarnAnalyticsBaseProperties
+  [EarnEventName.EarnVaultDetailViewed]: EarnAnalyticsBaseProperties
   [EarnEventName.EarnVaultSelected]: EarnAnalyticsBaseProperties
   [EarnEventName.EarnDepositStarted]: EarnTransactionAnalyticsProperties
+  [EarnEventName.EarnDepositReviewed]: EarnTransactionAnalyticsProperties
   [EarnEventName.EarnDepositSubmitted]: EarnTransactionAnalyticsProperties
   [EarnEventName.EarnDepositCompleted]: EarnTransactionAnalyticsProperties
   [EarnEventName.EarnDepositFailed]: EarnTransactionAnalyticsProperties
   [EarnEventName.EarnWithdrawStarted]: EarnTransactionAnalyticsProperties
+  [EarnEventName.EarnWithdrawReviewed]: EarnTransactionAnalyticsProperties
   [EarnEventName.EarnWithdrawSubmitted]: EarnTransactionAnalyticsProperties
   [EarnEventName.EarnWithdrawCompleted]: EarnTransactionAnalyticsProperties
   [EarnEventName.EarnWithdrawFailed]: EarnTransactionAnalyticsProperties

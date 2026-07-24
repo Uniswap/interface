@@ -19,7 +19,7 @@ export function TransferNFTNotification({ notification }: { notification: Transf
   const userAddress = useActiveAccountAddressWithThrow()
   const senderOrRecipient = txType === TransactionType.Send ? notification.recipient : notification.sender
   const nftOwner = txType === TransactionType.Send ? notification.recipient : userAddress
-  const { data: nft } = useNFT({ owner: nftOwner, address: tokenAddress, tokenId })
+  const nft = useNFT({ owner: nftOwner, address: tokenAddress, tokenId })
   const { name: displayName, type: displayNameType } =
     useDisplayName(senderOrRecipient, { includeUnitagSuffix: true }) ?? {}
   const showUnicon = txStatus !== TransactionStatus.Canceled && displayNameType === DisplayNameType.Unitag
@@ -39,7 +39,7 @@ export function TransferNFTNotification({ notification }: { notification: Transf
     <LogoWithTxStatus
       assetType={assetType}
       chainId={chainId}
-      nftImageUrl={nft?.thumbnail?.url ?? undefined}
+      nftImageUrl={nft?.thumbnailUrl ?? undefined}
       size={NOTIFICATION_ICON_SIZE}
       txStatus={txStatus}
       txType={txType}

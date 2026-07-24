@@ -1,11 +1,17 @@
-import { motion } from 'framer-motion'
 import { parseToRgb } from 'polished'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { opacify } from 'ui/src/theme'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { deprecatedStyled, keyframes } from '~/lib/deprecated-styled'
 
-const Mask = motion(deprecatedStyled.div`
+const SPRITE_HEIGHT = 60
+const SPRITE_STAGGER_MS = 25
+const SPRITE_RISE_DURATION_MS = 1000
+const CHAR_FADE_DURATION_MS = 500
+// Approximates the previous spring rise (slight overshoot, smooth settle)
+const SPRITE_RISE_EASING = 'cubic-bezier(0.25, 1.25, 0.5, 1)'
+
+const Mask = deprecatedStyled.div`
   position: relative;
   display: flex;
   flex: 0;
@@ -18,9 +24,9 @@ const Mask = motion(deprecatedStyled.div`
   @media (max-width: 768px) {
     min-height: 32px;
   }
-`)
+`
 
-const Char = motion(deprecatedStyled.div<{ color: string }>`
+const Char = deprecatedStyled.div<{ color: string }>`
   font-variant-numeric: lining-nums tabular-nums;
   font-family: Basel;
   font-size: 52px;
@@ -44,7 +50,7 @@ const Char = motion(deprecatedStyled.div<{ color: string }>`
     font-size: 22px;
     line-height: 22px;
   }
-`)
+`
 const Container = deprecatedStyled.div<{ live?: boolean }>`
   display: flex;
   flex-direction: column;
@@ -73,12 +79,12 @@ const Container = deprecatedStyled.div<{ live?: boolean }>`
   background-size: 12px 12px;
   background-position: -8.5px -8.5px;
 `
-const SpriteContainer = motion(deprecatedStyled.div`
+const SpriteContainer = deprecatedStyled.div`
   pointer-events: none;
   diplay: flex;
   flex-direction: column;
   color: ${({ theme }) => theme.neutral2};
-`)
+`
 
 const pulsate = (color: string) => keyframes`
   0% {
@@ -147,7 +153,7 @@ export function StatCard(props: StatCardProps) {
       <Flex row alignItems="center" gap="$gap4">
         <Title color={props.live ? colors.statusSuccess.val : colors.neutral2.val}>{props.title}</Title>
       </Flex>
-      <StringInterpolationWithMotion
+      <AnimatedStringInterpolation
         prefix={props.prefix}
         suffix={props.suffix}
         value={props.value}
@@ -159,7 +165,7 @@ export function StatCard(props: StatCardProps) {
   )
 }
 
-function StringInterpolationWithMotion({ value, delay, inView, live }: Omit<StatCardProps, 'title'>) {
+function AnimatedStringInterpolation({ value, delay, inView, live }: Omit<StatCardProps, 'title'>) {
   const chars = value.split('')
   const colors = useSporeColors()
   const locale = useCurrentLocale()
@@ -174,12 +180,10 @@ function StringInterpolationWithMotion({ value, delay, inView, live }: Omit<Stat
     )
   }
 
+  const baseDelayMs = 1000 * (delay ?? 0)
+
   return (
-    <Mask
-      initial="initial"
-      animate={inView ? 'animate' : 'initial'}
-      transition={{ staggerChildren: 0.025, delayChildren: delay }}
-    >
+    <Mask>
       {chars.map((char: string, index: number) => {
         // select charset based on char
         const charset = numeric.includes(char)
@@ -196,6 +200,8 @@ function StringInterpolationWithMotion({ value, delay, inView, live }: Omit<Stat
             key={index}
             charset={charset}
             color={live ? colors.statusSuccess.val : colors.neutral1.val}
+            inView={inView}
+            delayMs={baseDelayMs + index * SPRITE_STAGGER_MS}
           />
         )
       })}
@@ -203,53 +209,47 @@ function StringInterpolationWithMotion({ value, delay, inView, live }: Omit<Stat
   )
 }
 
-function NumberSprite({ char, charset, color }: { char: string; charset: string[]; color: string }) {
-  const height = 60
-
+function NumberSprite({
+  char,
+  charset,
+  color,
+  inView,
+  delayMs,
+}: {
+  char: string
+  charset: string[]
+  color: string
+  inView?: boolean
+  delayMs: number
+}) {
   // rotate array so that the char is at the top
   const chars = rotateArray(charset, charset.indexOf(char))
 
   const idx = chars.indexOf(char)
 
-  const variants = {
-    initial: {
-      y: idx + 3 * -height,
-    },
-    animate: {
-      y: idx * -height,
-      transition: {
-        duration: 1,
-        type: 'spring',
-      },
-    },
-  }
+  const initialY = idx - 3 * SPRITE_HEIGHT
+  const targetY = idx * -SPRITE_HEIGHT
 
   return (
-    <SpriteContainer variants={variants}>
+    <SpriteContainer
+      style={{
+        transform: `translateY(${inView ? targetY : initialY}px)`,
+        transition: `transform ${SPRITE_RISE_DURATION_MS}ms ${SPRITE_RISE_EASING} ${delayMs}ms`,
+      }}
+    >
       {/* oxlint-disable-next-line no-shadow */}
-      {chars.map((char, index) => {
-        const charVariants = {
-          initial: {
-            opacity: 0.25,
-          },
-          animate: {
-            opacity: idx === index ? 1 : 0,
-            transition: {
-              opacity: {
-                duration: 0.5,
-              },
-              duration: 1,
-              type: 'spring',
-            },
-          },
-        }
-
-        return (
-          <Char variants={charVariants} key={index} color={color}>
-            {char}
-          </Char>
-        )
-      })}
+      {chars.map((char, index) => (
+        <Char
+          key={index}
+          color={color}
+          style={{
+            opacity: inView ? (idx === index ? 1 : 0) : 0.25,
+            transition: `opacity ${CHAR_FADE_DURATION_MS}ms ease ${delayMs}ms`,
+          }}
+        >
+          {char}
+        </Char>
+      ))}
     </SpriteContainer>
   )
 }

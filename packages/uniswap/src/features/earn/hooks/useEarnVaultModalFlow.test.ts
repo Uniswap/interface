@@ -3,7 +3,7 @@ import { TradingApi } from '@universe/api'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EarnVaultView, useEarnVaultModalFlow } from 'uniswap/src/features/earn/hooks/useEarnVaultModalFlow'
 import type { EarnPositionInfo } from 'uniswap/src/features/earn/types'
-import { hasConfirmedEarnPositionRawBalance, resolveEarnWithdrawPosition } from 'uniswap/src/features/earn/utils'
+import { hasConfirmedEarnPositionRawBalance, resolveEarnAmountPosition } from 'uniswap/src/features/earn/utils'
 
 const POSITION: EarnPositionInfo = {
   vaultId: 'vault-1',
@@ -133,7 +133,7 @@ describe(useEarnVaultModalFlow, () => {
 
     // While the live GetEarnPosition query is unresolved, the view consumes the snapshot and the
     // review CTA stays gated on 'Loading'.
-    const pendingPosition = resolveEarnWithdrawPosition({
+    const pendingPosition = resolveEarnAmountPosition({
       livePosition: undefined,
       snapshotPosition: amountFlow.position,
     })
@@ -148,7 +148,7 @@ describe(useEarnVaultModalFlow, () => {
       apyPercent: 5,
       sharesRaw: '11900000',
     }
-    const resolvedPosition = resolveEarnWithdrawPosition({
+    const resolvedPosition = resolveEarnAmountPosition({
       livePosition: confirmedLivePosition,
       snapshotPosition: amountFlow.position,
     })
@@ -167,7 +167,7 @@ describe(useEarnVaultModalFlow, () => {
     if (reviewFlow.view !== EarnVaultView.WithdrawReview) {
       throw new Error(`expected WithdrawReview, got ${reviewFlow.view}`)
     }
-    const reviewPosition = resolveEarnWithdrawPosition({
+    const reviewPosition = resolveEarnAmountPosition({
       livePosition: confirmedLivePosition,
       snapshotPosition: reviewFlow.position,
     })

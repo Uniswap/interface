@@ -224,7 +224,7 @@ export function SwapCurrencyInputPanel({
                     pl="$spacing12"
                     emphasis="text-only"
                     size="small"
-                    isDisabled={!chainAllowed}
+                    disabled={!chainAllowed}
                     onPress={onMax}
                   >
                     {t('swap.button.max')}

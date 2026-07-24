@@ -45,6 +45,35 @@ export function DepositReviewDetails({
 
   return (
     <>
+      {/* Keep expanded-only rows before shared content so the bottom sheet grows upward without shifting the controls. */}
+      {expanded && (
+        <Flex gap="$spacing12">
+          <EarnReviewSummaryRow
+            label={t('explore.earn.deposit.vault')}
+            value={
+              <TouchableArea row alignItems="center" gap="$spacing4" onPress={onOpenVaultExplorer}>
+                <Text variant="body3">{shortenAddress({ address: vault.vaultAddress })}</Text>
+                <ExternalLink color="$neutral2" size="$icon.16" />
+              </TouchableArea>
+            }
+          />
+          <EarnReviewSummaryRow
+            label={t('explore.earn.deposit.yourBalance')}
+            value={
+              <Flex row alignItems="center" gap="$spacing6">
+                <Text variant="body3" color="$neutral2">
+                  {formatLocalFiat(currentBalanceUsd)}
+                </Text>
+                <Text variant="body3" color="$neutral2">
+                  →
+                </Text>
+                <Text variant="body3">{formatLocalFiat(balanceAfterUsd)}</Text>
+              </Flex>
+            }
+          />
+        </Flex>
+      )}
+
       <ExpandoRow
         isExpanded={expanded}
         label={expanded ? t('explore.earn.deposit.showLess') : t('explore.earn.deposit.showMore')}
@@ -54,33 +83,6 @@ export function DepositReviewDetails({
       />
 
       <Flex gap="$spacing12">
-        {expanded && (
-          <>
-            <EarnReviewSummaryRow
-              label={t('explore.earn.deposit.vault')}
-              value={
-                <TouchableArea row alignItems="center" gap="$spacing4" onPress={onOpenVaultExplorer}>
-                  <Text variant="body3">{shortenAddress({ address: vault.vaultAddress })}</Text>
-                  <ExternalLink color="$neutral2" size="$icon.16" />
-                </TouchableArea>
-              }
-            />
-            <EarnReviewSummaryRow
-              label={t('explore.earn.deposit.yourBalance')}
-              value={
-                <Flex row alignItems="center" gap="$spacing6">
-                  <Text variant="body3" color="$neutral2">
-                    {formatLocalFiat(currentBalanceUsd)}
-                  </Text>
-                  <Text variant="body3" color="$neutral2">
-                    →
-                  </Text>
-                  <Text variant="body3">{formatLocalFiat(balanceAfterUsd)}</Text>
-                </Flex>
-              }
-            />
-          </>
-        )}
         <EarnReviewSummaryRow
           label={
             <Flex row alignItems="center" gap="$spacing4">

@@ -1,4 +1,5 @@
 /* oxlint-disable complexity */
+import { toScreenInput, useIsBlockedAddress } from '@universe/compliance'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
@@ -27,17 +28,16 @@ import { useUSDTokenUpdater } from 'uniswap/src/features/transactions/hooks/useU
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
 import { SwapArrowButton } from 'uniswap/src/features/transactions/swap/components/SwapArrowButton'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
 import { isSafeNumber } from 'utilities/src/primitives/integer'
 import { RecipientInputPanel } from 'wallet/src/components/input/RecipientInputPanel'
+import { useIsBlockedActiveAddress } from 'wallet/src/features/compliance/hooks'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 import { EmptyGasFeeRow, GasFeeRow } from 'wallet/src/features/transactions/send/GasFeeRow'
 import { useShowSendNetworkNotification } from 'wallet/src/features/transactions/send/hooks/useShowSendNetworkNotification'
 import { isAmountGreaterThanZero } from 'wallet/src/features/transactions/utils'
-import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 
 const TRANSFER_DIRECTION_BUTTON_SIZE = iconSizes.icon20
 const TRANSFER_DIRECTION_BUTTON_INNER_PADDING = spacing.spacing12
@@ -93,7 +93,7 @@ export function SendTokenForm(): JSX.Element {
   }, [updateSendForm])
 
   const { isBlocked: isActiveBlocked } = useIsBlockedActiveAddress()
-  const { isBlocked: isRecipientBlocked } = useIsBlocked(recipient)
+  const { isBlocked: isRecipientBlocked } = useIsBlockedAddress(toScreenInput(recipient, currencyIn?.chainId))
   const isBlocked = isActiveBlocked || isRecipientBlocked
 
   const onTransferWarningClick = (): void => {

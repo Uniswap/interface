@@ -14,6 +14,8 @@ import { useStore } from 'zustand'
 
 export interface EarnPlanProgressState {
   steps: TransactionAndPlanStep[]
+  /** Array index of currentStep.step within steps (the errored previous step while it is displayed). */
+  currentStepIndex: number
   currentStep: { step: TransactionStep; accepted: boolean }
 }
 
@@ -90,14 +92,17 @@ export function useEarnPlanProgressState(): EarnPlanProgressState | undefined {
     }
 
     const currentStep = activePlan.steps.at(activePlan.currentStepIndex)
-    const previousStep = activePlan.steps.at(activePlan.currentStepIndex - 1)
-    const displayStep = previousStep?.status === TradingApi.PlanStepStatus.STEP_ERROR ? previousStep : currentStep
+    const previousStep =
+      activePlan.currentStepIndex > 0 ? activePlan.steps.at(activePlan.currentStepIndex - 1) : undefined
+    const showErroredPreviousStep = previousStep?.status === TradingApi.PlanStepStatus.STEP_ERROR
+    const displayStep = showErroredPreviousStep ? previousStep : currentStep
     if (!displayStep) {
       return undefined
     }
 
     return {
       steps: activePlan.steps,
+      currentStepIndex: showErroredPreviousStep ? activePlan.currentStepIndex - 1 : activePlan.currentStepIndex,
       currentStep: {
         step: displayStep,
         accepted: displayStep.status === TradingApi.PlanStepStatus.STEP_ERROR ? false : activePlan.proofPending,

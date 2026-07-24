@@ -1,4 +1,4 @@
-import { createStore, Store } from '@reduxjs/toolkit'
+import { configureStore, Store } from '@reduxjs/toolkit'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import {
@@ -30,13 +30,16 @@ describe(walletReducer, () => {
   let store: Store<WalletSliceState>
 
   beforeEach(() => {
-    store = createStore(walletReducer, {
-      accounts: {},
-      activeAccountAddress: null,
-      settings: {
-        swapProtection: SwapProtectionSetting.On,
+    store = configureStore({
+      reducer: walletReducer,
+      preloadedState: {
+        accounts: {},
+        activeAccountAddress: null,
+        settings: {
+          swapProtection: SwapProtectionSetting.On,
+        },
+        androidCloudBackupEmail: null,
       },
-      androidCloudBackupEmail: null,
     })
   })
 

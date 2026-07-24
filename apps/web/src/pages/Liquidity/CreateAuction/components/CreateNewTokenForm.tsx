@@ -304,7 +304,7 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
               size="large"
               emphasis="primary"
               onPress={handleContinue}
-              isDisabled={!canContinue}
+              disabled={!canContinue}
               onDisabledPress={canContinue ? undefined : handleDisabledContinue}
               fill
               backgroundColor={canContinue ? tokenColor : undefined}

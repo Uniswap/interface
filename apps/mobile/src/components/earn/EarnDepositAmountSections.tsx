@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { DepositSourceRowContent } from 'src/components/earn/EarnDepositAmountControls'
-import { Flex, SpinningLoader, Text, TouchableArea } from 'ui/src'
+import { Flex, SpinningLoader, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -85,6 +85,7 @@ export function EarnDepositSourceSection({
   showSelector: boolean
   onOpenDepositSourceSelector: () => void
 }): JSX.Element {
+  const isDarkMode = useIsDarkMode()
   const row = (
     <DepositSourceRowContent
       apyLabel={apyLabel}
@@ -101,11 +102,14 @@ export function EarnDepositSourceSection({
   if (showSelector) {
     return (
       <TouchableArea
-        backgroundColor="$surface1"
+        backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
         borderColor="$surface3"
-        borderRadius="$rounded20"
+        borderRadius="$rounded16"
         borderWidth="$spacing1"
-        p="$spacing16"
+        p="$spacing12"
+        shadowColor="$shadowColor"
+        shadowOpacity={0.03}
+        shadowRadius={4}
         onPress={onOpenDepositSourceSelector}
       >
         {row}
@@ -115,11 +119,14 @@ export function EarnDepositSourceSection({
 
   return (
     <Flex
-      backgroundColor="$surface1"
+      backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
       borderColor="$surface3"
-      borderRadius="$rounded20"
+      borderRadius="$rounded16"
       borderWidth="$spacing1"
-      p="$spacing16"
+      p="$spacing12"
+      shadowColor="$shadowColor"
+      shadowOpacity={0.03}
+      shadowRadius={4}
     >
       {row}
     </Flex>
@@ -139,6 +146,8 @@ export function EarnWithdrawDestinationSection({
   withdrawToLabel: string
   onOpenNetworkSelector: (chainId: UniverseChainId) => void
 }): JSX.Element | null {
+  const isDarkMode = useIsDarkMode()
+
   if (!isVisible) {
     return null
   }
@@ -149,9 +158,9 @@ export function EarnWithdrawDestinationSection({
         row
         alignItems="center"
         justifyContent="space-between"
-        backgroundColor="$surface1"
+        backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
         borderColor="$surface3"
-        borderRadius="$rounded20"
+        borderRadius="$rounded16"
         borderWidth="$spacing1"
         px="$spacing16"
         py="$spacing12"

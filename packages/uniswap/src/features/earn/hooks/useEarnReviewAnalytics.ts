@@ -110,6 +110,7 @@ export function useEarnReviewAnalytics({
   logFailed: (error: Error | undefined) => void
   logFinalized: (params: PlanFinalizedCallbackParams) => void
   logSubmitted: () => void
+  reviewedEventProperties: EarnTransactionAnalyticsProperties
 } {
   const analyticsProperties = useMemo<EarnTransactionAnalyticsProperties>(
     () => ({
@@ -265,5 +266,6 @@ export function useEarnReviewAnalytics({
     logFailed,
     logFinalized,
     logSubmitted,
+    reviewedEventProperties: analyticsProperties,
   }
 }

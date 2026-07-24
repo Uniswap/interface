@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Button, Flex, Separator, Switch, Text, Tooltip, TouchableArea } from 'ui/src'
 import { ArrowRight } from 'ui/src/components/icons/ArrowRight'
-import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { Rocket } from 'ui/src/components/icons/Rocket'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { AdvancedSettingsSeparator } from '~/pages/Liquidity/CreateAuction/components/AdvancedSettingsSeparator'
@@ -20,40 +19,14 @@ import {
   getQuickLaunchFloorPricePerToken,
   QUICK_LAUNCH_FLOOR_FDV_USD,
 } from '~/pages/Liquidity/CreateAuction/quickLaunch/quickLaunchPreset'
-import {
-  CreateAuctionStep,
-  QuickLaunchDuration,
-  TimeLockPreset,
-  TokenMode,
-} from '~/pages/Liquidity/CreateAuction/types'
-
-/** "30-minute" etc., interpolated into the launch story. Static t() calls so the extractor sees the keys. */
-function useDurationStoryLabel(duration: QuickLaunchDuration): string {
-  const { t } = useTranslation()
-  switch (duration) {
-    case QuickLaunchDuration.ThirtyMinutes:
-      return t('toucan.createAuction.quickLaunch.story.duration.thirtyMinutes')
-    case QuickLaunchDuration.OneHour:
-      return t('toucan.createAuction.quickLaunch.story.duration.oneHour')
-    case QuickLaunchDuration.FourHours:
-      return t('toucan.createAuction.quickLaunch.story.duration.fourHours')
-    default:
-      return t('toucan.createAuction.quickLaunch.story.duration.thirtyMinutes')
-  }
-}
+import { CreateAuctionStep, TimeLockPreset, TokenMode } from '~/pages/Liquidity/CreateAuction/types'
 
 /** Emphasis inside story copy is color-only (neutral1 on a neutral2 line), per the design spec. */
 const STORY_HIGHLIGHT = <Text variant="body3" color="$neutral1" />
 
-/** The full locked-preset table behind "View all parameters". */
-function useLaunchParams(duration: QuickLaunchDuration): { label: string; value: string; hint?: string }[] {
+/** The full locked-preset table behind "View all parameters" — every value is fixed by the SDK preset. */
+function useLaunchParams(): { label: string; value: string; hint?: string }[] {
   const { t } = useTranslation()
-
-  const durationTableLabel: Record<QuickLaunchDuration, string> = {
-    [QuickLaunchDuration.ThirtyMinutes]: t('toucan.createAuction.quickLaunch.duration.thirtyMinutes'),
-    [QuickLaunchDuration.OneHour]: t('toucan.createAuction.quickLaunch.duration.oneHour'),
-    [QuickLaunchDuration.FourHours]: t('toucan.createAuction.quickLaunch.duration.fourHours'),
-  }
 
   return [
     {
@@ -66,7 +39,10 @@ function useLaunchParams(duration: QuickLaunchDuration): { label: string; value:
       value: t('toucan.createAuction.quickLaunch.params.startTime.value'),
       hint: t('toucan.createAuction.quickLaunch.params.startTime.hint'),
     },
-    { label: t('toucan.createAuction.quickLaunch.params.duration'), value: durationTableLabel[duration] },
+    {
+      label: t('toucan.createAuction.quickLaunch.params.duration'),
+      value: t('toucan.createAuction.quickLaunch.duration.fourHours'),
+    },
     {
       label: t('toucan.createAuction.quickLaunch.params.raiseDenomination'),
       value: t('toucan.createAuction.quickLaunch.params.raiseDenomination.value'),
@@ -191,107 +167,6 @@ export function QuickLaunchToggleCard(): JSX.Element | null {
   )
 }
 
-function DurationTile({
-  eyebrow,
-  title,
-  description,
-  selected,
-  onPress,
-}: {
-  eyebrow: string
-  title: string
-  description: string
-  selected: boolean
-  onPress: () => void
-}): JSX.Element {
-  return (
-    <TouchableArea
-      flex={1}
-      flexBasis={0}
-      p="$spacing12"
-      gap="$spacing8"
-      borderRadius="$rounded12"
-      borderWidth={1}
-      borderColor="$surface3Hovered"
-      backgroundColor={selected ? '$surface2' : '$surface1'}
-      minHeight={100}
-      onPress={onPress}
-    >
-      <Flex row gap="$spacing8" alignItems="flex-start">
-        <Flex flex={1} minWidth={0}>
-          <Text variant="buttonLabel4" color="$neutral2">
-            {eyebrow}
-          </Text>
-          <Text variant="buttonLabel3" color="$neutral1">
-            {title}
-          </Text>
-        </Flex>
-        {selected && <CheckCircleFilled size="$icon.20" color="$neutral1" />}
-      </Flex>
-      <Flex flex={1} justifyContent="flex-end">
-        <Text variant="body4" color="$neutral2">
-          {description}
-        </Text>
-      </Flex>
-    </TouchableArea>
-  )
-}
-
-/** The one decision quick launch exposes: how long the auction runs (30 minutes pre-selected). */
-function DurationSection({
-  selected,
-  onSelect,
-}: {
-  selected: QuickLaunchDuration
-  onSelect: (duration: QuickLaunchDuration) => void
-}): JSX.Element {
-  const { t } = useTranslation()
-
-  const options: { value: QuickLaunchDuration; eyebrow: string; title: string; description: string }[] = [
-    {
-      value: QuickLaunchDuration.ThirtyMinutes,
-      eyebrow: t('toucan.createAuction.quickLaunch.duration.fast'),
-      title: t('toucan.createAuction.quickLaunch.duration.thirtyMinutes'),
-      description: t('toucan.createAuction.quickLaunch.duration.thirtyMinutes.description'),
-    },
-    {
-      value: QuickLaunchDuration.OneHour,
-      eyebrow: t('toucan.createAuction.quickLaunch.duration.standard'),
-      title: t('toucan.createAuction.quickLaunch.duration.oneHour'),
-      description: t('toucan.createAuction.quickLaunch.duration.oneHour.description'),
-    },
-    {
-      value: QuickLaunchDuration.FourHours,
-      eyebrow: t('toucan.createAuction.quickLaunch.duration.extended'),
-      title: t('toucan.createAuction.quickLaunch.duration.fourHours'),
-      description: t('toucan.createAuction.quickLaunch.duration.fourHours.description'),
-    },
-  ]
-
-  return (
-    <Flex gap="$spacing12">
-      <Flex gap="$spacing4">
-        <Text variant="subheading1">{t('toucan.createAuction.quickLaunch.duration.title')}</Text>
-        <Text variant="body3" color="$neutral2">
-          {t('toucan.createAuction.step.configureAuction.duration.description')}
-        </Text>
-      </Flex>
-      <Flex row gap="$gap8">
-        {options.map((option) => (
-          <DurationTile
-            key={option.value}
-            eyebrow={option.eyebrow}
-            title={option.title}
-            description={option.description}
-            selected={selected === option.value}
-            onPress={() => onSelect(option.value)}
-          />
-        ))}
-      </Flex>
-    </Flex>
-  )
-}
-
 function StoryBeat({
   index,
   title,
@@ -325,10 +200,9 @@ function StoryBeat({
  * center expando, expanded by default per the design spec; the exact parameter table stays one
  * "View all parameters" disclosure away.
  */
-function HowQuickLaunchesWork({ duration }: { duration: QuickLaunchDuration }): JSX.Element {
+function HowQuickLaunchesWork(): JSX.Element {
   const { t } = useTranslation()
-  const durationStoryLabel = useDurationStoryLabel(duration)
-  const launchParams = useLaunchParams(duration)
+  const launchParams = useLaunchParams()
   const [expanded, setExpanded] = useState(true)
   const [showAllParams, setShowAllParams] = useState(false)
 
@@ -353,7 +227,7 @@ function HowQuickLaunchesWork({ duration }: { duration: QuickLaunchDuration }): 
           <StoryBeat index={1} title={t('toucan.createAuction.quickLaunch.story.auction.title')}>
             <Trans
               i18nKey="toucan.createAuction.quickLaunch.story.auction.description"
-              values={{ duration: durationStoryLabel }}
+              values={{ duration: t('toucan.createAuction.quickLaunch.story.duration.fourHours') }}
               components={{ highlight: STORY_HIGHLIGHT }}
             />
           </StoryBeat>
@@ -402,15 +276,14 @@ function HowQuickLaunchesWork({ duration }: { duration: QuickLaunchDuration }): 
 }
 
 /**
- * QuickLaunch (flag-gated): the in-card quick-launch content on the Token info step — the auction
- * duration tiles, the "How quick launches work" story, and the Review-and-launch CTA that jumps
- * straight to Review with everything else locked to the preset. Renders nothing when quick-launch
- * mode is off (flag off, existing token, or the switch toggled off).
+ * QuickLaunch (flag-gated): the in-card quick-launch content on the Token info step — the "How quick
+ * launches work" story and the Review-and-launch CTA that jumps straight to Review with everything
+ * locked to the SDK preset (fixed 4h auction). Renders nothing when quick-launch mode is off (flag
+ * off, existing token, or the switch toggled off).
  */
 export function QuickLaunchSection(): JSX.Element | null {
   const { t } = useTranslation()
   const isQuickLaunchMode = useIsQuickLaunchMode()
-  const quickLaunchDuration = useCreateAuctionStore((state) => state.quickLaunchDuration)
   const tokenForm = useCreateAuctionStore((state) => state.tokenForm)
   const actions = useCreateAuctionStoreActions()
   const isTokenInfoValid = useIsStepValid(CreateAuctionStep.ADD_TOKEN_INFO)
@@ -431,16 +304,15 @@ export function QuickLaunchSection(): JSX.Element | null {
     // Quick launch defaults to on, so the pool preset is applied at handoff rather than on toggle.
     applyQuickLaunchPoolPreset(actions)
     actions.setFloorPrice(getQuickLaunchFloorPricePerToken(stableRaiseUsdPrice))
-    applyQuickLaunchAuctionWindow(actions, quickLaunchDuration)
+    applyQuickLaunchAuctionWindow(actions)
     actions.setStep(CreateAuctionStep.REVIEW_LAUNCH)
   }
 
   return (
     <>
-      <DurationSection selected={quickLaunchDuration} onSelect={actions.setQuickLaunchDuration} />
-      <HowQuickLaunchesWork duration={quickLaunchDuration} />
+      <HowQuickLaunchesWork />
       <Flex row>
-        <Button size="large" emphasis="primary" fill isDisabled={!isTokenInfoValid} onPress={handleReviewAndLaunch}>
+        <Button size="large" emphasis="primary" fill disabled={!isTokenInfoValid} onPress={handleReviewAndLaunch}>
           {t('toucan.createAuction.quickLaunch.reviewAndLaunch')}
         </Button>
       </Flex>

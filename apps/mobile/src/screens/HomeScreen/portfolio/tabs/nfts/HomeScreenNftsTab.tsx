@@ -1,5 +1,3 @@
-import { NetworkStatus } from '@apollo/client'
-import { isNonPollingRequestInFlight } from '@universe/api'
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ViewStyle } from 'react-native'
@@ -51,13 +49,14 @@ export const HomeScreenNftsTab = memo(function HomeScreenNftsTabInner({
   const { t } = useTranslation()
   const {
     nfts,
-    networkStatus,
+    isPending,
     isErrorState,
     hiddenNftsExpanded,
     setHiddenNftsExpanded,
     shouldAddInLoadingItem,
     refetch: refetchNfts,
     numHidden,
+    isFetchingMore,
   } = nftListRenderData
 
   const setNftHiddenExpandedBool = useCallback(
@@ -122,7 +121,7 @@ export const HomeScreenNftsTab = memo(function HomeScreenNftsTabInner({
     )
   }
 
-  if (nfts.length === 0 && isNonPollingRequestInFlight(networkStatus)) {
+  if (nfts.length === 0 && isPending) {
     return (
       <TabMeasuredLayout testID={testID} onHeightChange={onHeightChange}>
         <Flex px="$spacing12">
@@ -186,7 +185,7 @@ export const HomeScreenNftsTab = memo(function HomeScreenNftsTabInner({
           setHiddenNftsExpanded={setNftHiddenExpandedBool}
         />
       )}
-      {nfts.length > 0 && networkStatus === NetworkStatus.fetchMore && (
+      {nfts.length > 0 && isFetchingMore && (
         <Flex px="$spacing12">
           <Loader.NFT repeat={6} />
         </Flex>

@@ -1,12 +1,15 @@
 import type { DiscriminatedQuoteResponse } from '@universe/api'
-import { isMobileApp } from '@universe/environment'
-import { Button, Flex, IconButton, Text } from 'ui/src'
+import { isMobileApp, isWebApp } from '@universe/environment'
+import { Button, Flex, IconButton } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import {
   EarnPlanProgressIndicator,
   type EarnPlanProgressState,
 } from 'uniswap/src/features/earn/EarnPlanProgressIndicator'
+import { PendingSwapButtonContent } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewFooter/PendingSwapButtonContent'
 import { isChainedQuoteResponse } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { noop } from 'utilities/src/react/noop'
 
 /** Shared CTA gating for the Earn deposit/withdraw review views. */
 export function getEarnReviewCtaDisabled({
@@ -91,7 +94,7 @@ export function EarnReviewActionRow({
           variant="branded"
           emphasis="primary"
           size="large"
-          isDisabled={onRetry ? false : ctaDisabled}
+          disabled={onRetry ? false : ctaDisabled}
           onPress={onRetry ?? onPress}
         >
           {onRetry ? retryLabel : ctaLabel}
@@ -100,24 +103,21 @@ export function EarnReviewActionRow({
     )
   }
 
-  if (progress) {
+  if (isWebApp && progress) {
     return <EarnPlanProgressIndicator progress={progress} />
   }
 
-  if (isExecuting && stepProgressLabel) {
+  if (isMobileApp && isExecuting && progress && stepProgressLabel) {
     return (
-      <Flex
-        row
-        alignItems="center"
-        justifyContent="center"
-        py="$spacing16"
-        borderRadius="$rounded16"
-        backgroundColor="$surface2"
-      >
-        <Text variant="buttonLabel2" color="$neutral1">
-          {stepProgressLabel}
-        </Text>
-      </Flex>
+      <PendingSwapButtonContent
+        disabled={ctaDisabled}
+        // +1 offsets the synthetic plan-fetch segment at index 0 of the progress estimates
+        currentStepIndex={progress.currentStepIndex + 1}
+        steps={progress.steps}
+        submissionText={stepProgressLabel}
+        testID={TestID.EarnReviewAction}
+        onSubmit={noop}
+      />
     )
   }
 
@@ -129,7 +129,7 @@ export function EarnReviewActionRow({
         variant="branded"
         emphasis="primary"
         size="large"
-        isDisabled={ctaDisabled}
+        disabled={ctaDisabled}
         onPress={onPress}
       >
         {ctaLabel}
@@ -151,7 +151,7 @@ export function EarnReviewActionRow({
         variant="branded"
         emphasis="primary"
         size="large"
-        isDisabled={ctaDisabled}
+        disabled={ctaDisabled}
         onPress={onPress}
       >
         {ctaLabel}

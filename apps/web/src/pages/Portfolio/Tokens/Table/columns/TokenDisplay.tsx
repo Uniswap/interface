@@ -20,6 +20,8 @@ interface TokenDisplayProps {
   displayName?: string
   displaySymbol?: string
   onNameClick?: () => void
+  /** Explore-style unified expandable row: always show symbol + chevron instead of hover-to-expand affordance. */
+  unifiedExpandableRows?: boolean
 }
 
 export const TokenDisplay = memo(function TokenDisplay({
@@ -29,6 +31,7 @@ export const TokenDisplay = memo(function TokenDisplay({
   displayName: multichainDisplayName,
   displaySymbol: multichainDisplaySymbol,
   onNameClick,
+  unifiedExpandableRows = false,
 }: TokenDisplayProps) {
   const { t } = useTranslation()
   if (!currencyInfo) {
@@ -39,7 +42,27 @@ export const TokenDisplay = memo(function TokenDisplay({
   const displayName = multichainDisplayName ?? currency.name
   const displaySymbol = multichainDisplaySymbol ?? currency.symbol
   const symbolText = getSymbolDisplayText(displaySymbol) || EM_DASH
-  const showNetworksHover = chainIds && chainIds.length > 1
+  const showNetworksHover = !unifiedExpandableRows && chainIds && chainIds.length > 1
+  const showUnifiedExpandableSubline = unifiedExpandableRows && chainIds && chainIds.length > 1
+
+  const unifiedExpandableSubline = (
+    <Flex row alignItems="center" gap="$gap4" height={SYMBOL_SLOT_HEIGHT}>
+      <Text
+        variant="body4"
+        $platform-web={{ minWidth: 'fit-content' }}
+        color="$neutral2"
+        height={SYMBOL_SLOT_HEIGHT}
+        numberOfLines={1}
+      >
+        {symbolText}
+      </Text>
+      {isExpanded ? (
+        <ChevronsIn color="$neutral2" size="$icon.16" />
+      ) : (
+        <ChevronsOut color="$neutral2" size="$icon.16" />
+      )}
+    </Flex>
+  )
 
   return (
     <Flex row gap="$gap8" alignItems="center" justifyContent="flex-start" width="100%">
@@ -76,16 +99,20 @@ export const TokenDisplay = memo(function TokenDisplay({
           height={SYMBOL_SLOT_HEIGHT}
           showTransition={showNetworksHover}
           defaultContent={
-            <Text
-              variant="body4"
-              $platform-web={{ minWidth: 'fit-content' }}
-              color="$neutral2"
-              height={SYMBOL_SLOT_HEIGHT}
-              width="100%"
-              numberOfLines={1}
-            >
-              {symbolText}
-            </Text>
+            showUnifiedExpandableSubline ? (
+              unifiedExpandableSubline
+            ) : (
+              <Text
+                variant="body4"
+                $platform-web={{ minWidth: 'fit-content' }}
+                color="$neutral2"
+                height={SYMBOL_SLOT_HEIGHT}
+                width="100%"
+                numberOfLines={1}
+              >
+                {symbolText}
+              </Text>
+            )
           }
           hoverContent={
             <Flex row gap="$gap4">

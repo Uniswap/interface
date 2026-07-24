@@ -5,6 +5,15 @@ import { groupTickBars } from '~/features/Toucan/ToucanChart/bidDistribution/uti
 const DEFAULT_TARGET_GROUPED_BARS = 80
 
 /**
+ * In the no-bids empty state the floor price line sits at this fraction of the
+ * chart height, measured from the bottom, so the chart doesn't look totally
+ * empty (LP-806).
+ */
+const NO_BIDS_FLOOR_HEIGHT_FRACTION = 0.2
+/** Fraction of the floor price kept visible below the floor line in the no-bids state. */
+const NO_BIDS_LOWER_MARGIN_FRACTION = 0.1
+
+/**
  * Caps how far the concentration band and bid-volume range can extend the default
  * y-axis beyond the price range, expressed as a multiple of the price range on each
  * side. Keeps the price line visually dominant at default zoom (LP-802). Users can
@@ -54,9 +63,26 @@ function computeVolumeRange(bars: ChartBarData[] | undefined): { min: number; ma
 }
 
 /**
+ * Computes the default visible y-axis window for the no-bids empty state:
+ * the clearing price line is flat at the floor price, so anchor the floor at
+ * NO_BIDS_FLOOR_HEIGHT_FRACTION of the chart height with headroom above (LP-806).
+ * Returns null when the floor price is invalid.
+ */
+export function computeNoBidsViewRange(floorPrice: number): { yMin: number; yMax: number } | null {
+  if (!Number.isFinite(floorPrice) || floorPrice <= 0) {
+    return null
+  }
+  const yMin = floorPrice * (1 - NO_BIDS_LOWER_MARGIN_FRACTION)
+  const totalRange = (floorPrice - yMin) / NO_BIDS_FLOOR_HEIGHT_FRACTION
+  return { yMin, yMax: yMin + totalRange }
+}
+
+/**
  * Applies pan offset and zoom to produce updated y-axis bounds.
  * Centers the visible window around the union of price history, concentration band,
  * and (when available) the trimmed volume range so outlier volume bars stay in view.
+ * When `noBidsFloorPrice` is set (auction started, zero bids), the default window
+ * anchors the floor price near the bottom of the chart instead.
  */
 export function applyPanZoom<T extends NormalizedDataSlice>(params: {
   normalizedData: T
@@ -64,8 +90,9 @@ export function applyPanZoom<T extends NormalizedDataSlice>(params: {
   bars?: ChartBarData[]
   yPanOffset: number
   yZoomLevel: number
+  noBidsFloorPrice?: number
 }): T & { scaledYMin: number; scaledYMax: number } {
-  const { normalizedData, concentration, bars, yPanOffset, yZoomLevel } = params
+  const { normalizedData, concentration, bars, yPanOffset, yZoomLevel, noBidsFloorPrice } = params
   const { scaleFactor } = normalizedData
 
   const volumeRange = computeVolumeRange(bars)
@@ -90,10 +117,12 @@ export function applyPanZoom<T extends NormalizedDataSlice>(params: {
     baseYMax = Math.min(baseYMax, priceYMax + maxExpansion)
   }
 
+  const noBidsRange = noBidsFloorPrice !== undefined ? computeNoBidsViewRange(noBidsFloorPrice) : null
+
   const baseRange = baseYMax - baseYMin || Math.max(baseYMax * 0.1, 0.001)
   const buffer = baseRange * 0.1
-  const bufferedMin = Math.max(0, baseYMin - buffer)
-  const bufferedMax = baseYMax + buffer
+  const bufferedMin = noBidsRange ? noBidsRange.yMin : Math.max(0, baseYMin - buffer)
+  const bufferedMax = noBidsRange ? noBidsRange.yMax : baseYMax + buffer
   const bufferedRange = bufferedMax - bufferedMin
   const halfRange = bufferedRange / yZoomLevel / 2
   const baseMidpoint = (bufferedMin + bufferedMax) / 2

@@ -47,6 +47,12 @@
         "cwd": "{projectRoot}"
       }
     },
+    "check:apollo-codegen": {
+      "command": "bun ./scripts/checkApolloCodegenSync.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
     "check:deps:usage": {},
     "clean": {
       "command": "react-native-clean-project",
@@ -104,6 +110,12 @@
     },
     "env:local:copy:swift": {
       "command": "python3 scripts/copy_env_vars_to_swift.py",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "devicefarm:connect": {
+      "command": "bun run scripts/deviceFarmConnect.ts",
       "options": {
         "cwd": "{projectRoot}"
       }
@@ -253,7 +265,7 @@
       }
     },
     "test": {
-      "command": "node --max-old-space-size=8912 ../../node_modules/.bin/jest",
+      "command": "vitest run",
       "options": {
         "cwd": "{projectRoot}"
       },
@@ -266,14 +278,12 @@
       ]
     },
     "snapshots": {
-      "command": "jest -u",
+      "command": "vitest run -u",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "typecheck": {},
-    "typecheck:tsc": {},
-    "typecheck:tsgo": {},
     "config:pull": {
       "command": "if [ \"$SKIP_CONFIG_PULL\" != \"true\" ]; then bun config:pull mobile --env \"${CONFIG_ENV:-development}\" --soft; fi",
       "options": { "cwd": "{workspaceRoot}" },

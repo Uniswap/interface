@@ -1,10 +1,12 @@
-import { TokensOrderBy } from '@universe/api'
+import { TokensOrderBy } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { TimePeriod } from '~/appGraphql/data/util'
 import { TokenSortMethod } from '~/components/Tokens/constants'
 
 /**
- * Maps TokenSortMethod to TokensOrderBy for backend list-top-tokens API.
+ * Maps TokenSortMethod to (v2) TokensOrderBy for backend list-top-tokens API.
  * PRICE sorting is not supported by the backend; callers omit orderBy for that case.
+ * v2 also adds TVL, exposed by no TokenSortMethod today — left unmapped until product decides
+ * to surface it as an Explore sort column.
  */
 export const tokenSortMethodToOrderBy: Partial<Record<TokenSortMethod, TokensOrderBy>> = {
   [TokenSortMethod.FULLY_DILUTED_VALUATION]: TokensOrderBy.FDV,

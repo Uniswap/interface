@@ -14,7 +14,7 @@
       "outputs": ["{projectRoot}/src/utils/__generated__"]
     },
     "analyze": {
-      "command": "source-map-explorer 'build/assets/*.js' --no-border-checks --gzip",
+      "command": "source-map-explorer 'build/client/assets/*.js' --no-border-checks --gzip",
       "options": {
         "cwd": "{projectRoot}"
       }
@@ -59,6 +59,12 @@
       }
     },
     "check": {},
+    "check:bundle-size": {
+      "command": "bun ./scripts/check-bundle-size.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
     "check:deps:usage": {},
     "check:fast": {},
     "config:pull": {
@@ -262,12 +268,6 @@
         "cwd": "{projectRoot}"
       }
     },
-    "test:bundle": {
-      "command": "bun run -r esbuild-register ./src/test-utils/bundle-size-test.ts",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
     "test:cloud": {
       "command": "NODE_OPTIONS='--no-deprecation' vitest run functions --config functions/vitest.config.mts",
       "options": {
@@ -321,12 +321,6 @@
       "dependsOn": ["prepare", "typecheck:cloud"]
     },
     "typecheck:cloud": {
-      "command": "if test \"$DISABLE_TSGO\" = \"true\"; then bun run nx typecheck:cloud:tsc; else bun run nx typecheck:cloud:tsgo; fi",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "typecheck:cloud:tsc": {
       "command": "tsc -p functions/tsconfig.json",
       "options": {
         "cwd": "{projectRoot}"
@@ -334,16 +328,6 @@
       "cache": true,
       "inputs": ["{projectRoot}/functions/**/*.ts"]
     },
-    "typecheck:cloud:tsgo": {
-      "command": "tsgo -p functions/tsconfig.json",
-      "options": {
-        "cwd": "{projectRoot}"
-      },
-      "cache": true,
-      "inputs": ["{projectRoot}/functions/**/*.ts"]
-    },
-    "typecheck:tsc": {},
-    "typecheck:tsgo": {},
     "wait-for-webserver": {
       "executor": "nx:run-commands",
       "options": {

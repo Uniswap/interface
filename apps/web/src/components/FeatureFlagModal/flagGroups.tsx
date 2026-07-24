@@ -79,6 +79,7 @@ export function buildFlagGroups(extras: {
         { flag: FeatureFlags.LiquidityBatchedTransactions, label: 'Enable Batched Transactions for LP flow' },
         { flag: FeatureFlags.LpIncentives, label: 'Enable LP Incentives' },
         { flag: FeatureFlags.LpIncentivesTablesColumn, label: 'Enable LP Reward APR Column' },
+        { flag: FeatureFlags.V4ProtocolFeeDisplay, label: 'Enable v4 Fee Tiers in the Create flow' },
       ],
     },
     {
@@ -89,6 +90,7 @@ export function buildFlagGroups(extras: {
           flag: FeatureFlags.ToucanTickDetailsTooltip,
           label: 'Show Remaining (currency required) on chart-bar tooltip',
         },
+        { flag: FeatureFlags.AuctionSearch, label: 'Enable Auction Search' },
       ],
     },
     {
@@ -143,6 +145,7 @@ export function buildFlagGroups(extras: {
         { flag: FeatureFlags.V2EndpointsPortfolio, label: 'Enable V2 Endpoints Portfolio' },
         { flag: FeatureFlags.V2EndpointsSearch, label: 'Enable V2 Endpoints Search' },
         { flag: FeatureFlags.V2EndpointsCurrencyConversion, label: 'Enable V2 Endpoints Currency Conversion' },
+        { flag: FeatureFlags.V2EndpointsNfts, label: 'Enable V2 Endpoints NFTs' },
       ],
     },
     {
@@ -165,7 +168,6 @@ export function buildFlagGroups(extras: {
       name: 'Misc',
       flags: [
         { flag: FeatureFlags.DataLivelinessUI, label: 'Enable Data Liveliness UI' },
-        { flag: FeatureFlags.UniswapWrapped2025, label: 'Enable Uniswap Wrapped 2025' },
         { flag: FeatureFlags.UnificationCopy, label: 'Enable Unification Copy' },
       ],
     },
@@ -185,6 +187,10 @@ export function buildFlagGroups(extras: {
         { flag: FeatureFlags.RWAUXExplore, label: 'Enable RWA UX Explore (table)' },
         { flag: FeatureFlags.RwaUxSearch, label: 'Enable Stocks in Search' },
       ],
+    },
+    {
+      name: 'Token Categories',
+      flags: [{ flag: FeatureFlags.TokenCategories, label: 'Enable Token Categories' }],
     },
     { name: 'Experiments', flags: [] },
     {

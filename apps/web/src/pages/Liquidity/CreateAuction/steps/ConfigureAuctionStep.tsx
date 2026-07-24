@@ -379,7 +379,7 @@ export function ConfigureAuctionStep() {
             size="medium"
             emphasis="primary"
             onPress={handleContinue}
-            isDisabled={continueDisabled}
+            disabled={continueDisabled}
             onDisabledPress={isNextStepDisabled ? handleDisabledContinue : undefined}
             fill
             backgroundColor={continueDisabled ? undefined : tokenColor}

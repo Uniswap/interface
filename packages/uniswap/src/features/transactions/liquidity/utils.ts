@@ -75,6 +75,36 @@ function parseConnectRpcErrorMessage(
   return options.includeRequestId && title && requestId ? `${title}, id: ${requestId}` : title
 }
 
+const POOL_REJECTS_LIQUIDITY_ERROR_MARKERS = [
+  // Current backend behavior when a pool's hook reverts the add: gas estimation fails
+  'FAILED_TO_ESTIMATE_GAS',
+  // Future machine-readable reason returned by the backend
+  'POOL_REJECTS_LIQUIDITY',
+]
+
+function getErrorMessageText(error: unknown): string | undefined {
+  if (isConnectError(error)) {
+    return error.rawMessage
+  }
+  if (error instanceof Error) {
+    return error.message
+  }
+  if (isLegacyError(error)) {
+    return error.data?.detail ?? error.name
+  }
+  return undefined
+}
+
+/**
+ * Detects a CreatePosition failure consistent with the pool's hook rejecting the added liquidity
+ * (e.g. a `beforeAddLiquidity` hook that reverts). Only meaningful when the pool's hook actually
+ * has the before-add-liquidity permission — callers must check that separately.
+ */
+export function isPoolRejectsLiquidityError(error: unknown): boolean {
+  const message = getErrorMessageText(error)
+  return Boolean(message && POOL_REJECTS_LIQUIDITY_ERROR_MARKERS.some((marker) => message.includes(marker)))
+}
+
 export function parseErrorMessageTitle(
   error: unknown,
   { defaultTitle }: { defaultTitle: string; includeRequestId?: boolean },

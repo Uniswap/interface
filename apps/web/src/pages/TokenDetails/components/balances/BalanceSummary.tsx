@@ -7,15 +7,18 @@ import { NetworkBalanceBreakdown } from 'uniswap/src/components/tokenDetails/Net
 import { computeAggregateBalance } from 'uniswap/src/components/tokenDetails/utils'
 import { useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import type { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { Balance } from '~/pages/TokenDetails/components/balances/Balance'
 import { BridgedAssetWithdrawButton } from '~/pages/TokenDetails/components/balances/BridgedAssetWithdrawButton'
 import { useTDPSelectedMultichainChain } from '~/pages/TokenDetails/context/useTDPSelectedMultichainChain'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
+import { useTDPEffectiveCurrency } from '~/pages/TokenDetails/hooks/useTDPEffectiveCurrency'
 
 export function BalanceSummary(): JSX.Element | null {
   const { isDisconnected } = useConnectionStatus()
@@ -25,6 +28,8 @@ export function BalanceSummary(): JSX.Element | null {
     balanceError: s.balanceError,
     tokenQuery: s.tokenQuery,
   }))
+  const effectiveCurrency = useTDPEffectiveCurrency()
+  const metadata = useTokenMetadata(currencyId(effectiveCurrency), { legacyToken: tokenQuery.data?.token })
 
   const pageChainBalance = multiChainMap[currencyChain]?.balance
   const otherChainBalances: PortfolioBalance[] = []
@@ -50,7 +55,7 @@ export function BalanceSummary(): JSX.Element | null {
   if (isDisconnected || !hasBalances) {
     return null
   }
-  const projectName = tokenQuery.data?.token?.project?.name ?? undefined
+  const projectName = metadata.name ?? undefined
 
   return (
     <Flex gap="$gap24" height="fit-content" width="100%">

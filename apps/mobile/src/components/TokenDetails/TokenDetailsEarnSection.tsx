@@ -6,6 +6,7 @@ import { TokenDetailsEarnSection as SharedTokenDetailsEarnSection } from 'uniswa
 import { EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
 import { EarnBalanceErrorState } from 'uniswap/src/features/earn/EarnBalanceErrorState'
 import { useEarnDepositSources } from 'uniswap/src/features/earn/hooks/useEarnDepositSources'
+import { useEarnPosition } from 'uniswap/src/features/earn/hooks/useEarnPosition'
 import type { TokenDetailsEarnData } from 'uniswap/src/features/earn/hooks/useTokenDetailsEarnData'
 import { EarnAction, type EarnPositionInfo, type EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -25,6 +26,14 @@ export const TokenDetailsEarnSection = memo(function TokenDetailsEarnSectionInne
   const { navigateToEarnVault } = useWalletNavigation()
 
   const isSectionVisible = !!earnData.earnVault && !!earnData.earnPosition && earnData.userHasEarnPosition
+
+  const { position: detailedPosition, isError: positionIsError } = useEarnPosition({
+    vault: earnData.earnVault,
+    walletAddress: activeAddress,
+    isConnected: !!activeAddress,
+    enabled: isSectionVisible,
+    prefetchedPosition: earnData.earnPosition,
+  })
 
   const { balanceLookupSettled, hasSupportedBalanceForUnderlying } = useEarnDepositSources({
     vault: earnData.earnVault,
@@ -66,14 +75,16 @@ export const TokenDetailsEarnSection = memo(function TokenDetailsEarnSectionInne
     )
   }
 
-  if (!isSectionVisible || !earnData.earnVault || !earnData.earnPosition) {
+  if (!isSectionVisible || !earnData.earnVault || !detailedPosition) {
     return null
   }
 
   return (
     <SharedTokenDetailsEarnSection
+      mobileLayout
       earnVault={earnData.earnVault}
-      earnPosition={earnData.earnPosition}
+      earnPosition={detailedPosition}
+      rewardsUnavailable={positionIsError && detailedPosition.lifetimePnlUsd === undefined}
       onPositionPress={(vault, position) =>
         navigateToEarnVault({ analyticsEntryPoint: EarnEntryPoint.TokenDetailsEarnSection, vault, position })
       }

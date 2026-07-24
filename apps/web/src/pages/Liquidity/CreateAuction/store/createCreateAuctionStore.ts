@@ -57,7 +57,6 @@ export const createCreateAuctionStore = (): CreateAuctionStore =>
             set({ step })
           },
           setQuickLaunch: (quickLaunch) => set({ quickLaunch }),
-          setQuickLaunchDuration: (quickLaunchDuration) => set({ quickLaunchDuration }),
           goToNextStep: () => {
             set((state) => {
               const nextStep = Math.min(state.step + 1, CreateAuctionStep.REVIEW_LAUNCH) as CreateAuctionStep

@@ -1,11 +1,12 @@
 import { authenticateAsync, hasHardwareAsync, isEnrolledAsync } from 'expo-local-authentication'
 import { BiometricAuthenticationStatus, tryLocalAuthenticate } from 'src/features/biometrics/biometrics-utils'
+import type { MockedFunction } from 'vitest'
 
-jest.mock('expo-local-authentication')
+// expo-local-authentication is mocked with vi.fn()s in vitest-setup.ts
 
-const mockedHasHardwareAsync = <jest.MockedFunction<typeof hasHardwareAsync>>hasHardwareAsync
-const mockedIsEnrolledAsync = <jest.MockedFunction<typeof isEnrolledAsync>>isEnrolledAsync
-const mockedAuthenticateAsync = <jest.MockedFunction<typeof authenticateAsync>>authenticateAsync
+const mockedHasHardwareAsync = <MockedFunction<typeof hasHardwareAsync>>hasHardwareAsync
+const mockedIsEnrolledAsync = <MockedFunction<typeof isEnrolledAsync>>isEnrolledAsync
+const mockedAuthenticateAsync = <MockedFunction<typeof authenticateAsync>>authenticateAsync
 
 describe(tryLocalAuthenticate, () => {
   it('checks hardware compatibility', async () => {

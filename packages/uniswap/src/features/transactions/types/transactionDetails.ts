@@ -70,7 +70,7 @@ export interface TransactionDetailsCore extends TransactionId {
 // Platform-specific extensions
 export interface InterfaceTransactionExtensions {
   /** EIP-5792 batch transaction tracking */
-  batchInfo?: { connectorId?: string; batchId: string; chainId: UniverseChainId }
+  batchInfo?: { connectorId?: string; batchId: string; chainId: UniverseChainId; planId?: string }
   /** Transaction deadline for cleanup */
   deadline?: number
 }

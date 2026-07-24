@@ -3,7 +3,7 @@ import isEqual from 'lodash/isEqual'
 import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { GQLNftAsset } from 'uniswap/src/features/nfts/types'
+import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { getNetworkWarning } from 'uniswap/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { DerivedSendInfo } from 'uniswap/src/features/transactions/send/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -81,13 +81,13 @@ const checkIsMissingRequiredParams = ({
   hasCurrencyBalance,
 }: {
   currencyInInfo: Maybe<CurrencyInfo>
-  nftIn?: GQLNftAsset
+  nftIn?: NFTItem | undefined
   chainId?: UniverseChainId
   recipient?: Address
   hasCurrencyAmount: boolean
   hasCurrencyBalance: boolean
 }): boolean => {
-  const tokenAddress = currencyInInfo ? currencyAddress(currencyInInfo.currency) : nftIn?.nftContract?.address
+  const tokenAddress = currencyInInfo ? currencyAddress(currencyInInfo.currency) : nftIn?.contractAddress
 
   if (!tokenAddress || !chainId || !recipient) {
     return true

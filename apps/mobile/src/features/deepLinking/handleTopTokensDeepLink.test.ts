@@ -9,35 +9,36 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { logger } from 'utilities/src/logger/logger'
+import type { Mocked } from 'vitest'
 
 // Mock the navigation ref
-jest.mock('src/app/navigation/navigationRef', () => ({
+vi.mock('src/app/navigation/navigationRef', () => ({
   exploreNavigationRef: {
     current: null,
   },
 }))
 
 // Mock the logger
-jest.mock('utilities/src/logger/logger', () => ({
+vi.mock('utilities/src/logger/logger', () => ({
   logger: {
-    error: jest.fn(),
+    error: vi.fn(),
   },
 }))
 
 // Mock the dismissAllModalsBeforeNavigation function
-jest.mock('src/features/deepLinking/utils', () => ({
-  dismissAllModalsBeforeNavigation: jest.fn(),
+vi.mock('src/features/deepLinking/utils', () => ({
+  dismissAllModalsBeforeNavigation: vi.fn(),
 }))
 
 describe('handleTopTokensDeepLink', () => {
   const unichainExploreUrl = 'https://app.uniswap.org/explore/tokens/unichain'
   const unichainChainId = UniverseChainId.Unichain
 
-  const mockedExploreNavigationRef = exploreNavigationRef as jest.Mocked<typeof exploreNavigationRef>
-  const mockedLogger = logger as jest.Mocked<typeof logger>
+  const mockedExploreNavigationRef = exploreNavigationRef as Mocked<typeof exploreNavigationRef>
+  const mockedLogger = logger as Mocked<typeof logger>
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     // Reset navigation ref state
     mockedExploreNavigationRef.current = null
   })
@@ -103,8 +104,8 @@ describe('handleTopTokensDeepLink', () => {
 
   it('should use exploreNavigationRef when it is focused', async () => {
     // Setup the navigation ref to be focused
-    const mockNavigate = jest.fn()
-    const mockIsFocused = jest.fn().mockReturnValue(true)
+    const mockNavigate = vi.fn()
+    const mockIsFocused = vi.fn().mockReturnValue(true)
     mockedExploreNavigationRef.current = {
       isFocused: mockIsFocused,
       navigate: mockNavigate,
@@ -150,10 +151,10 @@ describe('handleTopTokensDeepLink', () => {
     it('should continue execution when exploreNavigationRef.navigate throws error and log it', async () => {
       // Setup the navigation ref to be focused and throw an error
       const navError = new Error('Navigation ref failed')
-      const mockNavigate = jest.fn().mockImplementation(() => {
+      const mockNavigate = vi.fn().mockImplementation(() => {
         throw navError
       })
-      const mockIsFocused = jest.fn().mockReturnValue(true)
+      const mockIsFocused = vi.fn().mockReturnValue(true)
       mockedExploreNavigationRef.current = {
         isFocused: mockIsFocused,
         navigate: mockNavigate,

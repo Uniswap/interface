@@ -1,3 +1,27 @@
+diff --git a/node_modules/react-native/.bun-tag-97d367fa370bdd1b b/.bun-tag-97d367fa370bdd1b
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/ReactCommon/react/renderer/components/view/YogaLayoutableShadowNode.cpp b/ReactCommon/react/renderer/components/view/YogaLayoutableShadowNode.cpp
+index bd327efc351234daee2ca569f2bd52fc0079c6ad..3b69d45a24fb8ab44a742576b6dc6dcb16199fa8 100644
+--- a/ReactCommon/react/renderer/components/view/YogaLayoutableShadowNode.cpp
++++ b/ReactCommon/react/renderer/components/view/YogaLayoutableShadowNode.cpp
+@@ -699,6 +699,16 @@ void YogaLayoutableShadowNode::layout(LayoutContext layoutContext) {
+     react_native_assert(&childNode.yogaNode_ == childYogaNode);
+ 
+     if (childYogaNode->getHasNewLayout()) {
++      // A child yoga node owned by another tree generation is shared, not
++      // ours to consume: reading it here (and clearing hasNewLayout below)
++      // steals the layout notification from the owning tree, which then never
++      // applies metrics — views render invisible while React state stays
++      // mounted. Skip it and let the owning generation deliver the layout.
++      // Upstream: https://github.com/facebook/react-native/issues/52349
++      if (YGNodeGetOwner(childYogaNode) != &yogaNode_) {
++        continue;
++      }
++
+       childYogaNode->setHasNewLayout(false);
+ 
+       // Reading data from a dirtied node does not make sense.
 diff --git a/sdks/hermes-engine/hermes-engine.podspec b/sdks/hermes-engine/hermes-engine.podspec
 index 58e003985c6dc3cd664d434339bf68ec09bce5bd..30f3ef2f9ed76f5002274a3aaaa29058e4f0d8aa 100644
 --- a/sdks/hermes-engine/hermes-engine.podspec

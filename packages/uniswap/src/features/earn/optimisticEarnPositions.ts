@@ -6,10 +6,22 @@ import { EarnAction, type EarnPositionInfo, type EarnVaultInfo } from 'uniswap/s
 import { getEarnVaultId } from 'uniswap/src/features/earn/utils'
 import { uuid } from 'utilities/src/primitives/uuid'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { create } from 'zustand'
 
-const OPTIMISTIC_EARN_POSITION_TTL_MS = 60_000
-const EARN_POSITION_QUERY_REPOLL_DELAYS_MS = [0, 2_000, 6_000, 15_000, 30_000] as const
+// Earn indexing can take more than two minutes after an onchain success. Keep the confirmed
+// transaction's optimistic position visible while bounded repolls reconcile with the API.
+const OPTIMISTIC_EARN_POSITION_TTL_MS = 5 * ONE_MINUTE_MS
+const EARN_POSITION_QUERY_REPOLL_DELAYS_MS = [
+  0,
+  2_000,
+  6_000,
+  15_000,
+  30_000,
+  ONE_MINUTE_MS,
+  2 * ONE_MINUTE_MS,
+  4 * ONE_MINUTE_MS,
+] as const
 const EARN_POSITION_USD_EPSILON = 0.01
 
 type EarnVaultPositionMetadata = Pick<EarnVaultInfo, 'chainId' | 'vaultAddress'> &
@@ -20,6 +32,14 @@ export type OptimisticEarnPositionUpdate = {
   action: EarnAction
   createdAtMs: number
   depositedUsd: number
+  /**
+   * The API-reported `sharesRaw` before this chain of optimistic actions began. Shares only move
+   * when a transaction is indexed, so this is the catch-up signal — `depositedUsd` drifts with
+   * prices/slippage/fees and can never reach the synthetic target. Inherited from the prior
+   * active update when one exists, because the caller's position may already be optimistically
+   * overlaid (a withdraw overlay zeroes `sharesRaw`).
+   */
+  baselineSharesRaw: string
   walletAddress: string
   vaultAddress: string
   vaultChainId: UniverseChainId
@@ -54,6 +74,7 @@ export const useOptimisticEarnPositionStore = create<OptimisticEarnPositionStore
 
 function addOptimisticEarnPositionUpdate({
   action,
+  baselineSharesRaw,
   depositedUsd,
   queryClient,
   ttlMs = OPTIMISTIC_EARN_POSITION_TTL_MS,
@@ -61,6 +82,7 @@ function addOptimisticEarnPositionUpdate({
   walletAddress,
 }: {
   action: EarnAction
+  baselineSharesRaw: string
   depositedUsd: number
   queryClient: QueryClient
   ttlMs?: number
@@ -73,6 +95,7 @@ function addOptimisticEarnPositionUpdate({
     action,
     createdAtMs: Date.now(),
     depositedUsd: Math.max(depositedUsd, 0),
+    baselineSharesRaw,
     walletAddress: normalizeTokenAddressForCache(walletAddress),
     vaultAddress: normalizeTokenAddressForCache(vault.vaultAddress),
     vaultChainId: vault.chainId,
@@ -129,8 +152,18 @@ export function applyEarnPositionChangeOptimistically({
         ? 0
         : Math.max(currentDepositedUsd - amountUsd, 0)
 
+  // `currentPosition` may already be optimistically overlaid (e.g. a masking withdraw zeroes
+  // `sharesRaw`), so an active update's baseline — captured when the API position was last
+  // authoritative — is preferred over the caller's position.
+  const activeUpdate = getLatestMatchingUpdate({
+    updatesById: useOptimisticEarnPositionStore.getState().updatesById,
+    vault,
+    walletAddress,
+  })
+
   addOptimisticEarnPositionUpdate({
     action,
+    baselineSharesRaw: activeUpdate?.baselineSharesRaw ?? currentPosition?.sharesRaw ?? '0',
     depositedUsd: nextDepositedUsd,
     queryClient,
     vault,
@@ -324,11 +357,31 @@ function hasApiCaughtUp({
     return update.action === EarnAction.Withdraw
   }
 
+  // Shares move only when the transaction is indexed, so a directional change from the
+  // chain-origin baseline is the reconciliation signal. Once shares move the update stays
+  // retired — a later USD price move can't reapply it. The synthetic USD target can't do either:
+  // indexing below it (price movement, slippage, fees) would mask the API value until the TTL.
+  const sharesComparison = compareRawBalances(position.sharesRaw, update.baselineSharesRaw)
+  if (sharesComparison !== undefined) {
+    return update.action === EarnAction.Deposit ? sharesComparison > 0 : sharesComparison < 0
+  }
+
+  // Unparsable share balances — fall back to the USD target.
   if (update.action === EarnAction.Deposit) {
     return position.depositedUsd >= update.depositedUsd - EARN_POSITION_USD_EPSILON
   }
 
   return position.depositedUsd <= update.depositedUsd + EARN_POSITION_USD_EPSILON
+}
+
+function compareRawBalances(a: string, b: string): -1 | 0 | 1 | undefined {
+  try {
+    const aRaw = BigInt(a)
+    const bRaw = BigInt(b)
+    return aRaw === bRaw ? 0 : aRaw > bRaw ? 1 : -1
+  } catch {
+    return undefined
+  }
 }
 
 function getVaultPositionId(vault: EarnVaultPositionMetadata): string {

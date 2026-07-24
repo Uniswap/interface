@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Mobile App",
   "extends": "../../config/tsconfig/expo.json",
-  "exclude": [".storybook/storybook.requires.ts", "oxlint.config.ts"],
+  "exclude": [".storybook/storybook.requires.ts", "oxlint.config.ts", "vitest*"],
   "references": [
     {
       "path": "../../packages/tailwind"
@@ -45,10 +45,13 @@
     },
     {
       "path": "../../packages/uniswap"
+    },
+    {
+      "path": "../../config/vitest-presets"
     }
   ],
   "compilerOptions": {
-    "types": ["jest", "node"],
+    "types": ["node", "vitest/globals"],
     "paths": {
       "src/*": ["./src/*"]
     }

@@ -13,6 +13,7 @@ interface BalanceTabProps {
   /** Lifetime earnings sourced separately from the balance so it can fail on its own. */
   lifetimeEarningsUsd?: number
   lifetimeEarningsError?: boolean
+  showActionButtons?: boolean
 }
 
 export function BalanceTab({
@@ -22,6 +23,7 @@ export function BalanceTab({
   onWithdraw,
   lifetimeEarningsUsd,
   lifetimeEarningsError = false,
+  showActionButtons = true,
 }: BalanceTabProps): JSX.Element {
   const { t } = useTranslation()
   const { formatPercent, formatNumberOrString } = useLocalizationContext()
@@ -31,7 +33,7 @@ export function BalanceTab({
 
   return (
     <Flex gap="$spacing16">
-      <Flex gap="$spacing16">
+      <Flex gap="$spacing16" px="$spacing4">
         <BalanceRow
           label={t('explore.earn.vault.deposited')}
           value={
@@ -57,30 +59,33 @@ export function BalanceTab({
               <RewardsUnavailableIndicator />
             ) : (
               // Show '-' rather than coercing undefined to 0 (would read as a real zero).
+              // Earnings are always framed as positive gains, so never render a minus sign.
               <Text variant="body2" color="$statusSuccess">
-                {resolvedLifetimeEarnings === undefined ? '-' : formatFiat(resolvedLifetimeEarnings)}
+                {resolvedLifetimeEarnings === undefined ? '-' : formatFiat(Math.abs(resolvedLifetimeEarnings))}
               </Text>
             )
           }
         />
       </Flex>
 
-      <Flex row gap="$spacing8">
-        <Button fill={false} emphasis="tertiary" size="large" flex={1} isDisabled={!canWithdraw} onPress={onWithdraw}>
-          {t('explore.earn.vault.withdraw')}
-        </Button>
-        <Button fill={false} variant="branded" emphasis="primary" size="large" flex={1} onPress={onDeposit}>
-          {t('explore.earn.vault.deposit')}
-        </Button>
-      </Flex>
+      {showActionButtons && (
+        <Flex row gap="$spacing8">
+          <Button fill={false} emphasis="secondary" size="large" flex={1} disabled={!canWithdraw} onPress={onWithdraw}>
+            {t('explore.earn.vault.withdraw')}
+          </Button>
+          <Button fill={false} emphasis="primary" size="large" flex={1} onPress={onDeposit}>
+            {t('explore.earn.vault.deposit')}
+          </Button>
+        </Flex>
+      )}
     </Flex>
   )
 }
 
 function BalanceRow({ label, value }: { label: string; value: React.ReactNode }): JSX.Element {
   return (
-    <Flex row alignItems="center" justifyContent="space-between" px="$spacing6">
-      <Text variant="body2" color="$neutral1">
+    <Flex row alignItems="center" justifyContent="space-between">
+      <Text variant="body2" color="$neutral2">
         {label}
       </Text>
       {value}

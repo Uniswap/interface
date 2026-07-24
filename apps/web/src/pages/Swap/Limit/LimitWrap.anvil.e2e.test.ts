@@ -45,6 +45,25 @@ test.describe(
       const wethBefore = await anvil.getErc20Balance(wethAddress, TEST_WALLET_ADDRESS)
       await page.getByTestId(TestID.SubmitOrderButton).click()
 
+      // needsWrap only resolves true AFTER the /quote for the typed amount returns
+      // (usdCostPerGas, useLimitOrderTrade -> getWrapInfo) plus a WETH-deposit gas
+      // estimate against the fork — a full roundtrip that races this test's fast
+      // confirm click (the market-price quote alone enables the button). Until it
+      // resolves, the trade carries needsWrap:false and confirming would sign the
+      // order immediately, skipping the wrap step. The review modal's Network cost
+      // is wrap-gas-only for limit trades ("$0" until needsWrap flips true), so wait
+      // for the real estimate before confirming.
+      // The row's text is the label directly followed by the fiat value ("Network cost$0",
+      // then "Network cost<$0.01" once the estimate lands) — anchoring on the value keeps
+      // this from matching the bare label or the tooltip copy ("Network cost is paid...").
+      // The char class must cover BOTH states or the row stops matching after the flip.
+      const networkCostRow = page.getByText(/^Network cost[<$]/)
+      // Guard first: a negative assertion alone could pass before the modal renders.
+      await expect(networkCostRow).toBeVisible()
+      // 30s: the flip can wait on the app's next quote poll (~12.5s cycle) plus an
+      // estimateGas roundtrip, which can exceed the 15s default expect timeout.
+      await expect(networkCostRow).not.toHaveText(/^Network cost\$0$/, { timeout: 30_000 })
+
       // The wrap deposit is sent fee-less. Pin an ample base fee so the filled
       // maxFeePerGas clears the (~1 gwei) tip and the deposit is accepted.
       const FORK_BASE_FEE = 100_000_000_000n // 100 gwei

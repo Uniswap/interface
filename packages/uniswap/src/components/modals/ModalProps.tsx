@@ -42,6 +42,8 @@ export type ModalProps = PropsWithChildren<{
   isModalOpen?: boolean
   analyticsProperties?: Record<string, unknown>
   skipLogImpression?: boolean
+  // web-only: skips Tamagui's built-in scroll lock for callers that already manage their own
+  disableRemoveScroll?: boolean
 
   // TODO MOB-2526 refactor Modal to more platform-agnostic
   alignment?: 'center' | 'top'

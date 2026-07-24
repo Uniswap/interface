@@ -99,6 +99,10 @@ function useSectionTitle(section: OnchainItemSectionName): string {
       return t('explore.search.section.wallets')
     case OnchainItemSectionName.FavoriteWallets:
       return t('explore.wallets.favorite.title.default')
+    case OnchainItemSectionName.TopAuctions:
+      return t('explore.search.section.topAuctions')
+    case OnchainItemSectionName.Auctions:
+      return t('explore.search.section.auctions')
     case OnchainItemSectionName.SuggestedTokens: // no suggested tokens header
       return ''
     case OnchainItemSectionName.Stocks:
@@ -135,6 +139,10 @@ function getSectionIcon(section: OnchainItemSectionName): JSX.Element | null {
       return <Heart color="$neutral2" size="$icon.16" />
     case OnchainItemSectionName.Stocks:
       return <Briefcase color="$neutral2" size="$icon.16" />
+    case OnchainItemSectionName.TopAuctions:
+      return <TrendUp color="$neutral2" size="$icon.16" />
+    case OnchainItemSectionName.Auctions:
+      return <Coins color="$neutral2" size="$icon.16" />
     default:
       return null
   }

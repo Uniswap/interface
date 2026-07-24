@@ -1,4 +1,5 @@
 import type { AppTFunction } from 'ui/src/i18n/types'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { EarnInlineError } from 'uniswap/src/features/earn/EarnInlineError'
 import { useEarnInsufficientGasWarning } from 'uniswap/src/features/earn/hooks/useEarnInsufficientGasWarning'
 import { isEarnNoRoutesQuoteError } from 'uniswap/src/features/earn/quoteError'
@@ -9,14 +10,21 @@ export function EarnReviewBlockingMessage({
   hasQuoteError,
   insufficientGasWarning,
   quoteErrorMessage,
+  showTroubleshootingLink,
 }: {
   executionErrorMessage: string | undefined
   hasQuoteError: boolean
   insufficientGasWarning: ReturnType<typeof useEarnInsufficientGasWarning>
   quoteErrorMessage: string | undefined
+  showTroubleshootingLink: boolean
 }): JSX.Element | null {
   if (executionErrorMessage) {
-    return <EarnInlineError message={executionErrorMessage} />
+    return (
+      <EarnInlineError
+        message={executionErrorMessage}
+        learnMoreUrl={showTroubleshootingLink ? UniswapHelpUrls.articles.earnTroubleshooting : undefined}
+      />
+    )
   }
   if (hasQuoteError && quoteErrorMessage) {
     return <EarnInlineError message={quoteErrorMessage} />

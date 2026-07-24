@@ -21,6 +21,7 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -92,7 +93,10 @@ export function TokenDetailsLinks(): JSX.Element {
     return [initialSnap, '100%']
   }, [screenHeight])
 
-  const { homepageUrl, twitterName } = useTokenProjectUrlsPartsFragment({ currencyId }).data.project ?? {}
+  const projectUrls = useTokenProjectUrlsPartsFragment({ currencyId }).data.project
+  const { homepageUrl, twitterName } = useTokenMetadata(currencyId, {
+    legacyToken: { project: { homepageUrl: projectUrls?.homepageUrl, twitterName: projectUrls?.twitterName } },
+  })
 
   const explorerLink = getExplorerLink({ chainId, data: address, type: ExplorerDataType.TOKEN })
   const explorerName = getChainInfo(chainId).explorer.name

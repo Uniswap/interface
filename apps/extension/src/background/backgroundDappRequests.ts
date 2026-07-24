@@ -444,8 +444,9 @@ async function handleRequestAsync({
   const windowIdString = windowId.toString()
   const isSidebarActive = Boolean(windowIdToSidebarPortMap.get(windowIdString))
 
-  // Try to handle silently if sidebar is not active
-  if (!isSidebarActive) {
+  // Try to handle silently if sidebar is not active. ProviderDirect reads are always
+  // handled here — the sidebar has no UI for them and the dapp hangs on the response.
+  if (!isSidebarActive || message.type === DappRequestType.ProviderDirect) {
     const handled = await handleSilentBackgroundRequest(message, senderTabInfo)
     if (handled) {
       return

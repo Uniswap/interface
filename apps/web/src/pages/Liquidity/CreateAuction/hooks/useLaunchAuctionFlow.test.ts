@@ -58,7 +58,7 @@ vi.mock('~/utils/swapErrorToUserReadableMessage', async (importOriginal) => ({
 }))
 
 // Non-rejection launch failures now log to Datadog via logger.error (which calls console.error in tests).
-// Mock the logger so jest-fail-on-console doesn't fail; the launch-failure test asserts the log fires.
+// Mock the logger so the fail-on-console setup doesn't fail; the launch-failure test asserts the log fires.
 vi.mock('utilities/src/logger/logger', () => ({
   logger: { error: vi.fn(), debug: vi.fn(), warn: vi.fn(), info: vi.fn() },
 }))
@@ -78,11 +78,16 @@ vi.mock('~/utils/params/chainParams', async (importOriginal) => ({
   getChainUrlParam: () => 'ethereum',
 }))
 
-// Drives the launch transaction's on-chain status so we can exercise the confirmed vs. pending paths.
-const mockUseTransaction = vi.fn<(hash?: string) => { status: TransactionStatus } | undefined>()
+// Drives the launch transaction record so we can exercise confirmed vs. pending and explorer-hash paths.
+type MockLaunchRecord = {
+  status: TransactionStatus
+  hash?: string
+  batchInfo?: { batchId: string; chainId: number }
+}
+const mockUseTransaction = vi.fn<(hash?: string) => MockLaunchRecord | undefined>()
 vi.mock('~/state/transactions/hooks', async (importOriginal) => ({
   ...(await importOriginal<typeof import('~/state/transactions/hooks')>()),
-  useTransaction: (hash?: string) => mockUseTransaction(hash),
+  useTransactionByHashOrBatchId: (hash?: string) => mockUseTransaction(hash),
 }))
 
 function tx(overrides: Partial<ValidatedTransactionRequest> = {}): ValidatedTransactionRequest {
@@ -400,6 +405,64 @@ describe('useLaunchAuctionFlow', () => {
     mockUseTransaction.mockReturnValue({ status: TransactionStatus.Success })
     rerender()
     expect(mockNavigate).toHaveBeenCalledWith('/explore/auctions/ethereum/0xAuction')
+  })
+
+  describe('launchTxHash (explorer link)', () => {
+    const BATCH_ID = '0xe2171d07cbd863e0fd83f9b6e356027cbf1ba57edc4c1c00265fdf4b34ede2b8'
+    const TX_HASH = '0x193acd50c25089f7cb69c383db1c2d4d3b4a53b1f5c9a3f7f00fce54f5e4b18a'
+
+    async function launchWithRecord(record: MockLaunchRecord | undefined, successHash: string) {
+      mockUseTransaction.mockReturnValue(record)
+      const utils = setup({ onLaunch: vi.fn().mockResolvedValue(submitResult([tx()])) })
+      await openAndPrepare(utils.result)
+      await act(async () => {
+        await utils.result.current.handleLaunchToken()
+      })
+      act(() => lastSubmit?.onSuccess(successHash))
+      return utils
+    }
+
+    it('is undefined while an atomic batch has no real hash yet (record hash === batch id)', async () => {
+      const { result } = await launchWithRecord(
+        { status: TransactionStatus.Pending, hash: BATCH_ID, batchInfo: { batchId: BATCH_ID, chainId: 1 } },
+        BATCH_ID,
+      )
+      expect(result.current.launchTxHash).toBeUndefined()
+    })
+
+    it('uses the CAIP-345 hash when the wallet returned it with the batch id', async () => {
+      const { result } = await launchWithRecord(
+        { status: TransactionStatus.Pending, hash: TX_HASH, batchInfo: { batchId: BATCH_ID, chainId: 1 } },
+        BATCH_ID,
+      )
+      expect(result.current.launchTxHash).toBe(TX_HASH)
+    })
+
+    it('uses the hash the batch poller wrote once the batch confirms', async () => {
+      const { result, rerender } = await launchWithRecord(
+        { status: TransactionStatus.Pending, hash: BATCH_ID, batchInfo: { batchId: BATCH_ID, chainId: 1 } },
+        BATCH_ID,
+      )
+      expect(result.current.launchTxHash).toBeUndefined()
+
+      mockUseTransaction.mockReturnValue({
+        status: TransactionStatus.Success,
+        hash: TX_HASH,
+        batchInfo: { batchId: BATCH_ID, chainId: 1 },
+      })
+      rerender()
+      expect(result.current.launchTxHash).toBe(TX_HASH)
+    })
+
+    it('uses the transaction hash directly on the non-atomic path', async () => {
+      const { result } = await launchWithRecord({ status: TransactionStatus.Success, hash: TX_HASH }, TX_HASH)
+      expect(result.current.launchTxHash).toBe(TX_HASH)
+    })
+
+    it('is undefined when the transaction record cannot be found', async () => {
+      const { result } = await launchWithRecord(undefined, BATCH_ID)
+      expect(result.current.launchTxHash).toBeUndefined()
+    })
   })
 
   it('maps the active transaction to the correct progress step by reference (existing-token path)', async () => {

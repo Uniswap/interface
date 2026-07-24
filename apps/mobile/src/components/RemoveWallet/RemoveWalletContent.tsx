@@ -205,7 +205,7 @@ export const RemoveWalletContent = ({
           </>
         ) : (
           <Flex row gap={inProgress ? '$none' : '$spacing12'} pt="$spacing12">
-            <Button size="large" emphasis="tertiary" isDisabled={inProgress} onPress={handleOnClose}>
+            <Button size="large" emphasis="tertiary" disabled={inProgress} onPress={handleOnClose}>
               {t('common.button.cancel')}
             </Button>
 

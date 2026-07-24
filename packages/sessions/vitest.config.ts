@@ -9,6 +9,8 @@ export default defineConfig({
       '**/dist/**',
       // Exclude real backend integration tests - these run in a separate optional CI workflow
       '**/session.integration.test.ts',
+      '**/headlessSessionClient.integration.test.ts',
+      '**/sessionTransport.integration.test.ts',
     ],
     coverage: {
       exclude: ['**/__generated__/**', '**/node_modules/**', '**/dist/**', '**/*.config.*', '**/scripts/**'],

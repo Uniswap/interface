@@ -14,6 +14,7 @@ import {
   useGasFeeFormattedDisplayAmounts,
   useGasFeeHighRelativeToValue,
 } from 'uniswap/src/features/gas/hooks'
+import { useIncludesDelegationUpgrade } from 'uniswap/src/features/smartWallet/delegation/hooks/useIncludesDelegationUpgrade'
 import { SponsorshipCampaignInfo } from 'uniswap/src/features/transactions/swap/components/SponsorshipCampaignModal/SponsorshipCampaignModal'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isZero } from 'uniswap/src/utils/number'
@@ -48,6 +49,8 @@ export function NetworkFee({
     includesDelegation,
   })
 
+  const includesDelegationUpgrade = useIncludesDelegationUpgrade({ chainId, includesDelegation })
+
   const uniswapXGasFeeInfo = useFormattedUniswapXGasFeeInfo(uniswapXGasBreakdown, chainId)
   const isGasFeeFree = gasFee.value !== undefined && isZero(gasFee.value)
 
@@ -59,6 +62,7 @@ export function NetworkFee({
       <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
         <NetworkFeeWarning
           includesDelegation={includesDelegation}
+          includesDelegationUpgrade={includesDelegationUpgrade}
           gasFeeHighRelativeToValue={gasFeeHighRelativeToValue}
           uniswapXGasFeeInfo={uniswapXGasFeeInfo}
           chainId={chainId}
@@ -105,7 +109,9 @@ export function NetworkFee({
       </Flex>
       {includesDelegation && (
         <Text color="$neutral3" variant="body4">
-          {t('swap.warning.networkFee.includesDelegation')}
+          {includesDelegationUpgrade
+            ? t('swap.warning.networkFee.includesSmartWalletUpdate')
+            : t('swap.warning.networkFee.includesDelegation')}
         </Text>
       )}
     </Flex>

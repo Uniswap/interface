@@ -154,7 +154,7 @@ export function EmailEntryStep({
             variant={isValidEmail ? 'branded' : 'default'}
             size="large"
             onPress={handleSendCode}
-            isDisabled={!isValidEmail || isLoading}
+            disabled={!isValidEmail || isLoading}
           >
             {t('common.button.continue')}
           </Button>

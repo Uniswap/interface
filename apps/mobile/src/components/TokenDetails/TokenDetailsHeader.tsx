@@ -15,6 +15,7 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
 import { selectHasViewedContractAddressExplainer } from 'uniswap/src/features/behaviorHistory/selectors'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { isMultichainProjectTokens } from 'uniswap/src/features/dataApi/tokenProjects/utils/isMultichainProjectTokens'
 import { getRWAHeaderIdentity } from 'uniswap/src/features/rwa/getRWAHeaderIdentity'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -32,6 +33,9 @@ export const TokenDetailsHeader = memo(function TokenDetailsHeaderInner(): JSX.E
   const rwaMatch = useGatedTokenDetailsRWAMatch(FeatureFlags.RWATdp)
   const token = useTokenBasicInfoPartsFragment({ currencyId }).data
   const project = useTokenBasicProjectPartsFragment({ currencyId }).data.project
+  const metadata = useTokenMetadata(currencyId, {
+    legacyToken: { name: token.name, symbol: token.symbol, project: { logoUrl: project?.logoUrl } },
+  })
   const projectTokensLoaded = project?.tokens !== undefined
   // Gate out unlaunched chains (e.g. Arc/Robinhood) so they don't drive multichain UI on the header.
   const featureFlaggedProjectTokens = useFeatureFlaggedProjectTokens(project?.tokens)
@@ -45,8 +49,8 @@ export const TokenDetailsHeader = memo(function TokenDetailsHeaderInner(): JSX.E
   const shouldWaitForProject = initialIsMultichainAsset && !projectTokensLoaded
   const { name: tokenName, logoUrl } = getRWAHeaderIdentity({
     rwaMatch,
-    fallbackName: token.name ?? undefined,
-    logoUrl: project?.logoUrl ?? undefined,
+    fallbackName: metadata.name ?? undefined,
+    logoUrl: metadata.logoUrl ?? undefined,
   })
 
   const handleCopyAddress = async (): Promise<void> => {
@@ -73,7 +77,7 @@ export const TokenDetailsHeader = memo(function TokenDetailsHeaderInner(): JSX.E
         chainId={fromGraphQLChain(token.chain) ?? undefined}
         hideNetworkLogo={isMultichainToken || !!rwaMatch}
         name={tokenName ?? undefined}
-        symbol={rwaMatch?.asset.symbol ?? token.symbol ?? undefined}
+        symbol={rwaMatch?.asset.symbol ?? metadata.symbol ?? undefined}
         url={logoUrl}
         size={iconSizes.icon48}
       />
@@ -119,7 +123,7 @@ export const TokenDetailsHeader = memo(function TokenDetailsHeaderInner(): JSX.E
                   testID={TestID.TokenDetailsHeaderText}
                   variant="body3"
                 >
-                  {token.symbol?.toUpperCase() || EM_DASH}
+                  {metadata.symbol?.toUpperCase() || EM_DASH}
                 </Text>
                 {token.address && <CopyAlt color="$neutral3" size="$icon.16" alignSelf="center" />}
               </TouchableArea>

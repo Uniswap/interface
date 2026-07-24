@@ -68,7 +68,7 @@ function usePages(): Array<Page> {
       loggingElementName: ElementName.ExploreTokensTab,
     },
     {
-      title: t('toucan.auctions'),
+      title: t('common.auctions'),
       key: ExploreTab.Toucan,
       component: ToucanTable,
       loggingElementName: ElementName.ExploreAuctionsTab,

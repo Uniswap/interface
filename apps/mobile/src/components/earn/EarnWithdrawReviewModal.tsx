@@ -1,10 +1,10 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import { useAppStackNavigation } from 'src/app/navigation/types'
+import { renderEarnReviewSheetLayout } from 'src/components/earn/EarnReviewSheetLayout'
 import type { EarnWithdrawReviewModalProps } from 'src/components/earn/EarnWithdrawReviewModalState'
 import { useEarnExecuteCallback } from 'src/components/earn/hooks/useEarnExecuteCallback'
 import { useEarnReviewModalHandlers } from 'src/components/earn/hooks/useEarnReviewModalHandlers'
-import { Flex } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import type { BaseModalProps } from 'uniswap/src/components/modals/ModalProps'
 import { applyEarnPositionChangeOptimistically } from 'uniswap/src/features/earn/optimisticEarnPositions'
@@ -87,24 +87,25 @@ export function EarnWithdrawReviewModal({
   }
 
   return (
-    <Modal name={ModalName.EarnWithdrawReview} isModalOpen={isOpen} onClose={handleClose}>
-      <Flex gap="$spacing16" px="$spacing16" pb="$spacing16">
-        <WithdrawReviewView
-          analyticsEntryPoint={analyticsEntryPoint}
-          analyticsSurface="mobile"
-          vault={vault}
-          position={position}
-          amount={amount}
-          chainId={chainId}
-          destinationCurrencyId={destinationCurrencyId}
-          withdrawMode={withdrawMode}
-          onBack={handleBack}
-          onClose={handleClose}
-          onWithdraw={handleClose}
-          onExecuteWithdraw={handleExecuteWithdraw}
-          onExecutionFailure={handleExecutionFailure}
-        />
-      </Flex>
+    // overrideInnerContainer: the review layout renders its own BottomSheetView so the action row
+    // can live in a pinned footer overlay (see renderEarnReviewSheetLayout).
+    <Modal overrideInnerContainer name={ModalName.EarnWithdrawReview} isModalOpen={isOpen} onClose={handleClose}>
+      <WithdrawReviewView
+        renderLayout={renderEarnReviewSheetLayout}
+        analyticsEntryPoint={analyticsEntryPoint}
+        analyticsSurface="mobile"
+        vault={vault}
+        position={position}
+        amount={amount}
+        chainId={chainId}
+        destinationCurrencyId={destinationCurrencyId}
+        withdrawMode={withdrawMode}
+        onBack={handleBack}
+        onClose={handleClose}
+        onWithdraw={handleClose}
+        onExecuteWithdraw={handleExecuteWithdraw}
+        onExecutionFailure={handleExecutionFailure}
+      />
     </Modal>
   )
 }

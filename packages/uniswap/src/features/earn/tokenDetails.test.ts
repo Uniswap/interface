@@ -13,13 +13,14 @@ const earnVault: EarnVaultInfo = {
   chainId: 1,
   apyPercent: 4,
   exposureCurrencyIds: [],
+  exposures: [],
   totalDepositsUsd: 0,
   liquidityUsd: 0,
   curator: { name: 'Gauntlet' },
 }
 
 describe(shouldShowTokenDetailsEarnBanner, () => {
-  it('shows when a disconnected viewer opens a token details page with an earn vault', () => {
+  it('hides for disconnected viewers', () => {
     expect(
       shouldShowTokenDetailsEarnBanner({
         earnVault,
@@ -27,7 +28,15 @@ describe(shouldShowTokenDetailsEarnBanner, () => {
         isLoggedIn: false,
         userHasEarnPosition: false,
       }),
-    ).toBe(true)
+    ).toBe(false)
+    expect(
+      shouldShowTokenDetailsEarnBanner({
+        earnVault,
+        hasLoadedPositions: true,
+        isLoggedIn: false,
+        userHasEarnPosition: false,
+      }),
+    ).toBe(false)
   })
 
   it('waits for connected viewer positions before showing the no-position banner', () => {

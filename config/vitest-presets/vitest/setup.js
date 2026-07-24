@@ -34,8 +34,10 @@ vi.mock('@react-native-async-storage/async-storage', () => ({
 }))
 
 // Mock redux-persist due to type issue in CI
-vi.mock('redux-persist', () => {
-  const real = vi.importActual('redux-persist')
+vi.mock('redux-persist', async (importOriginal) => {
+  // await is required: spreading the promise returned by a non-awaited import drops every real
+  // export (mobile's store needs persistStore)
+  const real = await importOriginal()
   return {
     ...real,
     persistReducer: vi.fn().mockImplementation((config, reducers) => reducers),
@@ -68,6 +70,7 @@ vi.mock('@amplitude/analytics-react-native', () => ({
 vi.mock('react-native/Libraries/EventEmitter/NativeEventEmitter')
 
 // Mock React Native Device Info
+// (includes the bundle/version getters @universe/environment's env.native.ts reads at import time)
 vi.mock('react-native-device-info', () => ({
   default: {
     getDeviceId: vi.fn(() => 'test-device-id'),
@@ -75,7 +78,14 @@ vi.mock('react-native-device-info', () => ({
     getBrand: vi.fn(() => 'test-brand'),
     getSystemName: vi.fn(() => 'test-system'),
     getSystemVersion: vi.fn(() => '1.0'),
+    getBundleId: vi.fn(() => 'com.test.bundle'),
+    getVersion: vi.fn(() => '1.0.0'),
+    getBuildNumber: vi.fn(() => '1'),
+    getUniqueId: vi.fn(() => Promise.resolve('test-unique-id')),
+    getUniqueIdSync: vi.fn(() => 'test-unique-id'),
   },
+  getUniqueId: vi.fn(() => Promise.resolve('test-unique-id')),
+  getUniqueIdSync: vi.fn(() => 'test-unique-id'),
 }))
 
 // mock initProviders to avoid creating real ethers providers for each test

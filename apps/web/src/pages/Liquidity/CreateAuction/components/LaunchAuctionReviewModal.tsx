@@ -243,7 +243,7 @@ export function LaunchAuctionReviewModal({
                 fill
                 backgroundColor={isLaunchButtonBusy ? undefined : tokenColor}
                 loading={isLaunchButtonBusy}
-                isDisabled={isLaunchButtonBusy || !hasAcknowledgedCompliance}
+                disabled={isLaunchButtonBusy || !hasAcknowledgedCompliance}
                 onPress={onLaunchToken}
               >
                 {t('toucan.createAuction.launchAuction')}

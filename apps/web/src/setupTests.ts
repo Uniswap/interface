@@ -22,7 +22,7 @@ beforeEach(() => {
 // oxlint-disable-next-line
 import './test-utils/mockTamagui' // mock problematic Tamagui components
 import { Readable } from 'stream'
-import { TextDecoder, TextEncoder } from 'util'
+import { format, TextDecoder, TextEncoder } from 'util'
 import { type createPopper } from '@popperjs/core'
 import {
   BaseWalletAdapter,
@@ -33,7 +33,6 @@ import {
 import { useFeatureFlag } from '@universe/gating'
 import { useWeb3React } from '@web3-react/core'
 import { config as loadEnv } from 'dotenv'
-import failOnConsole from 'jest-fail-on-console'
 import { disableNetConnect, restore as restoreNetConnect } from 'nock'
 import React from 'react'
 import { type UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -419,56 +418,106 @@ vi.mock('~/state/routing/slice', async () => {
  * })
  */
 
-failOnConsole({
-  shouldFailOnAssert: true,
-  shouldFailOnDebug: true,
-  shouldFailOnError: true,
-  shouldFailOnInfo: true,
-  shouldFailOnLog: true,
-  shouldFailOnWarn: true,
-  allowMessage: (message, type) => {
-    if (type === 'error') {
-      // TODO(TAM-47): remove this allowed warning once Tamagui is upgraded >= 1.100
-      if (message.startsWith('[moti]: Invalid transform value.')) {
-        return true
-      }
-      // Allow React key warnings from Trans component (react-i18next v14 issue)
-      if (
-        message.includes('Each child in a list should have a unique') &&
-        (message.includes('Trans') ||
-          message.includes('UniswapXDescription') ||
-          message.includes('SwapPreview') ||
-          message.includes('LimitOrderPreview') ||
-          message.includes('LimitPriceInputLabel'))
-      ) {
-        return true
-      }
-      // Nuances from tamagui causing issues with React 19
-      if (message.includes('React does not recognize the') && message.includes('prop on a DOM element')) {
-        // This is coming from tamagui passing through props to the DOM element
-        return true
-      }
+const FAIL_ON_CONSOLE_METHODS = ['assert', 'debug', 'error', 'info', 'log', 'warn'] as const
+type FailOnConsoleMethod = (typeof FAIL_ON_CONSOLE_METHODS)[number]
 
-      if (message.includes('Received') && message.includes('for a non-boolean attribute')) {
-        return true
-      }
-
-      if (message.includes('Invalid attribute name')) {
-        return true
-      }
-
-      if (message.includes('Unknown event handler property')) {
-        return true
-      }
+const allowMessage = (message: string, type: FailOnConsoleMethod): boolean => {
+  if (type === 'error') {
+    // TODO(TAM-47): remove this allowed warning once Tamagui is upgraded >= 1.100
+    if (message.startsWith('[moti]: Invalid transform value.')) {
+      return true
     }
-    if (type === 'warn') {
-      // Allow UniversalImage warnings about not being able to retrieve remote images in test environment
-      if (message.includes('Could not retrieve and format remote image for uri')) {
-        return true
-      }
+    // Allow React key warnings from Trans component (react-i18next v14 issue)
+    if (
+      message.includes('Each child in a list should have a unique') &&
+      (message.includes('Trans') ||
+        message.includes('UniswapXDescription') ||
+        message.includes('SwapPreview') ||
+        message.includes('LimitOrderPreview') ||
+        message.includes('LimitPriceInputLabel'))
+    ) {
+      return true
     }
-    return false
-  },
+    // Nuances from tamagui causing issues with React 19
+    if (message.includes('React does not recognize the') && message.includes('prop on a DOM element')) {
+      // This is coming from tamagui passing through props to the DOM element
+      return true
+    }
+
+    if (message.includes('Received') && message.includes('for a non-boolean attribute')) {
+      return true
+    }
+
+    if (message.includes('Invalid attribute name')) {
+      return true
+    }
+
+    if (message.includes('Unknown event handler property')) {
+      return true
+    }
+  }
+  if (type === 'warn') {
+    // Allow UniversalImage warnings about not being able to retrieve remote images in test environment
+    if (message.includes('Could not retrieve and format remote image for uri')) {
+      return true
+    }
+    // Allow RTK dev-check middleware perf warnings — CI-load-dependent, not correctness signals (real violations throw)
+    if (message.includes('Middleware took') && message.includes('warning threshold')) {
+      return true
+    }
+  }
+  return false
+}
+
+// Hand-rolled replacement for jest-fail-on-console, mirroring its behavior:
+// each console method is patched in beforeEach and restored in afterEach; disallowed calls are
+// captured (with their stacks) rather than thrown immediately — so accidental try/catch can't
+// suppress them — and the test is failed in afterEach.
+const originalConsoleMethods = Object.fromEntries(
+  FAIL_ON_CONSOLE_METHODS.map((method) => [method, console[method]]),
+) as Record<FailOnConsoleMethod, (...args: unknown[]) => void>
+
+let unexpectedConsoleCalls: Array<{ method: FailOnConsoleMethod; message: string; stack: string }> = []
+
+beforeEach(() => {
+  unexpectedConsoleCalls = []
+  for (const method of FAIL_ON_CONSOLE_METHODS) {
+    const originalMethod = originalConsoleMethods[method]
+    console[method] = (...args: unknown[]): void => {
+      // console.assert only logs when the assertion is falsy
+      if (method === 'assert') {
+        const [assertion, ...rest] = args
+        if (assertion) {
+          return
+        }
+        args = rest
+      }
+      const message = format(...args)
+      if (allowMessage(message, method)) {
+        originalMethod(...args)
+        return
+      }
+      const { stack } = new Error()
+      unexpectedConsoleCalls.push({ method, message, stack: stack?.slice(stack.indexOf('\n') + 1) ?? '' })
+    }
+  }
+})
+
+afterEach(() => {
+  for (const method of FAIL_ON_CONSOLE_METHODS) {
+    console[method] = originalConsoleMethods[method]
+  }
+  if (unexpectedConsoleCalls.length > 0) {
+    const calls = unexpectedConsoleCalls
+    unexpectedConsoleCalls = []
+    const details = calls.map(({ method, message, stack }) => `console.${method}: ${message}\n${stack}`).join('\n\n')
+    const methods = [...new Set(calls.map(({ method }) => method))]
+    throw new Error(
+      `Expected test not to call ${methods.map((method) => `console.${method}()`).join(', ')}.\n\n` +
+        `If the call is expected, test for it explicitly by mocking it out using ` +
+        `vi.spyOn(console, '${methods[0]}').mockImplementation() and asserting that it occurs.\n\n${details}`,
+    )
+  }
 })
 
 vi.mock('@universe/gating', async (importOriginal) => {

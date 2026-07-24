@@ -169,7 +169,7 @@ export function PoolFinder() {
                 size="large"
                 emphasis="secondary"
                 mt="$gap32"
-                isDisabled={!hasPosition || success}
+                disabled={!hasPosition || success}
                 onPress={() => {
                   if (hasPosition && pair) {
                     addPair(pair)

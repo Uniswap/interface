@@ -5,7 +5,6 @@ import {
   createNotificationsApiClient,
   getEntryGatewayUrl,
   provideSessionService,
-  SESSION_INIT_QUERY_KEY,
   SharedQueryClient,
 } from '@universe/api'
 import { isE2eTestEnv, REQUEST_SOURCE } from '@universe/environment'
@@ -19,10 +18,10 @@ import {
   type NotificationDataSource,
   type NotificationService,
 } from '@universe/notifications'
+import { SESSION_INIT_QUERY_KEY } from '@universe/sessions'
 import ms from 'ms'
 import { useEffect, useMemo, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router'
-import { useIsDarkMode } from 'ui/src'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { mapLocaleToBackendLocale } from 'uniswap/src/features/language/constants'
@@ -48,7 +47,6 @@ import store from '~/state'
  * Creates the notification service with all necessary dependencies
  */
 function provideWebNotificationService(ctx: {
-  getIsDarkMode: () => boolean
   navigate: (path: string) => void
   getSwapInputChainId: () => UniverseChainId | undefined
   getBlockTimestamp: () => bigint | undefined
@@ -106,11 +104,9 @@ function provideWebNotificationService(ctx: {
     storage: createLocalStorageAdapter(),
   })
 
-  // Legacy banners that would conflict with the new notification system (Solana and Bridging)
+  // Migrates legacy banner dismissal state (Bridging) into the notification system
   const bannersDataSource = createLegacyBannersNotificationDataSource({
     tracker,
-    getIsDarkMode: ctx.getIsDarkMode,
-    pollIntervalMs: 10000,
   })
 
   // System alerts data source (chain connectivity, outages)
@@ -174,7 +170,6 @@ function provideWebNotificationService(ctx: {
  * Accepts the context needed to create the notification service
  */
 function getNotificationServiceQueryOptions(ctx: {
-  getIsDarkMode: () => boolean
   navigate: (path: string) => void
   getSwapInputChainId: () => UniverseChainId | undefined
   getBlockTimestamp: () => bigint | undefined
@@ -186,7 +181,6 @@ function getNotificationServiceQueryOptions(ctx: {
     queryKey: [ReactQueryCacheKey.NotificationService],
     queryFn: () =>
       provideWebNotificationService({
-        getIsDarkMode: ctx.getIsDarkMode,
         navigate: ctx.navigate,
         getSwapInputChainId: ctx.getSwapInputChainId,
         getBlockTimestamp: ctx.getBlockTimestamp,
@@ -206,9 +200,6 @@ export function WebNotificationServiceManager(): JSX.Element | null {
 
   // Don't show notifications on the landing page
   const shouldRenderNotifications = location.pathname !== '/'
-
-  // Get current values for banner conditions (using refs to avoid recreating system)
-  const isDarkMode = useIsDarkMode()
 
   // Hook values that need to be passed to system alerts data source
   const { swapInputChainId } = useUniswapContext()
@@ -246,7 +237,6 @@ export function WebNotificationServiceManager(): JSX.Element | null {
 
   const { data: notificationService } = useQuery(
     getNotificationServiceQueryOptions({
-      getIsDarkMode: () => isDarkMode,
       navigate: (path: string) => navigate(path),
       ...getters,
     }),

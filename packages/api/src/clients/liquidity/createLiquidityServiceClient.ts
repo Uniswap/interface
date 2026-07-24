@@ -21,6 +21,8 @@ import type {
   CreatePositionResponse,
   DecreasePositionRequest,
   DecreasePositionResponse,
+  HookListRequest,
+  HookListResponse,
   IncreasePositionRequest,
   IncreasePositionResponse,
   ListPoolsRequest,
@@ -61,6 +63,7 @@ export interface V2LiquidityServiceClient {
   createClassicPosition: (params: CreateClassicPositionRequest) => Promise<CreateClassicPositionResponse>
   createPosition: (params: CreatePositionRequest) => Promise<CreatePositionResponse>
   decreasePosition: (params: DecreasePositionRequest) => Promise<DecreasePositionResponse>
+  hookList: (params: HookListRequest) => Promise<HookListResponse>
   increasePosition: (params: IncreasePositionRequest) => Promise<IncreasePositionResponse>
   listPools: (params: PartialMessage<ListPoolsRequest>) => Promise<ListPoolsResponse>
 }
@@ -74,6 +77,7 @@ export function createV2LiquidityServiceClient({
     createClassicPosition: (params) => rpcClient.createClassicPosition(params),
     createPosition: (params) => rpcClient.createPosition(params),
     decreasePosition: (params) => rpcClient.decreasePosition(params),
+    hookList: (params) => rpcClient.hookList(params),
     increasePosition: (params) => rpcClient.increasePosition(params),
     listPools: (params) => rpcClient.listPools(params),
   }

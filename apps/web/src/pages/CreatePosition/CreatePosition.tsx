@@ -9,6 +9,7 @@ import { Button, Flex, styled, Text, TouchableArea } from 'ui/src'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
 import { zIndexes } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Deadline } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/deadline/Deadline/Deadline'
@@ -25,6 +26,7 @@ import { useLPSlippageValue } from '~/features/Liquidity/Create/hooks/useLPSlipp
 import { ResetCreatePositionFormModal } from '~/features/Liquidity/Create/ResetCreatePositionsFormModal'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from '~/features/Liquidity/Create/types'
 import { FeeTierSearchModal } from '~/features/Liquidity/FeeTierSearchModal'
+import { HookSearchModal } from '~/features/Liquidity/HookSearchModal'
 import { LPSettings } from '~/features/Liquidity/LPSettings'
 import { getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVersion'
 import {
@@ -71,7 +73,7 @@ interface ResetProps {
 const ResetButton = ({ onClickReset, isDisabled }: ResetProps) => {
   const { t } = useTranslation()
   return (
-    <Button size="small" emphasis="tertiary" onPress={onClickReset} isDisabled={isDisabled} icon={<RotateLeft />}>
+    <Button size="small" emphasis="tertiary" onPress={onClickReset} disabled={isDisabled} icon={<RotateLeft />}>
       {t('common.button.reset')}
     </Button>
   )
@@ -220,8 +222,11 @@ export const SharedCreateModals = () => {
     positionState: { fee: selectedFee, protocolVersion, hook },
     currencies,
     setPositionState,
+    setSelectedHookEntry,
     feeTierSearchModalOpen,
     setFeeTierSearchModalOpen,
+    hookSearchModalOpen,
+    setHookSearchModalOpen,
     setDynamicFeeTierSpeedbumpData,
   } = useCreateLiquidityContext()
   const { chainId } = useMultichainContext()
@@ -238,6 +243,31 @@ export const SharedCreateModals = () => {
         selectedFee={selectedFee}
         onSelectFee={(fee) => setPositionState((prev) => ({ ...prev, fee }))}
         onSelectDynamicFee={(fee) => setDynamicFeeTierSpeedbumpData({ open: true, wishFeeData: fee })}
+      />
+      <HookSearchModal
+        isOpen={hookSearchModalOpen}
+        onClose={() => setHookSearchModalOpen(false)}
+        // Hooks are chain-specific: use the chain of the tokens the user has selected, not the app-level chain
+        chainId={(currencies.display.TOKEN0?.chainId ?? currencies.display.TOKEN1?.chainId) as UniverseChainId}
+        selectedHook={hook}
+        onSelectHook={(entry) => {
+          // A different hook exposes a different set of pools/tiers, so drop the fee to let the
+          // fee-tier auto-select re-run (matches clear-hook / chain-change / recommended-hook).
+          setPositionState((prev) => ({
+            ...prev,
+            hook: entry.address,
+            fee: prev.hook === entry.address ? prev.fee : undefined,
+          }))
+          setSelectedHookEntry(entry)
+        }}
+        onSelectAddress={(address) => {
+          setPositionState((prev) => ({
+            ...prev,
+            hook: address,
+            fee: prev.hook === address ? prev.fee : undefined,
+          }))
+          setSelectedHookEntry(undefined)
+        }}
       />
       <DynamicFeeTierSpeedbump />
     </>

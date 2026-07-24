@@ -97,6 +97,8 @@ export function useRecentlySearchedOptions({
           return isPoolSearchHistoryResult(searchResult)
         case SearchTab.Wallets:
           return isWalletSearchHistoryResult(searchResult)
+        case SearchTab.Auctions:
+          return false // Auctions don't have search history yet
         default:
         case SearchTab.All:
           if (isMobileApp) {

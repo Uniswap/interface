@@ -22,7 +22,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { useAuctionLaunch } from '~/hooks/useAuctionLaunch'
 import { LaunchProgressStep } from '~/pages/Liquidity/CreateAuction/components/LaunchAuctionProgressIndicator'
 import type { CreateAuctionSubmitResult } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionSubmit'
-import { useTransaction } from '~/state/transactions/hooks'
+import { useTransactionByHashOrBatchId } from '~/state/transactions/hooks'
 import { coerceUnknownToError } from '~/utils/coerceUnknownToError'
 import { getChainUrlParam } from '~/utils/params/chainParams'
 import { didUserReject } from '~/utils/swapErrorToUserReadableMessage'
@@ -86,6 +86,8 @@ export interface LaunchAuctionFlow {
   handleCloseErrorModal: () => void
   handleRetry: () => void
   launchSuccess?: LaunchSuccess
+  /** Real on-chain launch tx hash for explorer links; undefined until known (atomic batches resolve with a batch id). */
+  launchTxHash?: string
   isSuccessModalOpen: boolean
   handleCloseSuccessModal: () => void
   handleViewAuction: () => void
@@ -128,8 +130,19 @@ export function useLaunchAuctionFlow({
 
   // Non-atomic launches resolve onSuccess only after confirmation, but atomic-batch wallets resolve
   // it while the launch is still pending — so track the real on-chain status before redirecting.
-  const launchTransaction = useTransaction(launchSuccess?.hash)
+  // Batch-aware lookup: confirmed batch records are rekeyed from batch id to on-chain hash.
+  const launchTransaction = useTransactionByHashOrBatchId(launchSuccess?.hash)
   const isLaunchConfirmed = launchTransaction?.status === TransactionStatus.Success
+
+  // Explorer-safe hash: a 5792 batch id is not a tx hash, so for batches only expose the record's
+  // hash once it diverges from the batch id (CAIP-345 at submit, or the batch poller on confirmation).
+  const launchTxHash = useMemo(() => {
+    const hash = launchTransaction?.hash
+    if (hash === undefined || hash === launchTransaction?.batchInfo?.batchId) {
+      return undefined
+    }
+    return hash
+  }, [launchTransaction])
 
   const resetProgress = useCallback(() => {
     setIsLaunching(false)
@@ -327,6 +340,7 @@ export function useLaunchAuctionFlow({
     handleCloseErrorModal,
     handleRetry,
     launchSuccess,
+    launchTxHash,
     isSuccessModalOpen,
     handleCloseSuccessModal,
     handleViewAuction,

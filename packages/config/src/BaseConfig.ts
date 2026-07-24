@@ -1,7 +1,7 @@
 // oxlint-disable eslint-js/no-restricted-syntax -- allow process.env access here
 import { AppId } from '@universe/config/src/AppId'
 import { boolIfDefined, boolFromOne, boolFromString, optionalString } from '@universe/config/src/commonSchemas'
-import { Environment, NodeEnv } from '@universe/config/src/Environment'
+import { Environment, NodeEnv, normalizeEnvironmentWireValue } from '@universe/config/src/Environment'
 import { z } from 'zod'
 
 /**
@@ -89,9 +89,8 @@ export const BaseConfigSchema = z.object({
   // Environment
   nodeEnv: z.enum(NodeEnv).default(NodeEnv.Development).describe('Node process runtime mode, defaults to development'),
   environment: z
-    .enum(Environment)
-    .default(Environment.Development)
-    .describe('Backend deployment environment, defaults to development'),
+    .preprocess(normalizeEnvironmentWireValue, z.enum(Environment).default(Environment.Development))
+    .describe('Backend deployment environment, defaults to development; accepts deployer short forms dev/prod'),
   isUnitTest: boolIfDefined.describe('Is the app running in a unit test (Jest or Vitest)'),
   isE2ETest: boolFromString.describe('Is the app running in E2E test mode'),
   isVercelEnvironment: boolFromOne.describe('Is the app deployed on Vercel'),

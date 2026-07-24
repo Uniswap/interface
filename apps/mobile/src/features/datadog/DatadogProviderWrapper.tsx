@@ -4,6 +4,7 @@ import {
   DatadogProvider,
   DdRum,
   type PartialInitializationConfiguration,
+  PropagatorType,
   SdkVerbosity,
   TrackingConsent,
   UploadFrequency,
@@ -47,6 +48,10 @@ const datadogAutoInstrumentation: AutoInstrumentationConfiguration = {
     trackErrors: isEnabled,
     trackInteractions: isEnabled,
     trackResources: isEnabled,
+    firstPartyHosts: [
+      { match: 'gateway.uniswap.org', propagatorTypes: [PropagatorType.DATADOG, PropagatorType.TRACECONTEXT] },
+      { match: 'api.uniswap.org', propagatorTypes: [PropagatorType.DATADOG, PropagatorType.TRACECONTEXT] },
+    ],
     errorEventMapper: (event: ReturnType<ErrorEventMapper>): ReturnType<ErrorEventMapper> | null => {
       const ignoredErrors = getDynamicConfigValue<
         DynamicConfigs.DatadogIgnoredErrors,

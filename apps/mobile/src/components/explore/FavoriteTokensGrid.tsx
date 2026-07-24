@@ -107,6 +107,7 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
         <Flex>
           <Sortable.Grid
             {...rest}
+            dimensionsAnimationType="layout"
             scrollableRef={listRef}
             data={visibleTokens}
             sortEnabled={isEditing}

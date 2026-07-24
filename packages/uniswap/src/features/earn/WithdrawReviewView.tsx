@@ -22,18 +22,24 @@ import {
   EarnReviewBlockingMessage,
   getEarnReviewHasBlockingError,
 } from 'uniswap/src/features/earn/EarnReviewBlockingMessage'
+import { EarnReviewLayout, type EarnReviewRenderLayout } from 'uniswap/src/features/earn/EarnReviewLayout'
 import { getEarnTradingApiErrorDetail, getEarnWithdrawErrorMessage } from 'uniswap/src/features/earn/errors'
 import { useEarnInsufficientGasWarning } from 'uniswap/src/features/earn/hooks/useEarnInsufficientGasWarning'
 import { useEarnNetworkCostLabel } from 'uniswap/src/features/earn/hooks/useEarnNetworkCostLabel'
 import { useEarnReviewAnalytics } from 'uniswap/src/features/earn/hooks/useEarnReviewAnalytics'
 import { useEarnReviewExecutionHandlers } from 'uniswap/src/features/earn/hooks/useEarnReviewExecutionHandlers'
-import { getEarnExecutionErrorMessage } from 'uniswap/src/features/earn/planExecution'
+import {
+  getEarnExecutionErrorMessage,
+  shouldShowEarnTroubleshootingLink,
+} from 'uniswap/src/features/earn/planExecution'
 import type { EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { getEarnVaultWithdrawDestinationCurrencyId } from 'uniswap/src/features/earn/withdrawDestination'
 import { WithdrawReviewDetails } from 'uniswap/src/features/earn/WithdrawReviewDetails'
 import { useLocalFiatToUSDConverter } from 'uniswap/src/features/fiatCurrency/useLocalFiatToUSDConverter'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { EarnEventName } from 'uniswap/src/features/telemetry/constants/features'
+import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import type {
   EarnAnalyticsEntryPoint,
   EarnAnalyticsSurface as EarnAnalyticsSurfaceValue,
@@ -82,6 +88,8 @@ interface WithdrawReviewViewProps {
   onPlanFinalized?: (params: PlanFinalizedCallbackParams) => void
   analyticsEntryPoint?: EarnAnalyticsEntryPoint
   analyticsSurface?: EarnAnalyticsSurfaceValue
+  /** See {@link EarnReviewLayout} — lets the mobile bottom-sheet modal pin the action in a footer overlay. */
+  renderLayout?: EarnReviewRenderLayout
 }
 
 export function WithdrawReviewView({
@@ -99,6 +107,7 @@ export function WithdrawReviewView({
   onPlanFinalized,
   analyticsEntryPoint = EarnEntryPoint.GlobalModal,
   analyticsSurface = DEFAULT_EARN_ANALYTICS_SURFACE,
+  renderLayout,
 }: WithdrawReviewViewProps): JSX.Element {
   const { t } = useTranslation()
   const isShortMobileDevice = useIsShortMobileDevice()
@@ -270,7 +279,7 @@ export function WithdrawReviewView({
   )
 
   const balanceAfterUsd = Math.max(position.depositedUsd - parsedAmountUsd, 0)
-  const { logFailed, logFinalized, logSubmitted } = useEarnReviewAnalytics({
+  const { logFailed, logFinalized, logSubmitted, reviewedEventProperties } = useEarnReviewAnalytics({
     action: 'withdraw',
     amountUsd: parsedAmountUsd,
     analyticsEntryPoint,
@@ -360,76 +369,80 @@ export function WithdrawReviewView({
       }),
     [activePlan, t],
   )
+  const action = (
+    <EarnReviewActionRow
+      ctaDisabled={ctaDisabled}
+      ctaLabel={insufficientGasWarning.warning?.buttonText ?? t('explore.earn.withdraw.cta', { symbol })}
+      executionError={executionError}
+      isExecuting={isExecuting}
+      isShortMobileDevice={isShortMobileDevice}
+      progress={earnPlanProgress}
+      retryLabel={t('common.button.retry')}
+      stepProgressLabel={stepProgressLabel}
+      onBack={handleBack}
+      onPress={handleWithdrawPress}
+      onRetry={onPressRetry ? handleRetry : undefined}
+    />
+  )
 
   return (
-    <Flex gap="$spacing16">
-      {isMobileApp ? (
-        <Text variant="subheading2" color="$neutral2" textAlign="center">
-          {t('explore.earn.withdraw.confirm')}
-        </Text>
-      ) : (
-        <Flex row alignItems="center" justifyContent="space-between">
-          <TouchableArea onPress={handleBack}>
-            <BackArrow color="$neutral2" size="$icon.24" />
-          </TouchableArea>
-          <Text variant="subheading2" color="$neutral2">
+    <Trace logImpression eventOnTrigger={EarnEventName.EarnWithdrawReviewed} properties={reviewedEventProperties}>
+      <EarnReviewLayout action={action} renderLayout={renderLayout}>
+        {isMobileApp ? (
+          <Text variant="subheading2" color="$neutral2" textAlign="center">
             {t('explore.earn.withdraw.confirm')}
           </Text>
-          <ModalCloseIcon onClose={handleClose} />
-        </Flex>
-      )}
+        ) : (
+          <Flex row alignItems="center" justifyContent="space-between">
+            <TouchableArea onPress={handleBack}>
+              <BackArrow color="$neutral2" size="$icon.24" />
+            </TouchableArea>
+            <Text variant="subheading2" color="$neutral2">
+              {t('explore.earn.withdraw.confirm')}
+            </Text>
+            <ModalCloseIcon onClose={handleClose} />
+          </Flex>
+        )}
 
-      <Flex alignItems="center" gap="$spacing12" py="$spacing32">
-        <Text variant="heading1" color="$neutral1">
-          {formatLocalFiat(parsedAmountUsd)}
-        </Text>
-        <Flex row alignItems="center" gap="$spacing8">
-          <TokenLogo
-            hideNetworkLogo
-            url={currencyInfo?.logoUrl}
-            size={iconSizes.icon24}
-            symbol={symbol}
-            name={currency?.name}
-          />
-          <Text variant="body2" color="$neutral2">
-            {`${tokenAmountLabel} ${symbol}`}
+        <Flex alignItems="center" gap="$spacing12" py="$spacing32">
+          <Text variant="heading1" color="$neutral1">
+            {formatLocalFiat(parsedAmountUsd)}
           </Text>
+          <Flex row alignItems="center" gap="$spacing8">
+            <TokenLogo
+              hideNetworkLogo
+              url={currencyInfo?.logoUrl}
+              size={iconSizes.icon24}
+              symbol={symbol}
+              name={currency?.name}
+            />
+            <Text variant="body2" color="$neutral2">
+              {`${tokenAmountLabel} ${symbol}`}
+            </Text>
+          </Flex>
         </Flex>
-      </Flex>
 
-      {!earnPlanProgress && (
-        <WithdrawReviewDetails
-          balanceAfterUsd={balanceAfterUsd}
-          chainId={chainId}
-          expanded={expanded}
-          formatLocalFiat={formatLocalFiat}
-          networkCostLabel={networkCostLabel}
-          positionDepositedUsd={position.depositedUsd}
-          vault={vault}
-          onToggleExpanded={toggleExpanded}
+        {!earnPlanProgress && (
+          <WithdrawReviewDetails
+            balanceAfterUsd={balanceAfterUsd}
+            chainId={chainId}
+            expanded={expanded}
+            formatLocalFiat={formatLocalFiat}
+            networkCostLabel={networkCostLabel}
+            positionDepositedUsd={position.depositedUsd}
+            vault={vault}
+            onToggleExpanded={toggleExpanded}
+          />
+        )}
+
+        <EarnReviewBlockingMessage
+          executionErrorMessage={executionErrorMessage}
+          hasQuoteError={hasQuoteError}
+          insufficientGasWarning={insufficientGasWarning}
+          quoteErrorMessage={quoteErrorMessage}
+          showTroubleshootingLink={shouldShowEarnTroubleshootingLink(executionError)}
         />
-      )}
-
-      <EarnReviewBlockingMessage
-        executionErrorMessage={executionErrorMessage}
-        hasQuoteError={hasQuoteError}
-        insufficientGasWarning={insufficientGasWarning}
-        quoteErrorMessage={quoteErrorMessage}
-      />
-
-      <EarnReviewActionRow
-        ctaDisabled={ctaDisabled}
-        ctaLabel={insufficientGasWarning.warning?.buttonText ?? t('explore.earn.withdraw.cta', { symbol })}
-        executionError={executionError}
-        isExecuting={isExecuting}
-        isShortMobileDevice={isShortMobileDevice}
-        progress={earnPlanProgress}
-        retryLabel={t('common.button.retry')}
-        stepProgressLabel={stepProgressLabel}
-        onBack={handleBack}
-        onPress={handleWithdrawPress}
-        onRetry={onPressRetry ? handleRetry : undefined}
-      />
-    </Flex>
+      </EarnReviewLayout>
+    </Trace>
   )
 }

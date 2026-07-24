@@ -137,7 +137,7 @@ export function PositionPageActionButtons({
             size="small"
             emphasis="secondary"
             fill={buttonFill}
-            isDisabled={showV4UnsupportedTooltip}
+            disabled={showV4UnsupportedTooltip}
             opacity={showV4UnsupportedTooltip ? 0.5 : 1}
             onPress={migrateOption.onPress}
           >

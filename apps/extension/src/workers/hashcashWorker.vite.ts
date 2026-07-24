@@ -7,7 +7,7 @@
  * `new Worker(new URL())` variant in `hashcashWorker.ts` does not bundle correctly here.
  */
 
-// oxlint-disable-next-line import/default -- Vite ?worker virtual module; linter can't resolve the default export
+// oxlint-disable-next-line import/default, no-restricted-imports -- Vite ?worker virtual module (linter can't resolve the default export); worker files are intentionally not exported from the @universe/sessions root — Vite's worker transform only fires on app-tree imports
 import HashcashWorker from '@universe/sessions/src/challenge-solvers/hashcash/worker/hashcash.worker.ts?worker'
 
 export function createHashcashWorker(): Worker {

@@ -1,4 +1,4 @@
-import { ProfileMetadata } from '@universe/api/src/clients/unitags/types'
+import type { ProfileMetadata } from '@universe/api'
 
 function isMissingValue(value: string | undefined): boolean {
   return value === undefined || value === ''

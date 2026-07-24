@@ -27,6 +27,7 @@ import { getSwapFeeUsd } from 'uniswap/src/features/transactions/swap/utils/getS
 import { isChained, isClassic, isJupiter, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getProtocolVersionFromTrade } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
+import { isTradeDerivedUsdPricing } from 'uniswap/src/features/transactions/swap/utils/usdAnchoring/anchoredUsdPricing'
 import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
@@ -351,6 +352,7 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
       chainId: trade.inputAmount.currency.chainId,
       address: getCurrencyAddressForAnalytics(trade.inputAmount.currency),
       queryClient,
+      isTradeDerivedUsd: isTradeDerivedUsdPricing(derivedSwapInfo.usdPricing),
     })
 
     sendAnalyticsEvent(

@@ -3,8 +3,9 @@ import { useAppStackNavigation } from 'src/app/navigation/types'
 import { SpinningLoader } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { TokenDetailsEarnBanner as SharedTokenDetailsEarnBanner } from 'uniswap/src/components/tokenDetails/TokenDetailsEarnBanner'
-import { EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
+import { EarnAnalyticsSurface, EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
 import { useEarnDepositSources } from 'uniswap/src/features/earn/hooks/useEarnDepositSources'
+import { useLogEarnSurfaceViewed } from 'uniswap/src/features/earn/hooks/useLogEarnSurfaceViewed'
 import type { TokenDetailsEarnData } from 'uniswap/src/features/earn/hooks/useTokenDetailsEarnData'
 import { shouldShowTokenDetailsEarnBanner } from 'uniswap/src/features/earn/tokenDetails'
 import { EarnAction } from 'uniswap/src/features/earn/types'
@@ -32,6 +33,12 @@ export const TokenDetailsEarnBanner = memo(function TokenDetailsEarnBannerInner(
 
   const { balanceUsd, earnVault, isLoggedIn, projectedAnnualEarningsUsd, tokenSymbol } = earnData
   const isVisible = shouldShowTokenDetailsEarnBanner(earnData) && earnVault !== undefined
+  const isBannerVisible = isLoggedIn && isVisible
+  useLogEarnSurfaceViewed({
+    entryPoint: EarnEntryPoint.TokenDetailsEarnBanner,
+    isVisible: isBannerVisible,
+    surface: EarnAnalyticsSurface.Mobile,
+  })
   const pendingPressMatchesCurrent =
     pendingPress !== null && pendingPress.vaultId === earnVault?.id && pendingPress.walletAddress === activeAddress
   const minimumBalanceDataUpdatedAtMs = pendingPressMatchesCurrent ? pendingPress.requestedAtMs : undefined
@@ -44,7 +51,7 @@ export const TokenDetailsEarnBanner = memo(function TokenDetailsEarnBannerInner(
   } = useEarnDepositSources({
     vault: earnVault,
     walletAddress: activeAddress,
-    isOpen: isVisible && isLoggedIn,
+    isOpen: isBannerVisible,
     minimumBalanceDataUpdatedAtMs,
   })
   const isBalanceLookupPending = pendingPressMatchesCurrent && !balanceLookupSettled && !balanceLookupErrored
@@ -117,7 +124,7 @@ export const TokenDetailsEarnBanner = memo(function TokenDetailsEarnBannerInner(
     }
   }, [isVisible, pendingPress, pendingPressMatchesCurrent])
 
-  if (!isLoggedIn || !isVisible) {
+  if (!isBannerVisible) {
     return null
   }
 

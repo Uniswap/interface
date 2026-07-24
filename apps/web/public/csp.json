@@ -21,7 +21,6 @@
     "https://challenges.cloudflare.com",
     "https://verify.walletconnect.com/",
     "https://verify.walletconnect.org/",
-    "https://wrapped.uniswap.org",
     "https://auth.privy.io",
     "https://privy.dev.ew.unihq.org",
     "https://privy.app.corn-staging.com",
@@ -120,7 +119,9 @@
     "wss://relay.walletconnect.org",
     "wss://ws-us3.pusher.com/",
     "wss://nbstream.binance.com",
-    "wss://nbstream.binance.info"
+    "wss://nbstream.binance.info",
+    "wss://nbstream.binance.click",
+    "wss://nbstream.yshyqxx.com"
   ],
   "workerSrc": ["'self'", "blob:"]
 }

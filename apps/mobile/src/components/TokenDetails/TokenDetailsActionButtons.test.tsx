@@ -5,15 +5,15 @@ import { render } from 'src/test/test-utils'
 import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
-jest.mock('@universe/gating', () => ({
-  ...jest.requireActual('@universe/gating'),
-  useFeatureFlag: jest.fn().mockReturnValue(false),
-  useFeatureFlagWithLoading: jest.fn().mockReturnValue({ value: false, isLoading: false }),
-  useFeatureFlagWithExposureLoggingDisabled: jest.fn().mockReturnValue(false),
+vi.mock('@universe/gating', async () => ({
+  ...(await vi.importActual('@universe/gating')),
+  useFeatureFlag: vi.fn().mockReturnValue(false),
+  useFeatureFlagWithLoading: vi.fn().mockReturnValue({ value: false, isLoading: false }),
+  useFeatureFlagWithExposureLoggingDisabled: vi.fn().mockReturnValue(false),
 }))
 
-jest.mock('src/components/TokenDetails/TokenDetailsContext', () => ({
-  useTokenDetailsContext: jest.fn().mockReturnValue({
+vi.mock('src/components/TokenDetails/TokenDetailsContext', () => ({
+  useTokenDetailsContext: vi.fn().mockReturnValue({
     currencyInfo: {
       currency: { isToken: false },
       safetyInfo: { tokenList: 'default' },
@@ -27,12 +27,12 @@ describe('TokenDetailsBuySellButtons', () => {
   const defaultProps = {
     userHasBalance: false,
     actionMenuOptions: [],
-    onPressDisabled: jest.fn(),
-    onPressBuy: jest.fn(),
-    onPressSell: jest.fn(),
+    onPressDisabled: vi.fn(),
+    onPressBuy: vi.fn(),
+    onPressSell: vi.fn(),
   }
 
-  beforeEach(() => jest.clearAllMocks())
+  beforeEach(() => vi.clearAllMocks())
 
   it('should always render the Buy button', () => {
     const { getByTestId } = render(<TokenDetailsBuySellButtons {...defaultProps} />)
@@ -77,7 +77,7 @@ describe('TokenDetailsBuySellButtons', () => {
   it('should render default "Buy" title when buyButtonTitle is not provided', () => {
     const { getByText } = render(<TokenDetailsBuySellButtons {...defaultProps} />)
 
-    expect(getByText('Buy')).toBeTruthy()
+    expect(getByText('common.button.buy')).toBeTruthy()
   })
 
   it('should show action menu when using default Buy title', () => {

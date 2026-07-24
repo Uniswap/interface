@@ -6,28 +6,32 @@ import {
   isOfflineBannerNotification,
   OFFLINE_BANNER_NOTIFICATION_ID,
 } from 'src/notification-service/data-sources/reactive/offlineCondition'
+import type { MockedFunction } from 'vitest'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
 
 // Mock NetInfo
-const mockAddEventListener = jest.fn()
-jest.mock('@react-native-community/netinfo', () => ({
+const mockAddEventListener = vi.fn()
+vi.mock('@react-native-community/netinfo', () => ({
+  default: {
+    addEventListener: (callback: (state: NetInfoState) => void): (() => void) => mockAddEventListener(callback),
+  },
   addEventListener: (callback: (state: NetInfoState) => void): (() => void) => mockAddEventListener(callback),
-  useNetInfo: jest.fn(),
+  useNetInfo: vi.fn(),
 }))
 
 // Mock selectors
-jest.mock('src/features/modals/selectSomeModalOpen')
-jest.mock('wallet/src/features/wallet/selectors')
+vi.mock('src/features/modals/selectSomeModalOpen')
+vi.mock('wallet/src/features/wallet/selectors')
 
-const mockSelectSomeModalOpen = selectSomeModalOpen as jest.MockedFunction<typeof selectSomeModalOpen>
-const mockSelectFinishedOnboarding = selectFinishedOnboarding as jest.MockedFunction<typeof selectFinishedOnboarding>
+const mockSelectSomeModalOpen = selectSomeModalOpen as MockedFunction<typeof selectSomeModalOpen>
+const mockSelectFinishedOnboarding = selectFinishedOnboarding as MockedFunction<typeof selectFinishedOnboarding>
 
 describe('offlineCondition', () => {
-  const mockGetState = jest.fn()
+  const mockGetState = vi.fn()
 
   beforeEach(() => {
-    jest.clearAllMocks()
-    mockAddEventListener.mockReturnValue(jest.fn()) // Return unsubscribe function
+    vi.clearAllMocks()
+    mockAddEventListener.mockReturnValue(vi.fn()) // Return unsubscribe function
   })
 
   describe('createOfflineCondition', () => {
@@ -40,11 +44,11 @@ describe('offlineCondition', () => {
 
     describe('subscribe', () => {
       it('subscribes to NetInfo and returns unsubscribe function', () => {
-        const mockUnsubscribe = jest.fn()
+        const mockUnsubscribe = vi.fn()
         mockAddEventListener.mockReturnValue(mockUnsubscribe)
 
         const condition = createOfflineCondition({ getState: mockGetState })
-        const onStateChange = jest.fn()
+        const onStateChange = vi.fn()
 
         const unsubscribe = condition.subscribe(onStateChange)
 
@@ -56,14 +60,14 @@ describe('offlineCondition', () => {
         mockSelectFinishedOnboarding.mockReturnValue(true)
         mockSelectSomeModalOpen.mockReturnValue(false)
 
-        let capturedCallback: (state: NetInfoState) => void = jest.fn()
+        let capturedCallback: (state: NetInfoState) => void = vi.fn()
         mockAddEventListener.mockImplementation((callback: (state: NetInfoState) => void) => {
           capturedCallback = callback
-          return jest.fn()
+          return vi.fn()
         })
 
         const condition = createOfflineCondition({ getState: mockGetState })
-        const onStateChange = jest.fn()
+        const onStateChange = vi.fn()
 
         condition.subscribe(onStateChange)
 

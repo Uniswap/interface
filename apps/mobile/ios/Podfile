@@ -27,11 +27,40 @@ podfile_properties = read_podfile_properties
 ENV['RCT_USE_RN_DEP'] = '1' if podfile_properties['ios.buildReactNativeFromSource'] != 'true' && podfile_properties['newArchEnabled'] != 'false'
 ENV['RCT_USE_PREBUILT_RNCORE'] = '1' if podfile_properties['ios.buildReactNativeFromSource'] != 'true' && podfile_properties['newArchEnabled'] != 'false'
 # RN 0.85 treats these as prebuilt unless explicitly '0', so buildReactNativeFromSource alone doesn't force source.
-# Prebuilt pods (React-Core-prebuilt, ReactNativeDependencies) carry env-specific checksums; force source for a reproducible Podfile.lock.
 ENV['RCT_USE_RN_DEP'] = '0' if podfile_properties['ios.buildReactNativeFromSource'] == 'true'
 ENV['RCT_USE_PREBUILT_RNCORE'] = '0' if podfile_properties['ios.buildReactNativeFromSource'] == 'true'
 require_relative '../../../node_modules/react-native/scripts/react_native_pods'
 require_relative '../../../node_modules/react-native-permissions/scripts/setup'
+
+# facebook/react-native#55446 (still open as of RN 0.85.3): with prebuilt RN core/deps, the
+# React-Core-prebuilt and ReactNativeDependencies podspecs' :source is a file:// URL under this
+# checkout's absolute Pods path, so SPEC CHECKSUMS in Podfile.lock differ per machine. Rewrite the
+# :source to the deterministic Maven URL (same tarball) so the lockfile is reproducible. The
+# original resolver is still called for its side effect: it downloads the debug+release tarballs
+# into Pods/*-artifacts, which the replace-rncore-version.js / replace_dependencies_version.js
+# config-swap build phases read at build time.
+if ENV['RCT_USE_PREBUILT_RNCORE'] == '1' || ENV['RCT_USE_RN_DEP'] == '1'
+  require 'json'
+  rn_package_json = File.expand_path('../../../node_modules/react-native/package.json', File.dirname(__FILE__))
+  rn_version = JSON.parse(File.read(rn_package_json))['version']
+  unless rn_version.include?('nightly')
+    {
+      ReactNativeCoreUtils => proc { ReactNativeCoreUtils.stable_tarball_url(rn_version, :debug) },
+      ReactNativeDependenciesUtils => proc { ReactNativeDependenciesUtils.release_tarball_url(rn_version, :debug) },
+    }.each do |klass, stable_url|
+      original = klass.method(:resolve_podspec_source)
+      klass.define_singleton_method(:resolve_podspec_source) do
+        source = original.call
+        # Only rewrite the downloaded-artifacts path; RCT_TESTONLY_* / RCT_USE_LOCAL_* file overrides pass through.
+        if source.is_a?(Hash) && source[:http].to_s.match?(%r{\Afile://.*-artifacts/reactnative-})
+          { http: stable_url.call }
+        else
+          source
+        end
+      end
+    end
+  end
+end
 
 platform :ios, podfile_properties['ios.deploymentTarget'] || '15.1'
 prepare_react_native_project!

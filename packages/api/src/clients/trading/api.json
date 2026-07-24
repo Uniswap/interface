@@ -421,7 +421,8 @@
                       "token": "0x0000000000000000000000000000000000000000",
                       "recipient": "0x000000fee13a103A10D593b9AE06b3e05F2E7E1c",
                       "bps": 25,
-                      "minAmount": "2490801865802"
+                      "minAmount": "2490801865802",
+                      "fee": "INTEGRATOR"
                     }
                   ],
                   "portionAmount": "2490801865802",
@@ -1069,7 +1070,7 @@
           "utilities"
         ],
         "summary": "Get pool state",
-        "description": "Fetches detailed information about one or more liquidity pools across Uniswap V2, V3, and V4. Returns pool state including token addresses, reserves, liquidity, current tick, sqrtRatioX96, fee tier, tick spacing, and hook addresses (V4).\n\nProvide one of `poolParameters` or `poolReferences` (not both):\n- `poolParameters`: Look up pools by token pair. Provide token addresses and optional fee/tickSpacing/hooks to find matching pools.\n- `poolReferences`: Look up specific known pools by their reference identifier (pool address for V3, pool ID for V4, pair address for V2).",
+        "description": "Fetches detailed information about one or more liquidity pools across Uniswap v2, v3, and v4. Returns pool state including token addresses, reserves, liquidity, current tick, sqrtRatioX96, fee tier, tick spacing, and hook addresses (V4).\n\nProvide one of `poolParameters` or `poolReferences` (not both):\n- `poolParameters`: Look up pools by token pair. Provide token addresses and optional fee/tickSpacing/hooks to find matching pools.\n- `poolReferences`: Look up specific known pools by their reference identifier (pool address for v3, pool ID for v4, pair address for v2). Limited to 20 references per request; larger batches are rejected with an HTTP 400 error.\n\nPool reserves (`token0Reserves`/`token1Reserves`) are returned for v2 pools and, best-effort, for v4 pools. v4 reserves are the fee-excluded core principal computed from on-chain pool state: uncollected LP fees, donations, and hook-held assets are excluded, and for pools whose hooks perform custom accounting the value approximates swappable reserves.",
         "operationId": "pool_info",
         "security": [
           {
@@ -2053,7 +2054,8 @@
                     "token": "0x0000000000000000000000000000000000000000",
                     "recipient": "0x000000fee13a103A10D593b9AE06b3e05F2E7E1c",
                     "bps": 25,
-                    "minAmount": "2490801865802"
+                    "minAmount": "2490801865802",
+                    "fee": "INTEGRATOR"
                   }
                 ],
                 "portionAmount": "2490801865802",
@@ -2515,7 +2517,9 @@
                   "tokenDecimalsB": "6",
                   "poolLiquidity": "1007803497966589811",
                   "sqrtRatioX96": "3796141369585623258184840",
-                  "currentTick": -198932
+                  "currentTick": -198932,
+                  "token0Reserves": "224201965836985417",
+                  "token1Reserves": "1004698471"
                 }
               ],
               "currentPage": 1,
@@ -4111,6 +4115,7 @@
           42161,
           42220,
           43114,
+          57073,
           59144,
           81457,
           7777777,
@@ -5168,6 +5173,13 @@
           },
           "minAmount": {
             "$ref": "#/components/schemas/minAmount"
+          },
+          "fee": {
+            "type": "string",
+            "enum": [
+              "INTEGRATOR"
+            ],
+            "description": "Set to INTEGRATOR when this output is an integrator fee (as specified by the `integratorFees` array in the /quote request); omitted for the core output of the swap."
           }
         }
       },
@@ -7302,7 +7314,8 @@
           },
           "poolReferences": {
             "type": "array",
-            "description": "Array of pool reference identifiers to query. Each reference should include the protocol, chainId, and either the pool address (V3), pool id (V4), or pair address (V2).",
+            "description": "Array of pool reference identifiers to query. Each reference should include the protocol, chainId, and either the pool address (v3), pool id (v4), or pair address (v2). At most 20 references may be provided per request; requests exceeding this limit are rejected with an HTTP 400 error.",
+            "maxItems": 20,
             "items": {
               "$ref": "#/components/schemas/PoolReferenceByProtocol"
             }
@@ -7396,11 +7409,15 @@
           "currentTick": {
             "$ref": "#/components/schemas/lpTickCurrent"
           },
-          "tokenAReserves": {
-            "$ref": "#/components/schemas/tokenAmount"
+          "token0Reserves": {
+            "type": "string",
+            "description": "Pool reserves of token0, denominated in the token's base units. Populated for v2 pools (pair reserves) and v4 pools. For v4 pools this is the fee-excluded core principal computed from on-chain pool state: uncollected LP fees, donations, and hook-held assets are excluded, and for pools whose hooks perform custom accounting the value is an approximation of swappable reserves. Computed best-effort and omitted if unavailable. Not returned for v3 pools.",
+            "pattern": "^[0-9]+$"
           },
-          "tokenBReserves": {
-            "$ref": "#/components/schemas/tokenAmount"
+          "token1Reserves": {
+            "type": "string",
+            "description": "Pool reserves of token1, denominated in the token's base units. Populated for v2 pools (pair reserves) and v4 pools. For v4 pools this is the fee-excluded core principal computed from on-chain pool state: uncollected LP fees, donations, and hook-held assets are excluded, and for pools whose hooks perform custom accounting the value is an approximation of swappable reserves. Computed best-effort and omitted if unavailable. Not returned for v3 pools.",
+            "pattern": "^[0-9]+$"
           }
         }
       },

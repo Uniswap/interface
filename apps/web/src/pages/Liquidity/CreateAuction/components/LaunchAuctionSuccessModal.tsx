@@ -38,7 +38,7 @@ interface LaunchAuctionSuccessModalProps {
   isOpen: boolean
   tokenSymbol: string
   chainId: UniverseChainId
-  /** Launch transaction hash, used to build the block-explorer link. */
+  /** Real on-chain launch tx hash (never a 5792 batch id); the explorer link is hidden until it's known. */
   launchHash?: string
   onClose: () => void
   onViewAuction: () => void

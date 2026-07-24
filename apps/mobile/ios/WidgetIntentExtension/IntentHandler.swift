@@ -47,12 +47,10 @@ class IntentHandler: INExtension, TokenPriceConfigurationIntentHandling {
 
   func provideSelectedTokenOptionsCollection(for intent: TokenPriceConfigurationIntent) async throws -> INObjectCollection<IntentToken> {
     let favorites = UniswapUserDefaults.readFavorites()
-    let addresses = UniswapUserDefaults.readAccounts().accounts.filter{$0.isSigner}.map{$0.address}
-    // [WAll-4969] In the future should read chains from app state
-    let chains = ["ETHEREUM", "POLYGON", "ARBITRUM", "OPTIMISM", "BASE", "BNB", "BLAST", "ZORA", "CELO", "AVALANCHE", "ZKSYNC", "WORLDCHAIN"]
+    let accounts = UniswapUserDefaults.readAccounts()
+    let activeAddress = accounts.activeAddress ?? accounts.accounts.first{$0.isSigner}?.address
 
-
-    async let pendingOwnedTokensResponses = try DataQueries.fetchWalletsTokensData(addresses: addresses, chains: chains)
+    async let pendingOwnedTokensResponses = try DataQueries.fetchActiveAccountTokensData(address: activeAddress)
     async let pendingFavoriteTokenReponses = try DataQueries.fetchTokensData(tokenInputs: favorites.favorites)
     async let pendingTopTokensResponse = try DataQueries.fetchTopTokensData()
     let (ownedTokenResponses ,favoriteTokenReponses, topTokensResponse) = await (try pendingOwnedTokensResponses, try pendingFavoriteTokenReponses, try pendingTopTokensResponse)

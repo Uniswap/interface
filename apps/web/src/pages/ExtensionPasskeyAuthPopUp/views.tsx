@@ -187,7 +187,7 @@ export function ExportStep({
           size="large"
           variant="branded"
           onPress={onPressImport}
-          isDisabled={isAuthenticating}
+          disabled={isAuthenticating}
         >
           {isAuthenticating ? undefined : t('extensionPasskeyLogInPopUp.importButton')}
         </Button>

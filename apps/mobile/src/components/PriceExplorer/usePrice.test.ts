@@ -9,7 +9,7 @@ import { act } from 'react-test-renderer'
 import { useLineChartPrice, useLineChartRelativeChange } from 'src/components/PriceExplorer/usePrice'
 import { renderHookWithProviders } from 'src/test/render'
 
-jest.mock('react-native-wagmi-charts')
+vi.mock('react-native-wagmi-charts')
 
 const cursorValue = makeMutable('')
 const cursorFormattedValue = makeMutable('-')
@@ -22,7 +22,7 @@ const mockData = (args: { data?: TLineChartData; currentIndex?: number; isActive
   isActive.value = args.isActive ?? false
   // react-native-wagmi-charts is mocked so we can mock the return
   // of useLineChart
-  const mockedFunction = useLineChart as ReturnType<typeof jest.fn>
+  const mockedFunction = useLineChart as ReturnType<typeof vi.fn>
   mockedFunction.mockReturnValue({
     data: args.data ?? [],
     currentIndex,
@@ -36,7 +36,7 @@ const mockCursorPrice = (value?: string): void => {
 
   // react-native-wagmi-charts is mocked so we can mock the return
   // of useLineChartPrice
-  const mockedFunction = useRNWagmiChartLineChartPrice as ReturnType<typeof jest.fn>
+  const mockedFunction = useRNWagmiChartLineChartPrice as ReturnType<typeof vi.fn>
   mockedFunction.mockReturnValue({
     value: cursorValue,
     formatted: cursorFormattedValue,
@@ -44,14 +44,15 @@ const mockCursorPrice = (value?: string): void => {
 }
 
 describe(useLineChartPrice, () => {
-  beforeEach(() => {
-    const originalModule = jest.requireActual('react-native-wagmi-charts')
-    ;(useLineChart as ReturnType<typeof jest.fn>).mockImplementation(originalModule.useLineChart)
-    ;(useRNWagmiChartLineChartPrice as ReturnType<typeof jest.fn>).mockImplementation(originalModule.useLineChartPrice)
+  beforeEach(async () => {
+    const originalModule =
+      await vi.importActual<typeof import('react-native-wagmi-charts')>('react-native-wagmi-charts')
+    ;(useLineChart as ReturnType<typeof vi.fn>).mockImplementation(originalModule.useLineChart)
+    ;(useRNWagmiChartLineChartPrice as ReturnType<typeof vi.fn>).mockImplementation(originalModule.useLineChartPrice)
   })
 
   afterAll(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('returns correct initial values', () => {

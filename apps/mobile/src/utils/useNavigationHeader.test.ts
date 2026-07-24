@@ -3,7 +3,7 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { renderHook } from 'src/test/test-utils'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 
-const setOptionsSpy = jest.fn()
+const setOptionsSpy = vi.fn()
 
 describe(useNavigationHeader, () => {
   it('sets navigation options when item is first in stack', () => {

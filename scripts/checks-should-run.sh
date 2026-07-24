@@ -24,11 +24,20 @@ if [[ "$BRANCH_NAME" == gtmq* ]]; then
   exit 0
 fi
 
-# Check if the specified project is affected by changes
 # Use origin/main as fallback if NX_BASE is empty (nx-set-shas couldn't find previous successful run)
 if [ -z "$NX_BASE" ]; then
   export NX_BASE="origin/main"
 fi
+
+# .github/** (workflows, actions, CI scripts) is invisible to nx affected —
+# no namedInput covers those paths — so CI-config changes must run all checks.
+if git diff --name-only "$NX_BASE"..."${NX_HEAD:-HEAD}" | grep -q '^\.github/'; then
+  echo "✅ - .github/** changes detected, running all checks"
+  echo "CONCLUSION=success" >> "$GITHUB_OUTPUT"
+  exit 0
+fi
+
+# Check if the specified project is affected by changes
 bun nx show projects --affected | grep -q "$PROJECT_NAME"
 
 # grep returns 0 if match found (project is affected), 1 if no match

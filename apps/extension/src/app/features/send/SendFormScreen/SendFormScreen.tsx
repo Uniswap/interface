@@ -1,3 +1,4 @@
+import { toScreenInput, useIsBlockedAddress } from '@universe/compliance'
 import { useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { RecipientPanel } from 'src/app/features/send/SendFormScreen/RecipientPanel'
@@ -18,11 +19,11 @@ import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPri
 import { useUSDTokenUpdater } from 'uniswap/src/features/transactions/hooks/useUSDTokenUpdater'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
 import { LowNativeBalanceModal } from 'uniswap/src/features/transactions/modals/LowNativeBalanceModal'
-import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { isSafeNumber } from 'utilities/src/primitives/integer'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
+import { useIsBlockedActiveAddress } from 'wallet/src/features/compliance/hooks'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 import { GasFeeRow } from 'wallet/src/features/transactions/send/GasFeeRow'
 import { useShowSendNetworkNotification } from 'wallet/src/features/transactions/send/hooks/useShowSendNetworkNotification'
@@ -30,7 +31,6 @@ import { SendAmountInput } from 'wallet/src/features/transactions/send/SendAmoun
 import { SendReviewDetails } from 'wallet/src/features/transactions/send/SendReviewDetails'
 import { TokenSelectorPanel } from 'wallet/src/features/transactions/send/TokenSelectorPanel'
 import { isAmountGreaterThanZero } from 'wallet/src/features/transactions/utils'
-import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 
 export function SendFormScreen(): JSX.Element {
   const colors = useSporeColors()
@@ -102,7 +102,9 @@ export function SendFormScreen(): JSX.Element {
 
   // blocked addresses
   const { isBlocked: isActiveBlocked, isBlockedLoading: isActiveBlockedLoading } = useIsBlockedActiveAddress()
-  const { isBlocked: isRecipientBlocked, isBlockedLoading: isRecipientBlockedLoading } = useIsBlocked(recipient)
+  const { isBlocked: isRecipientBlocked, isBlockedLoading: isRecipientBlockedLoading } = useIsBlockedAddress(
+    toScreenInput(recipient, chainId),
+  )
   const isSubjectBlocked = isActiveBlocked || isRecipientBlocked
   const isSubjectBlockedLoading = isActiveBlockedLoading || isRecipientBlockedLoading
   const isButtonBlocked = !hasValueGreaterThanZero || isSubjectBlocked || isSubjectBlockedLoading
@@ -124,14 +126,16 @@ export function SendFormScreen(): JSX.Element {
 
   const onSetExactAmount = useCallback(
     (amount: string) => {
-      // Omit parsing errors by checking if amount exceeds Number range limit
-      if (!isSafeNumber(amount)) {
+      // Block growing a number past the Number range limit to omit parsing errors, but always allow
+      // shrinking it. Otherwise a value that already exceeds the limit (e.g. after switching
+      // fiat/crypto or tapping Max) becomes impossible to edit or even delete.
+      if (!isSafeNumber(amount) && amount.length > exactValue.length) {
         return
       }
 
       updateSendForm(isFiatInput ? { exactAmountFiat: amount } : { exactAmountToken: amount })
     },
-    [isFiatInput, updateSendForm],
+    [exactValue.length, isFiatInput, updateSendForm],
   )
 
   const onSetMax = useCallback(

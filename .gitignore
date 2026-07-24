@@ -35,6 +35,7 @@ yarn-error.log*
 # local env files
 .env
 .env.local
+/.env.defaults
 .env.defaults.local
 .env.override
 .env.new

@@ -307,7 +307,14 @@ export default defineConfig(({ mode, isPreview }) => {
       reactPlugin(),
       // Tailwind v4 — compiles @import "tailwindcss" + @universe/tailwind tokens.
       // Placed before the Tamagui extractor so CSS is resolved before extraction.
-      tailwindcss(),
+      // Client environment only: CSS is generated exclusively for the browser bundle, and
+      // Tailwind's scan/generate transforms must stay out of the Cloudflare Worker
+      // environments (app*), where their module-graph work can invalidate worker modules
+      // while requests are in flight.
+      ...tailwindcss().map((plugin) => ({
+        ...plugin,
+        applyToEnvironment: (environment: { name: string }) => environment.name === 'client',
+      })),
       isProduction || isStaging
         ? tamaguiPlugin({
             config: '../../packages/ui/src/tamagui.config.ts',
@@ -371,6 +378,24 @@ export default defineConfig(({ mode, isPreview }) => {
         },
         include: ['path', 'buffer'],
       }),
+      // nodePolyfills (above) injects its shim imports into every environment via a global esbuild
+      // banner, so non-client optimizers must know them up front to avoid a mid-run reload.
+      {
+        name: 'pre-bundle-node-polyfill-shims-in-worker-environments',
+        configEnvironment(name: string) {
+          return name === 'client'
+            ? null
+            : {
+                optimizeDeps: {
+                  include: [
+                    'vite-plugin-node-polyfills/shims/buffer',
+                    'vite-plugin-node-polyfills/shims/global',
+                    'vite-plugin-node-polyfills/shims/process',
+                  ],
+                },
+              }
+        },
+      },
       commonjs({
         dynamic: {
           loose: false,

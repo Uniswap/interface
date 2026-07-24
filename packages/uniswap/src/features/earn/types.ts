@@ -6,6 +6,15 @@ export interface EarnVaultCurator {
   imageUrl?: string
 }
 
+// Per-asset exposure breakdown for a vault, derived from EarnVault.exposures.
+export interface EarnVaultExposure {
+  currencyId: string
+  /** USD value of the vault's exposure to this asset. Undefined when the backend could not price it. */
+  valueUsd?: number
+  /** Share of the vault's total assets (0-1). May sum to less than 1 (idle assets aren't attributed). */
+  share?: number
+}
+
 // Frontend-ready vault info derived from the data-api EarnVault protobuf.
 // Keep backend-only fields on the generated type and add display/cache fields here in getEarnVaultInfo.
 export interface EarnVaultInfo {
@@ -20,6 +29,8 @@ export interface EarnVaultInfo {
   chainId: UniverseChainId
   apyPercent: number
   exposureCurrencyIds: readonly string[]
+  /** Per-asset exposure breakdown with USD values and shares. Empty until the backend populates it. */
+  exposures: readonly EarnVaultExposure[]
   totalDepositsUsd: number
   /** Raw underlying amount that can currently be withdrawn from the vault. */
   liquidityRaw?: string

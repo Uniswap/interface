@@ -2,15 +2,15 @@ import { CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
 import { PositionTokenBreakdown } from 'src/screens/PositionDetailsScreen/components/PositionTokenBreakdown'
 import { render, screen } from 'src/test/test-utils'
 
-jest.mock('ui/src/utils/colors/hooks/useExtractedTokenColor', () => ({
+vi.mock('ui/src/utils/colors/hooks/useExtractedTokenColor', () => ({
   useExtractedTokenColor: () => ({ tokenColor: '#123456', tokenColorLoading: false }),
 }))
 
-jest.mock('uniswap/src/components/CurrencyLogo/CurrencyLogo', () => ({
+vi.mock('uniswap/src/components/CurrencyLogo/CurrencyLogo', () => ({
   CurrencyLogo: () => null,
 }))
 
-jest.mock('uniswap/src/features/language/LocalizationContext', () => ({
+vi.mock('uniswap/src/features/language/LocalizationContext', () => ({
   useLocalizationContext: () => ({
     formatPercent: (value: number) => `${Math.round(value)}%`,
     formatCurrencyAmount: ({ value }: { value?: { toExact: () => string } }) => value?.toExact() ?? '',

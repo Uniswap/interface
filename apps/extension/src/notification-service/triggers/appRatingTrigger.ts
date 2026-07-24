@@ -5,7 +5,7 @@ import {
   OnClick,
 } from '@uniswap/client-notification-service/dist/uniswap/notificationservice/v1/api_pb'
 import { ContentStyle, type InAppNotification, OnClickAction } from '@universe/api'
-import { type TriggerCondition } from '@universe/notifications/src/notification-data-source/implementations/createLocalTriggerDataSource'
+import { type TriggerCondition } from '@universe/notifications'
 import { type ExtensionState } from 'src/store/extensionReducer'
 import { appRatingStateSelector } from 'wallet/src/features/appRating/selectors'
 import { setAppRating } from 'wallet/src/features/wallet/slice'

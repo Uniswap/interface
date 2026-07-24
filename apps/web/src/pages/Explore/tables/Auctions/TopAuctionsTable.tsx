@@ -43,7 +43,7 @@ import {
   useAuctionFdvWarningThresholds,
 } from '~/features/Toucan/utils/auctionFdvWarning'
 import { computeProjectedFdvTableValue, ProjectedFdvTableValue } from '~/features/Toucan/utils/computeProjectedFdv'
-import { isQuickLaunchAuction } from '~/features/Toucan/utils/quickLaunchAuction'
+import { isQuickLaunchAuction } from '~/features/Toucan/utils/quickLaunchClassification'
 import { useSimplePagination } from '~/pages/Explore/hooks/useSimplePagination'
 import { TimeRemainingCell } from '~/pages/Explore/tables/Auctions/TimeRemainingCell'
 import {
@@ -417,7 +417,7 @@ function ToucanTableComponent({
     [topAuctionsTableValues, sortMethod, sortAscending],
   )
 
-  // QuickLaunch: quick launches are exempted from the flagged-hiding treatment below.
+  // QuickLaunch: flag gates only the cosmetic quick-launch treatment (badge / progress cell) below.
   const isQuickLaunchFlagEnabled = useFeatureFlag(FeatureFlags.QuickLaunch)
 
   // Split sorted auctions into visible and hidden
@@ -434,15 +434,11 @@ function ToucanTableComponent({
         auction.timeRemaining.startBlockTimestamp * BigInt(ONE_SECOND_MS) <= BigInt(Date.now() - ONE_HOUR_MS)
       const hasZeroCommittedVolume = Number(auction.auction?.totalBidVolume ?? 0) === 0
 
-      // SECURITY REVIEW REQUIRED BEFORE ENABLING FOR REAL USERS: this exempts quick-launch
-      // auctions (heuristic match, see isQuickLaunchAuction) from the flagged-content hiding —
-      // i.e. it suppresses a user-protection signal for a token class. Strictly gated on the
-      // off-by-default quick_launch flag and scoped to this table's display layer only; the
-      // shared Blockaid/token-protection paths (TDP, swap) are untouched.
-      const isQuickLaunchExempt = isQuickLaunchFlagEnabled && isFlagged && isQuickLaunchAuction(auction)
-
+      // Flagged-content hiding stays on for quick launches: the quick-launch classifier is forgeable
+      // by construction, so it must never exempt an auction from a user-protection signal. Any
+      // exemption policy is deferred to security review (LP-1076).
       // Hide if flagged, or if started more than 1 hour ago and has 0 committed volume
-      if ((isFlagged && !isQuickLaunchExempt) || ((hasStarted || isCompleted) && hasZeroCommittedVolume)) {
+      if (isFlagged || ((hasStarted || isCompleted) && hasZeroCommittedVolume)) {
         hidden.push(value)
       } else {
         visible.push(value)
@@ -450,7 +446,7 @@ function ToucanTableComponent({
     })
 
     return { sortedVisibleAuctionTableValues: visible, sortedHiddenAuctionTableValues: hidden }
-  }, [sortedAuctionTableValues, isQuickLaunchFlagEnabled])
+  }, [sortedAuctionTableValues])
 
   // Show skeleton while auctions are loading
   const showLoadingSkeleton = loading || !!error

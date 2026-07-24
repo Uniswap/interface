@@ -13,8 +13,6 @@
       "inputs": ["{workspaceRoot}/scripts/check-promise-version.sh", "dependencies"]
     },
     "typecheck": {},
-    "typecheck:tsc": {},
-    "typecheck:tsgo": {},
     "format": {},
     "format:check": {},
     "lint:oxlint": {},

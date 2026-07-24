@@ -88,7 +88,7 @@ export function RemoveBackupLoginModal() {
                 emphasis="primary"
                 size="medium"
                 onPress={() => handleRemove()}
-                isDisabled={isPending}
+                disabled={isPending}
                 loading={isPending}
               >
                 {t('common.button.remove')}

@@ -115,7 +115,7 @@ export default function AddressClaimModal({ isOpen, closeModal }: ModalState) {
               <Button
                 variant="branded"
                 size="large"
-                isDisabled={!isAddress(parsedAddress ?? '') || !hasAvailableClaim}
+                disabled={!isAddress(parsedAddress ?? '') || !hasAvailableClaim}
                 borderRadius="$rounded12"
                 mt="$spacing16"
                 onPress={onClaim}

@@ -1,5 +1,6 @@
 import type { Currency } from '@uniswap/sdk-core'
 import { GraphQLApi, parseRestProtocolVersion } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { curveCardinal, scaleLinear } from 'd3'
 import { type ComponentProps, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -8,6 +9,7 @@ import { ChevronsIn } from 'ui/src/components/icons/ChevronsIn'
 import { ChevronsOut } from 'ui/src/components/icons/ChevronsOut'
 import { iconSizes } from 'ui/src/theme'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -20,6 +22,7 @@ import { getPriceBounds } from '~/components/Charts/PriceChart/utils'
 import { LineChart } from '~/components/Charts/SparklineChart/LineChart'
 import { DeltaArrow, getDeltaTextColor } from '~/components/DeltaArrow/DeltaArrow'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
+import { useServedProtocolFee } from '~/features/fees/useServedProtocolFees'
 import { usePoolPriceChartData } from '~/features/Liquidity/charts/usePoolPriceChartData'
 import { LiquidityPositionInfoBadges } from '~/features/Liquidity/LiquidityPositionInfoBadges'
 import { LpIncentivesAprDisplay } from '~/features/Liquidity/LPIncentives/LpIncentivesAprDisplay'
@@ -289,6 +292,16 @@ export function PoolInfoCard({
   const headerHeight = useAppHeaderHeight()
   const currency0 = useMemo(() => (poolData ? gqlToCurrency(poolData.token0) : undefined), [poolData])
   const currency1 = useMemo(() => (poolData ? gqlToCurrency(poolData.token1) : undefined), [poolData])
+  const chainId = (currency0?.chainId ?? currency1?.chainId) as UniverseChainId | undefined
+
+  const isFeeDisplayEnabled = useFeatureFlag(FeatureFlags.V4ProtocolFeeDisplay)
+  // PoolData is GraphQL-sourced and carries no fee fields — the protocol fee comes from data-api GetProtocolFees.
+  const protocolFeePips = useServedProtocolFee({
+    chainId,
+    protocolVersion: poolData ? parseRestProtocolVersion(poolData.protocolVersion) : undefined,
+    poolIdOrHash: poolData?.idOrAddress,
+    enabled: isFeeDisplayEnabled,
+  })
 
   if (!poolData) {
     if (loading) {
@@ -318,7 +331,9 @@ export function PoolInfoCard({
             <LiquidityPositionInfoBadges
               version={poolData.protocolVersion}
               v4hook={poolData.hookAddress}
+              chainId={chainId}
               feeTier={poolData.feeTier}
+              protocolFeePips={protocolFeePips}
               size="default"
             />
           </Flex>
@@ -370,7 +385,13 @@ export function ExpandablePoolInfo({
             <Text variant="subheading1">{currency1?.symbol}</Text>
           </Flex>
           <Flex row gap={2} alignItems="center">
-            <LiquidityPositionInfoBadges size="small" version={version} v4hook={v4hook} feeTier={feeTier} />
+            <LiquidityPositionInfoBadges
+              size="small"
+              version={version}
+              v4hook={v4hook}
+              chainId={(currency0?.chainId ?? currency1?.chainId) as UniverseChainId | undefined}
+              feeTier={feeTier}
+            />
           </Flex>
         </Flex>
         <Flex flexShrink={0}>

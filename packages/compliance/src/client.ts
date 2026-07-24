@@ -25,6 +25,17 @@ export type ScreenAddressInput = {
 }
 
 /**
+ * Builds a `useIsBlockedAddress` / `screenAddress` input from an optional address,
+ * collapsing the repeated `address ? { address } : undefined` guard at call sites.
+ * Pass `chainId` to route screening to that chain's provider; omit it to fall back
+ * to `CHAIN_ID_UNSPECIFIED` (the default provider). Returns `undefined` (skip the
+ * query) when there's no address to screen.
+ */
+export function toScreenInput(address?: string, chainId?: number): ScreenAddressInput | undefined {
+  return address ? { address, chainId } : undefined
+}
+
+/**
  * Screens a wallet address against the compliance provider and returns whether
  * it should be blocked (e.g. sanctioned / OFAC-listed). `chainId` is optional —
  * leaving it out sends `CHAIN_ID_UNSPECIFIED`, which routes to the default provider.

@@ -1,0 +1,171 @@
+{
+  "pools": [
+    {
+      "poolId": "0x72331fcb696b0151904c03584b66dc8365bc63f8a144d89a773384e3a579ca73",
+      "token0": "0x0000000000000000000000000000000000000000",
+      "token1": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "tick": -201331,
+      "liquidity": "1161811855341274182",
+      "sqrtPriceX96": "3367168326060413329045109",
+      "fee": 500,
+      "tickSpacing": 10,
+      "hooks": {
+        "address": "0x0000000000000000000000000000000000000000"
+      },
+      "protocolVersion": "PROTOCOL_VERSION_V4",
+      "chainId": 1,
+      "totalLiquidityUsd": "22464475.20018952098498682452353273",
+      "apr": 1.2440887223048835,
+      "totalApr": 1.2440887223048835
+    },
+    {
+      "poolId": "0x50b00c1a5a8e582ec808e97e71598cd135206a9f9c548eab2ed73659e7ee5fa8",
+      "token0": "0x0000000000000000000000000000000000000000",
+      "token1": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "tick": -201326,
+      "liquidity": "115650135241367820",
+      "sqrtPriceX96": "3367913540361957925399775",
+      "fee": 3000,
+      "tickSpacing": 60,
+      "hooks": {
+        "address": "0x0000000000000000000000000000000000000000"
+      },
+      "protocolVersion": "PROTOCOL_VERSION_V4",
+      "chainId": 1,
+      "totalLiquidityUsd": "3628484.810640708112222338868127788",
+      "apr": 1.1012860739399501
+    },
+    {
+      "poolId": "0x6423caccdb2b6b9913b9c488ae9b0fba2440e0ddc14d2bc5de45e3ce4df57c2e",
+      "token0": "0x0000000000000000000000000000000000000000",
+      "token1": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "tick": -201411,
+      "liquidity": "1370124412318515",
+      "sqrtPriceX96": "3353727759127078095703010",
+      "fee": 20000,
+      "tickSpacing": 400,
+      "hooks": {
+        "address": "0x0000000000000000000000000000000000000000"
+      },
+      "protocolVersion": "PROTOCOL_VERSION_V4",
+      "chainId": 1,
+      "totalLiquidityUsd": "1212110.401720635303073712091949861",
+      "apr": 0.1584839659766853
+    },
+    {
+      "poolId": "0x2287a9620adcbf6250dc71be9ee9b2d3a1ec85a464fc6f5c06669e8d07b61bba",
+      "token0": "0x0000000000000000000000000000000000000000",
+      "token1": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "tick": -201327,
+      "liquidity": "46221044161639589",
+      "sqrtPriceX96": "3367854110150879874450042",
+      "fee": 100,
+      "tickSpacing": 1,
+      "hooks": {
+        "address": "0x0000000000000000000000000000000000000000"
+      },
+      "protocolVersion": "PROTOCOL_VERSION_V4",
+      "chainId": 1,
+      "totalLiquidityUsd": "678646.7144532025482887097166378384",
+      "apr": 3.870200560821753
+    },
+    {
+      "poolId": "0xc271f1c8867809a4ac53a3e69f165da75ba589073ba518d8649cf9d575b320a1",
+      "token0": "0x0000000000000000000000000000000000000000",
+      "token1": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "tick": -201680,
+      "liquidity": "0",
+      "sqrtPriceX96": "3308818801961739607708721",
+      "fee": 500000,
+      "tickSpacing": 10000,
+      "hooks": {
+        "address": "0x0000000000000000000000000000000000000000"
+      },
+      "protocolVersion": "PROTOCOL_VERSION_V4",
+      "chainId": 1,
+      "totalLiquidityUsd": "4423.123160028829134838066819602057"
+    },
+    {
+      "poolId": "0xab39de136ca17a8f5afa50b71ff9a7d0c37d94108de71f8c692537deac933ca5",
+      "token0": "0x0000000000000000000000000000000000000000",
+      "token1": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "tick": -887272,
+      "liquidity": "0",
+      "sqrtPriceX96": "4295128740",
+      "fee": 4000,
+      "tickSpacing": 80,
+      "hooks": {
+        "address": "0x0000000000000000000000000000000000000000"
+      },
+      "protocolVersion": "PROTOCOL_VERSION_V4",
+      "chainId": 1,
+      "totalLiquidityUsd": "3373.654633858401011326499768386939"
+    },
+    {
+      "poolId": "0x34e63b1978574895621b85a67ab4a2bc78f50bc12e212bfc0078cc092d32ba2b",
+      "token0": "0x0000000000000000000000000000000000000000",
+      "token1": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "tick": -201651,
+      "liquidity": "0",
+      "sqrtPriceX96": "3313619829080752245428596",
+      "fee": 890000,
+      "tickSpacing": 17800,
+      "hooks": {
+        "address": "0x0000000000000000000000000000000000000000"
+      },
+      "protocolVersion": "PROTOCOL_VERSION_V4",
+      "chainId": 1,
+      "totalLiquidityUsd": "1748.042161425569508763573027141734"
+    },
+    {
+      "poolId": "0x1bbf82bb780dc9c312dfcb2430c04395675a7c925ec9f3e5eb5bd64f4fa1424d",
+      "token0": "0x0000000000000000000000000000000000000000",
+      "token1": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "tick": -201376,
+      "liquidity": "1110215125689",
+      "sqrtPriceX96": "3359580060259527254703928",
+      "fee": 10000,
+      "tickSpacing": 200,
+      "hooks": {
+        "address": "0x0000000000000000000000000000000000000000"
+      },
+      "protocolVersion": "PROTOCOL_VERSION_V4",
+      "chainId": 1,
+      "totalLiquidityUsd": "1007.247451210599051002577983477731",
+      "apr": 0.09930486593843098
+    },
+    {
+      "poolId": "0xac32702d3ec35bb4d543b615d63180898b9c6d71b0389ff0a243d9b84a4d719e",
+      "token0": "0x0000000000000000000000000000000000000000",
+      "token1": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "tick": -192635,
+      "liquidity": "3036712203562",
+      "sqrtPriceX96": "5201023861277202932490451",
+      "fee": 880000,
+      "tickSpacing": 17600,
+      "hooks": {
+        "address": "0x0000000000000000000000000000000000000000"
+      },
+      "protocolVersion": "PROTOCOL_VERSION_V4",
+      "chainId": 1,
+      "totalLiquidityUsd": "311.6046424266894197292031191691009",
+      "apr": 0.3205128205128205
+    },
+    {
+      "poolId": "0x6f5a313790943a619a3b955d86b17b5ba6d8f621a3ae9cf0517c7a1e7c99b6e5",
+      "token0": "0x0000000000000000000000000000000000000000",
+      "token1": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "tick": -201984,
+      "liquidity": "0",
+      "sqrtPriceX96": "3258916332496242543382411",
+      "fee": 50000,
+      "tickSpacing": 1000,
+      "hooks": {
+        "address": "0x0000000000000000000000000000000000000000"
+      },
+      "protocolVersion": "PROTOCOL_VERSION_V4",
+      "chainId": 1,
+      "totalLiquidityUsd": "192.8018472401534328723492697710092"
+    }
+  ]
+}

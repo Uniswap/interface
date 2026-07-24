@@ -6,7 +6,6 @@ export const UNITAG_NAV_PREFIX = 'unitag://'
 // Using 'local:' prefix to indicate these are client-only notifications
 // This prevents the API tracker from sending AckNotification calls to the backend
 export enum BannerId {
-  NoAppFees = 'local:no_app_fees_banner',
   FundWallet = 'local:fund_wallet_banner',
 
   PushNotifications = 'local:push_notifications_banner',

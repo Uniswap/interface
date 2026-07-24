@@ -39,6 +39,7 @@ type UseEarnAmountEntryMobileResult = {
   setActiveAmount: (next: string) => void
   handlePercentPress: (pct: number) => void
   handleToggleInputMode: () => void
+  resetAmounts: () => void
 }
 
 // This hook is currently mobile-only — the `useUSDTokenUpdater` state-cycle conversion model
@@ -164,6 +165,13 @@ export function useEarnAmountEntryMobile({
     setIsFiatInput((prev) => !prev)
   }, [])
 
+  const resetAmounts = useCallback(() => {
+    setExactAmountFiat('')
+    setExactAmountToken('')
+    setIsFiatInput(true)
+    setIsMaxSelected(false)
+  }, [setExactAmountFiat, setExactAmountToken])
+
   const parsedAmount = Number(value) || 0
   const hasInputAmount = parsedAmount > 0
   const tokenComparisonAmount = getComparisonAmount({
@@ -194,6 +202,7 @@ export function useEarnAmountEntryMobile({
     setActiveAmount,
     handlePercentPress,
     handleToggleInputMode,
+    resetAmounts,
   }
 }
 

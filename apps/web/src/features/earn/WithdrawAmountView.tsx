@@ -39,7 +39,10 @@ import {
 import { useActiveAddresses } from '~/features/accounts/store/hooks'
 import { EARN_SELECTOR_DROPDOWN_MAX_HEIGHT } from '~/features/earn/constants'
 import { EarnAmountViewHeader } from '~/features/earn/EarnAmountViewHeader'
-import { getWithdrawDestinationChainIds } from '~/features/earn/withdrawDestinationChains'
+import {
+  getSelectedWithdrawDestinationChainId,
+  getWithdrawDestinationChainIds,
+} from '~/features/earn/withdrawDestinationChains'
 
 const CHAR_WIDTH = 45
 const MAX_FONT_SIZE = 70
@@ -114,11 +117,9 @@ export function WithdrawAmountView({
   const { symbol: fiatSymbol } = useFiatCurrencyComponents(fiatCurrency)
   const { isTestnetModeEnabled } = useEnabledChains()
   const withdrawDestinationChainIds = useMemo(
-    () => getWithdrawDestinationChainIds({ isTestnetModeEnabled }),
-    [isTestnetModeEnabled],
+    () => getWithdrawDestinationChainIds({ isTestnetModeEnabled, vault }),
+    [isTestnetModeEnabled, vault],
   )
-  const fallbackChainId = withdrawDestinationChainIds[0] ?? initialChainId
-
   const withdrawableAmount = getEarnWithdrawableAmount({ position, vault })
   const withdrawableBalanceUsd = withdrawableAmount.availableUsd
   const availableBalanceLocal = convertFiatAmount(withdrawableBalanceUsd).amount
@@ -126,16 +127,19 @@ export function WithdrawAmountView({
   const [amount, setAmount] = useState(initialAmount)
   const [inputInFiat, setInputInFiat] = useState(true)
   const [selectedChainId, setSelectedChainId] = useState<UniverseChainId>(initialChainId)
-  const chainId = withdrawDestinationChainIds.includes(selectedChainId) ? selectedChainId : fallbackChainId
+  const chainId = getSelectedWithdrawDestinationChainId({
+    initialChainId,
+    selectedChainId,
+    withdrawDestinationChainIds,
+  })
   const activeAddresses = useActiveAddresses()
   const tieredNetworkOptions = useNetworkSelectorOptions({
     addresses: activeAddresses,
     chainIds: withdrawDestinationChainIds,
   })
-  const destinationCurrencyId = getEarnVaultWithdrawDestinationCurrencyId({
-    vault,
-    destinationChainId: chainId,
-  })
+  const destinationCurrencyId = chainId
+    ? getEarnVaultWithdrawDestinationCurrencyId({ vault, destinationChainId: chainId })
+    : undefined
   const currencyInfo = useCurrencyInfo(destinationCurrencyId)
   const currency = currencyInfo?.currency
   const symbol = currency?.symbol ?? ''
@@ -265,7 +269,7 @@ export function WithdrawAmountView({
   )
 
   const handleReview = useCallback(() => {
-    if (!hasPositionBalance || !currency) {
+    if (!hasPositionBalance || !currency || !chainId) {
       return
     }
     const localFiat = inputInFiat ? amount : tokenToFiat(amount)
@@ -302,7 +306,7 @@ export function WithdrawAmountView({
     }
   }, [])
 
-  const chainLabel = getChainInfo(chainId).label
+  const chainLabel = chainId ? getChainInfo(chainId).label : t('common.unavailable')
   const maxDecimals = inputInFiat ? FIAT_DECIMALS : (currency?.decimals ?? FIAT_DECIMALS)
 
   return (
@@ -411,7 +415,7 @@ export function WithdrawAmountView({
             />
             <Flex>
               <Text variant="body2" color="$neutral1">
-                {currency?.name ?? 'USD Coin'}
+                {currency?.name ?? t('common.unavailable')}
               </Text>
               <Flex row alignItems="center" gap="$spacing4">
                 <Text variant="body3" color="$neutral2">
@@ -462,7 +466,7 @@ export function WithdrawAmountView({
             onPress={handleNetworkChange}
             customTrigger={
               <Flex row alignItems="center" gap="$spacing6">
-                <ChainLogo chainId={chainId} size={iconSizes.icon20} />
+                {chainId && <ChainLogo chainId={chainId} size={iconSizes.icon20} />}
                 <Text variant="body2" color="$neutral1">
                   {chainLabel}
                 </Text>
@@ -478,7 +482,7 @@ export function WithdrawAmountView({
         variant="branded"
         emphasis="primary"
         size="large"
-        isDisabled={isReviewDisabled}
+        disabled={isReviewDisabled}
         onPress={handleReview}
       >
         {ctaLabel}

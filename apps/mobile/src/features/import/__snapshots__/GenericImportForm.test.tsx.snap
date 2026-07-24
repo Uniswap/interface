@@ -1,369 +1,99 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
-<View
-  onStartShouldSetResponder={[Function]}
-  onTouchEnd={[Function]}
-  style={
-    {
-      "flexDirection": "column",
-      "gap": 12,
-    }
-  }
->
-  <View
-    style={
-      {
-        "backgroundColor": "#FFFFFF",
-        "borderBottomColor": "rgba(19, 19, 19, 0.08)",
-        "borderBottomLeftRadius": 20,
-        "borderBottomRightRadius": 20,
-        "borderBottomWidth": 1,
-        "borderLeftColor": "rgba(19, 19, 19, 0.08)",
-        "borderLeftWidth": 1,
-        "borderRightColor": "rgba(19, 19, 19, 0.08)",
-        "borderRightWidth": 1,
-        "borderStyle": "solid",
-        "borderTopColor": "rgba(19, 19, 19, 0.08)",
-        "borderTopLeftRadius": 20,
-        "borderTopRightRadius": 20,
-        "borderTopWidth": 1,
-        "flexDirection": "column",
-        "flexShrink": 1,
-        "minHeight": 120,
-        "paddingBottom": 16,
-        "paddingLeft": 24,
-        "paddingRight": 24,
-        "paddingTop": 16,
-        "width": "100%",
-      }
-    }
+exports[`GenericImportForm > renders a placeholder when there is no value 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    <View
-      style={
-        {
-          "alignItems": "flex-end",
-          "flexDirection": "row",
-          "justifyContent": "center",
-        }
-      }
+    <span
+      class=""
+      style="display: contents;"
     >
-      <TextInput
-        autoCapitalize="none"
-        autoComplete="off"
-        autoCorrect={false}
-        autoFocus={true}
-        blurOnSubmit={false}
-        focusVisibleStyle={{}}
-        focusable={true}
-        maxFontSizeMultiplier={1.4}
-        multiline={true}
-        onBlur={[Function]}
-        onChangeText={[Function]}
-        onFocus={[Function]}
-        onSubmitEditing={[Function]}
-        placeholderTextColor="rgba(19, 19, 19, 0.35)"
-        returnKeyType="done"
-        scrollEnabled={false}
-        selectionColor="rgba(19, 19, 19, 0.35)"
-        spellCheck={false}
-        style={
-          {
-            "backgroundColor": "transparent",
-            "borderBottomColor": "transparent",
-            "borderBottomLeftRadius": 12,
-            "borderBottomRightRadius": 12,
-            "borderBottomWidth": 1,
-            "borderLeftColor": "transparent",
-            "borderLeftWidth": 1,
-            "borderRightColor": "transparent",
-            "borderRightWidth": 1,
-            "borderStyle": "solid",
-            "borderTopColor": "transparent",
-            "borderTopLeftRadius": 12,
-            "borderTopRightRadius": 12,
-            "borderTopWidth": 1,
-            "color": "#131313",
-            "flexShrink": 1,
-            "fontFamily": "Basel Grotesk",
-            "fontSize": 17,
-            "fontWeight": "500",
-            "height": "auto",
-            "lineHeight": 20.4,
-            "minWidth": 0,
-            "paddingBottom": 0,
-            "paddingLeft": 0,
-            "paddingRight": 0,
-            "paddingTop": 0,
-            "textAlign": "left",
-          }
-        }
-        testID="import-account-input"
-      />
-    </View>
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "flexDirection": "column",
-          "justifyContent": "center",
-          "left": 24,
-          "paddingBottom": 16,
-          "paddingTop": 16,
-          "position": "absolute",
-          "top": 0,
-        }
-      }
-    >
-      <Text
-        allowFontScaling={true}
-        maxFontSizeMultiplier={1.4}
-        pointerEvents="none"
-        style={
-          {
-            "color": "rgba(19, 19, 19, 0.63)",
-            "fontFamily": "Basel Grotesk",
-            "fontSize": 17,
-            "fontWeight": "400",
-            "lineHeight": 20.4,
-          }
-        }
-        suppressHighlighting={true}
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa1360334080"
       >
-        seed phrase
-      </Text>
-    </View>
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "bottom": 0,
-          "flexDirection": "column",
-          "height": 0,
-          "justifyContent": "center",
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-        }
-      }
-    >
-      <View
-        style={
-          {
-            "flexDirection": "column",
-            "position": "absolute",
-          }
-        }
-      >
-        <View
-          handlerTags={
-            [
-              3,
-              2,
-              1,
-            ]
-          }
-          onGestureHandlerEvent={[Function]}
-          onGestureHandlerReanimatedEvent={
-            {
-              "workletEventHandler": WorkletEventHandlerWeb {
-                "eventNames": [],
-                "listeners": {},
-                "worklet": [Function],
-              },
-            }
-          }
-          onGestureHandlerStateChange={[Function]}
-          onGestureHandlerTouchEvent={[Function]}
-          pointerEvents="box-none"
-          style={
-            {
-              "display": "contents",
-            }
-          }
+        <div
+          class="_pr-_short_t-space-spa1360334047 _pl-_short_t-space-spa1360334047 _pt-_short_t-space-spa1360334076 _pb-_short_t-space-spa1360334076 _minHeight-_short_90px _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minWidth-0px _flexShrink-1 _flexDirection-column _backgroundColor-surface1 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _minHeight-120px _pr-t-space-spa1360334047 _pl-t-space-spa1360334047 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _width-10037 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
         >
-          <RNGestureHandlerButton
-            accessible={true}
-            collapsable={false}
-            enabled={true}
-            forwardedRef={[Function]}
-            hitSlop={
-              {
-                "bottom": 0,
-                "left": 0,
-                "right": 0,
-                "top": 0,
-              }
-            }
-            jestAnimatedProps={
-              {
-                "value": {},
-              }
-            }
-            jestAnimatedStyle={
-              {
-                "value": {},
-              }
-            }
-            jestInlineStyle={
-              [
-                {
-                  "backgroundColor": "rgba(255, 55, 199, 0.08)",
-                  "borderBottomLeftRadius": 12,
-                  "borderBottomRightRadius": 12,
-                  "borderTopLeftRadius": 12,
-                  "borderTopRightRadius": 12,
-                  "flexDirection": "column",
-                  "opacity": 1,
-                  "paddingBottom": 8,
-                  "paddingLeft": 8,
-                  "paddingRight": 8,
-                  "paddingTop": 8,
-                  "transform": [
-                    {
-                      "scale": 1,
-                    },
-                  ],
-                },
-              ]
-            }
-            onBlur={[Function]}
-            onClick={[Function]}
-            onFocus={[Function]}
-            onLayout={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
-            rippleColor="transparent"
-            style={
-              [
-                {},
-                [
-                  {
-                    "backgroundColor": "rgba(255, 55, 199, 0.08)",
-                    "borderBottomLeftRadius": 12,
-                    "borderBottomRightRadius": 12,
-                    "borderTopLeftRadius": 12,
-                    "borderTopRightRadius": 12,
-                    "flexDirection": "column",
-                    "opacity": 1,
-                    "paddingBottom": 8,
-                    "paddingLeft": 8,
-                    "paddingRight": 8,
-                    "paddingTop": 8,
-                    "transform": [
-                      {
-                        "scale": 1,
-                      },
-                    ],
-                  },
-                  {},
-                ],
-              ]
-            }
+          <div
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-flex-end _justifyContent-center"
           >
-            <View
-              style={
-                {
-                  "alignItems": "center",
-                  "flexDirection": "row",
-                  "gap": 4,
-                  "justifyContent": "center",
-                }
-              }
+            <span
+              class="_dsp_contents"
             >
-              <Text
-                allowFontScaling={true}
-                maxFontSizeMultiplier={1.2}
-                style={
-                  {
-                    "color": "#FF37C7",
-                    "fontFamily": "Basel Grotesk",
-                    "fontSize": 15,
-                    "fontWeight": "500",
-                    "lineHeight": 17.25,
-                  }
-                }
-                suppressHighlighting={true}
+              <textarea
+                autocapitalize="none"
+                autocomplete="off"
+                autocorrect="off"
+                class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _borderTopColor-0hover-borderColor69916956 _borderRightColor-0hover-borderColor69916956 _borderBottomColor-0hover-borderColor69916956 _borderLeftColor-0hover-borderColor69916956 _borderTopColor-0focus-borderColor68052152 _borderRightColor-0focus-borderColor68052152 _borderBottomColor-0focus-borderColor68052152 _borderLeftColor-0focus-borderColor68052152 _outlineColor-0focus-visible-outlineColo114 _outlineWidth-0focus-visible-2px _outlineStyle-0focus-visible-solid _pr-t-space-non101 _pl-t-space-non101 _height-auto _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _fontFamily-f-family _fontWeight-f-weight-me3083741 _fontSize-17px _lineHeight-20--4px _color-neutral1 _pt-t-space-non101 _pb-t-space-non101 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _outlineWidth-0px _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _backgroundColor-transparent _minWidth-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _flexShrink-1 _textAlign-left"
+                data-disable-theme="true"
+                data-testid="import-account-input"
+                dir="auto"
+                enterkeyhint="done"
+                spellcheck="false"
+                style="--placeholderTextColor: var(--neutral3);"
+                tabindex="0"
+                virtualkeyboardpolicy="auto"
+              />
+            </span>
+          </div>
+          <div
+            class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _left-t-space-spa1360334047 _position-absolute _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _top-0px"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-17px _fontWeight-f-weight-bo3548 _lineHeight-20--4px _pointerEvents-none"
+              data-disable-theme="true"
+            >
+              seed phrase
+            </span>
+          </div>
+          <div
+            class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _bottom-0px _height-0px _left-0px _position-absolute _right-0px"
+          >
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute"
+            >
+              <button
+                class="is_TouchableArea "
+                style="flex-direction: column; opacity: 1; background-color: rgba(255, 55, 199, 0.08); border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; padding: 8px 8px 8px 8px; transform: [object Object];"
               >
-                Paste
-              </Text>
-              <RNSVGSvgView
-                align="xMidYMid"
-                bbHeight={16}
-                bbWidth={16}
-                fill="currentColor"
-                focusable={false}
-                meetOrSlice={0}
-                minX={0}
-                minY={0}
-                strokeWidth={8}
-                style={
-                  [
-                    {
-                      "backgroundColor": "transparent",
-                      "borderWidth": 0,
-                    },
-                    {
-                      "color": "#FF37C7",
-                      "height": 16,
-                      "width": 16,
-                    },
-                    {
-                      "flex": 0,
-                      "height": 16,
-                      "width": 16,
-                    },
-                  ]
-                }
-                vbHeight={16}
-                vbWidth={16}
-              >
-                <RNSVGGroup
-                  color="#FF37C7"
-                  fill={
-                    {
-                      "type": 2,
-                    }
-                  }
-                  propList={
-                    [
-                      "fill",
-                      "strokeWidth",
-                    ]
-                  }
-                  strokeWidth={8}
+                <div
+                  class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa94665589"
                 >
-                  <RNSVGPath
-                    d="M14 4.24666V8.56665C14 8.71332 13.9866 8.86 13.9533 9H11.2533C10.0066 9 9 10.0067 9 11.2533V13.9534C8.86 13.9867 8.7134 14 8.56673 14H4.25326C2.74659 14 2 13.2467 2 11.7467V4.24666C2 2.74666 2.74659 2 4.25326 2H11.7467C13.2534 2 14 2.74666 14 4.24666ZM10 11.2533V13.48C10.06 13.44 10.1067 13.3933 10.16 13.34L13.34 10.16C13.3933 10.1067 13.44 10.06 13.48 10H11.2533C10.5599 10 10 10.56 10 11.2533Z"
-                    fill={
-                      {
-                        "type": 2,
-                      }
-                    }
-                    propList={
-                      [
-                        "fill",
-                      ]
-                    }
-                  />
-                </RNSVGGroup>
-              </RNSVGSvgView>
-            </View>
-          </RNGestureHandlerButton>
-        </View>
-      </View>
-    </View>
-  </View>
-  <View
-    style={
-      {
-        "flexDirection": "column",
-      }
-    }
-  />
-</View>
+                  <span
+                    class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
+                    data-disable-theme="true"
+                  >
+                    common.button.paste
+                  </span>
+                  <div
+                    fill="currentColor"
+                    stroke-width="8"
+                    style="width: 16px; height: 16px; color: rgb(255, 55, 199);"
+                    viewbox="0 0 16 16"
+                  >
+                    <div
+                      d="M14 4.24666V8.56665C14 8.71332 13.9866 8.86 13.9533 9H11.2533C10.0066 9 9 10.0067 9 11.2533V13.9534C8.86 13.9867 8.7134 14 8.56673 14H4.25326C2.74659 14 2 13.2467 2 11.7467V4.24666C2 2.74666 2.74659 2 4.25326 2H11.7467C13.2534 2 14 2.74666 14 4.24666ZM10 11.2533V13.48C10.06 13.44 10.1067 13.3933 10.16 13.34L13.34 10.16C13.3933 10.1067 13.44 10.06 13.48 10H11.2533C10.5599 10 10 10.56 10 11.2533Z"
+                      fill="currentColor"
+                    />
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+        />
+      </div>
+      <div
+        style="display: contents;"
+      />
+    </span>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;

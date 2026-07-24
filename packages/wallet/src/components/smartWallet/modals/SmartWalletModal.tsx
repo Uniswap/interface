@@ -138,7 +138,7 @@ export function SmartWalletModal({
                 variant={primaryButton.variant ?? 'branded'}
                 emphasis={primaryButton.emphasis}
                 testID={TestID.SmartWalletUpgradeModalEnable}
-                isDisabled={primaryButton.disabled}
+                disabled={primaryButton.disabled}
                 loading={primaryButton.loading}
                 flexGrow={1}
                 shouldAnimateBetweenLoadingStates={false}

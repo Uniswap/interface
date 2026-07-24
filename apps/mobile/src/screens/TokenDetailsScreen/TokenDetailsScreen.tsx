@@ -37,6 +37,7 @@ import {
   useTokenBasicInfoPartsFragment,
   useTokenBasicProjectPartsFragment,
 } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
+import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { isMultichainProjectTokens } from 'uniswap/src/features/dataApi/tokenProjects/utils/isMultichainProjectTokens'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { useLogRWATokenDetailsViewed } from 'uniswap/src/features/rwa/useLogRWATokenDetailsViewed'
@@ -69,6 +70,7 @@ function TokenDetailsWrapper(): JSX.Element {
   const { chainId, address, currencyId, initialIsMultichainAsset } = useTokenDetailsContext()
   const { data: token } = useTokenBasicInfoPartsFragment({ currencyId })
   const { data: projectParts } = useTokenBasicProjectPartsFragment({ currencyId })
+  const metadata = useTokenMetadata(currencyId, { legacyToken: { name: token.name, symbol: token.symbol } })
   // Combine the navigator-provided hint with the project-derived signal so the
   // first analytics impression carries the correct value even when the project
   // fragment hasn't resolved yet.
@@ -78,17 +80,17 @@ function TokenDetailsWrapper(): JSX.Element {
     () => ({
       chain: chainId,
       address,
-      currencyName: token.name,
+      currencyName: metadata.name,
       multichain: isMultichainAsset,
     }),
-    [address, chainId, isMultichainAsset, token.name],
+    [address, chainId, isMultichainAsset, metadata.name],
   )
 
   const rwaMatch = useGatedTokenDetailsRWAMatch(FeatureFlags.RWATdp)
   useLogRWATokenDetailsViewed({
     rwaMatch,
     tokenAddress: address,
-    tokenSymbol: token.symbol,
+    tokenSymbol: metadata.symbol,
     chainId,
   })
 

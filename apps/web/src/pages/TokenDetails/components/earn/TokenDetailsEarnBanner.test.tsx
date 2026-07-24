@@ -36,6 +36,7 @@ const EARN_VAULT: EarnVaultInfo = {
   chainId: UniverseChainId.Mainnet,
   apyPercent: 3.5,
   exposureCurrencyIds: [],
+  exposures: [],
   totalDepositsUsd: 1_000_000,
   liquidityUsd: 500_000,
   curator: { name: 'Gauntlet' },

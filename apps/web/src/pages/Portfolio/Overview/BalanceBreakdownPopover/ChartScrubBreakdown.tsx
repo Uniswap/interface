@@ -24,6 +24,7 @@ function pointAtTime(series: PriceChartData[], time: UTCTimestamp): PriceChartDa
  * Crosshair-following overlay shown while scrubbing the Total chart: splits the balance into
  * tokens / earn / pools (fixed order) at the scrubbed point, each with a semantically-colored %
  * change. Categories with no series point at the scrubbed time or an all-zero series are skipped.
+ * The opaque background masks the canvas-drawn crosshair line so it starts below the list.
  */
 export function ChartScrubBreakdown({
   coordinates,
@@ -85,6 +86,8 @@ export function ChartScrubBreakdown({
       pointerEvents="none"
       width={OVERLAY_WIDTH}
       gap="$spacing4"
+      backgroundColor="$surface1"
+      pb="$spacing8"
       style={{ top: TOP_OFFSET, transform: 'translateX(-50%)', zIndex: 4 }}
     >
       {rows.map((row) => (

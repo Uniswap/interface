@@ -1,4 +1,4 @@
-import { NetworkStatus } from '@apollo/client'
+import { QueryStatus } from '@tanstack/react-query'
 import { TradingApi } from '@universe/api'
 import dayjs from 'dayjs'
 import { useFormattedTransactionDataForActivity } from 'uniswap/src/features/activity/hooks/useFormattedTransactionDataForActivity'
@@ -63,7 +63,8 @@ describe('useFormattedTransactionDataForActivity', () => {
       isFetching: false,
       error: undefined,
       refetch: mockRefetch,
-      networkStatus: NetworkStatus.ready,
+      isPending: false,
+      isError: false,
       fetchNextPage: mockFetchNextPage,
       hasNextPage: false,
       isFetchingNextPage: false,
@@ -85,7 +86,8 @@ describe('useFormattedTransactionDataForActivity', () => {
       isFetching: false,
       error: undefined,
       refetch: mockRefetch,
-      networkStatus: NetworkStatus.ready,
+      isPending: false,
+      isError: false,
       fetchNextPage: mockFetchNextPage,
       hasNextPage: false,
       isFetchingNextPage: false,
@@ -116,7 +118,7 @@ describe('useFormattedTransactionDataForActivity', () => {
 
   describe('loading states', () => {
     it('should show loading data when no data and loading', () => {
-      mockListTransactions({ data: undefined, loading: true, networkStatus: NetworkStatus.loading })
+      mockListTransactions({ data: undefined, loading: true, isPending: true })
       const { result } = renderFormattedHook()
 
       expect(result.current.isLoading).toBe(true)
@@ -139,7 +141,7 @@ describe('useFormattedTransactionDataForActivity', () => {
   describe('error states', () => {
     it('should handle error from useListTransactions', () => {
       const mockError = new Error('API error')
-      mockListTransactions({ data: undefined, error: mockError, networkStatus: NetworkStatus.error })
+      mockListTransactions({ data: undefined, error: mockError, isError: true })
 
       const { result } = renderFormattedHook()
 
@@ -148,7 +150,7 @@ describe('useFormattedTransactionDataForActivity', () => {
     })
 
     it('should provide retry functionality', async () => {
-      mockListTransactions({ data: undefined, error: new Error('Test error'), networkStatus: NetworkStatus.error })
+      mockListTransactions({ data: undefined, error: new Error('Test error'), isError: true })
 
       const { result } = renderFormattedHook()
 

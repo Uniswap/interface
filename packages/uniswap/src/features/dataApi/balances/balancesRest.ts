@@ -1,6 +1,7 @@
 import type { WatchQueryFetchPolicy } from '@apollo/client'
 import { type PlainMessage } from '@bufbuild/protobuf'
 import type { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import type { PollingInterval } from 'uniswap/src/constants/misc'
 import { calculateTotalBalancesUsdPerChainRest } from 'uniswap/src/data/balances/utils'
 import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
@@ -17,7 +18,6 @@ import {
   useRestPortfolioValueModifier,
   useRestPortfolioValueModifiers,
 } from 'uniswap/src/features/dataApi/balances/useRestPortfolioValueModifier'
-import { mapRestStatusToNetworkStatus } from 'uniswap/src/features/dataApi/balances/utils'
 import type { BaseResult, PortfolioBalance, PortfolioMultichainBalance } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency, buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
 import {
@@ -136,6 +136,7 @@ function usePortfolioDataQueryWithSelect<T>(
   const { evmAddress, svmAddress, select, requestMultichainFromBackend, cacheOnly, ...queryOptions } = options
   const { chains: defaultChainIds } = useEnabledChains()
   const chainIds = queryOptions.chainIds || defaultChainIds
+  const isV2TokensEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
 
   // TODO(SWAP-388): GetPortfolio REST endpoint does not yet support modifier array; it will take 1 evm/svm address, but will apply the modifications across the board
   const modifier = useRestPortfolioValueModifier(evmAddress ?? svmAddress)
@@ -153,7 +154,8 @@ function usePortfolioDataQueryWithSelect<T>(
     isFetching: restLoading,
     refetch: restRefetch,
     error: restError,
-    status: restStatus,
+    isPending: restPending,
+    isError: restIsError,
     dataUpdatedAt,
   } = useGetPortfolioQuery({
     input: {
@@ -162,6 +164,7 @@ function usePortfolioDataQueryWithSelect<T>(
       chainIds,
       modifier,
       multichain,
+      ...(isV2TokensEnabled && { useSubstreamData: true }),
     },
     enabled: !!(evmAddress ?? svmAddress) && !queryOptions.skip,
     cacheOnly,
@@ -172,7 +175,8 @@ function usePortfolioDataQueryWithSelect<T>(
   return {
     data: formattedData,
     loading: restLoading,
-    networkStatus: mapRestStatusToNetworkStatus(restStatus),
+    isPending: restPending,
+    isError: restIsError,
     refetch: restRefetch,
     error: restError || undefined,
     dataUpdatedAt: dataUpdatedAt || undefined,

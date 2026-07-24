@@ -1,4 +1,3 @@
-import { isError, isNonPollingRequestInFlight } from '@universe/api'
 import { isMobileApp } from '@universe/environment'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -16,10 +15,10 @@ export const EmptyTokensList = memo(function EmptyTokensListInner({
   errorCardContainerStyle: FlexProps
 }): JSX.Element | null {
   const { t } = useTranslation()
-  const { balancesById, networkStatus, refetch } = useTokenBalanceListContext()
+  const { balancesById, isPending, refetch, error } = useTokenBalanceListContext()
 
-  const isLoadingWithoutCachedValues = !balancesById && isNonPollingRequestInFlight(networkStatus)
-  const hasErrorWithoutCachedValues = isError(networkStatus, !!balancesById)
+  const isLoadingWithoutCachedValues = !balancesById && isPending
+  const hasErrorWithoutCachedValues = error !== undefined && !balancesById
 
   if (isLoadingWithoutCachedValues) {
     return (

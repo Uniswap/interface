@@ -14,6 +14,7 @@ const APM_PREFIX = 'trace.uniswap.privyembeddedwallet.v1.EmbeddedWalletService'
 // RPCs — there is no `*recovery*` view name on web, so measure it via resources.
 // (The mobile OnDeviceRecovery / OnboardingRecoveryFlow views are the
 // self-custodial wallet's own recovery UX, a different surface — excluded here.)
+// TODO(entry-gateway-urls): keep in sync with packages/api/src/clients/base/entryGatewayUrls.ts (no dep path to @universe/api)
 const feHost = `entry-gateway.backend-${env}.api.uniswap.org`
 const feRecoverySearch = `@type:resource @application.name:Web @resource.url_host:${feHost} @resource.url:(*ecovery* OR *OprfEvaluate* OR *DecryptionResult*)`
 

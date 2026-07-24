@@ -32,7 +32,7 @@ import { BidForm } from '~/features/Toucan/Auction/BidForm/BidForm'
 import { Bids } from '~/features/Toucan/Auction/Bids/Bids'
 import { WithdrawModal } from '~/features/Toucan/Auction/Bids/WithdrawModal/WithdrawModal'
 import { useBidFormState } from '~/features/Toucan/Auction/hooks/useBidFormState'
-import { useIsQuickLaunchExemptAuction } from '~/features/Toucan/Auction/hooks/useIsQuickLaunchExemptAuction'
+import { useIsQuickLaunchAuction } from '~/features/Toucan/Auction/hooks/useIsQuickLaunchAuction'
 import { useWithdrawButtonState } from '~/features/Toucan/Auction/hooks/useWithdrawButtonState'
 import { PostAuctionPanel } from '~/features/Toucan/Auction/PostAuctionPanel'
 import { AuctionStoreProvider } from '~/features/Toucan/Auction/store/AuctionStoreContextProvider'
@@ -162,7 +162,7 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
   const [showBidFormModal, setShowBidFormModal] = useState(false)
 
   // QuickLaunch: quick launches swap the standard stats banner for the simpler stat row.
-  const isQuickLaunch = useIsQuickLaunchExemptAuction()
+  const isQuickLaunch = useIsQuickLaunchAuction()
 
   const { pageTitle, metatags } = usePageMetatags(auctionDetails)
 

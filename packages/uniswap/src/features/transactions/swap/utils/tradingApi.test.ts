@@ -6,6 +6,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { useProtocols } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import {
+  createGetQuoteSlippageParams,
   transformTradingApiResponseToTrade,
   useQuoteRoutingParams,
   validateTrade,
@@ -354,5 +355,102 @@ describe(validateTrade, () => {
 
     expect(result).toBeNull()
     expect(logger.error).toHaveBeenCalledWith(expect.any(Error), expect.any(Object))
+  })
+})
+
+describe(createGetQuoteSlippageParams, () => {
+  const MIN_L2_SLIPPAGE = 2.5
+
+  function createSlippageParams({
+    customSlippageTolerance,
+    isL2ChainId = false,
+    minAutoSlippageToleranceL2,
+  }: { customSlippageTolerance?: number; isL2ChainId?: boolean; minAutoSlippageToleranceL2?: number } = {}) {
+    return createGetQuoteSlippageParams({
+      getMinAutoSlippageToleranceL2: () => minAutoSlippageToleranceL2,
+      getIsL2ChainId: () => isL2ChainId,
+      getCustomSlippageTolerance: () => customSlippageTolerance,
+    })
+  }
+
+  it('returns the configured slippage tolerance for same-chain L2 swaps when the dynamic config value is set', () => {
+    const getQuoteSlippageParams = createSlippageParams({
+      isL2ChainId: true,
+      minAutoSlippageToleranceL2: MIN_L2_SLIPPAGE,
+    })
+
+    const result = getQuoteSlippageParams({
+      tokenInChainId: UniverseChainId.Base,
+      tokenOutChainId: UniverseChainId.Base,
+    })
+
+    expect(result).toEqual({ slippageTolerance: MIN_L2_SLIPPAGE })
+  })
+
+  it('returns autoSlippage for same-chain L2 swaps when the dynamic config value is unset', () => {
+    const getQuoteSlippageParams = createSlippageParams({ isL2ChainId: true })
+
+    const result = getQuoteSlippageParams({
+      tokenInChainId: UniverseChainId.Base,
+      tokenOutChainId: UniverseChainId.Base,
+    })
+
+    expect(result).toEqual({ autoSlippage: TradingApi.AutoSlippage.DEFAULT })
+    expect(result).not.toHaveProperty('slippageTolerance')
+  })
+
+  it('returns the custom slippage tolerance when the user has set one', () => {
+    const getQuoteSlippageParams = createSlippageParams({
+      customSlippageTolerance: 1.5,
+      isL2ChainId: true,
+      minAutoSlippageToleranceL2: MIN_L2_SLIPPAGE,
+    })
+
+    const result = getQuoteSlippageParams({
+      tokenInChainId: UniverseChainId.Base,
+      tokenOutChainId: UniverseChainId.Base,
+    })
+
+    expect(result).toEqual({ slippageTolerance: 1.5 })
+  })
+
+  it('returns autoSlippage for cross-chain swaps regardless of the dynamic config value', () => {
+    const getQuoteSlippageParams = createSlippageParams({
+      isL2ChainId: true,
+      minAutoSlippageToleranceL2: MIN_L2_SLIPPAGE,
+    })
+
+    const result = getQuoteSlippageParams({
+      tokenInChainId: UniverseChainId.Base,
+      tokenOutChainId: UniverseChainId.Mainnet,
+    })
+
+    expect(result).toEqual({ autoSlippage: TradingApi.AutoSlippage.DEFAULT })
+  })
+
+  it('returns autoSlippage for USD quotes regardless of the dynamic config value', () => {
+    const getQuoteSlippageParams = createSlippageParams({
+      isL2ChainId: true,
+      minAutoSlippageToleranceL2: MIN_L2_SLIPPAGE,
+    })
+
+    const result = getQuoteSlippageParams({
+      tokenInChainId: UniverseChainId.Base,
+      tokenOutChainId: UniverseChainId.Base,
+      isUSDQuote: true,
+    })
+
+    expect(result).toEqual({ autoSlippage: TradingApi.AutoSlippage.DEFAULT })
+  })
+
+  it('returns autoSlippage for same-chain L1 swaps', () => {
+    const getQuoteSlippageParams = createSlippageParams({ minAutoSlippageToleranceL2: MIN_L2_SLIPPAGE })
+
+    const result = getQuoteSlippageParams({
+      tokenInChainId: UniverseChainId.Mainnet,
+      tokenOutChainId: UniverseChainId.Mainnet,
+    })
+
+    expect(result).toEqual({ autoSlippage: TradingApi.AutoSlippage.DEFAULT })
   })
 })

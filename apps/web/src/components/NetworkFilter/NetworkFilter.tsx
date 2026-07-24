@@ -2,7 +2,7 @@ import { isWebApp } from '@universe/environment'
 import type { Dispatch, SetStateAction } from 'react'
 import { memo, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, ScrollView, styled, Text, useMedia } from 'ui/src'
+import { Flex, styled, Text, useMedia } from 'ui/src'
 import type { FlexProps, TextProps } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import Badge from 'uniswap/src/components/badge/Badge'
@@ -46,9 +46,9 @@ const StyledDropdown = {
   minWidth: 272,
   px: 0,
   py: 0,
+  flexDirection: 'column',
+  minHeight: 0,
 } satisfies FlexProps
-
-const NETWORK_SEARCH_DROPDOWN_CHROME_HEIGHT = 64
 
 const ButtonStyles: Record<DropdownSizeVariants, FlexProps> = {
   [DropdownSizeVariants.Large]: {
@@ -202,17 +202,14 @@ export function NetworkFilter({
           alignRight={position === 'right'}
         >
           {showSearch ? (
-            <Flex p="$spacing4" pb="$spacing4">
+            <Flex flex={1} minHeight={0} p="$spacing4" pb="$spacing4">
               <NetworkFilterDropdownContent
                 autoFocus={!isMobileSheet}
                 chainIds={filteredChainIds}
+                fillAvailableHeight
                 includeAllNetworks={showMultichainOption}
                 allNetworksChainIds={showMultichainOption ? allNetworksDisplayChainIds : undefined}
                 isOpen={isMenuOpen}
-                maxHeight={
-                  (typeof dropdownStyle?.maxHeight === 'number' ? dropdownStyle.maxHeight : StyledDropdown.maxHeight) -
-                  NETWORK_SEARCH_DROPDOWN_CHROME_HEIGHT
-                }
                 selectedChain={currentChainId ?? null}
                 tieredOptions={tieredOptions}
                 forceAllNetworksLabel={forceAllNetworksLabel}
@@ -223,23 +220,21 @@ export function NetworkFilter({
               />
             </Flex>
           ) : (
-            <ScrollView>
-              <Flex p="$spacing8">
-                {showMultichainOption && (
-                  <TableNetworkItem
-                    forceAllNetworksLabel={forceAllNetworksLabel}
-                    chainInfo={null}
-                    chainIds={allNetworksDisplayChainIds}
-                    tab={tab}
-                    toggleMenu={toggleMenu}
-                    tracePage={tracePage}
-                    onPress={onPress}
-                    currentChainId={currentChainId}
-                  />
-                )}
-                {filteredChainIds.map(tableNetworkItemRenderer)}
-              </Flex>
-            </ScrollView>
+            <Flex p="$spacing8">
+              {showMultichainOption && (
+                <TableNetworkItem
+                  forceAllNetworksLabel={forceAllNetworksLabel}
+                  chainInfo={null}
+                  chainIds={allNetworksDisplayChainIds}
+                  tab={tab}
+                  toggleMenu={toggleMenu}
+                  tracePage={tracePage}
+                  onPress={onPress}
+                  currentChainId={currentChainId}
+                />
+              )}
+              {filteredChainIds.map(tableNetworkItemRenderer)}
+            </Flex>
           )}
         </Dropdown>
       </Trace>

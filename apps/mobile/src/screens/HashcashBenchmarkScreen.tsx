@@ -1,5 +1,5 @@
 import { HashcashNative } from '@universe/hashcash-native'
-import { findProof as jsFindProof } from '@universe/sessions/src/challenge-solvers/hashcash/core'
+import { findProof as jsFindProof } from '@universe/sessions'
 import React, { memo, useCallback, useEffect, useMemo } from 'react'
 import { ScrollView } from 'react-native'
 import { BackButton } from 'src/components/buttons/BackButton'
@@ -351,7 +351,7 @@ export function HashcashBenchmarkScreen(): JSX.Element {
 
             {/* Action Buttons */}
             <Flex row gap="$spacing8" flexWrap="wrap">
-              <Button size="small" emphasis="primary" isDisabled={isRunning} onPress={runBenchmark}>
+              <Button size="small" emphasis="primary" disabled={isRunning} onPress={runBenchmark}>
                 Run Benchmark
               </Button>
               {isRunning && (
@@ -359,7 +359,7 @@ export function HashcashBenchmarkScreen(): JSX.Element {
                   Cancel
                 </Button>
               )}
-              <Button size="small" emphasis="secondary" isDisabled={isRunning} onPress={handleClearResults}>
+              <Button size="small" emphasis="secondary" disabled={isRunning} onPress={handleClearResults}>
                 Clear Results
               </Button>
             </Flex>

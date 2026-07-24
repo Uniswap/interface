@@ -15,12 +15,6 @@ export default defineConfig({
     ...vitestPreset.test,
     name: 'Extension Wallet',
     pool: 'forks',
-    poolOptions: {
-      forks: {
-        minForks: 1,
-        maxForks: 2,
-      },
-    },
     globals: true,
     environment: 'jsdom',
     // Override the preset's jsdom customExportConditions to avoid loading React Native modules;

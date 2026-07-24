@@ -41,7 +41,7 @@ export function InfoTooltip({
       >
         <Flex shrink>
           <Tooltip.Trigger>{trigger}</Tooltip.Trigger>
-          {text && (
+          {(text || button) && (
             <Tooltip.Content pointerEvents="auto" maxWidth={maxWidth ?? (isWebPlatform ? 280 : '100%')} mx="$spacing24">
               <Flex row alignItems="center" gap="$spacing8">
                 {icon && <Flex grow>{icon}</Flex>}
@@ -51,9 +51,11 @@ export function InfoTooltip({
                       {title}
                     </Text>
                   )}
-                  <Text color="$neutral2" variant="body4">
-                    {text}
-                  </Text>
+                  {text && (
+                    <Text color="$neutral2" variant="body4">
+                      {text}
+                    </Text>
+                  )}
                   {button && (
                     <Flex alignSelf="flex-start" width="100%">
                       {button}

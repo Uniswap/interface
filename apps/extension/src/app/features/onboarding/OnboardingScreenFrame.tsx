@@ -89,10 +89,11 @@ export function OnboardingScreenFrame({
       <Flex row gap="$spacing12" width="100%">
         {Boolean(onSubmit) && nextButtonText && (
           <Button
-            isDisabled={!nextButtonEnabled}
+            disabled={!nextButtonEnabled}
             icon={nextButtonIcon}
             variant={nextButtonVariant}
             emphasis={nextButtonEmphasis}
+            testID={TestID.Next}
             onPress={onSubmit}
           >
             {nextButtonText}

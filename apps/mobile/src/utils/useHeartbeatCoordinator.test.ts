@@ -5,16 +5,25 @@ import { useHeartbeatCoordinator } from 'src/utils/useHeartbeatCoordinator'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useInterval } from 'utilities/src/time/timing'
 
-jest.mock('utilities/src/time/timing', () => ({
-  useInterval: jest.fn(),
+vi.mock('utilities/src/time/timing', () => ({
+  useInterval: vi.fn(),
 }))
 
-const mockUseInterval = jest.mocked(useInterval)
+// react-native-web's AppState methods aren't jest-style mocks (jest-expo's were); stub them
+vi.mock('react-native', async (importOriginal) => ({
+  ...(await importOriginal<Record<string, unknown>>()),
+  AppState: {
+    currentState: 'active',
+    addEventListener: vi.fn(() => ({ remove: vi.fn() })),
+  },
+}))
+
+const mockUseInterval = vi.mocked(useInterval)
 
 function makeParams(overrides?: { enabled?: boolean }) {
   return {
-    refresh: jest.fn().mockResolvedValue(undefined),
-    priceRefresh: jest.fn().mockResolvedValue(undefined),
+    refresh: vi.fn().mockResolvedValue(undefined),
+    priceRefresh: vi.fn().mockResolvedValue(undefined),
     enabled: true,
     ...overrides,
   }
@@ -22,7 +31,7 @@ function makeParams(overrides?: { enabled?: boolean }) {
 
 describe('useHeartbeatCoordinator', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     Object.defineProperty(AppState, 'currentState', {
       configurable: true,
       get: () => 'active',
@@ -76,7 +85,7 @@ describe('useHeartbeatCoordinator', () => {
     await act(async () => {
       await callback() // full tick
     })
-    jest.clearAllMocks()
+    vi.clearAllMocks()
 
     await act(async () => {
       await callback() // price-only tick
@@ -114,7 +123,7 @@ describe('useHeartbeatCoordinator', () => {
       configurable: true,
       get: () => 'active',
     })
-    const listener = jest.mocked(AppState.addEventListener).mock.calls[0]?.[1]
+    const listener = vi.mocked(AppState.addEventListener).mock.calls[0]?.[1]
     await act(async () => {
       listener?.('active')
     })
@@ -147,7 +156,7 @@ describe('useHeartbeatCoordinator', () => {
       configurable: true,
       get: () => 'active',
     })
-    const listener = jest.mocked(AppState.addEventListener).mock.calls[0]?.[1]
+    const listener = vi.mocked(AppState.addEventListener).mock.calls[0]?.[1]
     await act(async () => {
       listener?.('active')
     })

@@ -1,6 +1,9 @@
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
+import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import {
   ExplorerDataType,
+  getEarnVaultUrl,
   getExplorerLink,
   getFiatOnRampURL,
   getTokenDetailsURL,
@@ -10,6 +13,10 @@ import {
   TdpChainSelectionType,
   TDPView,
 } from 'uniswap/src/utils/linking'
+
+const earnVault = {
+  displayCurrencyId: `${UniverseChainId.Base}-0x4200000000000000000000000000000000000006`,
+} as EarnVaultInfo
 
 describe(getExplorerLink, () => {
   it('handles different link cases', () => {
@@ -91,6 +98,14 @@ describe(getFiatOnRampURL, () => {
 
   it('omits unset params from the query string', () => {
     expect(getFiatOnRampURL({ currencyCode: 'ETH' })).toEqual('/buy?currencyCode=ETH')
+  })
+})
+
+describe(getEarnVaultUrl, () => {
+  it('includes the source entry point in the web vault URL', () => {
+    expect(getEarnVaultUrl(earnVault, EarnEntryPoint.PortfolioEarnSection)).toEqual(
+      'https://app.uniswap.org/explore/tokens/base/0x4200000000000000000000000000000000000006?modal=earn-vault&earnEntryPoint=portfolio_earn_section',
+    )
   })
 })
 

@@ -165,16 +165,32 @@ export function getEarnAmountValidation({
 }
 
 export function getEarnDepositMinimumValidation({
+  fiatDecimals = 2,
   hasInputAmount,
   inputAmount,
   minimumAmount,
 }: {
+  fiatDecimals?: number
   hasInputAmount?: boolean
   inputAmount: number | undefined
   minimumAmount: number
 }): boolean {
   const hasPositiveInput = hasInputAmount ?? (inputAmount !== undefined && inputAmount > 0)
-  return inputAmount !== undefined && hasPositiveInput && inputAmount < minimumAmount
+  if (inputAmount === undefined || !hasPositiveInput) {
+    return false
+  }
+  // Compare at display precision so a token amount rendered as the minimum (e.g. $0.9999 → "$1.00") passes.
+  return (
+    roundAtDecimalPrecision({ value: inputAmount, decimals: fiatDecimals }) <
+    roundAtDecimalPrecision({ value: minimumAmount, decimals: fiatDecimals })
+  )
+}
+
+// Rounds on the decimal representation to match Intl.NumberFormat display rounding at half-cent
+// boundaries — `Math.round(1.005 * 100)` is 100 from float error, but 1.005 renders as "$1.01".
+function roundAtDecimalPrecision({ value, decimals }: { value: number; decimals: number }): number {
+  const shifted = Number(`${value}e${decimals}`)
+  return Number.isNaN(shifted) ? Math.round(value * 10 ** decimals) : Math.round(shifted)
 }
 
 export function getEarnWithdrawableAmount({

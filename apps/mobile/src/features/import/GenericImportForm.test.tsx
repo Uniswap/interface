@@ -1,6 +1,6 @@
 import React from 'react'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
-import { render, screen } from 'src/test/test-utils'
+import { fireEvent, render, screen } from 'src/test/test-utils'
 import { noOpFunction } from 'utilities/src/test/utils'
 import { TamaguiProvider } from 'wallet/src/providers/tamagui-provider'
 
@@ -48,6 +48,10 @@ describe(GenericImportForm, () => {
         />
       </TamaguiProvider>,
     )
+
+    // In jsdom the autofocused input starts focused, which hides the error; blur to show it
+    // (on device the error also only shows when the input isn't focused)
+    fireEvent(await screen.findByDisplayValue('wrong value'), 'blur')
 
     expect(await screen.findByText('there is an error')).toBeDefined()
   })

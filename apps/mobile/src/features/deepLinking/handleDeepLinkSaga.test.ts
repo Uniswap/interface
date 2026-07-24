@@ -29,24 +29,24 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
-jest.mock('@walletconnect/utils', () => ({
-  parseUri: jest.fn(() => ({
+vi.mock('@walletconnect/utils', () => ({
+  parseUri: vi.fn(() => ({
     version: 2,
   })),
 }))
-jest.mock('expo-web-browser', () => ({
-  dismissBrowser: jest.fn(),
-  openBrowserAsync: jest.fn(),
+vi.mock('expo-web-browser', () => ({
+  dismissBrowser: vi.fn(),
+  openBrowserAsync: vi.fn(),
   WebBrowserPresentationStyle: {
     FULL_SCREEN: 'fullScreen',
   },
 }))
-jest.mock('@universe/gating', () => ({
-  ...jest.requireActual('@universe/gating'),
-  getStatsigClient: jest.fn(() => ({
-    checkGate: jest.fn(() => false), // Always return false to avoid Korea gate redirects
+vi.mock('@universe/gating', async () => ({
+  ...(await vi.importActual('@universe/gating')),
+  getStatsigClient: vi.fn(() => ({
+    checkGate: vi.fn(() => false), // Always return false to avoid Korea gate redirects
   })),
-  getFeatureFlag: jest.fn(() => false), // Default to false for feature flags
+  getFeatureFlag: vi.fn(() => false), // Default to false for feature flags
 }))
 
 const account = signerMnemonicAccount()
@@ -89,9 +89,9 @@ const stateWithActiveAccountAddress = {
 
 describe(handleDeepLink, () => {
   beforeAll(() => {
-    jest.spyOn(navigationRef, 'isReady').mockReturnValue(true)
-    jest.spyOn(navigationRef, 'navigate').mockReturnValue(undefined)
-    jest.spyOn(navigationRef, 'getState').mockReturnValue({
+    vi.spyOn(navigationRef, 'isReady').mockReturnValue(true)
+    vi.spyOn(navigationRef, 'navigate').mockReturnValue(undefined)
+    vi.spyOn(navigationRef, 'getState').mockReturnValue({
       key: 'root',
       index: 0,
       routes: [{ name: MobileScreens.Home, key: 'home' }],
@@ -100,7 +100,7 @@ describe(handleDeepLink, () => {
       type: 'stack',
       stale: false,
     })
-    jest.spyOn(navigationRef, 'canGoBack').mockReturnValue(false)
+    vi.spyOn(navigationRef, 'canGoBack').mockReturnValue(false)
   })
 
   it('Routes to the swap deep link handler if screen=swap and userAddress is valid', () => {
@@ -135,7 +135,7 @@ describe(handleDeepLink, () => {
   })
 
   it('Fails if the screen param is not supported', () => {
-    jest.spyOn(console, 'error').mockImplementation(() => undefined)
+    vi.spyOn(console, 'error').mockImplementation(() => undefined)
 
     const payload = unsupportedScreenDeepLinkPayload
     return expectSaga(handleDeepLink, { payload, type: '' })

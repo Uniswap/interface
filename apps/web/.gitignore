@@ -37,7 +37,9 @@ tsconfig.tsbuildinfo
 .env.local
 .env.development.local
 .env.test.local
+.env.production
 .env.production.local
+.env.staging
 
 instrumented
 .nyc_output

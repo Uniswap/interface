@@ -17,6 +17,8 @@ type AddressDisplayProps = {
   address: string
   overrideDisplayName?: string
   allowFontScaling?: boolean
+  // Opt out of adjustsFontSizeToFit auto-shrink; use where the name is a fixed-width address, not an ENS/unitag
+  disableAutoFontSizing?: boolean
   lineHeight?: number
   hideAddressInSubtitle?: boolean
   size?: number
@@ -48,6 +50,7 @@ type AddressDisplayProps = {
 // oxlint-disable-next-line complexity
 export function AddressDisplay({
   allowFontScaling = true,
+  disableAutoFontSizing = false,
   overrideDisplayName,
   lineHeight,
   address,
@@ -117,7 +120,7 @@ export function AddressDisplay({
                 gap="$spacing4"
                 includeUnitagSuffix={includeUnitagSuffix}
                 textProps={{
-                  adjustsFontSizeToFit: true,
+                  adjustsFontSizeToFit: !disableAutoFontSizing,
                   allowFontScaling,
                   color: textColor,
                   hoverStyle: textHoverColor ? { color: textHoverColor } : undefined,
@@ -140,7 +143,7 @@ export function AddressDisplay({
               gap="$spacing4"
               includeUnitagSuffix={includeUnitagSuffix}
               textProps={{
-                adjustsFontSizeToFit: true,
+                adjustsFontSizeToFit: !disableAutoFontSizing,
                 allowFontScaling,
                 color: textColor,
                 hoverStyle: textHoverColor ? { color: textHoverColor } : undefined,

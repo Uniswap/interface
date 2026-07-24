@@ -9,6 +9,7 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import svgr from 'vite-plugin-svgr'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { defineConfig } from 'wxt'
+import { getRenamedIifeName, rewriteIifeFooter } from './config/contentScriptIifeRename'
 import { getTsconfigAliases } from './config/getTsconfigAliases'
 
 // process.env.APP_ID is used by @universe/config. Set at the Node level so the
@@ -197,7 +198,29 @@ export default defineConfig({
       // (this is the `build.lib` path WXT takes for content scripts).
       const lib = viteConfig.build?.lib
       if (lib && typeof lib === 'object' && 'name' in lib && typeof lib.name === 'string') {
-        lib.name = `__wxt_cs_${lib.name}`
+        const originalName = lib.name
+        lib.name = getRenamedIifeName(originalName)
+
+        // WXT's `wxt:iife-footer` plugin appends a bare `<originalName>;` expression to the
+        // entry chunk (so `scripting.executeScript` can read the entry's return value). After
+        // the rename above, that footer references a variable that no longer exists and throws
+        // an uncaught `ReferenceError: <originalName> is not defined` on every page the content
+        // script runs in. (The MAIN-world `ethereum` script only escaped this by accident:
+        // its footer resolves to the `window.ethereum` global it just defined.) Rewrite the
+        // footer to reference the renamed IIFE var; `rewriteIifeFooter` fails the build
+        // loudly if the expected footer isn't found. Logic + unit tests live in
+        // config/contentScriptIifeRename.ts.
+        viteConfig.plugins = viteConfig.plugins ?? []
+        viteConfig.plugins.push({
+          name: 'uniswap:rename-iife-footer',
+          generateBundle(_options, bundle) {
+            for (const chunk of Object.values(bundle)) {
+              if (chunk.type === 'chunk' && chunk.isEntry) {
+                chunk.code = rewriteIifeFooter({ code: chunk.code, originalName })
+              }
+            }
+          },
+        })
       }
     },
     // Validate build output after every build (dev and production). The script scans for

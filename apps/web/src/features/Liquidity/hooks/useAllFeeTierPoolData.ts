@@ -131,6 +131,7 @@ export function useAllFeeTierPoolData({
             tvl: pool.totalLiquidityUsd,
             created: true,
             boostedApr: pool.boostedApr,
+            protocolFee: pool.protocolFee,
           } satisfies FeeTierData
         }
       }

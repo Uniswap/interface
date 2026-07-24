@@ -33,7 +33,7 @@ export function AuctionQuickFilters() {
   const { t } = useTranslation()
   const quickFilter = useExploreTablesFilterStore((s) => s.quickFilter)
   const { setQuickFilter } = useExploreTablesFilterStoreActions()
-  // QuickLaunch: quick-launch chip is flag-gated; heuristic detection, see isQuickLaunchAuction.
+  // QuickLaunch: quick-launch chip is flag-gated; classification from the backend, see isQuickLaunchAuction.
   const isQuickLaunchFilterEnabled = useFeatureFlag(FeatureFlags.QuickLaunch)
 
   const options: readonly QuickFilterOption[] = useMemo(

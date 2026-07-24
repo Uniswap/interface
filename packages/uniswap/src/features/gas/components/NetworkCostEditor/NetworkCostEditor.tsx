@@ -372,7 +372,7 @@ export function NetworkCostEditor({
           <Button flex={1} emphasis="secondary" onPress={onCancel}>
             {t('common.button.cancel')}
           </Button>
-          <Button flex={1} emphasis="primary" isDisabled={!isDirtyAny || !validation.canSave} onPress={handleSave}>
+          <Button flex={1} emphasis="primary" disabled={!isDirtyAny || !validation.canSave} onPress={handleSave}>
             {t('common.button.save')}
           </Button>
         </Flex>

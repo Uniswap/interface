@@ -19,7 +19,7 @@ export function KycActionButton({ kycStatus, onPress }: { kycStatus: AuctionKycS
           icon={<UserLock size="$icon.16" />}
           flex={1}
           onPress={onPress}
-          isDisabled={kycStatus.kycButtonDisabled}
+          disabled={kycStatus.kycButtonDisabled}
           group
         >
           <Flex alignItems="flex-start" position="relative">

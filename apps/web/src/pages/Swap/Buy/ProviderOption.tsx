@@ -17,6 +17,7 @@ import { createOnRampTransactionId } from 'uniswap/src/features/fiatOnRamp/utils
 import { FiatOffRampEventName, FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useBuyFormContext } from '~/pages/Swap/Buy/BuyFormContext'
+import { getOnRampRedirectUrl } from '~/pages/Swap/Buy/onRampRedirectUrl'
 import { useAddFiatOnRampTransaction } from '~/state/fiatOnRampTransactions/hooks'
 import { FiatOnRampTransactionStatus, FiatOnRampTransactionType } from '~/state/fiatOnRampTransactions/types'
 
@@ -55,8 +56,6 @@ export function ProviderOption({
   )
 
   const widgetOnRampQueryParams = useMemo(() => {
-    const redirectUrl = new URL('/buy', window.location.origin)
-
     return {
       serviceProvider: quote.serviceProviderDetails?.serviceProvider ?? '',
       countryCode: selectedCountry.countryCode,
@@ -65,7 +64,7 @@ export function ProviderOption({
       sourceCurrencyCode: meldSupportedFiatCurrency.code,
       walletAddress,
       externalSessionId,
-      redirectUrl: redirectUrl.toString(),
+      redirectUrl: getOnRampRedirectUrl({ origin: window.location.origin }),
     }
   }, [
     externalSessionId,

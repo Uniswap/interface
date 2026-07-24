@@ -7,7 +7,7 @@ const defaultProps = {
   title: 'Title',
   editingTitle: 'Editing Title',
   isEditing: false,
-  onPress: jest.fn(),
+  onPress: vi.fn(),
 }
 
 describe(FavoriteHeaderRow, () => {

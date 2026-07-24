@@ -1,5 +1,4 @@
 import { TradingApi } from '@universe/api'
-import { PlanResponse } from '@universe/api/src/clients/trading/__generated__/models/PlanResponse'
 import { TradingApiSessionClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiSessionClient'
 import {
   areEarnPlanReuseIdentitiesCompatible,
@@ -15,7 +14,7 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 const PREFETCH_TTL_MS = 15 * ONE_SECOND_MS
 
 interface PrefetchedPlan {
-  promise: Promise<PlanResponse>
+  promise: Promise<TradingApi.PlanResponse>
   trade: Trade
 }
 
@@ -61,7 +60,7 @@ export function prefetchPlan(trade: Trade, walletExecutionContext?: TradingApi.W
   })
 }
 
-export async function consumePrefetchedPlan(currentTrade: Trade): Promise<PlanResponse | null> {
+export async function consumePrefetchedPlan(currentTrade: Trade): Promise<TradingApi.PlanResponse | null> {
   // One-shot: grab and null out immediately
   const current = prefetched
   prefetched = null

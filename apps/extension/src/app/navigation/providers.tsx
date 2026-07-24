@@ -235,7 +235,7 @@ function useNavigateToAdvancedSettings(): () => void {
 }
 
 function useNavigateToEarnVault(): (args: NavigateToEarnVaultArgs) => void {
-  return useCallback(async ({ vault }: NavigateToEarnVaultArgs): Promise<void> => {
-    await focusOrCreateEarnVaultTab({ vault })
+  return useCallback(async ({ analyticsEntryPoint, vault }: NavigateToEarnVaultArgs): Promise<void> => {
+    await focusOrCreateEarnVaultTab({ analyticsEntryPoint, vault })
   }, [])
 }

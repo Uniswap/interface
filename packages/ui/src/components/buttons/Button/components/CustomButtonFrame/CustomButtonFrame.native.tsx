@@ -87,7 +87,6 @@ const CustomButtonFrameWithoutCustomProps = styled(AnimatedPressable, {
           // @ts-expect-error we know emphasis will be ButtonEmphasis
           (props.emphasis || 'primary') as NonNullable<ButtonVariantProps['emphasis']>
 
-        // TODO(WEB-6347): change name back to `disabled`
         // @ts-expect-error we know isDisabled will be ButtonVariantProps['isDisabled']
         if (props.isDisabled && !props.onDisabledPress) {
           return {
@@ -197,7 +196,7 @@ const CustomButtonFrameWithoutCustomProps = styled(AnimatedPressable, {
         flexBasis: 0,
       },
     },
-    // TODO(WEB-6347): change variant name back to `disabled`
+    // Internal styling variant; deliberately not named `disabled` — see `ButtonVariantProps` in Button/types.ts
     isDisabled: (untypedIsDisabled, { props }) => {
       // @ts-expect-error we know this will potentially be on `props`
       if (props.onDisabledPress) {

@@ -3,21 +3,21 @@ import { usePortfolioChartDetailsHeartbeatCoordinator } from 'src/screens/Portfo
 import { useHeartbeatCoordinator } from 'src/utils/useHeartbeatCoordinator'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
-const mockQueryClientRefetchQueries = jest.fn().mockResolvedValue(undefined)
+const mockQueryClientRefetchQueries = vi.fn().mockResolvedValue(undefined)
 
-jest.mock('@tanstack/react-query', () => ({
+vi.mock('@tanstack/react-query', () => ({
   useQueryClient: () => ({ refetchQueries: mockQueryClientRefetchQueries }),
 }))
 
-jest.mock('src/utils/useHeartbeatCoordinator', () => ({
-  useHeartbeatCoordinator: jest.fn(),
+vi.mock('src/utils/useHeartbeatCoordinator', () => ({
+  useHeartbeatCoordinator: vi.fn(),
 }))
 
-const mockUseHeartbeatCoordinator = jest.mocked(useHeartbeatCoordinator)
+const mockUseHeartbeatCoordinator = vi.mocked(useHeartbeatCoordinator)
 
 describe('usePortfolioChartDetailsHeartbeatCoordinator', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockQueryClientRefetchQueries.mockReset().mockResolvedValue(undefined)
   })
 

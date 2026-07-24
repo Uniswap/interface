@@ -72,9 +72,6 @@ vi.mock('@testing-library/react-native', async () => {
   }
 })
 
-// Mock @testing-library/jest-native which requires the React Native runtime
-vi.mock('@testing-library/jest-native', () => ({}))
-
 // uniswap/src/i18n uses require() (for init timing in the extension production build), which
 // can't resolve aliased specifiers under vitest's ESM transform. Recreate the module with the
 // same semantics: run the real i18n-setup, then re-export i18next + changeLanguage.

@@ -8,7 +8,6 @@ import { Flex, useSporeColors } from 'ui/src'
 import { NftsList } from 'uniswap/src/components/nfts/NftsList'
 import { NftViewWithContextMenu } from 'uniswap/src/components/nfts/NftViewWithContextMenu'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useNavigateToNftExplorerLink } from 'uniswap/src/features/nfts/hooks/useNavigateToNftExplorerLink'
 import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
@@ -51,7 +50,7 @@ export const NftsTab = memo(
       (item: NFTItem, index: number) => {
         const onPressNft = async (): Promise<void> => {
           const nftDetails = {
-            chainId: fromGraphQLChain(item.chain) ?? defaultChainId,
+            chainId: item.chainId ?? defaultChainId,
             contractAddress: item.contractAddress ?? '',
             tokenId: item.tokenId ?? '',
           }

@@ -2,8 +2,9 @@
 /**
  * Prints the @expo/fingerprint hash of the mobile app's native surface for one platform.
  *
- * Used by CI (mobile_js_only_build.yml) to decide whether a commit needs a full native
- * build or can reuse a cached native baseline and just re-bundle the JS (repack).
+ * Used by CI (.github/actions/mobile_fingerprint) to decide whether a commit needs a
+ * full native build or can reuse a cached native baseline and just re-bundle the JS
+ * (repack, .github/actions/mobile_repack).
  * Configuration (sourceSkips + extraSources hardening) lives in fingerprint.config.js.
  *
  * Usage: bun scripts/getFingerprintHash.ts <ios|android>

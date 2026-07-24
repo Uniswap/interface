@@ -1,4 +1,5 @@
-import { createStore, Store } from 'redux'
+import { configureStore } from '@reduxjs/toolkit'
+import { Store } from 'redux'
 import reducer, {
   addFiatOnRampTransaction,
   FiatOnRampTransactionDetails,
@@ -26,7 +27,7 @@ describe('fiatOnRampTransactions reducer', () => {
   let store: Store<FiatOnRampTransactionsState>
 
   beforeEach(() => {
-    store = createStore(reducer, initialState)
+    store = configureStore({ reducer, preloadedState: initialState })
   })
 
   describe('addFiatOnRampTransaction', () => {

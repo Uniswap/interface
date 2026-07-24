@@ -14,30 +14,36 @@ import * as languageHooks from 'uniswap/src/features/language/hooks'
 import * as userSettingsHooks from 'uniswap/src/features/settings/hooks'
 import { MobileUserPropertyName } from 'uniswap/src/features/telemetry/user'
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
+import type { Mock, MockInstance } from 'vitest'
 import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import * as walletHooks from 'wallet/src/features/wallet/hooks'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 
 // `any` is the actual type used by `jest.spyOn`
-function mockFn(module: any, func: string, returnValue: any): jest.SpyInstance<any, unknown[]> {
-  return jest.spyOn(module, func).mockImplementation(() => returnValue)
+function mockFn(module: any, func: string, returnValue: any): MockInstance {
+  return vi.spyOn(module, func).mockImplementation(() => returnValue)
 }
 
-jest.mock('@tanstack/react-query', () => ({
-  ...jest.requireActual('@tanstack/react-query'),
-  useQuery: jest.fn().mockReturnValue({ data: undefined }),
+vi.mock('@tanstack/react-query', async () => ({
+  ...(await vi.importActual('@tanstack/react-query')),
+  useQuery: vi.fn().mockReturnValue({ data: undefined }),
 }))
-jest.mock('@universe/api', () => ({
-  ...jest.requireActual('@universe/api'),
+vi.mock('@universe/api', async () => ({
+  ...(await vi.importActual('@universe/api')),
   provideUniswapIdentifierService: {},
 }))
-jest.mock('@universe/sessions', () => ({
-  ...jest.requireActual('@universe/sessions'),
-  uniswapIdentifierQuery: jest.fn().mockReturnValue({}),
+vi.mock('@universe/sessions', async () => ({
+  ...(await vi.importActual('@universe/sessions')),
+  uniswapIdentifierQuery: vi.fn().mockReturnValue({}),
 }))
-jest.mock('react-native/Libraries/Utilities/useColorScheme')
-jest.mock('wallet/src/features/gating/userPropertyHooks')
-jest.mock('wallet/src/features/wallet/Keyring/Keyring', () => {
+// react-native is aliased to react-native-web in vitest; partially mock the top-level module
+// (mocking the internal Libraries/Utilities/useColorScheme path doesn't intercept RNW)
+vi.mock('react-native', async (importOriginal) => ({
+  ...(await importOriginal<Record<string, unknown>>()),
+  useColorScheme: vi.fn(() => 'light'),
+}))
+vi.mock('wallet/src/features/gating/userPropertyHooks')
+vi.mock('wallet/src/features/wallet/Keyring/Keyring', () => {
   return {
     Keyring: {
       getMnemonicIds: (): Promise<string[]> => Promise.resolve([]),
@@ -45,19 +51,19 @@ jest.mock('wallet/src/features/wallet/Keyring/Keyring', () => {
     },
   }
 })
-jest.mock('wallet/src/features/accounts/useAccountListData', () => {
+vi.mock('wallet/src/features/accounts/useAccountListData', () => {
   return {
-    useAccountBalances: jest.fn().mockReturnValue({ totalBalance: 0 }),
+    useAccountBalances: vi.fn().mockReturnValue({ totalBalance: 0 }),
   }
 })
 
-const mockDispatch = jest.fn()
-const mockSelector = jest.fn()
+const mockDispatch = vi.fn()
+const mockSelector = vi.fn()
 
-jest.mock('react-redux', () => ({
-  ...jest.requireActual('react-redux'),
-  useDispatch: (): jest.Mock => mockDispatch,
-  useSelector: (): jest.Mock => mockSelector,
+vi.mock('react-redux', async () => ({
+  ...(await vi.importActual('react-redux')),
+  useDispatch: (): Mock => mockDispatch,
+  useSelector: (): Mock => mockSelector,
 }))
 
 const address1 = '0x168fA52Da8A45cEb01318E72B299b2d6A17167BF'
@@ -93,13 +99,13 @@ const signerAccount3 = {
 
 describe('TraceUserProperties', () => {
   afterEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('sets user properties with active account', async () => {
     mockFn(versionUtils, 'getFullAppVersion', '1.0.0.345')
     // Hooks mocks
-    const mockedUsedColorScheme = useColorScheme as jest.Mock
+    const mockedUsedColorScheme = useColorScheme as Mock
     mockedUsedColorScheme.mockReturnValue('dark')
     mockFn(walletHooks, 'useActiveAccount', {
       address: 'address',
@@ -166,7 +172,7 @@ describe('TraceUserProperties', () => {
   it('sets user properties without active account', async () => {
     mockFn(versionUtils, 'getFullAppVersion', '1.0.0.345')
     // Hooks mocks
-    const mockedUsedColorScheme = useColorScheme as jest.Mock
+    const mockedUsedColorScheme = useColorScheme as Mock
     mockedUsedColorScheme.mockReturnValue('dark')
     mockFn(walletHooks, 'useActiveAccount', null)
     mockFn(walletHooks, 'useViewOnlyAccounts', [])

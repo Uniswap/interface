@@ -9,6 +9,7 @@ describe('EarnBalanceErrorState', () => {
     render(<EarnBalanceErrorState onRetry={onRetry} />)
 
     expect(screen.getByTestId(TestID.EarnBalanceError)).toBeDefined()
+    expect(screen.queryByText('Learn more')).toBeNull()
 
     fireEvent.press(screen.getByTestId(TestID.EarnBalanceErrorRetry), ON_PRESS_EVENT_PAYLOAD)
     expect(onRetry).toHaveBeenCalledTimes(1)

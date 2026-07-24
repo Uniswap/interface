@@ -179,6 +179,7 @@ export type AppStackParamList = {
     tokenId?: string
     chainId: UniverseChainId
     protocolVersion: ProtocolVersion
+    owner?: Address
   }
   [MobileScreens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
   [MobileScreens.UnitagStack]: NavigatorScreenParams<UnitagStackParamList>

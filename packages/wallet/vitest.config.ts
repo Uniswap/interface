@@ -9,12 +9,6 @@ export default defineConfig({
   test: {
     ...vitestPreset.test,
     pool: 'forks',
-    poolOptions: {
-      forks: {
-        minForks: 1,
-        maxForks: 2,
-      },
-    },
     globals: true,
     environment: 'jsdom',
     // Override the preset's jsdom customExportConditions to avoid loading React Native modules

@@ -1,133 +1,24 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`RemoveButton renders without error 1`] = `
-<View
-  handlerTags={
-    [
-      3,
-      2,
-      1,
-    ]
-  }
-  onGestureHandlerEvent={[Function]}
-  onGestureHandlerReanimatedEvent={
-    {
-      "workletEventHandler": WorkletEventHandlerWeb {
-        "eventNames": [],
-        "listeners": {},
-        "worklet": [Function],
-      },
-    }
-  }
-  onGestureHandlerStateChange={[Function]}
-  onGestureHandlerTouchEvent={[Function]}
-  pointerEvents="box-none"
-  style={
-    {
-      "display": "contents",
-    }
-  }
->
-  <RNGestureHandlerButton
-    accessible={true}
-    collapsable={false}
-    enabled={true}
-    forwardedRef={[Function]}
-    hitSlop={
-      {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0,
-      }
-    }
-    jestAnimatedProps={
-      {
-        "value": {},
-      }
-    }
-    jestAnimatedStyle={
-      {
-        "value": {},
-      }
-    }
-    jestInlineStyle={
-      [
-        {
-          "alignItems": "center",
-          "backgroundColor": "rgba(19, 19, 19, 0.35)",
-          "borderBottomLeftRadius": 999999,
-          "borderBottomRightRadius": 999999,
-          "borderTopLeftRadius": 999999,
-          "borderTopRightRadius": 999999,
-          "flexDirection": "column",
-          "height": 24,
-          "justifyContent": "center",
-          "opacity": 1,
-          "transform": [
-            {
-              "scale": 1,
-            },
-          ],
-          "width": 24,
-          "zIndex": 1080,
-        },
-      ]
-    }
-    onBlur={[Function]}
-    onClick={[Function]}
-    onFocus={[Function]}
-    onLayout={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
-    rippleColor="transparent"
-    style={
-      [
-        {},
-        [
-          {
-            "alignItems": "center",
-            "backgroundColor": "rgba(19, 19, 19, 0.35)",
-            "borderBottomLeftRadius": 999999,
-            "borderBottomRightRadius": 999999,
-            "borderTopLeftRadius": 999999,
-            "borderTopRightRadius": 999999,
-            "flexDirection": "column",
-            "height": 24,
-            "justifyContent": "center",
-            "opacity": 1,
-            "transform": [
-              {
-                "scale": 1,
-              },
-            ],
-            "width": 24,
-            "zIndex": 1080,
-          },
-          {},
-        ],
-      ]
-    }
-    testID="explore/remove-button"
+exports[`RemoveButton > renders without error 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    <View
-      style={
-        {
-          "backgroundColor": "#FFFFFF",
-          "borderBottomLeftRadius": 12,
-          "borderBottomRightRadius": 12,
-          "borderTopLeftRadius": 12,
-          "borderTopRightRadius": 12,
-          "flexDirection": "column",
-          "height": 2,
-          "width": 10,
-        }
-      }
+    <button
+      class="is_TouchableArea "
+      data-testid="explore/remove-button"
+      style="flex-direction: column; opacity: 1; align-items: center; background-color: rgba(19, 19, 19, 0.35); border-top-left-radius: 999999px; border-top-right-radius: 999999px; border-bottom-right-radius: 999999px; border-bottom-left-radius: 999999px; justify-content: center; z-index: 1080; width: 24px; height: 24px; transform: [object Object];"
+      testid="explore/remove-button"
+    >
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface1 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-2px _width-10px"
+      />
+    </button>
+    <div
+      style="display: contents;"
     />
-  </RNGestureHandlerButton>
-</View>
+  </span>
+</DocumentFragment>
 `;

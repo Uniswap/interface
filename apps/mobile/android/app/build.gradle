@@ -223,6 +223,11 @@ android {
           }
         }
     }
+    externalNativeBuild {
+        cmake {
+            path "src/main/jni/CMakeLists.txt"
+        }
+    }
 }
 
 dependencies {
@@ -284,3 +289,63 @@ dependencies {
 
     implementation project(':react-native-video')
 }
+
+// @generated begin expo-build-properties-pch - expo prebuild (DO NOT MODIFY)
+def cxxDir = project.file(".cxx")
+def generateStubPCHTask = tasks.register("generateStubPCH") {
+  dependsOn("configureCMakeDebug")
+
+  doLast {
+    if (!cxxDir.exists()) {
+      return
+    }
+
+    cxxDir.eachFileRecurse { file ->
+      if (file.name != "compile_commands.json") {
+        return
+      }
+
+      new groovy.json.JsonSlurper().parseText(file.text).each { entry ->
+        if (!entry.file.endsWith("cmake_pch.hxx.cxx")) {
+          return
+        }
+
+        def pchFile = new File(entry.file.substring(0, entry.file.length() - ".cxx".length()) + ".pch")
+
+        if (!pchFile.exists() || pchFile.length() == 0) {
+          pchFile.parentFile.mkdirs()
+
+          def compiler = entry.command.split(" ")[0]
+          def target = (entry.command =~ /--target=\S+/)[0]
+          def sysroot = (entry.command =~ /--sysroot=\S+/)[0]
+
+          def stubHeader = new File(pchFile.parentFile, "stub_pch.hxx")
+          stubHeader.text = ""
+
+          def process = new ProcessBuilder(
+            compiler,
+            target,
+            sysroot,
+            "-x", "c++-header",
+            "-o", pchFile.absolutePath,
+            stubHeader.absolutePath
+          )
+            .directory(new File(entry.directory))
+            .redirectErrorStream(true)
+            .start()
+          process.outputStream.close()
+          if (process.waitFor() != 0) {
+            throw new GradleException("Stub PCH generation failed: ${process.inputStream.text}")
+          }
+        }
+
+        pchFile.setLastModified(new File(entry.file).lastModified() - 1)
+      }
+    }
+  }
+}
+
+tasks.register("prepareKotlinBuildScriptModel") {
+  dependsOn(generateStubPCHTask)
+}
+// @generated end expo-build-properties-pch

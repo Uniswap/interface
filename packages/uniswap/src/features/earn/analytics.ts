@@ -23,6 +23,7 @@ export const EarnEntryPoint = {
   PortfolioEarnGetToken: 'portfolio_earn_get_token',
   PortfolioEarnSection: 'portfolio_earn_section',
   PostSwapUpsellToast: 'post_swap_upsell_toast',
+  Search: 'search',
   SwapReviewToggle: 'swap_review_toggle',
   TokenDetailsEarnBanner: 'tdp_earn_banner',
   TokenDetailsEarnSection: 'tdp_earn_section',
@@ -124,6 +125,14 @@ export function logEarnVaultSelected(properties: EarnAnalyticsBaseProperties): v
   sendAnalyticsEvent(EarnEventName.EarnVaultSelected, properties)
 }
 
+export function logEarnSurfaceViewed(properties: Pick<EarnAnalyticsBaseProperties, 'entry_point' | 'surface'>): void {
+  sendAnalyticsEvent(EarnEventName.EarnSurfaceViewed, properties)
+}
+
+export function logEarnVaultCardShowMoreClicked(properties: EarnAnalyticsBaseProperties): void {
+  sendAnalyticsEvent(EarnEventName.EarnVaultCardShowMoreClicked, properties)
+}
+
 export function logEarnTransactionEvent({
   action,
   properties,
@@ -131,18 +140,20 @@ export function logEarnTransactionEvent({
 }: {
   action: 'deposit' | 'withdraw'
   properties: EarnTransactionAnalyticsProperties
-  status: 'started' | 'submitted' | 'completed' | 'failed'
+  status: 'started' | 'reviewed' | 'submitted' | 'completed' | 'failed'
 }): void {
   const eventNameByAction = {
     deposit: {
       completed: EarnEventName.EarnDepositCompleted,
       failed: EarnEventName.EarnDepositFailed,
+      reviewed: EarnEventName.EarnDepositReviewed,
       started: EarnEventName.EarnDepositStarted,
       submitted: EarnEventName.EarnDepositSubmitted,
     },
     withdraw: {
       completed: EarnEventName.EarnWithdrawCompleted,
       failed: EarnEventName.EarnWithdrawFailed,
+      reviewed: EarnEventName.EarnWithdrawReviewed,
       started: EarnEventName.EarnWithdrawStarted,
       submitted: EarnEventName.EarnWithdrawSubmitted,
     },

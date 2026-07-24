@@ -212,7 +212,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
         <Button
           testID={TestID.Next}
           mt="$spacing24"
-          isDisabled={!isValid}
+          disabled={!isValid}
           variant="branded"
           size="large"
           onPress={onSubmit}

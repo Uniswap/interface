@@ -11,7 +11,7 @@ import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from '~/components/Ta
 import { EllipsisText } from '~/components/Table/shared/TableText'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
-import { isQuickLaunchAuction } from '~/features/Toucan/utils/quickLaunchAuction'
+import { isQuickLaunchAuction } from '~/features/Toucan/utils/quickLaunchClassification'
 
 /**
  * Sort fields for auction table

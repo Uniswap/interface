@@ -7,6 +7,8 @@ export const useCanActiveAddressClaimUnitag = (
   address?: Address,
 ): {
   canClaimUnitag: boolean
+  /** True until eligibility is known, including while the deviceId lookup gates the query. */
+  isLoading: boolean
 } => {
   const activeAddress = useActiveAccountAddressWithThrow()
   const targetAddress = address ?? activeAddress
@@ -25,5 +27,6 @@ export const useCanActiveAddressClaimUnitag = (
 
   return {
     canClaimUnitag: !isLoading && !!data?.canClaim,
+    isLoading: skip || isLoading,
   }
 }

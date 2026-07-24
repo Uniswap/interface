@@ -10,10 +10,12 @@ import { ReportTokenDataModal } from 'uniswap/src/components/reporting/ReportTok
 import { ReportTokenIssueModalPropsAtom } from 'uniswap/src/components/reporting/ReportTokenIssueModal'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { getRWAHeaderIdentity } from 'uniswap/src/features/rwa/getRWAHeaderIdentity'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
@@ -79,6 +81,8 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
   const effectiveCurrency = useTDPEffectiveCurrency()
   const rwaMatch = useRWATokenDetailsMatch()
 
+  const metadata = useTokenMetadata(currencyId(effectiveCurrency), { legacyToken: tokenProjectQuery.data?.token })
+
   const displayAddress = effectiveCurrency.isNative ? NATIVE_CHAIN_ID : effectiveCurrency.address
   const isNative = effectiveCurrency.isNative
   const tokenLogoSize = getHeaderLogoSize({ isCompact, media, scaleMobileOnScroll: true })
@@ -89,7 +93,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
     void setModalProps({
       source: 'token-details',
       currency,
-      isMarkedSpam: tokenProjectQuery.data?.token?.project?.isSpam,
+      isMarkedSpam: metadata.isSpam,
       isMultichainAsset: isMultiChainAsset,
       shouldReportMultichainAsset: isMultiChainAsset && selectedChainId === undefined,
     })
@@ -112,19 +116,19 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
 
   const { desktopHeaderActions, mobileHeaderActionSections } = useTokenDetailsHeaderActions({
     currency: effectiveCurrency,
-    project: tokenProjectQuery.data?.token?.project,
+    project: { homepageUrl: metadata.homepageUrl, twitterName: metadata.twitterName },
     openReportTokenModal,
     openReportDataIssueModal,
     isMobileScreen,
   })
 
-  const tokenSymbol = tokenProjectQuery.data?.token?.symbol ?? effectiveCurrency.symbol ?? t('tdp.symbolNotFound')
-  const fallbackTokenName = tokenProjectQuery.data?.token?.name ?? effectiveCurrency.name ?? t('tdp.nameNotFound')
+  const tokenSymbol = metadata.symbol ?? effectiveCurrency.symbol ?? t('tdp.symbolNotFound')
+  const fallbackTokenName = metadata.name ?? effectiveCurrency.name ?? t('tdp.nameNotFound')
   // Matched RWAs show the underlying asset name from listRwas, but keep the token's own logo.
   const { name: tokenName, logoUrl: tokenLogoUrl } = getRWAHeaderIdentity({
     rwaMatch,
     fallbackName: fallbackTokenName,
-    logoUrl: tokenProjectQuery.data?.token?.project?.logoUrl,
+    logoUrl: metadata.logoUrl,
   })
   const showAddressCopy = getShowAddressCopy({ isNative, isMultiChainAsset, selectedChainId })
 
@@ -235,7 +239,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
 
       <ReportTokenDataModal
         currency={currency}
-        isMarkedSpam={tokenProjectQuery.data?.token?.project?.isSpam}
+        isMarkedSpam={metadata.isSpam}
         shouldReportMultichainAsset={isMultiChainAsset && selectedChainId === undefined}
         onReportSuccess={onReportSuccess}
         isOpen={isReportDataIssueModalOpen}

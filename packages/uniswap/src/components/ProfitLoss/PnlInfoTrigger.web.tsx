@@ -6,7 +6,7 @@ import { PnlInfoTriggerProps } from 'uniswap/src/components/ProfitLoss/PnlInfoTr
 const TOOLTIP_REST_MS = 20
 const TOOLTIP_CLOSE_MS = 100
 
-export function PnlInfoTrigger({ metrics }: PnlInfoTriggerProps): JSX.Element {
+export function PnlInfoTrigger({ metrics, footer }: PnlInfoTriggerProps): JSX.Element {
   return (
     <Tooltip delay={{ close: TOOLTIP_CLOSE_MS, open: 0 }} placement="top" restMs={TOOLTIP_REST_MS}>
       <Tooltip.Trigger>
@@ -15,7 +15,7 @@ export function PnlInfoTrigger({ metrics }: PnlInfoTriggerProps): JSX.Element {
         </Flex>
       </Tooltip.Trigger>
       <Tooltip.Content pointerEvents="auto" maxWidth={320}>
-        <PnlDefinitionsList metrics={metrics} />
+        <PnlDefinitionsList metrics={metrics} footer={footer} />
         <Tooltip.Arrow />
       </Tooltip.Content>
     </Tooltip>

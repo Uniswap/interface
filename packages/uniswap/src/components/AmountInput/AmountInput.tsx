@@ -123,30 +123,30 @@ export const AmountInput = forwardRef<Input, Props>(function AmountInputInner(
     <TextInput {...textInputProps} showSoftInputOnFocus={false} />
   )
 
-  if (adjustWidthToContent) {
-    return (
-      <>
-        <Text
-          // Hidden element measures actual text width.
-          // On web, width is estimated instantly, then refined when onLayout fires.
-          // On mobile, width comes only from onLayout measurement.
-          fontFamily="$heading"
-          fontSize={fontSize}
-          fontWeight="500"
-          height={0}
-          numberOfLines={1}
-          overflow="hidden"
-          position="absolute"
-          onLayout={onLayout}
-        >
-          {measurementText}
-        </Text>
-        {textInputElement}
-      </>
-    )
-  }
-
-  return textInputElement
+  // Always render the same fragment shape (with the input at a stable position) so toggling
+  // `adjustWidthToContent` (e.g. switching between fiat and crypto) doesn't remount the input,
+  // which would drop focus/cursor and cause a visible bounce.
+  return (
+    <>
+      <Text
+        // Hidden element measures actual text width when adjustWidthToContent is enabled.
+        // On web, width is estimated instantly, then refined when onLayout fires.
+        // On mobile, width comes only from onLayout measurement.
+        fontFamily="$heading"
+        fontSize={fontSize}
+        fontWeight="500"
+        height={0}
+        numberOfLines={1}
+        overflow="hidden"
+        pointerEvents="none"
+        position="absolute"
+        onLayout={adjustWidthToContent ? onLayout : undefined}
+      >
+        {measurementText}
+      </Text>
+      {textInputElement}
+    </>
+  )
 })
 
 const TextInputWithNativeKeyboard = forwardRef<Input, TextInputProps>(function TextInputWithNativeKeyboardInner(

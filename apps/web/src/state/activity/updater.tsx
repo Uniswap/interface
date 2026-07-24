@@ -6,12 +6,15 @@ import { useIsEarnEnabled } from 'uniswap/src/features/earn/hooks/useIsEarnEnabl
 import { getDisplayedPriceSource } from 'uniswap/src/features/prices/getDisplayedPriceSource'
 import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { makeSelectPlanTransaction } from 'uniswap/src/features/transactions/selectors'
 import {
   finalizeTransaction,
   interfaceApplyTransactionHashToBatch,
   interfaceConfirmBridgeDeposit,
   updateTransaction,
 } from 'uniswap/src/features/transactions/slice'
+import { shouldPollPlan } from 'uniswap/src/features/transactions/swap/plan/planPollingUtils'
+import { activePlanStore } from 'uniswap/src/features/transactions/swap/review/stores/activePlan/activePlanStore'
 import {
   extractPlanFieldsFromTypeInfo,
   type InterfaceTransactionDetails,
@@ -31,11 +34,15 @@ import { useActivePlanTransactions, usePollPendingPlanTransactions } from '~/sta
 import { usePollPendingTransactions } from '~/state/activity/polling/transactions'
 import { type ActivityUpdate, ActivityUpdateTransactionType, type OnActivityUpdate } from '~/state/activity/types'
 import { useAppDispatch } from '~/state/hooks'
+import store from '~/state/index'
 import { maybeAddEarnSwapUpsellPopup } from '~/state/popups/earnSwapUpsell'
 import { popupRegistry } from '~/state/popups/registry'
 import { PopupType } from '~/state/popups/types'
 import type { TransactionDetails } from '~/state/transactions/types'
 import { logSwapFinalized } from '~/tracing/swapFlowLoggers'
+
+const selectPlanTransactionById = makeSelectPlanTransaction()
+const planIdsWithDeliveredNotifications = new Set<string>()
 
 export function ActivityStateUpdater() {
   const onActivityUpdate = useOnActivityUpdate()
@@ -57,7 +64,7 @@ function PollingActivityStateUpdater({ onActivityUpdate }: { onActivityUpdate: O
   return null
 }
 
-function canFinalizeBaseTransactionUpdate({
+export function canFinalizeBaseTransactionUpdate({
   original,
   update,
 }: {
@@ -72,10 +79,15 @@ function canFinalizeBaseTransactionUpdate({
   // Batch transactions that are confirmed also don't have traditional receipts
   const isBatchTransactionConfirmed = Boolean(original.batchInfo && update.hash)
 
+  // A failed batch may carry no receipt or hash at all (e.g. EIP-5792 status 400, never included onchain),
+  // so finalize it anyway instead of re-polling until the 1-hour cutoff
+  const isFailedBatchTransaction = Boolean(original.batchInfo) && update.status === TransactionStatus.Failed
+
   // For successful bridge transactions with deposit confirmed or confirmed batch transactions, we don't require a receipt
   // For all other transactions (including failed bridges), we need a receipt to finalize
   const canFinalizeWithoutReceipt =
-    (isBridgeWithDepositConfirmed || isBatchTransactionConfirmed) && update.status === TransactionStatus.Success
+    isFailedBatchTransaction ||
+    ((isBridgeWithDepositConfirmed || isBatchTransactionConfirmed) && update.status === TransactionStatus.Success)
 
   return Boolean(update.receipt) || canFinalizeWithoutReceipt
 }
@@ -102,7 +114,7 @@ function resolveSwapPriceSource({
   })
 }
 
-function useOnActivityUpdate(): OnActivityUpdate {
+export function useOnActivityUpdate(): OnActivityUpdate {
   const dispatch = useAppDispatch()
   const analyticsContext = useTrace()
   const isCentralizedPricesEnabled = useFeatureFlag(FeatureFlags.CentralizedPrices)
@@ -150,6 +162,8 @@ function useOnActivityUpdate(): OnActivityUpdate {
 
         const updatedTransaction: InterfaceTransactionDetails = {
           ...original,
+          // interfaceApplyTransactionHashToBatch re-keys the record from batchId to hash, so finalize under the new id
+          id: original.batchInfo && update.hash ? update.hash : original.id,
           typeInfo: update.typeInfo,
           receipt,
           networkFee: update.networkFee ?? original.networkFee,
@@ -256,7 +270,7 @@ function useOnActivityUpdate(): OnActivityUpdate {
           }
         }
 
-        if (hash) {
+        if (hash && shouldAddTransactionPopup({ hash, original })) {
           popupRegistry.addPopup({ type: PopupType.Transaction, hash }, hash, popupDismissalTime)
         }
 
@@ -277,22 +291,24 @@ function useOnActivityUpdate(): OnActivityUpdate {
       ) {
         const { update } = activity
         if (isFinalizedTx(update)) {
+          const planId = update.typeInfo.planId
           dispatch(finalizeTransaction(update))
           popupRegistry.addPopup(
             {
               type: PopupType.Plan,
-              planId: update.typeInfo.planId,
+              planId,
             },
-            update.typeInfo.planId,
+            planId,
             popupDismissalTime,
           )
+          recordDeliveredPlanNotification(planId)
 
           maybeAddEarnSwapUpsellPopup({
             isEarnEnabled,
             status: update.status,
             typeInfo: update.typeInfo,
             transactionId: update.id,
-            swapPopupKey: update.typeInfo.planId,
+            swapPopupKey: planId,
           })
         } else {
           dispatch(updateTransaction(update))
@@ -301,6 +317,41 @@ function useOnActivityUpdate(): OnActivityUpdate {
     },
     [analyticsContext, dispatch, handleUniswapXActivityUpdate, isCentralizedPricesEnabled, isEarnEnabled],
   )
+}
+
+export function shouldAddTransactionPopup({
+  hash,
+  original,
+}: {
+  hash: string | undefined
+  original: TransactionDetails
+}): boolean {
+  if (!hash) {
+    return false
+  }
+
+  const planId = original.batchInfo?.planId
+  return !planId || !isPlanNotificationOwnerTracked(planId)
+}
+
+function recordDeliveredPlanNotification(planId: string): void {
+  if (popupRegistry.hasPopup(planId)) {
+    planIdsWithDeliveredNotifications.add(planId)
+  }
+}
+
+function isPlanNotificationOwnerTracked(planId: string): boolean {
+  if (planIdsWithDeliveredNotifications.has(planId)) {
+    return true
+  }
+
+  const { activePlan, backgroundedPlans } = activePlanStore.getState()
+  if (activePlan?.planId === planId || planId in backgroundedPlans) {
+    return true
+  }
+
+  const persistedPlan = selectPlanTransactionById(store.getState(), { planId })
+  return persistedPlan ? shouldPollPlan(persistedPlan) : false
 }
 
 export default ActivityStateUpdater

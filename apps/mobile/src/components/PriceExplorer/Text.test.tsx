@@ -1,13 +1,14 @@
 import React from 'react'
 import * as charts from 'react-native-wagmi-charts'
 import { DatetimeText, PriceText, RelativeChangeText } from 'src/components/PriceExplorer/Text'
-import { render, within } from 'src/test/test-utils'
+import { getNearestFiberProp, render, within } from 'src/test/test-utils'
 import { amounts } from 'uniswap/src/test/fixtures'
+import type { Mock } from 'vitest'
 
-jest.mock('react-native-wagmi-charts')
-const mockedUseLineChartPrice = charts.useLineChartPrice as jest.Mock
-const mockedUseLineChart = charts.useLineChart as jest.Mock
-const mockedUseLineChartDatetime = charts.useLineChartDatetime as jest.Mock
+vi.mock('react-native-wagmi-charts')
+const mockedUseLineChartPrice = charts.useLineChartPrice as Mock
+const mockedUseLineChart = charts.useLineChart as Mock
+const mockedUseLineChartDatetime = charts.useLineChartDatetime as Mock
 
 describe(PriceText, () => {
   it('renders without error', () => {
@@ -48,8 +49,8 @@ describe(PriceText, () => {
     const wholePart = await within(animatedText).findByTestId('wholePart')
     const decimalPart = await within(animatedText).findByTestId('decimalPart')
 
-    expect(wholePart.props['text']).toBe(`$${amounts.sm().value}`)
-    expect(decimalPart.props['text']).toBe(`.00`)
+    expect(getNearestFiberProp(wholePart, 'text')).toBe(`$${amounts.sm().value}`)
+    expect(getNearestFiberProp(decimalPart, 'text')).toBe(`.00`)
   })
 })
 
@@ -88,7 +89,7 @@ describe(RelativeChangeText, () => {
     const tree = render(<RelativeChangeText loading={false} />)
 
     const text = await tree.findByTestId('relative-change-text')
-    expect(text.props['text']).toBe(`10.00%`)
+    expect(getNearestFiberProp(text, 'text')).toBe(`10.00%`)
   })
 })
 
@@ -100,7 +101,7 @@ describe(DatetimeText, () => {
     })
     const tree = render(<DatetimeText loading={false} />)
 
-    expect(tree.toJSON()).toHaveStyle({ opacity: 1 })
+    expect((tree.container.querySelector('div') as HTMLElement).style.opacity).toBe('1')
     expect(tree).toMatchSnapshot()
   })
 
@@ -111,6 +112,6 @@ describe(DatetimeText, () => {
     })
     const tree = render(<DatetimeText loading={true} />)
 
-    expect(tree.toJSON()).toHaveStyle({ opacity: 0 })
+    expect((tree.container.querySelector('div') as HTMLElement).style.opacity).toBe('0')
   })
 })

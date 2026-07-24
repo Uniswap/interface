@@ -20,6 +20,7 @@ const VAULT: EarnVaultInfo = {
   chainId: CHAIN_ID,
   apyPercent: 4.52,
   exposureCurrencyIds: [],
+  exposures: [],
   totalDepositsUsd: 0,
   liquidityUsd: 0,
   curator: { name: 'Test', imageUrl: '' },

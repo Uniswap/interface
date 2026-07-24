@@ -23,9 +23,6 @@ export const selectHasSeenToucanIntroModal = (state: UniswapState): boolean =>
 export const selectHasSeenToucanIntroModalForWallet = (state: UniswapState, walletAddress: string): boolean =>
   state.uniswapBehaviorHistory.toucanIntroModalSeenByWallet?.[walletAddress.toLowerCase()] === true
 
-export const selectHasDismissedUniswapWrapped2025Banner = (state: UniswapState): boolean =>
-  state.uniswapBehaviorHistory.hasDismissedUniswapWrapped2025Banner === true
-
 export const selectHasDismissedCrosschainSwapsPromoBanner = (state: UniswapState): boolean =>
   state.uniswapBehaviorHistory.hasDismissedCrosschainSwapsPromoBanner === true
 

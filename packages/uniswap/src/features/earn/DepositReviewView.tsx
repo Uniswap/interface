@@ -29,15 +29,21 @@ import {
   getEarnDepositQuoteErrorMessage,
   getEarnReviewHasBlockingError,
 } from 'uniswap/src/features/earn/EarnReviewBlockingMessage'
+import { EarnReviewLayout, type EarnReviewRenderLayout } from 'uniswap/src/features/earn/EarnReviewLayout'
 import { useEarnInsufficientGasWarning } from 'uniswap/src/features/earn/hooks/useEarnInsufficientGasWarning'
 import { useEarnNetworkCostLabel } from 'uniswap/src/features/earn/hooks/useEarnNetworkCostLabel'
 import { useEarnReviewAnalytics } from 'uniswap/src/features/earn/hooks/useEarnReviewAnalytics'
 import { useEarnReviewExecutionHandlers } from 'uniswap/src/features/earn/hooks/useEarnReviewExecutionHandlers'
-import { getEarnExecutionErrorMessage } from 'uniswap/src/features/earn/planExecution'
+import {
+  getEarnExecutionErrorMessage,
+  shouldShowEarnTroubleshootingLink,
+} from 'uniswap/src/features/earn/planExecution'
 import type { EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { useLocalFiatToUSDConverter } from 'uniswap/src/features/fiatCurrency/useLocalFiatToUSDConverter'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { EarnEventName } from 'uniswap/src/features/telemetry/constants/features'
+import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import type {
   EarnAnalyticsEntryPoint,
   EarnAnalyticsSurface as EarnAnalyticsSurfaceValue,
@@ -86,6 +92,8 @@ interface DepositReviewViewProps {
   projectedMonthlyEarningsUsd?: number
   sourceUpsellCurrencyId?: string
   swapAmountUsd?: number
+  /** See {@link EarnReviewLayout} — lets the mobile bottom-sheet modal pin the action in a footer overlay. */
+  renderLayout?: EarnReviewRenderLayout
 }
 
 // eslint-disable-next-line complexity
@@ -108,6 +116,7 @@ export function DepositReviewView({
   projectedMonthlyEarningsUsd,
   sourceUpsellCurrencyId,
   swapAmountUsd,
+  renderLayout,
 }: DepositReviewViewProps): JSX.Element {
   const { t } = useTranslation()
   const isShortMobileDevice = useIsShortMobileDevice()
@@ -221,7 +230,7 @@ export function DepositReviewView({
 
   const currentBalanceUsd = position?.depositedUsd ?? 0
   const balanceAfterUsd = currentBalanceUsd + parsedAmountUsd
-  const { logFailed, logFinalized, logSubmitted } = useEarnReviewAnalytics({
+  const { logFailed, logFinalized, logSubmitted, reviewedEventProperties } = useEarnReviewAnalytics({
     action: 'deposit',
     amountUsd: parsedAmountUsd,
     analyticsEntryPoint,
@@ -317,78 +326,82 @@ export function DepositReviewView({
       }),
     [activePlan, t],
   )
+  const action = (
+    <EarnReviewActionRow
+      ctaDisabled={ctaDisabled}
+      ctaLabel={insufficientGasWarning.warning?.buttonText ?? t('explore.earn.deposit.cta', { symbol })}
+      executionError={executionError}
+      isExecuting={isExecuting}
+      isShortMobileDevice={isShortMobileDevice}
+      progress={earnPlanProgress}
+      retryLabel={t('common.button.retry')}
+      stepProgressLabel={stepProgressLabel}
+      onBack={handleBack}
+      onPress={handleDepositPress}
+      onRetry={onPressRetry ? handleRetry : undefined}
+    />
+  )
 
   return (
-    <Flex gap="$spacing16">
-      {isMobileApp ? (
-        <Text variant="subheading2" color="$neutral2" textAlign="center">
-          {t('explore.earn.deposit.confirm')}
-        </Text>
-      ) : (
-        <Flex row alignItems="center" justifyContent="space-between">
-          <TouchableArea onPress={handleBack}>
-            <BackArrow color="$neutral2" size="$icon.24" />
-          </TouchableArea>
-          <Text variant="subheading2" color="$neutral2">
+    <Trace logImpression eventOnTrigger={EarnEventName.EarnDepositReviewed} properties={reviewedEventProperties}>
+      <EarnReviewLayout action={action} renderLayout={renderLayout}>
+        {isMobileApp ? (
+          <Text variant="subheading2" color="$neutral2" textAlign="center">
             {t('explore.earn.deposit.confirm')}
           </Text>
-          <ModalCloseIcon onClose={handleClose} />
-        </Flex>
-      )}
+        ) : (
+          <Flex row alignItems="center" justifyContent="space-between">
+            <TouchableArea onPress={handleBack}>
+              <BackArrow color="$neutral2" size="$icon.24" />
+            </TouchableArea>
+            <Text variant="subheading2" color="$neutral2">
+              {t('explore.earn.deposit.confirm')}
+            </Text>
+            <ModalCloseIcon onClose={handleClose} />
+          </Flex>
+        )}
 
-      <Flex alignItems="center" gap="$spacing12" py="$spacing32">
-        <Text variant="heading1" color="$neutral1">
-          {formatLocalFiat(parsedAmountUsd)}
-        </Text>
-        <Flex row alignItems="center" gap="$spacing8">
-          <TokenLogo
-            hideNetworkLogo={isMobileApp}
-            url={sourceCurrencyInfo?.logoUrl}
-            size={iconSizes.icon24}
-            chainId={quoteSourceChainId}
-            symbol={symbol}
-            name={currency?.name}
-          />
-          <Text variant="body2" color="$neutral2">
-            {`${tokenAmountLabel} ${symbol}`}
+        <Flex alignItems="center" gap="$spacing12" py="$spacing32">
+          <Text variant="heading1" color="$neutral1">
+            {formatLocalFiat(parsedAmountUsd)}
           </Text>
+          <Flex row alignItems="center" gap="$spacing8">
+            <TokenLogo
+              hideNetworkLogo={isMobileApp}
+              url={sourceCurrencyInfo?.logoUrl}
+              size={iconSizes.icon24}
+              chainId={quoteSourceChainId}
+              symbol={symbol}
+              name={currency?.name}
+            />
+            <Text variant="body2" color="$neutral2">
+              {`${tokenAmountLabel} ${symbol}`}
+            </Text>
+          </Flex>
         </Flex>
-      </Flex>
 
-      {!earnPlanProgress && (
-        <DepositReviewDetails
-          balanceAfterUsd={balanceAfterUsd}
-          currentBalanceUsd={currentBalanceUsd}
-          expanded={expanded}
-          formatLocalFiat={formatLocalFiat}
-          formatPercent={formatPercent}
-          networkCostLabel={networkCostLabel}
-          projectedAnnualEarningsUsd={projectedAnnualEarningsUsd}
-          vault={vault}
-          onToggleExpanded={toggleExpanded}
+        {!earnPlanProgress && (
+          <DepositReviewDetails
+            balanceAfterUsd={balanceAfterUsd}
+            currentBalanceUsd={currentBalanceUsd}
+            expanded={expanded}
+            formatLocalFiat={formatLocalFiat}
+            formatPercent={formatPercent}
+            networkCostLabel={networkCostLabel}
+            projectedAnnualEarningsUsd={projectedAnnualEarningsUsd}
+            vault={vault}
+            onToggleExpanded={toggleExpanded}
+          />
+        )}
+
+        <EarnReviewBlockingMessage
+          executionErrorMessage={executionErrorMessage}
+          hasQuoteError={hasQuoteError}
+          insufficientGasWarning={insufficientGasWarning}
+          quoteErrorMessage={quoteErrorMessage}
+          showTroubleshootingLink={shouldShowEarnTroubleshootingLink(executionError)}
         />
-      )}
-
-      <EarnReviewBlockingMessage
-        executionErrorMessage={executionErrorMessage}
-        hasQuoteError={hasQuoteError}
-        insufficientGasWarning={insufficientGasWarning}
-        quoteErrorMessage={quoteErrorMessage}
-      />
-
-      <EarnReviewActionRow
-        ctaDisabled={ctaDisabled}
-        ctaLabel={insufficientGasWarning.warning?.buttonText ?? t('explore.earn.deposit.cta', { symbol })}
-        executionError={executionError}
-        isExecuting={isExecuting}
-        isShortMobileDevice={isShortMobileDevice}
-        progress={earnPlanProgress}
-        retryLabel={t('common.button.retry')}
-        stepProgressLabel={stepProgressLabel}
-        onBack={handleBack}
-        onPress={handleDepositPress}
-        onRetry={onPressRetry ? handleRetry : undefined}
-      />
-    </Flex>
+      </EarnReviewLayout>
+    </Trace>
   )
 }

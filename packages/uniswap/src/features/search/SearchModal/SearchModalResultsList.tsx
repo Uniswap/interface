@@ -18,6 +18,7 @@ interface SearchModalResultsListProps {
   debouncedSearchFilter: string | null
   debouncedParsedSearchFilter: string | null
   activeTab: SearchTab
+  auctionSearchEnabled?: boolean
   onSelect?: SearchModalListProps['onSelect']
   onResetFilters?: () => void
   renderedInModal: boolean
@@ -32,6 +33,7 @@ function SearchModalResultsListInner({
   debouncedSearchFilter,
   debouncedParsedSearchFilter,
   activeTab,
+  auctionSearchEnabled = false,
   onSelect,
   onResetFilters,
   renderedInModal,
@@ -62,6 +64,7 @@ function SearchModalResultsListInner({
     chainFilter: effectiveTokenSearchChainFilter,
     searchFilter: searchQuery,
     activeTab,
+    auctionSearchEnabled,
     shouldPrioritizePools: searchQuery?.includes('/') ?? false,
     shouldPrioritizeWallets: shouldPrioritizeWallets ?? false,
   })

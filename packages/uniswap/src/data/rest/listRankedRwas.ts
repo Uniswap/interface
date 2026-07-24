@@ -3,6 +3,7 @@ import { useQuery } from '@connectrpc/connect-query'
 import type { UseQueryResult } from '@tanstack/react-query'
 import { listRankedRwas } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
 import type { ListRankedRwasResponse, RankedRwa, RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { OnchainItemListOptionType, type RwaTokenOption } from 'uniswap/src/components/lists/items/types'
 import { entryGatewayProdPostTransport } from 'uniswap/src/data/rest/base'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -28,10 +29,11 @@ export function useListRankedRwasQuery({
 }): UseQueryResult<ListRankedRwasResponse, ConnectError> {
   const { chains: enabledChainIds } = useEnabledChains()
   const resolvedChainIds = chainIds.length > 0 ? chainIds : enabledChainIds
+  const isV2TokensEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
 
   return useQuery(
     listRankedRwas,
-    { category, chainIds: resolvedChainIds, includeSparkline1d },
+    { category, chainIds: resolvedChainIds, includeSparkline1d, useSubstreamData: isV2TokensEnabled },
     {
       transport: entryGatewayProdPostTransport,
       enabled: enabled && resolvedChainIds.length > 0,

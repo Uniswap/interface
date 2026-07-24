@@ -2,7 +2,6 @@ import { default as React, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
-import { navigate } from 'src/app/navigation/rootNavigation'
 import type { AppStackScreenProp } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
@@ -43,7 +42,7 @@ export function EditProfileSettingsModal({
   }
 
   const onNavigate = (): void => {
-    navigate(MobileScreens.Home)
+    onClose()
   }
 
   const onBack = (): void => {

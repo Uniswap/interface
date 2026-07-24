@@ -1,443 +1,88 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`FavoriteWalletCard renders without error 1`] = `
-<View
-  actions={
-    [
-      {
-        "systemIcon": "heart.slash.fill",
-        "title": "Remove favorite",
-      },
-      {
-        "systemIcon": "square.and.pencil",
-        "title": "Edit favorites",
-      },
-    ]
-  }
-  disabled={false}
-  onPress={[Function]}
-  style={
-    {
-      "borderRadius": 16,
-    }
-  }
->
-  <View
-    handlerTags={
-      [
-        3,
-        2,
-        1,
-      ]
-    }
-    onGestureHandlerEvent={[Function]}
-    onGestureHandlerReanimatedEvent={
-      {
-        "workletEventHandler": WorkletEventHandlerWeb {
-          "eventNames": [],
-          "listeners": {},
-          "worklet": [Function],
-        },
-      }
-    }
-    onGestureHandlerStateChange={[Function]}
-    onGestureHandlerTouchEvent={[Function]}
-    pointerEvents="box-none"
-    style={
-      {
-        "display": "contents",
-      }
-    }
+exports[`FavoriteWalletCard > renders without error 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    <RNGestureHandlerButton
-      accessible={true}
-      collapsable={false}
-      enabled={true}
-      forwardedRef={[Function]}
-      hitSlop={
-        {
-          "bottom": 0,
-          "left": 0,
-          "right": 0,
-          "top": 0,
-        }
-      }
-      jestAnimatedProps={
-        {
-          "value": {},
-        }
-      }
-      jestAnimatedStyle={
-        {
-          "value": {},
-        }
-      }
-      jestInlineStyle={
-        [
-          {
-            "backgroundColor": "transparent",
-            "borderBottomLeftRadius": 16,
-            "borderBottomRightRadius": 16,
-            "borderTopLeftRadius": 16,
-            "borderTopRightRadius": 16,
-            "flexDirection": "column",
-            "marginBottom": 4,
-            "marginLeft": 4,
-            "marginRight": 4,
-            "marginTop": 4,
-            "opacity": 1,
-            "overflow": "hidden",
-            "shadowColor": "rgb(0,0,0)",
-            "shadowOffset": {
-              "height": 1,
-              "width": 0,
-            },
-            "shadowOpacity": 0.0196078431372549,
-            "shadowRadius": 6,
-            "transform": [
-              {
-                "scale": 1,
-              },
-            ],
-          },
-        ]
-      }
-      onBlur={[Function]}
-      onClick={[Function]}
-      onFocus={[Function]}
-      onLayout={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
-      rippleColor="transparent"
-      style={
-        [
-          {},
-          [
-            {
-              "backgroundColor": "transparent",
-              "borderBottomLeftRadius": 16,
-              "borderBottomRightRadius": 16,
-              "borderTopLeftRadius": 16,
-              "borderTopRightRadius": 16,
-              "flexDirection": "column",
-              "marginBottom": 4,
-              "marginLeft": 4,
-              "marginRight": 4,
-              "marginTop": 4,
-              "opacity": 1,
-              "overflow": "hidden",
-              "shadowColor": "rgb(0,0,0)",
-              "shadowOffset": {
-                "height": 1,
-                "width": 0,
-              },
-              "shadowOpacity": 0.0196078431372549,
-              "shadowRadius": 6,
-              "transform": [
-                {
-                  "scale": 1,
-                },
-              ],
-            },
-            {},
-          ],
-        ]
-      }
-      testID="favorite-wallet-card"
+    <div
+      class="css-view-175oi2r"
+      style="border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px;"
     >
-      <View
-        style={
-          {
-            "backgroundColor": "#FFFFFF",
-            "borderBottomColor": "rgba(19, 19, 19, 0.08)",
-            "borderBottomLeftRadius": 16,
-            "borderBottomRightRadius": 16,
-            "borderBottomWidth": 1,
-            "borderLeftColor": "rgba(19, 19, 19, 0.08)",
-            "borderLeftWidth": 1,
-            "borderRightColor": "rgba(19, 19, 19, 0.08)",
-            "borderRightWidth": 1,
-            "borderStyle": "solid",
-            "borderTopColor": "rgba(19, 19, 19, 0.08)",
-            "borderTopLeftRadius": 16,
-            "borderTopRightRadius": 16,
-            "borderTopWidth": 1,
-            "flexDirection": "row",
-            "gap": 4,
-            "justifyContent": "space-between",
-            "paddingBottom": 12,
-            "paddingLeft": 12,
-            "paddingRight": 12,
-            "paddingTop": 12,
-          }
-        }
+      <button
+        class="is_TouchableArea "
+        data-testid="favorite-wallet-card"
+        style="background-color: transparent; flex-direction: column; opacity: 1; overflow-x: hidden; overflow-y: hidden; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; margin: 4px 4px 4px 4px; box-shadow: 0px 1px 6px rgba(0,0,0,0.0196078431372549); transform: [object Object];"
+        testid="favorite-wallet-card"
       >
-        <View
-          style={
-            {
-              "alignItems": "center",
-              "flexDirection": "row",
-              "flexShrink": 1,
-              "gap": 8,
-            }
-          }
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665589 _justifyContent-space-betwe3241 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _backgroundColor-surface1 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
         >
-          <View
-            style={
-              {
-                "borderBottomColor": "transparent",
-                "borderBottomLeftRadius": 999999,
-                "borderBottomRightRadius": 999999,
-                "borderBottomWidth": 0,
-                "borderLeftColor": "transparent",
-                "borderLeftWidth": 0,
-                "borderRightColor": "transparent",
-                "borderRightWidth": 0,
-                "borderStyle": "solid",
-                "borderTopColor": "transparent",
-                "borderTopLeftRadius": 999999,
-                "borderTopRightRadius": 999999,
-                "borderTopWidth": 0,
-                "flexDirection": "column",
-                "height": 20,
-                "position": "relative",
-                "width": 20,
-              }
-            }
-            testID="account-icon"
+          <div
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _gap-t-space-spa94665593"
           >
-            <View
-              style={
-                {
-                  "flex": 1,
-                  "flexDirection": "column",
-                }
-              }
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _position-relative _width-20px _height-20px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+              data-testid="account-icon"
             >
-              <View
-                style={
-                  {
-                    "flexDirection": "column",
-                    "height": 20,
-                    "width": 20,
-                  }
-                }
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _flexGrow-1"
               >
-                <View
-                  style={
-                    {
-                      "height": 20,
-                      "width": 20,
-                    }
-                  }
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  style="width: 20px; height: 20px;"
                 >
-                  <skCircle
-                    color="#00C3A01F"
-                    cx={10}
-                    cy={10}
-                    r={10}
-                  />
-                  <skGroup
-                    transform={
-                      [
-                        {
-                          "translateX": 3.333333333333333,
-                        },
-                        {
-                          "translateY": 3.333333333333333,
-                        },
-                      ]
-                    }
+                  <div
+                    class="css-view-175oi2r"
+                    style="width: 20px; height: 20px;"
                   >
-                    <skGroup
-                      transform={
-                        [
-                          {
-                            "scale": 0.2777777777777778,
-                          },
-                        ]
-                      }
+                    <div
+                      class="css-view-175oi2r"
+                    />
+                    <div
+                      class="css-view-175oi2r"
                     >
-                      <skPath
-                        clip-rule="evenodd"
-                        color="#00C3A0"
-                        end={1}
-                        fillType="evenOdd"
-                        path="M20.9454 0.0175773C22.4936 -0.167833 23.763 1.13917 23.763 2.72944V21.3625C23.763 22.9527 22.4993 24.2419 20.9405 24.2419L2.67549 24.2419C1.11665 24.2419 -0.16452 22.9469 0.0172307 21.3675C1.30306 10.1936 9.99222 1.32931 20.9454 0.0175773Z"
-                        start={0}
-                        strokeWidth={1}
-                      />
-                      <skPath
-                        clip-rule="evenodd"
-                        color="#00C3A0"
-                        end={1}
-                        fillType="evenOdd"
-                        path="M27.0546 47.9824C25.5064 48.1678 24.237 46.8608 24.237 45.2706V26.6375C24.237 25.0473 25.5007 23.7581 27.0595 23.7581L45.3245 23.7581C46.8833 23.7581 48.1645 25.0531 47.9828 26.6325C46.6969 37.8064 38.0078 46.6707 27.0546 47.9824Z"
-                        start={0}
-                        strokeWidth={1}
-                      />
-                    </skGroup>
-                  </skGroup>
-                </View>
-              </View>
-            </View>
-          </View>
-          <View
-            style={
-              {
-                "flexDirection": "row",
-                "flexGrow": 1,
-              }
-            }
-          >
-            <Text
-              adjustsFontSizeToFit={true}
-              allowFontScaling={true}
-              maxFontSizeMultiplier={1.4}
-              numberOfLines={1}
-              style={
-                {
-                  "color": "#131313",
-                  "flexShrink": 1,
-                  "fontFamily": "Basel Grotesk",
-                  "fontSize": 19,
-                  "fontWeight": "400",
-                  "lineHeight": 24.7,
-                }
-              }
-              suppressHighlighting={true}
+                      <div
+                        class="css-view-175oi2r"
+                      >
+                        <div
+                          class="css-view-175oi2r"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _flexGrow-1"
             >
-              0x​82D5...3Fa6
-            </Text>
-          </View>
-        </View>
-        <View
-          handlerTags={
-            [
-              6,
-              5,
-              4,
-            ]
-          }
-          onGestureHandlerEvent={[Function]}
-          onGestureHandlerReanimatedEvent={
-            {
-              "workletEventHandler": WorkletEventHandlerWeb {
-                "eventNames": [],
-                "listeners": {},
-                "worklet": [Function],
-              },
-            }
-          }
-          onGestureHandlerStateChange={[Function]}
-          onGestureHandlerTouchEvent={[Function]}
-          pointerEvents="box-none"
-          style={
-            {
-              "display": "contents",
-            }
-          }
-        >
-          <RNGestureHandlerButton
-            accessible={true}
-            aria-disabled={true}
-            collapsable={false}
-            enabled={true}
-            forwardedRef={[Function]}
-            hitSlop={
-              {
-                "bottom": 0,
-                "left": 0,
-                "right": 0,
-                "top": 0,
-              }
-            }
-            jestAnimatedProps={
-              {
-                "value": {},
-              }
-            }
-            jestAnimatedStyle={
-              {
-                "value": {},
-              }
-            }
-            jestInlineStyle={
-              [
-                {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(19, 19, 19, 0.35)",
-                  "borderBottomLeftRadius": 999999,
-                  "borderBottomRightRadius": 999999,
-                  "borderTopLeftRadius": 999999,
-                  "borderTopRightRadius": 999999,
-                  "flexDirection": "column",
-                  "height": 24,
-                  "justifyContent": "center",
-                  "opacity": 0,
-                  "transform": [
-                    {
-                      "scale": 1,
-                    },
-                  ],
-                  "width": 24,
-                  "zIndex": 1080,
-                },
-              ]
-            }
-            onLayout={[Function]}
-            rippleColor="transparent"
-            style={
-              [
-                {},
-                [
-                  {
-                    "alignItems": "center",
-                    "backgroundColor": "rgba(19, 19, 19, 0.35)",
-                    "borderBottomLeftRadius": 999999,
-                    "borderBottomRightRadius": 999999,
-                    "borderTopLeftRadius": 999999,
-                    "borderTopRightRadius": 999999,
-                    "flexDirection": "column",
-                    "height": 24,
-                    "justifyContent": "center",
-                    "opacity": 0,
-                    "transform": [
-                      {
-                        "scale": 1,
-                      },
-                    ],
-                    "width": 24,
-                    "zIndex": 1080,
-                  },
-                  {},
-                ],
-              ]
-            }
-            testID="explore/remove-button"
-          >
-            <View
-              style={
-                {
-                  "backgroundColor": "#FFFFFF",
-                  "borderBottomLeftRadius": 12,
-                  "borderBottomRightRadius": 12,
-                  "borderTopLeftRadius": 12,
-                  "borderTopRightRadius": 12,
-                  "flexDirection": "column",
-                  "height": 2,
-                  "width": 10,
-                }
-              }
-            />
-          </RNGestureHandlerButton>
-        </View>
-      </View>
-    </RNGestureHandlerButton>
-  </View>
-</View>
+              <span
+                class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _whiteSpace-initial _flexShrink-1"
+                data-disable-theme="true"
+              >
+                0x​82D5...3Fa6
+              </span>
+            </div>
+          </div>
+        </div>
+      </button>
+      <button
+        aria-disabled="true"
+        class="is_TouchableArea "
+        data-testid="explore/remove-button"
+        style="flex-direction: column; opacity: 0; align-items: center; background-color: rgba(19, 19, 19, 0.35); border-top-left-radius: 999999px; border-top-right-radius: 999999px; border-bottom-right-radius: 999999px; border-bottom-left-radius: 999999px; justify-content: center; z-index: 1080; width: 24px; height: 24px; transform: [object Object];"
+        testid="explore/remove-button"
+      >
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface1 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-2px _width-10px"
+        />
+      </button>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;

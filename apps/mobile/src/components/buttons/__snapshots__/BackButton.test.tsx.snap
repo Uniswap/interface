@@ -1,250 +1,49 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`BackButton renders without error 1`] = `
-<View
-  handlerTags={
-    [
-      3,
-      2,
-      1,
-    ]
-  }
-  onGestureHandlerEvent={[Function]}
-  onGestureHandlerReanimatedEvent={
-    {
-      "workletEventHandler": WorkletEventHandlerWeb {
-        "eventNames": [],
-        "listeners": {},
-        "worklet": [Function],
-      },
-    }
-  }
-  onGestureHandlerStateChange={[Function]}
-  onGestureHandlerTouchEvent={[Function]}
-  pointerEvents="box-none"
-  style={
-    {
-      "display": "contents",
-    }
-  }
->
-  <RNGestureHandlerButton
-    accessible={true}
-    collapsable={false}
-    dd-action-name="back"
-    enabled={true}
-    forwardedRef={[Function]}
-    hitSlop={
-      {
-        "bottom": 24,
-        "left": 24,
-        "right": 24,
-        "top": 24,
-      }
-    }
-    jestAnimatedProps={
-      {
-        "value": {},
-      }
-    }
-    jestAnimatedStyle={
-      {
-        "value": {},
-      }
-    }
-    jestInlineStyle={
-      [
-        {
-          "alignItems": "center",
-          "backgroundColor": "transparent",
-          "borderBottomLeftRadius": 12,
-          "borderBottomRightRadius": 12,
-          "borderTopLeftRadius": 12,
-          "borderTopRightRadius": 12,
-          "flexDirection": "column",
-          "opacity": 1,
-          "transform": [
-            {
-              "scale": 1,
-            },
-          ],
-        },
-      ]
-    }
-    onBlur={[Function]}
-    onClick={[Function]}
-    onFocus={[Function]}
-    onLayout={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
-    rippleColor="transparent"
-    style={
-      [
-        {},
-        [
-          {
-            "alignItems": "center",
-            "backgroundColor": "transparent",
-            "borderBottomLeftRadius": 12,
-            "borderBottomRightRadius": 12,
-            "borderTopLeftRadius": 12,
-            "borderTopRightRadius": 12,
-            "flexDirection": "column",
-            "opacity": 1,
-            "transform": [
-              {
-                "scale": 1,
-              },
-            ],
-          },
-          {},
-        ],
-      ]
-    }
-    testID="back"
+exports[`BackButton > renders without error 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "gap": 8,
-        }
-      }
+    <button
+      class="is_TouchableArea "
+      data-testid="back"
+      dd-action-name="back"
+      style="border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; flex-direction: column; opacity: 1; align-items: center; transform: [object Object];"
+      testid="back"
     >
-      <View
-        collapsable={false}
-        forwardedRef={[Function]}
-        jestAnimatedProps={
-          {
-            "value": {},
-          }
-        }
-        jestAnimatedStyle={
-          {
-            "value": {},
-          }
-        }
-        jestInlineStyle={
-          [
-            {
-              "alignItems": "center",
-              "borderBottomLeftRadius": 999999,
-              "borderBottomRightRadius": 999999,
-              "borderTopLeftRadius": 999999,
-              "borderTopRightRadius": 999999,
-              "flexDirection": "column",
-              "justifyContent": "center",
-              "transform": [
-                {
-                  "rotate": "0deg",
-                },
-              ],
-            },
-          ]
-        }
-        style={
-          [
-            {
-              "alignItems": "center",
-              "borderBottomLeftRadius": 999999,
-              "borderBottomRightRadius": 999999,
-              "borderTopLeftRadius": 999999,
-              "borderTopRightRadius": 999999,
-              "flexDirection": "column",
-              "justifyContent": "center",
-              "transform": [
-                {
-                  "rotate": "0deg",
-                },
-              ],
-            },
-            {},
-          ]
-        }
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665593"
       >
-        <RNSVGSvgView
-          align="xMidYMid"
-          bbHeight={24}
-          bbWidth={24}
-          fill="none"
-          focusable={false}
-          meetOrSlice={0}
-          minX={0}
-          minY={0}
-          strokeWidth={8}
-          style={
-            [
-              {
-                "backgroundColor": "transparent",
-                "borderWidth": 0,
-              },
-              {
-                "color": "rgba(19, 19, 19, 0.63)",
-                "height": 24,
-                "width": 24,
-              },
-              {
-                "flex": 0,
-                "height": 24,
-                "width": 24,
-              },
-            ]
-          }
-          vbHeight={24}
-          vbWidth={24}
+        <div
+          style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: 999999px; border-top-right-radius: 999999px; border-bottom-right-radius: 999999px; border-bottom-left-radius: 999999px; transform: [object Object];"
         >
-          <RNSVGGroup
-            color="rgba(19, 19, 19, 0.63)"
-            fill={null}
-            propList={
-              [
-                "fill",
-                "strokeWidth",
-              ]
-            }
-            strokeWidth={8}
+          <div
+            fill="none"
+            stroke-width="8"
+            style="width: 24px; height: 24px;"
+            viewbox="0 0 24 24"
           >
-            <RNSVGPath
-              clipRule={0}
+            <div
+              clip-rule="evenodd"
               d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
-              fill={
-                {
-                  "type": 2,
-                }
-              }
-              fillRule={0}
-              propList={
-                [
-                  "fill",
-                  "fillRule",
-                ]
-              }
+              fill="currentColor"
+              fill-rule="evenodd"
             />
-          </RNSVGGroup>
-        </RNSVGSvgView>
-      </View>
-      <Text
-        allowFontScaling={true}
-        maxFontSizeMultiplier={1.4}
-        style={
-          {
-            "color": "rgba(19, 19, 19, 0.63)",
-            "fontFamily": "Basel Grotesk",
-            "fontSize": 19,
-            "fontWeight": "400",
-            "lineHeight": 24,
-          }
-        }
-        suppressHighlighting={true}
-      >
-        Back
-      </Text>
-    </View>
-  </RNGestureHandlerButton>
-</View>
+          </div>
+        </div>
+        <span
+          class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+          data-disable-theme="true"
+        >
+          common.button.back
+        </span>
+      </div>
+    </button>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;

@@ -1,26 +1,24 @@
-import type { CreateAuctionStoreState } from '~/pages/Liquidity/CreateAuction/types'
 import {
-  DEFAULT_QUICK_LAUNCH_DURATION,
-  QuickLaunchDuration,
-  TimeLockPreset,
-} from '~/pages/Liquidity/CreateAuction/types'
-import { MS_PER_HOUR } from '~/pages/Liquidity/CreateAuction/utils/duration'
+  QUICK_LAUNCH_DURATION_SECONDS,
+  QUICK_LAUNCH_FLOOR_FDV_USD,
+  QUICK_LAUNCH_TOTAL_SUPPLY,
+} from '@uniswap/liquidity-launcher-sdk'
+import type { CreateAuctionStoreState } from '~/pages/Liquidity/CreateAuction/types'
+import { TimeLockPreset } from '~/pages/Liquidity/CreateAuction/types'
 
-// The QuickLaunch v1 preset, using only parameters the live Toucan (CCA) contracts
-// support — the doc's mandated-price / escalating-bracket mechanism has no on-chain counterpart.
+// Create-flow glue over the canonical quick-launch preset in `@uniswap/liquidity-launcher-sdk`.
+// The defining parameters (supply, 4h duration, floor FDV, permanent buyback-&-burn LP) live in the
+// SDK — the single source of truth shared with data-api — so this file only maps them onto the
+// wizard store and derives the values the create request needs (floor price, auction window).
 
-/** Duration presets behind the quick-launch segmented control: 30 min / 1 h / 4 h per the design brief. */
-export const QUICK_LAUNCH_DURATION_MS: Record<QuickLaunchDuration, number> = {
-  [QuickLaunchDuration.ThirtyMinutes]: MS_PER_HOUR / 2,
-  [QuickLaunchDuration.OneHour]: MS_PER_HOUR,
-  [QuickLaunchDuration.FourHours]: 4 * MS_PER_HOUR,
-}
+/** $5k floor FDV, re-exported from the SDK so importers keep a single reference. */
+export { QUICK_LAUNCH_FLOOR_FDV_USD }
 
-/** FDV at the floor price, in USD — the doc's conservative $5k floor (launch threshold ≈ the raise at this FDV). */
-export const QUICK_LAUNCH_FLOOR_FDV_USD = 5_000
+/** Total supply in whole tokens (1B), for the plain-number floor-price math below. */
+const QUICK_LAUNCH_TOTAL_SUPPLY_TOKENS = Number(QUICK_LAUNCH_TOTAL_SUPPLY)
 
-/** Quick-launch preset supply, in whole tokens. Matches the wizard's default. */
-export const QUICK_LAUNCH_TOTAL_SUPPLY_TOKENS = 1_000_000_000
+/** The canonical 4h window, in milliseconds. */
+const QUICK_LAUNCH_DURATION_MS = QUICK_LAUNCH_DURATION_SECONDS * 1000
 
 /** Floor price fallback when the ETH/USD oracle hasn't resolved yet (assumes ~$2.5k ETH). */
 export const QUICK_LAUNCH_FALLBACK_FLOOR_ETH_PER_TOKEN = '0.000000002'
@@ -40,22 +38,18 @@ export function getQuickLaunchFloorPricePerToken(raiseUsdPrice: number | null): 
 /** 1-minute start lead — the service only rejects past starts; the standard wizard's 5-minute lead is a UI affordance. */
 export const QUICK_LAUNCH_START_LEAD_MINUTES = 1
 
-/** "Instant start": start = now + the quick-launch lead, end = start + the selected duration preset. */
-export function getQuickLaunchAuctionWindow(
-  duration: QuickLaunchDuration = DEFAULT_QUICK_LAUNCH_DURATION,
-  now: Date = new Date(),
-): { startTime: Date; endTime: Date } {
+/** "Instant start": start = now + the quick-launch lead, end = start + the fixed 4h window. */
+export function getQuickLaunchAuctionWindow(now: Date = new Date()): { startTime: Date; endTime: Date } {
   const startTime = new Date(now.getTime() + QUICK_LAUNCH_START_LEAD_MINUTES * 60 * 1000)
-  const endTime = new Date(startTime.getTime() + QUICK_LAUNCH_DURATION_MS[duration])
+  const endTime = new Date(startTime.getTime() + QUICK_LAUNCH_DURATION_MS)
   return { startTime, endTime }
 }
 
 /** Writes a fresh preset window into the store — shared by the quick-launch handoff and the stale-start retry. */
 export function applyQuickLaunchAuctionWindow(
   actions: Pick<CreateAuctionStoreState['actions'], 'setStartTime' | 'setEndTime'>,
-  duration: QuickLaunchDuration = DEFAULT_QUICK_LAUNCH_DURATION,
 ): void {
-  const { startTime, endTime } = getQuickLaunchAuctionWindow(duration)
+  const { startTime, endTime } = getQuickLaunchAuctionWindow()
   actions.setStartTime(startTime)
   actions.setEndTime(endTime)
 }

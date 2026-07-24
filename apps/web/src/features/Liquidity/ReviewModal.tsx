@@ -12,6 +12,7 @@ import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { GetHelpHeader } from 'uniswap/src/components/dialog/GetHelpHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
@@ -30,14 +31,17 @@ import {
   WrappedLiquidityPositionRangeChart,
 } from '~/features/Liquidity/charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { PoolOutOfSyncError } from '~/features/Liquidity/Create/PoolOutOfSyncError'
+import { useSelectedFeeBreakdown } from '~/features/Liquidity/hooks/useSelectedFeeBreakdown'
 import { LiquidityPositionInfoBadges } from '~/features/Liquidity/LiquidityPositionInfoBadges'
 import { LowLPSlippageWarning } from '~/features/Liquidity/LowLPSlippageWarning'
+import { PartialMigrationWarning } from '~/features/Liquidity/PartialMigrationWarning'
 import { getBaseAndQuoteCurrencies } from '~/features/Liquidity/utils/currency'
 import { getTickToPrice, getV4TickToPrice } from '~/features/Liquidity/utils/getTickToPrice'
 import { getTicksAtLimit } from '~/features/Liquidity/utils/priceRangeInfo'
 import { useCurrencyInfo } from '~/hooks/Tokens'
 import { useAccount } from '~/hooks/useAccount'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
+import { CurrencyAmountMap } from '~/types/liquidity'
 import { PositionField } from '~/types/position'
 
 export interface ReviewModalProps {
@@ -46,9 +50,10 @@ export interface ReviewModalProps {
   depositText?: string
   confirmButtonText: string
   formattedAmounts?: { [field in PositionField]?: string }
-  currencyAmounts?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
-  currencyAmountsUSDValue?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
-  refundedAmounts?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
+  currencyAmounts?: CurrencyAmountMap
+  currencyAmountsUSDValue?: CurrencyAmountMap
+  feeAmounts?: CurrencyAmountMap
+  refundedAmounts?: CurrencyAmountMap
   isDisabled?: boolean
   gasFeeEstimateUSD?: Maybe<CurrencyAmount<Currency>>
   transactionError: string | boolean
@@ -120,6 +125,7 @@ export function ReviewModal({
   formattedAmounts,
   currencyAmounts,
   currencyAmountsUSDValue,
+  feeAmounts,
   refundedAmounts,
   isDisabled,
   gasFeeEstimateUSD,
@@ -135,6 +141,7 @@ export function ReviewModal({
     protocolVersion,
     creatingPoolOrPair,
     positionState: { fee, hook },
+    protocolFee,
     currentTransactionStep,
     price,
     poolOrPair,
@@ -148,6 +155,10 @@ export function ReviewModal({
   const token0CurrencyInfo = useCurrencyInfo(token0)
   const token1CurrencyInfo = useCurrencyInfo(token1)
   const chainId = token0?.chainId
+
+  // Breakdown for the fee badge below the pair header, from the context's served protocol fee (existing
+  // pool) or the curve (not-yet-created vanilla v4). Shared with the select step and edit summary.
+  const feeBreakdown = useSelectedFeeBreakdown({ protocolVersion, fee, servedProtocolFee: protocolFee, hook })
 
   const { formatNumberOrString, formatCurrencyAmount } = useLocalizationContext()
 
@@ -245,7 +256,14 @@ export function ReviewModal({
                   <Text variant="heading3">{currencyAmounts?.TOKEN1?.currency.symbol}</Text>
                 </Flex>
                 <Flex row gap={2} alignItems="center">
-                  <LiquidityPositionInfoBadges size="small" version={protocolVersion} v4hook={hook} feeTier={fee} />
+                  <LiquidityPositionInfoBadges
+                    size="small"
+                    version={protocolVersion}
+                    v4hook={hook}
+                    chainId={chainId as UniverseChainId | undefined}
+                    feeTier={fee}
+                    feeBreakdown={feeBreakdown}
+                  />
                 </Flex>
               </Flex>
               <DoubleCurrencyLogo
@@ -326,6 +344,13 @@ export function ReviewModal({
             <LowLPSlippageWarning
               isNativePool={Boolean(currencies.sdk.TOKEN0?.isNative || currencies.sdk.TOKEN1?.isNative)}
             />
+            <PartialMigrationWarning
+              currencyAmounts={currencyAmounts}
+              currencyAmountsUSDValue={currencyAmountsUSDValue}
+              feeAmounts={feeAmounts}
+              refundedAmounts={refundedAmounts}
+              refundedAmountsUSDValue={{ TOKEN0: refundedToken0USD, TOKEN1: refundedToken1USD }}
+            />
             <ErrorCallout errorMessage={transactionError} onPress={refetch} />
             <PoolOutOfSyncError />
           </Flex>
@@ -367,7 +392,7 @@ export function ReviewModal({
                 size="large"
                 variant="branded"
                 onPress={onConfirm}
-                isDisabled={isDisabled}
+                disabled={isDisabled}
                 fill={false}
                 icon={needsPasskeySignin ? <Passkey size="$icon.24" color="$white" /> : undefined}
               >

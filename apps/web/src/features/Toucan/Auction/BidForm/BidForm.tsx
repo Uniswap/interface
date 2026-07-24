@@ -35,7 +35,6 @@ import { useBidFormWarningState } from '~/features/Toucan/Auction/BidForm/useBid
 import { useAuctionKycStatus } from '~/features/Toucan/Auction/hooks/useAuctionKycStatus'
 import { useAuctionTokenColor } from '~/features/Toucan/Auction/hooks/useAuctionTokenColor'
 import { useBidFormController } from '~/features/Toucan/Auction/hooks/useBidFormController'
-import { useIsQuickLaunchExemptAuction } from '~/features/Toucan/Auction/hooks/useIsQuickLaunchExemptAuction'
 import { AuctionProgressState } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore, useAuctionStoreActions } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { getRequiredTestnetMode } from '~/features/Toucan/Shared/getRequiredTestnetMode'
@@ -86,14 +85,11 @@ export function BidForm({ onInputChange, onBidSubmitted }: BidFormProps): JSX.El
   const [isKycFailedModalOpen, setIsKycFailedModalOpen] = useState(false)
   const [showTokenWarningModal, setShowTokenWarningModal] = useState(false)
 
-  // SECURITY REVIEW REQUIRED BEFORE ENABLING FOR REAL USERS: this suppresses the Blockaid/
-  // token-protection warning card + modal for quick-launch auctions — i.e. it hides a
-  // user-protection signal for a token class. Double-gated (off-by-default quick_launch flag
-  // AND the quick-launch fingerprint) inside useIsQuickLaunchExemptAuction; display layer only.
-  const isQuickLaunchExempt = useIsQuickLaunchExemptAuction()
-
+  // Token-protection warnings stay on for every auction, including quick launches: the
+  // quick-launch classifier is forgeable by construction, so it must never gate a protection
+  // signal. Any exemption policy is deferred to security review (LP-1076).
   const tokenWarningSeverity = token ? getTokenWarningSeverity(token) : WarningSeverity.None
-  const shouldShowTokenWarning = !isQuickLaunchExempt && tokenWarningSeverity > WarningSeverity.Low
+  const shouldShowTokenWarning = tokenWarningSeverity > WarningSeverity.Low
 
   const {
     budgetField,

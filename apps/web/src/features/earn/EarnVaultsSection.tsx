@@ -2,13 +2,14 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
+import { EarnAnalyticsSurface, EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
 import {
   EARN_VAULT_CHIP_FRAME_PROPS,
   EARN_VAULT_CHIP_MAX_WIDTH,
   EarnVaultChip,
 } from 'uniswap/src/features/earn/EarnVaultChip'
 import { useEarnVaults } from 'uniswap/src/features/earn/hooks/useEarnVaults'
+import { useLogEarnSurfaceViewed } from 'uniswap/src/features/earn/hooks/useLogEarnSurfaceViewed'
 import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { getEarnVaultsSortedForExplore } from 'uniswap/src/features/earn/utils'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -30,6 +31,11 @@ export function EarnVaultsSection() {
   const { isLoadingVaults, positionsByVaultId, vaults } = useEarnVaults({ account: evmAccountAddress })
   const exploreVaults = useMemo(() => getEarnVaultsSortedForExplore(vaults), [vaults])
   const { closeModal, openModal, selectedVaultState } = useEarnVaultModalState()
+  useLogEarnSurfaceViewed({
+    entryPoint: EarnEntryPoint.ExploreChip,
+    isVisible: !isLoadingVaults && exploreVaults.length > 0,
+    surface: EarnAnalyticsSurface.Web,
+  })
 
   const selectedVault = selectedVaultState?.vault ?? null
   const setSelectedVault = useCallback(
@@ -81,12 +87,7 @@ export function EarnVaultsSection() {
                 <EarnVaultChipSkeleton key={index} index={index} />
               ))
             : exploreVaults.map((vault) => (
-                <EarnVaultChip
-                  key={vault.id}
-                  vault={vault}
-                  position={positionsByVaultId.get(vault.id)}
-                  onPress={() => openModal(vault)}
-                />
+                <EarnVaultChip key={vault.id} vault={vault} onPress={() => openModal(vault)} />
               ))}
         </Flex>
       </Flex>

@@ -86,7 +86,7 @@ vi.mock('react-i18next', () => ({
   } => ({
     t: (key, params): string => {
       if (key === 'explore.earn.vault.rateValue') {
-        return `${params?.['apy']} APY`
+        return `${params?.['apy']} est. APY`
       }
       if (key === 'explore.earn.swapToggle.monthlyEarnings') {
         return `${params?.['amount']} /mo`
@@ -276,7 +276,7 @@ describe('EarnSwapToggle', () => {
 
     const { getByText, queryByText } = renderWithProviders(<EarnSwapToggle />)
 
-    expect(getByText('5% APY')).toBeTruthy()
+    expect(getByText('5% est. APY')).toBeTruthy()
     expect(queryByText('$20.83 /mo')).toBeNull()
   })
 
@@ -291,7 +291,7 @@ describe('EarnSwapToggle', () => {
     const { getByText, queryByText } = renderWithProviders(<EarnSwapToggle />)
 
     expect(getByText('$20.83 /mo')).toBeTruthy()
-    expect(queryByText('5% APY')).toBeNull()
+    expect(queryByText('5% est. APY')).toBeNull()
   })
 
   it('uses the dynamic monthly earnings threshold when configured', () => {
@@ -305,7 +305,7 @@ describe('EarnSwapToggle', () => {
 
     const { getByText, queryByText } = renderWithProviders(<EarnSwapToggle />)
 
-    expect(getByText('5% APY')).toBeTruthy()
+    expect(getByText('5% est. APY')).toBeTruthy()
     expect(queryByText('$41.66 /mo')).toBeNull()
   })
 

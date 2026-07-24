@@ -2,6 +2,7 @@ import { HomeScreenPortfolio } from 'src/screens/HomeScreen/portfolio/HomeScreen
 import { useHomeScreenState } from 'src/screens/HomeScreen/useHomeScreenState'
 import { render, screen } from 'src/test/test-utils'
 import { usePoolsTabVisibility } from 'uniswap/src/features/positions/hooks/usePoolsTabVisibility'
+import type { MockedFunction } from 'vitest'
 
 const noop = (): void => undefined
 
@@ -9,78 +10,79 @@ const EMPTY_STATE_TEST_ID = 'empty-wallet-tokens-tab'
 const TAB_VIEW_TEST_ID = 'tab-view-body'
 
 // Stub the two mutually-exclusive outcomes so the test asserts purely on which branch renders.
-jest.mock('src/screens/HomeScreen/portfolio/tabs/tokens/empty/EmptyWalletTokensTab', () => ({
-  EmptyWalletTokensTab: () => {
-    const { Text } = jest.requireActual('ui/src')
-    return <Text testID="empty-wallet-tokens-tab">empty</Text>
-  },
-}))
-jest.mock('src/screens/HomeScreen/portfolio/tabs/common/TabViewBody', () => ({
-  TabViewBody: () => {
-    const { Text } = jest.requireActual('ui/src')
-    return <Text testID="tab-view-body">tabs</Text>
-  },
-}))
+vi.mock('src/screens/HomeScreen/portfolio/tabs/tokens/empty/EmptyWalletTokensTab', async () => {
+  const { Text } = await vi.importActual<typeof import('ui/src')>('ui/src')
+  return {
+    EmptyWalletTokensTab: () => <Text testID="empty-wallet-tokens-tab">empty</Text>,
+  }
+})
+vi.mock('src/screens/HomeScreen/portfolio/tabs/common/TabViewBody', async () => {
+  const { Text } = await vi.importActual<typeof import('ui/src')>('ui/src')
+  return {
+    TabViewBody: () => <Text testID="tab-view-body">tabs</Text>,
+  }
+})
 
 // Header chrome is irrelevant to the empty-state branch; stub to avoid its dependency surface.
-jest.mock('src/screens/HomeScreen/portfolio/feedScroll/HomeScreenPortfolioStickyTabBar', () => ({
+vi.mock('src/screens/HomeScreen/portfolio/feedScroll/HomeScreenPortfolioStickyTabBar', () => ({
   HomeScreenPortfolioStickyTabBar: () => null,
 }))
-jest.mock('src/screens/HomeScreen/portfolio/feedScroll/HomeScreenPortfolioStatusBar', () => ({
+vi.mock('src/screens/HomeScreen/portfolio/feedScroll/HomeScreenPortfolioStatusBar', () => ({
   HomeScreenPortfolioStatusBar: () => null,
 }))
-jest.mock('src/components/layout/Screen', () => {
-  const { View } = jest.requireActual('react-native')
+vi.mock('src/components/layout/Screen', async () => {
+  const { View } = await vi.importActual<{ View: React.ComponentType<{ children?: React.ReactNode }> }>('react-native')
   return { Screen: ({ children }: { children: React.ReactNode }) => <View>{children}</View> }
 })
-jest.mock('@shopify/react-native-performance-navigation', () => ({
+vi.mock('@shopify/react-native-performance-navigation', () => ({
   ReactNavigationPerformanceView: ({ children }: { children: React.ReactNode }) => children,
 }))
 
 // Inputs under test.
-jest.mock('src/screens/HomeScreen/useHomeScreenState', () => ({
-  useHomeScreenState: jest.fn(),
+vi.mock('src/screens/HomeScreen/useHomeScreenState', () => ({
+  useHomeScreenState: vi.fn(),
 }))
-jest.mock('uniswap/src/features/positions/hooks/usePoolsTabVisibility', () => ({
-  usePoolsTabVisibility: jest.fn(),
+vi.mock('uniswap/src/features/positions/hooks/usePoolsTabVisibility', () => ({
+  usePoolsTabVisibility: vi.fn(),
 }))
 
 // Peripheral hooks — return minimal stable values so the component renders.
-jest.mock('src/features/splashScreen/useHideSplashScreen', () => ({
+vi.mock('src/features/splashScreen/useHideSplashScreen', () => ({
   useHideSplashScreen: () => (): void => undefined,
 }))
-jest.mock('wallet/src/features/wallet/hooks', () => ({
-  ...jest.requireActual('wallet/src/features/wallet/hooks'),
+vi.mock('wallet/src/features/wallet/hooks', async () => ({
+  ...(await vi.importActual('wallet/src/features/wallet/hooks')),
   useActiveAccountWithThrow: () => ({ address: '0x0000000000000000000000000000000000000001' }),
 }))
-jest.mock('src/screens/HomeScreen/portfolio/header/useHomeScreenPortfolioHeader', () => ({
-  useHomeScreenPortfolioHeader: () => ({ header: null, shouldShowWrappedBanner: false, outageModal: null }),
+vi.mock('src/screens/HomeScreen/portfolio/header/useHomeScreenPortfolioHeader', () => ({
+  useHomeScreenPortfolioHeader: () => ({ header: null, outageModal: null }),
 }))
-jest.mock('src/screens/HomeScreen/portfolio/hooks/useHomeScreenPortfolioRefresh', () => ({
+vi.mock('src/screens/HomeScreen/portfolio/hooks/useHomeScreenPortfolioRefresh', () => ({
   useHomeScreenPortfolioRefresh: () => ({ refreshing: false, onRefresh: (): void => undefined }),
 }))
-jest.mock('src/screens/HomeScreen/portfolio/context/HomeScreenPortfolioScrollContext', () => {
-  const { makeMutable: makeMutableActual } = jest.requireActual('react-native-reanimated')
+vi.mock('src/screens/HomeScreen/portfolio/context/HomeScreenPortfolioScrollContext', async () => {
+  // use the mocked reanimated makeMutable (the real package can't load under vitest/node)
+  const { makeMutable } = await import('react-native-reanimated')
   return {
     useHomeScreenPortfolioScroll: () => ({
-      feedScrollValue: makeMutableActual(0),
+      feedScrollValue: makeMutable(0),
       feedScrollHandler: (): void => undefined,
       feedScrollRef: { current: null },
     }),
   }
 })
-jest.mock('src/screens/HomeScreen/portfolio/tabs/common/hooks/useHomeScreenPortfolioTabState', () => ({
+vi.mock('src/screens/HomeScreen/portfolio/tabs/common/hooks/useHomeScreenPortfolioTabState', () => ({
   useHomeScreenPortfolioTabState: () => ({ tabIndex: 0, onTabIndexChange: (): void => undefined }),
 }))
-jest.mock('uniswap/src/components/nfts/hooks/useNftListRenderData', () => ({
+vi.mock('uniswap/src/components/nfts/hooks/useNftListRenderData', () => ({
   useNftListRenderData: () => ({ onListEndReached: (): void => undefined, numShown: 0, numHidden: 0 }),
 }))
-jest.mock('src/screens/HomeScreen/portfolio/tabs/pools/hooks/usePoolsListRenderData', () => ({
+vi.mock('src/screens/HomeScreen/portfolio/tabs/pools/hooks/usePoolsListRenderData', () => ({
   usePoolsListRenderData: () => ({ onListEndReached: (): void => undefined }),
 }))
 
-const mockUseHomeScreenState = useHomeScreenState as jest.MockedFunction<typeof useHomeScreenState>
-const mockUsePoolsTabVisibility = usePoolsTabVisibility as jest.MockedFunction<typeof usePoolsTabVisibility>
+const mockUseHomeScreenState = useHomeScreenState as MockedFunction<typeof useHomeScreenState>
+const mockUsePoolsTabVisibility = usePoolsTabVisibility as MockedFunction<typeof usePoolsTabVisibility>
 
 const setup = ({
   hasNoWalletActivity,
@@ -98,7 +100,7 @@ const setup = ({
 
 describe('HomeScreenPortfolio empty-state gating', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('does not show the empty state for a pools-only wallet (no tokens/NFTs/activity)', () => {

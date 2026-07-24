@@ -56,7 +56,7 @@ export function ToucanActionButton({
               : useCustomEmphasis
                 ? { emphasis }
                 : { backgroundColor: validTokenColor, emphasis: 'primary' })}
-        isDisabled={isDisabled}
+        disabled={isDisabled}
         loading={loading}
         onPress={onPress}
         dd-action-name={datadogActionName}

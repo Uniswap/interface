@@ -10,7 +10,6 @@
     "@jambit/eslint-plugin-typed-redux-saga": "0.4.0",
     "@manypkg/cli": "0.19.2",
     "@nx/devkit": "22.5.4",
-    "@nx/jest": "22.5.4",
     "@nx/js": "22.5.4",
     "@nx/plugin": "22.5.4",
     "@nx/s3-cache": "5.0.2",
@@ -21,7 +20,6 @@
     "@swc/helpers": "0.5.11",
     "@types/inquirer": "9.0.8",
     "@types/node": "22.19.17",
-    "@typescript/native-preview": "7.0.0-dev.20260421.2",
     "clipboardy": "4.0.0",
     "danger": "11.2.6",
     "dotenv-cli": "7.1.0",
@@ -40,12 +38,12 @@
     "oxlint-tsgolint": "0.17.4",
     "playwright-slack-report": "1.1.109",
     "syncpack": "8.5.14",
-    "typescript": "5.9.2"
+    "typescript": "7.0.2"
   },
   "type": "module",
   "engines": {
     "node": "=22.22.2",
-    "bun": ">=1.3.11",
+    "bun": ">=1.3.14",
     "npm": "please-use-bun"
   },
   "manypkg": {
@@ -71,7 +69,6 @@
     "nx",
     "protobufjs",
     "react-native-nitro-modules",
-    "sharp",
     "ssh2",
     "unrs-resolver",
     "utf-8-validate",
@@ -80,7 +77,6 @@
   "patchedDependenciesComments": {
     "immer": "this fixes typecheck in mobile app, see https://github.com/reduxjs/redux-toolkit/issues/1806",
     "react-native-wagmi-charts@2.5.1": "this fixes really bad performance issue when the pulse dot is enabled",
-    "react-native-sortables@1.7.1": "Fixes issue with showing grid cells in the favorite tokens grid. Should be removed after migrating to the new architecture.",
     "@shopify/react-native-performance@4.1.2": "RN 0.81 compat: Android getExportedCustomDirectEventTypeConstants must return a mutable map; iOS Swift bridging header switched to bracketed framework include. Should be upstreamed to Shopify.",
     "react-native-tab-view@3.5.2": "Fixes warning on profile screens with spreading key from props. Fixed in react-native-tab-view <4.0.0-alpha.7",
     "@react-native-community/cli-server-api": "Pinning previous version because of excessive logging thats not fixed until RN 0.79 https://github.com/facebook/hermes/commit/c615b115dfa471c108256982ce07f10adee63667",
@@ -93,11 +89,14 @@
     "zod@4.3.6": "Enables jitless mode by default to avoid CSP unsafe-eval violations in browser extension content scripts. See https://github.com/colinhacks/zod/issues/4461",
     "@ethersproject/providers@5.7.2": "ENS v2 support adapted from @ensdomains/ethers-patch-v5 with tunneling batch gateway",
     "webpack@5.90.0": "Pinned for Storybook compatibility — webpack 5.105.4 breaks Storybook module bundling. Webpack security CVEs (GHSA-4vvj-4cpr-p986, GHSA-8fgc-7cc6-rx7x, GHSA-38r7-794h-5758) are accepted risk for this dev-only build tool",
-    "react-native@0.85.3": "Makes the hermesc path in hermes-engine.podspec relative to PODS_ROOT so the absolute home-dir path isn't baked into Podfile.lock checksums (per-machine/CI drift). See https://github.com/facebook/react-native/issues/54891",
+    "react-native@0.85.3": "1) Makes the hermesc path in hermes-engine.podspec relative to PODS_ROOT so the absolute home-dir path isn't baked into Podfile.lock checksums (per-machine/CI drift). See https://github.com/facebook/react-native/issues/54891. 2) Skips layout-metrics consumption for yoga children owned by another shadow-tree generation (Reanimated clones share child yoga nodes): consuming them cleared hasNewLayout on the owning tree, leaving views invisible but mounted (ghost bottom sheets) and tripping the dev-only YGNodeGetOwner assert / SIGABRT (INFRA-2390). Drop when https://github.com/facebook/react-native/issues/52349 is fixed upstream.",
     "@gorhom/bottom-sheet@5.2.13": "Seeds containerHeight from the first measured layout when still INITIAL_LAYOUT_VALUE, fixing zero-height sheets under the new architecture (Fabric).",
     "expo-constants@18.0.13": "Xcode 26's shallow bundle format doesn't pre-create EXConstants.bundle before the :before_compile script runs; mkdir -p the destination dir to avoid an ENOENT on the JS config write.",
     "react-native-svg@15.12.1": "Holds RNSVGImage's RCTImageResponseObserverProxy in a shared_ptr so the Fabric image observer outlives in-flight callbacks (fixes a use-after-free crash on <Image> under Fabric).",
-    "i18next@23.10.0": "Adds $NoUndefinedValues and applies it to the t() options argument so t() rejects possibly-undefined interpolation values at compile time (e.g. t('k', { v: maybeUndefined }) is now a type error). Resource-type-independent — works despite this repo erasing resources to Record<string,string> for typecheck perf, which disables i18next's own placeholder typing."
+    "i18next@23.10.0": "Adds $NoUndefinedValues and applies it to the t() options argument so t() rejects possibly-undefined interpolation values at compile time (e.g. t('k', { v: maybeUndefined }) is now a type error). Resource-type-independent — works despite this repo erasing resources to Record<string,string> for typecheck perf, which disables i18next's own placeholder typing.",
+    "@expo/require-utils@56.1.3": "typescript >= 7.0.2 resolves its \".\" export to a version-only stub with no compiler API, so loadTypescript() would hand Expo config evaluation a ts without transpileModule and crash at ts.ModuleKind (breaks the Android/iOS native builds at expo-constants createExpoConfig). Treat the stub like typescript-not-installed so the module.stripTypeScriptTypes fallback transpiles app.config.ts. Should be upstreamed to Expo; drop when @expo/require-utils supports TS 7 (still unfixed as of 57.0.1).",
+    "react-native-gesture-handler@3.0.0": "Makes RNGestureHandlerDetectorView.setModuleId tolerant of moduleId changing on a live view instead of asserting write-once. Under the new architecture, globalThis._RNGH_MODULE_ID advances every time the native RNGH module re-inits (JS reload / RN context recreation), and Fabric re-applies the new moduleId to still-mounted detector views — tripping the assert and crashing the app with 'Tried to change moduleId of a native detector'. Mirrors iOS updateProps, which reassigns _moduleId freely; on a real change we detach handlers from the previous registry before wiring up the new one. Should be upstreamed.",
+    "danger@11.2.6": "danger's transpiler gates its native-TS path on a bare require.resolve('typescript'), which typescript >= 7.0.2 satisfies with a version-only stub that has no transpileModule — danger would then crash transpiling dangerfile.ts on every PR. Gate on transpileModule actually existing so danger keeps using its babel fallback (same behavior as under 7.0.1-rc, whose missing \".\" export made the resolve throw). Drop when danger supports TS 7 (still unfixed as of 13.0.10)."
   },
   "resolutions": {
     "react": "19.2.3",
@@ -172,7 +171,6 @@
     "sharp": "0.33.5",
     "simple-git": "3.32.3",
     "socket.io-parser": "4.2.6",
-    "typescript": "5.9.2",
     "viem": "2.30.5",
     "vite": "7.3.1",
     "@vitejs/plugin-react": "4.7.0",
@@ -205,9 +203,7 @@
     "g:lint": "nx run-many -t lint",
     "g:lint:changed": "nx affected -t lint --base=${NX_BASE:-main} --head=${NX_HEAD:-HEAD}",
     "g:lint:fix": "nx run-many -t lint:fix",
-    "g:typecheck": "test \"$DISABLE_TSGO\" = \"true\" && { nx run-many -t typecheck || exit $?; } || bun g:prepare && bun run g:typecheck:tsgo",
-    "g:typecheck:changed": "nx affected -t typecheck --base=${NX_BASE:-main} --head=${NX_HEAD:-HEAD}",
-    "g:typecheck:tsgo": "echo 'Running tsgo' && tsgo -b && echo 'Typecheck complete'",
+    "g:typecheck": "bun g:prepare && nx run @universe/uniswap-nx:typecheck:workspace",
     "g:test": "nx run-many -t test",
     "g:test:changed": "nx affected -t test --base=${NX_BASE:-main} --head=${NX_HEAD:-HEAD}",
     "g:snapshots": "nx run-many -t snapshots",
@@ -216,7 +212,8 @@
     "clean:local-packages": "bash ./scripts/remove-local-packages.sh",
     "clean:nodemodules": "find . -name 'node_modules' -type d -prune -print -exec rm -rf '{}' +",
     "// ── Tooling Maintenance ──": "Package generation, dependency upgrades, cleanup",
-    "generate:package": "NX_PREFER_TS_NODE=true nx generate @universe/uniswap-nx:package",
+    "generate:package": "nx generate @universe/uniswap-nx:package",
+    "sync:bun-version": "bun run ./scripts/sync-bun-version.ts",
     "upgrade:tamagui": "bun update '*tamagui*' '@tamagui/*'",
     "upgrade:tamagui:canary": "bun update '*tamagui*'@canary '@tamagui/*'@canary",
     "// ── Other Utilities ──": "Various other utilities, including i18n, codegen, and release management",
@@ -260,7 +257,8 @@
     "wallet": "bun run --cwd packages/wallet",
     "web": "bun run --cwd apps/web",
     "websocket": "bun run --cwd packages/websocket",
-    "tailwind": "bun run --cwd packages/tailwind"
+    "tailwind": "bun run --cwd packages/tailwind",
+    "experiments": "bun run --cwd packages/experiments"
   },
   "workspaces": [
     "apps/*",
@@ -272,7 +270,6 @@
   "patchedDependencies": {
     "multiformats@9.9.0": "patches/multiformats@9.9.0.patch",
     "react-native-context-menu-view@1.15.0": "patches/react-native-context-menu-view@1.15.0.patch",
-    "react-native-sortables@1.7.1": "patches/react-native-sortables@1.7.1.patch",
     "react-native-tab-view@3.5.2": "patches/react-native-tab-view@3.5.2.patch",
     "@react-native-community/slider@5.2.0": "patches/@react-native-community%2Fslider@5.2.0.patch",
     "@shopify/react-native-performance@4.1.2": "patches/@shopify%2Freact-native-performance@4.1.2.patch",
@@ -292,6 +289,10 @@
     "@gorhom/bottom-sheet@5.2.13": "patches/@gorhom%2Fbottom-sheet@5.2.13.patch",
     "react-native-svg@15.12.1": "patches/react-native-svg@15.12.1.patch",
     "react-native@0.85.3": "patches/react-native@0.85.3.patch",
-    "i18next@23.10.0": "patches/i18next@23.10.0.patch"
+    "i18next@23.10.0": "patches/i18next@23.10.0.patch",
+    "react-scripts@5.0.1": "patches/react-scripts@5.0.1.patch",
+    "@expo/require-utils@56.1.3": "patches/@expo%2Frequire-utils@56.1.3.patch",
+    "react-native-gesture-handler@3.0.0": "patches/react-native-gesture-handler@3.0.0.patch",
+    "danger@11.2.6": "patches/danger@11.2.6.patch"
   }
 }

@@ -316,14 +316,13 @@ export function createGetQuoteRoutingParams(ctx: {
   }
 }
 
-// Used if dynamic config value fails to resolve
-const DEFAULT_L2_SLIPPAGE_TOLERANCE_VALUE = 2.5
-
-export function getMinAutoSlippageToleranceL2(): number {
+// Returns undefined when the key is unset (or not a number), letting the backend compute auto slippage
+export function getMinAutoSlippageToleranceL2(): number | undefined {
   return getDynamicConfigValue({
     config: DynamicConfigs.Swap,
     key: SwapConfigKey.MinAutoSlippageToleranceL2,
-    defaultValue: DEFAULT_L2_SLIPPAGE_TOLERANCE_VALUE,
+    defaultValue: undefined,
+    customTypeGuard: (x): x is number | undefined => x === undefined || typeof x === 'number',
   })
 }
 
@@ -338,7 +337,7 @@ export type QuoteSlippageParamsResult = Pick<TradingApi.QuoteRequest, 'autoSlipp
 export type GetQuoteSlippageParams = (input: GetQuoteSlippageParamsArgs) => QuoteSlippageParamsResult
 
 export function createGetQuoteSlippageParams(ctx: {
-  getMinAutoSlippageToleranceL2: () => number
+  getMinAutoSlippageToleranceL2: () => number | undefined
   getIsL2ChainId: (chainId?: UniverseChainId) => boolean
   getCustomSlippageTolerance: () => number | undefined
 }): GetQuoteSlippageParams {
@@ -354,9 +353,13 @@ export function createGetQuoteSlippageParams(ctx: {
       return { autoSlippage: TradingApi.AutoSlippage.DEFAULT }
     }
 
-    // L2 chains should use the minimum slippage tolerance defined in the dynamic config
+    // L2 chains use the minimum slippage tolerance from the dynamic config when set;
+    // when unset, fall through to backend-computed auto slippage
     if (ctx.getIsL2ChainId(tokenInChainId)) {
-      return { slippageTolerance: ctx.getMinAutoSlippageToleranceL2() }
+      const minAutoSlippageToleranceL2 = ctx.getMinAutoSlippageToleranceL2()
+      if (minAutoSlippageToleranceL2 !== undefined) {
+        return { slippageTolerance: minAutoSlippageToleranceL2 }
+      }
     }
 
     // Otherwise, use an auto slippage tolerance calculated on the backend

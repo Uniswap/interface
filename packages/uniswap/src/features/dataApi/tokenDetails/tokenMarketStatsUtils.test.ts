@@ -61,29 +61,29 @@ describe('computeTokenMarketStats', () => {
     // With only currentPrice and no 52w data, high52w/low52w stay undefined
     const no52w = computeTokenMarketStats({
       currentPrice: 1,
-      projectMarket: { price: { value: 2 } },
-      market: { price: { value: 3 } },
+      projectMarket: { priceUsd: 2 },
+      market: { priceUsd: 3 },
     })
     expect(no52w.high52w).toBeUndefined()
     expect(no52w.low52w).toBeUndefined()
 
     const withOverride = computeTokenMarketStats({
       currentPrice: 10,
-      projectMarket: { price: { value: 2 }, priceHigh52W: { value: 5 }, priceLow52W: { value: 1 } },
+      projectMarket: { priceUsd: 2, priceHigh52wUsd: 5, priceLow52wUsd: 1 },
       market: {},
     })
     expect(withOverride.high52w).toBe(10)
     expect(withOverride.low52w).toBe(1)
 
     const fromProject = computeTokenMarketStats({
-      projectMarket: { price: { value: 7 }, priceHigh52W: { value: 8 }, priceLow52W: { value: 6 } },
-      market: { price: { value: 4 } },
+      projectMarket: { priceUsd: 7, priceHigh52wUsd: 8, priceLow52wUsd: 6 },
+      market: { priceUsd: 4 },
     })
     expect(fromProject.high52w).toBe(8)
     expect(fromProject.low52w).toBe(6)
 
     const fromMarket = computeTokenMarketStats({
-      market: { price: { value: 9 }, priceHigh52W: { value: 11 }, priceLow52W: { value: 5 } },
+      market: { priceUsd: 9, priceHigh52wUsd: 11, priceLow52wUsd: 5 },
     })
     expect(fromMarket.high52w).toBe(11)
     expect(fromMarket.low52w).toBe(5)
@@ -91,31 +91,31 @@ describe('computeTokenMarketStats', () => {
 
   it('should prefer projectMarket for marketCap and fdv', () => {
     const result = computeTokenMarketStats({
-      projectMarket: { marketCap: { value: 1_000_000 }, fullyDilutedValuation: { value: 2_000_000 } },
+      projectMarket: { marketCapUsd: 1_000_000, fullyDilutedValuationUsd: 2_000_000 },
       market: {},
     })
     expect(result.marketCap).toBe(1_000_000)
     expect(result.fdv).toBe(2_000_000)
   })
 
-  it('should resolve volume from volume24H', () => {
-    expect(computeTokenMarketStats({ market: { volume24H: { value: 100 } } }).volume).toBe(100)
+  it('should resolve volume from volumeUsd', () => {
+    expect(computeTokenMarketStats({ market: { volumeUsd: 100 } }).volume).toBe(100)
     expect(
       computeTokenMarketStats({
-        market: { volume24H: { value: 100 } },
-        projectMarket: { volume24H: { value: 300 } },
+        market: { volumeUsd: 100 },
+        projectMarket: { volumeUsd: 300 },
       }).volume,
     ).toBe(100)
     expect(computeTokenMarketStats({ market: {} }).volume).toBeUndefined()
   })
 
   it('reports volumeSource based on which volume was used', () => {
-    expect(computeTokenMarketStats({ market: { volume24H: { value: 100 } } }).volumeSource).toBe('market')
+    expect(computeTokenMarketStats({ market: { volumeUsd: 100 } }).volumeSource).toBe('market')
     expect(
       computeTokenMarketStats({
         preferProjectMarketData: true,
-        projectMarket: { volume24H: { value: 300 } },
-        market: { volume24H: { value: 100 } },
+        projectMarket: { volumeUsd: 300 },
+        market: { volumeUsd: 100 },
       }).volumeSource,
     ).toBe('project')
     // Project preferred but project volume missing: falls back to Uniswap market volume.
@@ -123,7 +123,7 @@ describe('computeTokenMarketStats', () => {
       computeTokenMarketStats({
         preferProjectMarketData: true,
         projectMarket: {},
-        market: { volume24H: { value: 100 } },
+        market: { volumeUsd: 100 },
       }).volumeSource,
     ).toBe('market')
     expect(
@@ -136,12 +136,12 @@ describe('computeTokenMarketStats', () => {
       currentPrice: 100,
       preferProjectMarketData: true,
       projectMarket: {
-        price: { value: 10 },
-        priceHigh52W: { value: 20 },
-        priceLow52W: { value: 15 },
-        volume24H: { value: 25 },
+        priceUsd: 10,
+        priceHigh52wUsd: 20,
+        priceLow52wUsd: 15,
+        volumeUsd: 25,
       },
-      market: { price: { value: 100 }, volume24H: { value: 5 } },
+      market: { priceUsd: 100, volumeUsd: 5 },
     })
 
     expect(result.high52w).toBe(20)
@@ -152,8 +152,8 @@ describe('computeTokenMarketStats', () => {
   it('should prefer projectMarket 52w then market 52w for raw high/low before clamping', () => {
     const result = computeTokenMarketStats({
       currentPrice: 50,
-      projectMarket: { priceHigh52W: { value: 60 }, priceLow52W: { value: 40 } },
-      market: { priceHigh52W: { value: 70 }, priceLow52W: { value: 30 } },
+      projectMarket: { priceHigh52wUsd: 60, priceLow52wUsd: 40 },
+      market: { priceHigh52wUsd: 70, priceLow52wUsd: 30 },
     })
     expect(result.high52w).toBe(60)
     expect(result.low52w).toBe(40)
@@ -163,7 +163,7 @@ describe('computeTokenMarketStats', () => {
     const result = computeTokenMarketStats({
       currentPrice: 50,
       projectMarket: {},
-      market: { price: { value: 50 }, priceHigh52W: { value: 80 }, priceLow52W: { value: 20 } },
+      market: { priceUsd: 50, priceHigh52wUsd: 80, priceLow52wUsd: 20 },
     })
     expect(result.high52w).toBe(80)
     expect(result.low52w).toBe(20)
@@ -172,7 +172,7 @@ describe('computeTokenMarketStats', () => {
   it('should clamp 52w high to at least current price and low to at most current price', () => {
     const result = computeTokenMarketStats({
       currentPrice: 55,
-      projectMarket: { priceHigh52W: { value: 50 }, priceLow52W: { value: 60 } },
+      projectMarket: { priceHigh52wUsd: 50, priceLow52wUsd: 60 },
     })
     expect(result.high52w).toBe(55)
     expect(result.low52w).toBe(55)

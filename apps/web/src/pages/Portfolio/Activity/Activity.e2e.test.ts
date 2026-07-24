@@ -39,10 +39,12 @@ async function goToPortfolioActivity({
   const base = `/portfolio/${address}/activity`
   const query = chain ? `eagerlyConnect=false&chain=${chain}` : 'eagerlyConnect=false'
 
-  const getPortfolioResponse = page.waitForResponse((res) => res.request().url().includes('GetPortfolio'))
+  // The external-wallet activity route only issues ListTransactions (never GetPortfolio),
+  // so that's the only response to wait for. GetPortfolio stays mocked above so any
+  // incidental portfolio request is still deterministic.
   const listTransactionsResponse = page.waitForResponse((res) => res.url().includes('ListTransactions'))
   await page.goto(`${base}?${query}`)
-  await Promise.all([getPortfolioResponse, listTransactionsResponse])
+  await listTransactionsResponse
 }
 
 test.describe(

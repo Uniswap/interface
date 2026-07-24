@@ -1,4 +1,4 @@
-import { isWebPlatform } from '@universe/environment'
+import { isMobileWeb, isWebPlatform } from '@universe/environment'
 import { PropsWithChildren, ReactNode, useCallback, useRef, useState } from 'react'
 import { Flex, TouchableArea } from 'ui/src'
 import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
@@ -17,7 +17,21 @@ type WarningInfoProps = {
   trigger?: ReactNode
   triggerPlacement?: 'start' | 'end'
   analyticsTitle?: string
+  showModalOnMobileWeb?: boolean
 }
+
+export function shouldRenderWarningInfoTooltip({
+  isWebPlatform: platformIsWeb,
+  isMobileWeb: platformIsMobileWeb,
+  showModalOnMobileWeb,
+}: {
+  isWebPlatform: boolean
+  isMobileWeb: boolean
+  showModalOnMobileWeb: boolean
+}): boolean {
+  return platformIsWeb && !(platformIsMobileWeb && showModalOnMobileWeb)
+}
+
 /**
  * Platform wrapper component used to display additional info either as a tooltip on web
  * or a modal on mobile
@@ -31,6 +45,7 @@ export function WarningInfo({
   trigger = <InfoCircle color="$neutral3" size="$icon.12" />,
   triggerPlacement = 'end',
   analyticsTitle,
+  showModalOnMobileWeb = false,
 }: PropsWithChildren<WarningInfoProps>): JSX.Element {
   const trace = useTrace()
   const hasHoverBeenTracked = useRef<boolean>(false)
@@ -60,7 +75,7 @@ export function WarningInfo({
     [trace, analyticsTitle],
   )
 
-  if (isWebPlatform) {
+  if (shouldRenderWarningInfoTooltip({ isWebPlatform, isMobileWeb, showModalOnMobileWeb })) {
     return (
       <InfoTooltip
         {...tooltipProps}

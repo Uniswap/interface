@@ -7,7 +7,6 @@ import {
   provideSessionService,
   SharedQueryClient,
 } from '@universe/api'
-import { SESSION_INIT_QUERY_KEY } from '@universe/api/src/components/ApiInit'
 import { REQUEST_SOURCE } from '@universe/environment'
 import { getIsSessionServiceEnabled } from '@universe/gating'
 import {
@@ -19,6 +18,7 @@ import {
   getNotificationQueryOptions,
   type NotificationService,
 } from '@universe/notifications'
+import { SESSION_INIT_QUERY_KEY } from '@universe/sessions'
 import ms from 'ms'
 import { getConfig } from 'src/app/config'
 import { UnitagClaimRoutes } from 'src/app/navigation/constants'

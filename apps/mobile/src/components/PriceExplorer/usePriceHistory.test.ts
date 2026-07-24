@@ -1,9 +1,12 @@
 import { waitFor } from '@testing-library/react-native'
 import { GraphQLApi } from '@universe/api'
+import { FeatureFlags } from '@universe/gating'
 import { act } from 'react-test-renderer'
 import { useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
 import { renderHookWithProviders } from 'src/test/render'
 import { USDC, USDC_ARBITRUM, USDC_BASE, USDC_OPTIMISM, USDC_POLYGON } from 'uniswap/src/constants/tokens'
+import { useTokenPriceChange, useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
+import { useTokenPriceHistoryRest } from 'uniswap/src/features/dataApi/tokenDetails/useTokenPriceHistoryRest'
 import {
   amount,
   getLatestPrice,
@@ -17,6 +20,28 @@ import {
   usdcTokenProject,
 } from 'uniswap/src/test/fixtures'
 import { queryResolvers } from 'uniswap/src/test/utils'
+
+const { mockUseFeatureFlag } = vi.hoisted(() => ({ mockUseFeatureFlag: vi.fn() }))
+
+vi.mock('@universe/gating', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@universe/gating')>()),
+  useFeatureFlag: mockUseFeatureFlag,
+}))
+
+vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData')>()),
+  useTokenSpotPrice: vi.fn(),
+  useTokenPriceChange: vi.fn(),
+}))
+
+vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenPriceHistoryRest', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/features/dataApi/tokenDetails/useTokenPriceHistoryRest')>()),
+  useTokenPriceHistoryRest: vi.fn(),
+}))
+
+const mockUseTokenSpotPrice = vi.mocked(useTokenSpotPrice)
+const mockUseTokenPriceChange = vi.mocked(useTokenPriceChange)
+const mockUseTokenPriceHistoryRest = vi.mocked(useTokenPriceHistoryRest)
 
 const mockTokenProjectsQuery = (historyPrices: number[]) => (): GraphQLApi.TokenProject[] => {
   const history = historyPrices.map((value) => timestampedAmount({ value }))
@@ -72,6 +97,14 @@ const createUsdcTokenProjectWithPriceHistories = ({
 })
 
 describe(useTokenPriceHistory, () => {
+  beforeEach(() => {
+    // Matches the real Statsig client's default in tests (gate closed) unless a test opts in below.
+    mockUseFeatureFlag.mockReturnValue(false)
+    mockUseTokenSpotPrice.mockReturnValue(undefined)
+    mockUseTokenPriceChange.mockReturnValue(undefined)
+    mockUseTokenPriceHistoryRest.mockReturnValue({ entries: [], isLoading: false })
+  })
+
   it('returns correct initial values', async () => {
     const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }))
 
@@ -244,10 +277,14 @@ describe(useTokenPriceHistory, () => {
         expect(result.current.error).toBe(false)
       })
 
-      expect(result.current.data?.priceHistory).toEqual(formatPriceHistory(projectHistory))
-      expect(result.current.data?.spot).toEqual({
-        value: expect.objectContaining({ value: project.markets?.[0]?.price?.value }),
-        relativeChange: expect.objectContaining({ value: project.markets?.[0]?.pricePercentChange24h?.value }),
+      // Poll for the exact expected values — the spot SharedValues settle asynchronously after
+      // `loading` flips (see the comment in the 1D percent-change test below)
+      await waitFor(() => {
+        expect(result.current.data?.priceHistory).toEqual(formatPriceHistory(projectHistory))
+        expect(result.current.data?.spot).toEqual({
+          value: expect.objectContaining({ value: project.markets?.[0]?.price?.value }),
+          relativeChange: expect.objectContaining({ value: project.markets?.[0]?.pricePercentChange24h?.value }),
+        })
       })
     })
 
@@ -290,8 +327,12 @@ describe(useTokenPriceHistory, () => {
         expect(result.current.error).toBe(false)
       })
 
-      expect(result.current.data?.priceHistory).toEqual(formatPriceHistory(tokenHistory))
+      // Wait on the exact expected values: the spot SharedValues are seeded with 0/0 placeholders
+      // and only settle after the query result propagates (under jest + real reanimated they update
+      // asynchronously on the mapper runloop after the commit that flips `loading`), so asserting
+      // them without polling races that flush and intermittently observes the placeholders.
       await waitFor(() => {
+        expect(result.current.data?.priceHistory).toEqual(formatPriceHistory(tokenHistory))
         expect(result.current.data?.spot).toEqual({
           value: expect.objectContaining({ value: project.tokens[0]?.market?.price?.value }),
           relativeChange: expect.objectContaining({ value: projectPercentChange24h.value }),
@@ -487,7 +528,7 @@ describe(useTokenPriceHistory, () => {
 
     describe('error handling', () => {
       it('returns error if query has no data and there is no loading state', async () => {
-        jest.spyOn(console, 'error').mockImplementation(() => undefined)
+        vi.spyOn(console, 'error').mockImplementation(() => undefined)
         const { resolvers: errorResolvers } = queryResolvers({
           tokenProjects: () => {
             throw new Error('error')
@@ -502,6 +543,101 @@ describe(useTokenPriceHistory, () => {
           expect(result.current.error).toBe(true)
         })
       })
+    })
+  })
+
+  describe('when V2EndpointsTokens is enabled', () => {
+    beforeEach(() => {
+      mockUseFeatureFlag.mockImplementation((flag: FeatureFlags) => flag === FeatureFlags.V2EndpointsTokens)
+    })
+
+    it('uses the REST spot price and 24h change instead of the GraphQL query for Day duration', async () => {
+      mockUseTokenSpotPrice.mockReturnValue(99.9)
+      mockUseTokenPriceChange.mockReturnValue(12.3)
+
+      const { resolvers } = queryResolvers({ tokenProjects: mockTokenProjectsQuery([1, 2, 3]) })
+      const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }), {
+        resolvers,
+      })
+
+      await waitFor(() => {
+        expect(result.current.data?.spot).toEqual({
+          value: expect.objectContaining({ value: 99.9 }),
+          relativeChange: expect.objectContaining({ value: 12.3 }),
+        })
+      })
+    })
+
+    it('uses the REST price history entries for the chart line instead of the GraphQL query', async () => {
+      mockUseTokenSpotPrice.mockReturnValue(99.9)
+      mockUseTokenPriceChange.mockReturnValue(12.3)
+      mockUseTokenPriceHistoryRest.mockReturnValue({
+        entries: [
+          { timestamp: 1_000, value: 10 },
+          { timestamp: 2_000, value: 20 },
+        ],
+        isLoading: false,
+      })
+
+      // The GraphQL query still runs (unused for the chart line while V2 is on) — make sure its
+      // own price history isn't what ends up in the result.
+      const graphqlHistory = priceHistory()
+      const { resolvers } = queryResolvers({
+        tokenProjects: () => [createUsdcTokenProjectWithMatchingPriceHistory(graphqlHistory)],
+      })
+      const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }), {
+        resolvers,
+      })
+
+      await waitFor(() => {
+        expect(result.current.data?.priceHistory).toEqual([
+          { timestamp: 1_000_000, value: 10 },
+          { timestamp: 2_000_000, value: 20 },
+        ])
+      })
+    })
+
+    it('calculates non-Day-duration change from the REST price history entries', async () => {
+      mockUseTokenSpotPrice.mockReturnValue(99.9)
+      mockUseTokenPriceChange.mockReturnValue(12.3)
+      mockUseTokenPriceHistoryRest.mockReturnValue({
+        entries: [
+          { timestamp: 1_000, value: 10 },
+          { timestamp: 2_000, value: 15 },
+        ],
+        isLoading: false,
+      })
+
+      const { result } = renderHookWithProviders(() =>
+        useTokenPriceHistory({
+          currencyId: SAMPLE_CURRENCY_ID_1,
+          initialDuration: GraphQLApi.HistoryDuration.Year,
+        }),
+      )
+
+      await waitFor(() => {
+        expect(result.current.data?.spot).toEqual({
+          value: expect.objectContaining({ value: 99.9 }),
+          relativeChange: expect.objectContaining({ value: 50 }), // (15 - 10) / 10 * 100
+        })
+      })
+    })
+
+    it('passes preferProjectMarketData and the mapped REST duration through to the REST hooks', () => {
+      renderHookWithProviders(() =>
+        useTokenPriceHistory({
+          currencyId: SAMPLE_CURRENCY_ID_1,
+          preferProjectMarketData: true,
+          initialDuration: GraphQLApi.HistoryDuration.Week,
+        }),
+      )
+
+      expect(mockUseTokenSpotPrice).toHaveBeenCalledWith(SAMPLE_CURRENCY_ID_1, { preferProjectMarketData: true })
+      expect(mockUseTokenPriceChange).toHaveBeenCalledWith(SAMPLE_CURRENCY_ID_1, { preferProjectMarketData: true })
+      expect(mockUseTokenPriceHistoryRest).toHaveBeenCalledWith(
+        SAMPLE_CURRENCY_ID_1,
+        expect.objectContaining({ preferProjectMarketData: true }),
+      )
     })
   })
 })

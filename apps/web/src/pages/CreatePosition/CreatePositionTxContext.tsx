@@ -47,6 +47,7 @@ import { generateLiquidityServiceCreateCalldataQueryParams } from '~/features/Li
 import { getCheckLPApprovalRequestParams } from '~/features/Liquidity/utils/getCheckLPApprovalRequestParams'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { useCreatePositionDepositInfo } from '~/pages/CreatePosition/hooks/useCreatePositionDepositInfo'
+import { useHookRejectsLiquidity } from '~/pages/CreatePosition/hooks/useHookRejectsLiquidity'
 import { PositionField } from '~/types/position'
 
 /** @internal - exported for testing */
@@ -148,6 +149,8 @@ interface CreatePositionTxContextType {
   currencyAmountsUSDValue?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
   currencyBalances?: { [field in PositionField]?: CurrencyAmount<Currency> }
   preEstimatedGasFee?: string
+  /** True when the CreatePosition error is attributable to the existing v4 pool's hook rejecting new liquidity. */
+  hookRejectsLiquidity: boolean
 }
 
 const CreatePositionTxContext = createContext<CreatePositionTxContextType | undefined>(undefined)
@@ -348,6 +351,14 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     }
   }
 
+  const hookRejectsLiquidity = useHookRejectsLiquidity({
+    createError,
+    creatingPoolOrPair,
+    protocolVersion,
+    poolOrPair,
+    hook: positionState.hook,
+  })
+
   const dependentAmountFallback = useCreatePositionDependentAmountFallback({
     queryParams: createCalldataQueryParams,
     isQueryEnabled: isQueryEnabled && Boolean(createError),
@@ -456,6 +467,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
       currencyAmountsUSDValue,
       currencyBalances,
       preEstimatedGasFee,
+      hookRejectsLiquidity,
     }),
     [
       txInfo,
@@ -468,6 +480,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
       currencyAmountsUSDValue,
       currencyBalances,
       preEstimatedGasFee,
+      hookRejectsLiquidity,
     ],
   )
 

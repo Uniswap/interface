@@ -218,7 +218,7 @@ function ModalFooter({
       key="confirm"
       variant={isCriticalRisk ? 'critical' : 'branded'}
       emphasis={isCriticalRisk ? 'secondary' : 'primary'}
-      isDisabled={!confirmationEnabled}
+      disabled={!confirmationEnabled}
       loading={confirmationLoading}
       size="large"
       testID={TestID.Confirm}

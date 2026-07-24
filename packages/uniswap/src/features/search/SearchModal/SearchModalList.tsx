@@ -4,6 +4,7 @@ import { memo, useCallback, useState, type ReactNode } from 'react'
 import type { StyleProp, ViewStyle } from 'react-native'
 import { Flex } from 'ui/src'
 import { ArrowRight } from 'ui/src/components/icons/ArrowRight'
+import { AuctionOptionItem } from 'uniswap/src/components/lists/items/auctions/AuctionOptionItem'
 import { EarnVaultOptionItem } from 'uniswap/src/components/lists/items/earn/EarnVaultOptionItem'
 import { PoolOptionItem } from 'uniswap/src/components/lists/items/pools/PoolOptionItem'
 import {
@@ -126,6 +127,7 @@ export const SearchModalList = memo(function SearchModalListInner({
     navigateToExternalProfile,
     navigateToPoolDetails,
     navigateToEarnVault,
+    navigateToAuction,
     getTokenDetailsUrl,
     getPoolDetailsUrl,
     getExternalProfileUrl,
@@ -204,7 +206,6 @@ export const SearchModalList = memo(function SearchModalListInner({
     ),
   )
 
-  // oxlint-disable-next-line typescript/consistent-return
   const renderItem = ({ item, section, rowIndex, index, expanded }: ItemRowInfo<SearchModalOption>): JSX.Element => {
     switch (item.type) {
       case OnchainItemListOptionType.Pool: {
@@ -249,7 +250,7 @@ export const SearchModalList = memo(function SearchModalListInner({
       case OnchainItemListOptionType.Token: {
         const tdpChain = tdpChainFilterForTokenRow({
           searchChainFilter: searchFilters.searchChainFilter,
-          rowCurrency: item.currencyInfo.currency,
+          rowChainId: item.currencyInfo.currency.chainId,
           searchQuery: searchFilters.query,
         })
         const recordTokenSelection = (): void => {
@@ -296,7 +297,7 @@ export const SearchModalList = memo(function SearchModalListInner({
       case OnchainItemListOptionType.MultichainToken: {
         const multichainTdpChain = tdpChainFilterForTokenRow({
           searchChainFilter: searchFilters.searchChainFilter,
-          rowCurrency: item.primaryCurrencyInfo.currency,
+          rowChainId: item.primaryCurrencyInfo.currency.chainId,
           explicitTdpChain: item.tdpChainFilter,
           searchQuery: searchFilters.query,
           allowAggregate: true,
@@ -414,8 +415,7 @@ export const SearchModalList = memo(function SearchModalListInner({
               isHoverable && rowIndex === focusedRowIndex ? <ArrowRight color="$neutral2" size="$icon.20" /> : undefined
             }
             onPress={() => {
-              navigateToEarnVault?.({ vault: item.vault, position: item.position })
-
+              navigateToEarnVault?.({ analyticsEntryPoint: 'search', vault: item.vault, position: item.position })
               sendSearchOptionItemClickedAnalytics({
                 item,
                 section,
@@ -446,6 +446,33 @@ export const SearchModalList = memo(function SearchModalListInner({
           />
         )
       }
+      case OnchainItemListOptionType.Auction:
+        return (
+          <AuctionOptionItem
+            option={item}
+            focusedRowControl={{
+              rowIndex,
+              setFocusedRowIndex,
+              focusedRowIndex,
+            }}
+            onPress={() => {
+              registerSearchItem(item)
+              navigateToAuction?.({ auctionAddress: item.auctionAddress, chainId: item.chainId })
+
+              sendSearchOptionItemClickedAnalytics({
+                item,
+                section,
+                sectionIndex: index,
+                rowIndex,
+                searchFilters,
+              })
+
+              onSelect?.()
+            }}
+          />
+        )
+      default:
+        return <></>
     }
   }
 

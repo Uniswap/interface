@@ -13,31 +13,20 @@ import { TDPTvlChartPanel } from '~/pages/TokenDetails/components/chart/TDPTvlCh
 import { TDPVolumeChartPanel } from '~/pages/TokenDetails/components/chart/TDPVolumeChartPanel'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { getTDPChartGraphqlTarget } from '~/pages/TokenDetails/hooks/getTDPChartGraphqlTarget'
-import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultichainTokenEntries'
+import { useTDPMultichainAggregate } from '~/pages/TokenDetails/hooks/useTDPMultichainAggregate'
 
 function ChartSectionBody(): JSX.Element {
-  const {
-    tokenColor,
-    currency,
-    tokenQueryData,
-    pathGraphqlChain,
-    pathTokenDbAddress,
-    selectedMultichainChainId,
-    multiChainMap,
-  } = useTDPStore((s) => ({
-    tokenColor: s.tokenColor,
-    currency: s.currency!,
-    tokenQueryData: s.tokenQuery.data?.token,
-    pathGraphqlChain: s.currencyChain,
-    pathTokenDbAddress: s.tokenQuery.variables?.address,
-    selectedMultichainChainId: s.selectedMultichainChainId,
-    multiChainMap: s.multiChainMap,
-  }))
+  const { tokenColor, currency, tokenQueryData, pathGraphqlChain, pathTokenDbAddress, selectedMultichainChainId } =
+    useTDPStore((s) => ({
+      tokenColor: s.tokenColor,
+      currency: s.currency!,
+      tokenQueryData: s.tokenQuery.data?.token,
+      pathGraphqlChain: s.currencyChain,
+      pathTokenDbAddress: s.tokenQuery.variables?.address,
+      selectedMultichainChainId: s.selectedMultichainChainId,
+    }))
 
-  const multichainEntries = useMultichainTokenEntries(multiChainMap)
-  const isMultiChainAsset = multichainEntries.length > 1
-
-  const showMultichainAggregation = isMultiChainAsset && selectedMultichainChainId === undefined
+  const { isMultichainAggregateView } = useTDPMultichainAggregate()
 
   const { chain: tokenChain, address: tokenDBAddress } = useMemo(
     () =>
@@ -58,9 +47,9 @@ function ChartSectionBody(): JSX.Element {
       address: tokenDBAddress,
       chain: tokenChain,
       duration: toHistoryDuration(timePeriod),
-      multichain: showMultichainAggregation,
+      multichain: isMultichainAggregateView,
     }),
-    [showMultichainAggregation, timePeriod, tokenChain, tokenDBAddress],
+    [isMultichainAggregateView, timePeriod, tokenChain, tokenDBAddress],
   )
 
   const displayPriceChartType = getDisplayPriceChartType(priceChartType, disableCandlestickUI)

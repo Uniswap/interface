@@ -225,6 +225,20 @@ describe(useEarnPosition, () => {
     expect(result.current.position?.vaultId).toBe(VAULT_ID)
   })
 
+  it('drops a prefetched position after an authoritative empty response', (): void => {
+    mockQueries({
+      livePosition: { isSuccess: true },
+      cachedPositions: { isSuccess: false },
+    })
+
+    const { result } = renderEarnPosition({
+      prefetchedPosition: PREFETCHED_POSITION,
+    })
+
+    expect(result.current.positionStatus).toBe(EarnPositionStatus.NoPosition)
+    expect(result.current.position).toBeUndefined()
+  })
+
   it('reports "error", not "noPosition", when the live query fails with no other source', () => {
     // A transient GetEarnPosition failure is not positive knowledge of no position — consumers (e.g. the
     // earn swap toggle) must not treat it as confirmed no-position and clear user intent.
@@ -286,6 +300,7 @@ describe(useEarnPosition, () => {
       action: EarnAction.Deposit,
       createdAtMs: 1,
       depositedUsd: 50,
+      baselineSharesRaw: '0',
       walletAddress: normalizeTokenAddressForCache(WALLET_ADDRESS),
       vaultAddress: normalizeTokenAddressForCache(VAULT_ADDRESS),
       vaultChainId: UniverseChainId.Mainnet,

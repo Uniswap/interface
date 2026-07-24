@@ -1,6 +1,9 @@
 /* oxlint-disable max-lines */
-import { createHashcashMultiWorkerChannel, createHashcashWorkerChannel } from '@universe/sessions'
-import { findProof as jsFindProof } from '@universe/sessions/src/challenge-solvers/hashcash/core'
+import {
+  createHashcashMultiWorkerChannel,
+  createHashcashWorkerChannel,
+  findProof as jsFindProof,
+} from '@universe/sessions'
 import { memo, useCallback, useEffect, useMemo } from 'react'
 import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import {
@@ -701,7 +704,7 @@ export function HashcashBenchmarkScreen(): JSX.Element {
 
           {/* Action Buttons */}
           <Flex row gap="$spacing8" flexWrap="wrap">
-            <Button size="small" emphasis="primary" isDisabled={isRunning} onPress={runBenchmark}>
+            <Button size="small" emphasis="primary" disabled={isRunning} onPress={runBenchmark}>
               Run Benchmark
             </Button>
             {isRunning && (
@@ -709,7 +712,7 @@ export function HashcashBenchmarkScreen(): JSX.Element {
                 Cancel
               </Button>
             )}
-            <Button size="small" emphasis="secondary" isDisabled={isRunning} onPress={handleClearResults}>
+            <Button size="small" emphasis="secondary" disabled={isRunning} onPress={handleClearResults}>
               Clear Results
             </Button>
           </Flex>

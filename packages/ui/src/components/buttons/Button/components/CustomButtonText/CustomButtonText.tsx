@@ -49,7 +49,6 @@ const CustomButtonTextStyled = styled(Text, {
     variant: {
       // @ts-expect-error we know variant will be ButtonVariant
       ':string': (variant: Required<ButtonVariantProps>['variant'], { props }) => {
-        // TODO(WEB-6347): change name back to `disabled`
         // @ts-expect-error we know isDisabled will be ButtonVariantProps['isDisabled']
         if (props.isDisabled) {
           return {

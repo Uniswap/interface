@@ -9,7 +9,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { setOpenModal } from '~/state/application/reducer'
 import { addList } from '~/state/lists/actions'
 import { createWebAppStateResetter } from '~/state/reset/appResetter'
-import { type InterfaceState, interfaceReducer } from '~/state/webReducer'
+import { interfaceReducer } from '~/state/webReducer'
 
 // Mock the sagas module to prevent saga initialization during tests
 vi.mock('~/state/sagas/root', () => ({
@@ -34,7 +34,7 @@ const createMockQueryClient = (): QueryClient => {
 
 // Disable dev-mode state checks: under CI load the immutable-check middleware
 // exceeds its 32ms warning threshold and the console.warn fails the test
-// via jest-fail-on-console.
+// via the fail-on-console setup in setupTests.ts.
 const createTestStore = () =>
   configureStore({
     reducer: interfaceReducer,

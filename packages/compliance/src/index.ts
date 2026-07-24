@@ -7,7 +7,7 @@
 
 export { GatedFeature, RestrictionReason } from '@uniswap/client-compliancev2/dist/uniswap/compliance/v1/api_pb'
 export type { ComplianceTokenInput, ComplianceV2Client, ScreenAddressInput } from '@universe/compliance/src/client'
-export { createComplianceV2Client, screenAddress } from '@universe/compliance/src/client'
+export { createComplianceV2Client, screenAddress, toScreenInput } from '@universe/compliance/src/client'
 export { ComplianceClientProvider } from '@universe/compliance/src/ComplianceClientProvider'
 export {
   clearComplianceOverrides,

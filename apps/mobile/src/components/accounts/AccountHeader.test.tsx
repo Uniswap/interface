@@ -15,7 +15,7 @@ import { ACCOUNT, preloadedWalletPackageState, signerMnemonicAccount } from 'wal
 const preloadedState = preloadedWalletPackageState({ account: ACCOUNT })
 const address = ACCOUNT.address
 const shortenedAddress = sanitizeAddressText(shortenAddress({ address }))!
-const navigate = jest.fn()
+const navigate = vi.fn()
 
 describe(AccountHeader, () => {
   it('renders correctly', () => {
@@ -40,8 +40,8 @@ describe(AccountHeader, () => {
     })
 
     it('copies wallet address to clipboard when address section is pressed', async () => {
-      const setStringAsync = jest.fn()
-      jest.spyOn(ExpoClipboard, 'setStringAsync').mockImplementation(setStringAsync)
+      const setStringAsync = vi.fn()
+      vi.spyOn(ExpoClipboard, 'setStringAsync').mockImplementation(setStringAsync)
       render(<AccountHeader />, { preloadedState: stateWithoutName })
 
       const addressSection = screen.getByTestId(TestID.AccountHeaderCopyAddress)
@@ -67,8 +67,8 @@ describe(AccountHeader, () => {
     })
 
     it('opens account switcher modal when account name is pressed', async () => {
-      jest.spyOn(navigationRef, 'isReady').mockImplementation(() => true)
-      jest.spyOn(navigationRef, 'navigate').mockImplementation(navigate)
+      vi.spyOn(navigationRef, 'isReady').mockImplementation(() => true)
+      vi.spyOn(navigationRef, 'navigate').mockImplementation(navigate)
 
       render(<AccountHeader />, { preloadedState })
 
@@ -84,8 +84,8 @@ describe(AccountHeader, () => {
   })
 
   it('opens account switcher modal when account avatar is pressed', async () => {
-    jest.spyOn(navigationRef, 'isReady').mockImplementation(() => true)
-    jest.spyOn(navigationRef, 'navigate').mockImplementation(navigate)
+    vi.spyOn(navigationRef, 'isReady').mockImplementation(() => true)
+    vi.spyOn(navigationRef, 'navigate').mockImplementation(navigate)
 
     render(<AccountHeader />, { preloadedState })
 
@@ -100,8 +100,8 @@ describe(AccountHeader, () => {
   })
 
   it('opens settings screen when settings button is pressed', async () => {
-    jest.spyOn(navigationRef, 'isReady').mockImplementation(() => true)
-    jest.spyOn(navigationRef, 'navigate').mockImplementation(navigate)
+    vi.spyOn(navigationRef, 'isReady').mockImplementation(() => true)
+    vi.spyOn(navigationRef, 'navigate').mockImplementation(navigate)
     render(<AccountHeader />, { preloadedState })
 
     const settingsButton = getByGestureTestId(TestID.AccountHeaderSettings)

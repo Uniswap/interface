@@ -1,13 +1,61 @@
 /* Tailwind v4 + shared Universe design tokens for the extension UI pages. */
-/* Fonts are loaded via each entrypoint's index.html, so /fonts is omitted. */
 /*
- * The explicit `.css` extension is required here: WXT's getTsconfigAliases()
+ * The explicit `.css` extension / full path is required here: WXT's getTsconfigAliases()
  * turns the `@universe/tailwind/*` tsconfig path into a hard Vite alias
- * (@universe/tailwind -> packages/tailwind) with no extension resolution, so a
- * bare "@universe/tailwind/tailwind" resolves to an extensionless path and
- * @tailwindcss/vite fails with ENOENT. The full path resolves to the real file.
- * (web/dev-portal use vite-tsconfig-paths, which extension-resolves, so they
- * import it without the suffix.)
+ * (@universe/tailwind -> packages/tailwind) with no extension resolution or
+ * package-exports mapping, so a bare "@universe/tailwind/tailwind" resolves to
+ * an extensionless path and @tailwindcss/vite fails with ENOENT. The full path
+ * resolves to the real file. (web/dev-portal use vite-tsconfig-paths, which
+ * extension-resolves, so they import it without the suffix.)
  */
-@import "tailwindcss";
+/*
+ * Import Tailwind without preflight: its base resets (e.g. `img, svg { display: block }`)
+ * restyle the Tamagui-rendered UI — SVG icons embedded inline in Text (like the unitag
+ * badge on the dapp transaction request screen) get forced to block and wrap onto their
+ * own line. The extension UI is Tamagui-rendered and doesn't rely on preflight.
+ */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
 @import "@universe/tailwind/tailwind.css";
+/* Licensed "Basel Grotesk" faces (weights 485/535) — the family the shared base
+ * layer and font-basel utilities resolve to. */
+@import "@universe/tailwind/css/fonts.css";
+
+/*
+ * Tamagui text (ui/src/theme/fonts.ts, web branch) requests family "Basel" at
+ * weights 400/500. Alias it to the same licensed Basel Grotesk sources so
+ * Tamagui renders the licensed font too. The previous "Basel" registration in
+ * each entrypoint's index.html pointed at an unlicensed 2019 dev cut of the
+ * font (broken vertical metrics, 159 missing glyphs).
+ */
+@font-face {
+  font-family: "Basel";
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+  src:
+    url("@universe/tailwind/fonts/Basel-Grotesk-Book.woff2") format("woff2"),
+    url("@universe/tailwind/fonts/Basel-Grotesk-Book.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Basel";
+  font-weight: 500;
+  font-style: normal;
+  font-display: block;
+  src:
+    url("@universe/tailwind/fonts/Basel-Grotesk-Medium.woff2") format("woff2"),
+    url("@universe/tailwind/fonts/Basel-Grotesk-Medium.woff") format("woff");
+}
+
+/*
+ * Chrome injects `body { font-family: <platform pref font>; font-size: 75%; }`
+ * into every chrome-extension:// page (author-origin, unlayered), which beats
+ * the `@layer base` html/body rule from @universe/tailwind — cascade layers
+ * lose to unlayered styles. Re-assert the base font unlayered so body text and
+ * everything inheriting from it doesn't render in the platform system font.
+ */
+body {
+  font-family: var(--font-basel);
+}

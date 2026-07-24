@@ -1,4 +1,3 @@
-import { NetworkStatus } from '@apollo/client'
 import { PartialMessage } from '@bufbuild/protobuf'
 import { FiatOnRampParams } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { TransactionTypeFilter } from '@uniswap/client-data-api/dist/data/v1/types_pb'
@@ -91,10 +90,10 @@ export function useFormattedTransactionDataForActivity({
   const {
     data: formattedTransactions,
     loading,
+    isPending,
     isFetching,
     error,
     refetch,
-    networkStatus,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
@@ -157,8 +156,8 @@ export function useFormattedTransactionDataForActivity({
   // 3. Error with a retry in progress (for UX when "retry" is clicked)
   // 4. Explicitly showing loading on refetch
   const showLoading =
-    (!hasData && (loading || (!skip && networkStatus === NetworkStatus.loading))) ||
-    (Boolean(error) && networkStatus === NetworkStatus.loading) ||
+    (!hasData && (loading || (!skip && isPending))) ||
+    (Boolean(error) && isPending) ||
     (showLoadingOnRefetch && isFetching && !isFetchingNextPage)
 
   const sectionData = useMemo(

@@ -1,3 +1,4 @@
+import { toScreenInput, useIsBlockedAddress } from '@universe/compliance'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
@@ -9,14 +10,13 @@ import { useDebouncedGasInfo } from 'uniswap/src/features/transactions/swap/form
 import { useResetGasCta } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/useResetGasCta'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 
 export const GasAndWarningRows = memo(function GasAndWarningRows(): JSX.Element {
   const { t } = useTranslation()
   const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
   const address = useActiveAddress(chainId)
 
-  const { isBlocked } = useIsBlocked(address)
+  const { isBlocked } = useIsBlockedAddress(toScreenInput(address, chainId))
 
   const { formScreenWarning, warnings } = useParsedSwapWarnings()
   const inlineWarning =

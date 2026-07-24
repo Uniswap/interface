@@ -51,12 +51,10 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@typescript/native-preview": "7.0.0-dev.20260421.2",
     "nitrogen": "0.33.2",
     "react": "19.2.3",
     "react-native": "0.85.3",
-    "react-native-nitro-modules": "0.33.2",
-    "typescript": "5.9.2"
+    "react-native-nitro-modules": "0.33.2"
   },
   "peerDependencies": {
     "react": ">=19.0.0",

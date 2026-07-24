@@ -71,7 +71,7 @@ export function ResumePlanButton({
 
   return (
     <Button
-      isDisabled={loading}
+      disabled={loading}
       size="medium"
       emphasis="primary"
       variant="branded"

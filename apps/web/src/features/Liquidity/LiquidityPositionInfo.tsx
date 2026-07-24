@@ -140,7 +140,9 @@ export function LiquidityPositionInfo({
               size="small"
               version={version}
               v4hook={v4hook}
+              chainId={chainId}
               feeTier={feeTier}
+              protocolFeePips={positionInfo.protocolFee}
               cta={
                 migrateButtonConfig
                   ? {

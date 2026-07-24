@@ -168,7 +168,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
                 <Button
                   size="large"
                   variant="branded"
-                  isDisabled={!displayContinueButtonEnabled}
+                  disabled={!displayContinueButtonEnabled}
                   testID={TestID.Next}
                   onPress={fromCloudBackup ? finishCloudBackup : nextView}
                 >
@@ -217,7 +217,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
               <Trace logPress element={ElementName.Continue} screen={ManualPageViewScreen.ConfirmRecoveryPhrase}>
                 <Flex row>
                   <Button
-                    isDisabled={!confirmContinueButtonEnabled}
+                    disabled={!confirmContinueButtonEnabled}
                     size="large"
                     variant="branded"
                     testID={TestID.Continue}

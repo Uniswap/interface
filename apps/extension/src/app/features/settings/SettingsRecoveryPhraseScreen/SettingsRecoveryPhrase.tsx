@@ -46,7 +46,7 @@ export function SettingsRecoveryPhrase({
       <Flex grow>{children}</Flex>
       <Flex row mt="$spacing12">
         <Button
-          isDisabled={!nextButtonEnabled}
+          disabled={!nextButtonEnabled}
           flexGrow={1}
           variant={nextButtonVariant}
           emphasis={nextButtonEmphasis}

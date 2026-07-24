@@ -146,7 +146,7 @@ export function EmbeddedWalletConnectionsModal(): JSX.Element {
             {/* Continue with passkey */}
             <Trace logPress element={ElementName.LoginWithPasskey}>
               <Flex row alignSelf="stretch">
-                <Button variant="branded" size="medium" onPress={handlePasskeyLogin} isDisabled={isPasskeyLoading}>
+                <Button variant="branded" size="medium" onPress={handlePasskeyLogin} disabled={isPasskeyLoading}>
                   {isPasskeyLoading ? (
                     <SpinningLoader size={20} color="$neutral2" />
                   ) : (

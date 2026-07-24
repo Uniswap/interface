@@ -3,6 +3,7 @@ import type { Token as DataApiToken } from '@uniswap/client-data-api/dist/data/v
 import type {
   EarnPosition as DataApiEarnPosition,
   EarnVault as DataApiEarnVault,
+  EarnVaultExposure as DataApiEarnVaultExposure,
 } from '@uniswap/client-data-api/dist/data/v2/earn_pb'
 import { GraphQLApi } from '@universe/api'
 import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
@@ -10,7 +11,12 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import type { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { EARN_EXPLORE_VAULT_CURRENCY_IDS } from 'uniswap/src/features/earn/launchAssets'
-import type { EarnPositionInfo, EarnVaultCurator, EarnVaultInfo } from 'uniswap/src/features/earn/types'
+import type {
+  EarnPositionInfo,
+  EarnVaultCurator,
+  EarnVaultExposure,
+  EarnVaultInfo,
+} from 'uniswap/src/features/earn/types'
 import {
   areCurrencyIdsEqual,
   buildCurrencyId,
@@ -126,6 +132,31 @@ function getExposureCurrencyIds({
   return currencyIds.length > 0 ? currencyIds : [fallbackCurrencyId]
 }
 
+function getExposures({
+  chainId,
+  exposures,
+}: {
+  chainId: UniverseChainId
+  exposures: readonly PlainMessage<DataApiEarnVaultExposure>[]
+}): readonly EarnVaultExposure[] {
+  const result: EarnVaultExposure[] = []
+  for (const exposure of exposures) {
+    if (!exposure.token) {
+      continue
+    }
+    const currencyId = getCurrencyIdForToken({ chainId, token: exposure.token })
+    if (!currencyId) {
+      continue
+    }
+    result.push({
+      currencyId: getEarnVaultDisplayCurrencyId(currencyId),
+      valueUsd: exposure.assetsUsd,
+      share: exposure.share,
+    })
+  }
+  return result
+}
+
 export function getEarnVaultInfo(dataApiVault: PlainMessage<DataApiEarnVault>): EarnVaultInfo | undefined {
   const chainId = toSupportedChainId(dataApiVault.chainId)
   const currencyId = getEarnVaultCurrencyId(dataApiVault)
@@ -148,6 +179,12 @@ export function getEarnVaultInfo(dataApiVault: PlainMessage<DataApiEarnVault>): 
       // oxlint-disable-next-line typescript-eslint/no-unnecessary-condition
       exposureTokens: dataApiVault.exposureTokens ?? [],
       fallbackCurrencyId: getEarnVaultDisplayCurrencyId(currencyId),
+    }),
+    exposures: getExposures({
+      chainId,
+      // Protobuf type marks this as non-nullable, but it can be undefined at runtime — keep the fallback.
+      // oxlint-disable-next-line typescript-eslint/no-unnecessary-condition
+      exposures: dataApiVault.exposures ?? [],
     }),
 
     // Backend fields normalized for app display.
@@ -386,16 +423,10 @@ export function hasConfirmedEarnPositionShareBalance(
 }
 
 /**
- * Resolves which position the withdraw views should consume.
- *
- * `startWithdraw` snapshots the position into flow state one-shot. After a user's *first* deposit,
- * that snapshot is an optimistic entry with zero raw balances (`depositedRaw`/`sharesRaw` of '0'),
- * and nothing refreshes the snapshot while the withdraw view is open — review would stay gated on
- * 'Loading' forever even after the live GetEarnPosition query resolves. Prefer the live queried
- * position once its raw balances are confirmed for the same vault; otherwise keep the snapshot so
- * the view never loses the position identity it entered with.
+ * Selects the freshest confirmed same-vault position for Earn amount and review flows, preserving
+ * the snapshot while live data is unresolved or optimistic.
  */
-export function resolveEarnWithdrawPosition({
+export function resolveEarnAmountPosition({
   livePosition,
   snapshotPosition,
 }: {

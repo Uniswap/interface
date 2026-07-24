@@ -1,4 +1,3 @@
-import { NetworkStatus } from '@apollo/client'
 import { Currency } from '@uniswap/sdk-core'
 import { memo, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -61,7 +60,7 @@ function TokenBalanceListInner({
 }: Omit<TokenBalanceListProps, 'svmOwner' | 'evmOwner' | 'onPressToken'>): JSX.Element {
   const { t } = useTranslation()
 
-  const { rows, balancesById, networkStatus, refetch, hiddenTokensExpanded } = useTokenBalanceListContext()
+  const { rows, balancesById, refetch, hiddenTokensExpanded, isError } = useTokenBalanceListContext()
   const hiddenTokensRowRef = useRef<HTMLDivElement | null>(null)
   const previousHiddenTokensExpanded = usePrevious(hiddenTokensExpanded)
 
@@ -100,7 +99,7 @@ function TokenBalanceListInner({
 
   const hasData = !!balancesById
   const hasTokens = balancesById && Object.keys(balancesById).length > 0
-  const hasErrorWithCachedValues = hasData && networkStatus === NetworkStatus.error
+  const hasErrorWithCachedValues = hasData && isError
 
   if (!hasData) {
     return (

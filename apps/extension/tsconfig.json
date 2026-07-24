@@ -12,6 +12,9 @@
       "path": "../../packages/wallet"
     },
     {
+      "path": "../../packages/compliance"
+    },
+    {
       "path": "../../packages/uniswap"
     },
     {

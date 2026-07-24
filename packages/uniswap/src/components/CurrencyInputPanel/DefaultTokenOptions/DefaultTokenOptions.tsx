@@ -7,9 +7,15 @@ import { extraMarginForHoverAnimation } from 'uniswap/src/components/CurrencyInp
 import { TokenOptions } from 'uniswap/src/components/CurrencyInputPanel/DefaultTokenOptions/TokenOptions/TokenOptions'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
-function DefaultTokenOptionsInner({ currencyField }: { currencyField: CurrencyField }): JSX.Element {
+export interface DefaultTokenOptionsProps {
+  currencyField: CurrencyField
+  maxTokens?: number
+  alignEnd?: boolean
+}
+
+function DefaultTokenOptionsInner({ currencyField, maxTokens, alignEnd }: DefaultTokenOptionsProps): JSX.Element {
   return (
-    <ScrollView horizontal showsVerticalScrollIndicator={false}>
+    <ScrollView horizontal justifyContent={alignEnd ? 'flex-end' : undefined} showsVerticalScrollIndicator={false}>
       <Flex
         row
         m={extraMarginForHoverAnimation}
@@ -26,7 +32,7 @@ function DefaultTokenOptionsInner({ currencyField }: { currencyField: CurrencyFi
             }
           : {})}
       >
-        <TokenOptions currencyField={currencyField} />
+        <TokenOptions currencyField={currencyField} maxTokens={maxTokens} />
       </Flex>
     </ScrollView>
   )

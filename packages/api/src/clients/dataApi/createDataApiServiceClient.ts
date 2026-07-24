@@ -4,6 +4,8 @@ import { type DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_c
 import type {
   GetPortfolioRequest,
   GetPortfolioResponse,
+  GetProtocolFeesRequest,
+  GetProtocolFeesResponse,
   GetWalletBalancesRequest,
   GetWalletBalancesResponse,
   GetWalletsBalancesRequest,
@@ -20,6 +22,7 @@ export interface DataApiServiceClientContext {
 
 export interface DataApiServiceClient {
   getPortfolio: (params: PartialMessage<GetPortfolioRequest>) => Promise<GetPortfolioResponse>
+  getProtocolFees: (params: PartialMessage<GetProtocolFeesRequest>) => Promise<GetProtocolFeesResponse>
   getWalletBalances: (params: PartialMessage<GetWalletBalancesRequest>) => Promise<GetWalletBalancesResponse>
   getWalletsBalances: (params: PartialMessage<GetWalletsBalancesRequest>) => Promise<GetWalletsBalancesResponse>
   listTokens: (params: PartialMessage<ListTokensRequest>) => Promise<ListTokensResponse>
@@ -29,6 +32,7 @@ export interface DataApiServiceClient {
 export function createDataApiServiceClient({ rpcClient }: DataApiServiceClientContext): DataApiServiceClient {
   return {
     getPortfolio: (params): Promise<GetPortfolioResponse> => rpcClient.getPortfolio(params),
+    getProtocolFees: (params): Promise<GetProtocolFeesResponse> => rpcClient.getProtocolFees(params),
     getWalletBalances: (params): Promise<GetWalletBalancesResponse> => rpcClient.getWalletBalances(params),
     getWalletsBalances: (params): Promise<GetWalletsBalancesResponse> => rpcClient.getWalletsBalances(params),
     listTokens: (params): Promise<ListTokensResponse> => rpcClient.listTokens(params),

@@ -17,6 +17,7 @@ import { DappRequestType } from 'uniswap/src/features/dappRequests/types'
 import { useChainGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToken'
 import { hasGasEstimationFailed, hasSufficientGasBalance } from 'uniswap/src/features/gas/utils'
 import { type TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { extractNameFromUrl } from 'utilities/src/format/extractNameFromUrl'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -329,6 +330,7 @@ function FooterButtons({
       flexBasis={1}
       size="medium"
       emphasis={applyCriticalStyling ? 'primary' : 'secondary'}
+      testID={TestID.Cancel}
       onPress={onCancel}
     >
       {isRequestStale
@@ -343,12 +345,13 @@ function FooterButtons({
     confirmText && !isRequestStale ? (
       <Button
         key="confirm"
-        isDisabled={isDisabled}
+        disabled={isDisabled}
         loading={isLoading}
         flexBasis={1}
         size="medium"
         variant={applyCriticalStyling ? 'critical' : 'branded'}
         emphasis={applyCriticalStyling ? 'secondary' : 'primary'}
+        testID={TestID.Confirm}
         onPress={onConfirm}
       >
         {confirmText}

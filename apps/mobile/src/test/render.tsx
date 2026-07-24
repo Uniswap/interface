@@ -53,6 +53,8 @@ export function renderWithProviders(
   }: ExtendedRenderOptions = {},
 ): RenderResult & {
   store: EnhancedStore
+  // provided at runtime by @testing-library/react (RNTL is mapped to RTL under vitest)
+  container: HTMLElement
 } {
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
@@ -71,7 +73,7 @@ export function renderWithProviders(
   }
 
   // Return an object with the store and all of RTL's query functions
-  return { store, ...RNRender(ui, { wrapper: Wrapper, ...renderOptions }) }
+  return { store, ...RNRender(ui, { wrapper: Wrapper, ...renderOptions }) } as ReturnType<typeof renderWithProviders>
 }
 
 // This type extends the default options for render from RTL, as well

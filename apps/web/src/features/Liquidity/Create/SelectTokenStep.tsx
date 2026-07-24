@@ -43,12 +43,14 @@ import { CreatingPoolInfo, PoolAlreadyCreatedInfo } from '~/features/Liquidity/C
 import { useBlockedTokens } from '~/features/Liquidity/Create/hooks/useBlockedTokens'
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
 import { PoolParsingError } from '~/features/Liquidity/Create/PoolParsingError'
-import { DEFAULT_POSITION_STATE } from '~/features/Liquidity/Create/types'
+import { DEFAULT_FEE_DATA, DEFAULT_POSITION_STATE } from '~/features/Liquidity/Create/types'
 import { CurrencySelector } from '~/features/Liquidity/CurrencySelector'
 import { FeeTierSelector } from '~/features/Liquidity/FeeTierSelector'
 import { HookModal } from '~/features/Liquidity/HookModal'
 import { useAllFeeTierPoolData } from '~/features/Liquidity/hooks/useAllFeeTierPoolData'
+import { useSelectedFeeBreakdown } from '~/features/Liquidity/hooks/useSelectedFeeBreakdown'
 import { LpIncentivesAprDisplay } from '~/features/Liquidity/LPIncentives/LpIncentivesAprDisplay'
+import { getCreateFeeTierOptions, getSteeredRecommendedFee } from '~/features/Liquidity/utils/createFeeTiers'
 import { getDefaultFeeTiersWithData, getFeeTierKey } from '~/features/Liquidity/utils/feeTiers'
 import { hasLPFoTTransferError } from '~/features/Liquidity/utils/hasLPFoTTransferError'
 import { isUnsupportedLPChain } from '~/features/Liquidity/utils/isUnsupportedLPChain'
@@ -93,6 +95,8 @@ export function SelectTokensStep({
   const [showWrappedNativeWarning, setShowWrappedNativeWarning] = useState(false)
   const isAddLiquidityRevamp = useFeatureFlag(FeatureFlags.AddLiquidityRevamp)
   const isLpIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
+  const isV4FeeDisplayEnabled = useFeatureFlag(FeatureFlags.V4ProtocolFeeDisplay)
+  const isL2DefaultTickSpacingEnabled = useFeatureFlag(FeatureFlags.L2DefaultTickSpacing)
   const allowedV4WethHookAddresses: string[] = useDynamicConfigValue({
     config: DynamicConfigs.AllowedV4WethHookAddresses,
     key: AllowedV4WethHookAddressesConfigKey.HookAddresses,
@@ -108,11 +112,21 @@ export function SelectTokensStep({
     poolOrPairLoading,
     poolOrPair,
     poolId,
+    protocolFee,
     setFeeTierSearchModalOpen,
   } = useCreateLiquidityContext()
 
   const token0 = currencyInputs.tokenA
   const token1 = currencyInputs.tokenB
+  // Behind V4ProtocolFeeDisplay, each v4 default tier is either kept (its pool already holds >= $5k, so
+  // users add to it) or swapped for the paired new, lower fee tier (labeled by effective rate). See
+  // getCreateFeeTierOptions.
+  const useNewDefaultFeeTiers = isV4FeeDisplayEnabled && protocolVersion === ProtocolVersion.V4
+  // Newly created L2 tiers use 1x the fee tier (instead of 2x) when the flag is on; the util does the L2 check.
+  const l2TickSpacingConfig = useMemo(
+    () => ({ chainId: token0?.chainId, l2TickSpacingEnabled: isL2DefaultTickSpacingEnabled }),
+    [token0?.chainId, isL2DefaultTickSpacingEnabled],
+  )
   const [currencySearchInputState, setCurrencySearchInputState] = useState<'tokenA' | 'tokenB' | undefined>(undefined)
   const [isShowMoreFeeTiersEnabled, toggleShowMoreFeeTiersEnabled] = useReducer((state) => !state, false)
 
@@ -204,23 +218,24 @@ export function SelectTokensStep({
     return undefined
   }, [hasExistingFeeTiers, feeTierData])
 
+  // Pre-select the most-used tier from existing pools; when there are none, select nothing. Behind
+  // V4ProtocolFeeDisplay, steer a shallow canonical default to its paired new tier so the pre-selection
+  // matches a rendered card. The revamped add-liquidity flow handles its own fee defaults. follow-up: LP-1074
   useEffect(() => {
-    if (fee || isAddLiquidityRevamp) {
+    if (fee || isAddLiquidityRevamp || !mostUsedFeeTier) {
       return
     }
 
-    if (mostUsedFeeTier) {
-      setPositionState((prevState) => ({
-        ...prevState,
-        fee: mostUsedFeeTier.fee,
-      }))
-      sendAnalyticsEvent(LiquidityEventName.SelectLiquidityPoolFeeTier, {
-        action: FeePoolSelectAction.Recommended,
-        fee_tier: mostUsedFeeTier.fee.feeAmount,
-        ...trace,
-      })
-    }
-  }, [mostUsedFeeTier, fee, setPositionState, trace, isAddLiquidityRevamp])
+    const recommendedFee = useNewDefaultFeeTiers
+      ? getSteeredRecommendedFee({ mostUsedFee: mostUsedFeeTier.fee, tvl: mostUsedFeeTier.tvl, l2TickSpacingConfig })
+      : mostUsedFeeTier.fee
+    setPositionState((prevState) => ({ ...prevState, fee: recommendedFee }))
+    sendAnalyticsEvent(LiquidityEventName.SelectLiquidityPoolFeeTier, {
+      action: FeePoolSelectAction.Recommended,
+      fee_tier: recommendedFee.feeAmount,
+      ...trace,
+    })
+  }, [mostUsedFeeTier, fee, setPositionState, trace, isAddLiquidityRevamp, useNewDefaultFeeTiers, l2TickSpacingConfig])
 
   const { chains } = useEnabledChains({ platform: Platform.EVM })
   const supportedChains = useMemo(() => {
@@ -372,6 +387,23 @@ export function SelectTokensStep({
 
   const defaultFeeTiers = getDefaultFeeTiersWithData({ chainId: token0?.chainId, feeTierData, protocolVersion })
 
+  const feeTierOptions = useMemo(
+    () =>
+      getCreateFeeTierOptions({
+        isFeeDisplayEnabled: isV4FeeDisplayEnabled,
+        protocolVersion,
+        defaultFeeTiers,
+        feeTierData,
+        hook,
+        l2TickSpacingConfig,
+      }),
+    [isV4FeeDisplayEnabled, protocolVersion, defaultFeeTiers, feeTierData, hook, l2TickSpacingConfig],
+  )
+
+  // Breakdown for the fee shown in the selector header (the collapsed "0.25% fee tier" summary), so it
+  // gets the same LP fee + hover tooltip as the tier boxes.
+  const selectedFeeBreakdown = useSelectedFeeBreakdown({ protocolVersion, fee, servedProtocolFee: protocolFee, hook })
+
   return (
     <>
       {hook && (
@@ -441,11 +473,21 @@ export function SelectTokensStep({
             </Text>
           </Flex>
 
-          {protocolVersion !== ProtocolVersion.V2 && (
+          {protocolVersion === ProtocolVersion.V2 ? (
+            // V2 pairs always have a fixed 0.3% fee, so show it without the option to change it
+            <FeeTierSelector
+              selectedFee={DEFAULT_FEE_DATA}
+              onFeeSelect={handleFeeTierSelect}
+              feeTiers={[]}
+              readOnly
+              selectedFeeBreakdown={selectedFeeBreakdown}
+            />
+          ) : (
             <FeeTierSelector
               selectedFee={fee}
               onFeeSelect={handleFeeTierSelect}
-              feeTiers={defaultFeeTiers}
+              feeTiers={feeTierOptions}
+              selectedFeeBreakdown={selectedFeeBreakdown}
               disabled={
                 hasError || !currencyInputs.tokenA || !currencyInputs.tokenB || Boolean(migratingPosition?.isOutOfRange)
               }
@@ -552,7 +594,7 @@ export function SelectTokensStep({
             key="SelectTokensStep-continue"
             onPress={handleOnContinue}
             loading={Boolean(poolOrPairLoading && token0 && token1 && fee)}
-            isDisabled={
+            disabled={
               !(creatingPoolOrPair || poolOrPair) || hasError || (showWrappedNativeWarning && !!wrappedNativeWarning)
             }
           >

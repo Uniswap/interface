@@ -4,17 +4,17 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
-const mockNavigateToSwapFlow = jest.fn()
-const mockNavigateToSend = jest.fn()
+const mockNavigateToSwapFlow = vi.fn()
+const mockNavigateToSend = vi.fn()
 
-jest.mock('wallet/src/contexts/WalletNavigationContext', () => ({
+vi.mock('wallet/src/contexts/WalletNavigationContext', () => ({
   useWalletNavigation: () => ({
     navigateToSwapFlow: mockNavigateToSwapFlow,
     navigateToSend: mockNavigateToSend,
   }),
 }))
 
-jest.mock('wallet/src/features/wallet/hooks', () => ({
+vi.mock('wallet/src/features/wallet/hooks', () => ({
   useActiveAccountAddressWithThrow: () => '0xTestAddress',
 }))
 
@@ -73,11 +73,11 @@ let mockCrossChainResult = {
   otherChainBalances: null as PortfolioBalance[] | null,
 }
 
-jest.mock('uniswap/src/data/balances/hooks/useCrossChainBalances', () => ({
+vi.mock('uniswap/src/data/balances/hooks/useCrossChainBalances', () => ({
   useCrossChainBalances: () => mockCrossChainResult,
 }))
 
-jest.mock('uniswap/src/data/graphql/uniswap-data-api/fragments', () => ({
+vi.mock('uniswap/src/data/graphql/uniswap-data-api/fragments', () => ({
   useTokenBasicProjectPartsFragment: () => ({
     data: { project: { tokens: [] } },
   }),
@@ -90,7 +90,7 @@ const defaultArgs = {
 
 describe(useNetworkBalanceSheet, () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockCrossChainResult = {
       currentChainBalance: null,
       otherChainBalances: null,

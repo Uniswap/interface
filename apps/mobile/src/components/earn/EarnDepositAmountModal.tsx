@@ -12,13 +12,16 @@ import {
   getEarnVaultAnalyticsProperties,
   logEarnTransactionEvent,
 } from 'uniswap/src/features/earn/analytics'
+import { useEarnPosition } from 'uniswap/src/features/earn/hooks/useEarnPosition'
 import { EarnAction } from 'uniswap/src/features/earn/types'
+import { resolveEarnAmountPosition } from 'uniswap/src/features/earn/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 export function EarnDepositAmountModal({
   analyticsEntryPoint = EarnEntryPoint.GlobalModal,
   vault,
-  position,
+  position: prefetchedPosition,
   initialAction,
   initialChainId,
   initialAmount,
@@ -36,6 +39,17 @@ export function EarnDepositAmountModal({
   // Capture navigation outside the bottom-sheet portal; portal navigation may miss `replace`.
   const navigation = useAppStackNavigation()
   const startedAnalyticsKeysRef = useRef(new Set<string>())
+  const walletAddress = useActiveAccountAddress()
+  const { position: livePosition } = useEarnPosition({
+    vault,
+    walletAddress: walletAddress ?? undefined,
+    isConnected: true,
+    enabled: isOpen,
+    prefetchedPosition,
+  })
+  const position = prefetchedPosition
+    ? resolveEarnAmountPosition({ livePosition, snapshotPosition: prefetchedPosition })
+    : livePosition
 
   const analyticsProperties = useMemo(() => {
     if (!vault) {
@@ -179,6 +193,19 @@ export function EarnDepositAmountModal({
     })
   }, [navigation, vault])
 
+  const handleOpenVaultDetails = useCallback(() => {
+    if (!vault) {
+      return
+    }
+    navigation.navigate(ModalName.EarnVault, {
+      analyticsEntryPoint,
+      vault,
+      position,
+      initialSelectedTab: 'details',
+      isInfoOnly: true,
+    })
+  }, [analyticsEntryPoint, navigation, position, vault])
+
   if (!vault) {
     return null
   }
@@ -203,6 +230,7 @@ export function EarnDepositAmountModal({
         initialWithdrawMode={initialWithdrawMode}
         minimumBalanceDataUpdatedAtMs={minimumBalanceDataUpdatedAtMs}
         onReview={handleReview}
+        onOpenVaultDetails={handleOpenVaultDetails}
         onOpenNetworkSelector={handleOpenNetworkSelector}
         onOpenDepositSourceSelector={handleOpenDepositSourceSelector}
       />

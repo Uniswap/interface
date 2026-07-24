@@ -122,7 +122,7 @@ export function SubmitSwapButton({
         <Button
           variant={warningVariant}
           emphasis="primary"
-          isDisabled={disabled}
+          disabled={disabled}
           icon={icon}
           size={size}
           testID={TestID.Swap}
@@ -137,7 +137,7 @@ export function SubmitSwapButton({
         <Button
           variant={disabled ? 'default' : 'branded'}
           emphasis={disabled ? 'secondary' : 'primary'}
-          isDisabled={disabled}
+          disabled={disabled}
           icon={icon}
           size={size}
           testID={TestID.Swap}

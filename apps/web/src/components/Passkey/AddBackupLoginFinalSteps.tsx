@@ -35,7 +35,7 @@ export function ConfirmPasscodeExtra({
         loading={isSigningIn}
         shouldAnimateBetweenLoadingStates={false}
         onPress={handleSignInWithPasskey}
-        isDisabled={!isReady || isSigningIn}
+        disabled={!isReady || isSigningIn}
       >
         {t('swap.button.submitting.passkey')}
       </Button>

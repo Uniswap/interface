@@ -3,6 +3,7 @@ import { useQuery } from '@connectrpc/connect-query'
 import type { UseQueryResult } from '@tanstack/react-query'
 import { listRwaTokens } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
 import type { ListRwaTokensResponse, RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { entryGatewayProdPostTransport } from 'uniswap/src/data/rest/base'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
@@ -24,10 +25,11 @@ export function useListRwaTokensQuery({
 }): UseQueryResult<ListRwaTokensResponse, ConnectError> {
   const { chains: enabledChainIds } = useEnabledChains()
   const resolvedChainIds = chainIds.length > 0 ? chainIds : enabledChainIds
+  const isV2TokensEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
 
   return useQuery(
     listRwaTokens,
-    { category, chainIds: resolvedChainIds, includeSparkline1d },
+    { category, chainIds: resolvedChainIds, includeSparkline1d, useSubstreamData: isV2TokensEnabled },
     {
       transport: entryGatewayProdPostTransport,
       enabled: enabled && resolvedChainIds.length > 0,

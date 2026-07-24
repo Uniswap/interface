@@ -202,7 +202,7 @@ function ErrorScreen({ error, appStateResetter }: { error: Error; appStateResett
           <Button
             backgroundColor="$neutral1"
             emphasis="primary"
-            isDisabled={isRestarting}
+            disabled={isRestarting}
             loading={isRestarting}
             onPress={handleRestart}
           >

@@ -88,17 +88,20 @@ function AccountCardItemInner({
   const onPressEditWalletSettings = useCallback(() => {
     onClose()
 
-    if (selectedAccount?.type === AccountType.SignerMnemonic && !onlyLabeledWallet) {
-      navigate(ModalName.EditProfileSettingsModal, {
-        address,
-        accessPoint: UnitagScreens.UnitagConfirmation,
-      })
-    } else {
-      navigate(ModalName.EditLabelSettingsModal, {
-        address,
-        accessPoint: UnitagScreens.UnitagConfirmation,
-      })
-    }
+    // Wait for AccountSwitcher and the native context menu overlay to dismiss before opening the next modal.
+    setTimeout(() => {
+      if (selectedAccount?.type === AccountType.SignerMnemonic && !onlyLabeledWallet) {
+        navigate(ModalName.EditProfileSettingsModal, {
+          address,
+          accessPoint: UnitagScreens.UnitagConfirmation,
+        })
+      } else {
+        navigate(ModalName.EditLabelSettingsModal, {
+          address,
+          accessPoint: UnitagScreens.UnitagConfirmation,
+        })
+      }
+    }, MODAL_OPEN_WAIT_TIME)
   }, [selectedAccount?.type, onlyLabeledWallet, address, onClose])
 
   const onPressConnectionSettings = useCallback(() => {

@@ -245,21 +245,10 @@ const DEFAULT_FEE_DATA: FeeData = {
   isDynamic: false,
 }
 
-/** QuickLaunch: quick-launch auction duration presets (30 min / 1 h / 4 h). */
-export enum QuickLaunchDuration {
-  ThirtyMinutes = 'thirty_minutes',
-  OneHour = 'one_hour',
-  FourHours = 'four_hours',
-}
-
-export const DEFAULT_QUICK_LAUNCH_DURATION = QuickLaunchDuration.ThirtyMinutes
-
 interface CreateAuctionState {
   step: CreateAuctionStep
   /** QuickLaunch: locks everything except token info to the quick-launch preset (flag-gated UI). */
   quickLaunch: boolean
-  /** QuickLaunch: the one decision quick launch exposes — how long the auction runs. */
-  quickLaunchDuration: QuickLaunchDuration
   tokenForm: TokenFormState
   tokenColor: TokenAccentHex | undefined
   configureAuction: ConfigureAuctionFormState
@@ -279,7 +268,6 @@ export const DEFAULT_EXISTING_TOKEN_FORM: ExistingTokenFormState = {
 export const DEFAULT_CREATE_AUCTION_STATE: CreateAuctionState = {
   step: CreateAuctionStep.ADD_TOKEN_INFO,
   quickLaunch: true,
-  quickLaunchDuration: DEFAULT_QUICK_LAUNCH_DURATION,
   tokenColor: undefined,
   xVerification: undefined,
   customizePool: {
@@ -331,7 +319,6 @@ export const DEFAULT_CREATE_AUCTION_STATE: CreateAuctionState = {
 interface CreateAuctionStoreActions {
   setStep: (step: CreateAuctionStep) => void
   setQuickLaunch: (enabled: boolean) => void
-  setQuickLaunchDuration: (duration: QuickLaunchDuration) => void
   goToNextStep: () => void
   goToPreviousStep: () => void
   setTokenMode: (mode: TokenMode) => void

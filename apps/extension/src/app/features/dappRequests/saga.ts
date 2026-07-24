@@ -131,6 +131,21 @@ function* handleRequest(requestParams: DappRequestNoDappInfo) {
     }
   }
 
+  // ProviderDirect reads are answered by the background worker and have no sidebar UI.
+  // Reject defensively so one can never queue as an empty confirmable request.
+  if (requestParams.dappRequest.type === DappRequestType.ProviderDirect) {
+    const response: DappRequestRejectParams = {
+      errorResponse: {
+        type: DappResponseType.ErrorResponse,
+        error: serializeError(rpcErrors.methodNotSupported()),
+        requestId: requestParams.dappRequest.requestId,
+      },
+      senderTabInfo: requestParams.senderTabInfo,
+    }
+    yield* put(rejectRequest(response))
+    return
+  }
+
   if (requestParams.dappRequest.type === DappRequestType.UniswapOpenSidebar) {
     // We can auto-confirm these requests since they are only for navigating to a certain tab
     // At this point the sidebar is already open

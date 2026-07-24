@@ -1,11 +1,17 @@
 import { GraphQLApi } from '@universe/api'
 import { isAndroid } from '@universe/environment'
 import React, { memo, PropsWithChildren, ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { I18nManager } from 'react-native'
 import { SharedValue, useDerivedValue } from 'react-native-reanimated'
 import { LineChart, LineChartProvider } from 'react-native-wagmi-charts'
 import { Loader } from 'src/components/loading/loaders'
-import { CURSOR_INNER_SIZE, CURSOR_SIZE, TIME_RANGES } from 'src/components/PriceExplorer/constants'
+import {
+  CURSOR_INNER_SIZE,
+  CURSOR_SIZE,
+  historyDurationToLabel,
+  TIME_RANGES,
+} from 'src/components/PriceExplorer/constants'
 import PriceExplorerAnimatedNumber from 'src/components/PriceExplorer/PriceExplorerAnimatedNumber'
 import { PriceExplorerError } from 'src/components/PriceExplorer/PriceExplorerError'
 import { DatetimeText, RelativeChangeText } from 'src/components/PriceExplorer/Text'
@@ -104,6 +110,7 @@ export const PriceExplorer = memo(function PriceExplorerInner(): JSX.Element {
 })
 
 const PriceExplorerContent = memo(function PriceExplorerContentInner(): JSX.Element {
+  const { t } = useTranslation()
   const { currencyId, tokenColor, navigation } = useTokenDetailsContext()
   const isScreenNavigationReady = useIsScreenNavigationReady({ navigation })
   const preferProjectMarketData = useTokenDetailsPreferProjectMarketData()
@@ -179,16 +186,24 @@ const PriceExplorerContent = memo(function PriceExplorerContentInner(): JSX.Elem
   const chartYGutter = shouldZoomOut ? LOW_VARIANCE_Y_PADDING : DEFAULT_Y_PADDING
 
   const segmentedControlOptions = useMemo(() => {
-    return TIME_RANGES.map(([duration, label, elementName]) => ({
-      value: duration,
-      wrapper: <TimeRangeTraceWrapper key={`${duration}-trace`} elementName={elementName} />,
-      display: (
-        <Text allowFontScaling={false} testID={`token-details-chart-time-range-button-${label}`} variant="buttonLabel2">
-          {label}
-        </Text>
-      ),
-    }))
-  }, [])
+    return TIME_RANGES.map(([duration, elementName]) => {
+      const label = historyDurationToLabel(t, duration)
+
+      return {
+        value: duration,
+        wrapper: <TimeRangeTraceWrapper key={`${duration}-trace`} elementName={elementName} />,
+        display: (
+          <Text
+            allowFontScaling={false}
+            testID={`token-details-chart-time-range-button-${duration}`}
+            variant="buttonLabel2"
+          >
+            {label}
+          </Text>
+        ),
+      }
+    })
+  }, [t])
 
   if (!loading && !convertedSpot && selectedDuration === GraphQLApi.HistoryDuration.Day) {
     return <PriceExplorerError showRetry={error} onRetry={refetch} />

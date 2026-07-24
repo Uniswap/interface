@@ -54,7 +54,7 @@ function HomeScreenPortfolioContent({ setIsLayoutReady }: HomeScreenPortfolioPro
   const hideSplashScreen = useHideSplashScreen()
   const activeAccount = useActiveAccountWithThrow()
   const { showEmptyWalletState: hasNoWalletActivity } = useHomeScreenState()
-  const { header: portfolio, shouldShowWrappedBanner, outageModal } = useHomeScreenPortfolioHeader()
+  const { header: portfolio, outageModal } = useHomeScreenPortfolioHeader()
   const { shouldShowPoolsTab } = usePoolsTabVisibility(activeAccount.address)
   // A pools-only wallet (positions but no tokens/NFTs/activity) should still see its tabs.
   const showEmptyWalletState = hasNoWalletActivity && !shouldShowPoolsTab
@@ -287,11 +287,7 @@ function HomeScreenPortfolioContent({ setIsLayoutReady }: HomeScreenPortfolioPro
 
   return (
     <Screen edges={['left', 'right']} onLayout={hideSplashScreen}>
-      <HomeScreenPortfolioStatusBar
-        heightCollapsed={insets.top}
-        heightExpanded={headerHeight}
-        shouldShowWrappedBanner={shouldShowWrappedBanner}
-      />
+      <HomeScreenPortfolioStatusBar heightCollapsed={insets.top} heightExpanded={headerHeight} />
       <Flex fill style={{ paddingTop: insets.top }}>
         <ReactNavigationPerformanceView interactive screenName={MobileScreens.Home}>
           <Animated.FlatList

@@ -1,385 +1,169 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`renders text with few matches 1`] = `
-<View
-  style={
-    {
-      "flexDirection": "row",
-      "gap": 16,
-    }
-  }
->
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "#131313",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "400",
-        "lineHeight": 24.7,
-      }
-    }
-    suppressHighlighting={true}
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    A
-  </Text>
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "#131313",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "400",
-        "lineHeight": 24.7,
-      }
-    }
-    suppressHighlighting={true}
-  >
-     
-  </Text>
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "rgba(19, 19, 19, 0.35)",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "400",
-        "lineHeight": 24.7,
-      }
-    }
-    suppressHighlighting={true}
-  >
-    t
-  </Text>
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "rgba(19, 19, 19, 0.35)",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "400",
-        "lineHeight": 24.7,
-      }
-    }
-    suppressHighlighting={true}
-  >
-    e
-  </Text>
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "#131313",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "400",
-        "lineHeight": 24.7,
-      }
-    }
-    suppressHighlighting={true}
-  >
-    x
-  </Text>
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "#131313",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "400",
-        "lineHeight": 24.7,
-      }
-    }
-    suppressHighlighting={true}
-  >
-    t
-  </Text>
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "#131313",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "400",
-        "lineHeight": 24.7,
-      }
-    }
-    suppressHighlighting={true}
-  >
-     
-  </Text>
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "#131313",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "400",
-        "lineHeight": 24.7,
-      }
-    }
-    suppressHighlighting={true}
-  >
-    w
-  </Text>
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "#131313",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "400",
-        "lineHeight": 24.7,
-      }
-    }
-    suppressHighlighting={true}
-  >
-    i
-  </Text>
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "rgba(19, 19, 19, 0.35)",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "400",
-        "lineHeight": 24.7,
-      }
-    }
-    suppressHighlighting={true}
-  >
-    t
-  </Text>
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "rgba(19, 19, 19, 0.35)",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "400",
-        "lineHeight": 24.7,
-      }
-    }
-    suppressHighlighting={true}
-  >
-    h
-  </Text>
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "rgba(19, 19, 19, 0.35)",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "400",
-        "lineHeight": 24.7,
-      }
-    }
-    suppressHighlighting={true}
-  >
-    o
-  </Text>
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "rgba(19, 19, 19, 0.35)",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "400",
-        "lineHeight": 24.7,
-      }
-    }
-    suppressHighlighting={true}
-  >
-    u
-  </Text>
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "rgba(19, 19, 19, 0.35)",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "400",
-        "lineHeight": 24.7,
-      }
-    }
-    suppressHighlighting={true}
-  >
-    t
-  </Text>
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "rgba(19, 19, 19, 0.35)",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "400",
-        "lineHeight": 24.7,
-      }
-    }
-    suppressHighlighting={true}
-  >
-     
-  </Text>
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "rgba(19, 19, 19, 0.35)",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "400",
-        "lineHeight": 24.7,
-      }
-    }
-    suppressHighlighting={true}
-  >
-    m
-  </Text>
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "rgba(19, 19, 19, 0.35)",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "400",
-        "lineHeight": 24.7,
-      }
-    }
-    suppressHighlighting={true}
-  >
-    a
-  </Text>
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "rgba(19, 19, 19, 0.35)",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "400",
-        "lineHeight": 24.7,
-      }
-    }
-    suppressHighlighting={true}
-  >
-    t
-  </Text>
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "rgba(19, 19, 19, 0.35)",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "400",
-        "lineHeight": 24.7,
-      }
-    }
-    suppressHighlighting={true}
-  >
-    c
-  </Text>
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "rgba(19, 19, 19, 0.35)",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "400",
-        "lineHeight": 24.7,
-      }
-    }
-    suppressHighlighting={true}
-  >
-    h
-  </Text>
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "rgba(19, 19, 19, 0.35)",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "400",
-        "lineHeight": 24.7,
-      }
-    }
-    suppressHighlighting={true}
-  >
-    e
-  </Text>
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "rgba(19, 19, 19, 0.35)",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "400",
-        "lineHeight": 24.7,
-      }
-    }
-    suppressHighlighting={true}
-  >
-    s
-  </Text>
-</View>
+    <div
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa1360334076"
+    >
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+        data-disable-theme="true"
+      >
+        A
+      </span>
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+        data-disable-theme="true"
+      >
+         
+      </span>
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+        data-disable-theme="true"
+      >
+        t
+      </span>
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+        data-disable-theme="true"
+      >
+        e
+      </span>
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+        data-disable-theme="true"
+      >
+        x
+      </span>
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+        data-disable-theme="true"
+      >
+        t
+      </span>
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+        data-disable-theme="true"
+      >
+         
+      </span>
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+        data-disable-theme="true"
+      >
+        w
+      </span>
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+        data-disable-theme="true"
+      >
+        i
+      </span>
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+        data-disable-theme="true"
+      >
+        t
+      </span>
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+        data-disable-theme="true"
+      >
+        h
+      </span>
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+        data-disable-theme="true"
+      >
+        o
+      </span>
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+        data-disable-theme="true"
+      >
+        u
+      </span>
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+        data-disable-theme="true"
+      >
+        t
+      </span>
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+        data-disable-theme="true"
+      >
+         
+      </span>
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+        data-disable-theme="true"
+      >
+        m
+      </span>
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+        data-disable-theme="true"
+      >
+        a
+      </span>
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+        data-disable-theme="true"
+      >
+        t
+      </span>
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+        data-disable-theme="true"
+      >
+        c
+      </span>
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+        data-disable-theme="true"
+      >
+        h
+      </span>
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+        data-disable-theme="true"
+      >
+        e
+      </span>
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+        data-disable-theme="true"
+      >
+        s
+      </span>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;
 
 exports[`renders text without matches 1`] = `
-<Text
-  allowFontScaling={true}
-  maxFontSizeMultiplier={1.4}
-  numberOfLines={1}
-  style={
-    {
-      "color": "#131313",
-      "fontFamily": "Basel Grotesk",
-      "fontSize": 19,
-      "fontWeight": "400",
-      "lineHeight": 24.7,
-    }
-  }
-  suppressHighlighting={true}
->
-  A text without matches
-</Text>
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <span
+      class="font_body _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+      data-disable-theme="true"
+    >
+      A text without matches
+    </span>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;

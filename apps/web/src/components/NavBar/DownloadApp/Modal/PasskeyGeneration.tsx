@@ -93,7 +93,7 @@ export function PasskeyGenerationModal({
               emphasis="primary"
               variant="branded"
               size="large"
-              isDisabled={hasWalletCreationSuccess}
+              disabled={hasWalletCreationSuccess}
               loading={isPending && !hasWalletCreationSuccess}
               onPress={() => signInWithPasskey()}
             >

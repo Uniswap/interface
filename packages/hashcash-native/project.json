@@ -6,8 +6,6 @@
   "tags": ["platform:native", "scope:hashcash", "type:lib"],
   "targets": {
     "typecheck": {},
-    "typecheck:tsc": {},
-    "typecheck:tsgo": {},
     "clean": {
       "command": "rm -rf android/build node_modules/**/android/build lib",
       "options": {

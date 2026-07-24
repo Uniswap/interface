@@ -41,7 +41,7 @@ interface EVMTradeServiceContext {
 
   // Configuration dependencies
   getIsL2ChainId: (chainId?: UniverseChainId) => boolean
-  getMinAutoSlippageToleranceL2: () => number
+  getMinAutoSlippageToleranceL2: () => number | undefined
   // Some accounts (e.g. those with a delegation mismatch) can't use UniswapX even when the global flag is on.
   // Defaults to supported when not provided.
   getIsUniswapXSupported?: (chainId?: UniverseChainId) => boolean

@@ -220,7 +220,7 @@ export function ExistingTokenForm({ existing }: { existing: ExistingTokenFormSta
             size="large"
             emphasis="primary"
             onPress={handleContinue}
-            isDisabled={continueDisabled}
+            disabled={continueDisabled}
             onDisabledPress={continueDisabled ? handleDisabledContinuePress : undefined}
             fill
             backgroundColor={continueDisabled ? undefined : tokenColor}

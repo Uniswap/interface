@@ -1,4 +1,3 @@
-import { NetworkStatus } from '@apollo/client'
 import type { PlainMessage } from '@bufbuild/protobuf'
 import { GetWalletTokensProfitLossResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { useMemo } from 'react'
@@ -94,7 +93,6 @@ export function useTransformTokenTableData({
   refetching: boolean
   error: Error | undefined
   refetch: (() => void) | undefined
-  networkStatus: NetworkStatus
 } {
   const { evmAddress, svmAddress } = usePortfolioAddresses()
   const ownerAddresses = useMemo(
@@ -118,7 +116,7 @@ export function useTransformTokenTableData({
     loading,
     error,
     refetch,
-    networkStatus,
+    isPending,
   } = useSortedPortfolioBalancesMultichain({
     evmAddress,
     svmAddress,
@@ -128,9 +126,9 @@ export function useTransformTokenTableData({
 
   return useMemo(() => {
     // Only show empty state on initial load, not during refetch.
-    // networkStatus === NetworkStatus.loading means the query has never completed.
+    // 'pending' means the query has never completed.
     // This is synchronously true from the very first render when there is no cached data, even before isFetching is set.
-    const isInitialLoading = (networkStatus === NetworkStatus.loading && !sortedBalances) || isLoadingVaults
+    const isInitialLoading = (isPending && !sortedBalances) || isLoadingVaults
     const isRefetching = loading && !!sortedBalances
 
     if (isInitialLoading) {
@@ -142,7 +140,6 @@ export function useTransformTokenTableData({
         refetching: false,
         error,
         refetch,
-        networkStatus,
       }
     }
 
@@ -158,10 +155,9 @@ export function useTransformTokenTableData({
           refetching: false,
           error,
           refetch,
-          networkStatus,
         }
       }
-      return { visible: [], hidden: [], totalCount: 0, loading, refetching: false, error, refetch, networkStatus }
+      return { visible: [], hidden: [], totalCount: 0, loading, refetching: false, error, refetch }
     }
 
     const balancesWithTokens = (balances: PortfolioMultichainBalance[]): PortfolioMultichainBalance[] =>
@@ -313,7 +309,6 @@ export function useTransformTokenTableData({
       loading,
       refetching: isRefetching,
       refetch,
-      networkStatus,
       error,
     }
   }, [
@@ -321,12 +316,12 @@ export function useTransformTokenTableData({
     sortedBalances,
     error,
     refetch,
-    networkStatus,
     limit,
     tokenProfitLossData,
     isTestnetModeEnabled,
     currencyIdToTokenVisibility,
     isLoadingVaults,
     vaultShareCurrencyIds,
+    isPending,
   ])
 }

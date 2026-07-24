@@ -19,6 +19,7 @@ export const CHROME_EXTENSION_UNINSTALL_URL_PATH = '/extension/uninstall'
 // localhost CORS); prod uses the prod backend. An explicit override always wins.
 const STAGING_LIQUIDITY_SERVICE_URL = 'https://liquidity.backend-staging.api.uniswap.org'
 const PROD_LIQUIDITY_SERVICE_URL = 'https://liquidity.backend-prod.api.uniswap.org'
+const EARN_HELP_ARTICLE = '46865818181901-Earn-on-Uniswap'
 
 export const UniswapHelpUrls = {
   // Help and web articles/items
@@ -31,10 +32,14 @@ export const UniswapHelpUrls = {
     batchedSwaps: createHelpArticleUrl('36393697148045'),
     batchedSwapsFailure: `${createHelpArticleUrl('36393697148045')}#error-messages-and-troubleshooting`,
     batchedSwapsReview: createHelpArticleUrl('36394497329933'),
+    caliburUpgrades: createHelpArticleUrl('47047111847053-Upgrades-to-smart-wallet-contracts'),
     cexTransferKorea: createHelpArticleUrl('29425131525901-How-to-transfer-crypto-to-a-Uniswap-Wallet-in-Korea'),
     contractAddressExplainer: createHelpArticleUrl('26757826138637-What-is-a-token-contract-address'),
     dappProtectionInfo: createHelpArticleUrl('37781087046029'),
-    earnHelp: createHelpArticleUrl('46865818181901'),
+    earnHelp: createHelpArticleUrl(EARN_HELP_ARTICLE),
+    earnTroubleshooting: createHelpArticleUrl(EARN_HELP_ARTICLE, {
+      section: 'troubleshooting-errors',
+    }),
     extensionBiometricsEnrollment: createHelpArticleUrl('38225957094541'),
     extensionHelp: createHelpArticleUrl('24458735271181'),
     extensionDappTroubleshooting: createHelpArticleUrl(
@@ -214,7 +219,6 @@ export interface UniswapServiceUrls {
   amplitudeProxyUrl: string
   apiBaseUrl: string
   apiBaseUrlV2: string
-  complianceApiBaseUrl: string
   dataApiBaseUrlV2: string
   dataApiServiceUrl: string
   embeddedWalletHostname: string
@@ -246,12 +250,6 @@ export function getUniswapServiceUrls(overrides: UniswapUrlOverrides): UniswapSe
     apiBaseUrl: overrides.apiBaseUrlOverride || getCloudflareApiBaseUrl(),
 
     apiBaseUrlV2: overrides.apiBaseUrlV2Override || getCloudflareApiBaseUrl({ postfix: 'v2' }),
-
-    // Dev and staging both use the staging compliance backend; e2e and prod use prod.
-    complianceApiBaseUrl:
-      !isE2eTestEnv() && (isDevEnv() || isBetaStaging)
-        ? STAGING_ENTRY_GATEWAY_API_BASE_URL
-        : PROD_ENTRY_GATEWAY_API_BASE_URL,
 
     dataApiBaseUrlV2:
       overrides.apiBaseUrlV2Override || getCloudflareApiBaseUrl({ flow: TrafficFlows.DataApi, postfix: 'v2' }),

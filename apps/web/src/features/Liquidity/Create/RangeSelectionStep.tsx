@@ -251,7 +251,7 @@ const InitialPriceInput = () => {
           {defaultInitialPrice && (
             <Flex>
               <Button
-                isDisabled={priceDifference?.absoluteValue ? priceDifference.absoluteValue === 0 : !!initialPrice}
+                disabled={priceDifference?.absoluteValue ? priceDifference.absoluteValue === 0 : !!initialPrice}
                 variant="default"
                 emphasis="secondary"
                 size="xxsmall"
@@ -518,7 +518,7 @@ export const SelectPriceRangeStep = ({
       </Flex>
       {onContinue && (
         <Flex row>
-          <Button onPress={onContinue} isDisabled={invalidState}>
+          <Button onPress={onContinue} disabled={invalidState}>
             {t(`common.button.continue`)}
           </Button>
         </Flex>

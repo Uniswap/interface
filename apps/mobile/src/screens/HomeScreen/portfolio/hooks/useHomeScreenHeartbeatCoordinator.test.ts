@@ -4,26 +4,26 @@ import { HomeTab } from 'src/screens/HomeScreen/portfolio/types'
 import { useHeartbeatCoordinator } from 'src/utils/useHeartbeatCoordinator'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
-const mockQueryClientRefetchQueries = jest.fn().mockResolvedValue(undefined)
-const mockApolloRefetchQueries = jest.fn().mockResolvedValue(undefined)
+const mockQueryClientRefetchQueries = vi.fn().mockResolvedValue(undefined)
+const mockApolloRefetchQueries = vi.fn().mockResolvedValue(undefined)
 
-jest.mock('@tanstack/react-query', () => ({
+vi.mock('@tanstack/react-query', () => ({
   useQueryClient: () => ({ refetchQueries: mockQueryClientRefetchQueries }),
 }))
 
-jest.mock('@apollo/client', () => ({
+vi.mock('@apollo/client', () => ({
   useApolloClient: () => ({ refetchQueries: mockApolloRefetchQueries }),
 }))
 
-jest.mock('src/utils/useHeartbeatCoordinator', () => ({
-  useHeartbeatCoordinator: jest.fn(),
+vi.mock('src/utils/useHeartbeatCoordinator', () => ({
+  useHeartbeatCoordinator: vi.fn(),
 }))
 
-const mockUseHeartbeatCoordinator = jest.mocked(useHeartbeatCoordinator)
+const mockUseHeartbeatCoordinator = vi.mocked(useHeartbeatCoordinator)
 
 describe('useHomeScreenHeartbeatCoordinator', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockQueryClientRefetchQueries.mockReset().mockResolvedValue(undefined)
     mockApolloRefetchQueries.mockReset().mockResolvedValue(undefined)
   })

@@ -49,6 +49,8 @@ export class ToucanClearingPriceChartController {
   private latestData: ClearingPriceChartControllerUpdateParams['data'] = []
   /** Whether to use logical range positioning (75% visible data width) */
   private useLogicalRangePositioning = false
+  /** Whether the visible range snaps to the data edges in logical units (LP-806 no-bids full-width line) */
+  private snapVisibleRangeToDataEdges = false
   private isZoomEnabled = true
   private fullRangeStart: UTCTimestamp | null = null
   private fullRangeEnd: UTCTimestamp | null = null
@@ -152,6 +154,8 @@ export class ToucanClearingPriceChartController {
       hideXAxis,
       isZoomEnabled = true,
       disableMouseWheelInteractions = false,
+      snapVisibleRangeToDataEdges = false,
+      solidAreaFill = false,
       preBidEndTime,
     } = params
 
@@ -159,6 +163,7 @@ export class ToucanClearingPriceChartController {
 
     // Store positioning mode for coordinate calculations and resize handling
     this.useLogicalRangePositioning = useLogicalRangePositioning ?? false
+    this.snapVisibleRangeToDataEdges = snapVisibleRangeToDataEdges
     this.isZoomEnabled = isZoomEnabled
 
     const resolvedStart = fullRangeStart ?? visibleRangeStart ?? data[0]?.time ?? null
@@ -211,11 +216,19 @@ export class ToucanClearingPriceChartController {
       tokenColor: resolvedTokenColor,
       scaledYMin,
       scaledYMax,
+      solidAreaFill,
     })
     series.applyOptions(seriesOptions)
     this.preBidSeries?.applyOptions(seriesOptions)
 
-    applyVisibleRange({ chart, data, useLogicalRangePositioning, visibleRangeStart, visibleRangeEnd })
+    applyVisibleRange({
+      chart,
+      data,
+      useLogicalRangePositioning,
+      snapVisibleRangeToDataEdges,
+      visibleRangeStart,
+      visibleRangeEnd,
+    })
 
     this.latestScaleFactor = scaleFactor
     this.latestMaxFractionDigits = maxFractionDigits
@@ -343,7 +356,7 @@ export class ToucanClearingPriceChartController {
       width: this.container.clientWidth,
       height: this.createParams.height,
     })
-    if (this.latestZoomState.visibleRange) {
+    if (!this.snapVisibleRangeToDataEdges && this.latestZoomState.visibleRange) {
       this.chart.timeScale().setVisibleRange(
         this.latestZoomState.visibleRange as {
           from: UTCTimestamp
@@ -430,6 +443,11 @@ export class ToucanClearingPriceChartController {
     // Wrap in try-catch because setVisibleRange() and fitContent() can throw
     // if the chart's internal state isn't ready
     try {
+      if (this.snapVisibleRangeToDataEdges && this.latestData.length > 2) {
+        this.chart.timeScale().setVisibleLogicalRange({ from: 0.5, to: this.latestData.length - 1.5 })
+        this.syncZoomStateFromChart()
+        return
+      }
       if (this.initialRangeStart != null && this.initialRangeEnd != null) {
         this.chart.timeScale().setVisibleRange({
           from: this.initialRangeStart,
@@ -655,12 +673,14 @@ function applyVisibleRange({
   chart,
   data,
   useLogicalRangePositioning,
+  snapVisibleRangeToDataEdges,
   visibleRangeStart,
   visibleRangeEnd,
 }: {
   chart: IChartApi
   data: ClearingPriceChartPoint[]
   useLogicalRangePositioning: boolean | undefined
+  snapVisibleRangeToDataEdges?: boolean
   visibleRangeStart: UTCTimestamp | undefined
   visibleRangeEnd: UTCTimestamp | undefined
 }): void {
@@ -669,6 +689,10 @@ function applyVisibleRange({
     if (useLogicalRangePositioning && data.length > 0) {
       const logicalEnd = Math.ceil(data.length / 0.75)
       chart.timeScale().setVisibleLogicalRange({ from: 0, to: logicalEnd })
+    } else if (snapVisibleRangeToDataEdges && data.length > 2) {
+      // Half-bar offsets pin the first/last point centers exactly onto the chart edges —
+      // whole-index ranges leave half-bar margins on both sides (LP-806)
+      chart.timeScale().setVisibleLogicalRange({ from: 0.5, to: data.length - 1.5 })
     } else if (visibleRangeStart !== undefined && visibleRangeEnd !== undefined) {
       chart.timeScale().setVisibleRange({ from: visibleRangeStart, to: visibleRangeEnd })
     } else {

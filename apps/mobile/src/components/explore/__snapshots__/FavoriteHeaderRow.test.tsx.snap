@@ -1,417 +1,97 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`FavoriteHeaderRow when editing renders without error 1`] = `
-<View
-  style={
-    {
-      "alignItems": "center",
-      "flexDirection": "row",
-      "gap": 16,
-      "justifyContent": "space-between",
-      "marginBottom": 8,
-      "marginLeft": 8,
-      "marginRight": 8,
-    }
-  }
-  testID="favorite-token-header"
->
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "rgba(19, 19, 19, 0.63)",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 17,
-        "fontWeight": "400",
-        "lineHeight": 20,
-      }
-    }
-    suppressHighlighting={true}
+exports[`FavoriteHeaderRow > when editing > renders without error 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    Editing Title
-  </Text>
-  <View
-    handlerTags={
-      [
-        15,
-        14,
-        13,
-      ]
-    }
-    onGestureHandlerEvent={[Function]}
-    onGestureHandlerReanimatedEvent={
-      {
-        "workletEventHandler": WorkletEventHandlerWeb {
-          "eventNames": [],
-          "listeners": {},
-          "worklet": [Function],
-        },
-      }
-    }
-    onGestureHandlerStateChange={[Function]}
-    onGestureHandlerTouchEvent={[Function]}
-    pointerEvents="box-none"
-    style={
-      {
-        "display": "contents",
-      }
-    }
-  >
-    <RNGestureHandlerButton
-      accessible={true}
-      collapsable={false}
-      enabled={true}
-      forwardedRef={[Function]}
-      hitSlop={
-        {
-          "bottom": 16,
-          "left": 16,
-          "right": 16,
-          "top": 16,
-        }
-      }
-      jestAnimatedProps={
-        {
-          "value": {},
-        }
-      }
-      jestAnimatedStyle={
-        {
-          "value": {},
-        }
-      }
-      jestInlineStyle={
-        [
-          {
-            "backgroundColor": "transparent",
-            "borderBottomLeftRadius": 12,
-            "borderBottomRightRadius": 12,
-            "borderTopLeftRadius": 12,
-            "borderTopRightRadius": 12,
-            "flexDirection": "column",
-            "opacity": 1,
-            "transform": [
-              {
-                "scale": 1,
-              },
-            ],
-          },
-        ]
-      }
-      onBlur={[Function]}
-      onClick={[Function]}
-      onFocus={[Function]}
-      onLayout={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
-      rippleColor="transparent"
-      style={
-        [
-          {},
-          [
-            {
-              "backgroundColor": "transparent",
-              "borderBottomLeftRadius": 12,
-              "borderBottomRightRadius": 12,
-              "borderTopLeftRadius": 12,
-              "borderTopRightRadius": 12,
-              "flexDirection": "column",
-              "opacity": 1,
-              "transform": [
-                {
-                  "scale": 1,
-                },
-              ],
-            },
-            {},
-          ],
-        ]
-      }
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa1360334076 _justifyContent-space-betwe3241 _mb-t-space-spa94665593 _mr-t-space-spa94665593 _ml-t-space-spa94665593"
+      data-testid="favorite-token-header"
     >
-      <Text
-        allowFontScaling={true}
-        maxFontSizeMultiplier={1.2}
-        style={
-          {
-            "color": "#FF37C7",
-            "fontFamily": "Basel Grotesk",
-            "fontSize": 17,
-            "fontWeight": "500",
-            "lineHeight": 19.549999999999997,
-          }
-        }
-        suppressHighlighting={true}
-        testID="done"
+      <span
+        class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+        data-disable-theme="true"
       >
-        Done
-      </Text>
-    </RNGestureHandlerButton>
-  </View>
-</View>
+        Editing Title
+      </span>
+      <button
+        class="is_TouchableArea "
+        style="border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; flex-direction: column; opacity: 1; transform: [object Object];"
+      >
+        <span
+          class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh507465454"
+          data-disable-theme="true"
+          data-testid="done"
+        >
+          common.button.done
+        </span>
+      </button>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;
 
-exports[`FavoriteHeaderRow when not editing renders without error 1`] = `
-<View
-  style={
-    {
-      "alignItems": "center",
-      "flexDirection": "row",
-      "gap": 16,
-      "justifyContent": "space-between",
-      "marginBottom": 8,
-      "marginLeft": 8,
-      "marginRight": 8,
-    }
-  }
-  testID="favorite-token-header"
->
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "rgba(19, 19, 19, 0.63)",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 17,
-        "fontWeight": "400",
-        "lineHeight": 20,
-      }
-    }
-    suppressHighlighting={true}
+exports[`FavoriteHeaderRow > when not editing > renders without error 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    Title
-  </Text>
-  <View
-    handlerTags={
-      [
-        3,
-        2,
-        1,
-      ]
-    }
-    onGestureHandlerEvent={[Function]}
-    onGestureHandlerReanimatedEvent={
-      {
-        "workletEventHandler": WorkletEventHandlerWeb {
-          "eventNames": [],
-          "listeners": {},
-          "worklet": [Function],
-        },
-      }
-    }
-    onGestureHandlerStateChange={[Function]}
-    onGestureHandlerTouchEvent={[Function]}
-    pointerEvents="box-none"
-    style={
-      {
-        "display": "contents",
-      }
-    }
-  >
-    <RNGestureHandlerButton
-      accessible={true}
-      collapsable={false}
-      enabled={true}
-      forwardedRef={[Function]}
-      hitSlop={
-        {
-          "bottom": 16,
-          "left": 16,
-          "right": 16,
-          "top": 16,
-        }
-      }
-      jestAnimatedProps={
-        {
-          "value": {},
-        }
-      }
-      jestAnimatedStyle={
-        {
-          "value": {},
-        }
-      }
-      jestInlineStyle={
-        [
-          {
-            "backgroundColor": "transparent",
-            "borderBottomLeftRadius": 12,
-            "borderBottomRightRadius": 12,
-            "borderTopLeftRadius": 12,
-            "borderTopRightRadius": 12,
-            "flexDirection": "column",
-            "opacity": 1,
-            "transform": [
-              {
-                "scale": 1,
-              },
-            ],
-          },
-        ]
-      }
-      onBlur={[Function]}
-      onClick={[Function]}
-      onFocus={[Function]}
-      onLayout={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
-      rippleColor="transparent"
-      style={
-        [
-          {},
-          [
-            {
-              "backgroundColor": "transparent",
-              "borderBottomLeftRadius": 12,
-              "borderBottomRightRadius": 12,
-              "borderTopLeftRadius": 12,
-              "borderTopRightRadius": 12,
-              "flexDirection": "column",
-              "opacity": 1,
-              "transform": [
-                {
-                  "scale": 1,
-                },
-              ],
-            },
-            {},
-          ],
-        ]
-      }
-      testID="edit"
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa1360334076 _justifyContent-space-betwe3241 _mb-t-space-spa94665593 _mr-t-space-spa94665593 _ml-t-space-spa94665593"
+      data-testid="favorite-token-header"
     >
-      <RNSVGSvgView
-        align="xMidYMid"
-        bbHeight={20}
-        bbWidth={20}
-        fill="none"
-        focusable={false}
-        meetOrSlice={0}
-        minX={0}
-        minY={0}
-        strokeLinecap="round"
-        strokeWidth={1}
-        style={
-          [
-            {
-              "backgroundColor": "transparent",
-              "borderWidth": 0,
-            },
-            {
-              "color": "rgba(19, 19, 19, 0.63)",
-              "height": 20,
-              "width": 20,
-            },
-            {
-              "flex": 0,
-              "height": 20,
-              "width": 20,
-            },
-          ]
-        }
-        vbHeight={4}
-        vbWidth={18}
+      <span
+        class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+        data-disable-theme="true"
       >
-        <RNSVGGroup
-          color="rgba(19, 19, 19, 0.63)"
-          fill={null}
-          propList={
-            [
-              "fill",
-              "strokeWidth",
-              "strokeLinecap",
-            ]
-          }
-          strokeLinecap={1}
-          strokeWidth={1}
+        Title
+      </span>
+      <button
+        class="is_TouchableArea "
+        data-testid="edit"
+        style="border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; flex-direction: column; opacity: 1; transform: [object Object];"
+        testid="edit"
+      >
+        <div
+          fill="none"
+          stroke-linecap="round"
+          stroke-width="1"
+          style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+          viewbox="0 0 18 4"
         >
-          <RNSVGPath
+          <div
             d="M9 3C9.55228 3 10 2.55228 10 2C10 1.44772 9.55228 1 9 1C8.44772 1 8 1.44772 8 2C8 2.55228 8.44772 3 9 3Z"
-            fill={
-              {
-                "payload": 4278190080,
-                "type": 0,
-              }
-            }
-            propList={
-              [
-                "stroke",
-                "strokeWidth",
-                "strokeLinecap",
-                "strokeLinejoin",
-              ]
-            }
-            stroke={
-              {
-                "type": 2,
-              }
-            }
-            strokeLinecap={1}
-            strokeLinejoin={1}
-            strokeWidth="2"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
           />
-          <RNSVGPath
+          <div
             d="M16 3C16.5523 3 17 2.55228 17 2C17 1.44772 16.5523 1 16 1C15.4477 1 15 1.44772 15 2C15 2.55228 15.4477 3 16 3Z"
-            fill={
-              {
-                "payload": 4278190080,
-                "type": 0,
-              }
-            }
-            propList={
-              [
-                "stroke",
-                "strokeWidth",
-                "strokeLinecap",
-                "strokeLinejoin",
-              ]
-            }
-            stroke={
-              {
-                "type": 2,
-              }
-            }
-            strokeLinecap={1}
-            strokeLinejoin={1}
-            strokeWidth="2"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
           />
-          <RNSVGPath
+          <div
             d="M2 3C2.55228 3 3 2.55228 3 2C3 1.44772 2.55228 1 2 1C1.44772 1 1 1.44772 1 2C1 2.55228 1.44772 3 2 3Z"
-            fill={
-              {
-                "payload": 4278190080,
-                "type": 0,
-              }
-            }
-            propList={
-              [
-                "stroke",
-                "strokeWidth",
-                "strokeLinecap",
-                "strokeLinejoin",
-              ]
-            }
-            stroke={
-              {
-                "type": 2,
-              }
-            }
-            strokeLinecap={1}
-            strokeLinejoin={1}
-            strokeWidth="2"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
           />
-        </RNSVGGroup>
-      </RNSVGSvgView>
-    </RNGestureHandlerButton>
-  </View>
-</View>
+        </div>
+      </button>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;

@@ -1,48 +1,45 @@
 import { renderHook } from '@testing-library/react'
+import { useFeatureFlag } from '@universe/gating'
 import { useMobileTDPHeartbeatCoordinator } from 'src/screens/TokenDetailsScreen/useMobileTDPHeartbeatCoordinator'
 import { useHeartbeatCoordinator } from 'src/utils/useHeartbeatCoordinator'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
-const mockApolloRefetchQueries = jest.fn().mockResolvedValue(undefined)
-const mockQueryClientRefetchQueries = jest.fn().mockResolvedValue(undefined)
+const mockApolloRefetchQueries = vi.fn().mockResolvedValue(undefined)
+const mockQueryClientRefetchQueries = vi.fn().mockResolvedValue(undefined)
 
-jest.mock('@apollo/client', () => ({
+vi.mock('@apollo/client', () => ({
   useApolloClient: () => ({ refetchQueries: mockApolloRefetchQueries }),
 }))
 
-jest.mock('@tanstack/react-query', () => ({
+vi.mock('@tanstack/react-query', () => ({
   useQueryClient: () => ({ refetchQueries: mockQueryClientRefetchQueries }),
 }))
 
-jest.mock('@universe/gating', () => ({
+vi.mock('@universe/gating', () => ({
   FeatureFlags: { Earn: 'earn' },
-  useFeatureFlag: jest.fn(),
+  useFeatureFlag: vi.fn(),
 }))
 
-jest.mock('wallet/src/features/wallet/hooks', () => ({
-  useActiveAccountAddress: jest.fn(),
+vi.mock('wallet/src/features/wallet/hooks', () => ({
+  useActiveAccountAddress: vi.fn(),
 }))
 
-jest.mock('src/utils/useHeartbeatCoordinator', () => ({
-  useHeartbeatCoordinator: jest.fn(),
+vi.mock('src/utils/useHeartbeatCoordinator', () => ({
+  useHeartbeatCoordinator: vi.fn(),
 }))
 
-const mockUseFeatureFlag = jest.mocked(
-  (jest.requireMock('@universe/gating') as { useFeatureFlag: jest.Mock }).useFeatureFlag,
-)
-const mockUseActiveAccountAddress = jest.mocked(
-  (jest.requireMock('wallet/src/features/wallet/hooks') as { useActiveAccountAddress: jest.Mock })
-    .useActiveAccountAddress,
-)
-const mockUseHeartbeatCoordinator = jest.mocked(useHeartbeatCoordinator)
+const mockUseFeatureFlag = vi.mocked(useFeatureFlag)
+const mockUseActiveAccountAddress = vi.mocked(useActiveAccountAddress)
+const mockUseHeartbeatCoordinator = vi.mocked(useHeartbeatCoordinator)
 
 describe('useMobileTDPHeartbeatCoordinator', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockApolloRefetchQueries.mockReset().mockResolvedValue(undefined)
     mockQueryClientRefetchQueries.mockReset().mockResolvedValue(undefined)
     mockUseFeatureFlag.mockReturnValue(false)
-    mockUseActiveAccountAddress.mockReturnValue(undefined)
+    mockUseActiveAccountAddress.mockReturnValue(null)
   })
 
   it('passes enabled through to the shared coordinator', () => {
@@ -99,7 +96,7 @@ describe('useMobileTDPHeartbeatCoordinator', () => {
 
   it('skips balances and earn refetches when there is no active address', async () => {
     mockUseFeatureFlag.mockReturnValue(true)
-    mockUseActiveAccountAddress.mockReturnValue(undefined)
+    mockUseActiveAccountAddress.mockReturnValue(null)
     renderHook(() => useMobileTDPHeartbeatCoordinator({ enabled: true }))
 
     const { refresh } = mockUseHeartbeatCoordinator.mock.calls[0]![0]

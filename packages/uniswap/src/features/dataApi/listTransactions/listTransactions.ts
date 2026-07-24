@@ -8,7 +8,6 @@ import { useListTransactionsQuery } from 'uniswap/src/data/rest/listTransactions
 import { parseToTransactionDetails } from 'uniswap/src/features/activity/parseToTransactionDetails'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { mapRestStatusToNetworkStatus } from 'uniswap/src/features/dataApi/balances/utils'
 import type { BaseResult, PaginationControls } from 'uniswap/src/features/dataApi/types'
 import { useHideReportedActivitySetting } from 'uniswap/src/features/settings/hooks'
 import type { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -64,7 +63,8 @@ export function useListTransactions({
     isFetching,
     error,
     refetch,
-    status: restStatus,
+    isPending,
+    isError,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
@@ -121,7 +121,8 @@ export function useListTransactions({
     data: filteredTransactions,
     loading: isLoading,
     isFetching,
-    networkStatus: mapRestStatusToNetworkStatus(restStatus),
+    isPending,
+    isError,
     refetch,
     error: error || undefined,
     dataUpdatedAt: dataUpdatedAt || undefined,

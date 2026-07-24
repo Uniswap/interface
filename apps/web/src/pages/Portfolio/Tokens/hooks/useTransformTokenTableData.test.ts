@@ -1,4 +1,3 @@
-import { NetworkStatus } from '@apollo/client'
 import { GetWalletTokensProfitLossResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { Token } from '@uniswap/sdk-core'
 import { USDC_ARBITRUM, USDC_MAINNET } from 'uniswap/src/constants/tokens'
@@ -116,6 +115,7 @@ const EARN_VAULT: EarnVaultInfo = {
   chainId: UniverseChainId.Mainnet,
   apyPercent: 4,
   exposureCurrencyIds: [buildCurrencyId(UniverseChainId.Mainnet, USDC_MAINNET.address)],
+  exposures: [],
   totalDepositsUsd: 1_000_000,
   liquidityUsd: 1_000_000,
   curator: { name: 'Gauntlet' },
@@ -134,8 +134,6 @@ describe('useTransformTokenTableData', () => {
       balancesById: undefined,
       loading: false,
       error: undefined,
-      refetch: undefined,
-      networkStatus: NetworkStatus.ready,
     } as ReturnType<typeof useSortedPortfolioBalancesMultichain>)
     mockUseIsEarnEnabled.mockReturnValue(true)
     mockUseEarnVaults.mockReturnValue({
@@ -157,8 +155,6 @@ describe('useTransformTokenTableData', () => {
       balancesById: undefined,
       loading: false,
       error: undefined,
-      refetch: undefined,
-      networkStatus: NetworkStatus.ready,
     } as ReturnType<typeof useSortedPortfolioBalancesMultichain>)
 
     const { result } = renderHook(() => useTransformTokenTableData({}))
@@ -187,7 +183,8 @@ describe('useTransformTokenTableData', () => {
       loading: false,
       error: undefined,
       refetch: vi.fn(),
-      networkStatus: NetworkStatus.ready,
+      isPending: false,
+      isError: false,
     } as ReturnType<typeof useSortedPortfolioBalancesMultichain>)
 
     const { result } = renderHook(() => useTransformTokenTableData({}))
@@ -217,7 +214,8 @@ describe('useTransformTokenTableData', () => {
       loading: false,
       error: undefined,
       refetch: vi.fn(),
-      networkStatus: NetworkStatus.ready,
+      isPending: false,
+      isError: false,
     } as ReturnType<typeof useSortedPortfolioBalancesMultichain>)
 
     const { result } = renderHook(() => useTransformTokenTableData({}))
@@ -259,7 +257,8 @@ describe('useTransformTokenTableData', () => {
       loading: false,
       error: undefined,
       refetch: vi.fn(),
-      networkStatus: NetworkStatus.ready,
+      isPending: false,
+      isError: false,
     } as ReturnType<typeof useSortedPortfolioBalancesMultichain>)
 
     const { result } = renderHook(() => useTransformTokenTableData({}))
@@ -296,7 +295,8 @@ describe('useTransformTokenTableData', () => {
       loading: false,
       error: undefined,
       refetch: vi.fn(),
-      networkStatus: NetworkStatus.ready,
+      isPending: false,
+      isError: false,
     } as ReturnType<typeof useSortedPortfolioBalancesMultichain>)
 
     const { result } = renderHook(() => useTransformTokenTableData({}))
@@ -331,7 +331,8 @@ describe('useTransformTokenTableData', () => {
       loading: false,
       error: undefined,
       refetch: vi.fn(),
-      networkStatus: NetworkStatus.ready,
+      isPending: false,
+      isError: false,
     } as ReturnType<typeof useSortedPortfolioBalancesMultichain>)
 
     const { result } = renderHook(() => useTransformTokenTableData({}))
@@ -420,7 +421,8 @@ describe('useTransformTokenTableData', () => {
       loading: false,
       error: undefined,
       refetch: vi.fn(),
-      networkStatus: NetworkStatus.ready,
+      isPending: false,
+      isError: false,
     } as ReturnType<typeof useSortedPortfolioBalancesMultichain>)
 
     const { result } = renderHook(() =>
@@ -494,7 +496,8 @@ describe('useTransformTokenTableData', () => {
       loading: false,
       error: undefined,
       refetch: vi.fn(),
-      networkStatus: NetworkStatus.ready,
+      isPending: false,
+      isError: false,
     } as ReturnType<typeof useSortedPortfolioBalancesMultichain>)
 
     const { result } = renderHook(() =>
@@ -551,7 +554,8 @@ describe('useTransformTokenTableData', () => {
       loading: false,
       error: undefined,
       refetch: vi.fn(),
-      networkStatus: NetworkStatus.ready,
+      isPending: false,
+      isError: false,
     } as ReturnType<typeof useSortedPortfolioBalancesMultichain>)
 
     const { result } = renderHook(() =>
@@ -586,7 +590,8 @@ describe('useTransformTokenTableData', () => {
       loading: false,
       error: undefined,
       refetch: vi.fn(),
-      networkStatus: NetworkStatus.ready,
+      isPending: false,
+      isError: false,
     } as ReturnType<typeof useSortedPortfolioBalancesMultichain>)
 
     const { result } = renderHook(() => useTransformTokenTableData({}))

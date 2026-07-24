@@ -12,6 +12,9 @@ export type PriceSourceTag =
   | 'tapi_quote'
   | 'legacy_subgraph'
   | 'legacy_coingecko'
+  // Displayed USD values were derived from the trade quote itself (one side anchored
+  // to an external price, the other converted through the quote — see INFRA-2364).
+  | 'trade_derived'
 
 /**
  * Which UI surface displayed the price. Different surfaces fall back to
@@ -28,6 +31,13 @@ interface Args {
   surface: PriceSurface
   chainId: number
   address: string
+  /**
+   * True when the displayed USD values were trade-derived: one side anchored to an
+   * external price and the other converted through the trade quote (route mid or
+   * execution price), rather than each side reading its own oracle. Takes precedence
+   * over per-token cache sources since no single token's source describes the pair.
+   */
+  isTradeDerivedUsd?: boolean
   /**
    * The React Query client whose cache holds the prices written by
    * `LivePricesProvider`. Pass the platform's shared client (e.g.
@@ -53,7 +63,12 @@ export function getDisplayedPriceSource({
   chainId,
   address,
   queryClient,
+  isTradeDerivedUsd,
 }: Args): PriceSourceTag {
+  if (isTradeDerivedUsd) {
+    return 'trade_derived'
+  }
+
   if (!isCentralizedPricesEnabled) {
     if (surface === 'usdc') {
       return 'tapi_quote'

@@ -102,7 +102,17 @@ test.describe(
     test('should bridge from ETH to L2', async ({ page, anvil }) => {
       await stubTradingApiEndpoint({ page, endpoint: V1_TRADING_API_PATHS.swap })
       await stubTradingApiEndpoint({ page, endpoint: V1_TRADING_API_PATHS.quote })
+      // The app decides whether ETH (mainnet) -> ETH (Base) is a bridgeable pair via a synchronous
+      // read of the prefetched `/swappable_tokens` react-query cache (`checkIsBridgePair`). If the
+      // output token is selected before that prefetch has resolved, the selection is treated as a
+      // plain chain switch and the input currency is cleared, unmounting the amount input. Wait for
+      // the mainnet prefetch before opening the token selector so the bridge pair is recognized.
+      const swappableTokensPrefetch = page.waitForResponse((response) => {
+        const url = new URL(response.url())
+        return url.pathname.endsWith('/swappable_tokens') && url.searchParams.get('tokenInChainId') === '1'
+      })
       await page.goto(`/swap?inputCurrency=ETH`)
+      await swappableTokensPrefetch
       await page.getByTestId(TestID.ChooseOutputToken).click()
       await page.getByTestId(TestID.ExploreSearchInput).fill('Base ETH') // necessary to guarantee token option shows up in DOM bc of virtualized token selector list
       await page.getByTestId(`token-option-${UniverseChainId.Base}-ETH`).first().click()

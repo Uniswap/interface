@@ -154,7 +154,7 @@ export function PortfolioPoolsRewardsCard({
                 size="xsmall"
                 emphasis="secondary"
                 fill={false}
-                isDisabled={hasError || isPendingTransaction}
+                disabled={hasError || isPendingTransaction}
                 onPress={openModal}
               >
                 {t('common.collect.button')}

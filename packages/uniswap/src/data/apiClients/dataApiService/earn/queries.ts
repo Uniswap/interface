@@ -8,7 +8,7 @@ import type {
   ListEarnVaultsRequest,
   ListEarnVaultsResponse,
 } from '@uniswap/client-data-api/dist/data/v2/api_pb'
-import { DataApiV2ServiceClient } from 'uniswap/src/data/apiClients/dataApi/DataApiClientV2'
+import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApi/DataApiClientV2'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 import { type QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
@@ -70,7 +70,7 @@ export function getListEarnVaultsQueryOptions<TSelectData = PlainMessage<ListEar
       if (!params) {
         return undefined
       }
-      return toPlainMessage(await DataApiV2ServiceClient.listEarnVaults(params))
+      return toPlainMessage(await dataApiServiceClientV2.listEarnVaults(params))
     },
     enabled: enabled && !!params,
     placeholderData: keepPreviousData,
@@ -94,7 +94,7 @@ export function getListEarnPositionsQueryOptions<TSelectData = PlainMessage<List
       if (!params) {
         return undefined
       }
-      return toPlainMessage(await DataApiV2ServiceClient.listEarnPositions(params))
+      return toPlainMessage(await dataApiServiceClientV2.listEarnPositions(params))
     },
     enabled: enabled && !!params,
     placeholderData: keepPreviousData,
@@ -118,7 +118,7 @@ export function getEarnPositionQueryOptions<TSelectData = PlainMessage<GetEarnPo
       if (!params) {
         return undefined
       }
-      return toPlainMessage(await DataApiV2ServiceClient.getEarnPosition(params))
+      return toPlainMessage(await dataApiServiceClientV2.getEarnPosition(params))
     },
     enabled: enabled && !!params,
     placeholderData: keepPreviousData,

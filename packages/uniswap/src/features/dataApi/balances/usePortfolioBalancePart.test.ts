@@ -414,7 +414,8 @@ describe(usePortfolioTotalValue, () => {
 
     expect(wrapped.current.data).toEqual(canonical.current.data)
     expect(wrapped.current.loading).toBe(canonical.current.loading)
-    expect(wrapped.current.networkStatus).toEqual(canonical.current.networkStatus)
+    expect(wrapped.current.isError).toEqual(canonical.current.isError)
+    expect(wrapped.current.isPending).toEqual(canonical.current.isPending)
   })
 })
 

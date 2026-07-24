@@ -21,6 +21,7 @@ export const paths = [
   '/limit',
   '/limits',
   '/buy',
+  '/onramp-return',
   '/pool/v2/find',
   '/pool/v2',
   '/pool/new',
@@ -70,6 +71,5 @@ export const paths = [
   '/auth/passkey/extension',
   '/manage/passkey/:walletAddress',
   '/extension/uninstall',
-  '/wrapped',
   '/preview',
 ]

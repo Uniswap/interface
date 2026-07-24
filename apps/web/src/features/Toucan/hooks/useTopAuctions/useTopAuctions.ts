@@ -76,6 +76,71 @@ export type EnrichedAuction = PlainMessage<AuctionWithStats> & {
   }
 }
 
+type Auction = NonNullable<PlainMessage<AuctionWithStats>['auction']>
+type CurrencyInfo = ReturnType<typeof useCurrencyInfos>[number]
+type GetBlockTimestamp = ReturnType<typeof useGetBlockTimestamps>
+type BlocksByChain = ReturnType<typeof useMultiChainBlockInfo>
+
+function getAuctionCurrencyId(auction: Auction | undefined): string | undefined {
+  return auction ? buildCurrencyId(auction.chainId, auction.tokenAddress) : undefined
+}
+
+function getAuctionOverrideLogo(auction: Auction | undefined): string | undefined {
+  return auction?.chainId && auction.tokenAddress
+    ? getAuctionMetadata({ chainId: auction.chainId, tokenAddress: auction.tokenAddress })?.logoUrl
+    : undefined
+}
+
+function getAuctionTimeRemaining({
+  auction,
+  blocksByChain,
+  getBlockTimestamp,
+}: {
+  auction: Auction | undefined
+  blocksByChain: BlocksByChain
+  getBlockTimestamp: GetBlockTimestamp
+}): EnrichedAuction['timeRemaining'] {
+  const startBlockTimestamp =
+    auction?.startBlock && auction.chainId ? getBlockTimestamp(auction.chainId, auction.startBlock) : undefined
+
+  const endBlockTimestamp =
+    auction && auction.chainId && auction.endBlock ? getBlockTimestamp(auction.chainId, auction.endBlock) : undefined
+
+  const preBidEndBlock = auction ? computePreBidEndBlock(auction.parsedAuctionSteps, auction.startBlock) : undefined
+  const preBidEndBlockTimestamp =
+    auction?.chainId && preBidEndBlock && preBidEndBlock !== auction.startBlock
+      ? getBlockTimestamp(auction.chainId, preBidEndBlock)
+      : startBlockTimestamp
+
+  return {
+    startBlockTimestamp,
+    endBlockTimestamp,
+    preBidEndBlockTimestamp,
+    isCompleted: isAuctionCompleted({
+      endBlock: auction?.endBlock,
+      blockNumber: auction?.chainId ? blocksByChain.get(auction.chainId)?.number : undefined,
+    }),
+  }
+}
+
+function getAuctionWithCurrencyInfo({
+  auction,
+  currencyInfo,
+}: {
+  auction: Auction | undefined
+  currencyInfo: CurrencyInfo | undefined
+}): PlainMessage<AuctionWithStats>['auction'] {
+  if (auction === undefined) {
+    return undefined
+  }
+
+  return {
+    ...toPlainMessage(auction),
+    tokenName: currencyInfo?.currency.name ?? auction.tokenName,
+    tokenSymbol: currencyInfo?.currency.symbol ?? auction.tokenSymbol,
+  }
+}
+
 /**
  * Hook that fetches and filters top auctions with chain and search filtering.
  * - Chain filtering: Backend (via ListTopAuctionsRequest chainIds parameter)
@@ -175,6 +240,18 @@ export function useTopAuctions(): {
     skip: mergedAuctions.length === 0,
   })
 
+  // Build a lookup map from currencyId → currencyInfo to avoid index misalignment
+  // (currencyIds filters out null-auction entries, so its indices don't match topAuctions.auctions)
+  const currencyInfoByCurrencyId = useMemo(() => {
+    const map = new Map<string, (typeof currencyInfos)[number]>()
+    currencyIds.forEach((id, i) => {
+      if (currencyInfos[i]) {
+        map.set(id, currencyInfos[i])
+      }
+    })
+    return map
+  }, [currencyIds, currencyInfos])
+
   // Extract unique chain IDs from auctions to minimize RPC calls
   const auctionChainIds = useMemo(() => {
     return new Set(
@@ -240,46 +317,17 @@ export function useTopAuctions(): {
     const verifiedSet = new Set(verifiedAuctionIds)
 
     return mergedAuctions
-      .map((auction, index) => {
+      .map((auction) => {
         const coreAuction = auction.auction
-        const currencyInfo = currencyInfos[index]
+        const currencyId = getAuctionCurrencyId(coreAuction)
+        const currencyInfo = currencyId ? currencyInfoByCurrencyId.get(currencyId) : undefined
 
         // Image precedence (mirrors the auction detail page): curated config override logo
         // (authoritative) -> creator-uploaded API image -> indexed currency logo -> TokenLogo
         // placeholder. Centralized here so the table cell and chip stay consistent.
-        const overrideLogo =
-          coreAuction?.chainId && coreAuction.tokenAddress
-            ? getAuctionMetadata({ chainId: coreAuction.chainId, tokenAddress: coreAuction.tokenAddress })?.logoUrl
-            : undefined
-
-        const startBlockTimestamp =
-          coreAuction?.startBlock && coreAuction.chainId
-            ? getBlockTimestamp(coreAuction.chainId, coreAuction.startBlock)
-            : undefined
-
-        const endBlockTimestamp =
-          coreAuction && coreAuction.chainId && coreAuction.endBlock
-            ? getBlockTimestamp(coreAuction.chainId, coreAuction.endBlock)
-            : undefined
-
-        const preBidEndBlock = coreAuction
-          ? computePreBidEndBlock(coreAuction.parsedAuctionSteps, coreAuction.startBlock)
-          : undefined
-        const preBidEndBlockTimestamp =
-          coreAuction?.chainId && preBidEndBlock && preBidEndBlock !== coreAuction.startBlock
-            ? getBlockTimestamp(coreAuction.chainId, preBidEndBlock)
-            : startBlockTimestamp
-
-        let auctionWithCurrency: PlainMessage<AuctionWithStats>['auction']
-        if (coreAuction !== undefined) {
-          auctionWithCurrency = {
-            ...toPlainMessage(coreAuction),
-            tokenName: currencyInfo?.currency.name ?? coreAuction.tokenName,
-            tokenSymbol: currencyInfo?.currency.symbol ?? coreAuction.tokenSymbol,
-          }
-        } else {
-          auctionWithCurrency = undefined
-        }
+        const overrideLogo = getAuctionOverrideLogo(coreAuction)
+        const timeRemaining = getAuctionTimeRemaining({ auction: coreAuction, blocksByChain, getBlockTimestamp })
+        const auctionWithCurrency = getAuctionWithCurrencyInfo({ auction: coreAuction, currencyInfo })
 
         return {
           ...auction,
@@ -287,15 +335,7 @@ export function useTopAuctions(): {
           // `||` (not `??`) so an empty-string API image is treated as absent and doesn't
           // suppress the override / indexed logo, independent of the backend's unset-vs-"".
           logoUrl: overrideLogo || coreAuction?.tokenImageUrl || currencyInfo?.logoUrl,
-          timeRemaining: {
-            startBlockTimestamp,
-            endBlockTimestamp,
-            preBidEndBlockTimestamp,
-            isCompleted: isAuctionCompleted({
-              endBlock: coreAuction?.endBlock,
-              blockNumber: coreAuction?.chainId ? blocksByChain.get(coreAuction.chainId)?.number : undefined,
-            }),
-          },
+          timeRemaining,
           auction: auctionWithCurrency,
         }
       })
@@ -310,7 +350,14 @@ export function useTopAuctions(): {
         const chainId = auctionWithInfo.auction?.chainId
         return chainId !== undefined && (isTestnetModeEnabled || !isTestnetChain(chainId))
       })
-  }, [mergedAuctions, verifiedAuctionIds, isTestnetModeEnabled, getBlockTimestamp, currencyInfos, blocksByChain])
+  }, [
+    mergedAuctions,
+    verifiedAuctionIds,
+    isTestnetModeEnabled,
+    getBlockTimestamp,
+    currencyInfoByCurrencyId,
+    blocksByChain,
+  ])
 
   return {
     auctions: auctionsWithCurrencyInfo,

@@ -6,40 +6,41 @@ import {
   createMobileLocalTriggerDataSource,
   isLocalTriggerNotification,
 } from 'src/notification-service/triggers/createMobileLocalTriggerDataSource'
+import type { MockedFunction } from 'vitest'
 
-jest.mock('@universe/notifications/src/notification-data-source/implementations/createLocalTriggerDataSource')
-jest.mock('src/notification-service/triggers/backupReminderTrigger')
+vi.mock('@universe/notifications/src/notification-data-source/implementations/createLocalTriggerDataSource')
+vi.mock('src/notification-service/triggers/backupReminderTrigger')
 
-const mockCreateLocalTriggerDataSource = createLocalTriggerDataSource as jest.MockedFunction<
+const mockCreateLocalTriggerDataSource = createLocalTriggerDataSource as MockedFunction<
   typeof createLocalTriggerDataSource
 >
-const mockCreateBackupReminderTrigger = createBackupReminderTrigger as jest.MockedFunction<
+const mockCreateBackupReminderTrigger = createBackupReminderTrigger as MockedFunction<
   typeof createBackupReminderTrigger
 >
 
 describe('createMobileLocalTriggerDataSource', () => {
-  const mockDispatch = jest.fn()
-  const mockGetState = jest.fn<MobileState, []>()
-  const mockGetPortfolioValue = jest.fn<Promise<number>, []>()
+  const mockDispatch = vi.fn()
+  const mockGetState = vi.fn<() => MobileState>()
+  const mockGetPortfolioValue = vi.fn<() => Promise<number>>()
   const mockTracker = {
-    isProcessed: jest.fn(),
-    markProcessed: jest.fn(),
-    markNotProcessed: jest.fn(),
+    isProcessed: vi.fn(),
+    markProcessed: vi.fn(),
+    markNotProcessed: vi.fn(),
   } as unknown as NotificationTracker
 
   const mockBackupReminderTrigger = {
     id: 'local:backup_reminder_modal',
-    shouldShow: jest.fn().mockResolvedValue(true),
-    createNotification: jest.fn(),
-    onAcknowledge: jest.fn(),
+    shouldShow: vi.fn().mockResolvedValue(true),
+    createNotification: vi.fn(),
+    onAcknowledge: vi.fn(),
   }
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockCreateBackupReminderTrigger.mockReturnValue(mockBackupReminderTrigger)
     mockCreateLocalTriggerDataSource.mockReturnValue({
-      start: jest.fn(),
-      stop: jest.fn(),
+      start: vi.fn(),
+      stop: vi.fn(),
     })
   })
 
@@ -94,8 +95,8 @@ describe('createMobileLocalTriggerDataSource', () => {
 
     it('returns the data source from createLocalTriggerDataSource', () => {
       const mockDataSource = {
-        start: jest.fn(),
-        stop: jest.fn(),
+        start: vi.fn(),
+        stop: vi.fn(),
       }
       mockCreateLocalTriggerDataSource.mockReturnValue(mockDataSource)
 

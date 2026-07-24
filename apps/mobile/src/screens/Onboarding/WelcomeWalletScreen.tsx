@@ -111,7 +111,7 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
           <Button
             variant="branded"
             size="large"
-            isDisabled={!onboardingAccountAddress}
+            disabled={!onboardingAccountAddress}
             icon={<NextButtonIcon />}
             testID={TestID.Next}
             onPress={onPressNext}

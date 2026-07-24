@@ -9,23 +9,46 @@ import type { IssuerToken, Rwa } from 'uniswap/src/data/rest/rwa/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { getTokenDetailsURL } from '~/appGraphql/data/util'
+import { TDP_MULTICHAIN_CHAIN_QUERY_VALUE } from '~/utils/params/chainQueryParam'
 
 export type ExpandableAssetTableRow =
   | { type: 'parent'; asset: Rwa; subRows?: ExpandableAssetTableRow[]; link?: string }
   | { type: 'issuer'; asset: Rwa; issuer: IssuerToken; link?: string }
 
-export function linkForIssuer(issuer: IssuerToken, enabledChainIds: readonly UniverseChainId[]): string | undefined {
+/**
+ * @param chainFilter the active Explore network filter (e.g. `/explore/tokens/arbitrum`), if any. When present the
+ * row link stays scoped to that network; otherwise it opens the aggregate multichain TDP, matching the stocks
+ * shelf cards (see `ShelfTokenCard`).
+ */
+export function linkForIssuer({
+  issuer,
+  enabledChainIds,
+  chainFilter,
+}: {
+  issuer: IssuerToken
+  enabledChainIds: readonly UniverseChainId[]
+  chainFilter?: UniverseChainId
+}): string | undefined {
   const primary = pickPrimaryChainToken(issuer.chainTokens, enabledChainIds)
   if (!primary?.address) {
     return undefined
   }
-  return getTokenDetailsURL({ address: primary.address, chain: toGraphQLChain(primary.chainId) })
+  return getTokenDetailsURL({
+    address: primary.address,
+    chain: toGraphQLChain(primary.chainId),
+    chainQueryParam: chainFilter ? undefined : TDP_MULTICHAIN_CHAIN_QUERY_VALUE,
+  })
 }
 
-export function buildExpandableAssetTableRows(
-  assets: Rwa[],
-  enabledChainIds: readonly UniverseChainId[],
-): ExpandableAssetTableRow[] {
+export function buildExpandableAssetTableRows({
+  assets,
+  enabledChainIds,
+  chainFilter,
+}: {
+  assets: Rwa[]
+  enabledChainIds: readonly UniverseChainId[]
+  chainFilter?: UniverseChainId
+}): ExpandableAssetTableRow[] {
   return assets.flatMap((asset): ExpandableAssetTableRow[] => {
     const soleIssuer = asset.issuerTokens.length === 1 ? asset.issuerTokens[0] : undefined
     if (soleIssuer) {
@@ -34,7 +57,7 @@ export function buildExpandableAssetTableRows(
           type: 'issuer',
           asset,
           issuer: soleIssuer,
-          link: linkForIssuer(soleIssuer, enabledChainIds),
+          link: linkForIssuer({ issuer: soleIssuer, enabledChainIds, chainFilter }),
         },
       ]
     }
@@ -43,7 +66,7 @@ export function buildExpandableAssetTableRows(
       type: 'issuer' as const,
       asset,
       issuer,
-      link: linkForIssuer(issuer, enabledChainIds),
+      link: linkForIssuer({ issuer, enabledChainIds, chainFilter }),
     }))
 
     return [

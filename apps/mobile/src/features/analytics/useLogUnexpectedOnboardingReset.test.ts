@@ -4,21 +4,21 @@ import { renderHook } from 'src/test/test-utils'
 import { logger } from 'utilities/src/logger/logger'
 import { initialWalletState } from 'wallet/src/features/wallet/slice'
 
-jest.mock('src/features/analytics/onboardingTimestamp')
-jest.mock('utilities/src/logger/logger', () => ({
+vi.mock('src/features/analytics/onboardingTimestamp')
+vi.mock('utilities/src/logger/logger', () => ({
   logger: {
-    debug: jest.fn(),
-    error: jest.fn(),
+    debug: vi.fn(),
+    error: vi.fn(),
   },
 }))
 
-const mockGetOnboardingTimestamp = jest.mocked(onboardingTimestamp.getOnboardingTimestamp)
-const mockSetOnboardingTimestamp = jest.mocked(onboardingTimestamp.setOnboardingTimestamp)
-const mockClearOnboardingTimestamp = jest.mocked(onboardingTimestamp.clearOnboardingTimestamp)
+const mockGetOnboardingTimestamp = vi.mocked(onboardingTimestamp.getOnboardingTimestamp)
+const mockSetOnboardingTimestamp = vi.mocked(onboardingTimestamp.setOnboardingTimestamp)
+const mockClearOnboardingTimestamp = vi.mocked(onboardingTimestamp.clearOnboardingTimestamp)
 
 describe('useLogUnexpectedOnboardingReset', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('does nothing when user has not yet onboarded', () => {

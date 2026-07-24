@@ -1,44 +1,21 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`renders selection circle 1`] = `
-<View
-  style={
-    {
-      "alignItems": "center",
-      "borderBottomColor": "#FF37C7",
-      "borderBottomLeftRadius": 999999,
-      "borderBottomRightRadius": 999999,
-      "borderBottomWidth": 1,
-      "borderLeftColor": "#FF37C7",
-      "borderLeftWidth": 1,
-      "borderRightColor": "#FF37C7",
-      "borderRightWidth": 1,
-      "borderStyle": "solid",
-      "borderTopColor": "#FF37C7",
-      "borderTopLeftRadius": 999999,
-      "borderTopRightRadius": 999999,
-      "borderTopWidth": 1,
-      "flexDirection": "column",
-      "height": 20,
-      "justifyContent": "center",
-      "width": 20,
-    }
-  }
->
-  <View
-    style={
-      {
-        "backgroundColor": "#FF37C7",
-        "borderBottomLeftRadius": 999999,
-        "borderBottomRightRadius": 999999,
-        "borderTopLeftRadius": 999999,
-        "borderTopRightRadius": 999999,
-        "flexDirection": "column",
-        "height": 10,
-        "opacity": 1,
-        "width": 10,
-      }
-    }
-  />
-</View>
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _borderTopColor-accent1 _borderRightColor-accent1 _borderBottomColor-accent1 _borderLeftColor-accent1 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _height-20px _width-20px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+    >
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-accent1 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _height-10px _opacity-1 _width-10px"
+      />
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;

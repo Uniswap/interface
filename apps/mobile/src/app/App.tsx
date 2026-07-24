@@ -5,7 +5,7 @@ import { DdRum, RumActionType } from '@datadog/mobile-react-native'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { PerformanceProfiler, type RenderPassReport } from '@shopify/react-native-performance'
 import { ApiInit, getEntryGatewayUrl, provideSessionService } from '@universe/api'
-import { isIOS, isTestEnv, isDatadogEnabled } from '@universe/environment'
+import { isIOS, isTestEnv, isDatadogEnabled, isE2eTestEnv } from '@universe/environment'
 import {
   DatadogSessionSampleRateKey,
   DynamicConfigs,
@@ -76,26 +76,17 @@ import { createHashcashWorkerChannel } from 'src/features/sessions/createHashcas
 import { statsigMMKVStorageProvider } from 'src/features/statsig/statsigMMKVStorageProvider'
 import { shouldLogScreen } from 'src/features/telemetry/directLogScreens'
 import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
-import {
-  processWidgetEvents,
-  setAccountAddressesUserDefaults,
-  setFavoritesUserDefaults,
-  setI18NUserDefaults,
-} from 'src/features/widgets/widgets'
+import { useSyncWidgetUserDefaults } from 'src/features/widgets/useSyncWidgetUserDefaults'
 import { SystemBannerPortalProvider } from 'src/notification-service/notification-renderer/SystemBannerPortal'
 import { initDynamicIntlPolyfills, loadIntlPolyfillsForLocale } from 'src/polyfills/intl-delayed'
 import { useDatadogUserAttributesTracking } from 'src/screens/HomeScreen/useDatadogUserAttributesTracking'
-import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { flexStyles, useIsDarkMode } from 'ui/src'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
 import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { initializePortfolioQueryOverrides } from 'uniswap/src/data/rest/portfolioBalanceOverrides'
 import { useCurrentAppearanceSetting, useSelectedColorScheme } from 'uniswap/src/features/appearance/hooks'
-import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
-import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProviderWrapper'
 import { mapLanguageToLocale } from 'uniswap/src/features/language/constants'
-import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import { clearNotificationQueue } from 'uniswap/src/features/notifications/slice/slice'
 import { RemotePriceProvider } from 'uniswap/src/features/prices/RemotePriceProvider'
@@ -104,11 +95,11 @@ import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import i18n, { changeLanguage } from 'uniswap/src/i18n'
-import { type CurrencyId } from 'uniswap/src/types/currency'
 import { Uniwind } from 'uniwind'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { attachUnhandledRejectionHandler, setAttributesToDatadog } from 'utilities/src/logger/datadog/Datadog'
 import { DDRumAction, DDRumTiming } from 'utilities/src/logger/datadog/datadogEvents'
+import { reportAppStartTiming } from 'utilities/src/logger/datadog/reportAppStartTiming'
 import { getLogger, logger } from 'utilities/src/logger/logger'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
@@ -122,9 +113,7 @@ import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
 import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks/useTestnetModeForLoggingAndAnalytics'
 import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
 import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
-import { type Account } from 'wallet/src/features/wallet/accounts/types'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
-import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { NativeWalletProvider } from 'wallet/src/features/wallet/providers/NativeWalletProvider'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
 import { SharedWalletProvider as SharedWalletReduxProvider } from 'wallet/src/providers/SharedWalletProvider'
@@ -245,28 +234,32 @@ function App(): JSX.Element | null {
   }
 
   return (
-    <StatsigProviderWrapper user={statsigUser} storageProvider={statsigMMKVStorageProvider} onInit={onStatsigInit}>
-      <DatadogProviderWrapper sessionSampleRate={datadogSessionSampleRate}>
-        <Trace>
-          <StrictMode>
-            <I18nextProvider i18n={i18n}>
-              <SafeAreaProvider>
-                <KeyboardProvider navigationBarTranslucent>
-                  <SharedWalletReduxProvider reduxStore={store}>
-                    <AnalyticsNavigationContextProvider
-                      shouldLogScreen={shouldLogScreen}
-                      useIsPartOfNavigationTree={useIsPartOfNavigationTree}
-                    >
-                      <AppOuter />
-                    </AnalyticsNavigationContextProvider>
-                  </SharedWalletReduxProvider>
-                </KeyboardProvider>
-              </SafeAreaProvider>
-            </I18nextProvider>
-          </StrictMode>
-        </Trace>
-      </DatadogProviderWrapper>
-    </StatsigProviderWrapper>
+    // Must wrap TamaguiProvider (inside SharedWalletReduxProvider): its root PortalHost needs the
+    // gesture root's context or portaled content (Popover, ActionSheetDropdown) throws under RNGH 3.
+    <GestureHandlerRootView style={flexStyles.fill}>
+      <StatsigProviderWrapper user={statsigUser} storageProvider={statsigMMKVStorageProvider} onInit={onStatsigInit}>
+        <DatadogProviderWrapper sessionSampleRate={datadogSessionSampleRate}>
+          <Trace>
+            <StrictMode>
+              <I18nextProvider i18n={i18n}>
+                <SafeAreaProvider>
+                  <KeyboardProvider navigationBarTranslucent>
+                    <SharedWalletReduxProvider reduxStore={store}>
+                      <AnalyticsNavigationContextProvider
+                        shouldLogScreen={shouldLogScreen}
+                        useIsPartOfNavigationTree={useIsPartOfNavigationTree}
+                      >
+                        <AppOuter />
+                      </AnalyticsNavigationContextProvider>
+                    </SharedWalletReduxProvider>
+                  </KeyboardProvider>
+                </SafeAreaProvider>
+              </I18nextProvider>
+            </StrictMode>
+          </Trace>
+        </DatadogProviderWrapper>
+      </StatsigProviderWrapper>
+    </GestureHandlerRootView>
   )
 }
 
@@ -305,7 +298,7 @@ function AppOuter(): JSX.Element | null {
    * RenderPassReport. We then forward this report to Datadog, Amplitude, etc.
    */
   const onReportPrepared = useCallback(async (report: RenderPassReport) => {
-    if (isDatadogEnabled()) {
+    if (isDatadogEnabled() || isE2eTestEnv()) {
       const shouldLogJsBundleLoaded = report.timeToBootJsMillis && !jsBundleLoadedRef.current
       if (shouldLogJsBundleLoaded) {
         await DdRum.addAction(RumActionType.CUSTOM, DDRumAction.ApplicationStartJs, {
@@ -315,6 +308,11 @@ function AppOuter(): JSX.Element | null {
         // Note that we are not checking report.interactive here because it's not consistently reported.
         // Additionally, we are not tracking interactive the same way @shopify/react-native-performance does.
         await DdRum.addTiming(DDRumTiming.ScreenInteractive)
+        // Durable cold-start TTI signal we own (SDK v3 dropped auto application_start); fire-and-forget so a RUM rejection can't drop the Amplitude report below.
+        reportAppStartTiming({
+          ttiMillis: report.timeToBootJsMillis + (report.timeToRenderMillis ?? 0),
+          jsBootTimeMillis: report.timeToBootJsMillis,
+        }).catch(() => undefined)
       }
     }
     sendAnalyticsEvent(MobileEventName.PerformanceReport, report)
@@ -357,35 +355,33 @@ function AppOuter(): JSX.Element | null {
           <ApplyPersistedLanguage />
           <BlankUrlProvider>
             <LocalizationContextProvider>
-              <GestureHandlerRootView style={flexStyles.fill}>
-                <WalletContextProvider>
-                  <PrivyProviderWrapper>
-                    <NavigationContainer>
-                      <MobileWalletNavigationProvider>
-                        <NativeWalletProvider>
-                          <RemotePriceProvider>
-                            <WalletUniswapProvider>
-                              <AccountsStoreContextProvider>
-                                <DataUpdaters />
-                                <BottomSheetModalProvider>
-                                  <AppModals />
-                                  <PerformanceProfiler
-                                    errorHandler={ignoreFabricMountStateErrors}
-                                    onReportPrepared={onReportPrepared}
-                                  >
-                                    <AppInner />
-                                  </PerformanceProfiler>
-                                </BottomSheetModalProvider>
-                                <NotificationToastWrapper />
-                              </AccountsStoreContextProvider>
-                            </WalletUniswapProvider>
-                          </RemotePriceProvider>
-                        </NativeWalletProvider>
-                      </MobileWalletNavigationProvider>
-                    </NavigationContainer>
-                  </PrivyProviderWrapper>
-                </WalletContextProvider>
-              </GestureHandlerRootView>
+              <WalletContextProvider>
+                <PrivyProviderWrapper>
+                  <NavigationContainer>
+                    <MobileWalletNavigationProvider>
+                      <NativeWalletProvider>
+                        <RemotePriceProvider>
+                          <WalletUniswapProvider>
+                            <AccountsStoreContextProvider>
+                              <DataUpdaters />
+                              <BottomSheetModalProvider>
+                                <AppModals />
+                                <PerformanceProfiler
+                                  errorHandler={ignoreFabricMountStateErrors}
+                                  onReportPrepared={onReportPrepared}
+                                >
+                                  <AppInner />
+                                </PerformanceProfiler>
+                              </BottomSheetModalProvider>
+                              <NotificationToastWrapper />
+                            </AccountsStoreContextProvider>
+                          </WalletUniswapProvider>
+                        </RemotePriceProvider>
+                      </NativeWalletProvider>
+                    </MobileWalletNavigationProvider>
+                  </NavigationContainer>
+                </PrivyProviderWrapper>
+              </WalletContextProvider>
             </LocalizationContextProvider>
           </BlankUrlProvider>
         </ErrorBoundaryWrapper>
@@ -450,10 +446,6 @@ function AppInner(): JSX.Element {
  * these services are running.
  */
 function DataUpdaters(): JSX.Element {
-  const favoriteTokens: CurrencyId[] = useSelector(selectFavoriteTokens)
-  const accountsMap: Record<string, Account> = useAccounts()
-  const { locale } = useCurrentLanguageInfo()
-  const { code } = useAppFiatCurrencyInfo()
   const finishedOnboarding = useSelector(selectFinishedOnboarding)
   const isSessionServiceEnabled = useIsSessionServiceEnabled()
 
@@ -462,21 +454,7 @@ function DataUpdaters(): JSX.Element {
   useHeartbeatReporter({ isOnboarded: !!finishedOnboarding })
   useLastBalancesReporter({ isOnboarded: !!finishedOnboarding })
   useTestnetModeForLoggingAndAnalytics()
-
-  // Refreshes widgets when bringing app to foreground
-  useAppStateTrigger({ from: 'background', to: 'active', callback: processWidgetEvents })
-
-  useEffect(() => {
-    setFavoritesUserDefaults(favoriteTokens)
-  }, [favoriteTokens])
-
-  useEffect(() => {
-    setAccountAddressesUserDefaults(Object.values(accountsMap))
-  }, [accountsMap])
-
-  useEffect(() => {
-    setI18NUserDefaults({ locale, currency: code })
-  }, [code, locale])
+  useSyncWidgetUserDefaults()
 
   return (
     <>

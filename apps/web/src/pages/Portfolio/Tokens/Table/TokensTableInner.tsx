@@ -13,7 +13,7 @@ import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { Table } from '~/components/Table'
 import { usePinnedColumns } from '~/components/Table/PinnedColumns/usePinnedColumns'
-import { PORTFOLIO_TABLE_ROW_HEIGHT } from '~/pages/Portfolio/constants'
+import { PORTFOLIO_MULTICHAIN_CHAIN_ROW_HEIGHT, PORTFOLIO_TABLE_ROW_HEIGHT } from '~/pages/Portfolio/constants'
 import { useNavigateToTokenDetails } from '~/pages/Portfolio/Tokens/hooks/useNavigateToTokenDetails'
 import { TokenData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 import { TokenColumns, useTokenColumns } from '~/pages/Portfolio/Tokens/Table/columns/useTokenColumns'
@@ -26,6 +26,7 @@ import {
   getTokenTableRowId,
 } from '~/pages/Portfolio/Tokens/Table/tokenTableRowUtils'
 import type { TokenTableRow } from '~/pages/Portfolio/Tokens/Table/tokenTableRowUtils'
+import { usePortfolioTokenTableExpandableRow } from '~/pages/Portfolio/Tokens/Table/usePortfolioTokenTableExpandableRow'
 
 const TOKEN_COLUMN_PINNED = ['currencyInfo']
 
@@ -119,6 +120,7 @@ export function TokensTableInner({
     showUnrealizedPnlPercent,
     columnSortEnabled,
     hasPinnedColumns,
+    unifiedExpandableRows: allowMultichainExpandRows,
     onTokenNameClick: handleTokenNameClick,
   })
 
@@ -134,30 +136,59 @@ export function TokensTableInner({
     [navigateToTokenDetails, trace, analyticsContext],
   )
 
+  const handleMultichainParentToggle = useCallback(
+    (_row: Row<TokenTableRow>, nextExpanded: boolean) => {
+      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+        ...trace,
+        element: ElementName.BreakdownExpanded,
+        multichainTokenRowState: nextExpanded ? 'open' : 'close',
+      })
+    },
+    [trace],
+  )
+
+  const { rowWrapper: unifiedExpandableRowWrapper, renderUnifiedExpandableRow } = usePortfolioTokenTableExpandableRow({
+    onParentToggle: handleMultichainParentToggle,
+    onChildRowPress: handleTokenRowClick,
+  })
+
   const rowWrapper = useCallback(
     (row: Row<TokenTableRow>, content: JSX.Element) => {
       if (loading) {
         return content
       }
-      const canExpand = allowMultichainExpandRows && row.getCanExpand()
-      const onPress = canExpand
-        ? () => {
-            const nextExpanded = !row.getIsExpanded()
-            row.toggleExpanded()
-            sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-              ...trace,
-              element: ElementName.BreakdownExpanded,
-              multichainTokenRowState: nextExpanded ? 'open' : 'close',
-            })
-          }
-        : () => handleTokenRowClick(getTokenDataForRow(row.original))
+
+      if (!allowMultichainExpandRows) {
+        return (
+          <TouchableArea
+            pressStyle={{ scale: 1 }}
+            onPress={() => {
+              handleTokenRowClick(getTokenDataForRow(row.original))
+            }}
+          >
+            {content}
+          </TouchableArea>
+        )
+      }
+
+      const wrappedContent = unifiedExpandableRowWrapper(row, content)
+
+      if (row.depth > 0) {
+        return wrappedContent
+      }
+
       return (
-        <TouchableArea onPress={onPress} pressStyle={{ scale: 1 }}>
-          {content}
+        <TouchableArea
+          pressStyle={{ scale: 1 }}
+          onPress={() => {
+            handleTokenRowClick(getTokenDataForRow(row.original))
+          }}
+        >
+          {wrappedContent}
         </TouchableArea>
       )
     },
-    [loading, allowMultichainExpandRows, handleTokenRowClick, trace],
+    [loading, allowMultichainExpandRows, unifiedExpandableRowWrapper, handleTokenRowClick],
   )
 
   return (
@@ -181,9 +212,11 @@ export function TokensTableInner({
         getRowId={(row: TokenTableRow) => getTokenTableRowId(row)}
         getSubRows={getSubRows}
         rowWrapper={rowWrapper}
+        renderUnifiedExpandableRow={allowMultichainExpandRows ? renderUnifiedExpandableRow : undefined}
+        singleExpandedRow={allowMultichainExpandRows}
         rowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
         compactRowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
-        subRowHeight={40}
+        subRowHeight={allowMultichainExpandRows ? PORTFOLIO_MULTICHAIN_CHAIN_ROW_HEIGHT : undefined}
         defaultPinnedColumns={['currencyInfo']}
         maxWidth={maxWidth}
         maxHeight={maxHeight}

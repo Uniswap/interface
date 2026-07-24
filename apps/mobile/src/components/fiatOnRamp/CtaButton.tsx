@@ -24,7 +24,7 @@ export function FiatOnRampCtaButton({
   const continueText = eligible ? continueButtonText : t('fiatOnRamp.error.unsupported')
   return (
     <Button
-      isDisabled={disabled}
+      disabled={disabled}
       icon={
         isLoading ? <SpinningLoader color="$white" /> : !eligible ? <InfoCircleFilled color="$neutral3" /> : undefined
       }

@@ -121,6 +121,7 @@ export const PortfolioPerformance = memo(function PortfolioPerformance({
         totalReturn={profitLoss?.totalReturnUsd}
         isLoading={isPending}
         periodSelector={periodSelector}
+        evmAddress={evmAddress}
       />
     </Flex>
   )

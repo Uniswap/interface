@@ -12,6 +12,7 @@ const mockFetch = vi.fn()
 global.fetch = mockFetch
 
 import { TRADING_API_PATHS, TradingApi } from '@universe/api'
+import { EXPERIMENTS_HEADER_NAME, getExperimentsClient } from '@universe/experiments'
 import {
   EthAsErc20UniswapXProperties,
   FeatureFlags,
@@ -620,6 +621,81 @@ describe('TradingApiClient web session credentials', () => {
       expect.stringContaining('/quote'),
       expect.objectContaining({ credentials: 'include' }),
     )
+  })
+})
+
+/**
+ * Smoke tests for the x-experiments wiring on TradingFetchClient:
+ * the active set rides out as `x-experiments` (FE→BE) and echoed experiments
+ * are absorbed off the response (BE→FE) — without throwing on a response
+ * that has no headers at all (the shape most mocks in this file use).
+ */
+describe('TradingApiClient x-experiments wiring', () => {
+  const quoteRequest = {
+    type: TradingApi.TradeType.EXACT_INPUT,
+    amount: '1000000000000000000',
+    tokenInChainId: 1 as TradingApi.ChainId,
+    tokenOutChainId: 1 as TradingApi.ChainId,
+    tokenIn: '0x1234567890abcdef1234567890abcdef12345678',
+    tokenOut: '0xabcdef1234567890abcdef1234567890abcdef12',
+    swapper: '0x9876543210fedcba9876543210fedcba98765432',
+  }
+
+  const mockQuoteResponse = (headers?: Headers): Partial<Response> => ({
+    ok: true,
+    status: 200,
+    json: vi.fn().mockResolvedValue({ routing: TradingApi.Routing.CLASSIC, quote: {} }),
+    ...(headers ? { headers } : {}),
+  })
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    getExperimentsClient().clear()
+  })
+
+  afterEach(() => {
+    getExperimentsClient().clear()
+  })
+
+  it('sends the active experiments set as x-experiments on fetchQuote', async () => {
+    mockFetch.mockResolvedValue(mockQuoteResponse())
+    getExperimentsClient().set('smoke-test-exp', { groupName: 'treatment', value: { enabled: true } })
+
+    await TradingApiClient.fetchQuote(quoteRequest)
+
+    const quoteCall = mockFetch.mock.calls.find(([url]) => String(url).includes('/quote'))
+    expect(quoteCall).toBeDefined()
+    const sentHeaders = new Headers((quoteCall?.[1] as RequestInit).headers)
+    expect(sentHeaders.get(EXPERIMENTS_HEADER_NAME)).toBe(
+      JSON.stringify({ 'smoke-test-exp': { groupName: 'treatment', value: { enabled: true } } }),
+    )
+  })
+
+  it('sends no x-experiments header when the active set is empty', async () => {
+    mockFetch.mockResolvedValue(mockQuoteResponse())
+
+    await TradingApiClient.fetchQuote(quoteRequest)
+
+    const quoteCall = mockFetch.mock.calls.find(([url]) => String(url).includes('/quote'))
+    const sentHeaders = new Headers((quoteCall?.[1] as RequestInit).headers)
+    expect(sentHeaders.get(EXPERIMENTS_HEADER_NAME)).toBeNull()
+  })
+
+  it('absorbs experiments echoed by the backend on the response', async () => {
+    const echoed = { 'backend-exp': { groupName: 'control', value: { ratio: 2 } } }
+    mockFetch.mockResolvedValue(mockQuoteResponse(new Headers({ [EXPERIMENTS_HEADER_NAME]: JSON.stringify(echoed) })))
+
+    await TradingApiClient.fetchQuote(quoteRequest)
+
+    expect(getExperimentsClient().snapshot()).toEqual(echoed)
+  })
+
+  it('tolerates a response without headers — absorbs nothing and does not throw', async () => {
+    mockFetch.mockResolvedValue(mockQuoteResponse())
+
+    await expect(TradingApiClient.fetchQuote(quoteRequest)).resolves.toBeDefined()
+
+    expect(getExperimentsClient().snapshot()).toEqual({})
   })
 })
 

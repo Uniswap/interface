@@ -1,12 +1,13 @@
 import { useTranslation } from 'react-i18next'
 import { Text, TouchableArea } from 'ui/src'
 import { Flex } from 'ui/src/components/layout'
+import { Skeleton } from 'ui/src/loading/Skeleton'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import type { EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/types'
+import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { NumberType } from 'utilities/src/format/types'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export const EARN_VAULT_CHIP_MAX_WIDTH = 240
 export const EARN_VAULT_CHIP_FRAME_PROPS = {
@@ -25,27 +26,19 @@ export const EARN_VAULT_CHIP_FRAME_PROPS = {
   $md: { maxWidth: '100%' },
 } as const
 
-export function EarnVaultChip({
-  onPress,
-  position,
-  vault,
-}: {
-  vault: EarnVaultInfo
-  position: EarnPositionInfo | undefined
-  onPress: () => void
-}): JSX.Element {
+export function EarnVaultChip({ onPress, vault }: { vault: EarnVaultInfo; onPress: () => void }): JSX.Element {
   const { t } = useTranslation()
-  const { convertFiatAmountFormatted, formatPercent } = useLocalizationContext()
+  const { formatPercent } = useLocalizationContext()
   const currencyInfo = useCurrencyInfo(vault.displayCurrencyId)
   const currency = currencyInfo?.currency
-  const depositedUsd = position?.depositedUsd
-  const depositedLabel =
-    depositedUsd !== undefined && depositedUsd > 0
-      ? convertFiatAmountFormatted(depositedUsd, NumberType.PortfolioBalance)
-      : undefined
 
   return (
-    <TouchableArea {...EARN_VAULT_CHIP_FRAME_PROPS} hoverStyle={{ backgroundColor: '$surface2' }} onPress={onPress}>
+    <TouchableArea
+      {...EARN_VAULT_CHIP_FRAME_PROPS}
+      hoverStyle={{ backgroundColor: '$surface2' }}
+      testID={`${TestID.EarnVaultChipPrefix}${currency?.symbol}`}
+      onPress={onPress}
+    >
       <TokenLogo
         hideNetworkLogo
         url={currencyInfo?.logoUrl}
@@ -58,17 +51,31 @@ export function EarnVaultChip({
         <Text variant="body2" color="$neutral1" numberOfLines={1}>
           {currency?.symbol ?? '-'}
         </Text>
-        <Flex row alignItems="center" gap="$spacing8">
-          {depositedLabel ? (
-            <Text variant="body3" color="$neutral2" numberOfLines={1}>
-              {depositedLabel}
-            </Text>
-          ) : null}
-          <Text variant="body3" color="$accent1" numberOfLines={1}>
-            {t('explore.earn.apy', { apy: formatPercent(vault.apyPercent) })}
-          </Text>
-        </Flex>
+        <Text variant="body3" color="$accent1" numberOfLines={1}>
+          {t('explore.earn.apy', { apy: formatPercent(vault.apyPercent) })}
+        </Text>
       </Flex>
     </TouchableArea>
+  )
+}
+
+export function EarnVaultChipSkeleton(): JSX.Element {
+  return (
+    <Flex {...EARN_VAULT_CHIP_FRAME_PROPS} testID={TestID.EarnVaultChipSkeleton}>
+      <Skeleton>
+        <Flex row alignItems="center" gap="$spacing12">
+          <Flex
+            backgroundColor="$neutral3"
+            borderRadius="$roundedFull"
+            height={iconSizes.icon32}
+            width={iconSizes.icon32}
+          />
+          <Flex>
+            <Text loading="no-shimmer" loadingPlaceholderText="USDC" numberOfLines={1} variant="body2" />
+            <Text loading="no-shimmer" loadingPlaceholderText="4.30% est. APY" numberOfLines={1} variant="body3" />
+          </Flex>
+        </Flex>
+      </Skeleton>
+    </Flex>
   )
 }

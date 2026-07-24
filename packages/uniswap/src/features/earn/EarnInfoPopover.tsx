@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import type { ColorValue } from 'react-native'
 import { Flex, Text } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { zIndexes } from 'ui/src/theme'
@@ -26,12 +27,16 @@ export function EarnInfoPopover({
   detailRows,
   learnMore,
   modalName,
+  modalIcon,
+  modalIconBackgroundColor,
 }: {
   title: string
   caption: string
   detailRows?: EarnInfoPopoverDetailRow[]
   learnMore?: EarnInfoPopoverLearnMore
   modalName: ModalNameType
+  modalIcon?: ReactNode
+  modalIconBackgroundColor?: ColorValue | false
 }): JSX.Element {
   const { t } = useTranslation()
   const hasDetails = detailRows !== undefined && detailRows.length > 0
@@ -40,7 +45,7 @@ export function EarnInfoPopover({
   const learnMoreUrl = learnMore?.url
   const onPressLearnMore = useCallback(() => {
     if (learnMoreUrl) {
-      openUri({ uri: learnMoreUrl, openExternalBrowser: true, isSafeUri: true }).catch(() => undefined)
+      openUri({ uri: learnMoreUrl, isSafeUri: true }).catch(() => undefined)
     }
   }, [learnMoreUrl])
   const captionComponent = learnMoreText ? (
@@ -58,13 +63,15 @@ export function EarnInfoPopover({
     <WarningInfo
       // Pass the icon directly — WarningInfo wraps it in its own TouchableArea on native.
       // Nesting another TouchableArea here would swallow the tap.
+      showModalOnMobileWeb
       trigger={<InfoCircleFilled color="$neutral3" size="$icon.16" />}
       infoButton={details}
       modalProps={{
         title,
         caption: captionComponent ? undefined : caption,
         captionComponent,
-        icon: <InfoCircleFilled color="$neutral2" size="$icon.24" />,
+        icon: modalIcon ?? <InfoCircleFilled color="$neutral2" size="$icon.24" />,
+        backgroundIconColor: modalIconBackgroundColor,
         modalName,
         severity: WarningSeverity.None,
         rejectText: t('common.button.close'),

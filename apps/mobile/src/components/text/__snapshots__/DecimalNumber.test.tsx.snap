@@ -1,92 +1,70 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`renders a DecimalNumber 1`] = `
-<Text
-  allowFontScaling={true}
-  maxFontSizeMultiplier={1.4}
-  style={
-    {
-      "color": "#131313",
-      "fontFamily": "Basel Grotesk",
-      "fontSize": 19,
-      "fontWeight": "400",
-      "lineHeight": 24.7,
-    }
-  }
-  suppressHighlighting={true}
->
-  14,123
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "rgba(19, 19, 19, 0.35)",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "400",
-        "lineHeight": 24.7,
-      }
-    }
-    suppressHighlighting={true}
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    .
-    78
-  </Text>
-</Text>
+    <span
+      class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+      data-disable-theme="true"
+    >
+      14,123
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+        data-disable-theme="true"
+      >
+        .78
+      </span>
+    </span>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;
 
 exports[`renders a DecimalNumber without a comma separator 1`] = `
-<Text
-  allowFontScaling={true}
-  maxFontSizeMultiplier={1.4}
-  style={
-    {
-      "color": "#131313",
-      "fontFamily": "Basel Grotesk",
-      "fontSize": 19,
-      "fontWeight": "400",
-      "lineHeight": 24.7,
-    }
-  }
-  suppressHighlighting={true}
->
-  14
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "rgba(19, 19, 19, 0.35)",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "400",
-        "lineHeight": 24.7,
-      }
-    }
-    suppressHighlighting={true}
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    ,
-    23
-  </Text>
-</Text>
+    <span
+      class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+      data-disable-theme="true"
+    >
+      14
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+        data-disable-theme="true"
+      >
+        ,23
+      </span>
+    </span>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;
 
 exports[`renders a DecimalNumber without a decimal part 1`] = `
-<Text
-  allowFontScaling={true}
-  maxFontSizeMultiplier={1.4}
-  style={
-    {
-      "color": "#131313",
-      "fontFamily": "Basel Grotesk",
-      "fontSize": 19,
-      "fontWeight": "400",
-      "lineHeight": 24.7,
-    }
-  }
-  suppressHighlighting={true}
->
-  14,123
-</Text>
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <span
+      class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+      data-disable-theme="true"
+    >
+      14,123
+    </span>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;

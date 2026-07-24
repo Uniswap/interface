@@ -25,6 +25,7 @@ const VAULT: EarnVaultInfo = {
   chainId: MAINNET_CHAIN_ID,
   apyPercent: 4.5,
   exposureCurrencyIds: [],
+  exposures: [],
   totalDepositsUsd: 1_000_000,
   liquidityUsd: 500_000,
   curator: { name: 'Morpho' },

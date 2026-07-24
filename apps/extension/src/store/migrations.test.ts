@@ -42,6 +42,7 @@ import {
   v29Schema,
   v30Schema,
   v31Schema,
+  v32Schema,
 } from 'src/store/schema'
 import { USDC } from 'uniswap/src/constants/tokens'
 import { initialAppearanceSettingsState } from 'uniswap/src/features/appearance/slice'
@@ -62,6 +63,7 @@ import {
   testMigrateDismissedTokenWarnings,
   testMigrateSearchHistory,
   testRemoveTHBFromCurrency,
+  testRemoveUniswapWrapped2025BehaviorHistory,
 } from 'uniswap/src/state/uniswapMigrationTests'
 import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
 import { initialWalletCallTransactionsState } from 'wallet/src/features/batchedTransactions/slice'
@@ -385,5 +387,9 @@ describe('Redux state migrations', () => {
 
   it('migrates from v31 to v32', () => {
     testAddEnableCustomGasFeeEntry(migrations[32], v31Schema)
+  })
+
+  it('migrates from v32 to v33', () => {
+    testRemoveUniswapWrapped2025BehaviorHistory(migrations[33], v32Schema)
   })
 })

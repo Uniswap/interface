@@ -15440,4 +15440,14 @@
     <lastmod>2026-07-09T19:37:03.190Z</lastmod>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/ethereum/0x41a561b972039a9ccb975a4c17b84c9f95099e15</loc>
+    <lastmod>2026-07-16T19:31:30.158Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/soneium/0xde132c90fd4b1c8735f8b9aad51382eeff46d3f2</loc>
+    <lastmod>2026-07-16T19:31:30.158Z</lastmod>
+    <priority>0.8</priority>
+  </url>
 </urlset>

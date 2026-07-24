@@ -64,7 +64,6 @@ export function ReviewLaunchStep(): JSX.Element | null {
   // QuickLaunch: quick launch skips the Configure/Customize steps, so their edit buttons are hidden.
   // Effective mode (flag + new-token + switch), NOT the raw store flag, which defaults to on.
   const quickLaunch = useIsQuickLaunchMode()
-  const quickLaunchDuration = useCreateAuctionStore((state) => state.quickLaunchDuration)
   const [pendingQuickLaunchRetry, setPendingQuickLaunchRetry] = useState(false)
   const configureAuction = useCreateAuctionStore((state) => state.configureAuction)
   const customizePool = useCreateAuctionStore((state) => state.customizePool)
@@ -232,7 +231,7 @@ export function ReviewLaunchStep(): JSX.Element | null {
   // Quick launch has no editable start time, so a stale start is fixed by refreshing the preset
   // window and retrying once the store update has rendered (handleRetry reads this render's props).
   const handleQuickLaunchRetry = useEvent(() => {
-    applyQuickLaunchAuctionWindow({ setStartTime, setEndTime }, quickLaunchDuration)
+    applyQuickLaunchAuctionWindow({ setStartTime, setEndTime })
     setPendingQuickLaunchRetry(true)
   })
 
@@ -355,7 +354,7 @@ export function ReviewLaunchStep(): JSX.Element | null {
           <Button
             size="large"
             emphasis="primary"
-            isDisabled={launchSubmit.isDisabled}
+            disabled={launchSubmit.isDisabled}
             fill
             backgroundColor={launchSubmit.isDisabled ? undefined : tokenColor}
             onPress={launchFlow.openReviewModal}
@@ -400,7 +399,7 @@ export function ReviewLaunchStep(): JSX.Element | null {
         isOpen={launchFlow.isSuccessModalOpen}
         tokenSymbol={tokenSymbol}
         chainId={chainId}
-        launchHash={launchFlow.launchSuccess?.hash}
+        launchHash={launchFlow.launchTxHash}
         onClose={launchFlow.handleCloseSuccessModal}
         onViewAuction={launchFlow.handleViewAuction}
       />

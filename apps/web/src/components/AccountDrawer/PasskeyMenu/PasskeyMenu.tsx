@@ -271,7 +271,7 @@ export function PasskeyMenu({ onClose }: { onClose: () => void }) {
           </Trace>
         }
       >
-        <MenuColumn px="$padding8" gap="$spacing24">
+        <MenuColumn px="$padding8" pb="$padding8" gap="$spacing24">
           <Flex gap="$spacing16">
             <Text variant="subheading2" color="$neutral1">
               {t('common.passkeys')}

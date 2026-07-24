@@ -135,7 +135,13 @@ function TableBodyInner<T extends RowData>(
       const subRowsContent = subRowsWrapper ? subRowsWrapper(row, <>{subRowElements}</>) : <>{subRowElements}</>
 
       return (
-        <HeightAnimator open={row.getIsExpanded()} animation="quick" unmountChildrenWhenCollapsed>
+        <HeightAnimator
+          open={row.getIsExpanded()}
+          animation="quick"
+          unmountChildrenWhenCollapsed
+          // overflow-y: hidden would coerce overflow-x to auto (CSS disallows mixing visible with a clipped axis), breaking sticky pinned columns
+          styleProps={{ '$platform-web': { overflowY: 'clip', overflowX: 'visible' } }}
+        >
           <Flex gap={rowGap} paddingTop={rowGap}>
             {subRowsContent}
           </Flex>

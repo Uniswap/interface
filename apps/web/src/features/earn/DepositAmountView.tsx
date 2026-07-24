@@ -434,7 +434,7 @@ export function DepositAmountView({
         variant="branded"
         emphasis="primary"
         size="large"
-        isDisabled={isReviewDisabled || isBelowMinimumDeposit}
+        disabled={isReviewDisabled || isBelowMinimumDeposit}
         onPress={handleReview}
       >
         {ctaLabel}

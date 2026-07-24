@@ -3,9 +3,9 @@ import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import type { EarnDepositReviewModalProps } from 'src/components/earn/EarnDepositReviewModalState'
+import { renderEarnReviewSheetLayout } from 'src/components/earn/EarnReviewSheetLayout'
 import { useEarnExecuteCallback } from 'src/components/earn/hooks/useEarnExecuteCallback'
 import { useEarnReviewModalHandlers } from 'src/components/earn/hooks/useEarnReviewModalHandlers'
-import { Flex } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import type { BaseModalProps } from 'uniswap/src/components/modals/ModalProps'
 import { permanentlyDismissEarnSwapUpsell } from 'uniswap/src/features/behaviorHistory/slice'
@@ -129,27 +129,28 @@ export function EarnDepositReviewModal({
   }
 
   return (
-    <Modal name={ModalName.EarnDepositReview} isModalOpen={isOpen} onClose={handleClose}>
-      <Flex gap="$spacing16" px="$spacing16" pb="$spacing16">
-        <DepositReviewView
-          analyticsEntryPoint={analyticsEntryPoint}
-          analyticsSurface="mobile"
-          vault={vault}
-          position={position}
-          amount={amount}
-          tokenAmount={tokenAmount}
-          originatingTransactionId={originatingTransactionId}
-          projectedMonthlyEarningsUsd={projectedMonthlyEarningsUsd}
-          sourceCurrencyId={sourceCurrencyId ?? vault.currencyId}
-          sourceUpsellCurrencyId={sourceUpsellCurrencyId}
-          swapAmountUsd={swapAmountUsd}
-          onBack={handleBack}
-          onClose={handleClose}
-          onDeposit={handleClose}
-          onExecuteDeposit={handleExecuteDeposit}
-          onExecutionFailure={handleExecutionFailure}
-        />
-      </Flex>
+    // overrideInnerContainer: the review layout renders its own BottomSheetView so the action row
+    // can live in a pinned footer overlay (see renderEarnReviewSheetLayout).
+    <Modal overrideInnerContainer name={ModalName.EarnDepositReview} isModalOpen={isOpen} onClose={handleClose}>
+      <DepositReviewView
+        renderLayout={renderEarnReviewSheetLayout}
+        analyticsEntryPoint={analyticsEntryPoint}
+        analyticsSurface="mobile"
+        vault={vault}
+        position={position}
+        amount={amount}
+        tokenAmount={tokenAmount}
+        originatingTransactionId={originatingTransactionId}
+        projectedMonthlyEarningsUsd={projectedMonthlyEarningsUsd}
+        sourceCurrencyId={sourceCurrencyId ?? vault.currencyId}
+        sourceUpsellCurrencyId={sourceUpsellCurrencyId}
+        swapAmountUsd={swapAmountUsd}
+        onBack={handleBack}
+        onClose={handleClose}
+        onDeposit={handleClose}
+        onExecuteDeposit={handleExecuteDeposit}
+        onExecutionFailure={handleExecutionFailure}
+      />
     </Modal>
   )
 }

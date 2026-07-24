@@ -7,7 +7,7 @@ import {
   tryProvideSession,
   type TradingApiClient as TradingApiClientType,
 } from '@universe/api'
-import { ChainId } from '@universe/api/src/clients/trading/__generated__'
+import { getExperimentsClient } from '@universe/experiments'
 import {
   EthAsErc20UniswapXProperties,
   Experiments,
@@ -33,7 +33,13 @@ const TradingFetchClient = createTradingApiFetchClient({
   getHeaders: () => ({
     ...BASE_UNISWAP_HEADERS,
     'x-api-key': config.tradingApiKey,
+    // Correlate experiment buckets with the trading backend (our own service): the active
+    // set rides as `x-experiments` on every trading request. Merged here, not in a shared
+    // client, so experiment data never leaks to third-party clients (Blockaid, Jupiter).
+    ...getExperimentsClient().toHeaders(),
   }),
+  // Absorb any experiments the backend echoes or originates (BE→FE).
+  onResponse: (response) => getExperimentsClient().absorb(response),
   getSessionService: () =>
     provideSessionService({
       getBaseUrl: () => getUniswapServiceUrls(config).apiBaseUrlV2,
@@ -73,7 +79,7 @@ export enum TradingApiHeaders {
  */
 export const getFeatureFlaggedHeaders = async (
   tradingApiPath: (typeof TRADING_API_PATHS)[keyof typeof TRADING_API_PATHS],
-  tradingApiChainId?: ChainId,
+  tradingApiChainId?: TradingApi.ChainId,
 ): Promise<HeadersInit> => {
   await waitForStatsigReady()
   const chainId = tradingApiToUniverseChainId(tradingApiChainId)

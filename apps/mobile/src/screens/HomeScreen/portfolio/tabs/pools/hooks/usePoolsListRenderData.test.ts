@@ -1,22 +1,23 @@
 import { usePoolsListRenderData } from 'src/screens/HomeScreen/portfolio/tabs/pools/hooks/usePoolsListRenderData'
 import { renderHook } from 'src/test/test-utils'
 import { useWalletPositions } from 'uniswap/src/features/positions/hooks/useWalletPositions'
+import type { MockedFunction } from 'vitest'
 import { usePendingLiquidityTransactionsChangeListener } from 'wallet/src/features/transactions/hooks/usePendingLiquidityTransactionsChangeListener'
 
-jest.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
+vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
   useEnabledChains: () => ({ chains: [1] }),
 }))
 
-jest.mock('uniswap/src/features/positions/hooks/useWalletPositions', () => ({
-  useWalletPositions: jest.fn(),
+vi.mock('uniswap/src/features/positions/hooks/useWalletPositions', () => ({
+  useWalletPositions: vi.fn(),
 }))
 
-jest.mock('wallet/src/features/transactions/hooks/usePendingLiquidityTransactionsChangeListener', () => ({
-  usePendingLiquidityTransactionsChangeListener: jest.fn(),
+vi.mock('wallet/src/features/transactions/hooks/usePendingLiquidityTransactionsChangeListener', () => ({
+  usePendingLiquidityTransactionsChangeListener: vi.fn(),
 }))
 
-const mockUseWalletPositions = useWalletPositions as jest.MockedFunction<typeof useWalletPositions>
-const mockUseLpListener = usePendingLiquidityTransactionsChangeListener as jest.MockedFunction<
+const mockUseWalletPositions = useWalletPositions as MockedFunction<typeof useWalletPositions>
+const mockUseLpListener = usePendingLiquidityTransactionsChangeListener as MockedFunction<
   typeof usePendingLiquidityTransactionsChangeListener
 >
 
@@ -31,13 +32,13 @@ const baseResult = {
   isFetchingNextPage: false,
   isPlaceholderData: false,
   hasNextPage: false,
-  refetch: jest.fn(),
-  fetchNextPage: jest.fn(),
+  refetch: vi.fn(),
+  fetchNextPage: vi.fn(),
 } as unknown as ReturnType<typeof useWalletPositions>
 
 describe('usePoolsListRenderData', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockUseWalletPositions.mockReturnValue(baseResult)
   })
 
@@ -72,7 +73,7 @@ describe('usePoolsListRenderData', () => {
   })
 
   it('registers refetch with the pending-LP-transactions listener', () => {
-    const refetch = jest.fn()
+    const refetch = vi.fn()
     mockUseWalletPositions.mockReturnValue({ ...baseResult, refetch })
 
     renderHook(() => usePoolsListRenderData({ owner: '0xabc', skip: false }))
@@ -81,7 +82,7 @@ describe('usePoolsListRenderData', () => {
   })
 
   it('fetches the next page on end reached when another page is available', () => {
-    const fetchNextPage = jest.fn()
+    const fetchNextPage = vi.fn()
     mockUseWalletPositions.mockReturnValue({
       ...baseResult,
       hasNextPage: true,
@@ -96,7 +97,7 @@ describe('usePoolsListRenderData', () => {
   })
 
   it('does not fetch the next page when there is none', () => {
-    const fetchNextPage = jest.fn()
+    const fetchNextPage = vi.fn()
     mockUseWalletPositions.mockReturnValue({ ...baseResult, hasNextPage: false, fetchNextPage })
 
     const { result } = renderHook(() => usePoolsListRenderData({ owner: '0xabc', skip: false }))
@@ -106,7 +107,7 @@ describe('usePoolsListRenderData', () => {
   })
 
   it('does not fetch the next page while one is already loading', () => {
-    const fetchNextPage = jest.fn()
+    const fetchNextPage = vi.fn()
     mockUseWalletPositions.mockReturnValue({
       ...baseResult,
       hasNextPage: true,

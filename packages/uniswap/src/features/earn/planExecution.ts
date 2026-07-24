@@ -39,6 +39,31 @@ export function getEarnExecutionErrorMessage({
   return error instanceof EarnPlanPriceChangeError ? error.message : fallback
 }
 
+export function shouldShowEarnTroubleshootingLink(error: Error | undefined): boolean {
+  if (!error || error instanceof EarnPlanPriceChangeError) {
+    return false
+  }
+
+  const code = (error as Error & { code?: unknown }).code
+  if (code === 4001 || code === '4001' || code === 5750 || code === '5750' || code === 'ACTION_REJECTED') {
+    return false
+  }
+
+  const rejectionText = `${error.name} ${error.message}`.toLowerCase()
+  return ![
+    'user rejected',
+    'user denied',
+    'user canceled',
+    'user cancelled',
+    'canceled by user',
+    'cancelled by user',
+    'request rejected',
+    'request declined',
+    'closed modal',
+    'transaction cancelled',
+    'connection rejected',
+  ].some((message) => rejectionText.includes(message))
+}
 export function buildEarnChainedActionTrade({
   currencyIn,
   currencyOut,

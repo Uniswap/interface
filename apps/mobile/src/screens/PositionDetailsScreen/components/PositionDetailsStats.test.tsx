@@ -14,8 +14,8 @@ describe('PositionDetailsStats', () => {
   it('shows a single full-range row for V2 positions instead of min/max/market', () => {
     render(<PositionDetailsStats {...baseProps} isV2={true} />)
 
-    expect(screen.getByText('Range')).toBeDefined()
-    expect(screen.getByText('Full range')).toBeDefined()
+    expect(screen.getByText('common.range')).toBeDefined()
+    expect(screen.getByText('common.fullRange')).toBeDefined()
     expect(screen.queryByText('$1,500.00')).toBeNull()
     expect(screen.queryByText('$2,500.00')).toBeNull()
     expect(screen.queryByText('$2,000.00')).toBeNull()
@@ -27,6 +27,6 @@ describe('PositionDetailsStats', () => {
     expect(screen.getByText('$1,500.00')).toBeDefined()
     expect(screen.getByText('$2,500.00')).toBeDefined()
     expect(screen.getByText('$2,000.00')).toBeDefined()
-    expect(screen.queryByText('Full range')).toBeNull()
+    expect(screen.queryByText('common.fullRange')).toBeNull()
   })
 })

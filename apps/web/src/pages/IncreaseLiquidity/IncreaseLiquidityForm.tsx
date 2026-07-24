@@ -153,7 +153,7 @@ export function IncreaseLiquidityForm() {
       <ErrorCallout errorMessage={dataFetchingError} onPress={refetch} />
       <Flex row>
         <Button
-          isDisabled={Boolean(error) || !txInfo?.txRequest || Boolean(fotErrorToken)}
+          disabled={Boolean(error) || !txInfo?.txRequest || Boolean(fotErrorToken)}
           onPress={handleOnContinue}
           loading={requestLoading}
           variant="branded"

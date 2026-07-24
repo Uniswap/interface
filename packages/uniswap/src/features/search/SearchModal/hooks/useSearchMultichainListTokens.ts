@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
-import { TokensOrderBy } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { HistoryDuration, TokensOrderBy } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { GqlResult } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
-import { dataApiServiceClient } from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
-import { dataApiMultichainTokenToSearchResult } from 'uniswap/src/data/rest/dataApiMultichainToken'
+import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApi/DataApiClientV2'
+import { dataApiMultichainTokenV2ToSearchResult } from 'uniswap/src/data/rest/dataApiMultichainTokenV2'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { MultichainSearchResult } from 'uniswap/src/features/dataApi/types'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
@@ -20,23 +21,25 @@ export function useSearchMultichainListTokens({
   skip: boolean
 }): GqlResult<MultichainSearchResult[]> {
   const { chains: enabledChainIds } = useEnabledChains()
+  const isV2TokensEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [
       ReactQueryCacheKey.DataApiService,
       'listTokens',
-      { chainIds: enabledChainIds, pageSize, multichain: true, orderBy: TokensOrderBy.VOLUME_1D, ascending: false },
+      'v2',
+      { chainIds: enabledChainIds, pageSize, orderBy: TokensOrderBy.VOLUME_1D, ascending: false },
     ] as const,
     queryFn: () =>
-      dataApiServiceClient.listTokens({
+      dataApiServiceClientV2.listTokens({
         chainIds: enabledChainIds,
-        pageSize,
-        multichain: true,
+        page: { pageSize },
         // TODO(CONS-1396): update to TRENDING order when available
-        orderBy: TokensOrderBy.VOLUME_1D,
-        ascending: false,
+        sort: { orderBy: TokensOrderBy.VOLUME_1D, ascending: false },
+        // Required by BE — UNSPECIFIED is rejected, mirrors apps/web's listTokensService.ts.
+        sparklineDuration: HistoryDuration.DAY,
       }),
-    enabled: !skip,
+    enabled: !skip && isV2TokensEnabled,
   })
 
   const results = useMemo(() => {
@@ -45,7 +48,7 @@ export function useSearchMultichainListTokens({
       return undefined
     }
     return multichainTokens
-      .map(dataApiMultichainTokenToSearchResult)
+      .map(dataApiMultichainTokenV2ToSearchResult)
       .filter((r): r is MultichainSearchResult => r !== undefined)
   }, [data])
 

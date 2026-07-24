@@ -10,6 +10,7 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import type { BaseModalProps } from 'uniswap/src/components/modals/ModalProps'
 import { useEarnDepositSources } from 'uniswap/src/features/earn/hooks/useEarnDepositSources'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
@@ -29,6 +30,7 @@ export function EarnDepositSourceSelectorModal({
   const navigation = useAppStackNavigation()
 
   const walletAddress = useActiveAccountAddress()
+  const vaultDisplayCurrencyInfo = useCurrencyInfo(vaultDisplayCurrencyId)
 
   const vault = useMemo(
     () =>
@@ -79,7 +81,7 @@ export function EarnDepositSourceSelectorModal({
                 borderRadius="$rounded12"
                 onPress={() => handleSelect(option.currencyInfo.currencyId)}
               >
-                <DepositSourceMenuItem option={option} />
+                <DepositSourceMenuItem canonicalTokenName={vaultDisplayCurrencyInfo?.currency.name} option={option} />
               </TouchableArea>
             ))}
           </Flex>

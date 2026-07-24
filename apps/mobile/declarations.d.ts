@@ -9,5 +9,3 @@ declare module '*.svg' {
 // declare the module so tsgo doesn't error TS2882 on it (it's compiled by
 // uniwind's Metro transformer, not TypeScript).
 declare module '*.css'
-
-declare module 'react-native-device-info/jest/react-native-device-info-mock'

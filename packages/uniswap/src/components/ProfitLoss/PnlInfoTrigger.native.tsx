@@ -7,7 +7,7 @@ import { PnlDefinitionsList } from 'uniswap/src/components/ProfitLoss/PnlDefinit
 import { PnlInfoTriggerProps } from 'uniswap/src/components/ProfitLoss/PnlInfoTrigger'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
-export function PnlInfoTrigger({ metrics }: PnlInfoTriggerProps): JSX.Element {
+export function PnlInfoTrigger({ metrics, footer }: PnlInfoTriggerProps): JSX.Element {
   const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
 
@@ -21,7 +21,7 @@ export function PnlInfoTrigger({ metrics }: PnlInfoTriggerProps): JSX.Element {
       </TouchableArea>
       <Modal isModalOpen={isOpen} name={ModalName.PnlDefinitions} onClose={onClose}>
         <Flex gap="$spacing24" pb="$spacing24" pt="$spacing12" px="$spacing24">
-          <PnlDefinitionsList metrics={metrics} gap="$spacing24" />
+          <PnlDefinitionsList metrics={metrics} footer={footer} gap="$spacing24" />
           <Flex row>
             <Button fill emphasis="secondary" size="medium" onPress={onClose}>
               {t('common.close')}

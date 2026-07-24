@@ -1,22 +1,14 @@
-import { GraphQLApi } from '@universe/api'
-
-export type GQLNftAsset = NonNullable<
-  NonNullable<NonNullable<NonNullable<GraphQLApi.NftsQuery['portfolios']>[0]>['nftBalances']>[0]
->['ownedAsset']
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export type NFTItem = {
-  name?: string
-  description?: string
+  chainId?: UniverseChainId
   contractAddress?: string
   tokenId?: string
+  name?: string
+  description?: string
   imageUrl?: string
-  thumbnailUrl?: string
   imageDimensions?: { width: number; height: number }
+  thumbnailUrl?: string
   collectionName?: string
-  isVerifiedCollection?: boolean
-  floorPrice?: number
-  ownerAddress?: string
-  listPrice?: GraphQLApi.IAmount
   isSpam?: boolean
-  chain?: GraphQLApi.Chain
 }

@@ -24,6 +24,9 @@ import type {
   TestSessionPlatform,
 } from '@universe/sessions/src/testing/types'
 
+// TODO(entry-gateway-urls): duplicated from the canonical definition in
+// packages/api/src/clients/base/entryGatewayUrls.ts — @universe/api depends on
+// @universe/sessions, so importing it here would create a package cycle. Keep in sync.
 const DEFAULT_BACKEND_URL = 'https://entry-gateway.backend-staging.api.uniswap.org'
 
 const PLATFORM_TO_REQUEST_SOURCE = {
@@ -64,9 +67,9 @@ export async function createTestSessionContext(options?: CreateTestSessionContex
 
   const requestSource = PLATFORM_TO_REQUEST_SOURCE[platform]
 
-  const sessionStorage = new InMemorySessionStorage()
-  const deviceIdService = new InMemoryDeviceIdService()
-  const uniswapIdentifierService = new InMemoryUniswapIdentifierService()
+  const sessionStorage = options?.sessionStorage ?? new InMemorySessionStorage()
+  const deviceIdService = options?.deviceIdService ?? new InMemoryDeviceIdService()
+  const uniswapIdentifierService = options?.uniswapIdentifierService ?? new InMemoryUniswapIdentifierService()
 
   // Create transport based on platform
   let cookieJar: Map<string, string> | null = null

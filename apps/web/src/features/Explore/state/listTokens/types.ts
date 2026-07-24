@@ -1,13 +1,24 @@
-import type { MultichainToken } from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import type { SparklineMap } from '~/appGraphql/data/types'
-import { TimePeriod } from '~/appGraphql/data/util'
+import { TimePeriod, type PricePoint } from '~/appGraphql/data/util'
 import { TokenSortMethod } from '~/components/Tokens/constants'
+
+/**
+ * Canonical shape produced by both the legacy adapter and the (real, v1-wire) backend adapter —
+ * everything downstream of the service layer only ever sees this v2 domain shape.
+ */
+export interface RankedMultichainTokensResult {
+  multichainTokens: RankedMultichainToken[]
+  /** multichainId → 1d price history, from RankedMultichainToken.sparkline (backend) or stat.priceHistory (legacy). */
+  priceHistoryByMultichainId: Partial<Record<string, PricePoint[]>>
+}
 
 /** Result shape returned by useListTokensService (data + loading/pagination + tokenSortRank). */
 export interface UseListTokensServiceResult {
-  topTokens: MultichainToken[]
+  topTokens: RankedMultichainToken[]
   /** multichainId → 1-based rank from the search-unfiltered list (stable while filtering the table). */
   tokenSortRank: Record<string, number>
+  priceHistoryByMultichainId: Partial<Record<string, PricePoint[]>>
   isLoading: boolean
   isError: boolean
   loadMore: ((params: { onComplete?: () => void }) => void) | undefined

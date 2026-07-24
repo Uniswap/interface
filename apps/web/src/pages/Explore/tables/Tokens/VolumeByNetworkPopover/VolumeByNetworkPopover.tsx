@@ -1,4 +1,4 @@
-import type { MultichainToken } from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { type ReactNode, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Popover, Text, useIsTouchDevice, useShadowPropsMedium } from 'ui/src'
@@ -36,7 +36,7 @@ const POPOVER_MIN_WIDTH = 300
 const COLOR_DOT_SIZE = 6
 
 interface VolumeByNetworkPopoverProps {
-  mcToken: MultichainToken | undefined
+  rankedToken: RankedMultichainToken | undefined
   timePeriod: TimePeriod
   volumeFormatted: string
   children: ReactNode
@@ -44,7 +44,7 @@ interface VolumeByNetworkPopoverProps {
 }
 
 export function VolumeByNetworkPopover({
-  mcToken,
+  rankedToken,
   timePeriod,
   volumeFormatted,
   children,
@@ -71,8 +71,8 @@ export function VolumeByNetworkPopover({
   const navigateToTokenDetails = useNavigateToTokenDetails()
 
   const breakdown = useMemo(
-    () => getVolumeBreakdownForPeriod(mcToken, timePeriod).filter((b) => isUniverseChainId(b.chainId)),
-    [mcToken, timePeriod],
+    () => getVolumeBreakdownForPeriod(rankedToken, timePeriod).filter((b) => isUniverseChainId(b.chainId)),
+    [rankedToken, timePeriod],
   )
   const totalVolume = useMemo(() => breakdown.reduce((sum, { volume }) => sum + volume, 0), [breakdown])
 
@@ -204,7 +204,7 @@ export function VolumeByNetworkPopover({
                     onPress={() =>
                       navigateVolumePopoverToTokenDetails({
                         navigateToTokenDetails,
-                        mcToken,
+                        rankedToken,
                         chainId,
                       })
                     }
@@ -248,7 +248,7 @@ export function VolumeByNetworkPopover({
                         : { type: TdpChainSelectionType.Multichain }
                     navigateVolumePopoverToTokenDetails({
                       navigateToTokenDetails,
-                      mcToken,
+                      rankedToken,
                       chainId: firstOtherBreakdown.chainId,
                       chainSelection,
                     })

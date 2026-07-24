@@ -1,9 +1,14 @@
+import { FeatureFlags, getFeatureFlagName } from '@universe/gating'
 import { USDT_ARBITRUM_ONE } from 'uniswap/src/constants/tokens'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { expect, getTest } from '~/playwright/fixtures'
 
 const test = getTest()
+
+// The `network-button-<chainId>` locators below only render when the network_filter_v2
+// gate is ON, so pin the flag to keep live rollout bucketing from flipping the DOM.
+const networkFilterV2Override = `featureFlagOverride=${getFeatureFlagName(FeatureFlags.NetworkFilterV2)}`
 
 test.describe(
   'Token explore',
@@ -72,7 +77,7 @@ test.describe(
     })
 
     test('should update when token explore table network changed', async ({ page }) => {
-      await page.goto('/explore/tokens/ethereum')
+      await page.goto(`/explore/tokens/ethereum?${networkFilterV2Override}`)
       await page.getByTestId(TestID.TokensNetworkFilterSelected).click()
       await page.getByTestId(`${ElementName.NetworkButton}-10`).last().click()
       await expect(page.getByTestId(TestID.TokensNetworkFilterSelected)).toHaveAttribute('alt', 'OP Mainnet logo')
@@ -80,7 +85,7 @@ test.describe(
 
     test('should show a L2 token even if the user is connected to a different network', async ({ page }) => {
       await page.setViewportSize({ width: 1200, height: 800 })
-      await page.goto('/explore/tokens/ethereum')
+      await page.goto(`/explore/tokens/ethereum?${networkFilterV2Override}`)
 
       await page.getByTestId(TestID.TokensNetworkFilterSelected).click()
       await page.getByTestId(`${ElementName.NetworkButton}-42161`).last().click()

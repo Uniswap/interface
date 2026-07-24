@@ -13,21 +13,21 @@ import { initialTelemetryState } from 'wallet/src/features/telemetry/slice'
 import { addAccount, initialWalletState, removeAccounts, setAccountAsActive } from 'wallet/src/features/wallet/slice'
 import { ACCOUNT, ACCOUNT2 } from 'wallet/src/test/fixtures'
 
-jest.mock('src/features/datadog/DatadogContext', () => ({
-  useDatadogStatus: jest.fn(() => ({ isInitialized: true, setInitialized: jest.fn() })),
+vi.mock('src/features/datadog/DatadogContext', () => ({
+  useDatadogStatus: vi.fn(() => ({ isInitialized: true, setInitialized: vi.fn() })),
 }))
 
-jest.mock('utilities/src/logger/datadog/Datadog', () => ({
-  setAttributesToDatadog: jest.fn().mockResolvedValue(undefined),
+vi.mock('utilities/src/logger/datadog/Datadog', () => ({
+  setAttributesToDatadog: vi.fn().mockResolvedValue(undefined),
 }))
 
-jest.mock('utilities/src/logger/logger', () => ({
-  logger: { error: jest.fn() },
+vi.mock('utilities/src/logger/logger', () => ({
+  logger: { error: vi.fn() },
 }))
 
-const mockUseDatadogStatus = jest.mocked(useDatadogStatus)
-const mockSetAttributesToDatadog = jest.mocked(setAttributesToDatadog)
-const mockLoggerError = jest.mocked(logger.error)
+const mockUseDatadogStatus = vi.mocked(useDatadogStatus)
+const mockSetAttributesToDatadog = vi.mocked(setAttributesToDatadog)
+const mockLoggerError = vi.mocked(logger.error)
 
 const VIEW_ONLY_ACCOUNT = {
   type: AccountType.Readonly as const,
@@ -37,8 +37,8 @@ const VIEW_ONLY_ACCOUNT = {
   pushNotificationsEnabled: false,
 }
 
-const datadogReady = { isInitialized: true, setInitialized: jest.fn() }
-const datadogPending = { isInitialized: false, setInitialized: jest.fn() }
+const datadogReady = { isInitialized: true, setInitialized: vi.fn() }
+const datadogPending = { isInitialized: false, setInitialized: vi.fn() }
 
 function walletStateWith({
   accounts,
@@ -64,7 +64,7 @@ function walletStateWith({
 
 describe('useDatadogWalletContext', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockUseDatadogStatus.mockReturnValue(datadogReady)
     mockSetAttributesToDatadog.mockResolvedValue(undefined)
   })

@@ -1,4 +1,4 @@
-import { createStore, Store } from '@reduxjs/toolkit'
+import { configureStore, Store } from '@reduxjs/toolkit'
 import {
   addFavoriteToken,
   FavoritesState,
@@ -14,9 +14,12 @@ describe(favoritesReducer, () => {
   })
 
   beforeEach(() => {
-    store = createStore(favoritesReducer, {
-      tokens: [],
-      watchedAddresses: [],
+    store = configureStore({
+      reducer: favoritesReducer,
+      preloadedState: {
+        tokens: [],
+        watchedAddresses: [],
+      },
     })
   })
 

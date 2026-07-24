@@ -1,7 +1,7 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { getChainLabel, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
-import { GQLNftAsset } from 'uniswap/src/features/nfts/types'
+import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { WalletConnectNotification } from 'uniswap/src/features/notifications/slice/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -247,7 +247,7 @@ export const formTransferNFTNotificationTitle = ({
 }: {
   txType: TransactionType
   txStatus: TransactionStatus
-  nft?: GQLNftAsset
+  nft?: NFTItem
   tokenAddress: Address
   tokenId: string
   senderOrRecipient: string

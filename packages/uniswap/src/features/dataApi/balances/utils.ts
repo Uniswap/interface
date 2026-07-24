@@ -1,4 +1,3 @@
-import { NetworkStatus } from '@apollo/client'
 import { type PlainMessage } from '@bufbuild/protobuf'
 import { Token as RestToken } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { Currency } from '@uniswap/sdk-core'
@@ -19,20 +18,6 @@ export function sortBalancesByName(unsortedBalances?: PortfolioBalance[]): Portf
     }
     return a.currencyInfo.currency.name.localeCompare(b.currencyInfo.currency.name)
   })
-}
-
-// maps REST status to gql NetworkStatus to preserve compatibility while we support both endpoints
-export function mapRestStatusToNetworkStatus(status: 'success' | 'error' | 'pending'): NetworkStatus {
-  switch (status) {
-    case 'success':
-      return NetworkStatus.ready
-    case 'error':
-      return NetworkStatus.error
-    case 'pending':
-      return NetworkStatus.loading
-    default:
-      return NetworkStatus.ready
-  }
 }
 
 export function matchesCurrency(token: PlainMessage<RestToken>, currency: Currency): boolean {

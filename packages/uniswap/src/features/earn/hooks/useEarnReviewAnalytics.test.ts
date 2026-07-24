@@ -21,6 +21,7 @@ const VAULT: EarnVaultInfo = {
   chainId: UniverseChainId.Mainnet,
   apyPercent: 4.8,
   exposureCurrencyIds: [],
+  exposures: [],
   totalDepositsUsd: 1_000_000,
   liquidityUsd: 500_000,
   curator: { name: 'Morpho' },
@@ -61,6 +62,14 @@ describe(useEarnReviewAnalytics, () => {
         swap_upsell_surface: 'toast',
         swap_amount_usd: 100,
       }),
+    )
+  })
+
+  it('provides analytics properties for the review impression', () => {
+    const { result } = renderAnalytics()
+
+    expect(result.current.reviewedEventProperties).toEqual(
+      expect.objectContaining({ action: 'deposit', amount_usd: 100 }),
     )
   })
 

@@ -24,6 +24,16 @@ export type {
   TurnstileChallengeData,
   HashCashChallengeData,
   GitHubChallengeData,
+  UserInfo,
+} from '@universe/sessions/src/session-repository/types'
+// The session-repository request/response types share names with the session-service
+// variants exported below, so they are exported under `SessionRepository`-prefixed aliases.
+export type {
+  ChallengeRequest as SessionRepositoryChallengeRequest,
+  ChallengeResponse as SessionRepositoryChallengeResponse,
+  InitSessionResponse as SessionRepositoryInitSessionResponse,
+  VerifySessionRequest as SessionRepositoryVerifySessionRequest,
+  VerifySessionResponse as SessionRepositoryVerifySessionResponse,
 } from '@universe/sessions/src/session-repository/types'
 
 // Session Service
@@ -112,9 +122,15 @@ export type {
 } from '@universe/sessions/src/challenge-solvers/createTurnstileSolver'
 export type {
   CreateHashcashWorkerChannelContext,
+  FindProofParams,
+  HashcashWorkerAPI,
   HashcashWorkerChannel,
   HashcashWorkerChannelFactory,
 } from '@universe/sessions/src/challenge-solvers/hashcash/worker/types'
+export type { HashcashChallenge, ProofResult } from '@universe/sessions/src/challenge-solvers/hashcash/shared'
+// Resolves platform-specifically (core.web.ts / core.native.ts) at the consumer's bundler,
+// exactly like a direct import of the core module would.
+export { findProof } from '@universe/sessions/src/challenge-solvers/hashcash/core'
 export {
   createHashcashWorkerChannel,
   HashcashWorkerBootError,

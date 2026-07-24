@@ -6,6 +6,8 @@ import {
 import { getDynamicConfigValue } from '@universe/gating'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getEarnVaultId } from 'uniswap/src/features/earn/utils'
+import { EarnEventName } from 'uniswap/src/features/telemetry/constants/features'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { PortfolioEarnSection } from './PortfolioEarnSection'
@@ -40,6 +42,10 @@ vi.mock('uniswap/src/features/portfolio/balances/hooks', () => ({
 
 vi.mock('uniswap/src/features/dataApi/tokenProjects/tokenProjects', () => ({
   useTokenProjectsByCurrencyId: mockUseTokenProjectsByCurrencyId,
+}))
+
+vi.mock('uniswap/src/features/telemetry/send', () => ({
+  sendAnalyticsEvent: vi.fn(),
 }))
 
 vi.mock('uniswap/src/features/language/LocalizationContext', () => ({
@@ -254,6 +260,7 @@ const WETH_VAULT = createVault({
 })
 const USDC_CURRENCY_ID = buildCurrencyId(UniverseChainId.Mainnet, USDC_ADDRESS)
 const DAI_CURRENCY_ID = buildCurrencyId(UniverseChainId.Mainnet, DAI_ADDRESS)
+const mockSendAnalyticsEvent = vi.mocked(sendAnalyticsEvent)
 
 function mockPortfolioBalances(
   currencyIds: readonly string[],
@@ -296,6 +303,7 @@ describe('PortfolioEarnSection', () => {
     mockUseQuery.mockReset()
     mockUseQueries.mockReset()
     mockRefetch.mockClear()
+    mockSendAnalyticsEvent.mockClear()
     mockUsePortfolioBalances.mockReset()
     mockUseTokenProjectsByCurrencyId.mockReset()
     mockPortfolioBalances([])
@@ -428,6 +436,50 @@ describe('PortfolioEarnSection', () => {
 
     expect(screen.getByTestId(TestID.PortfolioOverviewEarnSection)).toBeInTheDocument()
     expect(screen.getAllByTestId(TestID.PortfolioOverviewEarnVaultRowSkeleton)).toHaveLength(3)
+  })
+
+  it('does not log a Portfolio impression when loading settles with no vaults', () => {
+    mockEarnQueries({ vaults: [], positions: [], vaultsLoading: true })
+
+    const { rerender } = render(<PortfolioEarnSection account={ACCOUNT} />)
+
+    expect(mockSendAnalyticsEvent).not.toHaveBeenCalled()
+
+    mockEarnQueries({ vaults: [], positions: [] })
+    rerender(<PortfolioEarnSection key="settled" account={ACCOUNT} />)
+
+    expect(mockSendAnalyticsEvent).not.toHaveBeenCalled()
+  })
+
+  it('does not log a Portfolio impression when loading settles with an error', () => {
+    mockEarnQueries({ vaults: [], positions: [], vaultsLoading: true })
+
+    const { rerender } = render(<PortfolioEarnSection account={ACCOUNT} />)
+
+    expect(mockSendAnalyticsEvent).not.toHaveBeenCalled()
+
+    mockEarnQueries({ vaults: [], positions: [], vaultsError: true })
+    rerender(<PortfolioEarnSection key="settled" account={ACCOUNT} />)
+
+    expect(mockSendAnalyticsEvent).not.toHaveBeenCalled()
+  })
+
+  it('logs one Portfolio impression when loading settles with visible vault content', () => {
+    mockEarnQueries({ vaults: [], positions: [], vaultsLoading: true })
+
+    const { rerender } = render(<PortfolioEarnSection account={ACCOUNT} />)
+
+    expect(mockSendAnalyticsEvent).not.toHaveBeenCalled()
+
+    mockEarnQueries({ vaults: [USDC_VAULT], positions: [] })
+    rerender(<PortfolioEarnSection key="settled" account={ACCOUNT} />)
+
+    expect(screen.getByTestId(TestID.PortfolioOverviewEarnSection)).toBeInTheDocument()
+    expect(mockSendAnalyticsEvent).toHaveBeenCalledTimes(1)
+    expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(EarnEventName.EarnSurfaceViewed, {
+      entry_point: 'portfolio_earn_section',
+      surface: 'web',
+    })
   })
 
   it('orders vaults with active positions before vaults without', () => {

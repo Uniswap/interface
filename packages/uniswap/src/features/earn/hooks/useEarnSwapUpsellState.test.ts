@@ -69,6 +69,7 @@ const VAULT: EarnVaultInfo = {
   currencyId: OUTPUT_CURRENCY_ID,
   displayCurrencyId: OUTPUT_CURRENCY_ID,
   exposureCurrencyIds: [OUTPUT_CURRENCY_ID],
+  exposures: [],
   vaultAddress: '0x1111111111111111111111111111111111111111',
   chainId: UniverseChainId.Mainnet,
   apyPercent: 5,

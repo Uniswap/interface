@@ -24,6 +24,7 @@ function EmptyPretypeSection({ title, icon: Icon }: { title: string; icon: Gener
 interface SearchModalNoQueryListProps {
   chainFilter: UniverseChainId | null
   activeTab: SearchTab
+  auctionSearchEnabled?: boolean
   onSelect?: SearchModalListProps['onSelect']
   renderedInModal: boolean
   contentContainerStyle?: StyleProp<ViewStyle>
@@ -33,6 +34,7 @@ interface SearchModalNoQueryListProps {
 export const SearchModalNoQueryList = memo(function SearchModalNoQueryListInner({
   chainFilter,
   activeTab,
+  auctionSearchEnabled = false,
   onSelect,
   renderedInModal,
   contentContainerStyle,
@@ -40,7 +42,16 @@ export const SearchModalNoQueryList = memo(function SearchModalNoQueryListInner(
 }: SearchModalNoQueryListProps): JSX.Element {
   const { t } = useTranslation()
 
-  const { data: sections, loading, error, refetch } = useSectionsForNoQuerySearch({ chainFilter, activeTab })
+  const {
+    data: sections,
+    loading,
+    error,
+    refetch,
+  } = useSectionsForNoQuerySearch({
+    chainFilter,
+    activeTab,
+    auctionSearchEnabled,
+  })
 
   // Primary-chain CurrencyInfos for the no-query Stocks-shelf RwaCollection rows' context menu.
   const rwaIssuerCurrencyInfos = useRwaIssuerCurrencyInfos({ sections })

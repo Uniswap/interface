@@ -294,7 +294,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
                 emphasis="primary"
                 size="large"
                 fill
-                isDisabled={buttonDisabled}
+                disabled={buttonDisabled}
                 onPress={() => handleSendButton()}
               >
                 {sendButtonState.label}

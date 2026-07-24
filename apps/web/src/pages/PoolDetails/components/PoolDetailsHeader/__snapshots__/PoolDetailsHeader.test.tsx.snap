@@ -145,10 +145,10 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
     style="display: contents;"
   >
     <div
-      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037 _gap-t-space-gap56"
     >
       <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _alignItems-center _gap-t-space-gap1569"
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _minWidth-0px _alignItems-center _gap-t-space-gap1569"
       >
         <div
           class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-56px _width-56px _transition-opacity0--2se948550981"
@@ -237,24 +237,24 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
           </div>
         </div>
         <div
-          class="_gap-_md_t-space-non101 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
+          class="_gap-_md_t-space-non101 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-1 _flexDirection-column _minWidth-0px _gap-t-space-gap56"
         >
           <div
-            class="_width-_sm_10037 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _alignItems-flex-end _gap-t-space-gap56"
+            class="_width-_sm_10037 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _minWidth-0px _alignItems-flex-end _gap-t-space-gap56"
           >
             <div
-              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa1360334080 _alignItems-center _width-max-content"
+              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-1 _flexDirection-row _gap-t-space-spa1360334080 _alignItems-center _minWidth-0px"
             >
               <div
-                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-1 _flexDirection-row _minWidth-0px"
               >
                 <a
                   data-discover="true"
                   href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
-                  style="cursor: pointer; text-decoration: none; opacity: 1; transition: 100ms;"
+                  style="min-width: 0px; flex-shrink: 1; cursor: pointer; display: flex; text-decoration: none; opacity: 1; transition: 100ms;"
                 >
                   <h3
-                    class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _transition-opacity0--2se948550981"
+                    class="font_heading _whiteSpace-_platformweb_nowrap _overflowX-_platformweb_hidden _overflowY-_platformweb_hidden _textOverflow-_platformweb_ellipsis _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _transition-opacity0--2se948550981 _minWidth-0px _flexShrink-1"
                     data-disable-theme="true"
                   >
                     USDC / 
@@ -263,10 +263,10 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                 <a
                   data-discover="true"
                   href="/explore/tokens/ethereum/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
-                  style="cursor: pointer; text-decoration: none; opacity: 1; transition: 100ms;"
+                  style="min-width: 0px; flex-shrink: 1; cursor: pointer; display: flex; text-decoration: none; opacity: 1; transition: 100ms;"
                 >
                   <h3
-                    class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _transition-opacity0--2se948550981"
+                    class="font_heading _whiteSpace-_platformweb_nowrap _overflowX-_platformweb_hidden _overflowY-_platformweb_hidden _textOverflow-_platformweb_ellipsis _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _transition-opacity0--2se948550981 _minWidth-0px _flexShrink-1"
                     data-disable-theme="true"
                   >
                     WETH

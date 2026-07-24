@@ -1,7 +1,11 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
 import { USDC } from 'uniswap/src/constants/tokens'
-import { buildEarnPlanAnalytics } from 'uniswap/src/features/earn/planExecution'
+import {
+  buildEarnPlanAnalytics,
+  EarnPlanPriceChangeError,
+  shouldShowEarnTroubleshootingLink,
+} from 'uniswap/src/features/earn/planExecution'
 import type { ChainedActionTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 
 const VAULT_ADDRESS = '0x0000000000000000000000000000000000000002'
@@ -51,6 +55,23 @@ describe(buildEarnPlanAnalytics, () => {
   })
 })
 
+describe(shouldShowEarnTroubleshootingLink, () => {
+  it('shows troubleshooting help for transaction failures', () => {
+    expect(shouldShowEarnTroubleshootingLink(new Error('Transaction failed'))).toBe(true)
+  })
+
+  it.each([
+    Object.assign(new Error('Rejected by wallet'), { code: 4001 }),
+    new Error('User denied the request'),
+    new Error('Transaction cancelled'),
+  ])('hides troubleshooting help for wallet rejection %#', (error) => {
+    expect(shouldShowEarnTroubleshootingLink(error)).toBe(false)
+  })
+
+  it('hides troubleshooting help for price-change interruptions', () => {
+    expect(shouldShowEarnTroubleshootingLink(new EarnPlanPriceChangeError('Review the updated quote'))).toBe(false)
+  })
+})
 function createTrade({
   earnIntent = {
     action: TradingApi.EarnAction.DEPOSIT,

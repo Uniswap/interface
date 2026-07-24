@@ -41,7 +41,7 @@ import {
   getTokenBalanceUsd,
   getTokenProjectCurrencyIds,
   hasEarnPosition,
-  resolveEarnWithdrawPosition,
+  resolveEarnAmountPosition,
   selectEarnVaultForToken,
 } from 'uniswap/src/features/earn/utils'
 import { getEarnVaultWithdrawDestinationCurrencyId } from 'uniswap/src/features/earn/withdrawDestination'
@@ -56,6 +56,9 @@ import { describe, expect, it } from 'vitest'
 const USDC_ADDRESS = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
 const USDC_ADDRESS_LOWERCASE = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
 const USDT_ADDRESS = '0xdAC17F958D2ee523a2206206994597C13D831ec7'
+const BASE_USDT_ADDRESS = '0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2'
+const UNICHAIN_USDT0_ADDRESS = '0x9151434b16b9763660705744891fA906F660EcC5'
+const ZKSYNC_USDT_ADDRESS = '0x493257fD37EDB34451f62EDf8D2a0C418852bA4C'
 const DAI_ADDRESS = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
 const BASE_USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71B54bdA02913'
 const WETH_ADDRESS = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
@@ -98,6 +101,7 @@ function createSharedVault(overrides: Partial<EarnVaultInfo> = {}): EarnVaultInf
     chainId: UniverseChainId.Mainnet,
     apyPercent: 4,
     exposureCurrencyIds: [],
+    exposures: [],
     totalDepositsUsd: 0,
     liquidityUsd: 0,
     curator: { name: 'Gauntlet' },
@@ -160,6 +164,34 @@ describe('earn API mappers', () => {
     expect(vault?.deploymentDate).toBeUndefined()
     expect(vault?.morphoUrl).toBe('https://morpho.org/')
     expect(vault?.exposureAndRiskUrl).toBe(`https://app.morpho.org/ethereum/vault/${VAULT_ADDRESS}`)
+  })
+
+  it('defaults exposures to an empty list when the backend omits them', () => {
+    expect(getEarnVaultInfo(createDataApiVault())?.exposures).toEqual([])
+  })
+
+  it('maps per-asset exposure breakdown with USD values and shares', () => {
+    const exposureToken = new Token({
+      chainId: UniverseChainId.Mainnet,
+      address: USDC_ADDRESS,
+      symbol: 'USDC',
+      decimals: 6,
+      name: 'USD Coin',
+      type: TokenType.ERC20,
+    })
+
+    const vault = getEarnVaultInfo({
+      ...createDataApiVault(),
+      exposures: [
+        { token: exposureToken, assetsRaw: '101500000000', assetsUsd: 101_500_000, share: 0.82 },
+        { token: exposureToken, assetsRaw: '0' },
+      ],
+    } as unknown as Parameters<typeof getEarnVaultInfo>[0])
+
+    expect(vault?.exposures).toEqual([
+      { currencyId: buildCurrencyId(UniverseChainId.Mainnet, USDC_ADDRESS), valueUsd: 101_500_000, share: 0.82 },
+      { currencyId: buildCurrencyId(UniverseChainId.Mainnet, USDC_ADDRESS), valueUsd: undefined, share: undefined },
+    ])
   })
 
   it('filters out vaults without a supported chain or underlying token', () => {
@@ -581,6 +613,24 @@ describe('earn API mappers', () => {
     ).toBe(buildCurrencyId(UniverseChainId.Optimism, optimismUsdt.address))
     expect(
       getEarnVaultWithdrawDestinationCurrencyId({
+        vault: usdtVault,
+        destinationChainId: UniverseChainId.Base,
+      }),
+    ).toBe(buildCurrencyId(UniverseChainId.Base, BASE_USDT_ADDRESS))
+    expect(
+      getEarnVaultWithdrawDestinationCurrencyId({
+        vault: usdtVault,
+        destinationChainId: UniverseChainId.Unichain,
+      }),
+    ).toBe(buildCurrencyId(UniverseChainId.Unichain, UNICHAIN_USDT0_ADDRESS))
+    expect(
+      getEarnVaultWithdrawDestinationCurrencyId({
+        vault: usdtVault,
+        destinationChainId: UniverseChainId.Zksync,
+      }),
+    ).toBe(buildCurrencyId(UniverseChainId.Zksync, ZKSYNC_USDT_ADDRESS))
+    expect(
+      getEarnVaultWithdrawDestinationCurrencyId({
         vault: unsupportedVault,
         destinationChainId: UniverseChainId.Unichain,
       }),
@@ -788,6 +838,51 @@ describe('earn API mappers', () => {
         minimumAmount: EARN_MIN_DEPOSIT_USD,
       }),
     ).toBe(false)
+  })
+
+  it('accepts deposit amounts that round to the minimum at display precision', () => {
+    expect(
+      getEarnDepositMinimumValidation({
+        inputAmount: EARN_MIN_DEPOSIT_USD - 0.0001,
+        minimumAmount: EARN_MIN_DEPOSIT_USD,
+      }),
+    ).toBe(false)
+    expect(
+      getEarnDepositMinimumValidation({
+        inputAmount: EARN_MIN_DEPOSIT_USD - 0.006,
+        minimumAmount: EARN_MIN_DEPOSIT_USD,
+      }),
+    ).toBe(true)
+    expect(
+      getEarnDepositMinimumValidation({
+        fiatDecimals: 0,
+        inputAmount: EARN_MIN_DEPOSIT_USD - 0.4,
+        minimumAmount: EARN_MIN_DEPOSIT_USD,
+      }),
+    ).toBe(false)
+  })
+
+  it('rounds half-cent boundaries like Intl.NumberFormat display formatting', () => {
+    // 1.005 and 1.006 both render as "$1.01", but Math.round(1.005 * 100) is 100 from float error
+    expect(
+      getEarnDepositMinimumValidation({
+        inputAmount: 1.005,
+        minimumAmount: 1.006,
+      }),
+    ).toBe(false)
+    // 2.005 also renders as "$2.01"; its float error survives a Number.EPSILON nudge
+    expect(
+      getEarnDepositMinimumValidation({
+        inputAmount: 2.005,
+        minimumAmount: 2.01,
+      }),
+    ).toBe(false)
+    expect(
+      getEarnDepositMinimumValidation({
+        inputAmount: 1.004,
+        minimumAmount: 1.005,
+      }),
+    ).toBe(true)
   })
 
   it('uses share units for MAX_SHARES withdraw quote amounts', () => {
@@ -1078,7 +1173,7 @@ describe('earn API mappers', () => {
   })
 })
 
-describe(resolveEarnWithdrawPosition, () => {
+describe(resolveEarnAmountPosition, () => {
   // The post-first-deposit snapshot: synthesized optimistically with zero raw balances.
   const optimisticSnapshot: EarnPositionInfo = {
     vaultId: '1-0xvault',
@@ -1098,7 +1193,7 @@ describe(resolveEarnWithdrawPosition, () => {
 
   it('keeps the snapshot while the live query has not resolved', () => {
     expect(
-      resolveEarnWithdrawPosition({
+      resolveEarnAmountPosition({
         livePosition: undefined,
         snapshotPosition: optimisticSnapshot,
       }),
@@ -1107,7 +1202,7 @@ describe(resolveEarnWithdrawPosition, () => {
 
   it('keeps the snapshot while the live position is still an unconfirmed optimistic merge (zero raw)', () => {
     expect(
-      resolveEarnWithdrawPosition({
+      resolveEarnAmountPosition({
         livePosition: { ...optimisticSnapshot },
         snapshotPosition: optimisticSnapshot,
       }),
@@ -1118,7 +1213,7 @@ describe(resolveEarnWithdrawPosition, () => {
     // Sequence: startWithdraw snapshots the zero-raw optimistic position, then GetEarnPosition
     // resolves with real raw balances — the withdraw view must un-gate without re-entering.
     expect(
-      resolveEarnWithdrawPosition({
+      resolveEarnAmountPosition({
         livePosition: confirmedLivePosition,
         snapshotPosition: optimisticSnapshot,
       }),
@@ -1134,7 +1229,7 @@ describe(resolveEarnWithdrawPosition, () => {
     }
 
     expect(
-      resolveEarnWithdrawPosition({
+      resolveEarnAmountPosition({
         livePosition: confirmedLivePosition,
         snapshotPosition: confirmedSnapshot,
       }),
@@ -1143,7 +1238,7 @@ describe(resolveEarnWithdrawPosition, () => {
 
   it('ignores a confirmed live position for a different vault', () => {
     expect(
-      resolveEarnWithdrawPosition({
+      resolveEarnAmountPosition({
         livePosition: { ...confirmedLivePosition, vaultId: '1-0xothervault' },
         snapshotPosition: optimisticSnapshot,
       }),

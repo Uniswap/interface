@@ -17,14 +17,16 @@ import {
 } from 'src/components/earn/EarnDepositAmountSections'
 import {
   getEarnDepositAmountUiState,
+  getHasRequiredSelection,
   getIsEarnAmountConversionPending,
 } from 'src/components/earn/earnDepositAmountUiState'
+import { resolveMobileEarnAmountDestination } from 'src/components/earn/earnWithdrawDestination'
+import { useEarnAmountInputFontSizing } from 'src/components/earn/useEarnAmountInputFontSizing'
 import { useEarnDepositAmountInlineErrors } from 'src/components/earn/useEarnDepositAmountInlineErrors'
 import { Screen } from 'src/components/layout/Screen'
+import { useLayoutHeight } from 'src/utils/useLayoutHeight'
 import { Button, Flex, useIsShortMobileDevice } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
-import { fonts } from 'ui/src/theme'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { PillMultiToggle } from 'uniswap/src/components/pill/PillMultiToggle'
@@ -50,31 +52,6 @@ import { areCurrencyIdsEqual } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
-const MAX_INPUT_FONT_SIZE = fonts.heading1.fontSize
-const MIN_INPUT_FONT_SIZE = 28
-const MAX_CHAR_PIXEL_WIDTH = 40
-const DECIMAL_PAD_EXTRA_ELEMENTS_HEIGHT = 60
-
-function getHasRequiredSelection({
-  hasConfirmedWithdrawPosition,
-  hasCurrency,
-  hasDestinationCurrency,
-  hasSelectedDepositSource,
-  isWithdrawing,
-}: {
-  hasConfirmedWithdrawPosition: boolean
-  hasCurrency: boolean
-  hasDestinationCurrency: boolean
-  hasSelectedDepositSource: boolean
-  isWithdrawing: boolean
-}): boolean {
-  if (isWithdrawing) {
-    return hasConfirmedWithdrawPosition && hasDestinationCurrency && hasCurrency
-  }
-
-  return hasSelectedDepositSource
-}
-
 export function EarnDepositAmountContent({
   vault,
   position,
@@ -85,6 +62,7 @@ export function EarnDepositAmountContent({
   initialWithdrawMode,
   minimumBalanceDataUpdatedAtMs,
   onReview,
+  onOpenVaultDetails,
   onOpenNetworkSelector,
   onOpenDepositSourceSelector,
 }: {
@@ -105,6 +83,7 @@ export function EarnDepositAmountContent({
     sourceCurrencyId?: string
     withdrawMode?: TradingApi.EarnWithdrawMode
   }) => void
+  onOpenVaultDetails: () => void
   onOpenNetworkSelector: (chainId: UniverseChainId) => void
   onOpenDepositSourceSelector: () => void
 }): JSX.Element {
@@ -122,7 +101,11 @@ export function EarnDepositAmountContent({
   )
   const previousInitialWithdrawModeRef = useRef(initialWithdrawMode)
   const isWithdrawing = currentAction === EarnAction.Withdraw
-  const chainId = initialChainId ?? DEFAULT_WITHDRAW_CHAIN_ID
+  const requestedChainId = initialChainId ?? DEFAULT_WITHDRAW_CHAIN_ID
+  const { chainId, destinationCurrencyId: resolvedWithdrawDestinationCurrencyId } = useMemo(
+    () => resolveMobileEarnAmountDestination({ isWithdrawing, requestedChainId, vault }),
+    [isWithdrawing, requestedChainId, vault],
+  )
 
   const {
     balanceLookupErrored,
@@ -155,7 +138,7 @@ export function EarnDepositAmountContent({
     withdrawableBalanceUsd,
     availableBalance,
     isWithdrawLiquidityLimited,
-    destinationCurrencyId,
+    destinationCurrencyId: contextDestinationCurrencyId,
   } = useEarnDepositCurrencyContext({
     vault,
     position,
@@ -163,6 +146,7 @@ export function EarnDepositAmountContent({
     selectedDepositSource,
     chainId,
   })
+  const destinationCurrencyId = isWithdrawing ? resolvedWithdrawDestinationCurrencyId : contextDestinationCurrencyId
   const currency = currencyInfo?.currency
 
   const {
@@ -180,6 +164,7 @@ export function EarnDepositAmountContent({
     setActiveAmount: setEntryActiveAmount,
     handlePercentPress: handleEntryPercentPress,
     handleToggleInputMode,
+    resetAmounts,
   } = useEarnAmountEntryMobile({
     currency,
     isWithdrawing,
@@ -195,28 +180,29 @@ export function EarnDepositAmountContent({
   const decimalPadRef = useRef<DecimalPadInputRef>(null)
   const selectionRef = useRef<RNTextInputProps['selection']>(undefined)
   const [decimalPadReady, setDecimalPadReady] = useState(false)
+  const [amountSectionHeight, onAmountSectionLayout] = useLayoutHeight()
+  const [decimalPadHeight, onDecimalPadLayout] = useLayoutHeight()
+  const [bottomControlsHeight, onBottomControlsLayout] = useLayoutHeight()
 
-  const {
-    fontSize,
-    onLayout: onInputLayout,
-    onSetFontSize,
-  } = useDynamicFontSizing({
-    maxCharWidthAtMaxFontSize: MAX_CHAR_PIXEL_WIDTH,
-    maxFontSize: MAX_INPUT_FONT_SIZE,
-    minFontSize: MIN_INPUT_FONT_SIZE,
+  const { fontSize, onInputLayout } = useEarnAmountInputFontSizing({
+    fiatSymbol: fiatCurrencyInfo.symbol,
+    isFiatInput,
+    symbol,
+    value,
   })
-
-  useEffect(() => {
-    onSetFontSize(value || '0')
-  }, [onSetFontSize, value])
 
   const resetSelection = useCallback(({ start, end }: { start: number; end?: number }) => {
     selectionRef.current = { start, end }
   }, [])
 
+  // Refresh cached key state after programmatic value changes, mirroring the swap/send/FOR screens.
+  useEffect(() => {
+    resetSelection({ start: value.length, end: value.length })
+    decimalPadRef.current?.updateDisabledKeys()
+  }, [value, resetSelection])
+
   const onDecimalPadReady = useCallback(() => setDecimalPadReady(true), [])
   const onTriggerInputShake = useCallback(() => undefined, [])
-
   useEffect(() => {
     if (previousInitialWithdrawModeRef.current === initialWithdrawMode) {
       return
@@ -224,20 +210,28 @@ export function EarnDepositAmountContent({
     previousInitialWithdrawModeRef.current = initialWithdrawMode
     setWithdrawMode(initialWithdrawMode ?? TradingApi.EarnWithdrawMode.EXACT_ASSETS)
   }, [initialWithdrawMode])
-
   useEffect(() => {
     if (isWithdrawLiquidityLimited && withdrawMode === TradingApi.EarnWithdrawMode.MAX_SHARES) {
       setWithdrawMode(TradingApi.EarnWithdrawMode.EXACT_ASSETS)
     }
   }, [isWithdrawLiquidityLimited, withdrawMode])
 
-  const handleActionToggle = useCallback((action: string | number) => {
-    const nextAction = action as EarnAction
-    setCurrentAction(nextAction)
-    if (nextAction === EarnAction.Deposit) {
-      setWithdrawMode(TradingApi.EarnWithdrawMode.EXACT_ASSETS)
-    }
-  }, [])
+  const handleActionToggle = useCallback(
+    (action: string | number) => {
+      const nextAction = action as EarnAction
+      if (nextAction === currentAction) {
+        return
+      }
+      setCurrentAction(nextAction)
+      resetAmounts()
+      resetSelection({ start: 0 })
+      decimalPadRef.current?.updateDisabledKeys()
+      if (nextAction === EarnAction.Deposit) {
+        setWithdrawMode(TradingApi.EarnWithdrawMode.EXACT_ASSETS)
+      }
+    },
+    [currentAction, resetAmounts, resetSelection],
+  )
 
   const setActiveAmount = useCallback(
     (next: string) => {
@@ -332,7 +326,8 @@ export function EarnDepositAmountContent({
     exactAmountFiat,
     exactAmountToken,
     symbol,
-    fiatCurrencyInfo,
+    currencyCode: fiatCurrencyInfo.code,
+    formatNumberOrString,
   })
   const apyLabel = t('explore.earn.vault.rateValue', {
     apy: formatPercent(vault.apyPercent, 2),
@@ -377,7 +372,7 @@ export function EarnDepositAmountContent({
       <HandleBar backgroundColor="none" />
       <Flex row height="100%" pt="$spacing12">
         {isSheetReady && (
-          <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing16" px="$spacing24" width="100%">
+          <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing8" px="$spacing24" width="100%">
             <Flex row alignItems="center" justifyContent="center">
               <PillMultiToggle
                 defaultOption={currentAction}
@@ -387,7 +382,7 @@ export function EarnDepositAmountContent({
                 ]}
                 onSelectOption={handleActionToggle}
               />
-              <EarnHelpIconButton />
+              <EarnHelpIconButton onPress={onOpenVaultDetails} />
             </Flex>
 
             <EarnDepositLookupState
@@ -396,59 +391,40 @@ export function EarnDepositAmountContent({
               onRetry={refetchBalanceLookup}
             >
               <>
-                <AmountEntrySection
-                  fiatCurrencyInfo={fiatCurrencyInfo}
-                  fontSize={fontSize}
-                  formattedAlternateAmount={formattedAlternateAmount}
-                  hasAmount={hasAmount}
-                  inlineError={amountUiState.inlineError}
-                  inputRef={inputRef}
-                  isFiatInput={isFiatInput}
-                  maxDecimals={maxDecimals}
-                  maxLabel={t('common.max')}
-                  setActiveAmount={setActiveAmount}
-                  symbol={symbol}
-                  value={value}
-                  onInputLayout={onInputLayout}
-                  onPercentPress={handlePercentPress}
-                  onToggleInputMode={handleToggleInputMode}
-                />
-
-                {!isWithdrawing && (
-                  <EarnProjectedEarningsRow
-                    apyLabel={apyLabel}
-                    hasAmount={hasAmount}
-                    perYearLabel={t('explore.earn.deposit.perYear')}
-                    projectedAnnualEarningsLabel={formatFiat(projectedAnnualEarnings)}
-                  />
-                )}
-
-                <EarnDepositSourceSection
-                  apyLabel={apyLabel}
-                  availableLabel={availableLabel}
-                  currencyInfo={currencyInfo}
-                  isWithdrawing={isWithdrawing}
-                  lowLiquidityAvailableAmount={withdrawLiquidityAvailableAmount}
-                  lowLiquidityTotalAmount={withdrawLiquidityTotalAmount}
-                  showLowLiquidityInfo={isWithdrawing && isWithdrawLiquidityLimited}
-                  showSelector={shouldShowDepositSourceSelector}
-                  onOpenDepositSourceSelector={onOpenDepositSourceSelector}
-                />
-
-                <EarnWithdrawDestinationSection
-                  chainId={chainId}
-                  chainLabel={chainLabel}
-                  isVisible={isWithdrawing}
-                  withdrawToLabel={t('explore.earn.withdraw.to')}
-                  onOpenNetworkSelector={onOpenNetworkSelector}
-                />
-
-                <DecimalPadCalculateSpace
-                  id={DecimalPadCalculatedSpaceId.EarnDeposit}
-                  decimalPadRef={decimalPadRef}
-                  additionalElementsHeight={DECIMAL_PAD_EXTRA_ELEMENTS_HEIGHT}
-                  isDecimalPadReady={decimalPadReady}
-                />
+                <Flex fill justifyContent="center" pb={bottomControlsHeight}>
+                  <Flex onLayout={onAmountSectionLayout}>
+                    <AmountEntrySection
+                      fiatCurrencyInfo={fiatCurrencyInfo}
+                      fontSize={fontSize}
+                      formattedAlternateAmount={formattedAlternateAmount}
+                      hasAmount={hasAmount}
+                      inlineError={amountUiState.inlineError}
+                      inputRef={inputRef}
+                      isFiatInput={isFiatInput}
+                      isShortMobileDevice={isShortMobileDevice}
+                      maxDecimals={maxDecimals}
+                      maxLabel={t('common.max')}
+                      setActiveAmount={setActiveAmount}
+                      symbol={symbol}
+                      value={value}
+                      onInputLayout={onInputLayout}
+                      onPercentPress={handlePercentPress}
+                      onToggleInputMode={handleToggleInputMode}
+                    />
+                  </Flex>
+                  <Flex position="absolute" top={0} right={0} bottom={0} left={0} pointerEvents="none">
+                    {/* The spacer overlays the full content area, so the pad ceiling must exclude the amount
+                        section and the overlay's non-pad chrome (bottomControls − pad, pad-size-invariant). */}
+                    <DecimalPadCalculateSpace
+                      id={DecimalPadCalculatedSpaceId.EarnDeposit}
+                      decimalPadRef={decimalPadRef}
+                      additionalElementsHeight={
+                        amountSectionHeight + Math.max(0, bottomControlsHeight - decimalPadHeight)
+                      }
+                      isDecimalPadReady={decimalPadReady}
+                    />
+                  </Flex>
+                </Flex>
 
                 <AnimatedFlex
                   bottom={0}
@@ -459,23 +435,56 @@ export function EarnDepositAmountContent({
                   position="absolute"
                   px="$spacing24"
                   right={0}
+                  onLayout={onBottomControlsLayout}
                 >
-                  <Flex grow justifyContent="flex-end" py="$spacing8">
-                    <DecimalPadInput
-                      ref={decimalPadRef}
-                      maxDecimals={maxDecimals}
-                      resetSelection={resetSelection}
-                      selectionRef={selectionRef}
-                      setValue={setActiveAmount}
-                      valueRef={exactValueRef}
-                      onReady={onDecimalPadReady}
-                      onTriggerInputShakeAnimation={onTriggerInputShake}
+                  <Flex gap="$spacing8">
+                    {!isWithdrawing && (
+                      <EarnProjectedEarningsRow
+                        apyLabel={apyLabel}
+                        hasAmount={hasAmount}
+                        perYearLabel={t('explore.earn.deposit.perYear')}
+                        projectedAnnualEarningsLabel={formatFiat(projectedAnnualEarnings)}
+                      />
+                    )}
+
+                    <EarnDepositSourceSection
+                      apyLabel={apyLabel}
+                      availableLabel={availableLabel}
+                      currencyInfo={currencyInfo}
+                      isWithdrawing={isWithdrawing}
+                      lowLiquidityAvailableAmount={withdrawLiquidityAvailableAmount}
+                      lowLiquidityTotalAmount={withdrawLiquidityTotalAmount}
+                      showLowLiquidityInfo={isWithdrawing && isWithdrawLiquidityLimited}
+                      showSelector={shouldShowDepositSourceSelector}
+                      onOpenDepositSourceSelector={onOpenDepositSourceSelector}
                     />
+
+                    <EarnWithdrawDestinationSection
+                      chainId={chainId}
+                      chainLabel={chainLabel}
+                      isVisible={isWithdrawing}
+                      withdrawToLabel={t('explore.earn.withdraw.to')}
+                      onOpenNetworkSelector={onOpenNetworkSelector}
+                    />
+                  </Flex>
+                  <Flex grow justifyContent="flex-end" py="$spacing8">
+                    <Flex onLayout={onDecimalPadLayout}>
+                      <DecimalPadInput
+                        ref={decimalPadRef}
+                        maxDecimals={maxDecimals}
+                        resetSelection={resetSelection}
+                        selectionRef={selectionRef}
+                        setValue={setActiveAmount}
+                        valueRef={exactValueRef}
+                        onReady={onDecimalPadReady}
+                        onTriggerInputShakeAnimation={onTriggerInputShake}
+                      />
+                    </Flex>
                   </Flex>
                   <Button
                     emphasis="primary"
                     size="large"
-                    isDisabled={amountUiState.isReviewDisabled}
+                    disabled={amountUiState.isReviewDisabled}
                     onPress={handleReview}
                   >
                     {amountUiState.ctaLabel}

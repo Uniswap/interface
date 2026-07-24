@@ -2,16 +2,18 @@
 
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
-import type { MultichainToken } from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { usePrice } from '@universe/prices'
 import { ReactElement, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, useMedia } from 'ui/src'
 import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber.web'
+import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { DEFAULT_NATIVE_ADDRESS, DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/evm/defaults'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { fromGraphQLChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { isRemotePriceServiceSupportedChain } from 'uniswap/src/features/prices/isRemotePriceServiceSupportedChain'
@@ -32,23 +34,28 @@ import { HeaderCell } from '~/components/Table/styled'
 import { TokenSortMethod } from '~/components/Tokens/constants'
 import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
 import { getExploreMultichainExpandRowMetrics } from '~/features/Explore/state/listTokens/utils/getExploreMultichainExpandRowMetrics'
-import { multichainTokenToDisplayToken } from '~/features/Explore/state/listTokens/utils/multichainTokenToDisplayToken'
-import { getChainIdsByVolume } from '~/features/Explore/state/listTokens/utils/multichainVolume'
+import { getChainIdsByVolume, getVolumeForTimePeriod } from '~/features/Explore/state/listTokens/utils/multichainVolume'
+import { pickPrimaryDeployment } from '~/features/Explore/state/listTokens/utils/pickPrimaryDeployment'
 import { useExploreParams } from '~/pages/Explore/redirects'
 import { getTokenDescriptionColumnSize, TokenDescription } from '~/pages/Explore/tables/Tokens/TokenDescription'
 import { TokenTableHeader } from '~/pages/Explore/tables/Tokens/TokenTableHeader'
 import { useTokenTableSortStore } from '~/pages/Explore/tables/Tokens/tokenTableSortStore'
 import { VolumeByNetworkPopover } from '~/pages/Explore/tables/Tokens/VolumeByNetworkPopover/VolumeByNetworkPopover'
-import { TokenStat } from '~/types/explore'
 import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
 import { TDP_MULTICHAIN_CHAIN_QUERY_VALUE } from '~/utils/params/chainQueryParam'
 
 const VOLUME_INFO_ICON_WIDTH = 16
 
+interface PriceCellValue {
+  chainId: UniverseChainId
+  address: string
+  price: number | undefined
+}
+
 interface TokenTableValue {
   index: number
-  token: TokenStat
-  mcToken: MultichainToken | undefined
+  token: PriceCellValue
+  mcToken: RankedMultichainToken | undefined
   tokenDescription: ReactElement
   percentChange1hr: ReactElement
   percentChange1d: ReactElement
@@ -64,10 +71,10 @@ interface TokenTableValue {
 
 const ROW_HEIGHT = 64
 
-function LivePriceCell({ token }: { token?: TokenStat }) {
+function LivePriceCell({ token }: { token?: PriceCellValue }) {
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
-  const chainId = token ? fromGraphQLChain(token.chain) : undefined
+  const chainId = token?.chainId
   const rawAddress = token?.address
   const isLegacyNative = areAddressesEqual({
     addressInput1: { address: rawAddress, platform: Platform.EVM },
@@ -80,7 +87,7 @@ function LivePriceCell({ token }: { token?: TokenStat }) {
     address: isRemoteSupported ? address : undefined,
   })
 
-  const price = remotePrice ?? token?.price?.value
+  const price = remotePrice ?? token?.price
   const formatted = price ? convertFiatAmountFormatted(price, NumberType.FiatTokenPrice) : '-'
 
   return <AnimatedNumber numericValue={price} textVariant="$body2" value={formatted} />
@@ -94,7 +101,7 @@ export function TokenTable({
   error,
   loadMore,
 }: {
-  tokens?: readonly MultichainToken[]
+  tokens?: readonly RankedMultichainToken[]
   tokenSortRank: Record<string, number>
   sparklines: SparklineMap
   loading: boolean
@@ -119,18 +126,48 @@ export function TokenTable({
 
   const tokenTableValues: TokenTableValue[] | undefined = useMemo(
     () =>
-      tokens?.flatMap((mcToken, i) => {
-        const token = multichainTokenToDisplayToken({ mcToken, filterTimePeriod: timePeriod, exploreChainId })
-        if (!token) {
+      tokens?.flatMap((rankedToken, i) => {
+        const mc = rankedToken.multichainToken
+        const primary = mc
+          ? pickPrimaryDeployment({ addresses: mc.addresses, exploreChainId, chainStats: rankedToken.chainStats })
+          : undefined
+        if (!mc || !primary) {
           return []
         }
-        const delta1hr = token.pricePercentChange1Hour?.value
+        const { chainId, address } = primary
+        const delta1hr = mc.price?.percentChange1h
         const delta1hrAbs = delta1hr !== undefined ? Math.abs(delta1hr) : undefined
-        const delta1d = token.pricePercentChange1Day?.value
+        const delta1d = mc.price?.percentChange1d
         const delta1dAbs = delta1d !== undefined ? Math.abs(delta1d) : undefined
-        const tokenSortIndex = tokenSortRank[mcToken.multichainId]
-        const chainId = getChainIdFromChainUrlParam(token.chain.toLowerCase())
-        const unwrappedToken = chainId ? unwrapToken(chainId, token) : token
+        const tokenSortIndex = tokenSortRank[mc.multichainId]
+        const mainnetAddress = mc.addresses[String(UniverseChainId.Mainnet)]
+        const mainnetIsWrappedNative = Boolean(
+          mainnetAddress &&
+          areAddressesEqual({
+            addressInput1: { address: mainnetAddress, chainId: UniverseChainId.Mainnet },
+            addressInput2: {
+              address: WRAPPED_NATIVE_CURRENCY[UniverseChainId.Mainnet]?.address,
+              chainId: UniverseChainId.Mainnet,
+            },
+          }),
+        )
+        const unwrappedToken = unwrapToken(
+          // Ethereum L2s each brand their native currency differently (e.g. Robinhood's is "Robinhood ETH"),
+          // but they're all fundamentally the same ETH asset — so when this grouping includes a mainnet
+          // deployment, prefer mainnet's canonical "Ethereum"/"ETH" branding regardless of the primary chain.
+          // Otherwise (e.g. Polygon's native POL, which has no mainnet deployment), keep the primary chain's
+          // own native-currency branding.
+          { chainId, nativeCurrencyChainId: mainnetIsWrappedNative ? UniverseChainId.Mainnet : chainId },
+          {
+            address,
+            name: mc.name,
+            symbol: mc.symbol,
+            project: { name: mc.name },
+          },
+        )
+        const chainCount = Object.keys(mc.addresses).length
+        const fdvValue = rankedToken.stats?.fdv
+        const volumeValue = getVolumeForTimePeriod(rankedToken.stats, timePeriod)
 
         const parseAmount = (amount: number | undefined, type: FiatNumberType): string => {
           return amount ? convertFiatAmountFormatted(amount, type) : '-'
@@ -139,13 +176,17 @@ export function TokenTable({
         return [
           {
             index: tokenSortIndex,
-            token,
-            mcToken,
+            token: { chainId: chainId as UniverseChainId, address: unwrappedToken.address, price: mc.price?.spotUsd },
+            mcToken: rankedToken,
             tokenDescription: (
               <TokenDescription
                 chainFilter={chainFilter}
-                chainIdsByVolume={getChainIdsByVolume(mcToken, timePeriod)}
-                token={unwrappedToken}
+                chainIdsByVolume={getChainIdsByVolume(rankedToken, timePeriod)}
+                name={unwrappedToken.name}
+                symbol={unwrappedToken.symbol}
+                address={unwrappedToken.address}
+                chainId={chainId as UniverseChainId}
+                logoUrl={mc.project?.logoUrl}
               />
             ),
             testId: `${TestID.TokenTableRowPrefix}${unwrappedToken.address}`,
@@ -161,16 +202,16 @@ export function TokenTable({
                 <AnimatedNumber numericValue={delta1d} textVariant="$body2" value={formatPercent(delta1dAbs)} />
               </Flex>
             ),
-            fdv: parseAmount(token.fullyDilutedValuation?.value, NumberType.FiatTokenStats),
-            fdvRawValue: token.fullyDilutedValuation?.value,
-            volume: parseAmount(token.volume?.value, NumberType.FiatTokenStats),
-            volumeRawValue: token.volume?.value,
+            fdv: parseAmount(fdvValue, NumberType.FiatTokenStats),
+            fdvRawValue: fdvValue,
+            volume: parseAmount(volumeValue, NumberType.FiatTokenStats),
+            volumeRawValue: volumeValue,
             sparkline: (
               <SparklineChart
                 width={80}
                 height={20}
-                tokenData={token}
-                pricePercentChange={token.pricePercentChange1Day?.value}
+                multichainId={mc.multichainId}
+                pricePercentChange={delta1d}
                 sparklineMap={sparklines}
               />
             ),
@@ -178,15 +219,14 @@ export function TokenTable({
               address: unwrappedToken.address,
               chain: toGraphQLChain(chainId ?? defaultChainId),
               chainUrlParam: chainFilter,
-              chainQueryParam:
-                !chainFilter && mcToken.chainTokens.length > 1 ? TDP_MULTICHAIN_CHAIN_QUERY_VALUE : undefined,
+              chainQueryParam: !chainFilter && chainCount > 1 ? TDP_MULTICHAIN_CHAIN_QUERY_VALUE : undefined,
             }),
             analytics: {
               elementName: ElementName.TokensTableRow,
               properties: {
                 chain_id: chainId,
-                token_address: token.address,
-                token_symbol: token.symbol,
+                token_address: address,
+                token_symbol: mc.symbol,
                 token_list_index: i,
                 token_list_rank: tokenSortIndex,
                 token_list_length: tokens.length,
@@ -194,7 +234,7 @@ export function TokenTable({
                 search_token_address_input: filterString,
               },
             },
-            linkState: { preloadedLogoSrc: token.logo },
+            linkState: { preloadedLogoSrc: mc.project?.logoUrl },
           },
         ]
       }) ?? [],
@@ -378,11 +418,11 @@ export function TokenTable({
               </Cell>
             )
           }
-          const isMultichainAsset = (row.mcToken?.chainTokens.length ?? 0) > 1
+          const isMultichainAsset = Object.keys(row.mcToken?.multichainToken?.addresses ?? {}).length > 1
           return (
             <Cell loading={showLoadingSkeleton} grow overflow="visible" testId={TestID.VolumeCell}>
               <Flex flex={1} minWidth={0} justifyContent="flex-end">
-                <VolumeByNetworkPopover mcToken={row.mcToken} timePeriod={timePeriod} volumeFormatted={row.volume}>
+                <VolumeByNetworkPopover rankedToken={row.mcToken} timePeriod={timePeriod} volumeFormatted={row.volume}>
                   <Flex position="relative">
                     <AnimatedNumber
                       ellipsis
