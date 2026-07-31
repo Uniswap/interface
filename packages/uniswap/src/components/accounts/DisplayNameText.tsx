@@ -1,4 +1,4 @@
-import { isAndroid } from '@universe/environment'
+import { isAndroid, isWebPlatform } from '@universe/environment'
 import { Flex, FlexProps, Text, TextProps } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { IconSizeTokens } from 'ui/src/theme'
@@ -54,7 +54,18 @@ export function DisplayNameText({
         {name}
         {suffix}
         {isUnitag ? (
-          <Flex display="inline" y={INLINE_UNITAG_Y_OFFSET} pl="$spacing2">
+          // Web: `transform` (which the `y` prop compiles to) has no effect on non-replaced
+          // inline-level boxes per the CSS Transforms spec, so `display="inline"` + `y={...}`
+          // silently drops the offset and misaligns the badge next to the username (e.g. in the
+          // AddressHoverCard). `position: relative` + `top` IS honored on inline boxes, so use
+          // that on web instead while leaving the native (iOS) transform-based offset untouched.
+          <Flex
+            display="inline"
+            pl="$spacing2"
+            {...(isWebPlatform
+              ? { position: 'relative', top: INLINE_UNITAG_Y_OFFSET }
+              : { y: INLINE_UNITAG_Y_OFFSET })}
+          >
             <Unitag size={unitagIconSize} />
           </Flex>
         ) : null}
