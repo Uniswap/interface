@@ -1,0 +1,36 @@
+{
+  "name": "@universe/experiments",
+  "version": "0.0.0",
+  "dependencies": {
+    "@universe/gating": "workspace:*",
+    "utilities": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "19.2.3"
+  },
+  "devDependencies": {
+    "@testing-library/react": "16.3.0",
+    "@types/node": "22.19.17",
+    "@universe/sessions": "workspace:*",
+    "@vitest/coverage-v8": "3.2.1",
+    "react": "19.2.3",
+    "vitest": "3.2.1"
+  },
+  "scripts": {
+    "test": "nx test experiments",
+    "typecheck": "nx typecheck experiments",
+    "check": "nx check experiments",
+    "check:fast": "nx check:fast experiments",
+    "check:deps:usage": "nx check:deps:usage experiments",
+    "format": "nx run experiments:format",
+    "format:check": "nx run experiments:format:check",
+    "lint": "nx lint experiments",
+    "lint:fix": "nx lint:fix experiments"
+  },
+  "nx": {
+    "includedScripts": []
+  },
+  "main": "src/index.ts",
+  "private": true,
+  "sideEffects": false
+}

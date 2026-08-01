@@ -1,7 +1,5 @@
-import { useMutation } from '@tanstack/react-query'
-import { isNonPollingRequestInFlight } from '@universe/api'
 import { LinearGradient } from 'expo-linear-gradient'
-import { ComponentProps, default as React, useCallback, useEffect, useMemo, useRef } from 'react'
+import { ComponentProps, default as React, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
@@ -10,8 +8,6 @@ import { Flex, Text, useSporeColors } from 'ui/src'
 import { opacify, spacing } from 'ui/src/theme'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { logger } from 'utilities/src/logger/logger'
-import { useEvent } from 'utilities/src/react/hooks'
 import { useAccountListData } from 'wallet/src/features/accounts/useAccountListData'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 
@@ -52,56 +48,22 @@ type AccountListItem =
 export function AccountList({ accounts, onPress, isVisible, onClose }: AccountListProps): JSX.Element {
   const colors = useSporeColors()
   const addresses = useMemo(() => accounts.map((a) => a.address), [accounts])
-  const hasPollingRun = useRef(false)
-
-  const { data, networkStatus, refetch, startPolling, stopPolling } = useAccountListData({
-    addresses,
-    notifyOnNetworkStatusChange: true,
-  })
 
   // Only poll account total values when the account list is visible
-  const controlPolling = useCallback(async () => {
-    if (hasPollingRun.current) {
-      return
-    }
-
-    if (isVisible) {
-      refetch()
-      startPolling(PollingInterval.Fast)
-    } else {
-      stopPolling()
-    }
-  }, [isVisible, refetch, startPolling, stopPolling])
-
-  const controlPollingMutation = useMutation({
-    mutationFn: controlPolling,
-    onSettled: () => {
-      hasPollingRun.current = true
-    },
-    onError: (error) => {
-      logger.error(error, {
-        tags: { file: 'AccountList', function: 'controlPolling' },
-      })
-    },
+  const { balancesByAddress, loading } = useAccountListData({
+    addresses,
+    refetchInterval: isVisible ? PollingInterval.Fast : false,
   })
 
-  const controlPollingEvent = useEvent(controlPollingMutation.mutate)
-
-  useEffect(() => {
-    controlPollingEvent()
-  }, [controlPollingEvent])
-
-  const isPortfolioValueLoading = isNonPollingRequestInFlight(networkStatus)
-
   const accountsWithPortfolioValue: AccountWithPortfolioValue[] = useMemo(() => {
-    return accounts.map((account, i) => {
+    return accounts.map((account) => {
       return {
         account,
-        isPortfolioValueLoading,
-        portfolioValue: data?.portfolios?.[i]?.tokensTotalDenominatedValue?.value,
+        isPortfolioValueLoading: loading,
+        portfolioValue: balancesByAddress?.[account.address],
       }
     })
-  }, [accounts, data, isPortfolioValueLoading])
+  }, [accounts, balancesByAddress, loading])
 
   const signerAccounts = useMemo(() => {
     return accountsWithPortfolioValue.filter((account) => account.account.type === AccountType.SignerMnemonic)

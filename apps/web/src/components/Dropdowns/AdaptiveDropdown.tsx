@@ -1,4 +1,4 @@
-import { type CSSProperties, type RefObject, useEffect, useMemo, useRef, useState } from 'react'
+import { type CSSProperties, type RefObject, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import {
   AnimatePresence,
   Flex,
@@ -12,10 +12,11 @@ import {
 } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
 import { useEvent } from 'utilities/src/react/hooks'
-import { getDropdownVerticalLayout } from '~/components/Dropdowns/dropdownLayoutUtils'
+import { getDropdownAvailableSpace, getDropdownVerticalLayout } from '~/components/Dropdowns/dropdownLayoutUtils'
 import { useFixedDropdownLayout } from '~/components/Dropdowns/useFixedDropdownLayout'
 import { Portal } from '~/components/Popups/Portal'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
+import { useAppHeaderHeight } from '~/hooks/useAppHeaderHeight'
 import { useOnClickOutside } from '~/hooks/useOnClickOutside'
 
 // Gap between the trigger element and the dropdown content
@@ -97,21 +98,31 @@ type AdaptiveDropdownProps = SharedDropdownProps & {
 function getDropdownMaxHeightProps({
   availableMaxHeight,
   configuredMaxHeight,
-  clampConfiguredMaxHeight,
 }: {
   availableMaxHeight?: number
   configuredMaxHeight?: FlexProps['maxHeight']
-  clampConfiguredMaxHeight: boolean
 }): { maxHeight?: FlexProps['maxHeight'] } {
   if (availableMaxHeight === undefined) {
     return {}
   }
 
   if (typeof configuredMaxHeight === 'number') {
-    return clampConfiguredMaxHeight ? { maxHeight: Math.min(configuredMaxHeight, availableMaxHeight) } : {}
+    return { maxHeight: Math.min(configuredMaxHeight, availableMaxHeight) }
   }
 
   return configuredMaxHeight === undefined ? { maxHeight: availableMaxHeight } : {}
+}
+
+// Calls `reset` synchronously (React's "adjust state during rendering" pattern) the moment `value`
+// transitions to true, so dependent state is cleared before this same render commits.
+function useResetOnTrue(value: boolean, reset: () => void): void {
+  const prevValueRef = useRef(value)
+  if (prevValueRef.current !== value) {
+    prevValueRef.current = value
+    if (value) {
+      reset()
+    }
+  }
 }
 
 export function AdaptiveDropdown({
@@ -140,6 +151,8 @@ export function AdaptiveDropdown({
   const media = useMedia()
   const isSheet = !!adaptToSheet && media[adaptWhen]
   const shouldUseFixedLayout = !!positionFixed
+  // The sticky app header overlaps content once scrolled, so it isn't usable space for flipping a dropdown upward.
+  const headerHeight = useAppHeaderHeight()
   const fixedDropdown = useFixedDropdownLayout({
     alignRight,
     allowFlip,
@@ -151,6 +164,7 @@ export function AdaptiveDropdown({
     matchTriggerWidth,
     measuringDropdownRef: dropdownNode,
     triggerRef: node,
+    topInset: headerHeight,
   })
   const handleClickOutside = useEvent(() => {
     if (isOpen) {
@@ -169,18 +183,28 @@ export function AdaptiveDropdown({
   })
   const [inlineFlipVertical, setInlineFlipVertical] = useState(false)
   const [inlineDropdownMaxHeight, setInlineDropdownMaxHeight] = useState<number | undefined>(undefined)
+  const [inlineLayoutReady, setInlineLayoutReady] = useState(false)
+  // Reset readiness the moment isOpen flips true, before the live dropdown below mounts. It's
+  // position: absolute and would otherwise inflate document.documentElement.scrollHeight with its own
+  // unclamped height before we ever measure it, making it look like there's always room below and it
+  // never flips.
+  useResetOnTrue(isOpen, () => setInlineLayoutReady(false))
 
   // Normal dropdowns stay positioned relative to their trigger. Fixed dropdowns skip this path and let
   // useFixedDropdownLayout measure the trigger for portal coordinates.
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isOpen || isSheet || shouldUseFixedLayout || !node.current) {
       return
     }
 
     const rect = node.current.getBoundingClientRect()
-    const viewportHeight = window.innerHeight
-    const spaceBelow = viewportHeight - rect.bottom - DROPDOWN_OFFSET
-    const spaceAbove = rect.top - DROPDOWN_OFFSET
+    const { spaceAbove, spaceBelow } = getDropdownAvailableSpace({
+      dropdownOffset: DROPDOWN_OFFSET,
+      triggerRect: rect,
+      topInset: headerHeight,
+      documentHeight: document.documentElement.scrollHeight,
+      scrollY: window.scrollY,
+    })
     const dropdownHeight = dropdownNode.current?.offsetHeight ?? 0
     const { dropdownMaxHeight, flipVertical } = getDropdownVerticalLayout({
       allowFlip,
@@ -192,7 +216,8 @@ export function AdaptiveDropdown({
 
     setInlineFlipVertical(flipVertical)
     setInlineDropdownMaxHeight(dropdownMaxHeight)
-  }, [allowFlip, dropdownNode, forceFlipUp, isOpen, isSheet, node, shouldUseFixedLayout])
+    setInlineLayoutReady(true)
+  }, [allowFlip, dropdownNode, forceFlipUp, headerHeight, isOpen, isSheet, node, shouldUseFixedLayout])
 
   const flipVertical = shouldUseFixedLayout ? fixedDropdown.flipVertical : inlineFlipVertical
   const dropdownMaxHeight = shouldUseFixedLayout ? fixedDropdown.dropdownMaxHeight : inlineDropdownMaxHeight
@@ -201,8 +226,8 @@ export function AdaptiveDropdown({
   const maxHeightProps = getDropdownMaxHeightProps({
     availableMaxHeight: dropdownMaxHeight,
     configuredMaxHeight: dropdownStyle?.maxHeight,
-    clampConfiguredMaxHeight: shouldUseFixedLayout,
   })
+  const usesNestedScroll = dropdownStyle?.overflow === 'hidden'
 
   const dropdownContent = (
     <DropdownContent
@@ -212,6 +237,9 @@ export function AdaptiveDropdown({
       {...dropdownStyle}
       {...shadowProps}
       {...maxHeightProps}
+      {...(usesNestedScroll && maxHeightProps.maxHeight !== undefined
+        ? { flexDirection: 'column', minHeight: 0, overflow: 'hidden' }
+        : {})}
       {...(!shouldUseFixedLayout && matchTriggerWidth ? { width: '100%' } : {})}
       style={shouldUseFixedLayout ? { ...scrollbarStyles, ...fixedDropdown.fixedStyle } : scrollbarStyles}
       positionRight={!shouldUseFixedLayout && alignRight}
@@ -258,7 +286,9 @@ export function AdaptiveDropdown({
               {trigger}
             </MouseoverTooltip>
           )}
-          <AnimatePresence>{isOpen && !isSheet && !shouldUseFixedLayout && dropdownContent}</AnimatePresence>
+          <AnimatePresence>
+            {isOpen && !isSheet && !shouldUseFixedLayout && inlineLayoutReady && dropdownContent}
+          </AnimatePresence>
         </DropdownContainer>
       </div>
       {fixedDropdown.shouldRenderPortal && (

@@ -17,11 +17,13 @@ import type { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { DAI_CURRENCY_INFO, UNI_CURRENCY_INFO } from 'uniswap/src/test/fixtures'
 import { renderHookWithProviders } from 'uniswap/src/test/render'
 
-const { mockUseEnabledChains, mockUseRestPortfolioValueModifier, mockPoolsFlagEnabled } = vi.hoisted(() => ({
-  mockUseEnabledChains: vi.fn(),
-  mockUseRestPortfolioValueModifier: vi.fn(),
-  mockPoolsFlagEnabled: { value: false },
-}))
+const { mockUseEnabledChains, mockUseRestPortfolioValueModifier, mockPoolsFlagEnabled, mockEarnFlagEnabled } =
+  vi.hoisted(() => ({
+    mockUseEnabledChains: vi.fn(),
+    mockUseRestPortfolioValueModifier: vi.fn(),
+    mockPoolsFlagEnabled: { value: false },
+    mockEarnFlagEnabled: { value: false },
+  }))
 
 vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
   useEnabledChains: mockUseEnabledChains,
@@ -38,7 +40,10 @@ vi.mock('@universe/gating', async (importOriginal) => {
     flag === FeatureFlags.PortfolioPoolsBalances ? mockPoolsFlagEnabled.value : false
   return {
     ...actual,
-    useFeatureFlag: readPoolsFlag,
+    useFeatureFlag: (flag: FeatureFlags) =>
+      flag === FeatureFlags.Earn || flag === FeatureFlags.ChainedActions
+        ? mockEarnFlagEnabled.value
+        : readPoolsFlag(flag),
     // useWalletBalancesIncludeCategories reads the pools flag via the exposure-disabled variant.
     useFeatureFlagWithExposureLoggingDisabled: readPoolsFlag,
   }
@@ -204,6 +209,7 @@ type WalletBalancesShape = {
     total: { valueUsd: number }
     tokens: { valueUsd: number }
     pools: { valueUsd: number }
+    earn: { valueUsd: number }
   }
 }
 
@@ -213,6 +219,7 @@ function makeWalletBalances(total: number, tokens: number, pools: number): GetWa
       total: { valueUsd: total },
       tokens: { valueUsd: tokens },
       pools: { valueUsd: pools },
+      earn: { valueUsd: 75 },
     },
   } as unknown as GetWalletBalancesResponse
 }
@@ -233,6 +240,7 @@ describe(usePortfolioCacheUpdater, () => {
     vi.clearAllMocks()
     SharedQueryClient.clear()
     mockPoolsFlagEnabled.value = false
+    mockEarnFlagEnabled.value = false
     mockUseEnabledChains.mockReturnValue({ chains: [UniverseChainId.Mainnet] })
     mockUseRestPortfolioValueModifier.mockReturnValue(modifier)
   })
@@ -283,6 +291,37 @@ describe(usePortfolioCacheUpdater, () => {
     expect(walletAfter?.balance.total.valueUsd).toBe(900)
     expect(walletAfter?.balance.tokens.valueUsd).toBe(500)
     expect(walletAfter?.balance.pools.valueUsd).toBe(400)
+  })
+
+  it('targets the earn-inclusive wallet balances cache entry when the earn flag is on', () => {
+    mockEarnFlagEnabled.value = true
+    const { walletBalancesKey } = primeCaches([WalletBalanceCategory.EARN_VAULTS])
+
+    const { result } = renderHookWithProviders(() => usePortfolioCacheUpdater(EVM_ADDR))
+
+    result.current(true, mockPortfolioBalance1)
+
+    const walletAfter = SharedQueryClient.getQueryData<WalletBalancesShape>(walletBalancesKey)
+    expect(walletAfter?.balance.total.valueUsd).toBe(900)
+    expect(walletAfter?.balance.tokens.valueUsd).toBe(500)
+    expect(walletAfter?.balance.pools.valueUsd).toBe(400)
+    expect(walletAfter?.balance.earn.valueUsd).toBe(75)
+  })
+
+  it('targets the pools-and-earn wallet balances cache entry when both flags are on', () => {
+    mockPoolsFlagEnabled.value = true
+    mockEarnFlagEnabled.value = true
+    const { walletBalancesKey } = primeCaches([WalletBalanceCategory.POOLS, WalletBalanceCategory.EARN_VAULTS])
+
+    const { result } = renderHookWithProviders(() => usePortfolioCacheUpdater(EVM_ADDR))
+
+    result.current(true, mockPortfolioBalance1)
+
+    const walletAfter = SharedQueryClient.getQueryData<WalletBalancesShape>(walletBalancesKey)
+    expect(walletAfter?.balance.total.valueUsd).toBe(900)
+    expect(walletAfter?.balance.tokens.valueUsd).toBe(500)
+    expect(walletAfter?.balance.pools.valueUsd).toBe(400)
+    expect(walletAfter?.balance.earn.valueUsd).toBe(75)
   })
 
   it('leaves a wallet balances entry keyed with a different includeCategories untouched', () => {

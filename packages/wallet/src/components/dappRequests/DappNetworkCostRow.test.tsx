@@ -3,7 +3,7 @@ import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
 import { DappNetworkCostRow } from 'wallet/src/components/dappRequests/DappNetworkCostRow'
 import { renderWithProviders } from 'wallet/src/test/render'
 
-jest.mock('react-i18next', () => ({
+vi.mock('react-i18next', () => ({
   useTranslation: (): { t: (key: string) => string } => ({
     t: (key: string): string => {
       const translations: Record<string, string> = {
@@ -16,27 +16,27 @@ jest.mock('react-i18next', () => ({
   }),
 }))
 
-const mockDispatch = jest.fn()
-const mockUseGasOverridesWarningState = jest.fn()
+const mockDispatch = vi.fn()
+const mockUseGasOverridesWarningState = vi.fn()
 
-jest.mock('uniswap/src/features/gas/components/NetworkCostEditor/useGasOverridesWarningState', () => ({
+vi.mock('uniswap/src/features/gas/components/NetworkCostEditor/useGasOverridesWarningState', () => ({
   useGasOverridesWarningState: (): unknown => mockUseGasOverridesWarningState(),
 }))
 
-jest.mock('uniswap/src/features/gas/hooks/useGasChipDispatch', () => ({
+vi.mock('uniswap/src/features/gas/hooks/useGasChipDispatch', () => ({
   useGasChipDispatch: (): { dispatch: () => unknown } => ({ dispatch: mockDispatch }),
 }))
 
-jest.mock('uniswap/src/features/gas/hooks', () => ({
+vi.mock('uniswap/src/features/gas/hooks', () => ({
   useGasFeeFormattedDisplayAmounts: (): { gasFeeFormatted: string } => ({ gasFeeFormatted: '$1.54' }),
 }))
 
 // The companion modals render via Portal — stub them so we can assert open
 // state without spinning up the full Modal lifecycle.
-jest.mock('uniswap/src/features/gas/components/NetworkCostEditor/NetworkCostEditorModal', () => ({
+vi.mock('uniswap/src/features/gas/components/NetworkCostEditor/NetworkCostEditorModal', () => ({
   NetworkCostEditorModal: ({ isOpen }: { isOpen: boolean }): JSX.Element | null => (isOpen ? <>editor-open</> : null),
 }))
-jest.mock('uniswap/src/features/gas/components/AutoGasTooltipModal', () => ({
+vi.mock('uniswap/src/features/gas/components/AutoGasTooltipModal', () => ({
   AutoGasTooltipModal: ({ isOpen }: { isOpen: boolean }): JSX.Element | null =>
     isOpen ? <>auto-tooltip-open</> : null,
 }))
@@ -51,7 +51,7 @@ describe('DappNetworkCostRow', () => {
   })
 
   afterEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('dispatches to the gas chip when the row is pressed', () => {
@@ -62,7 +62,7 @@ describe('DappNetworkCostRow', () => {
         gasFee={undefined}
         tx={undefined}
         gasOverrides={undefined}
-        onChangeGasOverrides={jest.fn()}
+        onChangeGasOverrides={vi.fn()}
       />,
     )
     fireEvent.press(getByText('$1.54'), ON_PRESS_EVENT_PAYLOAD)
@@ -81,7 +81,7 @@ describe('DappNetworkCostRow', () => {
         gasFee={undefined}
         tx={undefined}
         gasOverrides={{ maxBaseFeeGwei: '1', priorityFeeGwei: '1', gasLimit: '21000' }}
-        onChangeGasOverrides={jest.fn()}
+        onChangeGasOverrides={vi.fn()}
       />,
     )
     expect(getByTestId('network-cost-warning-icon')).toBeTruthy()
@@ -94,7 +94,7 @@ describe('DappNetworkCostRow', () => {
         gasFee={undefined}
         tx={undefined}
         gasOverrides={undefined}
-        onChangeGasOverrides={jest.fn()}
+        onChangeGasOverrides={vi.fn()}
       />,
     )
     expect(getByText('$1.54')).toBeTruthy()
@@ -108,7 +108,7 @@ describe('DappNetworkCostRow', () => {
         tx={undefined}
         showSmartWalletActivation
         gasOverrides={undefined}
-        onChangeGasOverrides={jest.fn()}
+        onChangeGasOverrides={vi.fn()}
       />,
     )
     expect(getByText('Includes smart wallet activation')).toBeTruthy()
@@ -121,7 +121,7 @@ describe('DappNetworkCostRow', () => {
         gasFee={undefined}
         tx={undefined}
         gasOverrides={undefined}
-        onChangeGasOverrides={jest.fn()}
+        onChangeGasOverrides={vi.fn()}
       />,
     )
     expect(queryByText('Includes smart wallet activation')).toBeNull()

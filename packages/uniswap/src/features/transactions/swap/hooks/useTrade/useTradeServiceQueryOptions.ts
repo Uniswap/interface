@@ -1,5 +1,5 @@
 import { queryOptions, UseQueryOptions } from '@tanstack/react-query'
-import type { JupiterOrderUrlParams } from '@universe/api/src/clients/jupiter/types'
+import type { JupiterOrderUrlParams } from '@universe/api'
 import type {
   TradeService,
   TradeWithGasEstimates,

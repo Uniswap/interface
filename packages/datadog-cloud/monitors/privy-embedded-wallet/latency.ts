@@ -16,13 +16,20 @@ const apmFilter = apmTagFilter(env)
 // Whole-service web-request count, used to volume-gate the aggregate p95 below.
 const apmHits = `sum:trace.web.request.hits{${apmFilter}}.as_count()`
 
+// Whole-service ALB request count, used to volume-gate the ALB p95 below (same idiom
+// as the APM aggregate p95 and the ALB/APM error-rate monitors in errors.ts).
+const albHits = `sum:aws.applicationelb.request_count{${albFilter}}.as_count()`
+
 export const privyEmbeddedWalletLatencyMonitors: MonitorDefinition[] = [
   {
     id: 'privy_embedded_wallet_latency_p95',
     name: 'P95 Latency on privy-embedded-wallet',
     type: 'query alert',
-    query: `avg(last_5m):avg:aws.applicationelb.target_response_time.p95{${albFilter}} > 2`,
-    alertBody: 'P95 ALB target response time for privy-embedded-wallet has exceeded 2 seconds.',
+    // Volume-gate: scale p95 by (hits / clamp_min(hits, floor)) so a single slow request
+    // in a low-traffic window (prod ALB sees as few as 2-20 req/min) can't dominate the
+    // 1-minute p95 bucket and page on its own. Same idiom as the APM aggregate p95 below.
+    query: `avg(last_5m):( avg:aws.applicationelb.target_response_time.p95{${albFilter}} * ${albHits} / clamp_min(${albHits}, ${MIN_ALB_REQUESTS_5M}) ) > 2`,
+    alertBody: `P95 ALB target response time for privy-embedded-wallet has exceeded 2 seconds. Requires at least ${MIN_ALB_REQUESTS_5M} requests in the window before it can alert.`,
     recoveryBody: 'P95 ALB target response time for privy-embedded-wallet has recovered.',
     team: TEAM,
     priority: 3,

@@ -1,6 +1,6 @@
 import type { DiscriminatedQuoteResponse } from '@universe/api'
 import { TradingApi } from '@universe/api'
-import { logSwapQuoteFetch } from 'uniswap/src/features/transactions/swap/analytics'
+import { logSwapQuoteFetch } from 'uniswap/src/features/transactions/swap/logSwapQuoteFetch'
 import {
   createTradeRepository,
   type TradeRepository,
@@ -8,7 +8,7 @@ import {
 import type { Logger } from 'utilities/src/logger/logger'
 
 // Mock dependencies
-vi.mock('uniswap/src/features/transactions/swap/analytics')
+vi.mock('uniswap/src/features/transactions/swap/logSwapQuoteFetch')
 
 describe('TradeRepository', () => {
   // Minimal test params

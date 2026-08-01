@@ -10,7 +10,7 @@ import {
   useSearchTokenMenuItems,
 } from 'uniswap/src/components/lists/items/tokens/useSearchTokenMenuItems'
 import { ContextMenu } from 'uniswap/src/components/menus/ContextMenu'
-import type { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
+import type { ContextMenuHandle, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
 import { MenuContent } from 'uniswap/src/components/menus/ContextMenuContent'
 import { ContextMenuTriggerButton } from 'uniswap/src/components/menus/ContextMenuTriggerButton'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
@@ -56,11 +56,10 @@ interface RwaMultichainCopyButtonProps {
  * TokenRowContextMenuButton instead (RwaIssuerRow picks). Share targets the PRIMARY-chain TDP (no shareCurrencyInfo),
  * unlike regular multichain tokens which share the aggregate TDP — this matches the row's navigation.
  */
-function RwaMultichainCopyButtonInner({
-  primaryCurrencyInfo,
-  orderedEntries,
-  isVisible = true,
-}: RwaMultichainCopyButtonProps): JSX.Element | null {
+function RwaMultichainCopyButtonInner(
+  { primaryCurrencyInfo, orderedEntries, isVisible = true }: RwaMultichainCopyButtonProps,
+  ref: React.ForwardedRef<ContextMenuHandle>,
+): JSX.Element | null {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const trace = useTrace()
@@ -165,6 +164,7 @@ function RwaMultichainCopyButtonInner({
   return (
     <Flex opacity={shouldShow ? 1 : 0} pointerEvents={shouldShow ? 'auto' : 'none'}>
       <ContextMenu
+        ref={ref}
         menuItems={[]}
         contentOverride={contentOverride}
         triggerMode={ContextMenuTriggerMode.Primary}
@@ -181,4 +181,4 @@ function RwaMultichainCopyButtonInner({
   )
 }
 
-export const RwaMultichainCopyButton = React.memo(RwaMultichainCopyButtonInner)
+export const RwaMultichainCopyButton = React.memo(React.forwardRef(RwaMultichainCopyButtonInner))

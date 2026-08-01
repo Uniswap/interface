@@ -9,6 +9,7 @@ import { AccountType as ReduxAccountType } from 'uniswap/src/features/accounts/t
 import { CAIP25Session } from 'uniswap/src/features/capabilities/caip25/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
+import type { MockedFunction } from 'vitest'
 import { AccountsStoreContextProvider, useAccountsStoreContext } from 'wallet/src/features/accounts/store/provider'
 import {
   Account as ReduxAccount,
@@ -23,30 +24,30 @@ import { RenderHookResult, renderHook } from 'wallet/src/test/test-utils'
 // Don't mock the getters - use the real implementation
 
 // Mock the active account hook
-jest.mock('wallet/src/features/wallet/hooks', () => ({
-  useActiveAccount: jest.fn(),
+vi.mock('wallet/src/features/wallet/hooks', () => ({
+  useActiveAccount: vi.fn(),
 }))
 
 // Mock the onboarding selector
-jest.mock('wallet/src/features/wallet/selectors', () => ({
-  selectFinishedOnboarding: jest.fn(),
+vi.mock('wallet/src/features/wallet/selectors', () => ({
+  selectFinishedOnboarding: vi.fn(),
 }))
 
 // Mock the enabled chains hook
-jest.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
-  useEnabledChains: jest.fn(() => ({
+vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
+  useEnabledChains: vi.fn(() => ({
     chains: [1, 10, 137, 8453, 42161], // Default mainnet chains
   })),
 }))
 
 // Mock the swap delegation provider. Default: no delegation; individual tests override per chain.
-const mockGetSwapDelegationInfo = jest.fn(
+const mockGetSwapDelegationInfo = vi.fn(
   (_chainId?: number): SwapDelegationInfo => ({
     delegationInclusion: false,
     delegationAddress: undefined,
   }),
 )
-jest.mock('wallet/src/features/smartWallet/WalletDelegationProvider', () => ({
+vi.mock('wallet/src/features/smartWallet/WalletDelegationProvider', () => ({
   useGetSwapDelegationInfoForActiveAccount: () => mockGetSwapDelegationInfo,
   useWalletDelegationContext: () => ({
     delegationDataQuery: { data: undefined },
@@ -57,14 +58,14 @@ jest.mock('wallet/src/features/smartWallet/WalletDelegationProvider', () => ({
 }))
 
 // Mock the gas sponsorship feature flag (defaults to off in beforeEach)
-jest.mock('@universe/gating', () => ({
-  ...jest.requireActual('@universe/gating'),
-  useFeatureFlag: jest.fn(),
+vi.mock('@universe/gating', async () => ({
+  ...(await vi.importActual('@universe/gating')),
+  useFeatureFlag: vi.fn(),
 }))
 
-const mockUseActiveReduxAccount = useActiveReduxAccount as jest.MockedFunction<typeof useActiveReduxAccount>
-const mockSelectFinishedOnboarding = selectFinishedOnboarding as jest.MockedFunction<typeof selectFinishedOnboarding>
-const mockUseFeatureFlag = useFeatureFlag as jest.MockedFunction<typeof useFeatureFlag>
+const mockUseActiveReduxAccount = useActiveReduxAccount as MockedFunction<typeof useActiveReduxAccount>
+const mockSelectFinishedOnboarding = selectFinishedOnboarding as MockedFunction<typeof selectFinishedOnboarding>
+const mockUseFeatureFlag = useFeatureFlag as MockedFunction<typeof useFeatureFlag>
 
 const createTestStore = (walletState: Partial<WalletState['wallet']> = {}) => {
   return configureStore({
@@ -127,7 +128,7 @@ const renderWithProvider = (
 
 describe('Wallet Accounts Store Provider', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockUseFeatureFlag.mockReturnValue(false)
     mockGetSwapDelegationInfo.mockReturnValue({ delegationInclusion: false, delegationAddress: undefined })
   })

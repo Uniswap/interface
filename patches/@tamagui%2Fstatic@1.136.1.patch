@@ -1,3 +1,18 @@
+diff --git a/node_modules/@tamagui/static/.bun-tag-7795d3b99de484a7 b/.bun-tag-7795d3b99de484a7
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/node_modules/@tamagui/static/.bun-tag-79542206a7f337a8 b/.bun-tag-79542206a7f337a8
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/node_modules/@tamagui/static/.bun-tag-9f498f4bfaa56c54 b/.bun-tag-9f498f4bfaa56c54
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/node_modules/@tamagui/static/.bun-tag-a98ffb485b4dc26 b/.bun-tag-a98ffb485b4dc26
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/node_modules/@tamagui/static/.bun-tag-c0eb22fed2b93124 b/.bun-tag-c0eb22fed2b93124
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
 diff --git a/dist/extractor/concatClassName.js b/dist/extractor/concatClassName.js
 index 707d78c8a4f9d10836087392660b01a78e33b05e..1c1fdb51faa119c354d985131498e669112a9c7b 100644
 --- a/dist/extractor/concatClassName.js
@@ -71,6 +86,49 @@ index c07180192a4b573accba9454bd839bae0d0ba28f..df0127e10c88fb938fd476e04f680aed
  }
  const pseudoInvert = {
    hover: "hoverStyle",
+diff --git a/dist/extractor/esbuildTsconfigPaths.js b/dist/extractor/esbuildTsconfigPaths.js
+index e5d217bc538fd5af10f15f6bcc5bfd14b04d5f64..d1506113eb80853d70519a883386988544eb0e0f 100644
+--- a/dist/extractor/esbuildTsconfigPaths.js
++++ b/dist/extractor/esbuildTsconfigPaths.js
+@@ -25,7 +25,37 @@ __export(esbuildTsconfigPaths_exports, {
+   TsconfigPathsPlugin: () => TsconfigPathsPlugin
+ });
+ module.exports = __toCommonJS(esbuildTsconfigPaths_exports);
+-var import_node_fs = __toESM(require("node:fs")), import_node_path = __toESM(require("node:path")), import_typescript = require("typescript");
++var import_node_fs = __toESM(require("node:fs")), import_node_path = __toESM(require("node:path"));
++// PATCH: TS7's native `typescript` has no classic compiler API. Leave the original functions
++// below untouched and instead back them with a tiny shim that reads tsconfig `paths` from JSON.
++const fs = import_node_fs.default, path = import_node_path.default;
++const EXTS = ["", ".ts", ".tsx", ".mts", ".cts", ".js", ".jsx", ".mjs", ".cjs"];
++const resolveFile = (base) => [...EXTS.map((e) => base + e), ...EXTS.map((e) => path.join(base, "index" + e))]
++  .find((c) => !c.endsWith(".d.ts") && fs.existsSync(c) && fs.statSync(c).isFile()) ?? null;
++const import_typescript = {
++  sys: { fileExists: (f) => fs.existsSync(f), readFile: (f) => fs.existsSync(f) ? fs.readFileSync(f, "utf8") : void 0 },
++  findConfigFile(search, fileExists, n) {
++    for (let dir = search; ; dir = path.dirname(dir)) {
++      if (fileExists(path.join(dir, n))) return path.join(dir, n);
++      if (path.dirname(dir) === dir) return void 0;
++    }
++  },
++  readConfigFile: (file, readFile) => ({ config: JSON.parse(readFile(file)) }),
++  parseJsonConfigFileContent(config, _sys, baseDir) {
++    const co = config.compilerOptions ?? {};
++    return { options: { paths: co.paths, baseDir: co.baseUrl ? path.resolve(baseDir, co.baseUrl) : baseDir } };
++  },
++  nodeModuleNameResolver(specifier, _importer, options) {
++    for (const [key, targets] of Object.entries(options.paths ?? {})) {
++      const m = specifier.match(new RegExp("^" + key.replace(/[.*+?^${}()|[\]\\]/g, (c) => c === "*" ? "(.*)" : "\\" + c) + "$"));
++      if (m) for (const target of targets) {
++        const file = resolveFile(path.resolve(options.baseDir, target.replace("*", m[1] ?? "")));
++        if (file) return { resolvedModule: { resolvedFileName: file } };
++      }
++    }
++    return { resolvedModule: void 0 };
++  }
++};
+ const name = "tsconfig-paths";
+ function TsconfigPathsPlugin() {
+   const compilerOptions = loadCompilerOptionsFromTsconfig();
 diff --git a/dist/extractor/extractToClassNames.js b/dist/extractor/extractToClassNames.js
 index 5c4b6f5d7223e48d962c7304b57edbd4a5f6d5a0..3808fe7659cf4d5b26482debebec28b8a3886150 100644
 --- a/dist/extractor/extractToClassNames.js

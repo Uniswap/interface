@@ -35,11 +35,11 @@ vi.mock('uniswap/src/features/tokens/useCurrencyInfo', async () => {
 })
 
 describe('create auction help links', () => {
-  it('points the ETH vs USDC help link to the configure-auction section', () => {
+  it('points the raise-currency help link to the configure-auction section', () => {
     render(
       <PriceSettingsSection
         chainId={UniverseChainId.Mainnet}
-        raiseCurrency={RaiseCurrency.ETH}
+        raiseCurrency={RaiseCurrency.NATIVE}
         onSelect={() => undefined}
         floorPrice=""
         floorPriceInput={undefined}
@@ -51,14 +51,22 @@ describe('create auction help links', () => {
       />,
     )
 
-    expect(screen.getByRole('link', { name: 'How to choose ETH vs. USDC?' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'How to choose your raise currency?' })).toHaveAttribute(
       'href',
       UniswapHelpUrls.articles.toucanLaunchAuctionConfigureAuctionHelp,
     )
   })
 
   it('points the launch failed modal help CTA to the launch auction article', () => {
-    render(<LaunchAuctionErrorModal isOpen tokenSymbol="UNI" onClose={() => undefined} onRetry={() => undefined} />)
+    render(
+      <LaunchAuctionErrorModal
+        isOpen
+        tokenSymbol="UNI"
+        onClose={() => undefined}
+        onRetry={() => undefined}
+        onEditTokenInfo={() => undefined}
+      />,
+    )
 
     expect(screen.getByRole('link', { name: 'Get help' })).toHaveAttribute(
       'href',

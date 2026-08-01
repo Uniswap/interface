@@ -7,6 +7,7 @@ import { DappLogoWithWCBadge, LogoWithTxStatus } from 'uniswap/src/components/Cu
 import { CrossChainIcon, SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { getDepositWithdrawDisplayCurrencyId } from 'uniswap/src/features/activity/utils/getDepositWithdrawDisplayCurrencyId'
+import { getEarnPlanDisplayInfo } from 'uniswap/src/features/activity/utils/getEarnPlanDisplayInfo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import {
   useCurrencyInfo,
@@ -40,6 +41,7 @@ const TXN_DETAILS_ICON_SIZE = iconSizes.icon40
 
 interface HeaderLogoProps {
   transactionDetails: TransactionDetails
+  isEarnActivityDisplayEnabled?: boolean
 }
 
 const getLogoWithTxStatus = ({
@@ -70,7 +72,10 @@ const getLogoWithTxStatus = ({
   />
 )
 
-export function TransactionDetailsHeaderLogo({ transactionDetails }: HeaderLogoProps): JSX.Element | null {
+export function TransactionDetailsHeaderLogo({
+  transactionDetails,
+  isEarnActivityDisplayEnabled = true,
+}: HeaderLogoProps): JSX.Element | null {
   const { typeInfo } = transactionDetails
 
   switch (typeInfo.type) {
@@ -86,12 +91,23 @@ export function TransactionDetailsHeaderLogo({ transactionDetails }: HeaderLogoP
       return <TokenTransferHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     case TransactionType.Deposit:
     case TransactionType.Withdraw:
-      return <DepositWithdrawHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
+      return (
+        <DepositWithdrawHeaderLogo
+          transactionDetails={transactionDetails}
+          typeInfo={typeInfo}
+          isEarnActivityDisplayEnabled={isEarnActivityDisplayEnabled}
+        />
+      )
     case TransactionType.Swap:
       return <SwapHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     case TransactionType.Bridge:
-    case TransactionType.Plan:
       return <CrossChainHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
+    case TransactionType.Plan:
+      return isEarnActivityDisplayEnabled && typeInfo.earnAction ? (
+        <EarnPlanHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
+      ) : (
+        <CrossChainHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
+      )
     case TransactionType.WCConfirm:
       return <WCConfirmHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     case TransactionType.Wrap:
@@ -142,7 +158,10 @@ function DepositWithdrawCurrencyLogo({
   typeInfo,
 }: SpecificHeaderLogoProps<DepositTransactionInfo | WithdrawTransactionInfo>): JSX.Element {
   const currencyInfo = useCurrencyInfo(
-    getDepositWithdrawDisplayCurrencyId({ chainId: transactionDetails.chainId, typeInfo }),
+    getDepositWithdrawDisplayCurrencyId({
+      chainId: transactionDetails.chainId,
+      typeInfo,
+    }),
   )
 
   return <CurrencyLogo currencyInfo={currencyInfo} size={TXN_DETAILS_ICON_SIZE} />
@@ -151,8 +170,11 @@ function DepositWithdrawCurrencyLogo({
 function DepositWithdrawHeaderLogo({
   transactionDetails,
   typeInfo,
-}: SpecificHeaderLogoProps<DepositTransactionInfo | WithdrawTransactionInfo>): JSX.Element {
-  if (typeInfo.isVault) {
+  isEarnActivityDisplayEnabled,
+}: SpecificHeaderLogoProps<DepositTransactionInfo | WithdrawTransactionInfo> & {
+  isEarnActivityDisplayEnabled: boolean
+}): JSX.Element {
+  if (isEarnActivityDisplayEnabled && typeInfo.isVault) {
     return <DepositWithdrawCurrencyLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
   }
 
@@ -175,6 +197,13 @@ function CrossChainHeaderLogo({
       customIcon={<CrossChainIcon status={transactionDetails.status} />}
     />
   )
+}
+
+function EarnPlanHeaderLogo({ typeInfo }: SpecificHeaderLogoProps<PlanTransactionInfo>): JSX.Element {
+  const displayInfo = getEarnPlanDisplayInfo(typeInfo)
+  const currencyInfo = useCurrencyInfo(displayInfo?.currencyId)
+
+  return <CurrencyLogo currencyInfo={currencyInfo} size={TXN_DETAILS_ICON_SIZE} />
 }
 
 function SwapHeaderLogo({

@@ -3,6 +3,7 @@ import { DAI, USDT } from 'uniswap/src/constants/tokens'
 import { DYNAMIC_FEE_DATA } from 'uniswap/src/features/positions/types'
 import { WETH } from 'uniswap/src/test/fixtures/lib/sdk'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { getUniswapServiceUrls } from '~/config'
 import { DEFAULT_FEE_DATA } from '~/features/Liquidity/Create/types'
 import { expect, getTest, type Page } from '~/playwright/fixtures'
 import { stubTradingApiEndpoint } from '~/playwright/fixtures/tradingApi'
@@ -142,7 +143,7 @@ test.describe(
         await expect(page.getByText('Dynamic fee tier')).toBeVisible()
         // Verify hook
         await expect(page.getByRole('button', { name: '0x09DE' })).toBeVisible()
-        await expect(page.getByText('Add a hook')).not.toBeVisible()
+        await expect(page.getByTestId(TestID.HookAddButton)).not.toBeVisible()
         // Continue to second step
         await page.getByRole('button', { name: 'Continue' }).click()
         // Hook confirmation modal must be dismissed
@@ -233,7 +234,7 @@ test.describe(
         await expect(page.getByRole('button', { name: 'USDT' })).toBeVisible()
         await expect(page.getByRole('button', { name: 'Choose token' })).toBeVisible()
         // Should not show any hook button when invalid
-        await expect(page.getByText('Add a hook')).toBeVisible()
+        await expect(page.getByTestId(TestID.HookAddButton)).toBeVisible()
         // Should fall back to default step
         await expect(page.getByText('Select pair')).toBeVisible()
 
@@ -250,6 +251,169 @@ test.describe(
         // Should show ETH for tokenA and "Choose token" for tokenB (ETH/WETH conflict prevented)
         await expect(page.getByRole('button', { name: 'ETH' })).toBeVisible()
         await expect(page.getByRole('button', { name: 'Choose token' })).toBeVisible()
+      })
+    })
+
+    test.describe('Hook search modal', () => {
+      const MOCK_HOOK_LIST_RESPONSE = {
+        hooks: [
+          {
+            address: '0x1234567890123456789012345678901234567890',
+            chain: 'Ethereum',
+            chainId: 1,
+            name: 'Dynamic Fee Hook',
+            description: 'Adjusts fees dynamically',
+            verifiedSource: true,
+            flags: { beforeSwap: true, afterSwap: true },
+          },
+          {
+            address: '0xabcdefabcdefabcdefabcdefabcdefabcdefabcd',
+            chain: 'Ethereum',
+            chainId: 1,
+            name: 'MEV Protection Hook',
+            description: 'Protects against MEV',
+            verifiedSource: false,
+            flags: { beforeSwap: true },
+          },
+        ],
+      }
+
+      test('opens hook search modal and selects a hook', async ({ page }) => {
+        await page.route(
+          `${getUniswapServiceUrls().liquidityServiceUrl}/uniswap.liquidity.v2.LiquidityService/HookList*`,
+          async (route) => {
+            await route.fulfill({
+              status: 200,
+              headers: { 'content-type': 'application/json' },
+              body: JSON.stringify(MOCK_HOOK_LIST_RESPONSE),
+            })
+          },
+        )
+
+        await page.goto(
+          buildUrl({
+            subPath: '/v4',
+            queryParams: {
+              currencyA: 'NATIVE',
+              currencyB: USDT.address,
+            },
+          }),
+        )
+
+        // Click the "Add a hook" line item's search button to open the modal
+        await page.getByTestId(TestID.HookSelectButton).click()
+
+        // Verify modal is open with hook list
+        await expect(page.getByText('Dynamic Fee Hook')).toBeVisible()
+        await expect(page.getByText('MEV Protection Hook')).toBeVisible()
+
+        // Select the first hook via its hover-revealed add button
+        await page.getByText('Dynamic Fee Hook').hover()
+        await page.getByTestId(TestID.HookRowAddButton).first().click()
+
+        // Verify the selected hook appears in the form
+        await expect(page.getByText('Dynamic Fee Hook')).toBeVisible()
+        await expect(page.getByText('0x1234...7890')).toBeVisible()
+      })
+
+      test('shows empty state when no hooks match search', async ({ page }) => {
+        await page.route(
+          `${getUniswapServiceUrls().liquidityServiceUrl}/uniswap.liquidity.v2.LiquidityService/HookList*`,
+          async (route) => {
+            await route.fulfill({
+              status: 200,
+              headers: { 'content-type': 'application/json' },
+              body: JSON.stringify({ hooks: [] }),
+            })
+          },
+        )
+
+        await page.goto(
+          buildUrl({
+            subPath: '/v4',
+            queryParams: {
+              currencyA: 'NATIVE',
+              currencyB: USDT.address,
+            },
+          }),
+        )
+
+        await page.getByTestId(TestID.HookSelectButton).click()
+
+        await expect(page.getByText('No hooks found')).toBeVisible()
+      })
+
+      test('adds an unregistered hook address from search', async ({ page }) => {
+        await page.route(
+          `${getUniswapServiceUrls().liquidityServiceUrl}/uniswap.liquidity.v2.LiquidityService/HookList*`,
+          async (route) => {
+            await route.fulfill({
+              status: 200,
+              headers: { 'content-type': 'application/json' },
+              body: JSON.stringify({ hooks: [] }),
+            })
+          },
+        )
+
+        await page.goto(
+          buildUrl({
+            subPath: '/v4',
+            queryParams: {
+              currencyA: 'NATIVE',
+              currencyB: USDT.address,
+            },
+          }),
+        )
+
+        await page.getByTestId(TestID.HookSelectButton).click()
+
+        // Search an address that isn't in the registry: a selectable entry is shown instead of the empty state
+        const unregisteredAddress = '0x0000000000000000000000000000000000004444'
+        await page.getByPlaceholder('Search by name or address').fill(unregisteredAddress)
+        await expect(page.getByText('0x0000...4444')).toBeVisible()
+        await expect(page.getByText('No hooks found')).not.toBeVisible()
+
+        await page.getByTestId(TestID.HookRowAddButton).click()
+
+        // Verify the raw address is set as the selected hook
+        await expect(page.getByText('0x0000...4444')).toBeVisible()
+        await expect(page.getByTestId(TestID.HookAddButton)).not.toBeVisible()
+      })
+
+      test('clears selected hook with X button', async ({ page }) => {
+        await page.route(
+          `${getUniswapServiceUrls().liquidityServiceUrl}/uniswap.liquidity.v2.LiquidityService/HookList*`,
+          async (route) => {
+            await route.fulfill({
+              status: 200,
+              headers: { 'content-type': 'application/json' },
+              body: JSON.stringify(MOCK_HOOK_LIST_RESPONSE),
+            })
+          },
+        )
+
+        await page.goto(
+          buildUrl({
+            subPath: '/v4',
+            queryParams: {
+              currencyA: 'NATIVE',
+              currencyB: USDT.address,
+            },
+          }),
+        )
+
+        await page.getByTestId(TestID.HookSelectButton).click()
+        await page.getByText('Dynamic Fee Hook').hover()
+        await page.getByTestId(TestID.HookRowAddButton).first().click()
+
+        // Verify hook is selected
+        await expect(page.getByText('Dynamic Fee Hook')).toBeVisible()
+
+        // Clear the hook
+        await page.getByTestId(TestID.HookClearButton).click()
+
+        // Verify hook is cleared and "Add a hook" is back
+        await expect(page.getByTestId(TestID.HookAddButton)).toBeVisible()
       })
     })
 

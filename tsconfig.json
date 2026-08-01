@@ -102,6 +102,12 @@
     },
     {
       "path": "./packages/compliance"
+    },
+    {
+      "path": "./packages/tailwind"
+    },
+    {
+      "path": "./packages/experiments"
     }
   ]
 }

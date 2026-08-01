@@ -81,7 +81,7 @@ export const MiniTokensTable = memo(function MiniTokensTable({ maxTokens = 8, ch
   return (
     <Flex grow gap="$gap12">
       <TableSectionHeader
-        title={t('common.tokens')}
+        title={t('common.token.plural')}
         subtitle={t('portfolio.tokens.balance.totalTokens', { count: totalCount ?? tableData.length })}
         loading={tableLoading}
         testId={TestID.PortfolioOverviewTokensSection}

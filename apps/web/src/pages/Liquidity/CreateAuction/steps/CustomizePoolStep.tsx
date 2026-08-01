@@ -321,6 +321,7 @@ export function CustomizePoolStep() {
         borderRadius="$rounded20"
         p="$spacing24"
         gap="$spacing24"
+        $md={{ borderWidth: 0, borderRadius: '$none', p: '$none' }}
       >
         <Flex>
           <Text variant="heading3" color="$neutral1" py="$spacing12">
@@ -454,7 +455,7 @@ export function CustomizePoolStep() {
             size="medium"
             emphasis="primary"
             onPress={handleContinue}
-            isDisabled={isContinueDisabled}
+            disabled={isContinueDisabled}
             backgroundColor={isContinueDisabled ? undefined : tokenColor}
           >
             {t('toucan.createAuction.reviewLaunch')}

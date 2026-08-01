@@ -5,10 +5,10 @@ import path from 'path'
 import process from 'process'
 import { fileURLToPath } from 'url'
 import { cloudflare } from '@cloudflare/vite-plugin'
+import tailwindcss from '@tailwindcss/vite'
 import { tamaguiPlugin } from '@tamagui/vite-plugin'
 import react from '@vitejs/plugin-react'
-import { config as dotenvConfig } from 'dotenv'
-import { defineConfig, loadEnv, type ViteDevServer } from 'vite'
+import { defineConfig, type ViteDevServer } from 'vite'
 import bundlesize from 'vite-plugin-bundlesize'
 import commonjs from 'vite-plugin-commonjs'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
@@ -19,9 +19,9 @@ import { generateAssetsIgnorePlugin } from './vite/generateAssetsIgnorePlugin.js
 import { resolveEnvConfigs } from './vite/resolveEnvConfigs'
 import { cspMetaTagPlugin } from './vite/vite.plugins.js'
 
-// process.env.APP_ID is sourced from apps/web/.env for browser-side substitution
-// (via envDefines below) and from this assignment for the Node-side Tamagui static
-// extractor — Vite's loadEnv() returns an env object without mutating process.env.
+// process.env.APP_ID is injected into the browser bundle via envDefines below and set
+// here for the Node-side Tamagui static extractor — resolveEnvConfigs() returns an env
+// object and only mutates process.env for the keys it resolves, not APP_ID.
 process.env.APP_ID = 'web'
 
 // Get current file directory (ESM equivalent of __dirname)
@@ -145,75 +145,19 @@ function getNextDevVersion(): string {
 }
 
 export default defineConfig(({ mode, isPreview }) => {
-  let env: Record<string, string> = {}
+  // Unified config: resolve .env + overrides via the shared utility (the same
+  // code the Playwright test runner uses, so the build and runner configs stay identical).
+  const env = resolveEnvConfigs({
+    rootDir: __dirname,
+    isE2eTest: process.env.IS_E2E_TEST === 'true',
+    onOverride: (key) => console.log(`ENV_OVERRIDE: ${key}`),
+    overrideProcessEnv: true,
+  })
 
-  if (process.env.USE_NEW_CONFIGS !== 'false') {
-    // New unified config: resolve .env.new + overrides via the shared utility (the same
-    // code the Playwright test runner uses, so the build and runner configs stay identical).
-    env = resolveEnvConfigs({
-      rootDir: __dirname,
-      isE2eTest: process.env.IS_E2E_TEST === 'true',
-      onOverride: (key) => console.log(`ENV_OVERRIDE: ${key}`),
-      overrideProcessEnv: true,
-    })
-
-    // Stop the Cloudflare plugin's bundled Wrangler from auto-loading .env / .env.local
-    // (and emitting "Using vars defined in ..." logs). The .env.new values are forwarded
-    // to the Worker below via the plugin's `config` customizer.
-    process.env.CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV = 'false'
-  } else {
-    env = loadEnv(mode, __dirname, '')
-
-    // Load root .env.defaults.local as a base layer (app-level env files take precedence)
-    const rootEnvDefaultsLocalPath = path.resolve(__dirname, '../../.env.defaults.local')
-    if (fs.existsSync(rootEnvDefaultsLocalPath)) {
-      try {
-        const result = dotenvConfig({ path: rootEnvDefaultsLocalPath })
-        if (result.parsed) {
-          // Only set values that aren't already defined (lowest priority)
-          for (const [key, value] of Object.entries(result.parsed)) {
-            if (!(key in env)) {
-              env[key] = value
-            }
-          }
-        }
-      } catch (error) {
-        console.warn(
-          `Warning: Failed to read ${rootEnvDefaultsLocalPath}:`,
-          error instanceof Error ? error.message : String(error),
-        )
-      }
-    }
-
-    // Force load .env.[mode] files since NX ignores them
-    const modeEnvPath = path.resolve(__dirname, `.env.${mode}`)
-    if (fs.existsSync(modeEnvPath)) {
-      try {
-        const result = dotenvConfig({ path: modeEnvPath })
-        if (result.parsed) {
-          // Override base values with mode-specific values
-          Object.assign(env, result.parsed)
-        }
-        if (result.error) {
-          console.warn(`Warning: Failed to parse ${modeEnvPath}:`, result.error.message)
-        }
-      } catch (error) {
-        console.warn(`Warning: Failed to read ${modeEnvPath}:`, error instanceof Error ? error.message : String(error))
-      }
-    }
-
-    // Env vars that should be overridable from Vercel/CI (process.env takes precedence over .env files)
-    const VERCEL_OVERRIDABLE_ENV_VARS = [
-      'UNISWAP_GATEWAY_DNS',
-      'API_BASE_URL_V2_OVERRIDE',
-      'ENTRY_GATEWAY_API_URL_OVERRIDE',
-    ]
-    for (const key of VERCEL_OVERRIDABLE_ENV_VARS) {
-      if (process.env[key]) {
-        env[key] = process.env[key]
-      }
-    }
-  }
+  // Stop the Cloudflare plugin's bundled Wrangler from auto-loading .env / .env.local
+  // (and emitting "Using vars defined in ..." logs). The .env values are forwarded
+  // to the Worker below via the plugin's `config` customizer.
+  process.env.CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV = 'false'
 
   // Log environment loading for CI verification
   console.log(`ENV_LOADED: mode=${mode} AWS_API_ENDPOINT=${env.AWS_API_ENDPOINT ?? env.REACT_APP_AWS_API_ENDPOINT}`)
@@ -361,6 +305,16 @@ export default defineConfig(({ mode, isPreview }) => {
       },
       portWarningPlugin(isProduction),
       reactPlugin(),
+      // Tailwind v4 — compiles @import "tailwindcss" + @universe/tailwind tokens.
+      // Placed before the Tamagui extractor so CSS is resolved before extraction.
+      // Client environment only: CSS is generated exclusively for the browser bundle, and
+      // Tailwind's scan/generate transforms must stay out of the Cloudflare Worker
+      // environments (app*), where their module-graph work can invalidate worker modules
+      // while requests are in flight.
+      ...tailwindcss().map((plugin) => ({
+        ...plugin,
+        applyToEnvironment: (environment: { name: string }) => environment.name === 'client',
+      })),
       isProduction || isStaging
         ? tamaguiPlugin({
             config: '../../packages/ui/src/tamagui.config.ts',
@@ -373,7 +327,7 @@ export default defineConfig(({ mode, isPreview }) => {
         // ignores tsconfig files in Nx generator template directories
         skip: (dir) => dir.includes('files'),
       }),
-      env.SKIP_CSP ? undefined : cspMetaTagPlugin(mode),
+      env.SKIP_CSP ? undefined : cspMetaTagPlugin(mode, env),
       svgr({
         svgrOptions: {
           icon: false,
@@ -424,6 +378,24 @@ export default defineConfig(({ mode, isPreview }) => {
         },
         include: ['path', 'buffer'],
       }),
+      // nodePolyfills (above) injects its shim imports into every environment via a global esbuild
+      // banner, so non-client optimizers must know them up front to avoid a mid-run reload.
+      {
+        name: 'pre-bundle-node-polyfill-shims-in-worker-environments',
+        configEnvironment(name: string) {
+          return name === 'client'
+            ? null
+            : {
+                optimizeDeps: {
+                  include: [
+                    'vite-plugin-node-polyfills/shims/buffer',
+                    'vite-plugin-node-polyfills/shims/global',
+                    'vite-plugin-node-polyfills/shims/process',
+                  ],
+                },
+              }
+        },
+      },
       commonjs({
         dynamic: {
           loose: false,
@@ -476,18 +448,14 @@ export default defineConfig(({ mode, isPreview }) => {
       (isCloudflareDeploy || mode === 'development') && !isPreview
         ? cloudflare({
             configPath: './wrangler-vite-worker.jsonc',
-            // When USE_NEW_CONFIGS is on, forward .env.new values to the Worker as vars
-            // (the dotenv auto-loader is disabled above). Return only the `vars` patch —
-            // the plugin uses defu() to merge, which concatenates arrays. Returning the
-            // full workerConfig would duplicate fields like compatibility_flags and
-            // crash the Workers runtime at startup. Skip empty strings so any
-            // wrangler-defined defaults for the same key are preserved.
-            config:
-              process.env.USE_NEW_CONFIGS !== 'false'
-                ? () => ({
-                    vars: Object.fromEntries(Object.entries(env).filter(([, value]) => value !== '')),
-                  })
-                : undefined,
+            // Forward .env values to the Worker as vars (the dotenv auto-loader is
+            // disabled above). Return only the `vars` patch — the plugin uses defu() to
+            // merge, which concatenates arrays. Returning the full workerConfig would
+            // duplicate fields like compatibility_flags and crash the Workers runtime at
+            // startup. Skip empty strings so any wrangler-defined defaults are preserved.
+            config: () => ({
+              vars: Object.fromEntries(Object.entries(env).filter(([, value]) => value !== '')),
+            }),
             // Workaround for cloudflare plugin bug: explicitly set environment name based on CLOUDFLARE_ENV
             viteEnvironment:
               process.env.CLOUDFLARE_ENV === 'production'

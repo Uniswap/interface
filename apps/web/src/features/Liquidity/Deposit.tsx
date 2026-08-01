@@ -11,7 +11,6 @@ import {
   useTransactionSettingsStore,
 } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import SlippageWarningModal from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/SlippageWarningModal'
-import { ErrorCallout } from '~/components/ErrorCallout'
 import { BlockedTokensErrorCallout } from '~/features/Liquidity/BlockedTokensErrorCallout'
 import { useBlockedTokens } from '~/features/Liquidity/Create/hooks/useBlockedTokens'
 import { useDefaultInitialPrice } from '~/features/Liquidity/Create/hooks/useDefaultInitialPrice'
@@ -23,6 +22,7 @@ import { getFieldsDisabled, isInvalidRange } from '~/features/Liquidity/utils/pr
 import { useAccount } from '~/hooks/useAccount'
 import { ConfirmCreatePositionModal } from '~/pages/CreatePosition/ConfirmCreatePositionModal'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
+import { CreatePositionErrorCallout } from '~/pages/CreatePosition/CreatePositionErrorCallout'
 import { CreatePositionModal } from '~/pages/CreatePosition/CreatePositionModal'
 import { useCreatePositionTxContext } from '~/pages/CreatePosition/CreatePositionTxContext'
 import { PositionField } from '~/types/position'
@@ -219,7 +219,7 @@ export const DepositStep = () => {
             size="large"
             variant="branded"
             onPress={handleReview}
-            isDisabled={disabled}
+            disabled={disabled}
             key="Position-Create-DepositButton"
             loading={requestLoading}
           >
@@ -231,7 +231,7 @@ export const DepositStep = () => {
           </Button>
         )}
       </Flex>
-      <ErrorCallout errorMessage={transactionError} onPress={refetch} />
+      <CreatePositionErrorCallout onPress={refetch} />
       <CreatePositionModal
         formattedAmounts={updatedFormattedAmounts}
         currencyAmounts={updatedCurrencyAmounts ?? currencyAmounts}

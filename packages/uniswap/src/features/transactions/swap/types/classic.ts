@@ -5,11 +5,11 @@ import type { ClassicQuoteResponse } from '@universe/api'
 import { TradingApi } from '@universe/api'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { type BaseTrade, createBaseTradeAmounts } from 'uniswap/src/features/transactions/swap/types/base'
-import { getTradingApiSwapFee } from 'uniswap/src/features/transactions/swap/types/getTradingApiSwapFee'
 import {
   getQuoteOutputAmount,
   getQuoteOutputAmountUserWillReceive,
-} from 'uniswap/src/features/transactions/swap/types/trade'
+} from 'uniswap/src/features/transactions/swap/types/getQuoteOutputAmount'
+import { getTradingApiSwapFee } from 'uniswap/src/features/transactions/swap/types/getTradingApiSwapFee'
 
 export type ClassicTrade = BaseTrade<ClassicQuoteResponse, TradingApi.Routing.CLASSIC> & {
   readonly indicative: false

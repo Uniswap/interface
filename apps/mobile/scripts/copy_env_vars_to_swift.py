@@ -1,6 +1,7 @@
 import os
 
-ENV_FILE = './.env.new'
+ENV_FILE = './.env'
+DEV_ENV_FILE = './.env.dev'
 SWIFT_FILE_PATHS = ['ios/WidgetsCore/Env.swift', 'ios/OneSignalNotificationServiceExtension/Env.swift']
 SWIFT_ENV_VARIABLES = ['UNISWAP_API_KEY', 'STATSIG_API_KEY']
 
@@ -8,7 +9,7 @@ def to_swift_constant_line(key, value):
   return f'  static let {key.upper()} = "{value}"'
 
 # Strip the surrounding double quotes (and unescape) that the config system writes
-# into .env.new. Without this the raw `"value"` gets wrapped again into `""value""`,
+# into .env. Without this the raw `"value"` gets wrapped again into `""value""`,
 # producing invalid Swift. A no-op for unquoted values from older env sources.
 def unquote_env_value(value):
   value = value.strip()
@@ -32,20 +33,20 @@ def process_lines(lines, search_vars):
 
 # convert env variables to swift constants and writes to a swift file.
 def copy_env_vars_to_swift(env_file, swift_files, env_variables):
-  envs_left_to_find = env_variables.copy()
-  env_var_declarations = []
+  # Source values from .env (the unified config pulled by `config:pull`), matching how
+  # babel/Metro source app config for the JS bundle so the native Swift constants stay in sync.
+  # When .env is absent, fall back to the checked-in .env.dev defaults
+  if not os.path.isfile(env_file):
+    if os.path.isfile(DEV_ENV_FILE):
+      print('No .env file located, using the checked in dev defaults')
+      env_file = DEV_ENV_FILE
+    else:
+      print(f'ERROR: {env_file} not found; run `config:pull mobile` first.')
+      exit(1)
 
-  # Search for env vars in the system first
-  for key in env_variables:
-    if key in os.environ:
-      env_var_declarations.append(to_swift_constant_line(key.upper(), os.environ[key]))
-      envs_left_to_find.remove(key)
-
-  # read from env file if it exists
-  if os.path.isfile(env_file):
-    with open(env_file, 'r') as f:
-      env_lines = f.readlines()
-    env_var_declarations.extend(process_lines(env_lines, envs_left_to_find))
+  with open(env_file, 'r') as f:
+    env_lines = f.readlines()
+  env_var_declarations = process_lines(env_lines, env_variables.copy())
 
   # write to swift file
   for swift_file in swift_files:

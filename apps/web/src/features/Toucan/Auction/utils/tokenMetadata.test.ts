@@ -1,10 +1,71 @@
+import { Token } from '@uniswap/sdk-core'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { describe, expect, it } from 'vitest'
 import {
+  getAuctionTokenDecimals,
   getXProfileUrl,
+  isUsableAuctionTokenMetadata,
   mergeAuctionTokenMetadata,
   resolveAuctionTokenLogo,
 } from '~/features/Toucan/Auction/utils/tokenMetadata'
+
+const TOKEN_ADDRESS = '0x0000000000000000000000000000000000000001'
+
+function buildTokenInfo({
+  decimals,
+  symbol,
+  name,
+}: {
+  decimals: number
+  symbol?: string
+  name?: string
+}): CurrencyInfo {
+  return {
+    currency: new Token(1, TOKEN_ADDRESS, decimals, symbol, name),
+    currencyId: `1-${TOKEN_ADDRESS}`,
+    logoUrl: null,
+  } as CurrencyInfo
+}
+
+describe('isUsableAuctionTokenMetadata', () => {
+  it('accepts ordinary metadata (decimals 18 with name/symbol)', () => {
+    expect(isUsableAuctionTokenMetadata({ decimals: 18, symbol: 'TCAN', name: 'Toucan' })).toBe(true)
+  })
+
+  it('rejects the corrupt-ingestion signature (decimals 0 with empty name and symbol)', () => {
+    expect(isUsableAuctionTokenMetadata({ decimals: 0, symbol: undefined, name: undefined })).toBe(false)
+    expect(isUsableAuctionTokenMetadata({ decimals: 0, symbol: '', name: '' })).toBe(false)
+  })
+
+  it('accepts a legitimate 0-decimals token that has a real name or symbol', () => {
+    expect(isUsableAuctionTokenMetadata({ decimals: 0, symbol: 'ZERO', name: 'Zero Decimals' })).toBe(true)
+    expect(isUsableAuctionTokenMetadata({ decimals: 0, symbol: 'ZERO', name: undefined })).toBe(true)
+  })
+
+  it('rejects missing decimals regardless of name/symbol (never assume a value)', () => {
+    expect(isUsableAuctionTokenMetadata({ decimals: undefined, symbol: 'TCAN', name: 'Toucan' })).toBe(false)
+  })
+})
+
+describe('getAuctionTokenDecimals', () => {
+  it('returns undefined while token info has not resolved', () => {
+    expect(getAuctionTokenDecimals(undefined)).toBeUndefined()
+    expect(getAuctionTokenDecimals(null)).toBeUndefined()
+  })
+
+  it('returns the decimals for trustworthy metadata', () => {
+    expect(getAuctionTokenDecimals(buildTokenInfo({ decimals: 18, symbol: 'TCAN', name: 'Toucan' }))).toBe(18)
+    expect(getAuctionTokenDecimals(buildTokenInfo({ decimals: 6, symbol: 'SIX', name: 'Six Decimals' }))).toBe(6)
+  })
+
+  it('returns undefined for the corrupt-ingestion signature instead of 0', () => {
+    expect(getAuctionTokenDecimals(buildTokenInfo({ decimals: 0 }))).toBeUndefined()
+  })
+
+  it('keeps a legitimate 0-decimals token', () => {
+    expect(getAuctionTokenDecimals(buildTokenInfo({ decimals: 0, symbol: 'ZERO', name: 'Zero Decimals' }))).toBe(0)
+  })
+})
 
 describe('getXProfileUrl', () => {
   it('builds the profile URL from a bare handle', () => {

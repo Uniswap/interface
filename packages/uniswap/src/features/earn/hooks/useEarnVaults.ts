@@ -5,9 +5,13 @@ import { useMemo } from 'react'
 import {
   getListEarnPositionsQueryOptions,
   getListEarnVaultsQueryOptions,
-} from 'uniswap/src/data/apiClients/dataApiService/earn'
+} from 'uniswap/src/data/apiClients/dataApiService/earn/queries'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EARN_SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/earn/constants'
+import {
+  applyOptimisticEarnPositionUpdates,
+  useOptimisticEarnPositionStore,
+} from 'uniswap/src/features/earn/optimisticEarnPositions'
 import type { EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import {
   getEarnPositionInfosByVaultId,
@@ -15,6 +19,7 @@ import {
   getEarnVaultsSortedByPosition,
   getTotalEarnDepositedUsd,
 } from 'uniswap/src/features/earn/utils'
+import { useEvent } from 'utilities/src/react/hooks'
 
 const EMPTY_EARN_VAULTS: readonly EarnVaultInfo[] = []
 const EMPTY_EARN_POSITIONS_BY_VAULT_ID: ReadonlyMap<string, EarnPositionInfo> = new Map()
@@ -35,6 +40,10 @@ type UseEarnVaultsResult = {
   hasLoadedPositions: boolean
   isLoadingPositions: boolean
   isLoadingVaults: boolean
+  /** True when either the vaults or positions query failed. */
+  isError: boolean
+  /** Refetches both the vaults and positions queries. */
+  refetch: () => void
   positionsByVaultId: ReadonlyMap<string, EarnPositionInfo>
   totalDepositedUsd: number
   vaults: readonly EarnVaultInfo[]
@@ -68,7 +77,24 @@ export function useEarnVaults({
   )
 
   const vaults = vaultsQuery.data ?? EMPTY_EARN_VAULTS
-  const positionsByVaultId = positionsQuery.data ?? EMPTY_EARN_POSITIONS_BY_VAULT_ID
+  const hasResolvedPositions = account ? positionsQuery.data !== undefined && !positionsQuery.isPlaceholderData : false
+  const apiPositionsByVaultId = hasResolvedPositions
+    ? (positionsQuery.data ?? EMPTY_EARN_POSITIONS_BY_VAULT_ID)
+    : EMPTY_EARN_POSITIONS_BY_VAULT_ID
+  const optimisticEarnPositionUpdates = useOptimisticEarnPositionStore((s) => s.updatesById)
+  const positionsByVaultId = useMemo(
+    () =>
+      account
+        ? applyOptimisticEarnPositionUpdates({
+            chainIds,
+            positionsByVaultId: apiPositionsByVaultId,
+            updatesById: optimisticEarnPositionUpdates,
+            vaults,
+            walletAddress: account,
+          })
+        : EMPTY_EARN_POSITIONS_BY_VAULT_ID,
+    [account, apiPositionsByVaultId, chainIds, optimisticEarnPositionUpdates, vaults],
+  )
   const vaultsSortedByPosition = useMemo(
     () => getEarnVaultsSortedByPosition({ positionsByVaultId, vaults }),
     [positionsByVaultId, vaults],
@@ -76,12 +102,21 @@ export function useEarnVaults({
   const totalDepositedUsd = useMemo(() => getTotalEarnDepositedUsd(positionsByVaultId.values()), [positionsByVaultId])
 
   const isLoadingVaults = vaultsQuery.isLoading && vaults.length === 0
-  const isLoadingPositions = positionsQuery.isLoading && positionsByVaultId.size === 0
+  const isLoadingPositions = (positionsQuery.isLoading || positionsQuery.isPlaceholderData) && !hasResolvedPositions
+
+  const refetch = useEvent(() => {
+    vaultsQuery.refetch().catch(() => undefined)
+    if (positionsQueryParams) {
+      positionsQuery.refetch().catch(() => undefined)
+    }
+  })
 
   return {
-    hasLoadedPositions: positionsQuery.isSuccess,
+    hasLoadedPositions: hasResolvedPositions,
     isLoadingPositions,
     isLoadingVaults,
+    isError: vaultsQuery.isError || positionsQuery.isError,
+    refetch,
     positionsByVaultId,
     totalDepositedUsd,
     vaults,

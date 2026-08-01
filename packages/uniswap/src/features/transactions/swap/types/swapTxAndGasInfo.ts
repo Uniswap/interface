@@ -1,5 +1,6 @@
 import { GasEstimate, GasFeeResult, TradingApi } from '@universe/api'
 import { ValidatedGasFeeResult } from 'uniswap/src/features/gas/utils'
+import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/permitMethod'
 import { SolanaTrade } from 'uniswap/src/features/transactions/swap/types/solana'
 import {
   BridgeTrade,
@@ -10,7 +11,7 @@ import {
   WrapTrade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
 import { validateSwapTxContext } from 'uniswap/src/features/transactions/swap/types/validateSwapTxContext'
-import { ValidatedPermit } from 'uniswap/src/features/transactions/swap/utils/trade'
+import type { ValidatedPermit } from 'uniswap/src/features/transactions/swap/utils/trade'
 import {
   PopulatedTransactionRequestArray,
   ValidatedTransactionRequest,
@@ -64,11 +65,6 @@ export interface BaseSwapTxAndGasInfo {
   gasFee: GasFeeResult
   gasFeeEstimation: SwapGasFeeEstimation
   includesDelegation?: boolean
-}
-
-export enum PermitMethod {
-  Transaction = 'Transaction',
-  TypedData = 'TypedData',
 }
 
 export type PermitTransaction = {

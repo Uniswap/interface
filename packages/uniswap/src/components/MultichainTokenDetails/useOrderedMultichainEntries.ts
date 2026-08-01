@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 // oxlint-disable-next-line no-restricted-imports -- we need raw chain ordering without enabled filtering
 import { useOrderedChainIds } from 'uniswap/src/features/chains/hooks/useOrderedChainIds'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export interface MultichainTokenEntry {
   chainId: UniverseChainId

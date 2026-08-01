@@ -89,7 +89,7 @@ export const useTabsContent = (): TabsSection[] => {
       elementName: ElementName.NavbarExploreTab,
       items: [
         {
-          label: t('common.tokens'),
+          label: t('common.token.plural'),
           href: '/explore/tokens',
           internal: true,
           elementName: ElementName.NavbarExploreDropdownTokens,
@@ -162,7 +162,7 @@ export const useTabsContent = (): TabsSection[] => {
           elementName: ElementName.NavbarPortfolioDropdownOverview,
         },
         {
-          label: t('common.tokens'),
+          label: t('common.token.plural'),
           href: buildPortfolioUrl({
             tab: PortfolioTab.Tokens,
             chainId: portfolioChainId,

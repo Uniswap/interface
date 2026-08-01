@@ -1,5 +1,5 @@
-import { isMobileApp, isMobileWeb, isWebApp, isWebPlatform } from '@universe/environment'
-import { memo, useCallback, useMemo, useState } from 'react'
+import { isHoverable, isMobileApp, isMobileWeb, isWebApp, isWebPlatform } from '@universe/environment'
+import { memo, useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, type ModifierPressProps, Text, TouchableArea } from 'ui/src'
 import { Check } from 'ui/src/components/icons/Check'
@@ -10,6 +10,7 @@ import {
   TokenOptionItemContextMenu,
 } from 'uniswap/src/components/lists/items/tokens/TokenOptionItemContextMenu'
 import { TokenOption } from 'uniswap/src/components/lists/items/types'
+import type { ContextMenuHandle } from 'uniswap/src/components/menus/ContextMenu'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { MultichainAddressSheet } from 'uniswap/src/components/MultichainTokenDetails/MultichainAddressSheet'
 import { useOrderedMultichainEntries } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
@@ -17,6 +18,7 @@ import type { MultichainTokenEntry } from 'uniswap/src/components/MultichainToke
 import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { MultichainTokenContextMenuButton } from 'uniswap/src/features/search/SearchModal/MultichainTokenContextMenuButton'
 import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
 import TokenWarningModal from 'uniswap/src/features/tokens/warnings/TokenWarningModal'
@@ -360,6 +362,8 @@ export const TokenOptionItem = memo(function TokenOptionItemInner(
   const { value: isContextMenuOpen, setFalse: closeContextMenu, setTrue: openContextMenu } = useBooleanState(false)
   const { value: isAddressSheetOpen, setFalse: closeAddressSheet, setTrue: openAddressSheet } = useBooleanState(false)
   const { hapticFeedback } = useHapticFeedback()
+  // Lets the row's right-click (below) open the same menu instance as the "…" kebab.
+  const multichainButtonRef = useRef<ContextMenuHandle>(null)
 
   const multichainData = !isLegacyTokenOptionItemProps(props) ? props.multichainData : undefined
   const rawEntries = useMemo<MultichainTokenEntry[]>(
@@ -389,9 +393,36 @@ export const TokenOptionItem = memo(function TokenOptionItemInner(
     }
   }, [hasMultipleChains, allNative, closeContextMenu, openAddressSheet])
 
+  // Built internally (not passed via rightElement) so the row's right-click below can ref it.
+  const hasMultichainButton = isHoverable && Boolean(multichainData)
+  const focusedRowControl = !isLegacyTokenOptionItemProps(props) ? props.focusedRowControl : undefined
+  const isMultichainButtonVisible = focusedRowControl
+    ? focusedRowControl.rowIndex === focusedRowControl.focusedRowIndex
+    : undefined
+
   if (!isLegacyTokenOptionItemProps(props)) {
-    return (
-      <>
+    const content =
+      hasMultichainButton && multichainData && isWebPlatform ? (
+        // oxlint-disable-next-line react/forbid-elements -- raw div needed for the onContextMenu right-click trigger
+        <div
+          onContextMenu={(e): void => {
+            e.preventDefault()
+            multichainButtonRef.current?.openAt(e.clientX, e.clientY)
+          }}
+        >
+          <BaseTokenOptionItem
+            {...props}
+            rightElement={
+              <MultichainTokenContextMenuButton
+                ref={multichainButtonRef}
+                tokens={multichainData.tokens}
+                primaryCurrencyInfo={multichainData.primaryCurrencyInfo}
+                isVisible={isMultichainButtonVisible}
+              />
+            }
+          />
+        </div>
+      ) : (
         <TokenOptionItemContextMenu
           actions={CONTEXT_MENU_ACTIONS[props.contextMenuVariant]}
           currency={props.option.currencyInfo.currency}
@@ -414,6 +445,11 @@ export const TokenOptionItem = memo(function TokenOptionItemInner(
             />
           )}
         </TokenOptionItemContextMenu>
+      )
+
+    return (
+      <>
+        {content}
         {(isMobileApp || isMobileWeb) && hasMultipleChains && (
           <MultichainAddressSheet isOpen={isAddressSheetOpen} chains={orderedEntries} onClose={closeAddressSheet} />
         )}

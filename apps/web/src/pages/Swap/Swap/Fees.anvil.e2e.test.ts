@@ -27,7 +27,7 @@ test.describe(
       // Set up swap
       await page.getByTestId(TestID.AmountInputOut).fill('1')
 
-      const response = await page.waitForResponse(`${getUniswapServiceUrls().tradingApiUrl}/v1/quote`)
+      const response = await page.waitForResponse(`${getUniswapServiceUrls().tradingApiUrl}/quote`)
       const {
         quote: { portionBips, portionRecipient },
       } = await response.json()

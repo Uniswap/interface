@@ -1,6 +1,6 @@
 import { listTransactions } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
 import { WETH9 } from '@uniswap/sdk-core'
-import { V1_TRADING_API_PATHS } from '@universe/api'
+import { TRADING_API_PATHS } from '@universe/api'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -32,7 +32,7 @@ test.describe(
         balance: parseEther('1000000'),
       })
       await page.route(
-        `${getUniswapServiceUrls().tradingApiUrl}${V1_TRADING_API_PATHS.quote}`,
+        `${getUniswapServiceUrls().tradingApiUrl}/${TRADING_API_PATHS.quote}`,
         async (route, request) => {
           const postData = await request.postData()
           const data = JSON.parse(postData ?? '{}')
@@ -43,7 +43,7 @@ test.describe(
           }
         },
       )
-      await page.route(`${getUniswapServiceUrls().tradingApiUrl}${V1_TRADING_API_PATHS.order}`, async (route) => {
+      await page.route(`${getUniswapServiceUrls().tradingApiUrl}/${TRADING_API_PATHS.order}`, async (route) => {
         await route.fulfill({ path: Mocks.UniswapX.openOrder })
       })
       await page.goto(`/swap?inputCurrency=${WETH9[UniverseChainId.Mainnet].address}&outputCurrency=${DAI.address}`)

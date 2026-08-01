@@ -10,7 +10,7 @@ import {
 } from 'react'
 import { EffectiveModalOrSheetZIndexContext, stackingLayerAbove } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
-import { getDropdownVerticalLayout } from '~/components/Dropdowns/dropdownLayoutUtils'
+import { getDropdownAvailableSpace, getDropdownVerticalLayout } from '~/components/Dropdowns/dropdownLayoutUtils'
 
 interface UseFixedDropdownLayoutParams {
   alignRight?: boolean
@@ -23,6 +23,8 @@ interface UseFixedDropdownLayoutParams {
   matchTriggerWidth?: boolean
   measuringDropdownRef: RefObject<HTMLDivElement | null>
   triggerRef: RefObject<HTMLDivElement | null>
+  // Height of chrome (e.g. the sticky app header) that overlaps the top of the viewport once scrolled
+  topInset?: number
 }
 
 interface FixedDropdownLayout {
@@ -63,6 +65,7 @@ export function useFixedDropdownLayout({
   matchTriggerWidth,
   measuringDropdownRef,
   triggerRef,
+  topInset = 0,
 }: UseFixedDropdownLayoutParams): FixedDropdownLayout {
   const dropdownRef = useRef<HTMLDivElement | null>(null)
   const parentZIndex = useContext(EffectiveModalOrSheetZIndexContext)
@@ -79,8 +82,12 @@ export function useFixedDropdownLayout({
     const rect = triggerRef.current.getBoundingClientRect()
     const viewportHeight = window.innerHeight
     const viewportWidth = window.innerWidth
-    const spaceBelow = viewportHeight - rect.bottom - dropdownOffset
-    const spaceAbove = rect.top - dropdownOffset
+    const { spaceAbove, spaceBelow } = getDropdownAvailableSpace({
+      dropdownOffset,
+      triggerRect: rect,
+      viewportHeight,
+      topInset,
+    })
     const dropdownHeight = measuringDropdownRef.current?.offsetHeight ?? 0
     const { dropdownMaxHeight: nextDropdownMaxHeight, flipVertical: shouldFlip } = getDropdownVerticalLayout({
       allowFlip,
@@ -121,6 +128,7 @@ export function useFixedDropdownLayout({
     matchTriggerWidth,
     measuringDropdownRef,
     triggerRef,
+    topInset,
   ])
 
   const cancelScheduledLayoutUpdate = useCallback(() => {

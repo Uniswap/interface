@@ -347,7 +347,8 @@ export function Table<T extends RowData>({
             open={areHiddenRowsShown}
             animation="200ms"
             id="hidden-rows-section"
-            styleProps={{ overflowY: 'hidden', overflowX: 'visible' } as any}
+            // overflow-y: hidden would coerce overflow-x to auto (CSS disallows mixing visible with a clipped axis), breaking sticky pinned columns
+            styleProps={{ '$platform-web': { overflowY: 'clip', overflowX: 'visible' } }}
           >
             <ScrollSyncPane group={scrollGroup}>
               <HiddenTableScrollContainer>

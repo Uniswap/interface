@@ -17,6 +17,7 @@ import { DappRequestType } from 'uniswap/src/features/dappRequests/types'
 import { useChainGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToken'
 import { hasGasEstimationFailed, hasSufficientGasBalance } from 'uniswap/src/features/gas/utils'
 import { type TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { extractNameFromUrl } from 'utilities/src/format/extractNameFromUrl'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -49,6 +50,12 @@ interface DappRequestFooterProps {
   sponsorMetadata?: TradingApi.SponsorMetadata
   isUniswapX?: boolean
   disableConfirm?: boolean
+  /**
+   * Malicious (critical Blockaid risk) requests reorder and restyle the footer
+   * buttons: cancel becomes the recommended primary action and confirm is
+   * demoted to critical theming, placed first to add friction.
+   */
+  isCriticalRisk?: boolean
   contentHorizontalPadding?: number | Animated.AnimatedNode | GetThemeValueForKey<'paddingHorizontal'> | null
 }
 
@@ -96,6 +103,7 @@ export function DappRequestContent({
   children,
   isUniswapX,
   disableConfirm,
+  isCriticalRisk,
   showAddressFooter = true,
   contentHorizontalPadding = '$spacing12',
 }: PropsWithChildren<DappRequestContentProps>): JSX.Element {
@@ -134,6 +142,7 @@ export function DappRequestContent({
         transactionGasFeeResult={transactionGasFeeResult}
         sponsorMetadata={sponsorMetadata}
         disableConfirm={disableConfirm}
+        isCriticalRisk={isCriticalRisk}
         onCancel={onCancel}
         onConfirm={onConfirm}
       />
@@ -157,6 +166,7 @@ function DappRequestFooter({
   sponsorMetadata,
   isUniswapX,
   disableConfirm,
+  isCriticalRisk,
 }: DappRequestFooterProps): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -280,25 +290,78 @@ function DappRequestFooter({
           />
         )}
         <WarningSection request={request.dappRequest} isRequestStale={isRequestStale} />
-        <Flex row gap="$spacing12">
-          <Button flexBasis={1} size="medium" emphasis="secondary" onPress={handleOnCancel}>
-            {isRequestStale ? t('common.button.close') : t('common.button.cancel')}
-          </Button>
-          {confirmText && !isRequestStale && (
-            <Button
-              isDisabled={isDisabled}
-              loading={isLoading}
-              flexBasis={1}
-              size="medium"
-              variant="branded"
-              onPress={debouncedHandleOnConfirm}
-            >
-              {confirmText}
-            </Button>
-          )}
-        </Flex>
+        <FooterButtons
+          isRequestStale={isRequestStale}
+          isCriticalRisk={isCriticalRisk}
+          confirmText={confirmText}
+          isDisabled={isDisabled}
+          isLoading={isLoading}
+          onCancel={handleOnCancel}
+          onConfirm={debouncedHandleOnConfirm}
+        />
       </Flex>
     </>
+  )
+}
+
+function FooterButtons({
+  isRequestStale,
+  isCriticalRisk,
+  confirmText,
+  isDisabled,
+  isLoading,
+  onCancel,
+  onConfirm,
+}: {
+  isRequestStale: boolean
+  isCriticalRisk?: boolean
+  confirmText?: string
+  isDisabled: boolean
+  isLoading: boolean
+  onCancel: () => void
+  onConfirm: () => void
+}): JSX.Element {
+  const { t } = useTranslation()
+  const applyCriticalStyling = Boolean(isCriticalRisk) && !isRequestStale
+
+  const cancelButton = (
+    <Button
+      key="cancel"
+      flexBasis={1}
+      size="medium"
+      emphasis={applyCriticalStyling ? 'primary' : 'secondary'}
+      testID={TestID.Cancel}
+      onPress={onCancel}
+    >
+      {isRequestStale
+        ? t('common.button.close')
+        : applyCriticalStyling
+          ? t('common.button.reject')
+          : t('common.button.cancel')}
+    </Button>
+  )
+
+  const confirmButton =
+    confirmText && !isRequestStale ? (
+      <Button
+        key="confirm"
+        disabled={isDisabled}
+        loading={isLoading}
+        flexBasis={1}
+        size="medium"
+        variant={applyCriticalStyling ? 'critical' : 'branded'}
+        emphasis={applyCriticalStyling ? 'secondary' : 'primary'}
+        testID={TestID.Confirm}
+        onPress={onConfirm}
+      >
+        {confirmText}
+      </Button>
+    ) : null
+
+  return (
+    <Flex row gap="$spacing12">
+      {applyCriticalStyling ? [confirmButton, cancelButton] : [cancelButton, confirmButton]}
+    </Flex>
   )
 }
 

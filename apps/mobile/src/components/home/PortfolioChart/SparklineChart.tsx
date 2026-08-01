@@ -1,13 +1,7 @@
 import { memo, useCallback, useEffect, useId, useMemo } from 'react'
-import {
-  GestureEvent,
-  LongPressGestureHandler,
-  LongPressGestureHandlerEventPayload,
-} from 'react-native-gesture-handler'
+import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
-  runOnJS,
   SharedValue,
-  useAnimatedGestureHandler,
   useAnimatedProps,
   useAnimatedReaction,
   useDerivedValue,
@@ -26,6 +20,7 @@ import Svg, {
   Stop,
   LinearGradient as SvgLinearGradient,
 } from 'react-native-svg'
+import { scheduleOnRN } from 'react-native-worklets'
 import {
   computeChartPaths,
   findNearestIndex,
@@ -117,43 +112,48 @@ export const SparklineChart = memo(function SparklineChart({
         return
       }
 
-      runOnJS(handleScrubIndexChange)(currentIndex)
+      scheduleOnRN(handleScrubIndexChange, currentIndex)
     },
     [data.length, handleScrubIndexChange],
   )
 
-  const onGestureEvent = useAnimatedGestureHandler<GestureEvent<LongPressGestureHandlerEventPayload>>(
-    {
-      onActive: ({ x }) => {
-        if (data.length < 2 || !timestamps) {
-          return
-        }
-
-        const clampedX = Math.max(0, Math.min(x, dataWidth))
-        scrubActive.value = true
-        scrubX.value = clampedX
-
-        scrubIndex.value = findNearestIndex({ timestamps, normalizedX: clampedX / dataWidth })
-      },
-      onEnd: () => {
-        scrubActive.value = false
-        scrubX.value = -1
-        scrubIndex.value = -1
-        runOnJS(handleScrubEnd)()
-      },
-      onFail: () => {
-        scrubActive.value = false
-        scrubX.value = -1
-        scrubIndex.value = -1
-        runOnJS(handleScrubEnd)()
-      },
-      onCancel: () => {
-        scrubActive.value = false
-        scrubX.value = -1
-        scrubIndex.value = -1
-        runOnJS(handleScrubEnd)()
-      },
-    },
+  const longPressGesture = useMemo(
+    () =>
+      Gesture.LongPress()
+        .minDuration(SCRUB_ACTIVATION_DELAY_MS)
+        .maxDistance(SCRUB_MAX_DISTANCE)
+        .shouldCancelWhenOutside(false)
+        .onTouchesMove((e) => {
+          'worklet'
+          if (data.length < 2 || !timestamps) {
+            return
+          }
+          const touch = e.allTouches[0]
+          if (!touch) {
+            return
+          }
+          const clampedX = Math.max(0, Math.min(touch.x, dataWidth))
+          scrubActive.value = true
+          scrubX.value = clampedX
+          scrubIndex.value = findNearestIndex({ timestamps, normalizedX: clampedX / dataWidth })
+        })
+        .onEnd(() => {
+          'worklet'
+          scrubActive.value = false
+          scrubX.value = -1
+          scrubIndex.value = -1
+          scheduleOnRN(handleScrubEnd)
+        })
+        .onFinalize((_e, success) => {
+          'worklet'
+          if (success) {
+            return
+          }
+          scrubActive.value = false
+          scrubX.value = -1
+          scrubIndex.value = -1
+          scheduleOnRN(handleScrubEnd)
+        }),
     [data.length, dataWidth, timestamps, handleScrubEnd, scrubActive, scrubIndex, scrubX],
   )
 
@@ -262,14 +262,9 @@ export const SparklineChart = memo(function SparklineChart({
 
   if (interactive) {
     return (
-      <LongPressGestureHandler
-        minDurationMs={SCRUB_ACTIVATION_DELAY_MS}
-        maxDist={SCRUB_MAX_DISTANCE}
-        shouldCancelWhenOutside={false}
-        onGestureEvent={onGestureEvent}
-      >
+      <GestureDetector gesture={longPressGesture}>
         <Animated.View style={{ width, height }}>{chartContent}</Animated.View>
-      </LongPressGestureHandler>
+      </GestureDetector>
     )
   }
 

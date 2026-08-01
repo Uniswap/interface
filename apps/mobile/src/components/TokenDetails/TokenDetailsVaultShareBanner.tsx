@@ -3,6 +3,7 @@ import { Flex } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes } from 'ui/src/theme'
 import { TokenDetailsVaultShareBanner as SharedTokenDetailsVaultShareBanner } from 'uniswap/src/components/tokenDetails/TokenDetailsVaultShareBanner'
+import { EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
 import type { TokenDetailsVaultShareData } from 'uniswap/src/features/earn/hooks/useTokenDetailsVaultShareData'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 
@@ -20,7 +21,7 @@ export const TokenDetailsVaultShareBanner = memo(function TokenDetailsVaultShare
     if (!vault) {
       return
     }
-    navigateToEarnVault({ vault })
+    navigateToEarnVault({ analyticsEntryPoint: EarnEntryPoint.TokenDetailsVaultShareBanner, vault })
   }, [vault, navigateToEarnVault])
 
   // Only shown to connected users — the earn vault modal's connect flow isn't wired up from this

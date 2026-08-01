@@ -284,7 +284,7 @@ export const v30Schema = { ...v29Schema }
 
 export const v31Schema = { ...v30Schema }
 
-const v32Schema = {
+export const v32Schema = {
   ...v31Schema,
   userSettings: {
     ...v31Schema.userSettings,
@@ -292,4 +292,6 @@ const v32Schema = {
   },
 }
 
-export const getSchema = (): typeof v32Schema => v32Schema
+export const v33Schema = { ...v32Schema }
+
+export const getSchema = (): typeof v33Schema => v33Schema

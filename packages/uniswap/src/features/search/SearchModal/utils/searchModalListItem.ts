@@ -1,4 +1,3 @@
-import { Currency } from '@uniswap/sdk-core'
 import { OnchainItemListOptionType, SearchModalOption } from 'uniswap/src/components/lists/items/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
@@ -11,13 +10,13 @@ import { isAddressTokenSearchQuery } from 'uniswap/src/features/search/utils'
  */
 export function tdpChainFilterForTokenRow({
   searchChainFilter,
-  rowCurrency,
+  rowChainId,
   explicitTdpChain,
   searchQuery,
   allowAggregate,
 }: {
   searchChainFilter: UniverseChainId | null
-  rowCurrency: Currency
+  rowChainId: number
   explicitTdpChain?: UniverseChainId
   searchQuery?: string
   allowAggregate?: boolean
@@ -29,7 +28,7 @@ export function tdpChainFilterForTokenRow({
     return searchChainFilter
   }
   if (isAddressTokenSearchQuery(searchQuery)) {
-    return isUniverseChainId(rowCurrency.chainId) ? rowCurrency.chainId : undefined
+    return isUniverseChainId(rowChainId) ? rowChainId : undefined
   }
   return allowAggregate ? null : undefined
 }
@@ -57,5 +56,7 @@ export function searchModalOptionKey(item: SearchModalOption): string {
       return `ens-${item.address}`
     case OnchainItemListOptionType.Unitag:
       return `unitag-${item.address}`
+    case OnchainItemListOptionType.Auction:
+      return `auction-${item.chainId}-${item.auctionAddress}`
   }
 }

@@ -9,6 +9,7 @@ vi.mock('react-i18next', () => ({
         'common.auto': 'Auto',
         'gas.override.title': 'Network cost',
         'swap.warning.networkFee.includesDelegation': 'Includes smart wallet activation',
+        'swap.warning.networkFee.includesSmartWalletUpdate': 'Includes smart wallet update',
       }
       return translations[key] ?? key
     },
@@ -103,6 +104,39 @@ describe('NetworkCostRow', () => {
       />,
     )
     expect(getByText('Includes smart wallet activation')).toBeTruthy()
+  })
+
+  it('renders the smart wallet update subtitle when the delegation is an upgrade', () => {
+    const { getByText, queryByText } = renderWithProviders(
+      <NetworkCostRow
+        gasFeeUsd="$1.54"
+        enableCustomGasFeeEntry
+        hasOverrides={false}
+        hasWarning={false}
+        includesDelegation
+        includesDelegationUpgrade
+        pressable={false}
+        onPress={vi.fn()}
+      />,
+    )
+    expect(getByText('Includes smart wallet update')).toBeTruthy()
+    expect(queryByText('Includes smart wallet activation')).toBeNull()
+  })
+
+  it('ignores includesDelegationUpgrade when includesDelegation is false', () => {
+    const { queryByText } = renderWithProviders(
+      <NetworkCostRow
+        gasFeeUsd="$1.54"
+        enableCustomGasFeeEntry
+        hasOverrides={false}
+        hasWarning={false}
+        includesDelegationUpgrade
+        pressable={false}
+        onPress={vi.fn()}
+      />,
+    )
+    expect(queryByText('Includes smart wallet update')).toBeNull()
+    expect(queryByText('Includes smart wallet activation')).toBeNull()
   })
 
   it('hides the smart wallet activation subtitle when includesDelegation is omitted', () => {

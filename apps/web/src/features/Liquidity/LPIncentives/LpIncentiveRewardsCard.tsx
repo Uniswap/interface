@@ -200,7 +200,7 @@ export function LpIncentiveRewardsCard({
                 maxWidth="fit-content"
                 onPress={onCollectRewards}
                 borderColor={isCollectButtonDisabled ? '$neutral3' : 'unset'}
-                isDisabled={isCollectButtonDisabled}
+                disabled={isCollectButtonDisabled}
               >
                 {t('pool.incentives.collectRewards')}
               </Button>

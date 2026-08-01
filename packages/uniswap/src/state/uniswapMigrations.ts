@@ -278,3 +278,18 @@ export function addEnableCustomGasFeeEntry(state: any): any {
     },
   }
 }
+
+// Mobile: 99
+// Extension: 33
+// Web: 63
+export function removeUniswapWrapped2025BehaviorHistory(state: any): any {
+  if (!state?.uniswapBehaviorHistory) {
+    return state
+  }
+  const newState = {
+    ...state,
+    uniswapBehaviorHistory: { ...state.uniswapBehaviorHistory },
+  }
+  delete newState.uniswapBehaviorHistory.hasDismissedUniswapWrapped2025Banner
+  return newState
+}

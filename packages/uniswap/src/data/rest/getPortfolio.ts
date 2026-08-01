@@ -1,13 +1,12 @@
 import { type PartialMessage, type PlainMessage, toPlainMessage } from '@bufbuild/protobuf'
 import { createPromiseClient } from '@connectrpc/connect'
-import { type Query, queryOptions, type UseQueryResult, useQuery } from '@tanstack/react-query'
+import { queryOptions, type UseQueryResult, useQuery } from '@tanstack/react-query'
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
 import { type GetPortfolioRequest, type GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { type Balance } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import {
   createDataApiServiceClient,
   getGetPortfolioQueryOptions,
-  SharedQueryClient,
   transformInput,
   type WithoutWalletAccount,
 } from '@universe/api'
@@ -21,7 +20,6 @@ import {
 } from 'uniswap/src/data/rest/portfolioBalanceOverrides'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/useRestPortfolioValueModifier'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { fetchAndMergeOnchainBalances } from 'uniswap/src/features/portfolio/portfolioUpdates/refetchQueriesViaOnchainOverrideVariantSaga'
 import { removeExpiredBalanceOverrides } from 'uniswap/src/features/portfolio/slice/slice'
 import { type CurrencyId } from 'uniswap/src/types/currency'
@@ -292,58 +290,4 @@ function _findBalanceFromCurrencyId(
       addressInput2: { address: tokenAddress, chainId },
     })
   })
-}
-
-/**
- * Checks if a `GetPortfolio` query key matches the given address and platform.
- * Used to find active queries that need to be updated after a transaction.
- * Query key format (from api package): [GetPortfolio, { evmAddress?, svmAddress? }, queryCacheInputs]
- */
-export function doesGetPortfolioQueryMatchAddress({
-  queryKey,
-  address,
-  platform,
-}: {
-  queryKey: readonly unknown[]
-  address: string
-  platform: Platform
-}): boolean {
-  const [key, addressKey] = queryKey
-
-  if (key !== ReactQueryCacheKey.GetPortfolio || typeof addressKey !== 'object' || addressKey === null) {
-    return false
-  }
-
-  const keyWithAddresses = addressKey as { evmAddress?: string; svmAddress?: string }
-  const queryAddress = platform === Platform.EVM ? keyWithAddresses.evmAddress : keyWithAddresses.svmAddress
-
-  if (!queryAddress) {
-    return false
-  }
-
-  return areAddressesEqual({
-    addressInput1: { address, platform },
-    addressInput2: { address: queryAddress, platform },
-  })
-}
-
-/**
- * Finds all active `GetPortfolio` queries that match the given address and platform.
- * Returns the array of matching queries to update.
- */
-export function getPortfolioQueriesToUpdate({
-  address,
-  platform,
-}: {
-  address: string
-  platform: Platform
-}): Query<PlainMessage<GetPortfolioResponse> | undefined, Error>[] {
-  const activePortfolioQueries = SharedQueryClient.getQueryCache().findAll({
-    queryKey: [ReactQueryCacheKey.GetPortfolio],
-    type: 'active',
-  })
-
-  return activePortfolioQueries.filter((query) =>
-    doesGetPortfolioQueryMatchAddress({ queryKey: query.queryKey, address, platform }),
-  ) as Query<PlainMessage<GetPortfolioResponse> | undefined, Error>[]
 }

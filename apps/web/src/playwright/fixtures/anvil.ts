@@ -1,4 +1,3 @@
-// oxlint-disable eslint-js/no-restricted-syntax
 /* oxlint-disable react-hooks/rules-of-hooks -- Playwright fixtures use `use()` which is not a React hook */
 // oxlint-disable-next-line no-restricted-imports -- Anvil test fixtures need direct ethers imports
 import { test as base } from '@playwright/test'
@@ -6,45 +5,48 @@ import { MaxUint160, MaxUint256, permit2Address } from '@uniswap/permit2-sdk'
 import { WETH_ADDRESS } from '@uniswap/universal-router-sdk'
 import PERMIT2_ABI from 'uniswap/src/abis/permit2'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { DAI, USDT } from 'uniswap/src/constants/tokens'
+import { DAI, USDC, USDT } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { sleep } from 'utilities/src/time/timing'
+import { normalizeTokenAddressForCache } from 'uniswap/src/utils/currencyId'
 import { mainnet } from 'viem/chains'
 import { type Address, erc20Abi } from '~/chains'
 import type { AnvilClient as BaseAnvilClient } from '~/playwright/anvil/anvil-manager'
 import { getAnvilManager } from '~/playwright/anvil/anvil-manager'
-import { setErc20BalanceWithMultipleSlots } from '~/playwright/anvil/utils'
+import { clockSyncRpcFromClient, syncClockToWallClock } from '~/playwright/anvil/clock-sync'
+import type { SnapshotId, SnapshotLifecycleRpc } from '~/playwright/anvil/snapshot-lifecycle'
+import { restoreTestSnapshot, takeTestSnapshot } from '~/playwright/anvil/snapshot-lifecycle'
+import { setErc20BalanceWithMultipleSlots, WEETH_ADDRESS } from '~/playwright/anvil/utils'
 import { TEST_WALLET_ADDRESS } from '~/playwright/fixtures/wallets'
 import { assume0xAddress } from '~/utils/wagmi'
-
-const SNAPSHOTS_ENABLED = process.env.ENABLE_ANVIL_SNAPSHOTS === 'true'
 
 class WalletError extends Error {
   code?: number
 }
 
-// Known balance mapping slots for tokens with non-standard storage layouts
-const KNOWN_BALANCE_SLOTS: Record<string, number> = {
-  // WEETH (ether.fi weETH) — balance mapping at slot 101
-  '0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee': 101,
+/**
+ * `evm_revert` with the boolean result anvil actually returns (viem's typed `revert`
+ * action discards it): `true` = state restored, `false` = unknown/already-consumed
+ * snapshot ID. Callers MUST check it — assuming success is how state leaked across
+ * tests when snapshots were last enabled.
+ *
+ * Two snapshot paths share this primitive; the AUTHORITATIVE per-test isolation path
+ * is the fixture's snapshot lifecycle (takeTestSnapshot/restoreTestSnapshot, which
+ * falls back to a pinned resetFork). The takeSnapshot/revertToSnapshot/withSnapshot
+ * helpers below are for extra IN-test scoped state only — they throw on failure and
+ * have no reset fallback, so never wire test isolation through them.
+ */
+async function revertToSnapshotChecked(client: BaseAnvilClient, id: SnapshotId): Promise<boolean> {
+  const result: unknown = await client.request({ method: 'evm_revert', params: [id] })
+  return result === true
 }
 
 const allowedErc20BalanceAddresses = [
   USDT.address,
+  USDC.address,
   DAI.address,
   WETH_ADDRESS(UniverseChainId.Mainnet),
-  ...Object.keys(KNOWN_BALANCE_SLOTS),
-]
-
-// Helper to check if error is a timeout
-const isTimeoutError = (error: any): boolean => {
-  // oxlint-disable-next-line typescript/no-unsafe-return -- biome-parity: oxlint is stricter here
-  return (
-    error?.message?.includes('timeout') ||
-    error?.message?.includes('took too long') ||
-    error?.details?.includes('timed out')
-  )
-}
+  WEETH_ADDRESS,
+].map((address) => normalizeTokenAddressForCache(address))
 
 // Create anvil client with restart capability
 const createAnvilClient = () => {
@@ -62,15 +64,16 @@ const createAnvilClient = () => {
       balance: bigint
       walletAddress?: Address
     }) {
-      if (!allowedErc20BalanceAddresses.includes(address)) {
+      if (!allowedErc20BalanceAddresses.includes(normalizeTokenAddressForCache(address))) {
         throw new Error(`Token ${address} is not allowed. Allowed tokens: ${allowedErc20BalanceAddresses.join(', ')}`)
       }
+      // Known slots (DAI/USDT/WETH/WEETH) are resolved inside; unknown tokens go
+      // through the verified multi-slot probe (see playwright/anvil/utils.ts).
       await setErc20BalanceWithMultipleSlots({
         client,
         erc20Address: address,
         user: walletAddress,
         newBalance: balance,
-        knownSlot: KNOWN_BALANCE_SLOTS[address],
       })
     },
     async getErc20Balance(address: Address, owner?: Address) {
@@ -205,18 +208,25 @@ const createAnvilClient = () => {
       } as typeof originalRequest
     },
     /**
-     * Take a snapshot of the current blockchain state and return the snapshot ID
-     * This is useful for test isolation - take snapshot at beginning of test, revert at end
+     * Take a snapshot of the current blockchain state and return the snapshot ID.
+     * NOTE: `evm_revert` consumes the snapshot — an ID reverts successfully once.
+     *
+     * The AUTHORITATIVE per-test isolation path is the fixture's own lifecycle below
+     * (takeTestSnapshot/restoreTestSnapshot, ~/playwright/anvil/snapshot-lifecycle.ts);
+     * these helpers exist for extra IN-test scoped state and always nest within it.
      */
     async takeSnapshot() {
       return await client.snapshot()
     },
     /**
-     * Revert to a previously taken snapshot
+     * Revert to a previously taken snapshot, verifying anvil actually restored state.
      * @param snapshotId - The ID returned from takeSnapshot()
+     * @throws when the snapshot ID is unknown or already consumed (state NOT restored)
      */
-    async revertToSnapshot(snapshotId: `0x${string}`) {
-      await client.revert({ id: snapshotId })
+    async revertToSnapshot(snapshotId: SnapshotId) {
+      if (!(await revertToSnapshotChecked(client, snapshotId))) {
+        throw new Error(`evm_revert(${snapshotId}) did not restore state (unknown or already-consumed snapshot)`)
+      }
     },
     /**
      * Advanced state management: take snapshot, run function, then revert
@@ -228,7 +238,7 @@ const createAnvilClient = () => {
       try {
         return await fn()
       } finally {
-        await client.revert({ id: snapshotId })
+        await helpers.revertToSnapshot(snapshotId)
       }
     },
   }
@@ -238,7 +248,9 @@ const createAnvilClient = () => {
 export const test = base.extend<{ anvil: AnvilClient; delegateToZeroAddress?: void }>({
   // oxlint-disable-next-line no-empty-pattern -- it's ok here
   async anvil({}, use) {
-    // Ensure Anvil is running and healthy
+    // Ensure Anvil is running and healthy. Recovery (relaunch, session refresh,
+    // adopting a survivor node) happens ONLY here at the test boundary — anvil is
+    // never restarted mid-test, so snapshot IDs stay valid for the whole test.
     if (!(await getAnvilManager().ensureHealthy())) {
       throw new Error('Failed to ensure Anvil is healthy for test')
     }
@@ -246,23 +258,24 @@ export const test = base.extend<{ anvil: AnvilClient; delegateToZeroAddress?: vo
     // Get fresh client for this test
     const testAnvil = createAnvilClient()
 
-    // Take snapshot for test isolation
-    let snapshotId: `0x${string}` | undefined
-    try {
-      if (SNAPSHOTS_ENABLED) {
-        snapshotId = await testAnvil.snapshot()
-      }
-    } catch (error) {
-      if (isTimeoutError(error)) {
-        // Anvil timed out during snapshot, restart and retry
-        console.error('Snapshot timeout, restarting Anvil...')
-        await getAnvilManager().restart()
-        await sleep(2000)
-        snapshotId = await testAnvil.snapshot()
-      } else {
-        throw error
-      }
+    const lifecycleRpc: SnapshotLifecycleRpc = {
+      snapshot: () => testAnvil.snapshot(),
+      revert: (id) => revertToSnapshotChecked(testAnvil, id),
+      // Recovery re-fork: SAME upstream + pinned block (a bare anvil_reset would
+      // silently re-fork at the live tip). Drops all snapshots, hence recovery-only.
+      resetFork: () => getAnvilManager().resetFork(),
     }
+
+    // Clock sync EVERY boundary, before the snapshot: evm_revert rewinds anvil's
+    // internal clock offset to the snapshot point, so node time falls behind wall
+    // clock by the previous test's duration and the lag would accumulate across the
+    // run (breaking wall-clock-stamped quotes like the Across bridge deposit).
+    // Re-anchoring here bounds the lag within any test to that test's own runtime.
+    await syncClockToWallClock(clockSyncRpcFromClient(testAnvil))
+
+    // State isolation: a FRESH snapshot every test — evm_revert consumes snapshot
+    // IDs, so an ID from an earlier test can never be reused.
+    const snapshotId = await takeTestSnapshot(lifecycleRpc)
 
     // Run the test
     await use(testAnvil)
@@ -271,35 +284,20 @@ export const test = base.extend<{ anvil: AnvilClient; delegateToZeroAddress?: vo
     const isHealthy = await getAnvilManager().isHealthy()
     if (!isHealthy) {
       console.error('Anvil is not healthy after test, stopping...')
-      // Don't restart here - let the next test handle it
-      // This avoids race conditions between parallel tests
+      // Don't restart here - let the next test's ensureHealthy() relaunch it at the
+      // pinned fork state. This avoids race conditions between parallel tests.
       await getAnvilManager().stop()
       return
     }
 
-    // Cleanup with auto-recovery
-    try {
-      if (snapshotId) {
-        await testAnvil.revert({ id: snapshotId })
-      } else {
-        await testAnvil.reset()
-      }
-    } catch (error) {
-      console.error('Cleanup failed:', error)
-      if (isTimeoutError(error)) {
-        console.error('Cleanup timeout, marking Anvil for restart...')
-        // Don't restart here - let the next test handle it
-        // This avoids race conditions between parallel tests
-      } else if (snapshotId) {
-        try {
-          await testAnvil.reset()
-        } catch (resetError) {
-          console.error('Reset also failed:', resetError)
-        }
-      }
-    }
+    // Restore pre-test state, verifying the revert actually happened; a failed
+    // revert falls back to a full pinned re-fork so the next test starts clean.
+    await restoreTestSnapshot(lifecycleRpc, snapshotId)
   },
-  // Delegate the test wallet to the zero address to avoid any smart wallet conflicts
+  // Delegate the test wallet to the zero address to avoid any smart wallet conflicts.
+  // Fails the test loudly when the delegation cannot land — silently proceeding used
+  // to leave the wallet in an unknown delegation state and tests failing later in
+  // far less obvious ways.
   delegateToZeroAddress: [
     async ({ anvil }, use) => {
       try {
@@ -307,8 +305,16 @@ export const test = base.extend<{ anvil: AnvilClient; delegateToZeroAddress?: vo
         const nonce = await anvil.getTransactionCount({
           address: TEST_WALLET_ADDRESS,
         })
+        // The client's hoisted account is the LOCAL test-wallet account, which can
+        // sign authorizations. Passing TEST_WALLET_ADDRESS here (as this fixture
+        // used to) parses as a json-rpc account and ALWAYS threw
+        // AccountTypeNotSupportedError — invisible while this fixture swallowed
+        // errors, so no test ever actually ran with the delegation cleared.
+        if (!anvil.account) {
+          throw new Error('anvil client has no hoisted local account to sign the 7702 authorization')
+        }
         const auth = await anvil.signAuthorization({
-          account: TEST_WALLET_ADDRESS,
+          account: anvil.account,
           contractAddress: ZERO_ADDRESS,
           chainId: anvil.chain?.id,
           nonce: nonce + 1,
@@ -321,10 +327,10 @@ export const test = base.extend<{ anvil: AnvilClient; delegateToZeroAddress?: vo
         })
         // Reset the wallet to the original balance because tests might rely on that
         await anvil.setBalance({ address: TEST_WALLET_ADDRESS, value: originalBalance })
-        await use(undefined)
-      } catch {
-        await use(undefined)
+      } catch (error) {
+        throw new Error('delegateToZeroAddress fixture failed to delegate the test wallet', { cause: error })
       }
+      await use(undefined)
     },
     { auto: true },
   ],

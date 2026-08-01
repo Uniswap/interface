@@ -5,7 +5,7 @@ import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants
 import { Wiggle } from '~/components/animations/Wiggle'
 import { MobileTouchableArea } from '~/components/MobileTouchableArea'
 import { MenuItem, MenuSectionTitle, useMenuContent } from '~/components/NavBar/CompanyMenu/Content'
-import { MenuLink } from '~/components/NavBar/CompanyMenu/MenuDropdown'
+import { MenuLink } from '~/components/NavBar/CompanyMenu/MenuLink'
 import { useModalState } from '~/hooks/useModalState'
 import { Discord, Github, Twitter } from '~/pages/Landing/components/Icons'
 

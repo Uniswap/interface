@@ -24,7 +24,7 @@ const DEFAULT_ANIMATION_PROPS: Partial<YStackProps> = isTestEnv()
       animation: 'simple',
       animateOnly: ['transform', 'opacity'],
     }
-const blurViewStyle: BlurViewProps['style'] = { ...StyleSheet.absoluteFillObject, zIndex: zIndexes.negative }
+const blurViewStyle: BlurViewProps['style'] = { ...StyleSheet.absoluteFill, zIndex: zIndexes.negative }
 
 const WithInjectedColors = memo(function WithInjectedColors({
   children,
@@ -284,4 +284,12 @@ export const TouchableArea = withStaticProperties(TouchableAreaComponent, {
   Icon: ThemedIcon,
 })
 
-export const AnimatedTouchableArea = withAnimated(TouchableArea)
+const AnimatedTouchableAreaBase = withAnimated(TouchableArea)
+
+// Loosen `style` to accept reanimated's AnimatedStyleHandle, which doesn't compose with Tamagui's style type.
+export const AnimatedTouchableArea = AnimatedTouchableAreaBase as React.ComponentType<
+  Omit<React.ComponentProps<typeof AnimatedTouchableAreaBase>, 'style'> & {
+    // oxlint-disable-next-line typescript/no-explicit-any -- reanimated animated styles have complex types
+    style?: any
+  }
+>

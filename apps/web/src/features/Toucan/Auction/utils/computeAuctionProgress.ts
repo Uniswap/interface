@@ -1,7 +1,7 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
 import type { Checkpoint } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 import type { AuctionDetails, AuctionProgressData } from '~/features/Toucan/Auction/store/types'
-import { AuctionProgressState } from '~/features/Toucan/Auction/store/types'
+import { AuctionOutcome, AuctionProgressState } from '~/features/Toucan/Auction/store/types'
 
 function getAuctionProgressState({
   currentBlock,
@@ -48,6 +48,22 @@ function computeIsGraduated({
     return BigInt(currencyRaised) >= BigInt(requiredCurrencyRaised)
   } catch {
     return false
+  }
+}
+
+/**
+ * Derives the explicit auction outcome. There is no failure flag on-chain or in the API:
+ * a failed launch is an ended auction that never graduated.
+ */
+function computeOutcome({ state, isGraduated }: { state: AuctionProgressState; isGraduated: boolean }): AuctionOutcome {
+  switch (state) {
+    case AuctionProgressState.UNKNOWN:
+      return AuctionOutcome.UNKNOWN
+    case AuctionProgressState.ENDED:
+      return isGraduated ? AuctionOutcome.GRADUATED : AuctionOutcome.FAILED
+    default:
+      // Graduation can latch before the end block; the outcome stays ACTIVE until the auction ends.
+      return AuctionOutcome.ACTIVE
   }
 }
 
@@ -101,5 +117,6 @@ export function computeAuctionProgress({
     blocksRemaining,
     progressPercentage,
     isGraduated,
+    outcome: computeOutcome({ state, isGraduated }),
   }
 }

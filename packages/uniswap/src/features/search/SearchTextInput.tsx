@@ -45,8 +45,6 @@ export const springConfig = {
   damping: 500,
   mass: 3,
   overshootClamping: true,
-  restDisplacementThreshold: 0.01,
-  restSpeedThreshold: 0.01,
 }
 
 export enum CancelBehaviorType {
@@ -195,6 +193,11 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
                   borderWidth="$none"
                   fontFamily="$body"
                   fontWeight="$book"
+                  // Pin lineHeight to the font size: the $body token's larger lineHeight adds leading
+                  // that Fabric renders above the glyph, pushing the single-line text/placeholder down
+                  // and clipping it at the bottom of this tight input on iOS.
+                  fontSize={fonts.body1.fontSize}
+                  lineHeight={fonts.body1.fontSize}
                   height="100%"
                   maxFontSizeMultiplier={fonts.body1.maxFontSizeMultiplier}
                   outlineColor="transparent"

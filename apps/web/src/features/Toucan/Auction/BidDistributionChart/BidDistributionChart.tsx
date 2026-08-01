@@ -19,6 +19,7 @@ const PLACEHOLDER_HEIGHT = 400
 interface BidDistributionChartProps {
   auctionDetails: AuctionDetails
   bidTokenInfo: BidTokenInfo
+  auctionTokenDecimals: number
   tokenColor?: string
   userBids: UserBid[]
   onGroupingToggleDisabledChange?: (disabled: boolean) => void
@@ -38,6 +39,7 @@ interface BidDistributionChartProps {
 export function BidDistributionChart({
   auctionDetails,
   bidTokenInfo,
+  auctionTokenDecimals,
   tokenColor,
   userBids,
   onGroupingToggleDisabledChange,
@@ -68,7 +70,6 @@ export function BidDistributionChart({
   const tickSize = auctionDetails.tickSize || '0'
   const floorPrice = auctionDetails.floorPrice || '0'
   const totalSupply = auctionDetails.tokenTotalSupply
-  const auctionTokenDecimals = auctionDetails.token?.currency.decimals ?? 18
 
   const normalizedChainId = auctionDetails.chainId as UniverseChainId
   const connectedWalletAddress = useActiveAddress(normalizedChainId)

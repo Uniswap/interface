@@ -49,6 +49,7 @@ export const ChartFooter = ({ activeTab, onLearnMorePress }: ChartFooterProps) =
     chartZoomStates,
     clearingPriceZoomState,
     tickDetails,
+    isBidInputFocused,
   } = useAuctionStore((state) => ({
     auctionDetails: state.auctionDetails,
     totalCleared: state.totalCleared,
@@ -57,10 +58,12 @@ export const ChartFooter = ({ activeTab, onLearnMorePress }: ChartFooterProps) =
     chartZoomStates: state.chartZoomStates,
     clearingPriceZoomState: state.clearingPriceZoomState,
     tickDetails: state.tickDetails,
+    isBidInputFocused: state.isBidInputFocused,
   }))
   const { requestChartZoom } = useAuctionStoreActions()
   const { tokenColor: auctionTokenColor } = useAuctionTokenColor()
-  const hasConcentration = concentrationBand !== null
+  // Match the chart: the concentration lines only render while a bid input is focused.
+  const hasConcentration = concentrationBand !== null && isBidInputFocused
 
   const { validTokenColor } = useColorsFromTokenColor(tokenColor)
   // Calculate progress as fraction of tokens cleared (totalCleared / auctionAmount)
@@ -125,6 +128,12 @@ export const ChartFooter = ({ activeTab, onLearnMorePress }: ChartFooterProps) =
                 </Text>
               </Flex>
               <Flex row alignItems="center" gap="$spacing6">
+                <LegendDotDashed color={combinedLegendColor} />
+                <Text variant="body4" color="$neutral2">
+                  {t('toucan.bidDistribution.legend.preBidPrice')}
+                </Text>
+              </Flex>
+              <Flex row alignItems="center" gap="$spacing6">
                 <LegendDot color={colors.neutral2.val} />
                 <Text variant="body4" color="$neutral2">
                   {t('toucan.bidDistribution.legend.bidDistribution')}
@@ -132,7 +141,7 @@ export const ChartFooter = ({ activeTab, onLearnMorePress }: ChartFooterProps) =
               </Flex>
               {hasConcentration && (
                 <Flex row alignItems="center" gap="$spacing6">
-                  <LegendDotDashed color={combinedLegendColor} />
+                  <LegendDotDashed color={colors.neutral3.val} />
                   <Text variant="body4" color="$neutral2">
                     {t('toucan.bidDistribution.legend.bidConcentration')}
                   </Text>

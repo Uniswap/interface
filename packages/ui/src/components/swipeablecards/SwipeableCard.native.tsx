@@ -1,6 +1,7 @@
 import { Dimensions } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
-import { runOnJS, useSharedValue, withSpring, withTiming } from 'react-native-reanimated'
+import { useSharedValue, withSpring, withTiming } from 'react-native-reanimated'
+import { scheduleOnRN } from 'react-native-worklets'
 import { BaseCard } from 'ui/src/components/swipeablecards/BaseCard'
 import { SwipeableCardProps } from 'ui/src/components/swipeablecards/props'
 
@@ -34,11 +35,7 @@ export function SwipeableCard({
       const shouldDismissCard = Math.abs(translationX) > panXOffsetThreshold
 
       if (shouldDismissCard) {
-        panOffset.value = withSpring(
-          (translationX < 0 ? -1 : 1) * screenWidth,
-          { restDisplacementThreshold: screenWidth / 5, restSpeedThreshold: 100 },
-          () => runOnJS(onSwiped)(),
-        )
+        panOffset.value = withSpring((translationX < 0 ? -1 : 1) * screenWidth, undefined, () => scheduleOnRN(onSwiped))
       } else {
         panOffset.value = withTiming(0)
       }

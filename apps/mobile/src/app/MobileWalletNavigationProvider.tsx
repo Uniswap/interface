@@ -11,6 +11,12 @@ import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
 import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
+  EarnAnalyticsSurface,
+  EarnEntryPoint,
+  getEarnVaultAnalyticsProperties,
+  logEarnVaultSelected,
+} from 'uniswap/src/features/earn/analytics'
+import {
   useFiatOnRampAggregatorCountryListQuery,
   useFiatOnRampAggregatorGetCountryQuery,
 } from 'uniswap/src/features/fiatOnRamp/hooks/useFiatOnRampQueries'
@@ -342,16 +348,37 @@ function useNavigateToEarnVault(): (args: NavigateToEarnVaultArgs) => void {
   const navigation = useAppStackNavigation()
 
   return useCallback(
-    ({ vault, position, initialAction }: NavigateToEarnVaultArgs): void => {
+    ({
+      analyticsEntryPoint = EarnEntryPoint.GlobalModal,
+      vault,
+      position,
+      initialAction,
+      minimumBalanceDataUpdatedAtMs,
+    }: NavigateToEarnVaultArgs): void => {
       closeKeyboardBeforeCallback(() => {
+        logEarnVaultSelected(
+          getEarnVaultAnalyticsProperties({
+            entryPoint: analyticsEntryPoint,
+            position,
+            surface: EarnAnalyticsSurface.Mobile,
+            vault,
+          }),
+        )
+
         // With an explicit action, skip the vault overview and land directly in the
         // deposit/withdraw amount sheet — matches the in-overview "Deposit"/"Withdraw"
         // buttons' end state.
         if (initialAction) {
-          navigation.navigate(ModalName.EarnDepositAmount, { vault, position, initialAction })
+          navigation.navigate(ModalName.EarnDepositAmount, {
+            vault,
+            position,
+            initialAction,
+            analyticsEntryPoint,
+            minimumBalanceDataUpdatedAtMs,
+          })
           return
         }
-        navigation.navigate(ModalName.EarnVault, { vault, position })
+        navigation.navigate(ModalName.EarnVault, { vault, position, analyticsEntryPoint })
       })
     },
     [navigation],

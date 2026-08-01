@@ -96,7 +96,7 @@ export function PasskeyImportConfirm({
             }
             size="large"
             variant="branded"
-            isDisabled={isImporting}
+            disabled={isImporting}
             onPress={onPressImport}
           >
             {isImporting ? undefined : t('onboarding.passkey.found.importButton')}

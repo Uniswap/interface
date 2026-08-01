@@ -1,8 +1,6 @@
-import { GraphQLApi } from '@universe/api'
 import { useCallback, useState } from 'react'
-import { NUM_FIRST_NFTS } from 'uniswap/src/components/nfts/constants'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { formatNftItems } from 'uniswap/src/features/nfts/utils'
+import { useWalletNfts } from 'uniswap/src/features/nfts/hooks/useWalletNfts'
 import { selectPhotoFromLibrary } from 'wallet/src/features/unitags/photoSelection'
 
 export function useAvatarSelectionHandler({
@@ -24,20 +22,17 @@ export function useAvatarSelectionHandler({
   openModal: () => void
   closeModal: () => void
 } {
-  const { gqlChains } = useEnabledChains()
+  const { chains } = useEnabledChains()
   const [showModal, setShowModal] = useState(false)
 
-  const { data: nftsData } = GraphQLApi.useNftsTabQuery({
-    variables: {
-      ownerAddress: address,
-      first: NUM_FIRST_NFTS,
-      filter: { filterSpam: false },
-      chains: gqlChains,
-    },
+  const { nfts } = useWalletNfts({
+    address,
+    filterSpam: false,
+    chainsFilter: chains,
+    pageSize: 1,
   })
-  const nftItems = formatNftItems(nftsData)
 
-  const hasNFTs = nftItems !== undefined && nftItems.length > 0
+  const hasNFTs = nfts.length > 0
   const hasAvatarImage = avatarImageUri && avatarImageUri !== ''
 
   const openModal = useCallback((): void => {

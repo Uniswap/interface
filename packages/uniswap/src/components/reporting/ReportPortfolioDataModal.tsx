@@ -75,7 +75,7 @@ export function ReportPortfolioDataModal({
       ...(portfolioPoolsBalancesEnabled
         ? [
             {
-              title: t('common.tokens'),
+              title: t('common.token.plural'),
               subtitle: t('reporting.portfolio.data.options.tokens.subtitle'),
               value: PortfolioDataReportOption.Tokens,
               additionalTextInput: true,

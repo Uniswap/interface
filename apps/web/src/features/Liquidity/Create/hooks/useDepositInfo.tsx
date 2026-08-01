@@ -140,13 +140,13 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
 
     if (insufficientToken0Balance) {
       return t('common.insufficientTokenBalance.error', {
-        tokenSymbol: token0?.symbol,
+        tokenSymbol: token0?.symbol ?? t('common.token'),
       })
     }
 
     if (insufficientToken1Balance) {
       return t('common.insufficientTokenBalance.error', {
-        tokenSymbol: token1?.symbol,
+        tokenSymbol: token1?.symbol ?? t('common.token'),
       })
     }
 

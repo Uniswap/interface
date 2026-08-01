@@ -6,6 +6,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   convertRestBalanceToPortfolioBalance,
   formatPortfolioResponseToMap,
+  usePortfolioData,
   usePortfolioTotalBalancesUsdPerChain,
   usePortfolioTotalValue,
 } from 'uniswap/src/features/dataApi/balances/balancesRest'
@@ -19,6 +20,7 @@ const {
   mockUseHideSmallBalancesSetting,
   mockUseHideSpamTokensSetting,
   mockUsePlatformBasedFetchPolicy,
+  mockUseFeatureFlag,
 } = vi.hoisted(() => ({
   mockUseEnabledChains: vi.fn(),
   mockUseCurrencyIdToVisibility: vi.fn(),
@@ -26,6 +28,7 @@ const {
   mockUseHideSmallBalancesSetting: vi.fn(),
   mockUseHideSpamTokensSetting: vi.fn(),
   mockUsePlatformBasedFetchPolicy: vi.fn(),
+  mockUseFeatureFlag: vi.fn(),
 }))
 
 vi.mock('uniswap/src/data/rest/getWalletBalances/getWalletBalances', async (importOriginal) => ({
@@ -50,6 +53,11 @@ vi.mock('uniswap/src/features/transactions/selectors', async (importOriginal) =>
 
 vi.mock('uniswap/src/utils/usePlatformBasedFetchPolicy', () => ({
   usePlatformBasedFetchPolicy: mockUsePlatformBasedFetchPolicy,
+}))
+
+vi.mock('@universe/gating', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@universe/gating')>()),
+  useFeatureFlag: mockUseFeatureFlag,
 }))
 
 describe(formatPortfolioResponseToMap, () => {
@@ -248,6 +256,82 @@ describe(convertRestBalanceToPortfolioBalance, () => {
   })
 })
 
+describe(usePortfolioData, () => {
+  const evmAddress = '0x123'
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    window.localStorage.clear()
+    SharedQueryClient.clear()
+
+    mockUseEnabledChains.mockReturnValue({ chains: [UniverseChainId.Mainnet] })
+    mockUsePlatformBasedFetchPolicy.mockReturnValue({ pollInterval: false })
+    mockUseCurrencyIdToVisibility.mockReturnValue({})
+    mockUseHideSmallBalancesSetting.mockReturnValue(false)
+    mockUseHideSpamTokensSetting.mockReturnValue(false)
+  })
+
+  it('sends useSubstreamData: true on the request when V2EndpointsTokens is enabled', () => {
+    mockUseFeatureFlag.mockReturnValue(true)
+
+    const queryKey = getPortfolioQuery({
+      input: { evmAddress, chainIds: [UniverseChainId.Mainnet], multichain: false, useSubstreamData: true },
+    }).queryKey
+
+    const portfolioResponse = {
+      portfolio: { balances: [], totalValueUsd: 0 },
+    } as unknown as PlainMessage<GetPortfolioResponse>
+
+    act(() => {
+      SharedQueryClient.setQueryData(queryKey, portfolioResponse)
+    })
+
+    const { result } = renderHookWithProviders(() => usePortfolioData({ evmAddress, cacheOnly: true }))
+
+    expect(result.current.data).toEqual({})
+  })
+
+  it('omits useSubstreamData from the request entirely when V2EndpointsTokens is disabled', () => {
+    mockUseFeatureFlag.mockReturnValue(false)
+
+    const queryKey = getPortfolioQuery({
+      input: { evmAddress, chainIds: [UniverseChainId.Mainnet], multichain: false },
+    }).queryKey
+
+    const portfolioResponse = {
+      portfolio: { balances: [], totalValueUsd: 0 },
+    } as unknown as PlainMessage<GetPortfolioResponse>
+
+    act(() => {
+      SharedQueryClient.setQueryData(queryKey, portfolioResponse)
+    })
+
+    const { result } = renderHookWithProviders(() => usePortfolioData({ evmAddress, cacheOnly: true }))
+
+    expect(result.current.data).toEqual({})
+  })
+
+  it('does not find cached data primed under the opposite flag value', () => {
+    mockUseFeatureFlag.mockReturnValue(true)
+
+    const queryKeyForDisabledFlag = getPortfolioQuery({
+      input: { evmAddress, chainIds: [UniverseChainId.Mainnet], multichain: false },
+    }).queryKey
+
+    const portfolioResponse = {
+      portfolio: { balances: [], totalValueUsd: 0 },
+    } as unknown as PlainMessage<GetPortfolioResponse>
+
+    act(() => {
+      SharedQueryClient.setQueryData(queryKeyForDisabledFlag, portfolioResponse)
+    })
+
+    const { result } = renderHookWithProviders(() => usePortfolioData({ evmAddress, cacheOnly: true }))
+
+    expect(result.current.data).toBeUndefined()
+  })
+})
+
 describe(usePortfolioTotalValue, () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -341,6 +425,7 @@ describe(usePortfolioTotalBalancesUsdPerChain, () => {
     mockUseCurrencyIdToVisibility.mockReturnValue({})
     mockUseHideSmallBalancesSetting.mockReturnValue(false)
     mockUseHideSpamTokensSetting.mockReturnValue(false)
+    mockUseFeatureFlag.mockReturnValue(false)
   })
 
   it('never fetches on its own', () => {

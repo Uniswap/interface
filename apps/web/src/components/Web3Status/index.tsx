@@ -1,6 +1,6 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { atom, useAtom } from 'jotai'
-import { forwardRef, RefObject, useCallback, useEffect, useRef } from 'react'
+import { useAtom } from 'jotai'
+import { forwardRef, useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnimatePresence, Button, ButtonProps, Flex, Popover, Text } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
@@ -18,6 +18,7 @@ import { StatusIcon } from '~/components/StatusIcon'
 import { RecentlyConnectedModal } from '~/components/Web3Status/RecentlyConnectedModal'
 import { useAccountIdentifier } from '~/components/Web3Status/useAccountIdentifier'
 import { useShowPendingAfterDelay } from '~/components/Web3Status/useShowPendingAfterDelay'
+import { Web3StatusRef } from '~/components/Web3Status/web3StatusRef'
 import { useHasInjectedWallets } from '~/features/wallet/connection/hooks/useOrderedWalletConnectors'
 import { useModalState } from '~/hooks/useModalState'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
@@ -91,8 +92,6 @@ const ExistingUserCTAButton = forwardRef<HTMLDivElement, { onPress: () => void }
     </Button>
   )
 })
-
-export const Web3StatusRef = atom<RefObject<HTMLElement | null> | undefined>(undefined)
 
 function Web3StatusInner() {
   const { t } = useTranslation()

@@ -1,39 +1,23 @@
 import { isMobileApp, REQUEST_SOURCE } from '@universe/environment'
-import { FeatureFlags, getFeatureFlag } from '@universe/gating'
-import { config } from 'uniswap/src/config'
 import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { getVersionHeader } from 'uniswap/src/data/getVersionHeader'
 
 /**
  * Get FOR API headers.
  *
- * When ForSessionsEnabled is true, we omit the X-API-KEY header because
- * Entry Gateway prioritizes API key auth over session auth. Session auth
- * is required to get the session score (60) needed for FOR API access.
+ * FOR is served through the Entry Gateway with session auth, so we never send an
+ * X-API-KEY: the gateway prioritizes API key auth over session auth, and session
+ * auth is required to get the session score (60) needed for FOR API access.
  *
- * This is a function (not a constant) to evaluate the feature flag at request time.
+ * This is a function (not a constant) so the app-version header is resolved at request time.
  */
 export function getForApiHeaders(): Record<string, string> {
   return {
     'Content-Type': 'application/json',
-    // Only include API key when sessions are disabled (legacy auth flow)
-    ...(!getFeatureFlag(FeatureFlags.ForSessionsEnabled) ? { 'X-API-KEY': config.uniswapApiKey } : {}),
     'x-request-source': REQUEST_SOURCE,
     ...(isMobileApp ? { 'x-app-version': getVersionHeader() } : {}),
     Origin: UniswapStaticUrls.requestOriginUrl,
   }
-}
-
-/**
- * @deprecated Use getForApiHeaders() instead for dynamic feature flag evaluation.
- * This constant is kept for backward compatibility but always includes the API key.
- */
-export const FOR_API_HEADERS: Record<string, string> = {
-  'Content-Type': 'application/json',
-  'X-API-KEY': config.uniswapApiKey,
-  'x-request-source': REQUEST_SOURCE,
-  ...(isMobileApp ? { 'x-app-version': getVersionHeader() } : {}),
-  Origin: UniswapStaticUrls.requestOriginUrl,
 }
 
 export const FOR_MODAL_SNAP_POINTS = ['70%', '100%']

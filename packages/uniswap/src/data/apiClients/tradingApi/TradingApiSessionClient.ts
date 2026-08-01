@@ -6,8 +6,7 @@ import {
   provideSessionService,
   reinitializeSession,
 } from '@universe/api'
-import { tryProvideSession } from '@universe/api'
-import type { PlanEndpoints } from '@universe/api/src/clients/trading/createTradingApiClient'
+import { type PlanEndpoints, tryProvideSession } from '@universe/api'
 import { getConfig } from '@universe/config'
 import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { SessionGateSource } from '@universe/sessions'

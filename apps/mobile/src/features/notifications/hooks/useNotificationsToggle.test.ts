@@ -7,52 +7,53 @@ import { useAddressNotificationToggle } from 'src/features/notifications/hooks/u
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { showNotificationSettingsAlert } from 'src/features/notifications/showNotificationSettingsAlert'
 import { act, renderHook, waitFor } from 'src/test/test-utils'
+import type { MockedFunction } from 'vitest'
 import { useSelectAccountNotificationSetting } from 'wallet/src/features/wallet/hooks'
 
-jest.mock('react-redux', () => ({
-  ...jest.requireActual('react-redux'), // Keep all other exports
-  useDispatch: jest.fn(),
+vi.mock('react-redux', async () => ({
+  ...(await vi.importActual('react-redux')), // Keep all other exports
+  useDispatch: vi.fn(),
 }))
 
-jest.mock('src/features/notifications/Onesignal', () => ({
-  promptPushPermission: jest.fn(),
+vi.mock('src/features/notifications/Onesignal', () => ({
+  promptPushPermission: vi.fn(),
 }))
 
-jest.mock('src/features/notifications/hooks/useNotificationOSPermissionsEnabled', () => ({
-  ...jest.requireActual('src/features/notifications/hooks/useNotificationOSPermissionsEnabled'),
-  useNotificationOSPermissionsEnabled: jest.fn(),
+vi.mock('src/features/notifications/hooks/useNotificationOSPermissionsEnabled', async () => ({
+  ...(await vi.importActual('src/features/notifications/hooks/useNotificationOSPermissionsEnabled')),
+  useNotificationOSPermissionsEnabled: vi.fn(),
 }))
 
-jest.mock('wallet/src/features/wallet/accounts/editAccountSaga', () => ({
-  ...jest.requireActual('wallet/src/features/wallet/accounts/editAccountSaga'),
+vi.mock('wallet/src/features/wallet/accounts/editAccountSaga', async () => ({
+  ...(await vi.importActual('wallet/src/features/wallet/accounts/editAccountSaga')),
   editAccountActions: {
-    trigger: jest.fn((payload) => ({ type: 'EDIT_ACCOUNT', payload })),
+    trigger: vi.fn((payload) => ({ type: 'EDIT_ACCOUNT', payload })),
   },
 }))
 
-jest.mock('src/features/notifications/showNotificationSettingsAlert', () => ({
-  showNotificationSettingsAlert: jest.fn(),
+vi.mock('src/features/notifications/showNotificationSettingsAlert', () => ({
+  showNotificationSettingsAlert: vi.fn(),
 }))
 
-jest.mock('src/utils/useAppStateTrigger', () => ({
-  useAppStateTrigger: jest.fn(),
+vi.mock('src/utils/useAppStateTrigger', () => ({
+  useAppStateTrigger: vi.fn(),
 }))
 
-jest.mock('wallet/src/features/wallet/hooks', () => ({
-  useSelectAccountNotificationSetting: jest.fn(),
+vi.mock('wallet/src/features/wallet/hooks', () => ({
+  useSelectAccountNotificationSetting: vi.fn(),
 }))
 
 describe('useAddressNotificationToggle', () => {
   const mockAddress = '0xAddress'
-  const mockDispatch = jest.fn()
-  const mockUseDispatch = useDispatch as jest.MockedFunction<typeof useDispatch>
-  const mockPermissionPrompt = jest.mocked(promptPushPermission)
-  const mockSettingsAlert = jest.mocked(showNotificationSettingsAlert)
-  const mockUseSelectAccountNotificationSetting = jest.mocked(useSelectAccountNotificationSetting)
-  const mockUseNotificationOSPermissionsQuery = jest.mocked(useNotificationOSPermissionsEnabled)
+  const mockDispatch = vi.fn()
+  const mockUseDispatch = useDispatch as MockedFunction<typeof useDispatch>
+  const mockPermissionPrompt = vi.mocked(promptPushPermission)
+  const mockSettingsAlert = vi.mocked(showNotificationSettingsAlert)
+  const mockUseSelectAccountNotificationSetting = vi.mocked(useSelectAccountNotificationSetting)
+  const mockUseNotificationOSPermissionsQuery = vi.mocked(useNotificationOSPermissionsEnabled)
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockUseDispatch.mockReturnValue(mockDispatch)
   })
 
@@ -67,7 +68,7 @@ describe('useAddressNotificationToggle', () => {
   } = {}) {
     mockUseNotificationOSPermissionsQuery.mockReturnValue({
       notificationPermissionsEnabled: osPermissionStatus,
-      checkNotificationPermissions: jest.fn(),
+      checkNotificationPermissions: vi.fn(),
     })
     mockUseSelectAccountNotificationSetting.mockReturnValue(firebaseEnabled)
     return renderHook(() => useAddressNotificationToggle({ address: mockAddress, onToggle: onPermissionChanged }))
@@ -167,7 +168,7 @@ describe('useAddressNotificationToggle', () => {
 
   describe('callbacks', () => {
     it('calls onPermissionChanged after successful toggle', async () => {
-      const onPermissionChanged = jest.fn()
+      const onPermissionChanged = vi.fn()
 
       const { result } = setupHook({
         osPermissionStatus: NotificationPermission.Enabled,

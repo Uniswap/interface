@@ -4,10 +4,10 @@
       "id": "toucan-feature",
       "mode": "importerAllowlist",
       "importerInternalPathMarkers": ["/features/Toucan/"],
-      "allowedImporterPathMarkers": ["/pages/Explore/", "/features/Explore/state"],
+      "allowedImporterPathMarkers": ["/pages/Explore/", "/features/Explore/state", "/pages/Liquidity/CreateAuction/"],
       "importPrefixes": ["~/features/Toucan/", "features/Toucan/"],
       "bareModuleSources": ["~/features/Toucan", "features/Toucan"],
-      "message": "Toucan feature code may only be imported from pages/Explore/, features/explore/state, or from within features/Toucan/."
+      "message": "Toucan feature code may only be imported from pages/Explore/, features/explore/state, pages/Liquidity/CreateAuction/, or from within features/Toucan/."
     },
     {
       "id": "liquidity-feature",

@@ -1,7 +1,6 @@
 import type { UseQueryResult } from '@tanstack/react-query'
 import { queryOptions, useQuery } from '@tanstack/react-query'
-import { GasStrategy, TradingApi } from '@universe/api'
-import { SharedQueryClient } from '@universe/api/src/clients/base/SharedQueryClient'
+import { GasStrategy, SharedQueryClient, TradingApi } from '@universe/api'
 import { DynamicConfigs, SwapConfigKey, useDynamicConfigValue } from '@universe/gating'
 import { useMemo } from 'react'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
@@ -288,6 +287,14 @@ function createGetQueryOptions(ctx: {
   }
 }
 
+/** Reads the quote's `isTokenApprovalApplicable` off EVM trades; Solana quotes don't carry it (undefined ⇒ assume applicable). */
+function getIsTokenApprovalApplicable(trade: Trade | null): boolean | undefined {
+  if (!trade || trade.routing === TradingApi.Routing.JUPITER) {
+    return undefined
+  }
+  return trade.quote.isTokenApprovalApplicable
+}
+
 export function useSwapParams(): {
   approvalTxInfo: ApprovalTxInfo
   derivedSwapInfo: DerivedSwapInfo
@@ -311,6 +318,7 @@ export function useSwapParams(): {
     currencyInAmount: currencyAmounts[CurrencyField.INPUT],
     currencyOutAmount: currencyAmounts[CurrencyField.OUTPUT],
     routing: trade?.routing,
+    isTokenApprovalApplicable: getIsTokenApprovalApplicable(trade),
   })
 
   return {

@@ -1,0 +1,17 @@
+diff --git a/distribution/runner/runners/utils/transpiler.js b/distribution/runner/runners/utils/transpiler.js
+index 67b4e2bd7081d87eeac0b5fd8e51a3955ca9e1db..5504ce7ed9399392766e0c5868c6e5562c78749b 100644
+--- a/distribution/runner/runners/utils/transpiler.js
++++ b/distribution/runner/runners/utils/transpiler.js
+@@ -59,8 +59,10 @@ var checkForNodeModules = function () {
+         return;
+     }
+     try {
+-        require.resolve("typescript");
+-        hasNativeTypeScript = true && !disableTsc;
++        // Patched: typescript >= 7.0.2 resolves to a version-only stub without
++        // transpileModule, so a bare require.resolve check would send us down
++        // the native-TS path and crash. Require the API typescriptify needs.
++        hasNativeTypeScript = typeof require("typescript").transpileModule === "function" && !disableTsc;
+     }
+     catch (e) {
+         d("Does not have TypeScript set up");

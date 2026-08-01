@@ -2,7 +2,8 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { isDevEnv } from '@universe/environment'
 import React, { useCallback, useEffect } from 'react'
 import { Gesture, GestureDetector, State } from 'react-native-gesture-handler'
-import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
+import Animated, { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
+import { scheduleOnRN } from 'react-native-worklets'
 import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -29,7 +30,7 @@ import { useActiveAccount, useActiveAccountAddress, useDisplayName } from 'walle
 // Value comes from https://uniswapteam.slack.com/archives/C083LU9SD9T/p1733425965373019?thread_ts=1733362029.171999&cid=C083LU9SD9T
 const SCAN_ICON_ACTIVE_SCALE = 0.72
 
-const RotatingSettingsIcon = ({ onPressSettings }: { onPressSettings(): void }): JSX.Element => {
+const RotatingSettingsIcon = ({ onPressSettings }: { onPressSettings: () => void }): JSX.Element => {
   const isScreenFocused = useIsFocused()
   const pressProgress = useSharedValue(0)
 
@@ -51,7 +52,7 @@ const RotatingSettingsIcon = ({ onPressSettings }: { onPressSettings(): void }):
       if (state === State.FAILED) {
         pressProgress.value = withTiming(0)
       } else if (state === State.END) {
-        runOnJS(onPressSettings)()
+        scheduleOnRN(onPressSettings)
       }
     })
 

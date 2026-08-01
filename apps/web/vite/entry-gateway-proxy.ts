@@ -1,10 +1,13 @@
 import process from 'process'
 import type { ProxyOptions } from 'vite'
-
-// Entry Gateway API URLs
-const DEV_ENTRY_GATEWAY_API_BASE_URL = 'https://entry-gateway.backend-dev.api.uniswap.org'
-const STAGING_ENTRY_GATEWAY_API_BASE_URL = 'https://entry-gateway.backend-staging.api.uniswap.org'
-const PROD_ENTRY_GATEWAY_API_BASE_URL = 'https://entry-gateway.backend-prod.api.uniswap.org'
+// Deep import of the zero-dependency canonical module (not the @universe/api barrel):
+// this file runs at vite config load time, where vite's esbuild bundler inlines
+// TS-resolving imports — verified to load fine in plain node via loadConfigFromFile.
+import {
+  DEV_ENTRY_GATEWAY_API_BASE_URL,
+  PROD_ENTRY_GATEWAY_API_BASE_URL,
+  STAGING_ENTRY_GATEWAY_API_BASE_URL,
+} from '@universe/api/src/clients/base/entryGatewayUrls'
 
 const ENTRY_GATEWAY_PROXY_PATH = '/entry-gateway'
 

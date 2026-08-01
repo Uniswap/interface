@@ -11,7 +11,7 @@ import { PoolInfoCell } from '~/pages/Portfolio/Overview/MiniPoolsTable/columns/
 import { PositionCell } from '~/pages/Portfolio/Overview/MiniPoolsTable/columns/PositionCell'
 import { PoolStatusCell } from '~/pages/Portfolio/Overview/MiniPoolsTable/columns/Status'
 
-export const useMiniPoolsTableColumns = ({ isLoading }: { isLoading: boolean }) => {
+export const useMiniPoolsTableColumns = ({ isLoading, readOnly }: { isLoading: boolean; readOnly?: boolean }) => {
   const { t } = useTranslation()
 
   const columns = useMemo(() => {
@@ -73,14 +73,14 @@ export const useMiniPoolsTableColumns = ({ isLoading }: { isLoading: boolean }) 
         cell: (info) => (
           <PositionCell
             info={info}
-            render={(position) => <LiquidityPositionDropdownMenu liquidityPosition={position} />}
+            render={(position) => <LiquidityPositionDropdownMenu liquidityPosition={position} readOnly={readOnly} />}
             justifyContent="center"
             loading={isLoading}
           />
         ),
       }),
     ]
-  }, [isLoading, t])
+  }, [isLoading, readOnly, t])
 
   return columns
 }

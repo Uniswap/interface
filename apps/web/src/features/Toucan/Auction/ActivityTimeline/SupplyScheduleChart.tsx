@@ -1,7 +1,7 @@
-import { AuctionStep } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 import {
   CrosshairMode,
   createChart,
+  LineStyle,
   type IChartApi,
   type ISeriesApi,
   type ITimeScaleApi,
@@ -14,111 +14,45 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { opacify } from 'ui/src/theme'
 import { zIndexes } from 'ui/src/theme/zIndexes'
-import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
+import {
+  getSupplySchedulePoints,
+  type SupplySchedulePoint,
+} from '~/features/Toucan/Auction/ActivityTimeline/getSupplySchedulePoints'
 import { useAuctionTokenColor } from '~/features/Toucan/Auction/hooks/useAuctionTokenColor'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
-import { blockToTimestamp } from '~/features/Toucan/Auction/utils/blockToTimestamp'
 import { dottedMarkerStyle } from '~/features/Toucan/Auction/utils/dottedMarker'
 import { formatCompactFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
 import { formatShortDateTime } from '~/features/Toucan/Auction/utils/formatting'
+import { getAuctionTokenDecimals } from '~/features/Toucan/Auction/utils/tokenMetadata'
 import { TooltipContainer } from '~/features/Toucan/Shared/TooltipContainer'
 
 const CHART_HEIGHT = 200
 
-interface SupplySchedulePoint {
-  time: UTCTimestamp
-  value: number // percentage 0-100
-  // Metadata for tooltip
-  tokensReleasedInStep: bigint // raw tokens released in this step
-  totalReleased: bigint // cumulative raw tokens released
-}
-
 interface TooltipData {
   dateLabel: string
-  tokensReleasedFormatted: string
+  // Hidden for the inserted "now" pivot point — its per-step slice is arbitrary
+  tokensReleasedFormatted: string | null
   totalReleasedFormatted: string
+  // Right of the now line: amounts assume future demand absorbs the remaining supply
+  isProjected: boolean
   x: number
   y: number
 }
 
 /**
- * Generates supply schedule data points from parsedAuctionSteps.
- *
- * mps = tokens released per block during a step.
- * Cumulative tokens at step boundary i = sum of (mps_j × blocks_in_step_j) for j < i.
- * Total tokens across all steps = totalMpsBlocks (denominator for percentage).
+ * Splits schedule points at the now pivot so the actual (solid) and projected
+ * (dashed) portions render as separate series. Both include the pivot so the
+ * line stays connected.
  */
-function getSupplySchedulePoints({
-  steps,
-  endBlock,
-  anchorBlock,
-  anchorTime,
-  chainId,
-  totalSupplyRaw,
-}: {
-  steps: AuctionStep[]
-  endBlock: number
-  anchorBlock: number
-  anchorTime: Date
-  chainId: EVMUniverseChainId
-  totalSupplyRaw: bigint
-}): SupplySchedulePoint[] {
-  if (steps.length === 0) {
-    return []
+function splitAtNowPoint(data: SupplySchedulePoint[]): {
+  actual: SupplySchedulePoint[]
+  projected: SupplySchedulePoint[]
+} {
+  const nowIndex = data.findIndex((p) => p.isNowPoint)
+  if (nowIndex === -1) {
+    return { actual: data, projected: [] }
   }
-
-  const toTimestamp = (block: number): UTCTimestamp =>
-    (blockToTimestamp({ block, anchorBlock, anchorTime, chainId }).getTime() / 1000) as UTCTimestamp
-
-  // First compute total mps×blocks across all steps to get 100% denominator
-  let totalMpsBlocks = BigInt(0)
-  for (let i = 0; i < steps.length; i++) {
-    const stepStartBlock = Number(steps[i].startBlock)
-    const stepEndBlock = i < steps.length - 1 ? Number(steps[i + 1].startBlock) : endBlock
-    const blocksInStep = stepEndBlock - stepStartBlock
-    const mps = steps[i].mps ? BigInt(steps[i].mps) : BigInt(0)
-    totalMpsBlocks += mps * BigInt(blocksInStep)
-  }
-
-  if (totalMpsBlocks === BigInt(0)) {
-    return []
-  }
-
-  const points: SupplySchedulePoint[] = []
-  let cumulativeMpsBlocks = BigInt(0)
-
-  // Start point at 0%
-  points.push({
-    time: toTimestamp(Number(steps[0].startBlock)),
-    value: 0,
-    tokensReleasedInStep: BigInt(0),
-    totalReleased: BigInt(0),
-  })
-
-  for (let i = 0; i < steps.length; i++) {
-    const stepStartBlock = Number(steps[i].startBlock)
-    const stepEndBlock = i < steps.length - 1 ? Number(steps[i + 1].startBlock) : endBlock
-    const blocksInStep = stepEndBlock - stepStartBlock
-    const mps = steps[i].mps ? BigInt(steps[i].mps) : BigInt(0)
-    const mpsBlocksInStep = mps * BigInt(blocksInStep)
-
-    cumulativeMpsBlocks += mpsBlocksInStep
-    const pct = Number((cumulativeMpsBlocks * BigInt(10000)) / totalMpsBlocks) / 100
-
-    // Convert mps-units to actual token amounts: tokens = (mpsBlocks / totalMpsBlocks) × totalSupply
-    const tokensInStep = (mpsBlocksInStep * totalSupplyRaw) / totalMpsBlocks
-    const totalTokensReleased = (cumulativeMpsBlocks * totalSupplyRaw) / totalMpsBlocks
-
-    // Point at end of step
-    points.push({
-      time: toTimestamp(stepEndBlock),
-      value: pct,
-      tokensReleasedInStep: tokensInStep,
-      totalReleased: totalTokensReleased,
-    })
-  }
-
-  return points
+  return { actual: data.slice(0, nowIndex + 1), projected: data.slice(nowIndex) }
 }
 
 function computeNowX({
@@ -130,6 +64,13 @@ function computeNowX({
 }): number | null {
   if (data.length < 2) {
     return null
+  }
+
+  // The pivot is where the solid series ends; pin the now line to it so the solid
+  // line can never render past "Now" even if block-time estimates drift.
+  const nowPoint = data.find((p) => p.isNowPoint)
+  if (nowPoint) {
+    return timeScale.timeToCoordinate(nowPoint.time)
   }
 
   const nowSec = Date.now() / 1000
@@ -207,7 +148,7 @@ const ChartTooltip = forwardRef<HTMLDivElement, { data: TooltipData; containerWi
     >
       {/* Date header */}
       <Text variant="body4" color="$neutral2">
-        {data.dateLabel}
+        {data.isProjected ? `${data.dateLabel} · ${t('toucan.details.projected')}` : data.dateLabel}
       </Text>
 
       {/* Divider */}
@@ -215,9 +156,11 @@ const ChartTooltip = forwardRef<HTMLDivElement, { data: TooltipData; containerWi
 
       {/* Token info */}
       <Flex gap="$spacing2">
-        <Text variant="body4" color="$neutral1">
-          {t('toucan.details.tokensReleased')} {data.tokensReleasedFormatted}
-        </Text>
+        {data.tokensReleasedFormatted !== null && (
+          <Text variant="body4" color="$neutral1">
+            {t('toucan.details.tokensReleased')} {data.tokensReleasedFormatted}
+          </Text>
+        )}
         <Text variant="body4" color="$neutral1">
           {t('toucan.details.totalReleased')} {data.totalReleasedFormatted}
         </Text>
@@ -233,6 +176,8 @@ export function SupplyScheduleChart() {
   const surface3Val = surface3.val
   const { effectiveTokenColor } = useAuctionTokenColor()
   const auctionDetails = useAuctionStore((state) => state.auctionDetails)
+  const totalCleared = useAuctionStore((state) => state.totalCleared)
+  const currentBlockNumber = useAuctionStore((state) => state.currentBlockNumber)
   const [tooltipData, setTooltipData] = useState<TooltipData | null>(null)
   const [yAxisLabels, setYAxisLabels] = useState<Array<{ label: string; y: number }>>([])
   const [plotHeight, setPlotHeight] = useState(CHART_HEIGHT)
@@ -244,9 +189,12 @@ export function SupplyScheduleChart() {
   const nowBadgeRef = useRef<HTMLDivElement>(null)
   const chartRef = useRef<IChartApi | null>(null)
   const seriesRef = useRef<ISeriesApi<'Area'> | null>(null)
+  const projectedSeriesRef = useRef<ISeriesApi<'Area'> | null>(null)
   const tooltipRef = useRef<HTMLDivElement>(null)
+  const dataRef = useRef<SupplySchedulePoint[]>([])
+  const updateLabelPositionsRef = useRef<() => void>(() => {})
 
-  const tokenDecimals = auctionDetails?.token?.currency.decimals ?? 18
+  const tokenDecimals = getAuctionTokenDecimals(auctionDetails?.token)
 
   const data = useMemo(() => {
     if (!auctionDetails?.endBlock || !auctionDetails.totalSupply) {
@@ -262,18 +210,22 @@ export function SupplyScheduleChart() {
       anchorTime: new Date(auctionDetails.createdAt),
       chainId: auctionDetails.chainId,
       totalSupplyRaw: BigInt(auctionDetails.totalSupply),
+      actualSold:
+        totalCleared !== null && currentBlockNumber !== undefined
+          ? { currentBlock: currentBlockNumber, totalClearedRaw: BigInt(totalCleared) }
+          : undefined,
     })
-  }, [auctionDetails])
+  }, [auctionDetails, totalCleared, currentBlockNumber])
 
   const handleCrosshairMove = useCallback(
     (param: MouseEventParams<Time>) => {
-      if (!param.time || !param.point || !seriesRef.current || !containerRef.current) {
+      if (!param.time || !param.point || !seriesRef.current || !containerRef.current || tokenDecimals === undefined) {
         setTooltipData(null)
         setHoverLineX(null)
         return
       }
 
-      const matchingPoint = data.find((p) => p.time === param.time)
+      const matchingPoint = dataRef.current.find((p) => p.time === param.time)
       if (!matchingPoint) {
         setTooltipData(null)
         setHoverLineX(null)
@@ -287,26 +239,32 @@ export function SupplyScheduleChart() {
 
       setTooltipData({
         dateLabel,
-        tokensReleasedFormatted: formatCompactFromRaw({
-          raw: matchingPoint.tokensReleasedInStep,
-          decimals: tokenDecimals,
-          maxFractionDigits: 2,
-        }),
+        tokensReleasedFormatted: matchingPoint.isNowPoint
+          ? null
+          : formatCompactFromRaw({
+              raw: matchingPoint.tokensReleasedInStep,
+              decimals: tokenDecimals,
+              maxFractionDigits: 2,
+            }),
         totalReleasedFormatted: formatCompactFromRaw({
           raw: matchingPoint.totalReleased,
           decimals: tokenDecimals,
           maxFractionDigits: 2,
         }),
+        isProjected: matchingPoint.isProjected ?? false,
         x: param.point.x,
         y: param.point.y,
       })
     },
-    [data, tokenDecimals],
+    [tokenDecimals],
   )
 
+  const hasData = data.length > 0
+
+  // Create the chart once per color set; live data updates flow through the effect below
   useEffect(() => {
     const container = containerRef.current
-    if (!container || data.length === 0) {
+    if (!container || !hasData) {
       return undefined
     }
 
@@ -341,11 +299,10 @@ export function SupplyScheduleChart() {
       },
     })
 
-    const series = chart.addAreaSeries({
+    const sharedSeriesOptions = {
       priceScaleId: 'overlay-supply',
       lineWidth: 2,
       lineColor: effectiveTokenColor,
-      topColor: opacify(20, effectiveTokenColor),
       bottomColor: opacify(0, effectiveTokenColor),
       priceLineVisible: false,
       lastValueVisible: false,
@@ -356,19 +313,35 @@ export function SupplyScheduleChart() {
         type: 'custom',
         formatter: (price: number) => `${Math.round(price)}%`,
       },
+    } as const
+
+    // Actual amounts sold (solid) up to the now line
+    const series = chart.addAreaSeries({
+      ...sharedSeriesOptions,
+      topColor: opacify(20, effectiveTokenColor),
+    })
+
+    // Remaining schedule (dashed) — a projection that depends on future demand
+    const projectedSeries = chart.addAreaSeries({
+      ...sharedSeriesOptions,
+      lineStyle: LineStyle.Dashed,
+      topColor: opacify(10, effectiveTokenColor),
     })
 
     series.priceScale().applyOptions({
       scaleMargins: { top: 0.05, bottom: 0.05 },
     })
 
-    series.setData(data)
+    const { actual, projected } = splitAtNowPoint(dataRef.current)
+    series.setData(actual)
+    projectedSeries.setData(projected)
     chart.timeScale().fitContent()
 
     chart.subscribeCrosshairMove(handleCrosshairMove)
 
     chartRef.current = chart
     seriesRef.current = series
+    projectedSeriesRef.current = projectedSeries
 
     // Position y-axis labels using chart coordinates
     const updateLabelPositions = () => {
@@ -383,8 +356,9 @@ export function SupplyScheduleChart() {
       setYAxisLabels(positions)
 
       setPlotHeight(CHART_HEIGHT - chart.timeScale().height())
-      setNowLineX(computeNowX({ data, timeScale: chart.timeScale() }))
+      setNowLineX(computeNowX({ data: dataRef.current, timeScale: chart.timeScale() }))
     }
+    updateLabelPositionsRef.current = updateLabelPositions
 
     // Update after initial render and on resize
     let rafId = requestAnimationFrame(updateLabelPositions)
@@ -403,8 +377,28 @@ export function SupplyScheduleChart() {
       chart.remove()
       chartRef.current = null
       seriesRef.current = null
+      projectedSeriesRef.current = null
     }
-  }, [data, effectiveTokenColor, neutral2Val, surface3Val, handleCrosshairMove])
+  }, [hasData, effectiveTokenColor, neutral2Val, surface3Val, handleCrosshairMove])
+
+  // Push data updates into the existing chart (e.g. per-block rollover adjustments)
+  // without tearing it down
+  useEffect(() => {
+    dataRef.current = data
+    const chart = chartRef.current
+    const series = seriesRef.current
+    const projectedSeries = projectedSeriesRef.current
+    if (!chart || !series || !projectedSeries || data.length === 0) {
+      return undefined
+    }
+
+    const { actual, projected } = splitAtNowPoint(data)
+    series.setData(actual)
+    projectedSeries.setData(projected)
+    chart.timeScale().fitContent()
+    const rafId = requestAnimationFrame(() => updateLabelPositionsRef.current())
+    return () => cancelAnimationFrame(rafId)
+  }, [data])
 
   useLayoutEffect(() => {
     if (nowLineX !== null && nowBadgeRef.current) {
@@ -416,49 +410,58 @@ export function SupplyScheduleChart() {
     return null
   }
 
+  const hasProjected = data.some((p) => p.isProjected)
+
   return (
-    <Flex position="relative" width="100%" height={CHART_HEIGHT}>
-      {/* Custom y-axis labels positioned to match chart grid lines */}
-      {yAxisLabels.map((item) => (
-        <Text
-          key={item.label}
-          variant="body4"
-          color="$neutral2"
-          fontSize={11}
-          position="absolute"
-          left={0}
-          zIndex={1}
-          pointerEvents="none"
-          style={{ top: item.y, transform: 'translateY(-100%)' }}
-        >
-          {item.label}
-        </Text>
-      ))}
-      <Flex ref={containerRef} width="100%" height={CHART_HEIGHT} />
-      {hoverLineX !== null && <MarkerLine x={hoverLineX} top={nowBadgeHeight} height={plotHeight - nowBadgeHeight} />}
-      {nowLineX !== null && (
-        <>
-          <MarkerLine x={nowLineX} top={nowBadgeHeight} height={plotHeight - nowBadgeHeight} />
-          <Flex
-            ref={nowBadgeRef}
+    <Flex width="100%" gap="$spacing8">
+      <Flex position="relative" width="100%" height={CHART_HEIGHT}>
+        {/* Custom y-axis labels positioned to match chart grid lines */}
+        {yAxisLabels.map((item) => (
+          <Text
+            key={item.label}
+            variant="body4"
+            color="$neutral2"
+            fontSize={11}
             position="absolute"
-            top={0}
-            borderRadius="$rounded4"
-            backgroundColor="$surface3"
-            px="$spacing4"
-            py="$spacing2"
-            pointerEvents="none"
+            left={0}
             zIndex={1}
-            style={{ left: nowLineX, transform: 'translateX(-50%)' }}
+            pointerEvents="none"
+            style={{ top: item.y, transform: 'translateY(-100%)' }}
           >
-            <Text variant="body4" color="$neutral1">
-              {t('toucan.details.now')}
-            </Text>
-          </Flex>
-        </>
-      )}
-      {tooltipData && (
-        <ChartTooltip ref={tooltipRef} data={tooltipData} containerWidth={containerRef.current?.clientWidth ?? 0} />
+            {item.label}
+          </Text>
+        ))}
+        <Flex ref={containerRef} width="100%" height={CHART_HEIGHT} />
+        {hoverLineX !== null && <MarkerLine x={hoverLineX} top={nowBadgeHeight} height={plotHeight - nowBadgeHeight} />}
+        {nowLineX !== null && (
+          <>
+            <MarkerLine x={nowLineX} top={nowBadgeHeight} height={plotHeight - nowBadgeHeight} />
+            <Flex
+              ref={nowBadgeRef}
+              position="absolute"
+              top={0}
+              borderRadius="$rounded4"
+              backgroundColor="$surface3"
+              px="$spacing4"
+              py="$spacing2"
+              pointerEvents="none"
+              zIndex={1}
+              style={{ left: nowLineX, transform: 'translateX(-50%)' }}
+            >
+              <Text variant="body4" color="$neutral1">
+                {t('toucan.details.now')}
+              </Text>
+            </Flex>
+          </>
+        )}
+        {tooltipData && (
+          <ChartTooltip ref={tooltipRef} data={tooltipData} containerWidth={containerRef.current?.clientWidth ?? 0} />
+        )}
+      </Flex>
+      {hasProjected && (
+        <Text variant="body4" color="$neutral2">
+          {t('toucan.details.projectedSupplyNote')}
+        </Text>
       )}
     </Flex>
   )

@@ -27,37 +27,37 @@ export interface TransactionSigner {
    * @param input The transaction request
    * @returns The populated transaction
    */
-  prepareTransaction(input: TransactionSignerInput): Promise<TransactionPopulatedRequest>
+  prepareTransaction: (input: TransactionSignerInput) => Promise<TransactionPopulatedRequest>
 
   /**
    * Sign a transaction
    * @param input The transaction request
    * @returns The signed transaction
    */
-  signTransaction(input: TransactionPopulatedRequest): Promise<HexString>
+  signTransaction: (input: TransactionPopulatedRequest) => Promise<HexString>
 
   /**
    * Sign a typed data
    * @param input The typed data
    * @returns The signed typed data
    */
-  signTypedData(input: {
+  signTypedData: (input: {
     domain: TypedDataDomain
     types: Record<string, TypedDataField[]>
     value: Record<string, unknown>
-  }): Promise<string>
+  }) => Promise<string>
 
   /**
    * Send a transaction
    * @param input The signed transaction hex string
    * @returns The transaction hash
    */
-  sendTransaction(input: { signedTx: HexString }): Promise<string>
+  sendTransaction: (input: { signedTx: HexString }) => Promise<string>
 
   /**
    * Send a transaction synchronously and wait for receipt
    * @param input The signed transaction hex string
    * @returns The transaction receipt
    */
-  sendTransactionSync(input: { signedTx: HexString }): Promise<providers.TransactionReceipt>
+  sendTransactionSync: (input: { signedTx: HexString }) => Promise<providers.TransactionReceipt>
 }

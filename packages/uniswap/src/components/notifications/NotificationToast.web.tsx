@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Flex, styled } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
-import { NotificationToastProps } from 'uniswap/src/components/notifications/NotificationToast'
+import type { NotificationToastProps } from 'uniswap/src/components/notifications/NotificationToast'
 import { NotificationToastContent } from 'uniswap/src/components/notifications/NotificationToastContent'
 import { HIDE_OFFSET_Y } from 'uniswap/src/features/notifications/constants'
 import { useNotificationLifecycle } from 'uniswap/src/features/notifications/hooks/useNotificationLifecycle'
@@ -38,12 +38,16 @@ export function NotificationToast({
   smallToast,
   contentOverride,
 }: NotificationToastProps): JSX.Element {
-  const { onActionButtonPress, onNotificationPress } = useNotificationLifecycle({
+  const { onActionButtonPress, onNotificationPress, cancelDismiss, dismissLatest } = useNotificationLifecycle({
     actionButtonOnPress: actionButton?.onPress,
     address,
     hideDelay,
     onPress,
   })
+  const resolvedContentOverride = useMemo(
+    () => (typeof contentOverride === 'function' ? contentOverride({ cancelDismiss, dismissLatest }) : contentOverride),
+    [cancelDismiss, contentOverride, dismissLatest],
+  )
 
   const notificationContent = useMemo(
     () => (
@@ -52,7 +56,7 @@ export function NotificationToast({
         subtitle={subtitle}
         icon={icon}
         postCaptionElement={postCaptionElement}
-        contentOverride={contentOverride}
+        contentOverride={resolvedContentOverride}
         smallToast={smallToast}
         actionButton={actionButton}
         onPressIn={onPressIn}
@@ -65,7 +69,7 @@ export function NotificationToast({
       subtitle,
       icon,
       postCaptionElement,
-      contentOverride,
+      resolvedContentOverride,
       smallToast,
       actionButton,
       onPressIn,

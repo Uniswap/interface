@@ -34,8 +34,6 @@
       "outputs": ["{projectRoot}/src/components/icons/**", "{projectRoot}/src/components/logos/**"]
     },
     "typecheck": {},
-    "typecheck:tsc": {},
-    "typecheck:tsgo": {},
     "format": {
       "command": "oxfmt --threads=4 -c $NX_WORKSPACE_ROOT/.oxfmtrc.json . '!src/components/icons' '!src/components/logos'"
     },

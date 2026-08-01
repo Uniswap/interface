@@ -69,8 +69,11 @@ export function GasBreakdownTooltip({ trade }: GasBreakdownTooltipProps) {
   return (
     <Flex gap="$gap12" p="$spacing4">
       <Flex gap="$gap8">
-        <GasCostItem title={t('swap.wrap.token', { sym: native.symbol })} amount={wrapEstimate} />
-        <GasCostItem title={t('swap.allow.oneTime', { sym: inputCurrency.symbol })} amount={approvalEstimate} />
+        <GasCostItem title={t('swap.wrap.token', { sym: native.symbol ?? t('common.token') })} amount={wrapEstimate} />
+        <GasCostItem
+          title={t('swap.allow.oneTime', { sym: inputCurrency.symbol ?? t('common.token') })}
+          amount={approvalEstimate}
+        />
         <GasCostItem title={t('common.swap')} amount={swapEstimate} />
         {isUniswapX && <GasCostItem title={t('common.swap')} itemValue={<GaslessSwapLabel />} />}
       </Flex>
@@ -88,7 +91,7 @@ function NetworkCostDescription({ native }: { native: Currency }) {
 
   return (
     <Text variant="body4" color="$neutral2">
-      {t('swap.networkCost.paidIn', { sym: native.symbol, chainName })}{' '}
+      {t('swap.networkCost.paidIn', { sym: native.symbol ?? t('common.token'), chainName })}{' '}
       <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-">
         {t('common.button.learn')}
       </ExternalLink>

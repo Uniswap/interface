@@ -142,7 +142,7 @@ function useModalContent(params: { showSolanaPrompt: boolean }) {
     if (evmConnecting) {
       return {
         key: 'evm-connecting',
-        title: t('wallet.connecting.title.evm', { walletName: pendingWallet?.name }),
+        title: t('wallet.connecting.title.evm', { walletName: pendingWallet?.name ?? t('common.wallet.label') }),
         description: t('wallet.connecting.description'),
         icon: pendingWallet?.icon,
         animate: true,
@@ -152,7 +152,7 @@ function useModalContent(params: { showSolanaPrompt: boolean }) {
     if (showSolanaPrompt) {
       return {
         key: 'solana-prompt',
-        title: t('wallet.connecting.solanaPrompt', { walletName: pendingWallet?.name }),
+        title: t('wallet.connecting.solanaPrompt', { walletName: pendingWallet?.name ?? t('common.wallet.label') }),
         description: t('wallet.connecting.solanaPrompt.description'),
         icon: SOLANA_ICON,
         animate: false,
@@ -162,7 +162,7 @@ function useModalContent(params: { showSolanaPrompt: boolean }) {
     if (svmConnecting) {
       return {
         key: 'svm-connecting',
-        title: t('wallet.connecting.title.svm', { walletName: pendingWallet?.name }),
+        title: t('wallet.connecting.title.svm', { walletName: pendingWallet?.name ?? t('common.wallet.label') }),
         description: t('wallet.connecting.description'),
         icon: SOLANA_ICON,
         animate: true,

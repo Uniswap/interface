@@ -1,6 +1,8 @@
 {
   "ios.buildReactNativeFromSource": "true",
   "ios.useFrameworks": "static",
-  "ios.forceStaticLinking": "[\"RNFBApp\", \"RNFBAuth\", \"RNFBFirestore\"]"
+  "ios.forceStaticLinking": "[\"RNFBApp\", \"RNFBAuth\", \"RNFBFirestore\"]",
+  "newArchEnabled": "true",
+  "ios.deploymentTarget": "16.4"
 }
 

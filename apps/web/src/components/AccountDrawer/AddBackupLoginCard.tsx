@@ -16,6 +16,34 @@ import { useIsPortfolioZero } from '~/pages/Portfolio/Overview/hooks/useIsPortfo
 import { setOpenModal } from '~/state/application/reducer'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 
+/**
+ * Decides whether the "Add a backup login" card is visible.
+ *
+ * Fail closed: the card is only shown when a valid listAuthenticators response
+ * confirms the wallet has no recovery method yet (matches TroubleLoggingInModule).
+ * A skipped or not-yet-fetched query — e.g. right after logging out and into a
+ * different wallet, before its NECK key is active — must not imply "no recovery
+ * method": a disabled query reports `isLoading: false` with `authData: undefined`.
+ */
+export function getShowAddBackupLoginCard({
+  isEmbeddedWallet,
+  isPortfolioZero,
+  isLoading,
+  isError,
+  authData,
+  hasPrivyAppId,
+}: {
+  isEmbeddedWallet: boolean
+  isPortfolioZero: boolean
+  isLoading: boolean
+  isError: boolean
+  authData: { recoveryMethods: readonly unknown[] } | undefined
+  hasPrivyAppId: boolean
+}): boolean {
+  const confirmedNoRecoveryMethod = !isLoading && !isError && !!authData && authData.recoveryMethods.length === 0
+  return isEmbeddedWallet && !isPortfolioZero && confirmedNoRecoveryMethod && hasPrivyAppId
+}
+
 export function AddBackupLoginCard(): JSX.Element | null {
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -25,24 +53,19 @@ export function AddBackupLoginCard(): JSX.Element | null {
   const { walletId } = useEmbeddedWalletState()
   const hasActiveNeckKey = !!walletId && checkHasActiveNeckKey(walletId)
   const { data: authData, isLoading, isError } = useListAuthenticatorsQuery({ skip: !hasActiveNeckKey })
-  const hasRecoveryMethod = (authData?.recoveryMethods.length ?? 0) > 0
 
   const onPressCard = useEvent(() => {
     dispatch(setOpenModal({ name: ModalName.AddBackupLogin }))
   })
-  // TODO: We are temporarily blocking recovery setup, undo as part of INFRA-2344
-  const isRecoveryDisabled = true
+  const showCard = getShowAddBackupLoginCard({
+    isEmbeddedWallet,
+    isPortfolioZero,
+    isLoading,
+    isError,
+    authData,
+    hasPrivyAppId: !!getPrivyAppId(),
+  })
 
-  const showCard =
-    isEmbeddedWallet &&
-    !isPortfolioZero &&
-    !isLoading &&
-    !isError &&
-    !hasRecoveryMethod &&
-    !!getPrivyAppId() &&
-    !isRecoveryDisabled
-
-  // oxlint-disable-next-line typescript/no-unnecessary-condition
   if (!showCard) {
     return null
   }

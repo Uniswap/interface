@@ -99,6 +99,12 @@ const AddBackupLoginModal = createLazy(() =>
   import('~/components/Passkey/AddBackupLoginModal').then((module) => ({ default: module.AddBackupLoginModal })),
 )
 
+const ReconnectBackupLoginModal = createLazy(() =>
+  import('~/components/Passkey/ReconnectBackupLoginModal').then((module) => ({
+    default: module.ReconnectBackupLoginModal,
+  })),
+)
+
 const AddPasskeyModal = createLazy(() =>
   import('~/components/Passkey/AddPasskeyModal').then((module) => ({ default: module.AddPasskeyModal })),
 )
@@ -270,6 +276,10 @@ export const modalRegistry: ModalRegistry = {
   [ModalName.AddBackupLogin]: {
     component: AddBackupLoginModal,
     shouldMount: (state) => state.application.openModal?.name === ModalName.AddBackupLogin,
+  },
+  [ModalName.ReconnectBackupLogin]: {
+    component: ReconnectBackupLoginModal,
+    shouldMount: (state) => state.application.openModal?.name === ModalName.ReconnectBackupLogin,
   },
   [ModalName.AddPasskey]: {
     component: AddPasskeyModal,

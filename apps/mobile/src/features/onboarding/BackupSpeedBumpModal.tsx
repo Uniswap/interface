@@ -77,7 +77,7 @@ export function BackupSpeedBumpModal({ backupType, onContinue, onClose }: Backup
           <Button size="large" emphasis="secondary" onPress={() => onClose()}>
             {t('common.button.back')}
           </Button>
-          <Button isDisabled={!checked} size="large" variant="branded" onPress={() => onContinue()}>
+          <Button disabled={!checked} size="large" variant="branded" onPress={() => onContinue()}>
             {t('common.button.continue')}
           </Button>
         </Flex>

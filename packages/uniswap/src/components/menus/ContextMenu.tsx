@@ -1,8 +1,13 @@
-import { PropsWithChildren, ReactNode } from 'react'
+import { forwardRef, PropsWithChildren, ReactNode } from 'react'
 import { DropdownMenuSheetItemProps, GeneratedIcon, IconProps, TextProps } from 'ui/src'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { PlatformSplitStubError } from 'utilities/src/errors'
+
+/** Imperative handle for opening the menu at explicit screen coordinates, independent of `triggerMode`. */
+export type ContextMenuHandle = {
+  openAt: (x: number, y: number) => void
+}
 
 export type MenuOptionItemWithId = MenuOptionItem & {
   id: string
@@ -63,6 +68,8 @@ export type ContextMenuProps = {
   dimBackground?: boolean
 }
 
-export function ContextMenu(_: PropsWithChildren<ContextMenuProps>): JSX.Element {
+function ContextMenuStub(): JSX.Element {
   throw new PlatformSplitStubError('ContextMenu')
 }
+
+export const ContextMenu = forwardRef<ContextMenuHandle, PropsWithChildren<ContextMenuProps>>(ContextMenuStub)

@@ -41,7 +41,7 @@ interface EVMTradeServiceContext {
 
   // Configuration dependencies
   getIsL2ChainId: (chainId?: UniverseChainId) => boolean
-  getMinAutoSlippageToleranceL2: () => number
+  getMinAutoSlippageToleranceL2: () => number | undefined
   // Some accounts (e.g. those with a delegation mismatch) can't use UniswapX even when the global flag is on.
   // Defaults to supported when not provided.
   getIsUniswapXSupported?: (chainId?: UniverseChainId) => boolean
@@ -101,6 +101,7 @@ export function createEVMTradeService(ctx: EVMTradeServiceContext): TradeService
         const result = transformQuoteToTrade({
           quote: quoteResponse,
           amountSpecified: validatedInput.amount,
+          earnIntent: validatedInput.earnIntent,
           quoteCurrencyData: {
             currencyIn: validatedInput.currencyIn,
             currencyOut: validatedInput.currencyOut,
@@ -191,7 +192,7 @@ export function prepareTradingApiTradeInput(input?: UseTradeArgs): ValidatedTrad
  */
 function prepareIndicativeTradeInput(input?: UseTradeArgs): ValidatedTradeInput | null {
   // Early exit if input is falsy, skipped, or USD quote
-  if (!input || input.skip || input.isUSDQuote) {
+  if (!input || input.skip || input.isUSDQuote || input.skipIndicativeTrade) {
     return null
   }
 

@@ -64,6 +64,7 @@ const WALLET_BALANCES_BY_PART = {
   total: { balanceUSD: 1300, percentChange: 3, absoluteChangeUSD: 100 },
   tokens: { balanceUSD: 1000, percentChange: 2, absoluteChangeUSD: 50 },
   pools: { balanceUSD: 300, percentChange: 5, absoluteChangeUSD: 50 },
+  earn: { balanceUSD: 200, percentChange: 4, absoluteChangeUSD: 20 },
 } as const
 
 const makeQueryResult = <T>(
@@ -104,6 +105,7 @@ describe(usePortfolioBalancePart, () => {
           tokens: { valueUsd: 1000, percentChange1d: 2, absoluteChange1d: 50 },
           pools: { valueUsd: 300, percentChange1d: 5, absoluteChange1d: 50 },
           failedChainIds: [],
+          earn: { valueUsd: 200, percentChange1d: 4, absoluteChange1d: 20 },
         },
       }
       return makeQueryResult(select ? select(rawResponse) : rawResponse)
@@ -128,14 +130,16 @@ describe(usePortfolioBalancePart, () => {
       expect(input?.includeCategories).toEqual([])
     })
 
-    it.each([PortfolioBalancePart.Total, PortfolioBalancePart.Tokens, PortfolioBalancePart.Pools])(
-      'resolves part="%s" to the matching GetWalletBalances part',
-      (part) => {
-        const { result } = renderHookWithProviders(() => usePortfolioBalancePart({ part, evmAddress: '0x123' }))
+    it.each([
+      PortfolioBalancePart.Total,
+      PortfolioBalancePart.Tokens,
+      PortfolioBalancePart.Pools,
+      PortfolioBalancePart.Earn,
+    ])('resolves part="%s" to the matching GetWalletBalances part', (part) => {
+      const { result } = renderHookWithProviders(() => usePortfolioBalancePart({ part, evmAddress: '0x123' }))
 
-        expect(result.current.data).toEqual(WALLET_BALANCES_BY_PART[part])
-      },
-    )
+      expect(result.current.data).toEqual(WALLET_BALANCES_BY_PART[part])
+    })
   })
 
   describe('pools opted in (flag on)', () => {
@@ -150,14 +154,16 @@ describe(usePortfolioBalancePart, () => {
       expect(input?.includeCategories).toEqual([WalletBalanceCategory.POOLS])
     })
 
-    it.each([PortfolioBalancePart.Total, PortfolioBalancePart.Tokens, PortfolioBalancePart.Pools])(
-      'resolves part="%s" to the matching GetWalletBalances part',
-      (part) => {
-        const { result } = renderHookWithProviders(() => usePortfolioBalancePart({ part, evmAddress: '0x123' }))
+    it.each([
+      PortfolioBalancePart.Total,
+      PortfolioBalancePart.Tokens,
+      PortfolioBalancePart.Pools,
+      PortfolioBalancePart.Earn,
+    ])('resolves part="%s" to the matching GetWalletBalances part', (part) => {
+      const { result } = renderHookWithProviders(() => usePortfolioBalancePart({ part, evmAddress: '0x123' }))
 
-        expect(result.current.data).toEqual(WALLET_BALANCES_BY_PART[part])
-      },
-    )
+      expect(result.current.data).toEqual(WALLET_BALANCES_BY_PART[part])
+    })
 
     it('only enables the GetWalletBalances query when an address is provided', () => {
       renderHookWithProviders(() => usePortfolioBalancePart({ part: PortfolioBalancePart.Tokens, evmAddress: '0x123' }))
@@ -408,7 +414,8 @@ describe(usePortfolioTotalValue, () => {
 
     expect(wrapped.current.data).toEqual(canonical.current.data)
     expect(wrapped.current.loading).toBe(canonical.current.loading)
-    expect(wrapped.current.networkStatus).toEqual(canonical.current.networkStatus)
+    expect(wrapped.current.isError).toEqual(canonical.current.isError)
+    expect(wrapped.current.isPending).toEqual(canonical.current.isPending)
   })
 })
 
@@ -430,6 +437,7 @@ describe(usePortfolioBalanceBreakdown, () => {
           tokens: { valueUsd: 1000, percentChange1d: 2, absoluteChange1d: 50 },
           pools: { valueUsd: 300, percentChange1d: 5, absoluteChange1d: 50 },
           failedChainIds: [],
+          earn: { valueUsd: 200, percentChange1d: 4, absoluteChange1d: 20 },
         },
       }
       return makeQueryResult(select ? select(rawResponse) : rawResponse)
@@ -441,6 +449,7 @@ describe(usePortfolioBalanceBreakdown, () => {
     tokens: { balanceUSD: 1000, percentChange: 2, absoluteChangeUSD: 50 },
     pools: { balanceUSD: 300, percentChange: 5, absoluteChangeUSD: 50 },
     failedChainIds: [],
+    earn: { balanceUSD: 200, percentChange: 4, absoluteChangeUSD: 20 },
   }
 
   it('enables the query and returns the full breakdown with [POOLS] in requestedCategories when the flag is on', () => {
@@ -451,6 +460,16 @@ describe(usePortfolioBalanceBreakdown, () => {
     expect(mockUseGetWalletBalancesQuery).toHaveBeenCalledWith(expect.objectContaining({ enabled: true }))
     expect(result.current.data).toEqual(EXPECTED_BREAKDOWN)
     expect(result.current.requestedCategories).toEqual([WalletBalanceCategory.POOLS])
+  })
+
+  it('includes [POOLS, EARN_VAULTS] in requestedCategories when both balance flags are on', () => {
+    mockUseFeatureFlag.mockImplementation(
+      (flag) => flag === FeatureFlags.PortfolioPoolsBalances || flag === FeatureFlags.Earn,
+    )
+
+    const { result } = renderHookWithProviders(() => usePortfolioBalanceBreakdown({ evmAddress: '0x123' }))
+
+    expect(result.current.requestedCategories).toEqual([WalletBalanceCategory.POOLS, WalletBalanceCategory.EARN_VAULTS])
   })
 
   it('still enables the query and returns data with empty requestedCategories when the flag is off', () => {

@@ -19,9 +19,9 @@ import {
   waitForTransactionStatus,
 } from 'wallet/src/features/transactions/watcher/watchTransactionSaga'
 
-jest.mock('uniswap/src/features/telemetry/send', () => ({
-  sendAnalyticsEvent: jest.fn(),
-  sendAppsFlyerEvent: jest.fn(),
+vi.mock('uniswap/src/features/telemetry/send', () => ({
+  sendAnalyticsEvent: vi.fn(),
+  sendAppsFlyerEvent: vi.fn(),
 }))
 
 const ACTIVE_ACCOUNT_ADDRESS = '0x000000000000000000000000000000000000000001'
@@ -56,7 +56,7 @@ describe('updateTransactionWithReceipt', () => {
     }
 
     const providerMock = {
-      waitForTransaction: jest.fn(async () => SUCCESS_RECEIPT),
+      waitForTransaction: vi.fn(async () => SUCCESS_RECEIPT),
     } as unknown as providers.Provider
 
     const result = await expectSaga(updateTransactionWithReceipt, pendingTx, providerMock)
@@ -130,7 +130,7 @@ describe(waitForTransactionStatus, () => {
   }
 
   beforeEach(() => {
-    jest.mocked(sendAnalyticsEvent).mockClear()
+    vi.mocked(sendAnalyticsEvent).mockClear()
   })
 
   it('polls /swaps 20 times for UserOps before timing out', async () => {
@@ -190,16 +190,15 @@ describe(waitForTransactionStatus, () => {
     // Polling exhausted with no terminal status.
     expect(counter.getCount()).toBe(10)
 
-    expect(jest.mocked(sendAnalyticsEvent)).toHaveBeenCalledWith(
+    expect(vi.mocked(sendAnalyticsEvent)).toHaveBeenCalledWith(
       WalletEventName.PendingTransactionStuck,
       expect.objectContaining({ reason: 'poll_exhausted', transaction_id: classicTx.id }),
     )
 
     // This emit site never probes a chain provider, so provider_knows_tx must be omitted entirely
     // (the builder only includes it when it was actually measured).
-    const stuckCall = jest
-      .mocked(sendAnalyticsEvent)
-      .mock.calls.find(([eventName]) => eventName === WalletEventName.PendingTransactionStuck)
+    const analyticsCalls = vi.mocked(sendAnalyticsEvent).mock.calls
+    const stuckCall = analyticsCalls.find(([eventName]) => eventName === WalletEventName.PendingTransactionStuck)
     expect(stuckCall).toBeDefined()
     const payload = stuckCall?.[1] as Record<string, unknown>
     expect(payload).not.toHaveProperty('provider_knows_tx')
@@ -229,7 +228,7 @@ describe(waitForTransactionStatus, () => {
     // Same exhausting poll path as the classic case.
     expect(counter.getCount()).toBe(10)
 
-    expect(jest.mocked(sendAnalyticsEvent)).not.toHaveBeenCalledWith(
+    expect(vi.mocked(sendAnalyticsEvent)).not.toHaveBeenCalledWith(
       WalletEventName.PendingTransactionStuck,
       expect.anything(),
     )

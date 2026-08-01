@@ -7,6 +7,7 @@ import type {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import type { logger as loggerUtil } from 'utilities/src/logger/logger'
+import type { Mock } from 'vitest'
 import type { AnalyticsService } from 'wallet/src/features/transactions/executeTransaction/services/analyticsService'
 import type { TransactionRepository } from 'wallet/src/features/transactions/executeTransaction/services/TransactionRepository/transactionRepository'
 import {
@@ -17,20 +18,20 @@ import { rpcUtilsFixtures } from 'wallet/src/test/rpcUtilsFixtures'
 
 describe('handleTransactionError', () => {
   const mockRepo = {
-    finalizeTransaction: jest.fn(),
-    getPendingPrivateTransactionCount: jest.fn(),
+    finalizeTransaction: vi.fn(),
+    getPendingPrivateTransactionCount: vi.fn(),
   } as unknown as TransactionRepository
 
   const mockAnalytics = {
-    trackTransactionEvent: jest.fn(),
-    trackSwapSubmitted: jest.fn(),
+    trackTransactionEvent: vi.fn(),
+    trackSwapSubmitted: vi.fn(),
   } as unknown as AnalyticsService
 
   const mockLogger = {
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
   } as unknown as typeof loggerUtil
 
   const baseTx = {
@@ -42,9 +43,9 @@ describe('handleTransactionError', () => {
   } as unknown as OnChainTransactionDetails
 
   beforeEach(() => {
-    jest.clearAllMocks()
-    ;(mockRepo.finalizeTransaction as jest.Mock).mockResolvedValue(undefined)
-    ;(mockRepo.getPendingPrivateTransactionCount as jest.Mock).mockResolvedValue(3)
+    vi.clearAllMocks()
+    ;(mockRepo.finalizeTransaction as Mock).mockResolvedValue(undefined)
+    ;(mockRepo.getPendingPrivateTransactionCount as Mock).mockResolvedValue(3)
   })
 
   it('finalizes as Failed and emits a refined-category analytics event for a gapped-nonce error', async () => {
@@ -63,7 +64,7 @@ describe('handleTransactionError', () => {
     ).rejects.toThrow('Failed to send transaction: gapped_nonce')
 
     expect(mockRepo.finalizeTransaction).toHaveBeenCalled()
-    expect(mockAnalytics.trackTransactionEvent as jest.Mock).toHaveBeenCalledWith(
+    expect(mockAnalytics.trackTransactionEvent as Mock).toHaveBeenCalledWith(
       WalletEventName.OnchainTransactionSubmissionError,
       expect.objectContaining({
         transaction_id: 'tx1',
@@ -92,24 +93,24 @@ describe('handleTransactionError', () => {
     ).rejects.toBe('string error')
 
     expect(mockRepo.finalizeTransaction).toHaveBeenCalled()
-    expect(mockAnalytics.trackTransactionEvent as jest.Mock).not.toHaveBeenCalled()
+    expect(mockAnalytics.trackTransactionEvent as Mock).not.toHaveBeenCalled()
   })
 })
 
 describe('emitSubmissionErrorTelemetry', () => {
   const mockLogger = {
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
   } as unknown as typeof loggerUtil
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('returns the refined category and emits the full event payload for an Error', () => {
-    const emitEvent = jest.fn()
+    const emitEvent = vi.fn()
     const category = emitSubmissionErrorTelemetry({
       error: new Error(rpcUtilsFixtures.nonceError), // "gapped-nonce tx from delegated accounts"
       chainId: UniverseChainId.Mainnet,
@@ -143,7 +144,7 @@ describe('emitSubmissionErrorTelemetry', () => {
   })
 
   it('returns undefined and emits nothing for a non-Error', () => {
-    const emitEvent = jest.fn()
+    const emitEvent = vi.fn()
     const category = emitSubmissionErrorTelemetry({
       error: 'boom',
       chainId: UniverseChainId.Mainnet,

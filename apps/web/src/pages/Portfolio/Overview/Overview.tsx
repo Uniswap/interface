@@ -7,7 +7,10 @@ import {
   getPortfolioHistoricalValueChartQuery,
   useGetPortfolioHistoricalValueChartQuery,
 } from 'uniswap/src/data/rest/getPortfolioChart'
-import { useWalletBalancesIncludeCategories } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+import {
+  getUnavailableCategories,
+  useWalletBalancesIncludeCategories,
+} from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
 import { useActivityData } from 'uniswap/src/features/activity/hooks/useActivityData'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
@@ -99,11 +102,18 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
 
   // Shares the React Query cache entry with `usePortfolioTotalValue` (same input → same key,
   // different `select`), so this does not trigger an additional network request.
-  const { data: portfolioBreakdown } = usePortfolioBalanceBreakdown({
+  const { data: portfolioBreakdown, requestedCategories } = usePortfolioBalanceBreakdown({
     evmAddress: portfolioAddresses.evmAddress,
     svmAddress: portfolioAddresses.svmAddress,
     chainIds: filterChainIds,
   })
+
+  // Opt-in categories the backend omitted, making the aggregate total incomplete. The header shows a
+  // warning and falls back to the sum of the categories that did resolve.
+  const unavailableCategories = useMemo(
+    () => getUnavailableCategories({ breakdown: portfolioBreakdown, requestedCategories }),
+    [portfolioBreakdown, requestedCategories],
+  )
 
   // Fetch portfolio historical value chart data
   const {
@@ -119,9 +129,12 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
     series,
     tokensSeries,
     poolsSeries,
+    earnSeries,
     chartPercentChange,
     tokensPercentChange,
     poolsPercentChange,
+    earnPercentChange,
+    availableCategories,
     hasCategoryBreakdown,
   } = usePortfolioChartSeries({
     chartData: portfolioChartData,
@@ -129,12 +142,13 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
     selectedCategory,
   })
 
-  // Reset to total when the selector hides, so a stale selection doesn't strand the chart on a now-hidden series.
+  // Reset to total when the selected category is no longer available (selector hidden, or that
+  // category's data dropped out), so a stale selection doesn't strand the chart on a hidden series.
   useEffect(() => {
-    if (!hasCategoryBreakdown && selectedCategory !== PortfolioChartCategory.Total) {
+    if (selectedCategory !== PortfolioChartCategory.Total && !availableCategories.includes(selectedCategory)) {
       setSelectedCategory(PortfolioChartCategory.Total)
     }
-  }, [hasCategoryBreakdown, selectedCategory])
+  }, [availableCategories, selectedCategory])
   const isChartLoading = isChartPending || !series.length
   const isChartEmpty = useMemo(() => {
     if (!series.length) {
@@ -202,13 +216,17 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
               portfolioTotalBalanceUSD={portfolioData?.balanceUSD}
               tokensValue={portfolioBreakdown?.tokens}
               poolsValue={portfolioBreakdown?.pools}
+              earnValue={portfolioBreakdown?.earn}
+              unavailableCategories={unavailableCategories}
               isPortfolioZero={isPortfolioZero}
               series={series}
               tokensSeries={tokensSeries}
               poolsSeries={poolsSeries}
+              earnSeries={earnSeries}
               chartPercentChange={chartPercentChange}
               tokensPercentChange={tokensPercentChange}
               poolsPercentChange={poolsPercentChange}
+              earnPercentChange={earnPercentChange}
               isLoading={isChartLoading}
               isChartEmpty={isChartEmpty}
               error={chartError}
@@ -219,6 +237,7 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
               showBalanceHeaderRow={showBalanceHeaderRow}
               selectedCategory={selectedCategory}
               setSelectedCategory={setSelectedCategory}
+              availableCategories={availableCategories}
               hasCategoryBreakdown={hasCategoryBreakdown}
             />
           </Trace>

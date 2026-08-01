@@ -1,4 +1,5 @@
 import { GraphQLApi } from '@universe/api'
+import { useFeatureFlag } from '@universe/gating'
 import { UTCTimestamp } from 'lightweight-charts'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
@@ -35,6 +36,7 @@ vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData', async (
 const mockUseTokenPriceChartData = vi.mocked(useTokenPriceChartData)
 const mockUseTokenSpotPrice = vi.mocked(useTokenSpotPrice)
 const mockUsePreferProjectMarketDataForCurrency = vi.mocked(usePreferProjectMarketDataForCurrency)
+const mockUseFeatureFlag = vi.mocked(useFeatureFlag)
 
 type PriceChartQueryMock = ChartQueryResult<PriceChartData, ChartType.PRICE> & {
   disableCandlestickUI: boolean
@@ -143,11 +145,38 @@ describe('useTokenPriceChartPanel', () => {
       }),
     )
 
-    expect(mockUseTokenSpotPrice).toHaveBeenCalledWith(expect.any(String), { preferProjectMarketData: false })
+    expect(mockUseTokenSpotPrice).toHaveBeenCalledWith(expect.any(String), {
+      preferProjectMarketData: false,
+      isMultichainAggregateView: true,
+      multichainId: undefined,
+    })
     expect(mockUseTokenPriceChartData).toHaveBeenCalledWith(
       expect.objectContaining({
         currentPriceOverride: undefined,
         preferProjectMarketData: false,
+      }),
+    )
+  })
+
+  it('uses the REST spot price directly on the all-networks view when V2 tokens are enabled', () => {
+    // V2 REST has no cross-chain aggregate price endpoint, so the per-chain REST price is
+    // authoritative even on the aggregate view instead of falling back to legacy GraphQL/CoinGecko.
+    mockUseFeatureFlag.mockReturnValue(true)
+    mockUseTokenSpotPrice.mockReturnValue(123)
+
+    renderHook(() =>
+      useTokenPriceChartPanel({
+        variables: { ...variables, multichain: true },
+        priceChartType: PriceChartType.LINE,
+        setDisableCandlestickUI: vi.fn(),
+        timePeriod: TimePeriod.WEEK,
+        currency: USDC_MAINNET,
+      }),
+    )
+
+    expect(mockUseTokenPriceChartData).toHaveBeenCalledWith(
+      expect.objectContaining({
+        currentPriceOverride: 123,
       }),
     )
   })
@@ -167,7 +196,11 @@ describe('useTokenPriceChartPanel', () => {
       }),
     )
 
-    expect(mockUseTokenSpotPrice).toHaveBeenCalledWith(expect.any(String), { preferProjectMarketData: true })
+    expect(mockUseTokenSpotPrice).toHaveBeenCalledWith(expect.any(String), {
+      preferProjectMarketData: true,
+      isMultichainAggregateView: true,
+      multichainId: undefined,
+    })
     expect(mockUseTokenPriceChartData).toHaveBeenCalledWith(
       expect.objectContaining({
         currentPriceOverride: 123,
@@ -190,6 +223,10 @@ describe('useTokenPriceChartPanel', () => {
       }),
     )
 
-    expect(mockUseTokenSpotPrice).toHaveBeenCalledWith(expect.any(String), { preferProjectMarketData: true })
+    expect(mockUseTokenSpotPrice).toHaveBeenCalledWith(expect.any(String), {
+      preferProjectMarketData: true,
+      isMultichainAggregateView: false,
+      multichainId: undefined,
+    })
   })
 })

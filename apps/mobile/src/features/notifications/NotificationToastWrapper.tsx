@@ -1,4 +1,5 @@
 import React from 'react'
+import { EarnSwapUpsellNotificationToast } from 'src/features/notifications/EarnSwapUpsellNotificationToast'
 import { ScantasticCompleteNotification } from 'src/features/notifications/ScantasticCompleteNotification'
 import { WCNotification } from 'src/features/notifications/WCNotification'
 import { useSelectAddressNotifications } from 'uniswap/src/features/notifications/slice/hooks'
@@ -9,6 +10,7 @@ import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 export function NotificationToastWrapper(): JSX.Element | null {
   const activeAccountAddress = useActiveAccountAddress()
   const notifications = useSelectAddressNotifications(activeAccountAddress)
+  // Notifications render FIFO; individual toast components should dismiss themselves when no longer eligible.
   const notification = notifications?.[0]
 
   if (!notification) {
@@ -19,13 +21,13 @@ export function NotificationToastWrapper(): JSX.Element | null {
 }
 
 function NotificationToastRouter({ notification }: { notification: AppNotification }): JSX.Element | null {
-  // Insert Mobile-only notifications here.
-  // Shared wallet notifications should go in SharedNotificationToastRouter.
   switch (notification.type) {
     case AppNotificationType.WalletConnect:
       return <WCNotification notification={notification} />
     case AppNotificationType.ScantasticComplete:
       return <ScantasticCompleteNotification notification={notification} />
+    case AppNotificationType.EarnSwapUpsell:
+      return <EarnSwapUpsellNotificationToast notification={notification} />
   }
 
   return <WalletNotificationToastRouter notification={notification} />

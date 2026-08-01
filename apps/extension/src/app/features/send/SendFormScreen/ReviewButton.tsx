@@ -38,7 +38,7 @@ export function ReviewButton({ onPress, disabled }: ReviewButtonProps): JSX.Elem
       <Trace logPress element={ElementName.SendReview}>
         <Button
           variant="branded"
-          isDisabled={disableReviewButton}
+          disabled={disableReviewButton}
           size={isWebPlatform ? 'medium' : 'large'}
           testID={TestID.SendReview}
           onPress={onPress}

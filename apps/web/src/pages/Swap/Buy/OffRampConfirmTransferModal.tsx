@@ -297,7 +297,7 @@ export const OffRampConfirmTransferModal = ({
           </Flex>
         </Flex>
         <Flex row>
-          <Button variant="branded" emphasis="primary" onPress={handleSend} loading={isSending} isDisabled={isSending}>
+          <Button variant="branded" emphasis="primary" onPress={handleSend} loading={isSending} disabled={isSending}>
             {t('common.confirmTransfer')}
           </Button>
         </Flex>

@@ -1,794 +1,280 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`DatetimeText renders without error 1`] = `
-<View
-  style={
-    {
-      "alignItems": "center",
-      "flexDirection": "column",
-      "marginTop": 12,
-      "opacity": 1,
-    }
-  }
->
-  <TextInput
-    allowFontScaling={true}
-    collapsable={false}
-    defaultValue="Thursday, November 1st, 2023"
-    editable={false}
-    jestAnimatedProps={
-      {
-        "value": {
-          "defaultValue": "Thursday, November 1st, 2023",
-          "text": "Thursday, November 1st, 2023",
-        },
-      }
-    }
-    jestAnimatedStyle={
-      {
-        "value": {},
-      }
-    }
-    jestInlineStyle={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "color": "rgba(19, 19, 19, 0.63)",
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 15,
-          "fontWeight": "400",
-          "lineHeight": 19.5,
-        },
-        undefined,
-      ]
-    }
-    maxFontSizeMultiplier={1.4}
-    style={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "color": "rgba(19, 19, 19, 0.63)",
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 15,
-          "fontWeight": "400",
-          "lineHeight": 19.5,
-        },
-        undefined,
-      ]
-    }
-    text="Thursday, November 1st, 2023"
-    underlineColorAndroid="transparent"
-  />
-</View>
-`;
-
-exports[`PriceText renders loading state 1`] = `
-<View
-  style={
-    {
-      "flexDirection": "row",
-    }
-  }
-  testID="price-text"
->
-  <TextInput
-    allowFontScaling={true}
-    collapsable={false}
-    defaultValue="-"
-    editable={false}
-    jestAnimatedProps={
-      {
-        "value": {
-          "defaultValue": "-",
-          "text": "-",
-        },
-      }
-    }
-    jestAnimatedStyle={
-      {
-        "value": {
-          "fontSize": 106,
-        },
-      }
-    }
-    jestInlineStyle={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 53,
-          "fontWeight": "400",
-          "lineHeight": 50.879999999999995,
-        },
-        [
-          {
-            "color": "#131313",
-          },
-        ],
-      ]
-    }
-    maxFontSizeMultiplier={1.2}
-    style={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 53,
-          "fontWeight": "400",
-          "lineHeight": 50.879999999999995,
-        },
-        {
-          "color": "#131313",
-        },
-        {
-          "fontSize": 106,
-        },
-      ]
-    }
-    testID="wholePart"
-    text="-"
-    underlineColorAndroid="transparent"
-  />
-</View>
-`;
-
-exports[`PriceText renders without error 1`] = `
-<View
-  style={
-    {
-      "flexDirection": "row",
-    }
-  }
-  testID="price-text"
->
-  <TextInput
-    allowFontScaling={true}
-    collapsable={false}
-    defaultValue="$55"
-    editable={false}
-    jestAnimatedProps={
-      {
-        "value": {
-          "defaultValue": "$55",
-          "text": "$55",
-        },
-      }
-    }
-    jestAnimatedStyle={
-      {
-        "value": {
-          "fontSize": 106,
-        },
-      }
-    }
-    jestInlineStyle={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 53,
-          "fontWeight": "400",
-          "lineHeight": 50.879999999999995,
-        },
-        [
-          {
-            "color": "#131313",
-          },
-        ],
-      ]
-    }
-    maxFontSizeMultiplier={1.2}
-    style={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 53,
-          "fontWeight": "400",
-          "lineHeight": 50.879999999999995,
-        },
-        {
-          "color": "#131313",
-        },
-        {
-          "fontSize": 106,
-        },
-      ]
-    }
-    testID="wholePart"
-    text="$55"
-    underlineColorAndroid="transparent"
-  />
-  <TextInput
-    allowFontScaling={true}
-    collapsable={false}
-    defaultValue=".00"
-    editable={false}
-    jestAnimatedProps={
-      {
-        "value": {
-          "defaultValue": ".00",
-          "text": ".00",
-        },
-      }
-    }
-    jestAnimatedStyle={
-      {
-        "value": {
-          "color": "rgba(19, 19, 19, 0.35)",
-          "fontSize": 106,
-        },
-      }
-    }
-    jestInlineStyle={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 53,
-          "fontWeight": "400",
-          "lineHeight": 50.879999999999995,
-        },
-        [],
-      ]
-    }
-    maxFontSizeMultiplier={1.2}
-    style={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 53,
-          "fontWeight": "400",
-          "lineHeight": 50.879999999999995,
-        },
-        {
-          "color": "rgba(19, 19, 19, 0.35)",
-        },
-        {
-          "fontSize": 106,
-        },
-      ]
-    }
-    testID="decimalPart"
-    text=".00"
-    underlineColorAndroid="transparent"
-  />
-</View>
-`;
-
-exports[`PriceText renders without error less than a dollar 1`] = `
-<View
-  style={
-    {
-      "flexDirection": "row",
-    }
-  }
-  testID="price-text"
->
-  <TextInput
-    allowFontScaling={true}
-    collapsable={false}
-    defaultValue="$0"
-    editable={false}
-    jestAnimatedProps={
-      {
-        "value": {
-          "defaultValue": "$0",
-          "text": "$0",
-        },
-      }
-    }
-    jestAnimatedStyle={
-      {
-        "value": {
-          "fontSize": 106,
-        },
-      }
-    }
-    jestInlineStyle={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 53,
-          "fontWeight": "400",
-          "lineHeight": 50.879999999999995,
-        },
-        [
-          {
-            "color": "#131313",
-          },
-        ],
-      ]
-    }
-    maxFontSizeMultiplier={1.2}
-    style={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 53,
-          "fontWeight": "400",
-          "lineHeight": 50.879999999999995,
-        },
-        {
-          "color": "#131313",
-        },
-        {
-          "fontSize": 106,
-        },
-      ]
-    }
-    testID="wholePart"
-    text="$0"
-    underlineColorAndroid="transparent"
-  />
-  <TextInput
-    allowFontScaling={true}
-    collapsable={false}
-    defaultValue=".0500"
-    editable={false}
-    jestAnimatedProps={
-      {
-        "value": {
-          "defaultValue": ".0500",
-          "text": ".0500",
-        },
-      }
-    }
-    jestAnimatedStyle={
-      {
-        "value": {
-          "color": "#131313",
-          "fontSize": 106,
-        },
-      }
-    }
-    jestInlineStyle={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 53,
-          "fontWeight": "400",
-          "lineHeight": 50.879999999999995,
-        },
-        [],
-      ]
-    }
-    maxFontSizeMultiplier={1.2}
-    style={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 53,
-          "fontWeight": "400",
-          "lineHeight": 50.879999999999995,
-        },
-        {
-          "color": "#131313",
-        },
-        {
-          "fontSize": 106,
-        },
-      ]
-    }
-    testID="decimalPart"
-    text=".0500"
-    underlineColorAndroid="transparent"
-  />
-</View>
-`;
-
-exports[`RelativeChangeText renders loading state 1`] = `
-<View
-  style={
-    {
-      "alignItems": "center",
-      "flexDirection": "row",
-      "gap": 2,
-      "marginTop": 2,
-    }
-  }
-  testID="relative-price-change"
->
-  <View
-    style={
-      {
-        "alignItems": "center",
-        "flexDirection": "row",
-      }
-    }
-    testID="text-placeholder"
+exports[`DatetimeText > renders without error 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "position": "relative",
-        }
-      }
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _mt-t-space-spa1360334080"
+      style="opacity: 1;"
     >
-      <View
-        accessibilityElementsHidden={true}
-        importantForAccessibility="no-hide-descendants"
-      >
-        <Text
-          allowFontScaling={true}
-          maxFontSizeMultiplier={1.4}
-          style={
-            {
-              "color": "transparent",
-              "fontFamily": "Basel Grotesk",
-              "fontSize": 19,
-              "fontWeight": "400",
-              "lineHeight": 24.7,
-              "opacity": 0,
-            }
-          }
-          suppressHighlighting={true}
-        >
-          00.00%
-        </Text>
-      </View>
-      <View
-        style={
-          {
-            "backgroundColor": "#F9F9F9",
-            "borderBottomLeftRadius": 999999,
-            "borderBottomRightRadius": 999999,
-            "borderTopLeftRadius": 999999,
-            "borderTopRightRadius": 999999,
-            "bottom": "5%",
-            "flexDirection": "column",
-            "left": 0,
-            "position": "absolute",
-            "right": 0,
-            "top": "5%",
-          }
-        }
+      <input
+        autocapitalize="sentences"
+        autocomplete="on"
+        autocorrect="on"
+        class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 r-padding-t60dpp"
+        dir="auto"
+        readonly=""
+        rows="1"
+        spellcheck="true"
+        style="font-family: var(--f-family); font-weight: var(--f-weight-book); line-height: var(--f-lineHeight-small);"
+        value="Thursday, November 1st, 2023"
+        virtualkeyboardpolicy="auto"
       />
-    </View>
-  </View>
-  <View
-    collapsable={false}
-    jestAnimatedProps={
-      {
-        "value": {},
-      }
-    }
-    jestAnimatedStyle={
-      {
-        "value": {
-          "opacity": 0,
-        },
-      }
-    }
-    jestInlineStyle={{}}
-    style={
-      [
-        {
-          "opacity": 0,
-        },
-      ]
-    }
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`PriceText > renders loading state 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "gap": 2,
-        }
-      }
+    <div
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row"
+      data-testid="price-text"
     >
-      <RNSVGSvgView
-        align="xMidYMid"
-        bbHeight={16}
-        bbWidth={16}
-        collapsable={false}
-        fill="none"
-        focusable={false}
-        jestAnimatedProps={
-          {
-            "value": {},
-          }
-        }
-        jestInlineStyle={{}}
-        meetOrSlice={0}
-        minX={0}
-        minY={0}
-        strokeWidth={2}
-        style={
-          [
-            {
-              "backgroundColor": "transparent",
-              "borderWidth": 0,
-            },
-            {
-              "height": 16,
-              "width": 16,
-            },
-            {
-              "flex": 0,
-              "height": 16,
-              "width": 16,
-            },
-          ]
-        }
-        vbHeight={24}
-        vbWidth={24}
+      <input
+        autocapitalize="sentences"
+        autocomplete="on"
+        autocorrect="on"
+        class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 r-padding-t60dpp"
+        data-testid="wholePart"
+        dir="auto"
+        readonly=""
+        rows="1"
+        spellcheck="true"
+        style="font-family: var(--f-family); font-weight: var(--f-weight-book); line-height: var(--f-lineHeight-large); color: rgb(19, 19, 19); font-size: 0px;"
+        value="-"
+        virtualkeyboardpolicy="auto"
+      />
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`PriceText > renders without error 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row"
+      data-testid="price-text"
+    >
+      <input
+        autocapitalize="sentences"
+        autocomplete="on"
+        autocorrect="on"
+        class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 r-padding-t60dpp"
+        data-testid="wholePart"
+        dir="auto"
+        readonly=""
+        rows="1"
+        spellcheck="true"
+        style="font-family: var(--f-family); font-weight: var(--f-weight-book); line-height: var(--f-lineHeight-large); color: rgb(19, 19, 19); font-size: 0px;"
+        value="$55"
+        virtualkeyboardpolicy="auto"
+      />
+      <input
+        autocapitalize="sentences"
+        autocomplete="on"
+        autocorrect="on"
+        class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 r-padding-t60dpp"
+        data-testid="decimalPart"
+        dir="auto"
+        readonly=""
+        rows="1"
+        spellcheck="true"
+        style="font-family: var(--f-family); font-weight: var(--f-weight-book); line-height: var(--f-lineHeight-large); color: rgba(19, 19, 19, 0.35); font-size: 0px;"
+        value=".00"
+        virtualkeyboardpolicy="auto"
+      />
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`PriceText > renders without error less than a dollar 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row"
+      data-testid="price-text"
+    >
+      <input
+        autocapitalize="sentences"
+        autocomplete="on"
+        autocorrect="on"
+        class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 r-padding-t60dpp"
+        data-testid="wholePart"
+        dir="auto"
+        readonly=""
+        rows="1"
+        spellcheck="true"
+        style="font-family: var(--f-family); font-weight: var(--f-weight-book); line-height: var(--f-lineHeight-large); color: rgb(19, 19, 19); font-size: 0px;"
+        value="$0"
+        virtualkeyboardpolicy="auto"
+      />
+      <input
+        autocapitalize="sentences"
+        autocomplete="on"
+        autocorrect="on"
+        class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 r-padding-t60dpp"
+        data-testid="decimalPart"
+        dir="auto"
+        readonly=""
+        rows="1"
+        spellcheck="true"
+        style="font-family: var(--f-family); font-weight: var(--f-weight-book); line-height: var(--f-lineHeight-large); color: rgba(19, 19, 19, 0.35); font-size: 0px;"
+        value=".0500"
+        virtualkeyboardpolicy="auto"
+      />
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`RelativeChangeText > renders loading state 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665587 _mt-t-space-spa94665587"
+      data-testid="relative-price-change"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center"
+        data-testid="text-placeholder"
       >
-        <RNSVGGroup
-          fill={null}
-          propList={
-            [
-              "fill",
-              "strokeWidth",
-            ]
-          }
-          strokeWidth={2}
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _position-relative"
         >
-          <RNSVGPath
-            d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
-            fill={
-              {
-                "type": 2,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
+          <div
+            class="css-view-175oi2r"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-transparent _fontFamily-f-family _wordWrap-break-word _opacity-0 _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
+              data-disable-theme="true"
+            >
+              00.00%
+            </span>
+          </div>
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _bottom-537 _left-0px _position-absolute _right-0px _top-537"
           />
-        </RNSVGGroup>
-      </RNSVGSvgView>
-      <TextInput
-        allowFontScaling={true}
-        collapsable={false}
-        defaultValue="10.00%"
-        editable={false}
-        jestAnimatedProps={
-          {
-            "value": {
-              "defaultValue": "10.00%",
-              "text": "10.00%",
-            },
-          }
-        }
-        jestAnimatedStyle={
-          {
-            "value": {},
-          }
-        }
-        jestInlineStyle={
-          [
-            {
-              "padding": 0,
-            },
-            {
-              "color": "rgba(19, 19, 19, 0.63)",
-              "fontFamily": "Basel Grotesk",
-              "fontSize": 19,
-              "fontWeight": "400",
-              "lineHeight": 24.7,
-            },
-            undefined,
-          ]
-        }
-        maxFontSizeMultiplier={1.4}
-        style={
-          [
-            {
-              "padding": 0,
-            },
-            {
-              "color": "rgba(19, 19, 19, 0.63)",
-              "fontFamily": "Basel Grotesk",
-              "fontSize": 19,
-              "fontWeight": "400",
-              "lineHeight": 24.7,
-            },
-            undefined,
-          ]
-        }
-        testID="relative-change-text"
-        text="10.00%"
-        underlineColorAndroid="transparent"
-      />
-    </View>
-  </View>
-</View>
+        </div>
+      </div>
+      <div
+        style="opacity: 0;"
+      >
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665587"
+        >
+          <div
+            fill="none"
+            stroke-width="2"
+            style="width: 16px; height: 16px;"
+            viewbox="0 0 24 24"
+          >
+            <div
+              d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+              fill="currentColor"
+            />
+          </div>
+          <input
+            autocapitalize="sentences"
+            autocomplete="on"
+            autocorrect="on"
+            class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 r-padding-t60dpp"
+            data-testid="relative-change-text"
+            dir="auto"
+            readonly=""
+            rows="1"
+            spellcheck="true"
+            style="font-family: var(--f-family); font-weight: var(--f-weight-book); line-height: var(--f-lineHeight-large);"
+            value="10.00%"
+            virtualkeyboardpolicy="auto"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;
 
-exports[`RelativeChangeText renders without error 1`] = `
-<View
-  style={
-    {
-      "alignItems": "center",
-      "flexDirection": "row",
-      "gap": 2,
-      "marginTop": 2,
-    }
-  }
-  testID="relative-price-change"
->
-  <View
-    collapsable={false}
-    jestAnimatedProps={
-      {
-        "value": {},
-      }
-    }
-    jestAnimatedStyle={
-      {
-        "value": {
-          "opacity": 0,
-        },
-      }
-    }
-    jestInlineStyle={{}}
-    style={
-      [
-        {
-          "opacity": 0,
-        },
-      ]
-    }
+exports[`RelativeChangeText > renders without error 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "gap": 2,
-        }
-      }
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665587 _mt-t-space-spa94665587"
+      data-testid="relative-price-change"
     >
-      <RNSVGSvgView
-        align="xMidYMid"
-        bbHeight={16}
-        bbWidth={16}
-        collapsable={false}
-        fill="none"
-        focusable={false}
-        jestAnimatedProps={
-          {
-            "value": {},
-          }
-        }
-        jestInlineStyle={{}}
-        meetOrSlice={0}
-        minX={0}
-        minY={0}
-        strokeWidth={2}
-        style={
-          [
-            {
-              "backgroundColor": "transparent",
-              "borderWidth": 0,
-            },
-            {
-              "height": 16,
-              "width": 16,
-            },
-            {
-              "flex": 0,
-              "height": 16,
-              "width": 16,
-            },
-          ]
-        }
-        vbHeight={24}
-        vbWidth={24}
+      <div
+        style="opacity: 0;"
       >
-        <RNSVGGroup
-          fill={null}
-          propList={
-            [
-              "fill",
-              "strokeWidth",
-            ]
-          }
-          strokeWidth={2}
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665587"
         >
-          <RNSVGPath
-            d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
-            fill={
-              {
-                "type": 2,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
+          <div
+            fill="none"
+            stroke-width="2"
+            style="width: 16px; height: 16px;"
+            viewbox="0 0 24 24"
+          >
+            <div
+              d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+              fill="currentColor"
+            />
+          </div>
+          <input
+            autocapitalize="sentences"
+            autocomplete="on"
+            autocorrect="on"
+            class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 r-padding-t60dpp"
+            data-testid="relative-change-text"
+            dir="auto"
+            readonly=""
+            rows="1"
+            spellcheck="true"
+            style="font-family: var(--f-family); font-weight: var(--f-weight-book); line-height: var(--f-lineHeight-large);"
+            value="10.00%"
+            virtualkeyboardpolicy="auto"
           />
-        </RNSVGGroup>
-      </RNSVGSvgView>
-      <TextInput
-        allowFontScaling={true}
-        collapsable={false}
-        defaultValue="10.00%"
-        editable={false}
-        jestAnimatedProps={
-          {
-            "value": {
-              "defaultValue": "10.00%",
-              "text": "10.00%",
-            },
-          }
-        }
-        jestAnimatedStyle={
-          {
-            "value": {},
-          }
-        }
-        jestInlineStyle={
-          [
-            {
-              "padding": 0,
-            },
-            {
-              "color": "rgba(19, 19, 19, 0.63)",
-              "fontFamily": "Basel Grotesk",
-              "fontSize": 19,
-              "fontWeight": "400",
-              "lineHeight": 24.7,
-            },
-            undefined,
-          ]
-        }
-        maxFontSizeMultiplier={1.4}
-        style={
-          [
-            {
-              "padding": 0,
-            },
-            {
-              "color": "rgba(19, 19, 19, 0.63)",
-              "fontFamily": "Basel Grotesk",
-              "fontSize": 19,
-              "fontWeight": "400",
-              "lineHeight": 24.7,
-            },
-            undefined,
-          ]
-        }
-        testID="relative-change-text"
-        text="10.00%"
-        underlineColorAndroid="transparent"
-      />
-    </View>
-  </View>
-</View>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;

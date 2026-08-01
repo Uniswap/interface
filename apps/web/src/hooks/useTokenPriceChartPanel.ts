@@ -1,7 +1,12 @@
 import type { Currency } from '@uniswap/sdk-core'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useLayoutEffect, useMemo } from 'react'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { useTokenPriceChange, useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
+import {
+  resolveSpotPriceOverride,
+  useTokenPriceChange,
+  useTokenSpotPrice,
+} from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { usePreferProjectMarketDataForCurrency } from 'uniswap/src/features/rwa/usePreferProjectMarketData'
 import { buildCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
 import { TimePeriod } from '~/appGraphql/data/util'
@@ -43,8 +48,17 @@ export function useTokenPriceChartPanel({
   }, [chainId, variables.address])
   const defaultPreferProjectMarketData = usePreferProjectMarketDataForCurrency(currency)
   const preferProjectMarketData = preferProjectMarketDataOverride ?? defaultPreferProjectMarketData
-  const spotPriceOverride = useTokenSpotPrice(spotCurrencyId, { preferProjectMarketData })
-  const currentPriceOverride = variables.multichain && !preferProjectMarketData ? undefined : spotPriceOverride
+  const isV2TokensEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
+  const spotPriceOverride = useTokenSpotPrice(spotCurrencyId, {
+    preferProjectMarketData,
+    isMultichainAggregateView: variables.multichain,
+  })
+  const currentPriceOverride = resolveSpotPriceOverride({
+    isV2TokensEnabled,
+    isMultichainAggregateView: variables.multichain,
+    preferProjectMarketData,
+    spotPrice: spotPriceOverride,
+  })
 
   const priceQuery = useTokenPriceChartData({
     variables,
@@ -59,7 +73,7 @@ export function useTokenPriceChartPanel({
   }, [priceQuery.disableCandlestickUI, setDisableCandlestickUI])
 
   const currencyIdValue = useMemo(() => currencyId(currency), [currency])
-  const priceChange24h = useTokenPriceChange(currencyIdValue)
+  const priceChange24h = useTokenPriceChange(currencyIdValue, { preferProjectMarketData })
 
   const pricePercentChange = useMemo(
     () =>

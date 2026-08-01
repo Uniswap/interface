@@ -39,7 +39,7 @@ exports[`OrderContent > should render without error, filled order 1`] = `
                     <img
                       height="40"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                      style="object-fit: contain; border-radius: 40px; z-index: 1;"
+                      style="object-fit: cover; width: 40px; height: 40px; border-radius: 40px; z-index: 1;"
                       width="40"
                     />
                   </div>
@@ -63,7 +63,7 @@ exports[`OrderContent > should render without error, filled order 1`] = `
                     <img
                       height="40"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                      style="object-fit: contain; border-radius: 40px; z-index: 1;"
+                      style="object-fit: cover; width: 40px; height: 40px; border-radius: 40px; z-index: 1;"
                       width="40"
                     />
                   </div>
@@ -160,7 +160,7 @@ exports[`OrderContent > should render without error, filled order 1`] = `
               <img
                 height="36"
                 src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                style="object-fit: contain; border-radius: 36px; z-index: 1;"
+                style="object-fit: cover; width: 36px; height: 36px; border-radius: 36px; z-index: 1;"
                 width="36"
               />
             </div>
@@ -252,7 +252,7 @@ exports[`OrderContent > should render without error, filled order 1`] = `
               <img
                 height="36"
                 src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                style="object-fit: contain; border-radius: 36px; z-index: 1;"
+                style="object-fit: cover; width: 36px; height: 36px; border-radius: 36px; z-index: 1;"
                 width="36"
               />
             </div>
@@ -415,7 +415,7 @@ exports[`OrderContent > should render without error, limit order 1`] = `
                     <img
                       height="40"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                      style="object-fit: contain; border-radius: 40px; z-index: 1;"
+                      style="object-fit: cover; width: 40px; height: 40px; border-radius: 40px; z-index: 1;"
                       width="40"
                     />
                   </div>
@@ -439,7 +439,7 @@ exports[`OrderContent > should render without error, limit order 1`] = `
                     <img
                       height="40"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                      style="object-fit: contain; border-radius: 40px; z-index: 1;"
+                      style="object-fit: cover; width: 40px; height: 40px; border-radius: 40px; z-index: 1;"
                       width="40"
                     />
                   </div>
@@ -536,7 +536,7 @@ exports[`OrderContent > should render without error, limit order 1`] = `
               <img
                 height="36"
                 src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                style="object-fit: contain; border-radius: 36px; z-index: 1;"
+                style="object-fit: cover; width: 36px; height: 36px; border-radius: 36px; z-index: 1;"
                 width="36"
               />
             </div>
@@ -628,7 +628,7 @@ exports[`OrderContent > should render without error, limit order 1`] = `
               <img
                 height="36"
                 src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                style="object-fit: contain; border-radius: 36px; z-index: 1;"
+                style="object-fit: cover; width: 36px; height: 36px; border-radius: 36px; z-index: 1;"
                 width="36"
               />
             </div>
@@ -858,7 +858,7 @@ exports[`OrderContent > should render without error, open order 1`] = `
                     <img
                       height="40"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                      style="object-fit: contain; border-radius: 40px; z-index: 1;"
+                      style="object-fit: cover; width: 40px; height: 40px; border-radius: 40px; z-index: 1;"
                       width="40"
                     />
                   </div>
@@ -882,7 +882,7 @@ exports[`OrderContent > should render without error, open order 1`] = `
                     <img
                       height="40"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                      style="object-fit: contain; border-radius: 40px; z-index: 1;"
+                      style="object-fit: cover; width: 40px; height: 40px; border-radius: 40px; z-index: 1;"
                       width="40"
                     />
                   </div>
@@ -979,7 +979,7 @@ exports[`OrderContent > should render without error, open order 1`] = `
               <img
                 height="36"
                 src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                style="object-fit: contain; border-radius: 36px; z-index: 1;"
+                style="object-fit: cover; width: 36px; height: 36px; border-radius: 36px; z-index: 1;"
                 width="36"
               />
             </div>
@@ -1071,7 +1071,7 @@ exports[`OrderContent > should render without error, open order 1`] = `
               <img
                 height="36"
                 src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                style="object-fit: contain; border-radius: 36px; z-index: 1;"
+                style="object-fit: cover; width: 36px; height: 36px; border-radius: 36px; z-index: 1;"
                 width="36"
               />
             </div>

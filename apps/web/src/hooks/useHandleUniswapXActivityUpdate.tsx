@@ -2,6 +2,7 @@ import { useTrace } from '@uniswap/analytics'
 import { SharedQueryClient, TradingApi } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback } from 'react'
+import { useIsEarnEnabled } from 'uniswap/src/features/earn/hooks/useIsEarnEnabled'
 import { getDisplayedPriceSource } from 'uniswap/src/features/prices/getDisplayedPriceSource'
 import { finalizeTransaction, updateTransaction } from 'uniswap/src/features/transactions/slice'
 import {
@@ -13,6 +14,7 @@ import { isFinalizedTx } from 'uniswap/src/features/transactions/types/utils'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import type { UniswapXOrderUpdate } from '~/state/activity/types'
 import { useAppDispatch } from '~/state/hooks'
+import { maybeAddEarnSwapUpsellPopup } from '~/state/popups/earnSwapUpsell'
 import { popupRegistry } from '~/state/popups/registry'
 import { PopupType } from '~/state/popups/types'
 import { logUniswapXSwapFinalized } from '~/tracing/swapFlowLoggers'
@@ -26,6 +28,7 @@ export function useHandleUniswapXActivityUpdate(): (params: HandleUniswapXActivi
   const dispatch = useAppDispatch()
   const analyticsContext = useTrace()
   const isCentralizedPricesEnabled = useFeatureFlag(FeatureFlags.CentralizedPrices)
+  const isEarnEnabled = useIsEarnEnabled()
 
   return useCallback(
     ({ activity, popupDismissalTime }: HandleUniswapXActivityUpdateParams): void => {
@@ -49,6 +52,14 @@ export function useHandleUniswapXActivityUpdate(): (params: HandleUniswapXActivi
           update.hash,
           popupDismissalTime,
         )
+
+        maybeAddEarnSwapUpsellPopup({
+          isEarnEnabled,
+          status: update.status,
+          typeInfo: update.typeInfo,
+          transactionId: update.id,
+          swapPopupKey: update.hash,
+        })
       } else if (original.status !== update.status && original.orderHash) {
         popupRegistry.addPopup(
           {
@@ -99,6 +110,6 @@ export function useHandleUniswapXActivityUpdate(): (params: HandleUniswapXActivi
         })
       }
     },
-    [dispatch, analyticsContext, isCentralizedPricesEnabled],
+    [dispatch, analyticsContext, isCentralizedPricesEnabled, isEarnEnabled],
   )
 }

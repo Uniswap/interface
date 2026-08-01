@@ -2,8 +2,6 @@ import fs from 'fs'
 import path from 'path'
 import type { Plugin } from 'vite'
 
-const LOCAL_ENV = '.env.local'
-
 const CSP_DIRECTIVE_MAP: Record<string, string> = {
   defaultSrc: 'default-src',
   scriptSrc: 'script-src',
@@ -18,13 +16,11 @@ const CSP_DIRECTIVE_MAP: Record<string, string> = {
 }
 
 // This plugin is used in vite.config.mts
-// oxlint-disable-next-line import/no-unused-modules
-export function cspMetaTagPlugin(mode?: string): Plugin {
+export function cspMetaTagPlugin(mode?: string, envValues?: Record<string, string>): Plugin {
   return {
     name: 'inject-csp-meta',
 
     transformIndexHtml(html) {
-      // oxlint-disable-next-line typescript/no-unnecessary-condition
       const env = mode ?? process.env.NODE_ENV ?? 'development'
       const skip = process.env.SKIP_CSP === 'true'
 
@@ -49,8 +45,7 @@ export function cspMetaTagPlugin(mode?: string): Plugin {
         }
       }
 
-      const tradingApiUrlOverride =
-        getLocalEnvUrl('TRADING_API_URL_OVERRIDE') ?? getLocalEnvUrl('REACT_APP_TRADING_API_URL_OVERRIDE')
+      const tradingApiUrlOverride = envValues?.TRADING_API_URL_OVERRIDE
       if (tradingApiUrlOverride) {
         if (!baseCSP.connectSrc.includes(tradingApiUrlOverride)) {
           baseCSP.connectSrc.push(tradingApiUrlOverride)
@@ -87,47 +82,5 @@ export function cspMetaTagPlugin(mode?: string): Plugin {
         `<meta http-equiv="Content-Security-Policy" content="${escapedContent}">`,
       )
     },
-  }
-}
-
-/**
- * For development builds, gets the target envUrlKey from the local env
- * file and returns the value.
- */
-const getLocalEnvUrl = (envUrlKey: string) => {
-  try {
-    if (process.env.NODE_ENV !== 'development') {
-      return null
-    }
-    const localEnvPath = path.resolve(process.cwd(), LOCAL_ENV)
-    if (fs.existsSync(localEnvPath)) {
-      const envContent = fs.readFileSync(localEnvPath, 'utf-8')
-      const lines = envContent.split('\n')
-
-      for (const line of lines) {
-        const trimmedLine = line.trim()
-        if (!trimmedLine || trimmedLine.startsWith('#')) {
-          continue
-        }
-        if (trimmedLine.startsWith(`${envUrlKey}=`)) {
-          const value = trimmedLine.split('=')[1]?.trim().replace(/^["']|["']$/g, '') || ''
-          if (value) {
-            try {
-              new URL(value)
-              return value
-            } catch (_e) {
-              // oxlint-disable-next-line no-console -- Required for Vite build debugging
-              console.warn(`Invalid URL found for ${envUrlKey}: ${value}`)
-              return null
-            }
-          }
-        }
-      }
-    }
-    return null
-  } catch (error) {
-    // oxlint-disable-next-line no-console -- Required for Vite build debugging
-    console.error(`Error retrieving environment URL for ${envUrlKey}:`, error)
-    return null
   }
 }

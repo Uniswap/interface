@@ -1,11 +1,17 @@
+/* oxlint-disable max-lines */
 import { useMutation } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import type { TFunction } from 'i18next'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDigitInput } from 'uniswap/src/components/passkey/recovery/useDigitInput'
 import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
+import { toRecoveryAuthMethodType } from 'uniswap/src/features/passkey/embeddedWallet'
 import { hashAuthMethodId } from 'uniswap/src/features/passkey/pinCrypto'
+import { validatePin } from 'uniswap/src/features/passkey/pinValidation'
 import { attemptPinDecryption } from 'uniswap/src/features/passkey/recoveryExecute'
 import type { RecoveryPrivyAuth } from 'uniswap/src/features/passkey/recoveryPrivyAuth'
+import { rotateRecoveryWithRecoveryAuth } from 'uniswap/src/features/passkey/recoveryRotate'
+import { RecoveryOprfError } from 'uniswap/src/features/passkey/recoverySetup'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useInterval } from 'utilities/src/time/timing'
@@ -18,8 +24,28 @@ export enum RecoveryStep {
   EmailCode = 'EMAIL_CODE',
   EnterPin = 'ENTER_PIN',
   AddPasskey = 'ADD_PASSKEY',
+  // Passkey-less rotation (recover-with-email on a v1 method): primer → set + confirm a new
+  // passcode → rotate to v2 → hand off to AddPasskey to register a device passkey.
+  NewPasscodeIntro = 'NEW_PASSCODE_INTRO',
+  SetNewPasscode = 'SET_NEW_PASSCODE',
+  ConfirmNewPasscode = 'CONFIRM_NEW_PASSCODE',
+  // v1 recovery rotation disabled (the `disable_v1_ew_rotation` flag): rotation is no longer
+  // offered; the user is pointed at passkey/recovery-phrase sign-in instead.
+  RotationExpired = 'ROTATION_EXPIRED',
   Recovering = 'RECOVERING',
   NoWalletFound = 'NO_WALLET_FOUND',
+}
+
+// OprfEvaluate rate-limit / banned-PIN messages are user-facing; the "not enabled" flag-off error
+// is remapped to the expired/use-a-passkey copy. Everything else is a generic failure.
+function mapRotationError(e: unknown, t: TFunction): string {
+  if (e instanceof RecoveryOprfError) {
+    return e.message
+  }
+  if (e instanceof Error && e.message.includes('Passkey-less recovery rotation is not enabled')) {
+    return t('account.passkey.recovery.rotationNotEnabled')
+  }
+  return t('common.card.error.description')
 }
 
 const emailSchema = z.email()
@@ -56,6 +82,18 @@ interface UseRecoveryFlowOptions {
    * the user confirms the WebAuthn registration with an explicit button press.
    */
   showAddPasskeyStep?: boolean
+  /**
+   * If true, when the recovered config `shouldRotate` (v1), the flow routes to the
+   * passkey-less rotation sub-flow (set + confirm a new passcode → rotate to v2) instead of
+   * `ADD_PASSKEY`/`onPinDecryptSuccess`. Requires the server flag `ALLOW_V1_RECOVERY_AUTH_ROTATION`.
+   */
+  enableRotation?: boolean
+  /**
+   * When true, v1 recovery rotation is disabled (the `disable_v1_ew_rotation` kill switch): a
+   * `shouldRotate` config short-circuits to `ROTATION_EXPIRED` (sign in with a passkey) instead of
+   * offering the rotation sub-flow. Ignored unless `enableRotation` is also set.
+   */
+  disableRotation?: boolean
 }
 
 /**
@@ -71,6 +109,8 @@ export function useRecoveryFlow({
   onPinDecryptSuccess,
   setOauthError,
   showAddPasskeyStep = false,
+  enableRotation = false,
+  disableRotation = false,
 }: UseRecoveryFlowOptions) {
   const { t } = useTranslation()
 
@@ -87,12 +127,50 @@ export function useRecoveryFlow({
   const [recoveryWalletAddress, setRecoveryWalletAddress] = useState<string | undefined>()
   const [encryptedKeyId, setEncryptedKeyId] = useState<string | undefined>()
   const [encryptedBlob, setEncryptedBlob] = useState<string | undefined>()
+  // v1 (legacy) config that must be rotated before it can recover/export. Hosts branch on this.
+  const [shouldRotate, setShouldRotate] = useState(false)
+  // True once a v1→v2 rotation has completed. Drives the post-rotation add-passkey styling; kept
+  // separate from `shouldRotate` (which flips back to false when the rotation succeeds).
+  const [didRotate, setDidRotate] = useState(false)
+  // Privy wallet id from GetRecoveryConfig — needed by the rotation Challenge(SETUP_RECOVERY).
+  const [walletId, setWalletId] = useState<string | undefined>()
   const [oauthProvider, setOauthProvider] = useState<'google' | 'apple' | null>(null)
   const [oauthEmail, setOauthEmail] = useState<string | undefined>()
   const [finalStepError, setFinalStepError] = useState<string | undefined>()
+  // Passkey-less rotation state.
+  const firstNewPinRef = useRef('')
+  // The verified old passcode (from EnterPin), kept so the new passcode can be rejected if it
+  // matches — without a second v1 OprfEvaluate that would burn a recovery rate-limiter attempt.
+  const oldPinRef = useRef('')
+  const [newPasscodeError, setNewPasscodeError] = useState<string | undefined>()
 
   const effectiveEmail = oauthEmail ?? email
   const isValidEmail = emailSchema.safeParse(email).success
+
+  // Applies a GetRecoveryConfig result to flow state. Returns true when rotation is disabled for a
+  // v1 config and the flow was short-circuited to the expired screen (the caller should stop).
+  const applyRecoveryConfig = useEvent(
+    (config: Awaited<ReturnType<typeof EmbeddedWalletApiClient.fetchGetRecoveryConfig>>): boolean => {
+      setEncryptedKeyId(config.encryptedKeyId)
+      setShouldRotate(config.shouldRotate)
+      setWalletId(config.walletId)
+      if (config.walletAddress) {
+        setRecoveryWalletAddress(config.walletAddress)
+      }
+      if (enableRotation && config.shouldRotate && disableRotation) {
+        setStep(RecoveryStep.RotationExpired)
+        return true
+      }
+      return false
+    },
+  )
+
+  const resetRotationPasscodeState = useEvent(() => {
+    firstNewPinRef.current = ''
+    newPasscodeInput.reset()
+    confirmNewPasscodeInput.reset()
+    setNewPasscodeError(undefined)
+  })
 
   const fetchRecoveryAndAdvance = useEvent(async (providerEmail: string, isActive?: () => boolean) => {
     try {
@@ -114,9 +192,8 @@ export function useRecoveryFlow({
       if (isActive && !isActive()) {
         return
       }
-      setEncryptedKeyId(recoveryConfig.encryptedKeyId)
-      if (recoveryConfig.walletAddress) {
-        setRecoveryWalletAddress(recoveryConfig.walletAddress)
+      if (applyRecoveryConfig(recoveryConfig)) {
+        return
       }
 
       const blob = await privy.fetchEncryptedBlob({
@@ -219,9 +296,8 @@ export function useRecoveryFlow({
         setStep(RecoveryStep.NoWalletFound)
         return
       }
-      setEncryptedKeyId(recoveryConfig.encryptedKeyId)
-      if (recoveryConfig.walletAddress) {
-        setRecoveryWalletAddress(recoveryConfig.walletAddress)
+      if (applyRecoveryConfig(recoveryConfig)) {
+        return
       }
 
       const blob = await privy.fetchEncryptedBlob({
@@ -300,7 +376,13 @@ export function useRecoveryFlow({
 
       if (result.success) {
         setAuthPrivateKey(result.authPrivateKey)
-        if (showAddPasskeyStep) {
+        if (enableRotation && shouldRotate) {
+          // v1 method: rotate to v2 with the recovered auth key instead of recovering on-device.
+          // Stash the just-verified old passcode for the client-side "cannot reuse" check.
+          oldPinRef.current = code
+          resetRotationPasscodeState()
+          setStep(RecoveryStep.NewPasscodeIntro)
+        } else if (showAddPasskeyStep) {
           setStep(RecoveryStep.AddPasskey)
         } else {
           await runPostPinAction(result.authPrivateKey)
@@ -341,6 +423,101 @@ export function useRecoveryFlow({
     await runPostPinAction(authPrivateKey)
   })
 
+  // --- Passkey-less rotation (recover-with-email on a v1 method) ---
+
+  const runRotation = useEvent(async (newPin: string) => {
+    const recoveredKey = authPrivateKey
+    const privyUserId = privy.privyUserId
+    if (!recoveredKey || !accessToken || !walletId || !privyUserId) {
+      logger.error(new Error('Missing preconditions for recovery rotation'), {
+        tags: { file: 'useRecoveryFlow', function: 'runRotation' },
+        extra: {
+          hasRecoveredKey: !!recoveredKey,
+          hasAccessToken: !!accessToken,
+          // walletId comes from GetRecoveryConfig; privyUserId from the Privy session.
+          hasWalletId: !!walletId,
+          hasPrivyUserId: !!privyUserId,
+        },
+      })
+      setNewPasscodeError(t('common.card.error.description'))
+      return
+    }
+    setStep(RecoveryStep.Recovering)
+    setNewPasscodeError(undefined)
+    try {
+      const rotation = await rotateRecoveryWithRecoveryAuth({
+        recoveredAuthPrivateKey: recoveredKey,
+        newPin,
+        email: effectiveEmail,
+        accessToken,
+        privyAppId,
+        walletId,
+        privyUserId,
+        authMethodType: toRecoveryAuthMethodType(oauthProvider),
+        generateAuthorizationSignature: privy.generateAuthorizationSignature,
+      })
+      // The v1 key is spent; hand the new v2 recovery key to the add-passkey step, which registers
+      // a device passkey via executeRecovery (now unblocked because the method is v2).
+      setShouldRotate(false)
+      setDidRotate(true)
+      setAuthPrivateKey(rotation.newAuthPrivateKey)
+      setStep(RecoveryStep.AddPasskey)
+    } catch (e) {
+      logger.error(e, { tags: { file: 'useRecoveryFlow', function: 'runRotation' } })
+      // The recovered key is spent (zeroed), so a retry must re-derive it: send the user back to
+      // re-enter their old passcode.
+      setAuthPrivateKey(null)
+      resetRotationPasscodeState()
+      passcodeInput.reset()
+      setPinError(mapRotationError(e, t))
+      setStep(RecoveryStep.EnterPin)
+    }
+  })
+
+  const handleNewPasscodeComplete = useEvent((code: string) => {
+    setNewPasscodeError(undefined)
+    const validation = validatePin(code)
+    if (!validation.valid) {
+      setNewPasscodeError(
+        validation.reason === 'banned'
+          ? t('account.passkey.backupLogin.passcode.error.banned')
+          : t('account.passkey.backupLogin.passcode.error.invalid'),
+      )
+      newPasscodeInput.reset()
+      return
+    }
+    // New passcode must differ from the old one. Compare against the already-verified old passcode
+    // directly — a v1 OprfEvaluate here would count as another recovery attempt against the limiter.
+    if (oldPinRef.current && code === oldPinRef.current) {
+      setNewPasscodeError(t('account.passkey.backupLogin.passcode.error.reused'))
+      newPasscodeInput.reset()
+      return
+    }
+    firstNewPinRef.current = code
+    setStep(RecoveryStep.ConfirmNewPasscode)
+  })
+
+  const newPasscodeInput = useDigitInput({ length: PASSCODE_LENGTH, onComplete: handleNewPasscodeComplete })
+
+  const handleConfirmNewPasscodeComplete = useEvent(async (code: string) => {
+    if (code !== firstNewPinRef.current) {
+      setNewPasscodeError(t('account.passkey.backupLogin.confirmPasscode.error.mismatch'))
+      confirmNewPasscodeInput.reset()
+      return
+    }
+    await runRotation(code)
+  })
+
+  const confirmNewPasscodeInput = useDigitInput({
+    length: PASSCODE_LENGTH,
+    onComplete: handleConfirmNewPasscodeComplete,
+  })
+
+  const continueToSetNewPasscode = useEvent(() => {
+    setNewPasscodeError(undefined)
+    setStep(RecoveryStep.SetNewPasscode)
+  })
+
   const reset = useEvent(() => {
     // Default back to Login, not EmailEntry — otherwise `handleBack` from EnterPin (via
     // OAuth) lands the user on the email form with no way back to the method-selection
@@ -356,10 +533,15 @@ export function useRecoveryFlow({
     setRecoveryWalletAddress(undefined)
     setEncryptedKeyId(undefined)
     setEncryptedBlob(undefined)
+    setShouldRotate(false)
+    setDidRotate(false)
+    setWalletId(undefined)
     setOauthProvider(null)
     setOauthEmail(undefined)
     setOauthError(undefined)
     setFinalStepError(undefined)
+    oldPinRef.current = ''
+    resetRotationPasscodeState()
     privy.clearOAuthReturn()
     otpInput.reset()
     passcodeInput.reset()
@@ -385,6 +567,15 @@ export function useRecoveryFlow({
       } else {
         setStep(RecoveryStep.EmailCode)
       }
+    } else if (step === RecoveryStep.NewPasscodeIntro) {
+      passcodeInput.reset()
+      setStep(RecoveryStep.EnterPin)
+    } else if (step === RecoveryStep.SetNewPasscode) {
+      resetRotationPasscodeState()
+      setStep(RecoveryStep.NewPasscodeIntro)
+    } else if (step === RecoveryStep.ConfirmNewPasscode) {
+      resetRotationPasscodeState()
+      setStep(RecoveryStep.SetNewPasscode)
     } else {
       reset()
     }
@@ -442,10 +633,18 @@ export function useRecoveryFlow({
     showPasscode,
     setShowPasscode,
     recoveryWalletAddress,
+    shouldRotate,
+    didRotate,
+    walletId,
     oauthProvider,
     oauthEmail,
     effectiveEmail,
     finalStepError,
+    // Passkey-less rotation surface (populated only when `enableRotation`).
+    newPasscodeInput,
+    confirmNewPasscodeInput,
+    newPasscodeError,
+    continueToSetNewPasscode,
     handleBack,
     confirmAddPasskey,
     reset,

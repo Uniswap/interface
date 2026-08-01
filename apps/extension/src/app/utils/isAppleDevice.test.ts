@@ -1,9 +1,10 @@
 import { isAppleDevice } from 'src/app/utils/isAppleDevice'
+import { vi } from 'vitest'
 
 describe('isAppleDevice', () => {
   beforeEach(() => {
     // Reset any mocks before each test
-    jest.resetModules()
+    vi.resetModules()
   })
 
   it('should return true for macOS', () => {

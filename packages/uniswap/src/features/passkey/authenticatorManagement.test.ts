@@ -38,7 +38,7 @@ vi.mock('@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-walle
   },
 }))
 
-vi.mock('uniswap/src/features/passkey/embeddedWallet', () => ({
+vi.mock('uniswap/src/features/passkey/passkeySession', () => ({
   authenticateWithPasskey: vi.fn(),
   refreshNeckSession: vi.fn(),
 }))

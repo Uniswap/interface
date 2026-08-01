@@ -8,7 +8,6 @@
   ],
   "ignoreDependencies": [
     "typescript",
-    "@typescript/native-preview",
     "oxlint",
     "@types/.+"
   ],
@@ -18,7 +17,6 @@
         "@graphql-codegen/.+",
         "@commitlint/.+",
         "@nx/devkit",
-        "@nx/jest",
         "@nx/js",
         "@nx/plugin",
         "@nx/workspace",
@@ -60,13 +58,13 @@
       ],
       "ignoreDependencies": [
         "@svgr/webpack",
+        "@tailwindcss/vite",
         "@testing-library/dom",
         "@wxt-dev/module-react",
         "concurrently",
         "css-loader",
         "dotenv",
         "esbuild-loader",
-        "jest-environment-jsdom",
         "react-native-web",
         "serve",
         "style-loader",
@@ -94,7 +92,12 @@
         "react-native-svg-transformer",
         "@amplitude/analytics-react-native",
         "@datadog/datadog-ci",
+        "@ethersproject/shims",
         "@expo/fingerprint",
+        "@formatjs/intl-getcanonicallocales",
+        "@formatjs/intl-locale",
+        "react-native-quick-base64",
+        "react-native-quick-crypto",
         "@react-native-community/cli",
         "@react-native-community/cli-platform-android",
         "@react-native-community/cli-platform-ios",
@@ -102,7 +105,7 @@
         "@shopify/react-native-skia",
         "@tamagui/babel-plugin",
         "@uniswap/ethers-rs-mobile",
-        "babel-jest",
+        "agent-device",
         "babel-loader",
         "babel-plugin-react-native-web",
         "babel-plugin-transform-remove-console",
@@ -117,7 +120,6 @@
         "expo-modules-core",
         "expo-secure-store",
         "inquirer",
-        "madge",
         "postinstall-postinstall",
         "react-native-argon2",
         "react-native-asset",
@@ -126,7 +128,6 @@
         "react-native-passkey",
         "react-native-restart",
         "sp-react-native-in-app-updates",
-        "ts-jest",
         "ts-node",
         "@ethersproject/shims",
         "@formatjs/intl-getcanonicallocales",
@@ -143,12 +144,14 @@
         "src/sideEffects.ts",
         "src/polyfills.ts",
         "src/tamagui.config.ts",
-        "functions/**/*.ts"
+        "functions/**/*.ts",
+        "scripts/anvil-fork-headers.ts"
       ],
       "vite": false,
       "ignoreDependencies": [
         "@babel/preset-env",
         "@cloudflare/vite-plugin",
+        "@tailwindcss/vite",
         "@tamagui/vite-plugin",
         "vite-plugin-bundlesize",
         "vite-plugin-commonjs",
@@ -185,14 +188,12 @@
         "dd-trace",
         "detect-package-manager",
         "dotenv-cli",
-        "esbuild-register",
         "expo-crypto",
         "hono",
         "html-entities",
         "http-server",
         "jpeg-js",
         "lint-staged",
-        "madge",
         "mini-css-extract-plugin",
         "playwright",
         "png-ts",
@@ -237,13 +238,14 @@
         "ws"
       ]
     },
-    "config/jest-presets": {
-      "ignoreDependencies": [
-        "@testing-library/jest-native",
-        "babel-jest",
-        "jest-svg-transformer",
-        "jest-transform-stub",
-        "ts-jest"
+    "labs/workbench": {
+      "entry": [
+        "functions/vercel-entry.ts",
+        "scripts/build-vercel.ts",
+        "scripts/vercel-ignore.ts"
+      ],
+      "ignore": [
+        "app/components/ui/**"
       ]
     },
     "config/vitest-presets": {
@@ -319,6 +321,7 @@
       "ignoreDependencies": [
         "@react-native-masked-view/masked-view",
         "@shopify/react-native-skia",
+        "@tamagui/animations-moti",
         "@tamagui/animations-react-native",
         "@tamagui/font-inter",
         "@tamagui/theme-base",
@@ -343,6 +346,7 @@
         "@redux-devtools/extension",
         "@typechain/ethers-v5",
         "expo-blur",
+        "expo-file-system",
         "expo-linear-gradient",
         "i18next-resources-for-ts",
         "react-native-appsflyer",
@@ -364,7 +368,6 @@
     },
     "packages/wallet": {
       "ignoreDependencies": [
-        "jest-presets",
         "react-native-context-menu-view",
         "react-native-image-picker",
         "react-native-restart",

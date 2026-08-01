@@ -1,5 +1,4 @@
-import { type ChartPeriod, WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import { isWarmLoadingStatus } from '@universe/api'
+import { type ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { isWebPlatform } from '@universe/environment'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -12,6 +11,7 @@ import {
   getUnavailableCategories,
   isEmptyWalletBalance,
   PortfolioBalancePart,
+  sumAvailableBalanceSlices,
 } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { usePortfolioBalanceBreakdown } from 'uniswap/src/features/dataApi/balances/balancesRest'
@@ -19,12 +19,12 @@ import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { chartPeriodToTimeLabel } from 'uniswap/src/features/portfolio/chartPeriod'
+import { BalanceUnavailableIndicator } from 'uniswap/src/features/portfolio/PortfolioBalance/BalanceUnavailableIndicator'
 import { Change1dUnavailableIndicator } from 'uniswap/src/features/portfolio/PortfolioBalance/Change1dUnavailableIndicator'
 import {
   getPortfolioRelativeChangeDisplay,
   PortfolioRelativeChangeDisplay,
 } from 'uniswap/src/features/portfolio/PortfolioBalance/getPortfolioRelativeChangeDisplay'
-import { PoolsUnavailableIndicator } from 'uniswap/src/features/portfolio/PortfolioBalance/PoolsUnavailableIndicator'
 import { PortfolioRelativeChange } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioRelativeChange'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
@@ -46,14 +46,8 @@ interface PortfolioBalanceProps {
   /** When true, suppresses the unavailable-category indicator (e.g. when a banner conveys it instead) */
   hideUnavailableIndicator?: boolean
   part?: PortfolioBalancePart
-}
-
-/**
- * Indicator shown next to the total when an opt-in category's slice is unavailable and the total
- * falls back to tokens. Supporting a new category is a single entry here.
- */
-const UNAVAILABLE_INDICATOR_BY_CATEGORY: Partial<Record<WalletBalanceCategory, () => JSX.Element>> = {
-  [WalletBalanceCategory.POOLS]: PoolsUnavailableIndicator,
+  /** When true, skips the internal poll — use when a parent coordinator already refreshes this data on its own cadence. */
+  disablePolling?: boolean
 }
 
 export const PortfolioBalance = memo(function PortfolioBalanceInner({
@@ -68,6 +62,7 @@ export const PortfolioBalance = memo(function PortfolioBalanceInner({
   hidePercentChange,
   hideUnavailableIndicator,
   part = PortfolioBalancePart.Total,
+  disablePolling = false,
 }: PortfolioBalanceProps): JSX.Element {
   const { t } = useTranslation()
   const {
@@ -75,7 +70,6 @@ export const PortfolioBalance = memo(function PortfolioBalanceInner({
     requestedCategories,
     loading,
     error,
-    networkStatus,
     refetch,
   } = usePortfolioBalanceBreakdown({
     evmAddress: evmOwner,
@@ -83,21 +77,21 @@ export const PortfolioBalance = memo(function PortfolioBalanceInner({
     chainIds,
     // TransactionHistoryUpdater will refetch this query on new transaction.
     // No need to be super aggressive with polling here.
-    pollInterval: PollingInterval.Normal,
+    pollInterval: disablePolling ? undefined : PollingInterval.Normal,
   })
 
   const data = breakdown?.[part]
 
   // A requested opt-in category whose slice the backend omitted makes the aggregate total
-  // incomplete, so fall back to the tokens-only value. Categories we did not request are omitted by
-  // design and are not treated as unavailable.
+  // incomplete, so fall back to the sum of the categories that did resolve. Categories we did not
+  // request are omitted by design and are not treated as unavailable.
   const unavailableCategories = useMemo(
     () => getUnavailableCategories({ breakdown, requestedCategories }),
     [breakdown, requestedCategories],
   )
-  const shouldFallbackToTokens =
+  const hasIncompleteTotal =
     part === PortfolioBalancePart.Total && breakdown !== undefined && unavailableCategories.length > 0
-  const activeData = shouldFallbackToTokens ? breakdown.tokens : data
+  const activeData = hasIncompleteTotal ? sumAvailableBalanceSlices(breakdown) : data
 
   // Ensure component switches theme
   useIsDarkMode()
@@ -107,7 +101,7 @@ export const PortfolioBalance = memo(function PortfolioBalanceInner({
   const { convertFiatAmount, convertFiatAmountFormatted } = useLocalizationContext()
 
   const isLoading = !activeData && (loading || !!error)
-  const isWarmLoading = !!activeData && isWarmLoadingStatus(networkStatus)
+  const isWarmLoading = !!activeData && loading
 
   const walletEmpty = isEmptyWalletBalance(breakdown)
 
@@ -127,9 +121,9 @@ export const PortfolioBalance = memo(function PortfolioBalanceInner({
   const percentChange = hidePercentChange ? undefined : (overridePercentChange ?? backendPercentChange)
   const absoluteChangeUSD = overrideAbsoluteChangeUSD ?? backendAbsoluteChangeUSD
 
-  // Read from the coalesced backend value (the displayed source, which falls back to tokens when a
-  // requested category is unavailable) so the check matches `percentChange` above. `undefined` means
-  // the server omitted the field (unavailable); `0` is a valid zero, including an empty wallet.
+  // Read from the coalesced backend value (the displayed source, which falls back to the sum of
+  // available slices when a requested category is unavailable) so the check matches `percentChange`
+  // above. `undefined` means the server omitted the field (unavailable); `0` is a valid zero, including an empty wallet.
   const backendPercentChangeUnavailable = !!activeData && backendPercentChange === undefined
 
   const changeDisplay = getPortfolioRelativeChangeDisplay({
@@ -149,12 +143,11 @@ export const PortfolioBalance = memo(function PortfolioBalanceInner({
     (currency === FiatCurrency.UnitedStatesDollar || currency === FiatCurrency.Euro) && currencyComponents.symbolAtFront
 
   const unavailableIndicator = useMemo(() => {
-    const unavailableCategory =
-      shouldFallbackToTokens && !hideUnavailableIndicator ? unavailableCategories[0] : undefined
-    const UnavailableIndicator =
-      unavailableCategory === undefined ? undefined : UNAVAILABLE_INDICATOR_BY_CATEGORY[unavailableCategory]
-    return UnavailableIndicator ? <UnavailableIndicator /> : undefined
-  }, [shouldFallbackToTokens, hideUnavailableIndicator, unavailableCategories])
+    if (!hasIncompleteTotal || hideUnavailableIndicator || unavailableCategories.length === 0) {
+      return undefined
+    }
+    return <BalanceUnavailableIndicator categories={unavailableCategories} />
+  }, [hasIncompleteTotal, hideUnavailableIndicator, unavailableCategories])
 
   const balanceEndElement = useMemo(() => {
     const refreshButton = isWebPlatform ? <RefreshButton isLoading={loading} onPress={refetch} /> : undefined

@@ -288,7 +288,9 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
               LineItem={{
                 Label: () => (
                   <Text variant="body3" color="$neutral2">
-                    {t('pool.newSpecificPosition', { symbol: currencyAmounts?.TOKEN0?.currency.symbol })}
+                    {t('pool.newSpecificPosition', {
+                      symbol: currencyAmounts?.TOKEN0?.currency.symbol ?? t('common.token'),
+                    })}
                   </Text>
                 ),
                 Value: () => (
@@ -308,7 +310,9 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
               LineItem={{
                 Label: () => (
                   <Text variant="body3" color="$neutral2">
-                    {t('pool.newSpecificPosition', { symbol: currencyAmounts?.TOKEN1?.currency.symbol })}
+                    {t('pool.newSpecificPosition', {
+                      symbol: currencyAmounts?.TOKEN1?.currency.symbol ?? t('common.token'),
+                    })}
                   </Text>
                 ),
                 Value: () => (

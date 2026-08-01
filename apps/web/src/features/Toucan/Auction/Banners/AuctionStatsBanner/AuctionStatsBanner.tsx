@@ -220,6 +220,11 @@ export function AuctionStatsBanner() {
 
   const showChangePercent = changePercent !== null && (changeLabel === 'pastHour' || changePercent > 0)
 
+  // Committed volume headline excludes cancelled / out-of-range capital (filled + in-range outstanding).
+  // Falls back to the raw total when the breakdown isn't yet available.
+  const committedHeadlineFiat = committedVolumeBreakdown?.committedFiatFormatted ?? totalBidVolumeFiatFormatted
+  const committedHeadlineToken = committedVolumeBreakdown?.committedFormatted ?? totalBidVolumeFormatted
+
   // Format the change percent using compact notation for large values (e.g., "24.3T%" instead of "24,309,849,856,032.78%")
   const changePercentFormatted = (() => {
     if (changePercent === null) {
@@ -332,9 +337,9 @@ export function AuctionStatsBanner() {
           <Tooltip placement="top" delay={75} offset={{ mainAxis: 8 }}>
             <Tooltip.Trigger>
               <Flex cursor="pointer">
-                <StatPrimaryText>{totalBidVolumeFiatFormatted ?? totalBidVolumeFormatted ?? '--'}</StatPrimaryText>
-                {!isAuctionNotStarted && totalBidVolumeFiatFormatted && (
-                  <StatSecondaryText>{totalBidVolumeFormatted}</StatSecondaryText>
+                <StatPrimaryText>{committedHeadlineFiat ?? committedHeadlineToken ?? '--'}</StatPrimaryText>
+                {!isAuctionNotStarted && committedHeadlineFiat && (
+                  <StatSecondaryText>{committedHeadlineToken}</StatSecondaryText>
                 )}
               </Flex>
             </Tooltip.Trigger>
@@ -367,9 +372,9 @@ export function AuctionStatsBanner() {
           </Tooltip>
         ) : (
           <Flex>
-            <StatPrimaryText>{totalBidVolumeFiatFormatted ?? totalBidVolumeFormatted ?? '--'}</StatPrimaryText>
-            {!isAuctionNotStarted && totalBidVolumeFiatFormatted && (
-              <StatSecondaryText>{totalBidVolumeFormatted}</StatSecondaryText>
+            <StatPrimaryText>{committedHeadlineFiat ?? committedHeadlineToken ?? '--'}</StatPrimaryText>
+            {!isAuctionNotStarted && committedHeadlineFiat && (
+              <StatSecondaryText>{committedHeadlineToken}</StatSecondaryText>
             )}
           </Flex>
         )}

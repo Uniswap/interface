@@ -151,10 +151,12 @@ env:
       TARGET: 'restore-from-cloud'
       PHASE: 'end'
 
+# Bumped 5s → 15s: matches the flow's other RN accessibility-tree timing
+# bumps; covers the cloud-backup fallback navigation + screen mount.
 - extendedWaitUntil:
     visible:
       text: 'No backups found'
-    timeout: 5000 # wait for cloud back to fail
+    timeout: 15000 # wait for cloud backup to fail
 
 # Track incorrect seed phrase input
 - runScript:

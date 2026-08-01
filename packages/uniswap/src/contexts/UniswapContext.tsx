@@ -9,6 +9,7 @@ import type { EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { SignDelegationAuthorizationFn, SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
+import type { EarnAnalyticsEntryPoint } from 'uniswap/src/features/telemetry/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import type { TdpChainSelection } from 'uniswap/src/utils/linking'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -27,6 +28,12 @@ export type NavigateToSwapFlowArgs = {
   exactAmountToken?: string
 }
 
+export type NavigateToEarnVaultArgs = {
+  analyticsEntryPoint?: EarnAnalyticsEntryPoint
+  vault: EarnVaultInfo
+  position?: EarnPositionInfo
+}
+
 /** Stores objects/utils that exist on all platforms, abstracting away app-level specifics for each, in order to allow usage in cross-platform code. */
 interface UniswapContextValue {
   navigateToBuyOrReceiveWithEmptyWallet?: () => void
@@ -40,7 +47,8 @@ interface UniswapContextValue {
   navigateToPoolDetails: (args: { poolId: Address; chainId: UniverseChainId }) => void
   // Opens the earn vault destination for a vault share token (underlying TDP + earn modal on web, earn vault
   // modal on mobile/extension). Optional: not all platforms/environments wire earn navigation.
-  navigateToEarnVault?: (args: { vault: EarnVaultInfo; position?: EarnPositionInfo }) => void
+  navigateToEarnVault?: (args: NavigateToEarnVaultArgs) => void
+  navigateToAuction?: (args: { auctionAddress: string; chainId: UniverseChainId }) => void
   handleShareToken: (args: { currencyId: string }) => void
   navigateToAdvancedSettings: () => void
   onSwapChainsChanged: (args: {
@@ -94,6 +102,7 @@ export function UniswapProvider({
   navigateToNftDetails,
   navigateToPoolDetails,
   navigateToEarnVault,
+  navigateToAuction,
   handleShareToken,
   navigateToAdvancedSettings,
   onSwapChainsChanged,
@@ -132,6 +141,7 @@ export function UniswapProvider({
       navigateToNftDetails,
       navigateToPoolDetails,
       navigateToEarnVault,
+      navigateToAuction,
       handleShareToken,
       navigateToAdvancedSettings,
       onSwapChainsChanged: ({
@@ -180,6 +190,7 @@ export function UniswapProvider({
       navigateToNftDetails,
       navigateToPoolDetails,
       navigateToEarnVault,
+      navigateToAuction,
       handleShareToken,
       navigateToAdvancedSettings,
       signer,

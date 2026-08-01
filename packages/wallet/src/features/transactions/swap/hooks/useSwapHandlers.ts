@@ -1,6 +1,8 @@
+import { TradingApi } from '@universe/api'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
+import { logEarnSwapUpsellConverted } from 'uniswap/src/features/earn/analytics'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useRWAWhitelist } from 'uniswap/src/features/rwa/useRWAWhitelist'
@@ -9,6 +11,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { selectSwapStartTimestamp } from 'uniswap/src/features/timing/selectors'
 import { updateSwapStartTimestamp } from 'uniswap/src/features/timing/slice'
 import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
+import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import {
   ExecuteSwapCallback,
   ExecuteSwapParams,
@@ -43,6 +46,7 @@ export function useSwapHandlers(): SwapHandlers {
 
   const { data: portfolioData } = usePortfolioTotalValue({ evmAddress, fetchPolicy: 'cache-first' })
   const rwaWhitelist = useRWAWhitelist()
+  const earnSwapUpsellAnalyticsProperties = useSwapFormStore((s) => s.earnSwapUpsellAnalyticsProperties)
 
   const caip25Info = useAccountsStore((state) => {
     return state.getActiveConnector(Platform.EVM).session?.caip25Info
@@ -74,6 +78,7 @@ export function useSwapHandlers(): SwapHandlers {
       } = params
 
       const { trade, gasFee } = swapTxContext
+      const earnIntent = trade.routing === TradingApi.Routing.CHAINED ? trade.earnIntent : undefined
       const txRequest = getEVMTxRequest(swapTxContext)
       const isSmartWalletTransaction = txRequest?.to === address
 
@@ -117,6 +122,13 @@ export function useSwapHandlers(): SwapHandlers {
         dispatch(executeSwapActions.trigger({ ...commonParams, preSignedTransaction }))
       }
 
+      if (earnIntent?.action === TradingApi.EarnAction.DEPOSIT && earnSwapUpsellAnalyticsProperties) {
+        logEarnSwapUpsellConverted({
+          ...earnSwapUpsellAnalyticsProperties,
+          toggle_state: 'on',
+        })
+      }
+
       // Send analytics event similar to useSwapCallback
       const blockNumber = getClassicQuoteFromResponse(trade.quote)?.blockNumber?.toString()
 
@@ -134,7 +146,17 @@ export function useSwapHandlers(): SwapHandlers {
       // Reset swap start timestamp
       dispatch(updateSwapStartTimestamp({ timestamp: undefined }))
     },
-    [dispatch, formatter, portfolioData?.balanceUSD, swapStartTimestamp, trace, signing, caip25Info, rwaWhitelist],
+    [
+      caip25Info,
+      dispatch,
+      earnSwapUpsellAnalyticsProperties,
+      formatter,
+      portfolioData?.balanceUSD,
+      rwaWhitelist,
+      signing,
+      swapStartTimestamp,
+      trace,
+    ],
   )
 
   return useMemo(

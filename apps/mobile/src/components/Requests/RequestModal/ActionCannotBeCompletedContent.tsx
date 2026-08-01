@@ -48,9 +48,9 @@ function ActionCannotBeCompletedModalContent({
   onLearnMore: () => Promise<void>
 }): JSX.Element {
   const { t } = useTranslation()
-  const { animatedFooterHeight } = useBottomSheetInternal()
+  const { animatedLayoutState } = useBottomSheetInternal()
   const bottomSpacerStyle = useAnimatedStyle(() => ({
-    height: animatedFooterHeight.value - spacing.spacing12,
+    height: animatedLayoutState.value.footerHeight - spacing.spacing12,
   }))
 
   return (

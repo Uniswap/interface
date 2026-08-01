@@ -1,4 +1,4 @@
-import { ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { ChartPeriod, WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -76,10 +76,12 @@ interface PortfolioChartProps {
   /** Per-category series (shared timestamps) for the scrub breakdown overlay. */
   tokensSeries: PriceChartData[]
   poolsSeries: PriceChartData[]
+  earnSeries: PriceChartData[]
   chartPercentChange: ChartPercentChange
   /** Period percent change per category, for the breakdown popover rows at rest. */
   tokensPercentChange: number | undefined
   poolsPercentChange: number | undefined
+  earnPercentChange: number | undefined
   isLoading: boolean
   isChartEmpty: boolean
   error?: Error | null
@@ -89,12 +91,17 @@ interface PortfolioChartProps {
   portfolioTotalBalanceUSD?: number
   tokensValue?: PortfolioTotalValue
   poolsValue?: PortfolioTotalValue
+  earnValue?: PortfolioTotalValue
+  /** Opt-in categories the backend omitted, so the total is a partial sum shown with a warning. */
+  unavailableCategories?: WalletBalanceCategory[]
   isTotalValueMatch: boolean
   /** portfolio_pools_balances flag: when removed, make this the default and drop the legacy chart-internal header path. */
   showBalanceHeaderRow?: boolean
   selectedCategory: PortfolioChartCategory
   setSelectedCategory: (category: PortfolioChartCategory) => void
-  /** Gates the Total/Tokens/Pools selector; true only when both tokens and pools have data. */
+  /** Non-total categories with data, in fixed display order — what the selector lists. */
+  availableCategories: PortfolioChartCategory[]
+  /** Gates the category selector; true only when at least two categories have data. */
   hasCategoryBreakdown: boolean
 }
 
@@ -103,15 +110,19 @@ export function PortfolioChart({
   series,
   tokensSeries,
   poolsSeries,
+  earnSeries,
   chartPercentChange,
   tokensPercentChange,
   poolsPercentChange,
+  earnPercentChange,
   isLoading,
   isChartEmpty,
   error,
   portfolioTotalBalanceUSD,
   tokensValue,
   poolsValue,
+  earnValue,
+  unavailableCategories,
   selectedPeriod,
   setSelectedPeriod,
   onHoverPeriod,
@@ -119,6 +130,7 @@ export function PortfolioChart({
   showBalanceHeaderRow,
   selectedCategory,
   setSelectedCategory,
+  availableCategories,
   hasCategoryBreakdown,
 }: PortfolioChartProps): JSX.Element {
   const { t } = useTranslation()
@@ -202,10 +214,13 @@ export function PortfolioChart({
           portfolioTotalBalanceUSD={portfolioTotalBalanceUSD}
           tokensValue={tokensValue}
           poolsValue={poolsValue}
+          earnValue={earnValue}
+          unavailableCategories={unavailableCategories}
           series={series}
           chartPercentChange={chartPercentChange}
           tokensPercentChange={tokensPercentChange}
           poolsPercentChange={poolsPercentChange}
+          earnPercentChange={earnPercentChange}
           selectedPeriod={selectedPeriod}
           selectedCategory={selectedCategory}
           isPortfolioZero={isPortfolioZero}
@@ -254,6 +269,7 @@ export function PortfolioChart({
                     coordinates={hover}
                     time={crosshairData.time}
                     tokensSeries={tokensSeries}
+                    earnSeries={earnSeries}
                     poolsSeries={poolsSeries}
                   />
                 ) : null
@@ -301,7 +317,11 @@ export function PortfolioChart({
         </Flex>
         {showCategorySelector && (
           <Flex opacity={error ? 0.4 : 1} pointerEvents={error ? 'none' : 'auto'}>
-            <PortfolioChartCategorySelector value={selectedCategory} onChange={setSelectedCategory} />
+            <PortfolioChartCategorySelector
+              value={selectedCategory}
+              availableCategories={availableCategories}
+              onChange={setSelectedCategory}
+            />
           </Flex>
         )}
       </Flex>

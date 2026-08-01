@@ -32,6 +32,16 @@ bun run e2e:smoke
 bun run playwright:test
 ```
 
+### Run the publish-gate subset (blocks Chrome Web Store uploads):
+```bash
+bun run playwright:test:publish-gate
+```
+
+Tests tagged `@publish-gate` are the golden-path subset the extension publish workflows
+run against the exact built artifact (with its real config) between build and Chrome Web
+Store upload — a failure blocks the upload. Keep this subset small, high-signal, and
+low-flake. Set `EXTENSION_BUILD_DIR` to point the suite at a different build.
+
 ### Run tests in UI mode (for debugging):
 ```bash
 bun playwright test --ui --config=e2e/config/playwright.config.ts
@@ -54,6 +64,7 @@ xvfb-run -a bun run e2e:smoke
 - `tests/smoke/` - Smoke tests for critical functionality
   - `basic-setup.test.ts` - Verifies extension loads correctly
   - `onboarding-flow.test.ts` - Tests fresh install onboarding
+  - `onboarding-import.test.ts` - Tests onboarding via seed phrase import (deterministic wallet)
   - `sidebar-loads.test.ts` - Tests sidebar functionality (auto-onboards)
   - `wallet-connection.test.ts` - Tests dApp connection flow (auto-onboards)
 - `utils/` - Helper utilities including programmatic onboarding
@@ -67,14 +78,25 @@ xvfb-run -a bun run e2e:smoke
 
 ### onboardedExtensionTest
 - Loads extension with fresh user data
-- Automatically completes onboarding with test wallet
-- Uses test seed phrase: `test test test test test test test test test test test junk`
-- Use for testing wallet functionality
+- Automatically completes onboarding via the "create new wallet" flow
+- The wallet is randomly generated, so the address differs on every run
+- Use for testing wallet functionality that doesn't depend on a specific address
+
+### importedExtensionTest
+- Loads extension with fresh user data
+- Automatically completes onboarding by importing the canonical public Hardhat/Anvil dev
+  mnemonic: `test test test test test test test test test test test junk`
+- Produces the same deterministic wallet on every run
+  (`TEST_WALLET_ADDRESS = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`)
+- Use for tests that assert on addresses, balances, or any address-derived state
 
 ## Programmatic Onboarding
 
-Tests that require an onboarded extension will automatically complete the onboarding process using a test seed phrase. This approach:
-- Avoids committing sensitive user data
+Tests that require an onboarded extension automatically complete the onboarding process
+through the real onboarding UI. `importedExtensionTest` imports the public Hardhat/Anvil
+dev seed phrase — it is intentionally public, must never hold real funds, and no other
+seed phrase may ever be added to this suite. This approach:
+- Avoids committing sensitive user data (the only seed phrase used is the public dev one)
 - Ensures consistent test environment
 - Works identically in CI and local development
 - No manual setup required

@@ -11,11 +11,11 @@ vi.mock('uniswap/src/data/rest/getPools', () => ({
   useGetPoolsByTokens: vi.fn(),
 }))
 
-// The on-chain existence check (wagmi) is covered separately; default it to "no initialized pools" here
+// The on-chain existence check (wagmi) is covered separately; default it to "no unavailable pools" here
 // so these tests focus on indexed-data merging without needing a WagmiProvider.
 vi.mock('~/features/Liquidity/hooks/useV4PoolsInitializedOnChain', () => ({
   useV4PoolsInitializedOnChain: vi.fn(() => ({
-    initializedFeeTierKeys: new Set(),
+    unavailableFeeTierKeys: new Set(),
     isLoading: false,
     isError: false,
   })),

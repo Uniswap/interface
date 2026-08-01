@@ -1,6 +1,6 @@
-import { ContentStyle } from '@shopify/flash-list'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
+import type { StyleProp, ViewStyle } from 'react-native'
 import { Flex, GeneratedIcon, Text } from 'ui/src'
 import { Person } from 'ui/src/components/icons'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -24,15 +24,17 @@ function EmptyPretypeSection({ title, icon: Icon }: { title: string; icon: Gener
 interface SearchModalNoQueryListProps {
   chainFilter: UniverseChainId | null
   activeTab: SearchTab
+  auctionSearchEnabled?: boolean
   onSelect?: SearchModalListProps['onSelect']
   renderedInModal: boolean
-  contentContainerStyle?: ContentStyle
+  contentContainerStyle?: StyleProp<ViewStyle>
   rowWrapper?: SearchModalListProps['rowWrapper']
 }
 
 export const SearchModalNoQueryList = memo(function SearchModalNoQueryListInner({
   chainFilter,
   activeTab,
+  auctionSearchEnabled = false,
   onSelect,
   renderedInModal,
   contentContainerStyle,
@@ -40,7 +42,16 @@ export const SearchModalNoQueryList = memo(function SearchModalNoQueryListInner(
 }: SearchModalNoQueryListProps): JSX.Element {
   const { t } = useTranslation()
 
-  const { data: sections, loading, error, refetch } = useSectionsForNoQuerySearch({ chainFilter, activeTab })
+  const {
+    data: sections,
+    loading,
+    error,
+    refetch,
+  } = useSectionsForNoQuerySearch({
+    chainFilter,
+    activeTab,
+    auctionSearchEnabled,
+  })
 
   // Primary-chain CurrencyInfos for the no-query Stocks-shelf RwaCollection rows' context menu.
   const rwaIssuerCurrencyInfos = useRwaIssuerCurrencyInfos({ sections })

@@ -3,11 +3,11 @@ import type { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import type { DutchQuoteResponse, DutchV3QuoteResponse, PriorityQuoteResponse } from '@universe/api'
 import { TradingApi } from '@universe/api'
 import { type BaseTrade, createBaseTradeAmounts } from 'uniswap/src/features/transactions/swap/types/base'
-import { getTradingApiSwapFee } from 'uniswap/src/features/transactions/swap/types/getTradingApiSwapFee'
 import {
   getQuoteOutputAmount,
   getQuoteOutputAmountUserWillReceive,
-} from 'uniswap/src/features/transactions/swap/types/trade'
+} from 'uniswap/src/features/transactions/swap/types/getQuoteOutputAmount'
+import { getTradingApiSwapFee } from 'uniswap/src/features/transactions/swap/types/getTradingApiSwapFee'
 
 type UniswapXBaseTrade<TQuote, TRouting extends TradingApi.Routing> = BaseTrade<TQuote, TRouting> & {
   readonly indicative: false

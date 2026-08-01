@@ -10,6 +10,7 @@ import type {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   InterfaceTransactionDetails,
+  PlanTransactionInfo,
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import {
@@ -120,6 +121,22 @@ function mockMultiStatus(info: TransactionTypeInfo, id: string): [InterfaceTrans
   ]
 }
 
+function mockEarnPlanInfo(earnAction: TradingApi.EarnAction): PlanTransactionInfo {
+  return {
+    type: TransactionType.Plan,
+    planId: 'plan-1',
+    planStatus: undefined,
+    stepDetails: [],
+    tokenOutChainId: UniverseChainId.Mainnet,
+    inputCurrencyId: currencyId(MockUSDC_MAINNET),
+    outputCurrencyId: currencyId(MockDAI),
+    inputCurrencyAmountRaw: mockCurrencyAmountRawUSDC,
+    outputCurrencyAmountRaw: mockCurrencyAmountRaw,
+    tradeType: MockTradeType.EXACT_INPUT,
+    earnAction,
+  }
+}
+
 vi.mock('../../../../state/transactions/hooks', async () => {
   const actual = await vi.importActual('../../../../state/transactions/hooks')
   return {
@@ -137,7 +154,11 @@ vi.mock('../../../../state/transactions/hooks', async () => {
                 outputCurrency: MockDAI,
                 outputCurrencyAmountRaw: mockCurrencyAmountRaw,
               }),
-              ...mockCommonFields({ id: '0x123', account: mockAccount1, status: TransactionStatus.Success }),
+              ...mockCommonFields({
+                id: '0x123',
+                account: mockAccount1,
+                status: TransactionStatus.Success,
+              }),
             } as InterfaceTransactionDetails,
             mockChainId,
           ],
@@ -174,6 +195,181 @@ vi.mock('../../../../state/transactions/hooks', async () => {
 })
 
 describe('parseLocalActivity', () => {
+  it('uses Earn plan titles for local Earn plans with non-standard statuses', async () => {
+    const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
+    const statusesToTitles = [
+      [TransactionStatus.Queued, 'Depositing'],
+      [TransactionStatus.Cancelling, 'Canceling deposit'],
+      [TransactionStatus.Canceled, 'Canceled deposit'],
+      [TransactionStatus.AwaitingAction, 'Deposit interrupted'],
+    ] as const
+
+    for (const [status, title] of statusesToTitles) {
+      const result = await transactionToActivity({
+        details: {
+          typeInfo: mockEarnPlanInfo(TradingApi.EarnAction.DEPOSIT),
+          ...mockCommonFields({
+            id: `0xearn_plan_${status}`,
+            account: mockAccount1,
+            status,
+          }),
+        } as InterfaceTransactionDetails,
+        formatNumber: formatNumberOrString,
+      })
+
+      expect(result?.title).toEqual(title)
+    }
+  })
+
+  it.each([
+    [TradingApi.EarnAction.DEPOSIT, '1.00 USDC to Earn'],
+    [TradingApi.EarnAction.WITHDRAW, '1.00 DAI from Earn'],
+  ])('uses Earn plan descriptors for %s local plans', async (earnAction, descriptor) => {
+    const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
+
+    const result = await transactionToActivity({
+      details: {
+        typeInfo: mockEarnPlanInfo(earnAction),
+        ...mockCommonFields({
+          id: `0xearn_plan_${earnAction}`,
+          account: mockAccount1,
+          status: TransactionStatus.Success,
+        }),
+      } as InterfaceTransactionDetails,
+      formatNumber: formatNumberOrString,
+    })
+
+    expect(result?.descriptor).toEqual(descriptor)
+  })
+
+  it('uses the generic plan descriptor when Earn activity display is disabled', async () => {
+    const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
+
+    const result = await transactionToActivity({
+      details: {
+        typeInfo: mockEarnPlanInfo(TradingApi.EarnAction.DEPOSIT),
+        ...mockCommonFields({
+          id: '0xearn_plan_disabled',
+          account: mockAccount1,
+          status: TransactionStatus.Success,
+        }),
+      } as InterfaceTransactionDetails,
+      formatNumber: formatNumberOrString,
+      isEarnActivityDisplayEnabled: false,
+    })
+
+    expect(result?.descriptor).not.toEqual('1.00 USDC to Earn')
+  })
+
+  it('shows the auction token ticker in the submitted bid descriptor', async () => {
+    const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
+    const auctionContractAddress = '0xffdab1083fcbbcee300000000000000000000000'
+
+    const details = {
+      typeInfo: {
+        type: TransactionType.ToucanBid,
+        amountRaw: '10000000000000000',
+        maxPriceQ96: '1',
+        auctionContractAddress,
+        bidTokenAddress: ZERO_ADDRESS,
+        auctionTokenAddress: MockDAI.address,
+        requestId: 'request-id',
+      },
+      ...mockCommonFields({
+        id: '0xtoucan_bid',
+        account: mockAccount1,
+        status: TransactionStatus.Success,
+      }),
+    } as InterfaceTransactionDetails
+
+    const result = await transactionToActivity({
+      details,
+      formatNumber: formatNumberOrString,
+    })
+
+    expect(result).toMatchObject({
+      descriptor: '0.010 ETH bid on DAI',
+      title: 'Bid submitted',
+    })
+    expect(result?.descriptor).not.toContain(auctionContractAddress)
+  })
+
+  describe('auction launch', () => {
+    const predictedTokenAddress = '0xffdab1083fcbbcee300000000000000000000000'
+    const baseTypeInfo = {
+      type: TransactionType.AuctionLaunch,
+      requestId: 'request-id',
+      predictedAuctionAddress: '0xaaaab1083fcbbcee300000000000000000000000',
+      predictedTokenAddress,
+    }
+
+    it('shows the launched token name and logo captured at submit time', async () => {
+      const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
+
+      const details = {
+        typeInfo: {
+          ...baseTypeInfo,
+          tokenName: 'My New Token',
+          tokenSymbol: 'MNT',
+          tokenLogoUrl: 'https://gateway.pinata.cloud/ipfs/some-cid',
+        },
+        ...mockCommonFields({
+          id: '0xauction_launch',
+          account: mockAccount1,
+          status: TransactionStatus.Success,
+        }),
+      } as InterfaceTransactionDetails
+
+      const result = await transactionToActivity({
+        details,
+        formatNumber: formatNumberOrString,
+      })
+
+      expect(result).toMatchObject({
+        title: 'Auction launched',
+        descriptor: 'My New Token',
+        logos: ['https://gateway.pinata.cloud/ipfs/some-cid'],
+        fallbackSymbols: ['MNT'],
+      })
+    })
+
+    it('falls back to symbol then shortened token address when metadata is missing', async () => {
+      const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
+
+      const symbolOnly = {
+        typeInfo: { ...baseTypeInfo, tokenSymbol: 'MNT' },
+        ...mockCommonFields({
+          id: '0xauction_launch_symbol',
+          account: mockAccount1,
+          status: TransactionStatus.Success,
+        }),
+      } as InterfaceTransactionDetails
+      const symbolResult = await transactionToActivity({
+        details: symbolOnly,
+        formatNumber: formatNumberOrString,
+      })
+      expect(symbolResult).toMatchObject({
+        descriptor: 'MNT',
+        fallbackSymbols: ['MNT'],
+      })
+
+      const bare = {
+        typeInfo: baseTypeInfo,
+        ...mockCommonFields({
+          id: '0xauction_launch_bare',
+          account: mockAccount1,
+          status: TransactionStatus.Success,
+        }),
+      } as InterfaceTransactionDetails
+      const bareResult = await transactionToActivity({
+        details: bare,
+        formatNumber: formatNumberOrString,
+      })
+      expect(bareResult?.descriptor).toContain('0x')
+      expect(bareResult?.descriptor).not.toEqual(predictedTokenAddress)
+    })
+  })
+
   describe('UniswapX Orders', () => {
     it('handles UniswapX order with legacy isUniswapXOrder flag', async () => {
       const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
@@ -195,7 +391,10 @@ describe('parseLocalActivity', () => {
         from: mockAccount1,
       } as InterfaceTransactionDetails
 
-      const result = await transactionToActivity({ details, formatNumber: formatNumberOrString })
+      const result = await transactionToActivity({
+        details,
+        formatNumber: formatNumberOrString,
+      })
 
       expect(result).toMatchObject({
         chainId: 1,
@@ -228,7 +427,10 @@ describe('parseLocalActivity', () => {
         from: mockAccount1,
       } as InterfaceTransactionDetails
 
-      const result = await transactionToActivity({ details, formatNumber: formatNumberOrString })
+      const result = await transactionToActivity({
+        details,
+        formatNumber: formatNumberOrString,
+      })
 
       expect(result).toMatchObject({
         chainId: 1,
@@ -265,7 +467,10 @@ describe('parseLocalActivity', () => {
         from: mockAccount1,
       } as InterfaceTransactionDetails
 
-      const result = await transactionToActivity({ details, formatNumber: formatNumberOrString })
+      const result = await transactionToActivity({
+        details,
+        formatNumber: formatNumberOrString,
+      })
 
       expect(result).toMatchObject({
         status: TransactionStatus.Success,
@@ -295,7 +500,10 @@ describe('parseLocalActivity', () => {
         from: mockAccount1,
       } as InterfaceTransactionDetails
 
-      const result = await transactionToActivity({ details, formatNumber: formatNumberOrString })
+      const result = await transactionToActivity({
+        details,
+        formatNumber: formatNumberOrString,
+      })
 
       expect(result).toMatchObject({
         status: TransactionStatus.Pending,
@@ -328,7 +536,10 @@ describe('parseLocalActivity', () => {
         addedTime: Date.now(),
       } as InterfaceTransactionDetails
 
-      const result = await transactionToActivity({ details, formatNumber: formatNumberOrString })
+      const result = await transactionToActivity({
+        details,
+        formatNumber: formatNumberOrString,
+      })
 
       // Without tradeType, it's not considered UniswapX and returns undefined
       // because regular swap parsing also requires tradeType
@@ -359,7 +570,10 @@ describe('parseLocalActivity', () => {
         from: mockAccount1,
       } as InterfaceTransactionDetails
 
-      const result = await transactionToActivity({ details, formatNumber: formatNumberOrString })
+      const result = await transactionToActivity({
+        details,
+        formatNumber: formatNumberOrString,
+      })
 
       expect(result?.offchainOrderDetails).toMatchObject({
         routing: TradingApi.Routing.DUTCH_LIMIT,

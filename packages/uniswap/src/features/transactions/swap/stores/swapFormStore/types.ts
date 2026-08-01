@@ -1,6 +1,7 @@
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
 import type { TradeableAsset } from 'uniswap/src/entities/assets'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import type { EarnSwapUpsellAnalyticsProperties } from 'uniswap/src/features/telemetry/types'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import type { CurrencyField } from 'uniswap/src/types/currency'
 
@@ -17,6 +18,8 @@ export type SwapFormState = {
   isSelectingCurrencyFieldPrefilled?: boolean
   txId?: string
   isFiatMode: boolean
+  isEarnFlow?: boolean
+  earnSwapUpsellAnalyticsProperties?: EarnSwapUpsellAnalyticsProperties
   isMax: boolean
   presetPercentage?: PresetPercentage
   preselectAsset?: boolean

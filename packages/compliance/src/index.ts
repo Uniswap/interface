@@ -6,8 +6,8 @@
  */
 
 export { GatedFeature, RestrictionReason } from '@uniswap/client-compliancev2/dist/uniswap/compliance/v1/api_pb'
-export type { ComplianceTokenInput, ComplianceV2Client } from '@universe/compliance/src/client'
-export { createComplianceV2Client } from '@universe/compliance/src/client'
+export type { ComplianceTokenInput, ComplianceV2Client, ScreenAddressInput } from '@universe/compliance/src/client'
+export { createComplianceV2Client, screenAddress, toScreenInput } from '@universe/compliance/src/client'
 export { ComplianceClientProvider } from '@universe/compliance/src/ComplianceClientProvider'
 export {
   clearComplianceOverrides,
@@ -23,6 +23,7 @@ export {
 export { useComplianceClient } from '@universe/compliance/src/useComplianceClient'
 export { useSetTokenAcknowledgement, useTokenComplianceStatus } from '@universe/compliance/src/featureGatedTokenQuery'
 export { useGatedFeatures, useIsFeatureGated } from '@universe/compliance/src/gatedFeaturesQuery'
+export { useIsBlockedAddress } from '@universe/compliance/src/screenAddressQuery'
 export {
   hasUnrecognizedReason,
   isAckGated,

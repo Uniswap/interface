@@ -27,9 +27,11 @@ export function usePnlDefinitions(metrics: PnlMetric[] = ALL_PNL_METRICS): PnlDe
 export function PnlDefinitionsList({
   metrics,
   gap = '$spacing16',
+  footer,
 }: {
   metrics?: PnlMetric[]
   gap?: ComponentProps<typeof Flex>['gap']
+  footer?: string
 }): JSX.Element {
   const definitions = usePnlDefinitions(metrics)
 
@@ -45,6 +47,11 @@ export function PnlDefinitionsList({
           </Text>
         </Flex>
       ))}
+      {footer && (
+        <Text color="$neutral2" variant="body3">
+          {footer}
+        </Text>
+      )}
     </Flex>
   )
 }

@@ -1,4 +1,4 @@
-import { ProfileMetadata } from '@universe/api/src/clients/unitags/types'
+import type { ProfileMetadata } from '@universe/api'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'

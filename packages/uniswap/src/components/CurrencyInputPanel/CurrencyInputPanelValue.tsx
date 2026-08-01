@@ -71,7 +71,7 @@ export const CurrencyInputPanelValue = memo(function CurrencyInputPanelValueInne
       onPress={disabled || isTestnetModeEnabled ? onPressDisabledWithShakeAnimation : _onToggleIsFiatMode}
     >
       {!isTestnetModeEnabled && (
-        <Flex centered row shrink gap="$spacing4" width="max-content">
+        <Flex centered row shrink maxContent gap="$spacing4">
           <Text
             color="$neutral2"
             $group-item-hover={{ color: '$neutral2Hovered' }}

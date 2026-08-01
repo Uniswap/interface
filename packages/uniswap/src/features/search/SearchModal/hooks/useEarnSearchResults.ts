@@ -1,8 +1,8 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { EarnVaultOption, OnchainItemListOptionType, SearchModalOption } from 'uniswap/src/components/lists/items/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useEarnVaults } from 'uniswap/src/features/earn/hooks/useEarnVaults'
+import { useIsEarnEnabled } from 'uniswap/src/features/earn/hooks/useIsEarnEnabled'
 import { selectVaultByShareToken } from 'uniswap/src/features/earn/hooks/useTokenDetailsVaultShareData'
 import { hasEarnPosition } from 'uniswap/src/features/earn/utils'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
@@ -36,7 +36,7 @@ export function useEarnSearchResults({
   activeTab: SearchTab
   tokenOptions: readonly SearchModalOption[]
 }): EarnVaultOption[] {
-  const isEarnEnabled = useFeatureFlag(FeatureFlags.Earn)
+  const isEarnEnabled = useIsEarnEnabled()
   const { isTestnetModeEnabled } = useEnabledChains()
   const account = useWallet().evmAccount?.address
 

@@ -5,7 +5,7 @@ import { normalizeToken, usePrice } from '@universe/prices'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getPrimaryStablecoin } from 'uniswap/src/features/chains/utils'
 import { SolanaToken } from 'uniswap/src/features/tokens/SolanaToken'
-import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCPrice, useUSDCValueWithStatus } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { useTrade } from 'uniswap/src/features/transactions/swap/hooks/useTrade'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -148,5 +148,14 @@ describe('useUSDCPrice', () => {
     const { result } = renderHook(() => useUSDCPrice(MAINNET_TOKEN))
 
     expect(result.current).toEqual({ price: undefined, isLoading: false })
+  })
+
+  it('propagates the remote loading state through useUSDCValueWithStatus', () => {
+    mocks.usePrice.mockReturnValue({ price: undefined, isLoading: true })
+
+    const amount = CurrencyAmount.fromRawAmount(MAINNET_TOKEN, '1000000000000000000')
+    const { result } = renderHook(() => useUSDCValueWithStatus(amount))
+
+    expect(result.current).toEqual({ value: null, isLoading: true })
   })
 })

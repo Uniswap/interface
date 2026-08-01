@@ -353,8 +353,10 @@ describe('clean_for_publication', () => {
       fs.writeFileSync(path.join(testDir, 'src', 'index.ts'), 'export {}')
       fs.writeFileSync(path.join(testDir, 'src', 'Button.stories.tsx'), 'export {}')
       fs.writeFileSync(path.join(testDir, 'dist', 'index.js'), 'module.exports = {}')
+      fs.writeFileSync(path.join(testDir, '.env'), 'ROOT=1')
       fs.writeFileSync(path.join(testDir, '.env.local'), 'SECRET=123')
       fs.writeFileSync(path.join(testDir, '.env.defaults'), 'PUBLIC=abc')
+      fs.writeFileSync(path.join(testDir, 'src', '.env.dev'), 'NESTED=1')
       fs.writeFileSync(path.join(testDir, 'node_modules', 'package', 'index.js'), '')
       fs.writeFileSync(path.join(testDir, '.git', 'config'), '')
       fs.writeFileSync(
@@ -362,8 +364,7 @@ describe('clean_for_publication', () => {
         `# Test ignore file
 **/*.stories.tsx
 /dist
-/.env*
-!/.env.defaults
+.env*
 `,
       )
     })
@@ -381,20 +382,22 @@ describe('clean_for_publication', () => {
         ignoreFile: '.publishignore',
       })
 
-      // Should have deleted the matching files
+      // Should have deleted the matching files, including every .env* file at any depth
       expect(result.deletedFiles.map((f) => path.relative(testDir, f)).sort()).toEqual(
-        ['.env.local', 'src/Button.stories.tsx'].sort(),
+        ['.env', '.env.defaults', '.env.local', 'src/.env.dev', 'src/Button.stories.tsx'].sort(),
       )
       expect(result.deletedDirs.map((d) => path.relative(testDir, d))).toEqual(['dist'])
 
       // Verify files are actually deleted
+      expect(fs.existsSync(path.join(testDir, '.env'))).toBe(false)
       expect(fs.existsSync(path.join(testDir, '.env.local'))).toBe(false)
+      expect(fs.existsSync(path.join(testDir, '.env.defaults'))).toBe(false)
+      expect(fs.existsSync(path.join(testDir, 'src', '.env.dev'))).toBe(false)
       expect(fs.existsSync(path.join(testDir, 'src', 'Button.stories.tsx'))).toBe(false)
       expect(fs.existsSync(path.join(testDir, 'dist'))).toBe(false)
 
       // Verify non-matching files still exist
       expect(fs.existsSync(path.join(testDir, 'src', 'index.ts'))).toBe(true)
-      expect(fs.existsSync(path.join(testDir, '.env.defaults'))).toBe(true)
 
       // Verify excluded directories were not traversed/deleted
       expect(fs.existsSync(path.join(testDir, 'node_modules', 'package', 'index.js'))).toBe(true)

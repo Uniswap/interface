@@ -6,7 +6,7 @@ import { RestoreCloudBackupScreen } from 'src/screens/Import/RestoreCloudBackupS
 import { render } from 'src/test/test-utils'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 
-const setOptionsSpy = jest.fn()
+const setOptionsSpy = vi.fn()
 
 const backups = [
   {

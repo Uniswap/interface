@@ -75,6 +75,9 @@ export const createAuctionStore = (auctionAddress?: string, chainId?: EVMUnivers
         awaitingConfirmationBidIds: new Set<string>(),
         withdrawalTxHashes: new Map<string, string>(),
         chartSelectedBid: null,
+        isBidInputFocused: false,
+        // On-chain sweepUnsoldTokensBlock() — undefined until the chain read resolves
+        sweepUnsoldTokensBlock: undefined,
 
         // Actions
         actions: {
@@ -291,6 +294,12 @@ export const createAuctionStore = (auctionAddress?: string, chainId?: EVMUnivers
               awaitingConfirmationBidIds: new Set<string>(),
               withdrawalTxHashes: new Map<string, string>(),
             })
+          },
+          setBidInputFocused: (focused) => {
+            set({ isBidInputFocused: focused })
+          },
+          setSweepUnsoldTokensBlock: (block) => {
+            set({ sweepUnsoldTokensBlock: block })
           },
         },
       }),

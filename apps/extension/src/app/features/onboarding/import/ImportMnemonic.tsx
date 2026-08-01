@@ -13,7 +13,7 @@ import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingSteps'
 import { SyncFromPhoneButton } from 'src/app/features/onboarding/SyncFromPhoneButton'
 import { TopLevelRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { Button, Flex, Input, inputStyles, Square, Text } from 'ui/src'
+import { Button, Flex, HeightAnimator, Input, inputStyles, Square, Text } from 'ui/src'
 import { FileListLock, RotatableChevron } from 'ui/src/components/icons'
 import { fonts, iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -232,26 +232,54 @@ export function ImportMnemonic(): JSX.Element {
               {debouncedErrorMessageToDisplay ?? DUMMY_TEXT} {/* To prevent layout shift */}
             </Text>
             <Flex row flexWrap="wrap" gap="$spacing16">
-              {mnemonic.map(
-                (word, index) =>
-                  Boolean(expanded || index < MNEMONIC_LENGTH_HD) && (
-                    <Flex key={index} style={styles.recoveryPhraseWord}>
+              {mnemonic.slice(0, MNEMONIC_LENGTH_HD).map((word, index) => (
+                <Flex key={index} style={styles.recoveryPhraseWord}>
+                  <RecoveryPhraseWord
+                    key={index + 'input'}
+                    ref={(ref) => {
+                      inputRefs[index] = ref
+                    }}
+                    handleBlur={handleBlur}
+                    handleChange={handleChange}
+                    handleKeyPress={handleKeyPress}
+                    index={index}
+                    word={word}
+                    onSubmitEditing={onSubmit}
+                  />
+                </Flex>
+              ))}
+            </Flex>
+            <HeightAnimator animation="quickLong" open={expanded}>
+              <Flex
+                row
+                flexWrap="wrap"
+                mt="$spacing16"
+                gap="$spacing16"
+                aria-hidden={!expanded}
+                pointerEvents={expanded ? 'auto' : 'none'}
+                {...(!expanded ? { inert: true } : {})}
+              >
+                {mnemonic.slice(MNEMONIC_LENGTH_HD).map((word, index) => {
+                  const wordIndex = index + MNEMONIC_LENGTH_HD
+                  return (
+                    <Flex key={index + MNEMONIC_LENGTH_HD} style={styles.recoveryPhraseWord}>
                       <RecoveryPhraseWord
-                        key={index + 'input'}
+                        key={wordIndex + 'input'}
                         ref={(ref) => {
-                          inputRefs[index] = ref
+                          inputRefs[wordIndex] = ref
                         }}
                         handleBlur={handleBlur}
                         handleChange={handleChange}
                         handleKeyPress={handleKeyPress}
-                        index={index}
+                        index={wordIndex}
                         word={word}
                         onSubmitEditing={onSubmit}
                       />
                     </Flex>
-                  ),
-              )}
-            </Flex>
+                  )
+                })}
+              </Flex>
+            </HeightAnimator>
             <Flex row alignSelf="stretch">
               <Button
                 mt="$spacing16"
@@ -261,7 +289,10 @@ export function ImportMnemonic(): JSX.Element {
                 emphasis="text-only"
                 onPress={(): void => {
                   if (expanded) {
-                    setMnemonic([...mnemonic.slice(0, MNEMONIC_LENGTH_HD), ...Array(MNEMONIC_LENGTH_HD).fill('')])
+                    setMnemonic([
+                      ...mnemonic.slice(0, MNEMONIC_LENGTH_HD),
+                      ...Array(MNEMONIC_LENGTH_EW - MNEMONIC_LENGTH_HD).fill(''),
+                    ])
                   }
                   setExpanded(!expanded)
                 }}
@@ -296,7 +327,7 @@ const RecoveryPhraseWord = forwardRef<
   const showError = debouncedWord.length > 0 && !isValidMnemonicWord(debouncedWord)
 
   return (
-    <Flex key={index} position="relative" width={130}>
+    <Flex key={index} position="relative">
       <Text
         color="$neutral2"
         fontSize={fonts.body3.fontSize}

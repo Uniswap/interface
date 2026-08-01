@@ -3,6 +3,7 @@ import { FlatList } from 'react-native-gesture-handler'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { Check } from 'ui/src/components/icons'
+import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -17,8 +18,17 @@ type SettingsListModalProps<T> = {
   onSelectItem: (item: T) => Promise<void>
 }
 
-export function SettingsListModal<T extends string>({
-  modalName,
+export function SettingsListModal<T extends string>(props: SettingsListModalProps<T>): JSX.Element {
+  const { onClose } = useReactNavigationModal()
+
+  return (
+    <Modal fullScreen name={props.modalName} onClose={onClose}>
+      <SettingsListModalContent {...props} />
+    </Modal>
+  )
+}
+
+function SettingsListModalContent<T extends string>({
   title,
   selectedItem,
   options,
@@ -26,9 +36,10 @@ export function SettingsListModal<T extends string>({
   getItemSubtitle,
   onSelectItem,
 }: SettingsListModalProps<T>): JSX.Element {
-  const { onClose } = useReactNavigationModal()
+  // Defer the gesture-handler-backed list until the sheet begins animating; mounting every row
+  // (a gesture handler + Tamagui subtree each) synchronously on open otherwise blocks the open.
+  const { isSheetReady } = useBottomSheetContext()
 
-  // render
   const renderItem = useEvent(({ item }: { item: T }) => (
     <SettingsListModalOption
       active={selectedItem === item}
@@ -40,22 +51,24 @@ export function SettingsListModal<T extends string>({
   ))
 
   return (
-    <Modal fullScreen name={modalName} onClose={onClose}>
+    <>
       <Text pb="$spacing12" textAlign="center" variant="subheading1">
         {title}
       </Text>
       {/* When modifying this component, please test on a physical device that
           scrolling the languages list continues to work correctly. */}
-      <FlatList
-        data={options}
-        keyExtractor={(item: T) => item}
-        renderItem={renderItem}
-        showsVerticalScrollIndicator={false}
-        bounces={true}
-        keyboardShouldPersistTaps="always"
-        keyboardDismissMode="on-drag"
-      />
-    </Modal>
+      {isSheetReady && (
+        <FlatList
+          data={options}
+          keyExtractor={(item: T) => item}
+          renderItem={renderItem}
+          showsVerticalScrollIndicator={false}
+          bounces={true}
+          keyboardShouldPersistTaps="always"
+          keyboardDismissMode="on-drag"
+        />
+      )}
+    </>
   )
 }
 

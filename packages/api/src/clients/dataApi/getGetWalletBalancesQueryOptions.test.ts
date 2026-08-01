@@ -15,6 +15,7 @@ describe('getGetWalletBalancesQueryOptions', () => {
     mockClient = {
       getPortfolio: vi.fn(),
       getWalletBalances: vi.fn().mockResolvedValue(createMockResponse()),
+      getWalletsBalances: vi.fn(),
       listTokens: vi.fn(),
       listTopPools: vi.fn(),
     }

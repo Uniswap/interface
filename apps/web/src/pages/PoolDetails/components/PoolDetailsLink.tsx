@@ -32,7 +32,7 @@ const TokenName = styled(Text, {
   $xl: {
     display: 'block',
   },
-  $xs: {
+  $sm: {
     display: 'none',
   },
 })
@@ -65,7 +65,7 @@ const SymbolText = styled(Text, {
   $xl: {
     color: '$neutral2',
   },
-  $xs: {
+  $sm: {
     color: '$neutral1',
   },
 })

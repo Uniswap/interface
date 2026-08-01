@@ -108,7 +108,7 @@ export async function attemptPinDecryption({
 // Server sends a base64url-encoded canonical JSON string. Fails loudly on malformed input
 // rather than falling back to raw UTF-8 — a decode failure here means the server response
 // is unexpectedly shaped and we want to surface that, not silently continue.
-function decodeSigningPayload(payload: string): { payloadBytes: Uint8Array; payloadObject: object } {
+export function decodeSigningPayload(payload: string): { payloadBytes: Uint8Array; payloadObject: object } {
   const payloadJson = atob(base64urlToBase64(payload))
   const parsed: unknown = JSON.parse(payloadJson)
   if (!parsed || typeof parsed !== 'object') {

@@ -6,6 +6,7 @@ import { searchTokens } from '@uniswap/client-data-api/dist/data/v1/search-Searc
 import { SearchTokensRequest, SearchTokensResponse } from '@uniswap/client-data-api/dist/data/v1/search_pb'
 import {
   Pool,
+  type SearchAuction,
   SearchType,
   Token as SearchToken,
   ChainToken,
@@ -96,6 +97,38 @@ export async function fetchTokenByAddress({
     })
     return null
   }
+}
+
+/**
+ * Fetch a single auction by token address outside of React components.
+ * Shares the same entry-gateway transport as the token/pool search so the
+ * dev-vs-prod routing choice stays defined in one place.
+ * @param chainId - The chain ID to search on
+ * @param address - The token address to look up
+ * @returns The matching auction, or undefined if none is found
+ */
+export async function fetchAuctionByAddress({
+  chainId,
+  address,
+}: {
+  chainId: number
+  address: string
+}): Promise<SearchAuction | undefined> {
+  const result = await SharedQueryClient.fetchQuery(
+    createQueryOptions(
+      searchTokens,
+      {
+        searchQuery: address,
+        chainIds: [chainId],
+        searchType: SearchType.AUCTION,
+        size: 1,
+        page: 1,
+      },
+      { transport: entryGatewayProdPostTransport },
+    ),
+  )
+
+  return result.auctions[0]
 }
 
 export function searchTokenToCurrencyInfo(token: SearchToken): CurrencyInfo | null {

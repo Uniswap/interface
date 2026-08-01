@@ -25,6 +25,7 @@ export enum FiatCurrency {
 }
 
 export const DEFAULT_LOCAL_CURRENCY: FiatCurrency = FiatCurrency.UnitedStatesDollar
+export const SOURCE_CURRENCY: FiatCurrency = FiatCurrency.UnitedStatesDollar
 
 export const ORDERED_CURRENCIES: FiatCurrency[] = [
   FiatCurrency.UnitedStatesDollar,

@@ -238,7 +238,7 @@ export function WithdrawModal({
                 <Text variant="body3" color="$neutral2">
                   {t('toucan.withdraw.avgCost', {
                     cost: averageCostPerToken,
-                    symbol: bidTokenSymbol,
+                    symbol: bidTokenSymbol ?? t('common.token'),
                   })}
                 </Text>
               )}

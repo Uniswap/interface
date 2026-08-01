@@ -1,17 +1,18 @@
 export {}
+import type { Mock } from 'vitest'
 
 const mockMMKV = {
-  getString: jest.fn(),
-  set: jest.fn(),
+  getString: vi.fn(),
+  set: vi.fn(),
 }
 
-jest.mock('react-native-mmkv', () => ({
-  createMMKV: jest.fn(() => mockMMKV),
+vi.mock('react-native-mmkv', () => ({
+  createMMKV: vi.fn(() => mockMMKV),
 }))
 
-const mockLoggerError = jest.fn()
-jest.mock('utilities/src/logger/logger', () => ({
-  getLogger: (): { error: jest.Mock } => ({
+const mockLoggerError = vi.fn()
+vi.mock('utilities/src/logger/logger', () => ({
+  getLogger: (): { error: Mock } => ({
     error: mockLoggerError,
   }),
 }))
@@ -19,18 +20,18 @@ jest.mock('utilities/src/logger/logger', () => ({
 describe('createMobileStorageAdapter', () => {
   let createMobileStorageAdapter: typeof import('./createMobileStorageAdapter').createMobileStorageAdapter
 
-  beforeEach(() => {
-    jest.clearAllMocks()
-    jest.resetModules()
-    jest.doMock('react-native-mmkv', () => ({
-      createMMKV: jest.fn(() => mockMMKV),
+  beforeEach(async () => {
+    vi.clearAllMocks()
+    vi.resetModules()
+    vi.doMock('react-native-mmkv', () => ({
+      createMMKV: vi.fn(() => mockMMKV),
     }))
-    jest.doMock('utilities/src/logger/logger', () => ({
-      getLogger: (): { error: jest.Mock } => ({
+    vi.doMock('utilities/src/logger/logger', () => ({
+      getLogger: (): { error: Mock } => ({
         error: mockLoggerError,
       }),
     }))
-    createMobileStorageAdapter = require('./createMobileStorageAdapter').createMobileStorageAdapter
+    createMobileStorageAdapter = (await import('./createMobileStorageAdapter')).createMobileStorageAdapter
   })
 
   describe('has', () => {
@@ -110,7 +111,7 @@ describe('createMobileStorageAdapter', () => {
     it('adds notification ID with current timestamp when no metadata provided', async () => {
       mockMMKV.getString.mockReturnValue(JSON.stringify({}))
       const mockNow = 1700000000000
-      jest.spyOn(Date, 'now').mockReturnValue(mockNow)
+      vi.spyOn(Date, 'now').mockReturnValue(mockNow)
 
       const adapter = createMobileStorageAdapter()
       await adapter.add('notif-1')
@@ -120,7 +121,7 @@ describe('createMobileStorageAdapter', () => {
         JSON.stringify({ 'notif-1': { timestamp: mockNow } }),
       )
 
-      jest.restoreAllMocks()
+      vi.restoreAllMocks()
     })
 
     it('preserves existing entries when adding new notification', async () => {

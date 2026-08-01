@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react'
-import { FeatureFlags } from '@universe/gating'
+import { useIsEarnEnabled } from 'uniswap/src/features/earn/hooks/useIsEarnEnabled'
 import { useActiveAddresses } from '~/features/accounts/store/hooks'
 import { useInterval } from '~/lib/hooks/useInterval'
 import { TDP_HEARTBEAT_INTERVAL_MS } from '~/pages/TokenDetails/hooks/tdpHeartbeatConstants'
@@ -24,9 +24,8 @@ vi.mock('@tanstack/react-query', async (importOriginal) => {
   }
 })
 
-vi.mock('@universe/gating', () => ({
-  FeatureFlags: { Earn: 'earn' },
-  useFeatureFlag: vi.fn(),
+vi.mock('uniswap/src/features/earn/hooks/useIsEarnEnabled', () => ({
+  useIsEarnEnabled: vi.fn(),
 }))
 
 vi.mock('~/features/accounts/store/hooks', () => ({
@@ -37,7 +36,7 @@ vi.mock('~/lib/hooks/useInterval', () => ({
   useInterval: vi.fn(),
 }))
 
-const mockUseFeatureFlag = vi.mocked((await import('@universe/gating')).useFeatureFlag)
+const mockUseIsEarnEnabled = vi.mocked(useIsEarnEnabled)
 const mockUseActiveAddresses = vi.mocked(useActiveAddresses)
 const mockUseInterval = vi.mocked(useInterval)
 
@@ -55,7 +54,7 @@ describe('useTDPHeartbeatCoordinator', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     vi.spyOn(console, 'log').mockImplementation(() => {})
-    mockUseFeatureFlag.mockReturnValue(false)
+    mockUseIsEarnEnabled.mockReturnValue(false)
     mockUseActiveAddresses.mockReturnValue({ evmAddress: undefined, svmAddress: undefined })
     Object.defineProperty(document, 'visibilityState', {
       configurable: true,
@@ -107,7 +106,7 @@ describe('useTDPHeartbeatCoordinator', () => {
   })
 
   it('skips earn queries when earn feature flag is disabled', async () => {
-    mockUseFeatureFlag.mockReturnValue(false)
+    mockUseIsEarnEnabled.mockReturnValue(false)
     mockUseActiveAddresses.mockReturnValue({ evmAddress: '0xabc', svmAddress: undefined })
 
     const params = makeParams()
@@ -128,7 +127,7 @@ describe('useTDPHeartbeatCoordinator', () => {
   })
 
   it('skips earn queries when no evm account is connected', async () => {
-    mockUseFeatureFlag.mockImplementation((flag: FeatureFlags) => flag === FeatureFlags.Earn)
+    mockUseIsEarnEnabled.mockReturnValue(true)
     mockUseActiveAddresses.mockReturnValue({ evmAddress: undefined, svmAddress: undefined })
 
     const params = makeParams()
@@ -143,7 +142,7 @@ describe('useTDPHeartbeatCoordinator', () => {
   })
 
   it('fires both earn query keys when earn is enabled and account is connected', async () => {
-    mockUseFeatureFlag.mockImplementation((flag: FeatureFlags) => flag === FeatureFlags.Earn)
+    mockUseIsEarnEnabled.mockReturnValue(true)
     mockUseActiveAddresses.mockReturnValue({ evmAddress: '0xabc', svmAddress: undefined })
 
     const params = makeParams()

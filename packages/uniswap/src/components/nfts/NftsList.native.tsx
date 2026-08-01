@@ -1,6 +1,4 @@
-import { NetworkStatus } from '@apollo/client'
-import { FlashList } from '@shopify/flash-list'
-import { isNonPollingRequestInFlight } from '@universe/api'
+import type { FlashListRef } from '@shopify/flash-list'
 import { forwardRef, useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ListRenderItemInfo } from 'react-native'
@@ -32,7 +30,7 @@ const LOADING_ITEM = 'loading'
 const keyExtractor = (item: NFTItem | string): string =>
   typeof item === 'string' ? item : getNFTAssetKey(item.contractAddress ?? '', item.tokenId ?? '')
 
-export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function NftsTabInner(
+export const NftsList = forwardRef<FlashListRef<unknown>, NftsListProps>(function NftsTabInner(
   {
     owner,
     footerHeight,
@@ -52,7 +50,6 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function N
     onRefresh,
     skip,
     filteredNumHidden,
-    nextFetchPolicy,
     pollInterval,
     ...rest
   },
@@ -67,16 +64,17 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function N
     numShown,
     onListEndReached,
     refetch,
-    networkStatus,
+    isPending,
     hiddenNftsExpanded,
     setHiddenNftsExpanded,
     isErrorState,
-  } = useNftListRenderData({ owner, skip, nextFetchPolicy, pollInterval })
+    isFetchingMore,
+  } = useNftListRenderData({ owner, skip, pollInterval })
 
   // Use filtered count if provided, otherwise use internal count
   const numHidden = filteredNumHidden ?? internalNumHidden
 
-  const shouldAddInLoadingItem = networkStatus === NetworkStatus.fetchMore && numShown % 2 === 1
+  const shouldAddInLoadingItem = isFetchingMore && numShown % 2 === 1
 
   const onHiddenRowPressed = useCallback((): void => {
     if (hiddenNftsExpanded && footerHeight) {
@@ -150,7 +148,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function N
       ref={ref}
       ListEmptyComponent={
         // initial loading
-        isNonPollingRequestInFlight(networkStatus) ? (
+        isPending ? (
           <Loader.NFT repeat={6} />
         ) : // no response and we're not loading already
         isErrorState ? (
@@ -183,7 +181,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function N
       // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
       ListFooterComponent={
         <>
-          {nfts.length > 0 && networkStatus === NetworkStatus.fetchMore && <Loader.NFT repeat={6} />}
+          {nfts.length > 0 && isFetchingMore && <Loader.NFT repeat={6} />}
           {ListFooterComponent}
         </>
       }

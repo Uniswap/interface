@@ -97,7 +97,7 @@ function UnwrapUnderCard({
       px="$padding16"
     >
       <Text variant="body2" color="$neutral2">
-        {t('pool.collectAs', { nativeWrappedSymbol: nativeCurrency?.symbol })}
+        {t('pool.collectAs', { nativeWrappedSymbol: nativeCurrency?.symbol ?? t('common.token') })}
       </Text>
       <Switch
         id="collect-as-weth"
@@ -338,7 +338,7 @@ export function ClaimFeeModal() {
           <Button
             data-testid={TestID.ClaimFees}
             key="LoaderButton-animation-ClaimFeeModal-button"
-            isDisabled={!data?.claim || Boolean(currentTransactionStep)}
+            disabled={!data?.claim || Boolean(currentTransactionStep)}
             loading={calldataLoading || Boolean(currentTransactionStep)}
             size="large"
             variant="branded"

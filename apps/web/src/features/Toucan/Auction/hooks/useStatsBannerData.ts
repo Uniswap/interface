@@ -24,6 +24,7 @@ import {
   formatCompactFromRaw,
   formatTokenAmountWithSymbol,
 } from '~/features/Toucan/Auction/utils/fixedPointFdv'
+import { getAuctionTokenDecimals } from '~/features/Toucan/Auction/utils/tokenMetadata'
 import {
   buildContractInputForAddress,
   buildTokenMarketPriceKey,
@@ -146,7 +147,7 @@ export function useStatsBannerData(): StatsBannerData {
   const clearingPrice = getClearingPrice(effectiveCheckpoint, auctionDetails)
   const floorPrice = auctionDetails?.floorPrice ?? '0'
   const totalSupply = auctionDetails?.tokenTotalSupply ?? '0'
-  const auctionTokenDecimals = auctionDetails?.token?.currency.decimals ?? 18
+  const auctionTokenDecimals = getAuctionTokenDecimals(auctionDetails?.token)
 
   const parseQ96ToDecimal = useMemo(
     () => (q96Value: string) =>
@@ -253,7 +254,7 @@ export function useStatsBannerData(): StatsBannerData {
 
   // Calculate and format current valuation (totalSupply * clearingPrice)
   const currentValuationFormatted = useMemo(() => {
-    if (!bidTokenInfo || !totalSupply || totalSupply === '0') {
+    if (!bidTokenInfo || !totalSupply || totalSupply === '0' || auctionTokenDecimals === undefined) {
       return '--'
     }
     return formatValuationAsBidToken({
@@ -421,7 +422,7 @@ export function useStatsBannerData(): StatsBannerData {
   })
 
   // Determine loading state
-  const isLoading = bidTokenLoading || !auctionDetails
+  const isLoading = bidTokenLoading || !auctionDetails || auctionTokenDecimals === undefined
   const hasData = !isLoading && bidTokenInfo !== undefined
   const isAuctionEnded = auctionProgressState === AuctionProgressState.ENDED
   const isAuctionNotStarted = auctionProgressState === AuctionProgressState.NOT_STARTED

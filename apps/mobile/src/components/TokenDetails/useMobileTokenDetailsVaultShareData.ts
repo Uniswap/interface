@@ -1,7 +1,7 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { useTokenDetailsCrossChainBalances } from 'src/components/TokenDetails/useTokenDetailsCrossChainBalances'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useIsEarnEnabled } from 'uniswap/src/features/earn/hooks/useIsEarnEnabled'
 import {
   useTokenDetailsVaultShareData,
   type TokenDetailsVaultShareData,
@@ -12,7 +12,7 @@ export function useMobileTokenDetailsVaultShareData(): {
   enabled: boolean
   vaultShareData: TokenDetailsVaultShareData
 } {
-  const isEarnEnabled = useFeatureFlag(FeatureFlags.Earn)
+  const isEarnEnabled = useIsEarnEnabled()
   const { isTestnetModeEnabled } = useEnabledChains()
   const enabled = isEarnEnabled && !isTestnetModeEnabled
 

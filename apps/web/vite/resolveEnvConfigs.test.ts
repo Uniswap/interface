@@ -20,24 +20,48 @@ describe('resolveEnvConfigs', () => {
 
   afterEach(() => {
     fs.rmSync(rootDir, { recursive: true, force: true })
+    vi.restoreAllMocks()
   })
 
-  it('returns the base .env.new values', () => {
-    writeEnv(rootDir, '.env.new', { FOO: 'base', BAR: 'baz' })
+  it('returns the base .env values', () => {
+    writeEnv(rootDir, '.env', { FOO: 'base', BAR: 'baz' })
 
     const env = resolveEnvConfigs({ rootDir, isE2eTest: false, processEnv: {} })
 
     expect(env).toEqual({ FOO: 'base', BAR: 'baz' })
   })
 
-  it('returns an empty object when .env.new is absent', () => {
+  it('throws when neither .env nor .env.dev is present', () => {
+    vi.spyOn(console, 'log').mockImplementation(() => {})
+
+    expect(() => resolveEnvConfigs({ rootDir, isE2eTest: false, processEnv: {} })).toThrow(
+      /Failed to parse .*\.env\.dev/,
+    )
+  })
+
+  it('falls back to the checked-in .env.dev defaults when .env is absent', () => {
+    writeEnv(rootDir, '.env.dev', { FOO: 'dev-default', BAR: 'baz' })
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
+
     const env = resolveEnvConfigs({ rootDir, isE2eTest: false, processEnv: {} })
 
-    expect(env).toEqual({})
+    expect(env).toEqual({ FOO: 'dev-default', BAR: 'baz' })
+    expect(logSpy).toHaveBeenCalledWith('No .env file located, using the checked in dev defaults')
+  })
+
+  it('prefers .env over .env.dev when both exist and does not log the fallback', () => {
+    writeEnv(rootDir, '.env', { FOO: 'base' })
+    writeEnv(rootDir, '.env.dev', { FOO: 'dev-default' })
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
+
+    const env = resolveEnvConfigs({ rootDir, isE2eTest: false, processEnv: {} })
+
+    expect(env).toEqual({ FOO: 'base' })
+    expect(logSpy).not.toHaveBeenCalledWith('No .env file located, using the checked in dev defaults')
   })
 
   it('layers .env.e2e.override on top of the base only when isE2eTest is true', () => {
-    writeEnv(rootDir, '.env.new', { FOO: 'base', SHARED: 'base' })
+    writeEnv(rootDir, '.env', { FOO: 'base', SHARED: 'base' })
     writeEnv(rootDir, '.env.e2e.override', { SHARED: 'e2e', E2E_ONLY: 'yes' })
 
     const withoutE2e = resolveEnvConfigs({ rootDir, isE2eTest: false, processEnv: {} })
@@ -47,9 +71,9 @@ describe('resolveEnvConfigs', () => {
     expect(withE2e).toEqual({ FOO: 'base', SHARED: 'e2e', E2E_ONLY: 'yes' })
   })
 
-  it('applies .env.new.override and reports each changed key via onOverride', () => {
-    writeEnv(rootDir, '.env.new', { FOO: 'base', SHARED: 'base', SAME: 'same' })
-    writeEnv(rootDir, '.env.new.override', { SHARED: 'overridden', SAME: 'same', NEW_KEY: 'added' })
+  it('applies .env.override and reports each changed key via onOverride', () => {
+    writeEnv(rootDir, '.env', { FOO: 'base', SHARED: 'base', SAME: 'same' })
+    writeEnv(rootDir, '.env.override', { SHARED: 'overridden', SAME: 'same', NEW_KEY: 'added' })
 
     const onOverride = vi.fn()
     const env = resolveEnvConfigs({ rootDir, isE2eTest: false, processEnv: {}, onOverride })
@@ -62,7 +86,7 @@ describe('resolveEnvConfigs', () => {
 
   it('pulls PROCESS_ENV_OVERRIDES from processEnv, winning over the files', () => {
     const overrideKey = PROCESS_ENV_OVERRIDES[0]
-    writeEnv(rootDir, '.env.new', { [overrideKey]: 'from-file', FOO: 'base' })
+    writeEnv(rootDir, '.env', { [overrideKey]: 'from-file', FOO: 'base' })
 
     const env = resolveEnvConfigs({
       rootDir,
@@ -76,7 +100,7 @@ describe('resolveEnvConfigs', () => {
 
   it('ignores PROCESS_ENV_OVERRIDES keys that are undefined in processEnv', () => {
     const overrideKey = PROCESS_ENV_OVERRIDES[0]
-    writeEnv(rootDir, '.env.new', { [overrideKey]: 'from-file' })
+    writeEnv(rootDir, '.env', { [overrideKey]: 'from-file' })
 
     const env = resolveEnvConfigs({ rootDir, isE2eTest: false, processEnv: {} })
 
@@ -84,7 +108,7 @@ describe('resolveEnvConfigs', () => {
   })
 
   it('assigns the resolved values back into processEnv when overrideProcessEnv is true', () => {
-    writeEnv(rootDir, '.env.new', { FOO: 'base' })
+    writeEnv(rootDir, '.env', { FOO: 'base' })
     const processEnv: NodeJS.ProcessEnv = {}
 
     resolveEnvConfigs({ rootDir, isE2eTest: false, processEnv, overrideProcessEnv: true })
@@ -93,7 +117,7 @@ describe('resolveEnvConfigs', () => {
   })
 
   it('does not mutate processEnv when overrideProcessEnv is false', () => {
-    writeEnv(rootDir, '.env.new', { FOO: 'base' })
+    writeEnv(rootDir, '.env', { FOO: 'base' })
     const processEnv: NodeJS.ProcessEnv = {}
 
     resolveEnvConfigs({ rootDir, isE2eTest: false, processEnv, overrideProcessEnv: false })
@@ -102,7 +126,7 @@ describe('resolveEnvConfigs', () => {
   })
 
   it('skips the e2e override layer when .env.e2e.override is missing', () => {
-    writeEnv(rootDir, '.env.new', { FOO: 'base' })
+    writeEnv(rootDir, '.env', { FOO: 'base' })
 
     const env = resolveEnvConfigs({ rootDir, isE2eTest: true, processEnv: {} })
 

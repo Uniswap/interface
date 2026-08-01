@@ -22,6 +22,9 @@ import {
   getMaxTieredPostAuctionLiquidityEffectivePercent,
   getPostAuctionLiquidityPreviewPercent,
   getPostAuctionLiquidityTierLpDollars,
+  getPrimaryStablecoin,
+  getRaiseCurrencyAddress,
+  getRaiseCurrencyAsCurrency,
   inputExceedsCurrencyPrecision,
   isCustomPriceRangeAllocationValid,
   isCustomPriceRangeEntryValid,
@@ -583,7 +586,7 @@ describe('quoteRaiseAtFloor', () => {
     // 0.1 USDC/token × 50M tokens = 5M USDC
     const result = quoteRaiseAtFloor({
       floorPrice: '0.1',
-      raiseCurrency: RaiseCurrency.USDC,
+      raiseCurrency: RaiseCurrency.STABLECOIN,
       chainId: UniverseChainId.Mainnet,
       tokensAmount: auctionTokens(50_000_000),
     })
@@ -595,7 +598,7 @@ describe('quoteRaiseAtFloor', () => {
     expect(
       quoteRaiseAtFloor({
         floorPrice: '',
-        raiseCurrency: RaiseCurrency.USDC,
+        raiseCurrency: RaiseCurrency.STABLECOIN,
         chainId: UniverseChainId.Mainnet,
         tokensAmount: auctionTokens(50_000_000),
       }),
@@ -606,7 +609,7 @@ describe('quoteRaiseAtFloor', () => {
     expect(
       quoteRaiseAtFloor({
         floorPrice: '0.1',
-        raiseCurrency: RaiseCurrency.USDC,
+        raiseCurrency: RaiseCurrency.STABLECOIN,
         chainId: UniverseChainId.Mainnet,
         tokensAmount: auctionTokens(0),
       }),
@@ -619,7 +622,7 @@ describe('getLaunchThreshold', () => {
     // 100M deposit − 25M reserved for LP = 75M sold; 0.1 USDC floor → 7.5M USDC
     const result = getLaunchThreshold({
       floorPrice: '0.1',
-      raiseCurrency: RaiseCurrency.USDC,
+      raiseCurrency: RaiseCurrency.STABLECOIN,
       chainId: UniverseChainId.Mainnet,
       auctionSupplyAmount: auctionTokens(100_000_000),
       postAuctionLiquidityAmount: auctionTokens(25_000_000),
@@ -631,7 +634,7 @@ describe('getLaunchThreshold', () => {
   it('rises when fewer tokens are reserved for the LP (more tokens sold)', () => {
     const base = {
       floorPrice: '0.1',
-      raiseCurrency: RaiseCurrency.USDC,
+      raiseCurrency: RaiseCurrency.STABLECOIN,
       chainId: UniverseChainId.Mainnet,
       auctionSupplyAmount: auctionTokens(100_000_000),
     }
@@ -644,7 +647,7 @@ describe('getLaunchThreshold', () => {
     // 0.001 ETH/token × 75M sold = 75,000 ETH
     const result = getLaunchThreshold({
       floorPrice: '0.001',
-      raiseCurrency: RaiseCurrency.ETH,
+      raiseCurrency: RaiseCurrency.NATIVE,
       chainId: UniverseChainId.Mainnet,
       auctionSupplyAmount: auctionTokens(100_000_000),
       postAuctionLiquidityAmount: auctionTokens(25_000_000),
@@ -657,7 +660,7 @@ describe('getLaunchThreshold', () => {
     expect(
       getLaunchThreshold({
         floorPrice: '',
-        raiseCurrency: RaiseCurrency.USDC,
+        raiseCurrency: RaiseCurrency.STABLECOIN,
         chainId: UniverseChainId.Mainnet,
         auctionSupplyAmount: auctionTokens(100_000_000),
         postAuctionLiquidityAmount: auctionTokens(25_000_000),
@@ -669,11 +672,44 @@ describe('getLaunchThreshold', () => {
     expect(
       getLaunchThreshold({
         floorPrice: '0.1',
-        raiseCurrency: RaiseCurrency.USDC,
+        raiseCurrency: RaiseCurrency.STABLECOIN,
         chainId: UniverseChainId.Mainnet,
         auctionSupplyAmount: auctionTokens(25_000_000),
         postAuctionLiquidityAmount: auctionTokens(25_000_000),
       }),
     ).toBeUndefined()
+  })
+})
+
+describe('getPrimaryStablecoin', () => {
+  it('returns each chain’s curated primary stablecoin, not a hardcoded USDC', () => {
+    expect(getPrimaryStablecoin(UniverseChainId.Mainnet).symbol).toBe('USDC')
+    expect(getPrimaryStablecoin(UniverseChainId.Robinhood).symbol).toBe('USDG')
+    expect(getPrimaryStablecoin(UniverseChainId.XLayer).symbol).toBe('USDT0')
+  })
+})
+
+describe('getRaiseCurrencyAsCurrency', () => {
+  it('resolves the ETH slot to the chain’s native currency (ETH/AVAX/OKB), not literal ETH', () => {
+    expect(getRaiseCurrencyAsCurrency(RaiseCurrency.NATIVE, UniverseChainId.Mainnet)?.symbol).toBe('ETH')
+    expect(getRaiseCurrencyAsCurrency(RaiseCurrency.NATIVE, UniverseChainId.Avalanche)?.symbol).toBe('AVAX')
+    expect(getRaiseCurrencyAsCurrency(RaiseCurrency.NATIVE, UniverseChainId.XLayer)?.symbol).toBe('OKB')
+  })
+
+  it('resolves the stablecoin slot to the chain’s primary stablecoin', () => {
+    expect(getRaiseCurrencyAsCurrency(RaiseCurrency.STABLECOIN, UniverseChainId.Mainnet)?.symbol).toBe('USDC')
+    expect(getRaiseCurrencyAsCurrency(RaiseCurrency.STABLECOIN, UniverseChainId.Robinhood)?.symbol).toBe('USDG')
+    expect(getRaiseCurrencyAsCurrency(RaiseCurrency.STABLECOIN, UniverseChainId.XLayer)?.symbol).toBe('USDT0')
+  })
+})
+
+describe('getRaiseCurrencyAddress', () => {
+  it('returns the zero address for the native slot and the primary stablecoin address otherwise', () => {
+    expect(getRaiseCurrencyAddress(RaiseCurrency.NATIVE, UniverseChainId.Mainnet)).toBe(
+      '0x0000000000000000000000000000000000000000',
+    )
+    expect(getRaiseCurrencyAddress(RaiseCurrency.STABLECOIN, UniverseChainId.Robinhood)).toBe(
+      '0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168',
+    )
   })
 })

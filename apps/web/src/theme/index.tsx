@@ -1,4 +1,4 @@
-import { PropsWithChildren, useMemo } from 'react'
+import { PropsWithChildren, useEffect, useMemo } from 'react'
 import { breakpoints } from 'ui/src/theme'
 import { useSelectedColorScheme } from 'uniswap/src/features/appearance/hooks'
 import { createGlobalStyle, ThemeProvider as StyledComponentsThemeProvider } from '~/lib/deprecated-styled'
@@ -102,6 +102,13 @@ export function ThemeProvider({ children, ...overriddenColors }: PropsWithChildr
   const darkMode = useSelectedColorScheme() === 'dark'
   // oxlint-disable-next-line react/exhaustive-deps -- Only update when darkMode or overriddenColors' entries change
   const themeObject = useMemo(() => getTheme(darkMode, overriddenColors), [darkMode, JSON.stringify(overriddenColors)])
+
+  // Mirror the active color scheme onto the <html> `.dark` class so Tailwind v4
+  // `dark:` variants and @universe/tailwind dark tokens activate in sync with
+  // the Tamagui/styled-components theme (which are React-context-only).
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', darkMode)
+  }, [darkMode])
 
   // TODO(WEB-7508): set theme for wallet connect modal
 

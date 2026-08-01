@@ -2,24 +2,25 @@ import { act, renderHook } from '@testing-library/react-native'
 import { SharedQueryClient } from '@universe/api'
 import { useHomeScreenPortfolioRefresh } from 'src/screens/HomeScreen/portfolio/hooks/useHomeScreenPortfolioRefresh'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import type { MockInstance } from 'vitest'
 
-const mockRefetchQueries = jest.fn()
+const mockRefetchQueries = vi.fn()
 
-jest.mock('@apollo/client', () => ({
-  ...jest.requireActual('@apollo/client'),
+vi.mock('@apollo/client', async () => ({
+  ...(await vi.importActual('@apollo/client')),
   useApolloClient: () => ({ refetchQueries: mockRefetchQueries }),
 }))
 
-jest.mock('wallet/src/features/wallet/hooks', () => ({
-  ...jest.requireActual('wallet/src/features/wallet/hooks'),
+vi.mock('wallet/src/features/wallet/hooks', async () => ({
+  ...(await vi.importActual('wallet/src/features/wallet/hooks')),
   useActiveAccountWithThrow: () => ({ address: '0xabc' }),
 }))
 
 describe('useHomeScreenPortfolioRefresh', () => {
-  let invalidateSpy: jest.SpyInstance
+  let invalidateSpy: MockInstance
 
   beforeEach(() => {
-    invalidateSpy = jest.spyOn(SharedQueryClient, 'invalidateQueries').mockResolvedValue(undefined)
+    invalidateSpy = vi.spyOn(SharedQueryClient, 'invalidateQueries').mockResolvedValue(undefined)
   })
 
   afterEach(() => {

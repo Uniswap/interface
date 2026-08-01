@@ -7,10 +7,10 @@ import { DeviceAccessTimeout } from 'uniswap/src/features/settings/constants'
 import { logger } from 'utilities/src/logger/logger'
 
 // Mock dependencies
-jest.mock('uniswap/src/extension/useIsChromeWindowFocused')
-jest.mock('utilities/src/logger/logger')
-jest.mock('src/app/hooks/useIsWalletUnlocked', () => ({
-  useIsWalletUnlocked: jest.fn(),
+vi.mock('uniswap/src/extension/useIsChromeWindowFocused')
+vi.mock('utilities/src/logger/logger')
+vi.mock('src/app/hooks/useIsWalletUnlocked', () => ({
+  useIsWalletUnlocked: vi.fn(),
   isWalletUnlocked: null,
 }))
 
@@ -18,14 +18,14 @@ jest.mock('src/app/hooks/useIsWalletUnlocked', () => ({
 import { useIsWalletUnlocked } from 'src/app/hooks/useIsWalletUnlocked'
 import { useIsChromeWindowFocused } from 'uniswap/src/extension/useIsChromeWindowFocused'
 
-const mockUseIsChromeWindowFocused = jest.mocked(useIsChromeWindowFocused)
-const mockUseIsWalletUnlocked = jest.mocked(useIsWalletUnlocked)
-const mockLogger = jest.mocked(logger)
+const mockUseIsChromeWindowFocused = vi.mocked(useIsChromeWindowFocused)
+const mockUseIsWalletUnlocked = vi.mocked(useIsWalletUnlocked)
+const mockLogger = vi.mocked(logger)
 
 // Mock chrome.alarms API
 const mockChromeAlarms = {
-  create: jest.fn(),
-  clear: jest.fn(),
+  create: vi.fn(),
+  clear: vi.fn(),
 }
 
 global.chrome = {
@@ -65,7 +65,7 @@ const simulateFocusChange = (component: ReturnType<typeof render>) => (fromFocus
 
 describe('AutoLockProvider', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockUseIsChromeWindowFocused.mockReturnValue(true)
     mockUseIsWalletUnlocked.mockReturnValue(true)
     mockLogger.debug.mockImplementation(() => {})

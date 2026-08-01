@@ -7,7 +7,6 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useEffect } from 'react'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
 import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
-import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import type { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -26,14 +25,13 @@ import type { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { getTradeInputTax, getTradeOutputTax } from 'uniswap/src/features/transactions/swap/types/trade'
 import { getSwapFeeUsd } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
 import { isChained, isClassic, isJupiter, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'
 import { getProtocolVersionFromTrade } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
+import { isTradeDerivedUsdPricing } from 'uniswap/src/features/transactions/swap/utils/usdAnchoring/anchoredUsdPricing'
 import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
-import { logger } from 'utilities/src/logger/logger'
 import type { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
@@ -161,6 +159,8 @@ const STEP_TYPE_TO_IS_TRADE_STEP: Record<TradingApi.PlanStepType, boolean> = {
   [TradingApi.PlanStepType.PRIORITY]: true,
   [TradingApi.PlanStepType.QUICKROUTE]: false,
   [TradingApi.PlanStepType.CHAINED]: true,
+  [TradingApi.PlanStepType.VAULT_DEPOSIT]: true,
+  [TradingApi.PlanStepType.VAULT_WITHDRAW]: true,
 }
 
 /**
@@ -352,6 +352,7 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
       chainId: trade.inputAmount.currency.chainId,
       address: getCurrencyAddressForAnalytics(trade.inputAmount.currency),
       queryClient,
+      isTradeDerivedUsd: isTradeDerivedUsdPricing(derivedSwapInfo.usdPricing),
     })
 
     sendAnalyticsEvent(
@@ -584,52 +585,6 @@ export function getBaseTradeAnalyticsPropertiesFromSwapInfo({
     },
     ...getSponsorshipAnalyticsProperties(trade),
   }
-}
-
-export function logSwapQuoteFetch({
-  chainId,
-  isUSDQuote = false,
-  isQuickRoute = false,
-  quoteSource,
-  pollInterval,
-}: {
-  chainId: number
-  isUSDQuote?: boolean
-  isQuickRoute?: boolean
-  quoteSource?: 'routing_api' | 'trading_api'
-  pollInterval?: number
-}): void {
-  let performanceMetrics = {}
-  if (!isUSDQuote) {
-    const hasSetSwapQuote = timestampTracker.hasTimestamp(SwapEventType.FirstQuoteFetchStarted)
-    const elapsedTime = timestampTracker.setElapsedTime(SwapEventType.FirstQuoteFetchStarted)
-
-    // We only log the time_to_first_quote_request metric for the first quote request of a session.
-    const time_to_first_quote_request = hasSetSwapQuote ? undefined : elapsedTime
-    const time_to_first_quote_request_since_first_input = hasSetSwapQuote
-      ? undefined
-      : timestampTracker.getElapsedTime(SwapEventType.FirstQuoteFetchStarted, SwapEventType.FirstSwapAction)
-
-    performanceMetrics = { time_to_first_quote_request, time_to_first_quote_request_since_first_input }
-  }
-  sendAnalyticsEvent(SwapEventName.SwapQuoteFetch, {
-    chainId,
-    isQuickRoute,
-    isUSDQuote,
-    quoteSource,
-    pollInterval,
-    ...performanceMetrics,
-  })
-  logger.info('analytics', 'logSwapQuoteFetch', SwapEventName.SwapQuoteFetch, {
-    chainId,
-    // we explicitly log it here to show on Datadog dashboard
-    chainLabel: getChainLabel(chainId),
-    isQuickRoute,
-    isUSDQuote,
-    quoteSource,
-    pollInterval,
-    ...performanceMetrics,
-  })
 }
 
 export function tradeRoutingToFillType({

@@ -19,6 +19,7 @@ import { TransactionStatus } from 'uniswap/src/features/transactions/types/trans
 import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'uniswap/src/test/fixtures'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
+import type { Mock } from 'vitest'
 import {
   getReceiveNotificationFromData,
   TransactionHistoryUpdater,
@@ -28,14 +29,14 @@ import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { readOnlyAccount, receiveCurrencyTxNotification, signerMnemonicAccount } from 'wallet/src/test/fixtures'
 import { faker, render } from 'wallet/src/test/test-utils'
 
-jest.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
+vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
   // UniverseChainId.Mainnet — literal for Jest mock factory scope rules
-  useEnabledChains: jest.fn(() => ({ chains: [1] })),
+  useEnabledChains: vi.fn(() => ({ chains: [1] })),
 }))
 
-jest.mock('uniswap/src/data/rest/listTransactions', () => ({
-  useListTransactionsQuery: jest.fn(),
-  getListTransactionsQuery: jest.fn(),
+vi.mock('uniswap/src/data/rest/listTransactions', () => ({
+  useListTransactionsQuery: vi.fn(),
+  getListTransactionsQuery: vi.fn(),
 }))
 
 const now = Date.now()
@@ -162,20 +163,20 @@ const receiveOnChainStale = makeReceiveOnChain({
 let fetchQueryListResponse: ListTransactionsResponse = new ListTransactionsResponse({ transactions: [] })
 
 function setDefaultRestMocks(): void {
-  ;(useListTransactionsQuery as jest.Mock).mockReturnValue({
+  ;(useListTransactionsQuery as Mock).mockReturnValue({
     data: { pages: [pollPageWithNewTxns], pageParams: [undefined] },
     isLoading: false,
     isFetching: false,
     error: undefined,
-    refetch: jest.fn(),
+    refetch: vi.fn(),
     status: 'success',
-    fetchNextPage: jest.fn(),
+    fetchNextPage: vi.fn(),
     hasNextPage: false,
     isFetchingNextPage: false,
     dataUpdatedAt: Date.now(),
   })
 
-  ;(getListTransactionsQuery as jest.Mock).mockImplementation(() => ({
+  ;(getListTransactionsQuery as Mock).mockImplementation(() => ({
     queryKey: [ReactQueryCacheKey.ListTransactions, 'test'],
     queryFn: async (): Promise<ListTransactionsResponse> => fetchQueryListResponse,
   }))
@@ -184,8 +185,8 @@ function setDefaultRestMocks(): void {
 describe(TransactionHistoryUpdater, () => {
   beforeEach(() => {
     MockDate.reset()
-    jest.clearAllMocks()
-    ;(useEnabledChains as jest.Mock).mockReturnValue({ chains: [UniverseChainId.Mainnet] })
+    vi.clearAllMocks()
+    ;(useEnabledChains as Mock).mockReturnValue({ chains: [UniverseChainId.Mainnet] })
     fetchQueryListResponse = new ListTransactionsResponse({ transactions: [] })
     setDefaultRestMocks()
   })
@@ -313,7 +314,7 @@ describe(getReceiveNotificationFromData, () => {
         sender: SENDER,
         tokenAddress: DAI.address,
         chainId: UniverseChainId.Mainnet,
-        currencyAmountRaw: expect.any(String),
+        currencyAmountRaw: expect.any(String) as unknown as string,
       }),
     )
   })

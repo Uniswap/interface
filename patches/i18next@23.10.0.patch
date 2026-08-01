@@ -1,0 +1,31 @@
+diff --git a/typescript/t.d.ts b/typescript/t.d.ts
+index 12ceccb6f3a6a9928205eef2fc6e1dc1dfb4b543..17a43b26eff488b7e4f0acde6f9b780faadacbed 100644
+--- a/typescript/t.d.ts
++++ b/typescript/t.d.ts
+@@ -152,6 +152,17 @@ type InterpolationMap<Ret> = $PreservedValue<
+   Record<string, unknown>
+ >;
+ 
++// PATCH (universe): reject possibly-undefined values in the t() options object.
++// Maps any property whose type includes `undefined` to `never`, so the passed
++// object stops being assignable. Resource-type-independent (works even though this
++// repo erases resources to Record<string, string>). Replaces the i18n rule in
++// config/oxlint-plugins/typeaware-custom.ts. Applied to the t() options arg below.
++type $NoUndefinedValues<T> = {
++  // `0 extends 1 & T[K]` is true only when T[K] is `any` — pass `any` through so
++  // untyped values aren't flagged (parity with the old TypeFlags.Undefined check).
++  [K in keyof T]-?: 0 extends 1 & T[K] ? T[K] : undefined extends T[K] ? never : T[K];
++};
++
+ type ParseTReturnPlural<
+   Res,
+   Key,
+@@ -263,7 +274,7 @@ export interface TFunction<Ns extends Namespace = DefaultNamespace, KPrefix = un
+     const ActualOptions extends TOpt & InterpolationMap<Ret> = TOpt & InterpolationMap<Ret>,
+   >(
+     ...args:
+-      | [key: Key | Key[], options?: ActualOptions]
++      | [key: Key | Key[], options?: ActualOptions & $NoUndefinedValues<ActualOptions>]
+       | [key: string | string[], options: TOpt & $Dictionary & { defaultValue: string }]
+       | [key: string | string[], defaultValue: string, options?: TOpt & $Dictionary]
+   ): TFunctionReturnOptionalDetails<Ret, TOpt>;

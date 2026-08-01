@@ -1,7 +1,6 @@
 // oxlint-disable-next-line no-restricted-imports -- legacy import will be migrated
 import { CurrencyAmount, Token, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
-import type { GraphQLApi } from '@universe/api'
-import { UniversalRouterVersion } from '@universe/api/src/clients/trading/__generated__'
+import type { GraphQLApi, TradingApi } from '@universe/api'
 import type { AppId } from '@universe/config'
 import { SwapConfigKey } from '@universe/gating'
 import type { ImageSourcePropType } from 'react-native'
@@ -139,7 +138,7 @@ export interface UniverseChainInfo extends WagmiChain {
   readonly statusPage?: string
   readonly subblockTimeMs?: number // in milliseconds, used for subblock balance checks
   readonly blockTimeMs?: number // average block time in milliseconds, used for block timestamp estimation
-  readonly supportedURVersions: UniversalRouterVersion[]
+  readonly supportedURVersions: TradingApi.UniversalRouterVersion[]
   readonly supportsV4: boolean
   readonly supportsNFTs: boolean
   readonly urlParam: string

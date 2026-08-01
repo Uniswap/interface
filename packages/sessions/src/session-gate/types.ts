@@ -28,12 +28,12 @@ export interface Session {
  * Implementations MUST be single-flight on both fetch methods. This isn't
  * enforced by the type system: the React Query adapter gets it for free
  * (`fetchQuery`/`refetchQueries` dedupe concurrent calls on the query key),
- * and `createSession` additionally wraps `recover()` in `singleflight()`.
+ * and `createSession` additionally single-flights `recover()`'s refetch via `singleflight()`.
  */
 export interface SessionAdapter {
-  fetchSession(): Promise<void>
-  refetchSession(): Promise<void>
-  getStatus(): 'idle' | 'pending' | 'success' | 'error'
-  hasData(): boolean
-  subscribe(listener: () => void): () => void
+  fetchSession: () => Promise<void>
+  refetchSession: () => Promise<void>
+  getStatus: () => 'idle' | 'pending' | 'success' | 'error'
+  hasData: () => boolean
+  subscribe: (listener: () => void) => () => void
 }

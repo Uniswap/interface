@@ -1,9 +1,9 @@
 import { FieldFunctionOptions, InMemoryCache } from '@apollo/client'
 import { Reference, relayStylePagination, StoreObject } from '@apollo/client/utilities'
 import { isTestEnv } from '@universe/environment'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { getValidAddress } from 'uniswap/src/utils/addresses'
-import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
+import { normalizeTokenAddressForCache } from 'uniswap/src/utils/currencyId'
+
+export { normalizeCurrencyIdForMapLookup, normalizeTokenAddressForCache } from 'uniswap/src/utils/currencyId'
 
 export function setupSharedApolloCache(): InMemoryCache {
   return new InMemoryCache({
@@ -134,34 +134,4 @@ function incomingOrExistingArray(
   incoming: unknown[] | undefined,
 ): unknown[] | undefined {
   return incoming ?? existing
-}
-
-export function normalizeCurrencyIdForMapLookup(currencyId: string): string
-export function normalizeCurrencyIdForMapLookup(currencyId: string | undefined): string | undefined
-export function normalizeCurrencyIdForMapLookup(currencyId: string | undefined): string | undefined {
-  if (!currencyId) {
-    return undefined
-  }
-
-  const chainId = currencyIdToChain(currencyId)
-  const normalizedAddress = normalizeTokenAddressForCache(currencyIdToAddress(currencyId))
-  return `${chainId}-${normalizedAddress}`
-}
-
-export function normalizeTokenAddressForCache(address: string): string
-export function normalizeTokenAddressForCache(address: null): null
-export function normalizeTokenAddressForCache(address: string | null): string | null
-export function normalizeTokenAddressForCache(address: string | null): string | null {
-  // Our graphql backend would sometimes return checksummed addresses and sometimes lowercase addresses.
-  // In order to improve local cache hits, avoid unnecessary network requests, and avoid having duplicate `Token` items stored in the cache,
-  // we use lowercase addresses when accessing the `Token` object from our local cache.
-  // Solana addresses are case sensitive though, so this only applies to EVM addresses.
-
-  if (address === 'NATIVE' || address === 'native') {
-    return 'native' // lowercased native address for lowercase consistency
-  }
-  const normalizedEvmAddress = getValidAddress({ address, platform: Platform.EVM, withEVMChecksum: false })
-
-  // if not a valid EVM address, must be SVM address
-  return normalizedEvmAddress ?? address ?? null
 }

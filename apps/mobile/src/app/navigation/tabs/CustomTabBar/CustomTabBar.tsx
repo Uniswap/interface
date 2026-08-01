@@ -128,7 +128,7 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps): JSX.Elem
           >
             {/* Animated sliding background */}
             {containerWidth > 0 && (
-              <Flex position="absolute" height="100%" py="$spacing4">
+              <Flex position="absolute" height="100%" py="$spacing4" pointerEvents="none">
                 <AnimatedFlex
                   height="100%"
                   width={ANIMATED_VIEW_WIDTH}

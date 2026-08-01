@@ -35,13 +35,6 @@ export function buildFlagGroups(extras: {
       ],
     },
     {
-      name: 'FOR API',
-      flags: [
-        { flag: FeatureFlags.ForSessionsEnabled, label: 'Enable FOR Sessions' },
-        { flag: FeatureFlags.ForUrlMigration, label: 'Enable FOR URL Migration' },
-      ],
-    },
-    {
       name: 'XLayer',
       flags: [{ flag: FeatureFlags.XLayer, label: 'Enable XLayer UX' }],
     },
@@ -86,6 +79,7 @@ export function buildFlagGroups(extras: {
         { flag: FeatureFlags.LiquidityBatchedTransactions, label: 'Enable Batched Transactions for LP flow' },
         { flag: FeatureFlags.LpIncentives, label: 'Enable LP Incentives' },
         { flag: FeatureFlags.LpIncentivesTablesColumn, label: 'Enable LP Reward APR Column' },
+        { flag: FeatureFlags.V4ProtocolFeeDisplay, label: 'Enable v4 Fee Tiers in the Create flow' },
       ],
     },
     {
@@ -96,12 +90,17 @@ export function buildFlagGroups(extras: {
           flag: FeatureFlags.ToucanTickDetailsTooltip,
           label: 'Show Remaining (currency required) on chart-bar tooltip',
         },
+        { flag: FeatureFlags.AuctionSearch, label: 'Enable Auction Search' },
       ],
     },
     {
       name: 'Embedded Wallet',
       flags: [
         { flag: FeatureFlags.EmbeddedWallet, label: 'Add internal embedded wallet functionality' },
+        {
+          flag: FeatureFlags.DisableV1EwRotation,
+          label: 'Disable v1 embedded-wallet recovery rotation (force passkey sign-in)',
+        },
         {
           flag: FeatureFlags.Support7677GasSponsorship,
           label: 'Advertise EIP-7677 paymaster sponsorship in wallet_getCapabilities',
@@ -145,6 +144,8 @@ export function buildFlagGroups(extras: {
         { flag: FeatureFlags.V2EndpointsPositions, label: 'Enable V2 Endpoints Positions' },
         { flag: FeatureFlags.V2EndpointsPortfolio, label: 'Enable V2 Endpoints Portfolio' },
         { flag: FeatureFlags.V2EndpointsSearch, label: 'Enable V2 Endpoints Search' },
+        { flag: FeatureFlags.V2EndpointsCurrencyConversion, label: 'Enable V2 Endpoints Currency Conversion' },
+        { flag: FeatureFlags.V2EndpointsNfts, label: 'Enable V2 Endpoints NFTs' },
       ],
     },
     {
@@ -167,7 +168,6 @@ export function buildFlagGroups(extras: {
       name: 'Misc',
       flags: [
         { flag: FeatureFlags.DataLivelinessUI, label: 'Enable Data Liveliness UI' },
-        { flag: FeatureFlags.UniswapWrapped2025, label: 'Enable Uniswap Wrapped 2025' },
         { flag: FeatureFlags.UnificationCopy, label: 'Enable Unification Copy' },
       ],
     },
@@ -187,6 +187,10 @@ export function buildFlagGroups(extras: {
         { flag: FeatureFlags.RWAUXExplore, label: 'Enable RWA UX Explore (table)' },
         { flag: FeatureFlags.RwaUxSearch, label: 'Enable Stocks in Search' },
       ],
+    },
+    {
+      name: 'Token Categories',
+      flags: [{ flag: FeatureFlags.TokenCategories, label: 'Enable Token Categories' }],
     },
     { name: 'Experiments', flags: [] },
     {

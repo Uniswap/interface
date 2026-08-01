@@ -24,6 +24,7 @@ import { type FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { type Platform } from 'uniswap/src/features/platforms/types/Platform'
 import {
   type AuctionEventName,
+  type EarnEventName,
   type ExtensionEventName,
   type FiatOffRampEventName,
   type FiatOnRampEventName,
@@ -40,7 +41,7 @@ import {
   type WalletEventName,
 } from 'uniswap/src/features/telemetry/constants'
 import { type TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
-import { SponsoredApprovalType } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import type { SponsoredApprovalType } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { type TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { type WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { type UnitagClaimContext } from 'uniswap/src/features/unitags/types'
@@ -231,6 +232,67 @@ export type SwapTradeBaseProperties = {
   token_out_stocks?: boolean
 } & ITraceContext
 
+export type EarnAnalyticsSurface = 'web' | 'mobile' | 'extension'
+
+export type EarnAnalyticsAction = 'deposit' | 'withdraw'
+
+export type EarnAnalyticsEntryPoint =
+  | 'activity'
+  | 'explore_chip'
+  | 'global_modal'
+  | 'portfolio_earn_get_token'
+  | 'portfolio_earn_section'
+  | 'post_swap_upsell_toast'
+  | 'search'
+  | 'swap_review_toggle'
+  | 'tdp_earn_banner'
+  | 'tdp_earn_section'
+  | 'tdp_vault_share_banner'
+
+export type EarnSwapUpsellSurface = 'toast' | 'toggle'
+
+export type EarnAnalyticsBaseProperties = ITraceContext & {
+  surface: EarnAnalyticsSurface
+  entry_point: EarnAnalyticsEntryPoint
+  vault_id?: string
+  vault_address?: string
+  vault_chain_id?: UniverseChainId
+  underlying_token_address?: string
+  underlying_token_symbol?: string
+  underlying_chain_id?: UniverseChainId
+  has_existing_position?: boolean
+  position_balance_usd?: number
+}
+
+export type EarnTransactionAnalyticsProperties = EarnAnalyticsBaseProperties & {
+  action: EarnAnalyticsAction
+  amount_usd?: number
+  token_amount?: string
+  source_chain_id?: UniverseChainId
+  destination_chain_id?: UniverseChainId
+  source_token_address?: string
+  source_token_symbol?: string
+  destination_token_address?: string
+  destination_token_symbol?: string
+  estimated_network_fee_usd?: string
+  request_id?: string
+  quote_id?: string
+  plan_id?: string
+  withdraw_mode?: string
+  error_name?: string
+  error_message?: string
+}
+
+export type EarnSwapUpsellAnalyticsProperties = EarnAnalyticsBaseProperties & {
+  output_currency_id?: string
+  transaction_id?: string
+  source_upsell_currency_id?: string
+  swap_upsell_surface: EarnSwapUpsellSurface
+  toggle_state?: 'on' | 'off'
+  swap_amount_usd?: number
+  projected_monthly_earnings_usd?: number
+}
+
 type BaseSwapTransactionResultProperties = {
   routing: SwapTradeBaseProperties['routing']
   transactionOriginType: string
@@ -271,6 +333,10 @@ type BaseSwapTransactionResultProperties = {
   sponsorship_campaign_id?: SwapTradeBaseProperties['sponsorship_campaign_id']
   is_final_step?: boolean
   swap_start_timestamp?: number
+  earn_action?: TradingApi.EarnAction
+  earn_vault_address?: string
+  earn_vault_chain_id?: TradingApi.ChainId
+  earn_withdraw_mode?: TradingApi.EarnWithdrawMode
 
   // Chained action analytics properties
   plan_id?: string
@@ -328,13 +394,15 @@ type TransferProperties = {
 
 /** Known navbar search result types */
 export enum NavBarSearchTypes {
+  AuctionSuggestion = 'auction-suggestion',
+  AuctionTrending = 'auction-trending',
   CollectionSuggestion = 'collection-suggestion',
   CollectionTrending = 'collection-trending',
+  PoolSuggestion = 'pool-suggestion',
+  PoolTrending = 'pool-trending',
   RecentSearch = 'recent',
   TokenSuggestion = 'token-suggestion',
   TokenTrending = 'token-trending',
-  PoolSuggestion = 'pool-suggestion',
-  PoolTrending = 'pool-trending',
 }
 
 export enum WalletConnectionResult {
@@ -429,7 +497,6 @@ export enum OnboardingCardLoggingName {
   RecoveryBackup = 'recovery_backup',
   ClaimUnitag = 'claim_unitag',
   EnablePushNotifications = 'enable_push_notifications',
-  NoAppFeesAnnouncement = 'no_app_fees_announcement',
 
   Unknown = 'unknown',
 }
@@ -817,6 +884,26 @@ export type UniverseEventProperties = {
   [ExtensionEventName.SidebarConnect]: Pick<DappContextProperties, 'dappUrl'>
   [ExtensionEventName.SidebarDisconnect]: undefined
   [ExtensionEventName.UnknownMethodRequest]: WindowEthereumRequestProperties
+  [EarnEventName.EarnSurfaceViewed]: Pick<EarnAnalyticsBaseProperties, 'entry_point' | 'surface'>
+  [EarnEventName.EarnVaultCardShowMoreClicked]: EarnAnalyticsBaseProperties
+  [EarnEventName.EarnVaultDetailViewed]: EarnAnalyticsBaseProperties
+  [EarnEventName.EarnVaultSelected]: EarnAnalyticsBaseProperties
+  [EarnEventName.EarnDepositStarted]: EarnTransactionAnalyticsProperties
+  [EarnEventName.EarnDepositReviewed]: EarnTransactionAnalyticsProperties
+  [EarnEventName.EarnDepositSubmitted]: EarnTransactionAnalyticsProperties
+  [EarnEventName.EarnDepositCompleted]: EarnTransactionAnalyticsProperties
+  [EarnEventName.EarnDepositFailed]: EarnTransactionAnalyticsProperties
+  [EarnEventName.EarnWithdrawStarted]: EarnTransactionAnalyticsProperties
+  [EarnEventName.EarnWithdrawReviewed]: EarnTransactionAnalyticsProperties
+  [EarnEventName.EarnWithdrawSubmitted]: EarnTransactionAnalyticsProperties
+  [EarnEventName.EarnWithdrawCompleted]: EarnTransactionAnalyticsProperties
+  [EarnEventName.EarnWithdrawFailed]: EarnTransactionAnalyticsProperties
+  [EarnEventName.EarnSwapUpsellToggleShown]: EarnSwapUpsellAnalyticsProperties
+  [EarnEventName.EarnSwapUpsellToggleChanged]: EarnSwapUpsellAnalyticsProperties
+  [EarnEventName.EarnSwapUpsellToastShown]: EarnSwapUpsellAnalyticsProperties
+  [EarnEventName.EarnSwapUpsellToastClicked]: EarnSwapUpsellAnalyticsProperties
+  [EarnEventName.EarnSwapUpsellToastDismissed]: EarnSwapUpsellAnalyticsProperties
+  [EarnEventName.EarnSwapUpsellConverted]: EarnSwapUpsellAnalyticsProperties
   [FiatOffRampEventName.FORBuySellToggled]: ITraceContext & {
     value: 'BUY' | 'SELL'
   }
@@ -1521,7 +1608,7 @@ export type UniverseEventProperties = {
   [UniswapEventName.LpIncentiveCollectRewardsSuccess]: { token_rewards: string }
   [UniswapEventName.LpIncentiveLearnMoreCtaClicked]: undefined
   [UniswapEventName.AuctionFilterSelected]: {
-    filter: 'all' | 'verified' | 'unverified' | 'active' | 'complete'
+    filter: 'all' | 'verified' | 'unverified' | 'active' | 'complete' | 'new' | 'completed' | 'quick_launch'
   }
   [UniswapEventName.NetworkFilterSelected]: ITraceContext & {
     chain: UniverseChainId | typeof ALL_NETWORKS_LABEL

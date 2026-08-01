@@ -57,7 +57,7 @@ function convertToStatsFiat({
 interface ComputeCurrentValuationFiatFormattedParams {
   totalSupplyRaw: string
   auctionProgressState: AuctionProgressState
-  auctionTokenDecimals: number
+  auctionTokenDecimals: number | undefined
   clearingPriceQ96: string
   launchBidTokenPriceUsdRaw: string | undefined
   bidTokenInfo: BidTokenInfo | undefined
@@ -76,7 +76,7 @@ export function computeCurrentValuationUsd({
   auctionTokenMarketPriceUsd,
   bidTokenMarketPriceUsd,
 }: Omit<ComputeCurrentValuationFiatFormattedParams, 'convertFiatAmountFormatted'>): number | undefined {
-  if (!totalSupplyRaw || totalSupplyRaw === '0') {
+  if (!totalSupplyRaw || totalSupplyRaw === '0' || auctionTokenDecimals === undefined) {
     return undefined
   }
 

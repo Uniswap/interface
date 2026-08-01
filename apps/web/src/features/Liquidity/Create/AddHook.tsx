@@ -1,114 +1,44 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { IconButton, styled, Text, TouchableArea } from 'ui/src'
-import { DocumentList } from 'ui/src/components/icons/DocumentList'
+import { Button, Text, TouchableArea } from 'ui/src'
+import { Search } from 'ui/src/components/icons/Search'
 import { X } from 'ui/src/components/icons/X'
 import { Flex } from 'ui/src/components/layout/Flex'
-import { fonts } from 'ui/src/theme'
-import { TextInput } from 'uniswap/src/components/input/TextInput'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { getValidAddress } from 'uniswap/src/utils/addresses'
-import { shortenAddress } from 'utilities/src/addresses'
-import { useOnClickOutside, usePrevious } from 'utilities/src/react/hooks'
-import { getAddress } from '~/chains'
-import { AdvancedButton } from '~/features/Liquidity/Create/AdvancedButton'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
-import { HookModal } from '~/features/Liquidity/HookModal'
+import { HookCard } from '~/features/Liquidity/HookCard'
+import { getHookRegistryKey, useHookRegistryMap } from '~/hooks/useHookRegistryMap'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
-
-const MenuFlyout = styled(Flex, {
-  animation: 'fastHeavy',
-  enterStyle: { top: 30, opacity: 0 },
-  exitStyle: { top: 30, opacity: 0 },
-  width: 'calc(100% - 48px)',
-  backgroundColor: '$surface2',
-  borderColor: '$surface3',
-  borderWidth: 1,
-  borderRadius: '$rounded12',
-  position: 'absolute',
-  top: 40,
-  zIndex: 100,
-  p: '$padding16',
-  opacity: 1,
-  shadowColor: '$shadowColor',
-  shadowOffset: { width: 0, height: 25 },
-  shadowOpacity: 0.2,
-  shadowRadius: 50,
-})
-
-function AutocompleteFlyout({
-  address,
-  handleSelectAddress,
-}: {
-  address: string
-  handleSelectAddress: (checksummedAddress: string) => void
-}) {
-  const { t } = useTranslation()
-
-  const potentialChecksummedAddress = useMemo(() => {
-    const validChecksummedAddress = getValidAddress({ address, withEVMChecksum: true, platform: Platform.EVM })
-
-    let result: string | null = validChecksummedAddress
-    if (!result) {
-      try {
-        result = getAddress(address)
-      } catch {
-        result = null
-      }
-    }
-    return result
-  }, [address])
-
-  return (
-    <MenuFlyout>
-      {potentialChecksummedAddress ? (
-        <TouchableArea onPress={() => handleSelectAddress(potentialChecksummedAddress)}>
-          <Text variant="body2">{potentialChecksummedAddress}</Text>
-        </TouchableArea>
-      ) : (
-        <Text variant="body2" color="$neutral2">
-          {t('position.addingHook.invalidAddress')}
-        </Text>
-      )}
-    </MenuFlyout>
-  )
-}
 
 export function AddHook() {
   const { t } = useTranslation()
 
-  const [isFocusing, setFocus] = useState(false)
-  const handleFocus = useCallback((focus: boolean) => setFocus(focus), [])
-
-  const inputWrapperNode = useRef<HTMLDivElement | null>(null)
-  useOnClickOutside({
-    node: inputWrapperNode,
-    handler: isFocusing ? () => handleFocus(false) : undefined,
-  })
-
-  const [hookModalOpen, setHookModalOpen] = useState(false)
-
   const { hook: initialHook } = useLiquidityUrlState()
   const {
     positionState: { hook, protocolVersion },
+    currencies,
     setPositionState,
+    setHookSearchModalOpen,
+    selectedHookEntry,
+    setSelectedHookEntry,
   } = useCreateLiquidityContext()
-  const [hookInputEnabled, setHookInputEnabled] = useState(!!hook)
-  const [hookValue, setHookValue] = useState(hook ?? '')
+  // Hooks are chain-specific: use the chain of the tokens the user has selected, not the app-level chain
+  const chainId = (currencies.display.TOKEN0?.chainId ?? currencies.display.TOKEN1?.chainId) as
+    | UniverseChainId
+    | undefined
 
-  const onSelectHook = useCallback(
-    (value: string | undefined) => {
-      setPositionState((state) => ({
-        ...state,
-        hook: value,
-        userApprovedHook: value,
-        fee: undefined,
-      }))
-    },
-    [setPositionState],
-  )
+  // Resolve the hook address against the session-cached hook registry (one cross-chain fetch,
+  // then synchronous map lookups) instead of issuing a per-address backend query. Deferred until
+  // a hook is actually set so merely mounting AddHook doesn't fetch the registry.
+  const hookRegistryMap = useHookRegistryMap({ enabled: !!hook || !!initialHook })
+  const registryHookEntry =
+    hook && chainId ? hookRegistryMap?.get(getHookRegistryKey({ chainId, hookAddress: hook })) : undefined
+  const hookEntry = selectedHookEntry ?? registryHookEntry
 
   useEffect(() => {
     if (initialHook && protocolVersion === ProtocolVersion.V4) {
@@ -116,133 +46,84 @@ export function AddHook() {
         ...state,
         hook: initialHook,
       }))
-      setHookInputEnabled(true)
     }
   }, [initialHook, protocolVersion, setPositionState])
 
   const onClearHook = useCallback(() => {
-    setHookInputEnabled(false)
-    setHookValue('')
-    onSelectHook(undefined)
-    setPositionState((state) => ({ ...state, fee: undefined }))
-  }, [onSelectHook, setPositionState])
+    setSelectedHookEntry(undefined)
+    setPositionState((state) => ({ ...state, hook: undefined, userApprovedHook: undefined, fee: undefined }))
+  }, [setSelectedHookEntry, setPositionState])
 
-  // In the case that the user clears a hook that was filled in from a url
-  // this ensures the input is cleared again
-  const previousHook = usePrevious(hook)
-  useEffect(() => {
-    if (previousHook && !hook) {
-      onClearHook()
-    }
-  }, [hook, onClearHook, previousHook])
-
-  if (hookInputEnabled) {
-    const showFlyout = isFocusing && hookValue
-
+  if (hook) {
     return (
-      <>
-        {hookModalOpen && (
-          // intentionally only render this when the value is true to ensure that the address is valid.
-          <HookModal
-            isOpen={hookModalOpen}
-            address={hookValue}
-            onClose={() => setHookModalOpen(false)}
-            onClearHook={onClearHook}
-            onContinue={() => onSelectHook(hookValue)}
+      <Flex
+        row
+        alignItems="center"
+        backgroundColor="$surface2"
+        borderRadius="$rounded16"
+        py="$padding12"
+        px="$padding16"
+        gap="$gap12"
+      >
+        <TouchableArea onPress={() => setHookSearchModalOpen(true)} flex={1}>
+          <HookCard
+            address={hook}
+            name={hookEntry?.name}
+            chain={hookEntry?.chain}
+            chainId={isUniverseChainId(hookEntry?.chainId) ? hookEntry.chainId : chainId}
+            verified={hookEntry?.verifiedSource}
           />
-        )}
-        {hook ? (
-          <Flex row alignItems="center" gap="$spacing12">
-            <TouchableArea
-              onPress={() => {
-                setHookModalOpen(true)
-              }}
-            >
-              <Flex
-                row
-                alignItems="center"
-                backgroundColor="$surface3"
-                borderRadius="$rounded12"
-                gap="$gap8"
-                py="$padding8"
-                px="$padding12"
-              >
-                <DocumentList size="$icon.20" color="$neutral1" />
-                <Text variant="buttonLabel3">{shortenAddress({ address: hook })}</Text>
-              </Flex>
-            </TouchableArea>
-            <TouchableArea
-              onPress={(e) => {
-                e.preventDefault()
-                onClearHook()
-              }}
-            >
-              <Text variant="buttonLabel4" color="$neutral2">
-                {t('common.clear')}
-              </Text>
-            </TouchableArea>
-          </Flex>
-        ) : (
-          <Flex ref={inputWrapperNode} row gap="$spacing4">
-            <TextInput
-              autoFocus
-              placeholder={t('liquidity.hooks.address.input')}
-              autoCapitalize="none"
-              color="$neutral1"
-              fontFamily="$subHeading"
-              fontSize={fonts.body2.fontSize}
-              fontWeight={fonts.body2.fontWeight}
-              lineHeight={24}
-              maxLength={42}
-              numberOfLines={1}
-              px="$spacing16"
-              py={5}
-              returnKeyType="done"
-              width="100%"
-              borderWidth={1.5}
-              borderColor="$neutral3"
-              borderRadius="$rounded12"
-              focusStyle={{
-                borderColor: '$neutral3',
-              }}
-              hoverStyle={{
-                borderColor: '$neutral3',
-              }}
-              value={hookValue}
-              onChangeText={setHookValue}
-              onFocus={() => handleFocus(true)}
-            />
-            <IconButton
-              size="xsmall"
-              emphasis="secondary"
-              onPress={() => {
-                setHookInputEnabled(false)
-                setHookValue('')
-              }}
-              icon={<X />}
-            />
-            {showFlyout && (
-              <AutocompleteFlyout
-                address={hookValue}
-                handleSelectAddress={(checksummedAddress: string) => {
-                  setHookValue(checksummedAddress)
-                  setHookModalOpen(true)
-                }}
-              />
-            )}
-          </Flex>
-        )}
-      </>
+        </TouchableArea>
+        <TouchableArea
+          testID={TestID.HookClearButton}
+          onPress={(e) => {
+            e.preventDefault()
+            onClearHook()
+          }}
+        >
+          <X size="$icon.20" color="$neutral3" />
+        </TouchableArea>
+      </Flex>
     )
   }
 
   return (
-    <AdvancedButton
-      title={t('position.addHook')}
-      Icon={DocumentList}
-      onPress={() => setHookInputEnabled(true)}
-      tooltipText={t('position.addHook.tooltip')}
-      elementName={ElementName.AddHook}
-    />
+    <Flex
+      testID={TestID.HookAddButton}
+      row
+      alignItems="center"
+      justifyContent="space-between"
+      backgroundColor="$surface2"
+      borderRadius="$rounded16"
+      py="$padding12"
+      px="$padding16"
+      gap="$gap12"
+    >
+      <Flex flex={1}>
+        <Flex row alignItems="center" gap="$gap4">
+          <Text variant="body2" color="$neutral1">
+            {t('position.addHook')}
+          </Text>
+          <Text variant="body2" color="$neutral3">
+            {t('common.optional')}
+          </Text>
+        </Flex>
+        <Text variant="body3" color="$neutral2">
+          {t('position.addHook.subtitle')}
+        </Text>
+      </Flex>
+      <Trace logPress element={ElementName.AddHook}>
+        <Button
+          size="xsmall"
+          emphasis="secondary"
+          fill={false}
+          icon={<Search size="$icon.16" />}
+          testID={TestID.HookSelectButton}
+          onPress={() => setHookSearchModalOpen(true)}
+        >
+          {t('common.button.search')}
+        </Button>
+      </Trace>
+    </Flex>
   )
 }

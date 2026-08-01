@@ -1,3 +1,4 @@
+import { PROD_ENTRY_GATEWAY_API_BASE_URL, STAGING_ENTRY_GATEWAY_API_BASE_URL } from '@universe/api'
 import { Environment } from '@universe/config'
 import { auctionImageHandler } from 'functions/api/image/auctions'
 import { poolImageHandler } from 'functions/api/image/pools'
@@ -64,10 +65,11 @@ function withFrameProtection(res: Response): Response {
 }
 
 // ── Shared constants ─────────────────────────────────────────────────
+// Development deliberately targets the staging upstream (no dedicated dev deployment here).
 export const ENTRY_GATEWAY_URLS = {
-  development: 'https://entry-gateway.backend-staging.api.uniswap.org',
-  staging: 'https://entry-gateway.backend-staging.api.uniswap.org',
-  production: 'https://entry-gateway.backend-prod.api.uniswap.org',
+  development: STAGING_ENTRY_GATEWAY_API_BASE_URL,
+  staging: STAGING_ENTRY_GATEWAY_API_BASE_URL,
+  production: PROD_ENTRY_GATEWAY_API_BASE_URL,
 } as const
 
 // Statsig proxy via Cloudflare gateway — the URL is constant for the web app

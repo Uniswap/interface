@@ -177,7 +177,7 @@ export function Bids(): JSX.Element {
               allBidsExited
                 ? t('toucan.auction.myBids.failedToLaunch.description.withdrawn')
                 : t('toucan.auction.myBids.failedToLaunch.description', {
-                    token: auctionDetails?.token?.currency.symbol ?? auctionDetails?.tokenSymbol,
+                    token: auctionDetails?.token?.currency.symbol ?? auctionDetails?.tokenSymbol ?? t('common.token'),
                   })
             }
           />

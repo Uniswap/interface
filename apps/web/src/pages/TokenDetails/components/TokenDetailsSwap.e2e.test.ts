@@ -53,6 +53,9 @@ test.describe(
       await page.getByTestId('token-option-1-USDT').first().click()
 
       await page.getByTestId(OUTPUT_TOKEN_LABEL).click()
+      // necessary to guarantee token option shows up in DOM bc of virtualized token selector list
+      // scoped by placeholder: the selector's network filter search shares this test ID
+      await page.getByTestId(TestID.ExploreSearchInput).and(page.getByPlaceholder('Search tokens')).fill('WBTC')
       // oxlint-disable-next-line eslint-js/no-restricted-syntax
       await page.getByTestId('token-option-1-WBTC').first().click()
 

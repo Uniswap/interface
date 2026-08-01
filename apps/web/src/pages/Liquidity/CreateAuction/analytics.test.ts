@@ -76,7 +76,7 @@ describe('getAuctionDetailsInfoEnteredProperties', () => {
     expect(props.token_source).toBe('new')
     expect(props.floor_price).toBe('0.1')
     expect(props.floor_price_usd).toBeCloseTo(0.2)
-    expect(props.raise_currency).toBe('ETH')
+    expect(props.raise_currency).toBe('NATIVE')
     expect(props.raise_currency_address).toBe('0xRaise')
     expect(props.max_fdv).toBe(1000)
     expect(props.max_fdv_usd).toBe(2000)

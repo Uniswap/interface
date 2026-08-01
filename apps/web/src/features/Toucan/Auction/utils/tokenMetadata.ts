@@ -1,6 +1,50 @@
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { AuctionMetadataOverride } from '~/features/Toucan/Config/config'
 
+/**
+ * Whether indexed token metadata is trustworthy enough to drive display math.
+ *
+ * On some chains the backend can return corrupt metadata for launched tokens
+ * (decimals=0 together with an empty name and symbol) while ingestion is broken.
+ * Feeding decimals=0 into formatUnits/Q96 scaling renders wildly mis-scaled
+ * values (e.g. a raw un-scaled total supply), so that signature is treated as
+ * "not loaded yet". A legitimate 0-decimals token keeps its real name/symbol
+ * and still passes this check — we never assume a decimals value, since the
+ * token factory is permissionless and tokens can have unusual decimals.
+ */
+export function isUsableAuctionTokenMetadata({
+  decimals,
+  symbol,
+  name,
+}: {
+  decimals: number | undefined
+  symbol: string | undefined
+  name: string | undefined
+}): boolean {
+  if (decimals === undefined) {
+    return false
+  }
+  if (decimals === 0 && !symbol && !name) {
+    return false
+  }
+  return true
+}
+
+/**
+ * Resolves the auction token decimals used by formatting/scale math.
+ *
+ * Returns undefined while the token metadata is missing or corrupt (see
+ * isUsableAuctionTokenMetadata) — callers must render a loading/fallback state
+ * instead of assuming a value like 18.
+ */
+export function getAuctionTokenDecimals(token: CurrencyInfo | null | undefined): number | undefined {
+  if (!token) {
+    return undefined
+  }
+  const { decimals, symbol, name } = token.currency
+  return isUsableAuctionTokenMetadata({ decimals, symbol, name }) ? decimals : undefined
+}
+
 // X handles are 1-15 chars, alphanumeric or underscore. Validating before building the
 // URL prevents a malformed value (e.g. `intent/follow?screen_name=...`) from resolving to
 // an arbitrary x.com path under the "Twitter" badge, without relying on backend moderation.

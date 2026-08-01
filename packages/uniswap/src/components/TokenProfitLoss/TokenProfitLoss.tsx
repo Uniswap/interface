@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, Text } from 'ui/src'
+import { type ColorTokens, Flex, Text } from 'ui/src'
 import { PnlInfoTrigger } from 'uniswap/src/components/ProfitLoss/PnlInfoTrigger'
 import { ProfitLossRow } from 'uniswap/src/components/ProfitLoss/ProfitLossRow'
 
@@ -12,6 +12,7 @@ interface TokenProfitLossProps {
   totalReturn?: number
   isLoading?: boolean
   title?: string
+  titleColor?: ColorTokens
 }
 
 export function TokenProfitLoss({
@@ -23,6 +24,7 @@ export function TokenProfitLoss({
   totalReturn,
   isLoading,
   title,
+  titleColor = '$neutral2',
 }: TokenProfitLossProps): JSX.Element {
   const { t } = useTranslation()
 
@@ -30,7 +32,7 @@ export function TokenProfitLoss({
     <Flex gap="$gap16" width="100%">
       <Flex row justifyContent="space-between" alignItems="center">
         <Flex row alignItems="center" gap="$spacing4">
-          <Text variant="subheading2" color="$neutral2">
+          <Text variant="subheading2" color={titleColor}>
             {title ?? t('pnl.title')}
           </Text>
           <PnlInfoTrigger />

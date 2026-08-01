@@ -154,6 +154,8 @@ const FiatOnRampStack = createNativeStackNavigator<FiatOnRampStackParamList>()
 const SettingsStack = createNativeStackNavigator<SettingsStackParamList>()
 const UnitagStack = createStackNavigator<UnitagStackParamList>()
 
+const fullScreenGestureDisabledOptions = { fullScreenGestureEnabled: false }
+
 function SettingsStackGroup(): JSX.Element {
   return (
     <SettingsStack.Navigator
@@ -394,11 +396,16 @@ export function AppStackNavigator(): JSX.Element {
       <AppStack.Screen
         component={PortfolioChartDetailsScreen}
         name={MobileScreens.PortfolioChartDetails}
-        options={{ fullScreenGestureEnabled: false }}
+        options={fullScreenGestureDisabledOptions}
       />
       <AppStack.Screen component={UnitagStackNavigator} name={MobileScreens.UnitagStack} />
       <AppStack.Screen component={ExternalProfileScreen} name={MobileScreens.ExternalProfile} />
-      <AppStack.Screen component={TokenDetailsScreen} name={MobileScreens.TokenDetails} />
+      <AppStack.Screen
+        component={TokenDetailsScreen}
+        name={MobileScreens.TokenDetails}
+        // Edge-only swipe-back: full-screen gesture fights the vertical list scroll on iOS and pops back on near-vertical drags.
+        options={fullScreenGestureDisabledOptions}
+      />
       <AppStack.Screen component={PositionDetailsScreen} name={MobileScreens.PositionDetails} />
       <AppStack.Screen component={WebViewScreen} name={MobileScreens.WebView} />
       <AppStack.Screen component={SettingsStackGroup} name={MobileScreens.SettingsStack} />

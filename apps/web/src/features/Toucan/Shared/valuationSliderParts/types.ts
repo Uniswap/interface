@@ -34,7 +34,7 @@ export interface ValuationSliderProps {
   floorPriceQ96?: bigint
   /** Tick size in Q96 format */
   tickSizeQ96?: bigint
-  /** Decimals of the auction/base token (default 18) */
+  /** Decimals of the auction/base token */
   auctionTokenDecimals?: number
   /** Total supply of the auction token (raw string) for FDV calculation */
   tokenTotalSupply?: string

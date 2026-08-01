@@ -1,5 +1,9 @@
+import { isMobileApp } from '@universe/environment'
 import { put, select, takeLatest } from 'typed-redux-saga'
 import { AssetType } from 'uniswap/src/entities/assets'
+import { getEarnPlanDisplayInfo } from 'uniswap/src/features/activity/utils/getEarnPlanDisplayInfo'
+import { getIsEarnEnabled } from 'uniswap/src/features/earn/hooks/useIsEarnEnabled'
+import { getEarnSwapUpsellOutputCurrencyId } from 'uniswap/src/features/earn/swapUpsell'
 import { STALE_TRANSACTION_TIME_MS } from 'uniswap/src/features/notifications/constants'
 import { makeSelectAddressNotifications } from 'uniswap/src/features/notifications/slice/selectors'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
@@ -136,13 +140,20 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
       }),
     )
   } else if (typeInfo.type === TransactionType.Plan) {
+    const earnDisplayInfo = getEarnPlanDisplayInfo(typeInfo)
+    const inputCurrencyId = earnDisplayInfo?.currencyId ?? typeInfo.inputCurrencyId
+    const outputCurrencyId = earnDisplayInfo?.currencyId ?? typeInfo.outputCurrencyId
+    const inputCurrencyAmountRaw = earnDisplayInfo?.amountRaw ?? typeInfo.inputCurrencyAmountRaw
+    const outputCurrencyAmountRaw = earnDisplayInfo?.amountRaw ?? typeInfo.outputCurrencyAmountRaw
+
     yield* put(
       pushNotification({
         ...baseNotificationData,
-        inputCurrencyId: typeInfo.inputCurrencyId,
-        outputCurrencyId: typeInfo.outputCurrencyId,
-        inputCurrencyAmountRaw: typeInfo.inputCurrencyAmountRaw,
-        outputCurrencyAmountRaw: typeInfo.outputCurrencyAmountRaw,
+        inputCurrencyId,
+        outputCurrencyId,
+        inputCurrencyAmountRaw,
+        outputCurrencyAmountRaw,
+        earnAction: typeInfo.earnAction,
         type: AppNotificationType.Transaction,
         txType: TransactionType.Plan,
       }),
@@ -157,6 +168,67 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
       }),
     )
   }
+
+  // Only mobile renders this toast; other surfaces would queue-stall.
+  const earnSwapUpsellOutputCurrencyId = getEarnSwapUpsellNotificationOutputCurrencyId({ status, typeInfo })
+  if (
+    earnSwapUpsellOutputCurrencyId &&
+    !hasExistingEarnSwapUpsellNotification({
+      existingNotifications,
+      address: from,
+      outputCurrencyId: earnSwapUpsellOutputCurrencyId,
+      transactionId: id,
+    })
+  ) {
+    yield* put(
+      pushNotification({
+        type: AppNotificationType.EarnSwapUpsell,
+        address: from,
+        outputCurrencyId: earnSwapUpsellOutputCurrencyId,
+        swapAmountUsd: typeInfo.transactedUSDValue,
+        transactionId: id,
+      }),
+    )
+  }
+}
+
+function getEarnSwapUpsellNotificationOutputCurrencyId({
+  status,
+  typeInfo,
+}: {
+  status: TransactionStatus
+  typeInfo: TransactionDetails['typeInfo']
+}): string | undefined {
+  if (!isMobileApp || !getIsEarnEnabled()) {
+    return undefined
+  }
+
+  return getEarnSwapUpsellOutputCurrencyId({
+    status,
+    typeInfo,
+  })
+}
+
+function hasExistingEarnSwapUpsellNotification({
+  existingNotifications,
+  address,
+  outputCurrencyId,
+  transactionId,
+}: {
+  existingNotifications: AppNotification[] | undefined
+  address: Address
+  outputCurrencyId: string
+  transactionId: string
+}): boolean {
+  return (
+    existingNotifications?.some(
+      (notification) =>
+        notification.type === AppNotificationType.EarnSwapUpsell &&
+        notification.address === address &&
+        notification.outputCurrencyId === outputCurrencyId &&
+        notification.transactionId === transactionId,
+    ) ?? false
+  )
 }
 
 // oxlint-disable-next-line typescript/explicit-function-return-type

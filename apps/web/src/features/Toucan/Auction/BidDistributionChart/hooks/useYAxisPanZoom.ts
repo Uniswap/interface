@@ -30,6 +30,7 @@ export function useYAxisPanZoom<T extends NormalizedDataSlice>({
   bidTokenDecimals,
   auctionTokenDecimals,
   chartHeightPx,
+  noBidsFloorPrice,
 }: {
   normalizedData: T | null | undefined
   chartData: ProcessedChartData | null
@@ -38,6 +39,8 @@ export function useYAxisPanZoom<T extends NormalizedDataSlice>({
   bidTokenDecimals: number
   auctionTokenDecimals: number
   chartHeightPx?: number
+  /** When set (auction started, zero bids), the default view anchors the floor price near the chart bottom */
+  noBidsFloorPrice?: number
 }) {
   const { setClearingPriceZoomState, clearChartZoomCommand } = useAuctionStoreActions()
   const chartZoomCommand = useAuctionStore((state) => state.chartZoomCommand)
@@ -110,8 +113,9 @@ export function useYAxisPanZoom<T extends NormalizedDataSlice>({
       bars: chartData?.bars,
       yPanOffset,
       yZoomLevel,
+      noBidsFloorPrice,
     })
-  }, [normalizedData, chartData?.concentration, chartData?.bars, yPanOffset, yZoomLevel])
+  }, [normalizedData, chartData?.concentration, chartData?.bars, yPanOffset, yZoomLevel, noBidsFloorPrice])
 
   const panBounds = useMemo(() => {
     if (!chartData || !normalizedData) {
@@ -213,11 +217,12 @@ export function useYAxisPanZoom<T extends NormalizedDataSlice>({
         bars: chartData?.bars,
         yPanOffset: 0,
         yZoomLevel: 1,
+        noBidsFloorPrice,
       })
       const baseMidpoint = (view.yMin + view.yMax) / 2
       setYPanOffset(targetPrice - baseMidpoint)
     },
-    [normalizedData, chartData?.concentration, chartData?.bars],
+    [normalizedData, chartData?.concentration, chartData?.bars, noBidsFloorPrice],
   )
 
   return { pannedNormalizedData, groupedBars, tickSizeDecimal, chartWheelRef, panToPrice }

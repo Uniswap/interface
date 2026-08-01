@@ -37,14 +37,21 @@ import { buildActivityRowFragments } from '~/pages/Portfolio/Activity/ActivityTa
 interface ActivityAmountCellProps {
   transaction: TransactionDetails
   variant?: 'full' | 'compact'
+  isEarnActivityDisplayEnabled?: boolean
 }
 
 // oxlint-disable-next-line complexity
-function ActivityAmountCellInner({ transaction, variant = 'full' }: ActivityAmountCellProps) {
+function ActivityAmountCellInner({
+  transaction,
+  variant = 'full',
+  isEarnActivityDisplayEnabled = true,
+}: ActivityAmountCellProps) {
   const formatter = useLocalizationContext()
   const { t } = useTranslation()
   const { chainId } = transaction
-  const fragments = buildActivityRowFragments(transaction)
+  const fragments = buildActivityRowFragments(transaction, {
+    isEarnActivityDisplayEnabled,
+  })
   const { amount, protocolInfo } = fragments
 
   // Hook up currency info based on amount model
@@ -179,7 +186,14 @@ function ActivityAmountCellInner({ transaction, variant = 'full' }: ActivityAmou
   }
 
   // Get transaction type label for compact variant
-  const typeLabel = variant === 'compact' ? getTransactionTypeLabel(transaction, t) : ''
+  const typeLabel =
+    variant === 'compact'
+      ? getTransactionTypeLabel({
+          transaction,
+          t,
+          isEarnActivityDisplayEnabled,
+        })
+      : ''
 
   switch (amount.kind) {
     case 'pair': {
@@ -194,7 +208,11 @@ function ActivityAmountCellInner({ transaction, variant = 'full' }: ActivityAmou
         return (
           <CompactLayout
             typeLabel={typeLabel}
-            logo={createSplitLogo({ chainId, inputCurrencyInfo, outputCurrencyInfo })}
+            logo={createSplitLogo({
+              chainId,
+              inputCurrencyInfo,
+              outputCurrencyInfo,
+            })}
             amountText={formatCompactAmountText({
               inputAmount: inputAmountDisplay,
               inputSymbol: inputCurrencyInfo?.currency.symbol,
@@ -306,7 +324,11 @@ function ActivityAmountCellInner({ transaction, variant = 'full' }: ActivityAmou
         return (
           <CompactLayout
             typeLabel={typeLabel}
-            logo={createSplitLogo({ chainId, inputCurrencyInfo: currency0Info, outputCurrencyInfo: currency1Info })}
+            logo={createSplitLogo({
+              chainId,
+              inputCurrencyInfo: currency0Info,
+              outputCurrencyInfo: currency1Info,
+            })}
             amountText={formatCompactAmountText({
               inputAmount: currency0FormattedData.amount,
               inputSymbol: currency0Info?.currency.symbol,
@@ -359,6 +381,11 @@ function ActivityAmountCellInner({ transaction, variant = 'full' }: ActivityAmou
 }
 
 export const ActivityAmountCell = memo(ActivityAmountCellInner, (prev, next) => {
-  return prev.transaction.typeInfo === next.transaction.typeInfo && prev.transaction.status === next.transaction.status
+  return (
+    prev.transaction.typeInfo === next.transaction.typeInfo &&
+    prev.transaction.status === next.transaction.status &&
+    prev.variant === next.variant &&
+    prev.isEarnActivityDisplayEnabled === next.isEarnActivityDisplayEnabled
+  )
 })
 ActivityAmountCell.displayName = 'ActivityAmountCell'

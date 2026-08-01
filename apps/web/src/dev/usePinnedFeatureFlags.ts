@@ -3,11 +3,16 @@
  * Persisted in localStorage via a small Zustand store.
  */
 
-import { useCallback } from 'react'
+import { WEB_FEATURE_FLAG_NAMES } from '@universe/gating'
+import { useCallback, useMemo } from 'react'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 const STORAGE_KEY = 'uniswap_dev_pinned_gating'
+
+// Gate names no longer present here (e.g. the flag was removed from packages/gating/src/flags.ts)
+// are dropped from the pinned list below, since they no longer appear in the feature flag modal either.
+const KNOWN_FLAG_NAMES = new Set(WEB_FEATURE_FLAG_NAMES.values())
 
 function validatePinned(parsed: unknown): string[] {
   if (!Array.isArray(parsed) || !parsed.every((x) => typeof x === 'string')) {
@@ -118,9 +123,11 @@ export function usePinnedFeatureFlags(): {
   unpinFlag: (gateName: string) => void
   isPinned: (gateName: string) => boolean
 } {
-  const pinnedFlags = usePinnedGatingStore((state) => state.pinnedFlags)
+  const rawPinnedFlags = usePinnedGatingStore((state) => state.pinnedFlags)
   const pinFlag = usePinnedGatingStore((state) => state.pinFlag)
   const unpinFlag = usePinnedGatingStore((state) => state.unpinFlag)
+
+  const pinnedFlags = useMemo(() => rawPinnedFlags.filter((name) => KNOWN_FLAG_NAMES.has(name)), [rawPinnedFlags])
 
   const isPinned = useCallback((gateName: string) => pinnedFlags.includes(gateName), [pinnedFlags])
 

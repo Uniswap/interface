@@ -1,0 +1,22 @@
+{
+  "requestId": "e2e-replay-fixture",
+  "token0": {
+    "tokenAddress": "0x0000000000000000000000000000000000000000",
+    "amount": "610000000000000"
+  },
+  "token1": {
+    "tokenAddress": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+    "amount": "1000000"
+  },
+  "increase": {
+    "to": "0xbD216513d74C8cf14cf4747E6AaA6420FF64ee9e",
+    "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "data": "0x",
+    "value": "610000000000000",
+    "chainId": 1,
+    "gasLimit": "900000",
+    "maxFeePerGas": "2000000000",
+    "maxPriorityFeePerGas": "1000000000"
+  },
+  "gasFee": "540000000000000"
+}

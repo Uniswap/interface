@@ -10,7 +10,13 @@ import type {
   WalletBalance,
 } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
 import { createDataApiServiceClient, getGetWalletBalancesQueryOptions, type WithoutWalletAccount } from '@universe/api'
-import { FeatureFlags, useFeatureFlagWithExposureLoggingDisabled } from '@universe/gating'
+import {
+  FeatureFlags,
+  getFeatureFlag,
+  getFeatureFlagWithExposureLoggingDisabled,
+  useFeatureFlag,
+  useFeatureFlagWithExposureLoggingDisabled,
+} from '@universe/gating'
 import { useMemo } from 'react'
 import { entryGatewayPostTransport } from 'uniswap/src/data/rest/base'
 import { type PortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'
@@ -24,14 +30,33 @@ export enum PortfolioBalancePart {
   Total = 'total',
   Tokens = 'tokens',
   Pools = 'pools',
+  Earn = 'earn',
 }
 
-/** All three parts materialized in one pass, for callers that need them together. */
+/** All parts materialized in one pass, for callers that need them together. */
 export type PortfolioBalanceBreakdown = {
   total: PortfolioTotalValue
   tokens: PortfolioTotalValue
   pools: PortfolioTotalValue
   failedChainIds: number[]
+  earn: PortfolioTotalValue
+}
+
+function toIncludeCategories({
+  portfolioPoolsBalancesEnabled,
+  earnEnabled,
+}: {
+  portfolioPoolsBalancesEnabled: boolean
+  earnEnabled: boolean
+}): WalletBalanceCategory[] {
+  const categories: WalletBalanceCategory[] = []
+  if (portfolioPoolsBalancesEnabled) {
+    categories.push(WalletBalanceCategory.POOLS)
+  }
+  if (earnEnabled) {
+    categories.push(WalletBalanceCategory.EARN_VAULTS)
+  }
+  return categories
 }
 
 /**
@@ -39,12 +64,21 @@ export type PortfolioBalanceBreakdown = {
  * the optimistic cache writers use this so every caller produces the same query key.
  */
 export function useWalletBalancesIncludeCategories(): WalletBalanceCategory[] {
-  // Read without logging; the pools exposure is logged only where the feature is actually shown (see usePoolsTabVisibility).
+  // Pools is read without logging; its exposure is logged only where the feature is actually shown.
   const portfolioPoolsBalancesEnabled = useFeatureFlagWithExposureLoggingDisabled(FeatureFlags.PortfolioPoolsBalances)
+  const earnEnabled = useFeatureFlag(FeatureFlags.Earn)
   return useMemo(
-    () => (portfolioPoolsBalancesEnabled ? [WalletBalanceCategory.POOLS] : []),
-    [portfolioPoolsBalancesEnabled],
+    () => toIncludeCategories({ portfolioPoolsBalancesEnabled, earnEnabled }),
+    [portfolioPoolsBalancesEnabled, earnEnabled],
   )
+}
+
+/** Non-hook variant of {@link useWalletBalancesIncludeCategories} for imperative request paths. */
+export function getWalletBalancesIncludeCategories(): WalletBalanceCategory[] {
+  return toIncludeCategories({
+    portfolioPoolsBalancesEnabled: getFeatureFlagWithExposureLoggingDisabled(FeatureFlags.PortfolioPoolsBalances),
+    earnEnabled: getFeatureFlag(FeatureFlags.Earn),
+  })
 }
 
 type PortfolioValueSlice = {
@@ -57,6 +91,7 @@ type PortfolioValueSlice = {
  */
 const BREAKDOWN_SLICE_BY_CATEGORY: Partial<Record<WalletBalanceCategory, PortfolioValueSlice>> = {
   [WalletBalanceCategory.POOLS]: 'pools',
+  [WalletBalanceCategory.EARN_VAULTS]: 'earn',
 }
 
 /**
@@ -90,6 +125,29 @@ export function getUnavailableCategories({
     const slice = BREAKDOWN_SLICE_BY_CATEGORY[category]
     return slice !== undefined && breakdown[slice].balanceUSD === undefined
   })
+}
+
+/**
+ * Total value summed from the balance slices the backend returned (tokens plus any requested category
+ * that resolved), skipping the unavailable ones — the Total fallback when a requested category is
+ * missing. The period change is summed only when every included slice reports it, with the percent
+ * derived from that sum; otherwise both are `undefined`.
+ */
+export function sumAvailableBalanceSlices(breakdown: PortfolioBalanceBreakdown): PortfolioTotalValue {
+  const availableSlices = [breakdown.tokens, breakdown.pools, breakdown.earn].filter(
+    (slice) => slice.balanceUSD !== undefined,
+  )
+  if (availableSlices.length === 0) {
+    return { balanceUSD: undefined, percentChange: undefined, absoluteChangeUSD: undefined }
+  }
+  const balanceUSD = availableSlices.reduce((sum, slice) => sum + (slice.balanceUSD ?? 0), 0)
+  const absoluteChangeUSD = availableSlices.every((slice) => slice.absoluteChangeUSD !== undefined)
+    ? availableSlices.reduce((sum, slice) => sum + (slice.absoluteChangeUSD ?? 0), 0)
+    : undefined
+  const startingValue = absoluteChangeUSD === undefined ? undefined : balanceUSD - absoluteChangeUSD
+  const percentChange =
+    absoluteChangeUSD === undefined || !startingValue ? undefined : (absoluteChangeUSD / startingValue) * 100
+  return { balanceUSD, percentChange, absoluteChangeUSD }
 }
 
 export type GetWalletBalancesInput<TSelectData = PlainMessage<GetWalletBalancesResponse>> = {
@@ -180,6 +238,13 @@ export const selectPortfolioPools = (
   return balance ? mapBalanceComponent(balance.pools) : undefined
 }
 
+export const selectPortfolioEarn = (
+  data: PlainMessage<GetWalletBalancesResponse> | undefined,
+): PortfolioTotalValue | undefined => {
+  const balance = getBalance(data)
+  return balance ? mapBalanceComponent(balance.earn) : undefined
+}
+
 export const selectPortfolioBalanceBreakdown = (
   data: PlainMessage<GetWalletBalancesResponse> | undefined,
 ): PortfolioBalanceBreakdown | undefined => {
@@ -190,6 +255,7 @@ export const selectPortfolioBalanceBreakdown = (
         tokens: mapBalanceComponent(balance.tokens),
         pools: mapBalanceComponent(balance.pools),
         failedChainIds: balance.failedChainIds,
+        earn: mapBalanceComponent(balance.earn),
       }
     : undefined
 }
@@ -203,6 +269,8 @@ export function selectorForPart(
       return selectPortfolioTokens
     case PortfolioBalancePart.Pools:
       return selectPortfolioPools
+    case PortfolioBalancePart.Earn:
+      return selectPortfolioEarn
     case PortfolioBalancePart.Total:
     default:
       return selectPortfolioTotal

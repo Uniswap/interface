@@ -42,7 +42,9 @@ import { isOutOfRange } from '~/features/Liquidity/utils/priceRangeInfo'
 export const CHART_HEIGHT = 52
 export const CHART_WIDTH = 224
 const X_AXIS_HEIGHT = 28
-const Y_AXIS_WIDTH = 40
+// Reserved width for the right-side price axis label pane. Wide enough for subscript tick
+// labels (e.g. 0.0₄59) so they don't clip at the SVG's right edge.
+const Y_AXIS_WIDTH = 60
 const LIQUIDITY_BARS_WIDTH = 120
 
 const pulseKeyframe = `

@@ -8,6 +8,7 @@ import {
   AuctionInsufficientBalanceError,
   AuctionStartTimePassedError,
   AuctionWindowTooShortError,
+  AuctionXWalletMismatchError,
 } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionSubmit'
 
 interface LaunchAuctionErrorModalProps {
@@ -17,6 +18,11 @@ interface LaunchAuctionErrorModalProps {
   error?: Error
   onClose: () => void
   onRetry: () => void
+  /**
+   * Returns to the token-info step. Used as the primary action for the X wallet-mismatch error,
+   * where retrying can only fail again — the fix is re-verifying X with the connected wallet.
+   */
+  onEditTokenInfo: () => void
 }
 
 export function LaunchAuctionErrorModal({
@@ -25,8 +31,11 @@ export function LaunchAuctionErrorModal({
   error,
   onClose,
   onRetry,
+  onEditTokenInfo,
 }: LaunchAuctionErrorModalProps): JSX.Element {
   const { t } = useTranslation()
+
+  const isXWalletMismatch = error instanceof AuctionXWalletMismatchError
 
   // Known pre-submission errors get specific, actionable copy. Backend input-validation failures
   // (e.g. an unsupported fee tier) carry a meaningful reason worth surfacing verbatim; everything
@@ -40,9 +49,11 @@ export function LaunchAuctionErrorModal({
         ? t('toucan.createAuction.launchError.insufficientBalance', { tokenSymbol })
         : error instanceof AuctionWindowTooShortError
           ? t('toucan.createAuction.launchError.windowTooShort', { tokenSymbol })
-          : validationReason
-            ? t('toucan.createAuction.launchError.withReason', { tokenSymbol, reason: validationReason })
-            : t('toucan.createAuction.launchError.description', { tokenSymbol, reason: genericReason })
+          : isXWalletMismatch
+            ? t('toucan.createAuction.launchError.xWalletMismatch', { tokenSymbol })
+            : validationReason
+              ? t('toucan.createAuction.launchError.withReason', { tokenSymbol, reason: validationReason })
+              : t('toucan.createAuction.launchError.description', { tokenSymbol, reason: genericReason })
 
   return (
     <Dialog
@@ -59,10 +70,17 @@ export function LaunchAuctionErrorModal({
         text: t('common.button.cancel'),
         onPress: onClose,
       }}
-      primaryButton={{
-        text: t('common.button.tryAgain'),
-        onPress: onRetry,
-      }}
+      primaryButton={
+        isXWalletMismatch
+          ? {
+              text: t('common.button.goBack'),
+              onPress: onEditTokenInfo,
+            }
+          : {
+              text: t('common.button.tryAgain'),
+              onPress: onRetry,
+            }
+      }
     />
   )
 }

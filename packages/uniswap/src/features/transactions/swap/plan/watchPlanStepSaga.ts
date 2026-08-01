@@ -66,11 +66,15 @@ export function* watchPlanStep(params: WatchPlanStepParams): SagaGenerator<Watch
     const tradeStatusResponse =
       attempt === 0 && initialPlanResponse
         ? initialPlanResponse
-        : yield* call(TradingApiSessionClient.getExistingPlan, { planId })
+        : yield* call(TradingApiSessionClient.getExistingPlan, {
+            planId,
+          })
 
     const updatedPlanTx = extractPlanResponseDetails(tradeStatusResponse)
     if (!updatedPlanTx) {
-      throw new Error(`Failed to extract plan response details for plan`, { cause: { planId } })
+      throw new Error(`Failed to extract plan response details for plan`, {
+        cause: { planId },
+      })
     }
 
     const latestTargetStep = tradeStatusResponse.steps.find(
@@ -93,11 +97,15 @@ export function* watchPlanStep(params: WatchPlanStepParams): SagaGenerator<Watch
       // Spawn balance refetch so it runs in the background (balances not needed for plan execution, just for UI display)
       yield* spawn(refetchBalancesForStep, {
         planTransaction: updatedPlanTx,
+        planStep: latestTargetStep,
         stepIndex: targetStepIndex,
         address,
       })
 
-      return { steps: transformSteps(tradeStatusResponse.steps), planResponse: tradeStatusResponse }
+      return {
+        steps: transformSteps(tradeStatusResponse.steps),
+        planResponse: tradeStatusResponse,
+      }
     }
 
     attempt++
@@ -131,10 +139,12 @@ export function* watchPlanStep(params: WatchPlanStepParams): SagaGenerator<Watch
  */
 function* refetchBalancesForStep({
   planTransaction,
+  planStep,
   stepIndex,
   address,
 }: {
   planTransaction: TransactionDetails
+  planStep: TradingApi.PlanStep
   stepIndex: number
   address: Address
 }): Generator {
@@ -142,7 +152,15 @@ function* refetchBalancesForStep({
     return
   }
 
-  const step = planTransaction.typeInfo.stepDetails[stepIndex]
+  const proofId = planStep.proof?.txHash ?? planStep.proof?.orderId
+  const step =
+    planTransaction.typeInfo.stepDetails.find((stepDetails) => {
+      if (stepDetails.typeInfo.type !== TransactionType.Swap && stepDetails.typeInfo.type !== TransactionType.Bridge) {
+        return false
+      }
+      return stepDetails.typeInfo.stepIndex === stepIndex
+    }) ??
+    (proofId ? planTransaction.typeInfo.stepDetails.find((stepDetails) => stepDetails.hash === proofId) : undefined)
   if (step?.typeInfo.type === TransactionType.Swap || step?.typeInfo.type === TransactionType.Bridge) {
     yield* refetchQueriesViaOnchainOverrideVariant({
       transaction: step,

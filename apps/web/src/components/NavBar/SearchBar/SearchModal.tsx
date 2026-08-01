@@ -1,6 +1,5 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { memo, useCallback, useEffect, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Flex, type Input, Text, TouchableArea, useMedia, useScrollbarStyles, useSporeColors } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useUpdateScrollLock } from 'uniswap/src/components/modals/ScrollLock'
@@ -58,9 +57,14 @@ function useHoverCardWrapper({ containerWidth, onNavigate }: { containerWidth: n
   )
 }
 
-export const SearchModal = memo(function SearchModalInner(): JSX.Element {
+export const SearchModal = memo(function SearchModalInner({
+  isAuctionSearchEnabled,
+  placeholder,
+}: {
+  isAuctionSearchEnabled: boolean
+  placeholder: string
+}): JSX.Element {
   const colors = useSporeColors()
-  const { t } = useTranslation()
   const media = useMedia()
   const scrollbarStyles = useScrollbarStyles()
 
@@ -82,6 +86,16 @@ export const SearchModal = memo(function SearchModalInner(): JSX.Element {
   }, [isModalOpen])
 
   const [activeTab, setActiveTab] = useState<SearchTab>(SearchTab.All)
+  const searchTabs = useMemo(
+    () => (isAuctionSearchEnabled ? WEB_SEARCH_TABS : WEB_SEARCH_TABS.filter((tab) => tab !== SearchTab.Auctions)),
+    [isAuctionSearchEnabled],
+  )
+
+  useEffect(() => {
+    if (!searchTabs.includes(activeTab)) {
+      setActiveTab(SearchTab.All)
+    }
+  }, [activeTab, searchTabs])
 
   const { onChangeChainFilter, onChangeText, searchFilter, chainFilter, parsedChainFilter, parsedSearchFilter } =
     useFilterCallbacks(null, ModalName.Search)
@@ -113,7 +127,8 @@ export const SearchModal = memo(function SearchModalInner(): JSX.Element {
   const wrapWithHoverCard = useHoverCardWrapper({ containerWidth: searchModalWidth, onNavigate: onSelect })
   const rowWrapper = isDataLivelinessUIEnabled && !media.xl ? wrapWithHoverCard : undefined
 
-  // Tamagui Dialog/Sheets should remove background scroll by default but does not work to disable ArrowUp/Down key scrolling
+  // Tamagui's lock doesn't block ArrowUp/Down key scrolling, so we lock scroll ourselves and disable
+  // Tamagui's own lock below (disableRemoveScroll) to avoid a stray scrollbar-gutter reservation.
   useUpdateScrollLock({ isModalOpen })
 
   return (
@@ -122,6 +137,7 @@ export const SearchModal = memo(function SearchModalInner(): JSX.Element {
       hideKeyboardOnDismiss
       hideKeyboardOnSwipeDown
       renderBehindBottomInset
+      disableRemoveScroll
       backgroundColor={colors.surface1.val}
       isModalOpen={isModalOpen}
       maxWidth={searchModalWidth}
@@ -163,7 +179,7 @@ export const SearchModal = memo(function SearchModalInner(): JSX.Element {
                 />
               </Flex>
             }
-            placeholder={t('search.input.placeholder.withWallets')}
+            placeholder={placeholder}
             px="$spacing16"
             value={searchFilter ?? ''}
             onChangeText={onChangeText}
@@ -178,7 +194,7 @@ export const SearchModal = memo(function SearchModalInner(): JSX.Element {
           />
         </Flex>
         <Flex row px="$spacing20" pt="$spacing16" pb="$spacing8" gap="$spacing16">
-          {WEB_SEARCH_TABS.map((tab) => (
+          {searchTabs.map((tab) => (
             <Trace element={ElementName.SearchTab} logPress key={tab} properties={{ search_tab: tab }}>
               <TouchableArea onPress={() => setActiveTab(tab)}>
                 <Text color={activeTab === tab ? '$neutral1' : '$neutral2'} variant="buttonLabel2">
@@ -197,6 +213,7 @@ export const SearchModal = memo(function SearchModalInner(): JSX.Element {
               debouncedSearchFilter={debouncedSearchFilter}
               searchFilter={searchFilter}
               activeTab={activeTab}
+              auctionSearchEnabled={isAuctionSearchEnabled}
               onSelect={onSelect}
               renderedInModal={false}
               rowWrapper={rowWrapper}
@@ -205,6 +222,7 @@ export const SearchModal = memo(function SearchModalInner(): JSX.Element {
             <SearchModalNoQueryList
               chainFilter={chainFilter}
               activeTab={activeTab}
+              auctionSearchEnabled={isAuctionSearchEnabled}
               onSelect={onSelect}
               renderedInModal
               rowWrapper={rowWrapper}

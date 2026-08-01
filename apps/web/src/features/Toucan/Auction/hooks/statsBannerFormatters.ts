@@ -62,9 +62,9 @@ export function computeHourlyChangePercent({
   clearingPriceDecimal: number
   changes: PlainMessage<ClearingPriceChange>[] | undefined
   bidTokenDecimals: number | undefined
-  auctionTokenDecimals: number
+  auctionTokenDecimals: number | undefined
 }): number | null {
-  if (!changes || changes.length === 0) {
+  if (auctionTokenDecimals === undefined || !changes || changes.length === 0) {
     return null
   }
   const oneHourAgo = Date.now() - ONE_HOUR_MS

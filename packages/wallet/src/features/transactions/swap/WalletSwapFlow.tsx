@@ -15,15 +15,23 @@ type WalletSwapFlowProps = Omit<SwapFlowProps, 'settings'> & {
 const SETTINGS: SwapFlowProps['settings'] = [Slippage, SwapProtection, TradeRoutingPreference, SwapDeadline]
 
 export function WalletSwapFlow(props: WalletSwapFlowProps): JSX.Element {
-  const swapHandlers = useSwapHandlers()
-
   return (
     <SwapTransactionSettingsStoreContextProvider>
       <SwapFormStoreContextProvider prefilledState={props.prefilledState} hideFooter={props.hideFooter}>
-        <SwapDependenciesStoreContextProvider swapHandlers={swapHandlers}>
-          <SwapFlow {...props} settings={SETTINGS} />
-        </SwapDependenciesStoreContextProvider>
+        <WalletSwapFlowInner {...props} />
       </SwapFormStoreContextProvider>
     </SwapTransactionSettingsStoreContextProvider>
+  )
+}
+
+// `useSwapHandlers` reads from the swap form store, so it must be called inside
+// `SwapFormStoreContextProvider` — calling it in `WalletSwapFlow` itself crashes the flow.
+function WalletSwapFlowInner(props: WalletSwapFlowProps): JSX.Element {
+  const swapHandlers = useSwapHandlers()
+
+  return (
+    <SwapDependenciesStoreContextProvider swapHandlers={swapHandlers}>
+      <SwapFlow {...props} settings={SETTINGS} />
+    </SwapDependenciesStoreContextProvider>
   )
 }

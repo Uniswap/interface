@@ -73,4 +73,13 @@ describe('ExpandoRow', () => {
 
     expect(screen.getByText(customLabel)).toBeTruthy()
   })
+
+  it('supports a larger label variant', (): void => {
+    const { rerender } = render(<ExpandoRow {...defaultProps} />)
+    const defaultLabelClass = (screen.getByTestId(TestID.ExpandoRowLabel) as unknown as HTMLElement).className
+
+    rerender(<ExpandoRow {...defaultProps} labelVariant="body2" />)
+
+    expect((screen.getByTestId(TestID.ExpandoRowLabel) as unknown as HTMLElement).className).not.toBe(defaultLabelClass)
+  })
 })

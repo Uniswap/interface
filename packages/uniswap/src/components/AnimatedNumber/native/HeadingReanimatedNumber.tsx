@@ -1,6 +1,5 @@
-import { SCREEN_WIDTH } from '@gorhom/bottom-sheet'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import type { LayoutChangeEvent } from 'react-native'
+import { Dimensions, type LayoutChangeEvent } from 'react-native'
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { Flex, Shine, useSporeColors } from 'ui/src'
 import type { AnimatedNumberProps } from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
@@ -19,9 +18,7 @@ import { isDigitChar } from 'uniswap/src/components/AnimatedNumber/utils/compute
 export const HeadingReanimatedNumber = ({
   alignRight,
   baseColor,
-  balanceChangeColor,
   chars,
-  commonPrefixLength,
   containerTestID,
   currency,
   decimalPartColor,
@@ -34,10 +31,9 @@ export const HeadingReanimatedNumber = ({
   value,
   variantFont,
   warmLoading,
-  dir,
+  tick,
   charDelays,
   charShouldAnimate,
-  animateGen,
   reduceMotion,
 }: ReanimatedNumberRenderProps &
   Pick<
@@ -50,7 +46,7 @@ export const HeadingReanimatedNumber = ({
   // Measure the available container width so the balance can scale down to fit (e.g. next to the
   // portfolio chart). This only changes on real layout changes, never per-value, so it never lags
   // behind a digit-count change.
-  const [containerWidth, setContainerWidth] = useState(SCREEN_WIDTH - SCREEN_WIDTH_BUFFER)
+  const [containerWidth, setContainerWidth] = useState(Dimensions.get('window').width - SCREEN_WIDTH_BUFFER)
   // Width contributed by non-digit characters (currency symbol, separators). Measured once per
   // unique non-digit composition, which is rare, so the synchronous content-width math below stays
   // accurate without re-measuring on every digit roll.
@@ -133,20 +129,17 @@ export const HeadingReanimatedNumber = ({
           >
             <TopAndBottomGradient height={digitHeight} />
             <CharRow
-              animateGen={animateGen}
-              balanceChangeColor={balanceChangeColor}
               baseColor={baseColor}
               charDelays={charDelays}
               chars={chars}
               charShouldAnimate={charShouldAnimate}
-              commonPrefixLength={commonPrefixLength}
               currency={currency}
               decimalPartColor={decimalPartColor}
               digitCellWidth={digitCellWidth}
               digitHeight={digitHeight}
-              dir={dir}
               reduceMotion={reduceMotion}
               shouldFadeDecimals={shouldFadeDecimals}
+              tick={tick}
               useHeadingTypography={useHeadingTypography}
               variantFont={variantFont}
             />

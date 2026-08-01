@@ -26,6 +26,9 @@
     android:taskAffinity=""
     android:excludeFromRecents="true">
 
+    <!-- PROFILING: allow Perfetto/heapprofd to attach to this release build (not debuggable; no perf cost). -->
+    <profileable android:shell="true" />
+
     <meta-data
       android:name="com.onesignal.messaging.default_notification_icon"
       android:resource="@drawable/ic_stat_onesignal_default" />

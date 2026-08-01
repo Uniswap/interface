@@ -1,8 +1,7 @@
 import { ChainedQuoteResponse, TradingApi } from '@universe/api'
-import { WalletExecutionContext } from '@universe/api/src/clients/trading/__generated__/models/WalletExecutionContext'
 import { TradingApiSessionClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiSessionClient'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { TransactionAndPlanStep } from 'uniswap/src/features/transactions/swap/plan/planStepTransformer'
+import type { TransactionAndPlanStep } from 'uniswap/src/features/transactions/swap/plan/planStepTransformer'
 import { ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isJupiter } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
@@ -72,7 +71,23 @@ export function allStepsComplete(steps: TradingApi.PlanStep[]): boolean {
   return steps.every((step) => step.status === TradingApi.PlanStepStatus.COMPLETE)
 }
 
-type PlanOperationParams = { retryConfig: RetryConfig; walletExecutionContext?: WalletExecutionContext } & (
+export function getCreatePlanRouting(routing: TradingApi.Routing): TradingApi.CreatePlanRequest.routing {
+  if (routing !== TradingApi.Routing.CHAINED) {
+    logger.error(new Error('Unsupported plan routing'), {
+      tags: { file: 'plan/utils', function: 'getCreatePlanRouting' },
+      extra: { routing },
+    })
+    throw new Error(`Unsupported plan routing: ${routing}`)
+  }
+
+  return TradingApi.CreatePlanRequest.routing.CHAINED
+}
+
+type PlanOperationParams = {
+  retryConfig: RetryConfig
+  walletExecutionContext?: TradingApi.WalletExecutionContext
+  earnIntent?: TradingApi.EarnIntent
+} & (
   | ({ inputPlanId: string } & Maybe<Pick<ChainedQuoteResponse, 'quote' | 'routing'>>)
   | ({ inputPlanId?: never } & Pick<ChainedQuoteResponse, 'quote' | 'routing'>)
 )
@@ -86,16 +101,22 @@ async function executePlanOperation(
   operation: 'get' | 'refresh',
   params: PlanOperationParams,
 ): Promise<TradingApi.PlanResponse> {
-  const { retryConfig, inputPlanId, quote, routing, walletExecutionContext } = params
+  const { retryConfig, inputPlanId, quote, routing, walletExecutionContext, earnIntent } = params
   return await retryWithBackoff({
     fn: async () => {
       if (inputPlanId !== undefined) {
+        const existingPlanRequest = { planId: inputPlanId }
         return operation === 'refresh'
-          ? await TradingApiSessionClient.refreshExistingPlan({ planId: inputPlanId })
-          : await TradingApiSessionClient.getExistingPlan({ planId: inputPlanId })
+          ? await TradingApiSessionClient.refreshExistingPlan(existingPlanRequest)
+          : await TradingApiSessionClient.getExistingPlan(existingPlanRequest)
       } else {
-        // @ts-expect-error - CHAINED is the only supported but doesn't satisfy input param type for some reason
-        return await TradingApiSessionClient.createNewPlan({ quote, routing, walletExecutionContext })
+        // Preserve quote-response earnIntent; earnPreview is display-only.
+        return await TradingApiSessionClient.createNewPlan({
+          quote,
+          routing: getCreatePlanRouting(routing),
+          walletExecutionContext,
+          earnIntent,
+        })
       }
     },
     config: retryConfig,
@@ -179,6 +200,14 @@ export type PlanProgressEstimates = {
   stepPercentageRanges: Array<{ min: number; max: number }>
 }
 
+/** Step fields needed to estimate plan progress. Satisfied by both TruncatedPlanStep and PlanStep. */
+export type PlanProgressStep = Pick<TradingApi.PlanStep, 'stepType' | 'tokenInChainId'>
+
+/** Step index that disables the progress animation. */
+export const NO_ANIMATION_INDEX = -1
+/** Index of the synthetic plan-fetch step prepended by {@link getPlanProgressEstimates}. */
+export const PLAN_FETCH_STEP_INDEX = 0
+
 /** Multiplier selected based on eyeballing the time it takes for a step to complete. */
 const STEP_WAIT_TIME_MULTIPLIER = 40
 /** Divisor selected based on eyeballing the time it takes for last step to confirm submission. */
@@ -218,7 +247,7 @@ const APPROVAL_PERMIT_STEP_TIME_MS = ONE_SECOND_MS * 1.5
  *
  * @returns The progress state object containing totalTime, stepTimings, and stepPercentageRanges.
  */
-export function getPlanProgressEstimates(steps: TradingApi.TruncatedPlanStep[]): PlanProgressEstimates {
+export function getPlanProgressEstimates(steps: readonly PlanProgressStep[]): PlanProgressEstimates {
   const stepTimings: number[] = [
     PLAN_FETCH_WAIT_TIME_MS,
     ...steps.map((step, index) => {

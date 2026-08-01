@@ -12,7 +12,7 @@ interface UsePriceOptions {
 }
 
 /**
- * Hook to get the live price for a token.
+ * Hook to get the live price for a token along with its loading status.
  * Reads from React Query cache and auto-subscribes via websocket.
  * Falls back to REST polling when WS data goes stale (if restBatcher is provided).
  *
@@ -31,7 +31,7 @@ export function usePrice(options: UsePriceOptions): { price: number | undefined;
   // When restBatcher is provided and WS is disconnected, queryFn fires as a
   // fallback. When WS is connected, refetchInterval is disabled to avoid
   // redundant REST calls.
-  const { data, isLoading } = useQuery(
+  const { data, isPending } = useQuery(
     enabled
       ? tokenPriceQueryOptions({ chainId, address, restBatcher, queryClient, getIsWsConnected })
       : queryOptions<TokenPriceData | null>({ queryKey: priceKeys.all, queryFn: skipToken, enabled: false }),
@@ -48,5 +48,9 @@ export function usePrice(options: UsePriceOptions): { price: number | undefined;
   }, [enabled, live, chainId, address, wsClient])
 
   const price: number | undefined = enabled ? (data?.price ?? undefined) : undefined
-  return { price, isLoading: enabled && isLoading }
+  // Use isPending rather than React Query's isLoading (isPending && isFetching): in the
+  // WS-only configuration (skipToken queryFn, no REST fetch) isFetching is never true, so
+  // isLoading would stay false while waiting for the first WS message. isPending correctly
+  // reports "no data yet" until the first WS/REST update settles the cache.
+  return { price, isLoading: enabled && isPending }
 }

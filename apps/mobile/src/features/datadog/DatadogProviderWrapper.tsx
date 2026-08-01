@@ -4,6 +4,7 @@ import {
   DatadogProvider,
   DdRum,
   type PartialInitializationConfiguration,
+  PropagatorType,
   SdkVerbosity,
   TrackingConsent,
   UploadFrequency,
@@ -34,6 +35,12 @@ export const MOBILE_DEFAULT_DATADOG_SESSION_SAMPLE_RATE = 10 // percent
 // https://docs.datadoghq.com/real_user_monitoring/mobile_and_tv_monitoring/react_native/advanced_configuration/#delaying-the-initialization
 const isEnabled = isDatadogEnabled()
 
+// Event type accepted by the Datadog Logs mapper, derived from the SDK config type so we avoid a deep
+// type import (the SDK's package `exports` map blocks `.../lib/typescript/types` under tsgo).
+type DatadogLogEvent = Parameters<
+  NonNullable<AutoInstrumentationConfiguration['logsConfiguration']['logEventMapper']>
+>[0]
+
 // Event mappers and feature toggles must be supplied to the DatadogProvider component (not initialize)
 // so auto-instrumentation buffers correctly before the deferred native initialization runs.
 const datadogAutoInstrumentation: AutoInstrumentationConfiguration = {
@@ -41,6 +48,10 @@ const datadogAutoInstrumentation: AutoInstrumentationConfiguration = {
     trackErrors: isEnabled,
     trackInteractions: isEnabled,
     trackResources: isEnabled,
+    firstPartyHosts: [
+      { match: 'gateway.uniswap.org', propagatorTypes: [PropagatorType.DATADOG, PropagatorType.TRACECONTEXT] },
+      { match: 'api.uniswap.org', propagatorTypes: [PropagatorType.DATADOG, PropagatorType.TRACECONTEXT] },
+    ],
     errorEventMapper: (event: ReturnType<ErrorEventMapper>): ReturnType<ErrorEventMapper> | null => {
       const ignoredErrors = getDynamicConfigValue<
         DynamicConfigs.DatadogIgnoredErrors,
@@ -60,7 +71,13 @@ const datadogAutoInstrumentation: AutoInstrumentationConfiguration = {
       return event
     },
   },
-  logsConfiguration: {},
+  // v3 only enables the native Logs feature when logsConfiguration carries a logEventMapper —
+  // Logs.enable() is gated on it (iOS DdSdkNativeInitialization.swift / Android equivalent). With an
+  // empty {}, every DdLogs.* call (including the rpcObserver "RPC response"/"RPC error" logs) silently
+  // no-ops, so RUM works but logs go dark. Passthrough mapper enables Logs without altering events.
+  logsConfiguration: {
+    logEventMapper: (logEvent: DatadogLogEvent): DatadogLogEvent => logEvent,
+  },
 }
 
 async function initializeDatadog(sessionSamplingRate: number): Promise<void> {
@@ -72,7 +89,10 @@ async function initializeDatadog(sessionSamplingRate: number): Promise<void> {
     clientToken: getConfig().datadogClientToken,
     env: getDatadogEnvironment(),
     site: 'US1',
-    trackingConsent: useDebugConfig ? TrackingConsent.GRANTED : undefined,
+    // Must be set to a concrete value: v3's CoreConfiguration runs Object.assign(this, ...rest),
+    // so an explicit `undefined` key clobbers the GRANTED default and natively resolves to
+    // TrackingConsent.PENDING — the SDK then buffers all data on-device and never uploads (DD goes dark).
+    trackingConsent: TrackingConsent.GRANTED,
     verbosity: useDebugConfig ? SdkVerbosity.DEBUG : SdkVerbosity.INFO,
     // oxlint-disable-next-line typescript/no-unnecessary-condition
     ...(localDevDatadogEnabled ? { uploadFrequency: UploadFrequency.FREQUENT, batchSize: BatchSize.SMALL } : {}),

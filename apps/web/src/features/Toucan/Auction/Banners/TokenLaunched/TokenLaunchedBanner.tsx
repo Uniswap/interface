@@ -18,6 +18,7 @@ import { useDurationRemaining } from '~/features/Toucan/Auction/hooks/useDuratio
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { getClearingPrice } from '~/features/Toucan/Auction/utils/clearingPrice'
 import { isTokenLaunchTradeLive } from '~/features/Toucan/Auction/utils/tokenLaunchedBannerUtils'
+import { getAuctionTokenDecimals } from '~/features/Toucan/Auction/utils/tokenMetadata'
 import { isTradingRestrictedUntilTge } from '~/features/Toucan/Config/config'
 
 interface TokenLaunchedBannerProps {
@@ -41,7 +42,7 @@ export function TokenLaunchedBanner({
   tokenName,
   tokenColor,
   totalSupply,
-  auctionTokenDecimals = 18,
+  auctionTokenDecimals,
   isTradeAvailableFromStatus,
   tradeAvailabilityBlock,
 }: TokenLaunchedBannerProps) {
@@ -125,7 +126,7 @@ export function TokenLaunchedBanner({
     const clearingPriceDecimal = fromQ96ToDecimalWithTokenDecimals({
       q96Value: clearingPrice,
       bidTokenDecimals: bidTokenInfo.decimals,
-      auctionTokenDecimals: auctionDetails?.token?.currency.decimals,
+      auctionTokenDecimals: getAuctionTokenDecimals(auctionDetails?.token),
     })
     // Convert to USD using bid token's fiat price
     const priceInUSD = clearingPriceDecimal * bidTokenInfo.priceFiat
@@ -134,7 +135,7 @@ export function TokenLaunchedBanner({
       priceSeries: [] as Array<{ timestamp: number; value: number }>,
       changePercentage: undefined, // No change data available from clearing price
     }
-  }, [auctionDetails?.token?.currency.decimals, bidTokenInfo, clearingPrice, priceData])
+  }, [auctionDetails?.token, bidTokenInfo, clearingPrice, priceData])
 
   // Transform clearing price history to chart format for background chart fallback
   const fallbackChartSeries = useMemo(() => {
@@ -154,10 +155,10 @@ export function TokenLaunchedBanner({
         fromQ96ToDecimalWithTokenDecimals({
           q96Value: point.clearingPrice,
           bidTokenDecimals: bidTokenInfo.decimals,
-          auctionTokenDecimals: auctionDetails?.token?.currency.decimals,
+          auctionTokenDecimals: getAuctionTokenDecimals(auctionDetails?.token),
         }) * bidTokenInfo.priceFiat,
     }))
-  }, [auctionDetails?.token?.currency.decimals, bidTokenInfo, clearingHistory, priceData?.priceSeries])
+  }, [auctionDetails?.token, bidTokenInfo, clearingHistory, priceData?.priceSeries])
 
   // Combine primary data with fallback
   const effectivePriceData = priceData ?? fallbackPriceData
@@ -190,6 +191,7 @@ export function TokenLaunchedBanner({
   const isLoading =
     priceLoading ||
     bidTokenLoading ||
+    auctionTokenDecimals === undefined ||
     (needsFallback && clearingHistoryLoading) ||
     (isRedeemable && (redemptionLoading || realTokenInfoLoading))
   if (isLoading) {

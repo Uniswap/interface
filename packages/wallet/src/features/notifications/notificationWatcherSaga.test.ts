@@ -1,6 +1,8 @@
 import { TradeType } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import { expectSaga } from 'redux-saga-test-plan'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
+import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { NotificationState, pushNotification } from 'uniswap/src/features/notifications/slice/slice'
@@ -9,16 +11,41 @@ import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 import {
   ApproveTransactionInfo,
   ExactOutputSwapTransactionInfo,
+  PlanTransactionInfo,
   ReceiveTokenTransactionInfo,
   SendTokenTransactionInfo,
+  TransactionDetails,
+  TransactionOriginType,
   TransactionStatus,
   TransactionType,
   TransactionTypeInfo,
   UnknownTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { finalizedTransactionAction } from 'uniswap/src/test/fixtures'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { pushTransactionNotification } from 'wallet/src/features/notifications/notificationWatcherSaga'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
+
+// `vi.hoisted` runs before the hoisted `vi.mock` factories below, so these are
+// always initialized by the time the factories (and their getters) execute.
+const { mockIsMobileApp, mockIsEarnEnabled } = vi.hoisted(() => ({
+  mockIsMobileApp: { value: true },
+  mockIsEarnEnabled: vi.fn(() => true),
+}))
+
+vi.mock('@universe/environment', async () => {
+  const mocked: Record<string, unknown> = { ...(await vi.importActual('@universe/environment')) }
+  // Use `defineProperty` (not an inline spread value) so `isMobileApp` reads
+  // `mockIsMobileApp.value` lazily on each access instead of snapshotting it.
+  Object.defineProperty(mocked, 'isMobileApp', {
+    get: (): boolean => mockIsMobileApp.value,
+  })
+  return mocked
+})
+
+vi.mock('uniswap/src/features/earn/hooks/useIsEarnEnabled', () => ({
+  getIsEarnEnabled: () => mockIsEarnEnabled(),
+}))
 
 const finalizedTxAction = finalizedTransactionAction()
 const account = signerMnemonicAccount()
@@ -42,6 +69,11 @@ describe(pushTransactionNotification, () => {
     notificationStatus: {},
     lastTxNotificationUpdate: {},
   }
+
+  beforeEach(() => {
+    mockIsMobileApp.value = true
+    mockIsEarnEnabled.mockReturnValue(true)
+  })
 
   it('Handles approve transactions', () => {
     const approveTypeInfo: ApproveTransactionInfo = {
@@ -143,6 +175,207 @@ describe(pushTransactionNotification, () => {
           outputCurrencyAmountRaw: swapTypeInfo.outputCurrencyAmountRaw,
           tradeType: swapTypeInfo.tradeType,
           txId,
+        }),
+      )
+      .silentRun()
+  })
+
+  it('adds an Earn upsell notification for eligible finalized swaps on mobile', () => {
+    const outputCurrencyId = buildCurrencyId(UniverseChainId.Mainnet, USDC_MAINNET.address)
+    const swapTypeInfo: ExactOutputSwapTransactionInfo = {
+      type: TransactionType.Swap,
+      tradeType: TradeType.EXACT_OUTPUT,
+      inputCurrencyId: `1-${getNativeAddress(UniverseChainId.Mainnet)}`,
+      outputCurrencyId,
+      outputCurrencyAmountRaw: '230000000000000000',
+      expectedInputCurrencyAmountRaw: '12000000000000000',
+      maximumInputCurrencyAmountRaw: '12000000000000000',
+      transactedUSDValue: 123,
+    }
+    const finalizedSwapAction = createFinalizedTxAction(swapTypeInfo)
+    const { chainId, from, id } = finalizedSwapAction.payload
+
+    return expectSaga(pushTransactionNotification, finalizedSwapAction)
+      .withState({
+        notifications: initialNotificationsState,
+        wallet: {
+          activeAccountAddress: account.address,
+        },
+      })
+      .put(
+        pushNotification({
+          txStatus: TransactionStatus.Success,
+          address: from,
+          chainId,
+          type: AppNotificationType.Transaction,
+          txType: TransactionType.Swap,
+          inputCurrencyId: swapTypeInfo.inputCurrencyId,
+          outputCurrencyId,
+          inputCurrencyAmountRaw: swapTypeInfo.expectedInputCurrencyAmountRaw,
+          outputCurrencyAmountRaw: swapTypeInfo.outputCurrencyAmountRaw,
+          tradeType: swapTypeInfo.tradeType,
+          txId,
+        }),
+      )
+      .put(
+        pushNotification({
+          type: AppNotificationType.EarnSwapUpsell,
+          address: from,
+          outputCurrencyId,
+          swapAmountUsd: 123,
+          transactionId: id,
+        }),
+      )
+      .silentRun()
+  })
+
+  it('does not add a duplicate Earn upsell notification for the same transaction on mobile', () => {
+    const outputCurrencyId = buildCurrencyId(UniverseChainId.Mainnet, USDC_MAINNET.address)
+    const swapTypeInfo: ExactOutputSwapTransactionInfo = {
+      type: TransactionType.Swap,
+      tradeType: TradeType.EXACT_OUTPUT,
+      inputCurrencyId: `1-${getNativeAddress(UniverseChainId.Mainnet)}`,
+      outputCurrencyId,
+      outputCurrencyAmountRaw: '230000000000000000',
+      expectedInputCurrencyAmountRaw: '12000000000000000',
+      maximumInputCurrencyAmountRaw: '12000000000000000',
+      transactedUSDValue: 123,
+    }
+    const finalizedSwapAction = createFinalizedTxAction(swapTypeInfo)
+    const { chainId, from, id } = finalizedSwapAction.payload
+
+    const duplicateEarnUpsellNotification = pushNotification({
+      type: AppNotificationType.EarnSwapUpsell,
+      address: from,
+      outputCurrencyId,
+      swapAmountUsd: 123,
+      transactionId: id,
+    })
+
+    return expectSaga(pushTransactionNotification, finalizedSwapAction)
+      .withState({
+        notifications: {
+          ...initialNotificationsState,
+          notificationQueue: [duplicateEarnUpsellNotification.payload],
+        },
+        wallet: {
+          activeAccountAddress: from,
+        },
+      })
+      .put(
+        pushNotification({
+          txStatus: TransactionStatus.Success,
+          address: from,
+          chainId,
+          type: AppNotificationType.Transaction,
+          txType: TransactionType.Swap,
+          inputCurrencyId: swapTypeInfo.inputCurrencyId,
+          outputCurrencyId,
+          inputCurrencyAmountRaw: swapTypeInfo.expectedInputCurrencyAmountRaw,
+          outputCurrencyAmountRaw: swapTypeInfo.outputCurrencyAmountRaw,
+          tradeType: swapTypeInfo.tradeType,
+          txId,
+        }),
+      )
+      .not.put(duplicateEarnUpsellNotification)
+      .silentRun()
+  })
+
+  it('does not add an Earn upsell notification on non-mobile platforms', () => {
+    mockIsMobileApp.value = false
+
+    const outputCurrencyId = buildCurrencyId(UniverseChainId.Mainnet, USDC_MAINNET.address)
+    const swapTypeInfo: ExactOutputSwapTransactionInfo = {
+      type: TransactionType.Swap,
+      tradeType: TradeType.EXACT_OUTPUT,
+      inputCurrencyId: `1-${getNativeAddress(UniverseChainId.Mainnet)}`,
+      outputCurrencyId,
+      outputCurrencyAmountRaw: '230000000000000000',
+      expectedInputCurrencyAmountRaw: '12000000000000000',
+      maximumInputCurrencyAmountRaw: '12000000000000000',
+      transactedUSDValue: 123,
+    }
+    const finalizedSwapAction = createFinalizedTxAction(swapTypeInfo)
+    const { chainId, from, id } = finalizedSwapAction.payload
+
+    return expectSaga(pushTransactionNotification, finalizedSwapAction)
+      .withState({
+        notifications: initialNotificationsState,
+        wallet: {
+          activeAccountAddress: account.address,
+        },
+      })
+      .put(
+        pushNotification({
+          txStatus: TransactionStatus.Success,
+          address: from,
+          chainId,
+          type: AppNotificationType.Transaction,
+          txType: TransactionType.Swap,
+          inputCurrencyId: swapTypeInfo.inputCurrencyId,
+          outputCurrencyId,
+          inputCurrencyAmountRaw: swapTypeInfo.expectedInputCurrencyAmountRaw,
+          outputCurrencyAmountRaw: swapTypeInfo.outputCurrencyAmountRaw,
+          tradeType: swapTypeInfo.tradeType,
+          txId,
+        }),
+      )
+      .not.put(
+        pushNotification({
+          type: AppNotificationType.EarnSwapUpsell,
+          address: from,
+          outputCurrencyId,
+          swapAmountUsd: 123,
+          transactionId: id,
+        }),
+      )
+      .silentRun()
+  })
+
+  it('does not add an Earn upsell notification when Earn is disabled', () => {
+    mockIsEarnEnabled.mockReturnValue(false)
+
+    const outputCurrencyId = buildCurrencyId(UniverseChainId.Mainnet, USDC_MAINNET.address)
+    const swapTypeInfo: ExactOutputSwapTransactionInfo = {
+      type: TransactionType.Swap,
+      tradeType: TradeType.EXACT_OUTPUT,
+      inputCurrencyId: `1-${getNativeAddress(UniverseChainId.Mainnet)}`,
+      outputCurrencyId,
+      outputCurrencyAmountRaw: '230000000000000000',
+      expectedInputCurrencyAmountRaw: '12000000000000000',
+      maximumInputCurrencyAmountRaw: '12000000000000000',
+    }
+    const finalizedSwapAction = createFinalizedTxAction(swapTypeInfo)
+    const { chainId, from, id } = finalizedSwapAction.payload
+
+    return expectSaga(pushTransactionNotification, finalizedSwapAction)
+      .withState({
+        notifications: initialNotificationsState,
+        wallet: {
+          activeAccountAddress: account.address,
+        },
+      })
+      .put(
+        pushNotification({
+          txStatus: TransactionStatus.Success,
+          address: from,
+          chainId,
+          type: AppNotificationType.Transaction,
+          txType: TransactionType.Swap,
+          inputCurrencyId: swapTypeInfo.inputCurrencyId,
+          outputCurrencyId,
+          inputCurrencyAmountRaw: swapTypeInfo.expectedInputCurrencyAmountRaw,
+          outputCurrencyAmountRaw: swapTypeInfo.outputCurrencyAmountRaw,
+          tradeType: swapTypeInfo.tradeType,
+          txId,
+        }),
+      )
+      .not.put(
+        pushNotification({
+          type: AppNotificationType.EarnSwapUpsell,
+          address: from,
+          outputCurrencyId,
+          transactionId: id,
         }),
       )
       .silentRun()
@@ -282,6 +515,70 @@ describe(pushTransactionNotification, () => {
           tokenAddress: receiveNftTypeInfo.tokenAddress,
           tokenId: '420',
           sender: receiveNftTypeInfo.sender,
+          txId,
+        }),
+      )
+      .silentRun()
+  })
+
+  it('uses the Earn vault-step amount for plan notifications', () => {
+    const vaultAddress = '0x8c106EEDAd96553e64287A5A6839c3Cc78afA3D0'
+    const usdcCurrencyId = buildCurrencyId(UniverseChainId.Mainnet, USDC_MAINNET.address)
+    const vaultStep: TransactionDetails = {
+      id: 'vault-step',
+      chainId: UniverseChainId.Mainnet,
+      routing: TradingApi.Routing.CHAINED,
+      from: account.address,
+      transactionOriginType: TransactionOriginType.Internal,
+      typeInfo: {
+        type: TransactionType.Deposit,
+        assetType: AssetType.Currency,
+        tokenAddress: USDC_MAINNET.address,
+        currencyAmountRaw: '1900000',
+        isVault: true,
+        vaultAddress,
+      },
+      status: TransactionStatus.Success,
+      addedTime: 1,
+      updatedTime: 1,
+      options: { request: {} },
+    }
+    const planTypeInfo: PlanTransactionInfo = {
+      type: TransactionType.Plan,
+      planId: 'plan-id',
+      planStatus: TradingApi.PlanStatus.COMPLETED,
+      stepDetails: [vaultStep],
+      tokenOutChainId: UniverseChainId.Mainnet,
+      inputCurrencyId: `1-${getNativeAddress(UniverseChainId.Mainnet)}`,
+      outputCurrencyId: buildCurrencyId(UniverseChainId.Mainnet, vaultAddress),
+      inputCurrencyAmountRaw: '1000000000000000000',
+      outputCurrencyAmountRaw: '1800000000000000000',
+      tradeType: TradeType.EXACT_INPUT,
+      transactionHashes: [],
+      earnAction: TradingApi.EarnAction.DEPOSIT,
+    }
+    const finalizedPlanAction = createFinalizedTxAction(planTypeInfo)
+    const { chainId, from } = finalizedPlanAction.payload
+
+    return expectSaga(pushTransactionNotification, finalizedPlanAction)
+      .withState({
+        notifications: initialNotificationsState,
+        wallet: {
+          activeAccountAddress: account.address,
+        },
+      })
+      .put(
+        pushNotification({
+          txStatus: TransactionStatus.Success,
+          address: from,
+          chainId,
+          type: AppNotificationType.Transaction,
+          txType: TransactionType.Plan,
+          inputCurrencyId: usdcCurrencyId,
+          outputCurrencyId: usdcCurrencyId,
+          inputCurrencyAmountRaw: '1900000',
+          outputCurrencyAmountRaw: '1900000',
+          earnAction: TradingApi.EarnAction.DEPOSIT,
           txId,
         }),
       )

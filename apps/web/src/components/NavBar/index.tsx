@@ -11,7 +11,6 @@ import { SearchBar } from '~/components/NavBar/SearchBar'
 import { useIsSearchBarVisible } from '~/components/NavBar/SearchBar/useIsSearchBarVisible'
 import { Tabs } from '~/components/NavBar/Tabs/Tabs'
 import { TestnetModeTooltip } from '~/components/NavBar/TestnetMode/TestnetModeTooltip'
-import { UniswapWrappedEntry } from '~/components/NavBar/UniswapWrappedEntry'
 import { Web3Status } from '~/components/Web3Status'
 import { PageType, useIsPage } from '~/hooks/useIsPage'
 
@@ -68,7 +67,6 @@ export function Navbar() {
         </Flex>
 
         <NavItemsRow justifyContent="flex-end">
-          <UniswapWrappedEntry />
           {!isSearchBarVisible && <SearchBar />}
           {!isEmbeddedWalletEnabled && isLandingPage && !isSmallScreen && <NewUserCTAButton />}
           {!isConnected && <PreferenceMenu />}

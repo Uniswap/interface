@@ -2,19 +2,19 @@ import { renderHook } from '@testing-library/react'
 import { useHighestTvlChain } from 'src/screens/TokenDetailsScreen/useHighestTvlChain'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
-const mockFragmentData = jest.fn()
-const mockUseBalances = jest.fn()
-const mockUseEnabledChains = jest.fn()
+const mockFragmentData = vi.fn()
+const mockUseBalances = vi.fn()
+const mockUseEnabledChains = vi.fn()
 
-jest.mock('uniswap/src/data/graphql/uniswap-data-api/fragments', () => ({
+vi.mock('uniswap/src/data/graphql/uniswap-data-api/fragments', () => ({
   useTokenProjectTokensTvlPartsFragment: () => ({ data: mockFragmentData() }),
 }))
 
-jest.mock('uniswap/src/data/balances/hooks/useBalances', () => ({
+vi.mock('uniswap/src/data/balances/hooks/useBalances', () => ({
   useBalances: (params: unknown) => mockUseBalances(params),
 }))
 
-jest.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
+vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
   useEnabledChains: () => mockUseEnabledChains(),
 }))
 
@@ -23,7 +23,7 @@ const ENABLED_EVM_CHAINS = [UniverseChainId.Mainnet, UniverseChainId.Base, Unive
 
 describe(useHighestTvlChain, () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockUseBalances.mockReturnValue(null)
     mockUseEnabledChains.mockReturnValue({ chains: ENABLED_EVM_CHAINS })
   })

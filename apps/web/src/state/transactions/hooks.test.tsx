@@ -1,11 +1,14 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { permit2Address } from '@uniswap/permit2-sdk'
 import { TradeType } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { addTransaction, interfaceApplyTransactionHashToBatch } from 'uniswap/src/features/transactions/slice'
 import {
   ApproveTransactionInfo,
   InterfaceTransactionDetails,
+  TransactionOriginType,
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -18,6 +21,7 @@ import {
   useHasPendingRevocation,
   usePendingTransactions,
   useTransactionAdder,
+  useTransactionByHashOrBatchId,
   useTransactionCanceller,
   useTransactionRemover,
 } from '~/state/transactions/hooks'
@@ -121,6 +125,59 @@ describe('Transactions hooks', () => {
         result.current({ hash: transactionHash, chainId: UniverseChainId.Mainnet }, mockTransactionInfo)
       })
       expect(store.getState().transactions[address]?.[UniverseChainId.Mainnet]?.[transactionId]).toBeUndefined()
+    })
+  })
+
+  describe('useTransactionByHashOrBatchId', () => {
+    const batchId = '0xe2171d07cbd863e0fd83f9b6e356027cbf1ba57edc4c1c00265fdf4b34ede2b8'
+    const onChainHash = '0x193acd50c25089f7cb69c383db1c2d4d3b4a53b1f5c9a3f7f00fce54f5e4b18a'
+
+    const batchTransaction: InterfaceTransactionDetails = {
+      id: batchId,
+      hash: batchId,
+      from: address,
+      chainId: UniverseChainId.Mainnet,
+      typeInfo: mockTransactionInfo,
+      routing: TradingApi.Routing.CLASSIC,
+      transactionOriginType: TransactionOriginType.Internal,
+      status: TransactionStatus.Pending,
+      addedTime: Date.now(),
+      batchInfo: { connectorId: 'io.metamask', batchId, chainId: UniverseChainId.Mainnet },
+      options: { request: { from: address, chainId: UniverseChainId.Mainnet } },
+    }
+
+    it('resolves a pending batch by its batch id key', () => {
+      const { result, store } = renderHookWithProviders(() => useTransactionByHashOrBatchId(batchId))
+      act(() => {
+        store.dispatch(addTransaction(batchTransaction))
+      })
+      expect(result.current?.id).toBe(batchId)
+    })
+
+    it('still resolves by batch id after confirmation rekeys the record to the on-chain hash', () => {
+      const { result, store } = renderHookWithProviders(() => useTransactionByHashOrBatchId(batchId))
+      act(() => {
+        store.dispatch(addTransaction(batchTransaction))
+        store.dispatch(
+          interfaceApplyTransactionHashToBatch({
+            batchId,
+            chainId: UniverseChainId.Mainnet,
+            hash: onChainHash,
+            address,
+          }),
+        )
+      })
+      expect(result.current?.id).toBe(onChainHash)
+      expect(result.current?.hash).toBe(onChainHash)
+    })
+
+    it('returns undefined when nothing matches', () => {
+      const { result, store } = renderHookWithProviders(() => useTransactionByHashOrBatchId(onChainHash))
+      act(() => {
+        store.dispatch(addTransaction(batchTransaction))
+      })
+      // hash: batchId record neither is keyed by nor references onChainHash
+      expect(result.current).toBeUndefined()
     })
   })
 

@@ -1,11 +1,12 @@
 import { isHoverable, isMobileApp, isMobileWeb, isWebPlatform } from '@universe/environment'
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Flex, TouchableArea } from 'ui/src'
 import {
   CONTEXT_MENU_ACTIONS,
   TokenContextMenuVariant,
 } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem'
 import { TokenOptionItemContextMenu } from 'uniswap/src/components/lists/items/tokens/TokenOptionItemContextMenu'
+import type { ContextMenuHandle } from 'uniswap/src/components/menus/ContextMenu'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { MultichainAddressSheet } from 'uniswap/src/components/MultichainTokenDetails/MultichainAddressSheet'
 import { useOrderedMultichainEntries } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
@@ -53,6 +54,8 @@ export function RwaIssuerRow({
   // just-opened … menu (`!isVisible && isOpen` → 300ms close timer that never clears). Use the raw onMouseEnter/Leave
   // DOM props (the same hover props OptionItem wires for its row) — Tamagui's onHoverIn did NOT reliably fire here.
   const [isHovered, setIsHovered] = useState(false)
+  // Lets the row's right-click (below) open the same menu instance as the "…" kebab.
+  const multichainButtonRef = useRef<ContextMenuHandle>(null)
   const isOpen = menuControl?.isOpen ?? internalIsOpen
   const openMenu = menuControl?.openMenu ?? openInternalMenu
   const closeMenu = menuControl?.closeMenu ?? closeInternalMenu
@@ -124,6 +127,7 @@ export function RwaIssuerRow({
     <Flex flexShrink={0}>
       {hasMultipleChains ? (
         <RwaMultichainCopyButton
+          ref={multichainButtonRef}
           primaryCurrencyInfo={currencyInfo}
           orderedEntries={orderedEntries}
           isVisible={isVisible}
@@ -150,6 +154,30 @@ export function RwaIssuerRow({
     </Flex>
   )
 
+  const rowContent = ownsTouchable ? (
+    <TouchableArea modifierPressHref={modifierPressHref} onModifierPress={onModifierPress} onPress={onPress}>
+      {body}
+    </TouchableArea>
+  ) : (
+    body
+  )
+
+  // Desktop web + multichain: skip the flat TokenOptionItemContextMenu and let right-click open the kebab's
+  // own fan-out menu via the ref. isHoverable (not isWebPlatform) since that's the only case the ref is mounted.
+  if (isHoverable && hasMultipleChains && isWebPlatform) {
+    return (
+      // oxlint-disable-next-line react/forbid-elements -- raw div needed for the onContextMenu right-click trigger
+      <div
+        onContextMenu={(e): void => {
+          e.preventDefault()
+          multichainButtonRef.current?.openAt(e.clientX, e.clientY)
+        }}
+      >
+        {rowContent}
+      </div>
+    )
+  }
+
   return (
     <>
       <TokenOptionItemContextMenu
@@ -171,13 +199,7 @@ export function RwaIssuerRow({
               openMenu()
             }}
           >
-            {ownsTouchable ? (
-              <TouchableArea modifierPressHref={modifierPressHref} onModifierPress={onModifierPress} onPress={onPress}>
-                {body}
-              </TouchableArea>
-            ) : (
-              body
-            )}
+            {rowContent}
           </div>
         ) : ownsTouchable ? (
           // native expanded sub-row: ONE TouchableArea, tap + long-press (no nesting, no `…` since !isHoverable).

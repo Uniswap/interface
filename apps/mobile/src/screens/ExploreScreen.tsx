@@ -202,21 +202,14 @@ export function ExploreScreen(): JSX.Element {
 const useRenderNextFrame = (condition: boolean): boolean => {
   const [canRender, setCanRender] = useState<boolean>(false)
   const rafRef = useRef<number>(undefined)
-  const mountedRef = useRef<boolean>(true)
-
   const conditionRef = useRef<boolean>(condition)
 
-  // clean up on unmount to prevent memory leaks
-  useEffect(() => {
-    return () => {
-      mountedRef.current = false
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current)
-      }
-    }
-  }, [])
-
-  // schedule render for next frame if we should mount
+  // schedule render for next frame if we should mount.
+  // The cleanup cancels the RAF on real unmount, so the callback can't fire after
+  // unmount — no separate `mountedRef` guard is needed (and a `mountedRef` set
+  // only by the cleanup is broken under React 19 strict-mode dev double-invocation:
+  // the simulated unmount sets it to false and the simulated remount never resets
+  // it, so `setCanRender(true)` is never called).
   useEffect(() => {
     conditionRef.current = condition
 
@@ -224,7 +217,7 @@ const useRenderNextFrame = (condition: boolean): boolean => {
       rafRef.current = requestAnimationFrame(() => {
         // By the time this callback runs, 'condition' might have changed
         // since RAF executes in the next frame, so we store the condition in a ref
-        if (mountedRef.current && conditionRef.current) {
+        if (conditionRef.current) {
           setCanRender(true)
         }
       })

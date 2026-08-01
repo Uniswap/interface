@@ -18,11 +18,11 @@ import { queryResolvers } from 'uniswap/src/test/utils'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 
 const mockedNavigation = {
-  navigate: jest.fn(),
+  navigate: vi.fn(),
 }
 
-jest.mock('@react-navigation/native', () => {
-  const actualNav = jest.requireActual('@react-navigation/native')
+vi.mock('@react-navigation/native', async () => {
+  const actualNav = await vi.importActual('@react-navigation/native')
   return {
     ...actualNav,
     useNavigation: () => mockedNavigation,
@@ -52,7 +52,7 @@ const touchableId = `${TestID.FavoriteTokenCardPrefix}${favoriteToken.symbol}`
 
 const defaultProps: FavoriteTokenCardProps = {
   currencyId: SAMPLE_CURRENCY_ID_1,
-  setIsEditing: jest.fn(),
+  setIsEditing: vi.fn(),
   isEditing: false,
 }
 
@@ -70,7 +70,7 @@ describe('FavoriteTokenCard', () => {
 
   describe('when token data is being fetched', () => {
     it('renders loader', async () => {
-      const { queryByTestId } = render(<FavoriteTokenCard {...defaultProps} />, { resolvers })
+      const { queryByTestId, queryByText } = render(<FavoriteTokenCard {...defaultProps} />, { resolvers })
 
       const loaderPrice = queryByTestId('loader/favorite/price')
       const loaderPriceChange = queryByTestId('loader/favorite/priceChange')
@@ -79,7 +79,7 @@ describe('FavoriteTokenCard', () => {
       expect(loaderPriceChange).toBeTruthy()
 
       await waitFor(() => {
-        expect(queryByTestId(touchableId)).toBeTruthy()
+        expect(queryByText(getSymbolDisplayText(favoriteToken.symbol)!)).toBeTruthy()
       })
     })
   })
@@ -118,7 +118,7 @@ describe('FavoriteTokenCard', () => {
     it('navigates to the token details screen when pressed', async () => {
       const { findByTestId } = render(<FavoriteTokenCard {...defaultProps} />, { resolvers })
 
-      const touchable = await findByTestId(`${TestID.FavoriteTokenCardPrefix}${favoriteToken.symbol}`)
+      const touchable = await findByTestId(touchableId)
       act(() => {
         fireEvent.press(touchable, ON_PRESS_EVENT_PAYLOAD)
       })

@@ -1,20 +1,21 @@
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import type { MockedFunction } from 'vitest'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import { createTransactionConfigService } from 'wallet/src/features/transactions/executeTransaction/services/transactionConfigServiceImpl'
 
 // Mock the providers utils
-jest.mock('wallet/src/features/providers/utils', () => ({
-  isPrivateRpcSupportedOnChain: jest.fn(),
+vi.mock('wallet/src/features/providers/utils', () => ({
+  isPrivateRpcSupportedOnChain: vi.fn(),
 }))
 
 describe('TransactionConfigService', () => {
-  let mockIsPrivateRpcSupportedOnChain: jest.MockedFunction<typeof isPrivateRpcSupportedOnChain>
+  let mockIsPrivateRpcSupportedOnChain: MockedFunction<typeof isPrivateRpcSupportedOnChain>
   let transactionConfigService: ReturnType<typeof createTransactionConfigService>
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
 
-    mockIsPrivateRpcSupportedOnChain = isPrivateRpcSupportedOnChain as jest.MockedFunction<
+    mockIsPrivateRpcSupportedOnChain = isPrivateRpcSupportedOnChain as MockedFunction<
       typeof isPrivateRpcSupportedOnChain
     >
 

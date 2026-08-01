@@ -166,6 +166,8 @@ export interface EmbeddedWalletApiClient {
     params: {
       blindedElement: string
       authMethodId: string
+      // Rotation: force a v2 setup-style eval with a fresh nonce even though a v1 config exists.
+      rotate?: boolean
     },
     accessToken: string,
   ) => Promise<OprfEvaluateResponse>
@@ -173,12 +175,17 @@ export interface EmbeddedWalletApiClient {
     params: { authMethodId: string },
     accessToken: string,
   ) => Promise<CheckRecoveryAvailabilityResponse>
+  // Two auth modes: passkey (`credential`) or passkey-less recovery-auth
+  // (`authKeySignature` + `recoveryAuthSignature` + `signingPayload`) for v1→v2 rotation.
   fetchSetupRecovery: (params: {
-    credential: string
+    credential?: string
     authMethodId: string
     authMethodType?: string
     encryptedKeyId?: string
     authMethodIdentifier?: string
+    authKeySignature?: string
+    recoveryAuthSignature?: string
+    signingPayload?: string
   }) => Promise<SetupRecoveryResponse>
   fetchExecuteRecovery: (params: {
     authMethodId: string

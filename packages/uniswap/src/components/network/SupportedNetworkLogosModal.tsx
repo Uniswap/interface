@@ -35,9 +35,9 @@ export function SupportedNetworkLogosModal({
               key={chain}
               row
               centered
+              maxContent
               p="$spacing4"
               backgroundColor="$surface2"
-              width="max-content"
               borderRadius="$rounded8"
               gap="$gap8"
             >

@@ -1,0 +1,4 @@
+/* Tailwind v4 + shared Universe design tokens. */
+/* Fonts are loaded via index.html, so @universe/tailwind/fonts is intentionally omitted. */
+@import "tailwindcss";
+@import "@universe/tailwind/tailwind";

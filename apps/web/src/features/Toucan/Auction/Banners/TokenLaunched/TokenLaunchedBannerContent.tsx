@@ -115,7 +115,7 @@ export function TokenLaunchedBannerContent({
                     {isTradeAvailable
                       ? t('toucan.auction.tokenLaunchedBanner.tradeNow')
                       : t('toucan.auction.tokenLaunchedBanner.tradeAvailableIn', {
-                          time: tradeAvailabilityDurationRemaining,
+                          time: tradeAvailabilityDurationRemaining ?? t('common.unknown'),
                         })}
                   </Text>
                   {isTradeAvailable && <ArrowRight size="$icon.16" color="$neutral1" />}

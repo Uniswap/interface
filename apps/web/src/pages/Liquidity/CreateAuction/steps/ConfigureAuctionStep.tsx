@@ -2,13 +2,11 @@ import { type Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text } from 'ui/src'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { AuctionEventName, ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { zeroAddress } from '~/chains'
 import {
   getAuctionCreateTokenSource,
   getAuctionDetailsInfoEnteredProperties,
@@ -43,10 +41,10 @@ import {
   CreateAuctionStep,
   type InputCurrency,
   PostAuctionLiquidityAllocationType,
-  RaiseCurrency,
   TokenMode,
 } from '~/pages/Liquidity/CreateAuction/types'
 import {
+  getRaiseCurrencyAddress,
   percentOfSoldToLiquidityFromDepositAndLiquidityAmount,
   percentOfAmount,
 } from '~/pages/Liquidity/CreateAuction/utils'
@@ -129,11 +127,7 @@ export function ConfigureAuctionStep() {
     return parseFloat(configureAuction.floorPrice) * parseFloat(committed.totalSupply.toExact())
   }, [configureAuction.floorPrice, committed])
   const raiseCurrencyAddress =
-    detailsChainId === undefined
-      ? undefined
-      : raiseCurrency === RaiseCurrency.ETH
-        ? zeroAddress
-        : getChainInfo(detailsChainId).tokens.USDC?.address
+    detailsChainId === undefined ? undefined : getRaiseCurrencyAddress(raiseCurrency, detailsChainId)
   const handleContinue = useEvent(() => {
     sendAnalyticsEvent(
       AuctionEventName.AuctionDetailsInfoEntered,
@@ -291,6 +285,7 @@ export function ConfigureAuctionStep() {
         borderRadius="$rounded20"
         p="$spacing24"
         gap="$spacing24"
+        $md={{ borderWidth: 0, borderRadius: '$none', p: '$none' }}
       >
         <Text variant="heading3" color="$neutral1" pb="$spacing12">
           {t('toucan.createAuction.step.configureAuction.title')}
@@ -384,7 +379,7 @@ export function ConfigureAuctionStep() {
             size="medium"
             emphasis="primary"
             onPress={handleContinue}
-            isDisabled={continueDisabled}
+            disabled={continueDisabled}
             onDisabledPress={isNextStepDisabled ? handleDisabledContinue : undefined}
             fill
             backgroundColor={continueDisabled ? undefined : tokenColor}

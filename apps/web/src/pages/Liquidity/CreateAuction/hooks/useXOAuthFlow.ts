@@ -32,7 +32,18 @@ export function useXOAuthFlow({ onVerified }: { onVerified?: () => void } = {}):
 
     const handler = (event: MessageEvent<XOAuthMessage>) => {
       if (event.data.type === 'x_oauth_success') {
-        setXVerification({ xHandle: event.data.xHandle, xVerificationToken: event.data.xVerificationToken })
+        // Bind to the address the token was issued for so a later wallet switch invalidates it. Without a
+        // connected wallet there is no valid binding, so drop the result rather than store an unbound token.
+        if (!address) {
+          setError(t('toucan.createAuction.step.tokenInfo.xProfile.failedToInitiate'))
+          setIsLoading(false)
+          return
+        }
+        setXVerification({
+          xHandle: event.data.xHandle,
+          xVerificationToken: event.data.xVerificationToken,
+          boundWalletAddress: address,
+        })
         onVerified?.()
       } else {
         setError(event.data.message)
@@ -46,7 +57,7 @@ export function useXOAuthFlow({ onVerified }: { onVerified?: () => void } = {}):
       channel.removeEventListener('message', handler)
       channel.close()
     }
-  }, [setXVerification, onVerified])
+  }, [setXVerification, onVerified, address, t])
 
   // Reset loading if the user dismisses the popup without completing the flow. Deliberately does not touch
   // the channel above — a late success/error message can still arrive after the popup window closes.

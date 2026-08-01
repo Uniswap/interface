@@ -3,4 +3,9 @@ runtime:
   name: nodejs
   options:
     packagemanager: bun
+    # Run precompiled JS (see `build` target) instead of Pulumi's ts-node.
+    # ts-node can't load the repo's native typescript@7.0 and falls back to a
+    # vendored typescript@3.8.3 that rejects `node16`. See CLAUDE.md.
+    typescript: false
+main: bin/index.js
 description: Datadog monitors for Universe services

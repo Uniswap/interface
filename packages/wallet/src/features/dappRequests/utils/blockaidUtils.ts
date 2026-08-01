@@ -1,6 +1,7 @@
 import { type BlockaidScanTransactionResponse } from '@universe/api'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { AddressStringFormat, normalizeAddress } from 'uniswap/src/utils/addresses'
 import { formatUnits } from 'viem'
 import { TransactionErrorType } from 'wallet/src/components/dappRequests/TransactionErrorSection'
@@ -111,7 +112,8 @@ function isUnlimitedApproval(approval: string | undefined, decimals: number = 18
  * For other assets (ERC20, NFT, etc.), returns the contract address
  */
 function getAssetAddress(asset: { type: string; chain_id?: number; address?: string }): string {
-  if (asset.type === 'NATIVE' && asset.chain_id !== undefined) {
+  // Blockaid's chain_id is unvalidated input — an out-of-enum id would crash getNativeAddress
+  if (asset.type === 'NATIVE' && isUniverseChainId(asset.chain_id)) {
     return getNativeAddress(asset.chain_id)
   }
   return asset.address || ''

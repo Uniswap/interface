@@ -134,11 +134,16 @@ export async function initializeDatadog(appName: string): Promise<void> {
     applicationId: config.datadogProjectId,
     sessionSampleRate: shouldUseFullSampleRate ? 100 : sessionSampleRate,
     sessionReplaySampleRate: 0,
+    traceSampleRate: 100,
     trackResources: true,
     trackLongTasks: true,
     trackUserInteractions: true,
     enablePrivacyForActionName: true,
     beforeSend,
+    allowedTracingUrls: [
+      { match: /gateway\.uniswap\.org/, propagatorTypes: ['datadog', 'tracecontext'] },
+      { match: /api\.uniswap\.org/, propagatorTypes: ['datadog', 'tracecontext'] },
+    ],
   })
 
   // According to the Datadog RUM documentation:

@@ -6,6 +6,7 @@ import {
   useTokenProjectTokensTvlPartsFragment as useTokenProjectTokensTvlPartsFragmentFromApi,
   useTokenProjectUrlsPartsFragment as useTokenProjectUrlsPartsFragmentFromApi,
 } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToChain, currencyIdToGraphQLAddress } from 'uniswap/src/utils/currencyId'
 
@@ -38,10 +39,16 @@ export function useTokenBasicInfoPartsFragment({
 
 export function useTokenMarketPartsFragment({
   currencyId,
+  preferProjectMarketData = false,
 }: {
   currencyId: string
+  preferProjectMarketData?: boolean
 }): ReturnType<typeof useTokenMarketPartsFragmentFromApi> {
-  return useTokenMarketPartsFragmentFromApi(currencyIdToGraphQLTokenVariables(currencyId))
+  const isV2TokensEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
+  // '' resolves to an unmatchable cache key (see currencyIdToGraphQLTokenVariables) once V2 REST is the source of truth.
+  return useTokenMarketPartsFragmentFromApi(
+    currencyIdToGraphQLTokenVariables(isV2TokensEnabled && !preferProjectMarketData ? '' : currencyId),
+  )
 }
 
 export function useTokenBasicProjectPartsFragment({
@@ -62,10 +69,16 @@ export function useTokenProjectUrlsPartsFragment({
 
 export function useTokenProjectMarketsPartsFragment({
   currencyId,
+  preferProjectMarketData = false,
 }: {
   currencyId: string
+  preferProjectMarketData?: boolean
 }): ReturnType<typeof useTokenProjectMarketsPartsFragmentFromApi> {
-  return useTokenProjectMarketsPartsFragmentFromApi(currencyIdToGraphQLTokenVariables(currencyId))
+  const isV2TokensEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
+  // '' resolves to an unmatchable cache key (see currencyIdToGraphQLTokenVariables) once V2 REST is the source of truth.
+  return useTokenProjectMarketsPartsFragmentFromApi(
+    currencyIdToGraphQLTokenVariables(isV2TokensEnabled && !preferProjectMarketData ? '' : currencyId),
+  )
 }
 
 export function useTokenProjectTokensTvlPartsFragment({

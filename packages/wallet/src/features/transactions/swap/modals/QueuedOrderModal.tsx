@@ -100,7 +100,7 @@ export function QueuedOrderModal(): JSX.Element | null {
           <Flex gap="$spacing8" row={isWebPlatform}>
             <Flex row>
               <Button
-                isDisabled={!transactionState}
+                disabled={!transactionState}
                 variant="branded"
                 {...platformButtonStyling}
                 size={buttonSize}

@@ -11,7 +11,8 @@ import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useSwapAnchoredUsdValues } from 'uniswap/src/features/transactions/swap/hooks/useSwapAnchoredUsdValues'
+import { useSwapEarnIntent } from 'uniswap/src/features/transactions/swap/hooks/useSwapEarnIntent'
 import { useTrade } from 'uniswap/src/features/transactions/swap/hooks/useTrade'
 import { useTradeFromExistingPlan } from 'uniswap/src/features/transactions/swap/hooks/useTradeFromExistingPlan'
 import { getWalletExecutionContext } from 'uniswap/src/features/transactions/swap/plan/planSagaUtils'
@@ -25,8 +26,12 @@ import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 /** Returns information derived from the current swap state */
 export function useDerivedSwapInfo({
   isDebouncing,
+  isEarnFlow,
   ...state
-}: TransactionState & { isDebouncing?: boolean }): DerivedSwapInfo {
+}: TransactionState & {
+  isDebouncing?: boolean
+  isEarnFlow?: boolean
+}): DerivedSwapInfo {
   const {
     [CurrencyField.INPUT]: currencyAssetIn,
     [CurrencyField.OUTPUT]: currencyAssetOut,
@@ -34,7 +39,6 @@ export function useDerivedSwapInfo({
     exactAmountToken,
     exactCurrencyField,
     focusOnCurrencyField = CurrencyField.INPUT,
-    selectingCurrencyField,
     txId,
   } = state
 
@@ -91,6 +95,14 @@ export function useDerivedSwapInfo({
   }, [exactAmountToken, exactCurrency])
 
   const sendPortionEnabled = useFeatureFlag(FeatureFlags.PortionFields)
+  // Earn deposits are exact-input only: the user specifies how much of the input token to
+  // swap + deposit. Exact-asset (output-specified) deposits are not supported. When
+  // disabled, the Earn hook passes inert query inputs so normal swaps do not fetch Earn data.
+  const { earnIntent, quoteOutputOverride } = useSwapEarnIntent({
+    currencyIn,
+    currencyOut,
+    enabled: isEarnFlow === true && exactCurrencyField === CurrencyField.INPUT,
+  })
 
   const generatePermitAsTransaction = useUniswapContextSelector((ctx) => {
     // If the account cannot sign typedData, permits should be completed as a transaction step,
@@ -117,6 +129,9 @@ export function useDerivedSwapInfo({
       isV4HookPoolsEnabled,
       walletExecutionContext,
       gasOverrides,
+      earnIntent,
+      quoteOutputOverride,
+      skipIndicativeTrade: earnIntent !== undefined,
     }),
     [
       account,
@@ -131,6 +146,8 @@ export function useDerivedSwapInfo({
       isV4HookPoolsEnabled,
       walletExecutionContext,
       gasOverrides,
+      earnIntent,
+      quoteOutputOverride,
     ],
   )
 
@@ -152,8 +169,17 @@ export function useDerivedSwapInfo({
     [exactCurrencyField, amountSpecified, displayableTrade?.inputAmount, displayableTradeOutputAmount],
   )
 
-  const inputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.INPUT])
-  const outputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.OUTPUT])
+  // Both sides are valued from a single anchored price source so the two USD values
+  // (and the rate line derived from them) stay consistent with the quote (INFRA-2364).
+  const {
+    input: inputCurrencyUSDValue,
+    output: outputCurrencyUSDValue,
+    pricing: usdPricing,
+  } = useSwapAnchoredUsdValues({
+    trade: displayableTrade,
+    inputAmount: currencyAmounts[CurrencyField.INPUT],
+    outputAmount: currencyAmounts[CurrencyField.OUTPUT],
+  })
 
   const currencyAmountsUSDValue = useMemo(() => {
     return {
@@ -175,6 +201,7 @@ export function useDerivedSwapInfo({
       currencies,
       currencyAmounts,
       currencyAmountsUSDValue,
+      usdPricing,
       currencyBalances,
       trade,
       exactAmountToken,
@@ -182,7 +209,6 @@ export function useDerivedSwapInfo({
       exactCurrencyField,
       focusOnCurrencyField,
       wrapType,
-      selectingCurrencyField,
       txId,
       outputAmountUserWillReceive: displayableTrade?.quoteOutputAmountUserWillReceive,
     }
@@ -191,12 +217,12 @@ export function useDerivedSwapInfo({
     currencies,
     currencyAmounts,
     currencyAmountsUSDValue,
+    usdPricing,
     currencyBalances,
     exactAmountFiat,
     exactAmountToken,
     exactCurrencyField,
     focusOnCurrencyField,
-    selectingCurrencyField,
     trade,
     txId,
     wrapType,

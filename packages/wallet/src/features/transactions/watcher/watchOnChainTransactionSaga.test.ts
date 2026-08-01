@@ -16,6 +16,7 @@ import {
 } from 'uniswap/src/test/fixtures'
 import { mockApolloClient } from 'uniswap/src/test/mocks'
 import { sleep } from 'utilities/src/time/timing'
+import type { MockInstance } from 'vitest'
 import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
 import { logTransactionTimeout } from 'wallet/src/features/transactions/watcher/transactionFinalizationSaga'
 import { deleteTransaction } from 'wallet/src/features/transactions/watcher/transactionSagaUtils'
@@ -29,24 +30,26 @@ import {
 import { waitForTransactionStatus } from 'wallet/src/features/transactions/watcher/watchTransactionSaga'
 import { getProvider } from 'wallet/src/features/wallet/context'
 
-jest.mock('@universe/api', () => ({
-  ...jest.requireActual('@universe/api'),
-  provideSessionService: jest.fn(() => ({
-    createSession: jest.fn(),
-    getSession: jest.fn(),
-    getSessionState: jest.fn().mockResolvedValue(null),
+vi.mock('@universe/api', async () => ({
+  ...(await vi.importActual('@universe/api')),
+  provideSessionService: vi.fn(() => ({
+    createSession: vi.fn(),
+    getSession: vi.fn(),
+    getSessionState: vi.fn().mockResolvedValue(null),
   })),
 }))
 
-jest.mock('uniswap/src/data/apiClients/tradingApi/TradingApiClient', () => ({
+vi.mock('uniswap/src/data/apiClients/tradingApi/TradingApiClient', () => ({
   TradingApiClient: {
-    fetchSwaps: jest.fn().mockResolvedValue({ swaps: [] }),
+    fetchSwaps: vi.fn().mockResolvedValue({ swaps: [] }),
   },
+  // Referenced by TradingApiSessionClient, which is loaded transitively in this test's import graph
+  getFeatureFlaggedHeaders: vi.fn().mockResolvedValue({}),
 }))
 
-jest.mock('uniswap/src/features/telemetry/send', () => ({
-  sendAnalyticsEvent: jest.fn(),
-  sendAppsFlyerEvent: jest.fn(),
+vi.mock('uniswap/src/features/telemetry/send', () => ({
+  sendAnalyticsEvent: vi.fn(),
+  sendAppsFlyerEvent: vi.fn(),
 }))
 
 const ACTIVE_ACCOUNT_ADDRESS = '0x000000000000000000000000000000000000000001'
@@ -58,14 +61,14 @@ const {
 const txDetailsPending: TransactionDetails = { ...originalTxDetailsPending, from: ACTIVE_ACCOUNT_ADDRESS }
 
 describe(watchTransaction, () => {
-  let dateNowSpy: jest.SpyInstance
+  let dateNowSpy: MockInstance
   const receiptProvider = {
-    waitForTransaction: jest.fn(async () => {
+    waitForTransaction: vi.fn(async () => {
       await sleep(1000)
       return null
     }),
-    getTransactionReceipt: jest.fn(),
-    getBlockNumber: jest.fn(),
+    getTransactionReceipt: vi.fn(),
+    getBlockNumber: vi.fn(),
   }
 
   // Build transaction state structure for selectors
@@ -80,7 +83,7 @@ describe(watchTransaction, () => {
   })
 
   beforeAll(() => {
-    dateNowSpy = jest.spyOn(Date, 'now').mockImplementation(() => txReceipt.confirmedTime)
+    dateNowSpy = vi.spyOn(Date, 'now').mockImplementation(() => txReceipt.confirmedTime)
   })
 
   afterAll(() => {
@@ -91,9 +94,9 @@ describe(watchTransaction, () => {
 
   it('Finalizes successful transaction', () => {
     const providerMock = {
-      getTransactionReceipt: jest.fn(),
-      getBlockNumber: jest.fn(),
-      waitForTransaction: jest.fn(async () => ethersTxReceipt),
+      getTransactionReceipt: vi.fn(),
+      getBlockNumber: vi.fn(),
+      waitForTransaction: vi.fn(async () => ethersTxReceipt),
     } as unknown as providers.Provider
 
     const pendingTx = {
@@ -180,7 +183,7 @@ describe(watchTransaction, () => {
         [call(getProvider, chainId), receiptProvider],
         [call(watchForAppBackgrounded), true], // Mock app state change, should not be called
       ])
-      .not.put(transactionActions.updateTransaction(expect.anything()))
+      .not.put(transactionActions.updateTransaction(expect.anything() as unknown as TransactionDetails))
       .silentRun()
   })
 
@@ -251,8 +254,8 @@ describe(watchTransaction, () => {
 
 describe(checkIfTransactionInvalidated, () => {
   const mockProvider = {
-    getTransaction: jest.fn(),
-    getTransactionCount: jest.fn(),
+    getTransaction: vi.fn(),
+    getTransactionCount: vi.fn(),
   }
   const provider = mockProvider as unknown as providers.Provider
   const tx = {
@@ -263,7 +266,7 @@ describe(checkIfTransactionInvalidated, () => {
   const requestNonce = 5
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('returns false if transaction has no nonce', () => {
@@ -369,7 +372,7 @@ describe('waitForRemoteUpdate flashbots_unknown (SWAP-2471)', () => {
   })
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   // Drives the (unexported) waitForRemoteUpdate -> getFlashbotsTransactionStatus path through the
@@ -386,9 +389,9 @@ describe('waitForRemoteUpdate flashbots_unknown (SWAP-2471)', () => {
     }
 
     const providerMock = {
-      getTransactionReceipt: jest.fn(),
-      getBlockNumber: jest.fn(),
-      waitForTransaction: jest.fn(),
+      getTransactionReceipt: vi.fn(),
+      getBlockNumber: vi.fn(),
+      waitForTransaction: vi.fn(),
     } as unknown as providers.Provider
 
     await expectSaga(watchTransaction, { transaction: flashbotsTx, apolloClient: mockApolloClient })
@@ -414,13 +417,12 @@ describe('waitForRemoteUpdate flashbots_unknown (SWAP-2471)', () => {
 
     // provider_knows_tx must be OMITTED on this path (only the Flashbots relay was awaited, never the
     // chain provider) — emitting false would mislead.
-    const stuckCall = jest
-      .mocked(sendAnalyticsEvent)
-      .mock.calls.find(
-        ([eventName, payload]) =>
-          eventName === WalletEventName.PendingTransactionStuck &&
-          (payload as { reason?: string }).reason === 'flashbots_unknown',
-      )
+    const analyticsCalls = vi.mocked(sendAnalyticsEvent).mock.calls
+    const stuckCall = analyticsCalls.find(
+      ([eventName, payload]) =>
+        eventName === WalletEventName.PendingTransactionStuck &&
+        (payload as { reason?: string }).reason === 'flashbots_unknown',
+    )
     expect(stuckCall).toBeDefined()
     const stuckPayload = stuckCall?.[1] as Record<string, unknown>
     expect('provider_knows_tx' in stuckPayload).toBe(false)

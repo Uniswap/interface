@@ -8,7 +8,7 @@ function WebGetHelpButton({ url }: GetHelpButtonProps): JSX.Element {
   return (
     <Link to={url ?? UniswapHelpUrls.baseUrl} style={{ textDecoration: 'none' }} target="_blank">
       <GetHelpButtonUI
-        width="max-content"
+        maxContent
         animation="fast"
         hoverStyle={{
           backgroundColor: '$surface3Hovered',

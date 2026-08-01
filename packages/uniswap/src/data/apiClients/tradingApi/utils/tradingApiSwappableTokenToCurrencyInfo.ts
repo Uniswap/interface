@@ -1,6 +1,6 @@
 import { TradingApi } from '@universe/api'
-import { toGqlSafetyLevel } from 'uniswap/src/components/TokenSelector/utils'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
+import { toGqlSafetyLevel } from 'uniswap/src/data/apiClients/tradingApi/utils/toGqlSafetyLevel'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency } from 'uniswap/src/features/dataApi/utils/buildCurrency'

@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Button, Flex } from 'ui/src'
 import { TokenDetailsVaultShareBanner as SharedTokenDetailsVaultShareBanner } from 'uniswap/src/components/tokenDetails/TokenDetailsVaultShareBanner'
+import { EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import {
   EARN_VAULT_MODAL_QUERY_PARAM,
@@ -9,6 +10,7 @@ import {
   getTokenDetailsURL,
 } from 'uniswap/src/utils/linking'
 import { useEvent } from 'utilities/src/react/hooks'
+import { EARN_ENTRY_POINT_QUERY_PARAM } from '~/pages/TokenDetails/components/earn/earnEntryPointQuery'
 import type { TokenDetailsVaultShareData } from '~/pages/TokenDetails/components/earn/useTokenDetailsVaultShareData'
 
 type TokenDetailsVaultShareBannerProps = {
@@ -33,7 +35,11 @@ export function TokenDetailsVaultShareBanner({
       return
     }
     const tokenUrl = getTokenDetailsURL({ address: currencyIdToAddress(vault.displayCurrencyId), chain: chainId })
-    navigate(`${tokenUrl}?${EARN_VAULT_MODAL_QUERY_PARAM}=${EARN_VAULT_MODAL_QUERY_VALUE}`)
+    const params = new URLSearchParams({
+      [EARN_VAULT_MODAL_QUERY_PARAM]: EARN_VAULT_MODAL_QUERY_VALUE,
+      [EARN_ENTRY_POINT_QUERY_PARAM]: EarnEntryPoint.TokenDetailsVaultShareBanner,
+    })
+    navigate(`${tokenUrl}?${params.toString()}`)
   })
 
   // Only shown to connected users — the earn vault modal's connect flow isn't wired up from this

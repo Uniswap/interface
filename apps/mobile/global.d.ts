@@ -11,7 +11,7 @@ declare let chrome: {
 }
 
 /**
- * Module augmentation to @datadog deep import for tsgo compatibility
+ * Module augmentation to @datadog deep import for native compiler compatibility
  */
 declare module '@datadog/mobile-react-native/lib/typescript/rum/eventMappers/errorEventMapper' {
   // oxlint-disable-next-line typescript/no-explicit-any -- biome-parity: oxlint is stricter here

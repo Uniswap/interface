@@ -50,17 +50,13 @@ export const createCreateAuctionStore = (): CreateAuctionStore =>
   create<CreateAuctionStoreState>()(
     devtools(
       (set) => ({
-        step: DEFAULT_CREATE_AUCTION_STATE.step,
-        tokenForm: DEFAULT_CREATE_AUCTION_STATE.tokenForm,
-        tokenColor: DEFAULT_CREATE_AUCTION_STATE.tokenColor,
-        configureAuction: DEFAULT_CREATE_AUCTION_STATE.configureAuction,
-        customizePool: DEFAULT_CREATE_AUCTION_STATE.customizePool,
-        xVerification: DEFAULT_CREATE_AUCTION_STATE.xVerification,
+        ...DEFAULT_CREATE_AUCTION_STATE,
 
         actions: {
           setStep: (step) => {
             set({ step })
           },
+          setQuickLaunch: (quickLaunch) => set({ quickLaunch }),
           goToNextStep: () => {
             set((state) => {
               const nextStep = Math.min(state.step + 1, CreateAuctionStep.REVIEW_LAUNCH) as CreateAuctionStep

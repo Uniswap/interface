@@ -122,11 +122,3 @@ export const GQL_TESTNET_CHAINS = ORDERED_EVM_CHAINS.filter((chain) => chain.tes
 // If limit support expands beyond Mainnet, refactor to use a `supportsLimits`
 // property on chain info objects and filter chains, similar to the pattern used above
 export const LIMIT_SUPPORTED_CHAINS = [UniverseChainId.Mainnet]
-
-export const TOUCAN_AUCTION_SUPPORTED_CHAINS = [
-  UniverseChainId.Unichain,
-  UniverseChainId.Mainnet,
-  UniverseChainId.Base,
-  UniverseChainId.ArbitrumOne,
-  UniverseChainId.Sepolia,
-]

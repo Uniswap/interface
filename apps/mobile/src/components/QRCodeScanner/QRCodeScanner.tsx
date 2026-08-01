@@ -138,7 +138,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
                 barcodeTypes: [BarcodeType.QR],
               }}
               facing={CameraType.Back}
-              style={StyleSheet.absoluteFillObject}
+              style={StyleSheet.absoluteFill}
               onBarcodeScanned={handleBarcodeScanned}
             />
           )}
@@ -149,7 +149,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
         centered
         alignItems="center"
         gap="$spacing48"
-        style={{ ...StyleSheet.absoluteFillObject, bottom: BOTTOM_PADDING }}
+        style={{ ...StyleSheet.absoluteFill, bottom: BOTTOM_PADDING }}
         onLayout={(event: LayoutChangeEvent): void => setOverlayLayout(event.nativeEvent.layout)}
       >
         <Flex alignItems="center">
@@ -301,7 +301,7 @@ const GradientOverlay = memo(function GradientOverlay({
       alignItems="center"
       justifyContent="center"
       position="absolute"
-      style={{ ...StyleSheet.absoluteFillObject, bottom: BOTTOM_PADDING }}
+      style={{ ...StyleSheet.absoluteFill, bottom: BOTTOM_PADDING }}
       onLayout={onLayout}
     >
       <Svg height="100%" width="100%">

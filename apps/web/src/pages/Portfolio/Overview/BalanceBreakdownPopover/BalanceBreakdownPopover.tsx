@@ -12,35 +12,44 @@ const POPOVER_WIDTH = 208
 interface BalanceBreakdownPopoverProps {
   tokens: PortfolioTotalValue | undefined
   pools: PortfolioTotalValue | undefined
+  earn: PortfolioTotalValue | undefined
   /** Period percent change per category, derived from the chart series for the selected period. */
   tokensPercentChange: number | undefined
   poolsPercentChange: number | undefined
+  earnPercentChange: number | undefined
   children: ReactNode
   /** When true, render the trigger without the popover (e.g. while viewing a single category). */
   disabled?: boolean
 }
 
-/** Builds the row list for the popover, sorted by USD value descending. */
+/**
+ * Builds the popover row list in fixed category order (tokens → earn → pools), keeping only the
+ * categories with a positive balance. Returns [] unless at least two categories qualify, since a
+ * single-category wallet has no meaningful split to show.
+ */
 export function buildBalanceBreakdownRows({
   tokens,
   pools,
+  earn,
   tokensPercentChange,
   poolsPercentChange,
+  earnPercentChange,
 }: {
   tokens: PortfolioTotalValue | undefined
   pools: PortfolioTotalValue | undefined
+  earn: PortfolioTotalValue | undefined
   tokensPercentChange: number | undefined
   poolsPercentChange: number | undefined
+  earnPercentChange: number | undefined
 }): readonly BalanceBreakdownRowData[] {
-  if (!hasPositiveBalanceUSD(tokens) || !hasPositiveBalanceUSD(pools)) {
-    return []
-  }
   // Value stays the current balance; percent comes from the chart period (matching the header).
-  const rows: BalanceBreakdownRowData[] = [
-    { kind: 'tokens', valueUSD: tokens.balanceUSD, percentChange: tokensPercentChange },
-    { kind: 'pools', valueUSD: pools.balanceUSD, percentChange: poolsPercentChange },
+  const orderedCandidates: { value: PortfolioTotalValue | undefined; row: BalanceBreakdownRowData }[] = [
+    { value: tokens, row: { kind: 'tokens', valueUSD: tokens?.balanceUSD ?? 0, percentChange: tokensPercentChange } },
+    { value: earn, row: { kind: 'earn', valueUSD: earn?.balanceUSD ?? 0, percentChange: earnPercentChange } },
+    { value: pools, row: { kind: 'pools', valueUSD: pools?.balanceUSD ?? 0, percentChange: poolsPercentChange } },
   ]
-  return rows.sort((a, b) => b.valueUSD - a.valueUSD)
+  const rows = orderedCandidates.filter(({ value }) => hasPositiveBalanceUSD(value)).map(({ row }) => row)
+  return rows.length >= 2 ? rows : []
 }
 
 function hasPositiveBalanceUSD(
@@ -50,15 +59,17 @@ function hasPositiveBalanceUSD(
 }
 
 /**
- * Popover anchored to the Portfolio Overview total balance, showing the token vs pool composition
- * split. Renders whenever both sides have a positive USD value: hover-to-open on desktop and
- * tap-to-open on mweb (hover is disabled on the mobile breakpoint so the trigger responds to taps).
+ * Popover anchored to the Portfolio Overview total balance, showing the tokens / earn / pools
+ * composition split. Renders whenever at least two categories have a positive USD value: hover-to-open
+ * on desktop and tap-to-open on mweb (hover is disabled on the mobile breakpoint so the trigger responds to taps).
  */
 export function BalanceBreakdownPopover({
   tokens,
   pools,
+  earn,
   tokensPercentChange,
   poolsPercentChange,
+  earnPercentChange,
   children,
   disabled,
 }: BalanceBreakdownPopoverProps): JSX.Element {
@@ -66,8 +77,9 @@ export function BalanceBreakdownPopover({
   const shadowProps = useShadowPropsMedium()
 
   const orderedRows = useMemo(
-    () => buildBalanceBreakdownRows({ tokens, pools, tokensPercentChange, poolsPercentChange }),
-    [tokens, pools, tokensPercentChange, poolsPercentChange],
+    () =>
+      buildBalanceBreakdownRows({ tokens, pools, earn, tokensPercentChange, poolsPercentChange, earnPercentChange }),
+    [tokens, pools, earn, tokensPercentChange, poolsPercentChange, earnPercentChange],
   )
 
   if (disabled || orderedRows.length === 0) {

@@ -9,7 +9,6 @@ import {
   WalletSendCallsUserOperationRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { call, put, select } from 'typed-redux-saga'
-import { UNISWAP_DELEGATION_ADDRESS } from 'uniswap/src/constants/addresses'
 import { checkWalletDelegation, TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -228,6 +227,13 @@ export function* handleSendCalls({
       }
       yield* put(addRequest(requestWithEncodedUserOp))
     } else {
+      // The delegation address comes from check_delegation for this wallet + chain.
+      const delegationDetails = yield* call(getAccountDelegationDetails, request.account, request.chainId)
+      const delegationAddress = delegationDetails.contractAddress
+      if (!delegationAddress) {
+        throw new Error(`No delegation address available for wallet on chain ${request.chainId}`)
+      }
+
       const { requestId: encodedRequestId, encoded: encodedTransaction } = yield* call(
         TradingApiClient.fetchWalletEncoding7702,
         {
@@ -236,7 +242,7 @@ export function* handleSendCalls({
             chainId: request.chainId,
             accountAddress: request.account,
           }),
-          smartContractDelegationAddress: UNISWAP_DELEGATION_ADDRESS,
+          smartContractDelegationAddress: delegationAddress,
           walletAddress: request.account,
         },
       )

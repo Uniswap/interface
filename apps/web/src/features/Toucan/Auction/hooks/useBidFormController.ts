@@ -20,6 +20,7 @@ import { useAuctionStore, useAuctionStoreActions } from '~/features/Toucan/Aucti
 import { getClearingPrice } from '~/features/Toucan/Auction/utils/clearingPrice'
 import { approximateNumberFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
 import { snapToNearestTick } from '~/features/Toucan/Auction/utils/ticks'
+import { getAuctionTokenDecimals } from '~/features/Toucan/Auction/utils/tokenMetadata'
 
 interface UseBidFormControllerResult {
   budgetField: BudgetFieldState
@@ -82,7 +83,7 @@ export function useBidFormController({
     tickSize: state.auctionDetails?.tickSize,
     selectedTickPrice: state.selectedTickPrice,
     totalSupply: state.auctionDetails?.totalSupply,
-    auctionTokenDecimals: state.auctionDetails?.token?.currency.decimals,
+    auctionTokenDecimals: getAuctionTokenDecimals(state.auctionDetails?.token),
     auctionTokenSymbol: state.auctionDetails?.token?.currency.symbol,
     auctionTokenName: state.auctionDetails?.token?.currency.name,
     auctionTokenAddress: state.auctionDetails?.tokenAddress,

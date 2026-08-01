@@ -1,5 +1,7 @@
 import { memo, useEffect, useMemo } from 'react'
-import { Pressable, type PressableProps, type StyleProp, StyleSheet, type ViewStyle } from 'react-native'
+import { type StyleProp, StyleSheet, type ViewStyle } from 'react-native'
+// RNGH Pressable (not RN's) so the switch's tap gesture coordinates with the RNGH-backed TouchableArea it nests inside.
+import { Pressable } from 'react-native-gesture-handler'
 import Animated, { Easing, interpolate, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { Check } from 'ui/src/components/icons'
 import {
@@ -84,7 +86,7 @@ export const Switch = memo(function Switch({
     })
   })
 
-  const containerStyle: PressableProps['style'] = useMemo(
+  const containerStyle: StyleProp<ViewStyle> = useMemo(
     () => (pointerEvents === 'none' ? { pointerEvents: 'none' } : {}),
     [pointerEvents],
   )

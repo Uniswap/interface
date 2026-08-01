@@ -76,6 +76,7 @@ import {
   migrateDismissedTokenWarnings,
   migrateSearchHistory,
   removeThaiBahtFromFiatCurrency,
+  removeUniswapWrapped2025BehaviorHistory,
   unchecksumDismissedTokenWarningKeys,
 } from 'uniswap/src/state/uniswapMigrations'
 import {
@@ -204,6 +205,7 @@ export const migrations = {
   96: migrateDismissedTokenWarnings,
   97: setWalletDeviceLanguage,
   98: addEnableCustomGasFeeEntry,
+  99: removeUniswapWrapped2025BehaviorHistory,
 }
 
-export const MOBILE_STATE_VERSION = 98
+export const MOBILE_STATE_VERSION = 99

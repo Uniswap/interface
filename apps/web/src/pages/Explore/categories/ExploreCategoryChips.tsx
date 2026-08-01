@@ -22,13 +22,16 @@ type CategoryOption = {
   renderIcon: (color: '$neutral1' | '$neutral2') => JSX.Element
 }
 
-function CategoryChip({
+/** Rounded filter chip shared by the Explore tab filter rows (token categories, auction quick filters). */
+export function ExploreFilterChip({
   active,
-  option,
+  label,
+  renderIcon,
   onPress,
 }: {
   active: boolean
-  option: CategoryOption
+  label: string
+  renderIcon: (color: '$neutral1' | '$neutral2') => JSX.Element
   onPress: () => void
 }): JSX.Element {
   const color = active ? '$neutral1' : '$neutral2'
@@ -48,14 +51,14 @@ function CategoryChip({
       onPress={onPress}
     >
       <Flex row alignItems="center" gap="$spacing6">
-        {option.renderIcon(color)}
+        {renderIcon(color)}
         <Text
           variant="buttonLabel3"
           color={color}
           $platform-web={{ whiteSpace: 'nowrap' }}
           $group-hover={{ color: '$neutral1' }}
         >
-          {option.label}
+          {label}
         </Text>
       </Flex>
     </TouchableArea>
@@ -97,10 +100,11 @@ export function ExploreCategoryChips({ value, onChange }: ExploreCategoryChipsPr
       {options.map((option) => {
         const active = option.value === value
         return (
-          <CategoryChip
+          <ExploreFilterChip
             key={option.value}
             active={active}
-            option={option}
+            label={option.label}
+            renderIcon={option.renderIcon}
             onPress={() => {
               if (active) {
                 return

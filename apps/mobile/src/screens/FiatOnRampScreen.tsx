@@ -1,7 +1,6 @@
 /* oxlint-disable max-lines complexity */
 import { type NativeStackScreenProps } from '@react-navigation/native-stack'
 import { isIOS, isWebPlatform } from '@universe/environment'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Image } from 'expo-image'
 import React, { type ComponentProps, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -261,15 +260,14 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   }, [ipCountryData, setCountryCode, setCountryState])
 
   // preload service provider logos for given quotes for the next screen
-  const isExpoImageEnabled = useFeatureFlag(FeatureFlags.ExpoImage)
   useEffect(() => {
-    if (isExpoImageEnabled && quotes) {
+    if (quotes) {
       preloadServiceProviderLogos(
         quotes.map((q) => q.serviceProviderDetails),
         isDarkMode,
       )
     }
-  }, [isExpoImageEnabled, quotes, isDarkMode])
+  }, [quotes, isDarkMode])
 
   const filteredQuotes = useMemo(() => {
     if (!quotes) {

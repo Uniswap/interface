@@ -92,9 +92,9 @@ function UwULinkErc20SendModalContent({
 }): JSX.Element {
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
-  const { animatedFooterHeight } = useBottomSheetInternal()
+  const { animatedLayoutState } = useBottomSheetInternal()
   const bottomSpacerStyle = useAnimatedStyle(() => ({
-    height: animatedFooterHeight.value,
+    height: animatedLayoutState.value.footerHeight,
   }))
   const { convertFiatAmountFormatted } = useLocalizationContext()
 

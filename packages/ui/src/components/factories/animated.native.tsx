@@ -1,12 +1,12 @@
 import React, { ComponentClass } from 'react'
-import Animated, { AnimateProps } from 'react-native-reanimated'
+import Animated, { AnimatedProps } from 'react-native-reanimated'
 
 export function withAnimated<Props extends object>(
   WrappedComponent: React.ComponentType<Props>,
-): ComponentClass<AnimateProps<Props>> {
+): ComponentClass<AnimatedProps<Props>> {
   const displayName = WrappedComponent.displayName || WrappedComponent.name || 'Component'
 
-  class WithAnimated extends React.Component<AnimateProps<Props>> {
+  class WithAnimated extends React.Component<AnimatedProps<Props>> {
     static displayName = `WithAnimated(${displayName})`
 
     render(): React.ReactNode {
@@ -14,5 +14,7 @@ export function withAnimated<Props extends object>(
     }
   }
 
-  return Animated.createAnimatedComponent(WithAnimated as unknown as React.ComponentClass<Props>)
+  return Animated.createAnimatedComponent(
+    WithAnimated as unknown as React.ComponentClass<Props>,
+  ) as unknown as ComponentClass<AnimatedProps<Props>>
 }

@@ -9,6 +9,7 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ChooseUnitagModal } from '~/components/NavBar/DownloadApp/Modal/ChooseUnitag'
+import { Page } from '~/components/NavBar/DownloadApp/Modal/constants'
 import { DownloadAppsModal } from '~/components/NavBar/DownloadApp/Modal/DownloadApps'
 import { KeyManagementModal } from '~/components/NavBar/DownloadApp/Modal/KeyManagement'
 import { PasskeyGenerationModal } from '~/components/NavBar/DownloadApp/Modal/PasskeyGeneration'
@@ -16,13 +17,6 @@ import { useAndroidKeyboardViewportFix } from '~/hooks/useAndroidKeyboardViewpor
 import { useIOSBodyScrollLock } from '~/hooks/useIOSBodyScrollLock'
 import { useModalState } from '~/hooks/useModalState'
 import { useAppSelector } from '~/state/hooks'
-
-export enum Page {
-  DownloadApp = 0,
-  ChooseUnitag = 1,
-  KeyManagement = 2,
-  PasskeyGeneration = 3,
-}
 
 export const downloadAppModalPageAtom = atom<Page>(Page.DownloadApp)
 

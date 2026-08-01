@@ -2,31 +2,34 @@ import { PositionStatus } from '@uniswap/client-data-api/dist/data/v1/poolTypes_
 import { PoolsTab } from 'src/app/components/tabs/PoolsTab'
 import { render, screen } from 'src/test/test-utils'
 import { useWalletPositions } from 'uniswap/src/features/positions/hooks/useWalletPositions'
+import type { MockedFunction } from 'vitest'
 
-jest.mock('uniswap/src/features/positions/hooks/useWalletPositions', () => ({
-  useWalletPositions: jest.fn(),
+vi.mock('uniswap/src/features/positions/hooks/useWalletPositions', () => ({
+  useWalletPositions: vi.fn(),
 }))
 
-jest.mock('wallet/src/features/transactions/hooks/usePendingLiquidityTransactionsChangeListener', () => ({
-  usePendingLiquidityTransactionsChangeListener: jest.fn(),
+vi.mock('wallet/src/features/transactions/hooks/usePendingLiquidityTransactionsChangeListener', () => ({
+  usePendingLiquidityTransactionsChangeListener: vi.fn(),
 }))
 
-jest.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
+vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
   useEnabledChains: () => ({ chains: [1] }),
 }))
 
-jest.mock('utilities/src/react/useInfiniteScroll', () => ({
+vi.mock('utilities/src/react/useInfiniteScroll', () => ({
   useInfiniteScroll: () => ({ sentinelRef: { current: null } }),
 }))
 
-jest.mock('uniswap/src/components/portfolio/PositionItem/PositionItem', () => ({
-  PositionItem: ({ positionInfo }: { positionInfo: { poolId: string } }) => {
-    const { Text } = jest.requireActual('ui/src')
-    return <Text testID={`position-${positionInfo.poolId}`}>{positionInfo.poolId}</Text>
-  },
-}))
+vi.mock('uniswap/src/components/portfolio/PositionItem/PositionItem', async () => {
+  const { Text } = await vi.importActual<typeof import('ui/src')>('ui/src')
+  return {
+    PositionItem: ({ positionInfo }: { positionInfo: { poolId: string } }) => {
+      return <Text testID={`position-${positionInfo.poolId}`}>{positionInfo.poolId}</Text>
+    },
+  }
+})
 
-const mockUseWalletPositions = useWalletPositions as jest.MockedFunction<typeof useWalletPositions>
+const mockUseWalletPositions = useWalletPositions as MockedFunction<typeof useWalletPositions>
 
 const baseResult = {
   positions: [],
@@ -39,8 +42,8 @@ const baseResult = {
   hasNextPage: false,
   hasData: true,
   error: null,
-  refetch: jest.fn(),
-  fetchNextPage: jest.fn(),
+  refetch: vi.fn(),
+  fetchNextPage: vi.fn(),
 } as unknown as ReturnType<typeof useWalletPositions>
 
 const position = (poolId: string, status: PositionStatus = PositionStatus.IN_RANGE): never =>
@@ -48,7 +51,7 @@ const position = (poolId: string, status: PositionStatus = PositionStatus.IN_RAN
 
 describe('PoolsTab', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('renders the error state when the query errors before any data', () => {

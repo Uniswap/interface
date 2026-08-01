@@ -61,7 +61,7 @@ export function LaunchThresholdSection({
             <CurrencyLogo hideNetworkLogo currencyInfo={raiseCurrencyInfo} size={LOGO_SIZE} />
           ) : null}
           <Text variant="heading3" color="$neutral1">
-            {formattedThreshold} {raiseCurrency}
+            {formattedThreshold} {raiseCurrencySdk?.symbol}
           </Text>
         </Flex>
         <Text variant="body3" color="$neutral2">

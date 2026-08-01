@@ -1,4 +1,3 @@
-import { useApolloClient } from '@apollo/client'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect, useState } from 'react'
@@ -24,8 +23,7 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 
 export function PasskeyImportScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { generateImportedAccounts, selectImportedAccounts } = useOnboardingContext()
-  const apolloClient = useApolloClient()
-  const { gqlChains } = useEnabledChains()
+  const { chains: chainIds } = useEnabledChains()
   const headerHeight = useHeaderHeight()
   const [walletInfo, setWalletInfo] = useState<{ walletId: string; walletAddress: string } | null>(null)
   const [isImporting, setIsImporting] = useState(false)
@@ -80,8 +78,7 @@ export function PasskeyImportScreen({ navigation, route: { params } }: Props): J
       try {
         importableAddresses = await resolveImportableAddresses({
           addresses: generatedAccounts.map((acc) => acc.address),
-          apolloClient,
-          gqlChains,
+          chainIds,
           requiredAddress: walletInfo.walletAddress,
         })
       } catch (resolveError) {

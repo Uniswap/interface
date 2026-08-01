@@ -166,6 +166,7 @@ interface PoolDetailsStatsProps {
   loading?: boolean
   poolApr?: Percent
   rewardsApr?: number
+  lpFeeFraction?: number
 }
 
 export function PoolDetailsStats({
@@ -177,6 +178,7 @@ export function PoolDetailsStats({
   loading,
   poolApr,
   rewardsApr,
+  lpFeeFraction,
 }: PoolDetailsStatsProps) {
   const { t } = useTranslation()
   const media = useMedia()
@@ -256,7 +258,10 @@ export function PoolDetailsStats({
         <StatItem title={t('stats.24volume')} value={poolData.volumeUSD24H} delta={poolData.volumeUSD24HChange} />
       )}
       {poolData.volumeUSD24H !== undefined && poolData.feeTier !== undefined && (
-        <StatItem title={t('stats.24fees')} value={poolData.volumeUSD24H * (poolData.feeTier.feeAmount / 1000000)} />
+        <StatItem
+          title={t('stats.24fees')}
+          value={poolData.volumeUSD24H * (poolData.feeTier.feeAmount / 1000000) * (lpFeeFraction ?? 1)}
+        />
       )}
     </StatsWrapper>
   )

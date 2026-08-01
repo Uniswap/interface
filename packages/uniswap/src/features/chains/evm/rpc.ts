@@ -21,8 +21,8 @@ function getDedicatedQuicknodeEndpointUrl(chainId: UniverseChainId): string | un
   switch (chainId) {
     case UniverseChainId.Solana: {
       // Only honor a fully-formed URL. optionalString config fields default to ''
-      // when unset, and the `.env.defaults` placeholder ('stored-in-.env.local')
-      // reaches CI/jest as a literal value — both must fall through to the shared
+      // when unset, and a non-URL placeholder value can reach CI/jest as a
+      // literal value — both must fall through to the shared
       // multichain endpoint rather than become an invalid RPC URL (the Solana
       // Connection constructor throws on a non-http endpoint at module load).
       const solanaRpcUrl = config.quicknodeSolanaRpcUrl

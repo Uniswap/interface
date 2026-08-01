@@ -62,3 +62,28 @@ public struct CurrencyConversionResponse {
   public let conversionRate: Double
   public let currency: String
 }
+
+struct GetPortfolioResponse: Decodable {
+  let portfolio: Portfolio?
+}
+
+struct Portfolio: Decodable {
+  let balances: [PortfolioBalance]?
+}
+
+struct PortfolioBalance: Decodable {
+  let token: PortfolioToken?
+  let valueUsd: Double?
+}
+
+struct PortfolioToken: Decodable {
+  let chainId: Int?
+  let address: String?
+  let symbol: String?
+  let name: String?
+  let metadata: PortfolioTokenMetadata?
+}
+
+struct PortfolioTokenMetadata: Decodable {
+  let spamCode: String?
+}

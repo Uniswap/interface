@@ -76,12 +76,12 @@ const validatedAddressRecipient: SearchableRecipient = {
 const watchedAddresses = [SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]
 
 const searchSectionResult = {
-  title: 'Search results',
+  title: 'send.recipient.section.search',
   data: [validatedAddressRecipient],
 }
 
 const recentRecipientsSectionResult = {
-  title: 'Recent',
+  title: 'send.recipient.section.recent',
   data: [
     {
       address: sendTxDetailsFailed.typeInfo.recipient,
@@ -104,12 +104,12 @@ const recentRecipients = recentRecipientsSectionResult.data.map((recipient) => (
 }))
 
 const inactiveWalletsSectionResult = {
-  title: 'Your wallets',
+  title: 'send.recipient.section.yours',
   data: [inactiveAccount],
 }
 
 const favoriteWalletsSectionResult = {
-  title: 'Favorite wallets',
+  title: 'send.recipient.section.favorite',
   data: [{ address: SAMPLE_SEED_ADDRESS_1 }, { address: SAMPLE_SEED_ADDRESS_2 }],
 }
 
@@ -137,7 +137,7 @@ describe(useRecipients, () => {
 
       expect(result.current).toEqual(
         expect.objectContaining({
-          sections: expect.not.arrayContaining([expect.objectContaining({ title: 'Search results' })]),
+          sections: expect.not.arrayContaining([expect.objectContaining({ title: 'send.recipient.section.search' })]),
         }),
       )
     })
@@ -179,7 +179,7 @@ describe(useRecipients, () => {
 
       expect(result.current).toEqual(
         expect.objectContaining({
-          sections: expect.not.arrayContaining([expect.objectContaining({ title: 'Recent' })]),
+          sections: expect.not.arrayContaining([expect.objectContaining({ title: 'send.recipient.section.recent' })]),
         }),
       )
     })
@@ -200,7 +200,7 @@ describe(useRecipients, () => {
         expect.objectContaining({
           sections: expect.arrayContaining([
             {
-              title: 'Recent',
+              title: 'send.recipient.section.recent',
               data: [
                 {
                   address: sendTxDetailsPending.typeInfo.recipient,
@@ -228,7 +228,7 @@ describe(useRecipients, () => {
       })
 
       const section = result.current.sections[0]!
-      expect(section.title).toEqual('Recent')
+      expect(section.title).toEqual('send.recipient.section.recent')
       // This method doesn't check the order of the elements
       expect(section.data).toIncludeSameMembers([
         {
@@ -292,7 +292,7 @@ describe(useRecipients, () => {
 
       expect(result.current).toEqual(
         expect.objectContaining({
-          sections: expect.not.arrayContaining([expect.objectContaining({ title: 'Your wallets' })]),
+          sections: expect.not.arrayContaining([expect.objectContaining({ title: 'send.recipient.section.yours' })]),
         }),
       )
     })
@@ -333,7 +333,7 @@ describe(useRecipients, () => {
 
       expect(result.current).toEqual(
         expect.objectContaining({
-          sections: expect.not.arrayContaining([expect.objectContaining({ title: 'Favorite wallets' })]),
+          sections: expect.not.arrayContaining([expect.objectContaining({ title: 'send.recipient.section.favorite' })]),
         }),
       )
     })

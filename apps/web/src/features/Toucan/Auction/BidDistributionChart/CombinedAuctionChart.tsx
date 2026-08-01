@@ -1,7 +1,7 @@
 /* oxlint-disable max-lines */
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -39,6 +39,7 @@ import { AuctionProgressState } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore, useAuctionStoreActions } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { getClearingPrice } from '~/features/Toucan/Auction/utils/clearingPrice'
 import { snapToNearestTick } from '~/features/Toucan/Auction/utils/ticks'
+import { TooltipContainer } from '~/features/Toucan/Shared/TooltipContainer'
 import { ClearingPriceChartRenderer } from '~/features/Toucan/ToucanChart/clearingPrice/ClearingPriceChartRenderer'
 import { calculateMaxFractionDigits } from '~/features/Toucan/ToucanChart/clearingPrice/utils/yAxisRange'
 
@@ -55,6 +56,7 @@ const CLEARING_PRICE_HOVER_THRESHOLD = 15
 interface CombinedAuctionChartProps {
   auctionDetails: AuctionDetails
   bidTokenInfo: BidTokenInfo
+  auctionTokenDecimals: number
   tokenColor?: string
 }
 
@@ -67,6 +69,7 @@ interface CombinedAuctionChartProps {
 export function CombinedAuctionChart({
   auctionDetails,
   bidTokenInfo,
+  auctionTokenDecimals,
   tokenColor,
 }: CombinedAuctionChartProps): JSX.Element {
   const { t } = useTranslation()
@@ -82,15 +85,23 @@ export function CombinedAuctionChart({
   })
 
   // ── Distribution data (same as BidDistributionChart.tsx) ──
-  const { bidDistributionData, excludedBidVolume, userBids, optimisticBid, userBidPrice } = useAuctionStore(
-    (state) => ({
-      bidDistributionData: state.bidDistributionData,
-      excludedBidVolume: state.excludedBidVolume,
-      userBids: state.userBids,
-      optimisticBid: state.optimisticBid,
-      userBidPrice: state.userBidPrice,
-    }),
-  )
+  const {
+    bidDistributionData,
+    excludedBidVolume,
+    userBids,
+    optimisticBid,
+    userBidPrice,
+    isBidInputFocused,
+    auctionProgressState,
+  } = useAuctionStore((state) => ({
+    bidDistributionData: state.bidDistributionData,
+    excludedBidVolume: state.excludedBidVolume,
+    userBids: state.userBids,
+    optimisticBid: state.optimisticBid,
+    userBidPrice: state.userBidPrice,
+    isBidInputFocused: state.isBidInputFocused,
+    auctionProgressState: state.progress.state,
+  }))
 
   const clearingPrice = useAuctionStore((state) => {
     const isActive = state.progress.state === AuctionProgressState.IN_PROGRESS
@@ -101,7 +112,6 @@ export function CombinedAuctionChart({
   const tickSize = auctionDetails.tickSize || '0'
   const floorPrice = auctionDetails.floorPrice || '0'
   const totalSupply = auctionDetails.tokenTotalSupply
-  const auctionTokenDecimals = auctionDetails.token?.currency.decimals ?? 18
 
   const { formatPrice, formatTokenAmount } = useAuctionValueFormatters({
     bidTokenInfo,
@@ -230,6 +240,21 @@ export function CombinedAuctionChart({
   const scaleFactor = normalizedData?.scaleFactor ?? 1
   const chartAreaHeight = effectiveHeight - TIME_SCALE_HEIGHT
 
+  // `chartData` is only non-null once bid distribution data has loaded, so the
+  // empty state never shows while bids are still being fetched.
+  const showNoBidsState =
+    auctionProgressState !== AuctionProgressState.NOT_STARTED && chartData !== null && chartData.totalBidVolume === 0
+
+  const floorPriceDecimal = useMemo(
+    () =>
+      fromQ96ToDecimalWithTokenDecimals({
+        q96Value: floorPrice,
+        bidTokenDecimals: bidTokenInfo.decimals,
+        auctionTokenDecimals,
+      }),
+    [floorPrice, bidTokenInfo.decimals, auctionTokenDecimals],
+  )
+
   // ── Y-axis panning, zooming, and auto-grouped bars ──
   const { pannedNormalizedData, groupedBars, tickSizeDecimal, chartWheelRef, panToPrice } = useYAxisPanZoom({
     normalizedData,
@@ -239,6 +264,7 @@ export function CombinedAuctionChart({
     bidTokenDecimals: bidTokenInfo.decimals,
     auctionTokenDecimals,
     chartHeightPx: chartAreaHeight,
+    noBidsFloorPrice: showNoBidsState ? floorPriceDecimal : undefined,
   })
 
   const maxFractionDigits = pannedNormalizedData ? calculateMaxFractionDigits(pannedNormalizedData.yMax) : 0
@@ -372,8 +398,16 @@ export function CombinedAuctionChart({
 
   return (
     <Flex ref={chartWheelRef} position="relative" width="100%" height={effectiveHeight}>
-      {/* Price chart fills main area minus marker column and distribution column */}
-      <Flex position="absolute" left={CHART_LEFT_OFFSET} top={0} bottom={0} right={DISTRIBUTION_COLUMN_WIDTH}>
+      {/* Price chart fills main area minus marker column and distribution column.
+          When the auction has no bids, the distribution column is hidden and the
+          price chart extends to full width (LP-806). */}
+      <Flex
+        position="absolute"
+        left={CHART_LEFT_OFFSET}
+        top={0}
+        bottom={0}
+        right={showNoBidsState ? 0 : DISTRIBUTION_COLUMN_WIDTH}
+      >
         <ClearingPriceChartRenderer
           normalizedData={pannedNormalizedData}
           bidTokenInfo={bidTokenInfo}
@@ -384,23 +418,28 @@ export function CombinedAuctionChart({
           disableMouseWheelInteractions
           totalSupply={totalSupply}
           auctionTokenDecimals={auctionTokenDecimals}
+          extendLineToRightEdge={showNoBidsState}
         />
-        {/* Right-edge fade: masks the area fill so it doesn't clip abruptly */}
-        <Flex
-          position="absolute"
-          right={0}
-          top={0}
-          bottom={0}
-          width={80}
-          pointerEvents="none"
-          style={{
-            background: `linear-gradient(to right, transparent, ${colors.surface1.val})`,
-          }}
-        />
+        {/* Right-edge fade: masks the area fill so it doesn't clip abruptly.
+            In the no-bids state ClearingPriceChartRenderer renders the fade itself, anchored
+            to the flat line's exact pixel so the full-width line and live dot stay visible (LP-806). */}
+        {!showNoBidsState && (
+          <Flex
+            position="absolute"
+            right={0}
+            top={0}
+            bottom={0}
+            width={80}
+            pointerEvents="none"
+            style={{
+              background: `linear-gradient(to right, transparent, ${colors.surface1.val})`,
+            }}
+          />
+        )}
       </Flex>
 
-      {/* Distribution bars in 48px right column */}
-      {chartData && visiblePriceRange && (
+      {/* Distribution bars in 48px right column — hidden when the auction has no bids */}
+      {chartData && visiblePriceRange && !showNoBidsState && (
         <Flex
           position="absolute"
           right={0}
@@ -427,13 +466,15 @@ export function CombinedAuctionChart({
       )}
 
       {/* Concentration band overlay spanning full width */}
-      {chartData?.concentration && visiblePriceRange && tokenColor && (
+      {chartData?.concentration && visiblePriceRange && (
         <ConcentrationBandOverlay
           concentration={chartData.concentration}
           priceRange={visiblePriceRange}
           scaleFactor={scaleFactor}
-          tokenColor={tokenColor}
           height={effectiveHeight - TIME_SCALE_HEIGHT}
+          isVisible={isBidInputFocused}
+          labelLeftOffset={CHART_LEFT_OFFSET + CHART_DIMENSIONS.Y_AXIS_LABEL_WIDTH}
+          bidTokenSymbol={bidTokenInfo.symbol}
         />
       )}
 
@@ -452,17 +493,33 @@ export function CombinedAuctionChart({
         />
       )}
 
-      {/* User bid price line — solid line spanning full width with tooltip */}
+      {/* User bid price line — solid line spanning full width with "Your bid" label */}
       {bidLineY !== null && (
-        <Flex
-          position="absolute"
-          left={CHART_LEFT_OFFSET}
-          right={0}
-          top={bidLineY}
-          height={1}
-          pointerEvents="none"
-          backgroundColor="$neutral2"
-        />
+        <>
+          <Flex
+            position="absolute"
+            left={CHART_LEFT_OFFSET}
+            right={0}
+            top={bidLineY}
+            height={1}
+            pointerEvents="none"
+            backgroundColor="$neutral2"
+          />
+          <TooltipContainer
+            py="$spacing4"
+            px="$spacing6"
+            style={{
+              left: CHART_LEFT_OFFSET + CHART_DIMENSIONS.Y_AXIS_LABEL_WIDTH,
+              top: bidLineY,
+              transform: 'translateY(-50%)',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            <Text variant="body4" color="$neutral1">
+              {t('toucan.bidDistribution.yourBid')}
+            </Text>
+          </TooltipContainer>
+        </>
       )}
 
       {/* Tooltip layer — offset by marker column + Y_AXIS_LABEL_WIDTH so tooltips don't overlap */}

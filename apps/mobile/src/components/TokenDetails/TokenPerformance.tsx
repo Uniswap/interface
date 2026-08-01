@@ -59,6 +59,7 @@ export const TokenPerformance = memo(function TokenPerformance(): JSX.Element | 
     <Flex gap="$spacing24" px="$spacing16">
       <TokenProfitLoss
         title={t('pnl.title.allTime')}
+        titleColor="$neutral1"
         averageCost={profitLoss.averageCostUsd}
         unrealizedReturn={profitLoss.unrealizedReturnUsd}
         unrealizedReturnPercent={profitLoss.unrealizedReturnPercent}

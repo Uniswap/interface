@@ -13,7 +13,6 @@ import { ContextMenu } from 'uniswap/src/components/menus/ContextMenu'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { NftView, NftViewProps } from 'uniswap/src/components/nfts/NftView'
 import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useNFTContextMenuItems } from 'uniswap/src/features/nfts/hooks/useNftContextMenuItems'
 import { getNFTAssetKey } from 'uniswap/src/features/nfts/utils'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
@@ -58,6 +57,7 @@ function NFTCardInner(props: NftCardProps): JSX.Element {
     () => getNFTAssetKey(props.item.contractAddress ?? '', props.item.tokenId ?? ''),
     [props.item.contractAddress, props.item.tokenId],
   )
+  const chainId = props.item.chainId
 
   const [openPopoverId, setOpenPopoverId] = useState<string | null>(() => getOpenNftPopoverId())
   const isPopoverOpen = openPopoverId === nftUniqueId
@@ -93,14 +93,6 @@ function NFTCardInner(props: NftCardProps): JSX.Element {
     }),
     [props.id, colors.surface3.val],
   )
-
-  // Generate chainId for the NFT
-  const chainId = useMemo(() => {
-    if (props.item.chain) {
-      return fromGraphQLChain(props.item.chain) ?? undefined
-    }
-    return undefined
-  }, [props.item.chain])
 
   // Generate OpenSea URL for the NFT
   const openseaUrl = useMemo(() => {
@@ -254,7 +246,7 @@ function NFTCardInner(props: NftCardProps): JSX.Element {
                 >
                   {props.item.collectionName}
                 </Text>
-                {props.item.chain && chainId && <NetworkLogo chainId={chainId} size={iconSizes.icon12} />}
+                {chainId && <NetworkLogo chainId={chainId} size={iconSizes.icon12} />}
               </Flex>
             }
             hoverContent={

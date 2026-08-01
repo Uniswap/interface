@@ -64,14 +64,14 @@ export interface TransactionService {
    * @param input Transaction parameters
    * @returns The prepared transaction
    */
-  prepareAndSignTransaction(input: PrepareTransactionParams): Promise<SignedTransactionRequest>
+  prepareAndSignTransaction: (input: PrepareTransactionParams) => Promise<SignedTransactionRequest>
 
   /**
    * Send a transaction to the blockchain
    * @param input Transaction parameters
    * @returns The transaction response
    */
-  submitTransaction(input: SubmitTransactionParams): Promise<{
+  submitTransaction: (input: SubmitTransactionParams) => Promise<{
     transactionHash: string
   }>
 
@@ -87,7 +87,7 @@ export interface TransactionService {
    * @param input Transaction parameters
    * @returns The transaction details updated with the receipt
    */
-  submitTransactionSync(input: SubmitTransactionParamsWithTypeInfo): Promise<TransactionDetails>
+  submitTransactionSync: (input: SubmitTransactionParamsWithTypeInfo) => Promise<TransactionDetails>
 
   /**
    * Execute a transaction by preparing, signing, and submitting it
@@ -95,7 +95,7 @@ export interface TransactionService {
    * @param input Transaction parameters
    * @returns The transaction response
    */
-  executeTransaction(input: ExecuteTransactionParams): Promise<{
+  executeTransaction: (input: ExecuteTransactionParams) => Promise<{
     transactionHash: string
   }>
 
@@ -105,7 +105,7 @@ export interface TransactionService {
    * @param input UserOp parameters
    * @returns The userOp hash returned by the bundler
    */
-  executeUserOp(input: ExecuteUserOpParams): Promise<{ userOpHash: string }>
+  executeUserOp: (input: ExecuteUserOpParams) => Promise<{ userOpHash: string }>
 
   /**
    * Calculate the next nonce for an account on a chain
@@ -115,9 +115,9 @@ export interface TransactionService {
    * @returns The calculated nonce and optionally pending tx count
    * @throws {Error} When the nonce cannot be calculated due to network or validation issues
    */
-  getNextNonce(input: {
+  getNextNonce: (input: {
     account: AccountMeta
     chainId: UniverseChainId
     submitViaPrivateRpc?: boolean
-  }): Promise<CalculatedNonce>
+  }) => Promise<CalculatedNonce>
 }

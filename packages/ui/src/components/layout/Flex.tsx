@@ -64,6 +64,16 @@ export const Flex = styled(View, {
       },
     },
 
+    // `max-content` is a web-only CSS keyword (invalid on native), so apply it only on web; native
+    // falls back to auto width. Saves callers from repeating an isWebPlatform guard.
+    maxContent: {
+      true: {
+        '$platform-web': {
+          width: 'max-content',
+        },
+      },
+    },
+
     animateEnter: animationsEnter,
     animateExit: animationsExit,
     animateEnterExit: animationsEnterExit,

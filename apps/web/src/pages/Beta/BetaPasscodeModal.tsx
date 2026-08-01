@@ -118,7 +118,7 @@ export function BetaPasscodeModal(): JSX.Element {
             size="large"
             width="100%"
             onPress={validate}
-            isDisabled={!passphrase}
+            disabled={!passphrase}
           >
             {t('beta.preview.submit')}
           </Button>

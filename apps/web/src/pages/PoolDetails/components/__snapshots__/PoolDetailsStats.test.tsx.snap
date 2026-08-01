@@ -47,7 +47,7 @@ exports[`PoolDetailsStats > pool balance chart not visible on mobile 1`] = `
                   <img
                     height="20"
                     src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                    style="object-fit: contain; border-radius: 20px; z-index: 1;"
+                    style="object-fit: cover; width: 20px; height: 20px; border-radius: 20px; z-index: 1;"
                     width="20"
                   />
                 </div>
@@ -117,7 +117,7 @@ exports[`PoolDetailsStats > pool balance chart not visible on mobile 1`] = `
                   <img
                     height="20"
                     src="eth-logo.png"
-                    style="object-fit: contain; border-radius: 20px; z-index: 1;"
+                    style="object-fit: cover; width: 20px; height: 20px; border-radius: 20px; z-index: 1;"
                     width="20"
                   />
                 </div>

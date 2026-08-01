@@ -12,10 +12,6 @@ interface ApiInitProps {
   getLogger?: () => Logger
 }
 
-// Re-export the canonical query key so existing call sites that import from
-// this file keep working. New code should import from `@universe/sessions`.
-export { SESSION_INIT_QUERY_KEY }
-
 function ApiInit({ getSessionInitService, isSessionServiceEnabled, getLogger }: ApiInitProps): null {
   const [query] = useState(() => {
     // Both calls only build the query *options* (cheap, idempotent). The fetch

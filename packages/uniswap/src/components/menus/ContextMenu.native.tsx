@@ -1,10 +1,13 @@
+import { isIOS } from '@universe/environment'
 import isEqual from 'lodash/isEqual'
-import { Fragment, PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react'
+import { ForwardedRef, forwardRef, Fragment, PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react'
 import { NativeSyntheticEvent, View } from 'react-native'
-import { Flex, Portal, Separator, TouchableArea, useIsDarkMode, useWindowDimensions } from 'ui/src'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { FullWindowOverlay } from 'react-native-screens'
+import { Flex, Portal, Separator, TouchableArea, flexStyles, useIsDarkMode, useWindowDimensions } from 'ui/src'
 import { DropdownMenuSheetItem } from 'ui/src/components/dropdownMenuSheet/DropdownMenuSheetItem'
 import { spacing, zIndexes } from 'ui/src/theme'
-import { ContextMenuProps } from 'uniswap/src/components/menus/ContextMenu'
+import { ContextMenuHandle, ContextMenuProps } from 'uniswap/src/components/menus/ContextMenu'
 import { useContextMenuTracking } from 'uniswap/src/components/menus/hooks/useContextMenuTracking'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
@@ -22,6 +25,11 @@ const MIN_MENU_PADDING = spacing.spacing16
 // used for enter animation
 const ANIMATION_START_POINT = 10
 
+// Hoists the menu into its own native window so it paints above the bottom sheet (iOS). No-op elsewhere.
+function MenuWindowOverlay({ children }: PropsWithChildren): JSX.Element {
+  return isIOS ? <FullWindowOverlay>{children}</FullWindowOverlay> : <>{children}</>
+}
+
 /**
  * A controlled styled context menu component.
  * Accepts both a onPress prop for each action and a onPressAny prop that is called when any action is pressed.
@@ -29,25 +37,29 @@ const ANIMATION_START_POINT = 10
  * @param children the trigger element
  * @returns a fragment with a context menu and a trigger
  */
-export function ContextMenu({
-  children,
-  menuItems,
-  contentOverride,
-  isPlacementAbove = false,
-  isPlacementRight = false,
-  offsetX = 0,
-  offsetY = 0,
-  onPressAny,
-  triggerMode,
-  disabled = false,
-  isOpen,
-  closeMenu,
-  openMenu,
-  elementName,
-  sectionName,
-  trackItemClicks = false,
-  dimBackground = false,
-}: PropsWithChildren<ContextMenuProps>): JSX.Element {
+// No native caller currently needs `openAt` — coordinate-anchored positioning is a web-only concept here.
+function ContextMenuNativeInner(
+  {
+    children,
+    menuItems,
+    contentOverride,
+    isPlacementAbove = false,
+    isPlacementRight = false,
+    offsetX = 0,
+    offsetY = 0,
+    onPressAny,
+    triggerMode,
+    disabled = false,
+    isOpen,
+    closeMenu,
+    openMenu,
+    elementName,
+    sectionName,
+    trackItemClicks = false,
+    dimBackground = false,
+  }: PropsWithChildren<ContextMenuProps>,
+  _ref: ForwardedRef<ContextMenuHandle>,
+): JSX.Element {
   const { width: screenWidth, height: screenHeight } = useWindowDimensions()
   const maxUsableWidth = screenWidth - MIN_MENU_PADDING
   const maxMenuWidth = maxUsableWidth * 0.8 // Design spec: max width should be 80% of usable screen space
@@ -258,58 +270,64 @@ export function ContextMenu({
     <>
       {(isOpen || isMenuVisible) && (
         <Portal>
-          <Flex
-            pointerEvents={!isOpen ? 'none' : 'auto'}
-            height="100%"
-            width="100%"
-            top={0}
-            left={0}
-            zIndex={zIndexes.overlay}
-            onPress={handleMenuClose}
-          >
-            {dimBackground && isOpen && (
+          {/* Portal escapes the app's GestureHandlerRootView, so re-root gestures here or the menu's TouchableAreas don't register. */}
+          <MenuWindowOverlay>
+            <GestureHandlerRootView style={flexStyles.fill}>
               <Flex
-                position="absolute"
-                inset={0}
-                backgroundColor="$black"
-                opacity={isDarkMode ? 0.4 : 0.2}
-                animation="200ms"
-                enterStyle={{ opacity: 0 }}
-              />
-            )}
-            {/* Hidden pre-render for measurement */}
-            {!measuredMenuDimensions && (
-              <Flex
-                position="absolute"
-                top={-9999} // Render off-screen
-                left={-9999}
-                opacity={0}
-                onLayout={handleMenuLayout}
+                pointerEvents={!isOpen ? 'none' : 'auto'}
+                height="100%"
+                width="100%"
+                top={0}
+                left={0}
+                backgroundColor="transparent"
+                zIndex={zIndexes.overlay}
+                onPress={handleMenuClose}
               >
-                <MenuContent />
-              </Flex>
-            )}
+                {dimBackground && isOpen && (
+                  <Flex
+                    position="absolute"
+                    inset={0}
+                    backgroundColor="$black"
+                    opacity={isDarkMode ? 0.4 : 0.2}
+                    animation="200ms"
+                    enterStyle={{ opacity: 0 }}
+                  />
+                )}
+                {/* Hidden pre-render for measurement */}
+                {!measuredMenuDimensions && (
+                  <Flex
+                    position="absolute"
+                    top={-9999} // Render off-screen
+                    left={-9999}
+                    opacity={0}
+                    onLayout={handleMenuLayout}
+                  >
+                    <MenuContent />
+                  </Flex>
+                )}
 
-            {/* Visible menu */}
-            {isMenuVisible && measuredMenuDimensions && (
-              <Flex
-                justifyContent="flex-start"
-                alignItems="flex-start"
-                backgroundColor="$transparent"
-                top={position.top}
-                left={position.left}
-                position="absolute"
-                animation="200ms"
-                // We only animate on enter. No animation needed on exit because we immediately unmount the Portal.
-                enterStyle={{
-                  opacity: 0,
-                  y: isAboveTrigger ? ANIMATION_START_POINT : -ANIMATION_START_POINT,
-                }}
-              >
-                <MenuContent />
+                {/* Visible menu */}
+                {isMenuVisible && measuredMenuDimensions && (
+                  <Flex
+                    justifyContent="flex-start"
+                    alignItems="flex-start"
+                    backgroundColor="$transparent"
+                    top={position.top}
+                    left={position.left}
+                    position="absolute"
+                    animation="200ms"
+                    // We only animate on enter. No animation needed on exit because we immediately unmount the Portal.
+                    enterStyle={{
+                      opacity: 0,
+                      y: isAboveTrigger ? ANIMATION_START_POINT : -ANIMATION_START_POINT,
+                    }}
+                  >
+                    <MenuContent />
+                  </Flex>
+                )}
               </Flex>
-            )}
-          </Flex>
+            </GestureHandlerRootView>
+          </MenuWindowOverlay>
         </Portal>
       )}
 
@@ -334,3 +352,5 @@ export function ContextMenu({
     </>
   )
 }
+
+export const ContextMenu = forwardRef(ContextMenuNativeInner)

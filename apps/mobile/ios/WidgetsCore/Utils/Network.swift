@@ -8,18 +8,26 @@
 import Foundation
 import Apollo
 
+enum UniswapGateway {
+  static let graphQLUrl = "https://ios.wallet.gateway.uniswap.org/v1/graphql"
+  static let dataApiUrl = "https://entry-gateway.backend-prod.api.uniswap.org"
+  static let authHeaders = [
+    "X-API-KEY": Env.UNISWAP_API_KEY,
+    "Content-Type": "application/json",
+    "Origin": "https://app.uniswap.org",
+  ]
+}
+
 public class Network {
   public static let shared = Network()
-  
-  private let UNISWAP_API_URL = "https://ios.wallet.gateway.uniswap.org/v1/graphql"
-  
+
   public lazy var apollo: ApolloClient = {
     let cache = InMemoryNormalizedCache()
     let store = ApolloStore(cache: cache)
     let client = URLSessionClient()
-    
+
     let provider = NetworkInterceptorProvider(store: store, client: client)
-    let url = URL(string: UNISWAP_API_URL)!
+    let url = URL(string: UniswapGateway.graphQLUrl)!
     let transport = RequestChainNetworkTransport(interceptorProvider: provider, endpointURL: url)
     return ApolloClient(networkTransport: transport, store: store)
   }()
@@ -58,10 +66,10 @@ class AuthorizationInterceptor: ApolloInterceptor {
     response: HTTPResponse<Operation>?,
     completion: @escaping (Result<GraphQLResult<Operation.Data>, Error>) -> Void
   ) where Operation : GraphQLOperation {
-    request.addHeader(name: "X-API-KEY", value: Env.UNISWAP_API_KEY)
-    request.addHeader(name: "Content-Type", value: "application/json")
-    request.addHeader(name: "Origin", value: "https://app.uniswap.org")
-    
+    for (name, value) in UniswapGateway.authHeaders {
+      request.addHeader(name: name, value: value)
+    }
+
     chain.proceedAsync(request: request,
                        response: response,
                        completion: completion)

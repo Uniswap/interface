@@ -8,14 +8,12 @@
     "@uniswap/client-compliancev2": "1.1.1",
     "@universe/api": "workspace:^",
     "@universe/environment": "workspace:^",
-    "react": "19.1.0",
+    "react": "19.2.3",
     "utilities": "workspace:^"
   },
   "devDependencies": {
     "@types/node": "22.19.17",
-    "@typescript/native-preview": "7.0.0-dev.20260421.2",
     "@vitest/coverage-v8": "3.2.1",
-    "typescript": "5.9.2",
     "vitest": "3.2.1",
     "vitest-presets": "workspace:^"
   },

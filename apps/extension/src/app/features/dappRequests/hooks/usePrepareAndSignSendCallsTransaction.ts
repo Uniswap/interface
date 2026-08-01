@@ -5,7 +5,6 @@ import { useMemo } from 'react'
 import { usePrepareAndSignDappTransaction } from 'src/app/features/dappRequests/hooks/usePrepareAndSignDappTransaction'
 import { useTransactionGasEstimation } from 'src/app/features/dappRequests/hooks/useTransactionGasEstimation'
 import { DappRequestStoreItemForSendCallsTxn } from 'src/app/features/dappRequests/slice'
-import { UNISWAP_DELEGATION_ADDRESS } from 'uniswap/src/constants/addresses'
 import { useSignDelegationAuthorization } from 'uniswap/src/contexts/UniswapContext'
 import { useWalletEncode4337Query } from 'uniswap/src/data/apiClients/tradingApi/useWalletEncode4337Query'
 import { useWalletEncode7702Query } from 'uniswap/src/data/apiClients/tradingApi/useWalletEncode7702Query'
@@ -170,13 +169,18 @@ export function usePrepareAndSignSendCallsTransaction({
     })
 
   // --- 7702 path ---
+  // The delegation address comes from check_delegation (via useLiveAccountDelegationDetails);
+  // encoding waits until it's available.
+  const delegationAddress = delegationData?.contractAddress
   const { data: encoded7702data } = useWalletEncode7702Query({
-    enabled: !shouldUse4337 && !!chainId && !!account.address,
-    params: {
-      calls: transformedCalls,
-      smartContractDelegationAddress: UNISWAP_DELEGATION_ADDRESS,
-      walletAddress: account.address,
-    },
+    enabled: !shouldUse4337 && !!chainId && !!account.address && !!delegationAddress,
+    params: delegationAddress
+      ? {
+          calls: transformedCalls,
+          smartContractDelegationAddress: delegationAddress,
+          walletAddress: account.address,
+        }
+      : undefined,
   })
 
   const encodedTransaction = encoded7702data?.encoded

@@ -20,15 +20,18 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { areEvmAddressesEqual } from 'uniswap/src/utils/addresses'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function PositionDetailsScreen({ route }: AppStackScreenProp<MobileScreens.PositionDetails>): JSX.Element {
-  const { poolId, tokenId, chainId, protocolVersion } = route.params
+  const { poolId, tokenId, chainId, protocolVersion, owner: ownerParam } = route.params
   const { t } = useTranslation()
   const insets = useAppInsets()
-  const owner = useActiveAccountAddressWithThrow()
+  const activeAccountAddress = useActiveAccountAddressWithThrow()
+  const owner = ownerParam ?? activeAccountAddress
+  const isOwnPosition = areEvmAddressesEqual(owner, activeAccountAddress)
 
   const isV2 = protocolVersion === ProtocolVersion.V2
   const { data, isLoading } = useGetPositionQuery({
@@ -43,7 +46,9 @@ export function PositionDetailsScreen({ route }: AppStackScreenProp<MobileScreen
 
   return (
     <Trace directFromPage logImpression screen={MobileScreens.PositionDetails}>
-      <ScreenWithHeader rightElement={positionInfo ? <PositionDetailsMenu positionInfo={positionInfo} /> : undefined}>
+      <ScreenWithHeader
+        rightElement={positionInfo && isOwnPosition ? <PositionDetailsMenu positionInfo={positionInfo} /> : undefined}
+      >
         {positionInfo ? (
           <PositionDetailsContent positionInfo={positionInfo} bottomInset={insets.bottom} />
         ) : isLoading ? (

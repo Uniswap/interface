@@ -1,4 +1,3 @@
-import { UniversalImageResizeMode } from 'ui/src'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { useCreateAuctionStore } from '~/pages/Liquidity/CreateAuction/CreateAuctionContext'
@@ -24,7 +23,6 @@ export function CreateAuctionTokenLogo({ size, hideNetworkLogo }: CreateAuctionT
         chainId={tokenForm.network}
         size={size}
         hideNetworkLogo={hideNetworkLogo}
-        imageResizeMode={UniversalImageResizeMode.Cover}
       />
     )
   }

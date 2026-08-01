@@ -1,0 +1,23 @@
+diff --git a/android/src/main/java/com/swmansion/gesturehandler/react/RNGestureHandlerDetectorView.kt b/android/src/main/java/com/swmansion/gesturehandler/react/RNGestureHandlerDetectorView.kt
+index 44bfe9dae7d892f1ae2d44ff691ddeedc1e8ebb6..f561e2b5c2bdc2dece88fdecf459d3ff5393b93a 100644
+--- a/android/src/main/java/com/swmansion/gesturehandler/react/RNGestureHandlerDetectorView.kt
++++ b/android/src/main/java/com/swmansion/gesturehandler/react/RNGestureHandlerDetectorView.kt
+@@ -47,8 +47,16 @@ class RNGestureHandlerDetectorView(context: Context) : ReactViewGroup(context) {
+   }
+ 
+   fun setModuleId(id: Int) {
+-    assert(this.moduleId == -1) { "Tried to change moduleId of a native detector" }
+-
++    // `moduleId` (globalThis._RNGH_MODULE_ID) advances whenever the RNGH native module re-inits
++    // (reload / RN context recreation), and Fabric re-applies it to still-mounted detector views.
++    // iOS reassigns freely in updateProps; mirror that instead of asserting write-once. On a real
++    // change, tear down attachments bound to the previous registry before wiring up the new one.
++    if (this.moduleId == id) {
++      return
++    }
++    if (this.moduleId != -1) {
++      detachAllHandlers()
++    }
+     this.moduleId = id
+     attachHandlers(handlersToAttach)
+     attachVirtualChildren(virtualChildrenToAttach)

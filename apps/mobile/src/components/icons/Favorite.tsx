@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useAnimatedStyle, useDerivedValue, withSequence, withTiming } from 'react-native-reanimated'
-import { Flex, useSporeColors } from 'ui/src'
+import { useSporeColors } from 'ui/src'
 import { HeartWithFill } from 'ui/src/components/icons'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 
 interface FavoriteButtonProps {
   isFavorited: boolean
@@ -37,8 +38,8 @@ export const Favorite = ({ isFavorited, size }: FavoriteButtonProps): JSX.Elemen
   const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }), [scale])
 
   return (
-    <Flex animation={null} style={animatedStyle}>
+    <AnimatedFlex style={animatedStyle}>
       <HeartWithFill color={color} height={size} width={size} />
-    </Flex>
+    </AnimatedFlex>
   )
 }

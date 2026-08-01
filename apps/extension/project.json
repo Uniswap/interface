@@ -35,12 +35,6 @@
         }
       }
     },
-    "check:circular": {
-      "command": "bunx madge --circular ./src/entrypoints/sidepanel/main.tsx ./src/entrypoints/onboarding/main.tsx ./src/entrypoints/unitagClaim/main.tsx",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
     "check:deps:usage": {},
     "clean": {
       "command": "wxt clean",
@@ -65,9 +59,6 @@
     "lint:oxlint": {},
     "lint:oxlint:fix": {},
     "lint:oxlint:fast": {},
-    "lint:typeaware-custom": {
-      "command": "bun config/oxlint-plugins/typeaware-custom.ts apps/extension"
-    },
     "lint": {},
     "lint:fix": {},
     "check": {},
@@ -88,7 +79,7 @@
       "outputs": ["{projectRoot}/.wxt/types", "{projectRoot}/.wxt/tsconfig.json", "{projectRoot}/.wxt/wxt.d.ts"]
     },
     "config:pull": {
-      "command": "if [ \"$USE_NEW_CONFIGS\" != \"false\" ] && [ \"$SKIP_CONFIG_PULL\" != \"true\" ]; then bun config:pull extension --env \"${CONFIG_ENV:-development}\"; fi",
+      "command": "if [ \"$SKIP_CONFIG_PULL\" != \"true\" ]; then bun config:pull extension --env \"${CONFIG_ENV:-development}\" --soft; fi",
       "options": { "cwd": "{workspaceRoot}" },
       "defaultConfiguration": "development",
       "configurations": {
@@ -101,7 +92,7 @@
       }
     },
     "snapshots": {
-      "command": "jest -u",
+      "command": "vitest run -u",
       "options": {
         "cwd": "{projectRoot}"
       }
@@ -134,14 +125,12 @@
       }
     },
     "test": {
-      "command": "jest",
+      "command": "vitest run",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "typecheck": {},
-    "typecheck:tsc": {},
-    "typecheck:tsgo": {},
     "zip": {
       "command": "wxt zip",
       "options": {
@@ -162,6 +151,12 @@
     },
     "playwright:test:smoke": {
       "command": "playwright test --config=e2e/config/playwright.config.ts e2e/tests/smoke/",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "playwright:test:publish-gate": {
+      "command": "playwright test --config=e2e/config/playwright.config.ts --grep @publish-gate",
       "options": {
         "cwd": "{projectRoot}"
       }

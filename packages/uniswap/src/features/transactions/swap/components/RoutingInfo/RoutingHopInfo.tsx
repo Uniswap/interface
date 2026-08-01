@@ -78,18 +78,10 @@ export function RoutingHopInfo({
       )
     }
 
-    if (swapStepsSummary) {
-      return (
-        <Text variant={textVariant} textAlign={textAlign} color="$neutral2">
-          {t('swap.routing.poolsAndVersions', {
-            count: swapStepsSummary.pools,
-            versions: swapStepsSummary.versions.join(', '),
-          })}
-        </Text>
-      )
-    }
-
-    if (routes) {
+    // Prefer the classic `route` object diagram whenever it's available (Uniroute sends both
+    // `route` and `swapSteps`); fall back to the swapSteps text summary only when the route
+    // object is absent (e.g. GuideStar quotes).
+    if (routes && routes.length > 0) {
       const descriptionText =
         routingProvider?.getDescription?.(t) ??
         `${gasFeeFormatted ? t('swap.bestRoute.cost', { gasPrice: gasFeeFormatted }) : ''}${t('swap.route.optimizedGasCost')}`
@@ -109,6 +101,17 @@ export function RoutingHopInfo({
         </Flex>
       )
     }
+
+    if (swapStepsSummary) {
+      return (
+        <Text variant={textVariant} textAlign={textAlign} color="$neutral2">
+          {t('swap.routing.poolsAndVersions', {
+            count: swapStepsSummary.pools,
+            versions: swapStepsSummary.versions.join(', '),
+          })}
+        </Text>
+      )
+    }
     return null
   }, [t, trade, routes, gasFeeFormatted, routingProvider, isUniswapXTrade, swapStepsSummary])
 
@@ -120,8 +123,9 @@ export function RoutingHopInfo({
   const ModalIcon = routingProvider?.icon ?? OrderRouting
   const modalIconColor = routingProvider?.iconColor ?? '$neutral1'
 
+  // BestRouteTooltip embeds its own learn-more link, so only add one when it isn't shown
   const learnMoreLink =
-    !isUniswapXTrade && (isMobileApp || swapStepsSummary || !routes || routes.length === 0) ? (
+    !isUniswapXTrade && (isMobileApp || !routes || routes.length === 0) ? (
       <LearnMoreLink textVariant="buttonLabel4" textColor="$neutral1" url={UniswapHelpUrls.articles.routingSettings} />
     ) : undefined
 
@@ -142,15 +146,13 @@ export function RoutingHopInfo({
         tooltipProps={{
           text: isUniswapXTrade ? (
             <BestRouteUniswapXTooltip />
-          ) : swapStepsSummary ? (
-            caption
           ) : routes && routes.length > 0 ? (
-            <BestRouteTooltip />
+            <BestRouteTooltip trade={trade} />
           ) : (
             caption
           ),
           placement: 'top',
-          maxWidth: routes ? 300 : undefined,
+          maxWidth: routes && routes.length > 0 ? 300 : undefined,
         }}
         analyticsTitle="Order routing"
       >

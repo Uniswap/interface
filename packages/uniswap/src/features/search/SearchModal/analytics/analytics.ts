@@ -127,6 +127,21 @@ export function sendSearchOptionItemClickedAnalytics({
       })
       return
     }
+    case OnchainItemListOptionType.Auction:
+      sendAnalyticsEvent(InterfaceEventName.NavbarResultSelected, {
+        ...searchContext,
+        chainId: item.chainId,
+        suggestion_type: searchContext.isHistory
+          ? NavBarSearchTypes.RecentSearch
+          : searchContext.query && searchContext.query.length > 0
+            ? NavBarSearchTypes.AuctionSuggestion
+            : NavBarSearchTypes.AuctionTrending,
+        total_suggestions: searchContext.suggestionCount,
+        query_text: searchContext.query ?? '',
+        selected_search_result_name: item.tokenName ?? item.tokenSymbol,
+        selected_search_result_address: item.auctionAddress,
+      })
+      return
     default:
       logger.warn('SearchModal/analytics.ts', 'sendSearchOptionItemClickedAnalytics', 'Unhandled search option type', {
         item,

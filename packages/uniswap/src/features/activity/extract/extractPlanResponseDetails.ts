@@ -61,6 +61,7 @@ export default function extractPlanResponseDetails(
     type: TransactionType.Plan,
     planId,
     planStatus: status,
+    earnAction: planResponse.earnIntent?.action,
     stepDetails: extractStepDetailsFromPlanResponse({
       steps,
       swapper,
@@ -126,8 +127,14 @@ export function extractPlanResponseAssetDetails(steps: TradingApi.PlanStep[]): {
   const { tokenIn, tokenInChainId, tokenInAmount } = firstStep ?? {}
   const { tokenOut, tokenOutChainId, tokenOutAmount } = lastStep ?? {}
 
-  const validatedTokenIn = validateAndBuildCurrencyId({ chainId: tokenInChainId, tokenAddress: tokenIn })
-  const validatedTokenOut = validateAndBuildCurrencyId({ chainId: tokenOutChainId, tokenAddress: tokenOut })
+  const validatedTokenIn = validateAndBuildCurrencyId({
+    chainId: tokenInChainId,
+    tokenAddress: tokenIn,
+  })
+  const validatedTokenOut = validateAndBuildCurrencyId({
+    chainId: tokenOutChainId,
+    tokenAddress: tokenOut,
+  })
   if (!validatedTokenIn || !validatedTokenOut || !tokenInAmount || !tokenOutAmount) {
     logger.warn(
       'extractPlanResponseDetails',
@@ -177,6 +184,7 @@ function extractStepDetailsFromPlanResponse({
         planId,
         status: mapTAPIPlanStepStatusToTXStatus(step.status),
         planStepType,
+        stepIndex: step.stepIndex,
         inputCurrencyAmountRaw: step.tokenInAmount ?? '0',
         outputCurrencyAmountRaw: step.tokenOutAmount ?? '0',
         addedTime: updatedMillis,

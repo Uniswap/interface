@@ -46,15 +46,16 @@ export function OffHoursMarketWarning(): JSX.Element | null {
         backgroundColor="$surface2"
         borderRadius="$rounded12"
         gap="$spacing8"
-        height={44}
+        minHeight={44}
         mx="$spacing16"
         px="$spacing16"
+        py="$spacing12"
         testID={TestID.TokenDetailsRWAOffHoursBanner}
         onPress={openSheet}
       >
         <Clock color="$neutral2" size="$icon.20" />
-        <Text color="$neutral1" flex={1} numberOfLines={1} variant="body3">
-          {t('tdp.rwa.offHours.title')}
+        <Text color="$neutral1" flex={1} numberOfLines={2} variant="body3">
+          {t('tdp.rwa.offHours.banner')}
         </Text>
         <InfoCircle color="$neutral2" size="$icon.20" />
       </TouchableArea>

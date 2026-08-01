@@ -1,4 +1,3 @@
-import { NetworkStatus } from '@apollo/client'
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import { useIsFocused } from '@react-navigation/core'
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
@@ -208,12 +207,12 @@ const TokenBalanceListContent = forwardRef<FlatList<TokenBalanceListRow>, TokenB
 
 const HeaderComponent = memo(function HeaderComponentInner(): JSX.Element | null {
   const { t } = useTranslation()
-  const { balancesById, networkStatus, refetch, isPortfolioBalancesLoading } = useTokenBalanceListContext()
+  const { balancesById, error, refetch, isPortfolioBalancesLoading } = useTokenBalanceListContext()
 
   useAppStateTrigger({ from: 'background', to: 'active', callback: refetch || noop })
 
   const hasData = !!balancesById
-  const hasErrorWithCachedValues = !isPortfolioBalancesLoading && hasData && networkStatus === NetworkStatus.error
+  const hasErrorWithCachedValues = !isPortfolioBalancesLoading && hasData && error !== undefined
 
   return hasErrorWithCachedValues ? (
     <AnimatedFlex entering={FadeInDown} exiting={FadeOut} px="$spacing24" py="$spacing8">

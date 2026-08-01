@@ -612,7 +612,7 @@
   "common.tokenAmount": "Quantidade do token",
   "common.tokenB": "Token B",
   "common.tokenName": "Nome do token",
-  "common.tokens": "Tokens",
+  "common.token.plural": "Tokens",
   "common.totalValueLocked": "TVL",
   "common.trade": "Negociar",
   "common.trademarkPolicy": "Política de marca registrada",

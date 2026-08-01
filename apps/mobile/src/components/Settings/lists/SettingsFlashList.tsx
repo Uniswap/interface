@@ -1,8 +1,7 @@
 import { FlashList } from '@shopify/flash-list'
 import { default as React, useCallback, useMemo } from 'react'
 import { SectionData, SectionInfo, SettingsListProps } from 'src/components/Settings/lists/types'
-import { SETTINGS_ROW_HEIGHT, SettingsSection } from 'src/components/Settings/SettingsRow'
-import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
+import { SettingsSection } from 'src/components/Settings/SettingsRow'
 import { spacing } from 'ui/src/theme'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 
@@ -18,7 +17,6 @@ export function SettingsFlashList({
 }: SettingsListProps): JSX.Element {
   const data = useMemo(() => processSections(sections), [sections])
   const insets = useAppInsets()
-  const { fullWidth, fullHeight } = useDeviceDimensions()
 
   const renderFlashListItem = useCallback(
     ({ item, ...rest }: { item: ProcessedRow; index: number }) => {
@@ -45,13 +43,6 @@ export function SettingsFlashList({
     [renderItem, renderSectionHeader, renderSectionFooter],
   )
 
-  const estimatedListSize = useMemo(() => {
-    return {
-      height: fullHeight,
-      width: fullWidth,
-    }
-  }, [fullHeight, fullWidth])
-
   const contentContainerStyle = useMemo(() => {
     return {
       paddingBottom: insets.bottom - spacing.spacing16,
@@ -63,12 +54,10 @@ export function SettingsFlashList({
   return (
     <FlashList
       contentContainerStyle={contentContainerStyle}
-      estimatedListSize={estimatedListSize}
       ItemSeparatorComponent={ItemSeparatorComponent}
       ListFooterComponent={ListFooterComponent}
       ListHeaderComponent={ListHeaderComponent}
       data={data}
-      estimatedItemSize={SETTINGS_ROW_HEIGHT}
       keyExtractor={keyExtractor}
       renderItem={renderFlashListItem}
       showsVerticalScrollIndicator={showsVerticalScrollIndicator}

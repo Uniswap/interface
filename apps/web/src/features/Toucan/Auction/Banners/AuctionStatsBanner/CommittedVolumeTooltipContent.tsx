@@ -20,6 +20,7 @@ export function CommittedVolumeTooltipContent({
   required,
   distribution,
   showLowVolumeHighFdv = false,
+  minFdv,
   isCompleted = false,
 }: {
   // Formatted total committed volume row. Omitted on the explore table, which shows only the sentences.
@@ -30,10 +31,19 @@ export function CommittedVolumeTooltipContent({
   // checkpoint data; only total + launch requirement are shown there.
   distribution?: { filled: string; inRange: string; outOfRange: string }
   showLowVolumeHighFdv?: boolean
+  // Formatted minimum (at-floor) FDV; enables the educational high-floor copy for the FDV warning.
+  minFdv?: string
   // Completed auctions use a past-tense launch-requirement disclaimer.
   isCompleted?: boolean
 }) {
   const { t } = useTranslation()
+
+  // Educational framing for live high-floor auctions: explains the floor -> min FDV relationship and
+  // launch progress instead of the prescriptive low-volume warning.
+  const highFloorInfo =
+    showLowVolumeHighFdv && !isCompleted && minFdv && total && required
+      ? t('toucan.statsBanner.committed.highFloorInfo', { fdv: minFdv, committed: total, required })
+      : undefined
 
   return (
     <Flex gap="$spacing8" minWidth={200}>
@@ -48,15 +58,21 @@ export function CommittedVolumeTooltipContent({
         </>
       )}
       {total !== undefined && <ReceiptRow label={t('toucan.statsBanner.committed.total')} value={total} emphasize />}
-      {(required || showLowVolumeHighFdv) && (
+      {highFloorInfo ? (
         <Text variant="body4" color="$neutral3">
-          {showLowVolumeHighFdv ? `${t('toucan.statsBanner.committed.lowVolumeHighFdv')} ` : ''}
-          {required
-            ? isCompleted
-              ? t('toucan.statsBanner.committed.cancelDisclaimerCompleted', { amount: required })
-              : t('toucan.statsBanner.committed.cancelDisclaimer', { amount: required })
-            : null}
+          {highFloorInfo}
         </Text>
+      ) : (
+        (required || showLowVolumeHighFdv) && (
+          <Text variant="body4" color="$neutral3">
+            {showLowVolumeHighFdv ? `${t('toucan.statsBanner.committed.lowVolumeHighFdv')} ` : ''}
+            {required
+              ? isCompleted
+                ? t('toucan.statsBanner.committed.cancelDisclaimerCompleted', { amount: required })
+                : t('toucan.statsBanner.committed.cancelDisclaimer', { amount: required })
+              : null}
+          </Text>
+        )
       )}
     </Flex>
   )

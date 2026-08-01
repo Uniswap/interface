@@ -1,18 +1,20 @@
-import { PlanResponse } from '@universe/api/src/clients/trading/__generated__'
+import type { TradingApi } from '@universe/api'
 import { isDevEnv } from '@universe/environment'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import type { EarnPlanReuseIdentity } from 'uniswap/src/features/transactions/swap/plan/earnPlanReuseIdentity'
 import { TransactionAndPlanStep } from 'uniswap/src/features/transactions/swap/plan/planStepTransformer'
 import { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
 import { devtools } from 'zustand/middleware'
 import { createStore } from 'zustand/vanilla'
 
 export interface ActivePlanData {
-  response: PlanResponse
+  response: TradingApi.PlanResponse
   planId: string
   inputChainId: UniverseChainId
   steps: TransactionAndPlanStep[]
   proofPending: boolean
   currentStepIndex: number
+  earnReuseIdentity?: EarnPlanReuseIdentity
 }
 
 export interface ActivePlanState {

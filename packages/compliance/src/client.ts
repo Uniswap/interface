@@ -18,6 +18,43 @@ export type ComplianceTokenInput = {
   address: string
 }
 
+export type ScreenAddressInput = {
+  address: string
+  /** Optional; omitting it (`CHAIN_ID_UNSPECIFIED`) routes to the default provider. */
+  chainId?: number
+}
+
+/**
+ * Builds a `useIsBlockedAddress` / `screenAddress` input from an optional address,
+ * collapsing the repeated `address ? { address } : undefined` guard at call sites.
+ * Pass `chainId` to route screening to that chain's provider; omit it to fall back
+ * to `CHAIN_ID_UNSPECIFIED` (the default provider). Returns `undefined` (skip the
+ * query) when there's no address to screen.
+ */
+export function toScreenInput(address?: string, chainId?: number): ScreenAddressInput | undefined {
+  return address ? { address, chainId } : undefined
+}
+
+/**
+ * Screens a wallet address against the compliance provider and returns whether
+ * it should be blocked (e.g. sanctioned / OFAC-listed). `chainId` is optional —
+ * leaving it out sends `CHAIN_ID_UNSPECIFIED`, which routes to the default provider.
+ *
+ * Fails open like the rest of this client: an unauthenticated caller (no Entry
+ * Gateway session) is screened as not-blocked, so callers must treat `false` as
+ * fail-open rather than a verified-clean signal.
+ */
+export async function screenAddress(
+  client: ComplianceV2Client,
+  { address, chainId }: ScreenAddressInput,
+): Promise<boolean> {
+  const response = await client.screenAddress({
+    address,
+    chainId: chainId as ChainId | undefined,
+  })
+  return response.block
+}
+
 /**
  * Bulk deny-list check for a single token. The endpoint accepts up to 100
  * tokens per call, but we keep calls scoped to one token so each result is

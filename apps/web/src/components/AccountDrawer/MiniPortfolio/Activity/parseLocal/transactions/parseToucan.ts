@@ -3,12 +3,14 @@ import { CurrencyAmount } from '@uniswap/sdk-core'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type {
+  AuctionLaunchTransactionInfo,
   ToucanBidTransactionInfo,
   ToucanWithdrawBidAndClaimTokensTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
+import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { getActivityTitle } from '~/components/AccountDrawer/MiniPortfolio/Activity/constants'
 import { getCurrencyFromCurrencyId } from '~/components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
@@ -52,6 +54,16 @@ export async function parseToucanBid({
           })
         : i18n.t('common.unknown'),
     currencies: [bidCurrency],
+  }
+}
+
+export function parseAuctionLaunch(launch: AuctionLaunchTransactionInfo): Partial<Activity> {
+  const descriptor = launch.tokenName ?? launch.tokenSymbol ?? shortenAddress({ address: launch.predictedTokenAddress })
+
+  return {
+    descriptor,
+    logos: [launch.tokenLogoUrl],
+    fallbackSymbols: [launch.tokenSymbol],
   }
 }
 

@@ -190,7 +190,7 @@ export function BridgedAssetModal({
               <TouchableArea onPress={onPressGetHelp}>
                 <Flex
                   row
-                  width="max-content"
+                  maxContent
                   borderRadius="$rounded16"
                   px="$spacing8"
                   py="$spacing4"

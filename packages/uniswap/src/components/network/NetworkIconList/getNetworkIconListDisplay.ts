@@ -2,10 +2,8 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { logger } from 'utilities/src/logger/logger'
 
-/** Show every network icon when there are at most this many unique chains. */
-const MAX_FULL_ICON_COUNT = 4
-/** When there are more than {@link MAX_FULL_ICON_COUNT} chains, show this many logos plus a +N badge. */
-const ICON_COUNT_WHEN_OVERFLOW = 3
+/** Maximum network logos shown in {@link NetworkIconList}; additional chains use overflow count (+N badge when enabled). */
+const MAX_VISIBLE_NETWORK_ICONS = 3
 
 export interface NetworkIconListDisplay {
   visibleChainIds: UniverseChainId[]
@@ -18,7 +16,7 @@ export interface NetworkIconListDisplay {
  * - Keeps only supported chain IDs (via toSupportedChainId)
  * - Keeps only chain IDs that are in the enabled list
  * - Deduplicates while preserving order
- * - At most 4 icons when ≤4 networks; otherwise first 3 icons + overflow count for the rest
+ * - Shows at most {@link MAX_VISIBLE_NETWORK_ICONS} icons; remaining networks contribute to overflow count
  */
 export function getNetworkIconListDisplay(
   chainIds: UniverseChainId[],
@@ -50,12 +48,8 @@ export function getNetworkIconListDisplay(
 
   const capped = deduped.slice(0, enabledChainIds.length)
 
-  if (capped.length <= MAX_FULL_ICON_COUNT) {
-    return { visibleChainIds: capped, overflowCount: 0 }
-  }
-
   return {
-    visibleChainIds: capped.slice(0, ICON_COUNT_WHEN_OVERFLOW),
-    overflowCount: capped.length - ICON_COUNT_WHEN_OVERFLOW,
+    visibleChainIds: capped.slice(0, MAX_VISIBLE_NETWORK_ICONS),
+    overflowCount: Math.max(0, capped.length - MAX_VISIBLE_NETWORK_ICONS),
   }
 }

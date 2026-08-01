@@ -1,3 +1,4 @@
+import { toScreenInput, useIsBlockedAddress } from '@universe/compliance'
 import { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
@@ -15,7 +16,6 @@ import { TradeInfoRow } from 'uniswap/src/features/transactions/swap/form/SwapFo
 import { useDebouncedGasInfo } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/useDebouncedGasInfo'
 import { useResetGasCta } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/useResetGasCta'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
-import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 
 /*
@@ -39,7 +39,7 @@ export const GasAndWarningRows = memo(function GasAndWarningRows(): JSX.Element 
 
   const [showWarningModal, setShowWarningModal] = useState(false)
 
-  const { isBlocked } = useIsBlocked(evmAddress)
+  const { isBlocked } = useIsBlockedAddress(toScreenInput(evmAddress))
 
   const { formScreenWarning, insufficientGasFundsWarning, warnings } = useParsedSwapWarnings()
   const showFormWarning = formScreenWarning && formScreenWarning.displayedInline && !isBlocked

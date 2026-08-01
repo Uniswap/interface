@@ -1,4 +1,4 @@
-import { FlashList, FlashListProps } from '@shopify/flash-list'
+import type { FlashListProps, FlashListRef } from '@shopify/flash-list'
 import React, { RefObject, useCallback, useMemo } from 'react'
 import {
   FlatList,
@@ -9,7 +9,7 @@ import {
   StyleSheet,
   ViewStyle,
 } from 'react-native'
-import Animated, { SharedValue } from 'react-native-reanimated'
+import type { SharedValue } from 'react-native-reanimated'
 import { Route } from 'react-native-tab-view'
 import { Flex, Text } from 'ui/src'
 import { colorsLight, spacing } from 'ui/src/theme'
@@ -65,8 +65,8 @@ export type HeaderConfig = {
 }
 
 export type ScrollPair = {
-  list: RefObject<FlatList | null> | RefObject<FlashList<unknown> | null>
-  position: Animated.SharedValue<number>
+  list: RefObject<FlatList | null> | RefObject<FlashListRef<unknown> | null>
+  position: SharedValue<number>
   index: number
 }
 

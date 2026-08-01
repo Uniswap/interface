@@ -1,9 +1,9 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { useTokenDetailsCrossChainBalances } from 'src/components/TokenDetails/useTokenDetailsCrossChainBalances'
 import { computeAggregateBalance } from 'uniswap/src/components/tokenDetails/utils'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useIsEarnEnabled } from 'uniswap/src/features/earn/hooks/useIsEarnEnabled'
 import {
   useTokenDetailsEarnData,
   type TokenDetailsEarnData,
@@ -15,7 +15,7 @@ export function useMobileTokenDetailsEarnData(): {
   activeAddress: Address | undefined
   earnData: TokenDetailsEarnData
 } {
-  const isEarnEnabled = useFeatureFlag(FeatureFlags.Earn)
+  const isEarnEnabled = useIsEarnEnabled()
   const { isTestnetModeEnabled } = useEnabledChains()
   const enabled = isEarnEnabled && !isTestnetModeEnabled
 

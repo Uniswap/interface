@@ -6,6 +6,7 @@ import {
   EXPANDABLE_ASSET_SHELL_HEADER_GAP_PX,
   EXPANDABLE_ASSET_TABLE_SHELL_PADDING_PX,
 } from 'uniswap/src/features/expandableAsset/expandableAssetLayout'
+import { IssuerTableRowHoverProvider } from '~/pages/Explore/rwa/expandable/IssuerTableRowHoverProvider'
 
 const EXPANDABLE_TABLE_ROW_HEIGHT_TRANSITION = `height ${EXPANDABLE_ASSET_ROW_HEIGHT_TRANSITION_MS}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`
 
@@ -17,6 +18,10 @@ export type ExpandableTableRowContainerProps = {
   expandedIssuerHeightPx: number
   /** Full table row width (sum of column sizes) so the shell matches Popular row width at every breakpoint. */
   rowContentMinWidthPx?: number
+  /** RWA Explore only: widen the shell by its horizontal padding so the card matches the Popular table row width.
+   *  Disable when columns flex-grow (e.g. portfolio tokens) — otherwise the shell overflows the header/flat rows
+   *  by the padding amount whenever the table scrolls horizontally. */
+  extendShellBeyondRowContent?: boolean
   onToggle: () => void
   parentRow: ReactNode
   issuerPanel: ReactNode
@@ -28,6 +33,7 @@ export function ExpandableTableRowContainer({
   collapsedIssuerHeightPx,
   expandedIssuerHeightPx,
   rowContentMinWidthPx = 0,
+  extendShellBeyondRowContent = true,
   onToggle,
   parentRow,
   issuerPanel,
@@ -37,9 +43,11 @@ export function ExpandableTableRowContainer({
   const [shouldRenderIssuerPanel, setShouldRenderIssuerPanel] = useState(isExpanded)
   const [isIssuerTransitioning, setIsIssuerTransitioning] = useState(false)
 
-  /** Match expanded card outer width at every breakpoint (column sum + shell horizontal padding). */
+  /** Match expanded card outer width at every breakpoint (column sum + shell horizontal padding when extended). */
   const shellMinWidthPx =
-    rowContentMinWidthPx > 0 ? rowContentMinWidthPx + EXPANDABLE_ASSET_TABLE_SHELL_PADDING_PX * 2 : undefined
+    rowContentMinWidthPx > 0
+      ? rowContentMinWidthPx + (extendShellBeyondRowContent ? EXPANDABLE_ASSET_TABLE_SHELL_PADDING_PX * 2 : 0)
+      : undefined
   const shellHorizontalBleedPx = EXPANDABLE_ASSET_TABLE_SHELL_PADDING_PX * 2
 
   useLayoutEffect(() => {
@@ -77,14 +85,15 @@ export function ExpandableTableRowContainer({
         backgroundColor={isExpanded ? '$surface2' : '$surface1'}
         borderRadius="$rounded16"
         gap={EXPANDABLE_ASSET_SHELL_HEADER_GAP_PX}
-        hoverStyle={isExpanded ? { backgroundColor: '$surface2Hovered' } : undefined}
         minWidth={shellMinWidthPx ?? '100%'}
         p="$spacing4"
         width="100%"
       >
-        <Flex mx={-EXPANDABLE_ASSET_TABLE_SHELL_PADDING_PX} width={`calc(100% + ${shellHorizontalBleedPx}px)`}>
-          {parentRow}
-        </Flex>
+        <IssuerTableRowHoverProvider hoverStyle={isExpanded ? { backgroundColor: '$surface2Hovered' } : undefined}>
+          <Flex mx={-EXPANDABLE_ASSET_TABLE_SHELL_PADDING_PX} width={`calc(100% + ${shellHorizontalBleedPx}px)`}>
+            {parentRow}
+          </Flex>
+        </IssuerTableRowHoverProvider>
         {shouldRenderIssuerPanel ? (
           /* oxlint-disable-next-line eslint-plugin-react(forbid-elements) -- issuer reveal clip inside unified shell */
           <div

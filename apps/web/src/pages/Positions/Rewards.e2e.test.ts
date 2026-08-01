@@ -39,26 +39,38 @@ test.describe(
         await expect(page.getByRole('button', { name: 'Collect rewards' })).toBeEnabled()
       })
 
-      test('should display rewards card with zero rewards and disabled collect button', async ({ page }) => {
+      test('should not render rewards card when rewards are zero', async ({ page }) => {
         await page.route(getRewardsUrlPattern(), async (route) => {
           await route.fulfill({ path: Mocks.DataApiService.get_rewards_empty })
         })
 
+        const rewardsResponse = page.waitForResponse((res) =>
+          res.url().includes(`${getRewards.service.typeName}/${getRewards.name}`),
+        )
         await page.goto(buildUrl({}))
+        await rewardsResponse
 
-        await expect(page.getByText('Rewards earned')).toBeVisible()
-        await expect(page.getByRole('button', { name: 'Collect rewards' })).toBeDisabled()
+        // The rewards card only renders when the wallet has unclaimed rewards above
+        // the dust threshold, so zero rewards hide it entirely.
+        await expect(page.getByText('Rewards earned')).not.toBeVisible()
+        await expect(page.getByRole('button', { name: 'Collect rewards' })).not.toBeVisible()
       })
 
-      test('should show error state when rewards API fails', async ({ page }) => {
+      test('should not render rewards card when rewards API fails', async ({ page }) => {
         await page.route(getRewardsUrlPattern(), async (route) => {
           await route.fulfill({ status: 500, body: JSON.stringify({ error: 'Internal server error' }) })
         })
 
+        const rewardsResponse = page.waitForResponse((res) =>
+          res.url().includes(`${getRewards.service.typeName}/${getRewards.name}`),
+        )
         await page.goto(buildUrl({}))
+        await rewardsResponse
 
-        await expect(page.getByText('Your rewards are unavailable right now')).toBeVisible()
-        await expect(page.getByRole('button', { name: 'Collect rewards' })).toBeDisabled()
+        // A failed rewards fetch is treated as "no rewards": the card is hidden
+        // rather than shown in an error state.
+        await expect(page.getByText('Rewards earned')).not.toBeVisible()
+        await expect(page.getByRole('button', { name: 'Collect rewards' })).not.toBeVisible()
       })
     })
 

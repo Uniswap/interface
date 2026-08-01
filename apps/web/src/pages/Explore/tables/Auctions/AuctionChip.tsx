@@ -10,6 +10,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { NumberType } from 'utilities/src/format/types'
 import { useAuctionTimeRemaining } from '~/features/Toucan/Auction/hooks/useAuctionTimeRemaining'
 import { formatCompactFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
+import { isAuctionFailed } from '~/features/Toucan/Auction/utils/isAuctionFailed'
 import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
 import { computeProjectedFdvTableValue } from '~/features/Toucan/utils/computeProjectedFdv'
 import { useSrcColor } from '~/hooks/useColor'
@@ -70,7 +71,7 @@ export function AuctionChip({
   const effectiveTokenColor = lockedTokenColorRef.current ?? tokenColor ?? colors.neutral3.val
 
   // Calculate time remaining and progress
-  const { durationString, progressPercentage } = useAuctionTimeRemaining({
+  const { durationString, progressPercentage, phase } = useAuctionTimeRemaining({
     startBlockTimestamp: auction.timeRemaining.startBlockTimestamp,
     endBlockTimestamp: auction.timeRemaining.endBlockTimestamp,
   })
@@ -166,7 +167,7 @@ export function AuctionChip({
 
         <Flex flexDirection="column" gap="$gap4" flex={1}>
           <Text variant="body4" color="$neutral2">
-            {t('toucan.auction.committedVolume')}
+            {t('toucan.auction.committedVol')}
           </Text>
           <AnimatedNumber
             numericValue={committedVolumeUsd}
@@ -185,37 +186,49 @@ export function AuctionChip({
         </Flex>
       </Flex>
 
-      {/* Time remaining progress bar with overlaid text */}
-      {durationString && (
-        <Flex position="relative" width="100%" height="8px">
-          {/* Background track and progress fill */}
-          <Flex width="100%" height="100%" backgroundColor="$surface3" borderRadius="$roundedFull" overflow="hidden">
-            {/* Filled progress using token color */}
-            <Flex
-              width={`${Math.min(100, Math.max(0, progressPercentage))}%`}
-              height="100%"
-              backgroundColor={effectiveTokenColor}
-            />
-          </Flex>
+      {/* Completed auctions drop the progress bar and just show the Launched (or Failed) badge */}
+      {phase === 'completed' ? (
+        <Text variant="body4" color="$neutral2">
+          {isAuctionFailed({
+            phase,
+            totalBidVolume: auction.auction.totalBidVolume,
+            requiredCurrencyRaised: auction.auction.requiredCurrencyRaised,
+          })
+            ? t('toucan.auction.status.failed')
+            : t('toucan.auction.timeRemaining.completed')}
+        </Text>
+      ) : (
+        durationString && (
+          <Flex position="relative" width="100%" height="8px">
+            {/* Background track and progress fill */}
+            <Flex width="100%" height="100%" backgroundColor="$surface3" borderRadius="$roundedFull" overflow="hidden">
+              {/* Filled progress using token color */}
+              <Flex
+                width={`${Math.min(100, Math.max(0, progressPercentage))}%`}
+                height="100%"
+                backgroundColor={effectiveTokenColor}
+              />
+            </Flex>
 
-          {/* Overlaid duration text (at progress point, with edge protection) */}
-          <Flex
-            position="absolute"
-            top="50%"
-            left={`${Math.min(100, Math.max(0, progressPercentage))}%`}
-            backgroundColor="$scrim"
-            borderRadius="$rounded4"
-            padding="$spacing4"
-            style={{
-              transform: `translate(-${progressPercentage}%, -50%)`,
-              backdropFilter: 'blur(2px)',
-            }}
-          >
-            <Text variant="body4" color="$white" whiteSpace="nowrap">
-              {durationString}
-            </Text>
+            {/* Overlaid duration text (at progress point, with edge protection) */}
+            <Flex
+              position="absolute"
+              top="50%"
+              left={`${Math.min(100, Math.max(0, progressPercentage))}%`}
+              backgroundColor="$scrim"
+              borderRadius="$rounded4"
+              padding="$spacing4"
+              style={{
+                transform: `translate(-${progressPercentage}%, -50%)`,
+                backdropFilter: 'blur(2px)',
+              }}
+            >
+              <Text variant="body4" color="$white" whiteSpace="nowrap">
+                {durationString}
+              </Text>
+            </Flex>
           </Flex>
-        </Flex>
+        )
       )}
     </TouchableArea>
   )

@@ -1,10 +1,8 @@
 import type { Transport } from '@connectrpc/connect'
+import type { DeviceIdService } from '@universe/sessions/src/device-id/types'
 import type { SessionService } from '@universe/sessions/src/session-service/types'
-import type {
-  InMemoryDeviceIdService,
-  InMemorySessionStorage,
-  InMemoryUniswapIdentifierService,
-} from '@universe/sessions/src/test-utils'
+import type { SessionStorage } from '@universe/sessions/src/session-storage/types'
+import type { UniswapIdentifierService } from '@universe/sessions/src/uniswap-identifier/types'
 
 export type TestSessionPlatform = 'web' | 'ios' | 'android' | 'extension'
 
@@ -15,17 +13,23 @@ export interface CreateTestSessionContextOptions {
   backendUrl?: string
   /** Whether to auto-upgrade (complete challenge flow). Default: true */
   autoUpgrade?: boolean
+  /** Session ID persistence. Default: in-memory (inject e.g. a file store to persist across runs) */
+  sessionStorage?: SessionStorage
+  /** Device ID persistence. Default: in-memory */
+  deviceIdService?: DeviceIdService
+  /** Uniswap identifier persistence. Default: in-memory */
+  uniswapIdentifierService?: UniswapIdentifierService
 }
 
 export interface TestSessionContext {
   /** Authenticated SessionService — same interface as production */
   sessionService: SessionService
-  /** In-memory session storage, inspectable for assertions */
-  sessionStorage: InMemorySessionStorage
-  /** In-memory device ID service */
-  deviceIdService: InMemoryDeviceIdService
-  /** In-memory Uniswap identifier service */
-  uniswapIdentifierService: InMemoryUniswapIdentifierService
+  /** Session storage (in-memory unless injected), inspectable for assertions */
+  sessionStorage: SessionStorage
+  /** Device ID service (in-memory unless injected) */
+  deviceIdService: DeviceIdService
+  /** Uniswap identifier service (in-memory unless injected) */
+  uniswapIdentifierService: UniswapIdentifierService
   /** The ConnectRPC transport used for session API calls */
   transport: Transport
   /** Resolves current session + device + request-source headers for raw HTTP use */

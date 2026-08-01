@@ -13,7 +13,7 @@ export const ChangeUnitagConfirmButton = ({
   return (
     <Flex row width="100%" pt="$spacing4">
       <Button
-        isDisabled={isSubmitButtonDisabled}
+        disabled={isSubmitButtonDisabled}
         loading={isCheckingUnitag || isChangeResponseLoading}
         testID={TestID.Confirm}
         variant="branded"

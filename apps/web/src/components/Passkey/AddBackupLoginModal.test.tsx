@@ -28,6 +28,8 @@ vi.mock('uniswap/src/features/passkey/embeddedWallet', () => ({
   encryptAndStoreRecovery: vi.fn(),
   authorizeAndCompleteRecovery: vi.fn(),
   RecoveryMethod: vi.fn().mockImplementation((args: Record<string, unknown>) => args),
+  toRecoveryAuthMethodType: (provider: 'google' | 'apple' | null) =>
+    provider === 'google' ? 'GOOGLE' : provider === 'apple' ? 'APPLE' : 'EMAIL',
 }))
 
 vi.mock('uniswap/src/features/passkey/checkRecoveryAvailability', () => ({

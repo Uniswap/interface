@@ -33,6 +33,7 @@ import { MaxValuationFieldState } from '~/features/Toucan/Auction/hooks/useBidMa
 import { useBidTokenInfo } from '~/features/Toucan/Auction/hooks/useBidTokenInfo'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { getClearingPrice } from '~/features/Toucan/Auction/utils/clearingPrice'
+import { getAuctionTokenDecimals } from '~/features/Toucan/Auction/utils/tokenMetadata'
 import { ToucanActionButton } from '~/features/Toucan/Shared/ToucanActionButton'
 import { useAccount } from '~/hooks/useAccount'
 import { AllowanceState } from '~/hooks/usePermit2Allowance'
@@ -144,7 +145,7 @@ export function BidReviewModal({
     tickSizeQ96,
     fallbackBidTokenDecimals,
     totalSupply: auctionDetails?.tokenTotalSupply,
-    auctionTokenDecimals: auctionDetails?.token?.currency.decimals,
+    auctionTokenDecimals: getAuctionTokenDecimals(auctionDetails?.token),
     bidTokenPriceFiat: bidTokenInfo?.priceFiat,
   })
 

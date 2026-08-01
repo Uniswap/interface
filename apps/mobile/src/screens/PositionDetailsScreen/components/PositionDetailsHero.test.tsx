@@ -5,7 +5,7 @@ import { fireEvent, render, screen } from 'src/test/test-utils'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { shortenAddress } from 'utilities/src/addresses'
 
-jest.mock('uniswap/src/components/CurrencyLogo/SplitLogo', () => ({
+vi.mock('uniswap/src/components/CurrencyLogo/SplitLogo', () => ({
   SplitLogo: () => null,
 }))
 
@@ -28,7 +28,7 @@ function makeV4Position(overrides: Partial<PositionInfo> = {}): PositionInfo {
 
 describe('PositionDetailsHero', () => {
   it('renders the pair, protocol/fee/hook subtitle, value, and a tappable conversion row', () => {
-    const onTogglePriceDirection = jest.fn()
+    const onTogglePriceDirection = vi.fn()
 
     render(
       <PositionDetailsHero
@@ -47,7 +47,7 @@ describe('PositionDetailsHero', () => {
     expect(screen.getByText(shortenAddress({ address: hookAddress }))).toBeDefined()
     expect(screen.getByText('$1,234.00')).toBeDefined()
 
-    fireEvent.press(screen.getByText('1 ETH = 2,000 USDC'), { stopPropagation: jest.fn() })
+    fireEvent.press(screen.getByText('1 ETH = 2,000 USDC'), { stopPropagation: vi.fn() })
     expect(onTogglePriceDirection).toHaveBeenCalledTimes(1)
   })
 
@@ -59,7 +59,7 @@ describe('PositionDetailsHero', () => {
         currency1Info={undefined}
         formattedValue="$1,234.00"
         positionInfo={makeV4Position({ v4hook: '0x0000000000000000000000000000000000000000' })}
-        onTogglePriceDirection={jest.fn()}
+        onTogglePriceDirection={vi.fn()}
       />,
     )
 
@@ -74,7 +74,7 @@ describe('PositionDetailsHero', () => {
         currency1Info={undefined}
         formattedValue="$0.00"
         positionInfo={makeV4Position()}
-        onTogglePriceDirection={jest.fn()}
+        onTogglePriceDirection={vi.fn()}
       />,
     )
 

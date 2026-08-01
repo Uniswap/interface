@@ -260,6 +260,7 @@ export function createEmbeddedWalletApiClient({
     params: {
       blindedElement: string
       authMethodId: string
+      rotate?: boolean
     },
     accessToken: string,
   ): Promise<OprfEvaluateResponse> {
@@ -278,11 +279,14 @@ export function createEmbeddedWalletApiClient({
   }
 
   async function fetchSetupRecovery(params: {
-    credential: string
+    credential?: string
     authMethodId: string
     authMethodType?: string
     encryptedKeyId?: string
     authMethodIdentifier?: string
+    authKeySignature?: string
+    recoveryAuthSignature?: string
+    signingPayload?: string
   }): Promise<SetupRecoveryResponse> {
     return await rpcClient.setupRecovery(params)
   }

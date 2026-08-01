@@ -22,6 +22,7 @@ const animationProp = {
 
 export function Switch({
   checked: checkedProp,
+  // eslint-disable-next-line typescript/unbound-method
   onCheckedChange: onCheckedChangeProp,
   disabled,
   variant,

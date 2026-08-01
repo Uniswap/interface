@@ -9,9 +9,9 @@ import { isUniverseChainIdArrayType } from 'uniswap/src/features/gating/typeGuar
  */
 export const DEFAULT_CHAINED_ACTIONS_UNSUPPORTED_CHAIN_IDS: UniverseChainId[] = [
   UniverseChainId.Avalanche,
+  UniverseChainId.Blast,
   UniverseChainId.Bnb,
   UniverseChainId.Celo,
-  UniverseChainId.Monad,
   UniverseChainId.Polygon,
   UniverseChainId.Solana,
   UniverseChainId.Tempo,

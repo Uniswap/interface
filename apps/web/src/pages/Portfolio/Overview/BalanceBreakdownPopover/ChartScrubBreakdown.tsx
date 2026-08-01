@@ -5,7 +5,11 @@ import { spacing } from 'ui/src/theme'
 import { ChartHoverCoordinates } from '~/components/Charts/ChartModel'
 import { PriceChartData } from '~/components/Charts/PriceChart'
 import { calculateDelta } from '~/components/DeltaArrow/DeltaArrow'
-import { BalanceBreakdownRow } from '~/pages/Portfolio/Overview/BalanceBreakdownPopover/BalanceBreakdownRow'
+import {
+  BalanceBreakdownRow,
+  type BalanceBreakdownRowData,
+} from '~/pages/Portfolio/Overview/BalanceBreakdownPopover/BalanceBreakdownRow'
+import { seriesHasValue } from '~/pages/Portfolio/Overview/hooks/usePortfolioChartSeries'
 
 const OVERLAY_WIDTH = 180
 const TOP_OFFSET = -spacing.spacing8
@@ -18,17 +22,21 @@ function pointAtTime(series: PriceChartData[], time: UTCTimestamp): PriceChartDa
 
 /**
  * Crosshair-following overlay shown while scrubbing the Total chart: splits the balance into
- * tokens (first) and pools at the scrubbed point, each with a semantically-colored % change.
+ * tokens / earn / pools (fixed order) at the scrubbed point, each with a semantically-colored %
+ * change. Categories with no series point at the scrubbed time or an all-zero series are skipped.
+ * The opaque background masks the canvas-drawn crosshair line so it starts below the list.
  */
 export function ChartScrubBreakdown({
   coordinates,
   time,
   tokensSeries,
+  earnSeries,
   poolsSeries,
 }: {
   coordinates: ChartHoverCoordinates
   time: UTCTimestamp
   tokensSeries: PriceChartData[]
+  earnSeries: PriceChartData[]
   poolsSeries: PriceChartData[]
 }): JSX.Element | null {
   const ref = useRef<TamaguiElement>(null)
@@ -50,10 +58,24 @@ export function ChartScrubBreakdown({
     el.style.left = `${Math.min(Math.max(x, half), Math.max(half, maxLeft))}px`
   }, [x, plotRightEdge])
 
-  const tokensPoint = pointAtTime(tokensSeries, time)
-  const poolsPoint = pointAtTime(poolsSeries, time)
+  const rows: BalanceBreakdownRowData[] = (
+    [
+      { kind: 'tokens', series: tokensSeries },
+      { kind: 'earn', series: earnSeries },
+      { kind: 'pools', series: poolsSeries },
+    ] as const
+  ).flatMap(({ kind, series }) => {
+    if (!seriesHasValue(series)) {
+      return []
+    }
+    const point = pointAtTime(series, time)
+    if (!point) {
+      return []
+    }
+    return [{ kind, valueUSD: point.close, percentChange: calculateDelta(series[0].close, point.close) }]
+  })
 
-  if (!tokensPoint || !poolsPoint) {
+  if (rows.length < 2) {
     return null
   }
 
@@ -64,20 +86,13 @@ export function ChartScrubBreakdown({
       pointerEvents="none"
       width={OVERLAY_WIDTH}
       gap="$spacing4"
+      backgroundColor="$surface1"
+      pb="$spacing8"
       style={{ top: TOP_OFFSET, transform: 'translateX(-50%)', zIndex: 4 }}
     >
-      <BalanceBreakdownRow
-        kind="tokens"
-        valueUSD={tokensPoint.close}
-        percentChange={calculateDelta(tokensSeries[0].close, tokensPoint.close)}
-        semanticPercentColor
-      />
-      <BalanceBreakdownRow
-        kind="pools"
-        valueUSD={poolsPoint.close}
-        percentChange={calculateDelta(poolsSeries[0].close, poolsPoint.close)}
-        semanticPercentColor
-      />
+      {rows.map((row) => (
+        <BalanceBreakdownRow key={row.kind} {...row} semanticPercentColor />
+      ))}
     </Flex>
   )
 }

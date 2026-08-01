@@ -20,7 +20,7 @@ import { getContractManager, getProvider } from 'wallet/src/features/wallet/cont
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 import { getTxProvidersMocks, mockContractManager } from 'wallet/src/test/mocks'
 
-jest.mock('uniswap/src/features/telemetry/send')
+vi.mock('uniswap/src/features/telemetry/send')
 
 const account = signerMnemonicAccount()
 
@@ -174,10 +174,10 @@ describe('sendTokenSaga', () => {
       .silentRun()
   })
   it('Fails on insufficient balance', async () => {
-    jest.spyOn(console, 'error').mockImplementation(noOpFunction)
+    vi.spyOn(console, 'error').mockImplementation(noOpFunction)
     const provider = {
       ...mockProvider,
-      getBalance: jest.fn(() => BigNumber.from('0')),
+      getBalance: vi.fn(() => BigNumber.from('0')),
     }
     await expectSaga(sendToken, {
       sendTokenParams: nativeTransferParams,

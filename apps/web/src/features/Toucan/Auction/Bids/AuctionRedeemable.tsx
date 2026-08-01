@@ -70,7 +70,7 @@ export function AuctionRedeemable({
         </Flex>
         <Flex alignItems="center">
           <Text variant="body2" color="$neutral2" textAlign="center">
-            {t('toucan.auction.redeem.mustBeRedeemed', { symbol: auctionCurrency.symbol })}
+            {t('toucan.auction.redeem.mustBeRedeemed', { symbol: auctionCurrency.symbol ?? t('common.token') })}
           </Text>
           <TouchableArea onPress={onRedeemPress} mt={3}>
             <Flex row alignItems="center" gap="$spacing4">

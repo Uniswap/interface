@@ -314,7 +314,7 @@ export function RemovePasskeyModal() {
                     icon={<Passkey color={acknowledged ? '$white' : '$neutral2'} size={16} />}
                     // Arrow wrapper needed: onPress passes GestureResponderEvent, but handleDeleteAuthenticator expects void
                     onPress={() => handleDeleteAuthenticator()}
-                    isDisabled={!acknowledged || isPending}
+                    disabled={!acknowledged || isPending}
                   >
                     {t('common.button.delete')}
                   </Button>

@@ -107,6 +107,7 @@ export function WebBottomSheet({
   hideHandlebar,
   snapPointsMode = 'fit',
   snapPoints,
+  disableRemoveScroll = false,
   ...rest
 }: ModalProps): JSX.Element | null {
   const isTouchDevice = useIsTouchDevice()
@@ -173,7 +174,7 @@ export function WebBottomSheet({
   }
 
   return (
-    <RemoveScroll enabled={isOpen}>
+    <RemoveScroll enabled={isOpen && !disableRemoveScroll}>
       <Sheet
         key={touchDeviceSheetKey}
         dismissOnSnapToBottom
@@ -267,6 +268,7 @@ type ModalProps = GetProps<typeof View> &
     overlayOpacity?: number
     borderColor?: string
     zIndex?: number
+    disableRemoveScroll?: boolean // skips Tamagui's built-in RemoveScroll for self-locking callers
   }>
 
 /**
@@ -292,6 +294,7 @@ export function AdaptiveWebModal({
   overlayOpacity,
   snapPointsMode,
   snapPoints,
+  disableRemoveScroll = false,
   ...rest
 }: ModalProps): JSX.Element {
   const filteredRest = Object.fromEntries(Object.entries(rest).filter(([_, v]) => v !== undefined)) as typeof rest // Filter out undefined properties from rest
@@ -317,7 +320,7 @@ export function AdaptiveWebModal({
   )
 
   return (
-    <Dialog modal open={isOpen} onOpenChange={handleClose}>
+    <Dialog modal open={isOpen} disableRemoveScroll={disableRemoveScroll} onOpenChange={handleClose}>
       <VisuallyHidden>
         <Dialog.Title />
       </VisuallyHidden>
@@ -333,6 +336,7 @@ export function AdaptiveWebModal({
             snapPointsMode={snapPointsMode}
             snapPoints={snapPoints}
             zIndex={effectiveZIndex}
+            disableRemoveScroll={disableRemoveScroll}
             onClose={onClose}
             {...filteredRest}
           >
@@ -406,6 +410,7 @@ export function WebModalWithBottomAttachment({
   overlayOpacity,
   snapPointsMode,
   snapPoints,
+  disableRemoveScroll = false,
   ...rest
 }: ModalProps & { bottomAttachment?: ReactNode }): JSX.Element {
   const shadowProps = useShadowPropsShort()
@@ -425,7 +430,7 @@ export function WebModalWithBottomAttachment({
   const effectiveZIndex = useEffectiveModalOrSheetZIndex({ adaptToSheet, isTopAligned, zIndex })
 
   return (
-    <Dialog modal open={isOpen} onOpenChange={handleClose}>
+    <Dialog modal open={isOpen} disableRemoveScroll={disableRemoveScroll} onOpenChange={handleClose}>
       <VisuallyHidden>
         <Dialog.Title />
       </VisuallyHidden>
@@ -438,6 +443,7 @@ export function WebModalWithBottomAttachment({
             snapPointsMode={snapPointsMode}
             snapPoints={snapPoints}
             zIndex={effectiveZIndex}
+            disableRemoveScroll={disableRemoveScroll}
             onClose={onClose}
             {...filteredRest}
           >

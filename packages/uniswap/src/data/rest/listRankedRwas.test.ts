@@ -1,8 +1,32 @@
 import { PartialMessage } from '@bufbuild/protobuf'
-import { RankedRwa } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { useQuery } from '@connectrpc/connect-query'
+import { RankedRwa, RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { OnchainItemListOptionType } from 'uniswap/src/components/lists/items/types'
-import { buildRwaTokenOption } from 'uniswap/src/data/rest/listRankedRwas'
+import { buildRwaTokenOption, useListRankedRwasQuery } from 'uniswap/src/data/rest/listRankedRwas'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { renderHook } from 'uniswap/src/test/test-utils'
+
+const { mockUseEnabledChains, mockUseFeatureFlag } = vi.hoisted(() => ({
+  mockUseEnabledChains: vi.fn(),
+  mockUseFeatureFlag: vi.fn(),
+}))
+
+vi.mock('@connectrpc/connect-query', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@connectrpc/connect-query')>()),
+  useQuery: vi.fn(),
+}))
+
+vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
+  useEnabledChains: mockUseEnabledChains,
+}))
+
+vi.mock('@universe/gating', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@universe/gating')>()),
+  useFeatureFlag: mockUseFeatureFlag,
+}))
+
+const mockUseQuery = vi.mocked(useQuery)
+const CHAIN_IDS = [UniverseChainId.Mainnet, UniverseChainId.Base]
 
 function makeRwa(overrides?: PartialMessage<RankedRwa>): RankedRwa {
   return new RankedRwa({
@@ -21,6 +45,35 @@ function makeRwa(overrides?: PartialMessage<RankedRwa>): RankedRwa {
     ...overrides,
   })
 }
+
+describe(useListRankedRwasQuery, () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockUseEnabledChains.mockReturnValue({ chains: CHAIN_IDS })
+    mockUseFeatureFlag.mockReturnValue(false)
+    mockUseQuery.mockReturnValue({ data: undefined } as unknown as ReturnType<typeof useQuery>)
+  })
+
+  it('sets useSubstreamData to false when V2EndpointsTokens is disabled', () => {
+    mockUseFeatureFlag.mockReturnValue(false)
+
+    renderHook(() =>
+      useListRankedRwasQuery({ category: RwaCategory.STOCKS, chainIds: CHAIN_IDS, includeSparkline1d: false }),
+    )
+
+    expect(mockUseQuery.mock.calls[0]?.[1]).toEqual(expect.objectContaining({ useSubstreamData: false }))
+  })
+
+  it('sets useSubstreamData to true when V2EndpointsTokens is enabled', () => {
+    mockUseFeatureFlag.mockReturnValue(true)
+
+    renderHook(() =>
+      useListRankedRwasQuery({ category: RwaCategory.STOCKS, chainIds: CHAIN_IDS, includeSparkline1d: false }),
+    )
+
+    expect(mockUseQuery.mock.calls[0]?.[1]).toEqual(expect.objectContaining({ useSubstreamData: true }))
+  })
+})
 
 describe('buildRwaTokenOption', () => {
   it('maps issuerTokens[0].chainTokens[0] with issuer-token metadata, no decimals', () => {

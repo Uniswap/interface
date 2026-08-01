@@ -1,6 +1,10 @@
 import { type PartialMessage } from '@bufbuild/protobuf'
 import type { CreateAuctionRequest } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/auction_pb'
-import { PriceRangeStrategy as ProtoPriceRangeStrategy } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/auction_pb'
+// BurnLock requires @uniswap/client-liquidity >= 1.3.6 (Uniswap/backend#10274)
+import {
+  BurnLock,
+  PriceRangeStrategy as ProtoPriceRangeStrategy,
+} from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/auction_pb'
 import { ChainId } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
 import { UNBOUNDED_PERCENT } from '@uniswap/liquidity-launcher-sdk'
 import { isAddress, zeroAddress } from '~/chains'
@@ -13,6 +17,7 @@ import {
   CUSTOM_PRICE_RANGE_POSITIVE_INFINITY,
   PostAuctionLiquidityAllocationType,
   PriceRangeStrategy,
+  TimeLockPreset,
   TokenMode,
 } from '~/pages/Liquidity/CreateAuction/types'
 import {
@@ -149,6 +154,24 @@ function toLpAllocation(
 const SECONDS_PER_DAY = 86_400n
 
 /**
+ * A permanent plain timelock is expressed as the `burn` variant of the `liquidity_lock` oneof:
+ * on graduation the backend mints the LP position straight to the burn address (hardcoded
+ * server-side), instead of a max-duration lock contract. `pool_owner` is NOT repurposed — the
+ * creator keeps the auction tokensRecipient and failure-recovery recipient, so nothing burns
+ * unless the pool actually graduates. Fees-forwarder and buyback-burn need the per-launch
+ * lock-recipient contract to hold the position, so they keep the timelocked lock even on the
+ * Permanent preset.
+ */
+function shouldBurnLiquidity(customizePool: CustomizePoolState): boolean {
+  return (
+    customizePool.timeLockEnabled &&
+    customizePool.timeLockPreset === TimeLockPreset.Permanent &&
+    !customizePool.sendFeesEnabled &&
+    !customizePool.buybackAndBurnEnabled
+  )
+}
+
+/**
  * Buyback-burn floor as a fraction of the LP token reserve (`reservedSupplyForLp`): 0.1% (10 bps).
  * Scales the per-buyback minimum with pool size so a keeper can't grind dust-sized buyback-burns.
  */
@@ -254,6 +277,9 @@ export function buildCreateAuctionRequest(
   const auctionSupplyRaw = isNewToken ? totalSupplyRaw : auctionedSliceRaw
   const returnedSupplyRaw = isNewToken ? totalSupplyRaw - auctionedSliceRaw : 0n
 
+  const burnLiquidity = shouldBurnLiquidity(customizePool)
+  const resolvedPoolOwner = isAddress(customizePool.poolOwner) ? customizePool.poolOwner : walletAddress
+
   const tokenInfo: PartialMessage<CreateAuctionRequest>['tokenInfo'] =
     tokenForm.mode === TokenMode.CREATE_NEW
       ? {
@@ -315,8 +341,11 @@ export function buildCreateAuctionRequest(
       customRanges: toCustomRanges(customizePool),
       reservedSupplyForLp: reservedForLpRaw.toString(),
       lpAllocation: toLpAllocation(customizePool, configureAuction),
-      poolOwner: isAddress(customizePool.poolOwner) ? customizePool.poolOwner : walletAddress,
-      liquidityLock: toLiquidityLock(customizePool, configureAuction),
+      poolOwner: resolvedPoolOwner,
+      // `unlockTimeUnix` must be omitted for burn — the backend rejects a nonzero value.
+      liquidityLock: burnLiquidity
+        ? { mode: { case: 'burn', value: new BurnLock({}) } }
+        : toLiquidityLock(customizePool, configureAuction),
     },
   }
 }

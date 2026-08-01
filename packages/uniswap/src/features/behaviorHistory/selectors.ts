@@ -1,4 +1,4 @@
-import { UniswapState } from 'uniswap/src/state/uniswapReducer'
+import type { UniswapState } from 'uniswap/src/state/uniswapReducer'
 
 export const selectHasViewedBridgingBanner = (state: UniswapState): boolean =>
   state.uniswapBehaviorHistory.hasViewedBridgingBanner === true
@@ -22,9 +22,6 @@ export const selectHasSeenToucanIntroModal = (state: UniswapState): boolean =>
 /** Returns true if user has seen the modal for a specific wallet */
 export const selectHasSeenToucanIntroModalForWallet = (state: UniswapState, walletAddress: string): boolean =>
   state.uniswapBehaviorHistory.toucanIntroModalSeenByWallet?.[walletAddress.toLowerCase()] === true
-
-export const selectHasDismissedUniswapWrapped2025Banner = (state: UniswapState): boolean =>
-  state.uniswapBehaviorHistory.hasDismissedUniswapWrapped2025Banner === true
 
 export const selectHasDismissedCrosschainSwapsPromoBanner = (state: UniswapState): boolean =>
   state.uniswapBehaviorHistory.hasDismissedCrosschainSwapsPromoBanner === true

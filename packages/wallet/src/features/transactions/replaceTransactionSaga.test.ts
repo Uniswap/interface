@@ -19,6 +19,7 @@ import {
 import i18n from 'uniswap/src/i18n'
 import { ethersTransactionRequest, getTxFixtures, transactionDetails } from 'uniswap/src/test/fixtures'
 import * as CreateTransactionId from 'uniswap/src/utils/createTransactionId'
+import type { MockInstance } from 'vitest'
 import { executeTransaction } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
 import { attemptReplaceTransaction } from 'wallet/src/features/transactions/replaceTransactionSaga'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
@@ -42,17 +43,17 @@ const baseTransaction: ClassicTransactionDetails = transactionDetails({
 const present = dayjs('2022-02-01')
 
 describe('attemptReplaceTransaction', () => {
-  let txnUtilSpy: jest.SpyInstance
+  let txnUtilSpy: MockInstance
 
   beforeAll(() => {
     // Mock uuid for new txns
-    txnUtilSpy = jest.spyOn(CreateTransactionId, 'createTransactionId').mockReturnValue(NEW_UNIQUE_ID)
+    txnUtilSpy = vi.spyOn(CreateTransactionId, 'createTransactionId').mockReturnValue(NEW_UNIQUE_ID)
     MockDate.reset()
   })
 
   beforeEach(() => {
     // Clear mocks between tests
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   afterAll(() => {

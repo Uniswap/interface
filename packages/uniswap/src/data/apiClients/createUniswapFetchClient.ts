@@ -17,19 +17,27 @@ export function createUniswapFetchClient({
   baseUrl,
   includeBaseUniswapHeaders = true,
   additionalHeaders = {},
+  getHeaders,
+  onResponse,
 }: {
   baseUrl: string
   includeBaseUniswapHeaders?: boolean
   additionalHeaders?: HeadersInit & {
     'x-uniquote-enabled'?: string
   }
+  /** Per-request dynamic headers, merged over the static ones (the dynamic value wins). */
+  getHeaders?: () => HeadersInit
+  /** Invoked with the raw Response of every completed request (headers only). */
+  onResponse?: (response: Response) => void
 }): FetchClient {
   // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
   const headers = includeBaseUniswapHeaders ? { ...BASE_UNISWAP_HEADERS, ...additionalHeaders } : additionalHeaders
 
   return createFetchClient({
     baseUrl,
-    getHeaders: () => headers,
+    // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
+    getHeaders: () => ({ ...headers, ...getHeaders?.() }),
+    onResponse,
     getSessionService: () =>
       provideSessionService({
         getBaseUrl: () => getUniswapServiceUrls(config).apiBaseUrlV2,

@@ -1,6 +1,24 @@
-import { Platform } from 'react-native'
+import { File, UploadType } from 'expo-file-system'
 import type { S3UploadCredentials } from 'uniswap/src/features/unitags/fileUtils'
 import { logger } from 'utilities/src/logger/logger'
+
+// Map file extension to an image MIME type. The S3 upload policy requires a Content-Type starting with "image/".
+function getImageMimeType(uri: string): string {
+  const extension = uri.split('?')[0]?.split('.').pop()?.toLowerCase()
+  switch (extension) {
+    case 'png':
+      return 'image/png'
+    case 'gif':
+      return 'image/gif'
+    case 'webp':
+      return 'image/webp'
+    case 'heic':
+    case 'heif':
+      return 'image/heic'
+    default:
+      return 'image/jpeg'
+  }
+}
 
 // Native-specific: React Native file URI patterns
 export function isLocalFileUri(imageUri: string): boolean {
@@ -15,47 +33,29 @@ export function isLocalFileUri(imageUri: string): boolean {
   return localFilePatterns.some((pattern) => imageUri.startsWith(pattern))
 }
 
-// Native-specific: React Native FormData handling
+// Native-specific: multipart upload to a pre-signed S3 POST url.
+// Uses expo-file-system's native upload — the global fetch (Expo winter runtime) rejects RN's { uri } FormData part.
 export async function uploadFileToS3(imageUri: string, creds: S3UploadCredentials): Promise<{ success: boolean }> {
   if (!creds.preSignedUrl || !creds.s3UploadFields) {
     return { success: false }
   }
 
-  // Standardize the uri for iOS and Android
-  const uri = Platform.OS === 'android' ? imageUri : imageUri.replace('file://', '')
-  const formData = new FormData()
+  const contentType = getImageMimeType(imageUri)
+  const parameters = { ...creds.s3UploadFields }
+  if (!parameters['Content-Type']) {
+    parameters['Content-Type'] = contentType
+  }
 
-  // Add the S3 fields to the form data
-  Object.entries(creds.s3UploadFields).forEach(([key, value]) => {
-    formData.append(key, value)
-  })
-
-  // Get the file as a blob to set the Content-Type
-  const response = await fetch(uri)
-  const blob = await response.blob()
-  formData.append('Content-Type', blob.type)
-
-  // Add the file to the form data. We ignore the function signature and input an object with keys uri, type, and name
-  // This is the argument that react-native's FormData expects, but for some reason our project thinks it's using typescript's FormData
-  // Ignoring the typecheck and forcing the object to be Blob works though
-  formData.append('file', {
-    uri,
-    type: blob.type,
-    name: uri,
-  } as unknown as Blob)
-
-  // Send the post request to S3 using pre-signed URL and s3 fields
   try {
-    const postResponse = await fetch(creds.preSignedUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'multipart/form-data', // Important for S3 to process the file correctly
-      },
-      body: formData,
+    const { status } = await new File(imageUri).upload(creds.preSignedUrl, {
+      uploadType: UploadType.MULTIPART,
+      fieldName: 'file',
+      mimeType: contentType,
+      parameters,
     })
 
-    if (!postResponse.ok) {
-      throw new Error(`HTTP error! status: ${postResponse.status}`)
+    if (status < 200 || status >= 300) {
+      throw new Error(`HTTP error! status: ${status}`)
     }
 
     logger.debug('fileUtils.native.ts', 'uploadFileToS3', 'Avatar uploaded to S3 successfully')

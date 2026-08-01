@@ -10,6 +10,10 @@ import {
 } from 'uniswap/src/features/passkey/pinCrypto'
 import { describe, expect, it } from 'vitest'
 
+// Minimal valid Argon2 params — production-strength ARGON2_PARAMS (256 MB, t=3) cost ~10s per
+// derivation, so behavior tests inject these; one sanity test below keeps the production defaults.
+const FAST_ARGON2_PARAMS = { t: 1, m: 64, p: 1 }
+
 describe('pinCrypto', () => {
   describe('generateAuthKeyPair', () => {
     it('generates a P-256 key pair with SPKI DER base64 public key', async () => {
@@ -49,7 +53,7 @@ describe('pinCrypto', () => {
   })
 
   describe('blob round-trip', () => {
-    it('encrypts and decrypts auth key via blob', { timeout: 60_000 }, async () => {
+    it('encrypts and decrypts auth key via blob', async () => {
       const { privateKey } = await generateAuthKeyPair()
       const salt1 = crypto.getRandomValues(new Uint8Array(16))
       const salt2 = crypto.getRandomValues(new Uint8Array(16))
@@ -61,6 +65,7 @@ describe('pinCrypto', () => {
         oprfOutput: fakeOprfOutput,
         salt1,
         salt2,
+        argon2Params: FAST_ARGON2_PARAMS,
       })
 
       const blob = encryptAuthKey({ finalKey, authPrivateKey: privateKey, salt1, salt2 })
@@ -75,7 +80,7 @@ describe('pinCrypto', () => {
       expect(decrypted).toEqual(privateKey)
     })
 
-    it('fails decryption with wrong key', { timeout: 120_000 }, async () => {
+    it('fails decryption with wrong key', async () => {
       const { privateKey } = await generateAuthKeyPair()
       const salt1 = crypto.getRandomValues(new Uint8Array(16))
       const salt2 = crypto.getRandomValues(new Uint8Array(16))
@@ -86,6 +91,7 @@ describe('pinCrypto', () => {
         oprfOutput: fakeOprfOutput,
         salt1,
         salt2,
+        argon2Params: FAST_ARGON2_PARAMS,
       })
       const blob = encryptAuthKey({ finalKey: correctKey, authPrivateKey: privateKey, salt1, salt2 })
 
@@ -95,6 +101,7 @@ describe('pinCrypto', () => {
         oprfOutput: fakeOprfOutput,
         salt1,
         salt2,
+        argon2Params: FAST_ARGON2_PARAMS,
       })
 
       const parsed = parseBlob(blob)
@@ -105,27 +112,51 @@ describe('pinCrypto', () => {
   })
 
   describe('deriveEncryptionKey', () => {
-    it('is deterministic for same inputs', { timeout: 120_000 }, async () => {
+    it('is deterministic for same inputs', async () => {
       const oprfOutput = crypto.getRandomValues(new Uint8Array(32))
       const salt1 = crypto.getRandomValues(new Uint8Array(16))
       const salt2 = crypto.getRandomValues(new Uint8Array(16))
 
-      const key1 = await deriveEncryptionKey({ pin: '1234', oprfOutput, salt1, salt2 })
-      const key2 = await deriveEncryptionKey({ pin: '1234', oprfOutput, salt1, salt2 })
+      const key1 = await deriveEncryptionKey({
+        pin: '1234',
+        oprfOutput,
+        salt1,
+        salt2,
+        argon2Params: FAST_ARGON2_PARAMS,
+      })
+      const key2 = await deriveEncryptionKey({
+        pin: '1234',
+        oprfOutput,
+        salt1,
+        salt2,
+        argon2Params: FAST_ARGON2_PARAMS,
+      })
       expect(key1).toEqual(key2)
     })
 
-    it('produces different keys for different PINs', { timeout: 120_000 }, async () => {
+    it('produces different keys for different PINs', async () => {
       const oprfOutput = crypto.getRandomValues(new Uint8Array(32))
       const salt1 = crypto.getRandomValues(new Uint8Array(16))
       const salt2 = crypto.getRandomValues(new Uint8Array(16))
 
-      const key1 = await deriveEncryptionKey({ pin: '1234', oprfOutput, salt1, salt2 })
-      const key2 = await deriveEncryptionKey({ pin: '5678', oprfOutput, salt1, salt2 })
+      const key1 = await deriveEncryptionKey({
+        pin: '1234',
+        oprfOutput,
+        salt1,
+        salt2,
+        argon2Params: FAST_ARGON2_PARAMS,
+      })
+      const key2 = await deriveEncryptionKey({
+        pin: '5678',
+        oprfOutput,
+        salt1,
+        salt2,
+        argon2Params: FAST_ARGON2_PARAMS,
+      })
       expect(key1).not.toEqual(key2)
     })
 
-    it('returns a 32-byte key', { timeout: 60_000 }, async () => {
+    it('returns a 32-byte key with production Argon2 params', { timeout: 60_000 }, async () => {
       const key = await deriveEncryptionKey({
         pin: '4567',
         oprfOutput: crypto.getRandomValues(new Uint8Array(32)),

@@ -43,7 +43,7 @@ interface ReviewLaunchAuctionDetailsSectionProps {
   stableRaiseUsdPrice: number | null
   floorPriceNum: number | undefined
   fdv: number | undefined
-  onEditAuctionConfig: () => void
+  onEditAuctionConfig?: () => void
   onOpenKycHookExplorer: () => void
 }
 
@@ -64,6 +64,7 @@ export function ReviewLaunchAuctionDetailsSection({
   const { t } = useTranslation()
   const { formatNumberOrString, formatPercent } = useLocalizationContext()
   const { symbol: fiatSymbol } = useAppFiatCurrencyInfo()
+  const raiseCurrencySymbol = raiseCurrencyInfo.currency.symbol ?? ''
 
   const postAuctionLiquidityAllocation = configureAuction.postAuctionLiquidityAllocation
   const postAuctionLiquidityPercentDisplay = Math.round(
@@ -134,7 +135,7 @@ export function ReviewLaunchAuctionDetailsSection({
         <Flex row alignItems="center" gap="$spacing6">
           <CurrencyLogo hideNetworkLogo currencyInfo={raiseCurrencyInfo} size={CURRENCY_LOGO_SIZE} />
           <Text variant="body1" color="$neutral1">
-            {configureAuction.raiseCurrency}
+            {raiseCurrencySymbol}
           </Text>
         </Flex>
       </ReviewRow>
@@ -145,7 +146,7 @@ export function ReviewLaunchAuctionDetailsSection({
             {floorPriceNum !== undefined && Number.isFinite(floorPriceNum) ? (
               <SubscriptZeroPrice
                 value={floorPriceNum}
-                symbol={configureAuction.raiseCurrency}
+                symbol={raiseCurrencySymbol}
                 variant="body1"
                 color="$neutral1"
                 minSignificantDigits={1}
@@ -154,7 +155,7 @@ export function ReviewLaunchAuctionDetailsSection({
               />
             ) : (
               <Text variant="body1" color="$neutral1">
-                {configureAuction.floorPrice} {configureAuction.raiseCurrency}
+                {configureAuction.floorPrice} {raiseCurrencySymbol}
               </Text>
             )}
             {floorFiatAmount !== undefined ? (
@@ -186,7 +187,7 @@ export function ReviewLaunchAuctionDetailsSection({
           <Flex row alignItems="center" gap="$spacing4" flexWrap="wrap" justifyContent="flex-end">
             <SubscriptZeroPrice
               value={fdv}
-              symbol={configureAuction.raiseCurrency}
+              symbol={raiseCurrencySymbol}
               variant="body1"
               color="$neutral1"
               minSignificantDigits={1}
@@ -237,7 +238,7 @@ export function ReviewLaunchAuctionDetailsSection({
               <Flex row alignItems="center" gap="$spacing6">
                 <CurrencyLogo hideNetworkLogo currencyInfo={raiseCurrencyInfo} size={CURRENCY_LOGO_SIZE} />
                 <Text variant="body1" color="$neutral1">
-                  {formattedLaunchThreshold} {configureAuction.raiseCurrency}
+                  {formattedLaunchThreshold} {raiseCurrencySymbol}
                 </Text>
               </Flex>
             </ReviewRow>
@@ -248,7 +249,7 @@ export function ReviewLaunchAuctionDetailsSection({
           label={t('toucan.details.postAuctionLiquidity')}
           summaryLabel={t('common.custom')}
           tiers={postAuctionLiquidityAllocation.tiers}
-          raiseCurrencySymbol={configureAuction.raiseCurrency}
+          raiseCurrencySymbol={raiseCurrencySymbol}
           raiseUsdPrice={stableRaiseUsdPrice}
         />
       )}

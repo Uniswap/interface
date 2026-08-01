@@ -10,6 +10,7 @@ import { CrossChainIcon } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useIsEarnEnabled } from 'uniswap/src/features/earn/hooks/useIsEarnEnabled'
 import type { FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -207,11 +208,13 @@ export function ActivityPopupContent({ activity, onClick, onClose }: ActivityPop
 export function TransactionPopupContent({ hash, onClose }: { hash: string; onClose: () => void }) {
   const transaction = useTransaction(hash)
   const { formatNumberOrString } = useLocalizationContext()
+  const isEarnActivityDisplayEnabled = useIsEarnEnabled()
 
   const { data: activity } = useQuery(
     getTransactionToActivityQueryOptions({
       transaction,
       formatNumber: formatNumberOrString,
+      isEarnActivityDisplayEnabled,
     }),
   )
 
@@ -248,10 +251,12 @@ export function PlanPopupContent({ planId, onClose }: { planId: string; onClose:
   const plan = usePlanTransactions([planId]).at(0)
   const openTransactionDetailsModal = useOpenTransactionDetailsModal()
   const { formatNumberOrString } = useLocalizationContext()
+  const isEarnActivityDisplayEnabled = useIsEarnEnabled()
   const { data: activity } = useQuery(
     getTransactionToActivityQueryOptions({
       transaction: plan,
       formatNumber: formatNumberOrString,
+      isEarnActivityDisplayEnabled,
     }),
   )
 
@@ -267,6 +272,7 @@ export function PlanPopupContent({ planId, onClose }: { planId: string; onClose:
 export function UniswapXOrderPopupContent({ orderHash, onClose }: { orderHash: string; onClose: () => void }) {
   const order = useUniswapXOrderByOrderHash(orderHash)
   const openOffchainActivityModal = useOpenOffchainActivityModal()
+  const isEarnActivityDisplayEnabled = useIsEarnEnabled()
 
   const { formatNumberOrString } = useLocalizationContext()
 
@@ -274,6 +280,7 @@ export function UniswapXOrderPopupContent({ orderHash, onClose }: { orderHash: s
     getTransactionToActivityQueryOptions({
       transaction: order,
       formatNumber: formatNumberOrString,
+      isEarnActivityDisplayEnabled,
     }),
   )
 

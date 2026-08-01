@@ -5,8 +5,9 @@ import { getPortfolioChartPercentChange } from 'uniswap/src/features/portfolio/p
 export type BreakdownCategoryDisplay = { valueUSD: number | undefined; percentChange: number | undefined }
 
 export type BreakdownCardProps = {
-  tokens: BreakdownCategoryDisplay
-  pools: BreakdownCategoryDisplay
+  tokens?: BreakdownCategoryDisplay
+  pools?: BreakdownCategoryDisplay
+  earn?: BreakdownCategoryDisplay
   // Color the percent green/red by sign — used while scrubbing for legibility; neutral at rest.
   semanticPercentColor: boolean
 }
@@ -17,10 +18,9 @@ type ScrubValues = { total: number | undefined; tokens: number | undefined; pool
 /**
  * Resolves the breakdown card's props, or `undefined` when the card should be hidden.
  *
- * Hidden unless the flag is on, pools are available, and both categories currently hold a non-zero
- * balance (a zero side would just be a "$0.00" row). At rest the rows show the wallet-balances value
- * with a period delta (first-to-last of the chart series) and neutral percent; while scrubbing they
- * show the chart-series value at the crosshair with a period-start delta and semantic color.
+ * Hidden unless the flag is on and there is a useful breakdown to show. At rest, token/pool rows use
+ * wallet-balances values with period deltas from chart series; Earn has no mobile chart series yet,
+ * so it uses the wallet-balances delta. While scrubbing, token/pool rows follow the crosshair.
  */
 export function getBreakdownCardProps({
   enabled,
@@ -39,9 +39,12 @@ export function getBreakdownCardProps({
   poolsData: ChartData
   isAllTimePeriod: boolean
 }): BreakdownCardProps | undefined {
-  const hasBothCategoryBalances = (breakdown?.tokens.balanceUSD ?? 0) > 0 && (breakdown?.pools.balanceUSD ?? 0) > 0
+  const hasTokenBalance = (breakdown?.tokens.balanceUSD ?? 0) > 0
+  const hasPoolsBalance = !poolsUnavailable && (breakdown?.pools.balanceUSD ?? 0) > 0
+  const hasEarnBalance = (breakdown?.earn.balanceUSD ?? 0) > 0
+  const shouldShowBreakdown = hasEarnBalance || (hasTokenBalance && hasPoolsBalance)
 
-  if (!enabled || poolsUnavailable || !breakdown || !hasBothCategoryBalances) {
+  if (!enabled || !breakdown || !shouldShowBreakdown) {
     return undefined
   }
 
@@ -53,8 +56,18 @@ export function getBreakdownCardProps({
 
     return {
       semanticPercentColor: false,
-      tokens: { valueUSD: breakdown.tokens.balanceUSD, percentChange: periodPercentChange(tokensData) },
-      pools: { valueUSD: breakdown.pools.balanceUSD, percentChange: periodPercentChange(poolsData) },
+      tokens: hasTokenBalance
+        ? { valueUSD: breakdown.tokens.balanceUSD, percentChange: periodPercentChange(tokensData) }
+        : undefined,
+      pools: hasPoolsBalance
+        ? { valueUSD: breakdown.pools.balanceUSD, percentChange: periodPercentChange(poolsData) }
+        : undefined,
+      earn: hasEarnBalance
+        ? {
+            valueUSD: breakdown.earn.balanceUSD,
+            percentChange: isAllTimePeriod ? undefined : breakdown.earn.percentChange,
+          }
+        : undefined,
     }
   }
 
@@ -65,7 +78,17 @@ export function getBreakdownCardProps({
 
   return {
     semanticPercentColor: true,
-    tokens: { valueUSD: scrub.tokens, percentChange: scrubPercentChange(tokensData[0]?.value, scrub.tokens) },
-    pools: { valueUSD: scrub.pools, percentChange: scrubPercentChange(poolsData[0]?.value, scrub.pools) },
+    tokens: hasTokenBalance
+      ? { valueUSD: scrub.tokens, percentChange: scrubPercentChange(tokensData[0]?.value, scrub.tokens) }
+      : undefined,
+    pools: hasPoolsBalance
+      ? { valueUSD: scrub.pools, percentChange: scrubPercentChange(poolsData[0]?.value, scrub.pools) }
+      : undefined,
+    earn: hasEarnBalance
+      ? {
+          valueUSD: breakdown.earn.balanceUSD,
+          percentChange: isAllTimePeriod ? undefined : breakdown.earn.percentChange,
+        }
+      : undefined,
   }
 }

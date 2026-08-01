@@ -6,22 +6,17 @@ import {
 } from '@universe/notifications'
 import type { MobileState } from 'src/app/mobileReducer'
 import { checkFundWalletBanner } from 'src/notification-service/data-sources/banners/fundWalletBanner'
-import { checkNoAppFeesBanner } from 'src/notification-service/data-sources/banners/noAppFeesBanner'
 import { checkPushNotificationsBanner } from 'src/notification-service/data-sources/banners/pushNotificationsBanner'
 import { checkRecoveryBackup } from 'src/notification-service/data-sources/banners/recoveryBackupBanner'
 import { BannerId } from 'src/notification-service/data-sources/banners/types'
 import { checkUnitagClaim } from 'src/notification-service/data-sources/banners/unitagClaimBanner'
 import { logger } from 'utilities/src/logger/logger'
-import {
-  selectHasDismissedNoAppFeesAnnouncement,
-  selectHasViewedNotificationsCard,
-} from 'wallet/src/features/behaviorHistory/selectors'
+import { selectHasViewedNotificationsCard } from 'wallet/src/features/behaviorHistory/selectors'
 
 interface CreateMobileLegacyBannersNotificationDataSourceContext {
   tracker: NotificationTracker
   pollIntervalMs?: number
   getState: () => MobileState
-  getIsDarkMode: () => boolean
 }
 
 /**
@@ -29,7 +24,6 @@ interface CreateMobileLegacyBannersNotificationDataSourceContext {
  * into InAppNotifications compatible with the notification system.
  *
  * This replaces the legacy OnboardingIntroCardStack with notification system equivalents:
- * - No App Fees announcement
  * - Fund Wallet (empty wallet state)
  * - Recovery backup reminder
  * - Unitag claim prompt
@@ -43,7 +37,7 @@ interface CreateMobileLegacyBannersNotificationDataSourceContext {
 export function createMobileLegacyBannersNotificationDataSource(
   ctx: CreateMobileLegacyBannersNotificationDataSourceContext,
 ): NotificationDataSource {
-  const { tracker, pollIntervalMs = 5000, getState, getIsDarkMode } = ctx
+  const { tracker, pollIntervalMs = 5000, getState } = ctx
   let hasMigratedLegacyState = false
 
   /**
@@ -64,17 +58,6 @@ export function createMobileLegacyBannersNotificationDataSource(
 
     try {
       const state = getState()
-
-      // Migrate No App Fees dismissal
-      const noAppFeesWasDismissed = selectHasDismissedNoAppFeesAnnouncement(state)
-      if (noAppFeesWasDismissed) {
-        logger.info(
-          'createMobileLegacyBannersNotificationDataSource',
-          'migrateLegacyDismissalState',
-          'Migrating No App Fees announcement dismissal from legacy Redux state',
-        )
-        await tracker.track(BannerId.NoAppFees, { timestamp: Date.now() })
-      }
 
       // Migrate Push Notifications card dismissal
       const pushNotificationsWasViewed = selectHasViewedNotificationsCard(state)
@@ -103,7 +86,7 @@ export function createMobileLegacyBannersNotificationDataSource(
       // Run migration on first poll
       await migrateLegacyDismissalState()
 
-      const notifications = await fetchNotifications(getState, getIsDarkMode)
+      const notifications = await fetchNotifications(getState)
       return notifications
     } catch (error) {
       logger.error(error, {
@@ -129,45 +112,33 @@ export function createMobileLegacyBannersNotificationDataSource(
  * The processor will handle filtering based on tracked/processed state.
  *
  * Priority order (matches useSharedIntroCards):
- * 1. No App Fees announcement (if enabled)
- * 2. Fund Wallet (if empty wallet)
- * 3. Recovery backup (if no external backup)
- * 4. Unitag claim (if eligible)
- * 5. Push Notifications (if not granted)
- * 6. Bridged Assets V2 (if enabled)
- * 7. Bridged Assets V1 (if enabled)
+ * 1. Fund Wallet (if empty wallet)
+ * 2. Recovery backup (if no external backup)
+ * 3. Unitag claim (if eligible)
+ * 4. Push Notifications (if not granted)
  */
-async function fetchNotifications(
-  getState: () => MobileState,
-  getIsDarkMode: () => boolean,
-): Promise<InAppNotification[]> {
+async function fetchNotifications(getState: () => MobileState): Promise<InAppNotification[]> {
   const notifications: InAppNotification[] = []
 
-  // Priority 1: No App Fees announcement
-  const noAppFeesNotification = await checkNoAppFeesBanner(getIsDarkMode())
-  if (noAppFeesNotification) {
-    notifications.push(noAppFeesNotification)
-  }
-
-  // Priority 2: Fund Wallet (empty wallet state)
+  // Priority 1: Fund Wallet (empty wallet state)
   const fundWalletNotification = await checkFundWalletBanner(getState)
   if (fundWalletNotification) {
     notifications.push(fundWalletNotification)
   }
 
-  // Priority 3: Recovery backup reminder
+  // Priority 2: Recovery backup reminder
   const backupNotification = await checkRecoveryBackup(getState)
   if (backupNotification) {
     notifications.push(backupNotification)
   }
 
-  // Priority 4: Unitag claim
+  // Priority 3: Unitag claim
   const unitagNotification = await checkUnitagClaim(getState)
   if (unitagNotification) {
     notifications.push(unitagNotification)
   }
 
-  // Priority 5: Push Notifications
+  // Priority 4: Push Notifications
   const pushNotificationsNotification = await checkPushNotificationsBanner()
   if (pushNotificationsNotification) {
     notifications.push(pushNotificationsNotification)

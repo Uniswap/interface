@@ -1,28 +1,29 @@
 import { act, fireEvent, waitFor } from '@testing-library/react'
 import { ChangePasswordForm } from 'src/app/features/settings/password/ChangePasswordForm'
 import { cleanup, render, screen } from 'src/test/test-utils'
+import type { MockedFunction } from 'vitest'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 // Mock the Keyring
-jest.mock('wallet/src/features/wallet/Keyring/Keyring', () => ({
+vi.mock('wallet/src/features/wallet/Keyring/Keyring', () => ({
   Keyring: {
-    changePassword: jest.fn().mockResolvedValue(undefined),
+    changePassword: vi.fn().mockResolvedValue(undefined),
   },
 }))
 
 // Mock analytics
-jest.mock('uniswap/src/features/telemetry/send', () => ({
-  sendAnalyticsEvent: jest.fn(),
+vi.mock('uniswap/src/features/telemetry/send', () => ({
+  sendAnalyticsEvent: vi.fn(),
 }))
 
-const mockChangePassword = Keyring.changePassword as jest.MockedFunction<typeof Keyring.changePassword>
+const mockChangePassword = Keyring.changePassword as MockedFunction<typeof Keyring.changePassword>
 
 describe('ChangePasswordForm', () => {
-  const mockOnNext = jest.fn()
+  const mockOnNext = vi.fn()
   const oldPassword = 'MyOldPassword123!'
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockChangePassword.mockClear()
   })
 

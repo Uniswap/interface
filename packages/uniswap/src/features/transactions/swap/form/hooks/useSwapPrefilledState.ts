@@ -36,6 +36,7 @@ export function useSwapPrefilledState(initialState: TransactionState | undefined
       selectingCurrencyField: initialState.selectingCurrencyField,
       txId: initialState.txId,
       isFiatMode: false,
+      isEarnFlow: false,
       isSubmitting: false,
       isConfirmed: false,
       isMax: false,

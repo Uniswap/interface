@@ -12,6 +12,12 @@ export interface FetchClientContext {
   baseUrl?: string
   getBaseUrl?: () => string
   getHeaders?: () => HeadersInit
+  /**
+   * Invoked with the raw `Response` of every completed request, before its body is read.
+   * For reading response headers (e.g. correlation headers echoed by the backend); must not
+   * consume the body. Errors thrown here are not caught — keep it cheap and total.
+   */
+  onResponse?: (response: Response) => void
   getSessionService: () => SessionService
   /**
    * Optional session gate. When the getter returns a Session, fetch calls

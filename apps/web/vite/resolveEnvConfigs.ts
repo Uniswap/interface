@@ -1,19 +1,19 @@
 // oxlint-disable eslint-js/no-restricted-syntax -- env resolution utility legitimately reads/writes process.env
 import fs from 'node:fs'
 import path from 'node:path'
-import { config as dotenvConfig, parse as dotenvParse } from 'dotenv'
+import { parse as dotenvParse } from 'dotenv'
 
 // Env vars that should be read directly from process.env instead of the .env files.
-export const PROCESS_ENV_OVERRIDES = ['CI', 'IS_E2E_TEST', 'JEST_WORKER_ID', 'VITEST_WORKER_ID', 'SKIP_CSP', 'DISABLE_SOURCEMAP']
+export const PROCESS_ENV_OVERRIDES = ['CI', 'IS_E2E_TEST', 'JEST_WORKER_ID', 'VITEST_WORKER_ID', 'SKIP_CSP', 'DISABLE_SOURCEMAP', 'CLOUD_FUNCTIONS_GRAPHQL_ENDPOINT_OVERRIDE']
 
 interface ResolveEnvConfigsOptions {
-  /** Directory containing .env.new / .env.e2e.override / .env.new.override (i.e. apps/web). */
+  /** Directory containing .env / .env.e2e.override / .env.override (i.e. apps/web). */
   rootDir: string
   /** When true, layer .env.e2e.override on top (e2e builds and the Playwright runner). */
   isE2eTest: boolean
   /** Source for PROCESS_ENV_OVERRIDES. Defaults to process.env. */
   processEnv?: NodeJS.ProcessEnv
-  /** Called with each key whose value .env.new.override changes (vite logs these). */
+  /** Called with each key whose value .env.override changes (vite logs these). */
   onOverride?: (key: string) => void
   /** When true, Object.assign the resolved values back into processEnv (override wins). */
   overrideProcessEnv?: boolean
@@ -22,7 +22,7 @@ interface ResolveEnvConfigsOptions {
 /**
  * Resolves the unified ("new configs") env exactly the way vite.config.mts does, so the
  * Vite build and the Playwright test runner produce an identical config:
- *   .env.new (base) → .env.e2e.override (e2e only) → .env.new.override → PROCESS_ENV_OVERRIDES.
+ *   .env (base) → .env.e2e.override (e2e only) → .env.override → PROCESS_ENV_OVERRIDES.
  */
 export function resolveEnvConfigs({
   rootDir,
@@ -33,14 +33,18 @@ export function resolveEnvConfigs({
 }: ResolveEnvConfigsOptions): Record<string, string> {
   let env: Record<string, string> = {}
 
-  // Base layer: .env.new which is pulled from the remote config service.
-  const newEnvPath = path.resolve(rootDir, '.env.new')
-  if (fs.existsSync(newEnvPath)) {
-    try {
-      env = dotenvParse(fs.readFileSync(newEnvPath))
-    } catch (error) {
-      throw new Error(`Failed to parse ${newEnvPath}`, { cause: error })
-    }
+  // Base layer: .env which is pulled from the remote config service. When it's absent
+  // fall back to the checked-in .env.dev defaults so the app still runs in dev mode.
+  const newEnvPath = path.resolve(rootDir, '.env')
+  const devEnvPath = path.resolve(rootDir, '.env.dev')
+  const baseEnvPath = fs.existsSync(newEnvPath) ? newEnvPath : devEnvPath
+  if (baseEnvPath === devEnvPath) {
+    console.log('No .env file located, using the checked in dev defaults')
+  }
+  try {
+    env = dotenvParse(fs.readFileSync(baseEnvPath))
+  } catch (error) {
+    throw new Error(`Failed to parse ${baseEnvPath}`, { cause: error })
   }
 
   // E2E override layer: overrides applied only to playwright e2e tests.
@@ -57,7 +61,7 @@ export function resolveEnvConfigs({
   }
 
   // User-defined override layer
-  const overridesEnvPath = path.resolve(rootDir, '.env.new.override')
+  const overridesEnvPath = path.resolve(rootDir, '.env.override')
   if (fs.existsSync(overridesEnvPath)) {
     let overridesEnv: Record<string, string> = {}
     try {
@@ -90,16 +94,11 @@ export function resolveEnvConfigs({
 
 /**
  * Loads env for the Playwright test runner (Node) so its getConfig() matches the browser bundle.
- * Under USE_NEW_CONFIGS it loads exactly the files the build loaded (no legacy .env, which holds
- * stale app config); otherwise it falls back to the committed .env (the old `import 'dotenv/config'`).
+ * Loads exactly the files the build loaded (.env + overrides), so the runner config is identical.
  */
 export function loadTestRunnerEnv(rootDir: string): void {
-  if (process.env.USE_NEW_CONFIGS !== 'false') {
-    // The runner is always e2e: set IS_E2E_TEST so the e2e override layers and getConfig().isE2ETest
-    // matches the bundle, then overlay the resolved config onto process.env.
-    process.env.IS_E2E_TEST = 'true'
-    resolveEnvConfigs({ rootDir, isE2eTest: true, overrideProcessEnv: true })
-  } else {
-    dotenvConfig({ path: path.resolve(rootDir, '.env') })
-  }
+  // The runner is always e2e: set IS_E2E_TEST so the e2e override layers and getConfig().isE2ETest
+  // matches the bundle, then overlay the resolved config onto process.env.
+  process.env.IS_E2E_TEST = 'true'
+  resolveEnvConfigs({ rootDir, isE2eTest: true, overrideProcessEnv: true })
 }

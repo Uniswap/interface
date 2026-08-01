@@ -33,7 +33,7 @@ async function createNativeAccounts({
 }
 
 describe(createAccounts, () => {
-  jest.setTimeout(10000)
+  vi.setConfig({ testTimeout: 10000 })
 
   it('Imports one account', async () => {
     const state = await createNativeAccounts({ payload: { accounts: [ACCOUNT] } })

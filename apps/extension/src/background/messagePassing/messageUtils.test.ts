@@ -1,12 +1,12 @@
 import { addWindowMessageListener } from 'src/background/messagePassing/messageUtils'
+import { isSandboxedFrame as isSandboxedFrameImport } from 'src/contentScript/isSandboxedFrame'
+import type { Mock } from 'vitest'
 
-jest.mock('src/contentScript/isSandboxedFrame', () => ({
-  isSandboxedFrame: jest.fn(() => false),
+vi.mock('src/contentScript/isSandboxedFrame', () => ({
+  isSandboxedFrame: vi.fn(() => false),
 }))
 
-const { isSandboxedFrame } = require('src/contentScript/isSandboxedFrame') as {
-  isSandboxedFrame: jest.Mock
-}
+const isSandboxedFrame = isSandboxedFrameImport as Mock
 
 interface TestMessage {
   type: 'TEST'
@@ -25,7 +25,7 @@ function dispatchWindowMessage(data: unknown, source: MessageEventSource | null 
 
 describe('addWindowMessageListener', () => {
   afterEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('normal frame (isSandboxedFrame returns false)', () => {
@@ -34,7 +34,7 @@ describe('addWindowMessageListener', () => {
     })
 
     it('calls handler when validator passes and source is window', () => {
-      const handler = jest.fn()
+      const handler = vi.fn()
       addWindowMessageListener({ validator: isTestMessage, handler })
 
       dispatchWindowMessage({ type: 'TEST', payload: 'hello' })
@@ -43,8 +43,8 @@ describe('addWindowMessageListener', () => {
     })
 
     it('calls invalidMessageHandler when validator fails', () => {
-      const handler = jest.fn()
-      const invalidMessageHandler = jest.fn()
+      const handler = vi.fn()
+      const invalidMessageHandler = vi.fn()
       addWindowMessageListener({ validator: isTestMessage, handler, invalidMessageHandler })
 
       dispatchWindowMessage({ type: 'INVALID' })
@@ -54,8 +54,8 @@ describe('addWindowMessageListener', () => {
     })
 
     it('rejects when event.source is not window', () => {
-      const handler = jest.fn()
-      const invalidMessageHandler = jest.fn()
+      const handler = vi.fn()
+      const invalidMessageHandler = vi.fn()
       addWindowMessageListener({ validator: isTestMessage, handler, invalidMessageHandler })
 
       dispatchWindowMessage({ type: 'TEST', payload: 'hello' }, null)
@@ -65,7 +65,7 @@ describe('addWindowMessageListener', () => {
     })
 
     it('removes listener when removeAfterHandled is true', () => {
-      const handler = jest.fn()
+      const handler = vi.fn()
       addWindowMessageListener({
         validator: isTestMessage,
         handler,
@@ -86,7 +86,7 @@ describe('addWindowMessageListener', () => {
     })
 
     it('does NOT call handler even when validator passes and source is window', () => {
-      const handler = jest.fn()
+      const handler = vi.fn()
       addWindowMessageListener({ validator: isTestMessage, handler })
 
       dispatchWindowMessage({ type: 'TEST', payload: 'hello' })
@@ -95,8 +95,8 @@ describe('addWindowMessageListener', () => {
     })
 
     it('calls invalidMessageHandler when rejected due to sandbox', () => {
-      const handler = jest.fn()
-      const invalidMessageHandler = jest.fn()
+      const handler = vi.fn()
+      const invalidMessageHandler = vi.fn()
       addWindowMessageListener({ validator: isTestMessage, handler, invalidMessageHandler })
 
       dispatchWindowMessage({ type: 'TEST', payload: 'hello' })

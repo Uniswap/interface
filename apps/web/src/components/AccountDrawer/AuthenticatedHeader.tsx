@@ -1,4 +1,3 @@
-import { NetworkStatus } from '@apollo/client'
 import type { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useState } from 'react'
@@ -74,7 +73,7 @@ export function AuthenticatedHeader({
   const {
     data: portfolioData,
     error: portfolioError,
-    networkStatus: portfolioNetworkStatus,
+    isPending: portfolioPending,
     loading: portfolioLoading,
     dataUpdatedAt: portfolioDataUpdatedAt,
   } = usePortfolioTotalValue({
@@ -85,8 +84,8 @@ export function AuthenticatedHeader({
   const { percentChange, absoluteChangeUSD, balanceUSD } = portfolioData || {}
 
   // Treat error-before-first-data as loading so the skeleton stays visible
-  const isLoading = !portfolioData && (portfolioLoading || !!portfolioError)
-  const isWarmLoading = !!portfolioData && portfolioNetworkStatus === NetworkStatus.loading
+  const isLoading = !portfolioData && (portfolioPending || !!portfolioError)
+  const isWarmLoading = !!portfolioData && portfolioLoading
 
   const [activityOutage, setActivityOutage] = useState<DataApiOutageState>({
     error: undefined,

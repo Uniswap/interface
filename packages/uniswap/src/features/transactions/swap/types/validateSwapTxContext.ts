@@ -1,5 +1,6 @@
 import { isWebApp } from '@universe/environment'
 import { ValidatedGasFeeResult, validateGasFeeResult } from 'uniswap/src/features/gas/utils'
+import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/permitMethod'
 import type {
   BridgeSwapTxAndGasInfo,
   ChainedSwapTxAndGasInfo,
@@ -17,7 +18,6 @@ import type {
   ValidatedWrapSwapTxAndGasInfo,
   WrapSwapTxAndGasInfo,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import {
   isBridge,
   isChained,

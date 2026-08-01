@@ -11,7 +11,7 @@ import {
   useSearchTokenMenuItems,
 } from 'uniswap/src/components/lists/items/tokens/useSearchTokenMenuItems'
 import { ContextMenu } from 'uniswap/src/components/menus/ContextMenu'
-import type { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
+import type { ContextMenuHandle, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
 import { MenuContent } from 'uniswap/src/components/menus/ContextMenuContent'
 import { ContextMenuTriggerButton } from 'uniswap/src/components/menus/ContextMenuTriggerButton'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
@@ -23,7 +23,7 @@ import { COPY_CLOSE_DELAY } from 'uniswap/src/constants/misc'
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { CurrencyInfo, MultichainSearchResult } from 'uniswap/src/features/dataApi/types'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -87,16 +87,15 @@ function useMultichainEntries(tokens: CurrencyInfo[]): MultichainTokenEntry[] {
 }
 
 interface MultichainTokenContextMenuButtonProps {
-  multichainResult: MultichainSearchResult
+  tokens: CurrencyInfo[]
   primaryCurrencyInfo: CurrencyInfo
   isVisible?: boolean
 }
 
-function MultichainTokenContextMenuButtonInner({
-  multichainResult,
-  primaryCurrencyInfo,
-  isVisible = true,
-}: MultichainTokenContextMenuButtonProps): JSX.Element | null {
+function MultichainTokenContextMenuButtonInner(
+  { tokens, primaryCurrencyInfo, isVisible = true }: MultichainTokenContextMenuButtonProps,
+  ref: React.ForwardedRef<ContextMenuHandle>,
+): JSX.Element | null {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const trace = useTrace()
@@ -110,9 +109,9 @@ function MultichainTokenContextMenuButtonInner({
   const skipNextClose = useRef(false)
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined)
 
-  const isSingleChain = multichainResult.tokens.length <= 1
-  const bestCurrency = useBestChainCurrencyInfo(multichainResult.tokens, primaryCurrencyInfo)
-  const orderedEntries = useMultichainEntries(multichainResult.tokens)
+  const isSingleChain = tokens.length <= 1
+  const bestCurrency = useBestChainCurrencyInfo(tokens, primaryCurrencyInfo)
+  const orderedEntries = useMultichainEntries(tokens)
   const allNative = orderedEntries.every((e) => e.isNative)
 
   const handleCloseMenu = useCallback(() => {
@@ -235,6 +234,7 @@ function MultichainTokenContextMenuButtonInner({
   return (
     <Flex opacity={shouldShow ? 1 : 0} pointerEvents={shouldShow ? 'auto' : 'none'}>
       <ContextMenu
+        ref={ref}
         menuItems={[]}
         contentOverride={contentOverride}
         triggerMode={ContextMenuTriggerMode.Primary}
@@ -251,4 +251,4 @@ function MultichainTokenContextMenuButtonInner({
   )
 }
 
-export const MultichainTokenContextMenuButton = React.memo(MultichainTokenContextMenuButtonInner)
+export const MultichainTokenContextMenuButton = React.memo(React.forwardRef(MultichainTokenContextMenuButtonInner))

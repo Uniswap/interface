@@ -2,7 +2,7 @@ import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
 import { type DataApiPool, type ListTopPoolsResponse, ProtocolVersion, TopPoolsOrderBy } from '@universe/api'
 import { useMemo } from 'react'
 import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
-import { dataApiQueries } from 'uniswap/src/data/apiClients/dataApiService/dataApiQueries'
+import { getListTopPoolsQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/pools/queries'
 import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -86,6 +86,7 @@ function convertDataApiPoolToPoolStat(pool: DataApiPool): PoolStat {
       volume24h: pool.stats?.volume1d,
       tvl: pool.stats?.tvl,
       feeTier: feeTierValue,
+      protocolVersion: pool.protocolVersion,
     }),
     boostedApr: pool.stats?.rewardApr,
     feeTier: {
@@ -154,7 +155,7 @@ export function useBackendSortedTopPools({
     protocol !== undefined && protocol !== 0 ? [protocol] : [ProtocolVersion.V2, ProtocolVersion.V3, ProtocolVersion.V4]
 
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
-    dataApiQueries.listTopPools({
+    getListTopPoolsQueryOptions({
       params: {
         chainIds: chainId ? [chainId] : enabledChains.chains,
         protocolVersions,

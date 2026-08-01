@@ -3,6 +3,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { plan } from 'uniswap/src/features/transactions/swap/plan/planSaga'
+import type { MockInstance } from 'vitest'
 import { emitSubmissionErrorTelemetry } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionLifecycleHelpers'
 import { prepareTransactionServices } from 'wallet/src/features/transactions/shared/baseTransactionPreparationSaga'
 import { createExecutePlanSaga, type ExecutePlanParams } from 'wallet/src/features/transactions/swap/executePlanSaga'
@@ -16,22 +17,22 @@ import {
   prepareSwapTxContext,
 } from 'wallet/src/features/transactions/swap/types/fixtures'
 
-jest.mock('uniswap/src/features/telemetry/send', () => ({
-  sendAnalyticsEvent: jest.fn(),
-  sendAppsFlyerEvent: jest.fn(),
+vi.mock('uniswap/src/features/telemetry/send', () => ({
+  sendAnalyticsEvent: vi.fn(),
+  sendAppsFlyerEvent: vi.fn(),
 }))
-jest.mock('uniswap/src/features/transactions/swap/plan/planSaga')
-jest.mock('wallet/src/features/transactions/shared/baseTransactionPreparationSaga')
-jest.mock('wallet/src/features/transactions/swap/prepareAndSignSwapSaga')
-jest.mock('wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionLifecycleHelpers')
+vi.mock('uniswap/src/features/transactions/swap/plan/planSaga')
+vi.mock('wallet/src/features/transactions/shared/baseTransactionPreparationSaga')
+vi.mock('wallet/src/features/transactions/swap/prepareAndSignSwapSaga')
+vi.mock('wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionLifecycleHelpers')
 
 const MOCK_TIMESTAMP = 1487076708000
 
-const mockedPlan = jest.mocked(plan)
-const mockedSendAnalyticsEvent = jest.mocked(sendAnalyticsEvent)
-const mockedPrepareTransactionServices = jest.mocked(prepareTransactionServices)
-const mockedShouldSubmitViaPrivateRpc = jest.mocked(shouldSubmitViaPrivateRpc)
-const mockedEmitSubmissionErrorTelemetry = jest.mocked(emitSubmissionErrorTelemetry)
+const mockedPlan = vi.mocked(plan)
+const mockedSendAnalyticsEvent = vi.mocked(sendAnalyticsEvent)
+const mockedPrepareTransactionServices = vi.mocked(prepareTransactionServices)
+const mockedShouldSubmitViaPrivateRpc = vi.mocked(shouldSubmitViaPrivateRpc)
+const mockedEmitSubmissionErrorTelemetry = vi.mocked(emitSubmissionErrorTelemetry)
 
 function buildParams(overrides: Partial<ExecutePlanParams> = {}): ExecutePlanParams {
   return {
@@ -39,12 +40,12 @@ function buildParams(overrides: Partial<ExecutePlanParams> = {}): ExecutePlanPar
     address: mockSignerAccount.address,
     analytics: mockAnalytics,
     swapTxContext: prepareSwapTxContext(),
-    onSuccess: jest.fn(),
-    onFailure: jest.fn(),
-    onPending: jest.fn(),
-    onClearForm: jest.fn(),
-    setCurrentStep: jest.fn(),
-    setSteps: jest.fn(),
+    onSuccess: vi.fn(),
+    onFailure: vi.fn(),
+    onPending: vi.fn(),
+    onClearForm: vi.fn(),
+    setCurrentStep: vi.fn(),
+    setSteps: vi.fn(),
     caip25Info: undefined,
     ...overrides,
   }
@@ -54,11 +55,11 @@ const windowCallsOf = (event: WalletEventName): unknown[] =>
   mockedSendAnalyticsEvent.mock.calls.filter(([name]) => name === event).map(([, props]) => props)
 
 describe('executePlanSaga', () => {
-  let dateNowSpy: jest.SpyInstance
+  let dateNowSpy: MockInstance
   let executePlan: ReturnType<typeof createExecutePlanSaga>
 
   beforeAll(() => {
-    dateNowSpy = jest.spyOn(Date, 'now').mockImplementation(() => MOCK_TIMESTAMP)
+    dateNowSpy = vi.spyOn(Date, 'now').mockImplementation(() => MOCK_TIMESTAMP)
     executePlan = createExecutePlanSaga(mockTransactionSagaDependencies)
   })
 
@@ -67,7 +68,7 @@ describe('executePlanSaga', () => {
   })
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockedSendAnalyticsEvent.mockReset()
     // Default: plan completes immediately (empty iterable) without invoking any step handler.
     mockedPlan.mockReturnValue([] as unknown as ReturnType<typeof plan>)

@@ -1,4 +1,5 @@
-import { createStore, Store } from 'redux'
+import { configureStore } from '@reduxjs/toolkit'
+import { Store } from 'redux'
 import { updateVersion } from '~/state/global/actions'
 import { acceptListUpdate, addList, fetchTokenList, removeList } from '~/state/lists/actions'
 import reducer from '~/state/lists/reducer'
@@ -28,8 +29,11 @@ describe('list reducer', () => {
   let store: Store<ListsState>
 
   beforeEach(() => {
-    store = createStore(reducer, {
-      byUrl: {},
+    store = configureStore({
+      reducer,
+      preloadedState: {
+        byUrl: {},
+      },
     })
   })
 
@@ -51,13 +55,16 @@ describe('list reducer', () => {
       })
 
       it('does not clear current list', () => {
-        store = createStore(reducer, {
-          byUrl: {
-            'fake-url': {
-              error: null,
-              current: STUB_TOKEN_LIST,
-              pendingUpdate: null,
-              loadingRequestId: null,
+        store = configureStore({
+          reducer,
+          preloadedState: {
+            byUrl: {
+              'fake-url': {
+                error: null,
+                current: STUB_TOKEN_LIST,
+                pendingUpdate: null,
+                loadingRequestId: null,
+              },
             },
           },
         })
@@ -184,13 +191,16 @@ describe('list reducer', () => {
       })
 
       it('sets the error if loading', () => {
-        store = createStore(reducer, {
-          byUrl: {
-            'fake-url': {
-              error: null,
-              current: null,
-              loadingRequestId: 'request-id',
-              pendingUpdate: null,
+        store = configureStore({
+          reducer,
+          preloadedState: {
+            byUrl: {
+              'fake-url': {
+                error: null,
+                current: null,
+                loadingRequestId: 'request-id',
+                pendingUpdate: null,
+              },
             },
           },
         })
@@ -226,13 +236,16 @@ describe('list reducer', () => {
       })
     })
     it('no op for existing list', () => {
-      store = createStore(reducer, {
-        byUrl: {
-          'fake-url': {
-            error: null,
-            current: STUB_TOKEN_LIST,
-            loadingRequestId: null,
-            pendingUpdate: null,
+      store = configureStore({
+        reducer,
+        preloadedState: {
+          byUrl: {
+            'fake-url': {
+              error: null,
+              current: STUB_TOKEN_LIST,
+              loadingRequestId: null,
+              pendingUpdate: null,
+            },
           },
         },
       })
@@ -253,13 +266,16 @@ describe('list reducer', () => {
 
   describe('acceptListUpdate', () => {
     it('swaps pending update into current', () => {
-      store = createStore(reducer, {
-        byUrl: {
-          'fake-url': {
-            error: null,
-            current: STUB_TOKEN_LIST,
-            loadingRequestId: null,
-            pendingUpdate: PATCHED_STUB_LIST,
+      store = configureStore({
+        reducer,
+        preloadedState: {
+          byUrl: {
+            'fake-url': {
+              error: null,
+              current: STUB_TOKEN_LIST,
+              loadingRequestId: null,
+              pendingUpdate: PATCHED_STUB_LIST,
+            },
           },
         },
       })
@@ -280,13 +296,16 @@ describe('list reducer', () => {
 
   describe('removeList', () => {
     it('deletes the list key', () => {
-      store = createStore(reducer, {
-        byUrl: {
-          'fake-url': {
-            error: null,
-            current: STUB_TOKEN_LIST,
-            loadingRequestId: null,
-            pendingUpdate: PATCHED_STUB_LIST,
+      store = configureStore({
+        reducer,
+        preloadedState: {
+          byUrl: {
+            'fake-url': {
+              error: null,
+              current: STUB_TOKEN_LIST,
+              loadingRequestId: null,
+              pendingUpdate: PATCHED_STUB_LIST,
+            },
           },
         },
       })
@@ -300,19 +319,22 @@ describe('list reducer', () => {
   describe('updateVersion', () => {
     describe('never initialized', () => {
       beforeEach(() => {
-        store = createStore(reducer, {
-          byUrl: {
-            'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json': {
-              error: null,
-              current: STUB_TOKEN_LIST,
-              loadingRequestId: null,
-              pendingUpdate: null,
-            },
-            'https://unpkg.com/@uniswap/default-token-list@latest': {
-              error: null,
-              current: STUB_TOKEN_LIST,
-              loadingRequestId: null,
-              pendingUpdate: null,
+        store = configureStore({
+          reducer,
+          preloadedState: {
+            byUrl: {
+              'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json': {
+                error: null,
+                current: STUB_TOKEN_LIST,
+                loadingRequestId: null,
+                pendingUpdate: null,
+              },
+              'https://unpkg.com/@uniswap/default-token-list@latest': {
+                error: null,
+                current: STUB_TOKEN_LIST,
+                loadingRequestId: null,
+                pendingUpdate: null,
+              },
             },
           },
         })
@@ -340,22 +362,25 @@ describe('list reducer', () => {
     })
     describe('initialized with a different set of lists', () => {
       beforeEach(() => {
-        store = createStore(reducer, {
-          byUrl: {
-            'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json': {
-              error: null,
-              current: STUB_TOKEN_LIST,
-              loadingRequestId: null,
-              pendingUpdate: null,
+        store = configureStore({
+          reducer,
+          preloadedState: {
+            byUrl: {
+              'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json': {
+                error: null,
+                current: STUB_TOKEN_LIST,
+                loadingRequestId: null,
+                pendingUpdate: null,
+              },
+              'https://unpkg.com/@uniswap/default-token-list@latest': {
+                error: null,
+                current: STUB_TOKEN_LIST,
+                loadingRequestId: null,
+                pendingUpdate: null,
+              },
             },
-            'https://unpkg.com/@uniswap/default-token-list@latest': {
-              error: null,
-              current: STUB_TOKEN_LIST,
-              loadingRequestId: null,
-              pendingUpdate: null,
-            },
+            lastInitializedDefaultListOfLists: ['https://unpkg.com/@uniswap/default-token-list@latest'],
           },
-          lastInitializedDefaultListOfLists: ['https://unpkg.com/@uniswap/default-token-list@latest'],
         })
         store.dispatch(updateVersion())
       })

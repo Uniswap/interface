@@ -1,4 +1,5 @@
 import { TradeType } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -32,6 +33,7 @@ export enum AppNotificationType {
   NotSupportedNetwork = 18,
   PasswordChanged = 19,
   SmartWalletDisabled = 20,
+  EarnSwapUpsell = 21,
 }
 
 export interface AppNotificationBase {
@@ -137,6 +139,7 @@ export interface PlanTxNotification extends TransactionNotificationBase {
   outputCurrencyId: string
   inputCurrencyAmountRaw: string
   outputCurrencyAmountRaw: string
+  earnAction?: TradingApi.EarnAction
 }
 
 export interface UnknownTxNotification extends TransactionNotificationBase {
@@ -248,6 +251,13 @@ export interface PasswordChangedNotification extends AppNotificationBase {
   type: AppNotificationType.PasswordChanged
 }
 
+export interface EarnSwapUpsellNotification extends AppNotificationBase {
+  type: AppNotificationType.EarnSwapUpsell
+  outputCurrencyId: string
+  swapAmountUsd?: number
+  transactionId: string
+}
+
 export type AppNotification =
   | AppNotificationDefault
   | AppErrorNotification
@@ -270,3 +280,4 @@ export type AppNotification =
   | TransactionPendingNotification
   | PasswordChangedNotification
   | PlanTxNotification
+  | EarnSwapUpsellNotification

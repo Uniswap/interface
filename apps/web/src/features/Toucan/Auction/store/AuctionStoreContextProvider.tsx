@@ -24,7 +24,7 @@ function AuctionStoreProviderInner({ children }: PropsWithChildren) {
     auctionAddress: state.auctionAddress,
   }))
 
-  // Load auction details from API and enrich with token info (fetched once, not polled)
+  // Load auction details from API and enrich with token info (polled at the checkpoint cadence)
   useLoadAuctionDetails(chainId, auctionAddress)
 
   // Load checkpoint data with polling (clearing price, graduation progress, etc.)

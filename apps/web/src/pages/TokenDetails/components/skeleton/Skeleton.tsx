@@ -277,7 +277,7 @@ export function TokenDetailsPageSkeleton({ isCompact }: { isCompact: boolean }) 
       <BreadcrumbWrapper>
         <BreadcrumbNavContainer aria-label="breadcrumb-nav">
           <BreadcrumbNavLink to={`/explore/tokens/${urlParam}`}>
-            {t('common.tokens')} <ChevronRight />
+            {t('common.token.plural')} <ChevronRight />
           </BreadcrumbNavLink>
           <NavBubble />
         </BreadcrumbNavContainer>

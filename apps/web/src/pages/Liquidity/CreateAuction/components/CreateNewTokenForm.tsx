@@ -1,23 +1,14 @@
 import { SharedEventName } from '@uniswap/analytics-events'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { type ComponentRef, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  Button,
-  Flex,
-  Input,
-  Popover,
-  SpinningLoader,
-  Text,
-  TouchableArea,
-  UniversalImage,
-  UniversalImageResizeMode,
-} from 'ui/src'
+import { Button, Flex, Input, Popover, Text, TouchableArea } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { Edit } from 'ui/src/components/icons/Edit'
-import { ImageUpload } from 'ui/src/components/icons/ImageUpload'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { fonts, iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { NewTag } from 'uniswap/src/components/pill/NewTag'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -27,12 +18,16 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useActiveAddress } from '~/features/accounts/store/hooks'
+import { NEW_LAUNCH_CHAINS } from '~/features/Toucan/supportedChains'
 import { getAuctionTokenInfoEnteredProperties } from '~/pages/Liquidity/CreateAuction/analytics'
 import { NoWalletSection } from '~/pages/Liquidity/CreateAuction/components/NoWalletSection'
+import { QuickLaunchSection } from '~/pages/Liquidity/CreateAuction/components/QuickLaunchSection'
 import { TokenAdditionalInfoSection } from '~/pages/Liquidity/CreateAuction/components/TokenAdditionalInfoSection'
+import { TokenImageUploadButton } from '~/pages/Liquidity/CreateAuction/components/TokenImageUploadButton'
 import { useCreateAuctionStoreActions } from '~/pages/Liquidity/CreateAuction/CreateAuctionContext'
 import { useCreateNewTokenAllowedNetworks } from '~/pages/Liquidity/CreateAuction/hooks/useAllowedNetworks'
 import { useCreateAuctionTokenColor } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionTokenColor'
+import { useIsQuickLaunchMode } from '~/pages/Liquidity/CreateAuction/hooks/useIsQuickLaunchMode'
 import { useIsStepValid } from '~/pages/Liquidity/CreateAuction/hooks/useIsStepValid'
 import { useReconcileCreateNewTokenNetwork } from '~/pages/Liquidity/CreateAuction/hooks/useReconcileCreateNewTokenNetwork'
 import { useTokenImageUpload } from '~/pages/Liquidity/CreateAuction/hooks/useTokenImageUpload'
@@ -43,7 +38,7 @@ import {
 } from '~/pages/Liquidity/CreateAuction/types'
 import { resolveCreateNewTokenDisplayImageSrc } from '~/pages/Liquidity/CreateAuction/utils/resolveCreateNewTokenDisplayImageSrc'
 
-function NetworkSelector({
+export function NetworkSelector({
   network,
   allowedNetworks,
   onSelect,
@@ -103,6 +98,7 @@ function NetworkSelector({
                 >
                   <NetworkLogo chainId={chainId} size={iconSizes.icon20} />
                   <Text variant="buttonLabel3">{info.label}</Text>
+                  {NEW_LAUNCH_CHAINS.includes(chainId) && <NewTag ml="$none" />}
                   {isSelected && <CheckCircleFilled color="$neutral1" size="$icon.20" />}
                 </TouchableArea>
               </Popover.Close>
@@ -116,6 +112,11 @@ function NetworkSelector({
 
 export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFormState }) {
   const { t } = useTranslation()
+  // QuickLaunch: quick launch replaces Continue with its own Review-and-launch CTA (flag-gated).
+  const isQuickLaunchMode = useIsQuickLaunchMode()
+  // QuickLaunch (flag-gated): live $TICKER preview under the image circle + ticker character counter.
+  const isQuickLaunchFlagEnabled = useFeatureFlag(FeatureFlags.QuickLaunch)
+  const tickerPreview = createNew.symbol.trim().toUpperCase()
   const tokenColor = useCreateAuctionTokenColor()
   const { updateCreateNewTokenField, commitTokenFormAndAdvance } = useCreateAuctionStoreActions()
   const [isEditingName, setIsEditingName] = useState(false)
@@ -197,44 +198,18 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
       </Flex>
       <Flex gap="$spacing16">
         <Flex row alignItems="center" gap="$spacing24" height={88} overflow="visible">
-          <Trace logPress element={ElementName.AuctionTokenImageUpload}>
-            <TouchableArea
-              width={80}
-              height={80}
-              borderRadius="$roundedFull"
-              backgroundColor="$surface3"
-              alignItems="center"
-              justifyContent="center"
-              overflow="hidden"
+          <Flex alignItems="center" gap="$spacing4">
+            <TokenImageUploadButton
+              displayImageUri={displayImageUri}
+              isProcessing={isImageProcessing}
               onPress={startImageUpload}
-              accessibilityRole="button"
-              accessibilityLabel={t('toucan.createAuction.step.tokenInfo.image.upload')}
-            >
-              {displayImageUri ? (
-                <UniversalImage
-                  uri={displayImageUri}
-                  size={{ width: 80, height: 80, resizeMode: UniversalImageResizeMode.Cover }}
-                  allowLocalUri
-                />
-              ) : (
-                <ImageUpload color="$neutral2" size="$icon.24" />
-              )}
-              {isImageProcessing && (
-                <Flex
-                  position="absolute"
-                  top={0}
-                  left={0}
-                  right={0}
-                  bottom={0}
-                  alignItems="center"
-                  justifyContent="center"
-                  backgroundColor="$scrim"
-                >
-                  <SpinningLoader color="$white" />
-                </Flex>
-              )}
-            </TouchableArea>
-          </Trace>
+            />
+            {isQuickLaunchFlagEnabled && tickerPreview.length > 0 && (
+              <Text variant="body4" color="$neutral2" maxWidth={96} numberOfLines={1} textAlign="center">
+                ${tickerPreview}
+              </Text>
+            )}
+          </Flex>
           <Flex flex={1} gap="$spacing4" justifyContent="center">
             <Text variant="body3" color="$neutral2">
               {t('toucan.createAuction.step.tokenInfo.name')}
@@ -277,9 +252,16 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
         <Flex gap="$spacing8">
           <Flex row gap="$spacing8">
             <Flex flex={3} backgroundColor="$surface2" borderRadius="$rounded20" p="$spacing16" gap="$spacing2">
-              <Text variant="body3" color="$neutral2">
-                {t('toucan.createAuction.step.tokenInfo.ticker')}
-              </Text>
+              <Flex row alignItems="center" justifyContent="space-between">
+                <Text variant="body3" color="$neutral2">
+                  {t('toucan.createAuction.step.tokenInfo.ticker')}
+                </Text>
+                {isQuickLaunchFlagEnabled && createNew.symbol.length > 0 && (
+                  <Text variant="body4" color="$neutral3">
+                    {createNew.symbol.length}/{NEW_TOKEN_SYMBOL_MAX_LENGTH}
+                  </Text>
+                )}
+              </Flex>
               <Trace logFocus element={ElementName.AuctionTokenTicker}>
                 <Input
                   ref={symbolInputRef}
@@ -314,21 +296,24 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
           />
         </Flex>
       </Flex>
-      <Flex row>
-        <Trace logPress element={ElementName.Continue} properties={{ token_source: 'new' }}>
-          <Button
-            size="large"
-            emphasis="primary"
-            onPress={handleContinue}
-            isDisabled={!canContinue}
-            onDisabledPress={canContinue ? undefined : handleDisabledContinue}
-            fill
-            backgroundColor={canContinue ? tokenColor : undefined}
-          >
-            {t('common.button.continue')}
-          </Button>
-        </Trace>
-      </Flex>
+      <QuickLaunchSection />
+      {!isQuickLaunchMode && (
+        <Flex row>
+          <Trace logPress element={ElementName.Continue} properties={{ token_source: 'new' }}>
+            <Button
+              size="large"
+              emphasis="primary"
+              onPress={handleContinue}
+              disabled={!canContinue}
+              onDisabledPress={canContinue ? undefined : handleDisabledContinue}
+              fill
+              backgroundColor={canContinue ? tokenColor : undefined}
+            >
+              {t('common.button.continue')}
+            </Button>
+          </Trace>
+        </Flex>
+      )}
     </Flex>
   )
 }

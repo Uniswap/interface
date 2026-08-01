@@ -1,4 +1,5 @@
-import { doesGetPortfolioQueryMatchAddress, getPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
+import { getPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
+import { doesGetPortfolioQueryMatchAddress } from 'uniswap/src/data/rest/getPortfolioQueryUtils'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 

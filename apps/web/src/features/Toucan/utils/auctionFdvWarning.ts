@@ -45,6 +45,24 @@ export function getAuctionCancelThresholdDisplay(
   return auction.currencyTokenSymbol ? `${formatted} ${auction.currencyTokenSymbol}` : formatted
 }
 
+// Percent of the launch threshold met by committed volume, capped at 100. Undefined when no threshold.
+export function getAuctionThresholdPercentMet(auction: EnrichedAuction['auction']): number | undefined {
+  const requiredRaw = auction?.requiredCurrencyRaised
+  const totalRaw = auction?.totalBidVolume
+  if (!requiredRaw) {
+    return undefined
+  }
+  const required = Number(requiredRaw)
+  if (!Number.isFinite(required) || required <= 0) {
+    return undefined
+  }
+  const total = totalRaw ? Number(totalRaw) : 0
+  if (!Number.isFinite(total)) {
+    return undefined
+  }
+  return Math.min(100, Math.max(0, (total / required) * 100))
+}
+
 export const DEFAULT_AUCTION_FDV_WARNING_THRESHOLDS: AuctionFdvWarningThresholds = {
   committedVolumeUsd: 20_000,
   bidCount: 50,

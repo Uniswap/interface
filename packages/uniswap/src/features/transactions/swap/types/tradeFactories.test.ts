@@ -11,7 +11,9 @@ import type {
   WrapQuoteResponse,
 } from '@universe/api'
 import { TradingApi } from '@universe/api'
-import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
+import { USDC, USDC_MAINNET, USDC_UNICHAIN } from 'uniswap/src/constants/tokens'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { createEarnChainedActionDisplayAmounts } from 'uniswap/src/features/earn/chainedDisplayAmounts'
 import { createBridgeTrade } from 'uniswap/src/features/transactions/swap/types/bridge'
 import { createChainedActionTrade } from 'uniswap/src/features/transactions/swap/types/chained'
 import { createClassicTrade } from 'uniswap/src/features/transactions/swap/types/classic'
@@ -64,6 +66,13 @@ const DEFAULT_OUTPUT = {
   token: USDC_MAINNET.address,
   recipient: SWAPPER,
 }
+const USDC_VAULT = new Token(
+  UniverseChainId.Mainnet,
+  '0x8c106EEDAd96553e64287A5A6839c3Cc78afA3D0',
+  18,
+  'gtUSDC',
+  'Gauntlet USDC',
+)
 
 function createClassicQuote(overrides: Partial<ClassicQuoteResponse['quote']> = {}): ClassicQuoteResponse {
   return {
@@ -100,6 +109,12 @@ function createClassicQuote(overrides: Partial<ClassicQuoteResponse['quote']> = 
 }
 
 function createBridgeQuote(overrides: Partial<BridgeQuoteResponse['quote']> = {}): BridgeQuoteResponse {
+  const legacyFeeFields = {
+    portionAmount: '5',
+    portionBips: 250,
+    portionRecipient: FEE_RECIPIENT,
+  }
+
   return {
     requestId: 'request-id',
     routing: TradingApi.Routing.BRIDGE,
@@ -111,9 +126,7 @@ function createBridgeQuote(overrides: Partial<BridgeQuoteResponse['quote']> = {}
       output: DEFAULT_OUTPUT,
       swapper: SWAPPER,
       tradeType: TradingApi.TradeType.EXACT_INPUT,
-      portionAmount: '5',
-      portionBips: 250,
-      portionRecipient: FEE_RECIPIENT,
+      ...legacyFeeFields,
       ...overrides,
     },
   }
@@ -156,6 +169,19 @@ function createChainedQuote(overrides: Partial<ChainedQuoteResponse['quote']> = 
       ...overrides,
     },
   }
+}
+
+function createEarnChainedActionTrade(
+  params: Parameters<typeof createChainedActionTrade>[0] & { earnIntent: TradingApi.EarnIntent },
+): ReturnType<typeof createChainedActionTrade> {
+  const earnDisplayAmounts = createEarnChainedActionDisplayAmounts({
+    quote: params.quote,
+    currencyIn: params.currencyIn,
+    currencyOut: params.currencyOut,
+    earnIntent: params.earnIntent,
+  })
+
+  return earnDisplayAmounts ? createChainedActionTrade({ ...params, displayAmountsOverride: earnDisplayAmounts }) : null
 }
 
 function createDutchQuote(): DutchQuoteResponse {
@@ -393,6 +419,227 @@ describe('trade factories', () => {
     expect(trade?.tradeType).toBe(TradeType.EXACT_INPUT)
     expect(trade?.slippageTolerance).toBe(2.98)
     expect(trade?.minAmountOut.quotient.toString()).toBe('190')
+  })
+
+  it('returns null instead of throwing when a chained quote is malformed', () => {
+    const malformedQuote = createChainedQuote({
+      input: undefined as unknown as ChainedQuoteResponse['quote']['input'],
+    })
+
+    expect(
+      createChainedActionTrade({
+        quote: malformedQuote,
+        currencyIn: WETH,
+        currencyOut: USDC_MAINNET,
+      }),
+    ).toBeNull()
+  })
+
+  it('uses earnPreview deposit asset amount for Earn quote display', () => {
+    const earnIntent: TradingApi.EarnIntent = {
+      action: TradingApi.EarnAction.DEPOSIT,
+      vault: '0x8c106EEDAd96553e64287A5A6839c3Cc78afA3D0',
+      chainId: UniverseChainId.Mainnet as unknown as TradingApi.ChainId,
+    }
+    const depositAssetAmount = '2000000'
+    const vaultShareAmount = '2800994864966439066'
+
+    const trade = createEarnChainedActionTrade({
+      quote: createChainedQuote({
+        input: { amount: '1000000', token: USDC_UNICHAIN.address },
+        output: { amount: vaultShareAmount, token: earnIntent.vault, recipient: SWAPPER },
+        tokenInChainId: UniverseChainId.Unichain as unknown as TradingApi.ChainId,
+        tokenOutChainId: UniverseChainId.Mainnet as unknown as TradingApi.ChainId,
+        earnPreview: {
+          type: TradingApi.EarnDepositPreview.type.DEPOSIT,
+          depositAssets: [
+            {
+              token: USDC.address,
+              chainId: UniverseChainId.Mainnet as unknown as TradingApi.ChainId,
+              amount: depositAssetAmount,
+            },
+          ],
+          estimatedSharesOut: vaultShareAmount,
+        },
+      }),
+      currencyIn: USDC_UNICHAIN,
+      currencyOut: USDC_UNICHAIN,
+      earnIntent,
+    })
+
+    expect(trade?.outputAmount.quotient.toString()).toBe(depositAssetAmount)
+    expect(trade?.outputAmount.currency.equals(USDC)).toBe(true)
+    expect(trade?.earnIntent).toBe(earnIntent)
+  })
+
+  it('uses known preview asset decimals when Earn deposit output currency differs', () => {
+    const earnIntent: TradingApi.EarnIntent = {
+      action: TradingApi.EarnAction.DEPOSIT,
+      vault: '0x8c106EEDAd96553e64287A5A6839c3Cc78afA3D0',
+      chainId: UniverseChainId.Mainnet as unknown as TradingApi.ChainId,
+    }
+    const sourceOutputCurrency = new Token(
+      UniverseChainId.Unichain,
+      '0x111144272dc658575ba38f43c438447dded45358',
+      18,
+      'SRC',
+      'Source Token',
+    )
+    const depositAssetAmount = '2000000'
+    const vaultShareAmount = '2800994864966439066'
+
+    const trade = createEarnChainedActionTrade({
+      quote: createChainedQuote({
+        input: { amount: '1000000000000000000', token: USDC_UNICHAIN.address },
+        output: { amount: vaultShareAmount, token: earnIntent.vault, recipient: SWAPPER },
+        tokenInChainId: UniverseChainId.Unichain as unknown as TradingApi.ChainId,
+        tokenOutChainId: UniverseChainId.Mainnet as unknown as TradingApi.ChainId,
+        earnPreview: {
+          type: TradingApi.EarnDepositPreview.type.DEPOSIT,
+          depositAssets: [
+            {
+              token: USDC.address,
+              chainId: UniverseChainId.Mainnet as unknown as TradingApi.ChainId,
+              amount: depositAssetAmount,
+            },
+          ],
+          estimatedSharesOut: vaultShareAmount,
+        },
+      }),
+      currencyIn: USDC_UNICHAIN,
+      currencyOut: sourceOutputCurrency,
+      earnIntent,
+    })
+
+    expect(trade?.outputAmount.currency.equals(USDC)).toBe(true)
+    expect(trade?.outputAmount.toExact()).toBe('2')
+  })
+
+  it('returns null instead of a share-denominated display amount when the Earn deposit preview asset is unresolvable', () => {
+    const earnIntent: TradingApi.EarnIntent = {
+      action: TradingApi.EarnAction.DEPOSIT,
+      vault: '0x8c106EEDAd96553e64287A5A6839c3Cc78afA3D0',
+      chainId: UniverseChainId.Base as unknown as TradingApi.ChainId,
+    }
+    const vaultShareAmount = '2800994864966439066'
+
+    // Future vault on a non-mainnet chain: the deposit asset is not in the launch allowlist and does
+    // not match currencyOut, so there is no currency with known decimals to display the preview in.
+    // The old fallback paired the vault-share raw amount with currencyOut's decimals (inflating the
+    // displayed amount by 10^Δdecimals); now the trade fails to build → quote unavailable.
+    const trade = createEarnChainedActionTrade({
+      quote: createChainedQuote({
+        input: { amount: '1000000', token: USDC_UNICHAIN.address },
+        output: { amount: vaultShareAmount, token: earnIntent.vault, recipient: SWAPPER },
+        tokenInChainId: UniverseChainId.Unichain as unknown as TradingApi.ChainId,
+        tokenOutChainId: UniverseChainId.Base as unknown as TradingApi.ChainId,
+        earnPreview: {
+          type: TradingApi.EarnDepositPreview.type.DEPOSIT,
+          depositAssets: [
+            {
+              token: '0x999944272dc658575ba38f43c438447dded45999',
+              chainId: UniverseChainId.Base as unknown as TradingApi.ChainId,
+              amount: '2000000',
+            },
+          ],
+          estimatedSharesOut: vaultShareAmount,
+        },
+      }),
+      currencyIn: USDC_UNICHAIN,
+      currencyOut: USDC_UNICHAIN,
+      earnIntent,
+    })
+
+    expect(trade).toBeNull()
+  })
+
+  it('returns null for an Earn deposit quote that is missing its preview entirely', () => {
+    const earnIntent: TradingApi.EarnIntent = {
+      action: TradingApi.EarnAction.DEPOSIT,
+      vault: '0x8c106EEDAd96553e64287A5A6839c3Cc78afA3D0',
+      chainId: UniverseChainId.Mainnet as unknown as TradingApi.ChainId,
+    }
+    const vaultShareAmount = '2800994864966439066'
+
+    const trade = createEarnChainedActionTrade({
+      quote: createChainedQuote({
+        input: { amount: '1000000', token: USDC_UNICHAIN.address },
+        output: { amount: vaultShareAmount, token: earnIntent.vault, recipient: SWAPPER },
+        tokenInChainId: UniverseChainId.Unichain as unknown as TradingApi.ChainId,
+        tokenOutChainId: UniverseChainId.Mainnet as unknown as TradingApi.ChainId,
+      }),
+      currencyIn: USDC_UNICHAIN,
+      currencyOut: USDC_UNICHAIN,
+      earnIntent,
+    })
+
+    expect(trade).toBeNull()
+  })
+
+  it('uses exact-assets withdraw preview amount for Earn quote display', () => {
+    const earnIntent: TradingApi.EarnIntent = {
+      action: TradingApi.EarnAction.WITHDRAW,
+      vault: '0x8c106EEDAd96553e64287A5A6839c3Cc78afA3D0',
+      chainId: UniverseChainId.Mainnet as unknown as TradingApi.ChainId,
+      withdrawMode: TradingApi.EarnWithdrawMode.EXACT_ASSETS,
+    }
+    const requestedAssetsOut = '2000000'
+    const estimatedSharesIn = '2800994864966439066'
+
+    const trade = createEarnChainedActionTrade({
+      quote: createChainedQuote({
+        input: { amount: requestedAssetsOut, token: earnIntent.vault },
+        output: { amount: estimatedSharesIn, token: USDC.address, recipient: SWAPPER },
+        earnPreview: {
+          type: TradingApi.EarnExactAssetsWithdrawPreview.type.EXACT_ASSETS_WITHDRAW,
+          requestedAssetsOut,
+          estimatedSharesIn,
+        },
+      }),
+      currencyIn: USDC_VAULT,
+      currencyOut: USDC,
+      earnIntent,
+    })
+
+    expect(trade?.inputAmount.quotient.toString()).toBe(estimatedSharesIn)
+    expect(trade?.inputAmount.currency.equals(USDC_VAULT)).toBe(true)
+    expect(trade?.outputAmount.quotient.toString()).toBe(requestedAssetsOut)
+    expect(trade?.outputAmount.currency.equals(USDC)).toBe(true)
+    expect(trade?.maxAmountIn.quotient.toString()).toBe('2829004813616103456')
+    expect(trade?.minAmountOut.quotient.toString()).toBe(requestedAssetsOut)
+  })
+
+  it('uses max-shares withdraw preview amount for Earn quote display', () => {
+    const earnIntent: TradingApi.EarnIntent = {
+      action: TradingApi.EarnAction.WITHDRAW,
+      vault: '0x8c106EEDAd96553e64287A5A6839c3Cc78afA3D0',
+      chainId: UniverseChainId.Mainnet as unknown as TradingApi.ChainId,
+      withdrawMode: TradingApi.EarnWithdrawMode.MAX_SHARES,
+    }
+    const maxRedeemableSharesIn = '2800994864966439066'
+    const previewAssetsOut = '2000000'
+
+    const trade = createEarnChainedActionTrade({
+      quote: createChainedQuote({
+        input: { amount: maxRedeemableSharesIn, token: earnIntent.vault },
+        output: { amount: maxRedeemableSharesIn, token: USDC.address, recipient: SWAPPER },
+        earnPreview: {
+          type: TradingApi.EarnMaxSharesWithdrawPreview.type.MAX_SHARES_WITHDRAW,
+          maxRedeemableSharesIn,
+          previewAssetsOut,
+        },
+      }),
+      currencyIn: USDC_VAULT,
+      currencyOut: USDC,
+      earnIntent,
+    })
+
+    expect(trade?.inputAmount.quotient.toString()).toBe(maxRedeemableSharesIn)
+    expect(trade?.inputAmount.currency.equals(USDC_VAULT)).toBe(true)
+    expect(trade?.outputAmount.quotient.toString()).toBe(previewAssetsOut)
+    expect(trade?.outputAmount.currency.equals(USDC)).toBe(true)
+    expect(trade?.maxAmountIn.quotient.toString()).toBe(maxRedeemableSharesIn)
+    expect(trade?.minAmountOut.quotient.toString()).toBe('1980000')
   })
 
   it('creates indicative trades from validated quote responses', () => {

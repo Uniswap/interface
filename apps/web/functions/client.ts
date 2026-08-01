@@ -1,6 +1,11 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client'
 
-const GRAPHQL_ENDPOINT = 'https://interface.gateway.uniswap.org/v1/graphql'
+// Overridable so cloud-function tests can point the worker at a local fixture
+// server (see functions/fixtures) instead of the live gateway. In the Worker
+// bundle the env read is resolved at build time via Vite `define`; on
+// Vercel/Node it resolves at runtime. Unset everywhere except cloud-tests CI.
+const GRAPHQL_ENDPOINT =
+  process.env.CLOUD_FUNCTIONS_GRAPHQL_ENDPOINT_OVERRIDE || 'https://interface.gateway.uniswap.org/v1/graphql'
 
 //TODO: Figure out how to make ApolloClient global variable
 export default new ApolloClient({

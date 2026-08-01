@@ -1,8 +1,8 @@
 import { createContext, PropsWithChildren, useContext } from 'react'
 
 interface AnalyticsNavigationContext {
-  useIsPartOfNavigationTree(): boolean
-  shouldLogScreen(direct?: boolean, screen?: string): boolean
+  useIsPartOfNavigationTree: () => boolean
+  shouldLogScreen: (direct?: boolean, screen?: string) => boolean
 }
 
 const defaultState: AnalyticsNavigationContext = {

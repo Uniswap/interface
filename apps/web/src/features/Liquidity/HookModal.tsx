@@ -210,7 +210,7 @@ export function HookModal({
             </Trace>
             <Trace logPress element={ElementName.Continue}>
               <Button
-                isDisabled={!canContinue}
+                disabled={!canContinue}
                 size="small"
                 variant="branded"
                 onPress={handleContinue}

@@ -12,6 +12,7 @@ import {
   WrapTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
+import type { Mocked } from 'vitest'
 import { TransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 import { waitForTransactionConfirmation } from 'wallet/src/features/transactions/swap/confirmation'
 import {
@@ -22,20 +23,20 @@ import { TransactionStep, TransactionStepType } from 'wallet/src/features/transa
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
 // Mock dependencies
-jest.mock('utilities/src/logger/logger')
-jest.mock('wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService')
-jest.mock('wallet/src/features/transactions/swap/confirmation')
+vi.mock('utilities/src/logger/logger')
+vi.mock('wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService')
+vi.mock('wallet/src/features/transactions/swap/confirmation')
 
 const mockTransactionService = {
-  submitTransaction: jest.fn(),
-  submitTransactionSync: jest.fn(),
-  prepareAndSignTransaction: jest.fn(),
-  executeTransaction: jest.fn(),
-  executeUserOp: jest.fn(),
-  getNextNonce: jest.fn(),
-} as jest.Mocked<TransactionService>
+  submitTransaction: vi.fn(),
+  submitTransactionSync: vi.fn(),
+  prepareAndSignTransaction: vi.fn(),
+  executeTransaction: vi.fn(),
+  executeUserOp: vi.fn(),
+  getNextNonce: vi.fn(),
+} as Mocked<TransactionService>
 
-const mockLogger = logger as jest.Mocked<typeof logger>
+const mockLogger = logger as Mocked<typeof logger>
 
 describe('TransactionExecutor', () => {
   let executor: TransactionExecutor
@@ -98,7 +99,7 @@ describe('TransactionExecutor', () => {
 
   beforeEach(() => {
     executor = createTransactionExecutor(mockTransactionService)
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('executeStep', () => {

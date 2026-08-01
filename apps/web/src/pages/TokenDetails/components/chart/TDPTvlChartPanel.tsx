@@ -13,7 +13,7 @@ interface TDPTvlChartPanelProps {
 export function TDPTvlChartPanel({ variables, tokenColor }: TDPTvlChartPanelProps): JSX.Element {
   const { t } = useTranslation()
 
-  const tvlQuery = useTDPTVLChartData(variables, false)
+  const tvlQuery = useTDPTVLChartData({ variables, skip: false })
 
   if (tvlQuery.dataQuality === DataQuality.INVALID) {
     return (

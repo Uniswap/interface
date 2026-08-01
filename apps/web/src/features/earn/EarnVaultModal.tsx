@@ -1,62 +1,86 @@
-import { useCallback, useEffect } from 'react'
-import { Flex, SpinningLoader } from 'ui/src'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useDispatch } from 'react-redux'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
-import { DepositReviewView } from 'uniswap/src/features/earn/DepositReviewView'
-import { EarnVaultOverview } from 'uniswap/src/features/earn/EarnVaultOverview'
+import {
+  EarnAnalyticsSurface,
+  EarnEntryPoint,
+  getEarnVaultAnalyticsProperties,
+  logEarnTransactionEvent,
+  logEarnVaultSelected,
+} from 'uniswap/src/features/earn/analytics'
 import { useEarnDepositSources } from 'uniswap/src/features/earn/hooks/useEarnDepositSources'
 import { useEarnMainnetActionCurrencyForVault } from 'uniswap/src/features/earn/hooks/useEarnMainnetActionCurrency'
-import { useEarnPosition } from 'uniswap/src/features/earn/hooks/useEarnPosition'
+import { EarnPositionStatus, useEarnPosition } from 'uniswap/src/features/earn/hooks/useEarnPosition'
 import {
   type EarnVaultModalInitialView,
   EarnVaultView,
   useEarnVaultModalFlow,
 } from 'uniswap/src/features/earn/hooks/useEarnVaultModalFlow'
 import type { EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/types'
-import { WithdrawReviewView } from 'uniswap/src/features/earn/WithdrawReviewView'
-import { YouNeedTokenView } from 'uniswap/src/features/earn/YouNeedTokenView'
+import { hasConfirmedEarnPositionRawBalance } from 'uniswap/src/features/earn/utils'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import type {
+  EarnAnalyticsEntryPoint,
+  EarnAnalyticsSurface as EarnAnalyticsSurfaceValue,
+} from 'uniswap/src/features/telemetry/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { signalEarnModalClosed } from 'uniswap/src/utils/saga'
 import { noop } from 'utilities/src/react/noop'
 import { useActiveAccount } from '~/features/accounts/store/hooks'
-import { DepositAmountView } from '~/features/earn/DepositAmountView'
-import type { EarnVaultModalContentProps } from '~/features/earn/types'
-import { WithdrawAmountView } from '~/features/earn/WithdrawAmountView'
+import { EarnVaultModalContent } from '~/features/earn/EarnVaultModalContent'
 import { useAccount } from '~/hooks/useAccount'
-import { useColor } from '~/hooks/useColor'
 
 interface EarnVaultModalProps {
+  analyticsEntryPoint?: EarnAnalyticsEntryPoint
+  analyticsSurface?: EarnAnalyticsSurfaceValue
   vault: EarnVaultInfo | null
   prefetchedPosition?: EarnPositionInfo
   initialView?: EarnVaultModalInitialView
+  minimumBalanceDataUpdatedAtMs?: number
+  originatingTransactionId?: string
+  projectedMonthlyEarningsUsd?: number
+  sourceUpsellCurrencyId?: string
+  swapAmountUsd?: number
   isOpen: boolean
   onClose: () => void
   onConnectWallet?: () => void
 }
 
-// Single Modal hosts the entire vault → {deposit,withdraw}-{amount,review} flow so the
-// backdrop never unmounts between transitions, avoiding a visible overlay flicker.
+// Keep the full vault flow in one modal to avoid backdrop flicker between steps.
 export function EarnVaultModal({
+  analyticsEntryPoint = EarnEntryPoint.GlobalModal,
+  analyticsSurface = EarnAnalyticsSurface.Web,
   vault,
   prefetchedPosition,
   initialView = EarnVaultView.Vault,
+  minimumBalanceDataUpdatedAtMs,
+  originatingTransactionId,
+  projectedMonthlyEarningsUsd,
+  sourceUpsellCurrencyId,
+  swapAmountUsd,
   isOpen,
   onClose,
   onConnectWallet,
 }: EarnVaultModalProps) {
   const account = useAccount()
+  const dispatch = useDispatch()
   const { navigateToSwapFlow, navigateToFiatOnRamp } = useUniswapContext()
   const isConnected = account.isConnected
   const evmAccount = useActiveAccount(Platform.EVM)
   const currencyInfo = useCurrencyInfo(vault?.displayCurrencyId)
   const currency = currencyInfo?.currency
   const symbol = currency?.symbol ?? ''
+  const selectedAnalyticsKeyRef = useRef<string | undefined>(undefined)
+  const startedAnalyticsKeysRef = useRef(new Set<string>())
   const {
+    balanceLookupErrored,
     balanceLookupHasData,
     balanceLookupSettled,
     depositSourceOptions,
     hasSupportedBalanceForUnderlying,
+    refetchBalanceLookup,
     selectedDepositSource,
     setSelectedDepositSourceCurrencyId,
     unsupportedDepositSourceOptions,
@@ -64,18 +88,33 @@ export function EarnVaultModal({
     vault,
     walletAddress: evmAccount?.address,
     isOpen,
+    initialSourceCurrencyId: sourceUpsellCurrencyId,
+    minimumBalanceDataUpdatedAtMs,
     resetSelectionOnClose: true,
   })
   const { currencyIdForSwap, currencyInfoForActions } = useEarnMainnetActionCurrencyForVault({ vault })
 
-  const { position } = useEarnPosition({
+  const {
+    position,
+    positionStatus,
+    isError: positionIsError,
+    refetch: refetchPosition,
+  } = useEarnPosition({
     vault,
     walletAddress: evmAccount?.address,
     isConnected,
     enabled: isOpen,
     prefetchedPosition,
   })
-  const hasPosition = position !== undefined
+  // Prefetched (ListEarnPositions) carries deposited/rate but not lifetime PnL. When the live
+  // GetEarnPosition fails we still show the balance from the prefetch and localize the failure to
+  // the rewards row; only a total absence of position data falls back to the full balance error.
+  const displayPosition = position ?? prefetchedPosition
+  const hasPosition = displayPosition !== undefined
+  const balanceError = isConnected && positionIsError && prefetchedPosition === undefined
+  const lifetimeEarningsError = isConnected && positionIsError && prefetchedPosition !== undefined
+  const canWithdraw = hasConfirmedEarnPositionRawBalance(displayPosition)
+  const isPositionLoading = positionStatus === EarnPositionStatus.Loading && displayPosition === undefined
 
   const {
     flow,
@@ -92,27 +131,88 @@ export function EarnVaultModal({
     backToVault,
   } = useEarnVaultModalFlow({
     hasPosition,
-    initialPosition: position,
+    initialPosition: displayPosition,
     initialView,
     isOpen,
     vaultId: vault?.id,
   })
 
+  const analyticsProperties = useMemo(() => {
+    if (!vault) {
+      return undefined
+    }
+
+    return getEarnVaultAnalyticsProperties({
+      entryPoint: analyticsEntryPoint,
+      position: displayPosition,
+      surface: analyticsSurface,
+      underlyingTokenSymbol: symbol,
+      vault,
+    })
+  }, [analyticsEntryPoint, analyticsSurface, displayPosition, symbol, vault])
+
+  useEffect(() => {
+    if (!isOpen) {
+      selectedAnalyticsKeyRef.current = undefined
+      startedAnalyticsKeysRef.current.clear()
+    }
+  }, [isOpen])
+
+  useEffect(() => {
+    if (!isOpen || !analyticsProperties || !vault) {
+      return
+    }
+
+    const analyticsKey = `${analyticsEntryPoint}-${vault.id}`
+    if (selectedAnalyticsKeyRef.current === analyticsKey) {
+      return
+    }
+
+    selectedAnalyticsKeyRef.current = analyticsKey
+    logEarnVaultSelected(analyticsProperties)
+  }, [analyticsEntryPoint, analyticsProperties, isOpen, vault])
+
+  useEffect(() => {
+    if (!isOpen || !analyticsProperties || !vault) {
+      return
+    }
+
+    const action =
+      flow.view === EarnVaultView.DepositAmount
+        ? 'deposit'
+        : flow.view === EarnVaultView.WithdrawAmount
+          ? 'withdraw'
+          : undefined
+    if (!action) {
+      return
+    }
+
+    const analyticsKey = `${analyticsEntryPoint}-${vault.id}-${action}`
+    if (startedAnalyticsKeysRef.current.has(analyticsKey)) {
+      return
+    }
+
+    startedAnalyticsKeysRef.current.add(analyticsKey)
+    logEarnTransactionEvent({
+      action,
+      status: 'started',
+      properties: { ...analyticsProperties, action },
+    })
+  }, [analyticsEntryPoint, analyticsProperties, flow.view, isOpen, vault])
+
   const handleClose = useCallback(() => {
+    dispatch(signalEarnModalClosed())
     reset()
     onClose()
-  }, [onClose, reset])
+  }, [dispatch, onClose, reset])
 
   const handleWithdraw = useCallback(() => {
-    if (position) {
-      startWithdraw(position)
+    if (displayPosition && canWithdraw) {
+      startWithdraw(displayPosition)
     }
-  }, [position, startWithdraw])
+  }, [canWithdraw, displayPosition, startWithdraw])
 
-  // Gate the deposit CTA on the user holding the underlying on a supported chain; if they don't,
-  // route to the "You need {symbol}" view instead of opening the deposit amount input.
-  // Wait for both the portfolio and token-project queries to resolve — otherwise users
-  // with a balance would be briefly misrouted while data is loading.
+  // Wait for balance lookup before routing users to deposit vs. need-token.
   const handleDeposit = useCallback(() => {
     if (isConnected && balanceLookupHasData && !hasSupportedBalanceForUnderlying) {
       startNeedToken()
@@ -121,9 +221,7 @@ export function EarnVaultModal({
     startDeposit()
   }, [balanceLookupHasData, hasSupportedBalanceForUnderlying, isConnected, startDeposit, startNeedToken])
 
-  // Apply the same deposit guard when an external entry point opens the modal directly to
-  // DepositAmount (e.g. the token details "Deposit" shortcut). Without this, users with an
-  // existing position but no wallet balance would skip the "You need {symbol}" screen.
+  // External DepositAmount entry points still need the balance guard.
   useEffect(() => {
     if (
       isOpen &&
@@ -165,6 +263,8 @@ export function EarnVaultModal({
       onClose={handleClose}
     >
       <EarnVaultModalContent
+        analyticsEntryPoint={analyticsEntryPoint}
+        analyticsSurface={analyticsSurface}
         onConnectWallet={onConnectWallet ?? noop}
         flow={flow}
         flowHandlers={{
@@ -179,14 +279,27 @@ export function EarnVaultModal({
           onSwapForToken: handleSwapForToken,
           onWithdraw: handleWithdraw,
         }}
+        originatingTransactionId={originatingTransactionId}
+        projectedMonthlyEarningsUsd={projectedMonthlyEarningsUsd}
+        sourceUpsellCurrencyId={sourceUpsellCurrencyId}
+        swapAmountUsd={swapAmountUsd}
         tabState={{ selectedTab, setSelectedTab }}
         vaultData={{
+          balanceLookupErrored,
+          balanceLookupHasData,
           balanceLookupSettled,
+          onRetryBalanceLookup: refetchBalanceLookup,
+          balanceError,
+          onRetryBalance: refetchPosition,
+          lifetimeEarningsUsd: position?.lifetimePnlUsd,
+          lifetimeEarningsError,
+          canWithdraw,
           currencyInfo,
           depositSourceOptions,
           hasPosition,
           isConnected,
-          position,
+          isPositionLoading,
+          position: displayPosition,
           selectedDepositSource,
           setSelectedDepositSourceCurrencyId,
           symbol,
@@ -196,148 +309,4 @@ export function EarnVaultModal({
       />
     </Modal>
   )
-}
-
-function EarnVaultModalContent({
-  onConnectWallet,
-  flow,
-  flowHandlers,
-  tabState,
-  vaultData,
-}: EarnVaultModalContentProps): JSX.Element | null {
-  const {
-    balanceLookupSettled,
-    currencyInfo,
-    depositSourceOptions,
-    hasPosition,
-    isConnected,
-    position,
-    selectedDepositSource,
-    setSelectedDepositSourceCurrencyId,
-    symbol,
-    unsupportedDepositSourceOptions,
-    vault,
-  } = vaultData
-  const tokenColor = useColor(currencyInfo?.currency)
-  const {
-    onBackToDepositAmount,
-    onBackToVault,
-    onBackToWithdrawAmount,
-    onBuyWithCash,
-    onClose,
-    onDeposit,
-    onReviewDeposit,
-    onReviewWithdraw,
-    onSwapForToken,
-    onWithdraw,
-  } = flowHandlers
-  const { selectedTab, setSelectedTab } = tabState
-
-  if (!vault) {
-    return null
-  }
-
-  // Hold the deposit amount view until balance lookup completes. Otherwise the modal renders
-  // DepositAmount first, then flips to NeedToken once the portfolio/tokenProject queries
-  // resolve — a visible flicker when entering with initialView=DepositAmount. We gate on
-  // `settled` (success or error) so a failed lookup falls through to DepositAmount rather
-  // than spinning forever.
-  if (flow.view === EarnVaultView.DepositAmount && isConnected && !balanceLookupSettled) {
-    return <PendingDepositRoutingView />
-  }
-
-  switch (flow.view) {
-    case EarnVaultView.Vault:
-      return (
-        <EarnVaultOverview
-          onConnectWallet={onConnectWallet}
-          currencyInfo={currencyInfo}
-          hasPosition={hasPosition}
-          isConnected={isConnected}
-          onClose={onClose}
-          onDeposit={onDeposit}
-          onWithdraw={onWithdraw}
-          position={position}
-          selectedTab={selectedTab}
-          setSelectedTab={setSelectedTab}
-          symbol={symbol}
-          vault={vault}
-        />
-      )
-    case EarnVaultView.NeedToken:
-      return (
-        <YouNeedTokenView
-          currencyInfo={currencyInfo}
-          symbol={symbol}
-          tokenColor={tokenColor}
-          onBack={onBackToVault}
-          onClose={onClose}
-          onSwapForToken={onSwapForToken}
-          onBuyWithCash={onBuyWithCash}
-        />
-      )
-    case EarnVaultView.DepositAmount:
-      return (
-        <DepositAmountView
-          vault={vault}
-          depositSourceOptions={depositSourceOptions}
-          selectedDepositSource={selectedDepositSource}
-          onSelectDepositSource={setSelectedDepositSourceCurrencyId}
-          unsupportedDepositSourceOptions={unsupportedDepositSourceOptions}
-          initialAmount={flow.amount}
-          onBack={onBackToVault}
-          onClose={onClose}
-          onReview={onReviewDeposit}
-        />
-      )
-    case EarnVaultView.DepositReview:
-      return (
-        <DepositReviewView
-          vault={vault}
-          position={position}
-          amount={flow.amount}
-          sourceCurrencyId={flow.sourceCurrencyId}
-          onBack={onBackToDepositAmount}
-          onClose={onClose}
-        />
-      )
-    case EarnVaultView.WithdrawAmount:
-      return (
-        <WithdrawAmountView
-          vault={vault}
-          availableBalance={flow.position.depositedUsd}
-          initialAmount={flow.amount}
-          initialChainId={flow.chainId}
-          onBack={onBackToVault}
-          onClose={onClose}
-          onReview={onReviewWithdraw}
-        />
-      )
-    case EarnVaultView.WithdrawReview:
-      return (
-        <WithdrawReviewView
-          vault={vault}
-          position={flow.position}
-          amount={flow.amount}
-          chainId={flow.chainId}
-          destinationCurrencyId={flow.destinationCurrencyId}
-          onBack={onBackToWithdrawAmount}
-          onClose={onClose}
-        />
-      )
-  }
-
-  return assertNever(flow)
-}
-
-function PendingDepositRoutingView(): JSX.Element {
-  return (
-    <Flex alignItems="center" justifyContent="center" minHeight={320}>
-      <SpinningLoader color="$neutral2" size={24} />
-    </Flex>
-  )
-}
-
-function assertNever(value: never): never {
-  throw new Error(`Unexpected earn vault modal flow: ${JSON.stringify(value)}`)
 }

@@ -57,7 +57,7 @@ describe(getNetworkIconListDisplay, () => {
     })
   })
 
-  it('shows all four icons when there are exactly four networks', () => {
+  it('shows three icons and overflow count 1 when there are exactly four networks', () => {
     const chainIds = [
       UniverseChainId.Mainnet,
       UniverseChainId.Polygon,
@@ -71,17 +71,12 @@ describe(getNetworkIconListDisplay, () => {
       UniverseChainId.Optimism,
     ]
     expect(getNetworkIconListDisplay(chainIds, enabled)).toEqual({
-      visibleChainIds: [
-        UniverseChainId.Mainnet,
-        UniverseChainId.Polygon,
-        UniverseChainId.ArbitrumOne,
-        UniverseChainId.Optimism,
-      ],
-      overflowCount: 0,
+      visibleChainIds: [UniverseChainId.Mainnet, UniverseChainId.Polygon, UniverseChainId.ArbitrumOne],
+      overflowCount: 1,
     })
   })
 
-  it('shows three icons and overflow count when more than four networks', () => {
+  it('shows three icons and overflow count when more than three networks', () => {
     const chainIds = [
       UniverseChainId.Mainnet,
       UniverseChainId.Polygon,

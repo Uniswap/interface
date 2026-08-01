@@ -18,6 +18,7 @@ import {
   useTokenBasicProjectPartsFragment,
 } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { isMultichainProjectTokens } from 'uniswap/src/features/dataApi/tokenProjects/utils/isMultichainProjectTokens'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
 import {
@@ -37,10 +38,13 @@ export const HeaderTitleElement = memo(function HeaderTitleElement(): JSX.Elemen
   const token = useTokenBasicInfoPartsFragment({ currencyId }).data
   const project = useTokenBasicProjectPartsFragment({ currencyId }).data.project
   const isMultichainToken = isMultichainProjectTokens(project?.tokens)
+  const metadata = useTokenMetadata(currencyId, {
+    legacyToken: { name: token.name, symbol: token.symbol, project: { logoUrl: project?.logoUrl } },
+  })
 
-  const logo = project?.logoUrl ?? undefined
-  const symbol = token.symbol
-  const name = token.name
+  const logo = metadata.logoUrl ?? undefined
+  const symbol = metadata.symbol
+  const name = metadata.name
   const chain = token.chain
 
   return (

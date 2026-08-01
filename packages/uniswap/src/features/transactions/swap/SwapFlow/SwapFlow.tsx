@@ -58,6 +58,7 @@ function useSwapFlowOnClose({
     }
 
     dispatch(signalSwapModalClosed())
+    swapFormStore.getState().updateSwapForm({ isEarnFlow: false })
   })
 
   return useEvent(() => {

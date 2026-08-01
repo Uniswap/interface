@@ -33,13 +33,13 @@ export const rootIgnorePatterns = [
   '**/vitest.config*',
   '**/vitest-setup*',
   '**/vitest-package-mocks*',
-  '**/jest-setup*',
-  '**/jest-package-mocks*',
   '**/webpack.*',
   '**/webpack-plugins/**',
   '**/.wxt/**',
   '**/wxt.config.*',
   '**/tailwind-config.*',
+  // -- shared configs --
+  'config/**',
   // ── apps/mobile ──
   'apps/mobile/metro.config.js',
   'apps/mobile/ReactotronConfig.ts',
@@ -62,7 +62,6 @@ export const rootIgnorePatterns = [
   // ── apps/extension ──
   'apps/extension/dev/**',
   'apps/extension/webpack*.js',
-  'apps/extension/jest*.js',
   'apps/extension/babel*.js',
   // ── apps/dev-portal ──
   'apps/dev-portal/functions/**',
@@ -72,10 +71,8 @@ export const rootIgnorePatterns = [
   'packages/uniswap/src/abis/types/**',
   'packages/uniswap/vite/**',
   'packages/uniswap/vitest*.ts',
-  'packages/uniswap/jest*.js',
   'packages/uniswap/babel*.js',
   // ── packages/wallet ──
-  'packages/wallet/jest*.js',
   'packages/wallet/babel*.js',
   // ── packages/ui ──
   'packages/ui/src/components/icons/**',
@@ -83,7 +80,7 @@ export const rootIgnorePatterns = [
   // ── packages/api ──
   'packages/api/codegen.ts',
   // ── tools/uniswap-nx ──
-  'tools/uniswap-nx/src/generators/**/files/**',
+  'tools/uniswap-nx/src/generators/**',
 ]
 
 // ── Shared no-restricted-imports definitions ──────────────────────────
@@ -229,9 +226,31 @@ export const sharedRestrictedImportPaths = [
 ] as const
 
 /** Pattern that blocks deep imports into @universe/* packages. */
+// `**` is required — gitignore-style `*` doesn't cross `/`, so `@universe/*/src/*`
+// would miss nested paths like `@universe/api/src/clients/trading/types`.
 export const crossPackageDeepImportPattern = {
-  group: ['@universe/*/src', '@universe/*/src/*'],
+  group: ['@universe/*/src', '@universe/*/src/**'],
   message: 'Deep imports from @universe/* packages are forbidden. Import from the package root instead.',
+} as const
+
+/**
+ * Pattern that blocks imports of labs/ projects from everywhere outside labs/.
+ * labs/ is experimental and .nxignore'd — shipped apps and packages must never
+ * depend on it. labs/* projects may still import each other: the labs/**
+ * override below redefines no-restricted-imports without this pattern.
+ * Add new labs/* package names to this group when creating a labs project.
+ */
+export const labsRestrictedImportPattern = {
+  group: [
+    '@universe/workbench',
+    '@universe/workbench/**',
+    '@universe/sandbox',
+    '@universe/sandbox/**',
+    'labs/**',
+    '**/labs/**',
+  ],
+  message:
+    'labs/ projects are experimental and must not be imported outside labs/. Move shared code into packages/ instead.',
 } as const
 
 export const sharedRestrictedImportPatterns = [
@@ -241,6 +260,7 @@ export const sharedRestrictedImportPatterns = [
       'Please do not import SVG files directly from `ui/src/assets/icons/*.svg`. Use generated icon components instead.',
   },
   crossPackageDeepImportPattern,
+  labsRestrictedImportPattern,
 ] as const
 
 /**
@@ -251,7 +271,7 @@ export function restrictedImportPatternsForUniversePackage(packageName: string) 
   return [
     ...sharedRestrictedImportPatterns.filter((p) => p !== crossPackageDeepImportPattern),
     {
-      group: ['@universe/*/src', '@universe/*/src/*', `!${packageName}/src`, `!${packageName}/src/*`],
+      group: ['@universe/*/src', '@universe/*/src/**', `!${packageName}/src`, `!${packageName}/src/**`],
       message: 'Deep imports from @universe/* packages are forbidden. Import from the package root instead.',
     },
   ]
@@ -520,7 +540,7 @@ export default defineConfig({
     'typescript/no-unsafe-return': 'error',
     'typescript/no-unnecessary-condition': ['error', { allowConstantLoopConditions: true }],
     'typescript/no-redundant-type-constituents': 'off',
-    'typescript/unbound-method': 'off',
+    'typescript/unbound-method': ['error', { ignoreStatic: true }],
     'typescript/restrict-template-expressions': 'off',
     'typescript/no-base-to-string': 'off',
 
@@ -570,6 +590,8 @@ export default defineConfig({
 
     // ── jsPlugin rules (excluded when ENABLE_FAST_LINT=true) ──────────
     ...(!isFastLint && {
+      // correctness
+      'import/no-cycle': ['error', { ignoreExternal: true }],
       // security
       'security/detect-unsafe-regex': 'error',
       'security/detect-buffer-noassert': 'error',
@@ -625,6 +647,18 @@ export default defineConfig({
         'typescript/no-unsafe-return': 'off',
       },
     },
+
+    // ── Saga files ──────────────────────
+    {
+      files: ['**/*saga.ts', '**/*saga.tsx', '**/*Saga.ts', '**/*Saga.tsx'],
+      rules: {
+        // redux-saga's call/fork/etc. bind the receiver via the
+        // [obj, method] array form, an idiom unbound-method can't model, so it
+        // false-positives on the bound method reference. Disable it for sagas.
+        'typescript/unbound-method': 'off',
+      },
+    },
+
     // ── Logger, scripts, devtools: allow console ──────────────────────
     {
       files: [
@@ -671,6 +705,20 @@ export default defineConfig({
         ...(!isFastLint && {
           'eslint-js/no-restricted-syntax': ['error', ...sharedRestrictedSyntaxSelectors],
         }),
+      },
+    },
+    {
+      // cli's internal imports use the @universe/cli/src prefix (see
+      // no-relative-import-paths below), so exclude its own deep imports.
+      files: ['apps/cli/**'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: [...sharedRestrictedImportPaths],
+            patterns: restrictedImportPatternsForUniversePackage('@universe/cli'),
+          },
+        ],
       },
     },
     ...(!isFastLint
@@ -987,6 +1035,14 @@ export default defineConfig({
           },
         ]
       : []),
+    // Disable the no-cycles lint rule for web/state/sagas
+    // The sagas and redux store have many cycles, deep refactoring is needed
+    {
+      files: ['apps/web/src/state/sagas/**/*.ts'],
+      rules: {
+        'import/no-cycle': 'off',
+      },
+    },
     {
       files: [
         'apps/web/vite.config.*',
@@ -1108,6 +1164,55 @@ export default defineConfig({
     {
       files: ['apps/web/**/*.e2e.test.ts', 'apps/web/**/*.anvil.e2e.test.ts'],
       rules: { 'no-restricted-imports': 'off' },
+    },
+
+    // ── labs ──────────────────────────────────────────────────────────
+    // labs/* projects may import each other, so redefine no-restricted-imports
+    // without labsRestrictedImportPattern (rule options are replaced, not
+    // merged). Everywhere else the shared pattern blocks labs/ imports.
+    {
+      files: ['labs/**'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: sharedRestrictedImportPaths,
+            patterns: sharedRestrictedImportPatterns.filter((p) => p !== labsRestrictedImportPattern),
+          },
+        ],
+      },
+    },
+
+    // ── labs/workbench ────────────────────────────────────────────────
+    // labs/ is .nxignore'd so this never runs in CI; the workbench keeps
+    // itself lintable for manual `oxlint -c oxlint.config.ts labs/workbench`.
+    {
+      files: ['labs/workbench/**'],
+      rules: {
+        // The workbench chrome is shadcn/ui-based; shadcn components (and the
+        // chrome composing them) render plain divs by design.
+        'react/forbid-elements': 'off',
+        // react-router.config.ts reads process.env.VERCEL at the build boundary
+        // (mirrors mission-control); redefine the rule without
+        // processEnvRestrictedSyntaxSelector.
+        ...(!isFastLint && {
+          'eslint-js/no-restricted-syntax': ['error', ...sharedRestrictedSyntaxSelectors],
+        }),
+      },
+    },
+    {
+      // Vendored shadcn/ui sources (what `bunx shadcn add` emits) are kept
+      // pristine so upstream diffs stay reviewable.
+      files: [
+        'labs/workbench/app/components/ui/**',
+        'labs/workbench/app/hooks/use-mobile.ts',
+        'labs/workbench/app/lib/utils.ts',
+      ],
+      rules: {
+        'typescript/explicit-function-return-type': 'off',
+        'max-lines': 'off',
+        'no-shadow': 'off',
+      },
     },
 
     // ── packages/uniswap ──────────────────────────────────────────────
@@ -1238,7 +1343,9 @@ export default defineConfig({
 
     // ── @universe/* packages with standard pattern ────────────────────
     // (no-relative-import-paths + restrictedImportPatternsForUniversePackage)
-    ...(['api', 'compliance', 'config', 'gating', 'notifications', 'sessions', 'transactional', 'websocket'] as const).map((pkg) => ({
+    ...(
+      ['api', 'compliance', 'config', 'gating', 'notifications', 'sessions', 'transactional', 'websocket'] as const
+    ).map((pkg) => ({
       files: [`packages/${pkg}/**`],
       rules: {
         ...(!isFastLint && {
@@ -1284,11 +1391,13 @@ export default defineConfig({
         'no-console': 'off',
         'no-lone-blocks': 'off',
         'no-unsafe-optional-chaining': 'off',
+        'import/no-cycle': 'off',
         'typescript/triple-slash-reference': 'off',
         'typescript/await-thenable': 'off',
         'typescript/no-unsafe-return': 'off',
         'typescript/no-misused-spread': 'off',
         'typescript/no-var-requires': 'off',
+        'typescript/unbound-method': 'off',
         'prefer-const': 'off',
         'vitest/hoisted-apis-on-top': 'error',
         ...(!isFastLint && {

@@ -54,21 +54,17 @@ export function SettingsCloudBackupStatus({
 
   // Fetch balance data for associated accounts
   const accountAddresses = useMemo(() => associatedAccounts.map((account) => account.address), [associatedAccounts])
-  const { data: accountBalanceData, loading } = useAccountListData({
+  const { balancesByAddress, loading } = useAccountListData({
     addresses: accountAddresses,
   })
 
-  // Create balance mapping
-  const balanceRecord: Record<string, number> = useMemo(() => {
-    if (!accountBalanceData?.portfolios) {
-      return {}
-    }
-    return Object.fromEntries(
-      accountBalanceData.portfolios
-        .filter((portfolio): portfolio is NonNullable<typeof portfolio> => Boolean(portfolio))
-        .map((portfolio) => [portfolio.ownerAddress, portfolio.tokensTotalDenominatedValue?.value ?? 0]),
-    )
-  }, [accountBalanceData])
+  const balanceRecord: Record<string, number> = useMemo(
+    () =>
+      Object.fromEntries(
+        accountAddresses.map((accountAddress) => [accountAddress, balancesByAddress?.[accountAddress] ?? 0]),
+      ),
+    [accountAddresses, balancesByAddress],
+  )
 
   const [showBackupDeleteWarning, setShowBackupDeleteWarning] = useState(false)
   const onConfirmDeleteBackup = async (): Promise<void> => {

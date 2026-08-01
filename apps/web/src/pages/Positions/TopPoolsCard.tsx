@@ -11,7 +11,7 @@ import { LiquidityPositionInfoBadges } from '~/features/Liquidity/LiquidityPosit
 import { LPIncentiveRewardsBadge } from '~/features/Liquidity/LPIncentives/LPIncentiveRewardsBadge'
 import { PoolStat } from '~/types/explore'
 
-export function TopPoolsCard({ pool }: { pool: PoolStat }) {
+export function TopPoolsCard({ pool, protocolFeePips }: { pool: PoolStat; protocolFeePips?: number }) {
   const { t } = useTranslation()
   const { defaultChainId } = useEnabledChains()
   const { formatPercent } = useLocalizationContext()
@@ -45,7 +45,12 @@ export function TopPoolsCard({ pool }: { pool: PoolStat }) {
             {token0?.symbol} / {token1?.symbol}
           </Text>
           <Flex row gap="$spacing2" alignItems="center">
-            <LiquidityPositionInfoBadges size="small" version={pool.protocolVersion} feeTier={pool.feeTier} />
+            <LiquidityPositionInfoBadges
+              size="small"
+              version={pool.protocolVersion}
+              feeTier={pool.feeTier}
+              protocolFeePips={protocolFeePips}
+            />
           </Flex>
         </Flex>
       </Flex>

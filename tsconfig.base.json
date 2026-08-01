@@ -56,13 +56,15 @@
       "@universe/privacy/*": ["./packages/privacy/*"],
       "@universe/react-query/*": ["./packages/react-query/*"],
       "@universe/sessions/*": ["./packages/sessions/*"],
+      "@universe/tailwind/*": ["./packages/tailwind/*"],
       "@universe/transactional/*": ["./packages/transactional/*"],
       "@universe/trpc/*": ["./packages/trpc/*"],
       "@universe/websocket/*": ["./packages/websocket/*"],
       "ui/*": ["./packages/ui/*"],
       "uniswap/*": ["./packages/uniswap/*"],
       "utilities/*": ["./packages/utilities/*"],
-      "wallet/*": ["./packages/wallet/*"]
+      "wallet/*": ["./packages/wallet/*"],
+      "@universe/experiments/*": ["./packages/experiments/*"]
     }
   }
 }

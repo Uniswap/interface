@@ -12,13 +12,13 @@ const createMockApolloClient = (): ApolloClient<unknown> => {
   const client = new ApolloClient({
     cache: new InMemoryCache(),
   })
-  jest.spyOn(client, 'resetStore').mockResolvedValue([])
+  vi.spyOn(client, 'resetStore').mockResolvedValue([])
   return client
 }
 
 const createMockQueryClient = (): QueryClient => {
   const client = new QueryClient()
-  jest.spyOn(client, 'resetQueries').mockResolvedValue()
+  vi.spyOn(client, 'resetQueries').mockResolvedValue()
   return client
 }
 
@@ -39,7 +39,7 @@ describe('createExtensionAppStateResetter', () => {
       apolloClient,
       queryClient,
     })
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('resetAccountHistory', () => {

@@ -12,7 +12,7 @@ import { NftViewWithContextMenu } from 'uniswap/src/components/nfts/NftViewWithC
 import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { ChoosePhotoOptionsProps } from 'wallet/src/features/unitags/ChoosePhotoOptionsModal'
+import type { ChoosePhotoOptionsProps } from 'wallet/src/features/unitags/ChoosePhotoOptionsModal'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
 export const NFT_MODAL_MAX_WIDTH = 610

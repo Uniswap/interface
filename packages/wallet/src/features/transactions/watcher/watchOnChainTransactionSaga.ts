@@ -17,7 +17,7 @@ import {
   replaceTransaction,
   transactionActions,
 } from 'uniswap/src/features/transactions/slice'
-import { waitForPlanUpdateOrFinalizedState } from 'uniswap/src/features/transactions/swap/plan/planPollingUtils'
+import { waitForPlanUpdateOrFinalizedState } from 'uniswap/src/features/transactions/swap/plan/planWatcherSaga'
 import { isBridge, isChained, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   FinalizedTransactionDetails,

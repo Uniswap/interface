@@ -1,4 +1,3 @@
-import { useNftsTabQuery } from '@universe/api/src/clients/graphql/generated'
 import { GetThemeValueForKey } from 'ui/src'
 
 /**
@@ -11,6 +10,3 @@ export interface SearchInputProps {
   placeholder?: string
   width?: GetThemeValueForKey<'width'>
 }
-
-type UseNftsTabQueryOptions = Parameters<typeof useNftsTabQuery>[0]
-export type NftsNextFetchPolicy = UseNftsTabQueryOptions['nextFetchPolicy']

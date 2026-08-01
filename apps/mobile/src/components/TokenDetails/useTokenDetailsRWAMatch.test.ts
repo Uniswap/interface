@@ -7,44 +7,45 @@ import { useTokenDetailsPreferProjectMarketData } from 'src/components/TokenDeta
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useRWAWhitelist } from 'uniswap/src/features/rwa/useRWAWhitelist'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import type { MockedFunction } from 'vitest'
 
-jest.mock('@universe/gating', () => ({
-  ...jest.requireActual('@universe/gating'),
-  useFeatureFlag: jest.fn(),
+vi.mock('@universe/gating', async () => ({
+  ...(await vi.importActual('@universe/gating')),
+  useFeatureFlag: vi.fn(),
 }))
 
-jest.mock('@universe/api', () => {
-  const actual = jest.requireActual('@universe/api')
+vi.mock('@universe/api', async () => {
+  const actual = await vi.importActual<typeof import('@universe/api')>('@universe/api')
   return {
     ...actual,
     GraphQLApi: {
       ...actual.GraphQLApi,
-      useTokenDetailsScreenQuery: jest.fn(),
+      useTokenDetailsScreenQuery: vi.fn(),
     },
   }
 })
 
-jest.mock('src/components/TokenDetails/TokenDetailsContext', () => ({
-  useTokenDetailsContext: jest.fn(),
+vi.mock('src/components/TokenDetails/TokenDetailsContext', () => ({
+  useTokenDetailsContext: vi.fn(),
 }))
 
-jest.mock('uniswap/src/features/rwa/useRWAWhitelist', () => ({
-  useRWAWhitelist: jest.fn(),
+vi.mock('uniswap/src/features/rwa/useRWAWhitelist', () => ({
+  useRWAWhitelist: vi.fn(),
 }))
 
 const TOKEN_ADDRESS = '0x1111111111111111111111111111111111111111'
 const SIBLING_TOKEN_ADDRESS = '0x2222222222222222222222222222222222222222'
 
-const mockUseFeatureFlag = useFeatureFlag as jest.MockedFunction<typeof useFeatureFlag>
-const mockUseTokenDetailsContext = useTokenDetailsContext as jest.MockedFunction<typeof useTokenDetailsContext>
-const mockUseRWAWhitelist = useRWAWhitelist as jest.MockedFunction<typeof useRWAWhitelist>
-const mockUseTokenDetailsScreenQuery = GraphQLApi.useTokenDetailsScreenQuery as jest.MockedFunction<
+const mockUseFeatureFlag = useFeatureFlag as MockedFunction<typeof useFeatureFlag>
+const mockUseTokenDetailsContext = useTokenDetailsContext as MockedFunction<typeof useTokenDetailsContext>
+const mockUseRWAWhitelist = useRWAWhitelist as MockedFunction<typeof useRWAWhitelist>
+const mockUseTokenDetailsScreenQuery = GraphQLApi.useTokenDetailsScreenQuery as MockedFunction<
   typeof GraphQLApi.useTokenDetailsScreenQuery
 >
 
 describe(useTokenDetailsPreferProjectMarketData, () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
 
     mockUseFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.RWACoinGeckoData)
     mockUseTokenDetailsContext.mockReturnValue({

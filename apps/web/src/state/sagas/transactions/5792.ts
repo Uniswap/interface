@@ -14,6 +14,7 @@ import {
   TransactionStatus,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
+import { SendCallsResultSchema } from 'wallet/src/features/dappRequests/types'
 import { wagmiConfig } from '~/connection/wagmiConfig'
 import { getRoutingForTransaction } from '~/state/activity/utils'
 import { popupRegistry } from '~/state/popups/registry'
@@ -23,6 +24,15 @@ import { handleGetCapabilities } from '~/state/walletCapabilities/lib/handleGetC
 import { setCapabilitiesByChain } from '~/state/walletCapabilities/reducer'
 import { didUserReject } from '~/utils/swapErrorToUserReadableMessage'
 
+const TRANSACTION_HASH_REGEX = /^0x[0-9a-fA-F]{64}$/
+
+/** CAIP-345: wallets may return the real on-chain tx hash(es) alongside the batch id in the wallet_sendCalls result. */
+export function parseCaip345TransactionHash(result: unknown): string | undefined {
+  const parsed = SendCallsResultSchema.safeParse(result)
+  const hash = parsed.data?.capabilities?.caip345?.transactionHashes[0]
+  return hash !== undefined && TRANSACTION_HASH_REGEX.test(hash) ? hash : undefined
+}
+
 const CURRENT_SEND_CALLS_VERSION = '2.0.0'
 async function sendCalls(params: {
   signer: JsonRpcSigner
@@ -30,7 +40,7 @@ async function sendCalls(params: {
   from: string
   chainId: number
   paymasterService?: TradingApi.PaymasterServiceCapability
-}): Promise<string> {
+}): Promise<{ batchId: string; onChainHash?: string }> {
   const { signer, walletCallTxRequests, from, paymasterService } = params
   const chainId = numberToHex(params.chainId)
 
@@ -43,7 +53,7 @@ async function sendCalls(params: {
     { version: CURRENT_SEND_CALLS_VERSION, calls, from, chainId, atomicRequired: true, capabilities },
   ])
 
-  return result.id as string
+  return { batchId: result.id as string, onChainHash: parseCaip345TransactionHash(result) }
 }
 
 export function* handleAtomicSendCalls(
@@ -52,7 +62,7 @@ export function* handleAtomicSendCalls(
     disableOneClickSwap?: () => void
   },
 ) {
-  const { step, info, address, ignoreInterrupt, disableOneClickSwap } = params
+  const { step, info, address, ignoreInterrupt, disableOneClickSwap, planId } = params
   const { walletCallTxRequests, paymasterService } = step
   const chainId = walletCallTxRequests[0].chainId
 
@@ -61,18 +71,20 @@ export function* handleAtomicSendCalls(
     const { throwIfInterrupted } = yield* watchForInterruption(ignoreInterrupt)
 
     const signer = yield* call(getSigner, address)
-    const batchId = yield* call(() =>
+    const { batchId, onChainHash } = yield* call(() =>
       sendCalls({ signer, walletCallTxRequests, from: address, chainId, paymasterService }),
     )
 
     const connectorId = getAccount(wagmiConfig).connector?.id
-    const batchInfo = { connectorId, batchId, chainId }
+    const batchInfo = { connectorId, batchId, chainId, planId }
 
     // Add transaction to local state to start polling for status
     yield* put(
       addTransaction({
+        // batchId stays the record id (the wallet_getCallsStatus polling key); hash carries the real
+        // tx hash when the wallet provides it, else the batch poller backfills it on confirmation.
         id: batchId,
-        hash: batchId,
+        hash: onChainHash ?? batchId,
         from: address,
         typeInfo: info,
         chainId,
@@ -96,7 +108,9 @@ export function* handleAtomicSendCalls(
       } satisfies InterfaceTransactionDetails),
     )
 
-    popupRegistry.addPopup({ type: PopupType.Transaction, hash: batchId }, batchId)
+    if (!planId) {
+      popupRegistry.addPopup({ type: PopupType.Transaction, hash: batchId }, batchId)
+    }
 
     // If the transaction flow was interrupted, throw an error after the step has completed
     yield* call(throwIfInterrupted)

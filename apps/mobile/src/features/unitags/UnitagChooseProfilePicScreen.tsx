@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { UnitagStackScreenProp } from 'src/app/navigation/types'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
-import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Flex } from 'ui/src'
 import { Photo } from 'ui/src/components/icons'
 import { UnitagEventName } from 'uniswap/src/features/telemetry/constants'
@@ -14,7 +13,6 @@ import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingC
 import { UnitagChooseProfilePicContent } from 'wallet/src/features/unitags/UnitagChooseProfilePicContent'
 
 export function UnitagChooseProfilePicScreen({
-  navigation,
   route,
 }: UnitagStackScreenProp<UnitagScreens.ChooseProfilePicture>): JSX.Element {
   const { entryPoint, unitag, unitagFontSize, address } = route.params
@@ -58,13 +56,13 @@ export function UnitagChooseProfilePicScreen({
   }
 
   const showSkipButton = entryPoint === OnboardingScreens.Landing
-  useNavigationHeader(navigation, showSkipButton ? onPressSkip : undefined)
 
   return (
     <SafeKeyboardOnboardingScreen
       Icon={Photo}
       subtitle={t('unitags.onboarding.profile.subtitle')}
       title={t('unitags.onboarding.profile.title')}
+      onSkip={showSkipButton ? onPressSkip : undefined}
     >
       <Flex fill pt="$spacing24" gap="$spacing16">
         <UnitagChooseProfilePicContent

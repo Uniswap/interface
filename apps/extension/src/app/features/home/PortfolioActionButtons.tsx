@@ -10,6 +10,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
+import { TestID, TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 
 const ICON_COLOR = '$accent1'
@@ -17,6 +18,7 @@ const ICON_COLOR = '$accent1'
 type ActionButtonCommonProps = {
   label: string
   Icon: JSX.Element
+  testID?: TestIDType
 }
 
 // accepts an `onClick` prop or a `url` prop, but not both or neither
@@ -30,7 +32,7 @@ type ActionButtonProps =
       onClick?: never
     })
 
-function ActionButton({ label, Icon, onClick, url }: ActionButtonProps): JSX.Element {
+function ActionButton({ label, Icon, onClick, url, testID }: ActionButtonProps): JSX.Element {
   const actionHandler = url
     ? // if it has a url prop, open it in a new tab
       (): void => {
@@ -50,6 +52,7 @@ function ActionButton({ label, Icon, onClick, url }: ActionButtonProps): JSX.Ele
       hoverStyle={{ cursor: 'pointer', opacity: 0.8 }}
       justifyContent="space-between"
       p="$spacing12"
+      testID={testID}
       userSelect="none"
       onPress={actionHandler}
     >
@@ -115,12 +118,32 @@ export const PortfolioActionButtons = memo(function PortfolioActionButtonsInner(
         onClose={handleTestnetWarningModalClose}
       />
       <Flex row shrink gap="$spacing8" width={isGrid ? '100%' : '50%'}>
-        <ActionButton Icon={<CoinConvert />} label={t('home.label.swap')} onClick={onSwapClick} />
-        <ActionButton Icon={<Bank />} label={t('home.label.for')} onClick={onBuyClick} />
+        <ActionButton
+          Icon={<CoinConvert />}
+          label={t('home.label.swap')}
+          testID={TestID.PortfolioActionTileSwap}
+          onClick={onSwapClick}
+        />
+        <ActionButton
+          Icon={<Bank />}
+          label={t('home.label.for')}
+          testID={TestID.PortfolioActionTileBuy}
+          onClick={onBuyClick}
+        />
       </Flex>
       <Flex row shrink gap="$spacing8" width={isGrid ? '100%' : '50%'}>
-        <ActionButton Icon={<SendAction />} label={t('home.label.send')} onClick={onSendClick} />
-        <ActionButton Icon={<ArrowDownCircle />} label={t('home.label.receive')} onClick={onReceiveClick} />
+        <ActionButton
+          Icon={<SendAction />}
+          label={t('home.label.send')}
+          testID={TestID.PortfolioActionTileSend}
+          onClick={onSendClick}
+        />
+        <ActionButton
+          Icon={<ArrowDownCircle />}
+          label={t('home.label.receive')}
+          testID={TestID.PortfolioActionTileReceive}
+          onClick={onReceiveClick}
+        />
       </Flex>
     </Flex>
   )

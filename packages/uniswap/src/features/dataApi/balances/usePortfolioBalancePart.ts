@@ -14,7 +14,6 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { PortfolioTotalValueResult } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'
 import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/useRestPortfolioValueModifier'
-import { mapRestStatusToNetworkStatus } from 'uniswap/src/features/dataApi/balances/utils'
 import type { BaseResult } from 'uniswap/src/features/dataApi/types'
 import { usePlatformBasedFetchPolicy } from 'uniswap/src/utils/usePlatformBasedFetchPolicy'
 
@@ -115,7 +114,8 @@ export function usePortfolioBalancePart({
   return {
     data: walletBalancesResult.data,
     loading: walletBalancesResult.isFetching,
-    networkStatus: mapRestStatusToNetworkStatus(walletBalancesResult.status),
+    isPending: walletBalancesResult.isPending,
+    isError: walletBalancesResult.isError,
     refetch: walletBalancesResult.refetch,
     error: walletBalancesResult.error || undefined,
     dataUpdatedAt: walletBalancesResult.dataUpdatedAt || undefined,
@@ -170,7 +170,8 @@ export function usePortfolioBalanceBreakdown({
   return {
     data: result.data,
     loading: result.isFetching,
-    networkStatus: mapRestStatusToNetworkStatus(result.status),
+    isPending: result.isPending,
+    isError: result.isError,
     refetch: result.refetch,
     error: result.error || undefined,
     dataUpdatedAt: result.dataUpdatedAt || undefined,

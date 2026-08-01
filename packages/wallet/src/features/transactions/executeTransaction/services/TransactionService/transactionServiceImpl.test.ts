@@ -17,6 +17,7 @@ import { logger } from 'utilities/src/logger/logger'
 import type { Address } from 'viem'
 import type { RpcUserOperation } from 'viem/account-abstraction'
 import { entryPoint08Address } from 'viem/account-abstraction'
+import type { Mock, MockInstance, Mocked } from 'vitest'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import { ExecuteTransactionParams } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
 import { AnalyticsService } from 'wallet/src/features/transactions/executeTransaction/services/analyticsService'
@@ -43,55 +44,58 @@ type UserOpSubmitTransactionParamsWithTypeInfo = Extract<
 >
 
 // Mock external utilities
-jest.mock('wallet/src/features/providers/utils', () => ({
-  isPrivateRpcSupportedOnChain: jest.fn(),
+vi.mock('wallet/src/features/providers/utils', () => ({
+  isPrivateRpcSupportedOnChain: vi.fn(),
 }))
 
 // Mock ethers utils
-jest.mock('ethers', () => ({
-  ...jest.requireActual('ethers'),
-  utils: {
-    ...jest.requireActual('ethers').utils,
-    keccak256: jest.fn(),
-  },
-}))
+vi.mock('ethers', async () => {
+  const actualEthers = await vi.importActual<typeof import('ethers')>('ethers')
+  return {
+    ...actualEthers,
+    utils: {
+      ...actualEthers.utils,
+      keccak256: vi.fn(),
+    },
+  }
+})
 
 describe('TransactionService', () => {
   // Mock dependencies
-  const mockTransactionRepository: jest.Mocked<TransactionRepository> = {
-    addTransaction: jest.fn(),
-    updateTransaction: jest.fn(),
-    finalizeTransaction: jest.fn(),
-    getPendingPrivateTransactionCount: jest.fn(),
-    getPendingPrivateTransactionDetails: jest.fn(),
-    getTransactionsByAddress: jest.fn(),
+  const mockTransactionRepository: Mocked<TransactionRepository> = {
+    addTransaction: vi.fn(),
+    updateTransaction: vi.fn(),
+    finalizeTransaction: vi.fn(),
+    getPendingPrivateTransactionCount: vi.fn(),
+    getPendingPrivateTransactionDetails: vi.fn(),
+    getTransactionsByAddress: vi.fn(),
   }
 
-  const mockTransactionSigner: jest.Mocked<TransactionSigner> = {
-    prepareTransaction: jest.fn(),
-    signTransaction: jest.fn(),
-    signTypedData: jest.fn(),
-    sendTransaction: jest.fn(),
-    sendTransactionSync: jest.fn(),
+  const mockTransactionSigner: Mocked<TransactionSigner> = {
+    prepareTransaction: vi.fn(),
+    signTransaction: vi.fn(),
+    signTypedData: vi.fn(),
+    sendTransaction: vi.fn(),
+    sendTransactionSync: vi.fn(),
   }
 
-  // Create a proper mock for AnalyticsService without relying on jest.Mocked
+  // Create a proper mock for AnalyticsService without relying on Mocked
   const mockAnalyticsService = {
-    trackSwapSubmitted: jest.fn(),
-    trackTransactionEvent: jest.fn(),
+    trackSwapSubmitted: vi.fn(),
+    trackTransactionEvent: vi.fn(),
   } as unknown as AnalyticsService
 
-  const mockConfigService: jest.Mocked<TransactionConfigService> = {
-    shouldUsePrivateRpc: jest.fn(),
-    isPrivateRpcEnabled: jest.fn(),
-    getPrivateRpcConfig: jest.fn(),
-    getTransactionTimeoutMs: jest.fn(),
+  const mockConfigService: Mocked<TransactionConfigService> = {
+    shouldUsePrivateRpc: vi.fn(),
+    isPrivateRpcEnabled: vi.fn(),
+    getPrivateRpcConfig: vi.fn(),
+    getTransactionTimeoutMs: vi.fn(),
   }
 
-  // Create a properly mocked provider with proper jest function mocks
-  const mockGetTransactionCount = jest.fn().mockImplementation(() => Promise.resolve(42))
-  const mockGetInternalBlockNumber = jest.fn().mockImplementation(() => Promise.resolve(123456))
-  const mockGetTransaction = jest.fn().mockResolvedValue(null)
+  // Create a properly mocked provider with proper mock functions
+  const mockGetTransactionCount = vi.fn().mockImplementation(() => Promise.resolve(42))
+  const mockGetInternalBlockNumber = vi.fn().mockImplementation(() => Promise.resolve(123456))
+  const mockGetTransaction = vi.fn().mockResolvedValue(null)
 
   const mockBaseProvider = {
     _getInternalBlockNumber: mockGetInternalBlockNumber,
@@ -100,21 +104,21 @@ describe('TransactionService', () => {
   } as unknown as BaseProvider & Provider
 
   const mockLogger = {
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
   } as unknown as typeof logger
 
   // Mock Date.now to return a consistent timestamp
-  let dateNowSpy: jest.SpyInstance
+  let dateNowSpy: MockInstance
 
   // Reset mocks before each test
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
 
     // Mock Date.now to return consistent timestamp
-    dateNowSpy = jest.spyOn(Date, 'now').mockReturnValue(1234567890)
+    dateNowSpy = vi.spyOn(Date, 'now').mockReturnValue(1234567890)
 
     // Reset the mocks with their default implementations
     mockGetTransactionCount.mockImplementation(() => Promise.resolve(42))
@@ -122,11 +126,11 @@ describe('TransactionService', () => {
     mockTransactionRepository.getPendingPrivateTransactionDetails.mockResolvedValue([])
 
     // Setup default mock for private RPC support check
-    const mockIsPrivateRpcSupportedOnChain = isPrivateRpcSupportedOnChain as jest.Mock
+    const mockIsPrivateRpcSupportedOnChain = isPrivateRpcSupportedOnChain as Mock
     mockIsPrivateRpcSupportedOnChain.mockReturnValue(false)
 
     // Setup keccak256 mock to return a predictable hash
-    const mockKeccak256 = utils.keccak256 as jest.Mock
+    const mockKeccak256 = utils.keccak256 as Mock
     mockKeccak256.mockReturnValue('0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890')
   })
 
@@ -143,7 +147,7 @@ describe('TransactionService', () => {
       analyticsService: mockAnalyticsService,
       configService: mockConfigService,
       logger: mockLogger,
-      getProvider: jest.fn().mockResolvedValue(mockBaseProvider),
+      getProvider: vi.fn().mockResolvedValue(mockBaseProvider),
     })
   }
 
@@ -734,8 +738,8 @@ describe('TransactionService', () => {
       const receipt = mockReceipt || createMockFormattedReceipt()
 
       // Create the mocks explicitly
-      const mockSend = jest.fn().mockResolvedValue({})
-      const mockFormatterReceipt = jest.fn().mockImplementation(() => receipt)
+      const mockSend = vi.fn().mockResolvedValue({})
+      const mockFormatterReceipt = vi.fn().mockImplementation(() => receipt)
 
       const mockProvider = {
         ...mockBaseProvider,
@@ -757,7 +761,7 @@ describe('TransactionService', () => {
         analyticsService: mockAnalyticsService,
         configService: mockConfigService,
         logger: mockLogger,
-        getProvider: jest.fn().mockResolvedValue(provider),
+        getProvider: vi.fn().mockResolvedValue(provider),
       })
     }
 
@@ -1020,7 +1024,7 @@ describe('TransactionService', () => {
 
       // Distinct from receipt hash to prove the lookup keys off keccak256(signedRequest).
       const signedTxHash = '0x1111111111111111111111111111111111111111111111111111111111111111'
-      const mockKeccak256 = utils.keccak256 as jest.Mock
+      const mockKeccak256 = utils.keccak256 as Mock
       mockKeccak256.mockReturnValue(signedTxHash)
 
       mockTransactionSigner.sendTransactionSync.mockRejectedValue(new Error('nonce too low: next nonce 6, tx nonce 5'))
@@ -1573,7 +1577,7 @@ describe('TransactionService', () => {
       mockTransactionRepository.getPendingPrivateTransactionCount.mockResolvedValue(3)
 
       // Mock that private RPC is supported on the chain
-      const mockIsPrivateRpcSupportedOnChain = isPrivateRpcSupportedOnChain as jest.Mock
+      const mockIsPrivateRpcSupportedOnChain = isPrivateRpcSupportedOnChain as Mock
       mockIsPrivateRpcSupportedOnChain.mockReturnValue(true)
 
       // Act
@@ -1604,7 +1608,7 @@ describe('TransactionService', () => {
         { id: 'stuck1', hash: '0xaaa', nonce: 5, addedTime: 1234567000, status: 'pending' },
         { id: 'stuck2', hash: '0xbbb', nonce: 6, addedTime: 1234567100, status: 'pending' },
       ])
-      ;(isPrivateRpcSupportedOnChain as jest.Mock).mockReturnValue(true)
+      ;(isPrivateRpcSupportedOnChain as Mock).mockReturnValue(true)
 
       await service.getNextNonce({ account: mockAccount, chainId: UniverseChainId.Mainnet })
 
@@ -1612,7 +1616,7 @@ describe('TransactionService', () => {
         address: mockAccount.address,
         chainId: UniverseChainId.Mainnet,
       })
-      expect(mockAnalyticsService.trackTransactionEvent as jest.Mock).toHaveBeenCalledWith(
+      expect(mockAnalyticsService.trackTransactionEvent as Mock).toHaveBeenCalledWith(
         WalletEventName.NonceCalculated,
         expect.objectContaining({
           final_nonce: 7,
@@ -1632,12 +1636,12 @@ describe('TransactionService', () => {
       mockGetTransactionCount.mockReturnValue(5)
       mockConfigService.shouldUsePrivateRpc.mockReturnValue(false)
       mockTransactionRepository.getPendingPrivateTransactionCount.mockResolvedValue(0)
-      ;(isPrivateRpcSupportedOnChain as jest.Mock).mockReturnValue(true)
+      ;(isPrivateRpcSupportedOnChain as Mock).mockReturnValue(true)
 
       await service.getNextNonce({ account: mockAccount, chainId: UniverseChainId.Mainnet })
 
       expect(mockTransactionRepository.getPendingPrivateTransactionDetails).not.toHaveBeenCalled()
-      expect(mockAnalyticsService.trackTransactionEvent as jest.Mock).not.toHaveBeenCalled()
+      expect(mockAnalyticsService.trackTransactionEvent as Mock).not.toHaveBeenCalled()
     })
   })
 
@@ -1982,13 +1986,13 @@ describe('TransactionService', () => {
         analyticsService: mockAnalyticsService,
         configService: mockConfigService,
         logger: mockLogger,
-        getProvider: jest.fn().mockResolvedValue(provider),
+        getProvider: vi.fn().mockResolvedValue(provider),
       })
     }
 
     const createMockJsonRpcProvider = (): JsonRpcProvider => {
-      const mockSend = jest.fn().mockResolvedValue({})
-      const mockFormatterReceipt = jest.fn().mockImplementation(() => createMockFormattedReceipt())
+      const mockSend = vi.fn().mockResolvedValue({})
+      const mockFormatterReceipt = vi.fn().mockImplementation(() => createMockFormattedReceipt())
 
       return {
         ...mockBaseProvider,
@@ -2022,9 +2026,9 @@ describe('TransactionService', () => {
   })
 
   describe('executeUserOp', () => {
-    const mockSignUserOp = jest.fn()
-    const mockSendUserOp = jest.fn()
-    const mockSponsorUniswapUserOp = jest.fn()
+    const mockSignUserOp = vi.fn()
+    const mockSendUserOp = vi.fn()
+    const mockSponsorUniswapUserOp = vi.fn()
 
     const mockUserOpSigner: UserOpSigner = {
       signUserOp: mockSignUserOp,
@@ -2078,7 +2082,7 @@ describe('TransactionService', () => {
         analyticsService: mockAnalyticsService,
         configService: mockConfigService,
         logger: mockLogger,
-        getProvider: jest.fn().mockResolvedValue(mockBaseProvider),
+        getProvider: vi.fn().mockResolvedValue(mockBaseProvider),
         userOpSigner: mockUserOpSigner,
       })
 

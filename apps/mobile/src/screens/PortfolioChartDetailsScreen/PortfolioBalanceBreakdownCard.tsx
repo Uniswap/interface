@@ -1,8 +1,9 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useTranslation } from 'react-i18next'
 import { type BreakdownCardProps } from 'src/screens/PortfolioChartDetailsScreen/getBreakdownCardProps'
-import { Flex } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { Coin } from 'ui/src/components/icons/Coin'
+import { EarnSparkle } from 'ui/src/components/icons/EarnSparkle'
 import { Pools } from 'ui/src/components/icons/Pools'
 import { iconSizes } from 'ui/src/theme'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
@@ -16,6 +17,7 @@ const PERCENT_COLUMN_WIDTH = 56
 export function PortfolioBalanceBreakdownCard({
   tokens,
   pools,
+  earn,
   semanticPercentColor,
 }: BreakdownCardProps): JSX.Element {
   const isDataLivelinessEnabled = useFeatureFlag(FeatureFlags.DataLivelinessUI)
@@ -35,7 +37,13 @@ export function PortfolioBalanceBreakdownCard({
       testID: TestID.BalanceBreakdownRowPools,
       ...pools,
     },
-  ]
+    {
+      Icon: EarnSparkle,
+      label: t('portfolio.balanceBreakdown.earnBalance'),
+      testID: TestID.BalanceBreakdownRowEarn,
+      ...earn,
+    },
+  ].filter((row) => row.valueUSD !== undefined)
 
   return (
     <Flex alignSelf="flex-start" alignItems="stretch" gap="$spacing4" pt="$spacing12">
@@ -43,18 +51,22 @@ export function PortfolioBalanceBreakdownCard({
         <Flex key={testID} row alignItems="center" gap="$spacing12" accessibilityLabel={label} testID={testID}>
           <Flex row grow shrink minWidth={0} alignItems="center" gap="$spacing8">
             <Icon color="$neutral2" size={iconSizes.icon16} />
-            <AnimatedNumber
-              numericValue={valueUSD ?? undefined}
-              value={convertFiatAmountFormatted(valueUSD, NumberType.PortfolioBalance)}
-              textVariant="$body3"
-              disableAnimations={!isDataLivelinessEnabled}
-            />
+            {isDataLivelinessEnabled ? (
+              <AnimatedNumber
+                numericValue={valueUSD ?? undefined}
+                value={convertFiatAmountFormatted(valueUSD, NumberType.PortfolioBalance)}
+                textVariant="$body3"
+              />
+            ) : (
+              <Text variant="body3">{convertFiatAmountFormatted(valueUSD, NumberType.PortfolioBalance)}</Text>
+            )}
           </Flex>
           <Flex row justifyContent="flex-end" minWidth={PERCENT_COLUMN_WIDTH}>
             <RelativeChange
               arrowSize="$icon.12"
               change={percentChange}
               semanticColor={semanticPercentColor}
+              shouldAnimate={isDataLivelinessEnabled}
               variant="body3"
             />
           </Flex>

@@ -108,7 +108,8 @@ export const Popover = memo(function Popover({
       modifiers: [
         { name: 'offset', options: { offset: [offsetX, offsetY] } },
         { name: 'arrow', options: { element: arrowElement } },
-        { name: 'preventOverflow', options: { padding: 8 } },
+        // altAxis keeps side placements (left/right) from overflowing the viewport horizontally on narrow screens
+        { name: 'preventOverflow', options: { padding: 8, altAxis: true } },
       ],
     }),
     [placement, offsetX, offsetY, arrowElement],

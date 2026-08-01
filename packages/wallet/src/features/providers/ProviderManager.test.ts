@@ -2,6 +2,7 @@ import { providers as ethersProviders } from 'ethers'
 import { RPCType, UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { CreateEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
 import type { RpcConfigResolver } from 'uniswap/src/features/providers/resolveRpcConfig'
+import type { Mock } from 'vitest'
 import { ProviderManager } from 'wallet/src/features/providers/ProviderManager'
 
 const CHAIN_ID = UniverseChainId.Mainnet
@@ -10,11 +11,11 @@ const UNIRPC_URL = 'https://gateway.uniswap.org/rpc/1'
 
 function setup(resolveUrl: () => string | undefined): {
   manager: ProviderManager
-  factory: jest.Mock
+  factory: Mock
 } {
   // Each call returns a fresh identity so we can assert rebuild vs reuse.
-  const factory = jest.fn(() => ({ id: Symbol('provider') }) as unknown as ethersProviders.JsonRpcProvider)
-  const resolve = jest.fn((input: { rpcType: RPCType }) =>
+  const factory = vi.fn(() => ({ id: Symbol('provider') }) as unknown as ethersProviders.JsonRpcProvider)
+  const resolve = vi.fn((input: { rpcType: RPCType }) =>
     input.rpcType === RPCType.Public ? { rpcUrl: resolveUrl() } : null,
   )
   const manager = new ProviderManager(

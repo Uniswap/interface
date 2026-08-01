@@ -12,6 +12,7 @@ export function createFetchClient({
   baseUrl,
   getBaseUrl,
   getHeaders,
+  onResponse,
   getSessionService,
   getSession,
   source = 'fetch',
@@ -45,6 +46,7 @@ export function createFetchClient({
           baseUrl: resolveBaseUrl(),
           getBaseUrl,
           getHeaders,
+          onResponse,
           getSessionService,
           getSession,
           defaultOptions,
@@ -64,11 +66,14 @@ export function createFetchClient({
           // oxlint-disable-next-line typescript-eslint/no-misused-spread
           ...options?.headers,
         })
-        return doFetch(`${resolveBaseUrl()}${path}`, {
+        const response = await doFetch(`${resolveBaseUrl()}${path}`, {
           ...defaultOptions,
           ...options,
           headers,
-        }) as Promise<T>
+        })
+        // Surface the raw Response (headers only) before any body read downstream.
+        onResponse?.(response)
+        return response as T
       }
     },
 

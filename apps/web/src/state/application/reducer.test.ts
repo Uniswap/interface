@@ -1,4 +1,5 @@
-import { createStore, Store } from 'redux'
+import { configureStore } from '@reduxjs/toolkit'
+import { Store } from 'redux'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import reducer, {
   ApplicationState,
@@ -13,10 +14,13 @@ describe('application reducer', () => {
   let store: Store<ApplicationState>
 
   beforeEach(() => {
-    store = createStore(reducer, {
-      chainId: null,
-      openModal: null,
-      suppressedPopups: [],
+    store = configureStore({
+      reducer,
+      preloadedState: {
+        chainId: null,
+        openModal: null,
+        suppressedPopups: [],
+      },
     })
   })
 

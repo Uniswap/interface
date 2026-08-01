@@ -9,9 +9,12 @@ import { PortfolioChartCategory } from '~/pages/Portfolio/Overview/hooks/usePort
 /** Dropdown that picks which series the portfolio chart shows. */
 export function PortfolioChartCategorySelector({
   value,
+  availableCategories,
   onChange,
 }: {
   value: PortfolioChartCategory
+  /** Non-total categories with data, in fixed display order (tokens → earn → pools). */
+  availableCategories: PortfolioChartCategory[]
   onChange: (value: PortfolioChartCategory) => void
 }): JSX.Element {
   const { t } = useTranslation()
@@ -19,7 +22,8 @@ export function PortfolioChartCategorySelector({
   const labelByValue = useMemo<Record<PortfolioChartCategory, string>>(
     () => ({
       [PortfolioChartCategory.Total]: t('common.totalBalance'),
-      [PortfolioChartCategory.Tokens]: t('common.tokens'),
+      [PortfolioChartCategory.Tokens]: t('common.token.plural'),
+      [PortfolioChartCategory.Earn]: t('common.earning'),
       [PortfolioChartCategory.Pools]: t('common.pools'),
     }),
     [t],
@@ -28,10 +32,9 @@ export function PortfolioChartCategorySelector({
   const options = useMemo<SingleSelectOption<PortfolioChartCategory>[]>(
     () => [
       { value: PortfolioChartCategory.Total, label: labelByValue[PortfolioChartCategory.Total] },
-      { value: PortfolioChartCategory.Tokens, label: labelByValue[PortfolioChartCategory.Tokens] },
-      { value: PortfolioChartCategory.Pools, label: labelByValue[PortfolioChartCategory.Pools] },
+      ...availableCategories.map((category) => ({ value: category, label: labelByValue[category] })),
     ],
-    [labelByValue],
+    [labelByValue, availableCategories],
   )
 
   return (

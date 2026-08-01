@@ -1,27 +1,23 @@
-import { useEffect } from 'react'
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withDelay,
-  withSequence,
-  withTiming,
-} from 'react-native-reanimated'
+import { Text, View } from 'react-native'
+import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import type { ResolvedFontStyle } from 'ui/src/theme'
 import { DigitSlot } from 'uniswap/src/components/AnimatedNumber/native/DigitSlot'
+import { startFlashSequence } from 'uniswap/src/components/AnimatedNumber/native/startFlashSequence'
+import type { AnimatedNumberTick } from 'uniswap/src/components/AnimatedNumber/native/types'
 import { useDigitTextStyle } from 'uniswap/src/components/AnimatedNumber/native/useDigitTextStyle'
+import { useOnTick } from 'uniswap/src/components/AnimatedNumber/native/useOnTick'
 import { AnimatedCharStyles } from 'uniswap/src/components/AnimatedNumber/styles'
-import { TopAndBottomGradient } from 'uniswap/src/components/AnimatedNumber/TopAndBottomGradient/TopAndBottomGradient'
-import { AnimatedNumberDirection } from 'uniswap/src/components/AnimatedNumber/types'
 import { isDigitChar } from 'uniswap/src/components/AnimatedNumber/utils/computeCharsSizes'
-import { getCharBaseColor, getCharDisplayColor } from 'uniswap/src/components/AnimatedNumber/utils/getCharDisplayColor'
+import { getCharBaseColor } from 'uniswap/src/components/AnimatedNumber/utils/getCharDisplayColor'
 import type { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
+
+const overlayStyle = { position: 'absolute', top: 0, left: 0 } as const
 
 export const CharCell = ({
   index,
   chars,
   currency,
-  commonPrefixLength,
-  nextColor,
+  tick,
   baseColor,
   decimalPartColor,
   shouldFadeDecimals,
@@ -29,17 +25,14 @@ export const CharCell = ({
   digitCellWidth,
   variantFont,
   useHeadingTypography,
-  dir,
   delay,
   shouldForceAnimate,
-  animateGen,
   reduceMotion,
 }: {
   index: number
   chars: string[]
   currency: FiatCurrencyInfo
-  commonPrefixLength: number
-  nextColor?: string
+  tick: AnimatedNumberTick
   baseColor: string
   decimalPartColor: string
   shouldFadeDecimals: boolean
@@ -47,16 +40,13 @@ export const CharCell = ({
   digitCellWidth: number
   variantFont: ResolvedFontStyle
   useHeadingTypography: boolean
-  dir: AnimatedNumberDirection
   delay: number
   shouldForceAnimate: boolean
-  animateGen: number
   reduceMotion: boolean
 }): JSX.Element => {
   const char = chars[index]
   const isDigit = char != null && isDigitChar(char)
 
-  // Non-digit color animation (hooks always called; value only used for non-digit branch)
   const charBaseColor = getCharBaseColor({
     index,
     chars,
@@ -65,77 +55,71 @@ export const CharCell = ({
     neutral1Color: baseColor,
     fadedDecimalColor: decimalPartColor,
   })
-  const nonDigitFontColor = useSharedValue(charBaseColor)
+  const isInChangedSuffix = index >= tick.commonPrefixLength
+  const flashColor = isInChangedSuffix ? tick.flashColor : undefined
+
+  // Cells keep identity by position from the END of the value, so the outgoing glyph for this
+  // cell lives at the same end-relative position in the previous value's chars.
+  const prevIndex = tick.prevChars.length - (chars.length - index)
+  const prevChar = tick.prevChars[prevIndex]
+
+  // Non-digit flash (hooks always called; only used by the non-digit branch). Same
+  // once-per-tick trigger as DigitSlot so a tick can never flash twice.
+  const nonDigitFlashOpacity = useSharedValue(0)
   const digitTextStyle = useDigitTextStyle({ variantFont, digitHeight, useHeadingTypography })
 
-  useEffect(() => {
-    const finishColor = getCharBaseColor({
-      index,
-      chars,
-      decimalSeparator: currency.decimalSeparator,
-      shouldFadeDecimals,
-      neutral1Color: baseColor,
-      fadedDecimalColor: decimalPartColor,
-    })
-    if (nextColor && index >= commonPrefixLength) {
-      nonDigitFontColor.value = withSequence(
-        withTiming(nextColor, { duration: 250 }),
-        withDelay(50, withTiming(finishColor, { duration: 310 })),
-      )
-    } else {
-      nonDigitFontColor.value = withTiming(finishColor, { duration: 250 })
+  useOnTick(tick.gen, () => {
+    if (flashColor != null) {
+      startFlashSequence(nonDigitFlashOpacity)
     }
-  }, [
-    nextColor,
-    index,
-    commonPrefixLength,
-    baseColor,
-    decimalPartColor,
-    shouldFadeDecimals,
-    chars,
-    currency.decimalSeparator,
-    nonDigitFontColor,
-  ])
+  })
 
-  const animatedNonDigitStyle = useAnimatedStyle(() => ({
-    color: nonDigitFontColor.value,
+  const animatedNonDigitFlashStyle = useAnimatedStyle(() => ({
+    opacity: nonDigitFlashOpacity.value,
   }))
 
   if (isDigit) {
-    const digitColor = getCharDisplayColor({
-      index,
-      chars,
-      decimalSeparator: currency.decimalSeparator,
-      shouldFadeDecimals,
-      commonPrefixLength,
-      nextColor,
-      neutral1Color: baseColor,
-      fadedDecimalColor: decimalPartColor,
-    })
-
+    // Roll when this cell's glyph changed, or when it sits in the changed suffix (same-digit
+    // cells there roll too, matching the shipped design).
+    const digitChanged = prevChar !== undefined && prevChar !== char
     return (
-      <Animated.View
+      <View
         style={[{ height: digitHeight, width: digitCellWidth, alignItems: 'center' }, AnimatedCharStyles.wrapperStyle]}
       >
         <DigitSlot
-          color={digitColor}
+          baseColor={charBaseColor}
           delay={delay}
           digit={char}
           digitHeight={digitHeight}
-          dir={dir}
+          dir={tick.dir}
+          flashColor={flashColor}
+          gen={tick.gen}
+          prevDigit={prevChar !== undefined && isDigitChar(prevChar) ? prevChar : char}
           reduceMotion={reduceMotion}
-          triggerGen={shouldForceAnimate ? animateGen : undefined}
+          shouldRoll={digitChanged || shouldForceAnimate}
           useHeadingTypography={useHeadingTypography}
           variantFont={variantFont}
         />
-        <TopAndBottomGradient height={digitHeight} />
-      </Animated.View>
+      </View>
     )
   }
 
+  // Static glyph + flash overlay: the flash cross-fades a same-glyph copy in the indication
+  // color via opacity, so no `color` prop is ever animated (a per-frame commit under Fabric).
   return (
-    <Animated.Text allowFontScaling={false} style={[digitTextStyle, animatedNonDigitStyle]}>
-      {char}
-    </Animated.Text>
+    <View>
+      <Text accessible={false} allowFontScaling={false} style={[digitTextStyle, { color: charBaseColor }]}>
+        {char}
+      </Text>
+      <Animated.Text
+        accessibilityElementsHidden
+        accessible={false}
+        allowFontScaling={false}
+        importantForAccessibility="no-hide-descendants"
+        style={[digitTextStyle, { color: flashColor ?? charBaseColor }, overlayStyle, animatedNonDigitFlashStyle]}
+      >
+        {char}
+      </Animated.Text>
+    </View>
   )
 }

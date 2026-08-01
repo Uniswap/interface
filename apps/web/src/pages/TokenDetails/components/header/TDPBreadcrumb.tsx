@@ -29,7 +29,7 @@ export function TDPBreadcrumb() {
       $md={{ pt: '$none' }}
     >
       <BreadcrumbNavLink to={tokensExploreUrl}>
-        {t('common.tokens')}
+        {t('common.token.plural')}
         <RotatableChevron direction="right" size="$icon.16" />
       </BreadcrumbNavLink>
       {showStocksBreadcrumb && (

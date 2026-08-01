@@ -16,6 +16,7 @@ export enum OnchainItemListOptionType {
   Rwa = 'Rwa',
   RwaCollection = 'RwaCollection',
   EarnVault = 'EarnVault',
+  Auction = 'Auction',
 }
 
 /** Variable-height row descriptor read by the list primitives. Absent → fixed-height row.
@@ -125,6 +126,20 @@ export interface UnitagOption extends BaseOption {
   unitag: string
 }
 
+export interface AuctionOption extends BaseOption {
+  type: OnchainItemListOptionType.Auction
+  auctionId: string
+  auctionAddress: string
+  chainId: UniverseChainId
+  tokenAddress: string
+  tokenSymbol: string
+  tokenName: string | undefined
+  tokenLogoUrl: string | undefined
+  currencyInfo: Maybe<CurrencyInfo>
+  committedVolumeUsd: number | undefined
+  isVerified: boolean
+}
+
 // Union of item types for different list use cases
 export type MobileExploreSearchModalOption =
   | TokenOption
@@ -139,6 +154,7 @@ export type WebSearchModalOption =
   | WalletOption
   | RwaCollectionOption
   | EarnVaultOption
+  | AuctionOption
 export type SearchModalOption = MobileExploreSearchModalOption | WebSearchModalOption
 
 export type TokenSelectorOption = TokenOption | TokenOption[]

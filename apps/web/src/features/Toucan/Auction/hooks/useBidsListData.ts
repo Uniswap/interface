@@ -17,6 +17,7 @@ import {
   formatCompactFromRaw,
 } from '~/features/Toucan/Auction/utils/fixedPointFdv'
 import { parseCreatedAt, parseCreatedAtForSort } from '~/features/Toucan/Auction/utils/parseCreatedAt'
+import { getAuctionTokenDecimals } from '~/features/Toucan/Auction/utils/tokenMetadata'
 
 // Threshold for considering a bid "complete" (100% filled)
 const COMPLETE_FILL_THRESHOLD = 1
@@ -106,7 +107,10 @@ export function useBidsListData(): UseBidsListDataResult {
     if (!clearingPriceRaw || !bidTokenInfo || !auctionDetails) {
       return 0
     }
-    const auctionTokenDecimals = auctionDetails.token?.currency.decimals ?? 18
+    const auctionTokenDecimals = getAuctionTokenDecimals(auctionDetails.token)
+    if (auctionTokenDecimals === undefined) {
+      return 0
+    }
     const priceString = q96ToPriceString({
       q96Value: clearingPriceRaw,
       bidTokenDecimals: bidTokenInfo.decimals,
@@ -155,11 +159,16 @@ export function useBidsListData(): UseBidsListDataResult {
             : convertFiatAmountFormatted(totalBidAmount * bidTokenInfo!.priceFiat, NumberType.FiatTokenStats)
 
         // Max FDV calculation
-        const auctionTokenDecimals = auctionDetails!.token?.currency.decimals ?? 18
+        const auctionTokenDecimals = getAuctionTokenDecimals(auctionDetails!.token)
         const totalSupplyRaw = auctionDetails!.tokenTotalSupply
         let maxFdvDisplay = '-'
 
-        if (totalSupplyRaw && totalSupplyRaw !== '0' && bidTokenInfo!.priceFiat !== 0) {
+        if (
+          totalSupplyRaw &&
+          totalSupplyRaw !== '0' &&
+          bidTokenInfo!.priceFiat !== 0 &&
+          auctionTokenDecimals !== undefined
+        ) {
           const maxFdvBidTokenRaw = computeFdvBidTokenRaw({
             priceQ96: bid.maxPrice,
             bidTokenDecimals: bidTokenInfo!.decimals,
@@ -187,9 +196,10 @@ export function useBidsListData(): UseBidsListDataResult {
         // Line 3: Average price data (only if tokens received)
         let averagePriceData: BidAveragePriceData | null = null
         const filledBidAmount = Number(formatUnits(BigInt(bid.currencySpent), bidTokenInfo!.decimals))
+        const resolvedAuctionTokenDecimals = getAuctionTokenDecimals(auctionDetails!.token)
         const totalTokensReceived =
-          auctionDetails!.token?.currency.decimals !== undefined
-            ? Number(formatUnits(BigInt(bid.amount), auctionDetails!.token.currency.decimals))
+          resolvedAuctionTokenDecimals !== undefined
+            ? Number(formatUnits(BigInt(bid.amount), resolvedAuctionTokenDecimals))
             : 0
 
         // Format total tokens received
@@ -212,7 +222,7 @@ export function useBidsListData(): UseBidsListDataResult {
           // FDV from average price (in bid token, e.g. ETH)
           let fdvFromAvgPriceFormatted = '-'
           let fdvFromAvgPriceCompactFormatted = '-'
-          if (totalSupplyRaw && totalSupplyRaw !== '0') {
+          if (totalSupplyRaw && totalSupplyRaw !== '0' && auctionTokenDecimals !== undefined) {
             const totalSupplyApprox = approximateNumberFromRaw({
               raw: BigInt(totalSupplyRaw),
               decimals: auctionTokenDecimals,
@@ -323,8 +333,13 @@ export function useBidsListData(): UseBidsListDataResult {
     // Format max FDV
     let maxFdvDisplay = '-'
     const totalSupplyRaw = auctionDetails.tokenTotalSupply
-    if (totalSupplyRaw && totalSupplyRaw !== '0' && bidTokenInfo.priceFiat !== 0) {
-      const auctionTokenDecimals = auctionDetails.token?.currency.decimals ?? 18
+    const auctionTokenDecimals = getAuctionTokenDecimals(auctionDetails.token)
+    if (
+      totalSupplyRaw &&
+      totalSupplyRaw !== '0' &&
+      bidTokenInfo.priceFiat !== 0 &&
+      auctionTokenDecimals !== undefined
+    ) {
       const maxFdvBidTokenRaw = computeFdvBidTokenRaw({
         priceQ96: optimisticBid.maxPriceQ96,
         bidTokenDecimals: optimisticBid.bidTokenDecimals,

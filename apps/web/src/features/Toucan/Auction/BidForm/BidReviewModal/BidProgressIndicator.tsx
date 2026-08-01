@@ -72,7 +72,7 @@ export function BidProgressIndicator({
       [ConfirmModalState.APPROVING_TOKEN]: {
         icon: bidCurrencyInfo ? <CurrencyLogo currencyInfo={bidCurrencyInfo} size={ICON_SIZE} /> : <SwapIcon />,
         rippleColor: tokenColor,
-        previewTitle: t('common.approveSpend', { symbol: bidCurrencySymbol }),
+        previewTitle: t('common.approveSpend', { symbol: bidCurrencySymbol ?? t('common.token') }),
         actionRequiredTitle: t('common.wallet.approve'),
         inProgressTitle: t('common.approvePending'),
         learnMoreLinkText: t('common.whyApprove'),

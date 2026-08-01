@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, styled, Text } from 'ui/src'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
-import { PriceChartData } from '~/components/Charts/PriceChart'
+import type { PriceChartData } from '~/components/Charts/PriceChart'
 
 const CandlestickTooltipRow = styled(Flex, {
   row: true,

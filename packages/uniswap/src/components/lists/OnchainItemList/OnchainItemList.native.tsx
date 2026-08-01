@@ -1,4 +1,4 @@
-import { CellContainer, FlashList } from '@shopify/flash-list'
+import { FlashList, FlashListRef } from '@shopify/flash-list'
 import { memo, useCallback, useEffect, useMemo, useRef, type PropsWithChildren } from 'react'
 import type { LayoutChangeEvent, StyleProp, ViewStyle } from 'react-native'
 import Animated, { LinearTransition } from 'react-native-reanimated'
@@ -15,10 +15,12 @@ import { EXPANDABLE_ASSET_ROW_HEIGHT_TRANSITION_MS } from 'uniswap/src/features/
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 
 const TOKEN_ITEM_SIZE = 64
-const AMOUNT_TO_DRAW = 18
+// Rows ahead of the viewport to pre-render. Kept small so the initial mount stays cheap;
+// a large window mounts dozens of heavy rows synchronously when the list first appears.
+const AMOUNT_TO_DRAW = 5
 
 const EXPANDABLE_ROW_LAYOUT_TRANSITION = LinearTransition.duration(EXPANDABLE_ASSET_ROW_HEIGHT_TRANSITION_MS)
-const AnimatedCellContainer = Animated.createAnimatedComponent(CellContainer)
+const AnimatedCellContainer = Animated.View
 
 // Only multi-issuer (grouped ticker) rows are expandable / dynamic-height.
 function isExpandableRow(row: ProcessedRow): boolean {
@@ -61,13 +63,13 @@ export const OnchainItemList = memo(function OnchainItemListInner({
   contentContainerStyle,
 }: OnchainItemListProps<OnchainItemListOption>): JSX.Element {
   const insets = useAppInsets()
-  const ref = useRef<FlashList<ProcessedRow>>(null)
+  const ref = useRef<FlashListRef<ProcessedRow>>(null)
 
   useEffect(() => {
     if (sectionListRef) {
       sectionListRef.current = {
         scrollToLocation: ({ itemIndex, sectionIndex, animated }): void => {
-          ref.current?.scrollToIndex({ index: itemIndex || sectionIndex, animated })
+          void ref.current?.scrollToIndex({ index: itemIndex || sectionIndex, animated })
         },
       }
     }
@@ -143,7 +145,7 @@ export const OnchainItemList = memo(function OnchainItemListInner({
       data={data}
       ListEmptyComponent={ListEmptyComponent}
       estimatedItemSize={TOKEN_ITEM_SIZE}
-      contentContainerStyle={{ paddingBottom: insets.bottom, ...contentContainerStyle }}
+      contentContainerStyle={[{ paddingBottom: insets.bottom }, contentContainerStyle]}
       keyboardShouldPersistTaps="always"
       keyExtractor={makeKey}
       keyboardDismissMode="on-drag"

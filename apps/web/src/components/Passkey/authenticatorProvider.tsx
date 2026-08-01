@@ -33,7 +33,7 @@ export function getProviderLabel(provider: AuthenticatorProvider, count?: number
       return provider
     }
     default: {
-      return i18n.t('common.passkey.count', { number: count })
+      return i18n.t('common.passkey.count', { number: count ?? 0 })
     }
   }
 }

@@ -53,6 +53,12 @@ export const GAS_SPEED_STRATEGIES: Record<GasSpeed, GasStrategy> = {
   [GasSpeed.Urgent]: URGENT_GAS_STRATEGY,
 } as const
 
+const DISPLAY_GAS_LIMIT_INFLATION_FACTOR = 1
+
+export function getDisplayGasStrategy(strategy: GasStrategy | undefined): GasStrategy | undefined {
+  return strategy ? { ...strategy, displayLimitInflationFactor: DISPLAY_GAS_LIMIT_INFLATION_FACTOR } : undefined
+}
+
 export function applyNativeTokenPercentageBuffer(
   currencyAmount: Maybe<CurrencyAmount<Currency>>,
   nativeTokenPercentageBuffer: number,

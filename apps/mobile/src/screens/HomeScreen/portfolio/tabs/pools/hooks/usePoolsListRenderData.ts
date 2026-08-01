@@ -1,4 +1,5 @@
 import type { ConnectError } from '@connectrpc/connect'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -38,6 +39,9 @@ export type PoolsTabRenderData = Omit<PoolsListRenderData, 'onListEndReached'>
  */
 export function usePoolsListRenderData({ owner, skip }: { owner: string; skip: boolean }): PoolsListRenderData {
   const { chains } = useEnabledChains({ platform: Platform.EVM })
+  // The Home heartbeat coordinator only refreshes positions when this flag is on — otherwise
+  // this query must keep its own poll running, or positions would never refresh.
+  const isDataLivelinessEnabled = useFeatureFlag(FeatureFlags.DataLivelinessUI)
 
   const {
     positions,
@@ -57,7 +61,7 @@ export function usePoolsListRenderData({ owner, skip }: { owner: string; skip: b
     includeHidden: true,
     autoFetchAllPages: false,
     disabled: skip,
-    pollInterval: PollingInterval.Normal,
+    pollInterval: isDataLivelinessEnabled ? undefined : PollingInterval.Normal,
   })
 
   usePendingLiquidityTransactionsChangeListener(refetch)

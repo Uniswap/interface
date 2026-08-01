@@ -127,14 +127,14 @@ export EXPO_LOCAL_NO_BUILD_CACHE=1
 
 # Force a JS re-bundle (see header note 2). gradle's createBundle<Variant>JsAndAssets
 # misses monorepo JS edits and stays UP-TO-DATE, so the APK keeps a stale bundle.
+# The bundle/assets land under .../react/<variant> (the task NAME is not the dir),
+# so the clear must target the variant dir or it silently misses and reuses old JS.
 if [ "$CLEAN_JS" -eq 1 ]; then
-  # devRelease -> DevRelease (gradle task name capitalizes the first letter).
-  TASK_VARIANT="$(printf '%s' "${EXPO_VARIANT:0:1}" | tr '[:lower:]' '[:upper:]')${EXPO_VARIANT:1}"
-  BUNDLE_TASK="createBundle${TASK_VARIANT}JsAndAssets"
-  echo "→ Clearing stale JS bundle outputs for $BUNDLE_TASK (pass --no-clean-js to skip)"
+  echo "→ Clearing stale JS bundle outputs for $EXPO_VARIANT (pass --no-clean-js to skip)"
   rm -rf \
-    "$ANDROID_DIR/app/build/generated/assets/$BUNDLE_TASK" \
-    "$ANDROID_DIR/app/build/generated/res/$BUNDLE_TASK" \
+    "$ANDROID_DIR/app/build/generated/assets/react/$EXPO_VARIANT" \
+    "$ANDROID_DIR/app/build/generated/res/react/$EXPO_VARIANT" \
+    "$ANDROID_DIR/app/build/generated/sourcemaps/react/$EXPO_VARIANT" \
     "$ANDROID_DIR/app/build/intermediates/assets/$EXPO_VARIANT"
 fi
 

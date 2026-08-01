@@ -13,8 +13,6 @@ import { buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { shortenAddress } from 'utilities/src/addresses'
 import { EllipsisText } from '~/components/Table/shared/TableText'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import type { TokenStat } from '~/types/explore'
-import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
 
 const TokenDetailsContainer = styled(Flex, {
   flex: 1,
@@ -25,41 +23,52 @@ const TokenDetailsContainer = styled(Flex, {
 const SYMBOL_SLOT_HEIGHT = 20
 
 interface TokenDescriptionProps {
-  token: TokenStat
+  name: string
+  symbol: string
+  address: string
+  chainId: UniverseChainId
+  logoUrl?: string
   /** Chain IDs for this token sorted by volume (desc) for the table's time period. From multichain list data. */
   chainIdsByVolume?: UniverseChainId[]
   /** Current explore chain filter from route (e.g. "ethereum"). Passed from table to avoid useParams in every row. */
   chainFilter?: string | undefined
 }
 
-export function TokenDescription({ token, chainIdsByVolume = [], chainFilter }: TokenDescriptionProps) {
+export function TokenDescription({
+  name,
+  symbol,
+  address,
+  chainId,
+  logoUrl,
+  chainIdsByVolume = [],
+  chainFilter,
+}: TokenDescriptionProps) {
   const { t } = useTranslation()
   const isMultiNetworkRow = chainIdsByVolume.length > 1
   /** Omit chain badge on the logo when volume spans multiple networks — row uses NetworkIconList on hover instead. */
-  const logoChainId = isMultiNetworkRow ? undefined : getChainIdFromChainUrlParam(token.chain.toLowerCase())
-  const isNative = token.address === NATIVE_CHAIN_ID
-  const disableHoverTransition = chainIdsByVolume.length === 1 && (isNative || token.address === ZERO_ADDRESS)
+  const logoChainId = isMultiNetworkRow ? undefined : chainId
+  const isNative = address === NATIVE_CHAIN_ID
+  const disableHoverTransition = chainIdsByVolume.length === 1 && (isNative || address === ZERO_ADDRESS)
 
-  // token.logo returns the WETH logo URL for native ETH — use useCurrencyInfo to get the correct logo
-  const chainId = getChainIdFromChainUrlParam(token.chain.toLowerCase()) ?? UniverseChainId.Mainnet
+  // The project logo URL returns the WETH logo for native ETH — use useCurrencyInfo to get the correct logo
   const nativeCurrencyInfo = useCurrencyInfo(isNative ? buildNativeCurrencyId(chainId) : undefined)
-  const logoUrl = isNative ? nativeCurrencyInfo?.logoUrl : token.logo
+  const resolvedLogoUrl = isNative ? nativeCurrencyInfo?.logoUrl : logoUrl
 
   return (
     <Flex row gap="$gap8" alignItems="center" justifyContent="flex-start" width="100%">
       <View pr="$spacing4">
         <TokenLogo
           chainId={logoChainId}
-          name={token.name}
+          name={name}
           size={iconSizes.icon32}
-          symbol={token.symbol}
-          url={logoUrl}
+          symbol={symbol}
+          url={resolvedLogoUrl}
           alwaysShowNetworkLogo={!!chainFilter}
         />
       </View>
       <TokenDetailsContainer>
         <EllipsisText variant="body2" data-testid={TestID.TokenName}>
-          {token.name ?? token.project?.name}
+          {name}
         </EllipsisText>
         <GroupHoverTransition
           height={SYMBOL_SLOT_HEIGHT}
@@ -72,7 +81,7 @@ export function TokenDescription({ token, chainIdsByVolume = [], chainFilter }: 
               height={SYMBOL_SLOT_HEIGHT}
               width="100%"
             >
-              {token.symbol}
+              {symbol}
             </Text>
           }
           hoverContent={
@@ -85,7 +94,7 @@ export function TokenDescription({ token, chainIdsByVolume = [], chainFilter }: 
               </Flex>
             ) : (
               <CopyHelper
-                toCopy={token.address}
+                toCopy={address}
                 iconPosition="right"
                 iconSize={iconSizes.icon12}
                 iconColor="$neutral2"
@@ -93,7 +102,7 @@ export function TokenDescription({ token, chainIdsByVolume = [], chainFilter }: 
                 alwaysShowIcon
               >
                 <Text variant="body3" color="$neutral2">
-                  {shortenAddress({ address: token.address, chars: 4, charsEnd: 4 })}
+                  {shortenAddress({ address, chars: 4, charsEnd: 4 })}
                 </Text>
               </CopyHelper>
             )

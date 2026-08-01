@@ -167,7 +167,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
       <Trace logPress element={ElementName.Next}>
         <Flex row>
           <Button
-            isDisabled={!!errorMessage || !value}
+            disabled={!!errorMessage || !value}
             size="large"
             variant="branded"
             testID={ElementName.Continue}

@@ -13,6 +13,7 @@ import { ModalRenderer } from '~/app/layout/TopLevelModals/modalRegistry'
 import { OAuthRedirectProvider } from '~/components/Passkey/OAuthRedirectContext'
 import { useOAuthRedirectRouter } from '~/components/Passkey/useOAuthRedirectRouter'
 import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
+import { GlobalEarnVaultModal } from '~/features/earn/GlobalEarnVaultModal'
 import { useAccountRiskCheck } from '~/hooks/useAccountRiskCheck'
 import { PageType, useIsPage } from '~/hooks/useIsPage'
 import { popupRegistry } from '~/state/popups/registry'
@@ -60,6 +61,7 @@ export function TopLevelModals() {
         <ModalRenderer modalName={ModalName.PendingWalletConnection} />
         <ModalRenderer modalName={ModalName.AddPasskey} />
         <ModalRenderer modalName={ModalName.AddBackupLogin} />
+        <ModalRenderer modalName={ModalName.ReconnectBackupLogin} />
         <ModalRenderer modalName={ModalName.RecoverWallet} />
         <ModalRenderer modalName={ModalName.DeletePasskey} />
         <ModalRenderer modalName={ModalName.RemoveBackupLogin} />
@@ -107,12 +109,14 @@ export function TopLevelModals() {
       />
       <ModalRenderer modalName={ModalName.AddPasskey} />
       <ModalRenderer modalName={ModalName.AddBackupLogin} />
+      <ModalRenderer modalName={ModalName.ReconnectBackupLogin} />
       <ModalRenderer modalName={ModalName.RecoverWallet} />
       <ModalRenderer modalName={ModalName.DeletePasskey} />
       <ModalRenderer modalName={ModalName.RemoveBackupLogin} />
       <ModalRenderer modalName={ModalName.DataApiOutage} />
       <ModalRenderer modalName={ModalName.UnitagRateLimitSpeedbump} />
       <ModalRenderer modalName={ModalName.UnsupportedBrowser} />
+      <GlobalEarnVaultModal />
     </OAuthRedirectProvider>
   )
 }

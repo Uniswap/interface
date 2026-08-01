@@ -19,7 +19,7 @@ import { useTransactionGasFee } from '~/hooks/useTransactionGasFee'
 import { useUSDTokenUpdater } from '~/hooks/useUSDTokenUpdater'
 import { useCurrencyBalances } from '~/lib/hooks/useCurrencyBalance'
 import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
-import { SendState } from '~/pages/Swap/Send/state/SendContext'
+import type { SendState } from '~/pages/Swap/Send/state/SendContext'
 import { useCreateTransferTransaction } from '~/utils/transfer'
 
 export interface RecipientData {

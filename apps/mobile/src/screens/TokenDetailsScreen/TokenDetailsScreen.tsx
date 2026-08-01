@@ -1,7 +1,7 @@
 import { useApolloClient } from '@apollo/client'
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
 import { GQLQueries, GraphQLApi } from '@universe/api'
-import { FeatureFlags } from '@universe/gating'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { memo, useEffect, useMemo } from 'react'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
 import type { AppStackScreenProp } from 'src/app/navigation/types'
@@ -28,6 +28,7 @@ import { useGatedTokenDetailsRWAMatch } from 'src/components/TokenDetails/useTok
 import { TokenDetailsActionButtonsWrapper } from 'src/screens/TokenDetailsScreen/TokenDetailsActionButtonsWrapper'
 import { HeaderRightElement, HeaderTitleElement } from 'src/screens/TokenDetailsScreen/TokenDetailsHeaders'
 import { TokenDetailsModals } from 'src/screens/TokenDetailsScreen/TokenDetailsModals'
+import { useMobileTDPHeartbeatCoordinator } from 'src/screens/TokenDetailsScreen/useMobileTDPHeartbeatCoordinator'
 import { Flex } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
@@ -36,6 +37,7 @@ import {
   useTokenBasicInfoPartsFragment,
   useTokenBasicProjectPartsFragment,
 } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
+import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { isMultichainProjectTokens } from 'uniswap/src/features/dataApi/tokenProjects/utils/isMultichainProjectTokens'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { useLogRWATokenDetailsViewed } from 'uniswap/src/features/rwa/useLogRWATokenDetailsViewed'
@@ -68,6 +70,7 @@ function TokenDetailsWrapper(): JSX.Element {
   const { chainId, address, currencyId, initialIsMultichainAsset } = useTokenDetailsContext()
   const { data: token } = useTokenBasicInfoPartsFragment({ currencyId })
   const { data: projectParts } = useTokenBasicProjectPartsFragment({ currencyId })
+  const metadata = useTokenMetadata(currencyId, { legacyToken: { name: token.name, symbol: token.symbol } })
   // Combine the navigator-provided hint with the project-derived signal so the
   // first analytics impression carries the correct value even when the project
   // fragment hasn't resolved yet.
@@ -77,17 +80,17 @@ function TokenDetailsWrapper(): JSX.Element {
     () => ({
       chain: chainId,
       address,
-      currencyName: token.name,
+      currencyName: metadata.name,
       multichain: isMultichainAsset,
     }),
-    [address, chainId, isMultichainAsset, token.name],
+    [address, chainId, isMultichainAsset, metadata.name],
   )
 
   const rwaMatch = useGatedTokenDetailsRWAMatch(FeatureFlags.RWATdp)
   useLogRWATokenDetailsViewed({
     rwaMatch,
     tokenAddress: address,
-    tokenSymbol: token.symbol,
+    tokenSymbol: metadata.symbol,
     chainId,
   })
 
@@ -102,15 +105,20 @@ function TokenDetailsWrapper(): JSX.Element {
 
 const TokenDetailsQuery = memo(function TokenDetailsQueryInner(): JSX.Element {
   const { currencyId, setError } = useTokenDetailsContext()
+  // The TDP heartbeat coordinator only takes over refreshing when this flag is on —
+  // otherwise these queries must keep their own poll running, or they'd never refresh.
+  const isDataLivelinessEnabled = useFeatureFlag(FeatureFlags.DataLivelinessUI)
+
+  useMobileTDPHeartbeatCoordinator({ enabled: isDataLivelinessEnabled })
 
   const { error } = GraphQLApi.useTokenDetailsScreenQuery({
     variables: {
       ...currencyIdToContractInput(currencyId),
       multichain: true,
     },
-    pollInterval: PollingInterval.Normal,
     notifyOnNetworkStatusChange: true,
     returnPartialData: true,
+    pollInterval: isDataLivelinessEnabled ? undefined : PollingInterval.Normal,
   })
 
   useEffect(() => setError(error), [error, setError])
@@ -156,7 +164,7 @@ const TokenDetails = memo(function TokenDetailsInner(): JSX.Element {
 
             {showEarn && <TokenDetailsEarnSection activeAddress={activeAddress} earnData={earnData} />}
 
-            {showEarn && <TokenDetailsEarnBanner earnData={earnData} />}
+            {showEarn && <TokenDetailsEarnBanner activeAddress={activeAddress} earnData={earnData} />}
           </Flex>
           <Flex gap="$spacing24">
             <TokenPerformance />

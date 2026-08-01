@@ -13,9 +13,9 @@ import { watchTransaction } from 'wallet/src/features/transactions/watcher/watch
 import { getProvider, getProviderManager } from 'wallet/src/features/wallet/context'
 import { getTxProvidersMocks } from 'wallet/src/test/mocks'
 
-jest.mock('uniswap/src/features/telemetry/send', () => ({
-  sendAnalyticsEvent: jest.fn(),
-  sendAppsFlyerEvent: jest.fn(),
+vi.mock('uniswap/src/features/telemetry/send', () => ({
+  sendAnalyticsEvent: vi.fn(),
+  sendAppsFlyerEvent: vi.fn(),
 }))
 
 const ACTIVE_ACCOUNT_ADDRESS = '0x000000000000000000000000000000000000000001'
@@ -24,7 +24,7 @@ describe(transactionWatcher, () => {
   const { mockProvider, mockProviderManager } = getTxProvidersMocks(undefined)
 
   beforeEach(() => {
-    jest.mocked(sendAnalyticsEvent).mockClear()
+    vi.mocked(sendAnalyticsEvent).mockClear()
   })
 
   it('Triggers watchers successfully', () => {
@@ -120,7 +120,7 @@ describe(transactionWatcher, () => {
       ])
       .silentRun()
       .then(() => {
-        expect(jest.mocked(sendAnalyticsEvent)).toHaveBeenCalledWith(
+        expect(vi.mocked(sendAnalyticsEvent)).toHaveBeenCalledWith(
           WalletEventName.PendingTransactionBacklogOnStartup,
           expect.objectContaining({
             total_incomplete: 3,

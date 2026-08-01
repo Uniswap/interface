@@ -41,7 +41,6 @@ export function usePortfolioDataForReporting(address: string | undefined): Portf
 
   const { balances, totalBalance } = useAccountBalances({
     addresses: signerAccountAddresses,
-    fetchPolicy: 'cache-first',
   })
 
   const portfolioQuery = useGetPortfolioQuery({

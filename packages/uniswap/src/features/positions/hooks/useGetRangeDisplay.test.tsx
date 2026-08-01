@@ -12,6 +12,14 @@ vi.mock('uniswap/src/features/positions/hooks/useIsTickAtLimit', async (importOr
 })
 const useIsTickAtLimitMock = vi.mocked(useIsTickAtLimit)
 
+// useCurrentLocale needs UrlContext/redux providers that renderHook doesn't set up
+vi.mock('uniswap/src/features/language/hooks', async (importOriginal) => {
+  return {
+    ...(await importOriginal()),
+    useCurrentLocale: vi.fn(() => 'en-US'),
+  }
+})
+
 function createCurrency(symbol: string): Currency {
   return {
     decimals: 18,
@@ -58,6 +66,23 @@ describe('useGetRangeDisplay', () => {
     expect(result.current.tokenASymbol).toBe('QUOTE')
     expect(result.current.tokenBSymbol).toBe('BASE')
     expect(result.current.isFullRange).toBe(false)
+  })
+
+  it('formats tiny prices with subscript notation instead of the "<0.00001" floor', () => {
+    useIsTickAtLimitMock.mockReturnValue({ [Bound.LOWER]: false, [Bound.UPPER]: false })
+    const tinyLower = createPrice({ baseCurrency: base, quoteCurrency: quote, value: '308110000' })
+    const tinyUpper = createPrice({ baseCurrency: base, quoteCurrency: quote, value: '616220000' })
+    const { result } = renderHook(() =>
+      useGetRangeDisplay({
+        priceOrdering: { priceLower: tinyLower, priceUpper: tinyUpper, quote, base },
+        pricesInverted: true,
+        tickSpacing: 1,
+        tickLower: 10,
+        tickUpper: 20,
+      }),
+    )
+    expect(result.current.minPrice).toBe('0.0₈1623')
+    expect(result.current.maxPrice).toBe('0.0₈3246')
   })
 
   it('returns 0 and ∞ for full range', () => {

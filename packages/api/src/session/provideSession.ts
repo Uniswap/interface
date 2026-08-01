@@ -29,18 +29,22 @@ export function bootstrapSession(ctx: {
   const targetHash = SharedQueryClient.defaultQueryOptions({ queryKey }).queryHash
 
   cachedSession = createSession({
-    fetchSession: async () => {
-      await SharedQueryClient.fetchQuery(options)
+    adapter: {
+      fetchSession: async () => {
+        await SharedQueryClient.fetchQuery(options)
+      },
+      refetchSession: async () => {
+        await SharedQueryClient.refetchQueries({ queryKey })
+      },
+      getStatus: () => SharedQueryClient.getQueryState(queryKey)?.status ?? 'idle',
+      hasData: () => SharedQueryClient.getQueryState(queryKey)?.data != null,
+      subscribe: (listener) =>
+        SharedQueryClient.getQueryCache().subscribe((event) => {
+          if (event.query.queryHash === targetHash) listener()
+        }),
     },
-    refetchSession: async () => {
-      await SharedQueryClient.refetchQueries({ queryKey })
-    },
-    getStatus: () => SharedQueryClient.getQueryState(queryKey)?.status ?? 'idle',
-    hasData: () => SharedQueryClient.getQueryState(queryKey)?.data != null,
-    subscribe: (listener) =>
-      SharedQueryClient.getQueryCache().subscribe((event) => {
-        if (event.query.queryHash === targetHash) listener()
-      }),
+    // Monotonic clock for the recover cooldown's interval math — never a wall clock.
+    getNow: () => performance.now(),
   })
 
   return cachedSession

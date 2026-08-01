@@ -3,7 +3,7 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { ReactElement, useMemo } from 'react'
 import { Chart, ChartHoverCoordinates } from '~/components/Charts/ChartModel'
 import { CandlestickTooltip } from '~/components/Charts/PriceChart/CandlestickTooltip'
-import { PriceChartData, PriceChartModel } from '~/components/Charts/PriceChart/index'
+import { PriceChartData, PriceChartModel } from '~/components/Charts/PriceChart/PriceChartModel'
 import { PriceChartType } from '~/components/Charts/utils'
 
 export interface PriceChartBodyProps {

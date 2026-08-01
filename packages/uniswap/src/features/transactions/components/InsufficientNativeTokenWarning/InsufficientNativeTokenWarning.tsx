@@ -29,7 +29,7 @@ export function InsufficientNativeTokenWarning({
   gasFee,
 }: {
   warnings: Warning[]
-  flow: 'send' | 'swap'
+  flow: 'deposit' | 'send' | 'swap' | 'withdraw'
   gasFee: GasFeeResult
 }): JSX.Element | null {
   const parsedInsufficientNativeTokenWarning = useInsufficientNativeTokenWarning({

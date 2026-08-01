@@ -313,7 +313,7 @@ export function KycHookSetupModal({
                   emphasis="primary"
                   minHeight="$spacing36"
                   fill
-                  isDisabled={!canSubmitEnter}
+                  disabled={!canSubmitEnter}
                   onPress={phase === 'preview' ? handleConfirmPreview : handleValidateEnter}
                 >
                   {phase === 'enter'

@@ -85,12 +85,12 @@ export function WalletConnectRequestModalContent({
   const permitInfo = getPermitInfo(request)
   const nativeCurrency = getChainInfo(chainId).nativeCurrency
 
-  const { animatedFooterHeight } = useBottomSheetInternal()
+  const { animatedLayoutState } = useBottomSheetInternal()
 
   const netInfo = useNetInfo()
 
   const bottomSpacerStyle = useAnimatedStyle(() => ({
-    height: animatedFooterHeight.value,
+    height: animatedLayoutState.value.footerHeight,
   }))
 
   // If link mode is supported, we can sign messages through universal links on device

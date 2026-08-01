@@ -11,10 +11,12 @@ import { Screen } from 'src/components/layout/Screen'
 import { TAB_STYLES, TabContentProps, TabLabel } from 'src/components/layout/TabHelpers'
 import TraceTabView from 'src/components/Trace/TraceTabView'
 import { ProfileHeader } from 'src/features/externalProfile/ProfileHeader'
+import { ProfilePoolsTab } from 'src/features/externalProfile/ProfilePoolsTab'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Flex, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
+import { usePoolsTabVisibility } from 'uniswap/src/features/positions/hooks/usePoolsTabVisibility'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
@@ -33,18 +35,35 @@ export function ExternalProfileScreen({
 }: Props): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const [tabIndex, setIndex] = useState(0)
+  const [tabKey, setTabKey] = useState<SectionName>(SectionName.ProfileTokensTab)
   const insets = useAppInsets()
 
   const displayName = useDisplayName(address)
+  const { shouldShowPoolsTab, openPoolPositionsCount } = usePoolsTabVisibility(address)
 
   const tabs = useMemo(
     () => [
       { key: SectionName.ProfileTokensTab, title: t('home.tokens.title') },
+      ...(shouldShowPoolsTab ? [{ key: SectionName.ProfilePoolsTab, title: t('common.pools') }] : []),
       { key: SectionName.ProfileNftsTab, title: t('home.nfts.title') },
       { key: SectionName.ProfileActivityTab, title: t('home.activity.title') },
     ],
-    [t],
+    [t, shouldShowPoolsTab],
+  )
+
+  // Tracked by key, not index: the Pools tab appears async and would remap a numeric index.
+  const tabIndex = Math.max(
+    0,
+    tabs.findIndex((tab) => tab.key === tabKey),
+  )
+  const setIndex = useCallback(
+    (index: number): void => {
+      const key = tabs[index]?.key
+      if (key) {
+        setTabKey(key)
+      }
+    },
+    [tabs],
   )
 
   const containerStyle = useMemo<StyleProp<ViewStyle>>(
@@ -96,6 +115,15 @@ export function ExternalProfileScreen({
           return (
             <NftsTab isExternalProfile containerProps={sharedProps} owner={address} renderedInModal={renderedInModal} />
           )
+        case SectionName.ProfilePoolsTab:
+          return (
+            <ProfilePoolsTab
+              containerProps={sharedProps}
+              owner={address}
+              openPositionsCount={openPoolPositionsCount}
+              renderedInModal={renderedInModal}
+            />
+          )
         case SectionName.ProfileTokensTab:
           return (
             <TokensTab
@@ -108,7 +136,7 @@ export function ExternalProfileScreen({
       }
       return null
     },
-    [address, sharedProps, renderedInModal],
+    [address, sharedProps, renderedInModal, openPoolPositionsCount],
   )
 
   const renderTabBar = useCallback(

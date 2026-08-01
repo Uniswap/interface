@@ -19,6 +19,12 @@ interface SecurityEndpoint {
   name: string
   priority: 1 | 2 | 3 | 4 | 5
   rationale: string
+  /**
+   * Observe-only flag. Omit (default) to page per the priority. Set false for
+   * higher-volume endpoints whose anomaly band needs time to mature before we
+   * trust it to page.
+   */
+  enablePaging?: boolean
 }
 
 const securityEndpoints: SecurityEndpoint[] = [
@@ -45,6 +51,16 @@ const securityEndpoints: SecurityEndpoint[] = [
     priority: 2,
     rationale:
       'Mass passkey additions across wallets indicate an attacker provisioning their own credentials. Pair with the DeleteAuthenticator monitor for a complete picture.',
+  },
+  {
+    name: 'OprfEvaluate',
+    priority: 2,
+    // Observe-only: OprfEvaluate is higher-volume than the export/authenticator calls,
+    // so its anomaly band needs time to settle before we trust it to page. Promote once
+    // the baseline matures and APPS-9784 confirms server-side rate-limiting.
+    enablePaging: false,
+    rationale:
+      'OprfEvaluate is the server-side OPRF call an attacker is *forced* to make to test each candidate PIN. Recovery is gated by a 4-digit PIN (10k combinations), so the OPRF rate-limit (keyed on authMethodId) is the primary brute-force defense — a volume spike is the clearest sign of PIN-guessing in progress.',
   },
 ]
 
@@ -76,7 +92,51 @@ function anomalyMonitor(spec: SecurityEndpoint): MonitorDefinition {
     notifyNoData: false,
     // Re-notify every hour while abuse is in-flight.
     renotifyInterval: 60,
+    // Only emit enablePaging when explicitly observe-only, so endpoints without the
+    // flag keep their default paging behavior unchanged.
+    ...(spec.enablePaging === false ? { enablePaging: false } : {}),
   }
 }
 
-export const privyEmbeddedWalletSecurityMonitors: MonitorDefinition[] = securityEndpoints.map(anomalyMonitor)
+// ─────────────────────────────────────────────────────────────────────────────
+// Un-throttled recovery decryption failures (custom DogStatsD metric, tagged
+// `rate_limited`). Recovery is gated by a 4-digit PIN (10k combinations); the AES
+// key derivation needs a server-side OPRF output, so the only brute-force defense
+// is the backend rate-limiting recovery. A burst of `rate_limited:false` failures
+// is failed PIN attempts the backend is NOT throttling — i.e. brute-force the
+// rate-limiter isn't catching. As of 2026-06, `rate_limited:true` never emits in
+// prod (see APPS-9784).
+//
+// Static threshold, not anomaly: the `rate_limited:false` baseline is ~0 (empty in
+// nearly every 15m window over 30d), so an anomaly band with count_default_zero
+// collapses and reads single-digit PIN fumbling as a spike. A real 4-digit
+// brute-force runs to hundreds–thousands of attempts, so a floor of 15 in 15m
+// filters individual fumbling without blinding detection. Observe-only until
+// APPS-9784 confirms server-side rate-limiting; then turn paging on.
+// ─────────────────────────────────────────────────────────────────────────────
+const recoveryDecryptionFailedMonitor: MonitorDefinition = {
+  id: 'privy_embedded_wallet_recovery_decryption_failed_unthrottled',
+  name: 'Un-throttled recovery decryption failures on privy-embedded-wallet',
+  type: 'query alert',
+  query: `sum(last_15m):sum:privy_embedded_wallet.recovery_decryption_failed{${apmFilter},rate_limited:false}.as_count() > 15`,
+  alertBody:
+    'More than 15 *un-throttled* recovery decryption failures (`rate_limited:false`) in 15m on privy-embedded-wallet. Recovery is gated by a 4-digit PIN (10k combinations); a burst of failed attempts the backend is not rate-limiting is a PIN brute-force signal.\n\nInvestigate: (1) the Recovery / OPRF dashboard client-IP toplist for the alert window — is one client_ip (or a Tor exit) driving the failures, (2) whether the same IP is hammering OprfEvaluate, (3) whether any ExecuteRecovery + AddAuthenticator + ExportSeedPhraseWithRecovery followed (account takeover). Cross-ref APPS-9784.',
+  recoveryBody: 'Un-throttled recovery decryption failures have dropped back below 15 in 15m.',
+  team: TEAM,
+  priority: 2,
+  thresholds: { critical: 15 },
+  logQuery: `service:privy-embedded-wallet @resource_name:"uniswap.privyembeddedwallet.v1.EmbeddedWalletService:ReportDecryptionResult"`,
+  runbookUrl: PRIVY_EMBEDDED_WALLET_RUNBOOK,
+  readmeUrl: SERVICE_README_URL,
+  dashboards: [],
+  notifyNoData: false,
+  renotifyInterval: 60,
+  // Observe-only until APPS-9784 confirms server-side rate-limiting; then flip
+  // paging on.
+  enablePaging: false,
+}
+
+export const privyEmbeddedWalletSecurityMonitors: MonitorDefinition[] = [
+  ...securityEndpoints.map(anomalyMonitor),
+  recoveryDecryptionFailedMonitor,
+]

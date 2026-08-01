@@ -72,7 +72,7 @@ export const SwapFormButton = memo(function SwapFormButton({ tokenColor }: { tok
             emphasis={buttonEmphasis}
             // TODO(WALL-7186): make loading state more representative of the trade state
             loading={shouldShowLoading}
-            isDisabled={disabled}
+            disabled={disabled}
             backgroundColor={buttonBackgroundColor}
             size={isShortMobileDevice ? 'medium' : 'large'}
             testID={TestID.ReviewSwap}

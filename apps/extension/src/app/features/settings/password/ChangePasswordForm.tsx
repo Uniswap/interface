@@ -103,7 +103,7 @@ export function ChangePasswordForm({
         </Text>
       </Flex>
       <Flex row width="100%">
-        <Button size="medium" isDisabled={!enableNext || isSamePassword} emphasis="primary" onPress={onSubmit}>
+        <Button size="medium" disabled={!enableNext || isSamePassword} emphasis="primary" onPress={onSubmit}>
           {t('common.button.continue')}
         </Button>
       </Flex>

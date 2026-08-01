@@ -68,6 +68,7 @@ export function OnDeviceRecoveryWalletCard({
           <Flex fill py={!remainingWalletCount ? fonts.body3.lineHeight / 2 : undefined}>
             <AddressDisplay
               address={firstWalletInfo.address}
+              disableAutoFontSizing={true}
               hideAddressInSubtitle={true}
               showAccountIcon={false}
               size={iconSizes.icon36}

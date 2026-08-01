@@ -1,11 +1,5 @@
 import { CurrencyAmount, Price, type Currency, type Percent, type TradeType } from '@uniswap/sdk-core'
-import type {
-  ClassicQuoteResponse,
-  DutchQuoteResponse,
-  DutchV3QuoteResponse,
-  GasEstimate,
-  PriorityQuoteResponse,
-} from '@universe/api'
+import type { GasEstimate } from '@universe/api'
 import { TradingApi } from '@universe/api'
 import type { providers } from 'ethers/lib/ethers'
 import type { PollingInterval } from 'uniswap/src/constants/misc'
@@ -24,7 +18,7 @@ export type { BaseTrade } from 'uniswap/src/features/transactions/swap/types/bas
 export { createBridgeTrade } from 'uniswap/src/features/transactions/swap/types/bridge'
 export type { BridgeTrade } from 'uniswap/src/features/transactions/swap/types/bridge'
 export { createChainedActionTrade } from 'uniswap/src/features/transactions/swap/types/chained'
-export type { ChainedActionTrade } from 'uniswap/src/features/transactions/swap/types/chained'
+export type { ChainedActionEarnIntent, ChainedActionTrade } from 'uniswap/src/features/transactions/swap/types/chained'
 export { createClassicTrade } from 'uniswap/src/features/transactions/swap/types/classic'
 export type { ClassicTrade } from 'uniswap/src/features/transactions/swap/types/classic'
 export { createIndicativeTrade } from 'uniswap/src/features/transactions/swap/types/indicative'
@@ -44,53 +38,6 @@ export type {
 } from 'uniswap/src/features/transactions/swap/types/uniswapx'
 export { createUnwrapTrade, createWrapTrade } from 'uniswap/src/features/transactions/swap/types/wrap'
 export type { UnwrapTrade, WrapTrade } from 'uniswap/src/features/transactions/swap/types/wrap'
-
-type QuoteResponseWithAggregatedOutputs =
-  | ClassicQuoteResponse
-  | DutchQuoteResponse
-  | DutchV3QuoteResponse
-  | PriorityQuoteResponse
-
-/**
- * Calculates the total output amount from a quote by summing all aggregated outputs.
- */
-export function getQuoteOutputAmount<T extends QuoteResponseWithAggregatedOutputs>(
-  quote: T | undefined,
-  outputCurrency: Currency,
-): CurrencyAmount<Currency> {
-  if (!quote) {
-    return CurrencyAmount.fromRawAmount(outputCurrency, '0')
-  }
-
-  return (
-    quote.quote.aggregatedOutputs?.reduce(
-      (acc, output) => acc.add(CurrencyAmount.fromRawAmount(outputCurrency, output.amount ?? '0')),
-      CurrencyAmount.fromRawAmount(outputCurrency, '0'),
-    ) ?? CurrencyAmount.fromRawAmount(outputCurrency, '0')
-  )
-}
-
-/**
- * Calculates the minimum output amount that the swapper recipient will receive from a quote.
- */
-export function getQuoteOutputAmountUserWillReceive<T extends QuoteResponseWithAggregatedOutputs>({
-  quote,
-  outputCurrency,
-  recipient,
-}: {
-  quote?: T
-  outputCurrency: Currency
-  recipient?: string
-}): CurrencyAmount<Currency> {
-  if (!quote || !recipient) {
-    return CurrencyAmount.fromRawAmount(outputCurrency, '0')
-  }
-
-  const output = quote.quote.aggregatedOutputs?.find((out) => out.recipient === recipient)
-  return output
-    ? CurrencyAmount.fromRawAmount(outputCurrency, output.minAmount ?? '0')
-    : CurrencyAmount.fromRawAmount(outputCurrency, '0')
-}
 
 export function getWorstExecutionPrice(trade: {
   inputAmount: CurrencyAmount<Currency>
@@ -153,6 +100,13 @@ export interface UseTradeArgs {
   generatePermitAsTransaction?: boolean
   isV4HookPoolsEnabled?: boolean
   walletExecutionContext?: TradingApi.WalletExecutionContext
+  earnIntent?: TradingApi.EarnIntent
+  /** Overrides the quote request output token. Earn vault deposits use this to quote into the vault token. */
+  quoteOutputOverride?: {
+    tokenOutAddress: string
+    tokenOutChainId: number
+  }
+  skipIndicativeTrade?: boolean
   // User-supplied gas fee overrides (e.g. custom max fee / priority / gas limit) routed to the
   // TAPI `urgency.overrides` payload when the GasFeeOverrides feature flag is on.
   gasOverrides?: TradingApi.UrgencyOverrides

@@ -188,7 +188,7 @@ export function SendReviewModalInner({ onConfirm, isConfirming }: SendModalInner
               variant="branded"
               size="large"
               loading={isConfirming}
-              isDisabled={isConfirming}
+              disabled={isConfirming}
               icon={needsPasskeySignin ? <Passkey size="$icon.24" color="$white" /> : undefined}
               onPress={handleConfirm}
             >

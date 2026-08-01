@@ -21,7 +21,7 @@ import { type EthTransaction } from 'uniswap/src/types/walletConnect'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { BatchedRequestDetailsContent } from 'wallet/src/components/BatchedTransactions/BatchedTransactionDetails'
 import { DappSendCallsScanningContent } from 'wallet/src/components/dappRequests/DappSendCallsScanningContent'
-import { type TransactionRiskLevel } from 'wallet/src/features/dappRequests/types'
+import { TransactionRiskLevel } from 'wallet/src/features/dappRequests/types'
 import { shouldDisableConfirm } from 'wallet/src/features/dappRequests/utils/riskUtils'
 
 interface SendCallsRequestContentProps {
@@ -70,6 +70,7 @@ function SendCallsRequestContentWithScanning({
       title={t('dapp.request.base.title')}
       transactionGasFeeResult={transactionGasFeeResult}
       disableConfirm={disableConfirm}
+      isCriticalRisk={riskLevel === TransactionRiskLevel.Critical}
       onCancel={onCancel}
       onConfirm={() => onConfirm()}
       showAddressFooter={false}

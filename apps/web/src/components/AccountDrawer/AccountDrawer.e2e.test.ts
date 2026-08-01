@@ -29,10 +29,12 @@ test.describe(
         await getVisibleDropdownElementByTestId(page, TestID.WalletSettings).click()
       })
       test('changes theme', async ({ page }) => {
+        // Match by regex: <html> carries the tamagui theme class alongside the Tailwind
+        // `dark` class (toggled by ThemeProvider), so an exact class match would fail.
         await getVisibleDropdownElementByTestId(page, TestID.ThemeDark).click()
-        await expect(page.locator('html')).toHaveClass('t_dark')
+        await expect(page.locator('html')).toHaveClass(/t_dark/)
         await getVisibleDropdownElementByTestId(page, TestID.ThemeLight).click()
-        await expect(page.locator('html')).toHaveClass('t_light')
+        await expect(page.locator('html')).toHaveClass(/t_light/)
       })
 
       test('changes language', async ({ page }) => {

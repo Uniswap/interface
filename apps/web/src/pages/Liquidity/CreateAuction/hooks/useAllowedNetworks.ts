@@ -1,10 +1,12 @@
-import { CreateAuctionConfigKey, DynamicConfigs, useDynamicConfigValue } from '@universe/gating'
 import { useMemo } from 'react'
-import { TOUCAN_AUCTION_SUPPORTED_CHAINS } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
-import { isUniverseChainIdArrayType } from 'uniswap/src/features/gating/typeGuards'
+import {
+  NEW_LAUNCH_CHAINS,
+  TOUCAN_AUCTION_SUPPORTED_CHAINS,
+  TOUCAN_TOKEN_CREATION_SUPPORTED_CHAINS,
+} from '~/features/Toucan/supportedChains'
 
 const VALID_CHAIN_IDS = new Set<UniverseChainId>(
   Object.values(UniverseChainId).filter((value): value is UniverseChainId => typeof value === 'number'),
@@ -28,43 +30,36 @@ export function filterAllowedNetworksByTestnetMode({
   )
 }
 
-function useAllowedNetworks({
-  configKey,
-  defaultValue,
-}: {
-  configKey: CreateAuctionConfigKey
-  defaultValue: UniverseChainId[]
-}): UniverseChainId[] {
+/**
+ * Pins {@link NEW_LAUNCH_CHAINS} directly under Mainnet so newly launched chains get featured
+ * placement in the create-auction network pickers. Mainnet stays first — the pickers default to
+ * the head of the list.
+ */
+export function pinNewLaunchChains(allowedNetworkIds: UniverseChainId[]): UniverseChainId[] {
+  const isNewLaunchChain = (id: UniverseChainId): boolean =>
+    id !== UniverseChainId.Mainnet && NEW_LAUNCH_CHAINS.includes(id)
+  return [
+    ...allowedNetworkIds.filter((id) => id === UniverseChainId.Mainnet),
+    ...allowedNetworkIds.filter(isNewLaunchChain),
+    ...allowedNetworkIds.filter((id) => id !== UniverseChainId.Mainnet && !isNewLaunchChain(id)),
+  ]
+}
+
+function useAllowedNetworks(allowedNetworkIds: UniverseChainId[]): UniverseChainId[] {
   const { isTestnetModeEnabled } = useEnabledChains()
-  const allowedNetworkIds = useDynamicConfigValue<
-    DynamicConfigs.CreateAuction,
-    CreateAuctionConfigKey,
-    UniverseChainId[]
-  >({
-    config: DynamicConfigs.CreateAuction,
-    key: configKey,
-    defaultValue,
-    customTypeGuard: isUniverseChainIdArrayType,
-  })
 
   return useMemo(
-    () => filterAllowedNetworksByTestnetMode({ allowedNetworkIds, isTestnetModeEnabled }),
+    () => pinNewLaunchChains(filterAllowedNetworksByTestnetMode({ allowedNetworkIds, isTestnetModeEnabled })),
     [allowedNetworkIds, isTestnetModeEnabled],
   )
 }
 
-/** Networks available when creating a brand-new token to auction. */
+/** Networks available when creating a brand-new token to auction (chains whose stack has a token factory). */
 export function useCreateNewTokenAllowedNetworks(): UniverseChainId[] {
-  return useAllowedNetworks({
-    configKey: CreateAuctionConfigKey.AllowedTokenCreationNetworks,
-    defaultValue: TOUCAN_AUCTION_SUPPORTED_CHAINS,
-  })
+  return useAllowedNetworks(TOUCAN_TOKEN_CREATION_SUPPORTED_CHAINS)
 }
 
 /** Networks available when auctioning an existing token. */
 export function useCreateAuctionAllowedNetworks(): UniverseChainId[] {
-  return useAllowedNetworks({
-    configKey: CreateAuctionConfigKey.AllowedNetworks,
-    defaultValue: TOUCAN_AUCTION_SUPPORTED_CHAINS,
-  })
+  return useAllowedNetworks(TOUCAN_AUCTION_SUPPORTED_CHAINS)
 }

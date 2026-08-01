@@ -26,12 +26,14 @@ public struct TokenInput: Decodable {
 }
 
 public struct WidgetDataAccounts: Decodable {
-  
-  public init(_ accounts: [Account]) {
+
+  public init(_ accounts: [Account], activeAddress: String? = nil) {
     self.accounts = accounts
+    self.activeAddress = activeAddress
   }
-  
+
   public var accounts: [Account]
+  public var activeAddress: String?
 }
 
 public struct WidgetDataI18n: Decodable {
@@ -49,6 +51,20 @@ public struct Account: Decodable {
   public var address: String
   public var name: String?
   public var isSigner: Bool
+}
+
+public struct WidgetDataChains: Decodable {
+
+  public init(_ chains: [WidgetChain]) {
+    self.chains = chains
+  }
+
+  public var chains: [WidgetChain]
+}
+
+public struct WidgetChain: Decodable {
+  public var chainId: Int
+  public var name: String
 }
 
 public struct WidgetDataConfiguration: Codable {
@@ -99,6 +115,7 @@ public struct UniswapUserDefaults {
   static let keyFavorites = buildString + ".widgets.favorites"
   static let keyAccounts = buildString + ".widgets.accounts"
   static let keyI18n = buildString + ".widgets.i18n"
+  static let keyChains = buildString + ".widgets.chains"
   
   static let userDefaults = UserDefaults.init(suiteName: APP_GROUP)
   
@@ -140,6 +157,18 @@ public struct UniswapUserDefaults {
     return parsedData
   }
   
+  public static func readChains() -> WidgetDataChains {
+    let data = readData(key: keyChains)
+    guard let data = data else {
+      return WidgetDataChains([])
+    }
+    let decoder = JSONDecoder()
+    guard let parsedData = try? decoder.decode(WidgetDataChains.self, from: data) else {
+      return WidgetDataChains([])
+    }
+    return parsedData
+  }
+
   public static func readI18n() -> WidgetDataI18n {
     let data = readData(key: keyI18n)
     guard let data = data else {

@@ -102,6 +102,8 @@ const StepLogo = ({ step }: { step: TradingApi.TruncatedPlanStep }): JSX.Element
     case TradingApi.PlanStepType.DUTCH_V2:
     case TradingApi.PlanStepType.DUTCH_V3:
     case TradingApi.PlanStepType.PRIORITY:
+    case TradingApi.PlanStepType.VAULT_DEPOSIT:
+    case TradingApi.PlanStepType.VAULT_WITHDRAW:
       return (
         <SplitLogo
           chainId={chainIdIn}

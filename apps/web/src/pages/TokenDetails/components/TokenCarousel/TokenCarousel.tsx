@@ -141,7 +141,7 @@ export function TokenCarousel({
         )}
         <Flex ref={scrollRef} row overflow="scroll" gap="$gap12" pl="$spacing2" scrollbarWidth="none">
           {carouselTokens.map((token) => (
-            <TokenCarouselCard key={token.multichainId} token={token} sparklines={sparklines} />
+            <TokenCarouselCard key={token.multichainToken?.multichainId} token={token} sparklines={sparklines} />
           ))}
         </Flex>
       </Flex>

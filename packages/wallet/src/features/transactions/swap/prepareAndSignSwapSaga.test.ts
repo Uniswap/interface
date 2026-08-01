@@ -7,10 +7,11 @@ import { expectSaga } from 'redux-saga-test-plan'
 import type { EffectProviders, StaticProvider } from 'redux-saga-test-plan/providers'
 import { USDC } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/permitMethod'
 import type { UniswapXTrade, UnwrapTrade, WrapTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { ETH, WETH } from 'uniswap/src/test/fixtures'
 import { mockPermit } from 'uniswap/src/test/fixtures/permit'
+import type { MockInstance } from 'vitest'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import { createTransactionServices } from 'wallet/src/features/transactions/factories/createTransactionServices'
 import {
@@ -30,7 +31,7 @@ import { selectWalletSwapProtectionSetting } from 'wallet/src/features/wallet/se
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 
 // Mock dependencies
-jest.mock('wallet/src/features/transactions/factories/createTransactionServices')
+vi.mock('wallet/src/features/transactions/factories/createTransactionServices')
 
 const MOCK_TIMESTAMP = 1487076708000
 const CHAIN_ID = UniverseChainId.Mainnet
@@ -70,7 +71,7 @@ const mockSignedPermitRequest = {
 }
 
 describe('prepareAndSignSwapSaga', () => {
-  let dateNowSpy: jest.SpyInstance
+  let dateNowSpy: MockInstance
   let prepareAndSignSwapSaga: ReturnType<typeof createPrepareAndSignSwapSaga>
 
   const sharedProviders: (EffectProviders | StaticProvider)[] = [
@@ -91,7 +92,7 @@ describe('prepareAndSignSwapSaga', () => {
   ]
 
   beforeAll(() => {
-    dateNowSpy = jest.spyOn(Date, 'now').mockImplementation(() => MOCK_TIMESTAMP)
+    dateNowSpy = vi.spyOn(Date, 'now').mockImplementation(() => MOCK_TIMESTAMP)
     prepareAndSignSwapSaga = createPrepareAndSignSwapSaga(mockTransactionSagaDependencies)
   })
 
@@ -100,7 +101,7 @@ describe('prepareAndSignSwapSaga', () => {
   })
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
 
     mockTransactionService.getNextNonce.mockResolvedValue({ nonce: 1 })
     mockTransactionService.prepareAndSignTransaction.mockResolvedValue(mockSignedTransactionRequest)
@@ -410,7 +411,7 @@ describe('prepareAndSignSwapSaga', () => {
     })
 
     it('should handle UniswapX signing failure and call onFailure', async () => {
-      const onFailure = jest.fn()
+      const onFailure = vi.fn()
       const params = prepareAndSignSwapSagaParams({
         onFailure,
         swapTxContext: prepareSwapTxContext({
@@ -472,7 +473,7 @@ describe('prepareAndSignSwapSaga', () => {
 
   describe('Error handling', () => {
     it('should handle nonce calculation errors gracefully and continue execution', async () => {
-      const onSuccess = jest.fn()
+      const onSuccess = vi.fn()
       const params = prepareAndSignSwapSagaParams({
         onSuccess,
       })
@@ -509,7 +510,7 @@ describe('prepareAndSignSwapSaga', () => {
     })
 
     it('should call onSuccess callback with result', async () => {
-      const onSuccess = jest.fn()
+      const onSuccess = vi.fn()
       const params = prepareAndSignSwapSagaParams({
         onSuccess,
       })

@@ -251,10 +251,10 @@ function PendingConnectionModalContent({
   confirmedWarning,
 }: PendingConnectionModalContentProps): JSX.Element {
   const { t } = useTranslation()
-  const { animatedFooterHeight } = useBottomSheetInternal()
+  const { animatedLayoutState } = useBottomSheetInternal()
 
   const bottomSpacerStyle = useAnimatedStyle(() => ({
-    height: animatedFooterHeight.value,
+    height: animatedLayoutState.value.footerHeight,
   }))
 
   const dappInfo: DappConnectionInfo = {

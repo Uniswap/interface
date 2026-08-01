@@ -4,9 +4,9 @@ import { render, screen } from 'src/test/test-utils'
 
 describe('PositionStatusPill', () => {
   it.each([
-    [PositionStatus.IN_RANGE, 'In range'],
-    [PositionStatus.OUT_OF_RANGE, 'Out of range'],
-    [PositionStatus.CLOSED, 'Closed'],
+    [PositionStatus.IN_RANGE, 'common.withinRange'],
+    [PositionStatus.OUT_OF_RANGE, 'common.outOfRange'],
+    [PositionStatus.CLOSED, 'common.closed'],
   ])('renders the localized label for status %s', (status, label) => {
     render(<PositionStatusPill status={status} />)
 
@@ -16,6 +16,6 @@ describe('PositionStatusPill', () => {
   it('renders nothing when the status has no config (unspecified)', () => {
     render(<PositionStatusPill status={PositionStatus.UNSPECIFIED} />)
 
-    expect(screen.toJSON()).toBeNull()
+    expect(document.body.textContent).toBe('')
   })
 })

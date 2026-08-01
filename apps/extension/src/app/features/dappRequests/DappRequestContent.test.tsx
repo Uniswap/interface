@@ -8,44 +8,44 @@ import { AccountType } from 'uniswap/src/features/accounts/types'
 import { DappRequestType } from 'uniswap/src/features/dappRequests/types'
 
 // Mock wagmi to avoid ESM import issues
-jest.mock('wagmi', () => ({
-  useAccountEffect: jest.fn(),
+vi.mock('wagmi', () => ({
+  useAccountEffect: vi.fn(),
 }))
 
 // Mock the useIsRequestStale hook to control output
-const mockUseIsRequestStale = jest.fn()
-jest.mock('src/app/features/dappRequests/hooks/useIsRequestStale', () => ({
-  ...jest.requireActual('src/app/features/dappRequests/hooks/useIsRequestStale'),
+const mockUseIsRequestStale = vi.fn()
+vi.mock('src/app/features/dappRequests/hooks/useIsRequestStale', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('src/app/features/dappRequests/hooks/useIsRequestStale')>()),
   useIsRequestStale: (createdAt: number) => mockUseIsRequestStale(createdAt),
 }))
 
 // Mock the context hook to return our mock value
 let mockContextValue: any = null
-jest.mock('src/app/features/dappRequests/DappRequestQueueContext', () => ({
+vi.mock('src/app/features/dappRequests/DappRequestQueueContext', () => ({
   useDappRequestQueueContext: () => mockContextValue,
 }))
 
 // Mock hooks used by DappRequestFooter
-jest.mock('src/app/features/dapp/hooks', () => ({
-  useDappLastChainId: jest.fn(() => 1),
+vi.mock('src/app/features/dapp/hooks', () => ({
+  useDappLastChainId: vi.fn(() => 1),
 }))
 
-jest.mock('uniswap/src/features/gas/hooks/useChainGasToken', () => ({
-  useChainGasToken: jest.fn(() => ({
+vi.mock('uniswap/src/features/gas/hooks/useChainGasToken', () => ({
+  useChainGasToken: vi.fn(() => ({
     gasToken: { symbol: 'ETH' },
     gasBalance: { value: '1000000000000000000', currency: { symbol: 'ETH' }, equalTo: () => false },
     isLoading: false,
   })),
 }))
 
-jest.mock('uniswap/src/features/gas/utils', () => ({
-  ...jest.requireActual('uniswap/src/features/gas/utils'),
-  hasSufficientGasBalance: jest.fn(() => true),
-  hasGasEstimationFailed: jest.fn(() => false),
+vi.mock('uniswap/src/features/gas/utils', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/features/gas/utils')>()),
+  hasSufficientGasBalance: vi.fn(() => true),
+  hasGasEstimationFailed: vi.fn(() => false),
 }))
 
-jest.mock('wallet/src/features/wallet/hooks', () => ({
-  useActiveAccountWithThrow: jest.fn(() => ({
+vi.mock('wallet/src/features/wallet/hooks', () => ({
+  useActiveAccountWithThrow: vi.fn(() => ({
     address: '0x123',
     type: 'readonly',
     timeImportedMs: Date.now(),
@@ -53,28 +53,28 @@ jest.mock('wallet/src/features/wallet/hooks', () => ({
   })),
 }))
 
-jest.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
-  useEnabledChains: jest.fn(() => ({
+vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
+  useEnabledChains: vi.fn(() => ({
     defaultChainId: 1,
   })),
 }))
 
-jest.mock('src/app/features/dappRequests/hooks', () => ({
-  useIsDappRequestConfirming: jest.fn(() => false),
+vi.mock('src/app/features/dappRequests/hooks', () => ({
+  useIsDappRequestConfirming: vi.fn(() => false),
 }))
 
 // Mock the NetworkFeeFooter to avoid complex currency parsing
-jest.mock('wallet/src/features/transactions/TransactionRequest/NetworkFeeFooter', () => ({
+vi.mock('wallet/src/features/transactions/TransactionRequest/NetworkFeeFooter', () => ({
   NetworkFeeFooter: () => null,
 }))
 
-jest.mock('wallet/src/features/transactions/TransactionRequest/AddressFooter', () => ({
+vi.mock('wallet/src/features/transactions/TransactionRequest/AddressFooter', () => ({
   AddressFooter: () => null,
 }))
 
 // Mock currency hooks that parse transaction data
-jest.mock('uniswap/src/data/apiClients/tradingApi/useTradingApiSwapQuery', () => ({
-  useTradingApiSwapQuery: jest.fn(() => ({
+vi.mock('uniswap/src/data/apiClients/tradingApi/useTradingApiSwapQuery', () => ({
+  useTradingApiSwapQuery: vi.fn(() => ({
     data: undefined,
     isLoading: false,
   })),
@@ -129,10 +129,10 @@ function setupMockRequestAndContext(createdAt: number, options?: { frameUrl?: st
     dappIconUrl: '',
     currentIndex: 0,
     totalRequestCount: 1,
-    onPressNext: jest.fn(),
-    onPressPrevious: jest.fn(),
-    onConfirm: jest.fn(),
-    onCancel: jest.fn(),
+    onPressNext: vi.fn(),
+    onPressPrevious: vi.fn(),
+    onConfirm: vi.fn(),
+    onCancel: vi.fn(),
   }
 }
 
@@ -144,14 +144,14 @@ function renderDappRequestContent(options: { createdAt: number; isRequestStale: 
 
 describe('DappRequestContent - Stale Request Rendering', () => {
   beforeEach(() => {
-    jest.useFakeTimers()
-    jest.setSystemTime(new Date('2024-01-01T12:00:00.000Z'))
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2024-01-01T12:00:00.000Z'))
     mockUseIsRequestStale.mockClear()
   })
 
   afterEach(() => {
-    jest.runOnlyPendingTimers()
-    jest.useRealTimers()
+    vi.runOnlyPendingTimers()
+    vi.useRealTimers()
   })
 
   it('should render Cancel and Confirm buttons for fresh requests', async () => {

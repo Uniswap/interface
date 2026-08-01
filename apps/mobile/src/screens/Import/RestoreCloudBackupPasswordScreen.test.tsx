@@ -7,7 +7,7 @@ import { render } from 'src/test/test-utils'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { TamaguiProvider } from 'wallet/src/providers/tamagui-provider'
 
-const setOptionsSpy = jest.fn()
+const setOptionsSpy = vi.fn()
 const routeProp = { params: {} } as RouteProp<OnboardingStackParamList, OnboardingScreens.RestoreCloudBackupPassword>
 
 describe(RestoreCloudBackupPasswordScreen, () => {

@@ -7,7 +7,7 @@ exports[`ContextMenu > renders without error 1`] = `
     style="display: contents;"
   >
     <div
-      aria-controls="«r4»"
+      aria-controls="_r_4_"
       aria-expanded="true"
       aria-haspopup="dialog"
       class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"

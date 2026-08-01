@@ -32,6 +32,8 @@ vi.mock('@uniswap/analytics', () => ({
 vi.mock('~/state/popups/registry', () => ({
   popupRegistry: {
     addPopup: vi.fn(),
+    hasPopup: vi.fn(() => false),
+    onPopupRemoved: vi.fn(),
   },
 }))
 

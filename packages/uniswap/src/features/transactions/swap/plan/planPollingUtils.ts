@@ -1,10 +1,9 @@
-import { call, put, type SagaGenerator, select } from 'typed-redux-saga'
+import { put, type SagaGenerator, select } from 'typed-redux-saga'
 import { TradingApiSessionClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiSessionClient'
 import extractPlanResponseDetails from 'uniswap/src/features/activity/extract/extractPlanResponseDetails'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { selectPlanTransaction } from 'uniswap/src/features/transactions/selectors'
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
-import { PlanWatcher } from 'uniswap/src/features/transactions/swap/plan/planWatcherSaga'
 import { activePlanStore } from 'uniswap/src/features/transactions/swap/review/stores/activePlan/activePlanStore'
 import {
   PlanTransactionDetails,
@@ -142,26 +141,6 @@ export function* addOrUpdatePlanTransaction(params: {
   if (action) {
     yield* put(action)
   }
-}
-
-export function* waitForPlanUpdateOrFinalizedState(
-  planTx: PlanTransactionDetails,
-): SagaGenerator<PlanTransactionDetails | undefined> {
-  // AwaitingAction plans require user action and won't change from polling.
-  // Return undefined so the watcher exits without dispatching an update.
-  if (planTx.status === TransactionStatus.AwaitingAction) {
-    return undefined
-  }
-
-  if (isFinalizedTx(planTx)) {
-    return planTx
-  }
-
-  if (planIsTooOld(planTx)) {
-    return { ...planTx, status: TransactionStatus.AwaitingAction }
-  }
-
-  return yield* call(PlanWatcher.waitForPlanStatus, planTx.typeInfo.planId)
 }
 
 export const shouldUpdatePlan = (params: {

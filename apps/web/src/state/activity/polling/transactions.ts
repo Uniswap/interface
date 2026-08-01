@@ -62,7 +62,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
 
   const pendingTransactions = usePendingTransactions(account.chainId)
   const hasPending = pendingTransactions.length > 0
-  const blockTimestamp = useCurrentBlockTimestamp({ refetchInterval: !hasPending ? false : undefined })
+  const { blockTimestamp } = useCurrentBlockTimestamp({ refetchInterval: !hasPending ? false : undefined })
 
   const lastBlockNumber = useBlockNumber()
   const removeTransaction = useTransactionRemover()

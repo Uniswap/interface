@@ -7,6 +7,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { CancellationGasFeeDetails } from 'uniswap/src/features/gas/hooks'
 import { useCancellationGasFeeInfo } from 'uniswap/src/features/gas/hooks/useCancellationGasFeeInfo'
+import { selectTransactions } from 'uniswap/src/features/transactions/selectors'
 import { addTransaction } from 'uniswap/src/features/transactions/slice'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
@@ -17,11 +18,12 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isLimitOrder, isUniswapXOrderPending } from 'uniswap/src/features/transactions/utils/uniswapX.utils'
 import { zeroAddress } from '~/chains'
+import { useAppSelector } from '~/state/hooks'
 import { usePendingTransactions, usePendingUniswapXOrders } from '~/state/transactions/hooks'
-import { isExistingTransaction } from '~/state/transactions/utils'
 
 export function useOpenLimitOrders(account: string): { openLimitOrders: UniswapXOrderDetails[]; loading: boolean } {
   const dispatch = useDispatch()
+  const transactionsByAddress = useAppSelector(selectTransactions)
   const { data: limitOrders, loading } = useOpenLimitOrdersREST({ evmAddress: account })
 
   // Sync remote limit orders to local state if they don't exist in state yet
@@ -31,14 +33,12 @@ export function useOpenLimitOrders(account: string): { openLimitOrders: UniswapX
     }
 
     limitOrders.forEach((order) => {
-      if (
-        isUniswapXOrderPending(order) &&
-        !isExistingTransaction({ from: order.from, chainId: order.chainId, id: order.id })
-      ) {
+      const exists = Boolean(transactionsByAddress[order.from]?.[order.chainId]?.[order.id])
+      if (isUniswapXOrderPending(order) && !exists) {
         dispatch(addTransaction(order))
       }
     })
-  }, [dispatch, limitOrders])
+  }, [dispatch, limitOrders, transactionsByAddress])
 
   const merged = useMergeLocalAndRemoteTransactions({ evmAddress: account, remoteTransactions: limitOrders })
   const openLimitOrders = useMemo(

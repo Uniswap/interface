@@ -143,7 +143,7 @@ exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
                     <img
                       height="36"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                      style="object-fit: contain; border-radius: 36px; z-index: 1;"
+                      style="object-fit: cover; width: 36px; height: 36px; border-radius: 36px; z-index: 1;"
                       width="36"
                     />
                   </div>
@@ -304,7 +304,7 @@ exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
                             autocapitalize="none"
                             autocomplete="on"
                             autocorrect="off"
-                            class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _borderTopColor-0hover-borderColor69916956 _borderRightColor-0hover-borderColor69916956 _borderBottomColor-0hover-borderColor69916956 _borderLeftColor-0hover-borderColor69916956 _borderTopColor-0focus-borderColor68052152 _borderRightColor-0focus-borderColor68052152 _borderBottomColor-0focus-borderColor68052152 _borderLeftColor-0focus-borderColor68052152 _outlineColor-0focus-visible-outlineColo114 _outlineWidth-0focus-visible-2px _outlineStyle-0focus-visible-solid _fontFamily-f-family _fontWeight-f-weight-bo3548 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _pr-t-space-non101 _pl-t-space-non101 _height-10037 _borderTopLeftRadius-t-radius-tr3728 _borderTopRightRadius-t-radius-tr3728 _borderBottomRightRadius-t-radius-tr3728 _borderBottomLeftRadius-t-radius-tr3728 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _outlineWidth-0px _color-color _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _backgroundColor-transparent _minWidth-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _outlineColor-transparent _pt-t-space-non101 _pb-t-space-non101 _position-absolute _top-0px _width-10037"
+                            class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _borderTopColor-0hover-borderColor69916956 _borderRightColor-0hover-borderColor69916956 _borderBottomColor-0hover-borderColor69916956 _borderLeftColor-0hover-borderColor69916956 _borderTopColor-0focus-borderColor68052152 _borderRightColor-0focus-borderColor68052152 _borderBottomColor-0focus-borderColor68052152 _borderLeftColor-0focus-borderColor68052152 _outlineColor-0focus-visible-outlineColo114 _outlineWidth-0focus-visible-2px _outlineStyle-0focus-visible-solid _fontFamily-f-family _fontWeight-f-weight-bo3548 _fontSize-18px _lineHeight-18px _pr-t-space-non101 _pl-t-space-non101 _height-10037 _borderTopLeftRadius-t-radius-tr3728 _borderTopRightRadius-t-radius-tr3728 _borderBottomRightRadius-t-radius-tr3728 _borderBottomLeftRadius-t-radius-tr3728 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _outlineWidth-0px _color-color _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _backgroundColor-transparent _minWidth-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _outlineColor-transparent _pt-t-space-non101 _pb-t-space-non101 _position-absolute _top-0px _width-10037"
                             data-disable-theme="true"
                             data-testid="explore-search-input"
                             dir="auto"
@@ -385,7 +385,7 @@ exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _flexGrow-1"
                   >
                     <div
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _maxHeight-100dvh"
@@ -620,7 +620,7 @@ exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
                     <img
                       height="36"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                      style="object-fit: contain; border-radius: 36px; z-index: 1;"
+                      style="object-fit: cover; width: 36px; height: 36px; border-radius: 36px; z-index: 1;"
                       width="36"
                     />
                   </div>
@@ -781,7 +781,7 @@ exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
                             autocapitalize="none"
                             autocomplete="on"
                             autocorrect="off"
-                            class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _borderTopColor-0hover-borderColor69916956 _borderRightColor-0hover-borderColor69916956 _borderBottomColor-0hover-borderColor69916956 _borderLeftColor-0hover-borderColor69916956 _borderTopColor-0focus-borderColor68052152 _borderRightColor-0focus-borderColor68052152 _borderBottomColor-0focus-borderColor68052152 _borderLeftColor-0focus-borderColor68052152 _outlineColor-0focus-visible-outlineColo114 _outlineWidth-0focus-visible-2px _outlineStyle-0focus-visible-solid _fontFamily-f-family _fontWeight-f-weight-bo3548 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _pr-t-space-non101 _pl-t-space-non101 _height-10037 _borderTopLeftRadius-t-radius-tr3728 _borderTopRightRadius-t-radius-tr3728 _borderBottomRightRadius-t-radius-tr3728 _borderBottomLeftRadius-t-radius-tr3728 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _outlineWidth-0px _color-color _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _backgroundColor-transparent _minWidth-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _outlineColor-transparent _pt-t-space-non101 _pb-t-space-non101 _position-absolute _top-0px _width-10037"
+                            class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _borderTopColor-0hover-borderColor69916956 _borderRightColor-0hover-borderColor69916956 _borderBottomColor-0hover-borderColor69916956 _borderLeftColor-0hover-borderColor69916956 _borderTopColor-0focus-borderColor68052152 _borderRightColor-0focus-borderColor68052152 _borderBottomColor-0focus-borderColor68052152 _borderLeftColor-0focus-borderColor68052152 _outlineColor-0focus-visible-outlineColo114 _outlineWidth-0focus-visible-2px _outlineStyle-0focus-visible-solid _fontFamily-f-family _fontWeight-f-weight-bo3548 _fontSize-18px _lineHeight-18px _pr-t-space-non101 _pl-t-space-non101 _height-10037 _borderTopLeftRadius-t-radius-tr3728 _borderTopRightRadius-t-radius-tr3728 _borderBottomRightRadius-t-radius-tr3728 _borderBottomLeftRadius-t-radius-tr3728 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _outlineWidth-0px _color-color _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _backgroundColor-transparent _minWidth-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _outlineColor-transparent _pt-t-space-non101 _pb-t-space-non101 _position-absolute _top-0px _width-10037"
                             data-disable-theme="true"
                             data-testid="explore-search-input"
                             dir="auto"
@@ -862,7 +862,7 @@ exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _flexGrow-1"
                   >
                     <div
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _maxHeight-100dvh"
@@ -1106,7 +1106,7 @@ exports[`SendCurrencyInputform > should render placeholder values 1`] = `
                     <img
                       height="36"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                      style="object-fit: contain; border-radius: 36px; z-index: 1;"
+                      style="object-fit: cover; width: 36px; height: 36px; border-radius: 36px; z-index: 1;"
                       width="36"
                     />
                   </div>
@@ -1267,7 +1267,7 @@ exports[`SendCurrencyInputform > should render placeholder values 1`] = `
                             autocapitalize="none"
                             autocomplete="on"
                             autocorrect="off"
-                            class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _borderTopColor-0hover-borderColor69916956 _borderRightColor-0hover-borderColor69916956 _borderBottomColor-0hover-borderColor69916956 _borderLeftColor-0hover-borderColor69916956 _borderTopColor-0focus-borderColor68052152 _borderRightColor-0focus-borderColor68052152 _borderBottomColor-0focus-borderColor68052152 _borderLeftColor-0focus-borderColor68052152 _outlineColor-0focus-visible-outlineColo114 _outlineWidth-0focus-visible-2px _outlineStyle-0focus-visible-solid _fontFamily-f-family _fontWeight-f-weight-bo3548 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _pr-t-space-non101 _pl-t-space-non101 _height-10037 _borderTopLeftRadius-t-radius-tr3728 _borderTopRightRadius-t-radius-tr3728 _borderBottomRightRadius-t-radius-tr3728 _borderBottomLeftRadius-t-radius-tr3728 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _outlineWidth-0px _color-color _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _backgroundColor-transparent _minWidth-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _outlineColor-transparent _pt-t-space-non101 _pb-t-space-non101 _position-absolute _top-0px _width-10037"
+                            class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _borderTopColor-0hover-borderColor69916956 _borderRightColor-0hover-borderColor69916956 _borderBottomColor-0hover-borderColor69916956 _borderLeftColor-0hover-borderColor69916956 _borderTopColor-0focus-borderColor68052152 _borderRightColor-0focus-borderColor68052152 _borderBottomColor-0focus-borderColor68052152 _borderLeftColor-0focus-borderColor68052152 _outlineColor-0focus-visible-outlineColo114 _outlineWidth-0focus-visible-2px _outlineStyle-0focus-visible-solid _fontFamily-f-family _fontWeight-f-weight-bo3548 _fontSize-18px _lineHeight-18px _pr-t-space-non101 _pl-t-space-non101 _height-10037 _borderTopLeftRadius-t-radius-tr3728 _borderTopRightRadius-t-radius-tr3728 _borderBottomRightRadius-t-radius-tr3728 _borderBottomLeftRadius-t-radius-tr3728 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _outlineWidth-0px _color-color _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _backgroundColor-transparent _minWidth-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _outlineColor-transparent _pt-t-space-non101 _pb-t-space-non101 _position-absolute _top-0px _width-10037"
                             data-disable-theme="true"
                             data-testid="explore-search-input"
                             dir="auto"
@@ -1349,7 +1349,7 @@ exports[`SendCurrencyInputform > should render placeholder values 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _flexGrow-1"
                   >
                     <div
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _maxHeight-100dvh"

@@ -8,6 +8,7 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { CreateNewTokenForm } from '~/pages/Liquidity/CreateAuction/components/CreateNewTokenForm'
 import { ExistingTokenForm } from '~/pages/Liquidity/CreateAuction/components/ExistingTokenForm'
 import { HookTile } from '~/pages/Liquidity/CreateAuction/components/HookTile'
+import { QuickLaunchToggleCard } from '~/pages/Liquidity/CreateAuction/components/QuickLaunchSection'
 import {
   useCreateAuctionStore,
   useCreateAuctionStoreActions,
@@ -55,6 +56,7 @@ export function AddTokenInfoStep() {
           onPress={switchToExisting}
         />
       </Flex>
+      <QuickLaunchToggleCard />
       <Flex
         backgroundColor="$surface1"
         borderWidth="$spacing1"
@@ -62,6 +64,7 @@ export function AddTokenInfoStep() {
         borderRadius="$rounded20"
         p="$spacing24"
         gap="$spacing24"
+        $md={{ borderWidth: 0, borderRadius: '$none', p: '$none' }}
       >
         {tokenForm.mode === TokenMode.CREATE_NEW ? (
           <CreateNewTokenForm createNew={tokenForm} />

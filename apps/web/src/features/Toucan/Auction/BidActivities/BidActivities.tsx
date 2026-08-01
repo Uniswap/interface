@@ -1,5 +1,4 @@
 import { createColumnHelper, type Row } from '@tanstack/react-table'
-import { AnimatePresence, motion } from 'framer-motion'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea, Unicon, useMedia } from 'ui/src'
@@ -21,6 +20,7 @@ import { useAuctionStatsData } from '~/features/Toucan/Auction/hooks/useAuctionS
 import { useBidTokenInfo } from '~/features/Toucan/Auction/hooks/useBidTokenInfo'
 import { useLoadBidActivities } from '~/features/Toucan/Auction/hooks/useLoadBidActivities'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
+import { getAuctionTokenDecimals } from '~/features/Toucan/Auction/utils/tokenMetadata'
 import { useTimeAgo } from '~/features/Toucan/Shared/TimeCell'
 
 const ROW_HEIGHT = 48
@@ -51,18 +51,9 @@ function TableTimeCell({ timestamp }: { timestamp: string }) {
 
 function AnimatedBidRow({ children }: { children: React.ReactNode }) {
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0 }}
-      transition={{
-        layout: { duration: 0.2, ease: 'easeOut' },
-        duration: 0.2,
-      }}
-    >
+    <Flex animation="200ms" animateOnly={['transform', 'opacity']} enterStyle={{ opacity: 0, y: -20 }}>
       {children}
-    </motion.div>
+    </Flex>
   )
 }
 
@@ -173,7 +164,7 @@ export const BidActivities = ({
     setIsHovering(false)
   }, [allActivities])
 
-  const { bidTokenInfo, loading: bidTokenInfoLoading } = useBidTokenInfo({
+  const { bidTokenInfo, loading: bidTokenLoading } = useBidTokenInfo({
     bidTokenAddress: auctionDetails?.currency,
     chainId: auctionChainId,
   })
@@ -183,13 +174,15 @@ export const BidActivities = ({
   const bidTokenSymbol = bidTokenInfo?.symbol ?? 'ETH'
   const bidTokenPriceFiat = bidTokenInfo?.priceFiat ?? 0
   const hasPriceFiat = bidTokenPriceFiat > 0
-  const auctionTokenDecimals = auctionDetails?.token?.currency.decimals ?? 18
+  const auctionTokenDecimals = getAuctionTokenDecimals(auctionDetails?.token)
+  const bidTokenInfoLoading = bidTokenLoading || auctionTokenDecimals === undefined
 
   const formattedBidActivities: BidActivityRow[] = useMemo(() => {
     return visibleActivities.map((bid) => {
       const bidPriceInToken = Number(formatUnits(BigInt(bid.baseTokenInitial), bidTokenDecimals))
       const bidPriceFiat = hasPriceFiat ? convertFiatAmount(bidPriceInToken * bidTokenPriceFiat).amount : 0
-      const maxPricePerTokenWei = q96ToRawAmount(bid.price, auctionTokenDecimals)
+      const maxPricePerTokenWei =
+        auctionTokenDecimals !== undefined ? q96ToRawAmount(bid.price, auctionTokenDecimals) : 0n
       const maxPriceInToken = Number(formatUnits(maxPricePerTokenWei, bidTokenDecimals))
       const maxPriceFiat = hasPriceFiat ? convertFiatAmount(maxPriceInToken * bidTokenPriceFiat).amount : 0
 
@@ -370,21 +363,19 @@ export const BidActivities = ({
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <AnimatePresence mode="popLayout">
-          <Table
-            columns={columns}
-            data={formattedBidActivities}
-            loading={loading}
-            hideHeader={false}
-            maxHeight={formattedBidActivities.length >= FIXED_HEIGHT_THRESHOLD ? 450 : undefined}
-            loadMore={pendingNewBidCount > 0 ? undefined : loadMore}
-            loadingRowsCount={6}
-            rowHeight={ROW_HEIGHT}
-            getRowId={(row) => row.bidId}
-            rowWrapper={renderBidActivityRow}
-            showScrollbar
-          />
-        </AnimatePresence>
+        <Table
+          columns={columns}
+          data={formattedBidActivities}
+          loading={loading}
+          hideHeader={false}
+          maxHeight={formattedBidActivities.length >= FIXED_HEIGHT_THRESHOLD ? 450 : undefined}
+          loadMore={pendingNewBidCount > 0 ? undefined : loadMore}
+          loadingRowsCount={6}
+          rowHeight={ROW_HEIGHT}
+          getRowId={(row) => row.bidId}
+          rowWrapper={renderBidActivityRow}
+          showScrollbar
+        />
         {formattedBidActivities.length >= 6 && (
           <Flex
             position="absolute"

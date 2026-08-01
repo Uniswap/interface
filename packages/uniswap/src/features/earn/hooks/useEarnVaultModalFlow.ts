@@ -1,3 +1,4 @@
+import { TradingApi } from '@universe/api'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DEFAULT_WITHDRAW_CHAIN_ID } from 'uniswap/src/features/earn/constants'
@@ -21,24 +22,40 @@ export enum EarnVaultView {
 export type EarnVaultFlow =
   | { view: EarnVaultView.Vault }
   | { view: EarnVaultView.NeedToken }
-  | { view: EarnVaultView.DepositAmount; amount: string }
+  | {
+      view: EarnVaultView.DepositAmount
+      amount: string
+      // Carried back from review so a "Max" selection isn't lost on back-nav — otherwise the
+      // restored fiat amount (rounded up by display formatting) re-reads as "insufficient".
+      isMax?: boolean
+    }
   | {
       view: EarnVaultView.DepositReview
       amount: string
       sourceChainId: UniverseChainId
       sourceCurrencyId: string
+      isMax?: boolean
+      /**
+       * Exact token-unit amount, set when the user picked "Max". Review quotes this directly
+       * instead of round-tripping the rounded fiat display amount through spot prices (which
+       * can exceed the wallet balance).
+       */
+      tokenAmount?: string
     }
   | {
       view: EarnVaultView.WithdrawAmount
       amount: string
       chainId: UniverseChainId
+      // Carried back from review so a "Max" (MAX_SHARES) selection isn't lost on back-nav — otherwise the
+      // restored max amount re-runs the over-balance check and reads as "insufficient".
+      withdrawMode?: TradingApi.EarnWithdrawMode
       position: EarnPositionInfo
     }
   | {
       view: EarnVaultView.WithdrawReview
       amount: string
       chainId: UniverseChainId
-      destinationCurrencyId: string
+      withdrawMode: TradingApi.EarnWithdrawMode
       position: EarnPositionInfo
     }
 
@@ -62,10 +79,20 @@ interface UseEarnVaultModalFlowResult {
   reset: () => void
   startDeposit: () => void
   startNeedToken: () => void
-  submitDepositAmount: (params: { amount: string; sourceChainId: UniverseChainId; sourceCurrencyId: string }) => void
+  submitDepositAmount: (params: {
+    amount: string
+    sourceChainId: UniverseChainId
+    sourceCurrencyId: string
+    isMax?: boolean
+    tokenAmount?: string
+  }) => void
   backToDepositAmount: () => void
   startWithdraw: (position: EarnPositionInfo) => void
-  submitWithdrawAmount: (params: { amount: string; chainId: UniverseChainId; destinationCurrencyId: string }) => void
+  submitWithdrawAmount: (params: {
+    amount: string
+    chainId: UniverseChainId
+    withdrawMode: TradingApi.EarnWithdrawMode
+  }) => void
   backToWithdrawAmount: () => void
   backToVault: () => void
 }
@@ -157,22 +184,31 @@ export function useEarnVaultModalFlow({
   }, [])
 
   const submitDepositAmount = useCallback(
-    (params: { amount: string; sourceChainId: UniverseChainId; sourceCurrencyId: string }) => {
+    (params: {
+      amount: string
+      sourceChainId: UniverseChainId
+      sourceCurrencyId: string
+      isMax?: boolean
+      tokenAmount?: string
+    }) => {
       setFlow({
         view: EarnVaultView.DepositReview,
         amount: params.amount,
         sourceChainId: params.sourceChainId,
         sourceCurrencyId: params.sourceCurrencyId,
+        isMax: params.isMax,
+        tokenAmount: params.tokenAmount,
       })
     },
     [],
   )
 
   const backToDepositAmount = useCallback(() => {
-    setFlow((current) => ({
-      view: EarnVaultView.DepositAmount,
-      amount: current.view === EarnVaultView.DepositReview ? current.amount : '',
-    }))
+    setFlow((current) =>
+      current.view === EarnVaultView.DepositReview
+        ? { view: EarnVaultView.DepositAmount, amount: current.amount, isMax: current.isMax }
+        : { view: EarnVaultView.DepositAmount, amount: '' },
+    )
   }, [])
 
   const startWithdraw = useCallback((position: EarnPositionInfo) => {
@@ -185,7 +221,7 @@ export function useEarnVaultModalFlow({
   }, [])
 
   const submitWithdrawAmount = useCallback(
-    (params: { amount: string; chainId: UniverseChainId; destinationCurrencyId: string }) => {
+    (params: { amount: string; chainId: UniverseChainId; withdrawMode: TradingApi.EarnWithdrawMode }) => {
       setFlow((current) => {
         if (current.view !== EarnVaultView.WithdrawAmount) {
           return current
@@ -195,7 +231,7 @@ export function useEarnVaultModalFlow({
           view: EarnVaultView.WithdrawReview,
           amount: params.amount,
           chainId: params.chainId,
-          destinationCurrencyId: params.destinationCurrencyId,
+          withdrawMode: params.withdrawMode,
           position: current.position,
         }
       })
@@ -213,6 +249,7 @@ export function useEarnVaultModalFlow({
         view: EarnVaultView.WithdrawAmount,
         amount: current.amount,
         chainId: current.chainId,
+        withdrawMode: current.withdrawMode,
         position: current.position,
       }
     })

@@ -17,6 +17,10 @@ import { createTransactionRepositoryRedux } from 'wallet/src/features/transactio
 import { createSagaEffectRunner } from 'wallet/src/state/createSagaEffectRunner'
 
 describe('TransactionRepositoryImplRedux', () => {
+  type TestState = {
+    transactions: ReturnType<typeof transactionReducer>
+  }
+
   // Create saga middleware for our tests
   const sagaMiddleware = createSagaMiddleware()
 
@@ -40,10 +44,14 @@ describe('TransactionRepositoryImplRedux', () => {
   }
 
   // Spy on the runSagaEffect function at the describe level
-  const runSagaEffectSpy = jest.spyOn(repositoryContext, 'runSagaEffect')
+  const runSagaEffectSpy = vi.spyOn(repositoryContext, 'runSagaEffect')
 
   // Create repository
   const repository = createTransactionRepositoryRedux(repositoryContext)
+
+  const getTransactionsState = (): TestState['transactions'] => {
+    return (store.getState() as TestState).transactions
+  }
 
   // Sample test data
   const mockAddress = '0x1234567890123456789012345678901234567890'
@@ -85,7 +93,7 @@ describe('TransactionRepositoryImplRedux', () => {
     // Reset the store before each test
     store.dispatch({ type: 'transactions/resetTransactions' })
     // Reset all mocks before each test
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('addTransaction', () => {
@@ -96,8 +104,8 @@ describe('TransactionRepositoryImplRedux', () => {
       expect(runSagaEffectSpy).toHaveBeenCalled()
 
       // Verify the transaction was added to the store through the saga middleware
-      const state = store.getState()
-      expect(state.transactions[mockAddress]?.[mockChainId]?.[mockTransaction.id]).toBeDefined()
+      const transactionsState = getTransactionsState()
+      expect(transactionsState[mockAddress]?.[mockChainId]?.[mockTransaction.id]).toBeDefined()
     })
   })
 
@@ -118,8 +126,8 @@ describe('TransactionRepositoryImplRedux', () => {
       expect(runSagaEffectSpy).toHaveBeenCalled()
 
       // Check that the transaction was updated
-      const state = store.getState()
-      const storedTx = state.transactions[mockAddress]?.[mockChainId]?.[mockTransaction.id]
+      const transactionsState = getTransactionsState()
+      const storedTx = transactionsState[mockAddress]?.[mockChainId]?.[mockTransaction.id]
       expect(storedTx).toBeDefined()
       expect(storedTx?.status).toBe(TransactionStatus.Success)
     })
@@ -131,8 +139,8 @@ describe('TransactionRepositoryImplRedux', () => {
       store.dispatch(transactionActions.addTransaction(mockTransaction))
 
       // Spy on the action creators to verify which one gets called
-      const updateTransactionSpy = jest.spyOn(transactionActions, 'updateTransaction')
-      const updateTransactionWithoutWatchSpy = jest.spyOn(transactionActions, 'updateTransactionWithoutWatch')
+      const updateTransactionSpy = vi.spyOn(transactionActions, 'updateTransaction')
+      const updateTransactionWithoutWatchSpy = vi.spyOn(transactionActions, 'updateTransactionWithoutWatch')
 
       // Update the transaction with new status
       const updatedTransaction = {
@@ -150,8 +158,8 @@ describe('TransactionRepositoryImplRedux', () => {
       expect(updateTransactionSpy).not.toHaveBeenCalled()
 
       // Check that the transaction was updated
-      const state = store.getState()
-      const storedTx = state.transactions[mockAddress]?.[mockChainId]?.[mockTransaction.id]
+      const transactionsState = getTransactionsState()
+      const storedTx = transactionsState[mockAddress]?.[mockChainId]?.[mockTransaction.id]
       expect(storedTx).toBeDefined()
       expect(storedTx?.status).toBe(TransactionStatus.Success)
 
@@ -168,8 +176,8 @@ describe('TransactionRepositoryImplRedux', () => {
       store.dispatch(transactionActions.addTransaction(mockTransaction))
 
       // Spy on the action creators to verify which one gets called
-      const updateTransactionSpy = jest.spyOn(transactionActions, 'updateTransaction')
-      const updateTransactionWithoutWatchSpy = jest.spyOn(transactionActions, 'updateTransactionWithoutWatch')
+      const updateTransactionSpy = vi.spyOn(transactionActions, 'updateTransaction')
+      const updateTransactionWithoutWatchSpy = vi.spyOn(transactionActions, 'updateTransactionWithoutWatch')
 
       // Update the transaction with new status
       const updatedTransaction = {
@@ -187,8 +195,8 @@ describe('TransactionRepositoryImplRedux', () => {
       expect(updateTransactionWithoutWatchSpy).not.toHaveBeenCalled()
 
       // Check that the transaction was updated
-      const state = store.getState()
-      const storedTx = state.transactions[mockAddress]?.[mockChainId]?.[mockTransaction.id]
+      const transactionsState = getTransactionsState()
+      const storedTx = transactionsState[mockAddress]?.[mockChainId]?.[mockTransaction.id]
       expect(storedTx).toBeDefined()
       expect(storedTx?.status).toBe(TransactionStatus.Success)
 
@@ -214,8 +222,8 @@ describe('TransactionRepositoryImplRedux', () => {
       expect(runSagaEffectSpy).toHaveBeenCalled()
 
       // Check that the transaction was finalized
-      const state = store.getState()
-      const storedTx = state.transactions[mockAddress]?.[mockChainId]?.[mockTransaction.id]
+      const transactionsState = getTransactionsState()
+      const storedTx = transactionsState[mockAddress]?.[mockChainId]?.[mockTransaction.id]
       expect(storedTx).toBeDefined()
       expect(storedTx?.status).toBe(status)
     })

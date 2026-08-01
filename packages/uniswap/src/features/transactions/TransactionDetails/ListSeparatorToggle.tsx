@@ -15,27 +15,23 @@ export function ListSeparatorToggle({
   closedText: string
 }): JSX.Element {
   return (
-    <Flex group centered row gap="$spacing16" mb="$spacing16" px="$spacing12" testID={TestID.ListSeparatorToggle}>
-      <Separator />
-      <TouchableArea
-        flexGrow={1}
-        alignItems="center"
-        flexDirection="row"
-        justifyContent="center"
-        pb="$spacing4"
-        pt="$spacing8"
-        onPress={onPress}
-      >
-        <Text $group-hover={{ color: '$neutral2Hovered' }} color="$neutral2" variant="body3">
-          {isOpen ? openText : closedText}
-        </Text>
-        {isOpen ? (
-          <AnglesMinimize color="$neutral2" size="$icon.20" />
-        ) : (
-          <AnglesMaximize color="$neutral2" size="$icon.20" />
-        )}
-      </TouchableArea>
-      <Separator />
-    </Flex>
+    <TouchableArea activeOpacity={1} testID={TestID.ListSeparatorToggle} onPress={onPress}>
+      <Flex group row alignItems="center" mb="$spacing16" py="$spacing8">
+        <Flex centered grow row gap="$spacing16">
+          <Separator />
+          <Flex centered row gap="$gap4" pl="$spacing4">
+            <Text $group-hover={{ color: '$neutral2Hovered' }} color="$neutral2" variant="body3">
+              {isOpen ? openText : closedText}
+            </Text>
+            {isOpen ? (
+              <AnglesMinimize color="$neutral2" size="$icon.16" />
+            ) : (
+              <AnglesMaximize color="$neutral2" size="$icon.16" />
+            )}
+          </Flex>
+          <Separator />
+        </Flex>
+      </Flex>
+    </TouchableArea>
   )
 }

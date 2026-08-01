@@ -7,10 +7,13 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice/slice
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import type { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { HandleUniswapXPlanSignatureStepParams } from 'uniswap/src/features/transactions/steps/types'
 import { plan } from 'uniswap/src/features/transactions/swap/plan/planSaga'
-import { PlanPriceChangeInterrupt } from 'uniswap/src/features/transactions/swap/plan/types'
+import {
+  PlanPriceChangeInterrupt,
+  type PlanParams,
+  type PlanSagaAnalytics,
+} from 'uniswap/src/features/transactions/swap/plan/types'
 import { SwapExecutionCallbacks } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import type { ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
@@ -25,10 +28,17 @@ import {
 export type ExecutePlanParams = {
   txId?: string
   address: string
-  analytics: SwapTradeBaseProperties
+  analytics: PlanSagaAnalytics
   swapTxContext: ValidatedSwapTxContext
   getOnPressRetry?: (error: Error | undefined) => (() => void) | undefined
   caip25Info: CAIP25Session | undefined
+  onPlanFinalized?: PlanParams['onPlanFinalized']
+  modalClosedActionType?: PlanParams['modalClosedActionType']
+  /**
+   * Optional override for error display mapping. Earn callers convert PlanPriceChangeInterrupt into a
+   * displayable "review again" error; the default keeps price-change interrupts silent for the swap flow.
+   */
+  getDisplayableError?: PlanParams['getDisplayableError']
 } & SwapExecutionCallbacks
 
 /**
@@ -240,15 +250,19 @@ function* executeChainedPlan(params: ExecutePlanParams, dependencies: Transactio
         }
       }
     },
-    getDisplayableError: ({ error }: { error: Error }) => {
-      // UI gracefully handles price changes, so we don't need to display an error
-      if (error instanceof PlanPriceChangeInterrupt) {
-        return undefined
-      }
+    getDisplayableError:
+      params.getDisplayableError ??
+      (({ error }: { error: Error }) => {
+        // UI gracefully handles price changes, so we don't need to display an error
+        if (error instanceof PlanPriceChangeInterrupt) {
+          return undefined
+        }
 
-      dependencies.logger.error(error, { tags: { file: 'executeSwapSaga', function: 'getDisplayableError' } })
+        dependencies.logger.error(error, {
+          tags: { file: 'executeSwapSaga', function: 'getDisplayableError' },
+        })
 
-      return new Error(error.message)
-    },
+        return new Error(error.message)
+      }),
   })
 }

@@ -4,6 +4,7 @@ import { DynamicConfigs, getDynamicConfigValue, SwapConfigKey } from '@universe/
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
+import { createEarnChainedActionDisplayAmounts } from 'uniswap/src/features/earn/chainedDisplayAmounts'
 import {
   createBridgeTrade,
   createChainedActionTrade,
@@ -40,10 +41,11 @@ interface TradingApiResponseToTradeArgs {
   tradeType: TradeType
   deadline: number | undefined
   data: DiscriminatedQuoteResponse | undefined
+  earnIntent?: TradingApi.EarnIntent
 }
 
 export function transformTradingApiResponseToTrade(params: TradingApiResponseToTradeArgs): Trade | null {
-  const { currencyIn, currencyOut, tradeType, deadline, data } = params
+  const { currencyIn, currencyOut, tradeType, deadline, data, earnIntent } = params
 
   switch (data?.routing) {
     case TradingApi.Routing.CLASSIC: {
@@ -97,7 +99,27 @@ export function transformTradingApiResponseToTrade(params: TradingApiResponseToT
       return createUnwrapTrade({ quote: data, currencyIn, currencyOut, tradeType })
     }
     case TradingApi.Routing.CHAINED: {
-      return createChainedActionTrade({ quote: data, currencyIn, currencyOut })
+      const resolvedEarnIntent = earnIntent ?? data.quote.earnIntent
+      const earnDisplayAmounts = resolvedEarnIntent
+        ? createEarnChainedActionDisplayAmounts({
+            quote: data,
+            currencyIn,
+            currencyOut,
+            earnIntent: resolvedEarnIntent,
+          })
+        : undefined
+
+      if (resolvedEarnIntent && !earnDisplayAmounts) {
+        return null
+      }
+
+      return createChainedActionTrade({
+        quote: data,
+        currencyIn,
+        currencyOut,
+        earnIntent: resolvedEarnIntent,
+        displayAmountsOverride: earnDisplayAmounts ?? undefined,
+      })
     }
     default: {
       return null
@@ -182,7 +204,9 @@ export function validateTrade({
     },
   })
 
-  const tokenAddressesMatch = inputsMatch && outputsMatch
+  const isEarnDeposit = isEarnDepositTrade(trade)
+  const outputsAreValid = isEarnDeposit ? hasValidEarnDepositOutput(trade) : outputsMatch
+  const tokenAddressesMatch = inputsMatch && outputsAreValid
   // TODO(WEB-5132): Add validation checking that exact amount from response matches exact amount from user input
   if (!tokenAddressesMatch) {
     logger.error(new Error(`Mismatched address in swap trade`), {
@@ -202,6 +226,31 @@ export function validateTrade({
   }
 
   return trade
+}
+
+function hasValidEarnDepositOutput(trade: Trade): boolean {
+  if (!isEarnDepositTrade(trade)) {
+    return false
+  }
+
+  const earnIntent = trade.earnIntent
+  const outputToken = trade.quote.quote.output.token
+
+  if (trade.quote.quote.earnPreview?.type !== 'DEPOSIT' || !outputToken) {
+    return false
+  }
+
+  return areAddressesEqual({
+    addressInput1: { address: outputToken, chainId: Number(trade.quote.quote.tokenOutChainId) },
+    addressInput2: { address: earnIntent.vault, chainId: Number(earnIntent.chainId) },
+  })
+}
+
+function isEarnDepositTrade(trade: Trade): trade is Trade & {
+  routing: TradingApi.Routing.CHAINED
+  earnIntent: NonNullable<Extract<Trade, { routing: TradingApi.Routing.CHAINED }>['earnIntent']>
+} {
+  return trade.routing === TradingApi.Routing.CHAINED && trade.earnIntent?.action === TradingApi.EarnAction.DEPOSIT
 }
 
 type UseQuoteRoutingParamsArgs = {
@@ -267,14 +316,13 @@ export function createGetQuoteRoutingParams(ctx: {
   }
 }
 
-// Used if dynamic config value fails to resolve
-const DEFAULT_L2_SLIPPAGE_TOLERANCE_VALUE = 2.5
-
-export function getMinAutoSlippageToleranceL2(): number {
+// Returns undefined when the key is unset (or not a number), letting the backend compute auto slippage
+export function getMinAutoSlippageToleranceL2(): number | undefined {
   return getDynamicConfigValue({
     config: DynamicConfigs.Swap,
     key: SwapConfigKey.MinAutoSlippageToleranceL2,
-    defaultValue: DEFAULT_L2_SLIPPAGE_TOLERANCE_VALUE,
+    defaultValue: undefined,
+    customTypeGuard: (x): x is number | undefined => x === undefined || typeof x === 'number',
   })
 }
 
@@ -289,7 +337,7 @@ export type QuoteSlippageParamsResult = Pick<TradingApi.QuoteRequest, 'autoSlipp
 export type GetQuoteSlippageParams = (input: GetQuoteSlippageParamsArgs) => QuoteSlippageParamsResult
 
 export function createGetQuoteSlippageParams(ctx: {
-  getMinAutoSlippageToleranceL2: () => number
+  getMinAutoSlippageToleranceL2: () => number | undefined
   getIsL2ChainId: (chainId?: UniverseChainId) => boolean
   getCustomSlippageTolerance: () => number | undefined
 }): GetQuoteSlippageParams {
@@ -305,9 +353,13 @@ export function createGetQuoteSlippageParams(ctx: {
       return { autoSlippage: TradingApi.AutoSlippage.DEFAULT }
     }
 
-    // L2 chains should use the minimum slippage tolerance defined in the dynamic config
+    // L2 chains use the minimum slippage tolerance from the dynamic config when set;
+    // when unset, fall through to backend-computed auto slippage
     if (ctx.getIsL2ChainId(tokenInChainId)) {
-      return { slippageTolerance: ctx.getMinAutoSlippageToleranceL2() }
+      const minAutoSlippageToleranceL2 = ctx.getMinAutoSlippageToleranceL2()
+      if (minAutoSlippageToleranceL2 !== undefined) {
+        return { slippageTolerance: minAutoSlippageToleranceL2 }
+      }
     }
 
     // Otherwise, use an auto slippage tolerance calculated on the backend

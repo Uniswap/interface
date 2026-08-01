@@ -14,7 +14,7 @@ interface UseIsLowVolumeHighFdvParams {
   effectiveCheckpoint: PlainMessage<Checkpoint> | null
   totalSupply: string
   auctionProgressState: AuctionProgressState
-  auctionTokenDecimals: number
+  auctionTokenDecimals: number | undefined
   clearingPriceQ96: string
   bidTokenInfo: BidTokenInfo | undefined
   auctionTokenMarketPriceUsd: number | undefined

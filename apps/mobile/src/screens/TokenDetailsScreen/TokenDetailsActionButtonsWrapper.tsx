@@ -22,6 +22,7 @@ import { useTokenBasicInfoPartsFragment } from 'uniswap/src/data/graphql/uniswap
 import { useBridgingTokenWithHighestBalance } from 'uniswap/src/features/bridging/hooks/tokens'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { type PortfolioBalance, TokenList } from 'uniswap/src/features/dataApi/types'
 import { useIsSupportedFiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/hooks'
 import { useChainGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToken'
@@ -51,6 +52,7 @@ export const TokenDetailsActionButtonsWrapper = memo(
     const { navigateToFiatOnRamp, navigateToSwapFlow, navigateToSend, navigateToReceive } = useWalletNavigation()
 
     const token = useTokenBasicInfoPartsFragment({ currencyId }).data
+    const metadata = useTokenMetadata(currencyId, { legacyToken: { symbol: token.symbol } })
 
     const isBlocked = currencyInfo?.safetyInfo?.tokenList === TokenList.Blocked
 
@@ -246,7 +248,7 @@ export const TokenDetailsActionButtonsWrapper = memo(
       fiatOnRampCurrency,
       bridgingTokenWithHighestBalance,
       hasZeroGasBalance,
-      tokenSymbol: token.symbol,
+      tokenSymbol: metadata.symbol,
       onPressBuyWithCash,
       onPressGet,
       onPressBuy,

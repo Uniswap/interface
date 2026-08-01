@@ -69,6 +69,7 @@ export enum DynamicConfigs {
   BlockedAsyncSubmissionChainIds = 'blocked_async_submission_chain_ids',
   Chains = 'chains',
   DisableWalletSearchTerms = 'disable_wallet_search_terms',
+  Earn = 'earn_config',
   NetworkRequests = 'network_requests',
   Swap = 'swap_config',
   SyncTransactionSubmissionChainIds = 'sync_transaction_submission_chain_ids',
@@ -87,7 +88,6 @@ export enum DynamicConfigs {
   // Web
   AllowedV4WethHookAddresses = 'allowed_v4_weth_hook_addresses',
   AstroChain = 'astro_chain',
-  CreateAuction = 'create_auction_config',
   EmbeddedWalletBetaPassphrases = 'embedded_wallet_beta_passphrases',
   ExternallyConnectableExtension = 'externally_connectable_extension',
   LiquidityApprovalSimulation = 'liquidity_approval_simulation',
@@ -144,6 +144,11 @@ export enum ChainsConfigKey {
 
 export enum DisableWalletSearchTermsConfigKey {
   Terms = 'terms',
+}
+
+export enum EarnConfigKey {
+  MinDepositUsd = 'minDepositUsd',
+  SwapToggleMonthlyEarningsThresholdUsd = 'swapToggleMonthlyEarningsThresholdUsd',
 }
 
 // Wallet
@@ -261,11 +266,6 @@ export enum OutageBannerChainIdConfigKey {
   ChainId = 'chainId',
 }
 
-export enum CreateAuctionConfigKey {
-  AllowedNetworks = 'allowedNetworks',
-  AllowedTokenCreationNetworks = 'allowedTokenCreationNetworks',
-}
-
 export enum LiquidityGasPreEstimationConfigKey {
   EnabledChainIds = 'enabledChainIds',
 }
@@ -287,6 +287,7 @@ export type DynamicConfigKeys = {
   [DynamicConfigs.BlockedAsyncSubmissionChainIds]: BlockedAsyncSubmissionChainIdsConfigKey
   [DynamicConfigs.Chains]: ChainsConfigKey
   [DynamicConfigs.DisableWalletSearchTerms]: DisableWalletSearchTermsConfigKey
+  [DynamicConfigs.Earn]: EarnConfigKey
   [DynamicConfigs.NetworkRequests]: NetworkRequestsConfigKey
   [DynamicConfigs.Swap]: SwapConfigKey
   [DynamicConfigs.SyncTransactionSubmissionChainIds]: SyncTransactionSubmissionChainIdsConfigKey
@@ -305,7 +306,6 @@ export type DynamicConfigKeys = {
   [DynamicConfigs.AllowedV4WethHookAddresses]: AllowedV4WethHookAddressesConfigKey
   [DynamicConfigs.AuctionFdvWarning]: AuctionFdvWarningConfigKey
   [DynamicConfigs.AstroChain]: AstroChainConfigKey
-  [DynamicConfigs.CreateAuction]: CreateAuctionConfigKey
   [DynamicConfigs.EmbeddedWalletBetaPassphrases]: EmbeddedWalletBetaPassphrasesKey
   [DynamicConfigs.ExternallyConnectableExtension]: ExternallyConnectableExtensionConfigKey
   [DynamicConfigs.LiquidityApprovalSimulation]: LiquidityApprovalSimulationConfigKey

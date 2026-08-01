@@ -12,9 +12,11 @@ import {
   PortfolioBalancePart,
   selectorForPart,
   selectPortfolioBalanceBreakdown,
+  selectPortfolioEarn,
   selectPortfolioPools,
   selectPortfolioTokens,
   selectPortfolioTotal,
+  sumAvailableBalanceSlices,
 } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
 import type { PortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -38,12 +40,14 @@ function makeResponse(balance: Partial<WalletBalance> | undefined): GetWalletBal
 const totalComponent = makeComponent({ valueUsd: 1000, absoluteChange1d: 25, percentChange1d: 2.5 })
 const tokensComponent = makeComponent({ valueUsd: 600, absoluteChange1d: 15, percentChange1d: 2.6 })
 const poolsComponent = makeComponent({ valueUsd: 400, absoluteChange1d: 10, percentChange1d: 2.4 })
+const earnComponent = makeComponent({ valueUsd: 250, absoluteChange1d: 5, percentChange1d: 2.1 })
 
 const fullResponse = makeResponse({
   total: totalComponent,
   tokens: tokensComponent,
   pools: poolsComponent,
   failedChainIds: [],
+  earn: earnComponent,
 })
 
 describe('selectPortfolioTotal', () => {
@@ -119,6 +123,29 @@ describe('selectPortfolioPools', () => {
   })
 })
 
+describe('selectPortfolioEarn', () => {
+  it('returns undefined when response is undefined', () => {
+    expect(selectPortfolioEarn(undefined)).toBeUndefined()
+  })
+
+  it('maps earn component fields to PortfolioTotalValue', () => {
+    expect(selectPortfolioEarn(fullResponse)).toEqual({
+      balanceUSD: 250,
+      percentChange: 2.1,
+      absoluteChangeUSD: 5,
+    })
+  })
+
+  it('returns all-undefined values when earn component is missing', () => {
+    const response = makeResponse({ total: totalComponent, tokens: tokensComponent })
+    expect(selectPortfolioEarn(response)).toEqual({
+      balanceUSD: undefined,
+      percentChange: undefined,
+      absoluteChangeUSD: undefined,
+    })
+  })
+})
+
 describe('selectPortfolioBalanceBreakdown', () => {
   it('returns undefined when response is undefined', () => {
     expect(selectPortfolioBalanceBreakdown(undefined)).toBeUndefined()
@@ -128,12 +155,13 @@ describe('selectPortfolioBalanceBreakdown', () => {
     expect(selectPortfolioBalanceBreakdown(makeResponse(undefined))).toBeUndefined()
   })
 
-  it('materializes all three parts in a single pass', () => {
+  it('materializes all parts in a single pass', () => {
     expect(selectPortfolioBalanceBreakdown(fullResponse)).toEqual({
       total: { balanceUSD: 1000, percentChange: 2.5, absoluteChangeUSD: 25 },
       tokens: { balanceUSD: 600, percentChange: 2.6, absoluteChangeUSD: 15 },
       pools: { balanceUSD: 400, percentChange: 2.4, absoluteChangeUSD: 10 },
       failedChainIds: [],
+      earn: { balanceUSD: 250, percentChange: 2.1, absoluteChangeUSD: 5 },
     })
   })
 
@@ -154,6 +182,7 @@ describe('getUnavailableCategories', () => {
     tokens: slice(600),
     pools: slice(poolsBalanceUSD),
     failedChainIds: [],
+    earn: slice(0),
   })
 
   it('returns [] when the breakdown is undefined', () => {
@@ -192,10 +221,68 @@ describe('getUnavailableCategories', () => {
       tokens: slice(0),
       pools: slice(undefined),
       failedChainIds: [],
+      earn: slice(0),
     }
     expect(
       getUnavailableCategories({ breakdown: outageBreakdown, requestedCategories: [WalletBalanceCategory.POOLS] }),
     ).toEqual([WalletBalanceCategory.POOLS])
+  })
+})
+
+describe(sumAvailableBalanceSlices, () => {
+  const slice = (balanceUSD: number | undefined, absoluteChangeUSD?: number): PortfolioTotalValue => ({
+    balanceUSD,
+    percentChange: undefined,
+    absoluteChangeUSD,
+  })
+  const breakdown = (parts: {
+    tokens: PortfolioTotalValue
+    pools: PortfolioTotalValue
+    earn: PortfolioTotalValue
+  }): PortfolioBalanceBreakdown => ({ total: slice(undefined), failedChainIds: [], ...parts })
+
+  it('sums only the slices that resolved, skipping an unavailable category', () => {
+    // Earn is unavailable but pools is available: the total must still include pools.
+    const result = sumAvailableBalanceSlices(
+      breakdown({ tokens: slice(600), pools: slice(400), earn: slice(undefined) }),
+    )
+    expect(result.balanceUSD).toBe(1000)
+  })
+
+  it('returns undefined balance when no slice resolved', () => {
+    expect(
+      sumAvailableBalanceSlices(
+        breakdown({ tokens: slice(undefined), pools: slice(undefined), earn: slice(undefined) }),
+      ),
+    ).toEqual({
+      balanceUSD: undefined,
+      percentChange: undefined,
+      absoluteChangeUSD: undefined,
+    })
+  })
+
+  it('sums absolute change and derives percent when every included slice reports it', () => {
+    // tokens: 600 (+60), pools: 400 (+40) → 1000 now, +100 change, from a 900 start → 11.11%.
+    const result = sumAvailableBalanceSlices(
+      breakdown({ tokens: slice(600, 60), pools: slice(400, 40), earn: slice(undefined) }),
+    )
+    expect(result.balanceUSD).toBe(1000)
+    expect(result.absoluteChangeUSD).toBe(100)
+    expect(result.percentChange).toBeCloseTo(11.111, 2)
+  })
+
+  it('leaves change undefined when an included slice omits its absolute change', () => {
+    const result = sumAvailableBalanceSlices(
+      breakdown({ tokens: slice(600, 60), pools: slice(400, undefined), earn: slice(undefined) }),
+    )
+    expect(result.balanceUSD).toBe(1000)
+    expect(result.absoluteChangeUSD).toBeUndefined()
+    expect(result.percentChange).toBeUndefined()
+  })
+
+  it('treats a 0 balance slice as available', () => {
+    const result = sumAvailableBalanceSlices(breakdown({ tokens: slice(600), pools: slice(0), earn: slice(undefined) }))
+    expect(result.balanceUSD).toBe(600)
   })
 })
 
@@ -210,6 +297,7 @@ describe('isEmptyWalletBalance', () => {
     tokens: slice(0),
     pools: slice(0),
     failedChainIds: [],
+    earn: slice(0),
   })
 
   it('returns false when the breakdown is undefined', () => {
@@ -236,6 +324,10 @@ describe('selectorForPart', () => {
 
   it('returns selectPortfolioTokens for part=Tokens', () => {
     expect(selectorForPart(PortfolioBalancePart.Tokens)).toBe(selectPortfolioTokens)
+  })
+
+  it('returns selectPortfolioEarn for part=Earn', () => {
+    expect(selectorForPart(PortfolioBalancePart.Earn)).toBe(selectPortfolioEarn)
   })
 
   it('returns selectPortfolioPools for part=Pools', () => {

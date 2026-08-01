@@ -1,0 +1,8 @@
+/* Universe shared Tailwind v4 design tokens — web bundle */
+/* Usage (web/extension/mycelium): @import "@universe/tailwind/tailwind"; */
+/* For fonts: @import "@universe/tailwind/fonts"; */
+
+@import "./css/theme.css";
+@import "./css/variables.css";
+@import "./css/base.css";
+@import "./css/animations.css";

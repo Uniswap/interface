@@ -260,7 +260,7 @@ export interface BidDistributionChartRendererProps {
   chartData: ProcessedChartData
   bidTokenInfo: BidTokenInfo
   totalSupply?: string
-  auctionTokenDecimals?: number
+  auctionTokenDecimals: number
   clearingPrice: string
   onchainClearingPrice?: string // For marker in-range detection (on-chain truth)
   floorPrice: string

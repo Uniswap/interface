@@ -40,7 +40,7 @@ function useModalBackHandler(modalRef: React.RefObject<BaseModal | null>, enable
         return true
       })
 
-      return subscription.remove
+      return () => subscription.remove()
     }
 
     return undefined
@@ -49,6 +49,9 @@ function useModalBackHandler(modalRef: React.RefObject<BaseModal | null>, enable
 
 const BACKDROP_APPEARS_ON_INDEX = 0
 const DISAPPEARS_ON_INDEX = -1
+// HandleBar total height: top/bottom padding + indicator (+ android top margin). Subtracted from the
+// fullScreen content height so the sheet's bottom content (e.g. a footer toggle) isn't clipped.
+const FULLSCREEN_HANDLE_HEIGHT = spacing.spacing16 + spacing.spacing12 + spacing.spacing4 * 2
 
 function ModalBackdrop({
   fullScreen,
@@ -117,6 +120,7 @@ function BottomSheetModalContents({
   blurredBackground = false,
   dismissOnBackPress = true,
   isDismissible = true,
+  enableContentPanningGesture,
   overrideInnerContainer = false,
   renderBehindTopInset = false,
   renderBehindBottomInset = false,
@@ -132,6 +136,7 @@ function BottomSheetModalContents({
   zIndex,
 }: ModalProps): JSX.Element {
   const insets = useAppInsets()
+  const dimensions = useDeviceDimensions()
   const media = useMedia()
   const keyboard = useKeyboardLayout()
   const colors = useSporeColors()
@@ -202,6 +207,9 @@ function BottomSheetModalContents({
     [backgroundColorValue, handlebarColor, hideHandlebar, renderBehindTopInset],
   )
 
+  // on screens < xs (iPhone SE), assume no rounded corners on screen and remove rounded corners from fullscreen modal
+  const borderRadius = media.short ? borderRadii.none : borderRadii.rounded24
+
   const animatedBorderRadius = useAnimatedStyle(() => {
     const interpolatedRadius = interpolate(
       animatedPosition.value,
@@ -229,7 +237,6 @@ function BottomSheetModalContents({
   // `About to` is crucial here, because we want to trigger these actions as soon as possible.
   // See here: https://gorhom.github.io/react-native-bottom-sheet/props#onanimate
   const onAnimate = useCallback(
-    // We want to start hiding the keyboard during the process of hiding the sheet.
     (fromIndex: number, toIndex: number): void => {
       if (
         (hideKeyboardOnDismiss && toIndex === DISAPPEARS_ON_INDEX) ||
@@ -238,20 +245,13 @@ function BottomSheetModalContents({
         dismissNativeKeyboard()
       }
 
-      // When a sheet has too much content it can lag and take a while to begin opening, so we want to delay rendering some of the content until the sheet is ready.
-      // We consider the sheet to be "ready" as soon as it starts animating from the bottom to the top.
-      // We add a short delay given that this callback is called when the sheet is "about to" animate.
-      // Note: We tried to use BottomSheet.onChange but this caused some issues with the sheet not being
-      // scrollable sometimes.
+      // Delay rendering some of the content until the sheet has begun opening.
       if (!isSheetReady && fromIndex === -1 && toIndex === 0) {
         setTimeout(() => setIsSheetReady(true), IS_SHEET_READY_DELAY)
       }
     },
     [hideKeyboardOnDismiss, hideKeyboardOnSwipeDown, isSheetReady],
   )
-
-  // on screens < xs (iPhone SE), assume no rounded corners on screen and remove rounded corners from fullscreen modal
-  const borderRadius = media.short ? borderRadii.none : borderRadii.rounded24
 
   const backgroundStyle = useMemo(
     () => ({
@@ -261,39 +261,39 @@ function BottomSheetModalContents({
   )
 
   const bottomSheetViewStyles: StyleProp<ViewStyle> = useMemo(() => {
-    const styles: StyleProp<ViewStyle> = [
-      { backgroundColor: renderBehindTopInset ? 'transparent' : backgroundColorValue },
-    ]
+    // gorhom v5 flattens this prop via StyleSheet.compose(...style), which only keeps the first two
+    // entries — so merge all static rules into one object and append at most the animated style.
+    const base: ViewStyle = { backgroundColor: renderBehindTopInset ? 'transparent' : backgroundColorValue }
+    let animated: StyleProp<ViewStyle>
 
-    const hiddenHandlebarStyle = {
-      borderTopLeftRadius: borderRadius,
-      borderTopRightRadius: borderRadius,
-    }
+    const roundedCorners = { borderTopLeftRadius: borderRadius, borderTopRightRadius: borderRadius }
 
     if (renderBehindTopInset) {
-      styles.push(bottomSheetStyle.behindInset)
+      Object.assign(base, bottomSheetStyle.behindInset)
 
       if (hideHandlebar) {
         if (forceRoundedCorners) {
-          styles.push(hiddenHandlebarStyle)
+          Object.assign(base, roundedCorners)
         } else {
-          styles.push(animatedBorderRadius)
+          // reanimated 4 returns an AnimatedStyleHandle, accepted by Animated.View at runtime.
+          animated = animatedBorderRadius as unknown as StyleProp<ViewStyle>
         }
       }
     } else if (hideHandlebar) {
-      styles.push(hiddenHandlebarStyle)
+      Object.assign(base, roundedCorners)
     }
 
     if (!renderBehindBottomInset) {
-      styles.push({ paddingBottom: insets.bottom })
+      base.paddingBottom = insets.bottom
     }
-    // When in fullScreen mode, set a fixed height to fill the available space
-    // (when not in fullScreen, we use dynamic sizing based on content)
     if (fullScreen) {
-      styles.push({ height: '100%' })
+      // gorhom v5's content container is position:absolute with no resolved height, so a percentage height
+      // collapses grow children to 0. Give it a concrete dp height spanning the sheet below the handle.
+      const topInsetUsed = renderBehindTopInset ? 0 : insets.top
+      base.height = dimensions.fullHeight - topInsetUsed - FULLSCREEN_HANDLE_HEIGHT
     }
 
-    return styles
+    return animated ? [base, animated] : base
   }, [
     backgroundColorValue,
     borderRadius,
@@ -304,6 +304,8 @@ function BottomSheetModalContents({
     forceRoundedCorners,
     animatedBorderRadius,
     insets.bottom,
+    insets.top,
+    dimensions.fullHeight,
   ])
 
   const containerStyle = useMemo(() => {
@@ -320,8 +322,8 @@ function BottomSheetModalContents({
       backgroundStyle={backgroundStyle}
       containerComponent={containerComponent}
       containerStyle={containerStyle}
-      enableContentPanningGesture={isDismissible}
-      enableDynamicSizing={!snapPoints || enableDynamicSizing}
+      enableContentPanningGesture={enableContentPanningGesture ?? isDismissible}
+      enableDynamicSizing={enableDynamicSizing ?? !snapPoints}
       enableHandlePanningGesture={isDismissible}
       footerComponent={footerComponent}
       handleComponent={renderHandleBar}
@@ -431,8 +433,7 @@ const bottomSheetStyle = StyleSheet.create({
 
 const blurViewStyle = StyleSheet.create({
   base: {
-    ...StyleSheet.absoluteFillObject,
-    overflow: 'hidden',
+    ...StyleSheet.absoluteFill,
   },
 })
 

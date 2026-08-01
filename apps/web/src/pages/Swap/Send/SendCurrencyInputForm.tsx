@@ -37,6 +37,10 @@ import { useSendContext } from '~/pages/Swap/Send/state/SendContext'
 import { SwitchNetworkAction } from '~/state/popups/types'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
+// Hidden-mimic width measurement can land fractions of a pixel short of the real input's
+// required width, which is enough for `text-overflow: ellipsis` to clip the last character.
+const ROUNDING_BUFFER = 1
+
 const Wrapper = styled(Flex, {
   opacity: 1,
 
@@ -262,7 +266,7 @@ export function SendCurrencyInputForm({
     [maxInputAmount, setSendState],
   )
 
-  const adjustedWidth = displayValue && hiddenObserver.width ? hiddenObserver.width : undefined
+  const adjustedWidth = displayValue && hiddenObserver.width ? hiddenObserver.width + ROUNDING_BUFFER : undefined
 
   return (
     <Wrapper disabled={disabled}>

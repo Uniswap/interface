@@ -21,17 +21,20 @@ import { ActivitySection } from '~/features/Toucan/Auction/ActivityTimeline/Acti
 import { AuctionDetailsModal } from '~/features/Toucan/Auction/ActivityTimeline/AuctionDetailsModal'
 import { BidDistributionChartTab } from '~/features/Toucan/Auction/AuctionChartShared'
 import { AuctionHeader } from '~/features/Toucan/Auction/AuctionHeader'
-import { AuctionInfo, AuctionStatsGrid } from '~/features/Toucan/Auction/AuctionStats/AuctionStats'
+import { AuctionInfo } from '~/features/Toucan/Auction/AuctionStats/AuctionInfo'
+import { AuctionStatsGrid } from '~/features/Toucan/Auction/AuctionStats/AuctionStats'
 import { AuctionIntroBanner } from '~/features/Toucan/Auction/Banners/AuctionIntro/AuctionIntroBanner'
 import { AuctionStatsBanner } from '~/features/Toucan/Auction/Banners/AuctionStatsBanner/AuctionStatsBanner'
+import { QuickLaunchStatsRow } from '~/features/Toucan/Auction/Banners/QuickLaunchStatsRow'
 import { TokenLaunchedBanner } from '~/features/Toucan/Auction/Banners/TokenLaunched/TokenLaunchedBanner'
 import { AuctionChartContainer } from '~/features/Toucan/Auction/BidDistributionChart/AuctionChartContainer'
 import { BidForm } from '~/features/Toucan/Auction/BidForm/BidForm'
-import { AuctionGraduated } from '~/features/Toucan/Auction/Bids/AuctionGraduated'
 import { Bids } from '~/features/Toucan/Auction/Bids/Bids'
 import { WithdrawModal } from '~/features/Toucan/Auction/Bids/WithdrawModal/WithdrawModal'
 import { useBidFormState } from '~/features/Toucan/Auction/hooks/useBidFormState'
+import { useIsQuickLaunchAuction } from '~/features/Toucan/Auction/hooks/useIsQuickLaunchAuction'
 import { useWithdrawButtonState } from '~/features/Toucan/Auction/hooks/useWithdrawButtonState'
+import { PostAuctionPanel } from '~/features/Toucan/Auction/PostAuctionPanel'
 import { AuctionStoreProvider } from '~/features/Toucan/Auction/store/AuctionStoreContextProvider'
 import { AuctionDetails, AuctionProgressState, BidInfoTab } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore, useAuctionStoreActions } from '~/features/Toucan/Auction/store/useAuctionStore'
@@ -40,6 +43,7 @@ import {
   isTokenLaunchTradeAvailable,
   shouldShowTokenLaunchedBanner as getShouldShowTokenLaunchedBanner,
 } from '~/features/Toucan/Auction/utils/tokenLaunchedBannerUtils'
+import { getAuctionTokenDecimals } from '~/features/Toucan/Auction/utils/tokenMetadata'
 import { ToucanActionButton } from '~/features/Toucan/Shared/ToucanActionButton'
 import { ToucanContainer } from '~/features/Toucan/Shared/ToucanContainer'
 import { ToucanIntroModal } from '~/features/Toucan/ToucanIntroModal'
@@ -128,7 +132,7 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
     isGraduated: state.progress.isGraduated,
     currentBlockNumber: state.currentBlockNumber,
   }))
-  const { canPlaceBid, showMobileWithdrawButton, hasUserBids } = useBidFormState()
+  const { canPlaceBid, showMobileWithdrawButton, hasUserBids, showAuctionGraduated } = useBidFormState()
 
   // Withdraw button state for mobile fixed button
   const {
@@ -153,10 +157,12 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
       currentBlockNumber,
       isGraduated,
     })
-  const showAuctionGraduated = isAuctionEnded && isGraduated && hasUserBids
 
   const [chartActiveTab, setChartActiveTab] = useState<BidDistributionChartTab>(BidDistributionChartTab.ClearingPrice)
   const [showBidFormModal, setShowBidFormModal] = useState(false)
+
+  // QuickLaunch: quick launches swap the standard stats banner for the simpler stat row.
+  const isQuickLaunch = useIsQuickLaunchAuction()
 
   const { pageTitle, metatags } = usePageMetatags(auctionDetails)
 
@@ -192,7 +198,7 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
             tokenName={auctionDetails.token?.currency.name ?? ''}
             tokenColor={tokenColor}
             totalSupply={auctionDetails.tokenTotalSupply}
-            auctionTokenDecimals={auctionDetails.token?.currency.decimals}
+            auctionTokenDecimals={getAuctionTokenDecimals(auctionDetails.token)}
             isTradeAvailableFromStatus={isTradeAvailable}
             tradeAvailabilityBlock={tradeAvailabilityBlock}
           />
@@ -204,7 +210,7 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
         </ToucanContainer>
       </StickyCollapsibleHeader>
       <ToucanContainer mb="$spacing48">
-        <AuctionStatsBanner />
+        {isQuickLaunch ? <QuickLaunchStatsRow /> : <AuctionStatsBanner />}
         <TokenDetailsLayout justifyContent="flex-start" px="$none" $lg={{ px: '$none' }} gap={46}>
           <LeftPanel
             maxWidth={744}
@@ -215,16 +221,21 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
               maxWidth: '100%',
             }}
           >
+            {/* On mobile/tablet ($xl), surface the post-auction panel above the chart once the auction ends */}
+            {isAuctionEnded && (
+              <Flex display="none" $xl={{ display: 'flex', flexDirection: 'column' }}>
+                <PostAuctionPanel />
+              </Flex>
+            )}
             <AuctionChartContainer
               activeTab={chartActiveTab}
               onTabChange={setChartActiveTab}
               onLearnMorePress={handleDetailsModal}
               onShowBidFormModal={() => setShowBidFormModal(true)}
             />
-            {/* On mobile/tablet ($xl), show graduated state and bids below the chart */}
-            {(showAuctionGraduated || hasUserBids) && (
+            {/* On mobile/tablet ($xl), show bids below the chart */}
+            {hasUserBids && (
               <Flex display="none" $xl={{ display: 'flex', flexDirection: 'column', gap: '$spacing24' }}>
-                {showAuctionGraduated && <AuctionGraduated />}
                 <Bids />
               </Flex>
             )}
@@ -242,7 +253,7 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
               display: 'none',
             }}
           >
-            {showAuctionGraduated ? <AuctionGraduated /> : <BidForm />}
+            {isAuctionEnded ? <PostAuctionPanel /> : <BidForm />}
             {hasUserBids && <Bids />}
           </RightPanel>
         </TokenDetailsLayout>

@@ -85,16 +85,9 @@ export function TroubleLoggingInModule(): JSX.Element | null {
   const { walletId } = useEmbeddedWalletState()
   const hasActiveNeckKey = !!walletId && checkHasActiveNeckKey(walletId)
   const { data: authenticatorsData, isLoading, isError } = useListAuthenticatorsQuery({ skip: !hasActiveNeckKey })
-  // TODO: We are temporarily blocking recovery setup, undo as part of INFRA-2344
-  const isRecoveryDisabled = true
-
   // Fail closed: require a valid response that confirms no recovery method yet.
   const showAddBackupLogin =
-    !isLoading &&
-    !isError &&
-    !!authenticatorsData &&
-    authenticatorsData.recoveryMethods.length === 0 &&
-    !isRecoveryDisabled
+    !isLoading && !isError && !!authenticatorsData && authenticatorsData.recoveryMethods.length === 0
 
   const toggleExpanded = useEvent(() => setExpanded((prev) => !prev))
   const openAddPasskey = useEvent(() => dispatch(setOpenModal({ name: ModalName.AddPasskey })))
@@ -134,7 +127,6 @@ export function TroubleLoggingInModule(): JSX.Element | null {
             testID={TestID.DownloadAppAddPasskey}
             onPress={openAddPasskey}
           />
-          {/* oxlint-disable-next-line typescript/no-unnecessary-condition */}
           {showAddBackupLogin && (
             <LoginHelpOption
               icon={<Envelope size="$icon.20" color="$neutral1" />}

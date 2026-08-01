@@ -11,7 +11,9 @@ import type { CurrencyField } from 'uniswap/src/types/currency'
 const createKey = (currency: CurrencyInfo['currency']): string =>
   currency.isNative ? `${currency.chainId}-native` : `${currency.chainId}-${currency.address}`
 
-const useCommonTokensOptionsInfo = (): {
+const useCommonTokensOptionsInfo = (
+  maxTokens: number,
+): {
   allCurrencyInfos: CurrencyInfo[]
   numberOfCommonTokenOptions: number
 } => {
@@ -24,20 +26,24 @@ const useCommonTokensOptionsInfo = (): {
     portfolioData,
   })
 
-  const numberOfCommonTokenOptions = commonTokenOptions?.length ?? 0
-
   const allCurrencyInfos: CurrencyInfo[] = useMemo(() => {
-    return commonTokenOptions?.slice(0, MAX_NUMBER_OF_TOKENS).map(({ currencyInfo }) => currencyInfo) ?? []
-  }, [commonTokenOptions])
+    return commonTokenOptions?.slice(0, maxTokens).map(({ currencyInfo }) => currencyInfo) ?? []
+  }, [commonTokenOptions, maxTokens])
 
   return {
     allCurrencyInfos,
-    numberOfCommonTokenOptions,
+    numberOfCommonTokenOptions: allCurrencyInfos.length,
   }
 }
 
-export const TokenOptions = ({ currencyField }: { currencyField: CurrencyField }): JSX.Element => {
-  const { allCurrencyInfos, numberOfCommonTokenOptions } = useCommonTokensOptionsInfo()
+export const TokenOptions = ({
+  currencyField,
+  maxTokens = MAX_NUMBER_OF_TOKENS,
+}: {
+  currencyField: CurrencyField
+  maxTokens?: number
+}): JSX.Element => {
+  const { allCurrencyInfos, numberOfCommonTokenOptions } = useCommonTokensOptionsInfo(maxTokens)
 
   return (
     <>

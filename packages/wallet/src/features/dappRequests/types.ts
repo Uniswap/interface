@@ -138,6 +138,8 @@ export enum TransactionSectionType {
   Sending = 'sending',
   Receiving = 'receiving',
   Approving = 'approving',
+  Depositing = 'depositing',
+  Withdrawing = 'withdrawing',
 }
 
 /**
@@ -146,6 +148,8 @@ export enum TransactionSectionType {
 export interface TransactionSection {
   type: TransactionSectionType
   assets: TransactionAsset[]
+  /** Net APY for an Earn deposit, shown as an "Earning" row beneath the Depositing section. */
+  apyPercent?: number
 }
 
 /**

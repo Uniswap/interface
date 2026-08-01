@@ -1,3 +1,4 @@
+import { listPools } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
 import { LiquidityService } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_connect'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
@@ -27,13 +28,18 @@ test.describe(
     ],
   },
   () => {
-    test('Create position with full range', async ({ page, anvil, graphql }) => {
+    test('Create position with full range', async ({ page, anvil, graphql, dataApi }) => {
       await stubLiquidityServiceEndpoint({
         page,
         endpoint: LiquidityService.methods.createPosition,
         service: LiquidityService,
       })
       await graphql.intercept('SearchTokens', Mocks.Token.search_token_tether)
+      // Fee-tier auto-selection needs ListPools; the live endpoint rate-limits under
+      // suite churn (Cloudflare 429 → the request hangs and step-0 Continue never
+      // enables) and reflects the live tip anyway. Serve a recorded response so the
+      // flow is deterministic against the pinned fork.
+      await dataApi.intercept(listPools, Mocks.DataApiService.list_pools_eth_usdt_v4)
       await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
       await page.goto('/positions/create')
       await page.getByRole('button', { name: 'Choose token' }).click()
@@ -47,13 +53,15 @@ test.describe(
       await reviewAndCreatePosition({ page })
     })
 
-    test('Create position with custom range', async ({ page, anvil, graphql }) => {
+    test('Create position with custom range', async ({ page, anvil, graphql, dataApi }) => {
       await stubLiquidityServiceEndpoint({
         page,
         endpoint: LiquidityService.methods.createPosition,
         service: LiquidityService,
       })
       await graphql.intercept('SearchTokens', Mocks.Token.search_token_tether)
+      // Recorded ListPools: see 'Create position with full range'.
+      await dataApi.intercept(listPools, Mocks.DataApiService.list_pools_eth_usdt_v4)
       await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
       await page.goto('/positions/create')
       await page.getByRole('button', { name: 'Choose token' }).click()
@@ -112,13 +120,15 @@ test.describe(
     })
 
     test.describe('approval flow', () => {
-      test('should approve tokens and create a V4 position', async ({ page, anvil, graphql }) => {
+      test('should approve tokens and create a V4 position', async ({ page, anvil, graphql, dataApi }) => {
         await stubLiquidityServiceEndpoint({
           page,
           endpoint: LiquidityService.methods.createPosition,
           service: LiquidityService,
         })
         await graphql.intercept('SearchTokens', Mocks.Token.search_token_tether)
+        // Recorded ListPools: see 'Create position with full range'.
+        await dataApi.intercept(listPools, Mocks.DataApiService.list_pools_eth_usdt_v4)
         await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
 
         await page.goto('/positions/create')
@@ -141,7 +151,12 @@ test.describe(
         await expect(page.getByText('Created position')).toBeVisible()
       })
 
-      test('should handle approval when permit2 allowance is already set', async ({ page, anvil, graphql }) => {
+      test('should handle approval when permit2 allowance is already set', async ({
+        page,
+        anvil,
+        graphql,
+        dataApi,
+      }) => {
         await stubLiquidityServiceEndpoint({
           page,
           endpoint: LiquidityService.methods.createPosition,
@@ -156,6 +171,8 @@ test.describe(
           },
         })
         await graphql.intercept('SearchTokens', Mocks.Token.search_token_tether)
+        // Recorded ListPools: see 'Create position with full range'.
+        await dataApi.intercept(listPools, Mocks.DataApiService.list_pools_eth_usdt_v4)
         await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
         await anvil.setErc20Allowance({ address: assume0xAddress(USDT.address), spender: PERMIT2_ADDRESS })
 
@@ -181,7 +198,7 @@ test.describe(
     })
 
     test.describe('error handling', () => {
-      test('should gracefully handle errors during review', async ({ page, anvil }) => {
+      test('should gracefully handle errors during review', async ({ page, anvil, dataApi }) => {
         await stubLiquidityServiceEndpoint({
           page,
           endpoint: LiquidityService.methods.createPosition,
@@ -191,6 +208,8 @@ test.describe(
             return data
           },
         })
+        // Recorded ListPools: see 'Create position with full range'.
+        await dataApi.intercept(listPools, Mocks.DataApiService.list_pools_eth_usdt_v4)
         await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
         await page.goto(`/positions/create?currencyA=NATIVE&currencyB=${USDT.address}`)
 
@@ -254,15 +273,15 @@ test.describe(
       const WEETH_ADDRESS = '0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee'
       const ETH_WEETH_CREATE_URL = `/positions/create/v4?currencyA=NATIVE&currencyB=0xcd5fe23c85820f7b72d0926fc9b05b43e359b7ee&chain=ethereum&fee={"feeAmount":100,"tickSpacing":1,"isDynamic":false}&hook=undefined&priceRangeState={"priceInverted":false,"fullRange":false,"minTick":-871,"maxTick":-859,"initialPrice":"","inputMode":"price"}&depositState={"exactField":"TOKEN1","exactAmounts":{"TOKEN0":"0.01","TOKEN1":"0.064"}}&step=1&featureFlagOverride=lp_dynamic_native_slippage`
 
+      // The live CreatePosition endpoint computes slippage from the test wallet's
+      // LIVE mainnet balances server-side and 500s ("Insufficient balance for
+      // slippage calculation") for any deposit above them, so forked funding can
+      // never satisfy it. Serve a recorded success response instead: this test only
+      // asserts the slippage-warning UI driven by the response's `slippage` field
+      // and never submits the returned calldata on chain.
       test('shows low slippage warning for ETH/WEETH pool', async ({ page, anvil, graphql }) => {
-        await stubLiquidityServiceEndpoint({
-          page,
-          endpoint: LiquidityService.methods.createPosition,
-          service: LiquidityService,
-          modifyResponseData: (data) => {
-            data.slippage = 0.01
-            return data
-          },
+        await page.route('**/uniswap.liquidity.v2.LiquidityService/CreatePosition*', async (route) => {
+          await route.fulfill({ path: Mocks.LiquidityService.create_position_eth_weeth_low_slippage })
         })
         await page.route('**/uniswap.liquidity.v1.LiquidityService/PoolInfo*', async (route) => {
           await route.fulfill({ path: Mocks.LiquidityService.pool_info_eth_weeth })
@@ -279,15 +298,12 @@ test.describe(
         await expect(page.getByText('Slippage automatically reduced')).toBeVisible()
       })
 
+      // Recorded CreatePosition response: see 'shows low slippage warning' above.
+      // The extreme `slippage` value in the fixture drives the warning modal; the
+      // flow is cancelled at review so the fixture calldata is never executed.
       test('shows very high slippage warning when backend returns extreme value', async ({ page, anvil, graphql }) => {
-        await stubLiquidityServiceEndpoint({
-          page,
-          endpoint: LiquidityService.methods.createPosition,
-          service: LiquidityService,
-          modifyResponseData: (data) => {
-            data.slippage = 25
-            return data
-          },
+        await page.route('**/uniswap.liquidity.v2.LiquidityService/CreatePosition*', async (route) => {
+          await route.fulfill({ path: Mocks.LiquidityService.create_position_eth_weeth_high_slippage })
         })
         await page.route('**/uniswap.liquidity.v1.LiquidityService/PoolInfo*', async (route) => {
           await route.fulfill({ path: Mocks.LiquidityService.pool_info_eth_weeth })

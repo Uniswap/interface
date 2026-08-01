@@ -13,10 +13,12 @@ import { MultichainAddressList } from 'uniswap/src/components/MultichainTokenDet
 import { MultichainExplorerList } from 'uniswap/src/components/MultichainTokenDetails/MultichainExplorerList'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink, isAllowedExternalUri, openUri } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
@@ -113,7 +115,9 @@ export function TokenDescription() {
 
   // Read About metadata from the lightweight project query so this section paints with the header,
   // instead of waiting on the heavy market `tokenQuery`.
-  const { description, homepageUrl, twitterName } = tokenProjectQuery.data?.token?.project ?? {}
+  const { description, homepageUrl, twitterName } = useTokenMetadata(currencyId(effectiveCurrency), {
+    legacyToken: tokenProjectQuery.data?.token,
+  })
   const explorerUrl = getExplorerLink({
     chainId: effectiveCurrency.chainId,
     data: displayAddress,

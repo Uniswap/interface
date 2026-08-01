@@ -1,8 +1,17 @@
 import { type Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import type { ChainedActionTrade } from 'uniswap/src/features/transactions/swap/types/chained'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
 import { isChained, isClassic, isJupiter, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { areEvmAddressesEqual } from 'uniswap/src/utils/addresses'
+
+const EARN_DEPOSIT_ACTION = 'deposit'
+const EARN_DEPOSIT_PREVIEW_TYPE = 'DEPOSIT'
+const NATIVE_ASSET_ADDRESSES = [
+  '0x0000000000000000000000000000000000000000',
+  '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+] as const
 
 function stringToUSDAmount(value: string | number | undefined, USDCurrency: Currency): Maybe<CurrencyAmount<Currency>> {
   if (!value) {
@@ -70,6 +79,16 @@ export function getPriceImpact(derivedSwapInfo: DerivedSwapInfo): Percent | unde
  * doesn't surface a comparable classic-gas estimate.
  */
 function getChainedPriceImpact({ derivedSwapInfo }: { derivedSwapInfo: DerivedSwapInfo }): Percent | undefined {
+  const trade = derivedSwapInfo.trade.trade
+  if (!trade || !isChained(trade)) {
+    return undefined
+  }
+
+  // Earn deposits can output vault shares; only warn when display output is the underlying deposit asset.
+  if (isEarnDepositTrade(trade) && !isEarnDepositPriceImpactOutputSafe(trade)) {
+    return undefined
+  }
+
   const { input: inputUSD, output: outputUSD } = derivedSwapInfo.currencyAmountsUSDValue
 
   if (!inputUSD || !outputUSD) {
@@ -79,4 +98,33 @@ function getChainedPriceImpact({ derivedSwapInfo }: { derivedSwapInfo: DerivedSw
   const result = outputUSD.divide(inputUSD).asFraction.subtract(1).multiply(-1)
 
   return new Percent(result.numerator, result.denominator)
+}
+
+function isEarnDepositTrade(trade: ChainedActionTrade): boolean {
+  return (trade.earnIntent?.action as string | undefined) === EARN_DEPOSIT_ACTION
+}
+
+function isEarnDepositPriceImpactOutputSafe(trade: ChainedActionTrade): boolean {
+  const earnPreview = trade.quote.quote.earnPreview
+  if (earnPreview?.type !== EARN_DEPOSIT_PREVIEW_TYPE) {
+    return false
+  }
+
+  const depositAsset = earnPreview.depositAssets[0]
+  const outputCurrency = trade.outputAmount.currency
+
+  if (
+    !depositAsset?.token ||
+    !depositAsset.amount ||
+    Number(depositAsset.chainId) !== outputCurrency.chainId ||
+    trade.outputAmount.quotient.toString() !== depositAsset.amount
+  ) {
+    return false
+  }
+
+  if (outputCurrency.isNative) {
+    return NATIVE_ASSET_ADDRESSES.some((nativeAddress) => areEvmAddressesEqual(nativeAddress, depositAsset.token))
+  }
+
+  return areEvmAddressesEqual(outputCurrency.address, depositAsset.token)
 }

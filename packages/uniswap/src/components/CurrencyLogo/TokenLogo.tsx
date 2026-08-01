@@ -8,13 +8,13 @@ import {
   Text,
   TextProps,
   UniversalImage,
+  UniversalImageResizeMode,
   useColorSchemeFromSeed,
   useSporeColors,
 } from 'ui/src'
-import type { UniversalImageResizeMode } from 'ui/src/components/UniversalImage/types'
 import { iconSizes, validColor, zIndexes } from 'ui/src/theme'
 import { getBadgeBorderRadius, getBadgeOuterSize } from 'uniswap/src/components/CurrencyLogo/badgeSizeUtils'
-import { STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
+import { STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/constants'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
@@ -33,7 +33,7 @@ interface TokenLogoProps {
   webFontSize?: number
   lineHeight?: TextProps['lineHeight']
   transition?: FlexProps['transition']
-  /** When set, controls how the image fills the circular logo. */
+  /** Controls how the image fills the circular logo. Defaults to Cover so non-square images are cropped to the circle. */
   imageResizeMode?: UniversalImageResizeMode
 }
 
@@ -139,7 +139,7 @@ export const TokenLogo = memo(function TokenLogoInner({
   webFontSize = 10,
   lineHeight = 14,
   transition,
-  imageResizeMode,
+  imageResizeMode = UniversalImageResizeMode.Cover,
 }: TokenLogoProps): JSX.Element {
   const isTestnetToken = !!chainId && isTestnetChain(chainId)
 

@@ -39,9 +39,13 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
   const { formatNumberOrString, formatPercent } = useLocalizationContext()
   const currency = useAppFiatCurrencyInfo()
 
-  const directionValue = change ?? absoluteChange
+  // `||`, not `??`: when `change` rounds to exactly 0 but `absoluteChange` hasn't, fall back to it —
+  // AnimatedNumber's native change-detection gates its whole animation trigger on this value being
+  // truthy, so a literal 0 here would silently skip animating the dollar amount when it updates.
+  const directionValue = change || absoluteChange
   const isPositiveChange = directionValue !== undefined ? directionValue >= 0 : undefined
   const arrowColor = isPositiveChange ? positiveChangeColor : negativeChangeColor
+  const textColor = semanticColor ? getDeltaTextColor(directionValue) : color
 
   const formattedChange = formatPercent(change !== undefined ? Math.abs(change) : change)
   const formattedAbsChange = absoluteChange
@@ -51,6 +55,13 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
         currencyCode: currency.code,
       })}`
     : ''
+
+  // `absoluteChange` and `change` can each be shown alone or combined as `absChange (change%)`.
+  const combinedFormatted = absoluteChange
+    ? change !== undefined
+      ? `${formattedAbsChange} (${formattedChange})`
+      : formattedAbsChange
+    : formattedChange
 
   return (
     <Flex
@@ -64,30 +75,26 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
         <Caret color={arrowColor} direction={isPositiveChange ? 'n' : 's'} size={arrowSize} />
       )}
       <Flex>
-        {shouldAnimate && change !== undefined && !absoluteChange ? (
+        {shouldAnimate && directionValue !== undefined ? (
           <AnimatedNumber
             alignRight={alignRight}
-            numericValue={change}
-            color={semanticColor ? getDeltaTextColor(directionValue) : color}
+            color={textColor}
             containerTestID={TestID.PortfolioRelativeChange}
             loading={loading}
-            loadingPlaceholderText="00.00%"
+            loadingPlaceholderText="▲ 00.00 (0.00)%"
+            numericValue={directionValue}
             textVariant={`$${variant}` as FontVariantToken}
-            value={formattedChange}
+            value={combinedFormatted}
           />
         ) : (
           <Text
-            color={semanticColor ? getDeltaTextColor(directionValue) : color}
+            color={textColor}
             loading={loading}
             loadingPlaceholderText="▲ 00.00 (0.00)%"
             testID={TestID.PortfolioRelativeChange}
             variant={variant}
           >
-            {absoluteChange
-              ? change !== undefined
-                ? `${formattedAbsChange} (${formattedChange})`
-                : formattedAbsChange
-              : formattedChange}
+            {combinedFormatted}
           </Text>
         )}
       </Flex>

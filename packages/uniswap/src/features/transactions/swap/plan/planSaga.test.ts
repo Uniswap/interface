@@ -1,13 +1,16 @@
 import { TradingApi } from '@universe/api'
 import { runSaga, stdChannel } from 'redux-saga'
-import { UNI, WBTC } from 'uniswap/src/constants/tokens'
+import { UNI, USDC_MAINNET, WBTC } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { HandledTransactionInterrupt } from 'uniswap/src/features/transactions/errors'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import type { FetchAndTransformPlanResult } from 'uniswap/src/features/transactions/swap/plan/planSagaUtils'
 import type { TransactionAndPlanStep } from 'uniswap/src/features/transactions/swap/plan/planStepTransformer'
+import { PlanStepTimeoutError } from 'uniswap/src/features/transactions/swap/plan/types'
 import type { WatchPlanStepResult } from 'uniswap/src/features/transactions/swap/plan/watchPlanStepSaga'
 import type { ValidatedChainedSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { createChainedActionTrade, type ChainedActionTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 interface InitializePlanResult extends FetchAndTransformPlanResult {
   response?: TradingApi.PlanResponse
@@ -17,15 +20,25 @@ interface InitializePlanResult extends FetchAndTransformPlanResult {
 // ── Test constants ──────────────────────────────────────────────────────
 const INPUT_TOKEN = UNI[UniverseChainId.Mainnet]
 const OUTPUT_TOKEN = WBTC
+const EARN_UNDERLYING_TOKEN = USDC_MAINNET
+const EARN_VAULT_ADDRESS = '0x8c106EEDAd96553e64287A5A6839c3Cc78afA3D0'
 const INPUT_AMOUNT = '1000000000000000000' // 1e18
 const OUTPUT_AMOUNT = '100000000' // 1e8 (original trade output)
 const ADDRESS = '0x1234567890123456789012345678901234567890' as Address
+const EARN_INTENT: TradingApi.EarnQuoteIntent = {
+  action: TradingApi.EarnAction.DEPOSIT,
+  vault: EARN_VAULT_ADDRESS,
+  chainId: UniverseChainId.Mainnet as unknown as TradingApi.ChainId,
+  underlyingAsset: EARN_UNDERLYING_TOKEN.address,
+}
 
 // ── Mock tracking ───────────────────────────────────────────────────────
 let initializePlanResult: InitializePlanResult
 let watchPlanStepResult: WatchPlanStepResult
+let watchPlanStepError: Error | undefined
 
 const mockResetActivePlan = vi.fn()
+const mockMarkPlanPriceChangeInterrupted = vi.fn()
 const mockIsPlanBackgrounded = vi.fn().mockReturnValue(false)
 const mockIsPlanCancelledCheck = vi.fn().mockReturnValue(false)
 const mockUpdateGlobalStateWithLatestSteps = vi.fn()
@@ -37,6 +50,8 @@ const mockLockPlanForExecution = vi.fn()
 const mockUnlockPlanExecution = vi.fn()
 const mockLogPlanStepTradeAnalytics = vi.fn()
 const mockLogUniswapXPlanOrderSubmitted = vi.fn()
+const mockWatchPlanStep = vi.fn()
+const mockUpdateExistingPlan = vi.fn().mockResolvedValue(undefined)
 
 // ── Module mocks ────────────────────────────────────────────────────────
 vi.mock('uniswap/src/features/transactions/swap/plan/planSagaUtils', async (importOriginal) => {
@@ -48,6 +63,7 @@ vi.mock('uniswap/src/features/transactions/swap/plan/planSagaUtils', async (impo
       return initializePlanResult
     }),
     resetActivePlan: (...args: unknown[]): unknown => mockResetActivePlan(...args),
+    markPlanPriceChangeInterrupted: (...args: unknown[]): unknown => mockMarkPlanPriceChangeInterrupted(...args),
     isPlanBackgrounded: (...args: unknown[]): unknown => mockIsPlanBackgrounded(...args),
     isPlanCancelledCheck: (...args: unknown[]): unknown => mockIsPlanCancelledCheck(...args),
     updateGlobalStateWithLatestSteps: (...args: unknown[]): unknown => mockUpdateGlobalStateWithLatestSteps(...args),
@@ -67,7 +83,11 @@ vi.mock('uniswap/src/features/transactions/swap/plan/planSagaUtils', async (impo
 
 vi.mock('uniswap/src/features/transactions/swap/plan/watchPlanStepSaga', () => ({
   // oxlint-disable-next-line require-yield -- saga mock — runSaga requires generator functions
-  watchPlanStep: vi.fn().mockImplementation(function* () {
+  watchPlanStep: vi.fn().mockImplementation(function* (params) {
+    mockWatchPlanStep(params)
+    if (watchPlanStepError) {
+      throw watchPlanStepError
+    }
     return watchPlanStepResult
   }),
 }))
@@ -83,13 +103,13 @@ vi.mock('uniswap/src/features/transactions/swap/plan/planStepAnalytics', () => (
 }))
 
 vi.mock('utilities/src/async/retryWithBackoff', () => ({
-  retryWithBackoff: vi.fn().mockResolvedValue(undefined),
+  retryWithBackoff: vi.fn().mockImplementation(({ fn }) => fn()),
   BackoffStrategy: { None: 'none' },
 }))
 
 vi.mock('uniswap/src/data/apiClients/tradingApi/TradingApiSessionClient', () => ({
   TradingApiSessionClient: {
-    updateExistingPlan: vi.fn().mockResolvedValue(undefined),
+    updateExistingPlan: (...args: unknown[]): unknown => mockUpdateExistingPlan(...args),
   },
 }))
 
@@ -132,18 +152,37 @@ function createTransactionAndPlanStep(overrides: Partial<TransactionAndPlanStep>
   } as TransactionAndPlanStep
 }
 
-function createChainedTrade(outputAmount: string): ChainedActionTrade {
+/** Display preview for deposit earn quotes — without one, deposit trades intentionally fail to build. */
+function createEarnDepositPreview(amount: string): TradingApi.EarnPreview {
+  return {
+    type: TradingApi.EarnDepositPreview.type.DEPOSIT,
+    depositAssets: [
+      {
+        token: EARN_UNDERLYING_TOKEN.address,
+        chainId: UniverseChainId.Mainnet as unknown as TradingApi.ChainId,
+        amount,
+      },
+    ],
+    estimatedSharesOut: amount,
+  }
+}
+
+function createChainedTrade(outputAmount: string, earnIntent?: TradingApi.EarnQuoteIntent): ChainedActionTrade {
+  const currencyIn = earnIntent ? EARN_UNDERLYING_TOKEN : INPUT_TOKEN
+  const currencyOut = earnIntent ? EARN_UNDERLYING_TOKEN : OUTPUT_TOKEN
+  const tokenIn = currencyIn.address
+  const tokenOut = earnIntent ? earnIntent.vault : OUTPUT_TOKEN.address
   const trade = createChainedActionTrade({
     quote: {
       routing: TradingApi.Routing.CHAINED,
       requestId: 'test-request',
       permitData: null,
       quote: {
-        input: { amount: INPUT_AMOUNT, maximumAmount: INPUT_AMOUNT, token: INPUT_TOKEN.address },
+        input: { amount: INPUT_AMOUNT, maximumAmount: INPUT_AMOUNT, token: tokenIn },
         output: {
           amount: outputAmount,
           minimumAmount: outputAmount,
-          token: OUTPUT_TOKEN.address,
+          token: tokenOut,
           recipient: '0xrecipient',
         },
         swapper: '0xswapper',
@@ -158,10 +197,13 @@ function createChainedTrade(outputAmount: string): ChainedActionTrade {
         gasUseEstimate: '0',
         gasStrategies: [],
         steps: [createMockTruncatedStep()],
+        earnIntent,
+        earnPreview: earnIntent ? createEarnDepositPreview(outputAmount) : undefined,
       },
     },
-    currencyIn: INPUT_TOKEN,
-    currencyOut: OUTPUT_TOKEN,
+    currencyIn,
+    currencyOut,
+    earnIntent,
   })
 
   if (!trade) {
@@ -171,7 +213,11 @@ function createChainedTrade(outputAmount: string): ChainedActionTrade {
   return trade
 }
 
-function createPlanResponse(expectedOutput: string, steps?: TradingApi.PlanStep[]): TradingApi.PlanResponse {
+function createPlanResponse(
+  expectedOutput: string,
+  steps?: TradingApi.PlanStep[],
+  options?: { earnIntent?: TradingApi.EarnQuoteIntent },
+): TradingApi.PlanResponse {
   return {
     planId: 'test-plan',
     requestId: 'test-request',
@@ -188,6 +234,11 @@ function createPlanResponse(expectedOutput: string, steps?: TradingApi.PlanStep[
     status: TradingApi.PlanStatus.ACTIVE,
     currentStepIndex: 0,
     steps: steps ?? [createMockPlanStep()],
+    // Refreshed earn deposit trades need a preview to display an underlying amount — mirror the API,
+    // which carries it on planResponse.earnIntent.preview.
+    earnIntent: options?.earnIntent
+      ? { ...options.earnIntent, preview: createEarnDepositPreview(expectedOutput) }
+      : undefined,
   } as TradingApi.PlanResponse
 }
 
@@ -209,10 +260,12 @@ function createPlanParams(trade: ChainedActionTrade): {
   params: Record<string, unknown>
   onSuccess: ReturnType<typeof vi.fn>
   onFailure: ReturnType<typeof vi.fn>
+  onPlanFinalized: ReturnType<typeof vi.fn>
   handleSwapTransactionStep: ReturnType<typeof vi.fn>
 } {
   const onSuccess = vi.fn()
   const onFailure = vi.fn()
+  const onPlanFinalized = vi.fn()
   // oxlint-disable-next-line require-yield -- saga mock
   const handleSwapTransactionStep = vi.fn().mockImplementation(function* () {
     return '0xhash'
@@ -245,6 +298,7 @@ function createPlanParams(trade: ChainedActionTrade): {
       }),
       getDisplayableError: vi.fn().mockReturnValue(undefined),
       getOnPressRetry: vi.fn().mockReturnValue(undefined),
+      onPlanFinalized,
       sendToast: vi.fn().mockImplementation(function* () {
         yield // no-op
       }),
@@ -252,6 +306,7 @@ function createPlanParams(trade: ChainedActionTrade): {
     },
     onSuccess,
     onFailure,
+    onPlanFinalized,
     handleSwapTransactionStep,
   }
 }
@@ -271,6 +326,7 @@ async function runPlanSaga(params: unknown): Promise<void> {
 describe('plan saga — price change interrupts', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    watchPlanStepError = undefined
     mockIsPlanBackgrounded.mockReturnValue(false)
     mockIsPlanCancelledCheck.mockReturnValue(false)
   })
@@ -297,6 +353,37 @@ describe('plan saga — price change interrupts', () => {
 
       await runPlanSaga(params)
 
+      expect(mockResetActivePlan).toHaveBeenCalled()
+      expect(onFailure).toHaveBeenCalled()
+      expect(onSuccess).not.toHaveBeenCalled()
+    })
+
+    it('interrupts Earn plans when expectedOutput drops > 1%, same as non-earn plans', async () => {
+      const originalTrade = createChainedTrade(OUTPUT_AMOUNT, EARN_INTENT)
+      const { params, onFailure, onSuccess } = createPlanParams(originalTrade)
+
+      const badOutput = scaleOutput(98, 100)
+      const planResponse = createPlanResponse(badOutput, [createMockPlanStep()], { earnIntent: EARN_INTENT })
+      const step = createTransactionAndPlanStep()
+
+      initializePlanResult = {
+        planId: 'test-plan',
+        response: planResponse,
+        wasPlanResumed: false,
+        steps: [step],
+        currentStepIndex: 0,
+        currentStep: step,
+        inputChainId: UniverseChainId.Mainnet,
+      }
+
+      await runPlanSaga(params)
+
+      // The earn callbacks convert the interrupt into a displayable "review again" error — the saga
+      // must hand them the PlanPriceChangeInterrupt through getDisplayableError.
+      expect(params['getDisplayableError']).toHaveBeenCalledWith(
+        expect.objectContaining({ error: expect.objectContaining({ name: 'PlanPriceChangeInterrupt' }) }),
+      )
+      expect(mockMarkPlanPriceChangeInterrupted).toHaveBeenCalledWith('test-plan')
       expect(mockResetActivePlan).toHaveBeenCalled()
       expect(onFailure).toHaveBeenCalled()
       expect(onSuccess).not.toHaveBeenCalled()
@@ -440,7 +527,7 @@ describe('plan saga — price change interrupts', () => {
   describe('after watchPlanStep', () => {
     it('interrupts when refreshed plan price drops > 1% between steps', async () => {
       const originalTrade = createChainedTrade(OUTPUT_AMOUNT)
-      const { params, onFailure, onSuccess } = createPlanParams(originalTrade)
+      const { params, onFailure, onSuccess, onPlanFinalized } = createPlanParams(originalTrade)
 
       // Two-step plan: approve (step 0) + swap (step 1)
       const step0 = createTransactionAndPlanStep({
@@ -492,6 +579,69 @@ describe('plan saga — price change interrupts', () => {
       // Should NOT reset active plan (step 0 already completed, currentStepIndex is now 1)
       expect(onFailure).toHaveBeenCalled()
       expect(onSuccess).not.toHaveBeenCalled()
+      expect(onPlanFinalized).toHaveBeenCalledWith(expect.objectContaining({ status: TransactionStatus.Pending }))
+      expect(onPlanFinalized).not.toHaveBeenCalledWith(expect.objectContaining({ status: TransactionStatus.Success }))
+    })
+
+    it('interrupts Earn plans mid-plan when the refreshed price drops > 1%, retaining the active plan', async () => {
+      const originalTrade = createChainedTrade(OUTPUT_AMOUNT, EARN_INTENT)
+      const { params, onFailure, onSuccess, onPlanFinalized } = createPlanParams(originalTrade)
+
+      const step0 = createTransactionAndPlanStep({
+        stepIndex: 0,
+        status: TradingApi.PlanStepStatus.AWAITING_ACTION,
+      })
+      const step1 = createTransactionAndPlanStep({
+        stepIndex: 1,
+        status: TradingApi.PlanStepStatus.NOT_READY,
+      })
+
+      initializePlanResult = {
+        planId: 'test-plan',
+        response: createPlanResponse(
+          OUTPUT_AMOUNT,
+          [
+            createMockPlanStep({ stepIndex: 0 }),
+            createMockPlanStep({ stepIndex: 1, status: TradingApi.PlanStepStatus.NOT_READY }),
+          ],
+          { earnIntent: EARN_INTENT },
+        ),
+        wasPlanResumed: false,
+        steps: [step0, step1],
+        currentStepIndex: 0,
+        currentStep: step0,
+        inputChainId: UniverseChainId.Mainnet,
+      }
+
+      const badOutput = scaleOutput(98, 100)
+      watchPlanStepResult = {
+        steps: [
+          createTransactionAndPlanStep({ stepIndex: 0, status: TradingApi.PlanStepStatus.COMPLETE }),
+          createTransactionAndPlanStep({ stepIndex: 1, status: TradingApi.PlanStepStatus.AWAITING_ACTION }),
+        ],
+        planResponse: createPlanResponse(
+          badOutput,
+          [
+            createMockPlanStep({ stepIndex: 0, status: TradingApi.PlanStepStatus.COMPLETE }),
+            createMockPlanStep({ stepIndex: 1, status: TradingApi.PlanStepStatus.AWAITING_ACTION }),
+          ],
+          { earnIntent: EARN_INTENT },
+        ),
+      }
+
+      await runPlanSaga(params)
+
+      expect(params['getDisplayableError']).toHaveBeenCalledWith(
+        expect.objectContaining({ error: expect.objectContaining({ name: 'PlanPriceChangeInterrupt' }) }),
+      )
+      expect(mockMarkPlanPriceChangeInterrupted).toHaveBeenCalledWith('test-plan')
+      // A step already completed — the active plan must be retained so the user can resume the
+      // existing plan (creating a fresh plan could double-execute the completed swap step).
+      expect(mockResetActivePlan).not.toHaveBeenCalled()
+      expect(onFailure).toHaveBeenCalled()
+      expect(onSuccess).not.toHaveBeenCalled()
+      expect(onPlanFinalized).toHaveBeenCalledWith(expect.objectContaining({ status: TransactionStatus.Pending }))
+      expect(onPlanFinalized).not.toHaveBeenCalledWith(expect.objectContaining({ status: TransactionStatus.Success }))
     })
 
     it('does not interrupt when refreshed plan price is within threshold', async () => {
@@ -545,6 +695,72 @@ describe('plan saga — price change interrupts', () => {
       await runPlanSaga(params)
 
       // Price within threshold → saga proceeds to step 1 (which is last step) and succeeds
+      expect(onSuccess).toHaveBeenCalled()
+      expect(onFailure).not.toHaveBeenCalled()
+    })
+
+    it('passes chained-action headers through Earn proof patching and next-step polling', async () => {
+      const originalTrade = createChainedTrade(OUTPUT_AMOUNT, EARN_INTENT)
+      const { params, onFailure, onSuccess } = createPlanParams(originalTrade)
+
+      const step0 = createTransactionAndPlanStep({
+        stepIndex: 0,
+        status: TradingApi.PlanStepStatus.AWAITING_ACTION,
+      })
+      const step1 = createTransactionAndPlanStep({
+        stepIndex: 1,
+        status: TradingApi.PlanStepStatus.NOT_READY,
+      })
+
+      initializePlanResult = {
+        planId: 'test-plan',
+        response: createPlanResponse(
+          OUTPUT_AMOUNT,
+          [
+            createMockPlanStep({ stepIndex: 0 }),
+            createMockPlanStep({ stepIndex: 1, status: TradingApi.PlanStepStatus.NOT_READY }),
+          ],
+          { earnIntent: EARN_INTENT },
+        ),
+        wasPlanResumed: false,
+        steps: [step0, step1],
+        currentStepIndex: 0,
+        currentStep: step0,
+        inputChainId: UniverseChainId.Mainnet,
+      }
+
+      const updatedStep0 = createTransactionAndPlanStep({
+        stepIndex: 0,
+        status: TradingApi.PlanStepStatus.COMPLETE,
+      })
+      const updatedStep1 = createTransactionAndPlanStep({
+        stepIndex: 1,
+        status: TradingApi.PlanStepStatus.AWAITING_ACTION,
+      })
+      watchPlanStepResult = {
+        steps: [updatedStep0, updatedStep1],
+        planResponse: createPlanResponse(
+          OUTPUT_AMOUNT,
+          [
+            createMockPlanStep({ stepIndex: 0, status: TradingApi.PlanStepStatus.COMPLETE }),
+            createMockPlanStep({ stepIndex: 1, status: TradingApi.PlanStepStatus.AWAITING_ACTION }),
+          ],
+          { earnIntent: EARN_INTENT },
+        ),
+      }
+
+      await runPlanSaga(params)
+
+      expect(mockUpdateExistingPlan).toHaveBeenCalledWith(
+        expect.objectContaining({
+          planId: 'test-plan',
+        }),
+      )
+      expect(mockWatchPlanStep).toHaveBeenCalledWith(
+        expect.objectContaining({
+          planId: 'test-plan',
+        }),
+      )
       expect(onSuccess).toHaveBeenCalled()
       expect(onFailure).not.toHaveBeenCalled()
     })
@@ -708,6 +924,143 @@ describe('plan saga — price change interrupts', () => {
         }),
       )
       expect(onFailure).not.toHaveBeenCalled()
+    })
+
+    it('calls onPlanFinalized with Success when the watched last step completes', async () => {
+      const originalTrade = createChainedTrade(OUTPUT_AMOUNT)
+      const { params, onPlanFinalized } = createPlanParams(originalTrade)
+      const actionableSwapStep = createTransactionAndPlanStep({
+        stepIndex: 0,
+        status: TradingApi.PlanStepStatus.AWAITING_ACTION,
+      })
+      const completedSwapStep = createTransactionAndPlanStep({
+        stepIndex: 0,
+        status: TradingApi.PlanStepStatus.COMPLETE,
+      })
+
+      initializePlanResult = {
+        planId: 'test-plan',
+        response: createPlanResponse(OUTPUT_AMOUNT, [actionableSwapStep]),
+        wasPlanResumed: false,
+        steps: [actionableSwapStep],
+        currentStepIndex: 0,
+        currentStep: actionableSwapStep,
+        inputChainId: UniverseChainId.Mainnet,
+      }
+      watchPlanStepResult = {
+        steps: [completedSwapStep],
+        planResponse: createPlanResponse(OUTPUT_AMOUNT, [completedSwapStep]),
+      }
+
+      await runPlanSaga(params)
+
+      expect(onPlanFinalized).toHaveBeenCalledWith(
+        expect.objectContaining({
+          planId: 'test-plan',
+          status: TransactionStatus.Success,
+          stepStatus: TradingApi.PlanStepStatus.COMPLETE,
+        }),
+      )
+    })
+
+    it('keeps the plan Pending (not Failed) when last-step polling exhausts before confirmation', async () => {
+      const originalTrade = createChainedTrade(OUTPUT_AMOUNT)
+      const { params, onPlanFinalized } = createPlanParams(originalTrade)
+      const actionableSwapStep = createTransactionAndPlanStep({
+        stepIndex: 0,
+        status: TradingApi.PlanStepStatus.AWAITING_ACTION,
+      })
+
+      initializePlanResult = {
+        planId: 'test-plan',
+        response: createPlanResponse(OUTPUT_AMOUNT, [actionableSwapStep]),
+        wasPlanResumed: false,
+        steps: [actionableSwapStep],
+        currentStepIndex: 0,
+        currentStep: actionableSwapStep,
+        inputChainId: UniverseChainId.Mainnet,
+      }
+      // The watcher gave up, but the submitted tx can still confirm on-chain — finalizing as Failed
+      // would permanently skip Success-gated consumers (e.g. earn optimistic position updates).
+      watchPlanStepError = new PlanStepTimeoutError('Exceeded 60 attempts waiting for step completion')
+
+      await runPlanSaga(params)
+
+      expect(onPlanFinalized).toHaveBeenCalledWith(
+        expect.objectContaining({
+          planId: 'test-plan',
+          status: TransactionStatus.Pending,
+        }),
+      )
+      // The user is still notified the plan needs attention.
+      expect(params['sendToast']).toHaveBeenCalled()
+    })
+
+    it('finalizes as Canceled without an error toast when the last-step watch is cancelled', async () => {
+      const originalTrade = createChainedTrade(OUTPUT_AMOUNT)
+      const { params, onPlanFinalized } = createPlanParams(originalTrade)
+      const actionableSwapStep = createTransactionAndPlanStep({
+        stepIndex: 0,
+        status: TradingApi.PlanStepStatus.AWAITING_ACTION,
+      })
+
+      initializePlanResult = {
+        planId: 'test-plan',
+        response: createPlanResponse(OUTPUT_AMOUNT, [actionableSwapStep]),
+        wasPlanResumed: false,
+        steps: [actionableSwapStep],
+        currentStepIndex: 0,
+        currentStep: actionableSwapStep,
+        inputChainId: UniverseChainId.Mainnet,
+      }
+      watchPlanStepError = new HandledTransactionInterrupt('Plan cancelled during step watch')
+
+      await runPlanSaga(params)
+
+      expect(onPlanFinalized).toHaveBeenCalledWith(
+        expect.objectContaining({
+          planId: 'test-plan',
+          status: TransactionStatus.Canceled,
+        }),
+      )
+      expect(params['sendToast']).not.toHaveBeenCalled()
+    })
+
+    it('calls onPlanFinalized with Failed when the watched last step errors', async () => {
+      const originalTrade = createChainedTrade(OUTPUT_AMOUNT)
+      const { params, onPlanFinalized } = createPlanParams(originalTrade)
+      const actionableSwapStep = createTransactionAndPlanStep({
+        stepIndex: 0,
+        status: TradingApi.PlanStepStatus.AWAITING_ACTION,
+      })
+      const erroredSwapStep = createTransactionAndPlanStep({
+        stepIndex: 0,
+        status: TradingApi.PlanStepStatus.STEP_ERROR,
+      })
+
+      initializePlanResult = {
+        planId: 'test-plan',
+        response: createPlanResponse(OUTPUT_AMOUNT, [actionableSwapStep]),
+        wasPlanResumed: false,
+        steps: [actionableSwapStep],
+        currentStepIndex: 0,
+        currentStep: actionableSwapStep,
+        inputChainId: UniverseChainId.Mainnet,
+      }
+      watchPlanStepResult = {
+        steps: [erroredSwapStep],
+        planResponse: createPlanResponse(OUTPUT_AMOUNT, [erroredSwapStep]),
+      }
+
+      await runPlanSaga(params)
+
+      expect(onPlanFinalized).toHaveBeenCalledWith(
+        expect.objectContaining({
+          planId: 'test-plan',
+          status: TransactionStatus.Failed,
+          stepStatus: TradingApi.PlanStepStatus.STEP_ERROR,
+        }),
+      )
     })
   })
 })

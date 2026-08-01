@@ -11,6 +11,7 @@ import { checksIfSupportsSidePanel } from 'src/app/utils/chrome'
 import { isOnboardedSelector } from 'src/app/utils/isOnboardedSelector'
 import { Button, Flex, Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
 import { useTimeout } from 'utilities/src/time/timing'
 
@@ -44,6 +45,7 @@ export function IntroScreen(): JSX.Element {
             <Flex row backgroundColor="$surface1" borderRadius="$rounded16">
               <Button
                 variant="branded"
+                testID={TestID.CreateAccount}
                 onPress={(): void => navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Create}`)}
               >
                 {isPasskeyImportEnabled
@@ -54,6 +56,7 @@ export function IntroScreen(): JSX.Element {
             <Flex row>
               <Button
                 emphasis="secondary"
+                testID={TestID.ImportAccount}
                 onPress={(): void =>
                   navigate(
                     `/${TopLevelRoutes.Onboarding}/${isPasskeyImportEnabled ? OnboardingRoutes.SelectImportMethod : OnboardingRoutes.Import}`,

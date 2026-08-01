@@ -154,7 +154,7 @@ export function FloorPriceSelector({
     denomination,
     inputCurrency,
     fiatCurrencyCode,
-    raiseCurrency,
+    raiseCurrencySymbol: raiseCurrencyObj?.symbol ?? '',
     usdPriceNum,
     fdvRaiseNum,
     hasValidFloorPrice,

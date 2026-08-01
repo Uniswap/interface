@@ -29,7 +29,7 @@ export function resolveSponsorshipInfo(swapTxContext: SwapTxAndGasInfo): Trading
       return {
         sponsored: true,
         sponsorMetadata: {
-          name: 'Uniswap',
+          name: 'Uniswap Labs',
           icon: UNISWAP_LOGO,
         },
       }

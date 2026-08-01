@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, UniversalImageResizeMode } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { Globe } from 'ui/src/components/icons/Globe'
 import { XTwitter } from 'ui/src/components/icons/XTwitter'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
@@ -48,7 +48,6 @@ export function ReviewLaunchTokenInfoSection({
             name={tokenForm.name}
             chainId={tokenForm.network}
             size={TOKEN_LOGO_SIZE}
-            imageResizeMode={UniversalImageResizeMode.Cover}
           />
         ) : (
           <CurrencyLogo currencyInfo={tokenForm.existingTokenCurrencyInfo ?? null} size={TOKEN_LOGO_SIZE} />

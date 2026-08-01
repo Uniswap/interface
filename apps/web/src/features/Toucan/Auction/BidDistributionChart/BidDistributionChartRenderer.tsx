@@ -85,7 +85,7 @@ function BidDistributionChartRendererComponent({
   chartData,
   bidTokenInfo,
   totalSupply,
-  auctionTokenDecimals = 18,
+  auctionTokenDecimals,
   clearingPrice,
   onchainClearingPrice,
   floorPrice,

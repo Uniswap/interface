@@ -1,68 +1,60 @@
-import { NetworkStatus, WatchQueryFetchPolicy } from '@apollo/client'
-import { GqlResult, GraphQLApi } from '@universe/api'
 import { useMemo } from 'react'
+import { useWalletBalancesIncludeCategories } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+import {
+  selectTotalsByRequestedAddress,
+  toEvmWallets,
+  useGetWalletsBalancesQuery,
+} from 'uniswap/src/data/rest/getWalletsBalances/getWalletsBalances'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { usePortfolioValueModifiers } from 'uniswap/src/features/portfolio/balances/hooks'
+import { useRestPortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances/useRestPortfolioValueModifier'
 
 export function useAccountListData({
   addresses,
-  fetchPolicy,
-  notifyOnNetworkStatusChange,
+  refetchInterval,
 }: {
   addresses: Address[]
-  fetchPolicy?: WatchQueryFetchPolicy
-  notifyOnNetworkStatusChange?: boolean | undefined
-}): GqlResult<GraphQLApi.PortfoliosTotalValueQuery> & {
-  startPolling: (pollInterval: number) => void
-  stopPolling: () => void
-  networkStatus: NetworkStatus
+  refetchInterval?: number | false
+}): {
+  balancesByAddress: AddressTo<number | undefined> | undefined
+  loading: boolean
   refetch: () => void
 } {
-  const { gqlChains } = useEnabledChains()
+  const { chains: chainIds } = useEnabledChains()
+  const modifiers = useRestPortfolioValueModifiers(addresses)
+  const includeCategories = useWalletBalancesIncludeCategories()
 
-  const valueModifiers = usePortfolioValueModifiers(addresses)
-  const { data, loading, networkStatus, refetch, startPolling, stopPolling } = GraphQLApi.usePortfoliosTotalValueQuery({
-    variables: { ownerAddresses: addresses, valueModifiers, chains: gqlChains },
-    notifyOnNetworkStatusChange,
-    fetchPolicy,
+  const wallets = useMemo(() => toEvmWallets(addresses), [addresses])
+  const select = useMemo(() => selectTotalsByRequestedAddress(addresses), [addresses])
+
+  const { data, isLoading, isPlaceholderData, refetch } = useGetWalletsBalancesQuery({
+    input: { wallets, chainIds, modifiers, includeCategories },
+    enabled: addresses.length > 0,
+    refetchInterval,
+    select,
   })
 
   return {
-    data,
-    loading,
-    networkStatus,
+    balancesByAddress: data,
+    // isLoading (not isPending): an empty-address disabled query would otherwise report loading forever.
+    // isPlaceholderData: a newly added address has no value in the retained prior response yet — show loading.
+    loading: isLoading || isPlaceholderData,
     refetch,
-    startPolling,
-    stopPolling,
   }
 }
 
-export function useAccountBalances({
-  addresses,
-  fetchPolicy,
-}: {
-  addresses: Address[]
-  fetchPolicy?: WatchQueryFetchPolicy
-}): {
+export function useAccountBalances({ addresses }: { addresses: Address[] }): {
   balances: number[]
   totalBalance: number
 } {
-  const { data } = useAccountListData({
-    addresses,
-    fetchPolicy,
-  })
+  const { balancesByAddress } = useAccountListData({ addresses })
 
-  const balances = useMemo(() => {
-    const valuesUnfiltered = data?.portfolios
-      ?.map((p) => p?.tokensTotalDenominatedValue?.value)
-      .filter((v) => v !== undefined)
-
-    if (valuesUnfiltered === undefined) {
-      return []
-    }
-
-    return valuesUnfiltered as number[]
-  }, [data?.portfolios])
+  const balances = useMemo(
+    () =>
+      addresses
+        .map((address) => balancesByAddress?.[address])
+        .filter((balance): balance is number => balance !== undefined),
+    [addresses, balancesByAddress],
+  )
 
   return {
     balances,

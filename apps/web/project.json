@@ -14,7 +14,7 @@
       "outputs": ["{projectRoot}/src/utils/__generated__"]
     },
     "analyze": {
-      "command": "source-map-explorer 'build/assets/*.js' --no-border-checks --gzip",
+      "command": "source-map-explorer 'build/client/assets/*.js' --no-border-checks --gzip",
       "options": {
         "cwd": "{projectRoot}"
       }
@@ -59,8 +59,8 @@
       }
     },
     "check": {},
-    "check:circular": {
-      "command": "bunx madge --circular ./src/App.tsx ./src/setupTests.ts",
+    "check:bundle-size": {
+      "command": "bun ./scripts/check-bundle-size.ts",
       "options": {
         "cwd": "{projectRoot}"
       }
@@ -68,7 +68,7 @@
     "check:deps:usage": {},
     "check:fast": {},
     "config:pull": {
-      "command": "if [ \"$USE_NEW_CONFIGS\" != \"false\" ] && [ \"$SKIP_CONFIG_PULL\" != \"true\" ]; then bun config:pull web --env \"${CONFIG_ENV:-development}\"; fi",
+      "command": "if [ \"$SKIP_CONFIG_PULL\" != \"true\" ]; then bun config:pull web --env \"${CONFIG_ENV:-development}\" --soft; fi",
       "options": { "cwd": "{workspaceRoot}" },
       "defaultConfiguration": "development",
       "configurations": {
@@ -154,9 +154,6 @@
     "lint:oxlint": {},
     "lint:oxlint:fast": {},
     "lint:oxlint:fix": {},
-    "lint:typeaware-custom": {
-      "command": "bun config/oxlint-plugins/typeaware-custom.ts apps/web"
-    },
     "playwright:test": {
       "command": "playwright test",
       "options": {
@@ -271,12 +268,6 @@
         "cwd": "{projectRoot}"
       }
     },
-    "test:bundle": {
-      "command": "bun run -r esbuild-register ./src/test-utils/bundle-size-test.ts",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
     "test:cloud": {
       "command": "NODE_OPTIONS='--no-deprecation' vitest run functions --config functions/vitest.config.mts",
       "options": {
@@ -294,7 +285,7 @@
       "cache": true
     },
     "test:set2": {
-      "command": "NODE_OPTIONS='--no-deprecation' vitest run src/pages src/app src/state src/features/Swap/state",
+      "command": "NODE_OPTIONS='--no-deprecation' vitest run src/pages src/app/",
       "options": {
         "cwd": "{projectRoot}"
       },
@@ -303,7 +294,7 @@
       "cache": true
     },
     "test:set3": {
-      "command": "NODE_OPTIONS='--no-deprecation' vitest run src/hooks src/nft src/utils",
+      "command": "NODE_OPTIONS='--no-deprecation' vitest run src/hooks src/nft src/utils src/state src/features/Swap/state",
       "options": {
         "cwd": "{projectRoot}"
       },
@@ -330,12 +321,6 @@
       "dependsOn": ["prepare", "typecheck:cloud"]
     },
     "typecheck:cloud": {
-      "command": "if test \"$DISABLE_TSGO\" = \"true\"; then bun run nx typecheck:cloud:tsc; else bun run nx typecheck:cloud:tsgo; fi",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "typecheck:cloud:tsc": {
       "command": "tsc -p functions/tsconfig.json",
       "options": {
         "cwd": "{projectRoot}"
@@ -343,16 +328,6 @@
       "cache": true,
       "inputs": ["{projectRoot}/functions/**/*.ts"]
     },
-    "typecheck:cloud:tsgo": {
-      "command": "tsgo -p functions/tsconfig.json",
-      "options": {
-        "cwd": "{projectRoot}"
-      },
-      "cache": true,
-      "inputs": ["{projectRoot}/functions/**/*.ts"]
-    },
-    "typecheck:tsc": {},
-    "typecheck:tsgo": {},
     "wait-for-webserver": {
       "executor": "nx:run-commands",
       "options": {

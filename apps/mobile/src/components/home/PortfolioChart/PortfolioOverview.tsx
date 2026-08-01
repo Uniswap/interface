@@ -1,5 +1,6 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { navigate } from 'src/app/navigation/rootNavigation'
@@ -27,6 +28,9 @@ interface PortfolioChartSectionProps {
 export function PortfolioOverview({ evmAddress, chainIds }: PortfolioChartSectionProps): JSX.Element {
   const { t } = useTranslation()
   const chartPeriod = ChartPeriod.DAY
+  // The Home heartbeat coordinator only takes over balance refreshing when this flag is on —
+  // otherwise PortfolioBalance must keep its own poll running, or balances would never refresh.
+  const isDataLivelinessEnabled = useFeatureFlag(FeatureFlags.DataLivelinessUI)
 
   const { shouldShow: shouldShowPoolsCoachmark, dismiss: dismissPoolsCoachmark } = usePoolsBalanceCoachmarkVisibility({
     evmAddress,
@@ -103,6 +107,9 @@ export function PortfolioOverview({ evmAddress, chainIds }: PortfolioChartSectio
                 onDismiss={dismissPoolsCoachmark}
               >
                 <PortfolioBalance
+                  // Disabled because the Home heartbeat coordinator polls balances at the same
+                  // cadence as the rest of the page instead.
+                  disablePolling={isDataLivelinessEnabled}
                   evmOwner={evmAddress}
                   endText={chartNavigationIcon}
                   chartPeriod={chartPeriod}
@@ -132,7 +139,8 @@ export function PortfolioOverview({ evmAddress, chainIds }: PortfolioChartSectio
           testID={TestID.PoolsBalanceCoachmark}
           onDismiss={dismissPoolsCoachmark}
         >
-          <PortfolioBalance evmOwner={evmAddress} />
+          {/* Disabled because the Home heartbeat coordinator polls balances at the same cadence as the rest of the page instead. */}
+          <PortfolioBalance disablePolling={isDataLivelinessEnabled} evmOwner={evmAddress} />
         </Coachmark>
       )}
     </Flex>

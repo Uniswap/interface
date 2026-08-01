@@ -1,147 +1,131 @@
-import { useEffect, useRef, useState } from 'react'
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import type { ResolvedFontStyle } from 'ui/src/theme'
-import {
-  ROLL_TRANSITION_MS,
-  SLIDE_PERCENT,
-  SLOT_PREV_CLEAR_DELAY_MS,
-} from 'uniswap/src/components/AnimatedNumber/animationConfig'
+import { ROLL_TRANSITION_MS, SLIDE_PERCENT } from 'uniswap/src/components/AnimatedNumber/animationConfig'
+import { startFlashSequence } from 'uniswap/src/components/AnimatedNumber/native/startFlashSequence'
 import { useDigitTextStyle } from 'uniswap/src/components/AnimatedNumber/native/useDigitTextStyle'
+import { useOnTick } from 'uniswap/src/components/AnimatedNumber/native/useOnTick'
 import { AnimatedNumberDirection } from 'uniswap/src/components/AnimatedNumber/types'
-import { scheduleSlotTransition, type SlotState } from 'uniswap/src/components/AnimatedNumber/utils/slotScheduler'
 
+const absoluteStyle = { position: 'absolute', top: 1, width: '100%', textAlign: 'center' } as const
+
+/**
+ * A single rolling digit. All inputs for one roll (current/outgoing glyph, direction, flash
+ * color, tick id) arrive together in a single commit, and the roll starts exactly once per tick —
+ * so a value change can never animate twice. All motion (roll + color flash) runs on the UI
+ * thread via transform/opacity only; stagger uses withDelay instead of JS timers.
+ */
 export function DigitSlot({
   digit,
+  prevDigit,
+  gen,
+  shouldRoll,
   dir,
   delay,
-  color,
+  baseColor,
+  flashColor,
   reduceMotion,
   digitHeight,
   variantFont,
   useHeadingTypography,
-  triggerGen,
 }: {
   digit: string
+  /** Glyph the roll animates away from; equals `digit` for forced same-digit rolls. */
+  prevDigit: string
+  /** Tick id — the slot animates at most once per gen. */
+  gen: number
+  shouldRoll: boolean
   dir: AnimatedNumberDirection
   delay: number
-  color: string
+  baseColor: string
+  /** Balance-change indication color; the flash overlay cross-fades it in/out over the digit. */
+  flashColor: string | undefined
   reduceMotion: boolean
   digitHeight: number
   variantFont: ResolvedFontStyle
   useHeadingTypography: boolean
-  triggerGen?: number
 }): JSX.Element {
-  const [slot, setSlot] = useState<SlotState>({ current: digit, prev: null, gen: 0 })
-  const delayRef = useRef(delay)
-  delayRef.current = delay
-  const dirRef = useRef(dir)
-  dirRef.current = dir
-  const reduceMotionRef = useRef(reduceMotion)
-  reduceMotionRef.current = reduceMotion
-  const digitHeightRef = useRef(digitHeight)
-  digitHeightRef.current = digitHeight
-
   const prevTranslateY = useSharedValue(0)
   const prevOpacity = useSharedValue(0)
   const currentTranslateY = useSharedValue(0)
   const currentOpacity = useSharedValue(1)
-  const fontColor = useSharedValue(color)
+  const flashOpacity = useSharedValue(0)
 
   const digitTextStyle = useDigitTextStyle({ variantFont, digitHeight, useHeadingTypography })
 
-  useEffect(() => {
-    if (digit === slot.current) {
-      return undefined
-    }
-    return scheduleSlotTransition({
-      delayMs: delayRef.current,
-      clearDelayMs: SLOT_PREV_CLEAR_DELAY_MS,
-      setSlot,
-      computeNext: (s) => {
-        if (digit === s.current) {
-          return s
-        }
-        return { current: digit, prev: s.current, gen: s.gen + 1 }
-      },
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- delay read via ref; only digit drives transitions
-  }, [digit])
-
-  useEffect(() => {
-    if (triggerGen == null || dirRef.current === AnimatedNumberDirection.NONE) {
-      return undefined
-    }
-    return scheduleSlotTransition({
-      delayMs: delayRef.current,
-      clearDelayMs: SLOT_PREV_CLEAR_DELAY_MS,
-      setSlot,
-      computeNext: (s) => {
-        if (digit !== s.current) {
-          return s
-        }
-        return { current: digit, prev: digit, gen: s.gen + 1 }
-      },
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- delay/dir read via refs; only triggerGen drives this
-  }, [triggerGen])
-
-  useEffect(() => {
-    const animate = !reduceMotionRef.current && dirRef.current !== AnimatedNumberDirection.NONE
-
-    if (!animate || slot.prev === null) {
+  useOnTick(gen, () => {
+    if (!shouldRoll || reduceMotion || dir === AnimatedNumberDirection.NONE) {
       currentTranslateY.value = 0
       currentOpacity.value = 1
       prevOpacity.value = 0
       return
     }
 
-    const slideAmount = (SLIDE_PERCENT / 100) * digitHeightRef.current
-    const isUp = dirRef.current === AnimatedNumberDirection.UP
+    const slideAmount = (SLIDE_PERCENT / 100) * digitHeight
+    const isUp = dir === AnimatedNumberDirection.UP
 
-    // Set start positions (synchronous, no animation)
+    // Start positions (synchronous), then the whole staggered roll runs on the UI thread.
     currentTranslateY.value = isUp ? slideAmount : -slideAmount
     currentOpacity.value = 0
     prevTranslateY.value = 0
     prevOpacity.value = 1
 
-    // Animate to end positions
-    currentTranslateY.value = withTiming(0, { duration: ROLL_TRANSITION_MS })
-    currentOpacity.value = withTiming(1, { duration: ROLL_TRANSITION_MS })
-    prevTranslateY.value = withTiming(isUp ? -slideAmount : slideAmount, { duration: ROLL_TRANSITION_MS })
-    prevOpacity.value = withTiming(0, { duration: ROLL_TRANSITION_MS })
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- reduceMotion/dir/digitHeight read via refs; only gen drives animation
-  }, [slot.gen])
+    currentTranslateY.value = withDelay(delay, withTiming(0, { duration: ROLL_TRANSITION_MS }))
+    currentOpacity.value = withDelay(delay, withTiming(1, { duration: ROLL_TRANSITION_MS }))
+    prevTranslateY.value = withDelay(
+      delay,
+      withTiming(isUp ? -slideAmount : slideAmount, { duration: ROLL_TRANSITION_MS }),
+    )
+    prevOpacity.value = withDelay(delay, withTiming(0, { duration: ROLL_TRANSITION_MS }))
 
-  useEffect(() => {
-    fontColor.value = withTiming(color, { duration: 250 })
-  }, [color, fontColor])
+    if (flashColor != null) {
+      startFlashSequence(flashOpacity)
+    }
+  })
 
   const animatedPrevStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: prevTranslateY.value }],
     opacity: prevOpacity.value,
-    color: fontColor.value,
   }))
 
   const animatedCurrentStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: currentTranslateY.value }],
     opacity: currentOpacity.value,
-    color: fontColor.value,
   }))
 
-  const absoluteStyle = { position: 'absolute', top: 1, width: '100%', textAlign: 'center' } as const
+  // Tracks the current digit's roll so the flash reads as a color fade on the same glyph.
+  const animatedFlashStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: currentTranslateY.value }],
+    opacity: currentOpacity.value * flashOpacity.value,
+  }))
 
+  // accessible={false} on all glyphs: the parent renders an invisible full-value Text as the
+  // single screen-reader source, so the per-char animation copies must not be announced.
   return (
     <>
-      {slot.prev !== null && (
-        <Animated.Text allowFontScaling={false} style={[digitTextStyle, animatedPrevStyle, absoluteStyle]}>
-          {slot.prev}
-        </Animated.Text>
-      )}
       <Animated.Text
+        accessibilityElementsHidden
+        accessible={false}
         allowFontScaling={false}
-        style={[digitTextStyle, animatedCurrentStyle, slot.prev !== null ? absoluteStyle : undefined]}
+        importantForAccessibility="no-hide-descendants"
+        style={[digitTextStyle, { color: baseColor }, animatedPrevStyle, absoluteStyle]}
       >
-        {slot.current}
+        {prevDigit}
+      </Animated.Text>
+      <Animated.Text
+        accessible={false}
+        allowFontScaling={false}
+        style={[digitTextStyle, { color: baseColor }, animatedCurrentStyle, absoluteStyle]}
+      >
+        {digit}
+      </Animated.Text>
+      <Animated.Text
+        accessibilityElementsHidden
+        accessible={false}
+        allowFontScaling={false}
+        importantForAccessibility="no-hide-descendants"
+        style={[digitTextStyle, { color: flashColor ?? baseColor }, animatedFlashStyle, absoluteStyle]}
+      >
+        {digit}
       </Animated.Text>
     </>
   )

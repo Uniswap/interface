@@ -1,3 +1,5 @@
+// Saga handlers — redux-saga binds the receiver via call([obj, method]), which unbound-method can't model.
+/* oxlint-disable typescript/unbound-method */
 import { rpcErrors, serializeError } from '@metamask/rpc-errors'
 import { removeDappConnection } from 'src/app/features/dapp/actions'
 import { type DappInfo } from 'src/app/features/dapp/store'

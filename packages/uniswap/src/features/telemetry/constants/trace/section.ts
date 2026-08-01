@@ -24,6 +24,7 @@ export enum SectionName {
   PositionsList = 'positions-list',
   ProfileActivityTab = 'profile-activity-tab',
   ProfileNftsTab = 'profile-nfts-tab',
+  ProfilePoolsTab = 'profile-pools-tab',
   ProfileTokensTab = 'profile-tokens-tab',
   PortfolioDisconnectedDemoView = 'portfolio-disconnected-demo-view',
   SwapCurrencyInput = 'swap-currency-input',

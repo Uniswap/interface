@@ -1,9 +1,9 @@
 import {
   createLocalTriggerDataSource,
+  type NotificationDataSource,
+  type NotificationTracker,
   type TriggerCondition,
-} from '@universe/notifications/src/notification-data-source/implementations/createLocalTriggerDataSource'
-import { type NotificationDataSource } from '@universe/notifications/src/notification-data-source/NotificationDataSource'
-import { type NotificationTracker } from '@universe/notifications/src/notification-tracker/NotificationTracker'
+} from '@universe/notifications'
 import { type MobileState } from 'src/app/mobileReducer'
 import { createBackupReminderTrigger } from 'src/notification-service/triggers/backupReminderTrigger'
 import { setBackupReminderLastSeenTs } from 'wallet/src/features/behaviorHistory/slice'

@@ -10,8 +10,9 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.ViewGroupManager
 import com.facebook.react.uimanager.ViewManager
 import com.facebook.react.uimanager.annotations.ReactProp
-import com.facebook.react.uimanager.events.RCTEventEmitter
 import com.uniswap.RnEthersRs
+import com.uniswap.compose.ComposeHostView
+import com.uniswap.compose.dispatchComposeHostEvent
 import com.uniswap.onboarding.backup.ui.MnemonicDisplay
 import com.uniswap.onboarding.backup.ui.MnemonicDisplayViewModel
 import com.uniswap.theme.UniswapComponent
@@ -22,7 +23,7 @@ import kotlinx.coroutines.flow.update
  * View manager used to import native component into React Native code
  * for the MnemonicDisplay component used to show the seed phrases
  */
-class MnemonicDisplayViewManager : ViewGroupManager<ComposeView>() {
+class MnemonicDisplayViewManager : ViewGroupManager<ComposeHostView>() {
 
   override fun getName(): String = REACT_CLASS
 
@@ -32,12 +33,13 @@ class MnemonicDisplayViewManager : ViewGroupManager<ComposeView>() {
   private val copyTextFlow = MutableStateFlow("")
   private val copiedTextFlow = MutableStateFlow("")
 
-  override fun createViewInstance(reactContext: ThemedReactContext): ComposeView {
+  override fun createViewInstance(reactContext: ThemedReactContext): ComposeHostView {
     context = reactContext
     val ethersRs = RnEthersRs(reactContext)
     val viewModel = MnemonicDisplayViewModel(ethersRs)
 
-    return ComposeView(reactContext).apply {
+    val host = ComposeHostView(reactContext)
+    val composeView = ComposeView(reactContext).apply {
       setContent {
         val mnemonicId by mnemonicIdFlow.collectAsState()
         val copyText by copyTextFlow.collectAsState()
@@ -53,18 +55,21 @@ class MnemonicDisplayViewManager : ViewGroupManager<ComposeView>() {
               val bundle = Arguments.createMap().apply {
                 putDouble(FIELD_HEIGHT, it.toDouble())
               }
-              sendEvent(id, EVENT_HEIGHT_MEASURED, bundle)
+              sendEvent(host.id, EVENT_HEIGHT_MEASURED, bundle)
             },
             onEmptyMnemonic = {
               val bundle = Arguments.createMap().apply {
                 putString("mnemonicId", it)
               }
-              sendEvent(id, EVENT_EMPTY_MNEMONIC, bundle)
+              sendEvent(host.id, EVENT_EMPTY_MNEMONIC, bundle)
             }
           )
         }
       }
     }
+
+    host.setComposeView(composeView)
+    return host
   }
 
   /**
@@ -92,9 +97,7 @@ class MnemonicDisplayViewManager : ViewGroupManager<ComposeView>() {
   }
 
   private fun sendEvent(id: Int, eventName: String, bundle: WritableMap? = null) {
-    context
-      .getJSModule(RCTEventEmitter::class.java)
-      .receiveEvent(id, eventName, bundle)
+    dispatchComposeHostEvent(context, id, eventName, bundle)
   }
 
   @ReactProp(name = "mnemonicId")

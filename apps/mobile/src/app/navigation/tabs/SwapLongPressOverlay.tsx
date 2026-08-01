@@ -1,9 +1,8 @@
-import { isAndroid } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { BlurView } from 'expo-blur'
 import { type ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet, type ViewStyle } from 'react-native'
+import { Platform, StyleSheet, type ViewStyle } from 'react-native'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
@@ -177,58 +176,58 @@ export function SwapLongPressOverlay({
     return null
   }
 
+  const overlayContent = (
+    <TouchableArea activeOpacity={1} flex={1} justifyContent="flex-end" alignItems="flex-end" onPress={onClose}>
+      <Flex position="absolute" bottom={insets.bottom} right={0} alignItems="flex-end" gap="$spacing16" mr="$spacing24">
+        {swapMenuItems.map((item, i) => {
+          // Items animate in sequentially top-down after the initial animation, and out bottom-up.
+          const enteringDelay = ANIMATION_DURATION + (NUM_OF_SWAP_MENU_ITEMS - i) * BASE_DELAY
+          const exitingDelay = i * BASE_DELAY
+
+          return (
+            <AnimatedContainer key={item.title} enteringDelay={enteringDelay} exitingDelay={exitingDelay}>
+              <MenuItem title={item.title} icon={item.icon} onPress={item.onPress} />
+            </AnimatedContainer>
+          )
+        })}
+
+        <Flex height={ESTIMATED_BOTTOM_TABS_HEIGHT} alignItems="center" gap="$spacing24" flexDirection="row">
+          <AnimatedContainer enteringDelay={ANIMATION_DURATION} exitingDelay={DELAY_FOR_SWAP_TEXT_EXIT}>
+            <Text variant="buttonLabel2" color="$neutral1" textAlign="right">
+              {t('common.button.swap')}
+            </Text>
+          </AnimatedContainer>
+          {/* No entering animation so it reads as the same button that was long-pressed on HomeScreen */}
+          <AnimatedContainer enteringDelay={0} exitingDelay={DELAY_FOR_MAIN_EXIT} exitingDuration={0}>
+            <SwapButton onLongPress={onSwapLongPress} onClose={onClose} />
+          </AnimatedContainer>
+        </Flex>
+      </Flex>
+    </TouchableArea>
+  )
+
+  // Android: expo-blur can't blur here (needs a BlurTargetView), so use a near-opaque scrim.
+  if (Platform.OS === 'android') {
+    return (
+      <Animated.View
+        entering={FadeIn.duration(ANIMATION_DURATION)}
+        exiting={FadeOut.duration(ANIMATION_DURATION).delay(DELAY_FOR_MAIN_EXIT)}
+        style={[styles.blurView, { backgroundColor: isDarkMode ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.9)' }]}
+      >
+        {overlayContent}
+      </Animated.View>
+    )
+  }
+
   return (
     <AnimatedBlurView
       entering={FadeIn.duration(ANIMATION_DURATION)}
       exiting={FadeOut.duration(ANIMATION_DURATION).delay(DELAY_FOR_MAIN_EXIT)}
-      experimentalBlurMethod={isAndroid ? 'dimezisBlurView' : undefined}
       intensity={60}
       tint={isDarkMode ? 'systemMaterialDark' : 'systemMaterialLight'}
       style={styles.blurView}
     >
-      <TouchableArea activeOpacity={1} flex={1} justifyContent="flex-end" alignItems="flex-end" onPress={onClose}>
-        <Flex
-          position="absolute"
-          bottom={insets.bottom}
-          right={0}
-          alignItems="flex-end"
-          gap="$spacing16"
-          mr="$spacing24"
-        >
-          {swapMenuItems.map((item, i) => {
-            const length = NUM_OF_SWAP_MENU_ITEMS
-
-            // Wait for initial animation to complete, then animate each item in sequentially with a delay based on its position in the array.
-            const enteringDelay = ANIMATION_DURATION + (length - i) * BASE_DELAY
-
-            // We want to start animating before the main animation starts
-            const exitingDelay = i * BASE_DELAY
-
-            return (
-              <AnimatedContainer key={item.title} enteringDelay={enteringDelay} exitingDelay={exitingDelay}>
-                <MenuItem title={item.title} icon={item.icon} onPress={item.onPress} />
-              </AnimatedContainer>
-            )
-          })}
-
-          {/* Swap Button as last item in the column */}
-          <Flex height={ESTIMATED_BOTTOM_TABS_HEIGHT} alignItems="center" gap="$spacing24" flexDirection="row">
-            {/* We want to delay animating the text entering so the Swap button shows first, then the text animates in, followed by the actions
-
-            Text animates out at the same time as the Swap button, so it looks like the text is animating in while the Swap button is animating out.
-            */}
-            <AnimatedContainer enteringDelay={ANIMATION_DURATION} exitingDelay={DELAY_FOR_SWAP_TEXT_EXIT}>
-              <Text variant="buttonLabel2" color="$neutral1" textAlign="right">
-                {t('common.button.swap')}
-              </Text>
-            </AnimatedContainer>
-            {/* Swap Button doesn't animate in so it feels like the same button that was long pressed on HomeScreen is still there. It is the final thing to animate out (along with the Text above). */}
-            <AnimatedContainer enteringDelay={0} exitingDelay={DELAY_FOR_MAIN_EXIT} exitingDuration={0}>
-              <SwapButton onLongPress={onSwapLongPress} onClose={onClose} />
-            </AnimatedContainer>
-          </Flex>
-        </Flex>
-      </TouchableArea>
+      {overlayContent}
     </AnimatedBlurView>
   )
 }

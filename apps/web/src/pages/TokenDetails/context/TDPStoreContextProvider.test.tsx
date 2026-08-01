@@ -59,15 +59,19 @@ function StoreCapture({ storeRef }: { storeRef: React.MutableRefObject<ReturnTyp
   return null
 }
 
+function mockHeartbeat(overrides: Parameters<typeof createDerivedState>[0]) {
+  mocked(useCreateTDPContext).mockReturnValue(
+    createDerivedState(overrides) as unknown as ReturnType<typeof useCreateTDPContext>,
+  )
+}
+
 describe('TDPStoreContextProvider', () => {
   beforeEach(() => {
     mocked(useParams).mockReturnValue({
       tokenAddress: TOKEN_A,
       chainName: 'ethereum',
     })
-    mocked(useCreateTDPContext).mockReturnValue(
-      createDerivedState({ address: TOKEN_A }) as unknown as ReturnType<typeof useCreateTDPContext>,
-    )
+    mockHeartbeat({ address: TOKEN_A })
   })
 
   it('replaces full store state when identity changes (navigate to different token)', async () => {
@@ -88,9 +92,7 @@ describe('TDPStoreContextProvider', () => {
       tokenAddress: TOKEN_B,
       chainName: 'ethereum',
     })
-    mocked(useCreateTDPContext).mockReturnValue(
-      createDerivedState({ address: TOKEN_B }) as unknown as ReturnType<typeof useCreateTDPContext>,
-    )
+    mockHeartbeat({ address: TOKEN_B })
     rerender(
       <TDPStoreContextProvider>
         <StoreCapture storeRef={storeRef} />
@@ -106,11 +108,7 @@ describe('TDPStoreContextProvider', () => {
   it('applies partial updates when identity is unchanged but derived state changes', async () => {
     const initialTokenQuery = { loading: false, data: validTokenProjectResponse.data }
     const updatedTokenQuery = { loading: false, data: { ...validTokenProjectResponse.data } }
-    mocked(useCreateTDPContext).mockReturnValue(
-      createDerivedState({ address: TOKEN_A, tokenQuery: initialTokenQuery }) as unknown as ReturnType<
-        typeof useCreateTDPContext
-      >,
-    )
+    mockHeartbeat({ address: TOKEN_A, tokenQuery: initialTokenQuery })
 
     const storeRef = { current: null as ReturnType<typeof createTDPStore> | null }
     const { rerender } = render(
@@ -125,11 +123,7 @@ describe('TDPStoreContextProvider', () => {
     expect(storeRef.current?.getState().address).toBe(TOKEN_A)
 
     // Same identity (params unchanged), but derived state has new tokenQuery reference
-    mocked(useCreateTDPContext).mockReturnValue(
-      createDerivedState({ address: TOKEN_A, tokenQuery: updatedTokenQuery }) as unknown as ReturnType<
-        typeof useCreateTDPContext
-      >,
-    )
+    mockHeartbeat({ address: TOKEN_A, tokenQuery: updatedTokenQuery })
     rerender(
       <TDPStoreContextProvider>
         <StoreCapture storeRef={storeRef} />
@@ -144,11 +138,7 @@ describe('TDPStoreContextProvider', () => {
   })
 
   it('updates only tokenColor when only tokenColor changes (same identity)', async () => {
-    mocked(useCreateTDPContext).mockReturnValue(
-      createDerivedState({ address: TOKEN_A, tokenColor: undefined }) as unknown as ReturnType<
-        typeof useCreateTDPContext
-      >,
-    )
+    mockHeartbeat({ address: TOKEN_A, tokenColor: undefined })
 
     const storeRef = { current: null as ReturnType<typeof createTDPStore> | null }
     const { rerender } = render(
@@ -162,11 +152,7 @@ describe('TDPStoreContextProvider', () => {
     })
     expect(storeRef.current?.getState().tokenColor).toBeUndefined()
 
-    mocked(useCreateTDPContext).mockReturnValue(
-      createDerivedState({ address: TOKEN_A, tokenColor: '#FF0000' }) as unknown as ReturnType<
-        typeof useCreateTDPContext
-      >,
-    )
+    mockHeartbeat({ address: TOKEN_A, tokenColor: '#FF0000' })
     rerender(
       <TDPStoreContextProvider>
         <StoreCapture storeRef={storeRef} />
@@ -180,12 +166,7 @@ describe('TDPStoreContextProvider', () => {
   })
 
   it('updates the raw balance query error when identity is unchanged', async () => {
-    mocked(useCreateTDPContext).mockReturnValue(
-      createDerivedState({
-        address: TOKEN_A,
-        balanceError: undefined,
-      }) as unknown as ReturnType<typeof useCreateTDPContext>,
-    )
+    mockHeartbeat({ address: TOKEN_A, balanceError: undefined })
 
     const storeRef = { current: null as ReturnType<typeof createTDPStore> | null }
     const { rerender } = render(
@@ -199,12 +180,7 @@ describe('TDPStoreContextProvider', () => {
     })
     expect(storeRef.current?.getState().balanceError).toBeUndefined()
 
-    mocked(useCreateTDPContext).mockReturnValue(
-      createDerivedState({
-        address: TOKEN_A,
-        balanceError: new Error('Network error'),
-      }) as unknown as ReturnType<typeof useCreateTDPContext>,
-    )
+    mockHeartbeat({ address: TOKEN_A, balanceError: new Error('Network error') })
     rerender(
       <TDPStoreContextProvider>
         <StoreCapture storeRef={storeRef} />

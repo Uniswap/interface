@@ -1,6 +1,6 @@
 import { GetProps } from 'tamagui'
 import { ButtonProps, ButtonVariantProps } from 'ui/src/components/buttons/Button/types'
-import { DropdownButtonFrame } from 'ui/src/components/buttons/DropdownButton/DropdownButtonFrame'
+import type { DropdownButtonFrame } from 'ui/src/components/buttons/DropdownButton/DropdownButtonFrame'
 
 export type DropdownButtonVariantProps = ButtonVariantProps & {
   isExpanded: boolean

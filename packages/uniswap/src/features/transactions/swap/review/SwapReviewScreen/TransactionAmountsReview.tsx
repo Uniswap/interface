@@ -25,10 +25,12 @@ const SHORT_GAP: FlexProps['$short'] = { gap: '$spacing8' }
 
 export function TransactionAmountsReview({
   acceptedDerivedSwapInfo,
+  quoteRefreshField,
   newTradeRequiresAcceptance,
   onClose,
 }: {
   acceptedDerivedSwapInfo: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>
+  quoteRefreshField?: CurrencyField
   newTradeRequiresAcceptance: boolean
   onClose: () => void
 }): JSX.Element {
@@ -80,6 +82,8 @@ export function TransactionAmountsReview({
 
   const shouldDimInput = newTradeRequiresAcceptance && exactCurrencyField === CurrencyField.OUTPUT
   const shouldDimOutput = newTradeRequiresAcceptance && exactCurrencyField === CurrencyField.INPUT
+  const isInputAmountLoading = quoteRefreshField === CurrencyField.INPUT
+  const isOutputAmountLoading = quoteRefreshField === CurrencyField.OUTPUT
 
   const isInputIndicative = Boolean(displayTrade?.indicative && exactCurrencyField === CurrencyField.OUTPUT)
   const isOutputIndicative = Boolean(displayTrade?.indicative && exactCurrencyField === CurrencyField.INPUT)
@@ -134,6 +138,7 @@ export function TransactionAmountsReview({
           formattedTokenAmount={formattedTokenAmountIn}
           indicative={isInputIndicative}
           shouldDim={shouldDimInput}
+          isAmountLoading={isInputAmountLoading}
           isCrossChainSwap={isCrossChainSwap}
         />
       )}
@@ -149,6 +154,7 @@ export function TransactionAmountsReview({
           formattedTokenAmount={formattedTokenAmountOut}
           indicative={isOutputIndicative}
           shouldDim={shouldDimOutput}
+          isAmountLoading={isOutputAmountLoading}
           isCrossChainSwap={isCrossChainSwap}
         />
       )}
@@ -166,6 +172,7 @@ function CurrencyValueWithIcon({
   formattedTokenAmount,
   shouldDim,
   indicative,
+  isAmountLoading,
   isCrossChainSwap,
 }: {
   currencyInfo: CurrencyInfo
@@ -173,6 +180,7 @@ function CurrencyValueWithIcon({
   formattedTokenAmount: string
   shouldDim: boolean
   indicative: boolean
+  isAmountLoading: boolean
   isCrossChainSwap: boolean
 }): JSX.Element {
   const { defaultChainId } = useEnabledChains()
@@ -202,13 +210,26 @@ function CurrencyValueWithIcon({
             </Text>
           </Flex>
         )}
-        <Text color={amountColor} variant="heading3">
-          {formattedTokenAmount} {symbolDisplayText}
-        </Text>
+        {isAmountLoading ? (
+          <Flex row alignItems="center" gap="$spacing8">
+            <Loader.Box height={28} width={96} />
+            <Text color={amountColor} variant="heading3">
+              {symbolDisplayText}
+            </Text>
+          </Flex>
+        ) : (
+          <Text color={amountColor} variant="heading3">
+            {formattedTokenAmount} {symbolDisplayText}
+          </Text>
+        )}
 
-        <Text color={fiatColor} variant="body2">
-          {formattedFiatAmount}
-        </Text>
+        {isAmountLoading ? (
+          <Loader.Box height={18} width={72} />
+        ) : (
+          <Text color={fiatColor} variant="body2">
+            {formattedFiatAmount}
+          </Text>
+        )}
       </Flex>
 
       <CurrencyLogo currencyInfo={currencyInfo} size={iconSizes.icon40} />

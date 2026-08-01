@@ -7,25 +7,25 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 
-const mockUseGetPositionQuery = jest.fn()
-jest.mock('uniswap/src/data/rest/getPosition', () => ({
+const mockUseGetPositionQuery = vi.fn()
+vi.mock('uniswap/src/data/rest/getPosition', () => ({
   useGetPositionQuery: () => mockUseGetPositionQuery(),
 }))
 
-const mockParseRestPosition = jest.fn()
-jest.mock('uniswap/src/features/positions/parseRestPosition', () => ({
+const mockParseRestPosition = vi.fn()
+vi.mock('uniswap/src/features/positions/parseRestPosition', () => ({
   parseRestPosition: () => mockParseRestPosition(),
 }))
 
-jest.mock('uniswap/src/features/positions/hooks/usePriceRangeUsd', () => ({
+vi.mock('uniswap/src/features/positions/hooks/usePriceRangeUsd', () => ({
   usePriceRangeUsd: () => ({ minPrice: '$1.00', maxPrice: '$2.00', marketPrice: '$1.50' }),
 }))
 
-jest.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({
+vi.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({
   useCurrencyInfos: () => [undefined, undefined],
 }))
 
-jest.mock('uniswap/src/features/language/LocalizationContext', () => ({
+vi.mock('uniswap/src/features/language/LocalizationContext', () => ({
   useLocalizationContext: () => ({
     convertFiatAmountFormatted: (value?: number) => `$${value ?? 0}`,
     formatNumberOrString: () => '1',
@@ -33,36 +33,44 @@ jest.mock('uniswap/src/features/language/LocalizationContext', () => ({
   }),
 }))
 
-jest.mock('wallet/src/features/wallet/hooks', () => ({
+vi.mock('wallet/src/features/wallet/hooks', () => ({
   useActiveAccountAddressWithThrow: () => '0xowner',
 }))
 
-jest.mock('uniswap/src/hooks/useAppInsets', () => ({
+vi.mock('uniswap/src/hooks/useAppInsets', () => ({
   useAppInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
 }))
 
 // Keep the test focused on the screen's section-branching logic by stubbing children
 // and the surrounding layout/telemetry chrome with identifiable markers.
-jest.mock('src/components/layout/screens/ScreenWithHeader', () => {
-  const { Flex } = jest.requireActual('ui/src')
-  return { ScreenWithHeader: ({ children }: { children: React.ReactNode }) => <Flex>{children}</Flex> }
+vi.mock('src/components/layout/screens/ScreenWithHeader', async () => {
+  const { Flex } = await vi.importActual<typeof import('ui/src')>('ui/src')
+  return {
+    ScreenWithHeader: ({ children, rightElement }: { children: React.ReactNode; rightElement?: React.ReactNode }) => (
+      <Flex>
+        {rightElement}
+        {children}
+      </Flex>
+    ),
+  }
 })
 
-jest.mock('uniswap/src/features/telemetry/Trace', () => ({
+vi.mock('uniswap/src/features/telemetry/Trace', () => ({
   __esModule: true,
   default: ({ children }: { children: React.ReactNode }) => children,
 }))
 
-jest.mock('src/screens/PositionDetailsScreen/components/PositionDetailsMenu', () => ({
-  PositionDetailsMenu: () => null,
-}))
+vi.mock('src/screens/PositionDetailsScreen/components/PositionDetailsMenu', async () => {
+  const { Flex } = await vi.importActual<typeof import('ui/src')>('ui/src')
+  return { PositionDetailsMenu: () => <Flex testID="position-details-menu" /> }
+})
 
-jest.mock('src/screens/PositionDetailsScreen/components/PositionDetailsHero', () => ({
+vi.mock('src/screens/PositionDetailsScreen/components/PositionDetailsHero', () => ({
   PositionDetailsHero: () => null,
 }))
 
-jest.mock('src/screens/PositionDetailsScreen/components/PositionDetailsStats', () => {
-  const { Flex } = jest.requireActual('ui/src')
+vi.mock('src/screens/PositionDetailsScreen/components/PositionDetailsStats', async () => {
+  const { Flex } = await vi.importActual<typeof import('ui/src')>('ui/src')
   return {
     PositionDetailsStats: ({ isV2 }: { isV2: boolean }) => (
       <Flex testID={isV2 ? 'stats-full-range' : 'stats-concentrated'} />
@@ -70,16 +78,21 @@ jest.mock('src/screens/PositionDetailsScreen/components/PositionDetailsStats', (
   }
 })
 
-jest.mock('src/screens/PositionDetailsScreen/components/PositionFeesUnavailable', () => {
-  const { Flex } = jest.requireActual('ui/src')
+vi.mock('src/screens/PositionDetailsScreen/components/PositionFeesUnavailable', async () => {
+  const { Flex } = await vi.importActual<typeof import('ui/src')>('ui/src')
   return { PositionFeesUnavailable: () => <Flex testID="fees-unavailable" /> }
 })
 
-jest.mock('src/screens/PositionDetailsScreen/components/PositionTokenBreakdown', () => {
-  const { Flex } = jest.requireActual('ui/src')
+vi.mock('src/screens/PositionDetailsScreen/components/PositionTokenBreakdown', async () => {
+  const { Flex } = await vi.importActual<typeof import('ui/src')>('ui/src')
   return {
     PositionTokenBreakdown: ({ label, amount0, amount1 }: { label: string; amount0?: unknown; amount1?: unknown }) => {
-      const slug = label.toLowerCase().replace(/\s+/g, '-')
+      // i18n is key-echo mocked, so map the translation keys to the old slug names
+      const slugByKey: Record<string, string> = {
+        'pool.position.your': 'your-position',
+        'common.feesEarned': 'fees-earned',
+      }
+      const slug = slugByKey[label] ?? label.toLowerCase().replace(/\s+/g, '-')
       const variant = amount0 && amount1 ? 'full' : 'collapsed'
       return <Flex testID={`breakdown-${slug}-${variant}`} />
     },
@@ -106,7 +119,10 @@ function makePosition(overrides: Partial<PositionInfo> = {}): PositionInfo {
   } as unknown as PositionInfo
 }
 
-function renderScreen(positionInfo: PositionInfo | undefined, { isLoading = false } = {}): void {
+function renderScreen(
+  positionInfo: PositionInfo | undefined,
+  { isLoading = false, owner }: { isLoading?: boolean; owner?: string } = {},
+): void {
   mockUseGetPositionQuery.mockReturnValue({ data: { position: {} }, isLoading })
   mockParseRestPosition.mockReturnValue(positionInfo)
 
@@ -117,6 +133,7 @@ function renderScreen(positionInfo: PositionInfo | undefined, { isLoading = fals
         tokenId: '1',
         chainId: UniverseChainId.Mainnet,
         protocolVersion: positionInfo?.version ?? ProtocolVersion.V4,
+        owner,
       },
     },
   } as unknown as AppStackScreenProp<MobileScreens.PositionDetails>
@@ -126,7 +143,7 @@ function renderScreen(positionInfo: PositionInfo | undefined, { isLoading = fals
 
 describe('PositionDetailsScreen', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('renders fees-unavailable and a full-range stats row for V2 positions', () => {
@@ -191,12 +208,30 @@ describe('PositionDetailsScreen', () => {
     renderScreen(undefined, { isLoading: true })
 
     expect(screen.getByTestId('position-details-loader')).toBeDefined()
-    expect(screen.queryByText('Position not found')).toBeNull()
+    expect(screen.queryByText('position.notFound')).toBeNull()
   })
 
   it('shows a not-found message when the position cannot be parsed', () => {
     renderScreen(undefined)
 
-    expect(screen.getByText('Position not found')).toBeDefined()
+    expect(screen.getByText('position.notFound')).toBeDefined()
+  })
+
+  it('shows the details menu for the active account position', () => {
+    renderScreen(makePosition())
+
+    expect(screen.getByTestId('position-details-menu')).toBeDefined()
+  })
+
+  it('shows the details menu when the owner param matches the active account ignoring case', () => {
+    renderScreen(makePosition(), { owner: '0xOWNER' })
+
+    expect(screen.getByTestId('position-details-menu')).toBeDefined()
+  })
+
+  it('hides the details menu when viewing an external owner position', () => {
+    renderScreen(makePosition(), { owner: '0xexternal' })
+
+    expect(screen.queryByTestId('position-details-menu')).toBeNull()
   })
 })

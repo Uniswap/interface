@@ -1,39 +1,43 @@
 import fs from 'fs'
 import { createHash } from 'node:crypto'
 import path from 'path'
+import tailwindcss from '@tailwindcss/vite'
 import { parse as parseDotEnv } from 'dotenv'
-import { loadEnv, transformWithEsbuild } from 'vite'
+import { transformWithEsbuild } from 'vite'
 import commonjs from 'vite-plugin-commonjs'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import svgr from 'vite-plugin-svgr'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { defineConfig } from 'wxt'
+import { getRenamedIifeName, rewriteIifeFooter } from './config/contentScriptIifeRename'
 import { getTsconfigAliases } from './config/getTsconfigAliases'
 
 // process.env.APP_ID is used by @universe/config. Set at the Node level so the
 // Tamagui static extractor can resolve it.
 process.env.APP_ID = 'extension'
 
-// New config system is enabled by default; opt out by explicitly setting USE_NEW_CONFIGS=false.
-const USE_NEW_CONFIGS = process.env.USE_NEW_CONFIGS !== 'false'
-const NEW_ENV_PATH = path.resolve(import.meta.dirname, '.env.new')
-const NEW_ENV_OVERRIDE_PATH = path.resolve(import.meta.dirname, '.env.new.override')
+const NEW_ENV_PATH = path.resolve(import.meta.dirname, '.env')
+const NEW_ENV_DEV_PATH = path.resolve(import.meta.dirname, '.env.dev')
+const NEW_ENV_OVERRIDE_PATH = path.resolve(import.meta.dirname, '.env.override')
 
 function parseEnvFile(filePath: string): Record<string, string> {
   return parseDotEnv(fs.readFileSync(filePath))
 }
 
 function buildNewConfigsEnv(): Record<string, string> {
-  // Read apps/extension/.env.new as the base layer (an empty object if it doesn't
-  // exist), then apply apps/extension/.env.new.override on top (overrides win).
-  const envVars = fs.existsSync(NEW_ENV_PATH) ? parseEnvFile(NEW_ENV_PATH) : {}
+  // Base layer: .env is pulled from the remote config service. When it's absent
+  // fall back to the checked-in .env.dev defaults so the extension still runs in dev mode.
+  const baseEnvPath = fs.existsSync(NEW_ENV_PATH) ? NEW_ENV_PATH : NEW_ENV_DEV_PATH
+  if (baseEnvPath === NEW_ENV_DEV_PATH) {
+    console.log('No .env file located, using the checked in dev defaults')
+  }
+  const envVars = fs.existsSync(baseEnvPath) ? parseEnvFile(baseEnvPath) : {}
 
-  // Apply .env.new.override on top, logging every value it overrides
+  // Apply .env.override on top, logging every value it overrides
   if (fs.existsSync(NEW_ENV_OVERRIDE_PATH)) {
     const overrideVars = parseEnvFile(NEW_ENV_OVERRIDE_PATH)
     for (const [key, value] of Object.entries(overrideVars)) {
       if (key in envVars && envVars[key] !== value) {
-        // oxlint-disable-next-line no-console -- CLI output for env loading
         console.log(`ENV_OVERRIDE: ${key}`)
       }
       envVars[key] = value
@@ -43,7 +47,7 @@ function buildNewConfigsEnv(): Record<string, string> {
   return envVars
 }
 
-const NEW_CONFIGS_ENV = USE_NEW_CONFIGS ? buildNewConfigsEnv() : {}
+const NEW_CONFIGS_ENV = buildNewConfigsEnv()
 
 const icons = {
   16: 'assets/icon16.png',
@@ -69,7 +73,7 @@ const publicAssetsVariant = getPublicAssetsVariant()
 
 const BASE_NAME = 'Uniswap Extension'
 const BASE_DESCRIPTION = "The Uniswap Extension is a self-custody crypto wallet that's built for swapping."
-const BASE_VERSION = '1.78.0'
+const BASE_VERSION = '1.79.0'
 
 const BUILD_NUM = parseInt(process.env.BUILD_NUM || '0')
 const EXTENSION_VERSION = `${BASE_VERSION}.${BUILD_NUM}`
@@ -194,7 +198,29 @@ export default defineConfig({
       // (this is the `build.lib` path WXT takes for content scripts).
       const lib = viteConfig.build?.lib
       if (lib && typeof lib === 'object' && 'name' in lib && typeof lib.name === 'string') {
-        lib.name = `__wxt_cs_${lib.name}`
+        const originalName = lib.name
+        lib.name = getRenamedIifeName(originalName)
+
+        // WXT's `wxt:iife-footer` plugin appends a bare `<originalName>;` expression to the
+        // entry chunk (so `scripting.executeScript` can read the entry's return value). After
+        // the rename above, that footer references a variable that no longer exists and throws
+        // an uncaught `ReferenceError: <originalName> is not defined` on every page the content
+        // script runs in. (The MAIN-world `ethereum` script only escaped this by accident:
+        // its footer resolves to the `window.ethereum` global it just defined.) Rewrite the
+        // footer to reference the renamed IIFE var; `rewriteIifeFooter` fails the build
+        // loudly if the expected footer isn't found. Logic + unit tests live in
+        // config/contentScriptIifeRename.ts.
+        viteConfig.plugins = viteConfig.plugins ?? []
+        viteConfig.plugins.push({
+          name: 'uniswap:rename-iife-footer',
+          generateBundle(_options, bundle) {
+            for (const chunk of Object.values(bundle)) {
+              if (chunk.type === 'chunk' && chunk.isEntry) {
+                chunk.code = rewriteIifeFooter({ code: chunk.code, originalName })
+              }
+            }
+          },
+        })
       }
     },
     // Validate build output after every build (dev and production). The script scans for
@@ -292,35 +318,14 @@ export default defineConfig({
   },
 
   // Vite configuration copied from web project
-  vite: (env) => {
-    let envVars: Record<string, string>
-    if (USE_NEW_CONFIGS) {
-      // New unified config (built once at module scope from apps/extension/.env.new
-      // + .env.new.override). Other env sources (monorepo-root .env / .env.defaults
-      // / etc.) are ignored.
-      envVars = NEW_CONFIGS_ENV
-    } else {
-      // Load ALL env variables (including those without VITE_ prefix): read the
-      // monorepo-root `.env` (user-provided) AND the monorepo-root `.env.defaults`
-      // (checked-in defaults), with `.env` taking precedence.
-      // Vite only reads from one directory per call and doesn't know about `.env.defaults`,
-      // so we do both loads and merge.
-      const monorepoRoot = path.resolve(import.meta.dirname, '../..')
-      const envDefaults = loadEnv(env.mode, monorepoRoot, '')
-      // Re-read with a custom-named prefix file: loadEnv only looks at `.env`, `.env.local`,
-      // `.env.<mode>`, `.env.<mode>.local`. Manually parse `.env.defaults` since Vite won't.
-      const defaultsPath = path.join(monorepoRoot, '.env.defaults')
-      const parsedDefaults = fs.existsSync(defaultsPath) ? parseEnvFile(defaultsPath) : {}
-      envVars = { ...parsedDefaults, ...envDefaults }
-    }
-
+  vite: () => {
     const __dirname = path.dirname(new URL(import.meta.url).pathname)
     const isProduction = process.env.NODE_ENV === 'production'
     const isPreparePhase = process.env.WXT_PREPARE === 'true'
 
     // Create process.env definitions for ALL environment variables
     const envDefines = Object.fromEntries(
-      Object.entries(envVars).map(([key, value]) => [`process.env.${key}`, JSON.stringify(value)]),
+      Object.entries(NEW_CONFIGS_ENV).map(([key, value]) => [`process.env.${key}`, JSON.stringify(value)]),
     )
 
     const defines = {
@@ -414,6 +419,9 @@ export default defineConfig({
             })
           },
         },
+        // Tailwind v4 — compiles @import "tailwindcss" + @universe/tailwind tokens
+        // for the extension's UI pages (sidepanel, onboarding, popup, unitag claim).
+        tailwindcss(),
         tsconfigPaths({
           // ignores tsconfig files in Nx generator template directories
           skip: (dir) => dir.includes('files'),

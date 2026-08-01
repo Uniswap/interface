@@ -8,6 +8,7 @@ import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { RotateRight } from 'ui/src/components/icons/RotateRight'
 import { isLoadingItem } from 'uniswap/src/components/activity/utils'
 import { ActivityRenderData } from 'uniswap/src/features/activity/hooks/useActivityData'
+import { useIsEarnEnabled } from 'uniswap/src/features/earn/hooks/useIsEarnEnabled'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -40,6 +41,7 @@ export const MiniActivityTable = memo(function MiniActivityTable({
 }: MiniActivityTableProps) {
   const { t } = useTranslation()
   const trace = useTrace()
+  const isEarnActivityDisplayEnabled = useIsEarnEnabled()
   const { chainId, externalAddress, isExternalWallet } = usePortfolioRoutes()
   const openTransactionDetailsModal = useOpenTransactionDetailsModal()
   const navigate = useNavigate()
@@ -90,7 +92,11 @@ export const MiniActivityTable = memo(function MiniActivityTable({
           return (
             <Cell loading={showLoadingSkeleton} justifyContent="flex-start" p="$spacing8">
               {hasRow<TransactionDetails>(info) && (
-                <ActivityAmountCell transaction={info.row.original} variant="compact" />
+                <ActivityAmountCell
+                  transaction={info.row.original}
+                  variant="compact"
+                  isEarnActivityDisplayEnabled={isEarnActivityDisplayEnabled}
+                />
               )}
             </Cell>
           )
@@ -116,7 +122,7 @@ export const MiniActivityTable = memo(function MiniActivityTable({
         },
       }),
     ]
-  }, [loading])
+  }, [isEarnActivityDisplayEnabled, loading])
 
   const handleTransactionClick = useCallback(
     (transaction: TransactionDetails) => {
@@ -125,7 +131,9 @@ export const MiniActivityTable = memo(function MiniActivityTable({
         section: SectionName.PortfolioOverviewTab,
         ...trace,
       })
-      openTransactionDetailsModal(transaction, { isExternalProfile: isExternalWallet })
+      openTransactionDetailsModal(transaction, {
+        isExternalProfile: isExternalWallet,
+      })
     },
     [trace, openTransactionDetailsModal, isExternalWallet],
   )
@@ -153,9 +161,13 @@ export const MiniActivityTable = memo(function MiniActivityTable({
 
   const subtitle = useMemo(() => {
     if (showingPastWeek) {
-      return t('portfolio.overview.activity.table.subtitle', { count: transactionData.length })
+      return t('portfolio.overview.activity.table.subtitle', {
+        count: transactionData.length,
+      })
     }
-    return t('portfolio.overview.activity.table.subtitle_most_recent', { count: transactionData.length })
+    return t('portfolio.overview.activity.table.subtitle_most_recent', {
+      count: transactionData.length,
+    })
   }, [showingPastWeek, transactionData.length, t])
 
   return (
@@ -187,7 +199,9 @@ export const MiniActivityTable = memo(function MiniActivityTable({
           <Flex row alignItems="center" height={PORTFOLIO_TABLE_ROW_HEIGHT} gap="$gap8" p="$spacing8">
             <InfoCircleFilled color="$neutral2" size="$icon.20" />
             <Text variant="buttonLabel3" color="$neutral1">
-              {t('portfolio.overview.activity.table.empty', { count: transactionData.length })}
+              {t('portfolio.overview.activity.table.empty', {
+                count: transactionData.length,
+              })}
             </Text>
           </Flex>
         )}

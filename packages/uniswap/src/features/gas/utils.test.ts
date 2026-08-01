@@ -7,6 +7,7 @@ import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/consts'
 import {
   applyNativeTokenPercentageBuffer,
   getActiveGasStrategy,
+  getDisplayGasStrategy,
   hasGasEstimationFailed,
   hasGasOverrides,
   hasSufficientFundsIncludingGas,
@@ -28,6 +29,27 @@ vi.mock('@universe/gating', async (importOriginal) => {
 const ZERO_ETH = CurrencyAmount.fromRawAmount(MAINNET_CURRENCY, 0)
 const ONE_ETH = CurrencyAmount.fromRawAmount(MAINNET_CURRENCY, 1e18)
 const TEN_ETH = ONE_ETH.multiply(10)
+
+describe(getDisplayGasStrategy, () => {
+  it('returns undefined when no strategy is available', () => {
+    expect(getDisplayGasStrategy(undefined)).toBeUndefined()
+  })
+
+  it('returns a display strategy without mutating the submission strategy', () => {
+    const strategy: GasStrategy = {
+      limitInflationFactor: 1.2,
+      displayLimitInflationFactor: 1.2,
+      priceInflationFactor: 1.3,
+      percentileThresholdFor1559Fee: 80,
+    }
+
+    expect(getDisplayGasStrategy(strategy)).toEqual({
+      ...strategy,
+      displayLimitInflationFactor: 1,
+    })
+    expect(strategy.displayLimitInflationFactor).toBe(1.2)
+  })
+})
 
 describe(applyNativeTokenPercentageBuffer, () => {
   it('returns undefined if no currency amount is provided', () => {

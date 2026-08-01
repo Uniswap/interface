@@ -1,3 +1,4 @@
+import 'src/app/tailwind.css'
 import { ApiInit, getEntryGatewayUrl, provideSessionService } from '@universe/api'
 import {
   getIsHashcashSolverEnabled,
@@ -30,6 +31,7 @@ import { useOnCrashAppStateResetter } from 'src/store/appStateResetter'
 import { getReduxStore } from 'src/store/store'
 import { createHashcashWorker } from 'src/workers/hashcashWorker'
 import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
+import { useSelectedColorScheme } from 'uniswap/src/features/appearance/hooks'
 import { useCurrentLanguage } from 'uniswap/src/features/language/hooks'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import { getLocale } from 'uniswap/src/features/language/navigatorLocale'
@@ -115,6 +117,7 @@ function BaseAppContainerInner({ children }: PropsWithChildren): JSX.Element {
       <SharedWalletProvider reduxStore={getReduxStore()}>
         <ErrorBoundaryWrapper>
           <LanguageSync />
+          <TailwindThemeSync />
           <GraphqlProvider>
             <BlankUrlProvider>
               <LocalizationContextProvider>
@@ -153,6 +156,22 @@ function LanguageSync(): null {
   useEffect(() => {
     changeLanguage(getLocale(currentLanguage)).catch(() => undefined)
   }, [currentLanguage])
+
+  return null
+}
+
+/**
+ * Mirrors the resolved color scheme onto the <html> `.dark` class so Tailwind v4
+ * `dark:` variants and @universe/tailwind dark tokens activate in sync with the
+ * Tamagui theme (driven by the same useSelectedColorScheme signal). Each
+ * extension UI page is its own document, so this runs per entrypoint.
+ */
+function TailwindThemeSync(): null {
+  const colorScheme = useSelectedColorScheme()
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', colorScheme === 'dark')
+  }, [colorScheme])
 
   return null
 }

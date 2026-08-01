@@ -9,6 +9,8 @@ import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 interface PoolProgressStep {
   label: string
+  /** Overrides the default "Step N" eyebrow line (e.g. quick launch's single-step flow). */
+  caption?: string
   active: boolean
   onPress?: () => void
 }
@@ -66,7 +68,7 @@ export function PoolProgressIndicator({
             </Flex>
             <Flex shrink gap="$spacing2">
               <Text variant="body3" color={step.active ? '$neutral2' : '$neutral3'} userSelect="none">
-                {t('common.step.number', { number: index + 1 })}
+                {step.caption ?? t('common.step.number', { number: index + 1 })}
               </Text>
               <Text variant="subheading2" color={step.active ? '$neutral1' : '$neutral2'} userSelect="none">
                 {step.label}
@@ -91,8 +93,11 @@ export function PoolProgressIndicator({
 
 export function PoolProgressIndicatorHeader({
   steps,
+  flush = false,
 }: {
-  steps: { label: string; active: boolean; onPress?: () => void }[]
+  steps: PoolProgressStep[]
+  /** Drops the top/bottom hairline borders and horizontal padding so the header sits flush with the parent's padding (mweb launch-auction flow). */
+  flush?: boolean
 }) {
   const { t } = useTranslation()
   const { showBorder: showBottomBorder, elementRef } = useStickyHeaderBorder(INTERFACE_NAV_HEIGHT)
@@ -115,10 +120,11 @@ export function PoolProgressIndicatorHeader({
       alignItems="center"
       justifyContent="space-between"
       gap="$spacing12"
-      p="$spacing16"
+      py="$spacing16"
+      px={flush ? '$none' : '$spacing16'}
       backgroundColor="$surface1"
-      borderBottomWidth="$spacing1"
-      borderTopWidth="$spacing1"
+      borderBottomWidth={flush ? 0 : '$spacing1'}
+      borderTopWidth={flush ? 0 : '$spacing1'}
       borderTopColor={showBottomBorder ? 'transparent' : '$surface3'}
       borderBottomColor={showBottomBorder ? '$surface3' : 'transparent'}
       $platform-web={{ position: 'sticky', top: INTERFACE_NAV_HEIGHT, zIndex: zIndexes.header }}
@@ -138,7 +144,7 @@ export function PoolProgressIndicatorHeader({
 
       <Flex flex={1} gap="$spacing2" minWidth={0}>
         <Text variant="body3" color="$neutral2" numberOfLines={1}>
-          {t('common.step.number.of', { current: stepNumber, total: totalSteps })}
+          {currentStep.caption ?? t('common.step.number.of', { current: stepNumber, total: totalSteps })}
         </Text>
         <Text variant="subheading2" color="$neutral1" numberOfLines={1}>
           {currentStep.label}

@@ -162,7 +162,7 @@ exports[`LimitOrderPreview.tsx > renders ETH input token for an ETH input Uniswa
               <img
                 height="36"
                 src="eth-logo.png"
-                style="object-fit: contain; border-radius: 36px; z-index: 1;"
+                style="object-fit: cover; width: 36px; height: 36px; border-radius: 36px; z-index: 1;"
                 width="36"
               />
             </div>
@@ -307,7 +307,7 @@ exports[`LimitOrderPreview.tsx > renders ETH input token for an ETH input Uniswa
               <img
                 height="36"
                 src="eth-logo.png"
-                style="object-fit: contain; border-radius: 36px; z-index: 1;"
+                style="object-fit: cover; width: 36px; height: 36px; border-radius: 36px; z-index: 1;"
                 width="36"
               />
             </div>

@@ -34,9 +34,12 @@
     },
     {
       "path": "../uniswap"
+    },
+    {
+      "path": "../../config/vitest-presets"
     }
   ],
   "compilerOptions": {
-    "types": ["chrome", "jest"]
+    "types": ["chrome", "vitest/globals"]
   }
 }

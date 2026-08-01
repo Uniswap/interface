@@ -1,6 +1,6 @@
-import { ContentStyle } from '@shopify/flash-list'
 import { memo, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import type { StyleProp, ViewStyle } from 'react-native'
 import { NetworkError, NoResultsFound } from 'uniswap/src/components/lists/NoResultsFound'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSectionsForSearchResults } from 'uniswap/src/features/search/SearchModal/hooks/useSectionsForSearchResults'
@@ -18,10 +18,11 @@ interface SearchModalResultsListProps {
   debouncedSearchFilter: string | null
   debouncedParsedSearchFilter: string | null
   activeTab: SearchTab
+  auctionSearchEnabled?: boolean
   onSelect?: SearchModalListProps['onSelect']
   onResetFilters?: () => void
   renderedInModal: boolean
-  contentContainerStyle?: ContentStyle
+  contentContainerStyle?: StyleProp<ViewStyle>
   rowWrapper?: SearchModalListProps['rowWrapper']
 }
 
@@ -32,6 +33,7 @@ function SearchModalResultsListInner({
   debouncedSearchFilter,
   debouncedParsedSearchFilter,
   activeTab,
+  auctionSearchEnabled = false,
   onSelect,
   onResetFilters,
   renderedInModal,
@@ -62,6 +64,7 @@ function SearchModalResultsListInner({
     chainFilter: effectiveTokenSearchChainFilter,
     searchFilter: searchQuery,
     activeTab,
+    auctionSearchEnabled,
     shouldPrioritizePools: searchQuery?.includes('/') ?? false,
     shouldPrioritizeWallets: shouldPrioritizeWallets ?? false,
   })

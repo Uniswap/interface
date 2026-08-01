@@ -163,7 +163,7 @@ export function CancelConfirmationView({
           }}
         >
           <Button
-            isDisabled={disableConfirmationButton}
+            disabled={disableConfirmationButton}
             testID={TestID.Cancel}
             variant="critical"
             emphasis="secondary"

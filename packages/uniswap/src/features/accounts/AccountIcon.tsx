@@ -1,6 +1,6 @@
 import { isWebPlatform } from '@universe/environment'
 import { useState } from 'react'
-import { ColorTokens, Flex, FlexProps, Unicon, UniversalImage, UniversalImageResizeMode } from 'ui/src'
+import { ColorTokens, Flex, FlexProps, Unicon, UniversalImage, UniversalImageResizeMode, useSporeColors } from 'ui/src'
 import { Eye } from 'ui/src/components/icons/Eye'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
 
@@ -42,6 +42,7 @@ export function AccountIcon({
 }: FlexProps & AccountIconProps): JSX.Element | null {
   const { avatar } = useAvatar(address)
   const [originSize] = useState(() => size)
+  const colors = useSporeColors()
 
   if (!address) {
     return null
@@ -57,7 +58,6 @@ export function AccountIcon({
 
   return (
     <Flex
-      backgroundColor={showBackground ? '$surface1' : '$transparent'}
       borderColor={showBorder ? borderColor : '$transparent'}
       borderRadius="$roundedFull"
       borderWidth={showBorder ? borderWidth : '$none'}
@@ -70,7 +70,15 @@ export function AccountIcon({
     >
       <Flex fill {...ACCOUNT_ICON_WEB_STYLING}>
         <UniversalImage
-          style={{ image: { borderRadius: size, ...sizeTransitionStyle } }}
+          // Background lives on the image's own view (painted behind its pixels) rather than a
+          // separate backdrop layer, which Fabric view-flattening composites over the avatar.
+          style={{
+            image: {
+              borderRadius: size,
+              backgroundColor: showBackground ? colors.surface1.val : undefined,
+              ...sizeTransitionStyle,
+            },
+          }}
           fallback={uniconImage}
           size={{ height: size, width: size, resizeMode: UniversalImageResizeMode.Cover }}
           uri={avatarUri}

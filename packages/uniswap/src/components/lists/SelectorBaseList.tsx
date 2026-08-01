@@ -1,6 +1,6 @@
-import { ContentStyle } from '@shopify/flash-list'
 import { memo, useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import type { StyleProp, ViewStyle } from 'react-native'
 import { Flex, Loader, Text } from 'ui/src'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { FocusedRowControl } from 'uniswap/src/components/lists/items/OptionItem'
@@ -39,7 +39,7 @@ interface SelectorBaseListProps<T extends OnchainItemListOption> {
   expandedItems?: string[]
   focusedRowControl?: Omit<FocusedRowControl, 'rowIndex'>
   renderedInModal: boolean
-  contentContainerStyle?: ContentStyle
+  contentContainerStyle?: StyleProp<ViewStyle>
 }
 
 function SelectorBaseListInner<T extends OnchainItemListOption>({
@@ -106,7 +106,9 @@ function SelectorBaseListInner<T extends OnchainItemListOption>({
   const isLoading = (!sections || !sections.length) && loading
 
   return (
-    <Flex grow>
+    // `fill` (flex:1) not `grow` (flexGrow:1): FlashList v2 needs a parent with a definite height,
+    // otherwise the non-modal list (explore search) collapses to its content and is cut short.
+    <Flex fill>
       <OnchainItemList<T>
         ListEmptyComponent={emptyElement || <EmptyResults />}
         keyExtractor={keyExtractor}

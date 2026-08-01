@@ -6,7 +6,7 @@
  * Run this in your app to measure the speedup from native code.
  */
 
-import { HashcashNative } from './index'
+import { HashcashNative } from './HashcashNative'
 
 interface BenchmarkResult {
   implementation: 'native' | 'js'

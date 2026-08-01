@@ -9,11 +9,8 @@ import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import {
-  ActivityFilterType,
-  filterTransactionDetailsFromActivityItems,
-  TimePeriod,
-} from '~/pages/Portfolio/Activity/Filters/utils'
+import { ActivityFilterType } from '~/pages/Portfolio/Activity/Filters/activityFilterTypes'
+import { filterTransactionDetailsFromActivityItems, TimePeriod } from '~/pages/Portfolio/Activity/Filters/utils'
 
 interface UseActivityEmptyStateParams {
   chainId: UniverseChainId | undefined

@@ -1,5 +1,5 @@
 import type { GasStrategy } from '@universe/api'
-import { convertGasFeeToDisplayValue } from 'uniswap/src/features/gas/hooks'
+import { convertGasFeeToDisplayValue } from 'uniswap/src/features/gas/convertGasFeeToDisplayValue'
 
 const strategy: GasStrategy = {
   limitInflationFactor: 1.15,

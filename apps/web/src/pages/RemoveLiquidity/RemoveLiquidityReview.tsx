@@ -239,7 +239,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
               LineItem={{
                 Label: () => (
                   <Text variant="body3" color="$neutral2">
-                    {t('pool.newSpecificPosition', { symbol: currency0Amount.currency.symbol })}
+                    {t('pool.newSpecificPosition', { symbol: currency0Amount.currency.symbol ?? t('common.token') })}
                   </Text>
                 ),
                 Value: () => (
@@ -259,7 +259,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
               LineItem={{
                 Label: () => (
                   <Text variant="body3" color="$neutral2">
-                    {t('pool.newSpecificPosition', { symbol: currency1Amount.currency.symbol })}
+                    {t('pool.newSpecificPosition', { symbol: currency1Amount.currency.symbol ?? t('common.token') })}
                   </Text>
                 ),
                 Value: () => (

@@ -6,6 +6,7 @@ const breakdown = (tokensUSD: number | undefined, poolsUSD: number | undefined):
   tokens: { balanceUSD: tokensUSD, percentChange: -6.09, absoluteChangeUSD: -500 },
   pools: { balanceUSD: poolsUSD, percentChange: 1.02, absoluteChangeUSD: 70 },
   failedChainIds: [],
+  earn: { balanceUSD: undefined, percentChange: undefined, absoluteChangeUSD: undefined },
 })
 
 const NO_SCRUB = { total: undefined, tokens: undefined, pools: undefined }
@@ -49,11 +50,17 @@ describe('getBreakdownCardProps', () => {
 
   it('shows wallet-balance values with a period delta and neutral percent at rest', () => {
     const result = getBreakdownCardProps(baseInput)
-    expect(result?.semanticPercentColor).toBe(false)
-    expect(result?.tokens.valueUSD).toBe(8368)
-    expect(result?.tokens.percentChange).toBeCloseTo(10) // series 100 -> 110
-    expect(result?.pools.valueUSD).toBe(7373)
-    expect(result?.pools.percentChange).toBeCloseTo(-5) // series 200 -> 190
+    expect(result).toBeDefined()
+    expect(result?.tokens).toBeDefined()
+    expect(result?.pools).toBeDefined()
+    if (!result?.tokens || !result.pools) {
+      throw new Error('Expected tokens and pools breakdown rows')
+    }
+    expect(result.semanticPercentColor).toBe(false)
+    expect(result.tokens.valueUSD).toBe(8368)
+    expect(result.tokens.percentChange).toBeCloseTo(10) // series 100 -> 110
+    expect(result.pools.valueUSD).toBe(7373)
+    expect(result.pools.percentChange).toBeCloseTo(-5) // series 200 -> 190
   })
 
   it('omits the percent at rest on the all-time period', () => {
@@ -67,11 +74,17 @@ describe('getBreakdownCardProps', () => {
       ...baseInput,
       scrub: { total: 300, tokens: 110, pools: 190 },
     })
-    expect(result?.semanticPercentColor).toBe(true)
-    expect(result?.tokens.valueUSD).toBe(110)
-    expect(result?.tokens.percentChange).toBeCloseTo(10) // 110 vs first 100
-    expect(result?.pools.valueUSD).toBe(190)
-    expect(result?.pools.percentChange).toBeCloseTo(-5) // 190 vs first 200
+    expect(result).toBeDefined()
+    expect(result?.tokens).toBeDefined()
+    expect(result?.pools).toBeDefined()
+    if (!result?.tokens || !result.pools) {
+      throw new Error('Expected tokens and pools breakdown rows')
+    }
+    expect(result.semanticPercentColor).toBe(true)
+    expect(result.tokens.valueUSD).toBe(110)
+    expect(result.tokens.percentChange).toBeCloseTo(10) // 110 vs first 100
+    expect(result.pools.valueUSD).toBe(190)
+    expect(result.pools.percentChange).toBeCloseTo(-5) // 190 vs first 200
   })
 
   it('omits the percent while scrubbing on the all-time period', () => {

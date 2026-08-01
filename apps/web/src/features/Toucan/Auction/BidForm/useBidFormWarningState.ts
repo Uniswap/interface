@@ -1,11 +1,12 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
-import { getChainInfo, TOUCAN_AUCTION_SUPPORTED_CHAINS } from 'uniswap/src/features/chains/chainInfo'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { zeroAddress } from '~/chains'
 import { AuctionProgressState, type UserBid } from '~/features/Toucan/Auction/store/types'
+import { TOUCAN_AUCTION_SUPPORTED_CHAINS } from '~/features/Toucan/supportedChains'
+import { getSupportedAuctionCurrencyAddresses } from '~/pages/Liquidity/CreateAuction/raiseCurrency'
 
 interface UseBidFormWarningStateParams {
   chainId?: UniverseChainId
@@ -44,23 +45,25 @@ export function useBidFormWarningState({
       normalizedCurrency &&
       (normalizedCurrency === zeroAddress || isNativeCurrencyAddress(chainId, normalizedCurrency)),
     )
-    const usdcAddress = chainId && isSupportedChain ? getChainInfo(chainId).tokens.USDC?.address : undefined
-    const isUsdcBidToken = Boolean(
-      chainId &&
-      normalizedCurrency &&
-      usdcAddress &&
-      areAddressesEqual({
-        addressInput1: { address: normalizedCurrency, chainId },
-        addressInput2: { address: usdcAddress, chainId },
-      }),
-    )
+    // Accept exactly the currencies the create flow accepts, from the shared source of truth.
+    const isSupportedBidToken =
+      isNativeBidToken ||
+      Boolean(
+        chainId &&
+        isSupportedChain &&
+        normalizedCurrency &&
+        getSupportedAuctionCurrencyAddresses(chainId).some((supportedAddress) =>
+          areAddressesEqual({
+            addressInput1: { address: normalizedCurrency, chainId },
+            addressInput2: { address: supportedAddress, chainId },
+          }),
+        ),
+      )
     const isValidationErrorWarning = isToucanAuctionKYCEnabled
       ? Boolean(validationError)
       : Boolean(validationHook && validationHook !== zeroAddress)
     const isUnsupportedChainWarning = Boolean(chainId && !isSupportedChain)
-    const isUnsupportedBidTokenWarning = Boolean(
-      isSupportedChain && normalizedCurrency && !isNativeBidToken && !isUsdcBidToken,
-    )
+    const isUnsupportedBidTokenWarning = Boolean(isSupportedChain && normalizedCurrency && !isSupportedBidToken)
     const shouldShowWarningBanner =
       isUnsupportedChainWarning || isUnsupportedBidTokenWarning || isValidationErrorWarning
     const shouldDisableBidForm = showDisabledState || shouldShowWarningBanner

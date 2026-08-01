@@ -1,20 +1,34 @@
+import { type PlainMessage } from '@bufbuild/protobuf'
+import { useQuery } from '@tanstack/react-query'
+import type {
+  GetTokenHistoryOHLCResponse,
+  GetTokenHistoryPriceResponse,
+} from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { GraphQLApi } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { UTCTimestamp } from 'lightweight-charts'
 import { useEffect, useMemo, useReducer, useRef } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import {
+  getGetTokenHistoryOHLCQueryOptions,
+  getGetTokenHistoryPriceQueryOptions,
+} from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { toRestHistoryDuration } from 'uniswap/src/features/dataApi/tokenDetails/useTokenPriceHistoryRest'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { TimePeriod } from '~/appGraphql/data/util'
 import { PriceChartData } from '~/components/Charts/PriceChart'
 import {
+  appendCurrentValue,
   ChartQueryResult,
   ChartType,
   checkDataQuality,
   DataQuality,
-  getCurrentUTCTimestamp,
+  isZeroOhlcSeries,
   PriceChartType,
 } from '~/components/Charts/utils'
+import { useRestHistoryTarget } from '~/hooks/useRestHistoryTarget'
 import { usePageVisibility } from '~/lib/hooks/usePageVisibility'
 
 export type TokenPriceChartQueryVariables = {
@@ -38,6 +52,28 @@ function toPriceChartData(ohlc: GraphQLApi.CandlestickOhlcFragment): PriceChartD
   return { time, value: close.value, open: open.value, high: high.value, low: low.value, close: close.value }
 }
 
+function selectOhlcChartData(data: PlainMessage<GetTokenHistoryOHLCResponse> | undefined): PriceChartData[] {
+  return (data?.candles ?? []).map((candle) => ({
+    time: Number(candle.timestamp) as UTCTimestamp,
+    value: candle.closeUsd,
+    open: candle.openUsd,
+    high: candle.highUsd,
+    low: candle.lowUsd,
+    close: candle.closeUsd,
+  }))
+}
+
+function selectPriceChartData(data: PlainMessage<GetTokenHistoryPriceResponse> | undefined): PriceChartData[] {
+  return (data?.points ?? []).map((point) => ({
+    time: Number(point.timestamp) as UTCTimestamp,
+    value: point.priceUsd,
+    open: point.priceUsd,
+    high: point.priceUsd,
+    low: point.priceUsd,
+    close: point.priceUsd,
+  }))
+}
+
 /**
  * Enforces the strictly-ascending timestamps lightweight-charts requires. Upstream price history
  * (e.g. CoinGecko) occasionally returns a duplicate trailing timestamp; a zero time delta breaks
@@ -59,8 +95,6 @@ export function toStrictlyAscendingByTime(entries: PriceChartData[]): PriceChart
   return result
 }
 
-const CANDLESTICK_FALLBACK_THRESHOLD = 0.1
-
 export function useTokenPriceChartData({
   variables,
   skip,
@@ -74,6 +108,9 @@ export function useTokenPriceChartData({
   currentPriceOverride?: number
   preferProjectMarketData?: boolean
 }): ChartQueryResult<PriceChartData, ChartType.PRICE> & { disableCandlestickUI: boolean } {
+  const isV2TokensEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
+  // RWA/project-market data has no REST equivalent yet, so those tokens keep using GraphQL even when V2 is on.
+  const shouldUseV2Tokens = isV2TokensEnabled && !preferProjectMarketData
   const [fallback, enablePriceHistoryFallback] = useReducer(() => true, false)
   // Project markets do not provide OHLC, so RWA charts always render as line charts even if stale UI state says candle.
   const effectivePriceChartType = preferProjectMarketData ? PriceChartType.LINE : priceChartType
@@ -88,7 +125,7 @@ export function useTokenPriceChartData({
     refetch: refetchSubgraph,
   } = GraphQLApi.useTokenPriceQuery({
     variables: { ...variables, fallback },
-    skip,
+    skip: skip || shouldUseV2Tokens,
     pollInterval: isVisible ? PollingInterval.KindaFast : 0,
   })
 
@@ -112,7 +149,7 @@ export function useTokenPriceChartData({
         : { address: undefined, chain: variables.chain },
       duration: variables.duration,
     },
-    skip: skip || !currencyIdValue || !shouldFetchCoinGeckoHistory,
+    skip: skip || !currencyIdValue || !shouldFetchCoinGeckoHistory || shouldUseV2Tokens,
     // IMPORTANT: Must use no-cache to prevent infinite query loop.
     //
     // TokenPriceHistory returns Token objects (with chain/address) nested inside tokenProjects.
@@ -124,16 +161,74 @@ export function useTokenPriceChartData({
 
   const prevVisibleRef = useRef(isVisible)
   useEffect(() => {
-    if (isVisible && !prevVisibleRef.current && !skip) {
+    if (isVisible && !prevVisibleRef.current && !skip && !shouldUseV2Tokens) {
       refetchSubgraph().catch(() => {})
     }
     prevVisibleRef.current = isVisible
-  }, [isVisible, skip, refetchSubgraph])
+  }, [isVisible, skip, shouldUseV2Tokens, refetchSubgraph])
 
   const loading = subgraphLoading || (shouldFetchCoinGeckoHistory && coinGeckoLoading)
 
+  // REST path: OHLC feeds candlestick charts, Price feeds line charts.
+  const restTarget = useRestHistoryTarget(variables)
+  const useRestOhlc = effectivePriceChartType === PriceChartType.CANDLESTICK && !fallback
+  const restCommonEnabled = shouldUseV2Tokens && !skip && !!restTarget
+  const { data: restOhlcEntries, isLoading: restOhlcLoading } = useQuery(
+    getGetTokenHistoryOHLCQueryOptions({
+      params: { target: restTarget, duration: toRestHistoryDuration(variables.duration) },
+      enabled: restCommonEnabled && useRestOhlc,
+      select: selectOhlcChartData,
+    }),
+  )
+  const { data: restPriceEntries, isLoading: restPriceLoading } = useQuery(
+    getGetTokenHistoryPriceQueryOptions({
+      params: { target: restTarget, duration: toRestHistoryDuration(variables.duration) },
+      enabled: restCommonEnabled && !useRestOhlc,
+      select: selectPriceChartData,
+    }),
+  )
+
   // oxlint-disable-next-line complexity
   return useMemo(() => {
+    if (shouldUseV2Tokens) {
+      let restEntries = useRestOhlc ? (restOhlcEntries ?? []) : (restPriceEntries ?? [])
+      const restLoading = useRestOhlc ? restOhlcLoading : restPriceLoading
+
+      if (useRestOhlc && restOhlcEntries && isZeroOhlcSeries(restEntries)) {
+        enablePriceHistoryFallback() // triggers a re-fetch that uses GetTokenHistoryPrice instead of GetTokenHistoryOHLC
+        return {
+          chartType: ChartType.PRICE,
+          entries: [],
+          loading: true,
+          disableCandlestickUI: true,
+          dataQuality: DataQuality.INVALID,
+        }
+      }
+
+      restEntries = toStrictlyAscendingByTime(restEntries)
+
+      // Append current price to end of array to ensure data freshness and that each time period ends with same price
+      restEntries = appendCurrentValue({
+        entries: restEntries,
+        currentValue: currentPriceOverride,
+        buildEntry: (time, value) => ({ time, value, open: value, high: value, low: value, close: value }),
+        withCurrentValue: (entry, { time, value }) => ({ ...entry, time, value, close: value }),
+      })
+
+      const restDataQuality = checkDataQuality({
+        data: restEntries,
+        chartType: ChartType.PRICE,
+        duration: variables.duration,
+      })
+      return {
+        chartType: ChartType.PRICE,
+        entries: restEntries,
+        loading: restLoading,
+        dataQuality: restDataQuality,
+        disableCandlestickUI: fallback,
+      }
+    }
+
     const subgraphMarket = subgraphData?.token?.market
     const { ohlc, priceHistory: subgraphPriceHistory, price: subgraphPrice } = subgraphMarket ?? {}
 
@@ -185,9 +280,7 @@ export function useTokenPriceChartData({
         : priceHistory?.filter((v): v is PriceHistoryEntry => v !== undefined).map(fallbackToPriceChartData)) ?? []
 
     if (ohlcPriceHistory) {
-      // Special case: backend returns invalid OHLC data on some chains. If we detect long series of 0's, return an empty array to trigger fallback.
-      const zeroCount = entries.filter((x) => x.value === 0).length
-      if (!ohlcPriceHistory.length || zeroCount / entries.length > CANDLESTICK_FALLBACK_THRESHOLD) {
+      if (isZeroOhlcSeries(entries)) {
         enablePriceHistoryFallback() // triggers a re-fetch that uses priceHistory instead of OHLC
         return {
           chartType: ChartType.PRICE,
@@ -253,29 +346,12 @@ export function useTokenPriceChartData({
     entries = toStrictlyAscendingByTime(entries)
 
     // Append current price to end of array to ensure data freshness and that each time period ends with same price
-    if (currentPrice && entries.length > 1) {
-      const lastEntry = entries[entries.length - 1]
-      const secondToLastEntry = entries[entries.length - 2]
-      const granularity = lastEntry.time - secondToLastEntry.time
-
-      const time = getCurrentUTCTimestamp()
-      // If the current price falls within the last entry's time window, update the last entry's close price
-      if (time - lastEntry.time < granularity) {
-        lastEntry.time = time
-        lastEntry.value = currentPrice
-        lastEntry.close = currentPrice
-      } else {
-        // If the current price falls outside the last entry's time window, add it as a new entry
-        entries.push({
-          time,
-          value: currentPrice,
-          open: currentPrice,
-          high: currentPrice,
-          low: currentPrice,
-          close: currentPrice,
-        })
-      }
-    }
+    entries = appendCurrentValue({
+      entries,
+      currentValue: currentPrice,
+      buildEntry: (time, value) => ({ time, value, open: value, high: value, low: value, close: value }),
+      withCurrentValue: (entry, { time, value }) => ({ ...entry, time, value, close: value }),
+    })
 
     const dataQuality = checkDataQuality({ data: entries, chartType: ChartType.PRICE, duration: variables.duration })
     return {
@@ -287,6 +363,12 @@ export function useTokenPriceChartData({
     }
     // oxlint-disable-next-line react-hooks/exhaustive-deps -- coinGeckoData.tokenProjects is intentionally accessed via optional chaining
   }, [
+    shouldUseV2Tokens,
+    restOhlcEntries,
+    restOhlcLoading,
+    restPriceEntries,
+    restPriceLoading,
+    useRestOhlc,
     currentPriceOverride,
     subgraphData?.token?.market,
     // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here

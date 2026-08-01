@@ -68,13 +68,8 @@ const BlurredLockScreen = memo(function BlurredLockScreen(): JSX.Element {
   const bottomInset = useBottomInset()
   const dimensions = useDeviceDimensions()
 
-  return (
-    <BlurView
-      experimentalBlurMethod={isAndroid ? 'dimezisBlurView' : undefined}
-      intensity={60}
-      tint={isDarkMode ? 'systemMaterialDark' : 'systemMaterialLight'}
-      style={flexStyles.fill}
-    >
+  const contents = (
+    <>
       <Image
         source={UNISWAP_MONO_LOGO_LARGE}
         style={{
@@ -90,6 +85,23 @@ const BlurredLockScreen = memo(function BlurredLockScreen(): JSX.Element {
           <UnlockButton />
         </Flex>
       )}
+    </>
+  )
+
+  // Android: opaque cover. expo-blur on Android requires a blur target that must not contain this
+  // overlay (a contained BlurView creates a RenderNode cycle and crashes the RenderThread), and an
+  // opaque cover obscures app content more reliably anyway. iOS keeps the native UIKit blur.
+  if (isAndroid) {
+    return (
+      <Flex fill backgroundColor={isDarkMode ? '$surface1' : '$white'}>
+        {contents}
+      </Flex>
+    )
+  }
+
+  return (
+    <BlurView intensity={60} tint={isDarkMode ? 'systemMaterialDark' : 'systemMaterialLight'} style={flexStyles.fill}>
+      {contents}
     </BlurView>
   )
 })
@@ -112,8 +124,10 @@ const FullScreenFader = memo(function FullScreenFader({ children }: { children: 
   const dimensions = useDeviceDimensions()
   return (
     <Animated.View
-      entering={fadeIn}
-      exiting={fadeOut}
+      // No fades on Android: Fabric defers exiting-animation removal to the next rendered frame,
+      // which after a biometric unlock only comes on the next touch — the cover would appear stuck.
+      entering={isAndroid ? undefined : fadeIn}
+      exiting={isAndroid ? undefined : fadeOut}
       style={{
         position: 'absolute',
         top: 0,

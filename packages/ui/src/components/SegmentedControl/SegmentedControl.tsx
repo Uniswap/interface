@@ -246,8 +246,12 @@ export function SegmentedControl<T extends string = string>({
     }
   }
 
-  const activeIndicatorXAdjustment = isMobileApp ? 2.5 : 0
-  const activeIndicatorYAdjustment = isMobileApp ? -1.5 : 0
+  // The historical 2.5px/-1.5px optical adjustments are tuned for the smaller sizes; on `large`
+  // the -1.5px lift leaves the indicator visibly closer to the top than the bottom, and 3.17px
+  // (measured) centers the indicator's outer gutters exactly.
+  const isLargeSize = size === 'large'
+  const activeIndicatorXAdjustment = isMobileApp ? (isLargeSize ? 3.17 : 2.5) : 0
+  const activeIndicatorYAdjustment = isMobileApp && !isLargeSize ? -1.5 : 0
 
   return (
     <Tabs

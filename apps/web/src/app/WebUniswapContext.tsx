@@ -2,13 +2,12 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { PropsWithChildren, useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router'
-import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
+import { type NavigateToEarnVaultArgs, UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
 import { useOnchainDisplayName } from 'uniswap/src/features/accounts/useOnchainDisplayName'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import type { EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { useNavigateToNftExplorerLink } from 'uniswap/src/features/nfts/hooks/useNavigateToNftExplorerLink'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -44,6 +43,7 @@ import { useModalState } from '~/hooks/useModalState'
 import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
 import { useOneClickSwapSetting } from '~/pages/Swap/Swap/settings/OneClickSwap'
 import { serializeSwapAddressesToURLParameters } from '~/pages/Swap/Swap/state/tradeQueryParams'
+import { EARN_ENTRY_POINT_QUERY_PARAM } from '~/pages/TokenDetails/components/earn/earnEntryPointQuery'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 import { SwitchNetworkAction } from '~/state/popups/types'
 import { useHasAlternateGasFeesByChainIdCallback } from '~/state/walletCapabilities/hooks/useHasAlternateGasFees'
@@ -110,6 +110,15 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
     ({ poolId, chainId }: { poolId: Address; chainId: UniverseChainId }) => {
       const url = getPoolDetailsURL(poolId, chainId)
       navigate(url)
+      closeSearchModal()
+    },
+    [navigate, closeSearchModal],
+  )
+
+  const navigateToAuction = useCallback(
+    ({ auctionAddress, chainId: auctionChainId }: { auctionAddress: string; chainId: UniverseChainId }) => {
+      const chainUrlParam = getChainInfo(auctionChainId).urlParam
+      navigate(`/explore/auctions/${chainUrlParam}/${auctionAddress}`)
       closeSearchModal()
     },
     [navigate, closeSearchModal],
@@ -194,13 +203,17 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
   // Mirrors the TDP vault-share banner: route to the underlying token's TDP and auto-open the earn vault
   // modal (TokenDetailsEarnSection reads ?modal=earn-vault on load).
   const navigateToEarnVault = useCallback(
-    ({ vault }: { vault: EarnVaultInfo; position?: EarnPositionInfo }) => {
+    ({ analyticsEntryPoint, vault }: NavigateToEarnVaultArgs) => {
       const tokenChainId = currencyIdToChain(vault.displayCurrencyId)
       const url = getTokenDetailsURL({
         address: currencyIdToAddress(vault.displayCurrencyId),
         chain: tokenChainId ? toGraphQLChain(tokenChainId) : undefined,
       })
-      navigate(`${url}?${EARN_VAULT_MODAL_QUERY_PARAM}=${EARN_VAULT_MODAL_QUERY_VALUE}`)
+      const params = new URLSearchParams({ [EARN_VAULT_MODAL_QUERY_PARAM]: EARN_VAULT_MODAL_QUERY_VALUE })
+      if (analyticsEntryPoint) {
+        params.set(EARN_ENTRY_POINT_QUERY_PARAM, analyticsEntryPoint)
+      }
+      navigate(`${url}?${params}`)
       closeSearchModal()
       accountDrawer.close()
     },
@@ -324,6 +337,7 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
       navigateToNftDetails={navigateToNftDetails}
       navigateToPoolDetails={navigateToPoolDetails}
       navigateToEarnVault={navigateToEarnVault}
+      navigateToAuction={navigateToAuction}
       handleShareToken={handleShareToken}
       navigateToAdvancedSettings={navigateToAdvancedSettings}
       onConnectWallet={onConnectWallet}

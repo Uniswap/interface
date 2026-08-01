@@ -8,6 +8,7 @@ import { zeroAddress } from '~/chains'
 import {
   AuctionInsufficientBalanceError,
   AuctionStartTimePassedError,
+  AuctionXWalletMismatchError,
   useCreateAuctionSubmit,
 } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionSubmit'
 import { createCreateAuctionStore } from '~/pages/Liquidity/CreateAuction/store/createCreateAuctionStore'
@@ -179,6 +180,47 @@ describe('useCreateAuctionSubmit', () => {
     expect(returned).toBeUndefined()
     expect(mockMutateAsync).not.toHaveBeenCalled()
     expect(result.current.error).toBeInstanceOf(AuctionInsufficientBalanceError)
+  })
+
+  it('errors without calling the mutation when the X verification is bound to a different wallet', async () => {
+    const params = buildableParams({
+      xVerification: {
+        xVerificationToken: 'token-1',
+        boundWalletAddress: '0x0000000000000000000000000000000000000001',
+      },
+    })
+    const { result } = renderHook(() => useCreateAuctionSubmit(params))
+
+    let returned: Awaited<ReturnType<typeof result.current.onLaunch>>
+    await act(async () => {
+      returned = await result.current.onLaunch()
+    })
+
+    expect(returned).toBeUndefined()
+    expect(mockMutateAsync).not.toHaveBeenCalled()
+    expect(result.current.error).toBeInstanceOf(AuctionXWalletMismatchError)
+  })
+
+  it('submits when the X verification is bound to the connected wallet, comparing case-insensitively', async () => {
+    mockMutateAsync.mockResolvedValue({
+      transactions: [],
+      predictedTokenAddress: '0xToken',
+      predictedAuctionAddress: '0xAuction',
+      atomicallyBundleable: true,
+      requestId: 'req-1',
+    })
+
+    const params = buildableParams({
+      xVerification: { xVerificationToken: 'token-1', boundWalletAddress: WALLET.toLowerCase() },
+    })
+    const { result } = renderHook(() => useCreateAuctionSubmit(params))
+
+    await act(async () => {
+      await result.current.onLaunch()
+    })
+
+    expect(mockMutateAsync).toHaveBeenCalledOnce()
+    expect(result.current.error).toBeUndefined()
   })
 
   it('returns the validated result on success', async () => {

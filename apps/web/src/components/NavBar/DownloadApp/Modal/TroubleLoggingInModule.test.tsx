@@ -76,8 +76,7 @@ describe('TroubleLoggingInModule', () => {
   it('expands to reveal both options when no recovery method exists', () => {
     renderExpanded()
     expect(screen.getByText('Add a passkey')).toBeInTheDocument()
-    // TODO: We are temporarily blocking recovery setup, undo as part of INFRA-2344
-    // expect(screen.getByText('Add a backup login')).toBeInTheDocument()
+    expect(screen.getByText('Add a backup login')).toBeInTheDocument()
   })
 
   it('hides the backup login option when a recovery method already exists', () => {
@@ -104,10 +103,10 @@ describe('TroubleLoggingInModule', () => {
     fireEvent.click(screen.getByTestId(TestID.DownloadAppAddPasskey))
     expect(mockDispatch).toHaveBeenCalledWith(expect.objectContaining({ payload: { name: ModalName.AddPasskey } }))
   })
-  // TODO: We are temporarily blocking recovery setup, undo as part of INFRA-2344
-  // it('dispatches setOpenModal(AddBackupLogin) when the backup login option is pressed', () => {
-  //   renderExpanded()
-  //   fireEvent.click(screen.getByTestId(TestID.DownloadAppAddBackupLogin))
-  //   expect(mockDispatch).toHaveBeenCalledWith(expect.objectContaining({ payload: { name: ModalName.AddBackupLogin } }))
-  // })
+
+  it('dispatches setOpenModal(AddBackupLogin) when the backup login option is pressed', () => {
+    renderExpanded()
+    fireEvent.click(screen.getByTestId(TestID.DownloadAppAddBackupLogin))
+    expect(mockDispatch).toHaveBeenCalledWith(expect.objectContaining({ payload: { name: ModalName.AddBackupLogin } }))
+  })
 })

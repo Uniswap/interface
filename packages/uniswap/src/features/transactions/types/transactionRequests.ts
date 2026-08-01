@@ -12,3 +12,45 @@ export function isValidTransactionRequest(request: TransactionRequest): request 
     request.chainId > 0
   )
 }
+
+export function sanitizeTransactionRequest(
+  request?: TransactionRequest | null,
+): ValidatedTransactionRequest | undefined {
+  if (!request || !isValidTransactionRequest(request)) {
+    return undefined
+  }
+
+  const {
+    accessList,
+    ccipReadEnabled,
+    customData,
+    data,
+    from,
+    gasLimit,
+    gasPrice,
+    maxFeePerGas,
+    maxPriorityFeePerGas,
+    nonce,
+    to,
+    type,
+    value,
+    chainId,
+  } = request
+
+  return {
+    to,
+    chainId,
+    ...(accessList !== undefined ? { accessList } : {}),
+    ...(ccipReadEnabled !== undefined ? { ccipReadEnabled } : {}),
+    ...(customData !== undefined ? { customData } : {}),
+    ...(data !== undefined ? { data } : {}),
+    ...(from !== undefined ? { from } : {}),
+    ...(gasLimit !== undefined ? { gasLimit } : {}),
+    ...(gasPrice !== undefined ? { gasPrice } : {}),
+    ...(maxFeePerGas !== undefined ? { maxFeePerGas } : {}),
+    ...(maxPriorityFeePerGas !== undefined ? { maxPriorityFeePerGas } : {}),
+    ...(nonce !== undefined ? { nonce } : {}),
+    ...(type !== undefined ? { type } : {}),
+    ...(value !== undefined ? { value } : {}),
+  }
+}

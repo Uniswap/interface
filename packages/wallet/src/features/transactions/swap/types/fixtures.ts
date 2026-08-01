@@ -19,7 +19,9 @@ import type {
 import { TransactionOriginType, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ETH, WETH } from 'uniswap/src/test/fixtures'
 import { mockPermit } from 'uniswap/src/test/fixtures/permit'
+import { createMockFn } from 'uniswap/src/test/mockFn'
 import { createFixture } from 'uniswap/src/test/utils'
+import type { Mocked } from 'vitest'
 import { TransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 import { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
 import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
@@ -38,46 +40,46 @@ import {
 import { TransactionSagaDependencies } from 'wallet/src/features/transactions/types/transactionSagaDependencies'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
-export const mockTransactionService: jest.Mocked<TransactionService> = {
-  getNextNonce: jest.fn(),
-  prepareAndSignTransaction: jest.fn(),
-  submitTransaction: jest.fn(),
-  submitTransactionSync: jest.fn(),
-  executeTransaction: jest.fn(),
-  executeUserOp: jest.fn(),
+export const mockTransactionService: Mocked<TransactionService> = {
+  getNextNonce: createMockFn(),
+  prepareAndSignTransaction: createMockFn(),
+  submitTransaction: createMockFn(),
+  submitTransactionSync: createMockFn(),
+  executeTransaction: createMockFn(),
+  executeUserOp: createMockFn(),
 }
 
-export const mockTransactionSigner: jest.Mocked<TransactionSigner> = {
-  signTypedData: jest.fn(),
-  signTransaction: jest.fn(),
-  prepareTransaction: jest.fn(),
-  sendTransaction: jest.fn(),
-  sendTransactionSync: jest.fn(),
+export const mockTransactionSigner: Mocked<TransactionSigner> = {
+  signTypedData: createMockFn(),
+  signTransaction: createMockFn(),
+  prepareTransaction: createMockFn(),
+  sendTransaction: createMockFn(),
+  sendTransactionSync: createMockFn(),
 }
 
-export const mockTransactionExecutor: jest.Mocked<TransactionExecutor> = {
-  executeStep: jest.fn(),
-  executeStepSync: jest.fn(),
-  executeSteps: jest.fn(),
+export const mockTransactionExecutor: Mocked<TransactionExecutor> = {
+  executeStep: createMockFn(),
+  executeStepSync: createMockFn(),
+  executeSteps: createMockFn(),
 }
 
-export const mockTransactionParamsFactory: jest.Mocked<TransactionParamsFactory> = {
-  createApprovalParams: jest.fn().mockReturnValue({
+export const mockTransactionParamsFactory: Mocked<TransactionParamsFactory> = {
+  createApprovalParams: createMockFn().mockReturnValue({
     typeInfo: { type: TransactionType.Approve },
   }),
-  createPermitParams: jest.fn().mockReturnValue({
+  createPermitParams: createMockFn().mockReturnValue({
     typeInfo: { type: TransactionType.Permit2Approve },
   }),
-  createSwapParams: jest.fn().mockImplementation((data: SwapTransactionData) => ({
+  createSwapParams: createMockFn().mockImplementation((data: SwapTransactionData) => ({
     typeInfo: {
       type:
         data.swapTxContext.trade.routing === TradingApi.Routing.BRIDGE ? TransactionType.Bridge : TransactionType.Swap,
     },
   })),
-  createWrapParams: jest.fn().mockReturnValue({
+  createWrapParams: createMockFn().mockReturnValue({
     typeInfo: { type: TransactionType.Wrap },
   }),
-  createUniswapXOrderParams: jest.fn().mockImplementation((data: UniswapXOrderTransactionData) => ({
+  createUniswapXOrderParams: createMockFn().mockImplementation((data: UniswapXOrderTransactionData) => ({
     permit: data.signedPermit,
     quote: data.quote,
     routing: data.routing,
@@ -89,31 +91,31 @@ export const mockTransactionParamsFactory: jest.Mocked<TransactionParamsFactory>
   })),
 }
 
-export const mockTransactionSagaDependencies: jest.Mocked<TransactionSagaDependencies> = {
+export const mockTransactionSagaDependencies: Mocked<TransactionSagaDependencies> = {
   logger: {
-    error: jest.fn(),
-    warn: jest.fn(),
-    info: jest.fn(),
-    debug: jest.fn(),
-    setDatadogEnabled: jest.fn(),
+    error: createMockFn(),
+    warn: createMockFn(),
+    info: createMockFn(),
+    debug: createMockFn(),
+    setDatadogEnabled: createMockFn(),
   },
-  createProviderService: jest.fn(),
-  createTransactionConfigService: jest.fn(),
-  createTransactionSignerService: jest.fn(),
-  createBundledDelegationTransactionSignerService: jest.fn(),
-  createBundledDelegationUserOpSignerService: jest.fn(),
-  createTransactionService: jest.fn(),
-  createAnalyticsService: jest.fn(),
-  createTransactionRepository: jest.fn(),
-  createFeatureFlagService: jest.fn(),
-  createTransactionExecutor: jest.fn().mockReturnValue(mockTransactionExecutor),
-  createTransactionParamsFactory: jest.fn().mockReturnValue(mockTransactionParamsFactory),
-  getViemClients: jest.fn(),
-  getDelegationInfoForTransaction: jest.fn(),
-  sendAnalyticsEvent: jest.fn(),
+  createProviderService: createMockFn(),
+  createTransactionConfigService: createMockFn(),
+  createTransactionSignerService: createMockFn(),
+  createBundledDelegationTransactionSignerService: createMockFn(),
+  createBundledDelegationUserOpSignerService: createMockFn(),
+  createTransactionService: createMockFn(),
+  createAnalyticsService: createMockFn(),
+  createTransactionRepository: createMockFn(),
+  createFeatureFlagService: createMockFn(),
+  createTransactionExecutor: createMockFn().mockReturnValue(mockTransactionExecutor),
+  createTransactionParamsFactory: createMockFn().mockReturnValue(mockTransactionParamsFactory),
+  getViemClients: createMockFn(),
+  getDelegationInfoForTransaction: createMockFn(),
+  sendAnalyticsEvent: createMockFn(),
   transactionActions,
-  makeSelectAddressTransactions: jest.fn(),
-  runSagaEffect: jest.fn(),
+  makeSelectAddressTransactions: createMockFn(),
+  runSagaEffect: createMockFn(),
 }
 
 export const mockClassicTrade: ClassicTrade = {
@@ -275,12 +277,12 @@ export const prepareExecuteSwapSagaParams = createFixture<SwapParams>()(() => ({
   address: mockSignerAccount.address,
   analytics: mockAnalytics,
   swapTxContext: prepareSwapTxContext(),
-  onSuccess: jest.fn(),
-  onFailure: jest.fn(),
-  onPending: jest.fn(),
-  onClearForm: jest.fn(),
+  onSuccess: createMockFn(),
+  onFailure: createMockFn(),
+  onPending: createMockFn(),
+  onClearForm: createMockFn(),
   preSignedTransaction: preparePreSignedSwapTransaction(),
-  setCurrentStep: jest.fn(),
-  setSteps: jest.fn(),
+  setCurrentStep: createMockFn(),
+  setSteps: createMockFn(),
   caip25Info: undefined,
 }))

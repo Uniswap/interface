@@ -59,6 +59,7 @@ export function ParsedTransactionRequestContent({
       title={t('dapp.request.base.title')}
       transactionGasFeeResult={transactionGasFeeResult}
       disableConfirm={disableConfirm}
+      isCriticalRisk={riskLevel === TransactionRiskLevel.Critical}
       onCancel={onCancel}
       onConfirm={onConfirm}
       showAddressFooter={false}

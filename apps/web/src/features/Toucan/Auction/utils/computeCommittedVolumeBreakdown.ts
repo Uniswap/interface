@@ -5,24 +5,29 @@ import {
   formatCompactFromRaw,
   formatTokenAmountWithSymbol,
 } from '~/features/Toucan/Auction/utils/fixedPointFdv'
+import { safeBigInt } from '~/features/Toucan/Auction/utils/safeBigInt'
 
 export interface CommittedVolumeBreakdown {
   filledRaw: bigint
   inRangeOutstandingRaw: bigint
   outOfRangeRaw: bigint
   totalRaw: bigint
+  // Filled + in-range outstanding: committed capital excluding cancelled / out-of-range bids.
+  committedRaw: bigint
   requiredRaw: bigint | null
 
   filledFormatted: string
   inRangeOutstandingFormatted: string
   outOfRangeFormatted: string
   totalFormatted: string
+  committedFormatted: string
   requiredFormatted: string | null
 
   filledFiatFormatted: string | null
   inRangeOutstandingFiatFormatted: string | null
   outOfRangeFiatFormatted: string | null
   totalFiatFormatted: string | null
+  committedFiatFormatted: string | null
   requiredFiatFormatted: string | null
 }
 
@@ -72,6 +77,7 @@ export function computeCommittedVolumeBreakdown({
   const filledValue = safeBigInt(filledRaw) ?? 0n
   const filled = filledValue < 0n ? 0n : filledValue > filledCap ? filledCap : filledValue
   const inRangeOutstanding = total - outOfRange - filled
+  const committed = filled + inRangeOutstanding
   const required = safeBigInt(requiredRaw)
 
   const toToken = (raw: bigint): string =>
@@ -100,29 +106,21 @@ export function computeCommittedVolumeBreakdown({
     inRangeOutstandingRaw: inRangeOutstanding,
     outOfRangeRaw: outOfRange,
     totalRaw: total,
+    committedRaw: committed,
     requiredRaw: required,
 
     filledFormatted: toToken(filled),
     inRangeOutstandingFormatted: toToken(inRangeOutstanding),
     outOfRangeFormatted: toToken(outOfRange),
     totalFormatted: toToken(total),
+    committedFormatted: toToken(committed),
     requiredFormatted,
 
     filledFiatFormatted: toFiat(filled),
     inRangeOutstandingFiatFormatted: toFiat(inRangeOutstanding),
     outOfRangeFiatFormatted: toFiat(outOfRange),
     totalFiatFormatted: toFiat(total),
+    committedFiatFormatted: toFiat(committed),
     requiredFiatFormatted: required === null ? null : toFiat(required),
-  }
-}
-
-function safeBigInt(value: string | undefined): bigint | null {
-  if (value === undefined) {
-    return null
-  }
-  try {
-    return BigInt(value)
-  } catch {
-    return null
   }
 }

@@ -1,0 +1,19 @@
+diff --git a/scripts/get-app-config-ios.sh b/scripts/get-app-config-ios.sh
+index b612e095ea509f92dac967540f50353507a8ff51..e205e94826cbc4e7f828fecb18ec40b0cc5edc03 100755
+--- a/scripts/get-app-config-ios.sh
++++ b/scripts/get-app-config-ios.sh
+@@ -26,10 +26,13 @@ if [ "$BUNDLE_FORMAT" == "shallow" ]; then
+   RESOURCE_DEST="$DEST/$RESOURCE_BUNDLE_NAME"
+ elif [ "$BUNDLE_FORMAT" == "deep" ]; then
+   RESOURCE_DEST="$DEST/$RESOURCE_BUNDLE_NAME/Contents/Resources"
+-  mkdir -p "$RESOURCE_DEST"
+ else
+   echo "Unsupported bundle format: $BUNDLE_FORMAT"
+   exit 1
+ fi
++# Xcode 26 with the shallow bundle format does not pre-create EXConstants.bundle
++# before this :before_compile script runs, causing the JS write to fail with
++# ENOENT. Ensure the destination dir exists for both formats.
++mkdir -p "$RESOURCE_DEST"
+ 
+ "${EXPO_CONSTANTS_PACKAGE_DIR}/scripts/with-node.sh" "${EXPO_CONSTANTS_PACKAGE_DIR}/scripts/getAppConfig.js" "$PROJECT_ROOT" "$RESOURCE_DEST"

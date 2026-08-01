@@ -1,16 +1,19 @@
 import { ChainedQuoteResponse, TradingApi } from '@universe/api'
-import { PlanResponse } from '@universe/api/src/clients/trading/__generated__/models/PlanResponse'
-import { WalletExecutionContext } from '@universe/api/src/clients/trading/__generated__/models/WalletExecutionContext'
 import { isProdEnv } from '@universe/environment'
 import { call, race, SagaGenerator, take } from 'typed-redux-saga'
 import { CAIP25Session } from 'uniswap/src/features/capabilities/caip25/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { createEarnChainedActionDisplayAmounts } from 'uniswap/src/features/earn/chainedDisplayAmounts'
 import { AppNotificationType, SwapPendingNotification } from 'uniswap/src/features/notifications/slice/types'
 import {
   TransformPlanParams,
   transformPlanResponseToChainedQuote,
 } from 'uniswap/src/features/transactions/swap/hooks/useTradeFromExistingPlan'
+import {
+  areEarnPlanReuseIdentitiesCompatible,
+  getEarnPlanReuseIdentityFromTrade,
+} from 'uniswap/src/features/transactions/swap/plan/earnPlanReuseIdentity'
 import { TransactionAndPlanStep, transformSteps } from 'uniswap/src/features/transactions/swap/plan/planStepTransformer'
 import { consumePrefetchedPlan } from 'uniswap/src/features/transactions/swap/plan/prefetchedPlanStore'
 import { getPlanCompoundSlippageTolerance } from 'uniswap/src/features/transactions/swap/plan/slippage'
@@ -36,6 +39,7 @@ import {
   type ChainedActionTrade,
   type Trade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
+import { isChained } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { signalSwapModalClosed } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
@@ -43,8 +47,9 @@ import { logger } from 'utilities/src/logger/logger'
 interface FetchAndTransformPlanParams {
   quote: ChainedQuoteResponse['quote']
   routing: ChainedQuoteResponse['routing']
-  walletExecutionContext?: WalletExecutionContext
+  walletExecutionContext?: TradingApi.WalletExecutionContext
   trade: Trade
+  modalClosedActionType?: string
 }
 
 export interface FetchAndTransformPlanResult {
@@ -55,7 +60,7 @@ export interface FetchAndTransformPlanResult {
   currentStep: TransactionAndPlanStep
 }
 
-export function transformPlanResponse(response: PlanResponse): FetchAndTransformPlanResult {
+export function transformPlanResponse(response: TradingApi.PlanResponse): FetchAndTransformPlanResult {
   const steps = transformSteps(response.steps)
   const { index: currentStepIndex, step: currentStep } = findFirstActiveStep(steps)
   if (!currentStep) {
@@ -65,7 +70,13 @@ export function transformPlanResponse(response: PlanResponse): FetchAndTransform
   if (!inputChainId) {
     throw new AbortPlanError('No input chain id found. Do not retry plan.')
   }
-  return { planId: response.planId, steps, inputChainId, currentStepIndex, currentStep }
+  return {
+    planId: response.planId,
+    steps,
+    inputChainId,
+    currentStepIndex,
+    currentStep,
+  }
 }
 
 export interface InitializePlanResult extends FetchAndTransformPlanResult {
@@ -82,23 +93,37 @@ export interface InitializePlanResult extends FetchAndTransformPlanResult {
  */
 export function* initializePlan(params: FetchAndTransformPlanParams): SagaGenerator<InitializePlanResult> {
   const { quote, routing, walletExecutionContext } = params
+  const earnIntent = isChained(params.trade) ? params.trade.earnIntent : undefined
+  const modalClosedActionType = params.modalClosedActionType ?? signalSwapModalClosed.type
+  const currentEarnReuseIdentity = getEarnPlanReuseIdentityFromTrade(params.trade)
 
   // Case 1: Using a plan that already exists.
   const resumedPlanState = yield* call(getOrAwaitLatestActivePlan)
 
   if (resumedPlanState) {
-    const currentStep = resumedPlanState.steps[resumedPlanState.currentStepIndex]
-    if (!currentStep) {
-      throw new AbortPlanError('No active step found. Do not retry plan.')
+    // Active plans are global; Earn plans must match the same vault/action/source before reuse.
+    if (
+      areEarnPlanReuseIdentitiesCompatible({
+        activeIdentity: resumedPlanState.earnReuseIdentity,
+        currentIdentity: currentEarnReuseIdentity,
+      })
+    ) {
+      const currentStep = resumedPlanState.steps[resumedPlanState.currentStepIndex]
+      if (!currentStep) {
+        throw new AbortPlanError('No active step found. Do not retry plan.')
+      }
+      return {
+        planId: resumedPlanState.planId,
+        steps: resumedPlanState.steps,
+        currentStepIndex: resumedPlanState.currentStepIndex,
+        inputChainId: resumedPlanState.inputChainId,
+        currentStep,
+        wasPlanResumed: true,
+      }
     }
-    return {
-      planId: resumedPlanState.planId,
-      steps: resumedPlanState.steps,
-      currentStepIndex: resumedPlanState.currentStepIndex,
-      inputChainId: resumedPlanState.inputChainId,
-      currentStep,
-      wasPlanResumed: true,
-    }
+
+    logger.info('planSagaUtils', 'initializePlan', 'Active plan did not match current trade, creating fresh')
+    activePlanStore.getState().actions.backgroundPlan(resumedPlanState.planId)
   }
 
   // Case 2: Using a plan that was pre-fetched, rather than creating a new plan.
@@ -106,8 +131,16 @@ export function* initializePlan(params: FetchAndTransformPlanParams): SagaGenera
   if (prefetchedResponse) {
     try {
       const transformedResponse = transformPlanResponse(prefetchedResponse)
-      updateGlobalPlanState({ activePlan: transformedResponse, originalResponse: prefetchedResponse })
-      return { ...transformedResponse, response: prefetchedResponse, wasPlanResumed: false }
+      updateGlobalPlanState({
+        activePlan: transformedResponse,
+        originalResponse: prefetchedResponse,
+        earnReuseIdentity: currentEarnReuseIdentity,
+      })
+      return {
+        ...transformedResponse,
+        response: prefetchedResponse,
+        wasPlanResumed: false,
+      }
     } catch (error) {
       logger.warn('planSagaUtils', 'initializePlan', 'Prefetched plan unusable, creating fresh', {
         error: error instanceof Error ? error.message : String(error),
@@ -123,9 +156,10 @@ export function* initializePlan(params: FetchAndTransformPlanParams): SagaGenera
         quote,
         routing,
         walletExecutionContext,
+        earnIntent,
         retryConfig: { maxAttempts: 3 },
       }),
-      modalClosed: take(signalSwapModalClosed.type),
+      modalClosed: take(modalClosedActionType),
     })
 
     if (modalClosed || !response) {
@@ -133,7 +167,11 @@ export function* initializePlan(params: FetchAndTransformPlanParams): SagaGenera
     }
 
     const transformedResponse = transformPlanResponse(response)
-    updateGlobalPlanState({ activePlan: transformedResponse, originalResponse: response })
+    updateGlobalPlanState({
+      activePlan: transformedResponse,
+      originalResponse: response,
+      earnReuseIdentity: currentEarnReuseIdentity,
+    })
 
     return { ...transformedResponse, response, wasPlanResumed: false }
   } catch (error) {
@@ -229,9 +267,11 @@ export function logHelper(params: {
 export function updateGlobalPlanState({
   activePlan,
   originalResponse,
+  earnReuseIdentity,
 }: {
   activePlan: FetchAndTransformPlanResult
-  originalResponse: PlanResponse
+  originalResponse: TradingApi.PlanResponse
+  earnReuseIdentity?: ActivePlanData['earnReuseIdentity']
 }): void {
   const planData = {
     response: originalResponse,
@@ -240,6 +280,7 @@ export function updateGlobalPlanState({
     proofPending: false,
     currentStepIndex: activePlan.currentStepIndex,
     inputChainId: activePlan.inputChainId,
+    earnReuseIdentity,
   }
 
   activePlanStore.setState({
@@ -335,9 +376,10 @@ export function* showPendingOnEarlyModalClose(params: {
   sendToast: PlanParams['sendToast']
   planId: string
   onClose: () => void
+  modalClosedActionType?: string
 }): SagaGenerator<void> {
-  const { sendToast, planId, onClose } = params
-  yield* take(signalSwapModalClosed.type)
+  const { sendToast, planId, onClose, modalClosedActionType = signalSwapModalClosed.type } = params
+  yield* take(modalClosedActionType)
   yield* call(onClose)
   backgroundPlan(planId)
   yield* call(
@@ -381,10 +423,26 @@ export function buildTradeFromPlanResponse({
     validatedInput,
     slippageTolerance,
   } satisfies TransformPlanParams)
+  const earnIntent = originalTrade.earnIntent
+  const earnDisplayAmounts = earnIntent
+    ? createEarnChainedActionDisplayAmounts({
+        quote: adaptedQuote,
+        currencyIn: validatedInput.currencyIn,
+        currencyOut: validatedInput.currencyOut,
+        earnIntent,
+      })
+    : undefined
+
+  if (earnIntent && !earnDisplayAmounts) {
+    throw new PlanValidationError('Unable to build chained trade from plan response')
+  }
+
   const trade = createChainedActionTrade({
     quote: adaptedQuote,
     currencyIn: validatedInput.currencyIn,
     currencyOut: validatedInput.currencyOut,
+    earnIntent,
+    displayAmountsOverride: earnDisplayAmounts ?? undefined,
   })
 
   if (!trade) {
@@ -401,7 +459,7 @@ export function getWalletExecutionContext(
     return undefined
   }
 
-  const scopes = Object.entries(walletExecutionContext.scopes).reduce<WalletExecutionContext['scopes']>(
+  const scopes = Object.entries(walletExecutionContext.scopes).reduce<TradingApi.WalletExecutionContext['scopes']>(
     (acc, [key, scope]) => {
       if (!scope) {
         return acc

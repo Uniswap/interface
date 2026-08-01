@@ -3,7 +3,7 @@ import { NFTPermitData, PermitBatchData } from '@uniswap/client-liquidity/dist/u
 import { ONE, Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap/sdk-core'
 import { GasEstimate, TradingApi } from '@universe/api'
-import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
+import type { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import type { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { ACROSS_DAPP_INFO, isBridge, isClassic, isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
@@ -19,6 +19,7 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import {
   PopulatedTransactionRequestArray,
+  sanitizeTransactionRequest,
   ValidatedTransactionRequest,
 } from 'uniswap/src/features/transactions/types/transactionRequests'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
@@ -303,10 +304,7 @@ export function getProtocolVersionFromTrade(trade: Trade): Protocol | undefined 
 export function validateTransactionRequest(
   request?: TransactionRequest | null,
 ): ValidatedTransactionRequest | undefined {
-  if (request?.to && request.chainId) {
-    return { ...request, to: request.to, chainId: request.chainId }
-  }
-  return undefined
+  return sanitizeTransactionRequest(request)
 }
 
 export function validateTransactionRequests(

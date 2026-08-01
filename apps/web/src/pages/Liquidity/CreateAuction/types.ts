@@ -83,9 +83,15 @@ export const DEFAULT_NEW_TOKEN_AUCTION_SUPPLY_PERCENT = new Percent(100, 100)
 /** Default share for existing tokens: auction the user's entire wallet balance. */
 export const DEFAULT_EXISTING_TOKEN_AUCTION_SUPPLY_PERCENT = new Percent(100, 100)
 
+/**
+ * Which raise-currency option the creator picked: the chain's native currency (ETH/AVAX/OKB) or its
+ * curated primary stablecoin (USDC/USDG/USDT0). Resolve to the actual token via
+ * `getRaiseCurrencyAsCurrency` / `getPrimaryStablecoin`.
+ */
 export enum RaiseCurrency {
-  ETH = 'ETH',
-  USDC = 'USDC',
+  // oxlint-disable-next-line eslint-js/no-restricted-syntax -- raise-currency slot name, not the NATIVE_CHAIN_ID sentinel
+  NATIVE = 'NATIVE',
+  STABLECOIN = 'STABLECOIN',
 }
 
 /** What currency the user types floor price / FDV in (raise token vs USD fiat). */
@@ -161,9 +167,11 @@ export type ConfigureAuctionFormState = {
   kycValidationHookAddress: string | undefined
 }
 
-type XVerification = {
+export type XVerification = {
   xHandle: string
   xVerificationToken: string
+  /** Wallet the token was bound to at verify time. Cleared on wallet switch so a stale token never submits. */
+  boundWalletAddress: string
 }
 
 export enum PriceRangeStrategy {
@@ -239,6 +247,8 @@ const DEFAULT_FEE_DATA: FeeData = {
 
 interface CreateAuctionState {
   step: CreateAuctionStep
+  /** QuickLaunch: locks everything except token info to the quick-launch preset (flag-gated UI). */
+  quickLaunch: boolean
   tokenForm: TokenFormState
   tokenColor: TokenAccentHex | undefined
   configureAuction: ConfigureAuctionFormState
@@ -257,6 +267,7 @@ export const DEFAULT_EXISTING_TOKEN_FORM: ExistingTokenFormState = {
 
 export const DEFAULT_CREATE_AUCTION_STATE: CreateAuctionState = {
   step: CreateAuctionStep.ADD_TOKEN_INFO,
+  quickLaunch: true,
   tokenColor: undefined,
   xVerification: undefined,
   customizePool: {
@@ -285,7 +296,8 @@ export const DEFAULT_CREATE_AUCTION_STATE: CreateAuctionState = {
     description: '',
     imageUrl: '',
     localImagePreviewUri: '',
-    network: UniverseChainId.Unichain,
+    // Mainnet is pinned first in the supported-chains list; the create-new-token picker defaults to it.
+    network: UniverseChainId.Mainnet,
     xProfile: '',
     totalSupply: NEW_TOKEN_DEFAULT_TOTAL_SUPPLY,
   },
@@ -297,7 +309,7 @@ export const DEFAULT_CREATE_AUCTION_STATE: CreateAuctionState = {
       type: PostAuctionLiquidityAllocationType.SINGLE,
       percent: DEFAULT_POST_AUCTION_LIQUIDITY_PERCENT,
     },
-    raiseCurrency: RaiseCurrency.ETH,
+    raiseCurrency: RaiseCurrency.NATIVE,
     floorPrice: '',
     floorPriceInput: undefined,
     kycValidationHookAddress: undefined,
@@ -306,6 +318,7 @@ export const DEFAULT_CREATE_AUCTION_STATE: CreateAuctionState = {
 
 interface CreateAuctionStoreActions {
   setStep: (step: CreateAuctionStep) => void
+  setQuickLaunch: (enabled: boolean) => void
   goToNextStep: () => void
   goToPreviousStep: () => void
   setTokenMode: (mode: TokenMode) => void

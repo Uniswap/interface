@@ -4,6 +4,7 @@ const path = require('path')
 const withStorybook = require('@storybook/react-native/metro/withStorybook')
 const { mergeConfig } = require('@react-native/metro-config')
 const { getDefaultConfig: getExpoDefaultConfig } = require('expo/metro-config')
+const { withUniwindConfig } = require('uniwind/metro')
 
 const defaultConfig = getExpoDefaultConfig(__dirname)
 
@@ -19,6 +20,10 @@ const customConfig = {
   },
   transformer: {
     babelTransformerPath: require.resolve('react-native-svg-transformer'),
+    // Hermes runs async/await, generators, etc. natively. Without this the babel preset falls back to
+    // the 'default' profile and regenerator-transpiles async, yielding promises that fail
+    // `instanceof Promise` against Hermes' native Promise (a Promise-identity split).
+    unstable_transformProfile: 'hermes-stable',
     getTransformOptions: async () => ({
       transform: {
         experimentalImportSupport: false,
@@ -92,10 +97,11 @@ finalConfig.resolver.resolveRequest = (context, moduleName, platform) => {
 // Fold a hash of those files into Metro's cacheVersion so any change busts the cache
 // automatically. The file list must mirror what babel.config.js loads for the active mode.
 function getEnvCacheVersion() {
-  const envFiles =
-    process.env.USE_NEW_CONFIGS !== 'false'
-      ? [path.resolve(__dirname, '.env.new'), path.resolve(__dirname, '.env.new.override')]
-      : [path.resolve(__dirname, '../../.env.defaults'), path.resolve(__dirname, '../../.env.defaults.local')]
+  const envFiles = [
+    path.resolve(__dirname, '.env'),
+    path.resolve(__dirname, '.env.dev'),
+    path.resolve(__dirname, '.env.override'),
+  ]
   const hash = crypto.createHash('md5')
   for (const filePath of envFiles) {
     if (fs.existsSync(filePath)) {
@@ -110,4 +116,11 @@ function getEnvCacheVersion() {
 // Append to any existing cacheVersion rather than overwriting it.
 finalConfig.cacheVersion = [finalConfig.cacheVersion, getEnvCacheVersion()].filter(Boolean).join('-')
 
-module.exports = finalConfig
+// uniwind (Tailwind v4 for React Native) must be the OUTERMOST wrapper. It sets
+// `transformerPath` (not `transformer.babelTransformerPath`), so the existing
+// react-native-svg-transformer is preserved — uniwind's transformer delegates
+// non-CSS files to the upstream Expo/Metro worker, which still honors it. It also
+// spreads the existing resolver, keeping the @hpke/jose/zod resolveRequest chain.
+module.exports = withUniwindConfig(finalConfig, {
+  cssEntryFile: './src/global.css',
+})

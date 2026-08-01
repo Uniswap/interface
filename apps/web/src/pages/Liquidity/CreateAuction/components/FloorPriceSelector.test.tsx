@@ -41,7 +41,7 @@ function ControlledFloorPriceSelector() {
         chainId={UniverseChainId.Mainnet}
         floorPrice={floorPrice}
         floorPriceInput={floorPriceInput}
-        raiseCurrency={RaiseCurrency.USDC}
+        raiseCurrency={RaiseCurrency.STABLECOIN}
         tokenTotalSupply={supply1e9}
         inputCurrency={inputCurrency}
         usdPriceNum={1}
@@ -171,5 +171,13 @@ describe('FloorPriceSelector FDV draft commit/blur', () => {
     })
     expect(screen.getByTestId('canonical-floor-price').textContent).toBe('0.005')
     expect(focusInput().value).toBe('5,000,000')
+  })
+})
+
+describe('FloorPriceSelector raise-currency display', () => {
+  it('shows the resolved ticker, never the RaiseCurrency slot name', () => {
+    const { container } = render(<ControlledFloorPriceSelector />)
+    expect(container.textContent).toContain('USDC')
+    expect(container.textContent).not.toContain('STABLECOIN')
   })
 })

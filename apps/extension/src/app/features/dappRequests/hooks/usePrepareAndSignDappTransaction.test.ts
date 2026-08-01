@@ -10,45 +10,46 @@ import {
   ValidatedTransactionRequest,
 } from 'uniswap/src/features/transactions/types/transactionRequests'
 import { logger } from 'utilities/src/logger/logger'
+import type { Mocked, MockedFunction } from 'vitest'
 import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 
 // Mock dependencies
-jest.mock('react-redux', () => ({
-  useDispatch: jest.fn(),
+vi.mock('react-redux', () => ({
+  useDispatch: vi.fn(),
 }))
 
-jest.mock('src/app/features/dappRequests/hooks/useConditionalPreSignDelay', () => ({
-  useConditionalPreSignDelay: jest.fn(),
+vi.mock('src/app/features/dappRequests/hooks/useConditionalPreSignDelay', () => ({
+  useConditionalPreSignDelay: vi.fn(),
 }))
 
-jest.mock('src/app/features/dappRequests/configuredSagas', () => ({
+vi.mock('src/app/features/dappRequests/configuredSagas', () => ({
   prepareAndSignDappTransactionActions: {
-    trigger: jest.fn((payload) => ({ type: 'test/trigger', payload })),
-    cancel: jest.fn(() => ({ type: 'test/cancel' })),
+    trigger: vi.fn((payload) => ({ type: 'test/trigger', payload })),
+    cancel: vi.fn(() => ({ type: 'test/cancel' })),
   },
 }))
 
-jest.mock('uniswap/src/features/transactions/types/transactionRequests', () => ({
-  isValidTransactionRequest: jest.fn(),
+vi.mock('uniswap/src/features/transactions/types/transactionRequests', () => ({
+  isValidTransactionRequest: vi.fn(),
 }))
 
-jest.mock('utilities/src/logger/logger', () => ({
+vi.mock('utilities/src/logger/logger', () => ({
   logger: {
-    error: jest.fn(),
+    error: vi.fn(),
   },
 }))
 
 // Typed mocks
-const mockUseDispatch = useDispatch as jest.MockedFunction<typeof useDispatch>
-const mockUseConditionalPreSignDelay = useConditionalPreSignDelay as jest.MockedFunction<
-  typeof useConditionalPreSignDelay
+const mockUseDispatch = useDispatch as MockedFunction<typeof useDispatch>
+const mockUseConditionalPreSignDelay = useConditionalPreSignDelay as MockedFunction<typeof useConditionalPreSignDelay>
+const mockIsValidTransactionRequest = isValidTransactionRequest as unknown as MockedFunction<
+  typeof isValidTransactionRequest
 >
-const mockIsValidTransactionRequest = isValidTransactionRequest as jest.MockedFunction<typeof isValidTransactionRequest>
-const mockLogger = logger as jest.Mocked<typeof logger>
+const mockLogger = logger as Mocked<typeof logger>
 
 describe('usePrepareAndSignDappTransaction', () => {
-  const mockDispatch = jest.fn()
+  const mockDispatch = vi.fn()
 
   const mockAccount: SignerMnemonicAccount = {
     type: AccountType.SignerMnemonic,
@@ -75,7 +76,7 @@ describe('usePrepareAndSignDappTransaction', () => {
   }
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
 
     mockUseDispatch.mockReturnValue(mockDispatch)
     mockIsValidTransactionRequest.mockReturnValue(true)
@@ -200,7 +201,9 @@ describe('usePrepareAndSignDappTransaction', () => {
       const callback = (mockUseConditionalPreSignDelay as any)._capturedCallback
       callback?.()
 
-      expect(mockDispatch).toHaveBeenCalledWith(prepareAndSignDappTransactionActions.trigger(expect.any(Object)))
+      expect(mockDispatch).toHaveBeenCalledWith(
+        prepareAndSignDappTransactionActions.trigger(expect.any(Object) as never),
+      )
 
       // Change chainId to trigger cancellation
       rerender({
@@ -318,8 +321,8 @@ describe('usePrepareAndSignDappTransaction', () => {
           request: mockRequest,
           account: mockAccount,
           chainId: mockChainId,
-          onSuccess: expect.any(Function),
-          onFailure: expect.any(Function),
+          onSuccess: expect.any(Function) as never,
+          onFailure: expect.any(Function) as never,
         }),
       )
     })

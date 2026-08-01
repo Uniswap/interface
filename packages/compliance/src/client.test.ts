@@ -3,6 +3,7 @@ import {
   type ComplianceV2Client,
   fetchFeatureGatedToken,
   fetchGatedFeatures,
+  screenAddress,
   setTokenAcknowledgement,
 } from '@universe/compliance/src/client'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -14,11 +15,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 const featureGatedTokensMethod = vi.fn()
 const setTokenAcknowledgementMethod = vi.fn()
 const gatedFeaturesMethod = vi.fn()
+const screenAddressMethod = vi.fn()
 
 const client = {
   featureGatedTokens: featureGatedTokensMethod,
   setTokenAcknowledgement: setTokenAcknowledgementMethod,
   gatedFeatures: gatedFeaturesMethod,
+  screenAddress: screenAddressMethod,
 } as unknown as ComplianceV2Client
 
 describe(fetchFeatureGatedToken, () => {
@@ -100,5 +103,38 @@ describe(fetchGatedFeatures, () => {
     gatedFeaturesMethod.mockResolvedValue({ features: [] })
 
     expect(await fetchGatedFeatures(client)).toEqual([])
+  })
+})
+
+describe(screenAddress, () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('sends the address and chain id and returns the block flag', async () => {
+    screenAddressMethod.mockResolvedValue({ block: true })
+
+    const result = await screenAddress(client, { address: '0xabc', chainId: 8453 })
+
+    expect(screenAddressMethod).toHaveBeenCalledTimes(1)
+    const request = screenAddressMethod.mock.calls[0]?.[0]
+    expect(request.address).toBe('0xabc')
+    expect(request.chainId).toBe(8453)
+    expect(result).toBe(true)
+  })
+
+  it('omits chain id when not provided (routes to the default provider)', async () => {
+    screenAddressMethod.mockResolvedValue({ block: false })
+
+    await screenAddress(client, { address: '0xabc' })
+
+    const request = screenAddressMethod.mock.calls[0]?.[0]
+    expect(request.chainId).toBeUndefined()
+  })
+
+  it('returns false for a clean address', async () => {
+    screenAddressMethod.mockResolvedValue({ block: false })
+
+    expect(await screenAddress(client, { address: '0xabc' })).toBe(false)
   })
 })

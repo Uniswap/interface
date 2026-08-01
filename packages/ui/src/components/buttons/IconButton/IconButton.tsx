@@ -58,7 +58,7 @@ export const IconButton = forwardRef<TamaguiElement, IconButtonProps>(function I
     icon,
     shouldAnimateBetweenLoadingStates = true,
     loading,
-    isDisabled: propDisabled,
+    disabled: propDisabled,
     size = 'medium',
     variant = 'default',
     emphasis = 'primary',
@@ -72,7 +72,7 @@ export const IconButton = forwardRef<TamaguiElement, IconButtonProps>(function I
     loading,
   })
 
-  const isDisabled = getIsButtonDisabled({ isDisabled: propDisabled, loading })
+  const isDisabled = getIsButtonDisabled({ disabled: propDisabled, loading })
 
   return (
     <IconButtonFrame

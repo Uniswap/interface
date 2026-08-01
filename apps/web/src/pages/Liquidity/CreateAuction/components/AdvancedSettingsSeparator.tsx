@@ -5,7 +5,19 @@ import { ChevronsOut } from 'ui/src/components/icons/ChevronsOut'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 
-export function AdvancedSettingsSeparator({ isExpanded, onToggle }: { isExpanded: boolean; onToggle: () => void }) {
+export function AdvancedSettingsSeparator({
+  isExpanded,
+  onToggle,
+  expandedLabel,
+  collapsedLabel,
+}: {
+  isExpanded: boolean
+  onToggle: () => void
+  /** Overrides the default "hide advanced settings" label. */
+  expandedLabel?: string
+  /** Overrides the default "show advanced settings" label. */
+  collapsedLabel?: string
+}) {
   const { t } = useTranslation()
 
   return (
@@ -15,8 +27,8 @@ export function AdvancedSettingsSeparator({ isExpanded, onToggle }: { isExpanded
         <TouchableArea flexDirection="row" alignItems="center" py="$spacing4" onPress={onToggle}>
           <Text variant="buttonLabel4" color="$neutral2">
             {isExpanded
-              ? t('toucan.createAuction.step.configureAuction.hideAdvancedSettings')
-              : t('toucan.createAuction.step.configureAuction.showAdvancedSettings')}
+              ? (expandedLabel ?? t('toucan.createAuction.step.configureAuction.hideAdvancedSettings'))
+              : (collapsedLabel ?? t('toucan.createAuction.step.configureAuction.showAdvancedSettings'))}
           </Text>
           {isExpanded ? (
             <ChevronsIn size="$icon.16" color="$neutral2" />

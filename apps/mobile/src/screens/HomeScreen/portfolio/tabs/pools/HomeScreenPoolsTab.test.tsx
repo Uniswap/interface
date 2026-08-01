@@ -7,22 +7,22 @@ import { PositionStatusFilterValue } from 'uniswap/src/features/positions/compon
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 
-const mockNavigate = jest.fn()
-jest.mock('src/app/navigation/types', () => ({
-  ...jest.requireActual('src/app/navigation/types'),
+const mockNavigate = vi.fn()
+vi.mock('src/app/navigation/types', async () => ({
+  ...(await vi.importActual('src/app/navigation/types')),
   useAppStackNavigation: () => ({ navigate: mockNavigate }),
 }))
 
-jest.mock('uniswap/src/components/portfolio/PositionItem/PositionItem', () => ({
-  PositionItem: ({ positionInfo, onPress }: { positionInfo: { poolId: string }; onPress?: () => void }) => {
-    const { Text } = jest.requireActual('ui/src')
-    return (
+vi.mock('uniswap/src/components/portfolio/PositionItem/PositionItem', async () => {
+  const { Text } = await vi.importActual<typeof import('ui/src')>('ui/src')
+  return {
+    PositionItem: ({ positionInfo, onPress }: { positionInfo: { poolId: string }; onPress?: () => void }) => (
       <Text testID={`position-${positionInfo.poolId}`} onPress={onPress}>
         {positionInfo.poolId}
       </Text>
-    )
-  },
-}))
+    ),
+  }
+})
 
 const noop = (): void => undefined
 
@@ -45,7 +45,7 @@ const baseData: PoolsListRenderData = {
 const position = (poolId: string, status: PositionStatus = PositionStatus.IN_RANGE): never =>
   ({ poolId, tokenId: 't', chainId: 1, status }) as never
 
-const mockOnStatusFilterChange = jest.fn()
+const mockOnStatusFilterChange = vi.fn()
 
 const renderTab = (
   overrides: Partial<PoolsListRenderData> = {},
@@ -85,16 +85,16 @@ describe('HomeScreenPoolsTab', () => {
   it('renders the error state with a retry CTA when the query errors before any data', () => {
     renderTab({ hasErrorWithoutData: true })
 
-    expect(screen.getByText('Pools balances currently unavailable')).toBeDefined()
-    expect(screen.getByText('Try again')).toBeDefined()
+    expect(screen.getByText('pool.balances.unavailable')).toBeDefined()
+    expect(screen.getByText('common.button.tryAgain')).toBeDefined()
     expect(screen.queryByTestId('pools-loading-skeleton')).toBeNull()
   })
 
   it('calls refetch when the retry CTA is pressed', () => {
-    const refetch = jest.fn()
+    const refetch = vi.fn()
     renderTab({ hasErrorWithoutData: true, refetch })
 
-    fireEvent.press(screen.getByText('Try again'), { stopPropagation: () => undefined })
+    fireEvent.press(screen.getByText('common.button.tryAgain'), { stopPropagation: () => undefined })
 
     expect(refetch).toHaveBeenCalledTimes(1)
   })
@@ -103,7 +103,7 @@ describe('HomeScreenPoolsTab', () => {
     renderTab({ isLoadingFirstPage: true })
 
     expect(screen.getByTestId('pools-loading-skeleton')).toBeDefined()
-    expect(screen.queryByText('Pools balances currently unavailable')).toBeNull()
+    expect(screen.queryByText('pool.balances.unavailable')).toBeNull()
   })
 
   it('does not render rows until the tab has been visited', () => {
@@ -185,7 +185,9 @@ describe('HomeScreenPoolsTab', () => {
       { statusFilter: PositionStatusFilterValue.All },
     )
 
-    const rendered = screen.getAllByTestId(/^position-/).map((node) => node.props['testID'])
+    const rendered = screen
+      .getAllByTestId(/^position-/)
+      .map((node) => (node as unknown as HTMLElement).getAttribute('data-testid'))
     expect(rendered).toEqual(['position-pool-open-1', 'position-pool-open-2', 'position-pool-closed'])
   })
 

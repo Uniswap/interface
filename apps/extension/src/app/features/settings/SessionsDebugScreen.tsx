@@ -507,10 +507,10 @@ export function SessionsDebugScreen(): JSX.Element {
 
         {/* Action Buttons */}
         <Flex row gap="$spacing8" flexWrap="wrap">
-          <Button size="small" emphasis="secondary" isDisabled={isLoading} onPress={refreshSessionState}>
+          <Button size="small" emphasis="secondary" disabled={isLoading} onPress={refreshSessionState}>
             Refresh
           </Button>
-          <Button size="small" emphasis="tertiary" isDisabled={isLoading} onPress={clearAllState}>
+          <Button size="small" emphasis="tertiary" disabled={isLoading} onPress={clearAllState}>
             Clear All State
           </Button>
         </Flex>
@@ -519,16 +519,16 @@ export function SessionsDebugScreen(): JSX.Element {
         <Flex backgroundColor="$surface2" p="$spacing16" borderRadius="$rounded16" gap="$spacing12">
           <Text variant="subheading1">Step-by-Step Testing</Text>
           <Flex gap="$spacing8">
-            <Button size="small" emphasis="primary" isDisabled={isLoading} onPress={handleInitSession}>
+            <Button size="small" emphasis="primary" disabled={isLoading} onPress={handleInitSession}>
               1. Init Session
             </Button>
-            <Button size="small" emphasis="secondary" isDisabled={isLoading} onPress={handleRequestChallenge}>
+            <Button size="small" emphasis="secondary" disabled={isLoading} onPress={handleRequestChallenge}>
               2. Request Challenge
             </Button>
             <Button
               size="small"
               emphasis="secondary"
-              isDisabled={isLoading || !hasChallenge}
+              disabled={isLoading || !hasChallenge}
               onPress={handleSolveChallenge}
             >
               3. Solve Challenge

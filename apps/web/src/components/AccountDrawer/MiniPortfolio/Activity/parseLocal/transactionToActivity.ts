@@ -31,6 +31,7 @@ import {
   parseSwap,
 } from '~/components/AccountDrawer/MiniPortfolio/Activity/parseLocal/transactions/parseSwap'
 import {
+  parseAuctionLaunch,
   parseToucanBid,
   parseWithdrawBidAndClaimTokens,
 } from '~/components/AccountDrawer/MiniPortfolio/Activity/parseLocal/transactions/parseToucan'
@@ -54,17 +55,23 @@ import { isConfirmedTx } from '~/state/transactions/utils'
 export async function transactionToActivity({
   details,
   formatNumber,
+  isEarnActivityDisplayEnabled = true,
 }: {
   details?: InterfaceTransactionDetails
   formatNumber: FormatNumberFunctionType
+  isEarnActivityDisplayEnabled?: boolean
 }): Promise<Activity | undefined> {
   if (!details) {
     return undefined
   }
   const { chainId } = details
   try {
-    // For swaps that might be UniswapX, we'll set the title later
-    const shouldDeferTitle = details.typeInfo.type === TransactionType.Swap && isUniswapXActivity(details)
+    const isEarnPlan =
+      isEarnActivityDisplayEnabled &&
+      details.typeInfo.type === TransactionType.Plan &&
+      details.typeInfo.earnAction !== undefined
+    const isUniswapX = details.typeInfo.type === TransactionType.Swap && isUniswapXActivity(details)
+    const shouldDeferTitle = isEarnPlan || isUniswapX
 
     const defaultFields: Activity = {
       id: details.id,
@@ -72,116 +79,29 @@ export async function transactionToActivity({
       chainId,
       // Store transaction request in options.request for consistent nonce access
       options: 'options' in details ? details.options : undefined,
-      title: shouldDeferTitle ? '' : getActivityTitle({ type: details.typeInfo.type, status: details.status }),
+      title: shouldDeferTitle
+        ? ''
+        : getActivityTitle({
+            type: details.typeInfo.type,
+            status: details.status,
+          }),
       status: details.status,
       timestamp: (isConfirmedTx(details) ? details.receipt.confirmedTime : details.addedTime) / ONE_SECOND_MS,
       from: details.from,
     }
 
-    let additionalFields: Partial<Activity> = {}
-    const info = details.typeInfo
-    if (info.type === TransactionType.Swap) {
-      if (isUniswapXActivity(details)) {
-        additionalFields = await parseUniswapXOrderLocal({
-          details,
-          formatNumber,
-        })
-      } else {
-        // Handle as regular swap
-        const confirmedSwap = isConfirmedSwapTypeInfo(info)
-        if (!confirmedSwap) {
-          additionalFields = await parseSwap({
-            swap: info,
-            formatNumber,
-          })
-        } else {
-          additionalFields = await parseConfirmedSwap({
-            swap: info,
-            formatNumber,
-          })
-        }
-      }
-    } else if (info.type === TransactionType.Bridge) {
-      additionalFields = await parseBridge({
-        bridge: info,
-        formatNumber,
-        chainId,
-      })
-    } else if (info.type === TransactionType.Approve) {
-      additionalFields = await parseApproval({
-        approval: info,
-        chainId,
-        status: details.status,
-      })
-    } else if (info.type === TransactionType.Wrap) {
-      additionalFields = parseWrap({
-        wrap: info,
-        chainId,
-        status: details.status,
-        formatNumber,
-      })
-    } else if (
-      info.type === TransactionType.LiquidityIncrease ||
-      info.type === TransactionType.LiquidityDecrease ||
-      info.type === TransactionType.CreatePool ||
-      info.type === TransactionType.CreatePair ||
-      info.type === TransactionType.MigrateLiquidityV3ToV4
-    ) {
-      additionalFields = await parseLiquidity({
-        lp: info,
-        formatNumber,
-      })
-    } else if (info.type === TransactionType.CollectFees) {
-      additionalFields = await parseCollectFees({
-        collectInfo: info,
-        formatNumber,
-      })
-    } else if (info.type === TransactionType.MigrateLiquidityV2ToV3) {
-      additionalFields = await parseMigrateV2ToV3(info)
-    } else if (info.type === TransactionType.Send) {
-      additionalFields = await parseSend({
-        send: info,
-        formatNumber,
-        chainId,
-      })
-    } else if (info.type === TransactionType.ToucanBid) {
-      additionalFields = await parseToucanBid({
-        bid: info,
-        formatNumber,
-        chainId,
-      })
-    } else if (info.type === TransactionType.ToucanWithdrawBidAndClaimTokens) {
-      additionalFields = await parseWithdrawBidAndClaimTokens({
-        withdraw: info,
-        formatNumber,
-        chainId,
-        status: details.status,
-      })
-    } else if (info.type === TransactionType.LPIncentivesClaimRewards) {
-      additionalFields = await parseLpIncentivesClaim({
-        info,
-        chainId,
-      })
-    } else if (info.type === TransactionType.Permit2Approve) {
-      additionalFields = {
-        title: i18n.t('common.permit'),
-        descriptor: i18n.t('notification.transaction.unknown.success.short'),
-        portfolioLogoCustomIcon: createElement(SwapDotted, { size: '$icon.24', color: '$neutral2' }),
-      }
-    } else if (info.type === TransactionType.Plan) {
-      additionalFields = await parsePlan({
-        plan: info,
-        formatNumber,
-        chainId,
-      })
-    }
+    const additionalFields = await parseTransactionTypeFields({
+      details,
+      formatNumber,
+      chainId,
+      isEarnActivityDisplayEnabled,
+    })
 
     const activity = { ...defaultFields, ...additionalFields }
 
-    // Skip the canceled transaction override for UniswapX orders since they handle it specially
-    const isUniswapX = details.typeInfo.type === TransactionType.Swap && isUniswapXActivity(details)
+    // Skip the canceled transaction override for types that provide their own status-specific titles.
     const CancelledTransactionTitleTable = getCancelledTransactionTitleTable()
-    if (details.status === TransactionStatus.Canceled && !isUniswapX) {
+    if (details.status === TransactionStatus.Canceled && !isUniswapX && !isEarnPlan) {
       activity.title = CancelledTransactionTitleTable[details.typeInfo.type]
       activity.status = TransactionStatus.Success
     }
@@ -190,6 +110,122 @@ export async function transactionToActivity({
   } catch (error) {
     logger.warn('parseLocal', 'transactionToActivity', `Failed to parse transaction ${details.hash}`, error)
     return undefined
+  }
+}
+
+async function parseTransactionTypeFields({
+  details,
+  formatNumber,
+  chainId,
+  isEarnActivityDisplayEnabled,
+}: {
+  details: InterfaceTransactionDetails
+  formatNumber: FormatNumberFunctionType
+  chainId: UniverseChainId
+  isEarnActivityDisplayEnabled: boolean
+}): Promise<Partial<Activity>> {
+  const info = details.typeInfo
+
+  switch (info.type) {
+    case TransactionType.Swap: {
+      if (isUniswapXActivity(details)) {
+        return parseUniswapXOrderLocal({
+          details,
+          formatNumber,
+        })
+      }
+
+      const confirmedSwap = isConfirmedSwapTypeInfo(info)
+      return confirmedSwap
+        ? parseConfirmedSwap({
+            swap: info,
+            formatNumber,
+          })
+        : parseSwap({
+            swap: info,
+            formatNumber,
+          })
+    }
+    case TransactionType.Bridge:
+      return parseBridge({
+        bridge: info,
+        formatNumber,
+        chainId,
+      })
+    case TransactionType.Approve:
+      return parseApproval({
+        approval: info,
+        chainId,
+        status: details.status,
+      })
+    case TransactionType.Wrap:
+      return parseWrap({
+        wrap: info,
+        chainId,
+        status: details.status,
+        formatNumber,
+      })
+    case TransactionType.LiquidityIncrease:
+    case TransactionType.LiquidityDecrease:
+    case TransactionType.CreatePool:
+    case TransactionType.CreatePair:
+    case TransactionType.MigrateLiquidityV3ToV4:
+      return parseLiquidity({
+        lp: info,
+        formatNumber,
+      })
+    case TransactionType.CollectFees:
+      return parseCollectFees({
+        collectInfo: info,
+        formatNumber,
+      })
+    case TransactionType.MigrateLiquidityV2ToV3:
+      return parseMigrateV2ToV3(info)
+    case TransactionType.Send:
+      return parseSend({
+        send: info,
+        formatNumber,
+        chainId,
+      })
+    case TransactionType.ToucanBid:
+      return parseToucanBid({
+        bid: info,
+        formatNumber,
+        chainId,
+      })
+    case TransactionType.ToucanWithdrawBidAndClaimTokens:
+      return parseWithdrawBidAndClaimTokens({
+        withdraw: info,
+        formatNumber,
+        chainId,
+        status: details.status,
+      })
+    case TransactionType.AuctionLaunch:
+      return parseAuctionLaunch(info)
+    case TransactionType.LPIncentivesClaimRewards:
+      return parseLpIncentivesClaim({
+        info,
+        chainId,
+      })
+    case TransactionType.Permit2Approve:
+      return {
+        title: i18n.t('common.permit'),
+        descriptor: i18n.t('notification.transaction.unknown.success.short'),
+        portfolioLogoCustomIcon: createElement(SwapDotted, {
+          size: '$icon.24',
+          color: '$neutral2',
+        }),
+      }
+    case TransactionType.Plan:
+      return parsePlan({
+        plan: info,
+        formatNumber,
+        chainId,
+        status: details.status,
+        isEarnActivityDisplayEnabled,
+      })
+    default:
+      return {}
   }
 }
 
@@ -210,7 +246,10 @@ export async function forTransactionToActivity({
   const currency = await getCurrencyFromCurrencyId(buildCurrencyId(chainId, transaction.sourceCurrencyCode))
   const status = statusToTransactionInfoStatus(transaction.status)
   const serviceProvider = transaction.serviceProviderDetails?.name ?? ''
-  const tokenAmount = formatNumber({ value: transaction.sourceAmount, type: NumberType.TokenNonTx })
+  const tokenAmount = formatNumber({
+    value: transaction.sourceAmount,
+    type: NumberType.TokenNonTx,
+  })
   const fiatAmount = formatFiatPrice(transaction.destinationAmount, NumberType.FiatTokenPrice)
 
   let title = ''
@@ -231,7 +270,9 @@ export async function forTransactionToActivity({
     hash: transaction.externalSessionId,
     chainId,
     title,
-    descriptor: `${tokenAmount} ${transaction.sourceCurrencyCode} ${i18n.t('common.for').toLocaleLowerCase()} ${fiatAmount}`,
+    descriptor: `${tokenAmount} ${transaction.sourceCurrencyCode} ${i18n
+      .t('common.for')
+      .toLocaleLowerCase()} ${fiatAmount}`,
     currencies: [currency],
     status: forTransactionStatusToTransactionStatus(status),
     timestamp: convertToSecTimestamp(Number(transaction.createdAt)),

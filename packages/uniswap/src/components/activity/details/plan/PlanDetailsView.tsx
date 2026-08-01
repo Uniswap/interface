@@ -18,7 +18,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { buildNativeCurrencyId, buildWrappedNativeCurrencyId } from 'uniswap/src/utils/currencyId'
+import { buildCurrencyId, buildNativeCurrencyId, buildWrappedNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 
 interface PlanDetailsViewProps {
   isExternalProfile?: boolean
@@ -26,12 +26,14 @@ interface PlanDetailsViewProps {
   status: TransactionStatus
   closePlanView: () => void
   onClose: () => void
+  isEarnActivityDisplayEnabled?: boolean
 }
 
 export function PlanDetailsView(props: PlanDetailsViewProps): JSX.Element | null {
-  const { onClose, typeInfo, closePlanView, status } = props
+  const { onClose, typeInfo, closePlanView, status, isEarnActivityDisplayEnabled = true } = props
   const { t } = useTranslation()
-  const canResumePlan = useCanResumePlan(typeInfo, status)
+  const isEarnPlan = typeInfo.earnAction !== undefined
+  const canResumePlan = useCanResumePlan(typeInfo, status) && (!isEarnPlan || isEarnActivityDisplayEnabled)
 
   return (
     <Flex
@@ -52,7 +54,11 @@ export function PlanDetailsView(props: PlanDetailsViewProps): JSX.Element | null
         </Flex>
         {canResumePlan && (
           <Flex row>
-            <ResumePlanButton typeInfo={typeInfo} onSuccess={onClose} />
+            <ResumePlanButton
+              typeInfo={typeInfo}
+              isEarnActivityDisplayEnabled={isEarnActivityDisplayEnabled}
+              onSuccess={onClose}
+            />
           </Flex>
         )}
       </Flex>
@@ -136,14 +142,28 @@ function PlanDetailsHeaderIcon({
   )
 }
 
-function PlanDetailsStatus({ typeInfo, status }: Pick<PlanDetailsViewProps, 'typeInfo' | 'status'>): JSX.Element {
+function PlanDetailsStatus({
+  typeInfo,
+  status,
+  isEarnActivityDisplayEnabled = true,
+}: Pick<PlanDetailsViewProps, 'typeInfo' | 'status' | 'isEarnActivityDisplayEnabled'>): JSX.Element {
   const { t } = useTranslation()
   const intermediaryState = useIntermediaryPlanState({ typeInfo, status })
-  const descriptor = useIntermediaryPlanStateDescriptor({ intermediaryState, status, long: true })
+  const descriptor = useIntermediaryPlanStateDescriptor({
+    intermediaryState,
+    status,
+    long: true,
+  })
 
   return (
     <Flex centered gap="$spacing8">
-      <Text variant="subheading2">{getTransactionSummaryTitle({ typeInfo, status }, t)}</Text>
+      <Text variant="subheading2">
+        {getTransactionSummaryTitle({
+          tx: { typeInfo, status },
+          t,
+          isEarnActivityDisplayEnabled,
+        })}
+      </Text>
       <Text variant="body3" color="$neutral2">
         {descriptor}
       </Text>
@@ -191,6 +211,10 @@ function extractSwapCurrencyId(transactionDetails: TransactionDetails, mode: 'in
       return undefined
     case TransactionType.Swap:
       return mode === 'input' ? typeInfo.inputCurrencyId : typeInfo.outputCurrencyId
+    case TransactionType.Deposit:
+      return mode === 'input' ? buildCurrencyId(chainId, typeInfo.tokenAddress) : undefined
+    case TransactionType.Withdraw:
+      return mode === 'output' ? buildCurrencyId(chainId, typeInfo.tokenAddress) : undefined
     case TransactionType.Wrap: {
       const wrappedId = buildWrappedNativeCurrencyId(chainId)
       if (!wrappedId) {

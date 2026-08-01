@@ -1,6 +1,6 @@
 import { useApolloClient } from '@apollo/client'
 import { useQueryClient } from '@tanstack/react-query'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { useIsEarnEnabled } from 'uniswap/src/features/earn/hooks/useIsEarnEnabled'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { useActiveAddresses } from '~/features/accounts/store/hooks'
 import { useHeartbeatCoordinator } from '~/lib/hooks/useHeartbeatCoordinator'
@@ -27,7 +27,7 @@ export function useTDPHeartbeatCoordinator({
 }: UseTDPHeartbeatCoordinatorParams): void {
   const apolloClient = useApolloClient()
   const queryClient = useQueryClient()
-  const isEarnEnabled = useFeatureFlag(FeatureFlags.Earn)
+  const isEarnEnabled = useIsEarnEnabled()
   const { evmAddress } = useActiveAddresses()
 
   const refresh = async () => {

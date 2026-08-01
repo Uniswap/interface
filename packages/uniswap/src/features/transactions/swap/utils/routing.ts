@@ -152,6 +152,8 @@ export function planStepTypeToTradingRoute(stepType: TradingApi.PlanStepType): E
     case TradingApi.PlanStepType.LIMIT_ORDER:
       return TradingApi.Routing.LIMIT_ORDER
     case TradingApi.PlanStepType.CHAINED:
+    case TradingApi.PlanStepType.VAULT_DEPOSIT:
+    case TradingApi.PlanStepType.VAULT_WITHDRAW:
       return TradingApi.Routing.CHAINED
     default:
       throw new Error(`planStepTypeToTradingRoute: Unknown step type: ${stepType}`)

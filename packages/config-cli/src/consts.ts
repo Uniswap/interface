@@ -9,7 +9,8 @@ export const OKTA_DEVICE_AUTH_URL = `${OKTA_ISSUER}/oauth2/v1/device/authorize`
 export const OKTA_TOKEN_URL = `${OKTA_ISSUER}/oauth2/v1/token`
 export const OKTA_REVOKE_URL = `${OKTA_ISSUER}/oauth2/v1/revoke`
 
-// TODO: switch each app's destination to its real env file (e.g. apps/web/.env.local,
-// apps/mobile/.env.defaults.local) once the Config Service migration is complete.
-// Using .env.new during the migration keeps the old values intact for fallback.
-export const ENV_FILENAME = '.env.new'
+// Filename that `config:pull` writes per app (apps/<app>/.env), consumed by the build tooling.
+export const ENV_FILENAME = '.env'
+
+// Checked-in per-app dev defaults (apps/<app>/.env.dev), kept in sync by `sync-dev`.
+export const DEV_ENV_FILENAME = '.env.dev'

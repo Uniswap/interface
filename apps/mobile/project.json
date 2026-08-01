@@ -47,6 +47,12 @@
         "cwd": "{projectRoot}"
       }
     },
+    "check:apollo-codegen": {
+      "command": "bun ./scripts/checkApolloCodegenSync.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
     "check:deps:usage": {},
     "clean": {
       "command": "react-native-clean-project",
@@ -104,6 +110,12 @@
     },
     "env:local:copy:swift": {
       "command": "python3 scripts/copy_env_vars_to_swift.py",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "devicefarm:connect": {
+      "command": "bun run scripts/deviceFarmConnect.ts",
       "options": {
         "cwd": "{projectRoot}"
       }
@@ -188,12 +200,6 @@
         "cwd": "{projectRoot}"
       }
     },
-    "check:circular": {
-      "command": "bunx madge --circular ./src/app/App.tsx",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
     "ios": {
       "command": "echo 'Specify a configuration, e.g. nx ios mobile -c dev' && exit 1",
       "options": {
@@ -209,13 +215,13 @@
           "command": "bunx expo run:ios --scheme Uniswap --configuration Debug"
         },
         "dev-release": {
-          "command": "bunx expo run:ios --configuration Dev"
+          "command": "NODE_ENV=production bunx expo run:ios --configuration Dev"
         },
         "smol": {
           "command": "bunx expo run:ios --device=\"iPhone SE (3rd generation)\""
         },
         "beta": {
-          "command": "bunx expo run:ios --configuration Beta"
+          "command": "NODE_ENV=production bunx expo run:ios --configuration Beta"
         },
         "release": {
           "command": "bunx expo run:ios --configuration Release"
@@ -239,9 +245,6 @@
     "lint:oxlint": {},
     "lint:oxlint:fix": {},
     "lint:oxlint:fast": {},
-    "lint:typeaware-custom": {
-      "command": "bun config/oxlint-plugins/typeaware-custom.ts apps/mobile --native"
-    },
     "lint": {},
     "lint:fix": {},
     "check": {},
@@ -262,7 +265,7 @@
       }
     },
     "test": {
-      "command": "node --max-old-space-size=8912 ../../node_modules/.bin/jest",
+      "command": "vitest run",
       "options": {
         "cwd": "{projectRoot}"
       },
@@ -275,16 +278,14 @@
       ]
     },
     "snapshots": {
-      "command": "jest -u",
+      "command": "vitest run -u",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "typecheck": {},
-    "typecheck:tsc": {},
-    "typecheck:tsgo": {},
     "config:pull": {
-      "command": "if [ \"$USE_NEW_CONFIGS\" != \"false\" ] && [ \"$SKIP_CONFIG_PULL\" != \"true\" ]; then bun config:pull mobile --env \"${CONFIG_ENV:-development}\"; fi",
+      "command": "if [ \"$SKIP_CONFIG_PULL\" != \"true\" ]; then bun config:pull mobile --env \"${CONFIG_ENV:-development}\" --soft; fi",
       "options": { "cwd": "{workspaceRoot}" },
       "defaultConfiguration": "development",
       "configurations": {

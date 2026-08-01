@@ -21,11 +21,13 @@ export function RemoveBackupLoginModal() {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { isOpen, onClose } = useModalState(ModalName.RemoveBackupLogin)
-  const { walletId } = useEmbeddedWalletState()
+  const { walletId: sessionWalletId } = useEmbeddedWalletState()
 
   const initialState = useAppSelector(
     (state) => (state.application.openModal as RemoveBackupLoginModalParams | null)?.initialState,
   )
+  // Prefer an explicit walletId (recover-with-email rotation has no active session).
+  const walletId = initialState?.walletId ?? sessionWalletId
 
   const providerLabel = initialState?.recoveryMethodType ? getRecoveryMethodLabel(initialState.recoveryMethodType) : ''
 
@@ -86,7 +88,7 @@ export function RemoveBackupLoginModal() {
                 emphasis="primary"
                 size="medium"
                 onPress={() => handleRemove()}
-                isDisabled={isPending}
+                disabled={isPending}
                 loading={isPending}
               >
                 {t('common.button.remove')}

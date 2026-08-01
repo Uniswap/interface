@@ -66,9 +66,11 @@ const defaultProps = {
   series: makeSeries([100, 110]),
   tokensSeries: makeSeries([60, 65]),
   poolsSeries: makeSeries([40, 45]),
+  earnSeries: [],
   chartPercentChange: { percentChange: 10, absoluteChangeUSD: 10 },
   tokensPercentChange: 8.33,
   poolsPercentChange: 12.5,
+  earnPercentChange: undefined,
   isLoading: false,
   isChartEmpty: false,
   error: null,
@@ -78,11 +80,13 @@ const defaultProps = {
   isTotalValueMatch: true,
   selectedCategory: PortfolioChartCategory.Total,
   setSelectedCategory: vi.fn(),
+  availableCategories: [PortfolioChartCategory.Tokens, PortfolioChartCategory.Pools],
   hasCategoryBreakdown: false,
 }
 
 const tokensWithBalance: PortfolioTotalValue = { balanceUSD: 8368.94, percentChange: -6.09, absoluteChangeUSD: -510 }
 const poolsWithBalance: PortfolioTotalValue = { balanceUSD: 7373.05, percentChange: 1.02, absoluteChangeUSD: 75 }
+const earnWithBalance: PortfolioTotalValue = { balanceUSD: 512.34, percentChange: 2.34, absoluteChangeUSD: 12 }
 
 describe('PortfolioChart', () => {
   beforeEach(() => {
@@ -106,6 +110,7 @@ describe('PortfolioChart', () => {
         showBalanceHeaderRow
         tokensValue={tokensWithBalance}
         poolsValue={poolsWithBalance}
+        earnValue={earnWithBalance}
       />,
     )
 
@@ -226,6 +231,49 @@ describe('PortfolioChart', () => {
     // Values are read at the scrubbed point.
     expect(screen.getByText(/\$90/)).toBeInTheDocument()
     expect(screen.getByText(/\$60/)).toBeInTheDocument()
+  })
+
+  it('inserts the earn scrub row between tokens and pools when earn has data', () => {
+    mockPriceChartBodyCrosshairData.data = {
+      time: 1700003600 as UTCTimestamp,
+      value: 150,
+      open: 150,
+      high: 150,
+      low: 150,
+      close: 150,
+    }
+
+    render(
+      <PortfolioChart
+        {...defaultProps}
+        showBalanceHeaderRow
+        hasCategoryBreakdown
+        selectedCategory={PortfolioChartCategory.Total}
+        tokensSeries={makeSeries([100, 90])}
+        earnSeries={makeSeries([30, 35])}
+        poolsSeries={makeSeries([50, 60])}
+      />,
+    )
+
+    const tokensRow = screen.getByTestId(TestID.BalanceBreakdownRowTokens)
+    const earnRow = screen.getByTestId(TestID.BalanceBreakdownRowEarn)
+    const poolsRow = screen.getByTestId(TestID.BalanceBreakdownRowPools)
+    expect(tokensRow.compareDocumentPosition(earnRow) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(earnRow.compareDocumentPosition(poolsRow) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(screen.getByText(/\$35/)).toBeInTheDocument()
+  })
+
+  it('lists the Earning option in the category selector when earn is available', () => {
+    render(
+      <PortfolioChart
+        {...defaultProps}
+        showBalanceHeaderRow
+        hasCategoryBreakdown
+        availableCategories={[PortfolioChartCategory.Tokens, PortfolioChartCategory.Earn, PortfolioChartCategory.Pools]}
+      />,
+    )
+
+    expect(screen.getByTestId(TestID.PortfolioChartCategorySelector)).toBeInTheDocument()
   })
 
   it('does not show the scrub breakdown when a single category is selected', () => {

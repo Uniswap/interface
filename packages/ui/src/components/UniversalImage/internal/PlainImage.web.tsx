@@ -25,7 +25,9 @@ export function PlainImage({
     <img
       height={size.height}
       src={uri}
-      style={{ objectFit, aspectRatio: size.aspectRatio, ...style }}
+      // width/height also set as inline CSS: global stylesheet rules (img { height: auto }) override
+      // the HTML size attributes, which let non-square images escape their intended box
+      style={{ objectFit, aspectRatio: size.aspectRatio, width: size.width, height: size.height, ...style }}
       width={size.width}
       onError={() => {
         setHasError(true)

@@ -23,6 +23,10 @@ import { selectHasViewedContractAddressExplainer } from 'uniswap/src/features/be
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import {
+  adaptLegacyMarketData,
+  adaptLegacyProjectMarketData,
+} from 'uniswap/src/features/dataApi/tokenDetails/legacyMarketDataAdapters'
 import { useTokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { isMultichainProjectTokens } from 'uniswap/src/features/dataApi/tokenProjects/utils/isMultichainProjectTokens'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
@@ -66,8 +70,8 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
       return undefined
     }
     return {
-      market: screenData.token.multichainMarket,
-      project: { markets: screenData.token.project?.markets },
+      market: adaptLegacyMarketData(screenData.token.multichainMarket),
+      projectMarket: adaptLegacyProjectMarketData(screenData.token.project?.markets?.[0]),
     }
   }, [screenData?.token?.multichainMarket, screenData?.token?.project?.markets])
 

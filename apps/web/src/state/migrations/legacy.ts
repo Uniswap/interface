@@ -1,3 +1,4 @@
+// oxlint-disable import/no-cycle -- sagas and redux store have many cycles, deep refactoring is needed
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { DEFAULT_DEADLINE_FROM_NOW } from '~/constants/misc'
 import { persistor } from '~/state'

@@ -1,20 +1,20 @@
 import type { PartialMessage } from '@bufbuild/protobuf'
 import type { FiatOnRampParams, ListTransactionsResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import type { TransactionTypeFilter } from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import { isWebPlatform } from '@universe/environment'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { useListTransactionsQuery } from 'uniswap/src/data/rest/listTransactions'
 import { parseToTransactionDetails } from 'uniswap/src/features/activity/parseToTransactionDetails'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { mapRestStatusToNetworkStatus } from 'uniswap/src/features/dataApi/balances/utils'
 import type { BaseResult, PaginationControls } from 'uniswap/src/features/dataApi/types'
 import { useHideReportedActivitySetting } from 'uniswap/src/features/settings/hooks'
 import type { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { selectActivityVisibility } from 'uniswap/src/features/visibility/selectors'
 import type { CurrencyIdToVisibility, NFTKeyToVisibility } from 'uniswap/src/features/visibility/slice'
 
-const DEFAULT_PAGE_SIZE = 100
+const DEFAULT_PAGE_SIZE = isWebPlatform ? 100 : 20
 
 export type TransactionListDataResult = BaseResult<TransactionDetails[]> &
   PaginationControls & {
@@ -63,7 +63,8 @@ export function useListTransactions({
     isFetching,
     error,
     refetch,
-    status: restStatus,
+    isPending,
+    isError,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
@@ -120,7 +121,8 @@ export function useListTransactions({
     data: filteredTransactions,
     loading: isLoading,
     isFetching,
-    networkStatus: mapRestStatusToNetworkStatus(restStatus),
+    isPending,
+    isError,
     refetch,
     error: error || undefined,
     dataUpdatedAt: dataUpdatedAt || undefined,

@@ -202,7 +202,7 @@ function AttestationContent({
         />
       </Flex>
       <Flex row alignSelf="stretch">
-        <Button size="medium" emphasis="primary" isDisabled={!isChecked || isPending} onPress={onContinue}>
+        <Button size="medium" emphasis="primary" disabled={!isChecked || isPending} onPress={onContinue}>
           {t('swap.geoRestriction.modal.attest.continue')}
         </Button>
       </Flex>

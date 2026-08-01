@@ -1,4 +1,3 @@
-import { NetworkStatus } from '@apollo/client'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { preloadedMobileState } from 'src/test/fixtures'
 import { act, renderHook, waitFor } from 'src/test/test-utils'
@@ -15,48 +14,50 @@ import {
 } from 'uniswap/src/test/fixtures'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { portfolioBalancesById } from 'uniswap/src/utils/balances'
+import type { MockedFunction } from 'vitest'
 
 const mockedNavigation = {
-  navigate: jest.fn(),
-  canGoBack: jest.fn(),
-  pop: jest.fn(),
-  push: jest.fn(),
+  navigate: vi.fn(),
+  canGoBack: vi.fn(),
+  pop: vi.fn(),
+  push: vi.fn(),
 }
 
-jest.mock('@react-navigation/native', () => {
-  const actualNav = jest.requireActual('@react-navigation/native')
+vi.mock('@react-navigation/native', async () => {
+  const actualNav = await vi.importActual('@react-navigation/native')
   return {
     ...actualNav,
     useNavigation: () => mockedNavigation,
   }
 })
 
-jest.mock('uniswap/src/features/portfolio/balances/hooks', () => {
-  const actual = jest.requireActual('uniswap/src/features/portfolio/balances/hooks')
-  const { NetworkStatus: MockNetworkStatus } = jest.requireActual('@apollo/client')
+vi.mock('uniswap/src/features/portfolio/balances/hooks', async () => {
+  const actual = await vi.importActual('uniswap/src/features/portfolio/balances/hooks')
   return {
     ...actual,
-    usePortfolioBalances: jest.fn(() => ({
+    usePortfolioBalances: vi.fn(() => ({
       data: undefined,
       loading: false,
-      networkStatus: MockNetworkStatus.ready,
-      refetch: jest.fn(),
+      isPending: false,
+      isError: false,
+      refetch: vi.fn(),
       error: undefined,
     })),
   }
 })
 
-const mockUsePortfolioBalances = usePortfolioBalances as jest.MockedFunction<typeof usePortfolioBalances>
+const mockUsePortfolioBalances = usePortfolioBalances as MockedFunction<typeof usePortfolioBalances>
 
 describe(useCrossChainBalances, () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     // Reset mock to default state
     mockUsePortfolioBalances.mockReturnValue({
       data: undefined,
       loading: false,
-      networkStatus: NetworkStatus.ready,
-      refetch: jest.fn(),
+      isPending: false,
+      isError: false,
+      refetch: vi.fn(),
       error: undefined,
     })
   })
@@ -93,8 +94,9 @@ describe(useCrossChainBalances, () => {
       mockUsePortfolioBalances.mockReturnValue({
         data: portfolioBalancesByIdData,
         loading: false,
-        networkStatus: NetworkStatus.ready,
-        refetch: jest.fn(),
+        isPending: false,
+        isError: false,
+        refetch: vi.fn(),
         error: undefined,
       })
 
@@ -160,8 +162,9 @@ describe(useCrossChainBalances, () => {
       mockUsePortfolioBalances.mockReturnValue({
         data: portfolioBalancesByIdData,
         loading: false,
-        networkStatus: NetworkStatus.ready,
-        refetch: jest.fn(),
+        isPending: false,
+        isError: false,
+        refetch: vi.fn(),
         error: undefined,
       })
 
@@ -186,7 +189,7 @@ describe(useCrossChainBalances, () => {
 
 describe(useTokenDetailsNavigation, () => {
   afterEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('returns correct result', () => {

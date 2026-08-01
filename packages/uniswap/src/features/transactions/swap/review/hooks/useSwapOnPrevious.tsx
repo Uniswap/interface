@@ -32,7 +32,7 @@ export function useSwapOnPrevious(): {
     // and remove submitting UI. Plans do not stop on this signal as it can continue
     // while backgrounded.
     if (isWebApp) {
-      updateSwapForm({ isSubmitting: false })
+      updateSwapForm({ isSubmitting: false, isEarnFlow: false })
       dispatch(interruptTransactionFlow())
     }
 

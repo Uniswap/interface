@@ -1,10 +1,12 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, Tooltip } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
+import { FeeDisplay } from 'uniswap/src/components/FeeDisplay/FeeDisplay'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { LpIncentivesAprDisplay } from '~/features/Liquidity/LPIncentives/LpIncentivesAprDisplay'
+import { isDynamicFeeTier } from '~/features/Liquidity/utils/feeTiers'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 import type { FeeTierData } from '~/types/liquidity'
 
@@ -43,7 +45,10 @@ export function FeeTierSearchRow({
     >
       <Flex>
         <Flex row alignItems="center">
-          <Text variant="subheading2">{pool.formattedFee}</Text>
+          {/* v4 rows headline the LP fee and reveal protocol + all-in on hover via FeeDisplay's tooltip. */}
+          <FeeDisplay feeBreakdown={isDynamicFeeTier(pool.fee) ? undefined : pool.feeBreakdown}>
+            <Text variant="subheading2">{pool.formattedFee}</Text>
+          </FeeDisplay>
           {isLpIncentivesEnabled && pool.boostedApr !== undefined && pool.boostedApr > 0 && (
             <Tooltip placement="right">
               <Tooltip.Trigger>

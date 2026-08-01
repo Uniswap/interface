@@ -2,14 +2,14 @@ import {
   createHelpArticleUrl,
   DEV_ENTRY_GATEWAY_API_BASE_URL,
   getCloudflareApiBaseUrl,
-  getMigratedForApiUrl,
+  getEntryGatewayUrl,
+  getForApiUrl,
   helpUrl,
   PROD_ENTRY_GATEWAY_API_BASE_URL,
   STAGING_ENTRY_GATEWAY_API_BASE_URL,
   TrafficFlows,
 } from '@universe/api'
 import { isWebApp, isBetaEnv, isDevEnv, isE2eTestEnv } from '@universe/environment'
-import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 
 export const UNISWAP_WEB_HOSTNAME = 'app.uniswap.org'
 export const UNISWAP_WEB_URL = `https://${UNISWAP_WEB_HOSTNAME}`
@@ -19,6 +19,7 @@ export const CHROME_EXTENSION_UNINSTALL_URL_PATH = '/extension/uninstall'
 // localhost CORS); prod uses the prod backend. An explicit override always wins.
 const STAGING_LIQUIDITY_SERVICE_URL = 'https://liquidity.backend-staging.api.uniswap.org'
 const PROD_LIQUIDITY_SERVICE_URL = 'https://liquidity.backend-prod.api.uniswap.org'
+const EARN_HELP_ARTICLE = '46865818181901-Earn-on-Uniswap'
 
 export const UniswapHelpUrls = {
   // Help and web articles/items
@@ -31,9 +32,14 @@ export const UniswapHelpUrls = {
     batchedSwaps: createHelpArticleUrl('36393697148045'),
     batchedSwapsFailure: `${createHelpArticleUrl('36393697148045')}#error-messages-and-troubleshooting`,
     batchedSwapsReview: createHelpArticleUrl('36394497329933'),
+    caliburUpgrades: createHelpArticleUrl('47047111847053-Upgrades-to-smart-wallet-contracts'),
     cexTransferKorea: createHelpArticleUrl('29425131525901-How-to-transfer-crypto-to-a-Uniswap-Wallet-in-Korea'),
     contractAddressExplainer: createHelpArticleUrl('26757826138637-What-is-a-token-contract-address'),
     dappProtectionInfo: createHelpArticleUrl('37781087046029'),
+    earnHelp: createHelpArticleUrl(EARN_HELP_ARTICLE),
+    earnTroubleshooting: createHelpArticleUrl(EARN_HELP_ARTICLE, {
+      section: 'troubleshooting-errors',
+    }),
     extensionBiometricsEnrollment: createHelpArticleUrl('38225957094541'),
     extensionHelp: createHelpArticleUrl('24458735271181'),
     extensionDappTroubleshooting: createHelpArticleUrl(
@@ -80,6 +86,8 @@ export const UniswapHelpUrls = {
     supportedNetworks: createHelpArticleUrl('14569415293325'),
     swapFeeInfo: createHelpArticleUrl('20131678274957'),
     passkeysInfo: createHelpArticleUrl('35522111260173'),
+    // TODO(INFRA): swap placeholder id for the rotation help article
+    backupLoginReconnect: createHelpArticleUrl('35522111260173'),
     smartWalletDelegation: createHelpArticleUrl('36391987158797'),
     swapProtection: createHelpArticleUrl('18814993155853'),
     swapSlippage: createHelpArticleUrl('8643879653261-What-is-Price-Slippage-'),
@@ -112,6 +120,7 @@ export const UniswapHelpUrls = {
     transactionFailure: createHelpArticleUrl('8643975058829-Why-did-my-transaction-fail-'),
     uniswapXInfo: createHelpArticleUrl('17544708791821'),
     uniswapXFailure: createHelpArticleUrl('17515489874189-Why-can-my-swap-not-be-filled-'),
+    uniswapLabsTermsOfService: createHelpArticleUrl('30935100859661-Uniswap-Labs-Terms-of-Service'),
     unsupportedTokenPolicy: createHelpArticleUrl('18783694078989-Unsupported-Token-Policy'),
     addingV4Hooks: createHelpArticleUrl('32402040565133'),
     routingSettings: createHelpArticleUrl('27362707722637'),
@@ -127,6 +136,7 @@ export const UniswapHelpUrls = {
 export const UniswapStaticUrls = {
   downloadWalletUrl: 'https://wallet.uniswap.org/',
   tradingApiDocsUrl: 'https://hub.uniswap.org/',
+  morphoDisclaimerUrl: 'https://morpho.org/disclaimers/',
   unichainUrl: 'https://www.unichain.org/',
   uniswapXUrl: 'https://x.uniswap.org/',
   helpCenterUrl: 'https://help.uniswap.org/',
@@ -200,17 +210,20 @@ export interface UniswapUrlOverrides {
   statsigProxyUrlOverride?: string
   tradingApiUrlOverride?: string
   tradingApiWebTestEnv?: string
+  // When a Beta build sets this to true, beta points its APIs at prod instead of staging.
+  // Unset/false (the default) preserves beta → staging. Only set on mobile beta builds.
+  isBetaUsingProdApi?: boolean
 }
 
 export interface UniswapServiceUrls {
   amplitudeProxyUrl: string
   apiBaseUrl: string
   apiBaseUrlV2: string
-  complianceApiBaseUrl: string
   dataApiBaseUrlV2: string
   dataApiServiceUrl: string
   embeddedWalletHostname: string
   embeddedWalletUrl: string
+  forApiUrl: string
   graphQLUrl: string
   liquidityServiceUrl: string
   passkeysManagementUrl: string
@@ -221,24 +234,13 @@ export interface UniswapServiceUrls {
   tradingApiUrl: string
 }
 
-/**
- * Resolves the FOR API URL, honoring the `ForUrlMigration` feature flag.
- * This is intentionally NOT part of `getUniswapServiceUrls`. Because it reads a feature flag,
- * adding it there breaks the flag override modal.
- * TODO: Move this into getUniswapServiceUrls when the feature flag is removed.
- */
-export function getForApiUrl(overrides: Pick<UniswapUrlOverrides, 'forApiUrlOverride'>): string {
-  return (
-    overrides.forApiUrlOverride ||
-    (getFeatureFlag(FeatureFlags.ForUrlMigration)
-      ? getMigratedForApiUrl()
-      : getCloudflareApiBaseUrl({ flow: TrafficFlows.FOR, postfix: 'v2/FOR.v1.FORService' }))
-  )
-}
-
 export function getUniswapServiceUrls(overrides: UniswapUrlOverrides): UniswapServiceUrls {
+  // A beta build routes to staging by default, but can be built to point at prod
+  // (selected at workflow-trigger time). Beta → prod is opt-in: only when isBetaUsingProdApi is true.
+  const isBetaStaging = isBetaEnv() && !overrides.isBetaUsingProdApi
+
   const embeddedWalletHostname =
-    isE2eTestEnv() || isDevEnv() ? 'dev.ew.unihq.org' : isBetaEnv() ? 'app.corn-staging.com' : UNISWAP_WEB_HOSTNAME
+    isE2eTestEnv() || isDevEnv() ? 'dev.ew.unihq.org' : isBetaStaging ? 'app.corn-staging.com' : UNISWAP_WEB_HOSTNAME
 
   return {
     amplitudeProxyUrl:
@@ -249,12 +251,6 @@ export function getUniswapServiceUrls(overrides: UniswapUrlOverrides): UniswapSe
 
     apiBaseUrlV2: overrides.apiBaseUrlV2Override || getCloudflareApiBaseUrl({ postfix: 'v2' }),
 
-    // Dev and staging both use the staging compliance backend; e2e and prod use prod.
-    complianceApiBaseUrl:
-      !isE2eTestEnv() && (isDevEnv() || isBetaEnv())
-        ? STAGING_ENTRY_GATEWAY_API_BASE_URL
-        : PROD_ENTRY_GATEWAY_API_BASE_URL,
-
     dataApiBaseUrlV2:
       overrides.apiBaseUrlV2Override || getCloudflareApiBaseUrl({ flow: TrafficFlows.DataApi, postfix: 'v2' }),
 
@@ -264,6 +260,9 @@ export function getUniswapServiceUrls(overrides: UniswapUrlOverrides): UniswapSe
 
     embeddedWalletUrl: `https://${embeddedWalletHostname}`,
 
+    // FOR traffic goes through the Entry Gateway host, same as Plan / Chained Actions.
+    forApiUrl: overrides.forApiUrlOverride || getForApiUrl(),
+
     graphQLUrl:
       overrides.graphqlUrlOverride || getCloudflareApiBaseUrl({ flow: TrafficFlows.GraphQL, postfix: 'v1/graphql' }),
 
@@ -271,7 +270,7 @@ export function getUniswapServiceUrls(overrides: UniswapUrlOverrides): UniswapSe
       overrides.liquidityServiceUrlOverride ||
       (isE2eTestEnv()
         ? PROD_LIQUIDITY_SERVICE_URL
-        : isDevEnv() || isBetaEnv()
+        : isDevEnv() || isBetaStaging
           ? STAGING_LIQUIDITY_SERVICE_URL
           : PROD_LIQUIDITY_SERVICE_URL),
 
@@ -279,7 +278,7 @@ export function getUniswapServiceUrls(overrides: UniswapUrlOverrides): UniswapSe
 
     privyEmbeddedWalletUrl: isE2eTestEnv()
       ? PROD_ENTRY_GATEWAY_API_BASE_URL
-      : isBetaEnv()
+      : isBetaStaging
         ? STAGING_ENTRY_GATEWAY_API_BASE_URL
         : isDevEnv()
           ? DEV_ENTRY_GATEWAY_API_BASE_URL
@@ -287,7 +286,10 @@ export function getUniswapServiceUrls(overrides: UniswapUrlOverrides): UniswapSe
 
     // Privy REST endpoints
     // Docs: https://docs.privy.io/guide/api/encrypted-authorization-keys
-    privyEncryptedAuthorizationKeysUrl: `https://privy.${embeddedWalletHostname}/api/v1/encrypted_authorization_keys`,
+    // Local dev (vite dev only) hits Privy directly; deployed/e2e use the cookie-wrapping proxy.
+    privyEncryptedAuthorizationKeysUrl: isDevEnv()
+      ? 'https://auth.privy.io/api/v1/encrypted_authorization_keys'
+      : `https://privy.${embeddedWalletHostname}/api/v1/encrypted_authorization_keys`,
 
     scantasticApiUrl:
       overrides.scantasticApiUrlOverride ||
@@ -298,6 +300,8 @@ export function getUniswapServiceUrls(overrides: UniswapUrlOverrides): UniswapSe
       overrides.statsigProxyUrlOverride ||
       (isWebApp ? '/config' : getCloudflareApiBaseUrl({ flow: TrafficFlows.Gating, postfix: 'v1/statsig-proxy' })),
 
-    tradingApiUrl: overrides.tradingApiUrlOverride || getCloudflareApiBaseUrl({ flow: TrafficFlows.TradingApi }),
+    // Trading traffic routes through the entry gateway (same as sessions/FOR/compliance); x-api-key
+    // still applies and is forwarded through. Replaces the legacy trading-api-labs cloudflare host.
+    tradingApiUrl: overrides.tradingApiUrlOverride || getEntryGatewayUrl(),
   }
 }

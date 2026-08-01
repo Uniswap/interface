@@ -50,7 +50,7 @@ vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
 
 vi.mock('uniswap/src/features/dataApi/balances/balancesRest', () => ({
   usePortfolioTotalValue: () => ({ data: { balanceUSD: 110 } }),
-  usePortfolioBalanceBreakdown: () => ({ data: mockPortfolioBreakdown.value }),
+  usePortfolioBalanceBreakdown: () => ({ data: mockPortfolioBreakdown.value, requestedCategories: [] }),
 }))
 
 vi.mock('uniswap/src/features/portfolio/usePortfolioChartBalanceMismatch', () => ({
@@ -154,6 +154,7 @@ describe('PortfolioOverview', () => {
       tokens: { balanceUSD: 8368.94, percentChange: -6.09, absoluteChangeUSD: -510 },
       pools: { balanceUSD: 7373.05, percentChange: 1.02, absoluteChangeUSD: 75 },
       failedChainIds: [],
+      earn: { balanceUSD: 3259.01, percentChange: 2.2, absoluteChangeUSD: 70 },
     }
 
     render(<PortfolioOverview />)

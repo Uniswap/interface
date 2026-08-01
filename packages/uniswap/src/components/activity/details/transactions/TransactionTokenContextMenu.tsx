@@ -1,5 +1,5 @@
 import { isWebPlatform } from '@universe/environment'
-import { PropsWithChildren, useCallback, useMemo } from 'react'
+import { PropsWithChildren, useMemo } from 'react'
 import { TouchableArea } from 'ui/src'
 import { ContextMenu, MenuOptionItemWithId } from 'uniswap/src/components/menus/ContextMenu'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
@@ -97,15 +97,9 @@ function TransactionTokenContextMenuContent({
     closeMenu,
   })
 
-  const handleNavigationActionPress = useCallback(() => {
-    if (!isWebPlatform) {
-      onClose?.()
-    }
-  }, [onClose])
-
   const menuItems = useMemo(
-    () => withNavigationActionCallback(defaultMenuItems, handleNavigationActionPress),
-    [defaultMenuItems, handleNavigationActionPress],
+    () => withNavigationActionCallback(defaultMenuItems, onClose ?? noop),
+    [defaultMenuItems, onClose],
   )
 
   return (

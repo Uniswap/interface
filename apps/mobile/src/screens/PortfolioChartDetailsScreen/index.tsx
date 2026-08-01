@@ -1,8 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { ChartPeriod, WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import { FeatureFlags, useFeatureFlagWithExposureLoggingDisabled } from '@universe/gating'
+import { FeatureFlags, useFeatureFlag, useFeatureFlagWithExposureLoggingDisabled } from '@universe/gating'
 import { useEffect, useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { PortfolioChart } from 'src/components/home/PortfolioChart/PortfolioChart'
 import { usePortfolioChartData } from 'src/components/home/PortfolioChart/usePortfolioChartData'
 import { PortfolioPerformance } from 'src/components/home/PortfolioPerformance'
@@ -11,6 +10,7 @@ import { getBreakdownCardProps } from 'src/screens/PortfolioChartDetailsScreen/g
 import { PortfolioBalanceBreakdownCard } from 'src/screens/PortfolioChartDetailsScreen/PortfolioBalanceBreakdownCard'
 import { PortfolioChartDetailsMenu } from 'src/screens/PortfolioChartDetailsScreen/PortfolioChartDetailsMenu'
 import { useChartScrub } from 'src/screens/PortfolioChartDetailsScreen/useChartScrub'
+import { usePortfolioChartDetailsHeartbeatCoordinator } from 'src/screens/PortfolioChartDetailsScreen/usePortfolioChartDetailsHeartbeatCoordinator'
 import { Flex, ScrollView, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { iconSizes, spacing } from 'ui/src/theme'
@@ -28,6 +28,7 @@ import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/bala
 import { CHART_PERIOD_OPTIONS } from 'uniswap/src/features/portfolio/chartPeriod'
 import { PoolsDataIssueBanner } from 'uniswap/src/features/portfolio/pools/PoolsDataIssueBanner'
 import { usePoolsOutageBanner } from 'uniswap/src/features/portfolio/pools/usePoolsOutageBanner'
+import { useUnavailableBalancesText } from 'uniswap/src/features/portfolio/PortfolioBalance/BalanceUnavailableIndicator'
 import { PortfolioBalance } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioBalance'
 import { getPortfolioChartPercentChange } from 'uniswap/src/features/portfolio/portfolioChartPercentChange'
 import { usePortfolioChartBalanceMismatch } from 'uniswap/src/features/portfolio/usePortfolioChartBalanceMismatch'
@@ -36,10 +37,13 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useActiveAccountWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 export function PortfolioChartDetailsScreen(): JSX.Element {
-  const { t } = useTranslation()
   const activeAccount = useActiveAccountWithThrow()
   const displayName = useDisplayName(activeAccount.address)
   const { chains } = useEnabledChains()
+  // The heartbeat coordinator only takes over balance refreshing when this flag is on —
+  // otherwise PortfolioBalance must keep its own poll running, or balances would never refresh.
+  const isDataLivelinessEnabled = useFeatureFlag(FeatureFlags.DataLivelinessUI)
+  usePortfolioChartDetailsHeartbeatCoordinator({ enabled: isDataLivelinessEnabled })
   const insets = useAppInsets()
   const queryClient = useQueryClient()
   const [chartPeriod, setChartPeriod] = useState(ChartPeriod.DAY)
@@ -86,10 +90,12 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
     chainIds: chains,
   })
 
-  const poolsUnavailable = useMemo(
-    () => getUnavailableCategories({ breakdown, requestedCategories }).includes(WalletBalanceCategory.POOLS),
+  const unavailableCategories = useMemo(
+    () => getUnavailableCategories({ breakdown, requestedCategories }),
     [breakdown, requestedCategories],
   )
+  const poolsUnavailable = unavailableCategories.includes(WalletBalanceCategory.POOLS)
+  const unavailableBalancesText = useUnavailableBalancesText(unavailableCategories)
 
   const outageBanner = usePoolsOutageBanner({
     evmAddress: activeAccount.address,
@@ -183,7 +189,7 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
   return (
     <ScreenWithHeader centerElement={centerElement} rightElement={<PortfolioChartDetailsMenu />}>
       <ScrollView flex={1} showsVerticalScrollIndicator={false} testID={TestID.PortfolioChartDetailsScreen}>
-        {poolsUnavailable && (
+        {unavailableBalancesText && (
           <Flex
             row
             alignItems="center"
@@ -191,11 +197,11 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
             backgroundColor="$surface2"
             px="$spacing24"
             py="$spacing12"
-            testID={TestID.PoolsUnavailableBanner}
+            testID={TestID.BalanceUnavailableBanner}
           >
             <AlertTriangleFilled color="$neutral2" size="$icon.20" />
             <Text color="$neutral2" variant="body3">
-              {t('pool.balances.unavailable')}
+              {unavailableBalancesText}
             </Text>
           </Flex>
         )}
@@ -210,6 +216,9 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
         >
           <PortfolioBalance
             hideUnavailableIndicator
+            // Disabled because this screen's heartbeat coordinator polls balances at the same
+            // cadence as the rest of the page instead.
+            disablePolling={isDataLivelinessEnabled}
             evmOwner={activeAccount.address}
             chartPeriod={canShowChart ? chartPeriod : undefined}
             overrideBalanceUSD={chartScrubFiatValue}

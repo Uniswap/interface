@@ -38,11 +38,11 @@ const feeDataSchema: z.ZodSchema<FeeData | undefined> = z.object({
   isDynamic: z.boolean(),
 })
 
-export const parseAsFeeData = parseAsJson(feeDataSchema.parse)
+export const parseAsFeeData = parseAsJson((v) => feeDataSchema.parse(v))
 
-export const parseAsPriceRangeState = parseAsJson(priceRangeStateSchema.parse).withDefault({})
+export const parseAsPriceRangeState = parseAsJson((v) => priceRangeStateSchema.parse(v)).withDefault({})
 
-export const parseAsDepositState = parseAsJson(depositStateSchema.parse).withDefault({})
+export const parseAsDepositState = parseAsJson((v) => depositStateSchema.parse(v)).withDefault({})
 
 export const parseAsCurrencyAddress = createParser({
   parse: (query: string) => {

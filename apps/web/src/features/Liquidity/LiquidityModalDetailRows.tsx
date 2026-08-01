@@ -29,7 +29,7 @@ export function LiquidityModalDetailRows({
         LineItem={{
           Label: () => (
             <Text variant="body3" color="$neutral2">
-              {t('pool.specificPosition', { symbol: currency0Amount?.currency.symbol })}
+              {t('pool.specificPosition', { symbol: currency0Amount?.currency.symbol ?? t('common.token') })}
             </Text>
           ),
           Value: () => (
@@ -47,7 +47,7 @@ export function LiquidityModalDetailRows({
         LineItem={{
           Label: () => (
             <Text variant="body3" color="$neutral2">
-              {t('pool.specificPosition', { symbol: currency1Amount?.currency.symbol })}
+              {t('pool.specificPosition', { symbol: currency1Amount?.currency.symbol ?? t('common.token') })}
             </Text>
           ),
           Value: () => (

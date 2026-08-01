@@ -1,7 +1,8 @@
 /* oxlint-disable max-lines */
 import { Protocol } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { GasEstimate, TradingApi } from '@universe/api'
+import type { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
+import type { GasEstimate } from '@universe/api'
 import { providers } from 'ethers/lib/ethers'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -69,7 +70,7 @@ export interface TransactionDetailsCore extends TransactionId {
 // Platform-specific extensions
 export interface InterfaceTransactionExtensions {
   /** EIP-5792 batch transaction tracking */
-  batchInfo?: { connectorId?: string; batchId: string; chainId: UniverseChainId }
+  batchInfo?: { connectorId?: string; batchId: string; chainId: UniverseChainId; planId?: string }
   /** Transaction deadline for cleanup */
   deadline?: number
 }
@@ -817,6 +818,7 @@ export interface PlanTransactionInfo extends BaseTransactionInfo {
   outputCurrencyAmountRaw: string
   tradeType: TradeType.EXACT_INPUT
   transactionHashes?: string[]
+  earnAction?: TradingApi.EarnAction
 }
 
 export type TransactionTypeInfo =

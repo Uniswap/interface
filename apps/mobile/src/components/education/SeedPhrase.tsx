@@ -1,7 +1,7 @@
 import React, { ComponentProps, ReactNode, useCallback, useContext, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
-import { runOnJS } from 'react-native-reanimated'
+import { scheduleOnRN } from 'react-native-worklets'
 import { OnboardingStackBaseParams, useOnboardingStackNavigation } from 'src/app/navigation/types'
 import { CloseButton } from 'src/components/buttons/CloseButton'
 import { CarouselContext } from 'src/components/carousel/Carousel'
@@ -24,9 +24,9 @@ function Page({ text, params }: { text: ReactNode; params: OnboardingStackBasePa
     () =>
       Gesture.Tap().onEnd(({ absoluteX }) => {
         if (absoluteX < fullWidth * 0.33) {
-          runOnJS(goToPrev)()
+          scheduleOnRN(goToPrev)
         } else {
-          runOnJS(goToNext)()
+          scheduleOnRN(goToNext)
         }
       }),
     [goToPrev, goToNext, fullWidth],
@@ -35,7 +35,7 @@ function Page({ text, params }: { text: ReactNode; params: OnboardingStackBasePa
   const dismissGesture = useMemo(
     () =>
       Gesture.Tap().onEnd(() => {
-        runOnJS(onDismiss)()
+        scheduleOnRN(onDismiss)
       }),
     [onDismiss],
   )

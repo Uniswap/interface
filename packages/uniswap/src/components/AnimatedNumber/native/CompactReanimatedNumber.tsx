@@ -5,13 +5,12 @@ import { CharRow } from 'uniswap/src/components/AnimatedNumber/native/CharRow'
 import { CHAR_SPACE_SIZE } from 'uniswap/src/components/AnimatedNumber/native/constants'
 import { AnimatedFontStyles } from 'uniswap/src/components/AnimatedNumber/native/styles'
 import type { ReanimatedNumberRenderProps } from 'uniswap/src/components/AnimatedNumber/native/types'
+import { TopAndBottomGradient } from 'uniswap/src/components/AnimatedNumber/TopAndBottomGradient/TopAndBottomGradient'
 
 export const CompactReanimatedNumber = ({
   alignRight,
   baseColor,
-  balanceChangeColor,
   chars,
-  commonPrefixLength,
   containerTestID,
   currency,
   decimalPartColor,
@@ -24,10 +23,9 @@ export const CompactReanimatedNumber = ({
   value,
   variantFont,
   warmLoading,
-  dir,
+  tick,
   charDelays,
   charShouldAnimate,
-  animateGen,
   reduceMotion,
 }: ReanimatedNumberRenderProps &
   Pick<
@@ -40,21 +38,19 @@ export const CompactReanimatedNumber = ({
     <Flex row justifyContent={alignRight ? 'flex-end' : 'flex-start'} alignItems="flex-start" testID={containerTestID}>
       <Shine disabled={!warmLoading}>
         <Flex row style={{ position: 'relative' }}>
+          <TopAndBottomGradient height={digitHeight} />
           <CharRow
-            animateGen={animateGen}
-            balanceChangeColor={balanceChangeColor}
             baseColor={baseColor}
             charDelays={charDelays}
             chars={chars}
             charShouldAnimate={charShouldAnimate}
-            commonPrefixLength={commonPrefixLength}
             currency={currency}
             decimalPartColor={decimalPartColor}
             digitCellWidth={digitCellWidth}
             digitHeight={digitHeight}
-            dir={dir}
             reduceMotion={reduceMotion}
             shouldFadeDecimals={shouldFadeDecimals}
+            tick={tick}
             useHeadingTypography={useHeadingTypography}
             variantFont={variantFont}
           />

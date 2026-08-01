@@ -15,9 +15,11 @@ import { TransactionDetails, TransactionType } from 'uniswap/src/features/transa
 
 export function TransactionDetailsContent({
   transactionDetails,
+  isEarnActivityDisplayEnabled = true,
   onClose,
 }: {
   transactionDetails: TransactionDetails
+  isEarnActivityDisplayEnabled?: boolean
   onClose: () => void
 }): JSX.Element | null {
   const { typeInfo } = transactionDetails
@@ -68,7 +70,14 @@ export function TransactionDetailsContent({
       case TransactionType.MigrateLiquidityV3ToV4:
         return <LiquidityTransactionDetails typeInfo={typeInfo} onClose={onClose} />
       case TransactionType.Plan:
-        return <PlanTransactionDetails status={transactionDetails.status} typeInfo={typeInfo} onClose={onClose} />
+        return (
+          <PlanTransactionDetails
+            status={transactionDetails.status}
+            typeInfo={typeInfo}
+            isEarnActivityDisplayEnabled={isEarnActivityDisplayEnabled}
+            onClose={onClose}
+          />
+        )
       case TransactionType.AuctionBid:
       case TransactionType.AuctionClaimed:
       case TransactionType.AuctionExited:

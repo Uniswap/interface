@@ -1,5 +1,6 @@
 import { GraphQLApi } from '@universe/api'
 import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { EMPTY_NFT_ITEM, HIDDEN_NFTS_ROW } from 'uniswap/src/features/nfts/constants'
 import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { NFTKeyToVisibility } from 'uniswap/src/features/visibility/slice'
@@ -12,7 +13,6 @@ export function formatNftItems(data: GraphQLApi.NftsTabQuery | undefined): NFTIt
 
   const nfts = items
     .filter((item) => item.ownedAsset?.nftContract?.address && item.ownedAsset.tokenId)
-    // oxlint-disable-next-line complexity
     .map((item): NFTItem => {
       return {
         name: item.ownedAsset?.name ?? undefined,
@@ -22,8 +22,6 @@ export function formatNftItems(data: GraphQLApi.NftsTabQuery | undefined): NFTIt
         imageUrl: item.ownedAsset?.image?.url ?? undefined,
         thumbnailUrl: item.ownedAsset?.thumbnail?.url ?? undefined,
         collectionName: item.ownedAsset?.collection?.name ?? undefined,
-        isVerifiedCollection: item.ownedAsset?.collection?.isVerified ?? undefined,
-        floorPrice: item.ownedAsset?.collection?.markets?.[0]?.floorPrice?.value ?? undefined,
         isSpam: item.ownedAsset?.isSpam ?? undefined,
         imageDimensions:
           item.ownedAsset?.image?.dimensions?.height && item.ownedAsset.image.dimensions.width
@@ -32,7 +30,7 @@ export function formatNftItems(data: GraphQLApi.NftsTabQuery | undefined): NFTIt
                 height: item.ownedAsset.image.dimensions.height,
               }
             : undefined,
-        chain: item.ownedAsset?.chain,
+        chainId: toSupportedChainId(item.ownedAsset?.chain) ?? undefined,
       }
     })
   return nfts

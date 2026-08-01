@@ -20,6 +20,7 @@ import { uuid } from 'utilities/src/primitives/uuid'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useActiveAddresses } from '~/features/accounts/store/hooks'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { getOnRampRedirectUrl } from '~/pages/Swap/Buy/onRampRedirectUrl'
 import { ProviderConnectedView } from '~/pages/Swap/Buy/ProviderConnectedView'
 import { ProviderConnectionError } from '~/pages/Swap/Buy/ProviderConnectionError'
 import { ConnectingViewWrapper } from '~/pages/Swap/Buy/shared'
@@ -64,7 +65,7 @@ function ProviderPlatform({
       serviceProvider: selectedServiceProvider.serviceProvider,
       walletAddress: address ?? '', // satisfy typecheck: useFiatOnRampAggregatorTransferWidgetQuery will only query if walletAddress is defined
       externalSessionId: externalTransactionId,
-      redirectUrl: `${UNISWAP_WEB_URL}/buy`,
+      redirectUrl: getOnRampRedirectUrl({ origin: UNISWAP_WEB_URL }),
     }
   }, [selectedServiceProvider, address, externalTransactionId])
 

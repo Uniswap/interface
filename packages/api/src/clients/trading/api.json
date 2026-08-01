@@ -421,7 +421,8 @@
                       "token": "0x0000000000000000000000000000000000000000",
                       "recipient": "0x000000fee13a103A10D593b9AE06b3e05F2E7E1c",
                       "bps": 25,
-                      "minAmount": "2490801865802"
+                      "minAmount": "2490801865802",
+                      "fee": "INTEGRATOR"
                     }
                   ],
                   "portionAmount": "2490801865802",
@@ -1069,7 +1070,7 @@
           "utilities"
         ],
         "summary": "Get pool state",
-        "description": "Fetches detailed information about one or more liquidity pools across Uniswap V2, V3, and V4. Returns pool state including token addresses, reserves, liquidity, current tick, sqrtRatioX96, fee tier, tick spacing, and hook addresses (V4).\n\nProvide one of `poolParameters` or `poolReferences` (not both):\n- `poolParameters`: Look up pools by token pair. Provide token addresses and optional fee/tickSpacing/hooks to find matching pools.\n- `poolReferences`: Look up specific known pools by their reference identifier (pool address for V3, pool ID for V4, pair address for V2).",
+        "description": "Fetches detailed information about one or more liquidity pools across Uniswap v2, v3, and v4. Returns pool state including token addresses, reserves, liquidity, current tick, sqrtRatioX96, fee tier, tick spacing, and hook addresses (V4).\n\nProvide one of `poolParameters` or `poolReferences` (not both):\n- `poolParameters`: Look up pools by token pair. Provide token addresses and optional fee/tickSpacing/hooks to find matching pools.\n- `poolReferences`: Look up specific known pools by their reference identifier (pool address for v3, pool ID for v4, pair address for v2). Limited to 20 references per request; larger batches are rejected with an HTTP 400 error.\n\nPool reserves (`token0Reserves`/`token1Reserves`) are returned for v2 pools and, best-effort, for v4 pools. v4 reserves are the fee-excluded core principal computed from on-chain pool state: uncollected LP fees, donations, and hook-held assets are excluded, and for pools whose hooks perform custom accounting the value approximates swappable reserves.",
         "operationId": "pool_info",
         "security": [
           {
@@ -2053,7 +2054,8 @@
                     "token": "0x0000000000000000000000000000000000000000",
                     "recipient": "0x000000fee13a103A10D593b9AE06b3e05F2E7E1c",
                     "bps": 25,
-                    "minAmount": "2490801865802"
+                    "minAmount": "2490801865802",
+                    "fee": "INTEGRATOR"
                   }
                 ],
                 "portionAmount": "2490801865802",
@@ -2515,7 +2517,9 @@
                   "tokenDecimalsB": "6",
                   "poolLiquidity": "1007803497966589811",
                   "sqrtRatioX96": "3796141369585623258184840",
-                  "currentTick": -198932
+                  "currentTick": -198932,
+                  "token0Reserves": "224201965836985417",
+                  "token1Reserves": "1004698471"
                 }
               ],
               "currentPage": 1,
@@ -3392,6 +3396,10 @@
           "routing": {
             "$ref": "#/components/schemas/Routing"
           },
+          "isTokenApprovalApplicable": {
+            "type": "boolean",
+            "description": "Whether an ERC-20 token approval is applicable to this swap's input. `true` when the routing pulls the input token via an allowance, so an approval may be required — verify (or orchestrate) it via `/check_approval`. `false` when no approval is ever needed for this route (e.g. native-currency input, wrap/unwrap, or a native-gas-token input paid as native value). Reflects the routing mechanism, not the swapper's current on-chain allowance. If absent, assume an approval is applicable."
+          },
           "permitTransaction": {
             "$ref": "#/components/schemas/TransactionRequest"
           },
@@ -3786,6 +3794,10 @@
           "walletExecutionContext": {
             "$ref": "#/components/schemas/WalletExecutionContext",
             "x-internal": true
+          },
+          "earnIntent": {
+            "$ref": "#/components/schemas/EarnIntent",
+            "x-internal": true
           }
         },
         "required": [
@@ -4103,6 +4115,7 @@
           42161,
           42220,
           43114,
+          57073,
           59144,
           81457,
           7777777,
@@ -5134,6 +5147,8 @@
           "DUTCH_V3",
           "QUICKROUTE",
           "CHAINED",
+          "VAULT_DEPOSIT",
+          "VAULT_WITHDRAW",
           "APPROVAL_TXN",
           "APPROVAL_PERMIT",
           "RESET_APPROVAL_TXN"
@@ -5158,6 +5173,13 @@
           },
           "minAmount": {
             "$ref": "#/components/schemas/minAmount"
+          },
+          "fee": {
+            "type": "string",
+            "enum": [
+              "INTEGRATOR"
+            ],
+            "description": "Set to INTEGRATOR when this output is an integrator fee (as specified by the `integratorFees` array in the /quote request); omitted for the core output of the swap."
           }
         }
       },
@@ -7292,7 +7314,8 @@
           },
           "poolReferences": {
             "type": "array",
-            "description": "Array of pool reference identifiers to query. Each reference should include the protocol, chainId, and either the pool address (V3), pool id (V4), or pair address (V2).",
+            "description": "Array of pool reference identifiers to query. Each reference should include the protocol, chainId, and either the pool address (v3), pool id (v4), or pair address (v2). At most 20 references may be provided per request; requests exceeding this limit are rejected with an HTTP 400 error.",
+            "maxItems": 20,
             "items": {
               "$ref": "#/components/schemas/PoolReferenceByProtocol"
             }
@@ -7386,11 +7409,15 @@
           "currentTick": {
             "$ref": "#/components/schemas/lpTickCurrent"
           },
-          "tokenAReserves": {
-            "$ref": "#/components/schemas/tokenAmount"
+          "token0Reserves": {
+            "type": "string",
+            "description": "Pool reserves of token0, denominated in the token's base units. Populated for v2 pools (pair reserves) and v4 pools. For v4 pools this is the fee-excluded core principal computed from on-chain pool state: uncollected LP fees, donations, and hook-held assets are excluded, and for pools whose hooks perform custom accounting the value is an approximation of swappable reserves. Computed best-effort and omitted if unavailable. Not returned for v3 pools.",
+            "pattern": "^[0-9]+$"
           },
-          "tokenBReserves": {
-            "$ref": "#/components/schemas/tokenAmount"
+          "token1Reserves": {
+            "type": "string",
+            "description": "Pool reserves of token1, denominated in the token's base units. Populated for v2 pools (pair reserves) and v4 pools. For v4 pools this is the fee-excluded core principal computed from on-chain pool state: uncollected LP fees, donations, and hook-held assets are excluded, and for pools whose hooks perform custom accounting the value is an approximation of swappable reserves. Computed best-effort and omitted if unavailable. Not returned for v3 pools.",
+            "pattern": "^[0-9]+$"
           }
         }
       },
@@ -7576,6 +7603,10 @@
           },
           "urgency": {
             "$ref": "#/components/schemas/Urgency"
+          },
+          "earnIntent": {
+            "$ref": "#/components/schemas/EarnIntent",
+            "x-internal": true
           }
         },
         "required": [
@@ -7720,6 +7751,10 @@
           },
           "walletExecutionContext": {
             "$ref": "#/components/schemas/WalletExecutionContext",
+            "x-internal": true
+          },
+          "earnIntent": {
+            "$ref": "#/components/schemas/EarnQuoteIntent",
             "x-internal": true
           }
         },
@@ -7990,6 +8025,14 @@
           },
           "autoSlippage": {
             "$ref": "#/components/schemas/AutoSlippage"
+          },
+          "earnIntent": {
+            "$ref": "#/components/schemas/EarnQuoteIntent",
+            "x-internal": true
+          },
+          "earnPreview": {
+            "$ref": "#/components/schemas/EarnPreview",
+            "x-internal": true
           }
         },
         "required": [
@@ -8147,6 +8190,212 @@
           "limitInflationFactor",
           "priceInflationFactor",
           "percentileThresholdFor1559Fee"
+        ]
+      },
+      "EarnAction": {
+        "x-internal": true,
+        "type": "string",
+        "enum": [
+          "deposit",
+          "withdraw"
+        ],
+        "description": "The Earn vault action to quote or plan."
+      },
+      "EarnWithdrawMode": {
+        "x-internal": true,
+        "type": "string",
+        "enum": [
+          "EXACT_ASSETS",
+          "MAX_SHARES"
+        ],
+        "description": "The ERC-4626 withdraw mode. EXACT_ASSETS withdraws the requested asset amount; MAX_SHARES redeems the owner's currently redeemable shares."
+      },
+      "EarnDestinationGasMode": {
+        "x-internal": true,
+        "type": "string",
+        "enum": [
+          "WALLET_BALANCE",
+          "SELF_FUNDED"
+        ],
+        "description": "Backend-selected funding mode for destination-chain gas on standard cross-chain Earn deposits. WALLET_BALANCE means the swapper has enough destination native gas; SELF_FUNDED means the route bridges native gas and reserves part of it for the remaining destination transactions."
+      },
+      "EarnIntent": {
+        "x-internal": true,
+        "type": "object",
+        "description": "Earn vault intent supplied on /quote and repeated on /plan. Earn currently supports the allowlisted Mainnet Morpho vaults.",
+        "properties": {
+          "action": {
+            "$ref": "#/components/schemas/EarnAction"
+          },
+          "vault": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "chainId": {
+            "$ref": "#/components/schemas/ChainId"
+          },
+          "withdrawMode": {
+            "$ref": "#/components/schemas/EarnWithdrawMode"
+          }
+        },
+        "required": [
+          "action",
+          "vault",
+          "chainId"
+        ]
+      },
+      "EarnPreview": {
+        "x-internal": true,
+        "description": "Action-specific preview amounts computed while normalizing an Earn intent.",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/EarnDepositPreview"
+          },
+          {
+            "$ref": "#/components/schemas/EarnExactAssetsWithdrawPreview"
+          },
+          {
+            "$ref": "#/components/schemas/EarnMaxSharesWithdrawPreview"
+          }
+        ]
+      },
+      "EarnDepositPreview": {
+        "x-internal": true,
+        "type": "object",
+        "description": "Deposit preview. Asset amounts are vault-underlying assets, and share amounts are vault shares.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "DEPOSIT"
+            ]
+          },
+          "depositAssets": {
+            "type": "array",
+            "description": "Vault underlying assets that will be deposited after any swap, bridge, wrap, or unwrap steps.",
+            "items": {
+              "$ref": "#/components/schemas/EarnPreviewDepositAsset"
+            }
+          },
+          "estimatedSharesOut": {
+            "description": "Estimated vault shares received from the deposit.",
+            "$ref": "#/components/schemas/tokenAmount"
+          }
+        },
+        "required": [
+          "type",
+          "depositAssets",
+          "estimatedSharesOut"
+        ]
+      },
+      "EarnExactAssetsWithdrawPreview": {
+        "x-internal": true,
+        "type": "object",
+        "description": "Exact-assets withdraw preview. Assets are vault-underlying assets, and shares are vault shares.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "EXACT_ASSETS_WITHDRAW"
+            ]
+          },
+          "requestedAssetsOut": {
+            "description": "Requested vault underlying assets returned by the withdraw.",
+            "$ref": "#/components/schemas/tokenAmount"
+          },
+          "estimatedSharesIn": {
+            "description": "Estimated vault shares spent to withdraw the requested assets.",
+            "$ref": "#/components/schemas/tokenAmount"
+          }
+        },
+        "required": [
+          "type",
+          "requestedAssetsOut",
+          "estimatedSharesIn"
+        ]
+      },
+      "EarnMaxSharesWithdrawPreview": {
+        "x-internal": true,
+        "type": "object",
+        "description": "Max-shares withdraw preview. Assets are vault-underlying assets, and shares are vault shares.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "MAX_SHARES_WITHDRAW"
+            ]
+          },
+          "maxRedeemableSharesIn": {
+            "description": "Vault shares spent by the max-shares redeem.",
+            "$ref": "#/components/schemas/tokenAmount"
+          },
+          "previewAssetsOut": {
+            "description": "Estimated vault underlying assets received by redeeming max redeemable shares.",
+            "$ref": "#/components/schemas/tokenAmount"
+          }
+        },
+        "required": [
+          "type",
+          "maxRedeemableSharesIn",
+          "previewAssetsOut"
+        ]
+      },
+      "EarnPreviewDepositAsset": {
+        "x-internal": true,
+        "type": "object",
+        "description": "A vault deposit input asset amount after all pre-vault routing has completed.",
+        "properties": {
+          "token": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "chainId": {
+            "$ref": "#/components/schemas/ChainId"
+          },
+          "amount": {
+            "$ref": "#/components/schemas/tokenAmount"
+          }
+        },
+        "required": [
+          "token",
+          "chainId",
+          "amount"
+        ]
+      },
+      "EarnQuoteIntent": {
+        "x-internal": true,
+        "type": "object",
+        "description": "Validated Earn intent returned by /quote and /plan. Internal vault execution metadata is kept off the public contract.",
+        "properties": {
+          "action": {
+            "$ref": "#/components/schemas/EarnAction"
+          },
+          "vault": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "chainId": {
+            "$ref": "#/components/schemas/ChainId"
+          },
+          "withdrawMode": {
+            "$ref": "#/components/schemas/EarnWithdrawMode"
+          },
+          "destinationGasMode": {
+            "$ref": "#/components/schemas/EarnDestinationGasMode"
+          },
+          "underlyingAsset": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "requestedAssets": {
+            "$ref": "#/components/schemas/tokenAmount",
+            "description": "Requested underlying asset amount for EXACT_ASSETS withdraw intents."
+          },
+          "preview": {
+            "$ref": "#/components/schemas/EarnPreview"
+          }
+        },
+        "required": [
+          "action",
+          "vault",
+          "chainId",
+          "underlyingAsset"
         ]
       }
     },

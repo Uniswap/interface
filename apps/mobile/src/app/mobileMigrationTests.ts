@@ -17,6 +17,7 @@ import { Language } from 'uniswap/src/features/language/constants'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { DappRequestType } from 'uniswap/src/types/walletConnect'
+import type { MockedFunction } from 'vitest'
 import { type Account, type SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 
@@ -1381,7 +1382,7 @@ export function testMigrateAndRemoveCloudBackupSlice(migration: (state: any) => 
 export function testSetWalletDeviceLanguage(
   migration: (state: any) => any,
   prevSchema: any,
-  getWalletDeviceLanguageMock: jest.MockedFunction<() => Language>,
+  getWalletDeviceLanguageMock: MockedFunction<() => Language>,
 ): void {
   const deviceLanguage = Language.Japanese
   getWalletDeviceLanguageMock.mockReturnValue(deviceLanguage)

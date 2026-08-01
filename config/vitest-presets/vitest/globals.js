@@ -5,6 +5,8 @@ module.exports = {
     APP_ID: 'web',
     ALCHEMY_API_KEY: 'key',
     AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY: 'key',
+    AWS_API_ENDPOINT: 'https://test.gateway.uniswap.org/v1/graphql',
+    UNISWAP_GATEWAY_DNS: 'https://test.gateway.uniswap.org',
     AMPLITUDE_PROXY_URL_OVERRIDE: '',
     API_BASE_URL_OVERRIDE: '',
     API_BASE_URL_V2_OVERRIDE: '',

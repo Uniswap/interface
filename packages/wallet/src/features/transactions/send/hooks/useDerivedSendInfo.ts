@@ -33,7 +33,7 @@ export function useDerivedSendInfo(state: TransactionState): DerivedSendInfo {
   )
 
   const currencyIn = currencyInInfo?.currency
-  const { data: nftIn } = useNFT({
+  const nftIn = useNFT({
     owner: activeAccount?.address,
     address: tradeableAsset?.address,
     tokenId:

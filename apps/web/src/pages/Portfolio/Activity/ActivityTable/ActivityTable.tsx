@@ -19,10 +19,17 @@ interface ActivityTableProps {
   data: TransactionDetails[]
   loading?: boolean
   error?: boolean
+  isEarnActivityDisplayEnabled?: boolean
   rowWrapper?: (row: Row<TransactionDetails>, content: JSX.Element) => JSX.Element
 }
 
-export function useActivityTableColumns(showLoadingSkeleton: boolean): ColumnDef<TransactionDetails, any>[] {
+export function useActivityTableColumns({
+  showLoadingSkeleton,
+  isEarnActivityDisplayEnabled = true,
+}: {
+  showLoadingSkeleton: boolean
+  isEarnActivityDisplayEnabled?: boolean
+}): ColumnDef<TransactionDetails, any>[] {
   const { t } = useTranslation()
   const isTouchDevice = useIsTouchDevice()
   const columnHelper = useMemo(() => createColumnHelper<TransactionDetails>(), [])
@@ -71,7 +78,10 @@ export function useActivityTableColumns(showLoadingSkeleton: boolean): ColumnDef
           }
           return (
             <Cell justifyContent="flex-start">
-              <TransactionTypeCell transaction={info.row.original} />
+              <TransactionTypeCell
+                transaction={info.row.original}
+                isEarnActivityDisplayEnabled={isEarnActivityDisplayEnabled}
+              />
             </Cell>
           )
         },
@@ -98,7 +108,10 @@ export function useActivityTableColumns(showLoadingSkeleton: boolean): ColumnDef
           }
           return (
             <Cell justifyContent="flex-start">
-              <ActivityAmountCell transaction={info.row.original} />
+              <ActivityAmountCell
+                transaction={info.row.original}
+                isEarnActivityDisplayEnabled={isEarnActivityDisplayEnabled}
+              />
             </Cell>
           )
         },
@@ -125,7 +138,10 @@ export function useActivityTableColumns(showLoadingSkeleton: boolean): ColumnDef
           }
           return (
             <Cell justifyContent="flex-start">
-              <ActivityAddressCell transaction={info.row.original} />
+              <ActivityAddressCell
+                transaction={info.row.original}
+                isEarnActivityDisplayEnabled={isEarnActivityDisplayEnabled}
+              />
             </Cell>
           )
         },
@@ -156,17 +172,26 @@ export function useActivityTableColumns(showLoadingSkeleton: boolean): ColumnDef
         },
       }),
     ],
-    [t, columnHelper, showLoadingSkeleton, isTouchDevice],
+    [t, columnHelper, showLoadingSkeleton, isTouchDevice, isEarnActivityDisplayEnabled],
   )
 }
 
-function ActivityTableInner({ data, loading = false, error = false, rowWrapper }: ActivityTableProps): JSX.Element {
+function ActivityTableInner({
+  data,
+  loading = false,
+  error = false,
+  isEarnActivityDisplayEnabled = true,
+  rowWrapper,
+}: ActivityTableProps): JSX.Element {
   const showLoadingSkeleton = loading || error
 
   // Initialize address lookup for batch fetching
-  useActivityAddressLookup(data)
+  useActivityAddressLookup(data, { isEarnActivityDisplayEnabled })
 
-  const columns = useActivityTableColumns(showLoadingSkeleton)
+  const columns = useActivityTableColumns({
+    showLoadingSkeleton,
+    isEarnActivityDisplayEnabled,
+  })
 
   return (
     <Table

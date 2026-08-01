@@ -1,3 +1,4 @@
+import { toScreenInput, useIsBlockedAddress } from '@universe/compliance'
 import React, { Dispatch, SetStateAction, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
@@ -10,11 +11,10 @@ import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useDismissedCompatibleAddressWarnings } from 'uniswap/src/features/tokens/warnings/slice/hooks'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { useIsBlockedActiveAddress } from 'wallet/src/features/compliance/hooks'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 import { isAmountGreaterThanZero } from 'wallet/src/features/transactions/utils'
-import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function SendFormButton({
@@ -53,7 +53,9 @@ export function SendFormButton({
   const isViewOnlyWallet = account.type === AccountType.Readonly
 
   const { isBlocked: isActiveBlocked, isBlockedLoading: isActiveBlockedLoading } = useIsBlockedActiveAddress()
-  const { isBlocked: isRecipientBlocked, isBlockedLoading: isRecipientBlockedLoading } = useIsBlocked(recipient)
+  const { isBlocked: isRecipientBlocked, isBlockedLoading: isRecipientBlockedLoading } = useIsBlockedAddress(
+    toScreenInput(recipient, chainId),
+  )
   const isBlocked = isActiveBlocked || isRecipientBlocked
   const isBlockedLoading = isActiveBlockedLoading || isRecipientBlockedLoading
   const { tokenWarningDismissed: isCompatibleAddressDismissed } = useDismissedCompatibleAddressWarnings(
@@ -107,7 +109,7 @@ export function SendFormButton({
   return (
     <Flex centered row>
       <Button
-        isDisabled={actionButtonDisabled && !isViewOnlyWallet}
+        disabled={actionButtonDisabled && !isViewOnlyWallet}
         variant="branded"
         // Override opacity only for view-only wallets
         opacity={isViewOnlyWallet ? 0.4 : undefined}

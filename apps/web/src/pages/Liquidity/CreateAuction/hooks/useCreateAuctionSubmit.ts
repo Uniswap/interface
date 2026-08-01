@@ -2,11 +2,13 @@ import { generateRandomBytes } from '@universe/cryptography'
 import { ensure0xHex, uint8ToHex } from '@universe/encoding'
 import { useState } from 'react'
 import { useCreateAuctionMutation } from 'uniswap/src/data/rest/auctions/useCreateAuctionMutation'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { AuctionCreateFailedProperties, AuctionCreateFailedStep } from 'uniswap/src/features/telemetry/types'
 import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { getAuctionCreateFailedDiagnostics } from '~/pages/Liquidity/CreateAuction/analytics'
@@ -16,6 +18,7 @@ import {
   CustomizePoolState,
   TokenFormState,
   TokenMode,
+  XVerification,
 } from '~/pages/Liquidity/CreateAuction/types'
 import {
   EmissionScheduleError,
@@ -62,6 +65,20 @@ export class AuctionWindowTooShortError extends Error {
   }
 }
 
+/**
+ * Thrown at launch time when the stored X verification is bound to a different wallet than the one
+ * about to submit — possible when the user verifies on the token-info step and switches wallets on a
+ * later step, where the step-1 invalidation effect isn't mounted. The backend rejects such tokens
+ * ("x_verification_token is bound to a different wallet"), so this is caught pre-submission and
+ * mapped in `LaunchAuctionErrorModal` to copy that sends the user back to re-verify.
+ */
+export class AuctionXWalletMismatchError extends Error {
+  constructor() {
+    super('X verification is bound to a different wallet')
+    this.name = 'AuctionXWalletMismatchError'
+  }
+}
+
 export interface CreateAuctionSubmitResult {
   predictedTokenAddress: string
   predictedAuctionAddress: string
@@ -80,7 +97,7 @@ interface UseCreateAuctionSubmitParams {
   /** Resolved raise-currency token address (zero address for native ETH). */
   currencyAddress: string | undefined
   /** From X OAuth / VerifyXCallback when the creator linked their handle. */
-  xVerificationToken?: string | null
+  xVerification?: Pick<XVerification, 'xVerificationToken' | 'boundWalletAddress'>
   /**
    * Existing-token only: the connected wallet's on-chain balance in base units. Used for the
    * build-time insufficient-balance check so a deposit larger than the held balance can't hit the
@@ -160,7 +177,7 @@ export function useCreateAuctionSubmit(params: UseCreateAuctionSubmitParams): Us
     customizePool,
     walletAddress,
     currencyAddress,
-    xVerificationToken,
+    xVerification,
     existingTokenWalletBalanceRaw,
     getCreateFailedProperties,
   } = params
@@ -201,6 +218,22 @@ export function useCreateAuctionSubmit(params: UseCreateAuctionSubmitParams): Us
       return undefined
     }
 
+    // The X token is bound to the wallet that initiated the OAuth flow. A switch on the token-info
+    // step is caught there, but a switch on a later step isn't — fail here with actionable copy
+    // instead of letting the backend reject the request.
+    if (
+      xVerification &&
+      !areAddressesEqual({
+        addressInput1: { address: xVerification.boundWalletAddress, platform: Platform.EVM },
+        addressInput2: { address: walletAddress, platform: Platform.EVM },
+      })
+    ) {
+      const err = new AuctionXWalletMismatchError()
+      setError(err)
+      reportAuctionCreateFailed({ getCreateFailedProperties, failedStep: 'build_request', error: err, diagnostics })
+      return undefined
+    }
+
     // Existing tokens pull the deposit from the wallet, so a deposit larger than the held balance
     // can't be funded — fail here instead of letting the backend reject it.
     if (
@@ -236,7 +269,7 @@ export function useCreateAuctionSubmit(params: UseCreateAuctionSubmitParams): Us
       walletAddress,
       currencyAddress: currencyAddress ?? '',
       salt: ensure0xHex(uint8ToHex(generateRandomBytes(32))),
-      xVerificationToken,
+      xVerificationToken: xVerification?.xVerificationToken,
     })
 
     if (!request) {

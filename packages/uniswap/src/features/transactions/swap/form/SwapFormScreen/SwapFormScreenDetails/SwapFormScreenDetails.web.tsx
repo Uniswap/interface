@@ -27,7 +27,7 @@ export const SwapFormScreenDetails = memo(function SwapFormScreenDetails(): JSX.
               }
             `}</style>
             <Flex>
-              <Flex>
+              <Flex gap="$spacing8">
                 <SwapFormWarningStoreContextProvider>
                   <SwapFormButton tokenColor={tokenColor} />
                   <SwapFormWarningModals />

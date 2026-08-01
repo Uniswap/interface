@@ -14,13 +14,20 @@ import type {
 export function getTransactionToActivityQueryOptions({
   transaction,
   formatNumber,
+  isEarnActivityDisplayEnabled = true,
 }: {
   transaction?: InterfaceTransactionDetails
   formatNumber: FormatNumberFunctionType
+  isEarnActivityDisplayEnabled?: boolean
 }) {
   return queryOptions({
-    queryKey: [ReactQueryCacheKey.TransactionToActivity, transaction],
-    queryFn: async () => transactionToActivity({ details: transaction, formatNumber }),
+    queryKey: [ReactQueryCacheKey.TransactionToActivity, transaction, isEarnActivityDisplayEnabled],
+    queryFn: async () =>
+      transactionToActivity({
+        details: transaction,
+        formatNumber,
+        isEarnActivityDisplayEnabled,
+      }),
   })
 }
 

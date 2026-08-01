@@ -41,6 +41,7 @@ export function Modal({
   snapPointsMode,
   snapPoints,
   testID,
+  disableRemoveScroll,
 }: ModalProps): JSX.Element {
   const [fullyClosed, setFullyClosed] = useState(false)
 
@@ -78,6 +79,7 @@ export function Modal({
           borderRadius={borderRadius}
           overlayOpacity={overlayOpacity !== undefined ? overlayOpacity : isExtensionApp ? 1 : undefined}
           adaptToSheet={isWebApp}
+          disableRemoveScroll={disableRemoveScroll}
           alignment={alignment}
           backgroundColor={backgroundColor}
           height={height ?? (fullScreen ? '100%' : undefined)}

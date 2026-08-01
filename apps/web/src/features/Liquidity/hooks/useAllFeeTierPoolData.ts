@@ -84,7 +84,7 @@ export function useAllFeeTierPoolData({
   )
 
   const {
-    initializedFeeTierKeys,
+    unavailableFeeTierKeys,
     isLoading: isOnChainExistenceLoading,
     isError: isOnChainExistenceError,
   } = useV4PoolsInitializedOnChain({
@@ -131,6 +131,7 @@ export function useAllFeeTierPoolData({
             tvl: pool.totalLiquidityUsd,
             created: true,
             boostedApr: pool.boostedApr,
+            protocolFee: pool.protocolFee,
           } satisfies FeeTierData
         }
       }
@@ -143,9 +144,10 @@ export function useAllFeeTierPoolData({
       formattedDynamicFeeTier: t('fee.dynamic'),
     })
 
-    // Overlay on-chain truth: mark any pool that exists on-chain as `created`, even if the indexed data
-    // didn't surface it (abandoned/zero-liquidity pools), so existing-pool gates can't be bypassed.
-    for (const key of initializedFeeTierKeys) {
+    // Overlay on-chain truth: mark any pool that's unavailable on-chain (already initialized, or reserved
+    // by a live auction) as `created`, even if the indexed data didn't surface it, so existing-pool gates
+    // can't be bypassed.
+    for (const key of unavailableFeeTierKeys) {
       const existing = mergedFeeTierData[key]
       // oxlint-disable-next-line typescript/no-unnecessary-condition -- Record index access can be undefined at runtime
       if (existing) {
@@ -171,7 +173,7 @@ export function useAllFeeTierPoolData({
       feeTierData: mergedFeeTierData,
       hasExistingFeeTiers: Object.values(feeTierData).length > 0,
     }
-  }, [poolData, sdkCurrencies, defaultFeeData, formatPercent, t, initializedFeeTierKeys, onChainFeeTierCandidates])
+  }, [poolData, sdkCurrencies, defaultFeeData, formatPercent, t, unavailableFeeTierKeys, onChainFeeTierCandidates])
 
   return {
     ...mergedResult,

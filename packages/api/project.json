@@ -15,8 +15,6 @@
     "check": {},
     "check:fast": {},
     "typecheck": {},
-    "typecheck:tsc": {},
-    "typecheck:tsgo": {},
     "prepare": {
       "executor": "nx:noop",
       "dependsOn": ["graphql:generate", "tradingapi:generate"],

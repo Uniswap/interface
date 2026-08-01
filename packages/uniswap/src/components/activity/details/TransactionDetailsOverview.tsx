@@ -33,6 +33,7 @@ export function TransactionDetailsOverview({
   openCancelModal,
   menuItems,
   onClose,
+  isEarnActivityDisplayEnabled = true,
 }: TransactionDetailsOverviewProps): JSX.Element {
   const { t } = useTranslation()
   const { typeInfo, status, addedTime } = transactionDetails
@@ -46,7 +47,8 @@ export function TransactionDetailsOverview({
 
   const { evmAccount } = useWallet()
   const readonly = evmAccount?.accountType === AccountType.Readonly
-  const canResumePlan = useCanResumePlan(typeInfo, status)
+  const isEarnPlan = typeInfo.type === TransactionType.Plan && typeInfo.earnAction !== undefined
+  const canResumePlan = useCanResumePlan(typeInfo, status) && (!isEarnPlan || isEarnActivityDisplayEnabled)
   const isCancelable = useIsCancelable(transactionDetails) && !readonly
 
   const hideTransactionActions = readonly || isExternalProfile
@@ -55,7 +57,11 @@ export function TransactionDetailsOverview({
   if (canResumePlan) {
     buttons.push(
       <Flex key="resume" row testID="resume-button">
-        <ResumePlanButton typeInfo={typeInfo} onSuccess={onClose} />
+        <ResumePlanButton
+          typeInfo={typeInfo}
+          isEarnActivityDisplayEnabled={isEarnActivityDisplayEnabled}
+          onSuccess={onClose}
+        />
       </Flex>,
     )
   }
@@ -83,8 +89,14 @@ export function TransactionDetailsOverview({
   const showOffRampPendingCard = isOffRampSaleTransactionInfo(typeInfo) && status === 'pending' && isTransactionStale
 
   const detailsContent = useMemo((): JSX.Element | null => {
-    return <TransactionDetailsContent transactionDetails={transactionDetails} onClose={onClose} />
-  }, [transactionDetails, onClose])
+    return (
+      <TransactionDetailsContent
+        transactionDetails={transactionDetails}
+        isEarnActivityDisplayEnabled={isEarnActivityDisplayEnabled}
+        onClose={onClose}
+      />
+    )
+  }, [isEarnActivityDisplayEnabled, transactionDetails, onClose])
 
   return (
     <Flex gap="$spacing12" pb={isWebPlatform ? '$none' : '$spacing12'} px={isWebPlatform ? '$none' : '$spacing24'}>
@@ -92,6 +104,7 @@ export function TransactionDetailsOverview({
         hideTransactionActions={hideTransactionActions}
         transactionActions={menuItems}
         transactionDetails={transactionDetails}
+        isEarnActivityDisplayEnabled={isEarnActivityDisplayEnabled}
       />
       {!hideTopSeparator && <Separator />}
       {detailsContent}
@@ -102,6 +115,7 @@ export function TransactionDetailsOverview({
       <TransactionDetailsInfoRows
         isShowingMore={isShowingMore}
         transactionDetails={transactionDetails}
+        isEarnActivityDisplayEnabled={isEarnActivityDisplayEnabled}
         pt={!hideBottomSeparator && !hasMoreInfoRows ? '$spacing8' : undefined}
         openPlanView={openPlanView}
         onClose={onClose}

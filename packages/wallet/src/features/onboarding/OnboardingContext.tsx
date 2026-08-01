@@ -19,6 +19,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { normalizeTextInput } from 'utilities/src/primitives/string'
 import { MNEMONIC_LENGTH_EW, MNEMONIC_LENGTH_HD } from 'wallet/src/constants/accounts'
 import { setBackupReminderLastSeenTs, setHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/slice'
+import { NUMBER_OF_WALLETS_TO_GENERATE } from 'wallet/src/features/onboarding/constants'
 import { createImportedAccounts } from 'wallet/src/features/onboarding/createImportedAccounts'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
@@ -29,8 +30,6 @@ import { createAccountsActions } from 'wallet/src/features/wallet/create/createA
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
 import { generateSignerFunc } from 'wallet/src/features/wallet/signing/utils'
-
-export const NUMBER_OF_WALLETS_TO_GENERATE = 10
 
 interface ImportMnemonicArgs {
   mnemonic: string

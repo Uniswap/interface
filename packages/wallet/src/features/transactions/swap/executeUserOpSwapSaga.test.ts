@@ -24,10 +24,10 @@ import {
 } from 'wallet/src/features/transactions/swap/types/fixtures'
 import { DelegationType } from 'wallet/src/features/transactions/types/transactionSagaDependencies'
 
-jest.mock('wallet/src/features/transactions/factories/createTransactionServices')
-jest.mock('uniswap/src/features/transactions/swap/utils/trade', () => ({
-  ...jest.requireActual('uniswap/src/features/transactions/swap/utils/trade'),
-  tradeToTransactionInfo: jest.fn(),
+vi.mock('wallet/src/features/transactions/factories/createTransactionServices')
+vi.mock('uniswap/src/features/transactions/swap/utils/trade', async () => ({
+  ...(await vi.importActual('uniswap/src/features/transactions/swap/utils/trade')),
+  tradeToTransactionInfo: vi.fn(),
 }))
 
 const CHAIN_ID = UniverseChainId.Mainnet
@@ -48,12 +48,12 @@ function createParams(): UserOpSwapParams {
     analytics: mockAnalytics,
     swapTxContext: userOpSwapContext,
     caip25Info: undefined,
-    setCurrentStep: jest.fn(),
-    setSteps: jest.fn(),
-    onSuccess: jest.fn(),
-    onFailure: jest.fn(),
-    onPending: jest.fn(),
-    onClearForm: jest.fn(),
+    setCurrentStep: vi.fn(),
+    setSteps: vi.fn(),
+    onSuccess: vi.fn(),
+    onFailure: vi.fn(),
+    onPending: vi.fn(),
+    onClearForm: vi.fn(),
   }
 }
 
@@ -74,11 +74,11 @@ describe('executeUserOpSwapSaga', () => {
   ]
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockTransactionService.executeUserOp.mockResolvedValue({ userOpHash: USER_OP_HASH })
-    jest
-      .mocked(tradeToTransactionInfo)
-      .mockReturnValue({ type: TransactionType.Swap } as ReturnType<typeof tradeToTransactionInfo>)
+    vi.mocked(tradeToTransactionInfo).mockReturnValue({ type: TransactionType.Swap } as ReturnType<
+      typeof tradeToTransactionInfo
+    >)
   })
 
   it('submits via transactionService.executeUserOp and does not dispatch addTransaction itself', async () => {

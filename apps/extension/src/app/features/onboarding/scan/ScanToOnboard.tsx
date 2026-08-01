@@ -7,8 +7,8 @@ import {
   withRepeat,
   withSequence,
   withSpring,
+  WithSpringConfig,
 } from 'react-native-reanimated'
-import { SpringConfig } from 'react-native-reanimated/lib/typescript/animation/springUtils'
 import QRCode from 'react-qr-code' //TODO(EXT-476): Replace with custom QR code designs
 import { getUniswapServiceUrls } from 'src/app/config'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
@@ -141,7 +141,7 @@ export function ScanToOnboard(): JSX.Element {
       return undefined
     }
 
-    const springConfig: SpringConfig = {
+    const springConfig: WithSpringConfig = {
       mass: 1,
       stiffness: 80,
       damping: 20,

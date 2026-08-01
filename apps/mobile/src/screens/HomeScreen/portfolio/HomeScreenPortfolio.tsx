@@ -1,6 +1,7 @@
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { isAndroid } from '@universe/environment'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import type { LayoutChangeEvent, ListRenderItem } from 'react-native'
 import { RefreshControl, View } from 'react-native'
@@ -13,6 +14,7 @@ import { HomeScreenPortfolioStatusBar } from 'src/screens/HomeScreen/portfolio/f
 import { HomeScreenPortfolioStickyTabBar } from 'src/screens/HomeScreen/portfolio/feedScroll/HomeScreenPortfolioStickyTabBar'
 import { useFeedScrollContentContainerStyle } from 'src/screens/HomeScreen/portfolio/feedScroll/useFeedScrollContentContainerStyle'
 import { useHomeScreenPortfolioHeader } from 'src/screens/HomeScreen/portfolio/header/useHomeScreenPortfolioHeader'
+import { useHomeScreenHeartbeatCoordinator } from 'src/screens/HomeScreen/portfolio/hooks/useHomeScreenHeartbeatCoordinator'
 import { useHomeScreenPortfolioRefresh } from 'src/screens/HomeScreen/portfolio/hooks/useHomeScreenPortfolioRefresh'
 import { useHomeScreenPortfolioRoutes } from 'src/screens/HomeScreen/portfolio/tabs/common/hooks/useHomeScreenPortfolioRoutes'
 import { useHomeScreenPortfolioTabState } from 'src/screens/HomeScreen/portfolio/tabs/common/hooks/useHomeScreenPortfolioTabState'
@@ -52,7 +54,7 @@ function HomeScreenPortfolioContent({ setIsLayoutReady }: HomeScreenPortfolioPro
   const hideSplashScreen = useHideSplashScreen()
   const activeAccount = useActiveAccountWithThrow()
   const { showEmptyWalletState: hasNoWalletActivity } = useHomeScreenState()
-  const { header: portfolio, shouldShowWrappedBanner, outageModal } = useHomeScreenPortfolioHeader()
+  const { header: portfolio, outageModal } = useHomeScreenPortfolioHeader()
   const { shouldShowPoolsTab } = usePoolsTabVisibility(activeAccount.address)
   // A pools-only wallet (positions but no tokens/NFTs/activity) should still see its tabs.
   const showEmptyWalletState = hasNoWalletActivity && !shouldShowPoolsTab
@@ -62,6 +64,8 @@ function HomeScreenPortfolioContent({ setIsLayoutReady }: HomeScreenPortfolioPro
   // before resolving the active tab via route.key.
   const tabIndex = Math.max(0, Math.min(rawTabIndex, routes.length - 1))
   const activeKey = routes[tabIndex]?.key
+  const isDataLivelinessEnabled = useFeatureFlag(FeatureFlags.DataLivelinessUI)
+  useHomeScreenHeartbeatCoordinator({ enabled: isDataLivelinessEnabled, activeTab: activeKey })
   const { feedScrollValue, feedScrollHandler, feedScrollRef } = useHomeScreenPortfolioScroll()
   const [headerHeight, setHeaderHeight] = useState(CONTENT_HEADER_HEIGHT_ESTIMATE)
 
@@ -283,11 +287,7 @@ function HomeScreenPortfolioContent({ setIsLayoutReady }: HomeScreenPortfolioPro
 
   return (
     <Screen edges={['left', 'right']} onLayout={hideSplashScreen}>
-      <HomeScreenPortfolioStatusBar
-        heightCollapsed={insets.top}
-        heightExpanded={headerHeight}
-        shouldShowWrappedBanner={shouldShowWrappedBanner}
-      />
+      <HomeScreenPortfolioStatusBar heightCollapsed={insets.top} heightExpanded={headerHeight} />
       <Flex fill style={{ paddingTop: insets.top }}>
         <ReactNavigationPerformanceView interactive screenName={MobileScreens.Home}>
           <Animated.FlatList

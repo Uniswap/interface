@@ -112,7 +112,9 @@ test.describe(
         const actionTiles = page.getByTestId(TestID.PortfolioActionTiles)
         await expect(actionTiles.getByTestId(TestID.PortfolioActionTileBuy)).toBeVisible()
         await expect(page.getByTestId(TestID.PortfolioActionTileCopyAddress)).not.toBeVisible()
-        await expect(page.getByTestId(TestID.PortfolioShareButton)).not.toBeVisible()
+        // Scope to the action tiles: the portfolio header renders its own share button
+        // (same test ID), which is visible by design for connected wallets.
+        await expect(actionTiles.getByTestId(TestID.PortfolioShareButton)).not.toBeVisible()
       })
     })
 

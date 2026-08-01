@@ -1,18 +1,20 @@
-import { ApolloClient } from '@apollo/client'
-import { GraphQLApi } from '@universe/api'
 import { unitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
-import { GqlChainId } from 'uniswap/src/features/chains/types'
+import { getWalletBalancesIncludeCategories } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+import {
+  fetchWalletsBalances,
+  selectTotalsByRequestedAddress,
+  toEvmWallets,
+} from 'uniswap/src/data/rest/getWalletsBalances/getWalletsBalances'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 type UnitagByAddress = Awaited<ReturnType<typeof unitagsApiClient.fetchUnitagsByAddresses>>['usernames']
 
 export async function fetchBalancesAndUnitags({
   addresses,
-  apolloClient,
-  gqlChains,
+  chainIds,
 }: {
   addresses: Address[]
-  apolloClient: ApolloClient<unknown>
-  gqlChains: GqlChainId[]
+  chainIds: UniverseChainId[]
 }): Promise<{
   balanceByAddress: AddressTo<number | undefined>
   unitagByAddress: UnitagByAddress
@@ -21,32 +23,24 @@ export async function fetchBalancesAndUnitags({
     return { balanceByAddress: {}, unitagByAddress: {} }
   }
 
-  const valueModifiers = addresses.map((addr) => ({
-    ownerAddress: addr,
+  const modifiers = addresses.map((address) => ({
+    address,
     includeSmallBalances: true,
     includeSpamTokens: false,
   }))
 
   const [balancesResponse, unitagsResponse] = await Promise.all([
-    apolloClient.query<GraphQLApi.PortfoliosTotalValueQuery>({
-      query: GraphQLApi.PortfoliosTotalValueDocument,
-      variables: { ownerAddresses: addresses, chains: gqlChains, valueModifiers },
+    fetchWalletsBalances({
+      wallets: toEvmWallets(addresses),
+      chainIds,
+      modifiers,
+      includeCategories: getWalletBalancesIncludeCategories(),
     }),
     unitagsApiClient.fetchUnitagsByAddresses({ addresses }),
   ])
 
-  const balanceByAddress = (balancesResponse.data.portfolios ?? []).reduce<AddressTo<number | undefined>>(
-    (acc, portfolio) => {
-      if (portfolio?.ownerAddress) {
-        acc[portfolio.ownerAddress] = portfolio.tokensTotalDenominatedValue?.value
-      }
-      return acc
-    },
-    {},
-  )
-
   return {
-    balanceByAddress,
+    balanceByAddress: selectTotalsByRequestedAddress(addresses)(balancesResponse) ?? {},
     unitagByAddress: unitagsResponse.usernames,
   }
 }

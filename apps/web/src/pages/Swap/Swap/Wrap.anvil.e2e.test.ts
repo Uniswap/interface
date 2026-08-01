@@ -39,6 +39,9 @@ test.describe(
       await page.goto(`/swap`)
 
       await page.getByTestId(TestID.ChooseInputToken).click()
+      // necessary to guarantee token option shows up in DOM bc of virtualized token selector list
+      // scoped by placeholder: the selector's network filter search shares this test ID
+      await page.getByTestId(TestID.ExploreSearchInput).and(page.getByPlaceholder('Search tokens')).fill('WETH')
       // oxlint-disable-next-line eslint-js/no-restricted-syntax
       await page.getByTestId('token-option-1-WETH').first().click()
 
@@ -66,6 +69,9 @@ test.describe(
 
       await page.goto(`/swap`)
       await page.getByTestId(TestID.ChooseOutputToken).click()
+      // necessary to guarantee token option shows up in DOM bc of virtualized token selector list
+      // scoped by placeholder: the selector's network filter search shares this test ID
+      await page.getByTestId(TestID.ExploreSearchInput).and(page.getByPlaceholder('Search tokens')).fill('WETH')
       // oxlint-disable-next-line eslint-js/no-restricted-syntax
       await page.getByTestId('token-option-1-WETH').first().click()
 

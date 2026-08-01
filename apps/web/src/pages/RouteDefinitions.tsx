@@ -1,7 +1,6 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { lazy, ReactNode, Suspense, useMemo } from 'react'
 import { matchPath, Navigate, Route, Routes, useLocation } from 'react-router'
-import { WRAPPED_PATH } from 'uniswap/src/components/banners/shared/utils'
 import { CHROME_EXTENSION_UNINSTALL_URL_PATH } from 'uniswap/src/constants/urls'
 import { WRAPPED_SOL_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
 import { EXTENSION_PASSKEY_AUTH_PATH } from 'uniswap/src/features/passkey/constants'
@@ -16,6 +15,8 @@ import {
 // High-traffic pages (index and /swap) should not be lazy-loaded.
 import { Landing } from '~/pages/Landing'
 import { SwapPage } from '~/pages/Swap'
+import { ON_RAMP_RETURN_PATH } from '~/pages/Swap/Buy/onRampRedirectUrl'
+import { OnRampReturn } from '~/pages/Swap/Buy/OnRampReturn'
 import { isBrowserRouterEnabled } from '~/utils/env'
 
 const AddLiquidity = lazy(() => import('~/pages/AddLiquidity/AddLiquidity'))
@@ -50,14 +51,12 @@ const ToucanToken = lazy(() => import('~/pages/Explore/ToucanToken'))
 const CreateAuction = lazy(() => import('~/pages/Liquidity/CreateAuction/CreateAuction'))
 const XOAuthCallbackPage = lazy(() => import('~/pages/Liquidity/CreateAuction/XOAuthCallbackPage'))
 const BetaPage = lazy(() => import('~/pages/Beta'))
-const Wrapped = lazy(() => import('~/pages/Wrapped'))
 
 interface RouterConfig {
   browserRouterEnabled?: boolean
   hash?: string
   isAddLiquidityRevampEnabled?: boolean
   isEmbeddedWalletEnabled?: boolean
-  isWrappedEnabled?: boolean
 }
 
 /**
@@ -68,7 +67,6 @@ export function useRouterConfig(): RouterConfig {
   const { hash } = useLocation()
   const isAddLiquidityRevampEnabled = useFeatureFlag(FeatureFlags.AddLiquidityRevamp)
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
-  const isWrappedEnabled = useFeatureFlag(FeatureFlags.UniswapWrapped2025)
 
   return useMemo(
     () => ({
@@ -76,9 +74,8 @@ export function useRouterConfig(): RouterConfig {
       hash,
       isAddLiquidityRevampEnabled,
       isEmbeddedWalletEnabled,
-      isWrappedEnabled,
     }),
-    [browserRouterEnabled, hash, isAddLiquidityRevampEnabled, isEmbeddedWalletEnabled, isWrappedEnabled],
+    [browserRouterEnabled, hash, isAddLiquidityRevampEnabled, isEmbeddedWalletEnabled],
   )
 }
 
@@ -271,6 +268,11 @@ export const routes: RouteDefinition[] = [
     getTitle: () => StaticTitlesAndDescriptions.SwapTitle,
   }),
   createRouteDefinition({
+    path: ON_RAMP_RETURN_PATH,
+    getElement: () => <OnRampReturn />,
+    getTitle: () => StaticTitlesAndDescriptions.SwapTitle,
+  }),
+  createRouteDefinition({
     path: '/swap',
     getElement: () => <SwapPage />,
     getTitle: () => StaticTitlesAndDescriptions.SwapTitle,
@@ -446,13 +448,6 @@ export const routes: RouteDefinition[] = [
     path: CHROME_EXTENSION_UNINSTALL_URL_PATH,
     getElement: () => <ExtensionUninstall />,
     getTitle: () => i18n.t('title.extension.uninstall'),
-  }),
-  // Uniswap Wrapped
-  createRouteDefinition({
-    path: WRAPPED_PATH,
-    getElement: () => <Wrapped />,
-    getTitle: () => 'Uniswap Wrapped',
-    enabled: (args) => args.isWrappedEnabled ?? false,
   }),
   createRouteDefinition({
     path: '/preview',

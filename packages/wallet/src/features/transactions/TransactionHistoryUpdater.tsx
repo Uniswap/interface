@@ -3,8 +3,8 @@ import { useQueryClient } from '@tanstack/react-query'
 import { Transaction } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import dayjs from 'dayjs'
 import { useEffect } from 'react'
-import { View } from 'react-native'
 import { batch, useDispatch, useSelector } from 'react-redux'
+import { Flex } from 'ui/src'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { getListTransactionsQuery } from 'uniswap/src/data/rest/listTransactions'
 import { parseToTransactionDetails } from 'uniswap/src/features/activity/parseToTransactionDetails'
@@ -51,9 +51,9 @@ export function TransactionHistoryUpdater(): JSX.Element | null {
   }
 
   return (
-    <View key={activeAccountAddress} testID={`AddressTransactionHistoryUpdater/${activeAccountAddress}`}>
+    <Flex key={activeAccountAddress} testID={`AddressTransactionHistoryUpdater/${activeAccountAddress}`}>
       <AddressTransactionHistoryUpdater transactions={activeAccountTransactions} address={activeAccountAddress} />
-    </View>
+    </Flex>
   )
 }
 

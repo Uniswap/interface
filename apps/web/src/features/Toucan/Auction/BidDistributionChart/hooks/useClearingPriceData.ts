@@ -5,6 +5,7 @@ import { auctionQueries } from 'uniswap/src/data/rest/auctions/auctionQueries'
 import type { AuctionDetails, BidTokenInfo } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { getClearingPrice } from '~/features/Toucan/Auction/utils/clearingPrice'
+import { getAuctionTokenDecimals } from '~/features/Toucan/Auction/utils/tokenMetadata'
 import { normalizeClearingSeries } from '~/features/Toucan/ToucanChart/clearingPrice/utils/normalizeSeries'
 import { useBlockTimestamp } from '~/hooks/useBlockTimestamp'
 import { getPollingIntervalMs } from '~/utils/averageBlockTimeMs'
@@ -75,7 +76,7 @@ export function useClearingPriceData({
       normalizeClearingSeries({
         auctionDetails,
         bidTokenDecimals: bidTokenInfo.decimals,
-        auctionTokenDecimals: auctionDetails.token?.currency.decimals,
+        auctionTokenDecimals: getAuctionTokenDecimals(auctionDetails.token),
         currentBlockNumber,
         clearingHistory,
         latestClearingPriceQ96,

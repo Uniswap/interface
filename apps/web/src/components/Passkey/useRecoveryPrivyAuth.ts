@@ -63,6 +63,7 @@ export function useRecoveryPrivyAuth({
 
   return {
     ready,
+    privyUserId: user?.id,
     getAccessToken,
     sendEmailCode,
     loginWithEmailCode,

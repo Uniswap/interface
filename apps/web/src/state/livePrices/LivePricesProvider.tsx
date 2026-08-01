@@ -1,12 +1,6 @@
-import {
-  createFetchClient,
-  getEntryGatewayUrl,
-  getWebSocketUrl,
-  provideSessionService,
-  SharedQueryClient,
-} from '@universe/api'
-import { isDevEnv, REQUEST_SOURCE } from '@universe/environment'
-import { FeatureFlags, getIsSessionServiceEnabled, useFeatureFlag } from '@universe/gating'
+import { getEntryGatewayUrl, getWebSocketUrl, SharedQueryClient } from '@universe/api'
+import { isDevEnv } from '@universe/environment'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import type { TokenPriceMessage, TokenSubscriptionParams } from '@universe/prices'
 import {
   createPriceKey,
@@ -21,6 +15,7 @@ import type { ReactElement, ReactNode } from 'react'
 import { useState } from 'react'
 import { RemotePriceProvider } from 'uniswap/src/features/prices/RemotePriceProvider'
 import { logger } from 'utilities/src/logger/logger'
+import { createLivePricesFetchClient } from '~/state/livePrices/createLivePricesFetchClient'
 
 function createLivePricesClient(): WebSocketClient<TokenSubscriptionParams, TokenPriceMessage['data']> | null {
   const wsUrl = getWebSocketUrl()
@@ -40,15 +35,7 @@ function createLivePricesClient(): WebSocketClient<TokenSubscriptionParams, Toke
     devtoolsName: 'livePricesConnection',
   })
 
-  const fetchClient = createFetchClient({
-    baseUrl: subscriptionApiUrl,
-    getHeaders: () => ({
-      'Content-Type': 'application/json',
-      'x-request-source': REQUEST_SOURCE,
-    }),
-    getSessionService: () =>
-      provideSessionService({ getBaseUrl: () => getEntryGatewayUrl(), getIsSessionServiceEnabled }),
-  })
+  const fetchClient = createLivePricesFetchClient({ subscriptionApiUrl })
 
   const subscriptionHandler = createPriceSubscriptionHandler({
     client: fetchClient,

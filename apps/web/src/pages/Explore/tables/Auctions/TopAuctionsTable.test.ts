@@ -16,13 +16,21 @@ const NOW_SECONDS = BigInt(NOW_MS / 1000)
 function createAuctionTableValue({
   id,
   totalBidVolumeUsd,
-  isCompleted,
+  totalBidVolume,
+  currencyTokenDecimals,
+  fdvUsd,
+  fdvRaw = 0n,
+  isCompleted = false,
   isComingSoon = false,
   verified = false,
 }: {
   id: string
-  totalBidVolumeUsd: number
-  isCompleted: boolean
+  totalBidVolumeUsd?: number
+  totalBidVolume?: string
+  currencyTokenDecimals?: number
+  fdvUsd?: number
+  fdvRaw?: bigint
+  isCompleted?: boolean
   isComingSoon?: boolean
   verified?: boolean
 }): TestAuctionTableValue {
@@ -33,6 +41,8 @@ function createAuctionTableValue({
     auction: {
       auction: {
         totalBidVolumeUsd,
+        totalBidVolume,
+        currencyTokenDecimals,
       },
       verified,
       logoUrl: undefined,
@@ -43,9 +53,9 @@ function createAuctionTableValue({
       },
     } as unknown as EnrichedAuction,
     projectedFdv: {
-      raw: 0n,
+      raw: fdvRaw,
       formattedBidToken: '—',
-      usd: undefined,
+      usd: fdvUsd,
     },
   }
 }
@@ -130,5 +140,111 @@ describe('top auctions table sorting', () => {
       'verified-live-high-volume',
       'verified-live-low-volume',
     ])
+  })
+
+  describe('committed volume sort without USD prices', () => {
+    // Chains without a USD price feed (e.g. Robinhood) have totalBidVolumeUsd undefined on every row
+    const lowTokenVolume = createAuctionTableValue({
+      id: 'low-token-volume',
+      totalBidVolume: '1000000000000000000', // 1 token @ 18 decimals
+      currencyTokenDecimals: 18,
+    })
+    const highTokenVolume = createAuctionTableValue({
+      id: 'high-token-volume',
+      totalBidVolume: '5000000000000000000', // 5 tokens @ 18 decimals
+      currencyTokenDecimals: 18,
+    })
+    const midTokenVolume = createAuctionTableValue({
+      id: 'mid-token-volume',
+      totalBidVolume: '3000000000000000000', // 3 tokens @ 18 decimals
+      currencyTokenDecimals: 18,
+    })
+    const noVolumeData = createAuctionTableValue({ id: 'no-volume-data' })
+
+    it('falls back to bid-token amounts when USD is missing (descending)', () => {
+      const sorted = sortAuctions({
+        auctions: [lowTokenVolume, noVolumeData, highTokenVolume, midTokenVolume],
+        sortMethod: AuctionSortField.COMMITTED_VOLUME,
+        sortAscending: false,
+      })
+
+      expect(sorted.map((auction) => auction.id)).toEqual([
+        'high-token-volume',
+        'mid-token-volume',
+        'low-token-volume',
+        'no-volume-data',
+      ])
+    })
+
+    it('reverses order when ascending', () => {
+      const sorted = sortAuctions({
+        auctions: [lowTokenVolume, highTokenVolume, midTokenVolume],
+        sortMethod: AuctionSortField.COMMITTED_VOLUME,
+        sortAscending: true,
+      })
+
+      expect(sorted.map((auction) => auction.id)).toEqual(['low-token-volume', 'mid-token-volume', 'high-token-volume'])
+    })
+
+    it('treats rows that are both missing data as equal (stable sort)', () => {
+      const otherNoData = createAuctionTableValue({ id: 'other-no-data' })
+      const sorted = sortAuctions({
+        auctions: [noVolumeData, otherNoData, highTokenVolume],
+        sortMethod: AuctionSortField.COMMITTED_VOLUME,
+        sortAscending: false,
+      })
+
+      expect(sorted.map((auction) => auction.id)).toEqual(['high-token-volume', 'no-volume-data', 'other-no-data'])
+    })
+  })
+
+  describe('FDV sort', () => {
+    const lowFdvUsd = createAuctionTableValue({ id: 'low-fdv-usd', fdvUsd: 1000, fdvRaw: 10n ** 18n })
+    const highFdvUsd = createAuctionTableValue({ id: 'high-fdv-usd', fdvUsd: 5000, fdvRaw: 5n * 10n ** 18n })
+    const midFdvUsd = createAuctionTableValue({ id: 'mid-fdv-usd', fdvUsd: 3000, fdvRaw: 3n * 10n ** 18n })
+
+    it('sorts by USD when available (descending)', () => {
+      const sorted = sortAuctions({
+        auctions: [lowFdvUsd, highFdvUsd, midFdvUsd],
+        sortMethod: AuctionSortField.FDV,
+        sortAscending: false,
+      })
+
+      expect(sorted.map((auction) => auction.id)).toEqual(['high-fdv-usd', 'mid-fdv-usd', 'low-fdv-usd'])
+    })
+
+    it('falls back to bid-token FDV when USD is missing', () => {
+      // Robinhood-chain case: currencyPriceUsd absent so projectedFdv.usd is undefined for all rows
+      const lowFdvRaw = createAuctionTableValue({ id: 'low-fdv-raw', fdvRaw: 10n ** 18n, currencyTokenDecimals: 18 })
+      const highFdvRaw = createAuctionTableValue({
+        id: 'high-fdv-raw',
+        fdvRaw: 5n * 10n ** 18n,
+        currencyTokenDecimals: 18,
+      })
+      const midFdvRaw = createAuctionTableValue({
+        id: 'mid-fdv-raw',
+        fdvRaw: 3n * 10n ** 18n,
+        currencyTokenDecimals: 18,
+      })
+      const noFdvData = createAuctionTableValue({ id: 'no-fdv-data', currencyTokenDecimals: 18 })
+
+      const sorted = sortAuctions({
+        auctions: [lowFdvRaw, noFdvData, highFdvRaw, midFdvRaw],
+        sortMethod: AuctionSortField.FDV,
+        sortAscending: false,
+      })
+
+      expect(sorted.map((auction) => auction.id)).toEqual(['high-fdv-raw', 'mid-fdv-raw', 'low-fdv-raw', 'no-fdv-data'])
+    })
+
+    it('reverses order when ascending', () => {
+      const sorted = sortAuctions({
+        auctions: [midFdvUsd, lowFdvUsd, highFdvUsd],
+        sortMethod: AuctionSortField.FDV,
+        sortAscending: true,
+      })
+
+      expect(sorted.map((auction) => auction.id)).toEqual(['low-fdv-usd', 'mid-fdv-usd', 'high-fdv-usd'])
+    })
   })
 })

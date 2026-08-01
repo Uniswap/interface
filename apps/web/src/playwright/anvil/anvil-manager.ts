@@ -7,17 +7,40 @@ import { createClient, createTestClient, http, publicActions, walletActions } fr
 import { privateKeyToAccount } from 'viem/accounts'
 import { mainnet } from 'viem/chains'
 import { loadTestRunnerEnv } from '../../../vite/resolveEnvConfigs'
+import {
+  buildAnvilSpawnArgs,
+  buildResetForkParams,
+  isAnvilVerbose,
+  resolveForkChainDefaults,
+  resolveLoadStatePath,
+  resolvePinnedForkBlock,
+} from '~/playwright/anvil/anvil-args'
+import { killExistingProcess, removeAnvilPidFile, writeAnvilPidFile } from '~/playwright/anvil/anvil-process'
+import { clockSyncRpcFromClient, syncClockToWallClock } from '~/playwright/anvil/clock-sync'
+import type { AnvilForkSource, ForkSourceProvider } from '~/playwright/anvil/unirpc-fork'
+import { probeForkAuth, resolveForkSourceProvider, shouldRelaunchForAuth } from '~/playwright/anvil/unirpc-fork'
 
 loadTestRunnerEnv(process.cwd())
 
-const TEST_WALLET_PRIVATE_KEY = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
+/** anvil's well-known dev account 0 — the e2e test wallet (also scripts/generate-anvil-state.ts). */
+export const TEST_WALLET_PRIVATE_KEY = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
 
 interface AnvilConfig {
   port: number
   host: string
-  forkUrl: string
+  /** Async fork-source seam: resolved fresh on every (re)launch, so relaunches pick up refreshed credentials. */
+  forkSource: ForkSourceProvider
+  /** Pinned fork block for deterministic chain state (see anvil-args.ts). Undefined forks at the tip. */
+  forkBlockNumber: number | undefined
+  /**
+   * Committed `--load-state` fixture (pre-funded test wallet at the pin — see
+   * scripts/generate-anvil-state.ts). Undefined when no fixture matches the pin;
+   * runtime funding then does all the work.
+   */
+  loadStatePath: string | undefined
+  /** Opt-in debug output (`--print-traces` + `RUST_LOG=debug`) via ANVIL_VERBOSE. */
+  verbose: boolean
   timeout: number
-  healthCheckInterval: number
   logFile: string
 }
 
@@ -35,50 +58,47 @@ interface AnvilManager {
   isHealthy(): Promise<boolean>
   ensureHealthy(): Promise<boolean>
   checkHealth(): Promise<HealthCheckResult>
+  /**
+   * Full `anvil_reset` back to the launch state: same upstream fork source, same
+   * pinned block. Drops ALL snapshots — recovery only, never routine cleanup
+   * (see fixtures/anvil.ts for the snapshot/revert lifecycle this backs).
+   */
+  resetFork(): Promise<void>
   getClient(): AnvilClient
   getUrl(): string
 }
 
-/**
- * Fork from PublicNode, a free unkeyed public RPC. UniRPC can't serve anvil (it
- * 401s cookieless/session-less requests) and the QuickNode endpoint formerly used
- * here has its mainnet methods paused due to abuse. Override via ANVIL_FORK_URL;
- * keep in sync with scripts/start-anvil.sh.
- */
-const DEFAULT_MAINNET_FORK_URL = 'https://ethereum-rpc.publicnode.com'
+const MAINNET_CHAIN_ID = 1
 
 /**
- * Build fork URL from environment variables
- */
-function buildForkUrl(): string {
-  return process.env.ANVIL_FORK_URL ?? DEFAULT_MAINNET_FORK_URL
-}
-
-/**
- * Build Anvil configuration with defaults and overrides
+ * Anvil forks the static per-chain default (PublicNode; override via ANVIL_FORK_URL,
+ * see ~/playwright/anvil/anvil-args.ts), or — opt-in via ANVIL_FORK_VIA_UNIRPC=1 —
+ * the uni RPC entry gateway with session fork-headers (see
+ * ~/playwright/anvil/unirpc-fork.ts; without a session uni RPC 401s fork requests).
+ * Whatever the source, the fork block is pinned for deterministic chain state.
  */
 function buildAnvilConfig(overrides?: Partial<AnvilConfig>): AnvilConfig {
   return {
     port: overrides?.port ?? parseInt(process.env.ANVIL_PORT ?? '8545'),
     host: overrides?.host ?? '127.0.0.1',
-    forkUrl: overrides?.forkUrl ?? buildForkUrl(),
-    timeout: overrides?.timeout ?? 10_000,
-    healthCheckInterval: overrides?.healthCheckInterval ?? 3_000,
+    forkSource:
+      overrides?.forkSource ??
+      resolveForkSourceProvider({
+        defaultForkUrl: resolveForkChainDefaults({ chainId: MAINNET_CHAIN_ID }).forkUrl,
+        chainId: MAINNET_CHAIN_ID,
+      }),
+    forkBlockNumber: overrides?.forkBlockNumber ?? resolvePinnedForkBlock({ chainId: MAINNET_CHAIN_ID }),
+    loadStatePath:
+      overrides?.loadStatePath ??
+      resolveLoadStatePath({
+        chainId: MAINNET_CHAIN_ID,
+        forkBlockNumber: overrides?.forkBlockNumber ?? resolvePinnedForkBlock({ chainId: MAINNET_CHAIN_ID }),
+      }),
+    verbose: overrides?.verbose ?? isAnvilVerbose(),
+    // Generous: a health check can queue behind a slow upstream fork fetch (cold RPC
+    // cache, slow gateway) — a premature timeout here used to trigger disruptive restarts.
+    timeout: overrides?.timeout ?? 30_000,
     logFile: overrides?.logFile ?? path.join(process.cwd(), `anvil-test-${process.pid}.log`),
-  }
-}
-
-/**
- * Kill any existing process on the specified port
- */
-async function killExistingProcess(port: number): Promise<void> {
-  try {
-    const { exec } = await import('child_process')
-    const { promisify } = await import('util')
-    const execAsync = promisify(exec)
-    await execAsync(`lsof -ti:${port} | xargs kill -9 2>/dev/null || true`)
-  } catch {
-    // Ignore errors - port might be free
   }
 }
 
@@ -87,9 +107,10 @@ export type AnvilClient = ReturnType<typeof createTestClient> &
   ReturnType<typeof walletActions>
 
 /**
- * Create an Anvil client for interacting with the local node
+ * Create an Anvil client for interacting with the local node.
+ * Exported for standalone node scripts (see scripts/generate-anvil-state.ts).
  */
-function createAnvilClient(ctx: { url: string; timeout?: number }): AnvilClient {
+export function createAnvilClient(ctx: { url: string; timeout?: number }): AnvilClient {
   return createTestClient({
     account: privateKeyToAccount(TEST_WALLET_PRIVATE_KEY),
     chain: mainnet,
@@ -112,7 +133,17 @@ function createAnvilManager(configOverrides?: Partial<AnvilConfig>): AnvilManage
   let childProcess: ChildProcess | null = null
   let config: AnvilConfig | null = null
   let isRestarting = false
-  let healthCheckTimer: NodeJS.Timeout | null = null
+  // Fork source used by the running anvil process — probed at test boundaries so an
+  // expired upstream session (401) can be detected and fixed with a relaunch.
+  let activeForkSource: AnvilForkSource | null = null
+  // A healthy anvil this process never spawned (a previous worker's survivor) has
+  // unknown chain state — it gets one resetFork() before first use, tracked here.
+  let adoptedExternalAnvil = false
+
+  // NOTE: recovery happens ONLY at test boundaries via ensureHealthy(). There is
+  // deliberately no background health monitor: a slow health check mid-test used to
+  // auto-restart anvil, silently invalidating every live snapshot ID and breaking
+  // snapshot/revert test isolation (the reason snapshots were once disabled).
 
   // Lazy config getter
   const getConfig = (): AnvilConfig => {
@@ -120,30 +151,6 @@ function createAnvilManager(configOverrides?: Partial<AnvilConfig>): AnvilManage
       config = buildAnvilConfig(configOverrides)
     }
     return config
-  }
-
-  // Stop health monitoring
-  const stopHealthMonitoring = (): void => {
-    if (healthCheckTimer) {
-      clearInterval(healthCheckTimer)
-      healthCheckTimer = null
-    }
-  }
-
-  // Start health monitoring
-  const startHealthMonitoring = (manager: AnvilManager): void => {
-    if (healthCheckTimer) {
-      return
-    }
-
-    const cfg = getConfig()
-    healthCheckTimer = setInterval(async () => {
-      const healthy = await manager.isHealthy()
-      if (!healthy && !isRestarting) {
-        console.error('Anvil health check failed, attempting restart...')
-        await manager.restart()
-      }
-    }, cfg.healthCheckInterval)
   }
 
   // Check health implementation
@@ -222,8 +229,13 @@ function createAnvilManager(configOverrides?: Partial<AnvilConfig>): AnvilManage
 
       console.log(`Starting Anvil on port ${cfg.port}...`)
 
+      // Resolve the fork source before spawning: with uni RPC forking enabled this
+      // bootstraps (or reuses) a session and yields the auth fork-headers.
+      const forkSource = await cfg.forkSource.getForkSource()
+      activeForkSource = forkSource
+
       // Kill any existing process on the port
-      await killExistingProcess(cfg.port)
+      killExistingProcess(cfg.port)
 
       // Prepare log file
       const logStream = fs.createWriteStream(cfg.logFile, { flags: 'a' })
@@ -231,22 +243,16 @@ function createAnvilManager(configOverrides?: Partial<AnvilConfig>): AnvilManage
       // Start Anvil process
       childProcess = spawn(
         'anvil',
-        [
-          '--fork-url',
-          cfg.forkUrl,
-          '--port',
-          String(cfg.port),
-          '--host',
-          cfg.host,
-          '--hardfork',
-          'prague',
-          '--no-rate-limit',
-          '--disable-code-size-limit',
-          '--disable-min-priority-fee',
-          '--print-traces',
-        ],
+        buildAnvilSpawnArgs({
+          forkSource,
+          forkBlockNumber: cfg.forkBlockNumber,
+          loadStatePath: cfg.loadStatePath,
+          port: cfg.port,
+          host: cfg.host,
+          verbose: cfg.verbose,
+        }),
         {
-          env: { ...process.env, RUST_LOG: 'debug' },
+          env: { ...process.env, ...(cfg.verbose ? { RUST_LOG: 'debug' } : {}) },
           stdio: ['ignore', 'pipe', 'pipe'],
         },
       )
@@ -259,11 +265,19 @@ function createAnvilManager(configOverrides?: Partial<AnvilConfig>): AnvilManage
         childProcess.stderr.pipe(logStream)
       }
 
-      // Handle process exit
-      childProcess.on('exit', (code, signal) => {
+      // Record the PID so global teardown (a different process) can kill this anvil.
+      if (childProcess.pid !== undefined) {
+        writeAnvilPidFile({ port: cfg.port, pid: childProcess.pid })
+      }
+
+      // Handle process exit. Guard against a stale handler: a restart may have
+      // replaced `childProcess` with a new spawn by the time the old one exits.
+      const spawnedProcess = childProcess
+      spawnedProcess.on('exit', (code, signal) => {
         console.log(`Anvil process exited with code ${code} and signal ${signal}`)
-        childProcess = null
-        stopHealthMonitoring()
+        if (childProcess === spawnedProcess) {
+          childProcess = null
+        }
       })
 
       // Wait for Anvil to be ready
@@ -276,27 +290,36 @@ function createAnvilManager(configOverrides?: Partial<AnvilConfig>): AnvilManage
         throw new Error('Anvil failed to start')
       }
 
+      // The pinned fork boots hours behind wall clock; anchor node time to now so
+      // wall-clock-stamped quotes (e.g. Across bridge) don't revert on-chain.
+      await syncClockToWallClock(clockSyncRpcFromClient(manager.getClient()))
+
       console.log('Anvil is ready and accepting connections')
-      startHealthMonitoring(manager)
     },
 
     async stop(): Promise<void> {
-      stopHealthMonitoring()
+      // Take ownership of the reference first: the exit handler nulls `childProcess`
+      // when SIGTERM lands, so re-reading it after the grace sleep used to throw.
+      const processToStop = childProcess
+      childProcess = null
+      activeForkSource = null
 
-      if (!childProcess) {
+      if (!processToStop) {
         return
       }
 
       console.log('Stopping Anvil...')
-      childProcess.kill('SIGTERM')
+      processToStop.kill('SIGTERM')
 
       // Give it time to shut down gracefully
       await sleep(2000)
 
       // Force kill if still running
-      childProcess.kill('SIGKILL')
+      if (processToStop.exitCode === null && processToStop.signalCode === null) {
+        processToStop.kill('SIGKILL')
+      }
 
-      childProcess = null
+      removeAnvilPidFile(getConfig().port)
     },
 
     async restart(): Promise<boolean> {
@@ -333,12 +356,53 @@ function createAnvilManager(configOverrides?: Partial<AnvilConfig>): AnvilManage
     },
 
     async ensureHealthy(): Promise<boolean> {
-      if (await manager.isHealthy()) {
-        return true
+      if (!(await manager.isHealthy())) {
+        console.log('Anvil not healthy, attempting to fix...')
+        return await manager.restart()
       }
 
-      console.log('Anvil not healthy, attempting to fix...')
-      return await manager.restart()
+      // Healthy anvil this process never spawned: a previous worker's survivor with
+      // unknown chain state (arbitrary mutations, possibly un-pinned). Re-fork it to
+      // the pinned launch state once before this worker's first test uses it.
+      if (!childProcess && !adoptedExternalAnvil) {
+        console.log('Adopting an already-running Anvil — resetting it to the pinned fork state...')
+        await manager.resetFork()
+        adoptedExternalAnvil = true
+      }
+
+      // The local node being healthy doesn't prove the upstream fork source still
+      // accepts our credentials: uni RPC sessions can expire mid-run while anvil keeps
+      // serving already-fetched state, and only NEW upstream fetches fail. Probe the
+      // upstream with the active fork headers and relaunch with a refreshed session on
+      // a definitive 401. This runs only here, at the test boundary — recovery is
+      // deliberately never triggered mid-test (see the no-background-monitor note above).
+      if (activeForkSource && Object.keys(activeForkSource.forkHeaders).length > 0) {
+        const probe = await probeForkAuth(activeForkSource)
+        if (shouldRelaunchForAuth(probe)) {
+          console.warn('Upstream fork source rejected the session (401) — refreshing and relaunching Anvil...')
+          await getConfig().forkSource.recover()
+          return await manager.restart()
+        }
+      }
+
+      return true
+    },
+
+    async resetFork(): Promise<void> {
+      const cfg = getConfig()
+      // Reuse the running fork source; resolve one first for an adopted anvil we
+      // never launched (with uni RPC forking this bootstraps/reuses the session).
+      const forkSource = activeForkSource ?? (await cfg.forkSource.getForkSource())
+      activeForkSource = forkSource
+      await manager.getClient().reset(
+        buildResetForkParams({
+          forkUrl: forkSource.forkUrl,
+          forkBlockNumber: cfg.forkBlockNumber,
+        }),
+      )
+      // anvil_reset rewinds node time to the pinned block's timestamp (and drops any
+      // --load-state overlay); re-anchor the clock to wall time like at launch.
+      await syncClockToWallClock(clockSyncRpcFromClient(manager.getClient()))
     },
 
     checkHealth,

@@ -6,8 +6,7 @@ import {
 } from '@uniswap/client-notification-service/dist/uniswap/notificationservice/v1/api_pb'
 import { type InAppNotification, OnClickAction } from '@universe/api'
 import { DynamicConfigs, getDynamicConfigValue, OutageBannerChainIdConfigKey } from '@universe/gating'
-import { createNotificationDataSource } from '@universe/notifications/src/notification-data-source/implementations/createNotificationDataSource'
-import { type NotificationDataSource } from '@universe/notifications/src/notification-data-source/NotificationDataSource'
+import { createNotificationDataSource, type NotificationDataSource } from '@universe/notifications'
 import { capitalize } from 'tsafe'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -16,6 +15,11 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import i18n from 'uniswap/src/i18n'
 import { getLogger } from 'utilities/src/logger/logger'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import {
+  createVisibilitySettlingController,
+  subscribeToDocumentVisibilityChange,
+} from '~/notification-service/data-sources/createVisibilitySettlingController'
 import { useManualChainOutageStore } from '~/state/outage/store'
 import { ChainOutageData } from '~/state/outage/types'
 import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
@@ -26,14 +30,17 @@ import { getCurrentPageFromLocation } from '~/utils/urlRoutes'
  * When multiple alerts are active, only the highest priority is shown.
  */
 enum SystemAlertType {
-  /** Chain connectivity warning - block timestamp significantly behind machine time */
+  /** Chain connectivity warning - block timestamp significantly behind staleness-check time */
   ChainConnectivity = 'chain_connectivity',
   /** Chain/protocol outage - GraphQL errors or configured outage */
   Outage = 'outage',
 }
 
-const DEFAULT_POLL_INTERVAL_MS = 5000
+const DEFAULT_POLL_INTERVAL_MS = 5 * ONE_SECOND_MS
+// Long enough for a focus-triggered multicall refetch, short enough to avoid masking a real warning.
+const DEFAULT_VISIBILITY_SETTLING_MS = 10 * ONE_SECOND_MS
 const LOG_FILE_TAG = 'createSystemAlertsDataSource'
+const SYSTEM_ALERTS_SOURCE = 'system_alerts'
 
 /**
  * Priority order for system alerts.
@@ -60,10 +67,24 @@ interface CreateSystemAlertsDataSourceContext {
   getSwapInputChainId: () => UniverseChainId | undefined
   /** Get the current block timestamp (from useCurrentBlockTimestamp) */
   getBlockTimestamp: () => bigint | undefined
-  /** Get the current machine time in ms (from useMachineTimeMs) */
-  getMachineTime: () => number
+  /** Get the time (ms) the block timestamp was last fetched (from useCurrentBlockTimestamp) */
+  getBlockTimestampUpdatedAt: () => number
+  /**
+   * Get the reference time (ms) used to evaluate chain-staleness. Sourced from useMachineTimeMs,
+   * which advances on a fixed cadence regardless of refetches — this is the "is the chain
+   * keeping up?" clock, distinct from wall-clock visibility bookkeeping.
+   */
+  getStalenessCheckTimeMs: () => number
   /** Get the current pathname (from useLocation) */
   getPathname: () => string
+  /** Whether the document is currently visible. Defaults to `document.visibilityState === 'visible'`. */
+  getIsDocumentVisible?: () => boolean
+  /** Current wall-clock time in ms. Defaults to `Date.now()`. Used for visibility/window bookkeeping. */
+  getWallClockTimeMs?: () => number
+  /** Subscribe to document visibility changes. Defaults to a `visibilitychange` listener. Injected for tests. */
+  subscribeToVisibilityChange?: (listener: () => void) => () => void
+  /** How long to wait after returning to a visible tab if the block timestamp has not refreshed yet. */
+  visibilitySettlingMs?: number
   /** Polling interval in milliseconds (default: 5000ms) */
   pollIntervalMs?: number
 }
@@ -112,10 +133,10 @@ function getChainIdFromPathname(pathname: string): UniverseChainId | undefined {
 function checkChainConnectivity(ctx: {
   swapInputChainId: UniverseChainId | undefined
   blockTimestamp: bigint | undefined
-  machineTime: number
+  stalenessCheckTimeMs: number
   isLandingPage: boolean
 }): { shouldShow: boolean; notification?: InAppNotification } {
-  const { swapInputChainId, blockTimestamp, machineTime, isLandingPage } = ctx
+  const { swapInputChainId, blockTimestamp, stalenessCheckTimeMs, isLandingPage } = ctx
 
   // Don't show on landing page
   if (isLandingPage) {
@@ -132,7 +153,7 @@ function checkChainConnectivity(ctx: {
 
   // Check if block is stale
   const blockTimeMs = Number(blockTimestamp) * 1000
-  const isStale = machineTime - blockTimeMs > waitMsBeforeWarning
+  const isStale = stalenessCheckTimeMs - blockTimeMs > waitMsBeforeWarning
 
   if (!isStale) {
     return { shouldShow: false }
@@ -197,6 +218,15 @@ function checkOutage(ctx: {
 }
 
 /**
+ * Stable dedup key for an active alert. Includes the notification id so that two
+ * alerts of the same type but different ids (e.g., outage banners on different chains)
+ * are treated as distinct.
+ */
+function getSystemAlertKey(alert: { type: SystemAlertType; notification: InAppNotification }): string {
+  return `${alert.type}:${alert.notification.id}`
+}
+
+/**
  * Creates a data source for web system alerts (chain connectivity, outage warnings).
  *
  * Features:
@@ -204,13 +234,16 @@ function checkOutage(ctx: {
  * - Priority-based display (only shows highest priority active alert)
  * - Reads Zustand stores and dynamic config directly (no refs needed)
  * - Uses i18n for all user-facing strings
+ * - Suppresses chain-connectivity warnings during a settling window after the
+ *   tab regains visibility, until the block timestamp refreshes or the window expires
  *
  * @example
  * ```typescript
  * const systemAlertsDataSource = createSystemAlertsDataSource({
  *   getSwapInputChainId: () => swapInputChainIdRef.current,
  *   getBlockTimestamp: () => blockTimestampRef.current,
- *   getMachineTime: () => machineTimeRef.current,
+ *   getBlockTimestampUpdatedAt: () => blockTimestampUpdatedAtRef.current,
+ *   getStalenessCheckTimeMs: () => machineTimeRef.current,
  *   getPathname: () => pathnameRef.current,
  * })
  * ```
@@ -219,19 +252,37 @@ export function createSystemAlertsDataSource(ctx: CreateSystemAlertsDataSourceCo
   const {
     getSwapInputChainId,
     getBlockTimestamp,
-    getMachineTime,
+    getBlockTimestampUpdatedAt,
+    getStalenessCheckTimeMs,
     getPathname,
+    getIsDocumentVisible = () => typeof document === 'undefined' || document.visibilityState === 'visible',
+    getWallClockTimeMs = () => Date.now(),
+    subscribeToVisibilityChange = subscribeToDocumentVisibilityChange,
+    visibilitySettlingMs = DEFAULT_VISIBILITY_SETTLING_MS,
     pollIntervalMs = DEFAULT_POLL_INTERVAL_MS,
   } = ctx
 
+  const visibilityController = createVisibilitySettlingController({
+    getBlockTimestampUpdatedAt,
+    getIsDocumentVisible,
+    getWallClockTimeMs,
+    subscribeToVisibilityChange,
+    visibilitySettlingMs,
+    pollIntervalMs,
+  })
+
   let intervalId: ReturnType<typeof setInterval> | null = null
   let currentCallback: ((notifications: InAppNotification[], source: string) => void) | null = null
-  let lastEmittedAlertType: SystemAlertType | null = null
+  let lastEmittedAlertKey: string | null = null
 
   /**
    * Check all conditions and return the highest priority active alert.
    */
-  const getActiveAlert = (): { type: SystemAlertType; notification: InAppNotification } | null => {
+  const getActiveAlert = ({
+    suppressChainConnectivity = false,
+  }: {
+    suppressChainConnectivity?: boolean
+  } = {}): { type: SystemAlertType; notification: InAppNotification } | null => {
     const pathname = getPathname()
     const isLandingPage = pathname === '/'
     const currentPage = getCurrentPageFromLocation(pathname)
@@ -246,7 +297,7 @@ export function createSystemAlertsDataSource(ctx: CreateSystemAlertsDataSourceCo
         checkChainConnectivity({
           swapInputChainId: getSwapInputChainId(),
           blockTimestamp: getBlockTimestamp(),
-          machineTime: getMachineTime(),
+          stalenessCheckTimeMs: getStalenessCheckTimeMs(),
           isLandingPage,
         }),
       [SystemAlertType.Outage]: () =>
@@ -259,6 +310,10 @@ export function createSystemAlertsDataSource(ctx: CreateSystemAlertsDataSourceCo
     }
 
     for (const alertType of ALERT_PRIORITY) {
+      if (suppressChainConnectivity && alertType === SystemAlertType.ChainConnectivity) {
+        continue
+      }
+
       try {
         const result = checkers[alertType]()
         if (result.shouldShow && result.notification) {
@@ -280,17 +335,25 @@ export function createSystemAlertsDataSource(ctx: CreateSystemAlertsDataSourceCo
       return
     }
 
+    const { shouldEvaluateAlerts, suppressChainConnectivity } = visibilityController.tick()
+    if (!shouldEvaluateAlerts) {
+      return
+    }
+
     try {
-      const activeAlert = getActiveAlert()
+      const activeAlert = getActiveAlert({ suppressChainConnectivity })
 
       if (activeAlert) {
-        // Only emit if alert type changed to avoid unnecessary updates
-        if (lastEmittedAlertType !== activeAlert.type) {
-          lastEmittedAlertType = activeAlert.type
-          currentCallback([activeAlert.notification], 'system_alerts')
+        const activeAlertKey = getSystemAlertKey(activeAlert)
+
+        // Only emit if alert changed to avoid unnecessary updates
+        if (lastEmittedAlertKey !== activeAlertKey) {
+          lastEmittedAlertKey = activeAlertKey
+          currentCallback([activeAlert.notification], SYSTEM_ALERTS_SOURCE)
         }
-      } else if (lastEmittedAlertType !== null) {
-        lastEmittedAlertType = null
+      } else if (lastEmittedAlertKey !== null) {
+        lastEmittedAlertKey = null
+        currentCallback([], SYSTEM_ALERTS_SOURCE)
       }
     } catch (error) {
       getLogger().error(error, {
@@ -305,7 +368,8 @@ export function createSystemAlertsDataSource(ctx: CreateSystemAlertsDataSourceCo
     }
 
     currentCallback = onNotifications
-    lastEmittedAlertType = null
+    lastEmittedAlertKey = null
+    visibilityController.start()
 
     // Check immediately on start
     checkAndEmit()
@@ -319,8 +383,9 @@ export function createSystemAlertsDataSource(ctx: CreateSystemAlertsDataSourceCo
       clearInterval(intervalId)
       intervalId = null
     }
+    visibilityController.stop()
     currentCallback = null
-    lastEmittedAlertType = null
+    lastEmittedAlertKey = null
   }
 
   return createNotificationDataSource({ start, stop })

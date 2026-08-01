@@ -13,6 +13,7 @@ import { TransactionErrorType } from 'wallet/src/components/dappRequests/Transac
 import { TransactionLoadingState } from 'wallet/src/components/dappRequests/TransactionLoadingState'
 import { TransactionPreviewCard } from 'wallet/src/components/dappRequests/TransactionPreviewCard'
 import { useBlockaidJsonRpcScan } from 'wallet/src/features/dappRequests/hooks/useBlockaidJsonRpcScan'
+import { useEarnAwareSections } from 'wallet/src/features/dappRequests/hooks/useEarnAwareSections'
 import type { Call, TransactionAsset, TransactionSection } from 'wallet/src/features/dappRequests/types'
 import { TransactionRiskLevel, TransactionSectionType } from 'wallet/src/features/dappRequests/types'
 import {
@@ -212,9 +213,12 @@ export function DappSendCallsScanningContent({
     ]
   }, [sections, chainId, t])
 
+  // Collapse Earn deposit/withdraw into a dedicated Depositing/Withdrawing row when detected
+  const earnAwareSections = useEarnAwareSections({ sections: mergedSections, chainId })
+
   // Determine the appropriate error type (if any) to display
   const errorType = determineTransactionErrorType({
-    sections: mergedSections,
+    sections: earnAwareSections,
     providedErrorType,
     rawData: rawData ?? '',
   })
@@ -232,7 +236,7 @@ export function DappSendCallsScanningContent({
     <Flex gap="$spacing12">
       {/* Transaction Preview Card */}
       <TransactionPreviewCard
-        sections={mergedSections}
+        sections={earnAwareSections}
         riskLevel={riskLevel}
         errorType={errorType}
         functionName={functionName}

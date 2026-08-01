@@ -1,4 +1,4 @@
-import { createStore, Store } from '@reduxjs/toolkit'
+import { configureStore, Store } from '@reduxjs/toolkit'
 import {
   initialUserSettingsState,
   setEnableCustomGasFeeEntry,
@@ -12,7 +12,7 @@ describe(userSettingsReducer, () => {
   let store: Store<UserSettingsState>
 
   beforeEach(() => {
-    store = createStore(userSettingsReducer, initialUserSettingsState)
+    store = configureStore({ reducer: userSettingsReducer, preloadedState: initialUserSettingsState })
   })
 
   it('sets small balances setting from default', () => {

@@ -8,7 +8,7 @@ import { renderWithProviders } from 'src/test/render'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 // Mock required modules with simpler implementation
-jest.mock('wallet/src/features/transactions/swap/WalletSwapFlow', () => ({
+vi.mock('wallet/src/features/transactions/swap/WalletSwapFlow', () => ({
   WalletSwapFlow: function MockWalletSwapFlow(): string {
     return 'MockedWalletSwapFlow'
   },
@@ -18,8 +18,8 @@ jest.mock('wallet/src/features/transactions/swap/WalletSwapFlow', () => ({
 describe('SwapModal', () => {
   const mockProps: AppStackScreenProp<typeof ModalName.Swap> = {
     navigation: {
-      navigate: jest.fn(),
-      goBack: jest.fn(),
+      navigate: vi.fn(),
+      goBack: vi.fn(),
     } as unknown as AppStackScreenProp<typeof ModalName.Swap>['navigation'],
     route: {
       key: 'swap-modal',
@@ -29,7 +29,7 @@ describe('SwapModal', () => {
   }
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('renders without crashing', () => {

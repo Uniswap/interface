@@ -256,7 +256,9 @@ export function OrderBook({
   const asksScrollRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    if (asks.length === 0) return
+    if (asks.length === 0) {
+      return
+    }
     requestAnimationFrame(() => {
       const asksContainer = asksScrollRef.current
       if (asksContainer) {

@@ -1,3 +1,4 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Shine } from 'ui/src'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 
@@ -16,6 +17,8 @@ export function PortfolioRelativeChange({
   percentChange,
   absoluteChange,
 }: PortfolioRelativeChangeProps): JSX.Element {
+  const isDataLivelinessEnabled = useFeatureFlag(FeatureFlags.DataLivelinessUI)
+
   return (
     <Shine disabled={!isWarmLoading}>
       <RelativeChange
@@ -25,6 +28,7 @@ export function PortfolioRelativeChange({
         loading={isLoading}
         negativeChangeColor={isWarmLoading || hasError ? '$neutral2' : '$statusCritical'}
         positiveChangeColor={isWarmLoading || hasError ? '$neutral2' : '$statusSuccess'}
+        shouldAnimate={isDataLivelinessEnabled}
         variant="body3"
       />
     </Shine>

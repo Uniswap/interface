@@ -11,6 +11,10 @@ export interface NetworkCostRowProps {
   /** When true, renders the "Includes smart wallet activation" subtitle below
    *  the row, matching the default `<NetworkFee />` flow. Defaults to false. */
   includesDelegation?: boolean
+  /** When true (alongside `includesDelegation`), the subtitle reads
+   *  "Includes smart wallet update" — the delegation is a Calibur
+   *  re-delegation rather than a first-time activation. Defaults to false. */
+  includesDelegationUpgrade?: boolean
   /** When `pressable` is true (default), the row is wrapped in `TouchableArea`
    *  and renders a trailing chevron. When false, the row is display-only —
    *  no chevron, no `onPress`. */
@@ -42,6 +46,7 @@ export function NetworkCostRow({
   hasOverrides,
   hasWarning,
   includesDelegation = false,
+  includesDelegationUpgrade = false,
   pressable = true,
   onPress,
 }: NetworkCostRowProps): JSX.Element {
@@ -74,7 +79,9 @@ export function NetworkCostRow({
       </Flex>
       {includesDelegation && (
         <Text color="$neutral3" variant="body4">
-          {t('swap.warning.networkFee.includesDelegation')}
+          {includesDelegationUpgrade
+            ? t('swap.warning.networkFee.includesSmartWalletUpdate')
+            : t('swap.warning.networkFee.includesDelegation')}
         </Text>
       )}
     </Flex>

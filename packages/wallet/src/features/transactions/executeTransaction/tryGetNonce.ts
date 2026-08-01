@@ -35,6 +35,7 @@ export function* tryGetNonce(
       ? yield* call(getPrivateProvider, chainId, account)
       : yield* call(getProvider, chainId)
 
+    // oxlint-disable-next-line typescript/unbound-method -- saga effects can confuse this rule
     const nonce = yield* call([provider, provider.getTransactionCount], account.address, 'pending')
 
     // If we're using Flashbots with authentication header as private RPC, it will already account for pending private transactions. Otherwise, add the local pending private transactions.

@@ -11,13 +11,14 @@ import { FavoritesState } from 'uniswap/src/features/favorites/slice'
 import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import type { MockedFunction } from 'vitest'
 import { cleanup } from 'wallet/src/test/test-utils'
 
-jest.mock('src/app/navigation/rootNavigation', () => ({
-  navigate: jest.fn(),
+vi.mock('src/app/navigation/rootNavigation', () => ({
+  navigate: vi.fn(),
 }))
 
-const mockNavigate = navigate as jest.MockedFunction<typeof navigate>
+const mockNavigate = navigate as MockedFunction<typeof navigate>
 
 const tokenId = SAMPLE_SEED_ADDRESS_1
 const currencyId = `1-${tokenId}`
@@ -47,19 +48,19 @@ describe(useExploreTokenContextMenu, () => {
 
       expect(result.current.menuActions).toEqual([
         expect.objectContaining({
-          title: 'Favorite token',
+          title: 'explore.tokens.favorite.action.add',
           onPress: expect.any(Function),
         }),
         expect.objectContaining({
-          title: 'Swap',
+          title: 'common.button.swap',
           onPress: expect.any(Function),
         }),
         expect.objectContaining({
-          title: 'Receive',
+          title: 'common.button.receive',
           onPress: expect.any(Function),
         }),
         expect.objectContaining({
-          title: 'Share',
+          title: 'common.button.share',
           onPress: expect.any(Function),
         }),
       ])
@@ -67,7 +68,7 @@ describe(useExploreTokenContextMenu, () => {
     })
 
     it('renders proper context menu items when onEditFavorites is provided', async () => {
-      const onEditFavorites = jest.fn()
+      const onEditFavorites = vi.fn()
       const { result } = renderHookWithProviders(
         () => useExploreTokenContextMenu({ ...tokenMenuParams, onEditFavorites }),
         { resolvers },
@@ -75,19 +76,19 @@ describe(useExploreTokenContextMenu, () => {
 
       expect(result.current.menuActions).toEqual([
         expect.objectContaining({
-          title: 'Favorite token',
+          title: 'explore.tokens.favorite.action.add',
           onPress: expect.any(Function),
         }),
         expect.objectContaining({
-          title: 'Edit favorites',
+          title: 'explore.tokens.favorite.action.edit',
           onPress: onEditFavorites,
         }),
         expect.objectContaining({
-          title: 'Swap',
+          title: 'common.button.swap',
           onPress: expect.any(Function),
         }),
         expect.objectContaining({
-          title: 'Receive',
+          title: 'common.button.receive',
           onPress: expect.any(Function),
         }),
       ])
@@ -95,14 +96,14 @@ describe(useExploreTokenContextMenu, () => {
     })
 
     it('calls onEditFavorites when edit favorites is pressed', async () => {
-      const onEditFavorites = jest.fn()
+      const onEditFavorites = vi.fn()
       const { result } = renderHookWithProviders(
         () => useExploreTokenContextMenu({ ...tokenMenuParams, onEditFavorites }),
         { resolvers },
       )
 
       const editFavoritesActionIndex = result.current.menuActions.findIndex(
-        (action: ContextMenuAction) => action.title === 'Edit favorites',
+        (action: ContextMenuAction) => action.title === 'explore.tokens.favorite.action.edit',
       )
       result.current.onContextMenuPress({
         nativeEvent: { index: editFavoritesActionIndex },
@@ -124,19 +125,19 @@ describe(useExploreTokenContextMenu, () => {
 
       expect(result.current.menuActions).toEqual([
         expect.objectContaining({
-          title: 'Remove favorite',
+          title: 'explore.tokens.favorite.action.remove',
           onPress: expect.any(Function),
         }),
         expect.objectContaining({
-          title: 'Swap',
+          title: 'common.button.swap',
           onPress: expect.any(Function),
         }),
         expect.objectContaining({
-          title: 'Receive',
+          title: 'common.button.receive',
           onPress: expect.any(Function),
         }),
         expect.objectContaining({
-          title: 'Share',
+          title: 'common.button.share',
           onPress: expect.any(Function),
         }),
       ])
@@ -151,7 +152,7 @@ describe(useExploreTokenContextMenu, () => {
       })
 
       const favoriteTokenActionIndex = result.current.menuActions.findIndex(
-        (action: ContextMenuAction) => action.title === 'Favorite token',
+        (action: ContextMenuAction) => action.title === 'explore.tokens.favorite.action.add',
       )
       result.current.onContextMenuPress({
         nativeEvent: { index: favoriteTokenActionIndex },
@@ -177,7 +178,7 @@ describe(useExploreTokenContextMenu, () => {
       })
 
       const removeFavoriteTokenActionIndex = result.current.menuActions.findIndex(
-        (action: ContextMenuAction) => action.title === 'Remove favorite',
+        (action: ContextMenuAction) => action.title === 'explore.tokens.favorite.action.remove',
       )
       result.current.onContextMenuPress({
         nativeEvent: { index: removeFavoriteTokenActionIndex },
@@ -203,7 +204,9 @@ describe(useExploreTokenContextMenu, () => {
       resolvers,
     })
 
-    const swapActionIndex = result.current.menuActions.findIndex((action: ContextMenuAction) => action.title === 'Swap')
+    const swapActionIndex = result.current.menuActions.findIndex(
+      (action: ContextMenuAction) => action.title === 'common.button.swap',
+    )
     result.current.onContextMenuPress({
       nativeEvent: { index: swapActionIndex },
     } as NativeSyntheticEvent<ContextMenuOnPressNativeEvent>)
@@ -226,10 +229,10 @@ describe(useExploreTokenContextMenu, () => {
       resolvers,
     })
 
-    jest.spyOn(Share, 'share')
+    vi.spyOn(Share, 'share')
 
     const shareActionIndex = result.current.menuActions.findIndex(
-      (action: ContextMenuAction) => action.title === 'Share',
+      (action: ContextMenuAction) => action.title === 'common.button.share',
     )
     result.current.onContextMenuPress({
       nativeEvent: { index: shareActionIndex },

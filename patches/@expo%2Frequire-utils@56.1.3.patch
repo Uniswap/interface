@@ -1,0 +1,20 @@
+diff --git a/node_modules/@expo/require-utils/.bun-tag-d6ac4bce39e7c66c b/.bun-tag-d6ac4bce39e7c66c
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/build/load.js b/build/load.js
+index 6336c06876aaf86e192c9db8ef97279d1f253e2c..019e88833d8220adfe1d946b6941ea2249d106b4 100644
+--- a/build/load.js
++++ b/build/load.js
+@@ -76,6 +76,12 @@ function loadTypescript() {
+         _ts = null;
+       }
+     }
++    // typescript >= 7.0.2 resolves its "." export to a version-only stub with no
++    // transpileModule (no compiler API); treat it as unavailable so the
++    // module.stripTypeScriptTypes fallback in evalModule handles TS config files.
++    if (_ts && typeof _ts.transpileModule !== 'function') {
++      _ts = null;
++    }
+   }
+   return _ts;
+ }

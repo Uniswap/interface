@@ -33,3 +33,8 @@ export function getBuildVariant(): BuildVariant {
     return BuildVariant.Production
   }
 }
+
+// The Fabric UIManager global is registered only under the New Architecture.
+export function isNewArchEnabled(): boolean {
+  return (globalThis as { nativeFabricUIManager?: unknown }).nativeFabricUIManager != null
+}

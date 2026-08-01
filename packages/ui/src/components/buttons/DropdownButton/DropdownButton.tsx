@@ -30,10 +30,10 @@ const LeftContainer = ({ elementPositioning, children, icon, label }: LeftContai
 }
 
 const DropdownButtonComponent = forwardRef<TamaguiElement, DropdownButtonProps>(function DropdownButton(
-  { children, emphasis = 'secondary', icon, isDisabled, elementPositioning = 'equal', isExpanded, ...props },
+  { children, emphasis = 'secondary', icon, disabled, elementPositioning = 'equal', isExpanded, ...props },
   ref,
 ) {
-  const disabled = getIsButtonDisabled({ isDisabled, loading: undefined })
+  const isDisabled = getIsButtonDisabled({ disabled, loading: undefined })
   const isStringOrTransTag = useIsStringOrTransTag(children)
 
   /* When a `dropdownSelector` has an icon and text (children), we need to add a flexGrow={1} to the Flex to make sure the icon, text, and right chevron are equally spaced */
@@ -57,18 +57,12 @@ const DropdownButtonComponent = forwardRef<TamaguiElement, DropdownButtonProps>(
       ref={ref}
       iconPosition={getIconPosition('before')}
       emphasis={emphasis}
-      isDisabled={disabled}
+      isDisabled={isDisabled}
       isExpanded={isExpanded}
       {...props}
     >
       <LeftContainer icon={icon} elementPositioning={elementPositioning} label={children}>
-        <ThemedIcon
-          isDisabled={isDisabled}
-          emphasis={emphasis}
-          size={props.size}
-          variant="default"
-          typeOfButton="button"
-        >
+        <ThemedIcon isDisabled={disabled} emphasis={emphasis} size={props.size} variant="default" typeOfButton="button">
           {icon
             ? cloneElement(icon, {
                 color: iconColor,
@@ -83,7 +77,7 @@ const DropdownButtonComponent = forwardRef<TamaguiElement, DropdownButtonProps>(
 
       {SpacingElement}
 
-      <ThemedIcon isDisabled={isDisabled} emphasis={emphasis} size={props.size} variant="default" typeOfButton="button">
+      <ThemedIcon isDisabled={disabled} emphasis={emphasis} size={props.size} variant="default" typeOfButton="button">
         <RotatableChevron
           color={iconColor}
           animation="fast"

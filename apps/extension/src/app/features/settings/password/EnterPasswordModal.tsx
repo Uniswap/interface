@@ -91,7 +91,7 @@ export function EnterPasswordModal({
         </Text>
 
         <Flex row width="100%">
-          <Button size="medium" isDisabled={!password.length} emphasis="primary" onPress={checkPassword}>
+          <Button size="medium" disabled={!password.length} emphasis="primary" onPress={checkPassword}>
             {t('common.button.continue')}
           </Button>
         </Flex>

@@ -1,4 +1,5 @@
-import { createStore, Store } from 'redux'
+import { configureStore } from '@reduxjs/toolkit'
+import { Store } from 'redux'
 import { RouterPreference } from '~/state/routing/types'
 import reducer, {
   addSerializedPair,
@@ -36,7 +37,7 @@ describe('swap reducer', () => {
   let store: Store<UserState>
 
   beforeEach(() => {
-    store = createStore(reducer, initialState)
+    store = configureStore({ reducer, preloadedState: initialState })
   })
 
   describe('updateUserSlippageTolerance', () => {
@@ -78,8 +79,11 @@ describe('swap reducer', () => {
 
   describe('addSerializedPair', () => {
     it('adds a pair to the uninitialized list', () => {
-      store = createStore(reducer, {
-        ...initialState,
+      store = configureStore({
+        reducer,
+        preloadedState: {
+          ...initialState,
+        },
       })
       store.dispatch(
         addSerializedPair({

@@ -7,13 +7,19 @@ import { renderHook } from '~/test-utils/render'
 
 type Point = { timestamp: number; value: number }
 
-function makeChartResponse(series: { points?: Point[]; tokens?: Point[]; pools?: Point[] }): GetPortfolioChartResponse {
+function makeChartResponse(series: {
+  points?: Point[]
+  tokens?: Point[]
+  pools?: Point[]
+  earn?: Point[]
+}): GetPortfolioChartResponse {
   const toPoints = (points: Point[] = []): Array<{ timestamp: bigint; value: number }> =>
     points.map((p) => ({ timestamp: BigInt(p.timestamp), value: p.value }))
   return {
     points: toPoints(series.points),
     tokens: toPoints(series.tokens),
     pools: toPoints(series.pools),
+    earn: toPoints(series.earn),
   } as unknown as GetPortfolioChartResponse
 }
 
@@ -311,5 +317,29 @@ describe('usePortfolioChartSeries', () => {
 
     expect(poolsResult.current.hasCategoryBreakdown).toBe(false)
     expect(tokensResult.current.hasCategoryBreakdown).toBe(false)
+  })
+
+  it('exposes the earn series and lists Earn in availableCategories when earn data is present', () => {
+    const chartData = makeChartResponse({
+      points: [{ timestamp: 1700000000, value: 150 }],
+      tokens: [{ timestamp: 1700000000, value: 100 }],
+      earn: [
+        { timestamp: 1700000000, value: 40 },
+        { timestamp: 1700003600, value: 44 },
+      ],
+    })
+    const { result } = renderHook(() =>
+      usePortfolioChartSeries({
+        chartData,
+        selectedPeriod: ChartPeriod.DAY,
+        selectedCategory: PortfolioChartCategory.Earn,
+      }),
+    )
+
+    expect(result.current.earnSeries[0].close).toBe(40)
+    expect(result.current.earnPercentChange).toBeCloseTo(10, 5)
+    expect(result.current.series[0].close).toBe(40)
+    expect(result.current.availableCategories).toContain(PortfolioChartCategory.Earn)
+    expect(result.current.availableCategories).toEqual([PortfolioChartCategory.Tokens, PortfolioChartCategory.Earn])
   })
 })

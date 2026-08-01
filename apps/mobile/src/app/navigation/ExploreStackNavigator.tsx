@@ -25,18 +25,7 @@ export function ExploreStackNavigator({
     <NavigationIndependentTree>
       <NavigationContainer
         ref={exploreNavigationRef}
-        theme={{
-          ...DefaultTheme,
-          dark: false,
-          colors: {
-            primary: 'transparent',
-            background: 'transparent',
-            card: 'transparent',
-            text: 'transparent',
-            border: 'transparent',
-            notification: 'transparent',
-          },
-        }}
+        theme={TRANSPARENT_NAV_THEME}
         onStateChange={stopTracking}
         onReady={() => startTracking(exploreNavigationRef)}
       >
@@ -50,10 +39,30 @@ export function ExploreStackNavigator({
             <ExploreStack.Screen name={MobileScreens.ExternalProfile}>
               {(props): JSX.Element => <ExternalProfileScreen {...props} renderedInModal />}
             </ExploreStack.Screen>
-            <ExploreStack.Screen component={TokenDetailsScreen} name={MobileScreens.TokenDetails} />
+            <ExploreStack.Screen
+              component={TokenDetailsScreen}
+              name={MobileScreens.TokenDetails}
+              // Edge-only swipe-back: full-screen gesture fights the vertical list scroll on iOS and pops back on near-vertical drags.
+              options={tokenDetailsScreenOptions}
+            />
           </ExploreStack.Group>
         </ExploreStack.Navigator>
       </NavigationContainer>
     </NavigationIndependentTree>
   )
 }
+
+const TRANSPARENT_NAV_THEME = {
+  ...DefaultTheme,
+  dark: false,
+  colors: {
+    primary: 'transparent',
+    background: 'transparent',
+    card: 'transparent',
+    text: 'transparent',
+    border: 'transparent',
+    notification: 'transparent',
+  },
+}
+
+const tokenDetailsScreenOptions = { fullScreenGestureEnabled: false }

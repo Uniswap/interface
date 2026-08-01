@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
 import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
@@ -35,11 +36,11 @@ export function useChainsWithUnderlyingBalance({
       return new Set<UniverseChainId>()
     }
     const projectIdToChain = new Map<string, UniverseChainId>(
-      tokenProject.map((info) => [info.currencyId.toLowerCase(), info.currency.chainId]),
+      tokenProject.map((info) => [normalizeCurrencyIdForMapLookup(info.currencyId), info.currency.chainId]),
     )
     const result = new Set<UniverseChainId>()
     Object.values(portfolio.data).forEach((entry) => {
-      const chain = projectIdToChain.get(entry.currencyInfo.currencyId.toLowerCase())
+      const chain = projectIdToChain.get(normalizeCurrencyIdForMapLookup(entry.currencyInfo.currencyId))
       if (chain !== undefined && entry.quantity > 0) {
         result.add(chain)
       }

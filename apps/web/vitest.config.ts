@@ -1,16 +1,18 @@
 import path from 'path'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vitest/config'
+import vitestGlobals from '../../config/vitest-presets/vitest/globals.js'
 
 export default defineConfig({
   test: {
     pool: 'threads',
     globals: true,
     environment: 'jsdom',
-    // process.env.APP_ID is sourced from apps/web/.env, but Vitest does not
-    // auto-inject non-VITE_ prefixed .env vars into the test process's process.env.
+    // Unit tests don't run config:pull, so the app config is sourced from the shared
+    // test-env placeholders (Vitest injects these into process.env; getConfig() reads them).
     env: {
-      APP_ID: 'web',
+      ...vitestGlobals.globals,
+      NODE_ENV: 'test',
     },
     setupFiles: ['./src/setupTests.ts', './vite/mockAssets.tsx'],
     include: ['src/**/*.test.ts', 'src/**/*.test.tsx', 'vite/**/*.test.ts'],

@@ -165,6 +165,52 @@ const TokenOptionItem = memo(function TokenOptionItemInner({
   const { rwaCategory } = tokenOption
   const hasBalance = Boolean(tokenOption.quantity && tokenOption.quantity !== 0)
 
+  // Stable identities so BaseTokenOptionItem's React.memo holds — otherwise every row re-renders on each list commit.
+  const rightElement = useMemo(
+    () =>
+      hasBalance ? (
+        <Flex alignItems="flex-end">
+          <Text variant="body1">{balanceText}</Text>
+          {quantityText && (
+            <Text color="$neutral2" variant="body3">
+              {quantityText}
+            </Text>
+          )}
+        </Flex>
+      ) : undefined,
+    [hasBalance, balanceText, quantityText],
+  )
+
+  const modalInfo = useMemo(
+    () => ({
+      modal: showBridgedAssetWarningModal ? (
+        <BridgedAssetModal
+          currencyInfo0={currencyInfo}
+          isOpen={showBridgedAssetWarningModal}
+          onClose={(): void => setShowBridgedAssetWarningModal(false)}
+          onContinue={onAcceptTokenWarning}
+        />
+      ) : (
+        <TokenWarningModal
+          currencyInfo0={currencyInfo}
+          isVisible={showWarningModal}
+          closeModalOnly={(): void => setShowWarningModal(false)}
+          onAcknowledge={onAcceptTokenWarning}
+        />
+      ),
+      modalShouldShow: hasWarningModals,
+      modalSetIsOpen: setWarningModalVisible,
+    }),
+    [
+      showBridgedAssetWarningModal,
+      currencyInfo,
+      onAcceptTokenWarning,
+      showWarningModal,
+      hasWarningModals,
+      setWarningModalVisible,
+    ],
+  )
+
   return (
     <BaseTokenOptionItem
       option={tokenOption}
@@ -177,38 +223,9 @@ const TokenOptionItem = memo(function TokenOptionItemInner({
           <CategoryTag category={rwaCategory} />
         ) : undefined
       }
-      rightElement={
-        hasBalance ? (
-          <Flex alignItems="flex-end">
-            <Text variant="body1">{balanceText}</Text>
-            {quantityText && (
-              <Text color="$neutral2" variant="body3">
-                {quantityText}
-              </Text>
-            )}
-          </Flex>
-        ) : undefined
-      }
+      rightElement={rightElement}
       showDisabled={Boolean((showWarnings && isBlocked) || tokenOption.isUnsupported)}
-      modalInfo={{
-        modal: showBridgedAssetWarningModal ? (
-          <BridgedAssetModal
-            currencyInfo0={currencyInfo}
-            isOpen={showBridgedAssetWarningModal}
-            onClose={(): void => setShowBridgedAssetWarningModal(false)}
-            onContinue={onAcceptTokenWarning}
-          />
-        ) : (
-          <TokenWarningModal
-            currencyInfo0={currencyInfo}
-            isVisible={showWarningModal}
-            closeModalOnly={(): void => setShowWarningModal(false)}
-            onAcknowledge={onAcceptTokenWarning}
-          />
-        ),
-        modalShouldShow: hasWarningModals,
-        modalSetIsOpen: setWarningModalVisible,
-      }}
+      modalInfo={modalInfo}
       onPress={onPressTokenOption}
     />
   )

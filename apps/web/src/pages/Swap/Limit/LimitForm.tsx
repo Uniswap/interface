@@ -564,7 +564,7 @@ function SubmitOrderButton({
 
     if (hasInsufficientFunds) {
       return inputCurrency
-        ? t('common.insufficientTokenBalance.error.simple', { tokenSymbol: inputCurrency.symbol })
+        ? t('common.insufficientTokenBalance.error.simple', { tokenSymbol: inputCurrency.symbol ?? t('common.token') })
         : t('common.insufficientBalance.error')
     }
     return t('common.confirm')
@@ -577,7 +577,7 @@ function SubmitOrderButton({
           variant="branded"
           emphasis={isConnected ? 'primary' : 'secondary'}
           size={isShortMobileDevice ? 'small' : 'large'}
-          isDisabled={isDisabled}
+          disabled={isDisabled}
           onPress={!isConnected ? accountDrawer.open : handleContinueToReview}
           id={trade ? 'submit-order-button' : undefined}
           data-testid={trade ? TestID.SubmitOrderButton : undefined}

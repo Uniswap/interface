@@ -82,9 +82,9 @@ describe('getQuicknodeEndpointUrl', () => {
     vi.mocked(config).quicknodeSolanaRpcUrl = 'https://configured.solana-mainnet.quiknode.pro/configured-token/'
   })
 
-  it('ignores a non-URL Solana config value (e.g. the .env.defaults placeholder) and uses the multichain endpoint', () => {
-    // In CI/jest the `.env.defaults` placeholder reaches config verbatim; it must
-    // not become the RPC URL (Solana's Connection throws on a non-http endpoint).
+  it('ignores a non-URL Solana config value (e.g. a leftover placeholder) and uses the multichain endpoint', () => {
+    // A non-URL placeholder value must not become the RPC URL (Solana's Connection
+    // throws on a non-http endpoint).
     vi.mocked(config).quicknodeSolanaRpcUrl = 'stored-in-.env.local'
 
     expect(getQuicknodeEndpointUrl(UniverseChainId.Solana)).toBe(

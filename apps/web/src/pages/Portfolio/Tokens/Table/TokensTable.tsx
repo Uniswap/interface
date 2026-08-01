@@ -1,4 +1,3 @@
-import { NetworkStatus } from '@apollo/client'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -25,7 +24,6 @@ interface TokensTableProps {
   hidden: TokenData[]
   loading: boolean
   refetching?: boolean
-  networkStatus: NetworkStatus
   error?: Error | undefined
 }
 

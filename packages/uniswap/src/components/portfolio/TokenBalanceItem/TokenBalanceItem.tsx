@@ -19,7 +19,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { getPortfolioBalanceDisplayQuantity } from 'uniswap/src/features/portfolio/balances/getPortfolioBalanceDisplayQuantity'
 import { TokenMenuActionType } from 'uniswap/src/features/portfolio/balances/hooks/useTokenContextMenuOptions'
 import { sortPortfolioChainBalances } from 'uniswap/src/features/portfolio/balances/sortPortfolioBalances'
-import { useTokenBalanceListContext } from 'uniswap/src/features/portfolio/TokenBalanceListContext'
+import { useTokenBalanceItemConfig } from 'uniswap/src/features/portfolio/TokenBalanceListContext'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
@@ -68,7 +68,7 @@ export const TokenBalanceItem = memo(function TokenBalanceItemInner({
   const { currency } = currencyInfo
   const { isTestnetModeEnabled } = useEnabledChains()
   const { evmOwner, svmOwner, expandedCurrencyIds, multichainRowExpansionEnabled, onPressToken, hiddenBalanceRowIds } =
-    useTokenBalanceListContext()
+    useTokenBalanceItemConfig()
 
   // Ensure items rerender when theme is switched
   useIsDarkMode()

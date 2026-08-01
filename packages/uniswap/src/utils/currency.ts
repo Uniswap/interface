@@ -1,7 +1,7 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
+import type { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { SerializedToken } from 'uniswap/src/features/tokens/warnings/slice/types'
 import { getValidAddress } from 'uniswap/src/utils/addresses'

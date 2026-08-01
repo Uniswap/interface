@@ -19,11 +19,18 @@ export function getUsdValue(value: string | undefined): string | null {
 }
 
 // Helper to get transaction type display label
-export function getTransactionTypeLabel(
-  transaction: TransactionDetails,
-  t: ReturnType<typeof useTranslation>['t'],
-): string {
-  const fragments = buildActivityRowFragments(transaction)
+export function getTransactionTypeLabel({
+  transaction,
+  t,
+  isEarnActivityDisplayEnabled = true,
+}: {
+  transaction: TransactionDetails
+  t: ReturnType<typeof useTranslation>['t']
+  isEarnActivityDisplayEnabled?: boolean
+}): string {
+  const fragments = buildActivityRowFragments(transaction, {
+    isEarnActivityDisplayEnabled,
+  })
   const { typeLabel } = fragments
 
   const transactionTypeOptions = getTransactionTypeFilterOptions(t)

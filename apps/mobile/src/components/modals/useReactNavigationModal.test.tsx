@@ -1,12 +1,12 @@
 import { act, renderHook } from '@testing-library/react'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 
-const mockGoBack = jest.fn()
-const mockIsFocused = jest.fn(() => true)
-const mockCanGoBack = jest.fn(() => true)
+const mockGoBack = vi.fn()
+const mockIsFocused = vi.fn(() => true)
+const mockCanGoBack = vi.fn(() => true)
 
-jest.mock('src/app/navigation/types', () => ({
-  useAppStackNavigation: jest.fn(() => ({
+vi.mock('src/app/navigation/types', () => ({
+  useAppStackNavigation: vi.fn(() => ({
     goBack: mockGoBack,
     isFocused: mockIsFocused,
     canGoBack: mockCanGoBack,
@@ -15,7 +15,7 @@ jest.mock('src/app/navigation/types', () => ({
 
 describe('useReactNavigationModal', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('should call navigation.goBack when onClose is called', () => {

@@ -1,7 +1,8 @@
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { getEarnWithdrawableAmount } from 'uniswap/src/features/earn/amount'
 import type { EarnDepositSourceOption, EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/types'
-import { getEarnVaultWithdrawDestinationCurrencyId } from 'uniswap/src/features/earn/utils'
+import { getEarnVaultWithdrawDestinationCurrencyId } from 'uniswap/src/features/earn/withdrawDestination'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 
@@ -17,9 +18,10 @@ type UseEarnDepositCurrencyContextResult = {
   currencyInfo: CurrencyInfo | undefined
   symbol: string
   walletBalance: number
-  positionBalanceUsd: number
+  withdrawableBalanceUsd: number
   availableBalance: number
-  destinationCurrencyId: string
+  isWithdrawLiquidityLimited: boolean
+  destinationCurrencyId: string | undefined
 }
 
 export function useEarnDepositCurrencyContext({
@@ -44,15 +46,19 @@ export function useEarnDepositCurrencyContext({
   })
   const symbol = currencyInfo?.currency.symbol ?? ''
   const walletBalance = selectedDepositSource?.balanceQuantity ?? 0
-  const positionBalanceUsd = position?.depositedUsd ?? 0
-  const availableBalance = isWithdrawing ? convertFiatAmount(positionBalanceUsd).amount : walletBalance
+  const withdrawableAmount = position
+    ? getEarnWithdrawableAmount({ position, vault })
+    : { availableUsd: 0, isLiquidityLimited: false }
+  const withdrawableBalanceUsd = withdrawableAmount.availableUsd
+  const availableBalance = isWithdrawing ? convertFiatAmount(withdrawableBalanceUsd).amount : walletBalance
 
   return {
     currencyInfo,
     symbol,
     walletBalance,
-    positionBalanceUsd,
+    withdrawableBalanceUsd,
     availableBalance,
+    isWithdrawLiquidityLimited: withdrawableAmount.isLiquidityLimited,
     destinationCurrencyId,
   }
 }

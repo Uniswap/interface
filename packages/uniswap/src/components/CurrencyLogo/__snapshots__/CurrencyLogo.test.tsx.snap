@@ -20,7 +20,7 @@ exports[`CurrencyLogo > renders a currency logo with network logo 1`] = `
         <img
           height="40"
           src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-          style="object-fit: contain; border-radius: 40px; z-index: 1;"
+          style="object-fit: cover; width: 40px; height: 40px; border-radius: 40px; z-index: 1;"
           width="40"
         />
       </div>
@@ -77,7 +77,7 @@ exports[`CurrencyLogo > renders without error 1`] = `
         <img
           height="40"
           src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png"
-          style="object-fit: contain; border-radius: 40px; z-index: 1;"
+          style="object-fit: cover; width: 40px; height: 40px; border-radius: 40px; z-index: 1;"
           width="40"
         />
       </div>

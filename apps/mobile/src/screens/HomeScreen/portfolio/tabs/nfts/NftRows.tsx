@@ -9,7 +9,6 @@ import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
 import { NftViewWithContextMenu } from 'uniswap/src/components/nfts/NftViewWithContextMenu'
 import { ShowNFTModal } from 'uniswap/src/components/nfts/ShowNFTModal'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { EMPTY_NFT_ITEM, HIDDEN_NFTS_ROW } from 'uniswap/src/features/nfts/constants'
 import { useNavigateToNftExplorerLink } from 'uniswap/src/features/nfts/hooks/useNavigateToNftExplorerLink'
 import type { NFTItem } from 'uniswap/src/features/nfts/types'
@@ -57,7 +56,7 @@ export const NftPairRow = memo(function NftPairRowInner({
     (nft: NFTItem, index: number): JSX.Element => {
       const onPressNft = async (): Promise<void> => {
         const nftDetails = {
-          chainId: fromGraphQLChain(nft.chain) ?? defaultChainId,
+          chainId: nft.chainId ?? defaultChainId,
           contractAddress: nft.contractAddress ?? '',
           tokenId: nft.tokenId ?? '',
         }

@@ -42,6 +42,8 @@ vi.mock('uniswap/src/features/passkey/privyBlobStore', () => ({
 
 vi.mock('uniswap/src/features/passkey/embeddedWallet', () => ({
   registerNewPasskey: vi.fn(),
+  toRecoveryAuthMethodType: (provider: 'google' | 'apple' | null) =>
+    provider === 'google' ? 'GOOGLE' : provider === 'apple' ? 'APPLE' : 'EMAIL',
 }))
 
 vi.mock('uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient', () => ({

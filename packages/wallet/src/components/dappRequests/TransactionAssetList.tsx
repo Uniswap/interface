@@ -141,6 +141,7 @@ interface TransactionAssetListProps {
   assets: TransactionAsset[]
   icon: React.ComponentType<IconProps>
   iconColor: ColorTokens
+  iconRotation?: string
   titleText: string
   formatAmount?: (asset: TransactionAsset) => string
   showUsdValue?: boolean
@@ -156,6 +157,7 @@ export function TransactionAssetList({
   assets,
   icon: Icon,
   iconColor,
+  iconRotation,
   titleText,
   formatAmount,
   showUsdValue = false,
@@ -198,7 +200,7 @@ export function TransactionAssetList({
         <Flex row gap="$spacing12" alignItems="center" justifyContent="space-between">
           <Flex flex={1} gap="$spacing4">
             <Flex row gap="$spacing8" height={20} alignItems="center">
-              <Icon color={iconColor} size="$icon.16" />
+              <Icon color={iconColor} rotate={iconRotation} size="$icon.16" />
               <Text color="$neutral2" variant="body3">
                 {titleText}
               </Text>
@@ -220,7 +222,7 @@ export function TransactionAssetList({
   return (
     <Flex gap="$spacing4">
       <Flex row gap="$spacing8" height="$spacing20" alignItems="center">
-        <Icon color={iconColor} size="$icon.16" />
+        <Icon color={iconColor} rotate={iconRotation} size="$icon.16" />
         <Text color="$neutral2" variant="body3">
           {titleText}
         </Text>

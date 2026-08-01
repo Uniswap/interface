@@ -74,6 +74,10 @@ function isDynamicHeightRowInfo<T extends OnchainItemListOption>(rowInfo: Onchai
   return !isSectionHeader(rowInfo) && !isArray(rowInfo.item) && rowInfo.item.rowLayout?.dynamicHeight === true
 }
 
+function getSectionHeaderHeight<T extends OnchainItemListOption>(rowInfo: ListSectionRowInfo<T>): number {
+  return rowInfo.section.sectionHeaderHeight ?? ITEM_SECTION_HEADER_ROW_HEIGHT
+}
+
 export function OnchainItemList<T extends OnchainItemListOption>({
   ListEmptyComponent,
   keyExtractor,
@@ -168,6 +172,10 @@ export function OnchainItemList<T extends OnchainItemListOption>({
   const itemsRef = useRef(items)
   itemsRef.current = items
 
+  const resetRowOffsets = useCallback((index = 0): void => {
+    ref.current?.resetAfterIndex(index)
+  }, [])
+
   useLayoutEffect(() => {
     // Drop heights for rows that left so the map can't grow unbounded.
     const presentKeys = new Set(itemsRef.current.map((item) => item.measurementKey))
@@ -176,8 +184,8 @@ export function OnchainItemList<T extends OnchainItemListOption>({
         delete rowHeightMap.current[measurementKey]
       }
     }
-    ref.current?.resetAfterIndex(0)
-  }, [structuralSignature])
+    resetRowOffsets()
+  }, [resetRowOffsets, structuralSignature])
 
   // Used for rendering the sticky header
   const activeSessionIndex = useMemo(() => {
@@ -203,7 +211,7 @@ export function OnchainItemList<T extends OnchainItemListOption>({
       }
 
       if (isSectionHeader(item)) {
-        return item.section.sectionHeaderHeight ?? ITEM_SECTION_HEADER_ROW_HEIGHT
+        return getSectionHeaderHeight(item)
       }
 
       const measuredHeight = rowHeightMap.current[item.measurementKey]
@@ -247,13 +255,14 @@ export function OnchainItemList<T extends OnchainItemListOption>({
         <OnchainItemListRow
           data={data}
           index={index}
+          resetRowOffsets={resetRowOffsets}
           style={style}
           updateRowHeight={updateRowHeight}
           windowWidth={windowWidth}
         />
       )
     },
-    [updateRowHeight, windowWidth, activeSessionIndex],
+    [resetRowOffsets, updateRowHeight, windowWidth, activeSessionIndex],
   )
 
   const handleArrowKeyListScrolling = useCallback(
@@ -367,12 +376,14 @@ function OnchainItemListRow<T extends OnchainItemListOption>({
   style,
   windowWidth,
   updateRowHeight,
+  resetRowOffsets,
 }: {
   index: number
   data: OnchainItemListData<T>[]
   style?: CSSProperties
   windowWidth: number
   updateRowHeight?: (params: RowHeightUpdate) => void
+  resetRowOffsets?: (index?: number) => void
 }): JSX.Element {
   const itemData = data[index]
 
@@ -382,6 +393,7 @@ function OnchainItemListRow<T extends OnchainItemListOption>({
         <Row
           index={index}
           itemData={itemData}
+          resetRowOffsets={resetRowOffsets}
           style={style}
           updateRowHeight={updateRowHeight}
           windowWidth={windowWidth}
@@ -397,12 +409,14 @@ type RowProps<T extends OnchainItemListOption> = {
   style?: CSSProperties
   windowWidth: number
   updateRowHeight?: (params: RowHeightUpdate) => void
+  resetRowOffsets?: (index?: number) => void
 }
 function RowInner<T extends OnchainItemListOption>({
   index,
   itemData,
   style,
   updateRowHeight,
+  resetRowOffsets,
 }: RowProps<T>): JSX.Element {
   const rowRef = useRef<HTMLElement>(null)
 
@@ -414,6 +428,16 @@ function RowInner<T extends OnchainItemListOption>({
     itemKey: itemData.key,
     needsDynamicHeight: isDynamicHeightRowInfo(itemData),
   })
+
+  useLayoutEffect(() => {
+    if (!isSectionHeader(itemData) || typeof style?.height !== 'number') {
+      return
+    }
+
+    if (style.height !== getSectionHeaderHeight(itemData)) {
+      resetRowOffsets?.(index)
+    }
+  }, [index, itemData, resetRowOffsets, style?.height])
 
   const item = useMemo((): JSX.Element | null => {
     if (isSectionHeader(itemData)) {

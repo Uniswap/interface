@@ -1,33 +1,22 @@
-import { NetworkStatus } from '@apollo/client'
-import { GraphQLApi, isError } from '@universe/api'
 import { isMobileWeb } from '@universe/environment'
-import { useCallback, useMemo, useState } from 'react'
-import {
-  MOBILE_WEB_NUM_FIRST_NFTS,
-  MOBILE_WEB_NUM_NEXT_NFTS,
-  NUM_FIRST_NFTS,
-  NUM_NEXT_NFTS,
-} from 'uniswap/src/components/nfts/constants'
-import type { NftsNextFetchPolicy } from 'uniswap/src/components/nfts/types'
+import { useCallback, useState } from 'react'
+import { MOBILE_WEB_NUM_FIRST_NFTS, NUM_FIRST_NFTS } from 'uniswap/src/components/nfts/constants'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useGroupNftsByVisibility } from 'uniswap/src/features/nfts/hooks/useGroupNftsByVisibility'
+import { useWalletNfts } from 'uniswap/src/features/nfts/hooks/useWalletNfts'
 import { type NFTItem } from 'uniswap/src/features/nfts/types'
-import { formatNftItems } from 'uniswap/src/features/nfts/utils'
 
 export function useNftListRenderData({
   owner,
   skip,
   chainsFilter,
-  nextFetchPolicy,
   pollInterval,
 }: {
   owner: Address
   skip?: boolean
   chainsFilter?: UniverseChainId[]
-  nextFetchPolicy?: NftsNextFetchPolicy
   pollInterval?: PollingInterval
 }): {
   nfts: (NFTItem | string)[]
@@ -40,51 +29,44 @@ export function useNftListRenderData({
   shouldAddInLoadingItem: boolean
   hiddenNftsExpanded: boolean
   setHiddenNftsExpanded: (value: boolean) => void
-  networkStatus: NetworkStatus
+  isError: boolean
+  isPending: boolean
+  isFetchingMore: boolean
   onListEndReached: () => Promise<void>
   refetch: () => void
 } {
-  const { gqlChains } = useEnabledChains()
-  const gqlChainsParam = chainsFilter?.map(toGraphQLChain)
-  const chains = gqlChainsParam ?? gqlChains
+  const { chains: enabledChains } = useEnabledChains()
+  const chains = chainsFilter ?? enabledChains
 
   const [hiddenNftsExpanded, setHiddenNftsExpanded] = useState(false)
 
-  const { data, fetchMore, refetch, networkStatus } = GraphQLApi.useNftsTabQuery({
-    variables: {
-      ownerAddress: owner,
-      first: isMobileWeb ? MOBILE_WEB_NUM_FIRST_NFTS : NUM_FIRST_NFTS,
-      filter: { filterSpam: false },
-      chains,
-    },
-    notifyOnNetworkStatusChange: true, // Used to trigger network state / loading on refetch or fetchMore
-    errorPolicy: 'all', // Suppress non-null image.url fields from backend
+  const {
+    nfts: nftDataItems,
+    hasNextPage,
+    isError,
+    isPending,
+    isFetchingMore,
+    fetchNextPage,
+    refetch,
+  } = useWalletNfts({
+    address: owner,
     skip,
-    nextFetchPolicy,
+    filterSpam: false,
+    chainsFilter: chains,
+    pageSize: isMobileWeb ? MOBILE_WEB_NUM_FIRST_NFTS : NUM_FIRST_NFTS,
     pollInterval,
   })
 
-  const nftDataItems = useMemo(() => formatNftItems(data), [data])
-
-  const hasNextPage = data?.nftBalances?.pageInfo.hasNextPage
-
   const onListEndReached = useCallback(async () => {
-    if (!hasNextPage) {
-      return
+    if (hasNextPage) {
+      await fetchNextPage()
     }
-
-    await fetchMore({
-      variables: {
-        first: isMobileWeb ? MOBILE_WEB_NUM_NEXT_NFTS : NUM_NEXT_NFTS,
-        after: data.nftBalances?.pageInfo.endCursor,
-      },
-    })
-  }, [data?.nftBalances?.pageInfo.endCursor, hasNextPage, fetchMore])
+  }, [hasNextPage, fetchNextPage])
 
   const { nfts, numHidden, numShown, hiddenNfts, shownNfts } = useGroupNftsByVisibility({
     nftDataItems,
     showHidden: hiddenNftsExpanded,
-    allPagesFetched: !data?.nftBalances?.pageInfo.hasNextPage,
+    allPagesFetched: !hasNextPage,
   })
 
   return {
@@ -94,13 +76,15 @@ export function useNftListRenderData({
     hiddenNfts,
     shownNfts,
     refetch,
-    networkStatus,
+    isFetchingMore,
     onListEndReached,
     hiddenNftsExpanded,
     setHiddenNftsExpanded,
+    isError,
+    isPending,
     // Don't show error state when query is intentionally skipped
-    isErrorState: skip ? false : isError(networkStatus, !!data),
+    isErrorState: !skip && nftDataItems.length === 0 && isError,
     hasNextPage: Boolean(hasNextPage),
-    shouldAddInLoadingItem: networkStatus === NetworkStatus.fetchMore && numShown % 2 === 1,
+    shouldAddInLoadingItem: isFetchingMore && numShown % 2 === 1,
   }
 }

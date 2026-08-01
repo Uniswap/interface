@@ -97,7 +97,7 @@ export function WormholeModal({
               <TouchableArea onPress={onPressLearnMore}>
                 <Flex
                   row
-                  width="max-content"
+                  maxContent
                   borderRadius="$rounded16"
                   px="$spacing8"
                   py="$spacing4"

@@ -19,7 +19,7 @@ test.describe(
       await page.goto(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
 
       // The API response is too variable so stubbing a 404.
-      await page.route(`${getUniswapServiceUrls().tradingApiUrl}/v1/quote`, async (route) => {
+      await page.route(`${getUniswapServiceUrls().tradingApiUrl}/quote`, async (route) => {
         await route.fulfill({
           status: 404,
           body: JSON.stringify({

@@ -115,7 +115,7 @@ export function SendReviewDetails({
     txId,
     chainId: chainId as UniverseChainId,
     toAddress: recipient,
-    tokenAddress: nftIn?.nftContract?.address,
+    tokenAddress: nftIn?.contractAddress,
     tokenId: nftIn?.tokenId,
     txRequest,
     onSubmit: onNext,
@@ -336,7 +336,7 @@ export function SendReviewDetails({
         <Flex row gap="$spacing8">
           {!isWebPlatform && <IconButton icon={<BackArrow />} emphasis="secondary" size="large" onPress={onPrev} />}
           <Button
-            isDisabled={actionButtonProps.disabled}
+            disabled={actionButtonProps.disabled}
             icon={ButtonAuthIcon ?? undefined}
             size="medium"
             testID={actionButtonProps.name}

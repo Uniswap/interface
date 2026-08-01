@@ -4,6 +4,7 @@ import { isExtensionApp, isMobileApp, isMobileWeb, isWebApp, isWebIOS, isWebPlat
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { ComponentProps, memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useWindowDimensions } from 'react-native'
 import { Flex, ModalCloseIcon, Text, useMedia, useScrollbarStyles, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { spacing, zIndexes } from 'ui/src/theme'
@@ -41,7 +42,9 @@ import { useDebounce } from 'utilities/src/time/timing'
 export const TOKEN_SELECTOR_WEB_MAX_WIDTH = 400
 export const TOKEN_SELECTOR_WEB_MAX_HEIGHT = 700
 
-export const SNAP_POINTS = ['65%', '100%']
+// Half-open snap ratio; web uses the '%' string, mobile multiplies by windowHeight (concrete px).
+export const HALF_SNAP_POINT_RATIO = 0.65
+export const SNAP_POINTS = [`${HALF_SNAP_POINT_RATIO * 100}%`, '100%']
 
 export interface TokenSelectorProps {
   variation: TokenSelectorVariation
@@ -295,6 +298,8 @@ function TokenSelectorModalContent(props: TokenSelectorProps): JSX.Element {
 function TokenSelectorModalInner(props: TokenSelectorProps): JSX.Element {
   const colors = useSporeColors()
   const { isModalOpen, onClose, focusHook } = props
+  // Fabric collapses flex/percentage height inside a nested bottom-sheet portal; pin a concrete height on native.
+  const { height: windowHeight } = useWindowDimensions()
 
   return (
     <Modal
@@ -309,12 +314,14 @@ function TokenSelectorModalInner(props: TokenSelectorProps): JSX.Element {
       maxHeight={isWebApp ? TOKEN_SELECTOR_WEB_MAX_HEIGHT : undefined}
       name={ModalName.TokenSelector}
       padding="$none"
-      snapPoints={SNAP_POINTS}
+      // Open at half and allow expanding to full, matching SNAP_POINTS. Concrete px (not '%')
+      // because Fabric doesn't reliably normalize percentage snap points in the nested portal.
+      snapPoints={isMobileApp ? [windowHeight * HALF_SNAP_POINT_RATIO, windowHeight] : SNAP_POINTS}
       height={isWebApp ? '100vh' : undefined}
       focusHook={focusHook}
       onClose={onClose}
     >
-      <Flex grow maxHeight="100%" overflow="hidden">
+      <Flex grow={!isMobileApp} height={isMobileApp ? windowHeight : undefined} maxHeight="100%" overflow="hidden">
         <TokenSelectorModalContent {...props} />
       </Flex>
     </Modal>

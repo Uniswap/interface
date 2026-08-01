@@ -86,12 +86,12 @@ export const HeightAnimator = View.styleable<HeightAnimatorProps>(
 
     return (
       <View
+        overflow="hidden"
         {...styleProps}
         animation={animationDisabled || isTestEnv() ? null : animation}
         enterStyle={enterStyle}
         exitStyle={exitStyle}
         height={open ? visibleHeight : 0}
-        overflow="hidden"
         width="100%"
       >
         <View position="absolute" width="100%" onLayout={onLayout}>

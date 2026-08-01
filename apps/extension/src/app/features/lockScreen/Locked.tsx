@@ -15,6 +15,7 @@ import { AlertTriangleFilled, Lock } from 'ui/src/components/icons'
 import { spacing, zIndexes } from 'ui/src/theme'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { SagaStatus, useMonitoredSagaStatus } from 'uniswap/src/utils/saga'
 import { useEvent } from 'utilities/src/react/hooks'
 import { LandingBackground } from 'wallet/src/components/landing/LandingBackground'
@@ -216,7 +217,7 @@ export function Locked(): JSX.Element {
 
         <Flex gap="$spacing12" justifyContent="flex-end" zIndex={zIndexes.sticky}>
           <Flex row>
-            <Button size="large" variant="branded" onPress={onPressUnlockWithPassword}>
+            <Button size="large" testID={TestID.Submit} variant="branded" onPress={onPressUnlockWithPassword}>
               {t('extension.lock.button.submit')}
             </Button>
           </Flex>

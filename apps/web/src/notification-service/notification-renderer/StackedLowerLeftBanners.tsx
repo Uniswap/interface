@@ -1,11 +1,13 @@
 import type { InAppNotification } from '@universe/api'
 import { InlineBannerNotification, type NotificationClickTarget } from '@universe/notifications'
-import { AnimatePresence, motion } from 'framer-motion'
 import { memo, useEffect } from 'react'
-import { Portal, useMedia } from 'ui/src'
+import { AnimatePresence, Flex, Portal, useMedia } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
 import { useEvent } from 'utilities/src/react/hooks'
 import { calculateStackingProps, MAX_STACKED_BANNERS } from '~/notification-service/notification-renderer/stackingUtils'
+
+const EXIT_DROP_PX = 24
+const EXIT_Z_INDEX = 1035 // Above the stack but below modalBackdrop (1040)
 
 interface StackedLowerLeftBannersProps {
   notifications: InAppNotification[]
@@ -24,7 +26,7 @@ interface StackedLowerLeftBannersProps {
  * - 2nd notification: 95% scale, offset vertically
  * - 3rd notification: 90% scale, offset vertically
  * - Animates scale and position when notifications are dismissed
- * - Exit animation: 90deg counter-clockwise rotation + fade out
+ * - Exit animation: slide down + fade out
  */
 export const StackedLowerLeftBanners = memo(function StackedLowerLeftBanners({
   notifications,
@@ -52,29 +54,29 @@ export const StackedLowerLeftBanners = memo(function StackedLowerLeftBanners({
 
   return (
     <Portal zIndex={zIndexes.fixed + 10}>
-      <AnimatePresence initial={false} mode="sync">
+      <AnimatePresence initial={false}>
         {stackedNotifications.map((notification, index) => {
           const { scale, offsetY, zIndex } = calculateStackingProps(index, stackedNotifications.length)
 
           return (
-            <motion.div
+            <Flex
               key={notification.id}
-              layout="position"
-              initial={{ scale, y: offsetY, opacity: 1, originX: 0.5, originY: 1, zIndex }}
-              animate={{ scale, y: offsetY, opacity: 1, originX: 0.5, originY: 1, zIndex }}
-              exit={{
-                y: offsetY + 24,
+              animation="300ms"
+              animateOnly={['transform', 'opacity']}
+              scale={scale}
+              y={offsetY}
+              opacity={1}
+              zIndex={zIndex}
+              exitStyle={{
+                y: offsetY + EXIT_DROP_PX,
                 opacity: 0,
-                zIndex: 1035, // Above the stack but below modalBackdrop (1040)
-              }}
-              transition={{
-                duration: 0.3,
-                ease: 'easeInOut',
+                zIndex: EXIT_Z_INDEX,
               }}
               style={{
                 position: 'fixed',
                 left: leftPosition,
                 bottom: 29,
+                transformOrigin: '50% 100%',
                 willChange: 'transform, opacity',
               }}
             >
@@ -83,7 +85,7 @@ export const StackedLowerLeftBanners = memo(function StackedLowerLeftBanners({
                 onNotificationClick={onNotificationClick}
                 renderButton
               />
-            </motion.div>
+            </Flex>
           )
         })}
       </AnimatePresence>

@@ -15,8 +15,10 @@ import { shouldReverseForWaterfall } from 'uniswap/src/features/tokens/waterfall
 import { AddressStringFormat, normalizeAddress } from 'uniswap/src/utils/addresses'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { PoolData, usePoolData } from '~/appGraphql/data/pools/usePoolData'
+import { usePoolLpFeeFraction } from '~/appGraphql/data/pools/usePoolLpFeeFraction'
 import { calculateApr } from '~/appGraphql/data/pools/useTopPools'
 import { gqlToCurrency, unwrapToken } from '~/appGraphql/data/util'
+import { MOBILE_BAR_MAX_HEIGHT } from '~/components/NavBar/MobileBottomBar'
 import { StickyCollapsibleHeader } from '~/components/StickyCollapsibleHeader/StickyCollapsibleHeader'
 import { LpIncentivesPoolDetailsRewardsDistribution } from '~/features/Liquidity/LPIncentives/LpIncentivesPoolDetailsRewardsDistribution'
 import { useColor } from '~/hooks/useColor'
@@ -35,6 +37,9 @@ import { ThemeProvider } from '~/theme'
 import { ExploreTab } from '~/types/explore'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
+// Extra bottom padding so content (e.g. pool address links) can scroll above the fixed Swap/Add Liquidity CTA bar
+const STICKY_CTA_CLEARANCE = `calc(${MOBILE_BAR_MAX_HEIGHT}px + env(safe-area-inset-bottom))` as const
+
 const PageWrapper = styled(Flex, {
   row: true,
   pt: 24,
@@ -46,12 +51,13 @@ const PageWrapper = styled(Flex, {
   alignItems: 'flex-start',
   $lg: {
     px: 20,
-    pb: 52,
+    pb: STICKY_CTA_CLEARANCE,
   },
   $xl: {
     flexDirection: 'column',
     alignItems: 'center',
     gap: '$none',
+    pb: STICKY_CTA_CLEARANCE,
   },
 })
 
@@ -147,14 +153,21 @@ export function PoolDetailsPage() {
   const [token0, token1] = isReversed ? [unwrappedTokens[1], unwrappedTokens[0]] : unwrappedTokens
   const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
 
+  const lpFeeFraction = usePoolLpFeeFraction({
+    chainId: chainInfo?.id,
+    poolAddress: poolData?.idOrAddress,
+    protocolVersion: parseRestProtocolVersion(poolData?.protocolVersion),
+    feeTier: poolData?.feeTier?.feeAmount,
+  })
   const poolApr = useMemo(
     () =>
       calculateApr({
         volume24h: poolData?.volumeUSD24H,
         tvl: poolData?.tvlUSD,
         feeTier: poolData?.feeTier?.feeAmount,
+        lpFeeFraction,
       }),
-    [poolData?.volumeUSD24H, poolData?.tvlUSD, poolData?.feeTier],
+    [poolData?.volumeUSD24H, poolData?.tvlUSD, poolData?.feeTier, lpFeeFraction],
   )
   const [orderBookCurrencyA, orderBookCurrencyB] = useMemo(
     () => [
@@ -246,6 +259,7 @@ export function PoolDetailsPage() {
           <PoolDetailsHeader
             chainId={chainInfo.id}
             poolAddress={poolAddress}
+            poolId={poolData?.idOrAddress}
             token0={token0}
             token1={token1}
             feeTier={poolData?.feeTier}
@@ -327,6 +341,7 @@ export function PoolDetailsPage() {
               chainId={chainInfo.id}
               loading={loading}
               poolApr={poolApr}
+              lpFeeFraction={lpFeeFraction}
               rewardsApr={isLPIncentivesEnabled ? poolData?.rewardsCampaign?.boostedApr : undefined}
             />
             <TokenDetailsWrapper>

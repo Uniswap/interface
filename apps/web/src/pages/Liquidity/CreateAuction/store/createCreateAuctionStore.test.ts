@@ -1,3 +1,4 @@
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { describe, expect, it } from 'vitest'
 import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
 import { getCustomPriceRangeLiquidityTotal } from '~/pages/Liquidity/CreateAuction/customPriceRanges'
@@ -24,6 +25,13 @@ describe('createCreateAuctionStore', () => {
       throw new Error('expected single allocation')
     }
     expect(allocation.percent).toBe(100)
+  })
+
+  it('defaults the create-new-token network to Mainnet', () => {
+    const store = createCreateAuctionStore()
+    const tokenForm = store.getState().tokenForm
+
+    expect(tokenForm.mode === TokenMode.CREATE_NEW && tokenForm.network).toBe(UniverseChainId.Mainnet)
   })
 
   it('setNewTokenTotalSupply rescales committed amounts, preserving the deposit fraction', () => {
@@ -310,5 +318,25 @@ describe('createCreateAuctionStore', () => {
     actions.addCustomPriceRangePreset(CUSTOM_PRICE_RANGE_PRESETS[0])
 
     expect(store.getState().customizePool.customPriceRanges).toHaveLength(MAX_CUSTOM_PRICE_RANGE_ENTRIES)
+  })
+
+  it('stores the wallet the X verification token was bound to', () => {
+    const store = createCreateAuctionStore()
+    const { actions } = store.getState()
+
+    actions.setXVerification({
+      xHandle: 'satoshi',
+      xVerificationToken: 'token-abc',
+      boundWalletAddress: '0x1111111111111111111111111111111111111111',
+    })
+
+    expect(store.getState().xVerification).toEqual({
+      xHandle: 'satoshi',
+      xVerificationToken: 'token-abc',
+      boundWalletAddress: '0x1111111111111111111111111111111111111111',
+    })
+
+    actions.setXVerification(undefined)
+    expect(store.getState().xVerification).toBeUndefined()
   })
 })

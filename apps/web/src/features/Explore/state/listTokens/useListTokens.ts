@@ -20,7 +20,10 @@ export function useListTokens(
   const tokensV2EndpointsEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
   const result = useListTokensService(chainId, options)
 
-  const sparklines = useMemo(() => buildSparklinesFromMultichain(result.topTokens), [result.topTokens])
+  const sparklines = useMemo(
+    () => buildSparklinesFromMultichain(result.topTokens, result.priceHistoryByMultichainId),
+    [result.topTokens, result.priceHistoryByMultichainId],
+  )
 
   useExploreQueryLatencyTracking({
     queryType: 'tokens',

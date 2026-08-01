@@ -21,6 +21,7 @@ import {
   privyEmbeddedWalletSecurityMonitors,
   privyEmbeddedWalletBusinessMonitors,
   privyEmbeddedWalletDepsMonitors,
+  privyEmbeddedWalletKillSwitchMonitors,
 } from './monitors'
 import { MonitorDefinition } from './types'
 
@@ -60,6 +61,7 @@ const teamMonitors: Record<string, { monitors: MonitorDefinition[]; category: st
     { monitors: privyEmbeddedWalletSecurityMonitors, category: 'security' },
     { monitors: privyEmbeddedWalletBusinessMonitors, category: 'business' },
     { monitors: privyEmbeddedWalletDepsMonitors, category: 'deps' },
+    { monitors: privyEmbeddedWalletKillSwitchMonitors, category: 'killswitch' },
   ],
   'liquidity-fe': [{ monitors: liquidityFeErrorTrackingMonitors, category: 'error-tracking' }],
 }

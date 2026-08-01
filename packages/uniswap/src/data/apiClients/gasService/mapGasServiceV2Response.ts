@@ -1,6 +1,6 @@
 import type { EstimateGasFeeResponse } from '@uniswap/client-unirpc-v2/dist/uniswap/unirpc/v2/service_pb'
 import { FeeType, type GasEstimate, type GasFeeResultWithoutState, type GasStrategy } from '@universe/api'
-import { convertGasFeeToDisplayValue } from 'uniswap/src/features/gas/hooks'
+import { convertGasFeeToDisplayValue } from 'uniswap/src/features/gas/convertGasFeeToDisplayValue'
 import { extractGasFeeParams } from 'uniswap/src/features/gas/utils'
 
 export function mapGasServiceV2Response({

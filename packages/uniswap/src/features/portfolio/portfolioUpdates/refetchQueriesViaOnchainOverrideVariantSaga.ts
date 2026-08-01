@@ -6,7 +6,10 @@ import { GQLQueries, SharedQueryClient } from '@universe/api'
 import { all, call, delay, put } from 'typed-redux-saga'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
-import { doesGetPortfolioQueryMatchAddress, getPortfolioQueriesToUpdate } from 'uniswap/src/data/rest/getPortfolio'
+import {
+  doesGetPortfolioQueryMatchAddress,
+  getPortfolioQueriesToUpdate,
+} from 'uniswap/src/data/rest/getPortfolioQueryUtils'
 import { doesGetWalletBalancesQueryMatchAddress } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
 import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { fetchOnChainBalances, OnChainMap } from 'uniswap/src/features/portfolio/portfolioUpdates/fetchOnChainBalances'

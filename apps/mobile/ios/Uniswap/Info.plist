@@ -139,7 +139,7 @@
 	<key>OneSignal_suppress_launch_urls</key>
 	<true/>
 	<key>RCTNewArchEnabled</key>
-	<false/>
+	<true/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>InputMono-Regular.ttf</string>

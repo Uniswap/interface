@@ -1,29 +1,30 @@
 import { usePendingTransactions } from 'uniswap/src/features/transactions/hooks/usePendingTransactions'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import type { MockedFunction } from 'vitest'
 import { usePendingLiquidityTransactionsChangeListener } from 'wallet/src/features/transactions/hooks/usePendingLiquidityTransactionsChangeListener'
 import { renderHook } from 'wallet/src/test/test-utils'
 
-jest.mock('uniswap/src/features/accounts/store/hooks', () => ({
-  useActiveAddresses: jest.fn(() => ({ evmAddress: '0xabc', svmAddress: null })),
+vi.mock('uniswap/src/features/accounts/store/hooks', () => ({
+  useActiveAddresses: vi.fn(() => ({ evmAddress: '0xabc', svmAddress: null })),
 }))
 
-jest.mock('uniswap/src/features/transactions/hooks/usePendingTransactions', () => ({
-  usePendingTransactions: jest.fn(),
+vi.mock('uniswap/src/features/transactions/hooks/usePendingTransactions', () => ({
+  usePendingTransactions: vi.fn(),
 }))
 
-const mockUsePendingTransactions = usePendingTransactions as jest.MockedFunction<typeof usePendingTransactions>
+const mockUsePendingTransactions = usePendingTransactions as MockedFunction<typeof usePendingTransactions>
 
 // Minimal pending-tx shape — the hook only reads `typeInfo.type`.
 const tx = (type: TransactionType): { typeInfo: { type: TransactionType } } => ({ typeInfo: { type } })
 
 describe('usePendingLiquidityTransactionsChangeListener', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('does not fire the callback on mount', () => {
     mockUsePendingTransactions.mockReturnValue([tx(TransactionType.LiquidityIncrease)] as never)
-    const callback = jest.fn()
+    const callback = vi.fn()
 
     renderHook(() => usePendingLiquidityTransactionsChangeListener(callback))
 
@@ -32,7 +33,7 @@ describe('usePendingLiquidityTransactionsChangeListener', () => {
 
   it('fires the callback when the pending LP count changes (settle: 1 -> 0)', () => {
     mockUsePendingTransactions.mockReturnValue([tx(TransactionType.LiquidityDecrease)] as never)
-    const callback = jest.fn()
+    const callback = vi.fn()
 
     const { rerender } = renderHook(() => usePendingLiquidityTransactionsChangeListener(callback))
     expect(callback).not.toHaveBeenCalled()
@@ -45,7 +46,7 @@ describe('usePendingLiquidityTransactionsChangeListener', () => {
 
   it('fires the callback when a new LP tx is submitted (0 -> 1)', () => {
     mockUsePendingTransactions.mockReturnValue([] as never)
-    const callback = jest.fn()
+    const callback = vi.fn()
 
     const { rerender } = renderHook(() => usePendingLiquidityTransactionsChangeListener(callback))
 
@@ -57,7 +58,7 @@ describe('usePendingLiquidityTransactionsChangeListener', () => {
 
   it('ignores non-LP pending transactions', () => {
     mockUsePendingTransactions.mockReturnValue([tx(TransactionType.Swap)] as never)
-    const callback = jest.fn()
+    const callback = vi.fn()
 
     const { rerender } = renderHook(() => usePendingLiquidityTransactionsChangeListener(callback))
 
@@ -70,7 +71,7 @@ describe('usePendingLiquidityTransactionsChangeListener', () => {
 
   it('does not fire when the LP count is unchanged across renders', () => {
     mockUsePendingTransactions.mockReturnValue([tx(TransactionType.CreatePool)] as never)
-    const callback = jest.fn()
+    const callback = vi.fn()
 
     const { rerender } = renderHook(() => usePendingLiquidityTransactionsChangeListener(callback))
     rerender()

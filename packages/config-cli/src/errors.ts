@@ -31,6 +31,10 @@ export class ConfigServiceError extends TaggedError('ConfigServiceError')<{
   message: string
 }>() {}
 
+export class TimeoutError extends TaggedError('TimeoutError')<{
+  message: string
+}>() {}
+
 export type CliError =
   | OktaError
   | NetworkError

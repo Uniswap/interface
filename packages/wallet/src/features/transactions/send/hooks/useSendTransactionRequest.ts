@@ -83,7 +83,7 @@ function getSendParams(
   derivedSendInfo: DerivedSendInfo,
 ): SendTokenParams | undefined {
   const { currencyAmounts, currencyTypes, chainId, recipient, currencyInInfo, nftIn } = derivedSendInfo
-  const tokenAddress = currencyInInfo ? currencyAddress(currencyInInfo.currency) : nftIn?.nftContract?.address
+  const tokenAddress = currencyInInfo ? currencyAddress(currencyInInfo.currency) : nftIn?.contractAddress
   const amount = currencyAmounts[CurrencyField.INPUT]?.quotient.toString()
   const assetType = currencyTypes[CurrencyField.INPUT]
 
@@ -104,7 +104,7 @@ function getSendParams(
         toAddress: recipient,
         tokenAddress,
         type: assetType,
-        tokenId: nftIn.tokenId,
+        tokenId: nftIn.tokenId ?? '',
       }
     }
 

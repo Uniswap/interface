@@ -6,20 +6,21 @@ import { PollingInterval } from 'uniswap/src/constants/misc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
 import { logger } from 'utilities/src/logger/logger'
+import type { Mocked, MockedFunction } from 'vitest'
 
 // Mock dependencies
-jest.mock('uniswap/src/features/gas/hooks', () => ({
-  useTransactionGasFee: jest.fn(),
+vi.mock('uniswap/src/features/gas/hooks', () => ({
+  useTransactionGasFee: vi.fn(),
 }))
 
-jest.mock('utilities/src/logger/logger', () => ({
+vi.mock('utilities/src/logger/logger', () => ({
   logger: {
-    error: jest.fn(),
+    error: vi.fn(),
   },
 }))
 
-const mockUseTransactionGasFee = useTransactionGasFee as jest.MockedFunction<typeof useTransactionGasFee>
-const mockLogger = logger as jest.Mocked<typeof logger>
+const mockUseTransactionGasFee = useTransactionGasFee as MockedFunction<typeof useTransactionGasFee>
+const mockLogger = logger as Mocked<typeof logger>
 
 describe('useTransactionGasEstimation', () => {
   const mockBaseTx: TransactionRequest = {
@@ -32,7 +33,7 @@ describe('useTransactionGasEstimation', () => {
   const mockSmartContractDelegationAddress = '0xabcdef1234567890123456789012345678901234'
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('successful gas estimation', () => {

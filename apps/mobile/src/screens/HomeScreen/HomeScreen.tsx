@@ -1,4 +1,5 @@
 import { useStartProfiler } from '@shopify/react-native-performance'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
@@ -35,6 +36,9 @@ function HomeScreen({
   const dispatch = useDispatch()
   const { requiredForTransactions: requiresBiometrics } = useBiometricAppSettings()
   const { trigger } = useBiometricPrompt()
+  // The Home heartbeat coordinator only takes over the Tokens tab list refreshing when this
+  // flag is on — otherwise the list must keep its own poll running, or it would never refresh.
+  const isDataLivelinessEnabled = useFeatureFlag(FeatureFlags.DataLivelinessUI)
 
   const tokenDetailsNavigation = useTokenDetailsNavigation()
   const startProfilerTimer = useStartProfiler()
@@ -82,6 +86,7 @@ function HomeScreen({
   return (
     <HomeScreenPortfolioScrollProvider>
       <TokenBalanceListContextProvider
+        disablePolling={isDataLivelinessEnabled}
         isExternalProfile={false}
         evmOwner={activeAccount.address}
         onPressToken={onPressToken}

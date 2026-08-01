@@ -1,8 +1,6 @@
-import { NetworkStatus } from '@apollo/client'
-import { GqlResult } from '@universe/api'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { PortfolioBalance, PortfolioMultichainBalance } from 'uniswap/src/features/dataApi/types'
+import { BaseResult, PortfolioBalance, PortfolioMultichainBalance } from 'uniswap/src/features/dataApi/types'
 
 export type SortedPortfolioBalances = {
   balances: PortfolioBalance[]
@@ -14,17 +12,12 @@ export type SortedPortfolioBalancesMultichain = {
   hiddenBalances: PortfolioMultichainBalance[]
 }
 
-type SortedPortfolioBalancesResultBase = {
-  networkStatus: NetworkStatus
+export type SortedPortfolioBalancesResult = BaseResult<SortedPortfolioBalances>
+
+export type SortedPortfolioBalancesResultMultichain = BaseResult<SortedPortfolioBalancesMultichain> & {
+  balancesById: Record<string, PortfolioMultichainBalance> | undefined
+  dataUpdatedAt?: number
 }
-
-export type SortedPortfolioBalancesResult = GqlResult<SortedPortfolioBalances> & SortedPortfolioBalancesResultBase
-
-export type SortedPortfolioBalancesResultMultichain = GqlResult<SortedPortfolioBalancesMultichain> &
-  SortedPortfolioBalancesResultBase & {
-    balancesById: Record<string, PortfolioMultichainBalance> | undefined
-    dataUpdatedAt?: number
-  }
 
 export type UseSortedPortfolioBalancesOptions = {
   evmAddress?: Address

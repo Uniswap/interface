@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { z } from 'zod'
+import { AppId } from './AppId'
 import { BaseConfigSchema, BaseConfigValues } from './BaseConfig'
+import { Environment } from './Environment'
 import { parseConfig } from './parseConfig'
 
 describe('parseConfig', () => {
@@ -121,6 +123,41 @@ describe('parseConfig', () => {
     })
   })
 
+  describe('environment wire aliases', () => {
+    // The exact failure path of getConfig(): BaseConfigSchema parsed with
+    // extendBaseConfig: false. The backend shared deployer injects
+    // ENVIRONMENT=<stack name> ('dev'/'staging'/'prod') on every ECS container.
+    const parseEnvironment = (environment: string | undefined): unknown =>
+      parseConfig({
+        values: { appId: AppId.MissionControl, environment },
+        schema: BaseConfigSchema,
+        extendBaseConfig: false,
+      }).environment
+
+    it('parses the deployer short form "dev" as development', () => {
+      expect(parseEnvironment('dev')).toBe(Environment.Development)
+    })
+
+    it('parses the deployer short form "prod" as production', () => {
+      expect(parseEnvironment('prod')).toBe(Environment.Production)
+    })
+
+    it.each([Environment.Development, Environment.Staging, Environment.Production])(
+      'passes canonical value "%s" through unchanged',
+      (value) => {
+        expect(parseEnvironment(value)).toBe(value)
+      },
+    )
+
+    it('defaults to development when unset', () => {
+      expect(parseEnvironment(undefined)).toBe(Environment.Development)
+    })
+
+    it('still rejects unknown environment values', () => {
+      expect(() => parseEnvironment('sandbox')).toThrow('Config validation failed')
+    })
+  })
+
   describe('extendBaseConfig', () => {
     it('includes base config fields by default', () => {
       const config = parseConfig({
@@ -194,6 +231,22 @@ describe('parseConfig', () => {
       const nodeEnv: 'development' | 'production' | 'test' = extended.nodeEnv
       expect(custom).toBe('hello')
       expect(typeof nodeEnv).toBe('string')
+    })
+
+    it('surfaces isBetaUsingProdApi through the base config (forwarded to url overrides)', () => {
+      // Guards the beta API-target switch: callers pass getConfig() wholesale to
+      // getUniswapServiceUrls, so the parsed config must retain this field.
+      const enabled = parseConfig({
+        values: { isBetaUsingProdApi: 'true' },
+        schema: z.object({}),
+      })
+      expect(enabled.isBetaUsingProdApi).toBe(true)
+
+      const defaulted = parseConfig({
+        values: {},
+        schema: z.object({}),
+      })
+      expect(defaulted.isBetaUsingProdApi).toBe(false)
     })
 
     it('has matching keys in BaseConfigSchema and BaseConfigValues', () => {

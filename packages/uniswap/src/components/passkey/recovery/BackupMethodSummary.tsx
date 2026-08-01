@@ -47,10 +47,12 @@ export function BackupMethodSummary({
   provider,
   email,
   size,
+  iconOpacity,
 }: {
   provider: 'google' | 'apple' | null
   email?: string
   size: 'sm' | 'lg'
+  iconOpacity?: number
 }): JSX.Element {
   const { t } = useTranslation()
   const config = SIZE_CONFIG[size]
@@ -63,6 +65,7 @@ export function BackupMethodSummary({
         borderRadius={config.radius}
         alignItems="center"
         justifyContent="center"
+        opacity={iconOpacity}
       >
         <ProviderIcon provider={provider} size={config.icon} />
       </Flex>

@@ -1,4 +1,4 @@
-/* oxlint-disable typescript/no-unnecessary-condition typescript/explicit-function-return-type */
+/* oxlint-disable typescript/no-unnecessary-condition typescript/explicit-function-return-type typescript/unbound-method */
 import { tryProvideSession } from '@universe/api'
 import type { ViemClientManager } from '@universe/chains'
 import { Signer } from 'ethers'

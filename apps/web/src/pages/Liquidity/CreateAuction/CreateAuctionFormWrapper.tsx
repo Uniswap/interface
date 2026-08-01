@@ -12,6 +12,7 @@ import {
   useCreateAuctionStore,
   useCreateAuctionStoreActions,
 } from '~/pages/Liquidity/CreateAuction/CreateAuctionContext'
+import { useIsQuickLaunchMode } from '~/pages/Liquidity/CreateAuction/hooks/useIsQuickLaunchMode'
 import { useIsStepValid } from '~/pages/Liquidity/CreateAuction/hooks/useIsStepValid'
 import { CreateAuctionStep } from '~/pages/Liquidity/CreateAuction/types'
 
@@ -27,8 +28,20 @@ export function CreateAuctionFormWrapper({ children }: { children: React.ReactNo
   const { setStep } = useCreateAuctionStoreActions()
   const isStep0Valid = useIsStepValid(CreateAuctionStep.ADD_TOKEN_INFO)
   const isStep1Valid = useIsStepValid(CreateAuctionStep.CONFIGURE_AUCTION)
+  const isQuickLaunchMode = useIsQuickLaunchMode()
 
   const progressSteps = useMemo(() => {
+    // Quick launch collapses the wizard to a single configure step (Review stays excluded, as below).
+    if (isQuickLaunchMode) {
+      return [
+        {
+          label: t('toucan.createAuction.quickLaunch.step.title'),
+          caption: t('toucan.createAuction.quickLaunch.title'),
+          active: step === CreateAuctionStep.ADD_TOKEN_INFO,
+        },
+      ]
+    }
+
     const stepValidities = [isStep0Valid, isStep1Valid]
 
     const createStep = ({ label, stepEnum }: { label: string; stepEnum: CreateAuctionStep }) => {
@@ -49,7 +62,7 @@ export function CreateAuctionFormWrapper({ children }: { children: React.ReactNo
       createStep({ label: t('toucan.createAuction.step.customizePool'), stepEnum: CreateAuctionStep.CUSTOMIZE_POOL }),
       // Review step intentionally excluded - shown inline without step navigation
     ]
-  }, [step, setStep, t, isStep0Valid, isStep1Valid])
+  }, [step, setStep, t, isStep0Valid, isStep1Valid, isQuickLaunchMode])
 
   return (
     <Flex
@@ -63,7 +76,7 @@ export function CreateAuctionFormWrapper({ children }: { children: React.ReactNo
         mx: 'auto',
       }}
       $sm={{
-        px: '$spacing8',
+        px: '$spacing20',
       }}
     >
       <BreadcrumbNavContainer aria-label="breadcrumb-nav">
@@ -87,7 +100,9 @@ export function CreateAuctionFormWrapper({ children }: { children: React.ReactNo
             : t('toucan.createAuction.title')}
         </Text>
       </Flex>
-      {media.xl && step !== CreateAuctionStep.REVIEW_LAUNCH && <PoolProgressIndicatorHeader steps={progressSteps} />}
+      {media.xl && step !== CreateAuctionStep.REVIEW_LAUNCH && (
+        <PoolProgressIndicatorHeader flush steps={progressSteps} />
+      )}
       <Flex
         row
         gap="$spacing20"

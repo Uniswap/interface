@@ -1,5 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { ExploreStatsResponse, PoolStats, TokenStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
+import { parseRestProtocolVersion } from '@universe/api'
 import { useMemo } from 'react'
 import { DEFAULT_TICK_SPACING, V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
 import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
@@ -124,6 +125,7 @@ function convertPoolStatsToPoolStat(poolStats: PoolStats): PoolStat {
       volume24h: giveExploreStatDefaultValue(poolStats.volume1Day?.value),
       tvl: giveExploreStatDefaultValue(poolStats.totalLiquidity?.value),
       feeTier: poolStats.feeTier ?? V2_DEFAULT_FEE_TIER,
+      protocolVersion: parseRestProtocolVersion(poolStats.protocolVersion),
     }),
     boostedApr: poolStats.boostedApr,
     feeTier: {

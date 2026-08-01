@@ -1,54 +1,27 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`AnimatedText renders without error 1`] = `
-<TextInput
-  allowFontScaling={true}
-  collapsable={false}
-  defaultValue="Rendered"
-  editable={false}
-  jestAnimatedProps={
-    {
-      "value": {
-        "defaultValue": "Rendered",
-        "text": "Rendered",
-      },
-    }
-  }
-  jestAnimatedStyle={
-    {
-      "value": {},
-    }
-  }
-  jestInlineStyle={
-    [
-      {
-        "padding": 0,
-      },
-      {
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 17,
-        "fontWeight": "400",
-        "lineHeight": 22.1,
-      },
-      undefined,
-    ]
-  }
-  maxFontSizeMultiplier={1.4}
-  style={
-    [
-      {
-        "padding": 0,
-      },
-      {
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 17,
-        "fontWeight": "400",
-        "lineHeight": 22.1,
-      },
-      undefined,
-    ]
-  }
-  text="Rendered"
-  underlineColorAndroid="transparent"
-/>
+exports[`AnimatedText > renders without error 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <input
+      autocapitalize="sentences"
+      autocomplete="on"
+      autocorrect="on"
+      class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 r-padding-t60dpp"
+      dir="auto"
+      readonly=""
+      rows="1"
+      spellcheck="true"
+      style="font-family: var(--f-family); font-weight: var(--f-weight-book); line-height: var(--f-lineHeight-medium);"
+      value="Rendered"
+      virtualkeyboardpolicy="auto"
+    />
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;

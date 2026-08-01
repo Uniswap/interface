@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest'
 import { zeroAddress } from '~/chains'
 import { buildCreateAuctionRequest } from '~/pages/Liquidity/CreateAuction/buildCreateAuctionRequest'
 import { createCreateAuctionStore } from '~/pages/Liquidity/CreateAuction/store/createCreateAuctionStore'
-import { PostAuctionLiquidityAllocationType, TokenMode } from '~/pages/Liquidity/CreateAuction/types'
+import { PostAuctionLiquidityAllocationType, TimeLockPreset, TokenMode } from '~/pages/Liquidity/CreateAuction/types'
 
 const WALLET_ADDRESS = '0xF570F45f598fD48AF83FABD692629a2caFe899ec'
 const SALT = '0x4b8637a788454d5fdc1283dc54a4526524fdb200665d766c53183298b311cbf3'
@@ -246,6 +246,72 @@ describe('buildCreateAuctionRequest', () => {
 
   it('emits no custom ranges for the default (non-custom) price-range strategy', () => {
     expect(build(buildableStore())?.pool?.customRanges).toEqual([])
+  })
+
+  describe('permanent lock burns the liquidity', () => {
+    function permanentStore(): Store {
+      const store = buildableStore()
+      const { actions } = store.getState()
+      actions.setTimeLockEnabled(true)
+      actions.setTimeLockPreset(TimeLockPreset.Permanent)
+      return store
+    }
+
+    it('sends the burn lock variant instead of a max-duration timelock', () => {
+      const request = build(permanentStore())
+      expect(request?.pool?.liquidityLock?.mode?.case).toBe('burn')
+      // The backend rejects a nonzero unlock time for burn — it must be omitted.
+      expect(request?.pool?.liquidityLock?.unlockTimeUnix).toBeUndefined()
+      // pool_owner is NOT repurposed for burn: the creator keeps the auction tokensRecipient
+      // and failure-recovery recipient, so nothing burns unless the pool graduates.
+      expect(request?.pool?.poolOwner).toBe(WALLET_ADDRESS)
+    })
+
+    it('keeps a user-set pool owner when the liquidity is burned', () => {
+      const store = permanentStore()
+      store.getState().actions.setPoolOwner(UNI_ADDRESS)
+      const request = build(store)
+      expect(request?.pool?.poolOwner).toBe(UNI_ADDRESS)
+      expect(request?.pool?.liquidityLock?.mode?.case).toBe('burn')
+    })
+
+    it('keeps the timelocked lock for permanent buyback-burn (the lock contract must hold the LP)', () => {
+      const store = permanentStore()
+      store.getState().actions.setBuybackAndBurnEnabled(true)
+      const request = build(store)
+      expect(request?.pool?.poolOwner).toBe(WALLET_ADDRESS)
+      expect(request?.pool?.liquidityLock?.mode?.case).toBe('buybackBurn')
+    })
+
+    it('keeps the timelocked lock for permanent fees-forwarder (the lock contract must hold the LP)', () => {
+      const store = permanentStore()
+      store.getState().actions.setFeesRecipientAddress(WALLET_ADDRESS)
+      const request = build(store)
+      expect(request?.pool?.poolOwner).toBe(WALLET_ADDRESS)
+      expect(request?.pool?.liquidityLock?.mode?.case).toBe('feesForwarder')
+    })
+
+    it('keeps a duration-based timelock for non-permanent presets', () => {
+      const store = buildableStore()
+      const { actions } = store.getState()
+      actions.setTimeLockEnabled(true)
+      actions.setTimeLockPreset(TimeLockPreset.OneYear)
+      const request = build(store)
+      expect(request?.pool?.poolOwner).toBe(WALLET_ADDRESS)
+      expect(request?.pool?.liquidityLock?.mode?.case).toBe('timelock')
+      // end 2026-06-18T00:00:00Z + 365 days
+      expect(request?.pool?.liquidityLock?.unlockTimeUnix).toBe(
+        BigInt(Math.floor(new Date('2026-06-18T00:00:00.000Z').getTime() / 1000)) + 365n * 86_400n,
+      )
+    })
+
+    it('does not burn when the timelock is disabled even if the preset is Permanent', () => {
+      const store = permanentStore()
+      store.getState().actions.setTimeLockEnabled(false)
+      const request = build(store)
+      expect(request?.pool?.poolOwner).toBe(WALLET_ADDRESS)
+      expect(request?.pool?.liquidityLock).toBeUndefined()
+    })
   })
 
   it('returns undefined when token amounts are not committed', () => {

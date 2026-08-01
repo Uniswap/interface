@@ -3,6 +3,8 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import { Percent } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isL2ChainId } from 'uniswap/src/features/chains/utils'
+import type { FeeBreakdown } from 'uniswap/src/features/fees/types'
 import { DYNAMIC_FEE_DATA, type DynamicFeeData, type FeeData } from 'uniswap/src/features/positions/types'
 import i18n from 'uniswap/src/i18n'
 import { PercentNumberDecimals } from 'utilities/src/format/types'
@@ -22,9 +24,20 @@ export function validateFeeTier(feeTier: string): string {
   return feeTier
 }
 
-// tick spacing must be a whole number >= 1
-export function calculateTickSpacingFromFeeAmount(feeAmount: number): number {
-  return Math.max(Math.round((2 * feeAmount) / 100), 1)
+/** Inputs deciding the create-flow default tick spacing: L2 pools use 1x the fee tier when the flag is on. */
+export interface L2TickSpacingConfig {
+  chainId: UniverseChainId | undefined
+  l2TickSpacingEnabled: boolean
+}
+
+// tick spacing must be a whole number >= 1. Newly created L2 tiers use 1x the fee tier when the
+// L2DefaultTickSpacing flag is on; everything else uses 2x.
+export function calculateTickSpacingFromFeeAmount(
+  feeAmount: number,
+  { chainId, l2TickSpacingEnabled }: L2TickSpacingConfig,
+): number {
+  const feeMultiplier = l2TickSpacingEnabled && isL2ChainId(chainId) ? 1 : 2
+  return Math.max(Math.round((feeMultiplier * feeAmount) / 100), 1)
 }
 
 const SMALLEST_FEE_TIER_STEP_PERCENT = 0.0001
@@ -80,7 +93,7 @@ export function getFeeTierKey({
   return `${feeTier}-${tickSpacing}${isDynamicFee ? '-dynamic' : ''}`
 }
 
-function getFeeTierTitle(feeAmount: number, isDynamic?: boolean): string {
+export function getFeeTierTitle(feeAmount: number, isDynamic?: boolean): string {
   switch (feeAmount) {
     case FeeAmount.LOWEST:
       return i18n.t(`fee.bestForVeryStable`)
@@ -207,6 +220,26 @@ export function getCommonFeeTiersWithData({
   }))
 }
 
+/**
+ * A fee tier option rendered by `FeeTierSelector`. `protocolFee` (pips) is the backend's per-pool
+ * value when a pool exists; `feeBreakdown` is set only for the new-default v4 tiers (behind
+ * `V4ProtocolFeeDisplay`); `disabledReason*` mark a non-selectable tier (e.g. an existing CCA pool).
+ */
+export interface FeeTierOption {
+  value: FeeData
+  title: string
+  selectionPercent?: Percent
+  tvl: string | undefined
+  boostedApr?: number
+  protocolFee?: number
+  feeBreakdown?: FeeBreakdown
+  // Whether a pool already exists at this tier. `false` renders a "Not created" label in place of TVL
+  // (e.g. the not-yet-created v4 new-default tiers); undefined leaves the TVL-based display unchanged.
+  created?: boolean
+  disabledReason?: string
+  disabledReasonLearnMoreUrl?: string
+}
+
 export function getDefaultFeeTiersWithData({
   chainId,
   feeTierData,
@@ -215,29 +248,29 @@ export function getDefaultFeeTiersWithData({
   chainId?: UniverseChainId
   feeTierData: Record<string, FeeTierData>
   protocolVersion: ProtocolVersion
-}) {
+}): FeeTierOption[] {
   const defaultFeeTiersForChain = getDefaultFeeTiersForChain(chainId, protocolVersion)
 
   const feeTiers = Object.entries(defaultFeeTiersForChain).map(([key, feeData]) => ({
-    tier: feeData.feeAmount,
     value: feeData,
     title: getFeeTierTitle(feeData.feeAmount, feeData.isDynamic),
     selectionPercent: feeTierData[key]?.percentage,
     tvl: feeTierData[key]?.tvl,
     boostedApr: feeTierData[key]?.boostedApr,
+    protocolFee: feeTierData[key]?.protocolFee,
   }))
 
   // For V4, include the top 8 fee tiers sorted by TVL
   if (protocolVersion === ProtocolVersion.V4) {
     return (
       Object.entries(feeTierData)
-        .map(([feeAmount, data]) => ({
-          tier: parseInt(feeAmount),
+        .map(([, data]) => ({
           value: data.fee,
           title: getFeeTierTitle(data.fee.feeAmount, data.fee.isDynamic),
           selectionPercent: data.percentage,
           tvl: data.tvl,
           boostedApr: data.boostedApr,
+          protocolFee: data.protocolFee,
         }))
         // if tvl is less than MIN_FEE_TIER_TVL and not default fee tier, filter it out
         // or if it is a default fee tier, include it
@@ -246,7 +279,7 @@ export function getDefaultFeeTiersWithData({
             parseFloat(feeTier.tvl) >= MIN_FEE_TIER_TVL ||
             Object.keys(defaultFeeTiersForChain).includes(
               getFeeTierKey({
-                feeTier: feeTier.tier,
+                feeTier: feeTier.value.feeAmount,
                 tickSpacing: feeTier.value.tickSpacing,
                 isDynamicFee: feeTier.value.isDynamic,
               }),

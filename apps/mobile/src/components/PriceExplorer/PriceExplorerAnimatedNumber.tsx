@@ -1,7 +1,6 @@
-import { SCREEN_WIDTH } from '@gorhom/bottom-sheet'
 import times from 'lodash/times'
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { Dimensions, StyleSheet, Text, View } from 'react-native'
 import Animated, {
   SharedValue,
   useAnimatedReaction,
@@ -16,13 +15,14 @@ import { PriceNumberOfDigits } from 'src/components/PriceExplorer/usePriceHistor
 import { TextLoaderWrapper, useSporeColors } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { ADDITIONAL_WIDTH_FOR_ANIMATIONS, DIGIT_HEIGHT } from 'uniswap/src/components/AnimatedNumber/native/constants'
-
-const NUMBER_ARRAY = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 import { AnimatedCharStyles } from 'uniswap/src/components/AnimatedNumber/styles'
 import { TopAndBottomGradient } from 'uniswap/src/components/AnimatedNumber/TopAndBottomGradient/TopAndBottomGradient'
 import { NUMBER_WIDTH_ARRAY } from 'uniswap/src/components/AnimatedNumber/utils/constants'
 import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+
+const SCREEN_WIDTH = Dimensions.get('window').width
+const NUMBER_ARRAY = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
 // if price per token has > 3 numbers before the decimal, start showing decimals in neutral3
 // otherwise, show entire price in neutral1
@@ -65,7 +65,7 @@ const NumbersMain = ({
 }: {
   color: string
   backgroundColor: string
-  hidePlaceholder(): void
+  hidePlaceholder: () => void
 }): JSX.Element | null => {
   const [showNumbers, setShowNumbers] = useState(false)
   const hideNumbers = useSharedValue(true)
@@ -125,7 +125,7 @@ const RollNumber = ({
   index: number
   shouldAnimate: SharedValue<boolean>
   decimalPlace: SharedValue<number>
-  hidePlaceholder(): void
+  hidePlaceholder: () => void
   commaIndex: number
   currency: FiatCurrencyInfo
 }): JSX.Element => {
@@ -158,8 +158,6 @@ const RollNumber = ({
           damping: 29,
           stiffness: 164,
           overshootClamping: false,
-          restDisplacementThreshold: 0.01,
-          restSpeedThreshold: 2,
         })
       : endValue
   }, [animatedDigit, shouldAnimate])
@@ -254,7 +252,7 @@ const Numbers = ({
   currency,
 }: {
   price: ValueAndFormattedWithAnimation
-  hidePlaceholder(): void
+  hidePlaceholder: () => void
   numberOfDigits: PriceNumberOfDigits
   currency: FiatCurrencyInfo
 }): JSX.Element[] => {

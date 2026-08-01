@@ -16,6 +16,7 @@ import {
   type PostAuctionLiquidityTier,
   type RaiseCurrency,
 } from '~/pages/Liquidity/CreateAuction/types'
+import { getRaiseCurrencyAsCurrency } from '~/pages/Liquidity/CreateAuction/utils'
 
 interface PostAuctionLiquiditySectionProps {
   allocation: PostAuctionLiquidityAllocation
@@ -55,6 +56,7 @@ export function PostAuctionLiquiditySection({
   const { t } = useTranslation()
   const { formatNumberOrString } = useLocalizationContext()
   const { code: fiatCurrencyCode } = useAppFiatCurrencyInfo()
+  const raiseCurrencySymbol = getRaiseCurrencyAsCurrency(raiseCurrency, chainId)?.symbol ?? ''
 
   // When the editor is in USD mode, pass the (snapshotted) USD price down so the first tier
   // defaults to 100k USD (converted to raise) instead of 100k raise tokens. Subsequent tiers
@@ -118,7 +120,7 @@ export function PostAuctionLiquiditySection({
       <PostAuctionLiquiditySelector
         allocation={allocation}
         postAuctionLiquidityPercent={postAuctionLiquidityPercent}
-        raiseCurrencySymbol={raiseCurrency}
+        raiseCurrencySymbol={raiseCurrencySymbol}
         subtitle={subtitle}
         showSubtitleTooltip={showSubtitleTooltip}
         inputCurrency={inputCurrency}

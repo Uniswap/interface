@@ -1,7 +1,4 @@
 import { type Currency, CurrencyAmount, Fraction, Percent } from '@uniswap/sdk-core'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   DEFAULT_POST_AUCTION_LIQUIDITY_TIER_INITIAL_MILESTONE,
   MAX_POST_AUCTION_LIQUIDITY_PERCENT,
@@ -9,7 +6,6 @@ import {
   type PostAuctionLiquidityAllocation,
   PostAuctionLiquidityAllocationType,
   type PostAuctionLiquidityTier,
-  RaiseCurrency,
   UNBOUNDED_TIER_ID,
 } from '~/pages/Liquidity/CreateAuction/types'
 
@@ -390,23 +386,14 @@ export function getPostAuctionLiquidityPreviewPercent(allocation: PostAuctionLiq
   return clampPostAuctionLiquidityPercent(effectivePercent)
 }
 
-/**
- * Maps RaiseCurrency + chainId to the corresponding SDK Currency.
- * Use this whenever you need a Currency from the raise-currency constant (e.g. for pool data, sorting).
- */
-export function getRaiseCurrencyAsCurrency(
-  raiseCurrency: RaiseCurrency,
-  chainId: UniverseChainId,
-): Currency | undefined {
-  switch (raiseCurrency) {
-    case RaiseCurrency.ETH:
-      return nativeOnChain(chainId)
-    case RaiseCurrency.USDC:
-      return getChainInfo(chainId).tokens.USDC
-    default:
-      return undefined
-  }
-}
+// Raise-currency resolution lives in its own module; re-exported here so callers keep one import
+// path for CreateAuction utilities.
+export {
+  getPrimaryStablecoin,
+  getRaiseCurrencyAddress,
+  getRaiseCurrencyAsCurrency,
+  getSupportedAuctionCurrencyAddresses,
+} from '~/pages/Liquidity/CreateAuction/raiseCurrency'
 
 /**
  * Converts a float percentage into a SDK Percent (exact rational).

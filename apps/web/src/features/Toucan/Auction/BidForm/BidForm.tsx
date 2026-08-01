@@ -36,7 +36,7 @@ import { useAuctionKycStatus } from '~/features/Toucan/Auction/hooks/useAuctionK
 import { useAuctionTokenColor } from '~/features/Toucan/Auction/hooks/useAuctionTokenColor'
 import { useBidFormController } from '~/features/Toucan/Auction/hooks/useBidFormController'
 import { AuctionProgressState } from '~/features/Toucan/Auction/store/types'
-import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
+import { useAuctionStore, useAuctionStoreActions } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { getRequiredTestnetMode } from '~/features/Toucan/Shared/getRequiredTestnetMode'
 import { InlineAlertBanner } from '~/features/Toucan/Shared/InlineAlertBanner'
 
@@ -78,11 +78,16 @@ export function BidForm({ onInputChange, onBidSubmitted }: BidFormProps): JSX.El
   const isAuctionEnded = auctionProgressState === AuctionProgressState.ENDED
   const { validTokenColor } = useColorsFromTokenColor(tokenColor)
 
+  const { setBidInputFocused } = useAuctionStoreActions()
+
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
   const [isKycInterstitialModalOpen, setIsKycInterstitialModalOpen] = useState(false)
   const [isKycFailedModalOpen, setIsKycFailedModalOpen] = useState(false)
   const [showTokenWarningModal, setShowTokenWarningModal] = useState(false)
 
+  // Token-protection warnings stay on for every auction, including quick launches: the
+  // quick-launch classifier is forgeable by construction, so it must never gate a protection
+  // signal. Any exemption policy is deferred to security review (LP-1076).
   const tokenWarningSeverity = token ? getTokenWarningSeverity(token) : WarningSeverity.None
   const shouldShowTokenWarning = tokenWarningSeverity > WarningSeverity.Low
 
@@ -254,7 +259,12 @@ export function BidForm({ onInputChange, onBidSubmitted }: BidFormProps): JSX.El
               description={t('toucan.auction.bidForm.auctionConcluded.description')}
             />
           )}
-          <Flex opacity={shouldDisableBidForm ? 0.54 : 1} pointerEvents={shouldDisableBidForm ? 'none' : 'auto'}>
+          <Flex
+            opacity={shouldDisableBidForm ? 0.54 : 1}
+            pointerEvents={shouldDisableBidForm ? 'none' : 'auto'}
+            onFocus={() => setBidInputFocused(true)}
+            onBlur={() => setBidInputFocused(false)}
+          >
             <Flex flexDirection="column">
               <BidBudgetInput
                 label={t('toucan.bidForm.maxBudget')}

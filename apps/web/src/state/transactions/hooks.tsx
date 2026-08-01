@@ -261,6 +261,24 @@ export function useTransaction(transactionHash?: string): InterfaceTransactionDe
 }
 
 /**
+ * Like useTransaction, but also resolves an EIP-5792 batch id after confirmation — batch records are
+ * rekeyed from batch id to on-chain hash once confirmed (interfaceApplyTransactionHashToBatch).
+ */
+export function useTransactionByHashOrBatchId(hashOrBatchId?: string): InterfaceTransactionDetails | undefined {
+  const allTransactions = useAllTransactionsByChain()
+
+  return useMemo(() => {
+    if (!hashOrBatchId) {
+      return undefined
+    }
+    return (
+      allTransactions[hashOrBatchId] ??
+      Object.values(allTransactions).find((tx) => tx.batchInfo?.batchId === hashOrBatchId)
+    )
+  }, [allTransactions, hashOrBatchId])
+}
+
+/**
  * Returns a map of transaction hashes to their transaction details.
  * Useful when monitoring multiple transactions simultaneously.
  * @param transactionHashes - Set or array of transaction hashes to look up

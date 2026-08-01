@@ -40,27 +40,6 @@ const webConfigValues = {
   /** BACKEND_URL — override proxy target URL in dev */
   viteBackendUrl: process.env.BACKEND_URL ?? process.env.VITE_BACKEND_URL,
 
-  /** QUICKNODE_AVAX_RPC_URL */
-  quicknodeAvaxRpcUrl: process.env.QUICKNODE_AVAX_RPC_URL ?? process.env.REACT_APP_QUICKNODE_AVAX_RPC_URL,
-
-  /** QUICKNODE_BASE_RPC_URL */
-  quicknodeBaseRpcUrl: process.env.QUICKNODE_BASE_RPC_URL ?? process.env.REACT_APP_QUICKNODE_BASE_RPC_URL,
-
-  /** QUICKNODE_BLAST_RPC_URL */
-  quicknodeBlastRpcUrl: process.env.QUICKNODE_BLAST_RPC_URL ?? process.env.REACT_APP_QUICKNODE_BLAST_RPC_URL,
-
-  /** QUICKNODE_BNB_RPC_URL */
-  quicknodeBnbRpcUrl: process.env.QUICKNODE_BNB_RPC_URL ?? process.env.REACT_APP_QUICKNODE_BNB_RPC_URL,
-
-  /** QUICKNODE_CELO_RPC_URL */
-  quicknodeCeloRpcUrl: process.env.QUICKNODE_CELO_RPC_URL ?? process.env.REACT_APP_QUICKNODE_CELO_RPC_URL,
-
-  /** QUICKNODE_OP_RPC_URL */
-  quicknodeOpRpcUrl: process.env.QUICKNODE_OP_RPC_URL ?? process.env.REACT_APP_QUICKNODE_OP_RPC_URL,
-
-  /** QUICKNODE_POLYGON_RPC_URL */
-  quicknodePolygonRpcUrl: process.env.QUICKNODE_POLYGON_RPC_URL ?? process.env.REACT_APP_QUICKNODE_POLYGON_RPC_URL,
-
   // #endregion
 
   // #region Testing & CI
@@ -73,9 +52,6 @@ const webConfigValues = {
 
   /** ANVIL_PORT — port for local Anvil blockchain fork */
   anvilPort: process.env.ANVIL_PORT,
-
-  /** ENABLE_ANVIL_SNAPSHOTS — use Anvil state snapshots in e2e tests */
-  enableAnvilSnapshots: process.env.ENABLE_ANVIL_SNAPSHOTS,
 
   /** STORYBOOK_EXTENSION — enables extension mode in Storybook */
   storybookExtension: process.env.STORYBOOK_EXTENSION,
@@ -132,19 +108,11 @@ const webConfigSchema = z.object({
   entryGatewayApiUrl: z.string().optional().describe('URL for entry gateway BFF proxy'),
   websocketUrl: z.string().optional().describe('URL for WebSocket proxy'),
   viteBackendUrl: z.string().optional().describe('Override URL for Vite dev proxy target'),
-  quicknodeAvaxRpcUrl: z.string().optional().describe('QuickNode RPC URL for Avalanche'),
-  quicknodeBaseRpcUrl: z.string().optional().describe('QuickNode RPC URL for Base'),
-  quicknodeBlastRpcUrl: z.string().optional().describe('QuickNode RPC URL for Blast'),
-  quicknodeBnbRpcUrl: z.string().optional().describe('QuickNode RPC URL for BNB Chain'),
-  quicknodeCeloRpcUrl: z.string().optional().describe('QuickNode RPC URL for Celo'),
-  quicknodeOpRpcUrl: z.string().optional().describe('QuickNode RPC URL for Optimism'),
-  quicknodePolygonRpcUrl: z.string().optional().describe('QuickNode RPC URL for Polygon'),
 
   // Testing & CI
   ci: boolFromString.describe('Is the app running in CI'),
   reportToSlack: boolFromString.describe('Should Playwright results post to Slack'),
   anvilPort: z.coerce.number().default(8545).describe('Port for local Anvil blockchain fork'),
-  enableAnvilSnapshots: boolFromString.describe('Are Anvil state snapshots enabled for E2E'),
   storybookExtension: boolFromString.describe('Is Storybook extension mode enabled'),
 
   // Build Settings

@@ -18,6 +18,9 @@ save = "exact"
 # time-sensitive SDK upgrades coordinated with Privy.
 # @uniswap/liquidity-launcher-sdk is a first-party SDK (Uniswap/sdks) consumed by the
 # create-auction flow; excluded so a fresh publish can be adopted without the age delay.
+# agent-device is a pre-1.0 dev-only QA CLI (Callstack) with near-daily releases; it is
+# exact-pinned in apps/mobile devDependencies, so this exclusion only unblocks the
+# deliberately chosen version, never a floating range.
 minimumReleaseAge = 259200
 minimumReleaseAgeExcludes = [
   "@privy-io/expo",
@@ -37,6 +40,7 @@ minimumReleaseAgeExcludes = [
   "@uniswap/client-unirpc-v2",
   "@uniswap/client-unitag",
   "@uniswap/liquidity-launcher-sdk",
+  "agent-device",
 ]
 
 # Pin the default registry explicitly to prevent registry confusion attacks

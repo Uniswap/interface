@@ -13,6 +13,7 @@ import {
 import type { StocksSortMethod } from '~/pages/Explore/rwa/table/stocksTableSortStore'
 import { useExpandableAssetTableColumns } from '~/pages/Explore/rwa/table/useExpandableAssetTableColumns'
 import { useExpandableAssetTableExpandableRow } from '~/pages/Explore/rwa/table/useExpandableAssetTableExpandableRow'
+import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 export type ExpandableAssetTableProps = {
   assets: Rwa[]
@@ -36,10 +37,14 @@ export function ExpandableAssetTable({
   orderDirection,
 }: ExpandableAssetTableProps): JSX.Element {
   const { chains: enabledChainIds } = useEnabledChains()
+  const chainFilter = useChainIdFromUrlParam()
 
   const showLoadingSkeleton = isLoading
 
-  const data = useMemo(() => buildExpandableAssetTableRows(assets, enabledChainIds), [assets, enabledChainIds])
+  const data = useMemo(
+    () => buildExpandableAssetTableRows({ assets, enabledChainIds, chainFilter }),
+    [assets, enabledChainIds, chainFilter],
+  )
 
   const columns = useExpandableAssetTableColumns({
     showLoadingSkeleton,

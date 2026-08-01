@@ -8,14 +8,14 @@ import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { setHasCopiedPrivateKeys } from 'wallet/src/features/behaviorHistory/slice'
 import { restoreMnemonicComplete } from 'wallet/src/features/wallet/slice'
 
-jest.mock('uniswap/src/features/telemetry/send', () => ({
-  sendAnalyticsEvent: jest.fn(),
+vi.mock('uniswap/src/features/telemetry/send', () => ({
+  sendAnalyticsEvent: vi.fn(),
 }))
 
 describe('onRestoreComplete', () => {
   it('should dispatch restoreMnemonicComplete when isRestoringMnemonic is true', () => {
-    const mockDispatch = jest.fn()
-    const mockNavigation = { navigate: jest.fn() }
+    const mockDispatch = vi.fn()
+    const mockNavigation = { navigate: vi.fn() }
     const mockParams = {
       entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
       importType: ImportType.RestoreMnemonic,
@@ -40,8 +40,8 @@ describe('onRestoreComplete', () => {
   })
 
   it('should navigate to SelectWallet screen when isRestoringMnemonic is false', () => {
-    const mockDispatch = jest.fn()
-    const mockNavigation = { navigate: jest.fn() }
+    const mockDispatch = vi.fn()
+    const mockNavigation = { navigate: vi.fn() }
     const mockParams = {
       entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
       importType: ImportType.Restore,

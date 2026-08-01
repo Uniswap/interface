@@ -1,4 +1,3 @@
-import { NetworkStatus } from '@apollo/client'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ViewStyle } from 'react-native'
@@ -97,12 +96,12 @@ export const HomeScreenTokensTab = memo(function HomeScreenTokensTabInner({
 
 function TokenListInlineError(): JSX.Element | null {
   const { t } = useTranslation()
-  const { balancesById, networkStatus, refetch, isPortfolioBalancesLoading } = useTokenBalanceListContext()
+  const { balancesById, isError, refetch, isPortfolioBalancesLoading } = useTokenBalanceListContext()
 
   useAppStateTrigger({ from: 'background', to: 'active', callback: refetch || noop })
 
   const hasData = !!balancesById
-  const hasErrorWithCachedValues = !isPortfolioBalancesLoading && hasData && networkStatus === NetworkStatus.error
+  const hasErrorWithCachedValues = !isPortfolioBalancesLoading && hasData && isError
 
   return hasErrorWithCachedValues ? (
     <AnimatedFlex entering={FadeInDown} exiting={FadeOut} px="$spacing24" py="$spacing8">

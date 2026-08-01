@@ -73,7 +73,7 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
                     <img
                       height="16"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                      style="object-fit: contain; border-radius: 16px; z-index: 1;"
+                      style="object-fit: cover; width: 16px; height: 16px; border-radius: 16px; z-index: 1;"
                       width="16"
                     />
                   </div>
@@ -134,7 +134,7 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
                     <img
                       height="16"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                      style="object-fit: contain; border-radius: 16px; z-index: 1;"
+                      style="object-fit: cover; width: 16px; height: 16px; border-radius: 16px; z-index: 1;"
                       width="16"
                     />
                   </div>
@@ -256,7 +256,7 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
                     <img
                       height="16"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                      style="object-fit: contain; border-radius: 16px; z-index: 1;"
+                      style="object-fit: cover; width: 16px; height: 16px; border-radius: 16px; z-index: 1;"
                       width="16"
                     />
                   </div>
@@ -317,7 +317,7 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
                     <img
                       height="16"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                      style="object-fit: contain; border-radius: 16px; z-index: 1;"
+                      style="object-fit: cover; width: 16px; height: 16px; border-radius: 16px; z-index: 1;"
                       width="16"
                     />
                   </div>
@@ -460,7 +460,7 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
                     <img
                       height="16"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                      style="object-fit: contain; border-radius: 16px; z-index: 1;"
+                      style="object-fit: cover; width: 16px; height: 16px; border-radius: 16px; z-index: 1;"
                       width="16"
                     />
                   </div>
@@ -521,7 +521,7 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
                     <img
                       height="16"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                      style="object-fit: contain; border-radius: 16px; z-index: 1;"
+                      style="object-fit: cover; width: 16px; height: 16px; border-radius: 16px; z-index: 1;"
                       width="16"
                     />
                   </div>

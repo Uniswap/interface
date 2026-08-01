@@ -1,4 +1,7 @@
-import { findProof, type HashcashChallenge } from '@universe/sessions/src/challenge-solvers/hashcash/core'
+import {
+  findProof as defaultFindProof,
+  type HashcashChallenge,
+} from '@universe/sessions/src/challenge-solvers/hashcash/core'
 import { HashcashWorkerBootError } from '@universe/sessions/src/challenge-solvers/hashcash/worker/hashcashWorkerErrors'
 import type { HashcashWorkerChannelFactory } from '@universe/sessions/src/challenge-solvers/hashcash/worker/types'
 import type { ChallengeData, ChallengeSolver } from '@universe/sessions/src/challenge-solvers/types'
@@ -76,6 +79,14 @@ interface CreateHashcashSolverContext {
    * If not provided, falls back to main-thread execution (blocking).
    */
   getWorkerChannel?: HashcashWorkerChannelFactory
+  /**
+   * Main-thread proof-of-work implementation, used when no worker channel is provided.
+   * Defaults to the platform-split `hashcash/core` module, which platform-aware bundlers
+   * resolve to `core.web.ts` / `core.native.ts`. Runtimes without platform-split
+   * resolution (plain Node loaders) must inject an implementation explicitly, e.g. the
+   * headless client passes `core.web`'s `findProof`.
+   */
+  findProofFn?: typeof defaultFindProof
   /**
    * Callback for analytics when solve completes (success or failure)
    */
@@ -168,6 +179,7 @@ function classifyError(error: unknown): HashcashSolveAnalytics['errorType'] {
  */
 function createHashcashSolver(ctx: CreateHashcashSolverContext): ChallengeSolver {
   const usedWorker = !!ctx.getWorkerChannel
+  const findProof = ctx.findProofFn ?? defaultFindProof
 
   async function solve(challengeData: ChallengeData): Promise<string> {
     const startTime = ctx.performanceTracker.now()

@@ -9,7 +9,7 @@ describe(translateMnemonicErrorMessage, () => {
         invalidWord: undefined,
         t: i18n.t,
       }),
-    ).toBe('Invalid phrase')
+    ).toBe('account.recoveryPhrase.error.invalid')
   })
 
   it('correct invalid word message', () => {
@@ -20,7 +20,7 @@ describe(translateMnemonicErrorMessage, () => {
         invalidWord,
         t: i18n.t,
       }),
-    ).toBe(`Invalid word: ${invalidWord}`)
+    ).toBe('account.recoveryPhrase.error.invalidWord')
   })
 
   it('correct incorrect number of words message', () => {
@@ -30,14 +30,14 @@ describe(translateMnemonicErrorMessage, () => {
         invalidWord: undefined,
         t: i18n.t,
       }),
-    ).toBe('Recovery phrase must be 12-24 words')
+    ).toBe('account.recoveryPhrase.error.phraseLength')
     expect(
       translateMnemonicErrorMessage({
         error: MnemonicValidationError.NotEnoughWords,
         invalidWord: undefined,
         t: i18n.t,
       }),
-    ).toBe('Recovery phrase must be 12-24 words')
+    ).toBe('account.recoveryPhrase.error.phraseLength')
   })
 })
 

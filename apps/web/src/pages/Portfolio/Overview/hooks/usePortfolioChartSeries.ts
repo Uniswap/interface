@@ -10,7 +10,20 @@ type ChartPercentChange = ReturnType<typeof getPortfolioChartPercentChange>
 export enum PortfolioChartCategory {
   Total = 'total',
   Tokens = 'tokens',
+  Earn = 'earn',
   Pools = 'pools',
+}
+
+/** Non-total categories in their fixed display order (tokens → earn → pools). */
+export const PORTFOLIO_BREAKDOWN_CATEGORIES = [
+  PortfolioChartCategory.Tokens,
+  PortfolioChartCategory.Earn,
+  PortfolioChartCategory.Pools,
+] as const
+
+/** A category is shown across the breakdown UI only when its series has a non-zero value. */
+export function seriesHasValue(series: PriceChartData[]): boolean {
+  return series.some((point) => point.close !== 0)
 }
 
 interface UsePortfolioChartSeriesInput {
@@ -21,14 +34,18 @@ interface UsePortfolioChartSeriesInput {
 
 interface UsePortfolioChartSeriesResult {
   series: PriceChartData[]
-  /** Per-category series (shared timestamps), used to read tokens/pools values at the scrubbed point. */
+  /** Per-category series (shared timestamps), used to read each category's value at the scrubbed point. */
   tokensSeries: PriceChartData[]
   poolsSeries: PriceChartData[]
+  earnSeries: PriceChartData[]
   chartPercentChange: ChartPercentChange
   /** Period percent change per category (first-to-last of the series), for the breakdown rows at rest. */
   tokensPercentChange: number | undefined
   poolsPercentChange: number | undefined
-  /** True only when both tokens and pools have a non-zero value, so the selector has both to choose from. */
+  earnPercentChange: number | undefined
+  /** Non-total categories that have a non-zero value, in fixed display order — what the selector lists. */
+  availableCategories: PortfolioChartCategory[]
+  /** True when at least two categories have data, so the breakdown split is meaningful. */
   hasCategoryBreakdown: boolean
 }
 
@@ -82,9 +99,25 @@ export function usePortfolioChartSeries({
     [chartData],
   )
 
-  const hasTokensData = useMemo(() => tokensSeries.some((point) => point.close !== 0), [tokensSeries])
-  const hasPoolsData = useMemo(() => poolsSeries.some((point) => point.close !== 0), [poolsSeries])
-  const hasCategoryBreakdown = hasTokensData && hasPoolsData
+  const earnSeries = useMemo<PriceChartData[]>(
+    () => (chartData?.earn ? convertPortfolioChartDataToPriceChartData(chartData.earn) : []),
+    [chartData],
+  )
+
+  const hasTokensData = useMemo(() => seriesHasValue(tokensSeries), [tokensSeries])
+  const hasPoolsData = useMemo(() => seriesHasValue(poolsSeries), [poolsSeries])
+  const hasEarnData = useMemo(() => seriesHasValue(earnSeries), [earnSeries])
+
+  const availableCategories = useMemo<PortfolioChartCategory[]>(() => {
+    const hasDataByCategory = {
+      [PortfolioChartCategory.Tokens]: hasTokensData,
+      [PortfolioChartCategory.Earn]: hasEarnData,
+      [PortfolioChartCategory.Pools]: hasPoolsData,
+    }
+    return PORTFOLIO_BREAKDOWN_CATEGORIES.filter((category) => hasDataByCategory[category])
+  }, [hasTokensData, hasEarnData, hasPoolsData])
+
+  const hasCategoryBreakdown = availableCategories.length >= 2
 
   const series = useMemo<PriceChartData[]>(() => {
     switch (selectedCategory) {
@@ -92,11 +125,13 @@ export function usePortfolioChartSeries({
         return tokensSeries
       case PortfolioChartCategory.Pools:
         return poolsSeries
+      case PortfolioChartCategory.Earn:
+        return earnSeries
       case PortfolioChartCategory.Total:
       default:
         return totalSeries
     }
-  }, [selectedCategory, totalSeries, tokensSeries, poolsSeries])
+  }, [selectedCategory, totalSeries, tokensSeries, poolsSeries, earnSeries])
 
   const chartPercentChange = useMemo<ChartPercentChange>(
     () => seriesPercentChange(series, selectedPeriod),
@@ -113,13 +148,21 @@ export function usePortfolioChartSeries({
     [poolsSeries, selectedPeriod],
   )
 
+  const earnPercentChange = useMemo<number | undefined>(
+    () => seriesPercentChange(earnSeries, selectedPeriod)?.percentChange,
+    [earnSeries, selectedPeriod],
+  )
+
   return {
     series,
     tokensSeries,
     poolsSeries,
+    earnSeries,
     chartPercentChange,
     tokensPercentChange,
     poolsPercentChange,
+    earnPercentChange,
+    availableCategories,
     hasCategoryBreakdown,
   }
 }

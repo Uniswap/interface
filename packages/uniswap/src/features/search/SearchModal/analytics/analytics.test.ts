@@ -1,5 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
 import {
+  AuctionOption,
   MultichainTokenOption,
   OnchainItemListOptionType,
   RwaCollectionOption,
@@ -123,6 +124,20 @@ const MOCK_RWA_COLLECTION: RwaCollectionOption = {
       },
     ],
   },
+}
+
+const MOCK_AUCTION: AuctionOption = {
+  type: OnchainItemListOptionType.Auction,
+  auctionId: '1_0xauction',
+  auctionAddress: '0xauction',
+  chainId: UniverseChainId.Mainnet,
+  tokenAddress: '0xtoken',
+  tokenSymbol: 'AUCT',
+  tokenName: 'Auction Token',
+  tokenLogoUrl: undefined,
+  currencyInfo: null,
+  committedVolumeUsd: undefined,
+  isVerified: true,
 }
 
 describe('sendSearchOptionItemClickedAnalytics', () => {
@@ -368,6 +383,43 @@ describe('sendSearchOptionItemClickedAnalytics', () => {
       name: 'test-unitag.uni.eth',
       domain: '.uni.eth',
       searchTabFilter: SearchTab.Wallets,
+    })
+  })
+
+  it('sends top auction analytics event on web', () => {
+    mockPlatformState.isMobileApp = false
+
+    const mockSection: OnchainItemSection<AuctionOption> = {
+      sectionKey: OnchainItemSectionName.TopAuctions,
+      data: [MOCK_AUCTION],
+    }
+    const mockSearchFilters: SearchFilterContext = {
+      searchChainFilter: null,
+      searchTabFilter: SearchTab.All,
+    }
+
+    sendSearchOptionItemClickedAnalytics({
+      item: MOCK_AUCTION,
+      section: mockSection,
+      rowIndex: 1,
+      sectionIndex: 4,
+      searchFilters: mockSearchFilters,
+    })
+
+    expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.NavbarResultSelected, {
+      category: OnchainItemSectionName.TopAuctions,
+      isHistory: false,
+      position: 1,
+      sectionPosition: 5,
+      suggestionCount: 1,
+      chainId: UniverseChainId.Mainnet,
+      suggestion_type: 'auction-trending',
+      total_suggestions: 1,
+      query_text: '',
+      selected_search_result_name: 'Auction Token',
+      selected_search_result_address: '0xauction',
+      searchChainFilter: null,
+      searchTabFilter: SearchTab.All,
     })
   })
 })

@@ -4,6 +4,7 @@ import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { resolvePlatform } from 'uniswap/src/features/accounts/store/utils/flexibleInput'
 import { type UniverseChainId } from 'uniswap/src/features/chains/types'
+import { logEarnSwapUpsellConverted } from 'uniswap/src/features/earn/analytics'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getDisplayedPriceSource } from 'uniswap/src/features/prices/getDisplayedPriceSource'
@@ -15,8 +16,8 @@ import { updateSwapStartTimestamp } from 'uniswap/src/features/timing/slice'
 import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
 import { planActions } from 'uniswap/src/features/transactions/swap/plan/planSaga'
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/permitMethod'
 import { type SwapCallback, type SwapCallbackParams } from 'uniswap/src/features/transactions/swap/types/swapCallback'
-import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
@@ -61,6 +62,7 @@ export function useSwapCallback(): SwapCallback {
   const selectChain = useSelectChain()
   const trace = useTrace()
   const updateSwapForm = useSwapFormStore((s) => s.updateSwapForm)
+  const earnSwapUpsellAnalyticsProperties = useSwapFormStore((s) => s.earnSwapUpsellAnalyticsProperties)
 
   const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
 
@@ -94,6 +96,7 @@ export function useSwapCallback(): SwapCallback {
         onClearForm,
       } = args
       const { trade, gasFee } = swapTxContext
+      const earnIntent = trade.routing === TradingApi.Routing.CHAINED ? trade.earnIntent : undefined
 
       const isClassicSwap = isClassic(swapTxContext)
       const isBatched = isClassicSwap && swapTxContext.txRequests && swapTxContext.txRequests.length > 1
@@ -167,12 +170,19 @@ export function useSwapCallback(): SwapCallback {
             // oxlint-disable-next-line no-shadow
             getDisplayableError: (args) => getDisplayableError({ ...args, isPlanStep: true }),
             getOnPressRetry,
-            onPlanFinalized: clearLoggedSwapSignedPlanSteps,
+            onPlanFinalized: ({ planId }) => clearLoggedSwapSignedPlanSteps(planId),
             sendToast,
           }),
         )
       } else {
         appDispatch(swapActions.trigger(swapParams))
+      }
+
+      if (earnIntent?.action === TradingApi.EarnAction.DEPOSIT && earnSwapUpsellAnalyticsProperties) {
+        logEarnSwapUpsellConverted({
+          ...earnSwapUpsellAnalyticsProperties,
+          toggle_state: 'on',
+        })
       }
 
       const blockNumber = getClassicQuoteFromResponse(trade.quote)?.blockNumber?.toString()
@@ -202,6 +212,7 @@ export function useSwapCallback(): SwapCallback {
       getOnPressRetry,
       disableOneClickSwap,
       updateSwapForm,
+      earnSwapUpsellAnalyticsProperties,
       caip25Info,
       isCentralizedPricesEnabled,
       rwaWhitelist,

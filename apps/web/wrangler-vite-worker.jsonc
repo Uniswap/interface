@@ -29,7 +29,7 @@
       "name": "app-staging",
       "vars": {
         "ENTRY_GATEWAY_API_URL": "https://entry-gateway.backend-staging.api.uniswap.org",
-        "WEBSOCKET_URL": "https://websockets.backend-staging.api.uniswap.org",
+        "WEBSOCKET_URL": "https://entry-gateway.backend-staging.api.uniswap.org/ws",
       },
       "observability": {
         "enabled": true,
@@ -40,7 +40,7 @@
       "name": "app",
       "vars": {
         "ENTRY_GATEWAY_API_URL": "https://entry-gateway.backend-prod.api.uniswap.org",
-        "WEBSOCKET_URL": "https://websockets.backend-prod.api.uniswap.org",
+        "WEBSOCKET_URL": "https://entry-gateway.backend-prod.api.uniswap.org/ws",
       },
       "observability": {
         "enabled": true,

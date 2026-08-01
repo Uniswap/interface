@@ -22,7 +22,7 @@ describe('providerDirectMethods', () => {
 
   describe('executeProviderDirectMethod', () => {
     it('maps eth_blockNumber to provider.getBlockNumber and returns its result', async () => {
-      const provider = { getBlockNumber: jest.fn().mockResolvedValue(123) } as unknown as JsonRpcProvider
+      const provider = { getBlockNumber: vi.fn().mockResolvedValue(123) } as unknown as JsonRpcProvider
       const result = await executeProviderDirectMethod({ provider, method: 'eth_blockNumber', params: [] })
       expect(provider.getBlockNumber).toHaveBeenCalledTimes(1)
       expect(result).toBe(123)
@@ -30,7 +30,7 @@ describe('providerDirectMethods', () => {
 
     it('serializes BigNumber results to hex strings', async () => {
       const provider = {
-        getBalance: jest.fn().mockResolvedValue(BigNumber.from('0x1f4')),
+        getBalance: vi.fn().mockResolvedValue(BigNumber.from('0x1f4')),
       } as unknown as JsonRpcProvider
       const result = await executeProviderDirectMethod({ provider, method: 'eth_getBalance', params: ['0xabc'] })
       expect(provider.getBalance).toHaveBeenCalledWith('0xabc')
@@ -39,7 +39,7 @@ describe('providerDirectMethods', () => {
 
     it('forwards params to eth_call', async () => {
       const tx = { to: '0xabc', data: '0x1' }
-      const provider = { call: jest.fn().mockResolvedValue('0xdead') } as unknown as JsonRpcProvider
+      const provider = { call: vi.fn().mockResolvedValue('0xdead') } as unknown as JsonRpcProvider
       const result = await executeProviderDirectMethod({ provider, method: 'eth_call', params: [tx] })
       expect(provider.call).toHaveBeenCalledWith(tx)
       expect(result).toBe('0xdead')
@@ -54,7 +54,7 @@ describe('providerDirectMethods', () => {
 
     it('propagates provider errors', async () => {
       const provider = {
-        estimateGas: jest.fn().mockRejectedValue(new Error('execution reverted')),
+        estimateGas: vi.fn().mockRejectedValue(new Error('execution reverted')),
       } as unknown as JsonRpcProvider
       await expect(executeProviderDirectMethod({ provider, method: 'eth_estimateGas', params: [{}] })).rejects.toThrow(
         'execution reverted',

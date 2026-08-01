@@ -1,7 +1,8 @@
 import { TradingApi } from '@universe/api'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { getRouteAnalyticsData, logSwapQuoteFetch } from 'uniswap/src/features/transactions/swap/analytics'
+import { getRouteAnalyticsData } from 'uniswap/src/features/transactions/swap/analytics'
+import { logSwapQuoteFetch } from 'uniswap/src/features/transactions/swap/logSwapQuoteFetch'
 import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 
 vi.mock('uniswap/src/features/telemetry/send', () => ({

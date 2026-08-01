@@ -12,7 +12,7 @@ import type { OktaClient, TokenResponse } from './oktaClient'
 const SOFT_TTL_BUFFER_MS = 60_000
 
 const POLL_DELAY_SECONDS = 5
-const POLL_TIMEOUT_SECONDS = 180
+const POLL_TIMEOUT_SECONDS = 90
 
 export interface OktaAuthServiceDeps {
   keychain: KeychainService
@@ -36,6 +36,7 @@ export function createOktaAuthService({ keychain, okta, lock }: OktaAuthServiceD
     console.log(`Opening browser to: ${auth.verification_uri}`)
     console.log(`Code: ${formatUserCode(auth.user_code)}`)
     console.log("If the browser didn't open, visit the URL above and enter the code manually.")
+    console.log(`Waiting for up to ${POLL_TIMEOUT_SECONDS} seconds`)
     openBrowser(auth.verification_uri_complete)
 
     const tokensResult = await pollForToken({
@@ -233,7 +234,7 @@ async function pollForToken({
   return Result.err(
     new OktaError({
       code: 'expired_token',
-      message: `Authentication not completed within ${timeoutSeconds}s — please try again`,
+      message: `Authentication not completed within ${timeoutSeconds}s`,
     }),
   )
 }
