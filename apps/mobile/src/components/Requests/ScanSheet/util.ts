@@ -12,6 +12,7 @@ import {
   UNISWAP_WALLETCONNECT_URL,
 } from 'src/features/deepLinking/constants'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { ERC681TransferRequest, parseERC681URI } from 'uniswap/src/features/transactions/send/erc681'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { ScantasticParams, ScantasticParamsSchema } from 'wallet/src/features/scantastic/types'
@@ -23,12 +24,18 @@ export enum URIType {
   EasterEgg = 'easter-egg',
   Scantastic = 'scantastic',
   UwULink = 'uwu-link',
+  ERC681 = 'erc681',
 }
 
-type URIFormat = {
-  type: URIType
-  value: string
-}
+export type URIFormat =
+  | {
+      type: URIType.ERC681
+      value: ERC681TransferRequest
+    }
+  | {
+      type: Exclude<URIType, URIType.ERC681>
+      value: string
+    }
 
 interface EnabledFeatureFlags {
   isUwULinkEnabled: boolean
@@ -60,8 +67,13 @@ export async function getSupportedURI(
   }
 
   const maybeMetamaskAddress = getMetamaskAddress(uri)
-  if (maybeMetamaskAddress) {
+  if (maybeMetamaskAddress && !uri.includes('?') && !uri.includes('@') && !uri.includes('/')) {
     return { type: URIType.Address, value: maybeMetamaskAddress }
+  }
+
+  const maybeERC681Request = parseERC681URI(uri)
+  if (maybeERC681Request) {
+    return { type: URIType.ERC681, value: maybeERC681Request }
   }
 
   const maybeScantasticQueryParams = getScantasticQueryParams(uri)

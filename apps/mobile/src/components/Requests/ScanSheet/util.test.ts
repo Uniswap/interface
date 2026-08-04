@@ -126,6 +126,36 @@ describe('getSupportedURI', () => {
     expect(await getSupportedURI('ethereum:invalid_address')).toBeUndefined()
   })
 
+  it('should extract correct ERC681 payload from payment request URI', async () => {
+    const validErc681Uri = 'ethereum:0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359@8453?value=1e16'
+    const result = await getSupportedURI(validErc681Uri)
+    expect(result).toEqual({
+      type: URIType.ERC681,
+      value: {
+        chainId: 8453,
+        recipient: '0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359',
+        tokenAddress: undefined,
+        rawAmount: '10000000000000000',
+        formattedAmount: '0.01',
+      },
+    })
+  })
+
+  it('should extract correct ERC681 payload from token transfer URI', async () => {
+    const tokenTransferUri = 'ethereum:0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913@8453/transfer?address=0x54235780057CC828C92aA40e3b02053881990153&uint256=1e6'
+    const result = await getSupportedURI(tokenTransferUri)
+    expect(result).toEqual({
+      type: URIType.ERC681,
+      value: {
+        chainId: 8453,
+        recipient: '0x54235780057CC828C92aA40e3b02053881990153',
+        tokenAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+        rawAmount: '1000000',
+        formattedAmount: undefined,
+      },
+    })
+  })
+
   describe('URL and HTML encoded URIs', () => {
     it('should handle percent-encoded WalletConnect v2 URI', async () => {
       // Simulate a URI that has been percent-encoded (& becomes %26)
