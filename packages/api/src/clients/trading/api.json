@@ -7846,8 +7846,7 @@
               },
               "signature": {
                 "type": "string",
-                "description": "The signature for a message signing step.",
-                "pattern": "^0x[a-fA-F0-9]{130}$"
+                "description": "The signature for a message signing step."
               }
             }
           }
