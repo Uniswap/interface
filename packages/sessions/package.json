@@ -25,7 +25,7 @@
     "@uniswap/client-platform-service": "0.0.20",
     "bidc": "0.0.3",
     "utilities": "workspace:^",
-    "viem": "2.30.5",
+    "viem": "2.49.0",
     "zod": "4.3.6"
   },
   "devDependencies": {

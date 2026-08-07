@@ -9,6 +9,7 @@ import {
   TokenContextMenuAction,
   TokenOptionItemContextMenu,
 } from 'uniswap/src/components/lists/items/tokens/TokenOptionItemContextMenu'
+import { TokenOptionWarningBadge } from 'uniswap/src/components/lists/items/tokens/TokenOptionWarningBadge'
 import { TokenOption } from 'uniswap/src/components/lists/items/types'
 import type { ContextMenuHandle } from 'uniswap/src/components/menus/ContextMenu'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
@@ -279,6 +280,7 @@ const BaseTokenOptionItem = memo(function BaseTokenOptionItemInner(
     issuerLabel,
     modifierPressHref,
     onModifierPress,
+    contextMenuVariant,
   } = props
   const { currencyInfo } = option
   const { currency } = currencyInfo
@@ -287,9 +289,11 @@ const BaseTokenOptionItem = memo(function BaseTokenOptionItemInner(
   const isMultichain = networkCount !== undefined && networkCount > 1
   const isSingleChainMultichainResult = networkCount !== undefined && networkCount === 1
 
-  // in lists like token selector & search, we only show the warning icon if token is >=Medium severity
+  // search and token selector only badge >=Medium severity (Low/info-only warnings are too noisy to surface here)
   const severity = getTokenWarningSeverity(currencyInfo)
   const { colorSecondary: warningIconColor } = getWarningIconColors(severity)
+  const showSearchWarningBadge =
+    contextMenuVariant === TokenContextMenuVariant.Search && severity >= WarningSeverity.Medium
 
   return (
     <OptionItem
@@ -333,7 +337,9 @@ const BaseTokenOptionItem = memo(function BaseTokenOptionItemInner(
         </Flex>
       }
       badge={
-        warningIconColor ? (
+        showSearchWarningBadge ? (
+          <TokenOptionWarningBadge currencyInfo={currencyInfo} severity={severity} />
+        ) : warningIconColor ? (
           <Flex>
             <WarningIcon severity={severity} size="$icon.16" strokeColorOverride={warningIconColor} />
           </Flex>

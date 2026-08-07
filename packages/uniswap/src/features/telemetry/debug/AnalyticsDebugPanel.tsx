@@ -85,7 +85,7 @@ export function AnalyticsDebugPanel(): JSX.Element {
   }, [])
 
   return (
-    // oxlint-disable-next-line react/forbid-elements: Native DOM element needed for pointer event isolation from modal backdrops
+    // oxlint-disable-next-line react/forbid-elements -- Native DOM element needed for pointer event isolation from modal backdrops
     <div
       style={{
         position: 'fixed',
@@ -131,7 +131,7 @@ export function AnalyticsDebugPanel(): JSX.Element {
         <AnalyticsDebugEventList events={filteredEvents} detailLevel={detailLevel} />
       </Flex>
       {/* Resize handle - bottom right corner */}
-      {/* oxlint-disable-next-line react/forbid-elements: Native DOM element needed for resize pointer capture */}
+      {/* oxlint-disable-next-line react/forbid-elements -- Native DOM element needed for resize pointer capture */}
       <div
         ref={resizeHandleRef}
         style={{

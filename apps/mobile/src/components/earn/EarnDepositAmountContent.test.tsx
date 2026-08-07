@@ -8,6 +8,15 @@ import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 
 const UNICHAIN_USDT0_ADDRESS = '0x9151434b16b9763660705744891fA906F660EcC5'
 const setInputFontSizeMock = vi.hoisted(() => vi.fn())
+const resetAmountsMock = vi.hoisted(() => vi.fn())
+const earnAmountEntryOverrides = vi.hoisted(() => ({
+  exactAmountToken: '10',
+  exactMaxTokenAmount: undefined as string | undefined,
+  isMaxSelected: false,
+}))
+const depositSourceOptionsOverride = vi.hoisted(() => ({
+  value: [] as Array<{ currencyInfo: { currencyId: string } }>,
+}))
 
 vi.mock('src/components/earn/EarnDepositAmountControls', () => ({
   AmountEntrySection: () => null,
@@ -58,7 +67,26 @@ vi.mock('uniswap/src/components/modals/BottomSheetContext', () => ({
 }))
 
 vi.mock('uniswap/src/components/modals/HandleBar', () => ({ HandleBar: () => null }))
-vi.mock('uniswap/src/components/pill/PillMultiToggle', () => ({ PillMultiToggle: () => null }))
+vi.mock('uniswap/src/components/pill/PillMultiToggle', async () => {
+  const { Text } = await vi.importActual<typeof import('ui/src')>('ui/src')
+  return {
+    PillMultiToggle: ({
+      options,
+      onSelectOption,
+    }: {
+      options: Array<{ value: string; display?: string }>
+      onSelectOption?: (option: string) => void
+    }) => (
+      <>
+        {options.map(({ value, display }) => (
+          <Text key={value} onPress={() => onSelectOption?.(value)}>
+            {display ?? value}
+          </Text>
+        ))}
+      </>
+    ),
+  }
+})
 
 vi.mock('uniswap/src/features/earn/config', () => ({ useEarnMinDepositUsd: () => 1 }))
 
@@ -67,18 +95,19 @@ vi.mock('uniswap/src/features/earn/hooks/useEarnAmountEntryMobile', () => ({
     value: '10',
     exactValueRef: { current: '10' },
     exactAmountFiat: '10',
-    exactAmountToken: '10',
+    exactAmountToken: earnAmountEntryOverrides.exactAmountToken,
     isFiatInput: false,
     maxDecimals: 2,
     parsedAmount: 10,
     hasInputAmount: true,
     tokenComparisonAmount: 10,
     localFiatComparisonAmount: 10,
-    isMaxSelected: false,
+    isMaxSelected: earnAmountEntryOverrides.isMaxSelected,
+    exactMaxTokenAmount: earnAmountEntryOverrides.exactMaxTokenAmount,
     setActiveAmount: vi.fn(),
     handlePercentPress: vi.fn(),
     handleToggleInputMode: vi.fn(),
-    resetAmounts: vi.fn(),
+    resetAmounts: resetAmountsMock,
   }),
 }))
 
@@ -99,7 +128,7 @@ vi.mock('uniswap/src/features/earn/hooks/useEarnDepositSources', () => ({
     balanceLookupErrored: false,
     balanceLookupHasData: true,
     balanceLookupSettled: true,
-    depositSourceOptions: [],
+    depositSourceOptions: depositSourceOptionsOverride.value,
     refetchBalanceLookup: vi.fn(),
   }),
 }))
@@ -181,6 +210,11 @@ function renderWithdrawContent({
 describe(EarnDepositAmountContent, () => {
   beforeEach((): void => {
     setInputFontSizeMock.mockClear()
+    resetAmountsMock.mockClear()
+    earnAmountEntryOverrides.exactAmountToken = '10'
+    earnAmountEntryOverrides.exactMaxTokenAmount = undefined
+    earnAmountEntryOverrides.isMaxSelected = false
+    depositSourceOptionsOverride.value = []
   })
 
   it('sizes the amount input using its full token display value', (): void => {
@@ -228,6 +262,101 @@ describe(EarnDepositAmountContent, () => {
         destinationCurrencyId: 'context-destination',
       }),
     )
+  })
+
+  it('keeps the withdrawal state when a deposit action change is blocked', () => {
+    const onActionChange = vi.fn(() => false)
+    const onReview = vi.fn()
+
+    render(
+      <EarnDepositAmountContent
+        initialAction={EarnAction.Withdraw}
+        position={position}
+        vault={createVault('USDC')}
+        onActionChange={onActionChange}
+        onOpenDepositSourceSelector={vi.fn()}
+        onOpenNetworkSelector={vi.fn()}
+        onOpenVaultDetails={vi.fn()}
+        onReview={onReview}
+      />,
+    )
+
+    fireEvent.press(screen.getByText('common.deposit'))
+    fireEvent.press(screen.getByText('Review'))
+
+    expect(onActionChange).toHaveBeenCalledWith(EarnAction.Deposit)
+    expect(onReview).toHaveBeenCalledWith(expect.objectContaining({ action: EarnAction.Withdraw }))
+  })
+
+  it('reviews a Max deposit using the exact token amount', () => {
+    const onReview = vi.fn()
+    const exactMaxTokenAmount = '0.051437783503687976'
+    earnAmountEntryOverrides.exactAmountToken = '0.051437783'
+    earnAmountEntryOverrides.exactMaxTokenAmount = exactMaxTokenAmount
+    earnAmountEntryOverrides.isMaxSelected = true
+
+    render(
+      <EarnDepositAmountContent
+        initialAction={EarnAction.Deposit}
+        position={position}
+        vault={createVault('USDC')}
+        onOpenDepositSourceSelector={vi.fn()}
+        onOpenNetworkSelector={vi.fn()}
+        onOpenVaultDetails={vi.fn()}
+        onReview={onReview}
+      />,
+    )
+    fireEvent.press(screen.getByText('Review'))
+
+    expect(onReview).toHaveBeenCalledWith(
+      expect.objectContaining({
+        tokenAmount: exactMaxTokenAmount,
+      }),
+    )
+  })
+
+  it('preserves the initial amount when the first deposit source resolves', () => {
+    const sourceA = getStablecoinCurrencyId(UniverseChainId.Mainnet, 'USDC')
+    const props = {
+      initialAction: EarnAction.Deposit,
+      initialAmount: '42',
+      initialSourceCurrencyId: sourceA,
+      position,
+      vault: createVault('USDC'),
+      onOpenDepositSourceSelector: vi.fn(),
+      onOpenNetworkSelector: vi.fn(),
+      onOpenVaultDetails: vi.fn(),
+      onReview: vi.fn(),
+    }
+    const { rerender } = render(<EarnDepositAmountContent {...props} />)
+
+    depositSourceOptionsOverride.value = [{ currencyInfo: { currencyId: sourceA } }]
+    rerender(<EarnDepositAmountContent {...props} />)
+
+    expect(resetAmountsMock).not.toHaveBeenCalled()
+  })
+
+  it('clears the amount when the selected deposit source changes', () => {
+    const sourceA = getStablecoinCurrencyId(UniverseChainId.Mainnet, 'USDC')
+    const sourceB = getStablecoinCurrencyId(UniverseChainId.Mainnet, 'USDT')
+    const props = {
+      initialAction: EarnAction.Deposit,
+      position,
+      vault: createVault('USDC'),
+      onOpenDepositSourceSelector: vi.fn(),
+      onOpenNetworkSelector: vi.fn(),
+      onOpenVaultDetails: vi.fn(),
+      onReview: vi.fn(),
+    }
+    depositSourceOptionsOverride.value = [
+      { currencyInfo: { currencyId: sourceA } },
+      { currencyInfo: { currencyId: sourceB } },
+    ]
+    const { rerender } = render(<EarnDepositAmountContent {...props} initialSourceCurrencyId={sourceA} />)
+
+    rerender(<EarnDepositAmountContent {...props} initialSourceCurrencyId={sourceB} />)
+
+    expect(resetAmountsMock).toHaveBeenCalledTimes(1)
   })
 
   it('reviews USDT/Unichain input with the Unichain USDT0 destination', () => {

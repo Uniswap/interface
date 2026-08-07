@@ -6,10 +6,10 @@ import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { ViewDetailsTrailingArrow } from 'uniswap/src/components/portfolio/TokenBalanceItem/ViewDetailsTrailingArrow'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
-import { OrderDirection } from '~/appGraphql/data/util'
 import { Cell } from '~/components/Table/Cell'
 import { HeaderCell } from '~/components/Table/styled'
 import { hasRow } from '~/components/Table/utils/hasRow'
+import { OrderDirection } from '~/data/util'
 import { EmptyTableCell } from '~/pages/Portfolio/EmptyTableCell'
 import { TokenData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 import { Allocation } from '~/pages/Portfolio/Tokens/Table/columns/Allocation'
@@ -317,7 +317,7 @@ export function useTokenColumns({
 
             // oxlint-disable-next-line typescript/no-unnecessary-condition -- biome-parity: oxlint is stricter here
             const value = info.getValue?.()
-            if (!row) {
+            if (!row || row.tokenData.isSpamHidden) {
               return (
                 <Cell loading={showLoadingSkeleton} justifyContent="flex-end">
                   <EmptyTableCell />
@@ -365,7 +365,7 @@ export function useTokenColumns({
             ),
             cell: (info) => {
               const row = hasRow<TokenTableRow>(info) ? info.row.original : null
-              if (!row) {
+              if (!row || row.tokenData.isSpamHidden) {
                 return (
                   <Cell loading={showLoadingSkeleton} justifyContent="flex-end">
                     <EmptyTableCell />

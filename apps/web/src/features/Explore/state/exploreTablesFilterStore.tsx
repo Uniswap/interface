@@ -5,7 +5,7 @@ import type { StoreApi, UseBoundStore } from 'zustand'
 import { create, useStore } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { useShallow } from 'zustand/react/shallow'
-import { TimePeriod } from '~/appGraphql/data/util'
+import { TimePeriod } from '~/data/util'
 
 /**
  * Single-select auction filter shared by the quick-filter pills and the Status dropdown.

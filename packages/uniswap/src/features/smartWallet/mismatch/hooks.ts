@@ -1,4 +1,5 @@
 import { UseMutationResult, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useStatsigClientStatus } from '@universe/gating'
 import { useEffect, useMemo, useRef } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useMismatchContext } from 'uniswap/src/features/smartWallet/mismatch/MismatchContextValue'
@@ -99,6 +100,36 @@ export function useCurrentAccountChainMismatchEffect(): void {
     // invalidate on chain change so we ensure we are always checking the latest chain results
     queryClient.invalidateQueries({ queryKey: queryOptions.queryKey }).catch(() => {})
   }, [account.address, account.chainId, queryOptions.queryKey, queryClient])
+}
+
+/**
+ * [public] useRefetchMismatchOnStatsigReadyEffect -- re-runs the mismatch checks once Statsig values load,
+ * since the mismatch result can depend on dynamic config values that arrive after the on-connect check
+ * NB: only call this once per app instance, eg in the root component
+ */
+export function useRefetchMismatchOnStatsigReadyEffect(): void {
+  const { isStatsigReady } = useStatsigClientStatus()
+  const wasStatsigReady = usePrevious(isStatsigReady)
+  const { onHasAnyMismatch } = useMismatchContext()
+  const queryOptions = useGetMismatchQueryOptions()
+  const queryClient = useQueryClient()
+
+  useEffect(() => {
+    if (isStatsigReady && wasStatsigReady === false) {
+      // refetchType 'all': the swap path reads the cache without a mounted observer,
+      // so an 'active'-only refetch would leave the stale pre-Statsig result in place
+      queryClient
+        .invalidateQueries({ queryKey: queryOptions.queryKey, refetchType: 'all' })
+        .then(() => {
+          const data = queryClient.getQueryData(queryOptions.queryKey)
+          // the on-connect mutation only notifies once, so re-notify if the refetch surfaced a mismatch
+          if (data && Object.values(data).some(Boolean)) {
+            onHasAnyMismatch()
+          }
+        })
+        .catch(() => {})
+    }
+  }, [isStatsigReady, wasStatsigReady, queryOptions.queryKey, queryClient, onHasAnyMismatch])
 }
 
 /**

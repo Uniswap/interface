@@ -9,7 +9,7 @@ import {
   useGetWalletBalancesQuery,
   useWalletBalancesIncludeCategories,
   type PortfolioBalanceBreakdown,
-} from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+} from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { PortfolioTotalValueResult } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'

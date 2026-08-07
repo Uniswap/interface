@@ -27,7 +27,6 @@ import { getSwapFeeUsd } from 'uniswap/src/features/transactions/swap/utils/getS
 import { isChained, isClassic, isJupiter, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getProtocolVersionFromTrade } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
-import { isTradeDerivedUsdPricing } from 'uniswap/src/features/transactions/swap/utils/usdAnchoring/anchoredUsdPricing'
 import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
@@ -261,10 +260,10 @@ export function getRouteAnalyticsData({ routing, quote }: RouteAnalyticsInput): 
 }
 
 export function getPriceImpact(trade: Trade | null | undefined): string | undefined {
-  if (!trade || isUniswapX(trade) || isChained(trade)) {
+  if (!trade) {
     return undefined
   }
-  return trade.priceImpact?.multiply(100).toSignificant()
+  return trade.priceDifference?.multiply(100).toSignificant()
 }
 
 function getFeeUsd({
@@ -352,7 +351,6 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
       chainId: trade.inputAmount.currency.chainId,
       address: getCurrencyAddressForAnalytics(trade.inputAmount.currency),
       queryClient,
-      isTradeDerivedUsd: isTradeDerivedUsdPricing(derivedSwapInfo.usdPricing),
     })
 
     sendAnalyticsEvent(
@@ -398,6 +396,9 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
  * swap_4337 quotes are always sponsored, and swap_5792 quotes are sponsored when the backend
  * returns a paymaster. `sponsorship_rejection_reason` is populated when sponsorship was not
  * granted, and `sponsorship_campaign_id` carries the machine-readable campaign name.
+ *
+ * Quote-time events only: the finalization-time Completed/Failed events instead report whether a
+ * paymaster actually paid gas for the execution (see isGasSponsoredExecution).
  */
 export function getSponsorshipAnalyticsProperties(
   trade: Trade | null | undefined,

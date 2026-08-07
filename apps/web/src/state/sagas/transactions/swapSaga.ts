@@ -132,6 +132,7 @@ export function createHandleSwapTransactionWalletCallStep(ctx: {
         tokenInStocks: analytics.token_in_stocks,
         tokenOutStocks: analytics.token_out_stocks,
       },
+      executedWithPaymaster: Boolean(step.paymasterService),
     })
 
     const batchId = yield* handleAtomicSendCalls({

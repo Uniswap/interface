@@ -3,6 +3,7 @@ import { IncreasePositionRequest } from '@uniswap/client-liquidity/dist/uniswap/
 import { LPToken } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
 import { useMemo } from 'react'
 import { liquidityQueries } from 'uniswap/src/data/apiClients/liquidityService/liquidityQueries'
+import { getIsPermissioned } from 'uniswap/src/features/positions/utils'
 import {
   computePreEstimateIndependentAmount,
   poolHasNativeOrWrappedNativeSide,
@@ -62,6 +63,7 @@ export function usePreEstimatedIncreaseLiquidityGas({
           token0Address: getTokenOrZeroAddress(token0),
           token1Address: getTokenOrZeroAddress(token1),
           nftTokenId: positionInfo.tokenId,
+          permissioned: getIsPermissioned(positionInfo),
           independentToken: new LPToken({
             tokenAddress: getTokenOrZeroAddress(independentCurrency),
             amount: independentAmountRaw,

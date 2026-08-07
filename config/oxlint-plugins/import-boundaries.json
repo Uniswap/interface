@@ -4,10 +4,15 @@
       "id": "toucan-feature",
       "mode": "importerAllowlist",
       "importerInternalPathMarkers": ["/features/Toucan/"],
-      "allowedImporterPathMarkers": ["/pages/Explore/", "/features/Explore/state", "/pages/Liquidity/CreateAuction/"],
+      "allowedImporterPathMarkers": [
+        "/pages/Explore/",
+        "/features/Explore/state",
+        "/pages/Launches/",
+        "/pages/Liquidity/CreateAuction/"
+      ],
       "importPrefixes": ["~/features/Toucan/", "features/Toucan/"],
       "bareModuleSources": ["~/features/Toucan", "features/Toucan"],
-      "message": "Toucan feature code may only be imported from pages/Explore/, features/explore/state, pages/Liquidity/CreateAuction/, or from within features/Toucan/."
+      "message": "Toucan feature code may only be imported from pages/Explore/, features/explore/state, pages/Launches/, pages/Liquidity/CreateAuction/, or from within features/Toucan/."
     },
     {
       "id": "liquidity-feature",
@@ -55,6 +60,7 @@
         "/pages/AddLiquidity/",
         "/pages/Explore/",
         "/pages/Landing/",
+        "/pages/Launches/",
         "/pages/PoolDetails/",
         "/pages/Positions/",
         "/pages/TokenDetails/",
@@ -62,7 +68,7 @@
       ],
       "importPrefixes": ["~/features/Explore/", "features/Explore/"],
       "bareModuleSources": ["~/features/Explore", "features/Explore"],
-      "message": "The Explore feature may only be imported from pages/AddLiquidity/, pages/Explore/, pages/Landing/, pages/PoolDetails/, pages/Positions/, pages/TokenDetails/, features/Toucan/ or from within features/Explore/."
+      "message": "The Explore feature may only be imported from pages/AddLiquidity/, pages/Explore/, pages/Landing/, pages/Launches/, pages/PoolDetails/, pages/Positions/, pages/TokenDetails/, features/Toucan/ or from within features/Explore/."
     },
     {
       "id": "web-state-import-denylist",

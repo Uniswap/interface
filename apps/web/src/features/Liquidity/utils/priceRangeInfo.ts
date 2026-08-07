@@ -12,6 +12,7 @@ import {
 import { priceToClosestTick as priceToClosestV4Tick, Pool as V4Pool } from '@uniswap/v4-sdk'
 import JSBI from 'jsbi'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
+import { DYNAMIC_FEE_AMOUNT } from 'uniswap/src/constants/pools'
 import type { FeeData } from 'uniswap/src/features/positions/types'
 import {
   CreatePositionInfo,
@@ -166,10 +167,15 @@ function createMockV4Pool({
 
   const currentTick = priceToClosestV4Tick(price)
   const currentSqrt = TickMath.getSqrtRatioAtTick(currentTick)
+  // Defense in depth: the v4-sdk Pool constructor only accepts the DYNAMIC_FEE_AMOUNT sentinel
+  // or values < 1_000_000, so any dynamic-fee pool whose feeAmount is still a raw, un-normalized
+  // value (e.g. the protocol's 1_000_000 max-fee constant) would trip its fee invariant and throw.
+  // Normalize here too, in case a future producer of `fee` forgets to do it upstream.
+  const feeAmount = fee.isDynamic ? DYNAMIC_FEE_AMOUNT : fee.feeAmount
   const pool = new V4Pool(
     baseToken,
     quoteToken,
-    fee.feeAmount,
+    feeAmount,
     fee.tickSpacing,
     hook ?? ZERO_ADDRESS,
     currentSqrt,

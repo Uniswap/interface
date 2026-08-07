@@ -8,12 +8,14 @@ import {
 } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useGeoRestrictionModalStore } from 'uniswap/src/features/transactions/swap/components/GeoRestrictionCard/useGeoRestrictionModalStore'
+import { useIsBlockedByPermissionedPool } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsBlockedByPermissionedPool'
 import { useIsSwapButtonDisabled } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsSwapButtonDisabled'
 import { useIsTradeIndicative } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsTradeIndicative'
 import { useOnReviewPress } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useOnReviewPress'
 import { useSwapFormButtonColors } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useSwapFormButtonColors'
 import { useSwapFormButtonText } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useSwapFormButtonText'
 import { SwapFormButtonTrace } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/SwapFormButtonTrace'
+import { useSwapFormWarningStoreActions } from 'uniswap/src/features/transactions/swap/form/stores/swapFormWarningStore/useSwapFormWarningStore'
 import { useNeedsGeoAcknowledgment } from 'uniswap/src/features/transactions/swap/hooks/useGeoRestrictionAcknowledgment'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -26,8 +28,13 @@ export const SwapFormButton = memo(function SwapFormButton({ tokenColor }: { tok
   const indicative = useIsTradeIndicative()
   const { handleOnReviewPress } = useOnReviewPress()
   const disabled = useIsSwapButtonDisabled()
+  // Route the press to the in-app verify-identity sheet whenever the swap is blocked by a
+  // permissioned-pool warning. Per Figma, all platforms (web Dialog, extension, mobile
+  // BottomSheet) share this path so the user lands on the same registration flow.
+  const shouldOpenVerifyIdentityModal = useIsBlockedByPermissionedPool()
   const buttonText = useSwapFormButtonText()
   const { swapRedirectCallback } = useTransactionModalContext()
+  const { handleShowVerifyIdentityModal } = useSwapFormWarningStoreActions()
   const {
     backgroundColor: buttonBackgroundColor,
     variant: buttonVariant,
@@ -51,7 +58,12 @@ export const SwapFormButton = memo(function SwapFormButton({ tokenColor }: { tok
   const needsGeoAcknowledgment = useNeedsGeoAcknowledgment()
   const openGeoRestrictionModal = useGeoRestrictionModalStore((s) => s.open)
 
+  // Priority: permissioned-pool verify-identity > geo acknowledgement > web FOR-nudge > standard review.
   const onPress = useEvent(() => {
+    if (shouldOpenVerifyIdentityModal) {
+      handleShowVerifyIdentityModal()
+      return
+    }
     if (needsGeoAcknowledgment) {
       openGeoRestrictionModal()
       return

@@ -3,10 +3,10 @@ import { useMemo } from 'react'
 import { OnchainItemListOptionType, PoolOption } from 'uniswap/src/components/lists/items/types'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
-import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { PoolSearchHistoryResult } from 'uniswap/src/features/search/SearchHistoryResult'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { CurrencyId } from 'uniswap/src/types/currency'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 
 export function usePoolSearchResultsToPoolOptions(searchResults: PoolSearchHistoryResult[]): PoolOption[] {
   // combine all pool search results' tokens' currencyIds in an array of de-duped currencyIds

@@ -8,6 +8,7 @@ import { dismissTokenWarning } from 'uniswap/src/features/tokens/warnings/slice/
 import { TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
 import * as useSwapFormStoreModule from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
 import { useAccount } from '~/hooks/useAccount'
 import { PoolDetailsStatsButtons } from '~/pages/PoolDetails/components/PoolDetailsStatsButtons'
 import { useMultiChainPositions } from '~/pages/PoolDetails/Pools/hooks/useMultiChainPositions'
@@ -30,6 +31,11 @@ vi.mock('~/pages/Swap', () => {
     Swap: () => <div>Swap Component</div>,
   }
 })
+
+// These cases are about URL construction, so the geo gate is pinned to "confirmed clean" to keep them
+// independent of compliance query timing. The gate's own behaviour is covered in
+// PoolDetailsAddLiquidityGeoSeam.test.tsx.
+vi.mock('~/features/Liquidity/useLPGeoRestriction', () => ({ useLPGeoRestriction: vi.fn() }))
 
 describe('PoolDetailsStatsButton', () => {
   const mockProps = {
@@ -96,6 +102,11 @@ describe('PoolDetailsStatsButton', () => {
       }),
     )
 
+    mocked(useLPGeoRestriction).mockReturnValue({
+      isGeoRestricted: false,
+      restrictedTokenSymbol: undefined,
+      unavailableLabel: 'Not available in your region',
+    })
     mocked(useAccount).mockReturnValue(USE_DISCONNECTED_ACCOUNT)
     mocked(useMultiChainPositions).mockReturnValue(useMultiChainPositionsReturnValue)
     mocked(useUniswapContext).mockReturnValue(useUniswapContextReturnValue)

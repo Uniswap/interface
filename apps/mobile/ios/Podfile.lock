@@ -4194,7 +4194,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - react-native-video (6.17.0):
+  - react-native-video (6.19.2):
     - boost
     - DoubleConversion
     - fast_float
@@ -4212,7 +4212,7 @@ PODS:
     - React-graphics
     - React-ImageManager
     - React-jsi
-    - react-native-video/Video (= 6.17.0)
+    - react-native-video/Video (= 6.19.2)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-renderercss
@@ -4223,7 +4223,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - react-native-video/Fabric (6.17.0):
+  - react-native-video/Fabric (6.19.2):
     - boost
     - DoubleConversion
     - fast_float
@@ -4251,7 +4251,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - react-native-video/Video (6.17.0):
+  - react-native-video/Video (6.19.2):
     - boost
     - DoubleConversion
     - fast_float
@@ -5065,7 +5065,7 @@ PODS:
   - RNQrGenerator (1.4.3):
     - React
     - ZXingObjC
-  - RNReanimated (4.4.1):
+  - RNReanimated (4.4.2):
     - boost
     - DoubleConversion
     - fast_float
@@ -5092,12 +5092,12 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNReanimated/apple (= 4.4.1)
-    - RNReanimated/common (= 4.4.1)
+    - RNReanimated/apple (= 4.4.2)
+    - RNReanimated/common (= 4.4.2)
     - RNWorklets
     - SocketRocket
     - Yoga
-  - RNReanimated/apple (4.4.1):
+  - RNReanimated/apple (4.4.2):
     - boost
     - DoubleConversion
     - fast_float
@@ -5127,7 +5127,7 @@ PODS:
     - RNWorklets
     - SocketRocket
     - Yoga
-  - RNReanimated/common (4.4.1):
+  - RNReanimated/common (4.4.2):
     - boost
     - DoubleConversion
     - fast_float
@@ -6070,7 +6070,7 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: 7e0ba374906d8f5009aaf96cd19d4866d8de342b
   react-native-skia: 1fe59e6487c53f55970b231e999b7e6bb3343604
   react-native-slider: 770ecdcaca7487359f628e432000c8aa7ce358d9
-  react-native-video: 201e71d168053580319a4741e1ef44380cdcb06f
+  react-native-video: 66aad8c676a4b99c2e8b9990c5c21ad91a63dd38
   react-native-webview: 089e3d3bfeb754dff1e5920e6060e615757957f8
   react-native-widgetkit: efb6680df237463bbe1be3a4d1a1578a1b0bb08f
   React-NativeModulesApple: 35627d2202a25d100fdea60c65f098f3ee64eabe
@@ -6123,7 +6123,7 @@ SPEC CHECKSUMS:
   RNLocalize: d4b8af4e442d4bcca54e68fc687a2129b4d71a81
   RNPermissions: c6de3647e6f8fc9b8e4d7ae4aa3af50bcb7f3944
   RNQrGenerator: ac6a6c766e80dd3625038929ed2b13e2f3edcafb
-  RNReanimated: 735bc5e611d2bf976580e478452535e2b7eab90f
+  RNReanimated: 574819eaca022d85a510ef492ea373c757604c46
   RNScreens: d42c535167dd9e60f9e5219cad0ff726f7002b5b
   RNSVG: 0971eb425c6a55ba6768af77911a5c1b0b2d4625
   RNWorklets: 79d13b035a95eea8ac151978c1be9bdbd10afb76

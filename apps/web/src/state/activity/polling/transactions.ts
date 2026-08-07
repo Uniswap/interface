@@ -10,7 +10,11 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { checkedTransaction } from 'uniswap/src/features/transactions/slice'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
-import { TransactionReceipt, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  TransactionReceipt,
+  TransactionStatus,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { receiptFromViemReceipt } from 'uniswap/src/features/transactions/utils/receipt'
 import { shouldCheckTransaction } from 'uniswap/src/utils/polling'
 import { usePublicClient } from 'wagmi'
@@ -110,16 +114,19 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
               throw new RetryableError()
             }
 
-            sendAnalyticsEvent(InterfaceEventName.SwapConfirmedOnClient, {
-              time: Date.now() - tx.addedTime,
-              swap_success: finalizedStatus === 'success',
-              success: finalizedStatus === 'success',
-              chainId: account.chainId,
-              txHash: tx.hash ?? '',
-              transactionType: tx.typeInfo.type,
-              routing: 'classic',
-              ...getRwaSwapAnalyticsFromTypeInfo(tx.typeInfo),
-            })
+            // Tracked UniswapX cancel txs are not swaps — mirror the isUniswapX order exclusion
+            if (tx.typeInfo.type !== TransactionType.UniswapXCancel) {
+              sendAnalyticsEvent(InterfaceEventName.SwapConfirmedOnClient, {
+                time: Date.now() - tx.addedTime,
+                swap_success: finalizedStatus === 'success',
+                success: finalizedStatus === 'success',
+                chainId: account.chainId,
+                txHash: tx.hash ?? '',
+                transactionType: tx.typeInfo.type,
+                routing: 'classic',
+                ...getRwaSwapAnalyticsFromTypeInfo(tx.typeInfo),
+              })
+            }
 
             let adaptedReceipt: TransactionReceipt | undefined
 

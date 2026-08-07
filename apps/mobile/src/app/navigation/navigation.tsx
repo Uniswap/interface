@@ -38,6 +38,7 @@ import { BridgedAssetModalScreen } from 'src/components/modals/ReactNavigationMo
 import { EarnDepositAmountModalScreen } from 'src/components/modals/ReactNavigationModals/EarnDepositAmountModal'
 import { EarnDepositReviewModalScreen } from 'src/components/modals/ReactNavigationModals/EarnDepositReviewModal'
 import { EarnDepositSourceSelectorModalScreen } from 'src/components/modals/ReactNavigationModals/EarnDepositSourceSelectorModal'
+import { EarnHowItWorksModalScreen } from 'src/components/modals/ReactNavigationModals/EarnHowItWorksModal'
 import { EarnVaultModalScreen } from 'src/components/modals/ReactNavigationModals/EarnVaultModal'
 import { EarnWithdrawNetworkSelectorModalScreen } from 'src/components/modals/ReactNavigationModals/EarnWithdrawNetworkSelectorModal'
 import { EarnWithdrawReviewModalScreen } from 'src/components/modals/ReactNavigationModals/EarnWithdrawReviewModal'
@@ -419,6 +420,7 @@ export function AppStackNavigator(): JSX.Element {
         <AppStack.Screen component={EarnDepositAmountModalScreen} name={ModalName.EarnDepositAmount} />
         <AppStack.Screen component={EarnDepositReviewModalScreen} name={ModalName.EarnDepositReview} />
         <AppStack.Screen component={EarnDepositSourceSelectorModalScreen} name={ModalName.EarnDepositSourceSelector} />
+        <AppStack.Screen component={EarnHowItWorksModalScreen} name={ModalName.EarnHowItWorks} />
         <AppStack.Screen component={EarnVaultModalScreen} name={ModalName.EarnVault} />
         <AppStack.Screen
           component={EarnWithdrawNetworkSelectorModalScreen}
@@ -481,11 +483,13 @@ export function AppStackNavigator(): JSX.Element {
           const StorybookUIRoot = require('src/../.storybook').default
           const { HashcashBenchmarkScreen } = require('src/screens/HashcashBenchmarkScreen')
           const { SessionsDebugScreen } = require('src/screens/SessionsDebugScreen')
+          const { UniversalListDebugScreen } = require('src/screens/UniversalListDebugScreen')
           return (
             <>
               <AppStack.Screen component={StorybookUIRoot} name={MobileScreens.Storybook} />
               <AppStack.Screen component={HashcashBenchmarkScreen} name={MobileScreens.HashcashBenchmark} />
               <AppStack.Screen component={SessionsDebugScreen} name={MobileScreens.SessionsDebug} />
+              <AppStack.Screen component={UniversalListDebugScreen} name={MobileScreens.UniversalListDebug} />
             </>
           )
         })()}

@@ -8,9 +8,10 @@ import { DappRequestFooter } from 'wallet/src/components/dappRequests/DappReques
 import { TransactionErrorType } from 'wallet/src/components/dappRequests/TransactionErrorSection'
 import { TransactionLoadingState } from 'wallet/src/components/dappRequests/TransactionLoadingState'
 import { TransactionPreviewCard } from 'wallet/src/components/dappRequests/TransactionPreviewCard'
+import { useApprovalContractInfo } from 'wallet/src/features/dappRequests/hooks/useApprovalContractInfo'
 import { useBlockaidTransactionScan } from 'wallet/src/features/dappRequests/hooks/useBlockaidTransactionScan'
 import { useEarnAwareSections } from 'wallet/src/features/dappRequests/hooks/useEarnAwareSections'
-import { TransactionRiskLevel } from 'wallet/src/features/dappRequests/types'
+import { DappVerificationStatus, TransactionRiskLevel } from 'wallet/src/features/dappRequests/types'
 import {
   determineTransactionErrorType,
   extractContractName,
@@ -24,6 +25,8 @@ interface DappTransactionScanningContentProps {
   chainId: UniverseChainId
   account: string
   dappUrl: string
+  /** Blockaid site verification (merged with WC Verify on mobile), undefined while loading */
+  siteVerificationStatus?: DappVerificationStatus
   confirmedRisk: boolean
   onConfirmRisk: (confirmed: boolean) => void
   onRiskLevelChange: (riskLevel: TransactionRiskLevel) => void
@@ -44,6 +47,7 @@ export function DappTransactionScanningContent({
   chainId,
   account,
   dappUrl,
+  siteVerificationStatus,
   confirmedRisk,
   onConfirmRisk,
   onRiskLevelChange,
@@ -82,6 +86,15 @@ export function DappTransactionScanningContent({
   // Collapse Earn deposit/withdraw into a dedicated Depositing/Withdrawing row when detected
   const earnAwareSections = useEarnAwareSections({ sections, chainId })
 
+  // Pinned spender "Contract" row + unverified-site alert for approvals
+  const { approvalContract, showUnverifiedSiteWarning } = useApprovalContractInfo({
+    sections: earnAwareSections,
+    scanResult,
+    riskLevel,
+    chainId,
+    siteVerificationStatus,
+  })
+
   // Determine the appropriate error type (if any) to display
   const errorType = determineTransactionErrorType({
     sections: earnAwareSections,
@@ -115,12 +128,14 @@ export function DappTransactionScanningContent({
         contractName={contractName}
         rawData={data ?? ''}
         chainId={chainId}
+        approvalContract={approvalContract}
       />
 
       <DappRequestFooter
         chainId={chainId}
         account={account}
         riskLevel={riskLevel}
+        showUnverifiedSiteWarning={showUnverifiedSiteWarning}
         confirmedRisk={confirmedRisk}
         gasFee={gasFee}
         requestMethod={requestMethod}

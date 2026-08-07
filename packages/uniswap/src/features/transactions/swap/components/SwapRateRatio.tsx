@@ -2,10 +2,11 @@ import { useState } from 'react'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import type { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { getTradeAmounts } from 'uniswap/src/features/transactions/swap/utils/getTradeAmounts'
 import { calculateRateLine, getRateToDisplay } from 'uniswap/src/features/transactions/swap/utils/trade'
-import { CurrencyField } from 'uniswap/src/types/currency'
 
 type SwapRateRatioProps = {
   trade: Trade | IndicativeTrade | undefined | null
@@ -24,11 +25,8 @@ export function SwapRateRatio({
   const formatter = useLocalizationContext()
   const [showInverseRate, setShowInverseRate] = useState(initialInverse)
 
-  // Use the anchored USD value computed in `useDerivedSwapInfo` (not an independent
-  // oracle read) so the parenthetical can never contradict the displayed rate or the
-  // panel USD values (INFRA-2364).
-  const outputCurrencyAmount = derivedSwapInfo.currencyAmounts[CurrencyField.OUTPUT]
-  const usdAmountOut = derivedSwapInfo.currencyAmountsUSDValue[CurrencyField.OUTPUT] ?? null
+  const { outputCurrencyAmount } = getTradeAmounts(derivedSwapInfo)
+  const usdAmountOut = useUSDCValue(outputCurrencyAmount)
 
   const latestFiatPriceFormatted = calculateRateLine({
     usdAmountOut,

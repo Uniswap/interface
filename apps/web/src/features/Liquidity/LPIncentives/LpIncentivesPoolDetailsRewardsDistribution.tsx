@@ -163,15 +163,7 @@ export const LpIncentivesPoolDetailsRewardsDistribution = ({
   })
 
   return (
-    <Flex
-      mb={24}
-      mt={-24}
-      $xl={{ my: 0 }}
-      padding="$spacing20"
-      borderRadius="$spacing20"
-      backgroundColor="$surface2"
-      width="100%"
-    >
+    <Flex padding="$spacing20" borderRadius="$spacing20" backgroundColor="$surface2" width="100%">
       <Flex flex={1} gap="$gap8" minWidth={180} $md={{ minWidth: 150 }}>
         <Text color="$neutral2" variant="body2">
           {t('pool.incentives.rewardsDistribution')}

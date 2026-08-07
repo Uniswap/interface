@@ -5,7 +5,7 @@ import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useReadContract } from 'wagmi'
 import { erc20Abi } from '~/chains'
-import { assume0xAddress } from '~/utils/wagmi'
+import { assume0xAddress } from '~/chains'
 
 /**
  * Reads the connected EVM wallet's on-chain balance of a token.

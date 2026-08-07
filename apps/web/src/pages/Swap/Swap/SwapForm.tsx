@@ -1,5 +1,5 @@
+import { useGetPasskeyAuthStatus } from '@universe/embedded-wallet'
 import { Flex } from 'ui/src'
-import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
 import type { SwapRedirectFn } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { SwapFormSettings } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/SwapFormSettings'
 import { SwapOffHoursBanner } from 'uniswap/src/features/transactions/swap/components/SwapOffHoursBanner/SwapOffHoursBanner'

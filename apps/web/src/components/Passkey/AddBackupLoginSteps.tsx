@@ -1,4 +1,12 @@
 import type { UseMutationResult } from '@tanstack/react-query'
+import {
+  BackupMethodSummary,
+  DigitInputRow,
+  type DigitInputState,
+  IconBox,
+  OptionRow,
+  StepHeader,
+} from '@universe/embedded-wallet'
 import type { TFunction } from 'i18next'
 import type { Dispatch, ReactNode, SetStateAction } from 'react'
 import { Button, Flex, Input, ModalCloseIcon, SpinningLoader, Text, TouchableArea } from 'ui/src'
@@ -13,14 +21,6 @@ import { Person } from 'ui/src/components/icons/Person'
 import { Shield } from 'ui/src/components/icons/Shield'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import {
-  BackupMethodSummary,
-  DigitInputRow,
-  type DigitInputState,
-  IconBox,
-  OptionRow,
-  StepHeader,
-} from '~/components/Passkey/BackupLoginComponents'
 import { PrivyWatermark } from '~/components/Passkey/PrivyWatermark'
 import { GetHelpButton } from '~/pages/ExtensionPasskeyAuthPopUp/views'
 

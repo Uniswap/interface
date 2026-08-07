@@ -23,6 +23,7 @@ const mapFiatCurrencyToDataApiCurrency: Record<FiatCurrency, DataApiFiatCurrency
   [FiatCurrency.PakistaniRupee]: DataApiFiatCurrency.PKR,
   [FiatCurrency.RussianRuble]: DataApiFiatCurrency.RUB,
   [FiatCurrency.SingaporeDollar]: DataApiFiatCurrency.SGD,
+  [FiatCurrency.SwedishKrona]: DataApiFiatCurrency.SEK,
   [FiatCurrency.TurkishLira]: DataApiFiatCurrency.TRY,
   [FiatCurrency.UkrainianHryvnia]: DataApiFiatCurrency.UAH,
   [FiatCurrency.UnitedStatesDollar]: DataApiFiatCurrency.USD,
@@ -32,13 +33,12 @@ const mapFiatCurrencyToDataApiCurrency: Record<FiatCurrency, DataApiFiatCurrency
 /**
  * Returns the USD → target-currency conversion rate via the data-api V2 ConvertFiat RPC.
  */
-export function useConversionRate(currency: FiatCurrency, skip: boolean): number | undefined {
+export function useConversionRate(currency: FiatCurrency): number | undefined {
   const toCurrency = mapFiatCurrencyToDataApiCurrency[currency]
 
   const { data } = useQuery(
     getConvertFiatQueryOptions({
       params: { fromAmount: { currency: mapFiatCurrencyToDataApiCurrency[SOURCE_CURRENCY], value: 1 }, toCurrency },
-      enabled: !skip,
     }),
   )
 

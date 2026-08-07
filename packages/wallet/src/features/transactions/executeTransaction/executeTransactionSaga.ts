@@ -9,7 +9,7 @@ import type {
   TransactionOriginType,
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import type { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 import { createTransactionSagaDependencies } from 'wallet/src/features/transactions/factories/createTransactionSagaDependencies'
 import { createTransactionServices } from 'wallet/src/features/transactions/factories/createTransactionServices'
@@ -28,6 +28,12 @@ export interface ExecuteTransactionParams {
   analytics?: SwapTradeBaseProperties
   /** Pre-signed transaction to skip signing step */
   preSignedTransaction?: SignedTransactionRequest
+  /**
+   * Initial local status for the registered tx. Defaults to Pending — never change the default.
+   * `Cancelling` is used by the tracked UniswapX cancel flow; widen this union deliberately if a
+   * new in-flight status ever needs to register here.
+   */
+  initialStatus?: TransactionStatus.Pending | TransactionStatus.Cancelling
 }
 
 // A utility for sagas to send transactions
@@ -41,7 +47,17 @@ export function* executeTransaction(params: ExecuteTransactionParams): SagaItera
   transactionHash: string
 }> {
   // Extract parameters for the transaction
-  const { chainId, account, options, typeInfo, txId, transactionOriginType, analytics, preSignedTransaction } = params
+  const {
+    chainId,
+    account,
+    options,
+    typeInfo,
+    txId,
+    transactionOriginType,
+    analytics,
+    preSignedTransaction,
+    initialStatus,
+  } = params
 
   const dependencies = createTransactionSagaDependencies()
 
@@ -66,6 +82,7 @@ export function* executeTransaction(params: ExecuteTransactionParams): SagaItera
     transactionOriginType,
     analytics,
     preSignedTransaction,
+    initialStatus,
   })
 
   return result

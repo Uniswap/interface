@@ -1,6 +1,6 @@
 import type { MultichainTokenEntry } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { getTokenDetailsURL } from '~/appGraphql/data/util'
+import { getTokenDetailsURL } from '~/data/util'
 import { withoutChainSearchParam } from '~/utils/params/chainQueryParam'
 
 export function getTokenDetailsURLForMultichainEntry({

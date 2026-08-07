@@ -32,6 +32,8 @@ interface EarnVaultOverviewProps {
   position: EarnPositionInfo | undefined
   selectedTab: EarnVaultTab
   setSelectedTab: (tab: EarnVaultTab) => void
+  /** True while the deposit-source balance lookup is pending; shows the Deposit action as busy. */
+  depositLoading?: boolean
   showActionButtons?: boolean
   showCloseIcon?: boolean
   symbol: string
@@ -58,6 +60,7 @@ export function EarnVaultOverview({
   position,
   selectedTab,
   setSelectedTab,
+  depositLoading = false,
   showActionButtons = true,
   showCloseIcon = true,
   symbol,
@@ -160,7 +163,14 @@ export function EarnVaultOverview({
                 <Button emphasis="secondary" size="medium" py="$spacing16" flex={1} onPress={onWithdraw}>
                   {t('explore.earn.vault.withdraw')}
                 </Button>
-                <Button emphasis="primary" size="medium" py="$spacing16" flex={1} onPress={onDeposit}>
+                <Button
+                  emphasis="primary"
+                  size="medium"
+                  py="$spacing16"
+                  flex={1}
+                  loading={depositLoading}
+                  onPress={onDeposit}
+                >
                   {t('explore.earn.vault.deposit')}
                 </Button>
               </Flex>
@@ -172,6 +182,7 @@ export function EarnVaultOverview({
             lifetimeEarningsUsd={lifetimeEarningsUsd}
             lifetimeEarningsError={lifetimeEarningsError}
             canWithdraw={canWithdraw}
+            depositLoading={depositLoading}
             showActionButtons={showActionButtons}
             onDeposit={onDeposit}
             onWithdraw={onWithdraw}
@@ -181,6 +192,7 @@ export function EarnVaultOverview({
             vault={vault}
             hasPosition={hasPosition}
             isConnected={isConnected}
+            depositLoading={depositLoading}
             showActionButtons={showActionButtons}
             onDeposit={onDeposit}
             onConnectWallet={onConnectWallet}

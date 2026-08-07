@@ -17,7 +17,10 @@ import type {
   EarnAnalyticsSurface,
   EarnTransactionAnalyticsProperties,
 } from 'uniswap/src/features/telemetry/types'
-import type { PlanFinalizedCallbackParams } from 'uniswap/src/features/transactions/swap/plan/types'
+import type {
+  PlanFailureCallbackContext,
+  PlanFinalizedCallbackParams,
+} from 'uniswap/src/features/transactions/swap/plan/types'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
 
@@ -107,7 +110,7 @@ export function useEarnReviewAnalytics({
   vault: EarnVaultInfo
   withdrawMode?: string
 }): {
-  logFailed: (error: Error | undefined) => void
+  logFailed: (error: Error | undefined, context?: PlanFailureCallbackContext) => void
   logFinalized: (params: PlanFinalizedCallbackParams) => void
   logSubmitted: () => void
   reviewedEventProperties: EarnTransactionAnalyticsProperties
@@ -167,6 +170,8 @@ export function useEarnReviewAnalytics({
   > | null>(null)
 
   const logSubmitted = useCallback(() => {
+    finalizedPlanIdsRef.current.clear()
+    failedPlanIdsRef.current.clear()
     submittedExecutionRef.current = true
     pendingSubmittedFailureRef.current = null
     logEarnTransactionEvent({ action, status: 'submitted', properties: analyticsProperties })
@@ -207,12 +212,19 @@ export function useEarnReviewAnalytics({
   ])
 
   const logFailed = useCallback(
-    (error: Error | undefined) => {
+    (error: Error | undefined, context?: PlanFailureCallbackContext) => {
+      if (!error && !submittedExecutionRef.current) {
+        return
+      }
+
       const errorProperties = getErrorAnalyticsProperties(error)
-      if (submittedExecutionRef.current) {
+      if (submittedExecutionRef.current && context?.willFinalize !== false) {
         pendingSubmittedFailureRef.current = errorProperties
         return
       }
+
+      submittedExecutionRef.current = false
+      pendingSubmittedFailureRef.current = null
 
       logEarnTransactionEvent({
         action,
@@ -239,6 +251,21 @@ export function useEarnReviewAnalytics({
         submittedExecutionRef.current = false
         pendingSubmittedFailureRef.current = null
         logEarnTransactionEvent({ action, status: 'completed', properties: finalizedProperties })
+        return
+      }
+
+      if (pendingSubmittedFailureRef.current && !isFinalizedFailureStatus(status)) {
+        failedPlanIdsRef.current.add(planId)
+        submittedExecutionRef.current = false
+        logEarnTransactionEvent({
+          action,
+          status: 'failed',
+          properties: {
+            ...finalizedProperties,
+            ...pendingSubmittedFailureRef.current,
+          },
+        })
+        pendingSubmittedFailureRef.current = null
         return
       }
 

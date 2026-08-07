@@ -1,0 +1,79 @@
+{
+  "nfts": [
+    {
+      "chainId": 1,
+      "contractAddress": "0x3C90502f0CB0ad0A48c51357E65Ff15247A1D88E",
+      "tokenId": "21",
+      "name": "I Got Plenty - J Moe & J@z-Z-E",
+      "description": "Walking into a new society filled with many options can be exciting & exhausting at the same time. This song is about the experience of the lives of 2 artist growing up in Houston, and accumulating a multitude of memories and accomplishments with new obstacles to conquer.",
+      "isSpam": false,
+      "collectionName": "I Got Plenty - J Moe & J@z-Z-E",
+      "image": {
+        "url": "https://c.neevacdn.net/image/upload/c_limit,pg_1,h_1200,w_1200/f_webp/xyz/ILWWZSB46osksj1upvisseVPpAKBnLLNy2jAMbJd9mE.webp"
+      },
+      "thumbnail": {
+        "url": "https://c.neevacdn.net/image/upload/c_limit,pg_1,h_600,w_600/f_webp/xyz/ILWWZSB46osksj1upvisseVPpAKBnLLNy2jAMbJd9mE.webp"
+      }
+    },
+    {
+      "chainId": 1,
+      "contractAddress": "0x3C90502f0CB0ad0A48c51357E65Ff15247A1D88E",
+      "tokenId": "20",
+      "name": "I Got Plenty - J Moe & J@z-Z-E",
+      "description": "Walking into a new society filled with many options can be exciting & exhausting at the same time. This song is about the experience of the lives of 2 artist growing up in Houston, and accumulating a multitude of memories and accomplishments with new obstacles to conquer.",
+      "isSpam": false,
+      "collectionName": "I Got Plenty - J Moe & J@z-Z-E",
+      "image": {
+        "url": "https://c.neevacdn.net/image/upload/c_limit,pg_1,h_1200,w_1200/f_webp/xyz/ILWWZSB46osksj1upvisseVPpAKBnLLNy2jAMbJd9mE.webp"
+      },
+      "thumbnail": {
+        "url": "https://c.neevacdn.net/image/upload/c_limit,pg_1,h_600,w_600/f_webp/xyz/ILWWZSB46osksj1upvisseVPpAKBnLLNy2jAMbJd9mE.webp"
+      }
+    },
+    {
+      "chainId": 1,
+      "contractAddress": "0x495f947276749ce646f68ac8c248420045cb7b5e",
+      "tokenId": "49573910948929644057320032930374483793648558152449286445567646333571629580294",
+      "name": "MI",
+      "description": "660 HP",
+      "isSpam": false,
+      "collectionName": "OS Shared Storefront Collection",
+      "image": {
+        "url": "https://c.neevacdn.net/image/upload/xyz/Jz3lZSs_8p0-w0obYPSG5Kv3fUMUdR-rOmjR0CJcans.jpg"
+      },
+      "thumbnail": {
+        "url": "https://c.neevacdn.net/image/upload/c_limit,pg_1,h_200,w_200/f_webp/xyz/Jz3lZSs_8p0-w0obYPSG5Kv3fUMUdR-rOmjR0CJcans.webp"
+      }
+    },
+    {
+      "chainId": 1,
+      "contractAddress": "0x495f947276749ce646f68ac8c248420045cb7b5e",
+      "tokenId": "49573910948929644057320032930374483793648558152449286445567646332472117952516",
+      "name": "Kleefeld_TR",
+      "description": "975m2",
+      "isSpam": false,
+      "collectionName": "OS Shared Storefront Collection",
+      "image": {
+        "url": "https://c.neevacdn.net/image/upload/xyz/s-knv4tqNWmSfgtu9JCATVYLOS4wXi4LqmnJnKDtCpI.jpg"
+      },
+      "thumbnail": {
+        "url": "https://c.neevacdn.net/image/upload/c_limit,pg_1,h_200,w_200/f_webp/xyz/s-knv4tqNWmSfgtu9JCATVYLOS4wXi4LqmnJnKDtCpI.webp"
+      }
+    },
+    {
+      "chainId": 1,
+      "contractAddress": "0x495f947276749ce646f68ac8c248420045cb7b5e",
+      "tokenId": "49573910948929644057320032930374483793648558152449286445567646331372606324740",
+      "name": "Kleefeld_CH",
+      "description": "975m2",
+      "isSpam": false,
+      "collectionName": "OS Shared Storefront Collection",
+      "image": {
+        "url": "https://c.neevacdn.net/image/upload/xyz/s-knv4tqNWmSfgtu9JCATVYLOS4wXi4LqmnJnKDtCpI.jpg"
+      },
+      "thumbnail": {
+        "url": "https://c.neevacdn.net/image/upload/c_limit,pg_1,h_200,w_200/f_webp/xyz/s-knv4tqNWmSfgtu9JCATVYLOS4wXi4LqmnJnKDtCpI.webp"
+      }
+    }
+  ]
+}

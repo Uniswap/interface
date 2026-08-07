@@ -1,10 +1,10 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import {
-  MigrateV2ToV3LPPositionRequest,
-  MigrateV3ToV4LPPositionRequest,
-} from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_pb'
+import { MigrateV3ToV4LPPositionRequest } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_pb'
 import { Protocols, V3Position, V4Position } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
-import { LPApprovalRequest } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_pb'
+import {
+  LPApprovalRequest,
+  MigrateV2ToV3LPPositionRequest,
+} from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_pb'
 import { LPAction, LPToken } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool as V3Pool } from '@uniswap/v3-sdk'

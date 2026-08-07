@@ -20,6 +20,7 @@ import { useRecentConnectorId } from '~/connection/constants'
 import { useIsInjectedWallet } from '~/features/accounts/store/hooks'
 import { ExternalWallet } from '~/features/accounts/store/types'
 import { useConnectWallet } from '~/features/wallet/connection/hooks/useConnectWallet'
+import { useIsMetaMaskExtensionDetected } from '~/features/wallet/connection/hooks/useIsMetaMaskExtensionDetected'
 import { isIFramed } from '~/utils/isIFramed'
 
 function RecentBadge() {
@@ -143,7 +144,12 @@ export function WalletConnectorOption({
   const themeColors = useSporeColors()
   const icon = getIcon({ wallet, isEmbeddedWalletEnabled, themeColors })
   const text = getConnectorText({ wallet, t })
-  const isDetected = useIsInjectedWallet(wallet.id)
+  const isInjectedWallet = useIsInjectedWallet(wallet.id)
+  const isMetaMaskExtensionDetected = useIsMetaMaskExtensionDetected()
+  // The MetaMask Connect SDK connector always exposes an injected-style provider, so use the
+  // EIP-6963 extension check (matching the connector ordering) for its "Detected" badge.
+  const isDetected =
+    wallet.id === CONNECTION_PROVIDER_IDS.METAMASK_SDK_CONNECTOR_ID ? isMetaMaskExtensionDetected : isInjectedWallet
   // TODO(WEB-4173): Remove isIFrame check when we can update wagmi to version >= 2.9.4
   const isDisabled = Boolean(isPendingConnection && !isIFramed())
 

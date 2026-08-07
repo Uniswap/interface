@@ -5,7 +5,7 @@ import type {
   TransactionOptions,
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import type { logger as loggerUtil } from 'utilities/src/logger/logger'
 import type { Mock } from 'vitest'
 import type { AnalyticsService } from 'wallet/src/features/transactions/executeTransaction/services/analyticsService'
@@ -74,6 +74,26 @@ describe('handleTransactionError', () => {
         submit_via_private_rpc: true,
         includes_delegation: true,
       }),
+    )
+  })
+
+  it('finalizes a UniswapX cancel tx row as Failed on broadcast failure', async () => {
+    await expect(
+      handleTransactionError({
+        error: new Error('insufficient funds for gas'),
+        unsubmittedTransaction: baseTx,
+        chainId: UniverseChainId.Mainnet,
+        typeInfo: { type: TransactionType.UniswapXCancel, orderHashes: ['0xorder'] } as TransactionTypeInfo,
+        options: baseTx.options as TransactionOptions,
+        methodName: 'submitTransaction',
+        transactionRepository: mockRepo,
+        analyticsService: mockAnalytics,
+        logger: mockLogger,
+      }),
+    ).rejects.toThrow()
+
+    expect(mockRepo.finalizeTransaction).toHaveBeenCalledWith(
+      expect.objectContaining({ status: TransactionStatus.Failed }),
     )
   })
 

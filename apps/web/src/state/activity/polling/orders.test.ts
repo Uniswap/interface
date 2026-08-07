@@ -12,6 +12,7 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { buildCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
 import type { Mock } from 'vitest'
+import { evaluateCancelTimeouts } from '~/state/activity/polling/cancelTimeouts'
 import {
   getQuickPollingInterval,
   QUICK_POLL_INITIAL_INTERVAL,
@@ -47,6 +48,11 @@ vi.mock('uniswap/src/features/transactions/slice', async () => {
     updateTransaction: vi.fn((tx: any) => ({ type: 'transactions/updateTransaction', payload: tx })),
   }
 })
+
+// Isolate the poller tests from the flag-gated timeout machine (tested in cancelTimeouts.test.ts)
+vi.mock('~/state/activity/polling/cancelTimeouts', () => ({
+  evaluateCancelTimeouts: vi.fn(() => Promise.resolve()),
+}))
 
 vi.mock('~/hooks/useAccount', async () => {
   const actual = await vi.importActual('~/hooks/useAccount')
@@ -323,5 +329,121 @@ describe('useQuickPolling', () => {
       })
       expect(global.fetch).toHaveBeenCalledTimes(115 + i + 1)
     }
+  })
+})
+
+describe('cancel-timeout tick scoping', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+    global.fetch = vi.fn() as unknown as typeof fetch
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+    vi.clearAllMocks()
+  })
+
+  it('a quick L2 tick evaluates only its own L2 orders — never the mainnet ones it did not fetch', async () => {
+    const onActivityUpdate = vi.fn()
+    const now = Date.now()
+    vi.setSystemTime(now)
+    const l2Order = { ...mockL2Order, addedTime: now }
+    const mainnetOrder = { ...mockL1Order, id: 'mainnet-1', status: TransactionStatus.Cancelling }
+
+    vi.spyOn(hooks, 'usePendingUniswapXOrders').mockReturnValue([l2Order, mainnetOrder])
+    ;(global.fetch as unknown as Mock).mockImplementation(() =>
+      Promise.resolve({
+        json: () =>
+          Promise.resolve({ orders: [{ orderHash: l2Order.orderHash, orderStatus: TradingApi.OrderStatus.OPEN }] }),
+      }),
+    )
+
+    renderHook(() => usePollPendingOrders(onActivityUpdate))
+
+    // 500ms: only the quick (L2) poller has ticked
+    await act(async () => {
+      vi.advanceTimersByTime(500)
+    })
+
+    expect(evaluateCancelTimeouts).toHaveBeenCalled()
+    for (const [args] of (evaluateCancelTimeouts as Mock).mock.calls) {
+      expect(args.pendingOrders).toEqual([l2Order])
+    }
+
+    // 2s: the standard poller ticks and owns the mainnet order
+    await act(async () => {
+      vi.advanceTimersByTime(1500)
+    })
+    const allCalls = (evaluateCancelTimeouts as Mock).mock.calls.map(([args]) => args.pendingOrders)
+    expect(allCalls.some((orders) => orders.length === 1 && orders[0] === mainnetOrder)).toBe(true)
+  })
+})
+
+describe('updateOrders cancel-flow guard (via standard polling)', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+    global.fetch = vi.fn() as unknown as typeof fetch
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+    vi.clearAllMocks()
+  })
+
+  const cancellingOrder: UniswapXOrderDetails = {
+    ...mockL1Order,
+    status: TransactionStatus.Cancelling,
+  }
+
+  async function pollOnceWithBackendStatus(orderStatus: TradingApi.OrderStatus) {
+    const onActivityUpdate = vi.fn()
+    vi.spyOn(hooks, 'usePendingUniswapXOrders').mockReturnValue([cancellingOrder])
+    ;(global.fetch as unknown as Mock).mockImplementation(() =>
+      Promise.resolve({
+        json: () =>
+          Promise.resolve({
+            orders: [{ orderHash: cancellingOrder.orderHash, orderStatus, txHash: '0xtxhash' }],
+          }),
+      }),
+    )
+
+    renderHook(() => usePollPendingOrders(onActivityUpdate))
+    await act(async () => {
+      vi.advanceTimersByTime(2000)
+    })
+    return onActivityUpdate
+  }
+
+  it('Cancelling + backend INSUFFICIENT_FUNDS → no update (the Cancel-button flicker bug)', async () => {
+    const onActivityUpdate = await pollOnceWithBackendStatus(TradingApi.OrderStatus.INSUFFICIENT_FUNDS)
+    expect(onActivityUpdate).not.toHaveBeenCalled()
+  })
+
+  it('Cancelling + backend OPEN → no update', async () => {
+    const onActivityUpdate = await pollOnceWithBackendStatus(TradingApi.OrderStatus.OPEN)
+    expect(onActivityUpdate).not.toHaveBeenCalled()
+  })
+
+  it.each([
+    [TradingApi.OrderStatus.EXPIRED, TransactionStatus.Expired],
+    [TradingApi.OrderStatus.CANCELLED, TransactionStatus.Canceled],
+    [TradingApi.OrderStatus.FILLED, TransactionStatus.Success],
+    [TradingApi.OrderStatus.ERROR, TransactionStatus.Failed],
+  ])('Cancelling + backend %s (final) → update applied', async (backendStatus, expectedStatus) => {
+    const onActivityUpdate = await pollOnceWithBackendStatus(backendStatus)
+    expect(onActivityUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        update: expect.objectContaining({ status: expectedStatus }),
+      }),
+    )
+  })
+
+  it('FILLED while Cancelling records cancelFailedReason on the order', async () => {
+    const onActivityUpdate = await pollOnceWithBackendStatus(TradingApi.OrderStatus.FILLED)
+    expect(onActivityUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        update: expect.objectContaining({ status: TransactionStatus.Success, cancelFailedReason: 'filled' }),
+      }),
+    )
   })
 })

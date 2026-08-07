@@ -6,6 +6,7 @@ export enum MobileScreens {
   Dev = 'Dev',
   HashcashBenchmark = 'HashcashBenchmark',
   SessionsDebug = 'SessionsDebug',
+  UniversalListDebug = 'UniversalListDebug',
   Storybook = 'Storybook',
   Education = 'Education',
   ConnectionsDappListModal = 'connections-dapp-list-modal',

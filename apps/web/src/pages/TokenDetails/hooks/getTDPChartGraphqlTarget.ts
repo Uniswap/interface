@@ -1,29 +1,31 @@
-import { GraphQLApi } from '@universe/api'
+import type { PlainMessage } from '@bufbuild/protobuf'
+import type { MultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
+import type { GraphQLApi } from '@universe/api'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import type { TokenQueryData } from '~/appGraphql/data/Token'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { getNativeTokenDBAddress } from '~/utils/nativeTokens'
 
 /** Chain + DB address for TDP chart queries, aligned with the network dropdown (`?chain=` → `selectedMultichainChainId`). */
 export function getTDPChartGraphqlTarget({
   selectedMultichainChainId,
-  tokenQueryData,
+  multichainToken,
   pathGraphqlChain,
   pathTokenDbAddress,
 }: {
   selectedMultichainChainId: UniverseChainId | undefined
-  tokenQueryData: TokenQueryData | undefined
+  multichainToken: PlainMessage<MultichainToken> | undefined
   pathGraphqlChain: GraphQLApi.Chain
   pathTokenDbAddress: string | undefined
 }): { chain: GraphQLApi.Chain; address: string | undefined } {
-  // oxlint-disable-next-line typescript/no-unnecessary-condition -- biome-parity: oxlint is stricter here
-  if (selectedMultichainChainId !== undefined && tokenQueryData?.project?.tokens?.length) {
-    const gqlChain = getChainInfo(selectedMultichainChainId).backendChain.chain
-    const row = tokenQueryData.project.tokens.find((t) => t.chain === gqlChain)
-    if (row) {
-      const address =
-        // oxlint-disable-next-line typescript/no-unnecessary-condition -- biome-parity: oxlint is stricter here
-        row.address !== undefined && row.address !== null ? row.address : getNativeTokenDBAddress(gqlChain)
+  if (selectedMultichainChainId !== undefined) {
+    const deploymentAddress = multichainToken?.addresses[String(selectedMultichainChainId)]
+    if (deploymentAddress) {
+      const gqlChain = getChainInfo(selectedMultichainChainId).backendChain.chain
+      // native deployments carry a real indexed address in the V2 shape; charts query by the DB native address
+      const address = isNativeCurrencyAddress(selectedMultichainChainId, deploymentAddress)
+        ? getNativeTokenDBAddress(gqlChain)
+        : deploymentAddress
       return { chain: gqlChain, address }
     }
   }

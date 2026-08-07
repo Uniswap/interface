@@ -25,6 +25,7 @@ import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { getIsPermissioned } from 'uniswap/src/features/positions/utils'
 import { DelegatedState } from 'uniswap/src/features/smartWallet/delegation/types'
 import { InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -209,6 +210,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       token0Address: getTokenOrZeroAddress(token0),
       token1Address: getTokenOrZeroAddress(token1),
       nftTokenId: positionInfo.tokenId ?? undefined,
+      permissioned: getIsPermissioned(positionInfo),
       independentToken: new LPToken({
         tokenAddress: getTokenOrZeroAddress(independentToken),
         amount: independentAmount,

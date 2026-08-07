@@ -5,12 +5,12 @@ import { USDT } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { parseEther } from '~/chains'
+import { assume0xAddress } from '~/chains'
 import { getUniswapServiceUrls } from '~/config'
 import { ONE_MILLION_USDT } from '~/playwright/anvil/utils'
 import { expect, getTest } from '~/playwright/fixtures'
-import { stubTradingApiEndpoint } from '~/playwright/fixtures/tradingApi'
+import { stubTradingApiEndpoint, widenSwapRequestSlippage } from '~/playwright/fixtures/tradingApi'
 import { TEST_WALLET_ADDRESS } from '~/playwright/fixtures/wallets'
-import { assume0xAddress } from '~/utils/wagmi'
 
 const test = getTest({ withAnvil: true })
 
@@ -25,8 +25,31 @@ test.describe(
   },
   () => {
     test('should swap ETH to USDC', async ({ page, anvil }) => {
-      await stubTradingApiEndpoint({ page, endpoint: V1_TRADING_API_PATHS.swap })
-      await stubTradingApiEndpoint({ page, endpoint: V1_TRADING_API_PATHS.quote })
+      // The live quoter prices against mainnet tip while Anvil forks the pinned block in
+      // fork-blocks.json, so live-priced execution bounds revert on the stale fork state.
+      // /swap re-derives min-out server-side from a fresh price and `quote.slippage` — a
+      // `minimumAmount` rewritten in the /quote response never reaches the executed calldata.
+      // Widen slippage in the /swap request instead so the bound tolerates fork-vs-live price
+      // drift; the balance assertions below remain the regression signal.
+      await stubTradingApiEndpoint({
+        page,
+        endpoint: V1_TRADING_API_PATHS.swap,
+        modifyRequestData: widenSwapRequestSlippage,
+      })
+      // Route via long-lived V2/V3 pools: v4 pools/routes may postdate the fork pin
+      await stubTradingApiEndpoint({
+        page,
+        endpoint: V1_TRADING_API_PATHS.quote,
+        // Leave the indicative (FASTEST) quote alone: the API answers it 404
+        // "No quotes available" when protocols are forced onto it
+        modifyRequestData: (data) =>
+          data.routingPreference === TradingApi.RoutingPreference.FASTEST
+            ? data
+            : {
+                ...data,
+                protocols: [TradingApi.ProtocolItems.V2, TradingApi.ProtocolItems.V3],
+              },
+      })
       await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: 100_000_000n })
 
       await page.goto('/swap')
@@ -52,6 +75,10 @@ test.describe(
         address: TEST_WALLET_ADDRESS,
       })
       await expect(ethBalance).toBeLessThan(parseEther('9999.9'))
+      // Output-side on-chain check: a mined-but-reverted swap (masked as "Swapped" by the
+      // txPolling fixture's NOT_FOUND→SUCCESS rewrite) leaves the USDT balance unchanged
+      const usdtBalance = await anvil.getErc20Balance(assume0xAddress(USDT.address))
+      await expect(usdtBalance).toBeGreaterThan(100_000_000n)
       await expect(page.getByText('9,999.9 ETH')).toBeVisible()
     })
 

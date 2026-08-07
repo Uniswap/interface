@@ -31,13 +31,16 @@ export function useMobileTDPHeartbeatCoordinator({ enabled }: { enabled: boolean
     const otherTasks: Promise<unknown>[] = [apollo.refetchQueries({ include: [GQLQueries.TokenDetailsScreen] })]
 
     if (activeAddress) {
-      otherTasks.push(queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.GetPortfolio] }))
+      otherTasks.push(queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.GetPortfolio], type: 'active' }))
     }
 
     if (isEarnEnabled && activeAddress) {
       otherTasks.push(
-        queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.DataApiService, 'listEarnVaults'] }),
-        queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.DataApiService, 'listEarnPositions'] }),
+        queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.DataApiService, 'listEarnVaults'], type: 'active' }),
+        queryClient.refetchQueries({
+          queryKey: [ReactQueryCacheKey.DataApiService, 'listEarnPositions'],
+          type: 'active',
+        }),
       )
     }
 

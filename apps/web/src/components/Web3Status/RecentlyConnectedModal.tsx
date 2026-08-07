@@ -1,3 +1,4 @@
+import { useEmbeddedWalletState } from '@universe/embedded-wallet'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { MutableRefObject, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -30,7 +31,6 @@ import { useIsMobile } from '~/hooks/screenSize/useIsMobile'
 import { useModalState } from '~/hooks/useModalState'
 import { useSignInWithPasskey } from '~/hooks/useSignInWithPasskey'
 import { useEmbeddedWalletLoginViewStore } from '~/state/embeddedWallet/loginViewStore'
-import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 
 interface RecentlyConnectedModalUIProps {
   isOpen: boolean

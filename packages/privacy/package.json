@@ -1,11 +1,9 @@
 {
   "name": "@universe/privacy",
   "version": "0.0.0",
-  "dependencies": {
-    "fast-redact": "3.5.0"
-  },
   "devDependencies": {
-    "@types/node": "22.19.17"
+    "@types/node": "22.19.17",
+    "vitest": "3.2.1"
   },
   "scripts": {
     "typecheck": "nx typecheck privacy",
@@ -13,7 +11,8 @@
     "lint:fix": "nx lint:fix privacy",
     "check": "nx check privacy",
     "check:fast": "nx check:fast privacy",
-    "check:deps:usage": "nx check:deps:usage privacy"
+    "check:deps:usage": "nx check:deps:usage privacy",
+    "test": "nx test privacy"
   },
   "nx": {
     "includedScripts": []

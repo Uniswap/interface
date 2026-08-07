@@ -1,16 +1,25 @@
+import type { Store } from '@reduxjs/toolkit'
 import { type Currency } from '@uniswap/sdk-core'
 import type { ChainedQuoteResponse, TradingApi } from '@universe/api'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useStore } from 'react-redux'
+import type { MobileState } from 'src/app/mobileReducer'
+import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
+import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
+import { getIsEarnEnabled } from 'uniswap/src/features/earn/hooks/useIsEarnEnabled'
 import {
   buildEarnChainedActionTrade,
   buildEarnPlanAnalytics,
   buildEarnSwapTxContext,
   EarnPlanPriceChangeError,
+  EarnPlanUnavailableError,
 } from 'uniswap/src/features/earn/planExecution'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+// oxlint-disable-next-line no-restricted-imports -- execution must read the latest persisted mode after biometrics
+import { selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/selectors'
 import {
+  type PlanFailureCallback,
   PlanPriceChangeInterrupt,
   type PlanFinalizedCallbackParams,
 } from 'uniswap/src/features/transactions/swap/plan/types'
@@ -27,7 +36,7 @@ export interface MobileEarnExecuteParams {
   outputCurrency: Currency
   quote: ChainedQuoteResponse
   onSuccess: () => void
-  onFailure: (error?: Error) => void
+  onFailure: PlanFailureCallback
   onSubmitted?: () => void
   onPlanFinalized?: (params: PlanFinalizedCallbackParams) => void
 }
@@ -37,11 +46,24 @@ export type MobileEarnExecuteCallback = (params: MobileEarnExecuteParams) => voi
 export function useEarnExecuteCallback(): MobileEarnExecuteCallback {
   const { t } = useTranslation()
   const dispatch = useDispatch()
+  const store: Store<MobileState> = useStore()
   const evmAddress = useActiveAddress(Platform.EVM)
   const caip25Info = useAccountsStore((state) => state.getActiveConnector(Platform.EVM).session?.caip25Info)
+  const { requiredForTransactions } = useBiometricAppSettings()
+  const { trigger: biometricTrigger } = useBiometricPrompt()
+  const canExecuteEarn = useCallback(() => getIsEarnEnabled() && !selectIsTestnetModeEnabled(store.getState()), [store])
 
   return useCallback(
     (params: MobileEarnExecuteParams) => {
+      const failUnavailableEarn = (): void => {
+        params.onFailure(new EarnPlanUnavailableError(t('explore.earn.review.unavailable')))
+      }
+
+      if (!canExecuteEarn()) {
+        failUnavailableEarn()
+        return
+      }
+
       if (!evmAddress) {
         params.onFailure(new Error('No connected EVM account'))
         return
@@ -53,7 +75,9 @@ export function useEarnExecuteCallback(): MobileEarnExecuteCallback {
       const isPriceChangeInterrupted =
         !!interruptedPlanId && activePlanState.priceChangeInterruptedPlanIds.has(interruptedPlanId)
 
-      if (existingActivePlan && !isPriceChangeInterrupted) {
+      // Refuse only while a saga actively drives the foreground plan. A retained plan without
+      // the execution lock is a stopped partial plan — dispatching resumes its remaining steps.
+      if (existingActivePlan && activePlanState.executionLockPlanId === existingActivePlan.planId) {
         params.onFailure(new Error('A transaction is already in progress'))
         return
       }
@@ -71,40 +95,58 @@ export function useEarnExecuteCallback(): MobileEarnExecuteCallback {
         return
       }
 
-      if (interruptedPlanId && isPriceChangeInterrupted) {
-        activePlanState.actions.clearPriceChangeInterrupted(interruptedPlanId)
+      const submitPlan = (): void => {
+        // The setting or remote flags can change while the biometric sheet is open.
+        if (!canExecuteEarn()) {
+          failUnavailableEarn()
+          return
+        }
+
+        if (interruptedPlanId && isPriceChangeInterrupted) {
+          activePlanState.actions.clearPriceChangeInterrupted(interruptedPlanId)
+        }
+
+        params.onSubmitted?.()
+        dispatch(
+          executePlanActions.trigger({
+            address: evmAddress,
+            swapTxContext: buildEarnSwapTxContext(trade),
+            analytics: buildEarnPlanAnalytics(trade),
+            caip25Info,
+            setCurrentStep: noop,
+            setSteps: noop,
+            onPending: noop,
+            onClearForm: noop,
+            onSuccess: params.onSuccess,
+            onFailure: params.onFailure,
+            onPlanFinalized: params.onPlanFinalized,
+            modalClosedActionType: signalEarnModalClosed.type,
+            // Mobile Earn has no accept-new-price prompt.
+            getDisplayableError: ({ error }: { error: Error }) => {
+              if (error instanceof PlanPriceChangeInterrupt) {
+                return new EarnPlanPriceChangeError(t('explore.earn.review.priceChanged'))
+              }
+
+              logger.error(error, {
+                tags: { file: 'useEarnExecuteCallback', function: 'getDisplayableError' },
+              })
+
+              return new Error(error.message)
+            },
+          }),
+        )
       }
 
-      params.onSubmitted?.()
-      dispatch(
-        executePlanActions.trigger({
-          address: evmAddress,
-          swapTxContext: buildEarnSwapTxContext(trade),
-          analytics: buildEarnPlanAnalytics(trade),
-          caip25Info,
-          setCurrentStep: noop,
-          setSteps: noop,
-          onPending: noop,
-          onClearForm: noop,
-          onSuccess: params.onSuccess,
-          onFailure: params.onFailure,
-          onPlanFinalized: params.onPlanFinalized,
-          modalClosedActionType: signalEarnModalClosed.type,
-          // Mobile Earn has no accept-new-price prompt.
-          getDisplayableError: ({ error }: { error: Error }) => {
-            if (error instanceof PlanPriceChangeInterrupt) {
-              return new EarnPlanPriceChangeError(t('explore.earn.review.priceChanged'))
-            }
+      if (requiredForTransactions) {
+        biometricTrigger({
+          successCallback: submitPlan,
+          failureCallback: () => params.onFailure(),
+        }).catch(() => params.onFailure())
+        return
+      }
 
-            logger.error(error, {
-              tags: { file: 'useEarnExecuteCallback', function: 'getDisplayableError' },
-            })
-
-            return new Error(error.message)
-          },
-        }),
-      )
+      submitPlan()
     },
-    [caip25Info, dispatch, evmAddress, t],
+    [biometricTrigger, caip25Info, canExecuteEarn, dispatch, evmAddress, requiredForTransactions, t],
   )
 }

@@ -1,0 +1,490 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`TokenCard > renders a spacer instead of a sparkline for fewer than 2 points 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="is_TouchableArea  t_group_true"
+      role="button"
+      style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; cursor: pointer; flex-direction: column; outline-color: rgba(0, 0, 0, 0); opacity: 1; border-top-left-radius: var(--t-radius-rounded16); border-top-right-radius: var(--t-radius-rounded16); border-bottom-right-radius: var(--t-radius-rounded16); border-bottom-left-radius: var(--t-radius-rounded16); gap: var(--t-space-spacing12); flex-shrink: 0; width: 204px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
+      tabindex="0"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+      >
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-32px _justifyContent-center _pointerEvents-auto _width-32px _position-relative"
+          data-testid="token-logo"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
+          />
+          <div
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _height-32px _justifyContent-center _pr-t-space-spa94665593 _pl-t-space-spa94665593 _width-32px"
+            style="background-color: rgb(21, 36, 43);"
+          >
+            <span
+              class="font_button _fontSize-_platformweb_10px _whiteSpace-_platformweb_nowrap _overflowX-_platformweb_hidden _overflowY-_platformweb_hidden _textOverflow-_platformweb_clip _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-2ABDFF35 _wordWrap-break-word _fontFamily-f-family _fontSize-17px _fontWeight-500 _lineHeight-14px _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis"
+              data-disable-theme="true"
+            >
+              SND
+            </span>
+          </div>
+        </div>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-32px _width-64px"
+          data-testid="token-card-sparkline-empty"
+        />
+      </div>
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665587 _width-10037"
+      >
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-baseline _gap-t-space-spa94665593"
+        >
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _flexShrink-1 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
+            data-disable-theme="true"
+          >
+            SanDisk
+          </span>
+        </div>
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665589"
+        >
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
+          >
+            $1,594.61
+          </span>
+          <div
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665587 _justifyContent-flex-start"
+            data-testid="relative-change"
+          >
+            <div
+              fill="none"
+              stroke-width="2"
+              style="width: 12px; height: 12px; color: rgb(33, 201, 94); transform: rotate(180deg);"
+              viewbox="0 0 24 24"
+            >
+              <div
+                d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+                fill="currentColor"
+              />
+            </div>
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+            >
+              <span
+                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                data-disable-theme="true"
+                data-testid="portfolio-relative-change"
+              >
+                9.67%
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`TokenCard > renders the horizontal layout without a price 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="is_TouchableArea  t_group_true"
+      role="button"
+      style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; cursor: pointer; flex-direction: row; outline-color: rgba(0, 0, 0, 0); opacity: 1; border-top-left-radius: var(--t-radius-rounded16); border-top-right-radius: var(--t-radius-rounded16); border-bottom-right-radius: var(--t-radius-rounded16); border-bottom-left-radius: var(--t-radius-rounded16); gap: var(--t-space-spacing12); flex-shrink: 0; align-items: center; width: 280px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
+      tabindex="0"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-32px _justifyContent-center _pointerEvents-auto _width-32px _position-relative"
+        data-testid="token-logo"
+      >
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
+        />
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _height-32px _justifyContent-center _pr-t-space-spa94665593 _pl-t-space-spa94665593 _width-32px"
+          style="background-color: rgb(16, 20, 61);"
+        >
+          <span
+            class="font_button _fontSize-_platformweb_10px _whiteSpace-_platformweb_nowrap _overflowX-_platformweb_hidden _overflowY-_platformweb_hidden _textOverflow-_platformweb_clip _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-3271FF35 _wordWrap-break-word _fontFamily-f-family _fontSize-17px _fontWeight-500 _lineHeight-14px _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis"
+            data-disable-theme="true"
+          >
+            SLX
+          </span>
+        </div>
+      </div>
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-1 _flexDirection-column _flexGrow-1 _minWidth-0px"
+      >
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
+          data-disable-theme="true"
+        >
+          Solstice
+        </span>
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665593"
+        >
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
+          >
+            SLX
+          </span>
+          <div
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665587 _justifyContent-flex-start"
+            data-testid="relative-change"
+          >
+            <div
+              fill="none"
+              stroke-width="2"
+              style="width: 12px; height: 12px; color: rgb(33, 201, 94); transform: rotate(180deg);"
+              viewbox="0 0 24 24"
+            >
+              <div
+                d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+                fill="currentColor"
+              />
+            </div>
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+            >
+              <span
+                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                data-disable-theme="true"
+                data-testid="portfolio-relative-change"
+              >
+                6.45%
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        height="40"
+        width="64"
+      >
+        <div>
+          <div
+            id="token-card-sparkline-_r_1d_"
+            x1="0"
+            x2="0"
+            y1="0"
+            y2="1"
+          >
+            <div
+              offset="0"
+              stop-color="#21C95E"
+              stop-opacity="0.16"
+            />
+            <div
+              offset="1"
+              stop-color="#21C95E"
+              stop-opacity="0"
+            />
+          </div>
+        </div>
+        <div
+          d="M0,38C0,38,20.622,20.15,21.333,20C22.044,19.85,41.956,29.3,42.667,29C43.378,28.7,64,2,64,2L64,40C64,40,43.378,40,42.667,40C41.956,40,22.044,40,21.333,40C20.622,40,0,40,0,40Z"
+          fill="url(#token-card-sparkline-_r_1d_)"
+        />
+        <div
+          d="M0,38C0,38,20.622,20.15,21.333,20C22.044,19.85,41.956,29.3,42.667,29C43.378,28.7,64,2,64,2"
+          fill="none"
+          stroke="#21C95E"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.5"
+        />
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`TokenCard > renders the vertical layout with a negative delta and no issuer label 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="is_TouchableArea  t_group_true"
+      role="button"
+      style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; cursor: pointer; flex-direction: column; outline-color: rgba(0, 0, 0, 0); opacity: 1; border-top-left-radius: var(--t-radius-rounded16); border-top-right-radius: var(--t-radius-rounded16); border-bottom-right-radius: var(--t-radius-rounded16); border-bottom-left-radius: var(--t-radius-rounded16); gap: var(--t-space-spacing12); flex-shrink: 0; width: 168px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
+      tabindex="0"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+      >
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-32px _justifyContent-center _pointerEvents-auto _width-32px _position-relative"
+          data-testid="token-logo"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
+          />
+          <div
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _height-32px _justifyContent-center _pr-t-space-spa94665593 _pl-t-space-spa94665593 _width-32px"
+            style="background-color: rgb(26, 42, 33);"
+          >
+            <span
+              class="font_button _fontSize-_platformweb_10px _whiteSpace-_platformweb_nowrap _overflowX-_platformweb_hidden _overflowY-_platformweb_hidden _textOverflow-_platformweb_clip _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-5CFE9D35 _wordWrap-break-word _fontFamily-f-family _fontSize-17px _fontWeight-500 _lineHeight-14px _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis"
+              data-disable-theme="true"
+            >
+              MU
+            </span>
+          </div>
+        </div>
+        <div
+          height="32"
+          width="64"
+        >
+          <div>
+            <div
+              id="token-card-sparkline-_r_p_"
+              x1="0"
+              x2="0"
+              y1="0"
+              y2="1"
+            >
+              <div
+                offset="0"
+                stop-color="#FF593C"
+                stop-opacity="0.16"
+              />
+              <div
+                offset="1"
+                stop-color="#FF593C"
+                stop-opacity="0"
+              />
+            </div>
+          </div>
+          <div
+            d="M0,30C0,30,20.622,16.117,21.333,16C22.044,15.883,41.956,23.233,42.667,23C43.378,22.767,64,2,64,2L64,32C64,32,43.378,32,42.667,32C41.956,32,22.044,32,21.333,32C20.622,32,0,32,0,32Z"
+            fill="url(#token-card-sparkline-_r_p_)"
+          />
+          <div
+            d="M0,30C0,30,20.622,16.117,21.333,16C22.044,15.883,41.956,23.233,42.667,23C43.378,22.767,64,2,64,2"
+            fill="none"
+            stroke="#FF593C"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+          />
+        </div>
+      </div>
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665587 _width-10037"
+      >
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-baseline _gap-t-space-spa94665593"
+        >
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _flexShrink-1 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
+            data-disable-theme="true"
+          >
+            Micron Technology
+          </span>
+        </div>
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665589"
+        >
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
+          >
+            $900.63
+          </span>
+          <div
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665587 _justifyContent-flex-start"
+            data-testid="relative-change"
+          >
+            <div
+              fill="none"
+              stroke-width="2"
+              style="width: 12px; height: 12px; color: rgb(255, 89, 60); transform: rotate(0deg);"
+              viewbox="0 0 24 24"
+            >
+              <div
+                d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+                fill="currentColor"
+              />
+            </div>
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+            >
+              <span
+                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                data-disable-theme="true"
+                data-testid="portfolio-relative-change"
+              >
+                9.03%
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`TokenCard > renders the vertical layout with price, issuer label and positive delta 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="is_TouchableArea  t_group_true"
+      role="button"
+      style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; cursor: pointer; flex-direction: column; outline-color: rgba(0, 0, 0, 0); opacity: 1; border-top-left-radius: var(--t-radius-rounded16); border-top-right-radius: var(--t-radius-rounded16); border-bottom-right-radius: var(--t-radius-rounded16); border-bottom-left-radius: var(--t-radius-rounded16); gap: var(--t-space-spacing12); flex-shrink: 0; width: 204px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
+      tabindex="0"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+      >
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-32px _justifyContent-center _pointerEvents-auto _width-32px _position-relative"
+          data-testid="token-logo"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
+          />
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+            data-testid="img-token-image"
+          >
+            <img
+              height="32"
+              src="https://example.com/logo.png"
+              style="object-fit: cover; width: 32px; height: 32px; border-radius: 32px; z-index: 1;"
+              width="32"
+            />
+          </div>
+        </div>
+        <div
+          height="32"
+          width="64"
+        >
+          <div>
+            <div
+              id="token-card-sparkline-_r_9_"
+              x1="0"
+              x2="0"
+              y1="0"
+              y2="1"
+            >
+              <div
+                offset="0"
+                stop-color="#21C95E"
+                stop-opacity="0.16"
+              />
+              <div
+                offset="1"
+                stop-color="#21C95E"
+                stop-opacity="0"
+              />
+            </div>
+          </div>
+          <div
+            d="M0,30C0,30,20.622,16.117,21.333,16C22.044,15.883,41.956,23.233,42.667,23C43.378,22.767,64,2,64,2L64,32C64,32,43.378,32,42.667,32C41.956,32,22.044,32,21.333,32C20.622,32,0,32,0,32Z"
+            fill="url(#token-card-sparkline-_r_9_)"
+          />
+          <div
+            d="M0,30C0,30,20.622,16.117,21.333,16C22.044,15.883,41.956,23.233,42.667,23C43.378,22.767,64,2,64,2"
+            fill="none"
+            stroke="#21C95E"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+          />
+        </div>
+      </div>
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665587 _width-10037"
+      >
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-baseline _gap-t-space-spa94665593"
+        >
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _flexShrink-1 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
+            data-disable-theme="true"
+          >
+            Amazon
+          </span>
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-micr111 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1263414315"
+            data-disable-theme="true"
+          >
+            Robinhood
+          </span>
+        </div>
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665589"
+        >
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
+          >
+            $257.62
+          </span>
+          <div
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665587 _justifyContent-flex-start"
+            data-testid="relative-change"
+          >
+            <div
+              fill="none"
+              stroke-width="2"
+              style="width: 12px; height: 12px; color: rgb(33, 201, 94); transform: rotate(180deg);"
+              viewbox="0 0 24 24"
+            >
+              <div
+                d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+                fill="currentColor"
+              />
+            </div>
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+            >
+              <span
+                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                data-disable-theme="true"
+                data-testid="portfolio-relative-change"
+              >
+                7.55%
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;

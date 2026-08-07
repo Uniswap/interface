@@ -1,3 +1,4 @@
+import { useEmbeddedWalletState } from '@universe/embedded-wallet'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useAtom } from 'jotai'
 import { forwardRef, useCallback, useEffect, useRef } from 'react'
@@ -22,7 +23,6 @@ import { Web3StatusRef } from '~/components/Web3Status/web3StatusRef'
 import { useHasInjectedWallets } from '~/features/wallet/connection/hooks/useOrderedWalletConnectors'
 import { useModalState } from '~/hooks/useModalState'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
-import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { isIFramed } from '~/utils/isIFramed'
 
 const TextStyled = deprecatedStyled.span<{ marginRight?: number }>`

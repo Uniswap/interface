@@ -11,7 +11,10 @@ import { GroupHoverTransition } from 'uniswap/src/components/GroupHoverTransitio
 import { NetworkIconList } from 'uniswap/src/components/network/NetworkIconList/NetworkIconList'
 import { TokenBalanceItemContextMenu } from 'uniswap/src/components/portfolio/TokenBalanceItem/TokenBalanceItemContextMenu'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
-import { useRestTokenBalanceMainParts, useRestTokenBalanceQuantityParts } from 'uniswap/src/data/rest/getPortfolio'
+import {
+  useRestTokenBalanceMainParts,
+  useRestTokenBalanceQuantityParts,
+} from 'uniswap/src/data/apiClients/dataApiService/balances/getPortfolio'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo, PortfolioBalance, PortfolioMultichainBalance } from 'uniswap/src/features/dataApi/types'

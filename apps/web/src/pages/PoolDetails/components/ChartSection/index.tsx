@@ -12,10 +12,10 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { InterfaceEventName, InterfacePageName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { NumberType } from 'utilities/src/format/types'
-import { PoolData } from '~/appGraphql/data/pools/usePoolData'
-import { gqlToCurrency, TimePeriod, toHistoryDuration } from '~/appGraphql/data/util'
 import { ChartHeader } from '~/components/Charts/ChartHeader'
 import { Chart, refitChartContentAtom } from '~/components/Charts/ChartModel'
 import { ChartSkeleton } from '~/components/Charts/LoadingState'
@@ -25,6 +25,8 @@ import { getCandlestickPriceBounds } from '~/components/Charts/PriceChart/utils'
 import { ChartQueryResult, ChartType, DataQuality, PriceChartType } from '~/components/Charts/utils'
 import { VolumeChart } from '~/components/Charts/VolumeChart'
 import { SingleHistogramData } from '~/components/Charts/VolumeChart/utils'
+import type { PoolData } from '~/data/pools/usePoolData'
+import { gqlToCurrency, TimePeriod, toHistoryDuration } from '~/data/util'
 import { ChartActionsContainer } from '~/features/Explore/chart/ChartActionsContainer'
 import { ChartTypeToggle } from '~/features/Explore/chart/ChartTypeToggle'
 import { getPillTimeSelectorOptions, ORDERED_TIMES } from '~/features/Explore/timeLabels'
@@ -167,6 +169,8 @@ export function ChartSection(props: ChartSectionProps) {
   })
 
   const refitChartContent = useAtomValue(refitChartContentAtom)
+  const analyticsChainId = props.chain ? (fromGraphQLChain(props.chain) ?? undefined) : undefined
+  const poolId = props.poolData?.idOrAddress
 
   // TODO(WEB-3740): Integrate BE tick query, remove special casing for liquidity chart
   const loading = props.loading || (activeQuery.chartType !== ChartType.LIQUIDITY ? activeQuery.loading : false)
@@ -264,6 +268,17 @@ export function ChartSection(props: ChartSectionProps) {
           availableOptions={availableChartOptions}
           currentChartType={displayChartType}
           onChartTypeChange={(c: ChartType) => {
+            if (c !== displayChartType) {
+              sendAnalyticsEvent(InterfaceEventName.ChartSettingSelected, {
+                page: InterfacePageName.PoolDetailsPage,
+                selection: 'chart_type',
+                chart_type: c,
+                time_period: timePeriod,
+                previous_value: displayChartType,
+                chain_id: analyticsChainId,
+                pool_id: poolId,
+              })
+            }
             if (c !== ChartType.LIQUIDITY) {
               setZoomActions(null)
             }
@@ -294,6 +309,15 @@ export function ChartSection(props: ChartSectionProps) {
                 if (option === timePeriod) {
                   refitChartContent?.()
                 } else {
+                  sendAnalyticsEvent(InterfaceEventName.ChartSettingSelected, {
+                    page: InterfacePageName.PoolDetailsPage,
+                    selection: 'time_period',
+                    chart_type: selectedChartType,
+                    time_period: option,
+                    previous_value: timePeriod,
+                    chain_id: analyticsChainId,
+                    pool_id: poolId,
+                  })
                   setTimePeriod(option)
                 }
               }}

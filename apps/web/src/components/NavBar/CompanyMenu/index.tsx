@@ -9,7 +9,7 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NavIcon } from '~/components/Logo/NavIcon'
 import { MenuDropdown } from '~/components/NavBar/CompanyMenu/MenuDropdown'
 import { MobileMenuDrawer } from '~/components/NavBar/CompanyMenu/MobileMenuDrawer'
-import { useIsMobileDrawer } from '~/components/NavBar/ScreenSizes'
+import { useIsMobileDrawer, useTabsVisible } from '~/components/NavBar/ScreenSizes'
 
 const ArrowDownWrapper = styled(Text, {
   color: '$neutral2',
@@ -25,6 +25,7 @@ export function CompanyMenu() {
   const popoverRef = useRef<Popover>(null)
   const media = useMedia()
   const isMobileDrawer = useIsMobileDrawer()
+  const areTabsVisible = useTabsVisible()
   const isLargeScreen = !media.xxl
   const location = useLocation()
   const [isOpen, setIsOpen] = useState(false)
@@ -46,6 +47,7 @@ export function CompanyMenu() {
           alignItems="center"
           gap="$gap4"
           p="$spacing8"
+          $md={{ py: '$spacing12' }}
           cursor="pointer"
           group
           $platform-web={{ containerType: 'normal' }}
@@ -62,8 +64,8 @@ export function CompanyMenu() {
               </Flex>
             </Link>
           </Trace>
-          {media.md && <Hamburger size={22} color="$neutral2" cursor="pointer" ml="16px" />}
-          {!media.md && (
+          {!areTabsVisible && <Hamburger size={24} color="$neutral2" cursor="pointer" ml="16px" />}
+          {areTabsVisible && (
             <ArrowDownWrapper open={isOpen}>
               <ArrowChange size="$icon.12" />
             </ArrowDownWrapper>

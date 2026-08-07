@@ -1,5 +1,4 @@
-import { hasActiveNeckKey } from 'uniswap/src/features/passkey/deviceSession'
-import { listAuthenticators } from 'uniswap/src/features/passkey/embeddedWallet'
+import { hasActiveNeckKey, listAuthenticators } from '@universe/embedded-wallet'
 import { useOnCompleteEmbeddedWalletLogin } from '~/hooks/useOnCompleteEmbeddedWalletLogin'
 import { renderHook } from '~/test-utils/render'
 
@@ -32,22 +31,23 @@ vi.mock('~/components/AccountDrawer/MiniPortfolio/hooks', () => ({
   useAccountDrawer: vi.fn(() => ({ isOpen: false, open: mockDrawerOpen, close: mockDrawerClose, toggle: vi.fn() })),
 }))
 
-vi.mock('~/state/embeddedWallet/store', async (importOriginal) => ({
-  ...(await importOriginal()),
+vi.mock('@universe/embedded-wallet/src/state/embeddedWalletStore', () => ({
   useEmbeddedWalletState: vi.fn(() => ({ setEmbeddedWalletState: vi.fn() })),
+  getEmbeddedWalletState: vi.fn(() => ({ walletAddress: null, walletId: null, chainId: null, isConnected: false })),
+  setChainId: vi.fn(),
 }))
 
 vi.mock('uniswap/src/features/telemetry/send', () => ({
   sendAnalyticsEvent: vi.fn(),
 }))
 
-vi.mock('uniswap/src/features/passkey/deviceSession', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('uniswap/src/features/passkey/deviceSession')>()),
+vi.mock('@universe/embedded-wallet/src/features/passkey/deviceSession', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@universe/embedded-wallet/src/features/passkey/deviceSession')>()),
   hasActiveNeckKey: vi.fn(),
 }))
 
-vi.mock('uniswap/src/features/passkey/embeddedWallet', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('uniswap/src/features/passkey/embeddedWallet')>()),
+vi.mock('@universe/embedded-wallet/src/features/passkey/embeddedWallet', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@universe/embedded-wallet/src/features/passkey/embeddedWallet')>()),
   listAuthenticators: vi.fn(),
 }))
 

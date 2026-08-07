@@ -1,7 +1,7 @@
 import { AuctionStep } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 import type { UTCTimestamp } from 'lightweight-charts'
 import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
-import { calibratedBlockToTimestamp } from '~/features/Toucan/Auction/utils/blockToTimestamp'
+import { calibratedBlockToTimestamp } from '~/utils/blockToTimestamp'
 
 export interface SupplySchedulePoint {
   time: UTCTimestamp

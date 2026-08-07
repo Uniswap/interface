@@ -15,11 +15,11 @@ import { Flex, ScrollView, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText'
-import { getPortfolioHistoricalValueChartQuery } from 'uniswap/src/data/rest/getPortfolioChart'
+import { getPortfolioHistoricalValueChartQuery } from 'uniswap/src/data/apiClients/dataApiService/balances/getPortfolioChart'
 import {
   getUnavailableCategories,
   useWalletBalancesIncludeCategories,
-} from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+} from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -47,8 +47,9 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
   const insets = useAppInsets()
   const queryClient = useQueryClient()
   const [chartPeriod, setChartPeriod] = useState(ChartPeriod.DAY)
-  // Read without logging; the pools exposure is logged only where the feature is actually shown (see usePoolsTabVisibility).
+  // Read without duplicate logging; each category records its exposure where the feature itself is surfaced.
   const portfolioPoolsBalancesEnabled = useFeatureFlagWithExposureLoggingDisabled(FeatureFlags.PortfolioPoolsBalances)
+  const earnEnabled = useFeatureFlagWithExposureLoggingDisabled(FeatureFlags.Earn)
   const includeCategories = useWalletBalancesIncludeCategories()
   const portfolioValueModifier = useRestPortfolioValueModifier(activeAccount.address)
 
@@ -56,6 +57,7 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
     data: chartData,
     tokensData,
     poolsData,
+    earnData,
     loading: chartLoading,
     chartColor,
   } = usePortfolioChartData({
@@ -64,10 +66,12 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
     chainIds: chains,
   })
 
-  const { chartScrubFiatValue, chartScrubTokensValue, chartScrubPoolsValue, handleScrub } = useChartScrub({
-    tokensData,
-    poolsData,
-  })
+  const { chartScrubFiatValue, chartScrubTokensValue, chartScrubPoolsValue, chartScrubEarnValue, handleScrub } =
+    useChartScrub({
+      tokensData,
+      poolsData,
+      earnData,
+    })
 
   const chartPercentChange = useMemo(() => {
     const firstPoint = chartData[0]
@@ -113,23 +117,33 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
   const breakdownCardProps = useMemo(
     () =>
       getBreakdownCardProps({
-        enabled: portfolioPoolsBalancesEnabled,
+        poolsEnabled: portfolioPoolsBalancesEnabled,
+        earnEnabled,
         poolsUnavailable,
         breakdown,
-        scrub: { total: chartScrubFiatValue, tokens: chartScrubTokensValue, pools: chartScrubPoolsValue },
+        scrub: {
+          total: chartScrubFiatValue,
+          tokens: chartScrubTokensValue,
+          pools: chartScrubPoolsValue,
+          earn: chartScrubEarnValue,
+        },
         tokensData,
         poolsData,
+        earnData,
         isAllTimePeriod,
       }),
     [
       portfolioPoolsBalancesEnabled,
+      earnEnabled,
       poolsUnavailable,
       breakdown,
       chartScrubFiatValue,
       chartScrubTokensValue,
       chartScrubPoolsValue,
+      chartScrubEarnValue,
       tokensData,
       poolsData,
+      earnData,
       isAllTimePeriod,
     ],
   )
@@ -152,6 +166,9 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
               chartPeriod: period,
               chainIds: chains,
               includeCategories,
+              includeOverrides: portfolioValueModifier?.includeOverrides,
+              excludeOverrides: portfolioValueModifier?.excludeOverrides,
+              includeSpamTokens: portfolioValueModifier?.includeSpamTokens,
               ...(includeCategories.includes(WalletBalanceCategory.POOLS) && {
                 poolIncludeOverrides: portfolioValueModifier?.poolIncludeOverrides,
                 poolExcludeOverrides: portfolioValueModifier?.poolExcludeOverrides,

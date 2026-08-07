@@ -114,12 +114,12 @@ export const PortfolioEarnSection = memo(function PortfolioEarnSection({ account
     [positionsByVaultId],
   )
 
-  const shouldShowLoadingRows =
-    isLoadingVaults ||
-    (isLoadingPositions && !hasDisplayableEarnPosition) ||
-    !hasSettledPortfolioBalances ||
-    (isLoadingTokenProjects && tokenProjectsByCurrencyId === undefined)
-  const shouldShowPendingPositionRows = isLoadingPositions && hasDisplayableEarnPosition
+  // Eligibility inputs only gate unfunded rows — funded rows render once vaults + positions resolve.
+  const isEligibilityLookupPending =
+    !hasSettledPortfolioBalances || (isLoadingTokenProjects && tokenProjectsByCurrencyId === undefined)
+  const isVaultRowDataPending = isLoadingPositions || isEligibilityLookupPending
+  const shouldShowLoadingRows = isLoadingVaults || (isVaultRowDataPending && !hasDisplayableEarnPosition)
+  const shouldShowPendingPositionRows = isVaultRowDataPending && hasDisplayableEarnPosition
   const shouldShowVaultDivider = !shouldShowLoadingRows && eligibleVaults.length > 0 && ineligibleVaults.length > 0
   const hasNoVaultRows = !shouldShowLoadingRows && vaultsSortedByPosition.length === 0
   const shouldShowErrorState = isError && hasNoVaultRows

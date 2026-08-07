@@ -5,6 +5,7 @@ import { RenderHookOptions, RenderOptions, render, renderHook } from '@testing-l
 import { SharedQueryClient } from '@universe/api'
 import { ComplianceClientProvider, type ComplianceV2Client } from '@universe/compliance'
 import { PriceServiceProvider } from '@universe/prices'
+import { NuqsTestingAdapter } from 'nuqs/adapters/testing'
 import { ComponentType, PropsWithChildren, ReactElement, ReactNode } from 'react'
 import { HelmetProvider } from 'react-helmet-async/lib/index'
 import { Provider } from 'react-redux'
@@ -12,10 +13,10 @@ import { BrowserRouter } from 'react-router'
 import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { MismatchContextProvider } from 'uniswap/src/features/smartWallet/mismatch/MismatchContext'
 import { WebUniswapProvider } from '~/app/WebUniswapContext'
-import { TransactionWatcherProvider } from '~/appGraphql/data/apollo/TransactionWatcherProvider'
 import { TestWeb3Provider } from '~/components/Web3Provider/TestWeb3Provider'
 import { WebAccountsStoreProvider } from '~/features/accounts/store/provider'
 import { WebAccountsStoreUpdater } from '~/features/accounts/store/updater'
+import { TransactionWatcherProvider } from '~/features/transactions/TransactionWatcherProvider'
 import { ConnectWalletMutationProvider } from '~/features/wallet/connection/hooks/useConnectWalletMutation'
 import { ExternalWalletProvider } from '~/features/wallet/providers/ExternalWalletProvider'
 import { BlockNumberContext } from '~/lib/hooks/useBlockNumber'
@@ -87,22 +88,24 @@ function BaseWrapper({
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
-            <TestWeb3Provider>
-              <ConnectWalletMutationProvider>
-                <WebAccountsStoreProvider>
-                  <ExternalWalletProvider>
-                    {/* TODO: figure out how to properly mock `WebUniswapProvider` so that we can include it in all tests */}
-                    {includeUniswapContext ? (
-                      <WebUniswapProvider>
+            <NuqsTestingAdapter>
+              <TestWeb3Provider>
+                <ConnectWalletMutationProvider>
+                  <WebAccountsStoreProvider>
+                    <ExternalWalletProvider>
+                      {/* TODO: figure out how to properly mock `WebUniswapProvider` so that we can include it in all tests */}
+                      {includeUniswapContext ? (
+                        <WebUniswapProvider>
+                          <CommonTestProviders>{children}</CommonTestProviders>
+                        </WebUniswapProvider>
+                      ) : (
                         <CommonTestProviders>{children}</CommonTestProviders>
-                      </WebUniswapProvider>
-                    ) : (
-                      <CommonTestProviders>{children}</CommonTestProviders>
-                    )}
-                  </ExternalWalletProvider>
-                </WebAccountsStoreProvider>
-              </ConnectWalletMutationProvider>
-            </TestWeb3Provider>
+                      )}
+                    </ExternalWalletProvider>
+                  </WebAccountsStoreProvider>
+                </ConnectWalletMutationProvider>
+              </TestWeb3Provider>
+            </NuqsTestingAdapter>
           </BrowserRouter>
         </QueryClientProvider>
       </Provider>

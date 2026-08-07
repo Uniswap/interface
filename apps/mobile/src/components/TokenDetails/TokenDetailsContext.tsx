@@ -11,6 +11,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { useTokenKYCStatus } from 'uniswap/src/features/permissionedTokens/useTokenKYCStatus'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -20,6 +21,7 @@ import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/curren
 import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 type TokenDetailsContextState = {
   currencyId: string
@@ -45,6 +47,10 @@ type TokenDetailsContextState = {
   copyAddressToClipboard: (address: string) => Promise<void>
   error: unknown | undefined
   setError: (error: unknown | undefined) => void
+  isPermissioned: boolean
+  isAllowlisted: boolean
+  isPermissionedLoading: boolean
+  permissionedIssuer: string | undefined
 }
 
 const TokenDetailsContext = createContext<TokenDetailsContextState | undefined>(undefined)
@@ -115,10 +121,21 @@ export function TokenDetailsContextProvider({
 
   const { chains: enabledChains } = useEnabledChains()
 
-  const state = useMemo<TokenDetailsContextState>((): TokenDetailsContextState => {
-    const chainId = currencyIdToChain(currencyId)
-    const address = currencyIdToAddress(currencyId)
+  const activeAddress = useActiveAccountAddressWithThrow()
+  const chainId = currencyIdToChain(currencyId)
+  const address = currencyIdToAddress(currencyId)
+  const {
+    isPermissioned: permissioned,
+    isAllowlisted: allowlisted,
+    isLoading: isPermissionedLoading,
+    issuer: permissionedIssuer,
+  } = useTokenKYCStatus({
+    tokenAddress: address,
+    chainId: chainId ?? undefined,
+    walletAddress: activeAddress,
+  })
 
+  const state = useMemo<TokenDetailsContextState>((): TokenDetailsContextState => {
     if (!chainId) {
       throw new Error(`Unable to find chainId for currencyId: ${currencyId}`)
     }
@@ -149,6 +166,10 @@ export function TokenDetailsContextProvider({
       copyAddressToClipboard,
       error,
       setError,
+      isPermissioned: permissioned,
+      isAllowlisted: allowlisted,
+      isPermissionedLoading,
+      permissionedIssuer,
     }
   }, [
     activeTransactionType,
@@ -170,6 +191,12 @@ export function TokenDetailsContextProvider({
     tokenColor,
     tokenColorLoading,
     copyAddressToClipboard,
+    permissioned,
+    allowlisted,
+    isPermissionedLoading,
+    permissionedIssuer,
+    address,
+    chainId,
   ])
 
   return <TokenDetailsContext.Provider value={state}>{children}</TokenDetailsContext.Provider>

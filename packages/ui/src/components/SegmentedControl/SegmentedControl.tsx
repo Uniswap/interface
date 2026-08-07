@@ -34,32 +34,32 @@ const OptionsSelector = styled(Tabs.List, {
     },
     size: {
       xsmall: {
-        height: 30,
+        minHeight: 30,
         gap: '$spacing4',
         borderRadius: '$roundedFull',
       },
       small: {
-        height: 30,
+        minHeight: 30,
         gap: '$spacing6',
         borderRadius: '$rounded16',
       },
       smallThumbnail: {
-        height: 34,
+        minHeight: 34,
         gap: '$spacing6',
         borderRadius: '$rounded16',
       },
       default: {
-        height: 34,
+        minHeight: 34,
         gap: '$gap8',
         borderRadius: '$rounded20',
       },
       large: {
-        height: 44,
+        minHeight: 44,
         gap: '$gap12',
         borderRadius: '$rounded24',
       },
       largeThumbnail: {
-        height: 42,
+        minHeight: 42,
         gap: '$gap12',
         borderRadius: '$rounded24',
       },
@@ -118,34 +118,41 @@ const OptionButton = styled(Tabs.Tab, {
         flex: 1,
       },
     },
+    variableOptionWidths: {
+      true: {
+        flexGrow: 1,
+        flexShrink: 1,
+        flexBasis: 'auto',
+      },
+    },
     size: {
       xsmall: {
-        height: '$spacing20',
+        minHeight: '$spacing20',
         py: '$spacing2',
         px: 8,
       },
       small: {
-        height: '$spacing20',
+        minHeight: '$spacing20',
         py: '$spacing2',
         px: '$padding6',
       },
       smallThumbnail: {
-        height: '$spacing24',
+        minHeight: '$spacing24',
         py: '$spacing2',
         px: '$gap4',
       },
       default: {
-        height: '$spacing24',
+        minHeight: '$spacing24',
         py: '$spacing2',
         px: '$padding8',
       },
       large: {
-        height: '$spacing36',
+        minHeight: '$spacing36',
         py: '$padding8',
         px: '$padding12',
       },
       largeThumbnail: {
-        height: '$spacing32',
+        minHeight: '$spacing32',
         py: '$padding8',
         px: '$padding8',
       },
@@ -188,6 +195,8 @@ interface SegmentedControlProps<T extends string = string> {
   size?: SegmentedControlSize
   disabled?: boolean
   fullWidth?: boolean
+  // Size each option to its content instead of an equal split (mobile-web-like); requires fullWidth, ignored without it
+  variableOptionWidths?: boolean
   outlined?: boolean
   gap?: SpaceTokens
 }
@@ -198,9 +207,9 @@ interface SegmentedControlProps<T extends string = string> {
  * @param options - An array of options to display in the segmented control - must have between 2 and 6 options.
  *
  * Note: options can be just text (i.e. their value), or a value with a custom display element.
- * If you are defining custom display elements, you must ensure that each option fits within the vertical bounds of the SegmentedControl.
+ * The control grows vertically to fit its tallest option (e.g. labels that wrap in some locales).
  *
- * For reference, the heights of the container are as follows (each with top and bottom padding of 4px):
+ * For reference, the minimum heights of the container are as follows (each with top and bottom padding of 4px):
  * - small: 30px
  * - default: 34px
  * - defaultThumbnail: 34px
@@ -220,6 +229,7 @@ export function SegmentedControl<T extends string = string>({
   size = 'default',
   disabled,
   fullWidth,
+  variableOptionWidths,
   outlined = true,
   gap,
 }: SegmentedControlProps<T>): JSX.Element {
@@ -253,6 +263,12 @@ export function SegmentedControl<T extends string = string>({
   const activeIndicatorXAdjustment = isMobileApp ? (isLargeSize ? 3.17 : 2.5) : 0
   const activeIndicatorYAdjustment = isMobileApp && !isLargeSize ? -1.5 : 0
 
+  // Keyboard activation (Tab + Enter/Space) routes through Tabs' onValueChange, which bypasses the
+  // per-option onPress guard. Reject disabled values here too so a disabled tab can't be selected by
+  // any path. `tabIndex={-1}` on disabled options below also keeps them out of the tab sequence.
+  const isOptionDisabled = (value: T): boolean =>
+    disabled || (options.find((o) => o.value === value)?.disabled ?? false)
+
   return (
     <Tabs
       unstyled
@@ -260,6 +276,9 @@ export function SegmentedControl<T extends string = string>({
       orientation="horizontal"
       value={selectedOption}
       onValueChange={(option) => {
+        if (isOptionDisabled(option as T)) {
+          return
+        }
         onSelectOption(option as T)
       }}
     >
@@ -281,13 +300,18 @@ export function SegmentedControl<T extends string = string>({
           const optionElement = (
             <OptionButton
               key={value}
-              href={href}
-              role={href ? 'link' : 'button'}
+              href={itemDisabled ? undefined : href}
+              role={!itemDisabled && href ? 'link' : 'button'}
               tag={href ? 'a' : 'button'}
               $platform-web={{ textDecorationLine: 'none' }}
               active={selectedOption === value}
               disabled={itemDisabled}
-              fullWidth={fullWidth}
+              // Override the styled default tabIndex (0) so a disabled option leaves the keyboard
+              // tab sequence, and expose aria-disabled for assistive tech.
+              tabIndex={itemDisabled ? -1 : 0}
+              aria-disabled={itemDisabled || undefined}
+              fullWidth={fullWidth && !variableOptionWidths}
+              variableOptionWidths={fullWidth && variableOptionWidths}
               size={size}
               value={value}
               onInteraction={handleOnInteraction}
@@ -299,6 +323,9 @@ export function SegmentedControl<T extends string = string>({
               onPress={(e) => {
                 if (href && 'preventDefault' in e) {
                   e.preventDefault()
+                }
+                if (itemDisabled) {
+                  return
                 }
                 onSelectOption(value)
               }}

@@ -3,8 +3,8 @@ import { useMemo } from 'react'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useReadContract } from 'wagmi'
 import { erc20Abi } from '~/chains'
+import { assume0xAddress } from '~/chains'
 import { useActiveAddress } from '~/features/accounts/store/hooks'
-import { assume0xAddress } from '~/utils/wagmi'
 
 interface UseExistingTokenWalletBalanceResult {
   balance: CurrencyAmount<Token> | undefined

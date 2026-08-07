@@ -8,7 +8,7 @@ import { PriceChartType } from '~/components/Charts/utils'
 
 export interface PriceChartBodyProps {
   type: PriceChartType
-  height: number
+  height: number | string
   data: PriceChartData[]
   stale: boolean
   timePeriod?: GraphQLApi.HistoryDuration

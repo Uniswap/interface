@@ -48,7 +48,7 @@ describe('StatusIcon', () => {
         id: 'io.metamask',
         name: 'MetaMask',
         icon: '/src/assets/wallets/metamask-icon.svg',
-      } as ExternalWallet)
+      } as unknown as ExternalWallet)
 
       mocked(useActiveAddresses).mockReturnValue({
         evmAddress: ACCOUNT,

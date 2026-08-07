@@ -6,6 +6,7 @@ import { PlatformSplitStubError } from 'utilities/src/errors'
 export type StocksHorizontalRowProps = {
   tokens: RwaTokenOption[]
   onSelectRwaToken: OnSelectRwaToken
+  showTokenWarnings: boolean
   expanded?: boolean
   onExpand?: (tokens: RwaTokenOption[]) => void
 }

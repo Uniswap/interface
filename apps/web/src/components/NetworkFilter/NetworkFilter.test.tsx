@@ -37,6 +37,20 @@ const TIERED_OPTIONS = {
 } satisfies TieredNetworkOptions
 
 describe(NetworkFilter, () => {
+  it('hides the search input in the searchable menu when disabled', () => {
+    render(
+      <NetworkFilter
+        showSearch
+        showSearchInput={false}
+        networks={SUBSET_NETWORKS}
+        currentChainId={UniverseChainId.Mainnet}
+        onPress={vi.fn()}
+      />,
+    )
+
+    expect(screen.queryByTestId(TestID.ExploreSearchInput)).not.toBeInTheDocument()
+  })
+
   it('renders a searchable tiered menu without the all networks option', () => {
     const onPress = vi.fn()
 

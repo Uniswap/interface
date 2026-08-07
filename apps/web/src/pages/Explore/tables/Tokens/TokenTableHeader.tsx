@@ -2,10 +2,13 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { OrderDirection } from '~/appGraphql/data/util'
+import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from '~/components/Table/shared/SortableHeader'
 import { getHeaderDescription, TokenSortMethod } from '~/components/Tokens/constants'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
+import { OrderDirection } from '~/data/util'
+import { scrollToExploreTokenSection } from '~/pages/Explore/categories/useExploreCategory'
 import { useExploreParams } from '~/pages/Explore/redirects'
 import { useTokenTableSortStoreActions } from '~/pages/Explore/tables/Tokens/tokenTableSortStore'
 import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
@@ -55,7 +58,16 @@ export function TokenTableHeader({
   const { chainName } = useExploreParams()
   const headerText = useMemo(() => getTokenSortMethodLabel({ t, category }), [t, category])
   const { setSort } = useTokenTableSortStoreActions()
-  const handleSortCategory = useCallback(() => setSort(category), [setSort, category])
+  const handleSortCategory = useCallback(() => {
+    const newSortAscending = setSort(category)
+    sendAnalyticsEvent(InterfaceEventName.ExploreTableSorted, {
+      table_type: 'tokens',
+      sort_method: category,
+      sort_direction: newSortAscending ? OrderDirection.Asc : OrderDirection.Desc,
+      surface: 'explore',
+    })
+    scrollToExploreTokenSection()
+  }, [setSort, category])
 
   const networkName = useMemo(() => {
     if (category !== TokenSortMethod.PRICE || !chainName) {

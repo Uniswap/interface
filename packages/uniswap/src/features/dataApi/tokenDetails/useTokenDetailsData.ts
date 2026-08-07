@@ -16,25 +16,21 @@ import { useQuery } from '@tanstack/react-query'
 import type {
   GetTokenMarketsMultiChainResponse,
   GetTokenMarketsResponse,
+  GetTokenMultiChainResponse,
   GetTokenResponse,
-  GetTokensMultiChainResponse,
 } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import {
   HistoryDuration,
   type TokenMarketStats as RestTokenMarketStats,
 } from '@uniswap/client-data-api/dist/data/v2/types_pb'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import {
   getGetTokenMarketsMultiChainQueryOptions,
   getGetTokenMarketsQueryOptions,
+  getGetTokenMultiChainQueryOptions,
   getGetTokenQueryOptions,
-  getGetTokensMultiChainQueryOptions,
 } from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
-import {
-  useTokenMarketPartsFragment,
-  useTokenProjectMarketsPartsFragment,
-} from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
+import { useTokenMarketPartsFragment, useTokenProjectMarketsPartsFragment } from 'uniswap/src/data/graphql/fragments'
 import {
   adaptLegacyMarketData,
   adaptLegacyProjectMarketData,
@@ -46,6 +42,7 @@ import {
 import type { MarketStatsData, TokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails/tokenMarketStatsUtils'
 import { computeTokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails/tokenMarketStatsUtils'
 import type { TokenMetadataData } from 'uniswap/src/features/dataApi/tokenDetails/tokenMetadataUtils'
+import { useIsV2TokensEnabled } from 'uniswap/src/features/dataApi/tokenDetails/useIsV2TokensEnabled'
 import { currencyIdToRestContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import type { CurrencyId } from 'uniswap/src/types/currency'
 
@@ -63,24 +60,34 @@ export type { TokenMetadataData } from 'uniswap/src/features/dataApi/tokenDetail
  * Callers can prefer project market data when the aggregated quote is the intended display value.
  *
  * When `isMultichainAggregateView` is true (the all-networks view of a genuinely multichain asset),
- * fetches via GetTokensMultiChain instead — its price is sourced from a fixed canonical chain
+ * fetches via GetTokenMultiChain instead — its price is sourced from a fixed canonical chain
  * instance rather than the caller's per-chain currencyId.
  */
 export interface UseTokenSpotPriceOptions {
   preferProjectMarketData?: boolean
-  /** True for the "all networks" aggregate view of a genuinely multichain asset. When true, V2 fetches spot price via GetTokensMultiChain instead of the single-chain GetToken. */
+  /** True for the "all networks" aggregate view of a genuinely multichain asset. When true, V2 fetches spot price via GetTokenMultiChain instead of the single-chain GetToken. */
   isMultichainAggregateView?: boolean
+  /** Polls the V2 REST spot-price query at this cadence — without it the displayed price freezes, as REST token queries have no built-in polling. No effect on the legacy GraphQL path. */
+  refetchInterval?: number
+  /** Disables the V2 REST queries entirely, e.g. while the consuming surface is hidden */
+  skip?: boolean
 }
 
 function selectSpotUsd(data: PlainMessage<GetTokenResponse> | undefined): number | undefined {
   return data?.token?.price?.spotUsd
 }
 
-function selectMultichainSpotUsd(data: PlainMessage<GetTokensMultiChainResponse> | undefined): number | undefined {
-  return data?.tokens[0]?.price?.spotUsd
+function selectMultichainSpotUsd(data: PlainMessage<GetTokenMultiChainResponse> | undefined): number | undefined {
+  return data?.token?.price?.spotUsd
 }
 
 function selectPercentChange1d(data: PlainMessage<GetTokenResponse> | undefined): number | undefined {
+  return data?.token?.price?.percentChange1d
+}
+
+function selectMultichainPercentChange1d(
+  data: PlainMessage<GetTokenMultiChainResponse> | undefined,
+): number | undefined {
   return data?.token?.price?.percentChange1d
 }
 
@@ -89,9 +96,9 @@ export function useTokenSpotPrice(
   options?: UseTokenSpotPriceOptions,
 ): number | undefined {
   const id = currencyId ?? ''
-  const isV2TokensEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
+  const isV2TokensEnabled = useIsV2TokensEnabled()
   const preferProjectMarketData = options?.preferProjectMarketData ?? false
-  const shouldUseV2Tokens = isV2TokensEnabled && !preferProjectMarketData
+  const shouldUseV2Tokens = isV2TokensEnabled && !preferProjectMarketData && !options?.skip
   const tokenMarket = useTokenMarketPartsFragment({ currencyId: id, preferProjectMarketData }).data.market
   const projectMarkets = useTokenProjectMarketsPartsFragment({ currencyId: id, preferProjectMarketData }).data.project
     ?.markets
@@ -101,22 +108,22 @@ export function useTokenSpotPrice(
     () => (currencyId ? currencyIdToRestContractInput(currencyId) : undefined),
     [currencyId],
   )
-  const { data: singleChainRestSpotUsd } = useQuery(
-    getGetTokenQueryOptions({
+  const { data: singleChainRestSpotUsd } = useQuery({
+    ...getGetTokenQueryOptions({
       params: restTokenIdentifier,
       enabled: shouldUseV2Tokens && !isMultichainAggregation && !!restTokenIdentifier,
       select: selectSpotUsd,
     }),
-  )
-  const { data: multichainRestSpotUsd } = useQuery(
-    getGetTokensMultiChainQueryOptions({
-      params: restTokenIdentifier
-        ? { identifier: { case: 'tokens', value: { tokens: [restTokenIdentifier] } } }
-        : undefined,
+    refetchInterval: options?.refetchInterval,
+  })
+  const { data: multichainRestSpotUsd } = useQuery({
+    ...getGetTokenMultiChainQueryOptions({
+      params: restTokenIdentifier ? { identifier: { case: 'token', value: restTokenIdentifier } } : undefined,
       enabled: shouldUseV2Tokens && isMultichainAggregation && !!restTokenIdentifier,
       select: selectMultichainSpotUsd,
     }),
-  )
+    refetchInterval: options?.refetchInterval,
+  })
   const restSpotUsd = isMultichainAggregation ? multichainRestSpotUsd : singleChainRestSpotUsd
 
   const legacyMarketPrice = tokenMarket?.price?.value
@@ -146,7 +153,7 @@ export interface ResolveSpotPriceOverrideParams {
  * so the caller falls back to its own aggregate price source.
  *
  * Once V2 is enabled, `useTokenSpotPrice`'s value is always authoritative, even on the
- * all-networks view — pass `isMultichainAggregateView` there to get GetTokensMultiChain's
+ * all-networks view — pass `isMultichainAggregateView` there to get GetTokenMultiChain's
  * canonical-chain price instead of an arbitrary per-chain one. Legacy GraphQL still defers to the
  * caller's project-level aggregate there (unless RWA/project-market-preferred), since the
  * per-chain subgraph price would misrepresent the aggregate.
@@ -167,25 +174,39 @@ export function resolveSpotPriceOverride({
 
 export interface UseTokenPriceChangeOptions {
   preferProjectMarketData?: boolean
+  /** True for the "all networks" aggregate view of a genuinely multichain asset. When true, V2 fetches percent change via GetTokenMultiChain instead of the single-chain GetToken. */
+  isMultichainAggregateView?: boolean
+  /** Disables the V2 REST queries entirely, e.g. while the consuming surface is hidden */
+  skip?: boolean
 }
 
 /**
  * Returns the 24hr price change percentage for a token
  */
 export function useTokenPriceChange(currencyId: CurrencyId, options?: UseTokenPriceChangeOptions): number | undefined {
-  const isV2TokensEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
+  const isV2TokensEnabled = useIsV2TokensEnabled()
   const preferProjectMarketData = options?.preferProjectMarketData ?? false
+  const isMultichainAggregation = options?.isMultichainAggregateView ?? false
+  const shouldUseV2Tokens = isV2TokensEnabled && !preferProjectMarketData && !options?.skip
   const projectMarkets = useTokenProjectMarketsPartsFragment({ currencyId, preferProjectMarketData }).data.project
     ?.markets
 
   const restTokenIdentifier = useMemo(() => currencyIdToRestContractInput(currencyId), [currencyId])
-  const { data: restPercentChange1d } = useQuery(
+  const { data: singleChainPercentChange1d } = useQuery(
     getGetTokenQueryOptions({
       params: restTokenIdentifier,
-      enabled: isV2TokensEnabled && !preferProjectMarketData,
+      enabled: shouldUseV2Tokens && !isMultichainAggregation,
       select: selectPercentChange1d,
     }),
   )
+  const { data: multichainPercentChange1d } = useQuery(
+    getGetTokenMultiChainQueryOptions({
+      params: { identifier: { case: 'token', value: restTokenIdentifier } },
+      enabled: shouldUseV2Tokens && isMultichainAggregation,
+      select: selectMultichainPercentChange1d,
+    }),
+  )
+  const restPercentChange1d = isMultichainAggregation ? multichainPercentChange1d : singleChainPercentChange1d
 
   const legacyPercentChange24h = projectMarkets?.[0]?.pricePercentChange24h?.value
 
@@ -238,9 +259,17 @@ function selectMultichainMarketStatsData(
   return mapRestTokenMarketStats(data?.markets[0]?.stats)
 }
 
-export function useTokenMarketStats(currencyId: CurrencyId, params?: UseTokenMarketStatsParams): TokenMarketStats {
+export interface UseTokenMarketStatsResult extends TokenMarketStats {
+  /** True only while the active V2 REST market-stats request is in flight with no cached data to show yet. */
+  isLoading: boolean
+}
+
+export function useTokenMarketStats(
+  currencyId: CurrencyId,
+  params?: UseTokenMarketStatsParams,
+): UseTokenMarketStatsResult {
   const { currentPriceOverride, aggregatedData, preferProjectMarketData, isMultichainAggregateView } = params ?? {}
-  const isV2TokensEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
+  const isV2TokensEnabled = useIsV2TokensEnabled()
   const isMultichainAggregation = isMultichainAggregateView ?? false
   const shouldUseV2Tokens = isV2TokensEnabled && !preferProjectMarketData
 
@@ -253,14 +282,14 @@ export function useTokenMarketStats(currencyId: CurrencyId, params?: UseTokenMar
   // V2 path: on-chain market stats (TVL/volume/52w) from GetTokenMarkets, or from
   // GetTokenMarketsMultiChain (summed across chains) when showing the all-networks aggregate.
   const restTokenIdentifier = useMemo(() => currencyIdToRestContractInput(currencyId), [currencyId])
-  const { data: singleChainRestMarket } = useQuery(
+  const { data: singleChainRestMarket, isLoading: isSingleChainMarketLoading } = useQuery(
     getGetTokenMarketsQueryOptions({
       params: isMultichainAggregation ? undefined : { tokens: [restTokenIdentifier], duration: HistoryDuration.DAY },
       enabled: shouldUseV2Tokens,
       select: selectMarketStatsData,
     }),
   )
-  const { data: multichainRestMarket } = useQuery(
+  const { data: multichainRestMarket, isLoading: isMultichainMarketLoading } = useQuery(
     getGetTokenMarketsMultiChainQueryOptions({
       params: {
         identifier: { case: 'tokens', value: { tokens: [restTokenIdentifier] } },
@@ -271,6 +300,7 @@ export function useTokenMarketStats(currencyId: CurrencyId, params?: UseTokenMar
     }),
   )
   const restMarket = isMultichainAggregation ? multichainRestMarket : singleChainRestMarket
+  const isRestMarketLoading = isMultichainAggregation ? isMultichainMarketLoading : isSingleChainMarketLoading
 
   return useMemo(() => {
     const market = shouldUseV2Tokens ? restMarket : adaptLegacyMarketData(legacyTokenMarket)
@@ -285,25 +315,32 @@ export function useTokenMarketStats(currencyId: CurrencyId, params?: UseTokenMar
         aggregatedData.market?.priceHigh52wUsd != null ||
         aggregatedData.projectMarket != null)
     if (hasAggregated) {
-      return computeTokenMarketStats({
-        market: aggregatedData.market,
-        projectMarket: aggregatedData.projectMarket,
+      return {
+        ...computeTokenMarketStats({
+          market: aggregatedData.market,
+          projectMarket: aggregatedData.projectMarket,
+          currentPrice: currentPriceOverride,
+          preferProjectMarketData,
+        }),
+        isLoading: false,
+      }
+    }
+    return {
+      ...computeTokenMarketStats({
+        market,
+        projectMarket,
         currentPrice: currentPriceOverride,
         preferProjectMarketData,
-      })
+      }),
+      isLoading: shouldUseV2Tokens && isRestMarketLoading,
     }
-    return computeTokenMarketStats({
-      market,
-      projectMarket,
-      currentPrice: currentPriceOverride,
-      preferProjectMarketData,
-    })
   }, [
     aggregatedData,
     currentPriceOverride,
     preferProjectMarketData,
     shouldUseV2Tokens,
     restMarket,
+    isRestMarketLoading,
     legacyTokenMarket,
     legacyProjectMarkets,
   ])
@@ -325,9 +362,23 @@ function selectTokenMetadata(data: PlainMessage<GetTokenResponse> | undefined): 
   }
 }
 
+function nonEmptyFields(metadata: TokenMetadataData | undefined): Partial<TokenMetadataData> {
+  if (!metadata) {
+    return {}
+  }
+  return Object.fromEntries(
+    Object.entries(metadata).filter(([, value]) => value !== undefined && value !== ''),
+  ) as Partial<TokenMetadataData>
+}
+
 export interface UseTokenMetadataParams {
   /** Raw legacy GraphQL token data already fetched by the caller (e.g. tokenProjectQuery.data?.token); adapted internally. */
   legacyToken?: LegacyTokenMetadataInput
+}
+
+export interface UseTokenMetadataResult extends TokenMetadataData {
+  /** True only while the V2 REST metadata request is in flight with no cached data to show yet. */
+  isLoading: boolean
 }
 
 /**
@@ -342,13 +393,13 @@ export interface UseTokenMetadataParams {
 export function useTokenMetadata(
   currencyId: CurrencyId | undefined,
   params?: UseTokenMetadataParams,
-): TokenMetadataData {
-  const isV2TokensEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
+): UseTokenMetadataResult {
+  const isV2TokensEnabled = useIsV2TokensEnabled()
   const restTokenIdentifier = useMemo(
     () => (currencyId ? currencyIdToRestContractInput(currencyId) : undefined),
     [currencyId],
   )
-  const { data: restMetadata } = useQuery(
+  const { data: restMetadata, isLoading: isRestMetadataLoading } = useQuery(
     getGetTokenQueryOptions({
       params: restTokenIdentifier,
       enabled: isV2TokensEnabled && !!restTokenIdentifier,
@@ -359,8 +410,9 @@ export function useTokenMetadata(
 
   return useMemo(() => {
     if (isV2TokensEnabled) {
-      return restMetadata ?? {}
+      // Per-field, not whole-object: a sparse GetToken must not blank fields legacy already painted.
+      return { ...legacyMetadata, ...nonEmptyFields(restMetadata), isLoading: isRestMetadataLoading }
     }
-    return legacyMetadata ?? {}
-  }, [isV2TokensEnabled, restMetadata, legacyMetadata])
+    return { ...legacyMetadata, isLoading: false }
+  }, [isV2TokensEnabled, restMetadata, isRestMetadataLoading, legacyMetadata])
 }

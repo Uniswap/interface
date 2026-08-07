@@ -36,6 +36,12 @@ export type ModalProps = PropsWithChildren<{
   renderBehindBottomInset?: boolean
   hideKeyboardOnDismiss?: boolean
   hideKeyboardOnSwipeDown?: boolean
+  // native only; 'restore' settles the sheet back to its resting position after the keyboard hides (gorhom default: 'none')
+  keyboardBlurBehavior?: ComponentProps<typeof BaseModal>['keyboardBlurBehavior']
+  // native only; blur the focused BottomSheetTextInput as soon as a sheet pan starts. Required when the sheet hosts a
+  // BottomSheetTextInput: with the keyboard registered as shown, gorhom's pan-end worklet calls Dimensions.get (a
+  // non-worklet host function) on the UI runtime and hard-crashes; blurring at pan start keeps that branch unreachable.
+  enableBlurKeyboardOnGesture?: boolean
   // extend the sheet to its maximum snap point when keyboard is visible
   extendOnKeyboardVisible?: boolean
   // defaults to `true`

@@ -19,7 +19,7 @@ import { TamaguiProvider as OGTamaguiProvider, TamaguiProviderProps } from 'ui/s
 import { config } from 'ui/src/tamagui.config'
 import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
 import { UrlContext } from 'uniswap/src/contexts/UrlContext'
-import { SharedPersistQueryClientProvider } from 'uniswap/src/data/apiClients/SharedPersistQueryClientProvider'
+import { SharedPersistQueryClientProvider } from 'uniswap/src/data/reactQuery/SharedPersistQueryClientProvider'
 import { UniswapState, uniswapReducer } from 'uniswap/src/state/uniswapReducer'
 import { createMockFn } from 'uniswap/src/test/mockFn'
 import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'

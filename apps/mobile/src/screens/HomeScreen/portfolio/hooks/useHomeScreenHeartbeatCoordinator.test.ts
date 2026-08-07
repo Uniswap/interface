@@ -2,17 +2,13 @@ import { renderHook } from '@testing-library/react'
 import { useHomeScreenHeartbeatCoordinator } from 'src/screens/HomeScreen/portfolio/hooks/useHomeScreenHeartbeatCoordinator'
 import { HomeTab } from 'src/screens/HomeScreen/portfolio/types'
 import { useHeartbeatCoordinator } from 'src/utils/useHeartbeatCoordinator'
+import { NFT_QUERY_KEY_PREFIX } from 'uniswap/src/data/apiClients/dataApiService/nfts/queries'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 const mockQueryClientRefetchQueries = vi.fn().mockResolvedValue(undefined)
-const mockApolloRefetchQueries = vi.fn().mockResolvedValue(undefined)
 
 vi.mock('@tanstack/react-query', () => ({
   useQueryClient: () => ({ refetchQueries: mockQueryClientRefetchQueries }),
-}))
-
-vi.mock('@apollo/client', () => ({
-  useApolloClient: () => ({ refetchQueries: mockApolloRefetchQueries }),
 }))
 
 vi.mock('src/utils/useHeartbeatCoordinator', () => ({
@@ -25,7 +21,6 @@ describe('useHomeScreenHeartbeatCoordinator', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockQueryClientRefetchQueries.mockReset().mockResolvedValue(undefined)
-    mockApolloRefetchQueries.mockReset().mockResolvedValue(undefined)
   })
 
   it('passes enabled through to the shared coordinator', () => {
@@ -42,10 +37,21 @@ describe('useHomeScreenHeartbeatCoordinator', () => {
     const { refresh } = mockUseHeartbeatCoordinator.mock.calls[0]![0]
     await refresh()
 
-    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({ queryKey: [ReactQueryCacheKey.GetWalletBalances] })
-    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({ queryKey: [ReactQueryCacheKey.GetPortfolio] })
-    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({ queryKey: [ReactQueryCacheKey.GetPortfolioChart] })
-    expect(mockQueryClientRefetchQueries).not.toHaveBeenCalledWith({ queryKey: [ReactQueryCacheKey.ListPositions] })
+    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({
+      queryKey: [ReactQueryCacheKey.GetWalletBalances],
+      type: 'active',
+    })
+    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({
+      queryKey: [ReactQueryCacheKey.GetPortfolio],
+      type: 'active',
+    })
+    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({
+      queryKey: [ReactQueryCacheKey.GetPortfolioChart],
+      type: 'active',
+    })
+    expect(mockQueryClientRefetchQueries).not.toHaveBeenCalledWith(
+      expect.objectContaining({ queryKey: [ReactQueryCacheKey.ListPositions] }),
+    )
   })
 
   it('refetches the Tokens tab list on priceRefresh when Tokens is active', async () => {
@@ -54,8 +60,14 @@ describe('useHomeScreenHeartbeatCoordinator', () => {
     const { priceRefresh } = mockUseHeartbeatCoordinator.mock.calls[0]![0]
     await priceRefresh()
 
-    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({ queryKey: [ReactQueryCacheKey.GetWalletBalances] })
-    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({ queryKey: [ReactQueryCacheKey.GetPortfolio] })
+    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({
+      queryKey: [ReactQueryCacheKey.GetWalletBalances],
+      type: 'active',
+    })
+    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({
+      queryKey: [ReactQueryCacheKey.GetPortfolio],
+      type: 'active',
+    })
   })
 
   it('also refetches positions on refresh when Pools is active, but not the Tokens tab list', async () => {
@@ -64,8 +76,13 @@ describe('useHomeScreenHeartbeatCoordinator', () => {
     const { refresh } = mockUseHeartbeatCoordinator.mock.calls[0]![0]
     await refresh()
 
-    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({ queryKey: [ReactQueryCacheKey.ListPositions] })
-    expect(mockQueryClientRefetchQueries).not.toHaveBeenCalledWith({ queryKey: [ReactQueryCacheKey.GetPortfolio] })
+    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({
+      queryKey: [ReactQueryCacheKey.ListPositions],
+      type: 'active',
+    })
+    expect(mockQueryClientRefetchQueries).not.toHaveBeenCalledWith(
+      expect.objectContaining({ queryKey: [ReactQueryCacheKey.GetPortfolio] }),
+    )
   })
 
   it('only refetches balances on priceRefresh when Pools is active', async () => {
@@ -75,7 +92,10 @@ describe('useHomeScreenHeartbeatCoordinator', () => {
     await priceRefresh()
 
     expect(mockQueryClientRefetchQueries).toHaveBeenCalledTimes(1)
-    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({ queryKey: [ReactQueryCacheKey.GetWalletBalances] })
+    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({
+      queryKey: [ReactQueryCacheKey.GetWalletBalances],
+      type: 'active',
+    })
   })
 
   it('refetches NFTs on refresh when NFTs is active, but not positions or the Tokens tab list', async () => {
@@ -84,9 +104,13 @@ describe('useHomeScreenHeartbeatCoordinator', () => {
     const { refresh } = mockUseHeartbeatCoordinator.mock.calls[0]![0]
     await refresh()
 
-    expect(mockApolloRefetchQueries).toHaveBeenCalledWith({ include: ['NftsTab'] })
-    expect(mockQueryClientRefetchQueries).not.toHaveBeenCalledWith({ queryKey: [ReactQueryCacheKey.ListPositions] })
-    expect(mockQueryClientRefetchQueries).not.toHaveBeenCalledWith({ queryKey: [ReactQueryCacheKey.GetPortfolio] })
+    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({ queryKey: NFT_QUERY_KEY_PREFIX, type: 'active' })
+    expect(mockQueryClientRefetchQueries).not.toHaveBeenCalledWith(
+      expect.objectContaining({ queryKey: [ReactQueryCacheKey.ListPositions] }),
+    )
+    expect(mockQueryClientRefetchQueries).not.toHaveBeenCalledWith(
+      expect.objectContaining({ queryKey: [ReactQueryCacheKey.GetPortfolio] }),
+    )
   })
 
   it('does not refetch NFTs when a different tab is active', async () => {
@@ -95,6 +119,8 @@ describe('useHomeScreenHeartbeatCoordinator', () => {
     const { refresh } = mockUseHeartbeatCoordinator.mock.calls[0]![0]
     await refresh()
 
-    expect(mockApolloRefetchQueries).not.toHaveBeenCalled()
+    expect(mockQueryClientRefetchQueries).not.toHaveBeenCalledWith(
+      expect.objectContaining({ queryKey: NFT_QUERY_KEY_PREFIX }),
+    )
   })
 })

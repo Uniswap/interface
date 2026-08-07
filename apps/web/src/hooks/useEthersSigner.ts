@@ -4,7 +4,9 @@ import type { Account, Chain, Client, Transport } from 'viem'
 import { useConnectorClient } from 'wagmi'
 
 function clientToSigner(client?: Client<Transport, Chain, Account>) {
-  if (!client) {
+  // despite the types, wagmi v3 can resolve a client with no account (mid-disconnect) or no chain (unsupported network)
+  // oxlint-disable-next-line typescript/no-unnecessary-condition
+  if (!client?.account || !client.chain) {
     return undefined
   }
   const { chain, transport, account } = client

@@ -11,14 +11,18 @@ import { liquiditySaga } from '~/state/sagas/liquidity/liquiditySaga'
 import { lpIncentivesClaimSaga } from '~/state/sagas/lp_incentives/lpIncentivesSaga'
 import { submitToucanBidSaga } from '~/state/sagas/toucan/submitBidSaga'
 import { withdrawBidAndClaimTokensToucanBidSaga } from '~/state/sagas/toucan/withdrawBidAndClaimTokensSaga'
+import { cancelFinalizationSaga } from '~/state/sagas/transactions/cancelFinalizationSaga'
 import { cancelOrderSaga } from '~/state/sagas/transactions/cancelOrderSaga'
 import { cancelPlanStepSaga } from '~/state/sagas/transactions/cancelPlanStepSaga'
+import { cancelRemoteOrderSaga } from '~/state/sagas/transactions/cancelRemoteOrderSaga'
+import { revertCancellationSaga } from '~/state/sagas/transactions/revertCancellationSaga'
 import { swapActions, swapReducer, swapSaga, swapSagaName } from '~/state/sagas/transactions/swapSaga'
 import { watchTransactionsSaga } from '~/state/sagas/transactions/watcherSaga'
 import { wrapSaga } from '~/state/sagas/transactions/wrapSaga'
 
 const sagas = [
   wrapSaga,
+  revertCancellationSaga,
   liquiditySaga,
   watchTransactionsSaga,
   lpIncentivesClaimSaga,
@@ -64,5 +68,7 @@ export function* rootWebSaga() {
   // Spawn sagas that listen to external Redux actions (not trigger-based)
   // These sagas don't use createSaga wrapper and are spawned directly
   yield* spawn(cancelOrderSaga)
+  yield* spawn(cancelRemoteOrderSaga)
+  yield* spawn(cancelFinalizationSaga)
   yield* spawn(cancelPlanStepSaga)
 }

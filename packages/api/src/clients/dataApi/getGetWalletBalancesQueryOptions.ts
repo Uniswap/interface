@@ -5,6 +5,7 @@ import { transformInput, type WithoutWalletAccount } from '@universe/api/src/con
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 import { type QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 
 /** Input used to build queryKey and queryFn. Config (enabled, refetchInterval, select) is applied by the caller. */
 export type GetWalletBalancesQueryParams = {
@@ -54,5 +55,6 @@ export function getGetWalletBalancesQueryOptions(
       return toPlainMessage(response)
     },
     placeholderData: (prev: PlainMessage<GetWalletBalancesResponse> | undefined) => prev,
+    staleTime: ONE_MINUTE_MS,
   })
 }

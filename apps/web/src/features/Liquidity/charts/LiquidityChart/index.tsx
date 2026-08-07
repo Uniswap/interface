@@ -50,11 +50,23 @@ export function useLiquidityBarData({
     activeRangePercentage?: number
   }>()
 
-  const { data: ticksProcessed, activeTick, currentTick, liquidity } = activePoolData
+  const {
+    data: ticksProcessed,
+    activeTick,
+    currentTick,
+    liquidity,
+    isLoading,
+    error,
+    tickSpacing: resolvedTickSpacing,
+  } = activePoolData
 
   useEffect(() => {
     async function formatData() {
-      if (!ticksProcessed || activeTick === undefined || !liquidity || tickSpacing === undefined) {
+      if (!ticksProcessed || activeTick === undefined || !liquidity || resolvedTickSpacing === undefined) {
+        // Publish an empty result once the source has settled so `loading` can resolve.
+        if (!isLoading) {
+          setTickData({ barData: [] })
+        }
         return
       }
 
@@ -74,7 +86,7 @@ export function useLiquidityBarData({
 
         if (isActive && currentTick !== undefined) {
           activeRangeIndex = index
-          activeRangePercentage = 1 - (currentTick - t.tick) / tickSpacing
+          activeRangePercentage = 1 - (currentTick - t.tick) / resolvedTickSpacing
 
           price0 =
             version === ProtocolVersion.V3
@@ -88,7 +100,7 @@ export function useLiquidityBarData({
         const { amount0Locked, amount1Locked } = calculateTokensLocked({
           token0: sdkCurrencies.TOKEN0,
           token1: sdkCurrencies.TOKEN1,
-          tickSpacing,
+          tickSpacing: resolvedTickSpacing,
           currentTick: currentTick ?? 0,
           amount: JSBI.BigInt(t.liquidityActive.toString()),
           nextTick,
@@ -126,8 +138,9 @@ export function useLiquidityBarData({
     isReversed,
     feeTier,
     version,
-    tickSpacing,
+    resolvedTickSpacing,
+    isLoading,
   ])
 
-  return { tickData, activeTick: activePoolData.activeTick, loading: activePoolData.isLoading || !tickData }
+  return { tickData, activeTick, loading: (isLoading || !tickData) && !error }
 }

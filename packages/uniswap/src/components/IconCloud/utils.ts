@@ -11,11 +11,12 @@ export function randomChoice<T>(choices: T[]): T {
   return choices[Math.floor(Math.random() * choices.length)]!
 }
 
-export function shuffleArray(array: unknown[]): unknown[] {
+export function shuffleArray<T>(array: readonly T[]): T[] {
   const newArray = [...array]
   for (let i = newArray.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
-    ;[newArray[i], newArray[j]] = [newArray[j], newArray[i]]
+    // Indices are always in range; the casts undo noUncheckedIndexedAccess's `| undefined`.
+    ;[newArray[i], newArray[j]] = [newArray[j] as T, newArray[i] as T]
   }
   return newArray
 }

@@ -23,6 +23,7 @@ export enum MobileEventName {
   SwapLongPress = 'Swap Long Press',
   TokenDetailsOtherChainButtonPressed = 'Token Details Other Chain Button Pressed',
   TokenDetailsContextMenuAction = 'Token Details Context Menu Action Selected',
+  WalletConnectChainMismatchRejected = 'Wallet Connect Chain Mismatch Rejected',
   WalletConnectSheetCompleted = 'Wallet Connect Sheet Completed',
   WidgetClicked = 'Widget Clicked',
   WidgetConfigurationUpdated = 'Widget Configuration Updated',

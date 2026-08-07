@@ -103,6 +103,13 @@ export const TextFrame = styled(TamaguiText, {
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.body4.maxFontSizeMultiplier,
       }),
+      body5: createTextVariant({
+        fontFamily: '$body',
+        fontSize: '$nano',
+        lineHeight: '$nano',
+        fontWeight: '$book',
+        maxFontSizeMultiplier: fonts.body5.maxFontSizeMultiplier,
+      }),
       buttonLabel1: createTextVariant({
         fontFamily: '$button',
         fontSize: '$large',

@@ -1,19 +1,20 @@
 import React from 'react'
-import * as charts from 'react-native-wagmi-charts'
+import { usePriceChart } from 'src/components/charts/PriceChartContext'
 import { DatetimeText, PriceText, RelativeChangeText } from 'src/components/PriceExplorer/Text'
 import { getNearestFiberProp, render, within } from 'src/test/test-utils'
 import { amounts } from 'uniswap/src/test/fixtures'
 import type { Mock } from 'vitest'
 
-vi.mock('react-native-wagmi-charts')
-const mockedUseLineChartPrice = charts.useLineChartPrice as Mock
-const mockedUseLineChart = charts.useLineChart as Mock
-const mockedUseLineChartDatetime = charts.useLineChartDatetime as Mock
+vi.mock('src/components/charts/PriceChartContext')
+const mockedUsePriceChart = usePriceChart as Mock
 
 describe(PriceText, () => {
   it('renders without error', () => {
-    mockedUseLineChartPrice.mockReturnValue({ value: '' })
-    mockedUseLineChart.mockReturnValue({ data: [{ timestamp: 0, value: amounts.md().value }] })
+    mockedUsePriceChart.mockReturnValue({
+      data: [{ timestamp: 0, value: amounts.md().value }],
+      currentIndex: { value: -1 },
+      isActive: { value: false },
+    })
 
     const tree = render(<PriceText loading={false} />)
 
@@ -21,8 +22,11 @@ describe(PriceText, () => {
   })
 
   it('renders without error less than a dollar', () => {
-    mockedUseLineChartPrice.mockReturnValue({ value: '' })
-    mockedUseLineChart.mockReturnValue({ data: [{ timestamp: 0, value: amounts.xs().value }] })
+    mockedUsePriceChart.mockReturnValue({
+      data: [{ timestamp: 0, value: amounts.xs().value }],
+      currentIndex: { value: -1 },
+      isActive: { value: false },
+    })
 
     const tree = render(<PriceText loading={false} />)
 
@@ -30,8 +34,11 @@ describe(PriceText, () => {
   })
 
   it('renders loading state', () => {
-    mockedUseLineChartPrice.mockReturnValue({ value: '' })
-    mockedUseLineChart.mockReturnValue({ data: [] })
+    mockedUsePriceChart.mockReturnValue({
+      data: [],
+      currentIndex: { value: -1 },
+      isActive: { value: false },
+    })
 
     const tree = render(<PriceText loading={true} />)
 
@@ -39,8 +46,10 @@ describe(PriceText, () => {
   })
 
   it('shows active price when scrubbing', async () => {
-    mockedUseLineChartPrice.mockReturnValue({
-      value: { value: amounts.sm().value.toString() },
+    mockedUsePriceChart.mockReturnValue({
+      data: [{ timestamp: 0, value: amounts.sm().value }],
+      currentIndex: { value: 0 },
+      isActive: { value: true },
     })
 
     const tree = render(<PriceText loading={false} />)
@@ -56,9 +65,12 @@ describe(PriceText, () => {
 
 describe(RelativeChangeText, () => {
   it('renders without error', () => {
-    mockedUseLineChart.mockReturnValue({
+    mockedUsePriceChart.mockReturnValue({
       isActive: { value: false },
-      data: [{ value: 10 }, { value: 9 }],
+      data: [
+        { timestamp: 0, value: 10 },
+        { timestamp: 1, value: 9 },
+      ],
       currentIndex: { value: 1 },
     })
 
@@ -68,9 +80,12 @@ describe(RelativeChangeText, () => {
   })
 
   it('renders loading state', () => {
-    mockedUseLineChart.mockReturnValue({
+    mockedUsePriceChart.mockReturnValue({
       isActive: { value: false },
-      data: [{ value: 10 }, { value: 9 }],
+      data: [
+        { timestamp: 0, value: 10 },
+        { timestamp: 1, value: 9 },
+      ],
       currentIndex: { value: 1 },
     })
 
@@ -80,9 +95,12 @@ describe(RelativeChangeText, () => {
   })
 
   it('shows active relative change when scrubbing', async () => {
-    mockedUseLineChart.mockReturnValue({
+    mockedUsePriceChart.mockReturnValue({
       isActive: { value: true },
-      data: [{ value: 10 }, { value: 9 }],
+      data: [
+        { timestamp: 0, value: 10 },
+        { timestamp: 1, value: 9 },
+      ],
       currentIndex: { value: 1 },
     })
 
@@ -94,10 +112,14 @@ describe(RelativeChangeText, () => {
 })
 
 describe(DatetimeText, () => {
+  // 2023-11-01T00:00:00.000Z
+  const timestamp = 1698796800000
+
   it('renders without error', () => {
-    mockedUseLineChartDatetime.mockReturnValue({
-      value: { value: '123' },
-      formatted: { value: 'Thursday, November 1st, 2023' },
+    mockedUsePriceChart.mockReturnValue({
+      data: [{ timestamp, value: 1 }],
+      currentIndex: { value: 0 },
+      isActive: { value: true },
     })
     const tree = render(<DatetimeText loading={false} />)
 
@@ -106,9 +128,10 @@ describe(DatetimeText, () => {
   })
 
   it('renders loading state', () => {
-    mockedUseLineChartDatetime.mockReturnValue({
-      value: { value: '123' },
-      formatted: { value: 'Thursday, November 1st, 2023' },
+    mockedUsePriceChart.mockReturnValue({
+      data: [{ timestamp, value: 1 }],
+      currentIndex: { value: 0 },
+      isActive: { value: true },
     })
     const tree = render(<DatetimeText loading={true} />)
 

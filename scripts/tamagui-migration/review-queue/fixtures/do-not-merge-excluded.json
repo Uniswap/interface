@@ -1,0 +1,54 @@
+{
+  "description": "Trap 10: PRs carrying a 'do not merge' label (any casing) are EXCLUDED from the queue entirely — no bucket, no footer count — exactly like gtmq_* heads. PRs 1001/1003 would otherwise land in needsIndependentReview; PR 1002 is the control proving the queue is otherwise non-empty. Live precedent: #37012 and #37193.",
+  "now": "2026-07-28T12:00:00Z",
+  "defaultBranch": "main",
+  "podByLogin": { "alice": "swap-fe" },
+  "prs": [
+    {
+      "number": 1001,
+      "title": "feat(web): convert Explore directory to tailwind [INFRA-3910] (parked)",
+      "url": "https://github.com/Uniswap/universe/pull/1001",
+      "draft": false,
+      "author": { "login": "claude[bot]", "type": "Bot" },
+      "assignees": ["alice"],
+      "body": "Parked pending design sign-off.\n\nFixes INFRA-3910",
+      "baseRefName": "main",
+      "headRefName": "thebotfather/infra-3910-explore",
+      "labels": [{ "name": "tamagui-migration" }, { "name": "do not merge" }],
+      "createdAt": "2026-07-26T10:00:00Z"
+    },
+    {
+      "number": 1002,
+      "title": "feat(shared): convert badge components [INFRA-3911]",
+      "url": "https://github.com/Uniswap/universe/pull/1002",
+      "draft": false,
+      "author": { "login": "claude[bot]", "type": "Bot" },
+      "assignees": ["alice"],
+      "body": "Converts badge components.\n\nFixes INFRA-3911",
+      "baseRefName": "main",
+      "headRefName": "thebotfather/infra-3911-badges",
+      "labels": [{ "name": "tamagui-migration" }],
+      "createdAt": "2026-07-27T10:00:00Z"
+    },
+    {
+      "number": 1003,
+      "title": "feat(web): convert Portfolio directory to tailwind [INFRA-3912] (parked)",
+      "url": "https://github.com/Uniswap/universe/pull/1003",
+      "draft": false,
+      "author": { "login": "claude[bot]", "type": "Bot" },
+      "assignees": ["alice"],
+      "body": "Parked — label casing varies in the wild.\n\nFixes INFRA-3912",
+      "baseRefName": "main",
+      "headRefName": "thebotfather/infra-3912-portfolio",
+      "labels": [{ "name": "tamagui-migration" }, { "name": "DO NOT MERGE" }],
+      "createdAt": "2026-07-26T11:00:00Z"
+    }
+  ],
+  "reviews": { "1001": [], "1002": [], "1003": [] },
+  "checks": { "1001": "success", "1002": "success", "1003": "pending" },
+  "requestedReviewers": {
+    "1001": { "users": [], "teams": [] },
+    "1002": { "users": [], "teams": [] },
+    "1003": { "users": [], "teams": [] }
+  }
+}

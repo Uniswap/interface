@@ -1,7 +1,7 @@
 import type { GetWalletBalancesResponse, WalletBalance } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { SharedQueryClient } from '@universe/api'
-import { getWalletBalancesQuery } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+import { getWalletBalancesQuery } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { usePoolPositionCacheUpdater } from 'uniswap/src/features/dataApi/balances/poolPositionCacheUpdater'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'

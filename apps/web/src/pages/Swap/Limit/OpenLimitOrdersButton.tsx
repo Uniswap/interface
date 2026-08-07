@@ -1,3 +1,4 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import type { TFunction } from 'i18next'
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -5,10 +6,26 @@ import { Flex, Text, TouchableArea } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { Clock } from 'ui/src/components/icons/Clock'
 import { iconSizes } from 'ui/src/theme'
+import { isCancelTimedOut } from 'uniswap/src/features/transactions/cancel/cancelTimeoutStateMachine'
+import type { UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useOpenLimitOrders } from '~/components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
-function getExtraWarning(openLimitOrders: any[], t: TFunction) {
+function getExtraWarning({
+  openLimitOrders,
+  isCancelTimeoutEnabled,
+  t,
+}: {
+  openLimitOrders: UniswapXOrderDetails[]
+  isCancelTimeoutEnabled: boolean
+  t: TFunction
+}) {
+  if (isCancelTimeoutEnabled) {
+    const timedOutCount = openLimitOrders.filter((order) => isCancelTimedOut(order)).length
+    if (timedOutCount > 0) {
+      return t('limits.cancel.mayFail', { count: timedOutCount })
+    }
+  }
   if (openLimitOrders.length >= 100) {
     return t('common.limits.cancelProceed')
   }
@@ -67,8 +84,9 @@ export function OpenLimitOrdersButton({
   disabled?: boolean
 }) {
   const { t } = useTranslation()
+  const isCancelTimeoutEnabled = useFeatureFlag(FeatureFlags.LimitCancelTimeout)
   const { openLimitOrders, loading } = useOpenLimitOrders(account)
-  const extraWarning = getExtraWarning(openLimitOrders, t)
+  const extraWarning = getExtraWarning({ openLimitOrders, isCancelTimeoutEnabled, t })
 
   if (openLimitOrders.length < 1) {
     return null

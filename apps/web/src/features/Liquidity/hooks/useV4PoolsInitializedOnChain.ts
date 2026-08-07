@@ -4,8 +4,8 @@ import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { useMemo } from 'react'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { useReadContracts } from 'wagmi'
+import { assume0xAddress } from '~/chains'
 import { getFeeTierKey } from '~/features/Liquidity/utils/feeTiers'
-import { assume0xAddress } from '~/utils/wagmi'
 
 const STATE_VIEW_GET_SLOT0_ABI = [
   {

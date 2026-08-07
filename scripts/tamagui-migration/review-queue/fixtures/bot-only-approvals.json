@@ -1,0 +1,48 @@
+{
+  "description": "Trap 1: bot reviews count for NOTHING. PR 101 has APPROVED reviews from github-actions[bot] and claude[bot] only — it still needs independent review. PR 102 has a bot CHANGES_REQUESTED only — it must NOT land in changesRequested either.",
+  "now": "2026-07-28T12:00:00Z",
+  "defaultBranch": "main",
+  "podByLogin": { "alice": "swap-fe" },
+  "prs": [
+    {
+      "number": 101,
+      "title": "feat(web): convert Landing directory to tailwind [INFRA-3101]",
+      "url": "https://github.com/Uniswap/universe/pull/101",
+      "draft": false,
+      "author": { "login": "claude[bot]", "type": "Bot" },
+      "assignees": ["alice"],
+      "body": "Converts apps/web/src/pages/Landing.\n\nFixes INFRA-3101",
+      "baseRefName": "main",
+      "headRefName": "thebotfather/infra-3101-landing",
+      "labels": [{ "name": "tamagui-migration" }],
+      "createdAt": "2026-07-26T12:00:00Z"
+    },
+    {
+      "number": 102,
+      "title": "feat(wallet): convert settings screens [INFRA-3102]",
+      "url": "https://github.com/Uniswap/universe/pull/102",
+      "draft": false,
+      "author": { "login": "claude[bot]", "type": "Bot" },
+      "assignees": ["alice"],
+      "body": "Converts packages/wallet settings.\n\nFixes INFRA-3102",
+      "baseRefName": "main",
+      "headRefName": "thebotfather/infra-3102-settings",
+      "labels": [{ "name": "tamagui-migration" }],
+      "createdAt": "2026-07-27T12:00:00Z"
+    }
+  ],
+  "reviews": {
+    "101": [
+      { "author": { "login": "github-actions[bot]", "type": "Bot" }, "state": "APPROVED", "submittedAt": "2026-07-26T13:00:00Z" },
+      { "author": { "login": "claude[bot]", "type": "Bot" }, "state": "APPROVED", "submittedAt": "2026-07-26T14:00:00Z" }
+    ],
+    "102": [
+      { "author": { "login": "github-actions[bot]", "type": "Bot" }, "state": "CHANGES_REQUESTED", "submittedAt": "2026-07-27T13:00:00Z" }
+    ]
+  },
+  "checks": { "101": "success", "102": "success" },
+  "requestedReviewers": {
+    "101": { "users": [], "teams": [] },
+    "102": { "users": [], "teams": [] }
+  }
+}

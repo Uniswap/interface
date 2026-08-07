@@ -1,0 +1,31 @@
+{
+  "description": "Trap 5: latest HUMAN review is CHANGES_REQUESTED -> changesRequested. A LATER bot APPROVED (claude[bot]) must not flip it — bot reviews count for nothing anywhere.",
+  "now": "2026-07-28T12:00:00Z",
+  "defaultBranch": "main",
+  "podByLogin": { "alice": "swap-fe" },
+  "prs": [
+    {
+      "number": 501,
+      "title": "feat(extension): convert popup surfaces [INFRA-3501]",
+      "url": "https://github.com/Uniswap/universe/pull/501",
+      "draft": false,
+      "author": { "login": "claude[bot]", "type": "Bot" },
+      "assignees": ["alice"],
+      "body": "Converts apps/extension popup.\n\nFixes INFRA-3501",
+      "baseRefName": "main",
+      "headRefName": "thebotfather/infra-3501-popup",
+      "labels": [{ "name": "tamagui-migration" }],
+      "createdAt": "2026-07-24T12:00:00Z"
+    }
+  ],
+  "reviews": {
+    "501": [
+      { "author": { "login": "carol", "type": "User" }, "state": "CHANGES_REQUESTED", "submittedAt": "2026-07-26T10:00:00Z" },
+      { "author": { "login": "claude[bot]", "type": "Bot" }, "state": "APPROVED", "submittedAt": "2026-07-27T11:00:00Z" }
+    ]
+  },
+  "checks": { "501": "success" },
+  "requestedReviewers": {
+    "501": { "users": [], "teams": [] }
+  }
+}

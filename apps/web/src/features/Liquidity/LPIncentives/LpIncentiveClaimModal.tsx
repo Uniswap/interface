@@ -95,7 +95,7 @@ export function LpIncentiveClaimModal({
       lpIncentivesClaimSaga.actions.trigger({
         address: account.address,
         claimData: data.claim,
-        tokenAddress: token.address,
+        tokenAddresses: [token.address],
         selectChain,
         walletChainId: account.chainId,
         onSuccess,

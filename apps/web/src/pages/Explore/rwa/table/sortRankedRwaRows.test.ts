@@ -1,7 +1,7 @@
 import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import { mapRankedRwa } from 'uniswap/src/data/rest/rwa/mapRankedRwa'
-import { makeRankedRwa } from 'uniswap/src/data/rest/rwa/rankedRwaTestHelpers'
-import type { Rwa } from 'uniswap/src/data/rest/rwa/types'
+import { mapRankedRwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/mapRankedRwa'
+import { makeRankedRwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/rankedRwaTestHelpers'
+import type { Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { sortRankedRwaRows } from '~/pages/Explore/rwa/table/sortRankedRwaRows'
 import { StocksSortMethod } from '~/pages/Explore/rwa/table/stocksTableSortStore'
 

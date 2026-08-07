@@ -1,13 +1,13 @@
 import { OnchainItemListOptionType, type RwaCollectionOption } from 'uniswap/src/components/lists/items/types'
-import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
-import { resolveRwaIssuerDisplay } from 'uniswap/src/data/rest/rwa/resolveRwaIssuerDisplay'
+import { resolveRwaIssuerDisplay } from 'uniswap/src/data/apiClients/dataApiService/rwa/resolveRwaIssuerDisplay'
 import {
   PREFERRED_RWA_CHAIN_ID,
   type IssuerToken,
   type ListRwasAssetSource,
   type Rwa,
-} from 'uniswap/src/data/rest/rwa/types'
+} from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { getExpandableSearchRowHeightPx } from 'uniswap/src/features/expandableAsset/expandableAssetLayout'
+import { normalizeTokenAddressForCache } from 'uniswap/src/utils/currencyId'
 
 export type RwaSearchIndexEntry = { rwa: Rwa; issuer: IssuerToken }
 export type RwaSearchIndex = { rwas: Rwa[]; byChainAddress: Map<string, RwaSearchIndexEntry> }

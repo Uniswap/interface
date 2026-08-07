@@ -18,6 +18,8 @@ function createDerivedState(overrides: {
   tokenQuery?: { loading: boolean; data?: unknown }
   tokenColor?: string
   balanceError?: Error
+  token?: unknown
+  pageQueryLoading?: boolean
 }) {
   return {
     state: {
@@ -33,8 +35,16 @@ function createDerivedState(overrides: {
       selectedMultichainChainId: undefined,
       tokenColor: overrides.tokenColor,
       currency: undefined,
+      pathTokenDbAddress: overrides.address,
+      token: overrides.token,
+      multichainToken: undefined,
+      multichainTokenLoaded: false,
+      pageQueryLoading: overrides.pageQueryLoading ?? false,
+      chainDataLoading: false,
+      marketDataLoading: false,
     },
     balancesRefetch: vi.fn(),
+    tokenRefetch: vi.fn(),
   }
 }
 
@@ -163,6 +173,37 @@ describe('TDPStoreContextProvider', () => {
       expect(storeRef.current?.getState().address).toBe(TOKEN_A)
       expect(storeRef.current?.getState().tokenColor).toBe('#FF0000')
     })
+  })
+
+  it('applies partial updates to the V2-shaped token and loading fields (same identity)', async () => {
+    mockHeartbeat({ address: TOKEN_A, token: undefined, pageQueryLoading: true })
+
+    const storeRef = { current: null as ReturnType<typeof createTDPStore> | null }
+    const { rerender } = render(
+      <TDPStoreContextProvider>
+        <StoreCapture storeRef={storeRef} />
+      </TDPStoreContextProvider>,
+    )
+
+    await waitFor(() => {
+      expect(storeRef.current).not.toBeNull()
+    })
+    expect(storeRef.current?.getState().token).toBeUndefined()
+    expect(storeRef.current?.getState().pageQueryLoading).toBe(true)
+
+    const restToken = { chainId: 1, address: TOKEN_A, symbol: 'USDC', decimals: 6, name: 'USD Coin', type: 2 }
+    mockHeartbeat({ address: TOKEN_A, token: restToken, pageQueryLoading: false })
+    rerender(
+      <TDPStoreContextProvider>
+        <StoreCapture storeRef={storeRef} />
+      </TDPStoreContextProvider>,
+    )
+
+    await waitFor(() => {
+      expect(storeRef.current?.getState().token).toEqual(restToken)
+      expect(storeRef.current?.getState().pageQueryLoading).toBe(false)
+    })
+    expect(storeRef.current?.getState().address).toBe(TOKEN_A)
   })
 
   it('updates the raw balance query error when identity is unchanged', async () => {

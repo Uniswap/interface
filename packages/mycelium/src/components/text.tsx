@@ -2,6 +2,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import * as React from 'react'
 import { cn } from '../cn'
 
+/** @deprecated Use `Text` from `@universe/mycelium` (TextCompat, INFRA-3040 — FlexCompat precedent #36905). This cva vocabulary stays exported from '@universe/mycelium/components' for its existing consumers; don't add new usages. */
 const textVariants = cva('text-foreground', {
   variants: {
     variant: {
@@ -60,10 +61,12 @@ const textVariants = cva('text-foreground', {
   },
 })
 
+/** @deprecated Use `Text` from `@universe/mycelium` (TextCompat). Retirement tracked in [INFRA-3020](https://linear.app/uniswap/issue/INFRA-3020). */
 export interface TextProps extends React.HTMLAttributes<HTMLParagraphElement>, VariantProps<typeof textVariants> {
   asChild?: boolean
   as?: 'p' | 'span' | 'div' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
 }
+/** @deprecated Use `Text` from `@universe/mycelium` (TextCompat). Retirement tracked in [INFRA-3020](https://linear.app/uniswap/issue/INFRA-3020). */
 const Text = React.forwardRef<HTMLParagraphElement, TextProps>(
   ({ className, variant, size, weight, align, typography, as: Component = 'p', ...props }, ref) => {
     const Comp = Component as React.ElementType

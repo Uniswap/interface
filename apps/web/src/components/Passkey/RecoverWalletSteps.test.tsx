@@ -1,7 +1,7 @@
+import { type DigitInputState } from '@universe/embedded-wallet'
 import type { TFunction } from 'i18next'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { DigitInputState } from 'uniswap/src/components/passkey/recovery/useDigitInput'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { PasscodeStep } from '~/components/Passkey/AddBackupLoginSteps'
 import { AddPasskeyStep, RotationExpiredStep, RotationIntroStep } from '~/components/Passkey/RecoverWalletSteps'

@@ -56,7 +56,7 @@ function DropdownMenuItem({
     <DropdownMenuPrimitive.Item
       data-slot="dropdown-menu-item"
       className={cn(
-        'relative flex cursor-pointer select-none items-center gap-2 overflow-hidden rounded-12 px-3 py-2 text-[14px] leading-5 font-baselMedium outline-none transition-colors',
+        'relative flex cursor-pointer select-none items-center gap-2 overflow-hidden rounded-12 px-3 py-2 text-[14px] leading-5 font-basel-medium outline-none transition-colors',
         'focus:bg-surface2 data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
         '[&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
         variant === 'destructive' ? 'text-critical focus:text-critical' : 'text-neutral1',

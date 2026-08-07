@@ -58,7 +58,16 @@ function extractErrorNameFromRawMessage(rawMessage: string): string | undefined 
   }
   try {
     const parsed = JSON.parse(rawMessage.slice(jsonStart))
-    return typeof parsed.name === 'string' ? (parsed.name as string) : rawMessage
+    if (typeof parsed.name === 'string') {
+      return parsed.name as string
+    }
+    // Permissioned-pool rejections are keyed on `code` (KYC_REQUIRED,
+    // INVALID_HOOK_FOR_PERMISSIONED_POOL, ...); returning undefined instead of
+    // rawMessage keeps raw JSON payloads out of the UI (ECO-607/ECO-608).
+    if (typeof parsed.code === 'string') {
+      return parsed.code as string
+    }
+    return undefined
   } catch {
     return undefined
   }

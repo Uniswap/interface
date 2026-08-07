@@ -1,5 +1,6 @@
-import { expect, type Page } from '@playwright/test'
+import { expect } from '@playwright/test'
 import { importedExtensionTest as test } from 'e2e/fixtures/imported-extension.fixture'
+import { approveConnectionInSidebarIfPrompted } from 'e2e/utils/dapp-connection-helpers'
 import { openExtensionSidebar, waitForBackgroundReady } from 'e2e/utils/extension-helpers'
 import { isVisibleWithin } from 'e2e/utils/locator-helpers'
 import { TEST_WALLET_ADDRESS } from 'e2e/utils/onboarding-helpers'
@@ -20,14 +21,6 @@ const NON_ZERO_AMOUNT_REGEX = /[1-9]/
 // The web app's wallet modal option for the detected Uniswap Extension
 // (apps/web WalletModal/UniswapWalletOptions.tsx).
 const CONNECT_EXTENSION_OPTION_TESTID = 'connect-uniswap-extension'
-
-async function approveConnectionInSidebar(sidebarPage: Page): Promise<void> {
-  // The connection request card syncs into any open side panel instance.
-  const confirmButton = sidebarPage.getByTestId(TestID.Confirm)
-  await confirmButton.waitFor({ state: 'visible', timeout: ONE_SECOND_MS * 20 })
-  await expect(confirmButton).toBeEnabled({ timeout: ONE_SECOND_MS * 10 })
-  await confirmButton.click()
-}
 
 test.describe('Extension-connected web swap', { tag: '@publish-gate' }, () => {
   // INC-312 regression path: a prod-only CORS/config issue broke swaps on app.uniswap.org
@@ -53,24 +46,28 @@ test.describe('Extension-connected web swap', { tag: '@publish-gate' }, () => {
     await webPage.getByTestId(TestID.NavConnectWalletButton).first().click()
     const extensionOption = webPage.getByTestId(CONNECT_EXTENSION_OPTION_TESTID).first()
 
+    const connectedStatus = webPage.getByTestId(TestID.Web3StatusConnected)
+
     if (await isVisibleWithin(extensionOption, ONE_SECOND_MS * 15)) {
       await extensionOption.click()
-      await approveConnectionInSidebar(sidebarPage)
+      await approveConnectionInSidebarIfPrompted(
+        sidebarPage,
+        connectedStatus.waitFor({ state: 'visible', timeout: ONE_SECOND_MS * 30 }),
+      )
 
       // The web app should now show the connected account.
-      await expect(webPage.getByTestId(TestID.Web3StatusConnected)).toBeVisible({
-        timeout: ONE_SECOND_MS * 30,
-      })
+      await expect(connectedStatus).toBeVisible({ timeout: ONE_SECOND_MS * 30 })
     } else {
-      // Fallback: the live site's wallet modal may not expose the extension option
-      // (e.g. modal variant changes on prod). Connect at the provider level instead —
-      // this still drives the extension's real connection-approval UI end to end.
+      // Fallback: the wallet modal has no extension option when the app is already
+      // connected via the pre-authorized extension, or when the live modal variant
+      // changes on prod. Connect at the provider level instead — this still drives
+      // the extension's real connection flow end to end.
       await webPage.keyboard.press('Escape')
 
       const accountsPromise = webPage.evaluate(async () => {
         return (window.ethereum as any).request({ method: 'eth_requestAccounts' }) as Promise<string[]>
       })
-      await approveConnectionInSidebar(sidebarPage)
+      await approveConnectionInSidebarIfPrompted(sidebarPage, accountsPromise)
 
       const accounts = await accountsPromise
       expect(accounts[0]?.toLowerCase()).toBe(TEST_WALLET_ADDRESS.toLowerCase())

@@ -4,7 +4,7 @@ import type { StoreApi, UseBoundStore } from 'zustand'
 import { create, useStore } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { useShallow } from 'zustand/react/shallow'
-import { OrderDirection } from '~/appGraphql/data/util'
+import { OrderDirection } from '~/data/util'
 
 export enum StocksSortMethod {
   PRICE = 'Price',

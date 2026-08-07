@@ -225,7 +225,7 @@ export const DecimalPadInput = memo(
           let isUpdated = false
           const newDisabledKeys = Object.fromEntries(
             // oxlint-disable-next-line max-nested-callbacks
-            Object.entries(disableKeysConditions).map(([key, condition]) => {
+            Object.entries(disableKeysConditions).map(([key, condition]): [string, boolean] => {
               const isDisabled = condition(value)
               if (isDisabled !== prevDisabledKeys[key as KeyLabel]) {
                 isUpdated = true

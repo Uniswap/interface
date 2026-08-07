@@ -1,6 +1,9 @@
 import { ALL_NETWORKS_ARG, CustomRankingType } from '@universe/api'
 import { useMemo } from 'react'
-import { tokenRankingsStatToCurrencyInfo, useTokenRankingsQuery } from 'uniswap/src/data/rest/tokenRankings'
+import {
+  tokenRankingsStatToCurrencyInfo,
+  useTokenRankingsQuery,
+} from 'uniswap/src/data/apiClients/dataApiService/exploreV1/tokenRankings'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 

@@ -11,7 +11,7 @@ import {
   WalletSendCallsRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { toSupportedChainId, toSupportedDappChainId } from 'uniswap/src/features/chains/utils'
 import { EthMethod, EthSignMethod, WalletConnectEthMethod } from 'uniswap/src/features/dappRequests/types'
 import { DappRequestInfo, DappRequestType } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
@@ -342,6 +342,18 @@ function getAddressAndMessageToSign(
     case EthMethod.SignTypedData:
     case EthMethod.SignTypedDataV4:
       return { address: params[0], rawMessage: params[1], message: null }
+  }
+}
+
+/**
+ * The chain an EIP-712 signature will be bound to, which is not necessarily the envelope chain
+ * the request arrived on. Returns null on unparseable or unsupported input, so callers fail closed.
+ */
+export function getTypedDataDomainChainId(rawMessage: string): UniverseChainId | null {
+  try {
+    return toSupportedDappChainId(JSON.parse(rawMessage)?.domain?.chainId)
+  } catch {
+    return null
   }
 }
 

@@ -96,7 +96,9 @@ function getAnalyticsQuoteBlockNumber(trade: CommonAnalyticsTrade): string | und
 
 function getPriceImpactBasisPoints(trade: CommonAnalyticsTrade): number | undefined {
   if (isUniversalSwapFlowTrade(trade)) {
-    return isClassic(trade) && trade.priceImpact ? formatPercentInBasisPointsNumber(trade.priceImpact) : undefined
+    return isClassic(trade) && trade.priceDifference
+      ? formatPercentInBasisPointsNumber(trade.priceDifference)
+      : undefined
   }
   return isClassicTrade(trade) ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)) : undefined
 }

@@ -3,6 +3,7 @@ import { useCallback } from 'react'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { renderEarnReviewSheetLayout } from 'src/components/earn/EarnReviewSheetLayout'
 import type { EarnWithdrawReviewModalProps } from 'src/components/earn/EarnWithdrawReviewModalState'
+import { useEarnBiometricsIcon } from 'src/components/earn/hooks/useEarnBiometricsIcon'
 import { useEarnExecuteCallback } from 'src/components/earn/hooks/useEarnExecuteCallback'
 import { useEarnReviewModalHandlers } from 'src/components/earn/hooks/useEarnReviewModalHandlers'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -34,7 +35,8 @@ export function EarnWithdrawReviewModal({
   const queryClient = useQueryClient()
   const localFiatToUsd = useLocalFiatToUSDConverter()
   const evmAddress = useActiveAddress(Platform.EVM)
-  const { setHasExecutionError, handleExecutionFailure, handleClose } = useEarnReviewModalHandlers({ onClose })
+  const buttonAuthIcon = useEarnBiometricsIcon()
+  const { handleExecutionFailure, handleClose } = useEarnReviewModalHandlers({ onClose })
 
   const handleBack = useCallback(() => {
     if (!vault) {
@@ -55,7 +57,6 @@ export function EarnWithdrawReviewModal({
 
   const handleExecuteWithdraw = useCallback(
     (params: ExecuteEarnWithdrawParams) => {
-      setHasExecutionError(false)
       executeEarn({
         ...params,
         onPlanFinalized: (finalizedParams) => {
@@ -64,7 +65,6 @@ export function EarnWithdrawReviewModal({
           if (finalizedParams.status !== TransactionStatus.Success) {
             return
           }
-          setHasExecutionError(false)
 
           applyEarnPositionChangeOptimistically({
             action: EarnAction.Withdraw,
@@ -79,7 +79,7 @@ export function EarnWithdrawReviewModal({
         },
       })
     },
-    [amount, evmAddress, executeEarn, localFiatToUsd, position, queryClient, setHasExecutionError, vault],
+    [amount, evmAddress, executeEarn, localFiatToUsd, position, queryClient, vault],
   )
 
   if (!vault || !position || amount === undefined || chainId === undefined) {
@@ -91,6 +91,7 @@ export function EarnWithdrawReviewModal({
     // can live in a pinned footer overlay (see renderEarnReviewSheetLayout).
     <Modal overrideInnerContainer name={ModalName.EarnWithdrawReview} isModalOpen={isOpen} onClose={handleClose}>
       <WithdrawReviewView
+        buttonAuthIcon={buttonAuthIcon}
         renderLayout={renderEarnReviewSheetLayout}
         analyticsEntryPoint={analyticsEntryPoint}
         analyticsSurface="mobile"

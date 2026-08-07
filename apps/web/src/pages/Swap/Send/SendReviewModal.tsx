@@ -1,3 +1,4 @@
+import { useGetPasskeyAuthStatus } from '@universe/embedded-wallet'
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
@@ -12,7 +13,6 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useMaxAmountSpend } from 'uniswap/src/features/gas/hooks/useMaxAmountSpend'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
 import { ElementName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -65,13 +65,14 @@ type SendModalInnerProps = {
   onConfirm: () => void
   onDismiss: () => void
   isConfirming?: boolean
+  hasError?: boolean
 }
 
 export type SendModalProps = SendModalInnerProps & {
   isOpen: boolean
 }
 
-export function SendReviewModalInner({ onConfirm, isConfirming }: SendModalInnerProps) {
+export function SendReviewModalInner({ onConfirm, isConfirming, hasError }: SendModalInnerProps) {
   const { t } = useTranslation()
   const account = useAccount()
 
@@ -182,18 +183,25 @@ export function SendReviewModalInner({ onConfirm, isConfirming }: SendModalInner
           </Flex>
         </Flex>
         <Trace logPress element={ElementName.SendReviewButton}>
-          <Flex alignSelf="stretch" row>
-            <Button
-              emphasis="primary"
-              variant="branded"
-              size="large"
-              loading={isConfirming}
-              disabled={isConfirming}
-              icon={needsPasskeySignin ? <Passkey size="$icon.24" color="$white" /> : undefined}
-              onPress={handleConfirm}
-            >
-              {t('common.confirmSend.button')}
-            </Button>
+          <Flex alignSelf="stretch" gap="$spacing16">
+            {hasError && (
+              <Text variant="body3" color="$statusCritical" textAlign="center">
+                {t('common.send.error.message')}
+              </Text>
+            )}
+            <Flex row>
+              <Button
+                emphasis="primary"
+                variant="branded"
+                size="large"
+                loading={isConfirming}
+                disabled={isConfirming}
+                icon={needsPasskeySignin ? <Passkey size="$icon.24" color="$white" /> : undefined}
+                onPress={handleConfirm}
+              >
+                {t('common.confirmSend.button')}
+              </Button>
+            </Flex>
           </Flex>
         </Trace>
       </ReviewContentContainer>

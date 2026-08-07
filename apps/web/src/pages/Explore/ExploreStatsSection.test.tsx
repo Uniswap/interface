@@ -65,6 +65,8 @@ describe('ExploreStatsSection', () => {
     // Should show formatted volume and TVL values
     expect(screen.getByText(/1D volume/i)).toBeInTheDocument()
     expect(screen.getByText(/Total Uniswap TVL/i)).toBeInTheDocument()
+    expect(screen.queryByText(/today/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/5\.2/)).not.toBeInTheDocument()
 
     // Should not show loading bubbles
     const loadingBubbles = container.querySelectorAll('[style*="animation-name: shine"]')

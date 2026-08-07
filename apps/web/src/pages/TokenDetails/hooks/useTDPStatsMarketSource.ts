@@ -7,7 +7,7 @@ import {
   adaptLegacyProjectMarketData,
 } from 'uniswap/src/features/dataApi/tokenDetails/legacyMarketDataAdapters'
 import type { TokenMarketStatsAggregatedInput } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
-import type { TokenQueryData } from '~/appGraphql/data/Token'
+import type { TokenQueryData } from '~/data/Token'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultichainTokenEntries'
 import { useTDPMultichainAggregate } from '~/pages/TokenDetails/hooks/useTDPMultichainAggregate'
@@ -76,15 +76,17 @@ export function useTDPStatsMarketSource(tokenQueryData: TokenQueryData | undefin
   const networkFilterName = selectedMultichainChainId !== undefined ? getChainLabel(selectedMultichainChainId) : ''
 
   const { showAggregatedStats, filteredDeploymentMarket, marketStatsInput } = useMemo(() => {
+    // Computed from the source-agnostic multichain entries so the chain-filtered view is labeled
+    // correctly even when the legacy tokenQuery never resolves (always the case under the V2 flag).
+    const showAggregated = !isMultiChainAsset || selectedMultichainChainId === undefined
+
     if (!tokenQueryData) {
       return {
-        showAggregatedStats: true,
+        showAggregatedStats: showAggregated,
         filteredDeploymentMarket: undefined,
         marketStatsInput: undefined,
       }
     }
-
-    const showAggregated = !isMultiChainAsset || selectedMultichainChainId === undefined
 
     // oxlint-disable-next-line no-shadow
     const filteredDeploymentMarket = getTDPFilteredDeploymentMarket({

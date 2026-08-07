@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
 import { Gas } from 'ui/src/components/icons/Gas'
-import { useBottomSheetSafeKeyboard } from 'uniswap/src/components/modals/useBottomSheetSafeKeyboard'
 import { computeMaxCost } from 'uniswap/src/features/gas/components/NetworkCostEditor/computeMaxCost'
 import { GasFieldInput } from 'uniswap/src/features/gas/components/NetworkCostEditor/GasFieldInput'
 import { weiToGwei } from 'uniswap/src/features/gas/components/NetworkCostEditor/gweiToWei'
@@ -225,7 +224,6 @@ export function NetworkCostEditor({
   recommendedFallback,
 }: NetworkCostEditorProps): JSX.Element {
   const { t } = useTranslation()
-  const { keyboardHeight } = useBottomSheetSafeKeyboard()
   const recommended = useRecommendedGasFields({ tx, fallback: recommendedFallback })
   const initialFromTx = useMemo(() => extractGasFieldsFromTx(tx), [tx])
   const usdChainId = tx?.chainId ?? chainId
@@ -308,7 +306,7 @@ export function NetworkCostEditor({
       gap="$spacing24"
       px={isMobileApp ? '$spacing16' : '$spacing24'}
       pt={isMobileApp ? '$spacing12' : '$spacing24'}
-      pb={keyboardHeight || (isMobileApp ? '$spacing12' : '$spacing24')}
+      pb={isMobileApp ? '$spacing12' : '$spacing24'}
     >
       <Flex row alignItems="center">
         <Flex flex={1} flexDirection="row" alignItems="center" justifyContent="flex-start">

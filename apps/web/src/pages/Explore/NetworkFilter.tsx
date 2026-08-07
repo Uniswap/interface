@@ -41,6 +41,11 @@ export function TableNetworkFilter({ networks }: { networks?: UniverseChainId[] 
       forceAllNetworksLabel
       showMultichainOption={tabName !== ExploreTab.Transactions}
       position={media.lg ? 'left' : 'right'}
+      // The toolbar row this trigger sits in stacks to a column at different breakpoints depending on
+      // which Explore layout is active (see ExploreCategoryTablesSection vs. the classic tab nav row),
+      // so a single `position` breakpoint can't reliably predict the trigger's on-screen edge. Clamp
+      // against the real viewport instead of guessing from `position` alone.
+      positionFixed
       onPress={onNetworkPress}
       currentChainId={currentChainId}
       networks={networks}

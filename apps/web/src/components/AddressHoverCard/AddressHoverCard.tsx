@@ -35,6 +35,11 @@ interface AddressHoverCardProps {
   children: ReactNode
 }
 
+export function useShowsAddressHoverCard(address?: string): boolean {
+  const isTouchDevice = useIsTouchDevice()
+  return Boolean(address) && !isTouchDevice
+}
+
 export function AddressHoverCard({ address, platform, children }: AddressHoverCardProps): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -45,7 +50,7 @@ export function AddressHoverCard({ address, platform, children }: AddressHoverCa
   const chainId = platform === Platform.SVM ? UniverseChainId.Solana : UniverseChainId.Mainnet
   const BlockExplorerLogo = useBlockExplorerLogo(chainId)
   const shadowProps = useShadowPropsMedium()
-  const isTouchDevice = useIsTouchDevice()
+  const showsHoverCard = useShowsAddressHoverCard(address)
 
   const { data, error, loading } = usePortfolioTotalValue({
     evmAddress: platform === Platform.EVM ? address : undefined,
@@ -84,8 +89,7 @@ export function AddressHoverCard({ address, platform, children }: AddressHoverCa
 
   useCloseOnOutsideScroll({ contentRef: popoverContentRef, isOpen, setIsOpen })
 
-  // Disable hover cards on touch devices - hover interactions don't work well
-  if (!address || isTouchDevice) {
+  if (!address || !showsHoverCard) {
     return <>{children}</>
   }
 

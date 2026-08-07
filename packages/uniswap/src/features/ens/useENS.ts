@@ -5,24 +5,26 @@ import { useAddressFromEns, useENSName } from 'uniswap/src/features/ens/api'
 import { ENS_SUFFIX } from 'uniswap/src/features/ens/constants'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
-import { useDebounce } from 'utilities/src/time/timing'
+import { useDebounceWithStatus } from 'utilities/src/time/timing'
 
 type UseENSParams = {
   nameOrAddress?: string | null
   chainId?: UniverseChainId
   autocompleteDomain?: boolean
+  /** Set when the input is already debounced */
+  skipDebounce?: boolean
 }
 
 /**
  * Given a name or address, does a lookup to resolve to an address and name
  * @param nameOrAddress ENS name or address
  */
-export function useENS({ nameOrAddress, autocompleteDomain = false }: UseENSParams): {
+export function useENS({ nameOrAddress, autocompleteDomain = false, skipDebounce = false }: UseENSParams): {
   loading: boolean
   address?: string | null
   name: string | null
 } {
-  const debouncedNameOrAddress = useDebounce(nameOrAddress) ?? null
+  const [debouncedNameOrAddress = null] = useDebounceWithStatus({ value: nameOrAddress, skipDebounce })
   const validAddress = getValidAddress({
     address: debouncedNameOrAddress,
     platform: Platform.EVM,

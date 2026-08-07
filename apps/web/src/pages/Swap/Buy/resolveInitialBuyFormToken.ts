@@ -1,9 +1,9 @@
 import { ParsedQs } from 'qs'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 
 /**
  * Resolves which `FiatOnRampCurrency` the buy form should pre-select, in priority order:

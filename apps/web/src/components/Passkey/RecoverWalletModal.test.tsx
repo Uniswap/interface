@@ -1,7 +1,6 @@
 import { useAuthorizationSignature, useLoginWithEmail, useLoginWithOAuth, usePrivy } from '@privy-io/react-auth'
 import { fireEvent, waitFor } from '@testing-library/react'
-import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
-import { attemptPinDecryption, executeRecovery } from 'uniswap/src/features/passkey/recoveryExecute'
+import { attemptPinDecryption, EmbeddedWalletApiClient, executeRecovery } from '@universe/embedded-wallet'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { RecoverWalletModal } from '~/components/Passkey/RecoverWalletModal'
 import { useModalState } from '~/hooks/useModalState'
@@ -24,23 +23,23 @@ vi.mock('~/hooks/useModalState', () => ({
   useModalState: vi.fn(),
 }))
 
-vi.mock('uniswap/src/data/rest/embeddedWallet/requests', () => ({
+vi.mock('@universe/embedded-wallet/src/data/rest/embeddedWallet/requests', () => ({
   EmbeddedWalletApiClient: {
     fetchGetRecoveryConfig: vi.fn(),
   },
 }))
 
-vi.mock('uniswap/src/features/passkey/recoveryExecute', () => ({
+vi.mock('@universe/embedded-wallet/src/features/passkey/recoveryExecute', () => ({
   attemptPinDecryption: vi.fn(),
   executeRecovery: vi.fn(),
 }))
 
-vi.mock('uniswap/src/features/passkey/privyBlobStore', () => ({
+vi.mock('@universe/embedded-wallet/src/features/passkey/privyBlobStore', () => ({
   fetchEncryptedBlob: vi.fn().mockResolvedValue('blob-fixture'),
   storeEncryptedBlob: vi.fn(),
 }))
 
-vi.mock('uniswap/src/features/passkey/embeddedWallet', () => ({
+vi.mock('@universe/embedded-wallet/src/features/passkey/embeddedWallet', () => ({
   registerNewPasskey: vi.fn(),
   toRecoveryAuthMethodType: (provider: 'google' | 'apple' | null) =>
     provider === 'google' ? 'GOOGLE' : provider === 'apple' ? 'APPLE' : 'EMAIL',
@@ -61,7 +60,7 @@ const mockSetWalletId = vi.fn()
 const mockSetIsConnected = vi.fn()
 const mockConnector = { name: 'Embedded Wallet', type: 'embedded' }
 
-vi.mock('~/state/embeddedWallet/store', () => ({
+vi.mock('@universe/embedded-wallet/src/state/embeddedWalletStore', () => ({
   useEmbeddedWalletState: () => ({
     setWalletAddress: mockSetWalletAddress,
     setWalletId: mockSetWalletId,
@@ -73,6 +72,7 @@ vi.mock('~/state/embeddedWallet/store', () => ({
     chainId: null,
     isConnected: false,
   }),
+  setChainId: vi.fn(),
 }))
 
 vi.mock('~/components/WalletModal/useWagmiConnectorWithId', () => ({
@@ -168,7 +168,7 @@ describe('RecoverWalletModal', () => {
     vi.resetAllMocks()
     sessionStorage.clear()
     store.dispatch(setCloseModal(ModalName.RecoverWallet))
-    const { fetchEncryptedBlob } = await import('uniswap/src/features/passkey/privyBlobStore')
+    const { fetchEncryptedBlob } = await import('@universe/embedded-wallet/src/features/passkey/privyBlobStore')
     vi.mocked(fetchEncryptedBlob).mockResolvedValue('blob-fixture')
   })
 
@@ -328,7 +328,7 @@ describe('RecoverWalletModal', () => {
 
   it('Add passkey button triggers executeRecovery', async () => {
     vi.spyOn(console, 'warn').mockImplementation(() => {})
-    const { registerNewPasskey } = await import('uniswap/src/features/passkey/embeddedWallet')
+    const { registerNewPasskey } = await import('@universe/embedded-wallet/src/features/passkey/embeddedWallet')
     setupMocks()
     render(<RecoverWalletModal />)
     await goToEnterPinStep()

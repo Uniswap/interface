@@ -1,9 +1,9 @@
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { DAI, nativeOnChain } from 'uniswap/src/constants/tokens'
-import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/rpc'
 import { DEFAULT_NATIVE_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { normalizeTokenAddressForCache } from 'uniswap/src/utils/currencyId'
 import {
   areCurrencyIdsEqual,
   buildCurrencyId,

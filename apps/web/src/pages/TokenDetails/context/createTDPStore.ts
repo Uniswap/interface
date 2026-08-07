@@ -16,6 +16,12 @@ export type TDPActions = {
   setAddress: (v: TDPState['address']) => void
   setSelectedMultichainChainId: (v: TDPState['selectedMultichainChainId']) => void
   setBalanceError: (v: TDPState['balanceError']) => void
+  setToken: (v: TDPState['token']) => void
+  setMultichainToken: (v: TDPState['multichainToken']) => void
+  setMultichainTokenLoaded: (v: TDPState['multichainTokenLoaded']) => void
+  setPageQueryLoading: (v: TDPState['pageQueryLoading']) => void
+  setChainDataLoading: (v: TDPState['chainDataLoading']) => void
+  setMarketDataLoading: (v: TDPState['marketDataLoading']) => void
   incrementRefreshEpoch: () => void
 }
 
@@ -38,6 +44,12 @@ export const createTDPStore = (initial: TDPState): TDPStore =>
           setAddress: (address) => set({ address }),
           setSelectedMultichainChainId: (selectedMultichainChainId) => set({ selectedMultichainChainId }),
           setBalanceError: (balanceError) => set({ balanceError }),
+          setToken: (token) => set({ token }),
+          setMultichainToken: (multichainToken) => set({ multichainToken }),
+          setMultichainTokenLoaded: (multichainTokenLoaded) => set({ multichainTokenLoaded }),
+          setPageQueryLoading: (pageQueryLoading) => set({ pageQueryLoading }),
+          setChainDataLoading: (chainDataLoading) => set({ chainDataLoading }),
+          setMarketDataLoading: (marketDataLoading) => set({ marketDataLoading }),
           incrementRefreshEpoch: () => set((s) => ({ refreshEpoch: s.refreshEpoch + 1 })),
         },
       }),

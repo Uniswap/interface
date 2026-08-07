@@ -2,12 +2,47 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Height breakpoints (packages/ui/src/theme/breakpoints.ts heightBreakpoints) */
+@custom-variant h-short (@media (max-height: 736px));
+@custom-variant h-mid (@media (max-height: 800px));
+
 @layer base {
   html,
   body {
     @apply bg-background text-foreground font-basel;
   }
+  /* Typography polish: avoid orphans in body text, keep headings balanced.
+     text-wrap inherits, so `pretty` on body covers all body text; `balance`
+     on heading elements overrides it. Non-semantic headings (e.g. divs with
+     text-heading-*) should add the stock `text-balance` utility. */
+  body {
+    text-wrap: pretty;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    text-wrap: balance;
+  }
   * {
     @apply border-border outline-ring/50;
   }
+}
+
+/* Basel weight presets — one class sets family + weight (Basel is a single family;
+   Book/Medium are weights 485/535, see fonts.css @font-face).
+   Deliberately composite: with tailwind-merge, custom font-weight utilities classify
+   into the font-family group, so a `font-basel font-weight-book` pairing would drop
+   the family class. Keep these single classes — don't split into family + weight. */
+@utility font-basel-book {
+  font-family: var(--font-basel);
+  font-weight: var(--font-weight-book);
+}
+@utility font-basel-medium {
+  font-family: var(--font-basel);
+  font-weight: var(--font-weight-medium);
 }

@@ -11,3 +11,4 @@ export {
   parseHex,
   parseOptionalHex,
 } from './hex'
+export { uint8ToUtf8, utf8ToUint8 } from './utf8'

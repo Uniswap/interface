@@ -1,13 +1,11 @@
+import { BackupMethodSummary, type EncryptedRecoveryState, IconBox } from '@universe/embedded-wallet'
 import type { TFunction } from 'i18next'
 import { Button, Flex, ModalCloseIcon, Text } from 'ui/src'
 import { Lock } from 'ui/src/components/icons/Lock'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { ShieldCheck } from 'ui/src/components/icons/ShieldCheck'
-import type { EncryptedRecoveryState } from 'uniswap/src/features/passkey/embeddedWallet'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { BackupMethodSummary, IconBox } from '~/components/Passkey/BackupLoginComponents'
-
 export function ConfirmPasscodeExtra({
   cryptoResult,
   handleSignInWithPasskey,

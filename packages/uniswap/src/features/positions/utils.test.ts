@@ -4,6 +4,7 @@ import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import {
   filterAndSortPositions,
   getFeeLabel,
+  getIsPermissioned,
   getPositionKey,
   getProtocolVersionLabel,
   sortPositionsByStatusClosedLast,
@@ -155,5 +156,21 @@ describe('getFeeLabel', () => {
   it('returns undefined when feeTier is missing on V3/V4', () => {
     expect(getFeeLabel({ version: ProtocolVersion.V3, dynamicLabel })).toBeUndefined()
     expect(getFeeLabel({ version: ProtocolVersion.V4, dynamicLabel })).toBeUndefined()
+  })
+})
+
+describe('getIsPermissioned', () => {
+  it('passes through the isPermissioned flag for V4 positions', () => {
+    expect(getIsPermissioned({ version: ProtocolVersion.V4, isPermissioned: true } as PositionInfo)).toBe(true)
+    expect(getIsPermissioned({ version: ProtocolVersion.V4, isPermissioned: false } as PositionInfo)).toBe(false)
+  })
+
+  it('returns undefined for a V4 position missing the flag', () => {
+    expect(getIsPermissioned({ version: ProtocolVersion.V4 } as PositionInfo)).toBeUndefined()
+  })
+
+  it('returns undefined for non-V4 positions', () => {
+    expect(getIsPermissioned({ version: ProtocolVersion.V3 } as PositionInfo)).toBeUndefined()
+    expect(getIsPermissioned({ version: ProtocolVersion.V2 } as PositionInfo)).toBeUndefined()
   })
 })

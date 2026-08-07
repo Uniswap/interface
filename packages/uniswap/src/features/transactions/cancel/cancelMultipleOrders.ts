@@ -221,6 +221,8 @@ export async function cancelMultipleUniswapXOrders({
       error,
       orders,
     })
-    return undefined
+    // Propagate the raw error so callers can classify it (didUserReject) instead of
+    // receiving an undefined that is indistinguishable from a silent no-op
+    throw error
   }
 }

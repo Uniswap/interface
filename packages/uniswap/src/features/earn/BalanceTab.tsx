@@ -1,3 +1,4 @@
+import { isWebPlatform } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text } from 'ui/src'
 import { RewardsUnavailableIndicator } from 'uniswap/src/features/earn/RewardsUnavailableIndicator'
@@ -13,6 +14,7 @@ interface BalanceTabProps {
   /** Lifetime earnings sourced separately from the balance so it can fail on its own. */
   lifetimeEarningsUsd?: number
   lifetimeEarningsError?: boolean
+  depositLoading?: boolean
   showActionButtons?: boolean
 }
 
@@ -23,17 +25,19 @@ export function BalanceTab({
   onWithdraw,
   lifetimeEarningsUsd,
   lifetimeEarningsError = false,
+  depositLoading = false,
   showActionButtons = true,
 }: BalanceTabProps): JSX.Element {
   const { t } = useTranslation()
-  const { formatPercent, formatNumberOrString } = useLocalizationContext()
+  const { convertFiatAmountFormatted, formatPercent } = useLocalizationContext()
 
-  const formatFiat = (value: number): string => formatNumberOrString({ value, type: NumberType.FiatStandard })
+  // Position values are USD-denominated; convert before formatting in the selected fiat.
+  const formatFiat = (value: number): string => convertFiatAmountFormatted(value, NumberType.FiatStandard)
   const resolvedLifetimeEarnings = lifetimeEarningsUsd ?? position.lifetimePnlUsd
 
   return (
     <Flex gap="$spacing16">
-      <Flex gap="$spacing16" px="$spacing4">
+      <Flex gap="$spacing16" px="$spacing4" py={isWebPlatform ? undefined : '$spacing4'}>
         <BalanceRow
           label={t('explore.earn.vault.deposited')}
           value={
@@ -73,7 +77,7 @@ export function BalanceTab({
           <Button fill={false} emphasis="secondary" size="large" flex={1} disabled={!canWithdraw} onPress={onWithdraw}>
             {t('explore.earn.vault.withdraw')}
           </Button>
-          <Button fill={false} emphasis="primary" size="large" flex={1} onPress={onDeposit}>
+          <Button fill={false} emphasis="primary" size="large" flex={1} loading={depositLoading} onPress={onDeposit}>
             {t('explore.earn.vault.deposit')}
           </Button>
         </Flex>

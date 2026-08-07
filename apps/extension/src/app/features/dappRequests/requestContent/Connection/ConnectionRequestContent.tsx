@@ -6,7 +6,7 @@ import { DappConnectionContent } from 'wallet/src/components/dappRequests/DappCo
 import { useBlockaidVerification } from 'wallet/src/features/dappRequests/hooks/useBlockaidVerification'
 import { useDappConnectionConfirmation } from 'wallet/src/features/dappRequests/hooks/useDappConnectionConfirmation'
 import { DappVerificationStatus } from 'wallet/src/features/dappRequests/types'
-import { applyFirstPartyOverride } from 'wallet/src/features/dappRequests/verification'
+import { applyFirstPartyOverride, isFirstPartyDapp } from 'wallet/src/features/dappRequests/verification'
 
 export function ConnectionRequestContent(): JSX.Element {
   const { t } = useTranslation()
@@ -27,6 +27,7 @@ export function ConnectionRequestContent(): JSX.Element {
       confirmText={t('common.button.connect')}
       title={t('dapp.request.connect.title')}
       verificationStatus={verificationStatus}
+      isFirstParty={isFirstPartyDapp(dappUrl)}
       disableConfirm={disableConfirm}
     >
       <DappConnectionContent

@@ -17,7 +17,6 @@ interface UseIsLowVolumeHighFdvParams {
   auctionTokenDecimals: number | undefined
   clearingPriceQ96: string
   bidTokenInfo: BidTokenInfo | undefined
-  auctionTokenMarketPriceUsd: number | undefined
   bidTokenMarketPriceUsd: number | undefined
 }
 
@@ -30,7 +29,6 @@ export function useIsLowVolumeHighFdv({
   auctionTokenDecimals,
   clearingPriceQ96,
   bidTokenInfo,
-  auctionTokenMarketPriceUsd,
   bidTokenMarketPriceUsd,
 }: UseIsLowVolumeHighFdvParams): boolean {
   const fdvWarningThresholds = useAuctionFdvWarningThresholds()
@@ -44,14 +42,12 @@ export function useIsLowVolumeHighFdv({
         clearingPriceQ96,
         launchBidTokenPriceUsdRaw: auctionDetails?.currencyPriceUsd,
         bidTokenInfo,
-        auctionTokenMarketPriceUsd,
         bidTokenMarketPriceUsd,
       }),
     [
       auctionDetails?.currencyPriceUsd,
       auctionProgressState,
       auctionTokenDecimals,
-      auctionTokenMarketPriceUsd,
       bidTokenInfo,
       bidTokenMarketPriceUsd,
       clearingPriceQ96,

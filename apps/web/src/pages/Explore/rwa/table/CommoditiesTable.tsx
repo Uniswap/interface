@@ -1,6 +1,6 @@
 import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { useMemo } from 'react'
-import { useExploreRwaTokens } from 'uniswap/src/data/rest/rwa/useExploreRwaTokens'
+import { useExploreRwaTokens } from 'uniswap/src/data/apiClients/dataApiService/rwa/useExploreRwaTokens'
 import { RwaExploreTableShell } from '~/pages/Explore/rwa/table/RwaExploreTableShell'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 

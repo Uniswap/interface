@@ -4,6 +4,7 @@ import { WalletConnectSigningRequest } from 'src/features/walletConnect/walletCo
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { DappHeaderIcon } from 'wallet/src/components/dappRequests/DappHeaderIcon'
 import { DappRequestHeader } from 'wallet/src/components/dappRequests/DappRequestHeader'
+import { type DappVerificationStatus } from 'wallet/src/features/dappRequests/types'
 
 export interface PermitInfo {
   currencyId: string
@@ -13,9 +14,13 @@ export interface PermitInfo {
 export function ClientDetails({
   request,
   permitInfo,
+  verificationStatus,
+  isFirstParty,
 }: {
   request: WalletConnectSigningRequest
   permitInfo?: PermitInfo
+  verificationStatus?: DappVerificationStatus
+  isFirstParty?: boolean
 }): JSX.Element {
   const { dappRequestInfo } = request
   const permitCurrencyInfo = useCurrencyInfo(permitInfo?.currencyId)
@@ -24,5 +29,13 @@ export function ClientDetails({
     <HeaderText permitAmount={permitInfo?.amount} permitCurrency={permitCurrencyInfo?.currency} request={request} />
   )
 
-  return <DappRequestHeader dappInfo={dappRequestInfo} title={{ element: title }} headerIcon={headerIcon} />
+  return (
+    <DappRequestHeader
+      dappInfo={dappRequestInfo}
+      title={{ element: title }}
+      headerIcon={headerIcon}
+      verificationStatus={verificationStatus}
+      isFirstParty={isFirstParty}
+    />
+  )
 }

@@ -1,0 +1,30 @@
+{
+  "description": "Trap 3 (positive control): a non-requester human approval + green checks + base main = readyToMerge. Requester is alice (assignee); bob approved. Created 3 days before now (ageDays 3).",
+  "now": "2026-07-28T12:00:00Z",
+  "defaultBranch": "main",
+  "podByLogin": { "alice": "swap-fe" },
+  "prs": [
+    {
+      "number": 301,
+      "title": "feat(web): convert Explore tables [INFRA-3301]",
+      "url": "https://github.com/Uniswap/universe/pull/301",
+      "draft": false,
+      "author": { "login": "claude[bot]", "type": "Bot" },
+      "assignees": ["alice"],
+      "body": "Converts apps/web/src/pages/Explore tables.\n\nFixes INFRA-3301",
+      "baseRefName": "main",
+      "headRefName": "thebotfather/infra-3301-explore-tables",
+      "labels": [{ "name": "tamagui-migration" }],
+      "createdAt": "2026-07-25T12:00:00Z"
+    }
+  ],
+  "reviews": {
+    "301": [
+      { "author": { "login": "bob", "type": "User" }, "state": "APPROVED", "submittedAt": "2026-07-27T10:00:00Z" }
+    ]
+  },
+  "checks": { "301": "success" },
+  "requestedReviewers": {
+    "301": { "users": [], "teams": [] }
+  }
+}

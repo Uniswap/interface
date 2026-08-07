@@ -33,6 +33,7 @@ import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { areCurrenciesEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { ErrorCallout } from '~/components/ErrorCallout'
+import { LPGeoRestrictionBanner } from '~/components/GeoRestriction/LPGeoRestrictionBanner'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import { CurrencySearchModal } from '~/components/SearchModal/CurrencySearchModal'
 import { MouseoverTooltip } from '~/components/Tooltip'
@@ -42,6 +43,7 @@ import { AdvancedButton } from '~/features/Liquidity/Create/AdvancedButton'
 import { CreatingPoolInfo, PoolAlreadyCreatedInfo } from '~/features/Liquidity/Create/CreatingPoolInfo'
 import { useBlockedTokens } from '~/features/Liquidity/Create/hooks/useBlockedTokens'
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
+import { useRecommendedHookPrefill } from '~/features/Liquidity/Create/hooks/useRecommendedPermissionedHook'
 import { PoolParsingError } from '~/features/Liquidity/Create/PoolParsingError'
 import { DEFAULT_FEE_DATA, DEFAULT_POSITION_STATE } from '~/features/Liquidity/Create/types'
 import { CurrencySelector } from '~/features/Liquidity/CurrencySelector'
@@ -50,6 +52,7 @@ import { HookModal } from '~/features/Liquidity/HookModal'
 import { useAllFeeTierPoolData } from '~/features/Liquidity/hooks/useAllFeeTierPoolData'
 import { useSelectedFeeBreakdown } from '~/features/Liquidity/hooks/useSelectedFeeBreakdown'
 import { LpIncentivesAprDisplay } from '~/features/Liquidity/LPIncentives/LpIncentivesAprDisplay'
+import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
 import { getCreateFeeTierOptions, getSteeredRecommendedFee } from '~/features/Liquidity/utils/createFeeTiers'
 import { getDefaultFeeTiersWithData, getFeeTierKey } from '~/features/Liquidity/utils/feeTiers'
 import { hasLPFoTTransferError } from '~/features/Liquidity/utils/hasLPFoTTransferError'
@@ -86,7 +89,7 @@ export function SelectTokensStep({
   currencyInputs: { tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }
   setCurrencyInputs: Dispatch<SetStateAction<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>>
 } & FlexProps) {
-  const { loadingA, loadingB } = useLiquidityUrlState()
+  const { loadingA, loadingB, hook: urlHook } = useLiquidityUrlState()
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { setSelectedChainId, setIsUserSelectedToken } = useMultichainContext()
@@ -96,6 +99,7 @@ export function SelectTokensStep({
   const isAddLiquidityRevamp = useFeatureFlag(FeatureFlags.AddLiquidityRevamp)
   const isLpIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
   const isV4FeeDisplayEnabled = useFeatureFlag(FeatureFlags.V4ProtocolFeeDisplay)
+  // Newly created tiers use 1x the fee tier (instead of 2x) when the flag is on.
   const isL2DefaultTickSpacingEnabled = useFeatureFlag(FeatureFlags.L2DefaultTickSpacing)
   const allowedV4WethHookAddresses: string[] = useDynamicConfigValue({
     config: DynamicConfigs.AllowedV4WethHookAddresses,
@@ -122,11 +126,6 @@ export function SelectTokensStep({
   // users add to it) or swapped for the paired new, lower fee tier (labeled by effective rate). See
   // getCreateFeeTierOptions.
   const useNewDefaultFeeTiers = isV4FeeDisplayEnabled && protocolVersion === ProtocolVersion.V4
-  // Newly created L2 tiers use 1x the fee tier (instead of 2x) when the flag is on; the util does the L2 check.
-  const l2TickSpacingConfig = useMemo(
-    () => ({ chainId: token0?.chainId, l2TickSpacingEnabled: isL2DefaultTickSpacingEnabled }),
-    [token0?.chainId, isL2DefaultTickSpacingEnabled],
-  )
   const [currencySearchInputState, setCurrencySearchInputState] = useState<'tokenA' | 'tokenB' | undefined>(undefined)
   const [isShowMoreFeeTiersEnabled, toggleShowMoreFeeTiersEnabled] = useReducer((state) => !state, false)
 
@@ -227,7 +226,12 @@ export function SelectTokensStep({
     }
 
     const recommendedFee = useNewDefaultFeeTiers
-      ? getSteeredRecommendedFee({ mostUsedFee: mostUsedFeeTier.fee, tvl: mostUsedFeeTier.tvl, l2TickSpacingConfig })
+      ? getSteeredRecommendedFee({
+          mostUsedFee: mostUsedFeeTier.fee,
+          tvl: mostUsedFeeTier.tvl,
+          boostedApr: mostUsedFeeTier.boostedApr,
+          useSingleTickSpacing: isL2DefaultTickSpacingEnabled,
+        })
       : mostUsedFeeTier.fee
     setPositionState((prevState) => ({ ...prevState, fee: recommendedFee }))
     sendAnalyticsEvent(LiquidityEventName.SelectLiquidityPoolFeeTier, {
@@ -235,7 +239,26 @@ export function SelectTokensStep({
       fee_tier: recommendedFee.feeAmount,
       ...trace,
     })
-  }, [mostUsedFeeTier, fee, setPositionState, trace, isAddLiquidityRevamp, useNewDefaultFeeTiers, l2TickSpacingConfig])
+  }, [
+    mostUsedFeeTier,
+    fee,
+    setPositionState,
+    trace,
+    isAddLiquidityRevamp,
+    useNewDefaultFeeTiers,
+    isL2DefaultTickSpacingEnabled,
+  ])
+
+  // Auto-suggest the recommended hook for permissioned pairs (ECO-577); mirrors the
+  // mostUsedFeeTier auto-select above. No-op unless the pair is permissioned.
+  useRecommendedHookPrefill({
+    tokenA: currencyInputs.tokenA,
+    tokenB: currencyInputs.tokenB,
+    protocolVersion,
+    hook,
+    urlHook,
+    setPositionState,
+  })
 
   const { chains } = useEnabledChains({ platform: Platform.EVM })
   const supportedChains = useMemo(() => {
@@ -342,7 +365,12 @@ export function SelectTokensStep({
 
   const { hasBlockedToken, blockedTokenSymbols } = useBlockedTokens(token0, token1)
 
-  const hasError = isUnsupportedTokenSelected || Boolean(fotErrorToken) || hasBlockedToken
+  const { isGeoRestricted, restrictedTokenSymbol, unavailableLabel } = useLPGeoRestriction({
+    token0,
+    token1,
+  })
+
+  const hasError = isUnsupportedTokenSelected || Boolean(fotErrorToken) || hasBlockedToken || isGeoRestricted
 
   const currentFeeTierKey = useMemo(
     () =>
@@ -395,10 +423,34 @@ export function SelectTokensStep({
         defaultFeeTiers,
         feeTierData,
         hook,
-        l2TickSpacingConfig,
+        useSingleTickSpacing: isL2DefaultTickSpacingEnabled,
       }),
-    [isV4FeeDisplayEnabled, protocolVersion, defaultFeeTiers, feeTierData, hook, l2TickSpacingConfig],
+    [isV4FeeDisplayEnabled, protocolVersion, defaultFeeTiers, feeTierData, hook, isL2DefaultTickSpacingEnabled],
   )
+
+  // The best-rewarded tier among the rendered boxes — what "Switch pools" selects. Undefined when the
+  // rewarded pool sits at a fee amount no box covers (the banner reads raw feeTierData, which is wider).
+  const bestBoostedFeeTier = useMemo(
+    () =>
+      feeTierOptions
+        .filter((tier) => tier.boostedApr)
+        .sort((a, b) => (b.boostedApr ?? 0) - (a.boostedApr ?? 0))
+        .at(0),
+    [feeTierOptions],
+  )
+
+  const handleSwitchToBoostedPool = useCallback(() => {
+    if (bestBoostedFeeTier) {
+      handleFeeTierSelect(bestBoostedFeeTier.value)
+      return
+    }
+    // No box covers the rewarded tier, so expanding wouldn't reveal it — search is the only way in.
+    if (protocolVersion === ProtocolVersion.V4) {
+      setFeeTierSearchModalOpen(true)
+      return
+    }
+    toggleShowMoreFeeTiersEnabled()
+  }, [bestBoostedFeeTier, handleFeeTierSelect, protocolVersion, setFeeTierSearchModalOpen])
 
   // Breakdown for the fee shown in the selector header (the collapsed "0.25% fee tier" summary), so it
   // gets the same LP fee + hover tooltip as the tier boxes.
@@ -454,14 +506,19 @@ export function SelectTokensStep({
                 </Flex>
               </Flex>
             )}
-            <SelectStepError
-              isUnsupportedTokenSelected={isUnsupportedTokenSelected}
-              unsupportedChainId={unsupportedChainId}
-              protocolVersion={protocolVersion}
-              wrappedNativeWarning={undefined}
-              fotToken={fotErrorToken}
-              blockedTokenSymbols={blockedTokenSymbols}
-            />
+            {/* The geo block has no remedy, so it replaces the other callouts rather than stacking with them. */}
+            {isGeoRestricted ? (
+              <LPGeoRestrictionBanner tokenSymbol={restrictedTokenSymbol} />
+            ) : (
+              <SelectStepError
+                isUnsupportedTokenSelected={isUnsupportedTokenSelected}
+                unsupportedChainId={unsupportedChainId}
+                protocolVersion={protocolVersion}
+                wrappedNativeWarning={undefined}
+                fotToken={fotErrorToken}
+                blockedTokenSymbols={blockedTokenSymbols}
+              />
+            )}
             {!hasError && protocolVersion === ProtocolVersion.V4 && <AddHook />}
           </Flex>
         </Flex>
@@ -554,7 +611,10 @@ export function SelectTokensStep({
                 ) : undefined
               }
               footerContent={
-                !lpIncentiveRewardApr && feeTierHasLpRewards && !isShowMoreFeeTiersEnabled ? (
+                // Selecting the rewarded tier sets lpIncentiveRewardApr, which retires the banner. A manual
+                // expand only retires it once a box actually shows the reward APR — otherwise the banner is
+                // still the only route to the pool ("Switch pools" falls back to fee tier search).
+                !lpIncentiveRewardApr && feeTierHasLpRewards && !(isShowMoreFeeTiersEnabled && bestBoostedFeeTier) ? (
                   <Flex
                     row
                     alignItems="center"
@@ -577,7 +637,7 @@ export function SelectTokensStep({
                       color="$neutral1"
                       $sm={{ variant: 'body4', mt: '$spacing1' }}
                       {...ClickableTamaguiStyle}
-                      onPress={toggleShowMoreFeeTiersEnabled}
+                      onPress={handleSwitchToBoostedPool}
                     >
                       {t('pool.incentives.switchPools')}
                     </Text>
@@ -589,17 +649,23 @@ export function SelectTokensStep({
         </Flex>
         {poolAlreadyExists ? <PoolAlreadyCreatedInfo /> : <CreatingPoolInfo />}
         <Flex row>
-          <Button
-            size="large"
-            key="SelectTokensStep-continue"
-            onPress={handleOnContinue}
-            loading={Boolean(poolOrPairLoading && token0 && token1 && fee)}
-            disabled={
-              !(creatingPoolOrPair || poolOrPair) || hasError || (showWrappedNativeWarning && !!wrappedNativeWarning)
-            }
-          >
-            {poolAlreadyExists ? t('common.addLiquidity') : t('common.button.continue')}
-          </Button>
+          {isGeoRestricted ? (
+            <Button size="large" key="SelectTokensStep-geoRestricted" disabled>
+              {unavailableLabel}
+            </Button>
+          ) : (
+            <Button
+              size="large"
+              key="SelectTokensStep-continue"
+              onPress={handleOnContinue}
+              loading={Boolean(poolOrPairLoading && token0 && token1 && fee)}
+              disabled={
+                !(creatingPoolOrPair || poolOrPair) || hasError || (showWrappedNativeWarning && !!wrappedNativeWarning)
+              }
+            >
+              {poolAlreadyExists ? t('common.addLiquidity') : t('common.button.continue')}
+            </Button>
+          )}
         </Flex>
         <PoolParsingError formComplete={Boolean(token0 && token1 && fee)} />
         {showWrappedNativeWarning && wrappedNativeWarning && (

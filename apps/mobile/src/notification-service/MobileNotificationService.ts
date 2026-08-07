@@ -31,7 +31,7 @@ import { createMobileNotificationRenderer } from 'src/notification-service/notif
 import { mobileNotificationStore } from 'src/notification-service/notification-renderer/notificationStore'
 import { getNotificationTelemetry } from 'src/notification-service/notification-telemetry/getNotificationTelemetry'
 import { createMobileLocalTriggerDataSource } from 'src/notification-service/triggers/createMobileLocalTriggerDataSource'
-import { getPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
+import { getPortfolioQuery } from 'uniswap/src/data/apiClients/dataApiService/balances/getPortfolio'
 import { mapLocaleToBackendLocale } from 'uniswap/src/features/language/constants'
 import { getLocale } from 'uniswap/src/features/language/navigatorLocale'
 import { selectCurrentLanguage } from 'uniswap/src/features/settings/selectors'

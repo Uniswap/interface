@@ -109,7 +109,7 @@ export function AnalyticsDebugOverlay(): JSX.Element | null {
   }
 
   return createPortal(
-    // oxlint-disable-next-line react/forbid-elements: Event isolation boundary for portal — prevents React synthetic events from reaching modal backdrops
+    // oxlint-disable-next-line react/forbid-elements -- Event isolation boundary for portal — prevents React synthetic events from reaching modal backdrops
     <div
       onMouseDown={stopNativeForReact}
       onMouseUp={stopNativeForReact}

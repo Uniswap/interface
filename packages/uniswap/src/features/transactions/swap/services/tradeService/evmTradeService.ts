@@ -1,5 +1,5 @@
 import { TradeType } from '@uniswap/sdk-core'
-import { TradingApi } from '@universe/api'
+import { TradingApi, UNCONNECTED_ADDRESS } from '@universe/api'
 import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { GetQuoteRequestResult } from 'uniswap/src/features/transactions/swap/hooks/useTrade/createGetQuoteRequestArgs'
@@ -15,7 +15,6 @@ import {
   createBuildQuoteRequest,
   flattenQuoteRequestResult,
   parseTradeInputForTradingApiQuote,
-  UNCONNECTED_ADDRESS,
   type ValidatedTradeInput,
   validateParsedInput,
 } from 'uniswap/src/features/transactions/swap/services/tradeService/transformations/buildQuoteRequest'

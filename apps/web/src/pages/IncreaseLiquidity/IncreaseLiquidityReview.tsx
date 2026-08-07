@@ -1,5 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
+import { useGetPasskeyAuthStatus } from '@universe/embedded-wallet'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -12,7 +13,6 @@ import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
 import { getErrorMessageToDisplay } from 'uniswap/src/features/transactions/liquidity/utils'
@@ -23,10 +23,12 @@ import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { DetailLineItem } from '~/components/DetailLineItem'
+import { LPGeoRestrictionBanner } from '~/components/GeoRestriction/LPGeoRestrictionBanner'
 import { getLPBaseAnalyticsProperties } from '~/features/Liquidity/analytics'
 import { useUpdatedAmountsFromDependentAmount } from '~/features/Liquidity/hooks/useDependentAmountFallback'
 import { useGetPoolTokenPercentage } from '~/features/Liquidity/hooks/useGetPoolTokenPercentage'
 import { TokenInfo } from '~/features/Liquidity/TokenInfo'
+import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
 import { useCurrencyInfo } from '~/hooks/Tokens'
 import { useAccount } from '~/hooks/useAccount'
 import { useSelectChain } from '~/hooks/useSelectChain'
@@ -99,6 +101,18 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
   const currentPrice = increaseLiquidityState.position.poolOrPair?.token1Price
   const poolTokenPercentage = useGetPoolTokenPercentage(increaseLiquidityState.position)
 
+  // The signing-surface half of the gate. Read here rather than inherited from IncreaseLiquidityForm
+  // on purpose: the form gate fails open while the compliance answer is in flight, so a user can
+  // press Review before the verdict lands. Re-reading on this step is what catches that window.
+  const {
+    isGeoRestricted,
+    restrictedTokenSymbol,
+    unavailableLabel: geoUnavailableLabel,
+  } = useLPGeoRestriction({
+    token0: currency0Amount.currency,
+    token1: currency1Amount.currency,
+  })
+
   const currency0CurrencyInfo = useCurrencyInfo(currency0Amount.currency)
   const currency1CurrencyInfo = useCurrencyInfo(currency1Amount.currency)
 
@@ -149,6 +163,7 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
   const onIncreaseLiquidity = () => {
     const isValidTx = isValidLiquidityTxContext(txInfo)
     if (
+      isGeoRestricted ||
       !account ||
       !isSignerMnemonicAccountDetails(account) ||
       !isValidTx ||
@@ -358,14 +373,21 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
               }}
             />
           </Flex>
+          {/* Owns the message when up: a dead confirm with no stated reason is the failure mode. */}
+          {isGeoRestricted && <LPGeoRestrictionBanner tokenSymbol={restrictedTokenSymbol} />}
           <Flex row>
             <Button
               variant="branded"
               size="large"
               onPress={onIncreaseLiquidity}
-              icon={needsPasskeySignin ? <Passkey size="$icon.24" color="$white" /> : undefined}
+              disabled={isGeoRestricted}
+              icon={needsPasskeySignin && !isGeoRestricted ? <Passkey size="$icon.24" color="$white" /> : undefined}
             >
-              {needsPasskeySignin ? t('common.addLiquidity') : t('common.confirm')}
+              {isGeoRestricted
+                ? geoUnavailableLabel
+                : needsPasskeySignin
+                  ? t('common.addLiquidity')
+                  : t('common.confirm')}
             </Button>
           </Flex>
         </>

@@ -1,8 +1,10 @@
 import { clearComplianceOverrides } from '@universe/compliance'
 import { TRUSTED_CHROME_EXTENSION_IDS } from '@universe/environment'
-import type { DynamicConfigKeys } from '@universe/gating'
+import type { DynamicConfigKeys, ExperimentProperties } from '@universe/gating'
 import {
   DynamicConfigs,
+  EmbeddedWalletOnboardingProperties,
+  Experiments,
   ExternallyConnectableExtensionConfigKey,
   FeatureFlags,
   getFeatureFlagName,
@@ -10,6 +12,7 @@ import {
   Layers,
   NetworkRequestsConfigKey,
   useDynamicConfigValue,
+  useExperimentValueWithExposureLoggingDisabled,
   useFeatureFlagWithExposureLoggingDisabled,
 } from '@universe/gating'
 import type { PropsWithChildren, ReactNode } from 'react'
@@ -45,7 +48,7 @@ const FlagInfo = styled(Flex, {
   flexShrink: 1,
 })
 
-function fuzzyMatch(query: string, ...targets: string[]): boolean {
+function fuzzyMatch(query: string, ...targets: (string | undefined)[]): boolean {
   if (!query.trim()) {
     return true
   }
@@ -117,7 +120,7 @@ function PinnableRow({ isPinned, onPinPress, title, label, rightContent }: Pinna
 }
 
 interface FeatureFlagProps {
-  label: string
+  label?: string
   flag: FeatureFlags
 }
 
@@ -191,6 +194,35 @@ const FeatureFlagOption = memo(function FeatureFlagOption({ flag, label }: Featu
     />
   )
 })
+
+// Toggles a boolean experiment param: off mirrors the control group, on mirrors the test group.
+function ExperimentToggleOption<Exp extends keyof ExperimentProperties>({
+  experiment,
+  param,
+  label,
+}: {
+  experiment: Exp
+  param: ExperimentProperties[Exp]
+  label: string
+}): JSX.Element {
+  const enabled = useExperimentValueWithExposureLoggingDisabled({
+    experiment,
+    param,
+    defaultValue: false,
+  })
+
+  const onCheckedChange = useEvent((checked: boolean) => {
+    getOverrideAdapter().overrideExperiment(experiment, { [param]: checked })
+  })
+
+  return (
+    <GatingRowContent
+      title={experiment}
+      label={label}
+      rightContent={<GatingSwitch checked={enabled} onCheckedChange={onCheckedChange} />}
+    />
+  )
+}
 
 interface LayerOptionProps {
   layerName: Layers
@@ -291,6 +323,15 @@ export function FeatureFlagModal(): JSX.Element {
           />
         ),
         networkRequestsConfig: <NetworkRequestsConfig />,
+        experimentOptions: (
+          <Flex ml="$padding8" gap="$gap8">
+            <ExperimentToggleOption
+              experiment={Experiments.EmbeddedWalletOnboarding}
+              param={EmbeddedWalletOnboardingProperties.NewFlowEnabled}
+              label="newFlowEnabled: on = test (new onboarding UX), off = control (current flow)"
+            />
+          </Flex>
+        ),
         layerOptions: (
           <Flex ml="$padding8" gap="$gap8">
             <FeatureFlagGroup name={Layers.SwapPage}>

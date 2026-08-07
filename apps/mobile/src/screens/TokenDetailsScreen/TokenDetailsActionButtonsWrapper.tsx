@@ -18,7 +18,7 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import type { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { useTokenBasicInfoPartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
+import { useTokenBasicInfoPartsFragment } from 'uniswap/src/data/graphql/fragments'
 import { useBridgingTokenWithHighestBalance } from 'uniswap/src/features/bridging/hooks/tokens'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -46,8 +46,22 @@ export const TokenDetailsActionButtonsWrapper = memo(
     const activeAddress = useActiveAccountAddressWithThrow()
     const { isTestnetModeEnabled } = useEnabledChains()
 
-    const { currencyId, chainId, address, currencyInfo, openTokenWarningModal, tokenColorLoading, navigation } =
-      useTokenDetailsContext()
+    const {
+      currencyId,
+      chainId,
+      address,
+      currencyInfo,
+      openTokenWarningModal,
+      tokenColorLoading,
+      navigation,
+      isPermissioned,
+      isAllowlisted,
+    } = useTokenDetailsContext()
+
+    // A non-allowlisted wallet can't receive a permissioned token (the transfer reverts on-chain),
+    // so hide the secondary action menu entirely for that case — its only live entry for this user
+    // is Receive (Send/Sell require a balance they can't hold).
+    const hideActionMenu = isPermissioned && !isAllowlisted
 
     const { navigateToFiatOnRamp, navigateToSwapFlow, navigateToSend, navigateToReceive } = useWalletNavigation()
 
@@ -105,6 +119,8 @@ export const TokenDetailsActionButtonsWrapper = memo(
     })
 
     const onPressSwap = useEvent((currencyField: CurrencyField) => {
+      // Permissioned tokens: don't short-circuit here. Let the user into the swap flow;
+      // `SwapFormButton` surfaces the "Verify identity" CTA + bottom sheet per Figma.
       if (isBlocked) {
         openTokenWarningModal()
       } else {
@@ -120,6 +136,7 @@ export const TokenDetailsActionButtonsWrapper = memo(
     })
 
     const onPressSend = useEvent(() => {
+      // TDP doesn't gate Send; SendFormButton blocks the Review CTA for permissioned tokens.
       if (hasMultiChainBalances) {
         openSendSheet()
       } else {
@@ -140,6 +157,8 @@ export const TokenDetailsActionButtonsWrapper = memo(
     // 2. Chain with the highest TVL (best liquidity for new buyers with 0 balance)
     // 3. Current TDP chain (fallback when data is unavailable)
     const onPressBuy = useEvent(() => {
+      // Permissioned tokens: don't short-circuit. Let the user into the swap flow so
+      // `SwapFormButton` can surface the "Verify identity" CTA + bottom sheet per Figma.
       if (isBlocked) {
         openTokenWarningModal()
         return
@@ -254,14 +273,19 @@ export const TokenDetailsActionButtonsWrapper = memo(
       onPressBuy,
     })
 
+    const geoRestrictedButtonTitle = token.symbol
+      ? t('swap.geoRestriction.button', { tokenSymbol: token.symbol })
+      : t('common.notAvailableInRegion.error')
+
     return hideActionButtons ? null : (
       <AnimatedFlex mb={insets.bottom} backgroundColor="$surface1" entering={FadeInDown}>
         <TokenDetailsBuySellButtons
           actionMenuOptions={multichainActionMenuOptions}
+          hideActionMenu={hideActionMenu}
           buyButtonDisabled={isRWATradeBlocked}
           buyButtonIcon={isRWATradeBlocked ? undefined : multichainBuyVariant.icon}
-          buyButtonTitle={isRWATradeBlocked ? t('tdp.button.unavailableToTrade') : multichainBuyVariant.title}
-          sellButtonDisabled={isRWATradeBlocked}
+          buyButtonTitle={isRWATradeBlocked ? geoRestrictedButtonTitle : multichainBuyVariant.title}
+          isTradeBlocked={isRWATradeBlocked}
           userHasBalance={hasTokenBalance}
           onPressBuy={isRWATradeBlocked ? noop : multichainBuyVariant.onPress}
           onPressDisabled={isRWATradeBlocked ? undefined : onPressDisabled}

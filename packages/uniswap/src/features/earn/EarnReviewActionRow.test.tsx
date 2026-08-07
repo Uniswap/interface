@@ -42,7 +42,10 @@ const progress: EarnPlanProgressState = {
   currentStep: { step: progressStep, accepted: false },
 }
 
-function renderActionRow(progressState: EarnPlanProgressState = progress): JSX.Element {
+function renderActionRow(
+  progressState: EarnPlanProgressState = progress,
+  overrides: Partial<Parameters<typeof EarnReviewActionRow>[0]> = {},
+): JSX.Element {
   return EarnReviewActionRow({
     ctaDisabled: true,
     ctaLabel: 'Withdraw',
@@ -53,6 +56,7 @@ function renderActionRow(progressState: EarnPlanProgressState = progress): JSX.E
     stepProgressLabel: 'Withdrawing…',
     onBack: vi.fn(),
     onPress: vi.fn(),
+    ...overrides,
   })
 }
 
@@ -93,5 +97,36 @@ describe(EarnReviewActionRow, () => {
     }
 
     expect(renderActionRow(laterStepProgress).props.currentStepIndex).toBe(3)
+  })
+
+  it('returns the web CTA instead of progress when a retained plan is not executing', () => {
+    const stopped = renderActionRow(progress, { isExecuting: false, ctaDisabled: false })
+
+    expect(stopped.type).not.toBe(EarnPlanProgressIndicator)
+    expect(stopped.props).toMatchObject({ disabled: false, children: 'Withdraw' })
+  })
+
+  it('returns the mobile CTA instead of button progress when a retained plan is not executing', () => {
+    mockPlatform.isMobileApp = true
+    mockPlatform.isWebApp = false
+
+    const stopped = renderActionRow(progress, { isExecuting: false, ctaDisabled: false })
+
+    expect(stopped.type).not.toBe(PendingSwapButtonContent)
+    expect(stopped.type).not.toBe(EarnPlanProgressIndicator)
+  })
+
+  it('renders a supplied authentication icon on the mobile confirmation CTA', () => {
+    mockPlatform.isMobileApp = true
+    mockPlatform.isWebApp = false
+    const buttonAuthIcon = <span />
+
+    const actionRow = renderActionRow(progress, {
+      ctaDisabled: false,
+      buttonAuthIcon,
+      isExecuting: false,
+    })
+
+    expect(actionRow.props.children[1].props.icon).toBe(buttonAuthIcon)
   })
 })

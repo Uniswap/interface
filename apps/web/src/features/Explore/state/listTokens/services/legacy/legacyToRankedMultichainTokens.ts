@@ -8,7 +8,7 @@ import {
   TokenRankStats,
   TokenSafety,
 } from '@uniswap/client-data-api/dist/data/v2/types_pb'
-import type { PricePoint } from '~/appGraphql/data/util'
+import type { PricePoint } from '~/data/util'
 import type { RankedMultichainTokensResult } from '~/features/Explore/state/listTokens/types'
 import type {
   ExploreStatVolumeAmounts,

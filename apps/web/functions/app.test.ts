@@ -24,45 +24,9 @@ function buildApp({ fetchSpy, onResolveEntryGateway }: BuildAppOptions = {}) {
     },
     getWebSocketUrl: () => 'https://websockets.backend-prod.api.uniswap.org',
     getTrustedClientIp: () => undefined,
+    getEmbedFrameAncestors: () => undefined,
   })
 }
-
-describe('frame protection headers', () => {
-  it('sets frame-ancestors CSP header on SPA routes', async () => {
-    const app = buildApp()
-    const res = await app.request('/')
-
-    expect(res.headers.get('Content-Security-Policy')).toBe(
-      "frame-ancestors 'self' https://app.safe.global https://dexscreener.com https://*.dexscreener.com",
-    )
-  })
-
-  it('sets X-Frame-Options header on SPA routes', async () => {
-    const app = buildApp()
-    const res = await app.request('/')
-
-    expect(res.headers.get('X-Frame-Options')).toBe('SAMEORIGIN')
-  })
-
-  it('sets frame headers on /swap route', async () => {
-    const app = buildApp()
-    const res = await app.request('/swap')
-
-    expect(res.headers.get('Content-Security-Policy')).toBe(
-      "frame-ancestors 'self' https://app.safe.global https://dexscreener.com https://*.dexscreener.com",
-    )
-    expect(res.headers.get('X-Frame-Options')).toBe('SAMEORIGIN')
-  })
-
-  it('does not include other CSP directives in the frame-ancestors header', async () => {
-    const app = buildApp()
-    const res = await app.request('/')
-
-    const csp = res.headers.get('Content-Security-Policy')
-    expect(csp).not.toContain('default-src')
-    expect(csp).not.toContain('script-src')
-  })
-})
 
 describe('entry-gateway proxy: env pinning', () => {
   afterEach(() => {

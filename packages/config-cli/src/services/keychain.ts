@@ -1,3 +1,4 @@
+import { utf8ToUint8 } from '@universe/encoding'
 import { Result } from 'better-result'
 import { z } from 'incur'
 import { chunkString } from 'utilities/src/primitives/string'
@@ -264,7 +265,7 @@ async function runSecurity(args: string[], { stdin }: RunSecurityOptions = {}): 
   // internal `readpassphrase()` can't open /dev/tty to prompt directly, and is forced to
   // fall back to reading the password from stdin instead.
   const proc = Bun.spawn(['security', ...args], {
-    stdin: stdin === undefined ? 'ignore' : new TextEncoder().encode(stdin),
+    stdin: stdin === undefined ? 'ignore' : utf8ToUint8(stdin),
     stdout: 'pipe',
     stderr: 'pipe',
     detached: true,

@@ -1,8 +1,10 @@
+import { PasskeyManagementModal } from '@universe/embedded-wallet'
 import { type ComponentType, memo } from 'react'
 import type { AppStackParamList, AppStackScreenProp } from 'src/app/navigation/types'
 import { EarnDepositAmountModal } from 'src/components/earn/EarnDepositAmountModal'
 import { EarnDepositReviewModal } from 'src/components/earn/EarnDepositReviewModal'
 import { EarnDepositSourceSelectorModal } from 'src/components/earn/EarnDepositSourceSelectorModal'
+import { EarnHowItWorksModal } from 'src/components/earn/EarnHowItWorksModal'
 import { EarnVaultModal } from 'src/components/earn/EarnVaultModal'
 import { EarnWithdrawNetworkSelectorModal } from 'src/components/earn/EarnWithdrawNetworkSelectorModal'
 import { EarnWithdrawReviewModal } from 'src/components/earn/EarnWithdrawReviewModal'
@@ -14,7 +16,6 @@ import { WormholeModal } from 'uniswap/src/components/BridgedAsset/WormholeModal
 import { ReportPortfolioDataModal } from 'uniswap/src/components/reporting/ReportPortfolioDataModal'
 import { ReportTokenDataModal } from 'uniswap/src/components/reporting/ReportTokenDataModal'
 import { ReportTokenIssueModal } from 'uniswap/src/components/reporting/ReportTokenIssueModal'
-import { PasskeyManagementModal } from 'uniswap/src/features/passkey/PasskeyManagementModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
 import { HiddenTokenInfoModal } from 'uniswap/src/features/transactions/modals/HiddenTokenInfoModal'
@@ -45,6 +46,7 @@ type ValidModalNames = keyof Pick<
   | typeof ModalName.EarnDepositAmount
   | typeof ModalName.EarnDepositReview
   | typeof ModalName.EarnDepositSourceSelector
+  | typeof ModalName.EarnHowItWorks
   | typeof ModalName.EarnVault
   | typeof ModalName.EarnWithdrawNetworkSelector
   | typeof ModalName.EarnWithdrawReview
@@ -69,6 +71,7 @@ type ModalNameWithComponentProps = {
   [ModalName.EarnDepositAmount]: GetProps<typeof EarnDepositAmountModal>
   [ModalName.EarnDepositReview]: GetProps<typeof EarnDepositReviewModal>
   [ModalName.EarnDepositSourceSelector]: GetProps<typeof EarnDepositSourceSelectorModal>
+  [ModalName.EarnHowItWorks]: GetProps<typeof EarnHowItWorksModal>
   [ModalName.EarnVault]: GetProps<typeof EarnVaultModal>
   [ModalName.EarnWithdrawNetworkSelector]: GetProps<typeof EarnWithdrawNetworkSelectorModal>
   [ModalName.EarnWithdrawReview]: GetProps<typeof EarnWithdrawReviewModal>

@@ -15,14 +15,25 @@
     "./theme": "./css/theme.css",
     "./fonts": "./css/fonts.css",
     "./fonts/*": "./fonts/*",
-    "./types": "./src/types.ts"
+    "./types": "./src/types.ts",
+    "./internal/parity/matrix": "./src/parity/flex/matrix.ts",
+    "./internal/parity/tooltip-matrix": "./src/parity/tooltip/matrix.ts",
+    "./internal/parity/menu-matrix": "./src/parity/menu/matrix.ts",
+    "./internal/parity/option-list-matrix": "./src/parity/option-list/matrix.ts",
+    "./internal/parity/palette-drift": "./src/parity/core/palette-drift.ts",
+    "./internal/parity/class-manifest": "./src/parity/flex/class-manifest.ts",
+    "./internal/parity/touchable-area-matrix": "./src/parity/touchable-area/matrix.ts",
+    "./internal/parity/touchable-area-class-manifest": "./src/parity/touchable-area/class-manifest.ts",
+    "./internal/parity/view-class-manifest": "./src/parity/view/class-manifest.ts",
+    "./internal/parity/view-matrix": "./src/parity/view/matrix.ts"
   },
   "peerDependencies": {
     "tailwindcss": ">=4.0.0"
   },
   "devDependencies": {
     "@types/node": "22.19.17",
-    "tailwindcss": "4.1.16",
+    "@vitejs/plugin-react": "5.2.0",
+    "tailwindcss": "4.3.2",
     "vitest": "3.2.1"
   },
   "scripts": {

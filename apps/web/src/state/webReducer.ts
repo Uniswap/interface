@@ -4,7 +4,6 @@ import { uniswapPersistedStateList, uniswapReducers } from 'uniswap/src/state/un
 import application from '~/state/application/reducer'
 import fiatOnRampTransactions from '~/state/fiatOnRampTransactions/reducer'
 import lists from '~/state/lists/reducer'
-import logs from '~/state/logs/slice'
 import { routingApi } from '~/state/routing/slice'
 import { monitoredSagaReducers } from '~/state/sagas/root'
 import user from '~/state/user/reducer'
@@ -17,7 +16,6 @@ const interfaceReducers = {
   fiatOnRampTransactions,
   application,
   walletCapabilities,
-  logs,
   saga: monitoredSagaReducers,
   [routingApi.reducerPath]: routingApi.reducer,
 } as const

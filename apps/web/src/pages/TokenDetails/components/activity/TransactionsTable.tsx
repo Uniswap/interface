@@ -6,9 +6,10 @@ import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
 import { useMemo, useReducer, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, useMedia } from 'ui/src'
+import { Flex, Text, TouchableTextLink, type TouchableTextLinkProps, useMedia } from 'ui/src'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -17,12 +18,6 @@ import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
-import {
-  getTokenTransactionTypeTranslation,
-  TokenTransactionType,
-  useTokenTransactions,
-} from '~/appGraphql/data/useTokenTransactions'
-import { unwrapToken } from '~/appGraphql/data/util'
 import { AddressHoverCard } from '~/components/AddressHoverCard/AddressHoverCard'
 import { LimitedDataBanner } from '~/components/Banner/Outage/OutageBanner'
 import { InternalLink } from '~/components/InternalLink'
@@ -34,11 +29,19 @@ import { EllipsisText, TableText } from '~/components/Table/shared/TableText'
 import { TimestampCell } from '~/components/Table/shared/TimestampCell'
 import { TokenLinkCell } from '~/components/Table/shared/TokenLinkCell'
 import { FilterHeaderRow, HeaderCell } from '~/components/Table/styled'
+import { unwrapToken } from '~/data/util'
+import {
+  getTokenTransactionTypeTranslation,
+  TokenTransactionType,
+  useTokenTransactions,
+} from '~/features/Explore/state/transactions/useTokenTransactions'
 import { useUpdateManualOutage } from '~/hooks/useUpdateManualOutage'
 import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
+import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 
 interface SwapTransaction {
   hash: string
+  chainId: UniverseChainId
   timestamp: number
   input: SwapLeg
   output: SwapLeg
@@ -68,11 +71,15 @@ export function TransactionsTable({
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
   const filterAnchorRef = useRef<HTMLDivElement>(null)
   const [filter, setFilters] = useState<TokenTransactionType[]>([TokenTransactionType.BUY, TokenTransactionType.SELL])
+  // v2 endpoint only — the multichain view scopes by the token's multichain id and lets the BE
+  // resolve every chain + native/wrapped, so the client never enumerates per-chain addresses.
+  const multichainId = useTDPStore((s) => s.multichainToken?.multichainId)
   const { transactions, loading, loadMore, errorV2, errorV3, errorV4 } = useTokenTransactions({
     address: referenceToken.address,
     chainId,
     filter,
     multichain: isMultichainView,
+    multichainId,
   })
 
   // Only show full error state when ALL versions fail
@@ -124,6 +131,7 @@ export function TransactionsTable({
         const token0IsBeingSold = parseFloat(transaction.token0Quantity) > 0
         return {
           hash: transaction.hash,
+          chainId: fromGraphQLChain(transaction.chain) ?? chainId,
           timestamp: transaction.timestamp,
           input: token0IsBeingSold ? swapLeg0 : swapLeg1,
           output: token0IsBeingSold ? swapLeg1 : swapLeg0,
@@ -131,7 +139,7 @@ export function TransactionsTable({
           makerAddress: transaction.account,
         }
       }),
-    [transactions, convertFiatAmountFormatted],
+    [transactions, convertFiatAmountFormatted, chainId],
   )
 
   const media = useMedia()
@@ -153,20 +161,23 @@ export function TransactionsTable({
             </Flex>
           </HeaderCell>
         ),
-        cell: (row) => (
-          <Cell loading={showLoadingSkeleton} justifyContent="flex-start" grow>
-            <TimestampCell
-              timestamp={Number(row.getValue?.().timestamp)}
-              link={getExplorerLink({
-                chainId,
-                data: row.getValue?.().hash,
-                type: ExplorerDataType.TRANSACTION,
-              })}
-            />
-          </Cell>
-        ),
+        cell: (row) => {
+          const tx = row.getValue?.()
+          return (
+            <Cell loading={showLoadingSkeleton} justifyContent="flex-start" grow>
+              <TimestampCell
+                timestamp={Number(tx?.timestamp)}
+                link={getExplorerLink({
+                  chainId: tx?.chainId ?? chainId,
+                  data: tx?.hash,
+                  type: ExplorerDataType.TRANSACTION,
+                })}
+              />
+            </Cell>
+          )
+        },
       }),
-      columnHelper.accessor((row) => row.output.address, {
+      columnHelper.accessor((row) => row, {
         id: 'swap-type',
         maxSize: 80,
         header: () => (
@@ -194,16 +205,29 @@ export function TransactionsTable({
             </FilterHeaderRow>
           </HeaderCell>
         ),
-        cell: (outputTokenAddress) => {
+        cell: (info) => {
+          const tx = info.getValue?.()
           const isBuy = areAddressesEqual({
-            addressInput1: { address: String(outputTokenAddress.getValue?.()), platform: Platform.EVM },
+            addressInput1: { address: String(tx?.output?.address), platform: Platform.EVM },
             addressInput2: { address: referenceToken.address, platform: Platform.EVM },
           })
+          const color = isBuy ? '$statusSuccess' : '$statusCritical'
+          const text = isBuy ? t('common.buy.label') : t('common.sell.label')
           return (
             <Cell loading={showLoadingSkeleton} justifyContent="flex-start" grow>
-              <TableText color={isBuy ? '$statusSuccess' : '$statusCritical'}>
-                {isBuy ? t('common.buy.label') : t('common.sell.label')}
-              </TableText>
+              <TouchableTextLink
+                onlyUseText
+                noUnderline
+                color={color}
+                link={getExplorerLink({
+                  chainId: tx?.chainId ?? chainId,
+                  data: tx?.hash,
+                  type: ExplorerDataType.TRANSACTION,
+                })}
+                variant={'body2' as TouchableTextLinkProps['variant']}
+              >
+                {text}
+              </TouchableTextLink>
             </Cell>
           )
         },
@@ -291,7 +315,7 @@ export function TransactionsTable({
           </Cell>
         ),
       }),
-      columnHelper.accessor((row) => row.makerAddress, {
+      columnHelper.accessor((row) => row, {
         id: 'maker-address',
         maxSize: 130,
         header: () => (
@@ -301,10 +325,11 @@ export function TransactionsTable({
             </Text>
           </HeaderCell>
         ),
-        cell: (makerAddress) => {
-          const address = makerAddress.getValue?.()
+        cell: (info) => {
+          const tx = info.getValue?.()
+          const address = tx?.makerAddress
           const shortenedAddress = shortenAddress({ address })
-          const chainInfo = getChainInfo(chainId)
+          const chainInfo = getChainInfo(tx?.chainId ?? chainId)
 
           return (
             <Cell loading={showLoadingSkeleton} justifyContent="flex-end">

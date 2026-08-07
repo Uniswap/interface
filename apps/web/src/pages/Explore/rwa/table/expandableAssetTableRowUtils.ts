@@ -1,14 +1,14 @@
-import { pickPrimaryChainToken } from 'uniswap/src/data/rest/rwa/pickPrimaryChainToken'
+import { pickPrimaryChainToken } from 'uniswap/src/data/apiClients/dataApiService/rwa/pickPrimaryChainToken'
 import {
   deriveRwaAggregates,
   getIssuerPriceDisplay,
   getRwaPriceDisplay,
   type RwaPriceDisplay,
-} from 'uniswap/src/data/rest/rwa/rwaMetrics'
-import type { IssuerToken, Rwa } from 'uniswap/src/data/rest/rwa/types'
+} from 'uniswap/src/data/apiClients/dataApiService/rwa/rwaMetrics'
+import type { IssuerToken, Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { getTokenDetailsURL } from '~/appGraphql/data/util'
+import { getTokenDetailsURL } from '~/data/util'
 import { TDP_MULTICHAIN_CHAIN_QUERY_VALUE } from '~/utils/params/chainQueryParam'
 
 export type ExpandableAssetTableRow =

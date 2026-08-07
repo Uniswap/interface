@@ -1,0 +1,47 @@
+{
+  "description": "Trap 8: GitHub consumes team review requests once a member reviews, so review_requests emptiness carries NO signal. PR 801 (request consumed, empty teams) and PR 802 (team request still pending) have identical review/check states — both must land in readyToMerge; no bucket decision may rely on requestedReviewers.",
+  "now": "2026-07-28T12:00:00Z",
+  "defaultBranch": "main",
+  "podByLogin": { "alice": "swap-fe" },
+  "prs": [
+    {
+      "number": 801,
+      "title": "feat(web): convert pools pages [INFRA-3801]",
+      "url": "https://github.com/Uniswap/universe/pull/801",
+      "draft": false,
+      "author": { "login": "claude[bot]", "type": "Bot" },
+      "assignees": ["alice"],
+      "body": "Converts pools.\n\nFixes INFRA-3801",
+      "baseRefName": "main",
+      "headRefName": "thebotfather/infra-3801-pools",
+      "labels": [{ "name": "tamagui-migration" }],
+      "createdAt": "2026-07-26T12:00:00Z"
+    },
+    {
+      "number": 802,
+      "title": "feat(web): convert positions pages [INFRA-3802]",
+      "url": "https://github.com/Uniswap/universe/pull/802",
+      "draft": false,
+      "author": { "login": "claude[bot]", "type": "Bot" },
+      "assignees": ["alice"],
+      "body": "Converts positions.\n\nFixes INFRA-3802",
+      "baseRefName": "main",
+      "headRefName": "thebotfather/infra-3802-positions",
+      "labels": [{ "name": "tamagui-migration" }],
+      "createdAt": "2026-07-26T13:00:00Z"
+    }
+  ],
+  "reviews": {
+    "801": [
+      { "author": { "login": "dave", "type": "User" }, "state": "APPROVED", "submittedAt": "2026-07-27T09:00:00Z" }
+    ],
+    "802": [
+      { "author": { "login": "dave", "type": "User" }, "state": "APPROVED", "submittedAt": "2026-07-27T09:30:00Z" }
+    ]
+  },
+  "checks": { "801": "success", "802": "success" },
+  "requestedReviewers": {
+    "801": { "users": [], "teams": [] },
+    "802": { "users": [], "teams": ["uniswap/swap-fe"] }
+  }
+}

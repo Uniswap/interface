@@ -12,7 +12,6 @@ import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 interface MultichainExplorerListProps {
   chains: MultichainTokenEntry[]
-  isNativeToken?: boolean
   onExplorerPress?: (url: string, chainId: UniverseChainId) => void
   /** Pass true when rendered inside a Modal to enable BottomSheetScrollView on native. */
   renderedInModal?: boolean
@@ -24,7 +23,6 @@ interface MultichainExplorerListProps {
  */
 export function MultichainExplorerList({
   chains,
-  isNativeToken = false,
   onExplorerPress,
   renderedInModal,
 }: MultichainExplorerListProps): JSX.Element {
@@ -34,7 +32,7 @@ export function MultichainExplorerList({
       const explorerUrl = getExplorerLink({
         chainId: entry.chainId,
         data: entry.address,
-        type: isNativeToken ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN,
+        type: entry.isNative ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN,
       })
 
       return (
@@ -57,7 +55,7 @@ export function MultichainExplorerList({
         />
       )
     },
-    [isNativeToken, onExplorerPress],
+    [onExplorerPress],
   )
 
   return <MultichainScrollableList data={chains} renderItem={renderExplorerRow} renderedInModal={renderedInModal} />

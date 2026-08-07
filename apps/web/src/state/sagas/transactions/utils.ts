@@ -49,7 +49,7 @@ import type {
   ClassicTrade,
   UniswapXTrade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
-import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isGasSponsoredTradeExecution, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import type {
   ApproveTransactionInfo,
   BridgeTransactionInfo,
@@ -575,6 +575,7 @@ export function getSwapTransactionInfo(params: {
   planAnalytics?: PlanSwapTransactionInfoFields
   transactedUSDValue?: number
   rwaAnalytics?: RwaSwapAnalytics
+  executedWithPaymaster?: boolean
 }): SwapInfo | BridgeTransactionInfo
 export function getSwapTransactionInfo(params: {
   trade: UniswapXTrade
@@ -582,6 +583,7 @@ export function getSwapTransactionInfo(params: {
   planAnalytics?: PlanSwapTransactionInfoFields
   transactedUSDValue?: number
   rwaAnalytics?: RwaSwapAnalytics
+  executedWithPaymaster?: boolean
 }): SwapInfo & { isUniswapXOrder: true }
 export function getSwapTransactionInfo({
   trade,
@@ -589,16 +591,20 @@ export function getSwapTransactionInfo({
   planAnalytics,
   transactedUSDValue,
   rwaAnalytics,
+  executedWithPaymaster,
 }: {
   trade: ClassicTrade | BridgeTrade | UniswapXTrade | SolanaTrade | ChainedActionTrade
   swapStartTimestamp?: number
   planAnalytics?: PlanSwapTransactionInfoFields
   transactedUSDValue?: number
   rwaAnalytics?: RwaSwapAnalytics
+  /** Whether this execution actually routes gas through our paymaster (e.g. a walletCall step carrying
+   *  paymasterService). isSponsored means "paymaster actually paid", not the quote's sponsorship offer. */
+  executedWithPaymaster?: boolean
 }): SwapInfo | BridgeTransactionInfo {
-  const isSponsored = 'sponsorshipInfo' in trade.quote ? trade.quote.sponsorshipInfo?.sponsored : undefined
+  const isSponsored = isGasSponsoredTradeExecution({ trade, executesViaPaymaster: Boolean(executedWithPaymaster) })
   const sponsorshipCampaignId =
-    'sponsorshipInfo' in trade.quote ? trade.quote.sponsorshipInfo?.campaign?.name : undefined
+    isSponsored && 'sponsorshipInfo' in trade.quote ? trade.quote.sponsorshipInfo?.campaign?.name : undefined
   const commonAttributes = {
     inputCurrencyId: currencyId(trade.inputAmount.currency),
     outputCurrencyId: currencyId(trade.outputAmount.currency),

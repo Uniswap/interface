@@ -21,4 +21,12 @@ describe('getTsconfigAliases', () => {
     expect(path.isAbsolute(result['uniswap']!)).toBe(true)
     expect(path.isAbsolute(result['@universe/api']!)).toBe(true)
   })
+
+  it('should not alias packages whose exports map is the resolution contract', () => {
+    const result = getTsconfigAliases()
+
+    // Aliasing @universe/mycelium to its source dir would bypass its exports
+    // map and break deep subpaths like @universe/mycelium/icons/<Name>.
+    expect(result).not.toHaveProperty('@universe/mycelium')
+  })
 })

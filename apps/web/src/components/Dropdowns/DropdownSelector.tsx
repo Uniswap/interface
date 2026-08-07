@@ -48,7 +48,7 @@ export function DropdownSelector({
       toggleOpen={toggleOpen}
       dataTestId={dataTestId}
       menuLabel={
-        <Flex row alignItems="center" gap="$gap8">
+        <Flex row alignItems="center" gap="$gap8" width="max-content">
           <ButtonIcon size="$icon.20" color="$neutral1" />
           <Text variant="buttonLabel3">{selectedOption.label}</Text>
         </Flex>

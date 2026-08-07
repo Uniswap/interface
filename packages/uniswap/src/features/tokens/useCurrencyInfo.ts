@@ -69,8 +69,11 @@ function useCurrencyInfoQuery(
         // Creating new object to avoid error "Cannot assign to read only property"
         const copyCommonBase = { ...commonBase }
         // Related to TODO(WEB-5111)
-        // Some common base images are broken so this'll ensure we read from uniswap images
-        if (logoUrlOverride) {
+        // Some common base images are broken so this'll ensure we read from uniswap images.
+        // Native currencies are excluded: their commonBase logo is our own maintained static
+        // asset, never the "broken image" case this override exists for — and backend project
+        // metadata for the native placeholder address (0xeee/0x0) isn't reliable enough to trust.
+        if (logoUrlOverride && !commonBase.currency.isNative) {
           copyCommonBase.logoUrl = logoUrlOverride
         }
         copyCommonBase.currencyId = _currencyId
@@ -106,10 +109,11 @@ function useRestCurrencyInfos(
   currencyIds: string[],
   options?: { skip?: boolean },
 ): { data: Maybe<CurrencyInfo>[]; loading: boolean; error?: Error } {
-  const restParams = useMemo(
-    () => ({ tokens: currencyIds.map((id) => currencyIdToRestContractInput(id)) }),
-    [currencyIds],
-  )
+  // Resolved once and reused for both the request and response-matching below, so the native
+  // currency's REST-wire address (e.g. 0x0, which can differ from the currencyId's own address)
+  // can't drift between the two.
+  const restContracts = useMemo(() => currencyIds.map((id) => currencyIdToRestContractInput(id)), [currencyIds])
+  const restParams = useMemo(() => ({ tokens: restContracts }), [restContracts])
 
   const queryResult = useQuery(
     getGetTokensQueryOptions({
@@ -123,21 +127,11 @@ function useRestCurrencyInfos(
       (queryResult.data?.tokens ?? []).map((token) => [restTokenKey(token.chainId, token.address), token]),
     )
 
-    return currencyIds.map((id) => {
-      const chainId = currencyIdToChain(id)
-      let address: Address | undefined
-      try {
-        address = currencyIdToAddress(id)
-      } catch (_error) {
-        return undefined
-      }
-      if (!chainId || !address) {
-        return undefined
-      }
+    return restContracts.map(({ chainId, address }) => {
       const token = tokenByKey.get(restTokenKey(chainId, address))
       return token && restV2TokenToCurrencyInfo(token)
     })
-  }, [currencyIds, queryResult.data?.tokens])
+  }, [restContracts, queryResult.data?.tokens])
 
   return { data, loading: queryResult.isLoading, error: queryResult.error ?? undefined }
 }

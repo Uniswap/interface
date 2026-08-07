@@ -31,8 +31,12 @@ export const TokenDetailsLayout = styled(Flex, {
   gap: 80,
   mt: '$spacing32',
   pb: '$spacing48',
-  px: '$spacing40',
 
+  // No horizontal padding above $xxl — AppBody's 1200px cap provides the page margins there,
+  // so the TDP body gets the full expected content width
+  $xxl: {
+    px: '$spacing40',
+  },
   $lg: {
     pt: 0,
     px: '$padding20',
@@ -262,8 +266,8 @@ function TokenDetailsSkeleton() {
 
 const BreadcrumbWrapper = styled(Flex, {
   width: '100%',
-  px: '$spacing40',
   pt: '$spacing48',
+  $xxl: { px: '$spacing40' },
   $lg: { px: '$padding20' },
 })
 
@@ -282,7 +286,7 @@ export function TokenDetailsPageSkeleton({ isCompact }: { isCompact: boolean }) 
           <NavBubble />
         </BreadcrumbNavContainer>
       </BreadcrumbWrapper>
-      <StickyCollapsibleHeader isCompact={isCompact}>
+      <StickyCollapsibleHeader isCompact={isCompact} px="$none" $xxl={{ px: '$spacing40' }}>
         <TokenInfoRow>
           <TokenNameCell>
             <TokenLogoBubble isCompact={isCompact} />

@@ -2,8 +2,8 @@ import { MULTICALL_ADDRESSES } from '@uniswap/sdk-core'
 import ms from 'ms'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useReadContract } from 'wagmi'
+import { assume0xAddress } from '~/chains'
 import { useAccount } from '~/hooks/useAccount'
-import { assume0xAddress } from '~/utils/wagmi'
 
 interface UseCurrentBlockTimestampParams {
   refetchInterval?: number | false

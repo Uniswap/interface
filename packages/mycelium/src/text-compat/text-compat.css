@@ -1,0 +1,37 @@
+/*
+ * TextCompat support CSS: import once from the Tailwind entry stylesheet,
+ * alongside `@import "@universe/mycelium/tailwind"` (whose @universe/tailwind
+ * compat layer supplies the shared media-* variants and animation presets).
+ *
+ * - --stext-font-* pin the legacy web font stacks verbatim (theme/fonts.ts):
+ *   the @universe/tailwind font-basel-* utilities resolve to different family
+ *   names + fallbacks, which changes metrics when the webfont isn't loaded.
+ * - --stext-* color vars are the pinned legacy theme palette
+ *   (spore-text-colors.generated.css) — @universe/tailwind's semantic colors
+ *   drift from it (e.g. neutral1 #222222 vs #131313) and cover only a subset
+ *   of the tokens the Text `color` prop accepts.
+ */
+@import "./spore-text-colors.generated.css";
+
+:root {
+  /* Verbatim legacy web font stacks (theme/fonts.ts baselBook/baselMedium — identical on web — and monospaceFontFamily). */
+  --stext-font-book:
+    Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --stext-font-medium:
+    Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --stext-font-mono:
+    ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
+    "Roboto Mono", "Courier New", monospace;
+}
+
+/* Matches ui/src/loading/Shine.web.tsx's `shine` keyframes exactly. */
+@keyframes stext-shine {
+  from {
+    -webkit-mask-position: 150%;
+  }
+  to {
+    -webkit-mask-position: -50%;
+  }
+}

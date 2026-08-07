@@ -13,5 +13,6 @@ export function useScrollbarStyles(): CSSProperties {
     },
     scrollbarWidth: 'thin',
     scrollbarColor: `${colors.surface3.val} transparent`,
+    overscrollBehavior: 'contain',
   } as CSSProperties
 }

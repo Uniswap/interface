@@ -6,7 +6,6 @@ import { Text, useSporeColors } from 'ui/src'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
-import { TimePeriod, toHistoryDuration } from '~/appGraphql/data/util'
 import { ChartHeader } from '~/components/Charts/ChartHeader'
 import { Chart, ChartModelParams } from '~/components/Charts/ChartModel'
 import { useHeaderDateFormatter } from '~/components/Charts/hooks/useHeaderDateFormatter'
@@ -15,6 +14,7 @@ import {
   CustomVolumeChartModelParams,
 } from '~/components/Charts/VolumeChart/CustomVolumeChartModel'
 import { getCumulativeVolume, SingleHistogramData } from '~/components/Charts/VolumeChart/utils'
+import { TimePeriod, toHistoryDuration } from '~/data/util'
 
 interface VolumeChartModelParams extends ChartModelParams<SingleHistogramData>, CustomVolumeChartModelParams {
   TooltipBody?: React.FunctionComponent<{ data: SingleHistogramData }>

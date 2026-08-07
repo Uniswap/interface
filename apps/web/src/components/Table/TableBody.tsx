@@ -1,6 +1,6 @@
 import { CellContext, flexRender, Row, RowData } from '@tanstack/react-table'
-import { useWindowVirtualizer } from '@tanstack/react-virtual'
-import { forwardRef, useCallback, useMemo, useState } from 'react'
+import { isMobileWeb } from '@universe/environment'
+import { forwardRef, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, HeightAnimator, styled, Text, useSporeColors } from 'ui/src'
 import { WifiError } from 'ui/src/components/icons/WifiError'
@@ -8,6 +8,7 @@ import { breakpoints } from 'ui/src/theme'
 import { useIsOffline } from 'utilities/src/connection/useIsOffline'
 import { ROW_HEIGHT_DESKTOP, ROW_HEIGHT_MOBILE_WEB } from '~/components/Table/constants'
 import { ErrorModal } from '~/components/Table/ErrorBox'
+import { useTableVirtualizer } from '~/components/Table/hooks/useTableVirtualizer'
 import { getCommonPinningStyles } from '~/components/Table/PinnedColumns/getCommonPinningStyles'
 import { CellContainer, DataRow, TableRowBase } from '~/components/Table/styled'
 import { TableRow } from '~/components/Table/TableRow'
@@ -37,7 +38,7 @@ function TableBodyInner<T extends RowData>(
     hasPinnedColumns = false,
     extendedPinnedColumnDivider = false,
     dimmed,
-    virtualized = false,
+    virtualization,
   }: TableBodyProps<T>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -60,25 +61,11 @@ function TableBodyInner<T extends RowData>(
 
   const flatEstimateSize = useCallback(() => skeletonRowHeight + numericRowGap, [skeletonRowHeight, numericRowGap])
 
-  const [scrollMargin, setScrollMargin] = useState(0)
-
-  const setContainerRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      setScrollMargin(node?.offsetTop ?? 0)
-      if (typeof ref === 'function') {
-        ref(node)
-      } else if (ref) {
-        ref.current = node
-      }
-    },
-    [ref],
-  )
-
-  const flatRowVirtualizer = useWindowVirtualizer({
-    count: virtualized ? rows.length : 0,
+  const { virtualizer: flatRowVirtualizer, setContainerRef } = useTableVirtualizer({
+    mode: virtualization,
+    count: rows.length,
     estimateSize: flatEstimateSize,
-    overscan: 5,
-    scrollMargin,
+    forwardedRef: ref,
   })
 
   const renderTableRow = useCallback(
@@ -226,12 +213,15 @@ function TableBodyInner<T extends RowData>(
     )
   }
 
-  if (virtualized) {
+  if (virtualization) {
+    // Flat rows only: renderTableRow, not renderTopLevelRow / renderSubRows / renderUnifiedExpandableRow.
     const virtualItems = flatRowVirtualizer.getVirtualItems()
     return (
       <Flex ref={setContainerRef} position="relative" style={{ height: flatRowVirtualizer.getTotalSize() }}>
         {virtualItems.map((virtualRow) => {
           const row = rows[virtualRow.index]!
+          // Container virtualizer has scrollMargin 0, so this is a no-op there.
+          const translateY = virtualRow.start - flatRowVirtualizer.options.scrollMargin
           return (
             <Flex
               key={virtualRow.key}
@@ -241,8 +231,8 @@ function TableBodyInner<T extends RowData>(
               width="100%"
               style={{
                 height: virtualRow.size - numericRowGap,
-                transform: `translateY(${virtualRow.start - scrollMargin}px)`,
-                willChange: 'transform',
+                transform: `translateY(${translateY}px)`,
+                willChange: isMobileWeb ? undefined : 'transform',
               }}
             >
               {renderTableRow(row)}

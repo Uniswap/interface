@@ -3,8 +3,6 @@ import { type QueryKey, queryOptions } from '@tanstack/react-query'
 import type {
   ClaimLPRewardsRequest,
   ClaimLPRewardsResponse,
-  MigrateV2ToV3LPPositionRequest,
-  MigrateV2ToV3LPPositionResponse,
   MigrateV3ToV4LPPositionRequest,
   MigrateV3ToV4LPPositionResponse,
   PoolInfoRequest,
@@ -27,6 +25,8 @@ import type {
   ListPoolsResponse,
   LPApprovalRequest,
   LPApprovalResponse,
+  MigrateV2ToV3LPPositionRequest,
+  MigrateV2ToV3LPPositionResponse,
 } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_pb'
 import type { PoolListCursor } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
 import { type UseQueryApiHelperHookArgs } from '@universe/api'
@@ -107,7 +107,7 @@ function getClaimLPRewardsQueryOptions(
 }
 
 function getMigrateV2ToV3LPPositionQueryOptions(
-  client: typeof V1LiquidityServiceClient,
+  client: typeof V2LiquidityServiceClient,
   { params, ...rest }: UseQueryApiHelperHookArgs<MigrateV2ToV3LPPositionRequest, MigrateV2ToV3LPPositionResponse>,
 ): QueryOptionsResult<MigrateV2ToV3LPPositionResponse, Error, MigrateV2ToV3LPPositionResponse, QueryKey> {
   return queryOptions({
@@ -315,7 +315,7 @@ function provideLiquidityQueries(
       getDecreasePositionQueryOptions(v2Client, input),
     migrateV2ToV3: (
       input: UseQueryApiHelperHookArgs<MigrateV2ToV3LPPositionRequest, MigrateV2ToV3LPPositionResponse>,
-    ) => getMigrateV2ToV3LPPositionQueryOptions(v1Client, input),
+    ) => getMigrateV2ToV3LPPositionQueryOptions(v2Client, input),
     migrateV3ToV4: (
       input: UseQueryApiHelperHookArgs<MigrateV3ToV4LPPositionRequest, MigrateV3ToV4LPPositionResponse>,
     ) => getMigrateV3ToV4LPPositionQueryOptions(v1Client, input),

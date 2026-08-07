@@ -1,4 +1,19 @@
 import { useQueryClient } from '@tanstack/react-query'
+import {
+  EmailCodeStep,
+  EmailEntryStep,
+  EnterPinStep,
+  executeRecovery,
+  NoWalletFoundStep,
+  OAuthLoadingStep,
+  RecoveringStep,
+  RecoveryLoginStep,
+  RecoveryStep,
+  registerNewPasskey,
+  toRecoveryAuthMethodType,
+  useEmbeddedWalletState,
+  useRecoveryFlow,
+} from '@universe/embedded-wallet'
 import { base64urlToBase64 } from '@universe/encoding'
 import { isMobileWeb } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
@@ -8,18 +23,8 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Flex } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { EmailCodeStep } from 'uniswap/src/components/passkey/recovery/steps/EmailCodeStep'
-import { EmailEntryStep } from 'uniswap/src/components/passkey/recovery/steps/EmailEntryStep'
-import { EnterPinStep } from 'uniswap/src/components/passkey/recovery/steps/EnterPinStep'
-import { NoWalletFoundStep } from 'uniswap/src/components/passkey/recovery/steps/NoWalletFoundStep'
-import { OAuthLoadingStep } from 'uniswap/src/components/passkey/recovery/steps/OAuthLoadingStep'
-import { RecoveringStep } from 'uniswap/src/components/passkey/recovery/steps/RecoveringStep'
-import { RecoveryLoginStep } from 'uniswap/src/components/passkey/recovery/steps/RecoveryLoginStep'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { unitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
-import { registerNewPasskey, toRecoveryAuthMethodType } from 'uniswap/src/features/passkey/embeddedWallet'
-import { executeRecovery } from 'uniswap/src/features/passkey/recoveryExecute'
-import { RecoveryStep, useRecoveryFlow } from 'uniswap/src/features/passkey/useRecoveryFlow'
 import { InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { WalletConnectionResult } from 'uniswap/src/features/telemetry/types'
@@ -39,7 +44,6 @@ import { useModalState } from '~/hooks/useModalState'
 import { useSignInWithPasskey } from '~/hooks/useSignInWithPasskey'
 import { setOpenModal } from '~/state/application/reducer'
 import type { RecoverWalletModalParams } from '~/state/application/reducer'
-import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { useAppSelector } from '~/state/hooks'
 import { updateIsEmbeddedWalletBackedUp } from '~/state/user/reducer'
 

@@ -59,12 +59,14 @@ const Tab = ({
   isActive,
   path,
   items,
+  badge,
   elementName,
 }: {
   label: string
   isActive?: boolean
   path: string
   items?: TabsItem[]
+  badge?: JSX.Element
   elementName: ElementName
 }) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -79,9 +81,12 @@ const Tab = ({
   const Label = (
     <Trace logPress element={elementName}>
       <NavLink to={path} style={{ textDecoration: 'none' }}>
-        <TabText variant="subheading1" isActive={isActive || isOpen}>
-          {label}
-        </TabText>
+        <Flex row alignItems="center">
+          <TabText variant="subheading1" isActive={isActive || isOpen}>
+            {label}
+          </TabText>
+          {badge}
+        </Flex>
       </NavLink>
     </Trace>
   )
@@ -126,13 +131,14 @@ export function Tabs() {
   const tabsContent: TabsSection[] = useTabsContent()
   return (
     <>
-      {tabsContent.map(({ title, isActive, href, items, elementName }, index) => (
+      {tabsContent.map(({ title, isActive, href, items, badge, elementName }, index) => (
         <Tab
           key={`${title}_${index}`}
           label={title}
           isActive={isActive}
           path={href}
           items={items}
+          badge={badge}
           elementName={elementName}
         />
       ))}

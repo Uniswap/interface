@@ -632,8 +632,14 @@ describe(useTokenPriceHistory, () => {
         }),
       )
 
-      expect(mockUseTokenSpotPrice).toHaveBeenCalledWith(SAMPLE_CURRENCY_ID_1, { preferProjectMarketData: true })
-      expect(mockUseTokenPriceChange).toHaveBeenCalledWith(SAMPLE_CURRENCY_ID_1, { preferProjectMarketData: true })
+      expect(mockUseTokenSpotPrice).toHaveBeenCalledWith(SAMPLE_CURRENCY_ID_1, {
+        preferProjectMarketData: true,
+        isMultichainAggregateView: false,
+      })
+      expect(mockUseTokenPriceChange).toHaveBeenCalledWith(SAMPLE_CURRENCY_ID_1, {
+        preferProjectMarketData: true,
+        isMultichainAggregateView: false,
+      })
       expect(mockUseTokenPriceHistoryRest).toHaveBeenCalledWith(
         SAMPLE_CURRENCY_ID_1,
         expect.objectContaining({ preferProjectMarketData: true }),

@@ -1,7 +1,7 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { PoolTableSortState } from '~/appGraphql/data/pools/useTopPools'
+import { PoolTableSortState } from '~/data/pools/useTopPools'
 import { useExploreContextTopPools } from '~/features/Explore/state/topPools'
 import { useBackendSortedTopPools } from '~/features/Explore/state/topPools/useBackendSortedTopPools'
 import { useExploreQueryLatencyTracking } from '~/features/Explore/state/useExploreQueryLatencyTracking'

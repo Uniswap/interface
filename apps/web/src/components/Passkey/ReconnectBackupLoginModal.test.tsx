@@ -1,4 +1,4 @@
-import type { RecoveryMethod } from 'uniswap/src/features/passkey/embeddedWallet'
+import type { RecoveryMethod } from '@universe/embedded-wallet'
 import { useListAuthenticatorsQuery } from '~/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery'
 import { ReconnectBackupLoginModal } from '~/components/Passkey/ReconnectBackupLoginModal'
 import { Step, useBackupLoginFlow } from '~/components/Passkey/useBackupLoginFlow'

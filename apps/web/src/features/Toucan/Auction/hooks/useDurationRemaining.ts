@@ -1,17 +1,27 @@
-import { useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
 import { getDurationRemainingString } from 'utilities/src/time/duration'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
+import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { useBlockTimestamp } from '~/hooks/useBlockTimestamp'
 import { useMachineTimeMs } from '~/hooks/useMachineTime'
 
 const SYNC_THRESHOLD_MS = 20 * ONE_MINUTE_MS // 20 minutes
 
 export function useDurationRemaining(chainId: EVMUniverseChainId | undefined, targetBlock: number | undefined) {
+  // Anchor future-block estimates on the auction's creation block so the countdown uses the
+  // same calibrated block rate as the table and charts (not the chain-constant rate).
+  const creationBlock = useAuctionStore((s) => s.auctionDetails?.creationBlock)
+  const createdAt = useAuctionStore((s) => s.auctionDetails?.createdAt)
+  const anchorBlock = creationBlock === undefined ? undefined : Number(creationBlock)
+  const anchorTime = useMemo(() => (createdAt ? new Date(createdAt) : undefined), [createdAt])
+
   const targetBlockTimestamp = useBlockTimestamp({
     chainId,
     blockNumber: targetBlock,
     watch: true,
+    anchorBlock,
+    anchorTime,
   })
 
   // Capture initial timestamp for smooth countdown when >20 minutes away

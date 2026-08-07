@@ -2,8 +2,8 @@ import { GraphQLApi } from '@universe/api'
 import { useMemo } from 'react'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { useFeatureFlaggedProjectTokens } from 'src/components/TokenDetails/useFeatureFlaggedProjectTokens'
-import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
-import { useTokenBasicProjectPartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
+import { useCrossChainBalances } from 'uniswap/src/data/apiClients/dataApiService/balances/hooks/useCrossChainBalances'
+import { useTokenBasicProjectPartsFragment } from 'uniswap/src/data/graphql/fragments'
 import type { DataApiOutageState, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 
 type CrossChainToken = { address: string | null; chain: GraphQLApi.Chain }

@@ -5,12 +5,12 @@ import {
   TokenRankingsStat,
 } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { ALL_NETWORKS_ARG } from '@universe/api'
-import { useTokenRankingsQuery } from 'uniswap/src/data/rest/tokenRankings'
+import { useTokenRankingsQuery } from 'uniswap/src/data/apiClients/dataApiService/exploreV1/tokenRankings'
 import { buildLookupKey } from 'uniswap/src/features/favorites/canonicalFavoritesLookup'
 import { useMultichainFavoritesRankings } from 'uniswap/src/features/favorites/hooks/useMultichainFavoritesRankings'
 import { renderHook } from 'uniswap/src/test/test-utils'
 
-vi.mock('uniswap/src/data/rest/tokenRankings', () => ({
+vi.mock('uniswap/src/data/apiClients/dataApiService/exploreV1/tokenRankings', () => ({
   useTokenRankingsQuery: vi.fn(() => ({ data: undefined })),
 }))
 

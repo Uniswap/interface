@@ -1,3 +1,4 @@
+import { EXTENSION_PASSKEY_AUTH_PATH, useEmbeddedWalletBaseUrl } from '@universe/embedded-wallet'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate, useLocation } from 'react-router'
@@ -21,8 +22,6 @@ import {
   RecoveryExportErrorSchema,
   RecoveryExportResultSchema,
 } from 'uniswap/src/extension/messagePassing/types/requests'
-import { EXTENSION_PASSKEY_AUTH_PATH } from 'uniswap/src/features/passkey/constants'
-import { useEmbeddedWalletBaseUrl } from 'uniswap/src/features/passkey/hooks/useEmbeddedWalletBaseUrl'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
 import { logger } from 'utilities/src/logger/logger'

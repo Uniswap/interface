@@ -1,5 +1,5 @@
 // oxlint-disable eslint-js/no-restricted-syntax -- allow process.env access in these config files
-import type { BaseConfig } from '@universe/config'
+import type { BaseConfig, EnvFieldRules } from '@universe/config'
 import { AppId, boolFromString, Environment, NodeEnv, parseConfig } from '@universe/config'
 import {
   getUniswapServiceUrls as getUniswapServiceUrlsFromOverrides,
@@ -95,7 +95,7 @@ const webConfigValues = {
 }
 
 /** Zod schema for web-specific config fields */
-const webConfigSchema = z.object({
+export const webConfigSchema = z.object({
   // Environment & Build Metadata
   webBuildType: z.string().default('vite').describe('Web build tool identifier'),
   gitCommitHash: z.string().default('').describe('Git commit hash at build time'),
@@ -130,6 +130,17 @@ const webConfigSchema = z.object({
 
 export type Config = Omit<BaseConfig, keyof z.infer<typeof webConfigSchema> & string> & z.infer<typeof webConfigSchema>
 
+/**
+ * Env-scoped field rules for the web app, enforced by parseConfig together
+ * with the base rules (URL overrides forbidden in production).
+ */
+export const webEnvFieldRules: EnvFieldRules<Config> = {
+  [Environment.Production]: {
+    required: ['statsigApiKey', 'tradingApiKey', 'uniswapApiKey'],
+    forbidden: ['viteBackendUrl', 'debugProxy'],
+  },
+}
+
 // Module-level cache for config to avoid recomputing on every call
 let cachedConfig: Config | undefined
 
@@ -140,6 +151,7 @@ export const getConfig = (): Config => {
   cachedConfig = parseConfig({
     values: webConfigValues,
     schema: webConfigSchema,
+    envFieldRules: webEnvFieldRules,
   })
   if (cachedConfig.environment !== Environment.Production && cachedConfig.nodeEnv !== NodeEnv.Test) {
     logger.debug('config.ts', 'getConfig', 'Using app config:', cachedConfig)

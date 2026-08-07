@@ -1,0 +1,83 @@
+{
+  "launches": [
+    {
+      "launchpadId": "clanker",
+      "token": {
+        "chainId": 8453,
+        "address": "0x1d008f50fb828ef9debbbeae1b71fffe929bf317",
+        "symbol": "CLANKFUN",
+        "name": "clank.fun"
+      },
+      "poolId": "0x21eceaf3bf88ef0797e9927d85801e88333b3695158541f4d9a6ab02c2783c98",
+      "hooksAddress": "0x34a45c6b61876d739400bd71228cbcbd4f53e8cc",
+      "launchedAt": "1783957200",
+      "stats": { "volume24hUsd": 184230.55, "tvlUsd": 92140.1, "priceUsd": 0.0042, "fdvUsd": 420000.5 }
+    },
+    {
+      "launchpadId": "noxa",
+      "token": {
+        "chainId": 4663,
+        "address": "0x9be7dbb0b1eb1bc2ba0b0f2e2b4a2f37fd9b3c11",
+        "symbol": "HOODLE",
+        "name": "Hoodle"
+      },
+      "poolId": "0x5b3f1a0e2c0f6d5f9b2f4f88cba21f778b46d0a0d81a5f0e63bb17b26e0864a1",
+      "hooksAddress": "0x8ce3e9958d7a54b1e372e3b1f2e4b1a80b6828cc",
+      "launchedAt": "1783953600",
+      "stats": { "volume24hUsd": 96410.02, "tvlUsd": 40233.87, "priceUsd": 1.27, "fdvUsd": 210043.11 }
+    },
+    {
+      "launchpadId": "flaunch",
+      "token": {
+        "chainId": 8453,
+        "address": "0x63a1b1d38f0dd8f9b2c014fdc25b25ea70b17e42",
+        "symbol": "MEMEBOT",
+        "name": "Memebot"
+      },
+      "poolId": "0x84cbc0e2c9600e8d2fdd07aa4a51b0d5902c25e97a2c118c07e259cb04dbbb92",
+      "hooksAddress": "0x51bba15255406cfe7099a42183302640ba7dafdc",
+      "launchedAt": "1783950000",
+      "stats": { "volume24hUsd": 51204.4, "tvlUsd": 22890.31, "priceUsd": 0.00088, "fdvUsd": 88001.2 }
+    },
+    {
+      "launchpadId": "uniswap-cca",
+      "token": {
+        "chainId": 130,
+        "address": "0x56fdb834a81ebc1f048d11956088bd80ae4d13fc",
+        "symbol": "SIM",
+        "name": "Sim"
+      },
+      "poolId": "0xf3d9a2b0c4d7e9f1a5b8c6d4e2f0a9b7c5d3e1f0a8b6c4d2e0f9a7b5c3d1e0f9",
+      "launchedAt": "1783946400",
+      "graduated": false,
+      "stats": { "volume24hUsd": 18760.0, "tvlUsd": 15020.5, "priceUsd": 0.014, "fdvUsd": 46000.0 }
+    },
+    {
+      "launchpadId": "virtuals",
+      "token": {
+        "chainId": 8453,
+        "address": "0x2af4bd5f0e2f9c1d8b7a6e5d4c3b2a1908f7e6d5",
+        "symbol": "AGENTX",
+        "name": "Agent X"
+      },
+      "poolId": "0x1f2e3d4c5b6a79880917263544536271809f8e7d6c5b4a39281706f5e4d3c2b1",
+      "hooksAddress": "0x77bb2a8f1ab2a384918a4c090cd8ae82dc5078e0",
+      "launchedAt": "1783942800",
+      "stats": { "volume24hUsd": 8213.77, "tvlUsd": 6110.42 }
+    },
+    {
+      "launchpadId": "clanker",
+      "token": {
+        "chainId": 130,
+        "address": "0x7c1e5f0a9b8d7c6e5f4a3b2c1d0e9f8a7b6c5d4e",
+        "symbol": "UNIFROG",
+        "name": "Unifrog"
+      },
+      "poolId": "0x9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f9a8b",
+      "hooksAddress": "0x9b37a43422d7bbd4c8b231be11e50ad1ace828cc",
+      "launchedAt": "1783939200",
+      "stats": { "volume24hUsd": 3105.09, "tvlUsd": 2890.6, "priceUsd": 0.31, "fdvUsd": 9105.4 }
+    }
+  ],
+  "page": {}
+}

@@ -109,6 +109,9 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
             tickLower,
             tickUpper,
           })
+    if (!dependentTokenAmount) {
+      return undefined
+    }
     return dependentToken && CurrencyAmount.fromRawAmount(dependentToken, dependentTokenAmount.quotient)
   }, [state, protocolVersion, independentAmount, otherAmount, dependentToken, exactField, token0, token1])
 

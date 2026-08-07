@@ -3,7 +3,10 @@ import { useMutation } from '@tanstack/react-query'
 import type { VerifyTokenFactoryImageResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { VerifyTokenFactoryImageResponse_Status } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { useCallback, useRef, useState, type MutableRefObject } from 'react'
-import { createTokenFactoryPresignedUrl, verifyTokenFactoryImage } from 'uniswap/src/data/rest/tokenFactoryImage'
+import {
+  createTokenFactoryPresignedUrl,
+  verifyTokenFactoryImage,
+} from 'uniswap/src/data/apiClients/dataApiService/tokens/tokenFactoryImage'
 import { sleep } from 'utilities/src/time/timing'
 import type { CreateAuctionStore } from '~/pages/Liquidity/CreateAuction/store/createCreateAuctionStore'
 import {

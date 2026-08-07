@@ -2,7 +2,6 @@ import React, { forwardRef, useState } from 'react'
 import { TextInput as NativeTextInput } from 'react-native'
 import { Flex, TouchableArea } from 'ui/src'
 import { Eye, EyeOff } from 'ui/src/components/icons'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { TextInput, TextInputProps } from 'uniswap/src/components/input/TextInput'
 
 export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>(function PasswordInputInner(props, ref) {
@@ -24,7 +23,7 @@ export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>(functio
       borderWidth="$spacing1"
       p="$spacing4"
     >
-      <AnimatedFlex fill grow row alignItems="center" minHeight={48}>
+      <Flex fill grow row alignItems="center" minHeight={48}>
         <TextInput
           ref={ref}
           autoCapitalize="none"
@@ -40,7 +39,7 @@ export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>(functio
           placeholder={placeholder}
           placeholderTextColor="$neutral3"
           px="$spacing16"
-          py="$spacing20"
+          py="$spacing12"
           returnKeyType={returnKeyType || 'done'}
           secureTextEntry={!showPassword}
           textContentType="none"
@@ -49,12 +48,12 @@ export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>(functio
           onSubmitEditing={onSubmitEditing}
           {...rest} // apply any textinputprops
         />
-        <AnimatedFlex mx="$spacing12">
+        <Flex mx="$spacing12">
           <TouchableArea p="$spacing4" onPress={onPressEyeIcon}>
             {showPassword ? <Eye color="$neutral2" size="$icon.20" /> : <EyeOff color="$neutral2" size="$icon.20" />}
           </TouchableArea>
-        </AnimatedFlex>
-      </AnimatedFlex>
+        </Flex>
+      </Flex>
     </Flex>
   )
 })

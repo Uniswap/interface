@@ -1,10 +1,10 @@
 import { type PlainMessage } from '@bufbuild/protobuf'
 import { ChartPeriod, type ChartPoint, WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { useEffect, useMemo } from 'react'
-import { type ChartData } from 'src/components/home/PortfolioChart/SparklineChart'
+import { type ChartData } from 'src/components/charts/SparklineChart'
 import { useSporeColors } from 'ui/src'
-import { useGetPortfolioHistoricalValueChartQuery } from 'uniswap/src/data/rest/getPortfolioChart'
-import { useWalletBalancesIncludeCategories } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+import { useGetPortfolioHistoricalValueChartQuery } from 'uniswap/src/data/apiClients/dataApiService/balances/getPortfolioChart'
+import { useWalletBalancesIncludeCategories } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/useRestPortfolioValueModifier'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -30,6 +30,7 @@ export function usePortfolioChartData({
   data: ChartData
   tokensData: ChartData
   poolsData: ChartData
+  earnData: ChartData
   loading: boolean
   error: Error | null
   chartColor: string
@@ -49,6 +50,9 @@ export function usePortfolioChartData({
       chartPeriod,
       chainIds,
       includeCategories,
+      includeOverrides: portfolioValueModifier?.includeOverrides,
+      excludeOverrides: portfolioValueModifier?.excludeOverrides,
+      includeSpamTokens: portfolioValueModifier?.includeSpamTokens,
       ...(includeCategories.includes(WalletBalanceCategory.POOLS) && {
         poolIncludeOverrides: portfolioValueModifier?.poolIncludeOverrides,
         poolExcludeOverrides: portfolioValueModifier?.poolExcludeOverrides,
@@ -69,6 +73,7 @@ export function usePortfolioChartData({
   const data = useMemo<ChartData>(() => toChartData(chartResponse?.points), [chartResponse?.points])
   const tokensData = useMemo<ChartData>(() => toChartData(chartResponse?.tokens), [chartResponse?.tokens])
   const poolsData = useMemo<ChartData>(() => toChartData(chartResponse?.pools), [chartResponse?.pools])
+  const earnData = useMemo<ChartData>(() => toChartData(chartResponse?.earn), [chartResponse?.earn])
 
   const first = data[0]
   const last = data[data.length - 1]
@@ -78,6 +83,7 @@ export function usePortfolioChartData({
     data,
     tokensData,
     poolsData,
+    earnData,
     loading: isPending || isFetching,
     error: error ?? null,
     chartColor,

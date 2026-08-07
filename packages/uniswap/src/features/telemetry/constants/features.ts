@@ -36,6 +36,7 @@ export enum EarnEventName {
   EarnDepositReviewed = 'Earn Deposit Reviewed',
   EarnDepositStarted = 'Earn Deposit Started',
   EarnDepositSubmitted = 'Earn Deposit Submitted',
+  EarnHowItWorksAcknowledged = 'Earn How It Works Acknowledged',
   EarnSurfaceViewed = 'Earn Surface Viewed',
   EarnSwapUpsellConverted = 'Earn Swap Upsell Converted',
   EarnSwapUpsellToastClicked = 'Earn Swap Upsell Toast Clicked',

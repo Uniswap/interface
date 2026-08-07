@@ -1,5 +1,5 @@
 import { TransactionRequest } from '@ethersproject/providers'
-import { GasEstimate, TradingApi } from '@universe/api'
+import { GasEstimate, TradingApi, type WithSwapPermissionContext } from '@universe/api'
 import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SignDelegationAuthorizationFn, SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
@@ -28,7 +28,7 @@ export type SwapRequestParams = TradingApi.CreateSwapRequest & {
 }
 
 export interface EVMSwapRepository {
-  fetchSwapData: (params: SwapRequestParams) => Promise<SwapData>
+  fetchSwapData: (params: WithSwapPermissionContext<SwapRequestParams>) => Promise<SwapData>
 }
 
 export function convertSwapResponseToSwapData(response: TradingApi.CreateSwapResponse): SwapData {
@@ -42,7 +42,7 @@ export function convertSwapResponseToSwapData(response: TradingApi.CreateSwapRes
 
 export function createLegacyEVMSwapRepository(): EVMSwapRepository {
   return {
-    fetchSwapData: async (params: TradingApi.CreateSwapRequest) =>
+    fetchSwapData: async (params: WithSwapPermissionContext<SwapRequestParams>) =>
       convertSwapResponseToSwapData(await TradingApiClient.fetchSwap(params)),
   }
 }
@@ -63,7 +63,7 @@ export function create7702EVMSwapRepository(ctx: {
   getSwapDelegationInfo: (chainId?: UniverseChainId) => SwapDelegationInfo
 }): EVMSwapRepository {
   const { getSwapDelegationInfo } = ctx
-  async function fetchSwapData(params: TradingApi.CreateSwapRequest): Promise<SwapData> {
+  async function fetchSwapData(params: WithSwapPermissionContext<SwapRequestParams>): Promise<SwapData> {
     const chainId = tradingApiToUniverseChainId(params.quote.chainId)
     const smartContractDelegationInfo = getSwapDelegationInfo(chainId)
     const response = await TradingApiClient.fetchSwap7702({
@@ -88,7 +88,7 @@ export function convertSwap5792ResponseToSwapData(response: TradingApi.CreateSwa
 
 export function create5792EVMSwapRepository(): EVMSwapRepository {
   return {
-    fetchSwapData: async (params: SwapRequestParams) =>
+    fetchSwapData: async (params: WithSwapPermissionContext<SwapRequestParams>) =>
       convertSwap5792ResponseToSwapData(await TradingApiClient.fetchSwap5792(params)),
   }
 }
@@ -112,7 +112,7 @@ export function create4337EVMSwapRepository(ctx?: {
   signDelegationAuthorization?: SignDelegationAuthorizationFn
 }): EVMSwapRepository {
   return {
-    fetchSwapData: async (params: SwapRequestParams) => {
+    fetchSwapData: async (params: WithSwapPermissionContext<SwapRequestParams>) => {
       const sender = params.quote.swapper
       if (!sender) {
         throw new Error('create4337EVMSwapRepository: quote.swapper is required to populate Swap4337Request.sender')
@@ -142,13 +142,16 @@ export function create4337EVMSwapRepository(ctx?: {
             })
           : undefined
 
-      const swap4337Params: TradingApi.Swap4337Request = {
+      const swap4337Params: WithSwapPermissionContext<TradingApi.Swap4337Request> = {
         quote: params.quote,
         sender,
         permitData: params.permitData,
         deadline: params.deadline,
         sponsorshipInfo: params.sponsorshipInfo,
         eip7702Auth,
+        // Forward the permissioned flag so the 4337 path sends Universal Router 2.2.0 like the
+        // other swap fetchers; without it the backend rejects permissioned sponsored swaps.
+        isPermissionedToken: params.isPermissionedToken,
       }
       return convertSwap4337ResponseToSwapData(await TradingApiClient.fetchSwap4337(swap4337Params), includesDelegation)
     },

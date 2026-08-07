@@ -126,6 +126,8 @@ function BottomSheetModalContents({
   renderBehindBottomInset = false,
   hideKeyboardOnDismiss = false,
   hideKeyboardOnSwipeDown = false,
+  keyboardBlurBehavior,
+  enableBlurKeyboardOnGesture,
   forceRoundedCorners = false,
   // keyboardBehavior="extend" does not work and it's hard to figure why,
   // probably it requires usage of <BottomSheetTextInput>
@@ -290,7 +292,8 @@ function BottomSheetModalContents({
       // gorhom v5's content container is position:absolute with no resolved height, so a percentage height
       // collapses grow children to 0. Give it a concrete dp height spanning the sheet below the handle.
       const topInsetUsed = renderBehindTopInset ? 0 : insets.top
-      base.height = dimensions.fullHeight - topInsetUsed - FULLSCREEN_HANDLE_HEIGHT
+      const handleHeight = renderBehindTopInset && hideHandlebar ? 0 : FULLSCREEN_HANDLE_HEIGHT
+      base.height = dimensions.fullHeight - topInsetUsed - handleHeight
     }
 
     return animated ? [base, animated] : base
@@ -322,11 +325,13 @@ function BottomSheetModalContents({
       backgroundStyle={backgroundStyle}
       containerComponent={containerComponent}
       containerStyle={containerStyle}
+      enableBlurKeyboardOnGesture={enableBlurKeyboardOnGesture}
       enableContentPanningGesture={enableContentPanningGesture ?? isDismissible}
       enableDynamicSizing={enableDynamicSizing ?? !snapPoints}
       enableHandlePanningGesture={isDismissible}
       footerComponent={footerComponent}
       handleComponent={renderHandleBar}
+      keyboardBlurBehavior={keyboardBlurBehavior}
       snapPoints={snapPoints}
       stackBehavior={stackBehavior}
       topInset={renderBehindTopInset ? 0 : insets.top}

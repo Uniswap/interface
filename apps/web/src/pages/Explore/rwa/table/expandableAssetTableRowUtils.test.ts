@@ -1,8 +1,8 @@
 import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import { mapRankedRwa } from 'uniswap/src/data/rest/rwa/mapRankedRwa'
-import { makeRankedRwa } from 'uniswap/src/data/rest/rwa/rankedRwaTestHelpers'
-import { deriveRwaAggregates } from 'uniswap/src/data/rest/rwa/rwaMetrics'
-import type { IssuerToken } from 'uniswap/src/data/rest/rwa/types'
+import { mapRankedRwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/mapRankedRwa'
+import { makeRankedRwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/rankedRwaTestHelpers'
+import { deriveRwaAggregates } from 'uniswap/src/data/apiClients/dataApiService/rwa/rwaMetrics'
+import type { IssuerToken } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   buildExpandableAssetTableRows,

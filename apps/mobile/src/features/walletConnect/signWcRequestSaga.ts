@@ -16,8 +16,6 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EthMethod, EthSignMethod } from 'uniswap/src/features/dappRequests/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import {
   TransactionOriginType,
   TransactionType,
@@ -67,7 +65,6 @@ type SignTransactionParams = {
 
 function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
   const { sessionId, requestInternalId, account, method, chainId } = params
-  const { defaultChainId } = yield* getEnabledChainIdsSaga(Platform.EVM)
   try {
     const signerManager = yield* call(getSignerManager)
     let result: string | SendCallsResult = ''
@@ -80,10 +77,18 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
         signAsString: method === EthMethod.PersonalSign,
       })
     } else if (method === EthMethod.SignTypedData || method === EthMethod.SignTypedDataV4) {
-      result = yield* call(signTypedDataMessage, { message: params.message, account, signerManager })
+      result = yield* call(signTypedDataMessage, {
+        message: params.message,
+        account,
+        signerManager,
+        expectedChainId: chainId,
+      })
     } else if (method === EthMethod.EthSendTransaction && params.request.type === UwULinkMethod.Erc20Send) {
+      // The session chain, not params.transaction.chainId. Deriving the expected chain from the
+      // dapp's own value made the service-level assert compare it against itself, and the
+      // defaultChainId fallback could silently pick Mainnet for a chainless request.
       const txParams: ExecuteTransactionParams = {
-        chainId: params.transaction.chainId || defaultChainId,
+        chainId,
         account,
         options: {
           request: params.transaction,
@@ -101,7 +106,7 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
       result = transactionHash
     } else if (method === EthMethod.EthSendTransaction) {
       const txParams: ExecuteTransactionParams = {
-        chainId: params.transaction.chainId || defaultChainId,
+        chainId,
         account,
         options: {
           request: params.transaction,

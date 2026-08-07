@@ -77,7 +77,6 @@ exports[`PortfolioPageInner > demo view (disconnected) > should render demo view
         Connect Wallet Banner Mock
       </div>
       <div
-        data-should-show="false"
         data-testid="connect-wallet-button"
       >
         Connect Wallet Button Mock
@@ -124,7 +123,6 @@ exports[`PortfolioPageInner > demo view (disconnected) > should render demo view
         Connect Wallet Banner Mock
       </div>
       <div
-        data-should-show="false"
         data-testid="connect-wallet-button"
       >
         Connect Wallet Button Mock

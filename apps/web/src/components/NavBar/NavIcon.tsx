@@ -1,3 +1,4 @@
+import { isMobileWeb } from '@universe/environment'
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, styled, Text, TouchableArea } from 'ui/src'
@@ -26,7 +27,7 @@ interface NavIconProps {
   onClick?: () => void
 }
 
-export const NavIcon = ({ children, isActive = false, size = 40, label, onClick }: NavIconProps) => {
+export const NavIcon = ({ children, isActive = false, size = isMobileWeb ? 48 : 40, label, onClick }: NavIconProps) => {
   const { t } = useTranslation()
   const labelWithDefault = label ?? t('common.navigationButton')
 

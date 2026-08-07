@@ -1,4 +1,10 @@
-import type { ConnectionEstablishedMessage, RawTokenPriceMessage, TokenPriceMessage } from '@universe/prices/src/types'
+import type {
+  ConnectionEstablishedMessage,
+  RawPoolPriceMessage,
+  RawRealtimeTokenPriceMessage,
+  RawTokenPriceMessage,
+  TokenPriceMessage,
+} from '@universe/prices/src/types'
 import { createPriceKey } from '@universe/prices/src/utils/tokenIdentifier'
 
 /**
@@ -10,6 +16,36 @@ export function isRawTokenPriceMessage(message: unknown): message is RawTokenPri
     message !== null &&
     'type' in message &&
     message.type === 'token_price_update' &&
+    'payload' in message &&
+    typeof message.payload === 'object' &&
+    message.payload !== null
+  )
+}
+
+/**
+ * Type guard for RawRealtimeTokenPriceMessage
+ */
+export function isRawRealtimeTokenPriceMessage(message: unknown): message is RawRealtimeTokenPriceMessage {
+  return (
+    typeof message === 'object' &&
+    message !== null &&
+    'type' in message &&
+    message.type === 'token_price_realtime_update' &&
+    'payload' in message &&
+    typeof message.payload === 'object' &&
+    message.payload !== null
+  )
+}
+
+/**
+ * Type guard for RawPoolPriceMessage
+ */
+export function isRawPoolPriceMessage(message: unknown): message is RawPoolPriceMessage {
+  return (
+    typeof message === 'object' &&
+    message !== null &&
+    'type' in message &&
+    message.type === 'pool_price_update' &&
     'payload' in message &&
     typeof message.payload === 'object' &&
     message.payload !== null

@@ -16,46 +16,36 @@ import {
 import { FeeTierData } from '~/types/liquidity'
 
 describe('calculateTickSpacingFromFeeAmount', () => {
-  // Flag off (any chain) and flag-on-but-L1 both use the 2x multiplier; flag on + L2 uses 1x.
-  const flagOff = { chainId: UniverseChainId.Base, l2TickSpacingEnabled: false }
-  const l1Enabled = { chainId: UniverseChainId.Mainnet, l2TickSpacingEnabled: true }
-  const l2Enabled = { chainId: UniverseChainId.Base, l2TickSpacingEnabled: true }
-
   it('returns correct tick spacing for typical fee amounts (2x)', () => {
-    expect(calculateTickSpacingFromFeeAmount(100, flagOff)).toBe(2) // .01%
-    expect(calculateTickSpacingFromFeeAmount(500, flagOff)).toBe(10) // .05%
-    expect(calculateTickSpacingFromFeeAmount(3000, flagOff)).toBe(60) // .3%
+    expect(calculateTickSpacingFromFeeAmount(100, false)).toBe(2) // .01%
+    expect(calculateTickSpacingFromFeeAmount(500, false)).toBe(10) // .05%
+    expect(calculateTickSpacingFromFeeAmount(3000, false)).toBe(60) // .3%
   })
 
   it('rounds to nearest whole number', () => {
-    expect(calculateTickSpacingFromFeeAmount(333, flagOff)).toBe(7)
-    expect(calculateTickSpacingFromFeeAmount(250, flagOff)).toBe(5)
+    expect(calculateTickSpacingFromFeeAmount(333, false)).toBe(7)
+    expect(calculateTickSpacingFromFeeAmount(250, false)).toBe(5)
   })
 
   it('returns at least 1 for very small fee amounts', () => {
-    expect(calculateTickSpacingFromFeeAmount(0.1, flagOff)).toBe(1)
-    expect(calculateTickSpacingFromFeeAmount(0, flagOff)).toBe(1)
+    expect(calculateTickSpacingFromFeeAmount(0.1, false)).toBe(1)
+    expect(calculateTickSpacingFromFeeAmount(0, false)).toBe(1)
   })
 
   it('handles large fee amounts', () => {
-    expect(calculateTickSpacingFromFeeAmount(10000, flagOff)).toBe(200)
+    expect(calculateTickSpacingFromFeeAmount(10000, false)).toBe(200)
   })
 
-  it('uses 2x when the flag is on but the chain is not an L2', () => {
-    expect(calculateTickSpacingFromFeeAmount(100, l1Enabled)).toBe(2)
-    expect(calculateTickSpacingFromFeeAmount(3000, l1Enabled)).toBe(60)
+  it('uses the 1x multiplier when the flag is enabled', () => {
+    expect(calculateTickSpacingFromFeeAmount(100, true)).toBe(1) // .01%
+    expect(calculateTickSpacingFromFeeAmount(500, true)).toBe(5) // .05%
+    expect(calculateTickSpacingFromFeeAmount(3000, true)).toBe(30) // .3%
+    expect(calculateTickSpacingFromFeeAmount(10000, true)).toBe(100)
   })
 
-  it('uses the 1x multiplier on an L2 when the flag is enabled', () => {
-    expect(calculateTickSpacingFromFeeAmount(100, l2Enabled)).toBe(1) // .01%
-    expect(calculateTickSpacingFromFeeAmount(500, l2Enabled)).toBe(5) // .05%
-    expect(calculateTickSpacingFromFeeAmount(3000, l2Enabled)).toBe(30) // .3%
-    expect(calculateTickSpacingFromFeeAmount(10000, l2Enabled)).toBe(100)
-  })
-
-  it('still enforces a minimum of 1 on an L2 when the flag is enabled', () => {
-    expect(calculateTickSpacingFromFeeAmount(0, l2Enabled)).toBe(1)
-    expect(calculateTickSpacingFromFeeAmount(30, l2Enabled)).toBe(1) // round(0.3) = 0, floored to 1
+  it('still enforces a minimum of 1 when the flag is enabled', () => {
+    expect(calculateTickSpacingFromFeeAmount(0, true)).toBe(1)
+    expect(calculateTickSpacingFromFeeAmount(30, true)).toBe(1) // round(0.3) = 0, floored to 1
   })
 })
 

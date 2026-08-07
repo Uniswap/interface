@@ -4,14 +4,16 @@ import { Flex, Text } from 'ui/src'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { supportedChainIdFromGQLChain } from '~/appGraphql/data/chainUtils'
-import { gqlToCurrency, unwrapToken } from '~/appGraphql/data/util'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
+import { supportedChainIdFromGQLChain } from '~/data/chainUtils'
+import { gqlToCurrency, unwrapToken } from '~/data/util'
 import { LiquidityPositionInfoBadges } from '~/features/Liquidity/LiquidityPositionInfoBadges'
 import { LPIncentiveRewardsBadge } from '~/features/Liquidity/LPIncentives/LPIncentiveRewardsBadge'
 import { PoolStat } from '~/types/explore'
 
-export function TopPoolsCard({ pool, protocolFeePips }: { pool: PoolStat; protocolFeePips?: number }) {
+// `pool.feeTier` and `pool.protocolFeePips` are both sourced from data-api GetProtocolFees by the
+// top-pools hook that builds the PoolStat.
+export function TopPoolsCard({ pool }: { pool: PoolStat }) {
   const { t } = useTranslation()
   const { defaultChainId } = useEnabledChains()
   const { formatPercent } = useLocalizationContext()
@@ -49,7 +51,7 @@ export function TopPoolsCard({ pool, protocolFeePips }: { pool: PoolStat; protoc
               size="small"
               version={pool.protocolVersion}
               feeTier={pool.feeTier}
-              protocolFeePips={protocolFeePips}
+              protocolFeePips={pool.protocolFeePips}
             />
           </Flex>
         </Flex>

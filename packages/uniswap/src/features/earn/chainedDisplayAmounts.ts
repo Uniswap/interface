@@ -1,4 +1,4 @@
-import type { Currency } from '@uniswap/sdk-core'
+import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Percent as SdkPercent, Price } from '@uniswap/sdk-core'
 import type { ChainedQuoteResponse } from '@universe/api'
 import { TradingApi } from '@universe/api'
@@ -192,6 +192,33 @@ function getEarnChainedActionDisplayOutput({
     extra: { earnPreview },
   })
   return { amount: undefined, currency: currencyOut }
+}
+
+/**
+ * Quote-derived amount actually credited to the vault for a DEPOSIT preview, in the vault
+ * underlying currency. Differs from the source input on cross-token/cross-chain routes
+ * (routing economics, bridge fees, slippage).
+ */
+export function getEarnDepositPreviewCreditAmount({
+  quote,
+  vaultUnderlyingCurrency,
+}: {
+  quote: ChainedQuoteResponse
+  vaultUnderlyingCurrency: Currency | undefined
+}): CurrencyAmount<Currency> | undefined {
+  const earnPreview = quote.quote.earnPreview
+  if (!vaultUnderlyingCurrency || earnPreview?.type !== 'DEPOSIT') {
+    return undefined
+  }
+  const depositAsset = earnPreview.depositAssets[0]
+  if (!depositAsset) {
+    return undefined
+  }
+  const creditCurrency = getEarnDepositPreviewCurrency({ depositAsset, currencyOut: vaultUnderlyingCurrency })
+  if (!creditCurrency) {
+    return undefined
+  }
+  return createCurrencyAmount(creditCurrency, depositAsset.amount) ?? undefined
 }
 
 function getEarnDepositPreviewCurrency({

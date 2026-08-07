@@ -1,6 +1,6 @@
 import { WalletName as SolanaWalletName, WalletReadyState as SolanaWalletReadyState } from '@solana/wallet-adapter-base'
 import { Wallet as SolanaWallet, useWallet as useSolanaWallet } from '@solana/wallet-adapter-react'
-import { useMemo } from 'react'
+import { useMemo, useSyncExternalStore } from 'react'
 import { CONNECTION_PROVIDER_IDS, CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
 import type { Account } from 'uniswap/src/features/accounts/store/types/Account'
 import { AccessPattern, Connector, ConnectorStatus } from 'uniswap/src/features/accounts/store/types/Connector'
@@ -24,7 +24,12 @@ import {
   useConnectors as useWagmiConnectors,
   Connector as WagmiConnector,
 } from 'wagmi'
-import { CONNECTOR_ICON_OVERRIDE_MAP } from '~/connection/constants'
+import { CONNECTOR_ICON_OVERRIDE_MAP, useRecentConnectorId } from '~/connection/constants'
+import {
+  getConnectorsToReconnect,
+  getMountReconnectSettled,
+  subscribeMountReconnectSettled,
+} from '~/connection/mountReconnect'
 import { walletTypeToAmplitudeWalletType } from '~/connection/walletConnect'
 import { buildCAIP25Session } from '~/features/accounts/store/buildCAIP25Session'
 import { createAccountsStoreGetters } from '~/features/accounts/store/getters'
@@ -37,6 +42,7 @@ import type {
 import { normalizeWalletName } from '~/features/wallet/connection/connectors/multiplatform'
 import { useConnectWalletMutation } from '~/features/wallet/connection/hooks/useConnectWalletMutation'
 import { useOneClickSwapSetting } from '~/pages/Swap/Swap/settings/OneClickSwap'
+import { isIFramed } from '~/utils/isIFramed'
 
 /**
  * Web package implementation of the unified accounts store architecture.
@@ -80,10 +86,6 @@ function buildEVMWalletInfo(params: {
 }): PlatformWalletInfo<Platform.EVM> {
   const { connector, accountData, fallbackChainId } = params
 
-  const connectorStatus = accountData
-    ? WAGMI_STATUS_TO_CONNECTOR_STATUS[accountData.status]
-    : ConnectorStatus.Disconnected
-
   const injected = connector.type === CONNECTION_PROVIDER_IDS.INJECTED_CONNECTOR_TYPE
   const walletIcon = connector.icon
   const walletName = connector.name
@@ -95,6 +97,13 @@ function buildEVMWalletInfo(params: {
   const chainId = accountData?.chainId ?? fallbackChainId
 
   const accountInfo = address ? { address, chainId } : undefined
+
+  const wagmiStatus = accountData ? WAGMI_STATUS_TO_CONNECTOR_STATUS[accountData.status] : ConnectorStatus.Disconnected
+  // wagmi (with the MetaMask Connect SDK) can briefly report `connected` with no address while
+  // disconnecting. Without an account the connector isn't usably connected, so treat it as
+  // disconnected rather than letting the connected-without-account state crash buildConnector.
+  const connectorStatus =
+    wagmiStatus === ConnectorStatus.Connected && !accountInfo ? ConnectorStatus.Disconnected : wagmiStatus
 
   return {
     platform: Platform.EVM,
@@ -424,9 +433,34 @@ function useSVMWalletInfos(): PlatformWalletInfo<Platform.SVM>[] {
   }, [solanaWallet])
 }
 
+/**
+ * True while a mount reconnect (see createWeb3Provider) is expected but hasn't resolved. Read
+ * synchronously so the first render reports connecting rather than a transient disconnected frame,
+ * which would wrongly gate consumers of `useConnectionStatus().isDisconnected`.
+ */
+function useMountReconnectPending(): boolean {
+  const recentConnectorId = useRecentConnectorId()
+  const connectors = useWagmiConnectors()
+  const settled = useSyncExternalStore(subscribeMountReconnectSettled, getMountReconnectSettled)
+
+  return useMemo(() => {
+    if (settled) {
+      return false
+    }
+    return getConnectorsToReconnect({ recentConnectorId, isIframe: isIFramed(), connectors }).length > 0
+  }, [recentConnectorId, connectors, settled])
+}
+
 /** Main hook that combines EVM and SVM wallet data into unified accounts state. */
 function useAccountsState(): WebAccountsData {
-  const { pendingWallet, isConnecting } = useConnectWalletMutation()
+  const { pendingWallet, isConnecting: mutationIsConnecting } = useConnectWalletMutation()
+
+  // The mount reconnect drives wagmi's `reconnect` directly (not the connect mutation), so surface
+  // wagmi's own connecting/reconnecting status plus the synchronous mount-reconnect signal to keep
+  // Web3Status pending (and consumers not-disconnected) until the gated reconnect resolves.
+  const { isConnecting: wagmiIsConnecting, isReconnecting: wagmiIsReconnecting } = useWagmiAccount()
+  const mountReconnectPending = useMountReconnectPending()
+  const isConnecting = mutationIsConnecting || wagmiIsConnecting || wagmiIsReconnecting || mountReconnectPending
 
   const evmWalletInfos = useEVMWalletInfos(pendingWallet)
   const svmWalletInfos = useSVMWalletInfos()

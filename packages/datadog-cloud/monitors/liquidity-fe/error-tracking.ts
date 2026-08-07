@@ -18,16 +18,22 @@ export const liquidityFeErrorTrackingMonitors: MonitorDefinition[] = [
     id: 'liquidity_fe_web_error_count_spike',
     name: '[Web] Elevated JS errors on Liquidity pages',
     type: 'rum alert',
-    query: 'formula("query1").last("1h") > 100',
+    query: 'formula("query1").last("1h") > 500',
     alertBody:
       'Elevated JS error count on Liquidity pages (positions, pool, add, remove). Check [Error Tracking](/error-tracking?query=service%3Aweb-prod&teams=liquidity) for new issues.',
     recoveryBody: 'JS error count on Liquidity pages has recovered below threshold.',
     team: TEAM,
     priority: 3,
+    // Steady-state baseline is ~140-175 errors/hr per path group (p95 ~490 on
+    // /positions/create), so critical sits above p95 and recovery thresholds
+    // add hysteresis against trigger/recover flapping.
     thresholds: {
-      critical: 100,
-      warning: 50,
+      critical: 500,
+      warning: 300,
+      criticalRecovery: 250,
+      warningRecovery: 150,
     },
+    slackAlertTransitionsOnly: true,
     logQuery: 'service:web-prod',
     runbookUrl: LIQUIDITY_FE_RUNBOOK,
     readmeUrl: `${UNIVERSE_REPO_URL}/tree/main/apps/web`,
@@ -44,7 +50,9 @@ export const liquidityFeErrorTrackingMonitors: MonitorDefinition[] = [
           dataSource: 'rum',
           indexes: ['*'],
           search: {
-            query: `@type:error env:(production OR prod) service:web-prod ${LIQUIDITY_VIEW_FILTER}`,
+            // -@error.source:report excludes browser Report-API events (CSP
+            // violations etc.), which alone exceed the critical threshold.
+            query: `@type:error env:(production OR prod) service:web-prod ${LIQUIDITY_VIEW_FILTER} -@error.source:report`,
           },
           computes: [{ aggregation: 'count' }],
           groupBies: [

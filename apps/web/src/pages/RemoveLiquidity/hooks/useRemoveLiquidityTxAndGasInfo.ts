@@ -9,6 +9,7 @@ import { getTradeSettingsDeadline } from 'uniswap/src/data/apiClients/tradingApi
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
+import { getIsPermissioned } from 'uniswap/src/features/positions/utils'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
@@ -128,6 +129,7 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
       token0Address: getTokenOrZeroAddress(currency0),
       token1Address: getTokenOrZeroAddress(currency1),
       nftTokenId: positionInfo.tokenId,
+      permissioned: getIsPermissioned(positionInfo),
       liquidityPercentageToDecrease: Number(percent),
       slippageTolerance: customSlippageTolerance,
       deadline: getTradeSettingsDeadline(customDeadline),

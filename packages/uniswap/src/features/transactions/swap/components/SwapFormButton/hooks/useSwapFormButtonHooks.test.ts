@@ -40,7 +40,7 @@ vi.mock('uniswap/src/features/platforms/utils/chains', () => ({
   chainIdToPlatform: vi.fn(),
 }))
 
-vi.mock('uniswap/src/features/passkey/ShowGetStartedContext', () => ({
+vi.mock('uniswap/src/contexts/ShowGetStartedContext', () => ({
   useShowGetStarted: vi.fn().mockReturnValue(false),
 }))
 
@@ -95,6 +95,13 @@ vi.mock('uniswap/src/features/transactions/swap/hooks/useGeoRestrictionMode', ()
 }))
 
 vi.mock(
+  'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsBlockedByPermissionedPool',
+  () => ({
+    useIsBlockedByPermissionedPool: vi.fn(),
+  }),
+)
+
+vi.mock(
   'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsBlockingWithCustomMessage',
   () => ({
     useIsBlockingWithCustomMessage: vi.fn(),
@@ -128,12 +135,13 @@ vi.mock('utilities/src/react/hooks', () => ({
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useColorsFromTokenColor } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { useShowGetStarted } from 'uniswap/src/contexts/ShowGetStartedContext'
 import { useActiveAccount, useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
-import { useShowGetStarted } from 'uniswap/src/features/passkey/ShowGetStartedContext'
 import { chainIdToPlatform, isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { useIsShowingWebFORNudge, useIsWebFORNudgeEnabled } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useIsAmountSelectionInvalid } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsAmountSelectionInvalid'
+import { useIsBlockedByPermissionedPool } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsBlockedByPermissionedPool'
 import { useIsBlockingWithCustomMessage } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsBlockingWithCustomMessage'
 import { useIsMissingPlatformWallet } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsMissingPlatformWallet'
 import { useIsSwapButtonDisabled } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsSwapButtonDisabled'
@@ -179,6 +187,7 @@ describe('swap form button hooks', () => {
   const mockUseSwapFormStore = useSwapFormStore as Mock
   const mockUseSwapFormStoreDerivedSwapInfo = useSwapFormStoreDerivedSwapInfo as Mock
   const mockUseIsBlockingWithCustomMessage = useIsBlockingWithCustomMessage as Mock
+  const mockUseIsBlockedByPermissionedPool = useIsBlockedByPermissionedPool as Mock
   const mockUseColorsFromTokenColor = useColorsFromTokenColor as Mock
   const mockUseSwapFormWarningStoreActions = useSwapFormWarningStoreActions as Mock
   const mockUsePrepareSwap = usePrepareSwap as Mock
@@ -294,6 +303,7 @@ describe('swap form button hooks', () => {
     setRedirectCallback(false)
     mockUseIsAmountSelectionInvalid.mockReturnValue(false)
     mockUseIsSwapButtonDisabled.mockReturnValue(false)
+    mockUseIsBlockedByPermissionedPool.mockReturnValue(false)
     mockUseIsTokenSelectionInvalid.mockReturnValue(false)
     mockUseIsTradeIndicative.mockReturnValue(false)
     setWarnings()

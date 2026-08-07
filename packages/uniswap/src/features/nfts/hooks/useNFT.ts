@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { useWalletNfts } from 'uniswap/src/features/nfts/hooks/useWalletNfts'
+import { useWalletNfts } from 'uniswap/src/data/apiClients/dataApiService/nfts/useWalletNfts'
 import { NFTItem } from 'uniswap/src/features/nfts/types'
 
 export function useNFT({

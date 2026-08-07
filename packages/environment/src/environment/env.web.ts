@@ -74,7 +74,9 @@ export function isDevEnv(): boolean {
   } else if (isTestEnv()) {
     return false
   } else {
-    return getConfig().nodeEnv === NodeEnv.Development
+    // nodeEnv covers local `vite dev`; environment covers deployed dev builds
+    // (e.g. the dev ECS deploy, which builds in staging mode with ENVIRONMENT=development).
+    return getConfig().nodeEnv === NodeEnv.Development || getConfig().environment === Environment.Development
   }
 }
 
@@ -97,13 +99,15 @@ export function isBetaEnv(): boolean {
   } else if (isTestEnv()) {
     return false
   } else {
-    throw createAndLogError('isBetaEnv')
+    return getConfig().environment === Environment.Staging
   }
 }
 
 export function isProdEnv(): boolean {
   if (isWebApp) {
-    return getConfig().nodeEnv === NodeEnv.Production && !isBetaEnv()
+    // Exclude dev: the dev ECS build runs NODE_ENV=production with
+    // ENVIRONMENT=development, which would otherwise read as both dev and prod.
+    return getConfig().nodeEnv === NodeEnv.Production && !isBetaEnv() && !isDevEnv()
   } else if (isExtensionApp) {
     const chromeRuntime = getChromeRuntime()
     if (!chromeRuntime) {
@@ -120,15 +124,8 @@ export function isProdEnv(): boolean {
   } else if (isTestEnv()) {
     return false
   } else {
-    throw createAndLogError('isProdEnv')
+    return getConfig().environment === Environment.Production
   }
-}
-
-function createAndLogError(funcName: string): Error {
-  const e = new Error('Unsupported app environment that failed all checks')
-  // oxlint-disable-next-line no-console -- Console logging needed for debugging
-  console.error(`[utilities/env.web.ts/${funcName}]`, e)
-  return e
 }
 
 export function isRNDev(): boolean {

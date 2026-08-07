@@ -19,6 +19,7 @@ interface NetworkFilterDropdownContentProps {
   autoFocus?: boolean
   isMobileSheet?: boolean
   forceAllNetworksLabel?: boolean
+  showSearchInput?: boolean
 }
 
 export function NetworkFilterDropdownContent({
@@ -34,6 +35,7 @@ export function NetworkFilterDropdownContent({
   autoFocus,
   isMobileSheet,
   forceAllNetworksLabel,
+  showSearchInput = true,
 }: NetworkFilterDropdownContentProps): JSX.Element {
   const { searchQuery, setSearchQuery, filteredChainIds, filteredTieredOptions, showAllNetworks } =
     useNetworkFilterSearch({ chainIds, tieredOptions, includeAllNetworks })
@@ -55,7 +57,7 @@ export function NetworkFilterDropdownContent({
         ...scrollbarStyles,
         scrollbarWidth: 'auto',
         overflowY: 'auto',
-        overflow: 'auto',
+        overflowX: 'hidden',
       }}
     >
       <NetworkFilterContent
@@ -76,7 +78,9 @@ export function NetworkFilterDropdownContent({
   if (fillAvailableHeight || isMobileSheet) {
     return (
       <Flex flex={1} flexDirection="column" minHeight={0} overflow="hidden">
-        <NetworkSearchBar autoFocus={autoFocus} value={searchQuery} onChangeText={setSearchQuery} />
+        {showSearchInput && (
+          <NetworkSearchBar autoFocus={autoFocus} value={searchQuery} onChangeText={setSearchQuery} />
+        )}
         {scrollableList}
       </Flex>
     )
@@ -84,7 +88,7 @@ export function NetworkFilterDropdownContent({
 
   return (
     <>
-      <NetworkSearchBar autoFocus={autoFocus} value={searchQuery} onChangeText={setSearchQuery} />
+      {showSearchInput && <NetworkSearchBar autoFocus={autoFocus} value={searchQuery} onChangeText={setSearchQuery} />}
       <HeightAnimator useInitialHeight open>
         {scrollableList}
       </HeightAnimator>

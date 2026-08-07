@@ -22,12 +22,14 @@ const ReferenceElement = deprecatedStyled.div`
   height: inherit;
 `
 
+// styled-components v6 (stylis 4) compiles a bare "::before" as a descendant selector
+// (".x ::before"), so every pseudo below needs the explicit "&" to target the arrow itself.
 const Arrow = deprecatedStyled.div`
   width: 8px;
   height: 8px;
   z-index: 9998;
 
-  ::before {
+  &::before {
     position: absolute;
     width: 8px;
     height: 8px;
@@ -42,7 +44,7 @@ const Arrow = deprecatedStyled.div`
 
   &.arrow-top {
     bottom: -4px;
-    ::before {
+    &::before {
       border-top: none;
       border-left: none;
     }
@@ -50,7 +52,7 @@ const Arrow = deprecatedStyled.div`
 
   &.arrow-bottom {
     top: -4px;
-    ::before {
+    &::before {
       border-bottom: none;
       border-right: none;
     }
@@ -59,7 +61,7 @@ const Arrow = deprecatedStyled.div`
   &.arrow-left {
     right: -4px;
 
-    ::before {
+    &::before {
       border-bottom: none;
       border-left: none;
     }
@@ -67,7 +69,7 @@ const Arrow = deprecatedStyled.div`
 
   &.arrow-right {
     left: -4px;
-    ::before {
+    &::before {
       border-right: none;
       border-top: none;
     }

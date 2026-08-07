@@ -11,7 +11,10 @@ import { type GqlResult } from '@universe/api'
 import { DynamicConfigs, useDynamicConfigValue, VerifiedAuctionsConfigKey } from '@universe/gating'
 import { useCallback, useMemo } from 'react'
 import { type AuctionOption, OnchainItemListOptionType } from 'uniswap/src/components/lists/items/types'
-import { fetchAuctionByAddress, useSearchTokensAndPoolsQuery } from 'uniswap/src/data/rest/searchTokensAndPools'
+import {
+  fetchAuctionByAddress,
+  useSearchTokensAndPoolsQuery,
+} from 'uniswap/src/data/apiClients/dataApiService/search/searchTokensAndPools'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
@@ -339,7 +342,8 @@ export function useTopAuctionOptions({
   } = useQuery<PlainMessage<ListTopAuctionsResponse>, Error>({
     queryKey: [ReactQueryCacheKey.AuctionApi, 'listTopAuctions', params],
     queryFn: async () => {
-      const { AuctionServiceClient } = await import('uniswap/src/data/rest/auctions/AuctionServiceClient')
+      const { AuctionServiceClient } =
+        await import('uniswap/src/data/apiClients/dataApiService/auctions/AuctionServiceClient')
       return toPlainMessage(await AuctionServiceClient.listTopAuctions(params))
     },
     enabled: !skip,

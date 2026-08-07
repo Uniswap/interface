@@ -7,12 +7,10 @@ import { useFeatureFlaggedProjectTokens } from 'src/components/TokenDetails/useF
 import { useGatedTokenDetailsRWAMatch } from 'src/components/TokenDetails/useTokenDetailsRWAMatch'
 import { EM_DASH, Flex, FlexLoader, flexStyles, Shine, Text, TouchableArea } from 'ui/src'
 import { CopyAlt } from 'ui/src/components/icons'
+import { Lock } from 'ui/src/components/icons/Lock'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import {
-  useTokenBasicInfoPartsFragment,
-  useTokenBasicProjectPartsFragment,
-} from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
+import { useTokenBasicInfoPartsFragment, useTokenBasicProjectPartsFragment } from 'uniswap/src/data/graphql/fragments'
 import { selectHasViewedContractAddressExplainer } from 'uniswap/src/features/behaviorHistory/selectors'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
@@ -27,7 +25,12 @@ export const TokenDetailsHeader = memo(function TokenDetailsHeaderInner(): JSX.E
     openContractAddressExplainerModal,
     openMultichainAddressSheet,
     copyAddressToClipboard,
+    isPermissioned,
+    isAllowlisted,
   } = useTokenDetailsContext()
+  // Lock next to the ticker is the allowlisted "you're verified" reward, mirroring web TDP.
+  // Never shown to a non-allowlisted wallet.
+  const showPermissionedLock = isPermissioned && isAllowlisted
   const hasViewedContractAddressExplainer = useSelector(selectHasViewedContractAddressExplainer)
 
   const rwaMatch = useGatedTokenDetailsRWAMatch(FeatureFlags.RWATdp)
@@ -47,6 +50,7 @@ export const TokenDetailsHeader = memo(function TokenDetailsHeaderInner(): JSX.E
   // until the project fragment confirms — otherwise we briefly show the chain-specific name (e.g. "USDC.e")
   // before swapping to the canonical project name.
   const shouldWaitForProject = initialIsMultichainAsset && !projectTokensLoaded
+  const shouldShowNameSkeleton = shouldWaitForProject || metadata.isLoading
   const { name: tokenName, logoUrl } = getRWAHeaderIdentity({
     rwaMatch,
     fallbackName: metadata.name ?? undefined,
@@ -83,7 +87,7 @@ export const TokenDetailsHeader = memo(function TokenDetailsHeaderInner(): JSX.E
       />
 
       <Flex shrink flex={1}>
-        {shouldWaitForProject ? (
+        {shouldShowNameSkeleton ? (
           <Shine>
             <Flex gap="$spacing8" py="$spacing4">
               <FlexLoader height={20} width={120} borderRadius="$rounded4" />
@@ -125,6 +129,7 @@ export const TokenDetailsHeader = memo(function TokenDetailsHeaderInner(): JSX.E
                 >
                   {metadata.symbol?.toUpperCase() || EM_DASH}
                 </Text>
+                {showPermissionedLock && <Lock color="$neutral2" size="$icon.16" alignSelf="center" flexShrink={0} />}
                 {token.address && <CopyAlt color="$neutral3" size="$icon.16" alignSelf="center" />}
               </TouchableArea>
             </Flex>

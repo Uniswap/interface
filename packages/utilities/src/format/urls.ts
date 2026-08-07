@@ -52,6 +52,27 @@ export function uriToHttpUrls(uri: string, options?: { allowLocalUri?: boolean }
   }
 }
 
+function matchesProtocol({
+  uri,
+  allowedProtocols,
+  callerName,
+}: {
+  uri: Maybe<string>
+  allowedProtocols: readonly string[]
+  callerName: string
+}): boolean {
+  if (typeof uri !== 'string' || !uri.trim()) {
+    return false
+  }
+
+  try {
+    return allowedProtocols.includes(new URL(uri).protocol)
+  } catch {
+    logger.warn('format/urls', callerName, 'Invalid URI', { uri })
+    return false
+  }
+}
+
 /**
  * Checks if the provided URI uses HTTP or HTTPS protocol.
  *
@@ -59,17 +80,17 @@ export function uriToHttpUrls(uri: string, options?: { allowLocalUri?: boolean }
  * @returns {boolean} True if the URI uses http:// or https://, false otherwise.
  */
 export function isHttpUri(uri: Maybe<string>): boolean {
-  if (typeof uri !== 'string' || !uri.trim()) {
-    return false
-  }
+  return matchesProtocol({ uri, allowedProtocols: ['http:', 'https:'], callerName: 'isHttpUri' })
+}
 
-  try {
-    const url = new URL(uri)
-    return url.protocol === 'http:' || url.protocol === 'https:'
-  } catch {
-    logger.warn('format/urls', 'isHttpUri', 'Invalid URI', { uri })
-    return false
-  }
+/**
+ * Checks if the provided URI uses the HTTPS protocol.
+ *
+ * @param {Maybe<string>} uri The URI to check.
+ * @returns {boolean} True if the URI uses https://, false otherwise.
+ */
+export function isHttpsUri(uri: Maybe<string>): boolean {
+  return matchesProtocol({ uri, allowedProtocols: ['https:'], callerName: 'isHttpsUri' })
 }
 
 export function isSegmentUri(uri: Maybe<string>, extension: string): boolean {
@@ -158,21 +179,47 @@ export function extractBaseUrl(url?: string): string | undefined {
 }
 
 /**
- * Sanitizes an avatar URL by ensuring it uses HTTP or HTTPS protocol.
- * Returns null for any URL that doesn't use a safe protocol.
+ * Sanitizes a URL by ensuring it uses one of the allowed protocols.
+ * Returns the original URL if its scheme matches `allowedProtocols`, otherwise
+ * `undefined`. Use this to reject `javascript:`, `data:`, `ipfs:`, and other
+ * schemes for URLs that will be opened in a browser context or shown to users.
  *
- * @param {string | null} url The URL to sanitize.
- * @returns {string | null} The original URL if it uses http/https, null otherwise.
+ * @example
+ *   sanitizeUrl({ url: avatarUrl, allowedProtocols: ['http:', 'https:'], callerName: 'getAvatar' })
+ *   sanitizeUrl({ url: kycUrl, allowedProtocols: ['https:'], callerName: 'useTokenKYCStatus' })
  */
-export function sanitizeAvatarUrl(url: string | null): string | null {
+export function sanitizeUrl({
+  url,
+  allowedProtocols,
+  callerName,
+}: {
+  url: Maybe<string>
+  allowedProtocols: readonly string[]
+  callerName: string
+}): string | undefined {
   if (!url) {
-    return null
+    return undefined
   }
 
-  if (isHttpUri(url)) {
-    return url
+  // Parse + protocol-check inline so we can emit one precise log per failure
+  // (`invalid URI` vs `disallowed protocol`) instead of double-logging through
+  // `matchesProtocol`, which has its own `Invalid URI` warn for its callers.
+  let parsed: URL
+  try {
+    parsed = new URL(url)
+  } catch {
+    logger.warn('format/urls', callerName, 'Rejected URL: invalid URI', { url })
+    return undefined
   }
 
-  logger.warn('format/urls', 'sanitizeAvatarUrl', 'Rejected non-HTTP avatar URL', { url })
-  return null
+  if (!allowedProtocols.includes(parsed.protocol)) {
+    logger.warn('format/urls', callerName, 'Rejected URL: disallowed protocol', {
+      url,
+      protocol: parsed.protocol,
+      allowedProtocols,
+    })
+    return undefined
+  }
+
+  return url
 }

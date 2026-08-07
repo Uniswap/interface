@@ -7,11 +7,11 @@ import { ApproveTransactionInfo, TransactionType } from 'uniswap/src/features/tr
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useReadContract } from 'wagmi'
 import { erc20Abi } from '~/chains'
+import { assume0xAddress } from '~/chains'
 import { useTokenContract } from '~/hooks/useContract'
 import { useTriggerOnTransactionType } from '~/hooks/useTriggerOnTransactionType'
 import { UserRejectedRequestError } from '~/utils/errors'
 import { didUserReject } from '~/utils/swapErrorToUserReadableMessage'
-import { assume0xAddress } from '~/utils/wagmi'
 
 const MAX_ALLOWANCE = MaxUint256.toString()
 

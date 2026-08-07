@@ -1,7 +1,7 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { FeatureFlags, useFeatureFlagWithExposureLoggingDisabled } from '@universe/gating'
 import { useDispatch, useSelector } from 'react-redux'
-import { PortfolioBalancePart } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+import { PortfolioBalancePart } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { selectHasDismissedPoolsBalanceCoachmark } from 'uniswap/src/features/behaviorHistory/selectors'
 import { setPoolsBalanceCoachmarkDismissed } from 'uniswap/src/features/behaviorHistory/slice'
 import { usePortfolioBalancePart } from 'uniswap/src/features/dataApi/balances/balancesRest'

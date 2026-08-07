@@ -35,7 +35,6 @@ import type { CurrencyState } from '~/features/Swap/state/types'
 import { SendInputError } from '~/pages/Swap/Send/state/hooks'
 import { useSendContext } from '~/pages/Swap/Send/state/SendContext'
 import { SwitchNetworkAction } from '~/state/popups/types'
-import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 // Hidden-mimic width measurement can land fractions of a pixel short of the real input's
 // required width, which is enough for `text-overflow: ellipsis` to clip the last character.
@@ -331,9 +330,14 @@ export function SendCurrencyInputForm({
         </Flex>
       </InputWrapper>
       <CurrencyInputWrapper>
-        <Flex row justifyContent="space-between" {...ClickableTamaguiStyle} onPress={() => setTokenSelectorOpen(true)}>
+        <TouchableArea
+          row
+          justifyContent="space-between"
+          testID={TestID.SendFormSelectToken}
+          onPress={() => setTokenSelectorOpen(true)}
+        >
           <Flex row alignItems="center" gap="$gap12">
-            <Flex alignItems="center" row width="100%" gap="$gap12" onPress={() => setTokenSelectorOpen(true)}>
+            <Flex alignItems="center" row width="100%" gap="$gap12">
               {inputCurrency && (
                 <PortfolioLogo currencies={[inputCurrency]} size={36} chainId={chainId ?? UniverseChainId.Mainnet} />
               )}
@@ -368,7 +372,7 @@ export function SendCurrencyInputForm({
             )}
             <RotatableChevron direction="down" />
           </Flex>
-        </Flex>
+        </TouchableArea>
       </CurrencyInputWrapper>
       <CurrencySearchModal
         isOpen={tokenSelectorOpen}

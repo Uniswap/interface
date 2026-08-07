@@ -26,23 +26,29 @@ function MenuSection({
 }) {
   return (
     <Accordion.Item value={title} disabled={!collapsible}>
-      <Flex gap="8px">
-        <Accordion.Trigger flexDirection="row" p="0" gap="4px">
+      <Flex gap="$none">
+        <Accordion.Trigger
+          flexDirection="row"
+          alignItems="center"
+          p="0"
+          gap="4px"
+          minHeight={collapsible ? 36 : undefined}
+        >
           {({ open }: { open: boolean }) => (
             <>
-              <Text variant="body4" color="$neutral2">
+              <Text variant="body3" color="$neutral2">
                 {title}
               </Text>
               {collapsible && (
                 <Square animation="200ms" rotate={open ? '90deg' : '270deg'}>
-                  <RotatableChevron size="$icon.16" color="$neutral2" />
+                  <RotatableChevron size="$icon.20" color="$neutral2" />
                 </Square>
               )}
             </>
           )}
         </Accordion.Trigger>
         <Accordion.Content p="0" forceMount={!collapsible || undefined}>
-          <Flex gap="8px">{children}</Flex>
+          <Flex gap="$none">{children}</Flex>
         </Accordion.Content>
       </Flex>
     </Accordion.Item>
@@ -110,53 +116,54 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
                     internal
                     closeMenu={closeMenu}
                     icon={tab.icon}
-                    textVariant="body2"
+                    textVariant="body1"
                     elementName={tab.elementName}
                   />
                 ))}
               </MenuSection>
-              {Object.values(productContent).map((sectionContent, index) => (
-                <MenuSection key={`${sectionContent.title}_${index}`} title={sectionContent.title} collapsible={false}>
-                  {/* oxlint-disable-next-line no-shadow */}
-                  {sectionContent.items.map(({ label, href, internal, icon, elementName }, index) => (
-                    <MenuLink
-                      key={`${label}_${index}}`}
-                      label={label}
-                      href={href}
-                      internal={internal}
-                      closeMenu={closeMenu}
-                      icon={icon}
-                      textVariant="body2"
-                      elementName={elementName}
-                    />
-                  ))}
-                </MenuSection>
-              ))}
+
+              <Flex gap="$spacing8">
+                {Object.values(productContent).map((sectionContent, index) => (
+                  <MenuSection key={`${sectionContent.title}_${index}`} title={sectionContent.title}>
+                    {/* oxlint-disable-next-line no-shadow */}
+                    {sectionContent.items.map(({ label, href, internal, elementName }, index) => (
+                      <MenuLink
+                        key={`${label}_${index}}`}
+                        label={label}
+                        href={href}
+                        internal={internal}
+                        closeMenu={closeMenu}
+                        textVariant="body2"
+                        elementName={elementName}
+                      />
+                    ))}
+                  </MenuSection>
+                ))}
+                {Object.values(menuContent).map((sectionContent, index) => (
+                  <MenuSection key={`${sectionContent.title}_${index}`} title={sectionContent.title}>
+                    {/* oxlint-disable-next-line no-shadow */}
+                    {sectionContent.items.map(({ label, href, internal, elementName }, index) => (
+                      <MenuLink
+                        key={`${label}_${index}}`}
+                        label={label}
+                        href={href}
+                        internal={internal}
+                        closeMenu={closeMenu}
+                        textVariant="body2"
+                        elementName={elementName}
+                      />
+                    ))}
+                  </MenuSection>
+                ))}
+              </Flex>
 
               <Separator backgroundColor="$surface3" />
 
-              {Object.values(menuContent).map((sectionContent, index) => (
-                <MenuSection key={`${sectionContent.title}_${index}`} title={sectionContent.title}>
-                  {/* oxlint-disable-next-line no-shadow */}
-                  {sectionContent.items.map(({ label, href, internal, elementName }, index) => (
-                    <MenuLink
-                      key={`${label}_${index}}`}
-                      label={label}
-                      href={href}
-                      internal={internal}
-                      closeMenu={closeMenu}
-                      elementName={elementName}
-                    />
-                  ))}
-                </MenuSection>
-              ))}
-              <Flex paddingBottom="$padding8">
+              <Flex gap="$spacing12">
                 <LegalAndPrivacyMenu closeMenu={closeMenu} />
-              </Flex>
-              <Flex row width="100%" justifyContent="space-between" alignItems="flex-end">
-                <HelpModal showOnXL />
-                <Flex gap="$spacing16">
-                  <Socials iconSize="20px" />
+                <Flex row width="100%" justifyContent="space-between" alignItems="flex-end">
+                  <HelpModal showOnXL flushInDrawer />
+                  <Socials iconSize="24px" gap="$spacing12" iconPadding="$spacing4" flushLastRight />
                 </Flex>
               </Flex>
             </Flex>

@@ -222,6 +222,26 @@ describe('parseLocalActivity', () => {
   })
 
   it.each([
+    [TransactionStatus.Pending],
+    [TransactionStatus.Success],
+    [TransactionStatus.Canceled],
+    [TransactionStatus.Failed],
+  ])('produces a non-empty title and descriptor for UniswapXCancel transactions with status %s', async (status) => {
+    const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
+
+    const result = await transactionToActivity({
+      details: {
+        typeInfo: { type: TransactionType.UniswapXCancel, orderHashes: ['0xorderhash'] },
+        ...mockCommonFields({ id: `0xuniswapx_cancel_${status}`, account: mockAccount1, status }),
+      } as InterfaceTransactionDetails,
+      formatNumber: formatNumberOrString,
+    })
+
+    expect(result?.title).toBeTruthy()
+    expect(result?.descriptor).toBeTruthy()
+  })
+
+  it.each([
     [TradingApi.EarnAction.DEPOSIT, '1.00 USDC to Earn'],
     [TradingApi.EarnAction.WITHDRAW, '1.00 DAI from Earn'],
   ])('uses Earn plan descriptors for %s local plans', async (earnAction, descriptor) => {

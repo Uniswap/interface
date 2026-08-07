@@ -5,8 +5,8 @@ import { ChevronsIn } from 'ui/src/components/icons/ChevronsIn'
 import { ChevronsOut } from 'ui/src/components/icons/ChevronsOut'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import { getIssuerCount } from 'uniswap/src/data/rest/rwa/rwaMetrics'
-import type { Rwa } from 'uniswap/src/data/rest/rwa/types'
+import { getIssuerCount } from 'uniswap/src/data/apiClients/dataApiService/rwa/rwaMetrics'
+import type { Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { TABLE_SUBLINE_HEIGHT, type ExpandableAssetGroupVariant } from 'uniswap/src/features/expandableAsset/types'
 
 export type ExpandableParentAssetIdentityProps = {

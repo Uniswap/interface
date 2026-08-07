@@ -118,6 +118,30 @@ export interface UniswapXOrderExtension {
   // The Unix timestamp when the UniswapX order expires and can no longer be filled
   // TODO(CONS-344): Unify `expiry` field with wallet
   expiry?: number
+
+  // Cancellation tracking fields (all optional — no store migration required).
+  // Written by the id-keyed cancel reducers in slice.ts; timers are persisted deadlines
+  // evaluated on poller ticks (see features/transactions/cancel/cancelTimeoutStateMachine.ts).
+
+  // Hash of the Permit2 nonce-invalidation tx submitted to cancel this order
+  cancelTxHash?: string
+  // Epoch ms when the cancel tx was broadcast (wallet stack: sign-and-detach time)
+  cancelBroadcastTimeMs?: number
+  // Persisted deadline (epoch ms) after which the cancellation is considered timed out
+  cancelTimeoutAtMs?: number
+  // Epoch ms when the user initiated the cancellation; orphan-timer anchor for records
+  // that never reached broadcast (lazy-stamped for legacy records)
+  cancelInitiatedTimeMs?: number
+  // Set when the cancellation could not apply because the order was already filled
+  cancelFailedReason?: 'filled'
+  // Epoch ms when the timeout alert first fired for the current deadline. The alert itself is
+  // derived (isCancelTimedOut); this one-time write exists so memoized passive surfaces get a
+  // fresh order reference and re-render once the deadline passes. Cleared on failure/Revert.
+  cancelAlertShownAtMs?: number
+  // Cancel tx receipt observed on-chain; order converges via backend adjudication, never receipt alone
+  cancelTxMined?: boolean
+  // Hashes of earlier cancel attempts superseded by the Revert flow
+  supersededCancelTxHashes?: string[]
 }
 
 export interface ClassicTransactionExtension {
@@ -351,6 +375,8 @@ export enum TransactionType {
   ToucanBid = 'toucan-bid',
   ToucanWithdrawBidAndClaimTokens = 'toucan-withdraw-bid-and-claim-tokens',
   UniswapXOrder = 'uniswapx-order',
+  // Permit2 nonce-invalidation tx that cancels UniswapX order(s). Persisted value — never change.
+  UniswapXCancel = 'uniswapx-cancel',
 
   AuctionBid = 'auction-bid',
   AuctionClaimed = 'auction-claimed',
@@ -447,8 +473,9 @@ export interface BaseSwapTransactionInfo extends BaseTransactionInfo, PlanSwapTr
   simulationFailureReasons?: TradingApi.TransactionFailureReason[]
   dappInfo?: DappInfoTransactionDetails
 
-  /** Whether gas for this swap was sponsored, captured at submit so the finalization-time
-   *  Swap Transaction Completed/Failed event can report it. See getSponsorshipAnalyticsProperties. */
+  /** Whether a paymaster actually paid gas for this swap (not just the quote's sponsorship offer),
+   *  captured at submit so the finalization-time Swap Transaction Completed/Failed event can report
+   *  it. See isGasSponsoredExecution. */
   isSponsored?: boolean
   /** Machine-readable sponsorship campaign id, captured at submit alongside `isSponsored`. */
   sponsorshipCampaignId?: string
@@ -472,8 +499,9 @@ export interface BridgeTransactionInfo extends BaseTransactionInfo, PlanSwapTran
   gasUseEstimate?: string
   routingDappInfo?: DappInfoTransactionDetails
   depositConfirmed?: boolean // interface only
-  /** Whether gas for this bridge was sponsored, captured at submit so the finalization-time
-   *  Swap Transaction Completed/Failed event can report it. See getSponsorshipAnalyticsProperties. */
+  /** Whether a paymaster actually paid gas for this bridge (not just the quote's sponsorship offer),
+   *  captured at submit so the finalization-time Swap Transaction Completed/Failed event can report
+   *  it. See isGasSponsoredExecution. */
   isSponsored?: boolean
   /** Machine-readable sponsorship campaign id, captured at submit alongside `isSponsored`. */
   sponsorshipCampaignId?: string
@@ -617,6 +645,7 @@ export interface NFTTradeTransactionInfo extends BaseTransactionInfo {
   purchaseCurrencyId: string
   purchaseCurrencyAmountRaw: string
   tradeType: NFTTradeType
+  dappInfo?: DappInfoTransactionDetails
 }
 
 export interface NFTApproveTransactionInfo extends BaseTransactionInfo {
@@ -696,7 +725,7 @@ export const LIQUIDITY_TRANSACTION_TYPES: TransactionType[] = [
 
 export interface LpIncentivesClaimTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.LPIncentivesClaimRewards
-  tokenAddress: string
+  tokenAddresses: string[]
 }
 
 export interface ToucanBidTransactionInfo extends BaseTransactionInfo {
@@ -806,6 +835,12 @@ export interface MigrateV2LiquidityToV3TransactionInfo extends BaseTransactionIn
   isFork: boolean
 }
 
+export interface UniswapXCancelTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.UniswapXCancel
+  // Order hash(es) this Permit2 nonce invalidation cancels (one word/mask can cover several orders)
+  orderHashes: string[]
+}
+
 export interface PlanTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.Plan
   planId: string
@@ -861,6 +896,7 @@ export type TransactionTypeInfo =
   | AuctionClaimedTransactionInfo
   | AuctionExitedTransactionInfo
   | AuctionLaunchTransactionInfo
+  | UniswapXCancelTransactionInfo
 
 /**
  * Typeguard to check if a `TransactionTypeInfo` has a specific attribute.

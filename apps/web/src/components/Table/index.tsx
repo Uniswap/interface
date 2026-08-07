@@ -32,6 +32,9 @@ const TableContainer = styled(Flex, {
   className: 'scrollbar-hidden',
 })
 
+// When container virtualization is active, useTableVirtualizer resolves THIS element as its
+// scroll parent (via the body node's parentElement). Keep it the direct parent of TableBody's
+// root node and the sole scroll container, or container virtualization silently breaks.
 const TableBodyContainer = styled(Flex, {
   width: '100%',
   position: 'relative',
@@ -45,6 +48,9 @@ const TableBodyContainer = styled(Flex, {
     overscrollBehaviorX: 'none',
     overflowX: 'auto',
     overflowY: 'auto',
+    // Sorting reorders keyed row nodes; without this, browser scroll anchoring
+    // follows a moved row to an arbitrary scroll position
+    overflowAnchor: 'none',
   },
   variants: {
     hasHiddenRows: {
@@ -307,7 +313,7 @@ export function Table<T extends RowData>({
             subRowHeight={subRowHeight}
             hasPinnedColumns={hasPinnedColumns}
             extendedPinnedColumnDivider={extendedPinnedColumnDivider}
-            virtualized={virtualized}
+            virtualization={virtualized ? (maxHeight ? 'container' : 'window') : undefined}
             // @ts-ignore
             table={table}
             ref={tableBodyRef}

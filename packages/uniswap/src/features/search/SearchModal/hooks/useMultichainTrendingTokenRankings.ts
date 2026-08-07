@@ -1,7 +1,7 @@
 import { ALL_NETWORKS_ARG, CustomRankingType, GqlResult } from '@universe/api'
 import { useMemo } from 'react'
-import { useTokenRankingsQuery } from 'uniswap/src/data/rest/tokenRankings'
-import { tokenRankingsStatToSearchResult } from 'uniswap/src/data/rest/tokenRankingsMultichain'
+import { useTokenRankingsQuery } from 'uniswap/src/data/apiClients/dataApiService/exploreV1/tokenRankings'
+import { tokenRankingsStatToSearchResult } from 'uniswap/src/data/apiClients/dataApiService/exploreV1/tokenRankingsMultichain'
 import { MultichainSearchResult } from 'uniswap/src/features/dataApi/types'
 
 /**

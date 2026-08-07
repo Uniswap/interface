@@ -96,8 +96,9 @@ vi.mock('@universe/gating', async (importOriginal) => {
 })
 
 // Mirrors uniswap/jest-package-mocks
-vi.mock('uniswap/src/data/rest/tokenRankings', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('uniswap/src/data/rest/tokenRankings')>()
+vi.mock('uniswap/src/data/apiClients/dataApiService/exploreV1/tokenRankings', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('uniswap/src/data/apiClients/dataApiService/exploreV1/tokenRankings')>()
   return {
     ...actual,
     useTokenRankingsQuery: vi.fn(() => ({ data: undefined, isLoading: false, isFetching: false, error: null })),

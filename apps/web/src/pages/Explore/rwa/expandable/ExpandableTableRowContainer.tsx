@@ -95,7 +95,7 @@ export function ExpandableTableRowContainer({
           </Flex>
         </IssuerTableRowHoverProvider>
         {shouldRenderIssuerPanel ? (
-          /* oxlint-disable-next-line eslint-plugin-react(forbid-elements) -- issuer reveal clip inside unified shell */
+          /* oxlint-disable-next-line react/forbid-elements -- issuer reveal clip inside unified shell */
           <div
             aria-hidden={!isExpanded}
             style={{

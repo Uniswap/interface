@@ -6,6 +6,7 @@ import {
   type BaseTrade,
   createCurrencyAmount,
   createBaseTradeAmounts,
+  getQuotePriceDifference,
 } from 'uniswap/src/features/transactions/swap/types/base'
 import { getTradingApiSwapFee } from 'uniswap/src/features/transactions/swap/types/getTradingApiSwapFee'
 
@@ -14,7 +15,6 @@ export type BridgeTrade = BaseTrade<BridgeQuoteResponse, TradingApi.Routing.BRID
   readonly inputTax: Percent
   readonly outputTax: Percent
   readonly slippageTolerance: undefined
-  readonly priceImpact: undefined
   readonly deadline: undefined
 }
 
@@ -46,7 +46,7 @@ export function createBridgeTrade({
     inputTax: ZERO_PERCENT,
     outputTax: ZERO_PERCENT,
     slippageTolerance: undefined,
-    priceImpact: undefined,
+    priceDifference: getQuotePriceDifference(quote),
     deadline: undefined,
     quoteOutputAmount: amounts.outputAmount,
     quoteOutputAmountUserWillReceive: getBridgeQuoteOutputAmountUserWillReceive({

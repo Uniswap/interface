@@ -35,9 +35,18 @@ describe('usePortfolioChartDetailsHeartbeatCoordinator', () => {
     const { refresh } = mockUseHeartbeatCoordinator.mock.calls[0]![0]
     await refresh()
 
-    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({ queryKey: [ReactQueryCacheKey.GetWalletBalances] })
-    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({ queryKey: [ReactQueryCacheKey.GetPortfolioChart] })
-    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({ queryKey: [ReactQueryCacheKey.GetWalletProfitLoss] })
+    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({
+      queryKey: [ReactQueryCacheKey.GetWalletBalances],
+      type: 'active',
+    })
+    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({
+      queryKey: [ReactQueryCacheKey.GetPortfolioChart],
+      type: 'active',
+    })
+    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({
+      queryKey: [ReactQueryCacheKey.GetWalletProfitLoss],
+      type: 'active',
+    })
   })
 
   it('only refetches balances on priceRefresh', async () => {
@@ -47,6 +56,9 @@ describe('usePortfolioChartDetailsHeartbeatCoordinator', () => {
     await priceRefresh()
 
     expect(mockQueryClientRefetchQueries).toHaveBeenCalledTimes(1)
-    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({ queryKey: [ReactQueryCacheKey.GetWalletBalances] })
+    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({
+      queryKey: [ReactQueryCacheKey.GetWalletBalances],
+      type: 'active',
+    })
   })
 })

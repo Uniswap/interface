@@ -5,6 +5,7 @@ import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { getHighestBalanceChain } from '~/pages/TokenDetails/hooks/getHighestBalanceChain'
 import { getHighestVolumeChain } from '~/pages/TokenDetails/hooks/getHighestVolumeChain'
 import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultichainTokenEntries'
+import { useTDPPerChainVolume } from '~/pages/TokenDetails/hooks/useTDPPerChainVolume'
 
 /**
  * Currency for the TDP swap widget. Follows the network filter when set, otherwise targets the
@@ -12,15 +13,15 @@ import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultich
  * balances exist, then to the URL-path currency.
  */
 export function useTDPSwapCurrency(): Currency {
-  const { currency, multiChainMap, selectedMultichainChainId, tokenQuery } = useTDPStore((s) => ({
+  const { currency, multiChainMap, selectedMultichainChainId } = useTDPStore((s) => ({
     currency: s.currency!,
     multiChainMap: s.multiChainMap,
     selectedMultichainChainId: s.selectedMultichainChainId,
-    tokenQuery: s.tokenQuery,
   }))
 
   const multichainEntries = useMultichainTokenEntries(multiChainMap)
   const isMultiChainAsset = multichainEntries.length > 1
+  const volumeByChainId = useTDPPerChainVolume({ enabled: isMultiChainAsset })
 
   const targetEntry = useMemo(() => {
     if (!isMultiChainAsset) {
@@ -35,15 +36,9 @@ export function useTDPSwapCurrency(): Currency {
     // No filter → prefer the chain where the user holds the highest balance, fall back to highest 24h volume
     return (
       getHighestBalanceChain(multiChainMap, multichainEntries) ??
-      getHighestVolumeChain(tokenQuery.data?.token?.project?.tokens, multichainEntries)
+      getHighestVolumeChain(volumeByChainId, multichainEntries)
     )
-  }, [
-    isMultiChainAsset,
-    selectedMultichainChainId,
-    multichainEntries,
-    multiChainMap,
-    tokenQuery.data?.token?.project?.tokens,
-  ])
+  }, [isMultiChainAsset, selectedMultichainChainId, multichainEntries, multiChainMap, volumeByChainId])
 
   return useMemo(() => currencyForSelectedMultichainDeployment(currency, targetEntry), [currency, targetEntry])
 }

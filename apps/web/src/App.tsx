@@ -1,9 +1,9 @@
+import { EXTENSION_PASSKEY_AUTH_PATH } from '@universe/embedded-wallet'
 import { useEffect, useLayoutEffect } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Navigate, useLocation } from 'react-router'
 import { useSporeColors } from 'ui/src'
 import { initializeScrollWatcher } from 'uniswap/src/components/modals/ScrollLock'
-import { EXTENSION_PASSKEY_AUTH_PATH } from 'uniswap/src/features/passkey/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ResetPageScrollEffect } from '~/app/bootstrap/ResetPageScroll'
 import { ResetPortfolioChainOnEntryEffect } from '~/app/bootstrap/ResetPortfolioChainOnEntry'
@@ -14,6 +14,8 @@ import { ErrorBoundary } from '~/components/ErrorBoundary'
 import { useFeatureFlagUrlOverrides } from '~/featureFlags/useFeatureFlagUrlOverrides'
 import { useDynamicMetatags } from '~/pages/metatags'
 import { findRouteByPath } from '~/pages/RouteDefinitions'
+import { useEmbedSession } from '~/pages/Swap/embedContext'
+import { getSwapCapabilities } from '~/pages/Swap/swapCapabilities'
 import { isPathBlocked } from '~/utils/blockedPaths'
 import { MICROSITE_LINK } from '~/utils/openDownloadApp'
 import { getCurrentPageFromLocation } from '~/utils/urlRoutes'
@@ -26,6 +28,9 @@ export function App() {
   const location = useLocation()
   const { pathname } = location
   const currentPage = getCurrentPageFromLocation(pathname)
+
+  // Captured once at mount so in-frame client-side nav can't flip embedded-ness or the surface.
+  const { embedded, view: embedView } = useEmbedSession()
 
   useFeatureFlagUrlOverrides()
 
@@ -55,6 +60,8 @@ export function App() {
   }
 
   const shouldOverridePageLayout = OVERRIDE_PAGE_LAYOUT.includes(pathname)
+  // `view=swap` drops the app chrome and mounts SwapPage bare; the default full view keeps it.
+  const embedCapabilities = getSwapCapabilities(embedView)
 
   return (
     <ErrorBoundary>
@@ -83,7 +90,18 @@ export function App() {
         <UserPropertyUpdater />
         <ResetPageScrollEffect />
         <ResetPortfolioChainOnEntryEffect />
-        {shouldOverridePageLayout ? <Body shouldRenderAppChrome={false} /> : <AppLayout />}
+        {embedded ? (
+          embedCapabilities.appChrome ? (
+            <AppLayout embedded embedView={embedView} />
+          ) : (
+            // Swap-only surface: no chrome; SwapPage strips itself via useEmbedView.
+            <Body shouldRenderAppChrome={false} embedded embedView={embedView} />
+          )
+        ) : shouldOverridePageLayout ? (
+          <Body shouldRenderAppChrome={false} />
+        ) : (
+          <AppLayout />
+        )}
       </Trace>
     </ErrorBoundary>
   )

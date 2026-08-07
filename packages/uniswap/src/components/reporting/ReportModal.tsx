@@ -26,17 +26,21 @@ export type ReportOption<T extends string> = {
 export type ReportModalProps<T extends string> = {
   modalName: ModalNameType
   modalTitle: string
+  modalSubtitle?: string
   icon: GeneratedIcon
   reportOptions: ReportOption<T>[]
+  submitButtonText?: string
   submitReport: ({ checkedItems, reportTexts }: { checkedItems: Set<T>; reportTexts: Map<T, string> }) => void
 }
 
 export function ReportModal<T extends string>({
   modalName,
   modalTitle,
+  modalSubtitle,
   icon: Icon,
   reportOptions,
   isOpen,
+  submitButtonText,
   submitReport,
   onClose,
 }: ReportModalProps<T> & BaseModalProps): JSX.Element {
@@ -94,6 +98,11 @@ export function ReportModal<T extends string>({
             </Flex>
             <Text variant="subheading1">{modalTitle}</Text>
           </Flex>
+          {modalSubtitle && (
+            <Text variant="body3" color="$neutral2">
+              {modalSubtitle}
+            </Text>
+          )}
           <Flex gap="$spacing16">
             {reportOptions.map((option: ReportOption<T>) => {
               if (keyboardHeight > 0 && !(option.additionalTextInput && checkedItems.has(option.value))) {
@@ -152,7 +161,8 @@ export function ReportModal<T extends string>({
                 submitReport({ checkedItems, reportTexts: sanitizedTexts })
               }}
             >
-              {checkedItems.size > 0 ? t('common.submit') : t('reporting.token.report.button.disabled')}
+              {submitButtonText ??
+                (checkedItems.size > 0 ? t('common.submit') : t('reporting.token.report.button.disabled'))}
             </Button>
           </Flex>
         </Flex>

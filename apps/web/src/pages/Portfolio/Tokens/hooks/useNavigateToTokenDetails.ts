@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import type { TdpChainSelection } from 'uniswap/src/utils/linking'
 import { useEvent } from 'utilities/src/react/hooks'
-import { getTokenDetailsURL } from '~/appGraphql/data/util'
+import { getTokenDetailsURL } from '~/data/util'
 import { getTdpChainQueryParam } from '~/utils/params/chainQueryParam'
 
 /**

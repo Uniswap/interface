@@ -5,7 +5,6 @@ import type {
   GetTokenHistoryPriceResponse,
 } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { GraphQLApi } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { UTCTimestamp } from 'lightweight-charts'
 import { useEffect, useMemo, useReducer, useRef } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
@@ -14,10 +13,10 @@ import {
   getGetTokenHistoryPriceQueryOptions,
 } from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { useIsV2TokensEnabled } from 'uniswap/src/features/dataApi/tokenDetails/useIsV2TokensEnabled'
 import { toRestHistoryDuration } from 'uniswap/src/features/dataApi/tokenDetails/useTokenPriceHistoryRest'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { TimePeriod } from '~/appGraphql/data/util'
 import { PriceChartData } from '~/components/Charts/PriceChart'
 import {
   appendCurrentValue,
@@ -28,6 +27,7 @@ import {
   isZeroOhlcSeries,
   PriceChartType,
 } from '~/components/Charts/utils'
+import { TimePeriod } from '~/data/util'
 import { useRestHistoryTarget } from '~/hooks/useRestHistoryTarget'
 import { usePageVisibility } from '~/lib/hooks/usePageVisibility'
 
@@ -101,14 +101,17 @@ export function useTokenPriceChartData({
   priceChartType,
   currentPriceOverride,
   preferProjectMarketData = false,
+  disablePricePolling = false,
 }: {
   variables: TokenPriceChartQueryVariables
   skip: boolean
   priceChartType: PriceChartType
   currentPriceOverride?: number
   preferProjectMarketData?: boolean
+  /** Disables the legacy subgraph query's own 30s poll — pass true where a page heartbeat owns the price cadence (see useTokenPriceChartPanel). */
+  disablePricePolling?: boolean
 }): ChartQueryResult<PriceChartData, ChartType.PRICE> & { disableCandlestickUI: boolean } {
-  const isV2TokensEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
+  const isV2TokensEnabled = useIsV2TokensEnabled()
   // RWA/project-market data has no REST equivalent yet, so those tokens keep using GraphQL even when V2 is on.
   const shouldUseV2Tokens = isV2TokensEnabled && !preferProjectMarketData
   const [fallback, enablePriceHistoryFallback] = useReducer(() => true, false)
@@ -126,7 +129,7 @@ export function useTokenPriceChartData({
   } = GraphQLApi.useTokenPriceQuery({
     variables: { ...variables, fallback },
     skip: skip || shouldUseV2Tokens,
-    pollInterval: isVisible ? PollingInterval.KindaFast : 0,
+    pollInterval: isVisible && !disablePricePolling ? PollingInterval.KindaFast : 0,
   })
 
   // Fetch CoinGecko data for line charts to prefer its priceHistory
@@ -153,7 +156,7 @@ export function useTokenPriceChartData({
     // IMPORTANT: Must use no-cache to prevent infinite query loop.
     //
     // TokenPriceHistory returns Token objects (with chain/address) nested inside tokenProjects.
-    // Apollo normalizes these into the shared Token[chain, address] cache (defined in packages/uniswap/src/data/cache.ts).
+    // Apollo normalizes these into the shared Token[chain, address] cache (defined in packages/uniswap/src/data/graphql/cache.ts).
     // This triggers watchers on TokenWeb and TokenPrice queries (which use the same cache keys),
     // causing them to re-emit, which triggers re-renders, which re-executes this query → infinite loop.
     fetchPolicy: 'no-cache',
@@ -161,11 +164,11 @@ export function useTokenPriceChartData({
 
   const prevVisibleRef = useRef(isVisible)
   useEffect(() => {
-    if (isVisible && !prevVisibleRef.current && !skip && !shouldUseV2Tokens) {
+    if (isVisible && !prevVisibleRef.current && !skip && !shouldUseV2Tokens && !disablePricePolling) {
       refetchSubgraph().catch(() => {})
     }
     prevVisibleRef.current = isVisible
-  }, [isVisible, skip, shouldUseV2Tokens, refetchSubgraph])
+  }, [isVisible, skip, shouldUseV2Tokens, disablePricePolling, refetchSubgraph])
 
   const loading = subgraphLoading || (shouldFetchCoinGeckoHistory && coinGeckoLoading)
 
@@ -173,14 +176,14 @@ export function useTokenPriceChartData({
   const restTarget = useRestHistoryTarget(variables)
   const useRestOhlc = effectivePriceChartType === PriceChartType.CANDLESTICK && !fallback
   const restCommonEnabled = shouldUseV2Tokens && !skip && !!restTarget
-  const { data: restOhlcEntries, isLoading: restOhlcLoading } = useQuery(
+  const { data: restOhlcEntries, isPending: restOhlcLoading } = useQuery(
     getGetTokenHistoryOHLCQueryOptions({
       params: { target: restTarget, duration: toRestHistoryDuration(variables.duration) },
       enabled: restCommonEnabled && useRestOhlc,
       select: selectOhlcChartData,
     }),
   )
-  const { data: restPriceEntries, isLoading: restPriceLoading } = useQuery(
+  const { data: restPriceEntries, isPending: restPriceLoading } = useQuery(
     getGetTokenHistoryPriceQueryOptions({
       params: { target: restTarget, duration: toRestHistoryDuration(variables.duration) },
       enabled: restCommonEnabled && !useRestOhlc,

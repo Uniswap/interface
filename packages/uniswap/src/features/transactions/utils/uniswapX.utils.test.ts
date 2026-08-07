@@ -9,8 +9,11 @@ import {
 import {
   convertOrderStatusToTransactionStatus,
   convertOrderTypeToRouting,
+  isLimitCancellable,
   isLimitOrder,
+  isUniswapXOrderPending,
 } from 'uniswap/src/features/transactions/utils/uniswapX.utils'
+import { uniswapXOrderDetails } from 'uniswap/src/test/fixtures'
 
 describe('UniswapX Utils', () => {
   describe('convertOrderTypeToRouting', () => {
@@ -90,6 +93,32 @@ describe('UniswapX Utils', () => {
 
     it('should return false for regular UniswapX orders', () => {
       expect(isLimitOrder(mockRegularUniswapXOrder)).toBe(false)
+    })
+  })
+
+  // Tripwire: the cancel-flow state machine relies on `Cancelling` staying within the existing
+  // status enum (no new TransactionStatus) and on these membership tables. If these fail, the
+  // cancel timeout/alert flow needs re-review — do not casually update.
+  describe('cancel-flow status membership tripwires', () => {
+    it.each([
+      [TransactionStatus.Pending, true],
+      [TransactionStatus.Cancelling, true],
+      [TransactionStatus.InsufficientFunds, true],
+      [TransactionStatus.Success, false],
+      [TransactionStatus.Canceled, false],
+      [TransactionStatus.Expired, false],
+    ])('isUniswapXOrderPending(%s) === %s', (status, expected) => {
+      expect(isUniswapXOrderPending(uniswapXOrderDetails({ status }))).toBe(expected)
+    })
+
+    it.each([
+      [TransactionStatus.Pending, true],
+      [TransactionStatus.InsufficientFunds, true],
+      [TransactionStatus.Cancelling, false],
+      [TransactionStatus.Success, false],
+      [TransactionStatus.Canceled, false],
+    ])('isLimitCancellable(%s) === %s', (status, expected) => {
+      expect(isLimitCancellable(uniswapXOrderDetails({ status }))).toBe(expected)
     })
   })
 })

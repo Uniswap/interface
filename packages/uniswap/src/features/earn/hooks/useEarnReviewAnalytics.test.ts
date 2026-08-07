@@ -108,6 +108,14 @@ describe(useEarnReviewAnalytics, () => {
     )
   })
 
+  it('does not log an errorless failure before plan execution has been submitted', () => {
+    const { result } = renderAnalytics()
+
+    act(() => result.current.logFailed(undefined))
+
+    expect(mockSendAnalyticsEvent).not.toHaveBeenCalled()
+  })
+
   it('merges submitted failure details into the finalized failure event', () => {
     const { result } = renderAnalytics()
     const error = new Error('plan failed')
@@ -130,6 +138,81 @@ describe(useEarnReviewAnalytics, () => {
     )
   })
 
+  it('logs submitted failures immediately when plan finalization will not run', () => {
+    const { result } = renderAnalytics()
+    const error = new Error('plan initialization failed')
+    error.name = 'PlanInitializationError'
+
+    act(() => {
+      result.current.logSubmitted()
+      result.current.logFailed(error, { willFinalize: false })
+    })
+
+    expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(
+      EarnEventName.EarnDepositFailed,
+      expect.objectContaining({
+        error_message: 'plan initialization failed',
+        error_name: 'PlanInitializationError',
+      }),
+    )
+  })
+
+  it('flushes submitted failures when plan finalization is nonterminal', () => {
+    const { result } = renderAnalytics()
+    const error = new Error('plan remains pending')
+    error.name = 'PlanPendingError'
+
+    act(() => {
+      result.current.logSubmitted()
+      result.current.logFailed(error, { willFinalize: true })
+      result.current.logFinalized({ planId: 'plan-1', status: TransactionStatus.Pending })
+      result.current.logFinalized({ planId: 'plan-1', status: TransactionStatus.Pending })
+      result.current.logFinalized({ planId: 'plan-1', status: TransactionStatus.Success })
+    })
+
+    expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(
+      EarnEventName.EarnDepositFailed,
+      expect.objectContaining({
+        error_message: 'plan remains pending',
+        error_name: 'PlanPendingError',
+        plan_id: 'plan-1',
+      }),
+    )
+    expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(
+      EarnEventName.EarnDepositCompleted,
+      expect.objectContaining({ plan_id: 'plan-1' }),
+    )
+    expect(
+      mockSendAnalyticsEvent.mock.calls.filter(([eventName]) => eventName === EarnEventName.EarnDepositFailed),
+    ).toHaveLength(1)
+  })
+
+  it('does not log a second failure when a pending plan later fails', () => {
+    const { result } = renderAnalytics()
+    const error = new Error('plan remains pending')
+    error.name = 'PlanPendingError'
+
+    act(() => {
+      result.current.logSubmitted()
+      result.current.logFailed(error, { willFinalize: true })
+      result.current.logFinalized({ planId: 'plan-1', status: TransactionStatus.Pending })
+      result.current.logFinalized({ planId: 'plan-1', status: TransactionStatus.Failed })
+    })
+
+    expect(
+      mockSendAnalyticsEvent.mock.calls.filter(([eventName]) => eventName === EarnEventName.EarnDepositFailed),
+    ).toEqual([
+      [
+        EarnEventName.EarnDepositFailed,
+        expect.objectContaining({
+          error_message: 'plan remains pending',
+          error_name: 'PlanPendingError',
+          plan_id: 'plan-1',
+        }),
+      ],
+    ])
+  })
+
   it('logs completed events with the plan id when finalization succeeds', () => {
     const { result } = renderAnalytics()
 
@@ -150,6 +233,49 @@ describe(useEarnReviewAnalytics, () => {
     })
 
     expect(mockSendAnalyticsEvent).toHaveBeenCalledTimes(1)
+    expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(
+      EarnEventName.EarnDepositCompleted,
+      expect.objectContaining({ plan_id: 'plan-1' }),
+    )
+  })
+
+  it('logs one failed outcome per submitted attempt when the plan id is reused', () => {
+    const { result } = renderAnalytics()
+
+    act(() => {
+      result.current.logSubmitted()
+      result.current.logFailed(new Error('first attempt failed'))
+      result.current.logFinalized({ planId: 'plan-1', status: TransactionStatus.Failed })
+      result.current.logSubmitted()
+      result.current.logFailed(new Error('second attempt failed'))
+      result.current.logFinalized({ planId: 'plan-1', status: TransactionStatus.Failed })
+    })
+
+    expect(
+      mockSendAnalyticsEvent.mock.calls.filter(([eventName]) => eventName === EarnEventName.EarnDepositFailed),
+    ).toEqual([
+      [
+        EarnEventName.EarnDepositFailed,
+        expect.objectContaining({ error_message: 'first attempt failed', plan_id: 'plan-1' }),
+      ],
+      [
+        EarnEventName.EarnDepositFailed,
+        expect.objectContaining({ error_message: 'second attempt failed', plan_id: 'plan-1' }),
+      ],
+    ])
+  })
+
+  it('logs a completed outcome when a reused plan id succeeds on a later attempt', () => {
+    const { result } = renderAnalytics()
+
+    act(() => {
+      result.current.logSubmitted()
+      result.current.logFailed(new Error('first attempt failed'))
+      result.current.logFinalized({ planId: 'plan-1', status: TransactionStatus.Failed })
+      result.current.logSubmitted()
+      result.current.logFinalized({ planId: 'plan-1', status: TransactionStatus.Success })
+    })
+
     expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(
       EarnEventName.EarnDepositCompleted,
       expect.objectContaining({ plan_id: 'plan-1' }),

@@ -4,13 +4,15 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { EarnSparkle } from 'ui/src/components/icons/EarnSparkle'
 import { iconSizes } from 'ui/src/theme'
+import { CopyHelper } from 'uniswap/src/components/CopyHelper/CopyHelper'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { getEarnPlanTransactionType } from 'uniswap/src/features/earn/planActivityTitles'
 import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isPlanTransactionInfo } from 'uniswap/src/features/transactions/types/utils'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { shortenHash } from 'utilities/src/addresses'
-import { AddressHoverCard } from '~/components/AddressHoverCard/AddressHoverCard'
+import { AddressHoverCard, useShowsAddressHoverCard } from '~/components/AddressHoverCard/AddressHoverCard'
 import { InternalLink } from '~/components/InternalLink'
 import type { ActivityProtocolInfo } from '~/pages/Portfolio/Activity/ActivityTable/activityTableModels'
 import { AddressWithAvatar } from '~/pages/Portfolio/Activity/ActivityTable/AddressWithAvatar'
@@ -109,6 +111,7 @@ function getActivityAddressDisplay({
       }
     case TransactionType.Swap:
     case TransactionType.Bridge:
+    case TransactionType.UniswapXCancel:
       return {
         label: t('transaction.details.transaction'),
         content: transaction.hash ? { type: 'transactionHash', hash: transaction.hash } : undefined,
@@ -137,6 +140,9 @@ function getActivityAddressDisplay({
   }
 }
 
+// Prevents copy clicks from bubbling to the row, which opens the transaction details modal
+const stopPropagation = (e: { stopPropagation: () => void }): void => e.stopPropagation()
+
 function PrioritizedContent({
   content,
   t,
@@ -144,6 +150,8 @@ function PrioritizedContent({
   content: ActivityAddressContent | undefined
   t: TFunction
 }): JSX.Element | null {
+  const showsHoverCard = useShowsAddressHoverCard(content?.type === 'address' ? content.address : undefined)
+
   if (!content) {
     return null
   }
@@ -185,22 +193,44 @@ function PrioritizedContent({
       )
     case 'transactionHash':
       return (
-        <Text variant="body3" color="$neutral1">
-          {shortenHash(content.hash)}
-        </Text>
+        <Flex onPress={stopPropagation}>
+          <CopyHelper
+            toCopy={content.hash}
+            iconPosition="right"
+            iconSize={iconSizes.icon16}
+            iconColor="$neutral2"
+            testID={TestID.PortfolioActivityCopyTransactionHash}
+          >
+            <Text variant="body3" color="$neutral1">
+              {shortenHash(content.hash)}
+            </Text>
+          </CopyHelper>
+        </Flex>
       )
     case 'address': {
       const chainInfo = getChainInfo(content.chainId)
 
       return (
-        <AddressHoverCard address={content.address} platform={chainInfo.platform}>
-          <InternalLink
-            to={buildPortfolioUrl({ externalAddress: content.address })}
-            hoverStyle={ClickableTamaguiStyle.hoverStyle}
-          >
-            <AddressWithAvatar address={content.address} />
-          </InternalLink>
-        </AddressHoverCard>
+        <Flex row alignItems="center" gap="$gap4">
+          <AddressHoverCard address={content.address} platform={chainInfo.platform}>
+            <InternalLink
+              to={buildPortfolioUrl({ externalAddress: content.address })}
+              hoverStyle={ClickableTamaguiStyle.hoverStyle}
+            >
+              <AddressWithAvatar address={content.address} />
+            </InternalLink>
+          </AddressHoverCard>
+          {!showsHoverCard && (
+            <Flex onPress={stopPropagation}>
+              <CopyHelper
+                toCopy={content.address}
+                iconSize={iconSizes.icon16}
+                iconColor="$neutral2"
+                testID={TestID.PortfolioActivityCopyAddress}
+              />
+            </Flex>
+          )}
+        </Flex>
       )
     }
     default:

@@ -5,7 +5,7 @@ import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import type { Block } from '~/chains'
 import { wagmiConfig } from '~/connection/wagmiConfig'
-import { estimateFutureBlockTimestamp } from '~/utils/estimateFutureBlockTimestamp'
+import { calibratedBlockToTimestamp } from '~/utils/blockToTimestamp'
 
 /**
  * Fetches current block numbers and timestamps for specified chains.
@@ -137,33 +137,52 @@ export function useGetBlockTimestamps(
   return useMemo(() => {
     const timestampMap = new Map<string, bigint>()
 
+    // Earliest fetched past block per chain — longest baseline to the live block, so the
+    // calibrated rate averages over the auction window rather than a few noisy blocks.
+    const pastAnchorByChain = new Map<EVMUniverseChainId, { block: number; timestampMs: number }>()
+
     // Add past block timestamps from RPC
     pastBlockRequests.forEach((request, index) => {
       const result = pastBlockResults[index]
       if (result.data !== undefined) {
         const key = makeBlockTimestampKey(request.chainId, request.blockNumber)
         timestampMap.set(key, result.data)
+
+        const block = Number(request.blockNumber)
+        const anchor = pastAnchorByChain.get(request.chainId)
+        if (!anchor || block < anchor.block) {
+          pastAnchorByChain.set(request.chainId, { block, timestampMs: Number(result.data) * 1000 })
+        }
       }
     })
 
-    // Estimate future block timestamps
+    // Estimate future block timestamps, calibrating the block rate against a real past
+    // block when one is available. On demand-driven-block chains (e.g. Arbitrum Orbit)
+    // the chain-constant blockTimeMs can be off several-fold, which inflated/deflated
+    // every start/end countdown derived from these estimates.
     futureBlockRequests.forEach((request) => {
       const currentBlockData = blocksByChain.get(request.chainId)
       if (!currentBlockData || !currentBlockData.number) {
         return
       }
 
-      const estimatedTimestamp = estimateFutureBlockTimestamp({
-        targetBlockNumber: BigInt(request.blockNumber),
-        currentBlockNumber: currentBlockData.number,
-        currentBlockTimestamp: currentBlockData.timestamp,
+      const currentBlock = Number(currentBlockData.number)
+      const currentTimeMs = Number(currentBlockData.timestamp) * 1000
+      const anchor = pastAnchorByChain.get(request.chainId)
+
+      // No past anchor → calibratedBlockToTimestamp falls back to the chain-constant rate
+      // extrapolated from the live block (previous behavior).
+      const estimated = calibratedBlockToTimestamp({
+        block: Number(request.blockNumber),
+        anchorBlock: anchor?.block ?? currentBlock,
+        anchorTime: new Date(anchor?.timestampMs ?? currentTimeMs),
         chainId: request.chainId,
+        currentBlock,
+        currentTime: new Date(currentTimeMs),
       })
 
-      if (estimatedTimestamp !== undefined) {
-        const key = makeBlockTimestampKey(request.chainId, request.blockNumber)
-        timestampMap.set(key, estimatedTimestamp)
-      }
+      const key = makeBlockTimestampKey(request.chainId, request.blockNumber)
+      timestampMap.set(key, BigInt(Math.floor(estimated.getTime() / 1000)))
     })
 
     return (chainId: EVMUniverseChainId, blockNumber: string): bigint | undefined => {

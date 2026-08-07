@@ -1,0 +1,26 @@
+{
+  "name": "@universe/embedded-wallet",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/embedded-wallet/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "typecheck": {},
+    "test": {
+      "command": "vitest run",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "format": {},
+    "format:check": {},
+    "lint:oxlint": {},
+    "lint:oxlint:fix": {},
+    "lint:oxlint:fast": {},
+    "lint": {},
+    "lint:fix": {},
+    "check": {},
+    "check:fast": {},
+    "check:deps:usage": {}
+  }
+}

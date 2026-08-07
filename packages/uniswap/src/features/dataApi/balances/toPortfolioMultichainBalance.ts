@@ -1,13 +1,13 @@
 import type { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import type { ChainBalance, MultichainBalance, ProtectionInfo } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import type { GraphQLApi, SpamCode } from '@universe/api'
-import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { type PortfolioChainBalance, type PortfolioMultichainBalance } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency, buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
 import {
   getRestCurrencySafetyInfo,
   getRestTokenSafetyInfo,
 } from 'uniswap/src/features/dataApi/utils/getCurrencySafetyInfo'
+import { normalizeTokenAddressForCache } from 'uniswap/src/utils/currencyId'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
 /**

@@ -1,0 +1,30 @@
+{
+  "requestId": "wc-mock-request-id",
+  "routing": "CLASSIC",
+  "permitData": null,
+  "quote": {
+    "chainId": 1,
+    "input": {
+      "amount": "100000000000000000",
+      "token": "0x0000000000000000000000000000000000000000"
+    },
+    "output": {
+      "amount": "300000000",
+      "token": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "recipient": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+    },
+    "swapper": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "tradeType": "EXACT_INPUT",
+    "slippage": 0.5,
+    "route": [],
+    "routeString": "MOCK V3 ETH -> USDT",
+    "quoteId": "wc-mock-quote-id",
+    "gasFee": "1000000000000000",
+    "gasFeeUSD": "5.0",
+    "gasUseEstimate": "150000",
+    "gasPrice": "20000000000",
+    "blockNumber": "25510000",
+    "portionBips": 0,
+    "priceImpact": 0.01
+  }
+}

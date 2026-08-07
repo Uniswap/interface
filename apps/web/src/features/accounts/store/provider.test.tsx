@@ -16,11 +16,18 @@ const mockUsePendingConnectorId = vitest.fn()
 // Mock Solana wallet adapter
 const mockUseSolanaWallet = vitest.fn()
 
+const mockUseRecentConnectorId = vitest.fn()
+
 vi.mock('wagmi', async () => ({
   ...(await vi.importActual('wagmi')),
   useAccount: () => mockUseWagmiAccount(),
   useConnectors: () => mockUseWagmiConnectors(),
   useChainId: () => mockUseWagmiChainId(),
+}))
+
+vi.mock('~/connection/constants', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('~/connection/constants')>()),
+  useRecentConnectorId: () => mockUseRecentConnectorId(),
 }))
 
 vi.mock('@universe/gating', async (importOriginal) => {
@@ -89,6 +96,7 @@ describe('Web Accounts Store Provider', () => {
     mockUseWagmiChainId.mockReturnValue(1)
     mockUsePendingConnectorId.mockReturnValue(null)
     mockUseSolanaWallet.mockReturnValue(createMockSolanaWalletContext())
+    mockUseRecentConnectorId.mockReturnValue(undefined)
   })
 
   describe('Given a connected MetaMask wallet on EVM', () => {
@@ -319,6 +327,41 @@ describe('Web Accounts Store Provider', () => {
     })
   })
 
+  describe('Given a pending mount reconnect', () => {
+    const disconnectedAccount = () =>
+      createMockWagmiAccount({ address: undefined, status: 'disconnected', connector: undefined })
+
+    it('When a recentConnectorId matches a registered connector, Then the aggregate status is connecting (not disconnected) on first render', () => {
+      // Given: wagmi hasn't attached a connector yet, but the app has a record to reconnect from.
+      mockUseWagmiAccount.mockReturnValue(disconnectedAccount())
+      mockUseWagmiConnectors.mockReturnValue([createMockWagmiConnector({ id: 'metamask' })])
+      mockUseSolanaWallet.mockReturnValue({ wallet: null, wallets: [] })
+      mockUseRecentConnectorId.mockReturnValue('metamask')
+
+      // When
+      const { result } = renderWithProvider()
+      const status = result.current.getState().getConnectionStatus('aggregate')
+
+      // Then
+      expect(status).toMatchObject({ isConnecting: true, isDisconnected: false })
+    })
+
+    it('When there is no recentConnectorId, Then the aggregate status stays disconnected', () => {
+      // Given
+      mockUseWagmiAccount.mockReturnValue(disconnectedAccount())
+      mockUseWagmiConnectors.mockReturnValue([createMockWagmiConnector({ id: 'metamask' })])
+      mockUseSolanaWallet.mockReturnValue({ wallet: null, wallets: [] })
+      mockUseRecentConnectorId.mockReturnValue(undefined)
+
+      // When
+      const { result } = renderWithProvider()
+      const status = result.current.getState().getConnectionStatus('aggregate')
+
+      // Then
+      expect(status).toMatchObject({ isConnecting: false, isDisconnected: true })
+    })
+  })
+
   describe('Given a wallet with unsupported chain', () => {
     it('When the provider builds the accounts state, Then it should create a session with unsupported chain info', () => {
       // Given
@@ -505,8 +548,9 @@ describe('Web Accounts Store Provider', () => {
   })
 
   describe('Given a connected wallet without account info', () => {
-    it('When the provider builds the accounts state, Then it should throw an error', () => {
-      // Given
+    it('When the provider builds the accounts state, Then the connector is treated as disconnected', () => {
+      // Given: wagmi can briefly report `connected` with no address while disconnecting (e.g. the
+      // MetaMask Connect SDK firing accountsChanged([])). This must not crash the app.
       const wagmiAccount = createMockWagmiAccount({
         address: undefined,
         chainId: 1,
@@ -515,18 +559,12 @@ describe('Web Accounts Store Provider', () => {
 
       mockUseWagmiAccount.mockReturnValue(wagmiAccount)
 
-      // Mock console.error to prevent test failure
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      // When
+      const { result } = renderWithProvider()
+      const state = result.current.getState()
 
-      // When & Then
-      expect(() => {
-        const { result } = renderWithProvider()
-        // Access the state to trigger the error
-        result.current.getState()
-      }).toThrow('Connected status with no account info provided is not supported.')
-
-      // Clean up
-      consoleSpy.mockRestore()
+      // Then
+      expect(state.connectors.WagmiConnector_metamask.status).toBe(ConnectorStatus.Disconnected)
     })
   })
 

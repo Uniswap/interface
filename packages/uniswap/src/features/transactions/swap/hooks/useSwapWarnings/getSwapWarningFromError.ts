@@ -4,6 +4,7 @@ import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'uniswap/s
 import { SponsoredApprovalRejectedError } from 'uniswap/src/features/transactions/errors'
 import { GasSponsorshipNotAppliedError } from 'uniswap/src/features/transactions/swap/errors'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import { logger } from 'utilities/src/logger/logger'
 
 // Classic/bridge/wrap surface non-delivery as GasSponsorshipNotAppliedError; UniswapX as SponsoredApprovalRejectedError.
 export function isGasSponsorshipFailureError(error: Error): boolean {
@@ -74,6 +75,14 @@ export function getSwapWarningFromError({
           action: WarningAction.DisableReview,
           title: t('swap.warning.noRoutesFound.title'),
           message: t('swap.warning.noRoutesFound.message'),
+        }
+      }
+
+      default: {
+        if (error.data?.errorCode !== undefined) {
+          logger.warn('TradingApi', 'getSwapWarningFromError', 'Unmapped errorCode in trading-api response', {
+            errorCode: error.data.errorCode,
+          })
         }
       }
     }

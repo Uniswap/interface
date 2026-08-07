@@ -1,4 +1,4 @@
-import { TradingApi } from '@universe/api'
+import { findLatestActiveFailedStep } from 'uniswap/src/features/transactions/swap/plan/collapseRetrySteps'
 import {
   ActivePlanState,
   activePlanStore,
@@ -18,11 +18,11 @@ function selectActivePlanStatus(state: ActivePlanState): UseActivePlanStatusResu
       lastStepFailed: false,
     }
   }
-  const lastStep = state.activePlan.steps[state.activePlan.currentStepIndex - 1]
-
   return {
     hasActivePlan: true,
-    lastStepFailed: lastStep?.status === TradingApi.PlanStepStatus.STEP_ERROR,
+    // Semantic rather than positional: failed rows may not sit immediately before the actionable
+    // row, and stale (recovered) failures don't count.
+    lastStepFailed: findLatestActiveFailedStep(state.activePlan.steps) !== undefined,
   }
 }
 

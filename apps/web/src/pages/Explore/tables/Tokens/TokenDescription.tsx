@@ -26,7 +26,8 @@ interface TokenDescriptionProps {
   name: string
   symbol: string
   address: string
-  chainId: UniverseChainId
+  /** Undefined only for tokens on chains without a UniverseChainId (no network badge / native lookup). */
+  chainId: UniverseChainId | undefined
   logoUrl?: string
   /** Chain IDs for this token sorted by volume (desc) for the table's time period. From multichain list data. */
   chainIdsByVolume?: UniverseChainId[]
@@ -51,7 +52,9 @@ export function TokenDescription({
   const disableHoverTransition = chainIdsByVolume.length === 1 && (isNative || address === ZERO_ADDRESS)
 
   // The project logo URL returns the WETH logo for native ETH — use useCurrencyInfo to get the correct logo
-  const nativeCurrencyInfo = useCurrencyInfo(isNative ? buildNativeCurrencyId(chainId) : undefined)
+  const nativeCurrencyInfo = useCurrencyInfo(
+    isNative && chainId !== undefined ? buildNativeCurrencyId(chainId) : undefined,
+  )
   const resolvedLogoUrl = isNative ? nativeCurrencyInfo?.logoUrl : logoUrl
 
   return (

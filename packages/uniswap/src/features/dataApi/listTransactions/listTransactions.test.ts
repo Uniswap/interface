@@ -14,7 +14,7 @@ vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
 }))
 
 // Mock the REST hook with hoisted mock function
-vi.mock('uniswap/src/data/rest/listTransactions', () => ({
+vi.mock('uniswap/src/data/apiClients/dataApiService/activity/listTransactions', () => ({
   useListTransactionsQuery: mockUseListTransactionsQuery,
 }))
 

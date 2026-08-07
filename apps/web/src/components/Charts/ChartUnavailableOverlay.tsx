@@ -6,27 +6,15 @@ import { ChartType } from '~/components/Charts/utils'
 
 interface ChartUnavailableOverlayProps {
   height: number
-  chartTransform?: string
   type?: ChartType
 }
 
 /** Dimmed chart skeleton with a "Chart unavailable" banner, shown when a chart has loaded but has no usable data series. */
-export function ChartUnavailableOverlay({
-  height,
-  chartTransform,
-  type = ChartType.PRICE,
-}: ChartUnavailableOverlayProps): JSX.Element {
+export function ChartUnavailableOverlay({ height, type = ChartType.PRICE }: ChartUnavailableOverlayProps): JSX.Element {
   const { t } = useTranslation()
   return (
     <Flex position="relative" width="100%">
-      <ChartSkeleton
-        type={type}
-        height={height}
-        hideYAxis
-        hideXAxis
-        hidePriceIndicators
-        chartTransform={chartTransform}
-      />
+      <ChartSkeleton disabled type={type} height={height} hideYAxis hideXAxis hidePriceIndicators />
       <Flex
         position="absolute"
         top="50%"

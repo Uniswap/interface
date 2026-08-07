@@ -2,9 +2,11 @@ import type { RefObject } from 'react'
 import type { LayoutChangeEvent, TextInput as RNTextInput } from 'react-native'
 import { MAX_INPUT_FONT_SIZE } from 'src/components/earn/useEarnAmountInputFontSizing'
 import { Flex, SpaceTokens, Text, TouchableArea, useSporeColors } from 'ui/src'
+import type { ShakeAnimation } from 'ui/src/animations'
 import { ArrowDownArrowUp } from 'ui/src/components/icons/ArrowDownArrowUp'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts, iconSizes } from 'ui/src/theme'
 import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
@@ -36,6 +38,8 @@ export function EarnHelpIconButton({ onPress }: { onPress: () => void }): JSX.El
   )
 }
 
+// Returns `undefined` while the counterpart conversion is unresolved (pending or no price) so the
+// UI can show an unavailable state instead of a false zero.
 export function getFormattedAlternateAmount({
   isFiatInput,
   exactAmountFiat,
@@ -50,15 +54,21 @@ export function getFormattedAlternateAmount({
   symbol: string
   currencyCode: string
   formatNumberOrString: LocalizationContextState['formatNumberOrString']
-}): string {
+}): string | undefined {
   if (isFiatInput) {
+    if (!exactAmountToken) {
+      return undefined
+    }
     return `${formatNumberOrString({
-      value: exactAmountToken || 0,
+      value: exactAmountToken,
       type: NumberType.TokenNonTx,
     })} ${symbol}`
   }
+  if (!exactAmountFiat) {
+    return undefined
+  }
   return formatNumberOrString({
-    value: exactAmountFiat || 0,
+    value: exactAmountFiat,
     type: NumberType.FiatStandard,
     currencyCode,
   })
@@ -96,6 +106,7 @@ export function AmountEntrySection({
   maxLabel,
   onInputLayout,
   onPercentPress,
+  shakeStyle,
   onToggleInputMode,
   setActiveAmount,
   symbol,
@@ -103,7 +114,7 @@ export function AmountEntrySection({
 }: {
   fiatCurrencyInfo: FiatCurrencyInfo
   fontSize: number
-  formattedAlternateAmount: string
+  formattedAlternateAmount: string | undefined
   hasAmount: boolean
   inputRef: RefObject<RNTextInput | null>
   inlineError?: string
@@ -113,12 +124,15 @@ export function AmountEntrySection({
   maxLabel: string
   onInputLayout: (event: LayoutChangeEvent) => void
   onPercentPress: (pct: number) => void
+  shakeStyle: ShakeAnimation['shakeStyle']
   onToggleInputMode: () => void
   setActiveAmount: (next: string) => void
   symbol: string
   value: string
 }): JSX.Element {
   const { errorGap, pb } = getAmountEntrySpacing({ isShortMobileDevice, hasInlineError: Boolean(inlineError) })
+  // Honor locale symbol position (e.g. `100 €`): the symbol leads only for prefix-position fiat.
+  const isSymbolLeading = isFiatInput && fiatCurrencyInfo.symbolAtFront
 
   return (
     <Flex alignItems="center" pt="$spacing16" pb={pb} onLayout={onInputLayout}>
@@ -127,60 +141,75 @@ export function AmountEntrySection({
           0.96 line height clips ascenders when applied to a TextInput. The key remounts the symbol
           on mode toggle: a non-editing TextInput doesn't re-measure its intrinsic width when `value`
           changes ($ ↔ symbol), which strands the row off-center until an unrelated re-render. */}
-      <Flex alignItems="center" justifyContent="center" flexDirection={isFiatInput ? 'row' : 'row-reverse'}>
-        <TextInput
-          key={isFiatInput ? 'fiat-symbol' : 'token-symbol'}
-          allowFontScaling
-          disabled
-          color={value ? '$neutral1' : '$neutral3'}
-          fontFamily="$heading"
-          fontSize={fontSize}
-          fontWeight="$book"
-          height={fontSize + 5}
-          maxFontSizeMultiplier={fonts.heading1.maxFontSizeMultiplier}
-          minHeight={MAX_INPUT_FONT_SIZE}
-          px="$none"
-          py="$none"
-          testID={TestID.EarnAmountSymbol}
-          value={isFiatInput ? fiatCurrencyInfo.symbol : ` ${symbol}`}
-        />
-        <AmountInput
-          ref={inputRef}
-          adjustWidthToContent
-          autoFocus
-          alignSelf="stretch"
-          backgroundColor="$transparent"
-          borderWidth="$none"
-          fiatCurrencyInfo={fiatCurrencyInfo}
-          fontFamily="$heading"
-          fontSize={fontSize}
-          fontWeight="$book"
-          height={fontSize + 5}
-          maxDecimals={maxDecimals}
-          maxFontSizeMultiplier={fonts.heading1.maxFontSizeMultiplier}
-          minHeight={MAX_INPUT_FONT_SIZE}
-          placeholder="0"
-          placeholderTextColor="$neutral3"
-          px="$none"
-          py="$none"
-          returnKeyType={undefined}
-          showSoftInputOnFocus={false}
-          textAlign={isFiatInput ? 'left' : 'right'}
-          value={value}
-          onChangeText={setActiveAmount}
-        />
-      </Flex>
+      <AnimatedFlex style={shakeStyle} width="100%">
+        <Flex alignItems="center" justifyContent="center" flexDirection={isSymbolLeading ? 'row' : 'row-reverse'}>
+          <TextInput
+            key={isFiatInput ? 'fiat-symbol' : 'token-symbol'}
+            allowFontScaling
+            disabled
+            color={value ? '$neutral1' : '$neutral3'}
+            fontFamily="$heading"
+            fontSize={fontSize}
+            fontWeight="$book"
+            height={fontSize + 5}
+            maxFontSizeMultiplier={fonts.heading1.maxFontSizeMultiplier}
+            minHeight={MAX_INPUT_FONT_SIZE}
+            px="$none"
+            py="$none"
+            testID={TestID.EarnAmountSymbol}
+            value={
+              isFiatInput ? (isSymbolLeading ? fiatCurrencyInfo.symbol : ` ${fiatCurrencyInfo.symbol}`) : ` ${symbol}`
+            }
+          />
+          <AmountInput
+            ref={inputRef}
+            adjustWidthToContent
+            autoFocus
+            alignSelf="stretch"
+            backgroundColor="$transparent"
+            borderWidth="$none"
+            fiatCurrencyInfo={fiatCurrencyInfo}
+            fontFamily="$heading"
+            fontSize={fontSize}
+            fontWeight="$book"
+            height={fontSize + 5}
+            maxDecimals={maxDecimals}
+            maxFontSizeMultiplier={fonts.heading1.maxFontSizeMultiplier}
+            minHeight={MAX_INPUT_FONT_SIZE}
+            placeholder="0"
+            placeholderTextColor="$neutral3"
+            px="$none"
+            py="$none"
+            returnKeyType={undefined}
+            showSoftInputOnFocus={false}
+            textAlign={isSymbolLeading ? 'left' : 'right'}
+            value={value}
+            onChangeText={setActiveAmount}
+          />
+        </Flex>
+      </AnimatedFlex>
 
       <Flex centered mt="$spacing12" minHeight={QUICK_SELECT_ROW_MIN_HEIGHT}>
         {hasAmount ? (
-          <TouchableArea onPress={onToggleInputMode}>
+          formattedAlternateAmount === undefined ? (
+            // Conversion pending or unavailable — show an unavailable state instead of a false
+            // zero, and keep the unit switch inert until a real conversion exists.
             <Flex row alignItems="center" gap="$spacing4">
-              <Text color="$neutral2" variant="subheading1">
-                {formattedAlternateAmount}
+              <Text color="$neutral3" variant="subheading1">
+                -
               </Text>
-              <ArrowDownArrowUp color="$neutral2" size="$icon.16" />
+              <ArrowDownArrowUp color="$neutral3" size="$icon.16" />
             </Flex>
-          </TouchableArea>
+          ) : (
+            <TouchableArea onPress={onToggleInputMode}>
+              <Flex row alignItems="center" gap="$spacing4">
+                <Text color="$neutral2" variant="subheading1">
+                  {formattedAlternateAmount}
+                </Text>
+                <ArrowDownArrowUp color="$neutral2" size="$icon.16" />
+              </Flex>
+            </TouchableArea>
+          )
         ) : (
           <Flex row gap="$spacing8" justifyContent="center">
             {PERCENT_OPTIONS.map((pct) => (

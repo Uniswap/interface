@@ -2,7 +2,7 @@ import React from 'react'
 import { useParams } from 'react-router'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/warnings/slice/slice'
 import { TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
-import { usePoolData } from '~/appGraphql/data/pools/usePoolData'
+import { usePoolData } from '~/data/pools/usePoolData'
 import { PoolDetailsPage as PoolDetails } from '~/pages/PoolDetails'
 import store from '~/state'
 import { mocked } from '~/test-utils/mocked'
@@ -22,8 +22,8 @@ vi.mock('react-router', async () => {
   }
 })
 
-vi.mock('~/appGraphql/data/pools/usePoolData', async () => {
-  const actual = await vi.importActual('~/appGraphql/data/pools/usePoolData')
+vi.mock('~/data/pools/usePoolData', async () => {
+  const actual = await vi.importActual('~/data/pools/usePoolData')
   return {
     ...actual,
     usePoolData: vi.fn(),

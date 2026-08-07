@@ -1,6 +1,6 @@
 /* oxlint-disable max-params max-lines */
 import { HDKey } from '@scure/bip32'
-import { base64ToUint8, uint8ToBase64 } from '@universe/encoding'
+import { base64ToUint8, uint8ToBase64, uint8ToUtf8 } from '@universe/encoding'
 import { Signature, utils, Wallet } from 'ethers'
 import { defaultPath, joinSignature, SigningKey } from 'ethers/lib/utils'
 import { logger } from 'utilities/src/logger/logger'
@@ -89,7 +89,7 @@ export class WebKeyring implements IKeyring {
       keyPair.privateKey,
       base64ToUint8(encryptedMnemonic),
     )
-    return new TextDecoder().decode(decryptedMnemonic)
+    return uint8ToUtf8(new Uint8Array(decryptedMnemonic))
   }
 
   /**

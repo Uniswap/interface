@@ -61,4 +61,6 @@ export interface PoolStat extends PoolStatWithoutMethods {
   volOverTvl?: number
   hookAddress?: string
   feeTier?: CreatePositionFeeData
+  /** Backend-served per-pool protocol fee (integer pips); shared with the fee-display column. */
+  protocolFeePips?: number
 }

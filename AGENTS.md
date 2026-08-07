@@ -122,7 +122,7 @@ bun i18n:extract                # Extract localized strings (run after changing 
 3. **Python Setup**: Run `brew install python-setuptools` if you encounter Python module errors
 4. **Mobile Development**: Always run `bun mobile pod` after dependency changes
 5. **Bundle Size**: Monitor bundle size impacts when adding dependencies
-6. **Bun Version Bumps**: `.bun-version` is the single source of truth. After editing it, run `bun sync:bun-version` to rewrite the pins that can't read the file (CI runner preinstall in `.github/runs-on.yml`, `engines.bun`, EAS build profiles) — CI fails if they drift. Bump `@types/bun` and rerun `bun install` separately.
+6. **Bun Version Bumps**: `.bun-version` is the single source of truth. After editing it, run `bun sync:bun-version` to rewrite the pins that can't read the file (`engines.bun`, EAS build profiles) — CI fails if they drift. CI runners install Bun via `oven-sh/setup-bun` (reading `.bun-version` directly), so they need no pin. Bump `@types/bun` and rerun `bun install` separately.
 
 ## Package Dependencies
 

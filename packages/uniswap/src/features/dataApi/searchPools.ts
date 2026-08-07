@@ -2,7 +2,10 @@ import { SearchTokensResponse } from '@uniswap/client-data-api/dist/data/v1/sear
 import { SearchType, Pool } from '@uniswap/client-data-api/dist/data/v1/searchTypes_pb'
 import { GqlResult } from '@universe/api'
 import { useMemo } from 'react'
-import { searchPoolToPoolSearchResult, useSearchTokensAndPoolsQuery } from 'uniswap/src/data/rest/searchTokensAndPools'
+import {
+  searchPoolToPoolSearchResult,
+  useSearchTokensAndPoolsQuery,
+} from 'uniswap/src/data/apiClients/dataApiService/search/searchTokensAndPools'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'

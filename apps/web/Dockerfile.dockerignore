@@ -1,0 +1,82 @@
+# Docker prefers <dockerfile>.dockerignore over the repo-root .dockerignore,
+# which EXCLUDES apps/web and would break this build.
+
+# **/ so nested per-package node_modules (bun leaves some unhoisted) are
+# excluded too — a bare `node_modules` only matches the repo root.
+**/node_modules
+
+.git
+.gitattributes
+
+**/build
+**/dist
+**/.turbo
+**/.nx
+
+# Exclude other apps' source but KEEP every workspace package.json —
+# bun install --frozen-lockfile fails if any workspace manifest is missing.
+apps/mobile/**
+apps/extension/**
+apps/cli/**
+apps/dev-portal/**
+apps/mission-control/**
+!apps/mobile/package.json
+!apps/mobile/src/package.json
+!apps/extension/package.json
+!apps/cli/package.json
+!apps/dev-portal/package.json
+!apps/mission-control/package.json
+
+# Keep scoped: packages/ui has web-used asset folders named backgrounds/ios|android.
+apps/**/ios
+apps/**/android
+packages/hashcash-native/**/ios
+packages/hashcash-native/**/android
+.github/actions/mobile_fastlane_deploy/ios
+.github/actions/mobile_fastlane_deploy/android
+**/*.podspec
+
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/coverage
+**/__tests__
+**/__mocks__
+**/e2e
+**/playwright-report
+**/test-results
+
+# Must come after the excludes above (last match wins): dropping these .graphql
+# files makes the in-container @universe/api codegen emit a SILENT subset of
+# hooks (e.g. useTokenPriceHistoryQuery) — no error until runtime.
+!apps/mobile/src/**/*.graphql
+!apps/extension/src/**/*.graphql
+
+.vscode
+.idea
+**/.claude
+
+# Committed .env.<mode> files are kept — the hermetic ECS build relies on them.
+# `.env` itself is excluded: CI's config:pull writes the real pulled config to
+# apps/web/.env before the build, and it must only enter via the BuildKit secret
+# mount — never the COPY . . layer (which the registry cache can export).
+# .env.override is written by the Dockerfile itself (entry-gateway direct mode);
+# ignore any local copy so COPY . . can't leak one in.
+**/.env
+**/.env.local
+**/.env.*.local
+**/.env.new
+**/.env.new.override
+**/.env.override
+
+*.md
+!README.md
+
+.DS_Store
+*.log
+**/.storybook
+# Vite aliases expo-blur to this web mock during production builds.
+!apps/web/.storybook
+!apps/web/.storybook/__mocks__
+!apps/web/.storybook/__mocks__/expo-blur.jsx
+**/storybook-static

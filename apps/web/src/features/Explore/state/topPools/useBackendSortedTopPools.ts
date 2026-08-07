@@ -1,22 +1,24 @@
 import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
+import { Percent } from '@uniswap/sdk-core'
 import { type DataApiPool, type ListTopPoolsResponse, ProtocolVersion, TopPoolsOrderBy } from '@universe/api'
 import { useMemo } from 'react'
 import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { getListTopPoolsQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/pools/queries'
-import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import {
-  calculate1DVolOverTvl,
-  calculateApr,
-  PoolSortFields,
-  PoolTableSortState,
-} from '~/appGraphql/data/pools/useTopPools'
-import { OrderDirection } from '~/appGraphql/data/util'
+import { normalizeTokenAddressForCache } from 'uniswap/src/utils/currencyId'
+import { calculate1DVolOverTvl, calculateApr, PoolSortFields, PoolTableSortState } from '~/data/pools/useTopPools'
+import { OrderDirection } from '~/data/util'
 import { EXPLORE_API_PAGE_SIZE } from '~/features/Explore/state/constants'
 import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
 import { useInfiniteLoadMore } from '~/features/Explore/state/hooks/useInfiniteLoadMore'
+import {
+  servedFeeKey,
+  useServedProtocolFees,
+  type ServedProtocolFeePool,
+  type ServedPoolFees,
+} from '~/features/fees/useServedProtocolFees'
 import type { PoolStat } from '~/types/explore'
 
 /**
@@ -51,8 +53,11 @@ const poolSortFieldToOrderBy: Partial<Record<PoolSortFields, TopPoolsOrderBy>> =
 /**
  * Converts DataApiPool to PoolStat for compatibility with existing UI
  */
-function convertDataApiPoolToPoolStat(pool: DataApiPool): PoolStat {
-  const feeTierValue = pool.feeTier
+function convertDataApiPoolToPoolStat(pool: DataApiPool, servedFees?: ServedPoolFees): PoolStat {
+  const protocolFeePips = servedFees?.protocolFee
+  // GetProtocolFees is the source of truth for the tier so it always pairs with the protocol fee it
+  // was served with; ListTopPools' own tier is the fallback when the backend serves none.
+  const feeTierValue = servedFees?.feeTier ?? pool.feeTier
   const chainName = toGraphQLChain(pool.chainId as UniverseChainId)
 
   return {
@@ -82,12 +87,17 @@ function convertDataApiPoolToPoolStat(pool: DataApiPool): PoolStat {
     totalLiquidity: pool.stats?.tvl !== undefined ? { value: pool.stats.tvl } : undefined,
     volume1Day: pool.stats?.volume1d !== undefined ? { value: pool.stats.volume1d } : undefined,
     volume30Day: pool.stats?.volume30d !== undefined ? { value: pool.stats.volume30d } : undefined,
-    apr: calculateApr({
-      volume24h: pool.stats?.volume1d,
-      tvl: pool.stats?.tvl,
-      feeTier: feeTierValue,
-      protocolVersion: pool.protocolVersion,
-    }),
+    // Table APR keeps its numeric-cell contract (unlike PoolInfoCard/PoolDetails, which blank out
+    // for dynamic-fee pools); falls back to 0 since this call site doesn't feed isDynamic through,
+    // so undefined here would only ever come from missing volume/TVL data.
+    apr:
+      calculateApr({
+        volume24h: pool.stats?.volume1d,
+        tvl: pool.stats?.tvl,
+        feeTier: feeTierValue,
+        protocolVersion: pool.protocolVersion,
+        protocolFeePips,
+      }) ?? new Percent(0),
     boostedApr: pool.stats?.rewardApr,
     feeTier: {
       feeAmount: feeTierValue,
@@ -96,6 +106,7 @@ function convertDataApiPoolToPoolStat(pool: DataApiPool): PoolStat {
     },
     volOverTvl: calculate1DVolOverTvl(pool.stats?.volume1d, pool.stats?.tvl),
     hookAddress: pool.hookAddress,
+    protocolFeePips,
   } as PoolStat
 }
 
@@ -173,9 +184,26 @@ export function useBackendSortedTopPools({
     [infiniteData?.pages],
   )
 
+  // ListTopPools serves no protocol fee — both fees come from batched GetProtocolFees.
+  const protocolFeePools = useMemo<ServedProtocolFeePool[]>(
+    () =>
+      allPools?.map((pool) => ({
+        chainId: pool.chainId as UniverseChainId,
+        protocolVersion: pool.protocolVersion,
+        poolIdOrHash: pool.poolId,
+      })) ?? [],
+    [allPools],
+  )
+  const servedProtocolFees = useServedProtocolFees({ pools: protocolFeePools, enabled: enabled !== false })
+
   // Convert pools to PoolStat format and apply client-side sorting for volOverTvl
   const { sortedPoolStats, boostedPoolStats } = useMemo(() => {
-    let converted = allPools?.map((pool: DataApiPool) => convertDataApiPoolToPoolStat(pool))
+    let converted = allPools?.map((pool: DataApiPool) =>
+      convertDataApiPoolToPoolStat(
+        pool,
+        servedProtocolFees.get(servedFeeKey({ chainId: pool.chainId as UniverseChainId, poolIdOrHash: pool.poolId })),
+      ),
+    )
 
     if (!converted) {
       return { sortedPoolStats: undefined, boostedPoolStats: undefined }
@@ -191,7 +219,7 @@ export function useBackendSortedTopPools({
       .sort((a: PoolStat, b: PoolStat) => (b.boostedApr ?? 0) - (a.boostedApr ?? 0))
 
     return { sortedPoolStats: converted, boostedPoolStats: boosted }
-  }, [allPools, isVolOverTvlSorting, ascending])
+  }, [allPools, isVolOverTvlSorting, ascending, servedProtocolFees])
 
   // Client-side filtering for search
   const filteredPoolStats = useMemo(() => {

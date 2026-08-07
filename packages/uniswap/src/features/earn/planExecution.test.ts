@@ -3,9 +3,13 @@ import { TradingApi } from '@universe/api'
 import { USDC } from 'uniswap/src/constants/tokens'
 import {
   buildEarnPlanAnalytics,
+  createEarnPlanFailureCallback,
+  EarnPlanUnavailableError,
   EarnPlanPriceChangeError,
+  getEarnExecutionErrorMessage,
   shouldShowEarnTroubleshootingLink,
 } from 'uniswap/src/features/earn/planExecution'
+import type { PlanFailureCallbackContext } from 'uniswap/src/features/transactions/swap/plan/types'
 import type { ChainedActionTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 
 const VAULT_ADDRESS = '0x0000000000000000000000000000000000000002'
@@ -55,6 +59,25 @@ describe(buildEarnPlanAnalytics, () => {
   })
 })
 
+describe(createEarnPlanFailureCallback, (): void => {
+  it.each([false, true])(
+    'forwards failure context with willFinalize=%s while preserving the UI retry callback',
+    (willFinalize: boolean): void => {
+      const error = new Error('Plan failed')
+      const retry = vi.fn()
+      const handleFailure = vi.fn((_error?: Error, _retry?: () => void): void => undefined)
+      const logFailed = vi.fn((_error: Error | undefined, _context?: PlanFailureCallbackContext): void => undefined)
+      const onFailure = createEarnPlanFailureCallback({ handleFailure, logFailed })
+      const context = { willFinalize }
+
+      onFailure(error, retry, context)
+
+      expect(logFailed).toHaveBeenCalledWith(error, context)
+      expect(handleFailure).toHaveBeenCalledWith(error, retry)
+    },
+  )
+})
+
 describe(shouldShowEarnTroubleshootingLink, () => {
   it('shows troubleshooting help for transaction failures', () => {
     expect(shouldShowEarnTroubleshootingLink(new Error('Transaction failed'))).toBe(true)
@@ -71,7 +94,25 @@ describe(shouldShowEarnTroubleshootingLink, () => {
   it('hides troubleshooting help for price-change interruptions', () => {
     expect(shouldShowEarnTroubleshootingLink(new EarnPlanPriceChangeError('Review the updated quote'))).toBe(false)
   })
+
+  it('hides troubleshooting help when Earn is unavailable', () => {
+    expect(shouldShowEarnTroubleshootingLink(new EarnPlanUnavailableError('Earn is currently unavailable.'))).toBe(
+      false,
+    )
+  })
 })
+
+describe(getEarnExecutionErrorMessage, () => {
+  it('preserves the displayable Earn-unavailable message', () => {
+    expect(
+      getEarnExecutionErrorMessage({
+        error: new EarnPlanUnavailableError('Earn is currently unavailable.'),
+        fallback: 'Transaction failed. Please try again.',
+      }),
+    ).toBe('Earn is currently unavailable.')
+  })
+})
+
 function createTrade({
   earnIntent = {
     action: TradingApi.EarnAction.DEPOSIT,

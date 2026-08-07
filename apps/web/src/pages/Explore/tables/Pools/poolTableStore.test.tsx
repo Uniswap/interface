@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { PoolSortFields } from '~/appGraphql/data/pools/useTopPools'
+import { PoolSortFields } from '~/data/pools/useTopPools'
 import { createPoolTableStore } from '~/pages/Explore/tables/Pools/poolTableStore'
 
 describe('poolTableStore', () => {

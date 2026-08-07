@@ -5,6 +5,7 @@ import { ContractInteraction, RotatableChevron } from 'ui/src/components/icons'
 import { TransactionRequestDetails } from 'uniswap/src/components/transactions/requests/TransactionRequestDetails'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
+import { ApprovalContractRow, type ApprovalContractInfo } from 'wallet/src/components/dappRequests/ApprovalContractRow'
 import { TransactionApprovingSection } from 'wallet/src/components/dappRequests/TransactionApprovingSection'
 import { TransactionDepositingSection } from 'wallet/src/components/dappRequests/TransactionDepositingSection'
 import {
@@ -30,6 +31,8 @@ interface TransactionPreviewCardProps {
   rawData?: string
   chainId: UniverseChainId
   errorType?: TransactionErrorType
+  /** Spender contract pinned as an always-visible "Contract" row (approvals) */
+  approvalContract?: ApprovalContractInfo
   // Custom content for signatures or other use cases
   children?: ReactNode
 }
@@ -43,6 +46,7 @@ export function TransactionPreviewCard({
   rawData,
   chainId,
   errorType,
+  approvalContract,
   children,
 }: TransactionPreviewCardProps): JSX.Element {
   const { t } = useTranslation()
@@ -72,7 +76,9 @@ export function TransactionPreviewCard({
     [riskLevel],
   )
 
-  const hasDetails = Boolean(functionName || contractName || rawData)
+  // The pinned contract row replaces the contract line inside the expandable details
+  const detailsContractName = approvalContract ? undefined : contractName
+  const hasDetails = Boolean(functionName || detailsContractName || rawData)
   const showDetailsButton = hasDetails
 
   // Sort sections: Approving first, then Earn (deposit/withdraw), then Sending, then Receiving
@@ -106,6 +112,13 @@ export function TransactionPreviewCard({
 
         {children}
 
+        {approvalContract && (
+          <Flex>
+            <Flex height={1} backgroundColor="$surface3" mb="$spacing12" />
+            <ApprovalContractRow contract={approvalContract} chainId={chainId} />
+          </Flex>
+        )}
+
         {showDetailsButton && (
           <Flex>
             <Flex height={1} backgroundColor="$surface3" mb="$spacing12" />
@@ -126,7 +139,7 @@ export function TransactionPreviewCard({
               <Flex pt="$spacing12" px="$spacing16">
                 <TransactionRequestDetails
                   functionName={functionName}
-                  contractName={contractName}
+                  contractName={detailsContractName}
                   contractAddress={contractAddress}
                   rawData={rawData}
                   chainId={chainId}

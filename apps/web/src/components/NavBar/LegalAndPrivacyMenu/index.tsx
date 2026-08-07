@@ -1,3 +1,4 @@
+import { isMobileWeb } from '@universe/environment'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Anchor, AnchorProps, Flex, Text } from 'ui/src'
@@ -12,7 +13,7 @@ import { useModalState } from '~/hooks/useModalState'
 
 const MenuLink = ({ children, ...rest }: AnchorProps) => (
   <Anchor textDecorationLine="none" cursor="pointer" group {...rest}>
-    <MobileTouchableArea>
+    <MobileTouchableArea justifyContent="center" minHeight={isMobileWeb ? 28 : undefined}>
       <Text
         color="$neutral2"
         $group-hover={{ color: '$accent1' }}
@@ -48,7 +49,7 @@ export function LegalAndPrivacyMenu({ closeMenu }: { closeMenu?: () => void }) {
       onToggle={toggleIsOpen}
       iconSize="$icon.16"
       button={
-        <Text color="$neutral2" variant="body4" pr={spacing.spacing4}>
+        <Text color="$neutral2" variant="body4" py={isMobileWeb ? '$spacing6' : undefined} pr={spacing.spacing4}>
           {t('common.legalAndPrivacy')}
         </Text>
       }

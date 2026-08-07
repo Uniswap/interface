@@ -10,6 +10,7 @@ import {
   getFeatureFlagName,
   getOverrideAdapter,
   Layers,
+  useDynamicConfigValue,
   useFeatureFlagWithExposureLoggingDisabled,
   WALLET_FEATURE_FLAG_NAMES,
 } from '@universe/gating'
@@ -28,9 +29,9 @@ import {
 } from 'uniswap/src/components/gating/dynamicConfigOverrides'
 import { GatingButton } from 'uniswap/src/components/gating/GatingButton'
 import { ExperimentRow, LayerRow } from 'uniswap/src/components/gating/Rows'
+import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import { useForceUpgradeStatus } from 'uniswap/src/features/forceUpgrade/hooks/useForceUpgradeStatus'
 import { useForceUpgradeTranslations } from 'uniswap/src/features/forceUpgrade/hooks/useForceUpgradeTranslations'
-import { useEmbeddedWalletBaseUrl } from 'uniswap/src/features/passkey/hooks/useEmbeddedWalletBaseUrl'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export function GatingOverrides(): JSX.Element {
@@ -174,7 +175,11 @@ export function GatingOverrides(): JSX.Element {
                   configKey={EmbeddedWalletConfigKey.BaseUrl}
                   label="Base URL"
                   options={EMBEDDED_WALLET_BASE_URL_OPTIONS}
-                  selected={useEmbeddedWalletBaseUrl()}
+                  selected={useDynamicConfigValue({
+                    config: DynamicConfigs.EmbeddedWalletConfig,
+                    key: EmbeddedWalletConfigKey.BaseUrl,
+                    defaultValue: UNISWAP_WEB_URL,
+                  })}
                 />
               </DynamicConfigGroup>
 

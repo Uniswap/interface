@@ -28,6 +28,7 @@ import {
   USDC_BSC,
   USDC_CELO,
   USDC_E_TEMPO,
+  USDC_INK,
   USDC_LINEA,
   USDC_MAINNET,
   USDC_MONAD,
@@ -50,6 +51,7 @@ import {
   USDT_LINEA,
   USDT_OPTIMISM,
   USDT_POLYGON,
+  USDT0_INK,
   USDT0_XLAYER,
   USDM_MEGAETH,
   USYC_ARC,
@@ -180,6 +182,13 @@ export const COMMON_BASES: ChainCurrencyList = {
   ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.Arc]: [USDC_ARC, EURC_ARC, CIRBTC_ARC, WETH_ARC, USYC_ARC].map(buildPartialCurrencyInfo),
+
+  [UniverseChainId.Ink]: [
+    nativeOnChain(UniverseChainId.Ink),
+    WRAPPED_NATIVE_CURRENCY[UniverseChainId.Ink] as Token,
+    USDT0_INK,
+    USDC_INK,
+  ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.Soneium]: [
     nativeOnChain(UniverseChainId.Soneium),

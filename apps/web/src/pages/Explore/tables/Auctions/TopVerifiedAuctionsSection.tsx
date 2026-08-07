@@ -3,6 +3,7 @@ import { Anchor, Flex, Text } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { Tooltip } from 'ui/src/components/tooltip/Tooltip'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
+import { stopPropagation } from 'utilities/src/react/stopPropagation'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
 import { useTopVerifiedAuctions } from '~/features/Toucan/hooks/useTopAuctions/useTopVerifiedAuctions'
 import { AuctionChip } from '~/pages/Explore/tables/Auctions/AuctionChip'
@@ -27,7 +28,7 @@ export function TopVerifiedAuctionsSection() {
             <Anchor
               href={UniswapHelpUrls.articles.toucanVerifiedAuctionsHelp}
               target="_blank"
-              onPress={(e) => e.stopPropagation()}
+              onPress={stopPropagation}
               display="flex"
               alignItems="center"
             >

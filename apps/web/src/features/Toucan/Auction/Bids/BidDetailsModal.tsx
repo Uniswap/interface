@@ -228,12 +228,13 @@ function BidDetailsModalContent({
 
             <Flex width={1} backgroundColor="$surface3" />
 
+            {/* Ended auctions show the frozen end-of-auction FDV, so label it "FDV at launch" regardless of graduation (LP-822) */}
             <BidFdvSummary
               currentFdvDisplay={currentFdvDisplay}
               maxFdvDisplay={maxFdvDisplay}
               fdvFraction={fdvFraction}
               displayState={displayState}
-              isAuctionEnded={auctionProgressState === AuctionProgressState.ENDED && isGraduated}
+              isAuctionEnded={isAuctionEnded}
             />
           </Flex>
 

@@ -31,7 +31,11 @@ import { getCapabilitiesCore } from 'wallet/src/features/batchedTransactions/uti
 import { useBlockaidVerification } from 'wallet/src/features/dappRequests/hooks/useBlockaidVerification'
 import { useDappConnectionConfirmation } from 'wallet/src/features/dappRequests/hooks/useDappConnectionConfirmation'
 import { DappConnectionInfo, DappVerificationStatus } from 'wallet/src/features/dappRequests/types'
-import { applyFirstPartyOverride, mergeVerificationStatuses } from 'wallet/src/features/dappRequests/verification'
+import {
+  applyFirstPartyOverride,
+  isFirstPartyDapp,
+  mergeVerificationStatuses,
+} from 'wallet/src/features/dappRequests/verification'
 import {
   useActiveAccountWithThrow,
   useHasSmartWalletConsent,
@@ -270,6 +274,7 @@ function PendingConnectionModalContent({
           dappInfo={dappInfo}
           title={t('dapp.request.connect.title')}
           verificationStatus={verifyStatus}
+          isFirstParty={isFirstPartyDapp(pendingSession.trustedOriginUrl)}
         />
       </Flex>
       <DappConnectionContent

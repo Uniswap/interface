@@ -5,6 +5,7 @@ import { FeeAmount, nearestUsableTick, TICK_SPACINGS, TickMath, Pool as V3Pool }
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import JSBI from 'jsbi'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
+import { DEFAULT_TICK_SPACING, DYNAMIC_FEE_AMOUNT } from 'uniswap/src/constants/pools'
 import { nativeOnChain, USDT } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
@@ -840,6 +841,54 @@ describe('getV4PriceRangeInfo', () => {
           mockPool,
         })
       })
+    })
+  })
+
+  describe('dynamic-fee pool with a raw (non-normalized) feeAmount', () => {
+    // Regression test: some producers of `PositionState.fee` may forget to normalize a
+    // dynamic-fee pool's feeAmount to DYNAMIC_FEE_AMOUNT and instead pass through a raw value
+    // (e.g. the protocol's 1_000_000 max-fee constant). createMockV4Pool must not let that raw
+    // value reach the V4Pool constructor, or it throws its fee invariant check.
+    const positionState: PositionState = {
+      protocolVersion: ProtocolVersion.V4,
+      fee: {
+        feeAmount: 1_000_000,
+        tickSpacing: DEFAULT_TICK_SPACING,
+        isDynamic: true,
+      },
+      // the v4-sdk separately requires dynamic-fee pools to have a hook
+      hook: '0x1234567890123456789012345678901234567890',
+    }
+
+    const derivedPositionInfo: CreateV4PositionInfo = {
+      protocolVersion: ProtocolVersion.V4,
+      currencies: {
+        display: {
+          TOKEN0: ETH_MAINNET,
+          TOKEN1: USDT,
+        },
+        sdk: {
+          TOKEN0: ETH_MAINNET,
+          TOKEN1: USDT,
+        },
+      },
+      creatingPoolOrPair: true,
+      refetchPoolData: () => undefined,
+    }
+
+    it('normalizes feeAmount to DYNAMIC_FEE_AMOUNT instead of throwing', () => {
+      const state: PriceRangeState = {
+        priceInverted: false,
+        fullRange: true,
+        initialPrice: '3000',
+      }
+
+      let result: ReturnType<typeof getV4PriceRangeInfo>
+      expect(() => {
+        result = getV4PriceRangeInfo({ state, positionState, derivedPositionInfo })
+      }).not.toThrow()
+
+      expect(result?.mockPool?.fee).toBe(DYNAMIC_FEE_AMOUNT)
     })
   })
 

@@ -5,6 +5,9 @@ import type {
   ClassicQuote,
   DutchQuoteV2,
   DutchQuoteV3,
+  PermissionsRequest,
+  PermissionsResponse,
+  PermissionsResult,
   PriorityQuote,
   QuoteResponse,
   Routing,
@@ -49,3 +52,13 @@ export type SwappableTokensParams = {
   tokenIn: Address
   tokenInChainId: ChainId
 }
+
+// CheckPermissions / `/permissions` endpoint. The OpenAPI schema now documents this endpoint
+// (including the `issuer` field), so these are aliases onto the generated types rather than
+// hand-rolled shapes. Kept under the `CheckPermissions*` names so existing consumers don't churn.
+// The generated `PermissionsResult` is a flat object with `isPermissioned` as the discriminant
+// and the permissioned-only fields (`isAllowlisted`, `adapterTokenAddress`, `kycUrl`, `issuer`)
+// optional; consumers narrow on `isPermissioned` at runtime.
+export type CheckPermissionsRequest = PermissionsRequest
+export type CheckPermissionsResult = PermissionsResult
+export type CheckPermissionsResponse = PermissionsResponse

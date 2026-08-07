@@ -6,17 +6,18 @@ import { iconSizes, zIndexes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { NetworkPile } from 'uniswap/src/components/network/NetworkPile/NetworkPile'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { type TdpChainSelection, TdpChainSelectionType } from 'uniswap/src/utils/linking'
 import useResizeObserver from 'use-resize-observer'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
-import { TimePeriod } from '~/appGraphql/data/util'
+import { stopPropagation, stopPropagationPressProps } from 'utilities/src/react/stopPropagation'
 import { adjustItemWidths, MIN_BAR_WIDTH } from '~/components/PercentageAllocationChart/chartUtils'
 import { PercentageBars } from '~/components/PercentageAllocationChart/PercentageBars'
 import type { PercentageAllocationItem } from '~/components/PercentageAllocationChart/types'
 import { useChartHover } from '~/components/PercentageAllocationChart/useChartHover'
+import { TimePeriod } from '~/data/util'
 import { useTopNetworkBarColors } from '~/pages/Explore/tables/Tokens/VolumeByNetworkPopover/useTopNetworkBarColors'
 import {
   getPercentageDisplay,
@@ -38,7 +39,8 @@ const COLOR_DOT_SIZE = 6
 interface VolumeByNetworkPopoverProps {
   rankedToken: RankedMultichainToken | undefined
   timePeriod: TimePeriod
-  volumeFormatted: string
+  /** The row's registry + rollout-flag filtered networks; breakdown rows are restricted to it. */
+  visibleChainIds: readonly UniverseChainId[]
   children: ReactNode
   minBarWidth?: number
 }
@@ -46,7 +48,7 @@ interface VolumeByNetworkPopoverProps {
 export function VolumeByNetworkPopover({
   rankedToken,
   timePeriod,
-  volumeFormatted,
+  visibleChainIds,
   children,
   minBarWidth = MIN_BAR_WIDTH,
 }: VolumeByNetworkPopoverProps): JSX.Element {
@@ -71,8 +73,8 @@ export function VolumeByNetworkPopover({
   const navigateToTokenDetails = useNavigateToTokenDetails()
 
   const breakdown = useMemo(
-    () => getVolumeBreakdownForPeriod(rankedToken, timePeriod).filter((b) => isUniverseChainId(b.chainId)),
-    [rankedToken, timePeriod],
+    () => getVolumeBreakdownForPeriod({ rankedToken, timePeriod, visibleChainIds }),
+    [rankedToken, timePeriod, visibleChainIds],
   )
   const totalVolume = useMemo(() => breakdown.reduce((sum, { volume }) => sum + volume, 0), [breakdown])
 
@@ -139,14 +141,7 @@ export function VolumeByNetworkPopover({
       offset={{ mainAxis: 10 }}
     >
       <Popover.Trigger>
-        <Flex
-          cursor="default"
-          flex={1}
-          minWidth={0}
-          onPressIn={(e) => e.stopPropagation()}
-          onPressOut={(e) => e.stopPropagation()}
-          onPress={(e) => e.stopPropagation()}
-        >
+        <Flex cursor="default" flex={1} minWidth={0} {...stopPropagationPressProps}>
           {children}
         </Flex>
       </Popover.Trigger>
@@ -163,7 +158,7 @@ export function VolumeByNetworkPopover({
         p="$spacing16"
         px="$spacing8"
         minWidth={POPOVER_MIN_WIDTH}
-        onPress={(e) => e.stopPropagation()}
+        onPress={stopPropagation}
         onOpenAutoFocus={(e) => e.preventDefault()}
         {...shadowProps}
       >
@@ -172,8 +167,10 @@ export function VolumeByNetworkPopover({
             <Text variant="body2" color="$neutral2">
               {getVolumeLabelForTimePeriod(t, timePeriod)}
             </Text>
+            {/* Sum of the visible rows (the percentage denominator), not the unfiltered
+                aggregate, so the header always matches the breakdown below it. */}
             <Text variant="body2" color="$neutral1">
-              {volumeFormatted}
+              {convertFiatAmountFormatted(totalVolume, NumberType.FiatTokenStats)}
             </Text>
           </Flex>
 

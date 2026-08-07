@@ -114,6 +114,22 @@ function resolveSwapPriceSource({
   })
 }
 
+/**
+ * A successful UniswapX cancel tx is a cancellation, not a swap: remap its Success receipt
+ * to Canceled (web registers it Pending; the wallet stack uses a Cancelling initial status).
+ */
+function remapUniswapXCancelStatus({
+  original,
+  updateStatus,
+}: {
+  original: InterfaceTransactionDetails
+  updateStatus: TransactionStatus
+}): TransactionStatus {
+  return original.typeInfo.type === TransactionType.UniswapXCancel && updateStatus === TransactionStatus.Success
+    ? TransactionStatus.Canceled
+    : updateStatus
+}
+
 export function useOnActivityUpdate(): OnActivityUpdate {
   const dispatch = useAppDispatch()
   const analyticsContext = useTrace()
@@ -160,6 +176,8 @@ export function useOnActivityUpdate(): OnActivityUpdate {
 
         const receipt = update.receipt
 
+        const status = remapUniswapXCancelStatus({ original, updateStatus: update.status })
+
         const updatedTransaction: InterfaceTransactionDetails = {
           ...original,
           // interfaceApplyTransactionHashToBatch re-keys the record from batchId to hash, so finalize under the new id
@@ -167,7 +185,7 @@ export function useOnActivityUpdate(): OnActivityUpdate {
           typeInfo: update.typeInfo,
           receipt,
           networkFee: update.networkFee ?? original.networkFee,
-          status: update.status,
+          status,
           hash,
           sponsorInfo: update.sponsorInfo ?? original.sponsorInfo,
         }
@@ -327,6 +345,12 @@ export function shouldAddTransactionPopup({
   original: TransactionDetails
 }): boolean {
   if (!hash) {
+    return false
+  }
+
+  // The cancelled order row's own state change already produces the user signal
+  // (useHandleUniswapXActivityUpdate fires an Order popup) — no duplicate toast
+  if (original.typeInfo.type === TransactionType.UniswapXCancel) {
     return false
   }
 

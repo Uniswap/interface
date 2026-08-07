@@ -19,9 +19,6 @@ import {
   type PrepareAddAuthenticatorResponse,
   type ReportDecryptionResultResponse,
   type SetupRecoveryResponse,
-  type SignMessageResponse,
-  type SignTransactionResponse,
-  type SignTypedDataResponse,
   type StartAuthenticatedSessionResponse,
   type WalletSignInResponse,
 } from '@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_pb'

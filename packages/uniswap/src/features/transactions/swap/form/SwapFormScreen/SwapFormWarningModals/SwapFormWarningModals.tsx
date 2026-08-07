@@ -1,4 +1,5 @@
 import { BridgedAssetModal } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
+import { VerifyIdentityBottomSheet } from 'uniswap/src/features/permissionedTokens/VerifyIdentityBottomSheet'
 import TokenWarningModal from 'uniswap/src/features/tokens/warnings/TokenWarningModal'
 import { LowNativeBalanceModal } from 'uniswap/src/features/transactions/modals/LowNativeBalanceModal'
 import { ViewOnlyModal } from 'uniswap/src/features/transactions/modals/ViewOnlyModal'
@@ -100,6 +101,13 @@ const LocalBridgedAssetModal = (): JSX.Element => {
   )
 }
 
+const LocalVerifyIdentityModal = (): JSX.Element | null => {
+  const isVerifyIdentityModalVisible = useSwapFormWarningStore((s) => s.isVerifyIdentityModalVisible)
+  const { handleHideVerifyIdentityModal } = useSwapFormWarningStoreActions()
+
+  return <VerifyIdentityBottomSheet isOpen={isVerifyIdentityModalVisible} onClose={handleHideVerifyIdentityModal} />
+}
+
 export const SwapFormWarningModals = (): JSX.Element => {
   return (
     <>
@@ -108,6 +116,7 @@ export const SwapFormWarningModals = (): JSX.Element => {
       <LocalBridgingModal />
       <LocalTokenWarningModal />
       <LocalBridgedAssetModal />
+      <LocalVerifyIdentityModal />
     </>
   )
 }

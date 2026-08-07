@@ -13,6 +13,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { SendTokenTransactionInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyAddress, currencyId, getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
+import { UserRejectedRequestError as ViemUserRejectedRequestError } from 'viem'
 import { useAccount } from '~/hooks/useAccount'
 import { useEthersWeb3Provider } from '~/hooks/useEthersProvider'
 import { useSelectChain } from '~/hooks/useSelectChain'
@@ -74,7 +75,17 @@ export function useSendCallback({
             throw new Error('wallet must be connected to send')
           }
           if (account.chainId !== supportedTransactionChainId) {
-            const success = await selectChain(supportedTransactionChainId)
+            const success = await selectChain(supportedTransactionChainId, { throwOnUserRejection: true }).catch(
+              (error: unknown) => {
+                // useSelectChain rethrows viem's rejection when opted in; normalize it to our local
+                // cancellation type so a rejected network-switch prompt is treated like any other user
+                // cancellation (no log, no "Transfer failed." callout) rather than a generic failure.
+                if (error instanceof ViemUserRejectedRequestError) {
+                  throw new UserRejectedRequestError('Transfer failed: User rejected the network switch')
+                }
+                throw error
+              },
+            )
             if (!success) {
               throw new Error('Failed to switch chain')
             }

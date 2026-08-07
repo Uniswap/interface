@@ -4,7 +4,7 @@ import { GraphQLApi } from '@universe/api'
 import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { PoolData } from '~/appGraphql/data/pools/usePoolData'
+import type { PoolData } from '~/data/pools/usePoolData'
 import type { PoolStat } from '~/types/explore'
 
 export const validParams = { poolAddress: '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640', chainName: 'ethereum' }

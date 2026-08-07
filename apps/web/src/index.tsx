@@ -20,6 +20,7 @@ import {
   type ChallengeSolver,
   ChallengeType,
   createChallengeSolverService,
+  createCrossOriginWorker,
   createHashcashMockSolver,
   createHashcashSolver,
   createHashcashWorkerChannel,
@@ -28,6 +29,10 @@ import {
   createTurnstileMockSolver,
   createTurnstileSolver,
 } from '@universe/sessions'
+// Must stay a plain `?worker&url` import statement — Vite's worker detection is
+// syntactic (vitejs/vite#13680).
+// oxlint-disable-next-line import/default, no-restricted-imports -- Vite ?worker&url virtual module; linter can't resolve the default export
+import hashcashWorkerUrl from '@universe/sessions/src/challenge-solvers/hashcash/worker/hashcash.worker.ts?worker&url'
 import { NuqsAdapter } from 'nuqs/adapters/react-router/v7'
 import type { PropsWithChildren, ReactNode } from 'react'
 import { lazy, StrictMode, Suspense, useEffect, useMemo } from 'react'
@@ -39,7 +44,7 @@ import { Provider } from 'react-redux'
 import { BrowserRouter, HashRouter, useLocation } from 'react-router'
 import { PortalProvider } from 'ui/src'
 import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
-import { initializePortfolioQueryOverrides } from 'uniswap/src/data/rest/portfolioBalanceOverrides'
+import { initializePortfolioQueryOverrides } from 'uniswap/src/data/apiClients/dataApiService/balances/portfolioBalanceOverrides'
 import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProviderWrapper'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import i18n from 'uniswap/src/i18n'
@@ -49,14 +54,14 @@ import { getLogger } from 'utilities/src/logger/logger'
 import { useAccount } from 'wagmi'
 import { App } from '~/App'
 import { WebUniswapProvider } from '~/app/WebUniswapContext'
-import { apolloClient } from '~/appGraphql/data/apollo/client'
-import { TransactionWatcherProvider } from '~/appGraphql/data/apollo/TransactionWatcherProvider'
 import { QueryClientPersistProvider } from '~/components/PersistQueryClient'
 import { createWeb3Provider, WalletCapabilitiesEffects } from '~/components/Web3Provider/createWeb3Provider'
 import { getConfig, getPrivyConfig } from '~/config'
 import { wagmiConfig } from '~/connection/wagmiConfig'
+import { apolloClient } from '~/data/apollo/client'
 import { AccountsStoreDevTool } from '~/features/accounts/store/devtools'
 import { WebAccountsStoreProvider } from '~/features/accounts/store/provider'
+import { TransactionWatcherProvider } from '~/features/transactions/TransactionWatcherProvider'
 import { ConnectWalletMutationProvider } from '~/features/wallet/connection/hooks/useConnectWalletMutation'
 import { ExternalWalletProvider } from '~/features/wallet/providers/ExternalWalletProvider'
 import { useDeferredComponent } from '~/hooks/useDeferredComponent'
@@ -88,7 +93,6 @@ initializePortfolioQueryOverrides({ store })
 const loadListsUpdater = () => import('~/state/lists/updater')
 const loadApplicationUpdater = () => import('~/state/application/updater')
 const loadActivityStateUpdater = () => import('~/state/activity/updater')
-const loadLogsUpdater = () => import('~/state/logs/updater')
 const loadFiatOnRampTransactionsUpdater = () => import('~/state/fiatOnRampTransactions/updater')
 const loadWebAccountsStoreUpdater = () => import('~/features/accounts/store/updater')
 
@@ -122,12 +126,7 @@ const provideSessionInitService = () => {
         performanceTracker,
         getWorkerChannel: () =>
           createHashcashWorkerChannel({
-            getWorker: () => {
-              return new Worker(
-                new URL('@universe/sessions/src/challenge-solvers/hashcash/worker/hashcash.worker.ts', import.meta.url),
-                { type: 'module' },
-              )
-            },
+            getWorker: () => createCrossOriginWorker(hashcashWorkerUrl),
           }),
         onSolveCompleted: onHashcashSolveCompleted,
         getLogger,
@@ -162,7 +161,6 @@ function Updaters() {
   const ListsUpdater = useDeferredComponent(loadListsUpdater)
   const ApplicationUpdater = useDeferredComponent(loadApplicationUpdater)
   const ActivityStateUpdater = useDeferredComponent(loadActivityStateUpdater)
-  const LogsUpdater = useDeferredComponent(loadLogsUpdater)
   const FiatOnRampTransactionsUpdater = useDeferredComponent(loadFiatOnRampTransactionsUpdater)
   const WebAccountsStoreUpdater = useDeferredComponent(loadWebAccountsStoreUpdater)
 
@@ -174,7 +172,6 @@ function Updaters() {
       {ListsUpdater && <ListsUpdater />}
       {ApplicationUpdater && <ApplicationUpdater />}
       {ActivityStateUpdater && <ActivityStateUpdater />}
-      {LogsUpdater && <LogsUpdater />}
       {FiatOnRampTransactionsUpdater && <FiatOnRampTransactionsUpdater />}
       {WebAccountsStoreUpdater && <WebAccountsStoreUpdater />}
       <AccountsStoreDevTool />

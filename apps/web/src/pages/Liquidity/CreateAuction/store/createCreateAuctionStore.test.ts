@@ -304,7 +304,7 @@ describe('createCreateAuctionStore', () => {
     expect(store.getState().customizePool.customPriceRanges.map((entry) => entry.liquidityPercent)).toEqual([100, 25])
   })
 
-  it('limits custom price ranges to ten entries', () => {
+  it('limits custom price ranges to the maximum entry count', () => {
     const store = createCreateAuctionStore()
     const { actions } = store.getState()
 

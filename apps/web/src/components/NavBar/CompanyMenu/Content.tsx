@@ -1,3 +1,4 @@
+import { isMobileWeb } from '@universe/environment'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayerGroup } from 'ui/src/components/icons/LayerGroup'
@@ -31,11 +32,13 @@ export enum MenuSectionTitle {
   NeedHelp = 'NeedHelp',
 }
 
+const MENU_ICON_SIZE = isMobileWeb ? '$icon.24' : '$icon.20'
+
 const MENU_ICONS = {
-  wallet: <UniswapLogo size="$icon.20" color="$accent1" />,
-  uniswapX: <UniswapXGeneric size="$icon.20" color="$accent1" />,
-  tradingApi: <LayerGroup size="$icon.20" color="$accent1" />,
-  unichain: <Unichain size="$icon.20" color="$accent1" />,
+  wallet: <UniswapLogo size={MENU_ICON_SIZE} color="$accent1" />,
+  uniswapX: <UniswapXGeneric size={MENU_ICON_SIZE} color="$accent1" />,
+  tradingApi: <LayerGroup size={MENU_ICON_SIZE} color="$accent1" />,
+  unichain: <Unichain size={MENU_ICON_SIZE} color="$accent1" />,
 } as const
 
 export const useMenuContent = (args?: {

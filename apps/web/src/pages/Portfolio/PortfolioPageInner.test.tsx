@@ -18,10 +18,6 @@ vi.mock('~/pages/Portfolio/Header/hooks/usePortfolioRoutes', () => ({
   usePortfolioRoutes: vi.fn(),
 }))
 
-vi.mock('~/hooks/useScrollCompact', () => ({
-  useScrollCompact: vi.fn().mockReturnValue(false),
-}))
-
 vi.mock('~/pages/Portfolio/Header/Header', () => ({
   PortfolioHeader: () => <div data-testid="portfolio-header">Portfolio Header Mock</div>,
 }))
@@ -39,11 +35,7 @@ vi.mock('~/pages/Portfolio/ConnectWalletBanner', () => ({
 }))
 
 vi.mock('~/pages/Portfolio/ConnectWalletFixedBottomButton', () => ({
-  ConnectWalletFixedBottomButton: ({ shouldShow }: { shouldShow: boolean }) => (
-    <div data-testid="connect-wallet-button" data-should-show={shouldShow}>
-      Connect Wallet Button Mock
-    </div>
-  ),
+  ConnectWalletFixedBottomButton: () => <div data-testid="connect-wallet-button">Connect Wallet Button Mock</div>,
 }))
 
 describe('PortfolioPageInner', () => {

@@ -7,9 +7,9 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import type { FeeData } from 'uniswap/src/features/positions/types'
-import { getTokenDetailsURL } from '~/appGraphql/data/util'
 import { HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constants'
 import { getHeaderTitleVariant } from '~/components/StickyCollapsibleHeader/getHeaderLogoSize'
+import { getTokenDetailsURL } from '~/data/util'
 import { LiquidityPositionInfoBadges } from '~/features/Liquidity/LiquidityPositionInfoBadges'
 import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from '~/theme/components/styles'
 

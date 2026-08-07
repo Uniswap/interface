@@ -1,12 +1,13 @@
-import { BaseConfigSchema, BaseConfigValues } from '@universe/config/src/BaseConfig'
+import { BaseEnvFieldRules, BaseConfigSchema, BaseConfigValues } from '@universe/config/src/BaseConfig'
 import type { BaseConfig } from '@universe/config/src/BaseConfig'
+import { mergeEnvFieldRules, withEnvFieldRules } from '@universe/config/src/envFieldRules'
+import type { EnvFieldRules, UntypedEnvFieldRules } from '@universe/config/src/envFieldRules'
 import type { ConfigSchema, ConfigValues } from '@universe/config/src/types'
 import { z } from 'zod'
 
-interface ParseConfigParams<S extends ConfigSchema> {
+interface BaseParseConfigParams<S extends ConfigSchema> {
   values: ConfigValues
   schema: S
-  extendBaseConfig?: boolean
 }
 
 /**
@@ -16,28 +17,48 @@ interface ParseConfigParams<S extends ConfigSchema> {
  * Custom values/schema fields with the same key override the base version.
  * Pass `extendBaseConfig: false` to exclude base fields.
  *
+ * `envFieldRules` declares per-environment required/forbidden fields, typed
+ * against the merged shape (base + app). They are merged with
+ * `BaseEnvFieldRules` (field lists unioned per environment) and enforced by
+ * one object-level check on the merged schema, so the single `safeParse` below
+ * reports rule violations aggregated with zod's own issues.
+ *
  * @example
  * const config = parseConfig({
  *   values: { awsApiEndpoint: process.env.AWS_API_ENDPOINT },
  *   schema: z.object({ awsApiEndpoint: z.string().min(1) }),
+ *   envFieldRules: { [Environment.Production]: { required: ['awsApiEndpoint'] } },
  * })
  * // config includes all BaseConfig fields + awsApiEndpoint
  */
 export function parseConfig<S extends ConfigSchema>(
-  params: ParseConfigParams<S> & { extendBaseConfig: false },
+  params: BaseParseConfigParams<S> & {
+    extendBaseConfig: false
+    envFieldRules?: EnvFieldRules<z.infer<S>>
+  },
 ): z.infer<S>
 
 export function parseConfig<S extends ConfigSchema>(
-  params: ParseConfigParams<S> & { extendBaseConfig?: true },
+  params: BaseParseConfigParams<S> & {
+    extendBaseConfig?: true
+    envFieldRules?: EnvFieldRules<Omit<BaseConfig, keyof z.infer<S> & string> & z.infer<S>>
+  },
 ): Omit<BaseConfig, keyof z.infer<S> & string> & z.infer<S>
 
-export function parseConfig<S extends ConfigSchema>(params: ParseConfigParams<S>): Record<string, unknown> {
-  const { values, schema, extendBaseConfig = true } = params
+export function parseConfig<S extends ConfigSchema>(
+  params: BaseParseConfigParams<S> & {
+    extendBaseConfig?: boolean
+    envFieldRules?: UntypedEnvFieldRules
+  },
+): Record<string, unknown> {
+  const { values, schema, extendBaseConfig = true, envFieldRules = {} } = params
   const mergedValues = extendBaseConfig ? { ...BaseConfigValues, ...values } : values
-  const mergedSchema = extendBaseConfig ? BaseConfigSchema.extend(schema.shape) : schema
+  const mergedSchema = withEnvFieldRules(
+    extendBaseConfig ? z.object({ ...BaseConfigSchema.shape, ...schema.shape }) : schema,
+    mergeEnvFieldRules(BaseEnvFieldRules, envFieldRules),
+  )
 
   const parsed = mergedSchema.safeParse(mergedValues)
-
   if (parsed.success) {
     return Object.freeze(parsed.data as Record<string, unknown>)
   }

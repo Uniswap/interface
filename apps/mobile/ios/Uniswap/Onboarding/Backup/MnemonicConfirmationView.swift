@@ -11,10 +11,22 @@ import SwiftUI
 // Standard HD wallet mnemonic length (BIP-39 12 words). Embedded wallets use 24.
 fileprivate let mnemonicLengthHD = 12
 
-@objcMembers class MnemonicConfirmationView: NSObject {
+@objcMembers class MnemonicConfirmationView: UIView {
   private var vc = UIHostingController(rootView: MnemonicConfirmation())
 
-  static let storage = NSMutableDictionary()
+  override init(frame: CGRect) {
+    super.init(frame: frame)
+
+    let hostedView = vc.view!
+    hostedView.backgroundColor = .clear
+    hostedView.frame = bounds
+    hostedView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    addSubview(hostedView)
+  }
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
 
   var mnemonicId: String {
     set { vc.rootView.setMnemonicId(mnemonicId: newValue) }
@@ -62,10 +74,6 @@ fileprivate let mnemonicLengthHD = 12
     get { return vc.rootView.props.totalPages }
   }
 
-  var view: UIView {
-    vc.view.backgroundColor = .clear
-    return vc.view
-  }
 }
 
 class MnemonicConfirmationProps : ObservableObject {

@@ -6,12 +6,13 @@ import { useAccountsStore } from 'uniswap/src/features/accounts/store/hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTradingApiGasOverrides } from 'uniswap/src/features/gas/hooks/useTradingApiGasOverrides'
+import { useShouldWaitForPermissionedCheck } from 'uniswap/src/features/permissionedTokens/useShouldWaitForPermissionedCheck'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
-import { useSwapAnchoredUsdValues } from 'uniswap/src/features/transactions/swap/hooks/useSwapAnchoredUsdValues'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { useSwapEarnIntent } from 'uniswap/src/features/transactions/swap/hooks/useSwapEarnIntent'
 import { useTrade } from 'uniswap/src/features/transactions/swap/hooks/useTrade'
 import { useTradeFromExistingPlan } from 'uniswap/src/features/transactions/swap/hooks/useTradeFromExistingPlan'
@@ -151,8 +152,16 @@ export function useDerivedSwapInfo({
     ],
   )
 
+  // Hold the quote until the permissioned-token check for this pair has resolved, so the first
+  // quote can't ship the wrong Universal Router version off a cold cache. See the hook for detail.
+  const isPermissionedCheckLoading = useShouldWaitForPermissionedCheck({
+    inputCurrency: currencyIn,
+    outputCurrency: currencyOut,
+    walletAddress: account?.address,
+  })
+
   const existingPlanTrade = useTradeFromExistingPlan(tradeParams)
-  const tradeFromQuote = useTrade({ ...tradeParams, skip: !!existingPlanTrade })
+  const tradeFromQuote = useTrade({ ...tradeParams, skip: !!existingPlanTrade || isPermissionedCheckLoading })
   const trade = existingPlanTrade ?? tradeFromQuote
 
   const displayableTrade = trade.trade ?? trade.indicativeTrade
@@ -169,17 +178,8 @@ export function useDerivedSwapInfo({
     [exactCurrencyField, amountSpecified, displayableTrade?.inputAmount, displayableTradeOutputAmount],
   )
 
-  // Both sides are valued from a single anchored price source so the two USD values
-  // (and the rate line derived from them) stay consistent with the quote (INFRA-2364).
-  const {
-    input: inputCurrencyUSDValue,
-    output: outputCurrencyUSDValue,
-    pricing: usdPricing,
-  } = useSwapAnchoredUsdValues({
-    trade: displayableTrade,
-    inputAmount: currencyAmounts[CurrencyField.INPUT],
-    outputAmount: currencyAmounts[CurrencyField.OUTPUT],
-  })
+  const inputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.INPUT])
+  const outputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.OUTPUT])
 
   const currencyAmountsUSDValue = useMemo(() => {
     return {
@@ -201,7 +201,6 @@ export function useDerivedSwapInfo({
       currencies,
       currencyAmounts,
       currencyAmountsUSDValue,
-      usdPricing,
       currencyBalances,
       trade,
       exactAmountToken,
@@ -217,7 +216,6 @@ export function useDerivedSwapInfo({
     currencies,
     currencyAmounts,
     currencyAmountsUSDValue,
-    usdPricing,
     currencyBalances,
     exactAmountFiat,
     exactAmountToken,

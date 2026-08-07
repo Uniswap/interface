@@ -1,9 +1,9 @@
-import { useListRwasQuery } from 'uniswap/src/data/rest/listRwas'
+import { useListRwasQuery } from 'uniswap/src/data/apiClients/dataApiService/rwa/listRwas'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useRwaIndex } from 'uniswap/src/features/search/SearchModal/stocks/useRwaIndex'
 import { renderHook } from 'uniswap/src/test/test-utils'
 
-vi.mock('uniswap/src/data/rest/listRwas', () => ({ useListRwasQuery: vi.fn() }))
+vi.mock('uniswap/src/data/apiClients/dataApiService/rwa/listRwas', () => ({ useListRwasQuery: vi.fn() }))
 vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({ useEnabledChains: vi.fn() }))
 
 const mockUseListRwasQuery = vi.mocked(useListRwasQuery)

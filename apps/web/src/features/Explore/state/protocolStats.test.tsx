@@ -14,7 +14,7 @@ vi.mock('@universe/gating', async (importOriginal) => {
 })
 
 const mockUseProtocolStatsQuery = vi.fn()
-vi.mock('uniswap/src/data/rest/protocolStats', () => ({
+vi.mock('uniswap/src/data/apiClients/dataApiService/exploreV1/protocolStats', () => ({
   useProtocolStatsQuery: (input: unknown) => mockUseProtocolStatsQuery(input),
 }))
 

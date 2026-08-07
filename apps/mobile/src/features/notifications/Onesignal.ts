@@ -4,11 +4,8 @@ import { OneSignal } from 'react-native-onesignal'
 import { getConfig } from 'src/config'
 import { NotificationType } from 'src/features/notifications/constants'
 import { startSilentPushListener } from 'src/features/notifications/SilentPushListener'
-import { GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE } from 'uniswap/src/features/portfolio/portfolioUpdates/constants'
 import { getUniqueId } from 'utilities/src/device/uniqueId'
 import { logger } from 'utilities/src/logger/logger'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient'
 
 export const initOneSignal = (): void => {
   // Uncomment for local debugging
@@ -39,14 +36,6 @@ export const initOneSignal = (): void => {
 
   OneSignal.Notifications.addEventListener('click', (event) => {
     logger.debug('Onesignal', 'setNotificationOpenedHandler', `Notification opened: ${event.notification}`)
-
-    setTimeout(
-      () =>
-        apolloClientRef.current?.refetchQueries({
-          include: GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE,
-        }),
-      ONE_SECOND_MS, // Delay by 1s to give a buffer for data sources to synchronize
-    )
 
     // This emits a url event when coldStart = false. Don't call openURI because that will
     // send the user to Safari to open the universal link. When coldStart = true, OneSignal

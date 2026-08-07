@@ -16,6 +16,8 @@
  *
  * The semantic alias set below MUST stay in lockstep with the `:root`/`.dark`
  * blocks in css/variables.css — `src/tokens.parity.test.ts` enforces that.
+ * (the deprecated accent3/accent3-hovered neutral1 aliases and
+ * `background` are web-only by design and are deliberately absent here.)
  */
 
 @import "./css/theme.css";
@@ -31,18 +33,50 @@
   :root {
     @variant light {
       --surface1: var(--color-surface1-light);
+      --surface1-hovered: var(--color-surface1-hovered-light);
       --surface2: var(--color-surface2-light);
+      --surface2-hovered: var(--color-surface2-hovered-light);
       --surface3: var(--color-surface3-light);
+      --surface3-hovered: var(--color-surface3-hovered-light);
+      --surface3-solid: var(--color-surface3-solid-light);
       --surface4: var(--color-surface4-light);
       --surface5: var(--color-surface5-light);
+      --surface5-hovered: var(--color-surface5-hovered-light);
       --neutral1: var(--color-neutral1-light);
+      --neutral1-hovered: var(--color-neutral1-hovered-light);
       --neutral2: var(--color-neutral2-light);
+      --neutral2-hovered: var(--color-neutral2-hovered-light);
       --neutral3: var(--color-neutral3-light);
+      --neutral3-hovered: var(--color-neutral3-hovered-light);
       --accent1: var(--color-accent1-light);
+      --accent1-hovered: var(--color-accent1-hovered-light);
       --accent2: var(--color-accent2-light);
+      --accent2-hovered: var(--color-accent2-hovered-light);
+      --accent2-solid: var(--color-accent2-solid-light);
       --success: var(--color-success-light);
-      --warning: var(--color-gold-200);
+      --success-hovered: var(--color-success-hovered-light);
+      --success-secondary: var(--color-success-secondary-light);
+      --success-secondary-hovered: var(--color-success-secondary-hovered-light);
+      --warning: var(--color-warning-light);
+      --warning-hovered: var(--color-warning-hovered-light);
+      --warning-secondary: var(--color-warning-secondary-light);
+      --warning-secondary-hovered: var(--color-warning-secondary-hovered-light);
       --critical: var(--color-critical-light);
+      --critical-hovered: var(--color-critical-hovered-light);
+      --critical-secondary: var(--color-critical-secondary-light);
+      --critical-secondary-hovered: var(--color-critical-secondary-hovered-light);
+      --network-arc: var(--color-network-arc-light);
+      --network-blast: var(--color-network-blast-light);
+      --network-bnb: var(--color-network-bnb-light);
+      --network-celo: var(--color-network-celo-light);
+      --network-linea: var(--color-network-linea-light);
+      --network-megaeth: var(--color-network-megaeth-light);
+      --network-monad: var(--color-network-monad-light);
+      --network-soneium: var(--color-network-soneium-light);
+      --network-tempo: var(--color-network-tempo-light);
+      --network-worldchain: var(--color-network-worldchain-light);
+      --network-xlayer: var(--color-network-xlayer-light);
+      --network-zora: var(--color-network-zora-light);
       --unicon-0: var(--color-unicon-0-light);
       --unicon-1: var(--color-unicon-1-light);
       --unicon-2: var(--color-unicon-2-light);
@@ -57,18 +91,50 @@
     }
     @variant dark {
       --surface1: var(--color-surface1-dark);
+      --surface1-hovered: var(--color-surface1-hovered-dark);
       --surface2: var(--color-surface2-dark);
+      --surface2-hovered: var(--color-surface2-hovered-dark);
       --surface3: var(--color-surface3-dark);
+      --surface3-hovered: var(--color-surface3-hovered-dark);
+      --surface3-solid: var(--color-surface3-solid-dark);
       --surface4: var(--color-surface4-dark);
       --surface5: var(--color-surface5-dark);
+      --surface5-hovered: var(--color-surface5-hovered-dark);
       --neutral1: var(--color-neutral1-dark);
+      --neutral1-hovered: var(--color-neutral1-hovered-dark);
       --neutral2: var(--color-neutral2-dark);
+      --neutral2-hovered: var(--color-neutral2-hovered-dark);
       --neutral3: var(--color-neutral3-dark);
+      --neutral3-hovered: var(--color-neutral3-hovered-dark);
       --accent1: var(--color-accent1-dark);
+      --accent1-hovered: var(--color-accent1-hovered-dark);
       --accent2: var(--color-accent2-dark);
+      --accent2-hovered: var(--color-accent2-hovered-dark);
+      --accent2-solid: var(--color-accent2-solid-dark);
       --success: var(--color-success-dark);
-      --warning: var(--color-gold-200);
+      --success-hovered: var(--color-success-hovered-dark);
+      --success-secondary: var(--color-success-secondary-dark);
+      --success-secondary-hovered: var(--color-success-secondary-hovered-dark);
+      --warning: var(--color-warning-dark);
+      --warning-hovered: var(--color-warning-hovered-dark);
+      --warning-secondary: var(--color-warning-secondary-dark);
+      --warning-secondary-hovered: var(--color-warning-secondary-hovered-dark);
       --critical: var(--color-critical-dark);
+      --critical-hovered: var(--color-critical-hovered-dark);
+      --critical-secondary: var(--color-critical-secondary-dark);
+      --critical-secondary-hovered: var(--color-critical-secondary-hovered-dark);
+      --network-arc: var(--color-network-arc-dark);
+      --network-blast: var(--color-network-blast-dark);
+      --network-bnb: var(--color-network-bnb-dark);
+      --network-celo: var(--color-network-celo-dark);
+      --network-linea: var(--color-network-linea-dark);
+      --network-megaeth: var(--color-network-megaeth-dark);
+      --network-monad: var(--color-network-monad-dark);
+      --network-soneium: var(--color-network-soneium-dark);
+      --network-tempo: var(--color-network-tempo-dark);
+      --network-worldchain: var(--color-network-worldchain-dark);
+      --network-xlayer: var(--color-network-xlayer-dark);
+      --network-zora: var(--color-network-zora-dark);
       --unicon-0: var(--color-unicon-0-dark);
       --unicon-1: var(--color-unicon-1-dark);
       --unicon-2: var(--color-unicon-2-dark);
@@ -88,20 +154,52 @@
  * Bridge the runtime semantic aliases into Tailwind's --color-* namespace so
  * utilities (bg-surface1, text-neutral1, border-critical, …) resolve through
  * the active uniwind theme. Mirrors the @theme inline block in css/variables.css
- * (shadcn compat vars are intentionally omitted — web-only Radix components).
+ * (shadcn compat vars and the deprecated accent3 aliases are intentionally omitted — web-only).
  */
 @theme inline {
   --color-surface1: var(--surface1);
+  --color-surface1-hovered: var(--surface1-hovered);
   --color-surface2: var(--surface2);
+  --color-surface2-hovered: var(--surface2-hovered);
   --color-surface3: var(--surface3);
+  --color-surface3-hovered: var(--surface3-hovered);
+  --color-surface3-solid: var(--surface3-solid);
   --color-surface4: var(--surface4);
   --color-surface5: var(--surface5);
+  --color-surface5-hovered: var(--surface5-hovered);
   --color-neutral1: var(--neutral1);
+  --color-neutral1-hovered: var(--neutral1-hovered);
   --color-neutral2: var(--neutral2);
+  --color-neutral2-hovered: var(--neutral2-hovered);
   --color-neutral3: var(--neutral3);
+  --color-neutral3-hovered: var(--neutral3-hovered);
   --color-accent1: var(--accent1);
+  --color-accent1-hovered: var(--accent1-hovered);
   --color-accent2: var(--accent2);
+  --color-accent2-hovered: var(--accent2-hovered);
+  --color-accent2-solid: var(--accent2-solid);
   --color-success: var(--success);
+  --color-success-hovered: var(--success-hovered);
+  --color-success-secondary: var(--success-secondary);
+  --color-success-secondary-hovered: var(--success-secondary-hovered);
   --color-warning: var(--warning);
+  --color-warning-hovered: var(--warning-hovered);
+  --color-warning-secondary: var(--warning-secondary);
+  --color-warning-secondary-hovered: var(--warning-secondary-hovered);
   --color-critical: var(--critical);
+  --color-critical-hovered: var(--critical-hovered);
+  --color-critical-secondary: var(--critical-secondary);
+  --color-critical-secondary-hovered: var(--critical-secondary-hovered);
+  --color-network-arc: var(--network-arc);
+  --color-network-blast: var(--network-blast);
+  --color-network-bnb: var(--network-bnb);
+  --color-network-celo: var(--network-celo);
+  --color-network-linea: var(--network-linea);
+  --color-network-megaeth: var(--network-megaeth);
+  --color-network-monad: var(--network-monad);
+  --color-network-soneium: var(--network-soneium);
+  --color-network-tempo: var(--network-tempo);
+  --color-network-worldchain: var(--network-worldchain);
+  --color-network-xlayer: var(--network-xlayer);
+  --color-network-zora: var(--network-zora);
 }

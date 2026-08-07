@@ -1,5 +1,5 @@
-import { TradingApi } from '@universe/api'
 import { useEffect, useMemo } from 'react'
+import { getPlanStepsForDisplay } from 'uniswap/src/features/transactions/swap/plan/collapseRetrySteps'
 import { TransactionAndPlanStep } from 'uniswap/src/features/transactions/swap/plan/planStepTransformer'
 import {
   ActivePlanState,
@@ -14,7 +14,6 @@ function selectActivePlanData(state: ActivePlanState):
   | {
       steps: TransactionAndPlanStep[]
       currentStep: TransactionAndPlanStep
-      previousStep: TransactionAndPlanStep | undefined
       proofPending: boolean
     }
   | undefined {
@@ -25,12 +24,11 @@ function selectActivePlanData(state: ActivePlanState):
   const { steps, currentStepIndex, proofPending } = state.activePlan
 
   const currentStep = steps[currentStepIndex]
-  const previousStep = steps[currentStepIndex - 1]
   if (!currentStep) {
     return undefined
   }
 
-  return { steps, currentStep, previousStep, proofPending }
+  return { steps, currentStep, proofPending }
 }
 
 export function SyncActivePlanEffects(): null {
@@ -38,26 +36,31 @@ export function SyncActivePlanEffects(): null {
   const { setSteps, setCurrentStep } = useSwapReviewActions()
 
   const isSubmitting = useSwapFormStore((state) => state.isSubmitting)
-  const currentDisplayStep = useMemo(() => {
-    // Highlight last failed step if it exists and we're not submitting
-    if (activePlanData?.previousStep?.status === TradingApi.PlanStepStatus.STEP_ERROR && !isSubmitting) {
-      return activePlanData.previousStep
-    }
 
-    return activePlanData?.currentStep
-  }, [activePlanData?.currentStep, activePlanData?.previousStep, isSubmitting])
+  // Collapse retry rows so each logical step renders once (latest failed attempt while awaiting
+  // retry, live row while submitting), and pick the matching display step.
+  const displayData = useMemo(() => {
+    if (!activePlanData) {
+      return undefined
+    }
+    return getPlanStepsForDisplay({
+      steps: activePlanData.steps,
+      currentStep: activePlanData.currentStep,
+      isSubmitting,
+    })
+  }, [activePlanData, isSubmitting])
 
   useEffect(() => {
-    if (activePlanData?.steps) {
-      setSteps(activePlanData.steps)
+    if (displayData) {
+      setSteps(displayData.displaySteps)
     }
-  }, [activePlanData?.steps, setSteps])
+  }, [displayData, setSteps])
 
   useEffect(() => {
-    if (currentDisplayStep) {
-      setCurrentStep({ step: currentDisplayStep, accepted: activePlanData?.proofPending ?? false })
+    if (displayData) {
+      setCurrentStep({ step: displayData.displayStep, accepted: activePlanData?.proofPending ?? false })
     }
-  }, [currentDisplayStep, activePlanData?.proofPending, setCurrentStep])
+  }, [displayData, activePlanData?.proofPending, setCurrentStep])
 
   return null
 }

@@ -1,6 +1,7 @@
 import { createColumnHelper, Row } from '@tanstack/react-table'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { TFunction } from 'i18next'
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -13,7 +14,8 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { isCancelTimedOut } from 'uniswap/src/features/transactions/cancel/cancelTimeoutStateMachine'
+import { TransactionStatus, UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -54,10 +56,30 @@ function getExpiryText(expiry: number | undefined, t: TFunction): string | null 
   return t('common.limits.expiresIn', { duration: durationString })
 }
 
+// Second line of the info cell: cancel-flow status text replaces the expiry text
+function getSecondLine({
+  order,
+  isCancelTimeoutEnabled,
+  t,
+}: {
+  order: UniswapXOrderDetails
+  isCancelTimeoutEnabled: boolean
+  t: TFunction
+}): { text: string | null; color: '$neutral2' | '$statusWarning' } {
+  if (order.status === TransactionStatus.Cancelling) {
+    if (isCancelTimeoutEnabled && isCancelTimedOut(order)) {
+      return { text: t('limits.cancel.likelyToFail'), color: '$statusWarning' }
+    }
+    return { text: t('common.pending.cancellation'), color: '$neutral2' }
+  }
+  return { text: getExpiryText(order.expiry, t), color: '$neutral2' }
+}
+
 // Left column cell component
 const LimitInfoCell = memo(function LimitInfoCell({ order }: { order: UniswapXOrderDetails }) {
   const { t } = useTranslation()
   const { formatCurrencyAmount } = useLocalizationContext()
+  const isCancelTimeoutEnabled = useFeatureFlag(FeatureFlags.LimitCancelTimeout)
   const amounts = useOrderAmounts(order)
   const scrollbarStyles = useScrollbarStyles()
 
@@ -73,6 +95,8 @@ const LimitInfoCell = memo(function LimitInfoCell({ order }: { order: UniswapXOr
   if (!hasValidOrderAmounts(amounts)) {
     return null
   }
+
+  const secondLine = getSecondLine({ order, isCancelTimeoutEnabled, t })
 
   return (
     <Flex width="100%" $platform-web={{ overflowX: 'auto' }} style={scrollbarStyles}>
@@ -91,8 +115,8 @@ const LimitInfoCell = memo(function LimitInfoCell({ order }: { order: UniswapXOr
             })}{' '}
             {amounts.inputAmount.currency.symbol} → {amounts.outputAmount.currency.symbol}
           </Text>
-          <Text variant="body4" color="$neutral2">
-            {getExpiryText(order.expiry, t)}
+          <Text variant="body4" color={secondLine.color}>
+            {secondLine.text}
           </Text>
         </Flex>
       </Flex>

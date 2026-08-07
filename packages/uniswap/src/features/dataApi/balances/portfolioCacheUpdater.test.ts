@@ -6,8 +6,8 @@ import {
 import { SharedQueryClient } from '@universe/api'
 import { FeatureFlags } from '@universe/gating'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { getPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
-import { getWalletBalancesQuery } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+import { getPortfolioQuery } from 'uniswap/src/data/apiClients/dataApiService/balances/getPortfolio'
+import { getWalletBalancesQuery } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   createPortfolioCacheUpdater,
@@ -84,10 +84,7 @@ const mockPortfolioBalance2: PortfolioBalance = {
 
 describe(createPortfolioCacheUpdater, () => {
   it('updates balance visibility and total value when hiding', () => {
-    const ctx = {
-      getCurrentData: vi.fn().mockReturnValue(mockPortfolioData),
-      updateData: vi.fn(),
-    }
+    const ctx = { updateData: vi.fn() }
 
     const updater = createPortfolioCacheUpdater(ctx)({
       evmAddress: '0xuser',
@@ -96,12 +93,7 @@ describe(createPortfolioCacheUpdater, () => {
 
     updater({ hidden: true, portfolioBalance: mockPortfolioBalance1 })
 
-    expect(ctx.getCurrentData).toHaveBeenCalledWith({
-      evmAddress: '0xuser',
-      chainIds: [1, 2],
-    })
-
-    const updaterFn = ctx.updateData.mock.calls[0]![1]
+    const updaterFn = ctx.updateData.mock.calls[0]![0].updater
     const result = updaterFn(mockPortfolioData)
 
     expect(result.portfolio.balances[0].isHidden).toBe(true)
@@ -111,10 +103,7 @@ describe(createPortfolioCacheUpdater, () => {
   })
 
   it('updates balance visibility and total value when un-hiding', () => {
-    const ctx = {
-      getCurrentData: vi.fn().mockReturnValue(mockPortfolioData),
-      updateData: vi.fn(),
-    }
+    const ctx = { updateData: vi.fn() }
 
     const updater = createPortfolioCacheUpdater(ctx)({
       evmAddress: '0xuser',
@@ -123,12 +112,7 @@ describe(createPortfolioCacheUpdater, () => {
 
     updater({ hidden: false, portfolioBalance: mockPortfolioBalance2 })
 
-    expect(ctx.getCurrentData).toHaveBeenCalledWith({
-      evmAddress: '0xuser',
-      chainIds: [1, 2],
-    })
-
-    const updaterFn = ctx.updateData.mock.calls[0]![1]
+    const updaterFn = ctx.updateData.mock.calls[0]![0].updater
     const result = updaterFn(mockPortfolioData)
 
     expect(result.portfolio.balances[0].isHidden).toBe(false)
@@ -137,10 +121,57 @@ describe(createPortfolioCacheUpdater, () => {
     expect(result.portfolio.totalValueUsd).toBe(500)
   })
 
+  it('updates matching chain balances inside multichain entries', () => {
+    const ctx = { updateData: vi.fn() }
+    const multichainData = {
+      portfolio: {
+        balances: [],
+        multichainBalances: [
+          {
+            symbol: 'ETH',
+            chainBalances: [
+              { chainId: 1, address: mainnetNativeAddress, isHidden: false },
+              { chainId: 10, address: mainnetNativeAddress, isHidden: false },
+            ],
+          },
+          {
+            symbol: 'OTHER',
+            chainBalances: [{ chainId: 1, address: '0x2', isHidden: false }],
+          },
+        ],
+        totalValueUsd: 300,
+      },
+    }
+
+    const updater = createPortfolioCacheUpdater(ctx)({
+      evmAddress: '0xuser',
+      chainIds: [1, 10],
+    })
+    updater({ hidden: true, portfolioBalance: mockPortfolioBalance1 })
+
+    const updaterFn = ctx.updateData.mock.calls[0]![0].updater
+    const result = updaterFn(multichainData)
+
+    // Only the mainnet native chain balance matches the hidden currency.
+    expect(result.portfolio.multichainBalances[0].chainBalances[0].isHidden).toBe(true)
+    expect(result.portfolio.multichainBalances[0].chainBalances[1].isHidden).toBe(false)
+    expect(result.portfolio.multichainBalances[1].chainBalances[0].isHidden).toBe(false)
+    expect(result.portfolio.totalValueUsd).toBe(200)
+  })
+
+  it('leaves data-less entries untouched by returning undefined from the updater', () => {
+    const ctx = { updateData: vi.fn() }
+
+    const updater = createPortfolioCacheUpdater(ctx)({ evmAddress: '0xuser', chainIds: [1, 2] })
+    updater({ hidden: true, portfolioBalance: mockPortfolioBalance1 })
+
+    const updaterFn = ctx.updateData.mock.calls[0]![0].updater
+    expect(updaterFn(undefined)).toBeUndefined()
+  })
+
   it('forwards a negative USD delta and the originating input to updateWalletBalancesForDelta when hiding', () => {
     const updateWalletBalancesForDelta = vi.fn()
     const ctx = {
-      getCurrentData: vi.fn().mockReturnValue(mockPortfolioData),
       updateData: vi.fn(),
       updateWalletBalancesForDelta,
     }
@@ -153,13 +184,13 @@ describe(createPortfolioCacheUpdater, () => {
     expect(updateWalletBalancesForDelta).toHaveBeenCalledWith({
       input,
       deltaUsd: -mockPortfolioBalance1.balanceUSD!,
+      chainId: mockPortfolioBalance1.currencyInfo.currency.chainId,
     })
   })
 
   it('forwards a positive USD delta and the originating input to updateWalletBalancesForDelta when un-hiding', () => {
     const updateWalletBalancesForDelta = vi.fn()
     const ctx = {
-      getCurrentData: vi.fn().mockReturnValue(mockPortfolioData),
       updateData: vi.fn(),
       updateWalletBalancesForDelta,
     }
@@ -172,13 +203,13 @@ describe(createPortfolioCacheUpdater, () => {
     expect(updateWalletBalancesForDelta).toHaveBeenCalledWith({
       input,
       deltaUsd: mockPortfolioBalance2.balanceUSD!,
+      chainId: mockPortfolioBalance2.currencyInfo.currency.chainId,
     })
   })
 
   it('does not call updateWalletBalancesForDelta when no portfolioBalance is provided', () => {
     const updateWalletBalancesForDelta = vi.fn()
     const ctx = {
-      getCurrentData: vi.fn().mockReturnValue(mockPortfolioData),
       updateData: vi.fn(),
       updateWalletBalancesForDelta,
     }
@@ -189,10 +220,9 @@ describe(createPortfolioCacheUpdater, () => {
     expect(updateWalletBalancesForDelta).not.toHaveBeenCalled()
   })
 
-  it('does not invoke updateWalletBalancesForDelta when the GetPortfolio cache is empty', () => {
+  it('forwards the delta even when no GetPortfolio entry holds data', () => {
     const updateWalletBalancesForDelta = vi.fn()
     const ctx = {
-      getCurrentData: vi.fn().mockReturnValue(undefined),
       updateData: vi.fn(),
       updateWalletBalancesForDelta,
     }
@@ -200,7 +230,7 @@ describe(createPortfolioCacheUpdater, () => {
     const updater = createPortfolioCacheUpdater(ctx)({ evmAddress: '0xuser', chainIds: [1, 2] })
     updater({ hidden: true, portfolioBalance: mockPortfolioBalance1 })
 
-    expect(updateWalletBalancesForDelta).not.toHaveBeenCalled()
+    expect(updateWalletBalancesForDelta).toHaveBeenCalledTimes(1)
   })
 })
 
@@ -249,25 +279,32 @@ describe(usePortfolioCacheUpdater, () => {
     SharedQueryClient.clear()
   })
 
+  // The updater's cache writes land after it awaits query cancellation; flush one tick to observe them.
+  const flushUpdater = async (): Promise<void> => new Promise((resolve) => setTimeout(resolve, 0))
+
   // The wallet-balances entry the header reads is keyed by `includeCategories`, so the optimistic
   // token-side write must carry the same categories the rendered query used. Prime that exact key.
+  // The GetPortfolio entry is primed under a `multichain: true` key variant the updater never
+  // builds itself — the rendered hooks key on inputs the updater doesn't know, so these tests
+  // fail if the updater regresses to exact-key writes.
   function primeCaches(includeCategories: WalletBalanceCategory[] = []): {
     portfolioKey: readonly unknown[]
     walletBalancesKey: readonly unknown[]
   } {
-    const portfolioKey = getPortfolioQuery({ input: hookInput }).queryKey
+    const portfolioKey = getPortfolioQuery({ input: { ...hookInput, multichain: true } }).queryKey
     const walletBalancesKey = getWalletBalancesQuery({ input: { ...hookInput, includeCategories } }).queryKey
     SharedQueryClient.setQueryData(portfolioKey, mockPortfolioData as unknown as GetPortfolioResponse)
     SharedQueryClient.setQueryData(walletBalancesKey, makeWalletBalances(1000, 600, 400))
     return { portfolioKey, walletBalancesKey }
   }
 
-  it('mutates both the GetPortfolio and GetWalletBalances caches when hiding a token', () => {
+  it('mutates both the GetPortfolio and GetWalletBalances caches when hiding a token', async () => {
     const { portfolioKey, walletBalancesKey } = primeCaches()
 
     const { result } = renderHookWithProviders(() => usePortfolioCacheUpdater(EVM_ADDR))
 
     result.current(true, mockPortfolioBalance1)
+    await flushUpdater()
 
     const portfolioAfter = SharedQueryClient.getQueryData<typeof mockPortfolioData>(portfolioKey)
     expect(portfolioAfter?.portfolio.balances[0]?.isHidden).toBe(true)
@@ -279,13 +316,14 @@ describe(usePortfolioCacheUpdater, () => {
     expect(walletAfter?.balance.pools.valueUsd).toBe(400)
   })
 
-  it('targets the pools-inclusive wallet balances cache entry when the pools flag is on', () => {
+  it('targets the pools-inclusive wallet balances cache entry when the pools flag is on', async () => {
     mockPoolsFlagEnabled.value = true
     const { walletBalancesKey } = primeCaches([WalletBalanceCategory.POOLS])
 
     const { result } = renderHookWithProviders(() => usePortfolioCacheUpdater(EVM_ADDR))
 
     result.current(true, mockPortfolioBalance1)
+    await flushUpdater()
 
     const walletAfter = SharedQueryClient.getQueryData<WalletBalancesShape>(walletBalancesKey)
     expect(walletAfter?.balance.total.valueUsd).toBe(900)
@@ -293,13 +331,14 @@ describe(usePortfolioCacheUpdater, () => {
     expect(walletAfter?.balance.pools.valueUsd).toBe(400)
   })
 
-  it('targets the earn-inclusive wallet balances cache entry when the earn flag is on', () => {
+  it('targets the earn-inclusive wallet balances cache entry when the earn flag is on', async () => {
     mockEarnFlagEnabled.value = true
     const { walletBalancesKey } = primeCaches([WalletBalanceCategory.EARN_VAULTS])
 
     const { result } = renderHookWithProviders(() => usePortfolioCacheUpdater(EVM_ADDR))
 
     result.current(true, mockPortfolioBalance1)
+    await flushUpdater()
 
     const walletAfter = SharedQueryClient.getQueryData<WalletBalancesShape>(walletBalancesKey)
     expect(walletAfter?.balance.total.valueUsd).toBe(900)
@@ -308,7 +347,7 @@ describe(usePortfolioCacheUpdater, () => {
     expect(walletAfter?.balance.earn.valueUsd).toBe(75)
   })
 
-  it('targets the pools-and-earn wallet balances cache entry when both flags are on', () => {
+  it('targets the pools-and-earn wallet balances cache entry when both flags are on', async () => {
     mockPoolsFlagEnabled.value = true
     mockEarnFlagEnabled.value = true
     const { walletBalancesKey } = primeCaches([WalletBalanceCategory.POOLS, WalletBalanceCategory.EARN_VAULTS])
@@ -316,6 +355,7 @@ describe(usePortfolioCacheUpdater, () => {
     const { result } = renderHookWithProviders(() => usePortfolioCacheUpdater(EVM_ADDR))
 
     result.current(true, mockPortfolioBalance1)
+    await flushUpdater()
 
     const walletAfter = SharedQueryClient.getQueryData<WalletBalancesShape>(walletBalancesKey)
     expect(walletAfter?.balance.total.valueUsd).toBe(900)
@@ -324,7 +364,7 @@ describe(usePortfolioCacheUpdater, () => {
     expect(walletAfter?.balance.earn.valueUsd).toBe(75)
   })
 
-  it('leaves a wallet balances entry keyed with a different includeCategories untouched', () => {
+  it('applies the delta to every wallet balances entry covering the token chain, across categories', async () => {
     mockPoolsFlagEnabled.value = true
     const { walletBalancesKey } = primeCaches([WalletBalanceCategory.POOLS])
     const tokensOnlyKey = getWalletBalancesQuery({ input: { ...hookInput, includeCategories: [] } }).queryKey
@@ -333,24 +373,95 @@ describe(usePortfolioCacheUpdater, () => {
     const { result } = renderHookWithProviders(() => usePortfolioCacheUpdater(EVM_ADDR))
 
     result.current(true, mockPortfolioBalance1)
+    await flushUpdater()
 
-    // The matching pools-inclusive entry is mutated.
-    const targeted = SharedQueryClient.getQueryData<WalletBalancesShape>(walletBalancesKey)
-    expect(targeted?.balance.total.valueUsd).toBe(900)
-    expect(targeted?.balance.tokens.valueUsd).toBe(500)
-    // The non-matching tokens-only entry is left as-is.
-    const untouched = SharedQueryClient.getQueryData<WalletBalancesShape>(tokensOnlyKey)
-    expect(untouched?.balance.total.valueUsd).toBe(2000)
-    expect(untouched?.balance.tokens.valueUsd).toBe(1500)
-    expect(untouched?.balance.pools.valueUsd).toBe(500)
+    const poolsInclusive = SharedQueryClient.getQueryData<WalletBalancesShape>(walletBalancesKey)
+    expect(poolsInclusive?.balance.total.valueUsd).toBe(900)
+    expect(poolsInclusive?.balance.tokens.valueUsd).toBe(500)
+    const tokensOnly = SharedQueryClient.getQueryData<WalletBalancesShape>(tokensOnlyKey)
+    expect(tokensOnly?.balance.total.valueUsd).toBe(1900)
+    expect(tokensOnly?.balance.tokens.valueUsd).toBe(1400)
+    expect(tokensOnly?.balance.pools.valueUsd).toBe(500)
   })
 
-  it('mutates both caches in the opposite direction when un-hiding a token', () => {
+  it('updates chain-filtered entries covering the token chain and skips entries that do not', async () => {
+    mockUseEnabledChains.mockReturnValue({ chains: [UniverseChainId.Mainnet, UniverseChainId.Optimism] })
+    const allChainsInput = { ...hookInput, chainIds: [UniverseChainId.Mainnet, UniverseChainId.Optimism] }
+    SharedQueryClient.setQueryData(
+      getPortfolioQuery({ input: allChainsInput }).queryKey,
+      mockPortfolioData as unknown as GetPortfolioResponse,
+    )
+    const mainnetOnlyKey = getWalletBalancesQuery({
+      input: { ...hookInput, chainIds: [UniverseChainId.Mainnet], includeCategories: [] },
+    }).queryKey
+    const optimismOnlyKey = getWalletBalancesQuery({
+      input: { ...hookInput, chainIds: [UniverseChainId.Optimism], includeCategories: [] },
+    }).queryKey
+    SharedQueryClient.setQueryData(mainnetOnlyKey, makeWalletBalances(800, 500, 300))
+    SharedQueryClient.setQueryData(optimismOnlyKey, makeWalletBalances(200, 100, 100))
+
+    const { result } = renderHookWithProviders(() => usePortfolioCacheUpdater(EVM_ADDR))
+
+    result.current(true, mockPortfolioBalance1)
+    await flushUpdater()
+
+    // The chain-filtered entry covering the hidden token's chain (Mainnet) is mutated.
+    const mainnetOnly = SharedQueryClient.getQueryData<WalletBalancesShape>(mainnetOnlyKey)
+    expect(mainnetOnly?.balance.total.valueUsd).toBe(700)
+    expect(mainnetOnly?.balance.tokens.valueUsd).toBe(400)
+    // The entry filtered to a chain the token doesn't live on is left as-is.
+    const optimismOnly = SharedQueryClient.getQueryData<WalletBalancesShape>(optimismOnlyKey)
+    expect(optimismOnly?.balance.total.valueUsd).toBe(200)
+    expect(optimismOnly?.balance.tokens.valueUsd).toBe(100)
+  })
+
+  it('leaves chain-filtered GetPortfolio entries that do not cover the token chain untouched', async () => {
+    const { portfolioKey } = primeCaches()
+    const optimismOnlyPortfolioKey = getPortfolioQuery({
+      input: { ...hookInput, chainIds: [UniverseChainId.Optimism], multichain: true },
+    }).queryKey
+    SharedQueryClient.setQueryData(optimismOnlyPortfolioKey, mockPortfolioData as unknown as GetPortfolioResponse)
+
+    const { result } = renderHookWithProviders(() => usePortfolioCacheUpdater(EVM_ADDR))
+
+    result.current(true, mockPortfolioBalance1)
+    await flushUpdater()
+
+    // The entry covering the token's chain (Mainnet) is mutated; the Optimism-only entry is not.
+    const covering = SharedQueryClient.getQueryData<typeof mockPortfolioData>(portfolioKey)
+    expect(covering?.portfolio.totalValueUsd).toBe(200)
+    expect(SharedQueryClient.getQueryData(optimismOnlyPortfolioKey)).toEqual(mockPortfolioData)
+  })
+
+  it('cancels in-flight balance queries first, then schedules a reconciling invalidation', async () => {
+    primeCaches()
+    // Drain deferred invalidations scheduled by earlier tests so the spy only sees this test's.
+    await new Promise((resolve) => setTimeout(resolve, 0))
+    const cancelSpy = vi.spyOn(SharedQueryClient, 'cancelQueries')
+    const invalidateSpy = vi.spyOn(SharedQueryClient, 'invalidateQueries')
+
+    const { result } = renderHookWithProviders(() => usePortfolioCacheUpdater(EVM_ADDR))
+
+    result.current(true, mockPortfolioBalance1)
+    await flushUpdater()
+
+    expect(cancelSpy).toHaveBeenCalledTimes(1)
+    // Invalidation is deferred a tick so observers pick up the new visibility state first.
+    expect(invalidateSpy).not.toHaveBeenCalled()
+    await new Promise((resolve) => setTimeout(resolve, 0))
+    expect(invalidateSpy).toHaveBeenCalledTimes(1)
+
+    cancelSpy.mockRestore()
+    invalidateSpy.mockRestore()
+  })
+
+  it('mutates both caches in the opposite direction when un-hiding a token', async () => {
     const { portfolioKey, walletBalancesKey } = primeCaches()
 
     const { result } = renderHookWithProviders(() => usePortfolioCacheUpdater(EVM_ADDR))
 
     result.current(false, mockPortfolioBalance2)
+    await flushUpdater()
 
     const portfolioAfter = SharedQueryClient.getQueryData<typeof mockPortfolioData>(portfolioKey)
     expect(portfolioAfter?.portfolio.totalValueUsd).toBe(500)
@@ -361,12 +472,13 @@ describe(usePortfolioCacheUpdater, () => {
     expect(walletAfter?.balance.pools.valueUsd).toBe(400)
   })
 
-  it('is a no-op against both caches when no portfolioBalance is provided', () => {
+  it('leaves both caches untouched when no portfolioBalance is provided', async () => {
     const { portfolioKey, walletBalancesKey } = primeCaches()
 
     const { result } = renderHookWithProviders(() => usePortfolioCacheUpdater(EVM_ADDR))
 
     result.current(true)
+    await flushUpdater()
 
     expect(SharedQueryClient.getQueryData(portfolioKey)).toEqual(mockPortfolioData)
     const walletAfter = SharedQueryClient.getQueryData<WalletBalancesShape>(walletBalancesKey)

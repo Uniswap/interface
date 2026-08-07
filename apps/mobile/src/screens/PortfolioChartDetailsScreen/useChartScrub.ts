@@ -1,19 +1,27 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import type { ChartData } from 'src/components/home/PortfolioChart/SparklineChart'
+import type { ChartData } from 'src/components/charts/SparklineChart'
 import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
 
-type ScrubValues = { total: number; tokens: number | undefined; pools: number | undefined }
+type ScrubValues = {
+  total: number
+  tokens: number | undefined
+  pools: number | undefined
+  earn: number | undefined
+}
 
 export function useChartScrub({
   tokensData,
   poolsData,
+  earnData,
 }: {
   tokensData?: ChartData
   poolsData?: ChartData
+  earnData?: ChartData
 } = {}): {
   chartScrubFiatValue: number | undefined
   chartScrubTokensValue: number | undefined
   chartScrubPoolsValue: number | undefined
+  chartScrubEarnValue: number | undefined
   handleScrub: (point: ChartData[number] | null) => void
 } {
   const { hapticFeedback } = useHapticFeedback()
@@ -21,9 +29,10 @@ export function useChartScrub({
   const scrubValuesRef = useRef<ScrubValues | undefined>(undefined)
   const rafRef = useRef<ReturnType<typeof requestAnimationFrame> | null>(null)
 
-  // The chart scrubs the total series; these let us read the tokens/pools value at the same timestamp.
+  // The chart scrubs the total series; these let us read each category value at the same timestamp.
   const tokensByTimestamp = useMemo(() => new Map((tokensData ?? []).map((p) => [p.timestamp, p.value])), [tokensData])
   const poolsByTimestamp = useMemo(() => new Map((poolsData ?? []).map((p) => [p.timestamp, p.value])), [poolsData])
+  const earnByTimestamp = useMemo(() => new Map((earnData ?? []).map((p) => [p.timestamp, p.value])), [earnData])
 
   const handleScrub = useCallback(
     (point: ChartData[number] | null) => {
@@ -44,6 +53,7 @@ export function useChartScrub({
         total: point.value,
         tokens: tokensByTimestamp.get(point.timestamp),
         pools: poolsByTimestamp.get(point.timestamp),
+        earn: earnByTimestamp.get(point.timestamp),
       }
 
       if (rafRef.current === null) {
@@ -53,7 +63,7 @@ export function useChartScrub({
         })
       }
     },
-    [hapticFeedback, tokensByTimestamp, poolsByTimestamp],
+    [hapticFeedback, tokensByTimestamp, poolsByTimestamp, earnByTimestamp],
   )
 
   useEffect(() => {
@@ -69,6 +79,7 @@ export function useChartScrub({
     chartScrubFiatValue: scrubValues?.total,
     chartScrubTokensValue: scrubValues?.tokens,
     chartScrubPoolsValue: scrubValues?.pools,
+    chartScrubEarnValue: scrubValues?.earn,
     handleScrub,
   }
 }

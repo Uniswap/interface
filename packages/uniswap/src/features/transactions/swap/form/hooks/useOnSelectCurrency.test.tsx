@@ -9,7 +9,7 @@ import { TamaguiProvider } from 'ui/src'
 import { config } from 'ui/src/tamagui.config'
 import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
 import { UrlContext } from 'uniswap/src/contexts/UrlContext'
-import { SharedPersistQueryClientProvider } from 'uniswap/src/data/apiClients/SharedPersistQueryClientProvider'
+import { SharedPersistQueryClientProvider } from 'uniswap/src/data/reactQuery/SharedPersistQueryClientProvider'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {

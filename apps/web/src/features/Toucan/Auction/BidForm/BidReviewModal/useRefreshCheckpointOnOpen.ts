@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { GetLatestCheckpointRequest } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { auctionQueries } from 'uniswap/src/data/rest/auctions/auctionQueries'
+import { auctionQueries } from 'uniswap/src/data/apiClients/dataApiService/auctions/auctionQueries'
 import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
 import { logger } from 'utilities/src/logger/logger'
 

@@ -13,6 +13,8 @@ import type {
   GetTokenMarketsMultiChainResponse,
   GetTokenMarketsRequest,
   GetTokenMarketsResponse,
+  GetTokenMultiChainRequest,
+  GetTokenMultiChainResponse,
   GetTokenRequest,
   GetTokenResponse,
   GetTokensMultiChainRequest,
@@ -20,10 +22,11 @@ import type {
   GetTokensRequest,
   GetTokensResponse,
 } from '@uniswap/client-data-api/dist/data/v2/api_pb'
-import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApi/DataApiClientV2'
+import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 import { type QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
+import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 
 type DataApiV2Input<TRequest extends Message<TRequest>, TResponse extends Message<TResponse>, TSelectData> = {
   params?: PartialMessage<TRequest>
@@ -46,6 +49,12 @@ export type GetTokenInput<TSelectData = PlainMessage<GetTokenResponse>> = DataAp
 export type GetTokensInput<TSelectData = PlainMessage<GetTokensResponse>> = DataApiV2Input<
   GetTokensRequest,
   GetTokensResponse,
+  TSelectData
+>
+
+export type GetTokenMultiChainInput<TSelectData = PlainMessage<GetTokenMultiChainResponse>> = DataApiV2Input<
+  GetTokenMultiChainRequest,
+  GetTokenMultiChainResponse,
   TSelectData
 >
 
@@ -136,48 +145,69 @@ function createGetQueryOptions<
   }
 }
 
+// Price-bearing queries stay fresh at the 30s poll cadence; list/stats/history data holds for a minute.
+const PRICE_STALE_TIME_MS = 30 * ONE_SECOND_MS
+const STATS_STALE_TIME_MS = ONE_MINUTE_MS
+
 export const getGetTokenQueryOptions = createGetQueryOptions({
   name: 'getToken',
   fetch: (params: PartialMessage<GetTokenRequest>) => dataApiServiceClientV2.getToken(params),
+  policy: { staleTime: PRICE_STALE_TIME_MS },
 })
 
 export const getGetTokensQueryOptions = createGetQueryOptions({
   name: 'getTokens',
   fetch: (params: PartialMessage<GetTokensRequest>) => dataApiServiceClientV2.getTokens(params),
+  policy: { staleTime: STATS_STALE_TIME_MS },
+})
+
+export const getGetTokenMultiChainQueryOptions = createGetQueryOptions({
+  name: 'getTokenMultiChain',
+  fetch: (params: PartialMessage<GetTokenMultiChainRequest>) => dataApiServiceClientV2.getTokenMultiChain(params),
+  policy: { staleTime: PRICE_STALE_TIME_MS },
 })
 
 export const getGetTokensMultiChainQueryOptions = createGetQueryOptions({
   name: 'getTokensMultiChain',
   fetch: (params: PartialMessage<GetTokensMultiChainRequest>) => dataApiServiceClientV2.getTokensMultiChain(params),
+  policy: { staleTime: STATS_STALE_TIME_MS },
 })
 
 export const getGetTokenMarketsQueryOptions = createGetQueryOptions({
   name: 'getTokenMarkets',
   fetch: (params: PartialMessage<GetTokenMarketsRequest>) => dataApiServiceClientV2.getTokenMarkets(params),
+  policy: { staleTime: STATS_STALE_TIME_MS },
 })
 
 export const getGetTokenMarketsMultiChainQueryOptions = createGetQueryOptions({
   name: 'getTokenMarketsMultiChain',
   fetch: (params: PartialMessage<GetTokenMarketsMultiChainRequest>) =>
     dataApiServiceClientV2.getTokenMarketsMultiChain(params),
+  policy: { staleTime: STATS_STALE_TIME_MS },
 })
 
 export const getGetTokenHistoryPriceQueryOptions = createGetQueryOptions({
   name: 'getTokenHistoryPrice',
   fetch: (params: PartialMessage<GetTokenHistoryPriceRequest>) => dataApiServiceClientV2.getTokenHistoryPrice(params),
+  // Refetched on the TDP 30s price tick alongside getToken/getTokenMultiChain, not the config-cadence full tick.
+  policy: { staleTime: PRICE_STALE_TIME_MS },
 })
 
 export const getGetTokenHistoryOHLCQueryOptions = createGetQueryOptions({
   name: 'getTokenHistoryOHLC',
   fetch: (params: PartialMessage<GetTokenHistoryOHLCRequest>) => dataApiServiceClientV2.getTokenHistoryOHLC(params),
+  // Refetched on the TDP 30s price tick alongside getToken/getTokenMultiChain, not the config-cadence full tick.
+  policy: { staleTime: PRICE_STALE_TIME_MS },
 })
 
 export const getGetTokenHistoryVolumeQueryOptions = createGetQueryOptions({
   name: 'getTokenHistoryVolume',
   fetch: (params: PartialMessage<GetTokenHistoryVolumeRequest>) => dataApiServiceClientV2.getTokenHistoryVolume(params),
+  policy: { staleTime: STATS_STALE_TIME_MS },
 })
 
 export const getGetTokenHistoryTVLQueryOptions = createGetQueryOptions({
   name: 'getTokenHistoryTVL',
   fetch: (params: PartialMessage<GetTokenHistoryTVLRequest>) => dataApiServiceClientV2.getTokenHistoryTVL(params),
+  policy: { staleTime: STATS_STALE_TIME_MS },
 })

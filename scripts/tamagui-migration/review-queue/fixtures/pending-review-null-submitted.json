@@ -1,0 +1,48 @@
+{
+  "description": "Trap 12: PENDING (unsubmitted draft) reviews carry a null submittedAt and count for NOTHING. PR 1201's only human review is PENDING — the run must not crash and the PR still needs independent review, with no reviewer listed. PR 1202 has a PENDING review alongside a real independent approval — it is ready, and only the real reviewer is listed.",
+  "now": "2026-07-28T12:00:00Z",
+  "defaultBranch": "main",
+  "podByLogin": { "alice": "swap-fe" },
+  "prs": [
+    {
+      "number": 1201,
+      "title": "feat(web): convert Explore directory to tailwind [INFRA-3201]",
+      "url": "https://github.com/Uniswap/universe/pull/1201",
+      "draft": false,
+      "author": { "login": "claude[bot]", "type": "Bot" },
+      "assignees": ["alice"],
+      "body": "Converts apps/web/src/pages/Explore.\n\nFixes INFRA-3201",
+      "baseRefName": "main",
+      "headRefName": "thebotfather/infra-3201-explore",
+      "labels": [{ "name": "tamagui-migration" }],
+      "createdAt": "2026-07-26T12:00:00Z"
+    },
+    {
+      "number": 1202,
+      "title": "feat(wallet): convert send flow [INFRA-3202]",
+      "url": "https://github.com/Uniswap/universe/pull/1202",
+      "draft": false,
+      "author": { "login": "claude[bot]", "type": "Bot" },
+      "assignees": ["alice"],
+      "body": "Converts packages/wallet send flow.\n\nFixes INFRA-3202",
+      "baseRefName": "main",
+      "headRefName": "thebotfather/infra-3202-send",
+      "labels": [{ "name": "tamagui-migration" }],
+      "createdAt": "2026-07-27T12:00:00Z"
+    }
+  ],
+  "reviews": {
+    "1201": [
+      { "author": { "login": "bob", "type": "User" }, "state": "PENDING", "submittedAt": null }
+    ],
+    "1202": [
+      { "author": { "login": "bob", "type": "User" }, "state": "APPROVED", "submittedAt": "2026-07-27T13:00:00Z" },
+      { "author": { "login": "carol", "type": "User" }, "state": "PENDING", "submittedAt": null }
+    ]
+  },
+  "checks": { "1201": "success", "1202": "success" },
+  "requestedReviewers": {
+    "1201": { "users": [], "teams": [] },
+    "1202": { "users": [], "teams": [] }
+  }
+}

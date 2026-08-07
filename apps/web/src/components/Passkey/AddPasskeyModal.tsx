@@ -1,4 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import {
+  AuthenticatorAttachment,
+  registerNewAuthenticator,
+  startAddAuthenticatorSession,
+  useEmbeddedWalletState,
+} from '@universe/embedded-wallet'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Loader, Text, TouchableArea } from 'ui/src'
@@ -10,11 +16,6 @@ import { ShieldCheck } from 'ui/src/components/icons/ShieldCheck'
 import { colors } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
-import {
-  AuthenticatorAttachment,
-  registerNewAuthenticator,
-  startAddAuthenticatorSession,
-} from 'uniswap/src/features/passkey/embeddedWallet'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -24,7 +25,6 @@ import { resetListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/
 import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
 import { useActiveAddress } from '~/features/accounts/store/hooks'
 import { useModalState } from '~/hooks/useModalState'
-import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { popupRegistry } from '~/state/popups/registry'
 import { PopupType } from '~/state/popups/types'
 

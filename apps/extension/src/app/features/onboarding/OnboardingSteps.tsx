@@ -145,7 +145,7 @@ export function OnboardingStepsProvider({
         }
         return prev
       })
-    })
+    }, 0)
   }, [])
 
   const onboardingScreenKey = (props?: MaybeOnboardingProps): string => {

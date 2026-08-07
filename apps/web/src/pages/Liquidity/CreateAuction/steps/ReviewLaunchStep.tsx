@@ -45,6 +45,7 @@ import { useLaunchAuctionFlow } from '~/pages/Liquidity/CreateAuction/hooks/useL
 import { useStableRaiseUsdPrice } from '~/pages/Liquidity/CreateAuction/hooks/useStableRaiseUsdPrice'
 import { getLaunchThreshold } from '~/pages/Liquidity/CreateAuction/launchThreshold'
 import { applyQuickLaunchAuctionWindow } from '~/pages/Liquidity/CreateAuction/quickLaunch/quickLaunchPreset'
+import { useIsQuickLaunchModalFlow } from '~/pages/Liquidity/CreateAuction/quickLaunchModalContext'
 import {
   CreateAuctionStep,
   PriceRangeStrategy,
@@ -255,8 +256,80 @@ export function ReviewLaunchStep(): JSX.Element | null {
     }
   }, [pendingQuickLaunchRetry, configureAuction.startTime, launchFlowHandleRetry])
 
+  // The launches-page modal skips the review screen: the review-and-sign modal opens as soon
+  // as the form hands off to this step, and dismissing it returns to the form.
+  const isQuickLaunchModalFlow = useIsQuickLaunchModalFlow()
+  const openReviewModal = launchFlow.openReviewModal
+  useEffect(() => {
+    if (isQuickLaunchModalFlow) {
+      openReviewModal()
+    }
+  }, [isQuickLaunchModalFlow, openReviewModal])
+
+  const handleCloseReviewModal = useEvent(() => {
+    launchFlow.closeReviewModal()
+    if (isQuickLaunchModalFlow) {
+      setStep(CreateAuctionStep.ADD_TOKEN_INFO)
+    }
+  })
+
+  const handleCloseSuccessModal = useEvent(() => {
+    launchFlow.handleCloseSuccessModal()
+    if (isQuickLaunchModalFlow) {
+      setStep(CreateAuctionStep.ADD_TOKEN_INFO)
+    }
+  })
+
   if (!committed || !raiseCurrencyInfo) {
     return null
+  }
+
+  const launchModals = (
+    <>
+      <LaunchAuctionReviewModal
+        isOpen={launchFlow.isReviewModalVisible}
+        onClose={handleCloseReviewModal}
+        tokenName={tokenName}
+        tokenSymbol={tokenSymbol}
+        description={tokenForm.description}
+        isNewToken={tokenForm.mode === TokenMode.CREATE_NEW}
+        committed={committed}
+        startTime={configureAuction.startTime}
+        endTime={configureAuction.endTime}
+        feeTierDisplay={feeTierDisplay}
+        raiseCurrencySymbol={raiseCurrencyInfo.currency.symbol ?? ''}
+        launchThresholdAmount={launchThresholdAmount}
+        tokenColor={tokenColor}
+        progressSteps={launchFlow.progressSteps}
+        currentProgressStepIndex={launchFlow.currentProgressStepIndex}
+        currentStepPending={launchFlow.currentStepPending}
+        isLaunching={launchFlow.isLaunching}
+        isPreparing={launchFlow.isPreparing}
+        onLaunchToken={launchFlow.handleLaunchToken}
+      />
+
+      <LaunchAuctionErrorModal
+        isOpen={launchFlow.isErrorModalOpen}
+        tokenSymbol={tokenSymbol}
+        error={launchFlow.launchError}
+        onClose={launchFlow.handleCloseErrorModal}
+        onRetry={quickLaunch ? handleQuickLaunchRetry : launchFlow.handleRetry}
+        onEditTokenInfo={handleEditTokenInfo}
+      />
+
+      <LaunchAuctionSuccessModal
+        isOpen={launchFlow.isSuccessModalOpen}
+        tokenSymbol={tokenSymbol}
+        chainId={chainId}
+        launchHash={launchFlow.launchTxHash}
+        onClose={handleCloseSuccessModal}
+        onViewAuction={launchFlow.handleViewAuction}
+      />
+    </>
+  )
+
+  if (isQuickLaunchModalFlow) {
+    return launchModals
   }
 
   return (
@@ -364,45 +437,7 @@ export function ReviewLaunchStep(): JSX.Element | null {
         </Flex>
       </Flex>
 
-      <LaunchAuctionReviewModal
-        isOpen={launchFlow.isReviewModalVisible}
-        onClose={launchFlow.closeReviewModal}
-        tokenName={tokenName}
-        tokenSymbol={tokenSymbol}
-        description={tokenForm.description}
-        isNewToken={tokenForm.mode === TokenMode.CREATE_NEW}
-        committed={committed}
-        startTime={configureAuction.startTime}
-        endTime={configureAuction.endTime}
-        feeTierDisplay={feeTierDisplay}
-        raiseCurrencySymbol={raiseCurrencyInfo.currency.symbol ?? ''}
-        launchThresholdAmount={launchThresholdAmount}
-        tokenColor={tokenColor}
-        progressSteps={launchFlow.progressSteps}
-        currentProgressStepIndex={launchFlow.currentProgressStepIndex}
-        currentStepPending={launchFlow.currentStepPending}
-        isLaunching={launchFlow.isLaunching}
-        isPreparing={launchFlow.isPreparing}
-        onLaunchToken={launchFlow.handleLaunchToken}
-      />
-
-      <LaunchAuctionErrorModal
-        isOpen={launchFlow.isErrorModalOpen}
-        tokenSymbol={tokenSymbol}
-        error={launchFlow.launchError}
-        onClose={launchFlow.handleCloseErrorModal}
-        onRetry={quickLaunch ? handleQuickLaunchRetry : launchFlow.handleRetry}
-        onEditTokenInfo={handleEditTokenInfo}
-      />
-
-      <LaunchAuctionSuccessModal
-        isOpen={launchFlow.isSuccessModalOpen}
-        tokenSymbol={tokenSymbol}
-        chainId={chainId}
-        launchHash={launchFlow.launchTxHash}
-        onClose={launchFlow.handleCloseSuccessModal}
-        onViewAuction={launchFlow.handleViewAuction}
-      />
+      {launchModals}
     </Flex>
   )
 }

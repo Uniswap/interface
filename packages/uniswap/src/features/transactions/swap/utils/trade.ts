@@ -33,6 +33,7 @@ export function tradeToTransactionInfo({
   swapStartTimestamp,
   isFinalStep,
   rwaAnalytics,
+  isSponsored,
 }: {
   trade: Trade
   transactedUSDValue?: number
@@ -41,14 +42,16 @@ export function tradeToTransactionInfo({
   isFinalStep?: boolean
   /** RWA analytics computed at submit, persisted so the finalization-time Completed event can report them. */
   rwaAnalytics?: RwaSwapAnalytics
+  /** Whether a paymaster actually paid gas for this execution (see isGasSponsoredExecution), persisted so
+   *  the finalization-time Completed/Failed event reports actual spend rather than the quote's offer. */
+  isSponsored?: boolean
 }): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo | BridgeTransactionInfo | WrapTransactionInfo {
   const { quote, slippageTolerance } = trade
   const { quoteId, gasUseEstimate, routeString } = getClassicQuoteFromResponse(quote) ?? {}
-  // Whether gas was sponsored, derived from the quote's offer and persisted so the finalization-time
-  // Completed/Failed event can report it. Deriving here (rather than threading from callers) ensures every
-  // typeInfo builder — including the 4337 userOp swap path — captures it. See getSponsorshipAnalyticsProperties.
-  const isSponsored = 'sponsorshipInfo' in quote ? quote.sponsorshipInfo?.sponsored : undefined
-  const sponsorshipCampaignId = 'sponsorshipInfo' in quote ? quote.sponsorshipInfo?.campaign?.name : undefined
+  // Campaign attribution only accompanies actual sponsorship so filler- or user-paid gas is never
+  // counted against the campaign budget.
+  const sponsorshipCampaignId =
+    isSponsored && 'sponsorshipInfo' in quote ? quote.sponsorshipInfo?.campaign?.name : undefined
 
   const inputCurrency = trade.inputAmount.currency
   const outputCurrency = trade.outputAmount.currency

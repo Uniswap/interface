@@ -13,6 +13,7 @@ const ADDRESS = '0x0000000000000000000000000000000000000001' as Address
 
 function createTransaction(planId?: string): TransactionDetails {
   return {
+    typeInfo: { type: TransactionType.Swap },
     batchInfo: {
       batchId: 'batch-id',
       chainId: 1,

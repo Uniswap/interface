@@ -114,10 +114,21 @@ export function CustomPriceRangeEditor({
         ))}
         <AddRangeRow canAddEntry={canAddEntry} onAddPreset={onAddPreset} />
       </Flex>
-      {!isLiquidityTotalValid && (
-        <Text variant="body3" color="$statusCritical" textAlign="center">
-          {t('toucan.createAuction.step.customizePool.priceRange.custom.totalMustEqual100')}
-        </Text>
+      {(!canAddEntry || !isLiquidityTotalValid) && (
+        <Flex gap="$spacing4">
+          {!canAddEntry && (
+            <Text variant="body3" color="$neutral2" textAlign="center">
+              {t('toucan.createAuction.step.customizePool.priceRange.custom.maxRangesReached', {
+                count: MAX_CUSTOM_PRICE_RANGE_ENTRIES,
+              })}
+            </Text>
+          )}
+          {!isLiquidityTotalValid && (
+            <Text variant="body3" color="$statusCritical" textAlign="center">
+              {t('toucan.createAuction.step.customizePool.priceRange.custom.totalMustEqual100')}
+            </Text>
+          )}
+        </Flex>
       )}
     </Flex>
   )

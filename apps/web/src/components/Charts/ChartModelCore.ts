@@ -286,6 +286,12 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
         ...defaultOptions.timeScale,
         ...nonDefaultChartOptions?.timeScale,
       },
+      // Deep-merge so subclasses overriding e.g. `priceFormatter` don't drop `locale`,
+      // which formatTickMarks relies on to translate axis date labels (LP-266)
+      localization: {
+        ...defaultOptions.localization,
+        ...nonDefaultChartOptions?.localization,
+      },
     })
   }
 

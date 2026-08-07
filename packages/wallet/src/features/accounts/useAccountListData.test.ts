@@ -1,15 +1,17 @@
-import { useGetWalletsBalancesQuery } from 'uniswap/src/data/rest/getWalletsBalances/getWalletsBalances'
+import { useGetWalletsBalancesQuery } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletsBalances/getWalletsBalances'
 import type { MockedFunction } from 'vitest'
 import { useAccountBalances, useAccountListData } from 'wallet/src/features/accounts/useAccountListData'
 import { renderHook } from 'wallet/src/test/test-utils'
 
-vi.mock('uniswap/src/data/rest/getWalletsBalances/getWalletsBalances', async () => ({
-  ...(await vi.importActual('uniswap/src/data/rest/getWalletsBalances/getWalletsBalances')),
+vi.mock('uniswap/src/data/apiClients/dataApiService/balances/getWalletsBalances/getWalletsBalances', async () => ({
+  ...(await vi.importActual(
+    'uniswap/src/data/apiClients/dataApiService/balances/getWalletsBalances/getWalletsBalances',
+  )),
   useGetWalletsBalancesQuery: vi.fn(),
 }))
 
-vi.mock('uniswap/src/data/rest/getWalletBalances/getWalletBalances', async () => ({
-  ...(await vi.importActual('uniswap/src/data/rest/getWalletBalances/getWalletBalances')),
+vi.mock('uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances', async () => ({
+  ...(await vi.importActual('uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances')),
   useWalletBalancesIncludeCategories: vi.fn().mockReturnValue([]),
 }))
 

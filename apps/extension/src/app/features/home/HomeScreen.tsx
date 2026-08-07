@@ -1,4 +1,4 @@
-import { useApolloClient } from '@apollo/client'
+import { useQueryClient } from '@tanstack/react-query'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { getIsNotificationServiceLocalOverrideEnabled } from '@universe/notifications'
@@ -23,7 +23,7 @@ import { ExtensionNotificationServiceManager } from 'src/notification-service/Ex
 import { Coachmark, Flex, Loader, styled, Text, TouchableArea } from 'ui/src'
 import { SMART_WALLET_UPGRADE_VIDEO } from 'ui/src/assets'
 import { spacing } from 'ui/src/theme'
-import { NFTS_TAB_DATA_DEPENDENCIES } from 'uniswap/src/components/nfts/constants'
+import { NFT_QUERY_KEY_PREFIX } from 'uniswap/src/data/apiClients/dataApiService/nfts/queries'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { DataApiOutageBanner } from 'uniswap/src/features/dataApi/outage/DataApiOutageBanner'
@@ -71,7 +71,7 @@ export const HomeScreen = memo(function HomeScreenInner(): JSX.Element {
   const activeAccount = useActiveAccountWithThrow()
   const [showTabs, setShowTabs] = useState(false)
 
-  const apolloClient = useApolloClient()
+  const queryClient = useQueryClient()
 
   // The tabs are too slow to render on the first load, so we delay them to speed up the perceived loading time.
   useTimeout(() => setShowTabs(true), 0)
@@ -191,11 +191,11 @@ export const HomeScreen = memo(function HomeScreenInner(): JSX.Element {
   const maybeRefetchNfts = useCallback(() => {
     if (shouldRefetchNfts()) {
       setLastNftFetchTime(Date.now())
-      apolloClient.refetchQueries({ include: NFTS_TAB_DATA_DEPENDENCIES }).catch((e) => {
-        logger.error('Error refetching NFTs tab data', e)
+      queryClient.refetchQueries({ queryKey: NFT_QUERY_KEY_PREFIX }).catch((e) => {
+        logger.warn('HomeScreen', 'maybeRefetchNfts', 'Error refetching NFTs', e)
       })
     }
-  }, [apolloClient, shouldRefetchNfts])
+  }, [queryClient, shouldRefetchNfts])
 
   return (
     <>

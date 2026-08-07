@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TokenProfitLoss } from 'uniswap/src/components/TokenProfitLoss/TokenProfitLoss'
-import { useGetWalletTokenProfitLossQuery } from 'uniswap/src/data/rest/getWalletTokenProfitLoss'
+import { useGetWalletTokenProfitLossQuery } from 'uniswap/src/data/apiClients/dataApiService/performance/getWalletTokenProfitLoss'
 import { useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/rpc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'

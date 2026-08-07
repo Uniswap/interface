@@ -10,7 +10,7 @@ import { SubmitTransactionParamsWithTypeInfo } from 'wallet/src/features/transac
 export function createUnsubmittedTransactionDetails(
   executeTransactionParams: SubmitTransactionParamsWithTypeInfo,
 ): OnChainTransactionDetails {
-  const { txId, chainId, typeInfo, account, options, transactionOriginType } = executeTransactionParams
+  const { txId, chainId, typeInfo, account, options, transactionOriginType, initialStatus } = executeTransactionParams
   const id = txId ?? createTransactionId()
 
   const transaction: OnChainTransactionDetails = {
@@ -20,7 +20,7 @@ export function createUnsubmittedTransactionDetails(
     typeInfo,
     from: account.address,
     addedTime: Date.now(),
-    status: TransactionStatus.Pending,
+    status: initialStatus ?? TransactionStatus.Pending,
     options,
     transactionOriginType,
   }

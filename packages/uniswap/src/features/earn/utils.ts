@@ -6,7 +6,6 @@ import type {
   EarnVaultExposure as DataApiEarnVaultExposure,
 } from '@uniswap/client-data-api/dist/data/v2/earn_pb'
 import { GraphQLApi } from '@universe/api'
-import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import type { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
@@ -17,6 +16,7 @@ import type {
   EarnVaultExposure,
   EarnVaultInfo,
 } from 'uniswap/src/features/earn/types'
+import { normalizeTokenAddressForCache } from 'uniswap/src/utils/currencyId'
 import {
   areCurrencyIdsEqual,
   buildCurrencyId,

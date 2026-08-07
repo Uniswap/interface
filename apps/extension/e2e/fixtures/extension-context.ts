@@ -17,7 +17,7 @@ export async function createExtensionContext(options: CreateExtensionContextOpti
   // Default to the WXT output directory. A different build can be loaded by setting
   // EXTENSION_BUILD_DIR. Using `||` (not `??`) so an empty-string env var falls through
   // to the default.
-  // oxlint-disable-next-line eslint-js/no-restricted-syntax allow process.env access
+  // oxlint-disable-next-line eslint-js/no-restricted-syntax -- allow process.env access
   const extensionPath = process.env['EXTENSION_BUILD_DIR'] || path.join(__dirname, '../../.output/chrome-mv3')
 
   // Generate a unique user data directory for each test to ensure isolation
@@ -27,7 +27,7 @@ export async function createExtensionContext(options: CreateExtensionContextOpti
   )
 
   // CI environments need different args for headless-like behavior
-  // oxlint-disable-next-line eslint-js/no-restricted-syntax allow process.env access
+  // oxlint-disable-next-line eslint-js/no-restricted-syntax -- allow process.env access
   const isCI = process.env.CI === 'true'
 
   const context = await chromium.launchPersistentContext(userDataDir, {

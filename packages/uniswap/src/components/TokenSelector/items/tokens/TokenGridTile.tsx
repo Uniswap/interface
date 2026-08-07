@@ -8,6 +8,8 @@ type TokenGridTileProps = {
   onPress: () => void
   tooltipLabel?: Maybe<string>
   labelNumberOfLines?: number
+  /** Dims the tile while a tap is being resolved (e.g. a pre-selection token fetch). */
+  isPending?: boolean
 }
 
 /** Presentational tile shared by the token-selector grids (suggested currencies and stocks). */
@@ -18,9 +20,10 @@ export function TokenGridTile({
   onPress,
   tooltipLabel,
   labelNumberOfLines,
+  isPending = false,
 }: TokenGridTileProps): JSX.Element {
   const card = (
-    <TouchableArea hoverable borderRadius="$rounded16" testID={testID} onPress={onPress}>
+    <TouchableArea hoverable borderRadius="$rounded16" opacity={isPending ? 0.5 : 1} testID={testID} onPress={onPress}>
       <Flex
         centered
         gap="$gap4"

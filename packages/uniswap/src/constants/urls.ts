@@ -53,6 +53,7 @@ export const UniswapHelpUrls = {
     hiddenNFTInfo: createHelpArticleUrl('14185028445837-How-to-hide-and-unhide-NFTs-in-the-Uniswap-Wallet'),
     impermanentLoss: createHelpArticleUrl('20904453751693-What-is-Impermanent-Loss'),
     jupiterApiError: createHelpArticleUrl('39829559404685'),
+    kycExplainer: createHelpArticleUrl('13464110828685-What-is-Know-Your-Customer-KYC-when-buying-crypto'),
     limitsFailure: createHelpArticleUrl('24300813697933-Why-did-my-limit-order-fail-or-not-execute'),
     limitsInfo: createHelpArticleUrl('24470337797005'),
     limitsNetworkSupport: createHelpArticleUrl('24470251716237-What-networks-do-limits-support'),
@@ -135,7 +136,7 @@ export const UniswapHelpUrls = {
 
 export const UniswapStaticUrls = {
   downloadWalletUrl: 'https://wallet.uniswap.org/',
-  tradingApiDocsUrl: 'https://hub.uniswap.org/',
+  tradingApiDocsUrl: 'https://developers.uniswap.org/',
   morphoDisclaimerUrl: 'https://morpho.org/disclaimers/',
   unichainUrl: 'https://www.unichain.org/',
   uniswapXUrl: 'https://x.uniswap.org/',
@@ -219,8 +220,6 @@ export interface UniswapServiceUrls {
   amplitudeProxyUrl: string
   apiBaseUrl: string
   apiBaseUrlV2: string
-  dataApiBaseUrlV2: string
-  dataApiServiceUrl: string
   embeddedWalletHostname: string
   embeddedWalletUrl: string
   forApiUrl: string
@@ -250,11 +249,6 @@ export function getUniswapServiceUrls(overrides: UniswapUrlOverrides): UniswapSe
     apiBaseUrl: overrides.apiBaseUrlOverride || getCloudflareApiBaseUrl(),
 
     apiBaseUrlV2: overrides.apiBaseUrlV2Override || getCloudflareApiBaseUrl({ postfix: 'v2' }),
-
-    dataApiBaseUrlV2:
-      overrides.apiBaseUrlV2Override || getCloudflareApiBaseUrl({ flow: TrafficFlows.DataApi, postfix: 'v2' }),
-
-    dataApiServiceUrl: getCloudflareApiBaseUrl({ postfix: 'v2/data.v1.DataApiService' }),
 
     embeddedWalletHostname,
 

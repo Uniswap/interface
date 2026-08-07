@@ -2,8 +2,8 @@ import { ExploreStatsResponse } from '@uniswap/client-explore/dist/uniswap/explo
 import { ALL_NETWORKS_ARG } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { createContext, useContext, useMemo } from 'react'
-import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
-import { useProtocolStatsQuery } from 'uniswap/src/data/rest/protocolStats'
+import { useExploreStatsQuery } from 'uniswap/src/data/apiClients/dataApiService/exploreV1/exploreStats'
+import { useProtocolStatsQuery } from 'uniswap/src/data/apiClients/dataApiService/exploreV1/protocolStats'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 

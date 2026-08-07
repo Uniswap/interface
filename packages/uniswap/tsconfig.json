@@ -33,9 +33,6 @@
       "path": "../encoding"
     },
     {
-      "path": "../cryptography"
-    },
-    {
       "path": "../config"
     },
     {

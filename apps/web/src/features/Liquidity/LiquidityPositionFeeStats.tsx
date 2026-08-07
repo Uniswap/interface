@@ -27,6 +27,9 @@ interface LiquidityPositionFeeStatsProps extends LiquidityPositionMinMaxRangePro
   totalApr?: number
   feeApr?: string
   apr?: number
+  apr1d?: number
+  apr7d?: number
+  apr30d?: number
   lpIncentiveRewardApr?: number
   hasRewards?: boolean
 }
@@ -96,6 +99,9 @@ export function LiquidityPositionFeeStats({
   tickSpacing,
   version,
   apr,
+  apr1d,
+  apr7d,
+  apr30d,
   currency0Info,
   currency1Info,
   cardHovered,
@@ -156,11 +162,21 @@ export function LiquidityPositionFeeStats({
             currency0Info={currency0Info}
             currency1Info={currency1Info}
             poolApr={apr}
+            apr1d={apr1d}
+            apr7d={apr7d}
+            apr30d={apr30d}
             lpIncentiveRewardApr={lpIncentiveRewardApr}
             totalApr={totalApr}
           />
         ) : (
-          <APRFeeStat apr={apr} />
+          <APRFeeStat
+            apr={apr}
+            apr1d={apr1d}
+            apr7d={apr7d}
+            apr30d={apr30d}
+            currency0Info={currency0Info}
+            currency1Info={currency1Info}
+          />
         )}
       </Flex>
       <Flex $md={{ display: 'none' }}>
@@ -261,16 +277,60 @@ export function MinMaxRange({
   )
 }
 
-function APRFeeStat({ apr }: { apr?: number }) {
+function APRFeeStat({
+  apr,
+  apr1d,
+  apr7d,
+  apr30d,
+  currency0Info,
+  currency1Info,
+}: {
+  apr?: number
+  apr1d?: number
+  apr7d?: number
+  apr30d?: number
+  currency0Info: Maybe<CurrencyInfo>
+  currency1Info: Maybe<CurrencyInfo>
+}) {
   const { formatPercent } = useLocalizationContext()
   const { t } = useTranslation()
+  const hasTimeframeAprs = apr1d !== undefined || apr7d !== undefined || apr30d !== undefined
+
+  const content = (
+    <>
+      <AnimatedNumber value={apr ? formatPercent(apr) : '-'} numericValue={apr} textVariant="$body2" />
+      <Flex row gap="$gap4" alignItems="center">
+        <SecondaryText variant="body3" color="$neutral2">
+          {t('pool.apr.24h')}
+        </SecondaryText>
+        {hasTimeframeAprs && <InfoCircleFilled color="$neutral2" size="$icon.12" />}
+      </Flex>
+    </>
+  )
+
+  if (!hasTimeframeAprs) {
+    return <FeeStat>{content}</FeeStat>
+  }
 
   return (
     <FeeStat>
-      <AnimatedNumber value={apr ? formatPercent(apr) : '-'} numericValue={apr} textVariant="$body2" />
-      <SecondaryText variant="body3" color="$neutral2">
-        {t('pool.apr')}
-      </SecondaryText>
+      <MouseoverTooltip
+        padding={0}
+        text={
+          <LPIncentiveFeeStatTooltip
+            currency0Info={currency0Info}
+            currency1Info={currency1Info}
+            poolApr={apr}
+            apr1d={apr1d}
+            apr7d={apr7d}
+            apr30d={apr30d}
+          />
+        }
+        size={TooltipSize.Small}
+        placement="top"
+      >
+        <>{content}</>
+      </MouseoverTooltip>
     </FeeStat>
   )
 }
@@ -280,12 +340,18 @@ function LPIncentiveFeeStat({
   currency1Info,
   lpIncentiveRewardApr,
   poolApr,
+  apr1d,
+  apr7d,
+  apr30d,
   totalApr,
 }: {
   currency0Info: Maybe<CurrencyInfo>
   currency1Info: Maybe<CurrencyInfo>
   lpIncentiveRewardApr: number
   poolApr?: number
+  apr1d?: number
+  apr7d?: number
+  apr30d?: number
   totalApr?: number
 }) {
   const { formatPercent } = useLocalizationContext()
@@ -300,6 +366,9 @@ function LPIncentiveFeeStat({
             currency0Info={currency0Info}
             currency1Info={currency1Info}
             poolApr={poolApr}
+            apr1d={apr1d}
+            apr7d={apr7d}
+            apr30d={apr30d}
             lpIncentiveRewardApr={lpIncentiveRewardApr}
             totalApr={totalApr}
           />

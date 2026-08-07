@@ -47,14 +47,15 @@ export function DownloadWalletCard() {
           <Trans
             i18nKey="landing.walletBody"
             components={{
-              Star: <Star color="$accent1" size="$icon.24" mb={-4} />,
+              Star: <Star color="$accent1" size="$icon.24" display="inline" verticalAlign="middle" />,
+              nowrap: <span style={{ whiteSpace: 'nowrap' }} />,
             }}
           />
         ) : (
           <Trans
             i18nKey="landing.walletBody.old"
             components={{
-              Star: <Star color="$accent1" size="$icon.24" mb={-4} />,
+              Star: <Star color="$accent1" size="$icon.24" display="inline" verticalAlign="middle" />,
             }}
           />
         )

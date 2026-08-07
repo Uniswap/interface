@@ -4,6 +4,7 @@ import { PositionInfo } from 'uniswap/src/features/positions/types'
 
 export function getPositionUrl(position: PositionInfo, options?: { entryPoint?: string }): string {
   const chainUrlParam = getChainInfo(position.chainId).urlParam
+  const params = new URLSearchParams()
   let path: string
   if (position.version === ProtocolVersion.V2) {
     path = `/positions/v2/${chainUrlParam}/${position.liquidityToken.address}`
@@ -11,9 +12,14 @@ export function getPositionUrl(position: PositionInfo, options?: { entryPoint?: 
     path = `/positions/v3/${chainUrlParam}/${position.tokenId}`
   } else {
     path = `/positions/v4/${chainUrlParam}/${position.tokenId}`
+    // tokenIds are only unique per position manager, so the detail page must know to query the PermPosm
+    if (position.isPermissioned) {
+      params.set('permissioned', 'true')
+    }
   }
   if (options?.entryPoint) {
-    return `${path}?${new URLSearchParams({ entryPoint: options.entryPoint }).toString()}`
+    params.set('entryPoint', options.entryPoint)
   }
-  return path
+  const query = params.toString()
+  return query ? `${path}?${query}` : path
 }

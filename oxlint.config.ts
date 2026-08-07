@@ -357,7 +357,9 @@ export default defineConfig({
         'eslint-plugin-no-unsanitized',
         // TODO: Remove oxlint-plugin-eslint after oxlint ships native object-shorthand
         // (https://github.com/oxc-project/oxc/pull/17688)
-        'oxlint-plugin-eslint',
+        // Aliased: the plugin registers as 'eslint', which oxlint reserves for its
+        // native rules. The alias keeps our existing 'eslint-js/*' rule ids.
+        { name: 'eslint-js', specifier: 'oxlint-plugin-eslint' },
       ],
   options: isFastLint
     ? {}
@@ -432,14 +434,23 @@ export default defineConfig({
     'require-yield': 'error',
     'typescript/explicit-function-return-type': ['error', { allowExpressions: true }],
     'jest/no-disabled-tests': 'error',
-    'jest/expect-expect': 'error',
+    // assertFunctionNames covers redux-saga-test-plan assertions (expectSaga/testSaga),
+    // which oxlint does not recognize implicitly.
+    'jest/expect-expect': ['error', { assertFunctionNames: ['expect*', 'testSaga'] }],
     'jest/no-conditional-expect': 'off',
+    // oxlint reports jest and vitest variants of shared rules independently,
+    // so jest/* options must be mirrored on the vitest/* counterparts.
+    'vitest/expect-expect': ['error', { assertFunctionNames: ['expect*', 'testSaga'] }],
+    'vitest/no-conditional-expect': 'off',
+    'vitest/valid-title': ['error', { ignoreTypeOfDescribeName: true }],
+    'vitest/require-to-throw-message': 'off',
     'vitest/require-mock-type-parameters': 'off',
 
     // ── security ───────────────────────────────────────────────────────
     'react/no-danger': 'error',
     'react/no-danger-with-children': 'error',
     'no-eval': 'error',
+    'no-implied-eval': 'error',
     'unicorn/no-new-buffer': 'error',
     'unicorn/no-new-array': 'off',
 
@@ -580,6 +591,8 @@ export default defineConfig({
     'no-useless-backreference': 'error',
     'no-var': 'error',
     'no-with': 'warn',
+    'unicorn/explicit-timer-delay': 'error',
+    'unicorn/no-confusing-array-with': 'error',
 
     // TODO(apps-infra): The following rules were used in eslint or biome but are not currently
     // supported by oxlint or require tweaking with a custom plugin. Re-enable when possible.
@@ -627,6 +640,7 @@ export default defineConfig({
       'universe-custom/no-redux-modals': 'error',
       'universe-custom/no-tolowercase-address-currencyid': 'warn',
       'universe-custom/no-platform-gate-in-chain-flags': 'error',
+      'universe-custom/no-tamagui-styling': 'error',
       // typed-redux-saga
       '@jambit/typed-redux-saga/use-typed-effects': 'error',
       '@jambit/typed-redux-saga/delegate-effects': 'error',
@@ -989,6 +1003,27 @@ export default defineConfig({
         'typescript/no-floating-promises': 'off',
       },
     },
+
+    // ── @universe/embedded-wallet web protocol layer ──────────────────
+    // Migrated from apps/web (INFRA-2911) where these rules are off; EIP-1193
+    // request/event plumbing is inherently loosely typed. Tightening is
+    // tracked in INFRA-2942.
+    {
+      files: ['packages/embedded-wallet/src/connection/**'],
+      rules: {
+        'typescript/explicit-function-return-type': 'off',
+        'typescript/no-floating-promises': 'off',
+        'typescript/no-explicit-any': 'off',
+        'typescript/no-non-null-assertion': 'off',
+      },
+    },
+    {
+      // Local uSES helpers (getSnapshot/subscribe) predate the package's stricter rules.
+      files: ['packages/embedded-wallet/src/state/**'],
+      rules: {
+        'typescript/explicit-function-return-type': 'off',
+      },
+    },
     ...(!isFastLint
       ? [
           {
@@ -1180,6 +1215,11 @@ export default defineConfig({
             patterns: sharedRestrictedImportPatterns.filter((p) => p !== labsRestrictedImportPattern),
           },
         ],
+        // labs/ is experimental and outside the Tamagui → Tailwind migration
+        // surface; the generated baseline only covers apps/ + packages/.
+        ...(!isFastLint && {
+          'universe-custom/no-tamagui-styling': 'off' as const,
+        }),
       },
     },
 
@@ -1210,6 +1250,34 @@ export default defineConfig({
       ],
       rules: {
         'typescript/explicit-function-return-type': 'off',
+        'max-lines': 'off',
+        'no-shadow': 'off',
+      },
+    },
+
+    // ── labs/rh-cca ───────────────────────────────────────────────────
+    {
+      // Runtime boundaries read process.env directly (SERVER_RUNTIME/PORT are
+      // deploy-time, not app config) and implement react-router's 4-param
+      // handleRequest contract — same relaxations dev-portal's boundary gets.
+      // teaserMode.ts is the build-time teaser switch: Node-only, resolved
+      // before Vite exists, so getConfig() can't serve it.
+      files: ['labs/rh-cca/server.ts', 'labs/rh-cca/app/entry.server.tsx', 'labs/rh-cca/teaserMode.ts'],
+      rules: {
+        'max-params': 'off',
+        ...(!isFastLint && {
+          'eslint-js/no-restricted-syntax': ['error', ...sharedRestrictedSyntaxSelectors],
+        }),
+      },
+    },
+    {
+      // Vendored shadcn/ui sources (what `bunx shadcn add` emits) are kept
+      // pristine so upstream diffs stay reviewable; shadcn components render
+      // plain divs by design.
+      files: ['labs/rh-cca/app/components/ui/**', 'labs/rh-cca/app/lib/utils.ts'],
+      rules: {
+        'typescript/explicit-function-return-type': 'off',
+        'react/forbid-elements': 'off',
         'max-lines': 'off',
         'no-shadow': 'off',
       },
@@ -1344,7 +1412,17 @@ export default defineConfig({
     // ── @universe/* packages with standard pattern ────────────────────
     // (no-relative-import-paths + restrictedImportPatternsForUniversePackage)
     ...(
-      ['api', 'compliance', 'config', 'gating', 'notifications', 'sessions', 'transactional', 'websocket'] as const
+      [
+        'api',
+        'compliance',
+        'config',
+        'embedded-wallet',
+        'gating',
+        'notifications',
+        'sessions',
+        'transactional',
+        'websocket',
+      ] as const
     ).map((pkg) => ({
       files: [`packages/${pkg}/**`],
       rules: {

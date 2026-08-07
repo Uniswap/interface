@@ -7,6 +7,7 @@ import { BASE_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/base'
 import { BLAST_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/blast'
 import { BNB_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/bnb'
 import { CELO_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/celo'
+import { INK_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/ink'
 import { LINEA_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/linea'
 import { MAINNET_CHAIN_INFO, SEPOLIA_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/mainnet'
 import { MEGAETH_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/megaeth'
@@ -45,6 +46,8 @@ export { CIRBTC_ARC, EURC_ARC, USYC_ARC, WETH_ARC } from 'uniswap/src/features/c
 export const { USDM: USDM_MEGAETH, USDe: USDE_MEGAETH } = MEGAETH_CHAIN_INFO.tokens
 
 export const { USDG: USDG_ROBINHOOD } = ROBINHOOD_CHAIN_INFO.tokens
+
+export const { USDT0: USDT0_INK, USDC: USDC_INK } = INK_CHAIN_INFO.tokens
 
 export const { USDC: USDC_SONEIUM } = SONEIUM_CHAIN_INFO.tokens
 

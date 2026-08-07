@@ -6,7 +6,7 @@ import { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/s
 export interface LpIncentivesClaimParams {
   address: string
   claimData: TradingApi.TransactionRequest | LiquidityTransactionRequest
-  tokenAddress: string
+  tokenAddresses: string[]
   setCurrentStep: SetCurrentStepFn
   selectChain: (chainId: number) => Promise<boolean>
   walletChainId?: UniverseChainId

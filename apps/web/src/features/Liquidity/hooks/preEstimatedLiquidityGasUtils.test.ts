@@ -1,42 +1,56 @@
-import { FeeAmount, TickMath, Pool as V3Pool } from '@uniswap/v3-sdk'
-import { DAI } from 'uniswap/src/constants/tokens'
-import { WETH } from 'uniswap/src/test/fixtures/lib/sdk'
-import { describe, expect, it } from 'vitest'
+import { FeeAmount, nearestUsableTick, TICK_SPACINGS, TickMath, Pool as V3Pool } from '@uniswap/v3-sdk'
+import { nativeOnChain, USDT } from 'uniswap/src/constants/tokens'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   computePreEstimateIndependentAmount,
   DUMMY_AMOUNT,
 } from '~/features/Liquidity/hooks/preEstimatedLiquidityGasUtils'
 
-const ONE_UNIT = '1000000000000000000'
-const SQRT_PRICE_1_1 = TickMath.getSqrtRatioAtTick(0)
+const ETH_MAINNET = nativeOnChain(UniverseChainId.Mainnet)
+const WETH = ETH_MAINNET.wrapped
 
-// Pool at tick 0
-const pool = new V3Pool(WETH, DAI, FeeAmount.MEDIUM, SQRT_PRICE_1_1, ONE_UNIT, 0)
+const tickSpaceLimits = [
+  nearestUsableTick(TickMath.MIN_TICK, TICK_SPACINGS[FeeAmount.MEDIUM]),
+  nearestUsableTick(TickMath.MAX_TICK, TICK_SPACINGS[FeeAmount.MEDIUM]),
+]
+
+const pool = new V3Pool(WETH, USDT, FeeAmount.MEDIUM, '4862546267419838844180017', '6661209530036967407', -193981)
 
 describe('computePreEstimateIndependentAmount', () => {
   it('returns a non-dummy amount for a valid range', () => {
     const result = computePreEstimateIndependentAmount({
       poolOrPair: pool,
-      tickLower: -600,
-      tickUpper: 600,
-      token0: pool.token0,
-      token1: pool.token1,
+      tickLower: tickSpaceLimits[0],
+      tickUpper: tickSpaceLimits[1],
+      token0: WETH,
+      token1: USDT,
     })
-    expect(result.amountRaw).not.toBe(DUMMY_AMOUNT)
+    expect(result.amountRaw).not.toEqual(DUMMY_AMOUNT)
   })
 
-  it.each([
-    ['equal ticks above current tick', 600, 600],
-    ['equal ticks below current tick', -600, -600],
-    ['inverted ticks', 600, -600],
-  ])('falls back to DUMMY_AMOUNT instead of throwing for %s', (_case, tickLower, tickUpper) => {
+  it('should fall back to the dummy amount instead of throwing when tickLower equals tickUpper', () => {
+    // Repro for ECO-610: min price == max price produces equal ticks; maxLiquidityForAmounts
+    // divides by (sqrtRatioB - sqrtRatioA) == 0 and crashed the app from the render path.
+    const tick = nearestUsableTick(0, TICK_SPACINGS[FeeAmount.MEDIUM])
+
     const result = computePreEstimateIndependentAmount({
       poolOrPair: pool,
-      tickLower,
-      tickUpper,
-      token0: pool.token0,
-      token1: pool.token1,
+      tickLower: tick,
+      tickUpper: tick,
+      token0: WETH,
+      token1: USDT,
     })
-    expect(result.amountRaw).toBe(DUMMY_AMOUNT)
+    expect(result.amountRaw).toEqual(DUMMY_AMOUNT)
+  })
+
+  it('should fall back to the dummy amount instead of throwing when ticks are inverted', () => {
+    const result = computePreEstimateIndependentAmount({
+      poolOrPair: pool,
+      tickLower: tickSpaceLimits[1],
+      tickUpper: tickSpaceLimits[0],
+      token0: WETH,
+      token1: USDT,
+    })
+    expect(result.amountRaw).toEqual(DUMMY_AMOUNT)
   })
 })

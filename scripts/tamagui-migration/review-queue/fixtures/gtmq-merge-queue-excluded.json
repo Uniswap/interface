@@ -1,0 +1,40 @@
+{
+  "description": "Trap 9: Graphite merge-queue drafts (gtmq_* head refs) are EXCLUDED from the queue entirely — no bucket, no footer count. PR 902 is the control proving the queue is otherwise non-empty.",
+  "now": "2026-07-28T12:00:00Z",
+  "defaultBranch": "main",
+  "podByLogin": { "alice": "swap-fe" },
+  "prs": [
+    {
+      "number": 901,
+      "title": "feat(web): convert Landing directory to tailwind [INFRA-3101] (merge queue)",
+      "url": "https://github.com/Uniswap/universe/pull/901",
+      "draft": true,
+      "author": { "login": "graphite-app[bot]", "type": "Bot" },
+      "assignees": [],
+      "body": "Graphite merge queue entry.",
+      "baseRefName": "main",
+      "headRefName": "gtmq_68a1f2c9d0e4b5",
+      "labels": [{ "name": "tamagui-migration" }],
+      "createdAt": "2026-07-28T10:00:00Z"
+    },
+    {
+      "number": 902,
+      "title": "feat(shared): convert list components [INFRA-3902]",
+      "url": "https://github.com/Uniswap/universe/pull/902",
+      "draft": false,
+      "author": { "login": "claude[bot]", "type": "Bot" },
+      "assignees": ["alice"],
+      "body": "Converts list components.\n\nFixes INFRA-3902",
+      "baseRefName": "main",
+      "headRefName": "thebotfather/infra-3902-lists",
+      "labels": [{ "name": "tamagui-migration" }],
+      "createdAt": "2026-07-27T10:00:00Z"
+    }
+  ],
+  "reviews": { "901": [], "902": [] },
+  "checks": { "901": "pending", "902": "success" },
+  "requestedReviewers": {
+    "901": { "users": [], "teams": [] },
+    "902": { "users": [], "teams": [] }
+  }
+}

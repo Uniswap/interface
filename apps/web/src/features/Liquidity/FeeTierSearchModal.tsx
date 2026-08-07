@@ -107,12 +107,8 @@ export function FeeTierSearchModal({
   const withDynamicFeeTier = Boolean(hook)
   const isLpIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
   const isV4FeeDisplayEnabled = useFeatureFlag(FeatureFlags.V4ProtocolFeeDisplay)
+  // Newly created tiers use 1x the fee tier (instead of 2x) when the flag is on.
   const isL2DefaultTickSpacingEnabled = useFeatureFlag(FeatureFlags.L2DefaultTickSpacing)
-  // Newly created L2 tiers use 1x the fee tier (instead of 2x) when the flag is on; the util does the L2 check.
-  const l2TickSpacingConfig = useMemo(
-    () => ({ chainId, l2TickSpacingEnabled: isL2DefaultTickSpacingEnabled }),
-    [chainId, isL2DefaultTickSpacingEnabled],
-  )
 
   // When blocking existing pools (CCA), also check the user-entered custom tier on-chain so an
   // abandoned/zero-liquidity pool the indexed data omits still blocks the "Create" action.
@@ -124,9 +120,9 @@ export function FeeTierSearchModal({
     return {
       isDynamic: false,
       feeAmount,
-      tickSpacing: calculateTickSpacingFromFeeAmount(feeAmount, l2TickSpacingConfig),
+      tickSpacing: calculateTickSpacingFromFeeAmount(feeAmount, isL2DefaultTickSpacingEnabled),
     }
-  }, [createFeeValue, l2TickSpacingConfig])
+  }, [createFeeValue, isL2DefaultTickSpacingEnabled])
   const additionalFeeTiersToCheck = useMemo(
     () => (createFeeTierToCheck ? [createFeeTierToCheck] : []),
     [createFeeTierToCheck],
@@ -152,8 +148,15 @@ export function FeeTierSearchModal({
   const isV4FeeDisplay = isV4FeeDisplayEnabled && protocolVersion === ProtocolVersion.V4
   const useNewDefaultFeeTiers = isV4FeeDisplay && !blockExistingPools
   const displayedFeeTiers = useMemo(
-    () => getCreateFeeTierSearchData({ useNewDefaultFeeTiers, feeTierData, formatPercent, hook, l2TickSpacingConfig }),
-    [useNewDefaultFeeTiers, feeTierData, formatPercent, hook, l2TickSpacingConfig],
+    () =>
+      getCreateFeeTierSearchData({
+        useNewDefaultFeeTiers,
+        feeTierData,
+        formatPercent,
+        hook,
+        useSingleTickSpacing: isL2DefaultTickSpacingEnabled,
+      }),
+    [useNewDefaultFeeTiers, feeTierData, formatPercent, hook, isL2DefaultTickSpacingEnabled],
   )
 
   // Stable stepper for the +/- buttons.
@@ -180,7 +183,7 @@ export function FeeTierSearchModal({
   // full key to block existing pools in the CCA flow, which requires a brand-new pool.
   const createFeeTierKey = getFeeTierKey({
     feeTier: feeHundredthsOfBips,
-    tickSpacing: calculateTickSpacingFromFeeAmount(feeHundredthsOfBips, l2TickSpacingConfig),
+    tickSpacing: calculateTickSpacingFromFeeAmount(feeHundredthsOfBips, isL2DefaultTickSpacingEnabled),
   })
   const existingPoolForCreateFee = createFeeTierKey ? feeTierData[createFeeTierKey] : undefined
   const blockedByExistingPool = Boolean(blockExistingPools && existingPoolForCreateFee?.created)
@@ -315,7 +318,7 @@ export function FeeTierSearchModal({
                   onSelectFee({
                     isDynamic: false,
                     feeAmount: feeHundredthsOfBips,
-                    tickSpacing: calculateTickSpacingFromFeeAmount(feeHundredthsOfBips, l2TickSpacingConfig),
+                    tickSpacing: calculateTickSpacingFromFeeAmount(feeHundredthsOfBips, isL2DefaultTickSpacingEnabled),
                   })
                   sendAnalyticsEvent(LiquidityEventName.SelectLiquidityPoolFeeTier, {
                     action: FeePoolSelectAction.Search,

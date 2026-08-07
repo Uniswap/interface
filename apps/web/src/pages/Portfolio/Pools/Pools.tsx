@@ -1,11 +1,16 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { FeatureFlags, useFeatureFlag, useFeatureFlagWithExposureLoggingDisabled } from '@universe/gating'
+import {
+  FeatureFlags,
+  SynchronizedHeartbeatsConfigKey,
+  useFeatureFlag,
+  useFeatureFlagWithExposureLoggingDisabled,
+} from '@universe/gating'
 import { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Anchor, Flex, Text, TouchableArea, useMedia } from 'ui/src'
 import { Pools } from 'ui/src/components/icons/Pools'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { PortfolioBalancePart } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+import { PortfolioBalancePart } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { usePortfolioBalancePart } from 'uniswap/src/features/dataApi/balances/usePortfolioBalancePart'
 import { PoolsDataIssueBanner } from 'uniswap/src/features/portfolio/pools/PoolsDataIssueBanner'
 import { usePoolsOutageBanner } from 'uniswap/src/features/portfolio/pools/usePoolsOutageBanner'
@@ -28,10 +33,15 @@ import {
 } from '~/features/Liquidity/constants'
 import { useWalletPositionsWeb } from '~/features/Liquidity/hooks/useWalletPositionsWeb'
 import { LiquidityPositionCardLoader } from '~/features/Liquidity/LiquidityPositionCard'
+import { PositionsHeader } from '~/features/Liquidity/PositionsHeader'
 import { PositionsListSection } from '~/features/Liquidity/PositionsListSection'
+import { PositionsTable, PositionsTableLoader } from '~/features/Liquidity/PositionsTable'
+import type { PositionsTableControlBarProps } from '~/features/Liquidity/PositionsTableControlBar'
+import { useIsSynchronizedHeartbeatEnabled } from '~/lib/hooks/useHeartbeatCoordinator'
 import { PortfolioBalanceCountIndicator } from '~/pages/Portfolio/components/PortfolioBalanceCountIndicator'
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
+import { usePortfolioHeartbeatEnabled } from '~/pages/Portfolio/hooks/usePortfolioHeartbeatCoordinator'
 import { useResolvedAddresses } from '~/pages/Portfolio/hooks/useResolvedAddresses'
 import { PortfolioPoolsFeesPanel } from '~/pages/Portfolio/Pools/components/PortfolioPoolsFeesPanel'
 import { PortfolioPoolsRewardsCard } from '~/pages/Portfolio/Pools/components/PortfolioPoolsRewardsCard'
@@ -79,7 +89,12 @@ export function PortfolioPools() {
   const { chainId, externalAddress } = usePortfolioRoutes()
   const isLpIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
   const portfolioPoolsBalancesEnabled = useFeatureFlagWithExposureLoggingDisabled(FeatureFlags.PortfolioPoolsBalances)
+  const isSynchronizedHeartbeatsEnabled = useIsSynchronizedHeartbeatEnabled(
+    SynchronizedHeartbeatsConfigKey.PortfolioPollIntervalSeconds,
+    usePortfolioHeartbeatEnabled({ tab: PortfolioTab.Pools, poolsEnabled: portfolioPoolsBalancesEnabled }),
+  )
   const outageBanner = usePoolsOutageBanner({ evmAddress, chainId, enabled: portfolioPoolsBalancesEnabled })
+  const isV2PositionsEnabled = useFeatureFlag(FeatureFlags.V2EndpointsPositions)
   const media = useMedia()
   const { ref: positionsListRef, height: positionStackHeight } = useResizeObserver<HTMLElement>()
   const twoColumnFeeCardMaxHeight = positionStackHeight
@@ -105,6 +120,19 @@ export function PortfolioPools() {
     setVersionFilter([...DEFAULT_LP_POSITION_PROTOCOL_FILTER])
     setStatusFilter([...DEFAULT_LP_POSITION_STATUS_FILTER])
   }, [])
+
+  // Portfolio pools filters by the route's chainId rather than a chain dropdown, so the table's
+  // network filter is hidden and the chain controls are no-ops.
+  const noopChainChange = useCallback(() => undefined, [])
+  const positionsTableControlBarProps: PositionsTableControlBarProps = {
+    statusFilter,
+    setStatusFilter,
+    versionFilter,
+    toggleVersion,
+    chainFilter: null,
+    setChainFilter: noopChainChange,
+    showNetworkFilter: false,
+  }
 
   // Fetch every status + version once and filter client-side, so toggling a filter never refetches and
   // closed positions stay in memory for the count.
@@ -194,6 +222,25 @@ export function PortfolioPools() {
     if (hasErrorWithoutData) {
       return <ErrorPositionsView onRetry={refetch} />
     }
+    if (isV2PositionsEnabled) {
+      if (isLoadingPositions) {
+        return <PositionsTableLoader {...positionsTableControlBarProps} />
+      }
+      return (
+        <PositionsTable
+          visiblePositions={filteredVisiblePositions}
+          hiddenPositions={filteredHiddenPositions}
+          hasNextPage={hasNextPage}
+          isFetching={isFetching}
+          isPlaceholderData={isPlaceholderData}
+          loadMorePositions={loadMorePositions}
+          showHiddenPositions={showHiddenPositions}
+          setShowHiddenPositions={setShowHiddenPositions}
+          entryPoint={portfolioPoolsUrl}
+          {...positionsTableControlBarProps}
+        />
+      )
+    }
     if (isLoadingPositions) {
       return (
         <Flex gap="$gap16">
@@ -258,20 +305,43 @@ export function PortfolioPools() {
               ) : undefined
             }
             part={PortfolioBalancePart.Pools}
+            // The heartbeat refetches balances on its tick — avoid a second overlapping schedule
+            disablePolling={isSynchronizedHeartbeatsEnabled}
           />
-          <PoolsActionRow
-            search={search}
-            selectedVersions={versionFilter}
-            selectedStatus={statusFilter}
-            onSearchChange={setSearch}
-            onVersionChange={toggleVersion}
-            onStatusChange={toggleStatus}
-            createPositionEntryPoint={portfolioPoolsUrl}
-            showCreateButton={!isExternalWallet}
-          />
+          {isV2PositionsEnabled ? (
+            !isExternalWallet && (
+              <PositionsHeader
+                showTitle={false}
+                showFilters={false}
+                showNetworkFilter={false}
+                selectedChain={null}
+                onChainChange={noopChainChange}
+                onVersionChange={toggleVersion}
+                onStatusChange={toggleStatus}
+                createPositionEntryPoint={portfolioPoolsUrl}
+              />
+            )
+          ) : (
+            <PoolsActionRow
+              search={search}
+              selectedVersions={versionFilter}
+              selectedStatus={statusFilter}
+              onSearchChange={setSearch}
+              onVersionChange={toggleVersion}
+              onStatusChange={toggleStatus}
+              createPositionEntryPoint={portfolioPoolsUrl}
+              showCreateButton={!isExternalWallet}
+            />
+          )}
         </Flex>
         <Flex row gap="$spacing24" alignItems="flex-start" $xl={{ flexDirection: 'column-reverse' }}>
-          <Flex grow shrink width="100%" maxWidth={POSITIONS_LIST_MAX_WIDTH} $xl={{ maxWidth: '100%' }}>
+          <Flex
+            grow
+            shrink
+            width="100%"
+            maxWidth={isV2PositionsEnabled ? '100%' : POSITIONS_LIST_MAX_WIDTH}
+            $xl={{ maxWidth: '100%' }}
+          >
             {outageBanner.isVisible && (
               <Flex mb="$spacing16">
                 <PoolsDataIssueBanner message={outageBanner.message} onDismiss={outageBanner.onDismiss} />
@@ -300,23 +370,25 @@ export function PortfolioPools() {
               </Flex>
             )}
           </Flex>
-          <Flex
-            width={POSITIONS_SIDEBAR_WIDTH}
-            flexShrink={0}
-            gap="$gap12"
-            $xl={{ width: '100%', flexDirection: 'row' }}
-            $md={{ flexDirection: 'column' }}
-          >
-            {isLpIncentivesEnabled && (
-              <PortfolioPoolsRewardsCard walletAddress={evmAddress} isExternalWallet={isExternalWallet} />
-            )}
-            <PortfolioPoolsFeesPanel
-              walletAddress={evmAddress}
-              chainId={chainId}
-              isExternalWallet={isExternalWallet}
-              maxHeight={feeCardMaxHeight}
-            />
-          </Flex>
+          {!isV2PositionsEnabled && (
+            <Flex
+              width={POSITIONS_SIDEBAR_WIDTH}
+              flexShrink={0}
+              gap="$gap12"
+              $xl={{ width: '100%', flexDirection: 'row' }}
+              $md={{ flexDirection: 'column' }}
+            >
+              {isLpIncentivesEnabled && (
+                <PortfolioPoolsRewardsCard walletAddress={evmAddress} isExternalWallet={isExternalWallet} />
+              )}
+              <PortfolioPoolsFeesPanel
+                walletAddress={evmAddress}
+                chainId={chainId}
+                isExternalWallet={isExternalWallet}
+                maxHeight={feeCardMaxHeight}
+              />
+            </Flex>
+          )}
         </Flex>
       </Flex>
     )

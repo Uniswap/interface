@@ -1,7 +1,7 @@
 import { GraphQLApi } from '@universe/api'
 import { TFunction } from 'i18next'
 import { shouldReverseForWaterfall } from 'uniswap/src/features/tokens/waterfallPriority'
-import { gqlToCurrency } from '~/appGraphql/data/util'
+import { gqlToCurrency } from '~/data/util'
 
 export const getPoolDetailPageTitle = (
   t: TFunction,

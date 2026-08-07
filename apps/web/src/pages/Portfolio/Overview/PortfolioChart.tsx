@@ -95,7 +95,7 @@ interface PortfolioChartProps {
   /** Opt-in categories the backend omitted, so the total is a partial sum shown with a warning. */
   unavailableCategories?: WalletBalanceCategory[]
   isTotalValueMatch: boolean
-  /** portfolio_pools_balances flag: when removed, make this the default and drop the legacy chart-internal header path. */
+  /** Category feature gates: when the legacy path is retired, make this the default chart header. */
   showBalanceHeaderRow?: boolean
   selectedCategory: PortfolioChartCategory
   setSelectedCategory: (category: PortfolioChartCategory) => void

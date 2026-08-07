@@ -84,7 +84,7 @@ describe('SendReviewModal', () => {
       <MultichainContext.Provider value={mockMultichainContextValue}>
         <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
           <SendContext.Provider value={mockedSendContextFiatInput}>
-            <SendReviewModalInner onDismiss={vi.fn()} onConfirm={vi.fn()} />
+            <SendReviewModalInner onDismiss={vi.fn()} onConfirm={vi.fn()} hasError={false} />
           </SendContext.Provider>
         </SwapAndLimitContext.Provider>
       </MultichainContext.Provider>,
@@ -102,7 +102,7 @@ describe('SendReviewModal', () => {
       <MultichainContext.Provider value={mockMultichainContextValue}>
         <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
           <SendContext.Provider value={mockedSendContextTokenInput}>
-            <SendReviewModalInner onDismiss={vi.fn()} onConfirm={vi.fn()} />
+            <SendReviewModalInner onDismiss={vi.fn()} onConfirm={vi.fn()} hasError={false} />
           </SendContext.Provider>
         </SwapAndLimitContext.Provider>
       </MultichainContext.Provider>,
@@ -113,5 +113,31 @@ describe('SendReviewModal', () => {
     expect(screen.getByText(shortenAddress({ address: '0x9984b4b4E408e8D618A879e5315BD30952c89103' }))).toBeVisible()
     const modalComponent = screen.getByTestId('send-review-modal')
     expect(modalComponent).toMatchSnapshot()
+  })
+
+  it('renders the inline error text when a send error is present', () => {
+    render(
+      <MultichainContext.Provider value={mockMultichainContextValue}>
+        <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
+          <SendContext.Provider value={mockedSendContextTokenInput}>
+            <SendReviewModalInner onDismiss={vi.fn()} onConfirm={vi.fn()} hasError={true} />
+          </SendContext.Provider>
+        </SwapAndLimitContext.Provider>
+      </MultichainContext.Provider>,
+    )
+    expect(screen.getByText('Transfer failed. Please try again.')).toBeVisible()
+  })
+
+  it('does not render the error text in the non-error state', () => {
+    render(
+      <MultichainContext.Provider value={mockMultichainContextValue}>
+        <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
+          <SendContext.Provider value={mockedSendContextTokenInput}>
+            <SendReviewModalInner onDismiss={vi.fn()} onConfirm={vi.fn()} hasError={false} />
+          </SendContext.Provider>
+        </SwapAndLimitContext.Provider>
+      </MultichainContext.Provider>,
+    )
+    expect(screen.queryByText('Transfer failed. Please try again.')).not.toBeInTheDocument()
   })
 })

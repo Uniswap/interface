@@ -174,6 +174,11 @@ const getTransactionTitleTable = (): {
     [TransactionStatus.Success]: i18n.t('transaction.status.swap.success'),
     [TransactionStatus.Failed]: i18n.t('common.swap.failed'),
   },
+  [TransactionType.UniswapXCancel]: {
+    [TransactionStatus.Pending]: i18n.t('transaction.status.limitCancel.pending'),
+    [TransactionStatus.Success]: i18n.t('transaction.status.limitCancel.success'),
+    [TransactionStatus.Failed]: i18n.t('transaction.status.limitCancel.failed'),
+  },
   [TransactionType.RemoveDelegation]: {
     [TransactionStatus.Pending]: i18n.t('transaction.status.removeDelegation.pending'),
     [TransactionStatus.Success]: i18n.t('transaction.status.removeDelegation.success'),
@@ -247,6 +252,10 @@ export const getOrderTextTable = (): {
       getTitle: () => i18n.t('transaction.status.swap.canceled'),
       status: TransactionStatus.Failed,
     },
+    [TransactionStatus.FailedCancel]: {
+      getTitle: () => i18n.t('transaction.status.cancellation.failed'),
+      status: TransactionStatus.Failed,
+    },
   }
 }
 
@@ -285,6 +294,7 @@ export const getCancelledTransactionTitleTable = (): { [key in TransactionType]:
   [TransactionType.SendCalls]: i18n.t('transaction.status.send.canceled'),
   [TransactionType.CreatePosition]: i18n.t('pool.createdPosition.canceled'),
   [TransactionType.UniswapXOrder]: i18n.t('transaction.status.swap.canceled'),
+  [TransactionType.UniswapXCancel]: i18n.t('transaction.status.limitCancel.success'),
   [TransactionType.RemoveDelegation]: i18n.t('transaction.status.removeDelegation.canceled'),
   [TransactionType.AuctionBid]: i18n.t('transaction.status.submitBid.canceled'),
   [TransactionType.AuctionClaimed]: i18n.t('transaction.status.claim.canceled'),
@@ -381,6 +391,10 @@ export const getLimitOrderTextTable = (): {
   },
   [TransactionStatus.Canceled]: {
     getTitle: () => i18n.t('common.limit.canceled'),
+    status: TransactionStatus.Failed,
+  },
+  [TransactionStatus.FailedCancel]: {
+    getTitle: () => i18n.t('transaction.status.cancellation.failed'),
     status: TransactionStatus.Failed,
   },
 })

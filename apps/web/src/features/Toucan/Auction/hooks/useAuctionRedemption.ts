@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
 import { useReadContract } from 'wagmi'
+import { assume0xAddress } from '~/chains'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { getAuctionRedemptionConfig } from '~/features/Toucan/Config/config'
-import { assume0xAddress } from '~/utils/wagmi'
 
 // Minimal IVirtualERC20 surface — just the underlying-token getter we need.
 // Mirrors ../liquidity-launcher/src/interfaces/external/IVirtualERC20.sol

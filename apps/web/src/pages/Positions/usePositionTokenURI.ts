@@ -5,7 +5,7 @@ import { useMemo } from 'react'
 import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
 import { useReadContract } from 'wagmi'
 import { erc721Abi } from '~/chains'
-import { assume0xAddress } from '~/utils/wagmi'
+import { assume0xAddress } from '~/chains'
 
 type TokenId = number | JSBI | bigint
 

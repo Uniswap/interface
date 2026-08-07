@@ -9,7 +9,8 @@ import { DAI, USDC, USDT } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { normalizeTokenAddressForCache } from 'uniswap/src/utils/currencyId'
 import { mainnet } from 'viem/chains'
-import { type Address, erc20Abi } from '~/chains'
+import { type Address, assume0xAddress, erc20Abi } from '~/chains'
+import { resolvePinnedForkBlock } from '~/playwright/anvil/anvil-args'
 import type { AnvilClient as BaseAnvilClient } from '~/playwright/anvil/anvil-manager'
 import { getAnvilManager } from '~/playwright/anvil/anvil-manager'
 import { clockSyncRpcFromClient, syncClockToWallClock } from '~/playwright/anvil/clock-sync'
@@ -17,7 +18,6 @@ import type { SnapshotId, SnapshotLifecycleRpc } from '~/playwright/anvil/snapsh
 import { restoreTestSnapshot, takeTestSnapshot } from '~/playwright/anvil/snapshot-lifecycle'
 import { setErc20BalanceWithMultipleSlots, WEETH_ADDRESS } from '~/playwright/anvil/utils'
 import { TEST_WALLET_ADDRESS } from '~/playwright/fixtures/wallets'
-import { assume0xAddress } from '~/utils/wagmi'
 
 class WalletError extends Error {
   code?: number
@@ -38,6 +38,28 @@ class WalletError extends Error {
 async function revertToSnapshotChecked(client: BaseAnvilClient, id: SnapshotId): Promise<boolean> {
   const result: unknown = await client.request({ method: 'evm_revert', params: [id] })
   return result === true
+}
+
+// Cached per worker: a historical block's base fee is immutable.
+let pinnedForkBaseFeePerGas: bigint | undefined
+
+/**
+ * `anvil_setNextBlockBaseFeePerGas` is node fee config, not chain state — `evm_revert`
+ * does NOT undo it. A spec that pins the base fee (e.g. the Limit specs' 100 gwei pin)
+ * leaks it into every later test on the same anvil, and app transactions priced from
+ * live gas (~0.3 gwei) get rejected with "max fee per gas less than block base fee".
+ * Re-anchor to the pinned fork block's own base fee at every test boundary.
+ */
+async function resetNextBlockBaseFee(client: BaseAnvilClient): Promise<void> {
+  const forkBlockNumber = resolvePinnedForkBlock({ chainId: mainnet.id })
+  if (forkBlockNumber === undefined) {
+    return
+  }
+  pinnedForkBaseFeePerGas ??=
+    (await client.getBlock({ blockNumber: BigInt(forkBlockNumber) })).baseFeePerGas ?? undefined
+  if (pinnedForkBaseFeePerGas !== undefined) {
+    await client.setNextBlockBaseFeePerGas({ baseFeePerGas: pinnedForkBaseFeePerGas })
+  }
 }
 
 const allowedErc20BalanceAddresses = [
@@ -272,6 +294,10 @@ export const test = base.extend<{ anvil: AnvilClient; delegateToZeroAddress?: vo
     // run (breaking wall-clock-stamped quotes like the Across bridge deposit).
     // Re-anchoring here bounds the lag within any test to that test's own runtime.
     await syncClockToWallClock(clockSyncRpcFromClient(testAnvil))
+
+    // Fee re-anchor EVERY boundary: a previous test's base-fee pin survives evm_revert
+    // (node config, not chain state) and would reject this test's live-priced txs.
+    await resetNextBlockBaseFee(testAnvil)
 
     // State isolation: a FRESH snapshot every test — evm_revert consumes snapshot
     // IDs, so an ID from an earlier test can never be reused.

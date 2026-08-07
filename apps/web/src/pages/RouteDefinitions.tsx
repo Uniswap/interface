@@ -1,10 +1,12 @@
+import { EXTENSION_PASSKEY_AUTH_PATH } from '@universe/embedded-wallet'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { lazy, ReactNode, Suspense, useMemo } from 'react'
+import { lazy, Suspense, useMemo } from 'react'
 import { matchPath, Navigate, Route, Routes, useLocation } from 'react-router'
 import { CHROME_EXTENSION_UNINSTALL_URL_PATH } from 'uniswap/src/constants/urls'
 import { WRAPPED_SOL_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
-import { EXTENSION_PASSKEY_AUTH_PATH } from 'uniswap/src/features/passkey/constants'
 import i18n from 'uniswap/src/i18n'
+import { isEmbedPath } from '~/pages/embedPaths'
+import { EMBED_ENTRY_ROUTES } from '~/pages/embedRoutes'
 import { getExploreDescription, getExploreTitle } from '~/pages/getExploreTitle'
 import { getPortfolioDescription, getPortfolioTitle } from '~/pages/getPortfolioTitle'
 import {
@@ -14,6 +16,12 @@ import {
 } from '~/pages/getPositionPageTitle'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
 import { Landing } from '~/pages/Landing'
+import {
+  createRouteDefinition,
+  type RouteDefinition,
+  type RouterConfig,
+  StaticTitlesAndDescriptions,
+} from '~/pages/routeDefinition'
 import { SwapPage } from '~/pages/Swap'
 import { ON_RAMP_RETURN_PATH } from '~/pages/Swap/Buy/onRampRedirectUrl'
 import { OnRampReturn } from '~/pages/Swap/Buy/OnRampReturn'
@@ -51,13 +59,7 @@ const ToucanToken = lazy(() => import('~/pages/Explore/ToucanToken'))
 const CreateAuction = lazy(() => import('~/pages/Liquidity/CreateAuction/CreateAuction'))
 const XOAuthCallbackPage = lazy(() => import('~/pages/Liquidity/CreateAuction/XOAuthCallbackPage'))
 const BetaPage = lazy(() => import('~/pages/Beta'))
-
-interface RouterConfig {
-  browserRouterEnabled?: boolean
-  hash?: string
-  isAddLiquidityRevampEnabled?: boolean
-  isEmbeddedWalletEnabled?: boolean
-}
+const Launches = lazy(() => import('~/pages/Launches'))
 
 /**
  * Convenience hook which organizes the router configuration into a single object.
@@ -77,48 +79,6 @@ export function useRouterConfig(): RouterConfig {
     }),
     [browserRouterEnabled, hash, isAddLiquidityRevampEnabled, isEmbeddedWalletEnabled],
   )
-}
-
-// SEO titles and descriptions sourced from https://docs.google.com/spreadsheets/d/1_6vSxGgmsx6QGEZ4mdHppv1VkuiJEro3Y_IopxUHGB4/edit#gid=0
-// getTitle and getDescription are used as static metatags for SEO. Dynamic metatags should be set in the page component itself
-const StaticTitlesAndDescriptions = {
-  UniswapTitle: i18n.t('title.uniswapTradeCrypto'),
-  SwapTitle: i18n.t('title.buySellTradeEthereum'),
-  SwapDescription: i18n.t('title.swappingMadeSimple'),
-  DetailsPageBaseTitle: i18n.t('common.buyAndSell'),
-  TDPDescription: i18n.t('title.realTime'),
-  PDPDescription: i18n.t('title.tradeTokens'),
-  MigrateTitle: i18n.t('title.migratev2'),
-  MigrateTitleV3: i18n.t('title.migratev3'),
-  MigrateDescription: i18n.t('title.easilyRemove'),
-  MigrateDescriptionV4: i18n.t('title.easilyRemoveV4'),
-  AddLiquidityDescription: i18n.t('title.earnFees'),
-  PasskeyManagementTitle: i18n.t('title.managePasskeys'),
-  ToucanAuctionDescription: i18n.t('title.bidOnTokensInAuctions'),
-  ToucanLaunchAuctionDescription: i18n.t('title.launchTokenAuction'),
-}
-
-export interface RouteDefinition {
-  path: string
-  nestedPaths: string[]
-  getTitle: (path?: string) => string
-  getDescription: (path?: string) => string
-  enabled: (args: RouterConfig) => boolean
-  getElement: (args: RouterConfig) => ReactNode
-}
-
-// Assigns the defaults to the route definition.
-function createRouteDefinition(route: Partial<RouteDefinition>): RouteDefinition {
-  return {
-    getElement: () => null,
-    getTitle: () => StaticTitlesAndDescriptions.UniswapTitle,
-    getDescription: () => StaticTitlesAndDescriptions.SwapDescription,
-    enabled: () => true,
-    path: '/',
-    nestedPaths: [],
-    // overwrite the defaults
-    ...route,
-  }
 }
 
 export const routes: RouteDefinition[] = [
@@ -189,6 +149,16 @@ export const routes: RouteDefinition[] = [
     getElement: () => (
       <Suspense fallback={null}>
         <ToucanToken />
+      </Suspense>
+    ),
+  }),
+  createRouteDefinition({
+    path: '/launches',
+    getTitle: () => i18n.t('common.launches'),
+    getDescription: () => StaticTitlesAndDescriptions.ToucanAuctionDescription,
+    getElement: () => (
+      <Suspense fallback={null}>
+        <Launches />
       </Suspense>
     ),
   }),
@@ -462,8 +432,16 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({ path: '/not-found', getElement: () => <NotFound /> }),
 ]
 
+// Route primitives live in a sibling module (routeDefinition.tsx) to keep this file
+// within the max-lines limit; re-exported here so consumers keep a single import.
+export type { RouteDefinition } from '~/pages/routeDefinition'
+// Re-exported here so consumers keep a single import (see embedRoutes.tsx / Body.tsx).
+export { EMBED_ENTRY_ROUTES } from '~/pages/embedRoutes'
+
 export const findRouteByPath = (pathname: string) => {
-  for (const route of routes) {
+  // Search /embed entry routes first so /embed and /embed/* resolve before the `*` catch-all.
+  const searchSpace = isEmbedPath(pathname) ? [...EMBED_ENTRY_ROUTES, ...routes] : routes
+  for (const route of searchSpace) {
     const match = matchPath(route.path, pathname)
     if (match) {
       return route

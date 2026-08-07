@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { Flex, TouchableArea } from 'ui/src'
-import type { IssuerToken, Rwa } from 'uniswap/src/data/rest/rwa/types'
+import type { IssuerToken, Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   EXPANDABLE_ASSET_ISSUER_GAP_SEARCH_PX,

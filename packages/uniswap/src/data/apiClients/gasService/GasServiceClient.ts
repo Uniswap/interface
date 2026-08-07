@@ -8,7 +8,7 @@ import {
   type GasServiceClient as GasServiceClientType,
   reinitializeSession,
 } from '@universe/api'
-import { entryGatewayPostTransport } from 'uniswap/src/data/rest/base'
+import { entryGatewayPostTransport } from 'uniswap/src/data/transport'
 import { logger } from 'utilities/src/logger/logger'
 
 const withSessionRetry = createWithSessionRetry({

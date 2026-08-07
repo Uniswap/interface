@@ -1,8 +1,7 @@
-import { useApolloClient } from '@apollo/client'
 import { useQueryClient } from '@tanstack/react-query'
-import { GQLQueries } from '@universe/api'
 import { HomeTab } from 'src/screens/HomeScreen/portfolio/types'
 import { useHeartbeatCoordinator } from 'src/utils/useHeartbeatCoordinator'
+import { NFT_QUERY_KEY_PREFIX } from 'uniswap/src/data/apiClients/dataApiService/nfts/queries'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 /**
@@ -21,13 +20,14 @@ export function useHomeScreenHeartbeatCoordinator({
   activeTab: HomeTab | undefined
 }): void {
   const queryClient = useQueryClient()
-  const apollo = useApolloClient()
 
   const priceRefresh = async (): Promise<void> => {
-    const tasks: Promise<unknown>[] = [queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.GetWalletBalances] })]
+    const tasks: Promise<unknown>[] = [
+      queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.GetWalletBalances], type: 'active' }),
+    ]
 
     if (activeTab === HomeTab.Tokens) {
-      tasks.push(queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.GetPortfolio] }))
+      tasks.push(queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.GetPortfolio], type: 'active' }))
     }
 
     await Promise.allSettled(tasks)
@@ -35,20 +35,20 @@ export function useHomeScreenHeartbeatCoordinator({
 
   const refresh = async (): Promise<void> => {
     const tasks: Promise<unknown>[] = [
-      queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.GetWalletBalances] }),
-      queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.GetPortfolioChart] }),
+      queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.GetWalletBalances], type: 'active' }),
+      queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.GetPortfolioChart], type: 'active' }),
     ]
 
     if (activeTab === HomeTab.Tokens) {
-      tasks.push(queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.GetPortfolio] }))
+      tasks.push(queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.GetPortfolio], type: 'active' }))
     }
 
     if (activeTab === HomeTab.Pools) {
-      tasks.push(queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.ListPositions] }))
+      tasks.push(queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.ListPositions], type: 'active' }))
     }
 
     if (activeTab === HomeTab.NFTs) {
-      tasks.push(apollo.refetchQueries({ include: [GQLQueries.NftsTab] }))
+      tasks.push(queryClient.refetchQueries({ queryKey: NFT_QUERY_KEY_PREFIX, type: 'active' }))
     }
 
     await Promise.allSettled(tasks)

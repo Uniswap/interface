@@ -1,4 +1,6 @@
 import { TradingApi } from '@universe/api'
+import { FeatureFlags, getFeatureFlag } from '@universe/gating'
+import { isCancelTimedOut } from 'uniswap/src/features/transactions/cancel/cancelTimeoutStateMachine'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import type {
   ExactInputSwapTransactionInfo,
@@ -7,7 +9,8 @@ import type {
   InterfaceTransactionDetails,
   UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import i18n from 'uniswap/src/i18n'
 import {
   getActivityTitle,
   getLimitOrderTextTable,
@@ -39,6 +42,29 @@ export async function parseUniswapXOrderLocal({
   const orderTextTable = getOrderTextTable()
   const limitOrderTextTable = getLimitOrderTextTable()
   let orderTextTableEntry = (isLimitOrder ? limitOrderTextTable : orderTextTable)[details.status]
+
+  // Cancel-flow states are evaluated BEFORE the status-table lookup. Only timed-out is a
+  // persistent row treatment; finalizing and already-filled are transitional/reason states.
+  if (uniswapXOrderDetails && getFeatureFlag(FeatureFlags.LimitCancelTimeout)) {
+    if (isCancelTimedOut(uniswapXOrderDetails)) {
+      orderTextTableEntry = {
+        getTitle: () => i18n.t('limits.cancel.likelyToFail'),
+        getStatusMessage: () => i18n.t('limits.cancel.timeout.alert'),
+        status: TransactionStatus.Pending,
+      }
+    } else if (uniswapXOrderDetails.status === TransactionStatus.Cancelling && uniswapXOrderDetails.cancelTxMined) {
+      orderTextTableEntry = {
+        getTitle: () => i18n.t('limits.cancel.finalizing'),
+        status: TransactionStatus.Pending,
+      }
+    } else if (uniswapXOrderDetails.cancelFailedReason === 'filled') {
+      orderTextTableEntry = {
+        getTitle: () => (isLimitOrder ? i18n.t('common.limit.executed') : i18n.t('transaction.status.swap.success')),
+        getStatusMessage: () => i18n.t('limits.cancel.alreadyFilled'),
+        status: TransactionStatus.Success,
+      }
+    }
+  }
 
   // Fallback for missing status entries
   if (!orderTextTableEntry) {

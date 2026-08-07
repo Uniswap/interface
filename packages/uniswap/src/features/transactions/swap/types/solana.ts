@@ -18,7 +18,7 @@ export interface SolanaTrade {
   readonly inputTax: typeof ZERO_PERCENT
   readonly outputTax: typeof ZERO_PERCENT
   readonly slippageTolerance: number
-  readonly priceImpact?: Percent
+  readonly priceDifference?: Percent
   readonly deadline: undefined
   readonly minAmountOut: CurrencyAmount<Currency>
   readonly maxAmountIn: CurrencyAmount<Currency>
@@ -102,7 +102,7 @@ function getQuoteCurrencyAmounts(params: {
 // Relatively arbitrary; higher number is more precise
 const JUP_PRICE_IMPACT_MULTIPLICATION_BASE = 1000000
 
-function getPriceImpactPercent(quote: JupiterOrderResponse): Percent | undefined {
+function getPriceDifferencePercent(quote: JupiterOrderResponse): Percent | undefined {
   if (!quote.priceImpactPct) {
     return undefined
   }
@@ -161,7 +161,7 @@ export function createSolanaTrade({
     inputTax: ZERO_PERCENT,
     outputTax: ZERO_PERCENT,
     slippageTolerance: quote.slippageBps / 100,
-    priceImpact: getPriceImpactPercent(quote),
+    priceDifference: getPriceDifferencePercent(quote),
     deadline: undefined,
     minAmountOut,
     maxAmountIn,

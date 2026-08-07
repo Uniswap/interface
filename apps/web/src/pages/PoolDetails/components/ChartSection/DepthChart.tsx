@@ -4,8 +4,8 @@ import { FeeAmount } from '@uniswap/v3-sdk'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, useSporeColors } from 'ui/src'
-import { BIPS_BASE, ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
+import { BIPS_BASE } from 'uniswap/src/constants/misc'
+import { useGetPool } from 'uniswap/src/data/apiClients/dataApiService/pools/getPools'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getStablecoinsForChain, isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -20,7 +20,6 @@ import { ChartType } from '~/components/Charts/utils'
 import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
 import { LoadingChart } from '~/features/Explore/chart/LoadingChart'
 import { useLiquidityBarData } from '~/features/Liquidity/charts/LiquidityChart'
-import { getTokenOrZeroAddress } from '~/features/Liquidity/utils/currency'
 import { ChartPriceText, PriceDisplayContainer } from '~/pages/PoolDetails/components/ChartSection/ChartPriceDisplay'
 import {
   buildDepthData,
@@ -86,17 +85,7 @@ export function DepthChart({
   const [mirrorState, setMirrorState] = useState<TooltipUpdate | null>(null)
   const [gapState, setGapState] = useState<{ sell: TooltipUpdate; buy: TooltipUpdate } | null>(null)
 
-  const { data: poolData } = useGetPoolsByTokens(
-    {
-      fee: feeTier,
-      chainId,
-      protocolVersions: [version],
-      token0: getTokenOrZeroAddress(tokenA),
-      token1: getTokenOrZeroAddress(tokenB),
-      hooks: hooks ?? ZERO_ADDRESS,
-    },
-    true,
-  )
+  const { data: poolData } = useGetPool({ chainId, poolId, protocolVersion: version }, Boolean(poolId))
 
   const sdkCurrencies = useMemo(() => ({ TOKEN0: tokenA, TOKEN1: tokenB }), [tokenA, tokenB])
 
@@ -108,7 +97,7 @@ export function DepthChart({
     version,
     hooks,
     poolId,
-    tickSpacing: poolData?.pools[0]?.tickSpacing,
+    tickSpacing: poolData?.pool?.tickSpacing,
   })
 
   const { sellData, buyData, midPrice } = useMemo(() => {

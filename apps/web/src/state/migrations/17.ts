@@ -1,8 +1,8 @@
 import { PersistState } from 'redux-persist'
-import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { tokenAddressOrNativeAddress } from 'uniswap/src/features/search/utils'
 import { createPersistState, createSafeMigration } from 'uniswap/src/state/createSafeMigration'
 import { isPoolSearchResult, PreV55SearchResult, PreV55SearchResultType } from 'uniswap/src/state/oldTypes'
+import { normalizeTokenAddressForCache } from 'uniswap/src/utils/currencyId'
 
 export type PersistAppStateV17 = {
   _persist: PersistState

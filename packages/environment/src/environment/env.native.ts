@@ -34,6 +34,14 @@ export function isRNDev(): boolean {
 export const localDevDatadogEnabled = false
 
 export function isDatadogEnabled(): boolean {
+  // e2e/CI builds enable Datadog so every scheduled Maestro run behaves as a synthetic perf probe,
+  // emitting the same RUM vitals as prod. Build-gated on isE2eTestEnv (baked from IS_E2E_TEST, only
+  // set by the e2e build actions), so this can never turn on in dev/beta/prod/release builds.
+  // Isolation from the prod RUM app (env + source tags, optional dedicated app) is handled in
+  // DatadogProviderWrapper's initializeDatadog. Mobile is the sole consumer of this native module.
+  if (isE2eTestEnv()) {
+    return true
+  }
   // oxlint-disable-next-line typescript/no-unnecessary-condition
-  return (localDevDatadogEnabled || !isRNDev()) && !isUnitTestEnv() && !isE2eTestEnv()
+  return (localDevDatadogEnabled || !isRNDev()) && !isUnitTestEnv()
 }

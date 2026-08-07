@@ -1,3 +1,4 @@
+import { PLAN_SAGA_TIMEOUT_MS } from 'uniswap/src/features/transactions/swap/plan/constants'
 import { createMonitoredSaga } from 'uniswap/src/utils/saga'
 import { getSharedTransactionSagaDependencies } from 'wallet/src/features/transactions/configuredSagas'
 import { createExecutePlanSaga } from 'wallet/src/features/transactions/swap/executePlanSaga'
@@ -45,6 +46,7 @@ export const {
   name: 'executePlan',
   options: {
     parallel: true,
+    timeoutDuration: PLAN_SAGA_TIMEOUT_MS,
   },
 })
 

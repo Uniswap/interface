@@ -70,7 +70,7 @@ struct Provider: IntentTimelineProvider {
     let (tokenPriceResponse, conversionResponse) = try await (tokenPriceRequest, conversionRequest)
     
     let spotPrice = tokenPriceResponse.spotPrice != nil ?
-      tokenPriceResponse.spotPrice! * conversionResponse.conversionRate : nil
+    tokenPriceResponse.spotPrice! * conversionResponse.convertedAmount.value : nil 
     let pricePercentChange = tokenPriceResponse.pricePercentChange
     let symbol = tokenPriceResponse.symbol
     let logo = UIImage(url: URL(string: tokenPriceResponse.logoUrl ?? ""))
@@ -91,7 +91,7 @@ struct Provider: IntentTimelineProvider {
     return TokenPriceEntry(
       date: entryDate,
       configuration: configuration,
-      currency: conversionResponse.currency,
+      currency: fiatCurrencyCodeByInt[conversionResponse.convertedAmount.currency] ?? "USD",
       spotPrice: tokenPriceHistory?.price ?? spotPrice,
       pricePercentChange: tokenPriceHistory?.pricePercentChange24h ?? pricePercentChange,
       symbol: symbol,

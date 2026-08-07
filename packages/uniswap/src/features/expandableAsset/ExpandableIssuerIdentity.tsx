@@ -5,10 +5,13 @@ import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { GroupHoverTransition } from 'uniswap/src/components/GroupHoverTransition'
 import { NetworkIconList } from 'uniswap/src/components/network/NetworkIconList/NetworkIconList'
-import { formatIssuerDisplaySymbol, formatIssuerLabel } from 'uniswap/src/data/rest/rwa/formatIssuerDisplaySymbol'
-import { pickPrimaryChainToken } from 'uniswap/src/data/rest/rwa/pickPrimaryChainToken'
-import { getNetworkCount } from 'uniswap/src/data/rest/rwa/rwaMetrics'
-import type { IssuerToken, Rwa } from 'uniswap/src/data/rest/rwa/types'
+import {
+  formatIssuerDisplaySymbol,
+  formatIssuerLabel,
+} from 'uniswap/src/data/apiClients/dataApiService/rwa/formatIssuerDisplaySymbol'
+import { pickPrimaryChainToken } from 'uniswap/src/data/apiClients/dataApiService/rwa/pickPrimaryChainToken'
+import { getNetworkCount } from 'uniswap/src/data/apiClients/dataApiService/rwa/rwaMetrics'
+import type { IssuerToken, Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { IssuerTableRowHoverContext } from 'uniswap/src/features/expandableAsset/IssuerTableRowHoverContext'
 import { TABLE_SUBLINE_HEIGHT, type ExpandableAssetGroupVariant } from 'uniswap/src/features/expandableAsset/types'

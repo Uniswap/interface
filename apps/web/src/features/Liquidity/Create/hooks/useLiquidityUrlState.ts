@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { assume0xAddress } from '~/chains'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { useCurrencyValidation } from '~/features/Liquidity/Create/hooks/useCurrencyValidation'
 import { PositionFlowStep, PositionState, PriceRangeState } from '~/features/Liquidity/Create/types'
@@ -19,7 +20,6 @@ import {
 } from '~/features/Liquidity/parsers/urlParsers'
 import { getIsBrowserPage, MatchType, PageType } from '~/hooks/useIsPage'
 import type { DepositState } from '~/types/liquidity'
-import { assume0xAddress } from '~/utils/wagmi'
 
 // Parser for replace parameters (most params)
 const replaceStateParser = {

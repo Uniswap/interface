@@ -6,6 +6,7 @@ import { SwapFormButton } from 'uniswap/src/features/transactions/swap/component
 import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore'
 import { SwapFormWarningStoreContextProvider } from 'uniswap/src/features/transactions/swap/form/stores/swapFormWarningStore/SwapFormWarningStoreContextProvider'
 import { ExpandableRows } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/ExpandableRows'
+import { SwapFormPermissionedWarningCard } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormPermissionedWarningCard'
 import { SwapFormScreenFooter } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/SwapFormScreenFooter'
 import { SwapFormWarningModals } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormWarningModals/SwapFormWarningModals'
 
@@ -30,6 +31,7 @@ export const SwapFormScreenDetails = memo(function SwapFormScreenDetails(): JSX.
               <Flex gap="$spacing8">
                 <SwapFormWarningStoreContextProvider>
                   <SwapFormButton tokenColor={tokenColor} />
+                  <SwapFormPermissionedWarningCard />
                   <SwapFormWarningModals />
                 </SwapFormWarningStoreContextProvider>
               </Flex>

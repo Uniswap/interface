@@ -199,6 +199,25 @@ vi.stubGlobal('IntersectionObserver', IntersectionObserverMock)
 
 vi.mock('react-native-svg', () => require('@tamagui/react-native-svg'))
 
+// `resolve.extensions` puts `.web.ts` ahead of `.js`, so importing this package resolves its
+// untransformed TS source (src/module.web.ts) instead of its dist build and throws a SyntaxError,
+// making anything that reaches AmountInput untestable on web. Mirrors the mock the uniswap package
+// already uses (vitest-package-mocks.ts) so the two stay interchangeable.
+vi.mock('react-native-localize', () => ({
+  findBestLanguageTag: () => ({ languageTag: 'en-US', isRTL: false }),
+  getLocales: () => [{ countryCode: 'US', languageTag: 'en-US', languageCode: 'en', isRTL: false }],
+  getNumberFormatSettings: () => ({ decimalSeparator: '.', groupingSeparator: ',' }),
+  getCalendar: () => 'gregorian',
+  getCountry: () => 'US',
+  getCurrencies: () => ['USD'],
+  getTemperatureUnit: () => 'celsius',
+  getTimeZone: () => 'America/New_York',
+  uses24HourClock: () => true,
+  usesMetricSystem: () => true,
+  addEventListener: vi.fn(),
+  removeEventListener: vi.fn(),
+}))
+
 vi.mock('expo-blur', () => ({
   BlurView: ({ children }: any) => {
     return React.createElement(React.Fragment, {}, children)
@@ -533,8 +552,8 @@ vi.mock('@universe/gating', async (importOriginal) => {
     useExperimentValue: vi.fn(),
     getExperimentValue: vi.fn(),
     useExperimentValueWithExposureLoggingDisabled: vi.fn(),
-    useDynamicConfigValue: vi.fn(),
-    getDynamicConfigValue: vi.fn(),
+    useDynamicConfigValue: vi.fn((args) => args?.defaultValue),
+    getDynamicConfigValue: vi.fn((args) => args?.defaultValue),
     getExperimentValueFromLayer: vi.fn(),
     useExperimentValueFromLayer: vi.fn(),
     checkTypeGuard: vi.fn(),

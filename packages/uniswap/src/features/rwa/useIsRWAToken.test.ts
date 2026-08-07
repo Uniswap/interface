@@ -1,9 +1,9 @@
 import type { Currency } from '@uniswap/sdk-core'
-import { useListRwasQuery } from 'uniswap/src/data/rest/listRwas'
+import { useListRwasQuery } from 'uniswap/src/data/apiClients/dataApiService/rwa/listRwas'
 import { useIsRWAToken } from 'uniswap/src/features/rwa/useIsRWAToken'
 import { renderHook } from 'uniswap/src/test/test-utils'
 
-vi.mock('uniswap/src/data/rest/listRwas', () => ({
+vi.mock('uniswap/src/data/apiClients/dataApiService/rwa/listRwas', () => ({
   useListRwasQuery: vi.fn(),
 }))
 

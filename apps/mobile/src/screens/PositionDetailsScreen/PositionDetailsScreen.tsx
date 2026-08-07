@@ -11,7 +11,7 @@ import { PositionFeesUnavailable } from 'src/screens/PositionDetailsScreen/compo
 import { PositionTokenBreakdown } from 'src/screens/PositionDetailsScreen/components/PositionTokenBreakdown'
 import { Flex, ScrollView, Separator, Text } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
+import { useGetPositionQuery } from 'uniswap/src/data/apiClients/dataApiService/positions/getPosition'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { usePriceRangeUsd } from 'uniswap/src/features/positions/hooks/usePriceRangeUsd'
 import { parseRestPosition } from 'uniswap/src/features/positions/parseRestPosition'
@@ -26,7 +26,7 @@ import { NumberType } from 'utilities/src/format/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function PositionDetailsScreen({ route }: AppStackScreenProp<MobileScreens.PositionDetails>): JSX.Element {
-  const { poolId, tokenId, chainId, protocolVersion, owner: ownerParam } = route.params
+  const { poolId, tokenId, chainId, protocolVersion, owner: ownerParam, permissioned } = route.params
   const { t } = useTranslation()
   const insets = useAppInsets()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
@@ -40,6 +40,7 @@ export function PositionDetailsScreen({ route }: AppStackScreenProp<MobileScreen
     protocolVersion,
     tokenId: tokenId ?? '',
     pairAddress: isV2 ? poolId : '',
+    permissioned: Boolean(permissioned),
   })
 
   const positionInfo = useMemo(() => parseRestPosition(data?.position), [data?.position])

@@ -1,10 +1,10 @@
 import { TokenRankingsResponse } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { buildFavoritesCanonicalLookup } from 'uniswap/src/features/favorites/canonicalFavoritesLookup'
 import { selectFavoriteTokens, selectHasMigratedToMultichain } from 'uniswap/src/features/favorites/selectors'
 import { setFavoriteTokens, setHasMigratedToMultichain } from 'uniswap/src/features/favorites/slice'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 
 /**
  * Given the TokenRankings response and a list of favorite CurrencyIds, maps each favorite

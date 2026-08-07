@@ -35,7 +35,7 @@ vi.mock('uniswap/src/features/wallet/hooks/useWallet', () => ({
   useWallet: vi.fn(),
 }))
 
-vi.mock('uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus', () => ({
+vi.mock('@universe/embedded-wallet/src/features/passkey/hooks/useGetPasskeyAuthStatus', () => ({
   useGetPasskeyAuthStatus: vi.fn(),
 }))
 
@@ -47,13 +47,23 @@ vi.mock('~/hooks/Tokens', () => ({
   useCurrencyInfo: vi.fn(),
 }))
 
+// The modal reads the LP geo gate, whose compliance query resolves to undefined without a network
+// layer here — react-query logs that as a console error, which the console guard fails the file on.
+vi.mock('~/features/Liquidity/useLPGeoRestriction', () => ({
+  useLPGeoRestriction: () => ({
+    isGeoRestricted: false,
+    restrictedTokenSymbol: undefined,
+    unavailableLabel: 'Not available in your region',
+  }),
+}))
+
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
+import { useGetPasskeyAuthStatus } from '@universe/embedded-wallet'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router'
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
 import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'

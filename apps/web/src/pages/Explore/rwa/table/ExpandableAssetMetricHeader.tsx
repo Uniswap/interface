@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Text } from 'ui/src'
-import type { OrderDirection } from '~/appGraphql/data/util'
 import { HeaderCell } from '~/components/Table/styled'
+import type { OrderDirection } from '~/data/util'
 import { ExpandableAssetMetricHeaderTooltip } from '~/pages/Explore/rwa/table/ExpandableAssetMetricHeaderTooltip'
 import { getStocksSortMethodLabel } from '~/pages/Explore/rwa/table/stocksSortMethodLabels'
 import { StocksTableHeader } from '~/pages/Explore/rwa/table/StocksTableHeader'

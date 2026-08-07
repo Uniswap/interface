@@ -31,6 +31,7 @@ type OwnProps = {
   link: string
   target?: TextProps['target']
   onlyUseText?: boolean
+  noUnderline?: boolean
 }
 
 export type TouchableTextLinkProps = PropsFromText & PropsFromTouchableArea & OwnProps
@@ -65,6 +66,7 @@ const TouchableTextLink_ = forwardRef<TamaguiElement, TouchableTextLinkProps>(fu
     disabledStyle,
     forceStyle,
     onlyUseText,
+    noUnderline = false,
     display,
     ...textProps
   },
@@ -81,16 +83,19 @@ const TouchableTextLink_ = forwardRef<TamaguiElement, TouchableTextLinkProps>(fu
     [disabled, hoveredColor],
   )
 
-  const focusVisibleStyle = useMemo(
-    (): TextProps['$group-item-focusVisible'] => ({
+  const focusVisibleStyle = useMemo((): TextProps['$group-item-focusVisible'] => {
+    if (noUnderline) {
+      return {}
+    }
+
+    return {
       color: hoveredColor,
       textDecorationStyle: 'unset',
       textDecorationColor: hoveredColor,
       textDecorationLine: 'underline',
       textDecorationDistance: 1,
-    }),
-    [hoveredColor],
-  )
+    }
+  }, [hoveredColor, noUnderline])
 
   const handleOnPressWithLink = useEvent(async (event: GestureResponderEvent): Promise<void> => {
     onPress?.(event)
@@ -196,6 +201,7 @@ const TouchableTextLink_ = forwardRef<TamaguiElement, TouchableTextLinkProps>(fu
  * @param {'buttonLabel1' | 'buttonLabel2' | 'buttonLabel3' | 'buttonLabel4'} [variant='buttonLabel1'] - The text style variant to apply. Defaults to 'buttonLabel1'.
  * @param {'$neutral1' | '$neutral2' | '$neutral3' | '$accent1' | '$statusSuccess' | '$statusWarning' | '$statusCritical'} [color='$neutral1'] - The text color token. Defaults to '$neutral1'.
  * @param {boolean} [onlyUseText=false] - If true, the component will only use the text and not the TouchableAreaFrame. This is useful for when you want to render `TouchableTextLink` as a child of a `Text` component for inline links.
+ * @param {boolean} [noUnderline=false] - If true, skips the default focus underline.
  * @param {string} [link] - The URL to navigate to when the text is pressed. On Web, it will render as an anchor (`<a>`) tag. On Native, it will open the link in the device's default browser.
  * @param {TouchableTextLinkProps} props - Additional props passed down to the underlying `TouchableTextLinkFrame`.
  * @param {React.Ref<TamaguiElement>} ref - Forwarded ref to the underlying `TouchableTextLinkFrame` element.

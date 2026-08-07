@@ -1,9 +1,9 @@
-import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { createRankedMultichainToken } from 'uniswap/src/test/fixtures/dataApi/rankedMultichainToken'
+import { normalizeTokenAddressForCache } from 'uniswap/src/utils/currencyId'
 import { describe, expect, it, vi } from 'vitest'
 import { filterMultichainTokensBySearchString } from '~/features/Explore/state/listTokens/utils/filterMultichainTokensBySearchString'
 
-vi.mock('uniswap/src/data/cache', () => ({
+vi.mock('uniswap/src/utils/currencyId', () => ({
   normalizeTokenAddressForCache: vi.fn((addr: string | null) => (addr === null ? null : addr.toLowerCase())),
 }))
 

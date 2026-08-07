@@ -1,17 +1,22 @@
 import { TradingApi } from '@universe/api'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
+  NFTTradeType,
   TransactionOriginType,
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import type { PlanTransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
+import type {
+  PlanTransactionDetails,
+  TransactionDetails,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { buildActivityRowFragments } from '~/pages/Portfolio/Activity/ActivityTable/registry'
 import { ActivityFilterType } from '~/pages/Portfolio/Activity/Filters/activityFilterTypes'
 
 const ADDRESS = '0x0000000000000000000000000000000000000001'
 const DAI_ADDRESS = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
+const UNI_ADDRESS = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
 
 vi.mock('utilities/src/logger/logger', () => ({
   logger: {
@@ -67,6 +72,31 @@ function createEarnPlanTransaction({
       transactionHashes: [],
     },
   }
+}
+
+function createLpIncentivesClaim({
+  id,
+  tokenAddresses,
+}: {
+  id: string
+  tokenAddresses?: string[]
+}): TransactionDetails {
+  return {
+    routing: TradingApi.Routing.CLASSIC,
+    id,
+    chainId: UniverseChainId.Mainnet,
+    status: TransactionStatus.Success,
+    addedTime: 1,
+    updatedTime: 1,
+    from: ADDRESS,
+    transactionOriginType: TransactionOriginType.Internal,
+    options: { request: {} },
+    typeInfo: {
+      type: TransactionType.LPIncentivesClaimRewards,
+      // Cast so the pre-rename shape (no tokenAddresses) can be exercised.
+      tokenAddresses,
+    } as TransactionDetails['typeInfo'],
+  } as TransactionDetails
 }
 
 describe('buildActivityRowFragments', () => {
@@ -177,6 +207,52 @@ describe('buildActivityRowFragments', () => {
     })
   })
 
+  it('maps NFT trades to nft amount fragments with buy/sell labels', () => {
+    const createNftTrade = (tradeType: NFTTradeType): TransactionDetails => ({
+      routing: TradingApi.Routing.CLASSIC,
+      id: `nft-trade-${tradeType}`,
+      chainId: UniverseChainId.Mainnet,
+      status: TransactionStatus.Success,
+      addedTime: 1,
+      from: ADDRESS,
+      transactionOriginType: TransactionOriginType.Internal,
+      options: { request: {} },
+      typeInfo: {
+        type: TransactionType.NFTTrade,
+        tradeType,
+        nftSummaryInfo: {
+          name: 'nft_name',
+          collectionName: 'collection_name',
+          imageURL: 'image_url',
+          tokenId: 'token_id',
+          address: '0x0000000000000000000000000000000000000002',
+        },
+        purchaseCurrencyId: buildCurrencyId(UniverseChainId.Mainnet, DAI_ADDRESS),
+        purchaseCurrencyAmountRaw: '1000000',
+      },
+    })
+
+    const buyFragments = buildActivityRowFragments(createNftTrade(NFTTradeType.BUY))
+    expect(buyFragments.amount).toEqual({
+      kind: 'nft',
+      nftImageUrl: 'image_url',
+      nftName: 'nft_name',
+      nftCollectionName: 'collection_name',
+      purchaseCurrencyId: buildCurrencyId(UniverseChainId.Mainnet, DAI_ADDRESS),
+      purchaseAmountRaw: '1000000',
+    })
+    expect(buyFragments.typeLabel).toEqual({
+      baseGroup: ActivityFilterType.Receives,
+      overrideLabelKey: 'transaction.status.buy.success',
+    })
+
+    const sellFragments = buildActivityRowFragments(createNftTrade(NFTTradeType.SELL))
+    expect(sellFragments.typeLabel).toEqual({
+      baseGroup: ActivityFilterType.Sends,
+      overrideLabelKey: 'transaction.status.sell.success',
+    })
+  })
+
   it('does not reuse cached Earn plan fragments after status updates', () => {
     const id = 'plan-cache-status'
     const planStatus = TradingApi.PlanStatus.AWAITING_ACTION
@@ -204,5 +280,37 @@ describe('buildActivityRowFragments', () => {
       baseGroup: ActivityFilterType.Sends,
       overrideLabelKey: 'transaction.status.deposit.success',
     })
+  })
+
+  it('renders a single-token LP incentives claim as a one-currency multi-token row', () => {
+    const fragments = buildActivityRowFragments(
+      createLpIncentivesClaim({ id: 'lp-claim-single', tokenAddresses: [DAI_ADDRESS] }),
+    )
+
+    // Not a `single` row: that path renders the formatter's "-" placeholder for an amountless claim.
+    expect(fragments.amount).toEqual({
+      kind: 'multi-token',
+      currencyIds: [buildCurrencyId(UniverseChainId.Mainnet, DAI_ADDRESS)],
+    })
+  })
+
+  it('renders every token of a multi-token LP incentives claim', () => {
+    const fragments = buildActivityRowFragments(
+      createLpIncentivesClaim({ id: 'lp-claim-multi', tokenAddresses: [DAI_ADDRESS, UNI_ADDRESS] }),
+    )
+
+    expect(fragments.amount).toEqual({
+      kind: 'multi-token',
+      currencyIds: [
+        buildCurrencyId(UniverseChainId.Mainnet, DAI_ADDRESS),
+        buildCurrencyId(UniverseChainId.Mainnet, UNI_ADDRESS),
+      ],
+    })
+  })
+
+  it('renders no currencies for claims persisted before the tokenAddresses rename', () => {
+    const fragments = buildActivityRowFragments(createLpIncentivesClaim({ id: 'lp-claim-legacy' }))
+
+    expect(fragments.amount).toEqual({ kind: 'multi-token', currencyIds: [] })
   })
 })

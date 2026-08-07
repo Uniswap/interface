@@ -7,6 +7,7 @@ import { TransactionDetails } from 'uniswap/src/features/transactions/types/tran
 import { NATIVE_ANALYTICS_ADDRESS_VALUE } from 'uniswap/src/utils/currencyId'
 
 export enum TokenReportOption {
+  CantSellOrTransfer = 'cant_sell_or_transfer',
   Spam = 'spam',
   Imposter = 'imposter',
   HiddenFees = 'hidden_fees',
@@ -64,6 +65,7 @@ export function submitTokenIssueReport({
     chain_id: chainId,
     is_marked_spam: isMarkedSpam,
     is_multichain_asset: isMultichainAsset,
+    cant_sell_or_transfer: reportOptions.includes(TokenReportOption.CantSellOrTransfer),
     spam_token: reportOptions.includes(TokenReportOption.Spam),
     imposter_token: reportOptions.includes(TokenReportOption.Imposter),
     hidden_fees: reportOptions.includes(TokenReportOption.HiddenFees),

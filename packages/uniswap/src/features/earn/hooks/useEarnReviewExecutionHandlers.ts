@@ -1,5 +1,19 @@
 import { useCallback, useState } from 'react'
 import { resetActivePlan } from 'uniswap/src/features/transactions/swap/plan/planSagaUtils'
+import { activePlanStore } from 'uniswap/src/features/transactions/swap/review/stores/activePlan/activePlanStore'
+
+/**
+ * Clears a stopped earn-owned plan on any exit from the earn flow (Back, Close, sheet swipe,
+ * backdrop, Escape) so a later entry — possibly with a different amount — creates a fresh plan
+ * instead of resuming the stale one. Reads store state at call time: executing plans (lock held)
+ * and core swap plans are untouched. Staying on review keeps the plan resumable via the CTA.
+ */
+export function resetStoppedEarnPlan(): void {
+  const { activePlan, executionLockPlanId } = activePlanStore.getState()
+  if (activePlan?.earnReuseIdentity && executionLockPlanId !== activePlan.planId) {
+    resetActivePlan()
+  }
+}
 
 type EarnReviewExecutionHandlersParams = {
   onBack: () => void
@@ -65,18 +79,14 @@ export function useEarnReviewExecutionHandlers({
   }, [onPressRetry])
 
   const handleBack = useCallback((): void => {
-    if (executionError) {
-      resetActivePlan()
-    }
+    resetStoppedEarnPlan()
     onBack()
-  }, [executionError, onBack])
+  }, [onBack])
 
   const handleClose = useCallback((): void => {
-    if (executionError) {
-      resetActivePlan()
-    }
+    resetStoppedEarnPlan()
     onClose()
-  }, [executionError, onClose])
+  }, [onClose])
 
   return {
     clearExecutionState,

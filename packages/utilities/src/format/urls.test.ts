@@ -5,9 +5,10 @@ import {
   extractUrlHost,
   formatDappURL,
   isGifUri,
+  isHttpsUri,
   isHttpUri,
   isSVGUri,
-  sanitizeAvatarUrl,
+  sanitizeUrl,
   uriToHttpUrls,
 } from 'utilities/src/format/urls'
 
@@ -329,32 +330,125 @@ describe(isHttpUri, () => {
   })
 })
 
-describe(sanitizeAvatarUrl, () => {
-  it('returns the original URL for https', () => {
-    const url = 'https://example.com/avatar.png'
-    expect(sanitizeAvatarUrl(url)).toBe(url)
+describe(sanitizeUrl, () => {
+  const httpOrHttps = ['http:', 'https:'] as const
+  const httpsOnly = ['https:'] as const
+
+  describe('with http+https allowed (avatar-style)', () => {
+    it('returns the original URL for https', () => {
+      const url = 'https://example.com/avatar.png'
+      expect(sanitizeUrl({ url, allowedProtocols: httpOrHttps, callerName: 'test' })).toBe(url)
+    })
+
+    it('returns the original URL for http', () => {
+      const url = 'http://example.com/avatar.png'
+      expect(sanitizeUrl({ url, allowedProtocols: httpOrHttps, callerName: 'test' })).toBe(url)
+    })
+
+    it('returns undefined for non-HTTP URLs', () => {
+      expect(
+        sanitizeUrl({ url: 'ipfs://QmHash123', allowedProtocols: httpOrHttps, callerName: 'test' }),
+      ).toBeUndefined()
+      expect(
+        sanitizeUrl({
+          url: 'data:image/png;base64,iVBORw0KGgo=',
+          allowedProtocols: httpOrHttps,
+          callerName: 'test',
+        }),
+      ).toBeUndefined()
+      expect(
+        // oxlint-disable-next-line no-script-url
+        sanitizeUrl({ url: 'javascript:alert(1)', allowedProtocols: httpOrHttps, callerName: 'test' }),
+      ).toBeUndefined()
+      expect(
+        sanitizeUrl({ url: 'eip155:1/erc721:0xabc/123', allowedProtocols: httpOrHttps, callerName: 'test' }),
+      ).toBeUndefined()
+    })
+
+    it('returns undefined for null, undefined, or empty input', () => {
+      expect(sanitizeUrl({ url: null, allowedProtocols: httpOrHttps, callerName: 'test' })).toBeUndefined()
+      expect(sanitizeUrl({ url: undefined, allowedProtocols: httpOrHttps, callerName: 'test' })).toBeUndefined()
+      expect(sanitizeUrl({ url: '', allowedProtocols: httpOrHttps, callerName: 'test' })).toBeUndefined()
+    })
+
+    it('accepts IPFS gateway URLs (already converted to HTTPS)', () => {
+      const url = 'https://cloudflare-ipfs.com/ipfs/QmHash123'
+      expect(sanitizeUrl({ url, allowedProtocols: httpOrHttps, callerName: 'test' })).toBe(url)
+    })
   })
 
-  it('returns the original URL for http', () => {
-    const url = 'http://example.com/avatar.png'
-    expect(sanitizeAvatarUrl(url)).toBe(url)
+  describe('with https-only allowed (KYC-style)', () => {
+    it('returns undefined for undefined input', () => {
+      expect(sanitizeUrl({ url: undefined, allowedProtocols: httpsOnly, callerName: 'test' })).toBeUndefined()
+    })
+
+    it('returns undefined for empty string', () => {
+      expect(sanitizeUrl({ url: '', allowedProtocols: httpsOnly, callerName: 'test' })).toBeUndefined()
+    })
+
+    it('passes through https URLs', () => {
+      expect(
+        sanitizeUrl({ url: 'https://kyc.example.com/register', allowedProtocols: httpsOnly, callerName: 'test' }),
+      ).toBe('https://kyc.example.com/register')
+    })
+
+    it('rejects http URLs', () => {
+      expect(
+        sanitizeUrl({ url: 'http://kyc.example.com/register', allowedProtocols: httpsOnly, callerName: 'test' }),
+      ).toBeUndefined()
+    })
+
+    it('rejects javascript: URLs', () => {
+      expect(
+        // oxlint-disable-next-line no-script-url -- testing rejection of script-url scheme
+        sanitizeUrl({ url: 'javascript:alert(1)', allowedProtocols: httpsOnly, callerName: 'test' }),
+      ).toBeUndefined()
+    })
+
+    it('rejects data: URLs', () => {
+      expect(
+        sanitizeUrl({
+          url: 'data:text/html,<script>alert(1)</script>',
+          allowedProtocols: httpsOnly,
+          callerName: 'test',
+        }),
+      ).toBeUndefined()
+    })
+
+    it('rejects unparseable URLs', () => {
+      expect(sanitizeUrl({ url: 'not a url', allowedProtocols: httpsOnly, callerName: 'test' })).toBeUndefined()
+    })
+  })
+})
+
+describe(isHttpsUri, () => {
+  it('returns true for https URLs', () => {
+    expect(isHttpsUri('https://example.com')).toBe(true)
   })
 
-  it('returns null for non-HTTP URLs', () => {
-    expect(sanitizeAvatarUrl('ipfs://QmHash123')).toBeNull()
-    expect(sanitizeAvatarUrl('data:image/png;base64,iVBORw0KGgo=')).toBeNull()
-    // oxlint-disable-next-line no-script-url
-    expect(sanitizeAvatarUrl('javascript:alert(1)')).toBeNull()
-    expect(sanitizeAvatarUrl('eip155:1/erc721:0xabc/123')).toBeNull()
+  it('returns false for http URLs', () => {
+    expect(isHttpsUri('http://example.com')).toBe(false)
   })
 
-  it('returns null for null or empty input', () => {
-    expect(sanitizeAvatarUrl(null)).toBeNull()
-    expect(sanitizeAvatarUrl('')).toBeNull()
+  it('returns false for non-http(s) schemes', () => {
+    expect(isHttpsUri('ipfs://QmHash')).toBe(false)
+    expect(isHttpsUri('data:text/html,<script>alert(1)</script>')).toBe(false)
+    // oxlint-disable-next-line no-script-url -- testing rejection of script-url scheme
+    expect(isHttpsUri('javascript:alert(1)')).toBe(false)
   })
 
-  it('accepts IPFS gateway URLs (already converted to HTTPS)', () => {
-    const url = 'https://cloudflare-ipfs.com/ipfs/QmHash123'
-    expect(sanitizeAvatarUrl(url)).toBe(url)
+  it('returns false for null, undefined, empty, and whitespace', () => {
+    expect(isHttpsUri(null)).toBe(false)
+    expect(isHttpsUri(undefined)).toBe(false)
+    expect(isHttpsUri('')).toBe(false)
+    expect(isHttpsUri('   ')).toBe(false)
+  })
+
+  it('returns false for malformed URI', () => {
+    expect(isHttpsUri('not a url')).toBe(false)
+  })
+
+  it('returns true for uppercase HTTPS', () => {
+    expect(isHttpsUri('HTTPS://example.com')).toBe(true)
   })
 })

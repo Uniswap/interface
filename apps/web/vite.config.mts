@@ -121,8 +121,18 @@ const portWarningPlugin = (isProduction: boolean) =>
         },
       }
 
-// Get git commit hash
-const commitHash = execSync('git rev-parse HEAD').toString().trim()
+// Containerized builds have no .git — prefer the env var.
+function resolveCommitHash(): string {
+  if (process.env.GIT_COMMIT_HASH) {
+    return process.env.GIT_COMMIT_HASH
+  }
+  try {
+    return execSync('git rev-parse HEAD').toString().trim()
+  } catch {
+    return ''
+  }
+}
+const commitHash = resolveCommitHash()
 
 // Compute next dev version from latest non-RC web/* git tag
 function getNextDevVersion(): string {
@@ -144,7 +154,7 @@ function getNextDevVersion(): string {
   }
 }
 
-export default defineConfig(({ mode, isPreview }) => {
+export default defineConfig(({ mode, command, isPreview }) => {
   // Unified config: resolve .env + overrides via the shared utility (the same
   // code the Playwright test runner uses, so the build and runner configs stay identical).
   const env = resolveEnvConfigs({
@@ -166,6 +176,22 @@ export default defineConfig(({ mode, isPreview }) => {
   const isStaging = mode === 'staging'
   const isVercelDeploy = DEPLOY_TARGET === 'vercel'
   const isCloudflareDeploy = DEPLOY_TARGET === 'cloudflare'
+  const isEcsDeploy = DEPLOY_TARGET === 'ecs'
+  const isIpfsDeploy = DEPLOY_TARGET === 'ipfs'
+  if (isIpfsDeploy) {
+    // IPFS gateways have no same-origin BFF: hit the entry gateway and statsig proxy directly (both allow cross-origin).
+    env.ENABLE_ENTRY_GATEWAY_PROXY = 'false'
+    env.STATSIG_PROXY_URL_OVERRIDE = 'https://gating.interface.gateway.uniswap.org/v1/statsig-proxy'
+  }
+  const isOptimizedBuild = isProduction || isEcsDeploy
+  const isMinifiedBuild = isOptimizedBuild && !isVercelDeploy
+  // CF plugin runs for cloudflare deploys and local dev. Skipped during `vite preview` —
+  // preview only serves static assets, doesn't need worker bindings, and the plugin's
+  // getWorkerConfigs enumerates every env in wrangler-vite-worker.jsonc and chokes when
+  // one env's build dir is missing (e.g. after switching between build:production and
+  // build:staging). See INFRA-1874.
+  // Also determines `build.outDir`: the plugin owns the build/ output split.
+  const useCloudflarePlugin = (isCloudflareDeploy || mode === 'development') && !isPreview
   const root = path.resolve(__dirname)
 
   // External package aliases only
@@ -210,7 +236,7 @@ export default defineConfig(({ mode, isPreview }) => {
     // Fallback: compute next version from git tags when not set by CI
     ...(!env.VERSION && !env.REACT_APP_VERSION_TAG
       ? {
-          'process.env.VERSION': JSON.stringify(getNextDevVersion()),
+          'process.env.VERSION': JSON.stringify(process.env.VERSION || getNextDevVersion() || commitHash),
         }
       : {}),
   }
@@ -220,6 +246,9 @@ export default defineConfig(({ mode, isPreview }) => {
 
   return {
     root,
+
+    // IPFS path gateways serve the app under /ipfs/<cid>/; relative base keeps asset URLs inside the CID.
+    base: isIpfsDeploy ? './' : isEcsDeploy ? process.env.ASSET_BASE_URL || '/' : '/',
 
     define: defines,
 
@@ -324,6 +353,8 @@ export default defineConfig(({ mode, isPreview }) => {
           })
         : undefined,
       tsconfigPaths({
+        // No `projects` restriction — functions/tsconfig.json must be auto-discovered
+        // for the functions/* alias to resolve.
         // ignores tsconfig files in Nx generator template directories
         skip: (dir) => dir.includes('files'),
       }),
@@ -374,7 +405,12 @@ export default defineConfig(({ mode, isPreview }) => {
       },
       nodePolyfills({
         globals: {
-          process: true,
+          // In dev, `true` injects a per-module `import ... as process` shim that shadows
+          // `process`, so rolldown/oxc's scope-aware define skips the `process.env.*`
+          // replacements above (empty shim env -> config boot crash). `'dev'` instead sets
+          // `globalThis.process` via the dep optimizer, keeping defines working; build
+          // keeps the module shim (`true`) so prod output is unchanged.
+          process: command === 'serve' ? 'dev' : true,
         },
         include: ['path', 'buffer'],
       }),
@@ -401,7 +437,7 @@ export default defineConfig(({ mode, isPreview }) => {
           loose: false,
         },
       }),
-      isProduction || DISABLE_SOURCEMAP
+      isOptimizedBuild || DISABLE_SOURCEMAP
         ? undefined
         : bundlesize({
             limits: [
@@ -409,7 +445,7 @@ export default defineConfig(({ mode, isPreview }) => {
               { name: '**/*', limit: Infinity, mode: 'uncompressed' },
             ],
           }),
-      generateAssetsIgnorePlugin(isProduction && !isVercelDeploy && !DISABLE_SOURCEMAP, __dirname),
+      generateAssetsIgnorePlugin(isMinifiedBuild && !DISABLE_SOURCEMAP, __dirname),
       {
         name: 'copy-twist-config',
         writeBundle() {
@@ -440,12 +476,7 @@ export default defineConfig(({ mode, isPreview }) => {
           }
         },
       },
-      // Skip the Cloudflare plugin during `vite preview` — preview only serves
-      // static assets, doesn't need worker bindings, and the plugin's
-      // getWorkerConfigs enumerates every env in wrangler-vite-worker.jsonc and
-      // chokes when one env's build dir is missing (e.g. after switching between
-      // build:production and build:staging). See INFRA-1874.
-      (isCloudflareDeploy || mode === 'development') && !isPreview
+      useCloudflarePlugin
         ? cloudflare({
             configPath: './wrangler-vite-worker.jsonc',
             // Forward .env values to the Worker as vars (the dotenv auto-loader is
@@ -534,9 +565,12 @@ export default defineConfig(({ mode, isPreview }) => {
     },
 
     build: {
-      outDir: 'build',
-      sourcemap: DISABLE_SOURCEMAP ? false : isProduction && !isVercelDeploy ? 'hidden' : true,
-      minify: isProduction && !isVercelDeploy ? 'esbuild' : undefined,
+      // With the CF plugin, it owns the build/ output split (emits build/client itself).
+      // Without it, ECS and IPFS emit straight to build/client (ECS: read by ecs-entry.ts,
+      // synced to S3; IPFS: pinned by the deploy workflow); Vercel reads build/ directly.
+      outDir: !useCloudflarePlugin && (isEcsDeploy || isIpfsDeploy) ? 'build/client' : 'build',
+      sourcemap: DISABLE_SOURCEMAP ? false : isMinifiedBuild ? 'hidden' : true,
+      minify: isMinifiedBuild ? 'esbuild' : undefined,
       rollupOptions: {
         external: [/\.stories\.[tj]sx?$/, /\.mdx$/, /expo-clipboard\/build\/ClipboardPasteButton\.js/],
         output: {
@@ -548,6 +582,8 @@ export default defineConfig(({ mode, isPreview }) => {
       },
       // Increase the warning limit for larger chunks
       chunkSizeWarningLimit: 800,
+      // Log-only gzip sizing; size enforcement lives in check-bundle-size.ts
+      reportCompressedSize: false,
       commonjsOptions: {
         include: [/node_modules/],
       },

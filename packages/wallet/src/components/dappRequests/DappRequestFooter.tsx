@@ -7,6 +7,7 @@ import type { GasFeeOverrides } from 'uniswap/src/features/gas/types'
 import { DappNetworkCostRow } from 'wallet/src/components/dappRequests/DappNetworkCostRow'
 import { DappWalletLineItem } from 'wallet/src/components/dappRequests/DappWalletLineItem'
 import { TransactionWarningBanner } from 'wallet/src/components/dappRequests/TransactionWarningBanner'
+import { UnverifiedSiteBanner } from 'wallet/src/components/dappRequests/UnverifiedSiteBanner'
 import type { TransactionRiskLevel } from 'wallet/src/features/dappRequests/types'
 import {
   isGasBearingMethod,
@@ -17,6 +18,8 @@ interface DappRequestFooterProps {
   chainId: UniverseChainId
   account: string
   riskLevel: TransactionRiskLevel
+  /** Show the inline unverified-site alert (approvals from Blockaid-unverified sites) */
+  showUnverifiedSiteWarning?: boolean
   confirmedRisk?: boolean
   onConfirmRisk?: (confirmed: boolean) => void
   gasFee?: GasFeeResult
@@ -44,6 +47,7 @@ export function DappRequestFooter({
   chainId,
   account,
   riskLevel,
+  showUnverifiedSiteWarning = false,
   confirmedRisk,
   onConfirmRisk,
   gasFee,
@@ -93,6 +97,8 @@ export function DappRequestFooter({
       <Flex px="$spacing8" mb="$spacing4">
         <DappWalletLineItem activeAccountAddress={account} />
       </Flex>
+
+      {showUnverifiedSiteWarning && <UnverifiedSiteBanner />}
     </>
   )
 }

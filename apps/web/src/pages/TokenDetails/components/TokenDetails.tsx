@@ -1,10 +1,7 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { useTranslation } from 'react-i18next'
 import { Flex, useIsTouchDevice, useMedia } from 'ui/src'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { fromGraphQLChain, getChainLabel } from 'uniswap/src/features/chains/utils'
-import { isMultichainProjectTokens } from 'uniswap/src/features/dataApi/tokenProjects/utils/isMultichainProjectTokens'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useIsEarnEnabled } from 'uniswap/src/features/earn/hooks/useIsEarnEnabled'
 import { useLogRWATokenDetailsViewed } from 'uniswap/src/features/rwa/useLogRWATokenDetailsViewed'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
@@ -34,32 +31,32 @@ import { OffHoursLiquidityBanner } from '~/pages/TokenDetails/components/rwa/Off
 import { RelatedTokens } from '~/pages/TokenDetails/components/rwa/RelatedTokens'
 import { LeftPanel, RightPanel, TokenDetailsLayout } from '~/pages/TokenDetails/components/skeleton/Skeleton'
 import { TDPSwapComponent } from '~/pages/TokenDetails/components/swap/TDPSwapComponent'
-import { TokenCarousel } from '~/pages/TokenDetails/components/TokenCarousel/TokenCarousel'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
+import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultichainTokenEntries'
 import { useRWATokenDetailsMatch } from '~/pages/TokenDetails/hooks/useRWATokenDetailsMatch'
 
 export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
   const media = useMedia()
   const isTouchDevice = useIsTouchDevice()
-  const { t } = useTranslation()
 
-  const { tokenQuery, currencyChain, multiChainMap, address, currency } = useTDPStore((s) => ({
+  const { tokenQuery, currencyChain, multiChainMap, marketDataLoading, address, currency } = useTDPStore((s) => ({
     tokenQuery: s.tokenQuery,
     currencyChain: s.currencyChain,
     multiChainMap: s.multiChainMap,
+    marketDataLoading: s.marketDataLoading,
     address: s.address,
     currency: s.currency!,
   }))
   const tokenQueryData = tokenQuery.data?.token
-  const isMultichainAsset = isMultichainProjectTokens(tokenQueryData?.project?.tokens)
+  // Filtered to the user's enabled chains (shared with the stats/header predicates) so the
+  // analytics `multichain` flag matches what the UI actually presents as multichain.
+  const isMultichainAsset = useMultichainTokenEntries(multiChainMap).length > 1
   const pageChainBalance = multiChainMap[currencyChain]?.balance
 
   const { direction: scrollDirection } = useScroll()
 
   const chainId = fromGraphQLChain(currencyChain) ?? UniverseChainId.Mainnet
-  const currencyInfo = useCurrencyInfo(
-    tokenQueryData?.address ? buildCurrencyId(chainId, tokenQueryData.address) : undefined,
-  )
+  const currencyInfo = useCurrencyInfo(currency.isNative ? undefined : buildCurrencyId(chainId, currency.address))
   const isBridgedAsset = Boolean(currencyInfo?.isBridged)
   const showTokenInfo = !!pageChainBalance || isBridgedAsset
   const isDesktop = !media.xl
@@ -69,12 +66,12 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
   const { isTestnetModeEnabled } = useEnabledChains()
   const showEarn = isEarnEnabled && !isTestnetModeEnabled
 
-  const earnData = useTokenDetailsEarnData({ enabled: showEarn, tokenQueryData })
-  const vaultShareData = useTokenDetailsVaultShareData({ enabled: showEarn, tokenQueryData })
+  const earnData = useTokenDetailsEarnData({ enabled: showEarn })
+  const vaultShareData = useTokenDetailsVaultShareData({ enabled: showEarn })
   const showRightTokenInfo = isDesktop && (showTokenInfo || earnData.userHasEarnPosition)
-
-  const chainLabel = getChainLabel(chainId)
-  const isTDPTokenCarouselEnabled = useFeatureFlag(FeatureFlags.TDPTokenCarousel)
+  // An Earn position must stay manageable at every width — the right rail stacks below the chart
+  // at non-desktop widths, so the section container can't be desktop-only when a position exists.
+  const showRightPanelSections = showRightTokenInfo || (showEarn && earnData.userHasEarnPosition)
 
   const rwaMatch = useRWATokenDetailsMatch()
   useLogRWATokenDetailsViewed({
@@ -97,7 +94,7 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
       }}
     >
       <TDPBreadcrumb />
-      <StickyCollapsibleHeader isCompact={isCompact}>
+      <StickyCollapsibleHeader isCompact={isCompact} px="$none" $xxl={{ px: '$spacing40' }}>
         <TokenDetailsHeader isCompact={isCompact} />
       </StickyCollapsibleHeader>
       {showEarn && <TokenDetailsVaultShareBanner vaultShareData={vaultShareData} />}
@@ -110,28 +107,17 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
           {!showBalanceInfo && (
             <Flex gap="$gap24">
               {!!pageChainBalance && <BalanceSummary />}
-              <BridgedAssetSection
-                tokenQueryData={tokenQueryData}
-                currencyInfo={currencyInfo}
-                isBridgedAsset={isBridgedAsset}
-              />
+              <BridgedAssetSection currencyInfo={currencyInfo} isBridgedAsset={isBridgedAsset} />
             </Flex>
           )}
 
-          <StatsSection tokenQueryData={tokenQueryData} isLoading={tokenQuery.loading} />
+          <StatsSection tokenQueryData={tokenQueryData} isLoading={marketDataLoading} />
 
           <MoreWaysToTrade />
 
           <TokenDescription />
 
           <ActivitySection />
-          {isTDPTokenCarouselEnabled && (
-            <TokenCarousel
-              title={t('explore.popularOn.title', { chain: chainLabel })}
-              tooltipText={t('explore.popularOn.tooltip')}
-              chainId={chainId}
-            />
-          )}
           <RelatedTokens />
         </LeftPanel>
         <RightPanel>
@@ -140,17 +126,13 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
             <TDPSwapComponent />
           </Flex>
 
-          {/* Token info sections only show when the user has balance, a bridged asset, or an earn deposit. */}
-          <Flex display={showRightTokenInfo ? 'flex' : 'none'} gap="$gap24" mt="$gap24">
-            {showTokenInfo && <BalanceSummary />}
+          {/* Token info sections only show when the user has balance, a bridged asset, or an earn deposit.
+              Balance/bridged info stays desktop-only (the left panel renders it at smaller widths);
+              the Earn section renders at any width when the user has a position. */}
+          <Flex display={showRightPanelSections ? 'flex' : 'none'} gap="$gap24" mt="$gap24">
+            {showBalanceInfo && <BalanceSummary />}
             {showEarn && <TokenDetailsEarnSection earnData={earnData} />}
-            {showTokenInfo && (
-              <BridgedAssetSection
-                tokenQueryData={tokenQueryData}
-                currencyInfo={currencyInfo}
-                isBridgedAsset={isBridgedAsset}
-              />
-            )}
+            {showBalanceInfo && <BridgedAssetSection currencyInfo={currencyInfo} isBridgedAsset={isBridgedAsset} />}
           </Flex>
 
           <TokenPerformance />

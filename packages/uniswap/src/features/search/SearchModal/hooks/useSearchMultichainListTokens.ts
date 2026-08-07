@@ -3,8 +3,8 @@ import { HistoryDuration, TokensOrderBy } from '@uniswap/client-data-api/dist/da
 import { GqlResult } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
-import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApi/DataApiClientV2'
-import { dataApiMultichainTokenV2ToSearchResult } from 'uniswap/src/data/rest/dataApiMultichainTokenV2'
+import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2'
+import { dataApiMultichainTokenToSearchResult } from 'uniswap/src/data/apiClients/dataApiService/utils/dataApiMultichainToken'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { MultichainSearchResult } from 'uniswap/src/features/dataApi/types'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
@@ -48,7 +48,7 @@ export function useSearchMultichainListTokens({
       return undefined
     }
     return multichainTokens
-      .map(dataApiMultichainTokenV2ToSearchResult)
+      .map(dataApiMultichainTokenToSearchResult)
       .filter((r): r is MultichainSearchResult => r !== undefined)
   }, [data])
 

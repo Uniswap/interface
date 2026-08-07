@@ -8,5 +8,18 @@
     "types": ["node"],
     "paths": {}
   },
-  "references": [{ "path": "../tailwind" }]
+  "references": [
+    {
+      "path": "../tailwind"
+    },
+    {
+      "path": "../environment"
+    },
+    {
+      "path": "../logger"
+    },
+    {
+      "path": "../ui"
+    }
+  ]
 }

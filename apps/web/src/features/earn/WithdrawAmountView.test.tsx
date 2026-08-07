@@ -6,6 +6,11 @@ import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { WithdrawAmountView } from '~/features/earn/WithdrawAmountView'
 import { fireEvent, render, screen } from '~/test-utils/render'
 
+const { mockNetworkFilter, mockTieredNetworkOptions } = vi.hoisted(() => ({
+  mockNetworkFilter: vi.fn(),
+  mockTieredNetworkOptions: { withBalances: [], otherNetworks: [] },
+}))
+
 vi.mock('@universe/gating', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@universe/gating')>()),
   getDynamicConfigValue: ({ defaultValue }: { defaultValue: unknown }) => defaultValue,
@@ -14,7 +19,7 @@ vi.mock('@universe/gating', async (importOriginal) => ({
 vi.mock('uniswap/src/components/CurrencyLogo/TokenLogo', () => ({ TokenLogo: () => null }))
 
 vi.mock('uniswap/src/components/network/NetworkFilterV2/useNetworkSelectorOptions', () => ({
-  useNetworkSelectorOptions: () => ({ otherNetworks: [], withBalances: [] }),
+  useNetworkSelectorOptions: () => mockTieredNetworkOptions,
 }))
 
 vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
@@ -52,7 +57,15 @@ vi.mock('~/components/AlternateCurrencyDisplay/AlternateCurrencyDisplay', () => 
 }))
 
 vi.mock('~/components/NetworkFilter/NetworkFilter', () => ({
-  NetworkFilter: ({ customTrigger }: { customTrigger: ReactNode }) => customTrigger,
+  NetworkFilter: (props: {
+    customTrigger: ReactNode
+    showSearch?: boolean
+    showSearchInput?: boolean
+    tieredOptions?: { withBalances: unknown[]; otherNetworks: unknown[] }
+  }) => {
+    mockNetworkFilter(props)
+    return props.customTrigger
+  },
 }))
 
 vi.mock('~/components/NumericalInput/LargeAmountInput', async () => {
@@ -66,11 +79,6 @@ vi.mock('~/components/NumericalInput/LargeAmountInput', async () => {
     )),
   }
 })
-
-vi.mock('~/features/accounts/store/hooks', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('~/features/accounts/store/hooks')>()),
-  useActiveAddresses: () => ({}),
-}))
 
 vi.mock('~/features/earn/EarnAmountViewHeader', () => ({ EarnAmountViewHeader: () => null }))
 
@@ -103,6 +111,27 @@ const position: EarnPositionInfo = {
 }
 
 describe(WithdrawAmountView, () => {
+  it('configures the tiered network menu without a search input while CONS-2905 is unresolved', () => {
+    render(
+      <WithdrawAmountView
+        vault={vault}
+        position={position}
+        initialChainId={UniverseChainId.Mainnet}
+        onBack={vi.fn()}
+        onClose={vi.fn()}
+        onReview={vi.fn()}
+      />,
+    )
+
+    expect(mockNetworkFilter).toHaveBeenCalledWith(
+      expect.objectContaining({
+        showSearch: true,
+        showSearchInput: false,
+        tieredOptions: mockTieredNetworkOptions,
+      }),
+    )
+  })
+
   it('renders an unavailable destination and keeps review disabled when filtering returns no chains', () => {
     const onReview = vi.fn()
 

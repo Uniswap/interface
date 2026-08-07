@@ -4,10 +4,16 @@ tags:
   - language-agnostic
 env:
   DATADOG_API_KEY: ${DATADOG_API_KEY}
+  PLATFORM: ${PLATFORM}
+  GITHUB_REF_NAME: ${GITHUB_REF_NAME}
+  GITHUB_SHA: ${GITHUB_SHA}
+  GITHUB_RUN_ID: ${GITHUB_RUN_ID}
 ---
 # Initialize tracking at the very beginning
 - runScript:
     file: ../../scripts/performance/dist/actions/init-tracking.js
+    env:
+      PLATFORM: ${PLATFORM}
 
 # Start flow tracking (includes setup time)
 - runScript:
@@ -113,4 +119,7 @@ env:
     file: ../../scripts/performance/upload-metrics.js
     env:
       DATADOG_API_KEY: ${DATADOG_API_KEY}
+      GITHUB_REF_NAME: ${GITHUB_REF_NAME}
+      GITHUB_SHA: ${GITHUB_SHA}
+      GITHUB_RUN_ID: ${GITHUB_RUN_ID}
       ENVIRONMENT: 'maestro_cloud'

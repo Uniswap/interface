@@ -56,7 +56,7 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
   Model: new (chartDiv: HTMLDivElement, params: TParamType & ChartUtilParams<TDataType>) => ChartModel<TDataType>
   TooltipBody?: ChartTooltipBodyComponent<TDataType>
   params: TParamType
-  height?: number
+  height?: number | string
   children?: (crosshair?: TDataType, hover?: ChartHoverCoordinates | null) => ReactElement | null
   onCrosshairChange?: (crosshair?: TDataType) => void
   className?: string

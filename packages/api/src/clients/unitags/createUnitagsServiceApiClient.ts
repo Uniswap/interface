@@ -25,7 +25,7 @@ import {
   SignedRequestParams,
   NEW_UNITAGS_SIGNATURE_HEADER,
 } from '@universe/api/src/clients/base/auth'
-import { sanitizeAvatarUrl } from 'utilities/src/format/urls'
+import { sanitizeUrl } from 'utilities/src/format/urls'
 
 export interface UnitagsServiceApiClientContext {
   rpcClient: PromiseClient<typeof UnitagService>
@@ -96,8 +96,11 @@ function sanitizeAvatarUrlInResponse<T extends { metadata?: ProfileMetadata }>(r
     metadata: {
       // oxlint-disable-next-line typescript-eslint/no-misused-spread
       ...response.metadata,
-      // oxlint-disable-next-line typescript-eslint/no-unnecessary-condition
-      avatar: sanitizeAvatarUrl(response.metadata?.avatar ?? null) ?? undefined,
+      avatar: sanitizeUrl({
+        url: response.metadata.avatar,
+        allowedProtocols: ['http:', 'https:'],
+        callerName: 'sanitizeAvatarUrlInResponse',
+      }),
     },
   }
 }

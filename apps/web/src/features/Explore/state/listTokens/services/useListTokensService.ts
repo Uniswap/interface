@@ -3,12 +3,13 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import type { ListTokensRequest } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
-import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApi/DataApiClientV2'
+import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import type { PricePoint } from '~/appGraphql/data/util'
+import type { PricePoint } from '~/data/util'
 import { EXPLORE_API_PAGE_SIZE } from '~/features/Explore/state/constants'
 import { useInfiniteLoadMore } from '~/features/Explore/state/hooks/useInfiniteLoadMore'
 import { createListTokensService } from '~/features/Explore/state/listTokens/services/listTokensService'
@@ -33,6 +34,11 @@ export function useListTokensService(
 ): UseListTokensServiceResult {
   const effectiveOptions = getEffectiveListTokensOptions(options)
   const { chains: enabledChainIds } = useEnabledChains()
+  // Superset of enabledChainIds by construction: useEnabledChains derives its set FROM
+  // useFeatureFlaggedChainIds (getEnabledChains drops chains outside it), and testnet chains are
+  // never rollout-flag-gated, so every fetched chain passes the display filter in both testnet
+  // states and the pipeline's empty-set hide can never blank a fetched row.
+  const featureFlaggedChainIds = useFeatureFlaggedChainIds()
   const tokensV2EndpointsEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
 
   const chainIds = useMemo(() => (chainId !== undefined ? [chainId] : enabledChainIds), [chainId, enabledChainIds])
@@ -53,9 +59,13 @@ export function useListTokensService(
       effectiveOptions.filterTimePeriod,
     ],
   )
+  const backendOptionsKeySegment = useMemo(
+    () => [effectiveOptions.sortMethod, effectiveOptions.sortAscending, effectiveOptions.filterTimePeriod] as const,
+    [effectiveOptions.sortMethod, effectiveOptions.sortAscending, effectiveOptions.filterTimePeriod],
+  )
   const listTokensQueryKey = useMemo(
-    () => [ReactQueryCacheKey.TopTokens, chainIds, ...optionsKeySegment, tokensV2EndpointsEnabled] as const,
-    [chainIds, optionsKeySegment, tokensV2EndpointsEnabled],
+    () => [ReactQueryCacheKey.TopTokens, chainIds, ...backendOptionsKeySegment, tokensV2EndpointsEnabled] as const,
+    [chainIds, backendOptionsKeySegment, tokensV2EndpointsEnabled],
   )
   const legacyQueryKey = useMemo(
     () => [ReactQueryCacheKey.TopTokens, 'legacy', { multichain: true }, chainIds, ...optionsKeySegment] as const,
@@ -126,8 +136,13 @@ export function useListTokensService(
     const flat = tokensV2EndpointsEnabled
       ? (data?.pages ?? []).flatMap((p) => p.multichainTokens)
       : (legacyData?.multichainTokens ?? [])
-    return processMultichainTokensForDisplay(flat, effectiveOptions)
-  }, [tokensV2EndpointsEnabled, data?.pages, effectiveOptions, legacyData?.multichainTokens])
+    return processMultichainTokensForDisplay({
+      tokens: flat,
+      options: effectiveOptions,
+      trustBackendOrder: tokensV2EndpointsEnabled,
+      allowedChainIds: featureFlaggedChainIds,
+    })
+  }, [tokensV2EndpointsEnabled, data?.pages, effectiveOptions, legacyData?.multichainTokens, featureFlaggedChainIds])
 
   const priceHistoryByMultichainId = useMemo((): Partial<Record<string, PricePoint[]>> => {
     if (tokensV2EndpointsEnabled) {
@@ -151,14 +166,17 @@ export function useListTokensService(
   const isLoading = tokensV2EndpointsEnabled ? isBackendLoading : legacyPathLoading || isLegacyQueryLoading
   const isError = tokensV2EndpointsEnabled ? !!backendError : !!legacyPathError || isLegacyQueryError
 
+  const isSearchActive = !!effectiveOptions.filterString
+  const canLoadMore = tokensV2EndpointsEnabled && !isSearchActive
+
   return {
     topTokens,
     tokenSortRank,
     priceHistoryByMultichainId,
     isLoading,
     isError,
-    loadMore: tokensV2EndpointsEnabled ? loadMore : undefined,
-    hasNextPage: tokensV2EndpointsEnabled ? hasNextPage : false,
+    loadMore: canLoadMore ? loadMore : undefined,
+    hasNextPage: canLoadMore ? hasNextPage : false,
     isFetchingNextPage: tokensV2EndpointsEnabled ? isFetchingNextPage : false,
   }
 }

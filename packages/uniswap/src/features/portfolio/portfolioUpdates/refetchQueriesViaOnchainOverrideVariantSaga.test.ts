@@ -1,10 +1,11 @@
 import 'utilities/src/logger/mocks'
 import { PartialMessage } from '@bufbuild/protobuf'
-import { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
+import { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { Balance } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { OnChainMap } from 'uniswap/src/features/portfolio/portfolioUpdates/fetchOnChainBalances'
 import {
+  getBalanceOverridesToApply,
   getCurrenciesToUpdate,
   mergeOnChainBalances,
 } from 'uniswap/src/features/portfolio/portfolioUpdates/refetchQueriesViaOnchainOverrideVariantSaga'
@@ -288,6 +289,97 @@ describe('mergeOnChainBalances', () => {
     expect(result?.portfolio?.balances[0]?.amount?.amount).toBe(2)
     expect(result?.portfolio?.balances[1]?.amount?.amount).toBe(2)
     expect(result?.portfolio?.balances[2]?.amount?.amount).toBe(2)
+  })
+
+  it('preserves a prior on-chain snapshot when a partial refresh omits a newly acquired token', () => {
+    const existingCurrencyId = buildCurrencyId(mockChainId, MOCK_EXISTING_TOKEN_ADDRESS).toLowerCase()
+    const newCurrencyId = buildCurrencyId(mockChainId, MOCK_NEW_TOKEN_ADDRESS).toLowerCase()
+    const unrelatedCurrencyId = buildCurrencyId(mockChainId, MOCK_OTHER_ADDRESS).toLowerCase()
+    const staleBackendResponse = new GetPortfolioResponse({
+      portfolio: {
+        balances: [
+          {
+            token: { chainId: mockChainId, address: MOCK_EXISTING_TOKEN_ADDRESS },
+            amount: { amount: 2, raw: MOCK_BALANCE_2_ETH },
+            valueUsd: 20,
+          },
+          {
+            token: { chainId: mockChainId, address: MOCK_OTHER_ADDRESS },
+            amount: { amount: 5, raw: MOCK_BALANCE_5_ETH },
+            valueUsd: 50,
+          },
+        ],
+      },
+    })
+    const fetchedOnchainBalances: OnChainMap = new Map([
+      [
+        existingCurrencyId,
+        {
+          token: { chainId: mockChainId, address: MOCK_EXISTING_TOKEN_ADDRESS },
+          amount: { amount: 4, raw: MOCK_BALANCE_4_ETH },
+        },
+      ],
+    ])
+    const balanceOverrideSnapshots: OnChainMap = new Map([
+      [
+        newCurrencyId,
+        {
+          token: { chainId: mockChainId, address: MOCK_NEW_TOKEN_ADDRESS },
+          amount: { amount: 5, raw: MOCK_BALANCE_5_ETH },
+          valueUsd: 50,
+        },
+      ],
+    ])
+
+    const balancesToApply = getBalanceOverridesToApply({
+      currencyIds: new Set([existingCurrencyId, newCurrencyId]),
+      fetchedOnchainBalances,
+      balanceOverrideSnapshots,
+    })
+    const result = mergeOnChainBalances(staleBackendResponse, balancesToApply)
+    const balancesByCurrencyId = new Map(
+      result?.portfolio?.balances.map((balance) => [
+        buildCurrencyId(mockChainId, balance.token?.address ?? '').toLowerCase(),
+        balance,
+      ]),
+    )
+
+    expect(balancesByCurrencyId.get(existingCurrencyId)?.amount?.amount).toBe(4)
+    expect(balancesByCurrencyId.get(newCurrencyId)?.amount?.amount).toBe(5)
+    expect(balancesByCurrencyId.get(unrelatedCurrencyId)?.amount?.amount).toBe(5)
+  })
+
+  it('keeps a sold-to-zero token absent when only its prior zero snapshot is available', () => {
+    const staleBackendResponse = new GetPortfolioResponse({
+      portfolio: {
+        balances: [
+          {
+            token: { chainId: mockChainId, address: MOCK_TOKEN_ADDRESS },
+            amount: { amount: 2, raw: MOCK_BALANCE_2_ETH },
+            valueUsd: 20,
+          },
+        ],
+      },
+    })
+    const balanceOverrideSnapshots: OnChainMap = new Map([
+      [
+        mockCurrencyId,
+        {
+          token: { chainId: mockChainId, address: MOCK_TOKEN_ADDRESS },
+          amount: { amount: 0, raw: '0' },
+          valueUsd: 0,
+        },
+      ],
+    ])
+
+    const balancesToApply = getBalanceOverridesToApply({
+      currencyIds: new Set([mockCurrencyId]),
+      fetchedOnchainBalances: new Map(),
+      balanceOverrideSnapshots,
+    })
+    const result = mergeOnChainBalances(staleBackendResponse, balancesToApply)
+
+    expect(result?.portfolio?.balances).toHaveLength(0)
   })
 })
 

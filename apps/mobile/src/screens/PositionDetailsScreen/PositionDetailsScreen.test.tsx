@@ -8,7 +8,7 @@ import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 
 const mockUseGetPositionQuery = vi.fn()
-vi.mock('uniswap/src/data/rest/getPosition', () => ({
+vi.mock('uniswap/src/data/apiClients/dataApiService/positions/getPosition', () => ({
   useGetPositionQuery: () => mockUseGetPositionQuery(),
 }))
 

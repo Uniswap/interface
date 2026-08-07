@@ -1,6 +1,7 @@
 // oxlint-disable eslint-js/no-restricted-syntax -- allow process.env access here
 import { AppId } from '@universe/config/src/AppId'
 import { boolIfDefined, boolFromOne, boolFromString, optionalString } from '@universe/config/src/commonSchemas'
+import type { EnvFieldRules } from '@universe/config/src/envFieldRules'
 import { Environment, NodeEnv, normalizeEnvironmentWireValue } from '@universe/config/src/Environment'
 import { z } from 'zod'
 
@@ -12,6 +13,10 @@ import { z } from 'zod'
  * dynamic access like process.env[key] does not work in production builds.
  */
 export const BaseConfigValues = {
+  // Config metadata
+  // Version of the config schema the .env was emitted for; 0 = unversioned legacy config
+  configSchemaVersion: process.env.CONFIG_SCHEMA_VERSION,
+
   // App metadata
   appId: process.env.APP_ID,
   // Note, for mobile, this is empty in this package's getConfig() result but
@@ -49,6 +54,7 @@ export const BaseConfigValues = {
   walletConnectProjectId: process.env.WALLETCONNECT_PROJECT_ID ?? process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID,
   walletConnectProjectIdBeta: process.env.WALLETCONNECT_PROJECT_ID_BETA,
   walletConnectProjectIdDev: process.env.WALLETCONNECT_PROJECT_ID_DEV,
+  walletConnectRelayUrlOverride: process.env.WC_RELAY_URL_OVERRIDE,
 
   // External Service URLs
   blockaidProxyUrl: process.env.BLOCKAID_PROXY_URL ?? process.env.REACT_APP_BLOCKAID_PROXY_URL,
@@ -80,8 +86,19 @@ export const BaseConfigValues = {
   uniswapNotifApiBaseUrlOverride: process.env.UNISWAP_NOTIF_API_BASE_URL_OVERRIDE,
 }
 
-/** Zod schema defining the shape and validation for base config fields */
+/**
+ * Zod schema defining the shape and validation for base config fields.
+ * Env-scoped field rules for these fields live in `BaseEnvFieldRules`
+ * below and are enforced by `parseConfig`, not by this schema itself.
+ */
 export const BaseConfigSchema = z.object({
+  // Config metadata
+  configSchemaVersion: z.coerce
+    .number()
+    .int()
+    .default(0)
+    .describe('Version of the config schema the .env was emitted for; 0 = unversioned legacy config'),
+
   // App metadata
   appId: z.enum(AppId).describe('Identifies which app this config is for'),
   appVersion: optionalString.describe('App version tag'),
@@ -89,8 +106,8 @@ export const BaseConfigSchema = z.object({
   // Environment
   nodeEnv: z.enum(NodeEnv).default(NodeEnv.Development).describe('Node process runtime mode, defaults to development'),
   environment: z
-    .preprocess(normalizeEnvironmentWireValue, z.enum(Environment).default(Environment.Development))
-    .describe('Backend deployment environment, defaults to development; accepts deployer short forms dev/prod'),
+    .preprocess(normalizeEnvironmentWireValue, z.enum(Environment))
+    .describe('Backend deployment environment; accepts deployer short forms dev/prod'),
   isUnitTest: boolIfDefined.describe('Is the app running in a unit test (Jest or Vitest)'),
   isE2ETest: boolFromString.describe('Is the app running in E2E test mode'),
   isVercelEnvironment: boolFromOne.describe('Is the app deployed on Vercel'),
@@ -110,6 +127,9 @@ export const BaseConfigSchema = z.object({
   walletConnectProjectId: optionalString.describe('Project ID for WalletConnect'),
   walletConnectProjectIdBeta: optionalString.describe('Project ID for WalletConnect (beta)'),
   walletConnectProjectIdDev: optionalString.describe('Project ID for WalletConnect (dev)'),
+  walletConnectRelayUrlOverride: optionalString.describe(
+    'E2E-only WalletConnect relay URL override (local hermetic relay)',
+  ),
 
   // External Service URLs
   blockaidProxyUrl: optionalString.describe('URL for Blockaid proxy'),
@@ -143,3 +163,27 @@ export const BaseConfigSchema = z.object({
 
 /** Type inferred from BaseConfigSchema */
 export type BaseConfig = z.infer<typeof BaseConfigSchema>
+
+/**
+ * Env-scoped field rules for the base config fields. `parseConfig` merges
+ * these with any app-provided rules (field lists unioned per environment) and
+ * enforces the result on the merged schema.
+ */
+export const BaseEnvFieldRules: EnvFieldRules<BaseConfig> = {
+  [Environment.Production]: {
+    forbidden: [
+      'amplitudeProxyUrlOverride',
+      'apiBaseUrlOverride',
+      'apiBaseUrlV2Override',
+      'entryGatewayApiUrlOverride',
+      'forApiUrlOverride',
+      'graphqlUrlOverride',
+      'liquidityServiceUrlOverride',
+      'scantasticApiUrlOverride',
+      'statsigProxyUrlOverride',
+      'tradingApiUrlOverride',
+      'tradingApiWebTestEnv',
+      'uniswapNotifApiBaseUrlOverride',
+    ],
+  },
+}

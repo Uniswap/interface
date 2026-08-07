@@ -73,7 +73,8 @@ export function AuctionQuickFilters() {
   )
 
   return (
-    <Flex row alignItems="center">
+    // Chips can exceed small viewports — scroll them in place instead of wrapping or widening the page.
+    <Flex row alignItems="center" className="scrollbar-hidden" $md={{ '$platform-web': { overflowX: 'auto' } }}>
       {options.map((option) => {
         const active = option.value === quickFilter
         const chip = (

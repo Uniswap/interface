@@ -1,7 +1,6 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
 import { GetWalletTokensProfitLossResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { useMemo } from 'react'
-import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/rpc'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -17,6 +16,7 @@ import {
 import { useSortedPortfolioBalancesMultichain } from 'uniswap/src/features/portfolio/balances/hooks'
 import { useCurrencyIdToVisibility } from 'uniswap/src/features/transactions/selectors'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 import { buildCurrencyId, currencyAddress, currencyId } from 'uniswap/src/utils/currencyId'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
 import {
@@ -56,6 +56,8 @@ export interface TokenData {
   unrealizedPnl?: number
   unrealizedPnlPercent?: number
   isStablecoin: boolean
+  /** Spam-flagged token in the hidden section: value and P&L cells render as "-". */
+  isSpamHidden?: boolean
 }
 
 function filterVaultShareTokens({
@@ -183,11 +185,13 @@ export function useTransformTokenTableData({
       allocationFromTotal,
       /** Fully hidden multichain rows are flattened to one synthetic balance per leg (`tokens.length === 1`); set from the parent when that still represents a multichain asset. */
       isMultichainAssetOverride,
+      isHiddenRow = false,
     }: {
       balance: PortfolioMultichainBalance
       chainTokensForRow: PortfolioChainBalance[]
       allocationFromTotal?: number
       isMultichainAssetOverride?: boolean
+      isHiddenRow?: boolean
     }): TokenData | null => {
       if (chainTokensForRow.length === 0) {
         return null
@@ -251,6 +255,8 @@ export function useTransformTokenTableData({
         unrealizedPnl: parentUnrealizedPnl,
         unrealizedPnlPercent: parentUnrealizedPnlPercent,
         isStablecoin,
+        // Hidden rows are single-chain, so `first` is the row's chain token
+        isSpamHidden: isHiddenRow && !!first.currencyInfo.isSpam,
       }
     }
 
@@ -278,6 +284,7 @@ export function useTransformTokenTableData({
             chainTokensForRow: flatBalance.tokens,
             allocationFromTotal: 0,
             isMultichainAssetOverride: parentWasMultichain,
+            isHiddenRow: true,
           }),
         )
         .filter((d): d is TokenData => d !== null)
@@ -290,6 +297,7 @@ export function useTransformTokenTableData({
             balance,
             chainTokensForRow: [ht],
             allocationFromTotal: 0,
+            isHiddenRow: true,
           }),
         )
         .filter((d): d is TokenData => d !== null),

@@ -1,5 +1,5 @@
 import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
-import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
+import { normalizeTokenAddressForCache } from 'uniswap/src/utils/currencyId'
 
 /**
  * Filters ranked multichain tokens by search string (name, symbol, multichainId, address).

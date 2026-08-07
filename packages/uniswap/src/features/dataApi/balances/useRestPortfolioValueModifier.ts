@@ -5,6 +5,7 @@ import type {
 } from '@uniswap/client-data-api/dist/data/v1/types_pb.d'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
+import { DEFAULT_NATIVE_ADDRESS, DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/evm/rpc'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import type { RestContract } from 'uniswap/src/features/dataApi/types'
 import { currencyIdToRestContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
@@ -12,6 +13,7 @@ import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/s
 import { useCurrencyIdToVisibility } from 'uniswap/src/features/transactions/selectors'
 import { selectPositionsVisibility } from 'uniswap/src/features/visibility/selectors'
 import { parsePositionId } from 'uniswap/src/features/visibility/utils'
+import type { CurrencyId } from 'uniswap/src/types/currency'
 
 export type RestTokenOverrides = {
   includeOverrides: RestContract[]
@@ -21,6 +23,15 @@ export type RestTokenOverrides = {
 export type RestPoolOverrides = {
   poolIncludeOverrides: PartialMessage<PoolRef>[]
   poolExcludeOverrides: PartialMessage<PoolRef>[]
+}
+
+// The data-api represents EVM natives with the zero address; the app's legacy 0xeeee… placeholder
+// never matches server-side, so overrides for native tokens (hide ETH/BNB/…) would be ignored.
+function toModifierContract(id: CurrencyId): RestContract {
+  const contract = currencyIdToRestContractInput(id)
+  return contract.address === DEFAULT_NATIVE_ADDRESS_LEGACY
+    ? { ...contract, address: DEFAULT_NATIVE_ADDRESS }
+    : contract
 }
 
 /**
@@ -45,7 +56,7 @@ export function useRestPortfolioValueModifiers(
   const modifiers = useMemo(() => {
     const { includeOverrides, excludeOverrides } = Object.entries(currencyIdToTokenVisibility).reduce(
       (acc: RestTokenOverrides, [key, tokenVisibility]) => {
-        const contractInput = currencyIdToRestContractInput(key)
+        const contractInput = toModifierContract(key)
         tokenVisibility.isVisible ? acc.includeOverrides.push(contractInput) : acc.excludeOverrides.push(contractInput)
 
         return acc

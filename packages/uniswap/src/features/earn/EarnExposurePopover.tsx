@@ -19,20 +19,31 @@ function isNativeExposure(currencyId: string): boolean {
   return chainId !== null && isNativeCurrencyAddress(chainId, currencyIdToAddress(currencyId))
 }
 
+function compareExposureValueDescending(a: EarnVaultExposure, b: EarnVaultExposure): number {
+  if (a.valueUsd === undefined) {
+    return b.valueUsd === undefined ? 0 : 1
+  }
+  if (b.valueUsd === undefined) {
+    return -1
+  }
+  return b.valueUsd - a.valueUsd
+}
+
 // Prefer the per-asset breakdown; fall back to the token-only list until the backend populates `exposures`.
 export function getExposureRows(vault: EarnVaultInfo): EarnVaultExposure[] {
   if (vault.exposures.length > 0) {
     // The native token is fully deployed into the vault, so its idle exposure is 0 — hide that redundant $0 row.
     // Keep every other asset (including non-native 0-value assets) so the vault's collateral set stays visible.
-    return vault.exposures.filter(
+    const rows = vault.exposures.filter(
       (exposure) => !(isNativeExposure(exposure.currencyId) && (exposure.valueUsd ?? 0) === 0),
     )
+    return rows.sort(compareExposureValueDescending)
   }
   return vault.exposureCurrencyIds.map((currencyId) => ({ currencyId }))
 }
 
 export function shouldShowExposurePopover(vault: EarnVaultInfo): boolean {
-  return getExposureRows(vault).length > 1
+  return getExposureRows(vault).length > 0
 }
 
 export function EarnExposurePopover({ vault }: { vault: EarnVaultInfo }): JSX.Element {
@@ -158,7 +169,7 @@ function ExposureRow({
   showUsdValue: boolean
 }): JSX.Element {
   const currencyInfo = useCurrencyInfo(exposure.currencyId)
-  const { formatNumberOrString } = useLocalizationContext()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
   const currency = currencyInfo?.currency
   const color = useExposureColor({ currencyInfo, colorIndex })
 
@@ -182,7 +193,8 @@ function ExposureRow({
           <Text variant="body3" color="$neutral1">
             {exposure.valueUsd === undefined
               ? '-'
-              : formatNumberOrString({ value: exposure.valueUsd, type: NumberType.FiatTokenDetails })}
+              : // Exposure values are USD-denominated; convert before formatting in the selected fiat.
+                convertFiatAmountFormatted(exposure.valueUsd, NumberType.FiatTokenDetails)}
           </Text>
         )}
         <Flex width={8} height={8} borderRadius="$roundedFull" style={{ backgroundColor: color }} />

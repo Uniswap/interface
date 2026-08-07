@@ -5,7 +5,7 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Flex, Text, TouchableArea, useIsShortMobileDevice, useMedia } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
-import type { WarningWithStyle } from 'uniswap/src/components/modals/WarningModal/types'
+import { WarningLabel, type WarningWithStyle } from 'uniswap/src/components/modals/WarningModal/types'
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
@@ -42,7 +42,11 @@ export const GasAndWarningRows = memo(function GasAndWarningRows(): JSX.Element 
   const { isBlocked } = useIsBlockedAddress(toScreenInput(evmAddress))
 
   const { formScreenWarning, insufficientGasFundsWarning, warnings } = useParsedSwapWarnings()
-  const showFormWarning = formScreenWarning && formScreenWarning.displayedInline && !isBlocked
+  // PermissionedPool gating uses the dedicated <PermissionedSwapBanner /> above the
+  // GasAndWarningRows; suppress the FormWarning here to avoid rendering "Wallet not verified"
+  // alongside the lock-icon banner Figma calls for.
+  const isPermissionedWarning = formScreenWarning?.warning.type === WarningLabel.PermissionedPool
+  const showFormWarning = formScreenWarning && formScreenWarning.displayedInline && !isBlocked && !isPermissionedWarning
 
   const inlineWarning = showFormWarning ? formScreenWarning.warning : undefined
   const { showResetGas, onResetGas } = useResetGasCta(inlineWarning)

@@ -141,10 +141,21 @@ const config: StorybookConfig = {
     config.resolve.fallback = {
       ...(config.resolve.fallback || {}),
       os: false,
+      // @hpke/common (via @universe/embedded-wallet's seed-phrase export) references the
+      // Node crypto builtin behind a runtime guard; browsers use WebCrypto. Webpack 5 has
+      // no automatic node polyfills, so map it to an empty module like the others.
+      crypto: false,
       tty: require.resolve('./__mocks__/tty.js'),
       fs: false,
       path: false,
       util: false,
+      // wagmi v3's @wagmi/core and @wagmi/connectors reference optional peer deps we don't install
+      // (porto / Base account / account-abstraction / MetaMask Connect). Vite skips these optional
+      // imports, but Storybook's webpack resolves them eagerly and errors. Map them to empty modules.
+      '@metamask/connect-evm': false,
+      '@base-org/account': false,
+      accounts: false,
+      porto: false,
     }
 
     // Configure webpack aliases for React Native and compatibility

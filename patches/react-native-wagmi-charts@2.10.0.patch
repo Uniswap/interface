@@ -1,0 +1,48 @@
+diff --git a/lib/commonjs/charts/line/Chart.js b/lib/commonjs/charts/line/Chart.js
+index 8b46c207e6f433ede046299e37b0dbae38273fd7..32bf1f5ff701bb7290789fec4655e8a41b4f4fe0 100644
+--- a/lib/commonjs/charts/line/Chart.js
++++ b/lib/commonjs/charts/line/Chart.js
+@@ -53,7 +53,9 @@ function LineChart({
+ 
+   // Reserve space at the bottom for x-axis cursor labels
+   const X_AXIS_LABEL_RESERVED_HEIGHT = 40;
+-  const chartDrawingHeight = height - X_AXIS_LABEL_RESERVED_HEIGHT;
++  // Uniswap patch: only reserve label space when the chart is tall enough — small inline
++  // sparklines (e.g. 20px) otherwise get a negative drawing height and render cut off/shifted.
++  const chartDrawingHeight = height > X_AXIS_LABEL_RESERVED_HEIGHT ? height - X_AXIS_LABEL_RESERVED_HEIGHT : height;
+   const pathWidth = _react.default.useMemo(() => {
+     let allowedWidth = width;
+     if (data && xLength > data.length) {
+diff --git a/lib/module/charts/line/Chart.js b/lib/module/charts/line/Chart.js
+index f85dceeaf13a956b6262c44e690e41f3178068f0..3978197e6b5d5a55810eaba7459307d22dd350db 100644
+--- a/lib/module/charts/line/Chart.js
++++ b/lib/module/charts/line/Chart.js
+@@ -44,7 +44,9 @@ export function LineChart({
+ 
+   // Reserve space at the bottom for x-axis cursor labels
+   const X_AXIS_LABEL_RESERVED_HEIGHT = 40;
+-  const chartDrawingHeight = height - X_AXIS_LABEL_RESERVED_HEIGHT;
++  // Uniswap patch: only reserve label space when the chart is tall enough — small inline
++  // sparklines (e.g. 20px) otherwise get a negative drawing height and render cut off/shifted.
++  const chartDrawingHeight = height > X_AXIS_LABEL_RESERVED_HEIGHT ? height - X_AXIS_LABEL_RESERVED_HEIGHT : height;
+   const pathWidth = React.useMemo(() => {
+     let allowedWidth = width;
+     if (data && xLength > data.length) {
+diff --git a/src/charts/line/Chart.tsx b/src/charts/line/Chart.tsx
+index 4f4ee51601e23f85b6a8f18b7cfcf22ee38fee78..9239cea09bb9452b1baa743b66c27108b7b1c895 100644
+--- a/src/charts/line/Chart.tsx
++++ b/src/charts/line/Chart.tsx
+@@ -54,7 +54,12 @@ export function LineChart({
+ 
+   // Reserve space at the bottom for x-axis cursor labels
+   const X_AXIS_LABEL_RESERVED_HEIGHT = 40;
+-  const chartDrawingHeight = height - X_AXIS_LABEL_RESERVED_HEIGHT;
++  // Uniswap patch: only reserve label space when the chart is tall enough — small inline
++  // sparklines (e.g. 20px) otherwise get a negative drawing height and render cut off/shifted.
++  const chartDrawingHeight =
++    height > X_AXIS_LABEL_RESERVED_HEIGHT
++      ? height - X_AXIS_LABEL_RESERVED_HEIGHT
++      : height;
+ 
+   const pathWidth = React.useMemo(() => {
+     let allowedWidth = width;

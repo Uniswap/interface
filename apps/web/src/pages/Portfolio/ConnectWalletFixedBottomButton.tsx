@@ -5,6 +5,7 @@ import { opacify, zIndexes } from 'ui/src/theme'
 import { ElementName, InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
+import { useScrollCompact } from '~/hooks/useScrollCompact'
 import { CONNECT_WALLET_FIXED_BOTTOM_SECTION_HEIGHT } from '~/pages/Portfolio/constants'
 
 function useBackgroundGradient() {
@@ -51,11 +52,8 @@ const FixedBottomButton = styled(Flex, {
   },
 })
 
-interface ConnectWalletBottomOverlayProps {
-  shouldShow?: boolean
-}
-
-export function ConnectWalletFixedBottomButton({ shouldShow = false }: ConnectWalletBottomOverlayProps): JSX.Element {
+export function ConnectWalletFixedBottomButton(): JSX.Element {
+  const shouldShow = useScrollCompact({})
   const accountDrawer = useAccountDrawer()
   const { t } = useTranslation()
   const backgroundGradient = useBackgroundGradient()

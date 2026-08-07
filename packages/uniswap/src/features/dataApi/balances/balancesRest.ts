@@ -3,14 +3,13 @@ import { type PlainMessage } from '@bufbuild/protobuf'
 import type { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import type { PollingInterval } from 'uniswap/src/constants/misc'
-import { calculateTotalBalancesUsdPerChainRest } from 'uniswap/src/data/balances/utils'
-import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
-import { useGetPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
-import type { GetPortfolioInput } from 'uniswap/src/data/rest/getPortfolio'
+import { useGetPortfolioQuery } from 'uniswap/src/data/apiClients/dataApiService/balances/getPortfolio'
+import type { GetPortfolioInput } from 'uniswap/src/data/apiClients/dataApiService/balances/getPortfolio'
 import {
   shouldTransformToMultichain,
   transformPortfolioToMultichain,
-} from 'uniswap/src/data/rest/transformPortfolioToMultichain'
+} from 'uniswap/src/data/apiClients/dataApiService/balances/transformPortfolioToMultichain'
+import { calculateTotalBalancesUsdPerChainRest } from 'uniswap/src/data/apiClients/dataApiService/balances/utils'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { buildPortfolioBalance } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'
 import { getPortfolioMultichainBalancesById } from 'uniswap/src/features/dataApi/balances/toPortfolioMultichainBalance'
@@ -25,6 +24,7 @@ import {
   getRestTokenSafetyInfo,
 } from 'uniswap/src/features/dataApi/utils/getCurrencySafetyInfo'
 import type { CurrencyId } from 'uniswap/src/types/currency'
+import { normalizeTokenAddressForCache } from 'uniswap/src/utils/currencyId'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { usePlatformBasedFetchPolicy } from 'uniswap/src/utils/usePlatformBasedFetchPolicy'
 import { useEvent } from 'utilities/src/react/hooks'

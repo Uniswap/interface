@@ -41,6 +41,7 @@ import { createWebNotificationRenderer } from '~/notification-service/notificati
 import { NotificationContainer } from '~/notification-service/notification-renderer/NotificationContainer'
 import { useNotificationStore } from '~/notification-service/notification-renderer/notificationStore'
 import { getNotificationTelemetry } from '~/notification-service/telemetry/getNotificationTelemetry'
+import { getInAppDestination } from '~/notification-service/utils/getNotificationDestination'
 import store from '~/state'
 
 /**
@@ -136,29 +137,17 @@ function provideWebNotificationService(ctx: {
     renderer,
     telemetry,
     onNavigate: (url: string) => {
-      if (url.startsWith('/')) {
-        ctx.navigate(url)
+      const destination = getInAppDestination(url, {
+        onParseError: (error) =>
+          getLogger().warn('WebNotificationService', 'onNavigate', 'Failed to parse URL', { url, error }),
+      })
+
+      if (destination) {
+        ctx.navigate(destination)
         return
       }
 
-      try {
-        // Parse the URL to check if it's same-origin
-        const urlObj = new URL(url, window.location.origin)
-        const isSameOrigin = urlObj.origin === window.location.origin
-
-        if (isSameOrigin) {
-          // Use internal navigation for same-origin links
-          const path = urlObj.pathname + urlObj.search + urlObj.hash
-          ctx.navigate(path)
-        } else {
-          // Open external links in new tab
-          window.open(url, '_blank', 'noopener,noreferrer')
-        }
-      } catch (error) {
-        // If URL parsing fails, fall back to opening in new tab
-        getLogger().warn('WebNotificationService', 'onNavigate', 'Failed to parse URL', { url, error })
-        window.open(url, '_blank', 'noopener,noreferrer')
-      }
+      window.open(url, '_blank', 'noopener,noreferrer')
     },
   })
 
@@ -197,9 +186,6 @@ function getNotificationServiceQueryOptions(ctx: {
 export function WebNotificationServiceManager(): JSX.Element | null {
   const location = useLocation()
   const navigate = useNavigate()
-
-  // Don't show notifications on the landing page
-  const shouldRenderNotifications = location.pathname !== '/'
 
   // Hook values that need to be passed to system alerts data source
   const { swapInputChainId } = useUniswapContext()
@@ -259,12 +245,13 @@ export function WebNotificationServiceManager(): JSX.Element | null {
     }
   }, [notificationService])
 
-  if (!shouldRenderNotifications || !notificationService) {
+  if (!notificationService) {
     return null
   }
 
   return (
     <NotificationContainer
+      currentLocation={location}
       onRenderFailed={notificationService.onRenderFailed}
       onNotificationShown={notificationService.onNotificationShown}
       onNotificationClick={notificationService.onNotificationClick}

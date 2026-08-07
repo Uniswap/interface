@@ -1,5 +1,5 @@
 import { Image as ExpoImage, type ImageContentFit } from 'expo-image'
-import { useState } from 'react'
+import { useImageLoadError } from 'ui/src/components/UniversalImage/hooks/useImageLoadError'
 import { type PlainImageExpoProps, UniversalImageResizeMode } from 'ui/src/components/UniversalImage/types'
 
 const RESIZE_MODE_TO_CONTENT_FIT: Record<UniversalImageResizeMode, ImageContentFit> = {
@@ -23,7 +23,7 @@ export function PlainImage({
   transitionMs,
   uri,
 }: PlainImageExpoProps): JSX.Element {
-  const [hasError, setHasError] = useState(false)
+  const { hasError, markErrored } = useImageLoadError(uri)
 
   if (hasError && fallback) {
     return fallback
@@ -33,6 +33,9 @@ export function PlainImage({
 
   return (
     <ExpoImage
+      // remount on uri change: a stale onError for the old source can fire after the new source
+      // commits to the same instance, which would mark the new uri as errored
+      key={uri}
       // recyclingKey lets expo-image dispose the previous bitmap if this component is reused
       recyclingKey={uri}
       autoplay={autoplay}
@@ -49,7 +52,7 @@ export function PlainImage({
       testID={testID}
       transition={transitionMs ?? 200}
       onError={() => {
-        setHasError(true)
+        markErrored()
         onError?.()
       }}
       onLoad={onLoad}

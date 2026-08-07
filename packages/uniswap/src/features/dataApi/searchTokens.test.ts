@@ -21,7 +21,7 @@ vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
   useEnabledChains: mockUseEnabledChains,
 }))
 
-vi.mock('uniswap/src/data/rest/searchTokensAndPools', () => ({
+vi.mock('uniswap/src/data/apiClients/dataApiService/search/searchTokensAndPools', () => ({
   useSearchTokensAndPoolsQuery: mockUseSearchTokensAndPoolsQuery,
 }))
 

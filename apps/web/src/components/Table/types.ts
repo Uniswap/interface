@@ -1,5 +1,6 @@
 import { ApolloError } from '@apollo/client'
 import { ColumnDef, Row, RowData, Table as TanstackTable } from '@tanstack/react-table'
+import { TableVirtualizationMode } from '~/components/Table/hooks/useTableVirtualizer'
 
 export type RenderUnifiedExpandableRow<T extends RowData> = (
   row: Row<T>,
@@ -34,8 +35,8 @@ export type TableBodyProps<T extends RowData = unknown> = {
   dimmed?: boolean
   /** Draw one pinned-column guide from the header instead of per-row borders (mWeb). */
   extendedPinnedColumnDivider?: boolean
-  /** Flat row window virtualizer (`useWindowVirtualizer`), e.g. Portfolio Activity. */
-  virtualized?: boolean
+  /** Flat row virtualization: scroll the window (e.g. Portfolio Activity) or the maxHeight container. Flat rows only — skips sub-row / expandable rendering. */
+  virtualization?: TableVirtualizationMode
 }
 
 export type TableProps<T extends RowData = unknown> = {
@@ -73,6 +74,6 @@ export type TableProps<T extends RowData = unknown> = {
   hideHiddenRowsLabel?: string
   /** When true, shows native browser scrollbar instead of hiding it */
   showScrollbar?: boolean
-  /** When true, only visible rows are rendered using window-based virtualization */
+  /** When true, only visible flat rows are rendered (window scroll, or container scroll when maxHeight is set). Does not support getSubRows / renderUnifiedExpandableRow — expansion UI is skipped. */
   virtualized?: boolean
 }

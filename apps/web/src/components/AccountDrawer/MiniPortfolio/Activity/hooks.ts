@@ -54,7 +54,10 @@ export function usePendingActivity() {
 
   // Filter out UniswapX orders from pendingTransactions to avoid double-counting
   // UniswapX orders are handled separately via pendingOrders
-  const pendingTransactions = allPendingTransactions.filter((tx) => !isUniswapX(tx))
+  // Tracked cancel txs are excluded too: the cancelled order row already counts as the one user action
+  const pendingTransactions = allPendingTransactions.filter(
+    (tx) => !isUniswapX(tx) && tx.typeInfo.type !== TransactionType.UniswapXCancel,
+  )
   // Pending limit orders shown in the limit sidebar
   const pendingOrdersWithoutLimits = pendingOrders.filter((order) => order.routing !== TradingApi.Routing.DUTCH_LIMIT)
 

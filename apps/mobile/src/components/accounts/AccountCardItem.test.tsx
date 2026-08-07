@@ -1,6 +1,19 @@
 import { AccountCardItem } from 'src/components/accounts/AccountCardItem'
-import { fireEvent, render, screen } from 'src/test/test-utils'
+import { preloadedMobileState } from 'src/test/fixtures'
+import { fireEvent, getNearestFiberProp, render, screen } from 'src/test/test-utils'
 import { ON_PRESS_EVENT_PAYLOAD, SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures'
+import { ACCOUNT, readOnlyAccount } from 'wallet/src/test/fixtures'
+
+interface MenuAction {
+  title: string
+}
+
+function getMenuActionTitles(): string[] {
+  const accountItem = screen.getByTestId(`account-item/${SAMPLE_SEED_ADDRESS_1}`)
+  const menuActions = getNearestFiberProp(accountItem, 'actions') as MenuAction[]
+
+  return menuActions.map((action) => action.title)
+}
 
 describe('AccountCardItem', () => {
   const defaultProps = {
@@ -77,6 +90,31 @@ describe('AccountCardItem', () => {
       const badge = screen.queryByTestId('account-icon/view-only-badge')
 
       expect(badge).toBeFalsy()
+    })
+
+    it('only shows copy and remove actions', () => {
+      const account = readOnlyAccount({ address: SAMPLE_SEED_ADDRESS_1 })
+
+      render(<AccountCardItem {...defaultProps} isViewOnly={true} />, {
+        preloadedState: preloadedMobileState({ account }),
+      })
+
+      expect(getMenuActionTitles()).toEqual(['account.wallet.action.copy', 'account.wallet.button.remove'])
+    })
+  })
+
+  describe('signer accounts', () => {
+    it('keeps edit and connection management actions', () => {
+      render(<AccountCardItem {...defaultProps} />, {
+        preloadedState: preloadedMobileState({ account: ACCOUNT }),
+      })
+
+      expect(getMenuActionTitles()).toEqual([
+        'account.wallet.action.copy',
+        'settings.setting.wallet.action.editLabel',
+        'account.wallet.action.manageConnections',
+        'account.wallet.button.remove',
+      ])
     })
   })
 })

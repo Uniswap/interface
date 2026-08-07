@@ -3,11 +3,11 @@ import { Currency, Percent } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
-import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
+import { useGetPoolsByTokens } from 'uniswap/src/data/apiClients/dataApiService/pools/getPools'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import type { FeeData } from 'uniswap/src/features/positions/types'
+import { usePoolLookupTokenAddresses } from '~/features/Liquidity/hooks/usePoolLookupTokenAddresses'
 import { useV4PoolsInitializedOnChain } from '~/features/Liquidity/hooks/useV4PoolsInitializedOnChain'
-import { getTokenOrZeroAddress } from '~/features/Liquidity/utils/currency'
 import {
   getDefaultFeeTiersForChainWithDynamicFeeTier,
   getFeeTierKey,
@@ -54,12 +54,20 @@ export function useAllFeeTierPoolData({
     !isPlaceholderToken(sdkCurrencies.TOKEN0) &&
     !isPlaceholderToken(sdkCurrencies.TOKEN1)
 
+  // Permissioned pools are indexed under the PA adapter, not the displayed sec-token;
+  // an unmapped lookup misses them and every fee tier falsely reads as available.
+  const {
+    lookupAddress0,
+    lookupAddress1,
+    isLoading: isLookupAddressLoading,
+  } = usePoolLookupTokenAddresses({ token0: sdkCurrencies.TOKEN0, token1: sdkCurrencies.TOKEN1 })
+
   const { data: poolData, isLoading: isPoolDataLoading } = useGetPoolsByTokens(
     {
       chainId,
       protocolVersions: [protocolVersion],
-      token0: getTokenOrZeroAddress(sdkCurrencies.TOKEN0),
-      token1: getTokenOrZeroAddress(sdkCurrencies.TOKEN1),
+      token0: lookupAddress0,
+      token1: lookupAddress1,
       hooks: hook,
     },
     shouldFetchPools,
@@ -182,7 +190,7 @@ export function useAllFeeTierPoolData({
     // flash). A failed on-chain read keeps this set (fail closed) so the UI stays gated rather than showing an
     // unverified tier as available.
     isLoading:
-      (shouldFetchPools && isPoolDataLoading) ||
+      (shouldFetchPools && (isPoolDataLoading || isLookupAddressLoading)) ||
       (checkOnChainPoolExistence && (isOnChainExistenceLoading || isOnChainExistenceError)),
   }
 }

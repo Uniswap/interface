@@ -1,0 +1,9 @@
+{
+  "//": "Shared exemption list for the new-Tamagui-styling gate (INFRA-2958). Migration tooling under these repo-relative path prefixes legitimately contains styled(/animation/$group-*/tamagui-import text (codemod + census fixtures, ratchet probes) and must never trip the no-tamagui-styling oxlint rule, the baseline generator, or the dangerfile diff check. Consumed by config/oxlint-plugins/universe-custom.js, scripts/tamagui-migration/generate-tamagui-baseline.ts, and dangerfile.ts.",
+  "pathPrefixes": [
+    "scripts/tamagui-migration/",
+    "scripts/tamagui-census",
+    "packages/tailwind/src/parity/touchable-area/",
+    "packages/mycelium/src/touchable-area/"
+  ]
+}

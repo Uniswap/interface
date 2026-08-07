@@ -1,8 +1,10 @@
 import { waitFor } from '@testing-library/react-native'
+import { SharedQueryClient } from '@universe/api'
+import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/rpc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useCurrencyInfo, useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { renderHookWithProviders } from 'uniswap/src/test/render'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 const {
@@ -135,11 +137,40 @@ describe(useCurrencyInfo, () => {
       expect(mockUseTokenQuery).toHaveBeenCalledWith(expect.objectContaining({ skip: true }))
     })
   })
+
+  describe('native currency (commonBase match)', () => {
+    const NATIVE_CURRENCY_ID = buildNativeCurrencyId(UniverseChainId.Mainnet)
+
+    // Regression: the REST/GraphQL project.logoUrl override exists to patch broken *token* commonBase
+    // images (WEB-5111) — it must never clobber a native currency's own maintained static logo,
+    // since backend project metadata keyed on the native placeholder address isn't reliable.
+    it('does not override the native currency logo with the REST project logoUrl', async () => {
+      mockUseFeatureFlag.mockReturnValue(true)
+
+      const { result } = renderHookWithProviders(() => useCurrencyInfo(NATIVE_CURRENCY_ID))
+
+      await waitFor(() => expect(result.current?.currency.isNative).toBe(true))
+      expect(result.current?.logoUrl).not.toBe('https://example.com/rest.png')
+    })
+
+    it('does not override the native currency logo with the GraphQL project logoUrl', () => {
+      mockUseFeatureFlag.mockReturnValue(false)
+
+      const { result } = renderHookWithProviders(() => useCurrencyInfo(NATIVE_CURRENCY_ID))
+
+      expect(result.current?.currency.isNative).toBe(true)
+      expect(result.current?.logoUrl).not.toBe('https://example.com/gql.png')
+    })
+  })
 })
 
 describe(useCurrencyInfos, () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    // Every test's mocked getGetTokensQueryOptions reuses the same hardcoded queryKey, and
+    // useRestCurrencyInfos runs against the app's SharedQueryClient singleton — without clearing,
+    // a later test can read a stale cached response from an earlier one under that same key.
+    SharedQueryClient.clear()
 
     mockUseTokensQuery.mockReturnValue({ data: { tokens: [GQL_TOKEN] }, loading: false })
     mockGetGetTokensQueryOptions.mockImplementation(({ enabled }) => ({
@@ -163,5 +194,29 @@ describe(useCurrencyInfos, () => {
     const { result } = renderHookWithProviders(() => useCurrencyInfos([CURRENCY_ID]))
 
     expect(result.current[0]?.currency.name).toBe('USD Coin (GraphQL)')
+  })
+
+  // Regression: the native currencyId embeds the display address (0xeee...), but the REST
+  // wire/response address for native ETH is 0x0. The response-matching key must be built from
+  // the same resolved REST contract input as the request, not re-derived from the currencyId
+  // string, or the native leg never matches and callers (e.g. PoolInfoCell) render nothing.
+  it('matches the native currency by its REST wire address, not the currencyId display address', async () => {
+    mockUseFeatureFlag.mockReturnValue(true)
+    const nativeCurrencyId = buildNativeCurrencyId(UniverseChainId.Mainnet)
+    const nativeRestToken = {
+      ...REST_TOKEN,
+      address: DEFAULT_NATIVE_ADDRESS,
+      symbol: 'ETH',
+      name: 'Ethereum',
+    }
+    mockGetGetTokensQueryOptions.mockImplementation(({ enabled }) => ({
+      queryKey: [ReactQueryCacheKey.DataApiService, 'getTokens'],
+      queryFn: () => Promise.resolve({ tokens: [nativeRestToken] }),
+      enabled,
+    }))
+
+    const { result } = renderHookWithProviders(() => useCurrencyInfos([nativeCurrencyId]))
+
+    await waitFor(() => expect(result.current[0]?.currency.name).toBe('Ethereum'))
   })
 })

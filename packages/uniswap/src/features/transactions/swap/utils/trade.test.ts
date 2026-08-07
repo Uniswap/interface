@@ -9,7 +9,12 @@ import {
   type BridgeTrade,
   type ClassicTrade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
-import { getProtocolVersionFromTrade, requireAcceptNewTrade } from 'uniswap/src/features/transactions/swap/utils/trade'
+import {
+  getProtocolVersionFromTrade,
+  requireAcceptNewTrade,
+  tradeToTransactionInfo,
+} from 'uniswap/src/features/transactions/swap/utils/trade'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 const INPUT_TOKEN = UNI[UniverseChainId.Mainnet]
 
@@ -17,16 +22,19 @@ const createClassicTrade = ({
   tradeType,
   inputAmount,
   outputAmount,
+  sponsorshipInfo,
 }: {
   tradeType: TradeType
   inputAmount: number
   outputAmount: number
+  sponsorshipInfo?: TradingApi.SponsorshipInfo
 }): ClassicTrade => {
   const trade = createClassicTradeFromQuote({
     quote: {
       requestId: '123',
       routing: TradingApi.Routing.CLASSIC,
       permitData: null,
+      ...(sponsorshipInfo ? { sponsorshipInfo } : {}),
       quote: {
         input: {
           amount: inputAmount.toString(),
@@ -251,5 +259,45 @@ describe(getProtocolVersionFromTrade, () => {
     it('infers the protocol from the SDK routes', () => {
       expect(getProtocolVersionFromTrade(createClassicTradeWithSwapSteps(undefined))).toBe(Protocol.V3)
     })
+  })
+})
+
+describe(tradeToTransactionInfo, () => {
+  const sponsoredTrade = createClassicTrade({
+    tradeType: TradeType.EXACT_INPUT,
+    inputAmount: 100,
+    outputAmount: 200,
+    sponsorshipInfo: { sponsored: true, campaign: { name: 'test-campaign' } },
+  })
+
+  function toSwapTypeInfo(isSponsored?: boolean): ReturnType<typeof tradeToTransactionInfo> & {
+    type: TransactionType.Swap
+  } {
+    const typeInfo = tradeToTransactionInfo({ trade: sponsoredTrade, isSponsored })
+    if (typeInfo.type !== TransactionType.Swap) {
+      throw new Error('expected swap typeInfo')
+    }
+    return typeInfo
+  }
+
+  it('reports sponsorship and campaign when a paymaster actually paid', () => {
+    const typeInfo = toSwapTypeInfo(true)
+
+    expect(typeInfo.isSponsored).toBe(true)
+    expect(typeInfo.sponsorshipCampaignId).toBe('test-campaign')
+  })
+
+  it('does not attribute the campaign when execution was not paymaster-paid', () => {
+    const typeInfo = toSwapTypeInfo(false)
+
+    expect(typeInfo.isSponsored).toBe(false)
+    expect(typeInfo.sponsorshipCampaignId).toBeUndefined()
+  })
+
+  it('leaves sponsorship undefined when execution sponsorship is unknown', () => {
+    const typeInfo = toSwapTypeInfo()
+
+    expect(typeInfo.isSponsored).toBeUndefined()
+    expect(typeInfo.sponsorshipCampaignId).toBeUndefined()
   })
 })

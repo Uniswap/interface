@@ -3,10 +3,10 @@ import { V1_TRADING_API_PATHS } from '@universe/api'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { parseEther } from '~/chains'
+import { assume0xAddress } from '~/chains'
 import { expect, getTest } from '~/playwright/fixtures'
 import { stubTradingApiEndpoint } from '~/playwright/fixtures/tradingApi'
 import { TEST_WALLET_ADDRESS } from '~/playwright/fixtures/wallets'
-import { assume0xAddress } from '~/utils/wagmi'
 
 const test = getTest({ withAnvil: true })
 

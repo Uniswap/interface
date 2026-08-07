@@ -3,11 +3,14 @@ import { CONNECTOR_ICON_OVERRIDE_MAP } from '~/connection/constants'
 import { WalletConnectorMeta } from '~/features/wallet/connection/types/WalletConnectorMeta'
 
 export const METAMASK_CONNECTOR: WalletConnectorMeta = {
-  wagmi: { id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS, type: 'injected' },
+  wagmi: {
+    id: CONNECTION_PROVIDER_IDS.METAMASK_SDK_CONNECTOR_ID,
+    type: CONNECTION_PROVIDER_IDS.METAMASK_SDK_CONNECTOR_TYPE,
+  },
   name: CONNECTION_PROVIDER_NAMES.METAMASK,
   icon: CONNECTOR_ICON_OVERRIDE_MAP[CONNECTION_PROVIDER_NAMES.METAMASK],
-  isInjected: true,
-  analyticsWalletType: 'Browser Extension',
+  isInjected: false,
+  analyticsWalletType: 'MetaMask SDK',
 }
 
 export const COINBASE_WALLET_CONNECTOR: WalletConnectorMeta = {

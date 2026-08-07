@@ -1,5 +1,5 @@
 import type { RwaCollectionOption } from 'uniswap/src/components/lists/items/types'
-import type { Rwa } from 'uniswap/src/data/rest/rwa/types'
+import type { Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { buildRwaCollectionOption } from 'uniswap/src/features/search/SearchModal/stocks/rwaSearchGrouping'
 
 export const NO_QUERY_STOCKS_LIMIT = 3

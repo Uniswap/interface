@@ -2,6 +2,7 @@ import {
   EarnAnalyticsSurface,
   EarnEntryPoint,
   getEarnVaultAnalyticsProperties,
+  logEarnHowItWorksAcknowledged,
   logEarnSwapUpsellToggleChanged,
   logEarnTransactionEvent,
   logEarnVaultSelected,
@@ -92,6 +93,18 @@ describe('Earn analytics', () => {
     logEarnVaultSelected(properties)
 
     expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(EarnEventName.EarnVaultSelected, properties)
+  })
+
+  it('records How it works acknowledgement with vault context', () => {
+    const properties = getEarnVaultAnalyticsProperties({
+      entryPoint: EarnEntryPoint.ExploreChip,
+      surface: EarnAnalyticsSurface.Mobile,
+      vault: VAULT,
+    })
+
+    logEarnHowItWorksAcknowledged(properties)
+
+    expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(EarnEventName.EarnHowItWorksAcknowledged, properties)
   })
 
   it('logs action-specific transaction events', () => {

@@ -1,6 +1,6 @@
 import type { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import type { Rwa } from 'uniswap/src/data/rest/rwa/types'
+import type { Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo, MultichainSearchResult } from 'uniswap/src/features/dataApi/types'
 import type { EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/types'
@@ -41,6 +41,12 @@ export interface TokenOption extends BaseOption {
   quantity: number | null // float representation of balance, returned by data-api
   balanceUSD: Maybe<number>
   isUnsupported?: boolean
+  /** Spot price in USD carried from the rankings payload; set by TokenSelectorV2 trending options, absent elsewhere. */
+  priceUsd?: Maybe<number>
+  /** 24h price change in percent (e.g. -1.23); set alongside `priceUsd`. */
+  pricePercentChange24h?: Maybe<number>
+  /** Number of chains a multichain token spans (>1 renders "N networks" in TokenSelectorV2 rows). */
+  networkCount?: number
   /** Displayed category of a tokenized RWA (via `getRwaTagCategory`), set by RWA grouping; absent on non-RWA tokens. */
   rwaCategory?: RwaCategory
   /** Clean RWA asset name (e.g. "Tesla"), set by RWA grouping so the row matches the TDP; absent on non-RWA tokens. */

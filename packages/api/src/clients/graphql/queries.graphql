@@ -1,65 +1,3 @@
-query NftsTab(
-  $ownerAddress: String!
-  $first: Int
-  $after: String
-  $filter: NftBalancesFilterInput
-  $chains: [Chain!]!
-) {
-  nftBalances(
-    ownerAddress: $ownerAddress
-    chains: $chains
-    first: $first
-    after: $after
-    filter: $filter
-  ) {
-    edges {
-      node {
-        ownedAsset {
-          chain
-          id
-          collection {
-            id
-            name
-            isVerified
-            markets(currencies: [ETH]) {
-              id
-              floorPrice {
-                value
-              }
-            }
-          }
-          image {
-            id
-            url
-            dimensions {
-              width
-              height
-            }
-          }
-          thumbnail {
-            id
-            url
-          }
-          name
-          tokenId
-          description
-          nftContract {
-            id
-            address
-          }
-          isSpam
-        }
-      }
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-      hasPreviousPage
-      startCursor
-    }
-  }
-}
-
 query Token($chain: Chain!, $address: String) {
   token(chain: $chain, address: $address) {
     ...TokenParts
@@ -358,15 +296,5 @@ query WidgetTokens($contracts: [ContractInput!]!) {
 query Tokens($contracts: [ContractInput!]!) {
   tokens(contracts: $contracts) {
     ...TokenParts
-  }
-}
-
-query Convert($fromCurrency: Currency!, $toCurrency: Currency!) {
-  convert(
-    fromAmount: { currency: $fromCurrency, value: 1.0 }
-    toCurrency: $toCurrency
-  ) {
-    value
-    currency
   }
 }

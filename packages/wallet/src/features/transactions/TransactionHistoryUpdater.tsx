@@ -1,4 +1,3 @@
-import { useApolloClient } from '@apollo/client'
 import { useQueryClient } from '@tanstack/react-query'
 import { Transaction } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import dayjs from 'dayjs'
@@ -6,7 +5,7 @@ import { useEffect } from 'react'
 import { batch, useDispatch, useSelector } from 'react-redux'
 import { Flex } from 'ui/src'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { getListTransactionsQuery } from 'uniswap/src/data/rest/listTransactions'
+import { getListTransactionsQuery } from 'uniswap/src/data/apiClients/dataApiService/activity/listTransactions'
 import { parseToTransactionDetails } from 'uniswap/src/features/activity/parseToTransactionDetails'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useListTransactions } from 'uniswap/src/features/dataApi/listTransactions/listTransactions'
@@ -17,7 +16,6 @@ import {
   setNotificationStatus,
 } from 'uniswap/src/features/notifications/slice/slice'
 import { ReceiveCurrencyTxNotification, ReceiveNFTNotification } from 'uniswap/src/features/notifications/slice/types'
-import { GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE } from 'uniswap/src/features/portfolio/portfolioUpdates/constants'
 import { useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { useSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
 import {
@@ -65,7 +63,6 @@ function AddressTransactionHistoryUpdater({
   transactions: TransactionDetails[]
 }): JSX.Element | null {
   const dispatch = useDispatch()
-  const apolloClient = useApolloClient()
 
   const activeAccountAddress = useActiveAccountAddress()
 
@@ -118,13 +115,11 @@ function AddressTransactionHistoryUpdater({
           lastTxNotificationUpdateTimestamp,
           hideSpamTokens,
         })
-        await apolloClient.refetchQueries({ include: GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE })
       }
     }).catch(() => undefined)
   }, [
     activeAccountAddress,
     address,
-    apolloClient,
     dispatch,
     fetchAndDispatchReceiveNotification,
     hideSpamTokens,

@@ -147,22 +147,21 @@ const commonTranslations: Record<string, string> = {
   'settings.setting.storage.confirm.caption': 'Are you sure you want to clear this data?',
   'settings.setting.storage.success': 'Data cleared successfully',
   'settings.setting.storage.error': 'Failed to clear data',
+  // Permissioned-token send warnings (assertions check symbol interpolation)
+  'permissionedPool.send.requiresVerification.message': '{{tokenSymbol}} requires identity verification to send.',
+  'permissionedPool.send.requiresVerification.title': 'Identity verification required',
 }
 
 const mockT = (key: string, options?: Record<string, unknown>) => {
-  // Return common translations if available, otherwise return key
-  if (key in commonTranslations) {
-    return commonTranslations[key]
-  }
+  // Return common translations if available, otherwise fall back to the key itself
+  let result = key in commonTranslations ? commonTranslations[key]! : key
   // Handle interpolation for keys with values
   if (options && typeof options === 'object') {
-    let result = key
     Object.entries(options).forEach(([k, v]) => {
       result = result.replace(`{{${k}}}`, String(v))
     })
-    return result
   }
-  return key
+  return result
 }
 
 // Mock react-i18next to provide translations for tests
@@ -183,19 +182,15 @@ vi.mock('uniswap/src/i18n', () => ({
   changeLanguage: vi.fn(),
   default: {
     t: (key: string, options?: Record<string, unknown>) => {
-      // Return common translations if available, otherwise return key
-      if (key in commonTranslations) {
-        return commonTranslations[key]
-      }
+      // Return common translations if available, otherwise fall back to the key itself
+      let result = key in commonTranslations ? commonTranslations[key]! : key
       // Handle interpolation for keys with values
       if (options && typeof options === 'object') {
-        let result = key
         Object.entries(options).forEach(([k, v]) => {
           result = result.replace(`{{${k}}}`, String(v))
         })
-        return result
       }
-      return key
+      return result
     },
     exists: () => true,
     language: 'en',

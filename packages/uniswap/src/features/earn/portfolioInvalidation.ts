@@ -1,5 +1,5 @@
 import type { QueryClient } from '@tanstack/react-query'
-import { getPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
+import { getPortfolioQuery } from 'uniswap/src/data/apiClients/dataApiService/balances/getPortfolio'
 import { logger } from 'utilities/src/logger/logger'
 
 export function invalidateEarnPortfolioQuery({

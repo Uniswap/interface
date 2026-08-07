@@ -21,6 +21,7 @@ import { type EthTransaction } from 'uniswap/src/types/walletConnect'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { BatchedRequestDetailsContent } from 'wallet/src/components/BatchedTransactions/BatchedTransactionDetails'
 import { DappSendCallsScanningContent } from 'wallet/src/components/dappRequests/DappSendCallsScanningContent'
+import { useSiteVerification } from 'wallet/src/features/dappRequests/hooks/useSiteVerification'
 import { TransactionRiskLevel } from 'wallet/src/features/dappRequests/types'
 import { shouldDisableConfirm } from 'wallet/src/features/dappRequests/utils/riskUtils'
 
@@ -57,6 +58,8 @@ function SendCallsRequestContentWithScanning({
   // Initialize with null to indicate scan hasn't completed yet
   const [riskLevel, setRiskLevel] = useState<TransactionRiskLevel | null>(null)
 
+  const { verificationStatus } = useSiteVerification(dappUrl)
+
   const disableConfirm = shouldDisableConfirm({
     riskLevel,
     confirmedRisk,
@@ -80,6 +83,7 @@ function SendCallsRequestContentWithScanning({
         account={currentAccount.address}
         calls={dappRequest.calls}
         dappUrl={dappUrl}
+        siteVerificationStatus={verificationStatus}
         gasFee={transactionGasFeeResult}
         requestMethod={dappRequest.type}
         showSmartWalletActivation={showSmartWalletActivation}

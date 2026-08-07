@@ -14,6 +14,9 @@ type LPIncentiveFeeStatTooltipProps = {
   totalApr?: number
   poolApr?: number
   lpIncentiveRewardApr?: number
+  apr1d?: number
+  apr7d?: number
+  apr30d?: number
   chainId?: UniverseChainId
 }
 
@@ -23,66 +26,90 @@ export function LPIncentiveFeeStatTooltip({
   poolApr,
   lpIncentiveRewardApr,
   totalApr,
+  apr1d,
+  apr7d,
+  apr30d,
   chainId = UniverseChainId.Mainnet,
 }: LPIncentiveFeeStatTooltipProps) {
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
-  const displayPoolApr = poolApr ? formatPercent(poolApr) : '-'
-  const displayRewardApr = lpIncentiveRewardApr ? formatPercent(lpIncentiveRewardApr) : '-'
-  const displayTotalApr = totalApr ? formatPercent(totalApr) : '-'
+  // Presence checks match the row gating (`!== undefined`) so a genuine 0% renders as 0%,
+  // consistent with the timeframe rows.
+  const displayPoolApr = poolApr !== undefined ? formatPercent(poolApr) : '-'
+  const displayRewardApr = lpIncentiveRewardApr !== undefined ? formatPercent(lpIncentiveRewardApr) : '-'
+  const displayTotalApr = totalApr !== undefined ? formatPercent(totalApr) : '-'
+  // Reward rows are only meaningful on LP-incentive surfaces; plain fee-APR surfaces omit them.
+  const showRewardRows = lpIncentiveRewardApr !== undefined
+  // The 24H average row supersedes the Pool APR row (design: Philippe Cao), so the latter only
+  // renders on surfaces without windowed day-data (e.g. the Explore pools table).
+  const hasTimeframeRows = apr1d !== undefined || apr7d !== undefined || apr30d !== undefined
 
   return (
-    <Flex
-      flexDirection="column"
-      gap="$spacing4"
-      id="boosted-apr-tooltip"
-      paddingTop="$spacing8"
-      paddingBottom={5}
-      px="$spacing4"
-      maxWidth={256}
-    >
-      <TooltipRow>
-        <TooltipLabel
-          icon={
-            <SplitLogo
-              inputCurrencyInfo={currency0Info}
-              outputCurrencyInfo={currency1Info}
-              size={12}
-              chainId={chainId}
+    <Flex flexDirection="column" gap="$spacing4" id="boosted-apr-tooltip" py="$spacing4" px="$spacing4" maxWidth={256}>
+      {!hasTimeframeRows && (
+        <TooltipRow>
+          <TooltipLabel
+            icon={
+              <SplitLogo
+                inputCurrencyInfo={currency0Info}
+                outputCurrencyInfo={currency1Info}
+                size={12}
+                chainId={chainId}
+              />
+            }
+            label={t('pool.aprText')}
+          />
+          <Text variant="body4" color="$neutral1" flexShrink={0}>
+            {displayPoolApr}
+          </Text>
+        </TooltipRow>
+      )}
+      {apr1d !== undefined && <TimeframeAprRow label={t('pool.apr.average.24h')} apr={apr1d} />}
+      {apr7d !== undefined && <TimeframeAprRow label={t('pool.apr.average.7d')} apr={apr7d} />}
+      {apr30d !== undefined && <TimeframeAprRow label={t('pool.apr.average.30d')} apr={apr30d} />}
+      {showRewardRows && (
+        <>
+          <TooltipRow>
+            <TooltipLabel
+              icon={<CurrencyLogo currency={LP_INCENTIVES_REWARD_TOKEN} size={12} />}
+              label={t('pool.rewardAPR')}
             />
-          }
-          label={t('pool.aprText')}
-        />
-        <Text variant="body4" color="$neutral1" flexShrink={0}>
-          {displayPoolApr}
-        </Text>
-      </TooltipRow>
-      <TooltipRow>
-        <TooltipLabel
-          icon={<CurrencyLogo currency={LP_INCENTIVES_REWARD_TOKEN} size={12} />}
-          label={t('pool.rewardAPR')}
-        />
-        <Text variant="body4" color="$neutral1" flexShrink={0}>
-          {displayRewardApr}
-        </Text>
-      </TooltipRow>
-      <TooltipRow
-        backgroundColor="$accent2"
-        borderBottomLeftRadius="$rounded6"
-        borderBottomRightRadius="$rounded6"
-        alignItems="center"
-      >
-        <TooltipLabel
-          icon={<Magic size="$icon.12" color="$accent1" />}
-          label={t('pool.totalAPR')}
-          color="$accent1"
-          alignItems="center"
-        />
-        <Text variant="body4" color="$accent1" flexShrink={0}>
-          {displayTotalApr}
-        </Text>
-      </TooltipRow>
+            <Text variant="body4" color="$neutral1" flexShrink={0}>
+              {displayRewardApr}
+            </Text>
+          </TooltipRow>
+          <TooltipRow
+            backgroundColor="$accent2"
+            borderBottomLeftRadius="$rounded6"
+            borderBottomRightRadius="$rounded6"
+            alignItems="center"
+          >
+            <TooltipLabel
+              icon={<Magic size="$icon.12" color="$accent1" />}
+              label={t('pool.totalAPR')}
+              color="$accent1"
+              alignItems="center"
+            />
+            <Text variant="body4" color="$accent1" flexShrink={0}>
+              {displayTotalApr}
+            </Text>
+          </TooltipRow>
+        </>
+      )}
     </Flex>
+  )
+}
+
+const TimeframeAprRow = ({ label, apr }: { label: string; apr: number }) => {
+  const { formatPercent } = useLocalizationContext()
+
+  return (
+    <TooltipRow>
+      <TooltipLabel label={label} />
+      <Text variant="body4" color="$neutral1" flexShrink={0}>
+        {formatPercent(apr)}
+      </Text>
+    </TooltipRow>
   )
 }
 
@@ -94,12 +121,15 @@ type TooltipRowProps = {
   alignItems?: 'flex-start' | 'center'
 }
 
+// Rows center their content so the minHeight slack splits evenly — combined with the
+// container's symmetric vertical padding this keeps the top/bottom margins equal
+// whichever row type ends the tooltip.
 const TooltipRow = ({
   children,
   backgroundColor,
   borderBottomLeftRadius,
   borderBottomRightRadius,
-  alignItems = 'flex-start',
+  alignItems = 'center',
 }: TooltipRowProps) => (
   <Flex
     row

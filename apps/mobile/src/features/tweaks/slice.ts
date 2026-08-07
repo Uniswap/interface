@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { type CustomEndpoint } from 'uniswap/src/data/links'
+import { type CustomEndpoint } from 'uniswap/src/data/graphql/links'
 
 export interface TweaksState {
   customEndpoint?: CustomEndpoint

@@ -3,6 +3,7 @@ import { ReactNavigationPerformanceView } from '@shopify/react-native-performanc
 import { GQLQueries, GraphQLApi } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { memo, useEffect, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
 import type { AppStackScreenProp } from 'src/app/navigation/types'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
@@ -29,23 +30,23 @@ import { TokenDetailsActionButtonsWrapper } from 'src/screens/TokenDetailsScreen
 import { HeaderRightElement, HeaderTitleElement } from 'src/screens/TokenDetailsScreen/TokenDetailsHeaders'
 import { TokenDetailsModals } from 'src/screens/TokenDetailsScreen/TokenDetailsModals'
 import { useMobileTDPHeartbeatCoordinator } from 'src/screens/TokenDetailsScreen/useMobileTDPHeartbeatCoordinator'
-import { Flex } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
+import { Lock } from 'ui/src/components/icons/Lock'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import {
-  useTokenBasicInfoPartsFragment,
-  useTokenBasicProjectPartsFragment,
-} from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
+import { useTokenBasicInfoPartsFragment, useTokenBasicProjectPartsFragment } from 'uniswap/src/data/graphql/fragments'
 import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { isMultichainProjectTokens } from 'uniswap/src/features/dataApi/tokenProjects/utils/isMultichainProjectTokens'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
+import { PermissionedTokenInfoBottomSheet } from 'uniswap/src/features/permissionedTokens/PermissionedTokenInfoBottomSheet'
 import { useLogRWATokenDetailsViewed } from 'uniswap/src/features/rwa/useLogRWATokenDetailsViewed'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TokenWarningCard } from 'uniswap/src/features/tokens/warnings/TokenWarningCard'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { AddressStringFormat, normalizeAddress } from 'uniswap/src/utils/addresses'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { useDelayedRender } from 'utilities/src/react/useDelayedRender'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -169,8 +170,11 @@ const TokenDetails = memo(function TokenDetailsInner(): JSX.Element {
           <Flex gap="$spacing24">
             <TokenPerformance />
             <MoreRwaTokens />
-            <Flex px="$spacing16">
-              <TokenDetailsStats />
+            <Flex gap="$spacing16">
+              <PermissionedPillRow />
+              <Flex px="$spacing16">
+                <TokenDetailsStats />
+              </Flex>
             </Flex>
             <TokenDetailsLinks />
             <OtherStocks />
@@ -228,4 +232,43 @@ const TokenWarningCardWrapper = memo(function TokenWarningCardWrapperInner(): JS
   const { currencyInfo, openTokenWarningModal } = useTokenDetailsContext()
 
   return <TokenWarningCard currencyInfo={currencyInfo} onPress={openTokenWarningModal} />
+})
+
+// Allowlisted-only "Permissioned" pill, shown as its own row just above the stats section.
+// Figma places it in the About section, but not every token has one, so it lives as an
+// independent piece of UI here. Mirrors the web TDP `isVerified` predicate
+// (isPermissioned && isAllowlisted); never shown to a non-allowlisted wallet.
+const PermissionedPillRow = memo(function PermissionedPillRowInner(): JSX.Element | null {
+  const { t } = useTranslation()
+  const { currencyInfo, isPermissioned, isAllowlisted, permissionedIssuer } = useTokenDetailsContext()
+  const { value: isInfoOpen, setTrue: openInfo, setFalse: closeInfo } = useBooleanState(false)
+  const tokenSymbol = currencyInfo?.currency.symbol ?? ''
+
+  if (!isPermissioned || !isAllowlisted) {
+    return null
+  }
+
+  return (
+    <Flex row px="$spacing16">
+      <TouchableArea onPress={openInfo}>
+        <Flex
+          row
+          alignItems="center"
+          gap="$spacing4"
+          backgroundColor="$surface3"
+          borderRadius="$rounded12"
+          px="$spacing12"
+          py="$spacing6"
+        >
+          <Lock size="$icon.16" color="$neutral2" />
+          <Text variant="buttonLabel3" color="$neutral1">
+            {permissionedIssuer
+              ? t('permissionedPool.tooltip.lockIcon.verifiedSuffix', { issuer: permissionedIssuer })
+              : t('permissionedPool.tdp.permissioned')}
+          </Text>
+        </Flex>
+      </TouchableArea>
+      <PermissionedTokenInfoBottomSheet isOpen={isInfoOpen} tokenSymbol={tokenSymbol} onClose={closeInfo} />
+    </Flex>
+  )
 })

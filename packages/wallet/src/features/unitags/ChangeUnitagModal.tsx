@@ -54,12 +54,20 @@ export function ChangeUnitagModal({
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [isChangeResponseLoading, setIsChangeResponseLoading] = useState(false)
 
-  const { error: canClaimUnitagNameError, loading: canClaimUnitagLoading } = useCanClaimUnitagName(newUnitag, address)
+  const {
+    error: canClaimUnitagNameError,
+    loading: canClaimUnitagLoading,
+    isDebouncing: isDebouncingUnitag,
+  } = useCanClaimUnitagName({
+    unitag: newUnitag,
+    claimerAddress: address,
+  })
   const { errorCode } = useCanAddressClaimUnitag(address, true)
   const resetUnitagsQueries = useResetUnitagsQueries()
 
   const isUnitagEdited = unitag !== newUnitag
-  const isUnitagValid = !!newUnitag && isUnitagEdited && !canClaimUnitagNameError && !canClaimUnitagLoading
+  const isCheckingUnitag = isUnitagEdited && !canClaimUnitagNameError && (canClaimUnitagLoading || isDebouncingUnitag)
+  const isUnitagValid = !!newUnitag && isUnitagEdited && !canClaimUnitagNameError && !isCheckingUnitag
   const hasReachedAddressLimit = errorCode === UnitagErrorCode.UNITAG_ERROR_ADDRESS_LIMIT_REACHED
   const isSubmitButtonDisabled = !deviceId || hasReachedAddressLimit || !isUnitagValid
 
@@ -243,7 +251,7 @@ export function ChangeUnitagModal({
             </Flex>
             <ChangeUnitagConfirmButton
               isSubmitButtonDisabled={isSubmitButtonDisabled}
-              isCheckingUnitag={canClaimUnitagLoading}
+              isCheckingUnitag={isCheckingUnitag}
               isChangeResponseLoading={isChangeResponseLoading}
               onPressSaveChanges={onPressSaveChanges}
             />

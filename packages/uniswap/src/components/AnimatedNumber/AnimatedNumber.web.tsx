@@ -92,6 +92,7 @@ function AnimatedNumberFallback({
   return (
     <Flex
       row
+      group={!!EndElement}
       justifyContent={alignRight ? 'flex-end' : 'flex-start'}
       overflow={ellipsis ? 'hidden' : undefined}
       testID={containerTestID}
@@ -213,6 +214,7 @@ export function AnimatedNumberCore({
   return (
     <Flex
       row
+      group={!!EndElement}
       alignItems={compact ? undefined : 'center'}
       backgroundColor={compact ? undefined : '$surface1'}
       borderRadius={compact ? undefined : '$rounded4'}

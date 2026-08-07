@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { SharedValue, useAnimatedReaction, useDerivedValue, useSharedValue } from 'react-native-reanimated'
-import { useLineChart, useLineChartPrice as useRNWagmiChartLineChartPrice } from 'react-native-wagmi-charts'
+import { usePriceChart } from 'src/components/charts/PriceChartContext'
 import { numberToLocaleStringWorklet, numberToPercentWorklet } from 'src/utils/reanimated'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
@@ -15,16 +15,19 @@ export type ValueAndFormattedWithAnimation = ValueAndFormatted & {
 }
 
 /**
- * Wrapper around react-native-wagmi-chart#useLineChartPrice
  * @returns latest price when not scrubbing and active price when scrubbing
  */
 export function useLineChartPrice(currentSpot?: SharedValue<number>): ValueAndFormattedWithAnimation {
-  const { value: activeCursorPrice } = useRNWagmiChartLineChartPrice({
-    // do not round
-    precision: 18,
-  })
-  const { data } = useLineChart()
+  const { data, currentIndex, isActive } = usePriceChart()
   const shouldAnimate = useSharedValue(true)
+
+  // active price when scrubbing the chart
+  const activeCursorPrice = useDerivedValue(() => {
+    if (!isActive.value || currentIndex.value < 0 || data.length === 0) {
+      return undefined
+    }
+    return data[Math.min(currentIndex.value, data.length - 1)]?.value
+  })
 
   useAnimatedReaction(
     () => {
@@ -41,13 +44,12 @@ export function useLineChartPrice(currentSpot?: SharedValue<number>): ValueAndFo
 
   const price = useDerivedValue(() => {
     if (activeCursorPrice.value) {
-      // active price when scrubbing the chart
-      return Number(activeCursorPrice.value)
+      return activeCursorPrice.value
     }
 
     shouldAnimate.value = true
     // show spot price when chart not scrubbing, or if not available, show the last price in the chart
-    return currentSpot?.value ?? data?.[data.length - 1]?.value ?? 0
+    return currentSpot?.value ?? data[data.length - 1]?.value ?? 0
   })
   const priceFormatted = useDerivedValue(() => {
     const { symbol, code } = currencyInfo
@@ -78,10 +80,10 @@ export function useLineChartPrice(currentSpot?: SharedValue<number>): ValueAndFo
  *          change between active index and period start when scrubbing
  */
 export function useLineChartRelativeChange(): ValueAndFormatted {
-  const { currentIndex, data, isActive } = useLineChart()
+  const { currentIndex, data, isActive } = usePriceChart()
 
   const relativeChange = useDerivedValue(() => {
-    if (!data) {
+    if (data.length === 0) {
       return 0
     }
 

@@ -16,6 +16,23 @@ export function toSupportedChainId(chainId?: BigNumberish): UniverseChainId | nu
   return parseInt(chainId.toString(), 10) as UniverseChainId
 }
 
+/**
+ * Like `toSupportedChainId`, but also accepts the hex strings dapps send. Fails closed on
+ * anything unparseable.
+ */
+export function toSupportedDappChainId(chainId?: BigNumberish | null): UniverseChainId | null {
+  if (chainId === undefined || chainId === null) {
+    return null
+  }
+
+  const asNumber = Number(chainId.toString())
+  if (!Number.isFinite(asNumber)) {
+    return null
+  }
+
+  return toSupportedChainId(asNumber)
+}
+
 export function getChainLabel(chainId: UniverseChainId): string {
   return getChainInfo(chainId).label
 }
@@ -84,6 +101,8 @@ export function fromGraphQLChain(chain: GraphQLApi.Chain | string | undefined): 
       return UniverseChainId.Blast
     case GraphQLApi.Chain.Celo:
       return UniverseChainId.Celo
+    case GraphQLApi.Chain.Ink:
+      return UniverseChainId.Ink
     case GraphQLApi.Chain.Linea:
       return UniverseChainId.Linea
     case GraphQLApi.Chain.Megaeth:
@@ -143,6 +162,8 @@ export function fromUniswapWebAppLink(network: string | null): UniverseChainId {
       return UniverseChainId.Bnb
     case GraphQLApi.Chain.Celo.toLowerCase():
       return UniverseChainId.Celo
+    case GraphQLApi.Chain.Ink.toLowerCase():
+      return UniverseChainId.Ink
     case GraphQLApi.Chain.Linea.toLowerCase():
       return UniverseChainId.Linea
     case GraphQLApi.Chain.Megaeth.toLowerCase():
@@ -187,6 +208,7 @@ const CHAIN_ID_TO_UNISWAP_WEB_APP_LINK: Partial<Record<UniverseChainId, string>>
   [UniverseChainId.Blast]: GraphQLApi.Chain.Blast.toLowerCase(),
   [UniverseChainId.Bnb]: GraphQLApi.Chain.Bnb.toLowerCase(),
   [UniverseChainId.Celo]: GraphQLApi.Chain.Celo.toLowerCase(),
+  [UniverseChainId.Ink]: GraphQLApi.Chain.Ink.toLowerCase(),
   [UniverseChainId.Linea]: GraphQLApi.Chain.Linea.toLowerCase(),
   [UniverseChainId.Mainnet]: GraphQLApi.Chain.Ethereum.toLowerCase(),
   [UniverseChainId.MegaETH]: GraphQLApi.Chain.Megaeth.toLowerCase(),

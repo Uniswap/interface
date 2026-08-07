@@ -1,9 +1,8 @@
 import { useMemo } from 'react'
 import { OnchainItemListOptionType, type SearchModalOption } from 'uniswap/src/components/lists/items/types'
 import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
-import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
-import { pickPrimaryChainToken } from 'uniswap/src/data/rest/rwa/pickPrimaryChainToken'
-import type { IssuerToken, Rwa } from 'uniswap/src/data/rest/rwa/types'
+import { pickPrimaryChainToken } from 'uniswap/src/data/apiClients/dataApiService/rwa/pickPrimaryChainToken'
+import type { IssuerToken, Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { type UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
@@ -11,6 +10,7 @@ import type { CurrencyInfo, SearchMultichainParent } from 'uniswap/src/features/
 import { dedupeCurrencyIds } from 'uniswap/src/features/search/SearchModal/utils/dedupeCurrencyIds'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import type { CurrencyId } from 'uniswap/src/types/currency'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 
 function issuerPrimaryCurrencyId({

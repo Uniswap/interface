@@ -9,6 +9,7 @@
 import { readFileSync } from 'node:fs'
 import { dirname, join, relative, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import noTamaguiStyling from './no-tamagui-styling.js'
 
 // ── Utilities ──────────────────────────────────────────────────────────
 
@@ -944,6 +945,10 @@ const noPlatformGateInChainFlags = {
   },
 }
 
+// ── no-tamagui-styling ─────────────────────────────────────────────────
+// Extracted to its own module (rule + baseline/exemption loaders); see
+// no-tamagui-styling.js and its colocated tests.
+
 // ── import-boundary (JSON) ─────────────────────────────────────────────
 // Modes:
 //   importerAllowlist — only paths matching allowedImporterPathMarkers may import
@@ -1099,7 +1104,6 @@ const importBoundary = {
 // It's ok to update the allowlist if you're unable to use chains.
 
 const DIRECT_VIEM_ETHERS_IMPORT_ALLOWLIST = new Set([
-  'apps/web/src/components/AccountDrawer/MiniPortfolio/Activity/cancel/cancel.ts',
   'apps/web/src/connection/bundlerClient.ts',
   'apps/web/src/connection/EmbeddedWalletConnector.ts',
   'apps/web/src/connection/EmbeddedWalletProvider.ts',
@@ -1128,9 +1132,6 @@ const DIRECT_VIEM_ETHERS_IMPORT_ALLOWLIST = new Set([
   'apps/web/src/rpc/ConfiguredJsonRpcProvider.ts',
   'apps/web/src/state/activity/polling/batch.ts',
   'apps/web/src/features/claim/hooks.ts',
-  'apps/web/src/state/logs/slice.ts',
-  'apps/web/src/state/logs/updater.ts',
-  'apps/web/src/state/logs/utils.ts',
   'apps/web/src/state/routing/types.ts',
   'apps/web/src/state/routing/utils.ts',
   'apps/web/src/state/sagas/transactions/5792.ts',
@@ -1237,6 +1238,7 @@ const plugin = {
     'enum-member-naming': enumMemberNaming,
     'no-tolowercase-address-currencyid': noToLowerCaseAddressCurrencyId,
     'no-platform-gate-in-chain-flags': noPlatformGateInChainFlags,
+    'no-tamagui-styling': noTamaguiStyling,
   },
 }
 

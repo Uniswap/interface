@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
+import { useWalletNfts } from 'uniswap/src/data/apiClients/dataApiService/nfts/useWalletNfts'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { useWalletNfts } from 'uniswap/src/features/nfts/hooks/useWalletNfts'
 import { selectPhotoFromLibrary } from 'wallet/src/features/unitags/photoSelection'
 
 export function useAvatarSelectionHandler({

@@ -9,6 +9,7 @@ import { Flex, styled, Text, useMedia } from 'ui/src'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useIsV2TokensEnabled } from 'uniswap/src/features/dataApi/tokenDetails/useIsV2TokensEnabled'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
@@ -16,12 +17,6 @@ import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
-import {
-  BETypeToTransactionType,
-  getTransactionTypeTranslation,
-  TransactionType,
-  useAllTransactions,
-} from '~/appGraphql/data/useAllTransactions'
 import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { AddressHoverCard } from '~/components/AddressHoverCard/AddressHoverCard'
 import { InternalLink } from '~/components/InternalLink'
@@ -32,6 +27,8 @@ import { TableText } from '~/components/Table/shared/TableText'
 import { TimestampCell } from '~/components/Table/shared/TimestampCell'
 import { TokenLinkCell } from '~/components/Table/shared/TokenLinkCell'
 import { FilterHeaderRow, HeaderCell } from '~/components/Table/styled'
+import { BETypeToTransactionType, getTransactionTypeTranslation, TransactionType } from '~/data/useAllTransactions'
+import { useAllTransactions } from '~/features/Explore/state/transactions/useAllTransactions'
 import { useUpdateManualOutage } from '~/hooks/useUpdateManualOutage'
 import { useFilteredTransactions } from '~/pages/Explore/tables/RecentTransactions/useFilterTransaction'
 import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
@@ -57,6 +54,7 @@ export const RecentTransactionsTable = memo(function RecentTransactions() {
   ])
   const chainInfo = getChainInfo(useChainIdFromUrlParam() ?? UniverseChainId.Mainnet)
   const { t } = useTranslation()
+  const isV2TokensEnabled = useIsV2TokensEnabled()
   const { transactions, loading, loadMore, errorV2, errorV3 } = useAllTransactions(chainInfo.backendChain.chain, filter)
 
   const filteredTransactions = useFilteredTransactions(transactions)
@@ -283,6 +281,7 @@ export const RecentTransactionsTable = memo(function RecentTransactions() {
         maxWidth={1200}
         defaultPinnedColumns={['timestamp', 'swap-type']}
         getRowId={(row) => row.id}
+        virtualized={isV2TokensEnabled}
       />
     </Trace>
   )

@@ -1,5 +1,5 @@
+import { decryptHpkeCiphertext, generateHpkeKeypair } from '@universe/embedded-wallet'
 import { createContext, PropsWithChildren, useCallback, useContext, useState } from 'react'
-import { decryptHpkeCiphertext, generateHpkeKeypair } from 'uniswap/src/features/passkey/hpkeExport'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 

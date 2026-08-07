@@ -1,5 +1,5 @@
 import type { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { Price } from '@uniswap/sdk-core'
+import { Percent as PercentValue, Price } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import type { BlockingTradeError } from 'uniswap/src/features/transactions/swap/types/BlockingTradeError'
@@ -21,7 +21,7 @@ export type BaseTrade<TQuote, TRouting extends TradingApi.Routing> = {
   readonly inputTax?: Percent
   readonly outputTax?: Percent
   readonly slippageTolerance?: number
-  readonly priceImpact?: Percent
+  readonly priceDifference?: Percent
   readonly deadline?: number
   readonly blockingError?: BlockingTradeError
 }
@@ -80,4 +80,11 @@ export function createBaseTradeAmounts({
     minAmountOut,
     executionPrice: new Price(currencyIn, currencyOut, inputAmount.quotient, outputAmount.quotient),
   }
+}
+
+// The quote's `priceDifference` is a percent (e.g. 0.5 => 0.5%), positive when value is lost and
+// negative on price improvement.
+export function getQuotePriceDifference(quote: { quote: { priceDifference?: number } }): Percent | undefined {
+  const { priceDifference } = quote.quote
+  return priceDifference === undefined ? undefined : new PercentValue(Math.round(priceDifference * 100), 10000)
 }

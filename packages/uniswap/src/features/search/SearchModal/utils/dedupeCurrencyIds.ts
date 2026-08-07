@@ -1,4 +1,4 @@
-import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 
 /**
  * Dedupe currencyIds by their normalized map-lookup key, preserving first-seen order

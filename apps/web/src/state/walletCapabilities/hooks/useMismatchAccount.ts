@@ -4,6 +4,7 @@ import { useRef } from 'react'
 import { selectHasShownMismatchToast } from 'uniswap/src/features/behaviorHistory/selectors'
 import { setHasShownMismatchToast } from 'uniswap/src/features/behaviorHistory/slice'
 import { createHasMismatchUtil, type HasMismatchUtil } from 'uniswap/src/features/smartWallet/mismatch/mismatch'
+import { isPermit2MismatchDelegate } from 'uniswap/src/features/smartWallet/mismatch/permit2MismatchDelegates'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getLogger } from 'utilities/src/logger/logger'
@@ -69,6 +70,8 @@ export function useHasMismatchCallback(): HasMismatchUtil {
       delegationService,
       getIsAtomicBatchingSupported,
       onMismatchDetected,
+      // limit the mismatch fallback flow to delegates that reject raw Permit2 signatures
+      shouldTreatAsMismatch: isPermit2MismatchDelegate,
     }),
   )
 }

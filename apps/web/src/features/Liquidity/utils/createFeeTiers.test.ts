@@ -1,7 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Percent } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DYNAMIC_FEE_DATA } from 'uniswap/src/features/positions/types'
 import { PercentNumberDecimals } from 'utilities/src/format/types'
 import { describe, expect, it } from 'vitest'
@@ -19,7 +18,7 @@ const formatPercent = (percent: string | number | undefined, _maxDecimals?: Perc
 const keyOf = (feeAmount: number, isDynamic = false) =>
   getFeeTierKey({
     feeTier: feeAmount,
-    tickSpacing: calculateTickSpacingFromFeeAmount(feeAmount, OFF),
+    tickSpacing: calculateTickSpacingFromFeeAmount(feeAmount, false),
     isDynamicFee: isDynamic,
   })
 
@@ -32,7 +31,7 @@ const tierData = (
   fee: {
     feeAmount,
     isDynamic: opts.isDynamic ?? false,
-    tickSpacing: calculateTickSpacingFromFeeAmount(feeAmount, OFF),
+    tickSpacing: calculateTickSpacingFromFeeAmount(feeAmount, false),
   },
   formattedFee: `${feeAmount}`,
   totalLiquidityUsd: Number(tvl),
@@ -49,10 +48,6 @@ const record = (...entries: FeeTierData[]): Record<string, FeeTierData> =>
 // Fee amounts (pips) for the four canonical new tiers: 0.75 / 3.75 / 25 / 90 bps.
 const NEW_TIER_FEE_AMOUNTS = [75, 375, 2500, 9000]
 
-// Tick-spacing config: OFF → 2x everywhere; L2_ON → 1x on the L2 (Base).
-const OFF = { chainId: undefined, l2TickSpacingEnabled: false }
-const L2_ON = { chainId: UniverseChainId.Base, l2TickSpacingEnabled: true }
-
 describe('getCreateFeeTierOptions', () => {
   it('returns the pool-backed defaults unchanged when the flag is off', () => {
     const defaultFeeTiers = [
@@ -65,7 +60,7 @@ describe('getCreateFeeTierOptions', () => {
         defaultFeeTiers,
         feeTierData: {},
         hook: undefined,
-        l2TickSpacingConfig: OFF,
+        useSingleTickSpacing: false,
       }),
     ).toBe(defaultFeeTiers)
   })
@@ -86,7 +81,7 @@ describe('getCreateFeeTierOptions', () => {
       defaultFeeTiers,
       feeTierData: {},
       hook: undefined,
-      l2TickSpacingConfig: OFF,
+      useSingleTickSpacing: false,
     })
     // No keep-vs-swap for v3; the tier is unchanged except for the breakdown.
     expect(result.map((option) => option.value.feeAmount)).toEqual([FeeAmount.MEDIUM])
@@ -111,7 +106,7 @@ describe('getCreateFeeTierOptions', () => {
       defaultFeeTiers,
       feeTierData: {},
       hook: undefined,
-      l2TickSpacingConfig: OFF,
+      useSingleTickSpacing: false,
     })
     // 0.01% takes 1/4: LP 0.75 + protocol 0.25 = 1 effective (the tier).
     expect(result[0].feeBreakdown).toEqual({
@@ -142,7 +137,7 @@ describe('getCreateFeeTierOptions', () => {
       defaultFeeTiers,
       feeTierData,
       hook: undefined,
-      l2TickSpacingConfig: OFF,
+      useSingleTickSpacing: false,
     })
     expect(result.every((option) => option.created === false)).toBe(true)
   })
@@ -158,7 +153,7 @@ describe('getCreateFeeTierOptions', () => {
       defaultFeeTiers,
       feeTierData,
       hook: undefined,
-      l2TickSpacingConfig: OFF,
+      useSingleTickSpacing: false,
     })
     expect(result[0].created).toBe(true)
   })
@@ -170,7 +165,7 @@ describe('getCreateFeeTierOptions', () => {
       defaultFeeTiers: [],
       feeTierData: {},
       hook: undefined,
-      l2TickSpacingConfig: OFF,
+      useSingleTickSpacing: false,
     })
     // The four new tiers in pairing (ascending) order — no old tiers, no pool data, all not-yet-created.
     expect(result.map((option) => option.value.feeAmount)).toEqual(NEW_TIER_FEE_AMOUNTS)
@@ -196,7 +191,7 @@ describe('getCreateFeeTierOptions', () => {
       defaultFeeTiers: [],
       feeTierData,
       hook: undefined,
-      l2TickSpacingConfig: OFF,
+      useSingleTickSpacing: false,
     })
     // 0.30% (3000) kept; the rest are the paired new tiers.
     expect(result.map((option) => option.value.feeAmount)).toEqual([75, 375, FeeAmount.MEDIUM, 9000])
@@ -223,10 +218,50 @@ describe('getCreateFeeTierOptions', () => {
       defaultFeeTiers: [],
       feeTierData,
       hook: undefined,
-      l2TickSpacingConfig: OFF,
+      useSingleTickSpacing: false,
     })
     // 0.30% at exactly 5k is kept; 1% just below swaps to the paired 0.90% new tier.
     expect(result.map((option) => option.value.feeAmount)).toEqual([75, 375, FeeAmount.MEDIUM, 9000])
+  })
+
+  it('keeps a shallow old tier when its pool is incentivized', () => {
+    // A $7 TVL 0.05% pool with a live rewards campaign — kept despite being far below $5k, so its
+    // reward APR still has a box to render in.
+    const feeTierData = record(tierData(500, '7', { boostedApr: 1709392 }))
+    const result = getCreateFeeTierOptions({
+      isFeeDisplayEnabled: true,
+      protocolVersion: ProtocolVersion.V4,
+      defaultFeeTiers: [],
+      feeTierData,
+      hook: undefined,
+      useSingleTickSpacing: false,
+    })
+    // 0.05% (500) kept in the 3.75 bps slot instead of swapping to the empty new tier.
+    expect(result.map((option) => option.value.feeAmount)).toEqual([75, 500, 2500, 9000])
+    expect(result[1].boostedApr).toBe(1709392)
+    expect(result[1].created).toBe(true)
+  })
+
+  it('prefers the incentivized pool when one fee amount backs several pools', () => {
+    // SPY/USDG on Robinhood: 0.05% is backed by an incentivized pool (tickSpacing 5) and a dust one
+    // (tickSpacing 10, the canonical default key, so it sorts first in the merged record).
+    const dust = tierData(500, '27')
+    const incentivized: FeeTierData = {
+      ...tierData(500, '1920', { boostedApr: 1370409 }),
+      fee: { feeAmount: 500, isDynamic: false, tickSpacing: 5 },
+    }
+    const result = getCreateFeeTierOptions({
+      isFeeDisplayEnabled: true,
+      protocolVersion: ProtocolVersion.V4,
+      defaultFeeTiers: [],
+      feeTierData: { '500-10': dust, '500-5': incentivized },
+      hook: undefined,
+      useSingleTickSpacing: false,
+    })
+    // The incentivized pool wins the 3.75 bps slot, not the dust pool listed ahead of it.
+    expect(result[1].value).toEqual(incentivized.fee)
+    expect(result[1].boostedApr).toBe(1370409)
+    expect(result[1].tvl).toBe('1920')
   })
 
   it('shows a pool already sitting at the new tier, with its served data', () => {
@@ -238,7 +273,7 @@ describe('getCreateFeeTierOptions', () => {
       defaultFeeTiers: [],
       feeTierData,
       hook: undefined,
-      l2TickSpacingConfig: OFF,
+      useSingleTickSpacing: false,
     })
     expect(result.map((option) => option.value.feeAmount)).toEqual(NEW_TIER_FEE_AMOUNTS)
     const atNewTier = result[2]
@@ -262,7 +297,7 @@ describe('getCreateFeeTierOptions', () => {
       defaultFeeTiers: [dynamicOption],
       feeTierData,
       hook: '0x0000000000000000000000000000000000000088',
-      l2TickSpacingConfig: OFF,
+      useSingleTickSpacing: false,
     })
     // The four canonical tiers, then the dynamic tier appended last.
     expect(result.map((option) => option.value.feeAmount)).toEqual([
@@ -282,7 +317,7 @@ describe('getCreateFeeTierOptions', () => {
       defaultFeeTiers: [],
       feeTierData,
       hook: undefined,
-      l2TickSpacingConfig: OFF,
+      useSingleTickSpacing: false,
     })
     expect(result.every((option) => !option.value.isDynamic)).toBe(true)
   })
@@ -294,7 +329,7 @@ describe('getCreateFeeTierOptions', () => {
       defaultFeeTiers: [],
       feeTierData: {},
       hook: '0x0000000000000000000000000000000000000088',
-      l2TickSpacingConfig: OFF,
+      useSingleTickSpacing: false,
     })
     // Hooked pools can't be computed, so the protocol fee is unavailable and effective falls back to LP.
     expect(result.every((option) => option.feeBreakdown?.protocolFeeBps === undefined)).toBe(true)
@@ -310,7 +345,7 @@ describe('getCreateFeeTierSearchData', () => {
         useNewDefaultFeeTiers: false,
         feeTierData,
         formatPercent,
-        l2TickSpacingConfig: OFF,
+        useSingleTickSpacing: false,
       }),
     ).toEqual(Object.values(feeTierData))
   })
@@ -326,7 +361,7 @@ describe('getCreateFeeTierSearchData', () => {
       useNewDefaultFeeTiers: true,
       feeTierData,
       formatPercent,
-      l2TickSpacingConfig: OFF,
+      useSingleTickSpacing: false,
     })
     // The four new default tiers only — the seeded old defaults have no TVL, so they're dropped.
     expect(result.map((data) => data.fee.feeAmount)).toEqual(NEW_TIER_FEE_AMOUNTS)
@@ -339,13 +374,13 @@ describe('getCreateFeeTierSearchData', () => {
     })
   })
 
-  it('synthesizes new default tiers with 1x tick spacing when L2 tick spacing is enabled', () => {
+  it('synthesizes new default tiers with 1x tick spacing when the flag is enabled', () => {
     const feeTierData = record(tierData(FeeAmount.MEDIUM, '0'))
     const result = getCreateFeeTierSearchData({
       useNewDefaultFeeTiers: true,
       feeTierData,
       formatPercent,
-      l2TickSpacingConfig: L2_ON,
+      useSingleTickSpacing: true,
     })
     // 75 / 375 / 2500 / 9000 pips at 1x (vs 2 / 8 / 50 / 180 at 2x).
     expect(result.map((data) => data.fee.feeAmount)).toEqual(NEW_TIER_FEE_AMOUNTS)
@@ -364,7 +399,7 @@ describe('getCreateFeeTierSearchData', () => {
       useNewDefaultFeeTiers: true,
       feeTierData,
       formatPercent,
-      l2TickSpacingConfig: OFF,
+      useSingleTickSpacing: false,
     })
     // New defaults first, then the only old tier with liquidity.
     expect(result.map((data) => data.fee.feeAmount)).toEqual([...NEW_TIER_FEE_AMOUNTS, FeeAmount.MEDIUM])
@@ -388,7 +423,7 @@ describe('getCreateFeeTierSearchData', () => {
       useNewDefaultFeeTiers: true,
       feeTierData,
       formatPercent,
-      l2TickSpacingConfig: OFF,
+      useSingleTickSpacing: false,
     })
     // New defaults, then the dynamic tier (always kept) and the 0.04% pool with TVL; the empty 0.06% is dropped.
     expect(result.map((data) => data.fee.feeAmount)).toEqual([...NEW_TIER_FEE_AMOUNTS, DYNAMIC_FEE_DATA.feeAmount, 400])
@@ -403,7 +438,7 @@ describe('getCreateFeeTierSearchData', () => {
       useNewDefaultFeeTiers: true,
       feeTierData,
       formatPercent,
-      l2TickSpacingConfig: OFF,
+      useSingleTickSpacing: false,
     })
     expect(result.map((data) => data.fee.feeAmount)).toEqual(NEW_TIER_FEE_AMOUNTS)
     const atNewTier = result[2]
@@ -418,7 +453,7 @@ describe('getCreateFeeTierSearchData', () => {
       feeTierData,
       formatPercent,
       hook: '0x0000000000000000000000000000000000000088',
-      l2TickSpacingConfig: OFF,
+      useSingleTickSpacing: false,
     })
     expect(result.every((data) => data.feeBreakdown?.protocolFeeBps === undefined)).toBe(true)
   })
@@ -428,13 +463,13 @@ describe('getSteeredRecommendedFee', () => {
   const feeData = (feeAmount: number) => ({
     isDynamic: false,
     feeAmount,
-    tickSpacing: calculateTickSpacingFromFeeAmount(feeAmount, OFF),
+    tickSpacing: calculateTickSpacingFromFeeAmount(feeAmount, false),
   })
 
   it('steers a shallow canonical default to its paired new tier', () => {
     // 0.30% (old default) with < $5k liquidity → the paired 0.25% (2500) new tier.
     expect(
-      getSteeredRecommendedFee({ mostUsedFee: feeData(FeeAmount.MEDIUM), tvl: '2000', l2TickSpacingConfig: OFF }),
+      getSteeredRecommendedFee({ mostUsedFee: feeData(FeeAmount.MEDIUM), tvl: '2000', useSingleTickSpacing: false }),
     ).toEqual({
       isDynamic: false,
       feeAmount: 2500,
@@ -442,10 +477,10 @@ describe('getSteeredRecommendedFee', () => {
     })
   })
 
-  it('uses the 1x tick spacing for the steered new tier when L2 tick spacing is enabled', () => {
+  it('uses the 1x tick spacing for the steered new tier when the flag is enabled', () => {
     // Same steer as above, but 2500 pips → 25 (1x) instead of 50 (2x).
     expect(
-      getSteeredRecommendedFee({ mostUsedFee: feeData(FeeAmount.MEDIUM), tvl: '2000', l2TickSpacingConfig: L2_ON }),
+      getSteeredRecommendedFee({ mostUsedFee: feeData(FeeAmount.MEDIUM), tvl: '2000', useSingleTickSpacing: true }),
     ).toEqual({
       isDynamic: false,
       feeAmount: 2500,
@@ -455,20 +490,32 @@ describe('getSteeredRecommendedFee', () => {
 
   it('keeps a deep canonical default as-is', () => {
     expect(
-      getSteeredRecommendedFee({ mostUsedFee: feeData(FeeAmount.MEDIUM), tvl: '10000', l2TickSpacingConfig: OFF }),
+      getSteeredRecommendedFee({ mostUsedFee: feeData(FeeAmount.MEDIUM), tvl: '10000', useSingleTickSpacing: false }),
     ).toEqual(feeData(FeeAmount.MEDIUM))
+  })
+
+  it('keeps a shallow canonical default as-is when it is incentivized', () => {
+    // 0.05% (500) with $7 liquidity but a live campaign — kept, matching the card resolveCanonicalTier renders.
+    expect(
+      getSteeredRecommendedFee({
+        mostUsedFee: feeData(500),
+        tvl: '7',
+        boostedApr: 1709392,
+        useSingleTickSpacing: false,
+      }),
+    ).toEqual(feeData(500))
   })
 
   it('keeps a non-default tier as-is', () => {
     // 0.04% (400 pips) is not a canonical old default, so there is nothing to steer to.
-    expect(getSteeredRecommendedFee({ mostUsedFee: feeData(400), tvl: '0', l2TickSpacingConfig: OFF })).toEqual(
+    expect(getSteeredRecommendedFee({ mostUsedFee: feeData(400), tvl: '0', useSingleTickSpacing: false })).toEqual(
       feeData(400),
     )
   })
 
   it('keeps a tier that is already a new canonical tier as-is', () => {
     // 0.25% (2500) is a new tier, not an old default, so it is not steered further.
-    expect(getSteeredRecommendedFee({ mostUsedFee: feeData(2500), tvl: '0', l2TickSpacingConfig: OFF })).toEqual(
+    expect(getSteeredRecommendedFee({ mostUsedFee: feeData(2500), tvl: '0', useSingleTickSpacing: false })).toEqual(
       feeData(2500),
     )
   })

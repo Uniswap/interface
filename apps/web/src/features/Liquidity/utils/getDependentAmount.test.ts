@@ -10,10 +10,12 @@ import {
   getDependentAmountFromV3Position,
   getDependentAmountFromV4Position,
 } from '~/features/Liquidity/utils/getDependentAmount'
-import { ETH_MAINNET } from '~/test-utils/constants'
 import { PositionField } from '~/types/position'
 
-const WETH = nativeOnChain(UniverseChainId.Mainnet).wrapped
+// Deliberately not ~/test-utils/constants: importing it constructs ClassicTrade fixtures,
+// pulling the entire routing stack into this pure-utils suite.
+const ETH_MAINNET = nativeOnChain(UniverseChainId.Mainnet)
+const WETH = ETH_MAINNET.wrapped
 const tickSpaceLimits = [
   nearestUsableTick(TickMath.MIN_TICK, TICK_SPACINGS[FeeAmount.MEDIUM]),
   nearestUsableTick(TickMath.MAX_TICK, TICK_SPACINGS[FeeAmount.MEDIUM]),
@@ -106,6 +108,32 @@ describe('getDependentAmountFromV3Position', () => {
       }),
     ).toEqual(CurrencyAmount.fromRawAmount(USDT, '3766763261'))
   })
+
+  it('should return undefined instead of throwing when tickLower equals tickUpper', () => {
+    const pool = new V3Pool(WETH, USDT, FeeAmount.MEDIUM, '4862546267419838844180017', '6661209530036967407', -193981)
+
+    expect(
+      getDependentAmountFromV3Position({
+        independentAmount: CurrencyAmount.fromRawAmount(WETH, '1000000000000000000'),
+        pool,
+        tickLower: tickSpaceLimits[0],
+        tickUpper: tickSpaceLimits[0],
+      }),
+    ).toBeUndefined()
+  })
+
+  it('should return undefined instead of throwing when ticks are inverted', () => {
+    const pool = new V3Pool(WETH, USDT, FeeAmount.MEDIUM, '4862546267419838844180017', '6661209530036967407', -193981)
+
+    expect(
+      getDependentAmountFromV3Position({
+        independentAmount: CurrencyAmount.fromRawAmount(WETH, '1000000000000000000'),
+        pool,
+        tickLower: tickSpaceLimits[1],
+        tickUpper: tickSpaceLimits[0],
+      }),
+    ).toBeUndefined()
+  })
 })
 
 describe('getDependentAmountFromV4Position', () => {
@@ -129,5 +157,51 @@ describe('getDependentAmountFromV4Position', () => {
         tickUpper: tickSpaceLimits[1],
       }),
     ).toEqual(CurrencyAmount.fromRawAmount(USDT, '3766763261'))
+  })
+
+  it('should return undefined instead of throwing when tickLower equals tickUpper', () => {
+    // Repro for ECO-610: min price == max price produces equal ticks; the SDK's
+    // maxLiquidityForAmounts divides by (sqrtRatioB - sqrtRatioA) == 0 and crashed the app.
+    const pool = new V4Pool(
+      ETH_MAINNET,
+      USDT,
+      FeeAmount.MEDIUM,
+      TICK_SPACINGS[FeeAmount.MEDIUM],
+      ZERO_ADDRESS,
+      '4862546267419838844180017',
+      '6661209530036967407',
+      -193981,
+    )
+
+    expect(
+      getDependentAmountFromV4Position({
+        independentAmount: CurrencyAmount.fromRawAmount(ETH_MAINNET, '1000000000000000000'),
+        pool,
+        tickLower: tickSpaceLimits[0],
+        tickUpper: tickSpaceLimits[0],
+      }),
+    ).toBeUndefined()
+  })
+
+  it('should return undefined instead of throwing when ticks are inverted', () => {
+    const pool = new V4Pool(
+      ETH_MAINNET,
+      USDT,
+      FeeAmount.MEDIUM,
+      TICK_SPACINGS[FeeAmount.MEDIUM],
+      ZERO_ADDRESS,
+      '4862546267419838844180017',
+      '6661209530036967407',
+      -193981,
+    )
+
+    expect(
+      getDependentAmountFromV4Position({
+        independentAmount: CurrencyAmount.fromRawAmount(ETH_MAINNET, '1000000000000000000'),
+        pool,
+        tickLower: tickSpaceLimits[1],
+        tickUpper: tickSpaceLimits[0],
+      }),
+    ).toBeUndefined()
   })
 })

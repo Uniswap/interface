@@ -1,7 +1,9 @@
 import { TradingApi } from '@universe/api'
-import { call, delay, fork, select, take } from 'typed-redux-saga'
+import { FeatureFlags, getFeatureFlag } from '@universe/gating'
+import { call, delay, fork, put, select, take } from 'typed-redux-saga'
+import { evaluateCancelState } from 'uniswap/src/features/transactions/cancel/cancelTimeoutStateMachine'
 import { makeSelectUniswapXOrder } from 'uniswap/src/features/transactions/selectors'
-import { updateTransaction } from 'uniswap/src/features/transactions/slice'
+import { stampOrphanCancelTimeout, updateTransaction } from 'uniswap/src/features/transactions/slice'
 import { getOrders } from 'uniswap/src/features/transactions/swap/orders'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
@@ -16,6 +18,41 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 // If the backend cannot provide a status for an order, we can assume after a certain threshold the submission failed.
 const ORDER_TIMEOUT_BUFFER = 20 * ONE_SECOND_MS
+
+/**
+ * Pure per-order update decision for the poll loop (extracted for testability).
+ * Returns the updated order to store, or undefined when no update should be applied.
+ *
+ * Guard: orders in the cancel flow (`status === Cancelling`, strictly) exit only to FINAL
+ * statuses — non-final backend statuses (OPEN, INSUFFICIENT_FUNDS) must never flick a
+ * `Cancelling` order back to a cancellable state mid-cancel.
+ */
+export function getOrderUpdate({
+  localOrder,
+  remoteOrder,
+}: {
+  localOrder: UniswapXOrderDetails
+  remoteOrder: TradingApi.UniswapXOrder
+}): UniswapXOrderDetails | undefined {
+  const updatedStatus = convertOrderStatusToTransactionStatus(remoteOrder.orderStatus)
+
+  const isUnchanged = updatedStatus === localOrder.status
+  const isFinal = isFinalizedTxStatus(updatedStatus)
+  const inCancelFlow = localOrder.status === TransactionStatus.Cancelling
+
+  // Ignore non-final order statuses if the tx is being cancelled locally; the backend is not yet aware of cancellation
+  if (isUnchanged || (inCancelFlow && !isFinal)) {
+    return undefined
+  }
+
+  return {
+    ...localOrder,
+    status: updatedStatus,
+    hash: remoteOrder.txHash,
+    // The cancellation raced a fill and lost: the order succeeded, the cancellation did not apply
+    ...(inCancelFlow && updatedStatus === TransactionStatus.Success ? { cancelFailedReason: 'filled' as const } : {}),
+  }
+}
 
 export class OrderWatcher {
   private static listeners: {
@@ -51,6 +88,7 @@ export class OrderWatcher {
     try {
       const data = yield* call(getOrders, orderHashes)
       const remoteOrderMap = new Map(data.orders.map((order: TradingApi.UniswapXOrder) => [order.orderId, order]))
+      const isCancelTrackingEnabled = getFeatureFlag(FeatureFlags.LimitCancelTimeout)
 
       for (const localOrderHash of orderHashes) {
         const remoteOrder = remoteOrderMap.get(localOrderHash)
@@ -80,23 +118,36 @@ export class OrderWatcher {
           continue
         }
 
-        const updatedStatus = convertOrderStatusToTransactionStatus(remoteOrder.orderStatus)
+        // Cancel-timeout machine tick: keys exclusively off the persisted cancel fields, so
+        // Dutch/Priority orders without them can never mis-fire. Terminal backend statuses are
+        // converged by the normal update decision below; the alert arm has no wallet UI yet.
+        if (isCancelTrackingEnabled && localOrder.status === TransactionStatus.Cancelling) {
+          const evaluation = evaluateCancelState({
+            order: localOrder,
+            freshBackendStatus: remoteOrder.orderStatus,
+            // The tracked cancel tx is watched by the classic pipeline on this stack; receipts
+            // arrive via the finalization listener, so the one-shot receipt fetch is skipped.
+            cancelTxReceiptStatus: localOrder.cancelTxHash ? 'not-found' : undefined,
+            nowMs: Date.now(),
+          })
+          if (evaluation.kind === 'stamp-orphan-timeout') {
+            yield* put(
+              stampOrphanCancelTimeout({
+                address: localOrder.from,
+                chainId: localOrder.chainId,
+                id: localOrder.id,
+                nowMs: Date.now(),
+              }),
+            )
+          }
+        }
 
-        const isUnchanged = updatedStatus === localOrder.status
-        const isFinal = isFinalizedTxStatus(updatedStatus)
-
-        // Ignore non-final order statuses if the tx is being cancelled locally; the backend is not yet aware of cancellation
-        const isOngoingCancel = !isFinal && localOrder.status === TransactionStatus.Cancelling
-
-        if (isUnchanged || isOngoingCancel) {
+        const updatedOrder = getOrderUpdate({ localOrder, remoteOrder })
+        if (!updatedOrder) {
           continue
         }
 
-        OrderWatcher.listeners[localOrder.orderHash]?.updateOrderStatus({
-          ...localOrder,
-          status: updatedStatus,
-          hash: remoteOrder.txHash,
-        })
+        OrderWatcher.listeners[localOrder.orderHash]?.updateOrderStatus(updatedOrder)
         delete OrderWatcher.listeners[localOrder.orderHash]
       }
     } catch (error) {
@@ -122,7 +173,11 @@ export class OrderWatcher {
           payload.orderHash === orderHash &&
           payload.queueStatus === QueuedOrderStatus.Submitted
         ) {
-          break
+          // The submission update also forks a fresh watcher for this order (transactionWatcherSaga
+          // re-arms on every updateTransaction), and that watcher owns the fill. Exit instead of
+          // joining the same listener promise — otherwise both watchers resolve together and
+          // finalize the order twice, double-logging Swap Transaction Completed.
+          return undefined
         }
       }
     }

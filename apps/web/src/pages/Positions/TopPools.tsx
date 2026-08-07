@@ -3,15 +3,17 @@ import { ALL_NETWORKS_ARG } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useTranslation } from 'react-i18next'
 import { Flex, useMedia } from 'ui/src'
-import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
+import { useExploreStatsQuery } from 'uniswap/src/data/apiClients/dataApiService/exploreV1/exploreStats'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { PoolSortFields } from '~/appGraphql/data/pools/useTopPools'
-import { OrderDirection } from '~/appGraphql/data/util'
+import { PoolSortFields } from '~/data/pools/useTopPools'
+import { OrderDirection } from '~/data/util'
 import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
 import { useTopPoolsLegacy } from '~/features/Explore/state/topPools'
 import { ExternalArrowLink } from '~/features/Liquidity/ExternalArrowLink'
+import { LP_INCENTIVES_POOLS_CHAIN_ID } from '~/features/Liquidity/LPIncentives/constants'
 import { useAccount } from '~/hooks/useAccount'
 import { TopPoolsSection } from '~/pages/Positions/TopPoolsSection'
+import { getChainUrlParam } from '~/utils/params/chainParams'
 
 const MAX_BOOSTED_POOLS = 3
 
@@ -52,8 +54,11 @@ function TopPoolsContent({ chainId }: { chainId: UniverseChainId | null }): JSX.
             pools={topBoostedPools.slice(0, MAX_BOOSTED_POOLS)}
             isLoading={exploreStatsLoading}
           />
-          <ExternalArrowLink href="/explore/pools" openInNewTab={false}>
-            {t('explore.more.unichain')}
+          <ExternalArrowLink
+            href={`/explore/pools/${getChainUrlParam(LP_INCENTIVES_POOLS_CHAIN_ID)}`}
+            openInNewTab={false}
+          >
+            {t('explore.more.robinhood')}
           </ExternalArrowLink>
         </Flex>
       )}

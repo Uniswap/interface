@@ -8,6 +8,7 @@ import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
 import { useTradingApiGasOverrides } from 'uniswap/src/features/gas/hooks/useTradingApiGasOverrides'
+import { useActiveSwapPermissionedState } from 'uniswap/src/features/permissionedTokens/useActiveSwapPermissionedState'
 import type {
   SignDelegationAuthorizationFn,
   SwapDelegationInfo,
@@ -106,13 +107,19 @@ export function useSwapTxAndGasInfoService(): SwapTxAndGasInfoService {
   const gasOverrides = useTradingApiGasOverrides({ tx: undefined })
   // Any user gas override → display the tx max cost (matches the editor's "Max cost").
   const hasOverrides = gasOverrides !== undefined
+  // Permissioned swaps route through a different Universal Router version. Resolve it here
+  // (where the underlying currencies are known) and thread it into the swap request; the
+  // request's embedded quote only references v4-adapter addresses, so the trading API client
+  // can't detect it on its own.
+  const { isPermissioned: isPermissionedToken } = useActiveSwapPermissionedState()
   const instructionService = useMemo(() => {
     return createEVMSwapInstructionsService({
       ...swapConfig,
       gasOverrides,
       presignPermit,
+      isPermissionedToken,
     })
-  }, [swapConfig, gasOverrides, presignPermit])
+  }, [swapConfig, gasOverrides, presignPermit, isPermissionedToken])
 
   const decorateWithEVMLogging = useEvent(createDecorateSwapTxInfoServiceWithEVMLogging({ trace, transactionSettings }))
 
@@ -153,6 +160,10 @@ export function useSwapTxAndGasInfoService(): SwapTxAndGasInfoService {
     gasOverrides,
   ])
 
+  // isPermissionedToken is intentionally not threaded into the chained-action (/plan) service:
+  // its createOrGetPlan call is commented out, so no /plan swap request is issued today. When /plan
+  // is re-enabled, forward isPermissionedToken here (or guard that a permissioned pair can't route
+  // CHAINED), otherwise permissioned swaps on that path would ship the default UR version and 400.
   const chainedSwapTxInfoService = useMemo(() => {
     return createChainedActionSwapTxAndGasInfoService({
       getSwapDelegationInfo: swapConfig.getSwapDelegationInfo,

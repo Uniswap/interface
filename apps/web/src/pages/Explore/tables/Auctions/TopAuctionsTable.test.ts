@@ -23,6 +23,8 @@ function createAuctionTableValue({
   isCompleted = false,
   isComingSoon = false,
   verified = false,
+  launchThresholdUsd,
+  launchThresholdTokens,
 }: {
   id: string
   totalBidVolumeUsd?: number
@@ -33,6 +35,8 @@ function createAuctionTableValue({
   isCompleted?: boolean
   isComingSoon?: boolean
   verified?: boolean
+  launchThresholdUsd?: number
+  launchThresholdTokens?: number
 }): TestAuctionTableValue {
   const startBlockTimestamp = isComingSoon ? NOW_SECONDS + 3600n : NOW_SECONDS - 3600n
 
@@ -43,6 +47,17 @@ function createAuctionTableValue({
         totalBidVolumeUsd,
         totalBidVolume,
         currencyTokenDecimals,
+        // Currency token priced at $1 with 6 decimals, so the threshold's USD value equals launchThresholdUsd
+        ...(launchThresholdUsd !== undefined && {
+          requiredCurrencyRaised: BigInt(Math.round(launchThresholdUsd * 1e6)).toString(),
+          currencyTokenDecimals: 6,
+          currencyPriceUsd: '1',
+        }),
+        // Threshold in bid-token units with no USD price feed (e.g. Robinhood chains)
+        ...(launchThresholdTokens !== undefined && {
+          requiredCurrencyRaised: BigInt(Math.round(launchThresholdTokens * 1e18)).toString(),
+          currencyTokenDecimals: 18,
+        }),
       },
       verified,
       logoUrl: undefined,
@@ -140,6 +155,67 @@ describe('top auctions table sorting', () => {
       'verified-live-high-volume',
       'verified-live-low-volume',
     ])
+  })
+
+  describe('launch threshold sorting', () => {
+    const highThreshold = createAuctionTableValue({
+      id: 'high-threshold',
+      totalBidVolumeUsd: 10,
+      isCompleted: false,
+      launchThresholdUsd: 500_000,
+    })
+    const lowThreshold = createAuctionTableValue({
+      id: 'low-threshold',
+      totalBidVolumeUsd: 200,
+      isCompleted: false,
+      launchThresholdUsd: 1_000,
+    })
+    const noThreshold = createAuctionTableValue({
+      id: 'no-threshold',
+      totalBidVolumeUsd: 300,
+      isCompleted: false,
+    })
+
+    it('sorts by threshold USD value descending with missing thresholds at the end', () => {
+      const sorted = sortAuctions({
+        auctions: [noThreshold, lowThreshold, highThreshold],
+        sortMethod: AuctionSortField.LAUNCH_THRESHOLD,
+        sortAscending: false,
+      })
+
+      expect(sorted.map((auction) => auction.id)).toEqual(['high-threshold', 'low-threshold', 'no-threshold'])
+    })
+
+    it('reverses the order when sorting ascending', () => {
+      const sorted = sortAuctions({
+        auctions: [lowThreshold, highThreshold, noThreshold],
+        sortMethod: AuctionSortField.LAUNCH_THRESHOLD,
+        sortAscending: true,
+      })
+
+      expect(sorted.map((auction) => auction.id)).toEqual(['no-threshold', 'low-threshold', 'high-threshold'])
+    })
+
+    it('falls back to bid-token threshold amounts when USD is missing', () => {
+      // Robinhood-chain case: currencyPriceUsd absent so the threshold has no USD value on any row
+      const lowTokenThreshold = createAuctionTableValue({ id: 'low-token-threshold', launchThresholdTokens: 1 })
+      const highTokenThreshold = createAuctionTableValue({ id: 'high-token-threshold', launchThresholdTokens: 5 })
+      const midTokenThreshold = createAuctionTableValue({ id: 'mid-token-threshold', launchThresholdTokens: 3 })
+      const noThresholdData = createAuctionTableValue({ id: 'no-threshold-data', currencyTokenDecimals: 18 })
+
+      const sorted = sortAuctions({
+        auctions: [lowTokenThreshold, noThresholdData, highTokenThreshold, midTokenThreshold],
+        sortMethod: AuctionSortField.LAUNCH_THRESHOLD,
+        sortAscending: false,
+      })
+
+      expect(sorted.map((auction) => auction.id)).toEqual([
+        'high-token-threshold',
+        'mid-token-threshold',
+        'low-token-threshold',
+        'no-threshold-data',
+      ])
+    })
   })
 
   describe('committed volume sort without USD prices', () => {
@@ -246,5 +322,160 @@ describe('top auctions table sorting', () => {
 
       expect(sorted.map((auction) => auction.id)).toEqual(['low-fdv-usd', 'mid-fdv-usd', 'high-fdv-usd'])
     })
+  })
+})
+
+describe('time remaining sorting', () => {
+  function createTimeSortValue({
+    id,
+    startOffsetSec,
+    endOffsetSec,
+    isCompleted = false,
+  }: {
+    id: string
+    startOffsetSec: number
+    endOffsetSec: number
+    isCompleted?: boolean
+  }): TestAuctionTableValue {
+    return {
+      id,
+      auction: {
+        auction: {
+          totalBidVolumeUsd: 0,
+        },
+        verified: false,
+        logoUrl: undefined,
+        timeRemaining: {
+          isCompleted,
+          startBlockTimestamp: NOW_SECONDS + BigInt(startOffsetSec),
+          endBlockTimestamp: NOW_SECONDS + BigInt(endOffsetSec),
+        },
+      } as unknown as EnrichedAuction,
+      projectedFdv: {
+        raw: 0n,
+        formattedBidToken: '—',
+        usd: undefined,
+      },
+    }
+  }
+
+  const ongoingEndingSoon = createTimeSortValue({ id: 'ongoing-ending-soon', startOffsetSec: -3600, endOffsetSec: 600 })
+  const ongoingEndingLater = createTimeSortValue({
+    id: 'ongoing-ending-later',
+    startOffsetSec: -3600,
+    endOffsetSec: 7200,
+  })
+  // Ends after upcoming-starting-later ends — proves upcoming rows sort on start, not end
+  const upcomingStartingSoon = createTimeSortValue({
+    id: 'upcoming-starting-soon',
+    startOffsetSec: 600,
+    endOffsetSec: 10_000,
+  })
+  const upcomingStartingLater = createTimeSortValue({
+    id: 'upcoming-starting-later',
+    startOffsetSec: 3600,
+    endOffsetSec: 5000,
+  })
+  const completedRecently = createTimeSortValue({
+    id: 'completed-recently',
+    startOffsetSec: -7200,
+    endOffsetSec: -600,
+    isCompleted: true,
+  })
+  const completedLongAgo = createTimeSortValue({
+    id: 'completed-long-ago',
+    startOffsetSec: -14_400,
+    endOffsetSec: -7200,
+    isCompleted: true,
+  })
+
+  const auctions = [
+    completedRecently,
+    upcomingStartingLater,
+    ongoingEndingLater,
+    completedLongAgo,
+    upcomingStartingSoon,
+    ongoingEndingSoon,
+  ]
+
+  it('groups ongoing, then upcoming, then completed when sorting descending', () => {
+    const sorted = sortAuctions({
+      auctions,
+      sortMethod: AuctionSortField.TIME_REMAINING,
+      sortAscending: false,
+      currentTimeMs: NOW_MS,
+    })
+
+    expect(sorted.map((auction) => auction.id)).toEqual([
+      'ongoing-ending-soon',
+      'ongoing-ending-later',
+      'upcoming-starting-soon',
+      'upcoming-starting-later',
+      'completed-long-ago',
+      'completed-recently',
+    ])
+  })
+
+  it('inverts the grouping and in-group order when sorting ascending', () => {
+    const sorted = sortAuctions({
+      auctions,
+      sortMethod: AuctionSortField.TIME_REMAINING,
+      sortAscending: true,
+      currentTimeMs: NOW_MS,
+    })
+
+    expect(sorted.map((auction) => auction.id)).toEqual([
+      'completed-recently',
+      'completed-long-ago',
+      'upcoming-starting-later',
+      'upcoming-starting-soon',
+      'ongoing-ending-later',
+      'ongoing-ending-soon',
+    ])
+  })
+
+  it('keeps upcoming auctions out of the ongoing group even when their end falls between ongoing ends', () => {
+    const sorted = sortAuctions({
+      auctions: [ongoingEndingLater, upcomingStartingLater, ongoingEndingSoon],
+      sortMethod: AuctionSortField.TIME_REMAINING,
+      sortAscending: false,
+      currentTimeMs: NOW_MS,
+    })
+
+    // upcoming-starting-later ends (+5000s) between the ongoing ends (+600s, +7200s); it must still sort after both
+    expect(sorted.map((auction) => auction.id)).toEqual([
+      'ongoing-ending-soon',
+      'ongoing-ending-later',
+      'upcoming-starting-later',
+    ])
+  })
+
+  it('sorts auctions with no end timestamp to the end', () => {
+    const noData = createTimeSortValue({ id: 'no-data', startOffsetSec: -3600, endOffsetSec: 0 })
+    noData.auction.timeRemaining.endBlockTimestamp = undefined
+
+    const sorted = sortAuctions({
+      auctions: [noData, ongoingEndingSoon],
+      sortMethod: AuctionSortField.TIME_REMAINING,
+      sortAscending: false,
+      currentTimeMs: NOW_MS,
+    })
+
+    expect(sorted.map((auction) => auction.id)).toEqual(['ongoing-ending-soon', 'no-data'])
+  })
+
+  it('keeps an ongoing auction with no end timestamp in the ongoing group, above completed rows', () => {
+    const ongoingNoEnd = createTimeSortValue({ id: 'ongoing-no-end', startOffsetSec: -3600, endOffsetSec: 0 })
+    ongoingNoEnd.auction.timeRemaining.endBlockTimestamp = undefined
+
+    const sorted = sortAuctions({
+      auctions: [completedRecently, ongoingNoEnd, ongoingEndingSoon],
+      sortMethod: AuctionSortField.TIME_REMAINING,
+      sortAscending: false,
+      currentTimeMs: NOW_MS,
+    })
+
+    // Undefined end sorts last within ongoing, but never below the completed group
+    expect(sorted.map((auction) => auction.id)).toEqual(['ongoing-ending-soon', 'ongoing-no-end', 'completed-recently'])
   })
 })

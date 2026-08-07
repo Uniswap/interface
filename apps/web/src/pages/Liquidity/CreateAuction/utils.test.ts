@@ -110,6 +110,10 @@ describe('isValidPartialSignedPercentInput', () => {
 })
 
 describe('custom price range utilities', () => {
+  it('caps custom ranges below what the contract permits', () => {
+    expect(MAX_CUSTOM_PRICE_RANGE_ENTRIES).toBe(3)
+  })
+
   it('creates the default full-range row', () => {
     expect(createDefaultCustomPriceRangeEntry()).toEqual({
       id: 'custom-range-1',
@@ -134,7 +138,7 @@ describe('custom price range utilities', () => {
     })
   })
 
-  it('limits custom ranges to ten entries', () => {
+  it('limits custom ranges to the maximum entry count', () => {
     const entries = Array.from({ length: MAX_CUSTOM_PRICE_RANGE_ENTRIES }, (_, index) => ({
       id: `custom-range-${index + 1}`,
       liquidityPercent: index === 0 ? 100 : 0,

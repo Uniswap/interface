@@ -12,7 +12,7 @@ import {
   isEmptyWalletBalance,
   PortfolioBalancePart,
   sumAvailableBalanceSlices,
-} from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+} from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { usePortfolioBalanceBreakdown } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'

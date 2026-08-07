@@ -31,9 +31,7 @@ import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNati
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { useDebounce } from 'utilities/src/time/timing'
 
-const VERIFICATION_DEBOUNCE_MS = 700
 const MAX_UNITAG_CHAR_LENGTH = 20
 
 const MAX_INPUT_FONT_SIZE = 36
@@ -120,11 +118,15 @@ export function ClaimUnitagContent({
     }
   }, [animateY, unitagInputContainerTranslateY])
 
-  const debouncedInputValue = useDebounce(unitagInputValue, VERIFICATION_DEBOUNCE_MS)
-  const { error: canClaimUnitagNameError, loading: isCheckingUnitag } = useCanClaimUnitagName(
-    debouncedInputValue || undefined, // set to undefined if the input is empty to clear the error
-    unitagAddress,
-  )
+  const {
+    error: canClaimUnitagNameError,
+    loading: unitagCheckLoading,
+    isDebouncing,
+  } = useCanClaimUnitagName({
+    unitag: unitagInputValue,
+    claimerAddress: unitagAddress,
+  })
+  const isCheckingUnitag = unitagCheckLoading || isDebouncing
 
   const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing({
     maxCharWidthAtMaxFontSize: MAX_CHAR_PIXEL_WIDTH,
@@ -249,7 +251,7 @@ export function ClaimUnitagContent({
       return
     }
 
-    if (!!debouncedInputValue && !isCheckingUnitag) {
+    if (!!unitagInputValue && !isCheckingUnitag) {
       // If unitagError or addressError is defined, it's rendered in UI
       if (entryPoint === OnboardingScreens.Landing && !unitagAddress) {
         const err = new Error('unitagAddress should always be defined')
@@ -269,7 +271,7 @@ export function ClaimUnitagContent({
         setUnitagAvailableError(canClaimUnitagNameError)
       }
     }
-  }, [canClaimUnitagNameError, debouncedInputValue, isCheckingUnitag, entryPoint, unitagAddress, t, showTextInputView])
+  }, [canClaimUnitagNameError, unitagInputValue, isCheckingUnitag, entryPoint, unitagAddress, t, showTextInputView])
 
   const shouldBlockContinue = (entryPoint === OnboardingScreens.Landing && !unitagAddress) || !unitagInputValue
 

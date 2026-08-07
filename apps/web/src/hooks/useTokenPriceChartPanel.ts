@@ -1,7 +1,8 @@
 import type { Currency } from '@uniswap/sdk-core'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useLayoutEffect, useMemo } from 'react'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { useIsV2TokensEnabled } from 'uniswap/src/features/dataApi/tokenDetails/useIsV2TokensEnabled'
 import {
   resolveSpotPriceOverride,
   useTokenPriceChange,
@@ -9,8 +10,8 @@ import {
 } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { usePreferProjectMarketDataForCurrency } from 'uniswap/src/features/rwa/usePreferProjectMarketData'
 import { buildCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
-import { TimePeriod } from '~/appGraphql/data/util'
 import { DataQuality, PriceChartType } from '~/components/Charts/utils'
+import { TimePeriod } from '~/data/util'
 import { useTokenPriceChartData } from '~/hooks/useTokenPriceChartData'
 import { getDisplayedPricePercentChange, type TokenPriceChartQueryVariables } from '~/hooks/useTokenPriceChartData'
 
@@ -23,6 +24,8 @@ export interface UseTokenPriceChartPanelParams {
   skip?: boolean
   /** When omitted, derives RWA preference from the chart currency (no TDP store required). */
   preferProjectMarketData?: boolean
+  /** Disables this hook's own 30s price polling. Pass true where a page heartbeat owns the price cadence (TDP); leave off on surfaces without one (swap slideout). */
+  disablePricePolling?: boolean
 }
 
 export function useTokenPriceChartPanel({
@@ -33,6 +36,7 @@ export function useTokenPriceChartPanel({
   currency,
   skip = false,
   preferProjectMarketData: preferProjectMarketDataOverride,
+  disablePricePolling = false,
 }: UseTokenPriceChartPanelParams): {
   priceQuery: ReturnType<typeof useTokenPriceChartData>
   pricePercentChange: number | undefined
@@ -48,10 +52,13 @@ export function useTokenPriceChartPanel({
   }, [chainId, variables.address])
   const defaultPreferProjectMarketData = usePreferProjectMarketDataForCurrency(currency)
   const preferProjectMarketData = preferProjectMarketDataOverride ?? defaultPreferProjectMarketData
-  const isV2TokensEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
+  const isV2TokensEnabled = useIsV2TokensEnabled()
   const spotPriceOverride = useTokenSpotPrice(spotCurrencyId, {
     preferProjectMarketData,
     isMultichainAggregateView: variables.multichain,
+    // The V2 spot price must poll or the displayed price would freeze — REST token queries have no built-in polling
+    refetchInterval: disablePricePolling ? undefined : PollingInterval.KindaFast,
+    skip,
   })
   const currentPriceOverride = resolveSpotPriceOverride({
     isV2TokensEnabled,
@@ -66,6 +73,7 @@ export function useTokenPriceChartPanel({
     priceChartType,
     currentPriceOverride,
     preferProjectMarketData,
+    disablePricePolling,
   })
 
   useLayoutEffect(() => {
@@ -73,7 +81,7 @@ export function useTokenPriceChartPanel({
   }, [priceQuery.disableCandlestickUI, setDisableCandlestickUI])
 
   const currencyIdValue = useMemo(() => currencyId(currency), [currency])
-  const priceChange24h = useTokenPriceChange(currencyIdValue, { preferProjectMarketData })
+  const priceChange24h = useTokenPriceChange(currencyIdValue, { preferProjectMarketData, skip })
 
   const pricePercentChange = useMemo(
     () =>

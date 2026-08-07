@@ -9,8 +9,8 @@ import { liquidityQueries } from 'uniswap/src/data/apiClients/liquidityService/l
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { PoolSortFields, PoolTableSortState } from '~/appGraphql/data/pools/useTopPools'
-import { OrderDirection } from '~/appGraphql/data/util'
+import { PoolSortFields, PoolTableSortState } from '~/data/pools/useTopPools'
+import { OrderDirection } from '~/data/util'
 import { EXPLORE_API_PAGE_SIZE } from '~/features/Explore/state/constants'
 import { useInfiniteLoadMore } from '~/features/Explore/state/hooks/useInfiniteLoadMore'
 import { getTokenOrZeroAddress } from '~/features/Liquidity/utils/currency'
@@ -64,9 +64,13 @@ function convertPoolSummaryToPoolStat(pool: PoolSummary): PoolStat {
     apr: aprPercent,
     boostedApr: undefined,
     feeTier: {
-      feeAmount: pool.feeTier,
+      // The server serves the protocol's raw max-fee constant (1_000_000) for dynamic-fee v4
+      // pools, not the SDK's dynamic-fee sentinel — substitute it so downstream V4Pool
+      // construction doesn't throw its "Invariant failed" fee check, and so the fee badge
+      // doesn't render the raw value as a literal (and wrong) "100%" rate.
+      feeAmount: pool.isDynamicFee ? DYNAMIC_FEE_AMOUNT : pool.feeTier,
       tickSpacing: pool.tickSpacing || DEFAULT_TICK_SPACING,
-      isDynamic: pool.feeTier === DYNAMIC_FEE_AMOUNT,
+      isDynamic: pool.isDynamicFee ?? false,
     },
     volOverTvl: undefined,
     hookAddress: pool.hookAddress,

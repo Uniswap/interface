@@ -1,3 +1,4 @@
+import { BackupMethodSummary, IconBox } from '@universe/embedded-wallet'
 import type { TFunction } from 'i18next'
 import { Anchor, Button, Flex, ModalCloseIcon, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
@@ -5,22 +6,14 @@ import { Person } from 'ui/src/components/icons/Person'
 import { Shield } from 'ui/src/components/icons/Shield'
 import { WalletFilled } from 'ui/src/components/icons/WalletFilled'
 import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
-import { BackupMethodSummary } from 'uniswap/src/components/passkey/recovery/BackupMethodSummary'
-import { IconBox } from 'uniswap/src/components/passkey/recovery/IconBox'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { OverflowMenu } from '~/components/Passkey/OverflowMenu'
 
-// Canonical location for these steps: `uniswap/src/components/passkey/recovery/steps/*`.
-// Re-exported here so existing web imports keep resolving; prefer the canonical path
-// in new code.
-export { EmailCodeStep } from 'uniswap/src/components/passkey/recovery/steps/EmailCodeStep'
-export { EmailEntryStep } from 'uniswap/src/components/passkey/recovery/steps/EmailEntryStep'
-export { EnterPinStep } from 'uniswap/src/components/passkey/recovery/steps/EnterPinStep'
-export { OAuthLoadingStep } from 'uniswap/src/components/passkey/recovery/steps/OAuthLoadingStep'
-export { RecoveringStep } from 'uniswap/src/components/passkey/recovery/steps/RecoveringStep'
+// The shared recovery steps (EmailCodeStep, EnterPinStep, ...) live in
+// @universe/embedded-wallet. This file keeps only the web-only steps below.
 
 // AddPasskeyStep stays web-only — it is the "register new passkey" confirmation step,
 // used by the add-passkey recovery flow (not by the seed-phrase export flow). `isRotation`

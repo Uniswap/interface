@@ -14,7 +14,7 @@ import {
   TransactionStep,
 } from 'uniswap/src/features/transactions/steps/types'
 import { ExtractedBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
-import { SwapExecutionCallbacks } from 'uniswap/src/features/transactions/swap/types/swapCallback'
+import type { SwapExecutionCallbacks } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import type {
   PlanSwapTransactionInfoFields,
@@ -31,7 +31,16 @@ export interface PlanFinalizedCallbackParams {
   stepStatus?: TradingApi.PlanStepStatus
 }
 
-export interface PlanParams extends SwapExecutionCallbacks {
+export interface PlanFailureCallbackContext {
+  willFinalize: boolean
+}
+
+export type PlanFailureCallback = (
+  ...args: [...Parameters<SwapExecutionCallbacks['onFailure']>, context?: PlanFailureCallbackContext]
+) => void
+
+export interface PlanParams extends Omit<SwapExecutionCallbacks, 'onFailure'> {
+  onFailure: PlanFailureCallback
   address: Address
   swapTxContext: ValidatedSwapTxContext
   selectChain: (chainId: number) => Promise<boolean>
@@ -156,6 +165,19 @@ export class PlanPriceChangeInterrupt extends HandledTransactionInterrupt {
   constructor() {
     super('Plan price changed beyond threshold')
     this.name = 'PlanPriceChangeInterrupt'
+  }
+}
+
+/**
+ * A submitted plan step reached a terminal failure state.
+ *
+ * This remains an expected plan interruption so the resumable plan is retained, but callers
+ * can distinguish it from benign interruptions and show recovery UI.
+ */
+export class PlanStepFailedError extends HandledTransactionInterrupt {
+  constructor() {
+    super('Plan step failed')
+    this.name = 'PlanStepFailedError'
   }
 }
 

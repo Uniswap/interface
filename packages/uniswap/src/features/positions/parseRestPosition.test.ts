@@ -223,6 +223,7 @@ describe('parseRestPosition', () => {
     status: PositionStatus.IN_RANGE,
     isHidden: false,
     uncollectedFeesUsd: 56.78,
+    permissioned: false,
   } as RestPosition
 
   it('returns undefined if position is undefined', () => {
@@ -337,13 +338,7 @@ describe('parseRestPosition', () => {
   it('parses v4Position', () => {
     const result = parseRestPosition(MOCK_REST_V4_POSITION)
     expect(result).toEqual({
-      poolId: V4Pool.getPoolId(
-        WETH,
-        DAI,
-        Number(mockV4PoolPosition.feeTier),
-        Number(mockV4PoolPosition.tickSpacing),
-        ZERO_ADDRESS,
-      ),
+      poolId: mockV4PoolPosition.poolId,
       feeTier: {
         feeAmount: Number(mockV4PoolPosition.feeTier),
         tickSpacing: Number(mockV4PoolPosition.tickSpacing),
@@ -371,9 +366,24 @@ describe('parseRestPosition', () => {
       owner: mockV4PoolPosition.owner,
       isHidden: false,
       boostedApr: mockV4PoolPosition.boostedApr,
+      rewardBalances: mockV4PoolPosition.rewardBalances,
       poolOrPair: expect.any(V4Pool),
       position: expect.any(V4Position),
+      isPermissioned: false,
     })
+  })
+
+  it('marks isPermissioned true when the REST position carries the permissioned discriminator', () => {
+    const permissionedPosition = { ...MOCK_REST_V4_POSITION, permissioned: true }
+
+    const result = parseRestPosition(permissionedPosition)
+    expect(result?.version).toBe(ProtocolVersion.V4)
+    expect(result?.version === ProtocolVersion.V4 && result.isPermissioned).toBe(true)
+  })
+
+  it('marks isPermissioned false when the discriminator is false', () => {
+    const result = parseRestPosition(MOCK_REST_V4_POSITION)
+    expect(result?.version === ProtocolVersion.V4 && result.isPermissioned).toBe(false)
   })
 
   it('parses v4Position with empty hooks array — preserves undefined v4hook semantic', () => {
@@ -396,6 +406,20 @@ describe('parseRestPosition', () => {
     expect(result).toBeDefined()
     expect(result?.poolOrPair).toBeInstanceOf(V4Pool)
     expect(result?.v4hook).toBeUndefined()
+    expect(result?.poolId).toEqual(mockV4PoolPosition.poolId)
+  })
+
+  it('derives the v4 poolId from the currencies when the REST payload omits it', () => {
+    const poolPositionWithoutId = { ...mockV4PoolPosition, poolId: '' }
+    const position: RestPosition = {
+      ...MOCK_REST_V4_POSITION,
+      position: {
+        case: 'v4Position',
+        value: { poolPosition: poolPositionWithoutId, hooks: [] as Hook[] } as RestV4Position,
+      },
+    } as RestPosition
+
+    const result = parseRestPosition(position)
     expect(result?.poolId).toEqual(
       V4Pool.getPoolId(
         WETH,

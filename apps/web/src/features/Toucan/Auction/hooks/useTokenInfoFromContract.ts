@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { EVMUniverseChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useReadContracts } from 'wagmi'
 import { erc20Abi } from '~/chains'
-import { assume0xAddress } from '~/utils/wagmi'
+import { assume0xAddress } from '~/chains'
 
 interface TokenMetadata {
   name?: string

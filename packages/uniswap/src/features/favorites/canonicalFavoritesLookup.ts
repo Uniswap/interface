@@ -1,8 +1,8 @@
 import { TokenRankingsResponse, TokenRankingsStat } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { normalizeCurrencyIdForMapLookup, normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyId } from 'uniswap/src/types/currency'
+import { normalizeCurrencyIdForMapLookup, normalizeTokenAddressForCache } from 'uniswap/src/utils/currencyId'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 
 export type FavoritesCanonicalLookup = {

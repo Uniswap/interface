@@ -4,6 +4,7 @@
  * These must match parameter names on Statsig within an experiment
  */
 export enum Experiments {
+  EmbeddedWalletOnboarding = 'embedded_wallet_onboarding',
   EthAsErc20UniswapX = 'eth_as_erc20_uniswapx_experiment',
   NativeTokenPercentageBuffer = 'lp_native_buffer',
   SwapConfirmation = 'swap-confirmation',
@@ -24,6 +25,10 @@ export enum NativeTokenPercentageBufferExperimentGroup {
 
 export enum ArbitrumXV2SamplingProperties {
   RoutingType = 'routingType',
+}
+
+export enum EmbeddedWalletOnboardingProperties {
+  NewFlowEnabled = 'newFlowEnabled',
 }
 
 export enum NativeTokenPercentageBufferProperties {
@@ -48,6 +53,7 @@ export enum EthAsErc20UniswapXProperties {
 
 // Ordered alphabetically.
 export type ExperimentProperties = {
+  [Experiments.EmbeddedWalletOnboarding]: EmbeddedWalletOnboardingProperties
   [Experiments.EthAsErc20UniswapX]: EthAsErc20UniswapXProperties
   [Experiments.NativeTokenPercentageBuffer]: NativeTokenPercentageBufferProperties
   [Experiments.SwapConfirmation]: SwapConfirmationProperties

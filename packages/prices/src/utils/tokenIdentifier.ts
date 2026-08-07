@@ -3,7 +3,7 @@ import type { PriceKey, TokenIdentifier, TokenInput, TokenSubscriptionParams } f
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 
 /** Address that represents native currencies on ETH, Arbitrum, etc. */
-const DEFAULT_NATIVE_ADDRESS = '0x0000000000000000000000000000000000000000'
+export const DEFAULT_NATIVE_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 /**
  * Type guard to check if input is a Currency object (from @uniswap/sdk-core).
@@ -91,6 +91,19 @@ export function parsePriceKey(key: PriceKey): TokenIdentifier | null {
   }
 
   return { chainId, address }
+}
+
+/**
+ * Creates the ref-counting key for one ws price subscription. Distinct routes
+ * for the same token are distinct subscriptions: reusing one key would let the
+ * SubscriptionManager's eager subscribe/unsubscribe cancellation swallow the
+ * channel switch and leak the old server-side subscription.
+ */
+export function createPriceSubscriptionKey(params: TokenSubscriptionParams): string {
+  const tokenKey = createPriceKey(params.chainId, params.tokenAddress)
+  return params.poolRoute
+    ? `${tokenKey}#${params.poolRoute.protocolVersion}:${params.poolRoute.poolId.toLowerCase()}`
+    : tokenKey
 }
 
 /**

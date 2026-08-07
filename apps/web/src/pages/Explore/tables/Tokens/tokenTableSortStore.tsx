@@ -10,7 +10,7 @@ interface TokenTableSortState {
   sortMethod: TokenSortMethod
   sortAscending: boolean
   actions: {
-    setSort: (category: TokenSortMethod) => void
+    setSort: (category: TokenSortMethod) => boolean
   }
 }
 
@@ -26,13 +26,14 @@ export function createTokenTableSortStore(): TokenTableSortStore {
         sortMethod: INITIAL_SORT_METHOD,
         sortAscending: INITIAL_SORT_ASCENDING,
         actions: {
-          setSort: (category) =>
+          setSort: (category) => {
+            let newSortAscending = false
             set((state) => {
-              if (state.sortMethod === category) {
-                return { sortAscending: !state.sortAscending }
-              }
-              return { sortMethod: category, sortAscending: false }
-            }),
+              newSortAscending = state.sortMethod === category ? !state.sortAscending : false
+              return { sortMethod: category, sortAscending: newSortAscending }
+            })
+            return newSortAscending
+          },
         },
       }),
       {

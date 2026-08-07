@@ -33,6 +33,7 @@ import { Bids } from '~/features/Toucan/Auction/Bids/Bids'
 import { WithdrawModal } from '~/features/Toucan/Auction/Bids/WithdrawModal/WithdrawModal'
 import { useBidFormState } from '~/features/Toucan/Auction/hooks/useBidFormState'
 import { useIsQuickLaunchAuction } from '~/features/Toucan/Auction/hooks/useIsQuickLaunchAuction'
+import { usePostAuctionPanelState } from '~/features/Toucan/Auction/hooks/usePostAuctionPanelState'
 import { useWithdrawButtonState } from '~/features/Toucan/Auction/hooks/useWithdrawButtonState'
 import { PostAuctionPanel } from '~/features/Toucan/Auction/PostAuctionPanel'
 import { AuctionStoreProvider } from '~/features/Toucan/Auction/store/AuctionStoreContextProvider'
@@ -133,6 +134,9 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
     currentBlockNumber: state.currentBlockNumber,
   }))
   const { canPlaceBid, showMobileWithdrawButton, hasUserBids, showAuctionGraduated } = useBidFormState()
+  // Mirror the post-auction panel so the mobile fixed button never double-renders alongside a
+  // creator/migrate card or the graduated success card.
+  const { hasPanelContent } = usePostAuctionPanelState()
 
   // Withdraw button state for mobile fixed button
   const {
@@ -160,6 +164,13 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
 
   const [chartActiveTab, setChartActiveTab] = useState<BidDistributionChartTab>(BidDistributionChartTab.ClearingPrice)
   const [showBidFormModal, setShowBidFormModal] = useState(false)
+  // Fixed mobile trigger has no action once concluded with nothing to withdraw; it stays visible but disabled.
+  const handleConcludedPress = useCallback(() => {}, [])
+
+  // Once ended, the inline disabled bid frame is never shown; when there's no other content for this
+  // viewer (no withdraw, no creator/migrate CTA, no graduated card) the mobile fixed button becomes a
+  // disabled "Auction Concluded" trigger and nothing renders inline.
+  const showConcludedTrigger = isAuctionEnded && !showMobileWithdrawButton && !hasPanelContent
 
   // QuickLaunch: quick launches swap the standard stats banner for the simpler stat row.
   const isQuickLaunch = useIsQuickLaunchAuction()
@@ -211,7 +222,13 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
       </StickyCollapsibleHeader>
       <ToucanContainer mb="$spacing48">
         {isQuickLaunch ? <QuickLaunchStatsRow /> : <AuctionStatsBanner />}
-        <TokenDetailsLayout justifyContent="flex-start" px="$none" $lg={{ px: '$none' }} gap={46}>
+        <TokenDetailsLayout
+          justifyContent="flex-start"
+          px="$none"
+          $xxl={{ px: '$none' }}
+          $lg={{ px: '$none' }}
+          gap={46}
+        >
           <LeftPanel
             maxWidth={744}
             gap="$spacing40"
@@ -258,8 +275,10 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
           </RightPanel>
         </TokenDetailsLayout>
       </ToucanContainer>
-      {/* Fixed bottom button - $sm only - show Place Bid OR Withdraw */}
-      {(canPlaceBid || showMobileWithdrawButton) && (
+      {/* Fixed bottom button - $sm only - show Place Bid, Withdraw, or (once concluded) a disabled
+          "Auction Concluded" trigger. The concluded bid form never renders as a full inline box on
+          mobile: it collapses behind this disabled trigger unless a creator/graduated card is shown. */}
+      {(canPlaceBid || showMobileWithdrawButton || showConcludedTrigger) && (
         <Flex
           display="none"
           $sm={{
@@ -278,13 +297,19 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
         >
           {canPlaceBid ? (
             <ToucanActionButton label={t('toucan.bidForm.placeABid')} onPress={() => setShowBidFormModal(true)} />
-          ) : (
+          ) : showMobileWithdrawButton ? (
             <ToucanActionButton
               elementName={ElementName.AuctionWithdrawTokensButton}
               label={withdrawLabel}
               onPress={() => setIsWithdrawModalOpen(true)}
               isDisabled={isWithdrawDisabled}
               disabledTooltip={isWithdrawDisabled ? withdrawDisabledTooltip : undefined}
+            />
+          ) : (
+            <ToucanActionButton
+              label={t('toucan.auction.bidForm.auctionConcluded')}
+              onPress={handleConcludedPress}
+              isDisabled
             />
           )}
         </Flex>

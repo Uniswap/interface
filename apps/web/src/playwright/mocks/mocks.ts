@@ -11,7 +11,9 @@ export const Mocks = {
   UniswapX: {
     quote: path.resolve(__dirname, '../mocks/rest/uniswapX/quote.json'),
     openOrder: path.resolve(__dirname, '../mocks/rest/uniswapX/open_order.json'),
+    openOrders: path.resolve(__dirname, '../mocks/rest/uniswapX/open_orders.json'),
     filledOrders: path.resolve(__dirname, '../mocks/rest/uniswapX/filled_orders.json'),
+    cancelledOrders: path.resolve(__dirname, '../mocks/rest/uniswapX/cancelled_orders.json'),
     expiredOrders: path.resolve(__dirname, '../mocks/rest/uniswapX/expired_orders.json'),
   },
   Token: {
@@ -39,16 +41,16 @@ export const Mocks = {
     get_v3_position: path.resolve(__dirname, '../mocks/rest/positions/get_v3_position.json'),
     get_v4_position: path.resolve(__dirname, '../mocks/rest/positions/get_v4_position.json'),
   },
-  Account: {
-    nfts: path.resolve(__dirname, '../mocks/graphql/Account/nfts.json'),
-    nfts_empty: path.resolve(__dirname, '../mocks/graphql/Account/nfts_empty.json'),
-  },
   DataApiService: {
     get_portfolio: path.resolve(__dirname, '../mocks/dataApiService/get_portfolio.json'),
+    get_wallet_nfts: path.resolve(__dirname, '../mocks/dataApiService/get_wallet_nfts.json'),
+    get_wallet_nfts_empty: path.resolve(__dirname, '../mocks/dataApiService/get_wallet_nfts_empty.json'),
     get_portfolio_empty: path.resolve(__dirname, '../mocks/dataApiService/get_portfolio_empty.json'),
     get_wallet_balances_empty: path.resolve(__dirname, '../mocks/dataApiService/get_wallet_balances_empty.json'),
     get_rewards: path.resolve(__dirname, '../mocks/dataApiService/get_rewards.json'),
     get_rewards_empty: path.resolve(__dirname, '../mocks/dataApiService/get_rewards_empty.json'),
+    list_launches: path.resolve(__dirname, '../mocks/dataApiService/list_launches.json'),
+    list_launchpads: path.resolve(__dirname, '../mocks/dataApiService/list_launchpads.json'),
     list_transactions: path.resolve(__dirname, '../mocks/dataApiService/list_transactions.json'),
     list_transactions_empty: path.resolve(__dirname, '../mocks/dataApiService/list_transactions_empty.json'),
     list_transactions_uniswapx: path.resolve(__dirname, '../mocks/dataApiService/list_transactions_uniswapx.json'),
@@ -74,6 +76,9 @@ export const Mocks = {
   },
   TradingApi: {
     swap: path.resolve(__dirname, '../mocks/tradingApi/swap.json'),
+    quote_eth_usdt: path.resolve(__dirname, '../mocks/tradingApi/quote_eth_usdt.json'),
+    swap_eth_usdt: path.resolve(__dirname, '../mocks/tradingApi/swap_eth_usdt.json'),
+    check_approval_none: path.resolve(__dirname, '../mocks/tradingApi/check_approval_none.json'),
   },
   EmbeddedWallet: {
     list_authenticators_multi: path.resolve(__dirname, '../mocks/embeddedWallet/list_authenticators_multi.json'),

@@ -6,9 +6,9 @@ import type {
 } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { HistoryDuration } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { GraphQLApi } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { getGetTokenHistoryPriceQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
+import { useIsV2TokensEnabled } from 'uniswap/src/features/dataApi/tokenDetails/useIsV2TokensEnabled'
 import { currencyIdToRestContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import type { CurrencyId } from 'uniswap/src/types/currency'
 
@@ -83,7 +83,7 @@ export function useTokenPriceHistoryRest(
   options: UseTokenPriceHistoryRestOptions,
 ): { entries: RestPriceHistoryPoint[]; isLoading: boolean } {
   const { duration, preferProjectMarketData = false, isMultichainAggregateView = false } = options
-  const isV2TokensEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
+  const isV2TokensEnabled = useIsV2TokensEnabled()
   const shouldUseV2Tokens = isV2TokensEnabled && !preferProjectMarketData
 
   const target = useMemo(() => {

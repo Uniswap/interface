@@ -75,6 +75,21 @@ describe(pushTransactionNotification, () => {
     mockIsEarnEnabled.mockReturnValue(true)
   })
 
+  it('never toasts for UniswapXCancel finalization (the order row is the signal)', () => {
+    const cancelTypeInfo: TransactionTypeInfo = {
+      type: TransactionType.UniswapXCancel,
+      orderHashes: ['0xorderhash'],
+    }
+
+    return expectSaga(pushTransactionNotification, createFinalizedTxAction(cancelTypeInfo))
+      .withState({
+        notifications: initialNotificationsState,
+        wallet: { activeAccountAddress: account.address },
+      })
+      .not.put.like({ action: { type: pushNotification.type } })
+      .silentRun()
+  })
+
   it('Handles approve transactions', () => {
     const approveTypeInfo: ApproveTransactionInfo = {
       type: TransactionType.Approve,

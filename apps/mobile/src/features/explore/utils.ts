@@ -1,6 +1,33 @@
+import { TokensOrderBy } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { CustomRankingType, RankingType } from '@universe/api'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { ExploreOrderBy, TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
+
+export interface V2TokensSort {
+  orderBy: TokensOrderBy
+  ascending: boolean
+}
+
+/**
+ * Maps ExploreOrderBy (TokenRankings-era, direction baked into separate enum values for price
+ * change) to v2 ListTokens' {orderBy, ascending} shape, which models direction as its own field.
+ */
+export function exploreOrderByToV2Sort(orderBy: ExploreOrderBy): V2TokensSort {
+  switch (orderBy) {
+    case RankingType.TotalValueLocked:
+      return { orderBy: TokensOrderBy.TVL, ascending: false }
+    case RankingType.MarketCap:
+      return { orderBy: TokensOrderBy.MARKET_CAP, ascending: false }
+    case RankingType.Volume:
+      return { orderBy: TokensOrderBy.VOLUME_1D, ascending: false }
+    case CustomRankingType.PricePercentChange1DayDesc:
+      return { orderBy: TokensOrderBy.PRICE_CHANGE_1D, ascending: false }
+    case CustomRankingType.PricePercentChange1DayAsc:
+      return { orderBy: TokensOrderBy.PRICE_CHANGE_1D, ascending: true }
+    default:
+      throw new Error('Unexpected order by value ' + orderBy)
+  }
+}
 
 export function getTokenMetadataDisplayType(orderBy: ExploreOrderBy): TokenMetadataDisplayType {
   switch (orderBy) {

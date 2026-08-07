@@ -4,10 +4,9 @@ import { OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/l
 import { filter } from 'uniswap/src/components/TokenSelector/filter'
 import { type PortfolioBalancesResult } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
 import { createEmptyTokenOptionFromBridgingToken } from 'uniswap/src/components/TokenSelector/utils'
+import { useCrossChainBalances } from 'uniswap/src/data/apiClients/dataApiService/balances/hooks/useCrossChainBalances'
 import { useTradingApiSwappableTokensQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
 import { tradingApiSwappableTokenToCurrencyInfo } from 'uniswap/src/data/apiClients/tradingApi/utils/tradingApiSwappableTokenToCurrencyInfo'
-import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
-import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -19,6 +18,7 @@ import {
   NATIVE_ADDRESS_FOR_TRADING_API,
   toTradingApiSupportedChainId,
 } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 

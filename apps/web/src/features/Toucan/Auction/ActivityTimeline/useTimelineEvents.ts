@@ -1,7 +1,7 @@
 import { AuctionStep } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 import { useMemo } from 'react'
 import { AuctionDetails } from '~/features/Toucan/Auction/store/types'
-import { blockToTimestamp } from '~/features/Toucan/Auction/utils/blockToTimestamp'
+import { blockToTimestamp } from '~/utils/blockToTimestamp'
 
 export type TimelineEventType =
   | 'pre-sale-starts'

@@ -1,4 +1,4 @@
-import { base64ToUint8, base64urlToBase64 } from '@universe/encoding'
+import { base64ToUint8, base64urlToBase64, uint8ToUtf8 } from '@universe/encoding'
 import { Result } from 'better-result'
 import { sleep } from 'utilities/src/time/timing'
 import { AuthError, KeychainError, NetworkError, OktaError } from '../errors'
@@ -258,7 +258,7 @@ export function decodeEmailClaim(idToken: string): Result<string, OktaError> {
   }
   let claims: { email?: string }
   try {
-    claims = JSON.parse(new TextDecoder().decode(base64ToUint8(base64urlToBase64(payloadB64)))) as {
+    claims = JSON.parse(uint8ToUtf8(base64ToUint8(base64urlToBase64(payloadB64)))) as {
       email?: string
     }
   } catch (cause) {

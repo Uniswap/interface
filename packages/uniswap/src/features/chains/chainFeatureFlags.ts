@@ -7,6 +7,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
  */
 export const CHAIN_ROLLOUT_FLAGS = {
   [UniverseChainId.Arc]: FeatureFlags.Arc,
+  [UniverseChainId.Ink]: FeatureFlags.Ink,
   [UniverseChainId.Linea]: FeatureFlags.Linea,
   [UniverseChainId.MegaETH]: FeatureFlags.MegaETH,
   [UniverseChainId.Robinhood]: FeatureFlags.Robinhood,

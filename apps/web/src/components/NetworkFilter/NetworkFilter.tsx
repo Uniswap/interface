@@ -32,7 +32,7 @@ const NetworkLabel = styled(Flex, {
 })
 
 // dropdown sizes per design
-enum DropdownSizeVariants {
+export enum DropdownSizeVariants {
   Large = 'large',
   Medium = 'medium',
   Small = 'small',
@@ -41,7 +41,8 @@ enum DropdownSizeVariants {
 
 type DropdownSize = DropdownSizeVariants | 'large' | 'medium' | 'small' | 'xsmall'
 
-const StyledDropdown = {
+// Exported so sibling filters (e.g. the Launches launchpad selector) reuse the exact chrome.
+export const NETWORK_FILTER_DROPDOWN_STYLE = {
   maxHeight: 350,
   minWidth: 272,
   px: 0,
@@ -49,8 +50,10 @@ const StyledDropdown = {
   flexDirection: 'column',
   minHeight: 0,
 } satisfies FlexProps
+const StyledDropdown = NETWORK_FILTER_DROPDOWN_STYLE
 
-const ButtonStyles: Record<DropdownSizeVariants, FlexProps> = {
+// Exported so sibling filters (e.g. the Launches launchpad selector) reuse the exact chrome.
+export const NETWORK_FILTER_BUTTON_STYLES: Record<DropdownSizeVariants, FlexProps> = {
   [DropdownSizeVariants.Large]: {
     height: 48,
     pl: '$spacing16',
@@ -74,6 +77,8 @@ const ButtonStyles: Record<DropdownSizeVariants, FlexProps> = {
     gap: '$gap4',
   },
 }
+
+const ButtonStyles = NETWORK_FILTER_BUTTON_STYLES
 
 const NetworkLogoSizes: Record<DropdownSizeVariants, number> = {
   [DropdownSizeVariants.Large]: iconSizes.icon24,
@@ -106,8 +111,10 @@ export function NetworkFilter({
   forceFlipUp,
   positionFixed,
   showSearch = false,
+  showSearchInput = true,
   tieredOptions,
   forceAllNetworksLabel = false,
+  showComingSoonOption = false,
 }: {
   showMultichainOption?: boolean
   showDisplayName?: boolean
@@ -125,8 +132,11 @@ export function NetworkFilter({
   forceFlipUp?: boolean
   positionFixed?: boolean
   showSearch?: boolean
+  showSearchInput?: boolean
   tieredOptions?: TieredNetworkOptions
   forceAllNetworksLabel?: boolean
+  /** Appends a disabled multichain "Coming soon" row after the selectable networks (list menu only). */
+  showComingSoonOption?: boolean
 }) {
   const { t } = useTranslation()
   const media = useMedia()
@@ -136,6 +146,10 @@ export function NetworkFilter({
   const allSupportedChainIds = useFilteredChainIds()
   const isNetworkSubset = filteredChainIds.length < allSupportedChainIds.length
   const allNetworksDisplayChainIds = isNetworkSubset ? filteredChainIds : undefined
+  // With a single selectable network the "All networks" option is meaningless: drop the multichain
+  // row and show that one chain's logo in the trigger instead of the default multi-network image.
+  const singleChainId = filteredChainIds.length === 1 ? filteredChainIds[0] : undefined
+  const showMultichain = showMultichainOption && singleChainId === undefined
   const chainInfo = currentChainId ? getChainInfo(currentChainId) : null
   const isAllNetworks = chainInfo === null
   const isMobileSheet = isWebApp && media.sm
@@ -174,11 +188,11 @@ export function NetworkFilter({
           menuLabel={
             customTrigger ?? (
               <NetworkLabel testID={TestID.TokensNetworkFilterTrigger}>
-                {(!currentChainId || !isSupportedChainCallback(currentChainId)) && showMultichainOption ? (
+                {(!currentChainId || !isSupportedChainCallback(currentChainId)) && showMultichain ? (
                   <NetworkLogo size={NetworkLogoSizes[size]} chainId={null} transition={transition} />
                 ) : (
                   <ChainLogo
-                    chainId={currentChainId ?? UniverseChainId.Mainnet}
+                    chainId={currentChainId ?? singleChainId ?? UniverseChainId.Mainnet}
                     size={NetworkLogoSizes[size]}
                     testId={TestID.TokensNetworkFilterSelected}
                     transition={transition}
@@ -207,12 +221,13 @@ export function NetworkFilter({
                 autoFocus={!isMobileSheet}
                 chainIds={filteredChainIds}
                 fillAvailableHeight
-                includeAllNetworks={showMultichainOption}
-                allNetworksChainIds={showMultichainOption ? allNetworksDisplayChainIds : undefined}
+                includeAllNetworks={showMultichain}
+                allNetworksChainIds={showMultichain ? allNetworksDisplayChainIds : undefined}
                 isOpen={isMenuOpen}
                 selectedChain={currentChainId ?? null}
                 tieredOptions={tieredOptions}
                 forceAllNetworksLabel={forceAllNetworksLabel}
+                showSearchInput={showSearchInput}
                 onPressChain={(chainId) => {
                   onPress(chainId ?? undefined)
                   toggleMenu(false)
@@ -221,7 +236,7 @@ export function NetworkFilter({
             </Flex>
           ) : (
             <Flex p="$spacing8">
-              {showMultichainOption && (
+              {showMultichain && (
                 <TableNetworkItem
                   forceAllNetworksLabel={forceAllNetworksLabel}
                   chainInfo={null}
@@ -234,6 +249,20 @@ export function NetworkFilter({
                 />
               )}
               {filteredChainIds.map(tableNetworkItemRenderer)}
+              {showComingSoonOption && (
+                <Flex
+                  data-testid={`${TestID.TokensNetworkFilterOptionPrefix}coming-soon`}
+                  cursor="default"
+                  opacity={0.6}
+                >
+                  <NetworkOption
+                    chainId={null}
+                    isNew={false}
+                    customLogo={<NetworkLogo chainId={null} size={iconSizes.icon24} />}
+                    customLabel={t('common.comingSoon')}
+                  />
+                </Flex>
+              )}
             </Flex>
           )}
         </Dropdown>

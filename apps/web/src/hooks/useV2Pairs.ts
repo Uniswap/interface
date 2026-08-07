@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-cor
 import { computePairAddress, Pair } from '@uniswap/v2-sdk'
 import { useMemo } from 'react'
 import { useReadContracts } from 'wagmi'
-import { assume0xAddress } from '~/utils/wagmi'
+import { assume0xAddress } from '~/chains'
 
 enum PairState {
   LOADING = 0,

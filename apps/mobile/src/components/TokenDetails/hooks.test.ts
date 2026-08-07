@@ -1,7 +1,7 @@
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { preloadedMobileState } from 'src/test/fixtures'
 import { act, renderHook, waitFor } from 'src/test/test-utils'
-import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
+import { useCrossChainBalances } from 'uniswap/src/data/apiClients/dataApiService/balances/hooks/useCrossChainBalances'
 import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
 import {
   portfolio,

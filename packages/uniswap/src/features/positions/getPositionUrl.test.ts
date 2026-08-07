@@ -81,4 +81,39 @@ describe('getPositionUrl', () => {
     }
     expect(getPositionUrl(position, {})).toBe('/positions/v4/ethereum/456')
   })
+
+  it('appends permissioned=true for permissioned V4 positions', () => {
+    const position: PositionInfo = {
+      ...BASE_POSITION,
+      version: ProtocolVersion.V4,
+      tokenId: '456',
+      owner: 'owner',
+      isPermissioned: true,
+    }
+    expect(getPositionUrl(position)).toBe('/positions/v4/ethereum/456?permissioned=true')
+  })
+
+  it('omits the permissioned param when isPermissioned is false', () => {
+    const position: PositionInfo = {
+      ...BASE_POSITION,
+      version: ProtocolVersion.V4,
+      tokenId: '456',
+      owner: 'owner',
+      isPermissioned: false,
+    }
+    expect(getPositionUrl(position)).toBe('/positions/v4/ethereum/456')
+  })
+
+  it('composes permissioned and entryPoint params on the same URL', () => {
+    const position: PositionInfo = {
+      ...BASE_POSITION,
+      version: ProtocolVersion.V4,
+      tokenId: '456',
+      owner: 'owner',
+      isPermissioned: true,
+    }
+    expect(getPositionUrl(position, { entryPoint: '/portfolio/pools' })).toBe(
+      '/positions/v4/ethereum/456?permissioned=true&entryPoint=%2Fportfolio%2Fpools',
+    )
+  })
 })

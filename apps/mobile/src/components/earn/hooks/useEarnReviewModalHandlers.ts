@@ -1,14 +1,12 @@
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
+import { resetStoppedEarnPlan } from 'uniswap/src/features/earn/hooks/useEarnReviewExecutionHandlers'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
-import { resetActivePlan } from 'uniswap/src/features/transactions/swap/plan/planSagaUtils'
 import { signalEarnModalClosed } from 'uniswap/src/utils/saga'
 
 export interface EarnReviewModalHandlers {
-  hasExecutionError: boolean
-  setHasExecutionError: (hasError: boolean) => void
   handleExecutionFailure: (error?: Error) => void
   handleClose: () => void
 }
@@ -16,13 +14,9 @@ export interface EarnReviewModalHandlers {
 export function useEarnReviewModalHandlers({ onClose }: { onClose: () => void }): EarnReviewModalHandlers {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const [hasExecutionError, setHasExecutionError] = useState(false)
 
   const handleExecutionFailure = useCallback(
     (error?: Error) => {
-      if (error) {
-        setHasExecutionError(true)
-      }
       dispatch(
         pushNotification({
           type: AppNotificationType.Error,
@@ -33,13 +27,13 @@ export function useEarnReviewModalHandlers({ onClose }: { onClose: () => void })
     [dispatch, t],
   )
 
+  // Every dismissal path funnels here (sheet swipe, backdrop, hardware back, close button),
+  // so this is where a stopped partial plan must be cleared — not only the review view's buttons.
   const handleClose = useCallback(() => {
     dispatch(signalEarnModalClosed())
-    if (hasExecutionError) {
-      resetActivePlan()
-    }
+    resetStoppedEarnPlan()
     onClose()
-  }, [dispatch, hasExecutionError, onClose])
+  }, [dispatch, onClose])
 
-  return { hasExecutionError, setHasExecutionError, handleExecutionFailure, handleClose }
+  return { handleExecutionFailure, handleClose }
 }

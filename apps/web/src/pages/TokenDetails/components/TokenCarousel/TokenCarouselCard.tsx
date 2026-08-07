@@ -1,15 +1,15 @@
 import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
+import { pickPrimaryDeployment } from 'uniswap/src/data/apiClients/dataApiService/utils/dataApiMultichainToken'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
-import { SparklineMap } from '~/appGraphql/data/types'
 import { SparklineChart } from '~/components/Charts/SparklineChart'
 import { DeltaArrow } from '~/components/DeltaArrow/DeltaArrow'
-import { pickPrimaryDeployment } from '~/features/Explore/state/listTokens/utils/pickPrimaryDeployment'
+import { SparklineMap } from '~/data/types'
 import { useNavigateToTokenDetails } from '~/pages/Portfolio/Tokens/hooks/useNavigateToTokenDetails'
 
 export const TOKEN_CARD_WIDTH = 168
@@ -19,7 +19,7 @@ export const CARD_SPACING = 12
 export function TokenCarouselCard({ token, sparklines }: { token: RankedMultichainToken; sparklines: SparklineMap }) {
   const mc = token.multichainToken
   const primary = mc
-    ? pickPrimaryDeployment({ addresses: mc.addresses, exploreChainId: undefined, chainStats: token.chainStats })
+    ? pickPrimaryDeployment({ addresses: mc.addresses, chainId: undefined, chainStats: token.chainStats })
     : undefined
   if (!mc || !primary) {
     return null

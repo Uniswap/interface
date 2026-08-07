@@ -1,18 +1,21 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { ExploreStatsResponse, PoolStats, TokenStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
-import { parseRestProtocolVersion } from '@universe/api'
+import { Percent } from '@uniswap/sdk-core'
+import { GraphQLApi, parseRestProtocolVersion } from '@universe/api'
 import { useMemo } from 'react'
 import { DEFAULT_TICK_SPACING, V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
-import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
-import {
-  calculate1DVolOverTvl,
-  calculateApr,
-  PoolSortFields,
-  PoolTableSortState,
-} from '~/appGraphql/data/pools/useTopPools'
-import { OrderDirection } from '~/appGraphql/data/util'
+import { normalizeTokenAddressForCache } from 'uniswap/src/utils/currencyId'
+import { supportedChainIdFromGQLChain } from '~/data/chainUtils'
+import { calculate1DVolOverTvl, calculateApr, PoolSortFields, PoolTableSortState } from '~/data/pools/useTopPools'
+import { OrderDirection } from '~/data/util'
 import { giveExploreStatDefaultValue, useExploreStats } from '~/features/Explore/state'
 import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
+import {
+  servedFeeKey,
+  useServedProtocolFees,
+  type ServedProtocolFeePool,
+  type ServedPoolFees,
+} from '~/features/fees/useServedProtocolFees'
 import { PoolStat } from '~/types/explore'
 
 const COMBINED_ETH_SYMBOLS = ['WETH', 'ETH']
@@ -117,19 +120,29 @@ function sortPools(sortState: PoolTableSortState, pools?: PoolStat[]) {
   })
 }
 
-function convertPoolStatsToPoolStat(poolStats: PoolStats): PoolStat {
+function convertPoolStatsToPoolStat(poolStats: PoolStats, servedFees?: ServedPoolFees): PoolStat {
+  const protocolFeePips = servedFees?.protocolFee
+  // GetProtocolFees is the source of truth for the tier so it always pairs with the protocol fee it
+  // was served with; ExploreStats' own tier is the fallback when the backend serves none.
+  const feeAmount = servedFees?.feeTier ?? poolStats.feeTier ?? V2_DEFAULT_FEE_TIER
   return {
     // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
     ...poolStats,
-    apr: calculateApr({
-      volume24h: giveExploreStatDefaultValue(poolStats.volume1Day?.value),
-      tvl: giveExploreStatDefaultValue(poolStats.totalLiquidity?.value),
-      feeTier: poolStats.feeTier ?? V2_DEFAULT_FEE_TIER,
-      protocolVersion: parseRestProtocolVersion(poolStats.protocolVersion),
-    }),
+    // Table APR keeps its numeric-cell contract (unlike PoolInfoCard/PoolDetails, which blank out
+    // for dynamic-fee pools); falls back to 0 since this call site doesn't feed isDynamic through,
+    // so undefined here would only ever come from missing volume/TVL data.
+    apr:
+      calculateApr({
+        volume24h: giveExploreStatDefaultValue(poolStats.volume1Day?.value),
+        tvl: giveExploreStatDefaultValue(poolStats.totalLiquidity?.value),
+        feeTier: feeAmount,
+        protocolVersion: parseRestProtocolVersion(poolStats.protocolVersion),
+        protocolFeePips,
+      }) ?? new Percent(0),
+    protocolFeePips,
     boostedApr: poolStats.boostedApr,
     feeTier: {
-      feeAmount: poolStats.feeTier ?? V2_DEFAULT_FEE_TIER,
+      feeAmount,
       tickSpacing: DEFAULT_TICK_SPACING,
       isDynamic: false, // TODO: add dynamic fee tier check when client-explore is updated
     },
@@ -192,18 +205,41 @@ export function useTopPoolsLegacy({
   const { data, isLoading, isError } = topPoolData
   const poolStatsByProtocol = getPoolDataByProtocol(data, protocol)
 
+  // ExploreStats serves no protocol fee — both fees come from batched GetProtocolFees.
+  const protocolFeePools = useMemo<ServedProtocolFeePool[]>(() => {
+    const result: ServedProtocolFeePool[] = []
+    for (const poolStat of poolStatsByProtocol ?? []) {
+      const chainId = supportedChainIdFromGQLChain(poolStat.chain as GraphQLApi.Chain)
+      const protocolVersion = parseRestProtocolVersion(poolStat.protocolVersion)
+      if (chainId === undefined || protocolVersion === undefined) {
+        continue
+      }
+      result.push({ chainId, protocolVersion, poolIdOrHash: poolStat.id })
+    }
+    return result
+  }, [poolStatsByProtocol])
+  const servedProtocolFees = useServedProtocolFees({ pools: protocolFeePools, enabled })
+
   const { sortedPoolStats, boostedPoolStats } = useMemo(() => {
     if (!enabled) {
       return { sortedPoolStats: undefined, boostedPoolStats: undefined }
     }
-    const poolStats = poolStatsByProtocol?.map((poolStat: PoolStats) => convertPoolStatsToPoolStat(poolStat))
+    const poolStats = poolStatsByProtocol?.map((poolStat: PoolStats) => {
+      const chainId = supportedChainIdFromGQLChain(poolStat.chain as GraphQLApi.Chain)
+      return convertPoolStatsToPoolStat(
+        poolStat,
+        chainId === undefined
+          ? undefined
+          : servedProtocolFees.get(servedFeeKey({ chainId, poolIdOrHash: poolStat.id })),
+      )
+    })
     const sortedPools = sortPools(sortState, poolStats)
     const boostedPools = sortedPools
       ?.filter((pool) => typeof pool.boostedApr === 'number' && pool.boostedApr > 0)
       .sort((a, b) => (b.boostedApr ?? 0) - (a.boostedApr ?? 0))
 
     return { sortedPoolStats: sortedPools, boostedPoolStats: boostedPools }
-  }, [enabled, poolStatsByProtocol, sortState])
+  }, [enabled, poolStatsByProtocol, sortState, servedProtocolFees])
 
   const filteredPoolStats = useFilteredPools(sortedPoolStats, enabled)
 

@@ -9,8 +9,8 @@ import {
   TokensOrderBy,
 } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { describe, expect, it, vi } from 'vitest'
-import { TimePeriod } from '~/appGraphql/data/util'
 import { TokenSortMethod } from '~/components/Tokens/constants'
+import { TimePeriod } from '~/data/util'
 import { createListTokensService } from '~/features/Explore/state/listTokens/services/listTokensService'
 import { getEffectiveListTokensOptions } from '~/features/Explore/state/listTokens/types'
 import type { TokenStat } from '~/types/explore'
@@ -234,6 +234,35 @@ describe('createListTokensService', () => {
       ])
     })
 
+    it('should key an ungrouped token (empty multichainId) sparkline by chainId:address', async () => {
+      const ranked = new RankedMultichainToken({
+        multichainToken: new MultichainToken({
+          multichainId: '',
+          symbol: 'USDC.e',
+          name: 'Bridged USDC',
+          type: TokenType.ERC20,
+          addresses: { '137': '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174' },
+        }),
+        sparkline: [new TimestampedValue({ timestamp: 1n, value: 1 })],
+      })
+      const response = new ListTokensResponse({ multichainTokens: [ranked] })
+      const listTokens = vi.fn().mockResolvedValue(response)
+
+      const service = createListTokensService({
+        getSourceType: () => 'backend_sorted',
+        getTokenStats: vi.fn(),
+        listTokens,
+      })
+
+      const result = await service.getListTokens(defaultParams)
+
+      // The '' sentinel would collide every single onto one key; the map is
+      // keyed by multichainTokenKey so each single keeps its sparkline.
+      expect(result.priceHistoryByMultichainId['137:0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174']).toEqual([
+        { timestamp: 1, value: 1 },
+      ])
+    })
+
     it('should omit priceHistoryByMultichainId entries for tokens with an empty sparkline', async () => {
       const ranked = new RankedMultichainToken({
         multichainToken: new MultichainToken({
@@ -297,7 +326,7 @@ describe('createListTokensService', () => {
       )
     })
 
-    it('should omit sort when sortMethod is PRICE', async () => {
+    it('should include sort.orderBy and sort.ascending when sortMethod is PRICE', async () => {
       const listTokens = vi.fn().mockResolvedValue(emptyBackendListResponse())
       const service = createListTokensService({
         getSourceType: () => 'backend_sorted',
@@ -311,8 +340,9 @@ describe('createListTokensService', () => {
         }),
       )
 
-      const call = listTokens.mock.calls[0]?.[0] as Record<string, unknown>
-      expect(call.sort).toBeUndefined()
+      const call = listTokens.mock.calls[0]?.[0] as { sort?: { orderBy?: TokensOrderBy; ascending?: boolean } }
+      expect(call.sort?.orderBy).toBe(TokensOrderBy.PRICE)
+      expect(call.sort?.ascending).toBe(true)
     })
 
     it('should include sort.orderBy from filterTimePeriod and sort.ascending when sortMethod is VOLUME', async () => {

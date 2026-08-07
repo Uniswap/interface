@@ -51,6 +51,9 @@ export function TransactionDetailsContent({
         return <SwapTransactionDetails typeInfo={typeInfo} onClose={onClose} />
       case TransactionType.WCConfirm:
         return <></>
+      case TransactionType.UniswapXCancel:
+        // Nonce invalidation has no asset content; the default info rows (fee/hash/date) suffice
+        return <></>
       case TransactionType.Wrap:
         return <WrapTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
       case TransactionType.OnRampPurchase:

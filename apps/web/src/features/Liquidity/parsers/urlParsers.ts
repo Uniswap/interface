@@ -5,13 +5,13 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import type { FeeData } from 'uniswap/src/features/positions/types'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { z } from 'zod'
+import { assume0xAddress } from '~/chains'
 import { PositionFlowStep, PriceRangeState, RangeAmountInputPriceMode } from '~/features/Liquidity/Create/types'
 import { checkIsNative } from '~/hooks/Tokens'
 import { DepositState } from '~/types/liquidity'
 import { PositionField } from '~/types/position'
 import { getChainIdFromChainUrlParam, getChainUrlParam } from '~/utils/params/chainParams'
 import { parseCurrencyFromURLParameter } from '~/utils/params/currencyParams'
-import { assume0xAddress } from '~/utils/wagmi'
 
 const priceRangeStateSchema: z.ZodSchema<Partial<PriceRangeState>> = z
   .object({

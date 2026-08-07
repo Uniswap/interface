@@ -1,8 +1,6 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useMemo } from 'react'
-import { useConversionRate as useConversionRateRest } from 'uniswap/src/data/apiClients/dataApiService/convert/useConversionRate'
+import { useConversionRate } from 'uniswap/src/data/apiClients/dataApiService/convert/useConversionRate'
 import { FiatCurrency, SOURCE_CURRENCY } from 'uniswap/src/features/fiatCurrency/constants'
-import { useConversionRateGraphQL } from 'uniswap/src/features/fiatCurrency/graphql'
 import { getFiatCurrencyCode, useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import type { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { FiatNumberType } from 'utilities/src/format/types'
@@ -31,12 +29,7 @@ export function useFiatConverter({
 }: Pick<LocalizationContextState, 'formatNumberOrString'>): FiatConverter {
   const appCurrency = useAppFiatCurrency()
 
-  const currentConversionV2Enabled = useFeatureFlag(FeatureFlags.V2EndpointsCurrencyConversion)
-
-  const conversionRateRest = useConversionRateRest(appCurrency, !currentConversionV2Enabled)
-  const conversionRateGraphQL = useConversionRateGraphQL(appCurrency, currentConversionV2Enabled)
-
-  const conversionRate = currentConversionV2Enabled ? conversionRateRest : conversionRateGraphQL
+  const conversionRate = useConversionRate(appCurrency)
 
   const convertFiatAmountInner = useCallback(
     (amount: number): { amount: number; currency: FiatCurrency } => {

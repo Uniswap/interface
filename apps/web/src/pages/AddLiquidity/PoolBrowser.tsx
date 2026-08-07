@@ -8,13 +8,13 @@ import { Button, Flex } from 'ui/src'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { PoolSortFields } from '~/appGraphql/data/pools/useTopPools'
-import { OrderDirection } from '~/appGraphql/data/util'
 import { ExpandableSearchInput } from '~/components/ExpandableSearchInput/ExpandableSearchInput'
 import { NetworkFilter } from '~/components/NetworkFilter/NetworkFilter'
 import { CurrencySearchModal } from '~/components/SearchModal/CurrencySearchModal'
 import { ErrorModal } from '~/components/Table/ErrorBox'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
+import { PoolSortFields } from '~/data/pools/useTopPools'
+import { OrderDirection } from '~/data/util'
 import { getNextFlowStep } from '~/features/Liquidity/Create/flowSteps'
 import { PositionFlowStep } from '~/features/Liquidity/Create/types'
 import { CurrencySelector } from '~/features/Liquidity/CurrencySelector'
@@ -219,6 +219,7 @@ export function PoolBrowser(): JSX.Element {
             linkState={entryPoint ? { entryPoint } : undefined}
             selectedPoolId={selectedPoolId}
             selectedPoolChainId={selectedPoolChainId}
+            surface="add-liquidity-pool-browser"
           />
           {showCreatePool && (
             <Flex alignItems="center" mt="$spacing16">

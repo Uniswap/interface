@@ -3,7 +3,12 @@ import { type ChainedQuoteResponse, TradingApi } from '@universe/api'
 import { createEarnChainedActionDisplayAmounts } from 'uniswap/src/features/earn/chainedDisplayAmounts'
 import { convertGasFeeToDisplayValue } from 'uniswap/src/features/gas/convertGasFeeToDisplayValue'
 import { getDisplayGasStrategy } from 'uniswap/src/features/gas/utils'
-import type { EarnPlanAnalyticsFields, PlanSagaAnalytics } from 'uniswap/src/features/transactions/swap/plan/types'
+import type {
+  EarnPlanAnalyticsFields,
+  PlanFailureCallback,
+  PlanFailureCallbackContext,
+  PlanSagaAnalytics,
+} from 'uniswap/src/features/transactions/swap/plan/types'
 import type { ValidatedChainedSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { createChainedActionTrade, type ChainedActionTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -12,6 +17,9 @@ import { getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
 const EARN_PLAN_ANALYTICS_ROUTING: PlanSagaAnalytics['routing'] = 'chained'
 
 type EarnPlanSagaAnalytics = PlanSagaAnalytics & EarnPlanAnalyticsFields
+
+type EarnPlanFailureUiHandler = (error?: Error, retry?: () => void) => void
+type EarnPlanFailureAnalyticsHandler = (error: Error | undefined, context?: PlanFailureCallbackContext) => void
 
 /**
  * Displayable error the earn review surfaces show when plan execution stops because the refreshed quote
@@ -26,6 +34,19 @@ export class EarnPlanPriceChangeError extends Error {
   }
 }
 
+/**
+ * Displayable error the earn review surfaces show when execution is blocked because Earn was
+ * disabled or the user entered testnet mode after opening the review. Retrying the same plan
+ * cannot resolve either state, so this error preserves honest unavailable copy and suppresses
+ * transaction troubleshooting guidance.
+ */
+export class EarnPlanUnavailableError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'EarnPlanUnavailableError'
+  }
+}
+
 export function getEarnExecutionErrorMessage({
   error,
   fallback,
@@ -36,11 +57,13 @@ export function getEarnExecutionErrorMessage({
   if (!error) {
     return undefined
   }
-  return error instanceof EarnPlanPriceChangeError ? error.message : fallback
+  return error instanceof EarnPlanPriceChangeError || error instanceof EarnPlanUnavailableError
+    ? error.message
+    : fallback
 }
 
 export function shouldShowEarnTroubleshootingLink(error: Error | undefined): boolean {
-  if (!error || error instanceof EarnPlanPriceChangeError) {
+  if (!error || error instanceof EarnPlanPriceChangeError || error instanceof EarnPlanUnavailableError) {
     return false
   }
 
@@ -64,6 +87,21 @@ export function shouldShowEarnTroubleshootingLink(error: Error | undefined): boo
     'connection rejected',
   ].some((message) => rejectionText.includes(message))
 }
+
+export function createEarnPlanFailureCallback({
+  handleFailure,
+  logFailed,
+}: {
+  handleFailure: EarnPlanFailureUiHandler
+  logFailed: EarnPlanFailureAnalyticsHandler
+}): PlanFailureCallback {
+  return (...args): void => {
+    const [error, retry, context] = args
+    logFailed(error, context)
+    handleFailure(error, retry)
+  }
+}
+
 export function buildEarnChainedActionTrade({
   currencyIn,
   currencyOut,

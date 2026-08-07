@@ -1,6 +1,5 @@
-import { curveNatural } from 'd3-shape'
 import { useMemo } from 'react'
-import { LineChart, LineChartProvider } from 'react-native-wagmi-charts'
+import { SparklineChart } from 'src/components/charts/SparklineChart'
 import { TokenItemData } from 'src/components/explore/TokenItemData'
 import { useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
 import { useExtractedTokenColor, useSporeColors } from 'ui/src'
@@ -10,6 +9,8 @@ import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/curren
 // Used to divide the number of data points for a smoother charts
 // Necessary because graphql query does not support a time resolution parameter
 const DATA_REDUCTION_FACTOR = 10
+
+const Y_GUTTER = 2
 
 export function TokenItemChart({
   tokenItemData,
@@ -50,14 +51,12 @@ export function TokenItemChart({
   }
 
   return (
-    <LineChartProvider data={convertedPriceHistory}>
-      <LineChart height={height} shape={curveNatural} width={width}>
-        <LineChart.Path
-          color={tokenColor ?? colors.neutral2.val}
-          pathProps={{ isTransitionEnabled: false }}
-          width={2}
-        />
-      </LineChart>
-    </LineChartProvider>
+    <SparklineChart
+      data={convertedPriceHistory}
+      width={width}
+      height={height}
+      color={tokenColor ?? colors.neutral2.val}
+      yGutter={Y_GUTTER}
+    />
   )
 }

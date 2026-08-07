@@ -72,6 +72,7 @@ export enum ElementName {
   ChainArc = 'chain-arc',
   ChainCelo = 'chain-celo',
   ChainEthereum = 'chain-ethereum',
+  ChainInk = 'chain-ink',
   ChainLinea = 'chain-linea',
   ChainMegaETH = 'chain-megaeth',
   ChainMonad = 'chain-monad',
@@ -254,6 +255,17 @@ export enum ElementName {
   NavbarExploreDropdownToucan = 'navbar-explore-dropdown-toucan',
   NavbarExploreTab = 'navbar-explore-tab',
 
+  // Navbar Launches
+  NavbarLaunchesTab = 'navbar-launches-tab',
+
+  // Launches page
+  LaunchesHero = 'launches-hero',
+  LaunchesLaunchpadFilterClear = 'launches-launchpad-filter-clear',
+  LaunchesLaunchpadFilterOption = 'launches-launchpad-filter-option',
+  LaunchesTableRow = 'launches-table-row',
+  LaunchesTeaserBanner = 'launches-teaser-banner',
+  LaunchesTrendingCarouselCard = 'launches-trending-carousel-card',
+
   // Navbar Pool Dropdown
   NavbarPoolDropdownCreatePosition = 'navbar-pool-dropdown-create-position',
   NavbarPoolDropdownLaunchAuction = 'navbar-pool-dropdown-launch-auction',
@@ -306,6 +318,7 @@ export enum ElementName {
   SetPercentageOutput = 'set-percentage-output',
   SettingsCurrencyOption = 'settings-currency-option',
   SettingsLanguageOption = 'settings-language-option',
+  Shuffle = 'shuffle',
   SignIn = 'sign-in',
   SignOut = 'sign-out',
   Skip = 'skip',

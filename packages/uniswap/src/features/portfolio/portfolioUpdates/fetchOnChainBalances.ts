@@ -4,8 +4,11 @@ import { Balance } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { CurrencyAmount, NativeCurrency, Token } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
+import {
+  fetchTokenByAddress,
+  searchTokenToCurrencyInfo,
+} from 'uniswap/src/data/apiClients/dataApiService/search/searchTokensAndPools'
 import { fetchTradingApiIndicativeQuoteIgnoring404 } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiIndicativeQuoteQuery'
-import { fetchTokenByAddress, searchTokenToCurrencyInfo } from 'uniswap/src/data/rest/searchTokensAndPools'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getPrimaryStablecoin } from 'uniswap/src/features/chains/utils'
 import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
@@ -73,35 +76,54 @@ export async function fetchOnChainBalances({
           currency,
         })
 
-        const quantity = onchainQuantityCurrencyAmount?.toExact()
+        if (!onchainQuantityCurrencyAmount) {
+          log.debug('No numeric onchain balance found, skipping snapshot', {
+            currencyId,
+            accountAddress,
+          })
+          return
+        }
 
-        const denominatedValue = onchainQuantityCurrencyAmount
-          ? await getDenominatedValue({
-              accountAddress,
-              onchainQuantityCurrencyAmount,
-              cachedBalance,
-              cachedPortfolio,
-              currencyId,
-            })
-          : undefined
+        const quantity = onchainQuantityCurrencyAmount.toExact()
+        const amount = parseFloat(quantity)
+
+        if (!Number.isFinite(amount)) {
+          log.error(new Error('Onchain balance amount is not finite'), {
+            currencyId,
+            accountAddress,
+            quantity,
+          })
+          return
+        }
+
+        let denominatedValue: DenominatedValue | undefined
+        try {
+          denominatedValue = await getDenominatedValue({
+            accountAddress,
+            onchainQuantityCurrencyAmount,
+            cachedBalance,
+            cachedPortfolio,
+            currencyId,
+          })
+        } catch (error) {
+          // USD valuation is best-effort. Preserve the confirmed onchain amount if pricing fails.
+          log.error(error, { currencyId, accountAddress })
+        }
 
         onchainBalancesByCurrencyId.set(currencyId, {
           token: {
             address: currencyAddress,
             chainId,
             decimals: currency.decimals,
-            symbol: currency.symbol,
-            name: currency.name,
-            metadata: {
-              logoUrl: tokenInfo?.logoUrl ?? undefined,
-            },
+            ...(currency.symbol !== undefined ? { symbol: currency.symbol } : {}),
+            ...(currency.name !== undefined ? { name: currency.name } : {}),
+            ...(typeof tokenInfo?.logoUrl === 'string' ? { metadata: { logoUrl: tokenInfo.logoUrl } } : {}),
           },
           amount: {
-            amount: quantity ? parseFloat(quantity) : undefined,
+            amount,
             raw: onchainBalance,
           },
-          valueUsd: denominatedValue?.value,
-          pricePercentChange1d: undefined,
+          ...(denominatedValue?.value !== undefined ? { valueUsd: denominatedValue.value } : {}),
           isHidden: false,
         })
       } catch (error) {
@@ -172,8 +194,8 @@ async function getDenominatedValue({
     autoSlippage: TradingApi.AutoSlippage.DEFAULT,
   })
 
-  const amountOut =
-    indicativeQuote && 'output' in indicativeQuote.quote ? indicativeQuote.quote.output?.amount : undefined
+  const quote = indicativeQuote?.quote
+  const amountOut = quote && typeof quote === 'object' && 'output' in quote ? quote.output?.amount : undefined
 
   if (!amountOut) {
     return undefined

@@ -1,12 +1,13 @@
 import { isMobileWeb } from '@universe/environment'
 import { useCallback, useState } from 'react'
-import { MOBILE_WEB_NUM_FIRST_NFTS, NUM_FIRST_NFTS } from 'uniswap/src/components/nfts/constants'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { useWalletNfts } from 'uniswap/src/data/apiClients/dataApiService/nfts/useWalletNfts'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useGroupNftsByVisibility } from 'uniswap/src/features/nfts/hooks/useGroupNftsByVisibility'
-import { useWalletNfts } from 'uniswap/src/features/nfts/hooks/useWalletNfts'
 import { type NFTItem } from 'uniswap/src/features/nfts/types'
+
+export const NFT_LIST_PAGE_SIZE = isMobileWeb ? 20 : 30
 
 export function useNftListRenderData({
   owner,
@@ -53,7 +54,7 @@ export function useNftListRenderData({
     skip,
     filterSpam: false,
     chainsFilter: chains,
-    pageSize: isMobileWeb ? MOBILE_WEB_NUM_FIRST_NFTS : NUM_FIRST_NFTS,
+    pageSize: NFT_LIST_PAGE_SIZE,
     pollInterval,
   })
 
@@ -81,8 +82,8 @@ export function useNftListRenderData({
     hiddenNftsExpanded,
     setHiddenNftsExpanded,
     isError,
-    isPending,
-    // Don't show error state when query is intentionally skipped
+    // A skipped query stays pending forever, so suppress loading/error states for it
+    isPending: !skip && isPending,
     isErrorState: !skip && nftDataItems.length === 0 && isError,
     hasNextPage: Boolean(hasNextPage),
     shouldAddInLoadingItem: isFetchingMore && numShown % 2 === 1,

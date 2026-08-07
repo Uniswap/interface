@@ -158,6 +158,8 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
         txType: TransactionType.Plan,
       }),
     )
+  } else if (typeInfo.type === TransactionType.UniswapXCancel) {
+    // Explicitly no toast: the cancelled order's own row/state change is the user-facing signal
   } else if (typeInfo.type === TransactionType.Unknown) {
     yield* put(
       pushNotification({

@@ -1,8 +1,7 @@
-import { toScreenInput, useIsBlockedAddress } from '@universe/compliance'
 import { useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { RecipientPanel } from 'src/app/features/send/SendFormScreen/RecipientPanel'
-import { ReviewButton } from 'src/app/features/send/SendFormScreen/ReviewButton'
+import { SendBlockingWarnings } from 'src/app/features/send/SendFormScreen/SendBlockingWarnings'
 import { Flex, Separator, useSporeColors } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { selectHasDismissedLowNetworkTokenWarning } from 'uniswap/src/features/behaviorHistory/selectors'
@@ -17,13 +16,11 @@ import {
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { useUSDTokenUpdater } from 'uniswap/src/features/transactions/hooks/useUSDTokenUpdater'
-import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
 import { LowNativeBalanceModal } from 'uniswap/src/features/transactions/modals/LowNativeBalanceModal'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { isSafeNumber } from 'utilities/src/primitives/integer'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
-import { useIsBlockedActiveAddress } from 'wallet/src/features/compliance/hooks'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 import { GasFeeRow } from 'wallet/src/features/transactions/send/GasFeeRow'
 import { useShowSendNetworkNotification } from 'wallet/src/features/transactions/send/hooks/useShowSendNetworkNotification'
@@ -50,7 +47,6 @@ export function SendFormScreen(): JSX.Element {
     warnings,
     gasFee,
     showRecipientSelector,
-    recipient,
     updateSendForm,
     onSelectCurrency,
     isMax,
@@ -99,15 +95,6 @@ export function SendFormScreen(): JSX.Element {
       currency: currencyInInfo?.currency,
     })
   }, [exactAmountToken, exactAmountFiat, currencyInInfo?.currency])
-
-  // blocked addresses
-  const { isBlocked: isActiveBlocked, isBlockedLoading: isActiveBlockedLoading } = useIsBlockedActiveAddress()
-  const { isBlocked: isRecipientBlocked, isBlockedLoading: isRecipientBlockedLoading } = useIsBlockedAddress(
-    toScreenInput(recipient, chainId),
-  )
-  const isSubjectBlocked = isActiveBlocked || isRecipientBlocked
-  const isSubjectBlockedLoading = isActiveBlockedLoading || isRecipientBlockedLoading
-  const isButtonBlocked = !hasValueGreaterThanZero || isSubjectBlocked || isSubjectBlockedLoading
 
   const goToReview = useCallback(() => {
     const txId = createTransactionId()
@@ -226,18 +213,7 @@ export function SendFormScreen(): JSX.Element {
         </Flex>
         {!showRecipientSelector && (
           <>
-            {isSubjectBlocked && (
-              <BlockedAddressWarning
-                row
-                alignItems="center"
-                backgroundColor="$surface2"
-                borderRadius="$rounded16"
-                isRecipientBlocked={isRecipientBlocked}
-                px="$spacing16"
-                py="$spacing12"
-              />
-            )}
-            <ReviewButton disabled={isButtonBlocked} onPress={onPressReview} />
+            <SendBlockingWarnings hasValueGreaterThanZero={hasValueGreaterThanZero} onPressReview={onPressReview} />
             {!warnings.insufficientGasFundsWarning && <GasFeeRow chainId={chainId} gasFee={gasFee} />}
             <InsufficientNativeTokenWarning flow="send" gasFee={gasFee} warnings={warnings.warnings} />
           </>

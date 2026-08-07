@@ -1,5 +1,5 @@
 import { fireEvent, waitFor } from '@testing-library/react'
-import { deleteAuthenticatorWithPasskey, disconnectWallet } from 'uniswap/src/features/passkey/embeddedWallet'
+import { deleteAuthenticatorWithPasskey, disconnectWallet, useEmbeddedWalletState } from '@universe/embedded-wallet'
 import { MenuStateVariant, useSetMenu } from '~/components/AccountDrawer/menuState'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { AuthenticatorProvider } from '~/components/Passkey/authenticatorProvider'
@@ -7,11 +7,10 @@ import { RemovePasskeyModal } from '~/components/Passkey/RemovePasskeyModal'
 import { useDisconnect } from '~/hooks/useDisconnect'
 import { useModalState } from '~/hooks/useModalState'
 import type { DeletePasskeyModalParams } from '~/state/application/reducer'
-import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { useAppSelector } from '~/state/hooks'
 import { render, screen } from '~/test-utils/render'
 
-vi.mock('uniswap/src/features/passkey/embeddedWallet', () => ({
+vi.mock('@universe/embedded-wallet/src/features/passkey/embeddedWallet', () => ({
   Action: { DELETE_AUTHENTICATOR: 0 },
   deleteAuthenticatorWithPasskey: vi.fn(),
   disconnectWallet: vi.fn(),
@@ -21,9 +20,10 @@ vi.mock('~/hooks/useModalState', () => ({
   useModalState: vi.fn(),
 }))
 
-vi.mock('~/state/embeddedWallet/store', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('~/state/embeddedWallet/store')>()),
+vi.mock('@universe/embedded-wallet/src/state/embeddedWalletStore', () => ({
   useEmbeddedWalletState: vi.fn(),
+  getEmbeddedWalletState: vi.fn(() => ({ walletAddress: null, walletId: null, chainId: null, isConnected: false })),
+  setChainId: vi.fn(),
 }))
 
 vi.mock('~/state/hooks', () => ({

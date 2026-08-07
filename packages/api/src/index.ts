@@ -85,13 +85,16 @@ export {
 
 // Trading API
 export * as TradingApi from '@universe/api/src/clients/trading/__generated__'
+export { UNCONNECTED_ADDRESS } from '@universe/api/src/clients/trading/constants'
 export {
   createTradingApiClient,
   type PlanEndpoints,
   TRADING_API_PATHS,
+  type GetFeatureFlagHeadersOptions,
   type TradingApiPaths,
   type TradingApiClient,
   type TradingClientContext,
+  type WithSwapPermissionContext,
   V1_TRADING_API_PATHS,
 } from '@universe/api/src/clients/trading/createTradingApiClient'
 export {
@@ -101,6 +104,9 @@ export {
 export {
   type BridgeQuoteResponse,
   type ChainedQuoteResponse,
+  type CheckPermissionsRequest,
+  type CheckPermissionsResponse,
+  type CheckPermissionsResult,
   type ClassicQuoteResponse,
   type DiscriminatedQuoteResponse,
   type DutchQuoteResponse,
@@ -185,7 +191,7 @@ export type {
   EstimateGasFeeResponse as GasServiceEstimateResponse,
 } from '@uniswap/client-unirpc-v2/dist/uniswap/unirpc/v2/service_pb'
 
-// Data API Service (ConnectRPC - listTopTokens, listTopPools, getPortfolio, etc.)
+// Data API Service
 export {
   createDataApiServiceClient,
   type DataApiServiceClient,
@@ -222,18 +228,8 @@ export {
   type MultichainToken as DataApiMultichainToken,
   type Pool as DataApiPool,
   type Token as DataApiToken,
-} from '@uniswap/client-data-api/dist/data/v1/types_pb'
-
-// Data Service API
-export {
-  createDataServiceApiClient,
-  type DataServiceApiClient,
-  type DataServiceApiClientContext,
-  type DataReportType,
-  type SubmitDataReportParams,
   TokenReportEventType,
-  ReportAssetType,
-} from '@universe/api/src/clients/data/createDataServiceApiClient'
+} from '@uniswap/client-data-api/dist/data/v1/types_pb'
 
 // Data API Service V2
 export {

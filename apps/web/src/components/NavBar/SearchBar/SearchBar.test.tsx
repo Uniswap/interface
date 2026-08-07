@@ -17,9 +17,26 @@ vi.mock('uniswap/src/components/modals/ScrollLock', () => ({
   useUpdateScrollLock: vi.fn(),
 }))
 
+function mockSearchBarVisible(visible: boolean) {
+  vi.spyOn(window, 'matchMedia').mockImplementation(
+    (query) =>
+      ({
+        matches: visible,
+        media: query,
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      }) as MediaQueryList,
+  )
+}
+
 describe('disable nft on searchbar', () => {
   beforeEach(() => {
     mockMediaSize('xxxl')
+    mockSearchBarVisible(true)
   })
 
   it('should render searchbar on larger screen', () => {

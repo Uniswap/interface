@@ -11,6 +11,11 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ChooseUnitagModal } from '~/components/NavBar/DownloadApp/Modal/ChooseUnitag'
 import { Page } from '~/components/NavBar/DownloadApp/Modal/constants'
 import { DownloadAppsModal } from '~/components/NavBar/DownloadApp/Modal/DownloadApps'
+import { EmbeddedWalletOnboardingFlow } from '~/components/NavBar/DownloadApp/Modal/EmbeddedWalletOnboarding/EmbeddedWalletOnboardingFlow'
+import {
+  logEmbeddedWalletOnboardingExposure,
+  useIsEmbeddedWalletOnboardingNewFlow,
+} from '~/components/NavBar/DownloadApp/Modal/EmbeddedWalletOnboarding/useEmbeddedWalletOnboardingExperiment'
 import { KeyManagementModal } from '~/components/NavBar/DownloadApp/Modal/KeyManagement'
 import { PasskeyGenerationModal } from '~/components/NavBar/DownloadApp/Modal/PasskeyGeneration'
 import { useAndroidKeyboardViewportFix } from '~/hooks/useAndroidKeyboardViewportFix'
@@ -22,6 +27,7 @@ export const downloadAppModalPageAtom = atom<Page>(Page.DownloadApp)
 
 export function GetTheAppModal() {
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
+  const isNewOnboardingFlow = useIsEmbeddedWalletOnboardingNewFlow()
   const initialInnerPage = useAppSelector((state) => {
     const modal = state.application.openModal
     return modal?.name === ModalName.GetTheApp ? modal.initialState?.initialInnerPage : undefined
@@ -53,6 +59,17 @@ export function GetTheAppModal() {
     setPage(initialPage)
   }, [initialPage, setPage])
 
+  const isEnteringCreateWalletFlow = isOpen && isEmbeddedWalletEnabled && !showMobileDownload
+  const showNewOnboardingFlow = isEnteringCreateWalletFlow && isNewOnboardingFlow
+
+  // Log experiment exposure when the user actually opens the create-wallet flow (not on page load),
+  // so both arms are counted at the same entry point.
+  useEffect(() => {
+    if (isEnteringCreateWalletFlow) {
+      logEmbeddedWalletOnboardingExposure()
+    }
+  }, [isEnteringCreateWalletFlow])
+
   const media = useMedia()
   const isSheet = media.md
   const isDismissible = !(isEmbeddedWalletEnabled && !isMobileWeb) || showMobileDownload
@@ -61,25 +78,28 @@ export function GetTheAppModal() {
 
   const content = (
     <Flex data-testid={TestID.DownloadUniswapModal} position="relative" userSelect="none" width="100%">
-      <HeightAnimator animation="quickLong">
-        {/* The Page enum value corresponds to the modal page's index */}
-        <AnimatedPager animation="quickLong" currentIndex={page}>
-          <DownloadAppsModal onClose={close} initialInnerPage={showMobileDownload ? 'mobile' : undefined} />
-          <ChooseUnitagModal
-            setUnitag={setUnitag}
-            goBack={isEmbeddedWalletEnabled ? undefined : () => setPage(Page.DownloadApp)}
-            onClose={close}
-            setPage={setPage}
-          />
-          <KeyManagementModal goBack={() => setPage(Page.ChooseUnitag)} onClose={close} setPage={setPage} />
-          <PasskeyGenerationModal
-            unitag={unitag}
-            goBack={() => setPage(Page.KeyManagement)}
-            onClose={close}
-            setPage={setPage}
-          />
-        </AnimatedPager>
-      </HeightAnimator>
+      {showNewOnboardingFlow && <EmbeddedWalletOnboardingFlow onClose={close} />}
+      {!showNewOnboardingFlow && (
+        <HeightAnimator animation="quickLong">
+          {/* The Page enum value corresponds to the modal page's index */}
+          <AnimatedPager animation="quickLong" currentIndex={page}>
+            <DownloadAppsModal onClose={close} initialInnerPage={showMobileDownload ? 'mobile' : undefined} />
+            <ChooseUnitagModal
+              setUnitag={setUnitag}
+              goBack={isEmbeddedWalletEnabled ? undefined : () => setPage(Page.DownloadApp)}
+              onClose={close}
+              setPage={setPage}
+            />
+            <KeyManagementModal goBack={() => setPage(Page.ChooseUnitag)} onClose={close} setPage={setPage} />
+            <PasskeyGenerationModal
+              unitag={unitag}
+              goBack={() => setPage(Page.KeyManagement)}
+              onClose={close}
+              setPage={setPage}
+            />
+          </AnimatedPager>
+        </HeightAnimator>
+      )}
     </Flex>
   )
 

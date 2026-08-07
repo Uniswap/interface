@@ -1,6 +1,6 @@
 import { WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { useMemo } from 'react'
-import { getUnavailableCategories } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+import { getUnavailableCategories } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { usePortfolioBalanceBreakdown } from 'uniswap/src/features/dataApi/balances/balancesRest'

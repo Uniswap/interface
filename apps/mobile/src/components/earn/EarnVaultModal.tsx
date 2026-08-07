@@ -63,22 +63,27 @@ export function EarnVaultModal({
     initialSelectedTab ?? (hasPosition || balanceError ? 'balance' : 'details'),
   )
 
-  const { balanceLookupSettled, hasSupportedBalanceForUnderlying } = useEarnDepositSources({
-    vault,
-    walletAddress: walletAddress ?? undefined,
-    isOpen,
-  })
+  const { balanceLookupErrored, balanceLookupHasData, balanceLookupSettled, hasSupportedBalanceForUnderlying } =
+    useEarnDepositSources({
+      vault,
+      walletAddress: walletAddress ?? undefined,
+      isOpen,
+    })
+  const isBalanceLookupPending = !balanceLookupSettled && !balanceLookupErrored
 
   const handleDeposit = useCallback(() => {
     // Wait for the balance lookup to settle — without this, a tap during the loading window
     // would silently fall through to the deposit sheet for a user who actually has no balance.
-    if (!vault || !balanceLookupSettled) {
+    if (!vault || isBalanceLookupPending) {
       return
     }
     // Use `replace` (not `navigate` + onClose) so the vault sheet is atomically swapped for
     // the next modal — calling onClose after navigate is a no-op because the vault has
     // already lost focus, leaving both sheets stacked.
-    if (!hasSupportedBalanceForUnderlying) {
+    // Route to the acquisition screen only when the lookup produced data proving there is no
+    // supported balance — an errored lookup is unknown, not confirmed-empty (matches web and
+    // the Token Details banner). On error, the deposit sheet handles missing sources itself.
+    if (balanceLookupHasData && !hasSupportedBalanceForUnderlying) {
       navigation.replace(ModalName.EarnYouNeedToken, {
         currencyId: vault.displayCurrencyId,
       })
@@ -90,7 +95,15 @@ export function EarnVaultModal({
         initialAction: EarnAction.Deposit,
       })
     }
-  }, [analyticsEntryPoint, balanceLookupSettled, displayPosition, hasSupportedBalanceForUnderlying, navigation, vault])
+  }, [
+    analyticsEntryPoint,
+    balanceLookupHasData,
+    displayPosition,
+    hasSupportedBalanceForUnderlying,
+    isBalanceLookupPending,
+    navigation,
+    vault,
+  ])
 
   const handleWithdraw = useCallback(() => {
     if (!vault || !canWithdraw) {
@@ -131,6 +144,7 @@ export function EarnVaultModal({
             vault={vault}
             currencyInfo={currencyInfo}
             canWithdraw={canWithdraw}
+            depositLoading={isBalanceLookupPending}
             hasPosition={hasPosition}
             position={displayPosition}
             selectedTab={selectedTab}

@@ -8,6 +8,15 @@ import path from 'path'
  * @param tsconfigPath - Path to the tsconfig file. Defaults to ../../tsconfig.base.json relative to this file.
  * @returns Record of alias names to resolved absolute paths
  */
+/**
+ * Packages whose package.json `exports` map is the resolution contract.
+ * Aliasing them to their source directory would bypass `exports`, breaking
+ * subpaths that don't mirror the file layout (e.g. `@universe/mycelium/icons/<Name>`
+ * → `src/components/icons/<Name>.tsx`). Vite resolves them via node_modules
+ * + `exports` instead.
+ */
+const EXPORTS_MAP_PACKAGES = new Set(['@universe/mycelium'])
+
 export function getTsconfigAliases(
   tsconfigPath: string = path.resolve(__dirname, '../../../tsconfig.base.json'),
 ): Record<string, string> {
@@ -42,6 +51,9 @@ export function getTsconfigAliases(
     const targetPath = pathMapping[0]
     // Strip wildcard /* from both alias and target if present
     const aliasBase = alias.replace(/\/\*$/, '')
+    if (EXPORTS_MAP_PACKAGES.has(aliasBase)) {
+      continue
+    }
     const targetPathBase = targetPath.replace(/\/\*$/, '')
     // Resolve to absolute path relative to tsconfig directory
     aliases[aliasBase] = path.resolve(tsconfigDir, targetPathBase)

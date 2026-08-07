@@ -6,7 +6,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { isPlanTransactionDetails } from 'uniswap/src/features/transactions/types/utils'
+import { isFinalizedTxStatus, isPlanTransactionDetails } from 'uniswap/src/features/transactions/types/utils'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, buildNativeCurrencyId, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { ActivityRowFragments } from '~/pages/Portfolio/Activity/ActivityTable/activityTableModels'
@@ -17,6 +17,10 @@ import {
 } from '~/pages/Portfolio/Activity/ActivityTable/registryCache'
 import { buildEarnPlanActivityRowFragments } from '~/pages/Portfolio/Activity/ActivityTable/registryEarnPlanFragments'
 import { logInvalidTransactionType } from '~/pages/Portfolio/Activity/ActivityTable/registryLogging'
+import {
+  buildNFTMintActivityRowFragments,
+  buildNFTTradeActivityRowFragments,
+} from '~/pages/Portfolio/Activity/ActivityTable/registryNftFragments'
 import { ActivityFilterType } from '~/pages/Portfolio/Activity/Filters/activityFilterTypes'
 
 type ActivityRowFragmentsOptions = { isEarnActivityDisplayEnabled?: boolean }
@@ -299,26 +303,11 @@ function buildActivityRowFragmentsInternal(
         protocolInfo: toProtocolInfo(typeInfo.dappInfo),
       }
 
-    case TransactionType.NFTMint: {
-      return {
-        amount: {
-          kind: 'nft',
-          nftImageUrl: typeInfo.nftSummaryInfo.imageURL,
-          nftName: typeInfo.nftSummaryInfo.name,
-          nftCollectionName: typeInfo.nftSummaryInfo.collectionName,
-          purchaseCurrencyId: typeInfo.purchaseCurrencyId,
-          purchaseAmountRaw: typeInfo.purchaseCurrencyAmountRaw,
-        },
-        counterparty: typeInfo.dappInfo?.address
-          ? getValidAddress({ address: typeInfo.dappInfo.address, chainId })
-          : null,
-        typeLabel: {
-          baseGroup: ActivityFilterType.Mints,
-          overrideLabelKey: 'transaction.status.mint.success',
-        },
-        protocolInfo: toProtocolInfo(typeInfo.dappInfo),
-      }
-    }
+    case TransactionType.NFTMint:
+      return buildNFTMintActivityRowFragments(typeInfo, chainId)
+
+    case TransactionType.NFTTrade:
+      return buildNFTTradeActivityRowFragments(typeInfo, chainId)
 
     case TransactionType.CollectFees:
       return {
@@ -344,12 +333,14 @@ function buildActivityRowFragmentsInternal(
       }
 
     case TransactionType.LPIncentivesClaimRewards: {
-      const currencyId = buildCurrencyId(chainId, typeInfo.tokenAddress)
+      const tokenAddresses = typeInfo.tokenAddresses ?? [] // oxlint-disable-line no-unnecessary-condition -- pre-rename persisted claims may lack tokenAddresses
+      // Every claimed token, whatever the count. A claim records no amount, so the row is the
+      // token set alone — routing a one-token claim through the single-currency row instead would
+      // render the formatter's "-" placeholder where the amount belongs.
       return {
         amount: {
-          kind: 'single',
-          currencyId,
-          amountRaw: undefined,
+          kind: 'multi-token',
+          currencyIds: tokenAddresses.map((address) => buildCurrencyId(chainId, address)),
         },
         counterparty: null,
         typeLabel: {
@@ -467,6 +458,16 @@ function buildActivityRowFragmentsInternal(
           overrideLabelKey: 'common.claimed',
         },
       }
+    }
+
+    case TransactionType.UniswapXCancel: {
+      // Defensive surface only (row suppressed while the flag is on) — status-appropriate tense
+      const overrideLabelKey = !isFinalizedTxStatus(details.status)
+        ? 'transaction.status.limitCancel.pending'
+        : details.status === TransactionStatus.Failed
+          ? 'transaction.status.limitCancel.failed'
+          : 'transaction.status.limitCancel.success'
+      return { amount: null, counterparty: null, typeLabel: { baseGroup: null, overrideLabelKey } }
     }
 
     case TransactionType.Unknown: {

@@ -20,6 +20,10 @@ pre-commit:
     env-files:
       run: ./scripts/check-env-files.sh
 
+    dep-specs:
+      glob: "**/package.json"
+      run: bun scripts/check-dependency-specs.ts
+
     git-secrets:
       run: |
         export TERM=dumb

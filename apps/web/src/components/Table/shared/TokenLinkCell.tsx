@@ -7,9 +7,9 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { currencyId as toCurrencyId } from 'uniswap/src/utils/currencyId'
-import { getTokenDetailsURL, gqlToCurrency, unwrapToken } from '~/appGraphql/data/util'
 import { EllipsisText } from '~/components/Table/shared/TableText'
 import { TokenHoverCard } from '~/components/TokenHoverCard/TokenHoverCard'
+import { getTokenDetailsURL, gqlToCurrency, unwrapToken } from '~/data/util'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 const StyledInternalLink = styled(Link, {

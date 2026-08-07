@@ -1,11 +1,32 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useCallback, useMemo } from 'react'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import { getGetWalletNftsQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/nfts/queries'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import type { UseWalletNftsProps, UseWalletNftsResult } from 'uniswap/src/features/nfts/hooks/types'
 import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { logger } from 'utilities/src/logger/logger'
+
+export interface UseWalletNftsProps {
+  address: Address
+  filterSpam?: boolean
+  skip?: boolean
+  chainsFilter?: UniverseChainId[]
+  pageSize?: number
+  pollInterval?: PollingInterval
+}
+
+export interface UseWalletNftsResult {
+  nfts: NFTItem[]
+  loading: boolean
+  hasNextPage: boolean
+  isPending: boolean
+  isFetchingMore: boolean
+  isError: boolean
+  fetchNextPage: () => Promise<void>
+  refetch: () => void
+}
 
 const DEFAULT_PAGE_SIZE = 100
 

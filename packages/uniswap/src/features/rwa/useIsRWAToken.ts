@@ -1,6 +1,6 @@
 import type { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { useListRwasQuery } from 'uniswap/src/data/rest/listRwas'
+import { useListRwasQuery } from 'uniswap/src/data/apiClients/dataApiService/rwa/listRwas'
 import { getRWACandidatesFromCurrency } from 'uniswap/src/features/rwa/rwaCandidates'
 import { type RWACandidate, rwaTokenMatchesCandidate } from 'uniswap/src/features/rwa/rwaMatch'
 

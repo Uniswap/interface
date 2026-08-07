@@ -18,13 +18,14 @@ import { parseNFTMintTransaction } from 'uniswap/src/features/activity/parse/par
 import { parseReceiveTransaction } from 'uniswap/src/features/activity/parse/parseReceiveTransaction'
 import { parseSendTransaction } from 'uniswap/src/features/activity/parse/parseSendTransaction'
 import {
+  parseNFTTradeTransaction,
   parseSwapTransaction,
   parseWithdrawTransaction,
   parseWrapTransaction,
   parseDepositTransaction,
 } from 'uniswap/src/features/activity/parse/parseTradeTransaction'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { NFTTradeType, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import {
   SAMPLE_SEED_ADDRESS_1,
   SAMPLE_SEED_ADDRESS_2,
@@ -675,6 +676,122 @@ describe(parseSwapTransaction, () => {
       // Should be 950 (the amount to owner), NOT 50 (the fee) or 1000 (total)
       outputCurrencyAmountRaw: '950000000000000000000',
     })
+  })
+})
+
+/** NFT Trade (labeled SWAP by the data-api) */
+
+const MOCK_NFT_BUY: OnChainTransaction = {
+  ...TRANSACTION_BASE,
+  label: OnChainTransactionLabel.SWAP,
+  transfers: [
+    {
+      direction: Direction.SEND,
+      asset: {
+        case: 'token',
+        value: NATIVE_TOKEN_MOCK,
+      },
+      amount: {
+        amount: 0.5,
+        raw: '500000000000000000',
+      },
+      from: FROM_ADDRESS,
+      to: TO_ADDRESS,
+    },
+    {
+      direction: Direction.RECEIVE,
+      asset: {
+        case: 'nft',
+        value: NFT_MOCK,
+      },
+      amount: {
+        amount: 1,
+        raw: '1',
+      },
+      from: TO_ADDRESS,
+      to: FROM_ADDRESS,
+    },
+  ],
+} as OnChainTransaction
+
+const MOCK_NFT_SELL: OnChainTransaction = {
+  ...TRANSACTION_BASE,
+  label: OnChainTransactionLabel.SWAP,
+  transfers: [
+    {
+      direction: Direction.SEND,
+      asset: {
+        case: 'nft',
+        value: NFT_MOCK,
+      },
+      amount: {
+        amount: 1,
+        raw: '1',
+      },
+      from: FROM_ADDRESS,
+      to: TO_ADDRESS,
+    },
+    {
+      direction: Direction.RECEIVE,
+      asset: {
+        case: 'token',
+        value: WRAPPED_TOKEN_MOCK,
+      },
+      amount: {
+        amount: 0.5,
+        raw: '500000000000000000',
+      },
+      from: TO_ADDRESS,
+      to: FROM_ADDRESS,
+    },
+  ],
+} as OnChainTransaction
+
+describe(parseNFTTradeTransaction, () => {
+  it('NFT Trade: handle empty transfers', () => {
+    expect(parseNFTTradeTransaction(TRANSACTION_BASE)).toBeUndefined()
+  })
+  it('NFT Trade: returns undefined for token-only swap', () => {
+    expect(parseNFTTradeTransaction(MOCK_ERC20_SWAP)).toBeUndefined()
+  })
+  it('NFT Trade: parse NFT buy', () => {
+    expect(parseNFTTradeTransaction(MOCK_NFT_BUY)).toEqual({
+      type: TransactionType.NFTTrade,
+      tradeType: NFTTradeType.BUY,
+      nftSummaryInfo: {
+        name: 'asset_name',
+        collectionName: 'collection_name',
+        imageURL: 'image_url',
+        tokenId: 'token_id',
+        address: 'nft_contract_address',
+      },
+      purchaseCurrencyId: `1-${NATIVE_ADDRESS}`,
+      purchaseCurrencyAmountRaw: '500000000000000000',
+      isSpam: false,
+      dappInfo: undefined,
+    })
+  })
+  it('NFT Trade: parse NFT sell', () => {
+    expect(parseNFTTradeTransaction(MOCK_NFT_SELL)).toEqual({
+      type: TransactionType.NFTTrade,
+      tradeType: NFTTradeType.SELL,
+      nftSummaryInfo: {
+        name: 'asset_name',
+        collectionName: 'collection_name',
+        imageURL: 'image_url',
+        tokenId: 'token_id',
+        address: 'nft_contract_address',
+      },
+      purchaseCurrencyId: `1-${WRAPPED_NATIVE_ADDRESS}`,
+      purchaseCurrencyAmountRaw: '500000000000000000',
+      isSpam: false,
+      dappInfo: undefined,
+    })
+  })
+  it('NFT Trade: extract routes SWAP with NFT transfer to NFTTrade', () => {
+    const details = extractRestOnChainTransactionDetails(MOCK_NFT_BUY)
+    expect(details).toHaveLength(1)
+    expect(details[0]?.typeInfo.type).toEqual(TransactionType.NFTTrade)
   })
 })
 

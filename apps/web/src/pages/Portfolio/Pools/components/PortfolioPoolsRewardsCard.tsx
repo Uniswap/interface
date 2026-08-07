@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, FlexLoader, Image, Skeleton, Text, TouchableArea } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
@@ -7,30 +8,38 @@ import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
-import { useGetPoolsRewards } from 'uniswap/src/data/rest/getPoolsRewards'
+import { useGetPoolsRewards } from 'uniswap/src/data/apiClients/dataApiService/pools/getPoolsRewards'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
+import { useEvent } from 'utilities/src/react/hooks'
 import tokenLogo from '~/assets/images/token-logo.png'
 import { useLpIncentives } from '~/features/Liquidity/hooks/useLpIncentives'
+import { formatRewardsTotal } from '~/features/Liquidity/LPIncentives/buildLpIncentiveRewards'
 import { LP_INCENTIVES_CHAIN_IDS, LP_INCENTIVES_DUST_THRESHOLD } from '~/features/Liquidity/LPIncentives/constants'
 import { useEffectivelyClaimed } from '~/features/Liquidity/LPIncentives/hooks/useEffectivelyClaimed'
+import { useLpIncentiveRewards } from '~/features/Liquidity/LPIncentives/hooks/useLpIncentiveRewards'
 import { useLpIncentiveRewardsUsdValue } from '~/features/Liquidity/LPIncentives/hooks/useLpIncentiveRewardsUsdValue'
 import { LpIncentiveClaimModal } from '~/features/Liquidity/LPIncentives/LpIncentiveClaimModal'
+import { LpIncentiveRewardLogos } from '~/features/Liquidity/LPIncentives/LpIncentiveRewardLogos'
+import { LpIncentivesRewardsModal } from '~/features/Liquidity/LPIncentives/LpIncentivesRewardsModal'
 import { PortfolioPoolsSidebarCard } from '~/pages/Portfolio/Pools/components/PortfolioPoolsSidebarCard'
 
-export function PortfolioPoolsRewardsCard({
+/**
+ * The UNI-only reward read for this card: whether the wallet clears the dust threshold, the USD
+ * conversion of its unclaimed UNI, and the claim-modal state it owns. Disabled by
+ * `isMultiTokenEnabled` so the multi-token path doesn't fetch a result it never renders.
+ */
+function useUniPortfolioRewards({
   walletAddress,
-  isExternalWallet = false,
+  isMultiTokenEnabled,
 }: {
-  walletAddress: string | undefined
-  isExternalWallet?: boolean
+  walletAddress?: string
+  isMultiTokenEnabled: boolean
 }) {
-  const { t } = useTranslation()
-
   const {
     isModalOpen,
     isPendingTransaction,
@@ -42,57 +51,101 @@ export function PortfolioPoolsRewardsCard({
     hasCollectedRewards,
   } = useLpIncentives()
 
-  const {
-    data: rewardsData,
-    isLoading,
-    error,
-  } = useGetPoolsRewards({ walletAddress, chainIds: LP_INCENTIVES_CHAIN_IDS }, Boolean(walletAddress))
+  const { data, isLoading, error } = useGetPoolsRewards(
+    { walletAddress, chainIds: LP_INCENTIVES_CHAIN_IDS },
+    Boolean(walletAddress) && !isMultiTokenEnabled,
+  )
+  const totalUnclaimed = data?.totalUnclaimedAmountUni
 
-  const effectivelyClaimed = useEffectivelyClaimed({
-    tokenRewards: rewardsData?.totalUnclaimedAmountUni,
-    hasCollectedRewards,
-  })
+  const effectivelyClaimed = useEffectivelyClaimed({ tokenRewards: totalUnclaimed, hasCollectedRewards })
 
   const { userHasRewards, isParseError } = useMemo(() => {
     if (effectivelyClaimed) {
       return { userHasRewards: false, isParseError: false }
     }
     try {
-      const raw = rewardsData?.totalUnclaimedAmountUni ?? '0'
+      const raw = totalUnclaimed ?? '0'
       return { userHasRewards: BigInt(raw) >= LP_INCENTIVES_DUST_THRESHOLD, isParseError: false }
     } catch (e) {
-      logger.error(e, {
-        tags: { file: 'PortfolioPoolsRewardsCard.tsx', function: 'userHasRewards' },
-      })
+      logger.error(e, { tags: { file: 'PortfolioPoolsRewardsCard.tsx', function: 'userHasRewards' } })
       return { userHasRewards: false, isParseError: true }
     }
-  }, [effectivelyClaimed, rewardsData?.totalUnclaimedAmountUni])
+  }, [effectivelyClaimed, totalUnclaimed])
 
-  const { usdValue: rewardsUsdValue, formattedUsdValue: formattedRewardsUsdValue } = useLpIncentiveRewardsUsdValue(
-    effectivelyClaimed ? '0' : (rewardsData?.totalUnclaimedAmountUni ?? '0'),
+  const { usdValue, formattedUsdValue } = useLpIncentiveRewardsUsdValue(
+    effectivelyClaimed ? '0' : (totalUnclaimed ?? '0'),
   )
-  const { convertFiatAmountFormatted } = useLocalizationContext()
-
-  const hasError = Boolean(error) || isParseError
-  const isUsdLoading = userHasRewards && !rewardsUsdValue
 
   useEffect(() => {
-    setTokenRewards(effectivelyClaimed ? '0' : (rewardsData?.totalUnclaimedAmountUni ?? '0'))
-  }, [effectivelyClaimed, rewardsData?.totalUnclaimedAmountUni, setTokenRewards])
+    // The multi-token path renders no UNI amount and its modal doesn't read this page state.
+    if (isMultiTokenEnabled) {
+      return
+    }
+    setTokenRewards(effectivelyClaimed ? '0' : (totalUnclaimed ?? '0'))
+  }, [effectivelyClaimed, totalUnclaimed, setTokenRewards, isMultiTokenEnabled])
 
   const handleClaimSuccess = useCallback(() => {
-    sendAnalyticsEvent(UniswapEventName.LpIncentiveCollectRewardsSuccess, {
-      token_rewards: tokenRewards,
-    })
+    sendAnalyticsEvent(UniswapEventName.LpIncentiveCollectRewardsSuccess, { token_rewards: tokenRewards })
     onTransactionSuccess()
   }, [tokenRewards, onTransactionSuccess])
+
+  return {
+    userHasRewards,
+    hasError: Boolean(error) || isParseError,
+    // A known reward with no USD price yet is still loading as far as this card's amount slot goes.
+    isLoading: isLoading || (userHasRewards && !usdValue),
+    usdValue,
+    formattedUsdValue,
+    isModalOpen,
+    isPendingTransaction,
+    tokenRewards,
+    openModal,
+    closeModal,
+    handleClaimSuccess,
+  }
+}
+
+/**
+ * Portfolio pools sidebar rewards card.
+ *
+ * multi_token_lp_incentives switches what the card totals and how it collects. With the flag off it
+ * shows the USD value of unclaimed UNI beside the UNI logo and Collect opens the UNI-only claim
+ * modal. With the flag on it totals every reward denomination, shows a cluster of reward-token
+ * logos, and Collect opens the wallet-level rewards modal.
+ */
+export function PortfolioPoolsRewardsCard({
+  walletAddress,
+  isExternalWallet = false,
+}: {
+  walletAddress: string | undefined
+  isExternalWallet?: boolean
+}) {
+  const { t } = useTranslation()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
+  const isMultiTokenEnabled = useFeatureFlag(FeatureFlags.MultiTokenLpIncentives)
+
+  const uni = useUniPortfolioRewards({ walletAddress, isMultiTokenEnabled })
+  const multi = useLpIncentiveRewards(isMultiTokenEnabled ? walletAddress : undefined)
+  const [isRewardsModalOpen, setIsRewardsModalOpen] = useState(false)
+  const openRewardsModal = useEvent(() => setIsRewardsModalOpen(true))
+  const closeRewardsModal = useEvent(() => setIsRewardsModalOpen(false))
 
   if (!walletAddress) {
     return null
   }
 
-  const showSkeleton = isLoading || isUsdLoading
-  const isZero = !showSkeleton && !hasError && !userHasRewards
+  const hasRewards = isMultiTokenEnabled ? multi.hasRewards : uni.userHasRewards
+  const hasError = isMultiTokenEnabled ? multi.isError : uni.hasError
+  const showSkeleton = isMultiTokenEnabled ? multi.isLoading : uni.isLoading
+  // A failed fetch isn't a zero balance, so it keeps the tooltip and the (disabled) Collect button
+  // that the zero state drops.
+  const isZero = !showSkeleton && !hasError && !hasRewards
+  const displayValue = isMultiTokenEnabled
+    ? formatRewardsTotal(multi, convertFiatAmountFormatted)
+    : hasError
+      ? '-'
+      : (uni.formattedUsdValue ?? convertFiatAmountFormatted('0', NumberType.PortfolioBalance))
+  const numericValue = isMultiTokenEnabled ? multi.totalUsd : uni.usdValue ? Number(uni.usdValue.toExact()) : 0
 
   return (
     <>
@@ -127,7 +180,17 @@ export function PortfolioPoolsRewardsCard({
           )}
         </Flex>
         <Flex row alignItems="center" gap="$gap8" minHeight={32}>
-          <Image src={tokenLogo} width={iconSizes.icon24} height={iconSizes.icon24} objectFit="cover" flexShrink={0} />
+          {isMultiTokenEnabled ? (
+            multi.rewardTokens.length > 0 && <LpIncentiveRewardLogos tokens={multi.rewardTokens} />
+          ) : (
+            <Image
+              src={tokenLogo}
+              width={iconSizes.icon24}
+              height={iconSizes.icon24}
+              objectFit="cover"
+              flexShrink={0}
+            />
+          )}
           {showSkeleton ? (
             <Flex flexGrow={1}>
               <Skeleton>
@@ -136,15 +199,13 @@ export function PortfolioPoolsRewardsCard({
             </Flex>
           ) : (
             <Flex flexGrow={1}>
+              {/* An unknown balance reads as present rather than absent, so a failed fetch keeps the
+                  full-strength colour the zero state greys out. */}
               <AnimatedNumber
-                value={
-                  hasError
-                    ? '-'
-                    : (formattedRewardsUsdValue ?? convertFiatAmountFormatted('0', NumberType.PortfolioBalance))
-                }
-                numericValue={rewardsUsdValue ? Number(rewardsUsdValue.toExact()) : 0}
+                value={displayValue}
+                numericValue={numericValue}
                 textVariant="$heading3"
-                color={userHasRewards || hasError ? '$neutral1' : '$neutral3'}
+                color={hasRewards || hasError ? '$neutral1' : '$neutral3'}
               />
             </Flex>
           )}
@@ -154,8 +215,8 @@ export function PortfolioPoolsRewardsCard({
                 size="xsmall"
                 emphasis="secondary"
                 fill={false}
-                disabled={hasError || isPendingTransaction}
-                onPress={openModal}
+                disabled={isMultiTokenEnabled ? !hasRewards : hasError || uni.isPendingTransaction}
+                onPress={isMultiTokenEnabled ? openRewardsModal : uni.openModal}
               >
                 {t('common.collect.button')}
               </Button>
@@ -163,15 +224,23 @@ export function PortfolioPoolsRewardsCard({
           )}
         </Flex>
       </PortfolioPoolsSidebarCard>
-      <LpIncentiveClaimModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onSuccess={handleClaimSuccess}
-        tokenRewards={tokenRewards}
-        isPendingTransaction={isPendingTransaction}
-        iconUrl={tokenLogo}
-        formattedRewardsUsdValue={formattedRewardsUsdValue}
-      />
+      {isMultiTokenEnabled ? (
+        <LpIncentivesRewardsModal
+          isOpen={isRewardsModalOpen}
+          onClose={closeRewardsModal}
+          walletAddress={walletAddress}
+        />
+      ) : (
+        <LpIncentiveClaimModal
+          isOpen={uni.isModalOpen}
+          onClose={uni.closeModal}
+          onSuccess={uni.handleClaimSuccess}
+          tokenRewards={uni.tokenRewards}
+          isPendingTransaction={uni.isPendingTransaction}
+          iconUrl={tokenLogo}
+          formattedRewardsUsdValue={uni.formattedUsdValue}
+        />
+      )}
     </>
   )
 }

@@ -10,7 +10,8 @@ import { handleOnChainStep } from '~/state/sagas/transactions/utils'
 import type { LpIncentivesClaimTransactionStep } from '~/state/transactions/types'
 
 function* lpIncentivesClaim(params: LpIncentivesClaimParams) {
-  const { address, claimData, tokenAddress, selectChain, walletChainId, onSuccess, onFailure, setCurrentStep } = params
+  const { address, claimData, tokenAddresses, selectChain, walletChainId, onSuccess, onFailure, setCurrentStep } =
+    params
 
   try {
     // Check if we need to switch chains - compare the required chain (from claimData) with user's current chain
@@ -25,7 +26,7 @@ function* lpIncentivesClaim(params: LpIncentivesClaimParams) {
 
     const info: LpIncentivesClaimTransactionInfo = {
       type: TransactionType.LPIncentivesClaimRewards,
-      tokenAddress,
+      tokenAddresses,
     }
 
     const step: LpIncentivesClaimTransactionStep = {

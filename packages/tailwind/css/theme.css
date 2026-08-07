@@ -1,19 +1,18 @@
 /* Mycelium Theme Tokens for Tailwind v4 */
+/* Color values track the current Spore generation (packages/ui/src/theme/color/colors.ts). */
 
 @theme {
   /* Font Families - these create font-* utilities */
+  /* Basel is ONE family ("Basel Grotesk", weights 485/535 via @font-face in fonts.css). */
+  /* font-basel-book / font-basel-medium are composite utilities in base.css (family + weight). */
   --font-basel: "Basel Grotesk", sans-serif;
-  --font-basel-book: "Basel Grotesk Book", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI",
-    Roboto, Helvetica, Arial, sans-serif;
-  --font-basel-medium: "Basel Grotesk Medium", -apple-system, system-ui, BlinkMacSystemFont,
-    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: "InputMono-Regular", monospace;
 
   /* Font Weights */
   --font-weight-book: 485;
   --font-weight-medium: 535;
 
-  /* Breakpoints */
+  /* Breakpoints (width; height variants live in base.css as custom variants) */
   --breakpoint-xxs: 360px;
   --breakpoint-xs: 380px;
   --breakpoint-sm: 450px;
@@ -24,62 +23,63 @@
   --breakpoint-xxxl: 1536px;
 
   /* Typography Scale - Headings (creates text-heading-* utilities) */
-  --text-heading-1: 52px;
-  --text-heading-1--line-height: 60px;
+  /* rem at 16px base so the scale follows user font-size settings */
+  --text-heading-1: 3.25rem; /* 52px */
+  --text-heading-1--line-height: 3.125rem; /* 50px */
   --text-heading-1--letter-spacing: -0.02em;
   --text-heading-1--font-weight: 485;
 
-  --text-heading-2: 36px;
-  --text-heading-2--line-height: 44px;
+  --text-heading-2: 2.25rem; /* 36px */
+  --text-heading-2--line-height: 2.5rem; /* 40px */
   --text-heading-2--letter-spacing: -0.01em;
   --text-heading-2--font-weight: 485;
 
-  --text-heading-3: 24px;
-  --text-heading-3--line-height: 32px;
+  --text-heading-3: 1.5rem; /* 24px */
+  --text-heading-3--line-height: 1.75rem; /* 28px */
   --text-heading-3--letter-spacing: -0.005em;
   --text-heading-3--font-weight: 485;
 
   /* Typography Scale - Subheadings */
-  --text-subheading-1: 18px;
-  --text-subheading-1--line-height: 24px;
+  --text-subheading-1: 1.125rem; /* 18px */
+  --text-subheading-1--line-height: 1.5rem; /* 24px */
   --text-subheading-1--font-weight: 485;
 
-  --text-subheading-2: 16px;
-  --text-subheading-2--line-height: 24px;
+  --text-subheading-2: 1rem; /* 16px */
+  --text-subheading-2--line-height: 1.5rem; /* 24px */
   --text-subheading-2--font-weight: 485;
 
   /* Typography Scale - Body */
-  --text-body-1: 18px;
-  --text-body-1--line-height: 24px;
+  --text-body-1: 1.125rem; /* 18px */
+  --text-body-1--line-height: 1.5rem; /* 24px */
   --text-body-1--font-weight: 485;
 
-  --text-body-2: 16px;
-  --text-body-2--line-height: 24px;
+  --text-body-2: 1rem; /* 16px */
+  --text-body-2--line-height: 1.5rem; /* 24px */
   --text-body-2--font-weight: 485;
 
-  --text-body-3: 14px;
-  --text-body-3--line-height: 20px;
+  --text-body-3: 0.875rem; /* 14px */
+  --text-body-3--line-height: 1.25rem; /* 20px */
   --text-body-3--font-weight: 485;
 
-  --text-body-4: 12px;
-  --text-body-4--line-height: 16px;
+  --text-body-4: 0.75rem; /* 12px */
+  --text-body-4--line-height: 1rem; /* 16px */
   --text-body-4--font-weight: 485;
 
   /* Typography Scale - Buttons */
-  --text-button-1: 18px;
-  --text-button-1--line-height: 24px;
+  --text-button-1: 1.125rem; /* 18px */
+  --text-button-1--line-height: 1.5rem; /* 24px */
   --text-button-1--font-weight: 535;
 
-  --text-button-2: 16px;
-  --text-button-2--line-height: 24px;
+  --text-button-2: 1rem; /* 16px */
+  --text-button-2--line-height: 1.5rem; /* 24px */
   --text-button-2--font-weight: 535;
 
-  --text-button-3: 14px;
-  --text-button-3--line-height: 20px;
+  --text-button-3: 0.875rem; /* 14px */
+  --text-button-3--line-height: 1.25rem; /* 20px */
   --text-button-3--font-weight: 535;
 
-  --text-button-4: 12px;
-  --text-button-4--line-height: 16px;
+  --text-button-4: 0.75rem; /* 12px */
+  --text-button-4--line-height: 1rem; /* 16px */
   --text-button-4--font-weight: 535;
 
   /* Base Colors */
@@ -91,68 +91,132 @@
   --color-background-dark: #000000;
 
   /* Semantic Colors - Neutrals */
-  --color-neutral1-light: #222222;
+  --color-neutral1-light: #131313;
   --color-neutral1-dark: #ffffff;
-  --color-neutral2-light: #7d7d7d;
-  --color-neutral2-dark: #9b9b9b;
-  --color-neutral3-light: #cecece;
-  --color-neutral3-dark: #5e5e5e;
+  --color-neutral1-hovered-light: rgba(19, 19, 19, 0.83);
+  --color-neutral1-hovered-dark: rgba(255, 255, 255, 0.85);
+  --color-neutral2-light: rgba(19, 19, 19, 0.63);
+  --color-neutral2-dark: rgba(255, 255, 255, 0.65);
+  --color-neutral2-hovered-light: rgba(19, 19, 19, 0.83);
+  --color-neutral2-hovered-dark: rgba(255, 255, 255, 0.85);
+  --color-neutral3-light: rgba(19, 19, 19, 0.35);
+  --color-neutral3-dark: rgba(255, 255, 255, 0.38);
+  --color-neutral3-hovered-light: rgba(19, 19, 19, 0.55);
+  --color-neutral3-hovered-dark: rgba(255, 255, 255, 0.58);
 
   /* Semantic Colors - Surfaces */
   --color-surface1-light: #ffffff;
   --color-surface1-dark: #131313;
-  --color-surface1-hovered: #f5f5f5;
-  --color-surface1-hovered-dark: #181818;
+  --color-surface1-hovered-light: #fcfcfc;
+  --color-surface1-hovered-dark: #1a1a1a;
 
   --color-surface2-light: #f9f9f9;
-  --color-surface2-dark: #1b1b1b;
-  --color-surface2-hovered: #f2f2f2;
+  --color-surface2-dark: #1f1f1f;
+  --color-surface2-hovered-light: #f2f2f2;
   --color-surface2-hovered-dark: #242424;
 
-  --color-surface3-light: #22222212;
-  --color-surface3-dark: #ffffff12;
-  --color-surface3-hovered: rgba(34, 34, 34, 0.12);
+  --color-surface3-light: rgba(19, 19, 19, 0.08);
+  --color-surface3-dark: rgba(255, 255, 255, 0.12);
+  --color-surface3-hovered-light: rgba(19, 19, 19, 0.1);
   --color-surface3-hovered-dark: rgba(255, 255, 255, 0.16);
+  --color-surface3-solid-light: #f2f2f2;
+  --color-surface3-solid-dark: #393939;
 
-  --color-surface4-light: #ffffff64;
-  --color-surface4-dark: #ffffff20;
+  --color-surface4-light: rgba(255, 255, 255, 0.64);
+  --color-surface4-dark: rgba(255, 255, 255, 0.2);
 
-  --color-surface5-light: #00000004;
-  --color-surface5-dark: #00000004;
+  --color-surface5-light: rgba(0, 0, 0, 0.04);
+  --color-surface5-dark: rgba(0, 0, 0, 0.04);
+  --color-surface5-hovered-light: rgba(0, 0, 0, 0.06);
+  --color-surface5-hovered-dark: rgba(0, 0, 0, 0.06);
 
   /* Semantic Colors - Accents */
   --color-accent1-light: #ff37c7;
   --color-accent1-dark: #ff37c7;
-  --color-accent2-light: #ffefff;
-  --color-accent2-dark: #311c31;
-  --color-accent3: #4c82fb;
-  --color-accent3-dark: #4c82fb;
+  --color-accent1-hovered-light: #e500a5;
+  --color-accent1-hovered-dark: #e500a5;
+  --color-accent2-light: rgba(255, 55, 199, 0.08);
+  --color-accent2-dark: rgba(255, 55, 199, 0.08);
+  --color-accent2-hovered-light: rgba(255, 55, 199, 0.12);
+  --color-accent2-hovered-dark: rgba(255, 55, 199, 0.12);
+  --color-accent2-solid-light: #fff3fc;
+  --color-accent2-solid-dark: #261621;
+  /* Neutral-themed fills use neutral1 with surface1 labels (design decision: Zack Labadie + Philippe Cao, 2026-07-29 —
+     no separate inverse value). accent3 is a deprecated alias of neutral1 kept for migration compat; values duplicated
+     because the native pipeline and token parsers need literals — remove when legacy Tamagui accent3 is gone. */
+  --color-accent3-light: #131313; /* = neutral1-light */
+  --color-accent3-dark: #ffffff; /* = neutral1-dark */
+  --color-accent3-hovered-light: rgba(19, 19, 19, 0.83); /* = neutral1-hovered-light */
+  --color-accent3-hovered-dark: rgba(255, 255, 255, 0.85); /* = neutral1-hovered-dark */
   --color-accent4: #fdaff0;
   --color-accent4-light: #fef4ff;
-
-  /* Token Colors */
-  --color-token0: #fc72ff;
-  --color-token0-dark: #fc72ff;
-  --color-token1: #4c82fb;
-  --color-token1-dark: #4c82fb;
 
   /* Status Colors */
   --color-success-light: #0c8911;
   --color-success-dark: #21c95e;
+  --color-success-hovered-light: #06742c;
+  --color-success-hovered-dark: #15863c;
+  --color-success-secondary-light: rgba(15, 194, 68, 0.06);
+  --color-success-secondary-dark: rgba(33, 201, 94, 0.12);
+  --color-success-secondary-hovered-light: rgba(15, 194, 68, 0.12);
+  --color-success-secondary-hovered-dark: #093a16;
+  --color-warning-light: #996f01;
+  --color-warning-dark: #ffbf17;
+  --color-warning-hovered-light: #7a5801;
+  --color-warning-hovered-dark: #ffdd0d;
+  --color-warning-secondary-light: rgba(255, 191, 23, 0.1);
+  --color-warning-secondary-dark: rgba(255, 191, 23, 0.08);
+  --color-warning-secondary-hovered-light: rgba(255, 191, 23, 0.1);
+  --color-warning-secondary-hovered-dark: rgba(255, 191, 23, 0.16);
   --color-critical-light: #e10f0f;
   --color-critical-dark: #ff593c;
-  --color-critical-secondary: #fff2f1;
-  --color-critical-secondary-dark: #2e0805;
-  --color-warning: #eeb317;
+  --color-critical-hovered-light: #bf0d0d;
+  --color-critical-hovered-dark: #ff401f;
+  --color-critical-secondary-light: rgba(255, 0, 0, 0.05);
+  --color-critical-secondary-dark: rgba(255, 89, 60, 0.12);
+  --color-critical-secondary-hovered-light: rgba(255, 0, 0, 0.1);
+  --color-critical-secondary-hovered-dark: rgba(255, 89, 60, 0.2);
 
-  /* Network Colors */
+  /* Network Colors (mode-independent) */
   --color-network-ethereum: #627eea;
   --color-network-optimism: #ff0420;
-  --color-network-polygon: #a457ff;
-  --color-network-arbitrum: #28a0f0;
-  --color-network-bsc: #f0b90b;
+  --color-network-polygon: #8247e5;
+  --color-network-arbitrum: #12aaff;
   --color-network-base: #0052ff;
-  --color-network-blast: #fcfc03;
+  --color-network-avalanche: #e84142;
+  --color-network-solana: #9945ff;
+  --color-network-robinhood: #00c805;
+  --color-network-ink: #7757e2;
+  --color-network-unichain: #fc0fa4;
+  --color-network-zksync: #3667f6;
+  /* Legacy alias for BNB Smart Chain; prefer network-bnb (mode-aware) */
+  --color-network-bsc: #f0b90b;
+
+  /* Network Colors (mode-dependent; auto-switching aliases in variables.css/native.css) */
+  --color-network-arc-light: #2b5ce6;
+  --color-network-arc-dark: #6e8ff7;
+  --color-network-blast-light: #222222;
+  --color-network-blast-dark: #fcfc03;
+  --color-network-bnb-light: #b08603;
+  --color-network-bnb-dark: #ffbf17;
+  --color-network-celo-light: #222222;
+  --color-network-celo-dark: #fcff52;
+  --color-network-linea-light: #121212;
+  --color-network-linea-dark: #61dfff;
+  --color-network-megaeth-light: #19191a;
+  --color-network-megaeth-dark: #ffffff;
+  --color-network-monad-light: #735bf8;
+  --color-network-monad-dark: #836ef9;
+  --color-network-soneium-light: #000000;
+  --color-network-soneium-dark: #ffffff;
+  --color-network-tempo-light: #1a1a2e;
+  --color-network-tempo-dark: #e8e8f0;
+  --color-network-worldchain-light: #222222;
+  --color-network-worldchain-dark: #ffffff;
+  --color-network-xlayer-light: #383838;
+  --color-network-xlayer-dark: #a7a7a7;
+  --color-network-zora-light: #222222;
+  --color-network-zora-dark: #ffffff;
 
   /* Decorative/Pattern Colors */
   --color-pattern-dots-dark: rgba(252, 116, 254, 0.08);
@@ -190,8 +254,11 @@
   --color-pink-700: #55072a;
   --color-pink-800: #350318;
   --color-pink-900: #2b000b;
-  --color-pink-vibrant: #f50db4;
+  --color-pink-light: #fef4ff;
+  --color-pink-pastel: #fdaff0;
   --color-pink-base: #fc74fe;
+  --color-pink-vibrant: #f50db4;
+  --color-pink-dark: #361a37;
 
   /* Red Palette */
   --color-red-50: #faecea;
@@ -204,11 +271,22 @@
   --color-red-700: #530f0f;
   --color-red-800: #380a03;
   --color-red-900: #240800;
-  --color-red-vibrant: #f14544;
+  --color-red-light: #fff2f1;
+  --color-red-pastel: #fdcfc4;
+  --color-red-base: #ff5f52;
+  --color-red-vibrant: #ff0000;
+  --color-red-dark: #220d0c;
+
+  /* Orange Palette */
+  --color-orange-light: #fef5ea;
+  --color-orange-pastel: #ffe8bc;
+  --color-orange-base: #ff8934;
+  --color-orange-vibrant: #ff4d00;
+  --color-orange-dark: #371b0c;
 
   /* Yellow Palette */
   --color-yellow-50: #f6f2d5;
-  --color-yellow-100: #dbbc19;
+  --color-yellow-100: #f0e49a;
   --color-yellow-200: #dbbc19;
   --color-yellow-300: #bb9f13;
   --color-yellow-400: #a08116;
@@ -217,7 +295,18 @@
   --color-yellow-700: #3e2b04;
   --color-yellow-800: #231902;
   --color-yellow-900: #180f02;
-  --color-yellow-vibrant: #faf40a;
+  --color-yellow-light: #fffe8b;
+  --color-yellow-pastel: #fff8b4;
+  --color-yellow-base: #ffbf17;
+  --color-yellow-vibrant: #fff612;
+  --color-yellow-dark: #1f1e02;
+
+  /* Brown Palette */
+  --color-brown-light: #f7f6f1;
+  --color-brown-pastel: #e2e0cd;
+  --color-brown-base: #85754a;
+  --color-brown-vibrant: #996f01;
+  --color-brown-dark: #231e0f;
 
   /* Green Palette */
   --color-green-50: #e3f3e6;
@@ -230,7 +319,32 @@
   --color-green-700: #053117;
   --color-green-800: #091f10;
   --color-green-900: #09130b;
-  --color-green-vibrant: #5cfe9d;
+  --color-green-light: #eefbf1;
+  --color-green-pastel: #c2e7d0;
+  --color-green-base: #0c8911;
+  --color-green-vibrant: #21c95e;
+  --color-green-dark: #0f2c1a;
+
+  /* Lime Palette */
+  --color-lime-light: #f7feeb;
+  --color-lime-pastel: #e4f6c4;
+  --color-lime-base: #78e744;
+  --color-lime-vibrant: #b1f13c;
+  --color-lime-dark: #232917;
+
+  /* Turquoise Palette */
+  --color-turquoise-light: #f7feeb;
+  --color-turquoise-pastel: #caffdf;
+  --color-turquoise-base: #00c3a0;
+  --color-turquoise-vibrant: #5cfe9d;
+  --color-turquoise-dark: #1a2a21;
+
+  /* Cyan Palette */
+  --color-cyan-light: #ebf8ff;
+  --color-cyan-pastel: #b9e3f8;
+  --color-cyan-base: #23a3ff;
+  --color-cyan-vibrant: #3adcff;
+  --color-cyan-dark: #15242b;
 
   /* Blue Palette */
   --color-blue-50: #edeff8;
@@ -243,7 +357,11 @@
   --color-blue-700: #09265e;
   --color-blue-800: #0b193f;
   --color-blue-900: #040e34;
-  --color-blue-vibrant: #587bff;
+  --color-blue-light: #eff4ff;
+  --color-blue-pastel: #d0d9f8;
+  --color-blue-base: #4981ff;
+  --color-blue-vibrant: #0047ff;
+  --color-blue-dark: #10143d;
 
   /* Gold Palette */
   --color-gold-200: #eeb317;
@@ -251,13 +369,28 @@
   --color-gold-vibrant: #feb239;
 
   /* Magenta Palette */
+  --color-magenta-50: #fff1fe;
+  --color-magenta-100: #fad8f8;
   --color-magenta-300: #fd82ff;
   --color-magenta-vibrant: #fc72ff;
 
   /* Purple Palette */
   --color-purple-300: #8440f2;
   --color-purple-900: #1c0337;
-  --color-purple-vibrant: #6100ff;
+  --color-purple-light: #faf5ff;
+  --color-purple-pastel: #e9d8fd;
+  --color-purple-base: #9e62ff;
+  --color-purple-vibrant: #4300b0;
+  --color-purple-dark: #1a0040;
+
+  /* Violet Palette */
+  --color-violet-200: #bdb8fa;
+  --color-violet-400: #7a7beb;
+
+  /* Brand Colors */
+  --color-uniswapx-violet: #4673fa;
+  --color-uniswapx-purple: #7d55fb;
+  --color-fiat-onramp-banner: #fb36d0;
 
   /* Unicon Avatar Colors - Light Mode */
   --color-unicon-0-light: #f50db4;
@@ -319,4 +452,138 @@
   --shadow-short: var(--shadow-short);
   --shadow-medium: var(--shadow-medium);
   --shadow-large: var(--shadow-large);
+
+  /*
+   * ui/src/theme token-constant parity families (INFRA-2951).
+   * Additive, value-identical imports of the ui token families; TS-mirrored in
+   * src/tokens.ts and pinned to this file by src/tokens.guard.test.ts.
+   * Namespaces are chosen to leave every existing utility untouched.
+   */
+
+  /* Icon Sizes (ui iconSizes parity; no Tailwind namespace — plain vars, no utilities) */
+  --icon-size-8: 8px;
+  --icon-size-12: 12px;
+  --icon-size-14: 14px;
+  --icon-size-16: 16px;
+  --icon-size-18: 18px;
+  --icon-size-20: 20px;
+  --icon-size-24: 24px;
+  --icon-size-28: 28px;
+  --icon-size-32: 32px;
+  --icon-size-36: 36px;
+  --icon-size-40: 40px;
+  --icon-size-44: 44px;
+  --icon-size-48: 48px;
+  --icon-size-56: 56px;
+  --icon-size-64: 64px;
+  --icon-size-70: 70px;
+  --icon-size-100: 100px;
+
+  /* Spacing Scale (ui spacing parity) — deliberately NOT --spacing-*: that
+     namespace would rebind the Tailwind 4px-grid utilities (p-12 → 12px). */
+  --ui-spacing-none: 0px;
+  --ui-spacing-1: 1px;
+  --ui-spacing-2: 2px;
+  --ui-spacing-4: 4px;
+  --ui-spacing-6: 6px;
+  --ui-spacing-8: 8px;
+  --ui-spacing-12: 12px;
+  --ui-spacing-16: 16px;
+  --ui-spacing-18: 18px;
+  --ui-spacing-20: 20px;
+  --ui-spacing-24: 24px;
+  --ui-spacing-28: 28px;
+  --ui-spacing-32: 32px;
+  --ui-spacing-36: 36px;
+  --ui-spacing-40: 40px;
+  --ui-spacing-48: 48px;
+  --ui-spacing-60: 60px;
+
+  /* Z-Index Layers (ui zIndexes parity) — the Tailwind z-index namespace, so these
+     also create z-<name> utilities; all names are new, z-<number> is unaffected. */
+  --z-index-negative: -1;
+  --z-index-background: 0;
+  --z-index-default: 1;
+  --z-index-mask: 10;
+  --z-index-dropdown: 970;
+  --z-index-header: 980;
+  --z-index-sidebar: 990;
+  --z-index-sticky: 1020;
+  --z-index-fixed: 1030;
+  --z-index-modal-backdrop: 1040;
+  --z-index-offcanvas: 1050;
+  --z-index-modal: 1060;
+  --z-index-popover-backdrop: 1065;
+  --z-index-popover: 1070;
+  --z-index-tooltip: 1080;
+  --z-index-overlay: 100010;
+  --z-index-toast: 100020;
+
+  /* Typography (ui fonts parity) — --text-* is the deliberately re-cut web type
+     scale and --font-* / --font-weight-* are live namespaces, so the ui-parity
+     variants live under --typography-* (plain vars, no utilities). Fractional
+     line-heights are the ui computed values (fontSize x ratio) at full float
+     precision; letter-spacing keeps the ui percent encoding. The ui family and
+     maxFontSizeMultiplier members have no CSS representation — see src/tokens.ts. */
+  --typography-heading-1: 52px;
+  --typography-heading-1--line-height: 49.92px;
+  --typography-heading-1--font-weight: 400;
+  --typography-heading-1--letter-spacing: -2%;
+
+  --typography-heading-2: 36px;
+  --typography-heading-2--line-height: 40px;
+  --typography-heading-2--font-weight: 400;
+  --typography-heading-2--letter-spacing: -1%;
+
+  --typography-heading-3: 24px;
+  --typography-heading-3--line-height: 28.799999999999997px;
+  --typography-heading-3--font-weight: 400;
+  --typography-heading-3--letter-spacing: -0.5%;
+
+  --typography-subheading-1: 18px;
+  --typography-subheading-1--line-height: 24px;
+  --typography-subheading-1--font-weight: 400;
+
+  --typography-subheading-2: 16px;
+  --typography-subheading-2--line-height: 20px;
+  --typography-subheading-2--font-weight: 400;
+
+  --typography-body-1: 18px;
+  --typography-body-1--line-height: 23.400000000000002px;
+  --typography-body-1--font-weight: 400;
+
+  --typography-body-2: 16px;
+  --typography-body-2--line-height: 20.8px;
+  --typography-body-2--font-weight: 400;
+
+  --typography-body-3: 14px;
+  --typography-body-3--line-height: 18.2px;
+  --typography-body-3--font-weight: 400;
+
+  --typography-body-4: 12px;
+  --typography-body-4--line-height: 16px;
+  --typography-body-4--font-weight: 400;
+
+  --typography-body-5: 10px;
+  --typography-body-5--line-height: 12px;
+  --typography-body-5--font-weight: 400;
+
+  --typography-button-label-1: 18px;
+  --typography-button-label-1--line-height: 20.7px;
+  --typography-button-label-1--font-weight: 500;
+
+  --typography-button-label-2: 16px;
+  --typography-button-label-2--line-height: 18.4px;
+  --typography-button-label-2--font-weight: 500;
+
+  --typography-button-label-3: 14px;
+  --typography-button-label-3--line-height: 16.099999999999998px;
+  --typography-button-label-3--font-weight: 500;
+
+  --typography-button-label-4: 12px;
+  --typography-button-label-4--line-height: 13.799999999999999px;
+  --typography-button-label-4--font-weight: 500;
+
+  --typography-monospace: 12px;
+  --typography-monospace--line-height: 16px;
 }

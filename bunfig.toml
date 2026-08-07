@@ -14,6 +14,10 @@ save = "exact"
 # Supply chain protection: reject package versions published less than 3 days ago
 # @uniswap/client-* packages are internal service definitions that are frequently
 # updated alongside backend proto changes and are trusted as first-party packages.
+# @uniswap/{router-sdk,sdk-core,universal-router-sdk,uniswapx-sdk,v2-sdk,v3-sdk,v4-sdk}
+# are the first-party open-source SDKs, allowed for time-sensitive coordinated
+# upgrades (e.g. mainnet address rollouts) where waiting 3 days blocks the rest
+# of the integration.
 # @privy-io/expo, @privy-io/js-sdk-core, and @privy-io/routes are allowed for
 # time-sensitive SDK upgrades coordinated with Privy.
 # @uniswap/liquidity-launcher-sdk is a first-party SDK (Uniswap/sdks) consumed by the
@@ -21,6 +25,9 @@ save = "exact"
 # agent-device is a pre-1.0 dev-only QA CLI (Callstack) with near-daily releases; it is
 # exact-pinned in apps/mobile devDependencies, so this exclusion only unblocks the
 # deliberately chosen version, never a floating range.
+# react-native-sortables is exact-pinned in apps/mobile; 1.10.0 fixes drag gestures
+# permanently dying on New Architecture + gesture-handler v3 (favorites sorting bug),
+# so we adopt it without the age delay.
 minimumReleaseAge = 259200
 minimumReleaseAgeExcludes = [
   "@privy-io/expo",
@@ -40,7 +47,15 @@ minimumReleaseAgeExcludes = [
   "@uniswap/client-unirpc-v2",
   "@uniswap/client-unitag",
   "@uniswap/liquidity-launcher-sdk",
+  "@uniswap/router-sdk",
+  "@uniswap/sdk-core",
+  "@uniswap/universal-router-sdk",
+  "@uniswap/uniswapx-sdk",
+  "@uniswap/v2-sdk",
+  "@uniswap/v3-sdk",
+  "@uniswap/v4-sdk",
   "agent-device",
+  "react-native-sortables",
 ]
 
 # Pin the default registry explicitly to prevent registry confusion attacks

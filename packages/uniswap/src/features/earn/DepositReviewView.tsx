@@ -11,6 +11,8 @@ import { useTradingApiEarnQuoteQuery } from 'uniswap/src/data/apiClients/trading
 import { useActiveAccount } from 'uniswap/src/features/accounts/store/hooks'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EarnAnalyticsSurface, EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
+import { getEarnDepositPreviewCreditAmount } from 'uniswap/src/features/earn/chainedDisplayAmounts'
+import { EARN_REVIEW_AMOUNT_LINE_HEIGHT } from 'uniswap/src/features/earn/constants'
 import { DepositReviewDetails } from 'uniswap/src/features/earn/DepositReviewDetails'
 import {
   getDepositInputCurrencyAmount,
@@ -35,6 +37,7 @@ import { useEarnNetworkCostLabel } from 'uniswap/src/features/earn/hooks/useEarn
 import { useEarnReviewAnalytics } from 'uniswap/src/features/earn/hooks/useEarnReviewAnalytics'
 import { useEarnReviewExecutionHandlers } from 'uniswap/src/features/earn/hooks/useEarnReviewExecutionHandlers'
 import {
+  createEarnPlanFailureCallback,
   getEarnExecutionErrorMessage,
   shouldShowEarnTroubleshootingLink,
 } from 'uniswap/src/features/earn/planExecution'
@@ -50,7 +53,10 @@ import type {
 } from 'uniswap/src/features/telemetry/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useFiatTokenConversion } from 'uniswap/src/features/transactions/hooks/useFiatTokenConversion'
-import type { PlanFinalizedCallbackParams } from 'uniswap/src/features/transactions/swap/plan/types'
+import type {
+  PlanFailureCallback,
+  PlanFinalizedCallbackParams,
+} from 'uniswap/src/features/transactions/swap/plan/types'
 import { activePlanStore } from 'uniswap/src/features/transactions/swap/review/stores/activePlan/activePlanStore'
 import { isChainedQuoteResponse } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
@@ -67,12 +73,13 @@ export interface ExecuteEarnDepositParams {
   outputCurrency: Currency
   quote: ChainedQuoteResponse
   onSuccess: () => void
-  onFailure: (error?: Error, onPressRetry?: () => void) => void
+  onFailure: PlanFailureCallback
   onSubmitted?: () => void
   onPlanFinalized?: (params: PlanFinalizedCallbackParams) => void
 }
 
 interface DepositReviewViewProps {
+  buttonAuthIcon?: JSX.Element
   vault: EarnVaultInfo
   position: EarnPositionInfo | undefined
   amount: string
@@ -98,6 +105,7 @@ interface DepositReviewViewProps {
 
 // eslint-disable-next-line complexity
 export function DepositReviewView({
+  buttonAuthIcon,
   vault,
   position,
   amount,
@@ -134,7 +142,9 @@ export function DepositReviewView({
   const evmAccount = useActiveAccount(Platform.EVM)
   const activePlan = useStore(activePlanStore, (state) => state.activePlan)
   const priceChangeInterruptedPlanIds = useStore(activePlanStore, (state) => state.priceChangeInterruptedPlanIds)
+  const executionLockPlanId = useStore(activePlanStore, (state) => state.executionLockPlanId)
   const earnPlanProgress = useEarnPlanProgressState()
+  const isExecuting = isEarnActivePlanExecuting({ activePlan, executionLockPlanId, priceChangeInterruptedPlanIds })
 
   const [expanded, setExpanded] = useState(false)
   const toggleExpanded = useCallback(() => setExpanded((prev) => !prev), [])
@@ -160,7 +170,6 @@ export function DepositReviewView({
   const localFiatToUsd = useLocalFiatToUSDConverter()
   const parsedAmountLocalFiat = Number(amount) || 0
   const parsedAmountUsd = localFiatToUsd(parsedAmountLocalFiat) ?? parsedAmountLocalFiat
-  const projectedAnnualEarningsUsd = parsedAmountUsd * (vault.apyPercent / 100)
 
   // Max quotes use the exact token amount, not the display-rounded fiat value.
   const { fiatToToken } = useFiatTokenConversion({ currency })
@@ -194,7 +203,6 @@ export function DepositReviewView({
     })
   }, [currency, evmAccount?.address, inputCurrencyAmount, quoteSourceTradingApiChainId, vault, vaultTradingApiChainId])
 
-  const isExecuting = isEarnActivePlanExecuting({ activePlan, priceChangeInterruptedPlanIds })
   const quoteQuery = useTradingApiEarnQuoteQuery({
     base: quoteRequestBase,
     earnIntent,
@@ -209,10 +217,33 @@ export function DepositReviewView({
     () => (quoteQuery.data && isChainedQuoteResponse(quoteQuery.data) ? quoteQuery.data : undefined),
     [quoteQuery.data],
   )
+  // Post-deposit math (balance after, projected earnings) uses the quote's canonical vault-credit
+  // amount — on cross-token/cross-chain routes it differs from the source input by routing
+  // economics. Falls back to the source amount until the quote or the underlying's price resolves.
+  const depositCreditAmount = useMemo(
+    () =>
+      chainedQuote
+        ? getEarnDepositPreviewCreditAmount({
+            quote: chainedQuote,
+            vaultUnderlyingCurrency: vaultUnderlyingCurrencyInfo?.currency,
+          })
+        : undefined,
+    [chainedQuote, vaultUnderlyingCurrencyInfo?.currency],
+  )
+  const { usdPriceOfCurrency: underlyingUsdPrice } = useFiatTokenConversion({
+    currency: depositCreditAmount?.currency,
+  })
+  const depositCreditUsd =
+    depositCreditAmount && underlyingUsdPrice
+      ? Number(underlyingUsdPrice.quote(depositCreditAmount).toExact())
+      : undefined
+  const effectiveDepositUsd = depositCreditUsd ?? parsedAmountUsd
+  const projectedAnnualEarningsUsd = effectiveDepositUsd * (vault.apyPercent / 100)
   const hasQuoteError = quoteQuery.isError && !quoteQuery.isFetching
   const quoteErrorMessage = getEarnDepositQuoteErrorMessage({
     hasQuoteError,
     error: quoteQuery.error,
+    destinationChainId: vault.chainId,
     t,
   })
   const insufficientGasWarning = useEarnInsufficientGasWarning({
@@ -229,7 +260,7 @@ export function DepositReviewView({
   )
 
   const currentBalanceUsd = position?.depositedUsd ?? 0
-  const balanceAfterUsd = currentBalanceUsd + parsedAmountUsd
+  const balanceAfterUsd = currentBalanceUsd + effectiveDepositUsd
   const { logFailed, logFinalized, logSubmitted, reviewedEventProperties } = useEarnReviewAnalytics({
     action: 'deposit',
     amountUsd: parsedAmountUsd,
@@ -289,10 +320,7 @@ export function DepositReviewView({
       outputCurrency: executionParams.vaultShareCurrency,
       quote: executionParams.quote,
       onSuccess: handleSuccess,
-      onFailure: (error, onPressRetryCallback) => {
-        logFailed(error)
-        handleFailure(error, onPressRetryCallback)
-      },
+      onFailure: createEarnPlanFailureCallback({ handleFailure, logFailed }),
       onSubmitted: logSubmitted,
       onPlanFinalized: (params) => {
         logFinalized(params)
@@ -328,6 +356,7 @@ export function DepositReviewView({
   )
   const action = (
     <EarnReviewActionRow
+      buttonAuthIcon={buttonAuthIcon}
       ctaDisabled={ctaDisabled}
       ctaLabel={insufficientGasWarning.warning?.buttonText ?? t('explore.earn.deposit.cta', { symbol })}
       executionError={executionError}
@@ -362,7 +391,7 @@ export function DepositReviewView({
         )}
 
         <Flex alignItems="center" gap="$spacing12" py="$spacing32">
-          <Text variant="heading1" color="$neutral1">
+          <Text variant="heading1" color="$neutral1" lineHeight={EARN_REVIEW_AMOUNT_LINE_HEIGHT}>
             {formatLocalFiat(parsedAmountUsd)}
           </Text>
           <Flex row alignItems="center" gap="$spacing8">
@@ -398,6 +427,7 @@ export function DepositReviewView({
           executionErrorMessage={executionErrorMessage}
           hasQuoteError={hasQuoteError}
           insufficientGasWarning={insufficientGasWarning}
+          quoteError={quoteQuery.error}
           quoteErrorMessage={quoteErrorMessage}
           showTroubleshootingLink={shouldShowEarnTroubleshootingLink(executionError)}
         />

@@ -7,15 +7,29 @@ type TokenSelectorPillProps = {
   label: Maybe<string>
   testID: string
   onPress: () => void
+  /** Dims the pill while a tap is being resolved (e.g. a pre-selection token fetch). */
+  isPending?: boolean
 }
 
 /** Pill shared by the native token-selector rows (suggested currencies and stocks). */
-export function TokenSelectorPill({ icon, label, testID, onPress }: TokenSelectorPillProps): JSX.Element {
+export function TokenSelectorPill({
+  icon,
+  label,
+  testID,
+  onPress,
+  isPending = false,
+}: TokenSelectorPillProps): JSX.Element {
   const colors = useSporeColors()
   const media = useMedia()
 
   return (
-    <TouchableArea hoverable borderRadius="$roundedFull" testID={testID} onPress={onPress}>
+    <TouchableArea
+      hoverable
+      borderRadius="$roundedFull"
+      opacity={isPending ? 0.5 : 1}
+      testID={testID}
+      onPress={onPress}
+    >
       <Pill
         borderColor="$surface3Solid"
         borderRadius="$roundedFull"

@@ -610,6 +610,39 @@
         }
       }
     },
+    "/supported_chains": {
+      "get": {
+        "tags": [
+          "utilities"
+        ],
+        "summary": "Get supported chains",
+        "description": "Returns the list of chains supported by the Trading API, including protocol contract addresses and the protocols and actions available on each chain.",
+        "operationId": "get_supported_chains",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GetSupportedChainsSuccess200"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized401"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimitedErr429"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalErr500"
+          },
+          "504": {
+            "$ref": "#/components/responses/Timeout504"
+          }
+        }
+      }
+    },
     "/limit_order_quote": {
       "post": {
         "tags": [
@@ -2234,6 +2267,59 @@
           }
         }
       },
+      "GetSupportedChainsSuccess200": {
+        "description": "Get supported chains successful.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/GetSupportedChainsResponse"
+            },
+            "example": {
+              "requestId": "cL_1ih66iYcEJ2g=",
+              "chains": [
+                {
+                  "chainId": 1,
+                  "chainName": "Ethereum",
+                  "contractAddresses": [
+                    {
+                      "name": "UniswapV2Factory",
+                      "address": "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f"
+                    },
+                    {
+                      "name": "UniswapV3Factory",
+                      "address": "0x1F98431c8aD98523631AE4a59f267346ea31F984"
+                    },
+                    {
+                      "name": "Quoter",
+                      "version": "V3",
+                      "address": "0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6"
+                    },
+                    {
+                      "name": "PoolManager",
+                      "address": "0x000000000004444c5dc75cB358380D2e3dE08A90"
+                    },
+                    {
+                      "name": "UniversalRouter",
+                      "version": "2.0",
+                      "address": "0x66a9893cc07d91d95644aedd05d03f95e1dba8af"
+                    }
+                  ],
+                  "protocols": [
+                    "V2",
+                    "V3",
+                    "V4",
+                    "UniswapX"
+                  ],
+                  "actions": [
+                    "SWAP",
+                    "LP"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      },
       "GetSwappableTokensSuccess200": {
         "description": "Get swappable tokens successful.",
         "content": {
@@ -2917,6 +3003,89 @@
         "required": [
           "requestId",
           "status"
+        ]
+      },
+      "GetSupportedChainsResponse": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "$ref": "#/components/schemas/RequestId"
+          },
+          "chains": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SupportedChain"
+            }
+          }
+        },
+        "required": [
+          "requestId",
+          "chains"
+        ]
+      },
+      "SupportedChain": {
+        "type": "object",
+        "properties": {
+          "chainId": {
+            "$ref": "#/components/schemas/ChainId"
+          },
+          "chainName": {
+            "type": "string"
+          },
+          "contractAddresses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChainContractAddress"
+            }
+          },
+          "protocols": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "V2",
+                "V3",
+                "V4",
+                "UniswapX"
+              ]
+            }
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "SWAP",
+                "LP"
+              ]
+            }
+          }
+        },
+        "required": [
+          "chainId",
+          "chainName",
+          "contractAddresses",
+          "protocols",
+          "actions"
+        ]
+      },
+      "ChainContractAddress": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string",
+            "description": "Only present where it distinguishes deployments: contract release lines (e.g. UniversalRouter 2.0/2.1.1/2.2.0, CaliburEntry tags) and same-named contracts (Quoter V3 vs V4)."
+          },
+          "address": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "address"
         ]
       },
       "GetSwappableTokensResponse": {
@@ -4757,6 +4926,11 @@
         "title": "UniswapX V2 Quote",
         "type": "object",
         "properties": {
+          "priceDifference": {
+            "x-internal": true,
+            "type": "number",
+            "description": "The expected value lost versus frictionless execution at current prices, as a percent between -100 and 100. Negative values indicate price improvement. For UniswapX orders this prefers USD parity, computed as 1 - (outputUSD + classicGasUseEstimateUSD) / inputUSD over the auction start amounts (the gas estimate is added back because the filler's gas is baked into the output), and falls back to comparing the execution price against the mid price implied by the classic quote (its execution price divided by 1 - priceImpact). Absent when neither source is available."
+          },
           "encodedOrder": {
             "$ref": "#/components/schemas/encodedOrder"
           },
@@ -4810,6 +4984,11 @@
         "title": "UniswapX V3 Quote",
         "type": "object",
         "properties": {
+          "priceDifference": {
+            "x-internal": true,
+            "type": "number",
+            "description": "The expected value lost versus frictionless execution at current prices, as a percent between -100 and 100. Negative values indicate price improvement. For UniswapX orders this prefers USD parity, computed as 1 - (outputUSD + classicGasUseEstimateUSD) / inputUSD over the auction start amounts (the gas estimate is added back because the filler's gas is baked into the output), and falls back to comparing the execution price against the mid price implied by the classic quote (its execution price divided by 1 - priceImpact). Absent when neither source is available."
+          },
           "encodedOrder": {
             "$ref": "#/components/schemas/encodedOrder"
           },
@@ -4970,6 +5149,11 @@
         "title": "UniswapX Priority Quote",
         "type": "object",
         "properties": {
+          "priceDifference": {
+            "x-internal": true,
+            "type": "number",
+            "description": "The expected value lost versus frictionless execution at current prices, as a percent between -100 and 100. Negative values indicate price improvement. For UniswapX orders this prefers USD parity, computed as 1 - (outputUSD + classicGasUseEstimateUSD) / inputUSD over the auction start amounts (the gas estimate is added back because the filler's gas is baked into the output), and falls back to comparing the execution price against the mid price implied by the classic quote (its execution price divided by 1 - priceImpact). Absent when neither source is available."
+          },
           "encodedOrder": {
             "$ref": "#/components/schemas/encodedOrder"
           },
@@ -5029,6 +5213,11 @@
         "title": "Bridge Quote",
         "type": "object",
         "properties": {
+          "priceDifference": {
+            "x-internal": true,
+            "type": "number",
+            "description": "The expected value lost versus frictionless execution at current prices, as a percent between -100 and 100. Negative values indicate price improvement. For bridges this is the relayer fee as a percent of the input, 1 - amountOut / amountIn, computed on raw amounts since the same asset with the same decimals is bridged on both chains."
+          },
           "quoteId": {
             "$ref": "#/components/schemas/quoteId"
           },
@@ -5628,6 +5817,11 @@
         "title": "Classic Quote",
         "type": "object",
         "properties": {
+          "priceDifference": {
+            "x-internal": true,
+            "type": "number",
+            "description": "The expected value lost versus frictionless execution at current prices, as a percent between -100 and 100. Negative values indicate price improvement. For classic swaps this equals priceImpact, the pool-based impact reported by routing."
+          },
           "input": {
             "$ref": "#/components/schemas/QuoteInput"
           },
@@ -6355,6 +6549,11 @@
         "title": "Wrap/Unwrap Quote",
         "type": "object",
         "properties": {
+          "priceDifference": {
+            "x-internal": true,
+            "type": "number",
+            "description": "The expected value lost versus frictionless execution at current prices, as a percent between -100 and 100. Negative values indicate price improvement. Always 0, since wraps and unwraps are 1:1."
+          },
           "swapper": {
             "$ref": "#/components/schemas/receiverWalletAddress"
           },
@@ -7918,6 +8117,11 @@
         "type": "object",
         "description": "A truncated representation of a plan step containing only routing information.",
         "properties": {
+          "priceDifference": {
+            "x-internal": true,
+            "type": "number",
+            "description": "The expected value lost versus frictionless execution at current prices, as a percent between -100 and 100. Negative values indicate price improvement. The value for this step alone, computed according to the step's order type; the chained quote's top-level value compounds these."
+          },
           "stepType": {
             "$ref": "#/components/schemas/PlanStepType"
           },
@@ -7946,6 +8150,11 @@
         "type": "object",
         "description": "A quote for a chained transaction flow that spans multiple steps, potentially across multiple chains.",
         "properties": {
+          "priceDifference": {
+            "x-internal": true,
+            "type": "number",
+            "description": "The expected value lost versus frictionless execution at current prices, as a percent between -100 and 100. Negative values indicate price improvement. For chained trades this compounds the per-step values multiplicatively as 1 - product of (1 - stepValue/100) over the value-moving steps. Absent if any of those steps is missing its value."
+          },
           "swapper": {
             "$ref": "#/components/schemas/senderWalletAddress"
           },

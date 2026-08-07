@@ -5,7 +5,7 @@ import {
   KycVerificationStatus,
   ValidationType,
 } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { useFeatureFlag } from '@universe/gating'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useAuctionKycStatus } from '~/features/Toucan/Auction/hooks/useAuctionKycStatus'
@@ -27,8 +27,9 @@ vi.mock('@universe/gating', () => ({
 
 const mockUseVerifyWalletQuery = vi.fn()
 
-vi.mock('uniswap/src/data/rest/auctions/useVerifyWallet', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('uniswap/src/data/rest/auctions/useVerifyWallet')>()
+vi.mock('uniswap/src/data/apiClients/dataApiService/auctions/useVerifyWallet', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('uniswap/src/data/apiClients/dataApiService/auctions/useVerifyWallet')>()
   return {
     ...actual,
     useVerifyWalletQuery: (...args: unknown[]) => mockUseVerifyWalletQuery(...args),

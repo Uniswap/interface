@@ -14,7 +14,6 @@ import {
 import { MAX_RECENT_SEARCH_RESULTS } from 'uniswap/src/components/TokenSelector/constants'
 import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { normalizeCurrencyIdForMapLookup, normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo, MultichainSearchResult, SearchMultichainParent } from 'uniswap/src/features/dataApi/types'
 import {
@@ -30,6 +29,7 @@ import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { dedupeCurrencyIds } from 'uniswap/src/features/search/SearchModal/utils/dedupeCurrencyIds'
 import { selectSearchHistory } from 'uniswap/src/features/search/selectSearchHistory'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { normalizeCurrencyIdForMapLookup, normalizeTokenAddressForCache } from 'uniswap/src/utils/currencyId'
 import { buildCurrencyId, buildNativeCurrencyId, currencyId, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 
 function multichainHistoryToTokenOption(

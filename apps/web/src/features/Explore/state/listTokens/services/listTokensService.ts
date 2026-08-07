@@ -1,10 +1,11 @@
 import type { PartialMessage } from '@bufbuild/protobuf'
 import type { ListTokensRequest, ListTokensResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { HistoryDuration, type RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
-import type { PricePoint } from '~/appGraphql/data/util'
 import { TokenSortMethod } from '~/components/Tokens/constants'
+import type { PricePoint } from '~/data/util'
 import { tokenStatsToRankedMultichainTokens } from '~/features/Explore/state/listTokens/services/legacy/legacyToRankedMultichainTokens'
 import { UseListTokensOptions, type RankedMultichainTokensResult } from '~/features/Explore/state/listTokens/types'
+import { multichainTokenKey } from '~/features/Explore/state/listTokens/utils/multichainTokenKey'
 import {
   timePeriodToVolumeOrderBy,
   tokenSortMethodToOrderBy,
@@ -44,10 +45,8 @@ function buildBackendRequestParams({
   pageSize,
 }: ListTokensParams): PartialMessage<ListTokensRequest> {
   const { sortMethod, sortAscending, filterTimePeriod } = options
-  const isPriceSorting = sortMethod === TokenSortMethod.PRICE
-  const orderBy = isPriceSorting
-    ? undefined
-    : sortMethod === TokenSortMethod.VOLUME
+  const orderBy =
+    sortMethod === TokenSortMethod.VOLUME
       ? timePeriodToVolumeOrderBy[filterTimePeriod]
       : tokenSortMethodToOrderBy[sortMethod]
 
@@ -78,14 +77,15 @@ function normalizePriceChange1h(token: RankedMultichainToken): RankedMultichainT
   return clonedToken
 }
 
+// Keyed by multichainTokenKey (not raw multichainId): ungrouped tokens all
+// share the '' sentinel and would otherwise collide or drop their sparklines.
 function buildPriceHistoryByMultichainId(tokens: RankedMultichainToken[]): Record<string, PricePoint[]> {
   const priceHistoryByMultichainId: Record<string, PricePoint[]> = {}
   for (const token of tokens) {
-    const multichainId = token.multichainToken?.multichainId
-    if (!multichainId || !token.sparkline.length) {
+    if (!token.sparkline.length) {
       continue
     }
-    priceHistoryByMultichainId[multichainId] = token.sparkline.map((point) => ({
+    priceHistoryByMultichainId[multichainTokenKey(token)] = token.sparkline.map((point) => ({
       timestamp: Number(point.timestamp),
       value: point.value,
     }))

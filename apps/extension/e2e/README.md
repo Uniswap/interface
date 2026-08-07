@@ -42,6 +42,20 @@ run against the exact built artifact (with its real config) between build and Ch
 Store upload — a failure blocks the upload. Keep this subset small, high-signal, and
 low-flake. Set `EXTENSION_BUILD_DIR` to point the suite at a different build.
 
+#### Invariant: never unconditionally wait for optional or live-app UI
+
+A publish-gate spec must never unconditionally `waitFor` an optional or live-app UI element
+(for example a connection-approval card that a pre-authorized origin won't render). Doing so
+turns a benign product change into a deterministic release blocker: a gate spec that waited
+20s for a `confirm` approval card the app no longer shows blocked the 1.79.0 beta on every
+run, even though the connection itself succeeded.
+
+Instead, race the extension's own observable success signal (e.g. the `connected` state)
+against the optional UI, and interact with the UI only if it actually appears.
+`approveConnectionInSidebarIfPrompted` in `utils/dapp-connection-helpers.ts` is the canonical
+implementation of this pattern — reuse it (or model new approval/optional-UI helpers on it)
+rather than re-deriving an unconditional wait.
+
 ### Run tests in UI mode (for debugging):
 ```bash
 bun playwright test --ui --config=e2e/config/playwright.config.ts

@@ -7,6 +7,20 @@ import { Mocks } from '~/playwright/mocks/mocks'
 
 const DEFAULT_TEST_GAS_LIMIT = '20000000'
 
+/**
+ * Anvil executes against the pinned block in fork-blocks.json while /swap prices execution
+ * bounds from the live chain tip: the server rebuilds min-out/max-in from a fresh internal
+ * quote and `quote.slippage`, ignoring any `minimumAmount`/`minAmount` rewritten into the
+ * posted quote. Widening slippage in the /swap REQUEST is the only client-side lever that
+ * reaches the executed calldata (verified: `quote.slippage: 25` yields a min-out of exactly
+ * 0.75 × amountOut). On-chain balance assertions stay the regression signal.
+ */
+const WIDE_TEST_SLIPPAGE_PERCENT = 25
+
+export function widenSwapRequestSlippage<T extends { quote?: { slippage?: number } }>(data: T): T {
+  return data.quote ? { ...data, quote: { ...data.quote, slippage: WIDE_TEST_SLIPPAGE_PERCENT } } : data
+}
+
 const shouldIgnorePageError = (error: Error): { ignored: boolean } => {
   if (
     error.message.includes('Target page, context or browser has been closed') ||
@@ -54,6 +68,14 @@ export async function stubTradingApiEndpoint({
         postData: JSON.stringify(modifiedData),
       })
 
+      // Error bodies (404 NO_ROUTE, 429, ...) have none of the success-shape keys the
+      // modifiers read; pass them through with their real status. Fulfilling them via
+      // the success path used to re-serve them as 200 (fulfill's default status).
+      if (!response.ok()) {
+        await route.fulfill({ response })
+        return
+      }
+
       const responseText = await response.text()
       let responseJson
       try {
@@ -68,7 +90,8 @@ export async function stubTradingApiEndpoint({
       }
 
       // Set a high gas limit to avoid OutOfGas
-      if (endpoint === V1_TRADING_API_PATHS.swap) {
+      // Guard: some 2xx bodies still lack `swap` (shape drift safety)
+      if (endpoint === V1_TRADING_API_PATHS.swap && responseJson.swap) {
         responseJson.swap.gasLimit = DEFAULT_TEST_GAS_LIMIT
       }
 
@@ -76,7 +99,9 @@ export async function stubTradingApiEndpoint({
         responseJson = modifyResponseData(responseJson)
       }
 
+      // `response` carries the upstream status/headers; only the body is replaced
       await route.fulfill({
+        response,
         body: JSON.stringify(responseJson),
       })
     } catch (error) {
@@ -89,17 +114,64 @@ export async function stubTradingApiEndpoint({
     }
   }
 
-  // The entry gateway serves trading at unversioned paths, so requests no longer carry the `/v1`
-  // prefix. Callers still pass the versioned constant; strip the version segment for matching.
-  // Match the exact endpoint path, optionally followed by query params (e.g. /swap must not
-  // match /swappable_tokens or /swaps).
+  await page.route(getTradingApiEndpointPattern(endpoint), handler)
+}
+
+/**
+ * URL pattern matching a trading API endpoint. The entry gateway serves trading at unversioned
+ * paths, so requests no longer carry the `/v1` prefix. Callers still pass the versioned constant;
+ * strip the version segment for matching. Match the exact endpoint path, optionally followed by
+ * query params (e.g. /swap must not match /swappable_tokens or /swaps).
+ */
+export function getTradingApiEndpointPattern(endpoint: string): RegExp {
   const unversionedEndpoint = endpoint.replace(/^\/v1(?=\/)/, '')
   const escapedUrl = `${getUniswapServiceUrls().tradingApiUrl}${unversionedEndpoint}`.replace(
     /[.*+?^${}()|[\]\\]/g,
     '\\$&',
   )
   // oxlint-disable-next-line security/detect-non-literal-regexp -- escapedUrl is sanitized via regex escaping
-  await page.route(new RegExp(`^${escapedUrl}(\\?.*)?$`), handler)
+  return new RegExp(`^${escapedUrl}(\\?.*)?$`)
+}
+
+/**
+ * Fulfills a Trading API endpoint from a static recorded fixture (fully offline — no live
+ * fetch, unlike `stubTradingApiEndpoint`). Use when the test must run without Trading API
+ * egress (e.g. the hermetic WalletConnect swap spec).
+ */
+export async function mockTradingApiEndpoint({
+  page,
+  endpoint,
+  mockPath,
+}: {
+  page: Page
+  endpoint: string
+  mockPath: string
+}) {
+  const unversionedEndpoint = endpoint.replace(/^\/v1(?=\/)/, '')
+  const escapedUrl = `${getUniswapServiceUrls().tradingApiUrl}${unversionedEndpoint}`.replace(
+    /[.*+?^${}()|[\]\\]/g,
+    '\\$&',
+  )
+  // oxlint-disable-next-line security/detect-non-literal-regexp -- escapedUrl is sanitized via regex escaping
+  await page.route(new RegExp(`^${escapedUrl}(\\?.*)?$`), async (route) => {
+    await route.fulfill({ path: mockPath })
+  })
+}
+
+/**
+ * Fulfills the /swaps status-polling endpoint offline with a terminal status (default SUCCESS),
+ * echoing the polled tx hash. Overrides the live `txPolling` fixture for fully-offline specs.
+ */
+export async function mockTradingApiSwapsStatus({ page, status = 'SUCCESS' }: { page: Page; status?: string }) {
+  await page.route(`${getUniswapServiceUrls().tradingApiUrl}/${TRADING_API_PATHS.swaps}?txHashes=*`, async (route) => {
+    const txHash = new URL(route.request().url()).searchParams.get('txHashes')
+    await route.fulfill({
+      body: JSON.stringify({
+        requestId: 'mock-swaps-request-id',
+        swaps: [{ swapType: 'CLASSIC', status, txHash, hashType: 'TX' }],
+      }),
+    })
+  })
 }
 
 /**

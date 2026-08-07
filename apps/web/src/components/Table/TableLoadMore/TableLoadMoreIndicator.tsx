@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, SpinningLoader, styled } from 'ui/src'
+import { Flex, SpinningLoader, Text, styled } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
 
 const LoadingIndicatorContainer = styled(Flex, {
@@ -15,6 +15,7 @@ const LoadingIndicatorContainer = styled(Flex, {
 
 const LoadingIndicator = styled(Flex, {
   row: true,
+  alignItems: 'center',
   backgroundColor: '$accent2Solid',
   borderRadius: '$rounded8',
   width: 'fit-content',
@@ -38,7 +39,9 @@ export function TableLoadMoreIndicator({ loadingMore }: TableLoadMoreIndicatorPr
     <LoadingIndicatorContainer>
       <LoadingIndicator>
         <SpinningLoader size={16} color="$accent1" unstyled />
-        {t('common.loading')}
+        <Text variant="body3" color="$accent1">
+          {t('common.loading')}
+        </Text>
       </LoadingIndicator>
     </LoadingIndicatorContainer>
   )

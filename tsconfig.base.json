@@ -64,7 +64,8 @@
       "uniswap/*": ["./packages/uniswap/*"],
       "utilities/*": ["./packages/utilities/*"],
       "wallet/*": ["./packages/wallet/*"],
-      "@universe/experiments/*": ["./packages/experiments/*"]
+      "@universe/experiments/*": ["./packages/experiments/*"],
+      "@universe/embedded-wallet/*": ["./packages/embedded-wallet/*"]
     }
   }
 }

@@ -73,7 +73,7 @@ const publicAssetsVariant = getPublicAssetsVariant()
 
 const BASE_NAME = 'Uniswap Extension'
 const BASE_DESCRIPTION = "The Uniswap Extension is a self-custody crypto wallet that's built for swapping."
-const BASE_VERSION = '1.79.0'
+const BASE_VERSION = '1.80.0'
 
 const BUILD_NUM = parseInt(process.env.BUILD_NUM || '0')
 const EXTENSION_VERSION = `${BASE_VERSION}.${BUILD_NUM}`
@@ -318,7 +318,7 @@ export default defineConfig({
   },
 
   // Vite configuration copied from web project
-  vite: () => {
+  vite: (_configEnv) => {
     const __dirname = path.dirname(new URL(import.meta.url).pathname)
     const isProduction = process.env.NODE_ENV === 'production'
     const isPreparePhase = process.env.WXT_PREPARE === 'true'
@@ -474,11 +474,26 @@ export default defineConfig({
             return transformed === code ? null : transformed
           },
         },
-        nodePolyfills({
-          globals: {
-            process: true,
-          },
-        }),
+        // `wxt`'s single `vite(configEnv)` callback is reused for every internal Vite instance
+        // WXT spins up during one invocation — not just the live dev server. `configEnv.command`
+        // reflects WXT's own overall command (dev vs build), NOT the real Vite `command` of the
+        // specific instance currently resolving this config. During `wxt` (dev/serve), WXT runs
+        // ONE real live dev server (real command `serve`) for the HTML UI pages, but content
+        // scripts and the background service worker are always produced via separate one-shot
+        // `vite.build()` calls (real command `build`) even in dev mode, since those execution
+        // contexts can't consume a live HMR client. `configEnv.command` reports `serve` for both,
+        // so a single `process: configEnv.command === 'serve' ? 'dev' : true` picks one strategy
+        // for all of them — leaving the content-script/background builds with NEITHER
+        // vite-plugin-node-polyfills strategy active (dev's globalThis-via-dep-optimizer trick
+        // only fires when the real instance's command is `serve`; the build shim only fires when
+        // the option is literally `true`/`'build'`), so `process` is left undefined at runtime —
+        // throwing `ReferenceError: process is not defined` at the top of the content-script
+        // bundle before it can run (e.g. before `announceProvider()` in ethereum.content.ts).
+        // Register both strategies and let Vite's own per-plugin `apply` gate each one against
+        // the REAL command of whichever instance resolves this config, instead of relying on
+        // WXT's overall-session `configEnv.command`.
+        ...nodePolyfills({ globals: { process: true } }).map((plugin) => ({ ...plugin, apply: 'build' as const })),
+        ...nodePolyfills({ globals: { process: 'dev' } }).map((plugin) => ({ ...plugin, apply: 'serve' as const })),
         commonjs({
           dynamic: {
             loose: false,

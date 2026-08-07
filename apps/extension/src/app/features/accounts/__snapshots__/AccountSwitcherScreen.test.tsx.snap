@@ -162,7 +162,7 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
                             <circle
                               cx="28"
                               cy="28"
-                              fill="#FFBF171F"
+                              fill="#78E7441F"
                               r="28"
                             />
                             <g
@@ -500,7 +500,7 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
                           <circle
                             cx="28"
                             cy="28"
-                            fill="#FFBF171F"
+                            fill="#78E7441F"
                             r="28"
                           />
                           <g

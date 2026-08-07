@@ -231,18 +231,19 @@ export function ActiveLiquidityChart({
             <rect x="0" y="0" width={width} height={height} />
           </clipPath>
 
-          {brushDomain && !disableBrush && (
-            // mask to highlight selected area
-            <mask id={`${id}-chart-area-mask`}>
-              <rect
-                fill="white"
-                y={yScale(brushDomain[1])}
-                x={width - axisLabelPaneWidth - contentWidth - 1}
-                height={yScale(brushDomain[0]) - yScale(brushDomain[1])}
-                width={contentWidth + 2}
-              />
-            </mask>
-          )}
+          {brushDomain &&
+            !disableBrush && (
+              // mask to highlight selected area
+              <mask id={`${id}-chart-area-mask`}>
+                <rect
+                  fill="white"
+                  y={yScale(brushDomain[1])}
+                  x={width - axisLabelPaneWidth - contentWidth - 1}
+                  height={yScale(brushDomain[0]) - yScale(brushDomain[1])}
+                  width={contentWidth + 2}
+                />
+              </mask>
+            )}
 
           <style>
             {`

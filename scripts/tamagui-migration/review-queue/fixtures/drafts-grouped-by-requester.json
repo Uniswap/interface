@@ -1,0 +1,83 @@
+{
+  "description": "Trap 6: drafts grouped by requester, derivation order assignee -> 'Requested by' body line -> human author. 601+602 share assignee alice (one group of two). 603 has no assignee but a 'Requested by **@bob**' body line (source body; bob is in registryLogins — body logins outside the registry are ignored entirely). 604 has neither but a HUMAN author carol (source author). 605 has an assignee AND a conflicting body line — assignee wins.",
+  "now": "2026-07-28T12:00:00Z",
+  "defaultBranch": "main",
+  "podByLogin": { "alice": "swap-fe", "bob": "eng-ui", "carol": "platform-and-infra" },
+  "registryLogins": ["bob"],
+  "prs": [
+    {
+      "number": 601,
+      "title": "feat(web): convert nav components [INFRA-3601]",
+      "url": "https://github.com/Uniswap/universe/pull/601",
+      "draft": true,
+      "author": { "login": "claude[bot]", "type": "Bot" },
+      "assignees": ["alice"],
+      "body": "Converts nav.\n\nFixes INFRA-3601",
+      "baseRefName": "main",
+      "headRefName": "thebotfather/infra-3601-nav",
+      "labels": [{ "name": "tamagui-migration" }],
+      "createdAt": "2026-07-27T12:00:00Z"
+    },
+    {
+      "number": 602,
+      "title": "feat(web): convert footer components [INFRA-3602]",
+      "url": "https://github.com/Uniswap/universe/pull/602",
+      "draft": true,
+      "author": { "login": "claude[bot]", "type": "Bot" },
+      "assignees": ["alice"],
+      "body": "Converts footer.\n\nFixes INFRA-3602",
+      "baseRefName": "main",
+      "headRefName": "thebotfather/infra-3602-footer",
+      "labels": [{ "name": "tamagui-migration" }],
+      "createdAt": "2026-07-27T13:00:00Z"
+    },
+    {
+      "number": 603,
+      "title": "feat(shared): convert modals directory [INFRA-3603]",
+      "url": "https://github.com/Uniswap/universe/pull/603",
+      "draft": true,
+      "author": { "login": "claude[bot]", "type": "Bot" },
+      "assignees": [],
+      "body": "Converts modals.\n\nRequested by **@bob**\n\nFixes INFRA-3603",
+      "baseRefName": "main",
+      "headRefName": "thebotfather/infra-3603-modals",
+      "labels": [{ "name": "tamagui-migration" }],
+      "createdAt": "2026-07-27T14:00:00Z"
+    },
+    {
+      "number": 604,
+      "title": "fix(tailwind): refresh spore tokens [INFRA-3604]",
+      "url": "https://github.com/Uniswap/universe/pull/604",
+      "draft": true,
+      "author": { "login": "carol", "type": "User" },
+      "assignees": [],
+      "body": "Human-authored token refresh.\n\nFixes INFRA-3604",
+      "baseRefName": "main",
+      "headRefName": "carol/infra-3604-tokens",
+      "labels": [{ "name": "tamagui-migration" }],
+      "createdAt": "2026-07-27T15:00:00Z"
+    },
+    {
+      "number": 605,
+      "title": "feat(wallet): convert send flow [INFRA-3605]",
+      "url": "https://github.com/Uniswap/universe/pull/605",
+      "draft": true,
+      "author": { "login": "claude[bot]", "type": "Bot" },
+      "assignees": ["alice"],
+      "body": "Converts send flow.\n\nRequested by **@bob**\n\nFixes INFRA-3605",
+      "baseRefName": "main",
+      "headRefName": "thebotfather/infra-3605-send",
+      "labels": [{ "name": "tamagui-migration" }],
+      "createdAt": "2026-07-27T16:00:00Z"
+    }
+  ],
+  "reviews": { "601": [], "602": [], "603": [], "604": [], "605": [] },
+  "checks": { "601": "pending", "602": "pending", "603": "pending", "604": "pending", "605": "pending" },
+  "requestedReviewers": {
+    "601": { "users": [], "teams": [] },
+    "602": { "users": [], "teams": [] },
+    "603": { "users": [], "teams": [] },
+    "604": { "users": [], "teams": [] },
+    "605": { "users": [], "teams": [] }
+  }
+}

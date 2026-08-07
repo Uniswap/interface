@@ -1,12 +1,12 @@
 import { useMemo } from 'react'
-import { useListRwasQuery } from 'uniswap/src/data/rest/listRwas'
-import { getRwaTagCategory } from 'uniswap/src/data/rest/rwa/getRwaTagCategory'
-import { resolveRwaIssuerDisplay } from 'uniswap/src/data/rest/rwa/resolveRwaIssuerDisplay'
+import { getRwaTagCategory } from 'uniswap/src/data/apiClients/dataApiService/rwa/getRwaTagCategory'
+import { useListRwasQuery } from 'uniswap/src/data/apiClients/dataApiService/rwa/listRwas'
+import { resolveRwaIssuerDisplay } from 'uniswap/src/data/apiClients/dataApiService/rwa/resolveRwaIssuerDisplay'
 import {
   PREFERRED_RWA_CHAIN_ID,
   type ListRwasAssetSource,
   type ListRwasTokenSource,
-} from 'uniswap/src/data/rest/rwa/types'
+} from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import type { RWAAsset, RWAIssuer, RWAToken, RWAWhitelist } from 'uniswap/src/features/rwa/types'
 

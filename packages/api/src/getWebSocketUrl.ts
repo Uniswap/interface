@@ -1,4 +1,8 @@
-import { PROD_WEBSOCKET_BASE_URL, STAGING_WEBSOCKET_BASE_URL } from '@universe/api/src/clients/base/urls'
+import {
+  DEV_WEBSOCKET_BASE_URL,
+  PROD_WEBSOCKET_BASE_URL,
+  STAGING_WEBSOCKET_BASE_URL,
+} from '@universe/api/src/clients/base/urls'
 import { getConfig } from '@universe/config'
 import { Environment, getCurrentEnv } from '@universe/environment'
 
@@ -21,6 +25,7 @@ export function getWebSocketUrl(): string {
   const environment = getCurrentEnv({ isVercelEnvironment: config.isVercelEnvironment })
   switch (environment) {
     case Environment.Development:
+      return DEV_WEBSOCKET_BASE_URL as string
     case Environment.Staging:
       return STAGING_WEBSOCKET_BASE_URL as string
     case Environment.Production:

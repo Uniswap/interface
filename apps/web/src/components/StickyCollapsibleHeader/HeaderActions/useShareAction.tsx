@@ -1,6 +1,5 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from 'react-router'
 import { Check } from 'ui/src/components/icons/Check'
 import { LinkHorizontalAlt } from 'ui/src/components/icons/LinkHorizontalAlt'
 import { ShareArrow } from 'ui/src/components/icons/ShareArrow'
@@ -18,11 +17,15 @@ export function useShareAction({ name, utmSource, isMobileScreen }: UseShareActi
   shareAction: HeaderActionWithDropdown
 } {
   const { t } = useTranslation()
-  const [searchParams] = useSearchParams()
   const [isCopied, setCopied] = useCopyClipboard()
 
-  const utmTag = `${searchParams.size > 0 ? '&' : '?'}utm_source=${utmSource}&utm_medium=${isMobileScreen ? 'mobile' : 'web'}`
-  const currentLocation = window.location.href + utmTag
+  // Read window.location at press time: shallow history.replaceState updates (e.g. TDP network pill) bypass the router
+  const getShareUrl = useCallback(() => {
+    const url = new URL(window.location.href)
+    url.searchParams.set('utm_source', utmSource)
+    url.searchParams.set('utm_medium', isMobileScreen ? 'mobile' : 'web')
+    return url.toString()
+  }, [utmSource, isMobileScreen])
 
   const shareAction: HeaderActionWithDropdown = useMemo(
     () => ({
@@ -37,7 +40,7 @@ export function useShareAction({ name, utmSource, isMobileScreen }: UseShareActi
           ) : (
             <LinkHorizontalAlt size="$icon.18" color="$neutral1" />
           ),
-          onPress: () => setCopied(currentLocation),
+          onPress: () => setCopied(getShareUrl()),
           show: true,
         },
         {
@@ -46,13 +49,13 @@ export function useShareAction({ name, utmSource, isMobileScreen }: UseShareActi
           onPress: () =>
             openTwitterShareWindow({
               text: t('common.share.twitter.token', { name }),
-              url: currentLocation,
+              url: getShareUrl(),
             }),
           show: true,
         },
       ],
     }),
-    [t, isCopied, setCopied, currentLocation, name],
+    [t, isCopied, setCopied, getShareUrl, name],
   )
 
   return { shareAction }

@@ -1,5 +1,11 @@
 import { metaTagInjectionMiddleware } from 'functions/components/metaTagInjector'
+import { getRequest } from 'functions/utils/getRequest'
 import { Context } from 'hono'
+import { mocked } from '~/test-utils/mocked'
+
+vi.mock('functions/utils/getRequest', () => ({
+  getRequest: vi.fn(),
+}))
 
 // Mock HTML content for testing
 const mockHtml = `
@@ -100,6 +106,138 @@ describe('metaTagInjectionMiddleware', () => {
 
     expect(responseText).toContain('<meta property="og:title" content="Uniswap Interface"')
     expect(responseText).toContain('<meta property="og:url" content="http://localhost:3000/pool"')
+  })
+
+  test('should inject meta tags for paths with a trailing slash', async () => {
+    const c = createMockContext('http://localhost:3000/launches/')
+    let nextCalled = false
+
+    const next = async () => {
+      nextCalled = true
+    }
+
+    const response = await metaTagInjectionMiddleware(c, next)
+
+    expect(nextCalled).toBe(true)
+    const responseText = await response.text()
+
+    expect(responseText).toContain('<meta property="og:title" content="Token launches on Uniswap"')
+    expect(responseText).toContain('<meta property="og:url" content="http://localhost:3000/launches"')
+  })
+
+  test('should inject meta tags for paths with repeated trailing slashes', async () => {
+    const c = createMockContext('http://localhost:3000/launches//')
+    let nextCalled = false
+
+    const next = async () => {
+      nextCalled = true
+    }
+
+    const response = await metaTagInjectionMiddleware(c, next)
+
+    expect(nextCalled).toBe(true)
+    const responseText = await response.text()
+
+    expect(responseText).toContain('<meta property="og:title" content="Token launches on Uniswap"')
+    expect(responseText).toContain('<meta property="og:url" content="http://localhost:3000/launches"')
+  })
+
+  test('should inject meta tags for wildcard paths with a trailing slash', async () => {
+    // /vote/* only matches /vote/ before trailing-slash normalization, so the raw pathname must be checked too
+    const c = createMockContext('http://localhost:3000/vote/')
+    let nextCalled = false
+
+    const next = async () => {
+      nextCalled = true
+    }
+
+    const response = await metaTagInjectionMiddleware(c, next)
+
+    expect(nextCalled).toBe(true)
+    const responseText = await response.text()
+
+    expect(responseText).toContain('<meta property="og:title" content="Uniswap Interface"')
+    expect(responseText).toContain('<meta property="og:url" content="http://localhost:3000/vote"')
+  })
+
+  test('should inject launches-specific meta tags for the launches page', async () => {
+    const c = createMockContext('http://localhost:3000/launches')
+    let nextCalled = false
+
+    const next = async () => {
+      nextCalled = true
+    }
+
+    const response = await metaTagInjectionMiddleware(c, next)
+
+    expect(nextCalled).toBe(true)
+    const responseText = await response.text()
+
+    expect(responseText).toContain('<meta property="og:title" content="Token launches on Uniswap"')
+    expect(responseText).toContain(
+      '<meta property="og:description" content="Discover and trade new token launches across launchpads, all in one place."',
+    )
+    expect(responseText).toContain(
+      '<meta name="description" content="Discover and trade new token launches across launchpads, all in one place."',
+    )
+    // Launches keeps the default Uniswap card image (per design), with launches-specific title/description
+    expect(responseText).toContain(
+      '<meta property="og:image" content="http://localhost:3000/images/1200x630_Rich_Link_Preview_Image.png"',
+    )
+    expect(responseText).toContain('<meta property="og:image:width" content="1200"')
+    expect(responseText).toContain('<meta property="og:image:height" content="630"')
+    expect(responseText).toContain('<meta property="og:image:alt" content="Token launches on Uniswap"')
+    expect(responseText).toContain('<meta property="twitter:card" content="summary_large_image"')
+    expect(responseText).toContain('<meta property="twitter:title" content="Token launches on Uniswap"')
+    expect(responseText).toContain(
+      '<meta property="twitter:image" content="http://localhost:3000/images/1200x630_Rich_Link_Preview_Image.png"',
+    )
+    expect(responseText).toContain('<meta property="og:url" content="http://localhost:3000/launches"')
+  })
+
+  test('should not match the root path as a trailing slash of an empty path', async () => {
+    const c = createMockContext('http://localhost:3000/')
+    let nextCalled = false
+
+    const next = async () => {
+      nextCalled = true
+    }
+
+    const response = await metaTagInjectionMiddleware(c, next)
+
+    expect(nextCalled).toBe(true)
+    const responseText = await response.text()
+
+    expect(responseText).toContain('<meta property="og:title" content="Uniswap Interface"')
+  })
+
+  test('should inject dynamic meta tags for explore paths with a trailing slash', async () => {
+    mocked(getRequest).mockResolvedValueOnce({
+      title: 'Get UNI on Uniswap',
+      image: 'http://localhost:3000/api/image/tokens/ethereum/NATIVE',
+      url: 'http://localhost:3000/explore/tokens/ethereum/NATIVE/',
+      description: 'UNI on Ethereum',
+    })
+
+    const c = createMockContext('http://localhost:3000/explore/tokens/ethereum/NATIVE/')
+    let nextCalled = false
+
+    const next = async () => {
+      nextCalled = true
+    }
+
+    const response = await metaTagInjectionMiddleware(c, next)
+
+    expect(nextCalled).toBe(true)
+    const responseText = await response.text()
+
+    expect(responseText).toContain('<meta property="og:title" content="Get UNI on Uniswap"')
+    expect(responseText).toContain(
+      '<meta property="og:image" content="http://localhost:3000/api/image/tokens/ethereum/NATIVE"',
+    )
+    expect(responseText).toContain(
+      '<meta property="og:url" content="http://localhost:3000/explore/tokens/ethereum/NATIVE"',
+    )
   })
 
   test('should pass through header blocked paths', async () => {

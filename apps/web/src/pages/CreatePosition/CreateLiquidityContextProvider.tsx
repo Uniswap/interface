@@ -4,12 +4,9 @@ import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { createContext, Dispatch, SetStateAction, useContext, useEffect, useMemo, useState } from 'react'
-import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { useEvent, usePrevious } from 'utilities/src/react/hooks'
-import { useServedProtocolFee } from '~/features/fees/useServedProtocolFees'
 import { useDerivedPositionInfo } from '~/features/Liquidity/Create/hooks/useDerivedPositionInfo'
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
 import {
@@ -49,8 +46,8 @@ interface BaseCreateLiquidityState {
   protocolVersion: ProtocolVersion
   creatingPoolOrPair?: boolean
   poolId?: string
-  // Served protocol fee (integer pips) for the selected tier's pool, from data-api GetProtocolFees.
-  // Fetched once here so every create surface reads the same value; undefined for a not-yet-created pool.
+  // Protocol fee (integer pips) for the selected tier's pool, carried on the poolInfo response so every
+  // create surface reads the same value; undefined for a not-yet-created pool.
   protocolFee?: number
   poolOrPairLoading?: boolean
   poolOrPair: V4Pool | V3Pool | Pair | undefined
@@ -200,19 +197,9 @@ export function CreateLiquidityContextProvider({
     )
   }, [tokenChainId, previousTokenChainId, setSelectedHookEntry, setPositionState])
 
-  // Derived info
+  // Derived info — the poolInfo response carries the pool's protocol fee (integer pips), so the flow no
+  // longer fetches it separately; it's undefined for a not-yet-created pool.
   const derivedPositionInfo = useDerivedPositionInfo(currencyInputs, positionState)
-
-  // Protocol fee for the selected tier's pool — the poolInfo fetch above carries no fee fields, so it
-  // comes from data-api GetProtocolFees, keyed by the pool id the flow already resolved. Only for an
-  // existing pool: a not-yet-created pool has nothing to serve, so surfaces fall back to the curve.
-  const isFeeDisplayEnabled = useFeatureFlag(FeatureFlags.V4ProtocolFeeDisplay)
-  const protocolFee = useServedProtocolFee({
-    chainId: tokenChainId as UniverseChainId | undefined,
-    protocolVersion: derivedPositionInfo.protocolVersion,
-    poolIdOrHash: derivedPositionInfo.poolId,
-    enabled: isFeeDisplayEnabled && !derivedPositionInfo.creatingPoolOrPair,
-  })
 
   // Get URL sync function from consolidated hook
   const { setHistoryState, syncToUrl } = useLiquidityUrlState()
@@ -312,7 +299,7 @@ export function CreateLiquidityContextProvider({
     // State
     ...protocolSpecificValues,
     poolId: derivedPositionInfo.poolId,
-    protocolFee,
+    protocolFee: derivedPositionInfo.protocolFee,
     poolOrPairLoading: derivedPositionInfo.poolOrPairLoading,
     creatingPoolOrPair: derivedPositionInfo.creatingPoolOrPair,
     price: derivedPriceRangeInfo?.price,

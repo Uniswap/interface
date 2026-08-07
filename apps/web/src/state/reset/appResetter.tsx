@@ -8,7 +8,6 @@ import { createLogger } from 'utilities/src/logger/logger'
 import { resetApplication } from '~/state/application/reducer'
 import { resetFiatOnRamp } from '~/state/fiatOnRampTransactions/reducer'
 import { resetLists } from '~/state/lists/actions'
-import { resetLogs } from '~/state/logs/slice'
 import { resetRoutingApi } from '~/state/routing/slice'
 import { resetUser } from '~/state/user/reducer'
 
@@ -33,7 +32,6 @@ export function createWebAppStateResetter({
     onResetAccountHistory: () => {
       dispatch(resetFiatOnRamp())
       dispatch(resetApplication())
-      dispatch(resetLogs())
     },
 
     onResetUserSettings: () => {

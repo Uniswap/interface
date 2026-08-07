@@ -161,40 +161,51 @@ public class DataQueries {
     }
     return TokenResponse(chain: chain, address: token.address, symbol: token.symbol ?? "", name: token.name ?? "")
   }
-
+  
   public static func fetchCurrencyConversion(toCurrency: String) async throws -> CurrencyConversionResponse {
+    let usdResponse = CurrencyConversionResponse(convertedAmount: ConvertedAmount(currency: fiatCurrencyIntByCode["USD"] ?? 0, value: 1.0))
+
+    // If USD, don't convert
+    if (toCurrency == "USD") {
+      return usdResponse
+    }
+
+    var request = URLRequest(url: URL(string: "\(UniswapGateway.dataApiUrl)/data.v2.DataApiService/ConvertFiat")!)
+    request.httpMethod = "POST"
+    for (name, value) in UniswapGateway.authHeaders {
+      request.setValue(value, forHTTPHeaderField: name)
+    }
+    request.setValue("1", forHTTPHeaderField: "Connect-Protocol-Version")
+    request.setValue("uniswap-ios", forHTTPHeaderField: "x-request-source")
+
+    let body: [String: Any] = [
+      "fromAmount": [ "currency": fiatCurrencyIntByCode["USD"], "value": 1 ],
+      "toCurrency": fiatCurrencyIntByCode[toCurrency] ?? fiatCurrencyIntByCode["USD"]
+    ]
+    request.httpBody = try JSONSerialization.data(withJSONObject: body)
+
     return try await withCheckedThrowingContinuation { continuation in
-      let usdResponse = CurrencyConversionResponse(conversionRate: 1, currency: WidgetConstants.currencyUsd)
-
-      // Assuming all server currency amounts are in USD
-      if (toCurrency == WidgetConstants.currencyUsd) {
-        return continuation.resume(returning: usdResponse)
-      }
-
-      Network.shared.apollo.fetch(
-        query: MobileSchema.ConvertQuery(
-          fromCurrency: GraphQLEnum(MobileSchema.Currency.usd),
-          toCurrency: GraphQLEnum(rawValue: toCurrency)
-        )
-      ) { result in
-        switch result {
-        case .success(let graphQLResult):
-          let conversionRate = graphQLResult.data?.convert?.value
-          let currency = graphQLResult.data?.convert?.currency?.rawValue
-
-          continuation.resume(
-            returning: conversionRate == nil || currency == nil ? usdResponse :
-              CurrencyConversionResponse(
-                conversionRate: conversionRate!,
-                currency: currency!
-              )
-          )
-        case .failure:
-          continuation.resume(returning: usdResponse)
+      let task = URLSession.shared.dataTask(with: request) { data, response, error in
+        if let error = error {
+          continuation.resume(throwing: error)
+          return
+        }
+        guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode),
+              let data = data else {
+          continuation.resume(throwing: URLError(.badServerResponse))
+          return
+        }
+        do {
+          let response = try JSONDecoder().decode(CurrencyConversionResponse.self, from: data)
+          continuation.resume(returning: response)
+        } catch {
+          continuation.resume(throwing: error)
         }
       }
+      task.resume()
     }
   }
 }
+
 
 

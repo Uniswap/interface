@@ -156,19 +156,12 @@
     }
   },
   "namedInputs": {
-    "production": [
-      "dependencies",
-      "tsConfig",
-      "{projectRoot}/**/*",
-      "!{projectRoot}/**/*.spec.tsx",
-      "!{projectRoot}/**/*.spec.ts",
-      "!{projectRoot}/**/*.test.tsx",
-      "!{projectRoot}/**/*.test.ts",
-      "!{projectRoot}/tsconfig.spec.json",
-      "!{projectRoot}/**/*.stories.tsx",
-      "!{projectRoot}/**/*.stories.ts"
+    "production": ["storybookFiles", "!{projectRoot}/**/*.stories.tsx", "!{projectRoot}/**/*.stories.ts"],
+    "lintConfig": [
+      "{workspaceRoot}/.oxfmtrc.json",
+      "{workspaceRoot}/oxlint.config.ts",
+      "{workspaceRoot}/config/oxlint-plugins/**"
     ],
-    "lintConfig": ["{workspaceRoot}/.oxfmtrc.json", "{workspaceRoot}/oxlint.config.ts"],
     "mobileGlobals": ["{workspaceRoot}/metro.config.*", "{workspaceRoot}/Gemfile*"],
     "sourceFiles": [
       "dependencies",
@@ -181,6 +174,16 @@
       "{projectRoot}/**/*.jsx",
       "{projectRoot}/**/*.cjs",
       "{projectRoot}/**/*.mjs"
+    ],
+    "storybookFiles": [
+      "dependencies",
+      "tsConfig",
+      "{projectRoot}/**/*",
+      "!{projectRoot}/**/*.spec.tsx",
+      "!{projectRoot}/**/*.spec.ts",
+      "!{projectRoot}/**/*.test.tsx",
+      "!{projectRoot}/**/*.test.ts",
+      "!{projectRoot}/tsconfig.spec.json"
     ],
     "formattableFiles": [
       "sourceFiles",

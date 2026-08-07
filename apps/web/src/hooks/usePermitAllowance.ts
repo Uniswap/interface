@@ -5,13 +5,13 @@ import { useCallback, useMemo, useRef } from 'react'
 import { PERMIT2_ABI } from 'uniswap/src/abis/permit2'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useReadContract } from 'wagmi'
+import { assume0xAddress } from '~/chains'
 import { useAccount } from '~/hooks/useAccount'
 import { useEthersSigner } from '~/hooks/useEthersSigner'
 import { useTriggerOnTransactionType } from '~/hooks/useTriggerOnTransactionType'
 import { toReadableError, UserRejectedRequestError } from '~/utils/errors'
 import { signTypedData } from '~/utils/signing'
 import { didUserReject } from '~/utils/swapErrorToUserReadableMessage'
-import { assume0xAddress } from '~/utils/wagmi'
 
 const PERMIT_EXPIRATION = ms(`30d`)
 const PERMIT_SIG_EXPIRATION = ms(`30m`)

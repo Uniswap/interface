@@ -8,6 +8,7 @@ import { useRecentConnectorId } from '~/connection/constants'
 import { useAccountsStore } from '~/features/accounts/store/hooks'
 import { ExternalWallet } from '~/features/accounts/store/types'
 import { useConnectWallet } from '~/features/wallet/connection/hooks/useConnectWallet'
+import { useIsMetaMaskExtensionDetected } from '~/features/wallet/connection/hooks/useIsMetaMaskExtensionDetected'
 
 type WalletWithInjectedStatus = ExternalWallet & { injected: boolean }
 
@@ -74,9 +75,11 @@ function getWalletWithId(wallets: WalletWithInjectedStatus[], id: string): Walle
 function getInjectedConnectors({
   wallets,
   isEmbeddedWalletEnabled,
+  isMetaMaskExtensionDetected,
 }: {
   wallets: WalletWithInjectedStatus[]
   isEmbeddedWalletEnabled: boolean
+  isMetaMaskExtensionDetected: boolean
 }): WalletWithInjectedStatus[] {
   return wallets
     .filter((wallet) => {
@@ -89,6 +92,9 @@ function getInjectedConnectors({
       } else if (wallet.id === CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS && !isEmbeddedWalletEnabled) {
         // Special-case: Ignore the Uniswap Extension injection here if it's being displayed separately. This logic is updated with Embedded Wallet support where the Uniswap Extension is displayed with other connectors
         return false
+      } else if (wallet.id === CONNECTION_PROVIDER_IDS.METAMASK_SDK_CONNECTOR_ID) {
+        // SDK connector (not flagged injected); only surface it in the primary list when the extension is detected.
+        return isMetaMaskExtensionDetected
       }
       return wallet.injected
     })
@@ -148,12 +154,14 @@ function buildSecondaryConnectorsList({
   // oxlint-disable-next-line no-shadow
   isMobileWeb,
   walletConnectWallet,
+  metaMaskWallet,
   coinbaseSdkWallet,
   binanceWalletWallet,
   recentConnectorId,
 }: {
   isMobileWeb: boolean
   walletConnectWallet?: ExternalWallet
+  metaMaskWallet?: ExternalWallet
   coinbaseSdkWallet?: ExternalWallet
   binanceWalletWallet?: ExternalWallet
   recentConnectorId?: string
@@ -162,10 +170,11 @@ function buildSecondaryConnectorsList({
 
   if (isMobileWeb) {
     walletConnectWallet && orderedWallets.push(walletConnectWallet)
+    metaMaskWallet && orderedWallets.push(metaMaskWallet)
     coinbaseSdkWallet && orderedWallets.push(coinbaseSdkWallet)
     binanceWalletWallet && orderedWallets.push(binanceWalletWallet)
   } else {
-    const secondaryWallets = [walletConnectWallet, coinbaseSdkWallet, binanceWalletWallet].filter(
+    const secondaryWallets = [walletConnectWallet, metaMaskWallet, coinbaseSdkWallet, binanceWalletWallet].filter(
       (w): w is ExternalWallet => Boolean(w),
     )
     // Recent connector should have already been shown on the primary page
@@ -179,6 +188,7 @@ function buildPrimaryConnectorsList({
   injectedWallets,
   isEmbeddedWalletEnabled,
   walletConnectWallet,
+  metaMaskWallet,
   coinbaseSdkWallet,
   binanceWalletWallet,
   recentConnectorId,
@@ -186,6 +196,7 @@ function buildPrimaryConnectorsList({
   injectedWallets: ExternalWallet[]
   isEmbeddedWalletEnabled: boolean
   walletConnectWallet?: ExternalWallet
+  metaMaskWallet?: ExternalWallet
   coinbaseSdkWallet?: ExternalWallet
   binanceWalletWallet?: ExternalWallet // undefined if using injected connector from binance browser
   recentConnectorId?: string
@@ -205,6 +216,7 @@ function buildPrimaryConnectorsList({
     }
   } else {
     walletConnectWallet && orderedWallets.push(walletConnectWallet)
+    metaMaskWallet && orderedWallets.push(metaMaskWallet)
     coinbaseSdkWallet && orderedWallets.push(coinbaseSdkWallet)
     binanceWalletWallet && orderedWallets.push(binanceWalletWallet)
   }
@@ -218,11 +230,12 @@ function buildPrimaryConnectorsList({
  */
 export function useHasInjectedWallets(): boolean {
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
+  const isMetaMaskExtensionDetected = useIsMetaMaskExtensionDetected()
   const wallets = useFilteredWalletsWithInjectedInfo({ platformFilter: 'any' })
 
   return useMemo(() => {
-    return getInjectedConnectors({ wallets, isEmbeddedWalletEnabled }).length > 0
-  }, [wallets, isEmbeddedWalletEnabled])
+    return getInjectedConnectors({ wallets, isEmbeddedWalletEnabled, isMetaMaskExtensionDetected }).length > 0
+  }, [wallets, isEmbeddedWalletEnabled, isMetaMaskExtensionDetected])
 }
 
 /**
@@ -238,6 +251,7 @@ export function useOrderedWallets({
   platformFilter?: Platform | 'any'
 }): ExternalWallet[] {
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
+  const isMetaMaskExtensionDetected = useIsMetaMaskExtensionDetected()
 
   const wallets = useFilteredWalletsWithInjectedInfo({
     platformFilter,
@@ -251,6 +265,7 @@ export function useOrderedWallets({
     const injectedWallets = getInjectedConnectors({
       wallets,
       isEmbeddedWalletEnabled,
+      isMetaMaskExtensionDetected,
     })
     const isBinanceBrowser = isBinanceWalletBrowser(wallets)
     const coinbaseSdkWallet = getWalletWithId(wallets, CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID)
@@ -258,6 +273,12 @@ export function useOrderedWallets({
     const binanceWalletWallet = isBinanceBrowser
       ? undefined
       : getWalletWithId(wallets, CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID)
+
+    // When the extension isn't detected, the MetaMask Connect SDK connector isn't in the injected
+    // (primary) list; surface it as an SDK option (QR on desktop, deeplink on mobile) like the others.
+    const metaMaskWallet = isMetaMaskExtensionDetected
+      ? undefined
+      : getWalletWithId(wallets, CONNECTION_PROVIDER_IDS.METAMASK_SDK_CONNECTOR_ID)
 
     if (isE2eTestEnv()) {
       const mockWallet = getWalletWithId(wallets, CONNECTION_PROVIDER_IDS.MOCK_CONNECTOR_ID)
@@ -285,6 +306,7 @@ export function useOrderedWallets({
       orderedWallets = buildSecondaryConnectorsList({
         isMobileWeb,
         walletConnectWallet,
+        metaMaskWallet,
         coinbaseSdkWallet,
         binanceWalletWallet,
         recentConnectorId,
@@ -294,6 +316,7 @@ export function useOrderedWallets({
         injectedWallets,
         isEmbeddedWalletEnabled,
         walletConnectWallet,
+        metaMaskWallet,
         coinbaseSdkWallet,
         binanceWalletWallet,
         recentConnectorId,
@@ -304,5 +327,12 @@ export function useOrderedWallets({
     orderedWallets.sort(sortByRecent)
 
     return orderedWallets
-  }, [wallets, isEmbeddedWalletEnabled, recentConnectorId, showSecondaryConnectors, sortByRecent])
+  }, [
+    wallets,
+    isEmbeddedWalletEnabled,
+    isMetaMaskExtensionDetected,
+    recentConnectorId,
+    showSecondaryConnectors,
+    sortByRecent,
+  ])
 }

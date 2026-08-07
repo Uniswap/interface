@@ -18,6 +18,7 @@ import { HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constant
 import { useActiveAddresses } from '~/features/accounts/store/hooks'
 import { useAppHeaderHeight } from '~/hooks/useAppHeaderHeight'
 import { useDataApiOutageModal } from '~/hooks/useDataApiOutageModal'
+import { useScrollCompact } from '~/hooks/useScrollCompact'
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { PortfolioAddressDisplay } from '~/pages/Portfolio/Header/PortfolioAddressDisplay/PortfolioAddressDisplay'
 import { PortfolioMoreMenu } from '~/pages/Portfolio/Header/PortfolioMoreMenu'
@@ -71,10 +72,13 @@ function getOutageState({
 }
 
 interface PortfolioHeaderProps {
-  isCompact: boolean
+  enableScrollCompact?: boolean
+  isCompact?: boolean
 }
 
-export function PortfolioHeader({ isCompact }: PortfolioHeaderProps) {
+export function PortfolioHeader({ enableScrollCompact = false, isCompact: isCompactProp }: PortfolioHeaderProps) {
+  const scrollCompact = useScrollCompact({})
+  const isCompact = isCompactProp ?? (enableScrollCompact && scrollCompact)
   const { t } = useTranslation()
   const navigate = useNavigate()
   const media = useMedia()
@@ -156,7 +160,7 @@ export function PortfolioHeader({ isCompact }: PortfolioHeaderProps) {
             )}
             <NetworkFilter
               showMultichainOption
-              showDisplayName={!media.sm}
+              showDisplayName={!media.md}
               position="right"
               onPress={onNetworkPress}
               currentChainId={currentChainId}

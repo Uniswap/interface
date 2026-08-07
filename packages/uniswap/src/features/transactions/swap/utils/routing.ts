@@ -8,6 +8,7 @@ import {
   type SwapTxAndGasInfo,
   type WrapSwapTxAndGasInfo,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import type { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { type ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 import type { RpcUserOperation } from 'viem/account-abstraction'
 
@@ -60,6 +61,45 @@ export function isUserOpSwap(swapTxContext: SwapTxAndGasInfo): swapTxContext is 
     (isClassic(swapTxContext) || isWrap(swapTxContext) || isBridge(swapTxContext)) &&
     swapTxContext.unsignedUserOperation !== undefined
   )
+}
+
+/**
+ * Whether gas for this trade's execution is actually paid by our paymaster: the quote's sponsorship
+ * offer only takes effect when execution runs through a paymaster-driven path (4337 userOp /
+ * 5792 walletCall), signaled by `executesViaPaymaster`. UniswapX fill gas is always filler-paid
+ * (at most the Permit2 approval is sponsored), so orders never count. Undefined when the quote
+ * carries no sponsorship info.
+ */
+export function isGasSponsoredTradeExecution({
+  trade,
+  executesViaPaymaster,
+}: {
+  trade: Trade
+  executesViaPaymaster: boolean
+}): boolean | undefined {
+  const quote = trade.quote
+  if (!('sponsorshipInfo' in quote)) {
+    return undefined
+  }
+  if (isUniswapX(trade)) {
+    return false
+  }
+  return Boolean(quote.sponsorshipInfo?.sponsored) && executesViaPaymaster
+}
+
+/**
+ * Context-level variant of {@link isGasSponsoredTradeExecution}: derives whether execution runs
+ * through a paymaster-driven path from the pre-submit swap context (paymasterService / userOp).
+ */
+export function isGasSponsoredExecution(swapTxContext: SwapTxAndGasInfo): boolean | undefined {
+  const trade = swapTxContext.trade
+  if (!trade) {
+    return undefined
+  }
+  const executesViaPaymaster =
+    ('paymasterService' in swapTxContext && Boolean(swapTxContext.paymasterService)) ||
+    ('unsignedUserOperation' in swapTxContext && Boolean(swapTxContext.unsignedUserOperation))
+  return isGasSponsoredTradeExecution({ trade, executesViaPaymaster })
 }
 
 export function isChained<T extends { routing: TradingApi.Routing }>(

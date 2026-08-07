@@ -1,6 +1,7 @@
 import { FeatureFlags, getFeatureFlagName } from '@universe/gating'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { expect, getTest } from '~/playwright/fixtures'
+import { seedEmbeddedWalletState } from '~/playwright/fixtures/account'
 import { getVisibleDropdownElementByTestId } from '~/playwright/fixtures/utils'
 import { TEST_WALLET_ADDRESS } from '~/playwright/fixtures/wallets'
 import { Mocks } from '~/playwright/mocks/mocks'
@@ -8,6 +9,13 @@ import { Mocks } from '~/playwright/mocks/mocks'
 const test = getTest()
 
 const EW_ENABLED = `featureFlagOverride=${getFeatureFlagName(FeatureFlags.EmbeddedWallet)}`
+
+// `eagerlyConnect=embedded` (see setupWagmiAutoConnect, apps/web/src/components/Web3Provider/wagmiAutoConnect.ts)
+// tells the e2e bootstrap to `connect()` the embedded-wallet connector directly. Without it, the
+// default e2e auto-connect eagerly connects a generic mock connector on a 1ms timeout, which wins
+// the race against IntentionalEvmReconnect's recentConnectorId-gated reconnect and becomes the
+// active wallet instead — so useIsEmbeddedWallet() stays false and Passkey Settings never renders,
+// even though the account button shows "connected" (both connectors share the same test address).
 
 const LIST_AUTHENTICATORS_URL = '**/uniswap.privyembeddedwallet.v1.EmbeddedWalletService/ListAuthenticators'
 const CHALLENGE_URL = '**/uniswap.privyembeddedwallet.v1.EmbeddedWalletService/Challenge'
@@ -20,22 +28,17 @@ const DELETE_AUTHENTICATOR_URL = '**/uniswap.privyembeddedwallet.v1.EmbeddedWall
 
 const TEST_WALLET_ID = 'test-wallet-id'
 
-/** Sets embedded wallet state in localStorage before page navigation */
+/**
+ * Sets embedded wallet state in localStorage before page navigation.
+ *
+ * `seedEmbeddedWalletState` (playwright/fixtures/account.ts) also seeds `recentConnectorId`
+ * (INFRA-2902), but that alone isn't enough to guarantee the embedded wallet connector is
+ * active — see the `eagerlyConnect=embedded` comment above for why the mock-connector race
+ * also has to be won. Without both, the Passkey Settings menu item never renders, hanging
+ * every test at the PasskeySettings click.
+ */
 async function setupEmbeddedWalletState(page: Awaited<Parameters<Parameters<typeof test>[2]>[0]>['page']) {
-  await page.addInitScript(
-    ({ walletId, walletAddress }) => {
-      localStorage.setItem(
-        'embedded-wallet',
-        JSON.stringify({
-          walletId,
-          walletAddress,
-          chainId: 1,
-          isConnected: true,
-        }),
-      )
-    },
-    { walletId: TEST_WALLET_ID, walletAddress: TEST_WALLET_ADDRESS },
-  )
+  await seedEmbeddedWalletState({ page, walletId: TEST_WALLET_ID, walletAddress: TEST_WALLET_ADDRESS })
 }
 
 /** Navigates to the Passkey menu via Settings */
@@ -186,7 +189,7 @@ test.describe(
         await route.fulfill({ path: Mocks.EmbeddedWallet.list_authenticators_multi })
       })
 
-      await page.goto(`/swap?${EW_ENABLED}`)
+      await page.goto(`/swap?${EW_ENABLED}&eagerlyConnect=embedded`)
       await navigateToPasskeyMenu(page)
 
       const drawer = page.getByTestId(TestID.AccountDrawer)
@@ -206,7 +209,7 @@ test.describe(
         await route.fulfill({ path: Mocks.EmbeddedWallet.list_authenticators_multi })
       })
 
-      await page.goto(`/swap?${EW_ENABLED}`)
+      await page.goto(`/swap?${EW_ENABLED}&eagerlyConnect=embedded`)
       await navigateToPasskeyMenu(page)
 
       // While the request is in-flight, skeleton rows should be visible
@@ -223,7 +226,7 @@ test.describe(
         await route.fulfill({ path: Mocks.EmbeddedWallet.list_authenticators_multi })
       })
 
-      await page.goto(`/swap?${EW_ENABLED}`)
+      await page.goto(`/swap?${EW_ENABLED}&eagerlyConnect=embedded`)
       await navigateToPasskeyMenu(page)
 
       const drawer = page.getByTestId(TestID.AccountDrawer)
@@ -247,7 +250,7 @@ test.describe(
         await route.fulfill({ path: Mocks.EmbeddedWallet.list_authenticators_single })
       })
 
-      await page.goto(`/swap?${EW_ENABLED}`)
+      await page.goto(`/swap?${EW_ENABLED}&eagerlyConnect=embedded`)
       await navigateToPasskeyMenu(page)
 
       const drawer = page.getByTestId(TestID.AccountDrawer)
@@ -285,7 +288,7 @@ test.describe(
         await route.fulfill({ path: Mocks.EmbeddedWallet.add_authenticator })
       })
 
-      await page.goto(`/swap?${EW_ENABLED}`)
+      await page.goto(`/swap?${EW_ENABLED}&eagerlyConnect=embedded`)
       await navigateToPasskeyMenu(page)
 
       const drawer = page.getByTestId(TestID.AccountDrawer)
@@ -338,7 +341,7 @@ test.describe(
         await route.fulfill({ path: Mocks.EmbeddedWallet.add_authenticator })
       })
 
-      await page.goto(`/swap?${EW_ENABLED}`)
+      await page.goto(`/swap?${EW_ENABLED}&eagerlyConnect=embedded`)
       await navigateToPasskeyMenu(page)
 
       const drawer = page.getByTestId(TestID.AccountDrawer)
@@ -378,7 +381,7 @@ test.describe(
         }
       })
 
-      await page.goto(`/swap?${EW_ENABLED}`)
+      await page.goto(`/swap?${EW_ENABLED}&eagerlyConnect=embedded`)
       await navigateToPasskeyMenu(page)
 
       const drawer = page.getByTestId(TestID.AccountDrawer)
@@ -425,7 +428,7 @@ test.describe(
         await route.fulfill({ path: Mocks.EmbeddedWallet.delete_authenticator })
       })
 
-      await page.goto(`/swap?${EW_ENABLED}`)
+      await page.goto(`/swap?${EW_ENABLED}&eagerlyConnect=embedded`)
       await navigateToPasskeyMenu(page)
 
       const drawer = page.getByTestId(TestID.AccountDrawer)
@@ -460,7 +463,7 @@ test.describe(
         await route.fulfill({ path: Mocks.EmbeddedWallet.list_authenticators_multi })
       })
 
-      await page.goto(`/swap?${EW_ENABLED}`)
+      await page.goto(`/swap?${EW_ENABLED}&eagerlyConnect=embedded`)
       await navigateToPasskeyMenu(page)
 
       const drawer = page.getByTestId(TestID.AccountDrawer)
@@ -497,7 +500,7 @@ test.describe(
         await route.fulfill({ path: Mocks.EmbeddedWallet.delete_authenticator })
       })
 
-      await page.goto(`/swap?${EW_ENABLED}`)
+      await page.goto(`/swap?${EW_ENABLED}&eagerlyConnect=embedded`)
       await navigateToPasskeyMenu(page)
 
       const drawer = page.getByTestId(TestID.AccountDrawer)

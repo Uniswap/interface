@@ -32,6 +32,7 @@ export function createMonitor(def: MonitorDefinition): datadog.Monitor {
     dashboards: def.dashboards,
     includeIncidentWebhook: def.includeIncidentWebhook,
     additionalSlackChannels: def.additionalSlackChannels,
+    slackAlertTransitionsOnly: def.slackAlertTransitionsOnly,
   })
 
   return new datadog.Monitor(resourceName, {

@@ -13,7 +13,7 @@ import type { AppTFunction } from 'ui/src/i18n/types'
 import type { ActivityItem } from 'uniswap/src/components/activity/generateActivityItemRenderer'
 import { isLoadingItem, isSectionHeader } from 'uniswap/src/components/activity/utils'
 import { getEarnPlanTransactionType } from 'uniswap/src/features/earn/planActivityTitles'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { NFTTradeType, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import type { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import type { SelectOption } from '~/components/Dropdowns/DropdownSelector'
 import { ActivityFilterType } from '~/pages/Portfolio/Activity/Filters/activityFilterTypes'
@@ -54,6 +54,11 @@ export function getTransactionTypeForActivityFilter({
     transaction.typeInfo.earnAction
   ) {
     return getEarnPlanTransactionType(transaction.typeInfo.earnAction)
+  }
+
+  // NFT purchases are grouped under receives, sales under sends
+  if (transaction.typeInfo.type === TransactionType.NFTTrade) {
+    return transaction.typeInfo.tradeType === NFTTradeType.BUY ? TransactionType.Receive : TransactionType.Send
   }
 
   return transaction.typeInfo.type
@@ -152,12 +157,18 @@ export function getTransactionTypesForFilter(filterType: string): TransactionTyp
  */
 export const SERVER_FILTER_MAP: Record<ActivityFilterType, TransactionTypeFilter[] | undefined> = {
   [ActivityFilterType.All]: undefined,
+  // Sends/Receives include SWAP because NFT trades are categorized as SWAP server-side
   [ActivityFilterType.Sends]: [
     TransactionTypeFilter.SEND,
     TransactionTypeFilter.VAULT_DEPOSIT,
     TransactionTypeFilter.VAULT_TRANSFER,
+    TransactionTypeFilter.SWAP,
   ],
-  [ActivityFilterType.Receives]: [TransactionTypeFilter.RECEIVE, TransactionTypeFilter.VAULT_TRANSFER],
+  [ActivityFilterType.Receives]: [
+    TransactionTypeFilter.RECEIVE,
+    TransactionTypeFilter.VAULT_TRANSFER,
+    TransactionTypeFilter.SWAP,
+  ],
   [ActivityFilterType.Swaps]: [TransactionTypeFilter.SWAP],
   [ActivityFilterType.Wraps]: [TransactionTypeFilter.WRAP],
   [ActivityFilterType.Approvals]: [TransactionTypeFilter.APPROVE],
@@ -171,8 +182,8 @@ export const SERVER_FILTER_MAP: Record<ActivityFilterType, TransactionTypeFilter
 
 const LEGACY_SERVER_FILTER_MAP: Record<ActivityFilterType, TransactionTypeFilter[] | undefined> = {
   ...SERVER_FILTER_MAP,
-  [ActivityFilterType.Sends]: [TransactionTypeFilter.SEND],
-  [ActivityFilterType.Receives]: [TransactionTypeFilter.RECEIVE],
+  [ActivityFilterType.Sends]: [TransactionTypeFilter.SEND, TransactionTypeFilter.SWAP],
+  [ActivityFilterType.Receives]: [TransactionTypeFilter.RECEIVE, TransactionTypeFilter.SWAP],
   [ActivityFilterType.Withdrawals]: [TransactionTypeFilter.WITHDRAW],
 }
 

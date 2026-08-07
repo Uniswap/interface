@@ -35,6 +35,7 @@ export { createIsAddress } from './utilities/createIsAddress'
 export { createNamehash } from './utilities/createNamehash'
 export { createParseUnits } from './utilities/createParseUnits'
 export { zeroAddress } from './utilities/createZeroAddress'
+export { assume0xAddress } from './utilities/assume0xAddress'
 export { InstrumentedJsonRpcProvider } from './rpc/observability/InstrumentedJsonRpcProvider'
 export { createObservableTransport } from './rpc/observability/createObservableTransport'
 export { createUniRpcRoutedTransport } from './rpc/createUniRpcRoutedTransport'
@@ -54,8 +55,9 @@ export type {
   RpcErrorContext,
   RpcObserver,
 } from './rpc/observability/rpcObserver'
-export type { Abi, Address, Block, Hash, SignableMessage } from './types'
+export type { Abi, Address, Block, Hash, Hex, SignableMessage } from './types'
 export { erc20Abi, erc20Abi_bytes32, erc721Abi } from './types'
+export { createWalletClient, http, mainnet, privateKeyToAccount } from './other'
 export { v3PoolStateAbi, type V3PoolStateAbi } from './abis/v3PoolStateAbi'
 export { feeOnTransferDetectorAbi, type FeeOnTransferDetectorAbi } from './abis/feeOnTransferDetectorAbi'
 export { ensRegistrarAbi, type EnsRegistrarAbi } from './abis/ensRegistrarAbi'

@@ -1,14 +1,14 @@
 import { renderHook } from '@testing-library/react'
 import { Level } from '@uniswap/client-unirpc-v2/dist/uniswap/unirpc/v2/service_pb'
 import type { providers } from 'ethers/lib/ethers'
-import { useGasFeeQuery } from 'uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery'
+import { useGasFeeQuery } from 'uniswap/src/data/apiClients/gasService/useGasFeeQuery'
 import {
   getRecommendedGasFieldsFromQuoteGas,
   useRecommendedGasFields,
 } from 'uniswap/src/features/gas/components/NetworkCostEditor/useRecommendedGasFields'
 import type { Mock } from 'vitest'
 
-vi.mock('uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery', () => ({
+vi.mock('uniswap/src/data/apiClients/gasService/useGasFeeQuery', () => ({
   useGasFeeQuery: vi.fn(),
 }))
 

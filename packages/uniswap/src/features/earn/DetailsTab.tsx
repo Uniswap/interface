@@ -1,7 +1,7 @@
 import { isWebPlatform } from '@universe/environment'
 import dayjs from 'dayjs'
 import { useCallback, useState } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text, TouchableArea, UniversalImage, useSporeColors } from 'ui/src'
 import { EarnSparkle } from 'ui/src/components/icons/EarnSparkle'
 import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
@@ -10,9 +10,13 @@ import { MorphoLogoFull } from 'ui/src/components/icons/MorphoLogoFull'
 import { borderRadii, iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
-import { UniswapHelpUrls, UniswapStaticUrls } from 'uniswap/src/constants/urls'
-import { EarnExposurePopover, shouldShowExposurePopover } from 'uniswap/src/features/earn/EarnExposurePopover'
+import {
+  EarnExposurePopover,
+  getExposureRows,
+  shouldShowExposurePopover,
+} from 'uniswap/src/features/earn/EarnExposurePopover'
 import { EarnInfoPopover } from 'uniswap/src/features/earn/EarnInfoPopover'
+import { EarnLegalDisclaimer } from 'uniswap/src/features/earn/EarnLegalDisclaimer'
 import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { FORMAT_DATE_MEDIUM, useFormattedDate } from 'uniswap/src/features/language/localizedDayjs'
@@ -29,6 +33,7 @@ interface DetailsTabProps {
   onDeposit: () => void
   onConnectWallet: () => void
   onShowMore: () => void
+  depositLoading?: boolean
   showActionButtons?: boolean
 }
 
@@ -39,6 +44,7 @@ export function DetailsTab({
   onDeposit,
   onConnectWallet,
   onShowMore,
+  depositLoading = false,
   showActionButtons = true,
 }: DetailsTabProps): JSX.Element {
   const { t } = useTranslation()
@@ -69,7 +75,7 @@ export function DetailsTab({
       {expanded && (
         <>
           <VaultDetailsList vault={vault} />
-          <VaultDescription />
+          <EarnLegalDisclaimer />
         </>
       )}
       {showActionButtons && !isConnected ? (
@@ -85,6 +91,7 @@ export function DetailsTab({
             variant={isWebPlatform ? 'branded' : 'default'}
             emphasis="primary"
             size="large"
+            loading={depositLoading}
             onPress={onDeposit}
           >
             {t('explore.earn.vault.deposit')}
@@ -107,56 +114,14 @@ export function DetailsTab({
   )
 }
 
-function VaultDescription(): JSX.Element {
-  const onOpenUniswapTerms = useCallback(() => {
-    openUri({
-      uri: UniswapHelpUrls.articles.uniswapLabsTermsOfService,
-      openExternalBrowser: true,
-      isSafeUri: true,
-    }).catch(() => undefined)
-  }, [])
-
-  const onOpenMorphoDisclaimer = useCallback(() => {
-    openUri({ uri: UniswapStaticUrls.morphoDisclaimerUrl, openExternalBrowser: true, isSafeUri: true }).catch(
-      () => undefined,
-    )
-  }, [])
-
-  return (
-    <Text variant="body4" color="$neutral3">
-      <Trans
-        components={{
-          morphoDisclaimerLink: (
-            <Text
-              variant="body4"
-              color="$neutral2"
-              fontWeight="$medium"
-              cursor="pointer"
-              onPress={onOpenMorphoDisclaimer}
-            />
-          ),
-          termsLink: (
-            <Text
-              variant="body4"
-              color="$neutral2"
-              fontWeight="$medium"
-              cursor="pointer"
-              onPress={onOpenUniswapTerms}
-            />
-          ),
-        }}
-        i18nKey="explore.earn.vault.details.legalDisclaimer"
-      />
-    </Text>
-  )
-}
-
 function VaultStatsGrid({ vault }: { vault: EarnVaultInfo }): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const { formatPercent, formatNumberOrString } = useLocalizationContext()
+  const { convertFiatAmountFormatted, formatPercent } = useLocalizationContext()
 
-  const formatFiatShort = (value: number): string => formatNumberOrString({ value, type: NumberType.FiatTokenDetails })
+  // Vault stats are USD-denominated; convert before formatting in the selected fiat.
+  const formatFiatShort = (value: number): string => convertFiatAmountFormatted(value, NumberType.FiatTokenDetails)
+  const exposureCurrencyIds = getExposureRows(vault).map(({ currencyId }) => currencyId)
 
   return (
     <Flex borderWidth="$spacing1" borderColor="$surface3" borderRadius="$rounded16" overflow="hidden">
@@ -183,7 +148,7 @@ function VaultStatsGrid({ vault }: { vault: EarnVaultInfo }): JSX.Element {
         <StatCell
           label={t('explore.earn.vault.exposure')}
           labelAccessory={shouldShowExposurePopover(vault) ? <EarnExposurePopover vault={vault} /> : undefined}
-          value={<ExposureStack currencyIds={vault.exposureCurrencyIds} />}
+          value={<ExposureStack currencyIds={exposureCurrencyIds} />}
           borderBottomWidth="$spacing1"
         />
       </Flex>
@@ -282,6 +247,8 @@ function ExposureTokenLogo({ currencyId }: { currencyId: string }): JSX.Element 
 function VaultDetailsList({ vault }: { vault: EarnVaultInfo }): JSX.Element {
   const { t } = useTranslation()
   const isGauntletCurator = vault.curator.name.toLowerCase().includes('gauntlet')
+  const curatorLogoContainerSize = isWebPlatform ? iconSizes.icon20 : iconSizes.icon16
+  const curatorLogoSize = isWebPlatform ? iconSizes.icon20 : iconSizes.icon14
   const formattedDeploymentDate = useFormattedDate(dayjs(vault.deploymentDate ?? 0), FORMAT_DATE_MEDIUM)
   const deploymentDateLabel = vault.deploymentDate ? formattedDeploymentDate : '--'
 
@@ -305,16 +272,20 @@ function VaultDetailsList({ vault }: { vault: EarnVaultInfo }): JSX.Element {
         label={t('explore.earn.vault.curator')}
         value={
           <Flex row alignItems="center" gap="$spacing4">
-            {isGauntletCurator ? (
-              <GauntletLogo color="$neutral2" size="$icon.20" />
-            ) : (
-              vault.curator.imageUrl && (
-                <UniversalImage
-                  size={{ width: iconSizes.icon20, height: iconSizes.icon20 }}
-                  style={{ image: { borderRadius: borderRadii.roundedFull } }}
-                  uri={vault.curator.imageUrl}
-                />
-              )
+            {(isGauntletCurator || vault.curator.imageUrl) && (
+              <Flex centered width={curatorLogoContainerSize} height={curatorLogoContainerSize}>
+                {isGauntletCurator ? (
+                  <GauntletLogo color="$neutral2" size={curatorLogoSize} />
+                ) : (
+                  vault.curator.imageUrl && (
+                    <UniversalImage
+                      size={{ width: curatorLogoSize, height: curatorLogoSize }}
+                      style={{ image: { borderRadius: borderRadii.roundedFull } }}
+                      uri={vault.curator.imageUrl}
+                    />
+                  )
+                )}
+              </Flex>
             )}
             <Text variant="body3">{vault.curator.name}</Text>
           </Flex>

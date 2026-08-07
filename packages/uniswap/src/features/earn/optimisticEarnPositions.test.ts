@@ -1,6 +1,5 @@
 import type { QueryClient } from '@tanstack/react-query'
 import { TradingApi } from '@universe/api'
-import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   applyEarnPositionChangeOptimistically,
@@ -11,6 +10,7 @@ import {
   useOptimisticEarnPositionStore,
 } from 'uniswap/src/features/earn/optimisticEarnPositions'
 import { EarnAction, type EarnPositionInfo, type EarnVaultInfo } from 'uniswap/src/features/earn/types'
+import { normalizeTokenAddressForCache } from 'uniswap/src/utils/currencyId'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 

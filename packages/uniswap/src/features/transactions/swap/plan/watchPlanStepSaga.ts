@@ -165,7 +165,6 @@ function* refetchBalancesForStep({
     yield* refetchQueriesViaOnchainOverrideVariant({
       transaction: step,
       activeAddress: address,
-      apolloClient: null, // Skip NFT refetch for intermediate steps
     })
   }
 }

@@ -63,7 +63,7 @@ import {
   setVerifiedErc20Balance,
   WEETH_ADDRESS,
 } from '~/playwright/anvil/utils'
-import { assume0xAddress } from '~/utils/wagmi'
+import { assume0xAddress } from '~/chains'
 
 const CHAIN_ID = UniverseChainId.Mainnet
 const PORT = 8560 // offset from 8545 so a running e2e anvil is never clobbered

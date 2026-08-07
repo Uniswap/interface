@@ -2,8 +2,12 @@ import { ArrowDownToLine } from 'ui/src/components/icons/ArrowDownToLine'
 import { ArrowUpToLine } from 'ui/src/components/icons/ArrowUpToLine'
 import { Receipt } from 'ui/src/components/icons/Receipt'
 import { SendAction } from 'ui/src/components/icons/SendAction'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { getTransactionTypeCellIconProps } from '~/pages/Portfolio/Activity/ActivityTable/TransactionTypeCell'
+import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  getTransactionTypeCellIconProps,
+  shouldShowCancelTimeoutWarning,
+} from '~/pages/Portfolio/Activity/ActivityTable/TransactionTypeCell'
+import { createMockUniswapXOrder } from '~/test-utils/transactions/fixtures'
 
 describe('getTransactionTypeCellIconProps', () => {
   it('uses the earn icon for deposits and vault withdrawals instead of using group icons', () => {
@@ -38,5 +42,49 @@ describe('getTransactionTypeCellIconProps', () => {
     expect(getTransactionTypeCellIconProps({ transactionType: TransactionType.Unknown, groupIcon: null })).toEqual({
       IconComponent: Receipt,
     })
+  })
+})
+
+describe('shouldShowCancelTimeoutWarning', () => {
+  const nowMs = 1_700_000_000_000
+  const timedOutOrder = createMockUniswapXOrder({
+    status: TransactionStatus.Cancelling,
+    cancelTxHash: '0xcancel',
+    cancelTimeoutAtMs: nowMs - 1,
+  })
+
+  it('shows the warning treatment for a timed-out cancellation when the flag is on', () => {
+    expect(shouldShowCancelTimeoutWarning({ transaction: timedOutOrder, isCancelTimeoutEnabled: true, nowMs })).toBe(
+      true,
+    )
+  })
+
+  it('never shows the warning with the flag off, before the deadline, or once the cancel tx mined', () => {
+    expect(shouldShowCancelTimeoutWarning({ transaction: timedOutOrder, isCancelTimeoutEnabled: false, nowMs })).toBe(
+      false,
+    )
+    expect(
+      shouldShowCancelTimeoutWarning({
+        transaction: createMockUniswapXOrder({
+          status: TransactionStatus.Cancelling,
+          cancelTxHash: '0xcancel',
+          cancelTimeoutAtMs: nowMs + 60_000,
+        }),
+        isCancelTimeoutEnabled: true,
+        nowMs,
+      }),
+    ).toBe(false)
+    expect(
+      shouldShowCancelTimeoutWarning({
+        transaction: createMockUniswapXOrder({
+          status: TransactionStatus.Cancelling,
+          cancelTxHash: '0xcancel',
+          cancelTimeoutAtMs: nowMs - 1,
+          cancelTxMined: true,
+        }),
+        isCancelTimeoutEnabled: true,
+        nowMs,
+      }),
+    ).toBe(false)
   })
 })

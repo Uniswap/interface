@@ -23,7 +23,7 @@ import { StocksHorizontalRow } from 'uniswap/src/components/TokenSelector/lists/
 import { tagRwaTokenSelectorSections } from 'uniswap/src/components/TokenSelector/tagRwaTokenSelectorSections'
 import { useTokenSelectorHoverConfig } from 'uniswap/src/components/TokenSelector/TokenSelectorHoverConfig'
 import { OnSelectCurrency, OnSelectRwaToken } from 'uniswap/src/components/TokenSelector/types'
-import { formatIssuerLabel } from 'uniswap/src/data/rest/rwa/formatIssuerDisplaySymbol'
+import { formatIssuerLabel } from 'uniswap/src/data/apiClients/dataApiService/rwa/formatIssuerDisplaySymbol'
 import { setHasSeenBridgingTooltip } from 'uniswap/src/features/behaviorHistory/slice'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -286,6 +286,7 @@ function TokenSelectorListInner({
         <StocksHorizontalRow
           tokens={item}
           expanded={isExpandedItem(item)}
+          showTokenWarnings={showTokenWarnings}
           onSelectRwaToken={onSelectRwaToken ?? noop}
           onExpand={handleExpand}
         />

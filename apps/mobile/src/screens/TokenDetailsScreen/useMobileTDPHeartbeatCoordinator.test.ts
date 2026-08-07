@@ -59,7 +59,10 @@ describe('useMobileTDPHeartbeatCoordinator', () => {
 
     expect(mockApolloRefetchQueries).toHaveBeenCalledWith({ include: ['TokenDetailsScreen'] })
     expect(mockApolloRefetchQueries).toHaveBeenCalledWith({ include: ['TokenPriceHistory'] })
-    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({ queryKey: [ReactQueryCacheKey.GetPortfolio] })
+    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({
+      queryKey: [ReactQueryCacheKey.GetPortfolio],
+      type: 'active',
+    })
   })
 
   it('refetches price only after everything else has settled', async () => {
@@ -113,7 +116,10 @@ describe('useMobileTDPHeartbeatCoordinator', () => {
     const { refresh } = mockUseHeartbeatCoordinator.mock.calls[0]![0]
     await refresh()
 
-    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({ queryKey: [ReactQueryCacheKey.GetPortfolio] })
+    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({
+      queryKey: [ReactQueryCacheKey.GetPortfolio],
+      type: 'active',
+    })
     expect(mockQueryClientRefetchQueries).not.toHaveBeenCalledWith(
       expect.objectContaining({ queryKey: expect.arrayContaining(['listEarnVaults']) }),
     )
@@ -132,9 +138,11 @@ describe('useMobileTDPHeartbeatCoordinator', () => {
 
     expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({
       queryKey: [ReactQueryCacheKey.DataApiService, 'listEarnVaults'],
+      type: 'active',
     })
     expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({
       queryKey: [ReactQueryCacheKey.DataApiService, 'listEarnPositions'],
+      type: 'active',
     })
   })
 })

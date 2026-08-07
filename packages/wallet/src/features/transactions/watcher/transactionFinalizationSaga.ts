@@ -6,6 +6,7 @@ import {
   DEFAULT_FLASHBOTS_ENABLED,
   FLASHBOTS_DEFAULT_REFUND_PERCENT,
 } from '@universe/chains'
+import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { BigNumber } from 'ethers'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
 import { type UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -15,7 +16,8 @@ import { setNotificationStatus } from 'uniswap/src/features/notifications/slice/
 import { refetchQueries } from 'uniswap/src/features/portfolio/portfolioUpdates/refetchQueriesSaga'
 import { MobileAppsFlyerEvents, SwapEventName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
-import { selectSwapTransactionsCount } from 'uniswap/src/features/transactions/selectors'
+import { getCancelTxFinalizationUpdates } from 'uniswap/src/features/transactions/cancel/getCancelTxFinalizationUpdates'
+import { selectSwapTransactionsCount, selectTransactions } from 'uniswap/src/features/transactions/selectors'
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
 import { getRouteAnalyticsData, tradeRoutingToFillType } from 'uniswap/src/features/transactions/swap/analytics'
 import { activePlanStore } from 'uniswap/src/features/transactions/swap/review/stores/activePlan/activePlanStore'
@@ -36,7 +38,6 @@ import { getDiff, getOptionalTransactionProperty, getPercentageError } from 'wal
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
 export function* finalizeTransaction({
-  apolloClient,
   transaction,
 }: {
   apolloClient: ApolloClient<NormalizedCacheObject>
@@ -50,7 +51,6 @@ export function* finalizeTransaction({
   const activeAddress = yield* select(selectActiveAccountAddress)
   yield* refetchQueries({
     transaction,
-    apolloClient,
     activeAddress,
   })
 
@@ -155,7 +155,7 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
       submitViaPrivateRpc: isUniswapX(payload) ? false : payload.options.submitViaPrivateRpc,
       transactedUSDValue,
       swap_start_timestamp: typeInfo.swapStartTimestamp,
-      // Gas sponsorship captured at submit (see getSponsorshipAnalyticsProperties)
+      // Execution-time gas sponsorship captured at submit (see isGasSponsoredExecution)
       is_sponsored: typeInfo.isSponsored,
       sponsorship_campaign_id: typeInfo.sponsorshipCampaignId,
       // RWA analytics captured at submit (see getRwaSwapAnalyticsProperties)
@@ -373,7 +373,36 @@ function logSwapSuccess(
   })
 }
 
+/**
+ * Flips UniswapX orders when their tracked cancel tx finalizes (pure core in
+ * getCancelTxFinalizationUpdates). Covers every `finalizeTransaction` dispatch site.
+ */
+export function* handleCancelTxFinalized(
+  actionData: ReturnType<typeof transactionActions.finalizeTransaction>,
+): Generator<unknown> {
+  const { payload } = actionData
+  if (payload.typeInfo.type !== TransactionType.UniswapXCancel) {
+    return
+  }
+  if (!getFeatureFlag(FeatureFlags.LimitCancelTimeout)) {
+    return
+  }
+
+  const transactionsState = yield* select(selectTransactions)
+  const updates = getCancelTxFinalizationUpdates({
+    transaction: payload,
+    transactionsState,
+    nowMs: Date.now(),
+  })
+  for (const update of updates) {
+    yield* put(update)
+  }
+}
+
 export function* watchTransactionEvents(): Generator<unknown> {
   // Watch for finalized transactions to send analytics events
   yield* takeEvery(transactionActions.finalizeTransaction.type, logTransactionEvent)
+
+  // Watch for finalized cancel txs to flip their linked UniswapX orders
+  yield* takeEvery(transactionActions.finalizeTransaction.type, handleCancelTxFinalized)
 }

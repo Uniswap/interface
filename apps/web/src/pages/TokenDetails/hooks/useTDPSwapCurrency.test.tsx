@@ -1,19 +1,23 @@
 import { renderHook } from '@testing-library/react'
-import { Currency, Token } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
 import type { PropsWithChildren, ReactElement } from 'react'
 import type { MultichainTokenEntry } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import type { TokenQueryData } from '~/appGraphql/data/Token'
 import { currencyForSelectedMultichainDeployment } from '~/pages/TokenDetails/components/header/currencyForSelectedMultichainDeployment'
 import { createTDPStore, type TDPState } from '~/pages/TokenDetails/context/createTDPStore'
 import { TDPStoreContext, type MultiChainMap } from '~/pages/TokenDetails/context/TDPContext'
 import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultichainTokenEntries'
+import { useTDPPerChainVolume } from '~/pages/TokenDetails/hooks/useTDPPerChainVolume'
 import { useTDPSwapCurrency } from '~/pages/TokenDetails/hooks/useTDPSwapCurrency'
 import { mocked } from '~/test-utils/mocked'
 
 vi.mock('~/pages/TokenDetails/hooks/useMultichainTokenEntries', () => ({
   useMultichainTokenEntries: vi.fn(),
+}))
+
+vi.mock('~/pages/TokenDetails/hooks/useTDPPerChainVolume', () => ({
+  useTDPPerChainVolume: vi.fn(),
 }))
 
 vi.mock('~/pages/TokenDetails/components/header/currencyForSelectedMultichainDeployment', () => ({
@@ -30,25 +34,14 @@ const TWO_CHAINS: MultichainTokenEntry[] = [
   { chainId: UniverseChainId.Base, address: '0x222', isNative: false },
 ]
 
-type ProjectTokens = NonNullable<NonNullable<NonNullable<TokenQueryData>['project']>['tokens']>
-
-function makeToken(chain: GraphQLApi.Chain, volume: number): ProjectTokens[number] {
-  return { chain, address: '0x1', market: { volume24H: { value: volume } } } as unknown as ProjectTokens[number]
-}
-
 function createTDPState(
-  overrides: Partial<Pick<TDPState, 'selectedMultichainChainId' | 'multiChainMap'>> & {
-    tokens?: ProjectTokens
-  } = {},
+  overrides: Partial<Pick<TDPState, 'selectedMultichainChainId' | 'multiChainMap'>> = {},
 ): TDPState {
   return {
     currencyChain: GraphQLApi.Chain.Ethereum,
     currencyChainId: UniverseChainId.Mainnet,
     address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-    tokenQuery: {
-      loading: false,
-      data: overrides.tokens ? { token: { project: { tokens: overrides.tokens } } } : undefined,
-    },
+    tokenQuery: { loading: false, data: undefined },
     multiChainMap: overrides.multiChainMap ?? {},
     selectedMultichainChainId: overrides.selectedMultichainChainId,
     tokenColor: undefined,
@@ -67,6 +60,7 @@ describe('useTDPSwapCurrency', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mocked(useMultichainTokenEntries).mockReturnValue(TWO_CHAINS)
+    mocked(useTDPPerChainVolume).mockReturnValue(undefined)
     mocked(currencyForSelectedMultichainDeployment).mockReturnValue(BASE_CURRENCY)
   })
 
@@ -102,11 +96,11 @@ describe('useTDPSwapCurrency', () => {
         balance: { balanceUSD: 5000 } as NonNullable<MultiChainMap[GraphQLApi.Chain]>['balance'],
       },
     }
-    const tokens: ProjectTokens = [
-      makeToken(GraphQLApi.Chain.Ethereum, 10_000_000),
-      makeToken(GraphQLApi.Chain.Base, 1_000_000),
-    ]
-    const store = createTDPStore(createTDPState({ multiChainMap, tokens }))
+    mocked(useTDPPerChainVolume).mockReturnValue({
+      [UniverseChainId.Mainnet]: 10_000_000,
+      [UniverseChainId.Base]: 1_000_000,
+    })
+    const store = createTDPStore(createTDPState({ multiChainMap }))
 
     const { result } = renderUseTDPSwapCurrency(store)
 
@@ -117,11 +111,11 @@ describe('useTDPSwapCurrency', () => {
 
   it('falls back to highest-volume deployment when no filter and no balances', () => {
     mocked(currencyForSelectedMultichainDeployment).mockReturnValue(BASE_CURRENCY_ON_BASE)
-    const tokens: ProjectTokens = [
-      makeToken(GraphQLApi.Chain.Ethereum, 1_000_000),
-      makeToken(GraphQLApi.Chain.Base, 5_000_000),
-    ]
-    const store = createTDPStore(createTDPState({ tokens }))
+    mocked(useTDPPerChainVolume).mockReturnValue({
+      [UniverseChainId.Mainnet]: 1_000_000,
+      [UniverseChainId.Base]: 5_000_000,
+    })
+    const store = createTDPStore(createTDPState())
 
     const { result } = renderUseTDPSwapCurrency(store)
 

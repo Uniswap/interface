@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { TextInput as RNTextInput, TextInputProps as RNTextInputProps } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
+import type { EarnDepositAmountContentProps } from 'src/components/earn/EarnDepositAmountContent.types'
 import {
   AmountEntrySection,
   EarnHelpIconButton,
@@ -21,24 +22,24 @@ import {
   getIsEarnAmountConversionPending,
 } from 'src/components/earn/earnDepositAmountUiState'
 import { resolveMobileEarnAmountDestination } from 'src/components/earn/earnWithdrawDestination'
+import { useResetEarnAmountsOnDepositSourceChange } from 'src/components/earn/hooks/useResetEarnAmountsOnDepositSourceChange'
 import { useEarnAmountInputFontSizing } from 'src/components/earn/useEarnAmountInputFontSizing'
 import { useEarnDepositAmountInlineErrors } from 'src/components/earn/useEarnDepositAmountInlineErrors'
 import { Screen } from 'src/components/layout/Screen'
 import { useLayoutHeight } from 'src/utils/useLayoutHeight'
-import { Button, Flex, useIsShortMobileDevice } from 'ui/src'
+import { Button, Flex, useIsShortMobileDevice, useShakeAnimation } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { PillMultiToggle } from 'uniswap/src/components/pill/PillMultiToggle'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getEarnAmountValidation, getProjectedAnnualEarnings } from 'uniswap/src/features/earn/amount'
 import { useEarnMinDepositUsd } from 'uniswap/src/features/earn/config'
 import { DEFAULT_WITHDRAW_CHAIN_ID } from 'uniswap/src/features/earn/constants'
 import { useEarnAmountEntryMobile } from 'uniswap/src/features/earn/hooks/useEarnAmountEntryMobile'
 import { useEarnDepositCurrencyContext } from 'uniswap/src/features/earn/hooks/useEarnDepositCurrencyContext'
 import { useEarnDepositSources } from 'uniswap/src/features/earn/hooks/useEarnDepositSources'
-import { EarnAction, type EarnPositionInfo, type EarnVaultInfo } from 'uniswap/src/features/earn/types'
+import { EarnAction } from 'uniswap/src/features/earn/types'
 import { hasConfirmedEarnPositionRawBalance } from 'uniswap/src/features/earn/utils'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -61,32 +62,12 @@ export function EarnDepositAmountContent({
   initialSourceCurrencyId,
   initialWithdrawMode,
   minimumBalanceDataUpdatedAtMs,
+  onActionChange,
   onReview,
   onOpenVaultDetails,
   onOpenNetworkSelector,
   onOpenDepositSourceSelector,
-}: {
-  vault: EarnVaultInfo
-  position?: EarnPositionInfo
-  initialAction?: EarnAction
-  initialChainId?: UniverseChainId
-  initialAmount?: string
-  initialSourceCurrencyId?: string
-  initialWithdrawMode?: TradingApi.EarnWithdrawMode
-  minimumBalanceDataUpdatedAtMs?: number
-  onReview: (params: {
-    action: EarnAction
-    amount: string
-    tokenAmount?: string
-    chainId: UniverseChainId
-    destinationCurrencyId?: string
-    sourceCurrencyId?: string
-    withdrawMode?: TradingApi.EarnWithdrawMode
-  }) => void
-  onOpenVaultDetails: () => void
-  onOpenNetworkSelector: (chainId: UniverseChainId) => void
-  onOpenDepositSourceSelector: () => void
-}): JSX.Element {
+}: EarnDepositAmountContentProps): JSX.Element {
   const { t } = useTranslation()
   const { convertFiatAmount, formatNumberOrString, formatPercent } = useLocalizationContext()
   const minDepositUsd = useEarnMinDepositUsd()
@@ -99,6 +80,7 @@ export function EarnDepositAmountContent({
   const [withdrawMode, setWithdrawMode] = useState<TradingApi.EarnWithdrawMode>(
     initialWithdrawMode ?? TradingApi.EarnWithdrawMode.EXACT_ASSETS,
   )
+  const { shakeStyle: amountInputShakeStyle, triggerShakeAnimation } = useShakeAnimation()
   const previousInitialWithdrawModeRef = useRef(initialWithdrawMode)
   const isWithdrawing = currentAction === EarnAction.Withdraw
   const requestedChainId = initialChainId ?? DEFAULT_WITHDRAW_CHAIN_ID
@@ -130,7 +112,6 @@ export function EarnDepositAmountContent({
       ) ?? depositSourceOptions.at(0),
     [depositSourceOptions, initialSourceCurrencyId],
   )
-
   const {
     currencyInfo,
     symbol,
@@ -161,6 +142,7 @@ export function EarnDepositAmountContent({
     tokenComparisonAmount,
     localFiatComparisonAmount,
     isMaxSelected,
+    exactMaxTokenAmount,
     setActiveAmount: setEntryActiveAmount,
     handlePercentPress: handleEntryPercentPress,
     handleToggleInputMode,
@@ -174,7 +156,9 @@ export function EarnDepositAmountContent({
     selectedDepositSourceBalanceUsd: selectedDepositSource?.balanceUsd,
     withdrawableBalanceUsd,
     isWithdrawLiquidityLimited,
+    onInputLengthExceeded: triggerShakeAnimation,
   })
+  useResetEarnAmountsOnDepositSourceChange(selectedDepositSource?.currencyInfo.currencyId, resetAmounts)
 
   const inputRef = useRef<RNTextInput>(null)
   const decimalPadRef = useRef<DecimalPadInputRef>(null)
@@ -202,7 +186,6 @@ export function EarnDepositAmountContent({
   }, [value, resetSelection])
 
   const onDecimalPadReady = useCallback(() => setDecimalPadReady(true), [])
-  const onTriggerInputShake = useCallback(() => undefined, [])
   useEffect(() => {
     if (previousInitialWithdrawModeRef.current === initialWithdrawMode) {
       return
@@ -222,6 +205,9 @@ export function EarnDepositAmountContent({
       if (nextAction === currentAction) {
         return
       }
+      if (onActionChange?.(nextAction) === false) {
+        return
+      }
       setCurrentAction(nextAction)
       resetAmounts()
       resetSelection({ start: 0 })
@@ -230,7 +216,7 @@ export function EarnDepositAmountContent({
         setWithdrawMode(TradingApi.EarnWithdrawMode.EXACT_ASSETS)
       }
     },
-    [currentAction, resetAmounts, resetSelection],
+    [currentAction, onActionChange, resetAmounts, resetSelection],
   )
 
   const setActiveAmount = useCallback(
@@ -336,17 +322,14 @@ export function EarnDepositAmountContent({
   const showDepositSourceLookupError = !isWithdrawing && balanceLookupErrored && !balanceLookupHasData
   const showDepositSourceLookupLoader = !isWithdrawing && !balanceLookupSettled && !showDepositSourceLookupError
   const handleReview = useCallback(() => {
-    if (isWithdrawing && !hasConfirmedWithdrawPosition) {
-      return
-    }
-    if (isWithdrawing && !destinationCurrencyId) {
+    if (isWithdrawing && (!hasConfirmedWithdrawPosition || !destinationCurrencyId)) {
       return
     }
 
     onReview({
       action: currentAction,
       amount: exactAmountFiat,
-      tokenAmount: !isWithdrawing && isMaxSelected ? exactAmountToken : undefined,
+      tokenAmount: !isWithdrawing && isMaxSelected ? exactMaxTokenAmount : undefined,
       chainId: isWithdrawing ? chainId : (selectedDepositSource?.chainId ?? vault.chainId),
       destinationCurrencyId,
       sourceCurrencyId: selectedDepositSource?.currencyInfo.currencyId,
@@ -357,7 +340,7 @@ export function EarnDepositAmountContent({
     currentAction,
     destinationCurrencyId,
     exactAmountFiat,
-    exactAmountToken,
+    exactMaxTokenAmount,
     hasConfirmedWithdrawPosition,
     isMaxSelected,
     isWithdrawing,
@@ -407,6 +390,7 @@ export function EarnDepositAmountContent({
                       setActiveAmount={setActiveAmount}
                       symbol={symbol}
                       value={value}
+                      shakeStyle={amountInputShakeStyle}
                       onInputLayout={onInputLayout}
                       onPercentPress={handlePercentPress}
                       onToggleInputMode={handleToggleInputMode}
@@ -458,7 +442,6 @@ export function EarnDepositAmountContent({
                       showSelector={shouldShowDepositSourceSelector}
                       onOpenDepositSourceSelector={onOpenDepositSourceSelector}
                     />
-
                     <EarnWithdrawDestinationSection
                       chainId={chainId}
                       chainLabel={chainLabel}
@@ -477,7 +460,7 @@ export function EarnDepositAmountContent({
                         setValue={setActiveAmount}
                         valueRef={exactValueRef}
                         onReady={onDecimalPadReady}
-                        onTriggerInputShakeAnimation={onTriggerInputShake}
+                        onTriggerInputShakeAnimation={triggerShakeAnimation}
                       />
                     </Flex>
                   </Flex>

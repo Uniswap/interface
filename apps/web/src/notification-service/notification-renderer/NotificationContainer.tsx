@@ -1,6 +1,7 @@
 import { ContentStyle, type InAppNotification } from '@universe/api'
 import { type NotificationClickTarget } from '@universe/notifications'
 import { useEffect, useMemo } from 'react'
+import { type Location } from 'react-router'
 import { ModalNotification } from 'uniswap/src/components/notifications/ModalNotification'
 import { getLogger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -11,6 +12,10 @@ import {
   useNotificationStore,
 } from '~/notification-service/notification-renderer/notificationStore'
 import { StackedLowerLeftBanners } from '~/notification-service/notification-renderer/StackedLowerLeftBanners'
+import {
+  getNotificationDestination,
+  isDestinationAlreadyActive,
+} from '~/notification-service/utils/getNotificationDestination'
 
 /**
  * Routes a notification to the appropriate renderer based on its style
@@ -80,11 +85,13 @@ function NotificationRenderer({
  * Should be mounted at the app root level
  */
 export function NotificationContainer({
+  currentLocation,
   onRenderFailed,
   onNotificationShown,
   onNotificationClick,
   store = useNotificationStore,
 }: {
+  currentLocation: Pick<Location, 'pathname' | 'search' | 'hash'>
   onRenderFailed?: (notificationId: string) => void
   onNotificationShown?: (notificationId: string) => void
   onNotificationClick?: (notificationId: string, target: NotificationClickTarget) => void
@@ -104,12 +111,26 @@ export function NotificationContainer({
     const systemBanners: InAppNotification[] = []
     const others: InAppNotification[] = []
 
+    const currentDestination = currentLocation.pathname + currentLocation.search + currentLocation.hash
+
     activeNotifications.forEach((notification) => {
       const style = notification.content?.style
+
+      if (style === ContentStyle.SYSTEM_BANNER) {
+        systemBanners.push(notification)
+        return
+      }
+
+      // A promo whose click lands on the page you're already on has nothing to offer.
+      // System banners are exempt — they report state rather than send you somewhere.
+      const isDismissibleStyle = style === ContentStyle.LOWER_LEFT_BANNER || style === ContentStyle.MODAL
+      const destination = isDismissibleStyle ? getNotificationDestination(notification) : undefined
+      if (destination && isDestinationAlreadyActive(destination, currentDestination)) {
+        return
+      }
+
       if (style === ContentStyle.LOWER_LEFT_BANNER) {
         lowerLeftBanners.push(notification)
-      } else if (style === ContentStyle.SYSTEM_BANNER) {
-        systemBanners.push(notification)
       } else {
         others.push(notification)
       }
@@ -120,7 +141,7 @@ export function NotificationContainer({
       systemBannerNotifications: systemBanners,
       otherNotifications: others,
     }
-  }, [activeNotifications])
+  }, [activeNotifications, currentLocation])
 
   return (
     <>

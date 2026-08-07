@@ -1,9 +1,9 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
-import { TFunction } from 'i18next'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Separator, styled, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
@@ -17,7 +17,12 @@ import {
 } from 'uniswap/src/features/language/localizedDayjs'
 import { InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { trackOrderCancellation } from 'uniswap/src/features/transactions/cancel/cancelMultipleOrders'
+import { isCancelTimedOut } from 'uniswap/src/features/transactions/cancel/cancelTimeoutStateMachine'
+import { checkCancelOrder } from 'uniswap/src/features/transactions/cancel/getCancelOrderTxRequest'
+import { toCancelRevertStatus } from 'uniswap/src/features/transactions/cancel/orderCancelCaseReducers'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { addTransaction, cancelTransaction, TransactionsState } from 'uniswap/src/features/transactions/slice'
 import { hasTradeType } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { TransactionStatus, UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isLimitCancellable } from 'uniswap/src/features/transactions/utils/uniswapX.utils'
@@ -25,7 +30,6 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
-import { useCancelMultipleOrdersCallback } from '~/components/AccountDrawer/MiniPortfolio/Activity/cancel/cancel'
 import {
   CancellationState,
   CancelOrdersDialog,
@@ -38,7 +42,18 @@ import {
 import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { AmountHeader } from '~/components/AmountHeader'
 import { LimitDisclaimer } from '~/components/LimitDisclaimer'
+import {
+  AlertIconContainer,
+  CancelTimeoutAlert,
+  getOrderTitle,
+  OrderAlertContainer,
+  showCancelPreCheckRefusalPopup,
+} from '~/components/modals/OffchainActivityCancelFlow'
 import { useCurrency } from '~/hooks/Tokens'
+import { useSelectChain } from '~/hooks/useSelectChain'
+import store from '~/state'
+import { useAppDispatch } from '~/state/hooks'
+import { useRevertCancellationCallback } from '~/state/sagas/transactions/revertCancellationSaga'
 import { useUniswapXOrderByOrderHash } from '~/state/transactions/hooks'
 type SelectedOrderInfo = {
   modalOpen?: boolean
@@ -73,29 +88,6 @@ const Wrapper = styled(Flex, {
 
 const OffchainModalDivider = styled(Separator, {
   my: '$spacing28',
-})
-
-const InsufficientFundsCopyContainer = styled(Flex, {
-  row: true,
-  mt: '$spacing16',
-  p: '$spacing12',
-  borderWidth: 1.3,
-  borderStyle: 'solid',
-  borderColor: '$surface3',
-  borderRadius: '$rounded20',
-  gap: '$gap12',
-  justifyContent: 'space-between',
-  alignItems: 'flex-start',
-})
-
-const AlertIconContainer = styled(Flex, {
-  flexShrink: 0,
-  backgroundColor: '$statusWarning',
-  width: 40,
-  height: 40,
-  justifyContent: 'center',
-  alignItems: 'center',
-  borderRadius: '$rounded12',
 })
 
 export function useOrderAmounts(order?: UniswapXOrderDetails):
@@ -143,36 +135,28 @@ export function useOrderAmounts(order?: UniswapXOrderDetails):
   }
 }
 
-function getOrderTitle({
-  routing,
-  orderStatus,
-  t,
+export function OrderContent({
+  order,
+  onCancel,
+  onRevert,
 }: {
-  routing: TradingApi.Routing | undefined
-  orderStatus: TransactionStatus
-  t: TFunction
-}): string {
-  const isLimit = routing === TradingApi.Routing.DUTCH_LIMIT
-  switch (orderStatus) {
-    case TransactionStatus.Pending:
-      return isLimit ? t('common.limit.pending') : t('common.orderPending')
-    case TransactionStatus.Expired:
-      return isLimit ? t('common.limit.expired') : t('common.orderExpired')
-    case TransactionStatus.Cancelling:
-      return t('common.pending.cancellation')
-    case TransactionStatus.InsufficientFunds:
-      return t('common.insufficient.funds')
-    case TransactionStatus.Canceled:
-      return isLimit ? t('common.limit.canceled') : t('common.orderCanceled')
-    case TransactionStatus.Success:
-      return isLimit ? t('common.limit.executed') : t('common.orderExecuted')
-    default:
-      return ''
-  }
-}
-
-export function OrderContent({ order, onCancel }: { order: UniswapXOrderDetails; onCancel?: () => void }) {
+  order: UniswapXOrderDetails
+  onCancel?: () => void
+  onRevert?: () => void
+}) {
   const { t } = useTranslation()
+  const isCancelTimeoutEnabled = useFeatureFlag(FeatureFlags.LimitCancelTimeout)
+  // Persisted-deadline re-evaluation tick: the timed-out alert derives from the record + wall
+  // clock, so re-render periodically while a cancellation is in flight
+  const [, setNowMs] = useState(Date.now())
+  useEffect(() => {
+    if (order.status !== TransactionStatus.Cancelling) {
+      return undefined
+    }
+    const interval = setInterval(() => setNowMs(Date.now()), 15_000)
+    return () => clearInterval(interval)
+  }, [order.status])
+  const isTimedOut = isCancelTimeoutEnabled && isCancelTimedOut(order)
   const amounts = useOrderAmounts(order)
   const amountsDefined = !!amounts?.inputAmount.currency && !!amounts.outputAmount.currency
   const fiatValueInput = useUSDCValue(amounts?.inputAmount)
@@ -222,10 +206,7 @@ export function OrderContent({ order, onCancel }: { order: UniswapXOrderDetails;
     [amounts?.inputAmount.currency, amounts?.outputAmount.currency],
   )
 
-  const orderTitle = useMemo(
-    () => getOrderTitle({ routing: order.routing, orderStatus: order.status, t }),
-    [order.routing, order.status, t],
-  )
+  const orderTitle = getOrderTitle({ order, t })
 
   if (!amounts?.inputAmount) {
     return null
@@ -279,8 +260,9 @@ export function OrderContent({ order, onCancel }: { order: UniswapXOrderDetails;
           </Button>
         </Flex>
       )}
+      {isTimedOut && <CancelTimeoutAlert order={order} onRevert={onRevert} />}
       {order.status === TransactionStatus.InsufficientFunds ? (
-        <InsufficientFundsCopyContainer>
+        <OrderAlertContainer>
           <AlertIconContainer>
             <AlertTriangleFilled color="$neutral2" size="$icon.20" />
           </AlertIconContainer>
@@ -292,7 +274,7 @@ export function OrderContent({ order, onCancel }: { order: UniswapXOrderDetails;
                 : t('account.portfolio.activity.canceledBelow')}
             </Text>
           </Flex>
-        </InsufficientFundsCopyContainer>
+        </OrderAlertContainer>
       ) : order.routing === TradingApi.Routing.DUTCH_LIMIT ? (
         <LimitDisclaimer />
       ) : null}
@@ -335,15 +317,98 @@ function useSyncedSelectedOrder(): UniswapXOrderDetails | undefined {
  */
 function OffchainActivityModalContent({ order }: { order: UniswapXOrderDetails }) {
   const { t } = useTranslation()
-  const [cancelState, setCancelState] = useState(CancellationState.NOT_STARTED)
-  const [cancelTxHash, setCancelTxHash] = useState<string | undefined>()
+  // Whether the user entered the cancel flow from this modal; everything past that is derived
+  // from the tracked record (the cancel saga has no return channel)
+  const [cancelRequested, setCancelRequested] = useState(false)
+  // Between confirm click and the cancelTransaction dispatch (async pre-check + chain switch)
+  const [awaitingConfirm, setAwaitingConfirm] = useState(false)
   const setSelectedOrder = useUpdateAtom(selectedOrderAtom)
+  const dispatch = useAppDispatch()
+  const selectChain = useSelectChain()
+  const revertCancellation = useRevertCancellationCallback()
 
   const reset = () => {
     setSelectedOrder(undefined)
   }
 
-  const cancelOrders = useCancelMultipleOrdersCallback([order])
+  // Dialog progress derives from the tracked record, not a returned ContractTransaction:
+  // Cancelling + no hash → awaiting signature; hash set → awaiting confirmation (explorer link
+  // reads the persisted cancelTxHash); mined/Canceled → done; reverted to Pending/InsufficientFunds
+  // (rejection or broadcast failure) → back to review.
+  const cancelState: CancellationState = useMemo(() => {
+    if (!cancelRequested) {
+      return CancellationState.NOT_STARTED
+    }
+    if (
+      order.status === TransactionStatus.Canceled ||
+      (order.status === TransactionStatus.Cancelling && order.cancelTxMined)
+    ) {
+      return CancellationState.CANCELLED
+    }
+    if (order.status === TransactionStatus.Cancelling) {
+      return order.cancelTxHash ? CancellationState.PENDING_CONFIRMATION : CancellationState.PENDING_SIGNATURE
+    }
+    return awaitingConfirm ? CancellationState.PENDING_SIGNATURE : CancellationState.REVIEWING_CANCELLATION
+  }, [cancelRequested, awaitingConfirm, order.status, order.cancelTxMined, order.cancelTxHash])
+
+  const onConfirm = useCallback(async () => {
+    setAwaitingConfirm(true)
+    try {
+      // Re-homed UniswapXOrderCancelInitiated: exactly once, before the wallet prompt
+      trackOrderCancellation([order])
+
+      // Fresh cancellable pre-check (OPEN and INSUFFICIENT_FUNDS pass); builds the cancel tx.
+      // Never reuse the gas-estimate's cached request — it is built without a status check.
+      const preCheck = await checkCancelOrder(order)
+      if (preCheck.kind !== 'ready') {
+        // Order is no longer cancellable (filled/expired/cancelled) or nothing could be built:
+        // close the dialog but SAY why — a silent close reads as a broken button
+        setAwaitingConfirm(false)
+        setCancelRequested(false)
+        showCancelPreCheckRefusalPopup({ preCheck, orderId: order.id })
+        return
+      }
+      const { cancelRequest } = preCheck
+
+      // This modal serves every UniswapX order type — L2 Dutch/Priority cancels need the switch
+      const chainSwitched = await selectChain(order.chainId)
+      if (!chainSwitched) {
+        setAwaitingConfirm(false)
+        return
+      }
+
+      // The modal can open from activity rows whose order is not in the slice yet;
+      // cancelTransaction asserts the record exists
+      const existsInSlice = Boolean(
+        (store.getState() as { transactions: TransactionsState }).transactions[order.from]?.[order.chainId]?.[order.id],
+      )
+      if (!existsInSlice) {
+        dispatch(addTransaction(order))
+      }
+
+      dispatch(
+        cancelTransaction({
+          chainId: order.chainId,
+          id: order.id,
+          address: order.from,
+          cancelRequest,
+          cancelInitiatedTimeMs: Date.now(),
+          revertToStatus: toCancelRevertStatus(order.status),
+        }),
+      )
+    } catch (error) {
+      logger.error(error, {
+        tags: { file: 'OffchainActivityModal', function: 'onConfirm' },
+        extra: { orderHash: order.orderHash },
+      })
+    } finally {
+      setAwaitingConfirm(false)
+    }
+  }, [dispatch, order, selectChain])
+
+  const onRevert = useCallback(() => {
+    revertCancellation(order)
+  }, [order, revertCancellation])
 
   return (
     <>
@@ -351,29 +416,15 @@ function OffchainActivityModalContent({ order }: { order: UniswapXOrderDetails }
         isVisible={cancelState !== CancellationState.NOT_STARTED}
         orders={[order]}
         onCancel={() => {
-          setCancelState(CancellationState.NOT_STARTED)
+          setCancelRequested(false)
+          setAwaitingConfirm(false)
           if (cancelState !== CancellationState.REVIEWING_CANCELLATION) {
             reset()
           }
         }}
-        onConfirm={async () => {
-          setCancelState(CancellationState.PENDING_SIGNATURE)
-          const transactions = await cancelOrders()
-          if (transactions && transactions.length > 0) {
-            setCancelState(CancellationState.PENDING_CONFIRMATION)
-            setCancelTxHash(transactions[0].hash)
-            try {
-              await transactions[0].wait(1)
-              setCancelState(CancellationState.CANCELLED)
-            } catch {
-              setCancelState(CancellationState.REVIEWING_CANCELLATION)
-            }
-          } else {
-            setCancelState(CancellationState.REVIEWING_CANCELLATION)
-          }
-        }}
+        onConfirm={onConfirm}
         cancelState={cancelState}
-        cancelTxHash={cancelTxHash}
+        cancelTxHash={order.cancelTxHash}
       />
       <Modal
         name={ModalName.OffchainActivity}
@@ -392,8 +443,9 @@ function OffchainActivityModalContent({ order }: { order: UniswapXOrderDetails }
           <OrderContent
             order={order}
             onCancel={() => {
-              setCancelState(CancellationState.REVIEWING_CANCELLATION)
+              setCancelRequested(true)
             }}
+            onRevert={onRevert}
           />
         </Wrapper>
       </Modal>

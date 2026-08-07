@@ -1,5 +1,5 @@
-import { TimePeriod } from '~/appGraphql/data/util'
 import { ChartType, PriceChartType } from '~/components/Charts/utils'
+import { TimePeriod } from '~/data/util'
 import type { TDPChartState } from '~/pages/TokenDetails/components/chart/TDPChartState'
 
 /** Default `chartState` for TDP store tests; pass overrides for one-off cases. */

@@ -1,4 +1,4 @@
-import { PortfolioBalancePart } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+import { PortfolioBalancePart } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 
 export enum PortfolioRelativeChangeDisplay {
   Change = 'change',

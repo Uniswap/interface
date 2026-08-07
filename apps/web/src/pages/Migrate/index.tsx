@@ -10,7 +10,7 @@ import { Button, Flex, Main, styled } from 'ui/src'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
-import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
+import { useGetPositionQuery } from 'uniswap/src/data/apiClients/dataApiService/positions/getPosition'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { parseRestPosition } from 'uniswap/src/features/positions/parseRestPosition'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
@@ -50,6 +50,7 @@ import {
 import { SharedCreateModals } from '~/pages/CreatePosition/CreatePosition'
 import { useMigratingPosition } from '~/pages/Migrate/hooks/useMigratingPosition'
 import { MigratePositionTxContextProvider, useMigrateTxContext } from '~/pages/Migrate/MigrateLiquidityTxContext'
+import { useMigrateGeoGate } from '~/pages/Migrate/useMigrateGeoGate'
 import { useSetOverrideOneClickSwapFlag } from '~/pages/Swap/Swap/settings/OneClickSwap'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { liquiditySaga } from '~/state/sagas/liquidity/liquiditySaga'
@@ -195,15 +196,21 @@ function MigrateInner({
     isCentralizedPricesEnabled,
   ])
 
+  const { disableContinue: disableContinueForGeo, geoRestriction } = useMigrateGeoGate({
+    token0: currency0Amount.currency,
+    token1: currency1Amount.currency,
+  })
+
   const priceRangeProps = useMemo(() => {
     return {
       positionInfo,
-      disableContinue: !txInfo || Boolean(transactionError),
+      disableContinue: !txInfo || Boolean(transactionError) || disableContinueForGeo,
+      geoRestriction,
       onContinue: () => {
         setIsReviewModalOpen(true)
       },
     }
-  }, [txInfo, transactionError, positionInfo, setIsReviewModalOpen])
+  }, [txInfo, transactionError, positionInfo, setIsReviewModalOpen, disableContinueForGeo, geoRestriction])
 
   return (
     <>
@@ -227,7 +234,8 @@ function MigrateInner({
         />
         {!isReviewModalOpen && (
           <Flex mb="$spacing20">
-            <ErrorCallout errorMessage={transactionError} onPress={refetch} />
+            {/* Suppressed under the geo gate so the banner is the only message. */}
+            <ErrorCallout errorMessage={geoRestriction ? false : transactionError} onPress={refetch} />
           </Flex>
         )}
       </Flex>

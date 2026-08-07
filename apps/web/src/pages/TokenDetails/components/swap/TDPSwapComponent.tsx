@@ -14,13 +14,15 @@ import { useIsTokenGeoRestricted } from 'uniswap/src/features/transactions/swap/
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { areCurrenciesEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import { useEvent } from 'utilities/src/react/hooks'
-import { getTokenDetailsURL } from '~/appGraphql/data/util'
+import { VerifyIdentityModal } from '~/components/PermissionedPool/VerifyIdentityModal'
 import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
+import { getTokenDetailsURL } from '~/data/util'
 import type { CurrencyState } from '~/features/Swap/state/types'
 import { useCurrency } from '~/hooks/Tokens'
 import { Swap } from '~/pages/Swap'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
+import { useTDPPermissionedState } from '~/pages/TokenDetails/hooks/useTDPPermissionedState'
 import { useTDPSwapCurrency } from '~/pages/TokenDetails/hooks/useTDPSwapCurrency'
 import { useUserPreservedCurrencies } from '~/pages/TokenDetails/hooks/useUserPreservedCurrencies'
 import { popupRegistry } from '~/state/popups/registry'
@@ -48,6 +50,17 @@ export function TDPSwapComponent() {
   )
 
   const currencyInfo = useCurrencyInfo(currencyId(currency))
+
+  const tokenAddress = currency.isNative ? undefined : currency.address
+  const tokenChainId = currency.chainId
+  const {
+    isBlocked: isPermissionedBlocked,
+    kycUrl: permissionedRegistrationUrl,
+    issuer: permissionedIssuer,
+  } = useTDPPermissionedState({
+    tokenAddress,
+    chainId: tokenChainId,
+  })
 
   const { inputCurrency, outputCurrency } = useSwapInitialCurrencies(swapCurrency)
 
@@ -182,6 +195,16 @@ export function TDPSwapComponent() {
           closeModalOnly={closeWarningModal}
           onReportSuccess={onTokenWarningReportSuccess}
           onAcknowledge={closeWarningModal}
+        />
+      )}
+      {isPermissionedBlocked && permissionedRegistrationUrl && (
+        <VerifyIdentityModal
+          tokenSymbol={currency.symbol ?? ''}
+          registrationUrl={permissionedRegistrationUrl}
+          // Pass the raw issuer (no `?? ''` fallback): an empty issuer must reach the modal's
+          // missing-config guard so it renders the "verification temporarily unavailable" copy
+          // instead of interpolating a blank provider name (matches the LP/swap guard).
+          issuer={permissionedIssuer}
         />
       )}
     </Flex>

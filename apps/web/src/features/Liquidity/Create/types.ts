@@ -51,6 +51,9 @@ type BaseCreatePositionInfo = {
   protocolVersion: ProtocolVersion
   creatingPoolOrPair?: boolean
   poolId?: string
+  // Protocol fee (integer pips) for the existing pool, from the poolInfo response. Undefined for a
+  // not-yet-created pool (no pool to serve), so surfaces fall back to the fee curve.
+  protocolFee?: number
   poolOrPairLoading?: boolean
   refetchPoolData: () => void
 }

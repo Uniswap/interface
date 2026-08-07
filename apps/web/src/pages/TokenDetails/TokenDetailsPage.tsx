@@ -33,28 +33,26 @@ function TDPPageContent() {
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const isCompact = useScrollCompact({ thresholdCompact: 100, thresholdExpanded: 60 })
 
-  const { address, currency, currencyChain, currencyChainId, tokenQuery, tokenProjectQuery } = useTDPStore((s) => ({
+  const { address, currency, currencyChain, currencyChainId, token, pageQueryLoading } = useTDPStore((s) => ({
     address: s.address,
     currency: s.currency,
     currencyChain: s.currencyChain,
     currencyChainId: s.currencyChainId,
-    tokenQuery: s.tokenQuery,
-    tokenProjectQuery: s.tokenProjectQuery,
+    token: s.token,
+    pageQueryLoading: s.pageQueryLoading,
   }))
 
   const featureFlaggedChainIds = useFeatureFlaggedChainIds()
   const { isStatsigReady } = useStatsigClientStatus()
 
-  const tokenQueryData = tokenQuery.data?.token
-
-  const price = tokenQueryData?.market?.price?.value
+  const price = token?.price?.spotUsd
   const priceText = price ? convertFiatAmountFormatted(price, NumberType.FiatTokenPrice) : undefined
 
   const pageDescription = getTokenPageDescription({ currency, chainId: currencyChainId, price: priceText })
 
   const metatagProperties = useMemo(() => {
     return {
-      title: formatTokenMetatagTitleName(tokenQueryData?.symbol, tokenQueryData?.name),
+      title: formatTokenMetatagTitleName(token?.symbol, token?.name),
       image:
         window.location.origin +
         '/api/image/tokens/' +
@@ -64,21 +62,21 @@ function TDPPageContent() {
       url: window.location.href,
       description: pageDescription,
     }
-  }, [address, currency, currencyChain, pageDescription, tokenQueryData?.name, tokenQueryData?.symbol])
+  }, [address, currency, currencyChain, pageDescription, token?.name, token?.symbol])
   const metatags = useDynamicMetatags(metatagProperties)
 
   // Structured TDP data for SEO indexing
-  const structuredData = getTokenStructuredData({ tokenQueryData, price, pageDescription })
+  const structuredData = getTokenStructuredData({ token, price, pageDescription })
 
   // redirect to /explore if the token is not found, or if its chain is feature-gated (e.g. unlaunched Arc/Robinhood).
   // Gate the chain check on `isStatsigReady`: before Statsig loads, feature flags read as their default (false), so a
   // launched-but-flag-gated chain (e.g. Linea) would otherwise be transiently treated as gated and wrongly redirected.
   useEffect(() => {
     const isChainGated = isStatsigReady && !featureFlaggedChainIds.includes(currencyChainId)
-    if (isChainGated || (!tokenProjectQuery.loading && !currency)) {
+    if (isChainGated || (!pageQueryLoading && !currency)) {
       navigate(`/explore?type=${ExploreTab.Tokens}&result=${ModalName.NotFound}`)
     }
-  }, [currency, currencyChainId, featureFlaggedChainIds, isStatsigReady, tokenProjectQuery.loading, navigate])
+  }, [currency, currencyChainId, featureFlaggedChainIds, isStatsigReady, pageQueryLoading, navigate])
 
   return (
     <>
@@ -90,7 +88,7 @@ function TDPPageContent() {
         {structuredData && <script type="application/ld+json">{JSON.stringify(structuredData)}</script>}
       </Helmet>
       {/* Gate on metadata (not the market `tokenQuery`) so the shell + header paint before market data loads. */}
-      {tokenProjectQuery.loading || !currency ? (
+      {pageQueryLoading || !currency ? (
         <TokenDetailsPageSkeleton isCompact={isCompact} />
       ) : (
         <TokenDetailsContent isCompact={isCompact} />

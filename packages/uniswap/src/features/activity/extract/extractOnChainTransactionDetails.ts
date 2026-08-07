@@ -17,6 +17,7 @@ import { parseReceiveTransaction } from 'uniswap/src/features/activity/parse/par
 import { parseSendTransaction } from 'uniswap/src/features/activity/parse/parseSendTransaction'
 import {
   parseDepositTransaction,
+  parseNFTTradeTransaction,
   parseSwapTransaction,
   parseWithdrawTransaction,
   parseWrapTransaction,
@@ -65,7 +66,8 @@ function parseRestOnChainTransactionTypeInfo(transaction: OnChainTransaction): T
       return parseReceiveTransaction(transaction)
     case OnChainTransactionLabel.SWAP:
     case OnChainTransactionLabel.UNISWAP_X:
-      return parseSwapTransaction(transaction)
+      // NFT purchases/sales are labeled SWAP by the data-api, so check for an NFT transfer first
+      return parseNFTTradeTransaction(transaction) ?? parseSwapTransaction(transaction)
     case OnChainTransactionLabel.WRAP:
     case OnChainTransactionLabel.UNWRAP:
     case OnChainTransactionLabel.LEND:

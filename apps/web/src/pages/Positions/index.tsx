@@ -1,6 +1,7 @@
 import { PositionStatus } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import type { HexString } from '@universe/encoding'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Anchor, Flex, Text } from 'ui/src'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -19,6 +20,7 @@ import { LiquidityLearnMoreTiles } from '~/features/Liquidity/components/LearnMo
 import { useLpIncentives } from '~/features/Liquidity/hooks/useLpIncentives'
 import { useWalletPositionsWeb } from '~/features/Liquidity/hooks/useWalletPositionsWeb'
 import { LiquidityPositionCardLoader } from '~/features/Liquidity/LiquidityPositionCard'
+import { useLpIncentiveRewards } from '~/features/Liquidity/LPIncentives/hooks/useLpIncentiveRewards'
 import { useLpIncentiveRewardsUsdValue } from '~/features/Liquidity/LPIncentives/hooks/useLpIncentiveRewardsUsdValue'
 import { useLpIncentivesUserHasRewards } from '~/features/Liquidity/LPIncentives/hooks/useLpIncentivesUserHasRewards'
 import { LpIncentiveClaimModal } from '~/features/Liquidity/LPIncentives/LpIncentiveClaimModal'
@@ -62,12 +64,105 @@ function getPositionsViewState({
   }
 }
 
+// Latches true once the wallet has had rewards. The rewards card owns the claim modal, but its own
+// mount is gated on the reward state that claiming mutates: collecting the last reward flips
+// `hasRewards` false, which would unmount the card and tear the open modal down mid-claim. Staying
+// visible for the session also matches the legacy card, which persisted after a collect.
+// Latched per wallet — `Pool` survives an account switch, so a shared latch would carry the card
+// onto a wallet that never had rewards.
+function useHasEverHadRewards(hasRewards: boolean, walletAddress?: HexString): boolean {
+  const [latchedAddress, setLatchedAddress] = useState<HexString>()
+
+  useEffect(() => {
+    if (hasRewards && walletAddress) {
+      setLatchedAddress(walletAddress)
+    }
+  }, [hasRewards, walletAddress])
+
+  return latchedAddress !== undefined && latchedAddress === walletAddress
+}
+
+// Whether the rewards card renders at all. Under multi_token_lp_incentives a failed rewards fetch
+// leaves the balance unknown rather than zero, so the card still renders — greyed and
+// uncollectable — instead of vanishing as if the wallet had no rewards.
+function shouldShowLpIncentives({
+  isLPIncentivesEnabled,
+  isMultiTokenLpIncentivesEnabled,
+  legacyHasRewards,
+  multiTokenHasRewards,
+  multiTokenEverHadRewards,
+  multiTokenFetchFailed,
+  hasPositions,
+}: {
+  isLPIncentivesEnabled: boolean
+  isMultiTokenLpIncentivesEnabled: boolean
+  legacyHasRewards: boolean
+  multiTokenHasRewards: boolean
+  multiTokenEverHadRewards: boolean
+  multiTokenFetchFailed: boolean
+  hasPositions: boolean
+}): boolean {
+  if (!isLPIncentivesEnabled) {
+    return false
+  }
+  if (!isMultiTokenLpIncentivesEnabled) {
+    return legacyHasRewards
+  }
+  // The latch only arms after a successful fetch, so on a first-load outage the failure branch
+  // stands alone — gate it on holding positions so an outage doesn't put an uncollectable card on
+  // every connected wallet's page, including ones that have never been eligible.
+  return multiTokenHasRewards || multiTokenEverHadRewards || (multiTokenFetchFailed && hasPositions)
+}
+
+// The summary chips and the rewards card are alternate headers for the same slot. Each reads
+// multi_token_lp_incentives itself to decide what it reports and how it collects.
+function PositionsRewardsHeader({
+  showSummaryChips,
+  showLpIncentives,
+  walletAddress,
+  onCollectRewards,
+  setTokenRewards,
+  hasCollectedRewards,
+}: {
+  showSummaryChips: boolean
+  showLpIncentives: boolean
+  walletAddress?: HexString
+  onCollectRewards: () => void
+  setTokenRewards: (value: string) => void
+  hasCollectedRewards: boolean
+}): JSX.Element | null {
+  if (showSummaryChips) {
+    return (
+      <PositionsSummaryChips
+        walletAddress={walletAddress}
+        onCollectRewards={onCollectRewards}
+        setTokenRewards={setTokenRewards}
+        initialHasCollectedRewards={hasCollectedRewards}
+      />
+    )
+  }
+
+  if (showLpIncentives) {
+    return (
+      <LpIncentiveRewardsCard
+        walletAddress={walletAddress}
+        onCollectRewards={onCollectRewards}
+        setTokenRewards={setTokenRewards}
+        initialHasCollectedRewards={hasCollectedRewards}
+      />
+    )
+  }
+
+  return null
+}
+
 export function Pool() {
   const account = useAccount()
   const { t } = useTranslation()
   const { address, isConnected } = account
 
   const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives) && isConnected
+  const isMultiTokenLpIncentivesEnabled = useFeatureFlag(FeatureFlags.MultiTokenLpIncentives)
   const isV2EndpointsPositionsEnabled = useFeatureFlag(FeatureFlags.V2EndpointsPositions)
   const newPositionHref = useCreatePositionHref()
   const connectedWithoutEVM = useIsMissingPlatformWallet(Platform.EVM)
@@ -87,8 +182,16 @@ export function Pool() {
     hasCollectedRewards,
   } = useLpIncentives()
 
-  const userHasLpRewards = useLpIncentivesUserHasRewards(address, hasCollectedRewards)
-  const showLpIncentives = isLPIncentivesEnabled && userHasLpRewards
+  // Each path withholds the address when it's inactive so only the live query fetches — both hooks
+  // key on having one, and neither result is read on the other path.
+  const legacyUserHasLpRewards = useLpIncentivesUserHasRewards(
+    isMultiTokenLpIncentivesEnabled ? undefined : address,
+    hasCollectedRewards,
+  )
+  const { hasRewards: multiTokenUserHasLpRewards, isError: multiTokenRewardsFailed } = useLpIncentiveRewards(
+    isMultiTokenLpIncentivesEnabled ? address : undefined,
+  )
+  const multiTokenEverHadRewards = useHasEverHadRewards(multiTokenUserHasLpRewards, address)
 
   const { formattedUsdValue: formattedRewardsUsdValue } = useLpIncentiveRewardsUsdValue(tokenRewards)
 
@@ -130,6 +233,15 @@ export function Pool() {
   })
 
   const hasPositions = visiblePositions.length > 0 || hiddenPositions.length > 0
+  const showLpIncentives = shouldShowLpIncentives({
+    isLPIncentivesEnabled,
+    isMultiTokenLpIncentivesEnabled,
+    legacyHasRewards: legacyUserHasLpRewards,
+    multiTokenHasRewards: multiTokenUserHasLpRewards,
+    multiTokenEverHadRewards,
+    multiTokenFetchFailed: multiTokenRewardsFailed,
+    hasPositions,
+  })
   const { isEmptyPositionsState, showDiscoveryEmptyState } = getPositionsViewState({
     isConnected,
     isLoadingPositions,
@@ -160,21 +272,14 @@ export function Pool() {
           maxWidth={isV2EndpointsPositionsEnabled ? '100%' : 740}
           $xl={{ maxWidth: '100%' }}
         >
-          {showSummaryChips ? (
-            <PositionsSummaryChips
-              walletAddress={account.address}
-              onCollectRewards={handleCollectRewards}
-              setTokenRewards={setTokenRewards}
-              initialHasCollectedRewards={hasCollectedRewards}
-            />
-          ) : showLpIncentives ? (
-            <LpIncentiveRewardsCard
-              walletAddress={account.address}
-              onCollectRewards={handleCollectRewards}
-              setTokenRewards={setTokenRewards}
-              initialHasCollectedRewards={hasCollectedRewards}
-            />
-          ) : null}
+          <PositionsRewardsHeader
+            showSummaryChips={showSummaryChips}
+            showLpIncentives={showLpIncentives}
+            walletAddress={account.address}
+            onCollectRewards={handleCollectRewards}
+            setTokenRewards={setTokenRewards}
+            hasCollectedRewards={hasCollectedRewards}
+          />
           {!showDiscoveryEmptyState && (
             <Flex
               row
@@ -273,7 +378,8 @@ export function Pool() {
         </Flex>
         {!isV2EndpointsPositionsEnabled && <PositionsSidebar chainFilter={chainFilter} isConnected={isConnected} />}
       </Flex>
-      {(showLpIncentives || showSummaryChips) && (
+      {/* The multi-token cards own their rewards modal, so the UNI-only claim modal is legacy-only. */}
+      {!isMultiTokenLpIncentivesEnabled && (showLpIncentives || showSummaryChips) && (
         <LpIncentiveClaimModal
           isOpen={isModalOpen}
           onClose={closeModal}

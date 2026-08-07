@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { type ColorTokens, Image } from 'tamagui'
 import { Flex } from 'ui/src/components/layout/Flex'
+import { useImageLoadError } from 'ui/src/components/UniversalImage/hooks/useImageLoadError'
 import { PlainImage } from 'ui/src/components/UniversalImage/internal/PlainImage'
 import { SvgImage } from 'ui/src/components/UniversalImage/internal/SvgImage'
 import { type UniversalImageProps, type UniversalImageSize } from 'ui/src/components/UniversalImage/types'
@@ -31,7 +32,7 @@ export function UniversalImage({
   const [height, setHeight] = useState(size.height)
   const computedSize: UniversalImageSize = { width, height, aspectRatio: size.aspectRatio }
 
-  const [errored, setErrored] = useState(false)
+  const { hasError: errored, markErrored } = useImageLoadError(uri)
 
   const hasWidthAndHeight = computedSize.width !== undefined && computedSize.height !== undefined
   const hasHeightAndRatio = computedSize.height !== undefined && computedSize.aspectRatio !== undefined
@@ -61,11 +62,11 @@ export function UniversalImage({
         setHeight(calculatedHeight)
       },
       () => {
-        setErrored(true)
+        markErrored()
         onError?.()
       },
     )
-  }, [width, height, sizeKnown, uri, isRequireSource, skipSizeCalculation, onError])
+  }, [width, height, sizeKnown, uri, isRequireSource, skipSizeCalculation, onError, markErrored])
 
   // Handle local URI
   if (isRequireSource) {

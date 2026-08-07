@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
+import { exportSeedPhrase, useEmbeddedWalletState } from '@universe/embedded-wallet'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { exportSeedPhrase } from 'uniswap/src/features/passkey/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { logger } from 'utilities/src/logger/logger'
@@ -11,8 +11,6 @@ import { resetListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/
 import { PhraseDisplayContent } from '~/components/AccountDrawer/RecoveryPhraseMenu/PhraseDisplayContent'
 import { WarningContent } from '~/components/AccountDrawer/RecoveryPhraseMenu/WarningContent'
 import { SlideOutMenu } from '~/components/AccountDrawer/SlideOutMenu'
-import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
-
 const AUTO_HIDE_MS = 60_000
 
 enum ExportStep {

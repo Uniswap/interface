@@ -4,7 +4,11 @@ import { Percent as PercentValue } from '@uniswap/sdk-core'
 import type { ClassicQuoteResponse } from '@universe/api'
 import { TradingApi } from '@universe/api'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
-import { type BaseTrade, createBaseTradeAmounts } from 'uniswap/src/features/transactions/swap/types/base'
+import {
+  type BaseTrade,
+  createBaseTradeAmounts,
+  getQuotePriceDifference,
+} from 'uniswap/src/features/transactions/swap/types/base'
 import {
   getQuoteOutputAmount,
   getQuoteOutputAmountUserWillReceive,
@@ -50,7 +54,7 @@ export function createClassicTrade({
     swapFee: getTradingApiSwapFee(quote),
     inputTax: getClassicInputTax(currencyIn),
     outputTax: getClassicOutputTax(currencyOut),
-    priceImpact: getClassicPriceImpact(quote),
+    priceDifference: getQuotePriceDifference(quote),
     quoteOutputAmount: getQuoteOutputAmount(quote, outputCurrency),
     quoteOutputAmountUserWillReceive: getQuoteOutputAmountUserWillReceive({
       quote,
@@ -72,11 +76,6 @@ function getClassicInputTax(currencyIn: Currency): Percent {
 function getClassicOutputTax(currencyOut: Currency): Percent {
   const buyFeeBps = currencyOut.wrapped.buyFeeBps
   return buyFeeBps?.gt(0) ? new PercentValue(buyFeeBps.toString(), '10000') : ZERO_PERCENT
-}
-
-function getClassicPriceImpact(quote: ClassicQuoteResponse): Percent | undefined {
-  const quotePriceImpact = quote.quote.priceImpact
-  return quotePriceImpact === undefined ? undefined : new PercentValue(Math.round(quotePriceImpact * 100), 10000)
 }
 
 export function getClassicQuoteOutputAmountUserWillReceive(

@@ -3,7 +3,7 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import maxBy from 'lodash/maxBy'
 import { type Dispatch, type SetStateAction, useCallback, useMemo, useRef, useState } from 'react'
 import { type SharedValue, useDerivedValue } from 'react-native-reanimated'
-import { type TLineChartData } from 'react-native-wagmi-charts'
+import { type ChartPoint } from 'uniswap/src/components/charts/computeChartPaths'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
@@ -79,6 +79,28 @@ function calculatePriceChange(priceHistory: PriceValueEntries): number | undefin
   return ((closePrice - openPrice) / openPrice) * 100
 }
 
+function resolvePriceHistoryLoading({
+  skip,
+  shouldUseV2Tokens,
+  isRestPriceHistoryLoading,
+  isNonPollingInFlight,
+  hasEverLoaded,
+}: {
+  skip: boolean
+  shouldUseV2Tokens: boolean
+  isRestPriceHistoryLoading: boolean
+  isNonPollingInFlight: boolean
+  hasEverLoaded: boolean
+}): boolean {
+  if (skip) {
+    return true
+  }
+  if (hasEverLoaded) {
+    return false
+  }
+  return shouldUseV2Tokens ? isRestPriceHistoryLoading : isNonPollingInFlight
+}
+
 function getNumberOfDigits({
   convertFiatAmount,
   lastNumberOfDigits,
@@ -111,15 +133,17 @@ export function useTokenPriceHistory({
   currencyId,
   initialDuration = GraphQLApi.HistoryDuration.Day,
   preferProjectMarketData = false,
+  isMultichainAggregateView = false,
   skip = false,
 }: {
   currencyId: string
   initialDuration?: GraphQLApi.HistoryDuration
   preferProjectMarketData?: boolean
+  isMultichainAggregateView?: boolean
   skip?: boolean
 }): Omit<
   GqlResult<{
-    priceHistory?: TLineChartData
+    priceHistory?: ChartPoint[]
     spot?: TokenSpotData
   }>,
   'error'
@@ -146,12 +170,13 @@ export function useTokenPriceHistory({
   // RWA/project-market data (e.g. stocks) has no REST price-history equivalent yet — useTokenPriceHistoryRest
   // disables its query entirely in that case, so this hook must fall back to its own GraphQL query instead.
   const shouldUseV2Tokens = isV2TokensEnabled && !preferProjectMarketData
-  const restSpotPrice = useTokenSpotPrice(currencyId, { preferProjectMarketData })
-  const restPriceChange24h = useTokenPriceChange(currencyId, { preferProjectMarketData })
+  const restSpotPrice = useTokenSpotPrice(currencyId, { preferProjectMarketData, isMultichainAggregateView })
+  const restPriceChange24h = useTokenPriceChange(currencyId, { preferProjectMarketData, isMultichainAggregateView })
   // Once on, the chart line also comes from REST instead of this hook's own GraphQL query.
   const restPriceHistory = useTokenPriceHistoryRest(currencyId, {
     duration: toRestHistoryDuration(duration),
     preferProjectMarketData,
+    isMultichainAggregateView,
   })
 
   const {
@@ -166,7 +191,7 @@ export function useTokenPriceHistory({
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'network-only',
     pollInterval: isDataLivelinessEnabled ? undefined : PollingInterval.Normal,
-    skip,
+    skip: skip || shouldUseV2Tokens,
   })
 
   const {
@@ -210,7 +235,7 @@ export function useTokenPriceHistory({
 
   const formattedPriceHistory = useMemo(() => {
     if (shouldUseV2Tokens) {
-      // REST timestamps are unix seconds; react-native-wagmi-charts expects milliseconds.
+      // REST timestamps are unix seconds; the chart expects milliseconds.
       return restPriceHistory.entries.map((point) => ({
         timestamp: point.timestamp * ONE_SECOND_MS,
         value: point.value,
@@ -247,8 +272,14 @@ export function useTokenPriceHistory({
 
   return {
     data,
-    loading: skip || (isNonPollingRequestInFlight(networkStatus) && !hasEverLoadedRef.current),
-    error: !skip && isError(networkStatus, !!priceData),
+    loading: resolvePriceHistoryLoading({
+      skip,
+      shouldUseV2Tokens,
+      isRestPriceHistoryLoading: restPriceHistory.isLoading,
+      isNonPollingInFlight: isNonPollingRequestInFlight(networkStatus),
+      hasEverLoaded: hasEverLoadedRef.current,
+    }),
+    error: !skip && !shouldUseV2Tokens && isError(networkStatus, !!priceData),
     refetch: retry,
     setDuration,
     selectedDuration: duration,

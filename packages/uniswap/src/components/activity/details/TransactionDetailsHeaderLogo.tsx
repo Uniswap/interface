@@ -141,6 +141,7 @@ function FallbackTransactionDetailsHeaderLogo({ transactionDetails }: HeaderLogo
     // TODO WALL-7056: Implement Remove Delegation Header Logo
     case TransactionType.SendCalls:
     case TransactionType.RemoveDelegation:
+    case TransactionType.UniswapXCancel:
     case TransactionType.ClaimUni:
     case TransactionType.MigrateLiquidityV2ToV3:
     case TransactionType.LPIncentivesClaimRewards:

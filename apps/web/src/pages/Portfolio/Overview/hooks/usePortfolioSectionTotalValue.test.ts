@@ -1,4 +1,4 @@
-import { PortfolioBalancePart } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+import { PortfolioBalancePart } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { usePortfolioBalanceBreakdown } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'

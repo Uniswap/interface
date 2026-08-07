@@ -1,11 +1,6 @@
 import { LegendList, type LegendListRef } from '@legendapp/list/react-native'
 import { useScrollToTop } from '@react-navigation/native'
-import {
-  TokenRankingsResponse,
-  TokenRankingsStat,
-  TokenStats,
-} from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
-import { ALL_NETWORKS_ARG } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -38,17 +33,15 @@ import {
 } from 'src/components/explore/ExploreSections/exploreListItems'
 import { FavoritesSection } from 'src/components/explore/ExploreSections/FavoritesSection'
 import { NetworkPills, NetworkPillsProps } from 'src/components/explore/ExploreSections/NetworkPillsRow'
+import { useExploreTokenItems } from 'src/components/explore/ExploreSections/useExploreTokenItems'
+import { FavoritesSortingStoreProvider, useIsSortingFavorites } from 'src/components/explore/favoritesSortingStore'
 import { SortButton } from 'src/components/explore/SortButton'
 import { TokenItem } from 'src/components/explore/TokenItem'
-import { TokenItemData } from 'src/components/explore/TokenItemData'
-import { getTokenMetadataDisplayType } from 'src/features/explore/utils'
 import { Flex, Loader, Text } from 'ui/src'
 import { NoTokens } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { useTokenRankingsQuery } from 'uniswap/src/data/rest/tokenRankings'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useMultichainExploreMetricsAnalytics } from 'uniswap/src/features/explore/useMultichainExploreMetricsAnalytics'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -59,9 +52,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { useInitialLoadingState } from 'utilities/src/react/useInitialLoadingState'
 import { selectTokensOrderBy } from 'wallet/src/features/wallet/selectors'
 import { setTokensOrderBy } from 'wallet/src/features/wallet/slice'
-import { ExploreOrderBy, TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
-
-type TokenItemDataWithMetadata = { tokenItemData: TokenItemData; tokenMetadataDisplayType: TokenMetadataDisplayType }
+import { ExploreOrderBy } from 'wallet/src/features/wallet/types'
 
 type ExploreSectionsProps = ExploreScreenParams & {
   listRef: AnimatedRef<ScrollView>
@@ -107,15 +98,13 @@ function ExploreSectionsInner({
   }, [chainId, onOrderByChange, orderByMetric])
 
   const isMultichainPath = selectedNetwork === null
+  const isV2TokensEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
 
-  const { data, isLoading, error, refetch, isFetching } = useTokenRankingsQuery({
-    chainId: selectedNetwork?.toString() ?? ALL_NETWORKS_ARG,
-    ...(isMultichainPath && { multichain: true }),
-  })
+  const { topTokenItems, hasData, isLoading, error, refetch, isFetching, fetchNextPage, hasNextPage } =
+    useExploreTokenItems({ selectedNetwork, isMultichainPath, orderBy, isV2TokensEnabled })
 
   const isInitialLoading = useInitialLoadingState(isLoading)
-
-  const topTokenItems = useTokenItems(data, orderBy)
+  const isSortingFavorites = useIsSortingFavorites()
 
   const exploreRowChainCounts = useMemo(
     () => topTokenItems.map(({ tokenItemData }) => tokenItemData.networkCount ?? 1),
@@ -157,10 +146,9 @@ function ExploreSectionsInner({
     return scheduleAfterPaint(() => setHasPaintedSkeleton(true))
   }, [])
 
-  const hasAllData = !!data
   const isLoadingOrFetching = isLoading || isFetching
   const showFullScreenLoadingState =
-    !hasPaintedSkeleton || (!hasAllData && isLoadingOrFetching) || (!!error && isLoadingOrFetching)
+    !hasPaintedSkeleton || (!hasData && isLoadingOrFetching) || (!!error && isLoadingOrFetching)
 
   useEffect(() => {
     setDrawnItemCount(EXPLORE_LIST_INITIAL_ITEM_COUNT)
@@ -170,11 +158,17 @@ function ExploreSectionsInner({
   const allItemsRevealed = drawnItemCount >= topTokenItems.length
 
   const onEndReached = useEvent((): void => {
-    if (showFullScreenLoadingState || allItemsRevealed) {
+    if (showFullScreenLoadingState) {
       return
     }
-
-    setDrawnItemCount((count) => Math.min(count + EXPLORE_LIST_ITEM_REVEAL_STEP, topTokenItems.length))
+    if (!allItemsRevealed) {
+      setDrawnItemCount((count) => Math.min(count + EXPLORE_LIST_ITEM_REVEAL_STEP, topTokenItems.length))
+      return
+    }
+    // v1's hasNextPage is always false, so this only ever fires under v2 ListTokens' real pagination.
+    if (hasNextPage && !isFetching) {
+      fetchNextPage()
+    }
   })
 
   const listData: ExploreListItem[] = useMemo(() => {
@@ -261,7 +255,7 @@ function ExploreSectionsInner({
     [listRef, uiOrderBy, showFavorites, isInitialLoading, selectedNetwork, onSelectNetwork, onOrderByChange],
   )
 
-  if (!hasAllData && error) {
+  if (!hasData && error) {
     return (
       <Flex height="100%" pb="$spacing60">
         <BaseCard.ErrorState
@@ -279,6 +273,7 @@ function ExploreSectionsInner({
         ref={legendListRef}
         recycleItems
         refScrollView={listRef}
+        scrollEnabled={!isSortingFavorites}
         itemsAreEqual={exploreListItemsAreEqual}
         ListEmptyComponent={listEmptyComponent}
         ListFooterComponent={listFooter}
@@ -303,91 +298,11 @@ function ExploreSectionsInner({
   )
 }
 
-function tokenRankingStatsToTokenItemData(tokenRankingStat: TokenRankingsStat): TokenItemData | null {
-  const formattedChain = fromGraphQLChain(tokenRankingStat.chain)
-
-  if (!formattedChain) {
-    return null
-  }
-
-  return {
-    name: tokenRankingStat.name ?? '',
-    logoUrl: tokenRankingStat.logo ?? '',
-    chainId: formattedChain,
-    address: tokenRankingStat.address,
-    symbol: tokenRankingStat.symbol ?? '',
-    price: tokenRankingStat.price?.value,
-    marketCap: tokenRankingStat.fullyDilutedValuation?.value,
-    pricePercentChange24h: tokenRankingStat.pricePercentChange1Day?.value,
-    volume24h: tokenRankingStat.volume1Day?.value,
-    totalValueLocked: tokenRankingStat.totalValueLocked?.value,
-    // oxlint-disable-next-line typescript/no-unnecessary-condition -- chainTokens can be undefined at runtime despite protobuf typing
-    networkCount: tokenRankingStat.chainTokens?.length || undefined,
-  }
-}
-
 const styles = StyleSheet.create({
   foreground: {
     zIndex: 1,
   },
 })
-
-function getTokenMetadataDisplayTypeSafe(orderBy: ExploreOrderBy): TokenMetadataDisplayType | null {
-  try {
-    return getTokenMetadataDisplayType(orderBy)
-  } catch {
-    return null
-  }
-}
-
-function processTokens(
-  tokens: TokenStats[],
-  tokenMetadataDisplayType: TokenMetadataDisplayType,
-): TokenItemDataWithMetadata[] {
-  const validTokens = tokens.filter(Boolean)
-  const processedTokens: TokenItemDataWithMetadata[] = []
-
-  for (const token of validTokens) {
-    const tokenItemData = tokenRankingStatsToTokenItemData(token)
-    if (tokenItemData) {
-      processedTokens.push({ tokenItemData, tokenMetadataDisplayType })
-    }
-  }
-
-  return processedTokens
-}
-
-function processTokenRankings(
-  tokenRankings: TokenRankingsResponse['tokenRankings'] | undefined,
-): Partial<Record<ExploreOrderBy, TokenItemDataWithMetadata[]>> {
-  if (!tokenRankings) {
-    return {} as const
-  }
-
-  const result: Record<string, TokenItemDataWithMetadata[]> = {}
-
-  for (const [orderByKey, rankings] of Object.entries(tokenRankings)) {
-    const tokenMetadataDisplayType = getTokenMetadataDisplayTypeSafe(orderByKey as ExploreOrderBy)
-    if (tokenMetadataDisplayType === null) {
-      continue
-    }
-
-    const processedTokens = processTokens(rankings.tokens, tokenMetadataDisplayType)
-
-    if (processedTokens.length > 0) {
-      result[orderByKey] = processedTokens
-    }
-  }
-
-  return result
-}
-
-function useTokenItems(data: TokenRankingsResponse | undefined, orderBy: ExploreOrderBy): TokenItemDataWithMetadata[] {
-  // process all the token rankings into a map of orderBy to token items (only do this once)
-  const allTokenItemsByOrderBy = useMemo(() => processTokenRankings(data?.tokenRankings), [data])
-  // return the token items for the given orderBy, or empty array if the orderBy key doesn't exist
-  return useMemo(() => allTokenItemsByOrderBy[orderBy] ?? [], [allTokenItemsByOrderBy, orderBy])
-}
 
 type ListHeaderProps = {
   listRef: AnimatedRef<ScrollView>
@@ -488,4 +403,12 @@ function useOrderBy(): {
   return { uiOrderBy, orderBy, onOrderByChange }
 }
 
-export const ExploreSections = memo(ExploreSectionsInner)
+function ExploreSectionsWithFavoritesSortingStore(props: ExploreSectionsProps): JSX.Element {
+  return (
+    <FavoritesSortingStoreProvider>
+      <ExploreSectionsInner {...props} />
+    </FavoritesSortingStoreProvider>
+  )
+}
+
+export const ExploreSections = memo(ExploreSectionsWithFavoritesSortingStore)

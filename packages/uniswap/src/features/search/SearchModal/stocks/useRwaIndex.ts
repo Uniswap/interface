@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { useListRwasQuery } from 'uniswap/src/data/rest/listRwas'
+import { useListRwasQuery } from 'uniswap/src/data/apiClients/dataApiService/rwa/listRwas'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
   buildRwaSearchIndex,

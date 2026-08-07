@@ -1,7 +1,7 @@
 import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { OnchainItemListOptionType } from 'uniswap/src/components/lists/items/types'
-import { getRwaTagCategory } from 'uniswap/src/data/rest/rwa/getRwaTagCategory'
-import type { IssuerToken, Rwa } from 'uniswap/src/data/rest/rwa/types'
+import { getRwaTagCategory } from 'uniswap/src/data/apiClients/dataApiService/rwa/getRwaTagCategory'
+import type { IssuerToken, Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { buildNoQueryRwaCollectionOptions } from 'uniswap/src/features/search/SearchModal/stocks/noQueryStocks'
 
 function issuer(name: string): IssuerToken {

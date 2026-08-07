@@ -11,6 +11,12 @@ import { withTimeout } from 'uniswap/src/utils/polling'
 import { paths } from '~/pages/paths'
 import { MetaTagInjectorInput } from '~/shared-cloud/metatags'
 
+// Shared links often carry trailing slashes (e.g. /launches/); normalize so they match their canonical path.
+function stripTrailingSlash(pathname: string): string {
+  const stripped = pathname.replace(/\/+$/, '')
+  return stripped === '' ? '/' : stripped
+}
+
 function doesMatchPath(path: string): boolean {
   const regexPaths = paths.map((p) => '^' + p.replace(/:[^/]+/g, '[^/]+').replace(/\*/g, '.*') + '$')
   // These come from a constant we define (paths.ts), so we don't need to worry about them being malicious.
@@ -60,6 +66,10 @@ function parsePositionPath(
     }
   }
   return null
+}
+
+function defaultImageUri(origin: string): string {
+  return origin + '/images/1200x630_Rich_Link_Preview_Image.png'
 }
 
 // oxlint-disable-next-line max-params
@@ -159,8 +169,12 @@ async function fetchPositionData({
 
 export async function metaTagInjectionMiddleware(c: Context, next: Next): Promise<Response> {
   const requestURL = new URL(c.req.url)
+  const pathname = stripTrailingSlash(requestURL.pathname)
+  // Single og:url per page: trailing-slash variants must not split share counts / preview caches.
+  const canonicalUrl = requestURL.origin + pathname
 
-  if (!doesMatchPath(requestURL.pathname)) {
+  // Also check the raw pathname: wildcard entries like /vote/* only match /vote/ before normalization.
+  if (!doesMatchPath(pathname) && !doesMatchPath(requestURL.pathname)) {
     await next()
     return c.res
   }
@@ -178,8 +192,8 @@ export async function metaTagInjectionMiddleware(c: Context, next: Next): Promis
     const clonedResponse = originalResponse.clone()
     const html = await clonedResponse.text()
 
-    const exploreData = parseExplorePath(requestURL.pathname)
-    const positionData = parsePositionPath(requestURL.pathname)
+    const exploreData = parseExplorePath(pathname)
+    const positionData = parsePositionPath(pathname)
     let data: MetaTagInjectorInput
 
     if (exploreData) {
@@ -190,7 +204,7 @@ export async function metaTagInjectionMiddleware(c: Context, next: Next): Promis
           networkName: exploreData.networkName,
           address: exploreData.address,
           origin,
-          requestUrl: c.req.url,
+          requestUrl: canonicalUrl,
         }),
         { timeoutMs: META_TAG_FETCH_TIMEOUT_MS, errorMsg: 'fetchExploreData timeout' },
       ).catch(() => null)
@@ -208,7 +222,7 @@ export async function metaTagInjectionMiddleware(c: Context, next: Next): Promis
           chainName: positionData.chainName,
           identifier: positionData.identifier,
           origin,
-          requestUrl: c.req.url,
+          requestUrl: canonicalUrl,
         }),
         { timeoutMs: META_TAG_FETCH_TIMEOUT_MS, errorMsg: 'fetchPositionData timeout' },
       ).catch(() => null)
@@ -218,12 +232,19 @@ export async function metaTagInjectionMiddleware(c: Context, next: Next): Promis
       }
 
       data = positionMeta
+    } else if (pathname === '/launches') {
+      // English on purpose (like the default card below): crawlers read OG tags once per URL and don't reliably send Accept-Language.
+      data = {
+        title: 'Token launches on Uniswap',
+        image: defaultImageUri(requestURL.origin),
+        url: canonicalUrl,
+        description: 'Discover and trade new token launches across launchpads, all in one place.',
+      }
     } else {
-      const imageUri = requestURL.origin + '/images/1200x630_Rich_Link_Preview_Image.png'
       data = {
         title: 'Uniswap Interface',
-        image: imageUri,
-        url: c.req.url,
+        image: defaultImageUri(requestURL.origin),
+        url: canonicalUrl,
         description:
           'Swap crypto on Ethereum, Base, Arbitrum, Polygon, Unichain and more. The DeFi platform trusted by millions.',
       }

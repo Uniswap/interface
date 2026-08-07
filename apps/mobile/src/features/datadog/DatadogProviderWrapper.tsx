@@ -33,6 +33,12 @@ export const MOBILE_DEFAULT_DATADOG_SESSION_SAMPLE_RATE = 10 // percent
 // - Resource tracking: Traces network requests and API calls
 // Note: Can buffer up to 100 RUM events before SDK initialization
 // https://docs.datadoghq.com/real_user_monitoring/mobile_and_tv_monitoring/react_native/advanced_configuration/#delaying-the-initialization
+//
+// `isDatadogEnabled()` is true in e2e builds (it folds in isE2eTestEnv), so RUM auto-instrumentation
+// runs there too — every scheduled Maestro run behaves as a synthetic perf probe emitting the same
+// vitals as prod. That e2e enablement is build-time gated inside isDatadogEnabled (baked IS_E2E_TEST,
+// only set by the e2e build actions), so it can never turn on in dev/beta/prod/release builds.
+// Isolation from the prod RUM app is handled in initializeDatadog.
 const isEnabled = isDatadogEnabled()
 
 // Event type accepted by the Datadog Logs mapper, derived from the SDK config type so we avoid a deep
@@ -81,12 +87,27 @@ const datadogAutoInstrumentation: AutoInstrumentationConfiguration = {
 }
 
 async function initializeDatadog(sessionSamplingRate: number): Promise<void> {
-  const isE2ETest = getConfig().isE2ETest
+  const {
+    isE2ETest,
+    datadogClientToken,
+    datadogProjectId,
+    datadogE2eClientToken: e2eClientToken,
+    datadogE2eProjectId: e2eProjectId,
+  } = getConfig()
   // oxlint-disable-next-line typescript/no-unnecessary-condition
   const useDebugConfig = localDevDatadogEnabled || isE2ETest
 
+  // Anti-pollution: e2e RUM must never land in the production RUM app's data (prod dashboards/monitors
+  // query by @application.id and by env). Preferred isolation is a dedicated e2e RUM app — used when its
+  // credentials are provisioned. Until then we fall back to the prod app id but force env:dev (never prod)
+  // + source:e2e tags below, so prod queries scoped to env:prod / a dedicated app id exclude this traffic.
+  // env:dev + source:e2e is chosen (over a dedicated env) so e2e traffic is separated by tag, not by a
+  // bespoke env value. Every override here is gated on isE2ETest, so prod/dev/beta/release builds are untouched.
+  const useDedicatedE2eApp = isE2ETest && Boolean(e2eProjectId) && Boolean(e2eClientToken)
+
   const datadogConfig: PartialInitializationConfiguration = {
-    clientToken: getConfig().datadogClientToken,
+    clientToken: useDedicatedE2eApp ? e2eClientToken : datadogClientToken,
+    // e2e is mapped to env:dev inside getDatadogEnvironment (source:e2e separates the data).
     env: getDatadogEnvironment(),
     site: 'US1',
     // Must be set to a concrete value: v3's CoreConfiguration runs Object.assign(this, ...rest),
@@ -97,7 +118,8 @@ async function initializeDatadog(sessionSamplingRate: number): Promise<void> {
     // oxlint-disable-next-line typescript/no-unnecessary-condition
     ...(localDevDatadogEnabled ? { uploadFrequency: UploadFrequency.FREQUENT, batchSize: BatchSize.SMALL } : {}),
     rumConfiguration: {
-      applicationId: getConfig().datadogProjectId,
+      applicationId: useDedicatedE2eApp ? e2eProjectId : datadogProjectId,
+      // 100% only for local dev / e2e (useDebugConfig). Prod keeps the Statsig-driven rate — unchanged.
       sessionSampleRate: useDebugConfig ? 100 : sessionSamplingRate,
       longTaskThresholdMs: 100,
       nativeCrashReportEnabled: true,
@@ -108,6 +130,9 @@ async function initializeDatadog(sessionSamplingRate: number): Promise<void> {
 
   setAttributesToDatadog({
     isE2ETest,
+    // env:dev is shared with real dev traffic, so these tags are what actually separate e2e data —
+    // they let prod (and dev) queries exclude e2e by @context.source / @context.test_type.
+    ...(isE2ETest ? { source: 'e2e', test_type: 'e2e' } : {}),
   }).catch(() => undefined)
 }
 
@@ -122,7 +147,7 @@ export function DatadogProviderWrapper({
   const [isInitialized, setInitialized] = useState(false)
 
   useEffect(() => {
-    if ((isDatadogEnabled() || getConfig().isE2ETest) && sessionSampleRate !== undefined) {
+    if (isDatadogEnabled() && sessionSampleRate !== undefined) {
       initializeDatadog(sessionSampleRate).catch(() => undefined)
     }
   }, [sessionSampleRate])

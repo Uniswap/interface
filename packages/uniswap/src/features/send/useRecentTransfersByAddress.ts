@@ -1,8 +1,9 @@
+import { getAddress } from '@ethersproject/address'
 import { TransactionTypeFilter } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { useMemo } from 'react'
 import { isSendTokenTransactionInfo } from 'uniswap/src/components/activity/details/types'
 import { useListTransactions } from 'uniswap/src/features/dataApi/listTransactions/listTransactions'
-import { AddressStringFormat, ensureLeading0x, normalizeAddress } from 'uniswap/src/utils/addresses'
+import { ensureLeading0x } from 'uniswap/src/utils/addresses'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 
 export type TransferCount = {
@@ -53,7 +54,11 @@ function sanitizeRecipient(recipient: string): string {
   const trimmed = recipient.trim()
   const with0x = ensureLeading0x(trimmed)
   if (isEVMAddress(with0x)) {
-    return normalizeAddress(with0x, AddressStringFormat.Lowercase)
+    try {
+      return getAddress(with0x.toLowerCase())
+    } catch {
+      return trimmed
+    }
   }
   return trimmed
 }

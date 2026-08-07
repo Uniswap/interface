@@ -1,12 +1,14 @@
 import React, { memo } from 'react'
 import { TransactionLoader } from 'src/components/loading/parts/TransactionLoader'
-import { WaveLoader } from 'src/components/loading/parts/WaveLoader'
-import { Flex, FlexLoader, FlexLoaderProps, getToken, Skeleton } from 'ui/src'
+import { useChartDimensions } from 'src/components/PriceExplorer/useChartDimensions'
+import { Flex, FlexLoader, FlexLoaderProps, getToken, Skeleton, WaveLoader } from 'ui/src'
 
 function Graph(): JSX.Element {
+  const { chartHeight } = useChartDimensions()
+
   return (
     <Skeleton>
-      <WaveLoader />
+      <WaveLoader height={chartHeight} />
     </Skeleton>
   )
 }

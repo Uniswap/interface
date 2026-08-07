@@ -1,9 +1,16 @@
+import {
+  Action,
+  authenticatePasskey,
+  AuthenticationTypes,
+  EmbeddedWalletApiClient,
+  RecoveryStep,
+  useRecoveryFlow,
+} from '@universe/embedded-wallet'
 import { getChromeRuntime, getChromeRuntimeWithThrow } from '@universe/environment'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 import { Flex, SpinningLoader } from 'ui/src'
-import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
 import { parseMessage } from 'uniswap/src/extension/messagePassing/platform'
 import {
   InterfaceToExtensionRequestType,
@@ -12,9 +19,6 @@ import {
   PasskeySignInFlowOpened,
   RecoveryExportResult,
 } from 'uniswap/src/extension/messagePassing/types/requests'
-import { Action, AuthenticationTypes } from 'uniswap/src/features/passkey/embeddedWallet'
-import { authenticatePasskey } from 'uniswap/src/features/passkey/passkey'
-import { RecoveryStep, useRecoveryFlow } from 'uniswap/src/features/passkey/useRecoveryFlow'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { logger } from 'utilities/src/logger/logger'

@@ -47,13 +47,14 @@ function PoolDetailsHeaderContent({
   const showRewards = isLPIncentivesEnabled && rewardsApr && rewardsApr > 0
 
   const isFeeDisplayEnabled = useFeatureFlag(FeatureFlags.V4ProtocolFeeDisplay)
-  // GraphQL pool data carries no fee fields — the protocol fee comes from data-api GetProtocolFees.
+  // GraphQL pool data carries no protocol fee — it comes from data-api GetProtocolFees. The tier is
+  // already served-sourced by the page and arrives on `feeTier`.
   const protocolFeePips = useServedProtocolFee({
     chainId: chainId as UniverseChainId | undefined,
     protocolVersion: protocolVersion ? parseRestProtocolVersion(protocolVersion) : undefined,
     poolIdOrHash: poolId,
     enabled: isFeeDisplayEnabled,
-  })
+  })?.protocolFee
 
   return (
     <Flex row alignItems="center" justifyContent="space-between" width="100%" gap="$gap8">

@@ -1,4 +1,4 @@
-import { base64ToUint8 } from '@universe/encoding'
+import { base64ToUint8, uint8ToUtf8 } from '@universe/encoding'
 import { logger } from 'utilities/src/logger/logger'
 import { ScantasticParams } from 'wallet/src/features/scantastic/types'
 
@@ -36,8 +36,7 @@ export async function decryptMessage(privateKey: CryptoKey, ciphertext: string):
       base64ToUint8(ciphertext),
     )
 
-    const textDecoder = new TextDecoder()
-    return textDecoder.decode(decryptedArrayBuffer)
+    return uint8ToUtf8(new Uint8Array(decryptedArrayBuffer))
   } catch (e) {
     logger.error(e, { tags: { file: 'scan/utils.ts', function: 'decryptMessage' } })
     return ''

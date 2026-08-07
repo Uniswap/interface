@@ -1,5 +1,5 @@
 import { Flex, Text } from 'ui/src'
-import type { RwaPriceDisplay } from 'uniswap/src/data/rest/rwa/rwaMetrics'
+import type { RwaPriceDisplay } from 'uniswap/src/data/apiClients/dataApiService/rwa/rwaMetrics'
 import { NumberType, type FiatNumberType, type PercentNumberDecimals } from 'utilities/src/format/types'
 import { TableText } from '~/components/Table/shared/TableText'
 

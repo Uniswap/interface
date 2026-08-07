@@ -1,0 +1,47 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`UniversalList > snapshots > matches the snapshot for the empty state 1`] = `
+<DocumentFragment>
+  <div
+    class="flex flex-col items-stretch justify-start flex-nowrap gap-0"
+  >
+    <div
+      class="flex flex-col items-stretch justify-start flex-nowrap gap-0"
+    >
+      <p
+        class="text-foreground text-base leading-normal font-normal text-left"
+      >
+        Nothing here yet
+      </p>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`UniversalList > snapshots > matches the snapshot when rendering items 1`] = `
+<DocumentFragment>
+  <div
+    class="flex flex-col items-stretch justify-start flex-nowrap gap-0"
+  >
+    <div
+      class="flex flex-col items-stretch justify-start flex-nowrap gap-0"
+    >
+      <p
+        class="text-foreground text-base leading-normal font-normal text-left"
+      >
+        Alpha
+      </p>
+      <p
+        class="text-foreground text-base leading-normal font-normal text-left"
+      >
+        Bravo
+      </p>
+      <p
+        class="text-foreground text-base leading-normal font-normal text-left"
+      >
+        Charlie
+      </p>
+    </div>
+  </div>
+</DocumentFragment>
+`;

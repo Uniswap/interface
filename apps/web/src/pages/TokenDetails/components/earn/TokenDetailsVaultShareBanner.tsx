@@ -50,7 +50,7 @@ export function TokenDetailsVaultShareBanner({
   }
 
   return (
-    <Flex width="100%" px="$spacing40" mt="$spacing24" $lg={{ px: '$padding20' }}>
+    <Flex width="100%" mt="$spacing24" $xxl={{ px: '$spacing40' }} $lg={{ px: '$padding20' }}>
       <SharedTokenDetailsVaultShareBanner
         apyPercent={vault.apyPercent}
         underlyingCurrencyInfo={underlyingCurrencyInfo}

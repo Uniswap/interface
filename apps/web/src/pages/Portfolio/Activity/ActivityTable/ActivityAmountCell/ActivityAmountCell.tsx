@@ -3,11 +3,14 @@ import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { Plus } from 'ui/src/components/icons/Plus'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 import { useFormattedCurrencyAmountAndUSDValue } from 'uniswap/src/components/activity/hooks/useFormattedCurrencyAmountAndUSDValue'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import {
   useCurrencyInfo,
+  useCurrencyInfos,
   useNativeCurrencyInfo,
   useWrappedNativeCurrencyInfo,
 } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -17,11 +20,17 @@ import {
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isConfirmedSwapTypeInfo } from 'uniswap/src/features/transactions/types/utils'
+import { OverlappingCurrencyLogos } from '~/components/Logo/OverlappingCurrencyLogos'
 import { ApproveAmountCell } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/ApproveAmountCell'
 import { CompactLayout } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/CompactLayout'
 import { DualTokenLayout } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/DualTokenLayout'
 import { EmptyCell } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/EmptyCell'
 import { GenericCompactLayout } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/GenericCompactLayout'
+import {
+  formatMultiTokenSymbols,
+  MAX_SHOWN,
+  MultiTokenLayout,
+} from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/MultiTokenLayout'
 import {
   createSplitLogo,
   createTokenLogo,
@@ -39,6 +48,10 @@ interface ActivityAmountCellProps {
   variant?: 'full' | 'compact'
   isEarnActivityDisplayEnabled?: boolean
 }
+
+// Match the single-token logo sizes each variant already uses (CompactLayout / TokenAmountDisplay).
+const COMPACT_MULTI_TOKEN_LOGO_SIZE = iconSizes.icon24
+const FULL_MULTI_TOKEN_LOGO_SIZE = 32
 
 // oxlint-disable-next-line complexity
 function ActivityAmountCellInner({
@@ -63,6 +76,7 @@ function ActivityAmountCellInner({
   const currency0Info = useCurrencyInfo(amount?.kind === 'liquidity-pair' ? amount.currency0Id : undefined)
   const currency1Info = useCurrencyInfo(amount?.kind === 'liquidity-pair' ? amount.currency1Id : undefined)
   const nftPurchaseCurrencyInfo = useCurrencyInfo(amount?.kind === 'nft' ? amount.purchaseCurrencyId : undefined)
+  const multiTokenCurrencyInfos = useCurrencyInfos(amount?.kind === 'multi-token' ? amount.currencyIds : [])
 
   const nativeCurrencyInfo = useNativeCurrencyInfo(chainId)
   const wrappedCurrencyInfo = useWrappedNativeCurrencyInfo(chainId)
@@ -317,6 +331,43 @@ function ActivityAmountCellInner({
           separator={null}
         />
       )
+    }
+
+    case 'multi-token': {
+      // Unresolved currencies are dropped rather than rendered as gaps in the cluster.
+      const resolved = multiTokenCurrencyInfos.filter((currencyInfo): currencyInfo is CurrencyInfo =>
+        Boolean(currencyInfo),
+      )
+
+      // The claim's full token count, so an unresolved token lands in "+N" instead of vanishing.
+      const totalCount = amount.currencyIds.length
+
+      // Checked after the compact branch rather than before it: a compact row with nothing resolved
+      // still keeps its type label, matching what the single-token case renders in that state.
+      if (variant === 'compact') {
+        return (
+          <CompactLayout
+            typeLabel={typeLabel}
+            logo={
+              resolved.length > 0 ? (
+                <OverlappingCurrencyLogos
+                  currencyInfos={resolved}
+                  size={COMPACT_MULTI_TOKEN_LOGO_SIZE}
+                  max={MAX_SHOWN}
+                  totalCount={totalCount}
+                />
+              ) : null
+            }
+            amountText={formatMultiTokenSymbols(resolved, totalCount)}
+          />
+        )
+      }
+
+      if (resolved.length === 0) {
+        return <EmptyCell />
+      }
+
+      return <MultiTokenLayout currencyInfos={resolved} logoSize={FULL_MULTI_TOKEN_LOGO_SIZE} totalCount={totalCount} />
     }
 
     case 'liquidity-pair': {

@@ -5,9 +5,9 @@ import { Flex, styled, Text } from 'ui/src'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { FiatNumberType, NumberType } from 'utilities/src/format/types'
-import { getProtocolColor, getProtocolName } from '~/appGraphql/data/util'
 import { useHeaderDateFormatter } from '~/components/Charts/hooks/useHeaderDateFormatter'
 import { PROTOCOL_LEGEND_ELEMENT_ID } from '~/components/Charts/types'
+import { getProtocolColor, getProtocolName } from '~/data/util'
 import { EllipsisTamaguiStyle } from '~/theme/components/styles'
 
 type ChartHeaderProtocolInfo = { protocol: GraphQLApi.PriceSource; value?: number }

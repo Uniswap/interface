@@ -55,6 +55,12 @@
         },
         "vercel": {
           "command": "ENABLE_ENTRY_GATEWAY_PROXY=true NODE_OPTIONS=\"--max-old-space-size=$([ -n \\\"$GITHUB_ACTIONS\\\" ] && echo 32768 || echo 16384)\" DISABLE_SOURCEMAP=true DEPLOY_TARGET=vercel vite build --mode staging && bun scripts/build-vercel.ts"
+        },
+        "ecs": {
+          "command": "NODE_OPTIONS=\"--max-old-space-size=$([ -n \\\"$GITHUB_ACTIONS\\\" ] && echo 32768 || echo 16384)\" DEPLOY_TARGET=ecs vite build --mode ${VITE_MODE:-staging} && bun scripts/build-ecs.ts"
+        },
+        "ipfs": {
+          "command": "NODE_OPTIONS=\"--max-old-space-size=$([ -n \\\"$GITHUB_ACTIONS\\\" ] && echo 32768 || echo 16384)\" DISABLE_SOURCEMAP=true DEPLOY_TARGET=ipfs vite build"
         }
       }
     },
@@ -76,7 +82,9 @@
         "staging": { "env": { "CONFIG_ENV": "staging" } },
         "production": { "env": { "CONFIG_ENV": "production" } },
         "e2e": { "env": { "CONFIG_ENV": "staging" } },
-        "vercel": { "env": { "CONFIG_ENV": "staging" } }
+        "vercel": { "env": { "CONFIG_ENV": "staging" } },
+        "ecs": { "env": { "SKIP_CONFIG_PULL": "true" } },
+        "ipfs": { "env": { "CONFIG_ENV": "production" } }
       }
     },
     "deduplicate": {
@@ -234,7 +242,9 @@
         "cwd": "{projectRoot}"
       },
       "dependsOn": ["^prepare", "prepare"],
-      "cache": false
+      "cache": true,
+      "inputs": ["storybookFiles", "^storybookFiles", "!{projectRoot}/storybook-static"],
+      "outputs": ["{projectRoot}/storybook-static"]
     },
     "storybook:run": {
       "command": "storybook dev -p 6006",

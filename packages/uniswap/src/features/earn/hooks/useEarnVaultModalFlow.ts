@@ -9,6 +9,7 @@ export type { EarnVaultTab }
 
 export enum EarnVaultView {
   Vault = 'vault',
+  HowItWorks = 'how-it-works',
   NeedToken = 'need-token',
   DepositAmount = 'deposit-amount',
   DepositReview = 'deposit-review',
@@ -21,6 +22,7 @@ export enum EarnVaultView {
 // source chain + per-chain currencyId because the modal-level selection isn't visible to it.
 export type EarnVaultFlow =
   | { view: EarnVaultView.Vault }
+  | { view: EarnVaultView.HowItWorks }
   | { view: EarnVaultView.NeedToken }
   | {
       view: EarnVaultView.DepositAmount
@@ -69,6 +71,7 @@ interface UseEarnVaultModalFlowParams {
   initialPosition?: EarnPositionInfo
   initialView: EarnVaultModalInitialView
   isOpen: boolean
+  shouldShowHowItWorks: boolean
   vaultId: string | undefined
 }
 
@@ -78,6 +81,7 @@ interface UseEarnVaultModalFlowResult {
   setSelectedTab: (tab: EarnVaultTab) => void
   reset: () => void
   startDeposit: () => void
+  continueDeposit: () => void
   startNeedToken: () => void
   submitDepositAmount: (params: {
     amount: string
@@ -104,6 +108,7 @@ export function useEarnVaultModalFlow({
   initialPosition,
   initialView,
   isOpen,
+  shouldShowHowItWorks,
   vaultId,
 }: UseEarnVaultModalFlowParams): UseEarnVaultModalFlowResult {
   const previousHasPositionRef = useRef(hasPosition)
@@ -121,7 +126,9 @@ export function useEarnVaultModalFlow({
   const getInitialFlow = useCallback((): EarnVaultFlow => {
     switch (initialView) {
       case EarnVaultView.DepositAmount:
-        return { view: EarnVaultView.DepositAmount, amount: '' }
+        return shouldShowHowItWorks
+          ? { view: EarnVaultView.HowItWorks }
+          : { view: EarnVaultView.DepositAmount, amount: '' }
       case EarnVaultView.WithdrawAmount: {
         if (!initialPosition) {
           logger.warn(
@@ -144,7 +151,7 @@ export function useEarnVaultModalFlow({
     }
 
     return assertNever(initialView)
-  }, [initialPosition, initialView])
+  }, [initialPosition, initialView, shouldShowHowItWorks])
 
   const reset = useCallback(() => {
     setSelectedTab(hasPosition ? 'balance' : 'details')
@@ -176,6 +183,12 @@ export function useEarnVaultModalFlow({
   }, [flow.view, hasPosition])
 
   const startDeposit = useCallback(() => {
+    setFlow(
+      shouldShowHowItWorks ? { view: EarnVaultView.HowItWorks } : { view: EarnVaultView.DepositAmount, amount: '' },
+    )
+  }, [shouldShowHowItWorks])
+
+  const continueDeposit = useCallback(() => {
     setFlow({ view: EarnVaultView.DepositAmount, amount: '' })
   }, [])
 
@@ -265,6 +278,7 @@ export function useEarnVaultModalFlow({
     setSelectedTab,
     reset,
     startDeposit,
+    continueDeposit,
     startNeedToken,
     submitDepositAmount,
     backToDepositAmount,

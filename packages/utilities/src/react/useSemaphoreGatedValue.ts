@@ -120,7 +120,7 @@ export function useSemaphoreGatedValue<T>(params: { value: T | undefined; semaph
     }, timeoutMs)
     releaseRef.current = release
 
-    // oxlint-disable-next-line typescript/consistent-return cleanup function
+    // oxlint-disable-next-line typescript/consistent-return -- cleanup function
     return () => {
       release()
       releaseRef.current = null

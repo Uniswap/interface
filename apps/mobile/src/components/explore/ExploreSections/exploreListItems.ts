@@ -9,6 +9,7 @@ export const EXPLORE_SKELETON_ROW_COUNT = 12
 export const EXPLORE_LIST_INITIAL_ITEM_COUNT = 20
 export const EXPLORE_LIST_ITEM_REVEAL_STEP = 25
 export const EXPLORE_LIST_TRAILING_SKELETON_COUNT = 3
+export const EXPLORE_LIST_TOKENS_V2_PAGE_SIZE = 100
 
 export type ExploreSkeletonRow = {
   rowType: 'skeleton'

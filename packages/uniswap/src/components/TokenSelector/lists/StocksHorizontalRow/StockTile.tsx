@@ -8,10 +8,13 @@ import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 
 function StockTileInner({
   option,
-  onSelectRwaToken,
+  onPressRwaToken,
+  isPending = false,
 }: {
   option: RwaTokenOption
-  onSelectRwaToken: OnSelectRwaToken
+  onPressRwaToken: OnSelectRwaToken
+  /** True while this tile's tap is waiting on the pre-selection token fetch. */
+  isPending?: boolean
 }): JSX.Element {
   const label = getSymbolDisplayText(option.symbol)
 
@@ -27,12 +30,13 @@ function StockTileInner({
           url={option.logoUrl}
         />
       }
+      isPending={isPending}
       label={label}
       testID={`stock-option-${option.chainId}-${option.symbol}`}
       // Stock tickers can be long and truncate, so show the full ticker on hover.
       tooltipLabel={label}
       labelNumberOfLines={1}
-      onPress={(): void => onSelectRwaToken(option)}
+      onPress={(): void => onPressRwaToken(option)}
     />
   )
 }

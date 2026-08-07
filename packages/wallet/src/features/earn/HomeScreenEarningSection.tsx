@@ -9,6 +9,7 @@ import { ChevronsOut } from 'ui/src/components/icons/ChevronsOut'
 import { Skeleton } from 'ui/src/loading/Skeleton'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { EarnAnalyticsSurface, EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
 import { useEarnVaults } from 'uniswap/src/features/earn/hooks/useEarnVaults'
@@ -53,12 +54,14 @@ export function HomeScreenEarningSection({
   mx?: SpaceTokens
 }): JSX.Element | null {
   const isEarnEnabled = useIsEarnEnabled()
+  const { isTestnetModeEnabled } = useEnabledChains()
+  const isEarnAvailable = isEarnEnabled && !isTestnetModeEnabled
 
   const { vaultsSortedByPosition, positionsByVaultId, isLoadingVaults, isLoadingPositions, isError, refetch } =
-    useEarnVaults({ account: evmAddress, enabled: isEarnEnabled })
+    useEarnVaults({ account: evmAddress, enabled: isEarnAvailable })
 
   // Gates the unfunded discovery card: only wallets holding something are prompted to earn.
-  const { data: portfolioTotal } = usePortfolioTotalValue({ evmAddress, enabled: isEarnEnabled })
+  const { data: portfolioTotal } = usePortfolioTotalValue({ evmAddress, enabled: isEarnAvailable })
   const hasWalletBalance = (portfolioTotal?.balanceUSD ?? 0) > 0
 
   const entries = useMemo<EarningEntry[]>(() => {
@@ -98,11 +101,11 @@ export function HomeScreenEarningSection({
 
   useLogEarnSurfaceViewed({
     entryPoint: EarnEntryPoint.PortfolioEarnSection,
-    isVisible: isEarnEnabled && (entries.length > 0 || isUnfundedCardVisible),
+    isVisible: isEarnAvailable && (entries.length > 0 || isUnfundedCardVisible),
     surface: isExtensionApp ? EarnAnalyticsSurface.Extension : EarnAnalyticsSurface.Mobile,
   })
 
-  if (!isEarnEnabled) {
+  if (!isEarnAvailable) {
     return null
   }
 
@@ -186,7 +189,7 @@ function EarningCardSkeleton({ mb, mt, mx }: { mb?: SpaceTokens; mt?: SpaceToken
       <Skeleton>
         <Flex row alignItems="center" justifyContent="space-between" gap="$spacing8">
           <Text loading="no-shimmer" loadingPlaceholderText="Earning" variant="subheading2" />
-          <Text loading="no-shimmer" loadingPlaceholderText="$1,000.00 • 4.30% est. APY" variant="body3" />
+          <Text loading="no-shimmer" loadingPlaceholderText="$1,000.00 • 4.30% APY" variant="body3" />
         </Flex>
       </Skeleton>
     </Flex>

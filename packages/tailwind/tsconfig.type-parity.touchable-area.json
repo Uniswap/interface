@@ -1,0 +1,14 @@
+{
+  "extends": "../../config/tsconfig/ui.json",
+  "compilerOptions": {
+    "composite": false,
+    "noEmit": true,
+    "emitDeclarationOnly": false,
+    "types": ["node", "chrome"],
+    "noPropertyAccessFromIndexSignature": false,
+    "typeRoots": ["../../node_modules/@types"]
+  },
+  "include": ["src/parity/touchable-area/type-parity.ts", "../ui/src/env.d.ts"],
+  "references": [],
+  "exclude": []
+}

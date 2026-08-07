@@ -8,10 +8,11 @@ import type {
   ListEarnVaultsRequest,
   ListEarnVaultsResponse,
 } from '@uniswap/client-data-api/dist/data/v2/api_pb'
-import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApi/DataApiClientV2'
+import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 import { type QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 
 // TODO(CONS-1781): Earn list endpoints are currently intentionally bounded. If the data-api starts returning
 // nextPageToken for these responses, add explicit pagination handling before exposing pageToken to callers.
@@ -75,6 +76,7 @@ export function getListEarnVaultsQueryOptions<TSelectData = PlainMessage<ListEar
     enabled: enabled && !!params,
     placeholderData: keepPreviousData,
     select,
+    staleTime: ONE_MINUTE_MS,
   })
 }
 
@@ -99,6 +101,7 @@ export function getListEarnPositionsQueryOptions<TSelectData = PlainMessage<List
     enabled: enabled && !!params,
     placeholderData: keepPreviousData,
     select,
+    staleTime: ONE_MINUTE_MS,
   })
 }
 
@@ -123,5 +126,6 @@ export function getEarnPositionQueryOptions<TSelectData = PlainMessage<GetEarnPo
     enabled: enabled && !!params,
     placeholderData: keepPreviousData,
     select,
+    staleTime: ONE_MINUTE_MS,
   })
 }

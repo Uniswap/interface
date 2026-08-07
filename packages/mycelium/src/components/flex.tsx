@@ -2,6 +2,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import * as React from 'react'
 import { cn } from '../cn'
 
+/** @deprecated Use `Flex` from `@universe/mycelium` (FlexCompat). Retirement tracked in [INFRA-3020](https://linear.app/uniswap/issue/INFRA-3020). */
 const flexVariants = cva('flex', {
   variants: {
     direction: {
@@ -49,10 +50,12 @@ const flexVariants = cva('flex', {
   },
 })
 
+/** @deprecated Use `Flex` from `@universe/mycelium` (FlexCompat). Retirement tracked in [INFRA-3020](https://linear.app/uniswap/issue/INFRA-3020). */
 export interface FlexProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof flexVariants> {
   asChild?: boolean
 }
 
+/** @deprecated Use `Flex` from `@universe/mycelium` (FlexCompat). Retirement tracked in [INFRA-3020](https://linear.app/uniswap/issue/INFRA-3020). */
 const Flex = React.forwardRef<HTMLDivElement, FlexProps>(
   ({ className, direction, align, justify, wrap, gap, ...props }, ref) => {
     return (

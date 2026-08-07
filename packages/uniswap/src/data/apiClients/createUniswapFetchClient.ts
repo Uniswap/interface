@@ -5,7 +5,7 @@ import { getIsSessionServiceEnabled } from '@universe/gating'
 import { SessionGateSource } from '@universe/sessions'
 import { config } from 'uniswap/src/config'
 import { getUniswapServiceUrls, UniswapStaticUrls } from 'uniswap/src/constants/urls'
-import { getVersionHeader } from 'uniswap/src/data/getVersionHeader'
+import { getVersionHeader } from 'uniswap/src/data/headers/getVersionHeader'
 
 export const BASE_UNISWAP_HEADERS = {
   'x-request-source': REQUEST_SOURCE,

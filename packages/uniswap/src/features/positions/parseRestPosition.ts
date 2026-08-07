@@ -333,6 +333,9 @@ export function parseRestPosition(position?: PlainMessage<RestPosition>): Positi
         currency0Amount: CurrencyAmount.fromRawAmount(token0, v3Position.amount0),
         currency1Amount: CurrencyAmount.fromRawAmount(token1, v3Position.amount1),
         apr: v3Position.apr,
+        apr1d: v3Position.apr1d,
+        apr7d: v3Position.apr7d,
+        apr30d: v3Position.apr30d,
         v4hook: undefined,
         owner: v3Position.owner,
         isHidden: position.isHidden,
@@ -368,13 +371,12 @@ export function parseRestPosition(position?: PlainMessage<RestPosition>): Positi
             tickUpper: Number(v4Position.tickUpper),
           })
         : undefined
-      const poolId = V4Pool.getPoolId(
-        token0,
-        token1,
-        Number(v4Position.feeTier),
-        Number(v4Position.tickSpacing),
-        sdkHook,
-      )
+      // Prefer the indexer-provided id: permissioned pool currencies are PA wrappers
+      // surfaced as their sec-tokens, so deriving the id from the returned currencies
+      // yields a pool that doesn't exist onchain (breaks price history lookups).
+      const poolId =
+        v4Position.poolId ||
+        V4Pool.getPoolId(token0, token1, Number(v4Position.feeTier), Number(v4Position.tickSpacing), sdkHook)
       const fee0Amount = CurrencyAmount.fromRawAmount(token0, v4Position.token0UncollectedFees)
       const fee1Amount = CurrencyAmount.fromRawAmount(token1, v4Position.token1UncollectedFees)
       return {
@@ -404,12 +406,18 @@ export function parseRestPosition(position?: PlainMessage<RestPosition>): Positi
         totalValueUsd: position.valueUsd,
         liquidity: v4Position.liquidity,
         apr: v4Position.apr,
+        apr1d: v4Position.apr1d,
+        apr7d: v4Position.apr7d,
+        apr30d: v4Position.apr30d,
         owner: v4Position.owner,
         isHidden: position.isHidden,
         totalApr: v4Position.totalApr,
         unclaimedRewardsAmountUni: v4Position.unclaimedRewardsAmountUni,
         boostedApr: v4Position.boostedApr,
+        // Boolean() guards responses persisted by pre-0.0.121 clients, where the field is absent.
+        isPermissioned: Boolean(position.permissioned),
         protocolFee: v4Position.protocolFee,
+        rewardBalances: v4Position.rewardBalances,
       }
     }
   } catch (e) {

@@ -1,1 +1,6 @@
+export { AES_GCM_PARAMS } from './aes'
+export { hkdfSha256 } from './hkdf'
+export { derivePbkdf2, PBKDF2_PARAMS } from './pbkdf2'
 export { generateRandomBytes } from './random'
+export { sha256Sync } from './sha256'
+export { zeroBuffers } from './zeroize'

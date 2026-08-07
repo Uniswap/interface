@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ScrollView } from 'react-native'
 import type { AnimatedRef } from 'react-native-reanimated'
@@ -7,17 +7,19 @@ import type { SortableGridDragEndCallback, SortableGridRenderItem } from 'react-
 import Sortable from 'react-native-sortables'
 import { useDispatch, useSelector } from 'react-redux'
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
+import { useReportFavoritesSorting } from 'src/components/explore/favoritesSortingStore'
 import FavoriteTokenCard from 'src/components/explore/FavoriteTokenCard'
+import { useFavoritesDraftOrder } from 'src/components/explore/useFavoritesDraftOrder'
 import { getTokenValue } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
-import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { useCanonicalFavoritesMigration } from 'uniswap/src/features/favorites/hooks/useCanonicalFavoritesMigration'
 import { useMultichainFavoritesRankings } from 'uniswap/src/features/favorites/hooks/useMultichainFavoritesRankings'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
 import { setFavoriteTokens } from 'uniswap/src/features/favorites/slice'
 import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 
 const NUM_COLUMNS = 2
 const DEFAULT_TOKENS_TO_DISPLAY = 4
@@ -38,15 +40,29 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
 
   useCanonicalFavoritesMigration({ tokenRankingsData })
 
-  const [isEditing, setIsEditing] = useState(false)
   const [showAll, setShowAll] = useState(false)
   const favoriteCurrencyIds = useSelector(selectFavoriteTokens)
 
-  useEffect(() => {
-    if (favoriteCurrencyIds.length === 0) {
-      setIsEditing(false)
-    }
-  }, [favoriteCurrencyIds.length])
+  const persistFavoriteTokens = useCallback(
+    (currencyIds: string[]) => dispatch(setFavoriteTokens({ currencyIds })),
+    [dispatch],
+  )
+  const {
+    isEditing,
+    orderedItems: orderedCurrencyIds,
+    setIsEditing,
+    toggleEditing,
+    queueDraftOrder,
+    settleDraftOrder,
+  } = useFavoritesDraftOrder({
+    items: favoriteCurrencyIds,
+    persist: persistFavoriteTokens,
+  })
+
+  const networkCountByKeyRef = useRef(networkCountByKey)
+  networkCountByKeyRef.current = networkCountByKey
+
+  useReportFavoritesSorting('tokens', isEditing)
 
   useEffect(() => {
     if (isEditing) {
@@ -58,28 +74,23 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
     await hapticFeedback.light()
   }, [hapticFeedback])
 
-  const hasMoreTokens = favoriteCurrencyIds.length > DEFAULT_TOKENS_TO_DISPLAY
+  const hasMoreTokens = orderedCurrencyIds.length > DEFAULT_TOKENS_TO_DISPLAY
   const visibleTokens =
-    showAll || !hasMoreTokens ? favoriteCurrencyIds : favoriteCurrencyIds.slice(0, DEFAULT_TOKENS_TO_DISPLAY)
+    showAll || !hasMoreTokens ? orderedCurrencyIds : orderedCurrencyIds.slice(0, DEFAULT_TOKENS_TO_DISPLAY)
 
   const GRID_GAP = getTokenValue('$spacing8')
 
   const handleDragEnd = useCallback<SortableGridDragEndCallback<string>>(
-    async ({ data }) => {
-      await hapticFeedback.light()
-      if (showAll || !hasMoreTokens) {
-        dispatch(setFavoriteTokens({ currencyIds: data }))
-      } else {
-        const hiddenTokens = favoriteCurrencyIds.slice(DEFAULT_TOKENS_TO_DISPLAY)
-        dispatch(setFavoriteTokens({ currencyIds: [...data, ...hiddenTokens] }))
-      }
+    ({ data }) => {
+      void hapticFeedback.light()
+      queueDraftOrder(data)
     },
-    [hapticFeedback, dispatch, showAll, favoriteCurrencyIds, hasMoreTokens],
+    [hapticFeedback, queueDraftOrder],
   )
 
   const renderItem = useCallback<SortableGridRenderItem<string>>(
     ({ item: currencyId }): JSX.Element => {
-      const networkCount = networkCountByKey.get(normalizeCurrencyIdForMapLookup(currencyId))
+      const networkCount = networkCountByKeyRef.current.get(normalizeCurrencyIdForMapLookup(currencyId))
       return (
         <FavoriteTokenCard
           showLoading={showLoading}
@@ -90,45 +101,43 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
         />
       )
     },
-    [isEditing, showLoading, networkCountByKey],
+    [isEditing, showLoading, setIsEditing],
   )
 
   return (
-    <Sortable.Layer>
-      <AnimatedFlex entering={FadeIn}>
-        <FavoriteHeaderRow
-          disabled={showLoading}
-          editingTitle={t('explore.tokens.favorite.title.edit')}
-          isEditing={isEditing}
-          title={t('explore.tokens.favorite.title.default')}
-          onPress={(): void => setIsEditing(!isEditing)}
-        />
+    <AnimatedFlex entering={FadeIn}>
+      <FavoriteHeaderRow
+        disabled={showLoading}
+        editingTitle={t('explore.tokens.favorite.title.edit')}
+        isEditing={isEditing}
+        title={t('explore.tokens.favorite.title.default')}
+        onPress={toggleEditing}
+      />
 
-        <Flex>
-          <Sortable.Grid
-            {...rest}
-            dimensionsAnimationType="layout"
-            scrollableRef={listRef}
-            data={visibleTokens}
-            sortEnabled={isEditing}
-            autoScrollActivationOffset={[75, 100]}
-            columns={NUM_COLUMNS}
-            renderItem={renderItem}
-            rowGap={GRID_GAP}
-            columnGap={GRID_GAP}
-            onDragEnd={handleDragEnd}
-            onDragStart={handleDragStart}
+      <Flex>
+        <Sortable.Grid
+          {...rest}
+          scrollableRef={listRef}
+          data={visibleTokens}
+          sortEnabled={isEditing}
+          autoScrollActivationOffset={[75, 100]}
+          columns={NUM_COLUMNS}
+          renderItem={renderItem}
+          rowGap={GRID_GAP}
+          columnGap={GRID_GAP}
+          onDragEnd={handleDragEnd}
+          onDragStart={handleDragStart}
+          onActiveItemDropped={settleDraftOrder}
+        />
+        {hasMoreTokens && (
+          <ExpandoRow
+            isExpanded={showAll}
+            label={showAll ? t('common.showLess.button') : t('common.showMore.button')}
+            mx="$spacing16"
+            onPress={(): void => setShowAll((value: boolean) => !value)}
           />
-          {hasMoreTokens && (
-            <ExpandoRow
-              isExpanded={showAll}
-              label={showAll ? t('common.showLess.button') : t('common.showMore.button')}
-              mx="$spacing16"
-              onPress={(): void => setShowAll((value: boolean) => !value)}
-            />
-          )}
-        </Flex>
-      </AnimatedFlex>
-    </Sortable.Layer>
+        )}
+      </Flex>
+    </AnimatedFlex>
   )
 }

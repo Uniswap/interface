@@ -1,6 +1,9 @@
 import { WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { FeatureFlags } from '@universe/gating'
-import { getWalletBalancesQuery, PortfolioBalancePart } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+import {
+  getWalletBalancesQuery,
+  PortfolioBalancePart,
+} from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   usePortfolioBalanceBreakdown,
@@ -27,10 +30,15 @@ const {
   mockUseFeatureFlag: vi.fn(),
 }))
 
-vi.mock('uniswap/src/data/rest/getWalletBalances/getWalletBalances', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('uniswap/src/data/rest/getWalletBalances/getWalletBalances')>()),
-  useGetWalletBalancesQuery: mockUseGetWalletBalancesQuery,
-}))
+vi.mock(
+  'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances',
+  async (importOriginal) => ({
+    ...(await importOriginal<
+      typeof import('uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances')
+    >()),
+    useGetWalletBalancesQuery: mockUseGetWalletBalancesQuery,
+  }),
+)
 
 vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
   useEnabledChains: mockUseEnabledChains,

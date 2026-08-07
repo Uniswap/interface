@@ -83,11 +83,6 @@ export default defineConfig({
     alias: {
       // Mobile absolute imports
       src: path.resolve(__dirname, './src'),
-      // Use the transpiled ESM build (its 'react-native' entry points at untranspiled src)
-      'react-native-wagmi-charts': path.resolve(
-        __dirname,
-        '../../node_modules/react-native-wagmi-charts/lib/module/index.js',
-      ),
       // React Native aliases for testing
       'react-native': 'react-native-web',
       'react-native-gesture-handler': path.resolve(__dirname, '../../node_modules/react-native-gesture-handler'),

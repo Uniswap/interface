@@ -18,6 +18,7 @@ import {
   OnSelectCurrency,
   OnSelectRwaToken,
   TokenSectionsHookProps,
+  TokenSelectorFlow,
   TokenSelectorVariation,
 } from 'uniswap/src/components/TokenSelector/types'
 import { isSwapListLoading } from 'uniswap/src/components/TokenSelector/utils'
@@ -36,7 +37,8 @@ export function useTokenSectionsForSwap({
   chainIds,
   oppositeSelectedToken,
   variation,
-}: TokenSectionsHookProps): GqlResult<OnchainItemSection<TokenSelectorListOption>[]> {
+  flow,
+}: TokenSectionsHookProps & { flow?: TokenSelectorFlow }): GqlResult<OnchainItemSection<TokenSelectorListOption>[]> {
   const { defaultChainId, isTestnetModeEnabled } = useEnabledChains()
 
   // Fetch portfolio balances once and share across all sub-hooks to avoid 5 redundant hook chain traversals
@@ -112,7 +114,10 @@ export function useTokenSectionsForSwap({
 
   const isRwaRegionBlocked = useIsFeatureGated(GatedFeature.ISSUER_SPECIFIC_RWA)
   const shouldShowStocks =
-    !isRwaRegionBlocked && variation === TokenSelectorVariation.SwapOutput && !isTestnetModeEnabled
+    !isRwaRegionBlocked &&
+    variation === TokenSelectorVariation.SwapOutput &&
+    !isTestnetModeEnabled &&
+    flow !== TokenSelectorFlow.Limit
   // Gate the RWA query so it isn't fetched unless the Stocks section will actually render.
   // With no chain filter (All Chains), filter to the input token's chain so we never suggest impossible swaps.
   const rwaTokenOptions = useRwaTokenOptions({
@@ -221,11 +226,13 @@ function TokenSelectorSwapListInner({
   oppositeSelectedToken,
   renderedInModal,
   variation,
+  flow,
 }: TokenSectionsHookProps & {
   onSelectCurrency: OnSelectCurrency
   onSelectRwaToken?: OnSelectRwaToken
   chainFilter: UniverseChainId | null
   renderedInModal: boolean
+  flow?: TokenSelectorFlow
 }): JSX.Element {
   const {
     data: sections,
@@ -238,6 +245,7 @@ function TokenSelectorSwapListInner({
     chainIds,
     oppositeSelectedToken,
     variation,
+    flow,
   })
 
   const hasError = Boolean(error)

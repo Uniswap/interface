@@ -125,6 +125,8 @@ export * from './loading/Shine'
 export * from './loading/Skeleton'
 export * from './loading/SpinningLoader'
 export * from './loading/TransactionLoader'
+export { WaveLoader, type WaveLoaderProps } from './loading/WaveLoader/WaveLoader'
+export type { ResolvedWaveLoader, WaveLoaderVariant } from './loading/WaveLoader/shared'
 // Theme
 export * from './styles/ScrollbarStyles'
 export * from './theme/shadows'

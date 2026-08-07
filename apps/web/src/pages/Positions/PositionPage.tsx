@@ -28,7 +28,7 @@ import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { breakpoints } from 'ui/src/theme/breakpoints'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { PollingInterval, ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
+import { useGetPositionQuery } from 'uniswap/src/data/apiClients/dataApiService/positions/getPosition'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { EVMUniverseChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -52,7 +52,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from '~/components/BreadcrumbNav'
 import { Dropdown } from '~/components/Dropdowns/Dropdown'
 import { LoadingFullscreen, LoadingRows } from '~/components/Loader/styled'
-import { MouseoverTooltip } from '~/components/Tooltip'
+import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { BaseQuoteFiatAmount } from '~/features/Liquidity/BaseQuoteFiatAmount'
 import { WrappedLiquidityPositionRangeChart } from '~/features/Liquidity/charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { useEntryPointBreadcrumb } from '~/features/Liquidity/Create/hooks/useEntryPointBreadcrumb'
@@ -63,6 +63,7 @@ import { LiquidityPositionInfo } from '~/features/Liquidity/LiquidityPositionInf
 import { LiquidityPositionStackedBars } from '~/features/Liquidity/LiquidityPositionStackedBars'
 import { LoadingRow } from '~/features/Liquidity/Loader'
 import { LP_INCENTIVES_REWARD_TOKEN } from '~/features/Liquidity/LPIncentives/constants'
+import { LPIncentiveFeeStatTooltip } from '~/features/Liquidity/LPIncentives/LPIncentiveFeeStatTooltip'
 import { PositionNFT } from '~/features/Liquidity/PositionNFT'
 import { PositionPageActionButtons } from '~/features/Liquidity/PositionPageActionButtons'
 import { getBaseAndQuoteCurrencies } from '~/features/Liquidity/utils/currency'
@@ -127,8 +128,10 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
   const chainInfo = chainId ? getChainInfo(chainId) : undefined
   const account = useAccount()
   const supportedAccountChainId = useSupportedChainId(account.chainId)
-  const { pathname } = useLocation()
+  const { pathname, search } = useLocation()
   const breadcrumb = useEntryPointBreadcrumb()
+  // tokenIds are only unique per position manager; the flag routes the read to the PermissionedPositionManager
+  const isPermissionedFromUrl = useMemo(() => new URLSearchParams(search).get('permissioned') === 'true', [search])
   const {
     data,
     isLoading: positionLoading,
@@ -142,6 +145,7 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
         : ProtocolVersion.UNSPECIFIED,
     tokenId: tokenIdFromUrl,
     chainId: chainId ?? supportedAccountChainId,
+    permissioned: isPermissionedFromUrl,
   })
   const position = data?.position
   const positionInfo = useMemo(() => parseRestPosition(position), [position])
@@ -636,6 +640,9 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
                   poolApr={positionInfo.apr}
                   lpIncentiveRewardApr={positionInfo.boostedApr}
                   totalApr={positionInfo.totalApr}
+                  apr1d={positionInfo.apr1d}
+                  apr7d={positionInfo.apr7d}
+                  apr30d={positionInfo.apr30d}
                 />
               )}
             {!positionInfo.isHidden && (
@@ -788,15 +795,22 @@ const APRSection = ({
   poolApr,
   lpIncentiveRewardApr,
   totalApr,
+  apr1d,
+  apr7d,
+  apr30d,
 }: {
   poolApr?: number
   lpIncentiveRewardApr?: number
   totalApr?: number
+  apr1d?: number
+  apr7d?: number
+  apr30d?: number
 }) => {
   const { address, chainId, symbol } = LP_INCENTIVES_REWARD_TOKEN
   const currencyInfo = useCurrencyInfo(address, chainId)
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
+  const hasTimeframeAprs = apr1d !== undefined || apr7d !== undefined || apr30d !== undefined
 
   // Format APR values
   const displayPoolApr = poolApr ? formatPercent(poolApr) : '-'
@@ -813,9 +827,28 @@ const APRSection = ({
           {displayTotalApr}
         </Text>
         <Flex row justifyContent="space-between">
-          <Text color="$neutral2" variant="body3">
-            {t('pool.aprText')}
-          </Text>
+          <MouseoverTooltip
+            disabled={!hasTimeframeAprs}
+            padding={0}
+            text={
+              <LPIncentiveFeeStatTooltip
+                currency0Info={undefined}
+                currency1Info={undefined}
+                apr1d={apr1d}
+                apr7d={apr7d}
+                apr30d={apr30d}
+              />
+            }
+            size={TooltipSize.Small}
+            placement="top"
+          >
+            <Flex row gap="$gap4" alignItems="center">
+              <Text color="$neutral2" variant="body3">
+                {t('pool.apr.24h')}
+              </Text>
+              {hasTimeframeAprs && <InfoCircleFilled color="$neutral2" size="$icon.12" />}
+            </Flex>
+          </MouseoverTooltip>
           <Text color="$neutral1" variant="body3">
             {displayPoolApr}
           </Text>

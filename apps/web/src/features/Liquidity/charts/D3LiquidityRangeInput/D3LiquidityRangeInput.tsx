@@ -4,7 +4,7 @@ import { GraphQLApi } from '@universe/api'
 import { UTCTimestamp } from 'lightweight-charts'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, SegmentedControlOption, Shine, Text } from 'ui/src'
+import { Flex, SegmentedControlOption, Text } from 'ui/src'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -281,21 +281,19 @@ export function D3LiquidityRangeInput({
               token1Color={token1Color}
             />
           ) : (
-            <Shine disabled={showChartErrorView} p="$spacing16">
-              <ChartSkeleton
-                errorText={
-                  showChartErrorView && (
-                    <Text variant="body3" color="$neutral2">
-                      {internalChartError || t('position.setRange.inputsBelow')}
-                    </Text>
-                  )
-                }
-                chartTransform="translate(5, 0)"
-                hidePriceIndicators
-                height={CHART_DIMENSIONS.LIQUIDITY_CHART_TOTAL_HEIGHT}
-                type={ChartType.PRICE}
-              />
-            </Shine>
+            <ChartSkeleton
+              hidePriceIndicators
+              height={CHART_DIMENSIONS.LIQUIDITY_CHART_TOTAL_HEIGHT}
+              type={ChartType.PRICE}
+              errorText={
+                showChartErrorView && (
+                  <Text variant="body3" color="$neutral2">
+                    {internalChartError || t('position.setRange.inputsBelow')}
+                  </Text>
+                )
+              }
+              p="$spacing16"
+            />
           )}
           {!showChartErrorView && <LiquidityRangeActionButtons />}
         </Flex>

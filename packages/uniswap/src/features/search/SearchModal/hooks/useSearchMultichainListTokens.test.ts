@@ -19,8 +19,8 @@ vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
   useEnabledChains: mockUseEnabledChains,
 }))
 
-vi.mock('uniswap/src/data/apiClients/dataApi/DataApiClientV2', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('uniswap/src/data/apiClients/dataApi/DataApiClientV2')>()),
+vi.mock('uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2')>()),
   dataApiServiceClientV2: { listTokens: mockV2ListTokens },
 }))
 

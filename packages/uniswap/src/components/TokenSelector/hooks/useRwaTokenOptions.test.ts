@@ -6,8 +6,8 @@ import { renderHook } from 'uniswap/src/test/test-utils'
 
 const { mockUseListRankedRwasQuery } = vi.hoisted(() => ({ mockUseListRankedRwasQuery: vi.fn() }))
 
-vi.mock('uniswap/src/data/rest/listRankedRwas', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('uniswap/src/data/rest/listRankedRwas')>()),
+vi.mock('uniswap/src/data/apiClients/dataApiService/rwa/listRankedRwas', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/data/apiClients/dataApiService/rwa/listRankedRwas')>()),
   useListRankedRwasQuery: mockUseListRankedRwasQuery,
 }))
 

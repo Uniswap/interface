@@ -11,14 +11,14 @@ export function usePortfolioChartDetailsHeartbeatCoordinator({ enabled }: { enab
   const queryClient = useQueryClient()
 
   const priceRefresh = async (): Promise<void> => {
-    await queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.GetWalletBalances] })
+    await queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.GetWalletBalances], type: 'active' })
   }
 
   const refresh = async (): Promise<void> => {
     await Promise.allSettled([
-      queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.GetWalletBalances] }),
-      queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.GetPortfolioChart] }),
-      queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.GetWalletProfitLoss] }),
+      queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.GetWalletBalances], type: 'active' }),
+      queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.GetPortfolioChart], type: 'active' }),
+      queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.GetWalletProfitLoss], type: 'active' }),
     ])
   }
 

@@ -1,17 +1,16 @@
 import { GraphQLApi } from '@universe/api'
 import { isAndroid } from '@universe/environment'
+import { LinearGradient } from 'expo-linear-gradient'
 import React, { memo, PropsWithChildren, ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { I18nManager } from 'react-native'
-import { SharedValue, useDerivedValue } from 'react-native-reanimated'
-import { LineChart, LineChartProvider } from 'react-native-wagmi-charts'
+import { I18nManager, StyleSheet } from 'react-native'
+import { SharedValue, useAnimatedReaction, useDerivedValue } from 'react-native-reanimated'
+import { scheduleOnRN } from 'react-native-worklets'
+import { DotGrid } from 'src/components/charts/DotGrid'
+import { PriceChartProvider, usePriceChart } from 'src/components/charts/PriceChartContext'
+import { SparklineChart } from 'src/components/charts/SparklineChart'
 import { Loader } from 'src/components/loading/loaders'
-import {
-  CURSOR_INNER_SIZE,
-  CURSOR_SIZE,
-  historyDurationToLabel,
-  TIME_RANGES,
-} from 'src/components/PriceExplorer/constants'
+import { historyDurationToLabel, TIME_RANGES } from 'src/components/PriceExplorer/constants'
 import PriceExplorerAnimatedNumber from 'src/components/PriceExplorer/PriceExplorerAnimatedNumber'
 import { PriceExplorerError } from 'src/components/PriceExplorer/PriceExplorerError'
 import { DatetimeText, RelativeChangeText } from 'src/components/PriceExplorer/Text'
@@ -19,14 +18,17 @@ import { useChartDimensions } from 'src/components/PriceExplorer/useChartDimensi
 import { useLineChartPrice } from 'src/components/PriceExplorer/usePrice'
 import { PriceNumberOfDigits, TokenSpotData, useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
+import { useFeatureFlaggedProjectTokens } from 'src/components/TokenDetails/useFeatureFlaggedProjectTokens'
 import { useTokenDetailsPreferProjectMarketData } from 'src/components/TokenDetails/useTokenDetailsRWAMatch'
 import { useIsScreenNavigationReady } from 'src/utils/useIsScreenNavigationReady'
-import { Flex, SegmentedControl, Text } from 'ui/src'
+import { Flex, SegmentedControl, Text, useSporeColors } from 'ui/src'
 import { useLayoutAnimationOnChange } from 'ui/src/animations'
 import GraphCurve from 'ui/src/assets/backgrounds/graph-curve.svg'
-import { spacing } from 'ui/src/theme'
+import { opacify, spacing } from 'ui/src/theme'
 import { isLowVarianceRange } from 'uniswap/src/components/charts/utils'
+import { useTokenBasicProjectPartsFragment } from 'uniswap/src/data/graphql/fragments'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { isMultichainProjectTokens } from 'uniswap/src/features/dataApi/tokenProjects/utils/isMultichainProjectTokens'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
@@ -111,14 +113,22 @@ export const PriceExplorer = memo(function PriceExplorerInner(): JSX.Element {
 
 const PriceExplorerContent = memo(function PriceExplorerContentInner(): JSX.Element {
   const { t } = useTranslation()
-  const { currencyId, tokenColor, navigation } = useTokenDetailsContext()
+  const { currencyId, tokenColor, navigation, initialIsMultichainAsset } = useTokenDetailsContext()
   const isScreenNavigationReady = useIsScreenNavigationReady({ navigation })
   const preferProjectMarketData = useTokenDetailsPreferProjectMarketData()
+
+  // Default to the aggregate endpoints until project.tokens loads — better than assuming single-chain.
+  const project = useTokenBasicProjectPartsFragment({ currencyId }).data.project
+  const featureFlaggedProjectTokens = useFeatureFlaggedProjectTokens(project?.tokens)
+  const projectTokensLoaded = project?.tokens !== undefined
+  const shouldQueryMultichainAggregate =
+    initialIsMultichainAsset || !projectTokensLoaded || isMultichainProjectTokens(featureFlaggedProjectTokens)
 
   const { data, loading, error, refetch, setDuration, selectedDuration, numberOfDigits } = useTokenPriceHistory({
     currencyId,
     initialDuration: GraphQLApi.HistoryDuration.Day,
     preferProjectMarketData,
+    isMultichainAggregateView: shouldQueryMultichainAggregate,
     skip: !isScreenNavigationReady,
   })
 
@@ -140,22 +150,18 @@ const PriceExplorerContent = memo(function PriceExplorerContentInner(): JSX.Elem
     }
   }, [data?.priceHistory, selectedDuration, currencyId])
 
-  const { hapticFeedback } = useHapticFeedback()
-
   const { convertFiatAmount } = useLocalizationContext()
   const conversionRate = convertFiatAmount(1).amount
   const shouldShowAnimatedDot =
     selectedDuration === GraphQLApi.HistoryDuration.Day || selectedDuration === GraphQLApi.HistoryDuration.Hour
-  const additionalPadding = shouldShowAnimatedDot ? 40 : 0
 
-  const { lastPricePoint, convertedPriceHistory } = useMemo(() => {
-    const priceHistory =
+  const convertedPriceHistory = useMemo(
+    () =>
       data?.priceHistory?.map((point) => {
         return { ...point, value: point.value * conversionRate }
-      }) ?? []
-
-    return { lastPricePoint: priceHistory.length - 1, convertedPriceHistory: priceHistory }
-  }, [data, conversionRate])
+      }) ?? [],
+    [data, conversionRate],
+  )
 
   useLayoutAnimationOnChange(convertedPriceHistory.length)
 
@@ -194,7 +200,14 @@ const PriceExplorerContent = memo(function PriceExplorerContentInner(): JSX.Elem
         wrapper: <TimeRangeTraceWrapper key={`${duration}-trace`} elementName={elementName} />,
         display: (
           <Text
+            adjustsFontSizeToFit
             allowFontScaling={false}
+            // iOS keeps the full-size line box/baseline when adjustsFontSizeToFit shrinks glyphs, pushing
+            // them off-center; unset lineHeight so the pill's flex centering holds at any scale
+            lineHeight="unset"
+            minimumFontScale={0.7}
+            numberOfLines={1}
+            textAlign="center"
             testID={`token-details-chart-time-range-button-${duration}`}
             variant="buttonLabel2"
           >
@@ -213,7 +226,7 @@ const PriceExplorerContent = memo(function PriceExplorerContentInner(): JSX.Elem
   const startingPrice = convertedPriceHistory[0]?.value
 
   return (
-    <LineChartProvider data={convertedPriceHistory} onCurrentIndexChange={hapticFeedback.light}>
+    <PriceChartProvider data={convertedPriceHistory}>
       <Flex gap="$spacing8" overflow="hidden">
         <PriceTextSection
           loading={loading}
@@ -227,8 +240,6 @@ const PriceExplorerContent = memo(function PriceExplorerContentInner(): JSX.Elem
         <Flex animation="quick" enterStyle={{ opacity: isAndroid ? 0 : 1 }}>
           {convertedPriceHistory.length ? (
             <PriceExplorerChart
-              additionalPadding={additionalPadding}
-              lastPricePoint={lastPricePoint}
               shouldShowAnimatedDot={shouldShowAnimatedDot}
               tokenColor={tokenColor ?? undefined}
               yGutter={chartYGutter}
@@ -242,6 +253,7 @@ const PriceExplorerContent = memo(function PriceExplorerContentInner(): JSX.Elem
           <Flex px="$spacing8">
             <SegmentedControl
               fullWidth
+              variableOptionWidths
               outlined={false}
               options={segmentedControlOptions}
               selectedOption={selectedDuration}
@@ -250,60 +262,81 @@ const PriceExplorerContent = memo(function PriceExplorerContentInner(): JSX.Elem
           </Flex>
         </Flex>
       </Flex>
-    </LineChartProvider>
+    </PriceChartProvider>
   )
 })
 
+const CHART_LEFT_GRADIENT_WIDTH = 40
+
 const PriceExplorerChart = memo(function PriceExplorerChart({
   tokenColor,
-  additionalPadding,
   shouldShowAnimatedDot,
-  lastPricePoint,
   yGutter,
 }: {
   tokenColor?: string
-  additionalPadding: number
   shouldShowAnimatedDot: boolean
-  lastPricePoint: number
   yGutter: number
 }): JSX.Element {
   const { chartHeight, chartWidth } = useChartDimensions()
   const isRTL = I18nManager.isRTL
+  const colors = useSporeColors()
   const { hapticFeedback } = useHapticFeedback()
+  const { data, currentIndex, isActive } = usePriceChart()
+
+  useAnimatedReaction(
+    () => currentIndex.value,
+    (current, previous) => {
+      if (current !== previous && current >= 0 && isActive.value) {
+        scheduleOnRN(hapticFeedback.light)
+      }
+    },
+    [hapticFeedback.light],
+  )
+
+  useAnimatedReaction(
+    () => isActive.value,
+    (current, previous) => {
+      if (previous !== null && current !== previous) {
+        scheduleOnRN(hapticFeedback.light)
+      }
+    },
+    [hapticFeedback.light],
+  )
 
   return (
-    // TODO(MOB-2166): remove forced LTR direction + scaleX horizontal flip technique once react-native-wagmi-charts fixes this: https://github.com/coinjar/react-native-wagmi-charts/issues/136
-    <Flex
-      direction="ltr"
-      my="$spacing24"
-      style={{ transform: [{ scaleX: isRTL ? -1 : 1 }] }}
-      testID={TestID.PriceExplorerChart}
-    >
-      <LineChart height={chartHeight} width={chartWidth - additionalPadding} yGutter={yGutter}>
-        <LineChart.Path color={tokenColor} pathProps={{ isTransitionEnabled: false }}>
-          {shouldShowAnimatedDot && (
-            <LineChart.Dot
-              key={lastPricePoint}
-              hasPulse
-              at={lastPricePoint}
-              color={tokenColor}
-              inactiveColor="transparent"
-              pulseBehaviour="while-inactive"
-              pulseDurationMs={2000}
-              size={5}
-            />
-          )}
-        </LineChart.Path>
-        <LineChart.CursorLine color={tokenColor} minDurationMs={150} />
-        <LineChart.CursorCrosshair
-          color={tokenColor}
-          minDurationMs={150}
-          outerSize={CURSOR_SIZE}
-          size={CURSOR_INNER_SIZE}
-          onActivated={hapticFeedback.light}
-          onEnded={hapticFeedback.light}
+    <Flex height={chartHeight} my="$spacing24" overflow="hidden" testID={TestID.PriceExplorerChart}>
+      <DotGrid width={chartWidth} height={chartHeight} />
+      <Flex direction="ltr" style={{ transform: [{ scaleX: isRTL ? -1 : 1 }] }}>
+        <SparklineChart
+          interactive
+          data={data}
+          width={chartWidth}
+          height={chartHeight}
+          color={tokenColor ?? colors.accent1.val}
+          yGutter={yGutter}
+          showDot={shouldShowAnimatedDot}
+          dotStrokeColor={colors.surface1.val}
+          scrubIndex={currentIndex}
+          scrubActive={isActive}
         />
-      </LineChart>
+      </Flex>
+      <LinearGradient
+        pointerEvents="none"
+        colors={[colors.surface1.val, opacify(0, colors.surface1.val)]}
+        end={{ x: 1, y: 0 }}
+        start={{ x: 0, y: 0 }}
+        style={styles.leftGradient}
+      />
     </Flex>
   )
+})
+
+const styles = StyleSheet.create({
+  leftGradient: {
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+    top: 0,
+    width: CHART_LEFT_GRADIENT_WIDTH,
+  },
 })

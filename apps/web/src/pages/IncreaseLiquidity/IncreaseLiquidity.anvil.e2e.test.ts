@@ -3,12 +3,12 @@ import { LiquidityService } from '@uniswap/client-liquidity/dist/uniswap/liquidi
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { USDT } from 'uniswap/src/constants/tokens'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { assume0xAddress } from '~/chains'
 import { getUniswapServiceUrls } from '~/config'
 import { ONE_MILLION_USDT } from '~/playwright/anvil/utils'
 import { expect, getTest } from '~/playwright/fixtures'
 import { stubLiquidityServiceEndpoint } from '~/playwright/fixtures/liquidityService'
 import { Mocks } from '~/playwright/mocks/mocks'
-import { assume0xAddress } from '~/utils/wagmi'
 
 const test = getTest({ withAnvil: true })
 

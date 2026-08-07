@@ -1,6 +1,6 @@
 import type { Currency } from '@uniswap/sdk-core'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import type { PoolData } from '~/appGraphql/data/pools/usePoolData'
+import type { PoolData } from '~/data/pools/usePoolData'
 import { resolveAddLiquidityRenderGuard } from '~/pages/AddLiquidity/addLiquidityRenderGuard'
 
 // Only truthiness matters to the guard, so minimal stand-ins are enough.

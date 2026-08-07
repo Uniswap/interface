@@ -2,7 +2,7 @@ import { ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { TFunction } from 'i18next'
 import { SegmentedControlOption } from 'ui/src'
 import { chartPeriodToLabel } from 'uniswap/src/features/portfolio/chartPeriod'
-import { TimePeriod } from '~/appGraphql/data/util'
+import { TimePeriod } from '~/data/util'
 
 export function getTimePeriodLabel(t: TFunction, period: TimePeriod): string {
   switch (period) {

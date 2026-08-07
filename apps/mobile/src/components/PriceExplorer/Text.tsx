@@ -12,7 +12,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
-import { useLineChart, useLineChartDatetime } from 'react-native-wagmi-charts'
+import { usePriceChart } from 'src/components/charts/PriceChartContext'
 import { AnimatedDecimalNumber } from 'src/components/PriceExplorer/AnimatedDecimalNumber'
 import { useLineChartFiatDelta } from 'src/components/PriceExplorer/useFiatDelta'
 import { useLineChartPrice, useLineChartRelativeChange } from 'src/components/PriceExplorer/usePrice'
@@ -66,7 +66,7 @@ export function RelativeChangeText({
   shouldTreatAsStablecoin?: boolean
 }): JSX.Element {
   const colors = useSporeColors()
-  const { isActive } = useLineChart()
+  const { isActive } = usePriceChart()
   const isDataLivelinessEnabled = useFeatureFlag(FeatureFlags.DataLivelinessUI)
 
   // Bridge Reanimated isActive to React state so we can conditionally render AnimatedNumber
@@ -204,12 +204,20 @@ export function RelativeChangeText({
 
 export function DatetimeText({ loading }: { loading: boolean }): JSX.Element {
   const locale = useCurrentLocale()
+  const { data, currentIndex } = usePriceChart()
+
   // `datetime` when scrubbing the chart
-  const datetime = useLineChartDatetime({ locale })
+  const datetime = useDerivedValue(() => {
+    if (currentIndex.value < 0) {
+      return ''
+    }
+    const timestamp = data[currentIndex.value]?.timestamp
+    return timestamp ? new Date(timestamp).toLocaleString(locale) : ''
+  })
 
   return (
     <Flex alignItems="center" mt="$spacing12" style={{ opacity: loading ? 0 : 1 }}>
-      <AnimatedText color="$neutral2" text={datetime.formatted} variant="body3" />
+      <AnimatedText color="$neutral2" text={datetime} variant="body3" />
     </Flex>
   )
 }

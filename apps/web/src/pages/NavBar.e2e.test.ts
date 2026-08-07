@@ -146,11 +146,8 @@ test.describe(
 
         // Verify all menu sections and their links
         for (const section of companyMenu) {
-          // Products section is not expandable
-          if (section.label !== 'Products') {
-            // Expand the section
-            await drawer.getByText(section.label).click()
-          }
+          // Expand the section (Products, Protocol, and Company are all collapsible accordions)
+          await drawer.getByText(section.label).click()
           for (const item of section.items) {
             await expect(drawer.locator(`a:has-text("${item.label}")`)).toHaveAttribute('href', item.href)
           }

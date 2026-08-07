@@ -5,10 +5,10 @@ import { EVMUniverseChainId, UniverseChainId } from 'uniswap/src/features/chains
 import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { type Address, type ChainContract, createContract, feeOnTransferDetectorAbi } from '~/chains'
+import { assume0xAddress } from '~/chains'
 import { BIPS_BASE, ZERO_PERCENT } from '~/constants/misc'
 import { getInterfaceProvider } from '~/constants/providers'
 import { useAccount } from '~/hooks/useAccount'
-import { assume0xAddress } from '~/utils/wagmi'
 
 type FeeOnTransferDetectorContract = ChainContract<typeof feeOnTransferDetectorAbi>
 

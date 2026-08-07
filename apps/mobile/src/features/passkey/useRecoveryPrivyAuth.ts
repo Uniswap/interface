@@ -5,8 +5,8 @@ import {
   useLoginWithOAuth,
   usePrivy,
 } from '@privy-io/expo'
+import type { RecoveryPrivyAuth } from '@universe/embedded-wallet'
 import { useCallback, useMemo } from 'react'
-import type { RecoveryPrivyAuth } from 'uniswap/src/features/passkey/recoveryPrivyAuth'
 import { useEvent } from 'utilities/src/react/hooks'
 
 /**

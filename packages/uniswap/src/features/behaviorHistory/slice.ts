@@ -42,6 +42,8 @@ export interface UniswapBehaviorHistoryState {
    */
   hasDismissedPoolsBalanceCoachmark?: boolean
   hasDismissedPoolsOutageBanner?: boolean
+  /** Vaults for which the user accepted the one-time Earn deposit explainer. */
+  earnHowItWorksAcknowledgedByVaultId?: Record<string, true>
   earnSwapUpsell?: EarnSwapUpsellHistory
 }
 
@@ -66,6 +68,7 @@ export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
   hasDismissedCrosschainSwapsPromoBanner: false,
   hasDismissedPoolsBalanceCoachmark: true,
   hasDismissedPoolsOutageBanner: false,
+  earnHowItWorksAcknowledgedByVaultId: {},
 }
 
 const slice = createSlice({
@@ -142,6 +145,10 @@ const slice = createSlice({
     setHasDismissedPoolsOutageBanner: (state, action: PayloadAction<boolean>) => {
       state.hasDismissedPoolsOutageBanner = action.payload
     },
+    setHasAcknowledgedEarnHowItWorks: (state, action: PayloadAction<{ vaultId: string }>) => {
+      state.earnHowItWorksAcknowledgedByVaultId ??= {}
+      state.earnHowItWorksAcknowledgedByVaultId[action.payload.vaultId] = true
+    },
     recordEarnSwapUpsellQualifyingSwap: (
       state,
       action: PayloadAction<{ tokenCurrencyId: string; transactionId: string }>,
@@ -197,6 +204,7 @@ export const {
   setHasDismissedCrosschainSwapsPromoBanner,
   setPoolsBalanceCoachmarkDismissed,
   setHasDismissedPoolsOutageBanner,
+  setHasAcknowledgedEarnHowItWorks,
   recordEarnSwapUpsellQualifyingSwap,
   recordEarnSwapUpsellInteraction,
   permanentlyDismissEarnSwapUpsell,

@@ -1,7 +1,10 @@
 import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { useMemo } from 'react'
 import { type RwaTokenOption } from 'uniswap/src/components/lists/items/types'
-import { buildRwaTokenOption, useListRankedRwasQuery } from 'uniswap/src/data/rest/listRankedRwas'
+import {
+  buildRwaTokenOption,
+  useListRankedRwasQuery,
+} from 'uniswap/src/data/apiClients/dataApiService/rwa/listRankedRwas'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const MAX_RWA_TOKENS = 10

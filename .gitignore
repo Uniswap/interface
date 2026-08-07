@@ -12,6 +12,7 @@ test-results/
 # utility script output
 scripts/dist
 tools/uniswap-nx/dist
+scripts/tamagui-migration/*.json
 
 # build output
 .next/

@@ -1,0 +1,3 @@
+{
+  "reasons": ["mixed-import-statement", "styled-call"]
+}

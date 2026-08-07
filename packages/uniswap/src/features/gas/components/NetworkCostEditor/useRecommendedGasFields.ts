@@ -1,7 +1,7 @@
 import { type TransactionRequest } from '@ethersproject/providers'
 import { Level } from '@uniswap/client-unirpc-v2/dist/uniswap/unirpc/v2/service_pb'
 import { useMemo } from 'react'
-import { useGasFeeQuery } from 'uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery'
+import { useGasFeeQuery } from 'uniswap/src/data/apiClients/gasService/useGasFeeQuery'
 import { weiToGwei } from 'uniswap/src/features/gas/components/NetworkCostEditor/gweiToWei'
 
 /** Pinned to URGENT — matches `DEFAULT_URGENCY_LEVEL` (TAPI swap path). */

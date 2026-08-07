@@ -1,7 +1,7 @@
 import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
-import type { SparklineMap } from '~/appGraphql/data/types'
-import { TimePeriod, type PricePoint } from '~/appGraphql/data/util'
 import { TokenSortMethod } from '~/components/Tokens/constants'
+import type { SparklineMap } from '~/data/types'
+import { TimePeriod, type PricePoint } from '~/data/util'
 
 /**
  * Canonical shape produced by both the legacy adapter and the (real, v1-wire) backend adapter —

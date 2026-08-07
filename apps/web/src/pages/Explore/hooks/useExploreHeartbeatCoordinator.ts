@@ -1,10 +1,13 @@
 import { useApolloClient } from '@apollo/client'
 import { useQueryClient } from '@tanstack/react-query'
-import { PollingInterval } from 'uniswap/src/constants/misc'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import { EXPLORE_TRANSACTIONS_APOLLO_QUERY_NAMES } from '~/appGraphql/data/useAllTransactions'
-import { useHeartbeatCoordinator } from '~/lib/hooks/useHeartbeatCoordinator'
+import { EXPLORE_TRANSACTIONS_APOLLO_QUERY_NAMES } from '~/data/useAllTransactions'
+import { useFixedIntervalHeartbeatCoordinator } from '~/lib/hooks/useHeartbeatCoordinator'
 import { ExploreTab } from '~/types/explore'
+
+// Explore polls on a fixed cadence — not driven by the synchronized_heartbeats config.
+const EXPLORE_POLL_INTERVAL_SECONDS = 60
 
 type UseExploreHeartbeatCoordinatorParams = {
   tab: ExploreTab
@@ -12,30 +15,38 @@ type UseExploreHeartbeatCoordinatorParams = {
 }
 
 /**
- * Drives a single 30-second refresh loop for Explore page data, scoped to the active tab.
- * The stats section (TVL + volume) is always refreshed. Tab-specific queries only fire when
- * that tab is active — top tokens on Tokens, top pools on Pools, transactions on Transactions.
- * Pauses when the browser tab is not visible.
+ * Drives the Explore refresh loop every minute: the always-visible stats section plus the active
+ * tab's query.
  */
 export function useExploreHeartbeatCoordinator({ tab, enabled }: UseExploreHeartbeatCoordinatorParams): void {
   const queryClient = useQueryClient()
   const apolloClient = useApolloClient()
+  const isV2TransactionsEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTransactions)
 
-  const refresh = async () => {
+  const refresh = async (): Promise<void> => {
     const tasks: Promise<unknown>[] = [
       // Stats section is always visible — refresh ExploreStats + ProtocolStats on every tick
-      queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.ExploreStatsService] }),
+      queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.ExploreStatsService], type: 'active' }),
     ]
 
     switch (tab) {
       case ExploreTab.Tokens:
-        tasks.push(queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.TopTokens] }))
+        tasks.push(queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.TopTokens], type: 'active' }))
         break
       case ExploreTab.Pools:
-        tasks.push(queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.DataApiService, 'listTopPools'] }))
+        tasks.push(
+          queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.DataApiService, 'listTopPools'], type: 'active' }),
+        )
         break
       case ExploreTab.Transactions:
-        tasks.push(apolloClient.refetchQueries({ include: [...EXPLORE_TRANSACTIONS_APOLLO_QUERY_NAMES] }))
+        tasks.push(
+          isV2TransactionsEnabled
+            ? queryClient.refetchQueries({
+                queryKey: [ReactQueryCacheKey.DataApiService, 'listTransactions'],
+                type: 'active',
+              })
+            : apolloClient.refetchQueries({ include: [...EXPLORE_TRANSACTIONS_APOLLO_QUERY_NAMES] }),
+        )
         break
       case ExploreTab.Toucan:
         break
@@ -44,5 +55,5 @@ export function useExploreHeartbeatCoordinator({ tab, enabled }: UseExploreHeart
     await Promise.allSettled(tasks)
   }
 
-  useHeartbeatCoordinator({ refresh, intervalMs: PollingInterval.KindaFast, enabled })
+  useFixedIntervalHeartbeatCoordinator({ refresh, pollIntervalSeconds: EXPLORE_POLL_INTERVAL_SECONDS, enabled })
 }

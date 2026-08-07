@@ -23,6 +23,7 @@ import { getActivityDisplayVaultRows } from 'uniswap/src/components/activity/det
 import { TransactionParticipantRow } from 'uniswap/src/components/activity/details/TransactionParticipantRow'
 import { SwapTypeTransactionInfo } from 'uniswap/src/components/activity/details/types'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { ContentRow } from 'uniswap/src/components/transactions/requests/ContentRow'
 import { useNetworkFee } from 'uniswap/src/features/activity/hooks/useNetworkFee'
 import { getFormattedSwapRatio } from 'uniswap/src/features/activity/utils/swapInfo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -193,6 +194,7 @@ function useTransactionDetailsInfoRows({
       break
     case TransactionType.Wrap:
     case TransactionType.NFTTrade:
+    case TransactionType.UniswapXCancel:
       // For now, these cases don't add any specific rows
       break
 
@@ -398,24 +400,28 @@ function TransactionOfframpRow({ transactionId }: { transactionId?: string }): J
 
 function DappInfoRow({ label, name, iconUrl }: { label: string; name: string; iconUrl?: string | null }): JSX.Element {
   return (
-    <InfoRow label={label}>
-      {iconUrl && (
-        <UniversalImage
-          size={{
-            width: iconSizes.icon16,
-            height: iconSizes.icon16,
-            resizeMode: UniversalImageResizeMode.Contain,
-          }}
-          style={{
-            image: {
-              borderRadius: borderRadii.roundedFull,
-            },
-          }}
-          uri={iconUrl}
-        />
-      )}
-      <Text variant="body3">{name}</Text>
-    </InfoRow>
+    <ContentRow alignItems="flex-start" gap="$spacing16" label={label} variant="body3">
+      <Flex row alignItems="flex-start" justifyContent="flex-end" maxWidth="70%" gap="$gap4">
+        {iconUrl && (
+          <UniversalImage
+            size={{
+              width: iconSizes.icon20,
+              height: iconSizes.icon20,
+              resizeMode: UniversalImageResizeMode.Contain,
+            }}
+            style={{
+              image: {
+                borderRadius: borderRadii.roundedFull,
+              },
+            }}
+            uri={iconUrl}
+          />
+        )}
+        <Text textAlign="right" variant="body3" flexShrink={1}>
+          {name}
+        </Text>
+      </Flex>
+    </ContentRow>
   )
 }
 

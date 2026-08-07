@@ -2,6 +2,7 @@ import { remainingSupplyCall, sweepUnsoldTokensBlockCall } from '@uniswap/liquid
 import ms from 'ms'
 import { useEffect } from 'react'
 import { useReadContract } from 'wagmi'
+import { assume0xAddress } from '~/chains'
 import { AuctionOutcome } from '~/features/Toucan/Auction/store/types'
 import {
   useAuctionOutcome,
@@ -9,7 +10,6 @@ import {
   useAuctionStoreActions,
 } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { hasSweptUnsoldTokens } from '~/features/Toucan/Auction/utils/creatorActions'
-import { assume0xAddress } from '~/utils/wagmi'
 
 /**
  * On-chain state gating the creator's sweepUnsoldTokens() flow, read through the SDK's

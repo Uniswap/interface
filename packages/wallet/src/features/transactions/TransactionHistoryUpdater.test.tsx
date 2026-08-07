@@ -11,7 +11,10 @@ import {
 import dayjs from 'dayjs'
 import MockDate from 'mockdate'
 import { DAI } from 'uniswap/src/constants/tokens'
-import { getListTransactionsQuery, useListTransactionsQuery } from 'uniswap/src/data/rest/listTransactions'
+import {
+  getListTransactionsQuery,
+  useListTransactionsQuery,
+} from 'uniswap/src/data/apiClients/dataApiService/activity/listTransactions'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { STALE_TRANSACTION_TIME_MS } from 'uniswap/src/features/notifications/constants'
@@ -34,7 +37,7 @@ vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
   useEnabledChains: vi.fn(() => ({ chains: [1] })),
 }))
 
-vi.mock('uniswap/src/data/rest/listTransactions', () => ({
+vi.mock('uniswap/src/data/apiClients/dataApiService/activity/listTransactions', () => ({
   useListTransactionsQuery: vi.fn(),
   getListTransactionsQuery: vi.fn(),
 }))

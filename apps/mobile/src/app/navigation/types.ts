@@ -2,6 +2,7 @@ import { useNavigation } from '@react-navigation/native'
 import type { CompositeNavigationProp, CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/native'
 import type { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import type { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import type { PasskeyManagementModalState } from '@universe/embedded-wallet'
 import type { TokenWarningModalState } from 'src/app/modals/TokenWarningModalState'
 import type { EarnDepositAmountModalState } from 'src/components/earn/EarnDepositAmountModalState'
 import type { EarnDepositReviewModalProps } from 'src/components/earn/EarnDepositReviewModalState'
@@ -33,7 +34,6 @@ import type { ReportTokenDataModalProps } from 'uniswap/src/components/reporting
 import type { ReportTokenModalProps } from 'uniswap/src/components/reporting/ReportTokenIssueModal'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
-import type { PasskeyManagementModalState } from 'uniswap/src/features/passkey/PasskeyManagementModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import type { TestnetModeModalState } from 'uniswap/src/features/testnets/TestnetModeModal'
 import type { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
@@ -168,6 +168,7 @@ export type AppStackParamList = {
   [MobileScreens.Activity]: undefined
   [MobileScreens.HashcashBenchmark]: undefined
   [MobileScreens.SessionsDebug]: undefined
+  [MobileScreens.UniversalListDebug]: undefined
   [MobileScreens.Education]: {
     type: EducationContentType
   } & OnboardingStackBaseParams
@@ -180,6 +181,8 @@ export type AppStackParamList = {
     chainId: UniverseChainId
     protocolVersion: ProtocolVersion
     owner?: Address
+    /** V4 only: position held via the PermissionedPositionManager; tokenIds are only unique per manager. */
+    permissioned?: boolean
   }
   [MobileScreens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
   [MobileScreens.UnitagStack]: NavigatorScreenParams<UnitagStackParamList>
@@ -244,6 +247,7 @@ export type AppStackParamList = {
   [ModalName.EarnDepositAmount]: EarnDepositAmountModalState
   [ModalName.EarnDepositReview]: EarnDepositReviewModalProps
   [ModalName.EarnDepositSourceSelector]: EarnDepositSourceSelectorModalProps
+  [ModalName.EarnHowItWorks]: EarnDepositAmountModalState
   [ModalName.EarnVault]: EarnVaultModalProps
   [ModalName.EarnWithdrawNetworkSelector]: EarnWithdrawNetworkSelectorModalProps
   [ModalName.EarnWithdrawReview]: EarnWithdrawReviewModalProps

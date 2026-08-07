@@ -1,3 +1,4 @@
+import { executeRecoveryExport } from '@universe/embedded-wallet'
 import { getChromeRuntime, getChromeRuntimeWithThrow } from '@universe/environment'
 import { useEffect, useRef, useState } from 'react'
 import { parseMessage } from 'uniswap/src/extension/messagePassing/platform'
@@ -8,7 +9,6 @@ import {
   type RecoveryFlowOpened,
   RecoveryHpkeKeySchema,
 } from 'uniswap/src/extension/messagePassing/types/requests'
-import { executeRecoveryExport } from 'uniswap/src/features/passkey/recoveryExecute'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 

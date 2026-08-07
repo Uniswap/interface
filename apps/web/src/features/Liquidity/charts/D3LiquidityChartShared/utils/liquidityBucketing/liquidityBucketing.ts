@@ -2,7 +2,7 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import { Currency } from '@uniswap/sdk-core'
 import { nearestUsableTick, TickMath } from '@uniswap/v3-sdk'
 import { logger } from 'utilities/src/logger/logger'
-import { TickData } from '~/appGraphql/data/AllV3TicksQuery'
+import { TickData } from '~/data/AllV3TicksQuery'
 import { ChartEntry } from '~/features/Liquidity/charts/LiquidityRangeInput/types'
 import { getDisplayPriceFromTick } from '~/features/Liquidity/utils/getTickToPrice'
 

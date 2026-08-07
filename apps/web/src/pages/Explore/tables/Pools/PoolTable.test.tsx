@@ -5,7 +5,6 @@ import { Percent } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { DEFAULT_TICK_SPACING, DYNAMIC_FEE_AMOUNT } from 'uniswap/src/constants/pools'
-import { getProtocolFeesQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/pools/queries'
 import { getFeeBreakdown } from 'uniswap/src/features/fees/getFeeBreakdown'
 import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
 import { useTopPools } from '~/features/Explore/state/topPools/useTopPools'
@@ -19,21 +18,11 @@ function renderWithProvider(ui: React.ReactElement) {
   return render(<ExploreTablesFilterStoreContextProvider>{ui}</ExploreTablesFilterStoreContextProvider>)
 }
 
-const { getProtocolFeesQueryOptions: actualGetProtocolFeesQueryOptions } = await vi.importActual<
-  typeof import('uniswap/src/data/apiClients/dataApiService/pools/queries')
->('uniswap/src/data/apiClients/dataApiService/pools/queries')
-
 vi.mock('~/features/Explore/state/topPools/useTopPools')
 // Passthrough spy: real engine behavior, observable inputs/outputs.
 vi.mock('uniswap/src/features/fees/getFeeBreakdown', async (importOriginal) => {
   const actual = await importOriginal<typeof import('uniswap/src/features/fees/getFeeBreakdown')>()
   return { ...actual, getFeeBreakdown: vi.fn(actual.getFeeBreakdown) }
-})
-// The table fetches fees via batched GetProtocolFees (ListTopPools serves none) — spy the query
-// layer so tests can serve per-pool fees synchronously through initialData.
-vi.mock('uniswap/src/data/apiClients/dataApiService/pools/queries', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('uniswap/src/data/apiClients/dataApiService/pools/queries')>()
-  return { ...actual, getProtocolFeesQueryOptions: vi.fn(actual.getProtocolFeesQueryOptions) }
 })
 vi.mock('@universe/gating', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@universe/gating')>()),
@@ -73,7 +62,7 @@ describe('PoolTable', () => {
       loadMore: vi.fn(),
     })
 
-    const { asFragment } = renderWithProvider(<ExploreTopPoolTable />)
+    const { asFragment } = renderWithProvider(<ExploreTopPoolTable surface="explore" />)
     expect(screen.getAllByTestId('cell-loading-bubble')).not.toBeNull()
     expect(asFragment()).toMatchSnapshot()
   })
@@ -89,7 +78,7 @@ describe('PoolTable', () => {
       loadMore: vi.fn(),
     })
 
-    const { asFragment } = renderWithProvider(<ExploreTopPoolTable />)
+    const { asFragment } = renderWithProvider(<ExploreTopPoolTable surface="explore" />)
     expect(screen.getByTestId('table-error-modal')).not.toBeNull()
     expect(asFragment()).toMatchSnapshot()
   })
@@ -163,7 +152,7 @@ describe('PoolTable', () => {
       ),
     )
 
-    const { asFragment } = renderWithProvider(<ExploreTopPoolTable />)
+    const { asFragment } = renderWithProvider(<ExploreTopPoolTable surface="explore" />)
     expect(screen.getByTestId('top-pools-explore-table')).not.toBeNull()
     // Protocol, fee tier, and hook info collapse into the Pool column's second line — no
     // standalone columns for them
@@ -183,44 +172,13 @@ describe('PoolTable', () => {
   })
 
   describe('with V4ProtocolFeeDisplay enabled', () => {
-    let feeQueryNonce = 0
-
     function mockPools(
       feeTier: { feeAmount: number; isDynamic: boolean },
       protocolVersion: GraphQLApi.ProtocolVersion,
-      // Per-pool fee served through the mocked GetProtocolFees query (integer pips) — the pool
-      // objects themselves never carry fees (ListTopPools serves none).
+      // Per-pool protocol fee (integer pips) as the data hook attaches it to each pool; the
+      // fee-display column reads it straight off `pool.protocolFeePips`.
       served: { protocolFee?: number } = {},
     ) {
-      // Serve the requested fee synchronously via initialData: every requested pool id echoes
-      // back with the given protocolFee, or with both fields absent (= unavailable on the wire).
-      feeQueryNonce += 1
-      const nonce = feeQueryNonce
-      mocked(getProtocolFeesQueryOptions).mockImplementation((input) => {
-        const poolIds = input.params?.poolIds ?? []
-        return {
-          // The nonce pool id salts the query key: the shared test QueryClient would otherwise
-          // serve a previous test's cached response for an identical request shape, ignoring
-          // this test's initialData.
-          ...actualGetProtocolFeesQueryOptions({
-            ...input,
-            params: { ...input.params, poolIds: [...poolIds, `__nonce-${nonce}`] },
-          }),
-          enabled: false,
-          initialData: {
-            protocolFees: poolIds.map((poolId) => ({
-              poolId,
-              protocolFee: served.protocolFee,
-              effectiveFee:
-                served.protocolFee !== undefined
-                  ? protocolVersion === GraphQLApi.ProtocolVersion.V4
-                    ? feeTier.feeAmount + served.protocolFee
-                    : feeTier.feeAmount
-                  : undefined,
-            })),
-          },
-        }
-      })
       const pool = {
         id: '1',
         chain: 'mainnet',
@@ -235,6 +193,7 @@ describe('PoolTable', () => {
         apr: new Percent(6, 100),
         volOverTvl: 1.84,
         protocolVersion,
+        protocolFeePips: served.protocolFee,
       }
       mocked(useTopPools).mockReturnValue({
         topPools: [pool],
@@ -253,7 +212,7 @@ describe('PoolTable', () => {
 
     it('renders a FeeDisplay for a static v4 fee tier', () => {
       mockPools({ feeAmount: 3000, isDynamic: false }, GraphQLApi.ProtocolVersion.V4)
-      renderWithProvider(<ExploreTopPoolTable />)
+      renderWithProvider(<ExploreTopPoolTable surface="explore" />)
       // FeeDisplay renders the fee standalone next to the version, not as the joined "v4 · 0.30%" text.
       expect(screen.getAllByText('0.30%').length).toBeGreaterThan(0)
       expect(screen.queryByText(/^v4 · /)).toBeNull()
@@ -261,7 +220,7 @@ describe('PoolTable', () => {
 
     it('keeps the Dynamic label for dynamic fee tiers instead of rendering the sentinel as a fee', () => {
       mockPools({ feeAmount: DYNAMIC_FEE_AMOUNT, isDynamic: true }, GraphQLApi.ProtocolVersion.V4)
-      renderWithProvider(<ExploreTopPoolTable />)
+      renderWithProvider(<ExploreTopPoolTable surface="explore" />)
       expect(screen.getAllByText(/^v4 · Dynamic/).length).toBeGreaterThan(0)
       // DYNAMIC_FEE_AMOUNT (8388608 pips) must never be formatted as a rate (~838%).
       expect(screen.queryByText(/838/)).toBeNull()
@@ -269,7 +228,7 @@ describe('PoolTable', () => {
 
     it('renders the v2 fee through FeeDisplay', () => {
       mockPools({ feeAmount: 3000, isDynamic: false }, GraphQLApi.ProtocolVersion.V2)
-      renderWithProvider(<ExploreTopPoolTable />)
+      renderWithProvider(<ExploreTopPoolTable surface="explore" />)
       expect(screen.getAllByText('0.30%').length).toBeGreaterThan(0)
       expect(screen.queryByText(/^v2 · /)).toBeNull()
     })
@@ -278,7 +237,7 @@ describe('PoolTable', () => {
       mocked(getFeeBreakdown).mockClear()
       // 500 pips = 5 bps served for a 30 bps v4 pool.
       mockPools({ feeAmount: 3000, isDynamic: false }, GraphQLApi.ProtocolVersion.V4, { protocolFee: 500 })
-      renderWithProvider(<ExploreTopPoolTable />)
+      renderWithProvider(<ExploreTopPoolTable surface="explore" />)
       expect(getFeeBreakdown).toHaveBeenCalledWith(
         expect.objectContaining({ feeAmount: 3000, servedProtocolFeeBps: 5 }),
       )
@@ -292,7 +251,7 @@ describe('PoolTable', () => {
     it('is unavailable when the backend serves no protocol fee (the FE never computes fees)', () => {
       mocked(getFeeBreakdown).mockClear()
       mockPools({ feeAmount: 3000, isDynamic: false }, GraphQLApi.ProtocolVersion.V4)
-      renderWithProvider(<ExploreTopPoolTable />)
+      renderWithProvider(<ExploreTopPoolTable surface="explore" />)
       expect(getFeeBreakdown).toHaveBeenCalledWith(expect.objectContaining({ servedProtocolFeeBps: undefined }))
       // Unavailable: every breakdown has an undefined protocol fee; the served path never runs.
       const protocolFees = mocked(getFeeBreakdown).mock.results.map((result) => result.value.protocolFeeBps)

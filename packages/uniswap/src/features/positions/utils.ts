@@ -23,6 +23,14 @@ export function filterAndSortPositions(positions: PositionInfo[], statuses: Posi
   return sortPositionsByStatusClosedLast(positions.filter((position) => statuses.includes(position.status)))
 }
 
+/**
+ * Whether the position is held via the PermissionedPositionManager. Only V4 positions carry the
+ * flag; pass this as `permissioned` on liquidity-service requests so they route to the correct PM.
+ */
+export function getIsPermissioned(position: PositionInfo): boolean | undefined {
+  return position.version === ProtocolVersion.V4 ? position.isPermissioned : undefined
+}
+
 export function getProtocolVersionLabel(version: ProtocolVersion): string | undefined {
   switch (version) {
     case ProtocolVersion.V2:

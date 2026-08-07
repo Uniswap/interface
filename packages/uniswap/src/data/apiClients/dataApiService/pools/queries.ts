@@ -1,20 +1,18 @@
 import { type PartialMessage, type PlainMessage, toPlainMessage } from '@bufbuild/protobuf'
-import { createPromiseClient } from '@connectrpc/connect'
-import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
 import type {
   GetProtocolFeesRequest,
   GetProtocolFeesResponse,
   ListTopPoolsRequest,
   ListTopPoolsResponse,
 } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import { createDataApiServiceClient } from '@universe/api'
-import { entryGatewayPostTransport } from 'uniswap/src/data/rest/base'
+import { dataApiServiceClientV1 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClient'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import {
   persistableInfiniteQueryOptions,
   persistableQueryOptions,
 } from 'utilities/src/reactQuery/persistableQueryOptions'
 import { type QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 
 export type ListTopPoolsInput = {
   params?: Omit<PartialMessage<ListTopPoolsRequest>, 'pageToken'>
@@ -22,10 +20,6 @@ export type ListTopPoolsInput = {
 }
 
 type ListTopPoolsQueryKey = readonly [ReactQueryCacheKey.DataApiService, 'listTopPools', ListTopPoolsInput['params']]
-
-const client = createDataApiServiceClient({
-  rpcClient: createPromiseClient(DataApiService, entryGatewayPostTransport),
-})
 
 export function getListTopPoolsQueryOptions({
   params,
@@ -46,11 +40,13 @@ export function getListTopPoolsQueryOptions({
       if (!params) {
         throw new Error('params required')
       }
-      return toPlainMessage(await client.listTopPools({ ...params, pageToken: pageParam }))
+      return toPlainMessage(await dataApiServiceClientV1.listTopPools({ ...params, pageToken: pageParam }))
     },
     initialPageParam: '',
     getNextPageParam: (lastPage: PlainMessage<ListTopPoolsResponse>) => lastPage.nextPageToken || undefined,
     enabled,
+    // Refetched every 60s by the Explore heartbeat's Pools tab tick.
+    staleTime: ONE_MINUTE_MS,
   })
 }
 
@@ -86,7 +82,7 @@ export function getProtocolFeesQueryOptions({
       if (!params) {
         throw new Error('params required')
       }
-      return toPlainMessage(await client.getProtocolFees(params))
+      return toPlainMessage(await dataApiServiceClientV1.getProtocolFees(params))
     },
     enabled: enabled && !!params?.poolIds?.length,
   })

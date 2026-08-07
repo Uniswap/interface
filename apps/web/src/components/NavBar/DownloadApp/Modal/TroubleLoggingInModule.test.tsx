@@ -1,11 +1,10 @@
 import { fireEvent } from '@testing-library/react'
-import { hasActiveNeckKey } from 'uniswap/src/features/passkey/deviceSession'
+import { hasActiveNeckKey, useEmbeddedWalletState } from '@universe/embedded-wallet'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useListAuthenticatorsQuery } from '~/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery'
 import { TroubleLoggingInModule } from '~/components/NavBar/DownloadApp/Modal/TroubleLoggingInModule'
 import { useIsEmbeddedWallet } from '~/hooks/useIsEmbeddedWallet'
-import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { render, screen } from '~/test-utils/render'
 
 vi.mock('~/hooks/useIsEmbeddedWallet', () => ({
@@ -22,13 +21,14 @@ vi.mock('~/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery
   useListAuthenticatorsQuery: vi.fn(),
 }))
 
-vi.mock('~/state/embeddedWallet/store', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('~/state/embeddedWallet/store')>()),
+vi.mock('@universe/embedded-wallet/src/state/embeddedWalletStore', () => ({
   useEmbeddedWalletState: vi.fn(),
+  getEmbeddedWalletState: vi.fn(() => ({ walletAddress: null, walletId: null, chainId: null, isConnected: false })),
+  setChainId: vi.fn(),
 }))
 
-vi.mock('uniswap/src/features/passkey/deviceSession', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('uniswap/src/features/passkey/deviceSession')>()),
+vi.mock('@universe/embedded-wallet/src/features/passkey/deviceSession', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@universe/embedded-wallet/src/features/passkey/deviceSession')>()),
   hasActiveNeckKey: vi.fn(),
 }))
 

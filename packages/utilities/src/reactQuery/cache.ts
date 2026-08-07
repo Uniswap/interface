@@ -53,6 +53,7 @@ export enum ReactQueryCacheKey {
   OnchainENS = 'OnchainENS',
   OnRampAuth = 'OnRampAuth',
   PasskeyAuthStatus = 'PasskeyAuthStatus',
+  PermissionedTokenStatus = 'PermissionedTokenStatus',
   Permit2SignatureWithData = 'Permit2SignatureWithData',
   PositionCurrencyInfo = 'positionCurrencyInfo',
   PositionTokenURI = 'PositionTokenURI',

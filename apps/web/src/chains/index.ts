@@ -18,6 +18,7 @@ export const {
 export const { signTypedData } = createTransactions(ctx)
 export const { createContract } = createContracts(ctx)
 
+export { assume0xAddress } from '@universe/chains'
 export type { Abi, Address, Block, ChainContract, Hash, SignableMessage, WethAbi } from '@universe/chains'
 export {
   ensPublicResolverAbi,

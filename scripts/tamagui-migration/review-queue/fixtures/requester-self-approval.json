@@ -1,0 +1,30 @@
+{
+  "description": "Trap 2: the requester's own approval never satisfies the independent bar. PR 201's requester (assignee bob) approved it himself; no other human approval — still needsIndependentReview.",
+  "now": "2026-07-28T12:00:00Z",
+  "defaultBranch": "main",
+  "podByLogin": { "bob": "eng-ui" },
+  "prs": [
+    {
+      "number": 201,
+      "title": "feat(shared): convert TokenSelector directory [INFRA-3201]",
+      "url": "https://github.com/Uniswap/universe/pull/201",
+      "draft": false,
+      "author": { "login": "claude[bot]", "type": "Bot" },
+      "assignees": ["bob"],
+      "body": "Converts packages/uniswap/src/components/TokenSelector.\n\nFixes INFRA-3201",
+      "baseRefName": "main",
+      "headRefName": "thebotfather/infra-3201-token-selector",
+      "labels": [{ "name": "tamagui-migration" }],
+      "createdAt": "2026-07-25T12:00:00Z"
+    }
+  ],
+  "reviews": {
+    "201": [
+      { "author": { "login": "bob", "type": "User" }, "state": "APPROVED", "submittedAt": "2026-07-26T09:00:00Z" }
+    ]
+  },
+  "checks": { "201": "success" },
+  "requestedReviewers": {
+    "201": { "users": [], "teams": [] }
+  }
+}

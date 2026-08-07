@@ -121,78 +121,82 @@ function FavoriteTokenCard({
     )
   }
 
-  return (
-    <ContextMenu
-      actions={menuActions}
-      disabled={isEditing}
-      style={contextMenuStyle}
-      onPress={onContextMenuPress}
-      {...rest}
+  const card = (
+    <AnimatedTouchableArea
+      activeOpacity={isEditing ? 1 : undefined}
+      borderRadius="$rounded16"
+      overflow={isIOS ? 'hidden' : 'visible'}
+      testID={`${TestID.FavoriteTokenCardPrefix}${token?.symbol}`}
+      onPress={onPress}
+      {...shadowProps}
     >
-      <AnimatedTouchableArea
-        activeOpacity={isEditing ? 1 : undefined}
+      <Flex
+        alignItems="flex-start"
+        gap="$spacing8"
+        p="$spacing12"
+        backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
+        borderColor={isDarkMode ? '$transparent' : '$surface3'}
+        borderWidth="$spacing1"
         borderRadius="$rounded16"
-        overflow={isIOS ? 'hidden' : 'visible'}
-        testID={`${TestID.FavoriteTokenCardPrefix}${token?.symbol}`}
-        onPress={onPress}
-        {...shadowProps}
       >
-        <Flex
-          alignItems="flex-start"
-          gap="$spacing8"
-          p="$spacing12"
-          backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
-          borderColor={isDarkMode ? '$transparent' : '$surface3'}
-          borderWidth="$spacing1"
-          borderRadius="$rounded16"
-        >
-          <Flex row gap="$spacing4" justifyContent="space-between">
-            <Flex grow row alignItems="center" gap="$spacing8">
-              <TokenLogo
-                loading={loading}
-                chainId={chainId}
-                hideNetworkLogo={(networkCount ?? 0) > 1}
-                name={token?.name ?? undefined}
-                size={imageSizes.image20}
-                symbol={token?.symbol ?? undefined}
-                url={token?.project?.logoUrl ?? undefined}
-              />
-              <Text variant="body1">{symbolDisplayText}</Text>
-            </Flex>
-            <RemoveButton visible={isEditing} onPress={onRemove} />
+        <Flex row gap="$spacing4" justifyContent="space-between">
+          <Flex grow row alignItems="center" gap="$spacing8">
+            <TokenLogo
+              loading={loading}
+              chainId={chainId}
+              hideNetworkLogo={(networkCount ?? 0) > 1}
+              name={token?.name ?? undefined}
+              size={imageSizes.image20}
+              symbol={token?.symbol ?? undefined}
+              url={token?.project?.logoUrl ?? undefined}
+            />
+            <Text variant="body1">{symbolDisplayText}</Text>
           </Flex>
-          <Flex gap="$spacing2">
-            {priceLoading ? (
-              <Loader.Box
-                height={fonts.heading3.lineHeight}
-                width={fonts.heading3.lineHeight * 3}
-                testID="loader/favorite/price"
-              />
-            ) : (
-              <AnimatedNumber
-                numericValue={price}
-                value={priceFormatted}
-                textVariant="$heading3"
-                disableAnimations={!isDataLivelinessEnabled}
-              />
-            )}
-            {priceLoading ? (
-              <Loader.Box
-                height={fonts.subheading2.lineHeight}
-                width={fonts.subheading2.lineHeight * 3}
-                testID="loader/favorite/priceChange"
-              />
-            ) : (
-              <RelativeChange
-                arrowSize="$icon.16"
-                change={pricePercentChange ?? undefined}
-                semanticColor={true}
-                variant="subheading2"
-              />
-            )}
-          </Flex>
+          <RemoveButton visible={isEditing} onPress={onRemove} />
         </Flex>
-      </AnimatedTouchableArea>
+        <Flex gap="$spacing2">
+          {priceLoading ? (
+            <Loader.Box
+              height={fonts.heading3.lineHeight}
+              width={fonts.heading3.lineHeight * 3}
+              testID="loader/favorite/price"
+            />
+          ) : (
+            <AnimatedNumber
+              numericValue={price}
+              value={priceFormatted}
+              textVariant="$heading3"
+              disableAnimations={!isDataLivelinessEnabled}
+            />
+          )}
+          {priceLoading ? (
+            <Loader.Box
+              height={fonts.subheading2.lineHeight}
+              width={fonts.subheading2.lineHeight * 3}
+              testID="loader/favorite/priceChange"
+            />
+          ) : (
+            <RelativeChange
+              arrowSize="$icon.16"
+              change={pricePercentChange ?? undefined}
+              semanticColor={true}
+              variant="subheading2"
+            />
+          )}
+        </Flex>
+      </Flex>
+    </AnimatedTouchableArea>
+  )
+
+  // Unmount ContextMenu while editing — a disabled native context menu can still interrupt
+  // Sortable's Manual gesture on New Architecture and leave per-item drag state stuck.
+  if (isEditing) {
+    return card
+  }
+
+  return (
+    <ContextMenu actions={menuActions} style={contextMenuStyle} onPress={onContextMenuPress} {...rest}>
+      {card}
     </ContextMenu>
   )
 }

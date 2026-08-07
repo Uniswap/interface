@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import {
   isMultichainTokenSearchHistoryResult,
@@ -7,6 +6,7 @@ import {
   SearchHistoryResult,
   SearchHistoryResultType,
 } from 'uniswap/src/features/search/SearchHistoryResult'
+import { normalizeTokenAddressForCache } from 'uniswap/src/utils/currencyId'
 
 const SEARCH_HISTORY_LENGTH = 5
 

@@ -40,6 +40,7 @@ const POPULATED_STATS = {
   high52w: 12.34,
   low52w: 4.56,
   tvl: 1_000_000_000,
+  isLoading: false,
 }
 
 const EMPTY_STATS = {
@@ -50,6 +51,7 @@ const EMPTY_STATS = {
   high52w: undefined,
   low52w: undefined,
   tvl: undefined,
+  isLoading: false,
 }
 
 const MARKET_SOURCE_AGGREGATED = {
@@ -90,6 +92,41 @@ describe('StatsSection', () => {
     expect(screen.getByTestId(TestID.TokenDetailsStatsVolume24h)).toHaveTextContent('$')
     expect(screen.getByTestId(TestID.TokenDetailsStats52wHigh)).toHaveTextContent('$')
     expect(screen.getByTestId(TestID.TokenDetailsStats52wLow)).toHaveTextContent('$')
+  })
+
+  // The Robinhood fallback: V2 is effectively on (and omits both) while TokenWeb data is still present.
+  it('fills market cap and FDV from the legacy project market when effective V2 omits them', () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    mocked(useFeatureFlag).mockReturnValue(true)
+    mocked(useTokenMarketStats).mockReturnValue({ ...EMPTY_STATS, tvl: 1_000_000_000 })
+
+    const tokenQueryData = {
+      project: {
+        markets: [{ marketCap: { value: 1_234_576 }, fullyDilutedValuation: { value: 234_567 } }],
+      },
+    }
+
+    render(<StatsSection tokenQueryData={tokenQueryData as never} />)
+
+    expect(screen.getByTestId(`${TestID.TokenDetailsStatsMarketCap}-value`)).toHaveTextContent('$1.2M')
+    expect(screen.getByTestId(`${TestID.TokenDetailsStatsFdv}-value`)).toHaveTextContent('$234.6K')
+  })
+
+  it('prefers V2-sourced market cap and FDV over the legacy project market', () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    mocked(useFeatureFlag).mockReturnValue(true)
+    mocked(useTokenMarketStats).mockReturnValue({ ...EMPTY_STATS, marketCap: 1_234_576, fdv: 234_567 })
+
+    const tokenQueryData = {
+      project: {
+        markets: [{ marketCap: { value: 9_000_000_000 }, fullyDilutedValuation: { value: 9_000_000_000 } }],
+      },
+    }
+
+    render(<StatsSection tokenQueryData={tokenQueryData as never} />)
+
+    expect(screen.getByTestId(`${TestID.TokenDetailsStatsMarketCap}-value`)).toHaveTextContent('$1.2M')
+    expect(screen.getByTestId(`${TestID.TokenDetailsStatsFdv}-value`)).toHaveTextContent('$234.6K')
   })
 
   it('shows the "no stats available" fallback when every stat is missing', () => {

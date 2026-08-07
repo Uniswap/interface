@@ -85,12 +85,12 @@ export const swapFeApiMonitors: MonitorDefinition[] = [
     name: '[Mobile] Unknown gas simulation Error rate',
     type: 'query alert',
     query:
-      'sum(last_3h):sum:mobile.unknown_gas_sim_safe_tokens_by_chain_name{*}.as_count() / avg:mobile.quote_http_requests{*}.as_count() * 100 > 2.5',
+      'sum(last_3h):sum:mobile.unknown_gas_sim_safe_tokens_by_chain_name{*}.as_count() / avg:mobile.quote_http_requests{*}.as_count() * 100 > 9.75',
     alertBody:
-      'More than 2.5% of quote requests are returning `Unknown gas simulation error` for tokens with no safety warnings.',
+      'More than 9.75% of quote requests are returning `Unknown gas simulation error` for tokens with no safety warnings.',
     team: TEAM,
     priority: 3,
-    thresholds: { critical: 2.5 },
+    thresholds: { critical: 9.75 },
     logQuery: 'service:mobile',
     runbookUrl: SWAP_POD_RUNBOOK,
     readmeUrl: `${UNIVERSE_REPO_URL}/tree/main/apps/mobile`,
@@ -101,7 +101,12 @@ export const swapFeApiMonitors: MonitorDefinition[] = [
     id: 'swap_fe_web_api_failure_swap_quote',
     name: '[Web] General API failure for Swap + Quote endpoints',
     type: 'rum alert',
-    query: 'formula("query / query1 * 100").last("2h") > 40',
+    // `cutoff_min(query1, 25)` enforces a minimum of 25 requests per
+    // `@resource.url_path` bucket before the ratio is evaluated. Protects the
+    // low-volume legacy `/v1/*` residual buckets from a single user retrying
+    // a failed request. Matches the floor pattern used by
+    // `swap_fe_wallet_api_failure_swap_quote` in this file.
+    query: 'formula("query / cutoff_min(query1, 25) * 100").last("2h") > 40',
     alertBody:
       'Sustained API failure rate detected on Swap/Quote endpoints (web). Raise issue in #pod-swap with endpoint affected.',
     team: TEAM,
@@ -126,7 +131,7 @@ export const swapFeApiMonitors: MonitorDefinition[] = [
           indexes: ['*'],
           search: {
             query:
-              '@type:resource env:(production OR prod) service:web-prod @resource.status_code:(>=400 !404) @resource.url_path:(/v1/quote OR /v1/swap OR /v2/quote OR /v1/swap_5792)',
+              '@type:resource env:(production OR prod) service:web-prod @resource.status_code:(>=400 !404) @resource.url_path:(/quote OR /swap OR /swap_5792 OR /v1/quote OR /v1/swap OR /v2/quote OR /v1/swap_5792)',
           },
           computes: [{ aggregation: 'count' }],
           groupBies: [
@@ -143,7 +148,7 @@ export const swapFeApiMonitors: MonitorDefinition[] = [
           indexes: ['*'],
           search: {
             query:
-              '@type:resource env:(production OR prod) service:web-prod @resource.url_path:(/v1/quote OR /v1/swap OR /v2/quote OR /v1/swap_5792)',
+              '@type:resource env:(production OR prod) service:web-prod @resource.url_path:(/quote OR /swap OR /swap_5792 OR /v1/quote OR /v1/swap OR /v2/quote OR /v1/swap_5792)',
           },
           computes: [{ aggregation: 'count' }],
           groupBies: [
@@ -192,7 +197,7 @@ export const swapFeApiMonitors: MonitorDefinition[] = [
           indexes: ['*'],
           search: {
             query:
-              '@type:resource env:(production OR prod) service:(com.uniswap.mobile OR extension-prod) @resource.status_code:>=400 !@resource.status_code:404 @resource.url_path:(/v1/quote OR /v1/swap OR /v2/quote OR /v1/swap_5792 OR /v1/swap_7702)',
+              '@type:resource env:(production OR prod) service:(com.uniswap.mobile OR extension-prod) @resource.status_code:>=400 !@resource.status_code:404 @resource.url_path:(/quote OR /swap OR /swap_7702 OR /swap_4337 OR /v1/quote OR /v1/swap OR /v2/quote OR /v1/swap_7702 OR /v1/swap_4337)',
           },
           computes: [{ aggregation: 'cardinality', metric: '@session.id' }],
           groupBies: [
@@ -214,7 +219,7 @@ export const swapFeApiMonitors: MonitorDefinition[] = [
           indexes: ['*'],
           search: {
             query:
-              '@type:resource env:(production OR prod) service:(com.uniswap.mobile OR extension-prod) @resource.url_path:(/v1/quote OR /v1/swap OR /v2/quote OR /v1/swap_5792 OR /v1/swap_7702)',
+              '@type:resource env:(production OR prod) service:(com.uniswap.mobile OR extension-prod) @resource.url_path:(/quote OR /swap OR /swap_7702 OR /swap_4337 OR /v1/quote OR /v1/swap OR /v2/quote OR /v1/swap_7702 OR /v1/swap_4337)',
           },
           computes: [{ aggregation: 'cardinality', metric: '@session.id' }],
           groupBies: [

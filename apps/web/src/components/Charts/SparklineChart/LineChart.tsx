@@ -10,12 +10,14 @@ interface LineChartProps<T> {
   getY: (t: T) => number
   marginTop?: number
   curve: CurveFactory
-  color: ColorTokens
+  color: ColorTokens | string
   strokeWidth: number
   children?: ReactNode
   width: number
   height: number
   showGradientFill?: boolean
+  /** Fade the stroke in left-to-right (0% -> 100% opacity), e.g. so text under the chart's left edge stays legible. */
+  strokeFadeIn?: boolean
   yScale?: ScaleLinear<number, number>
 }
 
@@ -31,6 +33,7 @@ function LineChartInner<T>({
   height,
   children,
   showGradientFill = false,
+  strokeFadeIn = false,
   yScale,
 }: LineChartProps<T>) {
   const gradientId = useId().replace(/:/g, '')
@@ -46,6 +49,14 @@ function LineChartInner<T>({
           </linearGradient>
         </defs>
       ) : null}
+      {strokeFadeIn ? (
+        <defs>
+          <linearGradient id={`${gradientId}-stroke`} x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor={color} stopOpacity={0} />
+            <stop offset="100%" stopColor={color} stopOpacity={1} />
+          </linearGradient>
+        </defs>
+      ) : null}
       <Group top={marginTop}>
         {showGradientFill && yScale ? (
           <AreaClosed
@@ -58,7 +69,14 @@ function LineChartInner<T>({
             yScale={yScale}
           />
         ) : null}
-        <LinePath curve={curve} stroke={color} strokeWidth={strokeWidth} data={data} x={getX} y={getY} />
+        <LinePath
+          curve={curve}
+          stroke={strokeFadeIn ? `url(#${gradientId}-stroke)` : color}
+          strokeWidth={strokeWidth}
+          data={data}
+          x={getX}
+          y={getY}
+        />
       </Group>
       {children}
     </svg>

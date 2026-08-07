@@ -1,5 +1,5 @@
-import type { Rwa } from 'uniswap/src/data/rest/rwa/types'
-import type { OrderDirection } from '~/appGraphql/data/util'
+import type { Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
+import type { OrderDirection } from '~/data/util'
 import { ExpandableAssetTable } from '~/pages/Explore/rwa/table/ExpandableAssetTable'
 import { RwaTableSearchEmptyState } from '~/pages/Explore/rwa/table/RwaTableSearchEmptyState'
 import type { StocksSortMethod } from '~/pages/Explore/rwa/table/stocksTableSortStore'

@@ -22,6 +22,7 @@ const app = createApp({
   },
   getWebSocketUrl: () => process.env.WEBSOCKET_URL || WEBSOCKET_URLS.staging,
   getTrustedClientIp: (c) => c.req.header('x-real-ip'),
+  getEmbedFrameAncestors: () => process.env.EMBED_FRAME_ANCESTORS,
 })
 
 export default handle(app)

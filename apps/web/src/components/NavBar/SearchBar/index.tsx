@@ -15,7 +15,7 @@ import { useModalState } from '~/hooks/useModalState'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
 import { EllipsisTamaguiStyle } from '~/theme/components/styles'
 
-const NAV_SEARCH_MIN_WIDTH = '340px'
+const NAV_SEARCH_MIN_WIDTH = '320px'
 
 const KeyShortcut = deprecatedStyled.div`
   background-color: ${({ theme }) => theme.surface3};

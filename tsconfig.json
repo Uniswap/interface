@@ -108,6 +108,9 @@
     },
     {
       "path": "./packages/experiments"
+    },
+    {
+      "path": "packages/embedded-wallet"
     }
   ]
 }

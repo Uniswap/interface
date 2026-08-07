@@ -41,6 +41,10 @@ export function EditLabelSettingsModal({
 
   const inputRef = useRef<NativeTextInput>(null)
 
+  const onPressInputContainer = (): void => {
+    inputRef.current?.focus()
+  }
+
   const onFinishEditing = (): void => {
     dismissNativeKeyboard()
 
@@ -88,6 +92,7 @@ export function EditLabelSettingsModal({
                 justifyContent="space-between"
                 px="$spacing24"
                 py="$spacing12"
+                onPress={accountNameIsEditable ? onPressInputContainer : undefined}
               >
                 <TextInput
                   ref={inputRef}

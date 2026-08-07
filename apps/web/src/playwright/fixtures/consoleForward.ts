@@ -1,4 +1,3 @@
-/* oxlint-disable react-hooks/rules-of-hooks -- Playwright fixtures use `use()` which is not a React hook */
 // oxlint-disable-next-line no-restricted-imports -- Playwright fixtures need direct test import
 import { test as base } from '@playwright/test'
 

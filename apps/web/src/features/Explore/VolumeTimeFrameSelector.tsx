@@ -3,9 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { Flex, useMedia } from 'ui/src'
 import { Check } from 'ui/src/components/icons/Check'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { TimePeriod } from '~/appGraphql/data/util'
 import { Dropdown, InternalMenuItem } from '~/components/Dropdowns/Dropdown'
+import { TimePeriod } from '~/data/util'
 import { useExploreParams } from '~/features/Explore/hooks/useExploreParams'
 import {
   useExploreTablesFilterStore,
@@ -56,6 +58,10 @@ export function VolumeTimeFrameSelector() {
             data-testid={getLabel(time)}
             onPress={() => {
               setTime(time)
+              sendAnalyticsEvent(InterfaceEventName.ExploreTableFilterSelected, {
+                filter_type: 'volume_time_period',
+                filter_value: time,
+              })
               toggleMenu(false)
             }}
           >

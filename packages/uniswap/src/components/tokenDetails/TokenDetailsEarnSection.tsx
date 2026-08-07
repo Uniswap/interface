@@ -110,7 +110,7 @@ function MobileTokenDetailsEarnSection({
   const totalRewards = earnPosition.lifetimePnlUsd
 
   return (
-    <Flex gap="$spacing12" width="100%" px="$spacing8" pt="$spacing32">
+    <Flex gap="$spacing12" width="100%" pt="$spacing32">
       <TouchableArea
         alignSelf="flex-start"
         accessibilityRole="button"

@@ -1,15 +1,11 @@
-import { SPECIAL_CASE_TOKEN_COLORS } from 'ui/src/utils/colors/specialCaseTokens'
+import { getSpecialCaseTokenColorOverride } from 'ui/src/utils/colors/specialCaseTokens'
 
 export function getSpecialCaseTokenColor(imageUrl: Maybe<string>, isDarkMode: boolean): Nullable<string> {
   if (imageUrl && blackAndWhiteSpecialCase.has(imageUrl)) {
     return isDarkMode ? '#FFFFFF' : '#000000'
   }
 
-  if (!imageUrl || !SPECIAL_CASE_TOKEN_COLORS[imageUrl]) {
-    return null
-  }
-
-  return SPECIAL_CASE_TOKEN_COLORS[imageUrl]
+  return imageUrl ? (getSpecialCaseTokenColorOverride(imageUrl) ?? null) : null
 }
 
 const blackAndWhiteSpecialCase: Set<string> = new Set([

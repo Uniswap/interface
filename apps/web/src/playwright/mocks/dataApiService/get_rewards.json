@@ -1,3 +1,17 @@
 {
-  "totalUnclaimedAmountUni": "5000000000000000000"
+  "totalUnclaimedAmountUni": "5000000000000000000",
+  "totalUnclaimedUsd": 45.66,
+  "rewardBalances": [
+    {
+      "token": {
+        "chainId": 1,
+        "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+        "symbol": "UNI",
+        "decimals": 18,
+        "name": "Uniswap"
+      },
+      "unclaimedAmount": "5000000000000000000",
+      "unclaimedAmountUsd": 45.66
+    }
+  ]
 }

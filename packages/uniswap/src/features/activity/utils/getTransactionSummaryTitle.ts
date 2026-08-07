@@ -315,6 +315,15 @@ function getTransactionTypeVerbs(
         canceling: t('toucan.createAuction.transaction.canceling'),
         canceled: t('toucan.createAuction.transaction.canceled'),
       }
+    case TransactionType.UniswapXCancel:
+      // Suppressed in merged activity by default; defensive titles in case suppression regresses
+      return {
+        success: t('transaction.status.limitCancel.success'),
+        pending: t('transaction.status.limitCancel.pending'),
+        failed: t('transaction.status.limitCancel.failed'),
+        canceling: t('transaction.status.limitCancel.pending'),
+        canceled: t('transaction.status.limitCancel.success'),
+      }
     case TransactionType.CreatePair:
       return {
         success: t('transaction.status.createPair.success'),

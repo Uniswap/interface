@@ -295,6 +295,21 @@ describe(useRestPortfolioValueModifiers, () => {
     })
   })
 
+  it('maps native token overrides to the zero address the data-api matches on', () => {
+    // Native currency ids carry the app's legacy 0xeeee… placeholder; the BE represents natives
+    // with the zero address, so the modifier must translate or the override is ignored.
+    const nativeBnbId = `${UniverseChainId.Bnb}-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee`
+    mockUseCurrencyIdToVisibility.mockReturnValue({
+      [nativeBnbId]: { isVisible: false },
+    })
+
+    const { result } = renderHookWithProviders(() => useRestPortfolioValueModifiers([EVM_ADDRESS_A]))
+
+    expect(result.current?.[0]).toMatchObject({
+      excludeOverrides: [{ chainId: UniverseChainId.Bnb, address: '0x0000000000000000000000000000000000000000' }],
+    })
+  })
+
   it('flips includeSmallBalances to false when hideSmallBalances setting is on', () => {
     mockUseHideSmallBalancesSetting.mockReturnValue(true)
 

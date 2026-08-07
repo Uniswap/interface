@@ -38,8 +38,8 @@ export enum WarningLabel {
   InsufficientGasFunds = 'insufficient_gas_funds',
   FormIncomplete = 'form_incomplete',
   UnsupportedNetwork = 'unsupported_network',
-  PriceImpactMedium = 'price_impact_medium',
-  PriceImpactHigh = 'price_impact_high',
+  PriceDifferenceMedium = 'price_difference_medium',
+  PriceDifferenceHigh = 'price_difference_high',
   LowLiquidity = 'low_liquidity',
   SwapRouterError = 'swap_router_error',
   NoRoutesError = 'no_routes_error',
@@ -53,6 +53,7 @@ export enum WarningLabel {
   GeoRestricted = 'geo_restricted',
   NoQuotesFound = 'no_quotes_found',
   GasSponsorshipFailed = 'gas_sponsorship_failed',
+  PermissionedPool = 'permissioned_pool',
 }
 
 export interface Warning {

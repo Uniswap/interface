@@ -7,7 +7,7 @@ export function TablePinnedColumnOverlay({ leftPx, color }: { leftPx: number; co
   }
 
   return (
-    /* oxlint-disable-next-line eslint-plugin-react(forbid-elements) -- table overlay guide */
+    /* oxlint-disable-next-line react/forbid-elements -- table overlay guide */
     <div
       aria-hidden
       style={{

@@ -1,6 +1,6 @@
 import { HexString } from '@universe/encoding'
 import { useMemo } from 'react'
-import { useGetPoolsRewards } from 'uniswap/src/data/rest/getPoolsRewards'
+import { useGetPoolsRewards } from 'uniswap/src/data/apiClients/dataApiService/pools/getPoolsRewards'
 import { LP_INCENTIVES_CHAIN_IDS, LP_INCENTIVES_DUST_THRESHOLD } from '~/features/Liquidity/LPIncentives/constants'
 import { useEffectivelyClaimed } from '~/features/Liquidity/LPIncentives/hooks/useEffectivelyClaimed'
 

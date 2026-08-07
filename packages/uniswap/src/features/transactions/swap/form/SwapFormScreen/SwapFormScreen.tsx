@@ -1,9 +1,10 @@
 import type { BottomSheetView } from '@gorhom/bottom-sheet'
-import { isExtensionApp, isWebApp } from '@universe/environment'
+import { isExtensionApp, isMobileApp, isWebApp } from '@universe/environment'
 import type { ComponentProps } from 'react'
 import { useEffect } from 'react'
 import type { FlexProps } from 'ui/src'
 import { Flex } from 'ui/src'
+import { PermissionedSwapBanner } from 'uniswap/src/features/permissionedTokens/PermissionedSwapBanner'
 import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
 import { TransactionModalInnerContainer } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
@@ -91,6 +92,8 @@ function SwapFormContent({
           <SwitchCurrenciesButton />
           <SwapFormCurrencyOutputPanel />
         </Flex>
+
+        {isMobileApp && <PermissionedSwapBanner />}
 
         <Flex>
           <SwapFormScreenDetails />

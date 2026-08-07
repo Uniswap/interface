@@ -1,4 +1,4 @@
-import type { Rwa } from 'uniswap/src/data/rest/rwa/types'
+import type { Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 
 /** Client-side search for ranked RWA rows (symbol, name, issuer). */
 export function filterRwaRowsBySearch(rows: Rwa[], filterString: string): Rwa[] {

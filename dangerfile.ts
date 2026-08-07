@@ -1,5 +1,6 @@
 import * as fs from 'fs'
-import { danger, fail, markdown, message, warn } from 'danger'
+import { danger, fail, markdown, message, schedule, warn } from 'danger'
+import { findRatchetViolations, parseRatchetConfig } from './scripts/tamagui-migration/ratchet/check.ts'
 
 // Danger runs from the repo root. Resolve file checks against it instead of
 // `__dirname`/`__filename`, which are undefined now that this file loads as an ES module.
@@ -139,7 +140,11 @@ async function processAddChanges() {
     .concat(danger.git.created_files)
     .filter((file) => (file.endsWith('.ts') || file.endsWith('.tsx')) && !file.includes('dangerfile.ts'))
 
-  const updatedNonUITsFiles = updatedTsFiles.filter((file) => !file.includes('packages/ui'))
+  // Shared exemption: tooling paths legitimately contain the tamagui import strings these checks match
+  const migrationToolingPrefixes = loadMigrationToolingPrefixes()
+  const updatedNonUITsFiles = updatedTsFiles.filter(
+    (file) => !file.includes('packages/ui') && !isTamaguiExemptPath(file, migrationToolingPrefixes),
+  )
 
   const linesAddedByFile = await getLinesAddedByFile(updatedTsFiles)
   const allLinesAdded = linesAddedByFile.flatMap((x) => x)
@@ -153,6 +158,31 @@ async function processAddChanges() {
     if (change.content.includes(`from 'tamagui`)) {
       fail(`Please import any tamagui exports via the ui package. Found an import at ${change.content}`)
     }
+  })
+
+  // Tamagui→Mycelium migration ratchet: directories listed in ratchet.json are
+  // fully converted and must not reintroduce ui/src or tamagui imports
+  let convertedDirectories: string[] = []
+  try {
+    convertedDirectories = parseRatchetConfig(
+      fs.readFileSync(`${repoRoot}/scripts/tamagui-migration/ratchet/ratchet.json`, 'utf8'),
+    ).convertedDirectories
+  } catch (error) {
+    fail(
+      `Could not load \`scripts/tamagui-migration/ratchet/ratchet.json\`, so the converted-directory ratchet did not run. ` +
+        `Fix the file and re-push. Parse error: ${error instanceof Error ? error.message : String(error)}`,
+    )
+  }
+  linesAddedByFile.forEach((linesAdded, fileIndex) => {
+    const filePath = updatedTsFiles[fileIndex]
+    if (!filePath) {
+      return
+    }
+    findRatchetViolations({
+      filePath,
+      addedLines: linesAdded.map((change) => change.content),
+      convertedDirectories,
+    }).forEach((violation) => fail(violation))
   })
 
   // Checks for any logging and reminds the developer not to log sensitive data
@@ -256,8 +286,13 @@ async function processAddChanges() {
       )
     }
 
-    // Check for direct string cache key usage with react query (skip mission-control app)
-    if (concatenatedAddedLines.includes(`queryKey: ['`) && !filePath?.startsWith('apps/mission-control/')) {
+    // Check for direct string cache key usage with react query (skip mission-control app and test files, where fixture keys are arbitrary)
+    if (
+      concatenatedAddedLines.includes(`queryKey: ['`) &&
+      !filePath?.startsWith('apps/mission-control/') &&
+      !filePath?.endsWith('.test.ts') &&
+      !filePath?.endsWith('.test.tsx')
+    ) {
       fail(
         `It appears you're using a direct string cache key with react query. Please use the ReactQueryCacheKey enum instead!`,
       )
@@ -283,6 +318,106 @@ async function processAddChanges() {
     warn(
       `Detected usage of \`TouchableArea\` in the following file(s):\n\n${filesWithTouchableArea.map((f) => `- ${f}`).join('\n')}\n\nIn each of these files, please audit the usage of \`TouchableArea\` and consider migrating to the new implementation! Examples of new variants and API usage can be found in the \`TouchableArea.stories.tsx\` file.`,
     )
+  }
+}
+
+// ── New Tamagui styling ban (INFRA-2958) ──────────────────────────────
+// Diff-level backstop for the `universe-custom/no-tamagui-styling` oxlint
+// rule (which only runs under full lint — jsPlugins are disabled in fast
+// lint). Unlike the lint rule, which ratchets against the generated baseline,
+// this check is strict on ADDED lines: any added Tamagui styling fails, even
+// in grandfathered files. Keep the detection shapes in sync with
+// config/oxlint-plugins/universe-custom.js.
+// Shapes mirror the lint rule: `styled(`, `animation=` / `animateEnter=` /
+// `animateExit=` (JSX), and `$group-*` as a JSX prop or object key.
+const TAMAGUI_STYLED_RE = /\bstyled\s*\(/
+const TAMAGUI_ANIMATION_RE = /\b(?:animation|animateEnter|animateExit)\s*=[^=]/
+const TAMAGUI_GROUP_RE = /['"]?\$group-[\w-]+['"]?\s*[=:]/
+const TAMAGUI_STYLED_IMPORT_RE =
+  /import\s*(?:type\s+)?\{[^}]*\bstyled\b[^}]*\}\s*from\s*'(?:ui\/src|tamagui|@tamagui\/[^']+)'/
+// Paths outside the migration lint surface: labs/, config/, and top-level
+// scripts/ are never linted by the rule. Deliberately NOT exempting nested
+// package scripts/ dirs — real code there must not slip the gate; specific
+// tooling paths belong in the shared exemption list below.
+const TAMAGUI_EXEMPT_PATH_RE = /^(?:labs\/|scripts\/|config\/)|(?:^|\/)dangerfile\.ts$/
+// Migration tooling (codemod/census fixtures, ratchet probes) legitimately
+// contains Tamagui styling text. Shared list, also consumed by the oxlint
+// rule and the baseline generator.
+const TAMAGUI_EXEMPT_LIST_PATH = 'config/oxlint-plugins/tamagui-migration-exempt-paths.json'
+
+function isTamaguiExemptPath(file: string, migrationToolingPrefixes: string[]): boolean {
+  return TAMAGUI_EXEMPT_PATH_RE.test(file) || migrationToolingPrefixes.some((prefix) => file.startsWith(prefix))
+}
+
+function loadMigrationToolingPrefixes(): string[] {
+  // Missing/unreadable/malformed list degrades to no exemptions (keep
+  // checking), matching the rule module. Entries are normalized to directory
+  // prefixes (trailing `/`) so `scripts/tamagui-census` never exempts
+  // siblings like `scripts/tamagui-census-foo/` — same semantics in all
+  // three legs.
+  try {
+    const { pathPrefixes } = JSON.parse(fs.readFileSync(`${repoRoot}/${TAMAGUI_EXEMPT_LIST_PATH}`, 'utf8')) as {
+      pathPrefixes?: unknown
+    }
+    if (!Array.isArray(pathPrefixes)) {
+      throw new Error(`pathPrefixes is missing or not an array in ${TAMAGUI_EXEMPT_LIST_PATH}`)
+    }
+    return pathPrefixes
+      .filter((prefix): prefix is string => typeof prefix === 'string')
+      .map((prefix) => (prefix.endsWith('/') ? prefix : `${prefix}/`))
+  } catch {
+    warn(`Could not read \`${TAMAGUI_EXEMPT_LIST_PATH}\` — the Tamagui checks ran without tooling exemptions.`)
+    return []
+  }
+}
+
+async function checkNewTamaguiStyling() {
+  const migrationToolingPrefixes = loadMigrationToolingPrefixes()
+
+  const touchedFiles = danger.git.modified_files
+    .concat(danger.git.created_files)
+    .filter(
+      (file) => (file.endsWith('.ts') || file.endsWith('.tsx')) && !isTamaguiExemptPath(file, migrationToolingPrefixes),
+    )
+
+  for (const file of touchedFiles) {
+    const structuredDiff = await danger.git.structuredDiffForFile(file)
+    const addedLines = (structuredDiff?.chunks || []).flatMap((chunk) =>
+      chunk.changes.filter((change) => change.type === 'add'),
+    )
+    if (addedLines.length === 0) {
+      continue
+    }
+
+    // `styled(` only counts when the file actually pulls the Tamagui factory.
+    let hasTamaguiStyledImport = false
+    try {
+      hasTamaguiStyledImport = TAMAGUI_STYLED_IMPORT_RE.test(fs.readFileSync(`${repoRoot}/${file}`, 'utf8'))
+    } catch {
+      // deleted/unreadable — leave the styled() gate closed
+    }
+
+    const categories = [
+      { re: TAMAGUI_STYLED_RE, label: 'Tamagui `styled()` call', enabled: hasTamaguiStyledImport },
+      { re: TAMAGUI_ANIMATION_RE, label: 'Tamagui animation preset prop', enabled: true },
+      { re: TAMAGUI_GROUP_RE, label: 'Tamagui `$group-*` prop', enabled: true },
+    ]
+
+    for (const { re, label, enabled } of categories) {
+      if (!enabled) {
+        continue
+      }
+      const offendingLines = addedLines.filter((change) => re.test(change.content))
+      if (offendingLines.length === 0) {
+        continue
+      }
+      fail(
+        `Added ${label} in \`${file}\` — new Tamagui styling is banned (Tamagui → Tailwind migration, INFRA-2958). ` +
+          `Use Tailwind via \`@universe/mycelium\` (web) or plain Flex/Text/View layout props instead.\n\n` +
+          offendingLines.map((change) => `\`\`\`\n${change.content}\n\`\`\``).join('\n') +
+          `\n\nIf this diff only moves already-grandfathered code, say so in the PR and a reviewer can override this check.`,
+      )
+    }
   }
 }
 
@@ -358,6 +493,10 @@ checkHookFilesHaveTests()
 
 // Run checks on added changes
 processAddChanges()
+
+// Check for added Tamagui styling (INFRA-2958). schedule() guarantees Danger
+// awaits the async fail()s before reporting.
+schedule(checkNewTamaguiStyling)
 
 // Check for cocoapods version change
 checkCocoaPodsVersion()

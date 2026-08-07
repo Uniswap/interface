@@ -34,6 +34,26 @@ function exposure(currencyId: string, valueUsd?: number): EarnVaultExposure {
 }
 
 describe(getExposureRows, () => {
+  it('sorts populated exposure rows from greatest to least USD value', () => {
+    const rows = getExposureRows(
+      createVault({
+        exposures: [exposure(USDC_ID, 10), exposure(NATIVE_ID, 50), exposure(USDT_ID, 30)],
+      }),
+    )
+
+    expect(rows.map((row) => row.currencyId)).toEqual([NATIVE_ID, USDT_ID, USDC_ID])
+  })
+
+  it('places missing exposure values after known values', () => {
+    const rows = getExposureRows(
+      createVault({
+        exposures: [exposure(USDC_ID), exposure(USDT_ID, 30)],
+      }),
+    )
+
+    expect(rows.map((row) => row.currencyId)).toEqual([USDT_ID, USDC_ID])
+  })
+
   it('hides the native token row when its exposure value is zero', () => {
     const rows = getExposureRows(createVault({ exposures: [exposure(NATIVE_ID, 0), exposure(USDC_ID, 1_000)] }))
     expect(rows.map((row) => row.currencyId)).toEqual([USDC_ID])
@@ -46,30 +66,38 @@ describe(getExposureRows, () => {
 
   it('keeps a non-native asset even when its exposure value is zero', () => {
     const rows = getExposureRows(createVault({ exposures: [exposure(USDC_ID, 0), exposure(USDT_ID, 1_000)] }))
-    expect(rows.map((row) => row.currencyId)).toEqual([USDC_ID, USDT_ID])
+    expect(rows.map((row) => row.currencyId)).toEqual([USDT_ID, USDC_ID])
   })
 
   it('keeps the native token row when it has a nonzero exposure value', () => {
     const rows = getExposureRows(createVault({ exposures: [exposure(NATIVE_ID, 500), exposure(USDC_ID, 1_000)] }))
-    expect(rows.map((row) => row.currencyId)).toEqual([NATIVE_ID, USDC_ID])
+    expect(rows.map((row) => row.currencyId)).toEqual([USDC_ID, NATIVE_ID])
   })
 
-  it('does not filter the fallback exposureCurrencyIds branch', () => {
+  it('does not filter or reorder the fallback exposureCurrencyIds branch', () => {
     const rows = getExposureRows(createVault({ exposures: [], exposureCurrencyIds: [NATIVE_ID, USDC_ID] }))
     expect(rows.map((row) => row.currencyId)).toEqual([NATIVE_ID, USDC_ID])
   })
 })
 
 describe(shouldShowExposurePopover, () => {
-  it('hides the popover when filtering the zero native row leaves a single asset', () => {
+  it('shows the popover when filtering the zero native row leaves a single asset', () => {
     expect(
       shouldShowExposurePopover(createVault({ exposures: [exposure(NATIVE_ID, 0), exposure(USDC_ID, 1_000)] })),
-    ).toBe(false)
+    ).toBe(true)
   })
 
   it('shows the popover when multiple assets remain after filtering', () => {
     expect(
       shouldShowExposurePopover(createVault({ exposures: [exposure(NATIVE_ID, 500), exposure(USDC_ID, 1_000)] })),
     ).toBe(true)
+  })
+
+  it('hides the popover when no exposure rows are available', () => {
+    expect(shouldShowExposurePopover(createVault())).toBe(false)
+  })
+
+  it('hides the popover when every exposure row is filtered out', () => {
+    expect(shouldShowExposurePopover(createVault({ exposures: [exposure(NATIVE_ID, 0)] }))).toBe(false)
   })
 })

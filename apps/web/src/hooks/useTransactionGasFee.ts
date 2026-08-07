@@ -3,7 +3,7 @@ import { Level } from '@uniswap/client-unirpc-v2/dist/uniswap/unirpc/v2/service_
 import type { GasFeeResult } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
-import { useGasFeeQuery } from 'uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery'
+import { useGasFeeQuery } from 'uniswap/src/data/apiClients/gasService/useGasFeeQuery'
 import { GAS_SPEED_STRATEGIES, GasSpeed } from 'uniswap/src/features/gas/utils'
 
 const SPEED_TO_PROTO_LEVEL: Record<GasSpeed, Level> = {

@@ -1,12 +1,11 @@
 import { QueryClient } from '@tanstack/react-query'
 import { fireEvent, waitFor } from '@testing-library/react'
+import { listAuthenticators, useEmbeddedWalletState } from '@universe/embedded-wallet'
 import type { PropsWithChildren, ReactNode } from 'react'
-import { listAuthenticators } from 'uniswap/src/features/passkey/embeddedWallet'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { PasskeyMenu, resetListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
-import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { render, screen } from '~/test-utils/render'
 
 vi.mock('~/config', () => ({
@@ -15,7 +14,7 @@ vi.mock('~/config', () => ({
   getPrivyAppId: vi.fn(() => 'test-privy-app-id'),
 }))
 
-vi.mock('uniswap/src/features/passkey/embeddedWallet', () => ({
+vi.mock('@universe/embedded-wallet/src/features/passkey/embeddedWallet', () => ({
   listAuthenticators: vi.fn(),
   authenticateWithPasskey: vi.fn(),
   AuthenticatorNameType: {
@@ -28,9 +27,10 @@ vi.mock('uniswap/src/features/passkey/embeddedWallet', () => ({
   RecoveryMethod: vi.fn().mockImplementation((args: Record<string, unknown>) => args),
 }))
 
-vi.mock('~/state/embeddedWallet/store', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('~/state/embeddedWallet/store')>()),
+vi.mock('@universe/embedded-wallet/src/state/embeddedWalletStore', () => ({
   useEmbeddedWalletState: vi.fn(),
+  getEmbeddedWalletState: vi.fn(() => ({ walletAddress: null, walletId: null, chainId: null, isConnected: false })),
+  setChainId: vi.fn(),
 }))
 
 const mockDispatch = vi.fn()
@@ -136,6 +136,30 @@ describe('PasskeyMenu', () => {
     })
 
     expect(document.body).toMatchSnapshot()
+  })
+
+  it('labels Google Password Manager authenticators as Google Password Manager, not Android', async () => {
+    vi.mocked(useEmbeddedWalletState).mockReturnValue({
+      walletId: 'test-wallet-gpm-label',
+    } as ReturnType<typeof useEmbeddedWalletState>)
+    vi.mocked(listAuthenticators).mockResolvedValue({
+      authenticators: [
+        {
+          credentialId: 'cred-gpm',
+          providerName: MOCK_AUTHENTICATOR_NAME_TYPE.GOOGLE_PASSWORD_MANAGER,
+          createdAt: BigInt(1706788800000),
+          aaguid: 'ea9b8d66-4d01-1d21-3ce4-b6b48cb575d4',
+        },
+      ],
+      recoveryMethods: [],
+    } as never)
+
+    render(<PasskeyMenu onClose={vi.fn()} />)
+
+    await waitFor(() => {
+      expect(screen.getByText('Google Password Manager')).toBeInTheDocument()
+    })
+    expect(screen.queryByText('Android')).not.toBeInTheDocument()
   })
 
   it('shows overflow menu on authenticator rows', async () => {

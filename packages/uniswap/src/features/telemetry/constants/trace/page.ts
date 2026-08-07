@@ -13,6 +13,7 @@ export enum InterfacePageName {
   LaunchAuctionPoolDetails = 'launch-auction-pool-details',
   LaunchAuctionReview = 'launch-auction-review',
   LaunchAuctionTokenDetails = 'launch-auction-token-details',
+  LaunchesPage = 'launches-page',
   Limit = 'limit-page',
   MigrateV2 = 'migrate-v2-page',
   MigrateV2Pair = 'migrate-v2-pair-page',

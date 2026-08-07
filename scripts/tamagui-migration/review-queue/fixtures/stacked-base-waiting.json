@@ -1,0 +1,45 @@
+{
+  "description": "Trap 4: PR 402 meets the ready bar (independent approval, green checks) but its base branch is PR 401's head — an OPEN PR — so it is stackWaiting, NOT readyToMerge. PR 401 itself still needs independent review.",
+  "now": "2026-07-28T12:00:00Z",
+  "defaultBranch": "main",
+  "podByLogin": { "alice": "swap-fe" },
+  "prs": [
+    {
+      "number": 401,
+      "title": "feat(scripts): stack base tooling [INFRA-3401]",
+      "url": "https://github.com/Uniswap/universe/pull/401",
+      "draft": false,
+      "author": { "login": "claude[bot]", "type": "Bot" },
+      "assignees": ["alice"],
+      "body": "Stack base.\n\nFixes INFRA-3401",
+      "baseRefName": "main",
+      "headRefName": "thebotfather/infra-3401-stack-base",
+      "labels": [{ "name": "tamagui-migration" }],
+      "createdAt": "2026-07-24T12:00:00Z"
+    },
+    {
+      "number": 402,
+      "title": "feat(scripts): stacked child on 401 [INFRA-3402]",
+      "url": "https://github.com/Uniswap/universe/pull/402",
+      "draft": false,
+      "author": { "login": "claude[bot]", "type": "Bot" },
+      "assignees": ["alice"],
+      "body": "Stacked on #401.\n\nFixes INFRA-3402",
+      "baseRefName": "thebotfather/infra-3401-stack-base",
+      "headRefName": "thebotfather/infra-3402-stack-child",
+      "labels": [{ "name": "tamagui-migration" }],
+      "createdAt": "2026-07-25T12:00:00Z"
+    }
+  ],
+  "reviews": {
+    "401": [],
+    "402": [
+      { "author": { "login": "carol", "type": "User" }, "state": "APPROVED", "submittedAt": "2026-07-27T15:00:00Z" }
+    ]
+  },
+  "checks": { "401": "success", "402": "success" },
+  "requestedReviewers": {
+    "401": { "users": [], "teams": [] },
+    "402": { "users": [], "teams": [] }
+  }
+}

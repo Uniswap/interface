@@ -120,6 +120,8 @@ export const ENTRY_GATEWAY_HOSTS: Record<Environment, string> = {
 }
 
 // WebSocket URLs
+// Dev deliberately targets the staging WS host until a dev websockets deployment exists;
+// flip this constant to backend-dev when it does.
 export const DEV_WEBSOCKET_BASE_URL: string = 'wss://websockets.backend-staging.api.uniswap.org'
 export const STAGING_WEBSOCKET_BASE_URL: string = 'wss://websockets.backend-staging.api.uniswap.org'
 // Same host as the session cookie so browsers attach it to the WS handshake; the gateway authenticates and proxies to the websockets service.

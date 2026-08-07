@@ -32,6 +32,7 @@ import {
 import { createTransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionServiceImpl'
 import { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
 import type { UserOpSigner } from 'wallet/src/features/transactions/executeTransaction/services/UserOpSignerService/userOpSignerService'
+import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 
 type RequestSubmitTransactionParamsWithTypeInfo = Exclude<
   SubmitTransactionParamsWithTypeInfo,
@@ -1252,7 +1253,8 @@ describe('TransactionService', () => {
       // Assert - Verify the behavior, not the implementation
       // 1. Verify transaction was prepared correctly
       expect(mockTransactionSigner.prepareTransaction).toHaveBeenCalledWith({
-        request: txRequest,
+        // chainId is pinned onto the request so ethers cannot infer it from the provider.
+        request: { ...txRequest, chainId: UniverseChainId.Mainnet },
       })
 
       // 2. Verify transaction was signed
@@ -1338,7 +1340,7 @@ describe('TransactionService', () => {
 
       // 2. Verify transaction was prepared with calculated nonce
       expect(mockTransactionSigner.prepareTransaction).toHaveBeenCalledWith({
-        request: requestWithNonce,
+        request: { ...requestWithNonce, chainId: UniverseChainId.Mainnet },
       })
 
       // 3. Verify result
@@ -1537,6 +1539,183 @@ describe('TransactionService', () => {
     })
 
     // Additional tests would be in the individual method test suites for prepareAndSignTransaction and submitTransaction
+  })
+
+  // Finding 814: the caller-resolved `chainId` param is the reviewed chain. The request's own
+  // chainId and any pre-signed transaction's chain must agree with it.
+  describe('chain binding', () => {
+    const mockAccount: SignerMnemonicAccountMeta = {
+      address: '0x1234567890123456789012345678901234567890',
+      type: AccountType.SignerMnemonic,
+    }
+
+    const txRequest = {
+      to: '0xabcdef1234567890123456789012345678901234',
+      value: '0x1234',
+      data: '0x123abc',
+      nonce: 5,
+    }
+
+    function executeParams(overrides: Partial<ExecuteTransactionParams> = {}): ExecuteTransactionParams {
+      return {
+        chainId: UniverseChainId.Mainnet,
+        account: mockAccount,
+        options: { request: txRequest },
+        typeInfo: { type: TransactionType.Unknown },
+        transactionOriginType: TransactionOriginType.External,
+        ...overrides,
+      }
+    }
+
+    function signedRequest(chainId: UniverseChainId): SignedTransactionRequest {
+      return {
+        request: { ...txRequest, to: txRequest.to, chainId },
+        signedRequest: '0xdeadbeef',
+        timestampBeforeSign: 0,
+      }
+    }
+
+    it('rejects a pre-signed transaction bound to a different chain', async () => {
+      const service = createTestService()
+
+      await expect(
+        service.executeTransaction(executeParams({ preSignedTransaction: signedRequest(UniverseChainId.Base) })),
+      ).rejects.toThrow('Mismatched chainId on pre-signed transaction. Expected 1, received 8453')
+
+      expect(mockTransactionSigner.sendTransaction).not.toHaveBeenCalled()
+    })
+
+    it('submits a pre-signed transaction bound to the expected chain', async () => {
+      const service = createTestService()
+      mockTransactionSigner.sendTransaction.mockResolvedValue('0xhash')
+
+      await service.executeTransaction(executeParams({ preSignedTransaction: signedRequest(UniverseChainId.Mainnet) }))
+
+      expect(mockTransactionSigner.sendTransaction).toHaveBeenCalledWith({ signedTx: '0xdeadbeef' })
+    })
+
+    it('rejects a transaction request whose own chainId disagrees with the execution chain', async () => {
+      const service = createTestService()
+
+      await expect(
+        service.executeTransaction(
+          executeParams({ options: { request: { ...txRequest, chainId: UniverseChainId.Base } } }),
+        ),
+      ).rejects.toThrow('Mismatched chainId on transaction request. Expected 1, received 8453')
+
+      expect(mockTransactionSigner.signTransaction).not.toHaveBeenCalled()
+    })
+
+    it('allows a transaction request with no chainId of its own', async () => {
+      const service = createTestService()
+      const prepared = { ...txRequest, chainId: UniverseChainId.Mainnet }
+      mockTransactionSigner.prepareTransaction.mockResolvedValue(prepared)
+      mockTransactionSigner.signTransaction.mockResolvedValue('0xsigned')
+      mockTransactionSigner.sendTransaction.mockResolvedValue('0xhash')
+
+      await service.executeTransaction(executeParams())
+
+      expect(mockTransactionSigner.signTransaction).toHaveBeenCalledWith(prepared)
+      expect(mockTransactionSigner.sendTransaction).toHaveBeenCalledWith({ signedTx: '0xsigned' })
+    })
+
+    // Without pinning, ethers' populateTransaction fills chainId from the connected provider, so
+    // the signed chain would depend on service wiring rather than the chain the caller resolved.
+    it('pins the resolved chain onto a request that omits one', async () => {
+      const service = createTestService()
+      const prepared = { ...txRequest, chainId: UniverseChainId.Mainnet }
+      mockTransactionSigner.prepareTransaction.mockResolvedValue(prepared)
+      mockTransactionSigner.signTransaction.mockResolvedValue('0xsigned')
+
+      await service.prepareAndSignTransaction({
+        chainId: UniverseChainId.Mainnet,
+        account: mockAccount,
+        request: { ...txRequest, to: txRequest.to },
+        submitViaPrivateRpc: false,
+      })
+
+      expect(mockTransactionSigner.prepareTransaction).toHaveBeenCalledWith({
+        request: expect.objectContaining({ chainId: UniverseChainId.Mainnet }),
+      })
+    })
+
+    // Dapps send hex as readily as decimal, so the compare has to normalize or it rejects valid
+    // requests that are already on the right chain.
+    it('accepts a hex chainId that resolves to the expected chain', async () => {
+      const service = createTestService()
+      mockTransactionSigner.prepareTransaction.mockResolvedValue({ ...txRequest, chainId: UniverseChainId.Mainnet })
+      mockTransactionSigner.signTransaction.mockResolvedValue('0xsigned')
+
+      await expect(
+        service.prepareAndSignTransaction({
+          chainId: UniverseChainId.Mainnet,
+          account: mockAccount,
+          request: { ...txRequest, to: txRequest.to, chainId: '0x1' as unknown as number },
+          submitViaPrivateRpc: false,
+        }),
+      ).resolves.toMatchObject({ signedRequest: '0xsigned' })
+    })
+
+    // JSON delivers null as readily as undefined, and both mean "no chain of its own".
+    it('treats a null chainId as absent rather than a mismatch', async () => {
+      const service = createTestService()
+      mockTransactionSigner.prepareTransaction.mockResolvedValue({ ...txRequest, chainId: UniverseChainId.Mainnet })
+      mockTransactionSigner.signTransaction.mockResolvedValue('0xsigned')
+
+      await expect(
+        service.prepareAndSignTransaction({
+          chainId: UniverseChainId.Mainnet,
+          account: mockAccount,
+          request: { ...txRequest, to: txRequest.to, chainId: null as unknown as number },
+          submitViaPrivateRpc: false,
+        }),
+      ).resolves.toMatchObject({ signedRequest: '0xsigned' })
+    })
+
+    it('rejects a chainId that is not a supported chain', async () => {
+      const service = createTestService()
+
+      await expect(
+        service.prepareAndSignTransaction({
+          chainId: UniverseChainId.Mainnet,
+          account: mockAccount,
+          request: { ...txRequest, to: txRequest.to, chainId: 999999 },
+          submitViaPrivateRpc: false,
+        }),
+      ).rejects.toThrow('Mismatched chainId on transaction request')
+    })
+
+    // populateTransaction could rewrite chainId, which would bypass the pre-prepare binding.
+    it('rejects when prepare returns a transaction on a different chain', async () => {
+      const service = createTestService()
+      mockTransactionSigner.prepareTransaction.mockResolvedValue({ ...txRequest, chainId: UniverseChainId.Base })
+
+      await expect(
+        service.prepareAndSignTransaction({
+          chainId: UniverseChainId.Mainnet,
+          account: mockAccount,
+          request: { ...txRequest, to: txRequest.to },
+          submitViaPrivateRpc: false,
+        }),
+      ).rejects.toThrow('Mismatched chainId on prepared transaction. Expected 1, received 8453')
+
+      expect(mockTransactionSigner.signTransaction).not.toHaveBeenCalled()
+    })
+
+    it('rejects at prepare time when the request chain disagrees', async () => {
+      const service = createTestService()
+
+      await expect(
+        service.prepareAndSignTransaction({
+          chainId: UniverseChainId.Mainnet,
+          account: mockAccount,
+          request: { ...txRequest, to: txRequest.to, chainId: UniverseChainId.Base },
+          submitViaPrivateRpc: false,
+        }),
+      ).rejects.toThrow('Mismatched chainId on transaction request. Expected 1, received 8453')
+
+      expect(mockTransactionSigner.signTransaction).not.toHaveBeenCalled()
+    })
   })
 
   describe('getNextNonce', () => {

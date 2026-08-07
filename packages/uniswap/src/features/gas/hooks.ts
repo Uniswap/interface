@@ -15,7 +15,7 @@ import {
 } from 'uniswap/src/components/modals/WarningModal/types'
 import { type PollingInterval } from 'uniswap/src/constants/misc'
 import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
-import { useGasFeeQuery } from 'uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery'
+import { useGasFeeQuery } from 'uniswap/src/data/apiClients/gasService/useGasFeeQuery'
 import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'

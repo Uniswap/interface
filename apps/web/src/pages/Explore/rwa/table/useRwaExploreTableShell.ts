@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import type { Rwa } from 'uniswap/src/data/rest/rwa/types'
+import type { Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
 import { filterRwaRowsBySearch } from '~/pages/Explore/rwa/table/filterRwaRowsBySearch'
 import { sortRankedRwaRows } from '~/pages/Explore/rwa/table/sortRankedRwaRows'

@@ -6,7 +6,7 @@ import { AppNotificationType } from 'uniswap/src/features/notifications/slice/ty
 import type { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { SwapExecutionCallbacks } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import type { ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { isUserOpSwap } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isGasSponsoredExecution, isUserOpSwap } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { tradeToTransactionInfo } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import type { ExecuteUserOpParams } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
@@ -42,6 +42,7 @@ export function createExecuteUserOpSwapSaga(dependencies: TransactionSagaDepende
         gasEstimate: swapTxContext.gasFeeEstimation.swapEstimate,
         swapStartTimestamp: analytics.swap_start_timestamp,
         isFinalStep: analytics.is_final_step,
+        isSponsored: isGasSponsoredExecution(swapTxContext),
       })
 
       // Surface the pending state before submission so the user sees an immediate

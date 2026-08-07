@@ -82,7 +82,7 @@ export function ExpandableSearchRowContainer({
   const panelSlot = shouldRenderPanel ? (
     // Clip the panel to the animated height so it never spills over the rows below. The settled height equals
     // the panel's exact (computed) height, so nothing is cropped at rest.
-    // oxlint-disable-next-line eslint-plugin-react(forbid-elements) -- raw div needed for a CSS height-reveal clip
+    // oxlint-disable-next-line react/forbid-elements -- raw div needed for a CSS height-reveal clip
     <div
       aria-hidden={!shouldExpand}
       // `inert` while collapsing removes the still-mounted issuer-row buttons from the tab order mid-animation.

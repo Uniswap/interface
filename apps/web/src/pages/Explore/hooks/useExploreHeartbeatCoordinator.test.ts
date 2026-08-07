@@ -1,4 +1,5 @@
 import { renderHook, act } from '@testing-library/react'
+import { useFeatureFlag } from '@universe/gating'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { useInterval } from '~/lib/hooks/useInterval'
@@ -7,6 +8,15 @@ import { ExploreTab } from '~/types/explore'
 
 const mockQueryClientRefetchQueries = vi.fn().mockResolvedValue(undefined)
 const mockApolloRefetchQueries = vi.fn().mockResolvedValue(undefined)
+
+vi.mock('@universe/gating', async (importOriginal) => {
+  return {
+    ...(await importOriginal<typeof import('@universe/gating')>()),
+    useFeatureFlag: vi.fn(),
+  }
+})
+
+const mockUseFeatureFlag = vi.mocked(useFeatureFlag)
 
 vi.mock('@tanstack/react-query', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@tanstack/react-query')>()
@@ -41,6 +51,7 @@ function makeParams(overrides?: Partial<Parameters<typeof useExploreHeartbeatCoo
 describe('useExploreHeartbeatCoordinator', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mockUseFeatureFlag.mockReturnValue(false)
     Object.defineProperty(document, 'visibilityState', {
       configurable: true,
       get: () => 'visible',
@@ -51,7 +62,7 @@ describe('useExploreHeartbeatCoordinator', () => {
     renderHook(() => useExploreHeartbeatCoordinator(makeParams()))
 
     const [, delay] = mockUseInterval.mock.calls[0]!
-    expect(delay).toBe(PollingInterval.KindaFast)
+    expect(delay).toBe(PollingInterval.Normal)
   })
 
   it('passes null delay when disabled', () => {

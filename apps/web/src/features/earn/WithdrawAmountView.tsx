@@ -453,6 +453,7 @@ export function WithdrawAmountView({
           <Text variant="body2" color="$neutral2">
             {t('explore.earn.withdraw.to')}
           </Text>
+          {/* TODO(CONS-2905): Re-enable the search input once the portaled dropdown can retain focus in this modal. */}
           <NetworkFilter
             networks={withdrawDestinationChainIds}
             currentChainId={chainId}
@@ -461,6 +462,7 @@ export function WithdrawAmountView({
             position="right"
             positionFixed
             showSearch
+            showSearchInput={false}
             tieredOptions={tieredNetworkOptions}
             dropdownStyle={{ maxHeight: EARN_SELECTOR_DROPDOWN_MAX_HEIGHT }}
             onPress={handleNetworkChange}

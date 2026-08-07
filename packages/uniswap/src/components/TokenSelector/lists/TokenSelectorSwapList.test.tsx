@@ -6,7 +6,7 @@ import {
 } from 'uniswap/src/components/lists/items/types'
 import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { useTokenSectionsForSwap } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSwapList'
-import { TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/types'
+import { TokenSelectorFlow, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/types'
 import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { renderHook } from 'uniswap/src/test/test-utils'
@@ -64,7 +64,11 @@ const tokenOption = {
 
 function renderSwapSections(
   variation: TokenSelectorVariation,
-  options?: { chainFilter?: UniverseChainId | null; oppositeSelectedToken?: TradeableAsset },
+  options?: {
+    chainFilter?: UniverseChainId | null
+    oppositeSelectedToken?: TradeableAsset
+    flow?: TokenSelectorFlow
+  },
 ): ReturnType<typeof useTokenSectionsForSwap> {
   const { result } = renderHook(() =>
     useTokenSectionsForSwap({
@@ -72,6 +76,7 @@ function renderSwapSections(
       chainFilter: options?.chainFilter ?? null,
       oppositeSelectedToken: options?.oppositeSelectedToken,
       variation,
+      flow: options?.flow,
     }),
   )
   return result.current
@@ -109,6 +114,17 @@ describe('useTokenSectionsForSwap Stocks section', () => {
   it('does NOT include Stocks on SwapInput', () => {
     const { data } = renderSwapSections(TokenSelectorVariation.SwapInput)
     expect(hasStocksSection(data)).toBe(false)
+  })
+
+  it('includes the Stocks section on SwapOutput in the Swap flow', () => {
+    const { data } = renderSwapSections(TokenSelectorVariation.SwapOutput, { flow: TokenSelectorFlow.Swap })
+    expect(hasStocksSection(data)).toBe(true)
+  })
+
+  it('does NOT include Stocks in the Limit flow and disables the RWA fetch', () => {
+    const { data } = renderSwapSections(TokenSelectorVariation.SwapOutput, { flow: TokenSelectorFlow.Limit })
+    expect(hasStocksSection(data)).toBe(false)
+    expect(mockUseRwaTokenOptions).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
   })
 
   it('does NOT include Stocks when the region is RWA-blocked', () => {

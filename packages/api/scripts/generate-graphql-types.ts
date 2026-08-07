@@ -1,4 +1,5 @@
 #!/usr/bin/env bun
+import { readdir } from 'fs/promises'
 import path from 'path'
 /**
  * GraphQL type generator that replaces the graphql-codegen CLI.
@@ -37,22 +38,34 @@ const schemaDocumentNode = getCachedDocumentNodeFromSchema(schemaAst)
 // ---------------------------------------------------------------------------
 // 2. Load all document files (matching codegen.config.ts patterns)
 // ---------------------------------------------------------------------------
-const documentPatterns = [
-  'apps/mobile/src/**/*.graphql',
-  'apps/extension/src/**/*.graphql',
-  'packages/wallet/src/**/*.graphql',
-  'packages/uniswap/src/**/*.graphql',
-  'packages/api/src/**/*.graphql',
+const documentRoots = [
+  'apps/mobile/src',
+  'apps/extension/src',
+  'packages/wallet/src',
+  'packages/uniswap/src',
+  'packages/api/src',
 ]
 
-const documentPaths: string[] = []
-for (const pattern of documentPatterns) {
-  const g = new Bun.Glob(pattern)
-  for await (const match of g.scan({ cwd: REPO_ROOT, absolute: true })) {
-    // Skip the schema file itself
-    if (match.endsWith('schema.graphql')) continue
-    documentPaths.push(match)
+// Manual walk instead of Bun.Glob.scan: must skip __generated__ output dirs, which
+// concurrent codegen tasks (e.g. tradingapi:generate) delete/recreate mid-scan.
+async function collectGraphqlFiles(dir: string, out: string[]): Promise<void> {
+  const entries = await readdir(dir, { withFileTypes: true }).catch(() => null)
+  if (!entries) return // dir removed mid-scan by a concurrent codegen task
+  for (const entry of entries) {
+    if (entry.isDirectory()) {
+      if (entry.name === '__generated__') continue
+      await collectGraphqlFiles(path.join(dir, entry.name), out)
+    } else if (entry.name.endsWith('.graphql')) {
+      // Skip the schema file itself
+      if (entry.name.endsWith('schema.graphql')) continue
+      out.push(path.join(dir, entry.name))
+    }
   }
+}
+
+const documentPaths: string[] = []
+for (const root of documentRoots) {
+  await collectGraphqlFiles(path.join(REPO_ROOT, root), documentPaths)
 }
 
 // Deduplicate and sort for deterministic output

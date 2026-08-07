@@ -1,3 +1,4 @@
+import { PasskeyManagementModal } from '@universe/embedded-wallet'
 import { isDevEnv } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useEffect, useState } from 'react'
@@ -38,7 +39,6 @@ import { getFiatCurrencyName, useAppFiatCurrencyInfo } from 'uniswap/src/feature
 import { NetworkCostPickerModal } from 'uniswap/src/features/gas/components/NetworkCostPickerModal'
 import { Language, WALLET_SUPPORTED_LANGUAGES } from 'uniswap/src/features/language/constants'
 import { getLanguageInfo, useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
-import { PasskeyManagementModal } from 'uniswap/src/features/passkey/PasskeyManagementModal'
 import {
   setCurrentFiatCurrency,
   setCurrentLanguage,

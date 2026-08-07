@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
-import { useBalances } from 'uniswap/src/data/balances/hooks/useBalances'
-import { useTokenProjectTokensTvlPartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
+import { useBalances } from 'uniswap/src/data/apiClients/dataApiService/balances/hooks/useBalances'
+import { useTokenProjectTokensTvlPartsFragment } from 'uniswap/src/data/graphql/fragments'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'

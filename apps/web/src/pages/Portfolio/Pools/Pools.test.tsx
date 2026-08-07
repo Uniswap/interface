@@ -2,7 +2,7 @@ import userEvent from '@testing-library/user-event'
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import type { ReactNode } from 'react'
-import { PortfolioBalancePart } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+import { PortfolioBalancePart } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { usePortfolioBalancePart } from 'uniswap/src/features/dataApi/balances/usePortfolioBalancePart'
 import { PortfolioBalance } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioBalance'
@@ -25,6 +25,7 @@ import { PositionsListSection } from '~/features/Liquidity/PositionsListSection'
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
 import { useResolvedAddresses } from '~/pages/Portfolio/hooks/useResolvedAddresses'
+import { useShowDemoView } from '~/pages/Portfolio/hooks/useShowDemoView'
 import { PortfolioPools } from '~/pages/Portfolio/Pools/Pools'
 import { PortfolioTab } from '~/pages/Portfolio/types'
 import { mocked } from '~/test-utils/mocked'
@@ -71,6 +72,10 @@ vi.mock('~/pages/Portfolio/hooks/usePortfolioAddresses', () => ({
 
 vi.mock('~/pages/Portfolio/hooks/useResolvedAddresses', () => ({
   useResolvedAddresses: vi.fn(),
+}))
+
+vi.mock('~/pages/Portfolio/hooks/useShowDemoView', () => ({
+  useShowDemoView: vi.fn(),
 }))
 
 vi.mock('uniswap/src/features/portfolio/PortfolioBalance/PortfolioBalance', () => ({
@@ -189,6 +194,7 @@ describe('PortfolioPools', () => {
       svmAddress: undefined,
       isExternalWallet: false,
     })
+    mocked(useShowDemoView).mockReturnValue(false)
     mocked(usePortfolioRoutes).mockReturnValue({
       tab: PortfolioTab.Pools,
       chainId: undefined,

@@ -2,7 +2,7 @@ import JPEG from 'jpeg-js'
 import PNG from 'png-ts'
 import { parseToRgb } from 'polished'
 import { RgbaColor, RgbColor } from 'polished/lib/types/color'
-import { SPECIAL_CASE_TOKEN_COLORS } from 'ui/src/utils/colors/specialCaseTokens'
+import { getSpecialCaseTokenColorOverride } from 'ui/src/utils/colors/specialCaseTokens'
 
 // Maps to `#232B2B` — the neutral dark slate used as the OG-card accent
 // when a token logo can't be color-averaged (missing, unreachable, decode
@@ -54,8 +54,9 @@ export async function getRGBColor(imageUrl: string | undefined, checkDistance = 
   if (!imageUrl) {
     return DEFAULT_COLOR
   }
-  if (imageUrl in SPECIAL_CASE_TOKEN_COLORS) {
-    return parseToRgb(SPECIAL_CASE_TOKEN_COLORS[imageUrl])
+  const specialCaseColor = getSpecialCaseTokenColorOverride(imageUrl)
+  if (specialCaseColor) {
+    return parseToRgb(specialCaseColor)
   }
   let parsed: URL
   try {

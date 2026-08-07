@@ -7,7 +7,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
-import { getTokenDetailsURL } from '~/appGraphql/data/util'
+import { getTokenDetailsURL } from '~/data/util'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 import { getChainUrlParam } from '~/utils/params/chainParams'
 

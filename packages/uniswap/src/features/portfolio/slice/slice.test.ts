@@ -75,6 +75,29 @@ describe(portfolioReducer, () => {
 
       vi.useRealTimers()
     })
+
+    it('uses a distinct generation when the same token is added again in the same millisecond', () => {
+      vi.useFakeTimers()
+      vi.setSystemTime(new Date('2026-07-23T00:00:00Z'))
+
+      const currencyId = buildCurrencyId(TEST_CHAIN_ID, TEST_TOKEN_ADDRESS)
+      let state = portfolioReducer(
+        initialPortfolioState,
+        addTokensToBalanceOverride({ ownerAddress: TEST_ADDRESS1, currencyIds: [currencyId] }),
+      )
+      const firstOverride = state.tokenBalanceOverrides[TEST_ADDRESS1]?.[currencyId]
+
+      state = portfolioReducer(
+        state,
+        addTokensToBalanceOverride({ ownerAddress: TEST_ADDRESS1, currencyIds: [currencyId] }),
+      )
+      const secondOverride = state.tokenBalanceOverrides[TEST_ADDRESS1]?.[currencyId]
+
+      expect(secondOverride?.updatedAt).toBe(firstOverride?.updatedAt)
+      expect(secondOverride?.generation).not.toBe(firstOverride?.generation)
+
+      vi.useRealTimers()
+    })
   })
 
   describe(removeTokenFromBalanceOverride, () => {
@@ -125,6 +148,31 @@ describe(portfolioReducer, () => {
       )
 
       expect(state).toEqual(initialState)
+    })
+
+    it('does not remove a newer override when cleanup uses an older generation', () => {
+      const currencyId = buildCurrencyId(TEST_CHAIN_ID, TEST_TOKEN_ADDRESS)
+      let state = portfolioReducer(
+        initialPortfolioState,
+        addTokensToBalanceOverride({ ownerAddress: TEST_ADDRESS1, currencyIds: [currencyId] }),
+      )
+      const staleGeneration = state.tokenBalanceOverrides[TEST_ADDRESS1]?.[currencyId]?.generation ?? null
+
+      state = portfolioReducer(
+        state,
+        addTokensToBalanceOverride({ ownerAddress: TEST_ADDRESS1, currencyIds: [currencyId] }),
+      )
+      state = portfolioReducer(
+        state,
+        removeTokenFromBalanceOverride({
+          ownerAddress: TEST_ADDRESS1,
+          chainId: TEST_CHAIN_ID,
+          tokenAddress: TEST_TOKEN_ADDRESS,
+          expectedGeneration: staleGeneration,
+        }),
+      )
+
+      expect(state.tokenBalanceOverrides[TEST_ADDRESS1]?.[currencyId]).toBeDefined()
     })
   })
 

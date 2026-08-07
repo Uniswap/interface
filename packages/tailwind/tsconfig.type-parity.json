@@ -1,0 +1,60 @@
+{
+  "extends": "../../config/tsconfig/ui.json",
+  "compilerOptions": {
+    "composite": false,
+    "noEmit": true,
+    "emitDeclarationOnly": false,
+    "types": ["node", "chrome"],
+    "noPropertyAccessFromIndexSignature": false,
+    "typeRoots": ["../../node_modules/@types"],
+    // Overriding "paths" replaces the inherited map wholesale, so this
+    // mirrors tsconfig.base.json's map (rewritten relative to this config,
+    // since paths resolve against the declaring file) and adds the
+    // apps/web-internal "~" alias the filter-select legacy import graph
+    // needs. Keep in sync with tsconfig.base.json when packages move.
+    "paths": {
+      "@universe/analytics/*": ["../../packages/analytics/*"],
+      "@universe/api/*": ["../../packages/api/*"],
+      "@universe/chains/*": ["../../packages/chains/*"],
+      "@universe/cli/*": ["../../apps/cli/*"],
+      "@universe/compliance/*": ["../../packages/compliance/*"],
+      "@universe/config/*": ["../../packages/config/*"],
+      "@universe/config-cli/*": ["../../packages/config-cli/*"],
+      "@universe/cryptography/*": ["../../packages/cryptography/*"],
+      "@universe/encoding/*": ["../../packages/encoding/*"],
+      "@universe/environment/*": ["../../packages/environment/*"],
+      "@universe/gating/*": ["../../packages/gating/*"],
+      "@universe/hashcash-native": ["../../packages/hashcash-native/src/index.ts"],
+      "@universe/hashcash-native/*": ["../../packages/hashcash-native/*"],
+      "@universe/logger/*": ["../../packages/logger/*"],
+      "@universe/mycelium/*": ["../../packages/mycelium/*"],
+      "@universe/notifications/*": ["../../packages/notifications/*"],
+      "@universe/prices/*": ["../../packages/prices/*"],
+      "@universe/privacy/*": ["../../packages/privacy/*"],
+      "@universe/react-query/*": ["../../packages/react-query/*"],
+      "@universe/sessions/*": ["../../packages/sessions/*"],
+      "@universe/tailwind/*": ["../../packages/tailwind/*"],
+      "@universe/transactional/*": ["../../packages/transactional/*"],
+      "@universe/trpc/*": ["../../packages/trpc/*"],
+      "@universe/websocket/*": ["../../packages/websocket/*"],
+      "ui/*": ["../../packages/ui/*"],
+      "uniswap/*": ["../../packages/uniswap/*"],
+      "utilities/*": ["../../packages/utilities/*"],
+      "wallet/*": ["../../packages/wallet/*"],
+      "@universe/experiments/*": ["../../packages/experiments/*"],
+      "@universe/embedded-wallet/*": ["../../packages/embedded-wallet/*"],
+      "~/*": ["../../apps/web/src/*"]
+    }
+  },
+  "include": [
+    "src/parity/flex/type-parity.ts",
+    "src/parity/popover/type-parity.ts",
+    "src/parity/tooltip/type-parity.ts",
+    "src/parity/menu/type-parity.ts",
+    "src/parity/network-selector/type-parity.ts",
+    "src/parity/filter-select/type-parity.ts",
+    "../ui/src/env.d.ts"
+  ],
+  "references": [],
+  "exclude": []
+}

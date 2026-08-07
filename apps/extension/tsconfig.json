@@ -12,9 +12,6 @@
       "path": "../../packages/wallet"
     },
     {
-      "path": "../../packages/compliance"
-    },
-    {
       "path": "../../packages/uniswap"
     },
     {
@@ -46,6 +43,12 @@
     },
     {
       "path": "../../packages/utilities"
+    },
+    {
+      "path": "../../packages/compliance"
+    },
+    {
+      "path": "../../packages/embedded-wallet"
     }
   ],
   "compilerOptions": {

@@ -5,5 +5,7 @@
 //   @import "@universe/tailwind/native"    → React Native (uniwind) tokens
 //   @import "@universe/tailwind/fonts"     → Basel Grotesk @font-face (web)
 //
-// This barrel exports the platform-agnostic token *type* vocabulary.
+// This barrel exports the platform-agnostic token *type* vocabulary and the
+// TS value mirror of the CSS custom properties (./tokens).
+export * from './tokens'
 export * from './types'

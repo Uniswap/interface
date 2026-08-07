@@ -8,15 +8,13 @@ import { TokenDetailsFavoriteButton } from 'src/components/TokenDetails/TokenDet
 import { useTokenDetailsCurrentChainBalance } from 'src/components/TokenDetails/useTokenDetailsCurrentChainBalance'
 import { Flex, Text } from 'ui/src'
 import { Ellipsis } from 'ui/src/components/icons'
+import { Lock } from 'ui/src/components/icons/Lock'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { ContextMenu } from 'uniswap/src/components/menus/ContextMenu'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
-import {
-  useTokenBasicInfoPartsFragment,
-  useTokenBasicProjectPartsFragment,
-} from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
+import { useTokenBasicInfoPartsFragment, useTokenBasicProjectPartsFragment } from 'uniswap/src/data/graphql/fragments'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { isMultichainProjectTokens } from 'uniswap/src/features/dataApi/tokenProjects/utils/isMultichainProjectTokens'
@@ -33,7 +31,7 @@ import { useBooleanState } from 'utilities/src/react/useBooleanState'
 export const HeaderTitleElement = memo(function HeaderTitleElement(): JSX.Element {
   const { t } = useTranslation()
 
-  const { currencyId } = useTokenDetailsContext()
+  const { currencyId, isPermissioned, isAllowlisted } = useTokenDetailsContext()
 
   const token = useTokenBasicInfoPartsFragment({ currencyId }).data
   const project = useTokenBasicProjectPartsFragment({ currencyId }).data.project
@@ -46,6 +44,8 @@ export const HeaderTitleElement = memo(function HeaderTitleElement(): JSX.Elemen
   const symbol = metadata.symbol
   const name = metadata.name
   const chain = token.chain
+  // Mirror the top-of-page ticker lock in the sticky header: allowlisted-only.
+  const showPermissionedLock = isPermissioned && isAllowlisted
 
   return (
     <Flex alignItems="center" justifyContent="space-between" ml="$spacing32">
@@ -61,6 +61,7 @@ export const HeaderTitleElement = memo(function HeaderTitleElement(): JSX.Elemen
         <Text color="$neutral2" numberOfLines={1} variant="buttonLabel3">
           {symbol ?? t('token.error.unknown')}
         </Text>
+        {showPermissionedLock && <Lock color="$neutral2" size="$icon.16" flexShrink={0} />}
       </Flex>
     </Flex>
   )

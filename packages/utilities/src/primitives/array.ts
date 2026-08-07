@@ -97,6 +97,15 @@ export function pipe<T>(value: T, fns: Array<(arg: T) => T>): T {
 }
 
 /**
+ * Picks a random element from a non-empty array.
+ * @param pool - The array to pick from. Must be non-empty.
+ * @param random - Injectable randomness source in [0, 1); defaults to Math.random.
+ */
+export function pickRandom<T>(pool: readonly T[], random: () => number = Math.random): T {
+  return pool[Math.floor(random() * pool.length)] as T
+}
+
+/**
  * Removes duplicate items from an array of objects based on a given key.
  * @param array - The array of objects to remove duplicates from.
  * @param key - The key of each item to use for determining uniqueness.

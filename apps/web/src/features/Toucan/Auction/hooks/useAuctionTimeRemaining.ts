@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { getDurationRemainingString } from 'utilities/src/time/duration'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useAbbreviatedTimeString } from '~/components/Table/utils/useAbbreviatedTimeString'
-import { useMachineTimeMs } from '~/hooks/useMachineTime'
+import { useSharedMachineTimeMs } from '~/hooks/useMachineTime'
 
 export type AuctionPhase = 'notStarted' | 'preBid' | 'live' | 'completed'
 
@@ -32,8 +32,8 @@ export function useAuctionTimeRemaining({
   /** When pre-bidding ends. Absent (or equal to start) means no pre-bid window. */
   preBidEndBlockTimestamp?: bigint
 }): AuctionTimeRemainingData {
-  // Update current time every second for smooth countdown
-  const currentTime = useMachineTimeMs(ONE_SECOND_MS)
+  // Shared 1s clock so every countdown on the page ticks in the same pass with the same timestamp
+  const currentTime = useSharedMachineTimeMs(ONE_SECOND_MS)
   const { t } = useTranslation()
 
   const endTimestampMs = endBlockTimestamp ? Number(endBlockTimestamp) * 1000 : 0

@@ -13,12 +13,16 @@ import {
   useCreateAuctionStore,
   useCreateAuctionStoreActions,
 } from '~/pages/Liquidity/CreateAuction/CreateAuctionContext'
+import { useIsQuickLaunchModalFlow } from '~/pages/Liquidity/CreateAuction/quickLaunchModalContext'
 import { TokenMode } from '~/pages/Liquidity/CreateAuction/types'
 
 export function AddTokenInfoStep() {
   const { t } = useTranslation()
   const tokenForm = useCreateAuctionStore((state) => state.tokenForm)
   const { setTokenMode } = useCreateAuctionStoreActions()
+  // The launches-page modal is quick-launch-only: the source tiles and the quick-launch
+  // switch are hidden so the mode can't be toggled out of the preset.
+  const isQuickLaunchModalFlow = useIsQuickLaunchModalFlow()
   const trace = useTrace()
 
   // HookTile is a custom component that doesn't forward an injected onPress, so the source-toggle
@@ -42,29 +46,34 @@ export function AddTokenInfoStep() {
 
   return (
     <Flex gap="$spacing16">
-      <Flex row gap="$spacing12">
-        <HookTile
-          selected={tokenForm.mode === TokenMode.CREATE_NEW}
-          title={t('toucan.createAuction.step.tokenInfo.createNew')}
-          description={t('toucan.createAuction.step.tokenInfo.createNew.description')}
-          onPress={switchToCreateNew}
-        />
-        <HookTile
-          selected={tokenForm.mode === TokenMode.EXISTING}
-          title={t('toucan.createAuction.step.tokenInfo.existing')}
-          description={t('toucan.createAuction.step.tokenInfo.existing.description')}
-          onPress={switchToExisting}
-        />
-      </Flex>
-      <QuickLaunchToggleCard />
+      {!isQuickLaunchModalFlow && (
+        <Flex row gap="$spacing12">
+          <HookTile
+            selected={tokenForm.mode === TokenMode.CREATE_NEW}
+            title={t('toucan.createAuction.step.tokenInfo.createNew')}
+            description={t('toucan.createAuction.step.tokenInfo.createNew.description')}
+            onPress={switchToCreateNew}
+          />
+          <HookTile
+            selected={tokenForm.mode === TokenMode.EXISTING}
+            title={t('toucan.createAuction.step.tokenInfo.existing')}
+            description={t('toucan.createAuction.step.tokenInfo.existing.description')}
+            onPress={switchToExisting}
+          />
+        </Flex>
+      )}
+      {!isQuickLaunchModalFlow && <QuickLaunchToggleCard />}
+      {/* Inside the modal the card chrome is dropped so the form sits flush against the modal padding. */}
       <Flex
-        backgroundColor="$surface1"
-        borderWidth="$spacing1"
-        borderColor="$surface3"
-        borderRadius="$rounded20"
-        p="$spacing24"
         gap="$spacing24"
-        $md={{ borderWidth: 0, borderRadius: '$none', p: '$none' }}
+        {...(!isQuickLaunchModalFlow && {
+          backgroundColor: '$surface1',
+          borderWidth: '$spacing1',
+          borderColor: '$surface3',
+          borderRadius: '$rounded20',
+          p: '$spacing24',
+          $md: { borderWidth: 0, borderRadius: '$none', p: '$none' },
+        })}
       >
         {tokenForm.mode === TokenMode.CREATE_NEW ? (
           <CreateNewTokenForm createNew={tokenForm} />

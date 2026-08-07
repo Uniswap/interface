@@ -2,6 +2,7 @@ import { TradeType } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
 import ms from 'ms'
 import { useEffect, useRef, useState } from 'react'
+import type { Dispatch } from 'redux'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -16,8 +17,10 @@ import { convertOrderStatusToTransactionStatus } from 'uniswap/src/features/tran
 import { logger } from 'utilities/src/logger/logger'
 import { getConfig } from '~/config'
 import { useAccount } from '~/hooks/useAccount'
+import { evaluateCancelTimeouts } from '~/state/activity/polling/cancelTimeouts'
 import { ActivityUpdateTransactionType, OnActivityUpdate } from '~/state/activity/types'
 import { getRwaSwapAnalyticsFromTypeInfo } from '~/state/activity/utils'
+import { useAppDispatch } from '~/state/hooks'
 import { usePendingUniswapXOrders } from '~/state/transactions/hooks'
 import { OrderQueryResponse, UniswapXBackendOrder } from '~/types/uniswapx'
 
@@ -101,11 +104,18 @@ function updateOrders({
   pendingOrders,
   statuses,
   onActivityUpdate,
+  dispatch,
 }: {
   pendingOrders: UniswapXOrderDetails[]
   statuses: UniswapXBackendOrder[]
   onActivityUpdate: OnActivityUpdate
+  dispatch: Dispatch
 }) {
+  // Flag-gated cancel-timeout tick: evaluates persisted deadlines against the same fresh
+  // statuses. Callers pass only the orders whose statuses this tick fetched, so a sub-5s quick
+  // L2 tick never runs receipt RPCs for a timed-out mainnet order (the standard tick owns those).
+  void evaluateCancelTimeouts({ pendingOrders, statuses, dispatch })
+
   pendingOrders.forEach((pendingOrder) => {
     const updatedOrder = statuses.find((order) => order.orderHash === pendingOrder.orderHash)
     if (!updatedOrder) {
@@ -119,10 +129,10 @@ function updateOrders({
       return
     }
 
-    // Guard against downgrading from Cancelling to Pending
-    // This prevents the poller from overwriting user-initiated cancellation status
-    // Orders in "Cancelling" state should only transition to Success, Failed, or remain Cancelling
-    if (pendingOrder.status === TransactionStatus.Cancelling && transactionStatus === TransactionStatus.Pending) {
+    // Orders in the cancel flow exit only to FINAL statuses. Non-final backend statuses
+    // (OPEN, INSUFFICIENT_FUNDS) must never flick a Cancelling order back to a cancellable
+    // state mid-cancel; the backend is not yet aware of the cancellation.
+    if (pendingOrder.status === TransactionStatus.Cancelling && !isFinalizedTxStatus(transactionStatus)) {
       return
     }
 
@@ -134,6 +144,10 @@ function updateOrders({
           ? updatedOrder.txHash
           : pendingOrder.hash,
       typeInfo: { ...pendingOrder.typeInfo },
+      // The cancellation raced a fill and lost: the order succeeded, the cancellation did not apply
+      ...(pendingOrder.status === TransactionStatus.Cancelling && transactionStatus === TransactionStatus.Success
+        ? { cancelFailedReason: 'filled' as const }
+        : {}),
     }
 
     if (
@@ -186,6 +200,7 @@ function useQuickPolling({
   pendingOrders: UniswapXOrderDetails[]
   onActivityUpdate: OnActivityUpdate
 }) {
+  const dispatch = useAppDispatch()
   const [delay, setDelay] = useState(QUICK_POLL_INITIAL_INTERVAL)
 
   const pendingOrdersRef = useRef(pendingOrders)
@@ -213,7 +228,9 @@ function useQuickPolling({
 
       try {
         const statuses = await fetchOrderStatuses(account.address, l2Orders)
-        updateOrders({ pendingOrders, statuses, onActivityUpdate })
+        // Scope the tick to its own L2 orders — mainnet orders can never match L2 statuses,
+        // and the cancel-timeout tick must not evaluate orders this poll did not fetch
+        updateOrders({ pendingOrders: l2Orders, statuses, onActivityUpdate, dispatch })
 
         const earliestOrder = l2Orders.find((order) => !isFinalizedTxStatus(order.status))
         if (earliestOrder) {
@@ -229,7 +246,7 @@ function useQuickPolling({
 
     timeout = setTimeout(poll, delay)
     return () => clearTimeout(timeout)
-  }, [account.address, delay, onActivityUpdate, pendingOrders])
+  }, [account.address, delay, dispatch, onActivityUpdate, pendingOrders])
 }
 
 function useStandardPolling({
@@ -241,6 +258,7 @@ function useStandardPolling({
   pendingOrders: UniswapXOrderDetails[]
   onActivityUpdate: OnActivityUpdate
 }) {
+  const dispatch = useAppDispatch()
   const [delay, setDelay] = useState(STANDARD_POLLING_INITIAL_INTERVAL)
   const pendingOrdersRef = useRef(pendingOrders)
 
@@ -271,7 +289,8 @@ function useStandardPolling({
           fetchLimitStatuses(account.address, mainnetOrders),
         ]).then((results) => results.flat())
 
-        updateOrders({ pendingOrders, statuses, onActivityUpdate })
+        // Scope the tick to its own mainnet orders (see the quick poller's matching note)
+        updateOrders({ pendingOrders: mainnetOrders, statuses, onActivityUpdate, dispatch })
         const newDelay = Math.min(delay * 1.5, STANDARD_POLLING_MAX_INTERVAL)
         setDelay(newDelay)
         timeout = setTimeout(poll, newDelay)
@@ -283,7 +302,7 @@ function useStandardPolling({
 
     timeout = setTimeout(poll, delay)
     return () => clearTimeout(timeout)
-  }, [account.address, delay, onActivityUpdate, pendingOrders])
+  }, [account.address, delay, dispatch, onActivityUpdate, pendingOrders])
 }
 
 export function usePollPendingOrders(onActivityUpdate: OnActivityUpdate) {

@@ -1,4 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import {
+  type Authenticator,
+  deleteAuthenticatorWithPasskey,
+  disconnectWallet,
+  useEmbeddedWalletState,
+} from '@universe/embedded-wallet'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Checkbox, Flex, Text, TouchableArea } from 'ui/src'
@@ -12,8 +18,6 @@ import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import type { Authenticator } from 'uniswap/src/features/passkey/embeddedWallet'
-import { deleteAuthenticatorWithPasskey, disconnectWallet } from 'uniswap/src/features/passkey/embeddedWallet'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -30,7 +34,6 @@ import { StatusIcon } from '~/components/StatusIcon'
 import { useDisconnect } from '~/hooks/useDisconnect'
 import { useModalState } from '~/hooks/useModalState'
 import type { DeletePasskeyModalParams } from '~/state/application/reducer'
-import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { useAppSelector } from '~/state/hooks'
 import { popupRegistry } from '~/state/popups/registry'
 import { PopupType } from '~/state/popups/types'

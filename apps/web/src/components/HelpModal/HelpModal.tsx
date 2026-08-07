@@ -1,3 +1,4 @@
+import { isMobileWeb } from '@universe/environment'
 import { useState } from 'react'
 import { Flex, Popover, Theme, TouchableArea, useMedia, useSporeColors } from 'ui/src'
 import { QuestionInCircleFilled } from 'ui/src/components/icons/QuestionInCircleFilled'
@@ -7,12 +8,19 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { HelpContent } from '~/components/HelpModal/HelpContent'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
-export function HelpModal({ showOnXL = false }: { showOnXL?: boolean }) {
+export function HelpModal({
+  showOnXL = false,
+  flushInDrawer = false,
+}: {
+  showOnXL?: boolean
+  flushInDrawer?: boolean
+}) {
   const [isOpen, setIsOpen] = useState(false)
   const media = useMedia()
   const colors = useSporeColors()
   const colorScheme = useSelectedColorScheme()
   const isTabletWidth = media.xl && !media.sm
+  const useDrawerFooterStyle = flushInDrawer && isMobileWeb
 
   return (
     <Flex
@@ -42,8 +50,16 @@ export function HelpModal({ showOnXL = false }: { showOnXL?: boolean }) {
         onOpenChange={(open) => setIsOpen(open)}
       >
         <Popover.Trigger>
-          <TouchableArea hoverable {...ClickableTamaguiStyle}>
-            <QuestionInCircleFilled size={20} color={colors.neutral1.get()} data-testid={TestID.HelpIcon} />
+          <TouchableArea
+            hoverable
+            {...(useDrawerFooterStyle ? { py: '$spacing4', pr: '$spacing4', pl: '$none' } : {})}
+            {...ClickableTamaguiStyle}
+          >
+            <QuestionInCircleFilled
+              size={useDrawerFooterStyle ? 24 : 20}
+              color={colors.neutral1.get()}
+              data-testid={TestID.HelpIcon}
+            />
           </TouchableArea>
         </Popover.Trigger>
         <Popover.Content

@@ -135,10 +135,9 @@ export {
   createHashcashWorkerChannel,
   HashcashWorkerBootError,
 } from '@universe/sessions/src/challenge-solvers/hashcash/worker/createHashcashWorkerChannel'
-// Note: Web Worker factory is intentionally NOT exported from here — consumers must
-// create the Worker instance themselves via a `new Worker(new URL(..., import.meta.url))`
-// expression in their own source tree. Vite's worker URL transformation only fires when
-// the pattern lives in the app code, not in a workspace package.
+// Consumers must import the worker URL via Vite's `?worker&url` suffix in app source —
+// Vite's worker detection does not fire inside workspace packages.
+export { createCrossOriginWorker } from '@universe/sessions/src/challenge-solvers/hashcash/worker/createCrossOriginWorker'
 export { createHashcashMultiWorkerChannel } from '@universe/sessions/src/challenge-solvers/hashcash/worker/createHashcashMultiWorkerChannel'
 export type { MultiWorkerConfig } from '@universe/sessions/src/challenge-solvers/hashcash/worker/createHashcashMultiWorkerChannel'
 export type { CreateWorkerHashcashSolverContext } from '@universe/sessions/src/challenge-solvers/hashcash/createWorkerHashcashSolver'

@@ -15,7 +15,6 @@ import { ElementName, InterfaceEventName } from 'uniswap/src/features/telemetry/
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { TimePeriod, toHistoryDuration } from '~/appGraphql/data/util'
 import { ChartUnavailableOverlay } from '~/components/Charts/ChartUnavailableOverlay'
 import { useChartAnimatedColor } from '~/components/Charts/hooks/useChartAnimatedColor'
 import { ChartSkeleton } from '~/components/Charts/LoadingState'
@@ -24,6 +23,7 @@ import { PriceChartBody } from '~/components/Charts/PriceChart'
 import { PriceChartDelta } from '~/components/Charts/PriceChart/PriceChartDelta'
 import { ChartType, PriceChartType } from '~/components/Charts/utils'
 import { CurrencyLogo } from '~/components/Logo/CurrencyLogo'
+import { TimePeriod, toHistoryDuration } from '~/data/util'
 import { useSwapAndLimitContext } from '~/features/Swap/state/useSwapContext'
 import { useColor } from '~/hooks/useColor'
 import type { TokenPriceChartQueryVariables } from '~/hooks/useTokenPriceChartData'
@@ -40,7 +40,8 @@ const TIME_OPTIONS = [
   { value: '1Y', period: TimePeriod.YEAR },
 ] as const
 
-/** Matches the chart placeholder height from the original SlideoutChartCard design. */
+/** Minimum chart area height; also used as the fixed height for the skeleton/unavailable SVG states,
+ *  which need a concrete pixel value for their internal layout math. */
 const SWAP_CHART_AREA_HEIGHT = 108
 
 const CardShell = styled(Flex, {
@@ -65,6 +66,7 @@ interface SlideoutChartCardContentProps {
   outputCurrency: Currency | undefined
   selectedField: CurrencyField
   onSelectedFieldChange: (field: CurrencyField) => void
+  isChartOpen: boolean
 }
 
 function SlideoutChartCardContent({
@@ -77,6 +79,7 @@ function SlideoutChartCardContent({
   outputCurrency,
   selectedField,
   onSelectedFieldChange,
+  isChartOpen,
 }: SlideoutChartCardContentProps): JSX.Element {
   const shadowProps = useShadowPropsShort()
 
@@ -92,6 +95,7 @@ function SlideoutChartCardContent({
         outputCurrency={outputCurrency}
         selectedField={selectedField}
         onSelectedFieldChange={onSelectedFieldChange}
+        isChartOpen={isChartOpen}
       />
     </CardShell>
   )
@@ -107,6 +111,7 @@ interface SlideoutChartCardBodyProps {
   outputCurrency: Currency | undefined
   selectedField: CurrencyField
   onSelectedFieldChange: (field: CurrencyField) => void
+  isChartOpen: boolean
 }
 
 function SlideoutChartCardBody({
@@ -119,6 +124,7 @@ function SlideoutChartCardBody({
   outputCurrency,
   selectedField,
   onSelectedFieldChange,
+  isChartOpen,
 }: SlideoutChartCardBodyProps): JSX.Element {
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const { currentTab } = useSwapAndLimitContext()
@@ -149,6 +155,8 @@ function SlideoutChartCardBody({
     priceChartType: PriceChartType.LINE,
     timePeriod,
     currency: selectedCurrency,
+    // The card stays mounted (at width 0) while collapsed — don't fetch or poll until opened
+    skip: !isChartOpen,
   })
 
   const { entries, loading } = priceQuery
@@ -245,8 +253,11 @@ function SlideoutChartCardBody({
         )}
       </Flex>
 
-      {/* Chart — fixed height so lightweight-charts always receives a non-zero height */}
-      <Flex grow height={SWAP_CHART_AREA_HEIGHT}>
+      {/* Chart — takes the card's leftover height. flexBasis 0 + shrink are load-bearing: without them
+          the pixel-sized lightweight-charts canvas pins the row and pushes the controls row out of the
+          card. minHeight reserves the skeleton/unavailable SVG height and replaces the CSS auto
+          min-content floor (which would otherwise still let the canvas pin the row). */}
+      <Flex grow shrink flexBasis={0} minHeight={SWAP_CHART_AREA_HEIGHT}>
         {showInvalidSkeleton ? (
           isInitialLoad ? (
             <ChartSkeleton
@@ -255,15 +266,14 @@ function SlideoutChartCardBody({
               hidePriceIndicators
               hideXAxis
               hideYAxis
-              chartTransform="translate(5, -70)"
             />
           ) : (
-            <ChartUnavailableOverlay height={SWAP_CHART_AREA_HEIGHT} chartTransform="translate(5, -70)" />
+            <ChartUnavailableOverlay height={SWAP_CHART_AREA_HEIGHT} />
           )
         ) : (
           <PriceChartBody
             data={entries}
-            height={SWAP_CHART_AREA_HEIGHT}
+            height="100%"
             type={PriceChartType.LINE}
             stale={stale}
             timePeriod={toHistoryDuration(timePeriod)}
@@ -407,6 +417,7 @@ export function SlideoutChartCard({ isChartOpen }: { isChartOpen: boolean }): JS
       outputCurrency={outputCurrency}
       selectedField={selectedField}
       onSelectedFieldChange={setSelectedField}
+      isChartOpen={isChartOpen}
     />
   )
 }

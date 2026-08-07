@@ -3,6 +3,15 @@ import { createAction, createSlice, Draft, PayloadAction } from '@reduxjs/toolki
 import { providers } from 'ethers/lib/ethers'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FORTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
+import {
+  CancelRevertStatus,
+  orderCancelBroadcastedReducer,
+  orderCancelFailedReducer,
+  orderCancelTxMinedReducer,
+  revertCancelSwapReducer,
+  stampCancelAlertShownReducer,
+  stampOrphanCancelTimeoutReducer,
+} from 'uniswap/src/features/transactions/cancel/orderCancelCaseReducers'
 import { CancelableStepInfo } from 'uniswap/src/features/transactions/hooks/useIsCancelable'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
@@ -152,8 +161,17 @@ const slice = createSlice({
     cancelTransaction: (
       state,
       {
-        payload: { chainId, id, address, cancelRequest },
-      }: PayloadAction<TransactionId & { address: string; cancelRequest: providers.TransactionRequest }>,
+        payload: { chainId, id, address, cancelRequest, cancelInitiatedTimeMs },
+      }: PayloadAction<
+        TransactionId & {
+          address: string
+          cancelRequest: providers.TransactionRequest
+          // Dispatcher supplies Date.now() so the reducer stays deterministic
+          cancelInitiatedTimeMs?: number
+          // Pre-cancel status captured by the dispatcher; used by the cancel sagas to revert on rejection/failure
+          revertToStatus?: CancelRevertStatus
+        }
+      >,
     ) => {
       const walletTransaction = getWalletTransactionFromState({
         state,
@@ -165,7 +183,18 @@ const slice = createSlice({
 
       walletTransaction.status = TransactionStatus.Cancelling
       walletTransaction.cancelRequest = cancelRequest
+      if (isUniswapX(walletTransaction) && cancelInitiatedTimeMs !== undefined) {
+        walletTransaction.cancelInitiatedTimeMs = cancelInitiatedTimeMs
+      }
     },
+    // Cancel-flow CAS case reducers live in orderCancelCaseReducers.ts (kept out of this file
+    // for size; they are ordinary case reducers on this slice's state)
+    orderCancelBroadcasted: orderCancelBroadcastedReducer,
+    orderCancelFailed: orderCancelFailedReducer,
+    orderCancelTxMined: orderCancelTxMinedReducer,
+    stampOrphanCancelTimeout: stampOrphanCancelTimeoutReducer,
+    stampCancelAlertShown: stampCancelAlertShownReducer,
+    revertCancelSwap: revertCancelSwapReducer,
     /**
      * Action to cancel a step within a plan transaction.
      * The cancel is processed by the cancelPlanStepSaga which handles:
@@ -363,6 +392,12 @@ export const {
   cancelPlanStep,
   deleteTransaction,
   finalizeTransaction,
+  orderCancelBroadcasted,
+  orderCancelFailed,
+  orderCancelTxMined,
+  stampOrphanCancelTimeout,
+  stampCancelAlertShown,
+  revertCancelSwap,
   replaceTransaction,
   resetTransactions,
   upsertFiatOnRampTransaction,

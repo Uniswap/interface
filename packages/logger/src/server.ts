@@ -9,10 +9,5 @@ export type { ServerLogger, ServerLoggerCtx } from './serverLogger'
 export { createServerLogger } from './serverLogger'
 export type { StackResolver, StackResolverCtx } from './sourceMapResolver'
 export { createStackResolver } from './sourceMapResolver'
-export {
-  createStructuredJsonLogger,
-  createStructuredJsonLoggerFactory,
-  structuredJsonLoggerFactory,
-} from './structuredJsonLogger'
 export type { ErrorSource, SerializedError, WideEvent, WideEventFactory } from './wideEvent'
 export { createWideEvent, serializeErrorForWideEvent, wideEventFactory } from './wideEvent'

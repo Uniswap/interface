@@ -1,4 +1,5 @@
 import { toScreenInput, useIsBlockedAddress } from '@universe/compliance'
+import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { useActiveAddress, useActiveWallet } from 'uniswap/src/features/accounts/store/hooks'
 import { SigningCapability } from 'uniswap/src/features/accounts/store/types/Wallet'
 import { useIsShowingWebFORNudge, useIsWebFORNudgeEnabled } from 'uniswap/src/features/providers/webForNudgeProvider'
@@ -28,6 +29,14 @@ const useIsReviewButtonDisabled = (): boolean => {
   )
   const { walletNeedsRestore } = useTransactionModalContext()
 
+  // PermissionedPool blocking routes the button press to the in-app verify-identity bottom
+  // sheet (see SwapFormButton). Keep the button enabled so the user can actually open the
+  // sheet, otherwise the gating signal is invisible. Also bypass the trade-missing gate
+  // since the user shouldn't have to enter an amount before starting verification.
+  if (blockingWarning?.type === WarningLabel.PermissionedPool) {
+    return isBlockedAccount || isBlockedAccountLoading || walletNeedsRestore || isSubmitting || isMissingPlatformWallet
+  }
+
   return (
     !!blockingWarning ||
     isBlockedAccount ||
@@ -51,7 +60,6 @@ export const useIsSwapButtonDisabled = (): boolean => {
 
   const isWebFORNudgeEnabled = useIsWebFORNudgeEnabled()
   const isShowingWebFORNudge = useIsShowingWebFORNudge()
-  const { blockingWarning } = useParsedSwapWarnings()
   const needsGeoAcknowledgment = useNeedsGeoAcknowledgment()
   const geoRestrictionMode = useGeoRestrictionMode()
 
@@ -66,12 +74,13 @@ export const useIsSwapButtonDisabled = (): boolean => {
     return true
   }
 
-  if (isWebFORNudgeEnabled && !blockingWarning) {
-    return isShowingWebFORNudge
+  if (isWebFORNudgeEnabled && isShowingWebFORNudge) {
+    return true
+  } else if (isWebFORNudgeEnabled && !isShowingWebFORNudge) {
+    return false
   }
   return (
     // Only disable if the wallet is connected, review button is disabled, wallet is a signable-wallet, and there is no swap redirect callback
-
     !!activeWallet && // don't disable the button if unconnected because they need to click it to connect
     isReviewButtonDisabled && // the main disabling logic
     !walletCannotSign && // don't disable if wallet is viewonly because wallet app wants to allow clicking so it can pop up a "this wallet is view only"

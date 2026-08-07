@@ -1,8 +1,8 @@
 import { GraphQLApi } from '@universe/api'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { TimePeriod } from '~/appGraphql/data/util'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
 import { ChartType, DataQuality, PriceChartType } from '~/components/Charts/utils'
+import { TimePeriod } from '~/data/util'
 import {
   getCalculatedPricePercentChange,
   getDisplayedPricePercentChange,

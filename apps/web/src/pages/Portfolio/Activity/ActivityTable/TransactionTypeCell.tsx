@@ -1,11 +1,15 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, type GeneratedIcon, type IconProps, SpinningLoader, Text } from 'ui/src'
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { ArrowDownToLine } from 'ui/src/components/icons/ArrowDownToLine'
 import { ArrowUpToLine } from 'ui/src/components/icons/ArrowUpToLine'
 import { Receipt } from 'ui/src/components/icons/Receipt'
 import { getTransactionSummaryTitle } from 'uniswap/src/features/activity/utils/getTransactionSummaryTitle'
 import { getEarnPlanTransactionType } from 'uniswap/src/features/earn/planActivityTitles'
+import { isCancelTimedOut } from 'uniswap/src/features/transactions/cancel/cancelTimeoutStateMachine'
+import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   TEMPORARY_TRANSACTION_STATUSES,
   TransactionDetails,
@@ -45,9 +49,32 @@ export function getTransactionTypeCellIconProps({
   }
 }
 
+// Timed-out cancellation: warning treatment instead of the spinner (flag-before-table rule)
+export function shouldShowCancelTimeoutWarning({
+  transaction,
+  isCancelTimeoutEnabled,
+  nowMs,
+}: {
+  transaction: TransactionDetails
+  isCancelTimeoutEnabled: boolean
+  nowMs?: number
+}): boolean {
+  return isCancelTimeoutEnabled && isUniswapX(transaction) && isCancelTimedOut(transaction, nowMs)
+}
+
 function TransactionTypeCellInner({ transaction, isEarnActivityDisplayEnabled = true }: TransactionTypeCellProps) {
   const { t } = useTranslation()
+  const isCancelTimeoutEnabled = useFeatureFlag(FeatureFlags.LimitCancelTimeout)
   const isTemporaryStatus = TEMPORARY_TRANSACTION_STATUSES.includes(transaction.status)
+
+  if (shouldShowCancelTimeoutWarning({ transaction, isCancelTimeoutEnabled })) {
+    return (
+      <Flex row alignItems="center" gap="$gap8">
+        <AlertTriangleFilled color="$statusWarning" size={16} />
+        <Text variant="body3">{t('limits.cancel.likelyToFail')}</Text>
+      </Flex>
+    )
+  }
 
   if (isTemporaryStatus) {
     const pendingLabel =

@@ -1,14 +1,20 @@
 import { FeatureFlags } from '@universe/gating'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
-import { useExploreStocks } from 'uniswap/src/data/rest/rwa/useExploreStocks'
+import {
+  EXPLORE_STOCK_SHELF_COUNT,
+  useExploreStocks,
+} from 'uniswap/src/data/apiClients/dataApiService/rwa/useExploreStocks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { ASSET_CARD_WIDTH_NARROW, ASSET_SHELF_CAROUSEL_FADE_WIDTH } from '~/pages/Explore/rwa/shelf/assetCardConstants'
-import { AssetShelfCarousel } from '~/pages/Explore/rwa/shelf/AssetShelfCarousel'
-import { useHorizontalSnapCarousel } from '~/pages/Explore/rwa/shelf/useHorizontalSnapCarousel'
+import { CAROUSEL_FADE_WIDTH } from '~/components/TokenCardCarousel/constants'
+import { TokenCardCarousel } from '~/components/TokenCardCarousel/TokenCardCarousel'
+import { useHorizontalSnapCarousel } from '~/components/TokenCardCarousel/useHorizontalSnapCarousel'
+import { getShelfItemKey, ShelfTokenCard } from '~/pages/Explore/rwa/shelf/ShelfTokenCard'
 import { useRWATokenDetailsMatch } from '~/pages/TokenDetails/hooks/useRWATokenDetailsMatch'
 
-/** Related stocks shelf on the RWA TDP, reusing the Explore stock shelf carousel (gated by `FeatureFlags.RWATdpRelatedTokens`). */
+const RELATED_TOKENS_CARD_WIDTH = 176
+
+/** Related stocks shelf on the RWA TDP, reusing the token card carousel (gated by `FeatureFlags.RWATdpRelatedTokens`). */
 export function RelatedTokens(): JSX.Element | null {
   const { t } = useTranslation()
   const rwaMatch = useRWATokenDetailsMatch(FeatureFlags.RWATdpRelatedTokens)
@@ -19,7 +25,7 @@ export function RelatedTokens(): JSX.Element | null {
   })
 
   const carousel = useHorizontalSnapCarousel({
-    cardWidth: ASSET_CARD_WIDTH_NARROW,
+    cardWidth: RELATED_TOKENS_CARD_WIDTH,
     itemCount: featured.length,
     isLoading,
   })
@@ -31,13 +37,18 @@ export function RelatedTokens(): JSX.Element | null {
   return (
     <Flex gap="$gap16" testID={TestID.TokenDetailsRWARelatedTokens}>
       <Text variant="heading3">{t('tdp.rwa.relatedTokens')}</Text>
-      <AssetShelfCarousel
-        featured={featured}
+      <TokenCardCarousel
+        items={featured}
+        getItemKey={getShelfItemKey}
+        renderItem={(item) => (
+          <ShelfTokenCard rwa={item.rwa} issuer={item.issuer} cardWidth={RELATED_TOKENS_CARD_WIDTH} />
+        )}
         isLoading={isLoading}
-        cardWidth={ASSET_CARD_WIDTH_NARROW}
-        fadeWidth={ASSET_SHELF_CAROUSEL_FADE_WIDTH}
+        skeletonCount={EXPLORE_STOCK_SHELF_COUNT}
+        carousel={carousel}
+        cardWidth={RELATED_TOKENS_CARD_WIDTH}
+        fadeWidth={CAROUSEL_FADE_WIDTH}
         showArrowButtons
-        {...carousel}
       />
     </Flex>
   )

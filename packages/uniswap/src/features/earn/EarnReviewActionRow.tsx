@@ -45,6 +45,7 @@ export function getEarnReviewCtaDisabled({
 }
 
 interface EarnReviewActionRowProps {
+  buttonAuthIcon?: JSX.Element
   ctaDisabled: boolean
   ctaLabel: string
   executionError?: Error
@@ -59,6 +60,7 @@ interface EarnReviewActionRowProps {
 }
 
 export function EarnReviewActionRow({
+  buttonAuthIcon,
   ctaDisabled,
   ctaLabel,
   executionError,
@@ -103,7 +105,7 @@ export function EarnReviewActionRow({
     )
   }
 
-  if (isWebApp && progress) {
+  if (isWebApp && isExecuting && progress) {
     return <EarnPlanProgressIndicator progress={progress} />
   }
 
@@ -152,6 +154,7 @@ export function EarnReviewActionRow({
         emphasis="primary"
         size="large"
         disabled={ctaDisabled}
+        icon={buttonAuthIcon}
         onPress={onPress}
       >
         {ctaLabel}

@@ -3,6 +3,7 @@ import { useAtom } from 'jotai'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, useMedia } from 'ui/src'
+import { Lock } from 'ui/src/components/icons/Lock'
 import { iconSizes } from 'ui/src/theme'
 import { CopyHelper } from 'uniswap/src/components/CopyHelper/CopyHelper'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
@@ -11,6 +12,7 @@ import { ReportTokenIssueModalPropsAtom } from 'uniswap/src/components/reporting
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
+import { PermissionedTokenTooltip } from 'uniswap/src/features/permissionedTokens/PermissionedTokenTooltip'
 import { getRWAHeaderIdentity } from 'uniswap/src/features/rwa/getRWAHeaderIdentity'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -37,6 +39,7 @@ import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultichainTokenEntries'
 import { useRWATokenDetailsMatch } from '~/pages/TokenDetails/hooks/useRWATokenDetailsMatch'
 import { useTDPEffectiveCurrency } from '~/pages/TokenDetails/hooks/useTDPEffectiveCurrency'
+import { useTDPPermissionedState } from '~/pages/TokenDetails/hooks/useTDPPermissionedState'
 import { popupRegistry } from '~/state/popups/registry'
 import { PopupType } from '~/state/popups/types'
 import { EllipsisTamaguiStyle } from '~/theme/components/styles'
@@ -66,10 +69,11 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
   const trace = useTrace()
   const isMobileScreen = media.md
 
-  const { currency, tokenProjectQuery, multiChainMap } = useTDPStore((s) => ({
+  const { currency, tokenProjectQuery, multiChainMap, chainDataLoading } = useTDPStore((s) => ({
     currency: s.currency!,
     tokenProjectQuery: s.tokenProjectQuery,
     multiChainMap: s.multiChainMap,
+    chainDataLoading: s.chainDataLoading,
   }))
   const multichainEntries = useMultichainTokenEntries(multiChainMap)
   const isMultiChainAsset = multichainEntries.length > 1
@@ -187,6 +191,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
               selectedChainId={selectedChainId}
               multichainEntries={multichainEntries}
             />
+            <PermissionedHeaderLock isCompact={isCompact} mediaMd={media.md} currency={effectiveCurrency} />
           </Flex>
           <TokenDetailsHeaderSubtitleMobile rwaMatch={rwaMatch} symbol={tokenSymbol} isCompact={isCompact} />
           {!media.sm && (
@@ -197,7 +202,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
                 selectedChainId={selectedChainId}
                 setSelectedChainId={onSelectedChainChange}
                 showAddressCopy={showAddressCopy}
-                isChainDataLoading={tokenProjectQuery.loading}
+                isChainDataLoading={chainDataLoading}
               />
               {showAddressCopy && (
                 <Flex alignSelf="center">
@@ -232,7 +237,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
             showAddressCopy={false}
             showNetworkName={false}
             position="right"
-            isChainDataLoading={tokenProjectQuery.loading}
+            isChainDataLoading={chainDataLoading}
           />
         )}
       </Flex>
@@ -246,5 +251,40 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
         onClose={closeReportDataIssueModal}
       />
     </Flex>
+  )
+}
+
+// Extracted from TokenDetailsHeader to keep the parent function within the cyclomatic-complexity budget (oxlint cap: 30).
+// Renders only when the wallet IS allowlisted for a permissioned token; the lock icon +
+// "Verified with {{issuer}}" tooltip signal verified status, not blocked. (The pre-verify
+// CTA is the warning surface; this badge is the post-verify reward.)
+function PermissionedHeaderLock({
+  isCompact,
+  mediaMd,
+  currency,
+}: {
+  isCompact: boolean
+  mediaMd: boolean
+  currency: { chainId: number; isNative: boolean; address?: string }
+}) {
+  const { t } = useTranslation()
+  const tokenAddress = currency.isNative ? undefined : currency.address
+  const { isVerified, issuer } = useTDPPermissionedState({ tokenAddress, chainId: currency.chainId })
+  if (isCompact || mediaMd || !isVerified) {
+    return null
+  }
+  return (
+    <PermissionedTokenTooltip
+      baseText={t('permissionedPool.tooltip.lockIcon')}
+      verifiedSuffix={issuer ? t('permissionedPool.tooltip.lockIcon.verifiedSuffix', { issuer }) : undefined}
+      trigger={
+        // Match the height of the adjacent `subheading1` ticker so the 16px lock
+        // centers on the ticker's midline. Parent row aligns to flex-end, so without
+        // this the icon's bottom hugs the ticker baseline and reads visually too low.
+        <Flex height={24} alignItems="center" justifyContent="center">
+          <Lock size="$icon.16" color="$neutral2" />
+        </Flex>
+      }
+    />
   )
 }

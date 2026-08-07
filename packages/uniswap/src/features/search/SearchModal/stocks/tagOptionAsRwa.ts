@@ -1,5 +1,5 @@
 import type { SearchModalOption } from 'uniswap/src/components/lists/items/types'
-import { getRwaTagCategory } from 'uniswap/src/data/rest/rwa/getRwaTagCategory'
+import { getRwaTagCategory } from 'uniswap/src/data/apiClients/dataApiService/rwa/getRwaTagCategory'
 import type { RwaSearchIndexEntry } from 'uniswap/src/features/search/SearchModal/stocks/rwaSearchGrouping'
 
 /**

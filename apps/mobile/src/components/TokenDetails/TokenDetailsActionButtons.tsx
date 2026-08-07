@@ -141,20 +141,22 @@ function useActionButtonState(actionMenuOptions: MenuOptionItem[]): ActionButton
 export function TokenDetailsBuySellButtons({
   userHasBalance,
   actionMenuOptions,
+  hideActionMenu,
   buyButtonTitle,
   buyButtonIcon,
   buyButtonDisabled,
-  sellButtonDisabled,
+  isTradeBlocked,
   onPressDisabled,
   onPressBuy,
   onPressSell,
 }: {
   userHasBalance: boolean
   actionMenuOptions: MenuOptionItem[]
+  hideActionMenu?: boolean
   buyButtonTitle?: string
   buyButtonIcon?: GeneratedIcon
   buyButtonDisabled?: boolean
-  sellButtonDisabled?: boolean
+  isTradeBlocked?: boolean
   onPressDisabled?: () => void
   onPressBuy: () => void
   onPressSell: () => void
@@ -170,6 +172,10 @@ export function TokenDetailsBuySellButtons({
     closeActionMenu,
     toggleActionMenu,
   } = useActionButtonState(actionMenuOptions)
+
+  // Geo-restricted RWAs collapse to a single disabled Buy CTA; holders keep the action menu
+  // (Send/Receive) but the Sell button is hidden since trading is unavailable.
+  const showSellButton = userHasBalance && !isTradeBlocked
 
   const buyLabel = buyButtonTitle ?? t('common.button.buy')
   const sellLabel = t('common.button.sell')
@@ -198,7 +204,7 @@ export function TokenDetailsBuySellButtons({
     minFontSize: CTA_MIN_LABEL_FONT_SIZE,
   })
 
-  const labelsReady = userHasBalance ? buySized && sellSized : buySized
+  const labelsReady = showSellButton ? buySized && sellSized : buySized
 
   const handleBuyLayout = useCallback(
     (event: LayoutChangeEvent) => {
@@ -225,8 +231,8 @@ export function TokenDetailsBuySellButtons({
   )
 
   const sharedLabelFontSize = useMemo(() => {
-    return userHasBalance ? Math.min(buyLabelFontSize, sellLabelFontSize) : buyLabelFontSize
-  }, [buyLabelFontSize, sellLabelFontSize, userHasBalance])
+    return showSellButton ? Math.min(buyLabelFontSize, sellLabelFontSize) : buyLabelFontSize
+  }, [buyLabelFontSize, sellLabelFontSize, showSellButton])
 
   return (
     <Flex
@@ -253,9 +259,9 @@ export function TokenDetailsBuySellButtons({
           onPress={onPressBuy}
           onPressDisabled={onPressDisabled}
         />
-        {userHasBalance && (
+        {showSellButton && (
           <CTAButton
-            disabled={disabled || sellButtonDisabled}
+            disabled={disabled}
             element={ElementName.Sell}
             testID={TestID.TokenDetailsSellButton}
             title={sellLabel}
@@ -269,8 +275,9 @@ export function TokenDetailsBuySellButtons({
         )}
         {/* Alternate buy titles normally appear only in no-balance states (see useMultichainBuyVariant).
             The geo-blocked override sets a title even for holders, who still need Send/Receive from the
-            menu — so a balance keeps it visible. */}
-        {(!buyButtonTitle || userHasBalance) && !disabled && (
+            menu — so a balance keeps it visible. hideActionMenu suppresses it entirely for a
+            non-allowlisted permissioned token (Receive would revert on-chain). */}
+        {(!buyButtonTitle || userHasBalance) && !disabled && !hideActionMenu && (
           <ContextMenu
             isPlacementAbove
             closeMenu={closeActionMenu}

@@ -4,7 +4,10 @@ import { Auction, AuctionWithStats } from '@uniswap/client-data-api/dist/data/v1
 import { SearchAuction } from '@uniswap/client-data-api/dist/data/v1/searchTypes_pb'
 import { createElement, type PropsWithChildren } from 'react'
 import { OnchainItemListOptionType } from 'uniswap/src/components/lists/items/types'
-import { fetchAuctionByAddress, useSearchTokensAndPoolsQuery } from 'uniswap/src/data/rest/searchTokensAndPools'
+import {
+  fetchAuctionByAddress,
+  useSearchTokensAndPoolsQuery,
+} from 'uniswap/src/data/apiClients/dataApiService/search/searchTokensAndPools'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
@@ -28,7 +31,7 @@ vi.mock('@universe/gating', async (importOriginal) => ({
   useDynamicConfigValue: vi.fn(() => []),
 }))
 
-vi.mock('uniswap/src/data/rest/searchTokensAndPools', () => ({
+vi.mock('uniswap/src/data/apiClients/dataApiService/search/searchTokensAndPools', () => ({
   fetchAuctionByAddress: vi.fn(),
   useSearchTokensAndPoolsQuery: vi.fn(),
 }))

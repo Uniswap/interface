@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
-import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
 import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 
 /**
  * Resolves which chains the active wallet holds the underlying token on. Used by the earn

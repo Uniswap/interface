@@ -1,7 +1,8 @@
+import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, styled, Text, TouchableArea } from 'ui/src'
 
-const NewBadge = styled(Text, {
+export const NewBadge = styled(Text, {
   variant: 'body4',
   color: '$accent1',
   backgroundColor: '$accent2',
@@ -10,16 +11,25 @@ const NewBadge = styled(Text, {
   borderRadius: '$rounded8',
 })
 
-export function AssetShelfHeader({ onViewAll }: { onViewAll: () => void }): JSX.Element {
+/** Shelf section header: title (plus optional badge/adornment) on the left, "View all" on the right. */
+export function AssetShelfHeader({
+  title,
+  badge,
+  onViewAll,
+}: {
+  title: string
+  badge?: ReactNode
+  onViewAll: () => void
+}): JSX.Element {
   const { t } = useTranslation()
 
   return (
     <Flex row alignItems="center" justifyContent="space-between">
       <Flex row alignItems="center" gap="$spacing8">
         <Text variant="subheading1" color="$neutral1">
-          {t('common.stocks')}
+          {title}
         </Text>
-        <NewBadge>{t('common.new')}</NewBadge>
+        {badge}
       </Flex>
       <TouchableArea onPress={onViewAll}>
         <Text variant="buttonLabel3" color="$neutral2">

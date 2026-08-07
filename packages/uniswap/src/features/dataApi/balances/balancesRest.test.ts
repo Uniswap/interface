@@ -1,7 +1,7 @@
 import { type PlainMessage } from '@bufbuild/protobuf'
 import type { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
 import { SharedQueryClient } from '@universe/api'
-import { getPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
+import { getPortfolioQuery } from 'uniswap/src/data/apiClients/dataApiService/balances/getPortfolio'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   convertRestBalanceToPortfolioBalance,
@@ -31,10 +31,15 @@ const {
   mockUseFeatureFlag: vi.fn(),
 }))
 
-vi.mock('uniswap/src/data/rest/getWalletBalances/getWalletBalances', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('uniswap/src/data/rest/getWalletBalances/getWalletBalances')>()),
-  useGetWalletBalancesQuery: mockUseGetWalletBalancesQuery,
-}))
+vi.mock(
+  'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances',
+  async (importOriginal) => ({
+    ...(await importOriginal<
+      typeof import('uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances')
+    >()),
+    useGetWalletBalancesQuery: mockUseGetWalletBalancesQuery,
+  }),
+)
 
 vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
   useEnabledChains: mockUseEnabledChains,

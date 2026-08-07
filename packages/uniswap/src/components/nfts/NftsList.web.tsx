@@ -11,6 +11,7 @@ import { useNftSearch } from 'uniswap/src/components/nfts/hooks/useNftSearch'
 import { NftsListProps } from 'uniswap/src/components/nfts/NftsList'
 import { NftsListEmptyState } from 'uniswap/src/components/nfts/NftsListEmptyState'
 import { NftListHeader } from 'uniswap/src/components/nfts/NftsListHeader'
+import { NftsListLoadingFooter } from 'uniswap/src/components/nfts/NftsListLoadingFooter'
 import { ShowNFTModal } from 'uniswap/src/components/nfts/ShowNFTModal'
 import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import {
@@ -241,7 +242,7 @@ export function NftsList({
   )
   const shownRowCount = Math.ceil(filteredShownNfts.length / numColumns)
   // Hidden NFTs render below the expando; matches the buildNftsArray gate (showHidden && allPagesFetched)
-  const showHiddenGrid = hiddenNftsExpanded && !hasNextPage && filteredHiddenNfts.length > 0
+  const showHiddenGrid = hiddenNftsExpanded && filteredHiddenNfts.length > 0
   const isFetchingMore = nfts.length > 0 && isFetchingMoreNfts
 
   const rowVirtualizer = useWindowVirtualizer({
@@ -292,8 +293,8 @@ export function NftsList({
       )
     }
 
-    // Show no-results when user has searched and the filtered list is empty (explicit check so we always hit this when filtering yields nothing)
-    if (search && filteredShownCount === 0) {
+    // Show no-results when user has searched and the filtered list is empty (explicit check so we always hit this when filtering yields nothing).
+    if (search && filteredShownCount === 0 && !isFetchingMore) {
       return (
         <Flex py="$spacing40" width="100%">
           <BaseCard.EmptyState
@@ -320,6 +321,7 @@ export function NftsList({
     errorStateStyle,
     filteredShownCount,
     isErrorState,
+    isFetchingMore,
     isLoadingState,
     nfts.length,
     noResultsTestId,
@@ -332,16 +334,19 @@ export function NftsList({
 
   const nftListContent = (
     <>
-      <Flex position="relative" style={{ height: rowVirtualizer.getTotalSize() }}>
-        {renderGridRows({
-          virtualizer: rowVirtualizer,
-          items: filteredShownNfts,
-          itemIndexOffset: 0,
-          numColumns,
-          renderNFTItem,
-        })}
+      <Flex position="relative">
+        <Flex style={{ height: rowVirtualizer.getTotalSize() }}>
+          {renderGridRows({
+            virtualizer: rowVirtualizer,
+            items: filteredShownNfts,
+            itemIndexOffset: 0,
+            numColumns,
+            renderNFTItem,
+          })}
+        </Flex>
+        <NftsListLoadingFooter show={Boolean(search) && hasNextPage} />
       </Flex>
-      {isFetchingMore && skeletonContent}
+      {isFetchingMore && !search && skeletonContent}
       {numHidden > 0 && (
         <Flex grow>
           {renderExpandoRow ? (
@@ -374,7 +379,7 @@ export function NftsList({
   )
 
   return (
-    <Flex ref={containerRef} gap="$spacing24">
+    <Flex ref={containerRef}>
       {showHeader && (
         <NftListHeader
           key={headerResetKey}
@@ -385,7 +390,7 @@ export function NftsList({
           onSearchValueChange={setSearch}
         />
       )}
-      {nonNftContent ?? nftListContent}
+      <Flex mt="$spacing24">{nonNftContent ?? nftListContent}</Flex>
     </Flex>
   )
 }

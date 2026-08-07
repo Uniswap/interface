@@ -20,7 +20,7 @@ exports[`DatetimeText > renders without error 1`] = `
         rows="1"
         spellcheck="true"
         style="font-family: var(--f-family); font-weight: var(--f-weight-book); line-height: var(--f-lineHeight-small);"
-        value="Thursday, November 1st, 2023"
+        value="10/31/2023, 8:00:00 PM"
         virtualkeyboardpolicy="auto"
       />
     </div>

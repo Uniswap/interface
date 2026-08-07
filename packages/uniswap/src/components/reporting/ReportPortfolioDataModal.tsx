@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import { ChartBarCrossed } from 'ui/src/components/icons/ChartBarCrossed'
 import type { BaseModalProps } from 'uniswap/src/components/modals/ModalProps'
 import { ReportModal, ReportOption } from 'uniswap/src/components/reporting/ReportModal'
-import { DataServiceApiClient } from 'uniswap/src/data/apiClients/dataApi/DataApiClient'
+import { dataApiServiceClientV1 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClient'
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
@@ -47,16 +47,18 @@ export function ReportPortfolioDataModal({
 
       // Submit data report to Zerion via backend proxy
       if (checkedItems.has(PortfolioDataReportOption.Performance) && isProdEnv() && walletAddress) {
-        DataServiceApiClient.submitDataReport({
-          reportType: 'wallet',
-          tag: 'pnl',
-          details: reportTexts.get(PortfolioDataReportOption.Performance),
-          walletAddress,
-        }).catch((error: unknown) => {
-          logger.warn('ReportPortfolioDataModal', 'submitReport', 'Failed to submit data report to backend', {
-            error: error instanceof Error ? error.message : String(error),
+        dataApiServiceClientV1
+          .submitDataReport({
+            reportType: 'wallet',
+            tag: 'pnl',
+            details: reportTexts.get(PortfolioDataReportOption.Performance),
+            walletAddress,
           })
-        })
+          .catch((error: unknown) => {
+            logger.warn('ReportPortfolioDataModal', 'submitReport', 'Failed to submit data report to backend', {
+              error: error instanceof Error ? error.message : String(error),
+            })
+          })
       }
 
       onReportSuccess?.()

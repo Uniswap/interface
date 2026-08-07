@@ -19,7 +19,7 @@ import {
 } from 'uniswap/src/features/fiatOnRamp/types'
 // oxlint-disable-next-line no-restricted-imports -- Buy hooks need direct SDK imports
 import { getFiatCurrencyComponents } from 'utilities/src/format/localeBased'
-import { useMeldSupportedCurrencyToCurrencyInfo } from '~/appGraphql/data/types'
+import { useMeldSupportedCurrencyToCurrencyInfo } from '~/data/types'
 
 type FiatOnRampCurrencyInfo = {
   meldSupportedFiatCurrency: FiatCurrencyInfo

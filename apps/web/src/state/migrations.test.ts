@@ -19,7 +19,6 @@ const defaultState = {
     chainId: null,
     openModal: null,
   },
-  logs: {},
   searchHistory: {
     results: [],
   },

@@ -12,7 +12,9 @@ import {
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { planActions } from 'uniswap/src/features/transactions/swap/plan/planSaga'
 import {
+  type PlanFailureCallback,
   PlanPriceChangeInterrupt,
+  PlanStepFailedError,
   type PlanFinalizedCallbackParams,
 } from 'uniswap/src/features/transactions/swap/plan/types'
 import { activePlanStore } from 'uniswap/src/features/transactions/swap/review/stores/activePlan/activePlanStore'
@@ -34,7 +36,7 @@ export interface EarnCallbackParams {
   outputCurrency: Currency
   quote: ChainedQuoteResponse
   onSuccess: () => void
-  onFailure: (error?: Error, onPressRetry?: () => void) => void
+  onFailure: PlanFailureCallback
   onSubmitted?: () => void
   onPlanFinalized?: (params: PlanFinalizedCallbackParams) => void
 }
@@ -102,7 +104,9 @@ export function useEarnSagaCallback(): EarnSagaCallback {
           getDisplayableError: (args) =>
             args.error instanceof PlanPriceChangeInterrupt
               ? new EarnPlanPriceChangeError(t('explore.earn.review.priceChanged'))
-              : getDisplayableError({ ...args, isPlanStep: true }),
+              : args.error instanceof PlanStepFailedError
+                ? new Error(t('explore.earn.review.transactionFailed'))
+                : getDisplayableError({ ...args, isPlanStep: true }),
           sendToast,
           modalClosedActionType: signalEarnModalClosed.type,
           onSuccess,

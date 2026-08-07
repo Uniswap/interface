@@ -154,6 +154,73 @@ describe('useOnActivityUpdate', () => {
     expect(txs[onChainHash]?.hash).toBe(onChainHash)
   })
 
+  describe('tracked UniswapX cancel tx finalization', () => {
+    const CANCEL_HASH = '0xcanceltxhash'
+    const cancelInfo = { type: TransactionType.UniswapXCancel, orderHashes: ['0xorderhash'] } as const
+    const receipt = {
+      transactionIndex: 0,
+      blockHash: '0xblock',
+      blockNumber: 1,
+      confirmedTime: Date.now(),
+      gasUsed: 45_000,
+      effectiveGasPrice: 1,
+    }
+
+    function makeCancelTx(): PendingTransactionDetails {
+      return {
+        ...makePendingTx(),
+        id: CANCEL_HASH,
+        hash: CANCEL_HASH,
+        typeInfo: cancelInfo,
+      } as PendingTransactionDetails
+    }
+
+    it('remaps a Success receipt to Canceled and suppresses the finalize popup', () => {
+      const original = makeCancelTx()
+      const { result, store } = renderOnActivityUpdate(original)
+      const popupKeys: string[] = []
+      const removeListener = popupRegistry.addListener((_content, key) => {
+        popupKeys.push(key)
+        return key
+      })
+
+      try {
+        act(() => {
+          result.current({
+            type: ActivityUpdateTransactionType.BaseTransaction,
+            chainId: CHAIN_ID,
+            original,
+            update: { status: TransactionStatus.Success, hash: CANCEL_HASH, typeInfo: cancelInfo, receipt },
+          })
+        })
+
+        const storedTx = getTxs(store)[CANCEL_HASH]
+        expect(storedTx.status).toBe(TransactionStatus.Canceled)
+        expect(popupKeys).toEqual([])
+        // Registered as a plain hash tx — never batchInfo
+        expect((storedTx as { batchInfo?: unknown } | undefined)?.batchInfo).toBeUndefined()
+      } finally {
+        removeListener()
+      }
+    })
+
+    it('finalizes a reverted cancel tx as Failed (no remap)', () => {
+      const original = makeCancelTx()
+      const { result, store } = renderOnActivityUpdate(original)
+
+      act(() => {
+        result.current({
+          type: ActivityUpdateTransactionType.BaseTransaction,
+          chainId: CHAIN_ID,
+          original,
+          update: { status: TransactionStatus.Failed, hash: CANCEL_HASH, typeInfo: cancelInfo, receipt },
+        })
+      })
+
+      expect(getTxs(store)[CANCEL_HASH]?.status).toBe(TransactionStatus.Failed)
+    })
+  })
+
   it('does not finalize a failed non-batch transaction without a receipt', () => {
     const original = makePendingTx()
     const { result, store } = renderOnActivityUpdate(original)

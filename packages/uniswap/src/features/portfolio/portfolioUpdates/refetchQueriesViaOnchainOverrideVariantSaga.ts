@@ -1,22 +1,30 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { Balance } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { Portfolio } from '@uniswap/client-data-api/dist/data/v1/types_pb.d'
-import { GQLQueries, SharedQueryClient } from '@universe/api'
+import { SharedQueryClient } from '@universe/api'
 import { all, call, delay, put } from 'typed-redux-saga'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import {
   doesGetPortfolioQueryMatchAddress,
   getPortfolioQueriesToUpdate,
-} from 'uniswap/src/data/rest/getPortfolioQueryUtils'
-import { doesGetWalletBalancesQueryMatchAddress } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+} from 'uniswap/src/data/apiClients/dataApiService/balances/getPortfolioQueryUtils'
+import { doesGetWalletBalancesQueryMatchAddress } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
+import {
+  type BalanceOverrideSnapshots,
+  getBalanceOverrideStateForAddress,
+  storeBalanceOverrideSnapshots,
+} from 'uniswap/src/data/apiClients/dataApiService/balances/portfolioBalanceOverrides'
+import { NFT_QUERY_KEY_PREFIX } from 'uniswap/src/data/apiClients/dataApiService/nfts/queries'
 import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
-import { fetchOnChainBalances, OnChainMap } from 'uniswap/src/features/portfolio/portfolioUpdates/fetchOnChainBalances'
+import {
+  fetchOnChainBalances,
+  type OnChainMap,
+} from 'uniswap/src/features/portfolio/portfolioUpdates/fetchOnChainBalances'
 import { getCurrenciesWithExpectedUpdates } from 'uniswap/src/features/portfolio/portfolioUpdates/getCurrenciesWithExpectedUpdates'
 import { addTokensToBalanceOverride } from 'uniswap/src/features/portfolio/slice/slice'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyId } from 'uniswap/src/types/currency'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 import { buildCurrencyId, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { createLogger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
@@ -154,15 +162,47 @@ export function mergeOnChainBalances(
   return updatedData
 }
 
+export function getBalanceOverridesToApply({
+  currencyIds,
+  fetchedOnchainBalances,
+  balanceOverrideSnapshots,
+}: {
+  currencyIds: Set<CurrencyId>
+  fetchedOnchainBalances: OnChainMap
+  balanceOverrideSnapshots: BalanceOverrideSnapshots
+}): OnChainMap {
+  const balancesToApply: OnChainMap = new Map()
+
+  balanceOverrideSnapshots.forEach((balance, currencyId) => {
+    if (currencyIds.has(currencyId)) {
+      balancesToApply.set(currencyId, balance)
+    }
+  })
+
+  fetchedOnchainBalances.forEach((balance, currencyId) => {
+    balancesToApply.set(currencyId, balance)
+  })
+
+  return balancesToApply
+}
+
+export type FetchAndMergeOnchainBalancesResult = {
+  mergedData: GetPortfolioResponse
+  fetchedOnchainBalances: OnChainMap
+  appliedBalanceSnapshots: BalanceOverrideSnapshots
+}
+
 export async function fetchAndMergeOnchainBalances({
   cachedPortfolio,
   accountAddress,
   currencyIds,
+  balanceOverrideSnapshots,
 }: {
   cachedPortfolio: Portfolio
   accountAddress: string
   currencyIds: Set<CurrencyId>
-}): Promise<GetPortfolioResponse | undefined> {
+  balanceOverrideSnapshots: BalanceOverrideSnapshots
+}): Promise<FetchAndMergeOnchainBalancesResult | undefined> {
   const log = createLogger(FILE_NAME, 'fetchAndMergeOnchainBalances', '[ITBU]')
   log.debug(`Fetching onchain balances for ${currencyIds.size} currencies`, {
     accountAddress,
@@ -170,16 +210,22 @@ export async function fetchAndMergeOnchainBalances({
   })
 
   try {
-    const onchainBalancesByCurrencyId = await fetchOnChainBalances({
+    const fetchedOnchainBalances = await fetchOnChainBalances({
       cachedPortfolio,
       accountAddress,
       currencyIds,
     })
 
-    log.debug('On-chain balance fetching completed', { fetchedBalances: onchainBalancesByCurrencyId.size })
+    log.debug('On-chain balance fetching completed', { fetchedBalances: fetchedOnchainBalances.size })
 
-    if (onchainBalancesByCurrencyId.size === 0) {
-      log.debug('No onchain balances fetched, returning undefined')
+    const appliedBalanceSnapshots = getBalanceOverridesToApply({
+      currencyIds,
+      fetchedOnchainBalances,
+      balanceOverrideSnapshots,
+    })
+
+    if (appliedBalanceSnapshots.size === 0) {
+      log.debug('No on-chain balances or prior snapshots available, returning undefined')
       return undefined
     }
 
@@ -188,12 +234,16 @@ export async function fetchAndMergeOnchainBalances({
       portfolio: cachedPortfolio,
     })
 
-    // Merge onchain balances into the portfolio data
-    const mergedData = mergeOnChainBalances(portfolioResponse, onchainBalancesByCurrencyId)
+    // mergeOnChainBalances drains its map via delete, so preserve these snapshots for cleanup.
+    const mergedData = mergeOnChainBalances(portfolioResponse, new Map(appliedBalanceSnapshots))
+
+    if (!mergedData) {
+      return undefined
+    }
 
     log.debug('Successfully merged onchain balances into portfolio data')
 
-    return mergedData
+    return { mergedData, fetchedOnchainBalances, appliedBalanceSnapshots }
   } catch (error) {
     log.error(error, {
       accountAddress,
@@ -207,12 +257,9 @@ export async function fetchAndMergeOnchainBalances({
 export function* refetchQueriesViaOnchainOverrideVariant({
   transaction,
   activeAddress,
-  apolloClient,
 }: {
   transaction: TransactionDetails
   activeAddress: string | null
-  // Only pass `null` for Solana where we don't need to refetch GQL queries
-  apolloClient: ApolloClient<NormalizedCacheObject> | null
 }): Generator {
   const currenciesWithBalanceToUpdate = getCurrenciesToUpdate(transaction, activeAddress)
 
@@ -259,13 +306,6 @@ export function* refetchQueriesViaOnchainOverrideVariant({
   // Wait before invalidating and refetching queries
   yield* delay(REFETCH_DELAY)
 
-  // Once NFTs are migrated to REST we won't need to do this
-  if (apolloClient) {
-    yield* call([apolloClient, apolloClient.refetchQueries], { include: [GQLQueries.NftsTab] })
-  } else {
-    log.debug(`Ignoring NFT GQL refetch for ${platform} because apolloClient is null`)
-  }
-
   // Invalidate all portfolio queries that match this address
   yield* call([SharedQueryClient, SharedQueryClient.invalidateQueries], {
     predicate: (query: { queryKey: readonly unknown[] }) =>
@@ -283,6 +323,11 @@ export function* refetchQueriesViaOnchainOverrideVariant({
   yield* call([SharedQueryClient, SharedQueryClient.invalidateQueries], {
     predicate: (query: { queryKey: readonly unknown[] }) =>
       query.queryKey[0] === ReactQueryCacheKey.GetWalletTokenProfitLoss && query.queryKey[1] === activeAddress,
+  })
+
+  // Invalidate NFTs queries so the NFTs tab updates after swaps
+  yield* call([SharedQueryClient, SharedQueryClient.invalidateQueries], {
+    queryKey: NFT_QUERY_KEY_PREFIX,
   })
 }
 
@@ -306,16 +351,25 @@ function* updatePortfolioCache({
     return
   }
 
-  const mergedData = yield* call(fetchAndMergeOnchainBalances, {
+  const { snapshots: currentBalanceSnapshots, generations: currentOverrideGenerations } =
+    getBalanceOverrideStateForAddress({ address: ownerAddress })
+  const reconciliation = yield* call(fetchAndMergeOnchainBalances, {
     cachedPortfolio: cachedPortfolioData.portfolio,
     accountAddress: ownerAddress,
     currencyIds,
+    balanceOverrideSnapshots: currentBalanceSnapshots,
   })
 
-  if (mergedData) {
+  if (reconciliation) {
     log.debug('Updating cached portfolio balances')
-    SharedQueryClient.setQueryData(queryKey, () => mergedData)
+    SharedQueryClient.setQueryData(queryKey, () => reconciliation.mergedData)
     log.debug('Successfully updated react-query cache with fresh balances')
+
+    yield* call(storeBalanceOverrideSnapshots, {
+      ownerAddress,
+      nextSnapshots: reconciliation.fetchedOnchainBalances,
+      expectedGenerations: currentOverrideGenerations,
+    })
   } else {
     log.debug('No balance updates to apply')
   }

@@ -7,7 +7,6 @@
 
 #import "Uniswap-Swift.h"
 #import <React/RCTViewManager.h>
-#import "RNSwiftUI-Bridging-Header.h"
 
 @interface MnemonicConfirmationManager : RCTViewManager
 @end
@@ -15,21 +14,17 @@
 @implementation MnemonicConfirmationManager
 RCT_EXPORT_MODULE()
 
-RCT_EXPORT_SWIFTUI_PROPERTY(mnemonicId, NSString, MnemonicConfirmationView);
-RCT_EXPORT_SWIFTUI_PROPERTY(shouldShowSmallText, BOOL, MnemonicConfirmationView);
-RCT_EXPORT_SWIFTUI_CALLBACK(onConfirmComplete, RCTDirectEventBlock, MnemonicConfirmationView);
-RCT_EXPORT_SWIFTUI_PROPERTY(selectedWordPlaceholder, NSString, MnemonicConfirmationView);
-RCT_EXPORT_SWIFTUI_PROPERTY(pageStart, NSInteger, MnemonicConfirmationView);
-RCT_EXPORT_SWIFTUI_PROPERTY(pageSize, NSInteger, MnemonicConfirmationView);
-RCT_EXPORT_SWIFTUI_PROPERTY(currentPage, NSInteger, MnemonicConfirmationView);
-RCT_EXPORT_SWIFTUI_PROPERTY(totalPages, NSInteger, MnemonicConfirmationView);
+RCT_EXPORT_VIEW_PROPERTY(mnemonicId, NSString);
+RCT_EXPORT_VIEW_PROPERTY(shouldShowSmallText, BOOL);
+RCT_EXPORT_VIEW_PROPERTY(onConfirmComplete, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(selectedWordPlaceholder, NSString);
+RCT_EXPORT_VIEW_PROPERTY(pageStart, NSInteger);
+RCT_EXPORT_VIEW_PROPERTY(pageSize, NSInteger);
+RCT_EXPORT_VIEW_PROPERTY(currentPage, NSInteger);
+RCT_EXPORT_VIEW_PROPERTY(totalPages, NSInteger);
 
 - (UIView *)view
 {
-    MnemonicConfirmationView *proxy = [[MnemonicConfirmationView alloc] init];
-    UIView *view = [proxy view];
-    NSMutableDictionary *storage = [MnemonicConfirmationView storage];
-    storage[[NSValue valueWithNonretainedObject:view]] = proxy;
-    return view;
+    return [[MnemonicConfirmationView alloc] initWithFrame:CGRectZero];
 }
 @end

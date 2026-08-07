@@ -8,21 +8,22 @@ import { useTranslation } from 'react-i18next'
 import { Flex, styled, Text, useMedia } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
-import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { normalizeTokenAddressForCache } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_DAY_MS, ONE_HOUR_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useDebounce } from 'utilities/src/time/timing'
-import { OrderDirection } from '~/appGraphql/data/util'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
 import { TableText } from '~/components/Table/shared/TableText'
 import { HeaderCell } from '~/components/Table/styled'
-import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
+import { MouseoverTooltip } from '~/components/Tooltip'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
+import { OrderDirection } from '~/data/util'
 import { TABLE_PAGE_SIZE } from '~/features/Explore/state'
 import { AuctionQuickFilter, useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
 import { CommittedVolumeTooltipContent } from '~/features/Toucan/Auction/Banners/AuctionStatsBanner/CommittedVolumeTooltipContent'
@@ -38,6 +39,8 @@ import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/use
 import {
   getAuctionCancelThresholdDisplay,
   getAuctionCommittedVolumeDisplay,
+  getAuctionLaunchThresholdTokenAmount,
+  getAuctionLaunchThresholdUsd,
   getAuctionThresholdPercentMet,
   isLowEngagementHighFdvAuction,
   useAuctionFdvWarningThresholds,
@@ -51,6 +54,7 @@ import {
   AuctionTableHeader,
   TokenNameCell,
 } from '~/pages/Explore/tables/Auctions/TopAuctionsTableCells'
+import { LAUNCHPAD_COLUMN_META, LAUNCHPAD_COLUMN_WIDTH, LaunchpadCellContent } from '~/pages/Launches/LaunchpadCell'
 
 /**
  * Comparator functions for client-side auction sorting.
@@ -71,10 +75,40 @@ function getFdvBidTokenValue({ auction, projectedFdv }: SortableTopAuctionTableV
   return approximateNumberFromRaw({ raw: projectedFdv.raw, decimals })
 }
 
+/** Groups for the TIME_REMAINING sort, in descending-sort order. Inverted for ascending. */
+const TIME_REMAINING_GROUP = { ongoing: 0, upcoming: 1, completed: 2 } as const
+
+/** Single phase predicate shared by the Time-Remaining sort and the default sort. */
+function isUpcomingAuction(auction: EnrichedAuction, currentTimeMs: number): boolean {
+  const { isCompleted, startBlockTimestamp } = auction.timeRemaining
+  return (
+    !isCompleted && startBlockTimestamp !== undefined && currentTimeMs < Number(startBlockTimestamp) * ONE_SECOND_MS
+  )
+}
+
+function getTimeRemainingSortGroup({ auction }: SortableTopAuctionTableValue, currentTimeMs: number): number {
+  if (auction.timeRemaining.isCompleted) {
+    return TIME_REMAINING_GROUP.completed
+  }
+  return isUpcomingAuction(auction, currentTimeMs) ? TIME_REMAINING_GROUP.upcoming : TIME_REMAINING_GROUP.ongoing
+}
+
+// Upcoming cells display time-to-start, so they sort on start; ongoing/completed cells on end.
+function getTimeRemainingSortKey({ auction }: SortableTopAuctionTableValue, group: number): bigint | undefined {
+  return group === TIME_REMAINING_GROUP.upcoming
+    ? auction.timeRemaining.startBlockTimestamp
+    : auction.timeRemaining.endBlockTimestamp
+}
+
 const AuctionSortMethods: Record<
   AuctionSortField,
   // oxlint-disable-next-line max-params -- sort comparators conventionally take (a, b, direction)
-  (a: SortableTopAuctionTableValue, b: SortableTopAuctionTableValue, sortAscending?: boolean) => number
+  (
+    a: SortableTopAuctionTableValue,
+    b: SortableTopAuctionTableValue,
+    sortAscending?: boolean,
+    currentTimeMs?: number,
+  ) => number
 > = {
   [AuctionSortField.FDV]: (a, b) => {
     // USD when both sides have it (cross-currency comparison); otherwise fall back to the
@@ -89,46 +123,43 @@ const AuctionSortMethods: Record<
     return auctionCommittedVolumeComparator(a.auction, b.auction)
   },
 
-  // Sorting by time remaining sorts not completed or not started auction first (sorted by end block timestamp), followed by completed auction (sorted by end block timestamp).
+  [AuctionSortField.LAUNCH_THRESHOLD]: (a, b) => {
+    // USD when both sides have it (cross-currency comparison); otherwise fall back to the
+    // bid-token threshold so chains without a USD price feed (e.g. Robinhood) still sort.
+    const aUsd = getAuctionLaunchThresholdUsd(a.auction.auction)
+    const bUsd = getAuctionLaunchThresholdUsd(b.auction.auction)
+    if (aUsd !== undefined && bUsd !== undefined) {
+      return bUsd - aUsd
+    }
+    return compareDescendingMissingLast(
+      getAuctionLaunchThresholdTokenAmount(a.auction.auction),
+      getAuctionLaunchThresholdTokenAmount(b.auction.auction),
+    )
+  },
+
+  // Sorting by time remaining groups ongoing → upcoming → completed (inverted for ascending),
+  // then orders within each group by the timestamp its cell counts against.
 
   // oxlint-disable-next-line max-params -- sort comparators conventionally take (a, b, direction)
-  [AuctionSortField.TIME_REMAINING]: (a, b, sortAscending = false) => {
-    const aMs = a.auction.timeRemaining.endBlockTimestamp
-    const bMs = b.auction.timeRemaining.endBlockTimestamp
-    const aCompleted = a.auction.timeRemaining.isCompleted
-    const bCompleted = b.auction.timeRemaining.isCompleted
+  [AuctionSortField.TIME_REMAINING]: (a, b, sortAscending = false, currentTimeMs = Date.now()) => {
+    const aGroup = getTimeRemainingSortGroup(a, currentTimeMs)
+    const bGroup = getTimeRemainingSortGroup(b, currentTimeMs)
+    if (aGroup !== bGroup) {
+      return sortAscending ? bGroup - aGroup : aGroup - bGroup
+    }
 
-    // No data sorts to end
-    if (aMs === undefined) {
+    const aKey = getTimeRemainingSortKey(a, aGroup)
+    const bKey = getTimeRemainingSortKey(b, bGroup)
+
+    // No data sorts to the end of its group
+    if (aKey === undefined) {
       return 1
     }
-    if (bMs === undefined) {
+    if (bKey === undefined) {
       return -1
     }
 
-    // Descending (default): ongoing first, then completed
-    // Ascending: completed first, then ongoing
-    if (!sortAscending) {
-      // Descending: ongoing auctions first
-      if (!aCompleted && bCompleted) {
-        return -1 // a (ongoing) comes first
-      }
-      if (aCompleted && !bCompleted) {
-        return 1 // b (ongoing) comes first
-      }
-      // Both same status: sort by earliest timestamp first
-      return Number(aMs) - Number(bMs)
-    } else {
-      // Ascending: completed auctions first
-      if (aCompleted && !bCompleted) {
-        return -1 // a (completed) comes first
-      }
-      if (!aCompleted && bCompleted) {
-        return 1 // b (completed) comes first
-      }
-      // Both ongoing: sort by latest timestamp first
-      return Number(bMs) - Number(aMs)
-    }
+    return sortAscending ? Number(bKey) - Number(aKey) : Number(aKey) - Number(bKey)
   },
 }
 
@@ -143,15 +174,18 @@ export function sortAuctions<TAuction extends SortableTopAuctionTableValue>({
   auctions,
   sortMethod,
   sortAscending,
+  currentTimeMs = Date.now(),
 }: {
   auctions: TAuction[]
   sortMethod: AuctionSortField
   sortAscending: boolean
+  currentTimeMs?: number
 }): TAuction[] {
   // For TIME_REMAINING, pass sortAscending to enable custom sorting logic
   // For other fields, use reverse() approach
   if (sortMethod === AuctionSortField.TIME_REMAINING) {
-    return [...auctions].sort((a, b) => AuctionSortMethods[sortMethod](a, b, sortAscending))
+    // Snapshot the clock once so the phase grouping stays consistent across the whole sort
+    return [...auctions].sort((a, b) => AuctionSortMethods[sortMethod](a, b, sortAscending, currentTimeMs))
   }
 
   const sorted = [...auctions].sort(AuctionSortMethods[sortMethod])
@@ -160,11 +194,7 @@ export function sortAuctions<TAuction extends SortableTopAuctionTableValue>({
 
 function getDefaultAuctionSortRank({ auction }: SortableTopAuctionTableValue, currentTimeMs: number): number {
   const { verified, timeRemaining } = auction
-  const startTimestampMs =
-    timeRemaining.startBlockTimestamp === undefined
-      ? undefined
-      : Number(timeRemaining.startBlockTimestamp) * ONE_SECOND_MS
-  const isComingSoon = !timeRemaining.isCompleted && startTimestampMs !== undefined && currentTimeMs < startTimestampMs
+  const isComingSoon = isUpcomingAuction(auction, currentTimeMs)
   const isLive = !timeRemaining.isCompleted && !isComingSoon
 
   if (isLive) {
@@ -273,8 +303,34 @@ interface TopAuctionsTableValue extends SortableTopAuctionTableValue {
   link: string
 }
 
-export const ToucanTable = memo(function ToucanTable() {
-  const { auctions, isLoading, isError } = useTopAuctions()
+/** Launchpad identity rendered in the optional Launchpad column (see `ToucanTable.launchpad`). */
+export interface AuctionLaunchpadDisplay {
+  label: string
+  logoUrl?: string
+  /** True while the launchpad registry is still resolving the logo (renders a skeleton instead of the letter fallback). */
+  logoLoading?: boolean
+}
+
+export const ToucanTable = memo(function ToucanTable({
+  chainId,
+  liveOnly = false,
+  pageSize,
+  launchpad,
+}: {
+  /** Override the URL-derived chain (used off /explore, e.g. the /launches Live-auctions view). */
+  chainId?: UniverseChainId
+  /** Server-side: keep only in-progress + upcoming auctions, dropping ones past their end block. */
+  liveOnly?: boolean
+  /** Override the ListTopAuctions page size (defaults to the Explore-wide AUCTION_LIST_API_PAGE_SIZE). */
+  pageSize?: number
+  /**
+   * When set, renders a Launchpad column after the token column. Every Toucan auction is a Uniswap
+   * CCA auction, so the caller resolves the single launchpad once (registry logo + name) rather
+   * than per row — the /launches Live-auctions view passes the `uniswap-cca` registry entry.
+   */
+  launchpad?: AuctionLaunchpadDisplay
+} = {}) {
+  const { auctions, isLoading, isError } = useTopAuctions({ chainId, liveOnly, pageSize })
   const filterString = useExploreTablesFilterStore((s) => s.filterString)
   const debouncedFilterString = useDebounce(filterString, 300)
   const quickFilter = useExploreTablesFilterStore((s) => s.quickFilter)
@@ -285,7 +341,7 @@ export const ToucanTable = memo(function ToucanTable() {
     [auctions, debouncedFilterString],
   )
 
-  // Apply the quick filter after the search filter
+  // liveOnly is applied server-side (see useTopAuctions); only the quick filter remains client-side.
   const filteredAuctions = useMemo(
     () => filterAuctionsByQuickFilter(searchFiltered, quickFilter),
     [searchFiltered, quickFilter],
@@ -303,6 +359,7 @@ export const ToucanTable = memo(function ToucanTable() {
         loading={isLoading}
         loadMore={loadMore}
         error={isError}
+        launchpad={launchpad}
       />
     </TableWrapper>
   )
@@ -314,14 +371,17 @@ function ToucanTableComponent({
   loading,
   error,
   loadMore,
+  launchpad,
 }: {
   auctions?: readonly EnrichedAuction[]
   visibleAuctionLimit: number
   loading: boolean
   error?: boolean
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
+  launchpad?: AuctionLaunchpadDisplay
 }) {
   const { t } = useTranslation()
+  const isV2TokensEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
   const { priceMap: auctionTokenPriceMap } = useAuctionTokenPrices(auctions ?? [])
   const quickFilter = useExploreTablesFilterStore((s) => s.quickFilter)
   // Launch threshold isn't meaningful once every visible auction has already resolved.
@@ -452,13 +512,21 @@ function ToucanTableComponent({
   const showLoadingSkeleton = loading || !!error
 
   const media = useMedia()
+  // Primitive deps (not the `launchpad` object) so a refetch of the launchpads registry that
+  // produces an equal-but-new object can't rebuild the column defs — a columns identity change
+  // remounts every cell (flexRender treats each new `cell` function as a new component type),
+  // resetting TokenLogo's load state and flashing the launchpad logo.
+  const launchpadLabel = launchpad?.label
+  const launchpadLogoUrl = launchpad?.logoUrl
+  const launchpadLogoLoading = launchpad?.logoLoading ?? false
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<TopAuctionsTableValue>()
     const filteredColumns = [
       columnHelper.accessor((row) => row.tokenName, {
         id: 'tokenName',
-        // Column sizes sum to 1120 (table max width minus padding) so all columns fit without horizontal scroll
-        size: media.lg ? 160 : 320,
+        // Column sizes sum to 1120 (table max width minus padding) so all columns fit without
+        // horizontal scroll — the token column gives up the Launchpad column's width when present.
+        size: media.lg ? 160 : launchpadLabel !== undefined ? 268 : 320,
         header: () => (
           <HeaderCell justifyContent="flex-start">
             <Text variant="body3" color="$neutral2" fontWeight="500">
@@ -472,6 +540,31 @@ function ToucanTableComponent({
           </Cell>
         ),
       }),
+      // Constant per table today (see the `launchpad` prop docs), so the cell reads the resolved
+      // display directly instead of a row accessor.
+      launchpadLabel !== undefined
+        ? columnHelper.accessor((row) => row, {
+            id: 'launchpad',
+            size: LAUNCHPAD_COLUMN_WIDTH,
+            meta: LAUNCHPAD_COLUMN_META,
+            header: () => (
+              <HeaderCell justifyContent="flex-start">
+                <Text variant="body3" color="$neutral2" fontWeight="500">
+                  {t('launches.table.launchpad')}
+                </Text>
+              </HeaderCell>
+            ),
+            cell: () => (
+              <Cell justifyContent="flex-start" loading={showLoadingSkeleton}>
+                <LaunchpadCellContent
+                  label={launchpadLabel}
+                  logoUrl={launchpadLogoUrl}
+                  logoLoading={launchpadLogoLoading}
+                />
+              </Cell>
+            ),
+          })
+        : null,
       columnHelper.accessor((row) => row, {
         id: 'projectedFdv',
         size: 180,
@@ -590,20 +683,12 @@ function ToucanTableComponent({
             size: 180,
             header: () => (
               <HeaderCell justifyContent="flex-end">
-                <Flex row gap="$gap4" alignItems="center">
-                  <Text variant="body3" color="$neutral2" fontWeight="500">
-                    {t('toucan.auction.launchThreshold')}
-                  </Text>
-                  <MouseoverTooltip
-                    text={t('toucan.auction.launchThreshold.tooltip')}
-                    placement="top"
-                    size={TooltipSize.Small}
-                  >
-                    <Flex alignItems="center" justifyContent="center">
-                      <InfoCircleFilled color="$neutral3" size="$icon.16" />
-                    </Flex>
-                  </MouseoverTooltip>
-                </Flex>
+                <AuctionTableHeader
+                  category={AuctionSortField.LAUNCH_THRESHOLD}
+                  isCurrentSortMethod={sortMethod === AuctionSortField.LAUNCH_THRESHOLD}
+                  direction={orderDirection}
+                  onSort={createSortHandler(AuctionSortField.LAUNCH_THRESHOLD)}
+                />
               </HeaderCell>
             ),
             cell: (row) => {
@@ -672,6 +757,9 @@ function ToucanTableComponent({
     fdvWarningThresholds,
     isCompletedOnlyView,
     isQuickLaunchFlagEnabled,
+    launchpadLabel,
+    launchpadLogoUrl,
+    launchpadLogoLoading,
   ])
 
   return (
@@ -687,6 +775,7 @@ function ToucanTableComponent({
         hiddenRows={sortedHiddenAuctionTableValues}
         showHiddenRowsLabel={t('toucan.auction.showHiddenAuctions')}
         hideHiddenRowsLabel={t('toucan.auction.hideHiddenAuctions')}
+        virtualized={isV2TokensEnabled}
       />
       <Flex justifyContent="center" alignItems="center">
         <Text lineHeight="$spacing12" flex={1} width="75%" color="$neutral3" textAlign="center" variant="body4">

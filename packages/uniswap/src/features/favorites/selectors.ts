@@ -1,6 +1,6 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
-import { normalizeCurrencyIdForMapLookup, normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { UniswapRootState } from 'uniswap/src/state'
+import { normalizeCurrencyIdForMapLookup, normalizeTokenAddressForCache } from 'uniswap/src/utils/currencyId'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { unique } from 'utilities/src/primitives/array'
 

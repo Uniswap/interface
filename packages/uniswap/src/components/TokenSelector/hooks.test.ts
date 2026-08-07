@@ -69,7 +69,7 @@ vi.mock('uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddre
   usePortfolioBalancesForAddressById: mockUsePortfolioBalancesForAddressById,
 }))
 
-vi.mock('uniswap/src/data/rest/tokenRankings', () => ({
+vi.mock('uniswap/src/data/apiClients/dataApiService/exploreV1/tokenRankings', () => ({
   useTokenRankingsQuery: mockUseTokenRankingsQuery,
   CustomRankingType: {
     Trending: 'TRENDING',

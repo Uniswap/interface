@@ -40,19 +40,27 @@ export function AnimatedCopyLabel({
         <Flex row alignItems="center" gap="$spacing8">
           {isCopied ? (
             <>
-              <Text color="$statusSuccess" variant="body3">
+              <Text color="$statusSuccess" flexShrink={1} numberOfLines={1} variant="body3">
                 {copiedLabel}
               </Text>
-              <Flex centered $md={{ backgroundColor: '$statusSuccess2', borderRadius: '$rounded12', p: '$spacing8' }}>
+              <Flex
+                centered
+                flexShrink={0}
+                $md={{ backgroundColor: '$statusSuccess2', borderRadius: '$rounded12', p: '$spacing8' }}
+              >
                 <CheckmarkCircle color="$statusSuccess" size={iconSize} />
               </Flex>
             </>
           ) : (
             <>
-              <Text color="$neutral2" variant="body3">
+              <Text color="$neutral2" flexShrink={1} numberOfLines={1} variant="body3">
                 {label}
               </Text>
-              <Flex centered $md={{ backgroundColor: '$surface3', borderRadius: '$rounded12', p: '$spacing8' }}>
+              <Flex
+                centered
+                flexShrink={0}
+                $md={{ backgroundColor: '$surface3', borderRadius: '$rounded12', p: '$spacing8' }}
+              >
                 <CopySheets color={iconColor} size={iconSize} />
               </Flex>
             </>

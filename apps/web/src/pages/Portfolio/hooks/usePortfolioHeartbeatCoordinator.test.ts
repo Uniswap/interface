@@ -1,8 +1,12 @@
 import { renderHook, act } from '@testing-library/react'
+import { useDynamicConfigValue, useFeatureFlag } from '@universe/gating'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures/gql/assets/constants'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { useInterval } from '~/lib/hooks/useInterval'
+import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
 import { usePortfolioHeartbeatCoordinator } from '~/pages/Portfolio/hooks/usePortfolioHeartbeatCoordinator'
+import { useShowDemoView } from '~/pages/Portfolio/hooks/useShowDemoView'
 import { PortfolioTab } from '~/pages/Portfolio/types'
 
 const mockRefetchQueries = vi.fn().mockResolvedValue(undefined)
@@ -11,16 +15,35 @@ vi.mock('@tanstack/react-query', () => ({
   useQueryClient: () => ({ refetchQueries: mockRefetchQueries }),
 }))
 
+vi.mock('@universe/gating', async (importOriginal) => {
+  return {
+    ...(await importOriginal<typeof import('@universe/gating')>()),
+    useFeatureFlag: vi.fn(),
+    useDynamicConfigValue: vi.fn(),
+  }
+})
+
 vi.mock('~/lib/hooks/useInterval', () => ({
   useInterval: vi.fn(),
 }))
 
+vi.mock('~/pages/Portfolio/hooks/usePortfolioAddresses', () => ({
+  usePortfolioAddresses: vi.fn(),
+}))
+
+vi.mock('~/pages/Portfolio/hooks/useShowDemoView', () => ({
+  useShowDemoView: vi.fn(),
+}))
+
 const mockUseInterval = vi.mocked(useInterval)
+const mockUseFeatureFlag = vi.mocked(useFeatureFlag)
+const mockUseDynamicConfigValue = vi.mocked(useDynamicConfigValue)
+const mockUsePortfolioAddresses = vi.mocked(usePortfolioAddresses)
+const mockUseShowDemoView = vi.mocked(useShowDemoView)
 
 function makeParams(overrides?: Partial<Parameters<typeof usePortfolioHeartbeatCoordinator>[0]>) {
   return {
     tab: PortfolioTab.Overview,
-    enabled: true,
     ...overrides,
   }
 }
@@ -28,21 +51,40 @@ function makeParams(overrides?: Partial<Parameters<typeof usePortfolioHeartbeatC
 describe('usePortfolioHeartbeatCoordinator', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mockUseFeatureFlag.mockReturnValue(false)
+    mockUseDynamicConfigValue.mockReturnValue(60)
+    mockUseShowDemoView.mockReturnValue(false)
+    mockUsePortfolioAddresses.mockReturnValue({
+      evmAddress: SAMPLE_SEED_ADDRESS_1,
+      svmAddress: undefined,
+      isExternalWallet: false,
+    })
     Object.defineProperty(document, 'visibilityState', {
       configurable: true,
       get: () => 'visible',
     })
   })
 
+  it('passes null delay when the synchronized heartbeats config is 0', () => {
+    mockUseDynamicConfigValue.mockReturnValue(0)
+
+    renderHook(() => usePortfolioHeartbeatCoordinator(makeParams()))
+
+    const [, delay] = mockUseInterval.mock.calls[0]!
+    expect(delay).toBeNull()
+  })
+
   it('passes the heartbeat interval when enabled and visible', () => {
     renderHook(() => usePortfolioHeartbeatCoordinator(makeParams()))
 
     const [, delay] = mockUseInterval.mock.calls[0]!
-    expect(delay).toBe(PollingInterval.KindaFast)
+    expect(delay).toBe(PollingInterval.Normal)
   })
 
-  it('passes null delay when disabled', () => {
-    renderHook(() => usePortfolioHeartbeatCoordinator(makeParams({ enabled: false })))
+  it('passes null delay when disabled (demo view)', () => {
+    mockUseShowDemoView.mockReturnValue(true)
+
+    renderHook(() => usePortfolioHeartbeatCoordinator(makeParams()))
 
     const [, delay] = mockUseInterval.mock.calls[0]!
     expect(delay).toBeNull()

@@ -181,13 +181,46 @@ describe('Earn active plan execution helpers', () => {
     const priceChangeInterruptedPlanIds = new Set([PLAN_ID])
 
     expect(isEarnPlanPriceChangeInterrupted({ activePlan, priceChangeInterruptedPlanIds })).toBe(true)
-    expect(isEarnActivePlanExecuting({ activePlan, priceChangeInterruptedPlanIds })).toBe(false)
+    expect(isEarnActivePlanExecuting({ activePlan, executionLockPlanId: PLAN_ID, priceChangeInterruptedPlanIds })).toBe(
+      false,
+    )
   })
 
-  it('treats a normal active plan as executing', () => {
+  it('treats a lock-holding active plan as executing', () => {
     const activePlan = createActivePlan()
 
     expect(isEarnPlanPriceChangeInterrupted({ activePlan, priceChangeInterruptedPlanIds: new Set() })).toBe(false)
-    expect(isEarnActivePlanExecuting({ activePlan, priceChangeInterruptedPlanIds: new Set() })).toBe(true)
+    expect(
+      isEarnActivePlanExecuting({
+        activePlan,
+        executionLockPlanId: PLAN_ID,
+        priceChangeInterruptedPlanIds: new Set(),
+      }),
+    ).toBe(true)
+  })
+
+  it('treats a retained plan without the execution lock as stopped, not executing', () => {
+    const activePlan = createActivePlan()
+
+    expect(
+      isEarnActivePlanExecuting({ activePlan, executionLockPlanId: null, priceChangeInterruptedPlanIds: new Set() }),
+    ).toBe(false)
+    expect(
+      isEarnActivePlanExecuting({
+        activePlan,
+        executionLockPlanId: 'other-plan',
+        priceChangeInterruptedPlanIds: new Set(),
+      }),
+    ).toBe(false)
+  })
+
+  it('does not treat a missing plan as executing even while a lock is held', () => {
+    expect(
+      isEarnActivePlanExecuting({
+        activePlan: undefined,
+        executionLockPlanId: PLAN_ID,
+        priceChangeInterruptedPlanIds: new Set(),
+      }),
+    ).toBe(false)
   })
 })

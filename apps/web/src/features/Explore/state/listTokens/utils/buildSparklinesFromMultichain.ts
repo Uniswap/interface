@@ -1,6 +1,7 @@
 import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
-import type { SparklineMap } from '~/appGraphql/data/types'
-import type { PricePoint } from '~/appGraphql/data/util'
+import type { SparklineMap } from '~/data/types'
+import type { PricePoint } from '~/data/util'
+import { multichainTokenKey } from '~/features/Explore/state/listTokens/utils/multichainTokenKey'
 
 /**
  * Builds a sparklines map (multichainId -> priceHistory) for the given tokens from the
@@ -14,15 +15,14 @@ export function buildSparklinesFromMultichain(
 ): SparklineMap {
   const map: SparklineMap = {}
   for (const token of tokens) {
-    const multichainId = token.multichainToken?.multichainId
-    if (!multichainId) {
-      continue
-    }
-    const history = priceHistoryByMultichainId[multichainId]
+    // multichainTokenKey, not raw multichainId: ungrouped tokens share the
+    // '' sentinel and would otherwise all miss (or share) a sparkline.
+    const key = multichainTokenKey(token)
+    const history = priceHistoryByMultichainId[key]
     if (!history?.length) {
       continue
     }
-    map[multichainId] = history
+    map[key] = history
   }
   return map
 }

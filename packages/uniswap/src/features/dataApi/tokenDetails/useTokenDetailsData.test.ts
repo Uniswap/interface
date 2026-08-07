@@ -2,6 +2,7 @@ import { waitFor } from '@testing-library/react-native'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   resolveSpotPriceOverride,
+  useTokenMetadata,
   useTokenSpotPrice,
 } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { currencyIdToRestContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
@@ -14,13 +15,13 @@ const {
   mockUseTokenMarketPartsFragment,
   mockUseTokenProjectMarketsPartsFragment,
   mockGetGetTokenQueryOptions,
-  mockGetGetTokensMultiChainQueryOptions,
+  mockGetGetTokenMultiChainQueryOptions,
 } = vi.hoisted(() => ({
   mockUseFeatureFlag: vi.fn(),
   mockUseTokenMarketPartsFragment: vi.fn(),
   mockUseTokenProjectMarketsPartsFragment: vi.fn(),
   mockGetGetTokenQueryOptions: vi.fn(),
-  mockGetGetTokensMultiChainQueryOptions: vi.fn(),
+  mockGetGetTokenMultiChainQueryOptions: vi.fn(),
 }))
 
 vi.mock('@universe/gating', async (importOriginal) => ({
@@ -28,7 +29,7 @@ vi.mock('@universe/gating', async (importOriginal) => ({
   useFeatureFlag: mockUseFeatureFlag,
 }))
 
-vi.mock('uniswap/src/data/graphql/uniswap-data-api/fragments', () => ({
+vi.mock('uniswap/src/data/graphql/fragments', () => ({
   useTokenMarketPartsFragment: mockUseTokenMarketPartsFragment,
   useTokenProjectMarketsPartsFragment: mockUseTokenProjectMarketsPartsFragment,
 }))
@@ -36,13 +37,13 @@ vi.mock('uniswap/src/data/graphql/uniswap-data-api/fragments', () => ({
 vi.mock('uniswap/src/data/apiClients/dataApiService/tokens/queries', async (importOriginal) => ({
   ...(await importOriginal<typeof import('uniswap/src/data/apiClients/dataApiService/tokens/queries')>()),
   getGetTokenQueryOptions: mockGetGetTokenQueryOptions,
-  getGetTokensMultiChainQueryOptions: mockGetGetTokensMultiChainQueryOptions,
+  getGetTokenMultiChainQueryOptions: mockGetGetTokenMultiChainQueryOptions,
 }))
 
 const CURRENCY_ID = buildCurrencyId(UniverseChainId.Mainnet, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48')
 
 const GET_TOKEN_RAW_RESPONSE = { token: { price: { spotUsd: 1.23, percentChange1d: 0.5 } } }
-const GET_TOKENS_MULTICHAIN_RAW_RESPONSE = { tokens: [{ price: { spotUsd: 4.56 } }] }
+const GET_TOKEN_MULTICHAIN_RAW_RESPONSE = { token: { price: { spotUsd: 4.56 } } }
 
 describe(useTokenSpotPrice, () => {
   beforeEach(() => {
@@ -62,9 +63,9 @@ describe(useTokenSpotPrice, () => {
       enabled,
       select,
     }))
-    mockGetGetTokensMultiChainQueryOptions.mockImplementation(({ enabled, select }) => ({
-      queryKey: [ReactQueryCacheKey.DataApiService, 'getTokensMultiChain'],
-      queryFn: () => Promise.resolve(GET_TOKENS_MULTICHAIN_RAW_RESPONSE),
+    mockGetGetTokenMultiChainQueryOptions.mockImplementation(({ enabled, select }) => ({
+      queryKey: [ReactQueryCacheKey.DataApiService, 'getTokenMultiChain'],
+      queryFn: () => Promise.resolve(GET_TOKEN_MULTICHAIN_RAW_RESPONSE),
       enabled,
       select,
     }))
@@ -93,7 +94,7 @@ describe(useTokenSpotPrice, () => {
       renderHookWithProviders(() => useTokenSpotPrice(CURRENCY_ID))
 
       expect(mockGetGetTokenQueryOptions).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
-      expect(mockGetGetTokensMultiChainQueryOptions).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
+      expect(mockGetGetTokenMultiChainQueryOptions).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
     })
   })
 
@@ -108,11 +109,11 @@ describe(useTokenSpotPrice, () => {
       await waitFor(() => expect(result.current).toBe(1.23))
     })
 
-    it('does not query GetTokensMultiChain when isMultichainAggregateView is not set', () => {
+    it('does not query GetTokenMultiChain when isMultichainAggregateView is not set', () => {
       renderHookWithProviders(() => useTokenSpotPrice(CURRENCY_ID))
 
       expect(mockGetGetTokenQueryOptions).toHaveBeenCalledWith(expect.objectContaining({ enabled: true }))
-      expect(mockGetGetTokensMultiChainQueryOptions).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
+      expect(mockGetGetTokenMultiChainQueryOptions).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
     })
   })
 
@@ -121,27 +122,123 @@ describe(useTokenSpotPrice, () => {
       mockUseFeatureFlag.mockReturnValue(true)
     })
 
-    it('fetches via GetTokensMultiChain using the tokens identifier, resolved from the known chainId+address', () => {
+    it('fetches via GetTokenMultiChain using the token identifier, resolved from the known chainId+address', () => {
       renderHookWithProviders(() => useTokenSpotPrice(CURRENCY_ID, { isMultichainAggregateView: true }))
 
       expect(mockGetGetTokenQueryOptions).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
-      expect(mockGetGetTokensMultiChainQueryOptions).toHaveBeenCalledWith(
+      expect(mockGetGetTokenMultiChainQueryOptions).toHaveBeenCalledWith(
         expect.objectContaining({
           enabled: true,
           params: {
-            identifier: { case: 'tokens', value: { tokens: [currencyIdToRestContractInput(CURRENCY_ID)] } },
+            identifier: { case: 'token', value: currencyIdToRestContractInput(CURRENCY_ID) },
           },
         }),
       )
     })
 
-    it('returns the canonical-chain price from GetTokensMultiChain', async () => {
+    it('returns the canonical-chain price from GetTokenMultiChain', async () => {
       const { result } = renderHookWithProviders(() =>
         useTokenSpotPrice(CURRENCY_ID, { isMultichainAggregateView: true }),
       )
 
       await waitFor(() => expect(result.current).toBe(4.56))
     })
+  })
+})
+
+describe(useTokenMetadata, () => {
+  const LEGACY_TOKEN = {
+    name: 'Legacy Name',
+    symbol: 'LEG',
+    project: {
+      logoUrl: 'https://example.com/legacy-logo.png',
+      description: 'Legacy description sourced from CoinGecko.',
+      homepageUrl: 'https://legacy.example.com',
+      twitterName: 'legacyhandle',
+    },
+  }
+
+  // Salted per test so the module-level test QueryClient can't serve one test's GetToken cache to the next.
+  let querySalt = 0
+
+  function mockGetTokenResponse(response: unknown): void {
+    querySalt += 1
+    const salt = querySalt
+    mockGetGetTokenQueryOptions.mockImplementation(({ enabled, select }) => ({
+      queryKey: [ReactQueryCacheKey.DataApiService, 'getToken', 'metadata', salt],
+      queryFn: () => Promise.resolve(response),
+      enabled,
+      select,
+    }))
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockUseFeatureFlag.mockReturnValue(true)
+  })
+
+  it('keeps legacy fields that a sparse GetToken leaves undefined or empty', async () => {
+    mockGetTokenResponse({
+      token: {
+        name: 'V2 Name',
+        symbol: 'V2',
+        project: { logoUrl: 'https://example.com/v2-logo.png', description: '' },
+      },
+    })
+
+    const { result } = renderHookWithProviders(() => useTokenMetadata(CURRENCY_ID, { legacyToken: LEGACY_TOKEN }))
+
+    await waitFor(() => expect(result.current.name).toBe('V2 Name'))
+
+    expect(result.current.logoUrl).toBe('https://example.com/v2-logo.png')
+    expect(result.current.description).toBe(LEGACY_TOKEN.project.description)
+    expect(result.current.homepageUrl).toBe(LEGACY_TOKEN.project.homepageUrl)
+    expect(result.current.twitterName).toBe(LEGACY_TOKEN.project.twitterName)
+  })
+
+  it('prefers populated V2 fields over legacy ones', async () => {
+    mockGetTokenResponse({
+      token: {
+        name: 'V2 Name',
+        symbol: 'V2',
+        project: {
+          logoUrl: 'https://example.com/v2-logo.png',
+          description: 'V2 description.',
+          homepageUrl: 'https://v2.example.com',
+          twitterName: 'v2handle',
+        },
+      },
+    })
+
+    const { result } = renderHookWithProviders(() => useTokenMetadata(CURRENCY_ID, { legacyToken: LEGACY_TOKEN }))
+
+    await waitFor(() => expect(result.current.description).toBe('V2 description.'))
+
+    expect(result.current.homepageUrl).toBe('https://v2.example.com')
+    expect(result.current.twitterName).toBe('v2handle')
+  })
+
+  it('resolves from GetToken alone when there is no legacy data (global V2 flag)', async () => {
+    mockGetTokenResponse({
+      token: { name: 'V2 Name', symbol: 'V2', project: { logoUrl: 'https://example.com/v2-logo.png' } },
+    })
+
+    const { result } = renderHookWithProviders(() => useTokenMetadata(CURRENCY_ID))
+
+    await waitFor(() => expect(result.current.name).toBe('V2 Name'))
+
+    expect(result.current.description).toBeUndefined()
+    expect(result.current.homepageUrl).toBeUndefined()
+  })
+
+  it('reads only legacy data when V2 is disabled', () => {
+    mockUseFeatureFlag.mockReturnValue(false)
+    mockGetTokenResponse({ token: { name: 'V2 Name' } })
+
+    const { result } = renderHookWithProviders(() => useTokenMetadata(CURRENCY_ID, { legacyToken: LEGACY_TOKEN }))
+
+    expect(result.current.name).toBe('Legacy Name')
+    expect(result.current.description).toBe(LEGACY_TOKEN.project.description)
   })
 })
 

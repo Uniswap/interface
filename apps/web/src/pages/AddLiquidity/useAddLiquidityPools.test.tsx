@@ -2,12 +2,13 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { renderHook } from '@testing-library/react'
 import { Protocols } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
 import type { PoolSummary } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
+import { DEFAULT_TICK_SPACING, DYNAMIC_FEE_AMOUNT } from 'uniswap/src/constants/pools'
 import { liquidityQueries } from 'uniswap/src/data/apiClients/liquidityService/liquidityQueries'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { PoolSortFields } from '~/appGraphql/data/pools/useTopPools'
-import { OrderDirection } from '~/appGraphql/data/util'
+import { PoolSortFields } from '~/data/pools/useTopPools'
+import { OrderDirection } from '~/data/util'
 import { useAddLiquidityPools } from '~/pages/AddLiquidity/useAddLiquidityPools'
 
 vi.mock('@tanstack/react-query', async (importOriginal) => {
@@ -133,5 +134,33 @@ describe('useAddLiquidityPools', () => {
     mockPools([buildPool({ poolIdentifier: 'pool-1', protocolVersion: 'V4' as unknown as Protocols })])
     const { result } = renderHook(() => useAddLiquidityPools({ sortState: SORT_STATE, filterString: '' }))
     expect(result.current.pools?.[0]?.protocolVersion).toBe('v4')
+  })
+
+  it('passes through a static fee tier as-is', () => {
+    mockPools([buildPool({ poolIdentifier: 'pool-1', feeTier: 3000, tickSpacing: 60, isDynamicFee: false })])
+    const { result } = renderHook(() => useAddLiquidityPools({ sortState: SORT_STATE, filterString: '' }))
+    expect(result.current.pools?.[0]?.feeTier?.feeAmount).toBe(3000)
+    expect(result.current.pools?.[0]?.feeTier?.tickSpacing).toBe(60)
+    expect(result.current.pools?.[0]?.feeTier?.isDynamic).toBe(false)
+  })
+
+  // Robinhood-chain dynamic-fee pools serve the protocol's raw max-fee constant (1_000_000) as
+  // `feeTier`, not the SDK's dynamic-fee sentinel — literally 8388608 here, not just the named
+  // constant, so a revert of the normalization is caught even if the constant's value ever moves.
+  // Un-normalized, this both trips the v4-sdk's "Invariant failed" fee check downstream and
+  // renders as a false "100%" fee badge on the add-liquidity pool table row.
+  it('normalizes a dynamic-fee pool feeAmount to the SDK sentinel', () => {
+    mockPools([buildPool({ poolIdentifier: 'pool-dynamic', feeTier: 1_000_000, isDynamicFee: true, tickSpacing: 200 })])
+    const { result } = renderHook(() => useAddLiquidityPools({ sortState: SORT_STATE, filterString: '' }))
+    expect(result.current.pools?.[0]?.feeTier?.feeAmount).toBe(8_388_608)
+    expect(result.current.pools?.[0]?.feeTier?.feeAmount).toBe(DYNAMIC_FEE_AMOUNT)
+    expect(result.current.pools?.[0]?.feeTier?.tickSpacing).toBe(200)
+    expect(result.current.pools?.[0]?.feeTier?.isDynamic).toBe(true)
+  })
+
+  it('falls back to the default tick spacing when none is served', () => {
+    mockPools([buildPool({ poolIdentifier: 'pool-1', tickSpacing: 0 })])
+    const { result } = renderHook(() => useAddLiquidityPools({ sortState: SORT_STATE, filterString: '' }))
+    expect(result.current.pools?.[0]?.feeTier?.tickSpacing).toBe(DEFAULT_TICK_SPACING)
   })
 })

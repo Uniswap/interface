@@ -2,7 +2,7 @@ import { CandlestickData } from 'lightweight-charts'
 import { getFiatCurrencyCode } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
-import { PricePoint } from '~/appGraphql/data/util'
+import { PricePoint } from '~/data/util'
 
 /**
  * Returns the minimum and maximum values in the given array of PricePoints.

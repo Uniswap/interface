@@ -1,6 +1,8 @@
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
+import { UNISWAP_LOGO } from 'ui/src/assets'
 // oxlint-disable-next-line no-restricted-imports -- Provider constants need direct ethers imports
 import PASSKEY_ICON from 'ui/src/assets/icons/passkey.svg'
+import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import { CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
 import GNOSIS_ICON from '~/assets/images/gnosis.png'
 import COINBASE_ICON from '~/assets/wallets/coinbase-icon.svg'
@@ -26,3 +28,10 @@ export function useRecentConnectorId() {
 }
 
 export const PLAYWRIGHT_CONNECT_ADDRESS = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
+
+// Dapp identity shared by the MetaMask Connect EVM and Solana clients.
+export const METAMASK_CONNECT_DAPP_METADATA = {
+  name: 'Uniswap',
+  url: UNISWAP_WEB_URL,
+  iconUrl: `${UNISWAP_WEB_URL}${UNISWAP_LOGO}`,
+}

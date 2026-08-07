@@ -12,7 +12,7 @@ import {
 } from 'uniswap/src/components/WalletProfitLoss/utils'
 import { WalletProfitLoss } from 'uniswap/src/components/WalletProfitLoss/WalletProfitLoss'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { useGetWalletProfitLossQuery } from 'uniswap/src/data/rest/getWalletProfitLoss'
+import { useGetWalletProfitLossQuery } from 'uniswap/src/data/apiClients/dataApiService/performance/getWalletProfitLoss'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'

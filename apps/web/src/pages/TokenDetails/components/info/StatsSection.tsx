@@ -1,12 +1,13 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import type { TFunction } from 'i18next'
 import { ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, FlexProps, styled, Text } from 'ui/src'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useIsV2TokensEnabled } from 'uniswap/src/features/dataApi/tokenDetails/useIsV2TokensEnabled'
 import {
   resolveSpotPriceOverride,
+  type TokenMarketStats,
   useTokenMarketStats,
   useTokenSpotPrice,
 } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
@@ -14,10 +15,10 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { FiatNumberType, NumberType } from 'utilities/src/format/types'
-import { TokenQueryData } from '~/appGraphql/data/Token'
 import { getHeaderDescription, TokenSortMethod } from '~/components/Tokens/constants'
 import { LoadingBubble } from '~/components/Tokens/loading'
 import { MouseoverTooltip } from '~/components/Tooltip'
+import { TokenQueryData } from '~/data/Token'
 import { useTDPEffectiveCurrency } from '~/pages/TokenDetails/hooks/useTDPEffectiveCurrency'
 import { useTDPPreferProjectMarketData } from '~/pages/TokenDetails/hooks/useTDPPreferProjectMarketData'
 import { useTDPStatsMarketSource } from '~/pages/TokenDetails/hooks/useTDPStatsMarketSource'
@@ -64,6 +65,21 @@ function getGraphqlStatFallback<T>({
     return v2Value
   }
   return showAggregatedStats ? aggregatedValue : filteredValue
+}
+
+// V2 omits marketCap/FDV; TokenWeb only has data on the Robinhood fallback or the RWA carve-out.
+function getProjectValuations({
+  stats,
+  tokenQueryData,
+}: {
+  stats: TokenMarketStats
+  tokenQueryData: TokenQueryData | undefined
+}): { marketCap: number | undefined; fdv: number | undefined } {
+  const projectMarket = tokenQueryData?.project?.markets?.[0]
+  return {
+    marketCap: stats.marketCap ?? projectMarket?.marketCap?.value,
+    fdv: stats.fdv ?? projectMarket?.fullyDilutedValuation?.value,
+  }
 }
 
 export const StatWrapper = ({
@@ -176,7 +192,7 @@ type StatsSectionProps = {
 export function StatsSection({ tokenQueryData, isLoading = false }: StatsSectionProps) {
   const { t } = useTranslation()
   const effectiveCurrency = useTDPEffectiveCurrency()
-  const isV2TokensEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
+  const isV2TokensEnabled = useIsV2TokensEnabled()
 
   const {
     showAggregatedStats,
@@ -217,14 +233,17 @@ export function StatsSection({ tokenQueryData, isLoading = false }: StatsSection
   const volume = preferProjectMarketData ? (stats.volume ?? tokenMarketVolume) : (tokenMarketVolume ?? stats.volume)
   // Guard against the second fallback below: `volume` can drop to the Uniswap value even when `stats.volumeSource` is 'project'.
   const isProjectVolume = stats.volumeSource === 'project' && volume === stats.volume
+  // TVL is never available from CoinGecko project-market data, so REST/V2 is never authoritative
+  // for it when preferProjectMarketData is true (see stats.tvl's source in computeTokenMarketStats).
   const tvl = getGraphqlStatFallback({
-    isV2TokensEnabled,
+    isV2TokensEnabled: isV2TokensEnabled && !preferProjectMarketData,
     v2Value: stats.tvl,
     showAggregatedStats,
     aggregatedValue: tokenQueryData?.market?.totalValueLocked?.value,
     filteredValue: filteredDeploymentMarket?.totalValueLocked?.value,
   })
-  const { marketCap, fdv, high52w, low52w } = stats
+  const { marketCap, fdv } = getProjectValuations({ stats, tokenQueryData })
+  const { high52w, low52w } = stats
 
   const hasStats = tvl || fdv || marketCap || volume || high52w || low52w
 

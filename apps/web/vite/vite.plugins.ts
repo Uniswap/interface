@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import type { Plugin } from 'vite'
+import type { Plugin, ResolvedConfig } from 'vite'
 
 const CSP_DIRECTIVE_MAP: Record<string, string> = {
   defaultSrc: 'default-src',
@@ -15,10 +15,39 @@ const CSP_DIRECTIVE_MAP: Record<string, string> = {
   formAction: 'form-action',
 }
 
+const ASSET_BASE_URL_CSP_DIRECTIVES = [
+  'scriptSrc',
+  'styleSrc',
+  'fontSrc',
+  'imgSrc',
+  'mediaSrc',
+  'connectSrc',
+  'workerSrc',
+] as const
+
+function getCrossOriginBase(base: string | undefined): string | undefined {
+  if (!base || base === '/') {
+    return undefined
+  }
+
+  try {
+    return new URL(base).origin
+  } catch {
+    return undefined
+  }
+}
+
 // This plugin is used in vite.config.mts
+// oxlint-disable-next-line import/no-unused-modules
 export function cspMetaTagPlugin(mode?: string, envValues?: Record<string, string>): Plugin {
+  let resolvedBase: string | undefined
+
   return {
     name: 'inject-csp-meta',
+
+    configResolved(config: ResolvedConfig) {
+      resolvedBase = config.base
+    },
 
     transformIndexHtml(html) {
       const env = mode ?? process.env.NODE_ENV ?? 'development'
@@ -45,10 +74,28 @@ export function cspMetaTagPlugin(mode?: string, envValues?: Record<string, strin
         }
       }
 
+      // Cross-origin asset base (ECS CDN): 'self' no longer covers JS/CSS/fonts/workers.
+      const assetBaseUrlOrigin = getCrossOriginBase(resolvedBase)
+      if (assetBaseUrlOrigin) {
+        for (const directive of ASSET_BASE_URL_CSP_DIRECTIVES) {
+          baseCSP[directive] = [...new Set([...(baseCSP[directive] || []), assetBaseUrlOrigin])]
+        }
+      }
+
       const tradingApiUrlOverride = envValues?.TRADING_API_URL_OVERRIDE
       if (tradingApiUrlOverride) {
         if (!baseCSP.connectSrc.includes(tradingApiUrlOverride)) {
           baseCSP.connectSrc.push(tradingApiUrlOverride)
+        }
+      }
+
+      // E2E-only: the hermetic WalletConnect relay runs on a local ws port (see
+      // src/playwright/wc/localRelay.ts). Allow a localhost ws origin in connect-src only for the
+      // e2e build, keeping the prod policy (csp.json) free of any localhost ws.
+      if (envValues?.IS_E2E_TEST === 'true') {
+        const localWsOrigin = 'ws://127.0.0.1:*'
+        if (!baseCSP.connectSrc.includes(localWsOrigin)) {
+          baseCSP.connectSrc.push(localWsOrigin)
         }
       }
 

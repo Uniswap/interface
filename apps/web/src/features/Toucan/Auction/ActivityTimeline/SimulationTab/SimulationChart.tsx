@@ -11,10 +11,10 @@ import { computeSimulationResult } from '~/features/Toucan/Auction/ActivityTimel
 import { fromQ96ToDecimalWithTokenDecimals } from '~/features/Toucan/Auction/BidDistributionChart/utils/q96'
 import { AUCTION_CHART_HEIGHT, useAuctionChart } from '~/features/Toucan/Auction/hooks/useAuctionChart'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
-import { blockToTimestamp } from '~/features/Toucan/Auction/utils/blockToTimestamp'
 import { formatCompactFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
 import { formatShortDateTime } from '~/features/Toucan/Auction/utils/formatting'
 import { TooltipContainer } from '~/features/Toucan/Shared/TooltipContainer'
+import { blockToTimestamp } from '~/utils/blockToTimestamp'
 
 interface PriceCurvePoint {
   time: UTCTimestamp

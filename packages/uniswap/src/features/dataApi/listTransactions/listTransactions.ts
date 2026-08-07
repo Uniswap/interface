@@ -4,7 +4,7 @@ import type { TransactionTypeFilter } from '@uniswap/client-data-api/dist/data/v
 import { isWebPlatform } from '@universe/environment'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { useListTransactionsQuery } from 'uniswap/src/data/rest/listTransactions'
+import { useListTransactionsQuery } from 'uniswap/src/data/apiClients/dataApiService/activity/listTransactions'
 import { parseToTransactionDetails } from 'uniswap/src/features/activity/parseToTransactionDetails'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'

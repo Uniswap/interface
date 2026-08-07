@@ -1,8 +1,5 @@
 import type { TFunction } from 'i18next'
-import { UNITAG_VALID_REGEX } from 'uniswap/src/features/unitags/constants'
-
-const MIN_UNITAG_LENGTH = 3
-const MAX_UNITAG_LENGTH = 20
+import { MAX_UNITAG_LENGTH, MIN_UNITAG_LENGTH, UNITAG_VALID_REGEX } from 'uniswap/src/features/unitags/constants'
 
 export function getUnitagFormatError(unitag: string, t: TFunction): string | undefined {
   if (unitag.length < MIN_UNITAG_LENGTH) {

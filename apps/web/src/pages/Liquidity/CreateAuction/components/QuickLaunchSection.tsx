@@ -197,13 +197,13 @@ function StoryBeat({
 
 /**
  * The preset narrated as three numbered beats (auction → locked pool → buyback & burn) behind a
- * center expando, expanded by default per the design spec; the exact parameter table stays one
- * "View all parameters" disclosure away.
+ * center expando, collapsed by default so the form stays compact; the exact parameter table stays
+ * one "View all parameters" disclosure away.
  */
 function HowQuickLaunchesWork(): JSX.Element {
   const { t } = useTranslation()
   const launchParams = useLaunchParams()
-  const [expanded, setExpanded] = useState(true)
+  const [expanded, setExpanded] = useState(false)
   const [showAllParams, setShowAllParams] = useState(false)
 
   const handleToggleExpanded = (): void => {

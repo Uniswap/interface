@@ -1,6 +1,10 @@
+import { type PlainMessage } from '@bufbuild/protobuf'
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
+import { useQuery } from '@tanstack/react-query'
 import { SharedEventName } from '@uniswap/analytics-events'
+import type { GetTokensMultiChainResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { GraphQLApi } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useWindowDimensions } from 'react-native'
@@ -12,17 +16,26 @@ import { BlockExplorer, GlobeFilled, Page, XTwitter } from 'ui/src/components/ic
 import { spacing } from 'ui/src/theme'
 import { getBlockExplorerIcon } from 'uniswap/src/components/chains/BlockExplorerIcon'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import {
+  getMultichainTokenEntry,
+  getRestMultichainTokenEntry,
+} from 'uniswap/src/components/MultichainTokenDetails/getMultichainTokenEntry'
 import { MultichainAddressSheet } from 'uniswap/src/components/MultichainTokenDetails/MultichainAddressSheet'
 import { MultichainExplorerList } from 'uniswap/src/components/MultichainTokenDetails/MultichainExplorerList'
-import { useOrderedMultichainEntries } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
-import type { MultichainTokenEntry } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
-import { useTokenProjectUrlsPartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
+import {
+  type MultichainTokenEntry,
+  useOrderedMultichainEntries,
+} from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
+import { getGetTokensMultiChainQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
+import { useTokenProjectUrlsPartsFragment } from 'uniswap/src/data/graphql/fragments'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
+import {
+  currencyIdToContractInput,
+  currencyIdToRestContractInput,
+} from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -43,29 +56,59 @@ const renderItem = ({ item }: { item: LinkButtonProps }): JSX.Element => <LinkBu
 
 const keyExtractor = (item: LinkButtonProps): string => item.testID ?? item.label
 
+function selectMultichainAddresses(
+  data: PlainMessage<GetTokensMultiChainResponse> | undefined,
+): Record<string, string> | undefined {
+  return data?.tokens[0]?.addresses
+}
+
 /** Fetches cross-chain token data and returns entries ordered by network selector order. */
 function useMultichainTokenEntries(currencyId: string): MultichainTokenEntry[] {
-  const contractInput = useMemo(() => currencyIdToContractInput(currencyId), [currencyId])
-  const { data } = GraphQLApi.useTokenProjectsQuery({
-    variables: { contracts: [contractInput] },
-  })
+  const isV2TokensEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
   const featureFlaggedChainIds = useFeatureFlaggedChainIds()
 
+  const contractInput = useMemo(() => currencyIdToContractInput(currencyId), [currencyId])
+  const { data: legacyData } = GraphQLApi.useTokenProjectsQuery({
+    variables: { contracts: [contractInput] },
+    skip: isV2TokensEnabled,
+  })
+
+  // Batch (GetTokensMultiChain) rather than singular GetTokenMultiChain, for future multi-token use.
+  const restTokenIdentifier = useMemo(() => currencyIdToRestContractInput(currencyId), [currencyId])
+  const { data: restAddresses } = useQuery(
+    getGetTokensMultiChainQueryOptions({
+      params: { identifier: { case: 'tokens', value: { tokens: [restTokenIdentifier] } } },
+      enabled: isV2TokensEnabled,
+      select: selectMultichainAddresses,
+    }),
+  )
+
   const entries = useMemo(() => {
-    const tokens = data?.tokenProjects?.[0]?.tokens
+    if (isV2TokensEnabled) {
+      const result: MultichainTokenEntry[] = []
+      for (const [chainIdKey, address] of Object.entries(restAddresses ?? {})) {
+        const entry = getRestMultichainTokenEntry({ chainIdKey, address }, featureFlaggedChainIds)
+        if (entry) {
+          result.push(entry)
+        }
+      }
+      return result
+    }
+
+    const tokens = legacyData?.tokenProjects?.[0]?.tokens
     if (!tokens) {
       return []
     }
+
     const result: MultichainTokenEntry[] = []
     for (const token of tokens) {
-      const chainId = fromGraphQLChain(token.chain)
-      // Exclude feature-gated chains (e.g. unlaunched Arc/Robinhood) so they don't appear in the network selector.
-      if (chainId && token.address && featureFlaggedChainIds.includes(chainId)) {
-        result.push({ chainId, address: token.address, isNative: false })
+      const entry = getMultichainTokenEntry(token, featureFlaggedChainIds)
+      if (entry) {
+        result.push(entry)
       }
     }
     return result
-  }, [data, featureFlaggedChainIds])
+  }, [isV2TokensEnabled, restAddresses, legacyData, featureFlaggedChainIds])
 
   return useOrderedMultichainEntries(entries)
 }

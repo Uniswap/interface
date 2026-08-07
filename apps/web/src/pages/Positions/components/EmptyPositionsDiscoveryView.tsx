@@ -46,7 +46,7 @@ export function EmptyPositionsDiscoveryView(): JSX.Element {
         </Text>
         <ExploreContextProvider>
           <ExploreTablesFilterStoreContextProvider>
-            <ExploreTopPoolTable staticSize pageSize={TOP_POOLS_ROW_COUNT} />
+            <ExploreTopPoolTable staticSize pageSize={TOP_POOLS_ROW_COUNT} surface="positions-discovery" />
           </ExploreTablesFilterStoreContextProvider>
         </ExploreContextProvider>
         <Trace logPress element={ElementName.PositionsEmptyStateExplorePools}>

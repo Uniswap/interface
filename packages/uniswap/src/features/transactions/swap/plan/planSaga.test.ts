@@ -6,7 +6,7 @@ import { HandledTransactionInterrupt } from 'uniswap/src/features/transactions/e
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import type { FetchAndTransformPlanResult } from 'uniswap/src/features/transactions/swap/plan/planSagaUtils'
 import type { TransactionAndPlanStep } from 'uniswap/src/features/transactions/swap/plan/planStepTransformer'
-import { PlanStepTimeoutError } from 'uniswap/src/features/transactions/swap/plan/types'
+import { PlanStepFailedError, PlanStepTimeoutError } from 'uniswap/src/features/transactions/swap/plan/types'
 import type { WatchPlanStepResult } from 'uniswap/src/features/transactions/swap/plan/watchPlanStepSaga'
 import type { ValidatedChainedSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { createChainedActionTrade, type ChainedActionTrade } from 'uniswap/src/features/transactions/swap/types/trade'
@@ -385,7 +385,7 @@ describe('plan saga — price change interrupts', () => {
       )
       expect(mockMarkPlanPriceChangeInterrupted).toHaveBeenCalledWith('test-plan')
       expect(mockResetActivePlan).toHaveBeenCalled()
-      expect(onFailure).toHaveBeenCalled()
+      expect(onFailure).toHaveBeenCalledWith(undefined, undefined, { willFinalize: false })
       expect(onSuccess).not.toHaveBeenCalled()
     })
 
@@ -525,6 +525,50 @@ describe('plan saga — price change interrupts', () => {
   })
 
   describe('after watchPlanStep', () => {
+    it('classifies a terminal intermediate-step error as a displayable failure', async () => {
+      const originalTrade = createChainedTrade(OUTPUT_AMOUNT)
+      const { params, onFailure, onSuccess } = createPlanParams(originalTrade)
+      const failedStep = createTransactionAndPlanStep({
+        stepIndex: 0,
+        status: TradingApi.PlanStepStatus.AWAITING_ACTION,
+      })
+      const nextStep = createTransactionAndPlanStep({
+        stepIndex: 1,
+        status: TradingApi.PlanStepStatus.NOT_READY,
+      })
+      initializePlanResult = {
+        planId: 'test-plan',
+        response: createPlanResponse(OUTPUT_AMOUNT, [failedStep, nextStep]),
+        wasPlanResumed: false,
+        steps: [failedStep, nextStep],
+        currentStepIndex: 0,
+        currentStep: failedStep,
+        inputChainId: UniverseChainId.Mainnet,
+      }
+      watchPlanStepResult = {
+        steps: [
+          { ...failedStep, status: TradingApi.PlanStepStatus.STEP_ERROR },
+          { ...nextStep, status: TradingApi.PlanStepStatus.AWAITING_ACTION },
+        ],
+        planResponse: createPlanResponse(OUTPUT_AMOUNT, [
+          createMockPlanStep({ stepIndex: 0, status: TradingApi.PlanStepStatus.STEP_ERROR }),
+          createMockPlanStep({ stepIndex: 1, status: TradingApi.PlanStepStatus.AWAITING_ACTION }),
+        ]),
+      }
+      const displayableError = new Error('displayable plan failure')
+      params['getDisplayableError'] = vi.fn().mockReturnValue(displayableError)
+
+      await runPlanSaga(params)
+
+      expect(params['getDisplayableError']).toHaveBeenCalledWith(
+        expect.objectContaining({
+          error: expect.any(PlanStepFailedError),
+        }),
+      )
+      expect(onFailure).toHaveBeenCalledWith(displayableError, undefined, { willFinalize: true })
+      expect(onSuccess).not.toHaveBeenCalled()
+    })
+
     it('interrupts when refreshed plan price drops > 1% between steps', async () => {
       const originalTrade = createChainedTrade(OUTPUT_AMOUNT)
       const { params, onFailure, onSuccess, onPlanFinalized } = createPlanParams(originalTrade)
@@ -638,9 +682,10 @@ describe('plan saga — price change interrupts', () => {
       // A step already completed — the active plan must be retained so the user can resume the
       // existing plan (creating a fresh plan could double-execute the completed swap step).
       expect(mockResetActivePlan).not.toHaveBeenCalled()
-      expect(onFailure).toHaveBeenCalled()
+      expect(onFailure).toHaveBeenCalledWith(undefined, undefined, { willFinalize: true })
       expect(onSuccess).not.toHaveBeenCalled()
       expect(onPlanFinalized).toHaveBeenCalledWith(expect.objectContaining({ status: TransactionStatus.Pending }))
+      expect(onFailure.mock.invocationCallOrder[0]!).toBeLessThan(onPlanFinalized.mock.invocationCallOrder[0]!)
       expect(onPlanFinalized).not.toHaveBeenCalledWith(expect.objectContaining({ status: TransactionStatus.Success }))
     })
 

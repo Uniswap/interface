@@ -100,7 +100,7 @@ export function ManageWalletsModal({ route }: AppStackScreenProp<typeof ModalNam
       text: t('settings.setting.wallet.action.editLabel'),
       icon: <Edit color="$neutral2" size="$icon.24" />,
       screenProps: { address },
-      isHidden: !!ensName || !!unitag?.username,
+      isHidden: currentAccount?.type === AccountType.Readonly || !!ensName || !!unitag?.username,
       checkIfCanProceed: (): boolean => {
         navigate(ModalName.EditLabelSettingsModal, {
           address,

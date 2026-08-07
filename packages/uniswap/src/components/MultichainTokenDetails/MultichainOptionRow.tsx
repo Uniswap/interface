@@ -52,7 +52,9 @@ export function MultichainOptionRow({
       $md={{ gap: '$spacing12', px: 0, height: '$spacing48' }}
     >
       <NetworkLogo borderRadius={logoBorderRadius} chainId={chainId} size={logoSize} />
-      <Text color="$neutral1" flex={1} numberOfLines={1} variant={isMobileLayout ? 'body1' : 'body2'}>
+      {/* flexBasis 0: on web, flex={1} expands to flex-basis auto, which makes this Text share
+          shrink space with rightContent and clip it when the chain name is long */}
+      <Text color="$neutral1" flex={1} flexBasis={0} numberOfLines={1} variant={isMobileLayout ? 'body1' : 'body2'}>
         {chainName}
       </Text>
       {rightContent}

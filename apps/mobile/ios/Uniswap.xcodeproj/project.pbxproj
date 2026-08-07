@@ -57,12 +57,10 @@
 		288AB22A1B214FDF396A9A08 /* TokenProtectionInfoParts.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9582678FA2B68281DAC99FE5 /* TokenProtectionInfoParts.graphql.swift */; };
 		2FF434551968B1D3E928D0CE /* MobileSchema.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8801D2D672AF9764722DA5AB /* MobileSchema.graphql.swift */; };
 		343B1F44C8643D90F3D6F117 /* SchemaConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC13E61C2AD8FCE011D0F65 /* SchemaConfiguration.swift */; };
-		3C37C55DC0FF7A7D275FBF67 /* Dimensions.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A551FBE676D936100CD19EF /* Dimensions.graphql.swift */; };
 		45FFF7DF2E8C2A8100362570 /* SilentPushEventEmitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 45FFF7DE2E8C2A6400362570 /* SilentPushEventEmitter.m */; };
 		45FFF7E12E8C2E6900362570 /* SilentPushEventEmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FFF7E02E8C2E6100362570 /* SilentPushEventEmitter.swift */; };
 		463BA791004B1B7AC1773914 /* Pods_Uniswap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2226DF79BEAFECEE11A51347 /* Pods_Uniswap.framework */; };
 		4D816FAB04ED2EE38532611F /* TokenFeeDataParts.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A82384EBA0722B0C1AB44B8 /* TokenFeeDataParts.graphql.swift */; };
-		4EA2E801BA9072F80F9CA3D8 /* NftBalanceAssetInput.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCF8010F0D6929F64F4F8B8 /* NftBalanceAssetInput.graphql.swift */; };
 		5606997B29BDF31017DDD788 /* IAmount.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F89FD394F734E9FB870C73 /* IAmount.graphql.swift */; };
 		597A82081A297087BAD9BE5A /* HistoryDuration.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17D40EEF327B1B0BF043EB6 /* HistoryDuration.graphql.swift */; };
 		5B4398EC2DD3B22C00F6BE08 /* PrivateKeyDisplayManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4398E82DD3B22C00F6BE08 /* PrivateKeyDisplayManager.m */; };
@@ -71,7 +69,6 @@
 		5B4CEC5F2DD65DD4009F082B /* CopyIconOutline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B4CEC5E2DD65DD4009F082B /* CopyIconOutline.swift */; };
 		5E57F48D6C7B13CD2ABAD8F7 /* Token.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CD570E8A9E10E7CBC7CF63 /* Token.graphql.swift */; };
 		5E5E0A632D380F5800E166AA /* Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5E0A622D380F5700E166AA /* Env.swift */; };
-		613DC04DF697D2DD7929FCDE /* NftCollectionMarket.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83AC61873597229EF68A3337 /* NftCollectionMarket.graphql.swift */; };
 		649A7A782D9AE70B00B53589 /* KeychainUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649A7A772D9AE70B00B53589 /* KeychainUtils.swift */; };
 		649A7A792D9AE70B00B53589 /* KeychainConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649A7A762D9AE70B00B53589 /* KeychainConstants.swift */; };
 		654A88C5C81178AAC7D2700B /* FavoriteTokenCardQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7AA5AF95FFA43E7AB21266 /* FavoriteTokenCardQuery.graphql.swift */; };
@@ -90,14 +87,11 @@
 		70EB8338CA39744B7DBD553E /* Pods_WidgetIntentExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1064E23E366D0C2C2B20C30E /* Pods_WidgetIntentExtension.framework */; };
 		77CF6065C8A24FE48204A2C1 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF9176E944C84910B1C0B057 /* SplashScreen.storyboard */; };
 		78F106F15E57025596971D22 /* Chain.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDA8E6F0EDAA0493C939E2F /* Chain.graphql.swift */; };
-		7C34939B08FD7B24CED425E3 /* ConvertQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0AA320C4FD7A3AE9439996 /* ConvertQuery.graphql.swift */; };
 		7DBFDE0FBBA7B23063CB882A /* HomeScreenTokensQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = A77ABF6557E9D41B2E4F572F /* HomeScreenTokensQuery.graphql.swift */; };
-		7EC796063642BE8252278104 /* Image.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15EC4EE27B2BBBB169FBD8C /* Image.graphql.swift */; };
 		8273FC23FB1AE47B80C5E09F /* Pods_OneSignalNotificationServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15092E550A1C78508ABA3280 /* Pods_OneSignalNotificationServiceExtension.framework */; };
 		8321E1D61EDB61228BAE3249 /* TokenDetailsScreenQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = A363876CF390CF8E5946278F /* TokenDetailsScreenQuery.graphql.swift */; };
 		8385A47D3C765B841F450090 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C26D739993D5C939C6FBB58A /* ExpoModulesProvider.swift */; };
 		85EAB575D758AC6C45DBF99A /* TopTokensQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C5C7B93D07E3F55E06958F /* TopTokensQuery.graphql.swift */; };
-		87CE62F0C69BBEF3B3B8671B /* Currency.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2617C2DA26529034BD29E67 /* Currency.graphql.swift */; };
 		8B2A92172EB3E78E00990413 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2A92162EB3E78E00990413 /* AppDelegate.swift */; };
 		8E89C3AE2AB8AAA400C84DE5 /* MnemonicConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E89C3A62AB8AAA400C84DE5 /* MnemonicConfirmationView.swift */; };
 		8E89C3AF2AB8AAA400C84DE5 /* MnemonicDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E89C3A72AB8AAA400C84DE5 /* MnemonicDisplayView.swift */; };
@@ -111,14 +105,10 @@
 		8EA8AB3E2AB7ED3C004E7EF3 /* SeedPhraseInputManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA8AB332AB7ED3C004E7EF3 /* SeedPhraseInputManager.swift */; };
 		8EA8AB412AB7ED76004E7EF3 /* AlertTriangleIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA8AB402AB7ED76004E7EF3 /* AlertTriangleIcon.swift */; };
 		8EBFB1552ABA6AA6006B32A8 /* PasteIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBFB1542ABA6AA6006B32A8 /* PasteIcon.swift */; };
-		8ECB3C553DFA04B2548F6511 /* NftsTabQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB063CF502DD3C72BE6058A /* NftsTabQuery.graphql.swift */; };
 		8ED0562C2AA78E2C009BD5A2 /* ScrollFadeExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED0562B2AA78E2C009BD5A2 /* ScrollFadeExtensions.swift */; };
 		946021EF5B19B22EC45053A7 /* TokenProjectDescriptionQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80254DD5CF91C2EC3D5D2B46 /* TokenProjectDescriptionQuery.graphql.swift */; };
 		978B230540AEB8748E7B702C /* Query.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191E1D24D6DCD08B62496E5D /* Query.graphql.swift */; };
 		98A3D37015D5A29576D85039 /* ProtectionResult.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F9E8009946E082C07B374B /* ProtectionResult.graphql.swift */; };
-		98C09406BF4B1A7860C7336D /* NftBalanceEdge.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70E23FA507239ACEED39E034 /* NftBalanceEdge.graphql.swift */; };
-		9A282B809DCB8FFB8196CA8A /* NftBalance.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195A4CE6DA7A0B57B8E08593 /* NftBalance.graphql.swift */; };
-		9A87CDB55FA82652A17B2299 /* NftAsset.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6614C362B0421AC998109E54 /* NftAsset.graphql.swift */; };
 		9F78980B2A819CC4004D5A98 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 072F6C222A44A32E00DA720A /* SwiftUI.framework */; };
 		9F78980E2A819D2B004D5A98 /* WidgetsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 072E23862A44D5BC006AD6C9 /* WidgetsCore.framework */; };
 		9F7898112A819D32004D5A98 /* WidgetsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 072E23862A44D5BC006AD6C9 /* WidgetsCore.framework */; };
@@ -141,15 +131,11 @@
 		B7F2D60530795523B1DACF4A /* IContract.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3659E804D57C0E25E4C4BD2C /* IContract.graphql.swift */; };
 		B7FFC337E889E189188387C8 /* TokenBasicProjectParts.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58F7F365B9CBC5BD251DDD17 /* TokenBasicProjectParts.graphql.swift */; };
 		BA8FC9627A40644259D9E2F9 /* Pods_WidgetsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB29AC0C0907A833F23D2C30 /* Pods_WidgetsCore.framework */; };
-		BFB71E52A92A90EE918FA6B9 /* PageInfo.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C67D029A39C2FB131287D8 /* PageInfo.graphql.swift */; };
-		BFD61D4C3DB89BA7B6B93024 /* NftCollection.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C4CB3C8EE363A3024723CB2 /* NftCollection.graphql.swift */; };
 		C6754E678BFD27836EF7582D /* TokenParts.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B515F526DE252208CDAD8DA /* TokenParts.graphql.swift */; };
 		C8C51BCA8794B8F71DB26404 /* HomeScreenTokenParts.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC5CD0CC3CCAD2BCE6E2D7A /* HomeScreenTokenParts.graphql.swift */; };
-		CBC6D036DB7F9F12655BA0AB /* NftBalancesFilterInput.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80878AE473292C7C799F8C9 /* NftBalancesFilterInput.graphql.swift */; };
 		CD56DE91DFBEE0BD8CE2BA65 /* SchemaMetadata.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAAE18D1D8809B59A790250D /* SchemaMetadata.graphql.swift */; };
 		D1BE3A8ED6F6FD7F999996A3 /* TokenProject.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C2DFDE15F4C9A6BA7EE9F6 /* TokenProject.graphql.swift */; };
 		D3B63ACA9B0C42F68080B080 /* InputMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1834199AFFB04D91B05FFB64 /* InputMono-Regular.ttf */; };
-		D6321106A5E2F1D69457E8CE /* NftBalanceConnection.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D39E24B7AD4F08D7DCEACA /* NftBalanceConnection.graphql.swift */; };
 		D6E15516EA77C0CE65C6E137 /* BlockaidFees.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF1314DA797CE48121E0AA8 /* BlockaidFees.graphql.swift */; };
 		D7926D4A878B2237137B300F /* Pods_WidgetsCoreTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 021E59CE7ECBD4FE0F3BFCFD /* Pods_WidgetsCoreTests.framework */; };
 		DE2F24512E7204C2CA255C50 /* Pods_Widgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E8B7D36D2E14D9488F351EB /* Pods_Widgets.framework */; };
@@ -326,7 +312,6 @@
 		178644A78AB62609EFDB66B3 /* Pods-Uniswap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.release.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.release.xcconfig"; sourceTree = "<group>"; };
 		1834199AFFB04D91B05FFB64 /* InputMono-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "InputMono-Regular.ttf"; path = "../src/assets/fonts/InputMono-Regular.ttf"; sourceTree = "<group>"; };
 		191E1D24D6DCD08B62496E5D /* Query.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Query.graphql.swift; path = WidgetsCore/MobileSchema/Schema/Objects/Query.graphql.swift; sourceTree = "<group>"; };
-		195A4CE6DA7A0B57B8E08593 /* NftBalance.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NftBalance.graphql.swift; path = WidgetsCore/MobileSchema/Schema/Objects/NftBalance.graphql.swift; sourceTree = "<group>"; };
 		19F9E8009946E082C07B374B /* ProtectionResult.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProtectionResult.graphql.swift; path = WidgetsCore/MobileSchema/Schema/Enums/ProtectionResult.graphql.swift; sourceTree = "<group>"; };
 		1A82384EBA0722B0C1AB44B8 /* TokenFeeDataParts.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TokenFeeDataParts.graphql.swift; path = WidgetsCore/MobileSchema/Fragments/TokenFeeDataParts.graphql.swift; sourceTree = "<group>"; };
 		1CC6ADAADCA38FDAEB181E86 /* Pods-WidgetIntentExtension.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetIntentExtension.dev.xcconfig"; path = "Target Support Files/Pods-WidgetIntentExtension/Pods-WidgetIntentExtension.dev.xcconfig"; sourceTree = "<group>"; };
@@ -336,13 +321,11 @@
 		2590691EDB017AE6FB6C10AC /* Pods-WidgetIntentExtension.debugoptimized.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetIntentExtension.debugoptimized.xcconfig"; path = "Target Support Files/Pods-WidgetIntentExtension/Pods-WidgetIntentExtension.debugoptimized.xcconfig"; sourceTree = "<group>"; };
 		2793E5575C776543690005E2 /* TokenSortableField.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TokenSortableField.graphql.swift; path = WidgetsCore/MobileSchema/Schema/Enums/TokenSortableField.graphql.swift; sourceTree = "<group>"; };
 		2E8B7D36D2E14D9488F351EB /* Pods_Widgets.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Widgets.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		2EB063CF502DD3C72BE6058A /* NftsTabQuery.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NftsTabQuery.graphql.swift; path = WidgetsCore/MobileSchema/Operations/Queries/NftsTabQuery.graphql.swift; sourceTree = "<group>"; };
 		31CB18D02DE297D6DADB87C0 /* Pods-Uniswap.debugoptimized.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.debugoptimized.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.debugoptimized.xcconfig"; sourceTree = "<group>"; };
 		34FB0CB4C72016900097FC4F /* TokenMarketParts.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TokenMarketParts.graphql.swift; path = WidgetsCore/MobileSchema/Fragments/TokenMarketParts.graphql.swift; sourceTree = "<group>"; };
 		3659E804D57C0E25E4C4BD2C /* IContract.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = IContract.graphql.swift; path = WidgetsCore/MobileSchema/Schema/Interfaces/IContract.graphql.swift; sourceTree = "<group>"; };
 		36F66895EB592B9F61AE658C /* Pods-Uniswap-UniswapTests.debugoptimized.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap-UniswapTests.debugoptimized.xcconfig"; path = "Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests.debugoptimized.xcconfig"; sourceTree = "<group>"; };
 		3A2186B1FF7FB85663D96EA9 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
-		3B0AA320C4FD7A3AE9439996 /* ConvertQuery.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConvertQuery.graphql.swift; path = WidgetsCore/MobileSchema/Operations/Queries/ConvertQuery.graphql.swift; sourceTree = "<group>"; };
 		3B515F526DE252208CDAD8DA /* TokenParts.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TokenParts.graphql.swift; path = WidgetsCore/MobileSchema/Fragments/TokenParts.graphql.swift; sourceTree = "<group>"; };
 		3C606D2C81014A0A8898F38E /* Basel-Grotesk-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Basel-Grotesk-Medium.otf"; path = "../src/assets/fonts/Basel-Grotesk-Medium.otf"; sourceTree = "<group>"; };
 		3D8FCE4CD401350CA74DCC89 /* Pods-WidgetsCoreTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCoreTests.debug.xcconfig"; path = "Target Support Files/Pods-WidgetsCoreTests/Pods-WidgetsCoreTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -355,12 +338,10 @@
 		45FFF7E02E8C2E6100362570 /* SilentPushEventEmitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilentPushEventEmitter.swift; sourceTree = "<group>"; };
 		4781CD4CDD95B5792B793F75 /* Pods-Uniswap-UniswapTests.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap-UniswapTests.beta.xcconfig"; path = "Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests.beta.xcconfig"; sourceTree = "<group>"; };
 		4C445DB9798210862C34D0E0 /* Pods-WidgetsCoreTests.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCoreTests.beta.xcconfig"; path = "Target Support Files/Pods-WidgetsCoreTests/Pods-WidgetsCoreTests.beta.xcconfig"; sourceTree = "<group>"; };
-		4C4CB3C8EE363A3024723CB2 /* NftCollection.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NftCollection.graphql.swift; path = WidgetsCore/MobileSchema/Schema/Objects/NftCollection.graphql.swift; sourceTree = "<group>"; };
 		4CE2ABB1B5A9437CC7EC4774 /* DescriptionTranslations.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DescriptionTranslations.graphql.swift; path = WidgetsCore/MobileSchema/Schema/Objects/DescriptionTranslations.graphql.swift; sourceTree = "<group>"; };
 		4DF5F26A06553EFDD4D99214 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Uniswap/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		56FE9C9AF785221B7E3F4C04 /* Pods-Uniswap.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.dev.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.dev.xcconfig"; sourceTree = "<group>"; };
 		58F7F365B9CBC5BD251DDD17 /* TokenBasicProjectParts.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TokenBasicProjectParts.graphql.swift; path = WidgetsCore/MobileSchema/Fragments/TokenBasicProjectParts.graphql.swift; sourceTree = "<group>"; };
-		5A551FBE676D936100CD19EF /* Dimensions.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Dimensions.graphql.swift; path = WidgetsCore/MobileSchema/Schema/Objects/Dimensions.graphql.swift; sourceTree = "<group>"; };
 		5B4398E82DD3B22C00F6BE08 /* PrivateKeyDisplayManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PrivateKeyDisplayManager.m; sourceTree = "<group>"; };
 		5B4398E92DD3B22C00F6BE08 /* PrivateKeyDisplayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateKeyDisplayManager.swift; sourceTree = "<group>"; };
 		5B4398EA2DD3B22C00F6BE08 /* PrivateKeyDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateKeyDisplayView.swift; sourceTree = "<group>"; };
@@ -373,7 +354,6 @@
 		63F89FD394F734E9FB870C73 /* IAmount.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = IAmount.graphql.swift; path = WidgetsCore/MobileSchema/Schema/Interfaces/IAmount.graphql.swift; sourceTree = "<group>"; };
 		649A7A762D9AE70B00B53589 /* KeychainConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainConstants.swift; sourceTree = "<group>"; };
 		649A7A772D9AE70B00B53589 /* KeychainUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainUtils.swift; sourceTree = "<group>"; };
-		6614C362B0421AC998109E54 /* NftAsset.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NftAsset.graphql.swift; path = WidgetsCore/MobileSchema/Schema/Objects/NftAsset.graphql.swift; sourceTree = "<group>"; };
 		67D97B08000B9A0AB7DAFE51 /* TokensQuery.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TokensQuery.graphql.swift; path = WidgetsCore/MobileSchema/Operations/Queries/TokensQuery.graphql.swift; sourceTree = "<group>"; };
 		688E1B33AB34ACF8449BBA7A /* TokenBasicInfoParts.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TokenBasicInfoParts.graphql.swift; path = WidgetsCore/MobileSchema/Fragments/TokenBasicInfoParts.graphql.swift; sourceTree = "<group>"; };
 		69CD570E8A9E10E7CBC7CF63 /* Token.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Token.graphql.swift; path = WidgetsCore/MobileSchema/Schema/Objects/Token.graphql.swift; sourceTree = "<group>"; };
@@ -391,12 +371,10 @@
 		6F33E8069B7B40AFB313B8B0 /* Basel-Grotesk-Book.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Basel-Grotesk-Book.otf"; path = "../src/assets/fonts/Basel-Grotesk-Book.otf"; sourceTree = "<group>"; };
 		6F3DC921A65D749C0852B10C /* Pods-Uniswap-UniswapTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap-UniswapTests.debug.xcconfig"; path = "Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests.debug.xcconfig"; sourceTree = "<group>"; };
 		6F7814C6D40D9C348EA1F1C7 /* Pods-OneSignalNotificationServiceExtension.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.dev.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.dev.xcconfig"; sourceTree = "<group>"; };
-		70E23FA507239ACEED39E034 /* NftBalanceEdge.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NftBalanceEdge.graphql.swift; path = WidgetsCore/MobileSchema/Schema/Objects/NftBalanceEdge.graphql.swift; sourceTree = "<group>"; };
 		7546C36F4CD519116E7ADE00 /* TokenProjectsQuery.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TokenProjectsQuery.graphql.swift; path = WidgetsCore/MobileSchema/Operations/Queries/TokenProjectsQuery.graphql.swift; sourceTree = "<group>"; };
 		7A7637BBC9B3A68E0338D96E /* Pods-WidgetIntentExtension.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetIntentExtension.beta.xcconfig"; path = "Target Support Files/Pods-WidgetIntentExtension/Pods-WidgetIntentExtension.beta.xcconfig"; sourceTree = "<group>"; };
 		80254DD5CF91C2EC3D5D2B46 /* TokenProjectDescriptionQuery.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TokenProjectDescriptionQuery.graphql.swift; path = WidgetsCore/MobileSchema/Operations/Queries/TokenProjectDescriptionQuery.graphql.swift; sourceTree = "<group>"; };
 		82C9871585F60F92D079FB95 /* Pods-Widgets.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Widgets.release.xcconfig"; path = "Target Support Files/Pods-Widgets/Pods-Widgets.release.xcconfig"; sourceTree = "<group>"; };
-		83AC61873597229EF68A3337 /* NftCollectionMarket.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NftCollectionMarket.graphql.swift; path = WidgetsCore/MobileSchema/Schema/Objects/NftCollectionMarket.graphql.swift; sourceTree = "<group>"; };
 		8719E5872CC41AB64503E903 /* Pods-WidgetIntentExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetIntentExtension.debug.xcconfig"; path = "Target Support Files/Pods-WidgetIntentExtension/Pods-WidgetIntentExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		8801D2D672AF9764722DA5AB /* MobileSchema.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MobileSchema.graphql.swift; path = WidgetsCore/MobileSchema/MobileSchema.graphql.swift; sourceTree = "<group>"; };
 		8920D2D570B34DF1252363A3 /* ApplicationContract.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ApplicationContract.graphql.swift; path = WidgetsCore/MobileSchema/Schema/Objects/ApplicationContract.graphql.swift; sourceTree = "<group>"; };
@@ -430,8 +408,6 @@
 		9FCEBF032A95A99B0079EDDB /* RCTThemeModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RCTThemeModule.m; path = Appearance/RCTThemeModule.m; sourceTree = "<group>"; };
 		A0C5C7B93D07E3F55E06958F /* TopTokensQuery.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TopTokensQuery.graphql.swift; path = WidgetsCore/MobileSchema/Operations/Queries/TopTokensQuery.graphql.swift; sourceTree = "<group>"; };
 		A17D40EEF327B1B0BF043EB6 /* HistoryDuration.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HistoryDuration.graphql.swift; path = WidgetsCore/MobileSchema/Schema/Enums/HistoryDuration.graphql.swift; sourceTree = "<group>"; };
-		A2617C2DA26529034BD29E67 /* Currency.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Currency.graphql.swift; path = WidgetsCore/MobileSchema/Schema/Enums/Currency.graphql.swift; sourceTree = "<group>"; };
-		A2C67D029A39C2FB131287D8 /* PageInfo.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PageInfo.graphql.swift; path = WidgetsCore/MobileSchema/Schema/Objects/PageInfo.graphql.swift; sourceTree = "<group>"; };
 		A32F9FBC272343C8002CFCDB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A363876CF390CF8E5946278F /* TokenDetailsScreenQuery.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TokenDetailsScreenQuery.graphql.swift; path = WidgetsCore/MobileSchema/Operations/Queries/TokenDetailsScreenQuery.graphql.swift; sourceTree = "<group>"; };
 		A3F0A5B0272B1DFA00895B25 /* KeychainSwiftDistrib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainSwiftDistrib.swift; sourceTree = "<group>"; };
@@ -444,15 +420,11 @@
 		ACC13E61C2AD8FCE011D0F65 /* SchemaConfiguration.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SchemaConfiguration.swift; path = WidgetsCore/MobileSchema/Schema/SchemaConfiguration.swift; sourceTree = "<group>"; };
 		B0A3A642B70EB6720C2E0229 /* ProtectionAttackType.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProtectionAttackType.graphql.swift; path = WidgetsCore/MobileSchema/Schema/Enums/ProtectionAttackType.graphql.swift; sourceTree = "<group>"; };
 		B0DA4D39B1A6D74A1D05B99F /* Pods-WidgetsCore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCore.debug.xcconfig"; path = "Target Support Files/Pods-WidgetsCore/Pods-WidgetsCore.debug.xcconfig"; sourceTree = "<group>"; };
-		B15EC4EE27B2BBBB169FBD8C /* Image.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Image.graphql.swift; path = WidgetsCore/MobileSchema/Schema/Objects/Image.graphql.swift; sourceTree = "<group>"; };
-		B80878AE473292C7C799F8C9 /* NftBalancesFilterInput.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NftBalancesFilterInput.graphql.swift; path = WidgetsCore/MobileSchema/Schema/InputObjects/NftBalancesFilterInput.graphql.swift; sourceTree = "<group>"; };
 		BCB2A43E5FB0D7B69CA02312 /* Pods-WidgetsCore.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCore.dev.xcconfig"; path = "Target Support Files/Pods-WidgetsCore/Pods-WidgetsCore.dev.xcconfig"; sourceTree = "<group>"; };
-		BDCF8010F0D6929F64F4F8B8 /* NftBalanceAssetInput.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NftBalanceAssetInput.graphql.swift; path = WidgetsCore/MobileSchema/Schema/InputObjects/NftBalanceAssetInput.graphql.swift; sourceTree = "<group>"; };
 		BEC5CD0CC3CCAD2BCE6E2D7A /* HomeScreenTokenParts.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HomeScreenTokenParts.graphql.swift; path = WidgetsCore/MobileSchema/Fragments/HomeScreenTokenParts.graphql.swift; sourceTree = "<group>"; };
 		BF9176E944C84910B1C0B057 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = Uniswap/SplashScreen.storyboard; sourceTree = "<group>"; };
 		C005A71C43485EEADC6C42DF /* TokenPriceHistoryQuery.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TokenPriceHistoryQuery.graphql.swift; path = WidgetsCore/MobileSchema/Operations/Queries/TokenPriceHistoryQuery.graphql.swift; sourceTree = "<group>"; };
 		C26D739993D5C939C6FBB58A /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Uniswap-UniswapTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		C5D39E24B7AD4F08D7DCEACA /* NftBalanceConnection.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NftBalanceConnection.graphql.swift; path = WidgetsCore/MobileSchema/Schema/Objects/NftBalanceConnection.graphql.swift; sourceTree = "<group>"; };
 		C89238E3ED9F3AC98876B573 /* Pods-WidgetsCoreTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCoreTests.release.xcconfig"; path = "Target Support Files/Pods-WidgetsCoreTests/Pods-WidgetsCoreTests.release.xcconfig"; sourceTree = "<group>"; };
 		CAAE18D1D8809B59A790250D /* SchemaMetadata.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SchemaMetadata.graphql.swift; path = WidgetsCore/MobileSchema/Schema/SchemaMetadata.graphql.swift; sourceTree = "<group>"; };
 		CB29AC0C0907A833F23D2C30 /* Pods_WidgetsCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WidgetsCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -824,7 +796,6 @@
 			isa = PBXGroup;
 			children = (
 				0DDA8E6F0EDAA0493C939E2F /* Chain.graphql.swift */,
-				A2617C2DA26529034BD29E67 /* Currency.graphql.swift */,
 				A17D40EEF327B1B0BF043EB6 /* HistoryDuration.graphql.swift */,
 				B0A3A642B70EB6720C2E0229 /* ProtectionAttackType.graphql.swift */,
 				19F9E8009946E082C07B374B /* ProtectionResult.graphql.swift */,
@@ -906,8 +877,6 @@
 			isa = PBXGroup;
 			children = (
 				410C9AB43FE700B4C47C743C /* ContractInput.graphql.swift */,
-				BDCF8010F0D6929F64F4F8B8 /* NftBalanceAssetInput.graphql.swift */,
-				B80878AE473292C7C799F8C9 /* NftBalancesFilterInput.graphql.swift */,
 			);
 			name = InputObjects;
 			sourceTree = "<group>";
@@ -1083,17 +1052,8 @@
 				ECF1314DA797CE48121E0AA8 /* BlockaidFees.graphql.swift */,
 				0DF658806B9407CCB06B48D3 /* BridgedWithdrawalInfo.graphql.swift */,
 				4CE2ABB1B5A9437CC7EC4774 /* DescriptionTranslations.graphql.swift */,
-				5A551FBE676D936100CD19EF /* Dimensions.graphql.swift */,
 				8C62B67CD148BB64A7FE7D6E /* FeeData.graphql.swift */,
-				B15EC4EE27B2BBBB169FBD8C /* Image.graphql.swift */,
-				6614C362B0421AC998109E54 /* NftAsset.graphql.swift */,
-				195A4CE6DA7A0B57B8E08593 /* NftBalance.graphql.swift */,
-				C5D39E24B7AD4F08D7DCEACA /* NftBalanceConnection.graphql.swift */,
-				70E23FA507239ACEED39E034 /* NftBalanceEdge.graphql.swift */,
-				4C4CB3C8EE363A3024723CB2 /* NftCollection.graphql.swift */,
-				83AC61873597229EF68A3337 /* NftCollectionMarket.graphql.swift */,
 				0BE7E1D67989AB8AF8BDC0DD /* NftContract.graphql.swift */,
-				A2C67D029A39C2FB131287D8 /* PageInfo.graphql.swift */,
 				6211FB90D2ADB2A4246D43DD /* ProtectionInfo.graphql.swift */,
 				191E1D24D6DCD08B62496E5D /* Query.graphql.swift */,
 				5B8107F6C8FB77F7C457066C /* TimestampedAmount.graphql.swift */,
@@ -1108,10 +1068,8 @@
 		BB9343169D764004DCCFA28F /* Queries */ = {
 			isa = PBXGroup;
 			children = (
-				3B0AA320C4FD7A3AE9439996 /* ConvertQuery.graphql.swift */,
 				AA7AA5AF95FFA43E7AB21266 /* FavoriteTokenCardQuery.graphql.swift */,
 				A77ABF6557E9D41B2E4F572F /* HomeScreenTokensQuery.graphql.swift */,
-				2EB063CF502DD3C72BE6058A /* NftsTabQuery.graphql.swift */,
 				A363876CF390CF8E5946278F /* TokenDetailsScreenQuery.graphql.swift */,
 				C005A71C43485EEADC6C42DF /* TokenPriceHistoryQuery.graphql.swift */,
 				80254DD5CF91C2EC3D5D2B46 /* TokenProjectDescriptionQuery.graphql.swift */,
@@ -1589,10 +1547,8 @@
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Fragments/TokenProtectionInfoParts.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Fragments/TopTokenParts.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/MobileSchema.graphql.swift",
-				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/ConvertQuery.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/FavoriteTokenCardQuery.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/HomeScreenTokensQuery.graphql.swift",
-				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/NftsTabQuery.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/TokenDetailsScreenQuery.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/TokenPriceHistoryQuery.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/TokenProjectDescriptionQuery.graphql.swift",
@@ -1602,7 +1558,6 @@
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/TopTokensQuery.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/WidgetTokensQuery.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Enums/Chain.graphql.swift",
-				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Enums/Currency.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Enums/HistoryDuration.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Enums/ProtectionAttackType.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Enums/ProtectionResult.graphql.swift",
@@ -1610,8 +1565,6 @@
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Enums/TokenSortableField.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Enums/TokenStandard.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/InputObjects/ContractInput.graphql.swift",
-				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/InputObjects/NftBalanceAssetInput.graphql.swift",
-				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/InputObjects/NftBalancesFilterInput.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Interfaces/IAmount.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Interfaces/IContract.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/Amount.graphql.swift",
@@ -1619,17 +1572,8 @@
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/BlockaidFees.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/BridgedWithdrawalInfo.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/DescriptionTranslations.graphql.swift",
-				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/Dimensions.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/FeeData.graphql.swift",
-				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/Image.graphql.swift",
-				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftAsset.graphql.swift",
-				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftBalance.graphql.swift",
-				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftBalanceConnection.graphql.swift",
-				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftBalanceEdge.graphql.swift",
-				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftCollection.graphql.swift",
-				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftCollectionMarket.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftContract.graphql.swift",
-				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/PageInfo.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/ProtectionInfo.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/Query.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/TimestampedAmount.graphql.swift",
@@ -2000,10 +1944,8 @@
 				1E433F6853678F47EBECB467 /* TokenProjectUrlsParts.graphql.swift in Sources */,
 				288AB22A1B214FDF396A9A08 /* TokenProtectionInfoParts.graphql.swift in Sources */,
 				F14AAB869CE5D7B48BBD746C /* TopTokenParts.graphql.swift in Sources */,
-				7C34939B08FD7B24CED425E3 /* ConvertQuery.graphql.swift in Sources */,
 				654A88C5C81178AAC7D2700B /* FavoriteTokenCardQuery.graphql.swift in Sources */,
 				7DBFDE0FBBA7B23063CB882A /* HomeScreenTokensQuery.graphql.swift in Sources */,
-				8ECB3C553DFA04B2548F6511 /* NftsTabQuery.graphql.swift in Sources */,
 				8321E1D61EDB61228BAE3249 /* TokenDetailsScreenQuery.graphql.swift in Sources */,
 				F38AB9BD90A58857E783EBD5 /* TokenPriceHistoryQuery.graphql.swift in Sources */,
 				946021EF5B19B22EC45053A7 /* TokenProjectDescriptionQuery.graphql.swift in Sources */,
@@ -2015,7 +1957,6 @@
 				343B1F44C8643D90F3D6F117 /* SchemaConfiguration.swift in Sources */,
 				CD56DE91DFBEE0BD8CE2BA65 /* SchemaMetadata.graphql.swift in Sources */,
 				78F106F15E57025596971D22 /* Chain.graphql.swift in Sources */,
-				87CE62F0C69BBEF3B3B8671B /* Currency.graphql.swift in Sources */,
 				597A82081A297087BAD9BE5A /* HistoryDuration.graphql.swift in Sources */,
 				E017E5C5CF4CB45DB4A59F2F /* ProtectionAttackType.graphql.swift in Sources */,
 				98A3D37015D5A29576D85039 /* ProtectionResult.graphql.swift in Sources */,
@@ -2023,8 +1964,6 @@
 				F25F89A3087C4B1039C48943 /* TokenSortableField.graphql.swift in Sources */,
 				A300064C3121C5B27FA20631 /* TokenStandard.graphql.swift in Sources */,
 				E9255296104E966FB63DDC61 /* ContractInput.graphql.swift in Sources */,
-				4EA2E801BA9072F80F9CA3D8 /* NftBalanceAssetInput.graphql.swift in Sources */,
-				CBC6D036DB7F9F12655BA0AB /* NftBalancesFilterInput.graphql.swift in Sources */,
 				5606997B29BDF31017DDD788 /* IAmount.graphql.swift in Sources */,
 				B7F2D60530795523B1DACF4A /* IContract.graphql.swift in Sources */,
 				FA393F0C48AB2E38D8D2F6A0 /* Amount.graphql.swift in Sources */,
@@ -2032,17 +1971,8 @@
 				D6E15516EA77C0CE65C6E137 /* BlockaidFees.graphql.swift in Sources */,
 				230A61C36312913445CBF2B5 /* BridgedWithdrawalInfo.graphql.swift in Sources */,
 				AF3A7C5EBB9039E37FBC5996 /* DescriptionTranslations.graphql.swift in Sources */,
-				3C37C55DC0FF7A7D275FBF67 /* Dimensions.graphql.swift in Sources */,
 				B223FA4ACB9B265A7429F4F4 /* FeeData.graphql.swift in Sources */,
-				7EC796063642BE8252278104 /* Image.graphql.swift in Sources */,
-				9A87CDB55FA82652A17B2299 /* NftAsset.graphql.swift in Sources */,
-				9A282B809DCB8FFB8196CA8A /* NftBalance.graphql.swift in Sources */,
-				D6321106A5E2F1D69457E8CE /* NftBalanceConnection.graphql.swift in Sources */,
-				98C09406BF4B1A7860C7336D /* NftBalanceEdge.graphql.swift in Sources */,
-				BFD61D4C3DB89BA7B6B93024 /* NftCollection.graphql.swift in Sources */,
-				613DC04DF697D2DD7929FCDE /* NftCollectionMarket.graphql.swift in Sources */,
 				24B753E7212D69540759A392 /* NftContract.graphql.swift in Sources */,
-				BFB71E52A92A90EE918FA6B9 /* PageInfo.graphql.swift in Sources */,
 				09DFD99C2CC85F407A469313 /* ProtectionInfo.graphql.swift in Sources */,
 				978B230540AEB8748E7B702C /* Query.graphql.swift in Sources */,
 				21B25DE711EE9DBF5669203C /* TimestampedAmount.graphql.swift in Sources */,
@@ -2280,7 +2210,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -2333,7 +2263,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCore;
@@ -2386,7 +2316,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCore;
@@ -2439,7 +2369,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCore;
@@ -2477,7 +2407,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -2513,7 +2443,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCoreTests;
@@ -2548,7 +2478,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCoreTests;
@@ -2583,7 +2513,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCoreTests;
@@ -2630,7 +2560,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -2676,7 +2606,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.widgets;
@@ -2722,7 +2652,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev.widgets;
@@ -2768,7 +2698,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.beta.widgets;
@@ -2810,7 +2740,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -2853,7 +2783,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.WidgetIntentExtension;
@@ -2896,7 +2826,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev.WidgetIntentExtension;
@@ -2939,7 +2869,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.beta.WidgetIntentExtension;
@@ -2975,7 +2905,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -3013,7 +2943,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -3050,7 +2980,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -3084,7 +3014,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -3272,7 +3202,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -3320,7 +3250,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -3363,7 +3293,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -3615,7 +3545,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -3658,7 +3588,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -3703,7 +3633,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.OneSignalNotificationServiceExtension;
@@ -3838,7 +3768,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -3910,7 +3840,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.beta.OneSignalNotificationServiceExtension;
@@ -4045,7 +3975,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -4117,7 +4047,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.79;
+				MARKETING_VERSION = 1.80;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev.OneSignalNotificationServiceExtension;

@@ -104,7 +104,7 @@ export function EarnDepositSourceSection({
       <TouchableArea
         backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
         borderColor="$surface3"
-        borderRadius="$rounded16"
+        borderRadius="$rounded20"
         borderWidth="$spacing1"
         p="$spacing12"
         shadowColor="$shadowColor"
@@ -121,7 +121,7 @@ export function EarnDepositSourceSection({
     <Flex
       backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
       borderColor="$surface3"
-      borderRadius="$rounded16"
+      borderRadius="$rounded20"
       borderWidth="$spacing1"
       p="$spacing12"
       shadowColor="$shadowColor"

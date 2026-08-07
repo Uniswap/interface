@@ -4,14 +4,13 @@ import { useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { opacify } from 'ui/src/theme'
-import { BIPS_BASE, ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
+import { BIPS_BASE } from 'uniswap/src/constants/misc'
+import { useGetPool } from 'uniswap/src/data/apiClients/dataApiService/pools/getPools'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
 import { useLiquidityBarData } from '~/features/Liquidity/charts/LiquidityChart'
-import { getTokenOrZeroAddress } from '~/features/Liquidity/utils/currency'
 import { MIN_DEPTH_BARS_PER_SIDE } from '~/pages/PoolDetails/components/ChartSection/DepthChart'
 import {
   getDisplayPair,
@@ -178,7 +177,6 @@ export function OrderBook({
   hooks,
   poolId,
   height,
-  onLoadingChange,
 }: {
   tokenA: Currency
   tokenB: Currency
@@ -189,7 +187,6 @@ export function OrderBook({
   hooks?: string
   poolId?: string
   height?: number
-  onLoadingChange?: (loading: boolean) => void
 }) {
   const { t } = useTranslation()
   const colors = useSporeColors()
@@ -198,17 +195,7 @@ export function OrderBook({
   const askColor = colors.statusCritical.val
   const bidColor = colors.statusSuccess.val
 
-  const { data: poolData } = useGetPoolsByTokens(
-    {
-      fee: feeTier,
-      chainId,
-      protocolVersions: [version],
-      token0: getTokenOrZeroAddress(tokenA),
-      token1: getTokenOrZeroAddress(tokenB),
-      hooks: hooks ?? ZERO_ADDRESS,
-    },
-    true,
-  )
+  const { data: poolData } = useGetPool({ chainId, poolId, protocolVersion: version }, Boolean(poolId))
 
   const sdkCurrencies = useMemo(() => ({ TOKEN0: tokenA, TOKEN1: tokenB }), [tokenA, tokenB])
 
@@ -220,7 +207,7 @@ export function OrderBook({
     version,
     hooks,
     poolId,
-    tickSpacing: poolData?.pools[0]?.tickSpacing,
+    tickSpacing: poolData?.pool?.tickSpacing,
   })
 
   const { asks, bids } = useMemo(() => {
@@ -235,11 +222,6 @@ export function OrderBook({
       isReversed,
     })
   }, [tickData, activeTick, tokenA.decimals, tokenB.decimals, isReversed])
-
-  useEffect(() => {
-    onLoadingChange?.(loading)
-    return () => onLoadingChange?.(false)
-  }, [loading, onLoadingChange])
 
   const { quote } = getDisplayPair({ tokenA, tokenB, isReversed })
   const quoteSymbol = quote.symbol ?? quote.name ?? t('common.tokenB')

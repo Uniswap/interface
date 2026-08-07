@@ -1,16 +1,19 @@
 import userEvent from '@testing-library/user-event'
 import { CurrencyAmount } from '@uniswap/sdk-core'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
-import { useGetPoolsRewards } from 'uniswap/src/data/rest/getPoolsRewards'
+import { useGetPoolsRewards } from 'uniswap/src/data/apiClients/dataApiService/pools/getPoolsRewards'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures/gql/assets/constants'
 import { useLpIncentives } from '~/features/Liquidity/hooks/useLpIncentives'
+import type { LpIncentiveRewards } from '~/features/Liquidity/LPIncentives/buildLpIncentiveRewards'
+import { useLpIncentiveRewards } from '~/features/Liquidity/LPIncentives/hooks/useLpIncentiveRewards'
 import { PortfolioPoolsRewardsCard } from '~/pages/Portfolio/Pools/components/PortfolioPoolsRewardsCard'
 import { mocked } from '~/test-utils/mocked'
 import { render, screen } from '~/test-utils/render'
 
-vi.mock('uniswap/src/data/rest/getPoolsRewards', () => ({
+vi.mock('uniswap/src/data/apiClients/dataApiService/pools/getPoolsRewards', () => ({
   useGetPoolsRewards: vi.fn(),
 }))
 
@@ -30,6 +33,19 @@ vi.mock('~/features/Liquidity/hooks/useLpIncentives', async (importOriginal) => 
 
 vi.mock('~/features/Liquidity/LPIncentives/LpIncentiveClaimModal', () => ({
   LpIncentiveClaimModal: ({ isOpen }: { isOpen: boolean }) => (isOpen ? <div data-testid="claim-modal-open" /> : null),
+}))
+
+vi.mock('~/features/Liquidity/LPIncentives/hooks/useLpIncentiveRewards', () => ({
+  useLpIncentiveRewards: vi.fn(),
+}))
+
+vi.mock('~/features/Liquidity/LPIncentives/LpIncentivesRewardsModal', () => ({
+  LpIncentivesRewardsModal: ({ isOpen }: { isOpen: boolean }) =>
+    isOpen ? <div data-testid="rewards-modal-open" /> : null,
+}))
+
+vi.mock('~/features/Liquidity/LPIncentives/LpIncentiveRewardLogos', () => ({
+  LpIncentiveRewardLogos: () => <div data-testid="reward-logos" />,
 }))
 
 const openModal = vi.fn()
@@ -74,6 +90,16 @@ describe('PortfolioPoolsRewardsCard', () => {
     vi.clearAllMocks()
     mockLpIncentives()
     mockRewards({ totalUnclaimedAmountUni: '0' })
+    // The card reads both paths so its hook order is stable; the multi-token one is inert with the
+    // flag off (default false in setupTests) but still has to return a shape.
+    mocked(useLpIncentiveRewards).mockReturnValue({
+      totalUsd: 0,
+      groups: [],
+      rewardTokens: [],
+      isLoading: false,
+      isError: false,
+      hasRewards: false,
+    })
     mockUsd('0') // $0.00 by default
     mocked(useLocalizationContext).mockReturnValue({
       convertFiatAmountFormatted: (value: number | string | undefined | null) => `$${Number(value ?? 0).toFixed(2)}`,
@@ -158,5 +184,102 @@ describe('PortfolioPoolsRewardsCard', () => {
 
     expect(screen.getByText('$45.66')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Collect' })).not.toBeInTheDocument()
+  })
+})
+
+// multi_token_lp_incentives replaces the UNI amount with an aggregate USD total across every reward
+// denomination and swaps the UNI-only claim modal for the wallet-level rewards modal. The frame,
+// zero state and external-wallet handling are shared with the UNI-only path above.
+describe('PortfolioPoolsRewardsCard — multi_token_lp_incentives', () => {
+  function groupFixture(chainId: number, address: string, usd: number): LpIncentiveRewards['groups'][number] {
+    return {
+      chainId,
+      rows: [
+        {
+          token: { chainId, address, decimals: 18, symbol: 'TKN', name: 'Token' },
+          usdValue: usd,
+        } as unknown as LpIncentiveRewards['groups'][number]['rows'][number],
+      ],
+      subtotalUsd: usd,
+    }
+  }
+
+  function mockMultiTokenRewards(overrides: Partial<LpIncentiveRewards>): void {
+    const groups = overrides.groups ?? []
+    mocked(useLpIncentiveRewards).mockReturnValue({
+      totalUsd: 0,
+      hasRewards: false,
+      isLoading: false,
+      isError: false,
+      ...overrides,
+      groups,
+      rewardTokens:
+        overrides.rewardTokens ??
+        groups.flatMap((group) =>
+          group.rows.map((row) => ({ chainId: row.token.chainId, address: row.token.address })),
+        ),
+    })
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.MultiTokenLpIncentives)
+    mocked(useLocalizationContext).mockReturnValue({
+      convertFiatAmountFormatted: (value: number | string) => `$${Number(value).toFixed(2)}`,
+    } as unknown as ReturnType<typeof useLocalizationContext>)
+    mocked(useLpIncentives).mockReturnValue({
+      isModalOpen: false,
+      isPendingTransaction: false,
+      tokenRewards: '0',
+      openModal,
+      closeModal,
+      setTokenRewards,
+      onTransactionSuccess,
+      hasCollectedRewards: false,
+    } as unknown as ReturnType<typeof useLpIncentives>)
+    mocked(useGetPoolsRewards).mockReturnValue({
+      data: undefined,
+      isLoading: false,
+      error: null,
+    } as unknown as ReturnType<typeof useGetPoolsRewards>)
+    mocked(useUSDCValue).mockReturnValue(null)
+  })
+
+  it('renders nothing without a wallet address', () => {
+    mockMultiTokenRewards({ hasRewards: false, totalUsd: 0 })
+    render(<PortfolioPoolsRewardsCard walletAddress={undefined} />)
+    expect(screen.queryByText('Rewards')).not.toBeInTheDocument()
+  })
+
+  it('hides the Collect button in the zero state', () => {
+    mockMultiTokenRewards({ hasRewards: false, totalUsd: 0 })
+    render(<PortfolioPoolsRewardsCard walletAddress={SAMPLE_SEED_ADDRESS_1} />)
+    expect(screen.queryByText('Collect')).not.toBeInTheDocument()
+  })
+
+  it('shows reward logos and opens the rewards modal when Collect is clicked', async () => {
+    mockMultiTokenRewards({ hasRewards: true, totalUsd: 143.82, groups: [groupFixture(1, '0x1f98', 143.82)] })
+    render(<PortfolioPoolsRewardsCard walletAddress={SAMPLE_SEED_ADDRESS_1} />)
+
+    expect(screen.getByTestId('reward-logos')).toBeInTheDocument()
+    expect(screen.queryByTestId('rewards-modal-open')).not.toBeInTheDocument()
+    await userEvent.click(screen.getByText('Collect'))
+    expect(screen.getByTestId('rewards-modal-open')).toBeInTheDocument()
+  })
+
+  it('renders the unknown-balance placeholder instead of $0.00 when the fetch fails', () => {
+    mockMultiTokenRewards({ hasRewards: false, totalUsd: 0, isError: true })
+    render(<PortfolioPoolsRewardsCard walletAddress={SAMPLE_SEED_ADDRESS_1} />)
+
+    expect(screen.getByText('-')).toBeInTheDocument()
+    expect(screen.queryByText('$0.00')).not.toBeInTheDocument()
+    // Unknown isn't zero, so the Collect button stays — disabled, with nothing known to collect.
+    expect(screen.getByRole('button', { name: 'Collect' })).toBeDisabled()
+  })
+
+  it('hides the Collect button when viewing an external wallet', () => {
+    mockMultiTokenRewards({ hasRewards: true, totalUsd: 10, groups: [groupFixture(1, '0x1f98', 10)] })
+    render(<PortfolioPoolsRewardsCard walletAddress={SAMPLE_SEED_ADDRESS_1} isExternalWallet />)
+    expect(screen.queryByText('Collect')).not.toBeInTheDocument()
   })
 })

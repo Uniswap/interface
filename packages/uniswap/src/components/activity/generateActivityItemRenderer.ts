@@ -104,6 +104,10 @@ export function generateActivityItemRenderer({
       case TransactionType.LiquidityDecrease:
         SummaryItem = LiquiditySummaryItem
         break
+      case TransactionType.UniswapXCancel:
+        // Suppressed from merged activity by default; generic summary if suppression regresses
+        SummaryItem = UnknownSummaryItem
+        break
       default:
         SummaryItem = UnknownSummaryItem
     }

@@ -8,13 +8,17 @@ import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 
 function StockPillInner({
   option,
-  onSelectRwaToken,
+  onPressRwaToken,
+  isPending = false,
 }: {
   option: RwaTokenOption
-  onSelectRwaToken: OnSelectRwaToken
+  onPressRwaToken: OnSelectRwaToken
+  /** True while this pill's tap is waiting on the pre-selection token fetch. */
+  isPending?: boolean
 }): JSX.Element {
   return (
     <TokenSelectorPill
+      isPending={isPending}
       icon={
         <TokenLogo
           alwaysShowNetworkLogo
@@ -27,7 +31,7 @@ function StockPillInner({
       }
       label={getSymbolDisplayText(option.symbol)}
       testID={`stock-option-${option.chainId}-${option.symbol}`}
-      onPress={(): void => onSelectRwaToken(option)}
+      onPress={(): void => onPressRwaToken(option)}
     />
   )
 }

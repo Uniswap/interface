@@ -1,6 +1,5 @@
 /* oxlint-disable max-lines */
 import { TradingApi } from '@universe/api'
-import ms from 'ms'
 import { call, cancel, delay, fork } from 'typed-redux-saga'
 import { TradingApiSessionClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiSessionClient'
 import {
@@ -13,6 +12,7 @@ import { AppNotificationType, type PlanTxNotification } from 'uniswap/src/featur
 import { HandledTransactionInterrupt } from 'uniswap/src/features/transactions/errors'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { tradeRoutingToFillType } from 'uniswap/src/features/transactions/swap/analytics'
+import { PLAN_SAGA_TIMEOUT_MS } from 'uniswap/src/features/transactions/swap/plan/constants'
 import {
   backgroundPlan,
   buildTradeFromPlanResponse,
@@ -41,6 +41,7 @@ import {
   ExpectedPlanError,
   PlanParams,
   PlanPriceChangeInterrupt,
+  PlanStepFailedError,
   type PlanFinalizedCallbackParams,
   type PlanSagaAnalytics,
   ShouldRetryPlanError,
@@ -183,7 +184,7 @@ export function* plan(params: PlanParams) {
   logger.debug('planSaga', 'plan', '🚨 plan saga started', swapTxContext)
 
   if (!isChained(swapTxContext)) {
-    onFailure(new AbortPlanError('Route not enabled for the plan saga'))
+    onFailure(new AbortPlanError('Route not enabled for the plan saga'), undefined, { willFinalize: false })
     return
   }
 
@@ -246,7 +247,7 @@ export function* plan(params: PlanParams) {
     // @ts-expect-error - TODO: SWAP-485: getDisplayableError needs to be updated to accept unknown errors
     const displayableError = getDisplayableError({ error })
     const onPressRetry = params.getOnPressRetry?.(displayableError)
-    onFailure(displayableError, onPressRetry)
+    onFailure(displayableError, onPressRetry, { willFinalize: false })
     logHelper({
       planId: planId ?? 'notCreated',
       response,
@@ -518,7 +519,7 @@ export function* plan(params: PlanParams) {
 
         if (stepFailure) {
           logger.debug('planSaga', 'plan', '🚨 step failed')
-          throw new HandledTransactionInterrupt(`Plan step failed`)
+          throw new PlanStepFailedError()
         }
 
         // Check for price changes before executing the next step
@@ -560,7 +561,7 @@ export function* plan(params: PlanParams) {
       clearPlan(planId)
     }
 
-    onFailure(displayableError, onPressRetry)
+    onFailure(displayableError, onPressRetry, { willFinalize: true })
     logHelper({
       planId,
       timeToCreatePlan,
@@ -860,5 +861,5 @@ export const {
 } = createMonitoredSaga({
   saga: plan,
   name: 'planSaga',
-  options: { timeoutDuration: ms('30m'), showErrorNotification: false },
+  options: { timeoutDuration: PLAN_SAGA_TIMEOUT_MS, showErrorNotification: false },
 })

@@ -28,6 +28,7 @@ export {
   ExternallyConnectableExtensionConfigKey,
   ForceUpgradeConfigKey,
   HomeScreenExploreTokensConfigKey,
+  LaunchesNetworkFilterChainIdsConfigKey,
   LiquidityApprovalSimulationConfigKey,
   LiquidityGasPreEstimationConfigKey,
   LPConfigKey,
@@ -35,7 +36,9 @@ export {
   OnDeviceRecoveryConfigKey,
   OutageBannerChainIdConfigKey,
   RWAIssuerLogosConfigKey,
+  Permit2MismatchDelegatesConfigKey,
   SwapConfigKey,
+  SynchronizedHeartbeatsConfigKey,
   SyncTransactionSubmissionChainIdsConfigKey,
   UwuLinkConfigKey,
   VerifiedAuctionsConfigKey,
@@ -43,6 +46,7 @@ export {
 export { StatsigCustomAppValue } from '@universe/gating/src/constants'
 export type { ExperimentProperties } from '@universe/gating/src/experiments'
 export {
+  EmbeddedWalletOnboardingProperties,
   EthAsErc20UniswapXProperties,
   Experiments,
   LayerProperties,

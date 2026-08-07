@@ -1,6 +1,6 @@
 import { isMobileApp, REQUEST_SOURCE } from '@universe/environment'
 import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
-import { getVersionHeader } from 'uniswap/src/data/getVersionHeader'
+import { getVersionHeader } from 'uniswap/src/data/headers/getVersionHeader'
 
 /**
  * Get FOR API headers.

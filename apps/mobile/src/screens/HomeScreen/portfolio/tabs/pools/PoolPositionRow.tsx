@@ -1,3 +1,4 @@
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { memo } from 'react'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { PositionItem } from 'uniswap/src/components/portfolio/PositionItem/PositionItem'
@@ -27,6 +28,7 @@ export const PoolPositionRow = memo(function PoolPositionRow({
       tokenId: positionInfo.tokenId,
       chainId: positionInfo.chainId,
       protocolVersion: positionInfo.version,
+      permissioned: positionInfo.version === ProtocolVersion.V4 && Boolean(positionInfo.isPermissioned),
     })
   })
 

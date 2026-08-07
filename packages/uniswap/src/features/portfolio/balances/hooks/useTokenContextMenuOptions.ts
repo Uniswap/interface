@@ -15,7 +15,6 @@ import { SendAction } from 'ui/src/components/icons/SendAction'
 import { ShareArrow } from 'ui/src/components/icons/ShareArrow'
 import { MenuOptionItemWithId } from 'uniswap/src/components/menus/ContextMenu'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
-import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { selectHasViewedContractAddressExplainer } from 'uniswap/src/features/behaviorHistory/selectors'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -29,6 +28,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTokenVisibility } from 'uniswap/src/features/visibility/hooks/useTokenVisibility'
 import { setTokenVisibility } from 'uniswap/src/features/visibility/slice'
 import { CurrencyField, CurrencyId } from 'uniswap/src/types/currency'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 import { areCurrencyIdsEqual, currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { TdpChainSelectionType } from 'uniswap/src/utils/linking'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -170,13 +170,8 @@ export function useTokenContextMenuOptions({
   ])
 
   const onPressHiddenStatus = useCallback(() => {
-    /**
-     * This update changes the parameters sent in the call to `portfolios`,
-     * resulting in a full reload of the portfolio from the server.
-     * To avoid the empty state while fetching the new portfolio, we manually
-     * modify the current one in the cache.
-     */
-
+    // Optimistically updates cached balances and reconciles with the server, since the
+    // visibility change alone never re-keys the portfolio queries.
     updateCache(isVisible, portfolioBalance ?? undefined)
 
     sendAnalyticsEvent(WalletEventName.TokenVisibilityChanged, {

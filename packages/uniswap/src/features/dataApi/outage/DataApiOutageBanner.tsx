@@ -1,21 +1,26 @@
 import { isWebApp } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { ColorTokens, Flex, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 
 type DataApiOutageBannerProps = {
   onPress?: () => void
   title?: string
+  backgroundColor?: ColorTokens
 }
 
-export function DataApiOutageBanner({ title, onPress }: DataApiOutageBannerProps): JSX.Element {
+export function DataApiOutageBanner({
+  title,
+  onPress,
+  backgroundColor = '$surface2',
+}: DataApiOutageBannerProps): JSX.Element {
   const { t } = useTranslation()
 
   const content = (
     <Flex
       row
       alignItems="center"
-      backgroundColor="$surface2"
+      backgroundColor={backgroundColor}
       borderRadius={isWebApp ? '$rounded12' : undefined}
       gap="$spacing12"
       px="$spacing16"

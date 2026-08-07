@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { useMultichainFavoritesRankings } from 'uniswap/src/features/favorites/hooks/useMultichainFavoritesRankings'
 import { makeSelectHasTokenFavoritedByAddress } from 'uniswap/src/features/favorites/selectors'
 import { UniswapState } from 'uniswap/src/state/uniswapReducer'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 
 export function useSelectHasTokenFavorited(currencyId: string): boolean {
   const selectByAddress = useMemo(makeSelectHasTokenFavoritedByAddress, [])

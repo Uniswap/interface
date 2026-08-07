@@ -1,3 +1,4 @@
+import { SynchronizedHeartbeatsConfigKey } from '@universe/gating'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -5,8 +6,8 @@ import { Flex, RemoveScroll, useMedia } from 'ui/src'
 import { Coin } from 'ui/src/components/icons/Coin'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { TokensListEmptyState } from 'uniswap/src/components/tokens/TokensListEmptyState'
-import { PortfolioBalancePart } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
-import { useGetWalletTokensProfitLossQuery } from 'uniswap/src/data/rest/getWalletTokensProfitLoss'
+import { PortfolioBalancePart } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
+import { useGetWalletTokensProfitLossQuery } from 'uniswap/src/data/apiClients/dataApiService/performance/getWalletTokensProfitLoss'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/balancesRest'
@@ -16,14 +17,17 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { parseChainFromTokenSearchQuery } from 'uniswap/src/utils/search/parseChainFromTokenSearchQuery'
+import { useIsSynchronizedHeartbeatEnabled } from '~/lib/hooks/useHeartbeatCoordinator'
 import { PortfolioBalanceCountIndicator } from '~/pages/Portfolio/components/PortfolioBalanceCountIndicator'
 import { SearchInput } from '~/pages/Portfolio/components/SearchInput'
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
+import { usePortfolioHeartbeatEnabled } from '~/pages/Portfolio/hooks/usePortfolioHeartbeatCoordinator'
 import { useTransformTokenTableData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 import { TokensAllocationChart } from '~/pages/Portfolio/Tokens/Table/TokensAllocationChart'
 import { TokensTable } from '~/pages/Portfolio/Tokens/Table/TokensTable'
 import { filterTokensBySearch } from '~/pages/Portfolio/Tokens/utils/filterTokensBySearch'
+import { PortfolioTab } from '~/pages/Portfolio/types'
 
 // Disabled until polished in future projects
 const SHOW_TOKEN_ALLOCATION_CHART = false
@@ -43,6 +47,10 @@ export const PortfolioTokens = memo(function PortfolioTokens() {
   const media = useMedia()
   const navigate = useNavigate()
   const { t } = useTranslation()
+  const isSynchronizedHeartbeatsEnabled = useIsSynchronizedHeartbeatEnabled(
+    SynchronizedHeartbeatsConfigKey.PortfolioPollIntervalSeconds,
+    usePortfolioHeartbeatEnabled({ tab: PortfolioTab.Tokens }),
+  )
   const [search, setSearch] = useState('')
   const { chains: enabledChains } = useEnabledChains()
   const { chainId: urlChainId, isExternalWallet } = usePortfolioRoutes()
@@ -162,6 +170,8 @@ export const PortfolioTokens = memo(function PortfolioTokens() {
                 endText={tokenData ? <TokenCountIndicator count={tokenData.length} /> : undefined}
                 chainIds={effectiveChainId ? [effectiveChainId] : undefined}
                 part={PortfolioBalancePart.Tokens}
+                // The heartbeat refetches balances on its tick — avoid a second overlapping schedule
+                disablePolling={isSynchronizedHeartbeatsEnabled}
               />
             </Trace>
             <Trace logFocus section={SectionName.PortfolioTokensTab} element={ElementName.PortfolioTokensSearch}>

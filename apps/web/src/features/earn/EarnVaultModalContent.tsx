@@ -3,10 +3,12 @@ import type { TradingApi } from '@universe/api'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Flex, SpinningLoader } from 'ui/src'
+import { Flex, ModalCloseIcon, SpinningLoader, Text, TouchableArea } from 'ui/src'
+import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { permanentlyDismissEarnSwapUpsell } from 'uniswap/src/features/behaviorHistory/slice'
 import { DepositReviewView, type ExecuteEarnDepositParams } from 'uniswap/src/features/earn/DepositReviewView'
 import { EarnBalanceErrorState } from 'uniswap/src/features/earn/EarnBalanceErrorState'
+import { EarnHowItWorksView } from 'uniswap/src/features/earn/EarnHowItWorksView'
 import { EarnVaultOverview } from 'uniswap/src/features/earn/EarnVaultOverview'
 import { EarnVaultView } from 'uniswap/src/features/earn/hooks/useEarnVaultModalFlow'
 import { applyEarnPositionChangeOptimistically } from 'uniswap/src/features/earn/optimisticEarnPositions'
@@ -70,6 +72,7 @@ export function EarnVaultModalContent({
     onBackToWithdrawAmount,
     onBuyWithCash,
     onClose,
+    onContinueDeposit,
     onDeposit,
     onReviewDeposit,
     onReviewWithdraw,
@@ -198,12 +201,19 @@ export function EarnVaultModalContent({
 
   if (flow.view === EarnVaultView.DepositAmount && isConnected) {
     if (balanceLookupErrored && !balanceLookupHasData) {
-      return <CenteredModalBalanceError onRetry={onRetryBalanceLookup} />
+      return (
+        <CenteredModalBalanceError
+          title={t('explore.earn.deposit.title')}
+          onBack={onBackToVault}
+          onClose={onClose}
+          onRetry={onRetryBalanceLookup}
+        />
+      )
     }
 
     // Avoid flashing DepositAmount before balance lookup can redirect to NeedToken.
     if (!balanceLookupSettled) {
-      return <CenteredModalLoader />
+      return <CenteredModalLoader title={t('explore.earn.deposit.title')} onBack={onBackToVault} onClose={onClose} />
     }
   }
 
@@ -211,7 +221,7 @@ export function EarnVaultModalContent({
     case EarnVaultView.Vault:
       // Unknown position state should not flash the no-position fork.
       if (isPositionLoading) {
-        return <CenteredModalLoader />
+        return <CenteredModalLoader onClose={onClose} />
       }
       return (
         <EarnVaultOverview
@@ -236,6 +246,8 @@ export function EarnVaultModalContent({
           onRetryBalance={onRetryBalance}
         />
       )
+    case EarnVaultView.HowItWorks:
+      return <EarnHowItWorksView onBack={onBackToVault} onClose={onClose} onContinue={onContinueDeposit} />
     case EarnVaultView.NeedToken:
       return (
         <YouNeedTokenView
@@ -342,19 +354,75 @@ export function EarnVaultModalContent({
   return assertNever(flow)
 }
 
-function CenteredModalLoader(): JSX.Element {
+// Keep visible Back/Close controls during pending and error states — direct-to-deposit entries
+// otherwise strand the user on a shell-less loader with no in-modal escape.
+function ModalStateHeader({
+  title,
+  onBack,
+  onClose,
+}: {
+  title?: string
+  onBack?: () => void
+  onClose: () => void
+}): JSX.Element {
   return (
-    <Flex alignItems="center" justifyContent="center" minHeight={320}>
-      <SpinningLoader color="$neutral2" size={24} />
+    <Flex row alignItems="center" justifyContent="center" minHeight="$spacing32" position="relative">
+      {onBack && (
+        <Flex left={0} position="absolute">
+          <TouchableArea hoverable onPress={onBack}>
+            <BackArrow color="$neutral2" size="$icon.24" />
+          </TouchableArea>
+        </Flex>
+      )}
+      {title && (
+        <Text variant="body2" color="$neutral1" textAlign="center" px="$spacing48" numberOfLines={1}>
+          {title}
+        </Text>
+      )}
+      <Flex right={0} position="absolute">
+        <ModalCloseIcon onClose={onClose} />
+      </Flex>
     </Flex>
   )
 }
 
-function CenteredModalBalanceError({ onRetry }: { onRetry: () => void }): JSX.Element {
+function CenteredModalLoader({
+  title,
+  onBack,
+  onClose,
+}: {
+  title?: string
+  onBack?: () => void
+  onClose?: () => void
+}): JSX.Element {
   return (
-    <Flex alignItems="center" justifyContent="center" minHeight={320}>
-      <EarnBalanceErrorState onRetry={onRetry} />
-    </Flex>
+    <>
+      {onClose && <ModalStateHeader title={title} onBack={onBack} onClose={onClose} />}
+      <Flex alignItems="center" justifyContent="center" minHeight={320}>
+        <SpinningLoader color="$neutral2" size={24} />
+      </Flex>
+    </>
+  )
+}
+
+function CenteredModalBalanceError({
+  title,
+  onBack,
+  onClose,
+  onRetry,
+}: {
+  title?: string
+  onBack?: () => void
+  onClose?: () => void
+  onRetry: () => void
+}): JSX.Element {
+  return (
+    <>
+      {onClose && <ModalStateHeader title={title} onBack={onBack} onClose={onClose} />}
+      <Flex alignItems="center" justifyContent="center" minHeight={320}>
+        <EarnBalanceErrorState onRetry={onRetry} />
+      </Flex>
+    </>
   )
 }
 

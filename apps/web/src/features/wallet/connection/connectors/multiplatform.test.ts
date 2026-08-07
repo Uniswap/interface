@@ -110,6 +110,26 @@ describe('multiplatform connectors', () => {
       })
     })
 
+    it('should merge the real MetaMask Connect EVM and Solana connectors into one dual-platform entry', () => {
+      // Arrange
+      const metamaskSolana: WalletConnectorMeta = {
+        name: 'MetaMask',
+        icon: 'metamask-solana.svg',
+        solana: { walletName: 'MetaMask' as any },
+        isInjected: false,
+        analyticsWalletType: 'MetaMask SDK',
+      }
+
+      // Act
+      const result = deduplicateWalletConnectorMeta([METAMASK_CONNECTOR, metamaskSolana])
+
+      // Assert
+      expect(result).toHaveLength(1)
+      expect(result[0]?.name).toBe('MetaMask')
+      expect(result[0]?.wagmi).toEqual(METAMASK_CONNECTOR.wagmi)
+      expect(result[0]?.solana).toEqual({ walletName: 'MetaMask' })
+    })
+
     it('should merge different-platform connectors whose whose names differ by inclusion of "Wallet" in one of the names', () => {
       // Arrange
       const walletConnectors: WalletConnectorMeta[] = [

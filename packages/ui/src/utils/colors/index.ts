@@ -1,5 +1,4 @@
 export { MIN_COLOR_CONTRAST_THRESHOLD } from 'ui/src/utils/colors/constants'
-export { SPECIAL_CASE_TOKEN_COLORS } from 'ui/src/utils/colors/specialCaseTokens'
 export { useColorSchemeFromSeed } from 'ui/src/utils/colors/hooks/useColorSchemeFromSeed'
 export { useColorsFromTokenColor } from 'ui/src/utils/colors/hooks/useColorsFromTokenColor'
 export { useExtractedColors } from 'ui/src/utils/colors/hooks/useExtractedColors'

@@ -109,16 +109,7 @@ function HoverCardChart({
   lineColor: string
 }): JSX.Element {
   if (loading) {
-    return (
-      <ChartSkeleton
-        type={ChartType.PRICE}
-        height={CHART_HEIGHT}
-        hideYAxis
-        hideXAxis
-        hidePriceIndicators
-        chartTransform="translate(5, -70)"
-      />
-    )
+    return <ChartSkeleton type={ChartType.PRICE} height={CHART_HEIGHT} hideYAxis hideXAxis hidePriceIndicators />
   }
 
   if (hasChartData) {
@@ -136,7 +127,7 @@ function HoverCardChart({
     )
   }
 
-  return <ChartUnavailableOverlay height={CHART_HEIGHT} chartTransform="translate(5, -70)" />
+  return <ChartUnavailableOverlay height={CHART_HEIGHT} />
 }
 
 function TokenHoverCardContentInner({

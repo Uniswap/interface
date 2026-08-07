@@ -84,11 +84,20 @@ export async function parseLpIncentivesClaim({
   info: LpIncentivesClaimTransactionInfo
   chainId: UniverseChainId
 }): Promise<Partial<Activity>> {
-  const token = await getCurrencyFromCurrencyId(buildCurrencyId(chainId, info.tokenAddress))
-  const symbol = token?.symbol ?? i18n.t('common.unknown')
+  // Claims persisted before the tokenAddresses[] rename carry the old singular field, so guard the read.
+  // oxlint-disable-next-line no-unnecessary-condition
+  const tokenAddresses = info.tokenAddresses ?? []
+  const tokens = await Promise.all(
+    tokenAddresses.map((address) => getCurrencyFromCurrencyId(buildCurrencyId(chainId, address))),
+  )
+  const symbol =
+    tokens
+      .map((token) => token?.symbol)
+      .filter(Boolean)
+      .join(', ') || i18n.t('common.unknown')
   return {
     descriptor: i18n.t('activity.transaction.lpRewards.descriptor', { symbol }),
-    currencies: [token],
+    currencies: tokens,
   }
 }
 

@@ -1,9 +1,9 @@
 import { GraphQLApi } from '@universe/api'
 import { useMemo } from 'react'
-import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import type { RWAToken } from 'uniswap/src/features/rwa/types'
+import { normalizeTokenAddressForCache } from 'uniswap/src/utils/currencyId'
 
 export type RWAIssuerMarketData = {
   priceUsd?: number

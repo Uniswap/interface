@@ -5,6 +5,8 @@ interface MismatchCtx {
   delegationService: DelegationService
   getIsAtomicBatchingSupported: (input: { chainId: number }) => Promise<boolean>
   onMismatchDetected?: (payload: { chainId: number; isDelegated: boolean; delegatedAddress: Address }) => void
+  /** When set, a detected mismatch is only surfaced for delegates this accepts (`onMismatchDetected` still fires for all). */
+  shouldTreatAsMismatch?: (delegatedAddress: Address) => boolean
   logger?: Logger
 }
 
@@ -41,13 +43,17 @@ export function createHasMismatchUtil(ctx: MismatchCtx): HasMismatchUtil {
       const chainIdString = String(chainId)
       const delegated = delegationResults[chainIdString]
       const atomicSupported = batchingSupportMap[chainIdString] ?? false
-      const isMismatch = !atomicSupported && (delegated?.isDelegated ?? false)
+      let isMismatch = !atomicSupported && (delegated?.isDelegated ?? false)
       if (isMismatch && delegated?.delegatedAddress) {
         ctx.onMismatchDetected?.({
           chainId,
           isDelegated: true,
           delegatedAddress: delegated.delegatedAddress,
         })
+      }
+      if (isMismatch && ctx.shouldTreatAsMismatch) {
+        // fail closed: an unresolved delegate address is not treated as a strict delegate
+        isMismatch = delegated?.delegatedAddress ? ctx.shouldTreatAsMismatch(delegated.delegatedAddress) : false
       }
       results[chainIdString] = isMismatch
     }

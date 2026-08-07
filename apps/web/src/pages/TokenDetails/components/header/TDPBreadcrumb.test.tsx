@@ -106,6 +106,24 @@ describe('TDPBreadcrumb', () => {
     expect(screen.getByRole('link', { name: /Tokens/i })).toHaveAttribute('href', '/explore/tokens/ethereum')
   })
 
+  it('renders Launches and links back when the user arrived from the launches page', () => {
+    mockTDPStore(WBTC)
+    mockUseLocation.mockReturnValue({ ...defaultLocation, state: { from: '/launches' } })
+    render(<TDPBreadcrumb />)
+
+    expect(screen.getByRole('link', { name: /Launches/i })).toHaveAttribute('href', '/launches')
+    expect(screen.queryByRole('link', { name: /Tokens/i })).not.toBeInTheDocument()
+  })
+
+  it('falls back to the Tokens crumb when navigation state is missing', () => {
+    mockTDPStore(WBTC)
+    mockUseLocation.mockReturnValue({ ...defaultLocation, state: undefined })
+    render(<TDPBreadcrumb />)
+
+    expect(screen.getByRole('link', { name: /Tokens/i })).toHaveAttribute('href', '/explore/tokens')
+    expect(screen.queryByRole('link', { name: /Launches/i })).not.toBeInTheDocument()
+  })
+
   it('renders Tokens, Stocks, and current symbol for RWA tokens when explore table flag is on', () => {
     mockTDPStore(TSLA)
     mocked(useTDPRWAMatch).mockReturnValue({

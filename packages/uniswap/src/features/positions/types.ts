@@ -1,4 +1,5 @@
-import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { PlainMessage } from '@bufbuild/protobuf'
+import { PositionStatus, ProtocolVersion, RewardBalance } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool as V3Pool, Position as V3Position } from '@uniswap/v3-sdk'
@@ -54,6 +55,12 @@ interface BasePositionInfo {
   isHidden?: boolean
   /** Per-pool protocol fee served by data-api (`PoolPosition.protocolFee`), integer pips. Unset = unavailable. */
   protocolFee?: number
+  /** Fee APR averaged over the trailing 1 day (`PoolPosition.apr1d`, excludes reward boosts). Unset = day-data unavailable (never set for v2 pairs). */
+  apr1d?: number
+  /** Fee APR averaged over the trailing 7 days (`PoolPosition.apr7d`). See apr1d. */
+  apr7d?: number
+  /** Fee APR averaged over the trailing 30 days (`PoolPosition.apr30d`). See apr1d. */
+  apr30d?: number
 }
 
 export type V2PairInfo = BasePositionInfo & {
@@ -86,6 +93,11 @@ export type V4PositionInfo = BasePositionInfo & {
   totalApr?: number
   unclaimedRewardsAmountUni?: string
   boostedApr?: number
+  // Multi-token LP-incentive reward balances from the data-api PoolPosition — the multi-token
+  // view alongside the legacy UNI-only `unclaimedRewardsAmountUni` scalar.
+  rewardBalances?: PlainMessage<RewardBalance>[]
+  /** Held via the PermissionedPositionManager; tokenIds are only unique per manager, so reads must carry this selector. */
+  isPermissioned?: boolean
 }
 
 export type PositionInfo = V2PairInfo | V3PositionInfo | V4PositionInfo

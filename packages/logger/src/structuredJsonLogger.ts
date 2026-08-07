@@ -139,5 +139,3 @@ export function createStructuredJsonLoggerFactory(minLevel: LogLevel = 'info'): 
     },
   }
 }
-
-export const structuredJsonLoggerFactory: LoggerFactory = createStructuredJsonLoggerFactory('info')

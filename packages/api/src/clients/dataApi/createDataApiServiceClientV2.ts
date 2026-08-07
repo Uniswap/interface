@@ -18,6 +18,8 @@ import type {
   GetTokenMarketsMultiChainResponse,
   GetTokenMarketsRequest,
   GetTokenMarketsResponse,
+  GetTokenMultiChainRequest,
+  GetTokenMultiChainResponse,
   GetTokenRequest,
   GetTokenResponse,
   GetTokensMultiChainRequest,
@@ -30,8 +32,14 @@ import type {
   ListEarnPositionsResponse,
   ListEarnVaultsRequest,
   ListEarnVaultsResponse,
+  ListLaunchesRequest,
+  ListLaunchesResponse,
+  ListLaunchpadsRequest,
+  ListLaunchpadsResponse,
   ListTokensRequest,
   ListTokensResponse,
+  ListTransactionsRequest,
+  ListTransactionsResponse,
 } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 
 export interface DataApiServiceClientContext {
@@ -45,8 +53,12 @@ export interface DataApiServiceClientV2 {
   listEarnPositions: (params: PartialMessage<ListEarnPositionsRequest>) => Promise<ListEarnPositionsResponse>
   getEarnPosition: (params: PartialMessage<GetEarnPositionRequest>) => Promise<GetEarnPositionResponse>
   listTokens: (params: PartialMessage<ListTokensRequest>) => Promise<ListTokensResponse>
+  listTransactions: (params: PartialMessage<ListTransactionsRequest>) => Promise<ListTransactionsResponse>
+  listLaunchpads: (params: PartialMessage<ListLaunchpadsRequest>) => Promise<ListLaunchpadsResponse>
+  listLaunches: (params: PartialMessage<ListLaunchesRequest>) => Promise<ListLaunchesResponse>
   getToken: (params: PartialMessage<GetTokenRequest>) => Promise<GetTokenResponse>
   getTokens: (params: PartialMessage<GetTokensRequest>) => Promise<GetTokensResponse>
+  getTokenMultiChain: (params: PartialMessage<GetTokenMultiChainRequest>) => Promise<GetTokenMultiChainResponse>
   getTokensMultiChain: (params: PartialMessage<GetTokensMultiChainRequest>) => Promise<GetTokensMultiChainResponse>
   getTokenMarkets: (params: PartialMessage<GetTokenMarketsRequest>) => Promise<GetTokenMarketsResponse>
   getTokenMarketsMultiChain: (
@@ -68,8 +80,12 @@ export function createDataApiServiceClientV2({ rpcClient }: DataApiServiceClient
     listEarnPositions: (params): Promise<ListEarnPositionsResponse> => rpcClient.listEarnPositions(params),
     getEarnPosition: (params): Promise<GetEarnPositionResponse> => rpcClient.getEarnPosition(params),
     listTokens: (params): Promise<ListTokensResponse> => rpcClient.listTokens(params),
+    listTransactions: (params): Promise<ListTransactionsResponse> => rpcClient.listTransactions(params),
+    listLaunchpads: (params): Promise<ListLaunchpadsResponse> => rpcClient.listLaunchpads(params),
+    listLaunches: (params): Promise<ListLaunchesResponse> => rpcClient.listLaunches(params),
     getToken: (params): Promise<GetTokenResponse> => rpcClient.getToken(params),
     getTokens: (params): Promise<GetTokensResponse> => rpcClient.getTokens(params),
+    getTokenMultiChain: (params): Promise<GetTokenMultiChainResponse> => rpcClient.getTokenMultiChain(params),
     getTokensMultiChain: (params): Promise<GetTokensMultiChainResponse> => rpcClient.getTokensMultiChain(params),
     getTokenMarkets: (params): Promise<GetTokenMarketsResponse> => rpcClient.getTokenMarkets(params),
     getTokenMarketsMultiChain: (params): Promise<GetTokenMarketsMultiChainResponse> =>

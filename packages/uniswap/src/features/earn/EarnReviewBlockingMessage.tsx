@@ -1,20 +1,27 @@
 import type { AppTFunction } from 'ui/src/i18n/types'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EarnInlineError } from 'uniswap/src/features/earn/EarnInlineError'
 import { useEarnInsufficientGasWarning } from 'uniswap/src/features/earn/hooks/useEarnInsufficientGasWarning'
-import { isEarnNoRoutesQuoteError } from 'uniswap/src/features/earn/quoteError'
+import {
+  isEarnInsufficientDestinationGasQuoteError,
+  isEarnNoRoutesQuoteError,
+} from 'uniswap/src/features/earn/quoteError'
 import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 
 export function EarnReviewBlockingMessage({
   executionErrorMessage,
   hasQuoteError,
   insufficientGasWarning,
+  quoteError,
   quoteErrorMessage,
   showTroubleshootingLink,
 }: {
   executionErrorMessage: string | undefined
   hasQuoteError: boolean
   insufficientGasWarning: ReturnType<typeof useEarnInsufficientGasWarning>
+  quoteError?: unknown
   quoteErrorMessage: string | undefined
   showTroubleshootingLink: boolean
 }): JSX.Element | null {
@@ -27,7 +34,16 @@ export function EarnReviewBlockingMessage({
     )
   }
   if (hasQuoteError && quoteErrorMessage) {
-    return <EarnInlineError message={quoteErrorMessage} />
+    return (
+      <EarnInlineError
+        message={quoteErrorMessage}
+        learnMoreUrl={
+          isEarnInsufficientDestinationGasQuoteError(quoteError)
+            ? UniswapHelpUrls.articles.earnTroubleshooting
+            : undefined
+        }
+      />
+    )
   }
   if (insufficientGasWarning.hasInsufficientGas) {
     return (
@@ -54,12 +70,22 @@ export function getEarnReviewHasBlockingError({
 export function getEarnDepositQuoteErrorMessage({
   hasQuoteError,
   error,
+  destinationChainId,
   t,
 }: {
   hasQuoteError: boolean
   error: unknown
+  destinationChainId: UniverseChainId
   t: AppTFunction
 }): string | undefined {
+  if (hasQuoteError && isEarnInsufficientDestinationGasQuoteError(error)) {
+    const destinationChain = getChainInfo(destinationChainId)
+    return t('transaction.warning.insufficientGas.modal.title.withNetwork', {
+      networkName: destinationChain.label,
+      tokenSymbol: destinationChain.nativeCurrency.symbol,
+    })
+  }
+
   return getEarnQuoteErrorMessage({
     hasQuoteError,
     error,

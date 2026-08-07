@@ -1,10 +1,10 @@
 import { isE2eTestEnv } from '@universe/environment'
-import { FeatureFlags } from '@universe/gating'
+import { FeatureFlags, WEB_FEATURE_FLAG_NAMES } from '@universe/gating'
 import type { ReactNode } from 'react'
 
 export interface FlagDef {
   flag: FeatureFlags
-  label: string
+  label?: string
 }
 
 export interface FlagGroupDef {
@@ -20,10 +20,11 @@ export interface FlagGroupDef {
 export function buildFlagGroups(extras: {
   extensionDropdown: ReactNode
   networkRequestsConfig: ReactNode
+  experimentOptions: ReactNode
   layerOptions: ReactNode
   complianceOverrides: ReactNode
 }): FlagGroupDef[] {
-  return [
+  const groups: FlagGroupDef[] = [
     {
       name: 'Sessions',
       flags: [
@@ -51,6 +52,7 @@ export function buildFlagGroups(extras: {
         { flag: FeatureFlags.UseUniversalRouterVersion211, label: 'Use Universal Router v2.1.1' },
         { flag: FeatureFlags.ViemProviderEnabled, label: 'Enable Viem Provider' },
         { flag: FeatureFlags.LimitsFees, label: 'Enable Limits fees' },
+        { flag: FeatureFlags.LimitCancelTimeout, label: 'Enable limit order cancellation timeout + revert flow' },
         { flag: FeatureFlags.EnablePermitMismatchUX, label: 'Enable Permit2 mismatch detection' },
         { flag: FeatureFlags.NetworkFilterV2, label: 'Enable Network Filter V2' },
         {
@@ -79,6 +81,7 @@ export function buildFlagGroups(extras: {
         { flag: FeatureFlags.LiquidityBatchedTransactions, label: 'Enable Batched Transactions for LP flow' },
         { flag: FeatureFlags.LpIncentives, label: 'Enable LP Incentives' },
         { flag: FeatureFlags.LpIncentivesTablesColumn, label: 'Enable LP Reward APR Column' },
+        { flag: FeatureFlags.MultiTokenLpIncentives, label: 'Enable Multi-Token LP Incentive Rewards' },
         { flag: FeatureFlags.V4ProtocolFeeDisplay, label: 'Enable v4 Fee Tiers in the Create flow' },
       ],
     },
@@ -91,6 +94,20 @@ export function buildFlagGroups(extras: {
           label: 'Show Remaining (currency required) on chart-bar tooltip',
         },
         { flag: FeatureFlags.AuctionSearch, label: 'Enable Auction Search' },
+      ],
+    },
+    {
+      name: 'Launches',
+      flags: [
+        { flag: FeatureFlags.QuickLaunch, label: 'Enable Quick Launch' },
+        {
+          flag: FeatureFlags.EnablePoolsXyzBanner,
+          label: 'Show the existing Pools.xyz promo banner (wins over the teaser flag)',
+        },
+        {
+          flag: FeatureFlags.EnablePoolsXyzTeaser,
+          label: 'Show the new Pools.xyz teaser banner (only applies when the promo banner flag is off)',
+        },
       ],
     },
     {
@@ -112,6 +129,7 @@ export function buildFlagGroups(extras: {
       name: 'New Chains',
       flags: [
         { flag: FeatureFlags.Arc, label: 'Enable Arc' },
+        { flag: FeatureFlags.Ink, label: 'Enable Ink' },
         { flag: FeatureFlags.Linea, label: 'Enable Linea' },
         { flag: FeatureFlags.MegaETH, label: 'Enable MegaETH' },
         { flag: FeatureFlags.Robinhood, label: 'Enable Robinhood' },
@@ -144,8 +162,6 @@ export function buildFlagGroups(extras: {
         { flag: FeatureFlags.V2EndpointsPositions, label: 'Enable V2 Endpoints Positions' },
         { flag: FeatureFlags.V2EndpointsPortfolio, label: 'Enable V2 Endpoints Portfolio' },
         { flag: FeatureFlags.V2EndpointsSearch, label: 'Enable V2 Endpoints Search' },
-        { flag: FeatureFlags.V2EndpointsCurrencyConversion, label: 'Enable V2 Endpoints Currency Conversion' },
-        { flag: FeatureFlags.V2EndpointsNfts, label: 'Enable V2 Endpoints NFTs' },
       ],
     },
     {
@@ -155,10 +171,6 @@ export function buildFlagGroups(extras: {
         { flag: FeatureFlags.PortfolioPoolsBalances, label: 'Enable Portfolio Pools Balances' },
         { flag: FeatureFlags.SelfReportSpamNFTs, label: 'Report spam NFTs' },
       ],
-    },
-    {
-      name: 'Token Details Page',
-      flags: [{ flag: FeatureFlags.TDPTokenCarousel, label: 'Enable TDP Token Carousel' }],
     },
     {
       name: 'Earn',
@@ -178,6 +190,7 @@ export function buildFlagGroups(extras: {
     {
       name: 'RWA',
       flags: [
+        { flag: FeatureFlags.PermissionedPositions, label: 'Enable permissioned positions in the positions list' },
         { flag: FeatureFlags.RwaGeoblocked, label: 'Geo-block RWA tokens (treat region as restricted)' },
         { flag: FeatureFlags.RWACoinGeckoData, label: 'Enable RWA CoinGecko Data' },
         { flag: FeatureFlags.RWATdp, label: 'Enable RWA TDP' },
@@ -192,7 +205,11 @@ export function buildFlagGroups(extras: {
       name: 'Token Categories',
       flags: [{ flag: FeatureFlags.TokenCategories, label: 'Enable Token Categories' }],
     },
-    { name: 'Experiments', flags: [] },
+    {
+      name: 'Experiments',
+      flags: [],
+      extra: extras.experimentOptions,
+    },
     {
       name: 'Layers',
       flags: [],
@@ -204,4 +221,21 @@ export function buildFlagGroups(extras: {
       extra: extras.complianceOverrides,
     },
   ]
+
+  // Any web flag not placed in a curated group above auto-appears here, so new flags
+  // show up in the modal without hand-editing this file. DummyFlagTest stays E2E-only.
+  const referenced = new Set(groups.flatMap((group) => group.flags.map(({ flag }) => flag)))
+  const uncategorized: FlagDef[] = []
+  for (const [flag] of WEB_FEATURE_FLAG_NAMES) {
+    if (referenced.has(flag) || (flag === FeatureFlags.DummyFlagTest && !isE2eTestEnv())) {
+      continue
+    }
+    uncategorized.push({ flag })
+  }
+
+  if (uncategorized.length > 0) {
+    groups.push({ name: 'Uncategorized', flags: uncategorized })
+  }
+
+  return groups
 }

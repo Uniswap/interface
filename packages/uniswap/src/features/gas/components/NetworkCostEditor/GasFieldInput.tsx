@@ -1,4 +1,5 @@
-import { Flex, Input, Text } from 'ui/src'
+import { Flex, Text } from 'ui/src'
+import { GasFieldTextInput } from 'uniswap/src/features/gas/components/NetworkCostEditor/GasFieldTextInput'
 import {
   GasFieldTooltip,
   type GasTooltipKey,
@@ -59,21 +60,10 @@ export function GasFieldInput({
         px="$spacing12"
         py="$spacing8"
       >
-        <Input
-          flex={1}
+        <GasFieldTextInput
           accessibilityLabel={label}
-          aria-label={label}
           autoFocus={autoFocus}
-          backgroundColor="$transparent"
-          borderWidth={0}
-          color="$neutral1"
-          fontFamily="$body"
-          fontSize="$medium"
-          height="auto"
           keyboardType="decimal-pad"
-          outlineColor="$transparent"
-          p="$none"
-          placeholderTextColor="$neutral3"
           value={value}
           onChangeText={handleChangeText}
         />

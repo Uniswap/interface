@@ -1,0 +1,12 @@
+{
+  "launchpads": [
+    { "id": "uniswap-cca", "name": "Uniswap" },
+    { "id": "clanker", "name": "Clanker" },
+    { "id": "zora", "name": "Zora" },
+    { "id": "flaunch", "name": "Flaunch" },
+    { "id": "virtuals", "name": "Virtuals Protocol", "protocol": "doppler" },
+    { "id": "bankr", "name": "Bankr", "protocol": "doppler" },
+    { "id": "noxa", "name": "Noxa" },
+    { "id": "the-odyssey", "name": "The Odyssey" }
+  ]
+}

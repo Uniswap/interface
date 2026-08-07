@@ -200,7 +200,9 @@ export type CustomPriceRangeEntry = {
 
 export type CustomPriceRangePreset = Pick<CustomPriceRangeEntry, 'minPercentFromClearing' | 'maxPercentFromClearing'>
 
-export const MAX_CUSTOM_PRICE_RANGE_ENTRIES = 10
+// Interface-level cap. The contract still permits 10; we hold the UI to a more conservative
+// number until there's a reason to open it back up.
+export const MAX_CUSTOM_PRICE_RANGE_ENTRIES = 3
 
 export const CUSTOM_PRICE_RANGE_PRESETS: readonly CustomPriceRangePreset[] = [
   { minPercentFromClearing: -50, maxPercentFromClearing: 100 },

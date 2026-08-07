@@ -1,3 +1,4 @@
+import { hasActiveNeckKey as checkHasActiveNeckKey, useEmbeddedWalletState } from '@universe/embedded-wallet'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Flex, Text, TouchableArea } from 'ui/src'
@@ -5,7 +6,6 @@ import { AppleLogo } from 'ui/src/components/icons/AppleLogo'
 import { Envelope } from 'ui/src/components/icons/Envelope'
 import { GoogleLogoGradient } from 'ui/src/components/icons/GoogleLogoGradient'
 import { iconSizes } from 'ui/src/theme'
-import { hasActiveNeckKey as checkHasActiveNeckKey } from 'uniswap/src/features/passkey/deviceSession'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -14,8 +14,6 @@ import { getPrivyAppId } from '~/config'
 import { useIsEmbeddedWallet } from '~/hooks/useIsEmbeddedWallet'
 import { useIsPortfolioZero } from '~/pages/Portfolio/Overview/hooks/useIsPortfolioZero'
 import { setOpenModal } from '~/state/application/reducer'
-import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
-
 /**
  * Decides whether the "Add a backup login" card is visible.
  *

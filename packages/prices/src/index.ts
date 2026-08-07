@@ -2,18 +2,37 @@
 
 export {
   isConnectionEstablishedMessage,
+  isRawPoolPriceMessage,
+  isRawRealtimeTokenPriceMessage,
   isRawTokenPriceMessage,
   parseConnectionMessage,
   parseTokenPriceMessage,
 } from '@universe/prices/src/sources/websocket/messageParser'
 // Internals (testing / custom setups)
 export { getTokenPriceSource } from '@universe/prices/src/getTokenPriceSource'
+// Realtime channel (ETH-leg × ETH/USD join, version gating)
+export {
+  createRealtimePriceJoiner,
+  REALTIME_RATE_TOKEN_ADDRESS,
+  type RealtimePriceJoiner,
+  type RealtimePriceUpdate,
+} from '@universe/prices/src/sources/websocket/realtimeJoiner'
+// Pool channel (base-in-quote × quote-USD join, per-room version gating)
+export {
+  createPoolPriceJoiner,
+  type PoolPriceJoiner,
+  type PoolPriceUpdate,
+} from '@universe/prices/src/sources/websocket/poolPriceJoiner'
 export { createPriceSubscriptionHandler } from '@universe/prices/src/sources/websocket/subscriptionApi'
+export { withRealtimeRateSubscription } from '@universe/prices/src/sources/websocket/withRealtimeRateSubscription'
 export type {
   ConnectionEstablishedMessage,
   Logger,
+  PoolPriceRoute,
   PriceKey,
   PriceSource,
+  RawPoolPriceMessage,
+  RawRealtimeTokenPriceMessage,
   RawTokenPriceMessage,
   TokenIdentifier,
   TokenInput,
@@ -25,6 +44,8 @@ export type {
 export {
   createPriceKey,
   createPriceKeyFromToken,
+  createPriceSubscriptionKey,
+  DEFAULT_NATIVE_ADDRESS,
   filterValidTokens,
   isCurrency,
   isTokenIdentifier,

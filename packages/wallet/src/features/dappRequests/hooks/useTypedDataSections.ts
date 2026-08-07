@@ -34,8 +34,9 @@ export function useTypedDataSections({
   params,
   dappUrl,
 }: UseTypedDataSectionsParams): UseTypedDataSectionsResult {
-  // Detect UniswapX swap requests
-  const isUniswapX = isUniswapXSwapRequest(parsedTypedData)
+  // chainId pins the preview to the authorized chain, so the payload cannot pick one that
+  // flatters its own spender.
+  const isUniswapX = isUniswapXSwapRequest(parsedTypedData, chainId)
   const uniswapXTypedData = isUniswapX ? (parsedTypedData as UniswapXSwapRequest) : null
 
   // Build Blockaid scan request (always needed for risk level)

@@ -130,16 +130,6 @@ function AccountCardItemInner({
       ...(selectedAccount?.type === AccountType.Readonly
         ? [
             {
-              title: t('settings.setting.wallet.action.editLabel'),
-              systemIcon: 'square.and.pencil',
-              onPress: onPressEditWalletSettings,
-            },
-          ]
-        : []),
-
-      ...(selectedAccount?.type === AccountType.Readonly
-        ? [
-            {
               title: t('account.wallet.button.remove'),
               systemIcon: 'trash',
               destructive: true,

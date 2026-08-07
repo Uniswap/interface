@@ -3,7 +3,6 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import { Percent } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import type { FeeBreakdown } from 'uniswap/src/features/fees/types'
 import { DYNAMIC_FEE_DATA, type DynamicFeeData, type FeeData } from 'uniswap/src/features/positions/types'
 import i18n from 'uniswap/src/i18n'
@@ -24,19 +23,10 @@ export function validateFeeTier(feeTier: string): string {
   return feeTier
 }
 
-/** Inputs deciding the create-flow default tick spacing: L2 pools use 1x the fee tier when the flag is on. */
-export interface L2TickSpacingConfig {
-  chainId: UniverseChainId | undefined
-  l2TickSpacingEnabled: boolean
-}
-
-// tick spacing must be a whole number >= 1. Newly created L2 tiers use 1x the fee tier when the
-// L2DefaultTickSpacing flag is on; everything else uses 2x.
-export function calculateTickSpacingFromFeeAmount(
-  feeAmount: number,
-  { chainId, l2TickSpacingEnabled }: L2TickSpacingConfig,
-): number {
-  const feeMultiplier = l2TickSpacingEnabled && isL2ChainId(chainId) ? 1 : 2
+// tick spacing must be a whole number >= 1. Newly created tiers use a 1x fee-tier multiplier when
+// `useSingleTickSpacing` is set (behind the L2DefaultTickSpacing flag); otherwise 2x.
+export function calculateTickSpacingFromFeeAmount(feeAmount: number, useSingleTickSpacing: boolean): number {
+  const feeMultiplier = useSingleTickSpacing ? 1 : 2
   return Math.max(Math.round((feeMultiplier * feeAmount) / 100), 1)
 }
 

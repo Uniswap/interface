@@ -3,11 +3,11 @@ import { useActiveAccount } from 'uniswap/src/features/accounts/store/hooks'
 import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { useIsShowingWebFORNudge, useIsWebFORNudgeEnabled } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { useIsBlockedByPermissionedPool } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsBlockedByPermissionedPool'
 import { useIsBlockingWithCustomMessage } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsBlockingWithCustomMessage'
 import { useIsSwapButtonDisabled } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsSwapButtonDisabled'
 import { useNeedsGeoAcknowledgment } from 'uniswap/src/features/transactions/swap/hooks/useGeoRestrictionAcknowledgment'
 import { useGeoRestrictionMode } from 'uniswap/src/features/transactions/swap/hooks/useGeoRestrictionMode'
-import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import {
   useSwapFormStore,
   useSwapFormStoreDerivedSwapInfo,
@@ -23,6 +23,7 @@ export const useSwapFormButtonColors = (tokenColor?: string): ButtonColors => {
   const needsGeoAcknowledgment = useNeedsGeoAcknowledgment()
   // A region hard block renders a disabled CTA in the neutral blocked style, even when no wallet is connected.
   const isGeoRestricted = useGeoRestrictionMode() === 'restricted'
+  const isPermissionedBlocking = useIsBlockedByPermissionedPool()
 
   const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
   const platform = chainIdToPlatform(chainId)
@@ -32,11 +33,10 @@ export const useSwapFormButtonColors = (tokenColor?: string): ButtonColors => {
   const isShowingWebFORNudge = useIsShowingWebFORNudge()
   const { validTokenColor, lightTokenColor } = useColorsFromTokenColor(tokenColor)
   const { swapRedirectCallback } = useTransactionModalContext()
-  const { blockingWarning } = useParsedSwapWarnings()
-  const promptWebFORNudge =
-    useIsWebFORNudgeEnabled() && !swapRedirectCallback && !isShowingWebFORNudge && !blockingWarning
+  const promptWebFORNudge = useIsWebFORNudgeEnabled() && !swapRedirectCallback && !isShowingWebFORNudge
 
-  // Geo acknowledgement keeps the button an active "Review" CTA, so skip the blocked styling.
+  // Geo acknowledgement keeps the button an active "Review" CTA (it opens the attestation
+  // modal), so it should not adopt the blocked/disabled styling.
   const isBlockingOrDisabledWithoutSwapRedirect =
     !needsGeoAcknowledgment && (isBlockingWithCustomMessage || disabled) && !swapRedirectCallback
   const isInactiveAccountOrSubmitting = !activeAccount || isSubmitting
@@ -45,7 +45,7 @@ export const useSwapFormButtonColors = (tokenColor?: string): ButtonColors => {
   // Checks if web for nudge is enabled and uses accent2 if it is
   // Otherwise, we'll try and use the color from the token (i.e. swapping on Web > TDP)
   const buttonBackgroundColor = ((): ColorTokens | undefined => {
-    if (disabled) {
+    if (disabled || isPermissionedBlocking) {
       return undefined
     }
 
@@ -60,15 +60,28 @@ export const useSwapFormButtonColors = (tokenColor?: string): ButtonColors => {
     return validTokenColor
   })()
 
-  const buttonVariant: ButtonProps['variant'] = isGeoRestricted
-    ? 'default'
-    : !activeAccount || promptWebFORNudge
-      ? 'branded'
-      : isBlockingOrDisabledWithoutSwapRedirect
-        ? 'default'
-        : 'branded'
-  const buttonEmphasis: ButtonProps['emphasis'] =
-    isInactiveAccountOrSubmitting || isBlockingOrDisabledWithoutSwapRedirect ? 'secondary' : 'primary'
+  const buttonVariant: ButtonProps['variant'] = ((): ButtonProps['variant'] => {
+    if (isGeoRestricted || isPermissionedBlocking) {
+      return 'default'
+    }
+    if (!activeAccount || promptWebFORNudge) {
+      return 'branded'
+    }
+    if (isBlockingOrDisabledWithoutSwapRedirect) {
+      return 'default'
+    }
+    return 'branded'
+  })()
+
+  const buttonEmphasis: ButtonProps['emphasis'] = ((): ButtonProps['emphasis'] => {
+    if (isPermissionedBlocking) {
+      return 'primary'
+    }
+    if (isInactiveAccountOrSubmitting || isBlockingOrDisabledWithoutSwapRedirect) {
+      return 'secondary'
+    }
+    return 'primary'
+  })()
 
   const buttonTextColor = ((): ColorTokens | undefined => {
     if (promptWebFORNudge) {

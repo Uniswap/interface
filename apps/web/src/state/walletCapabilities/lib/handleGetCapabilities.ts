@@ -1,5 +1,5 @@
 import { ensure0xHex, hexToNumber, numberToHex } from '@universe/encoding'
-import { getCapabilities as wagmi_getCapabilities } from '@wagmi/core/experimental'
+import { getCapabilities as wagmi_getCapabilities } from '@wagmi/core'
 import { getLogger } from 'utilities/src/logger/logger'
 import { wagmiConfig } from '~/connection/wagmiConfig'
 import { ensureValidatedCapabilities } from '~/state/walletCapabilities/lib/ensureValidatedCapabilities'

@@ -6,11 +6,11 @@ const mockFragmentData = vi.fn()
 const mockUseBalances = vi.fn()
 const mockUseEnabledChains = vi.fn()
 
-vi.mock('uniswap/src/data/graphql/uniswap-data-api/fragments', () => ({
+vi.mock('uniswap/src/data/graphql/fragments', () => ({
   useTokenProjectTokensTvlPartsFragment: () => ({ data: mockFragmentData() }),
 }))
 
-vi.mock('uniswap/src/data/balances/hooks/useBalances', () => ({
+vi.mock('uniswap/src/data/apiClients/dataApiService/balances/hooks/useBalances', () => ({
   useBalances: (params: unknown) => mockUseBalances(params),
 }))
 

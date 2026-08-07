@@ -29,7 +29,7 @@ vi.mock('~/pages/Liquidity/CreateAuction/utils/selectTokenImageFile', () => ({
 vi.mock('~/pages/Liquidity/CreateAuction/utils/uploadImageToPinata', () => ({
   uploadImageToPinata: (...args: unknown[]) => mockUpload(...args),
 }))
-vi.mock('uniswap/src/data/rest/tokenFactoryImage', () => ({
+vi.mock('uniswap/src/data/apiClients/dataApiService/tokens/tokenFactoryImage', () => ({
   createTokenFactoryPresignedUrl: (...args: unknown[]) => mockPresign(...args),
   verifyTokenFactoryImage: (...args: unknown[]) => mockVerify(...args),
 }))

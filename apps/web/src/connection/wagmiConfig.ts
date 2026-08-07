@@ -7,6 +7,7 @@ import {
   createUniRpcTransportFactory,
   getRpcObserver,
 } from '@universe/chains'
+import { embeddedWallet } from '@universe/embedded-wallet'
 import { isE2eTestEnv, isTestEnv } from '@universe/environment'
 import { SessionGateSource } from '@universe/sessions'
 import { UNISWAP_LOGO } from 'ui/src/assets'
@@ -23,12 +24,12 @@ import type { Chain } from 'viem'
 import { createClient } from 'viem'
 import type { Config } from 'wagmi'
 import { createConfig, fallback, http } from 'wagmi'
-import { coinbaseWallet, injected, safe, walletConnect } from 'wagmi/connectors'
-import { PLAYWRIGHT_CONNECT_ADDRESS } from '~/connection/constants'
-import { embeddedWallet } from '~/connection/EmbeddedWalletConnector'
-import { instrumentWalletConnectRpc } from '~/connection/instrumentWalletConnectRpc'
+import { coinbaseWallet, injected, metaMask, safe } from 'wagmi/connectors'
+import { getConfig } from '~/config'
+import { METAMASK_CONNECT_DAPP_METADATA, PLAYWRIGHT_CONNECT_ADDRESS } from '~/connection/constants'
+import { embeddedWalletProvider } from '~/connection/embeddedWalletProviderInstance'
 import { createRejectableMockConnector } from '~/connection/rejectableConnector'
-import { uniswapWalletConnect, WC_PARAMS } from '~/connection/walletConnect'
+import { makeInterfaceWalletConnectConnector, uniswapWalletConnect } from '~/connection/walletConnect'
 
 // Only accept Safe Apps SDK messages from the canonical Safe web app.
 // Tested against bypass patterns in wagmiConfig.test.ts.
@@ -83,6 +84,8 @@ function createWagmiConnectors(params: {
   const { includeMockConnector } = params
 
   const baseConnectors = [
+    // MetaMask Connect SDK
+    metaMask({ dapp: METAMASK_CONNECT_DAPP_METADATA }),
     // Binance connector - uses injected for extension, QR code for mobile
     getBinanceConnector(),
     // There are no unit tests that expect WalletConnect to be included here,
@@ -90,21 +93,22 @@ function createWagmiConnectors(params: {
     // Isolated WC storage namespace so it doesn't share a relay identity (clientId) with any other
     // WC SignClient: sharing lets a second client's orphaned-subscription cleanup unsubscribe this
     // one's active session (dropping the swap's tx confirmation) and cross-deliver pairing messages.
-    // The Uniswap connector is registered here (not created lazily on click) so reconnectOnMount
-    // restores its session after a refresh; its own namespace keeps it safe alongside this one.
+    // The Uniswap connector is registered here (not created lazily on click) so IntentionalEvmReconnect
+    // can find it by id in config.connectors and restore its session; its own namespace keeps it safe alongside this one.
     ...(isTestEnv() && !isE2eTestEnv()
       ? []
       : [
-          instrumentWalletConnectRpc(walletConnect({ ...WC_PARAMS, customStoragePrefix: 'interfaceWalletConnect' })),
+          // relayUrl is undefined in production (public relay); the e2e config populates it with
+          // the hermetic in-process relay via WC_RELAY_URL_OVERRIDE (.env.e2e.override).
+          makeInterfaceWalletConnectConnector({ relayUrl: getConfig().walletConnectRelayUrlOverride }),
           uniswapWalletConnect(),
         ]),
-    embeddedWallet(),
+    embeddedWallet({ provider: embeddedWalletProvider }),
     coinbaseWallet({
       appName: 'Uniswap',
       // CB SDK doesn't pass the parent origin context to their passkey site
       // Flagged to CB team and can remove UNISWAP_WEB_URL once fixed
       appLogoUrl: `${UNISWAP_WEB_URL}${UNISWAP_LOGO}`,
-      reloadOnDisconnect: false,
     }),
     safe({
       allowedDomains: [SAFE_ALLOWED_ORIGIN],

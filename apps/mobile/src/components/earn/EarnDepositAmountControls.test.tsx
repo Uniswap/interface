@@ -42,6 +42,7 @@ function renderAmountEntrySection(overrides?: Partial<Parameters<typeof AmountEn
       value="10"
       onInputLayout={vi.fn()}
       onPercentPress={vi.fn()}
+      shakeStyle={{}}
       onToggleInputMode={vi.fn()}
       setActiveAmount={vi.fn()}
       {...overrides}
@@ -104,6 +105,24 @@ describe(AmountEntrySection, (): void => {
     renderAmountEntrySection({ isFiatInput: false })
 
     expect((screen.getByTestId(TestID.EarnAmountSymbol) as unknown as HTMLInputElement).value).toBe(' ETH')
+  })
+
+  it('renders the fiat symbol as the suffix when the locale positions it after the amount', (): void => {
+    renderAmountEntrySection({
+      fiatCurrencyInfo: { ...FIAT_CURRENCY_INFO, symbol: '€', fullSymbol: '€', symbolAtFront: false },
+    })
+
+    expect((screen.getByTestId(TestID.EarnAmountSymbol) as unknown as HTMLInputElement).value).toBe(' €')
+  })
+
+  it('shows an unavailable placeholder instead of a toggle while the conversion is unresolved', (): void => {
+    const onToggleInputMode = vi.fn()
+
+    renderAmountEntrySection({ formattedAlternateAmount: undefined, hasAmount: true, onToggleInputMode })
+
+    expect(screen.getByText('-')).toBeTruthy()
+    fireEvent.press(screen.getByText('-'), ON_PRESS_EVENT_PAYLOAD)
+    expect(onToggleInputMode).not.toHaveBeenCalled()
   })
 })
 
@@ -190,5 +209,31 @@ describe(getFormattedAlternateAmount, (): void => {
       type: NumberType.FiatStandard,
       currencyCode: 'EUR',
     })
+  })
+
+  it('returns undefined instead of a false zero while the counterpart conversion is unresolved', (): void => {
+    const formatNumberOrString = vi.fn(() => '0')
+
+    expect(
+      getFormattedAlternateAmount({
+        isFiatInput: true,
+        exactAmountFiat: '12.34',
+        exactAmountToken: '',
+        symbol: 'ETH',
+        currencyCode: 'USD',
+        formatNumberOrString,
+      }),
+    ).toBeUndefined()
+    expect(
+      getFormattedAlternateAmount({
+        isFiatInput: false,
+        exactAmountFiat: '',
+        exactAmountToken: '0.01',
+        symbol: 'ETH',
+        currencyCode: 'USD',
+        formatNumberOrString,
+      }),
+    ).toBeUndefined()
+    expect(formatNumberOrString).not.toHaveBeenCalled()
   })
 })

@@ -3,9 +3,9 @@ import { useEffect, useState } from 'react'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useSendTransaction, useWaitForTransactionReceipt } from 'wagmi'
+import { assume0xAddress } from '~/chains'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { useSelectChain } from '~/hooks/useSelectChain'
-import { assume0xAddress } from '~/utils/wagmi'
 
 export interface SweepUnsoldTokensSubmitState {
   onSubmit: () => Promise<void>

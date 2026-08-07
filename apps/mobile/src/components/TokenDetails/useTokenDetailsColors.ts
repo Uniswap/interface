@@ -1,8 +1,5 @@
 import { useExtractedTokenColor, useIsDarkMode, useSporeColors } from 'ui/src'
-import {
-  useTokenBasicInfoPartsFragment,
-  useTokenBasicProjectPartsFragment,
-} from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
+import { useTokenBasicInfoPartsFragment, useTokenBasicProjectPartsFragment } from 'uniswap/src/data/graphql/fragments'
 import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 
 export function useTokenDetailsColors({ currencyId }: { currencyId: string }): {

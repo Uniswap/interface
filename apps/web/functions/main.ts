@@ -11,6 +11,7 @@ const app = createApp({
   },
   getWebSocketUrl: (c) => c.env?.WEBSOCKET_URL || WEBSOCKET_URLS.production,
   getTrustedClientIp: (c) => c.req.header('cf-connecting-ip'),
+  getEmbedFrameAncestors: (c) => c.env?.EMBED_FRAME_ANCESTORS,
 })
 
 // oxlint-disable-next-line import/no-unused-modules

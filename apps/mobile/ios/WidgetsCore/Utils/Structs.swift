@@ -58,9 +58,80 @@ public struct PriceHistory {
   public let price: Double
 }
 
-public struct CurrencyConversionResponse {
-  public let conversionRate: Double
-  public let currency: String
+/// Maps protobuf FiatCurrency enum ints to ISO currency codes.
+public let fiatCurrencyCodeByInt: [Int: String] = [
+  0: "UNSPECIFIED",
+  1: "ARS",
+  2: "AUD",
+  3: "BRL",
+  4: "CAD",
+  5: "CNY",
+  6: "COP",
+  7: "EUR",
+  8: "GBP",
+  9: "HKD",
+  10: "IDR",
+  11: "INR",
+  12: "JPY",
+  13: "KRW",
+  14: "MXN",
+  15: "NGN",
+  16: "NZD",
+  17: "PKR",
+  18: "RUB",
+  19: "SGD",
+  20: "THB",
+  21: "TRY",
+  22: "UAH",
+  23: "USD",
+  24: "VND",
+  25: "SEK",
+]
+
+/// Maps ISO currency codes to protobuf FiatCurrency enum ints.
+public let fiatCurrencyIntByCode: [String: Int] = [
+  "UNSPECIFIED": 0,
+  "ARS": 1,
+  "AUD": 2,
+  "BRL": 3,
+  "CAD": 4,
+  "CNY": 5,
+  "COP": 6,
+  "EUR": 7,
+  "GBP": 8,
+  "HKD": 9,
+  "IDR": 10,
+  "INR": 11,
+  "JPY": 12,
+  "KRW": 13,
+  "MXN": 14,
+  "NGN": 15,
+  "NZD": 16,
+  "PKR": 17,
+  "RUB": 18,
+  "SGD": 19,
+  "THB": 20,
+  "TRY": 21,
+  "UAH": 22,
+  "USD": 23,
+  "VND": 24,
+  "SEK": 25,
+]
+
+public struct CurrencyConversionResponse: Decodable {
+  public init(convertedAmount: ConvertedAmount) {
+    self.convertedAmount = convertedAmount
+  }
+  public let convertedAmount: ConvertedAmount
+}
+
+public struct ConvertedAmount: Decodable {
+  public init(currency: Int, value: Double) {
+    self.currency = currency
+    self.value = value
+  }
+  public let currency: Int
+  public let value: Double
 }
 
 struct GetPortfolioResponse: Decodable {

@@ -1,8 +1,9 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
-import { OrderDirection } from '~/appGraphql/data/util'
 import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from '~/components/Table/shared/SortableHeader'
+import { OrderDirection } from '~/data/util'
+import { scrollToExploreTokenSection } from '~/pages/Explore/categories/useExploreCategory'
 import { ExpandableAssetMetricHeaderTooltip } from '~/pages/Explore/rwa/table/ExpandableAssetMetricHeaderTooltip'
 import { getStocksSortMethodLabel } from '~/pages/Explore/rwa/table/stocksSortMethodLabels'
 import { StocksSortMethod, useStocksTableSortStoreActions } from '~/pages/Explore/rwa/table/stocksTableSortStore'
@@ -19,7 +20,10 @@ export function StocksTableHeader({
   const { t } = useTranslation()
   const headerText = useMemo(() => getStocksSortMethodLabel({ t, category }), [t, category])
   const { setSort } = useStocksTableSortStoreActions()
-  const handleSortCategory = useCallback(() => setSort(category), [setSort, category])
+  const handleSortCategory = useCallback(() => {
+    setSort(category)
+    scrollToExploreTokenSection()
+  }, [setSort, category])
 
   return (
     <ClickableHeaderRow onPress={handleSortCategory} width="100%" group>

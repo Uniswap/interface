@@ -1,7 +1,9 @@
 import 'utilities/src/logger/mocks'
 import { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
 import { Token as SearchToken } from '@uniswap/client-data-api/dist/data/v1/searchTypes_pb'
-import * as searchTokensAndPools from 'uniswap/src/data/rest/searchTokensAndPools'
+import isEqual from 'lodash/isEqual'
+import * as searchTokensAndPools from 'uniswap/src/data/apiClients/dataApiService/search/searchTokensAndPools'
+import { fetchTradingApiIndicativeQuoteIgnoring404 } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiIndicativeQuoteQuery'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fetchOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { fetchOnChainBalances } from 'uniswap/src/features/portfolio/portfolioUpdates/fetchOnChainBalances'
@@ -9,11 +11,13 @@ import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import type { MockedFunction } from 'vitest'
 
 vi.mock('uniswap/src/data/apiClients/tradingApi/useTradingApiIndicativeQuoteQuery', () => ({
-  fetchTradingApiIndicativeQuote: vi.fn().mockResolvedValue({
-    output: {
-      token: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
-      chainId: 8453,
-      amount: '99750',
+  fetchTradingApiIndicativeQuoteIgnoring404: vi.fn().mockResolvedValue({
+    quote: {
+      output: {
+        token: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
+        chainId: 8453,
+        amount: '99750',
+      },
     },
   }),
 }))
@@ -22,8 +26,9 @@ vi.mock('uniswap/src/features/portfolio/api', () => ({
   fetchOnChainCurrencyBalance: vi.fn(),
 }))
 
-vi.mock('uniswap/src/data/rest/searchTokensAndPools', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('uniswap/src/data/rest/searchTokensAndPools')>()
+vi.mock('uniswap/src/data/apiClients/dataApiService/search/searchTokensAndPools', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('uniswap/src/data/apiClients/dataApiService/search/searchTokensAndPools')>()
   return {
     ...actual,
     fetchTokenByAddress: vi.fn(),
@@ -31,6 +36,9 @@ vi.mock('uniswap/src/data/rest/searchTokensAndPools', async (importOriginal) => 
 })
 
 const mockGetOnChainBalancesFetch = fetchOnChainCurrencyBalance as MockedFunction<typeof fetchOnChainCurrencyBalance>
+const mockFetchIndicativeQuote = fetchTradingApiIndicativeQuoteIgnoring404 as MockedFunction<
+  typeof fetchTradingApiIndicativeQuoteIgnoring404
+>
 
 const mockFetchTokenByAddress = searchTokensAndPools.fetchTokenByAddress as MockedFunction<
   typeof searchTokensAndPools.fetchTokenByAddress
@@ -113,6 +121,39 @@ describe('fetchOnChainBalancesRest', () => {
     expect(onchainBalance?.amount?.amount).toBe(1)
     expect(onchainBalance?.token?.address).toBe(TEST_TOKEN_ADDRESS)
     expect(onchainBalance?.token?.chainId).toBe(TEST_CHAIN_ID)
+  })
+
+  it('skips balances that cannot be converted to a currency amount', async () => {
+    const currencyId = buildCurrencyId(TEST_CHAIN_ID, TEST_TOKEN_ADDRESS)
+
+    mockGetOnChainBalancesFetch.mockResolvedValueOnce({
+      balance: undefined,
+    })
+
+    const result = await fetchOnChainBalances({
+      cachedPortfolio: mockCachedPortfolio,
+      accountAddress: TEST_ACCOUNT,
+      currencyIds: new Set([currencyId]),
+    })
+
+    expect(result.has(currencyId)).toBe(false)
+  })
+
+  it('skips balances whose numeric amount is not finite', async () => {
+    const currencyId = buildCurrencyId(TEST_CHAIN_ID, TEST_TOKEN_ADDRESS)
+    const rawBalanceThatOverflowsNumber = `1${'0'.repeat(400)}`
+
+    mockGetOnChainBalancesFetch.mockResolvedValueOnce({
+      balance: rawBalanceThatOverflowsNumber,
+    })
+
+    const result = await fetchOnChainBalances({
+      cachedPortfolio: mockCachedPortfolio,
+      accountAddress: TEST_ACCOUNT,
+      currencyIds: new Set([currencyId]),
+    })
+
+    expect(result.has(currencyId)).toBe(false)
   })
 
   it('handles native currency correctly', async () => {
@@ -211,6 +252,74 @@ describe('fetchOnChainBalancesRest', () => {
     expect(balanceInfo?.amount?.amount).toBe(3)
     expect(balanceInfo?.token?.address).toBe(MOCK_TOKEN_ADDRESS_2)
     expect(balanceInfo?.token?.symbol).toBe('NEW')
+  })
+
+  it('preserves a new token balance when the indicative quote omits quote data', async () => {
+    const currencyId = buildCurrencyId(TEST_CHAIN_ID, MOCK_TOKEN_ADDRESS_2)
+
+    mockGetOnChainBalancesFetch.mockResolvedValueOnce({
+      balance: MOCK_BALANCE_3_ETH,
+    })
+    mockFetchTokenByAddress.mockResolvedValueOnce({
+      chainId: TEST_CHAIN_ID,
+      address: MOCK_TOKEN_ADDRESS_2,
+      symbol: 'NEW',
+      name: 'New Token',
+      decimals: 18,
+      logoUrl: '',
+      feeData: undefined,
+      safetyLevel: 0,
+      protectionInfo: undefined,
+    } as unknown as SearchToken)
+    mockFetchIndicativeQuote.mockResolvedValueOnce(
+      {} as NonNullable<Awaited<ReturnType<typeof fetchTradingApiIndicativeQuoteIgnoring404>>>,
+    )
+
+    const result = await fetchOnChainBalances({
+      cachedPortfolio: mockCachedPortfolio,
+      accountAddress: TEST_ACCOUNT,
+      currencyIds: new Set([currencyId]),
+    })
+
+    expect(result.get(currencyId)?.amount?.amount).toBe(3)
+    expect(result.get(currencyId)?.valueUsd).toBeUndefined()
+  })
+
+  it('preserves a new token balance when USD valuation throws', async () => {
+    const currencyId = buildCurrencyId(TEST_CHAIN_ID, MOCK_TOKEN_ADDRESS_2)
+    const malformedQuoteResponse = {}
+    Object.defineProperty(malformedQuoteResponse, 'quote', {
+      get: (): never => {
+        throw new Error('Malformed quote response')
+      },
+    })
+
+    mockGetOnChainBalancesFetch.mockResolvedValueOnce({
+      balance: MOCK_BALANCE_3_ETH,
+    })
+    mockFetchTokenByAddress.mockResolvedValueOnce({
+      chainId: TEST_CHAIN_ID,
+      address: MOCK_TOKEN_ADDRESS_2,
+      symbol: 'NEW',
+      name: 'New Token',
+      decimals: 18,
+      logoUrl: '',
+      feeData: undefined,
+      safetyLevel: 0,
+      protectionInfo: undefined,
+    } as unknown as SearchToken)
+    mockFetchIndicativeQuote.mockResolvedValueOnce(
+      malformedQuoteResponse as NonNullable<Awaited<ReturnType<typeof fetchTradingApiIndicativeQuoteIgnoring404>>>,
+    )
+
+    const result = await fetchOnChainBalances({
+      cachedPortfolio: mockCachedPortfolio,
+      accountAddress: TEST_ACCOUNT,
+      currencyIds: new Set([currencyId]),
+    })
+
+    expect(result.get(currencyId)?.amount?.amount).toBe(3)
+    expect(result.get(currencyId)?.valueUsd).toBeUndefined()
   })
 
   it('skips tokens when REST token search fails', async () => {
@@ -323,4 +432,55 @@ describe('fetchOnChainBalancesRest', () => {
     const balanceInfo = result.get(currencyId)
     expect(balanceInfo?.valueUsd).toBe(200) // 2 tokens * ($100 / 1 token) = $200
   })
+
+  it('omits explicitly undefined optional fields from fetched balances', async () => {
+    const currencyId = buildCurrencyId(TEST_CHAIN_ID, TEST_TOKEN_ADDRESS)
+    const cachedPortfolioWithoutOptionalTokenFields = {
+      balances: [
+        {
+          token: {
+            chainId: TEST_CHAIN_ID,
+            address: TEST_TOKEN_ADDRESS,
+            decimals: 18,
+          },
+          amount: {
+            amount: 1,
+            raw: MOCK_BALANCE_1_ETH,
+          },
+        },
+      ],
+    } as NonNullable<GetPortfolioResponse['portfolio']>
+
+    mockGetOnChainBalancesFetch.mockResolvedValueOnce({
+      balance: MOCK_BALANCE_1_ETH,
+    })
+
+    const snapshot = (
+      await fetchOnChainBalances({
+        cachedPortfolio: cachedPortfolioWithoutOptionalTokenFields,
+        accountAddress: TEST_ACCOUNT,
+        currencyIds: new Set([currencyId]),
+      })
+    ).get(currencyId)
+
+    expect(snapshot).toBeDefined()
+    expect(snapshot?.token).not.toHaveProperty('symbol')
+    expect(snapshot?.token).not.toHaveProperty('name')
+    expectNoExplicitUndefinedValues(snapshot)
+    expect(isEqual(snapshot, JSON.parse(JSON.stringify(snapshot)))).toBe(true)
+  })
 })
+
+function expectNoExplicitUndefinedValues(value: unknown): void {
+  if (Array.isArray(value)) {
+    value.forEach(expectNoExplicitUndefinedValues)
+    return
+  }
+
+  if (value && typeof value === 'object') {
+    Object.values(value).forEach((nestedValue) => {
+      expect(nestedValue).not.toBeUndefined()
+      expectNoExplicitUndefinedValues(nestedValue)
+    })
+  }
+}

@@ -1,8 +1,9 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useTranslation } from 'react-i18next'
+import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { useShowGetStarted } from 'uniswap/src/contexts/ShowGetStartedContext'
 import { useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
-import { useShowGetStarted } from 'uniswap/src/features/passkey/ShowGetStartedContext'
 import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { useIsWebFORNudgeEnabled } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
@@ -42,6 +43,12 @@ export const useSwapFormButtonText = (): string => {
   const isIndicative = useIsTradeIndicative()
   const isWebFORNudgeEnabled = useIsWebFORNudgeEnabled()
   const isWrap = wrapType !== WrapType.NotApplicable
+
+  // Permissioned-pool gating runs before the generic swapRedirectCallback path so the
+  // button reads "Verify identity" instead of the default "Get started" copy.
+  if (blockingWarning?.type === WarningLabel.PermissionedPool) {
+    return t('permissionedPool.verifyIdentity.cta')
+  }
 
   if (swapRedirectCallback) {
     return t('common.getStarted')

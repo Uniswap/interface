@@ -61,11 +61,13 @@ interface ComputeCurrentValuationFiatFormattedParams {
   clearingPriceQ96: string
   launchBidTokenPriceUsdRaw: string | undefined
   bidTokenInfo: BidTokenInfo | undefined
-  auctionTokenMarketPriceUsd: number | undefined
   bidTokenMarketPriceUsd: number | undefined
   convertFiatAmountFormatted: (fromAmount: string | number | null | undefined, numberType: FiatNumberType) => string
 }
 
+// Ended auctions stay on the launch valuation basis (see computeCompletedAuctionValuationFiat),
+// falling back to the current bid token price on that same valuation, so the fiat line can never
+// contradict the bid-token line (LP-821).
 export function computeCurrentValuationUsd({
   totalSupplyRaw,
   auctionProgressState,
@@ -73,7 +75,6 @@ export function computeCurrentValuationUsd({
   clearingPriceQ96,
   launchBidTokenPriceUsdRaw,
   bidTokenInfo,
-  auctionTokenMarketPriceUsd,
   bidTokenMarketPriceUsd,
 }: Omit<ComputeCurrentValuationFiatFormattedParams, 'convertFiatAmountFormatted'>): number | undefined {
   if (!totalSupplyRaw || totalSupplyRaw === '0' || auctionTokenDecimals === undefined) {
@@ -89,7 +90,6 @@ export function computeCurrentValuationUsd({
       clearingPriceQ96,
       launchBidTokenPriceUsd,
       bidTokenInfo,
-      auctionTokenMarketPriceUsd,
     })
     if (completedAuctionValuation !== undefined) {
       return completedAuctionValuation

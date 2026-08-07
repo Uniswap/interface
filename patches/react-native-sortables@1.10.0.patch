@@ -1,0 +1,694 @@
+diff --git a/src/providers/grid/GridLayoutProvider/updates/common.ts b/src/providers/grid/GridLayoutProvider/updates/common.ts
+index cc536ec6b519e31407c2736b7deb3aca674bc941..266c632e0bee888e39a46dc30aaade218ababc8f 100644
+--- a/src/providers/grid/GridLayoutProvider/updates/common.ts
++++ b/src/providers/grid/GridLayoutProvider/updates/common.ts
+@@ -82,6 +82,8 @@ export const createGridStrategy =
+         mainContainerSize.value === null ||
+         mainGroupSize.value === null
+       ) {
++        // Already diagnosed: this bails because othersLayout is null. The
++        // `calcLayout NULL` logs say why; don't flood the console from here.
+         return;
+       }
+ 
+diff --git a/src/providers/grid/GridLayoutProvider/utils/layout.ts b/src/providers/grid/GridLayoutProvider/utils/layout.ts
+index cd5ed659c7971a68d8af79aebbfba03f5707d2fa..fed3c6960e955d5531985e703d8588ce28db969a 100644
+--- a/src/providers/grid/GridLayoutProvider/utils/layout.ts
++++ b/src/providers/grid/GridLayoutProvider/utils/layout.ts
+@@ -45,14 +45,24 @@ export const calculateLayout = ({
+     crossItemSizes = itemWidths;
+   }
+ 
+-  for (const [itemIndex, itemKey] of indexToKey.entries()) {
+-    const crossItemSize = resolveDimension(crossItemSizes, itemKey);
+-
+-    // Return null if the item is not yet measured or the item main size
+-    // is different than the main group size (main size must be always the same)
+-    if (crossItemSize === null) {
+-      return null;
++  // A single missing measurement must not null out the whole layout — that
++  // freezes reordering for every item (othersLayout becomes null while dragging).
++  let fallbackCrossSize = 0;
++  for (const itemKey of indexToKey) {
++    const size = resolveDimension(crossItemSizes, itemKey);
++    if (size !== null) {
++      fallbackCrossSize = Math.max(fallbackCrossSize, size);
+     }
++  }
++  // An empty list is a valid (empty) layout — bailing here returned null for
++  // `0 === 0` and killed `othersLayout` whenever no item was inactive.
++  if (indexToKey.length > 0 && fallbackCrossSize === 0) {
++    return null;
++  }
++
++  for (const [itemIndex, itemKey] of indexToKey.entries()) {
++    const crossItemSize =
++      resolveDimension(crossItemSizes, itemKey) ?? fallbackCrossSize;
+ 
+     const mainIndex = getMainIndex(itemIndex, numGroups);
+     const crossIndex = getCrossIndex(itemIndex, numGroups);
+diff --git a/src/providers/shared/DragProvider.ts b/src/providers/shared/DragProvider.ts
+index 3dbaf7df5b47b6598a54ad78a434a6a9cbfdf91c..3a4a12e1e3111c6a2997d7095f6f05aa443824f9 100644
+--- a/src/providers/shared/DragProvider.ts
++++ b/src/providers/shared/DragProvider.ts
+@@ -5,6 +5,7 @@ import type {
+ } from 'react-native-gesture-handler';
+ import type { SharedValue } from 'react-native-reanimated';
+ import {
++  cancelAnimation,
+   clamp,
+   interpolate,
+   useAnimatedReaction,
+@@ -29,7 +30,7 @@ import { DragActivationState, LayerState } from '../../types';
+ import {
+   areVectorsDifferent,
+   calculateSnapOffset,
+-  getItemDimensions,
++  getItemDimensionsWithFallback,
+   getKeyToIndex
+ } from '../../utils';
+ import { createProvider } from '../utils';
+@@ -46,6 +47,7 @@ type StateContextType = {
+   dragStartTouchPosition: null | Vector;
+   dragStartIndex: number;
+   activationTimeoutId: number;
++  dropSettleTime: number;
+ };
+ 
+ const INITIAL_STATE: StateContextType = {
+@@ -53,9 +55,14 @@ const INITIAL_STATE: StateContextType = {
+   dragStartIndex: -1,
+   dragStartItemTouchOffset: null,
+   dragStartTouchPosition: null,
++  dropSettleTime: 0,
+   touchStartTouch: null
+ };
+ 
++// Extra quiet time after the drop animation ends so no touch is in flight while
++// Fabric finishes residual layout work from the drop.
++const DROP_SETTLE_BUFFER = 150;
++
+ type DragProviderProps = PropsWithChildren<
+   Required<SortableCallbacks> & {
+     hapticsEnabled: boolean;
+@@ -96,11 +103,13 @@ const { DragProvider, useDragContext } = createProvider('Drag')<
+     inactiveItemOpacity,
+     inactiveItemScale,
+     indexToKey,
++    itemCurrentPositions,
+     itemHeights,
+     itemLayoutPositions,
+     itemWidths,
+     keyToIndex,
+     prevActiveItemKey,
++    shouldAnimateLayout,
+     snapOffsetX,
+     snapOffsetY,
+     sortEnabled,
+@@ -387,6 +396,8 @@ const { DragProvider, useDragContext } = createProvider('Drag')<
+     ) => {
+       'worklet';
+       const touch = e.allTouches[0];
++      const ctx = context.value;
++
+       if (
+         !touch ||
+         // Sorting is disabled
+@@ -394,29 +405,45 @@ const { DragProvider, useDragContext } = createProvider('Drag')<
+         // Absolute layout is not applied yet
+         !usesAbsoluteLayout.value ||
+         // Another item is already being touched/activated
+-        activationAnimationProgress.value > 0 ||
+         activeItemKey.value !== null
+       ) {
+         fail();
+         return;
+       }
+ 
+-      const ctx = context.value;
+       ctx.touchStartTouch = touch;
+       currentTouch.value = touch;
+       activationState.value = DragActivationState.TOUCHED;
+ 
+       clearAnimatedTimeout(ctx.activationTimeoutId);
+ 
++      // Activating while the previous drop is still settling races with Fabric's
++      // residual layout work from that drop. Wait the rest of that window out
++      // instead of rejecting the touch: `fail()` here swallowed the long-press
++      // whenever the next drag started within ~450ms of a drop, which read as
++      // "this one tile is dead" until the window happened to expire. A deadline
++      // (not a flag) means this can never stay stuck closed.
++      const dropCooldown = Math.max(0, ctx.dropSettleTime - Date.now());
++
+       // Start handling touch after a delay to prevent accidental activation
+       // e.g. while scrolling the ScrollView
+       ctx.activationTimeoutId = setAnimatedTimeout(() => {
+-        if (!usesAbsoluteLayout.value) {
++        // Only ever bail out silently from here. This runs outside a gesture
++        // event, where `GestureStateManager.fail` breaks the item's native
++        // handler and that tile stops recognising long-press for good.
++
++        if (
++          // The touch ended (or was cancelled) while we waited out the cooldown
++          activationState.value !== DragActivationState.TOUCHED ||
++          // Sorting was disabled in the meantime
++          !sortEnabled.value ||
++          !usesAbsoluteLayout.value
++        ) {
+           return;
+         }
+ 
+         const itemPosition = itemLayoutPositions.value[key];
+-        const itemDimensions = getItemDimensions(
++        const itemDimensions = getItemDimensionsWithFallback(
+           key,
+           itemWidths.value,
+           itemHeights.value
+@@ -434,7 +461,7 @@ const { DragProvider, useDragContext } = createProvider('Drag')<
+           activationAnimationProgress
+         );
+         activate();
+-      }, dragActivationDelay.value);
++      }, dragActivationDelay.value + dropCooldown);
+     },
+     [
+       activeItemKey,
+@@ -443,6 +470,7 @@ const { DragProvider, useDragContext } = createProvider('Drag')<
+       currentTouch,
+       dragActivationDelay,
+       handleDragStart,
++      indexToKey,
+       itemHeights,
+       itemWidths,
+       itemLayoutPositions,
+@@ -548,6 +576,8 @@ const { DragProvider, useDragContext } = createProvider('Drag')<
+       const dropDuration =
+         activeAnimationProgress.value * dropAnimationDuration.value;
+ 
++      ctx.dropSettleTime = Date.now() + dropDuration + DROP_SETTLE_BUFFER;
++
+       const animate = (callback?: (finished: boolean | undefined) => void) =>
+         withTiming(0, { duration: dropDuration }, callback);
+ 
+@@ -567,6 +597,29 @@ const { DragProvider, useDragContext } = createProvider('Drag')<
+       });
+ 
+       setAnimatedTimeout(() => {
++        // Fabric can leave timing values / item positions mid-animation after a
++        // drop. That desyncs hit-testing (especially the odd tile in an
++        // incomplete last row) and can wedge activation/reorder. Snap *every*
++        // item to its layout slot instead of remounting the React tree.
++        cancelAnimation(activationAnimationProgress);
++        cancelAnimation(activeAnimationProgress);
++        cancelAnimation(inactiveAnimationProgress);
++        activationAnimationProgress.value = 0;
++        activeAnimationProgress.value = 0;
++        inactiveAnimationProgress.value = 0;
++
++        shouldAnimateLayout.value = false;
++        for (const itemKey of indexToKey.value) {
++          const currentPosition = itemCurrentPositions.value[itemKey];
++          const layoutPosition = itemLayoutPositions.value[itemKey];
++          if (currentPosition && layoutPosition) {
++            cancelAnimation(currentPosition);
++            currentPosition.value = layoutPosition;
++          }
++        }
++        shouldAnimateLayout.value = true;
++
++        prevActiveItemKey.value = null;
+         activeItemDropped.value = true;
+         updateLayer?.(LayerState.IDLE);
+         onActiveItemDropped({
+@@ -593,10 +646,13 @@ const { DragProvider, useDragContext } = createProvider('Drag')<
+       haptics,
+       inactiveAnimationProgress,
+       indexToKey,
++      itemCurrentPositions,
++      itemLayoutPositions,
+       keyToIndex,
+       multiZoneActiveItemDimensions,
+       onActiveItemDropped,
+       stableOnDragEnd,
++      shouldAnimateLayout,
+       touchPosition,
+       updateLayer,
+       activeHandleMeasurements
+diff --git a/src/providers/shared/ItemsProvider/store.test.ts b/src/providers/shared/ItemsProvider/store.test.ts
+index fb22668da1bcd6c747803e2cdf4f18ce5121834d..76f86f2a70ed3d5342fd377297f2b532671c1bc6 100644
+--- a/src/providers/shared/ItemsProvider/store.test.ts
++++ b/src/providers/shared/ItemsProvider/store.test.ts
+@@ -54,4 +54,41 @@ describe('createItemsStore', () => {
+     expect(notified).toBe(0);
+     expect(store.getNode('a')).toBe('N:Item a');
+   });
++
++  it('does not re-render nodes when only item order changes', () => {
++    const renderer = asRenderItem(({ item }) => `N:${item}`);
++    const store = createItemsStore(
++      [
++        ['a', 'Item a'],
++        ['b', 'Item b']
++      ],
++      renderer
++    );
++
++    const nodeA = store.getNode('a');
++    const nodeB = store.getNode('b');
++
++    let notifiedA = 0;
++    let notifiedB = 0;
++    store.subscribeItem('a', () => {
++      notifiedA += 1;
++    });
++    store.subscribeItem('b', () => {
++      notifiedB += 1;
++    });
++
++    store.update(
++      [
++        ['b', 'Item b'],
++        ['a', 'Item a']
++      ],
++      renderer
++    );
++
++    expect(notifiedA).toBe(0);
++    expect(notifiedB).toBe(0);
++    expect(store.getNode('a')).toBe(nodeA);
++    expect(store.getNode('b')).toBe(nodeB);
++    expect(store.getKeys()).toEqual(['b', 'a']);
++  });
+ });
+diff --git a/src/providers/shared/ItemsProvider/store.ts b/src/providers/shared/ItemsProvider/store.ts
+index f405e5498d308354f291adee412b1503e30d2249..32fbb283dcfc42aff06dbfcf79f21c674acc5644 100644
+--- a/src/providers/shared/ItemsProvider/store.ts
++++ b/src/providers/shared/ItemsProvider/store.ts
+@@ -78,10 +78,16 @@ export function createItemsStore<I>(
+ 
+     entries.forEach(([k, item], index) => {
+       const prev = meta.get(k);
+-      const changed =
+-        rendererChanged || !prev || prev.item !== item || prev.index !== index;
+ 
+-      if (!changed) return;
++      // Reorder-only updates must not recreate React nodes. Doing so remounts
++      // item content (and its queries) on every drop, which on Fabric races the
++      // absolute-layout settle and eventually wedges a tile.
++      if (prev && !rendererChanged && prev.item === item) {
++        if (prev.index !== index) {
++          meta.set(k, { index, item });
++        }
++        return;
++      }
+ 
+       const info = { index, item };
+       meta.set(k, info);
+diff --git a/src/providers/shared/LayerProvider.tsx b/src/providers/shared/LayerProvider.tsx
+index 2d70f2fe2af52d0e1041823e4b694f1e2a98b54c..d7088bb716756fe11ff9d6134670042155a1f19f 100644
+--- a/src/providers/shared/LayerProvider.tsx
++++ b/src/providers/shared/LayerProvider.tsx
+@@ -12,19 +12,14 @@ type LayerProviderProps = PropsWithChildren<{
+ const { LayerProvider, useLayerContext } = createProvider('Layer', {
+   guarded: false
+ })<LayerProviderProps, LayerContextType>(({ children, disabled }) => {
+-  const { updateLayer: updateParentLayer } = (useLayerContext() ??
+-    {}) as Partial<LayerContextType>;
+-
+   const zIndex = useMutableValue(0);
+ 
+-  const updateLayer = useCallback(
+-    (state: LayerState) => {
+-      'worklet';
+-      zIndex.value = state;
+-      updateParentLayer?.(state);
+-    },
+-    [zIndex, updateParentLayer]
+-  );
++  const updateLayer = useCallback((_state: LayerState) => {
++    'worklet';
++    // No-op on Fabric: flipping the container zIndex (FOCUSED → IDLE) reorders
++    // sibling subviews and cancels the next touch. Leaving zIndex at 0 avoids
++    // both the cancel and any worklet capture of the LayerState enum.
++  }, []);
+ 
+   const animatedStyle = useAnimatedStyle(() => ({
+     zIndex: disabled ? 0 : zIndex.value
+diff --git a/src/providers/shared/MeasurementsProvider.ts b/src/providers/shared/MeasurementsProvider.ts
+index 522502c01aabfa70021c377376ecf31af28ea6aa..a27243f7c33e78b021341f48073c16c0d921d91c 100644
+--- a/src/providers/shared/MeasurementsProvider.ts
++++ b/src/providers/shared/MeasurementsProvider.ts
+@@ -1,4 +1,4 @@
+-import { useCallback, useRef } from 'react';
++import { useCallback } from 'react';
+ import type { SharedValue } from 'react-native-reanimated';
+ import { runOnUI } from 'react-native-reanimated';
+ 
+@@ -32,7 +32,8 @@ type MeasurementsProviderProps = {
+ const { MeasurementsProvider, useMeasurementsContext } = createProvider(
+   'Measurements'
+ )<MeasurementsProviderProps, MeasurementsContextType>(({
+-  measureDebounceDelay
++  // Kept for API compat with upstream provider props; flush is immediate now.
++  measureDebounceDelay: _measureDebounceDelay
+ }) => {
+   const {
+     activeItemDimensions,
+@@ -50,39 +51,16 @@ const { MeasurementsProvider, useMeasurementsContext } = createProvider(
+   const { getKeys } = useItemsContext();
+ 
+   const context = useMutableValue<null | StateContextType>(null);
+-  const previousItemDimensionsRef = useRef<Record<string, Dimensions>>({});
+   const debounce = useAnimatedDebounce();
+ 
+   const handleItemMeasurement = useStableCallback(
+     (key: string, dimensions: Dimensions) => {
+-      const prevDimensions = previousItemDimensionsRef.current[key];
+-
+       const { height: isHeightControlled, width: isWidthControlled } =
+         controlledItemDimensions;
+       if (isWidthControlled && isHeightControlled) {
+         return;
+       }
+ 
+-      const changedDimensions: Partial<Dimensions> = {};
+-
+-      if (
+-        !isWidthControlled &&
+-        areValuesDifferent(prevDimensions?.width, dimensions.width, 1)
+-      ) {
+-        changedDimensions.width = dimensions.width;
+-      }
+-      if (
+-        !isHeightControlled &&
+-        areValuesDifferent(prevDimensions?.height, dimensions.height, 1)
+-      ) {
+-        changedDimensions.height = dimensions.height;
+-      }
+-
+-      if (!Object.keys(changedDimensions).length) {
+-        return;
+-      }
+-
+-      previousItemDimensionsRef.current[key] = dimensions;
+       const itemsCount = getKeys().length;
+ 
+       runOnUI(() => {
+@@ -93,17 +71,6 @@ const { MeasurementsProvider, useMeasurementsContext } = createProvider(
+ 
+         const ctx = context.value;
+ 
+-        const isNewItem =
+-          !ctx.measuredItemKeys.has(key) &&
+-          (resolveDimension(itemWidths.value, key) === null ||
+-            resolveDimension(itemHeights.value, key) === null);
+-
+-        if (isNewItem) {
+-          ctx.measuredItemKeys.add(key);
+-        }
+-
+-        ctx.queuedMeasurements.set(key, dimensions);
+-
+         if (activeItemKey.value === key) {
+           activeItemDimensions.value = dimensions;
+           if (multiZoneActiveItemDimensions) {
+@@ -111,53 +78,71 @@ const { MeasurementsProvider, useMeasurementsContext } = createProvider(
+           }
+         }
+ 
+-        // Update the array of item dimensions only after all items have been
+-        // measured to reduce the number of times animated reactions are triggered
+-        if (ctx.measuredItemKeys.size !== itemsCount) {
++        const currentWidth = resolveDimension(itemWidths.value, key);
++        const currentHeight = resolveDimension(itemHeights.value, key);
++
++        // Diff against the sizes the grid actually lays out with, not against a
++        // JS-side cache of the last measurement. That cache goes stale the
++        // moment sizes are dropped from the shared values (item unmount, data
++        // change), and an unchanged re-measure was then skipped forever —
++        // leaving a key in `indexToKey` with no size, which can neither be
++        // lifted nor reordered.
++        const widthChanged =
++          !isWidthControlled &&
++          areValuesDifferent(currentWidth ?? undefined, dimensions.width, 1);
++        const heightChanged =
++          !isHeightControlled &&
++          areValuesDifferent(currentHeight ?? undefined, dimensions.height, 1);
++
++        if (!widthChanged && !heightChanged) {
+           return;
+         }
+ 
+-        const updateDimensions = () => {
+-          const updateDimension = (
+-            dimension: Dimension,
+-            sizes: SharedValue<ItemSizes>
+-          ) => {
+-            const newSizes = { ...(sizes.value as Record<string, number>) };
+-            for (const [k, dims] of ctx.queuedMeasurements.entries()) {
+-              newSizes[k] = dims[dimension];
+-            }
+-            sizes.value = newSizes;
+-          };
+-
+-          if (!isWidthControlled) {
+-            updateDimension('width', itemWidths);
+-          }
+-          if (!isHeightControlled) {
+-            updateDimension('height', itemHeights);
+-          }
++        if (
++          !ctx.measuredItemKeys.has(key) &&
++          (currentWidth === null || currentHeight === null)
++        ) {
++          ctx.measuredItemKeys.add(key);
++        }
+ 
+-          ctx.queuedMeasurements.clear();
+-          debounce.cancel();
++        ctx.queuedMeasurements.set(key, dimensions);
++
++        // Wait until every item has been seen at least once, but never gate on
++        // exact equality — `measuredItemKeys` can drift above `itemsCount` and
++        // a strict `!==` made that terminal (no flush ever again).
++        if (ctx.measuredItemKeys.size < itemsCount) {
++          return;
++        }
++
++        // Always flush immediately. Upstream debounce re-arms on every
++        // measurement; Fabric + live-updating children starve it forever, so
++        // the grid keeps working off stale sizes and reordering dies.
++        const updateDimension = (
++          dimension: Dimension,
++          sizes: SharedValue<ItemSizes>
++        ) => {
++          const newSizes = { ...(sizes.value as Record<string, number>) };
++          for (const [k, dims] of ctx.queuedMeasurements.entries()) {
++            newSizes[k] = dims[dimension];
++          }
++          sizes.value = newSizes;
+         };
+ 
+-        if (isNewItem || ctx.queuedMeasurements.size === itemsCount) {
+-          // Update dimensions immediately to avoid unnecessary delays when:
+-          // - measurements were triggered because of adding new items and all new items have been measured
+-          // - all sortable container items' dimensions have changed (e.g. when someone creates collapsible
+-          //   items which change their height when the user starts dragging them)
+-          updateDimensions();
+-        } else {
+-          // In all other cases, debounce the update to reduce the number of
+-          // updates when dimensions change many times within a short period of time
+-          debounce.schedule(updateDimensions, measureDebounceDelay);
++        if (!isWidthControlled) {
++          updateDimension('width', itemWidths);
+         }
++        if (!isHeightControlled) {
++          updateDimension('height', itemHeights);
++        }
++
++        ctx.queuedMeasurements.clear();
++        debounce.cancel();
+       })();
+     }
+   );
+ 
+   const removeItemMeasurements = useCallback(
+     (key: string) => {
+-      delete previousItemDimensionsRef.current[key];
+       const { height: isHeightControlled, width: isWidthControlled } =
+         controlledItemDimensions;
+       if (isWidthControlled && isHeightControlled) {
+@@ -165,13 +150,21 @@ const { MeasurementsProvider, useMeasurementsContext } = createProvider(
+       }
+ 
+       runOnUI(() => {
++        // Reassign instead of deleting in place: mutating the object behind a
++        // shared value does not re-run the animated reactions that derive the
++        // layout from it, so the grid would keep laying out a removed key.
+         if (itemWidths.value && typeof itemWidths.value === 'object') {
+-          delete itemWidths.value[key];
++          const next = { ...itemWidths.value };
++          delete next[key];
++          itemWidths.value = next;
+         }
+         if (itemHeights.value && typeof itemHeights.value === 'object') {
+-          delete itemHeights.value[key];
++          const next = { ...itemHeights.value };
++          delete next[key];
++          itemHeights.value = next;
+         }
+         context.value?.measuredItemKeys.delete(key);
++        context.value?.queuedMeasurements.delete(key);
+       })();
+     },
+     [controlledItemDimensions, itemHeights, itemWidths, context]
+@@ -223,7 +216,6 @@ const { MeasurementsProvider, useMeasurementsContext } = createProvider(
+   );
+ 
+   const resetMeasurements = useCallback(() => {
+-    previousItemDimensionsRef.current = {};
+     runOnUI(() => {
+       context.value = null;
+       if (typeof itemWidths.value === 'object') {
+diff --git a/src/providers/shared/hooks/useItemLayout.ts b/src/providers/shared/hooks/useItemLayout.ts
+index 6d2f9f1d3a658ed853fc5396d82d88d38165c0f2..8a7fd511b5db9ba20f58c72990223b748957d754 100644
+--- a/src/providers/shared/hooks/useItemLayout.ts
++++ b/src/providers/shared/hooks/useItemLayout.ts
+@@ -11,11 +11,7 @@ import {
+ } from 'react-native-reanimated';
+ 
+ import { HIDDEN_X_OFFSET, IS_WEB, isFabric } from '../../../constants';
+-import {
+-  interpolateVector,
+-  useAnimatedDebounce,
+-  useMutableValue
+-} from '../../../integrations/reanimated';
++import { interpolateVector, useMutableValue } from '../../../integrations/reanimated';
+ import type { Vector } from '../../../types';
+ import { areVectorsDifferent } from '../../../utils';
+ import { useCommonValuesContext } from '../CommonValuesProvider';
+@@ -91,16 +87,19 @@ function useItemLayoutFabric(
+ ): SharedValue<ViewStyle> {
+   const { activeItemDropped, usesAbsoluteLayout } = useCommonValuesContext();
+   const transformStartPosition = useMutableValue<null | Vector>(null);
+-  const debounce = useAnimatedDebounce();
+ 
+   useAnimatedReaction(
+     () => ({ current: position.value, dropped: activeItemDropped.value }),
+-    ({ current, dropped }) => {
+-      transformStartPosition.value ??= current;
+-      if (dropped) {
+-        debounce.schedule(() => {
+-          transformStartPosition.value = null;
+-        }, 50);
++    ({ current, dropped }, prev) => {
++      // As soon as a drop settles, abandon transforms so hit-testing uses the
++      // real left/top slot. Delayed clearing left stale layout frames that
++      // especially broke the odd tile in an incomplete last row.
++      if (dropped && prev && !prev.dropped) {
++        transformStartPosition.value = null;
++        return;
++      }
++      if (!dropped) {
++        transformStartPosition.value ??= current;
+       }
+     }
+   );
+diff --git a/src/providers/shared/hooks/useItemZIndex.ts b/src/providers/shared/hooks/useItemZIndex.ts
+index fc411a13be006ec7d8d90967287a5eb22c426646..a6f53cd04e6c26792bd3cdabb0ec45f0eef5d981 100644
+--- a/src/providers/shared/hooks/useItemZIndex.ts
++++ b/src/providers/shared/hooks/useItemZIndex.ts
+@@ -5,16 +5,15 @@ import { useCommonValuesContext } from '../CommonValuesProvider';
+ 
+ export default function useItemZIndex(
+   key: string,
+-  activationAnimationProgress: SharedValue<number>
++  _activationAnimationProgress: SharedValue<number>
+ ): SharedValue<number> {
+-  const {
+-    activeItemKey,
+-    indexToKey,
+-    isStackingOrderDesc,
+-    keyToIndex,
+-    prevActiveItemKey
+-  } = useCommonValuesContext();
++  const { activeItemKey, indexToKey, isStackingOrderDesc, keyToIndex } =
++    useCommonValuesContext();
+ 
++  // Only the active item is elevated. Upstream also elevates the dropping item
++  // (and every other item) while `activationAnimationProgress > 0`, which on
++  // Fabric reorders sibling subviews when progress hits 0 and cancels the next
++  // touch mid-activation.
+   return useDerivedValue<number>(() => {
+     const itemCount = indexToKey.value.length;
+ 
+@@ -23,18 +22,6 @@ export default function useItemZIndex(
+     }
+ 
+     const realIndex = keyToIndex.value[key] ?? 0;
+-    const orderZIndex = isStackingOrderDesc
+-      ? itemCount - realIndex - 1
+-      : realIndex;
+-
+-    if (activationAnimationProgress.value > 0) {
+-      if (prevActiveItemKey.value === key) {
+-        return 2 * itemCount;
+-      }
+-
+-      return itemCount + orderZIndex;
+-    }
+-
+-    return orderZIndex;
++    return isStackingOrderDesc ? itemCount - realIndex - 1 : realIndex;
+   });
+ }
+diff --git a/src/utils/dimensions.ts b/src/utils/dimensions.ts
+index 80fa9f4aad5c847ea34648bf1c382b612fd68f70..e25a43ea9e0c0a1d5ef176f4b9611fe5da913aa0 100644
+--- a/src/utils/dimensions.ts
++++ b/src/utils/dimensions.ts
+@@ -23,3 +23,45 @@ export const getItemDimensions = (
+ 
+   return { height: itemHeight, width: itemWidth };
+ };
++
++const resolveAnyDimension = (dimension: ItemSizes): null | number => {
++  'worklet';
++  if (!dimension) {
++    return null;
++  }
++  if (typeof dimension === 'number') {
++    return dimension;
++  }
++  let result: null | number = null;
++  for (const key in dimension) {
++    const size = dimension[key];
++    if (size !== undefined && (result === null || size > result)) {
++      result = size;
++    }
++  }
++  return result;
++};
++
++/**
++ * Like `getItemDimensions`, but substitutes a sibling's size for a missing
++ * measurement. Used on the drag activation path, where returning null means the
++ * item can never be lifted again — a much worse outcome than starting the drag
++ * with an approximate size that the next layout pass corrects.
++ */
++export const getItemDimensionsWithFallback = (
++  key: string,
++  itemWidths: ItemSizes,
++  itemHeights: ItemSizes
++): Dimensions | null => {
++  'worklet';
++  const itemWidth =
++    resolveDimension(itemWidths, key) ?? resolveAnyDimension(itemWidths);
++  const itemHeight =
++    resolveDimension(itemHeights, key) ?? resolveAnyDimension(itemHeights);
++
++  if (itemWidth === null || itemHeight === null) {
++    return null;
++  }
++
++  return { height: itemHeight, width: itemWidth };
++};

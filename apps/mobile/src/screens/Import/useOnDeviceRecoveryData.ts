@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
-import { useWalletBalancesIncludeCategories } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+import { useWalletBalancesIncludeCategories } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import {
   selectTotalsByRequestedAddress,
   toEvmWallets,
   useGetWalletsBalancesQuery,
-} from 'uniswap/src/data/rest/getWalletsBalances/getWalletsBalances'
+} from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletsBalances/getWalletsBalances'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useRestPortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances/useRestPortfolioValueModifier'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'

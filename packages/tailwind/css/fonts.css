@@ -8,8 +8,6 @@
   font-weight: 485;
   font-style: normal;
   font-display: swap;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
 }
 
 @font-face {
@@ -20,6 +18,4 @@
   font-weight: 535;
   font-style: normal;
   font-display: swap;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
 }

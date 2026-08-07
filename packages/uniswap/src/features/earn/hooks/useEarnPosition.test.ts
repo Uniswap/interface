@@ -6,12 +6,12 @@ import {
   EarnVault as DataApiEarnVault,
 } from '@uniswap/client-data-api/dist/data/v2/earn_pb'
 import React, { type PropsWithChildren } from 'react'
-import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EarnPositionStatus, useEarnPosition } from 'uniswap/src/features/earn/hooks/useEarnPosition'
 import { useOptimisticEarnPositionStore } from 'uniswap/src/features/earn/optimisticEarnPositions'
 import { EarnAction } from 'uniswap/src/features/earn/types'
 import { getEarnPositionInfo, getEarnVaultId } from 'uniswap/src/features/earn/utils'
+import { normalizeTokenAddressForCache } from 'uniswap/src/utils/currencyId'
 
 vi.mock('@tanstack/react-query', async () => {
   const actual = await vi.importActual<typeof import('@tanstack/react-query')>('@tanstack/react-query')

@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Flex } from 'ui/src'
-import { toHistoryDuration } from '~/appGraphql/data/util'
 import { ChartType } from '~/components/Charts/utils'
+import { toHistoryDuration } from '~/data/util'
 import { ChartControls } from '~/pages/TokenDetails/components/chart/ChartControls'
 import { getDisplayPriceChartType } from '~/pages/TokenDetails/components/chart/TDPChartState'
 import {
@@ -16,13 +16,13 @@ import { getTDPChartGraphqlTarget } from '~/pages/TokenDetails/hooks/getTDPChart
 import { useTDPMultichainAggregate } from '~/pages/TokenDetails/hooks/useTDPMultichainAggregate'
 
 function ChartSectionBody(): JSX.Element {
-  const { tokenColor, currency, tokenQueryData, pathGraphqlChain, pathTokenDbAddress, selectedMultichainChainId } =
+  const { tokenColor, currency, multichainToken, pathGraphqlChain, pathTokenDbAddress, selectedMultichainChainId } =
     useTDPStore((s) => ({
       tokenColor: s.tokenColor,
       currency: s.currency!,
-      tokenQueryData: s.tokenQuery.data?.token,
+      multichainToken: s.multichainToken,
       pathGraphqlChain: s.currencyChain,
-      pathTokenDbAddress: s.tokenQuery.variables?.address,
+      pathTokenDbAddress: s.pathTokenDbAddress,
       selectedMultichainChainId: s.selectedMultichainChainId,
     }))
 
@@ -32,11 +32,11 @@ function ChartSectionBody(): JSX.Element {
     () =>
       getTDPChartGraphqlTarget({
         selectedMultichainChainId,
-        tokenQueryData,
+        multichainToken,
         pathGraphqlChain,
         pathTokenDbAddress,
       }),
-    [pathGraphqlChain, pathTokenDbAddress, selectedMultichainChainId, tokenQueryData],
+    [pathGraphqlChain, pathTokenDbAddress, selectedMultichainChainId, multichainToken],
   )
 
   const { chartType, timePeriod, priceChartType, disableCandlestickUI, setDisableCandlestickUI } =

@@ -39,6 +39,7 @@ export type EarnVaultModalFlowHandlers = {
   onBackToWithdrawAmount: () => void
   onBuyWithCash: () => void
   onClose: () => void
+  onContinueDeposit: () => void
   onDeposit: () => void
   onReviewDeposit: (params: {
     amount: string

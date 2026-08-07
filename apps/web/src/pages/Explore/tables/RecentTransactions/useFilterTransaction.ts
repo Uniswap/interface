@@ -1,6 +1,6 @@
 import { GraphQLApi } from '@universe/api'
 import { useMemo } from 'react'
-import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
+import { normalizeTokenAddressForCache } from 'uniswap/src/utils/currencyId'
 import { normalizeTextInput } from 'utilities/src/primitives/string'
 import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
 

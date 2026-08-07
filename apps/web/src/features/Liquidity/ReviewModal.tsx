@@ -1,6 +1,7 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
-import { useMemo } from 'react'
+import { useGetPasskeyAuthStatus } from '@universe/embedded-wallet'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Separator, Text } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
@@ -15,7 +16,6 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
@@ -23,6 +23,7 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 import { DetailLineItem } from '~/components/DetailLineItem'
 import { ErrorCallout } from '~/components/ErrorCallout'
+import { LPGeoRestrictionBanner } from '~/components/GeoRestriction/LPGeoRestrictionBanner'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import { MouseoverTooltip } from '~/components/Tooltip'
 import { BaseQuoteFiatAmount } from '~/features/Liquidity/BaseQuoteFiatAmount'
@@ -35,6 +36,7 @@ import { useSelectedFeeBreakdown } from '~/features/Liquidity/hooks/useSelectedF
 import { LiquidityPositionInfoBadges } from '~/features/Liquidity/LiquidityPositionInfoBadges'
 import { LowLPSlippageWarning } from '~/features/Liquidity/LowLPSlippageWarning'
 import { PartialMigrationWarning } from '~/features/Liquidity/PartialMigrationWarning'
+import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
 import { getBaseAndQuoteCurrencies } from '~/features/Liquidity/utils/currency'
 import { getTickToPrice, getV4TickToPrice } from '~/features/Liquidity/utils/getTickToPrice'
 import { getTicksAtLimit } from '~/features/Liquidity/utils/priceRangeInfo'
@@ -155,6 +157,22 @@ export function ReviewModal({
   const token0CurrencyInfo = useCurrencyInfo(token0)
   const token1CurrencyInfo = useCurrencyInfo(token1)
   const chainId = token0?.chainId
+
+  // The signing-surface half of the gate, for both callers (create and migrate). Read here rather
+  // than threaded in from the form step on purpose: the form gate fails open while the compliance
+  // answer is in flight, so a user can press Continue and open this modal before the verdict lands.
+  // Re-reading inside the modal is what catches that window — a restriction resolving now kills the
+  // confirm under the user instead of leaving a live signable transaction.
+  const { isGeoRestricted, restrictedTokenSymbol, unavailableLabel } = useLPGeoRestriction({ token0, token1 })
+
+  // Guards both callers' submit handlers (`handleCreate`, migration's `handleConfirm`) at the
+  // boundary, so neither can dispatch a liquidity saga while the block is up.
+  const handleConfirm = useCallback(() => {
+    if (isGeoRestricted) {
+      return
+    }
+    onConfirm()
+  }, [isGeoRestricted, onConfirm])
 
   // Breakdown for the fee badge below the pair header, from the context's served protocol fee (existing
   // pool) or the curve (not-yet-created vanilla v4). Shared with the select step and edit summary.
@@ -351,8 +369,15 @@ export function ReviewModal({
               refundedAmounts={refundedAmounts}
               refundedAmountsUSDValue={{ TOKEN0: refundedToken0USD, TOKEN1: refundedToken1USD }}
             />
-            <ErrorCallout errorMessage={transactionError} onPress={refetch} />
-            <PoolOutOfSyncError />
+            {/* Owns the message when up: a dead confirm with no stated reason is the failure mode. */}
+            {isGeoRestricted ? (
+              <LPGeoRestrictionBanner tokenSymbol={restrictedTokenSymbol} />
+            ) : (
+              <>
+                <ErrorCallout errorMessage={transactionError} onPress={refetch} />
+                <PoolOutOfSyncError />
+              </>
+            )}
           </Flex>
         </Flex>
         {currentTransactionStep && steps.length > 1 ? (
@@ -391,12 +416,16 @@ export function ReviewModal({
               <Button
                 size="large"
                 variant="branded"
-                onPress={onConfirm}
-                disabled={isDisabled}
+                onPress={handleConfirm}
+                disabled={isDisabled || isGeoRestricted}
                 fill={false}
-                icon={needsPasskeySignin ? <Passkey size="$icon.24" color="$white" /> : undefined}
+                icon={needsPasskeySignin && !isGeoRestricted ? <Passkey size="$icon.24" color="$white" /> : undefined}
               >
-                {isSignedInWithPasskey && isSessionAuthenticated ? t('position.create.confirm') : confirmButtonText}
+                {isGeoRestricted
+                  ? unavailableLabel
+                  : isSignedInWithPasskey && isSessionAuthenticated
+                    ? t('position.create.confirm')
+                    : confirmButtonText}
               </Button>
             )}
           </>

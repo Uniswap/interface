@@ -5,7 +5,7 @@ import {
   GetAuctionActivityResponse,
 } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 import { useCallback, useEffect, useMemo } from 'react'
-import { AuctionServiceClient } from 'uniswap/src/data/rest/auctions/AuctionServiceClient'
+import { AuctionServiceClient } from 'uniswap/src/data/apiClients/dataApiService/auctions/AuctionServiceClient'
 import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'

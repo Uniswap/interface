@@ -112,6 +112,7 @@ describe(LogoWithTxStatus, () => {
         TransactionType.NFTMint,
         TransactionType.ClaimUni,
         TransactionType.LPIncentivesClaimRewards,
+        TransactionType.UniswapXCancel,
         TransactionType.Unknown,
       ]
       const transactionWithoutIcons = Object.values(TransactionType).filter(

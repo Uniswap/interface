@@ -35,10 +35,6 @@ vi.mock('~/features/Liquidity/utils/priceRangeInfo', () => ({
   getPriceRangeInfo: vi.fn(() => undefined),
 }))
 
-vi.mock('~/features/fees/useServedProtocolFees', () => ({
-  useServedProtocolFee: vi.fn(() => undefined),
-}))
-
 const HOOK_ADDRESS = '0x0000000000000000000000000000000000000001'
 
 function renderProvider({ tokenA }: { tokenA: Maybe<Currency> }) {

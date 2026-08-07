@@ -55,7 +55,7 @@ const CHART_DURATION_STALE_THRESHOLD_MAP: Record<
 > = {
   [ChartType.PRICE]: CONSTANT_STALENESS,
   [ChartType.VOLUME]: GRANULAR_STALENESS,
-  [ChartType.TVL]: CONSTANT_STALENESS,
+  [ChartType.TVL]: GRANULAR_STALENESS,
   // Liquidity chart does not have a time axis
   [ChartType.LIQUIDITY]: undefined,
   // Depth chart does not have a time axis

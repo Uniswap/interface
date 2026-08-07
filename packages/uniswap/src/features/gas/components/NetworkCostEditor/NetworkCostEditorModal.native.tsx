@@ -6,9 +6,11 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 export function NetworkCostEditorModal({ isOpen, ...editorProps }: NetworkCostEditorModalProps): JSX.Element {
   return (
     <Modal
+      enableBlurKeyboardOnGesture
       hideKeyboardOnDismiss
       hideKeyboardOnSwipeDown
       isModalOpen={isOpen}
+      keyboardBlurBehavior="restore"
       name={ModalName.NetworkCostEditor}
       onClose={editorProps.onCancel}
     >

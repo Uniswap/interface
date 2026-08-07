@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useReadContract } from 'wagmi'
 import { erc20Abi } from '~/chains'
-import { assume0xAddress } from '~/utils/wagmi'
+import { assume0xAddress } from '~/chains'
 
 interface UseTotalSupplyResult {
   totalSupply: CurrencyAmount<Token> | undefined

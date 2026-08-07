@@ -1,4 +1,17 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import {
+  authenticateWithPasskeyForWalletSignin,
+  EmailCodeStep,
+  EmailEntryStep,
+  EnterPinStep,
+  exportSeedPhraseWithRecovery,
+  NoWalletFoundStep,
+  OAuthLoadingStep,
+  RecoveringStep,
+  RecoveryLoginStep,
+  RecoveryStep,
+  useRecoveryFlow,
+} from '@universe/embedded-wallet'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
@@ -6,17 +19,7 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { getPrivyConfig } from 'src/features/passkey/PrivyProviderWrapper'
 import { useRecoveryPrivyAuth } from 'src/features/passkey/useRecoveryPrivyAuth'
 import { Flex, Text, TouchableArea } from 'ui/src'
-import { EmailCodeStep } from 'uniswap/src/components/passkey/recovery/steps/EmailCodeStep'
-import { EmailEntryStep } from 'uniswap/src/components/passkey/recovery/steps/EmailEntryStep'
-import { EnterPinStep } from 'uniswap/src/components/passkey/recovery/steps/EnterPinStep'
-import { NoWalletFoundStep } from 'uniswap/src/components/passkey/recovery/steps/NoWalletFoundStep'
-import { OAuthLoadingStep } from 'uniswap/src/components/passkey/recovery/steps/OAuthLoadingStep'
-import { RecoveringStep } from 'uniswap/src/components/passkey/recovery/steps/RecoveringStep'
-import { RecoveryLoginStep } from 'uniswap/src/components/passkey/recovery/steps/RecoveryLoginStep'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
-import { authenticateWithPasskeyForWalletSignin } from 'uniswap/src/features/passkey/embeddedWallet'
-import { exportSeedPhraseWithRecovery } from 'uniswap/src/features/passkey/hpkeExport'
-import { RecoveryStep, useRecoveryFlow } from 'uniswap/src/features/passkey/useRecoveryFlow'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { openUri } from 'uniswap/src/utils/linking'

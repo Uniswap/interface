@@ -187,20 +187,24 @@ exports[`SendReviewModal > should render input in fiat correctly 1`] = `
     </div>
   </div>
   <div
-    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignSelf-stretch"
+    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignSelf-stretch _gap-t-space-spa1360334076"
   >
-    <button
-      class="is_Button  t_group_item"
-      dd-action-name="Confirm send"
-      style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); border-top-left-radius: var(--t-radius-rounded20); border-top-right-radius: var(--t-radius-rounded20); border-bottom-right-radius: var(--t-radius-rounded20); border-bottom-left-radius: var(--t-radius-rounded20); gap: var(--t-space-spacing12); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1); transition: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+    <div
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row"
     >
-      <span
-        class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-larg101 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
-        line-height-disabled="false"
+      <button
+        class="is_Button  t_group_item"
+        dd-action-name="Confirm send"
+        style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); border-top-left-radius: var(--t-radius-rounded20); border-top-right-radius: var(--t-radius-rounded20); border-bottom-right-radius: var(--t-radius-rounded20); border-bottom-left-radius: var(--t-radius-rounded20); gap: var(--t-space-spacing12); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1); transition: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
       >
-        Confirm send
-      </span>
-    </button>
+        <span
+          class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-larg101 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
+          line-height-disabled="false"
+        >
+          Confirm send
+        </span>
+      </button>
+    </div>
   </div>
 </div>
 `;
@@ -392,20 +396,24 @@ exports[`SendReviewModal > should render input in token amount correctly 1`] = `
     </div>
   </div>
   <div
-    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignSelf-stretch"
+    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignSelf-stretch _gap-t-space-spa1360334076"
   >
-    <button
-      class="is_Button  t_group_item"
-      dd-action-name="Confirm send"
-      style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); border-top-left-radius: var(--t-radius-rounded20); border-top-right-radius: var(--t-radius-rounded20); border-bottom-right-radius: var(--t-radius-rounded20); border-bottom-left-radius: var(--t-radius-rounded20); gap: var(--t-space-spacing12); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1); transition: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+    <div
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row"
     >
-      <span
-        class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-larg101 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
-        line-height-disabled="false"
+      <button
+        class="is_Button  t_group_item"
+        dd-action-name="Confirm send"
+        style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); border-top-left-radius: var(--t-radius-rounded20); border-top-right-radius: var(--t-radius-rounded20); border-bottom-right-radius: var(--t-radius-rounded20); border-bottom-left-radius: var(--t-radius-rounded20); gap: var(--t-space-spacing12); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1); transition: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
       >
-        Confirm send
-      </span>
-    </button>
+        <span
+          class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-larg101 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
+          line-height-disabled="false"
+        >
+          Confirm send
+        </span>
+      </button>
+    </div>
   </div>
 </div>
 `;

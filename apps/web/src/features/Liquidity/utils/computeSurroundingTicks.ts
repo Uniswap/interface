@@ -3,7 +3,7 @@ import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { tickToPrice as tickToPriceV3 } from '@uniswap/v3-sdk'
 import { tickToPrice as tickToPriceV4 } from '@uniswap/v4-sdk'
 import JSBI from 'jsbi'
-import { Ticks } from '~/appGraphql/data/AllV3TicksQuery'
+import { Ticks } from '~/data/AllV3TicksQuery'
 
 const PRICE_FIXED_DIGITS = 8
 

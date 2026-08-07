@@ -8,6 +8,7 @@ import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { DAI, nativeOnChain, USDT } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { logger } from 'utilities/src/logger/logger'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   getSortedCurrenciesForProtocol,
@@ -71,6 +72,7 @@ const mockPair = new Pair(
 
 const mockUsePoolInfoQuery = vi.fn()
 const mockUseDefaultInitialPrice = vi.fn()
+const mockUsePermissionedSwapPair = vi.fn()
 
 vi.mock('~/features/Liquidity/Create/hooks/useDefaultInitialPrice', () => ({
   useDefaultInitialPrice: () => mockUseDefaultInitialPrice(),
@@ -78,8 +80,33 @@ vi.mock('~/features/Liquidity/Create/hooks/useDefaultInitialPrice', () => ({
 
 vi.mock('@tanstack/react-query', async (importOriginal) => ({
   ...(await importOriginal()),
-  useQuery: () => mockUsePoolInfoQuery(),
+  useQuery: (options: unknown) => mockUsePoolInfoQuery(options),
 }))
+
+vi.mock('uniswap/src/features/permissionedTokens/usePermissionedSwapPair', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/features/permissionedTokens/usePermissionedSwapPair')>()),
+  usePermissionedSwapPair: () => mockUsePermissionedSwapPair(),
+}))
+
+vi.mock('~/features/accounts/store/hooks', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('~/features/accounts/store/hooks')>()),
+  useActiveAddress: () => undefined,
+}))
+
+vi.mock('utilities/src/logger/logger', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('utilities/src/logger/logger')>()),
+  logger: { error: vi.fn() },
+}))
+
+const NOT_PERMISSIONED = {
+  isPermissioned: false,
+  isAllowlisted: true,
+  isLoading: false,
+  kycUrl: undefined,
+  issuer: undefined,
+  inputAdapterAddress: undefined,
+  outputAdapterAddress: undefined,
+}
 
 describe('useDerivedPositionInfo', () => {
   const defaultCurrencyInputs = {
@@ -104,6 +131,7 @@ describe('useDerivedPositionInfo', () => {
       price: 1000,
       isLoading: false,
     })
+    mockUsePermissionedSwapPair.mockReturnValue(NOT_PERMISSIONED)
   })
 
   describe('V4 Protocol', () => {
@@ -127,6 +155,32 @@ describe('useDerivedPositionInfo', () => {
       expect(v4Result.currencies.display.TOKEN0).toBe(ETH_MAINNET)
       expect(v4Result.currencies.display.TOKEN1).toBe(USDT)
       expect(v4Result.pool).toEqual(mockV4Pool)
+    })
+
+    it('should surface the protocol fee carried on the poolInfo response', () => {
+      mockUsePoolInfoQuery.mockReturnValue({
+        data: { pools: [Object.assign(new MockPoolInformation(ProtocolVersion.V4), { protocolFee: 3000 })] },
+        isLoading: false,
+        isFetched: true,
+        refetch: vi.fn(),
+      })
+
+      const { result } = renderHook(() => useDerivedPositionInfo(defaultCurrencyInputs, defaultPositionState))
+
+      expect((result.current as CreateV4PositionInfo).protocolFee).toBe(3000)
+    })
+
+    it('should return undefined protocol fee when the pool does not exist yet', () => {
+      mockUsePoolInfoQuery.mockReturnValue({
+        data: { pools: [] },
+        isLoading: false,
+        isFetched: true,
+        refetch: vi.fn(),
+      })
+
+      const { result } = renderHook(() => useDerivedPositionInfo(defaultCurrencyInputs, defaultPositionState))
+
+      expect((result.current as CreateV4PositionInfo).protocolFee).toBeUndefined()
     })
 
     it('should return V4 position info when tokens are unsorted', () => {
@@ -291,6 +345,80 @@ describe('useDerivedPositionInfo', () => {
       const { result } = renderHook(() => useDerivedPositionInfo(defaultCurrencyInputs, v2PositionState))
 
       expect(result.current.poolOrPairLoading).toBe(true)
+    })
+  })
+
+  describe('Permissioned pool lookup (V4)', () => {
+    const PA_ADAPTER = '0xef1dc9abd8a7e073cfdda453c775e7ce24e4a4c8'
+
+    const getLastPoolInfoRequest = () => {
+      const options = mockUsePoolInfoQuery.mock.calls.at(-1)?.[0] as {
+        queryKey: [unknown, unknown, { poolParameters?: { tokenAddressA: string; tokenAddressB: string } }]
+      }
+      return options.queryKey[2]
+    }
+
+    beforeEach(() => {
+      mockUsePoolInfoQuery.mockReturnValue({
+        data: { pools: [] },
+        isLoading: false,
+        isFetched: true,
+        refetch: vi.fn(),
+      })
+    })
+
+    it('should key the pool lookup on displayed addresses when the pair is not permissioned', () => {
+      renderHook(() => useDerivedPositionInfo(defaultCurrencyInputs, defaultPositionState))
+
+      const request = getLastPoolInfoRequest()
+      expect(request.poolParameters?.tokenAddressA).toBe(ZERO_ADDRESS)
+      expect(request.poolParameters?.tokenAddressB).toBe(USDT.address)
+    })
+
+    it('should key the pool lookup on the PA adapter address for the permissioned side', () => {
+      mockUsePermissionedSwapPair.mockReturnValue({
+        ...NOT_PERMISSIONED,
+        isPermissioned: true,
+        outputAdapterAddress: PA_ADAPTER,
+      })
+
+      renderHook(() => useDerivedPositionInfo(defaultCurrencyInputs, defaultPositionState))
+
+      const request = getLastPoolInfoRequest()
+      expect(request.poolParameters?.tokenAddressA).toBe(ZERO_ADDRESS)
+      expect(request.poolParameters?.tokenAddressB).toBe(PA_ADAPTER)
+    })
+
+    it('should not report creating a new pool while the permissions mapping is loading', () => {
+      mockUsePermissionedSwapPair.mockReturnValue({ ...NOT_PERMISSIONED, isLoading: true })
+
+      const { result } = renderHook(() => useDerivedPositionInfo(defaultCurrencyInputs, defaultPositionState))
+
+      expect(result.current.creatingPoolOrPair).toBe(false)
+    })
+
+    it('should drop a found pool when adapter substitution flips the pair orientation', () => {
+      // Displayed sort: DAI (0x6b17...) before USDT (0xdac1...). The DAI-side adapter sorts
+      // after USDT, flipping the mapped pair, so the response's price fields would be read
+      // inverted. The hook must fail closed rather than build a wrong-priced SDK pool.
+      mockUsePermissionedSwapPair.mockReturnValue({
+        ...NOT_PERMISSIONED,
+        isPermissioned: true,
+        inputAdapterAddress: '0xffffffffffffffffffffffffffffffffffffffff',
+      })
+      mockUsePoolInfoQuery.mockReturnValue({
+        data: { pools: [mockV4PoolInformation] },
+        isLoading: false,
+        isFetched: true,
+        refetch: vi.fn(),
+      })
+
+      const { result } = renderHook(() => useDerivedPositionInfo({ tokenA: DAI, tokenB: USDT }, defaultPositionState))
+
+      const info = result.current as CreateV4PositionInfo
+      expect(info.pool).toBeUndefined()
+      expect(info.creatingPoolOrPair).toBe(true)
+      expect(vi.mocked(logger.error)).toHaveBeenCalled()
     })
   })
 

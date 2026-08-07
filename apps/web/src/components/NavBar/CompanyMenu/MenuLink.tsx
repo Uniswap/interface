@@ -1,6 +1,6 @@
 import { isMobileWeb } from '@universe/environment'
 import { Link } from 'react-router'
-import { Text } from 'ui/src'
+import { type ColorTokens, Text } from 'ui/src'
 import { spacing, TextVariantTokens } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { MobileTouchableArea } from '~/components/MobileTouchableArea'
@@ -15,7 +15,7 @@ const LinkStyle = {
 }
 
 const LinkTextStyle = {
-  color: '$neutral1',
+  color: '$neutral1' as ColorTokens,
   hoverStyle: {
     opacity: 0.6,
   },
@@ -32,21 +32,25 @@ export function MenuLink({
   textVariant = 'body3',
   icon,
   elementName,
-}: MenuItem & { textVariant?: TextVariantTokens }) {
+  color,
+}: MenuItem & {
+  textVariant?: TextVariantTokens
+  color?: ColorTokens
+}) {
   const content = internal ? (
     <Link to={href} onClick={closeMenu} style={LinkStyle}>
-      <MobileTouchableArea row gap="$gap8">
+      <MobileTouchableArea row alignItems="center" gap="$gap8" minHeight={isMobileWeb ? 36 : undefined}>
         {icon}
-        <Text variant={textVariant} {...LinkTextStyle}>
+        <Text variant={textVariant} {...LinkTextStyle} color={color ?? LinkTextStyle.color}>
           {label}
         </Text>
       </MobileTouchableArea>
     </Link>
   ) : (
     <PlatformExternalLink to={href} href={href} onClick={closeMenu} style={{ ...LinkStyle, stroke: 'unset' }}>
-      <MobileTouchableArea row gap="$gap8">
+      <MobileTouchableArea row alignItems="center" gap="$gap8" minHeight={isMobileWeb ? 36 : undefined}>
         {icon}
-        <Text variant={textVariant} {...LinkTextStyle}>
+        <Text variant={textVariant} {...LinkTextStyle} color={color ?? LinkTextStyle.color}>
           {label}
         </Text>
       </MobileTouchableArea>

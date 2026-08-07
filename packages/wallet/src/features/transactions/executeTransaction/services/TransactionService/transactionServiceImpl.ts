@@ -1,9 +1,10 @@
 /* oxlint-disable max-lines */
+import type { BigNumberish } from '@ethersproject/bignumber'
 import type { BaseProvider, Provider } from '@ethersproject/providers'
 import { utils } from 'ethers'
 import { type AccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { getChainLabel } from 'uniswap/src/features/chains/utils'
+import { getChainLabel, toSupportedDappChainId } from 'uniswap/src/features/chains/utils'
 import { FlashbotsRpcProvider } from 'uniswap/src/features/providers/FlashbotsRpcProvider'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { GasSponsorshipNotAppliedError } from 'uniswap/src/features/transactions/swap/errors'
@@ -54,6 +55,29 @@ type TransactionSubmissionFunction<P extends SubmitTransactionParamsWithTypeInfo
   unsubmittedTransaction: OnChainTransactionDetails
   timestampBeforeSend: number
 }) => Promise<TransactionSubmissionResult>
+
+/**
+ * Rejects a transaction whose own chain disagrees with the one the caller resolved.
+ *
+ * Normalizes first, the same way the typed-data path does: `actual` comes off an unvalidated
+ * request, and dapps send hex as readily as decimal, so a strict compare would reject `'0x1'` on
+ * Mainnet. Unsupported or unparseable values fail here.
+ *
+ * Takes no undefined: callers decide what an absent chain means before reaching this.
+ */
+function assertChainIdMatches({
+  expected,
+  actual,
+  source,
+}: {
+  expected: UniverseChainId
+  actual: BigNumberish
+  source: string
+}): void {
+  if (toSupportedDappChainId(actual) !== expected) {
+    throw new Error(`Mismatched chainId on ${source}. Expected ${expected}, received ${String(actual)}`)
+  }
+}
 
 /**
  * Implementation of the TransactionService interface using explicit dependencies.
@@ -203,7 +227,23 @@ export function createTransactionService(ctx: {
    * Prepare and sign a transaction
    */
   async function prepareAndSignTransaction(params: PrepareTransactionParams): Promise<SignedTransactionRequest> {
-    const { chainId, account, request, submitViaPrivateRpc } = params
+    const { chainId, account, submitViaPrivateRpc } = params
+
+    // Optional per eth_sendTransaction, in which case it inherits the resolved chain. Guarding
+    // here rather than defaulting inside the assert, so the absent case is visible instead of
+    // being smuggled in as a comparison of the resolved chain against itself. JSON gives us null
+    // as readily as undefined, and both mean absent.
+    const requestChainId = params.request.chainId as BigNumberish | null | undefined
+    if (requestChainId != null) {
+      assertChainIdMatches({ expected: chainId, actual: requestChainId, source: 'transaction request' })
+    }
+
+    // Pin the resolved chain onto the request. Left absent, ethers' populateTransaction infers it
+    // from whichever provider the signer is connected to, which makes the signed chain depend on
+    // wiring rather than on the chain the caller resolved and the user reviewed. Pinning also
+    // makes ethers cross-check the provider and throw if the two disagree, and normalizes away any
+    // hex the dapp sent.
+    const request = { ...params.request, chainId }
 
     let nonce = request.nonce
     if (!nonce) {
@@ -230,6 +270,10 @@ export function createTransactionService(ctx: {
     if (!validatedTransaction) {
       throw new Error('Invalid transaction request')
     }
+
+    // Check the value actually being signed, not just what went in: populateTransaction could
+    // rewrite chainId, which would bypass the binding above silently.
+    assertChainIdMatches({ expected: chainId, actual: validatedTransaction.chainId, source: 'prepared transaction' })
 
     const timestampBeforeSign = Date.now()
     const signedTransaction = await ctx.transactionSigner.signTransaction(validatedTransaction)
@@ -423,6 +467,16 @@ export function createTransactionService(ctx: {
     )
 
     try {
+      // Signed earlier against whatever chain was current then; recheck before submitting.
+      // ValidatedTransactionRequest always carries a chainId, so this is a plain equality check.
+      if (preSignedTransaction) {
+        assertChainIdMatches({
+          expected: chainId,
+          actual: preSignedTransaction.request.chainId,
+          source: 'pre-signed transaction',
+        })
+      }
+
       const signedTransactionRequest =
         preSignedTransaction ??
         (await prepareAndSignTransaction({

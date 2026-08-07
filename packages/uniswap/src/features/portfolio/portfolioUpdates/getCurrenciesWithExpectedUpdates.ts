@@ -1,7 +1,7 @@
-import { normalizeCurrencyIdForMapLookup, normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isPlanTransactionDetails } from 'uniswap/src/features/transactions/types/utils'
 import { CurrencyId } from 'uniswap/src/types/currency'
+import { normalizeCurrencyIdForMapLookup, normalizeTokenAddressForCache } from 'uniswap/src/utils/currencyId'
 import { buildCurrencyId, buildNativeCurrencyId, buildWrappedNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -70,6 +70,9 @@ export function getCurrenciesWithExpectedUpdates(transaction: TransactionDetails
       currenciesWithBalToUpdate.add(
         buildCurrencyId(txChainId, normalizeTokenAddressForCache(transaction.typeInfo.destinationTokenAddress)),
       )
+      break
+    case TransactionType.UniswapXCancel:
+      // Nonce invalidation moves no assets; gas (native currency) refetch is already added above
       break
     default:
       logger.info(

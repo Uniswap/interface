@@ -57,16 +57,19 @@ interface EVMSwapInstructionsServiceContext {
    * sponsored delegated swaps route to /swap_5792 instead of the /swap_4337 userOp endpoint.
    */
   supportsUserOpSwaps?: boolean
+  /** True when a permissioned token is involved; routes the swap through the permissioned-pool Universal Router version. */
+  isPermissionedToken?: boolean
 }
 
 function createLegacyEVMSwapInstructionsService(
   ctx: Omit<EVMSwapInstructionsServiceContext, 'swapDelegationAddress'> & { swapRepository: EVMSwapRepository },
 ): EVMSwapInstructionsService {
-  const { gasStrategy, gasOverrides, swapRepository } = ctx
+  const { gasStrategy, gasOverrides, isPermissionedToken, swapRepository } = ctx
 
   const prepareSwapRequestParams = createPrepareSwapRequestParams({
     gasStrategy,
     gasOverrides,
+    isPermissionedToken,
   })
 
   const service: EVMSwapInstructionsService = {
@@ -99,11 +102,12 @@ function createLegacyEVMSwapInstructionsService(
 function createBatchedEVMSwapInstructionsService(
   ctx: Omit<EVMSwapInstructionsServiceContext, 'presignPermit'> & { swapRepository: EVMSwapRepository },
 ): EVMSwapInstructionsService {
-  const { gasStrategy, gasOverrides, swapRepository } = ctx
+  const { gasStrategy, gasOverrides, isPermissionedToken, swapRepository } = ctx
 
   const prepareSwapRequestParams = createPrepareSwapRequestParams({
     gasStrategy,
     gasOverrides,
+    isPermissionedToken,
   })
 
   const service: EVMSwapInstructionsService = {

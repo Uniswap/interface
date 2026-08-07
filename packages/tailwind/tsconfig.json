@@ -1,12 +1,16 @@
 {
   "extends": "../../config/tsconfig/app.json",
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json", "src/global.d.ts"],
-  "exclude": ["src/**/*.spec.ts", "src/**/*.spec.tsx", "src/**/*.test.ts", "src/**/*.test.tsx"],
+  "exclude": ["src/**/*.spec.ts", "src/**/*.spec.tsx", "src/**/*.test.ts", "src/**/*.test.tsx", "src/parity/**"],
   "compilerOptions": {
     "noEmit": false,
     "emitDeclarationOnly": true,
     "types": ["node", "vitest/globals"],
     "paths": {}
   },
-  "references": []
+  "references": [
+    {
+      "path": "../ui"
+    }
+  ]
 }

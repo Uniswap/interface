@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { useParams } from 'react-router'
+import { V2TokensEnabledOverrideProvider } from 'uniswap/src/features/dataApi/tokenDetails/useIsV2TokensEnabled'
 import { useHasValueChanged } from 'utilities/src/react/useHasValueChanged'
 import { shallow } from 'zustand/shallow'
 import { createTDPStore } from '~/pages/TokenDetails/context/createTDPStore'
@@ -20,7 +21,7 @@ function useTDPIdentity() {
 }
 
 export function TDPStoreContextProvider({ children }: TDPStoreContextProviderProps): JSX.Element {
-  const { state: derivedState, balancesRefetch } = useCreateTDPContext()
+  const { state: derivedState, balancesRefetch, tokenRefetch, isV2TokensEnabled } = useCreateTDPContext()
   const [store] = useState(() => createTDPStore(derivedState))
   const identity = useTDPIdentity()
   const prevIdentityRef = useRef(identity)
@@ -66,6 +67,24 @@ export function TDPStoreContextProvider({ children }: TDPStoreContextProviderPro
     if (state.balanceError !== derivedState.balanceError) {
       actions.setBalanceError(derivedState.balanceError)
     }
+    if (!shallow(state.token, derivedState.token)) {
+      actions.setToken(derivedState.token)
+    }
+    if (!shallow(state.multichainToken, derivedState.multichainToken)) {
+      actions.setMultichainToken(derivedState.multichainToken)
+    }
+    if (state.multichainTokenLoaded !== derivedState.multichainTokenLoaded) {
+      actions.setMultichainTokenLoaded(derivedState.multichainTokenLoaded)
+    }
+    if (state.pageQueryLoading !== derivedState.pageQueryLoading) {
+      actions.setPageQueryLoading(derivedState.pageQueryLoading)
+    }
+    if (state.chainDataLoading !== derivedState.chainDataLoading) {
+      actions.setChainDataLoading(derivedState.chainDataLoading)
+    }
+    if (state.marketDataLoading !== derivedState.marketDataLoading) {
+      actions.setMarketDataLoading(derivedState.marketDataLoading)
+    }
   }, [derivedState, hasDerivedStateChanged, store, identity.tokenAddress, identity.chainName])
 
   useEffect(() => {
@@ -76,16 +95,19 @@ export function TDPStoreContextProvider({ children }: TDPStoreContextProviderPro
   }, [store])
 
   useTDPHeartbeatCoordinator({
-    tokenQueryRefetch: derivedState.tokenQuery.refetch,
+    tokenQueryRefetch: tokenRefetch,
     balancesRefetch,
     incrementRefreshEpoch: store.getState().actions.incrementRefreshEpoch,
     enabled: Boolean(derivedState.currency),
+    isV2TokensEnabled,
   })
 
   return (
     <TDPStoreContext.Provider value={store}>
-      <TDPChainSearchParamSync />
-      {children}
+      <V2TokensEnabledOverrideProvider value={isV2TokensEnabled}>
+        <TDPChainSearchParamSync />
+        {children}
+      </V2TokensEnabledOverrideProvider>
     </TDPStoreContext.Provider>
   )
 }

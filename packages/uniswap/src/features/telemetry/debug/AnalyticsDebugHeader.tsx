@@ -103,7 +103,7 @@ export function AnalyticsDebugHeader({
       borderTopRightRadius="$rounded8"
     >
       {/* Drag handle area — only this part is draggable */}
-      {/* oxlint-disable-next-line react/forbid-elements: Native DOM element needed for setPointerCapture drag */}
+      {/* oxlint-disable-next-line react/forbid-elements -- Native DOM element needed for setPointerCapture drag */}
       <div
         ref={dragHandleRef}
         style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'grab', flexShrink: 1, userSelect: 'none' }}

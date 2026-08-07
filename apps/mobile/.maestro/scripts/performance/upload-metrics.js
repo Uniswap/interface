@@ -13,6 +13,9 @@
  * - DATADOG_API_URL_OVERRIDE: Optional, override for different Datadog regions (EU, gov cloud)
  * - ENVIRONMENT: Optional, defaults to 'maestro_cloud' (vs 'local')
  * - DRY_RUN: Optional, if 'true' will only log what would be sent
+ * - GITHUB_REF_NAME: Optional, CI branch name (added as branch: tag)
+ * - GITHUB_SHA: Optional, CI commit sha (added as commit: tag)
+ * - GITHUB_RUN_ID: Optional, CI run id (added as github_run_id: tag)
  *
  * Output Variables Used:
  * - METRICS_BUFFER: JSON string array of all metrics collected during the test
@@ -20,13 +23,35 @@
  * - CURRENT_PLATFORM: Platform being tested (ios/android)
  */
 
+/**
+ * Safely read an env var injected as a GraalJS global.
+ * Bare access to an unset variable throws a ReferenceError, which would kill the upload,
+ * so always go through globalThis with a typeof guard (mirrors src/utils/validateEnv.ts).
+ * Treats unresolved Maestro placeholders ('undefined'/'null') as unset.
+ * @param {string} name - Env var name
+ * @returns {string} The value, or '' when unset
+ */
+function getEnvString(name) {
+  const value = globalThis[name]
+  if (typeof value === 'undefined' || value === null) {
+    return ''
+  }
+  const str = String(value)
+  return str === 'undefined' || str === 'null' ? '' : str
+}
+
 // Get configuration from environment
-const apiKey = DATADOG_API_KEY || ''
-const environment = ENVIRONMENT || 'maestro_cloud'
-const isDryRun = DRY_RUN === 'true'
+const apiKey = getEnvString('DATADOG_API_KEY')
+const environment = getEnvString('ENVIRONMENT') || 'maestro_cloud'
+const isDryRun = getEnvString('DRY_RUN') === 'true'
+
+// CI context (only present when running from GitHub Actions)
+const ciBranch = getEnvString('GITHUB_REF_NAME')
+const ciCommit = getEnvString('GITHUB_SHA')
+const ciRunId = getEnvString('GITHUB_RUN_ID')
 
 // Datadog API endpoint (configurable for different regions)
-const DATADOG_API_URL = DATADOG_API_URL_OVERRIDE || 'https://api.datadoghq.com/api/v1/series'
+const DATADOG_API_URL = getEnvString('DATADOG_API_URL_OVERRIDE') || 'https://api.datadoghq.com/api/v1/series'
 
 /**
  * Parse metrics from the buffer
@@ -54,6 +79,11 @@ function convertToDatadogFormat(metrics) {
     'test_run_id:' + (output.CURRENT_TEST_RUN_ID || 'unknown'),
     'platform:' + (output.CURRENT_PLATFORM || 'unknown'),
   ]
+
+  // CI context tags (only added when running from GitHub Actions)
+  if (ciBranch) baseTags.push('branch:' + ciBranch)
+  if (ciCommit) baseTags.push('commit:' + ciCommit)
+  if (ciRunId) baseTags.push('github_run_id:' + ciRunId)
 
   for (let i = 0; i < metrics.length; i++) {
     const metric = metrics[i]

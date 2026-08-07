@@ -10,7 +10,7 @@ import {
   getGraphqlHttpLink,
   getPerformanceLink,
   getRestLink,
-} from 'uniswap/src/data/links'
+} from 'uniswap/src/data/graphql/links'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getDatadogApolloLink } from 'utilities/src/logger/datadog/datadogLink'

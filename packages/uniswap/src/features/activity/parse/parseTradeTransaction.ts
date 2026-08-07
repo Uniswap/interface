@@ -6,6 +6,8 @@ import { AssetCase } from 'uniswap/src/features/activity/utils/remote'
 import { getTokenAddressFromMintOrBurn } from 'uniswap/src/features/activity/utils/tokenTransfers'
 import {
   ConfirmedSwapTransactionInfo,
+  NFTTradeTransactionInfo,
+  NFTTradeType,
   TransactionType,
   WithdrawTransactionInfo,
   WrapTransactionInfo,
@@ -93,6 +95,56 @@ function findPrimaryTokenAndAmount(
   return {
     tokenAddress,
     amount: getTotalAmountForToken(filteredTransfers, tokenAddress),
+  }
+}
+
+/**
+ * Parse an NFT buy/sell from the REST API. NFT purchases come through labeled as SWAP,
+ * so this must be checked before falling back to the fungible swap parser.
+ */
+export function parseNFTTradeTransaction(transaction: OnChainTransaction): NFTTradeTransactionInfo | undefined {
+  const { transfers, chainId } = transaction
+
+  const nftTransfer = transfers.find((t) => t.asset.case === AssetCase.Nft)
+  if (nftTransfer?.asset.case !== AssetCase.Nft) {
+    return undefined
+  }
+
+  const nftAsset = nftTransfer.asset.value
+  const { tokenId, address } = nftAsset
+  if (!tokenId || !address) {
+    return undefined
+  }
+
+  const tradeType = nftTransfer.direction === Direction.RECEIVE ? NFTTradeType.BUY : NFTTradeType.SELL
+
+  // The payment token moves in the opposite direction of the NFT
+  const paymentDirection = tradeType === NFTTradeType.BUY ? Direction.SEND : Direction.RECEIVE
+  const paymentTransfers = transfers.filter((t) => t.direction === paymentDirection)
+  const paymentTransfer = paymentTransfers.find((t) => t.asset.case === AssetCase.Token && t.asset.value.address)
+  if (paymentTransfer?.asset.case !== AssetCase.Token) {
+    return undefined
+  }
+
+  const paymentTokenAddress = paymentTransfer.asset.value.address
+  if (!paymentTokenAddress) {
+    return undefined
+  }
+
+  return {
+    type: TransactionType.NFTTrade,
+    tradeType,
+    nftSummaryInfo: {
+      name: nftAsset.name,
+      collectionName: nftAsset.collectionName,
+      imageURL: nftAsset.imageUrl,
+      tokenId,
+      address,
+    },
+    purchaseCurrencyId: buildCurrencyId(chainId, paymentTokenAddress),
+    purchaseCurrencyAmountRaw: getTotalAmountForToken(paymentTransfers, paymentTokenAddress).toString(),
+    isSpam: nftAsset.isSpam,
+    dappInfo: extractDappInfo(transaction),
   }
 }
 

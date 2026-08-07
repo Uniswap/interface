@@ -3,6 +3,7 @@ import { Token } from '@uniswap/sdk-core'
 import { type ChainedQuoteResponse, TradingApi } from '@universe/api'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { planActions } from 'uniswap/src/features/transactions/swap/plan/planSaga'
+import { PlanStepFailedError } from 'uniswap/src/features/transactions/swap/plan/types'
 import { activePlanStore } from 'uniswap/src/features/transactions/swap/review/stores/activePlan/activePlanStore'
 import type { ChainedActionTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { signalEarnModalClosed } from 'uniswap/src/utils/saga'
@@ -127,6 +128,30 @@ describe('useEarnSagaCallback', () => {
     expect(action.payload.onSuccess).toBe(onSuccess)
     expect(action.payload.onFailure).toBe(onFailure)
     expect(action.payload.getOnPressRetry).toBeUndefined()
+  })
+
+  it('turns a failed plan step into a user-visible Earn error', () => {
+    const { result } = renderHook(() => useEarnSagaCallback())
+
+    result.current({
+      earnIntent: EARN_INTENT,
+      inputCurrency: USDC,
+      outputCurrency: USDC,
+      quote: QUOTE_RESPONSE,
+      onSuccess: vi.fn(),
+      onFailure: vi.fn(),
+    })
+
+    const action = mocks.dispatch.mock.calls[0]?.[0] as ReturnType<typeof planActions.trigger>
+    const displayableError = action.payload.getDisplayableError({
+      error: new PlanStepFailedError(),
+    })
+
+    expect(displayableError).toEqual(
+      expect.objectContaining({
+        message: 'Transaction failed. Please try again.',
+      }),
+    )
   })
 
   it('does not dispatch without an active EVM account', () => {

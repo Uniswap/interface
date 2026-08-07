@@ -7,12 +7,13 @@ import { UNI, USDC_BASE } from 'uniswap/src/constants/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { useIsEarnEnabled } from 'uniswap/src/features/earn/hooks/useIsEarnEnabled'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
-import { getTokenDetailsURL } from '~/appGraphql/data/util'
 import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { DeltaArrow } from '~/components/DeltaArrow/DeltaArrow'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
+import { getTokenDetailsURL } from '~/data/util'
 import { useCurrency } from '~/hooks/Tokens'
 import { PillButton } from '~/pages/Landing/components/cards/PillButton'
 import { ValuePropCard } from '~/pages/Landing/components/cards/ValuePropCard'
@@ -200,6 +201,7 @@ export function WebappCard() {
   const { t } = useTranslation()
   const { chains } = useEnabledChains()
   const isUnificationCopyEnabled = useFeatureFlag(FeatureFlags.UnificationCopy)
+  const isEarnEnabled = useIsEarnEnabled()
 
   return (
     <ValuePropCard
@@ -216,7 +218,9 @@ export function WebappCard() {
       subtitle={t('landing.swapSubtitle')}
       bodyText={
         isUnificationCopyEnabled
-          ? t('landing.swapBody', { amount: chains.length })
+          ? isEarnEnabled
+            ? t('landing.swapBody.earn', { amount: chains.length })
+            : t('landing.swapBody', { amount: chains.length })
           : t('landing.swapBody.old', { amount: chains.length })
       }
       button={<PillButton color={primary} label={t('common.exploreTokens')} backgroundColor="$surface1" />}

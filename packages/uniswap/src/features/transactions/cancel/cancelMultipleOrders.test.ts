@@ -370,17 +370,35 @@ describe('useCancelMultipleOrders', () => {
       expect(result).toBeUndefined()
     })
 
-    it('should handle errors gracefully', async () => {
-      mockBuildBatchCancellation.mockRejectedValue(new Error('Build failed'))
+    // Errors must propagate raw (never resolve undefined) so callers can classify them
+    // (didUserReject) — a swallowed rejection is indistinguishable from a silent no-op
+    it('should propagate build errors to the caller', async () => {
+      const buildError = new Error('Build failed')
+      mockBuildBatchCancellation.mockRejectedValue(buildError)
 
-      const result = await cancelMultipleUniswapXOrders({
-        orders: [{ encodedOrder: '0xencoded', routing: TradingApi.Routing.DUTCH_V2 }],
-        chainId: UniverseChainId.Mainnet,
-        signerAddress: '0xuser',
-        provider: mockProvider,
-      })
+      await expect(
+        cancelMultipleUniswapXOrders({
+          orders: [{ encodedOrder: '0xencoded', routing: TradingApi.Routing.DUTCH_V2 }],
+          chainId: UniverseChainId.Mainnet,
+          signerAddress: '0xuser',
+          provider: mockProvider,
+        }),
+      ).rejects.toBe(buildError)
+    })
 
-      expect(result).toBeUndefined()
+    it('should propagate the raw user-rejection error from sendTransaction', async () => {
+      const rejectionError = { code: 4001, message: 'User rejected the request' }
+      mockBuildBatchCancellation.mockResolvedValue({ to: '0xpermit2', data: '0xcancel' })
+      mockSigner.sendTransaction.mockRejectedValue(rejectionError)
+
+      await expect(
+        cancelMultipleUniswapXOrders({
+          orders: [{ encodedOrder: '0xencoded', routing: TradingApi.Routing.DUTCH_V2 }],
+          chainId: UniverseChainId.Mainnet,
+          signerAddress: '0xuser',
+          provider: mockProvider,
+        }),
+      ).rejects.toBe(rejectionError)
     })
   })
 })

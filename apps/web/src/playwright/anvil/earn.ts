@@ -1,10 +1,21 @@
 // oxlint-disable-next-line no-restricted-imports -- Anvil route helpers need Playwright's Page type
 import type { Page } from '@playwright/test'
+import { DataApiService } from '@uniswap/client-data-api/dist/data/v2/api_connect'
+import { ListEarnVaultsResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { TradingApi } from '@universe/api'
 // oxlint-disable-next-line universe-custom/no-direct-viem-ethers-import -- Node-side mock must not load the feature-gated app adapter
 import { encodeFunctionData, erc20Abi, type Address } from 'viem'
+import { assume0xAddress } from '~/chains'
+import {
+  buildSendTxPlanStep,
+  completePlanStep,
+  getPlanPath,
+  isPlanRoute,
+  MAX_UINT256,
+  PLAN_PATH,
+  WETH_ABI,
+} from '~/playwright/anvil/planLifecycle'
 import { TEST_WALLET_ADDRESS } from '~/playwright/fixtures/wallets'
-import { assume0xAddress } from '~/utils/wagmi'
 
 const ERC4626_ABI = [
   {
@@ -29,19 +40,6 @@ const ERC4626_ABI = [
     outputs: [{ name: 'shares', type: 'uint256' }],
   },
 ] as const
-const WETH_ABI = [
-  { type: 'function', name: 'deposit', stateMutability: 'payable', inputs: [], outputs: [] },
-  {
-    type: 'function',
-    name: 'withdraw',
-    stateMutability: 'nonpayable',
-    inputs: [{ name: 'wad', type: 'uint256' }],
-    outputs: [],
-  },
-] as const
-const MAX_UINT256 = 2n ** 256n - 1n
-const PLAN_PATH = '/plan'
-
 type EarnPlanMockOptions = {
   isNativeDeposit: boolean
 }
@@ -130,55 +128,6 @@ export async function installEarnQuoteMock(page: Page, options: EarnQuoteMockOpt
   )
 }
 
-function getPlanPath(pathname: string): string {
-  const entryGatewayPrefix = '/api'
-  return pathname.startsWith(entryGatewayPrefix) ? pathname.slice(entryGatewayPrefix.length) : pathname
-}
-
-function buildTransactionStep({
-  stepIndex,
-  stepType,
-  to,
-  data,
-  value,
-  tokenIn,
-  tokenInAmount,
-  tokenOut,
-  tokenOutAmount,
-  status,
-}: {
-  stepIndex: number
-  stepType: TradingApi.PlanStepType
-  to: Address
-  data: `0x${string}`
-  value?: string
-  tokenIn: Address
-  tokenInAmount: string
-  tokenOut: Address
-  tokenOutAmount: string
-  status: TradingApi.PlanStepStatus
-}): TradingApi.PlanStep {
-  return {
-    stepIndex,
-    method: TradingApi.PlanStepMethod.SEND_TX,
-    payloadType: TradingApi.PlanStepPayloadType.TX,
-    payload: {
-      to,
-      chainId: TradingApi.ChainId._1,
-      data,
-      ...(value ? { value } : {}),
-    },
-    status,
-    tokenIn,
-    tokenInAmount,
-    tokenOut,
-    tokenOutAmount,
-    tokenInChainId: TradingApi.ChainId._1,
-    tokenOutChainId: TradingApi.ChainId._1,
-    stepType,
-  }
-}
-
 function getDepositAmount(quote: TradingApi.ChainedQuote): string {
   const depositAsset =
     quote.earnPreview?.type === TradingApi.EarnDepositPreview.type.DEPOSIT
@@ -224,7 +173,7 @@ function buildPlan({
   if (isDeposit) {
     if (isNativeDeposit) {
       steps.push(
-        buildTransactionStep({
+        buildSendTxPlanStep({
           stepIndex: steps.length,
           stepType: TradingApi.PlanStepType.WRAP,
           to: underlyingAddress,
@@ -240,7 +189,7 @@ function buildPlan({
     }
 
     steps.push(
-      buildTransactionStep({
+      buildSendTxPlanStep({
         stepIndex: steps.length,
         stepType: TradingApi.PlanStepType.APPROVAL_TXN,
         to: underlyingAddress,
@@ -253,7 +202,7 @@ function buildPlan({
       }),
     )
     steps.push(
-      buildTransactionStep({
+      buildSendTxPlanStep({
         stepIndex: steps.length,
         stepType: TradingApi.PlanStepType.VAULT_DEPOSIT,
         to: vault,
@@ -271,7 +220,7 @@ function buildPlan({
     )
   } else {
     steps.push(
-      buildTransactionStep({
+      buildSendTxPlanStep({
         stepIndex: 0,
         stepType: TradingApi.PlanStepType.VAULT_WITHDRAW,
         to: vault,
@@ -289,7 +238,7 @@ function buildPlan({
     )
     if (isNativeDeposit) {
       steps.push(
-        buildTransactionStep({
+        buildSendTxPlanStep({
           stepIndex: 1,
           stepType: TradingApi.PlanStepType.UNWRAP,
           to: underlyingAddress,
@@ -329,34 +278,6 @@ function buildPlan({
   }
 }
 
-function advancePlan({
-  plan,
-  stepIndex,
-  proof,
-}: {
-  plan: TradingApi.PlanResponse
-  stepIndex: number
-  proof?: TradingApi.PlanStepProof
-}): void {
-  const isComplete = stepIndex === plan.steps.length - 1
-  plan.steps = plan.steps.map((step) => {
-    if (step.stepIndex <= stepIndex) {
-      return {
-        ...step,
-        status: TradingApi.PlanStepStatus.COMPLETE,
-        ...(step.stepIndex === stepIndex && proof ? { proof } : {}),
-      }
-    }
-    if (step.stepIndex === stepIndex + 1) {
-      return { ...step, status: TradingApi.PlanStepStatus.AWAITING_ACTION }
-    }
-    return step
-  })
-  plan.currentStepIndex = Math.min(stepIndex + 1, plan.steps.length - 1)
-  plan.status = isComplete ? TradingApi.PlanStatus.COMPLETED : TradingApi.PlanStatus.AWAITING_ACTION
-  plan.lastUserActionAt = new Date().toISOString()
-}
-
 /**
  * Keeps the stateless hosted quote in the test while emulating the plan lifecycle that cannot
  * observe transaction hashes mined only on Anvil. The returned calldata calls the vault address
@@ -366,45 +287,62 @@ export async function installEarnPlanMock(page: Page, options: EarnPlanMockOptio
   const plans = new Map<string, TradingApi.PlanResponse>()
   let planCounter = 0
 
-  await page.route(
-    (url: URL): boolean => {
-      const path = getPlanPath(url.pathname)
-      return path === PLAN_PATH || path.startsWith(`${PLAN_PATH}/`)
-    },
-    async (route) => {
-      const request = route.request()
-      const path = getPlanPath(new URL(request.url()).pathname)
+  await page.route(isPlanRoute, async (route) => {
+    const request = route.request()
+    const path = getPlanPath(new URL(request.url()).pathname)
 
-      if (request.method() === 'POST' && path === PLAN_PATH) {
-        const planId = `earn-e2e-${++planCounter}`
-        const plan = buildPlan({
-          request: request.postDataJSON() as TradingApi.CreatePlanRequest,
-          planId,
-          ...options,
-        })
-        plans.set(planId, plan)
-        await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(plan) })
-        return
-      }
-
-      const planId = path.slice(`${PLAN_PATH}/`.length)
-      const plan = plans.get(planId)
-      if (!plan) {
-        await route.fulfill({
-          status: 404,
-          contentType: 'application/json',
-          body: JSON.stringify({ error: 'Plan not found' }),
-        })
-        return
-      }
-
-      if (request.method() === 'PATCH') {
-        const update = request.postDataJSON() as TradingApi.UpdatePlanRequest
-        const submittedStep = update.steps[0]
-        advancePlan({ plan, stepIndex: submittedStep.stepIndex, proof: submittedStep.proof })
-      }
-
+    if (request.method() === 'POST' && path === PLAN_PATH) {
+      const planId = `earn-e2e-${++planCounter}`
+      const plan = buildPlan({
+        request: request.postDataJSON() as TradingApi.CreatePlanRequest,
+        planId,
+        ...options,
+      })
+      plans.set(planId, plan)
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(plan) })
-    },
-  )
+      return
+    }
+
+    const planId = path.slice(`${PLAN_PATH}/`.length)
+    const plan = plans.get(planId)
+    if (!plan) {
+      await route.fulfill({
+        status: 404,
+        contentType: 'application/json',
+        body: JSON.stringify({ error: 'Plan not found' }),
+      })
+      return
+    }
+
+    if (request.method() === 'PATCH') {
+      const update = request.postDataJSON() as TradingApi.UpdatePlanRequest
+      const submittedStep = update.steps[0]
+      completePlanStep({ plan, stepIndex: submittedStep.stepIndex, proof: submittedStep.proof })
+    }
+
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(plan) })
+  })
+}
+
+const SHIM_VAULT_LIQUIDITY_RAW = '1000000000000000000000000000000'
+const SHIM_VAULT_LIQUIDITY_USD = 1_000_000_000
+
+/**
+ * ListEarnVaults deliberately passes through to the live backend (the fork needs real vault
+ * addresses), but withdrawable amounts are capped by each vault's live instant liquidity
+ * (getEarnWithdrawableAmount). Floor the liquidity fields so withdraw coverage doesn't
+ * inherit real-time vault utilization — live USDC/ETH liquidity dropping below the amount
+ * the suite withdraws turned these tests red with no code change.
+ */
+export async function installEarnVaultLiquidityShim(page: Page): Promise<void> {
+  const methodPath = `${DataApiService.typeName}/${DataApiService.methods.listEarnVaults.name}`
+  await page.route(`**/${methodPath}`, async (route) => {
+    const response = await route.fetch()
+    const body = ListEarnVaultsResponse.fromJsonString(await response.text())
+    for (const vault of body.vaults) {
+      vault.liquidityRaw = SHIM_VAULT_LIQUIDITY_RAW
+      vault.liquidityUsd = SHIM_VAULT_LIQUIDITY_USD
+    }
+    await route.fulfill({ response, body: body.toJsonString() })
+  })
 }

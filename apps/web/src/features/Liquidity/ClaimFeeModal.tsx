@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { ClaimFeesRequest } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_pb'
 import { type Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { useGetPasskeyAuthStatus } from '@universe/embedded-wallet'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { type Dispatch, type SetStateAction, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -17,8 +18,8 @@ import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { liquidityQueries } from 'uniswap/src/data/apiClients/liquidityService/liquidityQueries'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
+import { getIsPermissioned } from 'uniswap/src/features/positions/utils'
 import { InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -68,6 +69,7 @@ function getClaimLpFeesRequest({
     walletAddress: address,
     chainId: currency0.chainId,
     tokenId: positionInfo.tokenId,
+    permissioned: getIsPermissioned(positionInfo),
     simulateTransaction: true,
     collectAsWeth: positionInfo.version !== ProtocolVersion.V4 ? !unwrapNativeCurrency : undefined,
     protocol: getProtocols(positionInfo.version),

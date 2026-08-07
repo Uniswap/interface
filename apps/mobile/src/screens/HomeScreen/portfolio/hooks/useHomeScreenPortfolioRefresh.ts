@@ -1,10 +1,9 @@
-import { useApolloClient } from '@apollo/client'
 import { SharedQueryClient } from '@universe/api'
 import { useCallback, useState } from 'react'
-import { NFTS_TAB_DATA_DEPENDENCIES } from 'uniswap/src/components/nfts/constants'
-import { getPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
-import { getWalletBalancesQuery } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
-import { getListTransactionsQuery } from 'uniswap/src/data/rest/listTransactions'
+import { getListTransactionsQuery } from 'uniswap/src/data/apiClients/dataApiService/activity/listTransactions'
+import { getPortfolioQuery } from 'uniswap/src/data/apiClients/dataApiService/balances/getPortfolio'
+import { getWalletBalancesQuery } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
+import { NFT_QUERY_KEY_PREFIX } from 'uniswap/src/data/apiClients/dataApiService/nfts/queries'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -18,7 +17,6 @@ export function useHomeScreenPortfolioRefresh({
 }: {
   shouldLoadNfts: boolean
 }): HomeScreenPortfolioRefreshState {
-  const apolloClient = useApolloClient()
   const activeAccount = useActiveAccountWithThrow()
   const [refreshing, setRefreshing] = useState(false)
 
@@ -39,20 +37,16 @@ export function useHomeScreenPortfolioRefresh({
       }),
       SharedQueryClient.invalidateQueries({ queryKey: [ReactQueryCacheKey.ListPositions] }),
     ]
-    const gqlQueriesToRefetch = shouldLoadNfts ? [...NFTS_TAB_DATA_DEPENDENCIES] : []
 
-    await Promise.all([
-      ...restQueriesToInvalidate,
-      gqlQueriesToRefetch.length > 0
-        ? apolloClient.refetchQueries({
-            include: gqlQueriesToRefetch,
-          })
-        : Promise.resolve(),
-    ])
+    if (shouldLoadNfts) {
+      restQueriesToInvalidate.push(SharedQueryClient.invalidateQueries({ queryKey: NFT_QUERY_KEY_PREFIX }))
+    }
+
+    await Promise.all(restQueriesToInvalidate)
 
     const timeout = setTimeout(() => setRefreshing(false), 500)
     return () => clearTimeout(timeout)
-  }, [apolloClient, activeAccount.address, shouldLoadNfts])
+  }, [activeAccount.address, shouldLoadNfts])
 
   return { refreshing, onRefresh }
 }

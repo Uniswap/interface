@@ -1,4 +1,8 @@
-import { PROD_ENTRY_GATEWAY_API_BASE_URL, STAGING_ENTRY_GATEWAY_API_BASE_URL } from '@universe/api'
+import {
+  DEV_ENTRY_GATEWAY_API_BASE_URL,
+  PROD_ENTRY_GATEWAY_API_BASE_URL,
+  STAGING_ENTRY_GATEWAY_API_BASE_URL,
+} from '@universe/api'
 import { Environment } from '@universe/config'
 import { auctionImageHandler } from 'functions/api/image/auctions'
 import { poolImageHandler } from 'functions/api/image/pools'
@@ -6,6 +10,7 @@ import { positionImageHandler } from 'functions/api/image/positions'
 import { tokenImageHandler } from 'functions/api/image/tokens'
 import { metaTagInjectionMiddleware } from 'functions/components/metaTagInjector'
 import { rewriteProxiedCookies } from 'functions/cookie-utils'
+import { resolveFramePolicy } from 'functions/frameProtection'
 import { Context, Hono } from 'hono'
 import { proxy } from 'hono/proxy'
 
@@ -39,35 +44,18 @@ interface AppConfig {
   getEntryGatewayUrl: (c: Context, env?: Environment) => string
   getWebSocketUrl: (c: Context) => string
   getTrustedClientIp: (c: Context) => string | undefined
-}
-
-// ── Frame protection ─────────────────────────────────────────────────
-// frame-ancestors cannot be enforced via <meta> CSP tags (W3C spec) — it
-// must be an HTTP response header. Cloudflare Workers returns responses
-// with immutable headers, so we clone into a mutable Response.
-// Origins allowed to iframe-embed the app. Whitelisting an embedder
-// relaxes clickjacking protection for that origin — treat additions as a
-// deliberate product/security tradeoff.
-// A wildcard host-source does not match the apex domain, so dexscreener.com
-// needs both the apex and the subdomain-wildcard entries.
-const ALLOWED_FRAME_ANCESTORS = [
-  "'self'",
-  'https://app.safe.global',
-  'https://dexscreener.com',
-  'https://*.dexscreener.com',
-]
-
-function withFrameProtection(res: Response): Response {
-  const headers = new Headers(res.headers)
-  headers.set('Content-Security-Policy', `frame-ancestors ${ALLOWED_FRAME_ANCESTORS.join(' ')}`)
-  headers.set('X-Frame-Options', 'SAMEORIGIN')
-  return new Response(res.body, { status: res.status, statusText: res.statusText, headers })
+  /**
+   * Space-separated CSP source list allowed to frame documents under
+   * /embed, e.g. `https://partner.com https://*.partner.com`. The literal
+   * `*` opens the embed surface to any ancestor. Empty/undefined keeps the
+   * embed surface on the same strict frame policy as every other route.
+   */
+  getEmbedFrameAncestors: (c: Context) => string | undefined
 }
 
 // ── Shared constants ─────────────────────────────────────────────────
-// Development deliberately targets the staging upstream (no dedicated dev deployment here).
 export const ENTRY_GATEWAY_URLS = {
-  development: STAGING_ENTRY_GATEWAY_API_BASE_URL,
+  development: DEV_ENTRY_GATEWAY_API_BASE_URL,
   staging: STAGING_ENTRY_GATEWAY_API_BASE_URL,
   production: PROD_ENTRY_GATEWAY_API_BASE_URL,
 } as const
@@ -76,6 +64,8 @@ export const ENTRY_GATEWAY_URLS = {
 // (platform prefix "interface", service prefix "gating")
 const STATSIG_PROXY_TARGET = 'https://gating.interface.gateway.uniswap.org'
 
+// Development targets the staging WS host until a dev websockets deployment exists
+// (keep in sync with DEV_WEBSOCKET_BASE_URL in @universe/api).
 export const WEBSOCKET_URLS = {
   development: 'https://websockets.backend-staging.api.uniswap.org',
   staging: 'https://websockets.backend-staging.api.uniswap.org',
@@ -106,7 +96,13 @@ function resolveEnvFromPath(path: string): { env: Environment | undefined; remai
   return { env: ENTRY_GATEWAY_ENV_BY_SEGMENT[match[1]], remainingPath: match[2] || '/' }
 }
 
-export function createApp({ fetchSpaHtml, getEntryGatewayUrl, getWebSocketUrl, getTrustedClientIp }: AppConfig) {
+export function createApp({
+  fetchSpaHtml,
+  getEntryGatewayUrl,
+  getWebSocketUrl,
+  getTrustedClientIp,
+  getEmbedFrameAncestors,
+}: AppConfig) {
   const app = new Hono<{ Bindings: Bindings }>()
 
   // ── OG image routes ────────────────────────────────────────────────────
@@ -195,6 +191,8 @@ export function createApp({ fetchSpaHtml, getEntryGatewayUrl, getWebSocketUrl, g
   app.all('*', async (c: Context) => {
     const url = new URL(c.req.url)
 
+    const applyFramePolicy = resolveFramePolicy(url.pathname, () => getEmbedFrameAncestors(c))
+
     const next = async () => {
       const response = await fetchSpaHtml(c)
       c.res = response
@@ -203,11 +201,11 @@ export function createApp({ fetchSpaHtml, getEntryGatewayUrl, getWebSocketUrl, g
     // API routes should not be processed by meta tag injection
     if (url.pathname.startsWith('/api/')) {
       await next()
-      return withFrameProtection(c.res)
+      return applyFramePolicy(c.res)
     }
 
     // For non-API routes, use meta tag injection middleware
-    return withFrameProtection(await metaTagInjectionMiddleware(c, next))
+    return applyFramePolicy(await metaTagInjectionMiddleware(c, next))
   })
 
   return app

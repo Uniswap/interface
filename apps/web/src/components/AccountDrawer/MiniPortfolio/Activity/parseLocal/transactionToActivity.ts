@@ -71,7 +71,10 @@ export async function transactionToActivity({
       details.typeInfo.type === TransactionType.Plan &&
       details.typeInfo.earnAction !== undefined
     const isUniswapX = details.typeInfo.type === TransactionType.Swap && isUniswapXActivity(details)
-    const shouldDeferTitle = isEarnPlan || isUniswapX
+    // UniswapXCancel provides its own status-specific titles (incl. Canceled, which the generic
+    // title table does not cover)
+    const isUniswapXCancel = details.typeInfo.type === TransactionType.UniswapXCancel
+    const shouldDeferTitle = isEarnPlan || isUniswapX || isUniswapXCancel
 
     const defaultFields: Activity = {
       id: details.id,
@@ -101,7 +104,7 @@ export async function transactionToActivity({
 
     // Skip the canceled transaction override for types that provide their own status-specific titles.
     const CancelledTransactionTitleTable = getCancelledTransactionTitleTable()
-    if (details.status === TransactionStatus.Canceled && !isUniswapX && !isEarnPlan) {
+    if (details.status === TransactionStatus.Canceled && !isUniswapX && !isEarnPlan && !isUniswapXCancel) {
       activity.title = CancelledTransactionTitleTable[details.typeInfo.type]
       activity.status = TransactionStatus.Success
     }
@@ -216,6 +219,19 @@ async function parseTransactionTypeFields({
           color: '$neutral2',
         }),
       }
+    case TransactionType.UniswapXCancel: {
+      // Suppressed from merged activity by default; never render an empty title if it surfaces
+      const title =
+        details.status === TransactionStatus.Canceled || details.status === TransactionStatus.Success
+          ? i18n.t('transaction.status.limitCancel.success')
+          : details.status === TransactionStatus.Failed
+            ? i18n.t('transaction.status.limitCancel.failed')
+            : i18n.t('transaction.status.limitCancel.pending')
+      return {
+        title,
+        descriptor: i18n.t('common.limit.cancel', { count: info.orderHashes.length }),
+      }
+    }
     case TransactionType.Plan:
       return parsePlan({
         plan: info,

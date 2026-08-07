@@ -45,6 +45,34 @@ export function getAuctionCancelThresholdDisplay(
   return auction.currencyTokenSymbol ? `${formatted} ${auction.currencyTokenSymbol}` : formatted
 }
 
+// Launch threshold (requiredCurrencyRaised) in bid-token units. Undefined when the auction has no requirement.
+export function getAuctionLaunchThresholdTokenAmount(auction: EnrichedAuction['auction']): number | undefined {
+  const requiredRaw = auction?.requiredCurrencyRaised
+  const decimals = auction?.currencyTokenDecimals
+  if (!requiredRaw || decimals === undefined) {
+    return undefined
+  }
+  const required = BigInt(requiredRaw)
+  if (required <= 0n) {
+    return undefined
+  }
+  return approximateNumberFromRaw({ raw: required, decimals })
+}
+
+// USD value of the launch threshold (requiredCurrencyRaised), for cross-currency comparison.
+// Undefined when the auction has no requirement or no currency price.
+export function getAuctionLaunchThresholdUsd(auction: EnrichedAuction['auction']): number | undefined {
+  const tokenAmount = getAuctionLaunchThresholdTokenAmount(auction)
+  if (tokenAmount === undefined) {
+    return undefined
+  }
+  const currencyPriceUsd = auction?.currencyPriceUsd !== undefined ? Number(auction.currencyPriceUsd) : undefined
+  if (currencyPriceUsd === undefined || currencyPriceUsd <= 0) {
+    return undefined
+  }
+  return tokenAmount * currencyPriceUsd
+}
+
 // Percent of the launch threshold met by committed volume, capped at 100. Undefined when no threshold.
 export function getAuctionThresholdPercentMet(auction: EnrichedAuction['auction']): number | undefined {
   const requiredRaw = auction?.requiredCurrencyRaised

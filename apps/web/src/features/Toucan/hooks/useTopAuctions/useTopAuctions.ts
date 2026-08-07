@@ -8,8 +8,8 @@ import {
 import { DynamicConfigs, useDynamicConfigValue, VerifiedAuctionsConfigKey } from '@universe/gating'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { auctionQueries } from 'uniswap/src/data/rest/auctions/auctionQueries'
-import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
+import { auctionQueries } from 'uniswap/src/data/apiClients/dataApiService/auctions/auctionQueries'
+import { EVMUniverseChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
 // oxlint-disable-next-line no-restricted-imports -- Direct selector access needed for auction testnet filtering
 import { selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/selectors'
@@ -144,13 +144,21 @@ function getAuctionWithCurrencyInfo({
 /**
  * Hook that fetches and filters top auctions with chain and search filtering.
  * - Chain filtering: Backend (via ListTopAuctionsRequest chainIds parameter)
+ *
+ * `chainId` overrides the URL-derived chain for surfaces without an /explore chain param (e.g. the
+ * /launches Live-auctions view, which drives chain from local state instead of the URL).
  */
-export function useTopAuctions(): {
+export function useTopAuctions({
+  chainId: chainIdOverride,
+  liveOnly = false,
+  pageSize = AUCTION_LIST_API_PAGE_SIZE,
+}: { chainId?: UniverseChainId; liveOnly?: boolean; pageSize?: number } = {}): {
   auctions: EnrichedAuction[]
   isLoading: boolean
   isError: boolean
 } {
-  const chainId = useChainIdFromUrlParam()
+  const urlChainId = useChainIdFromUrlParam()
+  const chainId = chainIdOverride ?? urlChainId
   const isTestnetModeEnabled = useSelector(selectIsTestnetModeEnabled)
 
   const verifiedAuctionIds: string[] = useDynamicConfigValue({
@@ -162,10 +170,11 @@ export function useTopAuctions(): {
   const params = useMemo(
     () =>
       new ListTopAuctionsRequest({
-        pageSize: AUCTION_LIST_API_PAGE_SIZE,
+        pageSize,
         chainIds: chainId ? [chainId] : [], // Empty array = all chains
+        liveOnly, // Server drops auctions past their end block, keeping in-progress + upcoming.
       }),
-    [chainId],
+    [chainId, liveOnly, pageSize],
   )
 
   const { data: topAuctions, isLoading, isError } = useQuery(auctionQueries.listTopAuctions({ params }))
@@ -201,9 +210,11 @@ export function useTopAuctions(): {
     [topAuctions?.auctions],
   )
 
+  // GetAuction ignores live_only, so under liveOnly we skip the fallback entirely: the Verified
+  // quick filter then filters only the live-only auctions we already fetched.
   const missingVerifiedParams = useMemo(
-    () => verifiedAuctionParams.filter((p) => !topAuctionIdSet.has(`${p.chainId}_${p.address}`)),
-    [verifiedAuctionParams, topAuctionIdSet],
+    () => (liveOnly ? [] : verifiedAuctionParams.filter((p) => !topAuctionIdSet.has(`${p.chainId}_${p.address}`))),
+    [verifiedAuctionParams, topAuctionIdSet, liveOnly],
   )
 
   const missingVerifiedQueries = useQueries({

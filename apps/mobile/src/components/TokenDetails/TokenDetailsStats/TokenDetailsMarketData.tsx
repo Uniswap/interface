@@ -5,20 +5,17 @@ import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { StatsRow } from 'src/components/TokenDetails/TokenDetailsStats/StatsRow'
+import { StatValue } from 'src/components/TokenDetails/TokenDetailsStats/StatValue'
 import { useFeatureFlaggedProjectTokens } from 'src/components/TokenDetails/useFeatureFlaggedProjectTokens'
 import { useTokenDetailsPreferProjectMarketData } from 'src/components/TokenDetails/useTokenDetailsRWAMatch'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import type { IconProps } from 'ui/src/components/factories/createIcon'
 import { ChartBar, ChartPie, ChartPyramid, GlobeFilled, TrendDown, TrendUp } from 'ui/src/components/icons'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { NetworkPile } from 'uniswap/src/components/network/NetworkPile/NetworkPile'
-import {
-  useTokenBasicInfoPartsFragment,
-  useTokenBasicProjectPartsFragment,
-} from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
+import { useTokenBasicInfoPartsFragment, useTokenBasicProjectPartsFragment } from 'uniswap/src/data/graphql/fragments'
 import { selectHasViewedContractAddressExplainer } from 'uniswap/src/features/behaviorHistory/selectors'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -100,6 +97,9 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
   const singleNetworkChainId = networkChainIds.length === 1 ? networkChainIds[0] : undefined
 
   const isMultichainToken = isMultichainProjectTokens(featureFlaggedProjectTokens)
+  // Default to the aggregate endpoint until project.tokens loads — better than assuming single-chain.
+  const projectTokensLoaded = project?.tokens !== undefined
+  const shouldQueryMultichainAggregate = !projectTokensLoaded || isMultichainToken
 
   /** Native currency pages have no contract address to copy / multichain address sheet (see TokenDetailsLinks). */
   const hasCopyableContractAddress = useMemo(() => {
@@ -131,9 +131,17 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
     token.address,
   ])
 
-  const { marketCap, fdv, volume, high52w, low52w } = useTokenMarketStats(currencyId, {
+  const {
+    marketCap,
+    fdv,
+    volume,
+    high52w,
+    low52w,
+    isLoading: isStatsLoading,
+  } = useTokenMarketStats(currencyId, {
     aggregatedData,
     preferProjectMarketData,
+    isMultichainAggregateView: shouldQueryMultichainAggregate,
   })
 
   const hasLimitedVolumeData = chainId === UniverseChainId.Tempo
@@ -152,11 +160,10 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
         label={t('token.stats.marketCap')}
         statsIcon={<ChartPie color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
       >
-        <AnimatedNumber
-          alignRight
+        <StatValue
+          isLoading={isStatsLoading}
           numericValue={marketCap ?? undefined}
-          value={convertFiatAmountFormatted(marketCap, NumberType.FiatTokenStats)}
-          textVariant="$body2"
+          formattedValue={convertFiatAmountFormatted(marketCap, NumberType.FiatTokenStats)}
           disableAnimations={!isDataLivelinessEnabled}
         />
       </StatsRow>
@@ -165,11 +172,10 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
         label={t('token.stats.fullyDilutedValuation')}
         statsIcon={<ChartPyramid color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
       >
-        <AnimatedNumber
-          alignRight
+        <StatValue
+          isLoading={isStatsLoading}
           numericValue={fdv ?? undefined}
-          value={convertFiatAmountFormatted(fdv, NumberType.FiatTokenStats)}
-          textVariant="$body2"
+          formattedValue={convertFiatAmountFormatted(fdv, NumberType.FiatTokenStats)}
           disableAnimations={!isDataLivelinessEnabled}
         />
       </StatsRow>
@@ -179,11 +185,10 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
         statsIcon={<ChartBar color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
         labelAfter={maybeLimitedVolumeDataInfoIcon}
       >
-        <AnimatedNumber
-          alignRight
+        <StatValue
+          isLoading={isStatsLoading}
           numericValue={volume ?? undefined}
-          value={convertFiatAmountFormatted(volume, NumberType.FiatTokenStats)}
-          textVariant="$body2"
+          formattedValue={convertFiatAmountFormatted(volume, NumberType.FiatTokenStats)}
           disableAnimations={!isDataLivelinessEnabled}
         />
       </StatsRow>
@@ -192,11 +197,10 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
         label={t('token.stats.priceHighYear')}
         statsIcon={<TrendUp color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
       >
-        <AnimatedNumber
-          alignRight
+        <StatValue
+          isLoading={isStatsLoading}
           numericValue={high52w ?? undefined}
-          value={convertFiatAmountFormatted(high52w, NumberType.FiatTokenDetails)}
-          textVariant="$body2"
+          formattedValue={convertFiatAmountFormatted(high52w, NumberType.FiatTokenDetails)}
           disableAnimations={!isDataLivelinessEnabled}
         />
       </StatsRow>
@@ -205,11 +209,10 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
         label={t('token.stats.priceLowYear')}
         statsIcon={<TrendDown color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
       >
-        <AnimatedNumber
-          alignRight
+        <StatValue
+          isLoading={isStatsLoading}
           numericValue={low52w ?? undefined}
-          value={convertFiatAmountFormatted(low52w, NumberType.FiatTokenDetails)}
-          textVariant="$body2"
+          formattedValue={convertFiatAmountFormatted(low52w, NumberType.FiatTokenDetails)}
           disableAnimations={!isDataLivelinessEnabled}
         />
       </StatsRow>

@@ -1,7 +1,9 @@
 {
   "name": "@universe/cryptography",
   "version": "0.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "@noble/hashes": "2.0.1"
+  },
   "devDependencies": {
     "@types/node": "22.19.17",
     "vitest": "3.2.1"

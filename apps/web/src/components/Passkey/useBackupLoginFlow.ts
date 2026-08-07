@@ -1,28 +1,29 @@
 /* oxlint-disable max-lines */
 import { Code, ConnectError } from '@connectrpc/connect'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useEffect, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
-import { checkPinReuse } from 'uniswap/src/features/passkey/checkPinReuse'
-import { checkRecoveryAvailability } from 'uniswap/src/features/passkey/checkRecoveryAvailability'
 import {
   authorizeAndCompleteRecovery,
-  type EncryptedRecoveryState,
+  checkPinReuse,
+  checkRecoveryAvailability,
+  EmbeddedWalletApiClient,
   encryptAndStoreRecovery,
+  type EncryptedRecoveryState,
+  fetchEncryptedBlob,
+  hashAuthMethodId,
   RecoveryMethod,
   RecoveryOprfError,
   toRecoveryAuthMethodType,
-} from 'uniswap/src/features/passkey/embeddedWallet'
-import { hashAuthMethodId } from 'uniswap/src/features/passkey/pinCrypto'
-import { validatePin } from 'uniswap/src/features/passkey/pinValidation'
-import { fetchEncryptedBlob } from 'uniswap/src/features/passkey/privyBlobStore'
+  useDigitInput,
+  useEmbeddedWalletState,
+  validatePin,
+} from '@universe/embedded-wallet'
+import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { type AuthenticatorDisplay } from '~/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery'
-import { useDigitInput } from '~/components/Passkey/BackupLoginComponents'
 import { OAUTH_PENDING_KEY } from '~/components/Passkey/useOAuthRedirectRouter'
 import { useOAuthResult } from '~/components/Passkey/useOAuthResult'
 import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
@@ -30,7 +31,6 @@ import { getPrivyConfig } from '~/config'
 import { useAndroidKeyboardViewportFix } from '~/hooks/useAndroidKeyboardViewportFix'
 import { useMaybeLoginWithEmail, useMaybeLoginWithOAuth, useMaybePrivy } from '~/hooks/useMaybePrivy'
 import { useModalState } from '~/hooks/useModalState'
-import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { popupRegistry } from '~/state/popups/registry'
 import { PopupType } from '~/state/popups/types'
 

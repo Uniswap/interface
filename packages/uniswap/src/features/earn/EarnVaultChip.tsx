@@ -72,7 +72,7 @@ export function EarnVaultChipSkeleton(): JSX.Element {
           />
           <Flex>
             <Text loading="no-shimmer" loadingPlaceholderText="USDC" numberOfLines={1} variant="body2" />
-            <Text loading="no-shimmer" loadingPlaceholderText="4.30% est. APY" numberOfLines={1} variant="body3" />
+            <Text loading="no-shimmer" loadingPlaceholderText="4.30% APY" numberOfLines={1} variant="body3" />
           </Flex>
         </Flex>
       </Skeleton>

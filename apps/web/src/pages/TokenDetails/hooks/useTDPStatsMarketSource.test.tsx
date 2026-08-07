@@ -5,7 +5,7 @@ import type { MultichainTokenEntry } from 'uniswap/src/components/MultichainToke
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import type { MarketStatsData } from 'uniswap/src/features/dataApi/tokenDetails/tokenMarketStatsUtils'
-import type { TokenQueryData } from '~/appGraphql/data/Token'
+import type { TokenQueryData } from '~/data/Token'
 import { createTDPStore, type TDPState } from '~/pages/TokenDetails/context/createTDPStore'
 import { TDPStoreContext } from '~/pages/TokenDetails/context/TDPContext'
 import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultichainTokenEntries'

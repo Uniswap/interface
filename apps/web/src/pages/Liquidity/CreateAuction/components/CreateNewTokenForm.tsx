@@ -2,7 +2,7 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { type ComponentRef, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Input, Popover, Text, TouchableArea } from 'ui/src'
+import { AdaptiveWebPopoverContent, Button, Flex, Input, Popover, Text, TouchableArea } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { Edit } from 'ui/src/components/icons/Edit'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -31,6 +31,7 @@ import { useIsQuickLaunchMode } from '~/pages/Liquidity/CreateAuction/hooks/useI
 import { useIsStepValid } from '~/pages/Liquidity/CreateAuction/hooks/useIsStepValid'
 import { useReconcileCreateNewTokenNetwork } from '~/pages/Liquidity/CreateAuction/hooks/useReconcileCreateNewTokenNetwork'
 import { useTokenImageUpload } from '~/pages/Liquidity/CreateAuction/hooks/useTokenImageUpload'
+import { useIsQuickLaunchModalFlow } from '~/pages/Liquidity/CreateAuction/quickLaunchModalContext'
 import {
   CreateAuctionStep,
   type CreateNewTokenFormState,
@@ -50,9 +51,10 @@ export function NetworkSelector({
   label?: string
 }) {
   const chainInfo = getChainInfo(network)
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <Popover placement="bottom-start">
+    <Popover placement="bottom-start" open={isOpen} onOpenChange={setIsOpen}>
       <Popover.Trigger>
         <TouchableArea gap="$spacing2" p="$spacing16" borderRadius="$rounded20" backgroundColor="$surface2">
           {label && (
@@ -69,7 +71,14 @@ export function NetworkSelector({
           </Flex>
         </TouchableArea>
       </Popover.Trigger>
-      <Popover.Content
+      {/* Modal-safe popover: plain Popover.Content portals at Tamagui's default z-index, which lands
+          behind the quick-launch modal (zIndexes.modal); AdaptiveWebPopoverContent stacks above the
+          hosting modal via EffectiveModalOrSheetZIndexContext. adaptWhen={false} keeps the existing
+          popover-only behavior on all viewports. */}
+      <AdaptiveWebPopoverContent
+        isOpen={isOpen}
+        adaptWhen={false}
+        placement="bottom-start"
         borderRadius="$rounded12"
         borderWidth="$spacing1"
         borderColor="$surface3"
@@ -105,7 +114,7 @@ export function NetworkSelector({
             )
           })}
         </Flex>
-      </Popover.Content>
+      </AdaptiveWebPopoverContent>
     </Popover>
   )
 }
@@ -116,6 +125,8 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
   const isQuickLaunchMode = useIsQuickLaunchMode()
   // QuickLaunch (flag-gated): live $TICKER preview under the image circle + ticker character counter.
   const isQuickLaunchFlagEnabled = useFeatureFlag(FeatureFlags.QuickLaunch)
+  // The launches-page modal already titles itself "Quick launch", so the in-form header is redundant there.
+  const isQuickLaunchModalFlow = useIsQuickLaunchModalFlow()
   const tickerPreview = createNew.symbol.trim().toUpperCase()
   const tokenColor = useCreateAuctionTokenColor()
   const { updateCreateNewTokenField, commitTokenFormAndAdvance } = useCreateAuctionStoreActions()
@@ -191,7 +202,7 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
   return (
     <Flex gap="$spacing24">
       <Flex gap="$spacing4">
-        <Text variant="subheading1">{t('toucan.createAuction.step.tokenInfo.title')}</Text>
+        {!isQuickLaunchModalFlow && <Text variant="subheading1">{t('toucan.createAuction.step.tokenInfo.title')}</Text>}
         <Text variant="body3" color="$neutral2">
           {t('toucan.createAuction.step.tokenInfo.subtitleCreateNew')}
         </Text>

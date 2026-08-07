@@ -1,0 +1,70 @@
+/* Tamagui->Tailwind compat CSS layer (media variants + animation presets), shared by every compat component.
+ *
+ * Media variants mirror the Tamagui media queries in
+ * packages/ui/src/theme/media.ts exactly (max-width / max-height, same
+ * breakpoint values as the --breakpoint-* tokens in theme.css). Tailwind's
+ * built-in max-* variants compile to exclusive ranges (`width < 450px`), so
+ * these custom variants exist to keep the emitted media query text identical
+ * to Tamagui's inclusive `(max-width: 450px)`.
+ */
+@custom-variant media-xxxl (@media (max-width: 1536px));
+@custom-variant media-xxl (@media (max-width: 1280px));
+@custom-variant media-xl (@media (max-width: 1024px));
+@custom-variant media-lg (@media (max-width: 768px));
+@custom-variant media-md (@media (max-width: 640px));
+@custom-variant media-sm (@media (max-width: 450px));
+@custom-variant media-xs (@media (max-width: 380px));
+@custom-variant media-xxs (@media (max-width: 360px));
+@custom-variant media-short (@media (max-height: 736px));
+@custom-variant media-mid-height (@media (max-height: 800px));
+@custom-variant media-lg-height (@media (max-height: 960px));
+
+/* Enter/exit animation presets mirroring packages/ui/src/animations/presets.ts.
+ *
+ * Enter keyframes declare only the start frame: the animation ends at the
+ * element's computed style, exactly like Tamagui animating from enterStyle to
+ * the base style. Exit keyframes declare only the end frame and hold it via
+ * `forwards`. Timing is a fixed CSS approximation — Tamagui's timing comes
+ * from its animation driver at runtime and is not part of the static parity
+ * contract.
+ */
+@theme {
+  --animate-spore-enter-fade-in: spore-enter-fade-in 200ms ease-out;
+  --animate-spore-enter-fade-in-down: spore-enter-fade-in-down 200ms ease-out;
+  --animate-spore-exit-fade-out: spore-exit-fade-out 200ms ease-out forwards;
+  --animate-spore-exit-fade-out-up: spore-exit-fade-out-up 200ms ease-out forwards;
+  --animate-spore-exit-fade-out-down: spore-exit-fade-out-down 200ms ease-out forwards;
+
+  @keyframes spore-enter-fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes spore-enter-fade-in-down {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes spore-exit-fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes spore-exit-fade-out-up {
+    to {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes spore-exit-fade-out-down {
+    to {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+}

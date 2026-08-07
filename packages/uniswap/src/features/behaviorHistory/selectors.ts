@@ -31,3 +31,6 @@ export const selectHasDismissedPoolsBalanceCoachmark = (state: UniswapState): bo
 
 export const selectHasDismissedPoolsOutageBanner = (state: UniswapState): boolean =>
   state.uniswapBehaviorHistory.hasDismissedPoolsOutageBanner === true
+
+export const selectHasAcknowledgedEarnHowItWorks = (state: UniswapState, vaultId: string | undefined): boolean =>
+  vaultId !== undefined && state.uniswapBehaviorHistory.earnHowItWorksAcknowledgedByVaultId?.[vaultId] === true

@@ -21,17 +21,27 @@ export interface ClientIdentityHeaders {
 /**
  * Extract the client's IP address from the request.
  *
- * IP resolution priority (most trusted first):
- * 1. x-real-ip — set by Vercel/infra at the TCP level, cannot be spoofed by clients
- * 2. cf-connecting-ip — set by Cloudflare edge
- * 3. x-forwarded-for — first entry, least trusted (can be spoofed)
+ * A header is trustworthy only because the proxy in front of THIS deployment
+ * sets it AND is the sole path to the origin — a header the front proxy does
+ * NOT set is client-spoofable. So we check the front-proxy header first:
+ * 1. cf-connecting-ip — set + overwritten by Cloudflare (the prod front door:
+ *    ECS behind a Cloudflare-locked ALB). Always present there, so the branches
+ *    below are never reached for real prod traffic.
+ * 2. x-real-ip — set by Vercel at the TCP level (Vercel/preview deployments).
+ * 3. x-forwarded-for — first entry, client-controllable; last resort only.
+ *
+ * cf-connecting-ip is deliberately FIRST: it was previously last, so behind
+ * Cloudflare a client could send x-real-ip (which Cloudflare does not strip)
+ * and have it trusted over Cloudflare's own header. This ordering is correct
+ * for the Cloudflare-fronted prod path; it is not a full substitute for
+ * per-runtime header selection.
  *
  * Use for rate limiting, logging, and any context where you need just the IP string.
  */
 export function getClientIp(request: Request): string {
   return (
-    request.headers.get('x-real-ip') ??
     request.headers.get('cf-connecting-ip') ??
+    request.headers.get('x-real-ip') ??
     request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
     'unknown'
   )

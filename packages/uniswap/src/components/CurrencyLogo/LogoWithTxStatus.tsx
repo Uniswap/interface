@@ -7,6 +7,7 @@ import { ArrowDownInCircle } from 'ui/src/components/icons/ArrowDownInCircle'
 import { ArrowDownToLine } from 'ui/src/components/icons/ArrowDownToLine'
 import { ArrowUpInCircle } from 'ui/src/components/icons/ArrowUpInCircle'
 import { QuestionInCircle } from 'ui/src/components/icons/QuestionInCircle'
+import { SlashCircle } from 'ui/src/components/icons/SlashCircle'
 import { Walletconnect } from 'ui/src/components/icons/Walletconnect'
 import { borderRadii, zIndexes } from 'ui/src/theme'
 import { STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/constants'
@@ -138,6 +139,9 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
         } else {
           Icon = ArrowDownInCircle
         }
+        break
+      case TransactionType.UniswapXCancel:
+        Icon = SlashCircle
         break
       case TransactionType.Unknown:
         Icon = QuestionInCircle

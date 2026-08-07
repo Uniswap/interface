@@ -13,12 +13,12 @@ const option: RwaTokenOption = {
 }
 
 describe('StockTile', () => {
-  it('renders the tile and fires onSelectRwaToken on press', () => {
-    const onSelect = vi.fn()
-    const { getByTestId, getAllByText } = render(<StockTile option={option} onSelectRwaToken={onSelect} />)
+  it('renders the tile and fires onPressRwaToken on press', () => {
+    const onPress = vi.fn()
+    const { getByTestId, getAllByText } = render(<StockTile option={option} onPressRwaToken={onPress} />)
     expect(getAllByText('GOOGLX').length).toBeGreaterThan(0)
     const tile = getByTestId('stock-option-56-GOOGLX')
     fireEvent.press(tile)
-    expect(onSelect).toHaveBeenCalledWith(option)
+    expect(onPress).toHaveBeenCalledWith(option)
   })
 })

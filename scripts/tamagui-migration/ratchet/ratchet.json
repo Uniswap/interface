@@ -1,0 +1,4 @@
+{
+  "//": "Directories fully converted off Tamagui (INFRA-2957). Listing a directory here makes the dangerfile fail any PR that adds a ui/src or tamagui import under it. Add a directory in the same PR that converts it. Paths are repo-relative, no trailing slash.",
+  "convertedDirectories": []
+}

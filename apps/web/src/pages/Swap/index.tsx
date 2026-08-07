@@ -1,4 +1,6 @@
+/* oxlint-disable max-lines */
 import type { Currency } from '@uniswap/sdk-core'
+import { useEmbeddedWalletState } from '@universe/embedded-wallet'
 import { isMobileWeb } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -9,13 +11,13 @@ import { Flex, SegmentedControl, stackingLayerAbove, styled, Text, Tooltip, useM
 import type { AppTFunction } from 'ui/src/i18n/types'
 import { zIndexes } from 'ui/src/theme'
 import { TokenSelectorHoverConfigProvider } from 'uniswap/src/components/TokenSelector/TokenSelectorHoverConfig'
+import { ShowGetStartedProvider } from 'uniswap/src/contexts/ShowGetStartedContext'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useIsModeMismatch } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
-import { ShowGetStartedProvider } from 'uniswap/src/features/passkey/ShowGetStartedContext'
 import { WebFORNudgeProvider } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { InterfaceEventName, InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -31,7 +33,9 @@ import type { SwapFormState } from 'uniswap/src/features/transactions/swap/store
 import { currencyToAsset } from 'uniswap/src/features/transactions/swap/utils/asset'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
+import { AccountDrawer } from '~/components/AccountDrawer'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
+import { Portal } from '~/components/Popups/Portal'
 import { TokenHoverCard } from '~/components/TokenHoverCard/TokenHoverCard'
 import { SwapAndLimitContextProvider } from '~/features/Swap/state/SwapContext'
 import type { CurrencyState } from '~/features/Swap/state/types'
@@ -41,13 +45,17 @@ import { useHasInjectedWallets } from '~/features/wallet/connection/hooks/useOrd
 import { useDeferredComponent } from '~/hooks/useDeferredComponent'
 import { PageType, useIsPage } from '~/hooks/useIsPage'
 import { useModalState } from '~/hooks/useModalState'
+import { useEmbedView } from '~/pages/Swap/embedContext'
+import { buildSwapTabOptions, isTabPermissionedBlocked } from '~/pages/Swap/permissionedTabs'
+import { PermissionedTabWrapper } from '~/pages/Swap/PermissionedTabWrapper'
 import { ReturnToAuctionBanner } from '~/pages/Swap/ReturnToAuctionBanner'
 import { SlideoutChartCard } from '~/pages/Swap/Swap/SlideoutChartCard/SlideoutChartCard'
 import { useSlideoutChartCardCurrencies } from '~/pages/Swap/Swap/SlideoutChartCard/useSlideoutChartCardCurrencies'
 import { useInitialCurrencyState } from '~/pages/Swap/Swap/state/hooks'
 import { SwapChartToggleButton } from '~/pages/Swap/Swap/SwapChartToggleButton'
 import { SwapForm, SwapFormSettingsButton } from '~/pages/Swap/Swap/SwapForm'
-import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
+import { getSwapCapabilities } from '~/pages/Swap/swapCapabilities'
+import { usePermissionedSwap } from '~/pages/Swap/usePermissionedSwap'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { isIFramed } from '~/utils/isIFramed'
 
@@ -66,6 +74,11 @@ export function SwapPage() {
   useFeatureFlag(FeatureFlags.AATestWeb)
 
   const accountDrawer = useAccountDrawer()
+
+  // Same shared SwapPage for every surface. The embed `view` (from context) picks the
+  // capabilities so the swap-only surface (`/embed?view=swap`) can strip itself instead of
+  // forking into a separate component tree. Outside an embed, view is 'full' → no change.
+  const capabilities = getSwapCapabilities(useEmbedView())
 
   const {
     initialInputCurrency,
@@ -95,11 +108,21 @@ export function SwapPage() {
             initialOutputChainId={initialOutputChainId}
             initialTypedValue={initialTypedValue}
             initialIndependentField={initialField}
-            syncTabToUrl={true}
+            hideHeader={!capabilities.header}
+            hideChart={!capabilities.chart}
+            syncTabToUrl={capabilities.syncTabToUrl}
           />
         </WebFORNudgeProvider>
       </PageWrapper>
-      <ReturnToAuctionBanner />
+      {capabilities.appChrome ? (
+        <ReturnToAuctionBanner />
+      ) : (
+        // Swap-only surface renders no app chrome, so mount the AccountDrawer here (as in
+        // #35715) — connecting a wallet still needs it. Send/embedded-wallet frame-bust as usual.
+        <Portal>
+          <AccountDrawer />
+        </Portal>
+      )}
     </Trace>
   )
 }
@@ -256,7 +279,7 @@ function UniversalSwapFlow({
   /** When Swap is embedded in TDP, the TDP token currency for Buy/Sell prefill */
   tdpCurrency?: Currency
 }) {
-  const { currentTab, setCurrentTab } = useSwapAndLimitContext()
+  const { currentTab, setCurrentTab, currencyState } = useSwapAndLimitContext()
   const tdpCurrencyAsset = currencyToAsset(tdpCurrency)
   const { inputCurrency, outputCurrency } = useSlideoutChartCardCurrencies()
   const isDataLivelinessEnabled = useFeatureFlag(FeatureFlags.DataLivelinessUI)
@@ -276,6 +299,35 @@ function UniversalSwapFlow({
   const navigate = useNavigate()
   const { t } = useTranslation()
 
+  // Permissioned-token gating — see usePermissionedSwap for the per-side detection details.
+  // The Swap CTA + denied-state Dialog are handled in-form by SwapFormWarningModals; this
+  // page-level hook is kept for PermissionedTabWrapper (Limit tab overlay). `isLoading`
+  // is folded into the overlay gate so tab content doesn't render during the KYC fetch.
+  const {
+    isPermissionedBlocked,
+    isLoading: isPermissionedLoading,
+    permissionedTokenSymbol,
+  } = usePermissionedSwap(currencyState)
+
+  // Buy/Sell tabs gate against the TDP token so a permissioned asset can't be bought or
+  // sold via fiat on/off-ramp partners without verification. Live in-form gating after a
+  // quote-currency change is a follow-up; the ramp partner's own KYC catches that case.
+  const buySellCurrencyState = useMemo<CurrencyState>(
+    () => ({ inputCurrency: tdpCurrency, outputCurrency: undefined }),
+    [tdpCurrency],
+  )
+  const {
+    isPermissionedBlocked: isBuySellPermissionedBlocked,
+    isLoading: isBuySellPermissionedLoading,
+    permissionedTokenSymbol: buySellPermissionedTokenSymbol,
+  } = usePermissionedSwap(buySellCurrencyState)
+
+  // Single source for each tab's gate so the tab button (isTabBlocked) and the content overlay
+  // (PermissionedTabWrapper isBlocked) can't drift if the condition gains a term later. Fold
+  // `isLoading` in so neither the tab nor its content unlocks during the KYC fetch.
+  const limitTabBlocked = isPermissionedBlocked || isPermissionedLoading
+  const buySellTabBlocked = isBuySellPermissionedBlocked || isBuySellPermissionedLoading
+
   const LimitFormWrapper = useDeferredComponent(() =>
     import('~/pages/Swap/Limit/LimitForm').then((module) => ({
       default: module.LimitFormWrapper,
@@ -292,11 +344,15 @@ function UniversalSwapFlow({
   useEffect(() => {
     if (pathname === '/send') {
       setCurrentTab(SwapTab.Swap)
-      // Do not open the send modal if iFramed (we do not allow the send tab to be iFramed due to clickjacking protections)
+      // Send is not allowed inside an iframe (clickjacking protections). Instead of
+      // silently dropping the action, frame-bust out to the top-level /send so the
+      // user can still complete the transfer (params preserved). Mirrors the
+      // embedded-wallet/passkey frame-bust (useSignInWithPasskey → isIFramed(true)).
       // https://www.notion.so/uniswaplabs/What-is-not-allowed-to-be-iFramed-Clickjacking-protections-874f85f066c648afa0eb3480b3f47b5c#d0ebf1846c83475a86342a594f77eae5
-      if (!isIFramed()) {
-        openSendFormModal()
+      if (isIFramed(true, { bustToPath: '/send' })) {
+        return
       }
+      openSendFormModal()
     } else {
       const tab = PATHNAME_TO_TAB[pathname] ?? SwapTab.Swap
       setCurrentTab(tab)
@@ -306,8 +362,20 @@ function UniversalSwapFlow({
     }
   }, [pathname, openSendFormModal, setCurrentTab])
 
+  const isTabBlocked = useCallback(
+    (tab: SwapTab): boolean =>
+      isTabPermissionedBlocked(tab, {
+        limitBlocked: limitTabBlocked,
+        buySellBlocked: buySellTabBlocked,
+      }),
+    [limitTabBlocked, buySellTabBlocked],
+  )
+
   const onTabClick = useCallback(
     (tab: SwapTab) => {
+      if (isTabBlocked(tab)) {
+        return
+      }
       sendAnalyticsEvent(InterfaceEventName.SwapTabClicked, { tab })
       if (!isChartEligibleTab(tab)) {
         setShowChart(false)
@@ -318,7 +386,7 @@ function UniversalSwapFlow({
         setCurrentTab(tab)
       }
     },
-    [navigate, syncTabToUrl, setCurrentTab],
+    [navigate, syncTabToUrl, setCurrentTab, isTabBlocked],
   )
 
   const isChartVisible = showChart && isChartEligibleTab(currentTab)
@@ -348,22 +416,17 @@ function UniversalSwapFlow({
     )
   }, [isDataLivelinessEnabled, media.lg, showChart, hideChart, currentTab, inputCurrency, outputCurrency])
 
-  const SWAP_TAB_OPTIONS: readonly SegmentedControlOption<SwapTab>[] = useMemo(() => {
-    return SWAP_TABS.map((tab) => ({
-      value: tab,
-      // Use href for proper link semantics when syncing to URL (SEO, accessibility, right-click menu)
-      href: syncTabToUrl ? `/${tab}` : undefined,
-      display: (
-        <Text
-          variant="buttonLabel3"
-          hoverStyle={{ color: '$neutral1' }}
-          color={currentTab === tab ? '$neutral1' : '$neutral2'}
-        >
-          {TAB_TYPE_TO_LABEL[tab](t)}
-        </Text>
-      ),
-    }))
-  }, [t, currentTab, syncTabToUrl])
+  const SWAP_TAB_OPTIONS: readonly SegmentedControlOption<SwapTab>[] = useMemo(
+    () =>
+      buildSwapTabOptions({
+        tabs: SWAP_TABS,
+        currentTab,
+        syncTabToUrl,
+        getTabLabel: (tab) => TAB_TYPE_TO_LABEL[tab](t),
+        isTabBlocked,
+      }),
+    [t, currentTab, syncTabToUrl, isTabBlocked],
+  )
 
   return (
     <Flex row alignItems="flex-start" maxWidth="calc(100vw - 16px)">
@@ -418,21 +481,31 @@ function UniversalSwapFlow({
             onCurrencyPanelsLayout={isDataLivelinessEnabled ? onCurrencyPanelsLayout : undefined}
           />
         )}
-        {currentTab === SwapTab.Limit && LimitFormWrapper && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
+        {currentTab === SwapTab.Limit && LimitFormWrapper && (
+          <PermissionedTabWrapper isBlocked={limitTabBlocked} tokenSymbol={permissionedTokenSymbol}>
+            <LimitFormWrapper onCurrencyChange={onCurrencyChange} />
+          </PermissionedTabWrapper>
+        )}
         {currentTab === SwapTab.Buy && BuyForm && (
-          <BuyForm
-            rampDirection={RampDirection.ON_RAMP}
-            disabled={disableTokenInputs}
-            initialCurrency={tdpCurrencyAsset ?? prefilledState?.output}
-          />
+          <PermissionedTabWrapper isBlocked={buySellTabBlocked} tokenSymbol={buySellPermissionedTokenSymbol}>
+            <BuyForm
+              rampDirection={RampDirection.ON_RAMP}
+              disabled={disableTokenInputs}
+              initialCurrency={tdpCurrencyAsset ?? prefilledState?.output}
+            />
+          </PermissionedTabWrapper>
         )}
         {currentTab === SwapTab.Sell && BuyForm && (
-          <BuyForm
-            rampDirection={RampDirection.OFF_RAMP}
-            disabled={disableTokenInputs}
-            initialCurrency={tdpCurrencyAsset ?? prefilledState?.output}
-          />
+          <PermissionedTabWrapper isBlocked={buySellTabBlocked} tokenSymbol={buySellPermissionedTokenSymbol}>
+            <BuyForm
+              rampDirection={RampDirection.OFF_RAMP}
+              disabled={disableTokenInputs}
+              initialCurrency={tdpCurrencyAsset ?? prefilledState?.output}
+            />
+          </PermissionedTabWrapper>
         )}
+        {/* VerifyIdentityModal is now mounted in-form via SwapFormWarningModals
+            (shared `VerifyIdentityBottomSheet` renders as Dialog on web). */}
       </SwapModuleWrapper>
     </Flex>
   )

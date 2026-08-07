@@ -1,4 +1,4 @@
-import { OrderDirection } from '~/appGraphql/data/util'
+import { OrderDirection } from '~/data/util'
 import { StocksTableHeader } from '~/pages/Explore/rwa/table/StocksTableHeader'
 import {
   StocksSortMethod,

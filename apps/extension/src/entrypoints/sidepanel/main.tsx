@@ -14,7 +14,7 @@ import { OnboardingMessageType } from 'src/background/messagePassing/types/Exten
 import { getReduxStore } from 'src/store/store'
 import { ExtensionAppLocation, StoreSynchronization } from 'src/store/storeSynchronization'
 import { initializeScrollWatcher } from 'uniswap/src/components/modals/ScrollLock'
-import { initializePortfolioQueryOverrides } from 'uniswap/src/data/rest/portfolioBalanceOverrides'
+import { initializePortfolioQueryOverrides } from 'uniswap/src/data/apiClients/dataApiService/balances/portfolioBalanceOverrides'
 import { logger } from 'utilities/src/logger/logger'
 // oxlint-disable-next-line typescript/no-explicit-any -- Global polyfill cleanup requires any type for runtime modification
 ;(globalThis as any).regeneratorRuntime = undefined

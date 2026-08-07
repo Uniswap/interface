@@ -10,90 +10,14 @@
  *
  * Usage: see vercel.json buildCommand
  */
-import { cpSync, existsSync, mkdirSync, rmSync, statSync, writeFileSync } from 'node:fs'
-import { dirname, extname, resolve } from 'node:path'
+import { cpSync, existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { copyOgAssets, inlineAssetPlugin, tsconfigPathsPlugin } from './bun-server-build'
 
 const ROOT = resolve(import.meta.dirname, '..')
 const OUTPUT_DIR = resolve(ROOT, '.vercel/output')
 const STATIC_DIR = resolve(OUTPUT_DIR, 'static')
 const FUNC_DIR = resolve(OUTPUT_DIR, 'functions/api.func')
-
-function isFile(path: string): boolean {
-  return existsSync(path) && statSync(path).isFile()
-}
-
-function resolveWithExtensions(basePath: string): string {
-  const extensions = ['.ts', '.tsx', '.js', '.jsx', '.mjs']
-  // Try exact path first (must be a file, not a directory)
-  if (isFile(basePath)) {
-    return basePath
-  }
-  for (const ext of extensions) {
-    if (isFile(basePath + ext)) {
-      return basePath + ext
-    }
-  }
-  for (const ext of extensions) {
-    if (isFile(basePath + '/index' + ext)) {
-      return basePath + '/index' + ext
-    }
-  }
-  return basePath
-}
-
-// Resolve path aliases since bun build doesn't read tsconfig paths.
-// ~/* -> src/*,  functions/* -> functions/*
-const tsconfigPathsPlugin: BunPlugin = {
-  name: 'tsconfig-paths',
-  setup(build) {
-    build.onResolve({ filter: /^~\// }, (args) => {
-      const suffix = args.path.slice(2)
-      return { path: resolveWithExtensions(resolve(ROOT, 'src', suffix)) }
-    })
-    build.onResolve({ filter: /^functions\// }, (args) => {
-      const suffix = args.path.slice('functions/'.length)
-      return { path: resolveWithExtensions(resolve(ROOT, 'functions', suffix)) }
-    })
-  },
-}
-
-// Vite-style `?inline` query: import asset as a base64 data URL string.
-// Bun's bundler has no built-in handler for it, so we resolve the underlying
-// file and emit a synthesized JS module exporting the data URL.
-const INLINE_MIME_TYPES: Record<string, string> = {
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.gif': 'image/gif',
-  '.webp': 'image/webp',
-  '.svg': 'image/svg+xml',
-}
-
-const inlineAssetPlugin: BunPlugin = {
-  name: 'inline-asset',
-  setup(build) {
-    build.onResolve({ filter: /\?inline$/ }, (args) => {
-      const cleanSpecifier = args.path.replace(/\?inline$/, '')
-      const importerDir = args.importer ? dirname(args.importer) : ROOT
-      const resolvedPath = Bun.resolveSync(cleanSpecifier, importerDir)
-      return { path: resolvedPath, namespace: 'inline-asset' }
-    })
-
-    build.onLoad({ filter: /.*/, namespace: 'inline-asset' }, async (args) => {
-      const ext = extname(args.path).toLowerCase()
-      const mime = INLINE_MIME_TYPES[ext]
-      if (!mime) {
-        throw new Error(`[inline-asset] Unsupported extension ${ext} for ${args.path}`)
-      }
-      const buffer = await Bun.file(args.path).arrayBuffer()
-      const dataUrl = `data:${mime};base64,${Buffer.from(buffer).toString('base64')}`
-      return {
-        loader: 'js',
-        contents: `export default ${JSON.stringify(dataUrl)};`,
-      }
-    })
-  },
-}
 
 // ── Step 1: Clean and create output directory ───────────────────────────
 console.log('[build-vercel] Creating .vercel/output/ directory structure...')
@@ -137,19 +61,7 @@ if (!bundleResult.success) {
 console.log('[build-vercel] Serverless function bundled successfully')
 
 // ── Step 3b: Copy @vercel/og runtime assets ─────────────────────────────
-// @vercel/og uses readFileSync(import.meta.url + '/../<file>') at module load
-// for its font, layout engine (yoga), and SVG renderer (resvg). Since we bundle
-// into a single .mjs, these files must sit alongside it.
-const ogAssets = ['noto-sans-v27-latin-regular.ttf', 'yoga.wasm', 'resvg.wasm']
-const ogDistDir = resolve(ROOT, '../../node_modules/@vercel/og/dist')
-for (const asset of ogAssets) {
-  const src = resolve(ogDistDir, asset)
-  if (existsSync(src)) {
-    cpSync(src, resolve(FUNC_DIR, asset))
-  } else {
-    console.warn(`[build-vercel] Warning: @vercel/og asset not found: ${src}`)
-  }
-}
+copyOgAssets(FUNC_DIR)
 console.log('[build-vercel] Copied @vercel/og runtime assets')
 
 // ── Step 4: Write .vc-config.json ───────────────────────────────────────

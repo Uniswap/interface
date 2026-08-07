@@ -208,9 +208,10 @@ export type SwapTradeBaseProperties = {
   included_permit_transaction_step?: boolean
   includes_delegation?: boolean
   is_smart_wallet_transaction?: boolean
-  // Gas sponsorship, derived from the quote's `sponsorshipInfo` (see getSponsorshipAnalyticsProperties).
-  // `is_sponsored` mirrors the quote's sponsorship offer across the funnel: swap_4337 quotes are always
-  // sponsored, swap_5792 quotes are sponsored when the backend returns a paymaster.
+  // Gas sponsorship. On quote-time funnel events `is_sponsored` mirrors the quote's sponsorship offer
+  // (see getSponsorshipAnalyticsProperties); on Swap Transaction Completed/Failed it means a paymaster
+  // actually paid gas for the execution (see isGasSponsoredExecution) — UniswapX fills are filler-paid
+  // and report false.
   is_sponsored?: boolean
   // Reason sponsorship was not granted, present when `is_sponsored` is false.
   sponsorship_rejection_reason?: string
@@ -857,6 +858,13 @@ export type SponsoredApprovalEventProperties = {
   duration_ms?: number // since SponsoredApprovalRequested
 }
 
+/**
+ * Which unitag the user created their embedded wallet with: the initial prefilled suggestion,
+ * a shuffled suggestion, or a manually edited name. Used to attribute the suggestion feature's
+ * impact in the embedded-wallet onboarding experiment.
+ */
+export type EmbeddedWalletUnitagSource = 'prefilled' | 'shuffled' | 'edited'
+
 // Please sort new values by EventName type!
 export type UniverseEventProperties = {
   [ExtensionEventName.BackgroundAttemptedToOpenSidebar]: { hasError: boolean }
@@ -884,6 +892,7 @@ export type UniverseEventProperties = {
   [ExtensionEventName.SidebarConnect]: Pick<DappContextProperties, 'dappUrl'>
   [ExtensionEventName.SidebarDisconnect]: undefined
   [ExtensionEventName.UnknownMethodRequest]: WindowEthereumRequestProperties
+  [EarnEventName.EarnHowItWorksAcknowledged]: EarnAnalyticsBaseProperties
   [EarnEventName.EarnSurfaceViewed]: Pick<EarnAnalyticsBaseProperties, 'entry_point' | 'surface'>
   [EarnEventName.EarnVaultCardShowMoreClicked]: EarnAnalyticsBaseProperties
   [EarnEventName.EarnVaultDetailViewed]: EarnAnalyticsBaseProperties
@@ -983,6 +992,30 @@ export type UniverseEventProperties = {
   [InterfaceEventName.LimitPresetRateSelected]: {
     value: number
   }
+  [InterfaceEventName.LimitCancelBroadcast]: {
+    order_hash: string
+    chain_id: number
+    route: 'pathA-converged' | 'wallet-shared' | 'revert'
+  }
+  [InterfaceEventName.LimitCancelBroadcastFailed]: {
+    order_hash?: string
+    chain_id: number
+    reason: 'rejection' | 'failure'
+    route: 'pathA-converged' | 'wallet-shared' | 'revert'
+  }
+  [InterfaceEventName.LimitCancelConfirmed]: {
+    order_hash: string
+    chain_id: number
+  }
+  [InterfaceEventName.LimitCancelRevertClicked]: {
+    order_hash: string
+    chain_id: number
+  }
+  [InterfaceEventName.LimitCancelTimeoutAlertShown]: {
+    order_hash: string
+    chain_id: number
+    cause: 'no-receipt' | 'orphan-no-hash' | 'legacy-record'
+  }
   [InterfaceEventName.LimitPriceReversed]: undefined
   [InterfaceEventName.LimitExpirySelected]: {
     value: LimitsExpiry
@@ -1077,7 +1110,7 @@ export type UniverseEventProperties = {
   [InterfaceEventName.OnChainAddLiquidityFailed]: {
     message: string
   } & (PartialMessage<CreatePositionRequest> | PartialMessage<IncreasePositionRequest>)
-  [InterfaceEventName.EmbeddedWalletCreated]: undefined
+  [InterfaceEventName.EmbeddedWalletCreated]: { unitag_source?: EmbeddedWalletUnitagSource }
   [InterfaceEventName.ExtensionUninstallFeedback]: {
     reason: ExtensionUninstallFeedbackOptions
   }
@@ -1098,6 +1131,16 @@ export type UniverseEventProperties = {
         chain: string
         page: InterfacePageName.ExplorePage
       }
+  [InterfaceEventName.ChartSettingSelected]: {
+    page: InterfacePageName
+    selection: 'chart_type' | 'time_period'
+    chart_type: string
+    time_period: string
+    previous_value: string
+    chain_id: UniverseChainId | undefined
+    token_address?: string
+    pool_id?: string
+  }
   [InterfaceEventName.ExploreSearchSelected]: undefined
   [InterfaceEventName.ExploreQueryLatency]: {
     query_type: 'tokens' | 'pools'
@@ -1105,6 +1148,16 @@ export type UniverseEventProperties = {
     latency_ms: number
     chain_id?: number
     result_count?: number
+  }
+  [InterfaceEventName.ExploreTableSorted]: {
+    table_type: 'tokens' | 'pools'
+    sort_method: string
+    sort_direction: 'asc' | 'desc'
+    surface: 'explore' | 'tdp' | 'add-liquidity-pool-browser' | 'positions-discovery'
+  }
+  [InterfaceEventName.ExploreTableFilterSelected]: {
+    filter_type: 'volume_time_period' | 'protocol'
+    filter_value: string
   }
   [InterfaceEventName.LanguageSelected]: {
     previous_language: string
@@ -1252,6 +1305,15 @@ export type UniverseEventProperties = {
   }
   [MobileEventName.TokenDetailsOtherChainButtonPressed]: ITraceContext
   [MobileEventName.TokenDetailsContextMenuAction]: ITraceContext & { action: string }
+  /** Typed data refused because its EIP-712 domain chain differed from the WalletConnect envelope. */
+  [MobileEventName.WalletConnectChainMismatchRejected]: {
+    dapp_url: string
+    dapp_name: string
+    eth_method: EthMethod
+    envelope_chain_id: number
+    domain_chain_id?: number
+    domain_chain_in_namespace: boolean
+  }
   [MobileEventName.WalletConnectSheetCompleted]: {
     request_type: WCEventType
     eth_method?: EthMethod | UwULinkMethod
@@ -1314,6 +1376,16 @@ export type UniverseEventProperties = {
     token1_symbol?: string
     /** ElementName.CreatePositionButton — selected protocol version ('v2' | 'v3' | 'v4'). */
     protocol_version?: string
+    /** ElementName.LaunchesTableRow / LaunchesTrendingCarouselCard — clicked launch's launchpad id. */
+    launchpad_id?: string
+    /** ElementName.LaunchesTableRow / LaunchesTrendingCarouselCard — true for Uniswap CCA quick launches. */
+    is_quick_launch?: boolean
+    /** ElementName.LaunchesTableRow / LaunchesTrendingCarouselCard — 1-based position in the rendered list. */
+    launch_list_index?: number
+    /** ElementName.LaunchesTableRow / LaunchesTrendingCarouselCard — length of the rendered list. */
+    launch_list_length?: number
+    /** ElementName.LaunchesLaunchpadFilterOption — resulting selected state after the toggle. */
+    selected?: boolean
   }
   [SharedEventName.PAGE_VIEWED]: ITraceContext & {
     /** Token details */
@@ -1570,6 +1642,10 @@ export type UniverseEventProperties = {
           tokenSection?: OnchainItemSectionName
         })
     | { token_balance_usd?: number | string }
+  [UniswapEventName.TokenSelectorSidebarToggled]: ITraceContext & {
+    expanded: boolean
+    field: CurrencyField
+  }
   [UniswapEventName.BlockaidFeesMismatch]: {
     symbol: string
     address: string
@@ -1605,10 +1681,17 @@ export type UniverseEventProperties = {
   [UniswapEventName.LpIncentiveCollectRewardsButtonClicked]: Partial<ITraceContext> | undefined
   [UniswapEventName.LpIncentiveCollectRewardsErrorThrown]: { error: string }
   [UniswapEventName.LpIncentiveCollectRewardsRetry]: undefined
-  [UniswapEventName.LpIncentiveCollectRewardsSuccess]: { token_rewards: string }
+  // The UNI-only path reports the raw UNI amount claimed; the multi-token path claims a set of
+  // reward tokens on one chain, so it reports the set instead of a single amount.
+  [UniswapEventName.LpIncentiveCollectRewardsSuccess]:
+    | { token_rewards: string }
+    | { chain_id: number; token_addresses: string[] }
   [UniswapEventName.LpIncentiveLearnMoreCtaClicked]: undefined
   [UniswapEventName.AuctionFilterSelected]: {
     filter: 'all' | 'verified' | 'unverified' | 'active' | 'complete' | 'new' | 'completed' | 'quick_launch'
+  }
+  [UniswapEventName.LaunchQuickFilterSelected]: {
+    filter: 'all' | 'trending' | 'recentlyLaunched'
   }
   [UniswapEventName.NetworkFilterSelected]: ITraceContext & {
     chain: UniverseChainId | typeof ALL_NETWORKS_LABEL
@@ -1622,6 +1705,7 @@ export type UniverseEventProperties = {
     | (TokenReportProperties & {
         type: 'token'
         source: 'portfolio' | 'token-details'
+        cant_sell_or_transfer: boolean
         spam_token: boolean
         imposter_token: boolean
         hidden_fees: boolean

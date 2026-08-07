@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { Flex, HeightAnimator, TransitionItem } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
+import { selectHasAcknowledgedEarnHowItWorks } from 'uniswap/src/features/behaviorHistory/selectors'
 import {
   EarnAnalyticsSurface,
   EarnEntryPoint,
@@ -9,9 +11,11 @@ import {
   logEarnTransactionEvent,
   logEarnVaultSelected,
 } from 'uniswap/src/features/earn/analytics'
+import { useAcknowledgeEarnHowItWorks } from 'uniswap/src/features/earn/hooks/useAcknowledgeEarnHowItWorks'
 import { useEarnDepositSources } from 'uniswap/src/features/earn/hooks/useEarnDepositSources'
 import { useEarnMainnetActionCurrencyForVault } from 'uniswap/src/features/earn/hooks/useEarnMainnetActionCurrency'
 import { EarnPositionStatus, useEarnPosition } from 'uniswap/src/features/earn/hooks/useEarnPosition'
+import { resetStoppedEarnPlan } from 'uniswap/src/features/earn/hooks/useEarnReviewExecutionHandlers'
 import {
   type EarnVaultModalInitialView,
   EarnVaultView,
@@ -26,10 +30,13 @@ import type {
   EarnAnalyticsSurface as EarnAnalyticsSurfaceValue,
 } from 'uniswap/src/features/telemetry/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import type { UniswapState } from 'uniswap/src/state/uniswapReducer'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { signalEarnModalClosed } from 'uniswap/src/utils/saga'
 import { noop } from 'utilities/src/react/noop'
 import { useActiveAccount } from '~/features/accounts/store/hooks'
 import { EarnVaultModalContent } from '~/features/earn/EarnVaultModalContent'
+import { useEarnVaultTransitionDirection } from '~/features/earn/hooks/useEarnVaultTransitionDirection'
 import { useAccount } from '~/hooks/useAccount'
 
 interface EarnVaultModalProps {
@@ -69,6 +76,9 @@ export function EarnVaultModal({
   const { navigateToSwapFlow, navigateToFiatOnRamp } = useUniswapContext()
   const isConnected = account.isConnected
   const evmAccount = useActiveAccount(Platform.EVM)
+  const hasAcknowledgedHowItWorks = useSelector((state: UniswapState) =>
+    selectHasAcknowledgedEarnHowItWorks(state, vault?.id),
+  )
   const currencyInfo = useCurrencyInfo(vault?.displayCurrencyId)
   const currency = currencyInfo?.currency
   const symbol = currency?.symbol ?? ''
@@ -122,6 +132,7 @@ export function EarnVaultModal({
     setSelectedTab,
     reset,
     startDeposit,
+    continueDeposit,
     startNeedToken,
     submitDepositAmount,
     backToDepositAmount,
@@ -134,8 +145,10 @@ export function EarnVaultModal({
     initialPosition: displayPosition,
     initialView,
     isOpen,
+    shouldShowHowItWorks: !hasAcknowledgedHowItWorks,
     vaultId: vault?.id,
   })
+  const transitionDirection = useEarnVaultTransitionDirection(flow.view)
 
   const analyticsProperties = useMemo(() => {
     if (!vault) {
@@ -200,8 +213,11 @@ export function EarnVaultModal({
     })
   }, [analyticsEntryPoint, analyticsProperties, flow.view, isOpen, vault])
 
+  // Every dismissal path funnels here (Escape, backdrop, close button), so this is where a
+  // stopped partial plan must be cleared — not only the review view's buttons.
   const handleClose = useCallback(() => {
     dispatch(signalEarnModalClosed())
+    resetStoppedEarnPlan()
     reset()
     onClose()
   }, [dispatch, onClose, reset])
@@ -220,6 +236,13 @@ export function EarnVaultModal({
     }
     startDeposit()
   }, [balanceLookupHasData, hasSupportedBalanceForUnderlying, isConnected, startDeposit, startNeedToken])
+
+  const handleContinueDeposit = useAcknowledgeEarnHowItWorks({
+    analyticsProperties,
+    onContinue: continueDeposit,
+    vaultId: vault?.id,
+  })
+  const isHowItWorksView = flow.view === EarnVaultView.HowItWorks
 
   // External DepositAmount entry points still need the balance guard.
   useEffect(() => {
@@ -256,57 +279,67 @@ export function EarnVaultModal({
     <Modal
       name={ModalName.EarnVault}
       isModalOpen={isOpen}
+      testID={TestID.EarnVaultModal}
       maxWidth={420}
-      padding="$spacing16"
+      padding={isHowItWorksView ? '$none' : '$spacing16'}
+      pt={isHowItWorksView ? '$spacing16' : undefined}
       gap="$spacing16"
       backgroundColor="$surface1"
       onClose={handleClose}
     >
-      <EarnVaultModalContent
-        analyticsEntryPoint={analyticsEntryPoint}
-        analyticsSurface={analyticsSurface}
-        onConnectWallet={onConnectWallet ?? noop}
-        flow={flow}
-        flowHandlers={{
-          onBackToDepositAmount: backToDepositAmount,
-          onBackToVault: backToVault,
-          onBackToWithdrawAmount: backToWithdrawAmount,
-          onBuyWithCash: handleBuyWithCash,
-          onClose: handleClose,
-          onDeposit: handleDeposit,
-          onReviewDeposit: submitDepositAmount,
-          onReviewWithdraw: submitWithdrawAmount,
-          onSwapForToken: handleSwapForToken,
-          onWithdraw: handleWithdraw,
-        }}
-        originatingTransactionId={originatingTransactionId}
-        projectedMonthlyEarningsUsd={projectedMonthlyEarningsUsd}
-        sourceUpsellCurrencyId={sourceUpsellCurrencyId}
-        swapAmountUsd={swapAmountUsd}
-        tabState={{ selectedTab, setSelectedTab }}
-        vaultData={{
-          balanceLookupErrored,
-          balanceLookupHasData,
-          balanceLookupSettled,
-          onRetryBalanceLookup: refetchBalanceLookup,
-          balanceError,
-          onRetryBalance: refetchPosition,
-          lifetimeEarningsUsd: position?.lifetimePnlUsd,
-          lifetimeEarningsError,
-          canWithdraw,
-          currencyInfo,
-          depositSourceOptions,
-          hasPosition,
-          isConnected,
-          isPositionLoading,
-          position: displayPosition,
-          selectedDepositSource,
-          setSelectedDepositSourceCurrencyId,
-          symbol,
-          unsupportedDepositSourceOptions,
-          vault,
-        }}
-      />
+      <HeightAnimator animation="quickLong">
+        <TransitionItem animation="quickLong" animationType={transitionDirection} childKey={flow.view} distance={24}>
+          {/* Preserve the modal's section gap after introducing the animation wrapper. */}
+          <Flex gap="$spacing16">
+            <EarnVaultModalContent
+              analyticsEntryPoint={analyticsEntryPoint}
+              analyticsSurface={analyticsSurface}
+              onConnectWallet={onConnectWallet ?? noop}
+              flow={flow}
+              flowHandlers={{
+                onBackToDepositAmount: backToDepositAmount,
+                onBackToVault: backToVault,
+                onBackToWithdrawAmount: backToWithdrawAmount,
+                onBuyWithCash: handleBuyWithCash,
+                onClose: handleClose,
+                onContinueDeposit: handleContinueDeposit,
+                onDeposit: handleDeposit,
+                onReviewDeposit: submitDepositAmount,
+                onReviewWithdraw: submitWithdrawAmount,
+                onSwapForToken: handleSwapForToken,
+                onWithdraw: handleWithdraw,
+              }}
+              originatingTransactionId={originatingTransactionId}
+              projectedMonthlyEarningsUsd={projectedMonthlyEarningsUsd}
+              sourceUpsellCurrencyId={sourceUpsellCurrencyId}
+              swapAmountUsd={swapAmountUsd}
+              tabState={{ selectedTab, setSelectedTab }}
+              vaultData={{
+                balanceLookupErrored,
+                balanceLookupHasData,
+                balanceLookupSettled,
+                onRetryBalanceLookup: refetchBalanceLookup,
+                balanceError,
+                onRetryBalance: refetchPosition,
+                lifetimeEarningsUsd: position?.lifetimePnlUsd,
+                lifetimeEarningsError,
+                canWithdraw,
+                currencyInfo,
+                depositSourceOptions,
+                hasPosition,
+                isConnected,
+                isPositionLoading,
+                position: displayPosition,
+                selectedDepositSource,
+                setSelectedDepositSourceCurrencyId,
+                symbol,
+                unsupportedDepositSourceOptions,
+                vault,
+              }}
+            />
+          </Flex>
+        </TransitionItem>
+      </HeightAnimator>
     </Modal>
   )
 }

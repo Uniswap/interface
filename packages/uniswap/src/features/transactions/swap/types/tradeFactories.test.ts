@@ -98,6 +98,7 @@ function createClassicQuote(overrides: Partial<ClassicQuoteResponse['quote']> = 
         ],
       ],
       priceImpact: 0.06,
+      priceDifference: 0.06,
       aggregatedOutputs: [
         { amount: '195', minAmount: '190', token: USDC_MAINNET.address, recipient: SWAPPER, bps: 9750 },
         { amount: '5', minAmount: '5', token: USDC_MAINNET.address, recipient: FEE_RECIPIENT, bps: 250 },
@@ -126,6 +127,7 @@ function createBridgeQuote(overrides: Partial<BridgeQuoteResponse['quote']> = {}
       output: DEFAULT_OUTPUT,
       swapper: SWAPPER,
       tradeType: TradingApi.TradeType.EXACT_INPUT,
+      priceDifference: 0.25,
       ...legacyFeeFields,
       ...overrides,
     },
@@ -204,6 +206,7 @@ function createDutchQuote(): DutchQuoteResponse {
       input: DEFAULT_INPUT,
       output: DEFAULT_OUTPUT,
       slippageTolerance: 0.5,
+      priceDifference: 0.5,
       aggregatedOutputs: [
         { amount: '195', minAmount: '190', token: USDC_MAINNET.address, recipient: SWAPPER, bps: 9750 },
       ],
@@ -284,6 +287,31 @@ describe('trade factories', () => {
     expect(trade?.outputTax.equalTo(new Percent(222, 10000))).toBe(true)
     expect(trade?.quoteOutputAmount.quotient.toString()).toBe('200')
     expect(trade?.quoteOutputAmountUserWillReceive.quotient.toString()).toBe('190')
+    expect(trade?.priceDifference?.equalTo(new Percent(6, 10000))).toBe(true)
+  })
+
+  it('sources a signed price difference from the quote, negative on price improvement', () => {
+    const trade = createClassicTrade({
+      quote: createClassicQuote({ priceDifference: -0.5 }),
+      currencyIn: WETH,
+      currencyOut: USDC_MAINNET,
+      tradeType: TradeType.EXACT_INPUT,
+      deadline: DEADLINE,
+    })
+
+    expect(trade?.priceDifference?.equalTo(new Percent(-50, 10000))).toBe(true)
+  })
+
+  it('leaves price impact undefined when the quote omits priceDifference', () => {
+    const trade = createClassicTrade({
+      quote: createClassicQuote({ priceDifference: undefined }),
+      currencyIn: WETH,
+      currencyOut: USDC_MAINNET,
+      tradeType: TradeType.EXACT_INPUT,
+      deadline: DEADLINE,
+    })
+
+    expect(trade?.priceDifference).toBeUndefined()
   })
 
   it('creates exact-output classic trades with backend maximum input and minimum output amounts', () => {
@@ -353,6 +381,9 @@ describe('trade factories', () => {
     expect(priorityTrade?.routing).toBe(TradingApi.Routing.PRIORITY)
     expect(dutchV2Trade?.deadline).toBe(DEADLINE)
     expect(dutchV2Trade?.quoteOutputAmountUserWillReceive.quotient.toString()).toBe('190')
+    expect(dutchV2Trade?.priceDifference?.equalTo(new Percent(50, 10000))).toBe(true)
+    expect(dutchV3Trade?.priceDifference?.equalTo(new Percent(50, 10000))).toBe(true)
+    expect(priorityTrade?.priceDifference?.equalTo(new Percent(50, 10000))).toBe(true)
   })
 
   it('creates bridge trades and preserves the pre-fee output amount the user receives', () => {
@@ -366,6 +397,7 @@ describe('trade factories', () => {
     expect(trade?.routing).toBe(TradingApi.Routing.BRIDGE)
     expect(trade?.quoteOutputAmount.quotient.toString()).toBe('200')
     expect(trade?.quoteOutputAmountUserWillReceive.quotient.toString()).toBe('205')
+    expect(trade?.priceDifference?.equalTo(new Percent(25, 10000))).toBe(true)
   })
 
   it('falls back to exact amounts for no-slippage bridge quotes without min/max fields', () => {
@@ -401,11 +433,13 @@ describe('trade factories', () => {
     expect(unwrapTrade?.routing).toBe(TradingApi.Routing.UNWRAP)
     expect(wrapTrade?.slippageTolerance).toBe(0)
     expect(unwrapTrade?.swapFee).toBeUndefined()
+    expect(wrapTrade?.priceDifference).toBeUndefined()
   })
 
   it('creates chained action trades with compound slippage', () => {
     const trade = createChainedActionTrade({
       quote: createChainedQuote({
+        priceDifference: 0.5,
         steps: [
           { stepType: TradingApi.PlanStepType.WRAP, slippage: 1 },
           { stepType: TradingApi.PlanStepType.CLASSIC, slippage: 2 },
@@ -419,6 +453,7 @@ describe('trade factories', () => {
     expect(trade?.tradeType).toBe(TradeType.EXACT_INPUT)
     expect(trade?.slippageTolerance).toBe(2.98)
     expect(trade?.minAmountOut.quotient.toString()).toBe('190')
+    expect(trade?.priceDifference?.equalTo(new Percent(50, 10000))).toBe(true)
   })
 
   it('returns null instead of throwing when a chained quote is malformed', () => {
@@ -470,6 +505,76 @@ describe('trade factories', () => {
     expect(trade?.outputAmount.quotient.toString()).toBe(depositAssetAmount)
     expect(trade?.outputAmount.currency.equals(USDC)).toBe(true)
     expect(trade?.earnIntent).toBe(earnIntent)
+  })
+
+  it('includes the price difference for Earn deposits whose display output is the underlying asset', () => {
+    const earnIntent: TradingApi.EarnIntent = {
+      action: TradingApi.EarnAction.DEPOSIT,
+      vault: '0x8c106EEDAd96553e64287A5A6839c3Cc78afA3D0',
+      chainId: UniverseChainId.Mainnet as unknown as TradingApi.ChainId,
+    }
+    const depositAssetAmount = '2000000'
+    const vaultShareAmount = '2800994864966439066'
+
+    const trade = createEarnChainedActionTrade({
+      quote: createChainedQuote({
+        input: { amount: '1000000', token: USDC_UNICHAIN.address },
+        output: { amount: vaultShareAmount, token: earnIntent.vault, recipient: SWAPPER },
+        tokenInChainId: UniverseChainId.Unichain as unknown as TradingApi.ChainId,
+        tokenOutChainId: UniverseChainId.Mainnet as unknown as TradingApi.ChainId,
+        priceDifference: 0.5,
+        earnPreview: {
+          type: TradingApi.EarnDepositPreview.type.DEPOSIT,
+          depositAssets: [
+            {
+              token: USDC.address,
+              chainId: UniverseChainId.Mainnet as unknown as TradingApi.ChainId,
+              amount: depositAssetAmount,
+            },
+          ],
+          estimatedSharesOut: vaultShareAmount,
+        },
+      }),
+      currencyIn: USDC_UNICHAIN,
+      currencyOut: USDC_UNICHAIN,
+      earnIntent,
+    })
+
+    expect(trade?.outputAmount.currency.equals(USDC)).toBe(true)
+    expect(trade?.priceDifference?.equalTo(new Percent(50, 10000))).toBe(true)
+  })
+
+  it('omits the price difference for Earn deposits whose display output is vault shares', () => {
+    const earnIntent: TradingApi.EarnIntent = {
+      action: TradingApi.EarnAction.DEPOSIT,
+      vault: USDC_VAULT.address,
+      chainId: UniverseChainId.Mainnet as unknown as TradingApi.ChainId,
+    }
+    const vaultShareAmount = '2800994864966439066'
+
+    const trade = createChainedActionTrade({
+      quote: createChainedQuote({
+        input: { amount: '1000000', token: USDC_UNICHAIN.address },
+        output: { amount: vaultShareAmount, token: USDC_VAULT.address, recipient: SWAPPER },
+        priceDifference: 0.5,
+        earnPreview: {
+          type: TradingApi.EarnDepositPreview.type.DEPOSIT,
+          depositAssets: [
+            {
+              token: USDC.address,
+              chainId: UniverseChainId.Mainnet as unknown as TradingApi.ChainId,
+              amount: '2000000',
+            },
+          ],
+          estimatedSharesOut: vaultShareAmount,
+        },
+      }),
+      currencyIn: USDC_UNICHAIN,
+      currencyOut: USDC_VAULT,
+      earnIntent,
+    })
+
+    expect(trade?.priceDifference).toBeUndefined()
   })
 
   it('uses known preview asset decimals when Earn deposit output currency differs', () => {

@@ -186,6 +186,7 @@ export function buildMessage(opts: {
   dashboards: DashboardLink[]
   includeIncidentWebhook?: boolean
   additionalSlackChannels?: string[]
+  slackAlertTransitionsOnly?: boolean
 }): string {
   // Disable webhook if globally disabled or explicitly set to false
   const includeWebhook = opts.includeIncidentWebhook !== false && !settings.disablePaging
@@ -224,11 +225,18 @@ uniapp: {{uniapp.name}}, unistk: {{unistk.name}}, unienv: {{unienv.name}}, unigr
 
   // Only include Slack channels if not globally disabled
   if (!settings.disableSlack) {
-    message += `${slackChannel}\n`
+    let channels = `${slackChannel}\n`
     if (opts.additionalSlackChannels) {
       for (const channel of opts.additionalSlackChannels) {
-        message += `${channel}\n`
+        channels += `${channel}\n`
       }
+    }
+    if (opts.slackAlertTransitionsOnly) {
+      // Mention Slack only on alert trigger + alert recovery, so warning-level
+      // transitions don't notify the channel.
+      message += `{{#is_alert}}\n${channels}{{/is_alert}}\n{{#is_alert_recovery}}\n${channels}{{/is_alert_recovery}}\n`
+    } else {
+      message += channels
     }
   }
 

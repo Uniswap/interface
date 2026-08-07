@@ -18,8 +18,6 @@ describe(useChartDimensions, () => {
     expect(result.current).toEqual({
       chartHeight: 130,
       chartWidth: 1000,
-      buttonWidth: expect.any(Number),
-      labelWidth: expect.any(Number),
     })
   })
 
@@ -30,8 +28,6 @@ describe(useChartDimensions, () => {
     expect(result.current).toEqual({
       chartHeight: 215,
       chartWidth: 1000,
-      buttonWidth: expect.any(Number),
-      labelWidth: expect.any(Number),
     })
   })
 })

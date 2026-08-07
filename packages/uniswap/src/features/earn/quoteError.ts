@@ -6,6 +6,7 @@ import { FetchError, TradingApi } from '@universe/api'
 // Routing-service no-route responses are not modeled in the generated TradingApi error enum.
 const NO_QUOTES_AVAILABLE_DETAIL = 'No quotes available'
 const ROUTING_NO_ROUTE_ERROR_CODE = 'NO_ROUTE'
+const INSUFFICIENT_DESTINATION_GAS_DETAIL = 'Bridged amount is insufficient to cover gas costs for destination swap'
 
 function getStringField(data: unknown, field: string): string | undefined {
   if (!data || typeof data !== 'object' || !(field in data)) {
@@ -30,4 +31,12 @@ export function isEarnNoRoutesQuoteError(error: unknown): boolean {
     errorCode === TradingApi.Err404.errorCode.QUOTE_AMOUNT_TOO_LOW_ERROR ||
     detail === NO_QUOTES_AVAILABLE_DETAIL
   )
+}
+
+export function isEarnInsufficientDestinationGasQuoteError(error: unknown): boolean {
+  if (!(error instanceof FetchError)) {
+    return false
+  }
+
+  return getStringField(error.data, 'detail') === INSUFFICIENT_DESTINATION_GAS_DETAIL
 }

@@ -3,11 +3,11 @@ import { GqlResult } from '@universe/api'
 import { useMemo } from 'react'
 import { OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/lists/items/types'
 import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
-import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { usePersistedError } from 'uniswap/src/features/dataApi/utils/usePersistedError'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 
 export function useCurrencies(currencyIds: string[]): GqlResult<CurrencyInfo[]> {
   const { data: baseCurrencyInfos, loading, error, refetch } = useTokenProjects(currencyIds)

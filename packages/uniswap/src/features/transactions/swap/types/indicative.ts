@@ -14,7 +14,7 @@ export type IndicativeTrade = BaseTrade<ValidatedIndicativeQuoteResponse, Tradin
   readonly inputTax: undefined
   readonly outputTax: undefined
   readonly slippageTolerance?: number
-  readonly priceImpact?: Percent
+  readonly priceDifference?: Percent
   readonly deadline: undefined
 }
 

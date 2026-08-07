@@ -5,14 +5,17 @@ import type {
   GetTokenHistoryVolumeResponse,
 } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { GraphQLApi } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { UTCTimestamp } from 'lightweight-charts'
 import { useMemo } from 'react'
 import {
   getGetTokenHistoryTVLQueryOptions,
   getGetTokenHistoryVolumeQueryOptions,
 } from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { useIsV2TokensEnabled } from 'uniswap/src/features/dataApi/tokenDetails/useIsV2TokensEnabled'
+import { useTokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { toRestHistoryDuration } from 'uniswap/src/features/dataApi/tokenDetails/useTokenPriceHistoryRest'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { StackedLineData } from '~/components/Charts/StackedLineChart'
 import {
   appendCurrentValue,
@@ -44,7 +47,7 @@ export function useTDPVolumeChartData({
   variables: TDPChartQueryVariables
   skip: boolean
 }): ChartQueryResult<SingleHistogramData, ChartType.VOLUME> {
-  const isV2TokensEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
+  const isV2TokensEnabled = useIsV2TokensEnabled()
 
   const { data, loading } = GraphQLApi.useTokenHistoricalVolumesQuery({
     variables,
@@ -53,7 +56,7 @@ export function useTDPVolumeChartData({
   const historicalVolume = data?.token?.market?.historicalVolume
 
   const target = useRestHistoryTarget(variables)
-  const { data: restEntries, isLoading: restLoading } = useQuery(
+  const { data: restEntries, isPending: restLoading } = useQuery(
     getGetTokenHistoryVolumeQueryOptions({
       params: { target, duration: toRestHistoryDuration(variables.duration) },
       enabled: isV2TokensEnabled && !skip && !!target,
@@ -91,12 +94,12 @@ export function useTDPTVLChartData({
   variables: TDPChartQueryVariables
   skip: boolean
 }): ChartQueryResult<StackedLineData, ChartType.TVL> {
-  const isV2TokensEnabled = useFeatureFlag(FeatureFlags.V2EndpointsTokens)
+  const isV2TokensEnabled = useIsV2TokensEnabled()
 
   const { data, loading } = GraphQLApi.useTokenHistoricalTvlsQuery({ variables, skip: skip || isV2TokensEnabled })
 
   const target = useRestHistoryTarget(variables)
-  const { data: restEntries, isLoading: restLoading } = useQuery(
+  const { data: restEntries, isPending: restLoading } = useQuery(
     getGetTokenHistoryTVLQueryOptions({
       params: { target, duration: toRestHistoryDuration(variables.duration) },
       enabled: isV2TokensEnabled && !skip && !!target,
@@ -104,10 +107,39 @@ export function useTDPTVLChartData({
     }),
   )
 
+  // REST history buckets lag "now" by their bucket granularity; append the live TVL stat (same
+  // source StatsSection uses) so freshness matches the GraphQL path below, which does the same
+  // with `totalValueLocked`. Derived from `variables` (the same chain/address the REST history
+  // target uses, mirroring useTokenPriceChartPanel's spotCurrencyId) rather than a separate
+  // `currency` prop, so the live point can never disagree with the curve on a multichain token
+  // whose selected chain differs from the path token's chain.
+  const chainId = useMemo(() => fromGraphQLChain(variables.chain), [variables.chain])
+  const currencyIdValue = useMemo(() => {
+    if (!variables.address) {
+      return undefined
+    }
+    return chainId ? buildCurrencyId(chainId, variables.address) : undefined
+  }, [chainId, variables.address])
+  const { tvl: currentTvlV2 } = useTokenMarketStats(currencyIdValue ?? '', {
+    isMultichainAggregateView: variables.multichain,
+  })
+
   return useMemo(() => {
     if (isV2TokensEnabled) {
-      const entries = restEntries ?? []
-      const dataQuality = checkDataQuality({ data: entries, chartType: ChartType.TVL, duration: variables.duration })
+      const rawEntries = restEntries ?? []
+      // Judge staleness on the real REST history bucket, not the appended live point below —
+      // otherwise a healthy live stat masks a historical ingestion pipeline that's actually stale.
+      const dataQuality = checkDataQuality({
+        data: rawEntries,
+        chartType: ChartType.TVL,
+        duration: variables.duration,
+      })
+      const entries = appendCurrentValue({
+        entries: rawEntries,
+        currentValue: currentTvlV2,
+        buildEntry: (time, value) => ({ time, values: [value] }),
+        withCurrentValue: (entry, { time, value }) => ({ ...entry, time, values: [value] }),
+      })
       return { chartType: ChartType.TVL, entries, loading: restLoading, dataQuality }
     }
 
@@ -118,6 +150,14 @@ export function useTDPTVLChartData({
         .map(toStackedLineData) ?? []
     const currentTvl = totalValueLocked?.value
 
+    // Judge staleness on the real historical bucket, not the appended live point below — otherwise
+    // a healthy live stat masks a historical ingestion pipeline that's actually stale.
+    const dataQuality = checkDataQuality({
+      data: entries,
+      chartType: ChartType.TVL,
+      duration: variables.duration,
+    })
+
     // Append current tvl to end of array to ensure data freshness and that each time period ends with same tvl
     const entriesWithCurrentTvl = appendCurrentValue({
       entries,
@@ -126,11 +166,6 @@ export function useTDPTVLChartData({
       withCurrentValue: (entry, { time, value }) => ({ ...entry, time, values: [value] }),
     })
 
-    const dataQuality = checkDataQuality({
-      data: entriesWithCurrentTvl,
-      chartType: ChartType.TVL,
-      duration: variables.duration,
-    })
     return { chartType: ChartType.TVL, entries: entriesWithCurrentTvl, loading, dataQuality }
-  }, [isV2TokensEnabled, restEntries, restLoading, data?.token?.market, loading, variables.duration])
+  }, [isV2TokensEnabled, restEntries, currentTvlV2, restLoading, data?.token?.market, loading, variables.duration])
 }

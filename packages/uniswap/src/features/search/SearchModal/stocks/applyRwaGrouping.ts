@@ -1,5 +1,5 @@
 import { OnchainItemListOptionType, type SearchModalOption } from 'uniswap/src/components/lists/items/types'
-import type { Rwa } from 'uniswap/src/data/rest/rwa/types'
+import type { Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   buildRwaCollectionOption,

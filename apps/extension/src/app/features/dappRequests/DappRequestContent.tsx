@@ -25,6 +25,7 @@ import { useThrottledCallback } from 'utilities/src/react/useThrottledCallback'
 import { MAX_HIDDEN_CALLS_BY_DEFAULT } from 'wallet/src/components/BatchedTransactions/BatchedTransactionDetails'
 import { DappRequestHeader } from 'wallet/src/components/dappRequests/DappRequestHeader'
 import { WarningBox } from 'wallet/src/components/WarningBox/WarningBox'
+import { useSiteVerification } from 'wallet/src/features/dappRequests/hooks/useSiteVerification'
 import { type DappVerificationStatus } from 'wallet/src/features/dappRequests/types'
 import { AddressFooter } from 'wallet/src/features/transactions/TransactionRequest/AddressFooter'
 import { NetworkFeeFooter } from 'wallet/src/features/transactions/TransactionRequest/NetworkFeeFooter'
@@ -33,6 +34,7 @@ import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 interface DappRequestHeaderProps {
   title: string
   verificationStatus?: DappVerificationStatus
+  isFirstParty?: boolean
   headerIcon?: JSX.Element
 }
 
@@ -90,6 +92,7 @@ export function DappRequestContent({
   chainId,
   title,
   verificationStatus,
+  isFirstParty,
   headerIcon,
   confirmText,
   connectedAccountAddress,
@@ -110,6 +113,10 @@ export function DappRequestContent({
   const { forwards, currentIndex, dappIconUrl, dappUrl, frameUrl } = useDappRequestQueueContext()
   const hostname = extractNameFromUrl(dappUrl).toUpperCase()
 
+  // Site verification applies to every request type; flows that compute their own
+  // status (e.g. connection, which feeds it into confirmation gating) can override.
+  const siteVerification = useSiteVerification(dappUrl)
+
   return (
     <>
       <Flex mb="$spacing4" ml="$spacing8" mt="$spacing8" mr="$spacing8" px="$spacing12">
@@ -121,7 +128,8 @@ export function DappRequestContent({
             frameUrl,
           }}
           title={title}
-          verificationStatus={verificationStatus}
+          verificationStatus={verificationStatus ?? siteVerification.verificationStatus}
+          isFirstParty={isFirstParty ?? siteVerification.isFirstParty}
           headerIcon={headerIcon}
         />
       </Flex>

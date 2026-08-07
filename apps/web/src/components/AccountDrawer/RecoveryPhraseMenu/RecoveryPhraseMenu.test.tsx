@@ -1,14 +1,13 @@
 import { act, fireEvent, waitFor } from '@testing-library/react'
+import { exportSeedPhrase, useEmbeddedWalletState } from '@universe/embedded-wallet'
 import type { PropsWithChildren, ReactNode } from 'react'
-import { exportSeedPhrase } from 'uniswap/src/features/passkey/utils'
 import { resetListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { PhraseDisplayContent } from '~/components/AccountDrawer/RecoveryPhraseMenu/PhraseDisplayContent'
 import { RecoveryPhraseMenu } from '~/components/AccountDrawer/RecoveryPhraseMenu/RecoveryPhraseMenu'
 import { WarningContent } from '~/components/AccountDrawer/RecoveryPhraseMenu/WarningContent'
-import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { render, screen } from '~/test-utils/render'
 
-vi.mock('uniswap/src/features/passkey/utils', () => ({
+vi.mock('@universe/embedded-wallet/src/features/passkey/utils', () => ({
   exportSeedPhrase: vi.fn(),
 }))
 
@@ -16,9 +15,10 @@ vi.mock('~/components/AccountDrawer/PasskeyMenu/PasskeyMenu', () => ({
   resetListAuthenticators: vi.fn(),
 }))
 
-vi.mock('~/state/embeddedWallet/store', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('~/state/embeddedWallet/store')>()),
+vi.mock('@universe/embedded-wallet/src/state/embeddedWalletStore', () => ({
   useEmbeddedWalletState: vi.fn(),
+  getEmbeddedWalletState: vi.fn(() => ({ walletAddress: null, walletId: null, chainId: null, isConnected: false })),
+  setChainId: vi.fn(),
 }))
 
 const mockCopy = vi.fn()

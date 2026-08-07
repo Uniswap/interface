@@ -8,6 +8,7 @@ import type {
   GasFeeResult,
   GasStrategy,
   UnwrapQuoteResponse,
+  WithSwapPermissionContext,
   WrapQuoteResponse,
 } from '@universe/api'
 import { TradingApi } from '@universe/api'
@@ -88,9 +89,13 @@ export type TransactionRequestInfo = {
 export function createPrepareSwapRequestParams({
   gasStrategy,
   gasOverrides,
+  isPermissionedToken,
 }: {
   gasStrategy: GasStrategy
   gasOverrides?: TradingApi.UrgencyOverrides
+  // When a permissioned token is involved, the trading API client uses it to select the
+  // permissioned-pool Universal Router version. Stripped from the request body before sending.
+  isPermissionedToken?: boolean
 }) {
   return function prepareSwapRequestParams({
     swapQuoteResponse,
@@ -104,7 +109,7 @@ export function createPrepareSwapRequestParams({
     transactionSettings: TransactionSettings
     alreadyApproved: boolean
     overrideSimulation?: boolean
-  }): SwapRequestParams {
+  }): WithSwapPermissionContext<SwapRequestParams> {
     const isBridgeTrade = swapQuoteResponse.routing === TradingApi.Routing.BRIDGE
     const permitData = swapQuoteResponse.permitData
 
@@ -130,6 +135,7 @@ export function createPrepareSwapRequestParams({
       deadline,
       refreshGasPrice: true,
       sponsorshipInfo: swapQuoteResponse.sponsorshipInfo,
+      isPermissionedToken,
     }
 
     if (shouldUseUrgency) {

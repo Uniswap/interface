@@ -2,7 +2,7 @@ import type { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/pool
 import type { Currency } from '@uniswap/sdk-core'
 import type * as d3 from 'd3'
 import type { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
-import type { TickData } from '~/appGraphql/data/AllV3TicksQuery'
+import type { TickData } from '~/data/AllV3TicksQuery'
 import type { ChartCoreActions } from '~/features/Liquidity/charts/D3LiquidityChartShared/store/createChartActions'
 import type { LinearTickScale, Renderer } from '~/features/Liquidity/charts/D3LiquidityChartShared/types'
 import type { BucketChartEntry } from '~/features/Liquidity/charts/D3LiquidityChartShared/utils/liquidityBucketing/liquidityBucketing'

@@ -1,4 +1,5 @@
-import { ReportAssetType, TokenReportEventType } from '@universe/api'
+import { ConnectError } from '@connectrpc/connect'
+import { TokenReportEventType } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -9,7 +10,8 @@ import { EyeOff } from 'ui/src/components/icons/EyeOff'
 import { Flag } from 'ui/src/components/icons/Flag'
 import { Opensea } from 'ui/src/components/icons/Opensea'
 import { type MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
-import { DataServiceApiClient } from 'uniswap/src/data/apiClients/dataApi/DataApiClient'
+import { dataApiServiceClientV1 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClient'
+import { ASSET_TO_REPORT_STRING, ReportAssetType } from 'uniswap/src/data/apiClients/dataApiService/reporting/utils'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useBlockExplorerLogo } from 'uniswap/src/features/chains/logos'
 import { type UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -84,11 +86,11 @@ export function useNFTContextMenuItems({
         contractAddress,
       })
       // Submit report to API
-      await DataServiceApiClient.submitTokenReport({
+      await dataApiServiceClientV1.submitReport({
         chainId,
         address: contractAddress,
-        event: TokenReportEventType.FalseNegative,
-        assetType: ReportAssetType.NFT,
+        event: TokenReportEventType.FALSE_NEGATIVE,
+        details: ASSET_TO_REPORT_STRING[ReportAssetType.NFT],
       })
 
       if (showNotification) {
@@ -105,8 +107,8 @@ export function useNFTContextMenuItems({
       })
 
       // Don't surface this error to the user if the chain ID isn't supported
-      const error = e as { data?: { message?: string } }
-      const unsupportedChainError = error.data?.message?.includes('Unsupported chain ID')
+      const errorMessage = e instanceof ConnectError ? e.message : undefined
+      const unsupportedChainError = errorMessage?.includes('Unsupported chain ID')
 
       if (unsupportedChainError) {
         return

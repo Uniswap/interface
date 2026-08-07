@@ -280,6 +280,23 @@ const arcCurrencies = [
   makeCurrencyInfo({ token: arcUsycToken }),
 ]
 
+// Ink-specific quick-select currencies
+const inkWethToken = new Token(
+  UniverseChainId.Ink,
+  '0x4200000000000000000000000000000000000006',
+  18,
+  'WETH',
+  'Wrapped Ether',
+)
+const inkUsdt0Token = new Token(UniverseChainId.Ink, '0x0200C29006150606B650577BBE7B6248F58470c1', 6, 'USDT0', 'USDT0')
+const inkUsdcToken = new Token(UniverseChainId.Ink, '0x2D270e6886d130D724215A266106e6832161EAEd', 6, 'USDC', 'USDC')
+
+const inkCurrencies = [
+  makeCurrencyInfo({ token: inkWethToken }),
+  makeCurrencyInfo({ token: inkUsdt0Token }),
+  makeCurrencyInfo({ token: inkUsdcToken }),
+]
+
 // --- Mock helpers ---
 
 const defaultGqlResult = {
@@ -330,6 +347,9 @@ function setupDefaultMocks({
   arcData = arcCurrencies,
   arcError,
   arcLoading = false,
+  inkData = inkCurrencies,
+  inkError,
+  inkLoading = false,
 }: {
   chainFilter: UniverseChainId | null
   commonBase?: CurrencyInfo[] | null
@@ -353,6 +373,9 @@ function setupDefaultMocks({
   arcData?: CurrencyInfo[]
   arcError?: Error
   arcLoading?: boolean
+  inkData?: CurrencyInfo[]
+  inkError?: Error
+  inkLoading?: boolean
 }): void {
   mockUseAllCommonBaseCurrencies.mockReturnValue({
     data: commonBase === null ? undefined : (commonBase ?? allCommonBaseCurrencies),
@@ -361,8 +384,9 @@ function setupDefaultMocks({
     refetch: vi.fn(),
   })
 
-  // useCurrencyInfosWithLoading is called six times: first for XLayer, then for Linea, then for Base,
-  // then for MegaETH, then for Robinhood, then for Arc. Each call receives { skip: true } when the chain doesn't match.
+  // useCurrencyInfosWithLoading is called seven times, in this order: XLayer, Linea, Base, MegaETH,
+  // Robinhood, Arc, Ink. Each call receives { skip: true } when the chain doesn't match. These
+  // mockReturnValueOnce calls are positional — they must stay in the same order as the hook's calls.
   mockUseCurrencyInfosWithLoading
     .mockReturnValueOnce(
       chainFilter === UniverseChainId.XLayer
@@ -393,6 +417,11 @@ function setupDefaultMocks({
       chainFilter === UniverseChainId.Arc
         ? { data: arcData, error: arcError, loading: arcLoading, refetch: vi.fn() }
         : { ...skippedResult, loading: arcLoading },
+    )
+    .mockReturnValueOnce(
+      chainFilter === UniverseChainId.Ink
+        ? { data: inkData, error: inkError, loading: inkLoading, refetch: vi.fn() }
+        : { ...skippedResult, loading: inkLoading },
     )
 }
 
@@ -493,6 +522,29 @@ describe(useCommonTokensOptions, () => {
       expect(currencyIds).toContain(buildCurrencyId(UniverseChainId.Arc, arcWethToken.address))
       expect(currencyIds).toContain(buildCurrencyId(UniverseChainId.Arc, arcCirBtcToken.address))
       expect(result.current.data).toHaveLength(arcCurrencies.length)
+    })
+
+    it('returns Ink-specific tokens when chainFilter is Ink', async () => {
+      setupDefaultMocks({ chainFilter: UniverseChainId.Ink })
+
+      const { result } = renderHook(() =>
+        useCommonTokensOptions({
+          portfolioData: makePortfolioData(),
+          chainFilter: UniverseChainId.Ink,
+        }),
+      )
+
+      await waitFor(() => {
+        expect(result.current.loading).toBe(false)
+      })
+
+      // Should return Ink currencies, not common base. USDT0 in particular cannot come from the
+      // common-base path since it is not a member of any mainnet token project.
+      const currencyIds = result.current.data?.map((opt) => opt.currencyInfo.currencyId) ?? []
+      expect(currencyIds).toContain(buildCurrencyId(UniverseChainId.Ink, inkUsdt0Token.address))
+      expect(currencyIds).toContain(buildCurrencyId(UniverseChainId.Ink, inkUsdcToken.address))
+      expect(currencyIds).toContain(buildCurrencyId(UniverseChainId.Ink, inkWethToken.address))
+      expect(result.current.data).toHaveLength(inkCurrencies.length)
     })
 
     it('returns XLayer-specific tokens when chainFilter is XLayer', async () => {
@@ -683,6 +735,23 @@ describe(useCommonTokensOptions, () => {
 
       expect(result.current.data).toEqual([])
     })
+
+    it('returns empty array when Ink currencies are empty', async () => {
+      setupDefaultMocks({ chainFilter: UniverseChainId.Ink, inkData: [] })
+
+      const { result } = renderHook(() =>
+        useCommonTokensOptions({
+          portfolioData: makePortfolioData(),
+          chainFilter: UniverseChainId.Ink,
+        }),
+      )
+
+      await waitFor(() => {
+        expect(result.current.loading).toBe(false)
+      })
+
+      expect(result.current.data).toEqual([])
+    })
   })
 
   describe('error handling', () => {
@@ -793,6 +862,24 @@ describe(useCommonTokensOptions, () => {
 
       expect(result.current.error).toBeTruthy()
     })
+
+    it('returns error when Ink currencies fetch fails and chainFilter is Ink', async () => {
+      const inkError = new Error('Ink fetch failed')
+      setupDefaultMocks({ chainFilter: UniverseChainId.Ink, inkData: [], inkError })
+
+      const { result } = renderHook(() =>
+        useCommonTokensOptions({
+          portfolioData: makePortfolioData(),
+          chainFilter: UniverseChainId.Ink,
+        }),
+      )
+
+      await waitFor(() => {
+        expect(result.current.loading).toBe(false)
+      })
+
+      expect(result.current.error).toBeTruthy()
+    })
   })
 
   describe('loading state', () => {
@@ -894,6 +981,19 @@ describe(useCommonTokensOptions, () => {
         useCommonTokensOptions({
           portfolioData: makePortfolioData(),
           chainFilter: UniverseChainId.Arc,
+        }),
+      )
+
+      expect(result.current.loading).toBe(true)
+    })
+
+    it('is loading when Ink currencies are loading', async () => {
+      setupDefaultMocks({ chainFilter: UniverseChainId.Ink, inkLoading: true })
+
+      const { result } = renderHook(() =>
+        useCommonTokensOptions({
+          portfolioData: makePortfolioData(),
+          chainFilter: UniverseChainId.Ink,
         }),
       )
 

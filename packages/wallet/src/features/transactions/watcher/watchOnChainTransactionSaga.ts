@@ -110,6 +110,13 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
   // For UniswapX orders, we need to wait for the order to be filled before we can get the hash
   if (isUniswapX(transaction) && transaction.orderHash && transaction.queueStatus) {
     const updatedOrder = yield* call(OrderWatcher.waitForOrderStatus, transaction.orderHash, transaction.queueStatus)
+
+    // Pre-submission watcher released: the submission update forked a replacement watcher that
+    // owns the fill (mirrors the classic not-yet-submitted early return below)
+    if (!updatedOrder) {
+      return undefined
+    }
+
     hash = updatedOrder.hash
     status = updatedOrder.status
 

@@ -8,7 +8,7 @@ import { type Warning, WarningLabel } from 'uniswap/src/components/modals/Warnin
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { EstimatedSwapTime } from 'uniswap/src/features/transactions/swap/components/EstimatedBridgeTime'
 import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/MaxSlippageRow'
-import { PriceImpactRow } from 'uniswap/src/features/transactions/swap/components/PriceImpactRow/PriceImpactRow'
+import { PriceDifferenceRow } from 'uniswap/src/features/transactions/swap/components/PriceDifferenceRow/PriceDifferenceRow'
 import { RoutingInfo } from 'uniswap/src/features/transactions/swap/components/RoutingInfo/RoutingInfo'
 import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/components/SwapRateRatio'
 import { AcceptNewQuoteRow } from 'uniswap/src/features/transactions/swap/review/SwapDetails/AcceptNewQuoteRow'
@@ -105,7 +105,7 @@ export function SwapDetails({
 
   const showNetworkLogo = !isMultiChainGasQuote(tradeQuote)
   const showCollapsedPriceImpactRow =
-    warning?.type === WarningLabel.PriceImpactHigh || warning?.type === WarningLabel.PriceImpactMedium
+    warning?.type === WarningLabel.PriceDifferenceHigh || warning?.type === WarningLabel.PriceDifferenceMedium
 
   return (
     <HeightAnimator animationDisabled={isMobileApp || isMobileWeb}>
@@ -144,7 +144,7 @@ export function SwapDetails({
         NetworkCostRowSlot={NetworkCostRowSlot}
         sponsorshipInfo={sponsorshipInfo}
         CollapsedInfoRow={
-          showCollapsedPriceImpactRow ? <PriceImpactRow derivedSwapInfo={acceptedDerivedSwapInfo} /> : undefined
+          showCollapsedPriceImpactRow ? <PriceDifferenceRow derivedSwapInfo={acceptedDerivedSwapInfo} /> : undefined
         }
         RateInfo={
           <Flex row alignItems="center" justifyContent="space-between">
@@ -167,7 +167,7 @@ export function SwapDetails({
         {!acceptedTrade.indicative && (
           <RoutingInfo trade={acceptedTrade} gasFee={gasFee} chainId={acceptedTrade.inputAmount.currency.chainId} />
         )}
-        <PriceImpactRow derivedSwapInfo={acceptedDerivedSwapInfo} />
+        <PriceDifferenceRow derivedSwapInfo={acceptedDerivedSwapInfo} />
       </TransactionDetails>
     </HeightAnimator>
   )

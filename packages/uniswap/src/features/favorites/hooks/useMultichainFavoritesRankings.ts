@@ -1,7 +1,7 @@
 import { TokenRankingsResponse } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { ALL_NETWORKS_ARG } from '@universe/api'
 import { useMemo } from 'react'
-import { useTokenRankingsQuery } from 'uniswap/src/data/rest/tokenRankings'
+import { useTokenRankingsQuery } from 'uniswap/src/data/apiClients/dataApiService/exploreV1/tokenRankings'
 import {
   buildFavoritesCanonicalLookup,
   FavoritesCanonicalLookup,

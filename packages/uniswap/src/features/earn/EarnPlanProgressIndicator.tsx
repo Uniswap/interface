@@ -31,12 +31,19 @@ export function isEarnPlanPriceChangeInterrupted({
 
 export function isEarnActivePlanExecuting({
   activePlan,
+  executionLockPlanId,
   priceChangeInterruptedPlanIds,
 }: {
   activePlan: ActivePlanData | undefined
+  executionLockPlanId: string | null
   priceChangeInterruptedPlanIds: Set<string>
 }): boolean {
-  return !!activePlan && !isEarnPlanPriceChangeInterrupted({ activePlan, priceChangeInterruptedPlanIds })
+  if (!activePlan || isEarnPlanPriceChangeInterrupted({ activePlan, priceChangeInterruptedPlanIds })) {
+    return false
+  }
+  // A retained plan without the execution lock is a stopped partial plan (rejected/STEP_ERROR) —
+  // resumable by re-dispatch, not executing.
+  return executionLockPlanId === activePlan.planId
 }
 
 /** In-flight step label for the Earn review CTA area while a plan executes (shared by deposit/withdraw). */

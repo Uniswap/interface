@@ -1,12 +1,13 @@
 import { GraphQLApi } from '@universe/api'
 import { useFeatureFlag } from '@universe/gating'
 import { UTCTimestamp } from 'lightweight-charts'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { usePreferProjectMarketDataForCurrency } from 'uniswap/src/features/rwa/usePreferProjectMarketData'
-import { TimePeriod } from '~/appGraphql/data/util'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
 import { ChartType, DataQuality, PriceChartType, type ChartQueryResult } from '~/components/Charts/utils'
+import { TimePeriod } from '~/data/util'
 import { useTokenPriceChartData } from '~/hooks/useTokenPriceChartData'
 import { useTokenPriceChartPanel } from '~/hooks/useTokenPriceChartPanel'
 import { renderHook } from '~/test-utils/render'
@@ -149,6 +150,8 @@ describe('useTokenPriceChartPanel', () => {
       preferProjectMarketData: false,
       isMultichainAggregateView: true,
       multichainId: undefined,
+      refetchInterval: PollingInterval.KindaFast,
+      skip: false,
     })
     expect(mockUseTokenPriceChartData).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -200,6 +203,8 @@ describe('useTokenPriceChartPanel', () => {
       preferProjectMarketData: true,
       isMultichainAggregateView: true,
       multichainId: undefined,
+      refetchInterval: PollingInterval.KindaFast,
+      skip: false,
     })
     expect(mockUseTokenPriceChartData).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -227,6 +232,23 @@ describe('useTokenPriceChartPanel', () => {
       preferProjectMarketData: true,
       isMultichainAggregateView: false,
       multichainId: undefined,
+      refetchInterval: PollingInterval.KindaFast,
+      skip: false,
     })
+  })
+
+  it('passes skip through to useTokenSpotPrice and useTokenPriceChartData', () => {
+    renderHook(() =>
+      useTokenPriceChartPanel({
+        variables,
+        priceChartType: PriceChartType.LINE,
+        timePeriod: TimePeriod.WEEK,
+        currency: USDC_MAINNET,
+        skip: true,
+      }),
+    )
+
+    expect(mockUseTokenSpotPrice).toHaveBeenCalledWith(expect.any(String), expect.objectContaining({ skip: true }))
+    expect(mockUseTokenPriceChartData).toHaveBeenCalledWith(expect.objectContaining({ skip: true }))
   })
 })

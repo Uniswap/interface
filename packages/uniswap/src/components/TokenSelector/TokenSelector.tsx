@@ -24,6 +24,11 @@ import type { OnSelectRwaToken } from 'uniswap/src/components/TokenSelector/type
 import { TokenSelectorFlow, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/types'
 import { UnsupportedChainedActionsBanner } from 'uniswap/src/components/TokenSelector/UnsupportedChainedActionsBanner'
 import { flowToModalName } from 'uniswap/src/components/TokenSelector/utils'
+import {
+  TOKEN_SELECTOR_V2_WEB_MAX_HEIGHT,
+  TOKEN_SELECTOR_V2_WEB_MAX_WIDTH,
+} from 'uniswap/src/components/TokenSelectorV2/constants'
+import { TokenSelectorV2Content } from 'uniswap/src/components/TokenSelectorV2/TokenSelectorV2Content'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import type { AddressGroup } from 'uniswap/src/features/accounts/store/types/AccountsState'
@@ -90,7 +95,35 @@ function TokenSelectorNetworkFilter({
   return <NetworkFilter {...props} styles={styles} />
 }
 
-export function TokenSelectorContent({
+/**
+ * Root V2 gate (SWAP-3038): flag on renders the net-new TokenSelectorV2 tree, flag off renders
+ * the untouched legacy selector. Covers every variation, including BalancesOnly (send).
+ */
+export function TokenSelectorContent(
+  props: Omit<TokenSelectorProps, 'isModalOpen'> & {
+    renderedInModal: boolean
+  },
+): JSX.Element {
+  const isUxRevampEnabled = useFeatureFlag(FeatureFlags.TokenSelectorUxRevamp)
+
+  if (isUxRevampEnabled) {
+    return <TokenSelectorV2Content {...props} />
+  }
+
+  return <LegacyTokenSelectorContent {...props} />
+}
+
+/** Web modal sizing for both flag states: legacy 400×700, V2 640×536 (Figma 750:13014). */
+export function useTokenSelectorWebModalDimensions(): { maxWidth: number; maxHeight: number } {
+  const isUxRevampEnabled = useFeatureFlag(FeatureFlags.TokenSelectorUxRevamp)
+
+  return {
+    maxWidth: isUxRevampEnabled ? TOKEN_SELECTOR_V2_WEB_MAX_WIDTH : TOKEN_SELECTOR_WEB_MAX_WIDTH,
+    maxHeight: isUxRevampEnabled ? TOKEN_SELECTOR_V2_WEB_MAX_HEIGHT : TOKEN_SELECTOR_WEB_MAX_HEIGHT,
+  }
+}
+
+function LegacyTokenSelectorContent({
   currencyField,
   flow,
   variation,
@@ -257,6 +290,7 @@ export function TokenSelectorContent({
                   searchFilter={searchFilter}
                   isTestnetModeEnabled={isTestnetModeEnabled}
                   variation={variation}
+                  flow={flow}
                   addresses={addresses}
                   chainFilter={chainFilter}
                   chainIds={effectiveChainIds}
@@ -300,6 +334,7 @@ function TokenSelectorModalInner(props: TokenSelectorProps): JSX.Element {
   const { isModalOpen, onClose, focusHook } = props
   // Fabric collapses flex/percentage height inside a nested bottom-sheet portal; pin a concrete height on native.
   const { height: windowHeight } = useWindowDimensions()
+  const { maxWidth: webMaxWidth, maxHeight: webMaxHeight } = useTokenSelectorWebModalDimensions()
 
   return (
     <Modal
@@ -310,8 +345,8 @@ function TokenSelectorModalInner(props: TokenSelectorProps): JSX.Element {
       renderBehindBottomInset
       backgroundColor={colors.surface1.val}
       isModalOpen={isModalOpen}
-      maxWidth={isWebPlatform ? TOKEN_SELECTOR_WEB_MAX_WIDTH : undefined}
-      maxHeight={isWebApp ? TOKEN_SELECTOR_WEB_MAX_HEIGHT : undefined}
+      maxWidth={isWebPlatform ? webMaxWidth : undefined}
+      maxHeight={isWebApp ? webMaxHeight : undefined}
       name={ModalName.TokenSelector}
       padding="$none"
       // Open at half and allow expanding to full, matching SNAP_POINTS. Concrete px (not '%')

@@ -13,11 +13,11 @@ const option: RwaTokenOption = {
 }
 
 describe('StockPill', () => {
-  it('renders the ticker and fires onSelectRwaToken on press', () => {
-    const onSelect = vi.fn()
-    const { getAllByText, getByTestId } = render(<StockPill option={option} onSelectRwaToken={onSelect} />)
+  it('renders the ticker and fires onPressRwaToken on press', () => {
+    const onPress = vi.fn()
+    const { getAllByText, getByTestId } = render(<StockPill option={option} onPressRwaToken={onPress} />)
     expect(getAllByText('GOOGLX').length).toBeGreaterThan(0)
     fireEvent.press(getByTestId('stock-option-56-GOOGLX'))
-    expect(onSelect).toHaveBeenCalledWith(option)
+    expect(onPress).toHaveBeenCalledWith(option)
   })
 })

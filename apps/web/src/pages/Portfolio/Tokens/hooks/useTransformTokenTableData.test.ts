@@ -18,6 +18,7 @@ import {
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { buildCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
 import { describe, expect, it, vi } from 'vitest'
+import { assume0xAddress } from '~/chains'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
 import { useTransformTokenTableData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 import {
@@ -28,7 +29,6 @@ import {
   USDC_INFO,
 } from '~/test-utils/constants'
 import { renderHook } from '~/test-utils/render'
-import { assume0xAddress } from '~/utils/wagmi'
 
 vi.mock('~/pages/Portfolio/hooks/usePortfolioAddresses', () => ({
   usePortfolioAddresses: vi.fn(),
@@ -572,6 +572,104 @@ describe('useTransformTokenTableData', () => {
     expect(row.tokens).toHaveLength(1)
     expect(row.tokens[0].avgCost).toBeUndefined()
     expect(row.tokens[0].unrealizedPnl).toBeUndefined()
+  })
+
+  it('marks hidden spam token rows as isSpamHidden', () => {
+    const spamInfo: CurrencyInfo = { ...TEST_TOKEN_1_INFO, isSpam: true }
+    const hiddenSpam = createPortfolioTableMultichainBalance(spamInfo, {
+      id: 'hidden-spam',
+      isHidden: true,
+      tokens: [createPortfolioTableChainBalance(spamInfo, { isHidden: true })],
+    })
+    const hiddenNonSpam = createMultichainBalance({
+      id: 'hidden-manual',
+      isHidden: true,
+      tokens: [createChainBalance({ isHidden: true })],
+    })
+
+    mockUseSortedPortfolioBalancesMultichain.mockReturnValue({
+      data: {
+        balances: [],
+        hiddenBalances: [hiddenSpam, hiddenNonSpam],
+      },
+      balancesById: undefined,
+      loading: false,
+      error: undefined,
+      refetch: vi.fn(),
+      isPending: false,
+      isError: false,
+    } as ReturnType<typeof useSortedPortfolioBalancesMultichain>)
+
+    const { result } = renderHook(() => useTransformTokenTableData({}))
+
+    expect(result.current.hidden).toHaveLength(2)
+    const spamRow = result.current.hidden!.find((r) => r.id === 'hidden-spam')
+    const manualRow = result.current.hidden!.find((r) => r.id === 'hidden-manual')
+    expect(spamRow?.isSpamHidden).toBe(true)
+    expect(manualRow?.isSpamHidden).toBe(false)
+  })
+
+  it('does not mark visible spam token rows as isSpamHidden', () => {
+    const spamInfo: CurrencyInfo = { ...TEST_TOKEN_1_INFO, isSpam: true }
+    const visibleSpam = createPortfolioTableMultichainBalance(spamInfo, {
+      id: 'visible-spam',
+      tokens: [createPortfolioTableChainBalance(spamInfo)],
+    })
+
+    mockUseSortedPortfolioBalancesMultichain.mockReturnValue({
+      data: {
+        balances: [visibleSpam],
+        hiddenBalances: [],
+      },
+      balancesById: undefined,
+      loading: false,
+      error: undefined,
+      refetch: vi.fn(),
+      isPending: false,
+      isError: false,
+    } as ReturnType<typeof useSortedPortfolioBalancesMultichain>)
+
+    const { result } = renderHook(() => useTransformTokenTableData({}))
+
+    expect(result.current.visible).toHaveLength(1)
+    expect(result.current.visible![0].isSpamHidden).toBe(false)
+    expect(result.current.hidden).toEqual([])
+  })
+
+  it('marks per-chain hidden spam legs of a partially visible multichain asset', () => {
+    const spamInfo: CurrencyInfo = { ...TEST_TOKEN_2_INFO, isSpam: true }
+    const visibleLeg = createPortfolioTableChainBalance(TEST_TOKEN_1_INFO, {
+      chainId: UniverseChainId.Mainnet,
+      isHidden: false,
+    })
+    const hiddenSpamLeg = createPortfolioTableChainBalance(spamInfo, {
+      chainId: UniverseChainId.ArbitrumOne,
+      isHidden: true,
+    })
+    const partiallyVisible = createMultichainBalance({
+      id: 'partial-visible',
+      tokens: [visibleLeg, hiddenSpamLeg],
+    })
+
+    mockUseSortedPortfolioBalancesMultichain.mockReturnValue({
+      data: {
+        balances: [partiallyVisible],
+        hiddenBalances: [],
+      },
+      balancesById: undefined,
+      loading: false,
+      error: undefined,
+      refetch: vi.fn(),
+      isPending: false,
+      isError: false,
+    } as ReturnType<typeof useSortedPortfolioBalancesMultichain>)
+
+    const { result } = renderHook(() => useTransformTokenTableData({}))
+
+    expect(result.current.visible).toHaveLength(1)
+    expect(result.current.visible![0].isSpamHidden).toBe(false)
+    expect(result.current.hidden).toHaveLength(1)
+    expect(result.current.hidden![0].isSpamHidden).toBe(true)
   })
 
   it('every visible and hidden entry has tokens.length >= 1', () => {

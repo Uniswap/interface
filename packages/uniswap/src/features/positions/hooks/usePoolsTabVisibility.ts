@@ -1,6 +1,6 @@
 import { FeatureFlags, getFeatureFlag, useFeatureFlagWithExposureLoggingDisabled } from '@universe/gating'
 import { useEffect } from 'react'
-import { PortfolioBalancePart } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+import { PortfolioBalancePart } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { usePortfolioBalancePart } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'

@@ -30,7 +30,8 @@ export function ExploreFilterChip({
   onPress,
 }: {
   active: boolean
-  label: string
+  /** Omit for an icon-only chip. */
+  label?: string
   renderIcon: (color: '$neutral1' | '$neutral2') => JSX.Element
   onPress: () => void
 }): JSX.Element {
@@ -52,14 +53,16 @@ export function ExploreFilterChip({
     >
       <Flex row alignItems="center" gap="$spacing6">
         {renderIcon(color)}
-        <Text
-          variant="buttonLabel3"
-          color={color}
-          $platform-web={{ whiteSpace: 'nowrap' }}
-          $group-hover={{ color: '$neutral1' }}
-        >
-          {label}
-        </Text>
+        {label !== undefined && (
+          <Text
+            variant="buttonLabel3"
+            color={color}
+            $platform-web={{ whiteSpace: 'nowrap' }}
+            $group-hover={{ color: '$neutral1' }}
+          >
+            {label}
+          </Text>
+        )}
       </Flex>
     </TouchableArea>
   )

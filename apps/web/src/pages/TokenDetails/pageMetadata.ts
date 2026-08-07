@@ -1,37 +1,42 @@
+import type { PlainMessage } from '@bufbuild/protobuf'
+import { TokenType } from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import type { Token } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { Currency } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
 import { TFunction } from 'i18next'
 import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { fromGraphQLChain, getChainLabel } from 'uniswap/src/features/chains/utils'
+import { getChainLabel, isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 
 export function getTokenStructuredData({
-  tokenQueryData,
+  token,
   price,
   pageDescription,
 }: {
-  tokenQueryData: GraphQLApi.TokenWebQuery['token']
+  token: PlainMessage<Token> | undefined
   price: number | undefined
   pageDescription: string
 }): Record<string, unknown>[] | null {
-  if (!tokenQueryData) {
+  if (!token) {
     return null
   }
 
-  const chainUrlParam = getChainInfo(fromGraphQLChain(tokenQueryData.chain) ?? UniverseChainId.Mainnet).urlParam
-  const tokenDetailsUrl = `${UniswapStaticUrls.webInterfaceTokensUrl}/${chainUrlParam}/${tokenQueryData.address ?? NATIVE_CHAIN_ID}`
+  const chainId = isUniverseChainId(token.chainId) ? token.chainId : UniverseChainId.Mainnet
+  const chainUrlParam = getChainInfo(chainId).urlParam
+  // V2 tokens always carry a real indexed address; native pages still use the NATIVE url segment
+  const urlAddress = token.type === TokenType.NATIVE ? NATIVE_CHAIN_ID : token.address
+  const tokenDetailsUrl = `${UniswapStaticUrls.webInterfaceTokensUrl}/${chainUrlParam}/${urlAddress}`
   return [
     {
       '@context': 'https://schema.org/',
       '@type': 'Product',
-      name: `${tokenQueryData.name}${tokenQueryData.symbol ? ` (${tokenQueryData.symbol})` : ''}`,
-      image: tokenQueryData.project?.logoUrl ? [tokenQueryData.project.logoUrl] : [],
+      name: `${token.name}${token.symbol ? ` (${token.symbol})` : ''}`,
+      image: token.project?.logoUrl ? [token.project.logoUrl] : [],
       description: pageDescription,
       offers: {
         '@type': 'Offer',
-        priceCurrency: tokenQueryData.market?.price?.currency ?? 'USD',
+        priceCurrency: 'USD',
         price: price ?? 0,
         url: tokenDetailsUrl,
       },
@@ -49,7 +54,7 @@ export function getTokenStructuredData({
         {
           '@type': 'ListItem',
           position: 2,
-          name: tokenQueryData.name,
+          name: token.name,
           item: tokenDetailsUrl,
         },
       ],

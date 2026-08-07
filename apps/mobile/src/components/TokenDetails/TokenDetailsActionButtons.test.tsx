@@ -94,14 +94,14 @@ describe('TokenDetailsBuySellButtons', () => {
     expect(queryByTestId(TestID.TokenDetailsActionButton)).toBeNull()
   })
 
-  it('should keep action menu visible for holders when buyButtonTitle is set', () => {
+  it('should keep action menu visible for holders when trade is blocked', () => {
     const { getByTestId } = render(
       <TokenDetailsBuySellButtons
         {...defaultProps}
         userHasBalance
         buyButtonDisabled
-        sellButtonDisabled
-        buyButtonTitle="Unavailable to trade"
+        isTradeBlocked
+        buyButtonTitle="HOOD unavailable in your region"
         onPressDisabled={undefined}
       />,
     )
@@ -124,13 +124,18 @@ describe('TokenDetailsBuySellButtons', () => {
     expect(defaultProps.onPressBuy).not.toHaveBeenCalled()
   })
 
-  it('should not call onPressSell when sellButtonDisabled is set', () => {
-    const { getByTestId } = render(
-      <TokenDetailsBuySellButtons {...defaultProps} userHasBalance sellButtonDisabled onPressDisabled={undefined} />,
+  it('should hide Sell button for holders when trade is blocked', () => {
+    const { queryByTestId } = render(
+      <TokenDetailsBuySellButtons
+        {...defaultProps}
+        userHasBalance
+        isTradeBlocked
+        buyButtonDisabled
+        buyButtonTitle="HOOD unavailable in your region"
+        onPressDisabled={undefined}
+      />,
     )
 
-    fireEvent.press(getByTestId(TestID.TokenDetailsSellButton), ON_PRESS_EVENT_PAYLOAD)
-
-    expect(defaultProps.onPressSell).not.toHaveBeenCalled()
+    expect(queryByTestId(TestID.TokenDetailsSellButton)).toBeNull()
   })
 })

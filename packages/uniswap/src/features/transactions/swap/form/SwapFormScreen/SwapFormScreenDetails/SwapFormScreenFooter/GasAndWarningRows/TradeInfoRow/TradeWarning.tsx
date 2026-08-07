@@ -11,7 +11,7 @@ export function TradeWarning({ children, warning }: PropsWithChildren<{ warning:
   const { t } = useTranslation()
 
   const isPriceImpactWarning =
-    warning.type === WarningLabel.PriceImpactMedium || warning.type === WarningLabel.PriceImpactHigh
+    warning.type === WarningLabel.PriceDifferenceMedium || warning.type === WarningLabel.PriceDifferenceHigh
   const infoCaption = isPriceImpactWarning ? t('swap.warning.priceImpact.tooltip') : warning.message
 
   const captionComponent = warning.link ? (

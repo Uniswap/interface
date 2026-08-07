@@ -3,6 +3,7 @@ import { Body } from '~/app/layout/Body'
 import { GRID_AREAS } from '~/app/layout/gridAreas'
 import { Header } from '~/app/layout/Header'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
+import type { EmbedView } from '~/pages/Swap/embedContext'
 
 const AppContainer = deprecatedStyled.div`
   min-height: 100vh;
@@ -32,12 +33,15 @@ const AppBody = deprecatedStyled.div`
   }
 `
 
-export function AppLayout() {
+export function AppLayout({
+  embedded = false,
+  embedView = 'full',
+}: { embedded?: boolean; embedView?: EmbedView } = {}) {
   return (
     <AppContainer>
       <Header />
       <AppBody>
-        <Body />
+        <Body embedded={embedded} embedView={embedView} />
       </AppBody>
     </AppContainer>
   )

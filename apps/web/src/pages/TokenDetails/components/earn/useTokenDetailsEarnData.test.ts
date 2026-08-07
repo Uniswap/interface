@@ -16,7 +16,6 @@ import {
   buildNativeCurrencyId,
   buildWrappedNativeCurrencyIdWithThrow,
 } from 'uniswap/src/utils/currencyId'
-import type { TokenQueryData } from '~/appGraphql/data/Token'
 import { useActiveAddress } from '~/features/accounts/store/hooks'
 import { useTokenDetailsEarnData } from '~/pages/TokenDetails/components/earn/useTokenDetailsEarnData'
 import type { TDPState } from '~/pages/TokenDetails/context/createTDPStore'
@@ -101,15 +100,24 @@ const WETH_ADDRESS = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
 const VAULT_ADDRESS = '0x8c106EEDAd96553e64287A5A6839c3Cc78afA3D0'
 const WETH_VAULT_ADDRESS = '0x1111111111111111111111111111111111111111'
 
+const DEFAULT_MULTICHAIN_MAP: MultiChainMap = {
+  [GraphQLApi.Chain.Ethereum]: { address: USDC_ADDRESS },
+  [GraphQLApi.Chain.Base]: { address: BASE_USDC_ADDRESS },
+}
+
+const DEFAULT_V2_TOKEN = { symbol: 'USDC', price: { spotUsd: 1 } } as TDPState['token']
+
 function mockTDPStore({
   currency,
-  multiChainMap = {},
+  multiChainMap = DEFAULT_MULTICHAIN_MAP,
+  token = DEFAULT_V2_TOKEN,
 }: {
   currency?: TDPState['currency']
   multiChainMap?: MultiChainMap
+  token?: TDPState['token']
 } = {}): void {
   useTDPStoreMock.mockImplementation(((selector: (state: TDPState) => unknown) =>
-    selector({ currency, multiChainMap } as TDPState)) as typeof useTDPStore)
+    selector({ currency, multiChainMap, token } as TDPState)) as typeof useTDPStore)
 }
 
 function mockQueryResult<TData>({
@@ -200,29 +208,6 @@ function createPosition(overrides: Partial<DataApiEarnPosition> = {}): DataApiEa
   })
 }
 
-function createTokenQueryData(): NonNullable<TokenQueryData> {
-  return {
-    symbol: 'USDC',
-    market: {
-      price: {
-        value: 1,
-      },
-    },
-    project: {
-      tokens: [
-        {
-          chain: GraphQLApi.Chain.Ethereum,
-          address: USDC_ADDRESS,
-        },
-        {
-          chain: GraphQLApi.Chain.Base,
-          address: BASE_USDC_ADDRESS,
-        },
-      ],
-    },
-  } as unknown as NonNullable<TokenQueryData>
-}
-
 function createBalance({ balanceUSD, quantity }: { balanceUSD: number; quantity: number }): PortfolioBalance {
   return {
     id: buildCurrencyId(UniverseChainId.Mainnet, USDC_ADDRESS),
@@ -248,7 +233,6 @@ describe(useTokenDetailsEarnData, () => {
     const { result } = renderHook(() =>
       useTokenDetailsEarnData({
         enabled: true,
-        tokenQueryData: createTokenQueryData(),
       }),
     )
 
@@ -279,7 +263,6 @@ describe(useTokenDetailsEarnData, () => {
     const { result } = renderHook(() =>
       useTokenDetailsEarnData({
         enabled: true,
-        tokenQueryData: createTokenQueryData(),
       }),
     )
 
@@ -294,19 +277,11 @@ describe(useTokenDetailsEarnData, () => {
     mockEarnQueries({ vaults: [wethVault] })
     mockTDPStore({
       currency: new SdkToken(UniverseChainId.Mainnet, WETH_ADDRESS, 18, 'WETH', 'Wrapped Ether'),
+      multiChainMap: { [GraphQLApi.Chain.Ethereum]: { address: WETH_ADDRESS } },
+      token: { symbol: 'WETH' } as TDPState['token'],
     })
 
-    const wethResult = renderHook(() =>
-      useTokenDetailsEarnData({
-        enabled: true,
-        tokenQueryData: {
-          symbol: 'WETH',
-          project: {
-            tokens: [{ chain: GraphQLApi.Chain.Ethereum, address: WETH_ADDRESS }],
-          },
-        } as unknown as NonNullable<TokenQueryData>,
-      }),
-    )
+    const wethResult = renderHook(() => useTokenDetailsEarnData({ enabled: true }))
 
     expect(wethResult.result.current.earnVault?.vaultAddress).toBe(WETH_VAULT_ADDRESS)
     expect(
@@ -320,17 +295,13 @@ describe(useTokenDetailsEarnData, () => {
     expect(wethResult.result.current.earnVault?.displayCurrencyId).toBe(buildNativeCurrencyId(UniverseChainId.Mainnet))
     expect(wethResult.result.current.tokenSymbol).toBe('ETH')
 
-    mockTDPStore({ currency: nativeOnChain(UniverseChainId.Mainnet) })
+    mockTDPStore({
+      currency: nativeOnChain(UniverseChainId.Mainnet),
+      multiChainMap: {},
+      token: { symbol: 'ETH' } as TDPState['token'],
+    })
 
-    const ethResult = renderHook(() =>
-      useTokenDetailsEarnData({
-        enabled: true,
-        tokenQueryData: {
-          symbol: 'ETH',
-          project: { tokens: [] },
-        } as unknown as NonNullable<TokenQueryData>,
-      }),
-    )
+    const ethResult = renderHook(() => useTokenDetailsEarnData({ enabled: true }))
 
     expect(ethResult.result.current.earnVault?.vaultAddress).toBe(WETH_VAULT_ADDRESS)
     expect(ethResult.result.current.tokenSymbol).toBe('ETH')

@@ -5,7 +5,7 @@ import { TokenSelectorEmptySearchList } from 'uniswap/src/components/TokenSelect
 import { TokenSelectorSearchResultsList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSearchResultsList'
 import { TokenSelectorSendList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSendList'
 import { TokenSelectorSwapList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSwapList'
-import { OnSelectRwaToken, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/types'
+import { OnSelectRwaToken, TokenSelectorFlow, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/types'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import type { AddressGroup } from 'uniswap/src/features/accounts/store/types/AccountsState'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -16,6 +16,7 @@ interface TokenSelectorListSwitchProps {
   searchFilter: string | null
   isTestnetModeEnabled: boolean
   variation: TokenSelectorVariation
+  flow: TokenSelectorFlow
   addresses: AddressGroup
   chainFilter: UniverseChainId | null
   chainIds: UniverseChainId[]
@@ -40,6 +41,7 @@ export const TokenSelectorListSwitch = memo(function _TokenSelectorListSwitch({
   searchFilter,
   isTestnetModeEnabled,
   variation,
+  flow,
   addresses,
   chainFilter,
   chainIds,
@@ -104,6 +106,7 @@ export const TokenSelectorListSwitch = memo(function _TokenSelectorListSwitch({
           chainIds={chainIds}
           renderedInModal={renderedInModal}
           variation={variation}
+          flow={flow}
           onSelectCurrency={onSelectCurrency}
           onSelectRwaToken={onSelectRwaToken}
         />
@@ -117,6 +120,7 @@ export const TokenSelectorListSwitch = memo(function _TokenSelectorListSwitch({
           chainIds={chainIds}
           renderedInModal={renderedInModal}
           variation={variation}
+          flow={flow}
           onSelectCurrency={onSelectCurrency}
           onSelectRwaToken={onSelectRwaToken}
         />

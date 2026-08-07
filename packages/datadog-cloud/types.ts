@@ -119,6 +119,13 @@ export interface MonitorDefinition {
    */
   additionalSlackChannels?: string[]
 
+  /**
+   * Mention Slack channels only on alert and alert-recovery transitions
+   * (default: channels are mentioned on every transition, including warnings).
+   * Use for monitors whose warning-level churn would otherwise flood Slack.
+   */
+  slackAlertTransitionsOnly?: boolean
+
   /** Include incident.io webhook (default: true) */
   includeIncidentWebhook?: boolean
 

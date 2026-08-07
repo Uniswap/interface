@@ -8,6 +8,7 @@ import { fonts, zIndexes } from 'ui/src/theme'
 import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { PositionInfo } from 'uniswap/src/features/positions/types'
+import { LPGeoRestrictionBanner } from '~/components/GeoRestriction/LPGeoRestrictionBanner'
 import { D3LiquidityRangeInput } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeInput'
 import { useDefaultInitialPrice } from '~/features/Liquidity/Create/hooks/useDefaultInitialPrice'
 import { useTokenControlOptions } from '~/features/Liquidity/Create/hooks/useTokenControlOptions'
@@ -17,6 +18,7 @@ import { PositionOutOfRangeError } from '~/features/Liquidity/Create/PositionOut
 import { RangeSelectionInput } from '~/features/Liquidity/Create/RangeAmountInput'
 import { PriceRangeState } from '~/features/Liquidity/Create/types'
 import { DisplayCurrentPrice } from '~/features/Liquidity/DisplayCurrentPrice'
+import type { LPGeoRestrictionCopy } from '~/features/Liquidity/useLPGeoRestriction'
 import { getBaseAndQuoteCurrencies } from '~/features/Liquidity/utils/currency'
 import { getPriceDifference } from '~/features/Liquidity/utils/getPriceDifference'
 import { isInvalidPrice, isInvalidRange } from '~/features/Liquidity/utils/priceRangeInfo'
@@ -282,10 +284,17 @@ export const SelectPriceRangeStep = ({
   positionInfo,
   onContinue,
   disableContinue,
+  geoRestriction,
 }: {
   positionInfo?: PositionInfo
   onContinue?: () => void
   disableContinue?: boolean
+  /**
+   * Set only by the migration flow: migration skips DepositStep, so this Continue is its final CTA
+   * and has to carry the geo block itself. Set only for a confirmed restriction — the gate fails
+   * open, so an unresolved check leaves this undefined and Continue live.
+   */
+  geoRestriction?: LPGeoRestrictionCopy
 }) => {
   const { t } = useTranslation()
 
@@ -516,11 +525,18 @@ export const SelectPriceRangeStep = ({
           </Flex>
         )}
       </Flex>
+      {geoRestriction && <LPGeoRestrictionBanner tokenSymbol={geoRestriction.tokenSymbol} />}
       {onContinue && (
         <Flex row>
-          <Button onPress={onContinue} disabled={invalidState}>
-            {t(`common.button.continue`)}
-          </Button>
+          {geoRestriction ? (
+            <Button disabled key="SelectPriceRangeStep-geoRestricted">
+              {geoRestriction.unavailableLabel}
+            </Button>
+          ) : (
+            <Button onPress={onContinue} disabled={invalidState}>
+              {t(`common.button.continue`)}
+            </Button>
+          )}
         </Flex>
       )}
     </>

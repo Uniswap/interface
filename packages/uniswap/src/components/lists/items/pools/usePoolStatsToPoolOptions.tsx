@@ -5,10 +5,10 @@ import { useMemo } from 'react'
 import { OnchainItemListOptionType, PoolOption } from 'uniswap/src/components/lists/items/types'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
-import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { CurrencyId } from 'uniswap/src/types/currency'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 import { buildCurrencyId, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 
 export function usePoolStatsToPoolOptions(poolStats: PoolStats[] | undefined): PoolOption[] {

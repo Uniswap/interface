@@ -1,19 +1,22 @@
+import {
+  EmailCodeStep,
+  EmailEntryStep,
+  EnterPinStep,
+  NoWalletFoundStep,
+  OAuthLoadingStep,
+  RecoveringStep,
+  RecoveryLoginStep,
+  RecoveryStep,
+  useRecoveryFlow,
+} from '@universe/embedded-wallet'
 import { Trans, useTranslation } from 'react-i18next'
 import { Anchor, Button, Flex, SpinningLoader, Text } from 'ui/src'
 import { EnvelopeHeart } from 'ui/src/components/icons/EnvelopeHeart'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
-import { EmailCodeStep } from 'uniswap/src/components/passkey/recovery/steps/EmailCodeStep'
-import { EmailEntryStep } from 'uniswap/src/components/passkey/recovery/steps/EmailEntryStep'
-import { EnterPinStep } from 'uniswap/src/components/passkey/recovery/steps/EnterPinStep'
-import { NoWalletFoundStep } from 'uniswap/src/components/passkey/recovery/steps/NoWalletFoundStep'
-import { OAuthLoadingStep } from 'uniswap/src/components/passkey/recovery/steps/OAuthLoadingStep'
-import { RecoveringStep } from 'uniswap/src/components/passkey/recovery/steps/RecoveringStep'
-import { RecoveryLoginStep } from 'uniswap/src/components/passkey/recovery/steps/RecoveryLoginStep'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { useOnchainDisplayName } from 'uniswap/src/features/accounts/useOnchainDisplayName'
-import { RecoveryStep, useRecoveryFlow } from 'uniswap/src/features/passkey/useRecoveryFlow'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { HpkeHandshakeStatus } from '~/pages/ExtensionPasskeyAuthPopUp/useExtensionRecoveryBridge'

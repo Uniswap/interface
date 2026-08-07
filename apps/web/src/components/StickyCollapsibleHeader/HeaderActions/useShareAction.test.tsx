@@ -15,8 +15,9 @@ vi.mock('@tamagui/core', async (importOriginal) => {
   }
 })
 
+const mockUseSearchParams = vi.fn(() => [new URLSearchParams()])
 vi.mock('react-router', () => ({
-  useSearchParams: vi.fn(() => [new URLSearchParams()]),
+  useSearchParams: () => mockUseSearchParams(),
 }))
 
 vi.mock('utilities/src/react/useCopyClipboard', () => ({
@@ -36,6 +37,7 @@ describe('useShareAction', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    mockUseSearchParams.mockReturnValue([new URLSearchParams()])
     Object.defineProperty(window, 'location', {
       value: { href: 'https://app.uniswap.org/tokens/0x123' },
       writable: true,
@@ -69,8 +71,48 @@ describe('useShareAction', () => {
     })
 
     expect(mockSetCopied).toHaveBeenCalledTimes(1)
-    expect(mockSetCopied).toHaveBeenCalledWith(expect.stringContaining('https://app.uniswap.org/tokens/0x123'))
-    expect(mockSetCopied).toHaveBeenCalledWith(expect.stringContaining('utm_source=share-tdp'))
+    expect(mockSetCopied).toHaveBeenCalledWith(
+      'https://app.uniswap.org/tokens/0x123?utm_source=share-tdp&utm_medium=web',
+    )
+  })
+
+  it('uses ? separator when window.location has no query string even if router search params are stale', () => {
+    // Regression: TDP network pill does a shallow history.replaceState that clears the query string
+    // while the router still holds stale search params (CONS-2648)
+    const baseUrl = 'https://app.uniswap.org/explore/tokens/robinhood/0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168'
+    Object.defineProperty(window, 'location', {
+      value: { href: baseUrl },
+      writable: true,
+    })
+    mockUseSearchParams.mockReturnValue([new URLSearchParams('chain=multichain')])
+
+    const { result } = renderHook(() => useShareAction(defaultParams))
+
+    act(() => {
+      result.current.shareAction.dropdownItems[0].onPress!()
+    })
+
+    const copiedUrl = mockSetCopied.mock.calls[0][0] as string
+    expect(copiedUrl).toBe(`${baseUrl}?utm_source=share-tdp&utm_medium=web`)
+    expect(copiedUrl).not.toContain('&utm_source')
+    expect(new URL(copiedUrl).pathname).toBe('/explore/tokens/robinhood/0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168')
+  })
+
+  it('preserves an existing query string with & separator', () => {
+    Object.defineProperty(window, 'location', {
+      value: { href: 'https://app.uniswap.org/tokens/0x123?chain=base' },
+      writable: true,
+    })
+
+    const { result } = renderHook(() => useShareAction(defaultParams))
+
+    act(() => {
+      result.current.shareAction.dropdownItems[0].onPress!()
+    })
+
+    expect(mockSetCopied).toHaveBeenCalledWith(
+      'https://app.uniswap.org/tokens/0x123?chain=base&utm_source=share-tdp&utm_medium=web',
+    )
   })
 
   it('share to Twitter dropdown item onPress calls openTwitterShareWindow with name and url including UTM', () => {

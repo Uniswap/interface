@@ -48,6 +48,12 @@
     },
     {
       "path": "../../config/vitest-presets"
+    },
+    {
+      "path": "../../packages/embedded-wallet"
+    },
+    {
+      "path": "../../packages/mycelium"
     }
   ],
   "compilerOptions": {

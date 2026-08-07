@@ -1,5 +1,5 @@
-import { deriveRwaAggregates, getRwaPriceSortValue } from 'uniswap/src/data/rest/rwa/rwaMetrics'
-import type { Rwa } from 'uniswap/src/data/rest/rwa/types'
+import { deriveRwaAggregates, getRwaPriceSortValue } from 'uniswap/src/data/apiClients/dataApiService/rwa/rwaMetrics'
+import type { Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { StocksSortMethod } from '~/pages/Explore/rwa/table/stocksTableSortStore'
 
 function getSortValue(rwa: Rwa, sortMethod: StocksSortMethod): number | undefined {

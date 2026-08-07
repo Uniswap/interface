@@ -1,14 +1,14 @@
 import { InMemoryCache } from '@apollo/client'
 import { persistCache } from 'apollo3-cache-persist'
 import { PersistentStorage } from 'apollo3-cache-persist/lib/types'
-import { setupSharedApolloCache } from 'uniswap/src/data/cache'
+import { setupSharedApolloCache } from 'uniswap/src/data/graphql/cache'
 import type { Mocked, MockedFunction } from 'vitest'
 import { initAndPersistCache, shouldResetCache, storeCacheVersion } from 'wallet/src/data/apollo/cache'
 
 // Mock external dependencies
 vi.mock('@apollo/client')
 vi.mock('apollo3-cache-persist')
-vi.mock('uniswap/src/data/cache')
+vi.mock('uniswap/src/data/graphql/cache')
 vi.mock('utilities/src/logger/logger')
 
 const mockPersistCache = persistCache as MockedFunction<typeof persistCache>

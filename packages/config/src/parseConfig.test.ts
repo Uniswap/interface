@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { z } from 'zod'
 import { AppId } from './AppId'
 import { BaseConfigSchema, BaseConfigValues } from './BaseConfig'
+import { optionalString } from './commonSchemas'
 import { Environment } from './Environment'
 import { parseConfig } from './parseConfig'
 
@@ -149,8 +150,8 @@ describe('parseConfig', () => {
       },
     )
 
-    it('defaults to development when unset', () => {
-      expect(parseEnvironment(undefined)).toBe(Environment.Development)
+    it('throws when unset (environment is mandatory)', () => {
+      expect(() => parseEnvironment(undefined)).toThrow('Config validation failed')
     })
 
     it('still rejects unknown environment values', () => {
@@ -254,6 +255,167 @@ describe('parseConfig', () => {
       const valueKeys = Object.keys(BaseConfigValues).sort()
 
       expect(schemaKeys).toEqual(valueKeys)
+    })
+  })
+
+  describe('configSchemaVersion', () => {
+    it('defaults to 0 when CONFIG_SCHEMA_VERSION is unset', () => {
+      const config = parseConfig({
+        values: {},
+        schema: z.object({}),
+      })
+
+      expect(config.configSchemaVersion).toBe(0)
+    })
+
+    it('coerces an explicit numeric string', () => {
+      const config = parseConfig({
+        values: { configSchemaVersion: '3' },
+        schema: z.object({}),
+      })
+
+      expect(config.configSchemaVersion).toBe(3)
+    })
+
+    it('rejects non-integer values', () => {
+      expect(() =>
+        parseConfig({
+          values: { configSchemaVersion: '1.5' },
+          schema: z.object({}),
+        }),
+      ).toThrow('Config validation failed')
+    })
+
+    it('rejects non-numeric values', () => {
+      expect(() =>
+        parseConfig({
+          values: { configSchemaVersion: 'not-a-number' },
+          schema: z.object({}),
+        }),
+      ).toThrow('Config validation failed')
+    })
+  })
+
+  describe('mandatory environment', () => {
+    it('throws when environment is missing from the values', () => {
+      expect(() =>
+        parseConfig({
+          values: { appId: AppId.Web, environment: undefined },
+          schema: BaseConfigSchema,
+          extendBaseConfig: false,
+        }),
+      ).toThrow(/environment/)
+    })
+
+    it('still parses via the BaseConfigValues derivation (dev-mode parse unchanged)', () => {
+      // BaseConfigValues derives environment from ENVIRONMENT ?? NODE_ENV, so the
+      // merged values always carry it even though the schema no longer defaults it.
+      const config = parseConfig({
+        values: {},
+        schema: z.object({}),
+      })
+
+      expect(config.environment).toBe(Environment.Development)
+    })
+  })
+
+  describe('envFieldRules (integration; behavior unit tests live in envFieldRules.test.ts)', () => {
+    it('enforces app rules and base rules together in one parse', () => {
+      try {
+        parseConfig({
+          values: {
+            environment: Environment.Production,
+            customApiKey: '',
+            statsigProxyUrlOverride: 'https://custom-statsig.example.com',
+          },
+          schema: z.object({ customApiKey: optionalString }),
+          envFieldRules: { [Environment.Production]: { required: ['customApiKey'] } },
+        })
+        expect.fail('should have thrown')
+      } catch (e) {
+        const message = (e as Error).message
+        // App-provided rule
+        expect(message).toContain('customApiKey  Required for environment "production"')
+        // Base rule, unioned in for the same environment
+        expect(message).toContain('statsigProxyUrlOverride  Forbidden for environment "production"')
+      }
+    })
+
+    it('forbids a base override URL in production and allows it outside production', () => {
+      expect(() =>
+        parseConfig({
+          values: { environment: Environment.Production, statsigProxyUrlOverride: 'https://custom.example.com' },
+          schema: z.object({}),
+        }),
+      ).toThrow('statsigProxyUrlOverride  Forbidden for environment "production"')
+
+      const staging = parseConfig({
+        values: { environment: Environment.Staging, statsigProxyUrlOverride: 'https://custom.example.com' },
+        schema: z.object({}),
+      })
+      expect(staging.statsigProxyUrlOverride).toBe('https://custom.example.com')
+
+      const emptyInProduction = parseConfig({
+        values: { environment: Environment.Production, statsigProxyUrlOverride: '' },
+        schema: z.object({}),
+      })
+      expect(emptyInProduction.statsigProxyUrlOverride).toBe('')
+    })
+
+    it('still enforces a base rule on a field the app schema overrides', () => {
+      // Rules are keyed by field name against the merged shape, so overriding
+      // the field schema does not detach the base rule.
+      expect(() =>
+        parseConfig({
+          values: { environment: Environment.Production, statsigProxyUrlOverride: 'https://custom.example.com' },
+          schema: z.object({ statsigProxyUrlOverride: z.string() }),
+        }),
+      ).toThrow('statsigProxyUrlOverride  Forbidden for environment "production"')
+    })
+
+    it('enforces base rules for a BaseConfigSchema parse with extendBaseConfig: false (getConfig path)', () => {
+      // BaseConfigSchema is not self-enforcing; getConfig still goes through
+      // parseConfig, which merges the base rules regardless.
+      expect(() =>
+        parseConfig({
+          values: {
+            appId: AppId.Web,
+            environment: Environment.Production,
+            statsigProxyUrlOverride: 'https://custom.example.com',
+          },
+          schema: BaseConfigSchema,
+          extendBaseConfig: false,
+        }),
+      ).toThrow('statsigProxyUrlOverride  Forbidden for environment "production"')
+    })
+
+    it('skips base rule keys that are not in the schema shape (extendBaseConfig: false)', () => {
+      const config = parseConfig({
+        values: {
+          environment: Environment.Production,
+          apiKey: 'key',
+          statsigProxyUrlOverride: 'https://custom.example.com',
+        },
+        schema: z.object({ environment: z.enum(Environment), apiKey: optionalString }),
+        extendBaseConfig: false,
+      })
+
+      expect(config.apiKey).toBe('key')
+      expect('statsigProxyUrlOverride' in config).toBe(false)
+    })
+
+    it('rejects rule keys that are not in the config shape at compile time', () => {
+      const config = parseConfig({
+        values: { environment: Environment.Development, apiKey: 'key' },
+        schema: z.object({ environment: z.enum(Environment), apiKey: optionalString }),
+        envFieldRules: {
+          // @ts-expect-error -- 'notAField' is not a key of the schema shape
+          [Environment.Production]: { required: ['notAField'] },
+        },
+        extendBaseConfig: false,
+      })
+
+      expect(config.apiKey).toBe('key')
     })
   })
 })

@@ -9,7 +9,7 @@ import { createEthersProviderFactory } from 'uniswap/src/features/providers/crea
 import { defaultResolveRpcConfig } from 'uniswap/src/features/providers/resolveRpcConfig'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
-import { sanitizeAvatarUrl } from 'utilities/src/format/urls'
+import { sanitizeUrl } from 'utilities/src/format/urls'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
@@ -64,7 +64,7 @@ async function getAvatarFetch(address: string, provider: providers.JsonRpcProvid
     ? name
     : null
   const avatarUrl = checkedName ? await provider.getAvatar(checkedName) : null
-  return sanitizeAvatarUrl(avatarUrl)
+  return sanitizeUrl({ url: avatarUrl, allowedProtocols: ['http:', 'https:'], callerName: 'getAvatarFetch' }) ?? null
 }
 
 async function getTextFetch({

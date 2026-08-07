@@ -122,6 +122,7 @@ export const createUniverseTransaction = ({
     case TransactionType.RemoveDelegation:
     case TransactionType.Deposit:
     case TransactionType.Withdraw:
+    case TransactionType.UniswapXCancel:
       return { ...baseTransaction, ...info } as UniswapTransactionDetails
     default:
       assertUnreachable(info)

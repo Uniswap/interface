@@ -158,6 +158,13 @@ export const fonts = {
     fontWeight: BOOK_WEIGHT,
     maxFontSizeMultiplier: 1.4,
   },
+  body5: {
+    family: platformFontFamily('book'),
+    fontSize: adjustedSize(10),
+    lineHeight: 12,
+    fontWeight: BOOK_WEIGHT,
+    maxFontSizeMultiplier: 1.4,
+  },
   buttonLabel1: {
     family: platformFontFamily('medium'),
     fontSize: adjustedSize(18),
@@ -311,6 +318,7 @@ export const bodyFont = createFont({
   family: baselBook,
   ...(isAndroid ? { face } : null),
   size: {
+    nano: fonts.body5.fontSize,
     micro: fonts.body4.fontSize,
     small: fonts.body3.fontSize,
     medium: fonts.body2.fontSize,
@@ -319,6 +327,7 @@ export const bodyFont = createFont({
   },
   weight: defaultWeights,
   lineHeight: {
+    nano: fonts.body5.lineHeight,
     micro: fonts.body4.lineHeight,
     small: fonts.body3.lineHeight,
     medium: fonts.body2.lineHeight,

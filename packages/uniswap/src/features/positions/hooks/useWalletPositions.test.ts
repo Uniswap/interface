@@ -18,8 +18,8 @@ const {
   mockParseRestPosition: vi.fn(),
 }))
 
-vi.mock('uniswap/src/data/rest/getPositions', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('uniswap/src/data/rest/getPositions')>()),
+vi.mock('uniswap/src/data/apiClients/dataApiService/positions/getPositions', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/data/apiClients/dataApiService/positions/getPositions')>()),
   useGetPositionsInfiniteQuery: mockUseGetPositionsInfiniteQuery,
 }))
 

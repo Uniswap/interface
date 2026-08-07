@@ -324,28 +324,29 @@ export function AdaptiveWebModal({
       <VisuallyHidden>
         <Dialog.Title />
       </VisuallyHidden>
-      {adaptToSheet && !isTopAligned && ( // Tamagui Sheets always animate in from the bottom, so we cannot use Sheets on top aligned modals
-        <Adapt when="md">
-          <WebBottomSheet
-            isOpen={isOpen}
-            gap={gap ?? '$spacing4'}
-            px={px ?? p ?? '$spacing24'}
-            py={py ?? p ?? '$spacing16'}
-            style={style}
-            hideHandlebar={hideHandlebar}
-            snapPointsMode={snapPointsMode}
-            snapPoints={snapPoints}
-            zIndex={effectiveZIndex}
-            disableRemoveScroll={disableRemoveScroll}
-            onClose={onClose}
-            {...filteredRest}
-          >
-            <EffectiveModalOrSheetZIndexContext.Provider value={effectiveZIndex}>
-              <Adapt.Contents />
-            </EffectiveModalOrSheetZIndexContext.Provider>
-          </WebBottomSheet>
-        </Adapt>
-      )}
+      {adaptToSheet &&
+        !isTopAligned && ( // Tamagui Sheets always animate in from the bottom, so we cannot use Sheets on top aligned modals
+          <Adapt when="md">
+            <WebBottomSheet
+              isOpen={isOpen}
+              gap={gap ?? '$spacing4'}
+              px={px ?? p ?? '$spacing24'}
+              py={py ?? p ?? '$spacing16'}
+              style={style}
+              hideHandlebar={hideHandlebar}
+              snapPointsMode={snapPointsMode}
+              snapPoints={snapPoints}
+              zIndex={effectiveZIndex}
+              disableRemoveScroll={disableRemoveScroll}
+              onClose={onClose}
+              {...filteredRest}
+            >
+              <EffectiveModalOrSheetZIndexContext.Provider value={effectiveZIndex}>
+                <Adapt.Contents />
+              </EffectiveModalOrSheetZIndexContext.Provider>
+            </WebBottomSheet>
+          </Adapt>
+        )}
 
       <Dialog.Portal zIndex={effectiveZIndex}>
         <Overlay key="overlay" {...(overlayOpacity !== undefined && { opacity: overlayOpacity })} />
@@ -434,25 +435,26 @@ export function WebModalWithBottomAttachment({
       <VisuallyHidden>
         <Dialog.Title />
       </VisuallyHidden>
-      {adaptToSheet && !isTopAligned && ( // Tamagui Sheets always animate in from the bottom, so we cannot use Sheets on top aligned modals
-        <Adapt when="md">
-          <WebBottomSheet
-            isOpen={isOpen}
-            style={style}
-            hideHandlebar={hideHandlebar}
-            snapPointsMode={snapPointsMode}
-            snapPoints={snapPoints}
-            zIndex={effectiveZIndex}
-            disableRemoveScroll={disableRemoveScroll}
-            onClose={onClose}
-            {...filteredRest}
-          >
-            <EffectiveModalOrSheetZIndexContext.Provider value={effectiveZIndex}>
-              <Adapt.Contents />
-            </EffectiveModalOrSheetZIndexContext.Provider>
-          </WebBottomSheet>
-        </Adapt>
-      )}
+      {adaptToSheet &&
+        !isTopAligned && ( // Tamagui Sheets always animate in from the bottom, so we cannot use Sheets on top aligned modals
+          <Adapt when="md">
+            <WebBottomSheet
+              isOpen={isOpen}
+              style={style}
+              hideHandlebar={hideHandlebar}
+              snapPointsMode={snapPointsMode}
+              snapPoints={snapPoints}
+              zIndex={effectiveZIndex}
+              disableRemoveScroll={disableRemoveScroll}
+              onClose={onClose}
+              {...filteredRest}
+            >
+              <EffectiveModalOrSheetZIndexContext.Provider value={effectiveZIndex}>
+                <Adapt.Contents />
+              </EffectiveModalOrSheetZIndexContext.Provider>
+            </WebBottomSheet>
+          </Adapt>
+        )}
 
       <Dialog.Portal zIndex={effectiveZIndex}>
         <Overlay key="overlay" {...(overlayOpacity !== undefined && { opacity: overlayOpacity })} />

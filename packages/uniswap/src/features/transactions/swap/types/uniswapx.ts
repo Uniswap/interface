@@ -2,7 +2,11 @@ import { ZERO_PERCENT } from '@uniswap/router-sdk'
 import type { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import type { DutchQuoteResponse, DutchV3QuoteResponse, PriorityQuoteResponse } from '@universe/api'
 import { TradingApi } from '@universe/api'
-import { type BaseTrade, createBaseTradeAmounts } from 'uniswap/src/features/transactions/swap/types/base'
+import {
+  type BaseTrade,
+  createBaseTradeAmounts,
+  getQuotePriceDifference,
+} from 'uniswap/src/features/transactions/swap/types/base'
 import {
   getQuoteOutputAmount,
   getQuoteOutputAmountUserWillReceive,
@@ -95,6 +99,7 @@ function createUniswapXTrade<TQuote extends DutchQuoteResponse | DutchV3QuoteRes
     swapFee: getTradingApiSwapFee(quote),
     inputTax: ZERO_PERCENT,
     outputTax: ZERO_PERCENT,
+    priceDifference: getQuotePriceDifference(quote),
     quoteOutputAmount: getQuoteOutputAmount(quote, outputCurrency),
     quoteOutputAmountUserWillReceive: getQuoteOutputAmountUserWillReceive({
       quote,

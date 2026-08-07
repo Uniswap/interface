@@ -31,6 +31,7 @@ export const padding = {
   padding12: spacing.spacing12,
   padding16: spacing.spacing16,
   padding20: spacing.spacing20,
+  padding24: spacing.spacing24,
   padding36: spacing.spacing36,
 }
 

@@ -1,6 +1,8 @@
-import type { ReactNode } from 'react'
+import { TradingApi } from '@universe/api'
+import type { ReactElement, ReactNode } from 'react'
 import { EarnDepositAmountModal } from 'src/components/earn/EarnDepositAmountModal'
-import { fireEvent, render, screen } from 'src/test/test-utils'
+import { fireEvent, render, screen, waitFor } from 'src/test/test-utils'
+import { initialUniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
 import { EarnAction, type EarnPositionInfo, type EarnVaultInfo } from 'uniswap/src/features/earn/types'
@@ -25,10 +27,12 @@ vi.mock('src/components/earn/EarnDepositAmountContent', async () => {
   return {
     EarnDepositAmountContent: ({
       position,
+      onActionChange,
       onOpenVaultDetails,
       onReview,
     }: {
       position?: EarnPositionInfo
+      onActionChange?: (action: EarnAction) => boolean
       onOpenVaultDetails: () => void
       onReview: (params: {
         action: EarnAction
@@ -39,6 +43,9 @@ vi.mock('src/components/earn/EarnDepositAmountContent', async () => {
     }) => (
       <>
         <Text testID="amount-position">{position?.depositedRaw ?? 'none'}</Text>
+        <Text testID="toggle-deposit" onPress={() => onActionChange?.(ActualEarnAction.Deposit)}>
+          Deposit
+        </Text>
         <Text testID="open-vault-details" onPress={onOpenVaultDetails}>
           Open vault details
         </Text>
@@ -66,7 +73,7 @@ vi.mock('uniswap/src/components/modals/Modal', () => ({
 
 vi.mock('uniswap/src/features/earn/analytics', async () => ({
   ...(await vi.importActual('uniswap/src/features/earn/analytics')),
-  getEarnVaultAnalyticsProperties: vi.fn(() => undefined),
+  getEarnVaultAnalyticsProperties: vi.fn(() => ({ vault_id: 'vault-id' })),
   logEarnTransactionEvent: vi.fn(),
 }))
 
@@ -97,6 +104,17 @@ const confirmedLivePosition = {
   sharesRaw: '9990000',
 }
 
+function renderAcknowledged(ui: ReactElement): ReturnType<typeof render> {
+  return render(ui, {
+    preloadedState: {
+      uniswapBehaviorHistory: {
+        ...initialUniswapBehaviorHistoryState,
+        earnHowItWorksAcknowledgedByVaultId: { [vault.id]: true },
+      },
+    },
+  })
+}
+
 describe(EarnDepositAmountModal, () => {
   beforeEach(() => {
     mockLivePosition = undefined
@@ -104,8 +122,74 @@ describe(EarnDepositAmountModal, () => {
     mockReplace.mockClear()
   })
 
-  it('opens the current vault on the details tab without replacing the amount modal', () => {
+  it('redirects a first deposit to the How it works sheet with the deposit params intact', async () => {
     render(
+      <EarnDepositAmountModal
+        analyticsEntryPoint={EarnEntryPoint.GlobalModal}
+        initialAction={EarnAction.Deposit}
+        initialAmount="12"
+        initialSourceCurrencyId="1-0xusdc"
+        isOpen
+        vault={vault}
+        onClose={vi.fn()}
+      />,
+    )
+
+    expect(screen.queryByTestId('amount-position')).toBeNull()
+
+    await waitFor(() =>
+      expect(mockReplace).toHaveBeenCalledWith(ModalName.EarnHowItWorks, {
+        analyticsEntryPoint: EarnEntryPoint.GlobalModal,
+        initialAction: EarnAction.Deposit,
+        initialAmount: '12',
+        initialSourceCurrencyId: '1-0xusdc',
+        vault,
+      }),
+    )
+  })
+
+  it('does not show How it works before a withdrawal', () => {
+    render(
+      <EarnDepositAmountModal
+        initialAction={EarnAction.Withdraw}
+        isOpen
+        position={position}
+        vault={vault}
+        onClose={vi.fn()}
+      />,
+    )
+
+    expect(screen.queryByText('How it works')).toBeNull()
+    expect(screen.getByTestId('amount-position')).toBeDefined()
+  })
+
+  it('clears withdrawal state before showing How it works when switching to deposit', () => {
+    render(
+      <EarnDepositAmountModal
+        initialAction={EarnAction.Withdraw}
+        initialAmount="12"
+        initialChainId={UniverseChainId.ArbitrumOne}
+        initialWithdrawMode={TradingApi.EarnWithdrawMode.MAX_SHARES}
+        isOpen
+        position={position}
+        startedAnalyticsKey="vault-id-withdraw"
+        vault={vault}
+        onClose={vi.fn()}
+      />,
+    )
+
+    fireEvent.press(screen.getByTestId('toggle-deposit'))
+
+    expect(mockReplace).toHaveBeenCalledWith(ModalName.EarnHowItWorks, {
+      analyticsEntryPoint: EarnEntryPoint.GlobalModal,
+      initialAction: EarnAction.Deposit,
+      position,
+      vault,
+    })
+  })
+
+  it('opens the current vault on the details tab without replacing the amount modal', () => {
+    renderAcknowledged(
       <EarnDepositAmountModal
         analyticsEntryPoint={EarnEntryPoint.GlobalModal}
         isOpen
@@ -129,7 +213,7 @@ describe(EarnDepositAmountModal, () => {
   it('replaces a zero-balance snapshot with the confirmed live position for content and review', () => {
     mockLivePosition = confirmedLivePosition
 
-    render(<EarnDepositAmountModal isOpen position={position} vault={vault} onClose={vi.fn()} />)
+    renderAcknowledged(<EarnDepositAmountModal isOpen position={position} vault={vault} onClose={vi.fn()} />)
 
     expect(screen.getByText('9990000')).toBeDefined()
     fireEvent.press(screen.getByTestId('review-withdraw'))
@@ -142,7 +226,7 @@ describe(EarnDepositAmountModal, () => {
   it('uses a live position when the amount route has no snapshot', () => {
     mockLivePosition = confirmedLivePosition
 
-    render(<EarnDepositAmountModal isOpen vault={vault} onClose={vi.fn()} />)
+    renderAcknowledged(<EarnDepositAmountModal isOpen vault={vault} onClose={vi.fn()} />)
 
     expect(screen.getByText('9990000')).toBeDefined()
   })

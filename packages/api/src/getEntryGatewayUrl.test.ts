@@ -1,4 +1,5 @@
 import {
+  DEV_ENTRY_GATEWAY_API_BASE_URL,
   PROD_ENTRY_GATEWAY_API_BASE_URL,
   STAGING_ENTRY_GATEWAY_API_BASE_URL,
 } from '@universe/api/src/clients/base/urls'
@@ -62,9 +63,9 @@ describe('getEntryGatewayUrl', () => {
       expect(getEntryGatewayUrl({ env: Environment.Production })).toBe(PROD_ENTRY_GATEWAY_API_BASE_URL)
     })
 
-    it('returns staging URL for both DEV and STAGING current envs', () => {
+    it('returns the matching URL per env (dev → dev, staging → staging)', () => {
       mockGetCurrentEnv.mockReturnValue(Environment.Development)
-      expect(getEntryGatewayUrl()).toBe(STAGING_ENTRY_GATEWAY_API_BASE_URL)
+      expect(getEntryGatewayUrl()).toBe(DEV_ENTRY_GATEWAY_API_BASE_URL)
 
       mockGetCurrentEnv.mockReturnValue(Environment.Staging)
       expect(getEntryGatewayUrl()).toBe(STAGING_ENTRY_GATEWAY_API_BASE_URL)

@@ -278,6 +278,13 @@ test.describe(
         ],
       }
 
+      // Closing the modal keeps its content mounted for the ~200ms exit animation, and getByText is
+      // strict: assertions right after a selection race the outgoing copy of the same text inside the
+      // dialog. Wait for the modal to fully unmount before asserting on the form underneath.
+      async function expectHookSearchModalClosed(page: Page): Promise<void> {
+        await expect(page.getByText('Select a hook')).not.toBeVisible()
+      }
+
       test('opens hook search modal and selects a hook', async ({ page }) => {
         await page.route(
           `${getUniswapServiceUrls().liquidityServiceUrl}/uniswap.liquidity.v2.LiquidityService/HookList*`,
@@ -310,6 +317,7 @@ test.describe(
         // Select the first hook via its hover-revealed add button
         await page.getByText('Dynamic Fee Hook').hover()
         await page.getByTestId(TestID.HookRowAddButton).first().click()
+        await expectHookSearchModalClosed(page)
 
         // Verify the selected hook appears in the form
         await expect(page.getByText('Dynamic Fee Hook')).toBeVisible()
@@ -374,6 +382,7 @@ test.describe(
         await expect(page.getByText('No hooks found')).not.toBeVisible()
 
         await page.getByTestId(TestID.HookRowAddButton).click()
+        await expectHookSearchModalClosed(page)
 
         // Verify the raw address is set as the selected hook
         await expect(page.getByText('0x0000...4444')).toBeVisible()
@@ -405,6 +414,7 @@ test.describe(
         await page.getByTestId(TestID.HookSelectButton).click()
         await page.getByText('Dynamic Fee Hook').hover()
         await page.getByTestId(TestID.HookRowAddButton).first().click()
+        await expectHookSearchModalClosed(page)
 
         // Verify hook is selected
         await expect(page.getByText('Dynamic Fee Hook')).toBeVisible()

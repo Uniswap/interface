@@ -6,11 +6,11 @@ import { Flex, Separator, styled, useMedia } from 'ui/src'
 import {
   getPortfolioHistoricalValueChartQuery,
   useGetPortfolioHistoricalValueChartQuery,
-} from 'uniswap/src/data/rest/getPortfolioChart'
+} from 'uniswap/src/data/apiClients/dataApiService/balances/getPortfolioChart'
 import {
   getUnavailableCategories,
   useWalletBalancesIncludeCategories,
-} from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+} from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { useActivityData } from 'uniswap/src/features/activity/hooks/useActivityData'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
@@ -58,7 +58,8 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
   const media = useMedia()
   const isFullWidth = media.xl
   const portfolioPoolsBalancesEnabled = useFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
-  const showBalanceHeaderRow = portfolioPoolsBalancesEnabled
+  const earnEnabled = useFeatureFlag(FeatureFlags.Earn)
+  const showBalanceHeaderRow = portfolioPoolsBalancesEnabled || earnEnabled
   const { chainId, isExternalWallet } = usePortfolioRoutes()
   const portfolioAddresses = usePortfolioAddresses()
   const { chains: allChainIds } = useEnabledChains()
@@ -80,6 +81,9 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
       svmAddress: portfolioAddresses.svmAddress,
       chainIds: filterChainIds,
       includeCategories,
+      includeOverrides: portfolioValueModifier?.includeOverrides,
+      excludeOverrides: portfolioValueModifier?.excludeOverrides,
+      includeSpamTokens: portfolioValueModifier?.includeSpamTokens,
       ...(includeCategories.includes(WalletBalanceCategory.POOLS) && {
         poolIncludeOverrides: portfolioValueModifier?.poolIncludeOverrides,
         poolExcludeOverrides: portfolioValueModifier?.poolExcludeOverrides,
@@ -140,6 +144,8 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
     chartData: portfolioChartData,
     selectedPeriod,
     selectedCategory,
+    poolsEnabled: portfolioPoolsBalancesEnabled,
+    earnEnabled,
   })
 
   // Reset to total when the selected category is no longer available (selector hidden, or that
@@ -215,8 +221,8 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
             <PortfolioChart
               portfolioTotalBalanceUSD={portfolioData?.balanceUSD}
               tokensValue={portfolioBreakdown?.tokens}
-              poolsValue={portfolioBreakdown?.pools}
-              earnValue={portfolioBreakdown?.earn}
+              poolsValue={portfolioPoolsBalancesEnabled ? portfolioBreakdown?.pools : undefined}
+              earnValue={earnEnabled ? portfolioBreakdown?.earn : undefined}
               unavailableCategories={unavailableCategories}
               isPortfolioZero={isPortfolioZero}
               series={series}

@@ -46,7 +46,7 @@ export function PortfolioBalanceBreakdownCard({
   ].filter((row) => row.valueUSD !== undefined)
 
   return (
-    <Flex alignSelf="flex-start" alignItems="stretch" gap="$spacing4" pt="$spacing12">
+    <Flex alignSelf="flex-start" alignItems="stretch" gap="$spacing4" py="$spacing12">
       {rows.map(({ Icon, label, testID, valueUSD, percentChange }) => (
         <Flex key={testID} row alignItems="center" gap="$spacing12" accessibilityLabel={label} testID={testID}>
           <Flex row grow shrink minWidth={0} alignItems="center" gap="$spacing8">

@@ -11,6 +11,20 @@ const Drawer = ({
 )
 Drawer.displayName = 'Drawer'
 
+/**
+ * Root for a drawer stacked inside an open drawer. An independent Root layered
+ * over another drawer renders fine but vaul never engages its swipe-dismiss
+ * drag — nested drawers must ride vaul's NestedRoot, which also choreographs
+ * the parent drawer while the child drags.
+ */
+const DrawerNested = ({
+  shouldScaleBackground = false,
+  ...props
+}: React.ComponentProps<typeof DrawerPrimitive.NestedRoot>): React.JSX.Element => (
+  <DrawerPrimitive.NestedRoot shouldScaleBackground={shouldScaleBackground} {...props} />
+)
+DrawerNested.displayName = 'DrawerNested'
+
 const DrawerTrigger = DrawerPrimitive.Trigger
 
 const DrawerPortal = DrawerPrimitive.Portal
@@ -29,6 +43,23 @@ const DrawerOverlay = React.forwardRef<
 ))
 DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName
 
+/**
+ * vaul (1.1.2) releases an in-flight swipe drag on any pointerout that bubbles
+ * to its content — including boundary moves between the sheet's own children,
+ * which fire while the sheet translates under a captured pointer (mouse drags,
+ * emulated touch). Contain those; a genuine exit (relatedTarget outside the
+ * sheet) still reaches vaul's release fallback.
+ */
+const containBoundaryPointerOut = (event: React.PointerEvent<HTMLDivElement>): void => {
+  const related = event.relatedTarget
+  if (
+    related instanceof Element &&
+    (event.currentTarget.contains(related) || related.closest('[data-vaul-overlay], [data-vaul-drawer]') !== null)
+  ) {
+    event.stopPropagation()
+  }
+}
+
 const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content>
@@ -42,6 +73,7 @@ const DrawerContent = React.forwardRef<
     >
       <Flex
         direction="column"
+        onPointerOut={containBoundaryPointerOut}
         className={cn('rounded-t-20 bg-surface1 border border-surface3 overflow-y-auto', className)}
       >
         {/* oxlint-disable-next-line react/forbid-elements -- drawer handle indicator */}
@@ -89,6 +121,7 @@ DrawerDescription.displayName = DrawerPrimitive.Description.displayName
 
 export {
   Drawer,
+  DrawerNested,
   DrawerPortal,
   DrawerOverlay,
   DrawerTrigger,

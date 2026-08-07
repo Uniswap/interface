@@ -11,11 +11,13 @@ import {
   EURC_ARC,
   USDC_ARC,
   USDC_BASE,
+  USDC_INK,
   USDC_LINEA,
   USDE_MEGAETH,
   USDG_ROBINHOOD,
   USDM_MEGAETH,
   USDT_LINEA,
+  USDT0_INK,
   USDT0_XLAYER,
   USYC_ARC,
   WETH_ARC,
@@ -75,6 +77,16 @@ const ARC_CURRENCY_IDS = [
   buildCurrencyId(UniverseChainId.Arc, CIRBTC_ARC.address), // cirBTC
   buildCurrencyId(UniverseChainId.Arc, WETH_ARC.address), // wETH
   buildCurrencyId(UniverseChainId.Arc, USYC_ARC.address), // USYC
+]
+
+// Ink quick-select tokens. USDT0 is not a member of any mainnet token project, so the generic
+// useAllCommonBaseCurrencies path cannot surface it — hence this explicit list (same reason
+// X Layer carries one for its USDT0).
+const INK_CURRENCY_IDS = [
+  buildNativeCurrencyId(UniverseChainId.Ink), // ETH
+  buildCurrencyId(UniverseChainId.Ink, '0x4200000000000000000000000000000000000006'), // WETH
+  buildCurrencyId(UniverseChainId.Ink, USDT0_INK.address), // USDT0
+  buildCurrencyId(UniverseChainId.Ink, USDC_INK.address), // USDC
 ]
 
 export function useCommonTokensOptions({
@@ -140,6 +152,13 @@ export function useCommonTokensOptions({
     loading: loadingArcCurrencies,
   } = useCurrencyInfosWithLoading(ARC_CURRENCY_IDS, { skip: chainFilter !== UniverseChainId.Arc })
 
+  const {
+    data: inkCurrencies,
+    error: inkCurrenciesError,
+    refetch: refetchInkCurrencies,
+    loading: loadingInkCurrencies,
+  } = useCurrencyInfosWithLoading(INK_CURRENCY_IDS, { skip: chainFilter !== UniverseChainId.Ink })
+
   // this is a one-off filter for USDT on Unichain which at time of launch does not have enough liquidity for swapping so we are filtering it out of quick select
   // TODO(WEB-6284): Replace useAllCommonBaseCurrencies static filter with a dynamic filter
   const USDT_UNICHAIN_ADDRESS = '0x588ce4f028d8e7b53b687865d6a67b3a54c75518'
@@ -174,6 +193,9 @@ export function useCommonTokensOptions({
     if (chainFilter === UniverseChainId.Arc) {
       return arcCurrencies
     }
+    if (chainFilter === UniverseChainId.Ink) {
+      return inkCurrencies
+    }
     return filtered
   }, [
     chainFilter,
@@ -184,6 +206,7 @@ export function useCommonTokensOptions({
     megaEthCurrencies,
     robinhoodCurrencies,
     arcCurrencies,
+    inkCurrencies,
   ])
 
   const commonBaseTokenOptions = useCurrencyInfosToTokenOptions({
@@ -200,6 +223,7 @@ export function useCommonTokensOptions({
     refetchMegaEthCurrencies?.()
     refetchRobinhoodCurrencies?.()
     refetchArcCurrencies?.()
+    refetchInkCurrencies?.()
   }, [
     portfolioBalancesByIdRefetch,
     refetchCommonBaseCurrencies,
@@ -209,6 +233,7 @@ export function useCommonTokensOptions({
     refetchMegaEthCurrencies,
     refetchRobinhoodCurrencies,
     refetchArcCurrencies,
+    refetchInkCurrencies,
   ])
 
   const error =
@@ -219,7 +244,8 @@ export function useCommonTokensOptions({
     (!baseCurrencies?.length && baseCurrenciesError) ||
     (!megaEthCurrencies?.length && megaEthCurrenciesError) ||
     (!robinhoodCurrencies?.length && robinhoodCurrenciesError) ||
-    (!arcCurrencies?.length && arcCurrenciesError)
+    (!arcCurrencies?.length && arcCurrenciesError) ||
+    (!inkCurrencies?.length && inkCurrenciesError)
 
   const filteredCommonBaseTokenOptions = useMemo(
     () => commonBaseTokenOptions && filter({ tokenOptions: commonBaseTokenOptions, chainFilter }),
@@ -239,7 +265,8 @@ export function useCommonTokensOptions({
         loadingBaseCurrencies ||
         loadingMegaEthCurrencies ||
         loadingRobinhoodCurrencies ||
-        loadingArcCurrencies,
+        loadingArcCurrencies ||
+        loadingInkCurrencies,
     }),
     [
       error,
@@ -250,6 +277,7 @@ export function useCommonTokensOptions({
       loadingMegaEthCurrencies,
       loadingRobinhoodCurrencies,
       loadingArcCurrencies,
+      loadingInkCurrencies,
       loadingPorfolioBalancesById,
       filteredCommonBaseTokenOptions,
       refetch,

@@ -13,7 +13,10 @@ import { useNavigateToNftExplorerLink } from 'uniswap/src/features/nfts/hooks/us
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useSetActiveChainId } from 'uniswap/src/features/smartWallet/delegation/hooks/useSetActiveChainId'
 import { DelegatedState } from 'uniswap/src/features/smartWallet/delegation/types'
-import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/mismatch/hooks'
+import {
+  useHasAccountMismatchCallback,
+  useRefetchMismatchOnStatsigReadyEffect,
+} from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import { MismatchContextProvider } from 'uniswap/src/features/smartWallet/mismatch/MismatchContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useGetCanSignPermits } from 'uniswap/src/features/transactions/hooks/useGetCanSignPermits'
@@ -28,10 +31,10 @@ import {
 } from 'uniswap/src/utils/linking'
 import { useEvent, usePrevious } from 'utilities/src/react/hooks'
 import { noop } from 'utilities/src/react/noop'
-import { getTokenDetailsURL } from '~/appGraphql/data/util'
 import { MenuStateVariant, useMenuState } from '~/components/AccountDrawer/menuState'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { useOpenReceiveCryptoModal } from '~/components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
+import { getTokenDetailsURL } from '~/data/util'
 import { useConnectionStatus } from '~/features/accounts/store/hooks'
 import { useAccountsStoreContext } from '~/features/accounts/store/provider'
 import { useAccount } from '~/hooks/useAccount'
@@ -50,6 +53,7 @@ import { useHasAlternateGasFeesByChainIdCallback } from '~/state/walletCapabilit
 import { useIsAtomicBatchingSupportedByChainIdCallback } from '~/state/walletCapabilities/hooks/useIsAtomicBatchingSupportedByChain'
 import { useHasMismatchCallback, useShowMismatchToast } from '~/state/walletCapabilities/hooks/useMismatchAccount'
 import { ReceiveModalState } from '~/types/receiveCryptoModal'
+import { isIFramed } from '~/utils/isIFramed'
 import { getTdpChainQueryParam } from '~/utils/params/chainQueryParam'
 import { showSwitchNetworkNotification } from '~/utils/showSwitchNetworkNotification'
 
@@ -155,6 +159,15 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
       currencyAddress?: Address
       recipient?: Address
     }) => {
+      // Send is not allowed inside an iframe (clickjacking protections). This is the
+      // primary Send entry point on web (portfolio/search/token menus), so instead of
+      // opening the Send modal in-frame we frame-bust out to the top-level /send.
+      // Mirrors the embedded-wallet/passkey frame-bust (useSignInWithPasskey).
+      // https://www.notion.so/uniswaplabs/What-is-not-allowed-to-be-iFramed-Clickjacking-protections-874f85f066c648afa0eb3480b3f47b5c
+      if (isIFramed(true, { bustToPath: '/send' })) {
+        return
+      }
+
       const chainUrlParam = getChainInfo(chainId).urlParam
       const params = new URLSearchParams(location.search)
 
@@ -375,12 +388,19 @@ const MismatchContextWrapper = React.memo(function MismatchContextWrapper({ chil
       defaultChainId={defaultChainId}
       isTestnetModeEnabled={isTestnetModeEnabled}
     >
+      <RefetchMismatchOnStatsigReadyEffect />
       {children}
     </MismatchContextProvider>
   )
 })
 
 MismatchContextWrapper.displayName = 'MismatchContextWrapper'
+
+function RefetchMismatchOnStatsigReadyEffect(): null {
+  // the permit2_mismatch_delegates config can load after the on-connect mismatch check
+  useRefetchMismatchOnStatsigReadyEffect()
+  return null
+}
 
 /**
  * Sets the active chain id when the account chain id changes

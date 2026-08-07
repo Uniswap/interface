@@ -1,5 +1,5 @@
 import 'utilities/src/logger/mocks'
-import { getCapabilities as wagmi_getCapabilities } from '@wagmi/core/experimental'
+import { getCapabilities as wagmi_getCapabilities } from '@wagmi/core'
 import { getLogger } from 'utilities/src/logger/logger'
 import type { Mock } from 'vitest'
 import {
@@ -10,7 +10,7 @@ import {
 import { GetCapabilitiesResult } from '~/state/walletCapabilities/lib/types'
 
 // Mock dependencies
-vi.mock('@wagmi/core/experimental', () => ({
+vi.mock('@wagmi/core', () => ({
   getCapabilities: vi.fn(),
 }))
 

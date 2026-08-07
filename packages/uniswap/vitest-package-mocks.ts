@@ -67,7 +67,7 @@ vi.mock('@shopify/react-native-skia', async () => {
 
 vi.mock('react-native-localize', () => mockRNLocalize)
 vi.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext({}))
-vi.mock('uniswap/src/data/apiClients/SharedPersistQueryClientProvider', () => mockSharedPersistQueryClientProvider)
+vi.mock('uniswap/src/data/reactQuery/SharedPersistQueryClientProvider', () => mockSharedPersistQueryClientProvider)
 
 vi.mock('utilities/src/device/uniqueId', async () => {
   return await vi.importActual('./src/test/mocks/uniqueId')

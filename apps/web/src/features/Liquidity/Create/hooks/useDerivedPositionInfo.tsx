@@ -3,10 +3,11 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import { PoolInfoRequest } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_pb'
 import { PoolParameters } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
 import { Currency } from '@uniswap/sdk-core'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { liquidityQueries } from 'uniswap/src/data/apiClients/liquidityService/liquidityQueries'
 import { getSDKPoolFromPoolInformation } from 'uniswap/src/features/positions/parseRestPosition'
 import { DYNAMIC_FEE_DATA } from 'uniswap/src/features/positions/types'
+import { logger } from 'utilities/src/logger/logger'
 import {
   CreatePositionInfo,
   CreateV2PositionInfo,
@@ -14,7 +15,8 @@ import {
   CreateV4PositionInfo,
   PositionState,
 } from '~/features/Liquidity/Create/types'
-import { getCurrencyWithWrap, getTokenOrZeroAddress, validateCurrencyInput } from '~/features/Liquidity/utils/currency'
+import { usePoolLookupTokenAddresses } from '~/features/Liquidity/hooks/usePoolLookupTokenAddresses'
+import { getCurrencyWithWrap, validateCurrencyInput } from '~/features/Liquidity/utils/currency'
 import { isDynamicFeeTier } from '~/features/Liquidity/utils/feeTiers'
 import { isUnsupportedLPChain } from '~/features/Liquidity/utils/isUnsupportedLPChain'
 import { getProtocols } from '~/features/Liquidity/utils/protocolVersion'
@@ -87,6 +89,15 @@ export function useDerivedPositionInfo(
   const isFeeValid = protocolVersion === ProtocolVersion.V2 ? true : state.fee !== undefined
   const isChainUnsupported = isUnsupportedLPChain(token0?.chainId, protocolVersion)
 
+  // Permissioned pools are indexed under the PA adapter, not the displayed sec-token;
+  // an unmapped lookup always misses and the flow falsely reports "creating new pool".
+  const {
+    lookupAddress0,
+    lookupAddress1,
+    orientationFlipped,
+    isLoading: isLookupAddressLoading,
+  } = usePoolLookupTokenAddresses({ token0, token1 })
+
   const {
     data: poolData,
     isLoading: poolIsLoading,
@@ -99,8 +110,8 @@ export function useDerivedPositionInfo(
         chainId: token0?.chainId,
         poolReferences: [],
         poolParameters: new PoolParameters({
-          tokenAddressA: getTokenOrZeroAddress(token0),
-          tokenAddressB: getTokenOrZeroAddress(token1),
+          tokenAddressA: lookupAddress0,
+          tokenAddressB: lookupAddress1,
           fee: isDynamicFeeTier(state.fee) ? DYNAMIC_FEE_DATA.feeAmount : state.fee?.feeAmount,
           hookAddress: state.hook,
           tickSpacing: state.fee?.tickSpacing,
@@ -110,8 +121,23 @@ export function useDerivedPositionInfo(
     }),
   )
 
-  const poolOrPair = poolData?.pools && poolData.pools.length > 0 ? poolData.pools[0] : undefined
-  const creatingPoolOrPair = poolDataIsFetched && !poolOrPair && !isChainUnsupported
+  const fetchedPoolOrPair = poolData?.pools && poolData.pools.length > 0 ? poolData.pools[0] : undefined
+  // The response's sqrtPriceX96/tick are denominated in the pool's on-chain (adapter) sort order.
+  // When adapter substitution flips the pair's sort order relative to the displayed sec-tokens, an
+  // SDK pool built from the displayed currencies would read the price inverted, so fail closed:
+  // drop the pool and let the permissioned-creation guard block the flow. No live pair flips today
+  // (verified against all deployed sec-token/adapter pairs); this protects future pairs.
+  const poolOrPair = orientationFlipped ? undefined : fetchedPoolOrPair
+  useEffect(() => {
+    if (orientationFlipped && fetchedPoolOrPair) {
+      logger.error(new Error('Permissioned pool dropped: adapter sort order flips displayed pair orientation'), {
+        tags: { file: 'useDerivedPositionInfo', function: 'useDerivedPositionInfo' },
+        extra: { lookupAddress0, lookupAddress1 },
+      })
+    }
+  }, [orientationFlipped, fetchedPoolOrPair, lookupAddress0, lookupAddress1])
+  // Don't declare "new pool" while the lookup key may still change to the adapter pair.
+  const creatingPoolOrPair = poolDataIsFetched && !poolOrPair && !isChainUnsupported && !isLookupAddressLoading
 
   return useMemo(() => {
     if (protocolVersion === ProtocolVersion.UNSPECIFIED) {
@@ -143,6 +169,7 @@ export function useDerivedPositionInfo(
         },
         protocolVersion,
         pair,
+        protocolFee: poolOrPair?.protocolFee,
         creatingPoolOrPair,
         poolOrPairLoading: poolIsLoading,
         refetchPoolData,
@@ -167,6 +194,7 @@ export function useDerivedPositionInfo(
         },
         protocolVersion,
         pool: v3Pool,
+        protocolFee: poolOrPair?.protocolFee,
         creatingPoolOrPair,
         poolOrPairLoading: poolIsLoading,
         poolId: poolOrPair?.poolReferenceIdentifier,
@@ -189,6 +217,7 @@ export function useDerivedPositionInfo(
       },
       protocolVersion, // V4
       pool: v4Pool,
+      protocolFee: poolOrPair?.protocolFee,
       creatingPoolOrPair,
       poolOrPairLoading: poolIsLoading,
       poolId: poolOrPair?.poolReferenceIdentifier,

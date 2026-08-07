@@ -162,6 +162,10 @@ export const networkColors = {
     light: '#00C805',
     dark: '#00C805',
   },
+  ink: {
+    light: '#7757E2',
+    dark: '#7757E2',
+  },
   soneium: {
     light: '#000000',
     dark: '#FFFFFF',
@@ -370,6 +374,7 @@ export const colorsLight = {
   chain_4326: networkColors.megaeth.light,
   chain_4663: networkColors.robinhood.light,
   chain_5042: networkColors.arc.light,
+  chain_57073: networkColors.ink.light,
   chain_501000101: networkColors.solana.light,
   chain_143: networkColors.monad.light,
 
@@ -466,6 +471,7 @@ export const colorsDark = {
   chain_4326: networkColors.megaeth.dark,
   chain_4663: networkColors.robinhood.dark,
   chain_5042: networkColors.arc.dark,
+  chain_57073: networkColors.ink.dark,
   chain_501000101: networkColors.solana.dark,
   chain_143: networkColors.monad.dark,
 

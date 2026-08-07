@@ -14,7 +14,7 @@ export function useSelectChain() {
   const { switchChain } = useSwitchChainWagmi()
   const account = useAccount()
 
-  return useEvent(async (targetChain: UniverseChainId) => {
+  return useEvent(async (targetChain: UniverseChainId, options?: { throwOnUserRejection?: boolean }) => {
     if (isSVMChain(targetChain)) {
       // Solana connections are single-chain & maintained separately from EVM connections
       return true
@@ -49,6 +49,11 @@ export function useSelectChain() {
 
       return true
     } catch (error) {
+      // Opt-in: let callers that treat a rejected switch as a user cancellation handle it themselves
+      // (e.g. useSendCallback normalizes it to its local cancellation type). Default stays boolean.
+      if (options?.throwOnUserRejection && error instanceof UserRejectedRequestError) {
+        throw error
+      }
       if (
         !error?.message?.includes("Request of type 'wallet_switchEthereumChain' already pending") &&
         !(error instanceof UserRejectedRequestError) /* request already pending */

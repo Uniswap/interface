@@ -2,8 +2,6 @@ import { Dispatch, SetStateAction, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex } from 'ui/src'
 import { Check } from 'ui/src/components/icons/Check'
-import { Faceid } from 'ui/src/components/icons/Faceid'
-import { Fingerprint } from 'ui/src/components/icons/Fingerprint'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -12,6 +10,7 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useEvent } from 'utilities/src/react/hooks'
 import { Page } from '~/components/NavBar/DownloadApp/Modal/constants'
 import { ModalContent } from '~/components/NavBar/DownloadApp/Modal/Content'
+import { PasskeyIconHeader } from '~/components/NavBar/DownloadApp/Modal/PasskeyIconHeader'
 import { useModalState } from '~/hooks/useModalState'
 import { useSignInWithPasskey } from '~/hooks/useSignInWithPasskey'
 
@@ -48,32 +47,7 @@ export function PasskeyGenerationModal({
       <ModalContent
         title={t('onboarding.passkey.secure')}
         subtext={t('onboarding.passkey.secure.description')}
-        header={
-          <Flex position="relative" height={48} width={80} alignItems="center" justifyContent="center">
-            <Flex
-              position="absolute"
-              backgroundColor="$surface2"
-              p="$spacing12"
-              borderRadius="$rounded16"
-              transform={[{ rotate: '-15deg' }, { translateY: -5 }]}
-              left={0}
-            >
-              <Fingerprint size="$icon.24" color="$neutral1" />
-            </Flex>
-            <Flex
-              position="absolute"
-              backgroundColor="$surface2"
-              p="$spacing12"
-              borderRadius="$rounded16"
-              transform={[{ rotate: '15deg' }]}
-              borderWidth={2}
-              borderColor="$surface1"
-              right={0}
-            >
-              <Faceid size="$icon.24" color="$neutral1" />
-            </Flex>
-          </Flex>
-        }
+        header={<PasskeyIconHeader />}
         learnMoreLink={UniswapHelpUrls.articles.passkeysInfo}
         onClose={onClose}
         goBack={goBack}

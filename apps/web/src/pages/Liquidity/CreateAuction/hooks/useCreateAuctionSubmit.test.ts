@@ -19,7 +19,7 @@ const WALLET = '0xF570F45f598fD48AF83FABD692629a2caFe899ec'
 
 const mockMutateAsync = vi.fn()
 const mockMutationState = { isPending: false }
-vi.mock('uniswap/src/data/rest/auctions/useCreateAuctionMutation', () => ({
+vi.mock('uniswap/src/data/apiClients/dataApiService/auctions/useCreateAuctionMutation', () => ({
   useCreateAuctionMutation: () => ({ mutateAsync: mockMutateAsync, isPending: mockMutationState.isPending }),
 }))
 

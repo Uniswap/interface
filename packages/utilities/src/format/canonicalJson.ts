@@ -3,6 +3,8 @@
  *  Can be removed if we decide to use the tamperproof-transactions package.
  */
 
+import { utf8ToUint8 } from '@universe/encoding'
+
 export type JsonPrimitive = null | boolean | number | string
 export type JsonValue = JsonPrimitive | JsonValue[] | { [key: string]: JsonValue }
 
@@ -53,5 +55,5 @@ export function canonicalStringify(value: unknown): string {
 }
 
 export function serializeRequestPayload<T>(requestPayload: T): Uint8Array {
-  return new TextEncoder().encode(canonicalStringify(requestPayload))
+  return utf8ToUint8(canonicalStringify(requestPayload))
 }

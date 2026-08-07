@@ -1,6 +1,6 @@
 import { waitFor } from '@testing-library/react-native'
 import * as reactRedux from 'react-redux'
-import * as balanceUtils from 'uniswap/src/data/balances/utils'
+import * as balanceUtils from 'uniswap/src/data/apiClients/dataApiService/balances/utils'
 import * as reportBalancesForAnalytics from 'uniswap/src/features/accounts/reportBalancesForAnalytics'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import * as telemetrySend from 'uniswap/src/features/telemetry/send'
@@ -25,8 +25,8 @@ vi.mock('wallet/src/features/telemetry/utils/walletFundingDetector', () => ({
 }))
 vi.mock('wallet/src/features/telemetry/utils/balanceReporter')
 
-vi.mock('uniswap/src/data/balances/utils', async () => ({
-  ...(await vi.importActual('uniswap/src/data/balances/utils')),
+vi.mock('uniswap/src/data/apiClients/dataApiService/balances/utils', async () => ({
+  ...(await vi.importActual('uniswap/src/data/apiClients/dataApiService/balances/utils')),
   calculateTotalBalancesUsdPerChainRest: vi.fn(),
 }))
 vi.mock('uniswap/src/features/accounts/reportBalancesForAnalytics', () => ({

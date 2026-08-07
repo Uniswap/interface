@@ -6,6 +6,7 @@ import {
   TransactionDetails,
   TransactionOptions,
   TransactionOriginType,
+  TransactionStatus,
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { type RpcUserOperation } from 'viem/account-abstraction'
@@ -29,6 +30,10 @@ type SubmitTransactionParamsBase = {
   // When undefined, the transaction is submitted but not added to the local state
   typeInfo?: TransactionTypeInfo
   analytics?: SwapTradeBaseProperties
+  // Initial local status for the registered tx. Defaults to Pending — never change the default.
+  // `Cancelling` is used by the tracked UniswapX cancel flow; widen this union deliberately if a
+  // new in-flight status ever needs to register here.
+  initialStatus?: TransactionStatus.Pending | TransactionStatus.Cancelling
 }
 
 export type EoaSubmitTransactionParams = SubmitTransactionParamsBase & {

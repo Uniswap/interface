@@ -12,7 +12,7 @@ export const TransactionWarning = ({
 }): JSX.Element => {
   const { t } = useTranslation()
   const { title, severity, message, link, type, icon } = warning
-  const isPriceImpactWarning = type === WarningLabel.PriceImpactMedium || type === WarningLabel.PriceImpactHigh
+  const isPriceImpactWarning = type === WarningLabel.PriceDifferenceMedium || type === WarningLabel.PriceDifferenceHigh
 
   if (isPriceImpactWarning) {
     return (

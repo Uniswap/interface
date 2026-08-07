@@ -1,12 +1,15 @@
 import { useLoginWithEmail, useLoginWithOAuth, usePrivy } from '@privy-io/react-auth'
 import { fireEvent, waitFor } from '@testing-library/react'
-import { checkRecoveryAvailability } from 'uniswap/src/features/passkey/checkRecoveryAvailability'
-import { authorizeAndCompleteRecovery, encryptAndStoreRecovery } from 'uniswap/src/features/passkey/embeddedWallet'
+import {
+  authorizeAndCompleteRecovery,
+  checkRecoveryAvailability,
+  encryptAndStoreRecovery,
+  useEmbeddedWalletState,
+} from '@universe/embedded-wallet'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { AddBackupLoginModal } from '~/components/Passkey/AddBackupLoginModal'
 import { useModalState } from '~/hooks/useModalState'
-import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { render, screen } from '~/test-utils/render'
 
 vi.mock('@privy-io/react-auth', () => ({
@@ -19,12 +22,13 @@ vi.mock('~/hooks/useModalState', () => ({
   useModalState: vi.fn(),
 }))
 
-vi.mock('~/state/embeddedWallet/store', () => ({
+vi.mock('@universe/embedded-wallet/src/state/embeddedWalletStore', () => ({
   useEmbeddedWalletState: vi.fn(),
   getEmbeddedWalletState: vi.fn().mockReturnValue({ chainId: 1 }),
+  setChainId: vi.fn(),
 }))
 
-vi.mock('uniswap/src/features/passkey/embeddedWallet', () => ({
+vi.mock('@universe/embedded-wallet/src/features/passkey/embeddedWallet', () => ({
   encryptAndStoreRecovery: vi.fn(),
   authorizeAndCompleteRecovery: vi.fn(),
   RecoveryMethod: vi.fn().mockImplementation((args: Record<string, unknown>) => args),
@@ -32,7 +36,7 @@ vi.mock('uniswap/src/features/passkey/embeddedWallet', () => ({
     provider === 'google' ? 'GOOGLE' : provider === 'apple' ? 'APPLE' : 'EMAIL',
 }))
 
-vi.mock('uniswap/src/features/passkey/checkRecoveryAvailability', () => ({
+vi.mock('@universe/embedded-wallet/src/features/passkey/checkRecoveryAvailability', () => ({
   checkRecoveryAvailability: vi.fn(),
 }))
 

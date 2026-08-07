@@ -4,7 +4,7 @@ import { type Currency, Percent, Token } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
 import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { usePoolsFromTokenAddress } from '~/appGraphql/data/pools/usePoolsFromTokenAddress'
+import { usePoolsFromTokenAddress } from '~/data/pools/usePoolsFromTokenAddress'
 import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
 import { TokenDetailsPoolsTable } from '~/pages/TokenDetails/components/activity/TokenDetailsPoolsTable'
 import { mocked } from '~/test-utils/mocked'
@@ -15,7 +15,7 @@ function renderWithProvider(ui: React.ReactElement) {
   return render(<ExploreTablesFilterStoreContextProvider>{ui}</ExploreTablesFilterStoreContextProvider>)
 }
 
-vi.mock('~/appGraphql/data/pools/usePoolsFromTokenAddress')
+vi.mock('~/data/pools/usePoolsFromTokenAddress')
 vi.mock('react-router', async () => {
   const actual = await vi.importActual('react-router')
   return {

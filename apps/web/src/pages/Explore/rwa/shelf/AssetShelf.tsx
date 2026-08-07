@@ -1,36 +1,41 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { useMemo, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Flex } from 'ui/src'
-import { useExploreStocks } from 'uniswap/src/data/rest/rwa/useExploreStocks'
+import {
+  EXPLORE_STOCK_SHELF_COUNT,
+  useExploreStocks,
+} from 'uniswap/src/data/apiClients/dataApiService/rwa/useExploreStocks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useEvent } from 'utilities/src/react/hooks'
+import { TokenCardCarousel } from '~/components/TokenCardCarousel/TokenCardCarousel'
+import { useCarouselLayout } from '~/components/TokenCardCarousel/useCarouselLayout'
+import { useHorizontalSnapCarousel } from '~/components/TokenCardCarousel/useHorizontalSnapCarousel'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
 import { scrollToExploreTokenSection } from '~/pages/Explore/categories/useExploreCategory'
-import { AssetShelfCarousel } from '~/pages/Explore/rwa/shelf/AssetShelfCarousel'
-import { AssetShelfHeader } from '~/pages/Explore/rwa/shelf/AssetShelfHeader'
+import { useAssetShelfChainId } from '~/pages/Explore/hooks/useAssetShelfChainId'
+import { AssetShelfHeader, NewBadge } from '~/pages/Explore/rwa/shelf/AssetShelfHeader'
+import { getShelfItemKey, ShelfTokenCard } from '~/pages/Explore/rwa/shelf/ShelfTokenCard'
 import type { AssetCardClickHandler } from '~/pages/Explore/rwa/shelf/types'
-import { useAssetShelfCarouselLayout } from '~/pages/Explore/rwa/shelf/useAssetShelfCarouselLayout'
-import { useHorizontalSnapCarousel } from '~/pages/Explore/rwa/shelf/useHorizontalSnapCarousel'
 import { ExploreTab } from '~/types/explore'
-import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 /** Featured asset shelf on Explore root (region-gated via `GatedFeature.ISSUER_SPECIFIC_RWA`). */
 export function AssetShelf(): JSX.Element | null {
-  const chainId = useChainIdFromUrlParam()
+  const { t } = useTranslation()
+  const chainId = useAssetShelfChainId()
   const chainIds = useMemo(() => (chainId ? [chainId] : []), [chainId])
   const { featured, isLoading } = useExploreStocks(chainIds)
   const navigate = useNavigate()
   const layoutRef = useRef<HTMLDivElement>(null)
-  const { cardWidth, fadeWidth, showArrowButtons } = useAssetShelfCarouselLayout(layoutRef)
+  const { cardWidth, fadeWidth, showArrowButtons } = useCarouselLayout(layoutRef)
 
-  const { setScrollRef, isAtEnd, isAtStart, isScrollSettled, isHovered, showButton, hideButton, onNext, onPrev } =
-    useHorizontalSnapCarousel({
-      cardWidth,
-      itemCount: featured.length,
-      isLoading,
-    })
+  const carousel = useHorizontalSnapCarousel({
+    cardWidth,
+    itemCount: featured.length,
+    isLoading,
+  })
 
   const onViewAll = useEvent((): void => {
     navigate(`/explore/${ExploreTab.Tokens}?category=stocks`)
@@ -54,24 +59,24 @@ export function AssetShelf(): JSX.Element | null {
 
   return (
     <Flex width="100%" maxWidth={MAX_WIDTH_MEDIA_BREAKPOINT} mx="auto" gap="$spacing12">
-      <AssetShelfHeader onViewAll={onViewAll} />
+      <AssetShelfHeader
+        title={t('common.stocks')}
+        badge={<NewBadge>{t('common.new')}</NewBadge>}
+        onViewAll={onViewAll}
+      />
       <Flex ref={layoutRef} width="100%">
-        <AssetShelfCarousel
-          featured={featured}
+        <TokenCardCarousel
+          items={featured}
+          getItemKey={getShelfItemKey}
+          renderItem={(item) => (
+            <ShelfTokenCard rwa={item.rwa} issuer={item.issuer} cardWidth={cardWidth} onAssetClick={onAssetClick} />
+          )}
           isLoading={isLoading}
-          setScrollRef={setScrollRef}
-          isAtEnd={isAtEnd}
-          isAtStart={isAtStart}
-          isScrollSettled={isScrollSettled}
-          isHovered={isHovered}
-          showButton={showButton}
-          hideButton={hideButton}
-          onNext={onNext}
-          onPrev={onPrev}
+          skeletonCount={EXPLORE_STOCK_SHELF_COUNT}
+          carousel={carousel}
           cardWidth={cardWidth}
           fadeWidth={fadeWidth}
           showArrowButtons={showArrowButtons}
-          onAssetClick={onAssetClick}
         />
       </Flex>
     </Flex>

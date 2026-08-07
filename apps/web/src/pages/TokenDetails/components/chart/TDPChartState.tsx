@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
-import { TimePeriod } from '~/appGraphql/data/util'
 import { ChartType, PriceChartType } from '~/components/Charts/utils'
+import { TimePeriod } from '~/data/util'
 
 export type TokenDetailsChartType = ChartType.PRICE | ChartType.VOLUME | ChartType.TVL
 

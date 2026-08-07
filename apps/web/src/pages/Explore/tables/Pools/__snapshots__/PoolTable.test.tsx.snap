@@ -113,7 +113,7 @@ exports[`PoolTable > renders data filled state 1`] = `
             </div>
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-              style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+              style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -145,7 +145,7 @@ exports[`PoolTable > renders data filled state 1`] = `
             </div>
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-              style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+              style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -177,7 +177,7 @@ exports[`PoolTable > renders data filled state 1`] = `
             </div>
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-              style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+              style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -234,7 +234,7 @@ exports[`PoolTable > renders data filled state 1`] = `
           </div>
         </div>
         <div
-          class="_overscrollBehaviorX-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _position-relative _justifyContent-flex-start _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px scrollbar-hidden"
+          class="_overscrollBehaviorX-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _overflowAnchor-_platformweb_none _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _position-relative _justifyContent-flex-start _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px scrollbar-hidden"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
@@ -395,7 +395,7 @@ exports[`PoolTable > renders data filled state 1`] = `
                     </div>
                     <div
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _backgroundColor-transparent _overflowX-hidden _overflowY-hidden first-child-flex-grow-0 last-child-justify-end"
-                      style="width: 120px; left: 0px; position: relative; z-index: 0; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                      style="width: 110px; left: 0px; position: relative; z-index: 0; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
                     >
                       <div
                         class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -410,7 +410,7 @@ exports[`PoolTable > renders data filled state 1`] = `
                     </div>
                     <div
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _backgroundColor-transparent _overflowX-hidden _overflowY-hidden first-child-flex-grow-0 last-child-justify-end"
-                      style="width: 120px; left: 0px; position: relative; z-index: 0; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                      style="width: 110px; left: 0px; position: relative; z-index: 0; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
                     >
                       <div
                         class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -425,7 +425,7 @@ exports[`PoolTable > renders data filled state 1`] = `
                     </div>
                     <div
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _backgroundColor-transparent _overflowX-hidden _overflowY-hidden first-child-flex-grow-0 last-child-justify-end"
-                      style="width: 120px; left: 0px; position: relative; z-index: 0; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                      style="width: 110px; left: 0px; position: relative; z-index: 0; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
                     >
                       <div
                         class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -634,7 +634,7 @@ exports[`PoolTable > renders data filled state 1`] = `
                     </div>
                     <div
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _backgroundColor-transparent _overflowX-hidden _overflowY-hidden first-child-flex-grow-0 last-child-justify-end"
-                      style="width: 120px; left: 0px; position: relative; z-index: 0; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                      style="width: 110px; left: 0px; position: relative; z-index: 0; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
                     >
                       <div
                         class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -649,7 +649,7 @@ exports[`PoolTable > renders data filled state 1`] = `
                     </div>
                     <div
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _backgroundColor-transparent _overflowX-hidden _overflowY-hidden first-child-flex-grow-0 last-child-justify-end"
-                      style="width: 120px; left: 0px; position: relative; z-index: 0; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                      style="width: 110px; left: 0px; position: relative; z-index: 0; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
                     >
                       <div
                         class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -664,7 +664,7 @@ exports[`PoolTable > renders data filled state 1`] = `
                     </div>
                     <div
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _backgroundColor-transparent _overflowX-hidden _overflowY-hidden first-child-flex-grow-0 last-child-justify-end"
-                      style="width: 120px; left: 0px; position: relative; z-index: 0; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                      style="width: 110px; left: 0px; position: relative; z-index: 0; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
                     >
                       <div
                         class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -702,7 +702,7 @@ exports[`PoolTable > renders data filled state 1`] = `
           class="_position-_platformweb_sticky _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _mt--48px _zIndex-1020"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _backgroundColor-accent2Soli100 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _width-fit-content _pt-t-space-pad95589114 _pr-t-space-pad95589114 _pb-t-space-pad95589114 _pl-t-space-pad95589114 _gap-t-space-gap56 _height-34px"
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _backgroundColor-accent2Soli100 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _width-fit-content _pt-t-space-pad95589114 _pr-t-space-pad95589114 _pb-t-space-pad95589114 _pl-t-space-pad95589114 _gap-t-space-gap56 _height-34px"
           >
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column RotateElement"
@@ -728,7 +728,12 @@ exports[`PoolTable > renders data filled state 1`] = `
                 />
               </svg>
             </div>
-            Loading
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+              data-disable-theme="true"
+            >
+              Loading
+            </span>
           </div>
         </div>
       </div>
@@ -853,7 +858,7 @@ exports[`PoolTable > renders error state 1`] = `
             </div>
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-              style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+              style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -885,7 +890,7 @@ exports[`PoolTable > renders error state 1`] = `
             </div>
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-              style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+              style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -917,7 +922,7 @@ exports[`PoolTable > renders error state 1`] = `
             </div>
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-              style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+              style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -974,7 +979,7 @@ exports[`PoolTable > renders error state 1`] = `
           </div>
         </div>
         <div
-          class="_overscrollBehaviorX-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _position-relative _justifyContent-flex-start _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px scrollbar-hidden"
+          class="_overscrollBehaviorX-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _overflowAnchor-_platformweb_none _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _position-relative _justifyContent-flex-start _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px scrollbar-hidden"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
@@ -1038,7 +1043,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1056,7 +1061,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1074,7 +1079,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1168,7 +1173,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1186,7 +1191,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1204,7 +1209,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1298,7 +1303,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1316,7 +1321,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1334,7 +1339,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1428,7 +1433,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1446,7 +1451,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1464,7 +1469,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1558,7 +1563,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1576,7 +1581,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1594,7 +1599,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1688,7 +1693,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1706,7 +1711,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1724,7 +1729,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1818,7 +1823,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1836,7 +1841,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1854,7 +1859,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1948,7 +1953,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1966,7 +1971,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -1984,7 +1989,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2078,7 +2083,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2096,7 +2101,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2114,7 +2119,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2208,7 +2213,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2226,7 +2231,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2244,7 +2249,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2338,7 +2343,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2356,7 +2361,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2374,7 +2379,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2468,7 +2473,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2486,7 +2491,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2504,7 +2509,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2598,7 +2603,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2616,7 +2621,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2634,7 +2639,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2728,7 +2733,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2746,7 +2751,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2764,7 +2769,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2858,7 +2863,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2876,7 +2881,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2894,7 +2899,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -2988,7 +2993,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3006,7 +3011,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3024,7 +3029,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3118,7 +3123,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3136,7 +3141,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3154,7 +3159,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3248,7 +3253,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3266,7 +3271,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3284,7 +3289,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3378,7 +3383,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3396,7 +3401,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3414,7 +3419,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3508,7 +3513,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3526,7 +3531,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3544,7 +3549,7 @@ exports[`PoolTable > renders error state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3749,7 +3754,7 @@ exports[`PoolTable > renders loading state 1`] = `
             </div>
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-              style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+              style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3781,7 +3786,7 @@ exports[`PoolTable > renders loading state 1`] = `
             </div>
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-              style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+              style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3813,7 +3818,7 @@ exports[`PoolTable > renders loading state 1`] = `
             </div>
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-              style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+              style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3870,7 +3875,7 @@ exports[`PoolTable > renders loading state 1`] = `
           </div>
         </div>
         <div
-          class="_overscrollBehaviorX-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _position-relative _justifyContent-flex-start _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px scrollbar-hidden"
+          class="_overscrollBehaviorX-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _overflowAnchor-_platformweb_none _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _position-relative _justifyContent-flex-start _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px scrollbar-hidden"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
@@ -3934,7 +3939,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3952,7 +3957,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -3970,7 +3975,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4064,7 +4069,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4082,7 +4087,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4100,7 +4105,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4194,7 +4199,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4212,7 +4217,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4230,7 +4235,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4324,7 +4329,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4342,7 +4347,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4360,7 +4365,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4454,7 +4459,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4472,7 +4477,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4490,7 +4495,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4584,7 +4589,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4602,7 +4607,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4620,7 +4625,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4714,7 +4719,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4732,7 +4737,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4750,7 +4755,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4844,7 +4849,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4862,7 +4867,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4880,7 +4885,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4974,7 +4979,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -4992,7 +4997,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5010,7 +5015,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5104,7 +5109,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5122,7 +5127,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5140,7 +5145,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5234,7 +5239,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5252,7 +5257,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5270,7 +5275,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5364,7 +5369,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5382,7 +5387,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5400,7 +5405,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5494,7 +5499,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5512,7 +5517,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5530,7 +5535,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5624,7 +5629,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5642,7 +5647,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5660,7 +5665,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5754,7 +5759,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5772,7 +5777,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5790,7 +5795,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5884,7 +5889,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5902,7 +5907,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -5920,7 +5925,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -6014,7 +6019,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -6032,7 +6037,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -6050,7 +6055,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -6144,7 +6149,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -6162,7 +6167,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -6180,7 +6185,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -6274,7 +6279,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -6292,7 +6297,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -6310,7 +6315,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -6404,7 +6409,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -6422,7 +6427,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"
@@ -6440,7 +6445,7 @@ exports[`PoolTable > renders loading state 1`] = `
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                style="width: 120px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
+                style="width: 110px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 0px; height: 100%; display: flex; justify-content: center;"
               >
                 <div
                   class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center"

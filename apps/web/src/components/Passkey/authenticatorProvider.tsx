@@ -1,9 +1,8 @@
-import { AndroidLogo } from 'ui/src/components/icons/AndroidLogo'
+import { AuthenticatorNameType } from '@universe/embedded-wallet'
 import { GoogleLogoGradient } from 'ui/src/components/icons/GoogleLogoGradient'
 import { IcloudPasswordLogo } from 'ui/src/components/icons/IcloudPasswordLogo'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { Windows } from 'ui/src/components/icons/Windows'
-import { AuthenticatorNameType } from 'uniswap/src/features/passkey/embeddedWallet'
 import i18n from 'uniswap/src/i18n'
 import { AuthenticatorProvider } from '~/types/authenticatorProvider'
 
@@ -12,11 +11,10 @@ export { AuthenticatorProvider }
 export function getProviderIcon(provider: AuthenticatorProvider): JSX.Element {
   switch (provider) {
     case AuthenticatorProvider.Google:
+    case AuthenticatorProvider.GooglePasswordManager:
       return <GoogleLogoGradient size="$icon.20" />
     case AuthenticatorProvider.Apple:
       return <IcloudPasswordLogo size="$icon.20" />
-    case AuthenticatorProvider.Android:
-      return <AndroidLogo size="$icon.20" color="$neutral1" />
     case AuthenticatorProvider.Microsoft:
       return <Windows size="$icon.20" color="$neutral1" />
     default:
@@ -26,7 +24,7 @@ export function getProviderIcon(provider: AuthenticatorProvider): JSX.Element {
 
 export function getProviderLabel(provider: AuthenticatorProvider, count?: number): string {
   switch (provider) {
-    case AuthenticatorProvider.Android:
+    case AuthenticatorProvider.GooglePasswordManager:
     case AuthenticatorProvider.Microsoft:
     case AuthenticatorProvider.Apple:
     case AuthenticatorProvider.Google: {
@@ -44,7 +42,7 @@ export function getProvider(
 ): AuthenticatorProvider {
   switch (providerName) {
     case nameType.GOOGLE_PASSWORD_MANAGER:
-      return AuthenticatorProvider.Android
+      return AuthenticatorProvider.GooglePasswordManager
     case nameType.CHROME_MAC:
       return AuthenticatorProvider.Google
     case nameType.ICLOUD_KEYCHAIN:

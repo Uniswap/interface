@@ -23,13 +23,13 @@ import { USDC, USDT } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { parseEther, parseUnits } from 'viem'
-import { installEarnPlanMock, installEarnQuoteMock } from '~/playwright/anvil/earn'
+import { assume0xAddress } from '~/chains'
+import { installEarnPlanMock, installEarnQuoteMock, installEarnVaultLiquidityShim } from '~/playwright/anvil/earn'
 import { ONE_MILLION_USDT } from '~/playwright/anvil/utils'
 import { expect, getTest, type Page } from '~/playwright/fixtures'
 import type { AnvilClient } from '~/playwright/fixtures/anvil'
 import { createTestUrlBuilder } from '~/playwright/fixtures/urls'
 import { TEST_WALLET_ADDRESS } from '~/playwright/fixtures/wallets'
-import { assume0xAddress } from '~/utils/wagmi'
 
 const test = getTest({ withAnvil: true })
 const buildEarnExploreUrl = createTestUrlBuilder({
@@ -134,6 +134,9 @@ async function deposit(page: Page, symbol: EarnVaultFixture['chipSymbol']): Prom
   await openVault(page, symbol)
   const modal = page.getByRole('dialog')
   await modal.getByRole('button', { name: /^deposit$/i }).click()
+  // First deposit into a vault shows the "How it works" interstitial (behavior history
+  // is empty in e2e), which must be acknowledged before the amount form renders.
+  await modal.getByRole('button', { name: /agree and continue/i }).click()
   await modal.getByRole('textbox').first().fill('500')
   await modal.getByRole('button', { name: /review/i }).click()
   const submitButton = modal.getByRole('button', { name: /deposit/i })
@@ -176,9 +179,9 @@ async function withdraw({
 test.describe(
   'Earn vault deposit and withdraw',
   {
-    tag: '@team:apps-swap',
+    tag: '@team:apps-portfolio',
     annotation: [
-      { type: 'DD_TAGS[team]', description: 'apps-swap' },
+      { type: 'DD_TAGS[team]', description: 'apps-portfolio' },
       { type: 'DD_TAGS[test.type]', description: 'web-e2e' },
     ],
   },
@@ -194,6 +197,7 @@ test.describe(
           isNativeDeposit: fixture.chipSymbol === 'ETH',
         })
         await installForkPositionShim(page, fixture)
+        await installEarnVaultLiquidityShim(page)
 
         if (fixture.chipSymbol === 'ETH') {
           const balanceBefore = await anvil.getBalance({ address: TEST_WALLET_ADDRESS })
@@ -250,15 +254,18 @@ test.describe(
       await page.goto(EARN_EXPLORE_URL)
       await openVault(page, fixture.chipSymbol)
 
-      const modal = page.getByRole('dialog')
-      const tablist = modal.getByRole('tablist')
+      // Measure against the modal card (Dialog.Content, max 420px), not getByRole('dialog'):
+      // Tamagui's <dialog> element spans the viewport, which made this guard fail (~30%)
+      // even with a correct layout.
+      const modalCard = page.getByTestId(TestID.EarnVaultModal)
+      const tablist = modalCard.getByRole('tablist')
       await expect(tablist).toBeVisible({ timeout: 30_000 })
 
-      const modalBox = await modal.boundingBox()
+      const modalBox = await modalCard.boundingBox()
       const tablistBox = await tablist.boundingBox()
       expect(modalBox).not.toBeNull()
       expect(tablistBox).not.toBeNull()
-      // Regression guard: the Balance/Details control must fill the modal, not shrink to
+      // Regression guard: the Balance/Details control must fill the modal card, not shrink to
       // intrinsic width inside the centered header. Broken ~39%, corrected ~90%.
       expect((tablistBox?.width ?? 0) / (modalBox?.width ?? 1)).toBeGreaterThan(0.8)
     })

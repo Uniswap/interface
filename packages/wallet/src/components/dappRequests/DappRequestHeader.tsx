@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, useSporeColors } from 'ui/src'
-import { Verified } from 'ui/src/components/icons'
+import { GlobeFilled, Verified } from 'ui/src/components/icons'
 import { formatDappURL } from 'utilities/src/format/urls'
 import { LinkButton } from 'wallet/src/components/buttons/LinkButton'
 import { DappHeaderIcon } from 'wallet/src/components/dappRequests/DappHeaderIcon'
@@ -10,6 +10,8 @@ interface DappRequestHeaderProps {
   dappInfo: DappConnectionInfo
   title: string | { element: JSX.Element }
   verificationStatus?: DappVerificationStatus
+  /** First-party Uniswap sites get pink (accent1) URL + badge styling. Must be derived from a trusted URL. */
+  isFirstParty?: boolean
   headerIcon?: JSX.Element
 }
 
@@ -17,16 +19,21 @@ export function DappRequestHeader({
   dappInfo,
   title,
   verificationStatus,
+  isFirstParty = false,
   headerIcon,
 }: DappRequestHeaderProps): JSX.Element {
   const colors = useSporeColors()
 
+  const isVerified = verificationStatus === DappVerificationStatus.Verified
+
   const urlColor =
     verificationStatus === DappVerificationStatus.Threat
       ? colors.statusCritical.val
-      : verificationStatus === DappVerificationStatus.Unverified
-        ? colors.neutral2.val
-        : colors.accent1.val
+      : isVerified && isFirstParty
+        ? colors.accent1.val
+        : verificationStatus === DappVerificationStatus.Unverified
+          ? colors.neutral2.val
+          : colors.neutral1.val
 
   const urlLabel = useRequestUrlLabel(dappInfo.url, dappInfo.frameUrl)
 
@@ -36,6 +43,7 @@ export function DappRequestHeader({
       {typeof title === 'string' ? <Text variant="subheading1">{title}</Text> : title.element}
       <Flex gap="$spacing2">
         <Flex row gap="$spacing4" alignItems="center">
+          <GlobeFilled color={urlColor} size="$icon.16" mr="$spacing4" />
           <LinkButton
             justifyContent="flex-start"
             color={urlColor}
@@ -44,7 +52,7 @@ export function DappRequestHeader({
             textVariant="buttonLabel4"
             url={dappInfo.url}
           />
-          {verificationStatus === DappVerificationStatus.Verified && <Verified color="$accent1" size="$icon.16" />}
+          {isVerified && <Verified color={isFirstParty ? '$accent1' : '$neutral1'} size="$icon.12" ml="$spacing4" />}
         </Flex>
       </Flex>
     </Flex>

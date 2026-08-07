@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
-import type { Rwa } from 'uniswap/src/data/rest/rwa/types'
+import type { Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import type { OrderDirection } from '~/appGraphql/data/util'
 import { Table } from '~/components/Table'
+import type { OrderDirection } from '~/data/util'
 import { EXPANDABLE_ASSET_TABLE_ROW_HEIGHT } from '~/pages/Explore/rwa/table/expandableAssetTableConstants'
 import {
   buildExpandableAssetTableRows,

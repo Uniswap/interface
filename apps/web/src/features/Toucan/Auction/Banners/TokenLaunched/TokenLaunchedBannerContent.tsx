@@ -8,7 +8,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { NumberType } from 'utilities/src/format/types'
-import { getTokenDetailsURL } from '~/appGraphql/data/util'
+import { getTokenDetailsURL } from '~/data/util'
 import { PulsingIndicatorDot } from '~/features/Toucan/Auction/Banners/AuctionIntro/PulsingIndicatorDot'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { approximateNumberFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'

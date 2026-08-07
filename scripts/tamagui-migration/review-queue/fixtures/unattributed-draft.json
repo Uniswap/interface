@@ -1,0 +1,26 @@
+{
+  "description": "Trap 7: draft PR with no assignee, no 'requested by' body line, and a BOT author — requester is unattributed: source 'unattributed', empty login, grouped under the 'unattributed' key and flagged in the rendering, never guessed.",
+  "now": "2026-07-28T12:00:00Z",
+  "defaultBranch": "main",
+  "podByLogin": {},
+  "prs": [
+    {
+      "number": 701,
+      "title": "feat(mobile): convert onboarding screens [INFRA-3701]",
+      "url": "https://github.com/Uniswap/universe/pull/701",
+      "draft": true,
+      "author": { "login": "github-actions[bot]", "type": "Bot" },
+      "assignees": [],
+      "body": "Converts apps/mobile onboarding.\n\nFixes INFRA-3701",
+      "baseRefName": "main",
+      "headRefName": "thebotfather/infra-3701-onboarding",
+      "labels": [{ "name": "tamagui-migration" }],
+      "createdAt": "2026-07-27T12:00:00Z"
+    }
+  ],
+  "reviews": { "701": [] },
+  "checks": { "701": "pending" },
+  "requestedReviewers": {
+    "701": { "users": [], "teams": [] }
+  }
+}

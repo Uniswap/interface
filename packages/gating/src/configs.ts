@@ -71,6 +71,7 @@ export enum DynamicConfigs {
   DisableWalletSearchTerms = 'disable_wallet_search_terms',
   Earn = 'earn_config',
   NetworkRequests = 'network_requests',
+  Permit2MismatchDelegates = 'permit2_mismatch_delegates',
   Swap = 'swap_config',
   SyncTransactionSubmissionChainIds = 'sync_transaction_submission_chain_ids',
 
@@ -90,11 +91,13 @@ export enum DynamicConfigs {
   AstroChain = 'astro_chain',
   EmbeddedWalletBetaPassphrases = 'embedded_wallet_beta_passphrases',
   ExternallyConnectableExtension = 'externally_connectable_extension',
+  LaunchesNetworkFilterChainIds = 'launches_network_filter_chain_ids',
   LiquidityApprovalSimulation = 'liquidity_approval_simulation',
   LiquidityGasPreEstimation = 'liquidity_gas_pre_estimation',
   LPConfig = 'lp_config',
   OutageBannerChainId = 'outage_banner_chain_id',
   RWAIssuerLogos = 'rwa_issuer_logos',
+  SynchronizedHeartbeats = 'synchronized_heartbeats',
   VerifiedAuctions = 'verified_auctions',
   AuctionFdvWarning = 'auction_fdv_warning',
 }
@@ -266,6 +269,10 @@ export enum OutageBannerChainIdConfigKey {
   ChainId = 'chainId',
 }
 
+export enum LaunchesNetworkFilterChainIdsConfigKey {
+  ChainIds = 'chainIds',
+}
+
 export enum LiquidityGasPreEstimationConfigKey {
   EnabledChainIds = 'enabledChainIds',
 }
@@ -282,6 +289,17 @@ export enum RWAIssuerLogosConfigKey {
   Logos = 'logos',
 }
 
+/** EIP-7702 delegate contracts whose ERC-1271 validation rejects raw Permit2 ECDSA signatures. */
+export enum Permit2MismatchDelegatesConfigKey {
+  DelegateAddresses = 'delegateAddresses',
+}
+
+/** Seconds between full (non-price) heartbeat refreshes, per page. 0 disables that page's heartbeat. */
+export enum SynchronizedHeartbeatsConfigKey {
+  PortfolioPollIntervalSeconds = 'portfolioPollIntervalSeconds',
+  TdpPollIntervalSeconds = 'tdpPollIntervalSeconds',
+}
+
 export type DynamicConfigKeys = {
   // Shared
   [DynamicConfigs.BlockedAsyncSubmissionChainIds]: BlockedAsyncSubmissionChainIdsConfigKey
@@ -289,6 +307,7 @@ export type DynamicConfigKeys = {
   [DynamicConfigs.DisableWalletSearchTerms]: DisableWalletSearchTermsConfigKey
   [DynamicConfigs.Earn]: EarnConfigKey
   [DynamicConfigs.NetworkRequests]: NetworkRequestsConfigKey
+  [DynamicConfigs.Permit2MismatchDelegates]: Permit2MismatchDelegatesConfigKey
   [DynamicConfigs.Swap]: SwapConfigKey
   [DynamicConfigs.SyncTransactionSubmissionChainIds]: SyncTransactionSubmissionChainIdsConfigKey
 
@@ -308,11 +327,13 @@ export type DynamicConfigKeys = {
   [DynamicConfigs.AstroChain]: AstroChainConfigKey
   [DynamicConfigs.EmbeddedWalletBetaPassphrases]: EmbeddedWalletBetaPassphrasesKey
   [DynamicConfigs.ExternallyConnectableExtension]: ExternallyConnectableExtensionConfigKey
+  [DynamicConfigs.LaunchesNetworkFilterChainIds]: LaunchesNetworkFilterChainIdsConfigKey
   [DynamicConfigs.LiquidityApprovalSimulation]: LiquidityApprovalSimulationConfigKey
   [DynamicConfigs.LiquidityGasPreEstimation]: LiquidityGasPreEstimationConfigKey
   [DynamicConfigs.LPConfig]: LPConfigKey
   [DynamicConfigs.OutageBannerChainId]: OutageBannerChainIdConfigKey
   [DynamicConfigs.RWAIssuerLogos]: RWAIssuerLogosConfigKey
+  [DynamicConfigs.SynchronizedHeartbeats]: SynchronizedHeartbeatsConfigKey
   [DynamicConfigs.VerifiedAuctions]: VerifiedAuctionsConfigKey
 }
 

@@ -14,6 +14,8 @@ import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import { addPendingSession, addSession, removeSession } from 'src/features/walletConnect/walletConnectSlice'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
+import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { DappRequestInfo, DappRequestType, EthEvent } from 'uniswap/src/types/walletConnect'
 import type { Mock } from 'vitest'
 import { DappVerificationStatus } from 'wallet/src/features/dappRequests/types'
@@ -745,6 +747,158 @@ describe('WalletConnect Saga', () => {
           }),
         }),
       )
+    })
+  })
+
+  // Finding 746: a session scoped to one chain must not produce a signature valid on another.
+  describe('handleSessionRequest typed-data chain binding', () => {
+    const APPROVED_ACCOUNT = '0xaaaa000000000000000000000000000000000001'
+    const SESSION_TOPIC = 'chain-binding-topic'
+    const PERMIT2 = '0x000000000022D473030F116dDEE9F6B43aC78BA3'
+
+    const multiChainSession = {
+      topic: SESSION_TOPIC,
+      peer: {
+        metadata: { name: 'Dapp', url: 'https://dapp.example', icons: [] },
+      },
+      namespaces: {
+        eip155: {
+          accounts: [`eip155:1:${APPROVED_ACCOUNT}`, `eip155:10:${APPROVED_ACCOUNT}`],
+          chains: ['eip155:1', 'eip155:10'],
+          methods: ['eth_signTypedData_v4', 'personal_sign'],
+          events: [],
+        },
+      },
+    }
+
+    function permit2TypedData(domainChainId?: number): string {
+      return JSON.stringify({
+        types: {
+          EIP712Domain: [
+            { name: 'name', type: 'string' },
+            { name: 'chainId', type: 'uint256' },
+            { name: 'verifyingContract', type: 'address' },
+          ],
+          PermitSingle: [{ name: 'spender', type: 'address' }],
+        },
+        primaryType: 'PermitSingle',
+        domain: {
+          name: 'Permit2',
+          ...(domainChainId === undefined ? {} : { chainId: domainChainId }),
+          verifyingContract: PERMIT2,
+        },
+        message: { spender: '0x1111111111111111111111111111111111111111' },
+      })
+    }
+
+    function typedDataRequest({
+      envelopeChain,
+      domainChainId,
+      id = 900,
+    }: {
+      envelopeChain: string
+      domainChainId?: number
+      id?: number
+    }): PendingRequestTypes.Struct {
+      return {
+        topic: SESSION_TOPIC,
+        id,
+        params: {
+          chainId: envelopeChain,
+          request: {
+            method: EthMethod.SignTypedDataV4,
+            params: [APPROVED_ACCOUNT, permit2TypedData(domainChainId)],
+          },
+        },
+      } as unknown as PendingRequestTypes.Struct
+    }
+
+    beforeEach(() => {
+      vi.clearAllMocks()
+      ;(wcWeb3Wallet.engine.signClient.session.get as Mock).mockReturnValue(multiChainSession)
+    })
+
+    it('queues a request whose domain chain matches the envelope chain', async () => {
+      await expectSaga(
+        handleSessionRequest,
+        typedDataRequest({ envelopeChain: 'eip155:1', domainChainId: UniverseChainId.Mainnet }),
+      )
+        .put.actionType('walletConnect/addRequest')
+        .run()
+
+      expect(wcWeb3Wallet.respondSessionRequest).not.toHaveBeenCalled()
+    })
+
+    it('rejects an Optimism-domain signature sent through a Mainnet envelope', async () => {
+      await expectSaga(
+        handleSessionRequest,
+        typedDataRequest({ envelopeChain: 'eip155:1', domainChainId: UniverseChainId.Optimism, id: 901 }),
+      )
+        .not.put.actionType('walletConnect/addRequest')
+        .run()
+
+      expect(wcWeb3Wallet.respondSessionRequest).toHaveBeenCalledWith(
+        expect.objectContaining({
+          topic: SESSION_TOPIC,
+          response: expect.objectContaining({ id: 901, jsonrpc: '2.0', error: expect.anything() }),
+        }),
+      )
+    })
+
+    it('reports the rejection with both chain ids and whether the domain chain was in scope', async () => {
+      await expectSaga(
+        handleSessionRequest,
+        typedDataRequest({ envelopeChain: 'eip155:1', domainChainId: UniverseChainId.Optimism, id: 905 }),
+      )
+        .call(sendAnalyticsEvent, MobileEventName.WalletConnectChainMismatchRejected, {
+          dapp_url: 'https://dapp.example',
+          dapp_name: 'Dapp',
+          eth_method: EthMethod.SignTypedDataV4,
+          envelope_chain_id: UniverseChainId.Mainnet,
+          domain_chain_id: UniverseChainId.Optimism,
+          // The multi-chain case strictness deliberately breaks; this is the one to watch.
+          domain_chain_in_namespace: true,
+        })
+        .run()
+    })
+
+    it('rejects even when the domain chain is inside the approved namespace', async () => {
+      // Authorized eip155:10 but envelope said eip155:1. Strict matching keeps reviewed and
+      // signed identical; the rejection is measured so this can be revisited.
+      await expectSaga(
+        handleSessionRequest,
+        typedDataRequest({ envelopeChain: 'eip155:10', domainChainId: UniverseChainId.Mainnet, id: 902 }),
+      )
+        .not.put.actionType('walletConnect/addRequest')
+        .run()
+
+      expect(wcWeb3Wallet.respondSessionRequest).toHaveBeenCalled()
+    })
+
+    it('rejects typed data with no domain chainId', async () => {
+      await expectSaga(handleSessionRequest, typedDataRequest({ envelopeChain: 'eip155:1', id: 903 }))
+        .not.put.actionType('walletConnect/addRequest')
+        .run()
+
+      expect(wcWeb3Wallet.respondSessionRequest).toHaveBeenCalled()
+    })
+
+    it('leaves personal_sign alone, since it is not chain-bound', async () => {
+      const request = {
+        topic: SESSION_TOPIC,
+        id: 904,
+        params: {
+          chainId: 'eip155:1',
+          request: {
+            method: EthMethod.PersonalSign,
+            params: ['0x68656c6c6f', APPROVED_ACCOUNT],
+          },
+        },
+      } as unknown as PendingRequestTypes.Struct
+
+      await expectSaga(handleSessionRequest, request).put.actionType('walletConnect/addRequest').run()
+
+      expect(wcWeb3Wallet.respondSessionRequest).not.toHaveBeenCalled()
     })
   })
 

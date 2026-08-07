@@ -1,5 +1,5 @@
-import { type ChartData } from 'src/components/home/PortfolioChart/SparklineChart'
-import { type PortfolioBalanceBreakdown } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+import { type ChartData } from 'src/components/charts/SparklineChart'
+import { type PortfolioBalanceBreakdown } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { getPortfolioChartPercentChange } from 'uniswap/src/features/portfolio/portfolioChartPercentChange'
 
 export type BreakdownCategoryDisplay = { valueUSD: number | undefined; percentChange: number | undefined }
@@ -13,38 +13,46 @@ export type BreakdownCardProps = {
 }
 
 /** The scrubbed values at the crosshair, or all `undefined` when the chart is at rest. */
-type ScrubValues = { total: number | undefined; tokens: number | undefined; pools: number | undefined }
+type ScrubValues = {
+  total: number | undefined
+  tokens: number | undefined
+  pools: number | undefined
+  earn: number | undefined
+}
 
 /**
  * Resolves the breakdown card's props, or `undefined` when the card should be hidden.
  *
- * Hidden unless the flag is on and there is a useful breakdown to show. At rest, token/pool rows use
- * wallet-balances values with period deltas from chart series; Earn has no mobile chart series yet,
- * so it uses the wallet-balances delta. While scrubbing, token/pool rows follow the crosshair.
+ * Hidden unless an eligible category flag is on and there is a useful breakdown to show. At rest, rows use
+ * wallet-balances values with period deltas from their chart series. While scrubbing, every row follows the crosshair.
  */
 export function getBreakdownCardProps({
-  enabled,
+  poolsEnabled,
+  earnEnabled,
   poolsUnavailable,
   breakdown,
   scrub,
   tokensData,
   poolsData,
+  earnData,
   isAllTimePeriod,
 }: {
-  enabled: boolean
+  poolsEnabled: boolean
+  earnEnabled: boolean
   poolsUnavailable: boolean
   breakdown: PortfolioBalanceBreakdown | undefined
   scrub: ScrubValues
   tokensData: ChartData
   poolsData: ChartData
+  earnData: ChartData
   isAllTimePeriod: boolean
 }): BreakdownCardProps | undefined {
   const hasTokenBalance = (breakdown?.tokens.balanceUSD ?? 0) > 0
-  const hasPoolsBalance = !poolsUnavailable && (breakdown?.pools.balanceUSD ?? 0) > 0
-  const hasEarnBalance = (breakdown?.earn.balanceUSD ?? 0) > 0
+  const hasPoolsBalance = poolsEnabled && !poolsUnavailable && (breakdown?.pools.balanceUSD ?? 0) > 0
+  const hasEarnBalance = earnEnabled && (breakdown?.earn.balanceUSD ?? 0) > 0
   const shouldShowBreakdown = hasEarnBalance || (hasTokenBalance && hasPoolsBalance)
 
-  if (!enabled || !breakdown || !shouldShowBreakdown) {
+  if ((!poolsEnabled && !earnEnabled) || !breakdown || !shouldShowBreakdown) {
     return undefined
   }
 
@@ -65,7 +73,7 @@ export function getBreakdownCardProps({
       earn: hasEarnBalance
         ? {
             valueUSD: breakdown.earn.balanceUSD,
-            percentChange: isAllTimePeriod ? undefined : breakdown.earn.percentChange,
+            percentChange: periodPercentChange(earnData),
           }
         : undefined,
     }
@@ -86,8 +94,8 @@ export function getBreakdownCardProps({
       : undefined,
     earn: hasEarnBalance
       ? {
-          valueUSD: breakdown.earn.balanceUSD,
-          percentChange: isAllTimePeriod ? undefined : breakdown.earn.percentChange,
+          valueUSD: scrub.earn,
+          percentChange: scrubPercentChange(earnData[0]?.value, scrub.earn),
         }
       : undefined,
   }

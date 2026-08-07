@@ -10,6 +10,14 @@ import { renderWithProviders } from 'wallet/src/test/render'
 
 const EVM_ADDRESS = '0x0000000000000000000000000000000000000001'
 
+const chainMocks = vi.hoisted(() => ({
+  isTestnetModeEnabled: false,
+}))
+
+vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
+  useEnabledChains: () => ({ isTestnetModeEnabled: chainMocks.isTestnetModeEnabled }),
+}))
+
 vi.mock('uniswap/src/features/earn/hooks/useEarnVaults', () => ({
   useEarnVaults: vi.fn(),
 }))
@@ -21,7 +29,7 @@ vi.mock('@universe/gating', async () => ({
 
 const mockUsePortfolioTotalValue = vi.fn()
 vi.mock('uniswap/src/features/dataApi/balances/balancesRest', () => ({
-  usePortfolioTotalValue: (): unknown => mockUsePortfolioTotalValue(),
+  usePortfolioTotalValue: (params: unknown): unknown => mockUsePortfolioTotalValue(params),
 }))
 
 const VAULT: EarnVaultInfo = {
@@ -81,6 +89,7 @@ describe(HomeScreenEarningSection, () => {
     mockRefetch.mockClear()
     mockUsePortfolioTotalValue.mockReset()
     mockUsePortfolioTotalValue.mockReturnValue({ data: undefined })
+    chainMocks.isTestnetModeEnabled = false
   })
 
   it('renders the error card with a working retry when the load fails', () => {
@@ -129,6 +138,17 @@ describe(HomeScreenEarningSection, () => {
     const { getByText } = renderWithProviders(<HomeScreenEarningSection evmAddress={EVM_ADDRESS} />)
 
     expect(getByText('home.earning.title')).toBeTruthy()
+  })
+
+  it('does not query or render Mainnet Earn content in testnet mode', () => {
+    chainMocks.isTestnetModeEnabled = true
+    mockEarnVaultsResult({ vaults: [VAULT], positionsByVaultId: new Map([[VAULT.id, POSITION]]) })
+
+    const { queryByText } = renderWithProviders(<HomeScreenEarningSection evmAddress={EVM_ADDRESS} />)
+
+    expect(queryByText('home.earning.title')).toBeNull()
+    expect(mockUseEarnVaults).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
+    expect(mockUsePortfolioTotalValue).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
   })
 
   it('marks the reveal as seen when the funded earning card renders', () => {

@@ -4,14 +4,14 @@ import {
   listAuthenticators,
   registerNewAuthenticator,
   startAddAuthenticatorSession,
-} from 'uniswap/src/features/passkey/embeddedWallet'
+  useEmbeddedWalletState,
+} from '@universe/embedded-wallet'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { AddPasskeyModal } from '~/components/Passkey/AddPasskeyModal'
 import { useModalState } from '~/hooks/useModalState'
-import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { render, screen } from '~/test-utils/render'
 
-vi.mock('uniswap/src/features/passkey/embeddedWallet', () => ({
+vi.mock('@universe/embedded-wallet/src/features/passkey/embeddedWallet', () => ({
   authenticateWithPasskey: vi.fn(),
   AuthenticatorAttachment: { PLATFORM: 0, CROSS_PLATFORM: 1 },
   registerNewAuthenticator: vi.fn(),
@@ -23,9 +23,10 @@ vi.mock('~/hooks/useModalState', () => ({
   useModalState: vi.fn(),
 }))
 
-vi.mock('~/state/embeddedWallet/store', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('~/state/embeddedWallet/store')>()),
+vi.mock('@universe/embedded-wallet/src/state/embeddedWalletStore', () => ({
   useEmbeddedWalletState: vi.fn(),
+  getEmbeddedWalletState: vi.fn(() => ({ walletAddress: null, walletId: null, chainId: null, isConnected: false })),
+  setChainId: vi.fn(),
 }))
 
 vi.mock('uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery', () => ({

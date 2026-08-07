@@ -77,7 +77,7 @@ export function MultichainScrollableList({
 
   return (
     <Flex position="relative" overflow="hidden" flex={1} $md={{ flex: 0 }}>
-      <Flex ref={scrollRef} overflow="scroll" scrollbarWidth="none" flex={1}>
+      <Flex ref={scrollRef} overflow="scroll" scrollbarWidth="none" flex={1} style={{ overscrollBehavior: 'contain' }}>
         {items}
       </Flex>
       {/* Bottom fade gradient (desktop web popover only, hidden when scrolled to bottom) */}

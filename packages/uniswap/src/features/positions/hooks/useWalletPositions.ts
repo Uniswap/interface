@@ -3,7 +3,7 @@ import type { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query
 import { ListPositionsResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { useEffect, useMemo } from 'react'
-import { useGetPositionsInfiniteQuery } from 'uniswap/src/data/rest/getPositions'
+import { useGetPositionsInfiniteQuery } from 'uniswap/src/data/apiClients/dataApiService/positions/getPositions'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { parseRestPosition } from 'uniswap/src/features/positions/parseRestPosition'

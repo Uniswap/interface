@@ -2,7 +2,7 @@ import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persist
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { SharedQueryClient } from '@universe/api'
 import { type PropsWithChildren } from 'react'
-import { sharedDehydrateOptions } from 'uniswap/src/data/apiClients/sharedDehydrateOptions'
+import { sharedDehydrateOptions } from 'uniswap/src/data/reactQuery/sharedDehydrateOptions'
 import { jsonParse, jsonStringify } from 'utilities/src/serialization/json'
 import { MAX_REACT_QUERY_CACHE_TIME_MS } from 'utilities/src/time/time'
 

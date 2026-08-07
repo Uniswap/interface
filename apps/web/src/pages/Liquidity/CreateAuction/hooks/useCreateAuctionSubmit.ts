@@ -1,7 +1,7 @@
 import { generateRandomBytes } from '@universe/cryptography'
 import { ensure0xHex, uint8ToHex } from '@universe/encoding'
 import { useState } from 'react'
-import { useCreateAuctionMutation } from 'uniswap/src/data/rest/auctions/useCreateAuctionMutation'
+import { useCreateAuctionMutation } from 'uniswap/src/data/apiClients/dataApiService/auctions/useCreateAuctionMutation'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'

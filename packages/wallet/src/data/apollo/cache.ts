@@ -1,7 +1,7 @@
 import { gql, InMemoryCache } from '@apollo/client'
 import { persistCache } from 'apollo3-cache-persist'
 import { PersistentStorage } from 'apollo3-cache-persist/lib/types'
-import { setupSharedApolloCache } from 'uniswap/src/data/cache'
+import { setupSharedApolloCache } from 'uniswap/src/data/graphql/cache'
 import { logger } from 'utilities/src/logger/logger'
 
 // Increment this when you want to wipe out the cache for all users next time they open the app.

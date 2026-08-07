@@ -45,6 +45,8 @@ export function TokensTableInner({
   analyticsContext,
   showUnrealizedPnlPercent = false,
   columnSortEnabled = true,
+  virtualized = false,
+  loadMore,
 }: {
   tokenData: TokenData[]
   hideHeader?: boolean
@@ -60,6 +62,8 @@ export function TokensTableInner({
   analyticsContext?: { element: ElementName; section: SectionName }
   showUnrealizedPnlPercent?: boolean
   columnSortEnabled?: boolean
+  virtualized?: boolean
+  loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
 }) {
   const { t } = useTranslation()
   const { value: isModalVisible, setTrue: openModal, setFalse: closeModal } = useBooleanState(false)
@@ -222,6 +226,8 @@ export function TokensTableInner({
         maxHeight={maxHeight}
         loadingRowsCount={loadingRowsCount}
         centerArrows
+        virtualized={virtualized}
+        loadMore={loadMore}
       />
     </>
   )

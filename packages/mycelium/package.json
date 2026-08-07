@@ -14,12 +14,31 @@
       "types": "./src/cn.d.ts",
       "default": "./src/index.ts"
     },
+    "./icons": "./src/components/icons/index.ts",
+    "./icons/*": "./src/components/icons/*.tsx",
     "./components": {
       "types": "./src/components/index.ts",
       "default": "./src/components/index.ts"
-    }
+    },
+    "./flex-compat": "./src/flex-compat/index.ts",
+    "./touchable-area": "./src/touchable-area/index.ts",
+    "./view-compat": "./src/view-compat/index.ts",
+    "./shadcn": "./src/shadcn/index.ts",
+    "./popover-compat": "./src/popover-compat/index.ts",
+    "./menu-compat": "./src/menu-compat/index.ts",
+    "./option-list-compat": "./src/option-list-compat/index.ts",
+    "./trigger-button-compat": "./src/trigger-button-compat/index.ts",
+    "./network-selector-compat": "./src/network-selector-compat/index.ts",
+    "./filter-select-compat": "./src/filter-select-compat/index.ts",
+    "./compat": "./src/compat/index.ts",
+    "./tooltip-compat": "./src/tooltip-compat/index.ts",
+    "./text-compat": "./src/text-compat/index.ts",
+    "./theme-hooks-compat": "./src/theme-hooks-compat/index.ts",
+    "./text-compat.css": "./src/text-compat/text-compat.css"
   },
   "dependencies": {
+    "@base-ui/react": "1.6.0",
+    "@legendapp/list": "3.3.3",
     "@radix-ui/react-accordion": "1.2.12",
     "@radix-ui/react-aspect-ratio": "1.1.8",
     "@radix-ui/react-avatar": "1.1.11",
@@ -35,11 +54,15 @@
     "@radix-ui/react-switch": "1.2.6",
     "@radix-ui/react-tabs": "1.1.13",
     "@radix-ui/react-tooltip": "1.2.8",
+    "@universe/environment": "workspace:^",
+    "@universe/logger": "workspace:^",
     "@universe/tailwind": "workspace:*",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "lucide-react": "0.554.0",
+    "react-native": "0.85.3",
     "tailwind-merge": "3.3.1",
+    "uniwind": "1.7.0",
     "vaul": "1.1.2"
   },
   "peerDependencies": {
@@ -47,11 +70,20 @@
     "tailwindcss": ">=4.0.0"
   },
   "devDependencies": {
+    "@testing-library/react": "16.3.0",
     "@types/node": "22.19.17",
+    "@vitejs/plugin-react": "5.2.0",
+    "camelcase": "6.3.0",
+    "cheerio": "1.0.0-rc.12",
+    "jsdom": "20.0.3",
     "react": "19.2.3",
-    "tailwindcss": "4.1.16"
+    "tailwindcss": "4.3.2",
+    "uppercamelcase": "3.0.0",
+    "vitest": "3.2.1"
   },
   "scripts": {
+    "build:icons": "nx build:icons @universe/mycelium",
+    "build:icons:missing": "nx build:icons:missing @universe/mycelium",
     "typecheck": "nx typecheck @universe/mycelium",
     "check": "nx check @universe/mycelium",
     "check:fast": "nx check:fast @universe/mycelium",
@@ -59,7 +91,8 @@
     "format": "nx run @universe/mycelium:format",
     "format:check": "nx run @universe/mycelium:format:check",
     "lint": "nx lint @universe/mycelium",
-    "lint:fix": "nx lint:fix @universe/mycelium"
+    "lint:fix": "nx lint:fix @universe/mycelium",
+    "test": "nx test @universe/mycelium"
   },
   "nx": {
     "includedScripts": []

@@ -133,6 +133,10 @@ export function logEarnVaultCardShowMoreClicked(properties: EarnAnalyticsBasePro
   sendAnalyticsEvent(EarnEventName.EarnVaultCardShowMoreClicked, properties)
 }
 
+export function logEarnHowItWorksAcknowledged(properties: EarnAnalyticsBaseProperties): void {
+  sendAnalyticsEvent(EarnEventName.EarnHowItWorksAcknowledged, properties)
+}
+
 export function logEarnTransactionEvent({
   action,
   properties,

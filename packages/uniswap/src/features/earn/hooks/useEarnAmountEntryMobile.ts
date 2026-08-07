@@ -22,6 +22,7 @@ type UseEarnAmountEntryMobileParams = {
   selectedDepositSourceBalanceUsd: number | undefined
   withdrawableBalanceUsd: number
   isWithdrawLiquidityLimited: boolean
+  onInputLengthExceeded?: () => void
 }
 
 type UseEarnAmountEntryMobileResult = {
@@ -36,10 +37,24 @@ type UseEarnAmountEntryMobileResult = {
   tokenComparisonAmount: number | undefined
   localFiatComparisonAmount: number | undefined
   isMaxSelected: boolean
+  exactMaxTokenAmount: string | undefined
   setActiveAmount: (next: string) => void
   handlePercentPress: (pct: number) => void
   handleToggleInputMode: () => void
   resetAmounts: () => void
+}
+
+// Keep the amount row aligned with the Buy/Sell amount-entry treatment. Fiat On-Ramp uses the
+// same 11-character ceiling for its custom keypad; Earn also needs it for percentage shortcuts,
+// which can otherwise surface the full 18-decimal on-chain balance in the input.
+export const MAX_EARN_AMOUNT_INPUT_LENGTH = 11
+
+export function getEarnAmountInputDisplayValue(value: string): string {
+  if (value.length <= MAX_EARN_AMOUNT_INPUT_LENGTH) {
+    return value
+  }
+
+  return value.slice(0, MAX_EARN_AMOUNT_INPUT_LENGTH).replace(/\.$/, '')
 }
 
 // This hook is currently mobile-only — the `useUSDTokenUpdater` state-cycle conversion model
@@ -54,15 +69,21 @@ export function useEarnAmountEntryMobile({
   selectedDepositSourceBalanceUsd,
   withdrawableBalanceUsd,
   isWithdrawLiquidityLimited,
+  onInputLengthExceeded,
 }: UseEarnAmountEntryMobileParams): UseEarnAmountEntryMobileResult {
   const { convertFiatAmount } = useLocalizationContext()
-  const [exactAmountFiat, setExactAmountFiat, exactAmountFiatRef] = useStateWithRef(initialAmount ?? '')
+  const initialFiatAmount = initialAmount ?? ''
+  const [exactAmountFiat, setExactAmountFiat] = useState(initialFiatAmount)
+  const [fiatDisplayAmount, setFiatDisplayAmount, fiatDisplayAmountRef] = useStateWithRef(
+    getEarnAmountInputDisplayValue(initialFiatAmount),
+  )
   const [exactAmountToken, setExactAmountToken, exactAmountTokenRef] = useStateWithRef('')
   const [isFiatInput, setIsFiatInput] = useState(true)
   const [isMaxSelected, setIsMaxSelected] = useState(false)
+  const [exactMaxTokenAmount, setExactMaxTokenAmount] = useState<string>()
 
-  const exactValueRef = isFiatInput ? exactAmountFiatRef : exactAmountTokenRef
-  const value = isFiatInput ? exactAmountFiat : exactAmountToken
+  const exactValueRef = isFiatInput ? fiatDisplayAmountRef : exactAmountTokenRef
+  const value = isFiatInput ? fiatDisplayAmount : exactAmountToken
   const maxDecimals = isFiatInput ? MAX_FIAT_INPUT_DECIMALS : (currency?.decimals ?? 0)
   const walletBalanceAmount = useMemo(
     () =>
@@ -95,31 +116,50 @@ export function useEarnAmountEntryMobile({
     })
   }, [currency, maxSpendableAmount, walletBalance, walletBalanceRaw])
 
+  const setTokenDisplayAmount = useCallback(
+    (next: string) => setExactAmountToken(getEarnAmountInputDisplayValue(next)),
+    [setExactAmountToken],
+  )
+  const setFiatAmount = useCallback(
+    (next: string) => {
+      setExactAmountFiat(next)
+      setFiatDisplayAmount(getEarnAmountInputDisplayValue(next))
+    },
+    [setFiatDisplayAmount],
+  )
+
   useUSDTokenUpdater({
     isFiatInput,
     exactAmountFiat,
     exactAmountToken,
     currency,
-    onFiatAmountUpdated: setExactAmountFiat,
-    onTokenAmountUpdated: setExactAmountToken,
+    onFiatAmountUpdated: setFiatAmount,
+    onTokenAmountUpdated: setTokenDisplayAmount,
   })
 
   const setActiveAmount = useCallback(
     (next: string) => {
+      if (next.length > MAX_EARN_AMOUNT_INPUT_LENGTH) {
+        onInputLengthExceeded?.()
+        return
+      }
+
       if (isFiatInput) {
-        setExactAmountFiat(next)
+        setFiatAmount(next)
       } else {
         setExactAmountToken(next)
       }
       setIsMaxSelected(false)
+      setExactMaxTokenAmount(undefined)
     },
-    [isFiatInput, setExactAmountFiat, setExactAmountToken],
+    [isFiatInput, onInputLengthExceeded, setFiatAmount, setExactAmountToken],
   )
 
   const handlePercentPress = useCallback(
     (pct: number) => {
       const convertUsdToLocalFiat = (balanceUsd: number): number => convertFiatAmount(balanceUsd).amount
       setIsMaxSelected(pct === 1)
+      setExactMaxTokenAmount(undefined)
       if (isWithdrawing) {
         const fiatAmount = getEarnFiatPercentageInput({
           balanceUsd: withdrawableBalanceUsd,
@@ -128,7 +168,7 @@ export function useEarnAmountEntryMobile({
           percentage: pct,
           rounding: pct === 1 && isWithdrawLiquidityLimited ? 'down' : 'nearest',
         })
-        setExactAmountFiat(fiatAmount)
+        setFiatAmount(fiatAmount)
         setIsFiatInput(true)
         return
       }
@@ -142,9 +182,10 @@ export function useEarnAmountEntryMobile({
         percentage: pct,
         tokenDecimals: currency?.decimals ?? MAX_FIAT_INPUT_DECIMALS,
       })
-      setExactAmountToken(percentageInput.exactAmountToken)
-      setExactAmountFiat(percentageInput.exactAmountFiat)
+      setTokenDisplayAmount(percentageInput.exactAmountToken)
+      setFiatAmount(percentageInput.exactAmountFiat)
       setIsFiatInput(percentageInput.inputInFiat)
+      setExactMaxTokenAmount(pct === 1 ? percentageInput.exactAmountToken : undefined)
     },
     [
       convertFiatAmount,
@@ -153,8 +194,8 @@ export function useEarnAmountEntryMobile({
       isWithdrawLiquidityLimited,
       maxDepositTokenAmount,
       selectedDepositSourceBalanceUsd,
-      setExactAmountFiat,
-      setExactAmountToken,
+      setFiatAmount,
+      setTokenDisplayAmount,
       withdrawableBalanceUsd,
       walletBalance,
     ],
@@ -162,17 +203,25 @@ export function useEarnAmountEntryMobile({
 
   const handleToggleInputMode = useCallback(() => {
     // Refs already track current state via setExactAmount*; no manual sync needed.
+    // Never promote an unresolved conversion: switching while the counterpart is still empty
+    // would replace a typed amount with a blank input.
+    const primary = isFiatInput ? fiatDisplayAmountRef.current : exactAmountTokenRef.current
+    const counterpart = isFiatInput ? exactAmountTokenRef.current : fiatDisplayAmountRef.current
+    if (primary && !counterpart) {
+      return
+    }
     setIsFiatInput((prev) => !prev)
-  }, [])
+  }, [exactAmountTokenRef, fiatDisplayAmountRef, isFiatInput])
 
   const resetAmounts = useCallback(() => {
-    setExactAmountFiat('')
+    setFiatAmount('')
     setExactAmountToken('')
     setIsFiatInput(true)
     setIsMaxSelected(false)
-  }, [setExactAmountFiat, setExactAmountToken])
+    setExactMaxTokenAmount(undefined)
+  }, [setFiatAmount, setExactAmountToken])
 
-  const parsedAmount = Number(value) || 0
+  const parsedAmount = Number(isFiatInput ? exactAmountFiat : value) || 0
   const hasInputAmount = parsedAmount > 0
   const tokenComparisonAmount = getComparisonAmount({
     parsedAmount,
@@ -199,6 +248,7 @@ export function useEarnAmountEntryMobile({
     tokenComparisonAmount,
     localFiatComparisonAmount,
     isMaxSelected,
+    exactMaxTokenAmount,
     setActiveAmount,
     handlePercentPress,
     handleToggleInputMode,

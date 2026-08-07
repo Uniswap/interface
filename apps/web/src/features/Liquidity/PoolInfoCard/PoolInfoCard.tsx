@@ -8,20 +8,18 @@ import { Button, Flex, Skeleton, Text, TouchableArea, useMedia, useSporeColors }
 import { ChevronsIn } from 'ui/src/components/icons/ChevronsIn'
 import { ChevronsOut } from 'ui/src/components/icons/ChevronsOut'
 import { iconSizes } from 'ui/src/theme'
-import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
-import type { PoolData } from '~/appGraphql/data/pools/usePoolData'
-import { usePoolLpFeeFraction } from '~/appGraphql/data/pools/usePoolLpFeeFraction'
-import { calculateApr } from '~/appGraphql/data/pools/useTopPools'
-import { gqlToCurrency, toHistoryDuration, TimePeriod } from '~/appGraphql/data/util'
 import { getPriceBounds } from '~/components/Charts/PriceChart/utils'
 import { LineChart } from '~/components/Charts/SparklineChart/LineChart'
 import { DeltaArrow, getDeltaTextColor } from '~/components/DeltaArrow/DeltaArrow'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
+import type { PoolData } from '~/data/pools/usePoolData'
+import { calculate24hLpFeesUsd, calculateApr } from '~/data/pools/useTopPools'
+import { gqlToCurrency, toHistoryDuration, TimePeriod } from '~/data/util'
 import { useServedProtocolFee } from '~/features/fees/useServedProtocolFees'
 import { usePoolPriceChartData } from '~/features/Liquidity/charts/usePoolPriceChartData'
 import { LiquidityPositionInfoBadges } from '~/features/Liquidity/LiquidityPositionInfoBadges'
@@ -207,17 +205,21 @@ export function PoolStatsContent({ poolData, sparklineWidth }: { poolData: PoolD
   const currentPrice =
     poolData.token1Price && poolData.token0Price ? poolData.token1Price / poolData.token0Price : undefined
 
-  const lpFeeFraction = usePoolLpFeeFraction({
+  // PoolData is GraphQL-sourced and carries no fee fields — the protocol fee comes from data-api GetProtocolFees.
+  const protocolFeePips = useServedProtocolFee({
     chainId: fromGraphQLChain(poolData.token0.chain) ?? undefined,
-    poolAddress: poolData.idOrAddress,
     protocolVersion: parseRestProtocolVersion(poolData.protocolVersion),
-    feeTier: poolData.feeTier?.feeAmount,
-  })
+    poolIdOrHash: poolData.idOrAddress,
+    enabled: true,
+  })?.protocolFee
 
-  const fees24h =
-    poolData.volumeUSD24H !== undefined && poolData.feeTier
-      ? poolData.volumeUSD24H * (poolData.feeTier.feeAmount / (BIPS_BASE * 100)) * lpFeeFraction
-      : undefined
+  const fees24h = calculate24hLpFeesUsd({
+    volume24h: poolData.volumeUSD24H,
+    feeTier: poolData.feeTier?.feeAmount,
+    isDynamic: poolData.feeTier?.isDynamic,
+    protocolVersion: parseRestProtocolVersion(poolData.protocolVersion),
+    protocolFeePips,
+  })
 
   const poolApr = useMemo(
     () =>
@@ -225,9 +227,11 @@ export function PoolStatsContent({ poolData, sparklineWidth }: { poolData: PoolD
         volume24h: poolData.volumeUSD24H,
         tvl: poolData.tvlUSD,
         feeTier: poolData.feeTier?.feeAmount,
-        lpFeeFraction,
+        isDynamic: poolData.feeTier?.isDynamic,
+        protocolVersion: parseRestProtocolVersion(poolData.protocolVersion),
+        protocolFeePips,
       }),
-    [poolData.volumeUSD24H, poolData.tvlUSD, poolData.feeTier, lpFeeFraction],
+    [poolData.volumeUSD24H, poolData.tvlUSD, poolData.feeTier, poolData.protocolVersion, protocolFeePips],
   )
 
   return (
@@ -263,7 +267,7 @@ export function PoolStatsContent({ poolData, sparklineWidth }: { poolData: PoolD
             label={t('stats.24fees')}
             value={formatNumberOrString({ value: fees24h, type: NumberType.FiatTokenStats })}
           />
-          <StatCell label={t('pool.apr.1day')} value={`${poolApr.toFixed(2)}%`} />
+          <StatCell label={t('pool.apr.1day')} value={poolApr ? `${poolApr.toFixed(2)}%` : '-'} />
         </Flex>
       </Flex>
 
@@ -301,7 +305,7 @@ export function PoolInfoCard({
     protocolVersion: poolData ? parseRestProtocolVersion(poolData.protocolVersion) : undefined,
     poolIdOrHash: poolData?.idOrAddress,
     enabled: isFeeDisplayEnabled,
-  })
+  })?.protocolFee
 
   if (!poolData) {
     if (loading) {

@@ -12,7 +12,7 @@ import {
 } from 'uniswap/src/components/modals/WarningModal/types'
 
 export function isPriceImpactWarning(warning: Warning): boolean {
-  return warning.type === WarningLabel.PriceImpactMedium || warning.type === WarningLabel.PriceImpactHigh
+  return warning.type === WarningLabel.PriceDifferenceMedium || warning.type === WarningLabel.PriceDifferenceHigh
 }
 
 export const getNetworkWarning = (t: AppTFunction): Warning => ({

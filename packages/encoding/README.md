@@ -24,3 +24,13 @@ directly in test files. These internal test functions represent code that was
 replaced across different packages and is useful for demonstration.
 
 *Parity tests can be removed after migration.*
+
+## Philosophy
+
+### Simple wrappers
+
+Even simple wrappers make sense to place here instead of directly inline. (eg.
+`new TextEncoder().encode()`) Placing them here allows us to document them once
+and explain decisions and nuance. While the call may be simple, understanding
+how it behaves in some cases is not always obvious. It also allows us to
+restrict the API to deal with types we prefer. (eg. `Uint8Array`)

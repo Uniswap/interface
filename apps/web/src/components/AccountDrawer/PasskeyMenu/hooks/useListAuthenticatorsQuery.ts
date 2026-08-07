@@ -1,12 +1,15 @@
 import { useQuery } from '@tanstack/react-query'
-import type { Authenticator, RecoveryMethod } from 'uniswap/src/features/passkey/embeddedWallet'
-import { AuthenticatorNameType, listAuthenticators } from 'uniswap/src/features/passkey/embeddedWallet'
+import {
+  type Authenticator,
+  AuthenticatorNameType,
+  listAuthenticators,
+  type RecoveryMethod,
+  useEmbeddedWalletState,
+} from '@universe/embedded-wallet'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { useSessionStoragePersistedQuery } from 'utilities/src/reactQuery/useSessionStoragePersistedQuery'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { AuthenticatorProvider, getProvider, getProviderLabel } from '~/components/Passkey/authenticatorProvider'
-import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
-
 export function getListAuthenticatorsStorageKey(walletId: string | null | undefined): string {
   return `listAuth:${walletId ?? ''}`
 }

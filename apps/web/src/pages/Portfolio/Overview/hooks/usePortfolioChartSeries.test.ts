@@ -342,4 +342,27 @@ describe('usePortfolioChartSeries', () => {
     expect(result.current.availableCategories).toContain(PortfolioChartCategory.Earn)
     expect(result.current.availableCategories).toEqual([PortfolioChartCategory.Tokens, PortfolioChartCategory.Earn])
   })
+
+  it('omits disabled Earn and pools categories even when the response contains their series', () => {
+    const chartData = makeChartResponse({
+      points: [{ timestamp: 1700000000, value: 190 }],
+      tokens: [{ timestamp: 1700000000, value: 100 }],
+      earn: [{ timestamp: 1700000000, value: 40 }],
+      pools: [{ timestamp: 1700000000, value: 50 }],
+    })
+    const { result } = renderHook(() =>
+      usePortfolioChartSeries({
+        chartData,
+        selectedPeriod: ChartPeriod.DAY,
+        selectedCategory: PortfolioChartCategory.Total,
+        earnEnabled: true,
+        poolsEnabled: false,
+      }),
+    )
+
+    expect(result.current.availableCategories).toEqual([PortfolioChartCategory.Tokens, PortfolioChartCategory.Earn])
+    expect(result.current.earnSeries).toHaveLength(1)
+    expect(result.current.poolsSeries).toEqual([])
+    expect(result.current.poolsPercentChange).toBeUndefined()
+  })
 })

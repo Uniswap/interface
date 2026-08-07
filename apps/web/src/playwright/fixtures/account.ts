@@ -1,5 +1,6 @@
 import { getPortfolio } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
 import { UnitagService } from '@universe/api'
+import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
 import { expect, type Page } from '~/playwright/fixtures'
@@ -57,6 +58,51 @@ export async function mockGetPortfolioResponse({
   await page.route(`**/${getPortfolio.service.typeName}/${getPortfolio.name}`, async (route) => {
     await route.fulfill({ path: mockPath })
   })
+}
+
+/**
+ * Seeds localStorage so the app boots as if an embedded wallet is already connected.
+ *
+ * Also seeds `recentConnectorId` (the app-owned record the mount-reconnect gate in
+ * mountReconnect.ts checks, see getConnectorsToReconnect / INFRA-2902) with the embedded
+ * wallet connector id. Without it, wagmi never reconnects the embedded wallet connector
+ * on mount, `useIsEmbeddedWallet()` stays false, and any UI gated on it never renders.
+ *
+ * @param page The Playwright page
+ * @param walletId The embedded wallet id to store
+ * @param walletAddress The embedded wallet address to store
+ * @param chainId The chain id to store (default: 1)
+ * @param embeddedWalletConnectorId The connector id to seed into recentConnectorId
+ *   (default: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID)
+ */
+export async function seedEmbeddedWalletState({
+  page,
+  walletId,
+  walletAddress,
+  chainId = 1,
+  embeddedWalletConnectorId = CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
+}: {
+  page: Page
+  walletId: string
+  walletAddress: string
+  chainId?: number
+  embeddedWalletConnectorId?: string
+}) {
+  await page.addInitScript(
+    ({ walletId: id, walletAddress: address, chainId: chain, embeddedWalletConnectorId: connectorId }) => {
+      localStorage.setItem(
+        'embedded-wallet',
+        JSON.stringify({
+          walletId: id,
+          walletAddress: address,
+          chainId: chain,
+          isConnected: true,
+        }),
+      )
+      localStorage.setItem('recentConnectorId', JSON.stringify(connectorId))
+    },
+    { walletId, walletAddress, chainId, embeddedWalletConnectorId },
+  )
 }
 
 /**

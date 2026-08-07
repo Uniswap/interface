@@ -5,7 +5,7 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import type { TdpChainSelection } from 'uniswap/src/utils/linking'
-import { TimePeriod } from '~/appGraphql/data/util'
+import { TimePeriod } from '~/data/util'
 import {
   sortChainStatsByVolume,
   TIME_PERIOD_TO_VOLUME_KEY,
@@ -41,18 +41,41 @@ export function getChainLogoUrl(chainId: UniverseChainId | undefined): string | 
   return `${UniswapStaticUrls.uniswapAssetsBlockchainsBaseUrl}/${networkName}/info/logo.png`
 }
 
-export function getVolumeBreakdownForPeriod(
-  rankedToken: RankedMultichainToken | undefined,
-  timePeriod: TimePeriod,
-): { chainId: UniverseChainId; volume: number }[] {
+/**
+ * Volume breakdown rows restricted to `visibleChainIds` (the row's registry + rollout-flag
+ * filtered network set), so the popover never lists a leg the row's other network surfaces hide.
+ */
+export function getVolumeBreakdownForPeriod({
+  rankedToken,
+  timePeriod,
+  visibleChainIds,
+}: {
+  rankedToken: RankedMultichainToken | undefined
+  timePeriod: TimePeriod
+  visibleChainIds: readonly UniverseChainId[]
+}): { chainId: UniverseChainId; volume: number }[] {
   if (!rankedToken?.chainStats.length) {
     return []
   }
+  const visible = new Set<number>(visibleChainIds)
   const volumeKey = TIME_PERIOD_TO_VOLUME_KEY[timePeriod]
   const sorted = sortChainStatsByVolume(rankedToken.chainStats, timePeriod)
   return sorted
-    .filter((cs) => (cs.stats?.[volumeKey] ?? 0) > 0)
+    .filter((cs) => visible.has(cs.chainId) && (cs.stats?.[volumeKey] ?? 0) > 0)
     .map((cs) => ({ chainId: cs.chainId as UniverseChainId, volume: cs.stats?.[volumeKey] ?? 0 }))
+}
+
+/**
+ * True when the popover will have a multi-network breakdown to open. The volume cell's info
+ * affordance must gate on this exact condition rather than the network count: a stats-less leg
+ * raises the count but adds no breakdown row, which would render an icon that opens nothing.
+ */
+export function hasVolumeBreakdown(params: {
+  rankedToken: RankedMultichainToken | undefined
+  timePeriod: TimePeriod
+  visibleChainIds: readonly UniverseChainId[]
+}): boolean {
+  return getVolumeBreakdownForPeriod(params).length > 1
 }
 
 export function getPercentageDisplay(volume: number, totalVolume: number): string {

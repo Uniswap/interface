@@ -32,7 +32,7 @@ function SelectTrigger({
       data-slot="select-trigger"
       data-size={size}
       className={cn(
-        "border-surface3 bg-surface2 text-neutral1 data-[placeholder]:text-neutral2 group-has-[[data-slot=field-label]]/field:data-[placeholder]:text-neutral3 [&_svg:not([class*='text-'])]:text-neutral2 focus-visible:ring-1 focus-visible:ring-surface3 flex w-full items-center justify-between gap-2 rounded-[20px] border px-5 py-2 text-body-2 font-baselBook whitespace-nowrap transition-colors outline-none disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-14 data-[size=sm]:h-10 data-[size=sm]:rounded-12 data-[size=sm]:px-4 data-[size=sm]:text-sm *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "border-surface3 bg-surface2 text-neutral1 data-[placeholder]:text-neutral2 group-has-[[data-slot=field-label]]/field:data-[placeholder]:text-neutral3 [&_svg:not([class*='text-'])]:text-neutral2 focus-visible:ring-1 focus-visible:ring-surface3 flex w-full items-center justify-between gap-2 rounded-[20px] border px-5 py-2 text-body-2 font-basel-book whitespace-nowrap transition-colors outline-none disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-14 data-[size=sm]:h-10 data-[size=sm]:rounded-12 data-[size=sm]:px-4 data-[size=sm]:text-sm *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className,
       )}
       {...props}

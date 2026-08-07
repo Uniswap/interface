@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { GetLatestCheckpointRequest } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 import { useEffect, useMemo } from 'react'
-import { auctionQueries } from 'uniswap/src/data/rest/auctions/auctionQueries'
+import { auctionQueries } from 'uniswap/src/data/apiClients/dataApiService/auctions/auctionQueries'
 import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
 import { AuctionProgressState } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore, useAuctionStoreActions } from '~/features/Toucan/Auction/store/useAuctionStore'

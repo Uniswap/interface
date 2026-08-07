@@ -33,6 +33,10 @@ export function useAuctionBlockPolling({
 }): void {
   const { setCurrentBlockNumberAndUpdateProgress } = useAuctionStoreActions()
   const currentBlockNumber = useAuctionStore((state) => state.currentBlockNumber)
+  const creationBlock = useAuctionStore((state) => state.auctionDetails?.creationBlock)
+  const createdAt = useAuctionStore((state) => state.auctionDetails?.createdAt)
+  const anchorBlock = creationBlock === undefined ? undefined : Number(creationBlock)
+  const anchorTime = useMemo(() => (createdAt ? new Date(createdAt) : undefined), [createdAt])
 
   // Whether we should poll continuously (watch) - only after auction details load
   const shouldPoll = useMemo((): boolean => {
@@ -65,8 +69,8 @@ export function useAuctionBlockPolling({
     return undefined
   }, [currentBlockNumber, startBlock, endBlock])
 
-  // Estimated wall-clock time of the next boundary — the same source the visible countdown uses.
-  const boundaryTimestamp = useBlockTimestamp({ chainId, blockNumber: nextBoundaryBlock })
+  // Estimated wall-clock time of the next boundary — the same calibrated source the visible countdown uses.
+  const boundaryTimestamp = useBlockTimestamp({ chainId, blockNumber: nextBoundaryBlock, anchorBlock, anchorTime })
   const now = useMachineTimeMs(ONE_SECOND_MS)
   const isBoundaryCountdownDone = boundaryTimestamp !== undefined && now >= Number(boundaryTimestamp) * ONE_SECOND_MS
 

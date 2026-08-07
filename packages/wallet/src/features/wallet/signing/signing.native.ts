@@ -1,8 +1,7 @@
 import { signTypedData } from 'uniswap/src/features/transactions/signing'
 import { ensureLeading0x } from 'uniswap/src/utils/addresses'
-import { SignMessageInfo } from 'wallet/src/features/wallet/signing/signing'
-import { EthTypedMessage } from 'wallet/src/features/wallet/signing/types'
-import { formatMessageForSigning } from 'wallet/src/features/wallet/signing/utils'
+import { SignMessageInfo, SignTypedDataInfo } from 'wallet/src/features/wallet/signing/signing'
+import { formatMessageForSigning, prepareTypedDataForSigning } from 'wallet/src/features/wallet/signing/utils'
 
 // https://docs.ethers.io/v5/api/signer/#Signer--signing-methods
 export async function signMessage({ message, account, signerManager, signAsString }: SignMessageInfo): Promise<string> {
@@ -12,12 +11,13 @@ export async function signMessage({ message, account, signerManager, signAsStrin
   return ensureLeading0x(signature)
 }
 
-export async function signTypedDataMessage({ message, account, signerManager }: SignMessageInfo): Promise<string> {
-  const parsedData: EthTypedMessage = JSON.parse(message)
-  // ethers computes EIP712Domain type for you, so we should not pass it in directly
-  // or else ethers will get confused about which type is the primary type
-  // https://github.com/ethers-io/ethers.js/issues/687#issuecomment-714069471
-  delete parsedData.types['EIP712Domain']
+export async function signTypedDataMessage({
+  message,
+  account,
+  signerManager,
+  expectedChainId,
+}: SignTypedDataInfo): Promise<string> {
+  const parsedData = prepareTypedDataForSigning({ message, expectedChainId })
 
   const signer = await signerManager.getSignerForAccount(account)
 

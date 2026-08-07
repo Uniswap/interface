@@ -44,7 +44,8 @@ import { navigate } from 'src/app/navigation/state'
 import { dappResponseMessageChannel } from 'src/background/messagePassing/messageChannels'
 import getCalldataInfoFromTransaction from 'src/background/utils/getCalldataInfoFromTransaction'
 import { call, put, select, take } from 'typed-redux-saga'
-import { hexadecimalStringToInt, toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { hexadecimalStringToInt, toSupportedChainId, toSupportedDappChainId } from 'uniswap/src/features/chains/utils'
 import { DappRequestType, DappResponseType } from 'uniswap/src/features/dappRequests/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
@@ -264,6 +265,7 @@ function* handleRequest(requestParams: DappRequestNoDappInfo) {
         senderTabInfo: requestParams.senderTabInfo,
       }
       yield* put(rejectRequest(response))
+      return
     }
   }
 
@@ -314,6 +316,68 @@ function* handleRequest(requestParams: DappRequestNoDappInfo) {
         senderTabInfo: requestParams.senderTabInfo,
       }
       yield* put(rejectRequest(response))
+      return
+    }
+  }
+
+  if (requestParams.dappRequest.type === DappRequestType.SendTransaction) {
+    // Separate from the chain checks below: 4902 is "unrecognized chain", this is authorization.
+    if (!dappInfo) {
+      const response: DappRequestRejectParams = {
+        errorResponse: {
+          type: DappResponseType.ErrorResponse,
+          error: serializeError(providerErrors.unauthorized()),
+          requestId: requestParams.dappRequest.requestId,
+        },
+        senderTabInfo: requestParams.senderTabInfo,
+      }
+      yield* put(rejectRequest(response))
+      return
+    }
+
+    try {
+      const { transaction } = requestParams.dappRequest
+      const connectedChainId = dappInfo.lastChainId
+
+      if (transaction.chainId !== undefined && toSupportedDappChainId(transaction.chainId) !== connectedChainId) {
+        throw new Error('Chain ID on transaction does not match the chain ID set on the extension.')
+      }
+
+      // chainId is optional on eth_sendTransaction. Pin it to the chain the request arrived on so
+      // review and signing cannot diverge: otherwise the UI falls back to the dapp's live chain,
+      // which an auto-confirmed wallet_switchEthereumChain can move mid-prompt. Also lets the
+      // request pass isValidTransactionRequest, so it pre-signs on the reviewed chain.
+      yield* put(
+        dappRequestActions.add({
+          ...requestParams,
+          dappRequest: {
+            ...requestParams.dappRequest,
+            transaction: { ...transaction, chainId: connectedChainId },
+          },
+          dappInfo,
+        }),
+      )
+      return
+    } catch (error) {
+      logger.error(error, { tags: { file: 'saga.ts', function: 'handleRequest' } })
+      const response: DappRequestRejectParams = {
+        errorResponse: {
+          type: DappResponseType.ErrorResponse,
+          error: serializeError(
+            providerErrors.custom({
+              code: 4902,
+              message:
+                error instanceof Error
+                  ? error.message
+                  : 'Chain ID on transaction from dApp does not match the chain ID set on the extension.',
+            }),
+          ),
+          requestId: requestParams.dappRequest.requestId,
+        },
+        senderTabInfo: requestParams.senderTabInfo,
+      }
+      yield* put(rejectRequest(response))
+      return
     }
   }
 
@@ -353,9 +417,26 @@ function* handleRequest(requestParams: DappRequestNoDappInfo) {
   }
 }
 
+/**
+ * Refuses to act on a queued request if the dapp moved since it was reviewed. The dappInfo
+ * snapshot can be stale by confirm time: wallet_switchEthereumChain is auto-confirmed, so a dapp
+ * can change its connection while a prompt sits open.
+ */
+function* assertDappChainUnchanged({ url, reviewedChainId }: { url: string; reviewedChainId: UniverseChainId }) {
+  const currentDappInfo = yield* call(dappStore.getDappInfo, extractBaseUrl(url))
+  if (!currentDappInfo) {
+    throw new Error('Dapp disconnected while this request was pending')
+  }
+  if (currentDappInfo.lastChainId !== reviewedChainId) {
+    throw new Error(
+      `Dapp changed chains while this request was pending - reviewed on: ${reviewedChainId}, now connected to: ${currentDappInfo.lastChainId}`,
+    )
+  }
+}
+
 export function* handleSendTransaction({
   request,
-  senderTabInfo: { id },
+  senderTabInfo: { id, url },
   dappInfo,
   transactionTypeInfo,
   preSignedTransaction,
@@ -375,6 +456,8 @@ export function* handleSendTransaction({
       throw new Error(`Mismatched chainId - expected active chain: ${lastChainId}, received: ${chainId}`)
     }
   }
+
+  yield* call(assertDappChainUnchanged, { url, reviewedChainId: lastChainId })
 
   const provider = yield* call(getProvider, lastChainId)
 
@@ -501,6 +584,8 @@ export function* handleSignTypedData({
       throw new Error(`Mismatched chainId - expected active chain: ${lastChainId}, received: ${chainId}`)
     }
 
+    yield* call(assertDappChainUnchanged, { url: senderTabInfo.url, reviewedChainId: lastChainId })
+
     const currentAccount = getActiveSignerConnectedAccount(connectedAccounts, activeConnectedAddress)
     const signerManager = yield* call(getSignerManager)
     const provider = yield* call(getProvider, lastChainId)
@@ -510,6 +595,7 @@ export function* handleSignTypedData({
       account: currentAccount,
       signerManager,
       provider,
+      expectedChainId: lastChainId,
     })
 
     const response: SignTypedDataResponse = {

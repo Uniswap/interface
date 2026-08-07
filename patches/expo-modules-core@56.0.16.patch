@@ -1,0 +1,16 @@
+diff --git a/src/ts-declarations/global.ts b/src/ts-declarations/global.ts
+index 1770ba7495b8d5a5bf3ed81bfc58c9cf99ef9ca8..a6f1902a9f8e223ec47dab85c483db42c5856d9b 100644
+--- a/src/ts-declarations/global.ts
++++ b/src/ts-declarations/global.ts
+@@ -1,7 +1,7 @@
+-import { EventEmitter } from './EventEmitter';
+-import { NativeModule } from './NativeModule';
+-import { SharedObject } from './SharedObject';
+-import { SharedRef } from './SharedRef';
++import type { EventEmitter } from './EventEmitter';
++import type { NativeModule } from './NativeModule';
++import type { SharedObject } from './SharedObject';
++import type { SharedRef } from './SharedRef';
+ 
+ type ViewConfig = {
+   validAttributes: Record<string, any>;

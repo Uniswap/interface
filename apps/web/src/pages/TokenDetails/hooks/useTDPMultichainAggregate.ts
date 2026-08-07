@@ -9,10 +9,13 @@ interface UseTDPMultichainAggregateResult {
 export function useTDPMultichainAggregate(): UseTDPMultichainAggregateResult {
   const multiChainMap = useTDPStore((s) => s.multiChainMap)
   const selectedMultichainChainId = useTDPStore((s) => s.selectedMultichainChainId)
+  const multichainTokenLoaded = useTDPStore((s) => s.multichainTokenLoaded)
 
   const multichainEntries = useMultichainTokenEntries(multiChainMap)
   const isMultiChainAsset = multichainEntries.length > 1
-  const isMultichainAggregateView = isMultiChainAsset && selectedMultichainChainId === undefined
+  // Default to the aggregate view until we know otherwise — better than assuming single-chain.
+  const isMultichainAggregateView =
+    (!multichainTokenLoaded || isMultiChainAsset) && selectedMultichainChainId === undefined
 
   return { isMultichainAggregateView }
 }

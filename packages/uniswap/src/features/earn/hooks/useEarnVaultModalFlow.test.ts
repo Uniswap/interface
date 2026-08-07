@@ -20,12 +20,61 @@ function renderFlow(): ReturnType<typeof renderHook<ReturnType<typeof useEarnVau
       initialPosition: POSITION,
       initialView: EarnVaultView.WithdrawAmount,
       isOpen: true,
+      shouldShowHowItWorks: false,
       vaultId: POSITION.vaultId,
     }),
   )
 }
 
 describe(useEarnVaultModalFlow, () => {
+  it('routes a first direct-to-deposit entry through How it works', () => {
+    const { result } = renderHook(() =>
+      useEarnVaultModalFlow({
+        hasPosition: false,
+        initialView: EarnVaultView.DepositAmount,
+        isOpen: true,
+        shouldShowHowItWorks: true,
+        vaultId: POSITION.vaultId,
+      }),
+    )
+
+    expect(result.current.flow).toEqual({ view: EarnVaultView.HowItWorks })
+
+    act(() => result.current.continueDeposit())
+
+    expect(result.current.flow).toEqual({ view: EarnVaultView.DepositAmount, amount: '' })
+  })
+
+  it('routes a first deposit from the vault overview through How it works', () => {
+    const { result } = renderHook(() =>
+      useEarnVaultModalFlow({
+        hasPosition: false,
+        initialView: EarnVaultView.Vault,
+        isOpen: true,
+        shouldShowHowItWorks: true,
+        vaultId: POSITION.vaultId,
+      }),
+    )
+
+    act(() => result.current.startDeposit())
+
+    expect(result.current.flow).toEqual({ view: EarnVaultView.HowItWorks })
+  })
+
+  it('opens the deposit amount directly after How it works has been acknowledged', () => {
+    const { result } = renderHook(() =>
+      useEarnVaultModalFlow({
+        hasPosition: false,
+        initialView: EarnVaultView.DepositAmount,
+        isOpen: true,
+        shouldShowHowItWorks: false,
+        vaultId: POSITION.vaultId,
+      }),
+    )
+
+    expect(result.current.flow).toEqual({ view: EarnVaultView.DepositAmount, amount: '' })
+  })
+
   it('preserves a MAX_SHARES withdraw mode when navigating review -> back', () => {
     const { result } = renderFlow()
 

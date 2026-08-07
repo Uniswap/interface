@@ -3,7 +3,11 @@ import { TransactionTypeFilter } from '@uniswap/client-data-api/dist/data/v1/typ
 import type { TradingApi } from '@universe/api'
 import { useActivityData } from 'uniswap/src/features/activity/hooks/useActivityData'
 import { useIsEarnEnabled } from 'uniswap/src/features/earn/hooks/useIsEarnEnabled'
-import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  NFTTradeType,
+  TransactionDetails,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ActivityFilterType } from '~/pages/Portfolio/Activity/Filters/activityFilterTypes'
 import { useActivityFiltering } from '~/pages/Portfolio/Activity/hooks/useActivityFiltering'
 
@@ -55,6 +59,20 @@ const mockReceiveTx = {
   hash: '0x333',
   addedTime: Date.now(),
   typeInfo: { type: TransactionType.Receive },
+} as TransactionDetails
+
+const mockNftBuyTx = {
+  id: 'nft-buy-tx-1',
+  hash: '0x444',
+  addedTime: Date.now(),
+  typeInfo: { type: TransactionType.NFTTrade, tradeType: NFTTradeType.BUY },
+} as TransactionDetails
+
+const mockNftSellTx = {
+  id: 'nft-sell-tx-1',
+  hash: '0x555',
+  addedTime: Date.now(),
+  typeInfo: { type: TransactionType.NFTTrade, tradeType: NFTTradeType.SELL },
 } as TransactionDetails
 
 const mockEarnDepositPlanTx = {
@@ -152,6 +170,26 @@ describe('useActivityFiltering — local transaction filter bypass bug', () => {
         evmAddress: '0x123',
         svmAddress: undefined,
         chainId: undefined,
+        selectedTransactionType: ActivityFilterType.Withdrawals,
+        selectedTimePeriod: 'all',
+      }),
+    )
+
+    expect(useActivityData).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        filterTransactionTypes: [TransactionTypeFilter.WITHDRAW],
+      }),
+    )
+  })
+
+  it('falls back to client-side filtering for sends/receives since NFT trades are SWAP server-side', () => {
+    mockActivityData([])
+
+    renderHook(() =>
+      useActivityFiltering({
+        evmAddress: '0x123',
+        svmAddress: undefined,
+        chainId: undefined,
         selectedTransactionType: ActivityFilterType.Sends,
         selectedTimePeriod: 'all',
       }),
@@ -159,7 +197,7 @@ describe('useActivityFiltering — local transaction filter bypass bug', () => {
 
     expect(useActivityData).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        filterTransactionTypes: [TransactionTypeFilter.SEND],
+        filterTransactionTypes: undefined,
       }),
     )
 
@@ -175,25 +213,49 @@ describe('useActivityFiltering — local transaction filter bypass bug', () => {
 
     expect(useActivityData).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        filterTransactionTypes: [TransactionTypeFilter.RECEIVE],
+        filterTransactionTypes: undefined,
       }),
     )
+  })
 
-    renderHook(() =>
+  it('classifies NFT purchases as receives and sales as sends', () => {
+    mockActivityData([mockSwapTx, mockNftBuyTx, mockNftSellTx])
+
+    const { result: receivesResult } = renderHook(() =>
       useActivityFiltering({
         evmAddress: '0x123',
         svmAddress: undefined,
         chainId: undefined,
-        selectedTransactionType: ActivityFilterType.Withdrawals,
+        selectedTransactionType: ActivityFilterType.Receives,
         selectedTimePeriod: 'all',
       }),
     )
 
-    expect(useActivityData).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        filterTransactionTypes: [TransactionTypeFilter.WITHDRAW],
+    expect(receivesResult.current.transactionData.map((tx) => tx.id)).toEqual([mockNftBuyTx.id])
+
+    const { result: sendsResult } = renderHook(() =>
+      useActivityFiltering({
+        evmAddress: '0x123',
+        svmAddress: undefined,
+        chainId: undefined,
+        selectedTransactionType: ActivityFilterType.Sends,
+        selectedTimePeriod: 'all',
       }),
     )
+
+    expect(sendsResult.current.transactionData.map((tx) => tx.id)).toEqual([mockNftSellTx.id])
+
+    const { result: swapsResult } = renderHook(() =>
+      useActivityFiltering({
+        evmAddress: '0x123',
+        svmAddress: undefined,
+        chainId: undefined,
+        selectedTransactionType: ActivityFilterType.Swaps,
+        selectedTimePeriod: 'all',
+      }),
+    )
+
+    expect(swapsResult.current.transactionData.map((tx) => tx.id)).toEqual([mockSwapTx.id])
   })
 
   it('falls back to client-side filtering for earn filters that need multiple server types', () => {

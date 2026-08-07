@@ -1,5 +1,8 @@
 import { FetchError, TradingApi } from '@universe/api'
-import { isEarnNoRoutesQuoteError } from 'uniswap/src/features/earn/quoteError'
+import {
+  isEarnInsufficientDestinationGasQuoteError,
+  isEarnNoRoutesQuoteError,
+} from 'uniswap/src/features/earn/quoteError'
 
 function createFetchError(data?: unknown): FetchError {
   return new FetchError({
@@ -28,5 +31,32 @@ describe(isEarnNoRoutesQuoteError, () => {
     const error = errorOrData instanceof Error ? errorOrData : createFetchError(errorOrData)
 
     expect(isEarnNoRoutesQuoteError(error)).toBe(false)
+  })
+})
+
+describe(isEarnInsufficientDestinationGasQuoteError, () => {
+  it('returns true for the self-funded destination gas error', () => {
+    expect(
+      isEarnInsufficientDestinationGasQuoteError(
+        createFetchError({
+          errorCode: 'UnprocessableEntity',
+          detail: 'Bridged amount is insufficient to cover gas costs for destination swap',
+        }),
+      ),
+    ).toBe(true)
+  })
+
+  it.each([
+    createFetchError({
+      errorCode: 'UnprocessableEntity',
+      detail: 'Bridged amount is insufficient',
+    }),
+    createFetchError({
+      errorCode: 'UnprocessableEntity',
+      detail: 'Internal Server Error',
+    }),
+    new Error('Bridged amount is insufficient to cover gas costs for destination swap'),
+  ])('returns false for unrelated errors: %#', (error) => {
+    expect(isEarnInsufficientDestinationGasQuoteError(error)).toBe(false)
   })
 })

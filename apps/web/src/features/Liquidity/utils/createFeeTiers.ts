@@ -13,7 +13,6 @@ import {
   type FeeTierOption,
   getFeeTierTitle,
   isDynamicFeeTier,
-  type L2TickSpacingConfig,
   MAX_FEE_TIER_DECIMALS,
 } from '~/features/Liquidity/utils/feeTiers'
 import { FeeTierData } from '~/types/liquidity'
@@ -24,14 +23,28 @@ import { FeeTierData } from '~/types/liquidity'
 const KEEP_EXISTING_TIER_MIN_TVL = 5000
 
 /** FeeData for a not-yet-created tier given its LP fee in bps (tick spacing derived from the fee). */
-function feeDataFromBps(bps: number, l2TickSpacingConfig: L2TickSpacingConfig): FeeData {
+function feeDataFromBps(bps: number, useSingleTickSpacing: boolean): FeeData {
   const feeAmount = bpsToFeeAmount(bps)
-  return { isDynamic: false, feeAmount, tickSpacing: calculateTickSpacingFromFeeAmount(feeAmount, l2TickSpacingConfig) }
+  return {
+    isDynamic: false,
+    feeAmount,
+    tickSpacing: calculateTickSpacingFromFeeAmount(feeAmount, useSingleTickSpacing),
+  }
 }
 
-/** The existing non-dynamic pool at a fee tier, matched by fee amount. */
+/**
+ * The existing non-dynamic pool at a fee tier, matched by fee amount. One fee amount can back several pools
+ * (same LP fee, different tick spacings) — prefer an incentivized one, then the deepest, so the tier box
+ * represents the pool worth joining rather than whichever the record happened to list first.
+ */
 function poolAtFee(feeTierData: Record<string, FeeTierData>, feeAmount: number): FeeTierData | undefined {
-  return Object.values(feeTierData).find((data) => !isDynamicFeeTier(data.fee) && data.fee.feeAmount === feeAmount)
+  const isIncentivized = (pool: FeeTierData): boolean => (pool.boostedApr ?? 0) > 0
+  return Object.values(feeTierData)
+    .filter((data) => !isDynamicFeeTier(data.fee) && data.fee.feeAmount === feeAmount)
+    .sort(
+      (a, b) =>
+        Number(isIncentivized(b)) - Number(isIncentivized(a)) || (parseFloat(b.tvl) || 0) - (parseFloat(a.tvl) || 0),
+    )[0]
 }
 
 /** A pool's served protocol fee (a raw fee amount) in bps, or undefined when the backend didn't serve one. */
@@ -68,41 +81,48 @@ function v4Breakdown({
  * (canonical post-cutover), or the old tier when its pool already holds >= {@link
  * KEEP_EXISTING_TIER_MIN_TVL} so we don't fragment that liquidity. `pool` is the backing pool when one
  * exists (a deep old pool, or a pool already sitting at the new tier), else undefined (curve breakdown).
+ *
+ * An incentivized old pool is kept regardless of TVL: the rewards are the reason to join it, and dropping
+ * it hides the reward APR entirely (the paired new tier has no pool, so no `boostedApr` to display).
  */
 function resolveCanonicalTier({
   pair,
   feeTierData,
-  l2TickSpacingConfig,
+  useSingleTickSpacing,
 }: {
   pair: { newBps: number; oldBps: number }
   feeTierData: Record<string, FeeTierData>
-  l2TickSpacingConfig: L2TickSpacingConfig
+  useSingleTickSpacing: boolean
 }): { feeData: FeeData; pool: FeeTierData | undefined } {
   const oldPool = poolAtFee(feeTierData, bpsToFeeAmount(pair.oldBps))
-  if (oldPool && (parseFloat(oldPool.tvl) || 0) >= KEEP_EXISTING_TIER_MIN_TVL) {
+  if (oldPool && ((parseFloat(oldPool.tvl) || 0) >= KEEP_EXISTING_TIER_MIN_TVL || (oldPool.boostedApr ?? 0) > 0)) {
     return { feeData: oldPool.fee, pool: oldPool }
   }
   const newPool = poolAtFee(feeTierData, bpsToFeeAmount(pair.newBps))
-  return { feeData: newPool?.fee ?? feeDataFromBps(pair.newBps, l2TickSpacingConfig), pool: newPool }
+  return { feeData: newPool?.fee ?? feeDataFromBps(pair.newBps, useSingleTickSpacing), pool: newPool }
 }
 
 /**
  * The v4 fee tier to pre-select in the create flow: the most-used existing tier, steered to its paired
  * new tier when that most-used tier is a shallow canonical default — so the pre-selection matches a
- * rendered card (a shallow old default isn't shown; its new tier is). Deep/non-default tiers are kept.
+ * rendered card (a shallow old default isn't shown; its new tier is). Deep/non-default tiers are kept,
+ * as are incentivized ones — {@link resolveCanonicalTier} renders those regardless of TVL.
  */
 export function getSteeredRecommendedFee({
   mostUsedFee,
   tvl,
-  l2TickSpacingConfig,
+  boostedApr,
+  useSingleTickSpacing,
 }: {
   mostUsedFee: FeeData
   tvl: string | undefined
-  l2TickSpacingConfig: L2TickSpacingConfig
+  boostedApr?: number
+  useSingleTickSpacing: boolean
 }): FeeData {
   const pairedNewBps = getPairedNewFeeTierBps(feeAmountToBps(mostUsedFee.feeAmount))
-  if (pairedNewBps !== undefined && (parseFloat(tvl ?? '') || 0) < KEEP_EXISTING_TIER_MIN_TVL) {
-    return feeDataFromBps(pairedNewBps, l2TickSpacingConfig)
+  const isShallow = (parseFloat(tvl ?? '') || 0) < KEEP_EXISTING_TIER_MIN_TVL && !(boostedApr ?? 0)
+  if (pairedNewBps !== undefined && isShallow) {
+    return feeDataFromBps(pairedNewBps, useSingleTickSpacing)
   }
   return mostUsedFee
 }
@@ -144,14 +164,14 @@ export function getCreateFeeTierOptions({
   defaultFeeTiers,
   feeTierData,
   hook,
-  l2TickSpacingConfig,
+  useSingleTickSpacing,
 }: {
   isFeeDisplayEnabled: boolean
   protocolVersion: ProtocolVersion
   defaultFeeTiers: FeeTierOption[]
   feeTierData: Record<string, FeeTierData>
   hook: string | undefined
-  l2TickSpacingConfig: L2TickSpacingConfig
+  useSingleTickSpacing: boolean
 }): FeeTierOption[] {
   if (!isFeeDisplayEnabled) {
     return defaultFeeTiers
@@ -167,7 +187,7 @@ export function getCreateFeeTierOptions({
   }
 
   const canonicalTiers = DEFAULT_FEE_TIER_PAIRS.map((pair) => {
-    const { feeData, pool } = resolveCanonicalTier({ pair, feeTierData, l2TickSpacingConfig })
+    const { feeData, pool } = resolveCanonicalTier({ pair, feeTierData, useSingleTickSpacing })
     return {
       value: feeData,
       title: getFeeTierTitle(bpsToFeeAmount(pair.oldBps)),
@@ -240,13 +260,13 @@ export function getCreateFeeTierSearchData({
   feeTierData,
   formatPercent,
   hook,
-  l2TickSpacingConfig,
+  useSingleTickSpacing,
 }: {
   useNewDefaultFeeTiers: boolean
   feeTierData: Record<string, FeeTierData>
   formatPercent: (percent: string | number | undefined, maxDecimals?: PercentNumberDecimals) => string
   hook?: string
-  l2TickSpacingConfig: L2TickSpacingConfig
+  useSingleTickSpacing: boolean
 }): FeeTierData[] {
   if (!useNewDefaultFeeTiers) {
     return Object.values(feeTierData)
@@ -256,7 +276,7 @@ export function getCreateFeeTierSearchData({
 
   // The four new default tiers always lead — shown from their real pool if one exists, else synthesized.
   const newDefaultTiers = DEFAULT_FEE_TIER_PAIRS.map((pair) => {
-    const feeData = feeDataFromBps(pair.newBps, l2TickSpacingConfig)
+    const feeData = feeDataFromBps(pair.newBps, useSingleTickSpacing)
     const pool = poolAtFee(feeTierData, feeData.feeAmount)
     return pool ? withServedFeeBreakdownData(pool) : makeUncreatedFeeTierData({ feeData, formatPercent, hook })
   })

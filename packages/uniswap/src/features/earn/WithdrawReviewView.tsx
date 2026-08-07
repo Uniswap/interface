@@ -12,6 +12,7 @@ import { useActiveAccount } from 'uniswap/src/features/accounts/store/hooks'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getEarnWithdrawInputAmount } from 'uniswap/src/features/earn/amount'
 import { EarnAnalyticsSurface, EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
+import { EARN_REVIEW_AMOUNT_LINE_HEIGHT } from 'uniswap/src/features/earn/constants'
 import {
   getEarnStepProgressLabel,
   isEarnActivePlanExecuting,
@@ -29,6 +30,7 @@ import { useEarnNetworkCostLabel } from 'uniswap/src/features/earn/hooks/useEarn
 import { useEarnReviewAnalytics } from 'uniswap/src/features/earn/hooks/useEarnReviewAnalytics'
 import { useEarnReviewExecutionHandlers } from 'uniswap/src/features/earn/hooks/useEarnReviewExecutionHandlers'
 import {
+  createEarnPlanFailureCallback,
   getEarnExecutionErrorMessage,
   shouldShowEarnTroubleshootingLink,
 } from 'uniswap/src/features/earn/planExecution'
@@ -47,7 +49,10 @@ import type {
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useFiatTokenConversion } from 'uniswap/src/features/transactions/hooks/useFiatTokenConversion'
-import type { PlanFinalizedCallbackParams } from 'uniswap/src/features/transactions/swap/plan/types'
+import type {
+  PlanFailureCallback,
+  PlanFinalizedCallbackParams,
+} from 'uniswap/src/features/transactions/swap/plan/types'
 import { activePlanStore } from 'uniswap/src/features/transactions/swap/review/stores/activePlan/activePlanStore'
 import { isChainedQuoteResponse } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
@@ -68,12 +73,13 @@ export interface ExecuteEarnWithdrawParams {
   outputCurrency: Currency
   quote: ChainedQuoteResponse
   onSuccess: () => void
-  onFailure: (error?: Error, onPressRetry?: () => void) => void
+  onFailure: PlanFailureCallback
   onSubmitted?: () => void
   onPlanFinalized?: (params: PlanFinalizedCallbackParams) => void
 }
 
 interface WithdrawReviewViewProps {
+  buttonAuthIcon?: JSX.Element
   vault: EarnVaultInfo
   position: EarnPositionInfo
   amount: string
@@ -93,6 +99,7 @@ interface WithdrawReviewViewProps {
 }
 
 export function WithdrawReviewView({
+  buttonAuthIcon,
   vault,
   position,
   amount,
@@ -129,7 +136,9 @@ export function WithdrawReviewView({
   const evmAccount = useActiveAccount(Platform.EVM)
   const activePlan = useStore(activePlanStore, (state) => state.activePlan)
   const priceChangeInterruptedPlanIds = useStore(activePlanStore, (state) => state.priceChangeInterruptedPlanIds)
+  const executionLockPlanId = useStore(activePlanStore, (state) => state.executionLockPlanId)
   const earnPlanProgress = useEarnPlanProgressState()
+  const isExecuting = isEarnActivePlanExecuting({ activePlan, executionLockPlanId, priceChangeInterruptedPlanIds })
 
   const [expanded, setExpanded] = useState(false)
   const toggleExpanded = useCallback(() => setExpanded((prev) => !prev), [])
@@ -224,7 +233,6 @@ export function WithdrawReviewView({
     }
   }, [currency, evmAccount, quoteRequestAmount, outputTradingApiChainId, vault.vaultAddress, vaultTradingApiChainId])
 
-  const isExecuting = isEarnActivePlanExecuting({ activePlan, priceChangeInterruptedPlanIds })
   const quoteQuery = useTradingApiEarnQuoteQuery({
     base: quoteRequestBase,
     earnIntent,
@@ -331,10 +339,7 @@ export function WithdrawReviewView({
       outputCurrency: currency,
       quote: quoteQuery.data,
       onSuccess: handleSuccess,
-      onFailure: (error, onPressRetryCallback) => {
-        logFailed(error)
-        handleFailure(error, onPressRetryCallback)
-      },
+      onFailure: createEarnPlanFailureCallback({ handleFailure, logFailed }),
       onSubmitted: logSubmitted,
       onPlanFinalized: (params) => {
         logFinalized(params)
@@ -371,6 +376,7 @@ export function WithdrawReviewView({
   )
   const action = (
     <EarnReviewActionRow
+      buttonAuthIcon={buttonAuthIcon}
       ctaDisabled={ctaDisabled}
       ctaLabel={insufficientGasWarning.warning?.buttonText ?? t('explore.earn.withdraw.cta', { symbol })}
       executionError={executionError}
@@ -405,7 +411,7 @@ export function WithdrawReviewView({
         )}
 
         <Flex alignItems="center" gap="$spacing12" py="$spacing32">
-          <Text variant="heading1" color="$neutral1">
+          <Text variant="heading1" color="$neutral1" lineHeight={EARN_REVIEW_AMOUNT_LINE_HEIGHT}>
             {formatLocalFiat(parsedAmountUsd)}
           </Text>
           <Flex row alignItems="center" gap="$spacing8">

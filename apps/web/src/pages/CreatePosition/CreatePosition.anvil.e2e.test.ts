@@ -8,12 +8,12 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { WETH } from 'uniswap/src/test/fixtures/lib/sdk'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { parseEther } from '~/chains'
+import { assume0xAddress } from '~/chains'
 import { ONE_MILLION_USDT } from '~/playwright/anvil/utils'
 import { expect, getTest, type Page } from '~/playwright/fixtures'
 import { stubLiquidityServiceEndpoint } from '~/playwright/fixtures/liquidityService'
 import { TEST_WALLET_ADDRESS } from '~/playwright/fixtures/wallets'
 import { Mocks } from '~/playwright/mocks/mocks'
-import { assume0xAddress } from '~/utils/wagmi'
 
 const test = getTest({ withAnvil: true })
 const WETH_ADDRESS = WETH.address
@@ -78,6 +78,16 @@ test.describe(
 
     test.describe('v2 zero liquidity', () => {
       test('should create a position', async ({ page, anvil }) => {
+        // The app requests simulateTransaction=true (approval simulation is default-enabled for
+        // mainnet), but the live service gas-estimates against LIVE mainnet where the test wallet
+        // holds nothing, so CreateClassicPosition 404s (FAILED_TO_ESTIMATE_GAS:
+        // TransferHelper: TRANSFER_FROM_FAILED) and Review never enables. Route through the stub,
+        // which forces simulateTransaction=false; the transaction still executes on the fork.
+        await stubLiquidityServiceEndpoint({
+          page,
+          endpoint: LiquidityService.methods.createClassicPosition,
+          service: LiquidityService,
+        })
         await anvil.setErc20Balance({ address: assume0xAddress(WETH_ADDRESS), balance: parseEther('100') })
         await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
         await anvil.setV2PoolReserves({
@@ -203,10 +213,23 @@ test.describe(
           page,
           endpoint: LiquidityService.methods.createPosition,
           service: LiquidityService,
-          modifyRequestData: (data) => {
-            data.simulateTransaction = true
-            return data
-          },
+        })
+        // This test used to force simulateTransaction: true and rely on the LIVE
+        // simulation failing; the live service now returns valid calldata, so the error
+        // state never appeared. Fail the 1-ETH request deterministically instead; every
+        // other request (pre-estimate dust amounts, the 2-ETH re-quote) falls back to the
+        // sim-disabled stub above.
+        await page.route('**/uniswap.liquidity.v2.LiquidityService/CreatePosition*', async (route) => {
+          const requestData = JSON.parse(route.request().postData() ?? '{}')
+          if (requestData.independentToken?.amount === parseEther('1').toString()) {
+            await route.fulfill({
+              status: 500,
+              contentType: 'application/json',
+              body: JSON.stringify({ code: 'internal', message: 'simulated create failure from e2e fixture' }),
+            })
+            return
+          }
+          await route.fallback()
         })
         // Recorded ListPools: see 'Create position with full range'.
         await dataApi.intercept(listPools, Mocks.DataApiService.list_pools_eth_usdt_v4)

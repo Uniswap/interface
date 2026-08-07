@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import type { ModifierPressProps } from 'ui/src'
-import type { IssuerToken } from 'uniswap/src/data/rest/rwa/types'
+import type { IssuerToken } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 
 export type ExpandableAssetGroupVariant = 'table' | 'search'
 

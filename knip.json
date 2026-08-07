@@ -9,7 +9,8 @@
   "ignoreDependencies": [
     "typescript",
     "oxlint",
-    "@types/.+"
+    "@types/.+",
+    "@vitest/coverage-v8"
   ],
   "workspaces": {
     ".": {
@@ -165,7 +166,10 @@
         "@ethersproject/.+",
         "@graphql-codegen/.+",
         "@hono/node-server",
+        "@metamask/connect-evm",
         "@rive-app/canvas",
+        "@safe-global/safe-apps-provider",
+        "@safe-global/safe-apps-sdk",
         "@storybook/.+",
         "@svgr/webpack",
         "@swc/core",
@@ -174,7 +178,6 @@
         "@typechain/ethers-v5",
         "@universe/config",
         "@vercel/og",
-        "@vitest/coverage-v8",
         "@walletconnect/ethereum-provider",
         "@web3-react/eip1193",
         "@web3-react/empty",
@@ -212,7 +215,8 @@
         "wait-on",
         "workbox-expiration",
         "workbox-strategies",
-        "wrangler"
+        "wrangler",
+        "ws"
       ]
     },
     "labs/sandbox": {
@@ -255,20 +259,24 @@
     },
     "packages/api": {
       "ignoreDependencies": [
-        "expo-secure-store",
-        "@vitest/coverage-v8"
+        "expo-secure-store"
       ]
     },
     "packages/compliance": {
       "ignoreDependencies": [
         "@universe/api",
-        "@universe/environment",
-        "@vitest/coverage-v8"
+        "@universe/environment"
       ]
     },
     "packages/config-cli": {
       "entry": [
         "src/main.ts"
+      ]
+    },
+    "packages/embedded-wallet": {
+      "ignoreDependencies": [
+        "react-native-argon2",
+        "react-native-passkey"
       ]
     },
     "packages/environment": {
@@ -285,32 +293,37 @@
     },
     "packages/mycelium": {
       "ignoreDependencies": [
-        "tailwindcss"
+        "@legendapp/list",
+        "camelcase",
+        "cheerio",
+        "tailwindcss",
+        "uppercamelcase",
+        "@testing-library/react"
+      ],
+      "ignore": [
+        "src/components/icons/**"
       ]
     },
     "packages/notifications": {
-      "ignoreDependencies": [
-        "@vitest/coverage-v8"
-      ]
+      "ignoreDependencies": []
     },
     "packages/prices": {
       "ignoreDependencies": [
-        "@testing-library/react",
-        "@vitest/coverage-v8"
+        "@testing-library/react"
       ]
     },
     "packages/sessions": {
       "ignoreDependencies": [
         "@bufbuild/protobuf",
         "@tanstack/react-query",
-        "@vitest/coverage-v8",
         "openapi-typescript-codegen"
       ]
     },
     "packages/transactional": {
       "ignoreDependencies": [
         "@react-email/preview-server",
-        "@universe/mycelium"
+        "@universe/mycelium",
+        "@universe/tailwind"
       ]
     },
     "packages/ui": {
@@ -339,9 +352,7 @@
     },
     "packages/uniswap": {
       "ignoreDependencies": [
-        "@cloudflare/.+",
         "@graphql-codegen/.+",
-        "@noble/.+",
         "@react-native-masked-view/masked-view",
         "@redux-devtools/extension",
         "@typechain/ethers-v5",
@@ -350,11 +361,9 @@
         "expo-linear-gradient",
         "i18next-resources-for-ts",
         "react-native-appsflyer",
-        "react-native-argon2",
         "react-native-context-menu-view",
         "react-native-device-info",
-        "react-native-mmkv",
-        "react-native-passkey"
+        "react-native-mmkv"
       ]
     },
     "packages/utilities": {
@@ -376,7 +385,6 @@
     },
     "packages/websocket": {
       "ignoreDependencies": [
-        "@vitest/coverage-v8",
         "partysocket"
       ]
     },

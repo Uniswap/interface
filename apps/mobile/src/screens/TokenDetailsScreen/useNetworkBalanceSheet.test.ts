@@ -73,11 +73,11 @@ let mockCrossChainResult = {
   otherChainBalances: null as PortfolioBalance[] | null,
 }
 
-vi.mock('uniswap/src/data/balances/hooks/useCrossChainBalances', () => ({
+vi.mock('uniswap/src/data/apiClients/dataApiService/balances/hooks/useCrossChainBalances', () => ({
   useCrossChainBalances: () => mockCrossChainResult,
 }))
 
-vi.mock('uniswap/src/data/graphql/uniswap-data-api/fragments', () => ({
+vi.mock('uniswap/src/data/graphql/fragments', () => ({
   useTokenBasicProjectPartsFragment: () => ({
     data: { project: { tokens: [] } },
   }),

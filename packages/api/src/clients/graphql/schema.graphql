@@ -15,8 +15,22 @@ type Query {
   historicalProtocolVolume(chain: Chain!, version: ProtocolVersion!, duration: HistoryDuration!): [TimestampedAmount!]
   dailyProtocolTvl(chain: Chain!, version: ProtocolVersion!): [TimestampedAmount!]
   # returns top v3 pools sorted by total value locked in desc order
-  topV3Pools(chain: Chain!, first: Int!, tvlCursor: Float, tokenFilter: String, debugMode: Boolean, multichain: Boolean = false): [V3Pool!]
-  topV4Pools(chain: Chain!, first: Int!, tvlCursor: Float, tokenFilter: String, debugMode: Boolean, multichain: Boolean = false): [V4Pool!]
+  topV3Pools(
+    chain: Chain!
+    first: Int!
+    tvlCursor: Float
+    tokenFilter: String
+    multichain: Boolean = false
+    debugMode: Boolean
+  ): [V3Pool!]
+  topV4Pools(
+    chain: Chain!
+    first: Int!
+    tvlCursor: Float
+    tokenFilter: String
+    multichain: Boolean = false
+    debugMode: Boolean
+  ): [V4Pool!]
   v3Pool(chain: Chain!, address: String!): V3Pool
   v4Pool(chain: Chain!, poolId: String!): V4Pool
   v3PoolsForTokenPair(chain: Chain!, token0: String!, token1: String!): [V3Pool!]
@@ -24,7 +38,14 @@ type Query {
   v3Transactions(chain: Chain!, first: Int!, timestampCursor: Int): [PoolTransaction!]
   v4Transactions(chain: Chain!, first: Int!, timestampCursor: Int): [PoolTransaction!]
   # returns top v2 pairs sorted by total value locked in desc order
-  topV2Pairs(chain: Chain!, first: Int!, tvlCursor: Float, tokenFilter: String, debugMode: Boolean, multichain: Boolean = false): [V2Pair!]
+  topV2Pairs(
+    chain: Chain!
+    first: Int!
+    tvlCursor: Float
+    tokenFilter: String
+    multichain: Boolean = false
+    debugMode: Boolean
+  ): [V2Pair!]
   v2Pair(chain: Chain!, address: String!): V2Pair
   v2Transactions(chain: Chain!, first: Int!, timestampCursor: Int): [PoolTransaction]
   convert(fromAmount: CurrencyAmountInput!, toCurrency: Currency!): Amount
@@ -186,8 +207,9 @@ enum Chain {
   XLAYER
   MEGAETH
   TEMPO
-  ROBINHOOD
   ARC
+  ROBINHOOD
+  INK
   UNKNOWN_CHAIN
 }
 
@@ -1258,6 +1280,7 @@ type Token implements IContract {
   source: TokenSource
   isBridged: Boolean
   bridgedWithdrawalInfo: BridgedWithdrawalInfo
+  multichainId: String
 }
 
 type BridgedWithdrawalInfo {
@@ -1391,6 +1414,7 @@ type TokenProjectMarket {
   pricePercentChange(duration: HistoryDuration!): Amount
   priceHighLow(duration: HistoryDuration!, highLow: HighLow!): Amount
   volume(duration: HistoryDuration!): Amount
+  historicalVolume(duration: HistoryDuration!, maxLength: Int): [TimestampedAmount]
 }
 
 input TokenTradeInput {

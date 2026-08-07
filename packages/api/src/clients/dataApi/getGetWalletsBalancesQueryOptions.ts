@@ -8,6 +8,7 @@ import { transformWalletsInput, type WithoutWalletAccounts } from '@universe/api
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 import { type QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 
 /** Mirrors the BE `MAX_WALLET_BALANCES_BATCH_SIZE`; larger requests are rejected with a 400. */
 const MAX_WALLETS_PER_REQUEST = 20
@@ -84,5 +85,6 @@ export function getGetWalletsBalancesQueryOptions(
       return fetchWalletsBalances(client, input)
     },
     placeholderData: (prev: PlainMessage<GetWalletsBalancesResponse> | undefined) => prev,
+    staleTime: ONE_MINUTE_MS,
   })
 }

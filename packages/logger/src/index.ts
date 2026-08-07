@@ -6,11 +6,7 @@ export { consoleLoggerFactory, createConsoleLogger, createConsoleLoggerFactory, 
 export type { RequestScopedContext } from './requestContext'
 export { requestContext } from './requestContext'
 export type { StackResolver, StackResolverCtx } from './sourceMapResolver'
-export {
-  createStructuredJsonLogger,
-  createStructuredJsonLoggerFactory,
-  structuredJsonLoggerFactory,
-} from './structuredJsonLogger'
+export { createStructuredJsonLogger, createStructuredJsonLoggerFactory } from './structuredJsonLogger'
 export type { BufferedTransportOptions } from './transports/buffered'
 export { createBufferedTransport } from './transports/buffered'
 export { createConsoleTransport } from './transports/console'

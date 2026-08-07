@@ -50,6 +50,15 @@ interface BaseRequest {
   dappRequestInfo: DappRequestInfo
   chainId: UniverseChainId
   isLinkModeSupported?: boolean
+  /** Verification status parsed from WC Verify's per-request `verifyContext`. */
+  verifyStatus?: DappVerificationStatus
+  /**
+   * The origin URL as reported by WalletConnect Verify (`verifyContext.verified.origin`).
+   * Only set when WC Verify supplied a trusted origin — never sourced from dapp-provided
+   * metadata. Use this (not `dappRequestInfo.url`) when making trust decisions such as the
+   * first-party allowlist override.
+   */
+  trustedOriginUrl?: string
 }
 
 export interface SignRequest extends BaseRequest {

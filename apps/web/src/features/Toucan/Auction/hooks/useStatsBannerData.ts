@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { GetClearingPriceHistoryRequest } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 import { useMemo } from 'react'
-import { auctionQueries } from 'uniswap/src/data/rest/auctions/auctionQueries'
+import { auctionQueries } from 'uniswap/src/data/apiClients/dataApiService/auctions/auctionQueries'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { fromQ96ToDecimalWithTokenDecimals } from '~/features/Toucan/Auction/BidDistributionChart/utils/q96'
@@ -81,7 +81,6 @@ export function useStatsBannerData(): StatsBannerData {
   })
   const auctionChainId = auctionDetails?.chainId
   const bidTokenAddress = auctionDetails?.currency
-  const auctionTokenAddress = auctionDetails?.tokenAddress
 
   const bidTokenContracts = useMemo(() => {
     if (!auctionChainId || !bidTokenAddress) {
@@ -99,21 +98,6 @@ export function useStatsBannerData(): StatsBannerData {
 
   const { priceMap: bidTokenMarketPriceMap } = useTokenMarketPrices(bidTokenContracts)
 
-  const auctionTokenContracts = useMemo(() => {
-    if (!auctionChainId || !auctionTokenAddress) {
-      return []
-    }
-
-    return [
-      buildContractInputForAddress({
-        chainId: auctionChainId,
-        address: auctionTokenAddress,
-      }),
-    ]
-  }, [auctionChainId, auctionTokenAddress])
-
-  const { priceMap: auctionTokenMarketPriceMap } = useTokenMarketPrices(auctionTokenContracts)
-
   // Use the same market price source as top auctions table/chips for committed volume consistency.
   const bidTokenMarketPriceUsd = useMemo(() => {
     if (!auctionChainId || !bidTokenAddress) {
@@ -126,18 +110,6 @@ export function useStatsBannerData(): StatsBannerData {
     })
     return bidTokenMarketPriceMap[key]
   }, [auctionChainId, bidTokenAddress, bidTokenMarketPriceMap])
-
-  const auctionTokenMarketPriceUsd = useMemo(() => {
-    if (!auctionChainId || !auctionTokenAddress) {
-      return undefined
-    }
-
-    const key = buildTokenMarketPriceKey({
-      chainId: auctionChainId,
-      address: auctionTokenAddress,
-    })
-    return auctionTokenMarketPriceMap[key]
-  }, [auctionChainId, auctionTokenAddress, auctionTokenMarketPriceMap])
 
   // Extract auction parameters
   // Use on-chain clearing price during active auction for display consistency with isInRange
@@ -266,9 +238,8 @@ export function useStatsBannerData(): StatsBannerData {
   }, [auctionTokenDecimals, bidTokenInfo, clearingPrice, totalSupply])
 
   // Format current valuation in user's selected fiat currency (no "USD" suffix)
-  // For completed auctions, this should represent FDV at launch using launch-time clearing
-  // price and launch-time bid-token USD price from auction details.
-  // Fall back to auction token market price, then current bid token price.
+  // Completed auctions show FDV at launch on the launch valuation basis, consistent with the
+  // bid-token line above (LP-821) — see computeCurrentValuationUsd.
   // Returns "--" when required price data is unavailable.
   const currentValuationFiatFormatted = useMemo(
     () =>
@@ -279,7 +250,6 @@ export function useStatsBannerData(): StatsBannerData {
         clearingPriceQ96: clearingPrice,
         launchBidTokenPriceUsdRaw: auctionDetails?.currencyPriceUsd,
         bidTokenInfo,
-        auctionTokenMarketPriceUsd,
         bidTokenMarketPriceUsd,
         convertFiatAmountFormatted,
       }),
@@ -287,7 +257,6 @@ export function useStatsBannerData(): StatsBannerData {
       auctionDetails?.currencyPriceUsd,
       auctionProgressState,
       auctionTokenDecimals,
-      auctionTokenMarketPriceUsd,
       bidTokenInfo,
       bidTokenMarketPriceUsd,
       clearingPrice,
@@ -417,7 +386,6 @@ export function useStatsBannerData(): StatsBannerData {
     auctionTokenDecimals,
     clearingPriceQ96: clearingPrice,
     bidTokenInfo,
-    auctionTokenMarketPriceUsd,
     bidTokenMarketPriceUsd,
   })
 

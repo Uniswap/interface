@@ -22,6 +22,8 @@ export function NetworkOption({
   borderRadius = '$rounded8',
   trailingElement,
   forceAllNetworksLabel,
+  customLogo,
+  customLabel,
 }: {
   chainId: UniverseChainId | null
   chainIds?: UniverseChainId[]
@@ -30,13 +32,23 @@ export function NetworkOption({
   borderRadius?: FlexProps['borderRadius']
   trailingElement?: ReactNode
   forceAllNetworksLabel?: boolean
+  /** Renders a non-network option (e.g. a launchpad) with this logo + label, bypassing chain lookup. */
+  customLogo?: ReactNode
+  customLabel?: string
 }): JSX.Element {
   const { t } = useTranslation()
   const info = chainId && getChainInfo(chainId)
 
   const content = useMemo(
     () =>
-      !info?.label ? (
+      customLabel !== undefined ? (
+        <Flex row gap="$spacing12" alignItems="center">
+          {customLogo}
+          <Text color="$neutral1" variant="body2">
+            {customLabel}
+          </Text>
+        </Flex>
+      ) : !info?.label ? (
         <Flex row gap="$spacing12" alignItems="center">
           {chainIds?.length ? (
             <NetworkPile chainIds={chainIds} size="small" />
@@ -59,7 +71,7 @@ export function NetworkOption({
           />
         </Flex>
       ),
-    [chainId, chainIds, info?.label, isNew, t, forceAllNetworksLabel],
+    [chainId, chainIds, info?.label, isNew, t, forceAllNetworksLabel, customLogo, customLabel],
   )
 
   return (

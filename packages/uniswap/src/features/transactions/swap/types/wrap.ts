@@ -13,7 +13,7 @@ type BaseWrapTrade<TQuote, TRouting extends TradingApi.Routing.WRAP | TradingApi
   readonly inputTax: Percent
   readonly outputTax: Percent
   readonly slippageTolerance: 0
-  readonly priceImpact: undefined
+  readonly priceDifference: undefined
   readonly deadline: undefined
 }
 
@@ -76,7 +76,7 @@ function createBaseWrapTrade<TQuote extends WrapQuoteResponse | UnwrapQuoteRespo
     inputTax: ZERO_PERCENT,
     outputTax: ZERO_PERCENT,
     slippageTolerance: 0,
-    priceImpact: undefined,
+    priceDifference: undefined,
     deadline: undefined,
     quoteOutputAmount: amounts.outputAmount,
     quoteOutputAmountUserWillReceive: amounts.outputAmount,

@@ -55,6 +55,38 @@ function createIsCurrentStep(currentStep: TransactionStep | undefined): (step: T
   }
 }
 
+export function computeStepStatus({
+  steps,
+  currentStep,
+  targetStep,
+}: {
+  steps: TransactionStep[]
+  currentStep: { step: TransactionStep; accepted: boolean } | undefined
+  targetStep: TransactionStep
+}): StepStatus {
+  // Resolve the current step by object identity first: duplicate chained-action rows (e.g. a
+  // failed attempt and its retry) share the same type and stepIndex, so a field match would pick
+  // the first row instead of the actual current one. Fall back to field matching when the
+  // reference isn't in the array (non-chained flows, undefined current step).
+  const currentStepRef = currentStep?.step
+  const refIndex = currentStepRef ? steps.indexOf(currentStepRef) : -1
+  const currentIndex = refIndex !== -1 ? refIndex : steps.findIndex(createIsCurrentStep(currentStepRef))
+  const targetIndex = steps.indexOf(targetStep)
+
+  const isCurrent = currentIndex === targetIndex
+
+  if (isFailedChainedActionStep(targetStep)) {
+    return isCurrent ? StepStatus.Failed : StepStatus.Replaced
+  }
+  if (currentIndex < targetIndex) {
+    return StepStatus.Preview
+  } else if (isCurrent) {
+    return currentStep?.accepted ? StepStatus.InProgress : StepStatus.Active
+  } else {
+    return StepStatus.Complete
+  }
+}
+
 export function ProgressIndicator({
   currentStep,
   steps,
@@ -62,22 +94,7 @@ export function ProgressIndicator({
 }: ProgressIndicatorProps): JSX.Element | null {
   const { t } = useTranslation()
   function getStatus(targetStep: TransactionStep): StepStatus {
-    const isCurrentStep = createIsCurrentStep(currentStep?.step)
-    const currentIndex = steps.findIndex(isCurrentStep)
-    const targetIndex = steps.indexOf(targetStep)
-
-    const isCurrent = currentIndex === targetIndex
-
-    if (isFailedChainedActionStep(targetStep)) {
-      return isCurrent ? StepStatus.Failed : StepStatus.Replaced
-    }
-    if (currentIndex < targetIndex) {
-      return StepStatus.Preview
-    } else if (isCurrent) {
-      return currentStep?.accepted ? StepStatus.InProgress : StepStatus.Active
-    } else {
-      return StepStatus.Complete
-    }
+    return computeStepStatus({ steps, currentStep, targetStep })
   }
 
   const counts = useMemo(() => {

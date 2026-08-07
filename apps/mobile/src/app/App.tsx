@@ -83,7 +83,7 @@ import { useDatadogUserAttributesTracking } from 'src/screens/HomeScreen/useData
 import { flexStyles, useIsDarkMode } from 'ui/src'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
 import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
-import { initializePortfolioQueryOverrides } from 'uniswap/src/data/rest/portfolioBalanceOverrides'
+import { initializePortfolioQueryOverrides } from 'uniswap/src/data/apiClients/dataApiService/balances/portfolioBalanceOverrides'
 import { useCurrentAppearanceSetting, useSelectedColorScheme } from 'uniswap/src/features/appearance/hooks'
 import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProviderWrapper'
 import { mapLanguageToLocale } from 'uniswap/src/features/language/constants'

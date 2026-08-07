@@ -1,6 +1,6 @@
 import type { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { useMemo } from 'react'
-import { useExploreRwaRows } from 'uniswap/src/data/rest/rwa/useExploreRwaRows'
+import { useExploreRwaRows } from 'uniswap/src/data/apiClients/dataApiService/rwa/useExploreRwaRows'
 import { RwaExploreTableShell } from '~/pages/Explore/rwa/table/RwaExploreTableShell'
 import {
   StocksTableSortStoreContextProvider,

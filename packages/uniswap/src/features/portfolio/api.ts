@@ -7,20 +7,20 @@ import { Contract } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
-import {
-  getSolanaParsedTokenAccountsByOwnerQueryOptions,
-  SOLANA_ONCHAIN_BALANCE_COMMITMENT,
-} from 'uniswap/src/data/solanaConnection/getSolanaParsedTokenAccountsByOwnerQueryOptions'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { RPCType, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getPollingIntervalByBlocktime } from 'uniswap/src/features/chains/utils'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
+import {
+  getSolanaParsedTokenAccountsByOwnerQueryOptions,
+  SOLANA_ONCHAIN_BALANCE_COMMITMENT,
+} from 'uniswap/src/features/portfolio/getSolanaParsedTokenAccountsByOwnerQueryOptions'
 import { createEthersProviderFactory } from 'uniswap/src/features/providers/createEthersProvider'
 import { getSolanaConnection } from 'uniswap/src/features/providers/getSolanaConnection'
 import { defaultResolveRpcConfig } from 'uniswap/src/features/providers/resolveRpcConfig'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { normalizeTokenAddressForCache } from 'uniswap/src/utils/currencyId'
 import { currencyAddress as getCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'

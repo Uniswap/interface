@@ -1,6 +1,6 @@
 import { curveCardinal, scaleLinear } from 'd3'
 import { Flex, useSporeColors } from 'ui/src'
-import type { AssetSparklineChartPoint } from 'uniswap/src/data/rest/rwa/sparklineUtils'
+import type { AssetSparklineChartPoint } from 'uniswap/src/data/apiClients/dataApiService/rwa/sparklineUtils'
 import { LineChart } from '~/components/Charts/SparklineChart/LineChart'
 
 interface AssetSparklineProps {

@@ -1,4 +1,4 @@
-import { TickData } from '~/appGraphql/data/AllV3TicksQuery'
+import { TickData } from '~/data/AllV3TicksQuery'
 
 export const TICK_DATA: TickData[] = [
   {

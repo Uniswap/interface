@@ -8,10 +8,7 @@ import { TokenDetailsMarketData } from 'src/components/TokenDetails/TokenDetails
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { Language as LanguageIcon } from 'ui/src/components/icons'
 import { DEP_accentColors, validColor } from 'ui/src/theme'
-import {
-  useTokenBasicInfoPartsFragment,
-  useTokenBasicProjectPartsFragment,
-} from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
+import { useTokenBasicInfoPartsFragment, useTokenBasicProjectPartsFragment } from 'uniswap/src/data/graphql/fragments'
 import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { Language } from 'uniswap/src/features/language/constants'

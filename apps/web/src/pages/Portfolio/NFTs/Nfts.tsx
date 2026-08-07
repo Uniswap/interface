@@ -14,12 +14,12 @@ import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { ElementName, InterfacePageName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { assume0xAddress } from '~/chains'
 import { SearchInput } from '~/pages/Portfolio/components/SearchInput'
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
 import { NFTCard, setOpenNftPopoverId } from '~/pages/Portfolio/NFTs/NFTCard'
 import { NFTCardSkeleton } from '~/pages/Portfolio/NFTs/NFTCardSkeleton'
-import { assume0xAddress } from '~/utils/wagmi'
 
 const LOADING_SKELETON_COUNT = isMobileWeb ? 4 : 10
 

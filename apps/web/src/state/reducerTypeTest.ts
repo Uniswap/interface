@@ -23,8 +23,6 @@ import { type SagaState } from 'uniswap/src/utils/saga'
 import { type ApplicationState, type OpenModalParams } from '~/state/application/reducer'
 import { type FiatOnRampTransactionsState } from '~/state/fiatOnRampTransactions/reducer'
 import { type ListsState } from '~/state/lists/types'
-import { type LogsState } from '~/state/logs/slice'
-import { type Log } from '~/state/logs/utils'
 import { type PopupType } from '~/state/popups/types'
 import { type routingApi } from '~/state/routing/slice'
 import { type RouterPreference } from '~/state/routing/types'
@@ -58,7 +56,6 @@ type ExpectedAppState = CombinedState<{
   readonly fiatOnRampTransactions: FiatOnRampTransactionsState
   readonly lists: ListsState
   readonly application: ApplicationState
-  readonly logs: LogsState
   readonly saga: Record<string, SagaState>
   readonly [routingApi.reducerPath]: ReturnType<typeof routingApi.reducer>
 
@@ -131,25 +128,3 @@ interface ExpectedApplicationState {
 }
 
 assert<Equals<ApplicationState, ExpectedApplicationState>>()
-
-interface ExpectedLogsState {
-  [chainId: number]: {
-    [filterKey: string]: {
-      listeners: number
-      fetchingBlockNumber?: number
-      results?:
-        | {
-            blockNumber: number
-            logs: Log[]
-            error?: undefined
-          }
-        | {
-            blockNumber: number
-            logs?: undefined
-            error: true
-          }
-    }
-  }
-}
-
-assert<Equals<LogsState, ExpectedLogsState>>()

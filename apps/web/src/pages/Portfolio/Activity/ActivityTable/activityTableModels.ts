@@ -23,6 +23,12 @@ type ActivityAmountModel =
       amountRaw?: string
     }
   | {
+      // An arbitrary number of currencies with no per-currency amount, for transactions that
+      // settle several tokens at once (e.g. collecting LP-incentive rewards across denominations).
+      kind: 'multi-token'
+      currencyIds: string[]
+    }
+  | {
       kind: 'approve'
       currencyId?: string
       approvalAmount?: string | 'INF'

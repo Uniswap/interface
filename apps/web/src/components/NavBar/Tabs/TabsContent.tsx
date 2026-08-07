@@ -8,8 +8,10 @@ import { Compass } from 'ui/src/components/icons/Compass'
 import { CreditCard } from 'ui/src/components/icons/CreditCard'
 import { Pools } from 'ui/src/components/icons/Pools'
 import { ReceiveAlt } from 'ui/src/components/icons/ReceiveAlt'
+import { Rocket } from 'ui/src/components/icons/Rocket'
 import { SwapDotted } from 'ui/src/components/icons/SwapDotted'
 import { Wallet } from 'ui/src/components/icons/Wallet'
+import Badge, { BadgeVariant } from 'uniswap/src/components/badge/Badge'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { MenuItem } from '~/components/NavBar/CompanyMenu/Content'
 import { PageType } from '~/hooks/useIsPage'
@@ -25,6 +27,8 @@ export type TabsSection = {
   items?: TabsItem[]
   closeMenu?: () => void
   icon?: JSX.Element
+  /** Small pill rendered next to the tab label (e.g. the Launches "Beta" tag). */
+  badge?: JSX.Element
   elementName: ElementName
 }
 
@@ -48,7 +52,7 @@ export const useTabsContent = (): TabsSection[] => {
       title: t('common.trade'),
       href: '/swap',
       isActive: pathname.startsWith('/swap') || pathname.startsWith('/limit') || pathname.startsWith('/send'),
-      icon: <CoinConvert color="$accent1" size="$icon.20" />,
+      icon: <CoinConvert color="$accent1" size="$icon.24" />,
       elementName: ElementName.NavbarTradeTab,
       items: [
         {
@@ -85,7 +89,7 @@ export const useTabsContent = (): TabsSection[] => {
       title: t('common.explore'),
       href: '/explore',
       isActive: pathname.startsWith('/explore') || pathname.startsWith('/nfts'),
-      icon: <Compass color="$accent1" size="$icon.20" />,
+      icon: <Compass color="$accent1" size="$icon.24" />,
       elementName: ElementName.NavbarExploreTab,
       items: [
         {
@@ -115,11 +119,23 @@ export const useTabsContent = (): TabsSection[] => {
       ],
     },
     {
+      title: t('common.launches'),
+      href: '/launches',
+      isActive: pathname.startsWith('/launches'),
+      icon: <Rocket color="$accent1" size="$icon.24" />,
+      badge: (
+        <Badge badgeVariant={BadgeVariant.SOFT} size="small" placement="only">
+          {t('common.beta')}
+        </Badge>
+      ),
+      elementName: ElementName.NavbarLaunchesTab,
+    },
+    {
       title: t('common.pool'),
       href: '/positions',
       isActive:
         !isPortfolioPoolsEntryPointActive && (pathname.startsWith('/positions') || pathname.startsWith('/liquidity')),
-      icon: <Pools color="$accent1" size="$icon.20" />,
+      icon: <Pools color="$accent1" size="$icon.24" />,
       elementName: ElementName.NavbarPoolTab,
       items: [
         {
@@ -149,7 +165,7 @@ export const useTabsContent = (): TabsSection[] => {
         chainId: portfolioChainId,
       }),
       isActive: (pathname.startsWith(PageType.PORTFOLIO) && !isExternalWallet) || isPortfolioPoolsEntryPointActive,
-      icon: <Wallet color="$accent1" size="$icon.20" />,
+      icon: <Wallet color="$accent1" size="$icon.24" />,
       elementName: ElementName.NavbarPortfolioTab,
       items: [
         {

@@ -1,7 +1,7 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { GatedFeature, useIsFeatureGated } from '@universe/compliance'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { NamedExoticComponent, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, NamedExoticComponent, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { useLocation, useNavigate, useSearchParams } from 'react-router'
@@ -13,11 +13,11 @@ import { useIsEarnEnabled } from 'uniswap/src/features/earn/hooks/useIsEarnEnabl
 import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { ElementName, InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { getTokenExploreURL } from '~/appGraphql/data/util'
 import { useFilteredChainIds } from '~/components/NetworkFilter/useFilteredChains'
 import { PoolNotFoundModal } from '~/components/NotFoundModal/PoolNotFoundModal'
 import { TokenNotFoundModal } from '~/components/NotFoundModal/TokenNotFoundModal'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
+import { getTokenExploreURL } from '~/data/util'
 import { EarnVaultsSection } from '~/features/earn/EarnVaultsSection'
 import { ExploreContextProvider } from '~/features/Explore/state'
 import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
@@ -57,6 +57,12 @@ interface Page {
 const SOLANA_TAB_NAV_MARGIN_TOP = 36
 const DEFAULT_TAB_NAV_MARGIN_TOP = 80
 
+// Stable identity so `<Page />` (a bare component reference) doesn't remount the pools tab on
+// every render — `surface` is required on `ExploreTopPoolTable`, so it can't be left off silently.
+const ExplorePoolsTabTable = memo(function ExplorePoolsTabTable() {
+  return <ExploreTopPoolTable surface="explore" />
+})
+
 function usePages(): Array<Page> {
   const { t } = useTranslation()
 
@@ -76,7 +82,7 @@ function usePages(): Array<Page> {
     {
       title: t('common.pools'),
       key: ExploreTab.Pools,
-      component: ExploreTopPoolTable,
+      component: ExplorePoolsTabTable,
       loggingElementName: ElementName.ExplorePoolsTab,
     },
     {
@@ -315,12 +321,12 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                   })
                   return (
                     <Trace
+                      key={key}
                       logPress
                       eventOnTrigger={SharedEventName.NAVBAR_CLICKED}
                       element={loggingElementName}
-                      key={index}
                     >
-                      <HeaderTab onPress={() => navigate(url)} active={currentTab === index} key={key}>
+                      <HeaderTab onPress={() => navigate(url)} active={currentTab === index}>
                         {title}
                       </HeaderTab>
                     </Trace>
@@ -372,7 +378,15 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                 <Text variant="subheading1" color="$neutral1">
                   {t('toucan.auctions')}
                 </Text>
-                <Flex row gap="$spacing8" justifyContent="flex-start" $md={{ width: '100%' }}>
+                {/* Actions can exceed small viewports — scroll the whole row in place instead of stacking or widening the page. */}
+                <Flex
+                  row
+                  gap="$spacing8"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  className="scrollbar-hidden"
+                  $md={{ width: '100%', '$platform-web': { overflowX: 'auto' } }}
+                >
                   <Button
                     size="small"
                     icon={<Plus />}
