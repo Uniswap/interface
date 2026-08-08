@@ -54,6 +54,21 @@ export const UNISWAP_CCA_LAUNCHPAD_ID = 'uniswap-cca'
 export const UNISWAP_BONDING_CURVE_LAUNCHPAD_ID = 'uniswap-bonding-curve'
 
 /**
+ * ListLaunches group id covering the whole Uniswap brand: the server resolves it to both mechanism
+ * ids above, so one request carries crowd launches (CCA) and instant launches (bonding curve).
+ *
+ * Request-only. Rows always come back tagged with their own mechanism id, never `pools`, so
+ * anything reading a row's `launchpadId` keeps comparing against the two constants above.
+ */
+export const POOLS_LAUNCHPAD_GROUP_ID = 'pools'
+
+/** The mechanism ids `POOLS_LAUNCHPAD_GROUP_ID` expands to — what a `pools` row can be tagged with. */
+export const POOLS_LAUNCHPAD_MECHANISM_IDS: readonly string[] = [
+  UNISWAP_CCA_LAUNCHPAD_ID,
+  UNISWAP_BONDING_CURVE_LAUNCHPAD_ID,
+]
+
+/**
  * Display names for launchpads that ListLaunches serves but ListLaunchpads has no row for. Without
  * this, cards and table rows fall through to the raw slug (`uniswap-cca`). Drop an entry once the
  * registry carries it.

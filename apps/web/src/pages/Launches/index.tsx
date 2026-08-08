@@ -1,4 +1,5 @@
-import { LaunchesOrderBy } from '@uniswap/client-data-api/dist/data/v2/types_pb'
+import type { PlainMessage } from '@bufbuild/protobuf'
+import { LaunchesOrderBy, type Launch } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import {
   DynamicConfigs,
   FeatureFlags,
@@ -25,7 +26,12 @@ import { useAuctionAddressByToken } from '~/pages/Launches/data/useAuctionAddres
 import { useLaunches } from '~/pages/Launches/data/useLaunches'
 import { useLaunchpads } from '~/pages/Launches/data/useLaunchpads'
 import { LaunchesHero } from '~/pages/Launches/LaunchesHero'
-import { LaunchItem, toLaunchItems, UNISWAP_CCA_LAUNCHPAD_ID } from '~/pages/Launches/launchesModel'
+import {
+  LaunchItem,
+  POOLS_LAUNCHPAD_GROUP_ID,
+  POOLS_LAUNCHPAD_MECHANISM_IDS,
+  toLaunchItems,
+} from '~/pages/Launches/launchesModel'
 import { LaunchesTeaserBanner } from '~/pages/Launches/LaunchesTeaserBanner'
 import { LaunchFilterBar, LaunchQuickSelects } from '~/pages/Launches/LaunchFilterBar'
 import { LaunchTable } from '~/pages/Launches/LaunchTable'
@@ -36,6 +42,23 @@ import { useTrendingMarquee } from '~/pages/Launches/useTrendingMarquee'
 const TRENDING_COUNT = 10
 // Chains offered in the launches network filter. Statsig-configurable; defaults to Robinhood Chain only.
 const DEFAULT_LAUNCHES_NETWORK_FILTER_CHAIN_IDS = [UniverseChainId.Robinhood] as number[]
+
+/**
+ * Hero marquee page size, matching the Trending feed Pools renders. The server ranks the whole
+ * eligible set and backfills the page by 24h volume, so one page of this size is the entire supply
+ * the marquee ever needs — there is nothing to page for.
+ */
+const HERO_PAGE_SIZE = 100
+
+/**
+ * Hero brand admission rule (its caller re-checks the chain). The request already scopes both
+ * server-side; this re-check exists so an older data-api that doesn't recognise the `pools` group
+ * id (and degrades to serving every launchpad) can't put a third-party launch in a Uniswap-branded
+ * marquee. Both mechanisms are admitted — the group id asks for both on purpose.
+ */
+function isPoolsLaunch(launch: PlainMessage<Launch>): boolean {
+  return POOLS_LAUNCHPAD_MECHANISM_IDS.includes(launch.launchpadId)
+}
 
 /** DOM id of the launches table section, used as the trending "View all" scroll target. */
 const LAUNCHES_TABLE_SECTION_ID = 'launches-table-section'
@@ -254,11 +277,18 @@ export default function LaunchesPage(): JSX.Element {
   // silently thins the network-filter options, so log it.
   const { launches: allLaunches, error: allLaunchesError } = useLaunches({ chainIds: allowedNetworkChainIds })
   useLogFeedError(allLaunchesError, 'networkOptionsFeed')
-  // Dedicated Uniswap CCA (Robinhood Chain) feed for the hero marquee — the aggregate feed doesn't
-  // surface quick launches, so request the launchpad directly. A failure just empties the marquee,
-  // so log it.
-  const { launches: ccaLaunches, error: ccaLaunchesError } = useLaunches({ launchpadId: UNISWAP_CCA_LAUNCHPAD_ID })
-  useLogFeedError(ccaLaunchesError, 'heroFeed')
+  // Dedicated Robinhood Chain feed for the hero marquee, requested with the same params as the
+  // Trending tab Pools renders: the `pools` group (both launch mechanisms), the chain pinned, and
+  // the server's TRENDING ranking, which backfills its page by 24h volume so the page is never
+  // thin. Asking CCA-only, newest-first for 25 rows was what starved the marquee.
+  // A failure just empties the marquee, so log it.
+  const { launches: poolsLaunches, error: poolsLaunchesError } = useLaunches({
+    launchpadIds: [POOLS_LAUNCHPAD_GROUP_ID],
+    chainIds: [UniverseChainId.Robinhood],
+    sortBy: LaunchesOrderBy.TRENDING,
+    pageSize: HERO_PAGE_SIZE,
+  })
+  useLogFeedError(poolsLaunchesError, 'heroFeed')
   // Trending is its own backend-driven feed: the server's TRENDING ranking (momentum-scored, gated
   // on FDV / 1h price change / distinct 1h buyers), independent of the active table filters but
   // still scoped to the surface's allowed chains. Age-agnostic, so it takes no recency window.
@@ -292,21 +322,20 @@ export default function LaunchesPage(): JSX.Element {
     [trendingLaunches, launchpadById, auctionAddressByToken],
   )
 
-  // Robinhood Chain quick launches feed the hero marquee (from the dedicated CCA request). The CCA
-  // launchpad spans multiple chains, so scope it to the Robinhood chain to match the hero copy.
-  // The launchpad is re-checked client-side: a feed that ignores the launchpad_id param must not
-  // put non-CCA rows in the hero.
+  // Robinhood Chain Pools launches feed the hero marquee, in the server's trending order. Both
+  // scopes are re-checked client-side even though the request pins them: a feed that ignores the
+  // params must not put a third-party launchpad, or a token off the Robinhood chain the hero copy
+  // promises, into a Uniswap-branded marquee.
   const quickLaunches = useMemo(
     () =>
       toLaunchItems({
-        launches: ccaLaunches.filter(
-          (launch) =>
-            launch.launchpadId === UNISWAP_CCA_LAUNCHPAD_ID && launch.token?.chainId === UniverseChainId.Robinhood,
+        launches: poolsLaunches.filter(
+          (launch) => isPoolsLaunch(launch) && launch.token?.chainId === UniverseChainId.Robinhood,
         ),
         launchpadById,
         auctionAddressByToken,
       }),
-    [ccaLaunches, launchpadById, auctionAddressByToken],
+    [poolsLaunches, launchpadById, auctionAddressByToken],
   )
 
   const launchpadOptions = useMemo(

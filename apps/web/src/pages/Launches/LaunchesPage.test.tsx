@@ -367,16 +367,46 @@ describe('LaunchesPage', () => {
       })
     }
 
-    it('scopes the hero marquee to CCA Robinhood Chain rows even when the feed leaks others', () => {
+    /** The hero's request is the only one naming the `pools` group, so that's what identifies it. */
+    function findHeroCall(): Record<string, unknown> | undefined {
+      return mockUseLaunches.mock.calls.find(([params]) => params?.launchpadIds?.includes('pools'))?.[0]
+    }
+
+    it('requests the hero feed with the same params as the Pools Trending tab', () => {
       mockPromoFlags({ banner: true, teaser: false })
-      const quick = createLaunch({
+
+      renderLaunchesPage()
+
+      // Literals on purpose: asserting the request against the constants it is built from can't
+      // catch drift away from the Trending tab's shape, which is the whole point of this feed.
+      expect(findHeroCall()).toMatchObject({
+        launchpadIds: ['pools'],
+        chainIds: [UniverseChainId.Robinhood],
+        sortBy: LaunchesOrderBy.TRENDING,
+        pageSize: 100,
+      })
+      // The single-launchpad param is what scoped this feed to CCA-only and starved it.
+      expect(findHeroCall()?.launchpadId).toBeUndefined()
+    })
+
+    it('scopes the hero marquee to Pools Robinhood Chain rows even when the feed leaks others', () => {
+      mockPromoFlags({ banner: true, teaser: false })
+      const crowd = createLaunch({
         launchpadId: 'uniswap-cca',
         name: 'Quick Token',
         symbol: 'QUICK',
         chainId: UniverseChainId.Robinhood,
       })
-      // A row from another launchpad on the right chain (a feed that ignored the launchpad_id
-      // param) and a CCA row on the wrong chain — neither belongs in the hero.
+      // Instant launches ride the same `pools` group and belong in the marquee too — scoping the
+      // hero to CCA alone is what starved it.
+      const instant = createLaunch({
+        launchpadId: 'uniswap-bonding-curve',
+        name: 'Curve Token',
+        symbol: 'CURVEY',
+        chainId: UniverseChainId.Robinhood,
+      })
+      // A launchpad outside the Uniswap brand on the right chain (a feed that ignored the
+      // launchpad_ids param) and a Pools row on the wrong chain — neither belongs in the hero.
       const leaked = createLaunch({
         launchpadId: 'flaunch',
         name: 'Leak Token',
@@ -384,17 +414,18 @@ describe('LaunchesPage', () => {
         chainId: UniverseChainId.Robinhood,
       })
       const offChain = createLaunch({ launchpadId: 'uniswap-cca', name: 'Base Token', symbol: 'BSE' })
-      mockUseLaunches.mockImplementation((params?: { launchpadId?: string }) =>
-        params?.launchpadId === 'uniswap-cca'
-          ? mockLaunchesResult({ launches: [quick, leaked, offChain] })
+      mockUseLaunches.mockImplementation((params?: { launchpadIds?: string[] }) =>
+        params?.launchpadIds?.includes('pools')
+          ? mockLaunchesResult({ launches: [crowd, instant, leaked, offChain] })
           : mockLaunchesResult(),
       )
 
       renderLaunchesPage()
 
-      // The pill strip is rendered twice for the seamless loop, so the one admitted row shows twice.
+      // The pill strip is rendered twice for the seamless loop, so each admitted row shows twice.
       const hero = screen.getByTestId(TestID.LaunchesHero)
       expect(within(hero).getAllByText('Quick Token')).toHaveLength(2)
+      expect(within(hero).getAllByText('Curve Token')).toHaveLength(2)
       expect(within(hero).queryByText('Leak Token')).not.toBeInTheDocument()
       expect(within(hero).queryByText('Base Token')).not.toBeInTheDocument()
     })
