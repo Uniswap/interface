@@ -7,7 +7,6 @@ import type { ComponentProps, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { AdaptiveWebPopoverContent, Popover, TouchableArea, useIsTouchDevice } from 'ui/src'
-import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { useShadowPropsMedium } from 'ui/src/theme/shadows'
 import { MultichainAddressTransitionPanel } from 'uniswap/src/components/MultichainTokenDetails/MultichainAddressTransitionPanel'
 import { MULTICHAIN_CONTEXT_MENU_ADDRESSES_PANEL_MAX_HEIGHT } from 'uniswap/src/components/MultichainTokenDetails/multichainContextMenuLayout'
@@ -35,6 +34,28 @@ import { getNativeTokenDBAddress } from '~/utils/nativeTokens'
 import { TDP_MULTICHAIN_CHAIN_QUERY_VALUE } from '~/utils/params/chainQueryParam'
 
 const POPOVER_HORIZONTAL_PADDING = 16
+
+/**
+ * Tracks `document.documentElement.clientWidth` — the width of the visible content viewport,
+ * excluding any reserved vertical scrollbar gutter. Deliberately distinct from `window.innerWidth`
+ * (e.g. via `useDeviceDimensions`), which always includes that gutter and so overestimates available
+ * space whenever the OS/browser is set to always show scrollbars. See usage below for why the
+ * distinction matters here.
+ */
+function useViewportClientWidth(): number {
+  const [clientWidth, setClientWidth] = useState(() => document.documentElement.clientWidth)
+
+  useEffect(() => {
+    function handleResize(): void {
+      setClientWidth(document.documentElement.clientWidth)
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  return clientWidth
+}
 
 type TokenHoverCardProps = {
   children: ReactNode
@@ -65,7 +86,13 @@ export function TokenHoverCard({
   const popoverContentRef = useRef<HTMLDivElement>(null)
   const { t } = useTranslation()
   const shadowProps = useShadowPropsMedium()
-  const { fullWidth: windowWidth } = useDeviceDimensions()
+  // Intentionally NOT window.innerWidth (via useDeviceDimensions): innerWidth always includes the
+  // vertical scrollbar's reserved width, while the modal we're computing space around is centered
+  // within the actual visible content area (documentElement.clientWidth), which excludes it. With
+  // overlay/auto-hiding scrollbars the two happen to match, masking the bug; with always-visible
+  // (classic) scrollbars they diverge by the scrollbar's width, overestimating available space and
+  // producing an inconsistent gap between the modal edge and the popover.
+  const viewportWidth = useViewportClientWidth()
   const isTouchDevice = useIsTouchDevice()
   const navigate = useNavigate()
   const [isCopied, copyToClipboard] = useCopyClipboard()
@@ -223,10 +250,12 @@ export function TokenHoverCard({
   }
 
   // Constrain content width so the popover fits with a viewport edge gap equal to the width offset (8px on each side).
-  // Available space: (windowWidth - containerWidth) / 2, minus the left margin, both inner paddings, and matching right gap.
+  // Available space: (viewportWidth - containerWidth) / 2, minus the left margin, both inner paddings, and matching right gap.
+  // Uses viewportWidth (documentElement.clientWidth), not window.innerWidth, so this stays correct when the
+  // OS/browser always reserves a scrollbar gutter — see useViewportClientWidth above.
   const maxContentWidth =
     containerWidth !== undefined
-      ? (windowWidth - containerWidth) / 2 - (widthOffset ?? 0) * 2 - POPOVER_HORIZONTAL_PADDING * 2
+      ? (viewportWidth - containerWidth) / 2 - (widthOffset ?? 0) * 2 - POPOVER_HORIZONTAL_PADDING * 2
       : undefined
 
   return (
