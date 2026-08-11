@@ -43,6 +43,9 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
     if (supportedURI?.type === URIType.Address) {
       onSelectRecipient(supportedURI.value)
       onClose()
+    } else if (supportedURI?.type === URIType.ERC681) {
+      onSelectRecipient(supportedURI.value.recipient)
+      onClose()
     } else {
       Alert.alert(t('qrScanner.recipient.error.title'), t('qrScanner.recipient.error.message'), [
         {

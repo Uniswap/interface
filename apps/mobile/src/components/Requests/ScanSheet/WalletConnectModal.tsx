@@ -30,7 +30,10 @@ import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { UwULinkRequest } from 'uniswap/src/types/walletConnect'
+import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { logger } from 'utilities/src/logger/logger'
+import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
+import { getSendPrefilledState } from 'wallet/src/features/transactions/send/getSendPrefilledState'
 import { useContractManager, useProviderManager } from 'wallet/src/features/wallet/context'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
@@ -51,6 +54,7 @@ export function WalletConnectModal({
   const [currentScreenState, setCurrentScreenState] = useState<ScannerModalState>(initialScreenState)
   const [shouldFreezeCamera, setShouldFreezeCamera] = useState(false)
   const { preload, navigate } = useEagerExternalProfileRootNavigation()
+  const { navigateToSend } = useWalletNavigation()
   const dispatch = useDispatch()
   const isUwULinkEnabled = useFeatureFlag(FeatureFlags.UwULink)
   const isScantasticEnabled = useFeatureFlag(FeatureFlags.Scantastic)
@@ -102,6 +106,24 @@ export function WalletConnectModal({
         setShouldFreezeCamera(true)
         await preload(supportedURI.value)
         await navigate(supportedURI.value, onClose)
+        return
+      }
+
+      if (supportedURI.type === URIType.ERC681) {
+        setShouldFreezeCamera(true)
+        const baseState = getSendPrefilledState({
+          chainId: supportedURI.value.chainId,
+          currencyAddress: supportedURI.value.tokenAddress,
+        })
+        const initialState: TransactionState = {
+          ...baseState,
+          recipient: supportedURI.value.recipient,
+          showRecipientSelector: false,
+          exactAmountToken: supportedURI.value.formattedAmount ?? '',
+          isFiatInput: false,
+        }
+        navigateToSend({ initialState })
+        onClose()
         return
       }
 
@@ -219,6 +241,7 @@ export function WalletConnectModal({
       t,
       preload,
       navigate,
+      navigateToSend,
       onClose,
       dispatch,
       uwuLinkContractAllowlist,
