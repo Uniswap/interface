@@ -27,11 +27,21 @@ const useTraceProperties = (): {
   )
 }
 
-export const SwapFormButtonTrace = ({ children }: { children: React.ReactNode }): JSX.Element => {
+export const SwapFormButtonTrace = ({
+  children,
+  promptWebFORNudge,
+}: {
+  children: React.ReactNode
+  promptWebFORNudge: boolean
+}): JSX.Element => {
   const traceProperties = useTraceProperties()
 
   return (
-    <Trace logPress properties={traceProperties} element={ElementName.SwapReview}>
+    <Trace
+      logPress
+      properties={traceProperties}
+      element={promptWebFORNudge ? ElementName.AddFundsToSwap : ElementName.SwapReview}
+    >
       {children}
     </Trace>
   )

@@ -136,6 +136,7 @@ export enum ElementName {
   FiatOnRampLearnMoreLink = 'fiat-on-ramp-learn-more-link',
   FiatOnRampTokenSelector = 'fiat-on-ramp-token-selector',
   FiatOnRampWidgetButton = 'fiat-on-ramp-widget-button',
+  AddFundsToSwap = 'add-funds-to-swap',
   ForEmptyStateBuy = 'for-empty-state-buy',
   ForEmptyStateCEXTransfer = 'for-empty-state-cex-transfer',
   ForEmptyStateReceive = 'for-empty-state-receive',

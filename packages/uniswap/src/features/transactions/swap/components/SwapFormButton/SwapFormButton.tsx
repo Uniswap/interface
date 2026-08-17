@@ -77,7 +77,7 @@ export const SwapFormButton = memo(function SwapFormButton({ tokenColor }: { tok
 
   return (
     <Flex alignItems="center" gap={isShortMobileDevice ? '$spacing8' : '$spacing16'}>
-      <SwapFormButtonTrace>
+      <SwapFormButtonTrace promptWebFORNudge={promptWebFORNudge}>
         <Flex row alignSelf="stretch">
           <Button
             variant={buttonVariant}
