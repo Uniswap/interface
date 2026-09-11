@@ -1,0 +1,13 @@
+{
+  "name": "@universe/uniswap-nx",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Local stub: upstream's public repo omits tools/uniswap-nx but package.json lists it as a workspace. Only nx generators reference it; the vite dev server does not.",
+  "nx": {
+    "targets": {
+      "typecheck:workspace": {
+        "command": "echo 'typecheck:workspace skipped: tools/uniswap-nx is a stub in this fork'"
+      }
+    }
+  }
+}

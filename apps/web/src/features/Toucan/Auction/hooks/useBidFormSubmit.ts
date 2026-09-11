@@ -17,6 +17,7 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { zeroAddress } from '~/chains'
 import { getAuctionBidBaseAnalyticsProperties } from '~/features/Toucan/Auction/analytics'
 import { useAuctionStore, useAuctionStoreActions } from '~/features/Toucan/Auction/store/useAuctionStore'
+import { encodeSubmitBidCalldata, ZKPASSPORT_ONCHAIN_BIDS } from '~/features/Toucan/ZkPassport/onchainBid'
 import { useToucanSubmitBid } from '~/hooks/useToucanSubmitBid'
 
 export interface PreparedBidTransaction {
@@ -124,7 +125,10 @@ export function useBidFormSubmit({
   const { evmAccount } = useWallet()
   const trace = useTrace()
   const isCentralizedPricesEnabled = useFeatureFlag(FeatureFlags.CentralizedPrices)
-  const preparedBidRef = useRef<{ signature: string; data: PreparedBidTransaction } | null>(null)
+  const preparedBidRef = useRef<{
+    signature: string
+    data: PreparedBidTransaction
+  } | null>(null)
   const [submissionError, setSubmissionError] = useState<Error | undefined>(undefined)
 
   // Store actions for optimistic bid management
@@ -178,7 +182,9 @@ export function useBidFormSubmit({
   })
 
   const prepareTransaction = useEvent(async (): Promise<PreparedBidTransaction | undefined> => {
-    const { sanitizedQ96, sanitizedDisplayValue, error } = evaluateMaxPrice({ shouldAutoCorrectMin: true })
+    const { sanitizedQ96, sanitizedDisplayValue, error } = evaluateMaxPrice({
+      shouldAutoCorrectMin: true,
+    })
 
     if (error) {
       setMaxPriceError(error)
@@ -215,21 +221,34 @@ export function useBidFormSubmit({
     }
 
     try {
-      const response = await submitBidMutation.mutateAsync({
-        maxPrice: sanitizedQ96.toString(),
-        amount: amountRaw.toString(),
-        walletAddress: accountAddress,
-        auctionContractAddress: auctionContractAddress.toLowerCase(),
-        chainId: chainId as ChainId,
-      })
+      let bidCalldata: string
+      let requestId: string
+      if (ZKPASSPORT_ONCHAIN_BIDS) {
+        // CCA bidding is a permissionless direct contract call; encoding
+        // locally lets deployments without liquidity-backend access bid.
+        bidCalldata = encodeSubmitBidCalldata({
+          maxPriceQ96: sanitizedQ96,
+          amountRaw,
+          owner: accountAddress,
+        })
+        requestId = crypto.randomUUID()
+      } else {
+        const response = await submitBidMutation.mutateAsync({
+          maxPrice: sanitizedQ96.toString(),
+          amount: amountRaw.toString(),
+          walletAddress: accountAddress,
+          auctionContractAddress: auctionContractAddress.toLowerCase(),
+          chainId: chainId as ChainId,
+        })
 
-      if (!response.bid || !response.bid.data || !response.bid.to) {
-        handleBidSubmitFailure(new Error('Received incomplete bid response'))
-        return undefined
+        if (!response.bid || !response.bid.data || !response.bid.to) {
+          handleBidSubmitFailure(new Error('Received incomplete bid response'))
+          return undefined
+        }
+
+        bidCalldata = response.bid.data
+        requestId = response.requestId
       }
-
-      const bidCalldata = response.bid.data
-      const requestId = response.requestId
       const currencyLower = (currency ?? zeroAddress).toLowerCase()
 
       if (!evmAccount || !isSignerMnemonicAccountDetails(evmAccount)) {

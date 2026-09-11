@@ -1,6 +1,7 @@
 //! tamagui-ignore
 // tamagui-ignore
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { VerifyWithZKPassportButton, type VerificationOptions } from '@zkpassport/ui/react-button'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -39,6 +40,7 @@ import { AuctionProgressState } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore, useAuctionStoreActions } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { getRequiredTestnetMode } from '~/features/Toucan/Shared/getRequiredTestnetMode'
 import { InlineAlertBanner } from '~/features/Toucan/Shared/InlineAlertBanner'
+import { useZkPassportGate } from '~/features/Toucan/ZkPassport/useZkPassportGate'
 
 const VerticalLineContainer = styled(Flex, {
   width: '100%',
@@ -82,6 +84,7 @@ export function BidForm({ onInputChange, onBidSubmitted }: BidFormProps): JSX.El
 
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
   const [isKycInterstitialModalOpen, setIsKycInterstitialModalOpen] = useState(false)
+  const [isZkInterstitialModalOpen, setIsZkInterstitialModalOpen] = useState(false)
   const [isKycFailedModalOpen, setIsKycFailedModalOpen] = useState(false)
   const [showTokenWarningModal, setShowTokenWarningModal] = useState(false)
 
@@ -139,16 +142,25 @@ export function BidForm({ onInputChange, onBidSubmitted }: BidFormProps): JSX.El
     currentBlockNumber,
   })
 
+  const zkGate = useZkPassportGate({
+    chainId,
+    validationHook,
+    walletAddress: accountAddress,
+  })
+  const zkNeedsVerify = zkGate.isGated && isWalletConnected && !zkGate.isEligible
+
   const { showDisabledState, shouldShowWarningBanner, shouldDisableBidForm } = useBidFormWarningState({
     chainId,
     currency,
     auctionProgressState,
     userBids,
-    validationHook,
+    // A ZKPassport hook is resolved entirely on-chain, so it is neither an
+    // unsupported validation hook nor a verify-wallet backend concern.
+    validationHook: zkGate.isGated ? undefined : validationHook,
     // Only treat KYC as an unsupported-auction signal once a wallet is connected;
     // otherwise the disabled verify-wallet query is misread as an error and surfaces
     // the warning banner instead of the connect-wallet CTA on the action button.
-    validationError: isWalletConnected && kycStatus.isError,
+    validationError: !zkGate.isGated && isWalletConnected && kycStatus.isError,
   })
 
   const handleButtonPress = (): void => {
@@ -160,7 +172,14 @@ export function BidForm({ onInputChange, onBidSubmitted }: BidFormProps): JSX.El
       dispatch(setIsTestnetModeEnabled(requiredTestnetMode))
       return
     }
-    if (kycStatus.canBid) {
+    if (zkNeedsVerify) {
+      setIsZkInterstitialModalOpen(true)
+      return
+    }
+    // A ZKPassport-gated auction is validated by its on-chain hook, so the
+    // backend verify-wallet outcome (unreachable from third-party origins)
+    // must not block a bidder who already passed the zk gate.
+    if (zkGate.isGated || kycStatus.canBid) {
       handleReviewBidClick()
     } else if (kycStatus.onKycAction) {
       kycStatus.onKycAction()
@@ -177,17 +196,24 @@ export function BidForm({ onInputChange, onBidSubmitted }: BidFormProps): JSX.El
     if (needsTestnetModeSwitch) {
       return requiredTestnetMode ? t('toucan.action.enableTestnetMode') : t('toucan.action.disableTestnetMode')
     }
+    if (zkNeedsVerify) {
+      return t('toucan.zkpassport.verify')
+    }
     return (kycStatus.kycButtonLabel ?? showDisabledState)
       ? t('toucan.auction.bidForm.auctionConcluded')
       : t('toucan.bidForm.reviewBid')
   })()
 
   // The testnet-mode-switch CTA stays tappable regardless of the bid inputs, since switching mode is
-  // always a valid action and is a prerequisite to bidding at all.
+  // always a valid action and is a prerequisite to bidding at all. The same goes for the ZKPassport
+  // verify CTA: it opens the verification popup, so the bid inputs don't constrain it.
   const buttonDisabled =
     isGeoRestricted ||
-    (isWalletConnected && !needsTestnetModeSwitch
-      ? submitState.isDisabled || !isAuctionInProgress || shouldDisableBidForm || kycStatus.kycButtonDisabled
+    (isWalletConnected && !needsTestnetModeSwitch && !zkNeedsVerify
+      ? submitState.isDisabled ||
+        !isAuctionInProgress ||
+        shouldDisableBidForm ||
+        (!zkGate.isGated && kycStatus.kycButtonDisabled)
       : false)
 
   const shouldShowSwapBanner =
@@ -343,6 +369,16 @@ export function BidForm({ onInputChange, onBidSubmitted }: BidFormProps): JSX.El
         onClose={() => setIsKycInterstitialModalOpen(false)}
         onContinue={kycStatus.onKycAction}
       />
+      <KycInterstitialModal
+        isOpen={isZkInterstitialModalOpen}
+        onClose={() => setIsZkInterstitialModalOpen(false)}
+        actionSlot={
+          <ZkVerifyAction verifyProps={zkGate.verifyProps} onVerified={() => setIsZkInterstitialModalOpen(false)} />
+        }
+        providerName="ZKPassport"
+        providerTermsUrl="https://zkpassport.id/terms"
+        providerPrivacyUrl="https://zkpassport.id/privacy"
+      />
       <KycFailedModal isOpen={isKycFailedModalOpen} onClose={() => setIsKycFailedModalOpen(false)} />
       {shouldShowTokenWarning && token && (
         <TokenWarningModal
@@ -354,5 +390,31 @@ export function BidForm({ onInputChange, onBidSubmitted }: BidFormProps): JSX.El
         />
       )}
     </Flex>
+  )
+}
+
+/**
+ * Branded verify button for the interstitial's action slot. Renders nothing
+ * until the gate has resolved the hook's policy into verify options, which is
+ * guaranteed by the time the interstitial can open.
+ */
+function ZkVerifyAction({
+  verifyProps,
+  onVerified,
+}: {
+  verifyProps?: VerificationOptions
+  onVerified: () => void
+}): JSX.Element | null {
+  if (!verifyProps) {
+    return null
+  }
+  return (
+    <VerifyWithZKPassportButton
+      {...verifyProps}
+      onSuccess={(response) => {
+        onVerified()
+        return verifyProps.onSuccess?.(response)
+      }}
+    />
   )
 }

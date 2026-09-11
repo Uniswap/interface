@@ -11,6 +11,8 @@ interface KycInterstitialModalProps {
   isOpen: boolean
   onClose: () => void
   onContinue?: () => void
+  /** Replaces the default continue button, e.g. with a provider-branded one */
+  actionSlot?: React.ReactNode
   providerName?: string
   providerTermsUrl?: string
   providerPrivacyUrl?: string
@@ -20,6 +22,7 @@ export function KycInterstitialModal({
   isOpen,
   onClose,
   onContinue,
+  actionSlot,
   providerName = 'Predicate',
   providerTermsUrl = 'https://predicate.io/terms-of-service',
   providerPrivacyUrl = 'https://predicate.io/privacy-policy',
@@ -68,7 +71,8 @@ export function KycInterstitialModal({
         </Flex>
 
         <Flex gap="$spacing8" width="100%">
-          {onContinue && (
+          {actionSlot}
+          {!actionSlot && onContinue && (
             <Button
               fill={false}
               variant="default"

@@ -15,6 +15,7 @@
     "sitemap:generate": "nx sitemap:generate web",
     "start": "nx start web",
     "dev": "nx dev web",
+    "zkpassport:link-ui": "bun scripts/zkpassport-ui-link.ts",
     "build:production": "nx build web -c production",
     "build:staging": "nx build web -c staging",
     "build:e2e": "nx build web -c e2e",

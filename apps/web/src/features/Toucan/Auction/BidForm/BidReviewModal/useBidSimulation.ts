@@ -3,6 +3,7 @@ import { useCallback, useRef, useState } from 'react'
 import { useSubmitBidMutation } from 'uniswap/src/data/apiClients/dataApiService/auctions/useSubmitBidMutation'
 import { logger } from 'utilities/src/logger/logger'
 import type { PreparedBidTransaction } from '~/features/Toucan/Auction/hooks/useBidFormSubmit'
+import { ZKPASSPORT_ONCHAIN_BIDS } from '~/features/Toucan/ZkPassport/onchainBid'
 
 export enum BidSimulationErrorType {
   BELOW_CLEARING_PRICE = 'BELOW_CLEARING_PRICE',
@@ -118,15 +119,21 @@ export function useBidSimulation({
     setSimulationError(undefined)
 
     try {
-      await submitBidMutation.mutateAsync({
-        maxPrice: preparedBid.info.maxPriceQ96,
-        amount: preparedBid.info.amountRaw,
-        walletAddress: accountAddress,
-        auctionContractAddress: auctionContractAddress.toLowerCase(),
-        chainId: chainId as ChainId,
-        // TODO | Toucan -- determine why this is returning error with true set
-        simulateTransaction: false,
-      })
+      // On-chain bids skip the backend dry-run: the calldata is encoded
+      // locally, the CCA contract enforces price validity, and the wallet's
+      // gas estimation surfaces reverts before signing — while the liquidity
+      // backend is CORS-blocked for third-party origins.
+      if (!ZKPASSPORT_ONCHAIN_BIDS) {
+        await submitBidMutation.mutateAsync({
+          maxPrice: preparedBid.info.maxPriceQ96,
+          amount: preparedBid.info.amountRaw,
+          walletAddress: accountAddress,
+          auctionContractAddress: auctionContractAddress.toLowerCase(),
+          chainId: chainId as ChainId,
+          // TODO | Toucan -- determine why this is returning error with true set
+          simulateTransaction: false,
+        })
+      }
 
       // oxlint-disable-next-line typescript/no-unnecessary-condition -- ref may be set during await
       if (isAbortedRef.current) {

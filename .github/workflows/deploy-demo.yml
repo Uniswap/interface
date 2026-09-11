@@ -1,0 +1,81 @@
+# Builds the web app and ships it to Vercel as a prebuilt deployment.
+# Lives only on the ZKPassport demo branch; requires repo secrets
+# VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID and the repo variable
+# ZKPASSPORT_POPUP_URL. The optional repo variable
+# ZKPASSPORT_ATTEST_REGISTRY_SEPOLIA overrides the registry baked into
+# apps/web ZkPassport/config.ts without a commit (set it, then re-run
+# this workflow).
+name: Deploy demo to Vercel
+
+on:
+  push:
+    branches: [martin/zkpassport-demo]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-demo
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.14
+
+      - name: Check required configuration
+        env:
+          POPUP_URL: ${{ vars.ZKPASSPORT_POPUP_URL }}
+        run: |
+          test -n "$POPUP_URL" || { echo "Repo variable ZKPASSPORT_POPUP_URL is not set"; exit 1; }
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      # Values here are not secrets: a placeholder WalletConnect id (extension
+      # wallets work without a real one), blanked Privy ids so the provider is
+      # skipped, and the public demo URLs.
+      - name: Write env overrides
+        working-directory: apps/web
+        env:
+          POPUP_URL: ${{ vars.ZKPASSPORT_POPUP_URL }}
+          ATTEST_REGISTRY: ${{ vars.ZKPASSPORT_ATTEST_REGISTRY_SEPOLIA }}
+        run: |
+          cat > .env.override <<EOF
+          WALLETCONNECT_PROJECT_ID="walletconnect_project_id"
+          PRIVY_APP_ID=""
+          PRIVY_CLIENT_ID=""
+          ENABLE_ENTRY_GATEWAY_PROXY="true"
+          ZKPASSPORT_ONCHAIN_BIDS="true"
+          ZKPASSPORT_POPUP_URL="$POPUP_URL"
+          EOF
+          # An empty define would win over the ?? fallback in config.ts, so
+          # only write the registry override when the variable is set.
+          if [ -n "$ATTEST_REGISTRY" ]; then
+            echo "ZKPASSPORT_ATTEST_REGISTRY_SEPOLIA=\"$ATTEST_REGISTRY\"" >> .env.override
+          fi
+
+      - name: Build
+        env:
+          SKIP_CONFIG_PULL: "true"
+        run: bunx nx run @universe/web:build:vercel
+
+      - name: Inject basic-auth middleware
+        run: node .github/scripts/inject-basic-auth.mjs apps/web/.vercel/output
+
+      - name: Deploy
+        working-directory: apps/web
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: bunx vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN"

@@ -15,23 +15,43 @@
   "targetDefaults": {
     "prepare": {
       "cache": true,
-      "syncGenerators": ["@universe/uniswap-nx:tsconfig-sync"]
+      "syncGenerators": [
+        "@universe/uniswap-nx:tsconfig-sync"
+      ]
     },
     "config:pull": {
-      "dependsOn": ["^prepare"],
+      "dependsOn": [
+        "^prepare"
+      ],
       "cache": true,
       "inputs": [
-        { "env": "CONFIG_ENV" },
-        { "env": "SKIP_CONFIG_PULL" },
-        { "runtime": "date -u +%Y-%m-%dT%H" },
+        {
+          "env": "CONFIG_ENV"
+        },
+        {
+          "env": "SKIP_CONFIG_PULL"
+        },
+        {
+          "runtime": "date -u +%Y-%m-%dT%H"
+        },
         "ciCacheBust"
       ],
-      "outputs": ["{projectRoot}/.env"]
+      "outputs": [
+        "{projectRoot}/.env"
+      ]
     },
     "build:production": {
-      "dependsOn": ["^prepare", "prepare"],
-      "inputs": ["dependencies", "production"],
-      "outputs": ["{projectRoot}/build"],
+      "dependsOn": [
+        "^prepare",
+        "prepare"
+      ],
+      "inputs": [
+        "dependencies",
+        "production"
+      ],
+      "outputs": [
+        "{projectRoot}/build"
+      ],
       "cache": true
     },
     "typecheck": {
@@ -39,8 +59,13 @@
       "options": {
         "cwd": "{projectRoot}"
       },
-      "syncGenerators": ["@universe/uniswap-nx:tsconfig-sync"],
-      "dependsOn": ["^prepare", "prepare"],
+      "syncGenerators": [
+        "@universe/uniswap-nx:tsconfig-sync"
+      ],
+      "dependsOn": [
+        "^prepare",
+        "prepare"
+      ],
       "inputs": [
         "{workspaceRoot}/package.json",
         "{workspaceRoot}/config/tsconfig/*",
@@ -54,7 +79,9 @@
           "dependentTasksOutputFiles": "**/*.d.ts"
         }
       ],
-      "outputs": ["{workspaceRoot}/dist/out-tsc/{projectRoot}"],
+      "outputs": [
+        "{workspaceRoot}/dist/out-tsc/{projectRoot}"
+      ],
       "cache": true
     },
     "format:check": {
@@ -63,7 +90,10 @@
         "cwd": "{projectRoot}"
       },
       "cache": true,
-      "inputs": ["formattableFiles", "lintConfig"]
+      "inputs": [
+        "formattableFiles",
+        "lintConfig"
+      ]
     },
     "format": {
       "command": "oxfmt --threads=2 -c $NX_WORKSPACE_ROOT/.oxfmtrc.json .",
@@ -71,70 +101,128 @@
         "cwd": "{projectRoot}"
       },
       "cache": true,
-      "inputs": ["formattableFiles", "lintConfig"]
+      "inputs": [
+        "formattableFiles",
+        "lintConfig"
+      ]
     },
     "lint:oxlint": {
       "command": "oxlint --threads=2 -c oxlint.config.ts {projectRoot}",
-      "dependsOn": ["prepare"],
+      "dependsOn": [
+        "prepare"
+      ],
       "cache": true,
-      "inputs": ["sourceFiles", "lintConfig"]
+      "inputs": [
+        "sourceFiles",
+        "lintConfig"
+      ]
     },
     "lint:oxlint:fix": {
       "command": "oxlint --fix --threads=2 -c oxlint.config.ts {projectRoot}",
-      "dependsOn": ["prepare"],
+      "dependsOn": [
+        "prepare"
+      ],
       "cache": false
     },
     "lint:oxlint:fast": {
       "command": "ENABLE_FAST_LINT=true oxlint --threads=2 -c oxlint.config.ts {projectRoot}",
-      "dependsOn": ["prepare"],
+      "dependsOn": [
+        "prepare"
+      ],
       "cache": true,
-      "inputs": ["sourceFiles", "lintConfig"]
+      "inputs": [
+        "sourceFiles",
+        "lintConfig"
+      ]
     },
     "lint": {
       "executor": "nx:noop",
-      "dependsOn": ["prepare", "lint:oxlint"]
+      "dependsOn": [
+        "prepare",
+        "lint:oxlint"
+      ]
     },
     "lint:fix": {
       "executor": "nx:noop",
-      "dependsOn": ["prepare", "lint:oxlint:fix"],
+      "dependsOn": [
+        "prepare",
+        "lint:oxlint:fix"
+      ],
       "cache": false
     },
     "check": {
       "executor": "nx:noop",
-      "dependsOn": ["prepare", "format", "typecheck", "lint", "check:deps:usage"]
+      "dependsOn": [
+        "prepare",
+        "format",
+        "typecheck",
+        "lint",
+        "check:deps:usage"
+      ]
     },
     "check:fast": {
       "executor": "nx:noop",
-      "dependsOn": ["prepare", "format", "typecheck", "lint:oxlint:fast"]
+      "dependsOn": [
+        "prepare",
+        "format",
+        "typecheck",
+        "lint:oxlint:fast"
+      ]
     },
     "check:deps:usage": {
       "command": "bun --preload ./scripts/silence-deprecation-warnings.js ./node_modules/.bin/knip-bun --include dependencies,devDependencies --no-progress --no-config-hints --workspace {projectRoot}",
       "options": {
         "cwd": "{workspaceRoot}"
       },
-      "inputs": ["sourceFiles", "{workspaceRoot}/knip.json", "{workspaceRoot}/bun.lock"],
+      "inputs": [
+        "sourceFiles",
+        "{workspaceRoot}/knip.json",
+        "{workspaceRoot}/bun.lock"
+      ],
       "cache": true
     },
     "test": {
-      "dependsOn": ["^prepare", "prepare"],
-      "inputs": ["sourceFiles", "^production", "{projectRoot}/**/*.test.*", "{projectRoot}/**/*.spec.*"],
+      "dependsOn": [
+        "^prepare",
+        "prepare"
+      ],
+      "inputs": [
+        "sourceFiles",
+        "^production",
+        "{projectRoot}/**/*.test.*",
+        "{projectRoot}/**/*.spec.*"
+      ],
       "cache": true
     },
     "start": {
-      "dependsOn": ["^prepare", "prepare"],
+      "dependsOn": [
+        "^prepare",
+        "prepare"
+      ],
       "cache": false
     },
     "dev": {
-      "dependsOn": ["^prepare", "prepare"],
+      "dependsOn": [
+        "^prepare",
+        "prepare"
+      ],
       "cache": false
     },
     "snapshots": {
-      "dependsOn": ["^prepare", "prepare"],
+      "dependsOn": [
+        "^prepare",
+        "prepare"
+      ],
       "cache": true
     },
     "graphql:schema": {
-      "inputs": ["{workspaceRoot}/.env.production", "{projectRoot}/graphql.*.ts"],
-      "outputs": ["{projectRoot}/schema.graphql"],
+      "inputs": [
+        "{workspaceRoot}/.env.production",
+        "{projectRoot}/graphql.*.ts"
+      ],
+      "outputs": [
+        "{projectRoot}/schema.graphql"
+      ],
       "cache": true
     },
     "graphql:generate": {
@@ -156,13 +244,20 @@
     }
   },
   "namedInputs": {
-    "production": ["storybookFiles", "!{projectRoot}/**/*.stories.tsx", "!{projectRoot}/**/*.stories.ts"],
+    "production": [
+      "storybookFiles",
+      "!{projectRoot}/**/*.stories.tsx",
+      "!{projectRoot}/**/*.stories.ts"
+    ],
     "lintConfig": [
       "{workspaceRoot}/.oxfmtrc.json",
       "{workspaceRoot}/oxlint.config.ts",
       "{workspaceRoot}/config/oxlint-plugins/**"
     ],
-    "mobileGlobals": ["{workspaceRoot}/metro.config.*", "{workspaceRoot}/Gemfile*"],
+    "mobileGlobals": [
+      "{workspaceRoot}/metro.config.*",
+      "{workspaceRoot}/Gemfile*"
+    ],
     "sourceFiles": [
       "dependencies",
       "tsConfig",
@@ -191,9 +286,23 @@
       "{projectRoot}/**/*.jsonc",
       "{projectRoot}/**/*.json5"
     ],
-    "dependencies": ["{workspaceRoot}/package.json", "{projectRoot}/package.json"],
-    "tsConfig": ["{workspaceRoot}/tsconfig.base.json", "{workspaceRoot}/tsconfig.json", "{projectRoot}/tsconfig*.json"],
-    "ciCacheBust": [{ "env": "GITHUB_RUN_ID" }, { "env": "GITHUB_RUN_ATTEMPT" }]
+    "dependencies": [
+      "{workspaceRoot}/package.json",
+      "{projectRoot}/package.json"
+    ],
+    "tsConfig": [
+      "{workspaceRoot}/tsconfig.base.json",
+      "{workspaceRoot}/tsconfig.json",
+      "{projectRoot}/tsconfig*.json"
+    ],
+    "ciCacheBust": [
+      {
+        "env": "GITHUB_RUN_ID"
+      },
+      {
+        "env": "GITHUB_RUN_ATTEMPT"
+      }
+    ]
   },
   "workspaceLayout": {
     "appsDir": "apps",
@@ -201,7 +310,10 @@
   },
   "sync": {
     "applyChanges": true,
-    "globalGenerators": ["@universe/uniswap-nx:tsconfig-sync"]
+    "globalGenerators": [],
+    "disabledTaskSyncGenerators": [
+      "@universe/uniswap-nx:tsconfig-sync"
+    ]
   },
   "parallel": 6,
   "defaultProject": "@universe/web",
