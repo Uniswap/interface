@@ -167,6 +167,28 @@ async function fetchPositionData({
   return data ? { title: data.title, image: data.image, url: requestUrl } : null
 }
 
+/**
+ * The UK path restriction, from whichever edge is in front: Cloudflare sets
+ * `x-blocked-paths: /` on GB, CloudFront sends `CloudFront-Viewer-Country`.
+ *
+ * CloudFront wins outright where present, never merged with the other.
+ * `x-blocked-paths` is an ordinary header any client can send, forwarded to
+ * the origin but absent from the cache key, so honouring it behind CloudFront
+ * would let one forged request cache the restricted page under an ordinary
+ * viewer's key for the 60s s-maxage. `CloudFront-Viewer-Country` is generated
+ * by CloudFront, unforgeable, and keyed on.
+ *
+ * `=== 'GB'` rather than an inverted test: an absent header must mean "not
+ * restricted", never "restrict everyone".
+ */
+function resolveBlockedPaths(c: Context): string | undefined {
+  const cloudfrontCountry = c.req.header('cloudfront-viewer-country')
+  if (cloudfrontCountry) {
+    return cloudfrontCountry === 'GB' ? '/' : undefined
+  }
+  return c.req.header('x-blocked-paths')
+}
+
 export async function metaTagInjectionMiddleware(c: Context, next: Next): Promise<Response> {
   const requestURL = new URL(c.req.url)
   const pathname = stripTrailingSlash(requestURL.pathname)
@@ -250,7 +272,7 @@ export async function metaTagInjectionMiddleware(c: Context, next: Next): Promis
       }
     }
 
-    const blockedPaths = c.req.header('x-blocked-paths')
+    const blockedPaths = resolveBlockedPaths(c)
     const metaTags = generateMetaTags(data, blockedPaths)
 
     const modifiedHtml = html.replace('</head>', `${metaTags}</head>`)
