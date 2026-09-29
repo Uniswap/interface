@@ -11,7 +11,7 @@ import {
   logAuctionDetailsErrorOnce,
   logMissingTokenTotalSupplyOnce,
 } from '~/features/Toucan/Auction/utils/auctionDetailsLogGuards'
-import { computePreBidEndBlock, ParsedAuctionStepLike } from '~/features/Toucan/Auction/utils/preBidEndBlock'
+import { computePreBidEndBlock, ParsedAuctionStepLike } from '~/features/Toucan/Auction/utils/emissionStartBlock'
 import { resolveAuctionTokenLogo } from '~/features/Toucan/Auction/utils/tokenMetadata'
 import { hasTokenTotalSupply } from '~/features/Toucan/Auction/utils/tokenTotalSupply'
 import { getAuctionMetadata } from '~/features/Toucan/Config/config'
