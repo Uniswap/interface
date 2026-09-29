@@ -4,9 +4,11 @@ import { Currency } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 import { calculateTokensLocked } from '~/features/Liquidity/charts/LiquidityChart/utils/calculateTokensLocked'
+import { getTickDataFingerprint } from '~/features/Liquidity/charts/LiquidityRangeInput/tickDataFingerprint'
 import { ChartEntry } from '~/features/Liquidity/charts/LiquidityRangeInput/types'
 import { usePoolActiveLiquidity } from '~/features/Liquidity/hooks/usePoolTickData'
 import { TickProcessed } from '~/features/Liquidity/utils/computeSurroundingTicks'
@@ -94,19 +96,27 @@ export function useDensityChartData({
     return newData
   }
 
+  // react-query hashes the key on every render, and the processed ticks are thousands of entries of
+  // JSBIs and SDK Prices, so keying on them directly cost ~0.5s per interaction on a deep pool. The key
+  // carries a fingerprint computed once per tick set instead, plus the pool state the formatter reads.
+  const dataFingerprint = useMemo(() => (data ? getTickDataFingerprint(data) : undefined), [data])
+
   const { data: formattedData } = useQuery(
     persistableQueryOptions({
       queryKey: [
         ReactQueryCacheKey.DensityChartData,
         poolId,
-        sdkCurrencies.TOKEN0,
-        sdkCurrencies.TOKEN1,
+        sdkCurrencies.TOKEN0 ? currencyId(sdkCurrencies.TOKEN0) : undefined,
+        sdkCurrencies.TOKEN1 ? currencyId(sdkCurrencies.TOKEN1) : undefined,
         feeAmount,
         priceInverted,
         version,
         chainId,
         tickSpacing,
-        data,
+        activeTick,
+        liquidity?.toString(),
+        sqrtPriceX96?.toString(),
+        dataFingerprint,
       ],
       queryFn: fetcher,
     }),

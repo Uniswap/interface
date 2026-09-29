@@ -17,6 +17,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { LPGeoRestrictionBanner } from '~/components/GeoRestriction/LPGeoRestrictionBanner'
 import { D3LiquidityRangeInput } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeInput'
 import { useDefaultInitialPrice } from '~/features/Liquidity/Create/hooks/useDefaultInitialPrice'
+import { usePoolDisplayCurrencies } from '~/features/Liquidity/Create/hooks/usePoolDisplayCurrencies'
 import { useTokenControlOptions } from '~/features/Liquidity/Create/hooks/useTokenControlOptions'
 import { PoolOutOfSyncError } from '~/features/Liquidity/Create/PoolOutOfSyncError'
 import { PoolParsingError } from '~/features/Liquidity/Create/PoolParsingError'
@@ -47,16 +48,16 @@ const InitialPriceInput = () => {
 
   const {
     creatingPoolOrPair,
-    currencies,
     protocolVersion,
     priceRangeState: { initialPrice, priceInverted, isInitialPriceDirty },
     setPriceRangeState,
   } = useCreateLiquidityContext()
+  const poolCurrencies = usePoolDisplayCurrencies()
 
   const { price: defaultInitialPrice, isLoading: isDefaultInitialPriceLoading } = useDefaultInitialPrice({
     currencies: {
-      [PositionField.TOKEN0]: currencies.display.TOKEN0,
-      [PositionField.TOKEN1]: currencies.display.TOKEN1,
+      [PositionField.TOKEN0]: poolCurrencies.TOKEN0,
+      [PositionField.TOKEN1]: poolCurrencies.TOKEN1,
     },
     // V2 create flow doesn't show the liquidity range chart so we always want
     // to get the default initial price for DisplayCurrentPrice in deposit step
@@ -90,7 +91,7 @@ const InitialPriceInput = () => {
     }
   }, [formattedDefaultInitialPrice, isInitialPriceDirty, setPriceRangeState])
 
-  const { baseCurrency, quoteCurrency } = getBaseAndQuoteCurrencies(currencies.display, priceInverted)
+  const { baseCurrency, quoteCurrency } = getBaseAndQuoteCurrencies(poolCurrencies, priceInverted)
   useEffect(() => {
     try {
       if (initialPrice && baseCurrency && quoteCurrency) {
@@ -106,7 +107,7 @@ const InitialPriceInput = () => {
     }
   }, [baseCurrency, quoteCurrency, initialPrice, priceInverted])
 
-  const { TOKEN0, TOKEN1 } = currencies.display
+  const { TOKEN0, TOKEN1 } = poolCurrencies
   const controlOptions = useTokenControlOptions([TOKEN0, TOKEN1], 'large')
 
   const handleSelectInitialPriceBaseToken = useCallback(
@@ -310,9 +311,10 @@ export const SelectPriceRangeStep = ({
     priceRangeState,
     setPriceRangeState,
   } = useCreateLiquidityContext()
+  const poolCurrencies = usePoolDisplayCurrencies()
 
-  const { TOKEN0, TOKEN1 } = currencies.display
-  const { baseCurrency, quoteCurrency } = getBaseAndQuoteCurrencies(currencies.display, priceRangeState.priceInverted)
+  const { TOKEN0, TOKEN1 } = poolCurrencies
+  const { baseCurrency, quoteCurrency } = getBaseAndQuoteCurrencies(poolCurrencies, priceRangeState.priceInverted)
 
   const controlOptions = useTokenControlOptions([TOKEN0, TOKEN1], 'small')
 

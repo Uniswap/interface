@@ -10,6 +10,7 @@ import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import type { PoolData } from '~/data/pools/poolData'
 import { CreatingPoolInfo } from '~/features/Liquidity/Create/CreatingPoolInfo'
 import { useDefaultInitialPrice } from '~/features/Liquidity/Create/hooks/useDefaultInitialPrice'
+import { usePoolDisplayCurrencies } from '~/features/Liquidity/Create/hooks/usePoolDisplayCurrencies'
 import { PositionFlowStep } from '~/features/Liquidity/Create/types'
 import { DisplayCurrentPrice } from '~/features/Liquidity/DisplayCurrentPrice'
 import { useSelectedFeeBreakdown } from '~/features/Liquidity/hooks/useSelectedFeeBreakdown'
@@ -46,10 +47,11 @@ export const EditSelectTokensStep = ({ poolData }: { poolData?: PoolData }) => {
     setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
   }, [resetDepositState, resetPriceRangeState, setStep])
 
+  const poolCurrencies = usePoolDisplayCurrencies()
   const { price: defaultInitialPrice } = useDefaultInitialPrice({
     currencies: {
-      [PositionField.TOKEN0]: display.TOKEN0,
-      [PositionField.TOKEN1]: display.TOKEN1,
+      [PositionField.TOKEN0]: poolCurrencies.TOKEN0,
+      [PositionField.TOKEN1]: poolCurrencies.TOKEN1,
     },
     skip: creatingPoolOrPair,
   })

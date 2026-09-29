@@ -19,6 +19,8 @@ import { VerifyIdentityModal } from '~/components/PermissionedPool/VerifyIdentit
 import { BlockedTokensErrorCallout } from '~/features/Liquidity/BlockedTokensErrorCallout'
 import { useBlockedTokens } from '~/features/Liquidity/Create/hooks/useBlockedTokens'
 import { useDefaultInitialPrice } from '~/features/Liquidity/Create/hooks/useDefaultInitialPrice'
+import { usePoolDisplayCurrencies } from '~/features/Liquidity/Create/hooks/usePoolDisplayCurrencies'
+import { useUnwrapNativeCurrencyToggles } from '~/features/Liquidity/Create/hooks/useUnwrapNativeCurrencyToggles'
 import { DepositInputForm } from '~/features/Liquidity/DepositInputForm'
 import { useUpdatedAmountsFromDependentAmount } from '~/features/Liquidity/hooks/useDependentAmountFallback'
 import { LowLPSlippageWarning } from '~/features/Liquidity/LowLPSlippageWarning'
@@ -76,10 +78,13 @@ export const DepositStep = () => {
   const { TOKEN0, TOKEN1 } = currencies.display
   const { exactField } = depositState
 
+  // The market price the user's initial price is checked against: the same pool-presentation pair the
+  // range step seeds `initialPrice` from, not the deposit form, so both sides share one baseline.
+  const poolCurrencies = usePoolDisplayCurrencies()
   const { price: defaultInitialPrice } = useDefaultInitialPrice({
     currencies: {
-      [PositionField.TOKEN0]: currencies.display.TOKEN0,
-      [PositionField.TOKEN1]: currencies.display.TOKEN1,
+      [PositionField.TOKEN0]: poolCurrencies.TOKEN0,
+      [PositionField.TOKEN1]: poolCurrencies.TOKEN1,
     },
     // V2 create flow doesn't show the liquidity range chart so we always want
     // to get the default initial price for DisplayCurrentPrice in deposit step
@@ -192,6 +197,8 @@ export const DepositStep = () => {
   // Blocks creation when deep-linked straight to this step with a blocked token, bypassing the select-tokens step.
   const { hasBlockedToken, blockedTokenSymbols } = useBlockedTokens(TOKEN0, TOKEN1)
 
+  const unwrapNativeCurrencyToggles = useUnwrapNativeCurrencyToggles()
+
   const verifyIdentityModalProps = useMemo(
     () =>
       showVerifyIdentity
@@ -246,6 +253,8 @@ export const DepositStep = () => {
         amount0Loading={requestLoading && exactField === PositionField.TOKEN1}
         amount1Loading={requestLoading && exactField === PositionField.TOKEN0}
         actualGasFee={preEstimatedGasFee}
+        token0UnderCardComponent={unwrapNativeCurrencyToggles.TOKEN0}
+        token1UnderCardComponent={unwrapNativeCurrencyToggles.TOKEN1}
       />
       <LowLPSlippageWarning
         isNativePool={Boolean(currencies.sdk.TOKEN0?.isNative || currencies.sdk.TOKEN1?.isNative)}

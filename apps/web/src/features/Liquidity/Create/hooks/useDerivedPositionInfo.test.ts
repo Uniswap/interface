@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { ChainId, PoolInformation } from '@uniswap/client-trading/dist/trading/v1/api_pb'
-import { CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, TICK_SPACINGS, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
@@ -525,6 +525,64 @@ describe('useDerivedPositionInfo', () => {
       result.current.refetchPoolData()
       expect(mockRefetch).toHaveBeenCalled()
     })
+  })
+})
+
+describe('useDerivedPositionInfo identity stability', () => {
+  const v3PositionState: PositionState = {
+    protocolVersion: ProtocolVersion.V3,
+    fee: {
+      feeAmount: FeeAmount.MEDIUM,
+      tickSpacing: TICK_SPACINGS[FeeAmount.MEDIUM],
+      isDynamic: false,
+    },
+    hook: undefined,
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockUseDefaultInitialPrice.mockReturnValue({ price: 1000, isLoading: false })
+    mockUsePermissionedSwapPair.mockReturnValue(NOT_PERMISSIONED)
+    mockUsePoolInfoQuery.mockReturnValue({
+      data: { pools: [mockV3PoolInformation] },
+      isLoading: false,
+      isFetched: true,
+      refetch: vi.fn(),
+    })
+  })
+
+  it('keeps the derived currencies and pool across a re-render with the same inputs', () => {
+    const inputs = { tokenA: ETH_MAINNET, tokenB: USDT }
+    const { result, rerender } = renderHook(
+      ({ currencyInputs }) => useDerivedPositionInfo(currencyInputs, v3PositionState),
+      { initialProps: { currencyInputs: inputs } },
+    )
+    const first = result.current as CreateV3PositionInfo
+
+    rerender({ currencyInputs: inputs })
+    const second = result.current as CreateV3PositionInfo
+
+    expect(second.currencies).toBe(first.currencies)
+    expect(second.pool).toBe(first.pool)
+  })
+
+  // The deposit step's "Add as ETH" toggle swaps a leg between native and wrapped. Only the display
+  // currency may change: the range chart's tick pipeline is keyed on the sdk legs and the pool, and
+  // must not recompute (or blank to a loader) for a deposit-form choice.
+  it('keeps the sdk legs and pool when a v3 leg flips between native and wrapped', () => {
+    const { result, rerender } = renderHook(
+      ({ currencyInputs }) => useDerivedPositionInfo(currencyInputs, v3PositionState),
+      { initialProps: { currencyInputs: { tokenA: ETH_MAINNET as Currency, tokenB: USDT as Currency } } },
+    )
+    const asNative = result.current as CreateV3PositionInfo
+    expect(asNative.currencies.display.TOKEN0).toBe(ETH_MAINNET)
+
+    rerender({ currencyInputs: { tokenA: ETH_MAINNET.wrapped, tokenB: USDT } })
+    const asWrapped = result.current as CreateV3PositionInfo
+
+    expect(asWrapped.currencies.display.TOKEN0).toBe(ETH_MAINNET.wrapped)
+    expect(asWrapped.currencies.sdk).toBe(asNative.currencies.sdk)
+    expect(asWrapped.pool).toBe(asNative.pool)
   })
 })
 

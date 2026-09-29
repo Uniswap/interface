@@ -1,6 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { Flex, Switch, Text } from '@universe/mycelium'
-import { useMemo } from 'react'
+import { Flex } from '@universe/mycelium'
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
@@ -10,6 +10,7 @@ import { DepositInputForm } from '~/features/Liquidity/DepositInputForm'
 import { useUpdatedAmountsFromDependentAmount } from '~/features/Liquidity/hooks/useDependentAmountFallback'
 import { LiquidityModalDetailRows } from '~/features/Liquidity/LiquidityModalDetailRows'
 import { LiquidityPositionInfo } from '~/features/Liquidity/LiquidityPositionInfo'
+import { UnwrapNativeCurrencyToggle } from '~/features/Liquidity/UnwrapNativeCurrencyToggle'
 import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
 import { useLPPermissionedGating } from '~/features/Liquidity/usePermissionedLP'
 import { canUnwrapCurrency } from '~/features/Liquidity/utils/currency'
@@ -120,22 +121,17 @@ export function IncreaseLiquidityForm() {
     }
   }
 
-  const UnwrapNativeCurrencyToggle = useMemo(() => {
-    return (
-      <Flex row justifyContent="space-between" alignItems="center">
-        <Text variant="body3" color="$neutral2">
-          {t('pool.addAs', { nativeWrappedSymbol: nativeCurrency.symbol ?? t('common.token') })}
-        </Text>
-        <Switch
-          id="add-as-weth"
-          checked={unwrapNativeCurrency}
-          // oxlint-disable-next-line no-shadow
-          onCheckedChange={() => setUnwrapNativeCurrency((unwrapNativeCurrency) => !unwrapNativeCurrency)}
-          variant="branded"
-        />
-      </Flex>
-    )
-  }, [nativeCurrency, t, unwrapNativeCurrency, setUnwrapNativeCurrency])
+  const toggleUnwrapNativeCurrency = useCallback(
+    () => setUnwrapNativeCurrency((prev) => !prev),
+    [setUnwrapNativeCurrency],
+  )
+  const unwrapNativeCurrencyToggle = (
+    <UnwrapNativeCurrencyToggle
+      nativeCurrency={nativeCurrency}
+      checked={unwrapNativeCurrency}
+      onCheckedChange={toggleUnwrapNativeCurrency}
+    />
+  )
 
   const requestLoading = Boolean(
     !dataFetchingError &&
@@ -163,8 +159,8 @@ export function IncreaseLiquidityForm() {
           deposit1Disabled={updatedDeposit1Disabled}
           amount0Loading={requestLoading && exactField === PositionField.TOKEN1} // check isRefetching instead
           amount1Loading={requestLoading && exactField === PositionField.TOKEN0}
-          token0UnderCardComponent={canUnwrap0 ? UnwrapNativeCurrencyToggle : undefined}
-          token1UnderCardComponent={canUnwrap1 ? UnwrapNativeCurrencyToggle : undefined}
+          token0UnderCardComponent={canUnwrap0 ? unwrapNativeCurrencyToggle : undefined}
+          token1UnderCardComponent={canUnwrap1 ? unwrapNativeCurrencyToggle : undefined}
           actualGasFee={preEstimatedGasFee}
         />
       </Flex>

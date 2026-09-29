@@ -81,12 +81,27 @@ export function useDerivedPositionInfo(
   const { protocolVersion } = state
   const { tokenA, tokenB } = currencyInputs
 
-  const sortedCurrencies = getSortedCurrenciesForProtocol({ a: tokenA, b: tokenB, protocolVersion })
+  // Memoized so the derived currencies, and everything keyed on them down to the range chart's tick
+  // pipeline, keep their identity across renders that don't touch the inputs.
+  const sortedCurrencies = useMemo(
+    () => getSortedCurrenciesForProtocol({ a: tokenA, b: tokenB, protocolVersion }),
+    [tokenA, tokenB, protocolVersion],
+  )
   const validCurrencyInput = validateCurrencyInput(sortedCurrencies)
 
   const token0 = getCurrencyWithWrap(sortedCurrencies.TOKEN0, protocolVersion)
   const token1 = getCurrencyWithWrap(sortedCurrencies.TOKEN1, protocolVersion)
   const protocol = getProtocols(protocolVersion)
+
+  // The legs a v2/v3 pool holds. `getWrappedTokenIfExists` returns the module-level wrapped token for a
+  // native input and the token itself otherwise, so flipping a leg between ETH and WETH (the deposit
+  // step's "Add as ETH" toggle) leaves these, and the pool and chart data built on them, untouched.
+  const wrappedToken0 = getWrappedTokenIfExists(sortedCurrencies.TOKEN0)
+  const wrappedToken1 = getWrappedTokenIfExists(sortedCurrencies.TOKEN1)
+  const wrappedCurrencies = useMemo(
+    () => ({ [PositionField.TOKEN0]: wrappedToken0, [PositionField.TOKEN1]: wrappedToken1 }),
+    [wrappedToken0, wrappedToken1],
+  )
 
   const isFeeValid = protocolVersion === ProtocolVersion.V2 ? true : state.fee !== undefined
   const isChainUnsupported = isUnsupportedLPChain(token0?.chainId, protocolVersion)
@@ -153,6 +168,36 @@ export function useDerivedPositionInfo(
   // didn't say" distinct from "the pool is genuinely empty".
   const poolHasNoActiveLiquidity = poolOrPair?.poolLiquidity === '0'
 
+  const hooks = poolOrPair?.hookAddress || ''
+  const v2Pair = useMemo(
+    () =>
+      protocolVersion === ProtocolVersion.V2
+        ? getSDKPoolFromPoolInformation({ poolOrPair, token0: wrappedToken0, token1: wrappedToken1, protocolVersion })
+        : undefined,
+    [protocolVersion, poolOrPair, wrappedToken0, wrappedToken1],
+  )
+  const v3Pool = useMemo(
+    () =>
+      protocolVersion === ProtocolVersion.V3
+        ? getSDKPoolFromPoolInformation({ poolOrPair, token0: wrappedToken0, token1: wrappedToken1, protocolVersion })
+        : undefined,
+    [protocolVersion, poolOrPair, wrappedToken0, wrappedToken1],
+  )
+  // v4 holds native and wrapped native as distinct currencies, so its pool follows the displayed legs.
+  const v4Pool = useMemo(
+    () =>
+      protocolVersion === ProtocolVersion.V4
+        ? getSDKPoolFromPoolInformation({
+            poolOrPair,
+            token0: sortedCurrencies.TOKEN0,
+            token1: sortedCurrencies.TOKEN1,
+            protocolVersion,
+            hooks,
+          })
+        : undefined,
+    [protocolVersion, poolOrPair, sortedCurrencies, hooks],
+  )
+
   return useMemo(() => {
     if (protocolVersion === ProtocolVersion.UNSPECIFIED) {
       return {
@@ -166,23 +211,13 @@ export function useDerivedPositionInfo(
     }
 
     if (protocolVersion === ProtocolVersion.V2) {
-      const pair = getSDKPoolFromPoolInformation({
-        poolOrPair,
-        token0: getWrappedTokenIfExists(sortedCurrencies.TOKEN0),
-        token1: getWrappedTokenIfExists(sortedCurrencies.TOKEN1),
-        protocolVersion,
-      })
-
       return {
         currencies: {
           display: sortedCurrencies,
-          sdk: {
-            [PositionField.TOKEN0]: getWrappedTokenIfExists(sortedCurrencies.TOKEN0),
-            [PositionField.TOKEN1]: getWrappedTokenIfExists(sortedCurrencies.TOKEN1),
-          },
+          sdk: wrappedCurrencies,
         },
         protocolVersion,
-        pair,
+        pair: v2Pair,
         protocolFee: poolOrPair?.protocolFee,
         creatingPoolOrPair,
         poolHasNoActiveLiquidity,
@@ -192,20 +227,10 @@ export function useDerivedPositionInfo(
     }
 
     if (protocolVersion === ProtocolVersion.V3) {
-      const v3Pool = getSDKPoolFromPoolInformation({
-        poolOrPair,
-        token0: getWrappedTokenIfExists(sortedCurrencies.TOKEN0),
-        token1: getWrappedTokenIfExists(sortedCurrencies.TOKEN1),
-        protocolVersion,
-      })
-
       return {
         currencies: {
           display: sortedCurrencies,
-          sdk: {
-            [PositionField.TOKEN0]: getWrappedTokenIfExists(sortedCurrencies.TOKEN0),
-            [PositionField.TOKEN1]: getWrappedTokenIfExists(sortedCurrencies.TOKEN1),
-          },
+          sdk: wrappedCurrencies,
         },
         protocolVersion,
         pool: v3Pool,
@@ -217,14 +242,6 @@ export function useDerivedPositionInfo(
         refetchPoolData,
       } satisfies CreateV3PositionInfo
     }
-
-    const v4Pool = getSDKPoolFromPoolInformation({
-      poolOrPair,
-      token0: sortedCurrencies.TOKEN0,
-      token1: sortedCurrencies.TOKEN1,
-      protocolVersion,
-      hooks: poolOrPair?.hookAddress || '',
-    })
 
     return {
       currencies: {
@@ -248,5 +265,9 @@ export function useDerivedPositionInfo(
     poolIsLoading,
     refetchPoolData,
     sortedCurrencies,
+    wrappedCurrencies,
+    v2Pair,
+    v3Pool,
+    v4Pool,
   ])
 }
