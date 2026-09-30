@@ -60,7 +60,7 @@ export function UnitagProfileForm({
   }, [])
 
   return (
-    <Flex fill gap="$spacing24" px={isExtensionApp ? '$none' : '$spacing16'} pt="$spacing16">
+    <Flex gap="$spacing24" px={isExtensionApp ? '$none' : '$spacing16'} pt="$spacing16">
       <Flex row>
         <Flex pr="$spacing24" pt="$spacing4" width={LABEL_WIDTH}>
           <Text color="$neutral2" variant="subheading1">

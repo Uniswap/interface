@@ -42,8 +42,8 @@ vi.mock('uniswap/src/components/modals/Modal', () => ({
 }))
 
 import { fireEvent, screen } from '@testing-library/react'
+import { TestID } from '@universe/test'
 import { VerifyIdentityBottomSheet } from 'uniswap/src/features/permissionedTokens/VerifyIdentityBottomSheet'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { renderWithTheme } from 'uniswap/src/test/renderWithTheme'
 import { CurrencyField } from 'uniswap/src/types/currency'
 

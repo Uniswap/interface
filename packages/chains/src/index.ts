@@ -1,4 +1,6 @@
 export { UniverseChainId, RPCType } from './rpc/types'
+export type { ChainMetadata } from './chainMetadata/chainMetadata'
+export { CHAIN_METADATA, getChainMetadata } from './chainMetadata/chainMetadata'
 export { Platform } from './platforms/types'
 export type {
   EVMUniverseChainId,

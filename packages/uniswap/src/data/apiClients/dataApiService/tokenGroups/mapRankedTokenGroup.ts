@@ -6,26 +6,37 @@ import type {
   RankedMultichainToken,
   TokenRankStats,
 } from '@uniswap/client-data-api/dist/data/v2/types_pb'
-import { sortRwaChainTokens } from 'uniswap/src/data/apiClients/dataApiService/rwa/rwaMappingUtils'
+import { mapAddressesToChainTokens } from 'uniswap/src/data/apiClients/dataApiService/rwa/rwaMappingUtils'
 import type {
-  ChainToken,
   IssuerToken,
   Rwa,
   RwaAggregatedMetrics,
   RwaSparkline,
 } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
+import {
+  getVolumeForOrderBy,
+  type VolumeOrderBy,
+} from 'uniswap/src/data/apiClients/dataApiService/utils/tokenRankStatsVolume'
 
 function mapSparkline(points: RankedMultichainToken['sparkline']): RwaSparkline {
   return { points: points.map((point) => ({ timestampS: Number(point.timestamp), value: point.value })) }
 }
 
-function mapGroupStats(stats: TokenRankStats | undefined, sparkline1d: RwaSparkline): RwaAggregatedMetrics {
+function mapGroupStats({
+  stats,
+  sparkline1d,
+  volumeOrderBy,
+}: {
+  stats: TokenRankStats | undefined
+  sparkline1d: RwaSparkline
+  volumeOrderBy: VolumeOrderBy
+}): RwaAggregatedMetrics {
   return {
     priceUsd: stats?.price ?? 0,
     priceChange1hPct: stats?.priceChange1h,
     priceChange24hPct: stats?.priceChange1d,
     marketCapUsd: stats?.marketCap,
-    volume24hUsd: stats?.volume1d ?? 0,
+    volume24hUsd: getVolumeForOrderBy(stats, volumeOrderBy) ?? 0,
     sparkline1d,
   }
 }
@@ -36,42 +47,38 @@ function mapMemberStats({
   token,
   stats,
   sparkline1d,
+  volumeOrderBy,
 }: {
   token: MultichainToken
   stats: TokenRankStats | undefined
   sparkline1d: RwaSparkline
+  volumeOrderBy: VolumeOrderBy
 }): RwaAggregatedMetrics {
   return {
     priceUsd: token.price?.spotUsd ?? stats?.price ?? 0,
     priceChange1hPct: token.price?.percentChange1h ?? stats?.priceChange1h,
     priceChange24hPct: token.price?.percentChange1d ?? stats?.priceChange1d,
     marketCapUsd: stats?.marketCap,
-    volume24hUsd: stats?.volume1d ?? 0,
+    volume24hUsd: getVolumeForOrderBy(stats, volumeOrderBy) ?? 0,
     sparkline1d,
   }
-}
-
-function mapChainTokens(addresses: Record<string, string>): ChainToken[] {
-  return sortRwaChainTokens(
-    Object.entries(addresses)
-      .map(([chainId, address]) => ({ chainId: Number(chainId), address }))
-      .filter((chainToken) => !Number.isNaN(chainToken.chainId)),
-  )
 }
 
 export function mapGroupMemberToIssuerToken({
   member,
   parentLogoUrl,
+  volumeOrderBy,
 }: {
   member: RankedMultichainToken
   parentLogoUrl: string
+  volumeOrderBy: VolumeOrderBy
 }): IssuerToken | null {
   const token = member.multichainToken
   if (!token?.symbol || !token.issuer?.id) {
     return null
   }
 
-  const chainTokens = mapChainTokens(token.addresses)
+  const chainTokens = mapAddressesToChainTokens(token.addresses)
   if (chainTokens.length === 0) {
     return null
   }
@@ -81,7 +88,8 @@ export function mapGroupMemberToIssuerToken({
     name: token.name,
     logoUrl: token.project?.logoUrl || parentLogoUrl,
     issuer: token.issuer.id,
-    ...mapMemberStats({ token, stats: member.stats, sparkline1d: mapSparkline(member.sparkline) }),
+    issuerDisplayName: token.issuer.displayName || undefined,
+    ...mapMemberStats({ token, stats: member.stats, sparkline1d: mapSparkline(member.sparkline), volumeOrderBy }),
     chainTokens,
   }
 }
@@ -89,9 +97,11 @@ export function mapGroupMemberToIssuerToken({
 export function mapRankedTokenGroup({
   rankedGroup,
   category,
+  volumeOrderBy,
 }: {
   rankedGroup: RankedTokenGroup
   category: RwaCategory
+  volumeOrderBy: VolumeOrderBy
 }): Rwa | null {
   const group = rankedGroup.group
   if (!group?.ticker) {
@@ -99,7 +109,7 @@ export function mapRankedTokenGroup({
   }
 
   const issuerTokens = rankedGroup.members
-    .map((member) => mapGroupMemberToIssuerToken({ member, parentLogoUrl: group.logoUrl }))
+    .map((member) => mapGroupMemberToIssuerToken({ member, parentLogoUrl: group.logoUrl, volumeOrderBy }))
     .filter((issuer): issuer is IssuerToken => issuer !== null)
 
   if (issuerTokens.length === 0) {
@@ -111,9 +121,10 @@ export function mapRankedTokenGroup({
 
   return {
     symbol: group.ticker,
-    name: group.displayName,
+    // Rows render this with no further fallback, so an empty proto3 default must not blank the name.
+    name: group.displayName || group.ticker,
     logoUrl: group.logoUrl,
-    ...mapGroupStats(rankedGroup.stats, sparkline1d),
+    ...mapGroupStats({ stats: rankedGroup.stats, sparkline1d, volumeOrderBy }),
     priceDeviationPct: rankedGroup.priceDeviationPct,
     issuerTokens,
     categories: [category],
@@ -123,11 +134,13 @@ export function mapRankedTokenGroup({
 export function mapRankedTokenGroupList({
   response,
   category,
+  volumeOrderBy,
 }: {
   response?: ListTokenGroupsResponse
   category: RwaCategory
+  volumeOrderBy: VolumeOrderBy
 }): Rwa[] {
   return (response?.tokenGroups ?? [])
-    .map((rankedGroup) => mapRankedTokenGroup({ rankedGroup, category }))
+    .map((rankedGroup) => mapRankedTokenGroup({ rankedGroup, category, volumeOrderBy }))
     .filter((rwa): rwa is Rwa => rwa !== null)
 }

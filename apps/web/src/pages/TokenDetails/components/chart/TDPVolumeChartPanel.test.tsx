@@ -1,9 +1,10 @@
 import { GraphQLApi } from '@universe/api'
 import { UTCTimestamp } from 'lightweight-charts'
 import type { ReactNode } from 'react'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { ChartType, DataQuality } from '~/components/Charts/utils'
 import { TimePeriod } from '~/data/util'
-import { useTDPVolumeChartData } from '~/pages/TokenDetails/components/chart/hooks'
+import { useTDPVolumeChartData } from '~/pages/TokenDetails/components/chart/hooks/useTDPVolumeChartData'
 import { TDPVolumeChartPanel } from '~/pages/TokenDetails/components/chart/TDPVolumeChartPanel'
 import { render, screen } from '~/test-utils/render'
 
@@ -28,7 +29,7 @@ vi.mock('~/components/Charts/LoadingState', () => ({
   },
 }))
 
-vi.mock('~/pages/TokenDetails/components/chart/hooks', () => ({
+vi.mock('~/pages/TokenDetails/components/chart/hooks/useTDPVolumeChartData', () => ({
   useTDPVolumeChartData: vi.fn(),
 }))
 
@@ -41,7 +42,7 @@ vi.mock('~/components/Charts/VolumeChart', () => ({
 const variables = {
   chain: GraphQLApi.Chain.Ethereum,
   address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-  duration: GraphQLApi.HistoryDuration.Day,
+  duration: HistoryDuration.Day,
   multichain: false,
 }
 

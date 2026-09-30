@@ -1,18 +1,23 @@
 import { chainIdToPlatform } from '@universe/chains'
+import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, FlexLoader, flexStyles, iconSizes, Shine, Text, TouchableArea } from '@universe/mycelium'
 import { CopyAlt } from '@universe/mycelium/icons/CopyAlt'
 import { Lock } from '@universe/mycelium/icons/Lock'
+import { TestID } from '@universe/test'
 import React, { memo } from 'react'
 import { useSelector } from 'react-redux'
 import { RWAIssuerHeaderDetails } from 'src/components/TokenDetails/rwa/RWAIssuerHeaderDetails'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
-import { useTokenDetailsRWAMatch } from 'src/components/TokenDetails/useTokenDetailsRWAMatch'
+import {
+  useIsTokenDetailsRWAMatchLoading,
+  useTokenDetailsRWAMatch,
+} from 'src/components/TokenDetails/useTokenDetailsRWAMatch'
 import { EM_DASH } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { selectHasViewedContractAddressExplainer } from 'uniswap/src/features/behaviorHistory/selectors'
 import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { getRWAHeaderIdentity } from 'uniswap/src/features/rwa/getRWAHeaderIdentity'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { useRwaIssuer } from 'uniswap/src/features/rwa/hooks/useRwaIssuer'
 import { isDefaultNativeAddress } from 'uniswap/src/utils/currencyId'
 
 export const TokenDetailsHeader = memo(function TokenDetailsHeaderInner(): JSX.Element {
@@ -34,13 +39,20 @@ export const TokenDetailsHeader = memo(function TokenDetailsHeaderInner(): JSX.E
   const hasViewedContractAddressExplainer = useSelector(selectHasViewedContractAddressExplainer)
 
   const rwaMatch = useTokenDetailsRWAMatch()
+  const isRwaMatchLoading = useIsTokenDetailsRWAMatchLoading()
+  const { issuer: rwaIssuer } = useRwaIssuer({ rwaMatch, currencyId })
+  const plainTokenNames = useIsTokenCategoriesEnabled()
   const metadata = useTokenMetadata(currencyId)
+  // The group match resolves after the token metadata; hold the title rather than paint the plain
+  // token name and then flip it.
+  const isIdentityLoading = metadata.isLoading || isRwaMatchLoading
 
   const isMultichainToken = initialIsMultichainAsset || hasMultichainAddresses
   const { name: tokenName, logoUrl } = getRWAHeaderIdentity({
     rwaMatch,
     fallbackName: metadata.name ?? undefined,
     logoUrl: metadata.logoUrl ?? undefined,
+    plainTokenNames,
   })
 
   const hasNonNativeAddress = !!address && !isDefaultNativeAddress({ address, platform: chainIdToPlatform(chainId) })
@@ -71,7 +83,7 @@ export const TokenDetailsHeader = memo(function TokenDetailsHeaderInner(): JSX.E
       />
 
       <Flex shrink flex={1}>
-        {metadata.isLoading ? (
+        {isIdentityLoading ? (
           <Shine>
             <Flex gap="$spacing8" py="$spacing4">
               <FlexLoader height={20} width={120} borderRadius="$rounded4" />
@@ -90,9 +102,9 @@ export const TokenDetailsHeader = memo(function TokenDetailsHeaderInner(): JSX.E
               {tokenName || EM_DASH}
             </Text>
             <Flex row shrink alignItems="center" gap="$spacing12">
-              {rwaMatch ? (
+              {rwaIssuer ? (
                 <>
-                  <RWAIssuerHeaderDetails rwaMatch={rwaMatch} />
+                  <RWAIssuerHeaderDetails issuer={rwaIssuer} />
                   <Flex alignSelf="center" backgroundColor="$surface3" height={20} width={1} />
                 </>
               ) : null}

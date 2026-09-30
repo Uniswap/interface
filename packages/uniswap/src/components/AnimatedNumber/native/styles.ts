@@ -24,6 +24,16 @@ export const NativeNumberTextStyles = {
   } satisfies TextStyle,
 }
 
+// Shared by DigitSlot and DigitCell so swapping between slot and plain Text is pixel-identical.
+export const DigitGlyphStyles = {
+  absolute: {
+    position: 'absolute',
+    top: 1,
+    width: '100%',
+    textAlign: 'center',
+  } satisfies TextStyle,
+}
+
 export const StaticNumberStyles = {
   fontStyle: {
     ...NativeNumberTextStyles.fontStyle,

@@ -1,9 +1,9 @@
 import { Flex, zIndexes, UniversalImage, UniversalImageResizeMode } from '@universe/mycelium'
 import { useColorSchemeFromSeed, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import { useState } from 'react'
 import { Loader } from 'ui/src'
 import { getBadgeBorderRadius } from 'uniswap/src/components/CurrencyLogo/badgeSizeUtils'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 /**
  * Rounded-rect radius for a launchpad logo. Reuses the NetworkLogo squircle convention

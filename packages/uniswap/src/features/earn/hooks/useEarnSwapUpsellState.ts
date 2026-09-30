@@ -10,7 +10,6 @@ import {
   recordEarnSwapUpsellInteraction,
   recordEarnSwapUpsellQualifyingSwap,
 } from 'uniswap/src/features/behaviorHistory/slice'
-import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { EarnPositionStatus, useEarnPosition } from 'uniswap/src/features/earn/hooks/useEarnPosition'
 import { useEarnVaults } from 'uniswap/src/features/earn/hooks/useEarnVaults'
@@ -18,6 +17,7 @@ import { getValidEarnSwapUpsellCurrencyId } from 'uniswap/src/features/earn/swap
 import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { hasConfirmedEarnPositionRawBalance, selectEarnVaultForToken } from 'uniswap/src/features/earn/utils'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { useMultichainCurrencyInfos } from 'uniswap/src/features/tokens/useMultichainCurrencyInfos'
 import type { UniswapState } from 'uniswap/src/state/uniswapReducer'
 import { currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -197,7 +197,7 @@ function useEarnSwapUpsellVault({ enabled, outputCurrencyId }: { enabled: boolea
   const hasValidOutputCurrencyId = Boolean(currencyIdToChain(outputCurrencyId))
   const shouldFetch = enabled && hasValidOutputCurrencyId
   const tokenProjectIds = useMemo(() => (shouldFetch ? [outputCurrencyId] : []), [outputCurrencyId, shouldFetch])
-  const tokenProjects = useTokenProjects(tokenProjectIds)
+  const tokenProjects = useMultichainCurrencyInfos(tokenProjectIds)
   const { isLoadingVaults, vaults } = useEarnVaults({ enabled: shouldFetch })
 
   const tokenCurrencyIds = useMemo(() => {
@@ -212,7 +212,7 @@ function useEarnSwapUpsellVault({ enabled, outputCurrencyId }: { enabled: boolea
   const vault = useMemo(() => selectEarnVaultForToken({ tokenCurrencyIds, vaults }), [tokenCurrencyIds, vaults])
 
   return {
-    isLoading: shouldFetch && (isLoadingVaults || tokenProjects.loading),
+    isLoading: shouldFetch && (isLoadingVaults || tokenProjects.isLoading),
     vault,
   }
 }

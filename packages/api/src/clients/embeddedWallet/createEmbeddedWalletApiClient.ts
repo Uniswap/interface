@@ -275,17 +275,22 @@ export function createEmbeddedWalletApiClient({
     })
   }
 
-  async function fetchSetupRecovery(params: {
-    credential?: string
-    authMethodId: string
-    authMethodType?: string
-    encryptedKeyId?: string
-    authMethodIdentifier?: string
-    authKeySignature?: string
-    recoveryAuthSignature?: string
-    signingPayload?: string
-  }): Promise<SetupRecoveryResponse> {
-    return await rpcClient.setupRecovery(params)
+  async function fetchSetupRecovery(
+    params: {
+      credential?: string
+      authMethodId: string
+      authMethodType?: string
+      encryptedKeyId?: string
+      authMethodIdentifier?: string
+      authKeySignature?: string
+      recoveryAuthSignature?: string
+      signingPayload?: string
+    },
+    accessToken: string,
+  ): Promise<SetupRecoveryResponse> {
+    return await rpcClient.setupRecovery(params, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
   }
 
   async function fetchExecuteRecovery(params: {

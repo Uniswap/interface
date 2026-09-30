@@ -8,6 +8,7 @@ import {
   type StyleProp,
   type ViewStyle,
 } from 'react-native'
+import { ROW_VIEWABILITY_CONFIG } from '../consts'
 import type { UniversalListPropsWithRef } from '../types'
 import { coalesceScrollEvents } from './coalesceScrollEvents'
 import { createItemTypeResolver, createOverrideItemLayout } from './itemLayout'
@@ -55,6 +56,7 @@ export function VirtualList<T>({
   showsVerticalScrollIndicator,
   style,
   testID,
+  trackRowViewability,
 }: UniversalListPropsWithRef<T, StyleProp<ViewStyle>>): ReactElement {
   const legendRef = useRef<LegendListRef>(null)
 
@@ -140,6 +142,7 @@ export function VirtualList<T>({
       showsVerticalScrollIndicator={showsVerticalScrollIndicator}
       style={style?.style}
       testID={testID}
+      viewabilityConfig={trackRowViewability ? ROW_VIEWABILITY_CONFIG : undefined}
     />
   )
 }

@@ -38,7 +38,7 @@ vi.mock('@tanstack/react-query', async (importOriginal) => ({
 
 // Pass the query options through so each sibling-pair `enabled` flag can be asserted directly.
 vi.mock('uniswap/src/data/apiClients/dataApiService/pools/queries', () => ({
-  getListPoolsQueryOptions: (input: unknown): unknown => input,
+  getListPoolsInfiniteQueryOptions: (input: unknown): unknown => input,
 }))
 
 // Pool at 1 DAI = 1 WETH (tick 0); both tokens have 18 decimals

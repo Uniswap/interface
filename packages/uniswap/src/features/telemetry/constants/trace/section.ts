@@ -45,6 +45,7 @@ export enum SectionName {
   CreatePositionDepositStep = 'create-position-deposit-step',
   CreatePositionPriceRangeStep = 'create-position-price-range-step',
   CreatePositionSelectTokensStep = 'create-position-select-tokens-step',
+  ExploreCategoryChips = 'explore-category-chips',
   ExploreRecentTransactions = 'explore-recent-transactions',
   ExploreTrendingTokensSection = 'explore-trending-tokens-section',
   // alphabetize additional values.

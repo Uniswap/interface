@@ -13,14 +13,12 @@ import React, { PropsWithChildren } from 'react'
 import { ExtensionState, extensionReducer } from 'src/store/extensionReducer'
 import { AppStore } from 'src/store/store'
 import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
-import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
 import { mockUniswapContext } from 'uniswap/src/test/render'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 
 // This type extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
 type ExtendedRenderOptions = RenderOptions & {
-  resolvers?: GraphQLApi.Resolvers
   preloadedState?: PreloadedState<ExtensionState>
   store?: AppStore
 }
@@ -35,7 +33,6 @@ type ExtendedRenderOptions = RenderOptions & {
 export function renderWithProviders(
   ui: React.ReactElement,
   {
-    resolvers,
     preloadedState = {},
     // Automatically create a store instance if no store was passed in
     store = configureStore({
@@ -51,9 +48,7 @@ export function renderWithProviders(
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
       <UniswapProvider {...mockUniswapContext}>
-        <AutoMockedApolloProvider resolvers={resolvers}>
-          <SharedWalletProvider reduxStore={store}>{children}</SharedWalletProvider>
-        </AutoMockedApolloProvider>
+        <SharedWalletProvider reduxStore={store}>{children}</SharedWalletProvider>
       </UniswapProvider>
     )
   }
@@ -65,7 +60,6 @@ export function renderWithProviders(
 // This type extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
 type ExtendedRenderHookOptions<P> = RenderHookOptions<P> & {
-  resolvers?: GraphQLApi.Resolvers
   preloadedState?: PreloadedState<ExtensionState>
   store?: AppStore
 }
@@ -99,7 +93,6 @@ export function renderHookWithProviders<P, R>(
   hookOptions?: ExtendedRenderHookOptions<P>,
 ): RenderHookWithProvidersResult<R, P> {
   const {
-    resolvers,
     preloadedState = {},
     // Automatically create a store instance if no store was passed in
     store = configureStore({
@@ -113,9 +106,7 @@ export function renderHookWithProviders<P, R>(
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
       <UniswapProvider {...mockUniswapContext}>
-        <AutoMockedApolloProvider resolvers={resolvers}>
-          <SharedWalletProvider reduxStore={store}>{children}</SharedWalletProvider>
-        </AutoMockedApolloProvider>
+        <SharedWalletProvider reduxStore={store}>{children}</SharedWalletProvider>
       </UniswapProvider>
     )
   }

@@ -45,6 +45,15 @@ describe(RwaIssuerRow, () => {
     expect(queryByText('common.button.swap')).toBeNull()
   })
 
+  it('renders a plain navigation row (no menu) when hideContextMenu is set, even with a resolved currencyInfo', () => {
+    const { getByTestId, queryByText } = render(
+      <RwaIssuerRow {...props} currencyInfo={ci} ownsTouchable isRowFocused hideContextMenu />,
+    )
+    rtlFireEvent.contextMenu(getByTestId(CHILD_TESTID) as unknown as Element)
+    expect(queryByText('common.copy.address')).toBeNull()
+    expect(queryByText('common.button.swap')).toBeNull()
+  })
+
   // === multichain Copy fan-out ===
   // (web, default platform) multichain issuer: the row mounts and the Secondary right-click menu still opens
   // (single-chain Copy unregressed). The self-isOpen-controlled web … panel doesn't flip in jsdom, so the per-chain

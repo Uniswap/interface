@@ -30,7 +30,7 @@ export function renderWebDisclaimerLink(href: string): JSX.Element {
   return <DisclaimerLearnMoreLink href={href} />
 }
 
-/** Legal disclaimer shown below Stocks and ETFs explore category tabs (not Commodities or Popular). */
+/** Legal disclaimer shown below Stocks and ETFs explore category tabs (not Commodities or All). */
 export function ExploreRwaDisclaimer({ category }: { category: RwaCategory }): JSX.Element {
   return (
     <Flex width="100%" pl="$spacing12" pr="$spacing16">

@@ -1,53 +1,55 @@
-import { waitFor } from '@testing-library/react-native'
-import { HistoryDuration } from '@uniswap/client-data-api/dist/data/v2/types_pb'
-import { GraphQLApi } from '@universe/api'
+import { onlineManager, QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { act, cleanup, renderHook, waitFor } from '@testing-library/react-native'
+import { GetTokenHistoryPriceResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
+import { HistoryDuration as RestHistoryDuration } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { UniverseChainId } from '@universe/chains'
+import { createElement, type PropsWithChildren } from 'react'
+import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2'
 import {
   toHistoryTarget,
   toRestHistoryDuration,
   useTokenPriceHistoryRest,
 } from 'uniswap/src/features/dataApi/tokenDetails/useTokenPriceHistoryRest'
-import { renderHookWithProviders } from 'uniswap/src/test/render'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
-const { mockGetGetTokenHistoryPriceQueryOptions } = vi.hoisted(() => ({
-  mockGetGetTokenHistoryPriceQueryOptions: vi.fn(),
-}))
-
-vi.mock('uniswap/src/data/apiClients/dataApiService/tokens/queries', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('uniswap/src/data/apiClients/dataApiService/tokens/queries')>()),
-  getGetTokenHistoryPriceQueryOptions: mockGetGetTokenHistoryPriceQueryOptions,
+vi.mock('uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2', () => ({
+  dataApiServiceClientV2: { getTokenHistoryPrice: vi.fn() },
 }))
 
 const CURRENCY_ID = buildCurrencyId(UniverseChainId.Mainnet, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48')
 
-const GET_TOKEN_HISTORY_PRICE_RAW_RESPONSE = {
+const GET_TOKEN_HISTORY_PRICE_RAW_RESPONSE = new GetTokenHistoryPriceResponse({
   points: [
     { timestamp: BigInt(100), priceUsd: 1.1 },
     { timestamp: BigInt(200), priceUsd: 2.2 },
   ],
-}
+})
+
+const mockGetTokenHistoryPrice = vi.mocked(dataApiServiceClientV2.getTokenHistoryPrice)
 
 describe(useTokenPriceHistoryRest, () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
+  let queryClient: QueryClient
 
-    // Mirrors the real query-options builder's contract: queryFn returns raw data, `select`
-    // (the actual selectPriceHistoryEntries from the source file) is left for react-query to
-    // apply, so that selector gets exercised for real by this test.
-    mockGetGetTokenHistoryPriceQueryOptions.mockImplementation(({ enabled, select }) => ({
-      queryKey: [ReactQueryCacheKey.DataApiService, 'getTokenHistoryPrice'],
-      queryFn: () => Promise.resolve(GET_TOKEN_HISTORY_PRICE_RAW_RESPONSE),
-      enabled,
-      select,
-    }))
+  function Wrapper({ children }: PropsWithChildren): JSX.Element {
+    return createElement(QueryClientProvider, { client: queryClient }, children)
+  }
+
+  beforeEach(() => {
+    queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+    mockGetTokenHistoryPrice.mockReset().mockResolvedValue(GET_TOKEN_HISTORY_PRICE_RAW_RESPONSE)
+  })
+
+  afterEach(() => {
+    cleanup()
+    queryClient.clear()
+    onlineManager.setOnline(true)
   })
 
   it('returns the REST price history entries from GetTokenHistoryPrice', async () => {
-    const { result } = renderHookWithProviders(() =>
-      useTokenPriceHistoryRest(CURRENCY_ID, { duration: HistoryDuration.DAY }),
-    )
+    const { result } = renderHook(() => useTokenPriceHistoryRest(CURRENCY_ID, { duration: HistoryDuration.Day }), {
+      wrapper: Wrapper,
+    })
 
     await waitFor(() => {
       expect(result.current.entries).toEqual([
@@ -57,40 +59,103 @@ describe(useTokenPriceHistoryRest, () => {
     })
   })
 
-  it('builds a singleChain target by default', () => {
-    renderHookWithProviders(() => useTokenPriceHistoryRest(CURRENCY_ID, { duration: HistoryDuration.DAY }))
-
-    expect(mockGetGetTokenHistoryPriceQueryOptions).toHaveBeenCalledWith(
-      expect.objectContaining({
-        enabled: true,
-        params: {
-          target: { case: 'singleChain', value: { chainId: UniverseChainId.Mainnet, address: expect.any(String) } },
-          duration: HistoryDuration.DAY,
-        },
-      }),
+  it('shows the skeleton instead of the previous period while a newly selected period loads', async () => {
+    const { result, rerender } = renderHook(
+      (duration: HistoryDuration) => useTokenPriceHistoryRest(CURRENCY_ID, { duration }),
+      { initialProps: HistoryDuration.Day, wrapper: Wrapper },
     )
+    await waitFor(() => expect(result.current.entries).toHaveLength(2))
+    expect(result.current.isLoading).toBe(false)
+
+    mockGetTokenHistoryPrice.mockReturnValueOnce(new Promise<never>(() => {}))
+    rerender(HistoryDuration.Week)
+
+    expect(mockGetTokenHistoryPrice).toHaveBeenCalledTimes(2)
+    expect(result.current).toEqual({ entries: [], isLoading: true, error: null })
   })
 
-  it('builds a multichain target when isMultichainAggregateView is set', () => {
-    renderHookWithProviders(() =>
-      useTokenPriceHistoryRest(CURRENCY_ID, { duration: HistoryDuration.DAY, isMultichainAggregateView: true }),
+  it('keeps loading for a duration switch paused offline and resolves on reconnect', async () => {
+    const { result, rerender } = renderHook(
+      (duration: HistoryDuration) => useTokenPriceHistoryRest(CURRENCY_ID, { duration }),
+      { initialProps: HistoryDuration.Day, wrapper: Wrapper },
     )
 
-    expect(mockGetGetTokenHistoryPriceQueryOptions).toHaveBeenCalledWith(
-      expect.objectContaining({
-        params: expect.objectContaining({
-          target: expect.objectContaining({ case: 'multichain' }),
-        }),
-      }),
+    await waitFor(() => expect(result.current.entries).toHaveLength(2))
+    expect(result.current.isLoading).toBe(false)
+    expect(mockGetTokenHistoryPrice).toHaveBeenCalledTimes(1)
+
+    act(() => onlineManager.setOnline(false))
+    rerender(HistoryDuration.Week)
+
+    expect(result.current).toEqual({ entries: [], isLoading: true, error: null })
+    expect(mockGetTokenHistoryPrice).toHaveBeenCalledTimes(1)
+
+    act(() => onlineManager.setOnline(true))
+    await waitFor(() => expect(result.current.entries).toHaveLength(2))
+    expect(result.current.isLoading).toBe(false)
+    expect(mockGetTokenHistoryPrice).toHaveBeenCalledTimes(2)
+  })
+
+  it('keeps cached entries visible while refreshing in the background', async () => {
+    const firstRender = renderHook(() => useTokenPriceHistoryRest(CURRENCY_ID, { duration: HistoryDuration.Day }), {
+      wrapper: Wrapper,
+    })
+    await waitFor(() => expect(firstRender.result.current.entries).toHaveLength(2))
+    const cachedEntries = firstRender.result.current.entries
+    firstRender.unmount()
+    await queryClient.invalidateQueries()
+
+    mockGetTokenHistoryPrice.mockResolvedValueOnce(
+      new GetTokenHistoryPriceResponse({ points: [{ timestamp: BigInt(300), priceUsd: 3.3 }] }),
     )
+    const { result } = renderHook(() => useTokenPriceHistoryRest(CURRENCY_ID, { duration: HistoryDuration.Day }), {
+      wrapper: Wrapper,
+    })
+
+    expect(mockGetTokenHistoryPrice).toHaveBeenCalledTimes(2)
+    expect(result.current).toEqual({ entries: cachedEntries, isLoading: false, error: null })
+    await waitFor(() => expect(result.current.entries).toEqual([{ timestamp: 300, value: 3.3 }]))
+    expect(result.current.isLoading).toBe(false)
+  })
+
+  it('requests a singleChain target by default', () => {
+    renderHook(() => useTokenPriceHistoryRest(CURRENCY_ID, { duration: HistoryDuration.Day }), {
+      wrapper: Wrapper,
+    })
+
+    expect(mockGetTokenHistoryPrice).toHaveBeenCalledWith({
+      target: { case: 'singleChain', value: { chainId: UniverseChainId.Mainnet, address: expect.any(String) } },
+      duration: RestHistoryDuration.DAY,
+    })
+  })
+
+  it('requests a multichain target when isMultichainAggregateView is set', () => {
+    renderHook(
+      () => useTokenPriceHistoryRest(CURRENCY_ID, { duration: HistoryDuration.Day, isMultichainAggregateView: true }),
+      { wrapper: Wrapper },
+    )
+
+    expect(mockGetTokenHistoryPrice).toHaveBeenCalledWith({
+      target: {
+        case: 'multichain',
+        value: {
+          identifier: {
+            case: 'token',
+            value: { chainId: UniverseChainId.Mainnet, address: expect.any(String) },
+          },
+        },
+      },
+      duration: RestHistoryDuration.DAY,
+    })
   })
 
   it('disables the query when currencyId is undefined', () => {
-    renderHookWithProviders(() => useTokenPriceHistoryRest(undefined, { duration: HistoryDuration.DAY }))
+    const { result } = renderHook(() => useTokenPriceHistoryRest(undefined, { duration: HistoryDuration.Day }), {
+      wrapper: Wrapper,
+    })
 
-    expect(mockGetGetTokenHistoryPriceQueryOptions).toHaveBeenCalledWith(
-      expect.objectContaining({ enabled: false, params: undefined }),
-    )
+    expect(result.current).toEqual({ entries: [], isLoading: false, error: null })
+    expect(mockGetTokenHistoryPrice).not.toHaveBeenCalled()
   })
 })
 
@@ -112,14 +177,13 @@ describe(toHistoryTarget, () => {
 
 describe(toRestHistoryDuration, () => {
   it.each([
-    [GraphQLApi.HistoryDuration.FiveMinute, HistoryDuration.HOUR],
-    [GraphQLApi.HistoryDuration.Hour, HistoryDuration.HOUR],
-    [GraphQLApi.HistoryDuration.Day, HistoryDuration.DAY],
-    [GraphQLApi.HistoryDuration.Week, HistoryDuration.WEEK],
-    [GraphQLApi.HistoryDuration.Month, HistoryDuration.MONTH],
-    [GraphQLApi.HistoryDuration.Year, HistoryDuration.YEAR],
-    [GraphQLApi.HistoryDuration.Max, HistoryDuration.MAX],
-  ])('maps GraphQL %s to REST %s', (graphqlDuration, restDuration) => {
-    expect(toRestHistoryDuration(graphqlDuration)).toBe(restDuration)
+    [HistoryDuration.Hour, RestHistoryDuration.HOUR],
+    [HistoryDuration.Day, RestHistoryDuration.DAY],
+    [HistoryDuration.Week, RestHistoryDuration.WEEK],
+    [HistoryDuration.Month, RestHistoryDuration.MONTH],
+    [HistoryDuration.Year, RestHistoryDuration.YEAR],
+    [HistoryDuration.Max, RestHistoryDuration.MAX],
+  ])('maps %s to REST %s', (duration, restDuration) => {
+    expect(toRestHistoryDuration(duration)).toBe(restDuration)
   })
 })

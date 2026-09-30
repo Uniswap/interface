@@ -55,6 +55,9 @@
     },
     {
       "path": "../../packages/chains"
+    },
+    {
+      "path": "../../packages/test"
     }
   ],
   "compilerOptions": {

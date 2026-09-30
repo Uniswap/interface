@@ -1,4 +1,5 @@
 import { expect } from '@playwright/test'
+import { TestID } from '@universe/test'
 import { importedExtensionTest as test } from 'e2e/fixtures/imported-extension.fixture'
 import { approveConnectionInSidebarIfPrompted } from 'e2e/utils/dapp-connection-helpers'
 import { openExtensionSidebar, waitForBackgroundReady } from 'e2e/utils/extension-helpers'
@@ -7,7 +8,6 @@ import { TEST_WALLET_ADDRESS } from 'e2e/utils/onboarding-helpers'
 import { collectCriticalPageErrors } from 'e2e/utils/page-error-helpers'
 import { unlockIfLocked } from 'e2e/utils/unlock-helpers'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 const USDC_MAINNET_ADDRESS = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'

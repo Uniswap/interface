@@ -1,9 +1,9 @@
 import { Flex, Text } from '@universe/mycelium'
 import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
+import { TestID } from '@universe/test'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SingleSelectContextMenu, type SingleSelectOption } from 'uniswap/src/components/menus/SingleSelectContextMenu'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { PortfolioChartCategory } from '~/pages/Portfolio/Overview/hooks/usePortfolioChartSeries'
 
 /** Dropdown that picks which series the portfolio chart shows. */

@@ -1,7 +1,6 @@
 import { Flex, getTextVariantKey, Text, TextLoaderWrapper } from '@universe/mycelium'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { AccessibilityInfo } from 'react-native'
+import { useMemo, useRef } from 'react'
 import { STAGGER_MS } from 'uniswap/src/components/AnimatedNumber/animationConfig'
 import { useResolvedAnimatedNumberColors } from 'uniswap/src/components/AnimatedNumber/hooks/useResolvedAnimatedNumberColors'
 import { CompactReanimatedNumber } from 'uniswap/src/components/AnimatedNumber/native/CompactReanimatedNumber'
@@ -13,6 +12,7 @@ import type {
   ReanimatedNumberRenderProps,
 } from 'uniswap/src/components/AnimatedNumber/native/types'
 import { getDigitCellWidth, useDigitTextStyle } from 'uniswap/src/components/AnimatedNumber/native/useDigitTextStyle'
+import { useReducedMotion } from 'uniswap/src/components/AnimatedNumber/native/useReducedMotion'
 import { AnimatedNumberDirection } from 'uniswap/src/components/AnimatedNumber/types'
 import { computeCharStaggerDelays } from 'uniswap/src/components/AnimatedNumber/utils/computeCharStaggerDelays'
 import { getAnimatedNumberVariantMetrics } from 'uniswap/src/components/AnimatedNumber/utils/getAnimatedNumberVariantMetrics'
@@ -51,6 +51,7 @@ export const ReanimatedNumber = ({
   containerTestID,
   isRightToLeft: isRightToLeftProp,
   forceDirection,
+  suspendAnimations = false,
 }: ReanimatedNumberProps): JSX.Element => {
   const colors = useSporeColors()
   const { variantFont, digitHeight, maxDigitWidthScaled } = useMemo(
@@ -62,17 +63,9 @@ export const ReanimatedNumber = ({
   const useHeadingTypography = HEADING_TEXT_VARIANT_KEYS.has(textVariantKey)
   const digitTextStyle = useDigitTextStyle({ variantFont, digitHeight, useHeadingTypography })
 
-  const [reduceMotion, setReduceMotion] = useState(false)
+  const reduceMotion = useReducedMotion()
 
   const isRightToLeft = isRightToLeftProp ?? i18next.dir() === 'rtl'
-
-  useEffect(() => {
-    void AccessibilityInfo.isReduceMotionEnabled().then((enabled) => {
-      setReduceMotion(enabled)
-    })
-    const subscription = AccessibilityInfo.addEventListener('reduceMotionChanged', setReduceMotion)
-    return () => subscription.remove()
-  }, [])
 
   const { baseColor, hasCustomColor, decimalPartColor } = useResolvedAnimatedNumberColors({
     colors,
@@ -89,7 +82,8 @@ export const ReanimatedNumber = ({
   const lastProcessedRef = useRef<{ value?: string; numericValue?: number; tick: AnimatedNumberTick }>({
     tick: NO_TICK,
   })
-  if (numericValue && value && value !== lastProcessedRef.current.value) {
+  // Compared against undefined, not truthiness: a balance falling to exactly 0 is still a tick.
+  if (numericValue !== undefined && value !== undefined && value !== lastProcessedRef.current.value) {
     const previous = lastProcessedRef.current
     const dir = forceDirection ?? getDirection(numericValue, previous.numericValue)
     const showFlash = dir !== AnimatedNumberDirection.NONE && !hasCustomColor && previous.value !== undefined
@@ -150,6 +144,7 @@ export const ReanimatedNumber = ({
     charDelays,
     charShouldAnimate,
     reduceMotion,
+    suspendAnimations,
   }
 
   if (HEADING_TEXT_VARIANT_KEYS.has(textVariantKey)) {

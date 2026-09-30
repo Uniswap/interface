@@ -6,10 +6,8 @@
 //
 
 import Foundation
-import Apollo
 
 enum UniswapGateway {
-  static let graphQLUrl = "https://ios.wallet.gateway.uniswap.org/v1/graphql"
   static let dataApiUrl = "https://entry-gateway.backend-prod.api.uniswap.org"
   static let authHeaders = [
     "X-API-KEY": Env.UNISWAP_API_KEY,
@@ -18,61 +16,30 @@ enum UniswapGateway {
   ]
 }
 
-public class Network {
-  public static let shared = Network()
+/// Connect-protocol JSON client for the Uniswap data API. Proto enums are sent as their proto value
+/// names (e.g. `HISTORY_DURATION_DAY`) and int64 fields come back as strings, per proto3 JSON.
+enum DataApi {
+  static let v1Service = "data.v1.DataApiService"
+  static let v2Service = "data.v2.DataApiService"
 
-  public lazy var apollo: ApolloClient = {
-    let cache = InMemoryNormalizedCache()
-    let store = ApolloStore(cache: cache)
-    let client = URLSessionClient()
-
-    let provider = NetworkInterceptorProvider(store: store, client: client)
-    let url = URL(string: UniswapGateway.graphQLUrl)!
-    let transport = RequestChainNetworkTransport(interceptorProvider: provider, endpointURL: url)
-    return ApolloClient(networkTransport: transport, store: store)
-  }()
-}
-
-class NetworkInterceptorProvider: InterceptorProvider {
-    private let store: ApolloStore
-    private let client: URLSessionClient
-    
-    init(store: ApolloStore, client: URLSessionClient) {
-        self.store = store
-        self.client = client
-    }
-    
-    func interceptors<Operation: GraphQLOperation>(for operation: Operation) -> [ApolloInterceptor] {
-        return [
-            AuthorizationInterceptor(),
-            MaxRetryInterceptor(),
-            CacheReadInterceptor(store: self.store),
-            NetworkFetchInterceptor(client: self.client),
-            ResponseCodeInterceptor(),
-            MultipartResponseParsingInterceptor(),
-            JSONResponseParsingInterceptor(),
-            AutomaticPersistedQueryInterceptor(),
-            CacheWriteInterceptor(store: self.store)
-        ]
-    }
-}
-
-class AuthorizationInterceptor: ApolloInterceptor {
-
-  
-  func interceptAsync<Operation>(
-    chain: RequestChain,
-    request: HTTPRequest<Operation>,
-    response: HTTPResponse<Operation>?,
-    completion: @escaping (Result<GraphQLResult<Operation.Data>, Error>) -> Void
-  ) where Operation : GraphQLOperation {
+  static func post<Response: Decodable>(
+    service: String = v2Service,
+    method: String,
+    body: [String: Any]
+  ) async throws -> Response {
+    var request = URLRequest(url: URL(string: "\(UniswapGateway.dataApiUrl)/\(service)/\(method)")!)
+    request.httpMethod = "POST"
     for (name, value) in UniswapGateway.authHeaders {
-      request.addHeader(name: name, value: value)
+      request.setValue(value, forHTTPHeaderField: name)
     }
+    request.setValue("1", forHTTPHeaderField: "Connect-Protocol-Version")
+    request.setValue("uniswap-ios", forHTTPHeaderField: "x-request-source")
+    request.httpBody = try JSONSerialization.data(withJSONObject: body)
 
-    chain.proceedAsync(request: request,
-                       response: response,
-                       completion: completion)
+    let (data, response) = try await URLSession.shared.data(for: request)
+    guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
+      throw URLError(.badServerResponse)
+    }
+    return try JSONDecoder().decode(Response.self, from: data)
   }
-  
 }

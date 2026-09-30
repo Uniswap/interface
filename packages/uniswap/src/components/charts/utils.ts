@@ -1,14 +1,13 @@
-import { GraphQLApi } from '@universe/api'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 
 // Shorter timeframes use higher thresholds since stablecoins naturally show more price noise on smaller windows
-const STABLECOIN_VARIANCE_THRESHOLDS: Record<GraphQLApi.HistoryDuration, number> = {
-  [GraphQLApi.HistoryDuration.FiveMinute]: 1.5, // not used in the UI
-  [GraphQLApi.HistoryDuration.Hour]: 1.5,
-  [GraphQLApi.HistoryDuration.Day]: 1.5,
-  [GraphQLApi.HistoryDuration.Week]: 0.5,
-  [GraphQLApi.HistoryDuration.Month]: 0.5,
-  [GraphQLApi.HistoryDuration.Year]: 0.5,
-  [GraphQLApi.HistoryDuration.Max]: 0.5,
+const STABLECOIN_VARIANCE_THRESHOLDS: Record<HistoryDuration, number> = {
+  [HistoryDuration.Hour]: 1.5,
+  [HistoryDuration.Day]: 1.5,
+  [HistoryDuration.Week]: 0.5,
+  [HistoryDuration.Month]: 0.5,
+  [HistoryDuration.Year]: 0.5,
+  [HistoryDuration.Max]: 0.5,
 }
 
 /**
@@ -25,7 +24,7 @@ export function isLowVarianceRange({
 }: {
   min: number
   max: number
-  duration?: GraphQLApi.HistoryDuration
+  duration?: HistoryDuration
 }): boolean {
   if (min <= 0) {
     return false
@@ -71,7 +70,7 @@ export function getLowVarianceAxisDecimals(min: number, max: number): number | u
  * fresh between backend refetches instead of ending at the last completed bucket. If the spot price
  * falls within the same time window as the last entry, that entry is updated in place; otherwise a
  * new trailing entry is added. No-ops when there's no price or fewer than two entries (not enough to
- * infer the series' time granularity).
+ * infer the series' time granularity), or when the device clock is behind the last server entry.
  *
  * Platform-agnostic: callers supply accessors/factories so this works with any chart point shape
  * (e.g. web's OHLC `PriceChartData` keyed by `time`, or mobile's `{ timestamp, value }` line points).
@@ -104,8 +103,14 @@ export function appendLiveSpotPriceEntry<T, TTime extends number = number>({
     return entries
   }
 
-  const granularity = getTime(lastEntry) - getTime(secondToLastEntry)
-  if (now - getTime(lastEntry) < granularity) {
+  const lastTimestamp = getTime(lastEntry)
+  // A lagging device clock must not move the tail backwards and break chronological chart lookups.
+  if (now < lastTimestamp) {
+    return entries
+  }
+
+  const granularity = lastTimestamp - getTime(secondToLastEntry)
+  if (now - lastTimestamp < granularity) {
     return [...entries.slice(0, -1), updateEntry(lastEntry, { time: now, price: currentPrice })]
   }
   return [...entries, createEntry({ time: now, price: currentPrice })]

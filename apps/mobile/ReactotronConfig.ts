@@ -14,7 +14,7 @@ const reactotron = Reactotron.setAsyncStorageHandler(AsyncStorage)
       Reactotron.clear()
     },
   })
-  .use(mmkvPlugin<ReactotronReactNative>({ storage, ignore: ['react-query-cache', 'apollo-cache-persist'] }))
+  .use(mmkvPlugin<ReactotronReactNative>({ storage, ignore: ['react-query-cache'] }))
   .use(reactotronRedux())
   .use(openInEditor())
   .useReactNative()

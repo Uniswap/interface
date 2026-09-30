@@ -1,8 +1,10 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { UniverseChainId } from '@universe/chains'
+import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, Text, iconSizes } from '@universe/mycelium'
 import { Lock } from '@universe/mycelium/icons/Lock'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import { useAtom } from 'jotai'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -13,9 +15,9 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { PermissionedTokenTooltip } from 'uniswap/src/features/permissionedTokens/PermissionedTokenTooltip'
 import { getRWAHeaderIdentity } from 'uniswap/src/features/rwa/getRWAHeaderIdentity'
+import { useRwaIssuer } from 'uniswap/src/features/rwa/hooks/useRwaIssuer'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -38,7 +40,7 @@ import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultichainTokenEntries'
 import { useTDPEffectiveCurrency } from '~/pages/TokenDetails/hooks/useTDPEffectiveCurrency'
 import { useTDPPermissionedState } from '~/pages/TokenDetails/hooks/useTDPPermissionedState'
-import { useTDPRWAMatch } from '~/pages/TokenDetails/hooks/useTDPRWAMatch'
+import { useIsTDPRWAMatchLoading, useTDPRWAMatch } from '~/pages/TokenDetails/hooks/useTDPRWAMatch'
 import { popupRegistry } from '~/state/popups/registry'
 import { PopupType } from '~/state/popups/types'
 
@@ -84,6 +86,12 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
 
   const effectiveCurrency = useTDPEffectiveCurrency()
   const rwaMatch = useTDPRWAMatch()
+  // Only the group match can change the name, so the title holds on that alone rather than paint the
+  // plain token name and flip. The issuer line fills in when GetToken lands.
+  const isRwaMatchLoading = useIsTDPRWAMatchLoading()
+  const { issuer: rwaIssuer } = useRwaIssuer({ rwaMatch, currencyId: currencyId(effectiveCurrency) })
+  const heldRwaIssuer = isRwaMatchLoading ? undefined : rwaIssuer
+  const plainTokenNames = useIsTokenCategoriesEnabled()
 
   const metadata = useTokenMetadata(currencyId(effectiveCurrency))
 
@@ -127,11 +135,11 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
 
   const tokenSymbol = metadata.symbol ?? effectiveCurrency.symbol ?? t('tdp.symbolNotFound')
   const fallbackTokenName = metadata.name ?? effectiveCurrency.name ?? t('tdp.nameNotFound')
-  // Matched RWAs show the underlying asset name from listRwas, but keep the token's own logo.
   const { name: tokenName, logoUrl: tokenLogoUrl } = getRWAHeaderIdentity({
     rwaMatch,
     fallbackName: fallbackTokenName,
     logoUrl: metadata.logoUrl,
+    plainTokenNames,
   })
   const showAddressCopy = getShowAddressCopy({ isNative, isMultiChainAsset, selectedChainId })
 
@@ -149,6 +157,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
         name={tokenName}
         symbol={tokenSymbol}
         isCompact={isCompact}
+        isLoading={isRwaMatchLoading}
         logoUrl={tokenLogoUrl}
         logoSymbol={effectiveCurrency.symbol ?? undefined}
         logoName={effectiveCurrency.name ?? undefined}
@@ -167,10 +176,12 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
             <PermissionedHeaderLock isCompact={isCompact} mediaMd={media.md} currency={effectiveCurrency} />
           </>
         }
-        mobileSubtitle={<DetailsHeaderSubtitleMobile rwaMatch={rwaMatch} symbol={tokenSymbol} isCompact={isCompact} />}
+        mobileSubtitle={
+          <DetailsHeaderSubtitleMobile issuer={heldRwaIssuer} symbol={tokenSymbol} isCompact={isCompact} />
+        }
         metadataRow={
           <Flex row alignItems="center" gap="$spacing6">
-            <RWAIssuerHeaderDetails rwaMatch={rwaMatch} />
+            <RWAIssuerHeaderDetails issuer={heldRwaIssuer} />
             <TokenDetailsNetworkFilter
               chainIds={multichainChainIds}
               selectedChainId={selectedChainId}

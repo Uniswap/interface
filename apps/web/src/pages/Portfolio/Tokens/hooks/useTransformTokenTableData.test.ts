@@ -1,6 +1,7 @@
 import { GetWalletTokensProfitLossResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { Token } from '@uniswap/sdk-core'
 import { UniverseChainId, normalizeTokenAddressForCache } from '@universe/chains'
+import { TestID } from '@universe/test'
 import { USDC_ARBITRUM, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import type {
   CurrencyInfo,
@@ -14,7 +15,6 @@ import {
   createPortfolioChainBalance,
   createPortfolioMultichainBalance,
 } from 'uniswap/src/test/fixtures/dataApi/portfolioMultichainBalances'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { buildCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
 import { describe, expect, it, vi } from 'vitest'
 import { assume0xAddress } from '~/chains'

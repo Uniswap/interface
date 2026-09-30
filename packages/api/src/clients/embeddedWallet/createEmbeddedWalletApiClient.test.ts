@@ -35,6 +35,21 @@ describe('createEmbeddedWalletApiClient', () => {
     vi.clearAllMocks()
   })
 
+  describe('fetchSetupRecovery', () => {
+    it('attaches the Privy access token as a Bearer Authorization header', async () => {
+      const rpcClient = makeRpcClient()
+      vi.mocked(rpcClient.setupRecovery).mockResolvedValue({ success: true, recoveryQuorumId: 'rq' } as never)
+      const client = createEmbeddedWalletApiClient({ rpcClient })
+
+      const params = { credential: 'cred', authMethodId: 'amid', encryptedKeyId: 'ek' }
+      await client.fetchSetupRecovery(params, 'fake-token')
+
+      expect(rpcClient.setupRecovery).toHaveBeenCalledWith(params, {
+        headers: { Authorization: 'Bearer fake-token' },
+      })
+    })
+  })
+
   describe('fetchOprfEvaluate', () => {
     it('attaches the Privy access token as a Bearer Authorization header', async () => {
       const rpcClient = makeRpcClient()

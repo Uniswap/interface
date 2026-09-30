@@ -1,5 +1,5 @@
 import { expect, type Page } from '@playwright/test'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 /**

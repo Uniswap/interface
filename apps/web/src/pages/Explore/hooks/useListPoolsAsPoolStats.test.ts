@@ -8,7 +8,7 @@ vi.mock('@tanstack/react-query', async () => ({
 }))
 
 vi.mock('uniswap/src/data/apiClients/dataApiService/pools/queries', () => ({
-  getListPoolsQueryOptions: vi.fn(() => ({})),
+  getListPoolsInfiniteQueryOptions: vi.fn(() => ({})),
 }))
 
 const mockUseInfiniteQuery = vi.mocked(useInfiniteQuery)

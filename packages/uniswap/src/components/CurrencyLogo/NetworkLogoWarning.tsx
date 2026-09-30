@@ -2,9 +2,9 @@ import { UniverseChainId } from '@universe/chains'
 import { Flex, iconSizes, spacing, zIndexes } from '@universe/mycelium'
 import { RoundExclamation } from '@universe/mycelium/icons/RoundExclamation'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import { memo } from 'react'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 interface NetworkLogoWarningProps {
   chainId: UniverseChainId

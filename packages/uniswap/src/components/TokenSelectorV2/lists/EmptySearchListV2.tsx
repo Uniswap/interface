@@ -23,7 +23,7 @@ export function EmptySearchListV2({
 }): JSX.Element {
   const {
     data: sections,
-    loading,
+    isLoading,
     error,
     refetch,
   } = useTokenSectionsForEmptySearch({ addresses, chainFilter, chainIds })
@@ -31,11 +31,14 @@ export function EmptySearchListV2({
   // The legacy hook returns legacy-styled headers; swap in V2 headers so the pane doesn't mix styles.
   const v2Sections = useSectionsWithV2Headers(sections)
 
+  // Recent searches are local, so a failed trending fetch shouldn't replace them with the error pane.
+  const hasError = Boolean(error) && !sections?.length
+
   return (
     <TokenSelectorV2List
       chainFilter={chainFilter}
-      hasError={Boolean(error)}
-      loading={loading}
+      hasError={hasError}
+      loading={isLoading}
       refetch={refetch}
       sections={v2Sections}
       showTokenWarnings={true}

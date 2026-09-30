@@ -211,8 +211,8 @@ describe('ExpandableParentAssetIdentity search group header', () => {
     expect(queryByText('TSLA')).toBeNull()
   })
 
-  it('renders the category tag beside the name and the volume detail in the subline', () => {
-    const { getByText, getByTestId } = render(
+  it('renders the category tag beside the name and the issuer token count by default', () => {
+    const { getByText, getByTestId, queryByText } = render(
       <ExpandableParentAssetIdentity
         asset={teslaRwa()}
         enabledChainIds={ENABLED_CHAINS}
@@ -220,10 +220,53 @@ describe('ExpandableParentAssetIdentity search group header', () => {
         isExpanded={false}
         variant="search"
         categoryTag={<Flex testID="category-tag" />}
-        volumeDetail="$1.2M vol"
       />,
     )
     expect(getByTestId('category-tag')).toBeTruthy()
+    expect(getByText('explore.rwa.issuerTokenCount')).toBeTruthy()
+    expect(queryByText('explore.tokens.table.networks')).toBeNull()
+  })
+
+  it('labels the subline with the distinct network count when showNetworkCount is set', () => {
+    const { getByText, queryByText } = render(
+      <ExpandableParentAssetIdentity
+        asset={makeMultiIssuerAsset()}
+        enabledChainIds={ENABLED_CHAINS}
+        canExpand
+        isExpanded={false}
+        variant="search"
+        showNetworkCount
+      />,
+    )
+    expect(getByText('explore.tokens.table.networks')).toBeTruthy()
+    expect(queryByText('explore.rwa.issuerTokenCount')).toBeNull()
+  })
+
+  it('shows the volume detail while collapsed', () => {
+    const { getByText } = render(
+      <ExpandableParentAssetIdentity
+        asset={teslaRwa()}
+        enabledChainIds={ENABLED_CHAINS}
+        canExpand
+        isExpanded={false}
+        variant="search"
+        volumeDetail="$1.2M vol"
+      />,
+    )
     expect(getByText('$1.2M vol')).toBeTruthy()
+  })
+
+  it('hides the volume detail while expanded (the sub-rows carry their own)', () => {
+    const { queryByText } = render(
+      <ExpandableParentAssetIdentity
+        asset={teslaRwa()}
+        enabledChainIds={ENABLED_CHAINS}
+        canExpand
+        isExpanded
+        variant="search"
+        volumeDetail="$1.2M vol"
+      />,
+    )
+    expect(queryByText('$1.2M vol')).toBeNull()
   })
 })

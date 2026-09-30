@@ -43,7 +43,7 @@ export interface TokenOption extends BaseOption {
   quantity: number | null // float representation of balance, returned by data-api
   balanceUSD: Maybe<number>
   isUnsupported?: boolean
-  /** Spot price in USD carried from the rankings payload; set by TokenSelectorV2 trending options, absent elsewhere. */
+  /** Spot price in USD; set by trending token options (rendered by TokenSelectorV2 rows), absent elsewhere. */
   priceUsd?: Maybe<number>
   /** 24h price change in percent (e.g. -1.23); set alongside `priceUsd`. */
   pricePercentChange24h?: Maybe<number>

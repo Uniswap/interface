@@ -6,6 +6,7 @@ import {
   testMigratePendingDappRequestsToRecord,
   testMigrateUnknownBackupAccountsToMaybeManualBackup,
   testRemoveDappInfoToChromeLocalStorage,
+  testRemovePersistedApolloCache,
   testSetLanguageToNavigatorLanguage,
 } from 'src/store/extensionMigrationsTests'
 import { EXTENSION_STATE_VERSION, migrations } from 'src/store/migrations'
@@ -45,6 +46,7 @@ import {
   v31Schema,
   v32Schema,
   v33Schema,
+  v34Schema,
 } from 'src/store/schema'
 import { USDC } from 'uniswap/src/constants/tokens'
 import { initialAppearanceSettingsState } from 'uniswap/src/features/appearance/slice'
@@ -397,5 +399,9 @@ describe('Redux state migrations', () => {
 
   it('migrates from v33 to v34', () => {
     testMarkPoolsBalanceCoachmarkEligible(migrations[34], v33Schema)
+  })
+
+  it('migrates from v34 to v35', () => {
+    testRemovePersistedApolloCache(migrations[35], v34Schema)
   })
 })

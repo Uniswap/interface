@@ -7,7 +7,7 @@ import { ChevronsIn } from 'ui/src/components/icons/ChevronsIn'
 import { ChevronsOut } from 'ui/src/components/icons/ChevronsOut'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { pickFilteredChainToken } from 'uniswap/src/data/apiClients/dataApiService/rwa/pickPrimaryChainToken'
-import { getIssuerCount } from 'uniswap/src/data/apiClients/dataApiService/rwa/rwaMetrics'
+import { getIssuerCount, getRwaNetworkCount } from 'uniswap/src/data/apiClients/dataApiService/rwa/rwaMetrics'
 import type { Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { TABLE_SUBLINE_HEIGHT, type ExpandableAssetGroupVariant } from 'uniswap/src/features/expandableAsset/types'
 
@@ -19,6 +19,7 @@ export type ExpandableParentAssetIdentityProps = {
   variant?: ExpandableAssetGroupVariant
   chainFilter?: UniverseChainId
   categoryTag?: ReactNode
+  showNetworkCount?: boolean
   volumeDetail?: string
   inlineChevron?: boolean
 }
@@ -31,6 +32,7 @@ export function ExpandableParentAssetIdentity({
   variant = 'table',
   chainFilter,
   categoryTag,
+  showNetworkCount = false,
   volumeDetail,
   inlineChevron = true,
 }: ExpandableParentAssetIdentityProps): JSX.Element {
@@ -42,6 +44,9 @@ export function ExpandableParentAssetIdentity({
     ? chainFilter
     : undefined
   const issuerCountLabel = t('explore.rwa.issuerTokenCount', { count: issuerCount })
+  const expandableSublineLabel = showNetworkCount
+    ? t('explore.tokens.table.networks', { count: getRwaNetworkCount(asset, enabledChainIds) })
+    : issuerCountLabel
   const logoSize = variant === 'search' ? iconSizes.icon40 : iconSizes.icon32
   const sublineHeight = variant === 'table' ? TABLE_SUBLINE_HEIGHT : undefined
 
@@ -60,10 +65,10 @@ export function ExpandableParentAssetIdentity({
     <ChevronsOut color="$neutral2" size="$icon.16" />
   )
 
-  const issuerCountSubline = (
+  const expandableSubline = (
     <Flex row alignItems="center" gap={variant === 'search' ? '$spacing2' : '$spacing4'} height={sublineHeight}>
       <Text variant="body3" color="$neutral2" numberOfLines={1}>
-        {issuerCountLabel}
+        {expandableSublineLabel}
       </Text>
       {variant === 'table' || inlineChevron ? chevron : null}
     </Flex>
@@ -71,8 +76,8 @@ export function ExpandableParentAssetIdentity({
 
   const searchSubline = (
     <Flex row alignItems="center" gap="$spacing8" minWidth={0}>
-      {issuerCountSubline}
-      {volumeDetail && (
+      {expandableSubline}
+      {volumeDetail && !isExpanded && (
         <Text variant="body3" color="$neutral3" numberOfLines={1}>
           {volumeDetail}
         </Text>
@@ -83,7 +88,7 @@ export function ExpandableParentAssetIdentity({
   const subline =
     variant === 'table' ? (
       canExpand ? (
-        issuerCountSubline
+        expandableSubline
       ) : (
         <Text variant="body3" color="$neutral2" numberOfLines={1} height={sublineHeight}>
           {issuerCountLabel}

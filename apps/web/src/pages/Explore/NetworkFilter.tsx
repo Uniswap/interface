@@ -5,24 +5,10 @@ import { useNavigate, useSearchParams } from 'react-router'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
 import { NetworkFilter } from '~/components/NetworkFilter/NetworkFilter'
+import { buildExploreUrl } from '~/features/Explore/utils/buildExploreUrl'
 import { useExploreParams } from '~/pages/Explore/redirects'
 import { ExploreTab } from '~/types/explore'
-import { getChainIdFromChainUrlParam, getChainUrlParam } from '~/utils/params/chainParams'
-
-function buildExploreUrl({
-  tabName,
-  chainId,
-  searchParams,
-}: {
-  tabName: ExploreTab | undefined
-  chainId: UniverseChainId | undefined
-  searchParams: URLSearchParams
-}): string {
-  const chainUrlParam = chainId ? getChainUrlParam(chainId) : ''
-  const path = `/explore/${tabName ?? ExploreTab.Tokens}${chainId ? `/${chainUrlParam}` : ''}`
-  const query = searchParams.toString()
-  return query ? `${path}?${query}` : path
-}
+import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
 
 export function TableNetworkFilter({ networks }: { networks?: UniverseChainId[] } = {}) {
   const navigate = useNavigate()

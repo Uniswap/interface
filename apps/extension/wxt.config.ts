@@ -7,7 +7,6 @@ import { transformWithEsbuild } from 'vite'
 import commonjs from 'vite-plugin-commonjs'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import svgr from 'vite-plugin-svgr'
-import tsconfigPaths from 'vite-tsconfig-paths'
 import { defineConfig } from 'wxt'
 import { getRenamedIifeName, rewriteIifeFooter } from './config/contentScriptIifeRename'
 import { getTsconfigAliases } from './config/getTsconfigAliases'
@@ -404,6 +403,8 @@ export default defineConfig({
       define: defines,
 
       resolve: {
+        // Native replacement for vite-tsconfig-paths: per-importer resolution, no tsconfig crawl.
+        tsconfigPaths: true,
         // .mjs before .js (matching Vite's defaults and apps/web): @rn-primitives/* barrels
         // re-export through an extensionless path (`export * from './checkbox'`) and ship paired
         // .web.mjs (ESM) / .web.js (CJS) legs — resolving the CJS leg drops the named exports.
@@ -465,10 +466,6 @@ export default defineConfig({
         // Tailwind v4 — compiles @import "tailwindcss" + @universe/tailwind tokens
         // for the extension's UI pages (sidepanel, onboarding, popup, unitag claim).
         tailwindcss(),
-        tsconfigPaths({
-          // ignores tsconfig files in Nx generator template directories
-          skip: (dir) => dir.includes('files'),
-        }),
         svgr({
           svgrOptions: {
             icon: false,

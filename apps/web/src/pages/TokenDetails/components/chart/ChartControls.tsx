@@ -13,8 +13,10 @@ import { ChartActionsContainer } from '~/features/Explore/chart/ChartActionsCont
 import { ChartTypeToggle } from '~/features/Explore/chart/ChartTypeToggle'
 import { getPillTimeSelectorOptions } from '~/features/Explore/timeLabels'
 import { AdvancedPriceChartToggle } from '~/pages/TokenDetails/components/chart/AdvancedPriceChartToggle'
+import { usePrefetchTDPChartHistory } from '~/pages/TokenDetails/components/chart/hooks/usePrefetchTDPChartHistory'
 import {
   getDisplayPriceChartType,
+  type TDPChartQueryVariables,
   type TokenDetailsChartType,
 } from '~/pages/TokenDetails/components/chart/TDPChartState'
 import { useTDPChartStateContext } from '~/pages/TokenDetails/components/chart/TDPChartStateContext'
@@ -22,7 +24,7 @@ import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 
 const TOKEN_DETAILS_CHART_OPTIONS: TokenDetailsChartType[] = [ChartType.PRICE, ChartType.VOLUME, ChartType.TVL]
 
-export function ChartControls() {
+export function ChartControls({ variables }: { variables: TDPChartQueryVariables }) {
   const { t } = useTranslation()
   const {
     chartType,
@@ -43,6 +45,7 @@ export function ChartControls() {
   const timeSelectorOptions = useMemo(() => getPillTimeSelectorOptions(t), [t])
   const showAdvancedPriceChartToggle = chartType === ChartType.PRICE
   const displayPriceChartType = getDisplayPriceChartType(priceChartType, disableCandlestickUI)
+  const prefetchTimePeriod = usePrefetchTDPChartHistory({ variables, chartType, displayPriceChartType })
 
   return (
     <ChartActionsContainer>
@@ -94,6 +97,7 @@ export function ChartControls() {
           fullWidth={isMediumScreen}
           options={timeSelectorOptions}
           selectedOption={timePeriod}
+          onHoverOption={prefetchTimePeriod}
           onSelectOption={(option: TimePeriod) => {
             if (option === timePeriod) {
               refitChartContent?.()

@@ -7,7 +7,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getCountry } from 'react-native-localize'
 import { useDispatch } from 'react-redux'
-import { useCurrencies } from 'uniswap/src/components/TokenSelector/hooks/useCurrencies'
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
@@ -27,6 +26,7 @@ import {
 } from 'uniswap/src/features/fiatOnRamp/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { useMultichainCurrencyInfosWithoutBridgedNatives } from 'uniswap/src/features/tokens/useMultichainCurrencyInfos'
 import { addTransaction } from 'uniswap/src/features/transactions/slice'
 import {
   TransactionDetails,
@@ -190,12 +190,13 @@ export function useFiatOnRampSupportedTokens({
     [supportedTokensResponse],
   )
 
+  const currencyIds = useMemo(() => Object.keys(supportedTokensById), [supportedTokensById])
   const {
     data: currencies,
     error: currenciesError,
-    loading: currenciesLoading,
+    isLoading: currenciesLoading,
     refetch: refetchCurrencies,
-  } = useCurrencies(Object.keys(supportedTokensById))
+  } = useMultichainCurrencyInfosWithoutBridgedNatives(currencyIds)
 
   const list = useMemo(
     () =>
@@ -211,12 +212,15 @@ export function useFiatOnRampSupportedTokens({
   const loading = supportedTokensLoading || currenciesLoading
   const error = Boolean(supportedTokensError || currenciesError)
   const refetch = async (): Promise<void> => {
+    const promises: Promise<unknown>[] = []
     if (supportedTokensError) {
-      await refetchSupportedTokens()
+      promises.push(refetchSupportedTokens())
     }
     if (currenciesError) {
-      refetchCurrencies?.()
+      promises.push(refetchCurrencies())
     }
+
+    await Promise.all(promises)
   }
 
   return { list, loading, error, refetch }

@@ -104,6 +104,9 @@
     },
     {
       "path": "../../packages/tailwind"
+    },
+    {
+      "path": "../../packages/test"
     }
   ]
 }

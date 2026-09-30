@@ -43,6 +43,7 @@ import {
   useCreateLiquidityContext,
 } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { CreatePositionTxContextProvider } from '~/pages/CreatePosition/CreatePositionTxContext'
+import { HookReviewGate } from '~/pages/CreatePosition/HookReviewGate'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 
@@ -227,12 +228,22 @@ const Toolbar = () => {
   )
 }
 
-export const SharedCreateModals = () => {
+export const SharedCreateModals = ({
+  onDeclineHookReview,
+}: {
+  /**
+   * Where declining the hook review (Go back, the header X) sends the user. Defaults to the
+   * token-select step, which is right for the create and migrate flows; the existing-pool add route
+   * has no such step and leaves the pool instead.
+   */
+  onDeclineHookReview?: () => void
+}) => {
   const {
     positionState: { fee: selectedFee, protocolVersion, hook },
     currencies,
     setPositionState,
     setSelectedHookEntry,
+    setStep,
     feeTierSearchModalOpen,
     setFeeTierSearchModalOpen,
     hookSearchModalOpen,
@@ -241,8 +252,13 @@ export const SharedCreateModals = () => {
   } = useCreateLiquidityContext()
   const { chainId } = useMultichainContext()
 
+  const returnToSelectStep = useCallback(() => {
+    setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
+  }, [setStep])
+
   return (
     <>
+      <HookReviewGate onDecline={onDeclineHookReview ?? returnToSelectStep} />
       <FeeTierSearchModal
         isOpen={feeTierSearchModalOpen}
         onClose={() => setFeeTierSearchModalOpen(false)}

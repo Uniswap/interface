@@ -25,7 +25,7 @@ interface AssetLogoProps {
 export function AssetLogo({ address, chainId, logoUrl, borderRadius }: AssetLogoProps): JSX.Element | null {
   const colors = useSporeColors()
   const currencyId = buildCurrencyId(chainId, address)
-  const { currencyInfo, loading } = useCurrencyInfoWithLoading(currencyId)
+  const { data: currencyInfo, isLoading } = useCurrencyInfoWithLoading(currencyId)
 
   // Use CurrencyLogo if we have currency info
   if (currencyInfo) {
@@ -33,7 +33,7 @@ export function AssetLogo({ address, chainId, logoUrl, borderRadius }: AssetLogo
   }
 
   // Show loading state while fetching currency info
-  if (loading) {
+  if (isLoading) {
     return <Loader.Box borderRadius={borderRadius} height={DAPP_REQUEST_LOGO_SIZE} width={DAPP_REQUEST_LOGO_SIZE} />
   }
 

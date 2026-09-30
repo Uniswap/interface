@@ -2,6 +2,7 @@ import { isAndroid } from '@universe/environment'
 import { Flex, Text } from '@universe/mycelium'
 import { Caret } from '@universe/mycelium/icons/Caret'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import React, { useEffect, useState } from 'react'
 import Animated, {
   cancelAnimation,
@@ -23,7 +24,6 @@ import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeCh
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 type CaretTone = 'flat' | 'up' | 'down'
 

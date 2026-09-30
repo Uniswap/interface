@@ -12,13 +12,14 @@ import {
 const env = settings.environment
 const apmFilter = apmTagFilter(env)
 
-// Volume floor for the Privy API error-rate monitor. privy-embedded-wallet is low-traffic and
-// its Privy call volume is spiky (10m windows routinely dip to ~5-15 requests), so a single
-// isolated 5xx against a tiny denominator can cross 5% and page even when nothing is wrong.
-// clamp_min the denominator to the smallest count at which one 5xx stays under the 2% warning
-// (ceil(100/2)=50), matching the rate-floor pattern the ALB/APM and per-endpoint error monitors
-// already use — so a lone failure trips neither threshold, while a sustained rate still fires.
-const privyApiErrorFloor = rateDenominatorFloor(2, MIN_REQUESTS_5M)
+// Request-volume floor for both Privy API monitors. api.privy.io traffic is 2-18 req/min, so a
+// lone 5xx or a lone ~60s hung request would otherwise page on its own. At 50, one 5xx stays
+// under the 2% warning and one 60s request adds ~1.2s to the gated p95.
+const privyApiVolumeFloor = rateDenominatorFloor(2, MIN_REQUESTS_5M)
+
+// Hit count for the p95 gate below (same idiom as latency.ts). Datadog sums as_count() over the
+// whole window before the arithmetic, so the floor is a 10m total, not a per-bucket count.
+const privyApiHits = `sum:trace.http.request.hits{${apmFilter},peer.hostname:api.privy.io}.as_count()`
 
 /**
  * Dependency monitors. Each external system this service talks to is a failure
@@ -48,8 +49,8 @@ export const privyEmbeddedWalletDepsMonitors: MonitorDefinition[] = [
     id: 'privy_embedded_wallet_dep_privy_api_error_rate',
     name: 'Privy API error rate elevated',
     type: 'query alert',
-    query: `sum(last_10m):( sum:trace.http.request.hits.by_http_status{${apmFilter},peer.hostname:api.privy.io,http.status_code:5*}.as_count() / clamp_min(sum:trace.http.request.hits{${apmFilter},peer.hostname:api.privy.io}.as_count(), ${privyApiErrorFloor}) ) * 100 > 5`,
-    alertBody: `Outbound HTTP error rate to api.privy.io is above 5% over the last 10 minutes. Every signing operation and wallet creation routes through Privy — sustained failures here translate to user-visible auth/signing failures.\n\nCheck: Privy status page, recent deploys, IAM/network changes that could affect outbound HTTPS.\n\nRequires at least ${privyApiErrorFloor} requests in the window before the rate can alert.`,
+    query: `sum(last_10m):( sum:trace.http.request.hits.by_http_status{${apmFilter},peer.hostname:api.privy.io,http.status_code:5*}.as_count() / clamp_min(sum:trace.http.request.hits{${apmFilter},peer.hostname:api.privy.io}.as_count(), ${privyApiVolumeFloor}) ) * 100 > 5`,
+    alertBody: `Outbound HTTP error rate to api.privy.io is above 5% over the last 10 minutes. Every signing operation and wallet creation routes through Privy, so sustained failures here translate to user-visible auth/signing failures.\n\nCheck: Privy status page, recent deploys, IAM/network changes that could affect outbound HTTPS.\n\nRequires at least ${privyApiVolumeFloor} requests in the window before the rate can alert.`,
     recoveryBody: 'Privy API error rate has recovered.',
     team: TEAM,
     priority: 1,
@@ -64,9 +65,8 @@ export const privyEmbeddedWalletDepsMonitors: MonitorDefinition[] = [
     id: 'privy_embedded_wallet_dep_privy_api_p95_latency',
     name: 'Privy API P95 latency elevated',
     type: 'query alert',
-    query: `avg(last_10m):p95:trace.http.request{${apmFilter},peer.hostname:api.privy.io} > 3`,
-    alertBody:
-      'P95 latency on outbound calls to api.privy.io is above 3s over the last 10 minutes. Privy slowness propagates directly to user-visible latency on CreateWallet, SignMessage, SignTransaction, SignTypedData, and Sign7702Authorization.',
+    query: `avg(last_10m):( p95:trace.http.request{${apmFilter},peer.hostname:api.privy.io} * ${privyApiHits} / clamp_min(${privyApiHits}, ${privyApiVolumeFloor}) ) > 3`,
+    alertBody: `P95 latency on outbound calls to api.privy.io is above 3s over the last 10 minutes. Privy slowness propagates directly to user-visible latency on CreateWallet, SignMessage, SignTransaction, SignTypedData, and Sign7702Authorization.\n\nRequires at least ${privyApiVolumeFloor} requests in the window before it can alert.`,
     recoveryBody: 'Privy API latency has recovered.',
     team: TEAM,
     priority: 2,

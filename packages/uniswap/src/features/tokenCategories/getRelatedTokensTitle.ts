@@ -13,8 +13,6 @@ export function getRelatedTokensTitle({ t, category }: { t: TFunction; category:
     return t('tdp.relatedTokens.single.fallback', { category: category.name })
   }
   switch (category.id) {
-    case 'popular':
-      return t('tdp.relatedTokens.single.popular')
     case 'stocks':
       return t('tdp.relatedTokens.single.stocks')
     case 'etfs':

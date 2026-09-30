@@ -1,7 +1,7 @@
 import { UniverseChainId } from '@universe/chains'
+import { TestID } from '@universe/test'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { ARBITRUM_DAI_CURRENCY_INFO, arbitrumDaiCurrencyInfo, UNI_CURRENCY_INFO } from 'uniswap/src/test/fixtures'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { renderWithProviders } from 'uniswap/src/test/render'
 import { render } from 'uniswap/src/test/test-utils'
 

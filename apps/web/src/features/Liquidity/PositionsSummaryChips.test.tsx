@@ -1,10 +1,10 @@
 import userEvent from '@testing-library/user-event'
+import { TestID } from '@universe/test'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import {
   type UseWalletPositionsBalanceResult,
   useWalletPositionsBalance,
 } from 'uniswap/src/features/positions/hooks/useWalletPositionsBalance'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 import { PositionsSummaryChips } from '~/features/Liquidity/PositionsSummaryChips'
 import { usePendingLPTransactionsChangeListener } from '~/state/transactions/hooks'

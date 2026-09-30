@@ -1,11 +1,11 @@
 import { Flex, Text, TouchableArea, iconSizes, spacing } from '@universe/mycelium'
+import { TestIDType } from '@universe/test'
 import { ComponentProps } from 'react'
 import { Trans } from 'react-i18next'
 import { SpinningLoader } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 
 interface SelectTokenButtonProps {

@@ -1,5 +1,5 @@
 import { getWalletNfts } from '@uniswap/client-data-api/dist/data/v2/api-DataApiService_connectquery'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import { expect, getTest } from '~/playwright/fixtures'
 import { HAYDEN_ADDRESS } from '~/playwright/fixtures/wallets'
 import { Mocks } from '~/playwright/mocks/mocks'

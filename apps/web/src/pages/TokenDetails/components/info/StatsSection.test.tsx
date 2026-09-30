@@ -1,7 +1,7 @@
 import { UniverseChainId } from '@universe/chains'
+import { TestID } from '@universe/test'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { useTokenMarketStats, useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { StatsSection } from '~/pages/TokenDetails/components/info/StatsSection'
 import type { TDPState } from '~/pages/TokenDetails/context/createTDPStore'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'

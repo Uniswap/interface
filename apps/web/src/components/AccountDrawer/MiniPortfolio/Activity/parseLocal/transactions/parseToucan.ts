@@ -2,6 +2,7 @@ import type { Currency } from '@uniswap/sdk-core'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
+import { fetchCurrency } from 'uniswap/src/features/tokens/fetchCurrencyInfo'
 import type {
   AuctionLaunchTransactionInfo,
   ToucanBidTransactionInfo,
@@ -13,7 +14,6 @@ import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/curren
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { getActivityTitle } from '~/components/AccountDrawer/MiniPortfolio/Activity/constants'
-import { getCurrencyFromCurrencyId } from '~/components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
 import type { FormatNumberFunctionType } from '~/components/AccountDrawer/MiniPortfolio/Activity/parseLocal/types'
 import type { Activity } from '~/components/AccountDrawer/MiniPortfolio/Activity/types'
 
@@ -32,8 +32,8 @@ export async function parseToucanBid({
       : buildCurrencyId(chainId, bid.bidTokenAddress)
   const auctionCurrencyId = bid.auctionTokenAddress ? buildCurrencyId(chainId, bid.auctionTokenAddress) : undefined
   const [bidCurrency, auctionCurrency] = await Promise.all([
-    getCurrencyFromCurrencyId(bidCurrencyId),
-    auctionCurrencyId ? getCurrencyFromCurrencyId(auctionCurrencyId) : undefined,
+    fetchCurrency(bidCurrencyId),
+    auctionCurrencyId ? fetchCurrency(auctionCurrencyId) : undefined,
   ])
   const auctionTokenSymbol = auctionCurrency?.symbol ?? bid.auctionTokenSymbol ?? bid.auctionContractAddress
 
@@ -80,11 +80,9 @@ export async function parseWithdrawBidAndClaimTokens({
 }): Promise<Partial<Activity>> {
   // Resolve currency objects from addresses
   const [auctionCurrency, bidCurrency] = await Promise.all([
-    withdraw.auctionTokenAddress
-      ? getCurrencyFromCurrencyId(buildCurrencyId(chainId, withdraw.auctionTokenAddress))
-      : undefined,
+    withdraw.auctionTokenAddress ? fetchCurrency(buildCurrencyId(chainId, withdraw.auctionTokenAddress)) : undefined,
     withdraw.bidTokenAddress
-      ? getCurrencyFromCurrencyId(
+      ? fetchCurrency(
           withdraw.bidTokenAddress === ZERO_ADDRESS
             ? buildNativeCurrencyId(chainId)
             : buildCurrencyId(chainId, withdraw.bidTokenAddress),

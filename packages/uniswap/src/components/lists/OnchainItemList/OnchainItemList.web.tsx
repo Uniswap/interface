@@ -3,6 +3,7 @@ import isArray from 'lodash/isArray'
 import isEqual from 'lodash/isEqual'
 import React, {
   CSSProperties,
+  forwardRef,
   Fragment,
   useCallback,
   useEffect,
@@ -11,37 +12,35 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { useWindowDimensions } from 'react-native'
+import { StyleProp, StyleSheet, useWindowDimensions, ViewStyle } from 'react-native'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { VariableSizeList as List } from 'react-window'
 import { zIndexes } from 'ui/src/theme'
 import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
 import { useRowHeightObserver } from 'uniswap/src/components/lists/OnchainItemList/hooks/useRowHeightObserver'
 import { OnchainItemListProps } from 'uniswap/src/components/lists/OnchainItemList/OnchainItemList'
-import { toSectionHeaderProps } from 'uniswap/src/components/lists/OnchainItemList/processSectionsToRows'
+import { toFlatRowIndex } from 'uniswap/src/components/lists/OnchainItemList/processSectionsToRows'
 import {
   findFocusableRowIndex,
   getFirstFocusableRowIndex,
+  hasWebHeaderRow,
   isDynamicHeightRowInfo,
   isHorizontalTokenRowInfo,
+  isSectionFooter,
   isSectionHeader,
-  type ListItemRowInfo,
   type ListSectionRowInfo,
   type OnchainItemListData,
+  toWebListRows,
 } from 'uniswap/src/components/lists/OnchainItemList/rowInfo'
-import {
-  getRowsStructuralSignature,
-  getSectionHeaderRowKey,
-  getSectionRowId,
-  getSectionItemRowKey,
-} from 'uniswap/src/components/lists/OnchainItemList/rowKeys'
-import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { getRowsStructuralSignature } from 'uniswap/src/components/lists/OnchainItemList/rowKeys'
 import { ITEM_SECTION_HEADER_ROW_HEIGHT } from 'uniswap/src/components/TokenSelector/constants'
 import { KeyAction } from 'utilities/src/device/keyboard/types'
 import { useKeyDown } from 'utilities/src/device/keyboard/useKeyDown'
 
 const ITEM_ROW_HEIGHT = 64
 const HORIZONTAL_TOKEN_ROW_HEIGHT = 88
+// Pre-measurement fallback only (the search "View all" footer's height); footers are measured.
+const SECTION_FOOTER_ROW_HEIGHT = 48
 
 type RowHeightUpdate = {
   index: number
@@ -51,6 +50,27 @@ type RowHeightUpdate = {
 
 function getSectionHeaderHeight<T extends OnchainItemListOption>(rowInfo: ListSectionRowInfo<T>): number {
   return rowInfo.section.sectionHeaderHeight ?? ITEM_SECTION_HEADER_ROW_HEIGHT
+}
+
+/**
+ * react-window fixes the inner element's `height` to the summed row sizes and positions rows absolutely, so
+ * `contentContainerStyle` padding has to be added to that height explicitly or the extra scroll extent never appears.
+ */
+function createInnerElementType(
+  contentContainerStyle: StyleProp<ViewStyle> | undefined,
+): React.ComponentType<React.HTMLAttributes<HTMLDivElement>> | undefined {
+  if (!contentContainerStyle) {
+    return undefined
+  }
+  const flattened = StyleSheet.flatten(contentContainerStyle) as CSSProperties
+  const paddingTop = typeof flattened.paddingTop === 'number' ? flattened.paddingTop : 0
+  const paddingBottom = typeof flattened.paddingBottom === 'number' ? flattened.paddingBottom : 0
+
+  return forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(function ListInner({ style, ...rest }, ref) {
+    const height = typeof style?.height === 'number' ? style.height + paddingTop + paddingBottom : style?.height
+    // oxlint-disable-next-line react/forbid-elements -- react-window needs a raw DOM node it can size and ref directly
+    return <div ref={ref} style={{ ...style, ...flattened, height, boxSizing: 'border-box' }} {...rest} />
+  })
 }
 
 export function OnchainItemList<T extends OnchainItemListOption>({
@@ -63,6 +83,7 @@ export function OnchainItemList<T extends OnchainItemListOption>({
   expandedItems,
   focusedRowControl,
   autoFocusFirstRowKey,
+  contentContainerStyle,
 }: OnchainItemListProps<T>): JSX.Element {
   const ref = useRef<List>(null)
   const listOuterRef = useRef<HTMLDivElement>(null)
@@ -70,62 +91,24 @@ export function OnchainItemList<T extends OnchainItemListOption>({
   const rowHeightMap = useRef<Record<string, number>>({})
   const [firstVisibleIndex, setFirstVisibleIndex] = useState(-1)
   const { width: windowWidth } = useWindowDimensions()
+  const innerElementType = useMemo(() => createInnerElementType(contentContainerStyle), [contentContainerStyle])
 
   useEffect(() => {
     if (sectionListRef) {
       sectionListRef.current = {
         scrollToLocation: ({ itemIndex, sectionIndex }): void => {
-          let listIndex = 0
-          for (let i = 0; i < sectionIndex; i++) {
-            const section = sections[i]
-            listIndex += section?.data.length ?? 0
-          }
-          listIndex += itemIndex
-
-          ref.current?.scrollToItem(listIndex)
+          ref.current?.scrollToItem(
+            toFlatRowIndex({ sections, sectionIndex, itemIndex, hasHeaderRow: hasWebHeaderRow }),
+          )
         },
       }
     }
   }, [sectionListRef, sections])
 
-  const items = useMemo(() => {
-    let rowIndex = 0
-    return sections.reduce((acc: OnchainItemListData<T>[], section) => {
-      if (section.sectionKey !== OnchainItemSectionName.SuggestedTokens) {
-        const sectionInfo: ListSectionRowInfo<T> = {
-          section: toSectionHeaderProps(section),
-          key: getSectionRowId(section),
-          measurementKey: getSectionHeaderRowKey(getSectionRowId(section)),
-          renderSectionHeader,
-        }
-        rowIndex += 1
-        acc.push(sectionInfo)
-      }
-
-      const rows = acc.concat(
-        section.data.map((item, index) => {
-          const itemInfo: ListItemRowInfo<T> = {
-            item,
-            rowIndex,
-            section,
-            index,
-            key: keyExtractor?.(item, index),
-            measurementKey: getSectionItemRowKey({
-              sectionRowId: getSectionRowId(section),
-              itemKey: keyExtractor?.(item, index),
-              index,
-            }),
-            renderItem,
-            expanded: expandedItems?.includes(keyExtractor?.(item, index) ?? '') ?? false,
-          }
-          rowIndex += 1
-          return itemInfo
-        }),
-      )
-
-      return rows
-    }, [])
-  }, [sections, renderSectionHeader, keyExtractor, renderItem, expandedItems])
+  const items = useMemo(
+    () => toWebListRows({ sections, renderSectionHeader, renderItem, keyExtractor, expandedItems }),
+    [sections, renderSectionHeader, keyExtractor, renderItem, expandedItems],
+  )
 
   // Signature of the row SET (ordered keys, excluding heights/expanded state): changes on insert/remove/reorder
   // (clear recents, tab/filter, refetch) but not on expand/collapse. On change, react-window's index-keyed offset
@@ -217,6 +200,10 @@ export function OnchainItemList<T extends OnchainItemListOption>({
 
       const measuredHeight = rowHeightMap.current[item.measurementKey]
 
+      if (isSectionFooter(item)) {
+        return measuredHeight ?? SECTION_FOOTER_ROW_HEIGHT
+      }
+
       if (isHorizontalTokenRowInfo(item)) {
         if (isArray(item.item) && !item.item.length) {
           return 0
@@ -266,12 +253,47 @@ export function OnchainItemList<T extends OnchainItemListOption>({
     [resetRowOffsets, updateRowHeight, windowWidth, activeSessionIndex],
   )
 
+  // react-window's scrollToItem is unaware of the sticky header overlay, so scrolling up would park the row beneath
+  // it. Reserve the height of the header that will be pinned once the row is at the top (its own section's header).
+  const scrollRowIntoView = useCallback(
+    (index: number): void => {
+      const list = ref.current
+      const outer = listOuterRef.current
+      if (!list || !outer) {
+        return
+      }
+
+      let rowTop = 0
+      for (let i = 0; i < index; i++) {
+        rowTop += getRowHeight(i)
+      }
+      const rowBottom = rowTop + getRowHeight(index)
+
+      let stickyHeaderHeight = 0
+      for (let i = index - 1; i >= 0; i--) {
+        const row = items[i]
+        if (row && isSectionHeader(row)) {
+          stickyHeaderHeight = getSectionHeaderHeight(row)
+          break
+        }
+      }
+
+      const { scrollTop, clientHeight } = outer
+      if (rowTop < scrollTop + stickyHeaderHeight) {
+        list.scrollTo(Math.max(0, rowTop - stickyHeaderHeight))
+      } else if (rowBottom > scrollTop + clientHeight) {
+        list.scrollTo(rowBottom - clientHeight)
+      }
+    },
+    [getRowHeight, items],
+  )
+
   const focusRowWithKeyboard = useCallback(
     (index: number): void => {
       focusedRowControl?.setFocusedRowIndex(index)
-      ref.current?.scrollToItem(index)
+      scrollRowIntoView(index)
     },
-    [focusedRowControl],
+    [focusedRowControl, scrollRowIntoView],
   )
 
   const handleArrowKeyListScrolling = useCallback(
@@ -347,6 +369,7 @@ export function OnchainItemList<T extends OnchainItemListOption>({
                 itemData={items}
                 itemKey={(index): string => items[index]?.measurementKey ?? `${index}`}
                 itemSize={getRowHeight}
+                innerElementType={innerElementType}
                 width="100%"
                 onItemsRendered={({ visibleStartIndex }): void => {
                   setFirstVisibleIndex(visibleStartIndex)
@@ -397,7 +420,7 @@ function OnchainItemListRow<T extends OnchainItemListOption>({
 
 type RowProps<T extends OnchainItemListOption> = {
   index: number
-  itemData: ListItemRowInfo<T> | ListSectionRowInfo<T>
+  itemData: OnchainItemListData<T>
   style?: CSSProperties
   windowWidth: number
   updateRowHeight?: (params: RowHeightUpdate) => void
@@ -434,6 +457,10 @@ function RowInner<T extends OnchainItemListOption>({
   const item = useMemo((): JSX.Element | null => {
     if (isSectionHeader(itemData)) {
       return itemData.renderSectionHeader?.(itemData) ?? null
+    }
+
+    if (isSectionFooter(itemData)) {
+      return itemData.footerElement
     }
 
     return itemData.renderItem(itemData)

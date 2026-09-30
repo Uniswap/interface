@@ -1,5 +1,5 @@
+import { TestID } from '@universe/test'
 import { SearchModalListSkeleton } from 'uniswap/src/features/search/SearchModal/SearchModalListSkeleton'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { render } from 'uniswap/src/test/test-utils'
 
 describe(SearchModalListSkeleton, () => {

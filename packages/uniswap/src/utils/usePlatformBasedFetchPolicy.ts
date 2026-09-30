@@ -1,8 +1,9 @@
-import { WatchQueryFetchPolicy } from '@apollo/client'
 import { usePlatformBasedValue } from 'uniswap/src/utils/usePlatformBasedValue'
 
+export type FetchPolicy = 'cache-first' | 'network-only' | 'cache-only' | 'no-cache' | 'standby' | 'cache-and-network'
+
 type Props = {
-  fetchPolicy: WatchQueryFetchPolicy | undefined
+  fetchPolicy: FetchPolicy | undefined
   pollInterval: number | undefined
 }
 

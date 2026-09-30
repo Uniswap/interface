@@ -1,5 +1,6 @@
 import { sanitizeAddressText } from '@universe/chains'
 import { ColorTokens, Flex, SpaceTokens, Text } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useMemo } from 'react'
 import type { FlexAlignType } from 'react-native'
 // mycelium's `fonts` is the flat web table; ui's applies the native +1 ramp these prop reads depend on
@@ -11,7 +12,6 @@ import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
 
 type AddressDisplayProps = {

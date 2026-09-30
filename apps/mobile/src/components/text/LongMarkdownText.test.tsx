@@ -1,9 +1,9 @@
 import { fonts } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import React from 'react'
 import Markdown, { MarkdownProps } from 'react-native-markdown-display'
 import { LongMarkdownText } from 'src/components/text/LongMarkdownText'
 import { act, fireEvent, render, within } from 'src/test/test-utils'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import type { Mock } from 'vitest'
 
 const TEXT_VARIANT = 'body2'

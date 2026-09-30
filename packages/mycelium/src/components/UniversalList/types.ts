@@ -83,6 +83,11 @@ interface ListLayoutProps<T> {
    */
   recycleItems?: boolean
   /**
+   * Required for rows that call `useIsRowViewable`. Opt-in because Legend then recomputes
+   * viewability on every scroll event.
+   */
+  trackRowViewability?: boolean
+  /**
    * Custom equality for recycled items — return true to skip re-rendering an item whose data is
    * unchanged. Pairs with recycleItems for busy feeds. Must be a stable reference.
    */

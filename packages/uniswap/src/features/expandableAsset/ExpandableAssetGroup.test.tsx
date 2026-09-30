@@ -9,6 +9,19 @@ import { ExpandableAssetGroup } from 'uniswap/src/features/expandableAsset/Expan
 import type { RenderIssuerRowArgs } from 'uniswap/src/features/expandableAsset/types'
 import { render } from 'uniswap/src/test/test-utils'
 
+// Mutable platform getter so the mobile volume test can flip isMobileApp without a whole-file mock.
+const { mockIsMobileApp } = vi.hoisted(() => ({ mockIsMobileApp: { value: false } }))
+
+vi.mock('@universe/environment', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@universe/environment')>()
+  return {
+    ...actual,
+    get isMobileApp(): boolean {
+      return mockIsMobileApp.value
+    },
+  }
+})
+
 const ENABLED_CHAINS = [UniverseChainId.Mainnet, UniverseChainId.Base, UniverseChainId.ArbitrumOne]
 
 function makeIssuer(slug: string, symbol: string) {
@@ -79,6 +92,36 @@ describe('ExpandableAssetGroup renderIssuerRow wiring', () => {
       )
       expect(getAllByText('Stocks')).toHaveLength(1)
       unmount()
+    }
+  })
+
+  it('shows the aggregated volume on a collapsed multi-issuer parent row on web but not on the mobile app', () => {
+    const rwa = rwaWithIssuers([
+      ['xstocks', 'TSLAX'],
+      ['ondo', 'TSLAON'],
+    ])
+    const renderGroup = () =>
+      render(
+        <ExpandableAssetGroup
+          asset={rwa}
+          enabledChainIds={ENABLED_CHAINS}
+          isExpanded={false}
+          volumeDetail="$1.2M vol"
+          onToggle={vi.fn()}
+        />,
+      )
+
+    const web = renderGroup()
+    expect(web.getByText('$1.2M vol')).toBeTruthy()
+    web.unmount()
+
+    mockIsMobileApp.value = true
+    try {
+      const mobile = renderGroup()
+      expect(mobile.queryByText('$1.2M vol')).toBeNull()
+      mobile.unmount()
+    } finally {
+      mockIsMobileApp.value = false
     }
   })
 

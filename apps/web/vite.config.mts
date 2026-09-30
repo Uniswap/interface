@@ -12,7 +12,6 @@ import bundlesize from 'vite-plugin-bundlesize'
 import commonjs from 'vite-plugin-commonjs'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import svgr from 'vite-plugin-svgr'
-import tsconfigPaths from 'vite-tsconfig-paths'
 import { enableDebugRoutes } from './scripts/debug-routes'
 import { createEntryGatewayProxies } from './vite/entry-gateway-proxy'
 import { generateAssetsIgnorePlugin } from './vite/generateAssetsIgnorePlugin.js'
@@ -286,6 +285,9 @@ export default defineConfig(({ mode, command, isPreview }) => {
     define: defines,
 
     resolve: {
+      // Native replacement for vite-tsconfig-paths: per-importer resolution, no tsconfig crawl.
+      tsconfigPaths: true,
+
       // .web-app file extensions take priority over .web for web app-specific overrides
       extensions: [
         '.web-app.tsx',
@@ -381,12 +383,6 @@ export default defineConfig(({ mode, command, isPreview }) => {
         ...plugin,
         applyToEnvironment: (environment: { name: string }) => environment.name === 'client',
       })),
-      tsconfigPaths({
-        // No `projects` restriction — functions/tsconfig.json must be auto-discovered
-        // for the functions/* alias to resolve.
-        // ignores tsconfig files in Nx generator template directories
-        skip: (dir) => dir.includes('files'),
-      }),
       env.SKIP_CSP ? undefined : cspMetaTagPlugin(mode, env),
       svgr({
         svgrOptions: {
@@ -443,22 +439,22 @@ export default defineConfig(({ mode, command, isPreview }) => {
         },
         include: ['path', 'buffer'],
       }),
-      // nodePolyfills (above) injects its shim imports into every environment via a global esbuild
-      // banner, so non-client optimizers must know them up front to avoid a mid-run reload.
+      // nodePolyfills (above) banners `import ... from 'vite-plugin-node-polyfills/shims/*'` onto every
+      // optimized dep, where the dep scanner can't see it. Every environment, client included, must
+      // know the shims up front, or each one is discovered on first chunk load, costing an extra
+      // optimize pass and a page reload. (Rolldown dropped the esbuild `inject` that covered the client.)
       {
-        name: 'pre-bundle-node-polyfill-shims-in-worker-environments',
-        configEnvironment(name: string) {
-          return name === 'client'
-            ? null
-            : {
-                optimizeDeps: {
-                  include: [
-                    'vite-plugin-node-polyfills/shims/buffer',
-                    'vite-plugin-node-polyfills/shims/global',
-                    'vite-plugin-node-polyfills/shims/process',
-                  ],
-                },
-              }
+        name: 'pre-bundle-node-polyfill-shims',
+        configEnvironment() {
+          return {
+            optimizeDeps: {
+              include: [
+                'vite-plugin-node-polyfills/shims/buffer',
+                'vite-plugin-node-polyfills/shims/global',
+                'vite-plugin-node-polyfills/shims/process',
+              ],
+            },
+          }
         },
       },
       commonjs({
@@ -475,7 +471,7 @@ export default defineConfig(({ mode, command, isPreview }) => {
             ],
           }),
       generateAssetsIgnorePlugin(isMinifiedBuild && !DISABLE_SOURCEMAP, __dirname),
-      generateVersionFilePlugin(isCloudflareDeploy, bundleVersion, __dirname),
+      generateVersionFilePlugin(isCloudflareDeploy || isEcsDeploy, bundleVersion, __dirname),
       {
         name: 'copy-twist-config',
         writeBundle() {
@@ -559,21 +555,23 @@ export default defineConfig(({ mode, command, isPreview }) => {
         '@uniswap/client-privy-embedded-wallet',
         'expo-modules-core',
       ],
-      esbuildOptions: {
-        resolveExtensions: [
-          '.web-app.js',
-          '.web-app.ts',
-          '.web-app.tsx',
-          '.web.mjs',
-          '.web.js',
-          '.web.ts',
-          '.web.tsx',
-          '.mjs',
-          '.js',
-          '.ts',
-          '.tsx',
-        ],
-        loader: {
+      rolldownOptions: {
+        resolve: {
+          extensions: [
+            '.web-app.js',
+            '.web-app.ts',
+            '.web-app.tsx',
+            '.web.mjs',
+            '.web.js',
+            '.web.ts',
+            '.web.tsx',
+            '.mjs',
+            '.js',
+            '.ts',
+            '.tsx',
+          ],
+        },
+        moduleTypes: {
           '.js': 'jsx',
           '.mjs': 'jsx',
           '.ts': 'ts',

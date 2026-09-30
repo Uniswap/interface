@@ -11,6 +11,7 @@ import {
   migratePendingDappRequestsToRecord,
   migrateUnknownBackupAccountsToMaybeManualBackup,
   removeDappInfoToChromeLocalStorage,
+  removePersistedApolloCache,
   setLanguageToNavigatorLanguage,
 } from 'src/store/extensionMigrations'
 import { Language } from 'uniswap/src/features/language/constants'
@@ -185,5 +186,30 @@ describe('setLanguageToNavigatorLanguage', () => {
     }
     const result = setLanguageToNavigatorLanguage(state)
     expect(result.userSettings.currentLanguage).toBe(Language.English)
+  })
+})
+
+describe('removePersistedApolloCache', () => {
+  const remove = vi.mocked(chrome.storage.local.remove)
+
+  beforeEach(() => {
+    remove.mockReset()
+    remove.mockImplementation(() => Promise.resolve())
+  })
+
+  it('removes the apollo cache entry from chrome.storage.local and leaves state untouched', () => {
+    const state = { otherData: 'preserved' }
+    const result = removePersistedApolloCache(state)
+    expect(remove).toHaveBeenCalledWith('apollo-cache-persist')
+    expect(result).toEqual({ otherData: 'preserved' })
+  })
+
+  it('returns state unchanged when chrome.storage throws', () => {
+    remove.mockImplementation(() => {
+      throw new Error('storage unavailable')
+    })
+    const state = { otherData: 'preserved' }
+    const result = removePersistedApolloCache(state)
+    expect(result).toEqual({ otherData: 'preserved' })
   })
 })

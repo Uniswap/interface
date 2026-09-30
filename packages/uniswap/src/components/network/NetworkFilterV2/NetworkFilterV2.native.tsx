@@ -2,6 +2,7 @@ import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { UniverseChainId } from '@universe/chains'
 import { Flex, spacing } from '@universe/mycelium'
 import { useState } from 'react'
+import { easeInEaseOutLayoutAnimation } from 'ui/src/animations/layout/layoutAnimation'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { NetworkFilterContent } from 'uniswap/src/components/network/NetworkFilterV2/NetworkFilterContent'
 import { NetworkFilterTrigger } from 'uniswap/src/components/network/NetworkFilterV2/NetworkFilterTrigger'
@@ -46,6 +47,8 @@ export function NetworkFilterV2({
 
   const handlePressChain = useEvent((chainId: UniverseChainId | null): void => {
     handleCloseSheet()
+    // Matches legacy NetworkFilter so the re-filtered list eases instead of snapping
+    easeInEaseOutLayoutAnimation()
     onPressChain(chainId)
   })
 

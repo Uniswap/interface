@@ -1,4 +1,5 @@
 import { Flex, iconSizes, type ModifierPressProps, Text } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { GridView } from 'ui/src/components/icons/GridView'
@@ -6,7 +7,6 @@ import { FocusedRowControl, OptionItem } from 'uniswap/src/components/lists/item
 import type { CategoryOption } from 'uniswap/src/components/lists/items/types'
 import { getTokenCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
 import { TokenLogoPile } from 'uniswap/src/features/tokenCategories/TokenLogoPile'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const ICON_TILE_SIZE = iconSizes.icon40
 const PILE_LOGO_SIZE = iconSizes.icon24

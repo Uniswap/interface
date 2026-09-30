@@ -1,10 +1,10 @@
 import type { UniverseChainId } from '@universe/chains'
 import { Button, Flex, Text } from '@universe/mycelium'
 import { Sliders } from '@universe/mycelium/icons/Sliders'
+import { TestID } from '@universe/test'
 import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { COLLAPSED_SEARCH_WIDTH } from '~/components/ExpandableSearchInput/ExpandableSearchInput'
 import { NetworkFilter } from '~/components/NetworkFilter/NetworkFilter'
 import { PoolsFilterModal } from '~/features/Liquidity/PoolsFilter/PoolsFilterModal'
@@ -16,10 +16,11 @@ import { EMPTY_POOLS_FILTER_STATE, type PoolsAprRange, type PoolsFilterState } f
  * search control plus a Filter button that opens the {@link PoolsFilterModal}. Rendered by both the Explore
  * pools tab and the add-liquidity pool browser so they stay in sync.
  *
- * Controlled: `value` is the committed filter each surface stores (Explore's store, the pool browser's URL
- * params) and reads into its pool query. The modal edits a local draft rather than committing per keystroke,
- * so the table doesn't refetch as the user types. Two actions commit through `onApply`: "Apply" (the draft,
- * and it dismisses) and "Clear all" (the empty state, staying open) — see `clearAll` below.
+ * Controlled: `value` is the committed filter each surface stores (Explore's store plus its URL chain
+ * segment, the pool browser's URL params) and reads into its pool query. The modal edits a local draft
+ * rather than committing per keystroke, so the table doesn't refetch as the user types. Two actions commit
+ * through `onApply`: "Apply" (the draft, and it dismisses) and "Clear all" (the empty state, staying open) —
+ * see `clearAll` below.
  */
 export function PoolsFilter({
   search,

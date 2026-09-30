@@ -36,7 +36,7 @@ function QrCodeSelectionHandlerContent({ selection, onClose }: QrCodeSelectionHa
   const [initialSelectionStarted, setInitialSelectionStarted] = useState(false)
   const [showTokenWarning, setShowTokenWarning] = useState(false)
   const recipientCheckConfirmed = useRef(false)
-  const { currencyInfo, loading } = useCurrencyInfoWithLoading(
+  const { data: currencyInfo, isLoading } = useCurrencyInfoWithLoading(
     buildCurrencyId(selection.chainId, selection.tokenAddress),
   )
   const tokenProtectionWarning = getTokenProtectionWarning(currencyInfo)
@@ -76,7 +76,7 @@ function QrCodeSelectionHandlerContent({ selection, onClose }: QrCodeSelectionHa
   )
 
   useEffect(() => {
-    if (!isInitialSelection || loading || initialSelectionStarted) {
+    if (!isInitialSelection || isLoading || initialSelectionStarted) {
       return
     }
 
@@ -87,7 +87,7 @@ function QrCodeSelectionHandlerContent({ selection, onClose }: QrCodeSelectionHa
 
     setInitialSelectionStarted(true)
     setCheckTargetChainSpeedBumps(true)
-  }, [currencyInfo, initialSelectionStarted, isInitialSelection, loading, onClose, setCheckTargetChainSpeedBumps])
+  }, [currencyInfo, initialSelectionStarted, isInitialSelection, isLoading, onClose, setCheckTargetChainSpeedBumps])
 
   const applySelection = (): void => {
     if (!currencyInfo) {
@@ -169,7 +169,7 @@ function QrCodeSelectionHandlerContent({ selection, onClose }: QrCodeSelectionHa
                 label={t('send.qrCodeSelection.warning.details.token')}
                 value={
                   <Flex row alignItems="center" gap="$spacing4">
-                    {loading ? (
+                    {isLoading ? (
                       <Loader.Box borderRadius="$roundedFull" height={16} width={16} />
                     ) : (
                       <CurrencyLogo hideNetworkLogo currencyInfo={currencyInfo} size={16} />
@@ -180,7 +180,7 @@ function QrCodeSelectionHandlerContent({ selection, onClose }: QrCodeSelectionHa
                   </Flex>
                 }
               />
-              {!loading && !currencyInfo && (
+              {!isLoading && !currencyInfo && (
                 <Text color="$statusCritical" variant="body3">
                   {t('send.qrCodeSelection.warning.token.unavailable', {
                     chainName: getChainLabel(selection.chainId),
@@ -198,7 +198,7 @@ function QrCodeSelectionHandlerContent({ selection, onClose }: QrCodeSelectionHa
                 flex={1}
                 disabled={!currencyInfo}
                 emphasis="primary"
-                loading={loading}
+                loading={isLoading}
                 size="medium"
                 variant="branded"
                 onPress={onUpdate}

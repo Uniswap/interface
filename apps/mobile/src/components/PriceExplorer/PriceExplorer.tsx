@@ -1,10 +1,10 @@
-import { GraphQLApi } from '@universe/api'
 import { isAndroid } from '@universe/environment'
 import { Flex, Text } from '@universe/mycelium'
 import { SegmentedControl } from '@universe/mycelium/segmented-control-compat'
 import { opacify, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { spacing } from '@universe/mycelium/tokens'
 import { withSporeCurve } from '@universe/tailwind/animations/reanimated'
+import { TestID } from '@universe/test'
 import { LinearGradient } from 'expo-linear-gradient'
 import React, { memo, PropsWithChildren, ReactElement, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -29,12 +29,12 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { isLowVarianceRange } from 'uniswap/src/components/charts/utils'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { logger } from 'utilities/src/logger/logger'
 
 const DEFAULT_Y_PADDING = 20
@@ -156,9 +156,9 @@ const PriceExplorerContent = memo(function PriceExplorerContentInner(): JSX.Elem
   const isScreenNavigationReady = useIsScreenNavigationReady({ navigation })
   const shouldQueryMultichainAggregate = initialIsMultichainAsset || hasMultichainAddresses
 
-  const { data, loading, setDuration, selectedDuration } = useTokenPriceHistory({
+  const { data, isLoading, setDuration, selectedDuration } = useTokenPriceHistory({
     currencyId,
-    initialDuration: GraphQLApi.HistoryDuration.Day,
+    initialDuration: HistoryDuration.Day,
     isMultichainAggregateView: shouldQueryMultichainAggregate,
     skip: !isScreenNavigationReady,
   })
@@ -183,8 +183,7 @@ const PriceExplorerContent = memo(function PriceExplorerContentInner(): JSX.Elem
 
   const { convertFiatAmount } = useLocalizationContext()
   const conversionRate = convertFiatAmount(1).amount
-  const shouldShowAnimatedDot =
-    selectedDuration === GraphQLApi.HistoryDuration.Day || selectedDuration === GraphQLApi.HistoryDuration.Hour
+  const shouldShowAnimatedDot = selectedDuration === HistoryDuration.Day || selectedDuration === HistoryDuration.Hour
 
   const convertedPriceHistory = useMemo(
     () =>
@@ -249,7 +248,7 @@ const PriceExplorerContent = memo(function PriceExplorerContentInner(): JSX.Elem
     })
   }, [t])
 
-  if (!loading && !convertedSpot && selectedDuration === GraphQLApi.HistoryDuration.Day) {
+  if (!isLoading && !convertedSpot && selectedDuration === HistoryDuration.Day) {
     return <PriceExplorerError />
   }
 
@@ -260,7 +259,7 @@ const PriceExplorerContent = memo(function PriceExplorerContentInner(): JSX.Elem
     <PriceChartProvider data={convertedPriceHistory}>
       <Flex gap="$spacing8" overflow="hidden">
         <PriceTextSection
-          loading={loading}
+          loading={isLoading}
           relativeChange={convertedSpot?.relativeChange}
           relativeChangeIdle={convertedSpot?.relativeChangeIdle}
           spotPrice={convertedSpot?.value}

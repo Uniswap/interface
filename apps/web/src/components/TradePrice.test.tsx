@@ -1,7 +1,7 @@
 import 'utilities/src/logger/mocks'
 import { Price, WETH9 } from '@uniswap/sdk-core'
+import { TestID } from '@universe/test'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { TradePrice } from '~/components/TradePrice'
 import { fireEvent, render, screen } from '~/test-utils/render'
 

@@ -1,9 +1,9 @@
 import { Flex, useIsTouchDevice } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { memo, useContext } from 'react'
 import { ContextMenuTriggerButton } from 'uniswap/src/components/menus/ContextMenuTriggerButton'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { IssuerTableRowHoverContext } from 'uniswap/src/features/expandableAsset/IssuerTableRowHoverContext'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { TokenData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 import { TokensContextMenuWrapper } from '~/pages/Portfolio/Tokens/Table/TokensContextMenuWrapper'
 

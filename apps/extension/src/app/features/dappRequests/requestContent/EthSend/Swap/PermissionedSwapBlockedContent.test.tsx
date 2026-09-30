@@ -40,8 +40,8 @@ vi.mock('uniswap/src/utils/linking', () => ({
   openUri: (args: unknown) => mockOpenUri(args),
 }))
 
+import { TestID } from '@universe/test'
 import { PermissionedSwapBlockedContent } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/PermissionedSwapBlockedContent'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const KYC_URL = 'https://app.superstate.com'
 

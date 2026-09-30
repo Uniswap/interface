@@ -1,6 +1,5 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
 import type { GetTokenHistoryPriceResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
-import { GraphQLApi } from '@universe/api'
 import type { UniverseChainId } from '@universe/chains'
 import {
   type GetTokenHistoryPriceInput,
@@ -12,6 +11,7 @@ import {
   toHistoryTarget,
   toRestHistoryDuration,
 } from 'uniswap/src/features/dataApi/tokenDetails/useTokenPriceHistoryRest'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { currencyIdToRestContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { toHistoryDuration } from '~/data/util'
@@ -50,7 +50,7 @@ export function getTdpTokenPriceHistoryQueryOptions<TSelectData = PlainMessage<G
   ...rest
 }: {
   target: HistoryTarget
-  duration: GraphQLApi.HistoryDuration
+  duration: HistoryDuration
 } & Omit<GetTokenHistoryPriceInput<TSelectData>, 'params'>): ReturnType<
   typeof getGetTokenHistoryPriceQueryOptions<TSelectData>
 > {

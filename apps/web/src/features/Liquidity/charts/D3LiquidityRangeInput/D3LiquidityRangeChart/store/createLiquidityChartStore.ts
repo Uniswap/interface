@@ -1,7 +1,7 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
 import { isDevEnv } from '@universe/environment'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import type { StoreApi, UseBoundStore } from 'zustand'
 import { create } from 'zustand'
 import { devtools, subscribeWithSelector } from 'zustand/middleware'
@@ -32,7 +32,7 @@ const INITIAL_VIEW_STATE = {
 const INITIAL_PRICE_STATE = {
   isFullRange: false,
   panY: 0,
-  selectedHistoryDuration: GraphQLApi.HistoryDuration.Month,
+  selectedHistoryDuration: HistoryDuration.Month,
   selectedPriceStrategy: undefined,
   zoomLevel: 1,
 }
@@ -88,13 +88,13 @@ export const createLiquidityChartStore = ({
   priceInverted: boolean
   protocolVersion: ProtocolVersion
   isFullRange?: boolean
-  selectedHistoryDuration?: GraphQLApi.HistoryDuration
+  selectedHistoryDuration?: HistoryDuration
   onChartError: (error: string) => void
   onInputModeChange: (inputMode: RangeAmountInputPriceMode) => void
   onMinTickChange: (tick?: number) => void
   onMaxTickChange: (tick?: number) => void
   onMinMaxTickChange: (ticks: { minTick?: number; maxTick?: number }) => void
-  onTimePeriodChange?: (timePeriod: GraphQLApi.HistoryDuration) => void
+  onTimePeriodChange?: (timePeriod: HistoryDuration) => void
   setIsFullRange: (isFullRange: boolean) => void
 }) => {
   // Group callbacks for action creators
@@ -179,7 +179,7 @@ export const createLiquidityChartStore = ({
             },
 
             // Core actions that stay in main file
-            setTimePeriod: (timePeriod: GraphQLApi.HistoryDuration) => {
+            setTimePeriod: (timePeriod: HistoryDuration) => {
               set((state) => ({ ...state, selectedHistoryDuration: timePeriod }))
               if (callbacks.onTimePeriodChange) {
                 callbacks.onTimePeriodChange(timePeriod)

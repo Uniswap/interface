@@ -1,5 +1,5 @@
-import { GraphQLApi } from '@universe/api'
 import { ReactElement, useMemo } from 'react'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { Chart, ChartHoverCoordinates } from '~/components/Charts/ChartModel'
 import { CandlestickTooltip } from '~/components/Charts/PriceChart/CandlestickTooltip'
 import { PriceChartData, PriceChartModel } from '~/components/Charts/PriceChart/PriceChartModel'
@@ -10,7 +10,7 @@ export interface PriceChartBodyProps {
   height: number | string
   data: PriceChartData[]
   stale: boolean
-  timePeriod?: GraphQLApi.HistoryDuration
+  timePeriod?: HistoryDuration
   overrideColor?: string
   hideYAxis?: boolean
   hideXAxis?: boolean

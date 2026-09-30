@@ -1,4 +1,5 @@
 import { UniverseChainId } from '@universe/chains'
+import { isMobileApp } from '@universe/environment'
 import { Flex } from '@universe/mycelium'
 import type { ReactNode } from 'react'
 import { ChevronsIn } from 'ui/src/components/icons/ChevronsIn'
@@ -44,6 +45,8 @@ type ExpandableAssetGroupProps = {
   onIssuerModifierPress?: (issuer: IssuerToken) => void
   rightElement?: ReactNode
   volumeDetail?: string
+  showIssuerStats?: boolean
+  showIssuerTag?: boolean
 }
 
 export function ExpandableAssetGroup({
@@ -64,6 +67,8 @@ export function ExpandableAssetGroup({
   getIssuerHref,
   rightElement,
   volumeDetail,
+  showIssuerStats,
+  showIssuerTag,
 }: ExpandableAssetGroupProps): ReactNode {
   const issuerCount = getIssuerCount(asset)
   const canExpand = issuerCount > 1
@@ -110,6 +115,7 @@ export function ExpandableAssetGroup({
       chainFilter={chainFilter}
       categoryTag={titleCategoryTag}
       volumeDetail={volumeDetail}
+      showIssuerTag={showIssuerTag}
     />
   ) : null
   const identity =
@@ -145,7 +151,9 @@ export function ExpandableAssetGroup({
             variant="search"
             chainFilter={chainFilter}
             categoryTag={titleCategoryTag}
-            volumeDetail={volumeDetail}
+            showNetworkCount={showIssuerStats}
+            // Mobile rows are too narrow for count + volume + chevron; the expanded sub-rows still show volume.
+            volumeDetail={isMobileApp ? undefined : volumeDetail}
             inlineChevron={isTitlePlacement}
           />
         ))
@@ -179,6 +187,8 @@ export function ExpandableAssetGroup({
           chainFilter={chainFilter}
           renderIssuerRow={renderIssuerRow}
           getIssuerHref={getIssuerHref}
+          showIssuerStats={showIssuerStats}
+          showIssuerTag={showIssuerTag}
           onIssuerPress={onIssuerPress}
           onIssuerModifierPress={onIssuerModifierPress}
         />

@@ -1,6 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import type { RewardsCampaign } from '~/data/pools/poolData'
 import { LpIncentivesPoolDetailsRewardsDistribution } from '~/features/Liquidity/LPIncentives/LpIncentivesPoolDetailsRewardsDistribution'
 import { render, screen } from '~/test-utils/render'

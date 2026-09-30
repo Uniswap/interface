@@ -1,5 +1,5 @@
 import { AddressStringFormat, normalizeAddress, UniverseChainId } from '@universe/chains'
-import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'uniswap/src/test/fixtures/gql/assets/constants'
+import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'uniswap/src/test/fixtures/assets/constants'
 import { LP_INCENTIVES_CLAIM_STALENESS_MS } from '~/features/Liquidity/LPIncentives/constants'
 import {
   lpIncentivesClaimedKey,

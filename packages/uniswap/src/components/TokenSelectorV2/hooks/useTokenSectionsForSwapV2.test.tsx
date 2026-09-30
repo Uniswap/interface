@@ -7,6 +7,7 @@ import { type PortfolioBalancesResult } from 'uniswap/src/components/TokenSelect
 import { TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/types'
 import { useTokenSectionsForSwapV2 } from 'uniswap/src/components/TokenSelectorV2/hooks/useTokenSectionsForSwapV2'
 import { renderHook } from 'uniswap/src/test/test-utils'
+import type { DerivedQueryResult } from 'utilities/src/reactQuery/types'
 
 const {
   mockUseFeatureFlag,
@@ -16,7 +17,7 @@ const {
   mockUseBridgingTokensOptions,
   mockUsePortfolioTokenOptions,
   mockUseRecentlySearchedTokens,
-  mockUseTrendingTokensOptionsV2,
+  mockUseTrendingTokensOptions,
   mockUseEnabledChains,
 } = vi.hoisted(() => ({
   mockUseFeatureFlag: vi.fn(),
@@ -26,7 +27,7 @@ const {
   mockUseBridgingTokensOptions: vi.fn(),
   mockUsePortfolioTokenOptions: vi.fn(),
   mockUseRecentlySearchedTokens: vi.fn(),
-  mockUseTrendingTokensOptionsV2: vi.fn(),
+  mockUseTrendingTokensOptions: vi.fn(),
   mockUseEnabledChains: vi.fn(),
 }))
 
@@ -53,8 +54,8 @@ vi.mock('uniswap/src/components/TokenSelector/hooks/usePortfolioTokenOptions', (
 vi.mock('uniswap/src/components/TokenSelector/hooks/useRecentlySearchedTokens', () => ({
   useRecentlySearchedTokens: mockUseRecentlySearchedTokens,
 }))
-vi.mock('uniswap/src/components/TokenSelectorV2/hooks/useTrendingTokensOptionsV2', () => ({
-  useTrendingTokensOptionsV2: mockUseTrendingTokensOptionsV2,
+vi.mock('uniswap/src/components/TokenSelector/hooks/useTrendingTokensOptions', () => ({
+  useTrendingTokensOptions: mockUseTrendingTokensOptions,
 }))
 vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
   useEnabledChains: mockUseEnabledChains,
@@ -75,13 +76,13 @@ const rwaOption = {
 
 const emptyPortfolioData: PortfolioBalancesResult = {
   data: undefined,
-  error: undefined,
+  error: null,
   refetch: vi.fn(),
-  loading: false,
+  isLoading: false,
 }
 
-function gqlResult<T>(data: T): { data: T; error: undefined; refetch: () => void; loading: boolean } {
-  return { data, error: undefined, refetch: vi.fn(), loading: false }
+function queryResult<T>(data: T): DerivedQueryResult<T> {
+  return { data, error: null, refetch: vi.fn(), isLoading: false }
 }
 
 function renderSwapSectionsV2(
@@ -104,11 +105,11 @@ describe('useTokenSectionsForSwapV2', () => {
     mockUseFeatureFlag.mockReturnValue(false)
     mockUseIsFeatureGated.mockReturnValue(false)
     mockUseRwaTokenOptions.mockReturnValue([])
-    mockUseCommonTokensOptionsWithFallback.mockReturnValue(gqlResult([tokenOption]))
-    mockUseBridgingTokensOptions.mockReturnValue({ ...gqlResult([tokenOption]), shouldNest: false })
-    mockUsePortfolioTokenOptions.mockReturnValue(gqlResult([tokenOption]))
+    mockUseCommonTokensOptionsWithFallback.mockReturnValue(queryResult([tokenOption]))
+    mockUseBridgingTokensOptions.mockReturnValue({ ...queryResult([tokenOption]), shouldNest: false })
+    mockUsePortfolioTokenOptions.mockReturnValue(queryResult([tokenOption]))
     mockUseRecentlySearchedTokens.mockReturnValue([tokenOption])
-    mockUseTrendingTokensOptionsV2.mockReturnValue(gqlResult([tokenOption]))
+    mockUseTrendingTokensOptions.mockReturnValue(queryResult([tokenOption]))
     mockUseEnabledChains.mockReturnValue({
       chains: [UniverseChainId.Mainnet],
       gqlChains: [],
@@ -200,11 +201,11 @@ describe('useTokenSectionsForSwapV2', () => {
   })
 
   it('surfaces a source error when that source has no data', () => {
-    mockUseTrendingTokensOptionsV2.mockReturnValue({
+    mockUseTrendingTokensOptions.mockReturnValue({
       data: undefined,
       error: new Error('trending down'),
       refetch: vi.fn(),
-      loading: false,
+      isLoading: false,
     })
     const result = renderSwapSectionsV2(TokenSelectorVariation.SwapInput)
 
@@ -212,25 +213,25 @@ describe('useTokenSectionsForSwapV2', () => {
   })
 
   it('suppresses a source error when stale data is still present', () => {
-    mockUseTrendingTokensOptionsV2.mockReturnValue({
+    mockUseTrendingTokensOptions.mockReturnValue({
       data: [tokenOption],
       error: new Error('trending down'),
       refetch: vi.fn(),
-      loading: false,
+      isLoading: false,
     })
     const result = renderSwapSectionsV2(TokenSelectorVariation.SwapInput)
 
-    expect(result.error).toBeUndefined()
+    expect(result.error).toBeNull()
     expect(result.data?.map((section) => section.sectionKey)).toContain(OnchainItemSectionName.TrendingTokens)
   })
 
   it('fans refetch out to all four underlying refetches', () => {
     const refetches = [vi.fn(), vi.fn(), vi.fn(), vi.fn()] as const
-    mockUsePortfolioTokenOptions.mockReturnValue({ ...gqlResult([tokenOption]), refetch: refetches[0] })
-    mockUseTrendingTokensOptionsV2.mockReturnValue({ ...gqlResult([tokenOption]), refetch: refetches[1] })
-    mockUseCommonTokensOptionsWithFallback.mockReturnValue({ ...gqlResult([tokenOption]), refetch: refetches[2] })
+    mockUsePortfolioTokenOptions.mockReturnValue({ ...queryResult([tokenOption]), refetch: refetches[0] })
+    mockUseTrendingTokensOptions.mockReturnValue({ ...queryResult([tokenOption]), refetch: refetches[1] })
+    mockUseCommonTokensOptionsWithFallback.mockReturnValue({ ...queryResult([tokenOption]), refetch: refetches[2] })
     mockUseBridgingTokensOptions.mockReturnValue({
-      ...gqlResult([tokenOption]),
+      ...queryResult([tokenOption]),
       shouldNest: false,
       refetch: refetches[3],
     })

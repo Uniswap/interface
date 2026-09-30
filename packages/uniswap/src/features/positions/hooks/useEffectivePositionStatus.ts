@@ -10,7 +10,7 @@ import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { getListPoolsQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/pools/queries'
+import { getListPoolsInfiniteQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/pools/queries'
 import { hasZeroInRangeLiquidity } from 'uniswap/src/features/positions/hasZeroInRangeLiquidity'
 import {
   getMarketPriceFromUsdPrices,
@@ -234,13 +234,13 @@ function useSiblingPoolPrice({
   const addressPairs = pool ? getListPoolsAddressPairs({ token0: pool.token0, token1: pool.token1 }) : []
   const [primaryPair, alternatePair] = addressPairs
   const primaryPools = useInfiniteQuery(
-    getListPoolsQueryOptions({
+    getListPoolsInfiniteQueryOptions({
       params: getSiblingPoolsParams(chainId, primaryPair),
       enabled: enabled && primaryPair !== undefined,
     }),
   )
   const alternatePools = useInfiniteQuery(
-    getListPoolsQueryOptions({
+    getListPoolsInfiniteQueryOptions({
       params: getSiblingPoolsParams(chainId, alternatePair),
       enabled: enabled && alternatePair !== undefined,
     }),

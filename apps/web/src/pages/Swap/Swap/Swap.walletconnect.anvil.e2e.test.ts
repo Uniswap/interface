@@ -1,6 +1,6 @@
 import { V1_TRADING_API_PATHS } from '@universe/api'
+import { TestID } from '@universe/test'
 import { USDT } from 'uniswap/src/constants/tokens'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { assume0xAddress, parseEther } from '~/chains'
 import { expect, getTest } from '~/playwright/fixtures'
 import { mockTradingApiEndpoint, mockTradingApiSwapsStatus } from '~/playwright/fixtures/tradingApi'

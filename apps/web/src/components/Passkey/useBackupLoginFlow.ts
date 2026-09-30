@@ -349,12 +349,17 @@ export function useBackupLoginFlow({
 
     setIsSigningIn(true)
     try {
+      const accessToken = await getAccessToken()
+      if (!accessToken) {
+        throw new Error('No access token available')
+      }
       const authMethodType = toRecoveryAuthMethodType(oauthProvider)
       await authorizeAndCompleteRecovery({
         encrypted: cryptoResult,
         email: effectiveEmail,
         walletId,
         privyUserId: user.id,
+        accessToken,
         authMethodType,
       })
 

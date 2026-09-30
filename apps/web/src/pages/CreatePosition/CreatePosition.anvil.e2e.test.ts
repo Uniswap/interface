@@ -3,9 +3,9 @@ import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { CHAIN_TO_ADDRESSES_MAP, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { computePairAddress } from '@uniswap/v2-sdk'
 import { UniverseChainId } from '@universe/chains'
+import { TestID } from '@universe/test'
 import { USDT } from 'uniswap/src/constants/tokens'
 import { WETH } from 'uniswap/src/test/fixtures/lib/sdk'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { parseEther } from '~/chains'
 import { assume0xAddress } from '~/chains'
 import { ONE_MILLION_USDT } from '~/playwright/anvil/utils'
@@ -33,6 +33,19 @@ async function stubCreatePosition(page: Page): Promise<void> {
   })
 }
 
+// Picks ETH/USDT and its 0.3% tier the way a user does. The form pre-selects no tier, and choosing
+// a token clears whatever tier is set (a tier only means something for the pair it was picked on),
+// so the tier has to be clicked after the pair — a `fee` seeded in the URL would be wiped here.
+// Each grid box is a button labeled fee-first ("0.3% Commonly used for most pairs. $27.1M TVL
+// 78.124% select"), so anchoring the name keeps the live TVL and selection share out of the match.
+async function selectEthUsdtWithDefaultFeeTier({ page }: { page: Page }): Promise<void> {
+  await page.getByRole('button', { name: 'Choose token' }).click()
+  await page.getByTestId(TestID.ExploreSearchInput).fill(USDT.address)
+  // oxlint-disable-next-line eslint-js/no-restricted-syntax
+  await page.getByTestId('token-option-1-USDT').first().click()
+  await page.getByRole('button', { name: /^0\.3%/ }).click()
+}
+
 test.describe(
   'Create position',
   {
@@ -47,11 +60,8 @@ test.describe(
       await stubCreatePosition(page)
       await graphql.intercept('SearchTokens', Mocks.Token.search_token_tether)
       await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
-      await page.goto('/positions/create')
-      await page.getByRole('button', { name: 'Choose token' }).click()
-      await page.getByTestId(TestID.ExploreSearchInput).fill(USDT.address)
-      // oxlint-disable-next-line eslint-js/no-restricted-syntax
-      await page.getByTestId('token-option-1-USDT').first().click()
+      await page.goto('/positions/add/new')
+      await selectEthUsdtWithDefaultFeeTier({ page })
       await page.getByRole('button', { name: 'Continue' }).click()
       await graphql.waitForResponse('PoolPriceHistory')
       await page.getByText('Full range').click()
@@ -62,11 +72,8 @@ test.describe(
       await stubCreatePosition(page)
       await graphql.intercept('SearchTokens', Mocks.Token.search_token_tether)
       await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
-      await page.goto('/positions/create')
-      await page.getByRole('button', { name: 'Choose token' }).click()
-      await page.getByTestId(TestID.ExploreSearchInput).fill(USDT.address)
-      // oxlint-disable-next-line eslint-js/no-restricted-syntax
-      await page.getByTestId('token-option-1-USDT').first().click()
+      await page.goto('/positions/add/new')
+      await selectEthUsdtWithDefaultFeeTier({ page })
       await page.getByRole('button', { name: 'Continue' }).click()
       await graphql.waitForResponse('PoolPriceHistory')
       await page.getByTestId(TestID.RangeInputIncrement + '-0').click()
@@ -99,7 +106,7 @@ test.describe(
           reserve0: 0n,
           reserve1: 0n,
         })
-        await page.goto(`/positions/create/v2?currencyA=${WETH_ADDRESS}&currencyB=${USDT.address}`)
+        await page.goto(`/positions/add/new?currencyA=${WETH_ADDRESS}&currencyB=${USDT.address}&protocolVersion=v2`)
         await page.getByRole('button', { name: 'Continue' }).click()
         await page.getByTestId(TestID.AmountInputIn).last().click()
         await page.getByTestId(TestID.AmountInputIn).last().fill('10000')
@@ -119,7 +126,7 @@ test.describe(
 
         await anvil.setErc20Balance({ address: assume0xAddress(WETH_ADDRESS), balance: parseEther('100') })
         await page.goto(
-          `/positions/create/v2?currencyA=${randomCoin1}&currencyB=${randomCoin2}&chain=ethereum&fee=undefined&hook=undefined&priceRangeState={"priceInverted":false,"fullRange":false,"minPrice":"","maxPrice":"","initialPrice":"","inputMode":"price"}&depositState={"exactField":"TOKEN0","exactAmounts":{}}`,
+          `/positions/add/new?currencyA=${randomCoin1}&currencyB=${randomCoin2}&protocolVersion=v2&chain=ethereum&fee=undefined&hook=undefined&priceRangeState={"priceInverted":false,"fullRange":false,"minPrice":"","maxPrice":"","initialPrice":"","inputMode":"price"}&depositState={"exactField":"TOKEN0","exactAmounts":{}}`,
         )
         await expect(page.getByText('Creating new pool').first()).toBeVisible()
         await page.getByRole('button', { name: 'Continue' }).click()
@@ -133,11 +140,8 @@ test.describe(
         await graphql.intercept('SearchTokens', Mocks.Token.search_token_tether)
         await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
 
-        await page.goto('/positions/create')
-        await page.getByRole('button', { name: 'Choose token' }).click()
-        await page.getByTestId(TestID.ExploreSearchInput).fill(USDT.address)
-        // oxlint-disable-next-line eslint-js/no-restricted-syntax
-        await page.getByTestId('token-option-1-USDT').first().click()
+        await page.goto('/positions/add/new')
+        await selectEthUsdtWithDefaultFeeTier({ page })
         await page.getByRole('button', { name: 'Continue' }).click()
         await graphql.waitForResponse('PoolPriceHistory')
         await page.getByText('Full range').click()
@@ -174,11 +178,8 @@ test.describe(
           spender: assume0xAddress(CHAIN_TO_ADDRESSES_MAP[UniverseChainId.Mainnet].v4PositionManagerAddress!),
         })
 
-        await page.goto('/positions/create')
-        await page.getByRole('button', { name: 'Choose token' }).click()
-        await page.getByTestId(TestID.ExploreSearchInput).fill(USDT.address)
-        // oxlint-disable-next-line eslint-js/no-restricted-syntax
-        await page.getByTestId('token-option-1-USDT').first().click()
+        await page.goto('/positions/add/new')
+        await selectEthUsdtWithDefaultFeeTier({ page })
         await page.getByRole('button', { name: 'Continue' }).click()
         await graphql.waitForResponse('PoolPriceHistory')
         await page.getByText('Full range').click()
@@ -220,7 +221,7 @@ test.describe(
         // routes, so a URL-seeded pair otherwise reaches this step with no tier and a permanently
         // disabled Continue. 0.3% is the recommended ETH/USDT tier.
         await page.goto(
-          `/positions/create?currencyA=NATIVE&currencyB=${USDT.address}&fee={"feeAmount":3000,"tickSpacing":60,"isDynamic":false}`,
+          `/positions/add/new?currencyA=NATIVE&currencyB=${USDT.address}&fee={"feeAmount":3000,"tickSpacing":60,"isDynamic":false}`,
         )
 
         await page.getByRole('button', { name: 'Continue' }).click()
@@ -240,12 +241,13 @@ test.describe(
       })
     })
 
+    // No expand step before the search link: the tier grid now opens expanded (its toggle reads
+    // "Less"), so "Search or create other fee tiers" is on screen as soon as the pair resolves.
     test.describe('Custom fee tier', () => {
       test('should create a position with a custom fee tier', async ({ page, anvil }) => {
         await stubCreatePosition(page)
         await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
-        await page.goto(`/positions/create?currencyA=NATIVE&currencyB=${USDT.address}`)
-        await page.getByRole('button', { name: 'More', exact: true }).click()
+        await page.goto(`/positions/add/new?currencyA=NATIVE&currencyB=${USDT.address}`)
         await page.getByText('Search or create other fee').click()
         await page.getByRole('button', { name: 'Create new fee tier' }).click()
         await page.getByPlaceholder('0').fill('3.1415')
@@ -265,8 +267,7 @@ test.describe(
         await anvil.setCode({ address: HOOK_ADDRESS, bytecode: '0x636fe7e6eb60e01b60005260206000f3' })
         await stubCreatePosition(page)
         await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
-        await page.goto(`/positions/create?currencyA=NATIVE&currencyB=${USDT.address}&hook=${HOOK_ADDRESS}`)
-        await page.getByRole('button', { name: 'More', exact: true }).click()
+        await page.goto(`/positions/add/new?currencyA=NATIVE&currencyB=${USDT.address}&hook=${HOOK_ADDRESS}`)
         await page.getByText('Search or create other fee').click()
         await page.getByText('Dynamic fee').click()
         await page.getByTestId(TestID.DynamicFeeTierSpeedbumpContinue).click()
@@ -278,7 +279,7 @@ test.describe(
 
     test.describe('Dynamic slippage', () => {
       const WEETH_ADDRESS = '0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee'
-      const ETH_WEETH_CREATE_URL = `/positions/create/v4?currencyA=NATIVE&currencyB=0xcd5fe23c85820f7b72d0926fc9b05b43e359b7ee&chain=ethereum&fee={"feeAmount":100,"tickSpacing":1,"isDynamic":false}&hook=undefined&priceRangeState={"priceInverted":false,"fullRange":false,"minTick":-871,"maxTick":-859,"initialPrice":"","inputMode":"price"}&depositState={"exactField":"TOKEN1","exactAmounts":{"TOKEN0":"0.01","TOKEN1":"0.064"}}&step=1&featureFlagOverride=lp_dynamic_native_slippage`
+      const ETH_WEETH_CREATE_URL = `/positions/add/new?currencyA=NATIVE&currencyB=0xcd5fe23c85820f7b72d0926fc9b05b43e359b7ee&protocolVersion=v4&chain=ethereum&fee={"feeAmount":100,"tickSpacing":1,"isDynamic":false}&hook=undefined&priceRangeState={"priceInverted":false,"fullRange":false,"minTick":-871,"maxTick":-859,"initialPrice":"","inputMode":"price"}&depositState={"exactField":"TOKEN1","exactAmounts":{"TOKEN0":"0.01","TOKEN1":"0.064"}}&step=1&featureFlagOverride=lp_dynamic_native_slippage`
 
       // The live CreatePosition endpoint computes slippage from the test wallet's
       // LIVE mainnet balances server-side and 500s ("Insufficient balance for

@@ -1,5 +1,6 @@
 import { UniverseChainId } from '@universe/chains'
 import { Flex, iconSizes, Text } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import ms from 'ms'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -21,7 +22,6 @@ import { filterQuotesByPaymentMethod } from 'uniswap/src/features/fiatOnRamp/uti
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
@@ -166,7 +166,7 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
         <GetHelpHeader
           link={UniswapHelpUrls.articles.fiatOnRampHelp}
           closeModal={closeModal}
-          closeDataTestId="ChooseProviderModal-close"
+          closeDataTestId={TestID.ChooseProviderModalClose}
         />
         <Flex row alignItems="center" justifyContent="space-between">
           <Text variant="subheading1" color="$neutral1" testID={TestID.BuyFormChooseProvider}>

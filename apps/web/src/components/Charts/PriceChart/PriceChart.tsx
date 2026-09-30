@@ -1,8 +1,8 @@
-import { GraphQLApi } from '@universe/api'
 import { Flex } from '@universe/mycelium'
 import { ReactNode } from 'react'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { isLowVarianceRange } from 'uniswap/src/components/charts/utils'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { ChartHeader } from '~/components/Charts/ChartHeader'
@@ -17,7 +17,7 @@ interface PriceChartProps {
   height: number
   data: PriceChartData[]
   stale: boolean
-  timePeriod?: GraphQLApi.HistoryDuration
+  timePeriod?: HistoryDuration
   pricePercentChange?: number
   overrideColor?: string
   headerTotalValueOverride?: number

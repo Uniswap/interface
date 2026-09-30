@@ -1,5 +1,6 @@
 import { Flex } from '@universe/mycelium'
 import { X } from '@universe/mycelium/icons/X'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { SCREEN_ITEM_HORIZONTAL_PAD } from 'src/app/constants'
@@ -20,7 +21,7 @@ export function ReceiveScreen(): JSX.Element {
         <Flex px="$spacing8">
           <ScreenHeader Icon={X} title={t('home.label.receive')} onBackClick={navigateBack} />
         </Flex>
-        <Flex fill grow pt="$spacing12" px={SCREEN_ITEM_HORIZONTAL_PAD} testID="wallet-qr-code">
+        <Flex fill grow pt="$spacing12" px={SCREEN_ITEM_HORIZONTAL_PAD} testID={TestID.WalletQRCode}>
           <ReceiveQRCode address={activeAddress} />
         </Flex>
       </Flex>

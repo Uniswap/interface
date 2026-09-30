@@ -9,8 +9,8 @@ import {
 const VALID_IDS: ReadonlySet<string> = new Set(['stocks', 'commodities', 'etfs', 'defi'])
 
 describe('categoryFromParam', () => {
-  it('defaults to popular', () => {
-    expect(categoryFromParam({ value: null, validCategoryIds: VALID_IDS })).toBe(ExploreCategory.Popular)
+  it('defaults to all', () => {
+    expect(categoryFromParam({ value: null, validCategoryIds: VALID_IDS })).toBe(ExploreCategory.All)
   })
 
   it('passes through valid category ids', () => {
@@ -18,13 +18,13 @@ describe('categoryFromParam', () => {
     expect(categoryFromParam({ value: 'defi', validCategoryIds: VALID_IDS })).toBe('defi')
   })
 
-  it('maps unknown category values to popular', () => {
-    expect(categoryFromParam({ value: 'unknown', validCategoryIds: VALID_IDS })).toBe(ExploreCategory.Popular)
+  it('maps unknown category values to all', () => {
+    expect(categoryFromParam({ value: 'unknown', validCategoryIds: VALID_IDS })).toBe(ExploreCategory.All)
   })
 
   it('hydrates a dynamic id once it joins the valid set', () => {
     const staticOnly: ReadonlySet<string> = new Set(['stocks', 'commodities', 'etfs'])
-    expect(categoryFromParam({ value: 'defi', validCategoryIds: staticOnly })).toBe(ExploreCategory.Popular)
+    expect(categoryFromParam({ value: 'defi', validCategoryIds: staticOnly })).toBe(ExploreCategory.All)
     expect(categoryFromParam({ value: 'defi', validCategoryIds: VALID_IDS })).toBe('defi')
   })
 
@@ -39,20 +39,20 @@ describe('categoryFromParam', () => {
     })
 
     it.each(['DeFi', 'de fi', 'defi_', '-defi', 'defi/agents', 'a'.repeat(65)])(
-      'still maps the malformed slug %j to popular',
+      'still maps the malformed slug %j to all',
       (value) => {
         expect(categoryFromParam({ value, validCategoryIds: staticOnly, trustUnverifiedIds: true })).toBe(
-          ExploreCategory.Popular,
+          ExploreCategory.All,
         )
       },
     )
 
-    it('drops a trusted slug back to popular once the resolved set excludes it', () => {
+    it('drops a trusted slug back to all once the resolved set excludes it', () => {
       expect(categoryFromParam({ value: 'bogus', validCategoryIds: staticOnly, trustUnverifiedIds: true })).toBe(
         'bogus',
       )
       expect(categoryFromParam({ value: 'bogus', validCategoryIds: VALID_IDS, trustUnverifiedIds: false })).toBe(
-        ExploreCategory.Popular,
+        ExploreCategory.All,
       )
     })
   })

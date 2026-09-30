@@ -2,6 +2,7 @@ import { CurrencyAmount } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import { getEarnPlanDisplayInfo } from 'uniswap/src/features/activity/utils/getEarnPlanDisplayInfo'
 import { getEarnPlanStatusTitleKeyFromTransactionStatus } from 'uniswap/src/features/earn/planActivityTitles'
+import { fetchCurrency } from 'uniswap/src/features/tokens/fetchCurrencyInfo'
 import {
   CrossChainCurrencyRow,
   CrossChainCurrencyRowProps,
@@ -11,7 +12,6 @@ import { TransactionStatus, TransactionType } from 'uniswap/src/features/transac
 import i18n from 'uniswap/src/i18n'
 import { currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
-import { getCurrencyFromCurrencyId } from '~/components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
 import type { FormatNumberFunctionType } from '~/components/AccountDrawer/MiniPortfolio/Activity/parseLocal/types'
 import type { Activity } from '~/components/AccountDrawer/MiniPortfolio/Activity/types'
 
@@ -31,11 +31,11 @@ export async function parsePlan({
   status: TransactionStatus
 }): Promise<Partial<Activity>> {
   const [tokenIn, tokenOut] = await Promise.all([
-    getCurrencyFromCurrencyId(plan.inputCurrencyId),
-    getCurrencyFromCurrencyId(plan.outputCurrencyId),
+    fetchCurrency(plan.inputCurrencyId),
+    fetchCurrency(plan.outputCurrencyId),
   ])
   const earnDisplayInfo = getEarnPlanDisplayInfo(plan)
-  const earnToken = earnDisplayInfo ? await getCurrencyFromCurrencyId(earnDisplayInfo.currencyId) : undefined
+  const earnToken = earnDisplayInfo ? await fetchCurrency(earnDisplayInfo.currencyId) : undefined
 
   const inputAmount = tokenIn
     ? formatNumber({

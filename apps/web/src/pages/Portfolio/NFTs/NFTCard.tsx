@@ -4,6 +4,7 @@ import { Flex, iconSizes, Text, TouchableArea, zIndexes } from '@universe/myceli
 import { ArrowUpRight } from '@universe/mycelium/icons/ArrowUpRight'
 import { MoreHorizontal } from '@universe/mycelium/icons/MoreHorizontal'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -16,7 +17,6 @@ import { useNFTContextMenuItems } from 'uniswap/src/features/nfts/hooks/useNftCo
 import { getNFTAssetKey } from 'uniswap/src/features/nfts/utils'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { getNftExplorerLink, getOpenseaLink, openUri } from 'uniswap/src/utils/linking'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
@@ -125,6 +125,14 @@ function NFTCardInner(props: NftCardProps): JSX.Element {
     )
   }, [t, props.item.contractAddress])
 
+  const onReportSuccess = useCallback(() => {
+    popupRegistry.addPopup(
+      { type: PopupType.Success, message: t('common.reported') },
+      `report-nft-spam-${nftUniqueId}`,
+      POPUP_MEDIUM_DISMISS_MS,
+    )
+  }, [t, nftUniqueId])
+
   // Generate context menu items
   // When viewing an external wallet, pass empty walletAddresses to hide "hide" and "report spam" options
   const menuItems = useNFTContextMenuItems({
@@ -138,6 +146,7 @@ function NFTCardInner(props: NftCardProps): JSX.Element {
     showNotification: false,
     chainId,
     onCopySuccess,
+    onReportSuccess,
   })
 
   // Prevents press events from bubbling to parent touchable areas

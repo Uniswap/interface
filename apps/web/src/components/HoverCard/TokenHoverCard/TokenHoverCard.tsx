@@ -39,8 +39,8 @@ type TokenHoverCardProps = {
   widthOffset?: number
   containerWidth?: number
   onNavigate?: () => void
-  /** List focus (auto-focused first result, arrow-key nav) opens the card without the hover delay. */
-  isFocused?: boolean
+  /** The child already shrinks on press; opts the trigger's own shrink out so the two don't compound. */
+  childOwnsPressFeedback?: boolean
 } & ({ token: TokenHoverCardToken; currencyInfo?: never } | { token?: never; currencyInfo: CurrencyInfo })
 
 export function TokenHoverCard({
@@ -52,7 +52,7 @@ export function TokenHoverCard({
   widthOffset = offset,
   containerWidth,
   onNavigate,
-  isFocused,
+  childOwnsPressFeedback,
 }: TokenHoverCardProps): JSX.Element {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -64,10 +64,7 @@ export function TokenHoverCard({
     defaultChainId,
   })
 
-  const { isOpen, isFocusOpen, hasOpenIntent, close, onOpenChange, triggerHoverProps } = useHoverCardState({
-    isFocused,
-    rearmKey: currencyInfoProp?.currencyId ?? currencyIdFromToken,
-  })
+  const { isOpen, hasOpenIntent, close, onOpenChange } = useHoverCardState()
 
   const {
     currencyInfo,
@@ -156,7 +153,6 @@ export function TokenHoverCard({
         chain_id: currencyInfo?.currency.chainId ?? chainId,
         token_address: contractAddress ?? undefined,
         is_multichain: isMultichainAsset,
-        open_trigger: isFocusOpen ? 'focus' : 'hover',
       }),
   })
 
@@ -165,10 +161,9 @@ export function TokenHoverCard({
   return (
     <HoverCard
       isOpen={isOpen}
-      isFocusOpen={isFocusOpen}
       placement={placement}
       offset={offset}
-      triggerHoverProps={triggerHoverProps}
+      childOwnsPressFeedback={childOwnsPressFeedback}
       onOpenChange={handleOpenChange}
       content={
         <MultichainAddressTransitionPanel

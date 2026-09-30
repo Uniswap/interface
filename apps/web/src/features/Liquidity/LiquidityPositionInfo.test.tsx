@@ -1,9 +1,10 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { CurrencyAmount } from '@uniswap/sdk-core'
+import { TestID } from '@universe/test'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { PositionInfo } from 'uniswap/src/features/positions/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { LiquidityPositionInfo } from '~/features/Liquidity/LiquidityPositionInfo'
-import { TEST_TOKEN_1, TEST_TOKEN_2, toCurrencyAmount } from '~/test-utils/constants'
+import { TEST_TOKEN_1, TEST_TOKEN_2, toCurrencyAmount, USDC_INFO, WETH_INFO } from '~/test-utils/constants'
 import { fireEvent, render, within } from '~/test-utils/render'
 
 const { mockNavigate, mockUseMedia } = vi.hoisted(() => ({
@@ -84,6 +85,42 @@ describe('LiquidityPositionInfo', () => {
     }
     const { getByText } = render(<LiquidityPositionInfo positionInfo={positionInfo} />)
     expect(getByText('Closed')).toBeInTheDocument()
+  })
+
+  describe('pair label orientation', () => {
+    const basePosition = {
+      status: PositionStatus.IN_RANGE,
+      version: ProtocolVersion.V3,
+      poolId: '1',
+      tokenId: '1',
+      v4hook: undefined,
+      owner: '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3',
+      // PositionInfo is a union discriminated on `version`; keep the literal narrow through the spread.
+    } as const
+
+    it('quotes in the stablecoin when token0 is the stablecoin, matching the positions table', () => {
+      // USDC sorts below WETH by address, so the pool's token0 is USDC; the label should still read WETH / USDC.
+      const positionInfo: PositionInfo = {
+        ...basePosition,
+        chainId: USDC_INFO.currency.chainId,
+        currency0Amount: CurrencyAmount.fromRawAmount(USDC_INFO.currency, 1),
+        currency1Amount: CurrencyAmount.fromRawAmount(WETH_INFO.currency, 1),
+      }
+      const { getByText, queryByText } = render(<LiquidityPositionInfo positionInfo={positionInfo} />)
+      expect(getByText('WETH / USDC')).toBeInTheDocument()
+      expect(queryByText('USDC / WETH')).not.toBeInTheDocument()
+    })
+
+    it('keeps token0 / token1 order when both tokens share a waterfall tier', () => {
+      const positionInfo: PositionInfo = {
+        ...basePosition,
+        chainId: TEST_TOKEN_1.chainId,
+        currency0Amount: toCurrencyAmount(TEST_TOKEN_1, 1),
+        currency1Amount: toCurrencyAmount(TEST_TOKEN_2, 1),
+      }
+      const { getByText } = render(<LiquidityPositionInfo positionInfo={positionInfo} />)
+      expect(getByText(`${TEST_TOKEN_1.symbol} / ${TEST_TOKEN_2.symbol}`)).toBeInTheDocument()
+    })
   })
 
   it('navigates to a chain-qualified /migrate/v2 URL when migrating a V2 position', () => {

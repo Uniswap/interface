@@ -1,5 +1,6 @@
 import { Flex, getTextVariantKey, Shine, Text, TextLoaderWrapper, type TextVariantKey } from '@universe/mycelium'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import { useEffect, useMemo, useState } from 'react'
 import type { AnimatedNumberProps } from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { BALANCE_CHANGE_INDICATION_DURATION } from 'uniswap/src/components/AnimatedNumber/animationConfig'
@@ -17,7 +18,6 @@ import {
 } from 'uniswap/src/components/AnimatedNumber/web/keyframes'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import i18next from 'uniswap/src/i18n'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useInjectSingleStylesheet } from 'utilities/src/react/useInjectSingleStylesheet'
 
 const ICON_LEFT_MARGIN = 4

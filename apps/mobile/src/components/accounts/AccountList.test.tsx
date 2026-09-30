@@ -2,7 +2,7 @@ import { sanitizeAddressText } from '@universe/chains'
 import { AccountList } from 'src/components/accounts/AccountList'
 import { cleanup, fireEvent, render, screen } from 'src/test/test-utils'
 import { Locale } from 'uniswap/src/features/language/constants'
-import { amounts, ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
+import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
 import { mockLocalizedFormatter } from 'uniswap/src/test/mocks'
 import { createArray } from 'uniswap/src/test/utils'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -14,7 +14,7 @@ import { ACCOUNT, readOnlyAccount, signerMnemonicAccount } from 'wallet/src/test
 vi.mock('wallet/src/features/accounts/useAccountListData')
 const mockUseAccountListData = useAccountListData as MockedFunction<typeof useAccountListData>
 
-const totalBalanceValue = amounts.md().value
+const totalBalanceValue = 55
 
 const formatter = mockLocalizedFormatter(Locale.EnglishUnitedStates)
 

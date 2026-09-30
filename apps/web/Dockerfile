@@ -57,6 +57,9 @@ ARG DEPLOYMENT_ENV=dev
 ARG ASSET_BASE_URL=/
 ARG DD_VERSION
 ARG DISABLE_SOURCEMAP=false
+# App release version (e.g. 5.163.0), matching the Workers build at this commit.
+# Unset locally, where vite falls back to the commit hash.
+ARG VERSION
 
 # node_modules is dockerignored, so this does not clobber the install layer above.
 COPY . .
@@ -77,6 +80,7 @@ ENV ASSET_BASE_URL=${ASSET_BASE_URL}
 ENV DD_VERSION=${DD_VERSION}
 ENV DISABLE_SOURCEMAP=${DISABLE_SOURCEMAP}
 ENV GIT_COMMIT_HASH=${DD_VERSION}
+ENV VERSION=${VERSION}
 
 # The pulled .env arrives only as a BuildKit secret mount — never COPY it (it would
 # land in image layers and the pushed build cache). When absent, vite's
@@ -95,6 +99,11 @@ RUN --mount=type=secret,id=web_env,target=/app/apps/web/.env \
     export VITE_MODE=$([ "$DEPLOYMENT_ENV" = "production" ] && echo production || echo staging) && \
     echo "[web Dockerfile] nx build web -c ecs (mode=$VITE_MODE ASSET_BASE_URL=$ASSET_BASE_URL WEB_ENV_SHA=$WEB_ENV_SHA)" && \
     NX_DAEMON=false NX_NO_CLOUD=true bun x nx build web -c ecs --skip-sync
+
+# CI re-builds with `--target sourcemaps --output type=local` (cache hit) to
+# extract .js + .map pairs for the Datadog upload (app_build_and_dispatch).
+FROM scratch AS sourcemaps
+COPY --from=builder /app/apps/web/build/client /client
 
 FROM public.ecr.aws/docker/library/alpine:3.22@sha256:14358309a308569c32bdc37e2e0e9694be33a9d99e68afb0f5ff33cc1f695dce
 

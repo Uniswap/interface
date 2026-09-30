@@ -29,6 +29,7 @@ import {
   getSearchResultsForActiveTab,
   getTokenAndPoolSections,
   getTokenOptions,
+  getTruncatedSectionKeys,
   getWalletSearchQuery,
   refetchAuctionsIfEnabled,
   type SearchModalSectionResult,
@@ -56,12 +57,12 @@ export function useSectionsForSearchResults({
   auctionSearchEnabled?: boolean
   shouldPrioritizePools: boolean
   shouldPrioritizeWallets: boolean
-}): SearchModalSectionResult {
+}): SearchModalSectionResult & { truncatedSectionKeys: OnchainItemSectionName[] } {
   // Token search results
   const useMultichainPath = chainFilter === null
 
   // RWA (tokenized stock) grouping
-  const rwaIndex = useRwaIndex(true)
+  const rwaIndex = useRwaIndex()
   const isAddressSearch = isAddressTokenSearchQuery(searchFilter)
   const isSearchV2Enabled = useIsV2EndpointsSearchEnabled()
 
@@ -88,7 +89,8 @@ export function useSectionsForSearchResults({
   const multichainSearchOptions = useMultichainSearchResultsToOptions({ results: multichainResults })
 
   // Category search results: All tab only, and never on the extension, which has no Category Details surface.
-  const categorySearchEnabled = useIsTokenCategoriesEnabled() && !isExtensionApp
+  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
+  const categorySearchEnabled = tokenCategoriesEnabled && !isExtensionApp
   const skipCategorySearchQuery = !categorySearchEnabled || activeTab !== SearchTab.All || !searchFilter
   const {
     data: searchCategoryIds,
@@ -182,9 +184,10 @@ export function useSectionsForSearchResults({
             isAddressSearch,
             chainFilter,
             hoistRwaToTop: !isSearchV2Enabled,
+            plainTokenNames: tokenCategoriesEnabled,
           })
         : tokenOptions,
-    [rwaIndex, tokenOptions, isAddressSearch, chainFilter, isSearchV2Enabled],
+    [rwaIndex, tokenOptions, isAddressSearch, chainFilter, isSearchV2Enabled, tokenCategoriesEnabled],
   )
   const tokenSearchResultsSection = useOnchainItemListSection({
     sectionKey: OnchainItemSectionName.Tokens,
@@ -257,7 +260,19 @@ export function useSectionsForSearchResults({
     shouldShowWallets,
   ])
 
-  return useMemo((): SearchModalSectionResult => {
+  const auctionOptionsLength = auctionSearchEnabled ? (auctionSearchResults?.length ?? 0) : 0
+  const truncatedSectionKeys = useMemo(
+    () =>
+      getTruncatedSectionKeys({
+        activeTab,
+        tokenOptionsLength: groupedTokenOptions.length,
+        poolOptionsLength: poolSearchOptions.length,
+        auctionOptionsLength,
+      }),
+    [activeTab, groupedTokenOptions.length, poolSearchOptions.length, auctionOptionsLength],
+  )
+
+  const searchResults = useMemo((): SearchModalSectionResult => {
     return getSearchResultsForActiveTab({
       activeTab,
       allSections,
@@ -308,4 +323,6 @@ export function useSectionsForSearchResults({
     walletSearchResultsSection,
     earnSearchResultsSection,
   ])
+
+  return useMemo(() => ({ ...searchResults, truncatedSectionKeys }), [searchResults, truncatedSectionKeys])
 }

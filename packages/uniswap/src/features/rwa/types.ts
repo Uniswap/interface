@@ -2,10 +2,16 @@ import type { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 
 export type RWAIssuer = string
 
+/** Issuer slug for registry tokens with no issuer (e.g. commodities); not a real issuer to display. */
+export const UNKNOWN_RWA_ISSUER: RWAIssuer = 'unknown'
+
 export type RWAToken = {
   chainId: number
   address: string
   issuer: RWAIssuer
+  // Backend-served issuer branding (GetTokenGroup); absent on the v1 ListRwas path.
+  issuerDisplayName?: string
+  issuerLogoUrl?: string
   /** Present when this preferred TDP display token represents an issuer available on multiple chains. */
   networkCount?: number
   // Display data for this specific tokenized asset (e.g. an `XX.on` token), resolved per token by
@@ -16,6 +22,9 @@ export type RWAToken = {
   symbol: string
   logoUrl: string
 }
+
+/** The issuer branding fields of an RWA token, also derivable from GetToken's `issuer` for ungrouped RWAs. */
+export type RWAIssuerDisplay = Pick<RWAToken, 'issuer' | 'issuerDisplayName' | 'issuerLogoUrl'>
 
 export type RWAAsset = {
   symbol: string

@@ -1,4 +1,5 @@
 import { Flex, type UniversalListRef, type UniversalListStyle } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import React, { forwardRef, memo, useCallback, useMemo } from 'react'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { TabProps } from 'src/components/layout/TabHelpers'
@@ -7,7 +8,6 @@ import { NftViewWithContextMenu } from 'uniswap/src/components/nfts/NftViewWithC
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useNavigateToNftExplorerLink } from 'uniswap/src/features/nfts/hooks/useNavigateToNftExplorerLink'
 import { NFTItem } from 'uniswap/src/features/nfts/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { getOpenseaLink, openUri } from 'uniswap/src/utils/linking'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 

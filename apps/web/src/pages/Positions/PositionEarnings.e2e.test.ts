@@ -1,5 +1,5 @@
 import { getPosition } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api-LiquidityService_connectquery'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import { expect, getTest, type Page } from '~/playwright/fixtures'
 import { createTestUrlBuilder } from '~/playwright/fixtures/urls'
 import { Mocks } from '~/playwright/mocks/mocks'

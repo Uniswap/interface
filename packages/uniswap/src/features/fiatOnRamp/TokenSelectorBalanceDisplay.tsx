@@ -1,4 +1,5 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { TestID, TestIDType } from '@universe/test'
 import { ComponentProps } from 'react'
 import { SpinningLoader, useIsDarkMode } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -6,7 +7,6 @@ import { iconSizes, spacing } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { useFormatExactCurrencyAmount } from 'uniswap/src/features/fiatOnRamp/hooks'
-import { TestID, TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 
 interface TokenSelectorBalanceDisplayProps {

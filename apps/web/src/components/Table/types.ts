@@ -1,4 +1,3 @@
-import { ApolloError } from '@apollo/client'
 import { ColumnDef, Row, RowData, Table as TanstackTable } from '@tanstack/react-table'
 import type { ReactNode } from 'react'
 import { TableVirtualizationMode } from '~/components/Table/hooks/useTableVirtualizer'
@@ -47,7 +46,7 @@ export interface TableColumnMeta {
 export type TableBodyProps<T extends RowData = unknown> = {
   table: TanstackTable<T>
   loading?: boolean
-  error?: ApolloError | boolean
+  error?: boolean
   errorState?: TableErrorState
   emptyState?: TableEmptyState
   rowWrapper?: (row: Row<T>, content: JSX.Element) => JSX.Element
@@ -70,7 +69,7 @@ export type TableProps<T extends RowData = unknown> = {
   columns: ColumnDef<T, any>[]
   data: T[]
   loading?: boolean
-  error?: ApolloError | boolean
+  error?: boolean
   errorState?: TableErrorState
   emptyState?: TableEmptyState
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void

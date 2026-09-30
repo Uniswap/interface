@@ -1,3 +1,5 @@
+import { CurrencyAmount } from '@uniswap/sdk-core'
+import { UniverseChainId } from '@universe/chains'
 import { DappRequestContent } from 'src/app/features/dappRequests/DappRequestContent'
 import { REQUEST_EXPIRY_TIME_MS } from 'src/app/features/dappRequests/hooks/useIsRequestStale'
 import type { DappRequestStoreItem } from 'src/app/features/dappRequests/shared'
@@ -6,6 +8,8 @@ import type { WithMetadata } from 'src/app/features/dappRequests/slice'
 import { render, screen } from 'src/test/test-utils'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { DappRequestType } from 'uniswap/src/features/dappRequests/types'
+import { getChainGasToken, useChainGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToken'
+import { hasSufficientGasBalance } from 'uniswap/src/features/gas/utils'
 
 // Mock wagmi to avoid ESM import issues
 vi.mock('wagmi', () => ({
@@ -30,12 +34,9 @@ vi.mock('src/app/features/dapp/hooks', () => ({
   useDappLastChainId: vi.fn(() => 1),
 }))
 
-vi.mock('uniswap/src/features/gas/hooks/useChainGasToken', () => ({
-  useChainGasToken: vi.fn(() => ({
-    gasToken: { symbol: 'ETH' },
-    gasBalance: { value: '1000000000000000000', currency: { symbol: 'ETH' }, equalTo: () => false },
-    isLoading: false,
-  })),
+vi.mock('uniswap/src/features/gas/hooks/useChainGasToken', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/features/gas/hooks/useChainGasToken')>()),
+  useChainGasToken: vi.fn(),
 }))
 
 vi.mock('uniswap/src/features/gas/utils', async (importOriginal) => ({
@@ -141,6 +142,133 @@ function renderDappRequestContent(options: { createdAt: number; isRequestStale: 
   setupMockRequestAndContext(options.createdAt, { frameUrl: options.frameUrl })
   return render(<DappRequestContent title="Transaction request" confirmText="Confirm" />)
 }
+
+beforeEach(() => {
+  const gasToken = getChainGasToken(UniverseChainId.Mainnet)
+  vi.mocked(useChainGasToken).mockReturnValue({
+    gasToken,
+    gasBalance: CurrencyAmount.fromRawAmount(gasToken, '1000000000000000000'),
+    isLoading: false,
+  })
+  vi.mocked(hasSufficientGasBalance).mockReturnValue(true)
+})
+
+describe('DappRequestContent - Payment and Gas Balance', () => {
+  beforeEach(async () => {
+    const actual = await vi.importActual<typeof import('uniswap/src/features/gas/utils')>(
+      'uniswap/src/features/gas/utils',
+    )
+    vi.mocked(hasSufficientGasBalance).mockImplementation(actual.hasSufficientGasBalance)
+    mockUseIsRequestStale.mockReturnValue(false)
+    setupMockRequestAndContext(Date.now())
+  })
+
+  it.each([
+    { chainId: UniverseChainId.Arc, balance: '1000000', value: '0xde0b6b3a7640000', disabled: true },
+    { chainId: UniverseChainId.Arc, balance: '1001000', value: '0xde0b6b3a7640000', disabled: false },
+    { chainId: UniverseChainId.Mainnet, balance: '1000000000000000000', value: '1000000000000000000', disabled: true },
+    { chainId: UniverseChainId.Mainnet, balance: '1001000000000000000', value: '1000000000000000000', disabled: false },
+    { chainId: UniverseChainId.Arc, balance: '1000', value: undefined, disabled: false },
+  ])('checks payment plus gas on $chainId with balance $balance', ({ chainId, balance, value, disabled }) => {
+    const gasToken = getChainGasToken(chainId)
+    vi.mocked(useChainGasToken).mockReturnValue({
+      gasToken,
+      gasBalance: CurrencyAmount.fromRawAmount(gasToken, balance),
+      isLoading: false,
+    })
+    mockContextValue.request.dappRequest.transaction = { chainId, value }
+
+    render(
+      <DappRequestContent
+        title="Transaction request"
+        confirmText="Confirm"
+        transactionGasFeeResult={{ value: '1000000000000000', isLoading: false, error: null }}
+      />,
+    )
+
+    expect(screen.getByRole('button', { name: 'Confirm' })).toHaveProperty('disabled', disabled)
+  })
+
+  it.each([
+    { callCount: 1, balance: '10000000000000000', disabled: true },
+    { callCount: 1, balance: '1000000000000000000', disabled: false },
+    { callCount: 2, balance: '10000000000000000', disabled: true },
+    { callCount: 2, balance: '1000000000000000000', disabled: false },
+    { callCount: 1, balance: '0', value: '0x', disabled: false },
+    { callCount: 2, balance: '0', value: '0x', disabled: false },
+  ])(
+    'checks first of $callCount sponsored calls with balance $balance',
+    ({ callCount, balance, value = '0xde0b6b3a7640000', disabled }) => {
+      const chainId = UniverseChainId.Mainnet
+      const gasToken = getChainGasToken(chainId)
+      vi.mocked(useChainGasToken).mockReturnValue({
+        gasToken,
+        gasBalance: CurrencyAmount.fromRawAmount(gasToken, balance),
+        isLoading: false,
+      })
+      mockContextValue.request.dappRequest = {
+        type: DappRequestType.SendCalls,
+        requestId: 'test-request-id',
+        version: '2.0.0',
+        chainId: `0x${chainId.toString(16)}`,
+        calls: Array.from({ length: callCount }, (_, index) => ({
+          to: '0x1234567890123456789012345678901234567890',
+          value: index === 0 ? value : '0x0',
+        })),
+      }
+
+      render(
+        <DappRequestContent
+          chainId={chainId}
+          title="Transaction request"
+          confirmText="Confirm"
+          transactionGasFeeResult={{ value: '0', isLoading: false, error: null }}
+        />,
+      )
+
+      expect(screen.getByRole('button', { name: 'Confirm' })).toHaveProperty('disabled', disabled)
+    },
+  )
+
+  it('allows a sponsored batch to unwrap WETH before sending the ETH', () => {
+    const chainId = UniverseChainId.Mainnet
+    const gasToken = getChainGasToken(chainId)
+    vi.mocked(useChainGasToken).mockReturnValue({
+      gasToken,
+      gasBalance: CurrencyAmount.fromRawAmount(gasToken, '10000000000000000'), // 0.01 ETH initially
+      isLoading: false,
+    })
+    mockContextValue.request.dappRequest = {
+      type: DappRequestType.SendCalls,
+      requestId: 'test-request-id',
+      version: '2.0.0',
+      chainId: `0x${chainId.toString(16)}`,
+      calls: [
+        {
+          to: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+          // WETH.withdraw(1 ETH), funded by the wallet's existing WETH balance.
+          data: '0x2e1a7d4d0000000000000000000000000000000000000000000000000de0b6b3a7640000',
+          value: '0x0',
+        },
+        {
+          to: '0x1234567890123456789012345678901234567890',
+          value: '0xde0b6b3a7640000',
+        },
+      ],
+    }
+
+    render(
+      <DappRequestContent
+        chainId={chainId}
+        title="Transaction request"
+        confirmText="Confirm"
+        transactionGasFeeResult={{ value: '0', isLoading: false, error: null }}
+      />,
+    )
+
+    expect(screen.getByRole('button', { name: 'Confirm' })).toHaveProperty('disabled', false)
+  })
+})
 
 describe('DappRequestContent - Stale Request Rendering', () => {
   beforeEach(() => {

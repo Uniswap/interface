@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
+import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { AuctionEventName, ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -24,7 +25,6 @@ import { NoWalletSection } from '~/pages/Liquidity/CreateAuction/components/NoWa
 import { useCreateAuctionStoreActions } from '~/pages/Liquidity/CreateAuction/CreateAuctionContext'
 import { useCreateAuctionAllowedNetworks } from '~/pages/Liquidity/CreateAuction/hooks/useAllowedNetworks'
 import { useCreateAuctionTokenColor } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionTokenColor'
-import { useExistingTokenProjectMetadata } from '~/pages/Liquidity/CreateAuction/hooks/useExistingTokenProjectMetadata'
 import { useIsStepValid } from '~/pages/Liquidity/CreateAuction/hooks/useIsStepValid'
 import { CreateAuctionStep, type ExistingTokenFormState } from '~/pages/Liquidity/CreateAuction/types'
 import { SwitchNetworkAction } from '~/state/popups/types'
@@ -42,22 +42,22 @@ export function ExistingTokenForm({ existing }: { existing: ExistingTokenFormSta
   const allowedNetworks = useCreateAuctionAllowedNetworks()
 
   const {
-    currencyInfo: resolvedCurrencyInfo,
-    loading: currencyLoading,
+    data: resolvedCurrencyInfo,
+    isLoading: currencyLoading,
     error: currencyError,
   } = useCurrencyInfoWithLoading(lookupCurrencyId, { skip: !lookupCurrencyId })
 
   const selectedCurrencyInfo = existing.existingTokenCurrencyInfo
   const selectedCurrency = selectedCurrencyInfo?.currency
   const { totalSupply, isLoading: totalSupplyLoading, isError: totalSupplyError } = useTotalSupply(selectedCurrency)
-  const projectMetadata = useExistingTokenProjectMetadata(selectedCurrencyInfo)
+  const projectMetadata = useTokenMetadata(selectedCurrencyInfo?.currencyId)
   const { isGeoRestricted, isGeoRestrictionPending, unavailableLabel } = useToucanGeoRestriction(selectedCurrency)
 
   const hasFetchError = (!!currencyError && !!lookupCurrencyId) || (totalSupplyError && !!selectedCurrencyInfo)
   const canContinue =
     useIsStepValid(CreateAuctionStep.ADD_TOKEN_INFO) &&
     !totalSupplyLoading &&
-    !projectMetadata.loading &&
+    !projectMetadata.isLoading &&
     !hasFetchError
   // Fail closed while the geo-restriction check is pending: keep the CTA disabled until the token is
   // confirmed clean, so a restricted token never briefly shows an enabled Continue button.
@@ -97,17 +97,17 @@ export function ExistingTokenForm({ existing }: { existing: ExistingTokenFormSta
   }, [totalSupply, existing.totalSupply, updateExistingTokenField])
 
   useEffect(() => {
-    if (projectMetadata.loading) {
+    if (projectMetadata.isLoading) {
       return
     }
-    if (projectMetadata.description !== existing.description) {
-      updateExistingTokenField('description', projectMetadata.description)
+    if ((projectMetadata.description ?? '') !== existing.description) {
+      updateExistingTokenField('description', projectMetadata.description ?? '')
     }
-    if (projectMetadata.websiteLink !== existing.websiteLink) {
-      updateExistingTokenField('websiteLink', projectMetadata.websiteLink)
+    if ((projectMetadata.homepageUrl ?? '') !== existing.websiteLink) {
+      updateExistingTokenField('websiteLink', projectMetadata.homepageUrl ?? '')
     }
-    if (projectMetadata.xHandle !== existing.xProfile) {
-      updateExistingTokenField('xProfile', projectMetadata.xHandle)
+    if ((projectMetadata.twitterName ?? '') !== existing.xProfile) {
+      updateExistingTokenField('xProfile', projectMetadata.twitterName ?? '')
     }
   }, [projectMetadata, existing.description, existing.websiteLink, existing.xProfile, updateExistingTokenField])
 

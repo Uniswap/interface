@@ -1,6 +1,7 @@
 import { isHoverable } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { ArrowRight } from '@universe/mycelium/icons/ArrowRight'
+import { TestID } from '@universe/test'
 import { memo, useCallback, useMemo, useState, type ReactNode } from 'react'
 import type { StyleProp, ViewStyle } from 'react-native'
 import { AuctionOptionItem } from 'uniswap/src/components/lists/items/auctions/AuctionOptionItem'
@@ -14,17 +15,18 @@ import { ENSAddressOptionItem } from 'uniswap/src/components/lists/items/wallets
 import { UnitagOptionItem } from 'uniswap/src/components/lists/items/wallets/UnitagOptionItem'
 import { WalletByAddressOptionItem } from 'uniswap/src/components/lists/items/wallets/WalletByAddressOptionItem'
 import { ItemRowInfo } from 'uniswap/src/components/lists/OnchainItemList/OnchainItemList'
-import { toFlatRowIndex } from 'uniswap/src/components/lists/OnchainItemList/processSectionsToRows'
 import { OnchainItemSectionName, type OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { SelectorBaseList } from 'uniswap/src/components/lists/SelectorBaseList'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useAllTokenCategories } from 'uniswap/src/data/apiClients/dataApiService/categories/useAllTokenCategories'
-import { formatIssuerLabel } from 'uniswap/src/data/apiClients/dataApiService/rwa/formatIssuerDisplaySymbol'
 import type { IssuerToken } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import type { RenderIssuerRowArgs } from 'uniswap/src/features/expandableAsset/types'
 import { SearchFilterContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
+import { withCategoryHeaderActions } from 'uniswap/src/features/search/SearchModal/categories/withCategoryHeaderActions'
+import { SEARCH_V2_MAX_SYMBOL_CHARACTERS } from 'uniswap/src/features/search/SearchModal/constants'
+import { useSearchEarnApy } from 'uniswap/src/features/search/SearchModal/hooks/useSearchEarnApy'
 import {
   SearchModalOptionSelection,
   useSearchModalOptionSelection,
@@ -43,8 +45,6 @@ import {
 } from 'uniswap/src/features/search/SearchModal/utils/searchModalListItem'
 import type { CategoryTagPlacement } from 'uniswap/src/features/tokenCategories/CategoryTagPill'
 import { getRowCategoryTag } from 'uniswap/src/features/tokenCategories/getRowCategoryTag'
-import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export interface SearchModalListProps {
@@ -84,34 +84,19 @@ export const SearchModalList = memo(function SearchModalListInner({
   const isSearchV2UIEnabled = useFeatureFlag(FeatureFlags.SearchV2UI)
   // V2 frees the right edge for stats by moving the pill beside the name and the chevron inline.
   const categoryTagPlacement: CategoryTagPlacement = isSearchV2UIEnabled ? 'title' : 'right'
+  const symbolMaxCharacters = isSearchV2UIEnabled ? SEARCH_V2_MAX_SYMBOL_CHARACTERS : undefined
   // Subscribed once here, not per row: `renderItem` is a plain function, so rows can't use hooks.
   const { categories } = useAllTokenCategories()
+  const getEarnApyPercent = useSearchEarnApy({ enabled: isSearchV2UIEnabled })
 
   const [focusedRowIndex, setFocusedRowIndex] = useState<number | undefined>()
   const [expandedItems, setExpandedItems] = useState<string[]>([])
 
-  // Applies the Search V2 UI gate on row focus once, so every wrapper call site inherits it.
-  const gatedRowWrapper = useMemo<SearchModalRowWrapper | undefined>(
-    () =>
-      rowWrapper &&
-      ((args): JSX.Element => rowWrapper({ ...args, isRowFocused: isSearchV2UIEnabled && args.isRowFocused })),
-    [rowWrapper, isSearchV2UIEnabled],
-  )
-  // Auction rows only get a hover card under Search V2 (token rows always do; only their focus behavior is gated).
+  // Auction rows only get a hover card under Search V2 (token rows always do).
   // Not gated on the auction-search flag: that governs whether auction rows are fetched at all.
-  const auctionRowWrapper = isSearchV2UIEnabled ? gatedRowWrapper : undefined
-  const wrapTokenRow = ({
-    element,
-    currencyInfo,
-    rowIndex,
-  }: {
-    element: JSX.Element
-    currencyInfo: CurrencyInfo
-    rowIndex: number
-  }): JSX.Element =>
-    gatedRowWrapper
-      ? gatedRowWrapper({ element, currencyInfo, variant: 'token', isRowFocused: rowIndex === focusedRowIndex })
-      : element
+  const auctionRowWrapper = isSearchV2UIEnabled ? rowWrapper : undefined
+  const wrapTokenRow = ({ element, currencyInfo }: { element: JSX.Element; currencyInfo: CurrencyInfo }): JSX.Element =>
+    rowWrapper ? rowWrapper({ element, currencyInfo, variant: 'token' }) : element
 
   // Reset expand-state during render (not in an effect, which would flash a stale expansion for one frame)
   // when the search context changes; a stale key would re-expand an unrelated same-keyed row, growing unbounded.
@@ -152,6 +137,8 @@ export const SearchModalList = memo(function SearchModalListInner({
           menuControl={menuControl}
           currencyInfo={currencyInfo}
           issuerChainTokens={issuer.chainTokens}
+          // V2 sub-rows' right edge holds issuer stats, so they drop the `…` menu; the collapsed single-issuer row keeps it.
+          hideContextMenu={isSearchV2UIEnabled && ownsTouchable}
           modifierPressHref={modifierPressHref}
           onPress={onPress}
           onModifierPress={onModifierPress}
@@ -162,11 +149,11 @@ export const SearchModalList = memo(function SearchModalListInner({
       // `ownsTouchable` is true only for the expanded multi-issuer sub-rows (the collection's child rows) — the
       // collapsed single-issuer row reuses this same renderer with `ownsTouchable: false` for the shell's parent
       // row, which must NOT get the hover chart card.
-      return ownsTouchable && gatedRowWrapper && currencyInfo
-        ? gatedRowWrapper({ element: issuerRow, currencyInfo, variant: 'rwaIssuerChild', isRowFocused })
+      return ownsTouchable && rowWrapper && currencyInfo
+        ? rowWrapper({ element: issuerRow, currencyInfo, variant: 'rwaIssuerChild' })
         : issuerRow
     },
-    [rwaIssuerCurrencyInfos, enabledChainIds, gatedRowWrapper],
+    [rwaIssuerCurrencyInfos, enabledChainIds, rowWrapper, isSearchV2UIEnabled],
   )
 
   // Gate the collapsed single-issuer row's native long-press: only let it open once the issuer's primary-chain
@@ -186,16 +173,11 @@ export const SearchModalList = memo(function SearchModalListInner({
     onSelect,
   })
 
-  // Category-scoped section headers behave like a Category row: same analytics, then Category Details, then close.
   const { navigateToCategoryDetails } = useUniswapContext()
   const openCategoryDetails = useEvent((selection: SearchModalOptionSelection): void => selectOption(selection))
   const sectionsWithHeaderActions = useMemo(
     () =>
-      navigateToCategoryDetails
-        ? withCategoryHeaderSelections({ sections, categories }).map(({ section, selection }) =>
-            selection ? { ...section, onPress: (): void => openCategoryDetails(selection) } : section,
-          )
-        : sections,
+      navigateToCategoryDetails ? withCategoryHeaderActions({ sections, categories, openCategoryDetails }) : sections,
     [sections, categories, navigateToCategoryDetails, openCategoryDetails],
   )
 
@@ -239,13 +221,16 @@ export const SearchModalList = memo(function SearchModalListInner({
             protocolVersion={item.protocolVersion}
             hookAddress={item.hookAddress}
             feeTier={item.feeTier}
+            identityPlacement={isSearchV2UIEnabled ? 'subtitle' : 'badge'}
+            searchStats={isSearchV2UIEnabled ? { volume1dUsd: item.volume1dUsd, apr: item.apr } : undefined}
             focusedRowControl={{
               rowIndex,
               setFocusedRowIndex,
               focusedRowIndex,
             }}
             rightElement={
-              isHoverable ? (
+              // V2 gives the right edge to vol/APR, like the token rows; long-press/right-click still opens the menu.
+              !isSearchV2UIEnabled && isHoverable ? (
                 <PoolRowContextMenuButton
                   poolId={item.poolId}
                   chainId={item.chainId}
@@ -266,7 +251,8 @@ export const SearchModalList = memo(function SearchModalListInner({
             showTokenAddress
             option={item}
             displayName={item.rwaName}
-            issuerLabel={item.rwaIssuerSlug ? formatIssuerLabel(item.rwaIssuerSlug) : undefined}
+            issuer={item.rwaIssuerSlug}
+            showIssuerTag={isSearchV2UIEnabled}
             categoryTag={getRowCategoryTag({
               rwaCategory: item.rwaCategory,
               categoryIds: item.currencyInfo.categoryIds,
@@ -281,6 +267,8 @@ export const SearchModalList = memo(function SearchModalListInner({
               rowIndex,
             }}
             searchStats={isSearchV2UIEnabled ? item.currencyInfo.searchStats : undefined}
+            earnApyPercent={getEarnApyPercent([item.currencyInfo.currencyId])}
+            symbolMaxCharacters={symbolMaxCharacters}
             hideContextMenu={isSearchV2UIEnabled}
             rightElement={
               !isSearchV2UIEnabled && isHoverable ? (
@@ -295,7 +283,7 @@ export const SearchModalList = memo(function SearchModalListInner({
             onModifierPress={onModifierPress}
           />
         )
-        return wrapTokenRow({ element: tokenElement, currencyInfo: item.currencyInfo, rowIndex })
+        return wrapTokenRow({ element: tokenElement, currencyInfo: item.currencyInfo })
       }
       case OnchainItemListOptionType.MultichainToken: {
         const multichainElement = (
@@ -307,7 +295,8 @@ export const SearchModalList = memo(function SearchModalListInner({
               balanceUSD: undefined,
             }}
             displayName={item.rwaName ?? item.multichainResult.name}
-            issuerLabel={item.rwaIssuerSlug ? formatIssuerLabel(item.rwaIssuerSlug) : undefined}
+            issuer={item.rwaIssuerSlug}
+            showIssuerTag={isSearchV2UIEnabled}
             networkCount={item.multichainResult.tokens.length}
             categoryTag={getRowCategoryTag({
               rwaCategory: item.rwaCategory,
@@ -317,6 +306,8 @@ export const SearchModalList = memo(function SearchModalListInner({
             })}
             categoryTagPlacement={categoryTagPlacement}
             searchStats={isSearchV2UIEnabled ? item.multichainResult.stats : undefined}
+            earnApyPercent={getEarnApyPercent(item.multichainResult.tokens.map((token) => token.currencyId))}
+            symbolMaxCharacters={symbolMaxCharacters}
             hideContextMenu={isSearchV2UIEnabled}
             contextMenuVariant={TokenContextMenuVariant.Search}
             multichainData={{
@@ -333,7 +324,7 @@ export const SearchModalList = memo(function SearchModalListInner({
             onModifierPress={onModifierPress}
           />
         )
-        return wrapTokenRow({ element: multichainElement, currencyInfo: item.primaryCurrencyInfo, rowIndex })
+        return wrapTokenRow({ element: multichainElement, currencyInfo: item.primaryCurrencyInfo })
       }
       case OnchainItemListOptionType.RwaCollection: {
         const { rwa } = item
@@ -350,6 +341,8 @@ export const SearchModalList = memo(function SearchModalListInner({
             isIssuerMenuReady={isRwaIssuerMenuReady}
             testID={`${TestID.SearchRwaCollectionPrefix}${rwa.symbol}`}
             searchStats={isSearchV2UIEnabled ? item.searchStats : undefined}
+            showIssuerStats={isSearchV2UIEnabled}
+            showIssuerTag={isSearchV2UIEnabled}
             categoryTagPlacement={categoryTagPlacement}
             onToggle={() => toggleExpanded(getRwaCollectionKey({ rwa }))}
             onSelect={onSelect}
@@ -421,12 +414,7 @@ export const SearchModalList = memo(function SearchModalListInner({
           />
         )
         return auctionRowWrapper
-          ? auctionRowWrapper({
-              element: auctionElement,
-              variant: 'auction',
-              auction: item,
-              isRowFocused: rowIndex === focusedRowIndex,
-            })
+          ? auctionRowWrapper({ element: auctionElement, variant: 'auction', auction: item })
           : auctionElement
       }
       default:
@@ -457,32 +445,3 @@ export const SearchModalList = memo(function SearchModalListInner({
     />
   )
 })
-
-/**
- * Pairs each category-scoped section with the selection its header press reports (`selectOption` records it, as
- * for rows). The header is row 0 of its section, so `index: -1` yields sectionPosition 0 (rows start at 1).
- */
-function withCategoryHeaderSelections({
-  sections,
-  categories,
-}: {
-  sections: OnchainItemSection<SearchModalListOption>[] | undefined
-  categories: TokenCategory[]
-}): { section: OnchainItemSection<SearchModalListOption>; selection?: SearchModalOptionSelection }[] {
-  return (sections ?? []).map((section, sectionIndex) => {
-    const category = section.categoryId
-      ? categories.find((candidate) => candidate.id === section.categoryId)
-      : undefined
-    return category
-      ? {
-          section,
-          selection: {
-            item: { type: OnchainItemListOptionType.Category, category },
-            section,
-            index: -1,
-            rowIndex: toFlatRowIndex({ sections: sections ?? [], sectionIndex, itemIndex: 0 }),
-          },
-        }
-      : { section }
-  })
-}

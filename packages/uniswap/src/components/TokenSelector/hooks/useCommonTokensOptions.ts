@@ -1,4 +1,3 @@
-import { GqlResult } from '@universe/api'
 import { UniverseChainId, areAddressesEqual } from '@universe/chains'
 import { useCallback, useMemo } from 'react'
 import { TokenOption } from 'uniswap/src/components/lists/items/types'
@@ -25,6 +24,8 @@ import {
 } from 'uniswap/src/constants/tokens'
 import { useCurrencyInfosWithLoading } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
+import { noop } from 'utilities/src/react/noop'
+import type { DerivedQueryResult } from 'utilities/src/reactQuery/types'
 
 // X Layer quick-select tokens
 const XLAYER_CURRENCY_IDS = [
@@ -94,68 +95,68 @@ export function useCommonTokensOptions({
 }: {
   chainFilter: UniverseChainId | null
   portfolioData: PortfolioBalancesResult
-}): GqlResult<TokenOption[] | undefined> {
+}): DerivedQueryResult<TokenOption[] | undefined> {
   const {
     data: portfolioBalancesById,
     error: portfolioBalancesByIdError,
     refetch: portfolioBalancesByIdRefetch,
-    loading: loadingPorfolioBalancesById,
+    isLoading: loadingPorfolioBalancesById,
   } = portfolioData
 
   const {
     data: commonBaseCurrencies,
     error: commonBaseCurrenciesError,
     refetch: refetchCommonBaseCurrencies,
-    loading: loadingCommonBaseCurrencies,
+    isLoading: loadingCommonBaseCurrencies,
   } = useAllCommonBaseCurrencies()
 
   const {
     data: xLayerCurrencies,
     error: xLayerCurrenciesError,
     refetch: refetchXLayerCurrencies,
-    loading: loadingXLayerCurrencies,
+    isLoading: loadingXLayerCurrencies,
   } = useCurrencyInfosWithLoading(XLAYER_CURRENCY_IDS, { skip: chainFilter !== UniverseChainId.XLayer })
 
   const {
     data: lineaCurrencies,
     error: lineaCurrenciesError,
     refetch: refetchLineaCurrencies,
-    loading: loadingLineaCurrencies,
+    isLoading: loadingLineaCurrencies,
   } = useCurrencyInfosWithLoading(LINEA_CURRENCY_IDS, { skip: chainFilter !== UniverseChainId.Linea })
 
   const {
     data: baseCurrencies,
     error: baseCurrenciesError,
     refetch: refetchBaseCurrencies,
-    loading: loadingBaseCurrencies,
+    isLoading: loadingBaseCurrencies,
   } = useCurrencyInfosWithLoading(BASE_CURRENCY_IDS, { skip: chainFilter !== UniverseChainId.Base })
 
   const {
     data: megaEthCurrencies,
     error: megaEthCurrenciesError,
     refetch: refetchMegaEthCurrencies,
-    loading: loadingMegaEthCurrencies,
+    isLoading: loadingMegaEthCurrencies,
   } = useCurrencyInfosWithLoading(MEGAETH_CURRENCY_IDS, { skip: chainFilter !== UniverseChainId.MegaETH })
 
   const {
     data: robinhoodCurrencies,
     error: robinhoodCurrenciesError,
     refetch: refetchRobinhoodCurrencies,
-    loading: loadingRobinhoodCurrencies,
+    isLoading: loadingRobinhoodCurrencies,
   } = useCurrencyInfosWithLoading(ROBINHOOD_CURRENCY_IDS, { skip: chainFilter !== UniverseChainId.Robinhood })
 
   const {
     data: arcCurrencies,
     error: arcCurrenciesError,
     refetch: refetchArcCurrencies,
-    loading: loadingArcCurrencies,
+    isLoading: loadingArcCurrencies,
   } = useCurrencyInfosWithLoading(ARC_CURRENCY_IDS, { skip: chainFilter !== UniverseChainId.Arc })
 
   const {
     data: inkCurrencies,
     error: inkCurrenciesError,
     refetch: refetchInkCurrencies,
-    loading: loadingInkCurrencies,
+    isLoading: loadingInkCurrencies,
   } = useCurrencyInfosWithLoading(INK_CURRENCY_IDS, { skip: chainFilter !== UniverseChainId.Ink })
 
   // this is a one-off filter for USDT on Unichain which at time of launch does not have enough liquidity for swapping so we are filtering it out of quick select
@@ -215,14 +216,14 @@ export function useCommonTokensOptions({
 
   const refetch = useCallback(() => {
     portfolioBalancesByIdRefetch?.()
-    refetchCommonBaseCurrencies?.()
-    refetchXLayerCurrencies?.()
-    refetchLineaCurrencies?.()
-    refetchBaseCurrencies?.()
-    refetchMegaEthCurrencies?.()
-    refetchRobinhoodCurrencies?.()
-    refetchArcCurrencies?.()
-    refetchInkCurrencies?.()
+    refetchCommonBaseCurrencies().catch(noop)
+    refetchXLayerCurrencies().catch(noop)
+    refetchLineaCurrencies().catch(noop)
+    refetchBaseCurrencies().catch(noop)
+    refetchMegaEthCurrencies().catch(noop)
+    refetchRobinhoodCurrencies().catch(noop)
+    refetchArcCurrencies().catch(noop)
+    refetchInkCurrencies().catch(noop)
   }, [
     portfolioBalancesByIdRefetch,
     refetchCommonBaseCurrencies,
@@ -255,8 +256,8 @@ export function useCommonTokensOptions({
     () => ({
       data: filteredCommonBaseTokenOptions,
       refetch,
-      error: error || undefined,
-      loading:
+      error: error || null,
+      isLoading:
         loadingPorfolioBalancesById ||
         loadingCommonBaseCurrencies ||
         loadingXLayerCurrencies ||

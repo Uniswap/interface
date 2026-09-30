@@ -29,7 +29,7 @@ object GDriveParams {
   const val SPACES = "appDataFolder"
   const val FIELDS = "nextPageToken, files(id, name)"
   const val PAGE_SIZE_NORMAL = 30
-  const val PAGE_SIZE_SINGLE = 1
+  const val ORDER_BY_NEWEST = "modifiedTime desc"
 }
 
 /**
@@ -180,27 +180,28 @@ class GoogleDriveApiHelper {
     }
 
     /**
-     * Fetches the fileId of a file in Google Drive by its file name.
-     * Assuming there is no bug in code, should always be only one file with the given name
-     * even though google drive allows to store multiple files with the same name
+     * Fetches the ids of every file in Google Drive with this name, newest first.
+     *
+     * Drive allows several files to share a name and concurrent backups have been able to create
+     * duplicates, so callers decide which copy wins instead of assuming there is one.
+     *
+     * Failures are not swallowed: treating a network error as "no file exists" makes the caller
+     * create a second copy of a backup that is already there.
      *
      * @param drive The authenticated Drive object of Google Drive.
      * @param name Name of the file.
-     * @return String fileId if file exists, `null` otherwise.
+     * @return ids of the matching files, most recently modified first.
      */
-    fun getFileIdByFileName(drive: Drive, name: String): String? {
-      try {
-        val files: FileList = drive.files().list()
-          .setSpaces(GDriveParams.SPACES)
-          .setFields(GDriveParams.FIELDS)
-          .setPageSize(GDriveParams.PAGE_SIZE_SINGLE)
-          .setQ("name = '$name.json'")
-          .execute()
-        return files.files.firstOrNull()?.id
-      } catch (e: Exception) {
-        e.printStackTrace()
-      }
-      return null
+    fun getFileIdsByFileName(drive: Drive, name: String): List<String> {
+      val files: FileList = drive.files().list()
+        .setSpaces(GDriveParams.SPACES)
+        .setFields(GDriveParams.FIELDS)
+        .setPageSize(GDriveParams.PAGE_SIZE_NORMAL)
+        .setOrderBy(GDriveParams.ORDER_BY_NEWEST)
+        .setQ("name = '$name.json'")
+        .execute()
+
+      return files.files.mapNotNull { it.id }
     }
 
     /**
@@ -216,20 +217,26 @@ class GoogleDriveApiHelper {
       mnemonicId: String,
       backup: CloudStorageMnemonicBackup
     ) {
+      val jsonData = gson.toJson(backup)
+      val jsonByteArray = jsonData.toByteArray(StandardCharsets.UTF_8)
+      val inputContent = ByteArrayContent("application/json", jsonByteArray)
+
+      val existingFileId = getFileIdsByFileName(drive, mnemonicId).firstOrNull()
+
+      if (existingFileId != null) {
+        // Replace the contents in place. Deleting first would leave the user with nothing if the
+        // upload then failed, and uploading first would leave two files sharing a name, which
+        // restore cannot tell apart. Drive rejects a parent change on update, so the metadata
+        // passed here must not carry `parents`.
+        drive.files().update(existingFileId, File(), inputContent).execute()
+        return
+      }
+
       val fileMetadata = File()
       fileMetadata.name = "$mnemonicId.json"
       fileMetadata.parents = listOf("appDataFolder")
 
-      val jsonData = gson.toJson(backup)
-
-      val jsonByteArray = jsonData.toByteArray(StandardCharsets.UTF_8)
-      val inputContent = ByteArrayContent("application/json", jsonByteArray)
-      val fileId = getFileIdByFileName(drive, mnemonicId)
-      if (fileId != null) {
-        drive.files().delete(fileId).execute()
-      }
-      drive.files().create(fileMetadata, inputContent)
-        .execute()
+      drive.files().create(fileMetadata, inputContent).execute()
     }
   }
 }

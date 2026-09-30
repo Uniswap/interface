@@ -1,6 +1,7 @@
 import { ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { Flex, Separator, Text, TouchableArea } from '@universe/mycelium'
 import { opacify, useDeviceDimensions, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import { LinearGradient } from 'expo-linear-gradient'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -15,7 +16,6 @@ import {
   chartPeriodToTestIdSuffix,
 } from 'uniswap/src/features/portfolio/chartPeriod'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const EXPANDED_CHART_HEIGHT = 180
 const COLLAPSED_CHART_VISIBLE_HEIGHT = 70

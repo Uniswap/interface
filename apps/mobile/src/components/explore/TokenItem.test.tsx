@@ -1,16 +1,16 @@
+import { TestID } from '@universe/test'
 import * as exploreHooks from 'src/components/explore/hooks'
 import { TokenItem } from 'src/components/explore/TokenItem'
 import * as tokenDetailsHooks from 'src/components/TokenDetails/hooks'
-import { TOKEN_ITEM_DATA, tokenItemData } from 'src/test/fixtures'
 import { fireEvent, render, within } from 'src/test/test-utils'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { asTextMatch, withVisibleText } from 'uniswap/src/test/matchers'
 
 const arbitrumNetworkLogoTestID = `${TestID.NetworkLogoPrefix}${UniverseChainId.ArbitrumOne}`
 const mainnetNetworkLogoTestID = `${TestID.NetworkLogoPrefix}${UniverseChainId.Mainnet}`
 import { UniverseChainId } from '@universe/chains'
+import type { TokenItemData } from 'src/components/explore/TokenItemData'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 
@@ -20,6 +20,26 @@ vi.mock('@universe/gating', async () => ({
   useFeatureFlagWithLoading: vi.fn().mockReturnValue({ value: false, isLoading: false }),
   useFeatureFlagWithExposureLoggingDisabled: vi.fn().mockReturnValue(false),
 }))
+
+// `TokenItemData` is a plain view model the explore list builds before render, so these tests
+// construct it directly instead of deriving it from a backend-shaped fixture. Values are fixed
+// rather than randomized so the snapshot stays stable.
+// `address` is narrowed to non-null: the factory always supplies one, so tests can pass it
+// straight to `buildCurrencyId` without a null check.
+type TokenItemDataOverrides = Partial<Omit<TokenItemData, 'address'>> & { address?: Address }
+
+function tokenItemData(overrides: TokenItemDataOverrides = {}): TokenItemData & { address: Address } {
+  return {
+    name: 'tkn',
+    logoUrl: 'https://loremflickr.com/640/480',
+    chainId: UniverseChainId.Mainnet,
+    address: '0x0000000000000000000000000000000000000001',
+    symbol: 'TKN',
+    ...overrides,
+  }
+}
+
+const TOKEN_ITEM_DATA = tokenItemData()
 
 describe('TokenItem', () => {
   const mockedTokenDetailsNavigation = {

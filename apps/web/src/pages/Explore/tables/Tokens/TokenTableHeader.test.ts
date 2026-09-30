@@ -10,7 +10,7 @@ function t(key: string): string {
 }
 
 describe('getTokenSortMethodLabel', () => {
-  it('labels the popular volume column without a fixed timeframe', () => {
+  it('labels the default volume column without a fixed timeframe', () => {
     expect(getTokenSortMethodLabel({ t, category: TokenSortMethod.VOLUME })).toBe('Volume')
   })
 })

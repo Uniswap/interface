@@ -369,16 +369,6 @@ if (danger.github.pr.additions < danger.github.pr.deletions) {
   message(`✂️ Thanks for removing  ${danger.github.pr.deletions - danger.github.pr.additions} lines!`)
 }
 
-// GraphQL update warnings
-const updatedGraphQLfile = danger.git.modified_files.find((file) => file.endsWith('.graphql'))
-
-if (updatedGraphQLfile) {
-  warn(
-    'You have updated the GraphQL schema. Please ensure that the Swift GraphQL Schema generation is valid by running `bun mobile ios` and rebuilding for iOS. ' +
-      'You may need to add or remove generated files to the project.pbxproj. For more information see `apps/mobile/ios/WidgetsCore/MobileSchema/README.md`',
-  )
-}
-
 // Migrations + schema warnings
 const updatedMobileSchemaFile = danger.git.modified_files.find((file) => file.includes('mobile/src/app/schema.ts'))
 

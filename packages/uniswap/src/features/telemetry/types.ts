@@ -1,5 +1,4 @@
 /* oxlint-disable max-lines */
-import { type ApolloError } from '@apollo/client'
 import { type PartialMessage } from '@bufbuild/protobuf'
 import { type TransactionRequest as EthersTransactionRequest } from '@ethersproject/providers'
 import { type SerializedError } from '@reduxjs/toolkit'
@@ -12,12 +11,9 @@ import {
 } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_pb'
 import { type Currency, type TradeType } from '@uniswap/sdk-core'
 import { type TradingApi } from '@universe/api'
+import type { UniverseChainId, Platform } from '@universe/chains'
 import { type Experiments } from '@universe/gating'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
-import type { PriceSourceTag } from 'uniswap/src/features/prices/getDisplayedPriceSource'
-
-export type { PriceSourceTag } from 'uniswap/src/features/prices/getDisplayedPriceSource'
-import type { UniverseChainId, Platform } from '@universe/chains'
 import { type OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import {
   type BlockaidScanFailureKind,
@@ -26,6 +22,7 @@ import {
   type EthMethod,
 } from 'uniswap/src/features/dappRequests/types'
 import { type FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
+import type { PriceSourceTag } from 'uniswap/src/features/prices/getDisplayedPriceSource'
 import {
   type AuctionEventName,
   type EarnEventName,
@@ -62,6 +59,8 @@ import { type ShareableEntity } from 'uniswap/src/types/sharing'
 import { type UwULinkMethod, type WCEventType, type WCRequestOutcome } from 'uniswap/src/types/walletConnect'
 import { type WidgetEvent, type WidgetType } from 'uniswap/src/types/widgets'
 import { type ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
+
+export type { PriceSourceTag } from 'uniswap/src/features/prices/getDisplayedPriceSource'
 
 /** Sent as `chain` on network filter analytics when no chain is selected. */
 export const ALL_NETWORKS_LABEL = 'All' as const
@@ -1328,8 +1327,6 @@ export type UniverseEventProperties = {
     chain_id?: number
     token_address?: string
     is_multichain?: boolean
-    /** Web search auto-focuses the first result, opening its card without a hover. */
-    open_trigger?: 'hover' | 'focus'
   }
   [InterfaceEventName.TokenSelectorOpened]: undefined
   [InterfaceEventName.LimitedWalletSupportToastDismissed]: {
@@ -1522,10 +1519,12 @@ export type UniverseEventProperties = {
     chain_id?: UniverseChainId
     multichainTokenRowState?: 'open' | 'close'
     chain_name?: string
-    /** ElementName.ExploreRwaCategoryView — selected Explore category tab (popular/stocks/commodities/etfs) */
+    /** ElementName.ExploreRwaCategoryView — selected Explore category id (`all` for the default) */
     tab?: string
-    /** Token category chips on the TDP (Collections pills, Related tokens) */
+    /** Token category chips on the TDP (Collections pills, Related tokens), in the token selector, and row category tags */
     category_id?: string
+    /** Token selector filter chips — whether the press turned the chip on */
+    active?: boolean
     category_index?: number
     /** ElementName.ExploreRwaStocksCarousel — clicked RWA asset on the Explore stocks carousel */
     token_address?: string
@@ -1661,7 +1660,7 @@ export type UniverseEventProperties = {
     included_permit_transaction_step?: boolean
   } & SwapTradeBaseProperties
   [SwapEventName.SwapEstimateGasCallFailed]: {
-    error?: ApolloError | FetchBaseQueryError | SerializedError | Error | string
+    error?: FetchBaseQueryError | SerializedError | Error | string
     txRequest?: EthersTransactionRequest
     client_block_number?: number
     isAutoSlippage?: boolean

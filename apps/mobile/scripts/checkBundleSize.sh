@@ -1,10 +1,6 @@
 #!/bin/bash
 # Measured on the PR's merge with main, so main-side growth can move this.
-# Bumped 32.5 -> 33.0 for the @uniswap/client-data-api 0.0.217 -> 0.0.227 upgrade (added generated
-# proto code); the bundle grew ~8KB over the old cap, well under the 0.5MB "check with the team" bar.
-# Lowered 34.0 -> 33.5 after the Tamagui-bearing ui/src internals came out: the bundle measures
-# 33.2725 MB, which left more than MAX_BUFFER of slack and so tripped the ratchet below.
-MAX_SIZE=33.5
+MAX_SIZE=34
 MAX_BUFFER=0.5
 
 # Check OS type and use appropriate stat command

@@ -8,12 +8,18 @@ import {
 } from 'uniswap/src/data/apiClients/dataApiService/utils/rankedTokenCardItem'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { findTrendingCategory } from 'uniswap/src/features/tokenCategories/findTrendingCategory'
+import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 
 export const TRENDING_CAROUSEL_TOKEN_COUNT = 12
 
-export function useTrendingCarouselTokens(): { tokens: RankedTokenCardItem[]; isLoading: boolean } {
+export function useTrendingCarouselTokens(): {
+  tokens: RankedTokenCardItem[]
+  isLoading: boolean
+  trendingCategory: TokenCategory | undefined
+} {
   const { data: categories, isPending: categoriesPending } = useListCategoriesQuery()
-  const trendingCategoryId = findTrendingCategory(categories)?.id
+  const trendingCategory = findTrendingCategory(categories)
+  const trendingCategoryId = trendingCategory?.id
   const { chains: chainIds } = useEnabledChains()
 
   // TODO(CONS-3522): swap to the non-paginated ListTokens query; the carousel never pages.
@@ -31,5 +37,5 @@ export function useTrendingCarouselTokens(): { tokens: RankedTokenCardItem[]; is
     [multichainTokens],
   )
 
-  return { tokens, isLoading: categoriesPending || tokensLoading }
+  return { tokens, isLoading: categoriesPending || tokensLoading, trendingCategory }
 }

@@ -1,7 +1,7 @@
 import { getPortfolio } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
 import { UnitagService } from '@universe/api'
+import { TestID } from '@universe/test'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
 import { expect, type Page } from '~/playwright/fixtures'
 import { Mocks } from '~/playwright/mocks/mocks'

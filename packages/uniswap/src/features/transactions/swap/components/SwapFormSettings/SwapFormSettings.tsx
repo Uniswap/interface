@@ -1,5 +1,6 @@
 import { chainIdToPlatform } from '@universe/chains'
 import type { ColorTokens, FlexProps } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useEffect } from 'react'
 import type { IconSizeTokens } from 'ui/src/theme'
 import { useTransactionSettingsWithSlippage } from 'uniswap/src/features/transactions/components/settings/hooks/useTransactionSettingsWithSlippage'
@@ -23,7 +24,6 @@ import {
 } from 'uniswap/src/features/transactions/components/settings/utils'
 import SlippageWarningModal from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/SlippageWarningModal'
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export interface SwapFormSettingsProps {
   settings: TransactionSettingConfig[]

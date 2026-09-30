@@ -1,8 +1,8 @@
 import { Text } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useCallback } from 'react'
 import { Trans } from 'react-i18next'
 import { UniswapHelpUrls, UniswapStaticUrls } from 'uniswap/src/constants/urls'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { openUri } from 'uniswap/src/utils/linking'
 
 export function EarnLegalDisclaimer(): JSX.Element {

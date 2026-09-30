@@ -1,11 +1,10 @@
 import { waitFor } from '@testing-library/react-native'
-import { HistoryDuration as RestHistoryDuration } from '@uniswap/client-data-api/dist/data/v2/types_pb'
-import { GraphQLApi } from '@universe/api'
 import { act } from 'react-test-renderer'
 import { useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
 import { renderHookWithProviders } from 'src/test/render'
 import { useTokenPriceChange, useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { useTokenPriceHistoryRest } from 'uniswap/src/features/dataApi/tokenDetails/useTokenPriceHistoryRest'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { SAMPLE_CURRENCY_ID_1 } from 'uniswap/src/test/fixtures'
 
 vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData', async (importOriginal) => ({
@@ -24,6 +23,13 @@ const mockUseTokenPriceChange = vi.mocked(useTokenPriceChange)
 const mockUseTokenPriceHistoryRest = vi.mocked(useTokenPriceHistoryRest)
 
 type PricePoint = { timestamp: number; value: number }
+
+type RestPriceHistoryResult = ReturnType<typeof useTokenPriceHistoryRest>
+
+const mockRestPriceHistory = ({ entries, isLoading }: { entries: PricePoint[]; isLoading: boolean }): void => {
+  const result: RestPriceHistoryResult = { entries, isLoading, error: null }
+  mockUseTokenPriceHistoryRest.mockReturnValue(result)
+}
 
 /** REST entries are unix seconds; the hook converts them to the chart's milliseconds. */
 const restEntries = (values: number[]): PricePoint[] =>
@@ -70,62 +76,61 @@ describe(useTokenPriceHistory, () => {
     vi.clearAllMocks()
     mockUseTokenSpotPrice.mockReturnValue(undefined)
     mockUseTokenPriceChange.mockReturnValue(undefined)
-    mockUseTokenPriceHistoryRest.mockReturnValue({ entries: [], isLoading: false })
+    mockUseTokenPriceHistoryRest.mockReturnValue({ entries: [], isLoading: false, error: null })
   })
 
   it('returns correct initial values while the REST price history is still loading', () => {
-    mockUseTokenPriceHistoryRest.mockReturnValue({ entries: [], isLoading: true })
+    mockUseTokenPriceHistoryRest.mockReturnValue({ entries: [], isLoading: true, error: null })
 
     const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }))
 
-    expect(result.current.loading).toBe(true)
+    expect(result.current.isLoading).toBe(true)
     expect(result.current.data).toEqual({ priceHistory: [], spot: undefined })
-    expect(result.current.selectedDuration).toBe(GraphQLApi.HistoryDuration.Day) // default initial duration
+    expect(result.current.selectedDuration).toBe(HistoryDuration.Day) // default initial duration
     expect(result.current.numberOfDigits).toEqual({ left: 0, right: 0 })
   })
 
   it('stops loading once the REST price history resolves', async () => {
     mockUseTokenSpotPrice.mockReturnValue(1)
-    mockUseTokenPriceHistoryRest.mockReturnValue({ entries: restEntries([1, 2]), isLoading: false })
+    mockUseTokenPriceHistoryRest.mockReturnValue({ entries: restEntries([1, 2]), isLoading: false, error: null })
 
     const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }))
 
     await waitFor(() => {
-      expect(result.current.loading).toBe(false)
+      expect(result.current.isLoading).toBe(false)
     })
   })
 
   it('reports loading while skipped, even with data already available', () => {
     mockUseTokenSpotPrice.mockReturnValue(1)
-    mockUseTokenPriceHistoryRest.mockReturnValue({ entries: restEntries([1, 2]), isLoading: false })
+    mockUseTokenPriceHistoryRest.mockReturnValue({ entries: restEntries([1, 2]), isLoading: false, error: null })
 
     const { result } = renderHookWithProviders(() =>
       useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1, skip: true }),
     )
 
-    expect(result.current.loading).toBe(true)
+    expect(result.current.isLoading).toBe(true)
   })
 
-  it('stays loaded across a subsequent REST refetch', async () => {
+  it('returns to loading while a newly selected duration loads', async () => {
     mockUseTokenSpotPrice.mockReturnValue(1)
-    mockUseTokenPriceHistoryRest.mockReturnValue({ entries: restEntries([1, 2]), isLoading: false })
+    mockUseTokenPriceHistoryRest.mockReturnValue({ entries: restEntries([1, 2]), isLoading: false, error: null })
 
-    const { result, rerender } = renderHookWithProviders(() =>
-      useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }),
-    )
+    const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }))
 
     await waitFor(() => {
-      expect(result.current.loading).toBe(false)
+      expect(result.current.isLoading).toBe(false)
     })
 
     // A refetch flips the REST hook back to loading, but the chart already has a price to show, so
     // the hook must not fall back into the loading state and blank the chart out.
-    mockUseTokenPriceHistoryRest.mockReturnValue({ entries: restEntries([1, 2]), isLoading: true })
+    mockUseTokenPriceHistoryRest.mockReturnValue({ entries: restEntries([]), isLoading: true, error: null })
     await act(() => {
-      rerender(undefined)
+      result.current.setDuration(HistoryDuration.Week)
     })
 
-    expect(result.current.loading).toBe(false)
+    expect(result.current.isLoading).toBe(true)
+    expect(result.current.data?.priceHistory).toEqual([])
   })
 
   it('uses the REST spot price and 24h change for Day duration', async () => {
@@ -155,7 +160,7 @@ describe(useTokenPriceHistory, () => {
   })
 
   it('leaves spot undefined until the REST spot price arrives', () => {
-    mockUseTokenPriceHistoryRest.mockReturnValue({ entries: restEntries([10, 20]), isLoading: false })
+    mockUseTokenPriceHistoryRest.mockReturnValue({ entries: restEntries([10, 20]), isLoading: false, error: null })
 
     const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }))
 
@@ -168,7 +173,7 @@ describe(useTokenPriceHistory, () => {
     const entries = restEntries([10, 20])
     mockUseTokenSpotPrice.mockReturnValue(99.9)
     mockUseTokenPriceChange.mockReturnValue(12.3)
-    mockUseTokenPriceHistoryRest.mockReturnValue({ entries, isLoading: false })
+    mockUseTokenPriceHistoryRest.mockReturnValue({ entries, isLoading: false, error: null })
 
     const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }))
 
@@ -181,15 +186,57 @@ describe(useTokenPriceHistory, () => {
     })
   })
 
+  it('orders REST history before calculating change and appending the live price without losing duplicates', () => {
+    const entries = [
+      { timestamp: 3000, value: 30 },
+      { timestamp: 1000, value: 10 },
+      { timestamp: 2000, value: 20 },
+      { timestamp: 2000, value: 21 },
+    ]
+    const originalEntries = structuredClone(entries)
+    mockUseTokenSpotPrice.mockReturnValue(40)
+    mockUseTokenPriceHistoryRest.mockReturnValue({ entries, isLoading: false, error: null })
+
+    const { result } = renderHookWithProviders(() =>
+      useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1, initialDuration: HistoryDuration.Year }),
+    )
+
+    expect(result.current.data?.priceHistory?.slice(0, -1)).toEqual(
+      toMilliseconds([entries[1]!, entries[2]!, entries[3]!, entries[0]!]),
+    )
+    expect(result.current.data?.priceHistory?.at(-1)?.value).toBe(40)
+    expect(result.current.data?.spot?.relativeChangeIdle).toBe(200)
+    expect(entries).toEqual(originalEntries)
+  })
+
+  it('orders REST history before checking whether the live price would move the newest bucket backwards', () => {
+    const now = vi.spyOn(Date, 'now').mockReturnValue(1_500_000)
+    const entries = [
+      { timestamp: 1000, value: 10 },
+      { timestamp: 2000, value: 20 },
+      { timestamp: 1200, value: 12 },
+    ]
+    mockUseTokenSpotPrice.mockReturnValue(40)
+    mockUseTokenPriceHistoryRest.mockReturnValue({ entries, isLoading: false, error: null })
+
+    try {
+      const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }))
+
+      expect(result.current.data?.priceHistory).toEqual(toMilliseconds([entries[0]!, entries[2]!, entries[1]!]))
+    } finally {
+      now.mockRestore()
+    }
+  })
+
   it('calculates non-Day-duration change from the REST price history entries', async () => {
     mockUseTokenSpotPrice.mockReturnValue(99.9)
     mockUseTokenPriceChange.mockReturnValue(12.3)
-    mockUseTokenPriceHistoryRest.mockReturnValue({ entries: restEntries([10, 15]), isLoading: false })
+    mockUseTokenPriceHistoryRest.mockReturnValue({ entries: restEntries([10, 15]), isLoading: false, error: null })
 
     const { result } = renderHookWithProviders(() =>
       useTokenPriceHistory({
         currencyId: SAMPLE_CURRENCY_ID_1,
-        initialDuration: GraphQLApi.HistoryDuration.Year,
+        initialDuration: HistoryDuration.Year,
       }),
     )
 
@@ -209,7 +256,7 @@ describe(useTokenPriceHistory, () => {
     const { result } = renderHookWithProviders(() =>
       useTokenPriceHistory({
         currencyId: SAMPLE_CURRENCY_ID_1,
-        initialDuration: GraphQLApi.HistoryDuration.Year,
+        initialDuration: HistoryDuration.Year,
       }),
     )
 
@@ -218,11 +265,11 @@ describe(useTokenPriceHistory, () => {
     })
   })
 
-  it('passes the mapped REST duration and single-chain view through to the REST hooks', () => {
+  it('passes the duration and single-chain view through to the REST hooks', () => {
     renderHookWithProviders(() =>
       useTokenPriceHistory({
         currencyId: SAMPLE_CURRENCY_ID_1,
-        initialDuration: GraphQLApi.HistoryDuration.Week,
+        initialDuration: HistoryDuration.Week,
       }),
     )
 
@@ -234,7 +281,7 @@ describe(useTokenPriceHistory, () => {
     })
     expect(mockUseTokenPriceHistoryRest).toHaveBeenCalledWith(SAMPLE_CURRENCY_ID_1, {
       isMultichainAggregateView: false,
-      duration: RestHistoryDuration.WEEK,
+      duration: HistoryDuration.Week,
     })
   })
 
@@ -251,45 +298,45 @@ describe(useTokenPriceHistory, () => {
     })
     expect(mockUseTokenPriceHistoryRest).toHaveBeenCalledWith(SAMPLE_CURRENCY_ID_1, {
       isMultichainAggregateView: true,
-      duration: RestHistoryDuration.DAY,
+      duration: HistoryDuration.Day,
     })
   })
 
-  it('refetches the REST price history at the newly mapped duration when the duration changes', async () => {
+  it('refetches the REST price history at the new duration when the duration changes', async () => {
     mockUseTokenSpotPrice.mockReturnValue(99.9)
     mockUseTokenPriceChange.mockReturnValue(12.3)
-    mockUseTokenPriceHistoryRest.mockReturnValue({ entries: restEntries([10, 15]), isLoading: false })
+    mockUseTokenPriceHistoryRest.mockReturnValue({ entries: restEntries([10, 15]), isLoading: false, error: null })
 
     const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }))
 
     await waitFor(() => {
-      expect(result.current.selectedDuration).toBe(GraphQLApi.HistoryDuration.Day)
+      expect(result.current.selectedDuration).toBe(HistoryDuration.Day)
       // Day duration reads the REST 24h change rather than deriving it from the entries.
       expect(result.current.data?.spot?.relativeChangeIdle).toBe(12.3)
     })
     expect(mockUseTokenPriceHistoryRest).toHaveBeenLastCalledWith(
       SAMPLE_CURRENCY_ID_1,
-      expect.objectContaining({ duration: RestHistoryDuration.DAY }),
+      expect.objectContaining({ duration: HistoryDuration.Day }),
     )
 
     await act(() => {
-      result.current.setDuration(GraphQLApi.HistoryDuration.Week)
+      result.current.setDuration(HistoryDuration.Week)
     })
 
     await waitFor(() => {
-      expect(result.current.selectedDuration).toBe(GraphQLApi.HistoryDuration.Week)
+      expect(result.current.selectedDuration).toBe(HistoryDuration.Week)
       // Week duration derives the change from the entries instead: (15 - 10) / 10 * 100
       expect(result.current.data?.spot?.relativeChangeIdle).toBe(50)
     })
     expect(mockUseTokenPriceHistoryRest).toHaveBeenLastCalledWith(
       SAMPLE_CURRENCY_ID_1,
-      expect.objectContaining({ duration: RestHistoryDuration.WEEK }),
+      expect.objectContaining({ duration: HistoryDuration.Week }),
     )
   })
 
   describe('correct number of digits', () => {
     it('for max price greater than 1', async () => {
-      mockUseTokenPriceHistoryRest.mockReturnValue({
+      mockRestPriceHistory({
         entries: restEntries([0.00001, 1, 111_111_111.1111]),
         isLoading: false,
       })
@@ -302,7 +349,11 @@ describe(useTokenPriceHistory, () => {
     })
 
     it('for max price less than 1', async () => {
-      mockUseTokenPriceHistoryRest.mockReturnValue({ entries: restEntries([0.001, 0.002]), isLoading: false })
+      mockUseTokenPriceHistoryRest.mockReturnValue({
+        entries: restEntries([0.001, 0.002]),
+        isLoading: false,
+        error: null,
+      })
 
       const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }))
 
@@ -312,7 +363,7 @@ describe(useTokenPriceHistory, () => {
     })
 
     it('for max price equal to 1', async () => {
-      mockUseTokenPriceHistoryRest.mockReturnValue({ entries: restEntries([0.1, 1]), isLoading: false })
+      mockUseTokenPriceHistoryRest.mockReturnValue({ entries: restEntries([0.1, 1]), isLoading: false, error: null })
 
       const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }))
 

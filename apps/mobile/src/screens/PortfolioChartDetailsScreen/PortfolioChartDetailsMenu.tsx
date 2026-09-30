@@ -1,6 +1,7 @@
 import { Flex } from '@universe/mycelium'
 import { Ellipsis } from '@universe/mycelium/icons/Ellipsis'
 import { Flag } from '@universe/mycelium/icons/Flag'
+import { TestID } from '@universe/test'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MODAL_OPEN_WAIT_TIME } from 'src/app/navigation/constants'
@@ -8,7 +9,6 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { ContextMenu, type MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 export function PortfolioChartDetailsMenu(): JSX.Element {

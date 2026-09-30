@@ -6,6 +6,7 @@ import { mockLocalizedFormatter } from 'uniswap/src/test/mocks'
 import {
   getCurrencyDisplayText,
   getFormattedCurrencyAmount,
+  getSymbolDisplayText,
   getWrappedAmountIfExists,
   getWrappedTokenIfExists,
 } from 'uniswap/src/utils/currency'
@@ -29,6 +30,23 @@ describe(getFormattedCurrencyAmount, () => {
     // invalid raw amount will throw error
     vi.spyOn(console, 'error').mockImplementation(noOpFunction)
     expect(getFormattedCurrencyAmount({ currency: USDC, amount: '0.1', formatter: mockFormatter })).toEqual('')
+  })
+})
+
+describe(getSymbolDisplayText, () => {
+  it('truncates past the default 6-character cap', () => {
+    expect(getSymbolDisplayText('PONSHIBA')).toEqual('PONSH…')
+    expect(getSymbolDisplayText('WSTETH')).toEqual('WSTETH')
+  })
+
+  it('respects a custom cap', () => {
+    expect(getSymbolDisplayText('PONSHIBA', 10)).toEqual('PONSHIBA')
+    expect(getSymbolDisplayText('ABCDEFGHIJK', 10)).toEqual('ABCDEFGHI…')
+  })
+
+  it('passes through nullish symbols', () => {
+    expect(getSymbolDisplayText(undefined)).toBeUndefined()
+    expect(getSymbolDisplayText(null)).toBeNull()
   })
 })
 

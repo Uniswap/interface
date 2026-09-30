@@ -19,8 +19,22 @@ export type AnimatedNumberTick = {
   prevChars: string[]
   dir: AnimatedNumberDirection
   commonPrefixLength: number
-  /** Balance-change indication color for this tick, or undefined when no flash should show. */
+  /** Balance-change indication color for this tick; undefined when no flash should show (always when dir is NONE). */
   flashColor: string | undefined
+}
+
+/** A digit cell's roll request for the current tick. `gen` 0 means the tick doesn't touch this cell. */
+export type CellRoll = {
+  gen: number
+  dir: AnimatedNumberDirection
+  flashColor: string | undefined
+  delay: number
+}
+
+/** A non-digit cell's flash request for the current tick. `gen` 0 means the tick doesn't flash this cell. */
+export type CellFlash = {
+  gen: number
+  color: string | undefined
 }
 
 export type ReanimatedNumberRenderProps = {
@@ -37,4 +51,6 @@ export type ReanimatedNumberRenderProps = {
   charDelays: number[]
   charShouldAnimate: boolean[]
   reduceMotion: boolean
+  /** See AnimatedNumberProps.suspendAnimations — layout unchanged, all animation work skipped. */
+  suspendAnimations: boolean
 }

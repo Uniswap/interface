@@ -1,5 +1,6 @@
 import { isWebAppDesktop, isWebPlatform } from '@universe/environment'
 import { AnimatedFlex, Flex, Text, TouchableArea, type FlexProps } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { forwardRef, memo, useCallback, useImperativeHandle, useRef } from 'react'
 import type { NativeSyntheticEvent, TextInput, TextInputSelectionChangeEventData } from 'react-native'
 import { useSporeColors } from 'ui/src'
@@ -19,7 +20,6 @@ import { SelectTokenButton } from 'uniswap/src/components/CurrencyInputPanel/Sel
 import type { CurrencyInputPanelProps, CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/types'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 type CurrencyInputPanelInputProps = {

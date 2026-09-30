@@ -1,7 +1,7 @@
 import { fireEvent } from '@testing-library/react'
 import { hasActiveNeckKey, useEmbeddedWalletState } from '@universe/embedded-wallet'
+import { TestID } from '@universe/test'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useListAuthenticatorsQuery } from '~/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery'
 import { TroubleLoggingInModule } from '~/components/NavBar/DownloadApp/Modal/TroubleLoggingInModule'
 import { useIsEmbeddedWallet } from '~/hooks/useIsEmbeddedWallet'

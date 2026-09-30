@@ -5,7 +5,7 @@ import type { TokenCategoryTopToken } from 'uniswap/src/features/tokenCategories
 const MAX_VISIBLE_LOGOS = 3
 /** Each subsequent logo tucks a third of its width under its predecessor. */
 const OVERLAP_RATIO = 1 / 3
-/** `$surface1` ring separating overlapping logos, rendered as wrapper padding. */
+/** `$surface1` ring separating overlapping logos. Rendered as wrapper padding, then pulled back out of layout. */
 const RING_WIDTH = spacing.spacing2
 
 /**
@@ -16,7 +16,7 @@ export function TokenLogoPile({ tokens, size }: { tokens: TokenCategoryTopToken[
   const visibleTokens = tokens.slice(0, MAX_VISIBLE_LOGOS)
 
   return (
-    <Flex row>
+    <Flex row m={-RING_WIDTH}>
       {visibleTokens.map((token, index) => (
         <Flex
           key={`${token.chainId}-${token.address}`}

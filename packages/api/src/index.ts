@@ -36,20 +36,6 @@ export { createSignedRequestBody, createSignedRequestParams } from '@universe/ap
 
 // GraphQL API
 export * as GraphQLApi from '@universe/api/src/clients/graphql/generated'
-export {
-  useTokenBasicProjectPartsFragment,
-  useTokenMarketPartsFragment,
-  useTokenProjectMarketsPartsFragment,
-  useTokenProjectTokensTvlPartsFragment,
-  useTokenProjectUrlsPartsFragment,
-} from '@universe/api/src/clients/graphql/fragments'
-export { GQLQueries } from '@universe/api/src/clients/graphql/queries'
-export type { GqlResult } from '@universe/api/src/clients/graphql/types'
-export {
-  isError,
-  isNonPollingRequestInFlight,
-  mapGraphQLNetworkStatusToReactQueryStatus,
-} from '@universe/api/src/clients/graphql/utils'
 
 // Jupiter API
 export { createJupiterApiClient, type JupiterApiClient } from '@universe/api/src/clients/jupiter/createJupiterApiClient'

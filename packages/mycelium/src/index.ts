@@ -4,6 +4,7 @@
 export { UniversalList } from './components/UniversalList/UniversalList'
 export { useRecyclingBooleanState } from './components/UniversalList/useRecyclingBooleanState/useRecyclingBooleanState'
 export type { RecyclingBooleanState } from './components/UniversalList/useRecyclingBooleanState/useRecyclingBooleanState'
+export { useIsRowViewable } from './components/UniversalList/useIsRowViewable/useIsRowViewable'
 export type {
   UniversalListProps,
   UniversalListRef,

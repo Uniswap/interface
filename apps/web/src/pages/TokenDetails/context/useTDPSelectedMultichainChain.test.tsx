@@ -8,7 +8,6 @@ import { createTDPStore, type TDPState } from '~/pages/TokenDetails/context/crea
 import { TDPStoreContext } from '~/pages/TokenDetails/context/TDPContext'
 import { useTDPSelectedMultichainChain } from '~/pages/TokenDetails/context/useTDPSelectedMultichainChain'
 import store from '~/state'
-import { validTokenProjectResponse } from '~/test-utils/tokens/fixtures'
 import { CHAIN_SEARCH_PARAM, TDP_MULTICHAIN_CHAIN_QUERY_VALUE } from '~/utils/params/chainQueryParam'
 
 const ADDRESS = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
@@ -18,10 +17,6 @@ function createPendingTDPState(overrides: { selectedMultichainChainId?: Universe
     currencyChain: GraphQLApi.Chain.Ethereum,
     currencyChainId: UniverseChainId.Mainnet,
     address: ADDRESS,
-    tokenQuery: {
-      loading: false,
-      data: validTokenProjectResponse.data,
-    },
     multiChainMap: {},
     selectedMultichainChainId: overrides.selectedMultichainChainId ?? undefined,
     tokenColor: undefined,

@@ -1,9 +1,9 @@
 import { Flex } from '@universe/mycelium'
 import { AdaptiveWebPopoverContentCompat, PopoverCompat } from '@universe/mycelium/popover-compat'
 import { useMedia, useShadowPropsMedium } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import { ReactNode, useMemo } from 'react'
 import type { PortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import {
   BalanceBreakdownRow,
   type BalanceBreakdownRowData,

@@ -1,12 +1,11 @@
-import { GraphQLApi } from '@universe/api'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import type { PlainMessage } from '@bufbuild/protobuf'
+import type { Token } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { buildCurrency } from 'uniswap/src/features/dataApi/utils/buildCurrency'
-import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils/getCurrencySafetyInfo'
-import { currencyInfo, portfolio, tokenBalance } from 'uniswap/src/test/fixtures'
+import { restV2TokenToCurrencyInfo } from 'uniswap/src/features/dataApi/utils/restV2TokenToCurrencyInfo'
+import { restV2Token } from 'uniswap/src/test/fixtures/dataApi/tokens'
+import { currencyInfo } from 'uniswap/src/test/fixtures/wallet/currencies'
 import { faker } from 'uniswap/src/test/shared'
-import { createFixture } from 'uniswap/src/test/utils'
-import { currencyId } from 'uniswap/src/utils/currencyId'
+import { createArray, createFixture } from 'uniswap/src/test/utils'
 
 const portfolioBalanceBase = createFixture<PortfolioBalance>()(() => ({
   id: faker.datatype.uuid(),
@@ -19,71 +18,37 @@ const portfolioBalanceBase = createFixture<PortfolioBalance>()(() => ({
 }))
 
 type PortfolioBalanceOptions = {
-  fromBalance: RequireNonNullable<GraphQLApi.TokenBalance, 'quantity' | 'token'> | null
-  fromToken: GraphQLApi.Token | null
+  fromToken: PlainMessage<Token> | null
 }
 
+/**
+ * A `PortfolioBalance` for a v2 REST token. The currency is derived with the same
+ * `restV2TokenToCurrencyInfo` the app uses, so a balance and a mocked token query built from the
+ * same fixture agree on `currencyId` — which is what the token-list hooks join on.
+ *
+ * Amounts are randomized per call, so a test that needs the balance in both its input and its
+ * expected output should build it once and reuse it rather than calling this twice.
+ */
 export const portfolioBalance = createFixture<PortfolioBalance, PortfolioBalanceOptions>({
-  fromBalance: null,
   fromToken: null,
-})(({ fromBalance, fromToken }) => {
-  const balance = fromBalance ?? (fromToken && tokenBalance({ token: fromToken }))
-  if (!balance) {
+})(({ fromToken }) => {
+  const tokenCurrencyInfo = fromToken && restV2TokenToCurrencyInfo(fromToken)
+  if (!tokenCurrencyInfo) {
     return portfolioBalanceBase()
   }
 
-  const currency = buildCurrency({
-    chainId: fromGraphQLChain(balance.token.chain),
-    address: balance.token.address,
-    decimals: balance.token.decimals,
-    symbol: balance.token.symbol,
-    name: balance.token.name,
-    buyFeeBps: balance.token.feeData?.buyFeeBps,
-    sellFeeBps: balance.token.feeData?.sellFeeBps,
-  })
-
-  if (!currency) {
-    return portfolioBalanceBase()
-  }
-
+  const id = faker.datatype.uuid()
   return {
-    id: balance.id,
-    cacheId: `${balance.__typename}:${balance.id}`,
-    quantity: balance.quantity,
-    balanceUSD: balance.denominatedValue?.value,
-    isHidden: balance.isHidden,
-    // This field is normally calculated dynamically. We cannot mock it in the
-    // fixture returned by the mocked resolver as it is ignored and replaced
-    // by randomly generated Amount mock. As a result, we expect any number here.
-    // Cast to unknown as number since vitest's expect.any returns AsymmetricMatcher
-    relativeChange24: expect.any(Number) as unknown as number,
-    currencyInfo: {
-      currency,
-      currencyId: currencyId(currency),
-      logoUrl: balance.token.project?.logoUrl,
-      isSpam: balance.token.project?.isSpam,
-      spamCode: balance.token.project?.spamCode,
-      safetyInfo: getCurrencySafetyInfo(balance.token.project?.safetyLevel, balance.token.protectionInfo),
-    },
+    ...portfolioBalanceBase({ id, cacheId: `TokenBalance:${id}` }),
+    currencyInfo: tokenCurrencyInfo,
+    isHidden: false,
   }
 })
 
 type PortfolioBalancesOptions = {
-  portfolio: GraphQLApi.Portfolio
+  balancesCount: number
 }
 
-export const portfolioBalances = createFixture<PortfolioBalance[], PortfolioBalancesOptions>(() => ({
-  portfolio: portfolio(),
-}))(
-  ({ portfolio: { tokenBalances } }) =>
-    tokenBalances
-      ?.map((balance) => {
-        if (balance?.quantity && balance.token) {
-          return portfolioBalance({
-            fromBalance: balance as RequireNonNullable<GraphQLApi.TokenBalance, 'quantity' | 'token'>,
-          })
-        }
-        return undefined
-      })
-      .filter(Boolean) as PortfolioBalance[],
-)
+export const portfolioBalances = createFixture<PortfolioBalance[], PortfolioBalancesOptions>({
+  balancesCount: 2,
+})(({ balancesCount }) => createArray(balancesCount, () => portfolioBalance({ fromToken: restV2Token() })))

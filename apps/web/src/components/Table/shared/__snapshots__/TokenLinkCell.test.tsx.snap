@@ -8,15 +8,14 @@ exports[`TokenLinkCell > renders known token on a different chain 1`] = `
     data-base-ui-click-trigger=""
     data-slot="ui-popover-trigger"
     id="base-ui-_r_5_"
-    role="button"
+    role="none"
     style="align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; margin: 0px; min-height: 0; min-width: 0; padding: 0px; position: relative;"
-    tabindex="0"
+    tabindex="-1"
   >
     <div
       class="[container-name:true] flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] rounded-[12px] [cursor:pointer] bg-transparent [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] active:opacity-[var(--ca-opacity)] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
-      role="button"
+      role="none"
       style="--ca-opacity: 1;"
-      tabindex="0"
     >
       <a
         class="cursor-pointer no-underline text-neutral1 transition-opacity duration-100 hover:opacity-80 active:opacity-60"
@@ -94,15 +93,14 @@ exports[`TokenLinkCell > renders known token on mainnet 1`] = `
     data-base-ui-click-trigger=""
     data-slot="ui-popover-trigger"
     id="base-ui-_r_3_"
-    role="button"
+    role="none"
     style="align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; margin: 0px; min-height: 0; min-width: 0; padding: 0px; position: relative;"
-    tabindex="0"
+    tabindex="-1"
   >
     <div
       class="[container-name:true] flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] rounded-[12px] [cursor:pointer] bg-transparent [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] active:opacity-[var(--ca-opacity)] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
-      role="button"
+      role="none"
       style="--ca-opacity: 1;"
-      tabindex="0"
     >
       <a
         class="cursor-pointer no-underline text-neutral1 transition-opacity duration-100 hover:opacity-80 active:opacity-60"
@@ -180,15 +178,14 @@ exports[`TokenLinkCell > renders unknown token 1`] = `
     data-base-ui-click-trigger=""
     data-slot="ui-popover-trigger"
     id="base-ui-_r_1_"
-    role="button"
+    role="none"
     style="align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; margin: 0px; min-height: 0; min-width: 0; padding: 0px; position: relative;"
-    tabindex="0"
+    tabindex="-1"
   >
     <div
       class="[container-name:true] flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] rounded-[12px] [cursor:pointer] bg-transparent [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] active:opacity-[var(--ca-opacity)] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
-      role="button"
+      role="none"
       style="--ca-opacity: 1;"
-      tabindex="0"
     >
       <a
         class="cursor-pointer no-underline text-neutral1 transition-opacity duration-100 hover:opacity-80 active:opacity-60"

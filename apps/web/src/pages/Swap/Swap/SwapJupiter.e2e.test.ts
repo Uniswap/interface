@@ -1,3 +1,4 @@
+import { TestID } from '@universe/test'
 /**
  * E2E coverage for Solana swaps via the Jupiter Ultra API (SWAP-2293).
  *
@@ -11,7 +12,6 @@
  */
 import { USDC_SOLANA } from 'uniswap/src/constants/tokens'
 import { WRAPPED_SOL_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { expect, getTest, type Page } from '~/playwright/fixtures'
 import { installJupiterExecuteMock, installJupiterOrderMock } from '~/playwright/solana/jupiter'
 import { installSolanaRpcMock } from '~/playwright/solana/mockRpc'

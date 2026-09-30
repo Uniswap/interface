@@ -117,6 +117,7 @@ describe(useTokenMetadata, () => {
         project: {
           logoUrl: 'https://example.com/logo.png',
           description: 'A description.',
+          descriptionTranslations: { 'es-ES': 'Una descripción.' },
           homepageUrl: 'https://example.com',
           twitterName: 'handle',
         },
@@ -131,6 +132,7 @@ describe(useTokenMetadata, () => {
     expect(result.current.symbol).toBe('TKN')
     expect(result.current.logoUrl).toBe('https://example.com/logo.png')
     expect(result.current.description).toBe('A description.')
+    expect(result.current.descriptionTranslations).toEqual({ 'es-ES': 'Una descripción.' })
     expect(result.current.homepageUrl).toBe('https://example.com')
     expect(result.current.twitterName).toBe('handle')
     expect(result.current.isSpam).toBe(false)

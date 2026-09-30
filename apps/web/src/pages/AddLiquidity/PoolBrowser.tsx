@@ -289,7 +289,15 @@ export function PoolBrowser(): JSX.Element {
                 onSelectProtocol={handleProtocolSelect}
                 surface="add-liquidity-pool-browser"
               />
-              <NetworkFilter position="right" onPress={handleChainSelect} currentChainId={selectedChainId} />
+              {/* positionFixed: this row's `overflowX: 'auto'` (set above, under `$md`) forces overflow-y
+                  to compute as `auto` too, clipping an inline-absolute menu. adaptToSheet only portals
+                  below the `sm` breakpoint, so this trigger is still exposed between `sm` and `md`. */}
+              <NetworkFilter
+                position="right"
+                onPress={handleChainSelect}
+                currentChainId={selectedChainId}
+                positionFixed
+              />
             </>
           )}
         </Flex>

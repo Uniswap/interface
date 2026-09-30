@@ -1,3 +1,4 @@
+import type { UseQueryResult } from '@tanstack/react-query'
 import { Token } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import { FeatureFlags, useFeatureFlag, useStatsigClientStatus } from '@universe/gating'
@@ -81,6 +82,11 @@ function setStatsigReady(isStatsigReady: boolean): void {
   })
 }
 
+/** Settled React Query result for the mocked `useCurrencyInfoWithLoading`; only `data`/`isLoading` are read. */
+function queryResult(data: Maybe<CurrencyInfo>): UseQueryResult<Maybe<CurrencyInfo>> {
+  return { data, isLoading: false } as UseQueryResult<Maybe<CurrencyInfo>>
+}
+
 /** currencyIds the app actually asked the data layer to resolve (skipped lookups excluded). */
 function requestedCurrencyIds(): (string | undefined)[] {
   return useCurrencyInfoWithLoadingMock.mock.calls.filter((call) => call[1]?.skip !== true).map((call) => call[0])
@@ -109,9 +115,9 @@ describe('useLiquidityUrlState — currency resolution across the chain hold', (
     // Only the Robinhood-keyed lookup can ever resolve this token.
     useCurrencyInfoWithLoadingMock.mockImplementation((currencyId?: string, options?: { skip?: boolean }) => {
       if (options?.skip || currencyId !== ROBINHOOD_CURRENCY_ID) {
-        return { currencyInfo: undefined, loading: false }
+        return queryResult(undefined)
       }
-      return { currencyInfo: { currency: USDG_ROBINHOOD } as CurrencyInfo, loading: false }
+      return queryResult({ currency: USDG_ROBINHOOD } as CurrencyInfo)
     })
 
     useFeatureFlagMock.mockImplementation(() => false)

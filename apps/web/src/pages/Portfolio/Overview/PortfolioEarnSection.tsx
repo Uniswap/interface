@@ -1,11 +1,11 @@
 import { Flex, iconSizes, Separator, Text, TouchableArea } from '@universe/mycelium'
 import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
+import { TestID } from '@universe/test'
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { FormattedAmountWithMutedDecimals } from 'uniswap/src/components/text/FormattedAmountWithMutedDecimals'
-import { useTokenProjectsByCurrencyId } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
 import type { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { getProjectedAnnualEarnings } from 'uniswap/src/features/earn/amount'
 import { EarnAnalyticsSurface, EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
@@ -23,7 +23,7 @@ import { getDisplayLifetimeEarningsUsd, hasEarnPosition } from 'uniswap/src/feat
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { useMultichainCurrencyInfosByCurrencyId } from 'uniswap/src/features/tokens/useMultichainCurrencyInfos'
 import { NumberType } from 'utilities/src/format/types'
 import { EarnVaultModal } from '~/features/earn/EarnVaultModal'
 import { useEarnVaultModalState } from '~/features/earn/hooks/useEarnVaultModalState'
@@ -77,7 +77,7 @@ export const PortfolioEarnSection = memo(function PortfolioEarnSection({
     () => (isReadOnly ? [] : vaultsSortedByPosition.map((vault) => vault.currencyId)),
     [isReadOnly, vaultsSortedByPosition],
   )
-  const { data: tokenProjectsByCurrencyId, loading: isLoadingTokenProjects } = useTokenProjectsByCurrencyId(
+  const { data: tokenProjectsByCurrencyId, isLoading: isLoadingTokenProjects } = useMultichainCurrencyInfosByCurrencyId(
     account ? tokenProjectCurrencyIds : [],
   )
   const hasTokenBalanceByVaultId = useMemo(() => {
@@ -121,8 +121,7 @@ export const PortfolioEarnSection = memo(function PortfolioEarnSection({
   const hasDisplayableEarnPosition = vaultsWithActivePosition.length > 0
 
   // Eligibility inputs only gate unfunded rows — funded rows render once vaults + positions resolve.
-  const isEligibilityLookupPending =
-    !isReadOnly && (!hasSettledPortfolioBalances || (isLoadingTokenProjects && tokenProjectsByCurrencyId === undefined))
+  const isEligibilityLookupPending = !isReadOnly && (!hasSettledPortfolioBalances || isLoadingTokenProjects)
   const isVaultRowDataPending = isLoadingPositions || isEligibilityLookupPending
   const shouldShowLoadingRows = isLoadingVaults || (isVaultRowDataPending && !hasDisplayableEarnPosition)
   const shouldShowPendingPositionRows = isVaultRowDataPending && hasDisplayableEarnPosition

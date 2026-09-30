@@ -26,7 +26,7 @@ function makeMultiIssuerAssets() {
             issuer: 'ondo',
             priceUsd: 248.42,
             volume24hUsd: 8_000_000,
-            chainTokens: [{ chainId: UniverseChainId.Mainnet, address: '0xondo1' }],
+            chainTokens: [{ chainId: UniverseChainId.Mainnet, address: '0x0000000000000000000000000000000000000d01' }],
           },
           {
             symbol: 'TSLAb',
@@ -34,7 +34,7 @@ function makeMultiIssuerAssets() {
             issuer: 'backed',
             priceUsd: 247.9,
             volume24hUsd: 3_000_000,
-            chainTokens: [{ chainId: UniverseChainId.Base, address: '0xbacked1' }],
+            chainTokens: [{ chainId: UniverseChainId.Base, address: '0x000000000000000000000000000000000bac0ed1' }],
           },
           {
             symbol: 'TSLAx',
@@ -42,7 +42,9 @@ function makeMultiIssuerAssets() {
             issuer: 'xstocks',
             priceUsd: 248.1,
             volume24hUsd: 1_400_000,
-            chainTokens: [{ chainId: UniverseChainId.ArbitrumOne, address: '0xxstocks1' }],
+            chainTokens: [
+              { chainId: UniverseChainId.ArbitrumOne, address: '0x000000000000000000000000000000000000c0c1' },
+            ],
           },
         ],
       }),
@@ -64,7 +66,7 @@ function makeMultiIssuerAssets() {
             issuer: 'ondo',
             priceUsd: 190,
             volume24hUsd: 5_000_000,
-            chainTokens: [{ chainId: UniverseChainId.Mainnet, address: '0xaapl1' }],
+            chainTokens: [{ chainId: UniverseChainId.Mainnet, address: '0x000000000000000000000000000000000000aa01' }],
           },
         ],
       }),
@@ -135,7 +137,9 @@ describe('buildExpandableAssetTableRows', () => {
               issuer: 'ondo',
               priceUsd: 190,
               volume24hUsd: 5_000_000,
-              chainTokens: [{ chainId: UniverseChainId.Mainnet, address: '0xaapl1' }],
+              chainTokens: [
+                { chainId: UniverseChainId.Mainnet, address: '0x000000000000000000000000000000000000aa01' },
+              ],
             },
           ],
         }),
@@ -184,7 +188,7 @@ describe('linkForIssuer', () => {
     priceUsd: 190,
     volume24hUsd: 5_000_000,
     sparkline1d: { points: [] },
-    chainTokens: [{ chainId: UniverseChainId.Mainnet, address: '0xaapl1' }],
+    chainTokens: [{ chainId: UniverseChainId.Mainnet, address: '0x000000000000000000000000000000000000aa01' }],
   }
 
   it('returns undefined when the issuer has no enabled-chain deployment', () => {
@@ -193,20 +197,22 @@ describe('linkForIssuer', () => {
 
   it('defaults to the multichain TDP with no chain filter', () => {
     const link = linkForIssuer({ issuer, enabledChainIds: enabledChains })
-    expect(link).toBe(`/explore/tokens/ethereum/0xaapl1?chain=${TDP_MULTICHAIN_CHAIN_QUERY_VALUE}`)
+    expect(link).toBe(
+      `/explore/tokens/ethereum/0x000000000000000000000000000000000000aa01?chain=${TDP_MULTICHAIN_CHAIN_QUERY_VALUE}`,
+    )
   })
 
   it('links to a single-chain TDP when a network filter is active', () => {
     const link = linkForIssuer({ issuer, enabledChainIds: enabledChains, chainFilter: UniverseChainId.Mainnet })
-    expect(link).toBe('/explore/tokens/ethereum/0xaapl1')
+    expect(link).toBe('/explore/tokens/ethereum/0x000000000000000000000000000000000000aa01')
   })
 
   it('picks the filtered chain leg over the mainnet-first pick when a network filter is active', () => {
     const multichainIssuer: IssuerToken = {
       ...issuer,
       chainTokens: [
-        { chainId: UniverseChainId.Mainnet, address: '0xaapl1' },
-        { chainId: UniverseChainId.Base, address: '0xaapl2' },
+        { chainId: UniverseChainId.Mainnet, address: '0x000000000000000000000000000000000000aa01' },
+        { chainId: UniverseChainId.Base, address: '0x000000000000000000000000000000000000aa02' },
       ],
     }
     const link = linkForIssuer({
@@ -214,7 +220,7 @@ describe('linkForIssuer', () => {
       enabledChainIds: enabledChains,
       chainFilter: UniverseChainId.Base,
     })
-    expect(link).toBe('/explore/tokens/base/0xaapl2')
+    expect(link).toBe('/explore/tokens/base/0x000000000000000000000000000000000000aa02')
   })
 })
 

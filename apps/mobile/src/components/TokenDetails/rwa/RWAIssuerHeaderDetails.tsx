@@ -1,20 +1,21 @@
 import { Flex, iconSizes, Text, UniversalImage } from '@universe/mycelium'
-import { getRWAIssuerDisplayName } from 'uniswap/src/features/rwa/issuers'
-import type { RWAMatch } from 'uniswap/src/features/rwa/rwaMatch'
+import { getRWAIssuerLabel } from 'uniswap/src/features/rwa/issuers'
+import type { RWAIssuerDisplay } from 'uniswap/src/features/rwa/types'
 import { useRWAIssuerLogoUrl } from 'uniswap/src/features/rwa/useRWAIssuerLogoUrl'
 
 type RWAIssuerHeaderDetailsProps = {
-  rwaMatch?: RWAMatch
+  issuer?: RWAIssuerDisplay
 }
 
-export function RWAIssuerHeaderDetails({ rwaMatch }: RWAIssuerHeaderDetailsProps): JSX.Element | null {
-  const issuerLogoUrl = useRWAIssuerLogoUrl(rwaMatch?.token.issuer)
+export function RWAIssuerHeaderDetails({ issuer }: RWAIssuerHeaderDetailsProps): JSX.Element | null {
+  const configLogoUrl = useRWAIssuerLogoUrl(issuer?.issuer)
+  const issuerLabel = issuer && getRWAIssuerLabel(issuer)
 
-  if (!rwaMatch) {
+  if (!issuer || !issuerLabel) {
     return null
   }
 
-  const displayName = getRWAIssuerDisplayName(rwaMatch.token.issuer)
+  const issuerLogoUrl = issuer.issuerLogoUrl ?? configLogoUrl
   const logoSize = iconSizes.icon16
 
   return (
@@ -28,7 +29,7 @@ export function RWAIssuerHeaderDetails({ rwaMatch }: RWAIssuerHeaderDetailsProps
         />
       ) : null}
       <Text color="$neutral2" numberOfLines={1} variant="body3">
-        {displayName}
+        {issuerLabel}
       </Text>
     </Flex>
   )

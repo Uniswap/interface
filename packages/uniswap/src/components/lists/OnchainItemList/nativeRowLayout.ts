@@ -5,6 +5,7 @@ import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItem
 export enum NativeRowType {
   Header = 'header',
   Item = 'item',
+  Footer = 'footer',
   HorizontalItem = 'item-horizontal',
   DynamicHeightItem = 'item-dynamic-height',
 }
@@ -28,6 +29,10 @@ function classifyNativeRow(row: ProcessedRow): NativeRowLayout {
       // Every other header is measured, deliberately ignoring `section.sectionHeaderHeight`
       fixedSize: row.data.section.sectionKey === OnchainItemSectionName.SuggestedTokens ? 0 : undefined,
     }
+  }
+
+  if (row.type === ProcessedRowType.Footer) {
+    return { type: NativeRowType.Footer, fixedSize: undefined }
   }
 
   const { item, expanded } = row.data

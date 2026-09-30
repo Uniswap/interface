@@ -1,4 +1,4 @@
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import { expect, getTest } from '~/playwright/fixtures'
 import { mockTradingApiSwapsStatus } from '~/playwright/fixtures/tradingApi'
 import { HAYDEN_ADDRESS, TEST_WALLET_ADDRESS } from '~/playwright/fixtures/wallets'

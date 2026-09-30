@@ -37,7 +37,8 @@ interface AuctionHoverCardProps {
   widthOffset?: number
   containerWidth?: number
   onNavigate?: () => void
-  isFocused?: boolean
+  /** The child already shrinks on press; opts the trigger's own shrink out so the two don't compound. */
+  childOwnsPressFeedback?: boolean
 }
 
 export function AuctionHoverCard({
@@ -48,13 +49,10 @@ export function AuctionHoverCard({
   widthOffset = offset,
   containerWidth,
   onNavigate,
-  isFocused,
+  childOwnsPressFeedback,
 }: AuctionHoverCardProps): JSX.Element {
   const { chainId, auctionAddress, tokenAddress, tokenSymbol, tokenName, tokenLogoUrl, uniqueBidderCount } = auction
-  const { isOpen, isFocusOpen, hasOpenIntent, close, onOpenChange, triggerHoverProps } = useHoverCardState({
-    isFocused,
-    rearmKey: auctionAddress,
-  })
+  const { isOpen, hasOpenIntent, close, onOpenChange } = useHoverCardState()
   const navigateToAuctionDetails = useNavigateToAuctionDetails()
   const trace = useTrace()
   const { isCopied, copyAndClose } = useHoverCardCopyAndClose({ onClose: close })
@@ -111,10 +109,9 @@ export function AuctionHoverCard({
   return (
     <HoverCard
       isOpen={isOpen}
-      isFocusOpen={isFocusOpen}
       placement={placement}
       offset={offset}
-      triggerHoverProps={triggerHoverProps}
+      childOwnsPressFeedback={childOwnsPressFeedback}
       onOpenChange={onOpenChange}
       content={
         <AuctionHoverCardContent

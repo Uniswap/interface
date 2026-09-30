@@ -5,6 +5,7 @@ import {
   Flex,
   Loader,
   UniversalList,
+  useIsRowViewable,
   zIndexes,
   type UniversalListRef,
   type UniversalListRenderItemInfo,
@@ -31,7 +32,9 @@ import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/
 import {
   TokenBalanceListContextProvider,
   TokenBalancePressOptions,
+  useTokenBalanceItemConfig,
   useTokenBalanceListContext,
+  useTokenBalanceRowBalance,
 } from 'uniswap/src/features/portfolio/TokenBalanceListContext'
 import { isHiddenTokenBalancesRow, TokenBalanceListRow } from 'uniswap/src/features/portfolio/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -129,6 +132,7 @@ const TokenBalanceListContent = forwardRef<UniversalListRef, TokenBalanceListPro
       >
         <UniversalList
           ref={ref}
+          trackRowViewability
           contentContainerStyle={contentContainerStyle}
           data={data}
           estimatedItemSize={TOKEN_BALANCE_ITEM_ESTIMATED_HEIGHT}
@@ -171,7 +175,14 @@ const HeaderComponent = memo(function HeaderComponentInner(): JSX.Element | null
 
 export const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: TokenBalanceListRow }) {
   const dispatch = useDispatch()
-  const { balancesById, isWarmLoading } = useTokenBalanceListContext()
+  // Per-key subscription + poll-stable config, NOT the full list context: its value has a new
+  // identity on every portfolio poll, which re-rendered every mounted row (up to `windowSize`
+  // screens of them) even when nothing they render changed.
+  const balance = useTokenBalanceRowBalance(item)
+  const { isWarmLoading } = useTokenBalanceItemConfig()
+
+  // Rows stay mounted well past the viewport; animating all of them exhausted native memory.
+  const isViewable = useIsRowViewable(item)
 
   const copyAddressToClipboard = useCallback(
     async (address: string): Promise<void> => {
@@ -190,7 +201,6 @@ export const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: {
     navigate(ModalName.HiddenTokenInfoModal)
   }, [])
 
-  const balance = balancesById?.[item]
   const currencyInfo = balance?.tokens[0]?.currencyInfo
 
   const contextMenuActions = useMemo(() => {
@@ -231,6 +241,7 @@ export const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: {
       isLoading={isWarmLoading}
       currencyInfo={currencyInfo}
       portfolioBalance={balance}
+      suspendAnimations={!isViewable}
     />
   )
 })

@@ -1,10 +1,10 @@
-import { GraphQLApi } from '@universe/api'
 import { Text } from '@universe/mycelium'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { TFunction } from 'i18next'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { ChartHeader } from '~/components/Charts/ChartHeader'
@@ -49,21 +49,19 @@ class VolumeChartModel extends CustomVolumeChartModel<SingleHistogramData> {
 }
 
 // oxlint-disable-next-line typescript/consistent-return
-function formatHistoryDuration(t: TFunction, duration: GraphQLApi.HistoryDuration): string {
+function formatHistoryDuration(t: TFunction, duration: HistoryDuration): string {
   switch (duration) {
-    case GraphQLApi.HistoryDuration.FiveMinute:
-      return t('common.pastFiveMinutes')
-    case GraphQLApi.HistoryDuration.Hour:
+    case HistoryDuration.Hour:
       return t('common.pastHour')
-    case GraphQLApi.HistoryDuration.Day:
+    case HistoryDuration.Day:
       return t('common.pastDay')
-    case GraphQLApi.HistoryDuration.Week:
+    case HistoryDuration.Week:
       return t('common.pastWeek')
-    case GraphQLApi.HistoryDuration.Month:
+    case HistoryDuration.Month:
       return t('common.pastMonth')
-    case GraphQLApi.HistoryDuration.Year:
+    case HistoryDuration.Year:
       return t('common.pastYear')
-    case GraphQLApi.HistoryDuration.Max:
+    case HistoryDuration.Max:
       return t('common.allTime')
   }
 }

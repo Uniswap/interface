@@ -1,8 +1,12 @@
+import { isMobileApp } from '@universe/environment'
 import { Flex, iconSizes, spacing, Text, TouchableArea } from '@universe/mycelium'
 import { ReactNode } from 'react'
 
 /** Fixed pill height (24px leading + vertical padding), shared with the loading placeholder so it can't drift. */
 export const PILL_HEIGHT = iconSizes.icon24 + spacing.spacing6 * 2
+
+/** Bottom padding of the pill row (and its placeholder); mobile adds an 8px gap before the next section. */
+export const PILL_ROW_PADDING_BOTTOM = isMobileApp ? '$spacing12' : '$spacing4'
 
 export interface PillPressProps {
   modifierPressHref?: string

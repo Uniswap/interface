@@ -40,6 +40,9 @@
     },
     {
       "path": "../mycelium"
+    },
+    {
+      "path": "../test"
     }
   ]
 }

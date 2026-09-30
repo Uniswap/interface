@@ -1,4 +1,5 @@
 import { Flex, spacing, Text } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList } from 'react-native-gesture-handler'
@@ -10,7 +11,6 @@ import type { ExploreStockShelfItem } from 'uniswap/src/data/apiClients/dataApiS
 import { useExploreStocks } from 'uniswap/src/data/apiClients/dataApiService/rwa/useExploreStocks'
 import { useStockTokenCardProps } from 'uniswap/src/data/apiClients/dataApiService/rwa/useStockTokenCardProps'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { useEvent } from 'utilities/src/react/hooks'
 

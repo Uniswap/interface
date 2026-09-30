@@ -1,6 +1,8 @@
+import { GetTokenHistoryOHLCResponse, GetTokenHistoryPriceResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { GraphQLApi } from '@universe/api'
+import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2'
 import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
 import { ChartType, DataQuality, PriceChartType } from '~/components/Charts/utils'
 import { TimePeriod } from '~/data/util'
@@ -12,19 +14,8 @@ import {
 } from '~/hooks/useTokenPriceChartData'
 import { renderHook, waitFor } from '~/test-utils/render'
 
-const { mockGetOhlcQueryOptions, mockGetPriceHistoryQueryOptions } = vi.hoisted(() => ({
-  mockGetOhlcQueryOptions: vi.fn(),
-  mockGetPriceHistoryQueryOptions: vi.fn(),
-}))
-
-vi.mock('uniswap/src/data/apiClients/dataApiService/tokens/queries', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('uniswap/src/data/apiClients/dataApiService/tokens/queries')>()),
-  getGetTokenHistoryOHLCQueryOptions: mockGetOhlcQueryOptions,
-}))
-
-vi.mock('~/pages/TokenDetails/tdpTokenQueryOptions', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('~/pages/TokenDetails/tdpTokenQueryOptions')>()),
-  getTdpTokenPriceHistoryQueryOptions: mockGetPriceHistoryQueryOptions,
+vi.mock('uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2', () => ({
+  dataApiServiceClientV2: { getTokenHistoryOHLC: vi.fn(), getTokenHistoryPrice: vi.fn() },
 }))
 
 vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData', async (importOriginal) => ({
@@ -32,12 +23,13 @@ vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData', async (
   useTokenSpotPrice: vi.fn(),
 }))
 
+const mockClient = vi.mocked(dataApiServiceClientV2)
 const mockUseTokenSpotPrice = vi.mocked(useTokenSpotPrice)
 
 const BASE_VARIABLES = {
   chain: GraphQLApi.Chain.Ethereum,
   address: '0x68749665FF8D2d112Fa859AA293F07A622782F38',
-  duration: GraphQLApi.HistoryDuration.Year,
+  duration: HistoryDuration.Year,
   multichain: false,
 }
 
@@ -48,13 +40,13 @@ const NOW_SECONDS = Math.floor(Date.now() / 1000)
 const T = [NOW_SECONDS - 3000, NOW_SECONDS - 2000, NOW_SECONDS - 1000]
 
 const PRICE_POINTS = [
-  { timestamp: T[0], priceUsd: 10 },
-  { timestamp: T[1], priceUsd: 11 },
-  { timestamp: T[2], priceUsd: 12 },
+  { timestamp: BigInt(T[0]), priceUsd: 10 },
+  { timestamp: BigInt(T[1]), priceUsd: 11 },
+  { timestamp: BigInt(T[2]), priceUsd: 12 },
 ]
 
 const candle = (timestamp: number, close: number) => ({
-  timestamp,
+  timestamp: BigInt(timestamp),
   openUsd: close,
   highUsd: close,
   lowUsd: close,
@@ -64,15 +56,10 @@ const candle = (timestamp: number, close: number) => ({
 const OHLC_CANDLES = [candle(T[0], 20), candle(T[1], 21), candle(T[2], 22)]
 const ZERO_OHLC_CANDLES = [candle(T[0], 0), candle(T[1], 0), candle(T[2], 0)]
 
-// The web test render helper shares one module-level QueryClient, so each test salts its query keys
-// to keep the previous test's REST responses out of its own cache.
-let querySalt = 0
+// The test QueryClient is shared, so each test uses a unique token to isolate the real query keys.
+let tokenIndex = 0
+let variables = BASE_VARIABLES
 
-/**
- * Mirrors the real query-options builders' contract: `queryFn` returns the raw protobuf-shaped
- * response and `select` (the hook's own selectors) is left for react-query to apply, so those
- * selectors get exercised for real.
- */
 function mockRestResponses({
   candles = OHLC_CANDLES,
   points = PRICE_POINTS,
@@ -80,20 +67,8 @@ function mockRestResponses({
   candles?: typeof OHLC_CANDLES
   points?: typeof PRICE_POINTS
 } = {}): void {
-  querySalt += 1
-  const salt = querySalt
-  mockGetOhlcQueryOptions.mockImplementation(({ enabled, select }) => ({
-    queryKey: [ReactQueryCacheKey.DataApiService, 'getTokenHistoryOHLC', salt],
-    queryFn: () => Promise.resolve({ candles }),
-    enabled,
-    select,
-  }))
-  mockGetPriceHistoryQueryOptions.mockImplementation(({ enabled, select }) => ({
-    queryKey: [ReactQueryCacheKey.DataApiService, 'getTokenHistoryPrice', salt],
-    queryFn: () => Promise.resolve({ points }),
-    enabled,
-    select,
-  }))
+  mockClient.getTokenHistoryOHLC.mockResolvedValue(new GetTokenHistoryOHLCResponse({ candles }))
+  mockClient.getTokenHistoryPrice.mockResolvedValue(new GetTokenHistoryPriceResponse({ points }))
 }
 
 /**
@@ -121,6 +96,8 @@ function expectSeriesWithLiveSpot({
 describe('useTokenPriceChartData', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    tokenIndex += 1
+    variables = { ...BASE_VARIABLES, address: `0x${String(tokenIndex).padStart(40, '0')}` }
     mockUseTokenSpotPrice.mockReturnValue(SPOT_PRICE)
     mockRestResponses()
   })
@@ -128,7 +105,7 @@ describe('useTokenPriceChartData', () => {
   it('renders the REST price history for line charts', async () => {
     const { result } = renderHook(() =>
       useTokenPriceChartData({
-        variables: BASE_VARIABLES,
+        variables,
         skip: false,
         priceChartType: PriceChartType.LINE,
       }),
@@ -144,13 +121,13 @@ describe('useTokenPriceChartData', () => {
       backendValues: [10, 11, 12],
       spotPrice: SPOT_PRICE,
     })
-    expect(mockGetOhlcQueryOptions).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
+    expect(mockClient.getTokenHistoryOHLC).not.toHaveBeenCalled()
   })
 
   it('renders the REST OHLC candles for candlestick charts', async () => {
     const { result } = renderHook(() =>
       useTokenPriceChartData({
-        variables: BASE_VARIABLES,
+        variables,
         skip: false,
         priceChartType: PriceChartType.CANDLESTICK,
       }),
@@ -163,7 +140,7 @@ describe('useTokenPriceChartData', () => {
       backendValues: [20, 21, 22],
       spotPrice: SPOT_PRICE,
     })
-    expect(mockGetPriceHistoryQueryOptions).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
+    expect(mockClient.getTokenHistoryPrice).not.toHaveBeenCalled()
   })
 
   it('falls back to price history and disables the candlestick UI on an all-zero OHLC series', async () => {
@@ -171,7 +148,7 @@ describe('useTokenPriceChartData', () => {
 
     const { result } = renderHook(() =>
       useTokenPriceChartData({
-        variables: BASE_VARIABLES,
+        variables,
         skip: false,
         priceChartType: PriceChartType.CANDLESTICK,
       }),
@@ -193,7 +170,7 @@ describe('useTokenPriceChartData', () => {
 
     const { result } = renderHook(() =>
       useTokenPriceChartData({
-        variables: BASE_VARIABLES,
+        variables,
         skip: false,
         priceChartType: PriceChartType.LINE,
       }),
@@ -208,20 +185,20 @@ describe('useTokenPriceChartData', () => {
   it('disables both REST queries when skipped', () => {
     renderHook(() =>
       useTokenPriceChartData({
-        variables: BASE_VARIABLES,
+        variables,
         skip: true,
         priceChartType: PriceChartType.LINE,
       }),
     )
 
-    expect(mockGetOhlcQueryOptions).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
-    expect(mockGetPriceHistoryQueryOptions).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
+    expect(mockClient.getTokenHistoryOHLC).not.toHaveBeenCalled()
+    expect(mockClient.getTokenHistoryPrice).not.toHaveBeenCalled()
   })
 
   it('prefers the caller-supplied current price over its own spot-price fallback', async () => {
     const { result } = renderHook(() =>
       useTokenPriceChartData({
-        variables: BASE_VARIABLES,
+        variables,
         skip: false,
         priceChartType: PriceChartType.LINE,
         currentPriceOverride: 999,
@@ -239,11 +216,11 @@ describe('useTokenPriceChartData', () => {
     // Upstream price history can end with two points at the same second. lightweight-charts
     // requires strictly-ascending times; a zero delta breaks curved-line interpolation and paints
     // a spurious diagonal line/wedge across the chart.
-    mockRestResponses({ points: [...PRICE_POINTS, { timestamp: T[2], priceUsd: 12 }] })
+    mockRestResponses({ points: [...PRICE_POINTS, { timestamp: BigInt(T[2]), priceUsd: 12 }] })
 
     const { result } = renderHook(() =>
       useTokenPriceChartData({
-        variables: BASE_VARIABLES,
+        variables,
         skip: false,
         priceChartType: PriceChartType.LINE,
       }),
@@ -256,6 +233,51 @@ describe('useTokenPriceChartData', () => {
       expect(times[i]).toBeGreaterThan(times[i - 1])
     }
   })
+
+  it.each([PriceChartType.LINE, PriceChartType.CANDLESTICK])(
+    'retains the displayed price during a %s period switch by default',
+    async (priceChartType) => {
+      const { result, rerender } = renderHook(
+        ({ duration }) =>
+          useTokenPriceChartData({
+            variables: { ...variables, duration },
+            skip: false,
+            priceChartType,
+          }),
+        { initialProps: { duration: HistoryDuration.Day } },
+      )
+      await waitFor(() => expect(result.current.loading).toBe(false))
+      expect(result.current.entries.length).toBeGreaterThan(0)
+
+      rerender({ duration: HistoryDuration.Week })
+
+      expect(result.current.loading).toBe(false)
+      expect(result.current.entries.at(-1)?.value).toBe(SPOT_PRICE)
+    },
+  )
+
+  it.each([PriceChartType.LINE, PriceChartType.CANDLESTICK])(
+    'shows a skeleton during a %s period switch when previous data is disabled',
+    async (priceChartType) => {
+      const { result, rerender } = renderHook(
+        ({ duration }) =>
+          useTokenPriceChartData({
+            variables: { ...variables, duration },
+            skip: false,
+            priceChartType,
+            keepPreviousData: false,
+          }),
+        { initialProps: { duration: HistoryDuration.Day } },
+      )
+      await waitFor(() => expect(result.current.entries.length).toBeGreaterThan(0))
+
+      rerender({ duration: HistoryDuration.Week })
+
+      expect(result.current).toMatchObject({ entries: [], loading: true, dataQuality: DataQuality.INVALID })
+      await waitFor(() => expect(result.current.loading).toBe(false))
+      expect(result.current.entries.length).toBeGreaterThan(0)
+    },
+  )
 })
 
 function point(time: number, close: number): PriceChartData {

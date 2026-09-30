@@ -24,7 +24,13 @@ describe('useListTokenGroupsQuery', () => {
   })
 
   it('requests the category with explicit chainIds, volume sort, and a required sparkline duration', async () => {
-    renderHook(() => useListTokenGroupsQuery({ categoryId: 'stocks', chainIds: [UniverseChainId.Base] }))
+    renderHook(() =>
+      useListTokenGroupsQuery({
+        categoryId: 'stocks',
+        chainIds: [UniverseChainId.Base],
+        orderBy: TokensOrderBy.VOLUME_1D,
+      }),
+    )
 
     await waitFor(() => expect(mockListTokenGroups).toHaveBeenCalledTimes(1))
     expect(mockListTokenGroups).toHaveBeenCalledWith(
@@ -37,8 +43,24 @@ describe('useListTokenGroupsQuery', () => {
     )
   })
 
+  it('forwards the requested ranking and direction', async () => {
+    renderHook(() =>
+      useListTokenGroupsQuery({
+        categoryId: 'stocks',
+        chainIds: [UniverseChainId.Base],
+        orderBy: TokensOrderBy.MARKET_CAP,
+        ascending: true,
+      }),
+    )
+
+    await waitFor(() => expect(mockListTokenGroups).toHaveBeenCalledTimes(1))
+    expect(mockListTokenGroups).toHaveBeenCalledWith(
+      expect.objectContaining({ sort: { orderBy: TokensOrderBy.MARKET_CAP, ascending: true } }),
+    )
+  })
+
   it('falls back to the enabled chains when no chainIds are given', async () => {
-    renderHook(() => useListTokenGroupsQuery({ categoryId: 'etfs', chainIds: [] }))
+    renderHook(() => useListTokenGroupsQuery({ categoryId: 'etfs', chainIds: [], orderBy: TokensOrderBy.VOLUME_1D }))
 
     await waitFor(() => expect(mockListTokenGroups).toHaveBeenCalledTimes(1))
     expect(mockListTokenGroups).toHaveBeenCalledWith(
@@ -47,9 +69,50 @@ describe('useListTokenGroupsQuery', () => {
   })
 
   it('does not fetch without a category id or when disabled', () => {
-    renderHook(() => useListTokenGroupsQuery({ categoryId: undefined, chainIds: [UniverseChainId.Mainnet] }))
-    renderHook(() => useListTokenGroupsQuery({ categoryId: 'stocks', chainIds: [], enabled: false }))
+    renderHook(() =>
+      useListTokenGroupsQuery({
+        categoryId: undefined,
+        chainIds: [UniverseChainId.Mainnet],
+        orderBy: TokensOrderBy.VOLUME_1D,
+      }),
+    )
+    renderHook(() =>
+      useListTokenGroupsQuery({
+        categoryId: 'stocks',
+        chainIds: [],
+        enabled: false,
+        orderBy: TokensOrderBy.VOLUME_1D,
+      }),
+    )
 
     expect(mockListTokenGroups).not.toHaveBeenCalled()
+  })
+
+  it('starts from an empty page token and pages forward with the BE next token', async () => {
+    mockListTokenGroups
+      .mockResolvedValueOnce({ tokenGroups: [], page: { nextPageToken: 'page-2' } } as never)
+      .mockResolvedValueOnce({ tokenGroups: [], page: { nextPageToken: '' } } as never)
+
+    // Distinct key: the shared test QueryClient would otherwise serve the earlier test's cached page.
+    const { result } = renderHook(() =>
+      useListTokenGroupsQuery({
+        categoryId: 'commodities',
+        chainIds: [UniverseChainId.Base],
+        orderBy: TokensOrderBy.VOLUME_1D,
+      }),
+    )
+
+    await waitFor(() => expect(result.current.hasNextPage).toBe(true))
+    expect(mockListTokenGroups).toHaveBeenCalledWith(
+      expect.objectContaining({ page: { pageSize: 100, pageToken: '' } }),
+    )
+
+    void result.current.fetchNextPage()
+
+    await waitFor(() => expect(mockListTokenGroups).toHaveBeenCalledTimes(2))
+    expect(mockListTokenGroups).toHaveBeenLastCalledWith(
+      expect.objectContaining({ page: { pageSize: 100, pageToken: 'page-2' } }),
+    )
+    await waitFor(() => expect(result.current.hasNextPage).toBe(false))
   })
 })

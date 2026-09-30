@@ -1,6 +1,6 @@
 import { UniverseChainId } from '@universe/chains'
+import { TestID } from '@universe/test'
 import type { ParsedToken } from 'uniswap/src/features/dataApi/utils/parsedToken'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { TokenLinkCell } from '~/components/Table/shared/TokenLinkCell'
 import { render, screen } from '~/test-utils/render'
 

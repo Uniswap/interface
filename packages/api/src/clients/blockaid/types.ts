@@ -1,4 +1,4 @@
-/* oxlint-disable typescript/explicit-function-return-type -- zod schema factory pattern to avoid bundle size bloat */
+/* oxlint-disable typescript/explicit-function-return-type, max-lines -- zod schema factory pattern to avoid bundle size bloat; one file mirrors the Blockaid API surface */
 import { z } from 'zod'
 
 /**
@@ -136,11 +136,12 @@ const getAssetAmountSchema = () =>
 
 /**
  * Lazy-loaded Zod schema factory for balance change
+ * `value` is omitted when Blockaid cannot scale the amount (no known decimals, e.g. NONERC assets).
  */
 const getBalanceChangeSchema = () =>
   z.object({
     usd_price: z.string().optional(),
-    value: z.union([z.string(), z.number()]),
+    value: z.union([z.string(), z.number()]).optional(),
     raw_value: z.string(),
   })
 
@@ -182,6 +183,21 @@ const getERC1155TokenDetailsSchema = () =>
   })
 
 /**
+ * Lazy-loaded Zod schema factory for NONERC token details
+ * Blockaid can return this metadata on transfers and approval exposures. Only `address` is
+ * guaranteed; the label alone does not establish the token interface or approval semantics.
+ */
+const getNonErcTokenDetailsSchema = () =>
+  z.object({
+    type: z.literal('NONERC'),
+    address: z.string(),
+    name: z.string().optional(),
+    symbol: z.string().optional(),
+    decimals: z.number().optional(),
+    logo_url: z.string().optional(),
+  })
+
+/**
  * Lazy-loaded Zod schema factory for native asset details
  */
 const getNativeAssetDetailsSchema = () =>
@@ -203,6 +219,7 @@ const getAssetDetailsSchema = () =>
     getERC20TokenDetailsSchema(),
     getERC721TokenDetailsSchema(),
     getERC1155TokenDetailsSchema(),
+    getNonErcTokenDetailsSchema(),
     getNativeAssetDetailsSchema(),
   ])
 

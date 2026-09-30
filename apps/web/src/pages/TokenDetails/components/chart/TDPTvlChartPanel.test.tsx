@@ -1,8 +1,9 @@
 import { GraphQLApi } from '@universe/api'
 import { UTCTimestamp } from 'lightweight-charts'
 import type { ReactNode } from 'react'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { ChartType, DataQuality } from '~/components/Charts/utils'
-import { useTDPTVLChartData } from '~/pages/TokenDetails/components/chart/hooks'
+import { useTDPTVLChartData } from '~/pages/TokenDetails/components/chart/hooks/useTDPTVLChartData'
 import { TDPTvlChartPanel } from '~/pages/TokenDetails/components/chart/TDPTvlChartPanel'
 import { render, screen } from '~/test-utils/render'
 
@@ -27,7 +28,7 @@ vi.mock('~/components/Charts/LoadingState', () => ({
   },
 }))
 
-vi.mock('~/pages/TokenDetails/components/chart/hooks', () => ({
+vi.mock('~/pages/TokenDetails/components/chart/hooks/useTDPTVLChartData', () => ({
   useTDPTVLChartData: vi.fn(),
 }))
 
@@ -40,7 +41,7 @@ vi.mock('~/components/Charts/StackedLineChart', () => ({
 const variables = {
   chain: GraphQLApi.Chain.Ethereum,
   address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-  duration: GraphQLApi.HistoryDuration.Day,
+  duration: HistoryDuration.Day,
   multichain: false,
 }
 

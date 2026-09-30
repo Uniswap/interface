@@ -1,6 +1,7 @@
 import { AnimatedFlex, Flex, UniversalImage, UniversalImageResizeMode } from '@universe/mycelium'
 import { ENTER_PRESET_CLASSES } from '@universe/mycelium/compat'
 import { fadeInQuick } from '@universe/tailwind/animations/reanimated'
+import { TestID } from '@universe/test'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, type StyleProp, type ViewStyle } from 'react-native'
@@ -13,7 +14,6 @@ import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 enum ActionOption {
   Buy = 'Buy',

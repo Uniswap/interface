@@ -8,7 +8,7 @@ import { usePortfolioBalancePart } from 'uniswap/src/features/dataApi/balances/u
 import { PortfolioBalance } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioBalance'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures/gql/assets/constants'
+import { SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures/assets/constants'
 import {
   DEFAULT_LP_POSITION_STATUS_FILTER,
   DEFAULT_V2_POSITION_STATUS_FILTER,

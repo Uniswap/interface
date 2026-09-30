@@ -1,11 +1,14 @@
-import { GqlResult } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { TokenOption } from 'uniswap/src/components/lists/items/types'
-import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { type PortfolioBalancesResult } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
-import { useTrendingTokensCurrencyInfos } from 'uniswap/src/components/TokenSelector/hooks/useTrendingTokensCurrencyInfos'
+import { top1DVolumeResultsToTokenOptions, useTop1DVolumeTokens } from 'uniswap/src/features/dataApi/top1DVolumeTokens'
+import type { DerivedQueryResult } from 'utilities/src/reactQuery/types'
 
+/**
+ * Trending token options for both token selectors: top tokens by 1D volume merged with the user's
+ * portfolio balances. Options carry market fields that TokenSelectorV2 rows render and legacy rows ignore.
+ */
 export function useTrendingTokensOptions({
   chainFilter,
   chainIds,
@@ -14,39 +17,38 @@ export function useTrendingTokensOptions({
   chainFilter: Maybe<UniverseChainId>
   chainIds?: UniverseChainId[]
   portfolioData: PortfolioBalancesResult
-}): GqlResult<TokenOption[] | undefined> {
+}): DerivedQueryResult<TokenOption[] | undefined> {
   const {
     data: portfolioBalancesById,
     error: portfolioBalancesByIdError,
     refetch: portfolioBalancesByIdRefetch,
-    loading: loadingPortfolioBalancesById,
+    isLoading: loadingPortfolioBalancesById,
   } = portfolioData
 
   const {
-    data: tokens,
+    data: results,
     error: tokensError,
     refetch: refetchTokens,
-    isLoading: tokensInitialLoading,
-    isFetching: tokensFetching,
-  } = useTrendingTokensCurrencyInfos(chainFilter, { chainIds })
-  // Background refetches count as loading here so the retry button shows a spinner after an error.
-  const loadingTokens = tokensInitialLoading || tokensFetching
+    isLoading: loadingTokens,
+  } = useTop1DVolumeTokens({ chainFilter, chainIds })
 
-  const tokenOptions = useCurrencyInfosToTokenOptions({ currencyInfos: tokens, portfolioBalancesById })
+  const tokenOptions = useMemo(
+    () =>
+      results ? top1DVolumeResultsToTokenOptions(results, { chainFilter, chainIds, portfolioBalancesById }) : undefined,
+    [results, chainFilter, chainIds, portfolioBalancesById],
+  )
 
   const refetch = useCallback(() => {
     portfolioBalancesByIdRefetch?.()
-    void refetchTokens()
+    refetchTokens?.()
   }, [portfolioBalancesByIdRefetch, refetchTokens])
 
-  const error =
-    (!portfolioBalancesById ? portfolioBalancesByIdError : undefined) ||
-    (!tokenOptions ? (tokensError ?? undefined) : undefined)
+  const error = (!portfolioBalancesById && portfolioBalancesByIdError) || (!tokenOptions && tokensError) || null
 
   return {
     data: tokenOptions,
     refetch,
     error,
-    loading: loadingPortfolioBalancesById || loadingTokens,
+    isLoading: loadingPortfolioBalancesById || loadingTokens,
   }
 }

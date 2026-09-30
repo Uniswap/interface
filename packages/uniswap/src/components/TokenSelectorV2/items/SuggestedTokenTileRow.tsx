@@ -1,4 +1,5 @@
 import { Flex, iconSizes, Text, TouchableArea } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { memo } from 'react'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { TokenOption } from 'uniswap/src/components/lists/items/types'
@@ -7,7 +8,6 @@ import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/type
 import { OnSelectTokenOption } from 'uniswap/src/components/TokenSelectorV2/hooks/usePendingWarningSelection'
 import { TokenSelectorV2SectionHeader } from 'uniswap/src/components/TokenSelectorV2/TokenSelectorV2SectionHeader'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 /**
  * Suggested tokens as a row of equal-width square tiles (Figma 750:13084); same renderer on all platforms.

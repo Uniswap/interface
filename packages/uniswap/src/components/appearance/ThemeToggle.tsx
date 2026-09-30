@@ -1,13 +1,13 @@
 import { Flex, Text } from '@universe/mycelium'
 import { SegmentedControl } from '@universe/mycelium/segmented-control-compat'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Moon, Sun } from 'ui/src/components/icons'
 import { useCurrentAppearanceSetting } from 'uniswap/src/features/appearance/hooks'
 import { AppearanceSettingType, setSelectedAppearanceSettings } from 'uniswap/src/features/appearance/slice'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export function ThemeToggle(): JSX.Element {
   const dispatch = useDispatch()

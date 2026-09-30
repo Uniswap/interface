@@ -82,8 +82,8 @@ export function ScrollHeader({
           {rightElement}
         </Flex>
         <AnimatedFlex
-          borderBottomColor={backgroundColor ?? '$surface3'}
           borderBottomWidth={0.25}
+          borderColor="$surface3"
           height={1}
           overflow="visible"
           style={visibleOnScrollStyle}

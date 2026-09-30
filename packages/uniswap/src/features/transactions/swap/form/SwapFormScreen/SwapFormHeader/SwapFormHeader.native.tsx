@@ -1,6 +1,6 @@
 import { Flex, Text } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export const SwapFormHeader = (): JSX.Element => {
   const { t } = useTranslation()

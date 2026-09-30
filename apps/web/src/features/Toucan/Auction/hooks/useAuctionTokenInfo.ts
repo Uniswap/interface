@@ -17,7 +17,7 @@ import { getAuctionMetadata } from '~/features/Toucan/Config/config'
  * Hook to fetch auction token information (the token being auctioned off)
  * Derives symbol, name, decimals, and logoUrl from tokenAddress and chainId
  *
- * First attempts to fetch from Uniswap's GraphQL API, then falls back to on-chain
+ * First attempts to fetch from Uniswap's API, then falls back to on-chain
  * RPC calls if the token is not indexed (common for testnet tokens).
  *
  * @param tokenAddress - The address of the auction token
@@ -33,8 +33,8 @@ export function useAuctionTokenInfo(
     [chainId, tokenAddress],
   )
 
-  // First try to fetch from GraphQL API
-  const { currencyInfo, loading: graphqlLoading, error: graphqlError } = useCurrencyInfoWithLoading(currencyId)
+  // First try to fetch from backend
+  const { data: currencyInfo, isLoading: backendLoading, error: backendError } = useCurrencyInfoWithLoading(currencyId)
 
   // Indexed metadata for launched tokens can come back corrupt on some chains
   // (decimals=0 with empty name/symbol). Treat it as missing so the on-chain
@@ -50,7 +50,7 @@ export function useAuctionTokenInfo(
   // Bad-ingestion signal: the API returned metadata for this token but it matched
   // the corrupt signature, so the on-chain fallback has to engage. Distinct from a
   // token that is simply not indexed yet (currencyInfo undefined).
-  const hasCorruptIndexedMetadata = !graphqlLoading && Boolean(currencyInfo) && !usableCurrencyInfo
+  const hasCorruptIndexedMetadata = !backendLoading && Boolean(currencyInfo) && !usableCurrencyInfo
 
   useEffect(() => {
     if (!hasCorruptIndexedMetadata || !currencyId || !shouldLogCorruptMetadataOnce(currencyId)) {
@@ -65,9 +65,9 @@ export function useAuctionTokenInfo(
     )
   }, [hasCorruptIndexedMetadata, currencyId, chainId, tokenAddress])
 
-  // Fallback to on-chain RPC call if GraphQL returns null (token not indexed)
+  // Fallback to on-chain RPC call if API returns null (token not indexed)
   // or returns unusable metadata (corrupt ingestion)
-  const shouldFetchFromContract = !graphqlLoading && !usableCurrencyInfo && Boolean(tokenAddress && chainId)
+  const shouldFetchFromContract = !backendLoading && !usableCurrencyInfo && Boolean(tokenAddress && chainId)
   const {
     tokenMetadata,
     loading: contractLoading,
@@ -101,10 +101,10 @@ export function useAuctionTokenInfo(
   }, [decimalsUnresolved, currencyId, chainId, tokenAddress, hasCorruptIndexedMetadata, contractErrorMessage])
 
   // Combine loading states - loading if either is loading
-  const loading = graphqlLoading || contractLoading
+  const loading = backendLoading || contractLoading
 
-  // Prefer GraphQL error, fallback to contract error
-  const error = graphqlError || contractError || undefined
+  // Prefer backend error, fallback to contract error
+  const error = backendError || contractError || undefined
 
   // Check for logo override from config
   const metadataOverride = useMemo(() => {
@@ -115,9 +115,9 @@ export function useAuctionTokenInfo(
     return undefined
   }, [chainId, tokenAddress])
 
-  // Construct tokenInfo from either GraphQL or on-chain data
+  // Construct tokenInfo from either API or on-chain data
   const tokenInfo = useMemo((): CurrencyInfo | undefined => {
-    // If we have usable GraphQL data, use it (with potential overrides)
+    // If we have usable API data, use it (with potential overrides)
     if (usableCurrencyInfo) {
       const hasLogoOverride = !!metadataOverride?.logoUrl
       const hasNameOverride = !!metadataOverride?.tokenName || !!metadataOverride?.tokenSymbol

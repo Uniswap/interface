@@ -1,6 +1,5 @@
 import { Currency, WETH9 } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position } from '@uniswap/v3-sdk'
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
@@ -29,7 +28,7 @@ const validPoolToken0 = {
   },
 }
 
-export const validBEPoolToken0 = validPoolToken0 as GraphQLApi.Token
+export const validBEPoolToken0 = validPoolToken0
 export const validRestPoolToken0 = validPoolToken0 as unknown as PoolStat['token0']
 
 export const validUSDCCurrency = {
@@ -66,7 +65,7 @@ const validPoolToken1 = {
   },
 }
 
-export const validBEPoolToken1 = validPoolToken1 as GraphQLApi.Token
+export const validBEPoolToken1 = validPoolToken1
 export const validRestPoolToken1 = validPoolToken1 as unknown as PoolStat['token0']
 
 // Parsed v2-native ParsedToken fixtures — what PoolData carries post-GraphQL.

@@ -52,12 +52,14 @@ import {
   testRemoveFlashbotsEnabledFromWalletSlice,
   testRemoveLocalTypeAccounts,
   testRemoveNonZeroDerivationIndexAccounts,
+  testRemovePersistedApolloCache,
   testRemovePersistedWalletConnectSlice,
   testRemoveProviders,
   testRemoveReplaceAccountOptions,
   testRemoveShowSmallBalances,
   testRemoveTokenListsAndCustomTokens,
   testRemoveTokensMetadataDisplayType,
+  testRemoveTweaksSlice,
   testRemoveWalletConnectModalState,
   testRenameFollowedAddressesToWatchedAddresses,
   testResetActiveChains,
@@ -172,13 +174,14 @@ import {
   v97Schema,
   v98Schema,
   v99Schema,
+  v100Schema,
+  v101Schema,
 } from 'src/app/schema'
 import { persistConfig } from 'src/app/store'
 import { initialBiometricsSettingsState } from 'src/features/biometricsSettings/slice'
 import { initialPasswordLockoutState } from 'src/features/CloudBackup/passwordLockoutSlice'
 import { initialModalsState } from 'src/features/modals/modalSlice'
 import { initialPushNotificationsState } from 'src/features/notifications/slice'
-import { initialTweaksState } from 'src/features/tweaks/slice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
 import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
 import { USDC } from 'uniswap/src/constants/tokens'
@@ -324,7 +327,6 @@ describe('Redux state migrations', () => {
       tokenLists: {},
       tokens: initialTokensState,
       transactions: initialTransactionsState,
-      tweaks: initialTweaksState,
       uniswapBehaviorHistory: initialUniswapBehaviorHistoryState,
       userSettings: initialUserSettingsState,
       visibility: initialVisibilityState,
@@ -779,5 +781,13 @@ describe('Redux state migrations', () => {
 
   it('migrates from v99 to v100', () => {
     testMarkPoolsBalanceCoachmarkEligible(migrations[100], v99Schema)
+  })
+
+  it('migrates from v100 to v101', () => {
+    testRemoveTweaksSlice(migrations[101], v100Schema)
+  })
+
+  it('migrates from v101 to v102', () => {
+    testRemovePersistedApolloCache(migrations[102], v101Schema)
   })
 })

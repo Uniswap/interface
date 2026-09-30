@@ -1,7 +1,7 @@
 import { fireEvent } from '@testing-library/react'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency } from '@uniswap/sdk-core'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import { useBlockedTokens } from '~/features/Liquidity/Create/hooks/useBlockedTokens'
 import { SelectTokensStep } from '~/features/Liquidity/Create/SelectTokenStep'
 import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'

@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { UniverseChainId } from '@universe/chains'
+import { TestID } from '@universe/test'
 import { useEffect } from 'react'
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { describe, expect, it } from 'vitest'
 import {
   ExploreTablesFilterStoreContextProvider,

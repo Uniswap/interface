@@ -6,12 +6,11 @@ import { Button, Flex, Text, useMedia } from '@universe/mycelium'
 import { styled } from '@universe/mycelium/styled'
 import { memo, NamedExoticComponent, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
-import { useLocation, useNavigate, useSearchParams } from 'react-router'
+import { useNavigate, useSearchParams } from 'react-router'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { ElementName, InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useFilteredChainIds } from '~/components/NetworkFilter/useFilteredChains'
 import { PoolNotFoundModal } from '~/components/NotFoundModal/PoolNotFoundModal'
@@ -46,7 +45,7 @@ import { TopVerifiedAuctionsSection } from '~/pages/Explore/tables/Auctions/TopV
 import { ExploreTopPoolTable } from '~/pages/Explore/tables/Pools/PoolTable'
 import { RecentTransactionsTable } from '~/pages/Explore/tables/RecentTransactions/RecentTransactions'
 import { TopTokensTable } from '~/pages/Explore/tables/Tokens/TopTokensTable'
-import { setOpenModal } from '~/state/application/reducer'
+import { useExploreNotFoundModal } from '~/pages/Explore/useExploreNotFoundModal'
 import { ExploreTab } from '~/types/explore'
 import { getChainUrlParam, useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
@@ -133,9 +132,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const tabNavRef = useRef<HTMLDivElement>(null)
   const Pages = usePages()
   const [params] = useSearchParams()
-  const dispatch = useDispatch()
   const navigate = useNavigate()
-  const location = useLocation()
   const initialKey: number = useMemo(() => {
     const key = initialTab && Pages.findIndex((page) => page.key === initialTab)
 
@@ -173,24 +170,8 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
     // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
   }, [])
 
-  useEffect(() => {
-    const notFound = params.get('result') === ModalName.NotFound
-    const type = params.get('type')
-
-    if (notFound) {
-      switch (type) {
-        case ExploreTab.Tokens:
-          dispatch(setOpenModal({ name: ModalName.TokenNotFound }))
-          break
-        case ExploreTab.Pools:
-          dispatch(setOpenModal({ name: ModalName.PoolNotFound }))
-          break
-      }
-
-      // navigate without params
-      navigate(location.pathname, { replace: true })
-    }
-  }, [params, dispatch, navigate, location])
+  const { isTokenNotFoundOpen, isPoolNotFoundOpen, closeNotFoundModal } = useExploreNotFoundModal()
+  const isNotFoundModalOpen = isTokenNotFoundOpen || isPoolNotFoundOpen
 
   const [currentTab, setCurrentTab] = useState(initialKey)
   const { component: Page, key: currentKey } = Pages[currentTab] || {}
@@ -324,7 +305,11 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                       eventOnTrigger={SharedEventName.NAVBAR_CLICKED}
                       element={loggingElementName}
                     >
-                      <HeaderTab onClick={() => navigate(url)} active={currentTab === index}>
+                      <HeaderTab
+                        // Replace the not-found entry so browser back cannot land on it and reopen the modal.
+                        onClick={() => navigate(url, { replace: isNotFoundModalOpen })}
+                        active={currentTab === index}
+                      >
                         {title}
                       </HeaderTab>
                     </Trace>
@@ -413,8 +398,8 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
           </Flex>
         </ExploreTablesFilterStoreContextProvider>
       </ExploreContextProvider>
-      <TokenNotFoundModal />
-      <PoolNotFoundModal />
+      <TokenNotFoundModal isOpen={isTokenNotFoundOpen} closeModal={closeNotFoundModal} />
+      <PoolNotFoundModal isOpen={isPoolNotFoundOpen} closeModal={closeNotFoundModal} />
     </Trace>
   )
 }

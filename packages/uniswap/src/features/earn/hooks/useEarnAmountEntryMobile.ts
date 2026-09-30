@@ -107,7 +107,7 @@ export function useEarnAmountEntryMobile({
       return undefined
     }
 
-    if (currency.isNative && maxSpendableAmount) {
+    if (maxSpendableAmount) {
       return maxSpendableAmount.toExact()
     }
 

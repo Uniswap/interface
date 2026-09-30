@@ -13,7 +13,7 @@ import { ExploreCategory } from '~/pages/Explore/categories/useExploreCategory'
 const t = ((key: string) => key) as TFunction
 
 function makeCategory(id: string, name: string): TokenCategory {
-  return { id, name, description: '', categoryClass: TokenCategoryClass.Sector, topTokens: [] }
+  return { id, name, description: '', categoryClass: TokenCategoryClass.Sector, grouped: false, topTokens: [] }
 }
 
 const CATEGORIES = [
@@ -28,7 +28,7 @@ const CATEGORIES = [
 describe('getStaticCategoryChipOptions', () => {
   it('returns the pre-token-categories chip set', () => {
     expect(getStaticCategoryChipOptions(t).map((option) => option.id)).toEqual([
-      ExploreCategory.Popular,
+      ExploreCategory.All,
       ExploreCategory.Stocks,
       ExploreCategory.Commodities,
       ExploreCategory.Etfs,
@@ -37,24 +37,10 @@ describe('getStaticCategoryChipOptions', () => {
 })
 
 describe('deriveCategoryChipOptions', () => {
-  it('spotlights Popular plus the first four categories in the given order', () => {
+  it('spotlights All plus the first four categories in the given order', () => {
     const options = deriveCategoryChipOptions({ categories: CATEGORIES, t })
     expect(options.map((option) => option.id)).toEqual([
-      ExploreCategory.Popular,
-      'trending',
-      'recently-launched',
-      'stocks',
-      'defi',
-    ])
-  })
-
-  it('does not spotlight a fetched popular category twice', () => {
-    const options = deriveCategoryChipOptions({
-      categories: [makeCategory('popular', 'Popular'), ...CATEGORIES],
-      t,
-    })
-    expect(options.map((option) => option.id)).toEqual([
-      ExploreCategory.Popular,
+      ExploreCategory.All,
       'trending',
       'recently-launched',
       'stocks',
@@ -70,7 +56,7 @@ describe('deriveCategoryChipOptions', () => {
   it('replaces the last spotlit slot with a non-spotlit selection, keeping the chip count constant', () => {
     const options = deriveCategoryChipOptions({ categories: CATEGORIES, selectedCategoryId: 'majors', t })
     expect(options.map((option) => option.id)).toEqual([
-      ExploreCategory.Popular,
+      ExploreCategory.All,
       'trending',
       'recently-launched',
       'stocks',
@@ -86,7 +72,7 @@ describe('deriveCategoryChipOptions', () => {
       t,
     })
     expect(options.map((option) => option.id)).toEqual([
-      ExploreCategory.Popular,
+      ExploreCategory.All,
       'trending',
       'recently-launched',
       'stocks',
@@ -102,7 +88,7 @@ describe('deriveCategoryChipOptions', () => {
       t,
     })
     expect(options.map((option) => option.id)).toEqual([
-      ExploreCategory.Popular,
+      ExploreCategory.All,
       'trending',
       'recently-launched',
       'stocks',
@@ -118,7 +104,7 @@ describe('deriveCategoryChipOptions', () => {
       t,
     })
     expect(options.map((option) => option.id)).toEqual([
-      ExploreCategory.Popular,
+      ExploreCategory.All,
       'trending',
       'recently-launched',
       'stocks',
@@ -133,7 +119,7 @@ describe('deriveCategoryChipOptions', () => {
       t,
     })
     expect(options.map((option) => option.id)).toEqual([
-      ExploreCategory.Popular,
+      ExploreCategory.All,
       'trending',
       'stocks',
       ExploreCategory.Etfs,
@@ -148,7 +134,7 @@ describe('deriveCategoryChipOptions', () => {
       t,
     })
     expect(options.map((option) => option.id)).toEqual([
-      ExploreCategory.Popular,
+      ExploreCategory.All,
       'trending',
       'recently-launched',
       'stocks',
@@ -168,7 +154,7 @@ describe('deriveCategoryChipOptions', () => {
       t,
     })
     expect(options.map((option) => option.id)).toEqual([
-      ExploreCategory.Popular,
+      ExploreCategory.All,
       'trending',
       'recently-launched',
       'defi',
@@ -180,6 +166,18 @@ describe('deriveCategoryChipOptions', () => {
   it('labels dynamic chips with the category name from the response', () => {
     const options = deriveCategoryChipOptions({ categories: CATEGORIES, t })
     expect(options[2]?.label).toBe('New')
+  })
+
+  it('carries the fetched category on dynamic chips only, not on All or static fallbacks', () => {
+    const options = deriveCategoryChipOptions({
+      categories: CATEGORIES.filter((category) => category.id !== 'stocks'),
+      selectedCategoryId: 'stocks',
+      t,
+    })
+    expect(options[1]?.category).toBe(CATEGORIES[0])
+    expect(options[0]?.category).toBeUndefined()
+    expect(options[4]?.category).toBeUndefined()
+    expect(getStaticCategoryChipOptions(t).every((option) => option.category === undefined)).toBe(true)
   })
 
   it('resolves icons by category id and falls back to the tag icon for unmapped categories', () => {

@@ -1,10 +1,10 @@
 import { isWebPlatform } from '@universe/environment'
 import { Flex, TouchableArea, iconSizes, UniversalImage } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { getCountryFlagSvgUrl } from 'uniswap/src/features/fiatOnRamp/utils'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const ICON_SIZE = iconSizes.icon16
 

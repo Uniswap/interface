@@ -74,7 +74,7 @@ describe('TokenDetailsPage', () => {
     render(<TokenDetailsPage />)
 
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith('/explore?type=tokens&result=not-found')
+      expect(mockNavigate).toHaveBeenCalledWith('/explore?type=tokens&result=not-found', { replace: true })
     })
   })
 

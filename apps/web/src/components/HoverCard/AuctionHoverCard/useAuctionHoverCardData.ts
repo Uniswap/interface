@@ -1,7 +1,6 @@
 import { toPlainMessage } from '@bufbuild/protobuf'
 import { useQuery } from '@tanstack/react-query'
 import { GetAuctionRequest, GetLatestCheckpointRequest } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
-import { GraphQLApi } from '@universe/api'
 import { AddressStringFormat, normalizeAddress, type UniverseChainId } from '@universe/chains'
 import { useMemo } from 'react'
 import {
@@ -10,6 +9,7 @@ import {
   auctionQueryKeys,
 } from 'uniswap/src/data/apiClients/dataApiService/auctions/queryTypes'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { getPortfolioChartPercentChange } from 'uniswap/src/features/portfolio/portfolioChartPercentChange'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
 import { PriceChartType } from '~/components/Charts/utils'
@@ -88,7 +88,7 @@ export function useAuctionHoverCardData({
     () => ({
       chain: toGraphQLChain(chainId),
       address: tokenAddress,
-      duration: GraphQLApi.HistoryDuration.Day,
+      duration: HistoryDuration.Day,
       multichain: false,
     }),
     [chainId, tokenAddress],

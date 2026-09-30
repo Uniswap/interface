@@ -17,7 +17,7 @@ export type ExpandableTableRowContainerProps = {
   collapsedIssuerHeightPx: number
   /** Issuer panel height when fully expanded (`getExpandableIssuerPanelHeightPx`). */
   expandedIssuerHeightPx: number
-  /** RWA Explore only: widen the shell by its horizontal padding so the card matches the Popular table row width.
+  /** RWA Explore only: widen the shell by its horizontal padding so the card matches the All table row width.
    *  Disable when columns flex-grow (e.g. portfolio tokens) — otherwise the shell overflows the header/flat rows
    *  by the padding amount whenever the table scrolls horizontally. */
   extendShellBeyondRowContent?: boolean

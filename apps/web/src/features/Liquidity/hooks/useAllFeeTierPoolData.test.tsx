@@ -23,7 +23,7 @@ vi.mock('@tanstack/react-query', async (importOriginal) => ({
 
 // Pass the input through so tests can assert on the params/enabled the hook builds.
 vi.mock('uniswap/src/data/apiClients/dataApiService/pools/queries', () => ({
-  getListPoolsQueryOptions: (input: unknown): unknown => input,
+  getListPoolsInfiniteQueryOptions: (input: unknown): unknown => input,
 }))
 
 // The on-chain existence check (wagmi) is covered separately; default it to "no unavailable pools" here

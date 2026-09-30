@@ -22,6 +22,8 @@ import {
   type GetTokensMultiChainResponse,
   type GetTokensRequest,
   type GetTokensResponse,
+  type ListTokensRequest,
+  type ListTokensResponse,
 } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2'
 import { logger } from 'utilities/src/logger/logger'
@@ -33,6 +35,11 @@ import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 type DataApiV2Input<TRequest extends Message<TRequest>, TResponse extends Message<TResponse>, TSelectData> = {
   params?: PartialMessage<TRequest>
   enabled?: boolean
+  /**
+   * Serve the previous key's data while a new key loads (react-query `keepPreviousData`). Turn off
+   * where a key change is a different view, e.g. a chart period switch that should show its skeleton.
+   */
+  keepPreviousData?: boolean
   select?: (data: PlainMessage<TResponse> | undefined) => TSelectData
 }
 
@@ -99,15 +106,22 @@ export type GetTokenHistoryTVLInput<TSelectData = PlainMessage<GetTokenHistoryTV
   TSelectData
 >
 
+export type ListTokensInput<TSelectData = PlainMessage<ListTokensResponse>> = DataApiV2Input<
+  ListTokensRequest,
+  ListTokensResponse,
+  TSelectData
+>
+
 type GetQueryOptionsPolicy = {
   refetchInterval?: number
   staleTime?: number
 }
 
 // Builds a `getXQueryOptions` function for a non-paginated DataApiServiceV2 endpoint. All such
-// endpoints share the same shape: params required to run, keepPreviousData while refetching,
-// and a query key of [DataApiService, name, params]. `policy` lets each endpoint opt into its own
-// refetchInterval/staleTime — there's no shared default since freshness needs differ per endpoint.
+// endpoints share the same shape: params required to run, keepPreviousData while refetching (callers
+// can opt out), and a query key of [DataApiService, name, params]. `policy` lets each endpoint opt
+// into its own refetchInterval/staleTime — there's no shared default since freshness needs differ
+// per endpoint.
 function createGetQueryOptions<
   TName extends string,
   TRequest extends Message<TRequest>,
@@ -124,6 +138,7 @@ function createGetQueryOptions<
   return function getQueryOptions<TSelectData = PlainMessage<TResponse>>({
     params,
     enabled = true,
+    keepPreviousData: keepPrevious = true,
     select,
   }: DataApiV2Input<TRequest, TResponse, TSelectData>): QueryOptionsResult<
     PlainMessage<TResponse> | undefined,
@@ -140,7 +155,7 @@ function createGetQueryOptions<
         return toPlainMessage(await fetch(params))
       },
       enabled: enabled && !!params,
-      placeholderData: keepPreviousData,
+      placeholderData: keepPrevious ? keepPreviousData : undefined,
       select,
       ...policy,
     })
@@ -238,5 +253,16 @@ export const getGetTokenHistoryVolumeQueryOptions = createGetQueryOptions({
 export const getGetTokenHistoryTVLQueryOptions = createGetQueryOptions({
   name: 'getTokenHistoryTVL',
   fetch: (params: PartialMessage<GetTokenHistoryTVLRequest>) => dataApiServiceClientV2.getTokenHistoryTVL(params),
+  policy: { staleTime: STATS_STALE_TIME_MS },
+})
+
+/**
+ * Single page of ListTokens for callers that only want the top `params.page.pageSize` rows (a
+ * "trending tokens" shelf, for instance) and never page further. Explore-style tables that page
+ * forward use `useExploreListTokens` instead.
+ */
+export const getListTokensQueryOptions = createGetQueryOptions({
+  name: 'listTokens',
+  fetch: (params: PartialMessage<ListTokensRequest>) => dataApiServiceClientV2.listTokens(params),
   policy: { staleTime: STATS_STALE_TIME_MS },
 })

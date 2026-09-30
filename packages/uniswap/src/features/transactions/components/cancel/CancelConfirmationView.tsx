@@ -1,6 +1,7 @@
 import { isWebPlatform } from '@universe/environment'
 import { Button, Flex, FlexLoader, fonts, Separator, Skeleton, Text } from '@universe/mycelium'
 import { SlashCircle } from '@universe/mycelium/icons/SlashCircle'
+import { TestID } from '@universe/test'
 import { providers } from 'ethers/lib/ethers'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -19,7 +20,6 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 
 export interface PlanCancellationInfo {

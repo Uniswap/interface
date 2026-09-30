@@ -1,8 +1,8 @@
-import { GraphQLApi } from '@universe/api'
 import { Text } from '@universe/mycelium'
 import { SegmentedControl, type SegmentedControlOption } from '@universe/mycelium/segmented-control-compat'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { useChartPriceState } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/selectors/priceSelectors'
 import { useLiquidityChartStoreActions } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/useLiquidityChartStore'
 
@@ -11,30 +11,30 @@ export function TimePeriodOptionButtons() {
   const { selectedHistoryDuration } = useChartPriceState()
   const { setTimePeriod } = useLiquidityChartStoreActions()
   const timePeriodOptions = useMemo(() => {
-    const options: Array<SegmentedControlOption<GraphQLApi.HistoryDuration>> = [
+    const options: Array<SegmentedControlOption<HistoryDuration>> = [
       [
-        GraphQLApi.HistoryDuration.Day,
+        HistoryDuration.Day,
         t('token.priceExplorer.timeRangeLabel.day'),
         t('token.priceExplorer.timeRangeLabel.day.verbose'),
       ],
       [
-        GraphQLApi.HistoryDuration.Week,
+        HistoryDuration.Week,
         t('token.priceExplorer.timeRangeLabel.week'),
         t('token.priceExplorer.timeRangeLabel.week.verbose'),
       ],
       [
-        GraphQLApi.HistoryDuration.Month,
+        HistoryDuration.Month,
         t('token.priceExplorer.timeRangeLabel.month'),
         t('token.priceExplorer.timeRangeLabel.month.verbose'),
       ],
       [
-        GraphQLApi.HistoryDuration.Year,
+        HistoryDuration.Year,
         t('token.priceExplorer.timeRangeLabel.year'),
         t('token.priceExplorer.timeRangeLabel.year.verbose'),
       ],
-      [GraphQLApi.HistoryDuration.Max, t('token.priceExplorer.timeRangeLabel.all')],
+      [HistoryDuration.Max, t('token.priceExplorer.timeRangeLabel.all')],
     ].map((timePeriod) => ({
-      value: timePeriod[0] as GraphQLApi.HistoryDuration,
+      value: timePeriod[0] as HistoryDuration,
       display:
         timePeriod[0] === selectedHistoryDuration ? (
           <Text variant="buttonLabel4">{timePeriod[1]}</Text>
@@ -54,7 +54,7 @@ export function TimePeriodOptionButtons() {
     <SegmentedControl
       options={timePeriodOptions.options}
       selectedOption={timePeriodOptions.selected}
-      onSelectOption={(option: GraphQLApi.HistoryDuration) => {
+      onSelectOption={(option: HistoryDuration) => {
         setTimePeriod(option)
       }}
     />

@@ -4,16 +4,15 @@ export type ColumnId = 'pool' | 'position' | 'distribution' | 'liquidity' | 'fee
 
 export type SortDirection = 'asc' | 'desc'
 
-// Server-side sort fields for GetWalletPositions. distribution/liquidity/created_at are wired;
-// fees/apr are rendered as sortable but no-op until the backend serves those values.
-export type PositionSortField = 'distribution' | 'liquidity' | 'created_at' | 'fees' | 'apr'
+// Server-side sort fields for GetWalletPositions. Fees has no client sort: the backend's fees sort
+// reads every matched position on-chain at request time and silently falls back to the default
+// order above a server-side ceiling, so its header stays plain.
+export type PositionSortField = 'distribution' | 'liquidity' | 'created_at' | 'apr'
 
 export interface PositionSort {
   field: PositionSortField
   direction: SortDirection
 }
-
-export const NOOP_SORT_FIELDS: readonly PositionSortField[] = ['fees', 'apr']
 
 export function getColumnLabel(id: ColumnId, t: AppTFunction): string {
   switch (id) {

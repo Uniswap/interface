@@ -1,8 +1,8 @@
 import { UniverseChainId } from '@universe/chains'
 import { Flex, Text } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import type { CSSProperties } from 'react'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { EllipsisText } from '~/components/Table/shared/TableText'
 import {
   COLLAPSE_PROGRESS,

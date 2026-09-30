@@ -302,6 +302,7 @@ export async function authorizeAndCompleteRecovery({
   email,
   walletId,
   privyUserId,
+  accessToken,
   authMethodType,
   onProgress,
 }: {
@@ -309,6 +310,9 @@ export async function authorizeAndCompleteRecovery({
   email: string
   walletId: string
   privyUserId: string
+  // Privy access token; sent as the bearer on SetupRecovery so the server can bind
+  // the setup to the caller.
+  accessToken: string
   authMethodType: RecoveryAuthMethodType
   onProgress?: (step: import('@universe/embedded-wallet/src/features/passkey/recoverySetup').SetupProgress) => void
 }): Promise<{ recoveryQuorumId: string }> {
@@ -331,13 +335,16 @@ export async function authorizeAndCompleteRecovery({
 
   // Complete setup with passkey credential
   onProgress?.('registering')
-  const result = await EmbeddedWalletApiClient.fetchSetupRecovery({
-    credential,
-    authMethodId: encrypted.authMethodId,
-    authMethodType,
-    authMethodIdentifier: email,
-    encryptedKeyId: encrypted.encryptedKeyId,
-  })
+  const result = await EmbeddedWalletApiClient.fetchSetupRecovery(
+    {
+      credential,
+      authMethodId: encrypted.authMethodId,
+      authMethodType,
+      authMethodIdentifier: email,
+      encryptedKeyId: encrypted.encryptedKeyId,
+    },
+    accessToken,
+  )
   if (!result.success || !result.recoveryQuorumId) {
     throw new Error('Backend failed to register recovery quorum')
   }

@@ -1,4 +1,4 @@
-import { GraphQLApi } from '@universe/api'
+import { UniverseChainId } from '@universe/chains'
 import getNetworkLogoUrl, { OG_NETWORK_BADGE_CHAINS } from 'functions/utils/getNetworkLogoURL'
 
 /**
@@ -18,8 +18,9 @@ describe('getNetworkLogoUrl — UI ?inline / worker build coupling', () => {
   })
 
   it('returns empty for chains that do not ship an OG badge', () => {
-    expect(getNetworkLogoUrl(GraphQLApi.Chain.Ethereum, '')).toBe('')
-    expect(getNetworkLogoUrl(GraphQLApi.Chain.Solana, '')).toBe('')
-    expect(getNetworkLogoUrl('NOT_A_REAL_CHAIN', '')).toBe('')
+    expect(getNetworkLogoUrl(UniverseChainId.Mainnet, '')).toBe('')
+    expect(getNetworkLogoUrl(UniverseChainId.Solana, '')).toBe('')
+    // An unresolved URL param lands here, since callers pass the lookup through unguarded.
+    expect(getNetworkLogoUrl(undefined, '')).toBe('')
   })
 })

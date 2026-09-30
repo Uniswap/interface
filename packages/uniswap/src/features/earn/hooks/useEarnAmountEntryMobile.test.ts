@@ -1,16 +1,18 @@
-import { Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
+import { USDC_ARC } from 'uniswap/src/constants/tokens'
 import {
   getEarnAmountInputDisplayValue,
   MAX_EARN_AMOUNT_INPUT_LENGTH,
   useEarnAmountEntryMobile,
 } from 'uniswap/src/features/earn/hooks/useEarnAmountEntryMobile'
+import { useMaxAmountSpend } from 'uniswap/src/features/gas/hooks/useMaxAmountSpend'
 import { act, renderHook } from 'uniswap/src/test/test-utils'
 
 const useUSDTokenUpdaterMock = vi.hoisted(() => vi.fn())
 
 vi.mock('uniswap/src/features/gas/hooks/useMaxAmountSpend', () => ({
-  useMaxAmountSpend: () => undefined,
+  useMaxAmountSpend: vi.fn(),
 }))
 
 vi.mock('uniswap/src/features/language/LocalizationContext', () => ({
@@ -26,6 +28,30 @@ vi.mock('uniswap/src/features/transactions/hooks/useUSDTokenUpdater', () => ({
 describe(useEarnAmountEntryMobile, () => {
   beforeEach(() => {
     useUSDTokenUpdaterMock.mockClear()
+    vi.mocked(useMaxAmountSpend).mockReturnValue(undefined)
+  })
+
+  it.each(['9990000', '0'])('uses the gas-reserved Max amount for Arc USDC: %s', (spendableRaw) => {
+    const spendable = CurrencyAmount.fromRawAmount(USDC_ARC, spendableRaw)
+    vi.mocked(useMaxAmountSpend).mockReturnValue(spendable)
+    const { result } = renderHook(() =>
+      useEarnAmountEntryMobile({
+        currency: USDC_ARC,
+        isWithdrawing: false,
+        isWithdrawLiquidityLimited: false,
+        selectedDepositSourceBalanceUsd: 10,
+        walletBalance: 10,
+        walletBalanceRaw: '10000000',
+        withdrawableBalanceUsd: 0,
+      }),
+    )
+
+    act(() => {
+      result.current.handlePercentPress(1)
+    })
+
+    expect(result.current.exactMaxTokenAmount).toBe(spendable.toExact())
+    expect(result.current.isMaxSelected).toBe(true)
   })
 
   it('removes a trailing decimal point when truncating a display value', () => {

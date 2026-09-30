@@ -4,12 +4,12 @@ import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFille
 import { Person } from '@universe/mycelium/icons/Person'
 import { Shield } from '@universe/mycelium/icons/Shield'
 import { WalletFilled } from '@universe/mycelium/icons/WalletFilled'
+import { TestID } from '@universe/test'
 import type { TFunction } from 'i18next'
 import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { OverflowMenu } from '~/components/Passkey/OverflowMenu'
 
 // The shared recovery steps (EmailCodeStep, EnterPinStep, ...) live in

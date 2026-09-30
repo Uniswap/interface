@@ -1,12 +1,10 @@
 import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import {
-  getRwaCategoryForTokenCategory,
-  RWA_CATEGORY_IDS,
-} from 'uniswap/src/features/tokenCategories/rwaCategoryBridge'
+import { getGroupedRwaCategory, isGroupedRwaCategory } from 'uniswap/src/features/tokenCategories/groupedCategory'
+import { RWA_CATEGORY_IDS } from 'uniswap/src/features/tokenCategories/rwaCategoryBridge'
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { ExploreCategory } from '~/pages/Explore/categories/useExploreCategory'
 
-/** Explore categories that render grouped-ticker tables instead of the standard ranked token list. */
+/** Static (flag-off) category ids: the deep-link set, and the grouped set until the BE list says otherwise. */
 export const GROUPED_EXPLORE_CATEGORIES = [
   ExploreCategory.Stocks,
   ExploreCategory.Commodities,
@@ -20,38 +18,57 @@ const RWA_CATEGORY_BY_STATIC_ID = new Map(
 )
 
 /**
- * Resolves the grouped-table RwaCategory for the selected Explore category id, or UNSPECIFIED for
- * flat categories. Categories in the fetched list resolve via the bridge; ids the bridge doesn't
- * recognize (or that are missing from the list) fall back to the static grouped set so flag-off
- * rendering and static deep links behave as today — and so a fetched stocks/etfs can never drop
- * the legal disclaimer without a client-side change to this map.
+ * Resolves which table the selected Explore category renders: the grouped RwaCategory, or UNSPECIFIED for the
+ * flat token list. A fetched category follows the BE's `grouped` flag; ids missing from the list (flag off,
+ * static deep links) fall back to the static grouped set. While the first fetch is in flight, a static id the
+ * FE can't render grouped (Commodities) resolves flat so the table doesn't mount v1 and flip once the list lands.
  */
 export function resolveGroupedRwaCategory({
   categoryId,
   categories,
+  categoriesPending = false,
 }: {
   categoryId: string
   categories: TokenCategory[]
+  categoriesPending?: boolean
 }): RwaCategory {
   const match = categories.find((category) => category.id === categoryId)
   if (match) {
-    const bridged = getRwaCategoryForTokenCategory(match)
-    if (bridged !== RwaCategory.UNSPECIFIED) {
-      return bridged
-    }
+    return getGroupedRwaCategory(match)
   }
-  return RWA_CATEGORY_BY_STATIC_ID.get(categoryId) ?? RwaCategory.UNSPECIFIED
+  const staticCategory = RWA_CATEGORY_BY_STATIC_ID.get(categoryId) ?? RwaCategory.UNSPECIFIED
+  if (categoriesPending && !isGroupedRwaCategory(staticCategory)) {
+    return RwaCategory.UNSPECIFIED
+  }
+  return staticCategory
 }
 
-/** Grouped categories served by ListRankedRwas (the endpoint swap-out point); Commodities rides its own v1 read. */
-export function isRankedRwaCategory(rwaCategory: RwaCategory): rwaCategory is RwaCategory.STOCKS | RwaCategory.ETFS {
-  return rwaCategory === RwaCategory.STOCKS || rwaCategory === RwaCategory.ETFS
+/**
+ * The RwaCategory whose legal disclaimer the selected category shows. Deliberately id-based rather than
+ * `grouped`-based: the BE flipping how Stocks/ETFs render must never drop legal copy without an FE change.
+ */
+export function resolveRwaDisclaimerCategory(categoryId: string): RwaCategory {
+  return RWA_CATEGORY_BY_STATIC_ID.get(categoryId) ?? RwaCategory.UNSPECIFIED
 }
 
 /**
  * Stocks and ETFs carry the legal disclaimer; Commodities and flat categories don't. Kept separate
- * from isRankedRwaCategory so narrowing that for an endpoint migration can't drop legal copy.
+ * from isGroupedRwaCategory so narrowing that for an endpoint migration can't drop legal copy.
  */
 export function showsRwaDisclaimer(rwaCategory: RwaCategory): boolean {
   return rwaCategory === RwaCategory.STOCKS || rwaCategory === RwaCategory.ETFS
+}
+
+/**
+ * Flat categories always sort by the selected volume window. Grouped categories only do once the
+ * token categories flag routes them to the v2 sources, since v1 ListRankedRwas/ListRwaTokens serve 1D only.
+ */
+export function showsVolumeTimeFrameSelector({
+  rwaCategory,
+  tokenCategoriesEnabled,
+}: {
+  rwaCategory: RwaCategory
+  tokenCategoriesEnabled: boolean
+}): boolean {
+  return tokenCategoriesEnabled || rwaCategory === RwaCategory.UNSPECIFIED
 }

@@ -1,6 +1,6 @@
-import { GraphQLApi } from '@universe/api'
 import { TickMarkType, UTCTimestamp } from 'lightweight-charts'
 import ms from 'ms'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 
 /** Compatible with ISeriesApi<'Area' | 'Candlestick'> */
 export enum PriceChartType {
@@ -33,19 +33,16 @@ export enum DataQuality {
 }
 
 /** Used decreasing freshness regardless of time period, e.g. 1h volume chart has more recent data than 1y volume chart */
-const GRANULAR_STALENESS: Partial<Record<GraphQLApi.HistoryDuration, number>> = {
-  [GraphQLApi.HistoryDuration.Hour]: ms('15m'),
-  [GraphQLApi.HistoryDuration.Day]: ms('4h'),
-  [GraphQLApi.HistoryDuration.Week]: ms('1d'),
-  [GraphQLApi.HistoryDuration.Month]: ms('4d'),
-  [GraphQLApi.HistoryDuration.Year]: ms('30d'),
+const GRANULAR_STALENESS: Partial<Record<HistoryDuration, number>> = {
+  [HistoryDuration.Hour]: ms('15m'),
+  [HistoryDuration.Day]: ms('4h'),
+  [HistoryDuration.Week]: ms('1d'),
+  [HistoryDuration.Month]: ms('4d'),
+  [HistoryDuration.Year]: ms('30d'),
 }
 
 /** Maps from `ChartType` and `HistoryDuration` to expected data freshness threshold */
-const CHART_DURATION_STALE_THRESHOLD_MAP: Record<
-  ChartType,
-  Partial<Record<GraphQLApi.HistoryDuration, number> | undefined>
-> = {
+const CHART_DURATION_STALE_THRESHOLD_MAP: Record<ChartType, Partial<Record<HistoryDuration, number> | undefined>> = {
   // Price chart appends a live spot-price point stamped to "now" (see appendLiveSpotPriceEntry), so this
   // threshold is only hit as a fallback when that append no-ops (e.g. current price momentarily unavailable).
   // GRANULAR_STALENESS avoids treating a coarser Week/Month/Year bucket as stale in that fallback case.
@@ -65,7 +62,7 @@ export function checkDataQuality({
 }: {
   data: { time: number }[]
   chartType: ChartType
-  duration: GraphQLApi.HistoryDuration
+  duration: HistoryDuration
 }): DataQuality {
   if (data.length < 3) {
     return DataQuality.INVALID

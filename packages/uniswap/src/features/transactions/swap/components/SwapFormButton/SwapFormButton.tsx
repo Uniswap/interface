@@ -1,4 +1,5 @@
 import { Flex } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { memo } from 'react'
 import { Button, useIsShortMobileDevice } from 'ui/src'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
@@ -18,7 +19,6 @@ import { useSwapFormButtonText } from 'uniswap/src/features/transactions/swap/co
 import { SwapFormButtonTrace } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/SwapFormButtonTrace'
 import { useSwapFormWarningStoreActions } from 'uniswap/src/features/transactions/swap/form/stores/swapFormWarningStore/useSwapFormWarningStore'
 import { useNeedsGeoAcknowledgment } from 'uniswap/src/features/transactions/swap/hooks/useGeoRestrictionAcknowledgment'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export const SWAP_BUTTON_TEXT_VARIANT = 'buttonLabel1'

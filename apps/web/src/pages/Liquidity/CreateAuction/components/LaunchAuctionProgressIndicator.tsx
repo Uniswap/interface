@@ -1,6 +1,7 @@
 import '~/pages/Liquidity/CreateAuction/components/LaunchAuctionProgressIndicator.css'
 import { Flex, getTokenValue, Separator, Text } from '@universe/mycelium'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { VerticalDottedLineSeparator } from 'ui/src'
 import { Rocket } from 'ui/src/components/icons/Rocket'
@@ -12,7 +13,6 @@ import {
 } from 'uniswap/src/components/ConfirmSwapModal/steps/StepRowSkeleton'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CreateAuctionTokenLogo } from '~/pages/Liquidity/CreateAuction/components/CreateAuctionTokenLogo'
 
 function LaunchIcon(): JSX.Element {

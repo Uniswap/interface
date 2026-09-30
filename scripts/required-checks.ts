@@ -21,8 +21,8 @@
  *      ties break in file order.
  *   3. No match, and the config sets `defaultTarget` → that entry's rule, with
  *      `matched` naming the entry it resolved to and `usedDefault: true`. This
- *      is how Graphite stack parents and `gtmq_*` merge-queue branches inherit
- *      the trunk rule instead of being gated more harshly than trunk PRs.
+ *      is how stacked-PR parent branches inherit the trunk rule instead of
+ *      being gated more harshly than trunk PRs.
  *   4. No match and no `defaultTarget` → `matched: null` (callers fall back to
  *      requiring everything).
  */

@@ -223,7 +223,7 @@ export function useTransactionGasWarning({
     chainId,
     gasBalance,
     gasFee,
-    gasTokenTransactionAmount: gasTokenAmountIn,
+    spend: gasTokenAmountIn ? { kind: 'gas-token-amount', amount: gasTokenAmountIn } : undefined,
   })
   const balanceInsufficient = currencyAmountIn && currencyBalanceIn?.lessThan(currencyAmountIn)
 

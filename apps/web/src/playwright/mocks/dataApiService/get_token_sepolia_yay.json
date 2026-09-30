@@ -1,0 +1,17 @@
+{
+  "token": {
+    "chainId": 11155111,
+    "address": "0x97dbb794244e1c27b6ff688fc8cef5fe8d80f531",
+    "symbol": "YAY",
+    "decimals": 18,
+    "name": "Yay",
+    "project": {
+      "name": "Yay"
+    },
+    "safety": {
+      "isSpam": false,
+      "isVerified": false,
+      "isBlocked": false
+    }
+  }
+}

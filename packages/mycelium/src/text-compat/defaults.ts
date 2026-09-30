@@ -11,15 +11,23 @@ import type { TextCompatProps } from './props'
  * updates the value but keeps the first-insertion slot), erasing the authored
  * fontWeight/variant order Tamagui's insertion-ordered merge resolves winners
  * from (see `fontWeightWinsOverVariant`, INFRA-3457).
+ *
+ * A prop passed as `undefined` (`color={maybeColor}`) counts as unset, matching
+ * how React and Tamagui treat it; otherwise it would silently drop the default.
  */
 function mergeDefaults(defaults: TextCompatProps, props: TextCompatProps): TextCompatProps {
-  const missing: Record<string, unknown> = {}
+  const merged: Record<string, unknown> = {}
   for (const key of Object.keys(defaults) as (keyof TextCompatProps)[]) {
-    if (!(key in props)) {
-      missing[key] = defaults[key]
+    if (props[key] === undefined) {
+      merged[key] = defaults[key]
     }
   }
-  return { ...missing, ...props }
+  for (const [key, value] of Object.entries(props)) {
+    if (value !== undefined) {
+      merged[key] = value
+    }
+  }
+  return merged as TextCompatProps
 }
 
 /**

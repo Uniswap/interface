@@ -1,7 +1,7 @@
 import { V1_TRADING_API_PATHS } from '@universe/api'
 import { areEvmAddressesEqual } from '@universe/chains'
+import { TestID } from '@universe/test'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { assume0xAddress } from '~/chains'
 import { getUniswapServiceUrls } from '~/config'
 import { expect, getTest } from '~/playwright/fixtures'

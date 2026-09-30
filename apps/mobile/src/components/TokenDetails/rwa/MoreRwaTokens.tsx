@@ -1,20 +1,23 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import type { UniverseChainId } from '@universe/chains'
+import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
-import { useMemo, useState } from 'react'
+import { TestID } from '@universe/test'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
-import { useTokenDetailsRWAMatch } from 'src/components/TokenDetails/useTokenDetailsRWAMatch'
+import { useTokenDetailsRWAMatch, useTokenDetailsRWASubject } from 'src/components/TokenDetails/useTokenDetailsRWAMatch'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { getIssuerTokenPrimaryName } from 'uniswap/src/features/rwa/getIssuerTokenPrimaryName'
 import { useExpandRWASiblingHandler } from 'uniswap/src/features/rwa/hooks/useExpandRWASiblingHandler'
-import { getRWAIssuerDisplayName } from 'uniswap/src/features/rwa/issuers'
+import { useMoreRwaTokens } from 'uniswap/src/features/rwa/hooks/useMoreRwaTokens'
+import { getRWAIssuerLabel } from 'uniswap/src/features/rwa/issuers'
 import type { RWAToken } from 'uniswap/src/features/rwa/types'
-import { type RWAIssuerMarketData, useRWAIssuerMarketData } from 'uniswap/src/features/rwa/useRWAIssuerMarketData'
+import type { RWAIssuerMarketData } from 'uniswap/src/features/rwa/useRWAIssuerMarketData'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 
@@ -24,11 +27,9 @@ export function MoreRwaTokens(): JSX.Element | null {
   const { t } = useTranslation()
   const [isExpanded, setIsExpanded] = useState(false)
   const rwaMatch = useTokenDetailsRWAMatch()
-  const otherIssuerTokens = useMemo(
-    () => rwaMatch?.asset.tokens.filter((token) => token.issuer !== rwaMatch.token.issuer) ?? [],
-    [rwaMatch],
-  )
-  const getMarketData = useRWAIssuerMarketData(otherIssuerTokens)
+  const subject = useTokenDetailsRWASubject()
+  const { otherIssuerTokens, getMarketData } = useMoreRwaTokens({ rwaMatch, subject })
+  const plainTokenNames = useIsTokenCategoriesEnabled()
   const onToggleExpanded = useExpandRWASiblingHandler({
     rwaMatch,
     variantCount: otherIssuerTokens.length,
@@ -56,7 +57,11 @@ export function MoreRwaTokens(): JSX.Element | null {
           <IssuerTokenCard
             key={`${token.chainId}-${token.address}`}
             token={token}
-            assetName={companyName}
+            primaryName={getIssuerTokenPrimaryName({
+              tokenName: token.name,
+              fallbackName: companyName,
+              plainTokenNames,
+            })}
             marketData={getMarketData(token)}
           />
         ))}
@@ -76,17 +81,17 @@ export function MoreRwaTokens(): JSX.Element | null {
 
 function IssuerTokenCard({
   token,
-  assetName,
+  primaryName,
   marketData,
 }: {
   token: RWAToken
-  assetName: string
+  primaryName: string
   marketData: RWAIssuerMarketData
 }): JSX.Element {
   const { t } = useTranslation()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
-  const displayName = getRWAIssuerDisplayName(token.issuer)
+  const issuerLabel = getRWAIssuerLabel(token)
   const priceLabel = convertFiatAmountFormatted(marketData.priceUsd, NumberType.FiatTokenDetails)
   const marketCapLabel = convertFiatAmountFormatted(marketData.marketCapUsd, NumberType.FiatTokenStats)
   const volumeLabel = convertFiatAmountFormatted(marketData.volume24hUsd, NumberType.FiatTokenStats)
@@ -123,11 +128,13 @@ function IssuerTokenCard({
               ellipsizes instead of bleeding into the price */}
           <Flex shrink flex={1} gap="$spacing2">
             <Text color="$neutral1" numberOfLines={1} variant="body2">
-              {assetName}
+              {primaryName}
             </Text>
-            <Text color="$neutral3" numberOfLines={1} variant="body3">
-              {displayName}
-            </Text>
+            {issuerLabel ? (
+              <Text color="$neutral3" numberOfLines={1} variant="body3">
+                {issuerLabel}
+              </Text>
+            ) : null}
             <Text color="$neutral2" numberOfLines={1} variant="body3">
               {token.symbol.toUpperCase()}
             </Text>

@@ -74,6 +74,9 @@ export function ProtocolFilter({
           buttonStyle={{ height: 40, width: 'max-content' }}
           allowFlip
           alignRight={!media.lg}
+          // The pool browser's flag-off toolbar renders this trigger inside its overflow-x scroller,
+          // which would clip an inline-absolute menu (see MoreCategoriesDropdown for the same fix).
+          positionFixed
         >
           {versionFilterOptions}
         </Dropdown>

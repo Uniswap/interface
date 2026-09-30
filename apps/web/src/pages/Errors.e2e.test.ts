@@ -1,5 +1,5 @@
+import { TestID } from '@universe/test'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { getUniswapServiceUrls } from '~/config'
 import { expect, getTest } from '~/playwright/fixtures'
 

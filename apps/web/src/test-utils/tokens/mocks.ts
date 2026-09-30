@@ -2,14 +2,14 @@
 // these predefined token lookup mocks.
 
 vi.mock('~/hooks/Tokens')
-vi.mock('~/components/AccountDrawer/MiniPortfolio/Activity/getCurrency')
+vi.mock('uniswap/src/features/tokens/fetchCurrencyInfo')
 
 import { Currency, WETH9 } from '@uniswap/sdk-core'
 import { UniverseChainId, Platform, areAddressesEqual } from '@universe/chains'
 import { COMMON_BASES } from 'uniswap/src/constants/routing'
 import { DAI, DAI_ARBITRUM_ONE, USDC_ARBITRUM, USDC_MAINNET, USDT, WBTC } from 'uniswap/src/constants/tokens'
+import { fetchCurrency } from 'uniswap/src/features/tokens/fetchCurrencyInfo'
 import { currencyIdToAddress, currencyIdToChain, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
-import { getCurrencyFromCurrencyId } from '~/components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
 import { useCurrency, useCurrencyInfo } from '~/hooks/Tokens'
 import {
   DAI_ARBITRUM_INFO,
@@ -38,7 +38,7 @@ function isSameEthAddress(a?: string, b?: string): boolean {
 
 beforeEach(() => {
   // Global mocks for token lookups. To override in a test, use `mocked().mockImplementation(...)`.
-  mocked(getCurrencyFromCurrencyId).mockImplementation(async (currencyId: string) => {
+  mocked(fetchCurrency).mockImplementation(async (currencyId: string) => {
     const chainId = currencyIdToChain(currencyId)
     const address = currencyIdToAddress(currencyId)
     if (!chainId) {

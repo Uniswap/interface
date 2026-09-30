@@ -1,7 +1,7 @@
+import { TestID } from '@universe/test'
 import { EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
 import { EarnVaultView } from 'uniswap/src/features/earn/hooks/useEarnVaultModalFlow'
 import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { EARN_VAULT_MODAL_QUERY_PARAM, EARN_VAULT_MODAL_QUERY_VALUE } from 'uniswap/src/utils/linking'
 import type { useEarnVaultModalState } from '~/features/earn/hooks/useEarnVaultModalState'
 import { EARN_ENTRY_POINT_QUERY_PARAM } from '~/pages/TokenDetails/components/earn/earnEntryPointQuery'

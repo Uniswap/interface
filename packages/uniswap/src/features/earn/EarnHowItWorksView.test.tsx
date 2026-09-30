@@ -1,8 +1,8 @@
 import { fireEvent } from '@testing-library/react-native'
+import { TestID } from '@universe/test'
 import { EarnHowItWorksView } from 'uniswap/src/features/earn/EarnHowItWorksView'
 import { EarnEventName } from 'uniswap/src/features/telemetry/constants/features'
 import type { EarnAnalyticsBaseProperties } from 'uniswap/src/features/telemetry/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { renderWithProviders } from 'uniswap/src/test/render'
 
 const mockPlatform = vi.hoisted(() => ({ isWebPlatform: true }))

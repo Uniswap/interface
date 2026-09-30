@@ -3,6 +3,8 @@ import { HookListResponse } from '@uniswap/client-liquidity/dist/uniswap/liquidi
 import { HookEntry } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
 import { Token } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
+import { TestID } from '@universe/test'
+import type { ComponentProps } from 'react'
 import { PoolOptionItem } from 'uniswap/src/components/lists/items/pools/PoolOptionItem'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { DYNAMIC_FEE_AMOUNT } from 'uniswap/src/constants/pools'
@@ -12,16 +14,26 @@ import {
   UniswapHookProvenance,
   useUniswapHookProvenance,
 } from 'uniswap/src/features/poolHooks/hooks/useUniswapHookProvenance'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { render } from 'uniswap/src/test/test-utils'
 import { currencyId } from 'uniswap/src/utils/currencyId'
-import { shortenAddress } from 'utilities/src/addresses'
+import { ellipseMiddle, shortenAddress } from 'utilities/src/addresses'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-// The shared vitest i18n mock returns raw keys; map the fee label so the assertions read as the user sees it.
+// The shared vitest i18n mock returns raw keys; map the labels so the assertions read as the user sees it.
 vi.mock('react-i18next', () => ({
-  useTranslation: (): { t: (key: string) => string } => ({
-    t: (key: string): string => (key === 'common.dynamic' ? 'Dynamic' : key),
+  useTranslation: (): { t: (key: string, values?: Record<string, string>) => string } => ({
+    t: (key: string, values?: Record<string, string>): string => {
+      switch (key) {
+        case 'common.dynamic':
+          return 'Dynamic'
+        case 'search.results.stats.volume':
+          return `${values?.['volume']} vol`
+        case 'search.results.stats.apr':
+          return `${values?.['apr']} APR`
+        default:
+          return key
+      }
+    },
   }),
 }))
 
@@ -53,28 +65,97 @@ const USDC = new Token(UniverseChainId.Mainnet, '0xA0b86991c6218b36c1d19D4a2e9Eb
 const token0CurrencyInfo = buildCurrencyInfo({ currencyId: currencyId(WETH), currency: WETH, logoUrl: null })
 const token1CurrencyInfo = buildCurrencyInfo({ currencyId: currencyId(USDC), currency: USDC, logoUrl: null })
 
+const POOL_ID = '0x1234567890abcdef1234567890abcdef12345678'
+
 function renderPoolOptionItem({
   feeTier,
   hookAddress,
+  ...rest
 }: {
   feeTier: number
   hookAddress?: string
-}): ReturnType<typeof render> {
+} & Partial<
+  Pick<ComponentProps<typeof PoolOptionItem>, 'identityPlacement' | 'searchStats' | 'rightElement'>
+>): ReturnType<typeof render> {
   return render(
     <PoolOptionItem
       token0CurrencyInfo={token0CurrencyInfo}
       token1CurrencyInfo={token1CurrencyInfo}
-      poolId="0x1234567890abcdef1234567890abcdef12345678"
+      poolId={POOL_ID}
       chainId={UniverseChainId.Mainnet}
       onPress={vi.fn()}
       protocolVersion={ProtocolVersion.V4}
       hookAddress={hookAddress}
       feeTier={feeTier}
+      {...rest}
     />,
   )
 }
 
 describe('PoolOptionItem', () => {
+  beforeEach(() => {
+    vi.mocked(useHookRegistryMap).mockReturnValue(new Map())
+    vi.mocked(useUniswapHookProvenance).mockReturnValue(() => undefined)
+  })
+
+  it('renders the pool address as the subtitle by default', () => {
+    const { getByText } = renderPoolOptionItem({ feeTier: 500 })
+    expect(getByText(ellipseMiddle({ str: POOL_ID, charsStart: 6 }))).toBeTruthy()
+  })
+
+  describe('identityPlacement="subtitle"', () => {
+    it('replaces the address with the version and fee tier', () => {
+      const { getByText, queryByText } = renderPoolOptionItem({ feeTier: 500, identityPlacement: 'subtitle' })
+      expect(getByText('v4')).toBeTruthy()
+      expect(getByText('0.05%')).toBeTruthy()
+      expect(queryByText(ellipseMiddle({ str: POOL_ID, charsStart: 6 }))).toBeNull()
+    })
+
+    it('renders the hook after the fee tier, with the Uniswap mark before the name', () => {
+      const hookAddress = '0x0010d0d5db05933fa0d9f7038d365e1541a41888'
+      vi.mocked(useHookRegistryMap).mockReturnValue(
+        buildHookRegistryMap(
+          new HookListResponse({
+            hooks: [new HookEntry({ address: hookAddress, chain: 'Ethereum', chainId: 1, name: 'StablePairHook' })],
+          }),
+        ),
+      )
+      vi.mocked(useUniswapHookProvenance).mockReturnValue(() => UniswapHookProvenance.Built)
+
+      renderPoolOptionItem({ feeTier: 500, hookAddress, identityPlacement: 'subtitle' })
+
+      const pill = document.querySelector(`[data-testid="${TestID.PoolOptionItemHookBadge}"]`)
+      const pillHtml = pill?.innerHTML ?? ''
+      const markIndex = pillHtml.indexOf(TestID.UniswapBuiltHookMark)
+      expect(markIndex).toBeGreaterThan(-1)
+      expect(pillHtml.indexOf('StablePairHook')).toBeGreaterThan(markIndex)
+    })
+  })
+
+  describe('searchStats', () => {
+    it('renders volume and APR on the right when provided', () => {
+      const { getByText } = renderPoolOptionItem({ feeTier: 500, searchStats: { volume1dUsd: 128_900_000, apr: 42.1 } })
+      expect(getByText(/vol$/)).toBeTruthy()
+      expect(getByText(/APR$/)).toBeTruthy()
+    })
+
+    it('renders nothing on the right when both stats are absent', () => {
+      const { queryByText } = renderPoolOptionItem({ feeTier: 500, searchStats: {} })
+      expect(queryByText(/vol$/)).toBeNull()
+      expect(queryByText(/APR$/)).toBeNull()
+    })
+
+    it('prefers an explicit rightElement over the stats', () => {
+      const { getByText, queryByText } = renderPoolOptionItem({
+        feeTier: 500,
+        searchStats: { volume1dUsd: 1, apr: 1 },
+        rightElement: <>menu</>,
+      })
+      expect(getByText('menu')).toBeTruthy()
+      expect(queryByText(/APR$/)).toBeNull()
+    })
+  })
+
   it('renders the "Dynamic" fee badge for a v4 dynamic-fee pool', () => {
     const { getByText, queryByText } = renderPoolOptionItem({ feeTier: DYNAMIC_FEE_AMOUNT })
     expect(getByText('Dynamic')).toBeTruthy()

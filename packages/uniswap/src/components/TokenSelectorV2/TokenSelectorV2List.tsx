@@ -1,5 +1,5 @@
 import { UniverseChainId } from '@universe/chains'
-import { GatedFeature, useIsFeatureGated } from '@universe/compliance'
+import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex } from '@universe/mycelium'
 import { memo, useCallback, useMemo, useState } from 'react'
 import { TokenOption, TokenSelectorListOption } from 'uniswap/src/components/lists/items/types'
@@ -103,11 +103,12 @@ export const TokenSelectorV2List = memo(function TokenSelectorV2List({
 
   const { handleTokenPress, pendingModal } = usePendingWarningSelection({ showTokenWarnings, onSelectCurrency })
 
-  // Tag tokenized-stock (RWA) rows so rows render category tag / canonical name / issuer label.
-  // `useRwaIndex` returns an empty index (and skips the fetch) for RWA-blocked regions.
-  const isRwaRegionBlocked = useIsFeatureGated(GatedFeature.ISSUER_SPECIFIC_RWA)
-  const rwaIndex = useRwaIndex(!isRwaRegionBlocked)
-  const taggedSections = useMemo(() => tagRwaTokenSelectorSections({ sections, rwaIndex }), [sections, rwaIndex])
+  const rwaIndex = useRwaIndex()
+  const plainTokenNames = useIsTokenCategoriesEnabled()
+  const taggedSections = useMemo(
+    () => tagRwaTokenSelectorSections({ sections, rwaIndex, plainTokenNames }),
+    [sections, rwaIndex, plainTokenNames],
+  )
 
   const [expandedItems, setExpandedItems] = useState<string[]>([])
 

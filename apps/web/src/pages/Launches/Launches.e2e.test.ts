@@ -1,6 +1,6 @@
 import fs from 'fs'
 import { listLaunches, listLaunchpads } from '@uniswap/client-launches/dist/launches/v1/api-LaunchService_connectquery'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import { expect, getTest } from '~/playwright/fixtures'
 import { getVisibleDropdownElementByTestId } from '~/playwright/fixtures/utils'
 import { Mocks } from '~/playwright/mocks/mocks'

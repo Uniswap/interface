@@ -1,5 +1,6 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/core'
 import { Button, Flex } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { addScreenshotListener } from 'expo-screen-capture'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -14,7 +15,6 @@ import { flexStyles } from 'ui/src'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 type Props = {
   mnemonicId: string

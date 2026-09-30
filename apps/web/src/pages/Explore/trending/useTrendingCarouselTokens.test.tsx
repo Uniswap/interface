@@ -5,8 +5,9 @@ import { ListTokensResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb
 import { HistoryDuration, TokensOrderBy } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { UniverseChainId } from '@universe/chains'
 import type { PropsWithChildren } from 'react'
-import { MOCK_TOKEN_CATEGORIES } from 'uniswap/src/data/apiClients/dataApiService/categories/mockTokenCategories'
+import { TokenCategoryClass } from 'uniswap/src/features/tokenCategories/types'
 import { createRankedMultichainToken } from 'uniswap/src/test/fixtures/dataApi/rankedMultichainToken'
+import { tokenCategory } from 'uniswap/src/test/fixtures/tokenCategory'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   TRENDING_CAROUSEL_TOKEN_COUNT,
@@ -15,6 +16,8 @@ import {
 
 const ENABLED_CHAIN_IDS = [UniverseChainId.Mainnet, UniverseChainId.Base]
 const TRENDING_CATEGORY_ID = 'trending'
+const TRENDING = tokenCategory({ id: TRENDING_CATEGORY_ID, name: 'Trending', categoryClass: TokenCategoryClass.Market })
+const DEFI = tokenCategory({ id: 'defi' })
 
 const { listTokens, useListCategoriesQuery } = vi.hoisted(() => ({
   listTokens: vi.fn(),
@@ -57,7 +60,7 @@ describe(useTrendingCarouselTokens, () => {
   beforeEach(() => {
     listTokens.mockReset()
     listTokens.mockResolvedValue(new ListTokensResponse({ multichainTokens: [] }))
-    useListCategoriesQuery.mockReturnValue({ data: MOCK_TOKEN_CATEGORIES, isPending: false })
+    useListCategoriesQuery.mockReturnValue({ data: [TRENDING, DEFI], isPending: false })
   })
 
   it('requests the trending category from ListTokens sorted by 1d volume with sparklines', async () => {
@@ -83,10 +86,7 @@ describe(useTrendingCarouselTokens, () => {
   })
 
   it('renders nothing when the taxonomy has no trending category', () => {
-    useListCategoriesQuery.mockReturnValue({
-      data: MOCK_TOKEN_CATEGORIES.filter((category) => category.id !== TRENDING_CATEGORY_ID),
-      isPending: false,
-    })
+    useListCategoriesQuery.mockReturnValue({ data: [DEFI], isPending: false })
 
     const { result } = renderUseTrendingCarouselTokens()
 

@@ -167,6 +167,7 @@ function OptionItemInner({
                     overflow="hidden"
                     textOverflow="ellipsis"
                     numberOfLines={1}
+                    flexShrink={1}
                     {...titleProps}
                   >
                     {title}

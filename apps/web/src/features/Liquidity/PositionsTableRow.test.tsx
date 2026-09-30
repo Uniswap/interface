@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event'
-import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, TICK_SPACINGS, TickMath, Pool as V3Pool } from '@uniswap/v3-sdk'
@@ -10,7 +10,7 @@ import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import sourceTranslations from 'uniswap/src/i18n/locales/source/en-US.json'
 import { WETH } from 'uniswap/src/test/fixtures/lib/sdk'
 import { describe, expect, it } from 'vitest'
-import { FeesCellContent, getPositionValueDistribution } from '~/features/Liquidity/PositionsTableRow'
+import { FeesCellContent, getPositionValueDistribution, RangeCellContent } from '~/features/Liquidity/PositionsTableRow'
 import { render, screen } from '~/test-utils/render'
 
 const ONE_UNIT = '1000000000000000000'
@@ -174,5 +174,49 @@ describe('FeesCellContent', () => {
     await userEvent.hover(screen.getByText('$12.34'))
 
     expect(screen.queryByText(V2_FEES_TOOLTIP)).toBeNull()
+  })
+})
+
+describe('RangeCellContent current price', () => {
+  // ≈ 0.001 token1 per token0, so the inverted quote is ≈ 1,000 and the two orientations can't be confused.
+  const TICK_ONE_THOUSANDTH = -69082
+
+  function rangeCellPosition(tokenA: Token, tokenB: Token): PositionInfo {
+    const pool = new V3Pool(
+      tokenA,
+      tokenB,
+      FeeAmount.MEDIUM,
+      TickMath.getSqrtRatioAtTick(TICK_ONE_THOUSANDTH),
+      ONE_UNIT,
+      TICK_ONE_THOUSANDTH,
+    )
+    return {
+      version: ProtocolVersion.V3,
+      status: PositionStatus.OUT_OF_RANGE,
+      currency0Amount: CurrencyAmount.fromRawAmount(pool.token0, ONE_UNIT),
+      currency1Amount: CurrencyAmount.fromRawAmount(pool.token1, ZERO),
+      poolOrPair: pool,
+    } as unknown as PositionInfo
+  }
+
+  // DAI sorts below WETH by address, so the pool's token0Price is WETH per DAI while the range above
+  // the current price is displayed as DAI per WETH (stablecoin quote). The hover price must follow.
+  it("quotes in the range's asset when the pair is reversed for display", () => {
+    render(<RangeCellContent position={rangeCellPosition(WETH, DAI)} />)
+
+    const currentPrice = screen.getByText(/Current price:/)
+    expect(currentPrice).toHaveTextContent(/(999|1,?000)/)
+    expect(currentPrice).toHaveTextContent(/DAI$/)
+    expect(currentPrice).not.toHaveTextContent('WETH')
+  })
+
+  it("keeps the pool's token0Price when both tokens share a waterfall tier", () => {
+    const abc = new Token(1, '0x0000000000000000000000000000000000000001', 18, 'ABC', 'Abc')
+    const def = new Token(1, '0x0000000000000000000000000000000000000002', 18, 'DEF', 'Def')
+    render(<RangeCellContent position={rangeCellPosition(abc, def)} />)
+
+    const currentPrice = screen.getByText(/Current price:/)
+    expect(currentPrice).toHaveTextContent(/0\.001/)
+    expect(currentPrice).toHaveTextContent(/DEF$/)
   })
 })

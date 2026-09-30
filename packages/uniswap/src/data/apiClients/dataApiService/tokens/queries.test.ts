@@ -1,12 +1,17 @@
 import { Code, ConnectError } from '@connectrpc/connect'
-import { GetTokenMarketsMultiChainResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
-import { MultichainTokenMarket } from '@uniswap/client-data-api/dist/data/v2/types_pb'
+import { GetTokenMarketsMultiChainResponse, ListTokensResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
+import { MultichainTokenMarket, TokensOrderBy } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2'
-import { getGetTokenMarketsMultiChainQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
+import {
+  getGetTokenMarketsMultiChainQueryOptions,
+  getListTokensQueryOptions,
+} from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
+import { createRankedMultichainToken } from 'uniswap/src/test/fixtures/dataApi/rankedMultichainToken'
 
 vi.mock('uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2', () => ({
   dataApiServiceClientV2: {
     getTokenMarketsMultiChain: vi.fn(),
+    listTokens: vi.fn(),
   },
 }))
 
@@ -79,5 +84,34 @@ describe('getGetTokenMarketsMultiChainQueryOptions', () => {
 
     await expect(runQueryFn(options)).rejects.toThrow()
     expect(mockClient.getTokenMarketsMultiChain).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('getListTokensQueryOptions', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('passes the request through unchanged and returns the page as plain data', async () => {
+    mockClient.listTokens.mockResolvedValue(
+      new ListTokensResponse({ multichainTokens: [createRankedMultichainToken({ symbol: 'USDC' })] }),
+    )
+    const params = {
+      chainIds: [1, 137],
+      page: { pageSize: 8 },
+      sort: { orderBy: TokensOrderBy.VOLUME_1D, ascending: false },
+    }
+
+    const options = getListTokensQueryOptions({ params })
+    const data = await runQueryFn<{ multichainTokens: { multichainToken?: { symbol: string } }[] }>(options)
+
+    expect(mockClient.listTokens).toHaveBeenCalledWith(params)
+    expect(data.multichainTokens).toHaveLength(1)
+    expect(data.multichainTokens[0]?.multichainToken?.symbol).toBe('USDC')
+    expect(options.queryKey).toEqual(['DataApiService', 'listTokens', params])
+  })
+
+  it('is disabled without params', () => {
+    expect(getListTokensQueryOptions({}).enabled).toBe(false)
   })
 })

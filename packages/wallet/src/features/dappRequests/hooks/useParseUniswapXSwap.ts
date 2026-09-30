@@ -44,8 +44,8 @@ export function useParseUniswapXSwap(
   const inputCurrencyId = inputToken ? buildCurrencyId(chainId, inputToken) : undefined
   const outputCurrencyId = normalizedOutputToken ? buildCurrencyId(chainId, normalizedOutputToken) : undefined
 
-  const { currencyInfo: inputCurrencyInfo, loading: inputLoading } = useCurrencyInfoWithLoading(inputCurrencyId)
-  const { currencyInfo: outputCurrencyInfo, loading: outputLoading } = useCurrencyInfoWithLoading(outputCurrencyId)
+  const { data: inputCurrencyInfo, isLoading: inputLoading } = useCurrencyInfoWithLoading(inputCurrencyId)
+  const { data: outputCurrencyInfo, isLoading: outputLoading } = useCurrencyInfoWithLoading(outputCurrencyId)
 
   // Determine loading state - only loading if we have typed data and either currency query is still loading
   const isLoading = typedData !== null && (inputLoading || outputLoading)

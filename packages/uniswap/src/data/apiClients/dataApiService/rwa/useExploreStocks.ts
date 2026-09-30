@@ -1,4 +1,5 @@
 import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { TokensOrderBy } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { useMemo } from 'react'
 import { deriveRwaAggregates } from 'uniswap/src/data/apiClients/dataApiService/rwa/rwaMetrics'
 import type { ExploreStockShelfItem, Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
@@ -16,7 +17,12 @@ export function useExploreStocks(
   isError: boolean
 } {
   const { excludeSymbol, enabled = true } = options
-  const { rows, isLoading, isError } = useExploreRwaRows({ category: RwaCategory.STOCKS, chainIds, enabled })
+  const { rows, isLoading, isError } = useExploreRwaRows({
+    category: RwaCategory.STOCKS,
+    chainIds,
+    volumeOrderBy: TokensOrderBy.VOLUME_1D,
+    enabled,
+  })
 
   const featured = useMemo((): ExploreStockShelfItem[] => {
     return [...rows]

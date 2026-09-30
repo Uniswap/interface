@@ -3,8 +3,8 @@ import {
   getWalletBalances,
   listTransactions,
 } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
+import { TestID } from '@universe/test'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { expect, getTest } from '~/playwright/fixtures'
 import { mockGetPortfolioResponse } from '~/playwright/fixtures/account'
 import { getVisibleDropdownElementByTestId } from '~/playwright/fixtures/utils'

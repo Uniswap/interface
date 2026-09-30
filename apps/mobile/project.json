@@ -47,12 +47,6 @@
         "cwd": "{projectRoot}"
       }
     },
-    "check:apollo-codegen": {
-      "command": "bun ./scripts/checkApolloCodegenSync.ts",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
     "check:deps:usage": {},
     "clean": {
       "command": "react-native-clean-project",

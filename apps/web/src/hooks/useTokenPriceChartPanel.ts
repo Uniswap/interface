@@ -18,6 +18,8 @@ export interface UseTokenPriceChartPanelParams {
   skip?: boolean
   /** Disables this hook's own 30s price polling. Pass true where a page heartbeat owns the price cadence (TDP); leave off on surfaces without one (swap slideout). */
   disablePricePolling?: boolean
+  /** Set false for TDP period-switch skeletons; other surfaces retain the previous series. */
+  keepPreviousData?: boolean
 }
 
 export function useTokenPriceChartPanel({
@@ -28,6 +30,7 @@ export function useTokenPriceChartPanel({
   currency,
   skip = false,
   disablePricePolling = false,
+  keepPreviousData = true,
 }: UseTokenPriceChartPanelParams): {
   priceQuery: ReturnType<typeof useTokenPriceChartData>
   pricePercentChange: number | undefined
@@ -57,6 +60,7 @@ export function useTokenPriceChartPanel({
     priceChartType,
     currentPriceOverride,
     disablePricePolling,
+    keepPreviousData,
   })
 
   useLayoutEffect(() => {

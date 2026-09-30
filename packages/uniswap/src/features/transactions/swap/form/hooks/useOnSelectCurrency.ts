@@ -7,8 +7,8 @@ import { useMemo } from 'react'
 import { getSwappableTokensQueryData } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
 import type { TradeableAsset } from 'uniswap/src/entities/assets'
 import { AssetType } from 'uniswap/src/entities/assets'
-import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { useMultichainCurrencyInfos } from 'uniswap/src/features/tokens/useMultichainCurrencyInfos'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { getShouldResetExactAmountToken } from 'uniswap/src/features/transactions/swap/form/utils'
 import type { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
@@ -54,9 +54,9 @@ export function useOnSelectTradeableAsset({
   const traceRef = useValueAsRef(useTrace())
 
   const inputCurrencyIds = useMemo(() => (input ? [currencyId(input)] : []), [input])
-  const inputTokenProjects = useTokenProjects(inputCurrencyIds)
+  const inputTokenProjects = useMultichainCurrencyInfos(inputCurrencyIds)
   const outputCurrencyIds = useMemo(() => (output ? [currencyId(output)] : []), [output])
-  const outputTokenProjects = useTokenProjects(outputCurrencyIds)
+  const outputTokenProjects = useMultichainCurrencyInfos(outputCurrencyIds)
 
   const queryClient = useQueryClient()
 

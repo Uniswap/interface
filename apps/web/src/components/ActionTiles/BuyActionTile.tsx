@@ -1,10 +1,10 @@
 import type { FlexCompatProps as FlexProps } from '@universe/mycelium'
 import { Bank } from '@universe/mycelium/icons/Bank'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ActionTileWithIconAnimation } from '~/components/ActionTiles/ActionTileWithIconAnimation'
 

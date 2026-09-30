@@ -2,6 +2,7 @@ import type { ColorTokens } from '@universe/mycelium'
 import { borderRadii, Flex, iconSizes, Text, TouchableArea } from '@universe/mycelium'
 import type { IconProps } from '@universe/mycelium/icons'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import type { TFunction } from 'i18next'
 import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -116,12 +117,18 @@ function ApprovalAddressesPopover({ assets, formatAmount }: ApprovalAddressesPop
  * @param formatNumberOrString - Locale formatter function
  * @returns Formatted amount with symbol
  */
-function formatAmountWithLocale(
-  asset: TransactionAsset,
-  formatNumberOrString: LocalizationContextState['formatNumberOrString'],
-): string {
+function formatAmountWithLocale({
+  asset,
+  formatNumberOrString,
+  t,
+}: {
+  asset: TransactionAsset
+  formatNumberOrString: LocalizationContextState['formatNumberOrString']
+  t: TFunction
+}): string {
+  const assetName = asset.symbol || asset.name || shortenAddress({ address: asset.address }) || t('common.unknown')
   if (!asset.amount) {
-    return asset.symbol ?? asset.name ?? ''
+    return assetName
   }
 
   const formattedAmount = formatNumberOrString({
@@ -129,7 +136,7 @@ function formatAmountWithLocale(
     type: NumberType.TokenNonTx,
   })
 
-  return `${formattedAmount} ${asset.symbol ?? ''}`
+  return `${formattedAmount} ${assetName}`
 }
 
 const getBorderRadius = (type: TransactionAsset['type']): number => {
@@ -165,14 +172,16 @@ export function TransactionAssetList({
   showUsdValue = false,
   groupedAssets,
 }: TransactionAssetListProps): JSX.Element | null {
+  const { t } = useTranslation()
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
 
   const renderAssetDetails = (asset: TransactionAsset, groupedAsset?: GroupedApprovalAsset): ReactNode => {
-    const amountText = formatAmount ? formatAmount(asset) : formatAmountWithLocale(asset, formatNumberOrString)
+    const amountText = formatAmount ? formatAmount(asset) : formatAmountWithLocale({ asset, formatNumberOrString, t })
     const shouldShowApprovalAddresses =
       groupedAsset !== undefined &&
       groupedAsset.allAssets.some((grouped) => Boolean(grouped.spenderAddress)) &&
-      (groupedAsset.allAssets.length > 1 || groupedAsset.allAssets.some((grouped) => Boolean(grouped.approvalScope)))
+      (groupedAsset.allAssets.length > 1 ||
+        groupedAsset.allAssets.some((grouped) => Boolean(grouped.approvalScope) || grouped.type === 'NONERC'))
 
     return (
       <Flex gap="$spacing4">
@@ -186,6 +195,11 @@ export function TransactionAssetList({
             </Text>
           )}
         </Flex>
+        {asset.type === 'NONERC' && !asset.amount && (
+          <Text color="$neutral2" variant="body4">
+            {t('dapp.request.amountUnavailable')}
+          </Text>
+        )}
         {groupedAsset && shouldShowApprovalAddresses && formatAmount && (
           <ApprovalAddressesPopover assets={groupedAsset.allAssets} formatAmount={formatAmount} />
         )}

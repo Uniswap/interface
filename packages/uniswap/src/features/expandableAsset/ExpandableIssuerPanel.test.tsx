@@ -11,7 +11,16 @@ import { fireEvent, render } from 'uniswap/src/test/test-utils'
 
 const ENABLED_CHAINS = [UniverseChainId.Mainnet, UniverseChainId.Base, UniverseChainId.ArbitrumOne]
 
-function singleIssuerRwa(): Rwa {
+const MULTICHAIN_TOKENS = [
+  { chainId: UniverseChainId.Base, address: '0xbase' },
+  { chainId: UniverseChainId.Mainnet, address: '0xmainnet' },
+]
+
+function singleIssuerRwa({
+  multichain = false,
+  volume24hUsd = 1,
+  priceUsd = 1,
+}: { multichain?: boolean; volume24hUsd?: number; priceUsd?: number } = {}): Rwa {
   const rwa = mapRankedRwa({
     token: makeRankedRwa({
       symbol: 'TSLA',
@@ -21,10 +30,10 @@ function singleIssuerRwa(): Rwa {
           name: 'Tesla (xStocks)',
           logoUrl: '',
           issuer: 'xstocks',
-          priceUsd: 1,
-          volume24hUsd: 1,
+          priceUsd,
+          volume24hUsd,
           marketCapUsd: 1,
-          chainTokens: [{ chainId: UniverseChainId.Base, address: '0xbase' }],
+          chainTokens: multichain ? MULTICHAIN_TOKENS : [MULTICHAIN_TOKENS[0]!],
         },
       ],
     }),
@@ -81,5 +90,51 @@ describe('ExpandableIssuerRows renderIssuerRow seam', () => {
     expect(captured?.issuer).toBe(rwa.issuerTokens[0])
     captured?.onPress()
     expect(onIssuerPress).toHaveBeenCalledWith(rwa.issuerTokens[0])
+  })
+})
+
+describe('ExpandableIssuerRows issuer stats', () => {
+  const VOLUME_LABEL_KEY = 'search.results.stats.volume'
+  const NETWORKS_LABEL_KEY = 'explore.tokens.table.networks'
+
+  it('shows each issuer 24h volume and price instead of its network count when showIssuerStats is set', () => {
+    const { getByText, queryByText } = render(
+      <ExpandableIssuerRows
+        asset={singleIssuerRwa({ multichain: true, priceUsd: 248.42 })}
+        enabledChainIds={ENABLED_CHAINS}
+        variant="search"
+        showIssuerStats
+      />,
+    )
+    expect(getByText(VOLUME_LABEL_KEY)).toBeTruthy()
+    expect(getByText('$248.42')).toBeTruthy()
+    expect(queryByText(NETWORKS_LABEL_KEY)).toBeNull()
+  })
+
+  it('keeps the network count subline and no price by default', () => {
+    const { getByText, queryByText } = render(
+      <ExpandableIssuerRows
+        asset={singleIssuerRwa({ multichain: true, priceUsd: 248.42 })}
+        enabledChainIds={ENABLED_CHAINS}
+        variant="search"
+      />,
+    )
+    expect(getByText(NETWORKS_LABEL_KEY)).toBeTruthy()
+    expect(queryByText(VOLUME_LABEL_KEY)).toBeNull()
+    expect(queryByText('$248.42')).toBeNull()
+  })
+
+  it('falls back to the network count, with no volume or price, for an issuer with zeroed metrics', () => {
+    const { getByText, queryByText } = render(
+      <ExpandableIssuerRows
+        asset={singleIssuerRwa({ multichain: true, volume24hUsd: 0, priceUsd: 0 })}
+        enabledChainIds={ENABLED_CHAINS}
+        variant="search"
+        showIssuerStats
+      />,
+    )
+    expect(queryByText(VOLUME_LABEL_KEY)).toBeNull()
+    expect(getByText(NETWORKS_LABEL_KEY)).toBeTruthy()
+    expect(queryByText(/^\$/)).toBeNull()
   })
 })

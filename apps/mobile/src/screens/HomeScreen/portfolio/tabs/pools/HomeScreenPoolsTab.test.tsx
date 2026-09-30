@@ -1,10 +1,10 @@
 import { PositionStatus } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { TestID } from '@universe/test'
 import { makeMutable } from 'react-native-reanimated'
 import { HomeScreenPoolsTab } from 'src/screens/HomeScreen/portfolio/tabs/pools/HomeScreenPoolsTab'
 import type { PoolsListRenderData } from 'src/screens/HomeScreen/portfolio/tabs/pools/hooks/usePoolsListRenderData'
 import { fireEvent, render, screen } from 'src/test/test-utils'
 import { PositionStatusFilterValue } from 'uniswap/src/features/positions/components/PositionStatusFilter'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 
 const mockNavigate = vi.fn()

@@ -1,4 +1,3 @@
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex, Text } from '@universe/mycelium'
@@ -8,7 +7,9 @@ import { useNavigate } from 'react-router'
 import { UNI, USDC_BASE } from 'uniswap/src/constants/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { useTokenPriceChange, useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { DEFAULT_DELTA_COLOR, DeltaArrow, isDeltaZero } from '~/components/DeltaArrow/DeltaArrow'
@@ -50,14 +51,12 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
     address,
     chainId,
   })
-  const tokenPromoQuery = GraphQLApi.useTokenPromoQuery({
-    variables: {
-      address: currency?.wrapped.address,
-      chain: toGraphQLChain(chainId),
-    },
-  })
-  const price = tokenPromoQuery.data?.token?.market?.price?.value ?? 0
-  const pricePercentChange = tokenPromoQuery.data?.token?.market?.pricePercentChange?.value ?? 0
+  const currencyId =
+    address === 'ETH' || address === NATIVE_CHAIN_ID
+      ? buildNativeCurrencyId(chainId)
+      : buildCurrencyId(chainId, address)
+  const price = useTokenSpotPrice(currencyId) ?? 0
+  const pricePercentChange = useTokenPriceChange(currencyId) ?? 0
   // Use the formatted (displayed) value to decide zero-ness, not the raw delta — a stablecoin can have
   // a tiny non-zero raw change that still rounds to "0.00%", and should render neutral like DeltaArrow does.
   const formattedPricePercentChange = formatPercent(Math.abs(pricePercentChange))

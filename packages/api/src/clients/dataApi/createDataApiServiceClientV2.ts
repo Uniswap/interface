@@ -8,6 +8,8 @@ import type {
   GetCategoryResponse,
   GetEarnPositionRequest,
   GetEarnPositionResponse,
+  GetTokenGroupRequest,
+  GetTokenGroupResponse,
   GetTokenHistoryOHLCRequest,
   GetTokenHistoryOHLCResponse,
   GetTokenHistoryPriceRequest,
@@ -61,6 +63,7 @@ export interface DataApiServiceClientV2 {
   listPools: (params: PartialMessage<ListPoolsRequest>) => Promise<ListPoolsResponse>
   listTokens: (params: PartialMessage<ListTokensRequest>) => Promise<ListTokensResponse>
   listTokenGroups: (params: PartialMessage<ListTokenGroupsRequest>) => Promise<ListTokenGroupsResponse>
+  getTokenGroup: (params: PartialMessage<GetTokenGroupRequest>) => Promise<GetTokenGroupResponse>
   listTransactions: (params: PartialMessage<ListTransactionsRequest>) => Promise<ListTransactionsResponse>
   getToken: (params: PartialMessage<GetTokenRequest>) => Promise<GetTokenResponse>
   getTokens: (params: PartialMessage<GetTokensRequest>) => Promise<GetTokensResponse>
@@ -90,6 +93,7 @@ export function createDataApiServiceClientV2({ rpcClient }: DataApiServiceClient
     listPools: (params): Promise<ListPoolsResponse> => rpcClient.listPools(params),
     listTokens: (params): Promise<ListTokensResponse> => rpcClient.listTokens(params),
     listTokenGroups: (params): Promise<ListTokenGroupsResponse> => rpcClient.listTokenGroups(params),
+    getTokenGroup: (params): Promise<GetTokenGroupResponse> => rpcClient.getTokenGroup(params),
     listTransactions: (params): Promise<ListTransactionsResponse> => rpcClient.listTransactions(params),
     getToken: (params): Promise<GetTokenResponse> => rpcClient.getToken(params),
     getTokens: (params): Promise<GetTokensResponse> => rpcClient.getTokens(params),

@@ -1,10 +1,10 @@
 import { Text, TouchableArea } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export const renderHeaderBackButton = (): JSX.Element => (
   <BackButton color="$neutral2" size="$icon.28" testID={TestID.OnboardingHeaderBack} />

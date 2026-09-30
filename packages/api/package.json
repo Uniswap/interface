@@ -19,12 +19,11 @@
     "includedScripts": []
   },
   "dependencies": {
-    "@apollo/client": "3.11.10",
     "@bufbuild/protobuf": "1.10.0",
     "@connectrpc/connect": "1.5.0",
     "@connectrpc/connect-web": "1.5.0",
     "@tanstack/react-query": "5.90.20",
-    "@uniswap/client-data-api": "0.0.242",
+    "@uniswap/client-data-api": "0.0.250",
     "@uniswap/client-embeddedwallet": "0.0.16",
     "@uniswap/client-for": "0.1.5",
     "@uniswap/client-launches": "0.0.3",

@@ -1,7 +1,7 @@
 import { fireEvent } from '@testing-library/react'
+import { TestID } from '@universe/test'
 import type { NFTItem } from 'uniswap/src/features/nfts/types'
 import { getNFTAssetKey } from 'uniswap/src/features/nfts/utils'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NFTCard } from '~/pages/Portfolio/NFTs/NFTCard'
 import { render, screen } from '~/test-utils/render'
 

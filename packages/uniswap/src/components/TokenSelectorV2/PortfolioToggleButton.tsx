@@ -1,11 +1,11 @@
 import { Flex, iconSizes, Text, TouchableArea } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { TOKEN_SELECTOR_V2_CONTROL_HEIGHT } from 'uniswap/src/components/TokenSelectorV2/constants'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import type { AddressGroup } from 'uniswap/src/features/accounts/store/types/AccountsState'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 
 /**

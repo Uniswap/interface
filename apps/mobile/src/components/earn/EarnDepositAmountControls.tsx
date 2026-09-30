@@ -2,6 +2,7 @@ import { fonts, Flex, iconSizes, SpaceTokens, Text, TouchableArea } from '@unive
 import { ArrowDownArrowUp } from '@universe/mycelium/icons/ArrowDownArrowUp'
 import { InfoCircleFilled } from '@universe/mycelium/icons/InfoCircleFilled'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import type { RefObject } from 'react'
 import type { LayoutChangeEvent, TextInput as RNTextInput } from 'react-native'
 import { MAX_INPUT_FONT_SIZE } from 'src/components/earn/useEarnAmountInputFontSizing'
@@ -22,7 +23,6 @@ import {
   type LocalizationContextState,
   useLocalizationContext,
 } from 'uniswap/src/features/language/LocalizationContext'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 
 const PERCENT_OPTIONS = [0.25, 0.5, 0.75, 1] as const

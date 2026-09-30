@@ -1,10 +1,10 @@
 import { TradeType } from '@uniswap/sdk-core'
+import { fetchCurrency } from 'uniswap/src/features/tokens/fetchCurrencyInfo'
 import type {
   ConfirmedSwapTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { getCurrencyFromCurrencyId } from '~/components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
 import type { FormatNumberFunctionType } from '~/components/AccountDrawer/MiniPortfolio/Activity/parseLocal/types'
 import { buildCurrencyDescriptor } from '~/components/AccountDrawer/MiniPortfolio/Activity/parseLocal/utils'
 import type { Activity } from '~/components/AccountDrawer/MiniPortfolio/Activity/types'
@@ -17,8 +17,8 @@ export async function parseSwap({
   formatNumber: FormatNumberFunctionType
 }): Promise<Partial<Activity>> {
   const [tokenIn, tokenOut] = await Promise.all([
-    getCurrencyFromCurrencyId(swap.inputCurrencyId),
-    getCurrencyFromCurrencyId(swap.outputCurrencyId),
+    fetchCurrency(swap.inputCurrencyId),
+    fetchCurrency(swap.outputCurrencyId),
   ])
   const [inputRaw, outputRaw] =
     swap.tradeType === TradeType.EXACT_INPUT
@@ -47,8 +47,8 @@ export async function parseConfirmedSwap({
   formatNumber: FormatNumberFunctionType
 }): Promise<Partial<Activity>> {
   const [tokenIn, tokenOut] = await Promise.all([
-    getCurrencyFromCurrencyId(swap.inputCurrencyId),
-    getCurrencyFromCurrencyId(swap.outputCurrencyId),
+    fetchCurrency(swap.inputCurrencyId),
+    fetchCurrency(swap.outputCurrencyId),
   ])
 
   // For confirmed swaps, we use the actual settled amounts

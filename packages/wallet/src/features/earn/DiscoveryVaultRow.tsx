@@ -1,4 +1,5 @@
 import { Flex, iconSizes, Text, TouchableArea } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 // RotatableChevron is still web-only on mycelium (WEB_ONLY_MYCELIUM_ICONS); packages/wallet
@@ -8,7 +9,6 @@ import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import type { EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export type OnSelectEarnVault = (args: { vault: EarnVaultInfo; position?: EarnPositionInfo }) => void
 

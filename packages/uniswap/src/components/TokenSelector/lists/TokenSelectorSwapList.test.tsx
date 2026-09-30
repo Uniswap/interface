@@ -87,15 +87,15 @@ describe('useTokenSectionsForSwap Stocks section', () => {
     mockUseIsFeatureGated.mockReturnValue(false)
     mockUseCommonTokensOptionsWithFallback.mockReturnValue({
       data: undefined,
-      error: undefined,
+      error: null,
       refetch: vi.fn(),
-      loading: false,
+      isLoading: false,
     })
     mockUseBridgingTokensOptions.mockReturnValue({
       data: undefined,
-      error: undefined,
+      error: null,
       refetch: vi.fn(),
-      loading: false,
+      isLoading: false,
       shouldNest: false,
     })
   })
@@ -166,15 +166,15 @@ describe('useTokenSectionsForSwap Stocks section', () => {
   it('orders Stocks between Suggested and Bridging when both neighbors are present', () => {
     mockUseCommonTokensOptionsWithFallback.mockReturnValue({
       data: [tokenOption],
-      error: undefined,
+      error: null,
       refetch: vi.fn(),
-      loading: false,
+      isLoading: false,
     })
     mockUseBridgingTokensOptions.mockReturnValue({
       data: [tokenOption],
-      error: undefined,
+      error: null,
       refetch: vi.fn(),
-      loading: false,
+      isLoading: false,
       shouldNest: false,
     })
 

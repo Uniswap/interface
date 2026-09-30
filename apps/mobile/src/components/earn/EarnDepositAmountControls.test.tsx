@@ -1,5 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
+import { TestID } from '@universe/test'
 import {
   AmountEntrySection,
   DepositSourceMenuItem,
@@ -11,7 +12,6 @@ import { fireEvent, render, screen } from 'src/test/test-utils'
 import type { EarnDepositSourceOption } from 'uniswap/src/features/earn/types'
 import type { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { formatNumberOrString } from 'utilities/src/format/localeBased'
 import { NumberType } from 'utilities/src/format/types'
 

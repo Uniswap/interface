@@ -1,7 +1,6 @@
 import type { GeneratedIcon } from 'ui/src'
 import { AlertCircleFilled } from 'ui/src/components/icons/AlertCircleFilled'
 import { Briefcase } from 'ui/src/components/icons/Briefcase'
-import { ChartBar } from 'ui/src/components/icons/ChartBar'
 import { Coin } from 'ui/src/components/icons/Coin'
 import { Etf } from 'ui/src/components/icons/Etf'
 import { Nut } from 'ui/src/components/icons/Nut'
@@ -15,7 +14,6 @@ import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 // Keyed on backend ids — the locale-independent ListCategories contract; names are display-only
 // and may arrive localized. Categories without an entry fall back to a generic tag icon.
 const CATEGORY_ICONS_BY_ID: Record<string, GeneratedIcon> = {
-  popular: ChartBar,
   trending: WavePulse,
   'recently-launched': Rocket,
   'top-gainers': TrendUp,

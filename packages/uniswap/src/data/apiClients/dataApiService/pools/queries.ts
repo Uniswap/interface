@@ -4,9 +4,13 @@ import type { ListPoolsRequest, ListPoolsResponse } from '@uniswap/client-data-a
 import { getConnectQueryRetryDelay, shouldRetryConnectQuery } from '@universe/api'
 import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import { persistableInfiniteQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
+import {
+  persistableInfiniteQueryOptions,
+  persistableQueryOptions,
+} from 'utilities/src/reactQuery/persistableQueryOptions'
+import type { QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 
-export type ListPoolsInput = {
+type ListPoolsInfiniteInput = {
   params?: Omit<PartialMessage<ListPoolsRequest>, 'page'>
   /** data.v2 PageRequest pageSize (default 100, max 100). */
   pageSize?: number
@@ -14,25 +18,25 @@ export type ListPoolsInput = {
   persist?: boolean
 }
 
-type ListPoolsQueryKey = readonly [
+type ListPoolsInfiniteQueryKey = readonly [
   ReactQueryCacheKey.DataApiService,
   'listPools',
-  ListPoolsInput['params'],
+  ListPoolsInfiniteInput['params'],
   number | undefined,
   boolean,
 ]
 
-export function getListPoolsQueryOptions({
+export function getListPoolsInfiniteQueryOptions({
   params,
   pageSize,
   enabled = true,
   persist = true,
-}: ListPoolsInput): ReturnType<
+}: ListPoolsInfiniteInput): ReturnType<
   typeof persistableInfiniteQueryOptions<
     PlainMessage<ListPoolsResponse>,
     Error,
     InfiniteData<PlainMessage<ListPoolsResponse>>,
-    ListPoolsQueryKey,
+    ListPoolsInfiniteQueryKey,
     string
   >
 > {
@@ -61,4 +65,48 @@ export function getListPoolsQueryOptions({
     enabled: enabled && !!params,
   })
   return persist ? options : { ...options, meta: { ...options.meta, persist: false } }
+}
+
+type ListPoolsInput<TSelectData = PlainMessage<ListPoolsResponse>> = {
+  params?: Omit<PartialMessage<ListPoolsRequest>, 'page'>
+  /** data.v2 PageRequest pageSize (default 100, max 100). */
+  pageSize?: number
+  enabled?: boolean
+  select?: (data: PlainMessage<ListPoolsResponse>) => TSelectData
+}
+
+type ListPoolsQueryKey = readonly [
+  ReactQueryCacheKey.DataApiService,
+  'listPoolsPage',
+  ListPoolsInput['params'],
+  number | undefined,
+]
+
+/**
+ * Single-page ListPools
+ */
+export function getListPoolsQueryOptions<TSelectData = PlainMessage<ListPoolsResponse>>({
+  params,
+  pageSize,
+  enabled = true,
+  select,
+}: ListPoolsInput<TSelectData>): QueryOptionsResult<
+  PlainMessage<ListPoolsResponse>,
+  Error,
+  TSelectData,
+  ListPoolsQueryKey
+> {
+  return persistableQueryOptions({
+    queryKey: [ReactQueryCacheKey.DataApiService, 'listPoolsPage', params, pageSize] as const,
+    queryFn: async (): Promise<PlainMessage<ListPoolsResponse>> => {
+      if (!params) {
+        throw new Error('params required')
+      }
+      return toPlainMessage(await dataApiServiceClientV2.listPools({ ...params, page: { pageSize } }))
+    },
+    retry: shouldRetryConnectQuery,
+    retryDelay: getConnectQueryRetryDelay,
+    enabled: enabled && !!params,
+    select,
+  })
 }

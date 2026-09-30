@@ -17,7 +17,10 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice/slice
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { multichainChainTokenRowSuffix } from 'uniswap/src/features/portfolio/balances/flattenMultichainToSingleChainRows'
 import { sortPortfolioChainBalances } from 'uniswap/src/features/portfolio/balances/sortPortfolioBalances'
-import { useTokenBalanceListContext } from 'uniswap/src/features/portfolio/TokenBalanceListContext'
+import {
+  useTokenBalanceItemConfig,
+  useTokenBalanceRowBalance,
+} from 'uniswap/src/features/portfolio/TokenBalanceListContext'
 import { isHiddenTokenBalancesRow, TokenBalanceListRow } from 'uniswap/src/features/portfolio/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -96,8 +99,12 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({
   openReportTokenModal: (currency: Currency, isMarkedSpam: Maybe<boolean>) => void
   hiddenTokensRowRef?: React.RefObject<HTMLDivElement | null>
 }) {
-  const { balancesById, expandedCurrencyIds, isWarmLoading, toggleExpanded, multichainRowExpansionEnabled } =
-    useTokenBalanceListContext()
+  // Per-key subscription + poll-stable config, NOT the full list context: its value has a new
+  // identity on every portfolio poll, which re-rendered every mounted row even when nothing they
+  // render changed.
+  const parentBalance = useTokenBalanceRowBalance(item)
+  const { expandedCurrencyIds, isWarmLoading, toggleExpanded, multichainRowExpansionEnabled } =
+    useTokenBalanceItemConfig()
   const { isTestnetModeEnabled } = useEnabledChains()
   const trace = useTrace()
   const dispatch = useDispatch()
@@ -111,8 +118,6 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({
   const closeModal = useCallback((): void => {
     setModalVisible(false)
   }, [])
-
-  const parentBalance = balancesById?.[item]
 
   const orderedChainTokens = useMemo(() => {
     if (!parentBalance || parentBalance.tokens.length <= 1) {

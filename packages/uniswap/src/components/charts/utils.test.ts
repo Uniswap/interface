@@ -46,6 +46,32 @@ const updateEntry = (entry: Point, { time, price }: { time: number; price: numbe
 describe('appendLiveSpotPriceEntry', () => {
   const entries = [point(1000, 10), point(2000, 11), point(3000, 12)]
 
+  it.each([1500, 2500])('preserves server history when the device clock is behind at %i', (now) => {
+    const result = appendLiveSpotPriceEntry({
+      entries,
+      currentPrice: 15,
+      now,
+      getTime: (e) => e.time,
+      createEntry,
+      updateEntry,
+    })
+
+    expect(result).toBe(entries)
+  })
+
+  it('updates the price when the device clock equals the last server timestamp', () => {
+    const result = appendLiveSpotPriceEntry({
+      entries,
+      currentPrice: 15,
+      now: 3000,
+      getTime: (e) => e.time,
+      createEntry,
+      updateEntry,
+    })
+
+    expect(result).toEqual([point(1000, 10), point(2000, 11), point(3000, 15)])
+  })
+
   it('updates the last entry in place when the current time is within the last window', () => {
     // granularity is 1000 (2000 -> 3000); 3500 falls within that window past the last entry
     const result = appendLiveSpotPriceEntry({

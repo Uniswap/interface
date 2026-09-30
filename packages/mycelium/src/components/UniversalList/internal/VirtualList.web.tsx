@@ -1,5 +1,6 @@
 import { LegendList, type LegendListRef } from '@legendapp/list/react'
 import { type CSSProperties, type ReactElement, useImperativeHandle, useMemo, useRef } from 'react'
+import { ROW_VIEWABILITY_CONFIG } from '../consts'
 import type { UniversalListPropsWithRef } from '../types'
 import { createItemTypeResolver, createOverrideItemLayout } from './itemLayout'
 
@@ -40,6 +41,7 @@ export function VirtualList<T>({
   showsVerticalScrollIndicator,
   style,
   testID,
+  trackRowViewability,
   useWindowScroll,
 }: UniversalListPropsWithRef<T, CSSProperties>): ReactElement {
   const legendRef = useRef<LegendListRef>(null)
@@ -102,6 +104,7 @@ export function VirtualList<T>({
       showsVerticalScrollIndicator={showsVerticalScrollIndicator}
       style={resolvedStyle}
       useWindowScroll={useWindowScroll}
+      viewabilityConfig={trackRowViewability ? ROW_VIEWABILITY_CONFIG : undefined}
     />
   )
 }

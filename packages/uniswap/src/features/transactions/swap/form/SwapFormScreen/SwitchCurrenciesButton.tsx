@@ -1,4 +1,5 @@
 import { Flex } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { memo } from 'react'
 import { useIsShortMobileDevice } from 'ui/src'
 import { iconSizes } from 'ui/src/theme/iconSizes'
@@ -7,7 +8,6 @@ import { ElementName, SwapEventName } from 'uniswap/src/features/telemetry/const
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { SwapArrowButton } from 'uniswap/src/features/transactions/swap/components/SwapArrowButton'
 import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const SWAP_DIRECTION_BUTTON_SIZE = {
   size: {

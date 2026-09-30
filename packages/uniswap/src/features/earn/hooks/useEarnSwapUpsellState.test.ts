@@ -1,3 +1,4 @@
+import type { UseQueryResult } from '@tanstack/react-query'
 import { renderHook } from '@testing-library/react'
 import { UniverseChainId } from '@universe/chains'
 import { useFeatureFlag } from '@universe/gating'
@@ -8,12 +9,13 @@ import {
   recordEarnSwapUpsellQualifyingSwap,
   type UniswapBehaviorHistoryState,
 } from 'uniswap/src/features/behaviorHistory/slice'
-import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
+import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { EarnPositionStatus, useEarnPosition } from 'uniswap/src/features/earn/hooks/useEarnPosition'
 import { useEarnSwapUpsellState } from 'uniswap/src/features/earn/hooks/useEarnSwapUpsellState'
 import { useEarnVaults } from 'uniswap/src/features/earn/hooks/useEarnVaults'
 import type { EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { useMultichainCurrencyInfos } from 'uniswap/src/features/tokens/useMultichainCurrencyInfos'
 import type { UniswapState } from 'uniswap/src/state/uniswapReducer'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import type { MockedFunction } from 'vitest'
@@ -30,8 +32,8 @@ vi.mock('react-redux', async (importOriginal) => ({
   useSelector: vi.fn(),
 }))
 
-vi.mock('uniswap/src/features/dataApi/tokenProjects/tokenProjects', () => ({
-  useTokenProjects: vi.fn(),
+vi.mock('uniswap/src/features/tokens/useMultichainCurrencyInfos', () => ({
+  useMultichainCurrencyInfos: vi.fn(),
 }))
 
 vi.mock('uniswap/src/features/earn/hooks/useEarnPosition', () => ({
@@ -55,7 +57,7 @@ vi.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({
 const mockDispatch = vi.fn()
 const mockUseFeatureFlag = vi.mocked(useFeatureFlag)
 const mockUseSelector = useSelector as MockedFunction<typeof useSelector>
-const mockUseTokenProjects = vi.mocked(useTokenProjects)
+const mockUseTokenProjects = vi.mocked(useMultichainCurrencyInfos)
 const mockUseEarnPosition = vi.mocked(useEarnPosition)
 const mockUseEarnVaults = vi.mocked(useEarnVaults)
 const mockUseCurrencyInfo = vi.mocked(useCurrencyInfo)
@@ -116,10 +118,10 @@ function mockDataHooks({
 }): void {
   mockUseTokenProjects.mockReturnValue({
     data: undefined,
-    loading: false,
-    error: undefined,
+    isLoading: false,
+    error: null,
     refetch: vi.fn(),
-  })
+  } as unknown as UseQueryResult<CurrencyInfo[]>)
   mockUseEarnVaults.mockReturnValue({
     isLoadingVaults,
     vaults,

@@ -1,11 +1,11 @@
 import { UniverseChainId } from '@universe/chains'
+import { TestID } from '@universe/test'
 import { MultichainContextMenuAddressSubview } from 'uniswap/src/components/MultichainTokenDetails/MultichainContextMenuAddressSubview'
 import type { MultichainTokenEntry } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
 import { buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
 import { RwaMultichainCopyButton } from 'uniswap/src/features/search/SearchModal/RwaMultichainCopyButton'
 import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
 import { WETH } from 'uniswap/src/test/fixtures/lib/sdk' // real ERC-20 SDK Token (isNative === false)
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { benignSafetyInfo } from 'uniswap/src/test/fixtures/wallet/currencies'
 import { fireEvent, render } from 'uniswap/src/test/test-utils'
 import { currencyId } from 'uniswap/src/utils/currencyId'

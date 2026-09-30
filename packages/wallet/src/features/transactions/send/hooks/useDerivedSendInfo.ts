@@ -29,7 +29,6 @@ export function useDerivedSendInfo(state: TransactionState): DerivedSendInfo {
     tradeableAsset?.type === AssetType.Currency
       ? buildCurrencyId(tradeableAsset.chainId, tradeableAsset.address)
       : undefined,
-    { refetch: true },
   )
 
   const currencyIn = currencyInInfo?.currency

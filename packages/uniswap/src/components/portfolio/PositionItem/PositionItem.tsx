@@ -1,4 +1,4 @@
-import { isMobileApp, isWebPlatform } from '@universe/environment'
+import { isWebPlatform } from '@universe/environment'
 import { Flex, iconSizes, Text, TouchableArea, type FontVariantToken } from '@universe/mycelium'
 import { useIsDarkMode } from '@universe/mycelium/theme-hooks-compat'
 import { memo } from 'react'
@@ -31,6 +31,8 @@ interface PositionItemProps {
   onPress?: () => void
   hasOuterPadding?: boolean
   contextMenuActions?: PositionItemContextMenuConfig
+  /** See AnimatedNumberProps.suspendAnimations — pass for rows outside the list viewport. */
+  suspendAnimations?: boolean
 }
 
 export const PositionItem = memo(function PositionItemInner({
@@ -38,6 +40,7 @@ export const PositionItem = memo(function PositionItemInner({
   onPress,
   hasOuterPadding,
   contextMenuActions,
+  suspendAnimations,
 }: PositionItemProps): JSX.Element {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
@@ -118,7 +121,7 @@ export const PositionItem = memo(function PositionItemInner({
         {balanceFormatted !== undefined ? (
           <AnimatedNumber
             color="$neutral1"
-            disableAnimations={isMobileApp}
+            suspendAnimations={suspendAnimations}
             numericValue={totalValueUsd}
             textVariant={`$${TITLE_VARIANT}` as FontVariantToken}
             value={balanceFormatted}

@@ -1,9 +1,9 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { Lock } from 'ui/src/components/icons/Lock'
 import { PermissionedTokenInfoBottomSheet } from 'uniswap/src/features/permissionedTokens/PermissionedTokenInfoBottomSheet'
 import { useActiveSwapPermissionedState } from 'uniswap/src/features/permissionedTokens/useActiveSwapPermissionedState'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 export function PermissionedSwapBanner(): JSX.Element | null {

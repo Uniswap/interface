@@ -1,6 +1,7 @@
 import { UniverseChainId } from '@universe/chains'
 import { Flex } from '@universe/mycelium'
 import { NoTransactions } from '@universe/mycelium/icons/NoTransactions'
+import { TestID } from '@universe/test'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -8,7 +9,6 @@ import { ActivityListEmptyState } from 'uniswap/src/components/activity/Activity
 import { ActivityItem } from 'uniswap/src/components/activity/generateActivityItemRenderer'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ActivityFilterType } from '~/pages/Portfolio/Activity/Filters/activityFilterTypes'
 import { filterTransactionDetailsFromActivityItems, TimePeriod } from '~/pages/Portfolio/Activity/Filters/utils'
 

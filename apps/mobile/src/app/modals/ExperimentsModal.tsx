@@ -1,9 +1,9 @@
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { Text } from '@universe/mycelium'
 import { Accordion } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import React from 'react'
 import { SeedPhraseAndPrivateKeysDevSection } from 'src/components/experiments/SeedPhraseAndPrivateKeysDevSection'
-import { ServerOverrides } from 'src/components/experiments/ServerOverrides'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { E2EPixel } from 'src/test/E2EPixel'
 import { getFullAppVersion } from 'src/utils/version'
@@ -13,7 +13,6 @@ import { GatingOverrides } from 'uniswap/src/components/gating/GatingOverrides'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export function ExperimentsModal(): JSX.Element {
   const insets = useAppInsets()
@@ -40,7 +39,6 @@ export function ExperimentsModal(): JSX.Element {
             Miscellaneous
           </Text>
           <CacheConfig />
-          <ServerOverrides />
           <SeedPhraseAndPrivateKeysDevSection />
         </Accordion>
       </BottomSheetScrollView>

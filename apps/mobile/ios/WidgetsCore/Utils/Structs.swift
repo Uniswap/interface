@@ -34,19 +34,13 @@ public struct TokenPriceResponse {
 public struct TokenPriceHistoryResponse {
   public init() {
     priceHistory = []
-    pricePercentChange24h = nil
-    price = nil
   }
-  
-  public init(priceHistory: [PriceHistory], price: Double?, pricePercentChange24h: Double?) {
+
+  public init(priceHistory: [PriceHistory]) {
     self.priceHistory = priceHistory
-    self.pricePercentChange24h = pricePercentChange24h
-    self.price = price
   }
-  
+
   public let priceHistory: [PriceHistory]
-  public let pricePercentChange24h: Double?
-  public let price: Double?
 }
 
 public struct PriceHistory {
@@ -54,8 +48,86 @@ public struct PriceHistory {
     self.timestamp = timestamp
     self.price = price
   }
+  /// Unix seconds
   public let timestamp: Int
   public let price: Double
+}
+
+// MARK: - data.v2 response shapes (proto3 JSON: absent fields are omitted, int64 arrives as a string)
+
+struct GetTokenResponse: Decodable {
+  let token: DataApiToken?
+}
+
+struct GetTokensResponse: Decodable {
+  let tokens: [DataApiToken]?
+}
+
+struct DataApiToken: Decodable {
+  let chainId: Int?
+  let address: String?
+  let symbol: String?
+  let name: String?
+  let price: DataApiTokenPrice?
+  let project: DataApiTokenProject?
+}
+
+struct DataApiTokenPrice: Decodable {
+  let spotUsd: Double?
+  let percentChange1d: Double?
+}
+
+struct DataApiTokenProject: Decodable {
+  let logoUrl: String?
+}
+
+struct ListTokensResponse: Decodable {
+  let multichainTokens: [RankedMultichainToken]?
+}
+
+struct RankedMultichainToken: Decodable {
+  let multichainToken: MultichainToken?
+  let chainStats: [ChainTokenRankStats]?
+}
+
+struct MultichainToken: Decodable {
+  /// Keyed by chain id (as a string) → deployment address
+  let addresses: [String: String]?
+  let symbol: String?
+  let name: String?
+}
+
+struct ChainTokenRankStats: Decodable {
+  let chainId: Int?
+  let stats: TokenRankStats?
+}
+
+struct TokenRankStats: Decodable {
+  let volume1d: Double?
+}
+
+struct GetTokenHistoryPriceResponse: Decodable {
+  let points: [PricePoint]?
+}
+
+struct PricePoint: Decodable {
+  /// Unix seconds
+  let timestamp: Int?
+  let priceUsd: Double?
+
+  private enum CodingKeys: String, CodingKey {
+    case timestamp, priceUsd
+  }
+
+  init(from decoder: Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    priceUsd = try container.decodeIfPresent(Double.self, forKey: .priceUsd)
+    if let seconds = try? container.decodeIfPresent(Int.self, forKey: .timestamp) {
+      timestamp = seconds
+    } else {
+      timestamp = try container.decodeIfPresent(String.self, forKey: .timestamp).flatMap { Int($0) }
+    }
+  }
 }
 
 /// Maps protobuf FiatCurrency enum ints to ISO currency codes.

@@ -11,8 +11,8 @@ import { TokenCategory, TokenCategoryClass } from 'uniswap/src/features/tokenCat
 
 /**
  * Static stand-in mirroring the backend category identity. These tags are live prod UI while
- * ListCategories is still gated behind the token categories experiment, so rendering must not
- * depend on the rollout — the fallback dies with the experiment cleanup (M9).
+ * ListCategories is still gated behind the token categories flag, so rendering must not
+ * depend on the rollout — the fallback dies with the flag cleanup (M9).
  */
 function useFallbackTokenCategory(rwaCategory: RwaCategory): TokenCategory | undefined {
   const { t } = useTranslation()
@@ -31,7 +31,15 @@ function useFallbackTokenCategory(rwaCategory: RwaCategory): TokenCategory | und
     if (!name) {
       return undefined
     }
-    return { id, name, description: '', categoryClass: TokenCategoryClass.Asset, topTokens: [] }
+    return {
+      id,
+      name,
+      description: '',
+      categoryClass: TokenCategoryClass.Asset,
+      // Inert here: the tag only reads id + name. Table routing must come from the BE flag, never this stand-in.
+      grouped: rwaCategory !== RwaCategory.COMMODITIES,
+      topTokens: [],
+    }
   }, [rwaCategory, t])
 }
 

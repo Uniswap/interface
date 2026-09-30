@@ -1,5 +1,5 @@
 import { UniverseChainId } from '@universe/chains'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { TradeTokenBanner } from '~/features/Toucan/Auction/Banners/TradeTokenBanner'
 import { useAuctionDisplayState } from '~/features/Toucan/Auction/hooks/useAuctionDisplayState'

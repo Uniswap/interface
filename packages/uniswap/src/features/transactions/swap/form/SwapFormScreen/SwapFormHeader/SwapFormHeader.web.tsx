@@ -1,9 +1,9 @@
 import { isWebPlatform } from '@universe/environment'
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
 import { X } from '@universe/mycelium/icons/X'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export const SwapFormHeader = (): JSX.Element => {
   const { t } = useTranslation()

@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react'
+import { TestID } from '@universe/test'
 import React from 'react'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { VerifyIdentityModal } from '~/components/PermissionedPool/VerifyIdentityModal'
 import { useModalState } from '~/hooks/useModalState'
 

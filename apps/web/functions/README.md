@@ -29,23 +29,25 @@ Testing is done utilizing a custom vitest environment as well as Cloudflare's lo
 
 TODO(WEB-5914): as of 12/19/24, tests pass locally but fail on CI. Notes on investigation in issue
 
-### Deterministic GraphQL responses (gateway fixtures)
+### Deterministic gateway responses (gateway fixtures)
 
 The meta-tag and OG-image tests fetch pages from the dev server, whose worker
-queries the interface GraphQL gateway. To keep CI deterministic, the
-`cloud-tests` job sets `CLOUD_FUNCTIONS_GRAPHQL_ENDPOINT_OVERRIDE` to a local
-URL: the worker (`functions/client.ts`) sends its queries there, and the vitest
-global setup (`functions/fixtures/globalSetup.ts`) serves checked-in responses
-from `functions/fixtures/gatewayResponses.ts` on that port.
+queries the data-api and liquidity backends. To keep CI deterministic, the
+`cloud-tests` job sets `CLOUD_FUNCTIONS_DATA_API_ENDPOINT_OVERRIDE` and
+`CLOUD_FUNCTIONS_LIQUIDITY_ENDPOINT_OVERRIDE` to a local URL: the worker
+(`functions/utils/dataApiService.ts`, `functions/utils/liquidityService.ts`) sends
+its requests there, and the vitest global setup (`functions/fixtures/globalSetup.ts`)
+serves checked-in responses from `functions/fixtures/gatewayResponses.ts` on that port.
 
-To run the same way locally, export the override for both processes:
+To run the same way locally, export the overrides for both processes:
 
 ```sh
-CLOUD_FUNCTIONS_GRAPHQL_ENDPOINT_OVERRIDE=http://127.0.0.1:8901/v1/graphql \
+CLOUD_FUNCTIONS_DATA_API_ENDPOINT_OVERRIDE=http://127.0.0.1:8901 \
+CLOUD_FUNCTIONS_LIQUIDITY_ENDPOINT_OVERRIDE=http://127.0.0.1:8901 \
   bun run start-server-and-test 'bun run dev' http://localhost:3000/swap 'bun run test:cloud'
 ```
 
-Without the override, tests exercise the live gateway (old behavior). When
+Without the overrides, tests exercise the live gateways (old behavior). When
 adding a test for a new token/pool, add a matching fixture entry to
 `functions/fixtures/gatewayResponses.ts`.
 

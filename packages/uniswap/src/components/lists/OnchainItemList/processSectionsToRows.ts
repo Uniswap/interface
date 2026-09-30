@@ -1,6 +1,7 @@
 import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
 import type { ItemRowInfo, SectionRowInfo } from 'uniswap/src/components/lists/OnchainItemList/OnchainItemList'
 import {
+  getSectionFooterRowKey,
   getSectionHeaderRowKey,
   getSectionItemRowKey,
   getSectionRowId,
@@ -10,11 +11,15 @@ import { type OnchainItemSection } from 'uniswap/src/components/lists/OnchainIte
 export enum ProcessedRowType {
   Header = 'header',
   Item = 'item',
+  Footer = 'footer',
 }
+
+export type SectionFooterRowInfo = { sectionRowId: string; footerElement: JSX.Element }
 
 export type ProcessedRow =
   | { type: ProcessedRowType.Header; data: SectionRowInfo }
   | { type: ProcessedRowType.Item; data: ItemRowInfo<OnchainItemListOption> }
+  | { type: ProcessedRowType.Footer; data: SectionFooterRowInfo }
 
 /** Header-row payload shared by the web and native legs, so a new section field is threaded in one place. */
 export function toSectionHeaderProps<T extends OnchainItemListOption>(
@@ -79,6 +84,15 @@ export function processSectionsToRows({
       }
       result.push(reuseIfEqual(itemRow, previousByKey.get(getProcessedRowKey(itemRow, keyExtractor))))
     }
+
+    if (section.footerElement) {
+      const footerRow: ProcessedRow = {
+        type: ProcessedRowType.Footer,
+        data: { sectionRowId: getSectionRowId(section), footerElement: section.footerElement },
+      }
+      result.push(reuseIfEqual(footerRow, previousByKey.get(getProcessedRowKey(footerRow, keyExtractor))))
+      rowIndex++
+    }
   }
 
   return result
@@ -98,6 +112,8 @@ export function getProcessedRowKey(
         itemKey: keyExtractor?.(row.data.item, row.data.index),
         index: row.data.index,
       })
+    case ProcessedRowType.Footer:
+      return getSectionFooterRowKey(row.data.sectionRowId)
     default:
       return ''
   }
@@ -126,35 +142,48 @@ function reuseIfEqual(next: ProcessedRow, previous: ProcessedRow | undefined): P
     const b = previous.data.section
     return (Object.keys(a) as (keyof typeof a)[]).every((field) => a[field] === b[field]) ? previous : next
   }
+  if (next.type === ProcessedRowType.Footer && previous.type === ProcessedRowType.Footer) {
+    return next.data.footerElement === previous.data.footerElement ? previous : next
+  }
   return next
 }
 
 /**
  * Inverse of {@link processSectionsToRows}' flattening: folds a SectionList-style (section, item)
  * address into an index in the flat row array, where every section contributes a header row ahead of
- * its items.
+ * its items (and a footer row after them, when the section has one).
  *
  * `itemIndex` follows React Native's `SectionList.scrollToLocation`, which measures from the
  * section's header rather than from its first item: `itemIndex: 0` addresses the header, `1` the
  * first item. (RN's own math gives it away — its sticky-header branch reads the header's position as
- * `index - itemIndex`.) Matching it keeps this leg in step with `OnchainItemList.web`
+ * `index - itemIndex`.)
+ *
+ * Both list legs index through this. `hasHeaderRow` covers the one layout difference: the web leg
+ * renders no row at all for some headers (see `hasWebHeaderRow`), where native renders them at 0px.
  */
 export function toFlatRowIndex({
   sections,
   sectionIndex,
   itemIndex,
+  hasHeaderRow = (): boolean => true,
 }: {
   sections: OnchainItemSection<OnchainItemListOption>[]
   sectionIndex: number
   itemIndex: number
+  hasHeaderRow?: (section: OnchainItemSection<OnchainItemListOption>) => boolean
 }): number {
   let index = 0
 
   for (let i = 0; i < sectionIndex; i++) {
-    // 1 header + that section's items
-    index += 1 + (sections[i]?.data.length ?? 0)
+    const section = sections[i]
+    if (!section) {
+      continue
+    }
+    // header (if rendered) + that section's items + its optional footer
+    index += (hasHeaderRow(section) ? 1 : 0) + section.data.length + (section.footerElement ? 1 : 0)
   }
 
-  // No offset for the target section's own header: itemIndex is measured from it.
-  return index + itemIndex
+  const target = sections[sectionIndex]
+  // itemIndex counts the target's header; with no header row, its first item (itemIndex 1) sits at `index`.
+  return target && !hasHeaderRow(target) ? index + Math.max(0, itemIndex - 1) : index + itemIndex
 }

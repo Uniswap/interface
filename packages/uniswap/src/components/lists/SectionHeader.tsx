@@ -1,5 +1,5 @@
 import { isAndroid } from '@universe/environment'
-import { ElementAfterText, Flex, TouchableArea } from '@universe/mycelium'
+import { ElementAfterText, Flex, Text, TouchableArea } from '@universe/mycelium'
 import { Briefcase } from '@universe/mycelium/icons/Briefcase'
 import { Clock } from '@universe/mycelium/icons/Clock'
 import { Coins } from '@universe/mycelium/icons/Coins'
@@ -10,10 +10,10 @@ import { Pools } from '@universe/mycelium/icons/Pools'
 import { Search } from '@universe/mycelium/icons/Search'
 import { Shuffle } from '@universe/mycelium/icons/Shuffle'
 import { TrendUp } from '@universe/mycelium/icons/TrendUp'
+import { TestID } from '@universe/test'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export const SECTION_HEADER_LAYOUT = { pt: '$spacing12', pb: '$spacing4', px: '$spacing20', gap: '$spacing8' } as const
 export const SECTION_HEADER_TITLE_VARIANT = 'subheading2'
@@ -51,7 +51,10 @@ export const SectionHeader = memo(function SectionHeaderInner({
     return sectionHeader
   }
 
-  const header = (
+  const iconElement = icon ?? getSectionIcon(sectionKey)
+  const titleText = name ?? title
+
+  return (
     <Flex
       row
       backgroundColor="$surface1"
@@ -64,25 +67,38 @@ export const SectionHeader = memo(function SectionHeaderInner({
       testID={`${TestID.SectionHeaderPrefix}${sectionRowId ?? sectionKey}`}
     >
       <Flex row alignItems="center" gap={SECTION_HEADER_LAYOUT.gap} flex={1}>
-        {icon ?? getSectionIcon(sectionKey)}
-        <ElementAfterText
-          text={name ?? title}
-          textProps={{ color: '$neutral2', variant: SECTION_HEADER_TITLE_VARIANT }}
-          wrapperProps={{ flex: 1 }}
-          element={rightElement}
-        />
+        {onPress ? (
+          <>
+            <TouchableArea
+              row
+              alignItems="center"
+              flexShrink={1}
+              gap={SECTION_HEADER_LAYOUT.gap}
+              hoverStyle={{ opacity: 0.8 }}
+              pressStyle={{ opacity: 0.6 }}
+              onPress={onPress}
+            >
+              {iconElement}
+              <Text color="$neutral2" variant={SECTION_HEADER_TITLE_VARIANT}>
+                {titleText}
+              </Text>
+            </TouchableArea>
+            {rightElement}
+          </>
+        ) : (
+          <>
+            {iconElement}
+            <ElementAfterText
+              text={titleText}
+              textProps={{ color: '$neutral2', variant: SECTION_HEADER_TITLE_VARIANT }}
+              wrapperProps={{ flex: 1 }}
+              element={rightElement}
+            />
+          </>
+        )}
       </Flex>
       {endElement}
     </Flex>
-  )
-
-  if (!onPress) {
-    return header
-  }
-  return (
-    <TouchableArea hoverStyle={{ opacity: 0.8 }} pressStyle={{ opacity: 0.6 }} onPress={onPress}>
-      {header}
-    </TouchableArea>
   )
 })
 

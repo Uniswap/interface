@@ -1,5 +1,5 @@
 import { UniverseChainId } from '@universe/chains'
-import { GatedFeature, useIsFeatureGated } from '@universe/compliance'
+import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, Text } from '@universe/mycelium'
 import { memo, useCallback, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -22,7 +22,6 @@ import { StocksHorizontalRow } from 'uniswap/src/components/TokenSelector/lists/
 import { tagRwaTokenSelectorSections } from 'uniswap/src/components/TokenSelector/tagRwaTokenSelectorSections'
 import { useTokenSelectorHoverConfig } from 'uniswap/src/components/TokenSelector/TokenSelectorHoverConfig'
 import { OnSelectCurrency, OnSelectRwaToken } from 'uniswap/src/components/TokenSelector/types'
-import { formatIssuerLabel } from 'uniswap/src/data/apiClients/dataApiService/rwa/formatIssuerDisplaySymbol'
 import { setHasSeenBridgingTooltip } from 'uniswap/src/features/behaviorHistory/slice'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -200,7 +199,7 @@ const TokenOptionItem = memo(function TokenOptionItemInner({
     <SharedTokenOptionItem
       option={tokenOption}
       displayName={tokenOption.rwaName}
-      issuerLabel={tokenOption.rwaIssuerSlug ? formatIssuerLabel(tokenOption.rwaIssuerSlug) : undefined}
+      issuer={tokenOption.rwaIssuerSlug}
       showTokenAddress={showTokenAddress}
       contextMenuVariant={TokenContextMenuVariant.TokenSelector}
       categoryTag={hasBalance ? undefined : categoryTag}
@@ -245,11 +244,12 @@ function TokenSelectorListInner({
   const [expandedItems, setExpandedItems] = useState<string[]>([])
   const wrapTokenRow = useTokenSelectorHoverConfig()
 
-  // Tag tokenized-stock (RWA) rows so the inner row renders the category tag. `useRwaIndex` returns an empty
-  // index (and skips the fetch) for RWA-blocked regions, so this is a no-op pass-through there.
-  const isRwaRegionBlocked = useIsFeatureGated(GatedFeature.ISSUER_SPECIFIC_RWA)
-  const rwaIndex = useRwaIndex(!isRwaRegionBlocked)
-  const taggedSections = useMemo(() => tagRwaTokenSelectorSections({ sections, rwaIndex }), [sections, rwaIndex])
+  const rwaIndex = useRwaIndex()
+  const plainTokenNames = useIsTokenCategoriesEnabled()
+  const taggedSections = useMemo(
+    () => tagRwaTokenSelectorSections({ sections, rwaIndex, plainTokenNames }),
+    [sections, rwaIndex, plainTokenNames],
+  )
 
   usePerformanceLogger(DDRumManualTiming.TokenSelectorListRender, [chainFilter])
 

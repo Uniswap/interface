@@ -1,7 +1,7 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { Clear } from 'ui/src/components/icons/Clear'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 interface PoolsDataIssueBannerProps {
   message: string

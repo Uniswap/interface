@@ -146,6 +146,16 @@ export function testMigrateUnknownBackupAccountsToMaybeManualBackup(
   expect(migration3.wallet.accounts['0x2'].backups).toEqual(['cloud'])
 }
 
+export function testRemovePersistedApolloCache(migration: (state: any) => any, prevSchema: any): void {
+  // oxlint-disable-next-line typescript/unbound-method
+  const remove = vi.mocked(chrome.storage.local.remove).mockImplementation(() => Promise.resolve())
+
+  // The migration only touches chrome.storage.local; redux state must pass through untouched.
+  const result = migration(prevSchema)
+  expect(result).toEqual(prevSchema)
+  expect(remove).toHaveBeenCalledWith('apollo-cache-persist')
+}
+
 export function testSetLanguageToNavigatorLanguage(migration: (state: any) => any, _prevSchema: any): void {
   // Test: sets language when userSettings exists
   const result = migration({

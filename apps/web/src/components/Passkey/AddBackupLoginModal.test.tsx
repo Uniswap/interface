@@ -6,8 +6,8 @@ import {
   encryptAndStoreRecovery,
   useEmbeddedWalletState,
 } from '@universe/embedded-wallet'
+import { TestID } from '@universe/test'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { AddBackupLoginModal } from '~/components/Passkey/AddBackupLoginModal'
 import { useModalState } from '~/hooks/useModalState'
 import { render, screen } from '~/test-utils/render'

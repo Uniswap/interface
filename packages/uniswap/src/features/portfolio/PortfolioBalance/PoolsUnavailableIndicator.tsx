@@ -1,7 +1,7 @@
 import { WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import type { IconSizeTokens } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { BalanceUnavailableIndicator } from 'uniswap/src/features/portfolio/PortfolioBalance/BalanceUnavailableIndicator'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 interface PoolsUnavailableIndicatorProps {
   message?: string

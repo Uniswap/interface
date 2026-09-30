@@ -1,12 +1,12 @@
 import type { UniverseChainId } from '@universe/chains'
 import { AnimatableCopyIcon, Flex, TouchableArea, iconSizes } from '@universe/mycelium'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MultichainAddressList } from 'uniswap/src/components/MultichainTokenDetails/MultichainAddressList'
 import type { MultichainTokenEntry } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import {
   MultichainPillDropdown,
   useMultichainPopoverContentProps,

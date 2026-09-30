@@ -1,4 +1,3 @@
-import { type ApolloClient, useApolloClient } from '@apollo/client'
 import { type Dispatch } from '@reduxjs/toolkit'
 import { type QueryClient, useQueryClient } from '@tanstack/react-query'
 import { Image } from 'expo-image'
@@ -7,7 +6,6 @@ import { useDispatch } from 'react-redux'
 import { resetBiometricSettings } from 'src/features/biometricsSettings/slice'
 import { resetModals } from 'src/features/modals/modalSlice'
 import { resetPushNotifications } from 'src/features/notifications/slice'
-import { resetTweaks } from 'src/features/tweaks/slice'
 import { resetWalletConnect } from 'src/features/walletConnect/walletConnectSlice'
 import { type AppStateResetter } from 'uniswap/src/state/createAppStateResetter'
 import { createLogger } from 'utilities/src/logger/logger'
@@ -19,11 +17,9 @@ import { createWalletStateResetter } from 'wallet/src/state/createWalletStateRes
  */
 export function createMobileAppStateResetter({
   dispatch,
-  apolloClient,
   queryClient,
 }: {
   dispatch: Dispatch
-  apolloClient: ApolloClient<unknown>
   queryClient: QueryClient
 }): AppStateResetter {
   const logger = createLogger('appStateResetter.tsx', 'createMobileAppStateResetter')
@@ -39,12 +35,10 @@ export function createMobileAppStateResetter({
     onResetUserSettings: () => {
       dispatch(resetBiometricSettings())
       dispatch(resetPushNotifications())
-      dispatch(resetTweaks())
     },
 
     onResetQueryCaches: async () => {
       await Promise.all([
-        apolloClient.resetStore().then(() => logger.info('Apollo cache cleared successfully')),
         queryClient.resetQueries().then(() => logger.info('React Query cache cleared successfully')),
         Image.clearDiskCache().then(() => logger.info('Image disk cache cleared successfully')),
         Image.clearMemoryCache().then(() => logger.info('Image memory cache cleared successfully')),
@@ -55,10 +49,6 @@ export function createMobileAppStateResetter({
 
 export function useAppStateResetter(): AppStateResetter {
   const dispatch = useDispatch()
-  const apolloClient = useApolloClient()
   const queryClient = useQueryClient()
-  return useMemo(
-    () => createMobileAppStateResetter({ dispatch, apolloClient, queryClient }),
-    [dispatch, apolloClient, queryClient],
-  )
+  return useMemo(() => createMobileAppStateResetter({ dispatch, queryClient }), [dispatch, queryClient])
 }

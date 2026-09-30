@@ -1,7 +1,7 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
 import { PropsWithChildren, ReactNode, useContext, useEffect, useState } from 'react'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { createLiquidityChartStore } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/createLiquidityChartStore'
 import { LiquidityChartStoreContext } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/LiquidityChartStoreContext'
 import { useLiquidityChartStoreActions } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/useLiquidityChartStore'
@@ -25,13 +25,13 @@ interface LiquidityChartStoreProviderProps {
   quoteCurrency: Maybe<Currency>
   priceInverted: boolean
   protocolVersion: ProtocolVersion
-  selectedHistoryDuration: GraphQLApi.HistoryDuration
+  selectedHistoryDuration: HistoryDuration
   onChartError: (error: string) => void
   onInputModeChange: (inputMode: RangeAmountInputPriceMode) => void
   onMinTickChange: (tick?: number) => void
   onMaxTickChange: (tick?: number) => void
   onMinMaxTickChange: (ticks: { minTick?: number; maxTick?: number }) => void
-  onTimePeriodChange?: (timePeriod: GraphQLApi.HistoryDuration) => void
+  onTimePeriodChange?: (timePeriod: HistoryDuration) => void
   setIsFullRange: (isFullRange: boolean) => void
 }
 

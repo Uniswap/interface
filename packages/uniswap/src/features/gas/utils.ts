@@ -27,6 +27,7 @@ import {
   URGENT_GAS_STRATEGY,
 } from 'uniswap/src/features/gas/consts'
 import {
+  convertShiftedGasFeeForDisplay,
   getGasFeeDecimalsShift,
   hasShiftedGasToken,
   hasSufficientFundsIncludingShiftedGasToken,
@@ -127,34 +128,47 @@ export function hasSufficientFundsIncludingGas(params: {
   return !totalSpend || !nativeCurrencyBalance?.lessThan(totalSpend)
 }
 
+type GasSpend =
+  /** Raw native transaction value (decimal or hex `tx.value`), converted to gas-token units here. */
+  | { kind: 'raw-native-value'; value: string }
+  /** Amount already expressed in the gas token's currency and units. */
+  | { kind: 'gas-token-amount'; amount: CurrencyAmount<Currency> }
+
 export function hasSufficientGasBalance({
   chainId,
   gasBalance,
   gasFee,
-  gasTokenTransactionAmount,
+  spend,
 }: {
   chainId: UniverseChainId
   gasBalance: CurrencyAmount<Currency> | undefined
   gasFee: string | undefined
-  /** Amount being spent from the gas token balance (e.g. pathUSD on Tempo, native on other chains).
-   *  Consumers set this when `currencyAmountIn?.currency.equals(gasToken)`. */
-  gasTokenTransactionAmount?: CurrencyAmount<Currency>
+  spend?: GasSpend
 }): boolean {
   // Without a fee estimate or balance we cannot prove insufficiency — return true
   // so callers don't flash "insufficient gas" warnings while data is loading.
   if (!gasFee || !gasBalance) {
     return true
   }
+  const transactionAmount =
+    spend?.kind === 'raw-native-value'
+      ? (getCurrencyAmount({
+          value: convertShiftedGasFeeForDisplay(spend.value, getGasFeeDecimalsShift(chainId)),
+          valueType: ValueType.Raw,
+          currency: gasBalance.currency,
+        }) ?? undefined)
+      : spend?.amount
+
   if (hasShiftedGasToken(chainId)) {
     return hasSufficientFundsIncludingShiftedGasToken({
       gasTokenBalance: gasBalance,
       gasFee,
-      gasTokenTransactionAmount,
+      gasTokenTransactionAmount: transactionAmount,
       decimalShift: getGasFeeDecimalsShift(chainId),
     })
   }
   return hasSufficientFundsIncludingGas({
-    transactionAmount: gasTokenTransactionAmount,
+    transactionAmount,
     gasFee,
     nativeCurrencyBalance: gasBalance,
   })

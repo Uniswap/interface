@@ -5,7 +5,6 @@ import { CharRow } from 'uniswap/src/components/AnimatedNumber/native/CharRow'
 import { CHAR_SPACE_SIZE } from 'uniswap/src/components/AnimatedNumber/native/constants'
 import { AnimatedFontStyles } from 'uniswap/src/components/AnimatedNumber/native/styles'
 import type { ReanimatedNumberRenderProps } from 'uniswap/src/components/AnimatedNumber/native/types'
-import { TopAndBottomGradient } from 'uniswap/src/components/AnimatedNumber/TopAndBottomGradient/TopAndBottomGradient'
 
 export const CompactReanimatedNumber = ({
   alignRight,
@@ -27,6 +26,7 @@ export const CompactReanimatedNumber = ({
   charDelays,
   charShouldAnimate,
   reduceMotion,
+  suspendAnimations,
 }: ReanimatedNumberRenderProps &
   Pick<
     AnimatedNumberProps,
@@ -37,8 +37,9 @@ export const CompactReanimatedNumber = ({
   return (
     <Flex row justifyContent={alignRight ? 'flex-end' : 'flex-start'} alignItems="flex-start" testID={containerTestID}>
       <Shine disabled={!warmLoading}>
+        {/* No TopAndBottomGradient: its SVG tree per number is too costly across dozens of list
+            rows, and digit cells already clip their own roll. */}
         <Flex row style={{ position: 'relative' }}>
-          <TopAndBottomGradient height={digitHeight} />
           <CharRow
             baseColor={baseColor}
             charDelays={charDelays}
@@ -50,6 +51,7 @@ export const CompactReanimatedNumber = ({
             digitHeight={digitHeight}
             reduceMotion={reduceMotion}
             shouldFadeDecimals={shouldFadeDecimals}
+            suspendAnimations={suspendAnimations}
             tick={tick}
             useHeadingTypography={useHeadingTypography}
             variantFont={variantFont}

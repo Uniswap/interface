@@ -1,5 +1,5 @@
+import { TestID } from '@universe/test'
 import { TokenCategoryClass, type TokenCategoryTopToken } from 'uniswap/src/features/tokenCategories/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { tokenCategory } from 'uniswap/src/test/fixtures/tokenCategory'
 import {
   CategoryDefinitionCard,
@@ -16,6 +16,7 @@ const stocks = tokenCategory({
   name: 'Stocks',
   description: 'Tokenized stocks from known issuers',
   categoryClass: TokenCategoryClass.Asset,
+  grouped: false,
   stats: {
     tokenCount: 42,
     priceChange24hPct: 4.07,

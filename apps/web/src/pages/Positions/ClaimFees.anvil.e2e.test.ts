@@ -1,7 +1,7 @@
 import { LiquidityService } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_connect'
 import { CHAIN_TO_ADDRESSES_MAP } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import { erc721Abi } from 'viem'
 import { mainnet } from 'viem/chains'
 import { assume0xAddress } from '~/chains'

@@ -2,16 +2,15 @@ import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { preloadedMobileState } from 'src/test/fixtures'
 import { act, renderHook, waitFor } from 'src/test/test-utils'
 import { useCrossChainBalances } from 'uniswap/src/data/apiClients/dataApiService/balances/hooks/useCrossChainBalances'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
 import {
-  portfolio,
+  portfolioBalance,
   portfolioBalances,
   SAMPLE_CURRENCY_ID_1,
   SAMPLE_SEED_ADDRESS_1,
-  tokenBalance,
-  usdcArbitrumToken,
-  usdcBaseToken,
 } from 'uniswap/src/test/fixtures'
+import { usdcArbitrumV2Token, usdcBaseV2Token } from 'uniswap/src/test/fixtures/dataApi/tokens'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { portfolioBalancesById } from 'uniswap/src/utils/balances'
 import type { MockedFunction } from 'vitest'
@@ -86,8 +85,7 @@ describe(useCrossChainBalances, () => {
     })
 
     it('returns balance if there is at least one for the specified currency', async () => {
-      const Portfolio = portfolio()
-      const testPortfolioBalances = portfolioBalances({ portfolio: Portfolio })
+      const testPortfolioBalances = portfolioBalances()
       const currentChainBalance = testPortfolioBalances[0]!
 
       const portfolioBalancesByIdData = portfolioBalancesById(testPortfolioBalances)
@@ -146,16 +144,13 @@ describe(useCrossChainBalances, () => {
     })
 
     it('does not include current chain balance in other chain balances', async () => {
-      const tokenBalances = [tokenBalance({ token: usdcBaseToken() }), tokenBalance({ token: usdcArbitrumToken() })]
+      const tokens = [usdcBaseV2Token(), usdcArbitrumV2Token()]
 
-      const bridgeInfo = tokenBalances.map((balance) => ({
-        chain: balance.token.chain,
-        address: balance.token.address,
+      const bridgeInfo = tokens.map((token) => ({
+        chain: toGraphQLChain(token.chainId),
+        address: token.address,
       }))
-      const Portfolio = portfolio({ tokenBalances })
-      const testPortfolioBalances = portfolioBalances({
-        portfolio: Portfolio,
-      })
+      const testPortfolioBalances = tokens.map((token) => portfolioBalance({ fromToken: token }))
       const [currentChainBalance, ...otherChainBalances] = testPortfolioBalances
 
       const portfolioBalancesByIdData = portfolioBalancesById(testPortfolioBalances)

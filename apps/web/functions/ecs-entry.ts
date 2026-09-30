@@ -5,6 +5,7 @@ import { serve } from '@hono/node-server'
 import { serveStatic } from '@hono/node-server/serve-static'
 import { createApp, ENTRY_GATEWAY_URLS, WEBSOCKET_URLS } from 'functions/app'
 import { FRAME_PROTECTION_HEADERS } from 'functions/frameProtection'
+import { requestLogger } from 'functions/requestLogger'
 import { Hono } from 'hono'
 import { compress } from 'hono/compress'
 
@@ -216,6 +217,10 @@ const htmlStaticHandler = serveStatic({
 const root = new Hono()
 // Register /health before compress() so the every-few-seconds ALB probe isn't gzipped.
 root.get('/health', (c) => c.text('ok'))
+
+// Registered after /health so ALB probes stay out of the request log.
+root.use('*', requestLogger())
+
 root.use('*', compress())
 // compress() sets Content-Encoding but no Vary, so a shared cache could hand a
 // gzip body to an identity client. Key every compressible response on the header.

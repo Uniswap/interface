@@ -1,4 +1,3 @@
-import type { WatchQueryFetchPolicy } from '@apollo/client'
 import { type PlainMessage } from '@bufbuild/protobuf'
 import type { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
 import { normalizeTokenAddressForCache } from '@universe/chains'
@@ -26,7 +25,7 @@ import {
 } from 'uniswap/src/features/dataApi/utils/getCurrencySafetyInfo'
 import type { CurrencyId } from 'uniswap/src/types/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
-import { usePlatformBasedFetchPolicy } from 'uniswap/src/utils/usePlatformBasedFetchPolicy'
+import { FetchPolicy, usePlatformBasedFetchPolicy } from 'uniswap/src/utils/usePlatformBasedFetchPolicy'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export { useRestPortfolioValueModifier, useRestPortfolioValueModifiers }
@@ -118,7 +117,7 @@ export type UsePortfolioDataQueryOptions = {
   /** Cache-only read: never fetches, but still re-renders when another observer updates the cached data. */
   cacheOnly?: boolean
   pollInterval?: PollingInterval
-  fetchPolicy?: WatchQueryFetchPolicy
+  fetchPolicy?: FetchPolicy
   /**
    * When true, request portfolio.multichainBalances from backend (mock/dummy data).
    * When false or omitted, request legacy portfolio.balances and transform to multichain shape on client.

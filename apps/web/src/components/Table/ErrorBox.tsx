@@ -1,5 +1,6 @@
 import { Button, Flex, Text, zIndexes } from '@universe/mycelium'
 import { ChartBarCrossed } from '@universe/mycelium/icons/ChartBarCrossed'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 
 export function ChartBarCrossedWithBackground(): JSX.Element {
@@ -25,7 +26,7 @@ export const ErrorModal = ({
   return (
     <Flex
       row
-      testID="table-error-modal"
+      testID={TestID.TableErrorModal}
       alignItems="flex-start"
       justifyContent="flex-start"
       position="absolute"

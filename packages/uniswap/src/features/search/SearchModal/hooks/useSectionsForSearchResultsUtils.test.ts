@@ -4,9 +4,11 @@ import {
   SearchModalOption,
 } from 'uniswap/src/components/lists/items/types'
 import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { NUMBER_OF_RESULTS_ALL_TAB } from 'uniswap/src/features/search/SearchModal/constants'
 import {
   getAllSections,
   getSearchResultsForActiveTab,
+  getTruncatedSectionKeys,
   SearchResultsForActiveTabParams,
   withCategoryOptions,
 } from 'uniswap/src/features/search/SearchModal/hooks/useSectionsForSearchResultsUtils'
@@ -34,7 +36,7 @@ function createAuctionOption(): SearchModalOption {
 function createCategoryOption(id: string, name: string): CategoryOption {
   return {
     type: OnchainItemListOptionType.Category,
-    category: { id, name, description: '', categoryClass: TokenCategoryClass.Sector, topTokens: [] },
+    category: { id, name, description: '', categoryClass: TokenCategoryClass.Sector, grouped: false, topTokens: [] },
   }
 }
 
@@ -241,5 +243,29 @@ describe('withCategoryOptions', () => {
       searchFilter: 'defi',
     })
     expect(result).toBe(tokenOptions)
+  })
+})
+
+describe('getTruncatedSectionKeys', () => {
+  it('returns the All-tab sections with more options than fit', () => {
+    expect(
+      getTruncatedSectionKeys({
+        activeTab: SearchTab.All,
+        tokenOptionsLength: NUMBER_OF_RESULTS_ALL_TAB + 1,
+        poolOptionsLength: NUMBER_OF_RESULTS_ALL_TAB,
+        auctionOptionsLength: NUMBER_OF_RESULTS_ALL_TAB + 5,
+      }),
+    ).toEqual([OnchainItemSectionName.Tokens, OnchainItemSectionName.Auctions])
+  })
+
+  it('returns nothing outside the All tab', () => {
+    expect(
+      getTruncatedSectionKeys({
+        activeTab: SearchTab.Tokens,
+        tokenOptionsLength: NUMBER_OF_RESULTS_ALL_TAB + 1,
+        poolOptionsLength: NUMBER_OF_RESULTS_ALL_TAB + 1,
+        auctionOptionsLength: NUMBER_OF_RESULTS_ALL_TAB + 1,
+      }),
+    ).toEqual([])
   })
 })

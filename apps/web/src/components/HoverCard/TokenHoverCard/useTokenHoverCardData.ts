@@ -1,6 +1,6 @@
 import { GraphQLApi } from '@universe/api'
 import { useMemo } from 'react'
-import { isMultichainProjectTokens } from 'uniswap/src/features/dataApi/tokenProjects/utils/isMultichainProjectTokens'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { getPortfolioChartPercentChange } from 'uniswap/src/features/portfolio/portfolioChartPercentChange'
 import { useCurrencyInfoWithLoading } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -41,7 +41,7 @@ export function useTokenHoverCardData({
 } {
   // Only fetch currencyInfo when using the token prop path (and only once the card is actually
   // hovered open); use the prop directly otherwise.
-  const { currencyInfo: derivedCurrencyInfo, loading: currencyInfoLoading } = useCurrencyInfoWithLoading(
+  const { data: derivedCurrencyInfo, isLoading: currencyInfoLoading } = useCurrencyInfoWithLoading(
     currencyInfoProp || !hasOpenIntent ? undefined : currencyIdFromToken,
   )
   const currencyInfo = currencyInfoProp ?? derivedCurrencyInfo
@@ -50,7 +50,8 @@ export function useTokenHoverCardData({
   // query and switches the placeholder to its no-data state, since no token data will ever arrive.
   const currencyInfoUnavailable = hasOpenIntent && !currencyInfo && !currencyInfoLoading
 
-  const isMultichainAsset = isMultichainProjectTokens(currencyInfo?.searchMultichainParent?.tokenCurrencyIds)
+  // An asset is multichain when it has more than one on-chain deployment
+  const isMultichainAsset = (currencyInfo?.searchMultichainParent?.tokenCurrencyIds.length ?? 0) > 1
 
   // NATIVE_CHAIN_ID is a frontend sentinel — the backend expects undefined (not 'NATIVE') for native-token price queries
   const tokenAddress = !rawAddress || rawAddress === NATIVE_CHAIN_ID ? getNativeTokenDBAddress(gqlChain) : rawAddress
@@ -59,7 +60,7 @@ export function useTokenHoverCardData({
     () => ({
       chain: gqlChain,
       address: tokenAddress,
-      duration: GraphQLApi.HistoryDuration.Day,
+      duration: HistoryDuration.Day,
       multichain: isMultichainAsset,
     }),
     [gqlChain, tokenAddress, isMultichainAsset],

@@ -1,5 +1,5 @@
 import { UniverseChainId } from '@universe/chains'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { FeatureFlags, useFeatureFlag, useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, Text } from '@universe/mycelium'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -12,6 +12,8 @@ import { SearchModalListSkeleton } from 'uniswap/src/features/search/SearchModal
 import { useRwaIssuerCurrencyInfos } from 'uniswap/src/features/search/SearchModal/stocks/useRwaIssuerCurrencyInfos'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { useMultichainSearchModalMetricsAnalytics } from 'uniswap/src/features/search/SearchModal/useMultichainSearchModalMetricsAnalytics'
+import { withSectionGaps } from 'uniswap/src/features/search/SearchModal/viewAll/withSectionGaps'
+import { withViewAllFooters } from 'uniswap/src/features/search/SearchModal/viewAll/withViewAllFooters'
 
 function EmptyPretypeSection({ title, icon: Icon }: { title: string; icon: GeneratedIcon }): JSX.Element {
   return (
@@ -29,6 +31,8 @@ interface SearchModalNoQueryListProps {
   activeTab: SearchTab
   auctionSearchEnabled?: boolean
   onSelect?: SearchModalListProps['onSelect']
+  /** Search V2: shows "View all" under the All tab's trimmed sections; called with the section's tab. */
+  onViewAll?: (tab: SearchTab) => void
   renderedInModal: boolean
   contentContainerStyle?: StyleProp<ViewStyle>
   rowWrapper?: SearchModalListProps['rowWrapper']
@@ -39,6 +43,7 @@ export const SearchModalNoQueryList = memo(function SearchModalNoQueryListInner(
   activeTab,
   auctionSearchEnabled = false,
   onSelect,
+  onViewAll,
   renderedInModal,
   contentContainerStyle,
   rowWrapper,
@@ -46,6 +51,7 @@ export const SearchModalNoQueryList = memo(function SearchModalNoQueryListInner(
   const { t } = useTranslation()
 
   const isSearchV2UIEnabled = useFeatureFlag(FeatureFlags.SearchV2UI)
+  const isTokenCategoriesEnabled = useIsTokenCategoriesEnabled()
 
   const {
     data: sections,
@@ -67,6 +73,17 @@ export const SearchModalNoQueryList = memo(function SearchModalNoQueryListInner(
     isSearchResultsLoading: isLoading,
     isSearchQueryPending: false,
   })
+
+  const displayedSections = useMemo(() => {
+    if (activeTab !== SearchTab.All) {
+      return sections
+    }
+    const withFooters =
+      isTokenCategoriesEnabled && onViewAll
+        ? withViewAllFooters({ sections, truncatedSectionKeys: 'all', onViewAll })
+        : sections
+    return isSearchV2UIEnabled ? withSectionGaps(withFooters) : withFooters
+  }, [isSearchV2UIEnabled, isTokenCategoriesEnabled, onViewAll, activeTab, sections])
 
   // Element and object props are memoized so SearchModalList's memo isn't busted every render.
   const loadingElement = useMemo(
@@ -98,7 +115,7 @@ export const SearchModalNoQueryList = memo(function SearchModalNoQueryListInner(
       loading={isLoading}
       loadingElement={loadingElement}
       refetch={refetch}
-      sections={sections}
+      sections={displayedSections}
       searchFilters={searchFilters}
       renderedInModal={renderedInModal}
       contentContainerStyle={contentContainerStyle}

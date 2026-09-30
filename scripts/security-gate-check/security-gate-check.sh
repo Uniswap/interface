@@ -101,10 +101,10 @@ COUNTING_BOTS="${COUNTING_BOTS:-github-actions,uniswap-security-gate}"
 # change. Defaulted in the SCRIPT, not workflow env: a re-run replays old workflow YAML, so a
 # default that lives only there silently reverts on replay (universe#39289).
 BOT_APPROVALS_COUNT="${BOT_APPROVALS_COUNT:-1}"
-# Bots that author PRs on their own behalf rather than a human's — merge queues, dependency
-# bumps. They are scored as ordinary PRs. An UNLISTED bot gets the strict rule, so a new
+# Bots that author PRs on their own behalf rather than a human's — dependency bumps and the
+# like. They are scored as ordinary PRs. An UNLISTED bot gets the strict rule, so a new
 # coding agent is covered on day one and a new infrastructure bot only causes friction.
-EXEMPT_BOT_AUTHORS="${EXEMPT_BOT_AUTHORS:-graphite-app,dependabot}"
+EXEMPT_BOT_AUTHORS="${EXEMPT_BOT_AUTHORS:-dependabot}"
 # Machine accounts GitHub reports as type=User. type=Bot is filtered structurally and needs
 # no entry. Empty: ai-services-uni and hello-happy-puppy are tightly governed and counted
 # as humans by choice.
@@ -331,12 +331,10 @@ fi
 # alone and walk away with security-gate never posted -- half a gate, which reads as a stuck
 # check rather than an unevaluated one. Marking the PR ready is how a draft gets a verdict.
 #
-# EXEMPT_BOT_AUTHORS are never skipped. Graphite's merge queue opens a throwaway DRAFT PR
-# (gtmq_spec_*) and evaluates the required checks on it before landing the real PR behind it;
-# a draft skip there would leave both contexts "Expected" forever and eject every PR from the
-# queue -- the same failure shape that took the queue down on 2026-08-11 (see the exempt-author
-# branch of evaluate_review_integrity). is_exempt_bot_author is the shared definition, so this
-# path and that one cannot drift.
+# EXEMPT_BOT_AUTHORS are never skipped. Automation that opens draft PRs it expects required
+# checks to report on would otherwise be left with both contexts "Expected" forever.
+# is_exempt_bot_author is the shared definition, so this path and the exempt-author branch of
+# evaluate_review_integrity cannot drift.
 draft_exempt_author=0
 is_exempt_bot_author && draft_exempt_author=1
 if [ "$PR_DRAFT" = "true" ] && [ "$draft_exempt_author" = "0" ]; then
@@ -1405,23 +1403,14 @@ evaluate_review_integrity() {
       ri_state="pending"; ri_desc="Awaiting human review — $ri_human/$ri_human_req approvals; bot approvals do not count."
     fi
   elif [ "$ri_exempt_bot" = "1" ]; then
-    # Infrastructure automation acting on its OWN behalf rather than a person's: merge
-    # queues, dependency bumps. EXEMPT_BOT_AUTHORS exists to spare these the strict
-    # 2-human rule, and until now that was achieved by scoring them as ordinary PRs --
-    # which was a pass only because the ordinary thresholds were 0.
+    # Infrastructure automation acting on its OWN behalf rather than a person's: dependency
+    # bumps and the like. These PRs carry no reviewers by construction, so a human approval
+    # requirement could never be satisfied; exempt authors skip the human thresholds outright
+    # instead of inheriting them.
     #
-    # MIN_HUMAN_APPROVALS=1 broke that. Graphite's merge queue opens a throwaway draft PR
-    # (gtmq_spec_*) authored by graphite-app purely to run checks against. It has no
-    # reviewers by construction, so a human requirement fails it and the queue ejects the
-    # real PR behind it. That took down the universe merge queue on 2026-08-11 within half
-    # an hour of the threshold landing. The human requirement belongs on the PR a person
-    # actually opened -- which the queue PR is a proxy for, and which was gated on its own
-    # way in.
-    #
-    # Exempt authors therefore skip the human thresholds outright instead of inheriting
-    # them. Still a denylist: an UNLISTED bot gets the strict rule, so a new coding agent
-    # is covered from day one. Adding an author here is a deliberate statement that it acts
-    # on its own behalf.
+    # Still a denylist: an UNLISTED bot gets the strict rule, so a new coding agent is covered
+    # from day one. Adding an author here is a deliberate statement that it acts on its own
+    # behalf.
     ri_state="success"; ri_desc="Exempt bot author ($PR_AUTHOR) — infrastructure automation, no human approval required."
   elif [ "$ri_counting" -lt "$ri_req" ]; then
     # Human-authored. The author cannot approve their own PR, so reaching this count means at

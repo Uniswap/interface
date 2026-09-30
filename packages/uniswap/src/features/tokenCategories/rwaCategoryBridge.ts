@@ -13,8 +13,12 @@ const RWA_CATEGORY_BY_ID = new Map(
   Object.entries(RWA_CATEGORY_IDS).map(([rwaCategory, id]) => [id, Number(rwaCategory) as RwaCategory]),
 )
 
+export function getRwaCategoryForCategoryId(categoryId: string): RwaCategory {
+  return RWA_CATEGORY_BY_ID.get(categoryId) ?? RwaCategory.UNSPECIFIED
+}
+
 export function getRwaCategoryForTokenCategory(category: TokenCategory): RwaCategory {
-  return RWA_CATEGORY_BY_ID.get(category.id) ?? RwaCategory.UNSPECIFIED
+  return getRwaCategoryForCategoryId(category.id)
 }
 
 // The resolver runs per RWA row per render — warn once per category, not once per call.

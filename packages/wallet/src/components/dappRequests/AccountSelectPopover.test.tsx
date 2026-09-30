@@ -1,6 +1,6 @@
 import { fireEvent } from '@testing-library/react-native'
+import { TestID } from '@universe/test'
 import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures/events'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { AccountSelectPopover } from 'wallet/src/components/dappRequests/AccountSelectPopover'
 import { renderWithProviders } from 'wallet/src/test/render'
 

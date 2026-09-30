@@ -1,12 +1,12 @@
 import { Button, Flex } from '@universe/mycelium'
 import { Lock } from '@universe/mycelium/icons/Lock'
+import { TestID } from '@universe/test'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { openKycExplainer } from 'uniswap/src/features/permissionedTokens/openKycExplainer'
 import { PermissionedSheetHeader } from 'uniswap/src/features/permissionedTokens/PermissionedSheetHeader'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 type PermissionedTokenInfoBottomSheetProps = {
   isOpen: boolean

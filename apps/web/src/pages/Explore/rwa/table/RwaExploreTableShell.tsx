@@ -7,25 +7,42 @@ import type { StocksSortMethod } from '~/pages/Explore/rwa/table/stocksTableSort
 
 export function RwaExploreTableShell({
   rows,
+  rowsKey,
   isLoading,
   isError,
+  hasNextPage,
+  isFetchingNextPage,
+  fetchNextPage,
+  isSortedByServer = false,
   enableSorting = false,
   sortMethod,
   sortAscending,
   orderDirection,
 }: {
   rows: Rwa[]
+  /** Identity of the query serving `rows`; the row window restarts when it changes. */
+  rowsKey: string
   isLoading: boolean
   isError: boolean
+  hasNextPage: boolean
+  isFetchingNextPage: boolean
+  fetchNextPage: () => void
+  /** Rows already arrive in `sortMethod` order, so only the header indicators are needed. */
+  isSortedByServer?: boolean
   enableSorting?: boolean
   sortMethod?: StocksSortMethod
   sortAscending?: boolean
   orderDirection?: OrderDirection
 }): JSX.Element {
+  const sortOnClient = enableSorting && !isSortedByServer
   const { visibleRows, rankByAsset, loadMore } = useRwaExploreTableShell({
     rows,
-    sortMethod: enableSorting ? sortMethod : undefined,
-    sortAscending: enableSorting ? sortAscending : undefined,
+    rowsKey,
+    sortMethod: sortOnClient ? sortMethod : undefined,
+    sortAscending: sortOnClient ? sortAscending : undefined,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
   })
 
   const emptyState = useRwaTableFilterEmptyState(visibleRows.length === 0 && !isLoading && !isError)

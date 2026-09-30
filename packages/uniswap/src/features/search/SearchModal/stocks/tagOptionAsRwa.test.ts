@@ -54,7 +54,7 @@ describe('tagOptionAsRwa', () => {
     if (!match) {
       throw new Error('fixture match missing')
     }
-    const out = tagOptionAsRwa({ option: token(MAINNET, '0xa'), match })
+    const out = tagOptionAsRwa({ option: token(MAINNET, '0xa'), match, plainTokenNames: false })
     expect(out.rwaCategory).toBe(RwaCategory.STOCKS)
     expect(out.rwaName).toBe('Tesla')
     expect(out.rwaIssuerSlug).toBe('ondo')
@@ -66,7 +66,7 @@ describe('tagOptionAsRwa', () => {
       throw new Error('fixture match missing')
     }
     const option = token(MAINNET, '0xa')
-    const out = tagOptionAsRwa({ option, match })
+    const out = tagOptionAsRwa({ option, match, plainTokenNames: false })
     expect(out).not.toBe(option)
     expect(out.type).toBe(OnchainItemListOptionType.Token)
     expect(out.currencyInfo).toBe(option.currencyInfo)
@@ -78,11 +78,22 @@ describe('tagOptionAsRwa', () => {
       throw new Error('fixture match missing')
     }
     const option = multichainToken(MAINNET, '0xa')
-    const out = tagOptionAsRwa({ option, match })
+    const out = tagOptionAsRwa({ option, match, plainTokenNames: false })
     expect(out.type).toBe(OnchainItemListOptionType.MultichainToken)
     expect(out.multichainResult).toBe(option.multichainResult)
     expect(out.rwaCategory).toBe(RwaCategory.STOCKS)
     expect(out.rwaName).toBe('Tesla')
+    expect(out.rwaIssuerSlug).toBe('ondo')
+  })
+
+  it('leaves the clean name unset with plainTokenNames so the row keeps the token name', () => {
+    const match = findRwaForToken(index, { chainId: MAINNET, address: '0xa' })
+    if (!match) {
+      throw new Error('fixture match missing')
+    }
+    const out = tagOptionAsRwa({ option: token(MAINNET, '0xa'), match, plainTokenNames: true })
+    expect(out.rwaName).toBeUndefined()
+    expect(out.rwaCategory).toBe(RwaCategory.STOCKS)
     expect(out.rwaIssuerSlug).toBe('ondo')
   })
 
@@ -101,7 +112,7 @@ describe('tagOptionAsRwa', () => {
     if (!match) {
       throw new Error('fixture match missing')
     }
-    const out = tagOptionAsRwa({ option: token(MAINNET, '0xa'), match })
+    const out = tagOptionAsRwa({ option: token(MAINNET, '0xa'), match, plainTokenNames: false })
     expect(out.rwaName).toBeUndefined()
     expect(out.rwaIssuerSlug).toBeUndefined()
   })

@@ -1,8 +1,5 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import {
-  type Position as LiquidityServicePosition,
-  PositionStatus as LiquidityPositionStatus,
-} from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
+import type { Position as LiquidityServicePosition } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
 import { CHAIN_TO_ADDRESSES_MAP, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool as V3Pool, Position as V3Position } from '@uniswap/v3-sdk'
@@ -28,14 +25,6 @@ const V2_LP_TOKEN_DECIMALS = 18
 // dependent cells show the same "–" treatment as the known valuation gaps).
 const DEGRADED_TOKEN0_ADDRESS = '0x0000000000000000000000000000000000000001'
 const DEGRADED_TOKEN1_ADDRESS = '0x0000000000000000000000000000000000000002'
-
-// Same rehydration hazard as the protocol version (see normalizeLiquidityServiceProtocols): a
-// cache-restored `status` comes back as its name ("HIDDEN"), so a raw
-// `=== LiquidityPositionStatus.HIDDEN` (numeric) would miss it and leak spam-flagged positions into
-// the main table. Normalize name → numeric before comparing.
-function normalizeLiquidityServicePositionStatus(status: LiquidityPositionStatus | string): LiquidityPositionStatus {
-  return typeof status === 'string' ? LiquidityPositionStatus[status as keyof typeof LiquidityPositionStatus] : status
-}
 
 // The enriched Position carries token metadata inline (Tier 1 backend enrichment).
 type TokenMetadata = NonNullable<LiquidityServicePosition['token0Metadata']>
@@ -373,10 +362,6 @@ export function parseLiquidityServicePosition(position: LiquidityServicePosition
     const currency0 = token0 ?? new Token(position.chainId, DEGRADED_TOKEN0_ADDRESS, 18)
     const currency1 = token1 ?? new Token(position.chainId, DEGRADED_TOKEN1_ADDRESS, 18)
 
-    // Spam/unsafe positions are flagged HIDDEN by the backend; it cross-cuts open/closed, so the
-    // derived in/out-of-range status stays independent and visibility is driven by isHidden.
-    const isHidden = normalizeLiquidityServicePositionStatus(position.status) === LiquidityPositionStatus.HIDDEN
-
     let parsed: PositionInfo | undefined
     if (version === ProtocolVersion.V2) {
       parsed = parseV2Position({ position, token0: currency0, token1: currency1, hasTokenIdentity })
@@ -423,12 +408,10 @@ export function parseLiquidityServicePosition(position: LiquidityServicePosition
       apr7d: position.apr7d,
       apr30d: position.apr30d,
       totalApr: position.totalApr,
-      isHidden,
       // `created_at` is unix seconds (int64); 0 — or an absent field once the proto makes it
       // optional — means the indexer has no creation event yet, which the UI renders as "–" like
       // the other gaps. A present value arrives as a bigint from a fresh fetch, or as a string on a
-      // cache-restored (protobuf-JSON) load — the same rehydration hazard as `status` above, since
-      // protobuf-JSON encodes int64 as a string. Number() handles both. Guard so only an absent
+      // cache-restored (protobuf-JSON) load, since protobuf-JSON encodes int64 as a string. Number() handles both. Guard so only an absent
       // value (undefined once the field is optional) maps to undefined, rather than becoming
       // Number(undefined) === NaN (falsy, but breaks createdAt equality). Number() is safe on a
       // present value — far below MAX_SAFE_INTEGER.

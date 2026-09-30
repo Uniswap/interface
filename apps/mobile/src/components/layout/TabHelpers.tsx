@@ -1,9 +1,9 @@
 import { Flex, Text } from '@universe/mycelium'
+import { TestIDType } from '@universe/test'
 import React from 'react'
 import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
 import { Route } from 'react-native-tab-view'
 import { colorsLight, spacing } from 'ui/src/theme'
-import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 
 export const TAB_VIEW_SCROLL_THROTTLE = 16
 export const TAB_BAR_HEIGHT = 48

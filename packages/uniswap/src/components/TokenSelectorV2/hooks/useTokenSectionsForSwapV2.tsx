@@ -1,4 +1,3 @@
-import { GqlResult } from '@universe/api'
 import { GatedFeature, useIsFeatureGated } from '@universe/compliance'
 import { Flex } from '@universe/mycelium'
 import { useMemo } from 'react'
@@ -11,15 +10,16 @@ import { type PortfolioBalancesResult } from 'uniswap/src/components/TokenSelect
 import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioTokenOptions'
 import { useRecentlySearchedTokens } from 'uniswap/src/components/TokenSelector/hooks/useRecentlySearchedTokens'
 import { useRwaTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useRwaTokenOptions'
+import { useTrendingTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useTrendingTokensOptions'
 import { TokenSectionsHookProps, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/types'
 import { RECENT_PILLS_MAX_COUNT } from 'uniswap/src/components/TokenSelectorV2/constants'
-import { useTrendingTokensOptionsV2 } from 'uniswap/src/components/TokenSelectorV2/hooks/useTrendingTokensOptionsV2'
 import { TokenSelectorV2SectionHeader } from 'uniswap/src/components/TokenSelectorV2/TokenSelectorV2SectionHeader'
 import { useBridgingTokensOptions } from 'uniswap/src/features/bridging/hooks/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { DataApiOutageBanner } from 'uniswap/src/features/dataApi/outage/DataApiOutageBanner'
 import { ClearRecentSearchesButton } from 'uniswap/src/features/search/ClearRecentSearchesButton'
 import { useEvent } from 'utilities/src/react/hooks'
+import type { DerivedQueryResult } from 'utilities/src/reactQuery/types'
 
 // V2 section header plus the single-line outage banner and spacing (mirrors legacy TokenSelectorSwapList).
 const PORTFOLIO_OUTAGE_SECTION_HEADER_ROW_HEIGHT = 104
@@ -33,7 +33,7 @@ const PORTFOLIO_OUTAGE_SECTION_HEADER_ROW_HEIGHT = 104
  * - Your-tokens is excluded when the dual-pane sidebar owns it (`includeYourTokens=false`);
  *   single-pane platforms (mobile/extension/small web) keep it in the list — no designs exist
  *   for a sidebar there and dropping the section would lose functionality.
- * - Trending options carry price/24h-change market data for the V2 rows.
+ * - Trending rows render the price/24h-change market data the shared trending options carry.
  * - Section headers are the V2 icon+title headers.
  */
 export function useTokenSectionsForSwapV2({
@@ -46,28 +46,28 @@ export function useTokenSectionsForSwapV2({
 }: Omit<TokenSectionsHookProps, 'addresses'> & {
   includeYourTokens: boolean
   portfolioData: PortfolioBalancesResult
-}): GqlResult<OnchainItemSection<TokenSelectorListOption>[]> {
+}): DerivedQueryResult<OnchainItemSection<TokenSelectorListOption>[]> {
   const { defaultChainId, isTestnetModeEnabled } = useEnabledChains()
 
   const {
     data: portfolioTokenOptions,
     error: portfolioTokenOptionsError,
     refetch: refetchPortfolioTokenOptions,
-    loading: portfolioTokenOptionsLoading,
+    isLoading: portfolioTokenOptionsLoading,
   } = usePortfolioTokenOptions({ chainFilter, chainIds, portfolioData })
 
   const {
     data: trendingTokenOptions,
     error: trendingTokenOptionsError,
     refetch: refetchTrendingTokenOptions,
-    loading: trendingTokenOptionsLoading,
-  } = useTrendingTokensOptionsV2({ chainFilter, chainIds, portfolioData })
+    isLoading: trendingTokenOptionsLoading,
+  } = useTrendingTokensOptions({ chainFilter, chainIds, portfolioData })
 
   const {
     data: commonTokenOptions,
     error: commonTokenOptionsError,
     refetch: refetchCommonTokenOptions,
-    loading: commonTokenOptionsLoading,
+    isLoading: commonTokenOptionsLoading,
   } = useCommonTokensOptionsWithFallback({
     chainFilter: chainFilter ?? oppositeSelectedToken?.chainId ?? defaultChainId,
     portfolioData,
@@ -77,7 +77,7 @@ export function useTokenSectionsForSwapV2({
     data: bridgingTokenOptions,
     error: bridgingTokenOptionsError,
     refetch: refetchBridgingTokenOptions,
-    loading: bridgingTokenOptionsLoading,
+    isLoading: bridgingTokenOptionsLoading,
   } = useBridgingTokensOptions({ oppositeSelectedToken, chainFilter, chainIds, portfolioData })
 
   const recentlySearchedTokenOptions = useRecentlySearchedTokens(chainFilter, {
@@ -225,8 +225,8 @@ export function useTokenSectionsForSwapV2({
   return useMemo(
     () => ({
       data: sections,
-      loading,
-      error: error || undefined,
+      isLoading: loading,
+      error: error || null,
       refetch,
     }),
     [error, loading, refetch, sections],

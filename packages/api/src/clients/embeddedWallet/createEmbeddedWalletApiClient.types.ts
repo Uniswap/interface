@@ -57,7 +57,7 @@ export interface EmbeddedWalletClientContext {
       req: Record<string, unknown>,
       options?: CallOptions,
     ) => Promise<CheckRecoveryAvailabilityResponse>
-    setupRecovery: (req: Record<string, unknown>) => Promise<SetupRecoveryResponse>
+    setupRecovery: (req: Record<string, unknown>, options?: CallOptions) => Promise<SetupRecoveryResponse>
     executeRecovery: (req: Record<string, unknown>) => Promise<ExecuteRecoveryResponse>
     reportDecryptionResult: (
       req: Record<string, unknown>,
@@ -177,16 +177,19 @@ export interface EmbeddedWalletApiClient {
   ) => Promise<CheckRecoveryAvailabilityResponse>
   // Two auth modes: passkey (`credential`) or passkey-less recovery-auth
   // (`authKeySignature` + `recoveryAuthSignature` + `signingPayload`) for v1→v2 rotation.
-  fetchSetupRecovery: (params: {
-    credential?: string
-    authMethodId: string
-    authMethodType?: string
-    encryptedKeyId?: string
-    authMethodIdentifier?: string
-    authKeySignature?: string
-    recoveryAuthSignature?: string
-    signingPayload?: string
-  }) => Promise<SetupRecoveryResponse>
+  fetchSetupRecovery: (
+    params: {
+      credential?: string
+      authMethodId: string
+      authMethodType?: string
+      encryptedKeyId?: string
+      authMethodIdentifier?: string
+      authKeySignature?: string
+      recoveryAuthSignature?: string
+      signingPayload?: string
+    },
+    accessToken: string,
+  ) => Promise<SetupRecoveryResponse>
   fetchExecuteRecovery: (params: {
     authMethodId: string
     newCredential: string

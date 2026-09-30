@@ -183,8 +183,8 @@ describe('repo ci-checks.json', () => {
 
   const needs = parseCiPassedNeeds(CI_YML)
   const unmatchedBases = [
-    '07-14-fix_web_add_sorting_to_liquidity_positions_table_stackmaster', // Graphite stack parent
-    'gtmq_spec_f1a705_abc', // merge-queue base
+    '07-14-fix_web_add_sorting_to_liquidity_positions_table', // stacked-PR parent
+    'some-ad-hoc-feature-branch',
   ]
 
   test('unmatched bases are gated exactly as a PR against main, not more harshly', () => {

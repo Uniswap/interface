@@ -1,6 +1,7 @@
 import { isExtensionApp } from '@universe/environment'
 import { Flex, Text } from '@universe/mycelium'
 import { type FlexProps } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import React from 'react'
 import { Trans } from 'react-i18next'
 import { Button } from 'ui/src'
@@ -8,7 +9,6 @@ import { ButtonConfig as DialogButtonConfig } from 'uniswap/src/components/dialo
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 type ButtonConfig =
   | (Pick<DialogButtonConfig, 'text' | 'variant' | 'emphasis'> & {

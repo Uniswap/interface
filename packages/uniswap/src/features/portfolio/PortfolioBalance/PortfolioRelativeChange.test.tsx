@@ -1,5 +1,5 @@
+import { TestID } from '@universe/test'
 import { PortfolioRelativeChange } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioRelativeChange'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { render } from 'uniswap/src/test/test-utils'
 
 type Props = React.ComponentProps<typeof PortfolioRelativeChange>

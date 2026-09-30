@@ -1,8 +1,8 @@
 import '~/test-utils/tokens/mocks'
 import { within } from '@testing-library/react'
 import { UniverseChainId } from '@universe/chains'
+import { TestID } from '@universe/test'
 import { DAI, DAI_ARBITRUM_ONE } from 'uniswap/src/constants/tokens'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { PendingPortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PendingPortfolioLogo'
 import { render, screen } from '~/test-utils/render'
 

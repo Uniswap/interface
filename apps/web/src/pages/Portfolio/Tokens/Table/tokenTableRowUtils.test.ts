@@ -1,7 +1,7 @@
 import { UniverseChainId } from '@universe/chains'
+import { TestID } from '@universe/test'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/rpc'
 import { getPrimaryStablecoin, isStablecoinAddress } from 'uniswap/src/features/chains/utils'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { currencyAddress, currencyId } from 'uniswap/src/utils/currencyId'
 import { describe, expect, it } from 'vitest'
 import {

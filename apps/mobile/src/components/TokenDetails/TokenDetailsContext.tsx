@@ -56,8 +56,6 @@ type TokenDetailsContextState = {
   openMultichainAddressSheet: () => void
   closeMultichainAddressSheet: () => void
   copyAddressToClipboard: (address: string) => Promise<void>
-  error: unknown | undefined
-  setError: (error: unknown | undefined) => void
   isPermissioned: boolean
   isAllowlisted: boolean
   isPermissionedLoading: boolean
@@ -82,8 +80,6 @@ export function TokenDetailsContextProvider({
 >): JSX.Element {
   const dispatch = useDispatch()
   const trace = useTrace()
-
-  const [error, setError] = useState<unknown>(undefined)
 
   const [isTokenWarningModalOpen, setIsTokenWarningModalOpen] = useState(false)
   const openTokenWarningModal = useCallback(() => setIsTokenWarningModalOpen(true), [])
@@ -200,8 +196,6 @@ export function TokenDetailsContextProvider({
       openMultichainAddressSheet,
       closeMultichainAddressSheet,
       copyAddressToClipboard,
-      error,
-      setError,
       isPermissioned: permissioned,
       isAllowlisted: allowlisted,
       isPermissionedLoading,
@@ -215,7 +209,6 @@ export function TokenDetailsContextProvider({
     currencyId,
     currencyInfo,
     enabledChains,
-    error,
     multichainTokens,
     initialIsMultichainAsset,
     isContractAddressExplainerModalOpen,

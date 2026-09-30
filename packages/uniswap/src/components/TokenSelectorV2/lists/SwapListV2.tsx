@@ -29,7 +29,7 @@ export function SwapListV2({
 }): JSX.Element {
   const {
     data: sections,
-    loading,
+    isLoading,
     error,
     refetch,
   } = useTokenSectionsForSwapV2({
@@ -46,7 +46,7 @@ export function SwapListV2({
       showTokenAddress
       chainFilter={chainFilter}
       hasError={Boolean(error)}
-      loading={loading}
+      loading={isLoading}
       refetch={refetch}
       sections={sections}
       showTokenWarnings={true}

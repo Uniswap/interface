@@ -1,4 +1,5 @@
 import { useDeviceDimensions } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import { memo, useCallback, useMemo, useState } from 'react'
 import { Freeze } from 'react-freeze'
 import type { SharedValue } from 'react-native-reanimated'
@@ -10,7 +11,6 @@ import type { PoolsTabRenderData } from 'src/screens/HomeScreen/portfolio/tabs/p
 import { HomeScreenTokensTab } from 'src/screens/HomeScreen/portfolio/tabs/tokens/HomeScreenTokensTab'
 import { HomeTab, type HomeRoute, type NftTabRenderData } from 'src/screens/HomeScreen/portfolio/types'
 import type { PositionStatusFilterValue } from 'uniswap/src/features/positions/components/PositionStatusFilter'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 interface TabViewBodyProps {
   routes: HomeRoute[]

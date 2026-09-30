@@ -2,7 +2,7 @@ import type { PartialMessage } from '@bufbuild/protobuf'
 import { InfiniteData, type RefetchOptions, useInfiniteQuery } from '@tanstack/react-query'
 import type { ListPoolsRequest, ListPoolsResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { useMemo } from 'react'
-import { getListPoolsQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/pools/queries'
+import { getListPoolsInfiniteQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/pools/queries'
 import { convertPoolToPoolStat } from '~/features/Liquidity/utils/convertPoolToPoolStat'
 import { normalizeRankedPool } from '~/features/Liquidity/utils/normalizeRankedPool'
 import type { PoolStat } from '~/types/explore'
@@ -56,7 +56,7 @@ export function useListPoolsAsPoolStats({
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfiniteQuery(getListPoolsQueryOptions({ params, pageSize, enabled, persist }))
+  } = useInfiniteQuery(getListPoolsInfiniteQueryOptions({ params, pageSize, enabled, persist }))
 
   const infiniteData = data as InfiniteData<ListPoolsResponse> | undefined
   const rawPoolCount = useMemo(

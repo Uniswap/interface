@@ -4,6 +4,7 @@ import { Flex, Text, TouchableArea, useSporeColorsForTheme } from '@universe/myc
 import { QrCode } from '@universe/mycelium/icons/QrCode'
 import { Scan } from '@universe/mycelium/icons/Scan'
 import { useIsDarkMode } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
@@ -15,7 +16,6 @@ import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constant
 import { ReceiveQRCode } from 'uniswap/src/components/ReceiveQRCode/ReceiveQRCode'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { logger } from 'utilities/src/logger/logger'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 

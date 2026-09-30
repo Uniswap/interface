@@ -1,7 +1,7 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
 import type { Auction } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 import { UniverseChainId } from '@universe/chains'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { AuctionLaunchMethod } from '~/features/Toucan/Auction/utils/auctionLaunchMethod'
 import {

@@ -9,7 +9,7 @@ import { EXPLORE_CHART_HEIGHT_PX } from '~/features/Explore/constants'
 import { AuctionDisplayPhase } from '~/features/Toucan/Auction/utils/resolveAuctionDisplayState'
 import { useTokenPriceChartPanel } from '~/hooks/useTokenPriceChartPanel'
 import { useIsSynchronizedHeartbeatEnabled } from '~/lib/hooks/useHeartbeatCoordinator'
-import type { TDPChartQueryVariables } from '~/pages/TokenDetails/components/chart/hooks'
+import type { TDPChartQueryVariables } from '~/pages/TokenDetails/components/chart/TDPChartState'
 
 interface TDPPriceChartPanelProps {
   variables: TDPChartQueryVariables
@@ -47,6 +47,7 @@ export function TDPPriceChartPanel({
     timePeriod,
     currency,
     disablePricePolling: isSynchronizedHeartbeatsEnabled,
+    keepPreviousData: false,
   })
 
   if (showInvalidSkeleton) {

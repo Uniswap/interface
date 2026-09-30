@@ -1,0 +1,18 @@
+{
+  "token": {
+    "chainId": 1,
+    "address": "0x1eFBB78C8b917f67986BcE54cE575069c0143681",
+    "symbol": "test",
+    "decimals": 9,
+    "name": "test token",
+    "project": {
+      "name": "test token",
+      "logoUrl": "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1eFBB78C8b917f67986BcE54cE575069c0143681/logo.png"
+    },
+    "safety": {
+      "isSpam": false,
+      "isVerified": false,
+      "isBlocked": false
+    }
+  }
+}

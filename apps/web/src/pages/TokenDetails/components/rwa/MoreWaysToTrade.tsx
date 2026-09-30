@@ -1,12 +1,14 @@
+import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, Text } from '@universe/mycelium'
-import { useMemo, useState } from 'react'
+import { TestID } from '@universe/test'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
+import { getIssuerTokenPrimaryName } from 'uniswap/src/features/rwa/getIssuerTokenPrimaryName'
 import { useExpandRWASiblingHandler } from 'uniswap/src/features/rwa/hooks/useExpandRWASiblingHandler'
-import { useRWAIssuerMarketData } from 'uniswap/src/features/rwa/useRWAIssuerMarketData'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { useMoreRwaTokens } from 'uniswap/src/features/rwa/hooks/useMoreRwaTokens'
 import { IssuerTokenCard } from '~/pages/TokenDetails/components/rwa/IssuerTokenCard'
-import { useTDPRWAMatch } from '~/pages/TokenDetails/hooks/useTDPRWAMatch'
+import { useTDPRWAMatch, useTDPRWASubject } from '~/pages/TokenDetails/hooks/useTDPRWAMatch'
 
 const COLLAPSED_VISIBLE_COUNT = 2
 
@@ -14,11 +16,9 @@ export function MoreWaysToTrade(): JSX.Element | null {
   const { t } = useTranslation()
   const [isExpanded, setIsExpanded] = useState(false)
   const rwaMatch = useTDPRWAMatch()
-  const otherIssuerTokens = useMemo(
-    () => rwaMatch?.asset.tokens.filter((token) => token.issuer !== rwaMatch.token.issuer) ?? [],
-    [rwaMatch],
-  )
-  const getMarketData = useRWAIssuerMarketData(otherIssuerTokens)
+  const subject = useTDPRWASubject()
+  const { otherIssuerTokens, getMarketData } = useMoreRwaTokens({ rwaMatch, subject })
+  const plainTokenNames = useIsTokenCategoriesEnabled()
   const onToggleExpanded = useExpandRWASiblingHandler({
     rwaMatch,
     variantCount: otherIssuerTokens.length,
@@ -30,7 +30,7 @@ export function MoreWaysToTrade(): JSX.Element | null {
     return null
   }
 
-  const companyName = rwaMatch.asset.name
+  const companyName = rwaMatch.asset.name || rwaMatch.asset.symbol
   const useExpando = otherIssuerTokens.length > COLLAPSED_VISIBLE_COUNT
   const visibleTokens =
     useExpando && !isExpanded ? otherIssuerTokens.slice(0, COLLAPSED_VISIBLE_COUNT) : otherIssuerTokens
@@ -49,7 +49,15 @@ export function MoreWaysToTrade(): JSX.Element | null {
             maxWidth="49%"
             $md={{ flexGrow: 0, flexBasis: 'auto', maxWidth: '100%' }}
           >
-            <IssuerTokenCard token={token} assetName={companyName} marketData={getMarketData(token)} />
+            <IssuerTokenCard
+              token={token}
+              primaryName={getIssuerTokenPrimaryName({
+                tokenName: token.name,
+                fallbackName: companyName,
+                plainTokenNames,
+              })}
+              marketData={getMarketData(token)}
+            />
           </Flex>
         ))}
       </Flex>

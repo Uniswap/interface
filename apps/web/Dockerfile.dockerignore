@@ -15,6 +15,8 @@
 
 # Exclude other apps' source but KEEP every workspace package.json —
 # bun install --frozen-lockfile fails if any workspace manifest is missing.
+# Their tsconfig.json stays too: vite's resolve.tsconfigPaths walks the root
+# tsconfig's project references and hard-errors on any that is missing.
 apps/mobile/**
 apps/extension/**
 apps/cli/**
@@ -26,6 +28,7 @@ apps/mission-control/**
 !apps/cli/package.json
 !apps/dev-portal/package.json
 !apps/mission-control/package.json
+!apps/*/tsconfig.json
 
 # Keep scoped: packages/ui has web-used asset folders named backgrounds/ios|android.
 apps/**/ios

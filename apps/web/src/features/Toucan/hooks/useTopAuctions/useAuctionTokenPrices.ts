@@ -1,11 +1,7 @@
-import { GraphQLApi } from '@universe/api'
 import { useMemo } from 'react'
-import {
-  buildContractInputForAddress,
-  type PriceMap,
-  useTokenMarketPrices,
-} from '~/features/Toucan/hooks/useTokenMarketPrices'
+import { buildTokenMarketCurrencyId } from '~/features/Toucan/hooks/tokenMarketPriceKeys'
 import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
+import { type PriceMap, useCurrencyKeyPriceMap } from '~/hooks/useCurrencyKeyPriceMap'
 
 /**
  * Fetches USD prices for the auction tokens (the tokens being auctioned).
@@ -15,26 +11,15 @@ export function useAuctionTokenPrices(auctions: readonly EnrichedAuction[]): {
   priceMap: PriceMap
   loading: boolean
 } {
-  const contracts = useMemo(() => {
-    if (!auctions.length) {
-      return []
-    }
-
-    const contractMap = auctions.reduce((acc: { [key: string]: GraphQLApi.ContractInput }, auction) => {
-      if (auction.auction?.tokenAddress && auction.auction.chainId) {
-        const key = `${auction.auction.chainId}-${auction.auction.tokenAddress}`
-        // oxlint-disable-next-line typescript/no-unnecessary-condition
-        if (!acc[key]) {
-          acc[key] = buildContractInputForAddress({
-            chainId: auction.auction.chainId,
-            address: auction.auction.tokenAddress,
-          })
-        }
+  const currencyIds = useMemo(() => {
+    const ids = new Set<string>()
+    for (const { auction } of auctions) {
+      if (auction?.tokenAddress && auction.chainId) {
+        ids.add(buildTokenMarketCurrencyId({ chainId: auction.chainId, address: auction.tokenAddress }))
       }
-      return acc
-    }, {})
-    return Object.values(contractMap)
+    }
+    return Array.from(ids)
   }, [auctions])
 
-  return useTokenMarketPrices(contracts)
+  return useCurrencyKeyPriceMap(currencyIds)
 }

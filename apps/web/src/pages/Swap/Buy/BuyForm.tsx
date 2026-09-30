@@ -1,4 +1,5 @@
 import { Flex, type FlexCompatProps, fonts, Text } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { type ComponentRef, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router'
@@ -15,7 +16,6 @@ import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/ho
 import { FiatOffRampEventName, FiatOnRampEventName, InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { isSafeNumber } from 'utilities/src/primitives/integer'

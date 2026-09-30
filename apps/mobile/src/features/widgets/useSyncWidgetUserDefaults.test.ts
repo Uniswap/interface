@@ -2,7 +2,7 @@ import { setItem } from 'react-native-widgetkit'
 import { useSyncWidgetUserDefaults } from 'src/features/widgets/useSyncWidgetUserDefaults'
 import { act, renderHook } from 'src/test/test-utils'
 import { getBuildVariant } from 'src/utils/version'
-import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'uniswap/src/test/fixtures/gql/assets/constants'
+import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'uniswap/src/test/fixtures/assets/constants'
 import { initialWalletState, setAccountAsActive } from 'wallet/src/features/wallet/slice'
 import { ACCOUNT, ACCOUNT2 } from 'wallet/src/test/fixtures'
 
@@ -92,8 +92,8 @@ describe('useSyncWidgetUserDefaults', () => {
     expect(writesTo(CHAINS_KEY)).toEqual([
       {
         chains: [
-          { chainId: 1, name: 'ETHEREUM' },
-          { chainId: 10, name: 'OPTIMISM' },
+          { chainId: 1, name: 'ETHEREUM', nativeAddress: '0x0000000000000000000000000000000000000000' },
+          { chainId: 10, name: 'OPTIMISM', nativeAddress: '0x0000000000000000000000000000000000000000' },
         ],
       },
     ])

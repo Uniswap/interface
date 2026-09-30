@@ -1,3 +1,4 @@
+import type { UseQueryResult } from '@tanstack/react-query'
 import { act, fireEvent, waitFor } from '@testing-library/react-native'
 import { Token } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
@@ -89,6 +90,11 @@ function makeFetchedCurrencyInfo(tokenList: TokenList): CurrencyInfo {
   }
 }
 
+// Only `data`/`isLoading` are read by the component; the rest of the query result is irrelevant here.
+function mockQueryResult(data: Maybe<CurrencyInfo>, isLoading = false): UseQueryResult<Maybe<CurrencyInfo>> {
+  return { data, isLoading } as UseQueryResult<Maybe<CurrencyInfo>>
+}
+
 const sevenTokens: RwaTokenOption[] = ['AAPLX', 'GOOGLX', 'MSFTX', 'AMZNX', 'TSLAX', 'METAX', 'NVDAX'].map(makeStock)
 const threeTokens: RwaTokenOption[] = ['AAPLX', 'GOOGLX', 'MSFTX'].map(makeStock)
 
@@ -97,7 +103,7 @@ function testIdFor(token: RwaTokenOption): string {
 }
 
 beforeEach(() => {
-  mockUseCurrencyInfoWithLoading.mockReturnValue({ currencyInfo: undefined, loading: false })
+  mockUseCurrencyInfoWithLoading.mockReturnValue(mockQueryResult(undefined))
   mockUseCurrencyInfos.mockReturnValue([])
   mockUseDismissedTokenWarnings.mockReturnValue({ tokenWarningDismissed: false, onDismissTokenWarning: vi.fn() })
 })
@@ -167,10 +173,7 @@ describe('StocksHorizontalRow.web', () => {
   })
 
   it('tapping a stock shows the warning modal without selecting', async () => {
-    mockUseCurrencyInfoWithLoading.mockReturnValue({
-      currencyInfo: makeFetchedCurrencyInfo(TokenList.NonDefault),
-      loading: false,
-    })
+    mockUseCurrencyInfoWithLoading.mockReturnValue(mockQueryResult(makeFetchedCurrencyInfo(TokenList.NonDefault)))
     const onSelect = vi.fn()
     const { getByTestId, findByTestId } = render(
       <StocksHorizontalRow
@@ -189,10 +192,7 @@ describe('StocksHorizontalRow.web', () => {
   })
 
   it('acknowledging the warning selects the token', async () => {
-    mockUseCurrencyInfoWithLoading.mockReturnValue({
-      currencyInfo: makeFetchedCurrencyInfo(TokenList.NonDefault),
-      loading: false,
-    })
+    mockUseCurrencyInfoWithLoading.mockReturnValue(mockQueryResult(makeFetchedCurrencyInfo(TokenList.NonDefault)))
     const onSelect = vi.fn()
     const { getByTestId, findByTestId } = render(
       <StocksHorizontalRow
@@ -211,10 +211,7 @@ describe('StocksHorizontalRow.web', () => {
   })
 
   it('"Go back" cancels without selecting', async () => {
-    mockUseCurrencyInfoWithLoading.mockReturnValue({
-      currencyInfo: makeFetchedCurrencyInfo(TokenList.NonDefault),
-      loading: false,
-    })
+    mockUseCurrencyInfoWithLoading.mockReturnValue(mockQueryResult(makeFetchedCurrencyInfo(TokenList.NonDefault)))
     const onSelect = vi.fn()
     const { getByTestId, findByTestId, queryByTestId } = render(
       <StocksHorizontalRow
@@ -234,10 +231,7 @@ describe('StocksHorizontalRow.web', () => {
   })
 
   it('a previously-dismissed warning selects directly without a modal', async () => {
-    mockUseCurrencyInfoWithLoading.mockReturnValue({
-      currencyInfo: makeFetchedCurrencyInfo(TokenList.NonDefault),
-      loading: false,
-    })
+    mockUseCurrencyInfoWithLoading.mockReturnValue(mockQueryResult(makeFetchedCurrencyInfo(TokenList.NonDefault)))
     mockUseDismissedTokenWarnings.mockReturnValue({ tokenWarningDismissed: true, onDismissTokenWarning: vi.fn() })
     const onSelect = vi.fn()
     const { getByTestId, queryByTestId } = render(
@@ -275,7 +269,7 @@ describe('StocksHorizontalRow.web', () => {
   })
 
   it('while the token query is loading, no modal shows and nothing is selected', () => {
-    mockUseCurrencyInfoWithLoading.mockReturnValue({ currencyInfo: undefined, loading: true })
+    mockUseCurrencyInfoWithLoading.mockReturnValue(mockQueryResult(undefined, true))
     const onSelect = vi.fn()
     const { getByTestId, queryByTestId } = render(
       <StocksHorizontalRow
@@ -294,10 +288,7 @@ describe('StocksHorizontalRow.web', () => {
   })
 
   it('a blocked token shows the modal and never selects, even via the acknowledge button', async () => {
-    mockUseCurrencyInfoWithLoading.mockReturnValue({
-      currencyInfo: makeFetchedCurrencyInfo(TokenList.Blocked),
-      loading: false,
-    })
+    mockUseCurrencyInfoWithLoading.mockReturnValue(mockQueryResult(makeFetchedCurrencyInfo(TokenList.Blocked)))
     const onSelect = vi.fn()
     const { getByTestId, findByTestId, queryByTestId } = render(
       <StocksHorizontalRow
@@ -318,10 +309,7 @@ describe('StocksHorizontalRow.web', () => {
   })
 
   it('a fetched default-list token with no warning selects directly without a modal', async () => {
-    mockUseCurrencyInfoWithLoading.mockReturnValue({
-      currencyInfo: makeFetchedCurrencyInfo(TokenList.Default),
-      loading: false,
-    })
+    mockUseCurrencyInfoWithLoading.mockReturnValue(mockQueryResult(makeFetchedCurrencyInfo(TokenList.Default)))
     const onSelect = vi.fn()
     const { getByTestId, queryByTestId } = render(
       <StocksHorizontalRow
@@ -356,6 +344,27 @@ describe('StocksHorizontalRow.web', () => {
     )
   })
 
+  it('a tap resolves from the batched prefetch without a per-tap query', async () => {
+    mockUseCurrencyInfos.mockReturnValue([makeFetchedCurrencyInfo(TokenList.NonDefault)])
+    const onSelect = vi.fn()
+    const { getByTestId, findByTestId } = render(
+      <StocksHorizontalRow
+        tokens={[warnableStock]}
+        expanded={true}
+        showTokenWarnings={true}
+        onSelectRwaToken={onSelect}
+        onExpand={vi.fn()}
+      />,
+    )
+
+    fireEvent.press(getByTestId(testIdFor(warnableStock)))
+
+    expect(await findByTestId('warning-modal-title')).toBeDefined()
+    expect(onSelect).not.toHaveBeenCalled()
+    // The per-tap query stays skipped (undefined currencyId) because the batch already had this token.
+    expect(mockUseCurrencyInfoWithLoading).not.toHaveBeenCalledWith(expect.any(String))
+  })
+
   it('skips the batched prefetch when warnings are gated off', () => {
     render(
       <StocksHorizontalRow
@@ -373,7 +382,7 @@ describe('StocksHorizontalRow.web', () => {
   it('a hung token query selects directly without a modal after the timeout', () => {
     vi.useFakeTimers()
     try {
-      mockUseCurrencyInfoWithLoading.mockReturnValue({ currencyInfo: undefined, loading: true })
+      mockUseCurrencyInfoWithLoading.mockReturnValue(mockQueryResult(undefined, true))
       const onSelect = vi.fn()
       const { getByTestId, queryByTestId } = render(
         <StocksHorizontalRow
@@ -401,7 +410,7 @@ describe('StocksHorizontalRow.web', () => {
   })
 
   it('a query that resolves with no token info selects directly without a modal', async () => {
-    // beforeEach default: currencyInfo undefined, loading false — i.e. the fetch came back empty.
+    // beforeEach default: data undefined, isLoading false — i.e. the fetch came back empty.
     const onSelect = vi.fn()
     const { getByTestId, queryByTestId } = render(
       <StocksHorizontalRow

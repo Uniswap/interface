@@ -1,16 +1,16 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
 import type { ListPoolsResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { getConnectQueryRetryDelay, shouldRetryConnectQuery } from '@universe/api'
-import { getListPoolsQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/pools/queries'
+import { getListPoolsInfiniteQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/pools/queries'
 
 function nextPageParamFor(lastPage: PlainMessage<ListPoolsResponse>): string | undefined {
-  const { getNextPageParam } = getListPoolsQueryOptions({ params: { chainIds: [1] } })
+  const { getNextPageParam } = getListPoolsInfiniteQueryOptions({ params: { chainIds: [1] } })
   return getNextPageParam(lastPage, [lastPage], '', ['']) ?? undefined
 }
 
-describe(getListPoolsQueryOptions, () => {
+describe(getListPoolsInfiniteQueryOptions, () => {
   it('uses the shared ConnectRPC retry policy — the global policy only retries FetchError 500s, which never matches a ConnectRPC error', () => {
-    const options = getListPoolsQueryOptions({ params: { chainIds: [1] } })
+    const options = getListPoolsInfiniteQueryOptions({ params: { chainIds: [1] } })
     expect(options.retry).toBe(shouldRetryConnectQuery)
     expect(options.retryDelay).toBe(getConnectQueryRetryDelay)
   })

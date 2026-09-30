@@ -1,5 +1,5 @@
+import { TestID } from '@universe/test'
 import { useId } from 'react'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export const HERO_LOCKUP_SIZE = 48
 const TILE_SIZE = 28

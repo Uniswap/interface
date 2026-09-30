@@ -37,8 +37,6 @@ const DisclosuresModal = createLazy(() =>
 )
 const FeatureFlagModal = createLazy(() => import('~/components/FeatureFlagModal/FeatureFlagModal'))
 const DevFlagsBox = createLazyNoReload(() => import('~/dev/DevFlagsBox'))
-const TokenNotFoundModal = createLazy(() => import('~/components/NotFoundModal/TokenNotFoundModal'))
-const PoolNotFoundModal = createLazy(() => import('~/components/NotFoundModal/PoolNotFoundModal'))
 const IncreaseLiquidityModal = createLazy(() =>
   import('~/pages/IncreaseLiquidity/IncreaseLiquidityModal').then((module) => ({
     default: module.IncreaseLiquidityModal,
@@ -224,14 +222,6 @@ export const modalRegistry: ModalRegistry = {
   [ModalName.ClaimFee]: {
     component: ClaimFeeModal,
     shouldMount: (state) => state.application.openModal?.name === ModalName.ClaimFee,
-  },
-  [ModalName.TokenNotFound]: {
-    component: TokenNotFoundModal,
-    shouldMount: (state) => state.application.openModal?.name === ModalName.TokenNotFound,
-  },
-  [ModalName.PoolNotFound]: {
-    component: PoolNotFoundModal,
-    shouldMount: (state) => state.application.openModal?.name === ModalName.PoolNotFound,
   },
   [ModalName.DevFlags]: {
     component: DevFlagsBox,

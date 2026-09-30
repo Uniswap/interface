@@ -36,6 +36,7 @@ export const HeadingReanimatedNumber = ({
   charDelays,
   charShouldAnimate,
   reduceMotion,
+  suspendAnimations,
 }: ReanimatedNumberRenderProps &
   Pick<
     AnimatedNumberProps,
@@ -140,6 +141,7 @@ export const HeadingReanimatedNumber = ({
               digitHeight={digitHeight}
               reduceMotion={reduceMotion}
               shouldFadeDecimals={shouldFadeDecimals}
+              suspendAnimations={suspendAnimations}
               tick={tick}
               useHeadingTypography={useHeadingTypography}
               variantFont={variantFont}

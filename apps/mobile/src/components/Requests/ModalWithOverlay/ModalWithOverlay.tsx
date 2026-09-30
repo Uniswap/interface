@@ -1,6 +1,7 @@
 import { BottomSheetFooter, BottomSheetScrollView, useBottomSheetInternal } from '@gorhom/bottom-sheet'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Button, ButtonProps, Flex, spacing } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { PropsWithChildren, useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -18,7 +19,6 @@ import { ScrollDownOverlay } from 'src/components/Requests/ModalWithOverlay/Scro
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const MEASURE_LAYOUT_TIMEOUT = 100
 

@@ -1,7 +1,7 @@
 import { REFRESH_FRAME_HIDDEN_CLASS, REFRESH_FRAME_REVEAL_CLASSES } from '@universe/mycelium/refresh-button-compat'
+import { TestID } from '@universe/test'
 import { PortfolioBalancePart } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { PortfolioBalance } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioBalance'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { render } from 'uniswap/src/test/test-utils'
 
 /**

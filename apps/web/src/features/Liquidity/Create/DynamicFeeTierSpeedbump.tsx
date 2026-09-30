@@ -1,10 +1,10 @@
 import { Flex } from '@universe/mycelium'
 import { InfoCircleFilled } from '@universe/mycelium/icons/InfoCircleFilled'
+import { TestID } from '@universe/test'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Dialog } from 'uniswap/src/components/dialog/Dialog'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 
 export const DynamicFeeTierSpeedbump = () => {

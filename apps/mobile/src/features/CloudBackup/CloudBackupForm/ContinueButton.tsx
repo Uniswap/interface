@@ -1,7 +1,7 @@
 import { Button, Flex } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { useCloudBackupPasswordFormContext } from 'src/features/CloudBackup/CloudBackupForm/CloudBackupPasswordFormContext'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export function ContinueButton({ onPressContinue }: { onPressContinue?: () => void }): JSX.Element {
   const { isInputValid, onPressNext } = useCloudBackupPasswordFormContext()

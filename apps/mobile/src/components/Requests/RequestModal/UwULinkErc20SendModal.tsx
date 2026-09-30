@@ -157,7 +157,7 @@ function UwULinkErc20SendModalContent({
           </Text>
         </Flex>
       </Flex>
-      <Flex alignSelf="stretch" borderTopColor="$surface3" borderTopWidth={1} pt="$spacing16">
+      <Flex alignSelf="stretch" borderColor="$surface3" borderTopWidth={1} pt="$spacing16">
         <NetworkFee chainId={chainId} gasFee={gasFee} />
       </Flex>
       {!hasSufficientGasFunds && (

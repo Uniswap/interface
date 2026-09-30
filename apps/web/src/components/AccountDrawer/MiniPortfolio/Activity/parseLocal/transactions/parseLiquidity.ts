@@ -1,4 +1,5 @@
 import { UniverseChainId } from '@universe/chains'
+import { fetchCurrency } from 'uniswap/src/features/tokens/fetchCurrencyInfo'
 import type {
   LiquidityDecreaseTransactionInfo,
   LiquidityIncreaseTransactionInfo,
@@ -10,7 +11,6 @@ import type {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { getCurrencyFromCurrencyId } from '~/components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
 import type { FormatNumberFunctionType } from '~/components/AccountDrawer/MiniPortfolio/Activity/parseLocal/types'
 import { buildCurrencyDescriptor } from '~/components/AccountDrawer/MiniPortfolio/Activity/parseLocal/utils'
 import type { Activity } from '~/components/AccountDrawer/MiniPortfolio/Activity/types'
@@ -30,8 +30,8 @@ async function parseCurrencyInfoForLP({
   formatNumber: FormatNumberFunctionType
 }): Promise<Partial<Activity>> {
   const [currency0, currency1] = await Promise.all([
-    getCurrencyFromCurrencyId(currencyInfo.currency0Id),
-    currencyInfo.currency1Id ? getCurrencyFromCurrencyId(currencyInfo.currency1Id) : undefined,
+    fetchCurrency(currencyInfo.currency0Id),
+    currencyInfo.currency1Id ? fetchCurrency(currencyInfo.currency1Id) : undefined,
   ])
 
   const descriptor = buildCurrencyDescriptor({
@@ -64,8 +64,8 @@ export async function parseMigrateV2ToV3({
   quoteCurrencyId,
 }: MigrateV2LiquidityToV3TransactionInfo): Promise<Partial<Activity>> {
   const [baseCurrency, quoteCurrency] = await Promise.all([
-    getCurrencyFromCurrencyId(baseCurrencyId),
-    getCurrencyFromCurrencyId(quoteCurrencyId),
+    fetchCurrency(baseCurrencyId),
+    fetchCurrency(quoteCurrencyId),
   ])
   const baseSymbol = baseCurrency?.symbol ?? i18n.t('common.unknown')
   const quoteSymbol = quoteCurrency?.symbol ?? i18n.t('common.unknown')
@@ -87,9 +87,7 @@ export async function parseLpIncentivesClaim({
   // Claims persisted before the tokenAddresses[] rename carry the old singular field, so guard the read.
   // oxlint-disable-next-line no-unnecessary-condition
   const tokenAddresses = info.tokenAddresses ?? []
-  const tokens = await Promise.all(
-    tokenAddresses.map((address) => getCurrencyFromCurrencyId(buildCurrencyId(chainId, address))),
-  )
+  const tokens = await Promise.all(tokenAddresses.map((address) => fetchCurrency(buildCurrencyId(chainId, address))))
   const symbol =
     tokens
       .map((token) => token?.symbol)
@@ -109,8 +107,8 @@ export async function parseLiquidity({
   formatNumber: FormatNumberFunctionType
 }): Promise<Partial<Activity>> {
   const [token0Currency, token1Currency] = await Promise.all([
-    getCurrencyFromCurrencyId(lp.currency0Id),
-    getCurrencyFromCurrencyId(lp.currency1Id),
+    fetchCurrency(lp.currency0Id),
+    fetchCurrency(lp.currency1Id),
   ])
   const [token0Raw, token1Raw] = [lp.currency0AmountRaw, lp.currency1AmountRaw]
   const descriptor = buildCurrencyDescriptor({

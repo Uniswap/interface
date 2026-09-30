@@ -1419,3 +1419,20 @@ export function testSetWalletDeviceLanguage(
     }
   }
 }
+
+export function testRemovePersistedApolloCache(migration: (state: any) => any, prevSchema: any): void {
+  const result = migration(prevSchema)
+  expect(result).toEqual(prevSchema)
+}
+
+export function testRemoveTweaksSlice(migration: (state: any) => any, prevSchema: any): void {
+  const expected = { ...prevSchema }
+  delete expected.tweaks
+
+  const result = migration({ ...prevSchema, tweaks: { someTweak: true } })
+  expect(result).toEqual(expected)
+  expect('tweaks' in result).toBe(false)
+
+  const resultWithoutTweaks = migration(expected)
+  expect(resultWithoutTweaks).toEqual(expected)
+}

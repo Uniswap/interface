@@ -1,4 +1,4 @@
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import { TableSectionHeader } from '~/pages/Portfolio/Overview/TableSectionHeader'
 import { render, screen } from '~/test-utils/render'
 

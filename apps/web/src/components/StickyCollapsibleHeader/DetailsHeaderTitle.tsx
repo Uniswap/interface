@@ -1,13 +1,18 @@
 import type { UniverseChainId } from '@universe/chains'
 import { Flex, Text } from '@universe/mycelium'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
+import type { TestIDType } from '@universe/test'
 import type { CSSProperties, ReactNode } from 'react'
 import { Link } from 'react-router'
 import { gap } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import type { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constants'
-import { getHeaderLogoSize, getHeaderTitleVariant } from '~/components/StickyCollapsibleHeader/getHeaderLogoSize'
+import {
+  getHeaderLogoSize,
+  getHeaderTitleLineHeight,
+  getHeaderTitleVariant,
+} from '~/components/StickyCollapsibleHeader/getHeaderLogoSize'
+import { LoadingBubble } from '~/components/Tokens/loading'
 import { EllipsisTamaguiStyle } from '~/theme/components/styles'
 
 // flexShrink 0 is load-bearing: this is a plain `<a>`, so it defaults to CSS flex-shrink 1, and the
@@ -40,6 +45,8 @@ interface DetailsHeaderTitleProps {
   /** Ticker, rendered inline after the name on desktop and via `mobileSubtitle` on mobile web. */
   symbol: string
   isCompact: boolean
+  /** Shows a title-sized skeleton in place of the name, ticker and mobile subtitle while the identity resolves. */
+  isLoading?: boolean
   logoUrl?: string | null
   /** Logo seed name — may differ from the displayed name (e.g. RWAs show the underlying asset name). */
   logoName?: string | null
@@ -109,6 +116,7 @@ export function DetailsHeaderTitle({
   name,
   symbol,
   isCompact,
+  isLoading = false,
   logoUrl,
   logoName,
   logoSymbol,
@@ -155,39 +163,47 @@ export function DetailsHeaderTitle({
           transition={HEADER_TRANSITION}
         >
           <Flex row flex={1} alignItems="flex-end" gap="$gap8" $sm={{ width: '100%' }}>
-            <TitleLink href={titleHref} style={TITLE_LINK_STYLE}>
-              <Text
-                tag="h1"
-                variant={getHeaderTitleVariant({ isCompact, media })}
-                // Adornments are unshrinkable pills, so the name is what yields when the title line runs
-                // out of room: it ellipsizes (see EllipsisTamaguiStyle) instead of pushing the last
-                // adornment past the header edge. Shrinking needs a non-auto min-width, since a nowrap
-                // text's min-content is its full width.
-                flexShrink={1}
-                minWidth={titleMinWidth ?? 0}
-                transition={HEADER_TRANSITION}
-                {...EllipsisTamaguiStyle}
-              >
-                {name}
-              </Text>
-              {!isCompact && !media.md && (
+            {isLoading ? (
+              <LoadingBubble
+                height={getHeaderTitleLineHeight({ isCompact, media })}
+                width={136}
+                containerProps={{ width: 'max-content' }}
+              />
+            ) : (
+              <TitleLink href={titleHref} style={TITLE_LINK_STYLE}>
                 <Text
-                  tag="h2"
-                  variant="subheading1"
-                  textTransform="uppercase"
-                  color="$neutral2"
-                  $sm={{ display: 'none' }}
+                  tag="h1"
+                  variant={getHeaderTitleVariant({ isCompact, media })}
+                  // Adornments are unshrinkable pills, so the name is what yields when the title line runs
+                  // out of room: it ellipsizes (see EllipsisTamaguiStyle) instead of pushing the last
+                  // adornment past the header edge. Shrinking needs a non-auto min-width, since a nowrap
+                  // text's min-content is its full width.
+                  flexShrink={1}
+                  minWidth={titleMinWidth ?? 0}
                   transition={HEADER_TRANSITION}
+                  {...EllipsisTamaguiStyle}
                 >
-                  {symbol}
+                  {name}
                 </Text>
-              )}
-            </TitleLink>
+                {!isCompact && !media.md && (
+                  <Text
+                    tag="h2"
+                    variant="subheading1"
+                    textTransform="uppercase"
+                    color="$neutral2"
+                    $sm={{ display: 'none' }}
+                    transition={HEADER_TRANSITION}
+                  >
+                    {symbol}
+                  </Text>
+                )}
+              </TitleLink>
+            )}
             {/* Outside TitleLink on purpose: badges carry their own tooltips/taps, which a wrapping
                 anchor would swallow into a navigation. */}
             {titleAdornments}
           </Flex>
-          {mobileSubtitle}
+          {!isLoading && mobileSubtitle}
           {(!media.sm || showMetadataRowOnMobile) && metadataRow}
         </Flex>
       </Flex>

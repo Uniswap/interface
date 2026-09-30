@@ -1,5 +1,5 @@
 import { normalizeTokenAddressForCache, UniverseChainId } from '@universe/chains'
-import { pickDisplayChainToken } from 'uniswap/src/data/apiClients/dataApiService/rwa/pickPrimaryChainToken'
+import { resolvePrimaryChain } from 'uniswap/src/data/apiClients/dataApiService/rwa/resolvePrimaryChain'
 import {
   deriveRwaAggregates,
   getIssuerPriceDisplay,
@@ -30,12 +30,12 @@ export function linkForIssuer({
   enabledChainIds: readonly UniverseChainId[]
   chainFilter?: UniverseChainId
 }): string | undefined {
-  const primary = pickDisplayChainToken({ chainTokens: issuer.chainTokens, enabledChainIds, chainFilter })
-  if (!primary?.address) {
+  const primary = resolvePrimaryChain({ issuer, enabledChainIds, chainFilter })
+  if (!primary) {
     return undefined
   }
   return getTokenDetailsURL({
-    address: primary.address,
+    address: primary.chainToken.address,
     chain: toGraphQLChain(primary.chainId),
     chainQueryParam: chainFilter ? undefined : TDP_MULTICHAIN_CHAIN_QUERY_VALUE,
   })

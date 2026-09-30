@@ -92,15 +92,18 @@ export async function rotateRecoveryWithRecoveryAuth({
     const authKeySignature = signWithAuthKey(recoveredAuthPrivateKey, payloadBytes)
     const { signature: recoveryAuthSignature } = await generateAuthorizationSignature(payloadObject)
 
-    const result = await EmbeddedWalletApiClient.fetchSetupRecovery({
-      authMethodId: encrypted.authMethodId,
-      authMethodType,
-      authMethodIdentifier: email,
-      encryptedKeyId: encrypted.encryptedKeyId,
-      authKeySignature,
-      recoveryAuthSignature,
-      signingPayload: swapPayload,
-    })
+    const result = await EmbeddedWalletApiClient.fetchSetupRecovery(
+      {
+        authMethodId: encrypted.authMethodId,
+        authMethodType,
+        authMethodIdentifier: email,
+        encryptedKeyId: encrypted.encryptedKeyId,
+        authKeySignature,
+        recoveryAuthSignature,
+        signingPayload: swapPayload,
+      },
+      accessToken,
+    )
     if (!result.success) {
       throw new Error('Backend failed to rotate recovery quorum')
     }

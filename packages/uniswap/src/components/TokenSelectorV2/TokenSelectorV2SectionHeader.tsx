@@ -1,4 +1,5 @@
 import { Flex, Text } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Briefcase } from 'ui/src/components/icons/Briefcase'
@@ -9,7 +10,6 @@ import { Shuffle } from 'ui/src/components/icons/Shuffle'
 import { Sparkle } from 'ui/src/components/icons/Sparkle'
 import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
 import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 function useSectionTitleV2(sectionKey: OnchainItemSectionName): string {
   const { t } = useTranslation()

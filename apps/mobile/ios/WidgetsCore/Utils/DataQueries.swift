@@ -1,102 +1,158 @@
 //
-//  Network.swift
+//  DataQueries.swift
 //  WidgetsCore
 //
 //  Created by Eric Huang on 7/6/23.
 //
 
 import Foundation
-import Apollo
 import OSLog
+
+/// Resolves between the widget's chain-name strings (GraphQL-style, e.g. `ETHEREUM`, stored in favorites,
+/// intents and deeplinks) and the numeric chain ids + native-token addresses the v2 data API expects.
+/// Backed by the chains the app syncs (see `setChainsUserDefaults`); Ethereum is always present so a
+/// widget rendered before any sync (snapshots, placeholders) still resolves.
+struct WidgetChainRegistry {
+  private static let ethereum = WidgetChain(
+    chainId: 1, name: WidgetConstants.ethereumChain, nativeAddress: WidgetConstants.zeroAddress)
+
+  let chains: [WidgetChain]
+
+  init(chains: [WidgetChain] = UniswapUserDefaults.readChains().chains) {
+    self.chains = chains.contains { $0.chainId == Self.ethereum.chainId } ? chains : chains + [Self.ethereum]
+  }
+
+  var chainIds: [Int] { chains.map { $0.chainId } }
+
+  func chain(named name: String) -> WidgetChain? {
+    return chains.first { $0.name == name }
+  }
+
+  func chain(id chainId: Int) -> WidgetChain? {
+    return chains.first { $0.chainId == chainId }
+  }
+
+  /// v2 `TokenIdentifier` for a widget token; a nil address means the chain's native token.
+  func tokenIdentifier(chain chainName: String, address: String?) -> [String: Any]? {
+    return chain(named: chainName).map { tokenIdentifier(chain: $0, address: address) }
+  }
+
+  func tokenIdentifier(chain: WidgetChain, address: String?) -> [String: Any] {
+    return ["chainId": chain.chainId, "address": address ?? nativeAddress(for: chain)]
+  }
+
+  /// Maps a v2 response address back to the widget convention: nil for the chain's native token.
+  /// The backend serves natives under several placeholders, so all of them collapse to nil.
+  func displayAddress(chainId: Int, address: String?) -> String? {
+    guard let address = address, !address.isEmpty else {
+      return nil
+    }
+    let native = chain(id: chainId).map { nativeAddress(for: $0) }
+    let nativePlaceholders = [native, WidgetConstants.zeroAddress, WidgetConstants.legacyNativeAddress, "ETH"]
+    return nativePlaceholders.contains { $0?.lowercased() == address.lowercased() } ? nil : address
+  }
+
+  private func nativeAddress(for chain: WidgetChain) -> String {
+    return chain.nativeAddress ?? WidgetConstants.zeroAddress
+  }
+}
 
 public class DataQueries {
 
-  static let cachePolicy: CachePolicy = CachePolicy.fetchIgnoringCacheData
+  /// Mirrors mobile Explore's default ListTokens request: every enabled chain, sorted by 1d volume descending.
+  static let listTokensOrderBy = "TOKENS_ORDER_BY_VOLUME_1D"
+  static let listTokensPageSize = 100
+  static let dayDuration = "HISTORY_DURATION_DAY"
 
   public static func fetchTokensData(tokenInputs: [TokenInput]) async throws -> [TokenResponse] {
-    return try await withCheckedThrowingContinuation { continuation in
-      let contractInputs = tokenInputs.map {MobileSchema.ContractInput(chain: GraphQLEnum(rawValue: $0.chain), address: $0.address == nil ? GraphQLNullable.null: GraphQLNullable(stringLiteral: $0.address!))}
-      Network.shared.apollo.fetch(query: MobileSchema.WidgetTokensQuery(contracts: contractInputs)) { result in
-        switch result {
-        case .success(let graphQLResult):
-          let tokens = graphQLResult.data?.tokens ?? []
-          let tokenResponses = tokens.map {
-            let symbol = $0?.symbol
-            let name = $0?.name
-            let chain = $0?.chain
-            let address = $0?.address
-            return TokenResponse(chain: chain?.rawValue ?? "", address: address, symbol: symbol ?? "", name: name ?? "")
-          }
-          continuation.resume(returning: tokenResponses)
-        case .failure(let error):
-          continuation.resume(throwing: error)
-        }
+    let registry = WidgetChainRegistry()
+    let requests = tokenInputs.compactMap { input -> (key: String, identifier: [String: Any])? in
+      guard let chain = registry.chain(named: input.chain) else {
+        return nil
       }
+      return (
+        tokenKey(chainId: chain.chainId, address: registry.displayAddress(chainId: chain.chainId, address: input.address)),
+        registry.tokenIdentifier(chain: chain, address: input.address))
+    }
+    guard !requests.isEmpty else {
+      return []
+    }
+
+    let response: GetTokensResponse = try await DataApi.post(
+      method: "GetTokens", body: ["tokens": requests.map { $0.identifier }])
+    // GetTokens is best-effort and unordered, so match results back to the inputs to keep the favorites order.
+    // Both sides are keyed on the widget's display address so a native echoed under a different placeholder
+    // than the one requested (0xeeee…, ETH, …) still matches.
+    let tokensByKey = Dictionary(
+      (response.tokens ?? []).compactMap { token -> (String, DataApiToken)? in
+        guard let chainId = token.chainId else {
+          return nil
+        }
+        return (tokenKey(chainId: chainId, address: registry.displayAddress(chainId: chainId, address: token.address)), token)
+      },
+      uniquingKeysWith: { first, _ in first })
+
+    return requests.compactMap { request in
+      tokensByKey[request.key].flatMap { tokenResponse(from: $0, registry: registry) }
     }
   }
 
   public static func fetchTopTokensData() async throws -> [TokenResponse] {
-    return try await withCheckedThrowingContinuation { continuation in
-      Network.shared.apollo.fetch(query: MobileSchema.TopTokensQuery(chain: GraphQLNullable(MobileSchema.Chain.ethereum)), cachePolicy: cachePolicy) { result in
-        switch result {
-        case .success(let graphQLResult):
-          let topTokens = graphQLResult.data?.topTokens ?? []
-          let tokenResponses = topTokens.map { (tokenData) -> TokenResponse in
-            let symbol = tokenData?.symbol
-            let name = tokenData?.name
-            let chain = tokenData?.chain
-            let address = tokenData?.address
-            return TokenResponse(chain: chain?.rawValue ?? "", address: address, symbol: symbol ?? "", name: name ?? "")
-          }
-          continuation.resume(returning: tokenResponses)
-        case .failure(let error):
-          continuation.resume(throwing: error)
-        }
+    let registry = WidgetChainRegistry()
+    let body: [String: Any] = [
+      "chainIds": registry.chainIds,
+      "sort": ["orderBy": listTokensOrderBy, "ascending": false],
+      "page": ["pageSize": listTokensPageSize],
+      "sparklineDuration": dayDuration,
+    ]
+    let response: ListTokensResponse = try await DataApi.post(method: "ListTokens", body: body)
+
+    return (response.multichainTokens ?? []).compactMap { ranked -> TokenResponse? in
+      guard let token = ranked.multichainToken,
+            let deployment = primaryDeployment(of: ranked, registry: registry),
+            let chain = registry.chain(id: deployment.chainId) else {
+        return nil
       }
+      return TokenResponse(
+        chain: chain.name,
+        address: registry.displayAddress(chainId: deployment.chainId, address: deployment.address),
+        symbol: token.symbol ?? "",
+        name: token.name ?? "")
     }
   }
 
   public static func fetchTokenPriceData(chain: String, address: String?) async throws -> TokenPriceResponse {
-    return try await withCheckedThrowingContinuation { continuation in
-      Network.shared.apollo.fetch(query: MobileSchema.FavoriteTokenCardQuery(chain: GraphQLEnum(rawValue: chain), address: address == nil ? GraphQLNullable.null : GraphQLNullable(stringLiteral: address!)), cachePolicy: cachePolicy) { result in
-        switch result {
-        case .success(let graphQLResult):
-          let token = graphQLResult.data?.token
-          let symbol = token?.symbol
-          let name = token?.name
-          let logoUrl = token?.project?.logoUrl ?? nil
-          let market = token?.market
-          let spotPrice = market?.price?.value
-          let pricePercentChange = market?.pricePercentChange?.value
-          let tokenPriceResponse = TokenPriceResponse(chain: chain, address: address, symbol: symbol ?? "", name: name ?? "", logoUrl: logoUrl ?? "", spotPrice: spotPrice, pricePercentChange: pricePercentChange)
-          continuation.resume(returning: tokenPriceResponse)
-        case .failure(let error):
-          continuation.resume(throwing: error)
-        }
-      }
+    let registry = WidgetChainRegistry()
+    guard let identifier = registry.tokenIdentifier(chain: chain, address: address) else {
+      throw URLError(.badURL)
     }
+    let response: GetTokenResponse = try await DataApi.post(method: "GetToken", body: identifier)
+    let token = response.token
+    return TokenPriceResponse(
+      chain: chain,
+      address: address,
+      symbol: token?.symbol ?? "",
+      name: token?.name ?? "",
+      logoUrl: token?.project?.logoUrl,
+      spotPrice: token?.price?.spotUsd,
+      pricePercentChange: token?.price?.percentChange1d)
   }
 
   public static func fetchTokenPriceHistoryData(chain: String, address: String?) async throws -> TokenPriceHistoryResponse {
-    return try await withCheckedThrowingContinuation { continuation in
-      Network.shared.apollo.fetch(query: MobileSchema.TokenPriceHistoryQuery(contract: MobileSchema.ContractInput(chain: GraphQLEnum(rawValue: chain), address: address == nil ? GraphQLNullable.null: GraphQLNullable(stringLiteral: address!))), cachePolicy: cachePolicy) { result in
-        switch result {
-        case .success(let graphQLResult):
-          let tokenProject = graphQLResult.data?.tokenProjects?[0]
-          let markets = tokenProject?.markets
-          let price = tokenProject?.markets?[0]?.price?.value
-          let pricePercentChange24h = tokenProject?.markets?[0]?.pricePercentChange24h?.value
-          let priceHistory = (markets != nil) && !markets!.isEmpty ?
-          tokenProject?.markets?[0]?.priceHistory?.map { (result) -> PriceHistory in
-            return PriceHistory(timestamp: result?.timestamp ?? 0  * 1000, price: result?.value ?? 0)
-          } : []
-          let priceHistoryResponse = TokenPriceHistoryResponse(priceHistory: priceHistory ?? [], price: price, pricePercentChange24h: pricePercentChange24h)
-          continuation.resume(returning: priceHistoryResponse)
-        case .failure(let error):
-          continuation.resume(throwing: error)
-        }
-      }
+    let registry = WidgetChainRegistry()
+    guard let identifier = registry.tokenIdentifier(chain: chain, address: address) else {
+      throw URLError(.badURL)
     }
+    // `singleChain` is a oneof member, which proto3 JSON flattens onto the message rather than nesting under `target`.
+    let body: [String: Any] = ["singleChain": identifier, "duration": dayDuration]
+    let response: GetTokenHistoryPriceResponse = try await DataApi.post(method: "GetTokenHistoryPrice", body: body)
+    let priceHistory = (response.points ?? []).compactMap { point -> PriceHistory? in
+      guard let timestamp = point.timestamp, let price = point.priceUsd else {
+        return nil
+      }
+      return PriceHistory(timestamp: timestamp, price: price)
+    }
+    return TokenPriceHistoryResponse(priceHistory: priceHistory)
   }
 
   public static func fetchActiveAccountTokensData(address: String?, maxLength: Int = 25) async throws -> [TokenResponse] {
@@ -104,64 +160,21 @@ public class DataQueries {
       return []
     }
 
-    let chains = UniswapUserDefaults.readChains().chains
-    let chainNamesById = Dictionary(chains.map { ($0.chainId, $0.name) }, uniquingKeysWith: { first, _ in first })
-    guard !chainNamesById.isEmpty else {
-      return []
-    }
-
-    var request = URLRequest(url: URL(string: "\(UniswapGateway.dataApiUrl)/data.v1.DataApiService/GetPortfolio")!)
-    request.httpMethod = "POST"
-    for (name, value) in UniswapGateway.authHeaders {
-      request.setValue(value, forHTTPHeaderField: name)
-    }
-    request.setValue("1", forHTTPHeaderField: "Connect-Protocol-Version")
-    request.setValue("uniswap-ios", forHTTPHeaderField: "x-request-source")
-
+    let registry = WidgetChainRegistry()
     let body: [String: Any] = [
       "walletAccount": ["platformAddresses": [["platform": "EVM", "address": address]]],
-      "chainIds": Array(chainNamesById.keys),
+      "chainIds": registry.chainIds,
       "multichain": false,
     ]
-    request.httpBody = try JSONSerialization.data(withJSONObject: body)
-
-    return try await withCheckedThrowingContinuation { continuation in
-      let task = URLSession.shared.dataTask(with: request) { data, response, error in
-        if let error = error {
-          continuation.resume(throwing: error)
-          return
-        }
-        guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode),
-              let data = data else {
-          continuation.resume(throwing: URLError(.badServerResponse))
-          return
-        }
-        do {
-          let response = try JSONDecoder().decode(GetPortfolioResponse.self, from: data)
-          let ranked = (response.portfolio?.balances ?? [])
-            .filter { !isSpam($0.token?.metadata?.spamCode) }
-            .sorted { ($0.valueUsd ?? 0) > ($1.valueUsd ?? 0) }
-            .compactMap { tokenResponse(from: $0, chainNamesById: chainNamesById) }
-          continuation.resume(returning: Array(ranked.prefix(maxLength)))
-        } catch {
-          continuation.resume(throwing: error)
-        }
-      }
-      task.resume()
-    }
+    let response: GetPortfolioResponse = try await DataApi.post(
+      service: DataApi.v1Service, method: "GetPortfolio", body: body)
+    let ranked = (response.portfolio?.balances ?? [])
+      .filter { !isSpam($0.token?.metadata?.spamCode) }
+      .sorted { ($0.valueUsd ?? 0) > ($1.valueUsd ?? 0) }
+      .compactMap { tokenResponse(from: $0, registry: registry) }
+    return Array(ranked.prefix(maxLength))
   }
 
-  private static func isSpam(_ spamCode: String?) -> Bool {
-    return spamCode == "SPAM_CODE_SPAM" || spamCode == "SPAM_CODE_SPAM_URL"
-  }
-
-  private static func tokenResponse(from balance: PortfolioBalance, chainNamesById: [Int: String]) -> TokenResponse? {
-    guard let token = balance.token, let chainId = token.chainId, let chain = chainNamesById[chainId] else {
-      return nil
-    }
-    return TokenResponse(chain: chain, address: token.address, symbol: token.symbol ?? "", name: token.name ?? "")
-  }
-  
   public static func fetchCurrencyConversion(toCurrency: String) async throws -> CurrencyConversionResponse {
     let usdResponse = CurrencyConversionResponse(convertedAmount: ConvertedAmount(currency: fiatCurrencyIntByCode["USD"] ?? 0, value: 1.0))
 
@@ -170,42 +183,72 @@ public class DataQueries {
       return usdResponse
     }
 
-    var request = URLRequest(url: URL(string: "\(UniswapGateway.dataApiUrl)/data.v2.DataApiService/ConvertFiat")!)
-    request.httpMethod = "POST"
-    for (name, value) in UniswapGateway.authHeaders {
-      request.setValue(value, forHTTPHeaderField: name)
-    }
-    request.setValue("1", forHTTPHeaderField: "Connect-Protocol-Version")
-    request.setValue("uniswap-ios", forHTTPHeaderField: "x-request-source")
-
     let body: [String: Any] = [
       "fromAmount": [ "currency": fiatCurrencyIntByCode["USD"], "value": 1 ],
       "toCurrency": fiatCurrencyIntByCode[toCurrency] ?? fiatCurrencyIntByCode["USD"]
     ]
-    request.httpBody = try JSONSerialization.data(withJSONObject: body)
+    return try await DataApi.post(method: "ConvertFiat", body: body)
+  }
 
-    return try await withCheckedThrowingContinuation { continuation in
-      let task = URLSession.shared.dataTask(with: request) { data, response, error in
-        if let error = error {
-          continuation.resume(throwing: error)
-          return
-        }
-        guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode),
-              let data = data else {
-          continuation.resume(throwing: URLError(.badServerResponse))
-          return
-        }
-        do {
-          let response = try JSONDecoder().decode(CurrencyConversionResponse.self, from: data)
-          continuation.resume(returning: response)
-        } catch {
-          continuation.resume(throwing: error)
-        }
-      }
-      task.resume()
+  /// Keyed on the widget's display address, so every native placeholder collapses to the same key.
+  private static func tokenKey(chainId: Int, address: String?) -> String {
+    return "\(chainId):\(address?.lowercased() ?? "native")"
+  }
+
+  private static func tokenResponse(from token: DataApiToken, registry: WidgetChainRegistry) -> TokenResponse? {
+    guard let chainId = token.chainId, let chain = registry.chain(id: chainId) else {
+      return nil
     }
+    return TokenResponse(
+      chain: chain.name,
+      address: registry.displayAddress(chainId: chainId, address: token.address),
+      symbol: token.symbol ?? "",
+      name: token.name ?? "")
+  }
+
+  /// Mirrors mobile's `pickPrimaryDeployment` with no network selected: the highest-1d-volume deployment,
+  /// falling back to Ethereum and then the lowest chain id (Swift dictionaries have no insertion order to
+  /// take "the first entry" from). Only chains the widget can name are considered.
+  private static func primaryDeployment(
+    of ranked: RankedMultichainToken, registry: WidgetChainRegistry
+  ) -> (chainId: Int, address: String)? {
+    let deployments = (ranked.multichainToken?.addresses ?? [:]).compactMap { key, address -> (chainId: Int, address: String)? in
+      guard let chainId = Int(key), registry.chain(id: chainId) != nil else {
+        return nil
+      }
+      return (chainId, address)
+    }
+    guard !deployments.isEmpty else {
+      return nil
+    }
+
+    let volumeByChainId = Dictionary(
+      (ranked.chainStats ?? []).compactMap { stat -> (Int, Double)? in
+        guard let chainId = stat.chainId, let volume = stat.stats?.volume1d else {
+          return nil
+        }
+        return (chainId, volume)
+      },
+      uniquingKeysWith: { first, _ in first })
+    if let byVolume = deployments.filter({ volumeByChainId[$0.chainId] != nil })
+      .max(by: { volumeByChainId[$0.chainId]! < volumeByChainId[$1.chainId]! }) {
+      return byVolume
+    }
+    return deployments.first { $0.chainId == 1 } ?? deployments.min { $0.chainId < $1.chainId }
+  }
+
+  private static func isSpam(_ spamCode: String?) -> Bool {
+    return spamCode == "SPAM_CODE_SPAM" || spamCode == "SPAM_CODE_SPAM_URL"
+  }
+
+  private static func tokenResponse(from balance: PortfolioBalance, registry: WidgetChainRegistry) -> TokenResponse? {
+    guard let token = balance.token, let chainId = token.chainId, let chain = registry.chain(id: chainId) else {
+      return nil
+    }
+    return TokenResponse(
+      chain: chain.name,
+      address: registry.displayAddress(chainId: chainId, address: token.address),
+      symbol: token.symbol ?? "",
+      name: token.name ?? "")
   }
 }
-
-
-

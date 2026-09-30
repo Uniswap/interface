@@ -1,6 +1,6 @@
 import { CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
+import { TestID } from '@universe/test'
 import { getExactSharePercent } from 'uniswap/src/features/positions/utils'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { LiquidityPositionStackedBars } from '~/features/Liquidity/LiquidityPositionStackedBars'
 import { render, screen } from '~/test-utils/render'
 

@@ -8,7 +8,6 @@ import { TDPChainSearchParamSync } from '~/pages/TokenDetails/context/TDPChainSe
 import { TDPStoreContext } from '~/pages/TokenDetails/context/TDPContext'
 import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultichainTokenEntries'
 import { mocked } from '~/test-utils/mocked'
-import { validTokenProjectResponse } from '~/test-utils/tokens/fixtures'
 import { CHAIN_SEARCH_PARAM, TDP_MULTICHAIN_CHAIN_QUERY_VALUE } from '~/utils/params/chainQueryParam'
 
 vi.mock('~/pages/TokenDetails/hooks/useMultichainTokenEntries', () => ({
@@ -22,10 +21,6 @@ function createPendingTDPState(overrides: { selectedMultichainChainId?: Universe
     currencyChain: GraphQLApi.Chain.Ethereum,
     currencyChainId: UniverseChainId.Mainnet,
     address: ADDRESS,
-    tokenQuery: {
-      loading: false,
-      data: validTokenProjectResponse.data,
-    },
     multiChainMap: {},
     selectedMultichainChainId: overrides.selectedMultichainChainId ?? undefined,
     tokenColor: undefined,

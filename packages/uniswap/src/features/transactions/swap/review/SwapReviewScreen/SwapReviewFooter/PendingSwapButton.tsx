@@ -1,11 +1,11 @@
 import { TradingApi } from '@universe/api'
+import { TestID } from '@universe/test'
 import { useEffect, useMemo, useState } from 'react'
 import { NO_ANIMATION_INDEX, PLAN_FETCH_STEP_INDEX } from 'uniswap/src/features/transactions/swap/plan/utils'
 import { useSwapReviewStore } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewStore/useSwapReviewStore'
 import { useSwapReviewTransactionStore } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewTransactionStore/useSwapReviewTransactionStore'
 import { PendingSwapButtonContent } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewFooter/PendingSwapButtonContent'
 import { isChained } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export interface PendingSwapButtonProps {
   disabled: boolean

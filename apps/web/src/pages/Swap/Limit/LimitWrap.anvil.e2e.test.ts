@@ -1,7 +1,7 @@
 import { WETH_ADDRESS } from '@uniswap/universal-router-sdk'
 import { V1_TRADING_API_PATHS } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import { parseEther } from '~/chains'
 import { assume0xAddress } from '~/chains'
 import { expect, getTest } from '~/playwright/fixtures'

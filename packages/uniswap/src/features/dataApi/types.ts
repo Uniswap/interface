@@ -55,6 +55,19 @@ export interface PaginationControls {
   isFetchingNextPage: boolean
 }
 
+/**
+ * App-level chart / windowed-stat time range. Map to the data-api or liquidity-service protobuf
+ * enums only where the request is built (`toRestHistoryDuration`, `toLiquidityHistoryDuration`).
+ */
+export enum HistoryDuration {
+  Hour = 'HOUR',
+  Day = 'DAY',
+  Week = 'WEEK',
+  Month = 'MONTH',
+  Year = 'YEAR',
+  Max = 'MAX',
+}
+
 export enum TokenList {
   Default = 'default',
   NonDefault = 'non_default',
@@ -156,12 +169,14 @@ export type PortfolioMultichainBalance = {
 }
 
 /**
- * Display stats for a search result token row (Search V2 PRD: price, price change, 1D volume).
+ * Display stats for a search result token row (Search V2 PRD: price, price change, FDV). 1D volume
+ * isn't displayed on token rows but still picks the primary chain and feeds RWA collection rows.
  * Populated from the v2 search response; absent on the v1 path.
  */
 export type SearchTokenStats = {
   priceUsd?: number
   pricePercentChange1d?: number
+  fdvUsd?: number
   volume1dUsd?: number
 }
 

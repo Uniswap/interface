@@ -1,6 +1,7 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { UniverseChainId } from '@universe/chains'
 import { AnimatedFlex, Text, TouchableArea } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'ui/src'
@@ -11,7 +12,6 @@ import { getHookRegistryKey, useHookRegistryMap } from 'uniswap/src/features/poo
 import { useUniswapHookProvenance } from 'uniswap/src/features/poolHooks/hooks/useUniswapHookProvenance'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
 import { HookCard } from '~/features/Liquidity/HookCard'
 import { UniswapBuiltHookIcon } from '~/features/Liquidity/UniswapBuiltHookIcon'
@@ -45,6 +45,9 @@ export function AddHook() {
 
   const getUniswapHookProvenance = useUniswapHookProvenance()
 
+  // Seeds position state from `?hook=` on mount and again if the version flips to v4. Note for callers
+  // that clear the hook while this is unmounted: the next mount re-seeds it from the URL until the
+  // provider's sync has caught up, so return to this step first and clear afterwards.
   useEffect(() => {
     if (initialHook && protocolVersion === ProtocolVersion.V4) {
       setPositionState((state) => ({

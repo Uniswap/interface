@@ -1,11 +1,11 @@
 import { isMobileWeb } from '@universe/environment'
 import { Flex, TouchableArea } from '@universe/mycelium'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import { useState } from 'react'
 import { Popover, useSporeColors } from 'ui/src'
 import { QuestionInCircleFilled } from 'ui/src/components/icons/QuestionInCircleFilled'
 import { zIndexes } from 'ui/src/theme'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { HelpContent } from '~/components/HelpModal/HelpContent'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 

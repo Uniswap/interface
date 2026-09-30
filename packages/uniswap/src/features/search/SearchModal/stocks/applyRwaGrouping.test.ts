@@ -52,6 +52,7 @@ describe('applyRwaGroupingToSearchOptions', () => {
       isAddressSearch: false,
       chainFilter: null,
       hoistRwaToTop: false,
+      plainTokenNames: false,
     })
     expect(out[0]).toBe(generic)
     expect(out[1]?.type).toBe(OnchainItemListOptionType.RwaCollection)
@@ -67,6 +68,7 @@ describe('applyRwaGroupingToSearchOptions', () => {
       isAddressSearch: false,
       chainFilter: null,
       hoistRwaToTop: true,
+      plainTokenNames: false,
     })
     expect(out[0]?.type).toBe(OnchainItemListOptionType.RwaCollection)
     expect(out[1]).toBe(first)
@@ -83,6 +85,7 @@ describe('applyRwaGroupingToSearchOptions', () => {
       isAddressSearch: false,
       chainFilter: null,
       hoistRwaToTop: false,
+      plainTokenNames: false,
     })
     expect(out.map((o) => o.type)).toEqual([
       OnchainItemListOptionType.Token,
@@ -100,6 +103,7 @@ describe('applyRwaGroupingToSearchOptions', () => {
       isAddressSearch: false,
       chainFilter: null,
       hoistRwaToTop: false,
+      plainTokenNames: false,
     })
     expect(out.filter((o) => o.type === OnchainItemListOptionType.RwaCollection)).toHaveLength(1)
     expect(out).toHaveLength(1)
@@ -112,6 +116,7 @@ describe('applyRwaGroupingToSearchOptions', () => {
       isAddressSearch: true,
       chainFilter: null,
       hoistRwaToTop: false,
+      plainTokenNames: false,
     })
     expect(out[0]?.type).toBe(OnchainItemListOptionType.Token)
     expect((out[0] as TokenOption).rwaCategory).toBe(RwaCategory.STOCKS)
@@ -126,6 +131,7 @@ describe('applyRwaGroupingToSearchOptions', () => {
       isAddressSearch: false,
       chainFilter: BNB as never,
       hoistRwaToTop: false,
+      plainTokenNames: false,
     })
     // only ondo is on BNB -> single issuer on-chain -> tagged token, not a collection
     expect(out[0]?.type).toBe(OnchainItemListOptionType.Token)
@@ -151,6 +157,7 @@ describe('applyRwaGroupingToSearchOptions', () => {
       isAddressSearch: true,
       chainFilter: null,
       hoistRwaToTop: false,
+      plainTokenNames: false,
     })
     expect(out[0]?.type).toBe(OnchainItemListOptionType.Token)
     expect((out[0] as TokenOption).rwaCategory).toBe(RwaCategory.ETFS)
@@ -177,6 +184,7 @@ describe('applyRwaGroupingToSearchOptions', () => {
       isAddressSearch: false,
       chainFilter: null,
       hoistRwaToTop: false,
+      plainTokenNames: false,
     })
     expect(out[0]?.type).toBe(OnchainItemListOptionType.RwaCollection)
   })
@@ -192,6 +200,7 @@ describe('applyRwaGroupingToSearchOptions', () => {
       isAddressSearch: false,
       chainFilter: null,
       hoistRwaToTop: false,
+      plainTokenNames: false,
     })
     expect(out).toHaveLength(1)
     expect((out[0] as RwaCollectionOption).searchStats).toEqual({
@@ -211,6 +220,7 @@ describe('applyRwaGroupingToSearchOptions', () => {
       isAddressSearch: false,
       chainFilter: MAINNET as never,
       hoistRwaToTop: false,
+      plainTokenNames: false,
     })
     expect(out).toHaveLength(1)
     expect(out[0]?.type).toBe(OnchainItemListOptionType.RwaCollection)
@@ -228,6 +238,7 @@ describe('applyRwaGroupingToSearchOptions', () => {
       isAddressSearch: false,
       chainFilter: null,
       hoistRwaToTop: false,
+      plainTokenNames: false,
     })
     expect(out[0]?.type).toBe(OnchainItemListOptionType.RwaCollection)
     expect(out[0]).not.toHaveProperty('searchStats')

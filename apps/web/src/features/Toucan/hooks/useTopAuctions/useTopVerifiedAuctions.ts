@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import { buildTokenMarketPriceKey } from '~/features/Toucan/hooks/useTokenMarketPrices'
+import { buildTokenMarketPriceKey } from '~/features/Toucan/hooks/tokenMarketPriceKeys'
 import { useAuctionTokenPrices } from '~/features/Toucan/hooks/useTopAuctions/useAuctionTokenPrices'
 import {
   auctionCommittedVolumeComparator,

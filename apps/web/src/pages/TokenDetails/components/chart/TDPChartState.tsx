@@ -1,11 +1,14 @@
 import { useMemo, useState } from 'react'
 import { ChartType, PriceChartType } from '~/components/Charts/utils'
 import { TimePeriod } from '~/data/util'
+import type { TokenPriceChartQueryVariables } from '~/hooks/useTokenPriceChartData'
 
 /** Time period the TDP chart opens on. Prefetchers warm this period's key (see tdpTokenQueryOptions). */
 export const TDP_DEFAULT_TIME_PERIOD = TimePeriod.DAY
 
 export type TokenDetailsChartType = ChartType.PRICE | ChartType.VOLUME | ChartType.TVL
+
+export type TDPChartQueryVariables = TokenPriceChartQueryVariables
 
 export type TDPChartState = {
   chartType: TokenDetailsChartType

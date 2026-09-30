@@ -1,4 +1,4 @@
-import { TestID } from '../../../../../packages/uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 
 const output: Record<string, string> = {}
 

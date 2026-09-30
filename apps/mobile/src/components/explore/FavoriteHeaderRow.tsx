@@ -1,9 +1,9 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
 import { Ellipsis } from '@universe/mycelium/icons/Ellipsis'
+import { TestID } from '@universe/test'
 import { default as React } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useExploreSectionTitleProps } from 'src/components/explore/ExploreSections/useExploreSectionTitleProps'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export function FavoriteHeaderRow({
   title,

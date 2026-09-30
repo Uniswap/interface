@@ -95,13 +95,18 @@ vi.mock('@universe/gating', async (importOriginal) => {
   }
 })
 
-// Mirrors uniswap/jest-package-mocks
-vi.mock('uniswap/src/data/apiClients/dataApiService/exploreV1/tokenRankings', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('uniswap/src/data/apiClients/dataApiService/exploreV1/tokenRankings')>()
+// Keeps token selector / search modal renders from fetching trending tokens in tests.
+vi.mock('uniswap/src/features/dataApi/top1DVolumeTokens', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('uniswap/src/features/dataApi/top1DVolumeTokens')>()
   return {
     ...actual,
-    useTokenRankingsQuery: vi.fn(() => ({ data: undefined, isLoading: false, isFetching: false, error: null })),
+    useTop1DVolumeTokensQuery: vi.fn(() => ({
+      data: undefined,
+      error: null,
+      refetch: vi.fn(),
+      isLoading: false,
+      isInitialLoading: false,
+    })),
   }
 })
 

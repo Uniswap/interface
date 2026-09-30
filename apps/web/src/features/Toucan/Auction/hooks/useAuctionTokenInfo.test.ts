@@ -54,7 +54,7 @@ describe('useAuctionTokenInfo', () => {
 
   it('uses indexed metadata when it is trustworthy (decimals 18)', () => {
     const currencyInfo = buildCurrencyInfoFixture({ decimals: 18, symbol: 'TCAN', name: 'Toucan' })
-    mockUseCurrencyInfoWithLoading.mockReturnValue({ currencyInfo, loading: false, error: undefined })
+    mockUseCurrencyInfoWithLoading.mockReturnValue({ data: currencyInfo, isLoading: false, error: null })
 
     const { result } = renderHook(() => useAuctionTokenInfo(TOKEN_ADDRESS, CHAIN_ID))
 
@@ -67,9 +67,9 @@ describe('useAuctionTokenInfo', () => {
   it('treats corrupt indexed metadata (decimals=0, empty name/symbol) as missing and resolves on-chain', () => {
     const corruptCurrencyInfo = buildCurrencyInfoFixture({ decimals: 0 })
     mockUseCurrencyInfoWithLoading.mockReturnValue({
-      currencyInfo: corruptCurrencyInfo,
-      loading: false,
-      error: undefined,
+      data: corruptCurrencyInfo,
+      isLoading: false,
+      error: null,
     })
     mockUseTokenInfoFromContract.mockReturnValue({
       tokenMetadata: { name: 'Toucan', symbol: 'TCAN', decimals: 18 },
@@ -88,9 +88,9 @@ describe('useAuctionTokenInfo', () => {
   it('returns no token info while the on-chain fallback is still loading (no assumed decimals)', () => {
     const corruptCurrencyInfo = buildCurrencyInfoFixture({ decimals: 0 })
     mockUseCurrencyInfoWithLoading.mockReturnValue({
-      currencyInfo: corruptCurrencyInfo,
-      loading: false,
-      error: undefined,
+      data: corruptCurrencyInfo,
+      isLoading: false,
+      error: null,
     })
     mockUseTokenInfoFromContract.mockReturnValue({ tokenMetadata: undefined, loading: true, error: null })
 
@@ -101,7 +101,7 @@ describe('useAuctionTokenInfo', () => {
   })
 
   it('never defaults decimals when the on-chain read comes back without them', () => {
-    mockUseCurrencyInfoWithLoading.mockReturnValue({ currencyInfo: undefined, loading: false, error: undefined })
+    mockUseCurrencyInfoWithLoading.mockReturnValue({ data: undefined, isLoading: false, error: null })
     mockUseTokenInfoFromContract.mockReturnValue({
       tokenMetadata: { name: 'Toucan', symbol: 'TCAN', decimals: undefined },
       loading: false,
@@ -117,9 +117,9 @@ describe('useAuctionTokenInfo', () => {
     it('warns once with chainId + token address when corrupt indexed metadata engages the fallback', () => {
       const corruptCurrencyInfo = buildCurrencyInfoFixture({ decimals: 0 })
       mockUseCurrencyInfoWithLoading.mockReturnValue({
-        currencyInfo: corruptCurrencyInfo,
-        loading: false,
-        error: undefined,
+        data: corruptCurrencyInfo,
+        isLoading: false,
+        error: null,
       })
       mockUseTokenInfoFromContract.mockReturnValue({ tokenMetadata: undefined, loading: true, error: null })
 
@@ -139,7 +139,7 @@ describe('useAuctionTokenInfo', () => {
     })
 
     it('does not warn for a token that is simply not indexed yet', () => {
-      mockUseCurrencyInfoWithLoading.mockReturnValue({ currencyInfo: undefined, loading: false, error: undefined })
+      mockUseCurrencyInfoWithLoading.mockReturnValue({ data: undefined, isLoading: false, error: null })
 
       renderHook(() => useAuctionTokenInfo(TOKEN_ADDRESS, CHAIN_ID))
 
@@ -150,9 +150,9 @@ describe('useAuctionTokenInfo', () => {
     it('logs an error once when the on-chain fallback also settles without decimals', () => {
       const corruptCurrencyInfo = buildCurrencyInfoFixture({ decimals: 0 })
       mockUseCurrencyInfoWithLoading.mockReturnValue({
-        currencyInfo: corruptCurrencyInfo,
-        loading: false,
-        error: undefined,
+        data: corruptCurrencyInfo,
+        isLoading: false,
+        error: null,
       })
       mockUseTokenInfoFromContract.mockReturnValue({
         tokenMetadata: { name: 'Toucan', symbol: 'TCAN', decimals: undefined },
@@ -181,7 +181,7 @@ describe('useAuctionTokenInfo', () => {
     })
 
     it('logs an error with the RPC error message when the fallback read fails', () => {
-      mockUseCurrencyInfoWithLoading.mockReturnValue({ currencyInfo: undefined, loading: false, error: undefined })
+      mockUseCurrencyInfoWithLoading.mockReturnValue({ data: undefined, isLoading: false, error: null })
       mockUseTokenInfoFromContract.mockReturnValue({
         tokenMetadata: undefined,
         loading: false,
@@ -203,7 +203,7 @@ describe('useAuctionTokenInfo', () => {
     })
 
     it('does not log an error while the on-chain fallback is still loading', () => {
-      mockUseCurrencyInfoWithLoading.mockReturnValue({ currencyInfo: undefined, loading: false, error: undefined })
+      mockUseCurrencyInfoWithLoading.mockReturnValue({ data: undefined, isLoading: false, error: null })
       mockUseTokenInfoFromContract.mockReturnValue({ tokenMetadata: undefined, loading: true, error: null })
 
       renderHook(() => useAuctionTokenInfo(TOKEN_ADDRESS, CHAIN_ID))
@@ -215,9 +215,9 @@ describe('useAuctionTokenInfo', () => {
   it('keeps a legitimate 0-decimals token with real metadata', () => {
     const zeroDecimalsInfo = buildCurrencyInfoFixture({ decimals: 0, symbol: 'ZERO', name: 'Zero Decimals' })
     mockUseCurrencyInfoWithLoading.mockReturnValue({
-      currencyInfo: zeroDecimalsInfo,
-      loading: false,
-      error: undefined,
+      data: zeroDecimalsInfo,
+      isLoading: false,
+      error: null,
     })
 
     const { result } = renderHook(() => useAuctionTokenInfo(TOKEN_ADDRESS, CHAIN_ID))

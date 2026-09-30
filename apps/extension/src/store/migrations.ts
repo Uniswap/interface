@@ -2,6 +2,7 @@ import {
   migratePendingDappRequestsToRecord,
   migrateUnknownBackupAccountsToMaybeManualBackup,
   removeDappInfoToChromeLocalStorage,
+  removePersistedApolloCache,
   setLanguageToNavigatorLanguage,
 } from 'src/store/extensionMigrations'
 import {
@@ -76,6 +77,7 @@ export const migrations = {
   32: addEnableCustomGasFeeEntry,
   33: removeUniswapWrapped2025BehaviorHistory,
   34: markPoolsBalanceCoachmarkEligible,
+  35: removePersistedApolloCache,
 }
 
-export const EXTENSION_STATE_VERSION = 34
+export const EXTENSION_STATE_VERSION = 35

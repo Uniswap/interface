@@ -1,10 +1,10 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { UniverseChainId, Platform, getValidAddress } from '@universe/chains'
+import { fetchCurrency } from 'uniswap/src/features/tokens/fetchCurrencyInfo'
 import type { SendTokenTransactionInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
-import { getCurrencyFromCurrencyId } from '~/components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
 import type { FormatNumberFunctionType } from '~/components/AccountDrawer/MiniPortfolio/Activity/parseLocal/types'
 import type { Activity } from '~/components/AccountDrawer/MiniPortfolio/Activity/types'
 
@@ -18,7 +18,7 @@ export async function parseSend({
   chainId: UniverseChainId
 }): Promise<Partial<Activity>> {
   const { tokenAddress, currencyAmountRaw, recipient } = send
-  const currency = await getCurrencyFromCurrencyId(buildCurrencyId(chainId, tokenAddress))
+  const currency = await fetchCurrency(buildCurrencyId(chainId, tokenAddress))
   const formattedAmount =
     currency && currencyAmountRaw
       ? formatNumber({

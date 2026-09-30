@@ -93,7 +93,7 @@ describe('PoolDetailsPage', () => {
     })
 
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith('/explore/pools?type=pools&result=not-found')
+      expect(mockNavigate).toHaveBeenCalledWith('/explore/pools?type=pools&result=not-found', { replace: true })
     })
   })
 
@@ -106,7 +106,7 @@ describe('PoolDetailsPage', () => {
     })
 
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith('/explore/pools?type=pools&result=not-found')
+      expect(mockNavigate).toHaveBeenCalledWith('/explore/pools?type=pools&result=not-found', { replace: true })
     })
   })
 
@@ -119,7 +119,7 @@ describe('PoolDetailsPage', () => {
     })
 
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith('/explore/pools?type=pools&result=not-found')
+      expect(mockNavigate).toHaveBeenCalledWith('/explore/pools?type=pools&result=not-found', { replace: true })
     })
   })
 
@@ -136,7 +136,7 @@ describe('PoolDetailsPage', () => {
     })
 
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith('/explore/pools?type=pools&result=not-found')
+      expect(mockNavigate).toHaveBeenCalledWith('/explore/pools?type=pools&result=not-found', { replace: true })
     })
   })
 })

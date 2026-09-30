@@ -1,7 +1,6 @@
 import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { findRWAMatch, type RWAMatch } from 'uniswap/src/features/rwa/rwaMatch'
-import type { RWAWhitelist } from 'uniswap/src/features/rwa/types'
-import { UNKNOWN_RWA_ISSUER } from 'uniswap/src/features/rwa/useRWAWhitelist'
+import { type RWAWhitelist, UNKNOWN_RWA_ISSUER } from 'uniswap/src/features/rwa/types'
 
 /**
  * Matches on every deployment because the registry keeps one (mainnet-preferred) token per issuer and

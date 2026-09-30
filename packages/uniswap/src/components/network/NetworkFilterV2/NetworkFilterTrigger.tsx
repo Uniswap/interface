@@ -1,10 +1,10 @@
 import { UniverseChainId } from '@universe/chains'
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
 import { iconSizes } from '@universe/mycelium/tokens'
+import { TestID } from '@universe/test'
 import { Tooltip } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const NETWORK_ICON_SIZE = iconSizes.icon20
 const TOOLTIP_DELAY = { close: 0, open: 0 }

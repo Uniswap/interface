@@ -7,11 +7,6 @@ import type { MockInstance } from 'vitest'
 
 const mockRefetchQueries = vi.fn()
 
-vi.mock('@apollo/client', async () => ({
-  ...(await vi.importActual('@apollo/client')),
-  useApolloClient: () => ({ refetchQueries: mockRefetchQueries }),
-}))
-
 vi.mock('wallet/src/features/wallet/hooks', async () => ({
   ...(await vi.importActual('wallet/src/features/wallet/hooks')),
   useActiveAccountWithThrow: () => ({ address: '0xabc' }),

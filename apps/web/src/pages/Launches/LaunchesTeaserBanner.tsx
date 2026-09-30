@@ -1,10 +1,10 @@
 import { Anchor, Flex, Text, validColor } from '@universe/mycelium'
 import { ArrowRight } from '@universe/mycelium/icons/ArrowRight'
 import { opacifyRaw, useIsDarkMode } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import {
   POOLS_TEASER_BACKGROUND_DARK,
   POOLS_TEASER_BACKGROUND_LIGHT,

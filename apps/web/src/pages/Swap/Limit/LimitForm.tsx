@@ -7,6 +7,7 @@ import { Anchor, Button, Flex, Text, type TextCompatProps } from '@universe/myce
 import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import { ArrowDown } from '@universe/mycelium/icons/ArrowDown'
 import { SPORE_ANIMATION_CURVE_CSS } from '@universe/tailwind/animations'
+import { TestID } from '@universe/test'
 import { ComponentProps, useCallback, useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useIsShortMobileDevice } from 'ui/src'
@@ -20,7 +21,6 @@ import { useIsMismatchAccountQuery } from 'uniswap/src/features/smartWallet/mism
 import { ElementName, InterfacePageName, SectionName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useUSDCValueWithStatus } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
 // oxlint-disable-next-line no-restricted-imports -- We need to import this directly so we can format with `en-US` locale
 import { formatCurrencyAmount as formatCurrencyAmountRaw } from 'utilities/src/format/localeBased'

@@ -1,4 +1,4 @@
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import { AuctionLaunchMethod } from '~/features/Toucan/Auction/utils/auctionLaunchMethod'
 import { LaunchMethodExplainerModal } from '~/features/Toucan/Shared/LaunchMethodExplainerModal'
 import { fireEvent, render, screen } from '~/test-utils/render'

@@ -185,6 +185,7 @@ export type AppStackParamList = {
     categoryId: string
   }
   [MobileScreens.Collections]: undefined
+  [MobileScreens.AnimatedNumberDebug]: undefined
   [MobileScreens.HashcashBenchmark]: undefined
   [MobileScreens.SessionsDebug]: undefined
   [MobileScreens.UniversalListDebug]: undefined

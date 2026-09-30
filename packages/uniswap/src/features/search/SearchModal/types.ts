@@ -5,14 +5,11 @@ import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
  *  from `token` because those rows sit deeper in the expandable shell's nesting and need a different offset. */
 export type SearchModalRowVariant = 'token' | 'rwaIssuerChild'
 
-interface SearchModalRowWrapperBaseProps {
-  element: JSX.Element
-  isRowFocused: boolean
-}
-
 /** Web: wraps a row with its hover card — the token price chart card for token rows, the auction card for auction rows. */
-export type SearchModalRowWrapperProps = SearchModalRowWrapperBaseProps &
-  ({ variant: SearchModalRowVariant; currencyInfo: CurrencyInfo } | { variant: 'auction'; auction: AuctionOption })
+export type SearchModalRowWrapperProps = { element: JSX.Element } & (
+  | { variant: SearchModalRowVariant; currencyInfo: CurrencyInfo }
+  | { variant: 'auction'; auction: AuctionOption }
+)
 
 export type SearchModalRowWrapper = (props: SearchModalRowWrapperProps) => JSX.Element
 

@@ -1,6 +1,6 @@
-import { GraphQLApi } from '@universe/api'
 import { TickMarkType, UTCTimestamp } from 'lightweight-charts'
 import ms from 'ms'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import {
   ChartType,
   DataQuality,
@@ -33,7 +33,7 @@ describe('checkDataQuality', () => {
     vi.spyOn(Date, 'now').mockReturnValue(NOW)
   })
 
-  it.each([GraphQLApi.HistoryDuration.Week, GraphQLApi.HistoryDuration.Month, GraphQLApi.HistoryDuration.Year])(
+  it.each([HistoryDuration.Week, HistoryDuration.Month, HistoryDuration.Year])(
     'does not flag the price chart as stale for a %s-duration bucket several hours old',
     (duration) => {
       // Regression: the raw last historical bucket for longer durations is naturally coarser/older than
@@ -52,7 +52,7 @@ describe('checkDataQuality', () => {
     const result = checkDataQuality({
       data,
       chartType: ChartType.PRICE,
-      duration: GraphQLApi.HistoryDuration.Day,
+      duration: HistoryDuration.Day,
     })
 
     expect(result).toBe(DataQuality.INVALID)
@@ -61,7 +61,7 @@ describe('checkDataQuality', () => {
   it('flags the price chart as stale once a duration-appropriate threshold is exceeded', () => {
     const data = makeData(ms('31d'))
 
-    const result = checkDataQuality({ data, chartType: ChartType.PRICE, duration: GraphQLApi.HistoryDuration.Year })
+    const result = checkDataQuality({ data, chartType: ChartType.PRICE, duration: HistoryDuration.Year })
 
     expect(result).toBe(DataQuality.STALE)
   })

@@ -2,6 +2,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { ChartPeriod, WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { FeatureFlags, useFeatureFlagWithExposureLoggingDisabled } from '@universe/gating'
 import { Flex, iconSizes, ScrollView, Text } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useEffect, useMemo, useState } from 'react'
 import { PortfolioChart } from 'src/components/home/PortfolioChart/PortfolioChart'
 import { usePortfolioChartData } from 'src/components/home/PortfolioChart/usePortfolioChartData'
@@ -32,7 +33,6 @@ import { PortfolioBalance } from 'uniswap/src/features/portfolio/PortfolioBalanc
 import { getPortfolioChartPercentChange } from 'uniswap/src/features/portfolio/portfolioChartPercentChange'
 import { usePortfolioChartBalanceMismatch } from 'uniswap/src/features/portfolio/usePortfolioChartBalanceMismatch'
 import { useBottomScreenGap } from 'uniswap/src/hooks/useBottomScreenGap'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useActiveAccountWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 export function PortfolioChartDetailsScreen(): JSX.Element {

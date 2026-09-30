@@ -1,5 +1,6 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { isAndroid } from '@universe/environment'
+import { TestID } from '@universe/test'
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import { findNodeHandle, StyleSheet, UIManager } from 'react-native'
 import { useNativeComponentKey } from 'src/app/hooks'
@@ -10,7 +11,6 @@ import {
   NativeSeedPhraseInputProps,
   NativeSeedPhraseInputRef,
 } from 'src/screens/Import/SeedPhraseInputScreen/SeedPhraseInput/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 
 const styles = StyleSheet.create({

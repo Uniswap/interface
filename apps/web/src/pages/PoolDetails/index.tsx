@@ -157,9 +157,11 @@ export function PoolDetailsPage() {
     // oxlint-disable-next-line react-hooks/exhaustive-deps -- unwrappedTokens changes every render; use underlying stable deps instead
   }, [poolData?.token0, poolData?.token1, chainInfo?.id, poolData?.protocolVersion])
 
-  const [userFlipCount, setUserFlipCount] = useState(0)
-  const toggleReversed = () => setUserFlipCount((n) => n + 1)
-  const isReversed = waterfallDefault !== (userFlipCount % 2 !== 0)
+  // The user's flip is stored relative to the waterfall default rather than as the absolute value,
+  // since poolData arrives after mount.
+  const [userFlipped, setUserFlipped] = useState(false)
+  const toggleReversed = () => setUserFlipped((flipped) => !flipped)
+  const isReversed = waterfallDefault !== userFlipped
 
   const [token0, token1] = isReversed ? [unwrappedTokens[1], unwrappedTokens[0]] : unwrappedTokens
 
@@ -216,7 +218,7 @@ export function PoolDetailsPage() {
 
   useEffect(() => {
     if (poolNotFound) {
-      navigate(`/explore/pools?type=${ExploreTab.Pools}&result=${ModalName.NotFound}`)
+      navigate(`/explore/pools?type=${ExploreTab.Pools}&result=${ModalName.NotFound}`, { replace: true })
     }
   }, [poolNotFound, navigate])
 

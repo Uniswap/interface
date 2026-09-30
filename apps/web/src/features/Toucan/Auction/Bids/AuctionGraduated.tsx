@@ -267,7 +267,7 @@ export function AuctionGraduated() {
         : undefined,
     [auctionDetails?.chainId, auctionDetails?.currency],
   )
-  const { currencyInfo: bidTokenCurrencyInfo } = useCurrencyInfoWithLoading(bidTokenCurrencyId)
+  const { data: bidTokenCurrencyInfo } = useCurrencyInfoWithLoading(bidTokenCurrencyId)
   const bidTokenCurrency = bidTokenCurrencyInfo?.currency
   // priceFiat is 0 when price data is unavailable (e.g., testnets) - don't block on it
   const bidTokenPriceFiat = bidTokenInfo?.priceFiat ?? 0

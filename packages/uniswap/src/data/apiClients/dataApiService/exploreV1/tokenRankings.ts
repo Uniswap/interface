@@ -31,22 +31,6 @@ export function useTokenRankingsQuery<TData = TokenRankingsResponse>(
   return useQuery(tokenRankings, input, { transport: uniswapGetTransport, enabled, select })
 }
 
-/** Market fields the rankings payload already carries; read by TokenSelectorV2 rows (legacy selector ignores them). */
-export interface TokenRankingsMarketData {
-  priceUsd?: number
-  pricePercentChange24h?: number
-  networkCount?: number
-}
-
-export function tokenRankingsStatToMarketData(tokenRankingsStat: TokenRankingsStat): TokenRankingsMarketData {
-  const { price, pricePercentChange1Day, chainTokens } = tokenRankingsStat
-  return {
-    priceUsd: price?.value,
-    pricePercentChange24h: pricePercentChange1Day?.value,
-    networkCount: chainTokens.length > 1 ? chainTokens.length : undefined,
-  }
-}
-
 export function tokenRankingsStatToCurrencyInfo(tokenRankingsStat: TokenRankingsStat): CurrencyInfo | null {
   const { chain, address, symbol, name, logo, decimals, feeData } = tokenRankingsStat
   const chainId = fromGraphQLChain(chain)

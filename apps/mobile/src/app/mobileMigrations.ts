@@ -3,6 +3,7 @@
 
 import { UniverseChainId } from '@universe/chains'
 import dayjs from 'dayjs'
+import { createMMKV } from 'react-native-mmkv'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
@@ -1105,4 +1106,32 @@ export const setWalletDeviceLanguage = createSafeMigration({
       currentLanguage: Language.English,
     },
   }),
+})
+
+// apollo3-cache-persist's default key. The Apollo cache was persisted to the default MMKV instance
+// before the GraphQL codepath was removed; nothing reads it anymore, so reclaim the space.
+const APOLLO_CACHE_PERSIST_KEY = 'apollo-cache-persist'
+
+export const removePersistedApolloCache = createSafeMigration({
+  name: 'removePersistedApolloCache',
+  migrate: (state: any) => {
+    createMMKV().remove(APOLLO_CACHE_PERSIST_KEY)
+    return state
+  },
+  onError: (state: any) => state,
+})
+
+// The tweaks reducer was removed along with the GraphQL codepath; drop its persisted state.
+export const removeTweaksSlice = createSafeMigration({
+  name: 'removeTweaksSlice',
+  migrate: (state: any) => {
+    const newState = { ...state }
+    delete newState.tweaks
+    return newState
+  },
+  onError: (state: any) => {
+    const fallbackState = { ...state }
+    delete fallbackState.tweaks
+    return fallbackState
+  },
 })

@@ -1,7 +1,7 @@
 import { Flex, Text } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export function Change1dUnavailableIndicator(): JSX.Element {
   const { t } = useTranslation()

@@ -1,6 +1,6 @@
 import { Flex, Text } from '@universe/mycelium'
 import { Pools } from '@universe/mycelium/icons/Pools'
-import type { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
+import type { TestIDType } from '@universe/test'
 
 export const BUTTON_AREA_WIDTH = 160 * 2
 

@@ -1,9 +1,9 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Button } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useModalState } from '~/hooks/useModalState'
 
 export function NewUserCTAButton() {

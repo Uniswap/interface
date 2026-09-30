@@ -1,6 +1,12 @@
+import type { PlainMessage } from '@bufbuild/protobuf'
+import { useQuery } from '@tanstack/react-query'
+import type { GetTokensMultiChainResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
+import type { MultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { GraphQLApi } from '@universe/api'
+import type { UniverseChainId } from '@universe/chains'
 import { DynamicConfigs, HomeScreenExploreTokensConfigKey, useDynamicConfigValue } from '@universe/gating'
 import { Flex, LinearGradient, Text, useIsDarkMode } from '@universe/mycelium'
+import { SwirlyArrowDown } from '@universe/mycelium/icons'
 import { withSporeCurve } from '@universe/tailwind/animations/reanimated'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -9,21 +15,35 @@ import type { EntryExitAnimationFunction } from 'react-native-reanimated'
 import { useSelector } from 'react-redux'
 import { TokenItem } from 'src/components/explore/TokenItem'
 import { TokenItemData } from 'src/components/explore/TokenItemData'
-import { SwirlyArrowDown } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { spacing, zIndexes } from 'ui/src/theme'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { getGetTokensMultiChainQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
+import { normalizeBackendNativeAddress } from 'uniswap/src/data/apiClients/dataApiService/utils/dataApiMultichainToken'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { fromGraphQLChain, toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { currencyIdToRestContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { useMultichainExploreMetricsAnalytics } from 'uniswap/src/features/explore/useMultichainExploreMetricsAnalytics'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { isContractInputArrayType } from 'uniswap/src/features/gating/typeGuards'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
+import {
+  areCurrencyIdsEqual,
+  buildCurrencyId,
+  buildNativeCurrencyId,
+  currencyIdToAddress,
+  currencyIdToChain,
+  isNativeCurrencyAddress,
+} from 'uniswap/src/utils/currencyId'
 import { selectHasUsedExplore } from 'wallet/src/features/behaviorHistory/selectors'
 import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
+
+const EMPTY_TOKEN_DATA_LIST: TokenItemData[] = []
 
 /** Recommended tokens for empty-wallet home (no nested scroll). */
 export const EmptyWalletTokensTab = memo(function EmptyWalletTokensTabInner(): JSX.Element {
   const isDarkMode = useIsDarkMode()
   const appFiatCurrency = useAppFiatCurrency()
+  const { chains: enabledChainIds } = useEnabledChains()
   const [maxTokenPriceWrapperWidth, setMaxTokenPriceWrapperWidth] = useState(0)
 
   const ethChainId = useDynamicConfigValue({
@@ -40,15 +60,34 @@ export const EmptyWalletTokensTab = memo(function EmptyWalletTokensTabInner(): J
     customTypeGuard: isContractInputArrayType,
   })
 
-  const { data, loading: homeExploreTokensLoading } = GraphQLApi.useHomeScreenTokensQuery({
-    variables: { contracts: recommendedTokens, chain: ethChainId },
-  })
-  const tokenDataList = useMemo(
+  // The remote config still speaks GraphQL ContractInput; ETH leads the list as before.
+  const currencyIds = useMemo(
     () =>
-      [data?.eth, ...(data?.tokens ?? [])]
-        .map((token) => gqlTokenToTokenItemData(token))
-        .filter((tokenItemData): tokenItemData is TokenItemData => !!tokenItemData),
-    [data],
+      [{ chain: ethChainId }, ...recommendedTokens]
+        .map(contractInputToCurrencyId)
+        .filter((currencyId): currencyId is string => !!currencyId),
+    [ethChainId, recommendedTokens],
+  )
+  const multichainParams = useMemo(
+    () => ({
+      identifier: {
+        case: 'tokens' as const,
+        value: { tokens: currencyIds.map((currencyId) => currencyIdToRestContractInput(currencyId)) },
+      },
+    }),
+    [currencyIds],
+  )
+  const selectTokenItemDataList = useCallback(
+    (data: PlainMessage<GetTokensMultiChainResponse> | undefined) =>
+      multichainTokensToTokenItemDataList({ multichainTokens: data?.tokens ?? [], currencyIds, enabledChainIds }),
+    [currencyIds, enabledChainIds],
+  )
+  const { data: tokenDataList = EMPTY_TOKEN_DATA_LIST, isLoading: homeExploreTokensLoading } = useQuery(
+    getGetTokensMultiChainQueryOptions({
+      params: multichainParams,
+      enabled: currencyIds.length > 0,
+      select: selectTokenItemDataList,
+    }),
   )
 
   const homeExploreRowChainCounts = useMemo(
@@ -174,30 +213,76 @@ function FooterElement(): JSX.Element {
   )
 }
 
-function gqlTokenToTokenItemData(
-  token: GraphQLApi.Maybe<NonNullable<NonNullable<GraphQLApi.HomeScreenTokensQuery['tokens']>[0]>>,
-): TokenItemData | null {
-  if (!token || !token.project) {
-    return null
-  }
-
-  const { name, symbol, address, chain, project } = token
-  const { logoUrl, markets } = project
-  const tokenProjectMarket = markets?.[0]
-
+function contractInputToCurrencyId({ chain, address }: GraphQLApi.ContractInput): string | undefined {
   const chainId = fromGraphQLChain(chain)
+  if (!chainId) {
+    return undefined
+  }
+  return address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId)
+}
 
-  if (!chainId || !name || !symbol || !logoUrl) {
+function multichainTokensToTokenItemDataList({
+  multichainTokens,
+  currencyIds,
+  enabledChainIds,
+}: {
+  multichainTokens: PlainMessage<MultichainToken>[]
+  currencyIds: string[]
+  enabledChainIds: readonly UniverseChainId[]
+}): TokenItemData[] {
+  return currencyIds
+    .map((currencyId) => {
+      const multichainToken = multichainTokens.find((token) => multichainTokenHasDeployment(token, currencyId))
+      return multichainToken ? multichainTokenToTokenItemData({ multichainToken, currencyId, enabledChainIds }) : null
+    })
+    .filter((tokenItemData): tokenItemData is TokenItemData => !!tokenItemData)
+}
+
+function multichainTokenHasDeployment(multichainToken: PlainMessage<MultichainToken>, currencyId: string): boolean {
+  return Object.entries(multichainToken.addresses).some(([chainIdKey, address]) => {
+    const chainId = toSupportedChainId(chainIdKey)
+    if (!chainId) {
+      return false
+    }
+    // The backend serves natives under placeholder addresses; normalize so they match buildNativeCurrencyId.
+    const deploymentCurrencyId = buildCurrencyId(chainId, normalizeBackendNativeAddress({ chainId, address }))
+    return areCurrencyIdsEqual(deploymentCurrencyId, currencyId)
+  })
+}
+
+function multichainTokenToTokenItemData({
+  multichainToken,
+  currencyId,
+  enabledChainIds,
+}: {
+  multichainToken: PlainMessage<MultichainToken>
+  currencyId: string
+  enabledChainIds: readonly UniverseChainId[]
+}): TokenItemData | null {
+  const chainId = currencyIdToChain(currencyId)
+  const logoUrl = multichainToken.project?.logoUrl
+  if (!chainId || !multichainToken.name || !multichainToken.symbol || !logoUrl) {
     return null
   }
+
+  // The addresses map carries every deployment regardless of request; count only enabled chains
+  // (mirrors rankedMultichainTokenToTokenItemData).
+  const enabled = new Set<number>(enabledChainIds)
+  const networkCount = Object.keys(multichainToken.addresses).filter((chainIdKey) =>
+    enabled.has(Number(chainIdKey)),
+  ).length
+
+  // The row expects null for natives.
+  const address = currencyIdToAddress(currencyId)
 
   return {
     chainId,
-    address: address ?? null,
-    name,
-    symbol,
+    address: isNativeCurrencyAddress(chainId, address) ? null : address,
+    name: multichainToken.name,
+    symbol: multichainToken.symbol,
     logoUrl,
-    price: tokenProjectMarket?.price?.value,
-    pricePercentChange24h: tokenProjectMarket?.pricePercentChange24h?.value,
+    price: multichainToken.price?.spotUsd,
+    pricePercentChange24h: multichainToken.price?.percentChange1d,
+    networkCount: networkCount || undefined,
   } satisfies TokenItemData
 }

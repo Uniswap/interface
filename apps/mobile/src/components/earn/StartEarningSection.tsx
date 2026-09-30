@@ -1,4 +1,5 @@
 import { Flex, spacing, Text } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, StyleSheet } from 'react-native'
@@ -9,7 +10,6 @@ import { EarnVaultChip, EarnVaultChipSkeleton } from 'uniswap/src/features/earn/
 import { useEarnVaults } from 'uniswap/src/features/earn/hooks/useEarnVaults'
 import { useLogEarnSurfaceViewed } from 'uniswap/src/features/earn/hooks/useLogEarnSurfaceViewed'
 import { getEarnVaultsSortedForExplore } from 'uniswap/src/features/earn/utils'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 

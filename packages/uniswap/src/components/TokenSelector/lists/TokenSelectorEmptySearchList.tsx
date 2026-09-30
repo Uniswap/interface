@@ -23,7 +23,7 @@ function TokenSelectorEmptySearchListInner({
 
   const {
     data: sections,
-    loading,
+    isLoading,
     error,
     refetch,
   } = useTokenSectionsForEmptySearch({
@@ -32,12 +32,15 @@ function TokenSelectorEmptySearchListInner({
     chainIds,
   })
 
+  // Recent searches are local, so a failed trending fetch shouldn't replace them with the error pane.
+  const hasError = Boolean(error) && !sections?.length
+
   return (
     <TokenSelectorList
       showTokenAddress
       errorText={t('token.selector.search.error')}
-      hasError={Boolean(error)}
-      loading={loading}
+      hasError={hasError}
+      loading={isLoading}
       refetch={refetch}
       sections={sections}
       showTokenWarnings={true}

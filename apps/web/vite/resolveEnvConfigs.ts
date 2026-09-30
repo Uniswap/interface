@@ -6,7 +6,7 @@ import { parse as dotenvParse } from 'dotenv'
 // Env vars that should be read directly from process.env instead of the .env files.
 // VERSION is supplied by the deploy workflow and must win over the pulled .env, or the
 // bundle reports a version the Datadog sourcemap upload never used (INFRA-3219).
-export const PROCESS_ENV_OVERRIDES = ['CI', 'IS_E2E_TEST', 'JEST_WORKER_ID', 'VITEST_WORKER_ID', 'SKIP_CSP', 'DISABLE_SOURCEMAP', 'CLOUD_FUNCTIONS_GRAPHQL_ENDPOINT_OVERRIDE', 'CLOUD_FUNCTIONS_LIQUIDITY_ENDPOINT_OVERRIDE', 'VERSION']
+export const PROCESS_ENV_OVERRIDES = ['CI', 'IS_E2E_TEST', 'JEST_WORKER_ID', 'VITEST_WORKER_ID', 'SKIP_CSP', 'DISABLE_SOURCEMAP', 'CLOUD_FUNCTIONS_DATA_API_ENDPOINT_OVERRIDE', 'CLOUD_FUNCTIONS_LIQUIDITY_ENDPOINT_OVERRIDE', 'VERSION']
 
 interface ResolveEnvConfigsOptions {
   /** Directory containing .env / .env.e2e.override / .env.override (i.e. apps/web). */

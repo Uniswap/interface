@@ -1,9 +1,9 @@
 import { fireEvent } from '@testing-library/react-native'
+import { TestID } from '@universe/test'
 import React from 'react'
 import { TokenDetailsBuySellButtons } from 'src/components/TokenDetails/TokenDetailsActionButtons'
 import { render } from 'src/test/test-utils'
 import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 vi.mock('@universe/gating', async () => ({
   ...(await vi.importActual('@universe/gating')),

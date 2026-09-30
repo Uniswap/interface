@@ -1,12 +1,12 @@
 /* oxlint-disable typescript/no-unnecessary-condition */
-
-import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
 import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { UniverseChainId } from '@universe/chains'
+import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, Text } from '@universe/mycelium'
 import { InfoCircle } from '@universe/mycelium/icons/InfoCircle'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber.web'
@@ -14,10 +14,10 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { useFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { getRWAHeaderIdentity } from 'uniswap/src/features/rwa/getRWAHeaderIdentity'
 import { useRWAWhitelist } from 'uniswap/src/features/rwa/useRWAWhitelist'
 import { ElementName, SectionName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { FiatNumberType, NumberType } from 'utilities/src/format/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { SparklineChart } from '~/components/Charts/SparklineChart'
@@ -75,7 +75,7 @@ export function TokenTable({
   tokenSortRank: Record<string, number>
   sparklines: SparklineMap
   loading: boolean
-  error?: ApolloError | boolean
+  error?: boolean
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
   categoryId?: string
 }) {
@@ -96,6 +96,7 @@ export function TokenTable({
   const exploreChainId = chainFilter ? getChainIdFromChainUrlParam(chainFilter) : undefined
   const featureFlaggedChainIds = useFeatureFlaggedChainIds()
   const rwaWhitelist = useRWAWhitelist()
+  const plainTokenNames = useIsTokenCategoriesEnabled()
 
   const tokenTableValues: TokenTableValue[] | undefined = useMemo(
     () =>
@@ -139,9 +140,7 @@ export function TokenTable({
         const chainIdsByVolume =
           getChainIdsByVolume({ rankedToken, timePeriod, allowedChainIds: featureFlaggedChainIds }) ?? []
         const rwaMatch = findRankedTokenRWAMatch({ multichainToken: mc, rwaWhitelist })
-        // Same identity rule as the TDP header (getRWAHeaderIdentity): a matched RWA shows the registry
-        // asset name ("Tesla") next to its issuer tag instead of the on-chain name ("Tesla (Ondo)").
-        const name = rwaMatch ? rwaMatch.asset.name || rwaMatch.asset.symbol : unwrappedToken.name
+        const { name } = getRWAHeaderIdentity({ rwaMatch, fallbackName: unwrappedToken.name, plainTokenNames })
         // Count and TDP link mode derive from the same filtered set as the "N networks" label,
         // or a flag-disabled leg desyncs them. The volume cell's info affordance gates separately
         // on the visible breakdown (hasVolumeBreakdown), matching the popover's own condition.
@@ -234,6 +233,7 @@ export function TokenTable({
       filterString,
       formatPercent,
       rwaWhitelist,
+      plainTokenNames,
       sparklines,
       timePeriod,
       tokenSortRank,

@@ -1,9 +1,9 @@
 import { Text } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { SectionHeader } from 'uniswap/src/components/lists/SectionHeader'
 import { NewTag } from 'uniswap/src/components/pill/NewTag'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { render } from 'uniswap/src/test/test-utils'
+import { fireEvent, render } from 'uniswap/src/test/test-utils'
 
 describe('SectionHeader Stocks', () => {
   it('renders the Stocks title', () => {
@@ -38,5 +38,25 @@ describe('SectionHeader SuggestedTokens', () => {
     expect(queryByText('Suggested')).toBeNull()
     expect(queryByText('common.new')).toBeNull()
     expect(queryByText('custom header')).toBeNull()
+  })
+})
+
+describe('SectionHeader with onPress', () => {
+  it('presses from the icon and title but not from the rightElement', () => {
+    const onPress = vi.fn()
+    const { getByText } = render(
+      <SectionHeader
+        sectionKey={OnchainItemSectionName.Category}
+        name="Stocks"
+        rightElement={<Text>info</Text>}
+        onPress={onPress}
+      />,
+    )
+
+    fireEvent.press(getByText('Stocks'))
+    expect(onPress).toHaveBeenCalledTimes(1)
+
+    fireEvent.press(getByText('info'))
+    expect(onPress).toHaveBeenCalledTimes(1)
   })
 })

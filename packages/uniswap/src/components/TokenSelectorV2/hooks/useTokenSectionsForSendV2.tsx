@@ -1,4 +1,3 @@
-import { GqlResult } from '@universe/api'
 import { Flex } from '@universe/mycelium'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -10,6 +9,7 @@ import { type PortfolioBalancesResult } from 'uniswap/src/components/TokenSelect
 import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioTokenOptions'
 import { TokenSectionsHookProps } from 'uniswap/src/components/TokenSelector/types'
 import { TokenSelectorV2SectionHeader } from 'uniswap/src/components/TokenSelectorV2/TokenSelectorV2SectionHeader'
+import type { DerivedQueryResult } from 'utilities/src/reactQuery/types'
 
 /**
  * V2 send sections (SWAP-3050): same data as the legacy send hook (visible portfolio tokens +
@@ -22,14 +22,14 @@ export function useTokenSectionsForSendV2({
   portfolioData,
 }: Omit<TokenSectionsHookProps, 'variation' | 'addresses'> & {
   portfolioData: PortfolioBalancesResult
-}): GqlResult<OnchainItemSection<TokenOption>[]> {
+}): DerivedQueryResult<OnchainItemSection<TokenOption>[]> {
   const { t } = useTranslation()
   const {
     data: portfolioTokenOptions,
     hiddenTokens: hiddenPortfolioTokenOptions,
     error: portfolioTokenOptionsError,
     refetch: refetchPortfolioTokenOptions,
-    loading: portfolioTokenOptionsLoading,
+    isLoading: portfolioTokenOptionsLoading,
   } = usePortfolioTokenOptions({ chainFilter, chainIds, includeHidden: true, portfolioData })
 
   const [hiddenTokensExpanded, setHiddenTokensExpanded] = useState(false)
@@ -96,8 +96,8 @@ export function useTokenSectionsForSendV2({
   return useMemo(
     () => ({
       data: sections,
-      loading,
-      error: error || undefined,
+      isLoading: loading,
+      error: error || null,
       refetch: refetchPortfolioTokenOptions,
     }),
     [error, loading, refetchPortfolioTokenOptions, sections],

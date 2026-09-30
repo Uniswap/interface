@@ -1,12 +1,12 @@
 /* oxlint-disable max-lines */
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, CurrencyAmount, Fraction, Percent, Price } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
 import { isEVMChain, EVMUniverseChainId, areAddressesEqual, UniverseChainId } from '@universe/chains'
 import { isMobileWeb } from '@universe/environment'
 import { Button, Flex, Text, TouchableArea } from '@universe/mycelium'
 import { FlexCompat, type FlexCompatProps } from '@universe/mycelium/flex-compat'
 import { SegmentedControl, type SegmentedControlOption } from '@universe/mycelium/segmented-control-compat'
+import { TestID } from '@universe/test'
 import { forwardRef, useMemo, useState } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { useTranslation } from 'react-i18next'
@@ -23,6 +23,7 @@ import { PollingInterval, ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { getPrimaryStablecoin } from 'uniswap/src/features/chains/utils'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { formatPositionPrice } from 'uniswap/src/features/positions/formatPositionPrice'
@@ -33,9 +34,9 @@ import type { PositionInfo, PositionRewardApr } from 'uniswap/src/features/posit
 import { getExactSharePercent } from 'uniswap/src/features/positions/utils'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { shouldReverseForWaterfall } from 'uniswap/src/features/tokens/waterfallPriority'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -237,7 +238,14 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
     navigateToPositions: true,
   })
 
-  const [priceInverted, setPriceInverted] = useState(false)
+  // Waterfall priority picks the default quote asset (same as the pool details page). The user's flip is
+  // stored relative to that default rather than as the absolute value, since positionInfo arrives after mount.
+  const waterfallDefault = Boolean(
+    currency0Amount && currency1Amount && shouldReverseForWaterfall(currency0Amount.currency, currency1Amount.currency),
+  )
+  const [userFlipped, setUserFlipped] = useState(false)
+  const togglePriceInverted = useEvent(() => setUserFlipped((flipped) => !flipped))
+  const priceInverted = waterfallDefault !== userFlipped
 
   const { formatNumberOrString } = useLocalizationContext()
   const { isPoolPriceStale, isPoolOutOfSync, marketPrice } = useEffectivePositionStatus(positionInfo)
@@ -271,36 +279,34 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
     priceInverted,
   )
 
-  const [selectedHistoryDuration, setSelectedHistoryDuration] = useState<GraphQLApi.HistoryDuration>(
-    GraphQLApi.HistoryDuration.Month,
-  )
+  const [selectedHistoryDuration, setSelectedHistoryDuration] = useState<HistoryDuration>(HistoryDuration.Month)
   const [timePeriodDropdownOpen, setTimePeriodDropdownOpen] = useState(false)
   const [mainViewDropdownOpen, setMainViewDropdownOpen] = useState(false)
   const timePeriodOptions = useMemo(() => {
-    const options: Array<SegmentedControlOption<GraphQLApi.HistoryDuration> & { verboseDisplay: JSX.Element }> = [
+    const options: Array<SegmentedControlOption<HistoryDuration> & { verboseDisplay: JSX.Element }> = [
       [
-        GraphQLApi.HistoryDuration.Day,
+        HistoryDuration.Day,
         t('token.priceExplorer.timeRangeLabel.day'),
         t('token.priceExplorer.timeRangeLabel.day.verbose'),
       ],
       [
-        GraphQLApi.HistoryDuration.Week,
+        HistoryDuration.Week,
         t('token.priceExplorer.timeRangeLabel.week'),
         t('token.priceExplorer.timeRangeLabel.week.verbose'),
       ],
       [
-        GraphQLApi.HistoryDuration.Month,
+        HistoryDuration.Month,
         t('token.priceExplorer.timeRangeLabel.month'),
         t('token.priceExplorer.timeRangeLabel.month.verbose'),
       ],
       [
-        GraphQLApi.HistoryDuration.Year,
+        HistoryDuration.Year,
         t('token.priceExplorer.timeRangeLabel.year'),
         t('token.priceExplorer.timeRangeLabel.year.verbose'),
       ],
-      [GraphQLApi.HistoryDuration.Max, t('token.priceExplorer.timeRangeLabel.all')],
+      [HistoryDuration.Max, t('token.priceExplorer.timeRangeLabel.all')],
     ].map((timePeriod) => ({
-      value: timePeriod[0] as GraphQLApi.HistoryDuration,
+      value: timePeriod[0] as HistoryDuration,
       display: <Text variant="buttonLabel3">{timePeriod[1]}</Text>,
       verboseDisplay: <Text variant="buttonLabel3">{timePeriod[2] ?? timePeriod[1]}</Text>,
     }))
@@ -481,11 +487,7 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
                   <AlertTriangleFilled color="$statusWarning" size="$icon.20" />
                 </MouseoverTooltip>
               )}
-              <TouchableArea
-                onPress={() => {
-                  setPriceInverted((prev) => !prev)
-                }}
-              >
+              <TouchableArea onPress={togglePriceInverted}>
                 <ExchangeHorizontal size="$icon.16" />
               </TouchableArea>
             </Flex>
@@ -663,7 +665,7 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
                   <SegmentedControl
                     options={timePeriodOptions.options}
                     selectedOption={timePeriodOptions.selected}
-                    onSelectOption={(option: GraphQLApi.HistoryDuration) => {
+                    onSelectOption={(option: HistoryDuration) => {
                       setSelectedHistoryDuration(option)
                     }}
                   />
@@ -679,7 +681,7 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
                 token0CurrentPrice={token0Price}
                 token1CurrentPrice={token1Price}
                 priceInverted={priceInverted}
-                setPriceInverted={setPriceInverted}
+                togglePriceInverted={togglePriceInverted}
               />
             </Flex>
           </Flex>
@@ -1089,13 +1091,13 @@ const PriceDisplay = ({
   price,
   tokenASymbol,
   tokenBSymbol,
-  setPriceInverted,
+  togglePriceInverted,
 }: {
   labelText: string
   price: string
   tokenASymbol?: string
   tokenBSymbol?: string
-  setPriceInverted: (value: React.SetStateAction<boolean>) => void
+  togglePriceInverted: () => void
 }) => {
   return (
     <Flex
@@ -1116,14 +1118,7 @@ const PriceDisplay = ({
         <Text variant="body4" color="$neutral2" numberOfLines={1}>
           {tokenASymbol} = 1 {tokenBSymbol}
         </Text>
-        <TouchableArea
-          animation={null}
-          $group-hover={{ opacity: 1 }}
-          opacity={0}
-          onPress={() => {
-            setPriceInverted((prev: boolean) => !prev)
-          }}
-        >
+        <TouchableArea animation={null} $group-hover={{ opacity: 1 }} opacity={0} onPress={togglePriceInverted}>
           <ExchangeHorizontal color="$neutral2" size="$icon.16" />
         </TouchableArea>
       </Flex>
@@ -1140,7 +1135,7 @@ const PriceRangeSection = ({
   token1CurrentPrice,
   isFullRange,
   priceInverted,
-  setPriceInverted,
+  togglePriceInverted,
 }: {
   maxPrice: string
   minPrice: string
@@ -1150,7 +1145,7 @@ const PriceRangeSection = ({
   token0CurrentPrice?: Price<Currency, Currency>
   token1CurrentPrice?: Price<Currency, Currency>
   priceInverted?: boolean
-  setPriceInverted: React.Dispatch<React.SetStateAction<boolean>>
+  togglePriceInverted: () => void
 }) => {
   const { t } = useTranslation()
   const { formatNumberOrString } = useLocalizationContext()
@@ -1178,7 +1173,7 @@ const PriceRangeSection = ({
           price={minPrice}
           tokenASymbol={tokenASymbol}
           tokenBSymbol={tokenBSymbol}
-          setPriceInverted={setPriceInverted}
+          togglePriceInverted={togglePriceInverted}
         />
 
         <PriceDisplay
@@ -1186,7 +1181,7 @@ const PriceRangeSection = ({
           price={maxPrice}
           tokenASymbol={tokenASymbol}
           tokenBSymbol={tokenBSymbol}
-          setPriceInverted={setPriceInverted}
+          togglePriceInverted={togglePriceInverted}
         />
 
         <PriceDisplay
@@ -1194,7 +1189,7 @@ const PriceRangeSection = ({
           price={formattedMarketPrice}
           tokenASymbol={tokenASymbol}
           tokenBSymbol={tokenBSymbol}
-          setPriceInverted={setPriceInverted}
+          togglePriceInverted={togglePriceInverted}
         />
       </Flex>
     </Flex>

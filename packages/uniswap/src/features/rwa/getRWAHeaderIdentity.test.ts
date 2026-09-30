@@ -30,6 +30,7 @@ describe('getRWAHeaderIdentity', () => {
       rwaMatch: ROBINHOOD_NVDA_MATCH,
       fallbackName: 'ignored',
       logoUrl: TOKEN_PROJECT_LOGO,
+      plainTokenNames: false,
     })
 
     expect(logoUrl).toBe(TOKEN_PROJECT_LOGO)
@@ -41,6 +42,7 @@ describe('getRWAHeaderIdentity', () => {
       rwaMatch: ROBINHOOD_NVDA_MATCH,
       fallbackName: 'ignored',
       logoUrl: TOKEN_PROJECT_LOGO,
+      plainTokenNames: false,
     })
 
     expect(name).toBe('NVIDIA')
@@ -51,9 +53,21 @@ describe('getRWAHeaderIdentity', () => {
       rwaMatch: { ...ROBINHOOD_NVDA_MATCH, asset: { ...ROBINHOOD_NVDA_MATCH.asset, name: '' } },
       fallbackName: 'ignored',
       logoUrl: TOKEN_PROJECT_LOGO,
+      plainTokenNames: false,
     })
 
     expect(name).toBe('NVDA')
+  })
+
+  it('keeps the token name for an RWA match with plainTokenNames', () => {
+    const result = getRWAHeaderIdentity({
+      rwaMatch: ROBINHOOD_NVDA_MATCH,
+      fallbackName: 'NVIDIA • Robinhood Token',
+      logoUrl: TOKEN_PROJECT_LOGO,
+      plainTokenNames: true,
+    })
+
+    expect(result).toEqual({ name: 'NVIDIA • Robinhood Token', logoUrl: TOKEN_PROJECT_LOGO })
   })
 
   it('uses the fallback name and project logo when there is no RWA match', () => {
@@ -61,6 +75,7 @@ describe('getRWAHeaderIdentity', () => {
       rwaMatch: undefined,
       fallbackName: 'USD Coin',
       logoUrl: TOKEN_PROJECT_LOGO,
+      plainTokenNames: false,
     })
 
     expect(result).toEqual({ name: 'USD Coin', logoUrl: TOKEN_PROJECT_LOGO })

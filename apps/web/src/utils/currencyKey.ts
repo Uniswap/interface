@@ -1,7 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
 import { normalizeTokenAddressForCache, UniverseChainId } from '@universe/chains'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { currencyIdToAddress, currencyIdToChain, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 
 export type CurrencyKey = string
@@ -15,18 +14,12 @@ export function currencyKey(currency: Currency): CurrencyKey {
   return buildCurrencyKey(currency.chainId, currency.isToken ? currency.address : NATIVE_CHAIN_ID)
 }
 
-export function currencyKeyFromGraphQL(contract: {
-  address?: string
-  chain: GraphQLApi.Chain
-  standard?: GraphQLApi.TokenStandard
-}): CurrencyKey {
-  const chainId = fromGraphQLChain(contract.chain)
-  const address = contract.standard === GraphQLApi.TokenStandard.Native ? NATIVE_CHAIN_ID : contract.address
-  if (!address) {
-    throw new Error('Non-native token missing address')
-  }
+/** Same key `currencyKey` produces for the matching sdk Currency; undefined for unsupported chains. */
+export function currencyKeyFromCurrencyId(currencyId: string): CurrencyKey | undefined {
+  const chainId = currencyIdToChain(currencyId)
   if (!chainId) {
-    throw new Error('Unsupported chain from pools query')
+    return undefined
   }
-  return buildCurrencyKey(chainId, address)
+  const address = currencyIdToAddress(currencyId)
+  return buildCurrencyKey(chainId, isNativeCurrencyAddress(chainId, address) ? NATIVE_CHAIN_ID : address)
 }

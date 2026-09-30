@@ -1,4 +1,9 @@
-import type { ChainTokenRankStats, RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
+import type { PlainMessage } from '@bufbuild/protobuf'
+import type {
+  ChainTokenRankStats,
+  MultichainToken as MultichainTokenMessage,
+  RankedMultichainToken,
+} from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { SpamCode } from '@universe/api'
 import { chainIdToPlatform } from '@universe/chains'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
@@ -18,7 +23,9 @@ import {
 import type { CurrencyId } from 'uniswap/src/types/currency'
 import { currencyId, isDefaultNativeAddress } from 'uniswap/src/utils/currencyId'
 
-type MultichainToken = NonNullable<RankedMultichainToken['multichainToken']>
+// Field-level view so both protobuf class instances (RankedMultichainToken) and toPlainMessage
+// output (GetTokensMultiChain query data) are accepted.
+type MultichainToken = PlainMessage<MultichainTokenMessage>
 
 /**
  * Data-api endpoints serve native tokens under three formats: the literal 'ETH' string, the legacy
@@ -91,6 +98,26 @@ function dataApiChainAddressToCurrencyInfo({
 }
 
 /**
+ * Expands a v2 MultichainToken into one CurrencyInfo per chain deployment — the v2 counterpart of
+ * the GraphQL TokenProject → tokens fan-out. Deployments that can't be built (unsupported chain,
+ * bad address) are dropped.
+ */
+export function dataApiMultichainTokenToCurrencyInfos(multichainToken: MultichainToken): CurrencyInfo[] {
+  const parentSafetyInfo = deriveParentSafetyInfo(multichainToken.safety, multichainToken.fees)
+
+  return Object.entries(multichainToken.addresses)
+    .map(([chainIdKey, address]) =>
+      dataApiChainAddressToCurrencyInfo({
+        chainId: Number(chainIdKey),
+        address,
+        parent: multichainToken,
+        parentSafetyInfo,
+      }),
+    )
+    .filter((c): c is CurrencyInfo => c !== null)
+}
+
+/**
  * Picks the (chainId, address) deployment to display for a multichain token: `chainId` when set,
  * else the highest-1d-volume deployment, else the first `addresses` entry.
  */
@@ -127,14 +154,17 @@ export function pickPrimaryDeployment({
 
 /**
  * Builds parent-level display stats from a RankedMultichainToken: spot price and 1d change from
- * the token's price data (mirrors mobile's rankedMultichainTokenToTokenItemData), 1d volume from
- * the aggregate rank stats. Returns undefined when none are present.
+ * the token's price data (mirrors mobile's rankedMultichainTokenToTokenItemData), FDV and 1d volume
+ * from the aggregate rank stats. Returns undefined when none are present.
  */
-function buildSearchTokenStats(rankedToken: RankedMultichainToken): SearchTokenStats | undefined {
+function buildSearchTokenStats(
+  rankedToken: RankedMultichainToken | PlainMessage<RankedMultichainToken>,
+): SearchTokenStats | undefined {
   const price = rankedToken.multichainToken?.price
   const stats: SearchTokenStats = {
     priceUsd: price?.spotUsd,
     pricePercentChange1d: price?.percentChange1d,
+    fdvUsd: rankedToken.stats?.fdv,
     volume1dUsd: rankedToken.stats?.volume1d,
   }
   // Object.values drops `undefined` from optional props, so re-widen or the check looks always-true
@@ -143,8 +173,8 @@ function buildSearchTokenStats(rankedToken: RankedMultichainToken): SearchTokenS
 }
 
 /**
- * Per-chain variant of the parent stats: price fields stay parent-level (per-chain prices are
- * effectively identical), but 1d volume is replaced with this chain's own when the response
+ * Per-chain variant of the parent stats: price and FDV stay parent-level (per-chain prices are
+ * effectively identical, and FDV is a token-level metric), but 1d volume is replaced with this chain's own when the response
  * carries per-chain stats — a chain-filtered row should show that chain's volume, not the
  * cross-chain aggregate.
  */
@@ -166,9 +196,10 @@ function buildChainSearchStats({
  * MultichainSearchResult type used by the search modal UI. Returns undefined when no valid chain
  * tokens can be built. Pass `isSuppressed` for tokens from the v2 search suppressed bucket — the
  * flag is stamped on the result and the shared `searchMultichainParent` so chain-filtered paths keep it.
+ * Accepts the plain shape too, so persisted ListTokens query data converts as-is.
  */
 export function dataApiMultichainTokenToSearchResult(
-  rankedToken: RankedMultichainToken,
+  rankedToken: RankedMultichainToken | PlainMessage<RankedMultichainToken>,
   { isSuppressed = false }: { isSuppressed?: boolean } = {},
 ): MultichainSearchResult | undefined {
   const multichainToken = rankedToken.multichainToken
@@ -177,17 +208,7 @@ export function dataApiMultichainTokenToSearchResult(
   }
 
   const parentSafetyInfo = deriveParentSafetyInfo(multichainToken.safety, multichainToken.fees)
-
-  const tokens = Object.entries(multichainToken.addresses)
-    .map(([chainIdKey, address]) =>
-      dataApiChainAddressToCurrencyInfo({
-        chainId: Number(chainIdKey),
-        address,
-        parent: multichainToken,
-        parentSafetyInfo,
-      }),
-    )
-    .filter((c): c is CurrencyInfo => c !== null)
+  const tokens = dataApiMultichainTokenToCurrencyInfos(multichainToken)
 
   if (tokens.length === 0) {
     return undefined

@@ -1,4 +1,5 @@
 import { TokensOrderBy } from '@uniswap/client-data-api/dist/data/v2/types_pb'
+import type { VolumeOrderBy } from 'uniswap/src/data/apiClients/dataApiService/utils/tokenRankStatsVolume'
 import { TokenSortMethod } from '~/components/Tokens/constants'
 import { TimePeriod } from '~/data/util'
 
@@ -16,7 +17,7 @@ export const tokenSortMethodToOrderBy: Partial<Record<TokenSortMethod, TokensOrd
 }
 
 /** Maps TimePeriod to volume TokensOrderBy for dynamic volume sorting. */
-export const timePeriodToVolumeOrderBy: Record<TimePeriod, TokensOrderBy> = {
+export const timePeriodToVolumeOrderBy: Record<TimePeriod, VolumeOrderBy> = {
   [TimePeriod.HOUR]: TokensOrderBy.VOLUME_1H,
   [TimePeriod.DAY]: TokensOrderBy.VOLUME_1D,
   [TimePeriod.WEEK]: TokensOrderBy.VOLUME_7D,

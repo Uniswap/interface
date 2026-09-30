@@ -3,8 +3,8 @@ import { Flex } from '@universe/mycelium'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CheckmarkCircle } from 'ui/src/components/icons/CheckmarkCircle'
-import { GridView } from 'ui/src/components/icons/GridView'
 import { Lightning } from 'ui/src/components/icons/Lightning'
+import { Ranking } from 'ui/src/components/icons/Ranking'
 import { Rocket } from 'ui/src/components/icons/Rocket'
 import { Sparkle } from 'ui/src/components/icons/Sparkle'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
@@ -44,7 +44,7 @@ export function AuctionQuickFilters() {
       {
         value: AuctionQuickFilter.All,
         label: t('common.all'),
-        renderIcon: (color) => <GridView size="$icon.16" color={color} />,
+        renderIcon: (color) => <Ranking size="$icon.16" color={color} />,
       },
       {
         value: AuctionQuickFilter.Verified,
@@ -77,7 +77,13 @@ export function AuctionQuickFilters() {
 
   return (
     // Chips can exceed small viewports — scroll them in place instead of wrapping or widening the page.
-    <Flex row alignItems="center" className="scrollbar-hidden" $md={{ '$platform-web': { overflowX: 'auto' } }}>
+    <Flex
+      row
+      alignItems="center"
+      gap="$spacing4"
+      className="scrollbar-hidden"
+      $md={{ '$platform-web': { overflowX: 'auto' } }}
+    >
       {options.map((option) => {
         const active = option.value === quickFilter
         const chip = (

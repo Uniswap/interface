@@ -5,11 +5,11 @@ import { styled } from '@universe/mycelium/styled'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { fetchCurrency } from 'uniswap/src/features/tokens/fetchCurrencyInfo'
 import type { BridgeTransactionInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n'
 import { currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
-import { getCurrencyFromCurrencyId } from '~/components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
 import type { FormatNumberFunctionType } from '~/components/AccountDrawer/MiniPortfolio/Activity/parseLocal/types'
 import type { Activity } from '~/components/AccountDrawer/MiniPortfolio/Activity/types'
 
@@ -56,8 +56,8 @@ export async function parseBridge({
   chainId: UniverseChainId
 }): Promise<Partial<Activity>> {
   const [tokenIn, tokenOut] = await Promise.all([
-    getCurrencyFromCurrencyId(bridge.inputCurrencyId),
-    getCurrencyFromCurrencyId(bridge.outputCurrencyId),
+    fetchCurrency(bridge.inputCurrencyId),
+    fetchCurrency(bridge.outputCurrencyId),
   ])
   const inputAmount = tokenIn
     ? formatNumber({

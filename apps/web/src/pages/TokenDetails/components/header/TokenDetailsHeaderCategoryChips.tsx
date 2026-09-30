@@ -1,14 +1,15 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, iconSizes, spacing, Text, TouchableArea } from '@universe/mycelium'
+import { TestID, type TestIDType } from '@universe/test'
 import { memo, type ReactNode } from 'react'
 import { useNavigate } from 'react-router'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getTokenCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
-import { TestID, type TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { useEvent } from 'utilities/src/react/hooks'
+import { CategoryHoverCard } from '~/components/HoverCard/CategoryHoverCard/CategoryHoverCard'
 import { LoadingBubble } from '~/components/Tokens/loading'
 import { rightEdgeFadeStyle, useWheelHorizontalScroll } from '~/pages/Explore/categories/useWheelHorizontalScroll'
 import { getCategoryDetailsURL } from '~/pages/Explore/CategoryDetails/getCategoryDetailsURL'
@@ -109,26 +110,28 @@ const CategoryChip = memo(function CategoryChip({
   const onModifierPressChip = useEvent(() => onModifierPress(category, index))
 
   return (
-    <TouchableArea
-      row
-      alignItems="center"
-      flexShrink={0}
-      height={CHIP_HEIGHT}
-      gap="$spacing4"
-      pl="$spacing8"
-      pr="$spacing12"
-      borderWidth="$spacing1"
-      borderColor="$surface3"
-      borderRadius="$roundedFull"
-      hoverStyle={{ backgroundColor: '$surface2' }}
-      modifierPressHref={getCategoryDetailsURL(category.id)}
-      onPress={onPressChip}
-      onModifierPress={onModifierPressChip}
-    >
-      <Icon color="$neutral2" size="$icon.16" />
-      <Text variant="buttonLabel4" color="$neutral2" $platform-web={{ whiteSpace: 'nowrap' }}>
-        {category.name}
-      </Text>
-    </TouchableArea>
+    <CategoryHoverCard category={category} section={SectionName.TokenDetails}>
+      <TouchableArea
+        row
+        alignItems="center"
+        flexShrink={0}
+        height={CHIP_HEIGHT}
+        gap="$spacing4"
+        pl="$spacing8"
+        pr="$spacing12"
+        borderWidth="$spacing1"
+        borderColor="$surface3"
+        borderRadius="$roundedFull"
+        hoverStyle={{ backgroundColor: '$surface2' }}
+        modifierPressHref={getCategoryDetailsURL(category.id)}
+        onPress={onPressChip}
+        onModifierPress={onModifierPressChip}
+      >
+        <Icon color="$neutral2" size="$icon.16" />
+        <Text variant="buttonLabel4" color="$neutral2" $platform-web={{ whiteSpace: 'nowrap' }}>
+          {category.name}
+        </Text>
+      </TouchableArea>
+    </CategoryHoverCard>
   )
 })

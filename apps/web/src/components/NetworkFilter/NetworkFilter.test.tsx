@@ -1,7 +1,7 @@
 import { UniverseChainId } from '@universe/chains'
+import { TestID } from '@universe/test'
 import type { ReactNode } from 'react'
 import type { TieredNetworkOptions } from 'uniswap/src/components/network/NetworkFilterV2/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NetworkFilter } from './NetworkFilter'
 import { fireEvent, render, screen } from '~/test-utils/render'
 

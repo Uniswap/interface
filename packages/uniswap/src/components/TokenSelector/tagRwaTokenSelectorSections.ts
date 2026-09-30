@@ -12,9 +12,11 @@ import { currencyAddress } from 'uniswap/src/utils/currencyId'
 export function tagRwaTokenSelectorSections({
   sections,
   rwaIndex,
+  plainTokenNames,
 }: {
   sections?: OnchainItemSection<TokenSelectorListOption>[]
   rwaIndex: RwaSearchIndex
+  plainTokenNames: boolean
 }): OnchainItemSection<TokenSelectorListOption>[] | undefined {
   if (!sections || rwaIndex.byChainAddress.size === 0) {
     return sections
@@ -33,7 +35,7 @@ export function tagRwaTokenSelectorSections({
       if (!match) {
         return item
       }
-      return tagOptionAsRwa({ option: item, match })
+      return tagOptionAsRwa({ option: item, match, plainTokenNames })
     })
     // A row was tagged iff `.map` produced a new object for it — unchanged rows keep their reference.
     const sectionChanged = data.some((item, index) => item !== sectionItem.data[index])

@@ -105,11 +105,12 @@ export function getInsufficientGasWarning({
     return undefined
   }
 
+  const gasTokenTransactionAmount = getGasTokenTransactionAmount({ gasToken, inputAmount, chainId })
   const hasGasFunds = hasSufficientGasBalance({
     chainId,
     gasBalance,
     gasFee,
-    gasTokenTransactionAmount: getGasTokenTransactionAmount({ gasToken, inputAmount, chainId }),
+    spend: gasTokenTransactionAmount ? { kind: 'gas-token-amount', amount: gasTokenTransactionAmount } : undefined,
   })
   if (hasGasFunds) {
     return undefined

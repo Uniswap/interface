@@ -1,6 +1,6 @@
 import { Button, Flex } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ChangeUnitagConfirmButtonProps } from 'wallet/src/features/unitags/ChangeUnitagConfirmButton'
 
 export const ChangeUnitagConfirmButton = ({

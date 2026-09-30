@@ -1,7 +1,7 @@
 import { UniverseChainId } from '@universe/chains'
 import { Flex } from '@universe/mycelium'
 import { CheckmarkCircle } from '@universe/mycelium/icons/CheckmarkCircle'
-import { GridView } from '@universe/mycelium/icons/GridView'
+import { Ranking } from '@universe/mycelium/icons/Ranking'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
@@ -29,7 +29,7 @@ function LiveAuctionsQuickSelects(): JSX.Element {
       {
         value: AuctionQuickFilter.All,
         label: t('common.all'),
-        renderIcon: (color: '$neutral1' | '$neutral2') => <GridView size="$icon.20" color={color} />,
+        renderIcon: (color: '$neutral1' | '$neutral2') => <Ranking size="$icon.20" color={color} />,
       },
       {
         value: AuctionQuickFilter.Verified,

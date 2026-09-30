@@ -38,6 +38,8 @@ export function PopoverTrigger(props: PopoverTriggerProps): JSX.Element | null {
     onContextMenu: _onContextMenu,
     testID,
     'data-testid': _dataTestId,
+    role: _role,
+    tabIndex: _tabIndex,
     ...styleProps
   } = props
   const config = useContext(NativePopoverConfigContext)

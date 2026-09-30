@@ -1,5 +1,6 @@
 import userEvent from '@testing-library/user-event'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { TestID } from '@universe/test'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useWalletPositions } from 'uniswap/src/features/positions/hooks/useWalletPositions'
 import {
@@ -7,8 +8,7 @@ import {
   useWalletPositionsBalance,
 } from 'uniswap/src/features/positions/hooks/useWalletPositionsBalance'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures/gql/assets/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures/assets/constants'
 import { YourFeesModal } from '~/features/Liquidity/fees/YourFeesModal'
 import { setOpenModal } from '~/state/application/reducer'
 import { useAppDispatch } from '~/state/hooks'

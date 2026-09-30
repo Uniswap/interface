@@ -56,7 +56,7 @@ export const AnalyticsDebugEventRow = memo(function AnalyticsDebugEventRow({
     <TouchableArea onPress={toggleExpanded}>
       <Flex
         borderBottomWidth={1}
-        borderBottomColor="$surface3"
+        borderColor="$surface3"
         py="$spacing4"
         px="$spacing8"
         hoverStyle={{ backgroundColor: '$surface2' }}

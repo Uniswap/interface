@@ -2,15 +2,16 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { UniverseChainId } from '@universe/chains'
 import { Flex, iconSizes, Text } from '@universe/mycelium'
 import { GridView } from '@universe/mycelium/icons/GridView'
+import { Ranking } from '@universe/mycelium/icons/Ranking'
 import { Sparkle } from '@universe/mycelium/icons/Sparkle'
 import { TrendUp } from '@universe/mycelium/icons/TrendUp'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NetworkOption } from 'uniswap/src/components/network/NetworkOption'
 import { ElementName, InterfacePageName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { Dropdown } from '~/components/Dropdowns/Dropdown'
 import {
   DropdownSizeVariants,
@@ -43,7 +44,7 @@ export function LaunchQuickSelects({
       {
         value: LaunchQuickFilter.All,
         label: t('common.all'),
-        renderIcon: (color: '$neutral1' | '$neutral2') => <GridView size="$icon.20" color={color} />,
+        renderIcon: (color: '$neutral1' | '$neutral2') => <Ranking size="$icon.20" color={color} />,
       },
       {
         value: LaunchQuickFilter.RecentlyLaunched,

@@ -1,4 +1,3 @@
-import { type ApolloClient, useApolloClient } from '@apollo/client'
 import { type Dispatch } from '@reduxjs/toolkit'
 import { type QueryClient, useQueryClient } from '@tanstack/react-query'
 import { useMemo } from 'react'
@@ -19,11 +18,9 @@ import { createWalletStateResetter } from 'wallet/src/state/createWalletStateRes
  */
 export function createExtensionAppStateResetter({
   dispatch,
-  apolloClient,
   queryClient,
 }: {
   dispatch: Dispatch
-  apolloClient?: ApolloClient<unknown>
   queryClient?: QueryClient
 }): AppStateResetter {
   const logger = createLogger('appResetter.tsx', 'createExtensionAppStateResetter')
@@ -43,9 +40,6 @@ export function createExtensionAppStateResetter({
 
     onResetQueryCaches: async () => {
       const cachePromises: Promise<void>[] = []
-      if (apolloClient) {
-        cachePromises.push(apolloClient.resetStore().then(() => logger.info('Apollo cache cleared successfully')))
-      }
       if (queryClient) {
         cachePromises.push(queryClient.resetQueries().then(() => logger.info('React Query cache cleared successfully')))
       }
@@ -58,12 +52,8 @@ export function createExtensionAppStateResetter({
 
 export function useAppStateResetter(): AppStateResetter {
   const dispatch = useDispatch()
-  const apolloClient = useApolloClient()
   const queryClient = useQueryClient()
-  return useMemo(
-    () => createExtensionAppStateResetter({ dispatch, apolloClient, queryClient }),
-    [dispatch, apolloClient, queryClient],
-  )
+  return useMemo(() => createExtensionAppStateResetter({ dispatch, queryClient }), [dispatch, queryClient])
 }
 
 /**

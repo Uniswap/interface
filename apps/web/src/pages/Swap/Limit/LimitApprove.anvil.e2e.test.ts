@@ -1,7 +1,7 @@
 import { MaxUint256, PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { V1_TRADING_API_PATHS } from '@universe/api'
+import { TestID } from '@universe/test'
 import { USDT } from 'uniswap/src/constants/tokens'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { parseEther } from '~/chains'
 import { assume0xAddress } from '~/chains'
 import { expect, getTest } from '~/playwright/fixtures'

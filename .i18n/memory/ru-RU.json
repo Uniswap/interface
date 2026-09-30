@@ -14,8 +14,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Apple",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-17T17-30-50Z",
-        "approvedAt": "2026-09-17T17:30:50.155Z",
+        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
+        "approvedAt": "2026-09-23T16:12:06.051Z",
         "approvedBy": "agent"
       }
     ],
@@ -31,8 +31,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Google",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-17T17-30-50Z",
-        "approvedAt": "2026-09-17T17:30:50.155Z",
+        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
+        "approvedAt": "2026-09-23T16:12:06.051Z",
         "approvedBy": "agent"
       }
     ],
@@ -105,6 +105,23 @@
       }
     ],
     [
+      "ru-RU:i18next-json:dapp.request.amountUnavailable",
+      {
+        "unitId": "dapp.request.amountUnavailable",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "6ea97c53df001e76387ca3cd2a57c61aa2ffa0e12d752ff4f445556b31edd0b1",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Сумма недоступна",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-09-18T15-34-59Z",
+        "approvedAt": "2026-09-18T15:34:59.207Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ru-RU:i18next-json:explore.collections.single",
       {
         "unitId": "explore.collections.single",
@@ -133,8 +150,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Earn",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-17T17-30-50Z",
-        "approvedAt": "2026-09-17T17:30:50.155Z",
+        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
+        "approvedAt": "2026-09-23T16:12:06.051Z",
         "approvedBy": "agent"
       }
     ],
@@ -150,8 +167,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Venmo",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-17T17-30-50Z",
-        "approvedAt": "2026-09-17T17:30:50.155Z",
+        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
+        "approvedAt": "2026-09-23T16:12:06.051Z",
         "approvedBy": "agent"
       }
     ],
@@ -167,8 +184,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "API",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-17T17-30-50Z",
-        "approvedAt": "2026-09-17T17:30:50.155Z",
+        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
+        "approvedAt": "2026-09-23T16:12:06.051Z",
         "approvedBy": "agent"
       }
     ],
@@ -218,8 +235,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-17T17-30-50Z",
-        "approvedAt": "2026-09-17T17:30:50.155Z",
+        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
+        "approvedAt": "2026-09-23T16:12:06.051Z",
         "approvedBy": "agent"
       }
     ],
@@ -252,8 +269,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-17T17-30-50Z",
-        "approvedAt": "2026-09-17T17:30:50.155Z",
+        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
+        "approvedAt": "2026-09-23T16:12:06.051Z",
         "approvedBy": "agent"
       }
     ],
@@ -269,8 +286,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "DeFi",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-17T17-30-50Z",
-        "approvedAt": "2026-09-17T17:30:50.155Z",
+        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
+        "approvedAt": "2026-09-23T16:12:06.051Z",
         "approvedBy": "agent"
       }
     ],
@@ -303,8 +320,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-17T17-30-50Z",
-        "approvedAt": "2026-09-17T17:30:50.155Z",
+        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
+        "approvedAt": "2026-09-23T16:12:06.051Z",
         "approvedBy": "agent"
       }
     ],
@@ -456,8 +473,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-17T17-30-50Z",
-        "approvedAt": "2026-09-17T17:30:50.155Z",
+        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
+        "approvedAt": "2026-09-23T16:12:06.051Z",
         "approvedBy": "agent"
       }
     ],
@@ -473,8 +490,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-17T17-30-50Z",
-        "approvedAt": "2026-09-17T17:30:50.155Z",
+        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
+        "approvedAt": "2026-09-23T16:12:06.051Z",
         "approvedBy": "agent"
       }
     ],
@@ -490,8 +507,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Crowd",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-17T17-30-50Z",
-        "approvedAt": "2026-09-17T17:30:50.155Z",
+        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
+        "approvedAt": "2026-09-23T16:12:06.051Z",
         "approvedBy": "agent"
       }
     ],
@@ -507,8 +524,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Instant",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-17T17-30-50Z",
-        "approvedAt": "2026-09-17T17:30:50.155Z",
+        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
+        "approvedAt": "2026-09-23T16:12:06.051Z",
         "approvedBy": "agent"
       }
     ],
@@ -524,8 +541,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "ENS",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-17T17-30-50Z",
-        "approvedAt": "2026-09-17T17:30:50.155Z",
+        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
+        "approvedAt": "2026-09-23T16:12:06.051Z",
         "approvedBy": "agent"
       }
     ],
@@ -768,6 +785,23 @@
       }
     ],
     [
+      "ru-RU:i18next-json:tokens.selector.categoryFilter.myTokens",
+      {
+        "unitId": "tokens.selector.categoryFilter.myTokens",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "16f6f49ce8ba3114b5b5495524ad01dc739a58e7405110fa38669d4d23443f0c",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Мои токены",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
+        "approvedAt": "2026-09-23T16:12:06.051Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ru-RU:i18next-json:toucan.auction.biddingClosed",
       {
         "unitId": "toucan.auction.biddingClosed",
@@ -847,8 +881,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "<value>{{fdv}}</value> FDV",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-17T17-30-50Z",
-        "approvedAt": "2026-09-17T17:30:50.155Z",
+        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
+        "approvedAt": "2026-09-23T16:12:06.051Z",
         "approvedBy": "agent"
       }
     ],
@@ -1102,8 +1136,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-17T17-30-50Z",
-        "approvedAt": "2026-09-17T17:30:50.155Z",
+        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
+        "approvedAt": "2026-09-23T16:12:06.051Z",
         "approvedBy": "agent"
       }
     ],
@@ -1119,8 +1153,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-17T17-30-50Z",
-        "approvedAt": "2026-09-17T17:30:50.155Z",
+        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
+        "approvedAt": "2026-09-23T16:12:06.051Z",
         "approvedBy": "agent"
       }
     ],
@@ -1151,10 +1185,20 @@
         "sourceHash": "280c70ebebbbc7e0b7a65d2f88fa764a7c1ccf9474ede08bc9273c9ef47518c1",
         "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
-        "translation": "Crowd Launches",
-        "status": "clean",
-        "agentRunId": "ru-RU-2026-09-17T17-30-50Z",
-        "approvedAt": "2026-09-17T17:30:50.155Z",
+        "translation": "Запуски Crowd Launch",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "design-and-markup",
+            "severity": "major",
+            "detail": "Translator annotation '[uncertain: Crowd Launches]' left in the string and would ship to users.",
+            "evidence": {
+              "targetSpan": "[uncertain: Crowd Launches]"
+            }
+          }
+        ],
+        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
+        "approvedAt": "2026-09-23T16:12:06.051Z",
         "approvedBy": "agent"
       }
     ],
@@ -1238,8 +1282,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-17T17-30-50Z",
-        "approvedAt": "2026-09-17T17:30:50.155Z",
+        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
+        "approvedAt": "2026-09-23T16:12:06.051Z",
         "approvedBy": "agent"
       }
     ],
@@ -1270,10 +1314,21 @@
         "sourceHash": "2990da5554ed8b8d80ca9d06f4f23b0566a88a1ffd4f4eb7be58788afea54016",
         "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
-        "translation": "Instant Launches",
+        "translation": "Мгновенные запуски",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-17T17-30-50Z",
-        "approvedAt": "2026-09-17T17:30:50.155Z",
+        "judgeIssues": [
+          {
+            "category": "terminology",
+            "severity": "minor",
+            "reviewDimension": "term-type-agreement",
+            "detail": "'Instant Launch' (singular, i=2656/4407) stays English while the plural is translated 'Мгновенные запуски'; this split matches shipped precedent ('Instant Launch' kept, 'мгновенные запуски' in prose), so no change — noting for terminology ratification.",
+            "evidence": {
+              "rule": "shipped: 'How Instant Launches work → Как работают мгновенные запуски'"
+            }
+          }
+        ],
+        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
+        "approvedAt": "2026-09-23T16:12:06.051Z",
         "approvedBy": "agent"
       }
     ],
@@ -1289,8 +1344,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Pools.trade",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-17T17-30-50Z",
-        "approvedAt": "2026-09-17T17:30:50.155Z",
+        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
+        "approvedAt": "2026-09-23T16:12:06.051Z",
         "approvedBy": "agent"
       }
     ],
@@ -1357,8 +1412,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "<icon /> <gradient>UniswapX</gradient> <info />",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-17T17-30-50Z",
-        "approvedAt": "2026-09-17T17:30:50.155Z",
+        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
+        "approvedAt": "2026-09-23T16:12:06.051Z",
         "approvedBy": "agent"
       }
     ]

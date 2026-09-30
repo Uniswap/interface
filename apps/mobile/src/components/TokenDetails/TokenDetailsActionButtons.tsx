@@ -1,6 +1,7 @@
 import { AnimatedFlex, type ColorTokens, Flex } from '@universe/mycelium'
 import type { GeneratedIcon } from '@universe/mycelium/icons'
 import { withSporeCurve } from '@universe/tailwind/animations/reanimated'
+import { TestID, TestIDType } from '@universe/test'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { LayoutChangeEvent } from 'react-native'
@@ -17,7 +18,6 @@ import { ElementName, MobileEventName, SectionName } from 'uniswap/src/features/
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useBottomScreenGap } from 'uniswap/src/hooks/useBottomScreenGap'
-import { TestID, TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 const CTA_MAX_LABEL_FONT_SIZE = fonts.buttonLabel1.fontSize
@@ -244,7 +244,7 @@ export function TokenDetailsBuySellButtons({
     <Flex
       row
       backgroundColor="$surface1"
-      borderTopColor="$surface3"
+      borderColor="$surface3"
       borderTopWidth={1}
       gap="$spacing8"
       pb={bottomScreenExtraGap}

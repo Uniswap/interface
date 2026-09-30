@@ -1,9 +1,9 @@
 import { isWebPlatform } from '@universe/environment'
 import { Flex, Text } from '@universe/mycelium'
 import { TooltipCompat as Tooltip } from '@universe/mycelium/tooltip-compat'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export function EarnUnavailableIndicator(): JSX.Element {
   const { t } = useTranslation()

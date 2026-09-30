@@ -1,9 +1,8 @@
 import { gcm } from '@noble/ciphers/aes.js'
 import { p256 } from '@noble/curves/nist.js'
-import { bytesToHex } from '@noble/hashes/utils.js'
 import { generateRandomBytes, hkdfSha256, sha256Sync } from '@universe/cryptography'
 import { deriveArgon2 } from '@universe/embedded-wallet/src/features/passkey/deriveArgon2'
-import { base64ToUint8, uint8ToBase64, utf8ToUint8 } from '@universe/encoding'
+import { base64ToUint8, uint8ToBase64, uint8ToHex, utf8ToUint8 } from '@universe/encoding'
 
 // OPRF types (lazy-loaded to code-split @cloudflare/voprf-ts)
 type OprfClient = InstanceType<typeof import('@cloudflare/voprf-ts').OPRFClient>
@@ -173,5 +172,5 @@ export function signWithAuthKey(privateKey: Uint8Array, data: Uint8Array): strin
 
 export function hashAuthMethodId(identifier: string): string {
   const bytes = utf8ToUint8(identifier.toLowerCase())
-  return bytesToHex(sha256Sync(bytes))
+  return uint8ToHex(sha256Sync(bytes))
 }

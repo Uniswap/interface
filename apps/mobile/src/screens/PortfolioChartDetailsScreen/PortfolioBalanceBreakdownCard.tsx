@@ -1,4 +1,5 @@
 import { Flex, iconSizes } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { type BreakdownCardProps } from 'src/screens/PortfolioChartDetailsScreen/getBreakdownCardProps'
 import { Coin } from 'ui/src/components/icons/Coin'
@@ -7,7 +8,6 @@ import { Pools } from 'ui/src/components/icons/Pools'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 
 const PERCENT_COLUMN_WIDTH = 56

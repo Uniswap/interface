@@ -42,30 +42,36 @@ export function useStocksSelectionWithWarning({
 } {
   const [pendingOption, setPendingOption] = useState<RwaTokenOption | null>(null)
 
-  // One batched `Tokens` query warms the same normalized `Token` cache entries the per-tap query below reads
-  // (identical `TokenParts` selection + the `Query.token` cache redirect), so a tap usually resolves from cache with
-  // no pending gap. On a cache miss the lazy per-tap fetch still works exactly as before.
+  // One batched `GetTokens` query for the whole row. React Query has no normalized cache, so this can't warm the
+  // per-tap `GetToken` entry below (different query key); instead the tapped option is read straight out of this
+  // positional result, so a tap after it resolves commits with no pending gap.
   const prefetchCurrencyIds = useMemo(
     () => tokens.map((option) => buildCurrencyId(option.chainId, option.address)),
     [tokens],
   )
-  useCurrencyInfos(prefetchCurrencyIds, { skip: !showTokenWarnings })
+  const prefetchedCurrencyInfos = useCurrencyInfos(prefetchCurrencyIds, { skip: !showTokenWarnings })
+  const pendingIndex = pendingOption
+    ? tokens.findIndex((option) => getStockKey(option) === getStockKey(pendingOption))
+    : -1
+  const prefetchedCurrencyInfo = pendingIndex >= 0 ? prefetchedCurrencyInfos[pendingIndex] : undefined
 
-  // Lazy: undefined currencyId skips the query, so nothing is fetched until a tile is tapped. cache-first makes a
-  // repeat tap instant.
-  const currencyId = pendingOption ? buildCurrencyId(pendingOption.chainId, pendingOption.address) : undefined
-  const { currencyInfo, loading } = useCurrencyInfoWithLoading(currencyId)
+  // Fallback for a tap before the batch resolves (or a token it didn't return): undefined currencyId skips the query,
+  // so nothing is fetched until it's needed. cache-first makes a repeat tap instant.
+  const currencyId =
+    pendingOption && !prefetchedCurrencyInfo ? buildCurrencyId(pendingOption.chainId, pendingOption.address) : undefined
+  const { data: fetchedCurrencyInfo, isLoading } = useCurrencyInfoWithLoading(currencyId)
+  const currencyInfo = prefetchedCurrencyInfo ?? fetchedCurrencyInfo
 
   const [fetchTimedOut, setFetchTimedOut] = useState(false)
   useEffect(() => {
     setFetchTimedOut(false)
-    if (!pendingOption || !loading) {
+    if (!pendingOption || !isLoading) {
       return undefined
     }
     const timer = setTimeout(() => setFetchTimedOut(true), PENDING_FETCH_TIMEOUT_MS)
     return () => clearTimeout(timer)
-  }, [pendingOption, loading])
-  const isFetching = loading && !fetchTimedOut
+  }, [pendingOption, isLoading])
+  const isFetching = isLoading && !fetchTimedOut
 
   const severity = getTokenWarningSeverity(currencyInfo)
   const tokenProtectionWarning = getTokenProtectionWarning(currencyInfo)

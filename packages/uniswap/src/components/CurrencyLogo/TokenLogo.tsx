@@ -49,6 +49,8 @@ const BADGE_MAX_SYMBOL_CHARACTERS = 3
 // smaller badges (e.g. icon16/icon24) so it never eats the whole width and leaves no room for text.
 const BADGE_HORIZONTAL_PADDING = 8
 const BADGE_BASE_FONT_SIZE = 17
+const COUNT_BADGE_MAX_FONT_SIZE = 13
+const COUNT_BADGE_FONT_SIZE_RATIO = 0.8
 
 /**
  * The fallback badge shows up to `BADGE_MAX_SYMBOL_CHARACTERS` characters. A 1-2 character ticker
@@ -73,6 +75,9 @@ function MultichainCountBadge({
   const colors = useSporeColors()
   const outerSize = getBadgeOuterSize(sizeWithoutBorder, borderWidth)
   const borderRadius = getBadgeBorderRadius(outerSize, 'square')
+  // buttonLabel4 (13px, ~15px line) overflows small badges (e.g. icon24 → 10px inner),
+  // so scale the text to the badge's inner size.
+  const fontSize = Math.min(COUNT_BADGE_MAX_FONT_SIZE, Math.round(sizeWithoutBorder * COUNT_BADGE_FONT_SIZE_RATIO))
 
   return (
     <Badge>
@@ -90,7 +95,14 @@ function MultichainCountBadge({
           allowFontScaling={false}
           color="$neutral1"
           variant="buttonLabel4"
-          $platform-web={{ fontSize: 10, lineHeight: 12, whiteSpace: 'nowrap' }}
+          $platform-web={{ whiteSpace: 'nowrap' }}
+          $platform-native={{ textAlignVertical: 'center' }}
+          // Top-level so uniwind drops the variant's line-height class too (see fallback badge below).
+          fontSize={fontSize}
+          lineHeight={fontSize}
+          // RN-only: shrinks 3-char counts ("99+") that don't fit at the scaled size.
+          adjustsFontSizeToFit={isMobileApp}
+          minimumFontScale={0.7}
           // On web numberOfLines clamps to the badge width and ellipsizes, so small badges (icon24)
           // render "…" instead of the count. Let the digits overflow the square; the parent centers them.
           numberOfLines={isMobileApp ? 1 : undefined}

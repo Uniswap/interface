@@ -1,7 +1,7 @@
 import { Flex, iconSizes, Text, TouchableArea } from '@universe/mycelium'
 import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 /**
  * Bordered, centered "balance failed to load" card with a retry action, shown when an earn balance

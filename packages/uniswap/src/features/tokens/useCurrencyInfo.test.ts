@@ -1,8 +1,13 @@
-import { waitFor } from '@testing-library/react-native'
+import { act, waitFor } from '@testing-library/react-native'
 import { SharedQueryClient } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/rpc'
-import { useCurrencyInfo, useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { currencyIdToRestContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
+import {
+  useCurrencyInfo,
+  useCurrencyInfos,
+  useCurrencyInfoWithLoading,
+} from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { renderHookWithProviders } from 'uniswap/src/test/render'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
@@ -38,15 +43,17 @@ describe(useCurrencyInfo, () => {
   beforeEach(() => {
     vi.clearAllMocks()
 
-    mockGetGetTokenQueryOptions.mockImplementation(({ enabled }) => ({
+    mockGetGetTokenQueryOptions.mockImplementation(({ enabled, select }) => ({
       queryKey: [ReactQueryCacheKey.DataApiService, 'getToken'],
       queryFn: () => Promise.resolve({ token: REST_TOKEN }),
       enabled,
+      select,
     }))
-    mockGetGetTokensQueryOptions.mockImplementation(({ enabled }) => ({
+    mockGetGetTokensQueryOptions.mockImplementation(({ enabled, select }) => ({
       queryKey: [ReactQueryCacheKey.DataApiService, 'getTokens'],
       queryFn: () => Promise.resolve({ tokens: [REST_TOKEN] }),
       enabled,
+      select,
     }))
   })
 
@@ -93,10 +100,11 @@ describe(useCurrencyInfos, () => {
     // a later test can read a stale cached response from an earlier one under that same key.
     SharedQueryClient.clear()
 
-    mockGetGetTokensQueryOptions.mockImplementation(({ enabled }) => ({
+    mockGetGetTokensQueryOptions.mockImplementation(({ enabled, select }) => ({
       queryKey: [ReactQueryCacheKey.DataApiService, 'getTokens'],
       queryFn: () => Promise.resolve({ tokens: [REST_TOKEN] }),
       enabled,
+      select,
     }))
   })
 
@@ -118,14 +126,50 @@ describe(useCurrencyInfos, () => {
       symbol: 'ETH',
       name: 'Ethereum',
     }
-    mockGetGetTokensQueryOptions.mockImplementation(({ enabled }) => ({
+    mockGetGetTokensQueryOptions.mockImplementation(({ enabled, select }) => ({
       queryKey: [ReactQueryCacheKey.DataApiService, 'getTokens'],
       queryFn: () => Promise.resolve({ tokens: [nativeRestToken] }),
       enabled,
+      select,
     }))
 
     const { result } = renderHookWithProviders(() => useCurrencyInfos([nativeCurrencyId]))
 
     await waitFor(() => expect(result.current[0]?.currency.name).toBe('Ethereum'))
+  })
+})
+
+describe(useCurrencyInfoWithLoading, () => {
+  beforeEach(async () => {
+    // The file-level mock drops placeholderData; this regression needs the real query options.
+    const actual = await vi.importActual<typeof import('uniswap/src/data/apiClients/dataApiService/tokens/queries')>(
+      'uniswap/src/data/apiClients/dataApiService/tokens/queries',
+    )
+    mockGetGetTokenQueryOptions.mockImplementation(actual.getGetTokenQueryOptions)
+  })
+
+  it('settles on an empty result instead of looping on placeholder data when the currency id is cleared', () => {
+    SharedQueryClient.setQueryData(
+      [ReactQueryCacheKey.DataApiService, 'getToken', currencyIdToRestContractInput(CURRENCY_ID)],
+      { token: REST_TOKEN },
+    )
+    let renders = 0
+    const { result, rerender } = renderHookWithProviders(
+      (id: string | undefined) => {
+        renders++
+        const r = useCurrencyInfoWithLoading(id)
+        // Tracking status props is what turns placeholder/pending alternation into re-renders.
+        return { data: r.data, status: r.status, isPlaceholderData: r.isPlaceholderData }
+      },
+      { initialProps: [CURRENCY_ID] },
+    )
+    expect(result.current.data?.currency.name).toBe('USD Coin (REST)')
+
+    const before = renders
+    act(() => rerender([undefined]))
+
+    expect(result.current.data).toBeUndefined()
+    expect(result.current.isPlaceholderData).toBe(false)
+    expect(renders - before).toBeLessThan(5)
   })
 })

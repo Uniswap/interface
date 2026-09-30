@@ -4,10 +4,12 @@ import {
   AuctionHoverCard,
   type AuctionHoverCardAuction,
 } from '~/components/HoverCard/AuctionHoverCard/AuctionHoverCard'
+import { useHoverCardState } from '~/components/HoverCard/HoverCard'
 import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
 import { popupRegistry } from '~/state/popups/registry'
 import { PopupType } from '~/state/popups/types'
-import { fireEvent, render, screen, waitFor } from '~/test-utils/render'
+import { mocked } from '~/test-utils/mocked'
+import { fireEvent, render, screen } from '~/test-utils/render'
 
 const mockNavigate = vi.fn()
 
@@ -37,14 +39,27 @@ vi.mock('~/components/HoverCard/AuctionHoverCard/AuctionHoverCardContent', () =>
   ),
 }))
 
-let isTouchDevice = false
 vi.mock('@universe/mycelium', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@universe/mycelium')>()),
-  useIsTouchDevice: () => isTouchDevice,
+  useIsTouchDevice: () => false,
 }))
 
+vi.mock('~/components/HoverCard/HoverCard', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('~/components/HoverCard/HoverCard')>()),
+  useHoverCardState: vi.fn(),
+}))
+
+function mockHoverCardState(isOpen: boolean): void {
+  mocked(useHoverCardState).mockReturnValue({
+    isOpen,
+    hasOpenIntent: isOpen,
+    close: vi.fn(),
+    onOpenChange: vi.fn(),
+  })
+}
+
 beforeEach(() => {
-  isTouchDevice = false
+  mockHoverCardState(true)
   useAuctionHoverCardData.mockClear()
   mockNavigate.mockClear()
 })
@@ -62,7 +77,7 @@ describe('AuctionHoverCard navigation', () => {
   it('opens the normalized auction URL and calls onNavigate when expanded', () => {
     const onNavigate = vi.fn()
     render(
-      <AuctionHoverCard auction={auction} onNavigate={onNavigate} isFocused>
+      <AuctionHoverCard auction={auction} onNavigate={onNavigate}>
         <div>row</div>
       </AuctionHoverCard>,
     )
@@ -76,7 +91,7 @@ describe('AuctionHoverCard navigation', () => {
 
   it('shows the navigation error instead of opening a malformed auction address', () => {
     render(
-      <AuctionHoverCard auction={{ ...auction, auctionAddress: `0x${'g'.repeat(40)}` }} isFocused>
+      <AuctionHoverCard auction={{ ...auction, auctionAddress: `0x${'g'.repeat(40)}` }}>
         <div>row</div>
       </AuctionHoverCard>,
     )
@@ -103,79 +118,34 @@ const auction: AuctionHoverCardAuction = {
   uniqueBidderCount: 982,
 }
 
-function renderCard(isFocused: boolean) {
+function renderCard(auctionOverrides?: Partial<AuctionHoverCardAuction>) {
   return render(
-    <AuctionHoverCard auction={auction} isFocused={isFocused}>
+    <AuctionHoverCard auction={{ ...auction, ...auctionOverrides }}>
       <div>row</div>
     </AuctionHoverCard>,
   )
 }
 
-describe('AuctionHoverCard focus-open', () => {
-  it('stays closed without hover or focus', () => {
-    renderCard(false)
-    expect(screen.queryByTestId('auction-hover-card-content')).not.toBeInTheDocument()
-  })
-
-  it('opens immediately when mounted focused (auto-focused first result)', () => {
-    renderCard(true)
-    expect(screen.getByTestId('auction-hover-card-content')).toBeInTheDocument()
-  })
-
-  it('opens when focus arrives and closes when it leaves (arrow-key nav)', async () => {
-    const { rerender } = renderCard(false)
-    expect(screen.queryByTestId('auction-hover-card-content')).not.toBeInTheDocument()
-
-    rerender(
-      <AuctionHoverCard auction={auction} isFocused>
-        <div>row</div>
-      </AuctionHoverCard>,
-    )
-    expect(screen.getByTestId('auction-hover-card-content')).toBeInTheDocument()
-
-    rerender(
-      <AuctionHoverCard auction={auction} isFocused={false}>
-        <div>row</div>
-      </AuctionHoverCard>,
-    )
-    // The popup unmounts once its exit transition settles, which resolves asynchronously.
-    await waitFor(() => expect(screen.queryByTestId('auction-hover-card-content')).not.toBeInTheDocument())
-  })
-
-  it('offers copy only when the row carries a token address', () => {
-    const { rerender } = renderCard(true)
-    expect(screen.getByTestId('auction-hover-card-content')).toHaveAttribute('data-can-copy', 'true')
-
-    rerender(
-      <AuctionHoverCard auction={{ ...auction, tokenAddress: '' }} isFocused>
-        <div>row</div>
-      </AuctionHoverCard>,
-    )
-    expect(screen.getByTestId('auction-hover-card-content')).toHaveAttribute('data-can-copy', 'false')
-  })
-
-  it('latches fetch intent once focus opens the card', () => {
-    renderCard(true)
-    expect(useAuctionHoverCardData).toHaveBeenLastCalledWith(expect.objectContaining({ enabled: true }))
-  })
-
-  // The popover never renders on touch, but a wide touch viewport still auto-focuses the first result.
-  it('neither opens nor fetches on a touch device, even when focused', () => {
-    isTouchDevice = true
-    renderCard(true)
+describe('AuctionHoverCard', () => {
+  it('stays closed until opened', () => {
+    mockHoverCardState(false)
+    renderCard()
     expect(screen.queryByTestId('auction-hover-card-content')).not.toBeInTheDocument()
     expect(useAuctionHoverCardData).toHaveBeenLastCalledWith(expect.objectContaining({ enabled: false }))
   })
 
-  it('leaves a pointer-driven focus to the hover delay (no immediate open while the trigger is hovered)', () => {
-    const { rerender } = renderCard(false)
-    fireEvent.mouseEnter(screen.getByText('row'))
+  it('fetches once opened', () => {
+    renderCard()
+    expect(screen.getByTestId('auction-hover-card-content')).toBeInTheDocument()
+    expect(useAuctionHoverCardData).toHaveBeenLastCalledWith(expect.objectContaining({ enabled: true }))
+  })
 
-    rerender(
-      <AuctionHoverCard auction={auction} isFocused>
-        <div>row</div>
-      </AuctionHoverCard>,
-    )
-    expect(screen.queryByTestId('auction-hover-card-content')).not.toBeInTheDocument()
+  it('offers copy only when the row carries a token address', () => {
+    const { unmount } = renderCard()
+    expect(screen.getByTestId('auction-hover-card-content')).toHaveAttribute('data-can-copy', 'true')
+    unmount()
+
+    renderCard({ tokenAddress: '' })
+    expect(screen.getByTestId('auction-hover-card-content')).toHaveAttribute('data-can-copy', 'false')
   })
 })

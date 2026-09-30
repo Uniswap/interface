@@ -1,20 +1,23 @@
-import { ApolloError } from '@apollo/client'
-import { GqlResult } from '@universe/api'
+import { UseQueryResult } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { usePersistedError } from 'uniswap/src/features/dataApi/utils/usePersistedError'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
+import { useCurrencyInfosWithLoading } from 'uniswap/src/features/tokens/useCurrencyInfo'
 
-export function useFavoriteCurrencies(): GqlResult<CurrencyInfo[]> {
+export function useFavoriteCurrencies(): Pick<
+  UseQueryResult<CurrencyInfo[]>,
+  'data' | 'isLoading' | 'error' | 'refetch'
+> {
   const favoriteCurrencyIds = useSelector(selectFavoriteTokens)
-  const { data: favoriteTokensOnAllChains, loading, error, refetch } = useTokenProjects(favoriteCurrencyIds)
+  const {
+    data: favoriteTokensOnAllChains,
+    isLoading,
+    error,
+    refetch,
+  } = useCurrencyInfosWithLoading(favoriteCurrencyIds)
 
-  const persistedError = usePersistedError(loading, error instanceof ApolloError ? error : undefined)
-
-  // useTokenProjects returns each token on Arbitrum, Optimism, Polygon,
-  // so we need to filter out the tokens which user has actually favorited
+  // Keep the user's favorites order and drop any token the lookup didn't return
   const favoriteTokens = useMemo(() => {
     if (!favoriteTokensOnAllChains) {
       return undefined
@@ -25,5 +28,5 @@ export function useFavoriteCurrencies(): GqlResult<CurrencyInfo[]> {
       .filter((token): token is CurrencyInfo => !!token)
   }, [favoriteCurrencyIds, favoriteTokensOnAllChains])
 
-  return { data: favoriteTokens, loading, error: persistedError, refetch }
+  return { data: favoriteTokens, isLoading, error, refetch }
 }

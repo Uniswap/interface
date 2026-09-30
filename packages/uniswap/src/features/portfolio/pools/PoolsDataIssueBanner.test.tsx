@@ -1,5 +1,5 @@
+import { TestID } from '@universe/test'
 import { PoolsDataIssueBanner } from 'uniswap/src/features/portfolio/pools/PoolsDataIssueBanner'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { fireEvent, render, screen } from 'uniswap/src/test/test-utils'
 
 describe('PoolsDataIssueBanner', () => {

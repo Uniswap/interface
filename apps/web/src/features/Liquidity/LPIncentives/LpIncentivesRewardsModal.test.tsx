@@ -4,7 +4,7 @@ import { UniverseChainId } from '@universe/chains'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures/gql/assets/constants'
+import { SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures/assets/constants'
 import { ETH_CURRENCY_INFO } from 'uniswap/src/test/fixtures/wallet/currencies'
 import type {
   LpIncentiveRewardChainGroup,

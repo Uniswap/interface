@@ -3,7 +3,7 @@ import { HookListResponse } from '@uniswap/client-liquidity/dist/uniswap/liquidi
 import { HookEntry } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
 import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
-import { useFeatureFlag } from '@universe/gating'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { DEFAULT_TICK_SPACING, DYNAMIC_FEE_AMOUNT } from 'uniswap/src/constants/pools'
@@ -12,6 +12,7 @@ import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { getFeeBreakdown } from 'uniswap/src/features/fees/getFeeBreakdown'
 import { buildHookRegistryMap, useHookRegistryMap } from 'uniswap/src/features/poolHooks/hooks/useHookRegistryMap'
 import {
+  EMPTY_EXPLORE_POOLS_FILTER_STATE,
   ExploreTablesFilterStoreContextProvider,
   useExploreTablesFilterStore,
 } from '~/features/Explore/state/exploreTablesFilterStore'
@@ -21,7 +22,7 @@ import { ExploreTopPoolTable, PoolsTable } from '~/pages/Explore/tables/Pools/Po
 import { PoolTableStoreContextProvider } from '~/pages/Explore/tables/Pools/poolTableStore'
 import { mocked } from '~/test-utils/mocked'
 import { validRestPoolToken0, validRestPoolToken1 } from '~/test-utils/pools/fixtures'
-import { fireEvent, render, screen } from '~/test-utils/render'
+import { fireEvent, render, screen, waitFor } from '~/test-utils/render'
 import type { PoolStat } from '~/types/explore'
 
 function renderWithProvider(ui: React.ReactElement) {
@@ -261,6 +262,29 @@ describe('PoolTable', () => {
     expect(mocked(useHookRegistryMap)).toHaveBeenCalledWith({ chainId: undefined, enabled: true })
   })
 
+  it('scopes the pools query to the URL chain with advanced filtering on', () => {
+    // The advanced filter's Network control reads and writes the URL chain segment, so a direct link like
+    // /explore/pools/ethereum must filter the table just as it does with the flag off. The chain travels on
+    // the `chainId` arg with `poolsFilter.chainId` unset; resolvePoolsListChainId (getPoolsListParams.test.ts)
+    // covers that the surface chain then scopes the request.
+    mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.AdvancedPoolsFiltering)
+    mocked(useListPools).mockReturnValue({
+      pools: [],
+      isLoading: false,
+      isError: false,
+      hasNextPage: false,
+      isFetchingNextPage: false,
+      loadMore: vi.fn(),
+      chainId: UniverseChainId.Mainnet,
+    })
+
+    renderWithProvider(<ExploreTopPoolTable surface="explore" />)
+
+    expect(mocked(useListPools)).toHaveBeenCalledWith(
+      expect.objectContaining({ chainId: UniverseChainId.Mainnet, poolsFilter: EMPTY_EXPLORE_POOLS_FILTER_STATE }),
+    )
+  })
+
   it('falls back to the truncated hook address when the registry has no entry for the hook', () => {
     mocked(useListPools).mockReturnValue({
       pools: [poolStat({ id: '1', protocolVersion: GraphQLApi.ProtocolVersion.V4, hookAddress: HOOKED_ADDRESS })],
@@ -424,7 +448,7 @@ describe('PoolTable', () => {
   describe('with LP incentives enabled', () => {
     // USDC on mainnet stands in for the served reward token: its CurrencyInfo — which the sub-line's
     // logo needs to render at all — is one of the few that resolve offline under test.
-    function mockPool(boostedApr?: number) {
+    function mockPool(boostedApr?: number, overrides: Partial<PoolStat> = {}) {
       const pool = {
         id: '1',
         chain: 'mainnet',
@@ -440,6 +464,7 @@ describe('PoolTable', () => {
         protocolVersion: GraphQLApi.ProtocolVersion.V4,
         boostedApr,
         rewards: boostedApr === undefined ? [] : toRewardAprEntries(boostedApr, USDC_MAINNET),
+        ...overrides,
       } as unknown as PoolStat
       mocked(useListPools).mockReturnValue({
         pools: [pool],
@@ -477,6 +502,27 @@ describe('PoolTable', () => {
       renderWithProvider(<ExploreTopPoolTable surface="explore" />)
       expect(screen.getAllByText('6%').length).toBeGreaterThan(0)
       expect(screen.queryByText(/^\+/)).toBeNull()
+    })
+
+    // Regression: rows carry the lowercase protocol label `convertPoolToPoolStat` stamps on them
+    // ('v4'), so comparing against the GraphQL enum's 'V4' never matched in production — every v4 row
+    // reached the APR tooltip with no currency info, leaving its pool-pair logo and network badge empty.
+    it('resolves the pair currency info for a v4 row carrying the lowercase protocol label', async () => {
+      mockPool(66.9, { protocolVersion: 'v4' })
+      renderWithProvider(<ExploreTopPoolTable surface="explore" />)
+
+      fireEvent.mouseEnter(screen.getAllByText('6%')[0])
+
+      const tooltip = await waitFor(() => {
+        const el = document.getElementById('boosted-apr-tooltip')
+        expect(el).not.toBeNull()
+        return el as HTMLElement
+      })
+      // The Pool APR row's SplitLogo draws one leg per currency info; with none, CurrencyLogo renders
+      // nothing in either half and the row's network badge falls back to no chain.
+      expect(tooltip.querySelector('[data-testid="input-currency-logo-container"] img')).toBeTruthy()
+      expect(tooltip.querySelector('[data-testid="output-currency-logo-container"] img')).toBeTruthy()
+      expect(tooltip.querySelector('[data-testid="network-logo-1"]')).toBeTruthy()
     })
   })
 

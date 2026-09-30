@@ -1,4 +1,5 @@
 import { UniverseChainId } from '@universe/chains'
+import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, iconSizes, Text } from '@universe/mycelium'
 import { useContext, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -7,7 +8,7 @@ import { GroupHoverTransition } from 'uniswap/src/components/GroupHoverTransitio
 import { NetworkIconList } from 'uniswap/src/components/network/NetworkIconList/NetworkIconList'
 import {
   formatIssuerDisplaySymbol,
-  formatIssuerLabel,
+  getIssuerTokenLabel,
 } from 'uniswap/src/data/apiClients/dataApiService/rwa/formatIssuerDisplaySymbol'
 import {
   pickDisplayChainToken,
@@ -18,6 +19,8 @@ import type { IssuerToken, Rwa } from 'uniswap/src/data/apiClients/dataApiServic
 import { IssuerTableRowHoverContext } from 'uniswap/src/features/expandableAsset/IssuerTableRowHoverContext'
 import { TABLE_SUBLINE_HEIGHT, type ExpandableAssetGroupVariant } from 'uniswap/src/features/expandableAsset/types'
 import { getIssuerTokenDisplayName } from 'uniswap/src/features/rwa/getIssuerTokenDisplayName'
+import { getIssuerTokenPrimaryName } from 'uniswap/src/features/rwa/getIssuerTokenPrimaryName'
+import { RWAIssuerTag } from 'uniswap/src/features/rwa/RWAIssuerTag'
 import { shortenAddress } from 'utilities/src/addresses'
 
 export type ExpandableIssuerIdentityProps = {
@@ -30,6 +33,7 @@ export type ExpandableIssuerIdentityProps = {
   useIssuerNameAsPrimary?: boolean
   categoryTag?: ReactNode
   volumeDetail?: string
+  showIssuerTag?: boolean
 }
 
 export function ExpandableIssuerIdentity({
@@ -41,6 +45,7 @@ export function ExpandableIssuerIdentity({
   useIssuerNameAsPrimary = false,
   categoryTag,
   volumeDetail,
+  showIssuerTag = false,
 }: ExpandableIssuerIdentityProps): JSX.Element {
   const { t } = useTranslation()
   const issuerTableRowHovered = useContext(IssuerTableRowHoverContext)
@@ -48,11 +53,12 @@ export function ExpandableIssuerIdentity({
     baseSymbol: asset.symbol,
     apiSymbol: issuer.symbol,
   })
-  // The on-chain name often repeats the issuer brand ("NVIDIA • Robinhood Token"); the issuer label beside it
-  // already says who issued it, so drop the affix to leave room for the company name.
-  const primaryName = useIssuerNameAsPrimary
+  const plainTokenNames = useIsTokenCategoriesEnabled()
+  // Flag off: the legacy group name, or the affix-stripped on-chain name on flat rows.
+  const legacyName = useIssuerNameAsPrimary
     ? getIssuerTokenDisplayName({ name: issuer.name, issuer: issuer.issuer })
     : asset.name
+  const primaryName = getIssuerTokenPrimaryName({ tokenName: issuer.name, fallbackName: legacyName, plainTokenNames })
   const chainIds = issuer.chainTokens
     .map((chain) => chain.chainId as UniverseChainId)
     .filter((id) => enabledChainIds.includes(id))
@@ -118,9 +124,13 @@ export function ExpandableIssuerIdentity({
           <Text variant={variant === 'search' ? 'body1' : 'body2'} color="$neutral1" numberOfLines={1} flexShrink={1}>
             {primaryName}
           </Text>
-          <Text variant="body3" color="$neutral3" numberOfLines={1} flexShrink={0}>
-            {formatIssuerLabel(issuer.issuer)}
-          </Text>
+          {showIssuerTag ? (
+            <RWAIssuerTag issuer={issuer.issuer} />
+          ) : (
+            <Text variant="body3" color="$neutral3" numberOfLines={1} flexShrink={0}>
+              {getIssuerTokenLabel(issuer)}
+            </Text>
+          )}
           {categoryTag}
         </Flex>
         {showNetworkHover ? (

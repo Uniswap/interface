@@ -1,5 +1,5 @@
 import { V1_TRADING_API_PATHS } from '@universe/api'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import { expect, getTest } from '~/playwright/fixtures'
 import { stubTradingApiEndpoint } from '~/playwright/fixtures/tradingApi'
 import { Mocks } from '~/playwright/mocks/mocks'

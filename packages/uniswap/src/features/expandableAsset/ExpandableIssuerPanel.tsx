@@ -1,6 +1,10 @@
 import { UniverseChainId } from '@universe/chains'
 import { Flex, TouchableArea } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import type { ReactNode } from 'react'
+import { TokenOptionItemStats } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem/TokenOptionItemStats'
+import { useSearchVolumeLabelFormatter } from 'uniswap/src/components/lists/items/useSearchVolumeLabel'
+import { hasIssuerMetrics } from 'uniswap/src/data/apiClients/dataApiService/rwa/rwaMetrics'
 import type { IssuerToken, Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import {
   EXPANDABLE_ASSET_ISSUER_GAP_SEARCH_PX,
@@ -9,7 +13,6 @@ import {
 } from 'uniswap/src/features/expandableAsset/expandableAssetLayout'
 import { ExpandableIssuerIdentity } from 'uniswap/src/features/expandableAsset/ExpandableIssuerIdentity'
 import type { ExpandableAssetGroupVariant, RenderIssuerRowArgs } from 'uniswap/src/features/expandableAsset/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 /**
  * Inner `$surface1` block; issuer sub-rows (or table sub-row slots) render as children inside it.
@@ -20,7 +23,7 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
  *   `getExpandableIssuerPanelHeightPx({ variant: 'table' })`.
  * - `search`: transparent, `$surface5`-bordered, rounded, clipped block with a 2px gap
  *   (`EXPANDABLE_ASSET_ISSUER_GAP_SEARCH_PX`) between rows. Each row paints its own `$surface1` fill, so the gaps
- *   reveal the `$surface2` shell behind the panel (per Figma). Issuer rows carry their own `px="$spacing8"` indent.
+ *   reveal the `$surface2` shell behind the panel (per Figma). Issuer rows carry their own `px="$spacing12"` indent.
  */
 export function ExpandableIssuerPanelContainer({
   children,
@@ -72,6 +75,8 @@ type ExpandableIssuerRowsProps = {
   renderIssuerRow?: (args: RenderIssuerRowArgs) => ReactNode
   getIssuerHref?: (issuer: IssuerToken) => string | undefined
   onIssuerModifierPress?: (issuer: IssuerToken) => void
+  showIssuerStats?: boolean
+  showIssuerTag?: boolean
 }
 
 /** Issuer sub-rows inside the inner `$surface1` container (nested under `$surface2`). */
@@ -84,18 +89,36 @@ export function ExpandableIssuerRows({
   renderIssuerRow,
   getIssuerHref,
   onIssuerModifierPress,
+  showIssuerStats = false,
+  showIssuerTag = false,
 }: ExpandableIssuerRowsProps): JSX.Element {
+  const formatVolumeLabel = useSearchVolumeLabelFormatter()
   return (
     <ExpandableIssuerPanelContainer variant={variant}>
       {asset.issuerTokens.map((issuer) => {
-        const issuerRow = (
+        // Issuers without metrics keep the default address / network subline rather than showing "$0.00".
+        const showStats = showIssuerStats && hasIssuerMetrics(issuer)
+        const volumeDetail = showStats ? formatVolumeLabel(issuer.volume24hUsd) : undefined
+        const identity = (
           <ExpandableIssuerIdentity
             asset={asset}
             issuer={issuer}
             enabledChainIds={enabledChainIds}
             variant={variant}
             chainFilter={chainFilter}
+            volumeDetail={volumeDetail}
+            showIssuerTag={showIssuerTag}
           />
+        )
+        const issuerRow = showStats ? (
+          <Flex row alignItems="center" gap="$spacing8" width="100%" minWidth={0}>
+            <Flex flex={1} minWidth={0}>
+              {identity}
+            </Flex>
+            <TokenOptionItemStats priceUsd={issuer.priceUsd} pricePercentChange1d={issuer.priceChange24hPct} />
+          </Flex>
+        ) : (
+          identity
         )
         const onPress = (): void => onIssuerPress?.(issuer)
         const onModifierPress = (): void => onIssuerModifierPress?.(issuer)
@@ -122,7 +145,7 @@ export function ExpandableIssuerRows({
             }
             overflow="hidden"
             width="100%"
-            px={variant === 'search' ? '$spacing8' : undefined}
+            px={variant === 'search' ? '$spacing12' : undefined}
             // renderIssuerRow owns the row's TouchableArea, so the issuer row-locator testID moves to this wrapper for
             // that path; the default-TouchableArea path below keeps it on the touchable (its accessibilityRole too).
             {...(renderIssuerRow && issuerTestID ? { testID: issuerTestID } : {})}

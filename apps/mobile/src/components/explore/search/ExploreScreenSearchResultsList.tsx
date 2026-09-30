@@ -106,6 +106,7 @@ export const ExploreScreenSearchResultsList = memo(function ExploreScreenSearchR
             activeTab={activeTab}
             renderedInModal={false}
             contentContainerStyle={contentContainerStyle}
+            onViewAll={setActiveTab}
           />
         ) : (
           <SearchModalNoQueryList
@@ -113,6 +114,7 @@ export const ExploreScreenSearchResultsList = memo(function ExploreScreenSearchR
             activeTab={activeTab}
             renderedInModal={false}
             contentContainerStyle={contentContainerStyle}
+            onViewAll={setActiveTab}
           />
         )}
       </Trace>

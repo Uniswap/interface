@@ -193,11 +193,12 @@ function ValidatedWalletConnectRequestModal({ onClose, request }: Props): JSX.El
     ...(smartContractDelegationAddress && { smartContractDelegationAddress }),
   })
 
+  const transactionForBalance = isSponsoredUserOp ? request.calls[0] : tx
   const hasSufficientFunds = useHasSufficientFunds({
     account: request.account,
     chainId,
-    gasFee,
-    value: tx?.value?.toString(),
+    gasFee: isSponsoredUserOp ? { ...gasFee, value: '0' } : gasFee,
+    value: transactionForBalance?.value?.toString(),
   })
 
   const getHasMismatch = useHasAccountMismatchCallback()
@@ -231,8 +232,8 @@ function ValidatedWalletConnectRequestModal({ onClose, request }: Props): JSX.El
       return false
     }
 
-    if (isUserOpRequest(request) && request.gasSponsored) {
-      return true
+    if (isSponsoredUserOp) {
+      return hasSufficientFunds
     }
 
     if (getDoesMethodCostGas(request)) {

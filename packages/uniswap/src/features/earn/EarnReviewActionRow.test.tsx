@@ -1,10 +1,10 @@
+import { TestID } from '@universe/test'
 import {
   EarnPlanProgressIndicator,
   type EarnPlanProgressState,
 } from 'uniswap/src/features/earn/EarnPlanProgressIndicator'
 import { EarnReviewActionRow } from 'uniswap/src/features/earn/EarnReviewActionRow'
 import { PendingSwapButtonContent } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewFooter/PendingSwapButtonContent'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { noop } from 'utilities/src/react/noop'
 
 const mockPlatform = vi.hoisted(() => ({ isMobileApp: false, isWebApp: true }))

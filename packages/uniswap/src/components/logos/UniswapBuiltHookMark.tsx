@@ -1,7 +1,7 @@
 import { Flex } from '@universe/mycelium'
 import { UniswapLogo } from '@universe/mycelium/icons/UniswapLogo'
 import { LIGHT_THEME_COLORS } from '@universe/mycelium/theme-hooks-compat'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 
 // Fixed light chip (#FEF4FF) in both themes on purpose: a translucent accent tint (`$accent2`) washes out
 // against the dark badge, so a pinned light tile is what makes the mark read in dark mode. Read from

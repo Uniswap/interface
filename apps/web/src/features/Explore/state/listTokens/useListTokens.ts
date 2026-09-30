@@ -71,7 +71,7 @@ export function useListTokens(
       }),
     // An empty page ends the list even if it carries a token: the tokens feed has no budget-walk
     // resume cursor (unlike ListPools, whose empty page + token must be followed — see
-    // getListPoolsQueryOptions), so following one could only burn empty fetches.
+    // getListPoolsInfiniteQueryOptions), so following one could only burn empty fetches.
     getNextPageParam: (lastPage) =>
       lastPage.multichainTokens.length ? lastPage.nextPageToken || undefined : undefined,
     initialPageParam: '',

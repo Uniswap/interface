@@ -1,4 +1,4 @@
-import { GqlResult, GraphQLApi, TradingApi } from '@universe/api'
+import { TradingApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { useCallback, useMemo } from 'react'
 import { OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/lists/items/types'
@@ -10,9 +10,9 @@ import { useTradingApiSwappableTokensQuery } from 'uniswap/src/data/apiClients/t
 import { tradingApiSwappableTokenToCurrencyInfo } from 'uniswap/src/data/apiClients/tradingApi/utils/tradingApiSwappableTokenToCurrencyInfo'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { toGraphQLChain, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
+import { useMultichainCurrencyInfos } from 'uniswap/src/features/tokens/useMultichainCurrencyInfos'
 import {
   getTokenAddressFromChainForTradingApi,
   NATIVE_ADDRESS_FOR_TRADING_API,
@@ -21,6 +21,7 @@ import {
 import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
+import type { DerivedQueryResult } from 'utilities/src/reactQuery/types'
 
 export function useBridgingTokenWithHighestBalance({
   evmAddress,
@@ -46,11 +47,18 @@ export function useBridgingTokenWithHighestBalance({
   const tokenIn = currencyAddress ? getTokenAddressFromChainForTradingApi(currencyAddress, currencyChainId) : undefined
   const tokenInChainId = toTradingApiSupportedChainId(currencyChainId)
 
-  const { data: tokenProjectsData, loading: tokenProjectsLoading } = GraphQLApi.useTokenProjectsQuery({
-    variables: { contracts: [currencyIdToContractInput(currencyId)] },
-  })
+  const multichainQueryIds = useMemo(() => [currencyId], [currencyId])
+  const { data: currencyOnAllChains, isLoading: currencyInfosLoading } = useMultichainCurrencyInfos(multichainQueryIds)
 
-  const crossChainTokens = tokenProjectsData?.tokenProjects?.[0]?.tokens
+  // useCrossChainBalances still speaks the GraphQL deployment shape (chain enum + nullable address).
+  const crossChainTokens = useMemo(
+    () =>
+      currencyOnAllChains?.map(({ currency }) => ({
+        chain: toGraphQLChain(currency.chainId),
+        address: currency.isNative ? undefined : currency.address,
+      })),
+    [currencyOnAllChains],
+  )
 
   const { otherChainBalances } = useCrossChainBalances({
     evmAddress,
@@ -70,7 +78,7 @@ export function useBridgingTokenWithHighestBalance({
         : undefined,
   })
 
-  const isLoading = tokenProjectsLoading || bridgingTokensLoading
+  const isLoading = currencyInfosLoading || bridgingTokensLoading
 
   return useMemo(() => {
     if (!otherChainBalances || !bridgingTokens?.tokens) {
@@ -130,7 +138,7 @@ export function useBridgingTokensOptions({
   chainFilter: UniverseChainId | null
   chainIds?: UniverseChainId[]
   portfolioData: PortfolioBalancesResult
-}): GqlResult<TokenOption[] | undefined> & { shouldNest?: boolean } {
+}): DerivedQueryResult<TokenOption[] | undefined> & { shouldNest?: boolean } {
   const tokenIn = oppositeSelectedToken?.address
     ? getTokenAddressFromChainForTradingApi(oppositeSelectedToken.address, oppositeSelectedToken.chainId)
     : undefined
@@ -155,7 +163,7 @@ export function useBridgingTokensOptions({
     data: portfolioBalancesById,
     error: portfolioBalancesByIdError,
     refetch: portfolioBalancesByIdRefetch,
-    loading: loadingPorfolioBalancesById,
+    isLoading: loadingPorfolioBalancesById,
   } = portfolioData
 
   const tokenOptions = useBridgingTokensToTokenOptions(bridgingTokens?.tokens, portfolioBalancesById)
@@ -181,8 +189,8 @@ export function useBridgingTokensOptions({
 
   return {
     data: filteredTokenOptions,
-    loading: loadingBridgingTokens || loadingPorfolioBalancesById,
-    error: error || undefined,
+    isLoading: loadingBridgingTokens || loadingPorfolioBalancesById,
+    error: error || null,
     refetch,
     shouldNest: !shouldFilterByChain,
   }

@@ -6,6 +6,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { TransactionAssetList } from 'wallet/src/components/dappRequests/TransactionAssetList'
 import {
@@ -42,7 +43,7 @@ interface FormatAssetDisplayParams {
  * @returns Formatted asset display string
  */
 export function formatAssetDisplay({ asset, t, formatNumberOrString }: FormatAssetDisplayParams): string {
-  const assetName = asset.symbol ?? asset.name ?? ''
+  const assetName = asset.symbol || asset.name || shortenAddress({ address: asset.address }) || t('common.unknown')
 
   if (asset.approvalScope === TransactionApprovalScope.Collection) {
     return t('dapp.request.approve.allItems', { assetName })

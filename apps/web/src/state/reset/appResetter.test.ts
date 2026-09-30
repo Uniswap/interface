@@ -1,5 +1,4 @@
 import 'utilities/src/logger/mocks'
-import { ApolloClient, InMemoryCache } from '@apollo/client'
 import { configureStore } from '@reduxjs/toolkit'
 import { QueryClient } from '@tanstack/react-query'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
@@ -18,14 +17,6 @@ vi.mock('~/state/sagas/root', () => ({
   rootWebSaga: vi.fn(function* () {}),
 }))
 
-const createMockApolloClient = (): ApolloClient<unknown> => {
-  const client = new ApolloClient({
-    cache: new InMemoryCache(),
-  })
-  vi.spyOn(client, 'resetStore').mockResolvedValue([])
-  return client
-}
-
 const createMockQueryClient = (): QueryClient => {
   const client = new QueryClient()
   vi.spyOn(client, 'resetQueries').mockResolvedValue()
@@ -43,17 +34,14 @@ const createTestStore = () =>
 
 describe('createWebAppStateResetter', () => {
   let store: ReturnType<typeof createTestStore>
-  let apolloClient: ApolloClient<unknown>
   let queryClient: QueryClient
   let resetter: ReturnType<typeof createWebAppStateResetter>
 
   beforeEach(() => {
     store = createTestStore()
-    apolloClient = createMockApolloClient()
     queryClient = createMockQueryClient()
     resetter = createWebAppStateResetter({
       dispatch: store.dispatch,
-      apolloClient,
       queryClient,
     })
     vi.clearAllMocks()
@@ -96,7 +84,6 @@ describe('createWebAppStateResetter', () => {
       await resetter.resetQueryCaches()
 
       // Verify cache clearing methods were called
-      expect(apolloClient.resetStore).toHaveBeenCalledTimes(1)
       expect(queryClient.resetQueries).toHaveBeenCalledTimes(1)
     })
   })
@@ -119,7 +106,6 @@ describe('createWebAppStateResetter', () => {
       // Verify all resets worked
       const state = store.getState()
       expect(state.notifications.notificationQueue).toEqual([])
-      expect(apolloClient.resetStore).toHaveBeenCalledTimes(1)
       expect(queryClient.resetQueries).toHaveBeenCalledTimes(1)
     })
   })

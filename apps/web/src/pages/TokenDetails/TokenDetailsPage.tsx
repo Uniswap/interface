@@ -75,7 +75,7 @@ function TDPPageContent() {
   useEffect(() => {
     const isChainGated = isStatsigReady && !featureFlaggedChainIds.includes(currencyChainId)
     if (isChainGated || (!pageQueryLoading && !currency)) {
-      navigate(`/explore?type=${ExploreTab.Tokens}&result=${ModalName.NotFound}`)
+      navigate(`/explore?type=${ExploreTab.Tokens}&result=${ModalName.NotFound}`, { replace: true })
     }
   }, [currency, currencyChainId, featureFlaggedChainIds, isStatsigReady, pageQueryLoading, navigate])
 

@@ -1,11 +1,11 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, Price } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { Flex, Shine } from '@universe/mycelium'
 import { LoadingPriceCurve } from '@universe/mycelium/icons/LoadingPriceCurve'
 import { opacify, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { useMemo } from 'react'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { ErrorBoundary } from '~/components/ErrorBoundary'
 import {
   CHART_HEIGHT,
@@ -76,7 +76,7 @@ function LiquidityPositionSparkline({
     ? {
         addressOrId: poolAddressOrId,
         chainId,
-        duration: GraphQLApi.HistoryDuration.Month,
+        duration: HistoryDuration.Month,
         isV4,
         isV3,
         isV2,

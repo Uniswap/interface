@@ -1,9 +1,17 @@
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import type { Page } from '@playwright/test'
+import { getToken } from '@uniswap/client-data-api/dist/data/v2/api-DataApiService_connectquery'
+import { TestID } from '@universe/test'
 import { expect, getTest } from '~/playwright/fixtures'
 import { getVisibleDropdownElementByTestId } from '~/playwright/fixtures/utils'
 import { Mocks } from '~/playwright/mocks/mocks'
 
 const test = getTest()
+
+// The page renders the token name in the loading skeleton too, so assertions must wait for the
+// metadata response rather than the first paint of the name.
+function waitForGetTokenResponse(page: Page): Promise<unknown> {
+  return page.waitForResponse((response) => response.url().includes(`${getToken.service.typeName}/${getToken.name}`))
+}
 
 test.describe(
   'Token Details',
@@ -17,34 +25,15 @@ test.describe(
   () => {
     test('token with warning and low trading volume should have all information populated', async ({
       page,
-      graphql,
+      dataApi,
     }) => {
-      await graphql.intercept('TokenWeb', Mocks.TokenWeb.token_warning, {
-        chain: 'ETHEREUM',
-        address: '0x1eFBB78C8b917f67986BcE54cE575069c0143681',
-      })
-      // TokenProjectWeb gates the page and powers the header name. Without this mock the
-      // live API responds with an empty name for this token, so 'test token' only ever
-      // appeared in the transient loading skeleton — making the assertion a timing race.
-      await graphql.intercept('TokenProjectWeb', Mocks.TokenProjectWeb.token_warning, {
-        chain: 'ETHEREUM',
-        address: '0x1eFBB78C8b917f67986BcE54cE575069c0143681',
-      })
-      await graphql.intercept('Token', Mocks.Token.token_warning, {
-        chain: 'ETHEREUM',
-        address: '0x1eFBB78C8b917f67986BcE54cE575069c0143681',
-      })
-      await graphql.intercept('TokenProjects', Mocks.TokenProjects.token_spam, {
-        contracts: [
-          {
-            chain: 'ETHEREUM',
-            address: '0x1eFBB78C8b917f67986BcE54cE575069c0143681',
-          },
-        ],
-      })
+      // GetToken gates the page and powers the header name. Without this mock the live API
+      // responds with an empty name for this token, so 'test token' only ever appeared in the
+      // transient loading skeleton — making the assertion a timing race.
+      await dataApi.intercept(getToken, Mocks.DataApiService.get_token_warning)
+      const getTokenResponse = waitForGetTokenResponse(page)
       await page.goto('/explore/tokens/ethereum/0x1eFBB78C8b917f67986BcE54cE575069c0143681')
-      // Wait for the GraphQL response to complete before checking UI elements
-      await graphql.waitForResponse('TokenWeb')
+      await getTokenResponse
       // .first(): the loaded page renders the name in both the breadcrumb and the header
       await expect(page.getByText('test token').first()).toBeVisible()
       await expect(page.getByText('No pricing data available')).toBeVisible()
@@ -57,18 +46,11 @@ test.describe(
       await expect(page.getByText('Ethereum').first()).toBeVisible()
     })
 
-    test('connected wallet on mainnet mode should load testnet token details', async ({ page, graphql }) => {
-      await graphql.intercept('TokenWeb', Mocks.TokenWeb.sepolia_yay_token, {
-        chain: 'ETHEREUM_SEPOLIA',
-        address: '0x97dbb794244e1c27b6ff688fc8cef5fe8d80f531',
-      })
-      await graphql.intercept('Token', Mocks.Token.sepolia_yay_token, {
-        chain: 'ETHEREUM_SEPOLIA',
-        address: '0x97dbb794244e1c27b6ff688fc8cef5fe8d80f531',
-      })
+    test('connected wallet on mainnet mode should load testnet token details', async ({ page, dataApi }) => {
+      await dataApi.intercept(getToken, Mocks.DataApiService.get_token_sepolia_yay)
+      const getTokenResponse = waitForGetTokenResponse(page)
       await page.goto('/explore/tokens/ethereum_sepolia/0x97dbb794244e1c27b6ff688fc8cef5fe8d80f531')
-      // Wait for the GraphQL response to complete before checking UI elements
-      await graphql.waitForResponse('TokenWeb')
+      await getTokenResponse
       await expect(page.getByText('Yay').first()).toBeVisible()
     })
 

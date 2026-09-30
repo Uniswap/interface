@@ -200,19 +200,6 @@ describe('parseLiquidityServicePosition', () => {
       expect(parsed?.status).toBe(PositionStatus.OUT_OF_RANGE)
     })
 
-    // Security: a cache-restored status rehydrates as its name ("HIDDEN"), so isHidden must match
-    // whether status is the numeric enum or the string — otherwise spam positions leak into the
-    // visible partition on a persisted-query load.
-    it('flags isHidden for a spam position whether status is the numeric enum or its rehydrated name', () => {
-      const numeric = parseLiquidityServicePosition(enrichedV3Position({ status: 3 }))
-      const named = parseLiquidityServicePosition(
-        enrichedV3Position({ status: 'HIDDEN' } as unknown as Record<string, unknown>),
-      )
-
-      expect(numeric?.isHidden).toBe(true)
-      expect(named?.isHidden).toBe(true)
-    })
-
     it('derives CLOSED when position liquidity is zero', () => {
       const parsed = parseLiquidityServicePosition(enrichedV3Position({ liquidity: '0' }))
 

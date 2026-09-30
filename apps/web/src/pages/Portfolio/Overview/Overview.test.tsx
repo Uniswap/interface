@@ -1,6 +1,6 @@
 import { FeatureFlags } from '@universe/gating'
+import { TestID } from '@universe/test'
 import type { PortfolioBalanceBreakdown } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { PortfolioOverview } from '~/pages/Portfolio/Overview/Overview'
 import { render, screen } from '~/test-utils/render'
@@ -72,7 +72,7 @@ vi.mock('uniswap/src/features/portfolio/usePortfolioChartBalanceMismatch', () =>
 }))
 
 vi.mock('~/components/emptyWallet/EmptyWalletCards', () => ({
-  EmptyWalletCards: () => <div data-testid="empty-wallet-cards" />,
+  EmptyWalletCards: () => <div data-testid={TestID.EmptyWalletCards} />,
 }))
 
 vi.mock('~/pages/Portfolio/Header/hooks/usePortfolioRoutes', () => ({

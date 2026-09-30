@@ -1,11 +1,11 @@
 import { fireEvent } from '@testing-library/react-native'
 import { UniverseChainId } from '@universe/chains'
+import { TestID } from '@universe/test'
 import React from 'react'
 import { NetworkBalanceList } from 'src/components/TokenDetails/NetworkBalanceList'
 import { render } from 'src/test/test-utils'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 vi.mock('@universe/gating', async () => ({
   ...(await vi.importActual('@universe/gating')),

@@ -1,10 +1,10 @@
 import { expect, type Page } from '@playwright/test'
+import { TestID } from '@universe/test'
 import { importedExtensionTest as test } from 'e2e/fixtures/imported-extension.fixture'
 import { openExtensionSidebar, waitForBackgroundReady } from 'e2e/utils/extension-helpers'
 import { isVisibleWithin } from 'e2e/utils/locator-helpers'
 import { collectCriticalPageErrors } from 'e2e/utils/page-error-helpers'
 import { unlockIfLocked } from 'e2e/utils/unlock-helpers'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 const QUOTE_TIMEOUT_MS = ONE_SECOND_MS * 45

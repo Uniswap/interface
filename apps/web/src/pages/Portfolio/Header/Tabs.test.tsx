@@ -1,4 +1,4 @@
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { PortfolioTabs } from '~/pages/Portfolio/Header/Tabs'
 import { PortfolioTab } from '~/pages/Portfolio/types'

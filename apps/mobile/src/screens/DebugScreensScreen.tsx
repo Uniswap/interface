@@ -2,7 +2,7 @@ import { Flex, Text, TouchableArea, UniversalList } from '@universe/mycelium'
 import React, { memo, useCallback, useMemo } from 'react'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { ScreenWithHeader } from 'src/components/layout/screens/ScreenWithHeader'
-import { BookOpen, Clock, Wrench } from 'ui/src/components/icons'
+import { BookOpen, Clock, TrendUp, Wrench } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 
@@ -12,6 +12,7 @@ interface DebugScreenItem {
   description: string
   icon: JSX.Element
   screen:
+    | MobileScreens.AnimatedNumberDebug
     | MobileScreens.HashcashBenchmark
     | MobileScreens.SessionsDebug
     | MobileScreens.UniversalListDebug
@@ -29,6 +30,13 @@ const STORYBOOK_ROW: DebugScreenItem = {
 }
 
 const DEBUG_SCREENS: DebugScreenItem[] = [
+  {
+    id: 'animated-number',
+    title: 'Animated Number',
+    description: 'Explore-style token list with fake prices that tick every 5s',
+    icon: <TrendUp color="$neutral2" size={ICON_SIZE} />,
+    screen: MobileScreens.AnimatedNumberDebug,
+  },
   {
     id: 'hashcash',
     title: 'Hashcash Benchmark',

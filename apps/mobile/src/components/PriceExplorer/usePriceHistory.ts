@@ -1,15 +1,13 @@
-import { type GqlResult, GraphQLApi } from '@universe/api'
 import maxBy from 'lodash/maxBy'
 import { type Dispatch, type SetStateAction, useMemo, useRef, useState } from 'react'
 import { type SharedValue, useDerivedValue } from 'react-native-reanimated'
 import { type ChartPoint } from 'uniswap/src/components/charts/computeChartPaths'
 import { appendLiveSpotPriceEntry } from 'uniswap/src/components/charts/utils'
 import { useTokenPriceChange, useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
-import {
-  toRestHistoryDuration,
-  useTokenPriceHistoryRest,
-} from 'uniswap/src/features/dataApi/tokenDetails/useTokenPriceHistoryRest'
+import { useTokenPriceHistoryRest } from 'uniswap/src/features/dataApi/tokenDetails/useTokenPriceHistoryRest'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import type { DerivedQueryResult } from 'utilities/src/reactQuery/types'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export type TokenSpotData = {
@@ -78,27 +76,26 @@ function getNumberOfDigits({
  */
 export function useTokenPriceHistory({
   currencyId,
-  initialDuration = GraphQLApi.HistoryDuration.Day,
+  initialDuration = HistoryDuration.Day,
   isMultichainAggregateView = false,
   skip = false,
 }: {
   currencyId: string
-  initialDuration?: GraphQLApi.HistoryDuration
+  initialDuration?: HistoryDuration
   isMultichainAggregateView?: boolean
   skip?: boolean
 }): Omit<
-  GqlResult<{
+  DerivedQueryResult<{
     priceHistory?: ChartPoint[]
     spot?: TokenSpotData
   }>,
-  'error'
+  'error' | 'refetch'
 > & {
-  setDuration: Dispatch<SetStateAction<GraphQLApi.HistoryDuration>>
-  selectedDuration: GraphQLApi.HistoryDuration
+  setDuration: Dispatch<SetStateAction<HistoryDuration>>
+  selectedDuration: HistoryDuration
   numberOfDigits: PriceNumberOfDigits
 } {
   const lastPrice = useRef<undefined | number>(undefined)
-  const hasEverLoadedRef = useRef(false)
   const lastNumberOfDigits = useRef({
     left: 0,
     right: 0,
@@ -109,22 +106,22 @@ export function useTokenPriceHistory({
   const restPriceChange24h = useTokenPriceChange(currencyId, { isMultichainAggregateView })
   // Once on, the chart line also comes from REST instead of this hook's own GraphQL query.
   const restPriceHistory = useTokenPriceHistoryRest(currencyId, {
-    duration: toRestHistoryDuration(duration),
+    duration,
     isMultichainAggregateView,
   })
 
   const price = restSpotPrice ?? lastPrice.current
   lastPrice.current = price
-  if (price !== undefined) {
-    hasEverLoadedRef.current = true
-  }
 
-  const activeEntries = restPriceHistory.entries
+  const activeEntries = useMemo(
+    () => [...restPriceHistory.entries].sort((a, b) => a.timestamp - b.timestamp),
+    [restPriceHistory.entries],
+  )
   const calculatedPriceChange = useMemo(() => calculatePriceChange(activeEntries), [activeEntries])
 
   // Use API's 24hr change for 1d, calculated change for other durations
   const apiPriceChange24h = restPriceChange24h ?? 0
-  const priceChange = duration === GraphQLApi.HistoryDuration.Day ? apiPriceChange24h : calculatedPriceChange
+  const priceChange = duration === HistoryDuration.Day ? apiPriceChange24h : calculatedPriceChange
 
   const spotValue = useDerivedValue(() => price ?? 0)
   const spotRelativeChange = useDerivedValue(() => priceChange, [priceChange])
@@ -143,7 +140,7 @@ export function useTokenPriceHistory({
 
   const formattedPriceHistory = useMemo(() => {
     // the chart expects milliseconds.
-    const formatted = restPriceHistory.entries.map((point) => ({
+    const formatted = activeEntries.map((point) => ({
       timestamp: point.timestamp * ONE_SECOND_MS,
       value: point.value,
     }))
@@ -157,7 +154,7 @@ export function useTokenPriceHistory({
       createEntry: ({ time, price: entryPrice }) => ({ timestamp: time, value: entryPrice }),
       updateEntry: (entry, { time, price: entryPrice }) => ({ ...entry, timestamp: time, value: entryPrice }),
     })
-  }, [restPriceHistory.entries, price])
+  }, [activeEntries, price])
 
   const data = useMemo(
     () => ({
@@ -181,7 +178,7 @@ export function useTokenPriceHistory({
 
   return {
     data,
-    loading: skip || (restPriceHistory.isLoading && !hasEverLoadedRef.current),
+    isLoading: skip || restPriceHistory.isLoading,
     setDuration,
     selectedDuration: duration,
     numberOfDigits,

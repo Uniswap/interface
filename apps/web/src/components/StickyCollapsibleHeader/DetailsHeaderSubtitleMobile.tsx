@@ -2,12 +2,12 @@ import { Flex, Text, UniversalImage } from '@universe/mycelium'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { useTranslation } from 'react-i18next'
 import { iconSizes } from 'ui/src/theme'
-import { getRWAIssuerDisplayName } from 'uniswap/src/features/rwa/issuers'
-import type { RWAMatch } from 'uniswap/src/features/rwa/rwaMatch'
+import { getRWAIssuerLabel } from 'uniswap/src/features/rwa/issuers'
+import type { RWAIssuerDisplay } from 'uniswap/src/features/rwa/types'
 import { useRWAIssuerLogoUrl } from 'uniswap/src/features/rwa/useRWAIssuerLogoUrl'
 
 interface DetailsHeaderSubtitleMobileProps {
-  rwaMatch?: RWAMatch
+  issuer?: RWAIssuerDisplay
   symbol: string
   isCompact: boolean
 }
@@ -16,13 +16,14 @@ interface DetailsHeaderSubtitleMobileProps {
 // the name: the RWA issuer for matched assets, otherwise the ticker symbol. Both shrink when the
 // sticky header is compact (scrolled). Shared by the token details and auction headers.
 export function DetailsHeaderSubtitleMobile({
-  rwaMatch,
+  issuer,
   symbol,
   isCompact,
 }: DetailsHeaderSubtitleMobileProps): JSX.Element | null {
   const { t } = useTranslation()
   const media = useMedia()
-  const issuerLogoUrl = useRWAIssuerLogoUrl(rwaMatch?.token.issuer)
+  const configLogoUrl = useRWAIssuerLogoUrl(issuer?.issuer)
+  const issuerLabel = issuer && getRWAIssuerLabel(issuer)
 
   if (!media.sm) {
     return null
@@ -30,7 +31,7 @@ export function DetailsHeaderSubtitleMobile({
 
   const textVariant = isCompact ? 'body4' : 'body3'
 
-  if (!rwaMatch) {
+  if (!issuer || !issuerLabel) {
     return (
       <Text variant={textVariant} color="$neutral2" textTransform="uppercase" whiteSpace="nowrap" mt="$spacing1">
         {symbol}
@@ -38,7 +39,7 @@ export function DetailsHeaderSubtitleMobile({
     )
   }
 
-  const displayName = getRWAIssuerDisplayName(rwaMatch.token.issuer)
+  const issuerLogoUrl = issuer.issuerLogoUrl ?? configLogoUrl
   const logoSize = iconSizes.icon16
 
   return (
@@ -52,7 +53,7 @@ export function DetailsHeaderSubtitleMobile({
         />
       ) : null}
       <Text variant={textVariant} color={isCompact ? '$neutral2' : '$neutral1'} whiteSpace="nowrap">
-        {isCompact ? displayName : t('tdp.rwa.issuedBy', { issuer: displayName })}
+        {isCompact ? issuerLabel : t('tdp.rwa.issuedBy', { issuer: issuerLabel })}
       </Text>
     </Flex>
   )

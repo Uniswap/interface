@@ -2,10 +2,10 @@ import type { Currency } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
 import { useMemo } from 'react'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
 import { useEarnVaults } from 'uniswap/src/features/earn/hooks/useEarnVaults'
 import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { selectEarnVaultForToken } from 'uniswap/src/features/earn/utils'
+import { useMultichainCurrencyInfos } from 'uniswap/src/features/tokens/useMultichainCurrencyInfos'
 import type { UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'
 import { getChainedActionsSupportedChainIds } from 'uniswap/src/features/transactions/swap/utils/chainedActions'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
@@ -54,9 +54,9 @@ export function useSwapEarnIntent({
     [directOutputCurrencyId, wrappedOutputCurrencyId],
   )
 
-  // TokenProjects expands assets across chains, so e.g. Unichain USDC can match the Mainnet USDC vault
-  // and let the backend plan swap -> bridge -> deposit.
-  const tokenProjects = useTokenProjects(canEvaluateVaults ? projectQueryIds : [])
+  // The multichain lookup expands assets across chains, so e.g. Unichain USDC can match the Mainnet
+  // USDC vault and let the backend plan swap -> bridge -> deposit.
+  const tokenProjects = useMultichainCurrencyInfos(canEvaluateVaults ? projectQueryIds : [])
   const { vaults } = useEarnVaults({ enabled: canEvaluateVaults })
 
   const tokenCurrencyIds = useMemo(() => {

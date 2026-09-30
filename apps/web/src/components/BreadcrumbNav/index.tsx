@@ -11,6 +11,7 @@ import {
 } from '@universe/mycelium'
 import { flexCompatClassName } from '@universe/mycelium/flex-compat'
 import { SPORE_ANIMATION_CURVE_CSS } from '@universe/tailwind/animations'
+import { TestID } from '@universe/test'
 import {
   type ComponentPropsWithoutRef,
   forwardRef,
@@ -22,7 +23,6 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { iconSizes } from 'ui/src/theme'
 import { CopyHelper } from 'uniswap/src/components/CopyHelper/CopyHelper'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
 
 // Explicit return type: forwardRef's inferred type isn't nameable under declaration emit (TS2883).
@@ -97,7 +97,7 @@ export const CurrentPageBreadcrumb = ({
   return (
     <CurrentPageBreadcrumbContainer
       aria-current="page"
-      data-testid="current-breadcrumb"
+      data-testid={TestID.CurrentBreadcrumb}
       onMouseEnter={() => setIsBreadcrumbHover(true)}
       onMouseLeave={() => setIsBreadcrumbHover(false)}
     >

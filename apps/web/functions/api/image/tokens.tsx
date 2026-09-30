@@ -8,6 +8,7 @@ import { getRequest } from 'functions/utils/getRequest'
 import { getRGBColor } from 'functions/utils/getRGBColor'
 import getToken from 'functions/utils/getToken'
 import { Context } from 'hono'
+import { URL_PARAM_TO_CHAIN_ID } from 'uniswap/src/features/chains/chainUrlParam'
 import { withTimeout } from 'uniswap/src/utils/polling'
 
 export async function tokenImageHandler(c: Context) {
@@ -36,7 +37,7 @@ export async function tokenImageHandler(c: Context) {
 
     const [fontData, palette] = await Promise.all([getFont(origin, c.env), getRGBColor(data.ogImage, true)])
 
-    const networkLogo = getNetworkLogoUrl(networkName.toUpperCase(), origin)
+    const networkLogo = getNetworkLogoUrl(URL_PARAM_TO_CHAIN_ID[networkName.toLowerCase()], origin)
 
     // ImageResponse cannot handle webp images: https://github.com/vercel/satori/issues/273#issuecomment-1296323042
     // TODO: remove this check logic once @vercel/og supports webp, which appears to be in-progress https://github.com/vercel/satori/pull/622

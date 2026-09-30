@@ -1,10 +1,10 @@
 import { Flex, iconSizes, Skeleton, Text, TouchableArea } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export const EARN_VAULT_CHIP_MAX_WIDTH = 240
 export const EARN_VAULT_CHIP_FRAME_PROPS = {

@@ -1,7 +1,7 @@
 import { UniverseChainId } from '@universe/chains'
+import { TestID } from '@universe/test'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { DAI_CURRENCY_INFO, daiCurrencyInfo, ETH_CURRENCY_INFO, ethCurrencyInfo } from 'uniswap/src/test/fixtures'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { render, within } from 'uniswap/src/test/test-utils'
 
 const arbitrumNetworkLogoTestID = `${TestID.NetworkLogoPrefix}${UniverseChainId.ArbitrumOne}`

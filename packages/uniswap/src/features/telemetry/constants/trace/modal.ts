@@ -31,6 +31,7 @@ export const ModalName = {
   BridgingWarning: 'bridging-warning-modal',
   BuyNativeToken: 'buy-native-token-modal',
   CancelOrders: 'cancel-orders-modal',
+  CategoryDefinition: 'category-definition-modal',
   ChooseProfilePhoto: 'choose-profile-photo-modal',
   ChooseProviderModal: 'choose-provider-modal',
   ChooseUnitag: 'choose-unitag-modal',

@@ -286,7 +286,7 @@ describe('auction override search', () => {
     expect(result.current.refetch).toBe(initialRefetch)
 
     await act(async () => {
-      await result.current.refetch()
+      await result.current.refetch?.()
     })
     expect(mockPrimaryRefetch).toHaveBeenCalledTimes(1)
     await waitFor(() => expect(mockFetchAuctionByAddress).toHaveBeenCalledTimes(2))

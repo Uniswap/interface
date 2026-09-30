@@ -7,8 +7,10 @@ import {
   getIssuerCount,
   getIssuerPriceDisplay,
   getNetworkCount,
+  getRwaNetworkCount,
   getRwaPriceDisplay,
   getRwaPriceSortValue,
+  hasIssuerMetrics,
 } from 'uniswap/src/data/apiClients/dataApiService/rwa/rwaMetrics'
 
 function makeMappedRwa() {
@@ -75,6 +77,19 @@ describe('deriveRwaAggregates', () => {
   })
 })
 
+describe('hasIssuerMetrics', () => {
+  it('treats a zeroed price as no data, even with volume', () => {
+    const issuer = makeMappedRwa().issuerTokens[0]!
+    expect(hasIssuerMetrics(issuer)).toBe(true)
+    expect(hasIssuerMetrics({ ...issuer, priceUsd: 0 })).toBe(false)
+  })
+
+  it('keeps an issuer with a price but zero volume', () => {
+    const issuer = makeMappedRwa().issuerTokens[0]!
+    expect(hasIssuerMetrics({ ...issuer, volume24hUsd: 0 })).toBe(true)
+  })
+})
+
 describe('getIssuerCount', () => {
   it('returns issuer token count', () => {
     expect(getIssuerCount(makeMappedRwa())).toBe(3)
@@ -91,6 +106,20 @@ describe('getNetworkCount', () => {
     const ondo = makeMappedRwa().issuerTokens.find((issuer) => issuer.issuer === 'ondo')!
     expect(getNetworkCount(ondo, [UniverseChainId.Base])).toBe(1)
     expect(getNetworkCount(ondo, [])).toBe(0)
+  })
+})
+
+describe('getRwaNetworkCount', () => {
+  it('counts each enabled chain once across all issuers', () => {
+    // ondo: Mainnet + Base, backed: Mainnet, xstocks: Arbitrum → three distinct chains, not four chain tokens.
+    expect(
+      getRwaNetworkCount(makeMappedRwa(), [UniverseChainId.Mainnet, UniverseChainId.Base, UniverseChainId.ArbitrumOne]),
+    ).toBe(3)
+  })
+
+  it('excludes chains outside the enabled set', () => {
+    expect(getRwaNetworkCount(makeMappedRwa(), [UniverseChainId.Mainnet, UniverseChainId.Base])).toBe(2)
+    expect(getRwaNetworkCount(makeMappedRwa(), [])).toBe(0)
   })
 })
 

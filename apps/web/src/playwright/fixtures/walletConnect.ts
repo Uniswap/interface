@@ -2,7 +2,7 @@
 // oxlint-disable eslint-js/no-restricted-syntax -- Node-side Playwright code: process.env is the config surface here
 // oxlint-disable-next-line no-restricted-imports -- WC e2e fixture needs direct Playwright imports
 import { test as base, type Page } from '@playwright/test'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import { getAnvilManager } from '~/playwright/anvil/anvil-manager'
 import { type LocalRelay, startLocalRelay } from '~/playwright/wc/localRelay'
 import { createWalletCounterparty, type WalletCounterparty } from '~/playwright/wc/walletCounterparty'

@@ -1,6 +1,6 @@
 import { V1_TRADING_API_PATHS } from '@universe/api'
+import { TestID } from '@universe/test'
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { expect, getTest } from '~/playwright/fixtures'
 import { stubTradingApiEndpoint } from '~/playwright/fixtures/tradingApi'
 

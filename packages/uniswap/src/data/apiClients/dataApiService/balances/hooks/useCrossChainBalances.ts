@@ -1,4 +1,3 @@
-import type { WatchQueryFetchPolicy } from '@apollo/client'
 import { GraphQLApi } from '@universe/api'
 import { useMemo } from 'react'
 import { useBalances } from 'uniswap/src/data/apiClients/dataApiService/balances/hooks/useBalances'
@@ -6,6 +5,7 @@ import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import type { DataApiOutageState, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
 import { buildCurrencyId, buildNativeCurrencyId, currencyIdToChain } from 'uniswap/src/utils/currencyId'
+import { FetchPolicy } from 'uniswap/src/utils/usePlatformBasedFetchPolicy'
 
 export function useCrossChainBalances({
   evmAddress,
@@ -18,7 +18,7 @@ export function useCrossChainBalances({
   svmAddress?: Address
   currencyId: string
   crossChainTokens: Maybe<{ chain: GraphQLApi.Chain; address?: Maybe<string> }[]>
-  fetchPolicy?: WatchQueryFetchPolicy
+  fetchPolicy?: FetchPolicy
 }): {
   currentChainBalance: PortfolioBalance | null
   otherChainBalances: PortfolioBalance[] | null

@@ -7,18 +7,13 @@ import { ColorTokens } from '@universe/mycelium'
 import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { MELD_NATIVE_SOL_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
 import { GqlChainId } from 'uniswap/src/features/chains/types'
-import {
-  isBackendSupportedChain,
-  isUniverseChainId,
-  toGraphQLChain,
-  toSupportedChainId,
-} from 'uniswap/src/features/chains/utils'
+import { isBackendSupportedChain, isUniverseChainId } from 'uniswap/src/features/chains/utils'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency } from 'uniswap/src/features/dataApi/utils/buildCurrency'
 import { FORSupportedToken } from 'uniswap/src/features/fiatOnRamp/types'
 import { isDefaultNativeAddress, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { ExploreTab, TokenStat } from '~/types/explore'
-import { getNativeTokenDBAddress } from '~/utils/nativeTokens'
 import { getChainIdFromBackendChain, getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
 import { CHAIN_SEARCH_PARAM } from '~/utils/params/chainQueryParam'
 
@@ -32,30 +27,24 @@ export enum TimePeriod {
 }
 
 // oxlint-disable-next-line typescript/consistent-return
-export function toHistoryDuration(timePeriod: TimePeriod): GraphQLApi.HistoryDuration {
+export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
   switch (timePeriod) {
     case TimePeriod.HOUR:
-      return GraphQLApi.HistoryDuration.Hour
+      return HistoryDuration.Hour
     case TimePeriod.DAY:
-      return GraphQLApi.HistoryDuration.Day
+      return HistoryDuration.Day
     case TimePeriod.WEEK:
-      return GraphQLApi.HistoryDuration.Week
+      return HistoryDuration.Week
     case TimePeriod.MONTH:
-      return GraphQLApi.HistoryDuration.Month
+      return HistoryDuration.Month
     case TimePeriod.YEAR:
-      return GraphQLApi.HistoryDuration.Year
+      return HistoryDuration.Year
     case TimePeriod.MAX:
-      return GraphQLApi.HistoryDuration.Max
+      return HistoryDuration.Max
   }
 }
 
 export type PricePoint = { timestamp: number; value: number }
-
-export function toContractInput(currency: Currency, fallback: UniverseChainId): GraphQLApi.ContractInput {
-  const supportedChainId = toSupportedChainId(currency.chainId)
-  const chain = toGraphQLChain(supportedChainId ?? fallback)
-  return { chain, address: currency.isToken ? currency.address : getNativeTokenDBAddress(chain) }
-}
 
 export function gqlToCurrency(token: DeepPartial<GraphQLApi.Token | TokenStat>): Currency | undefined {
   if (!token.chain) {

@@ -745,6 +745,12 @@ export const v99Schema = v98Schema
 // `uniswapBehaviorHistory` is not modeled in these schemas; migration 100 only touches that slice.
 export const v100Schema = v99Schema
 
+const v101SchemaIntermediate = { ...v100Schema, tweaks: undefined }
+delete v101SchemaIntermediate.tweaks
+export const v101Schema = v101SchemaIntermediate
+
+export const v102Schema = v101Schema
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v100Schema => v100Schema
+export const getSchema = (): typeof v102Schema => v102Schema

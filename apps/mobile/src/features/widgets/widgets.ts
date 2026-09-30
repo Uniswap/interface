@@ -5,7 +5,10 @@ import { getItem, reloadAllTimelines, setItem } from 'react-native-widgetkit'
 import { getBuildVariant } from 'src/utils/version'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
+import {
+  currencyIdToContractInput,
+  nativeAddressForRest,
+} from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { CurrencyId } from 'uniswap/src/types/currency'
@@ -82,7 +85,11 @@ export const setI18NUserDefaults = (i18nSettings: WidgetI18nSettings): void => {
 }
 
 export const setChainsUserDefaults = (chainIds: UniverseChainId[]): void => {
-  const chains = chainIds.map((chainId) => ({ chainId, name: toGraphQLChain(chainId) }))
+  const chains = chainIds.map((chainId) => ({
+    chainId,
+    name: toGraphQLChain(chainId),
+    nativeAddress: nativeAddressForRest(chainId),
+  }))
   setUserDefaults({ chains }, KEY_WIDGETS_CHAINS).catch(() => undefined)
 }
 

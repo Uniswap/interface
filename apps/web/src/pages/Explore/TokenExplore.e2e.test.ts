@@ -1,7 +1,7 @@
 import { FeatureFlags, getFeatureFlagName } from '@universe/gating'
+import { TestID } from '@universe/test'
 import { USDT_ARBITRUM_ONE } from 'uniswap/src/constants/tokens'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { expect, getTest } from '~/playwright/fixtures'
 
 const test = getTest()

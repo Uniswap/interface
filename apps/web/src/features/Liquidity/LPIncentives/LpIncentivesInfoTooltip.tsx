@@ -1,4 +1,5 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
@@ -6,7 +7,6 @@ import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 /**
  * Which surface is asking. Portfolio totals rewards across every pool, so it describes them

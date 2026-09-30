@@ -377,11 +377,13 @@ export function AppStackNavigator(): JSX.Element {
       {/* Explicitly using __DEV__ so that the bundler knows to exclude this code from release builds */}
       {__DEV__ &&
         ((): JSX.Element => {
+          const { AnimatedNumberDebugScreen } = require('src/screens/AnimatedNumberDebugScreen')
           const { HashcashBenchmarkScreen } = require('src/screens/HashcashBenchmarkScreen')
           const { SessionsDebugScreen } = require('src/screens/SessionsDebugScreen')
           const { UniversalListDebugScreen } = require('src/screens/UniversalListDebugScreen')
           return (
             <>
+              <AppStack.Screen component={AnimatedNumberDebugScreen} name={MobileScreens.AnimatedNumberDebug} />
               <AppStack.Screen component={HashcashBenchmarkScreen} name={MobileScreens.HashcashBenchmark} />
               <AppStack.Screen component={SessionsDebugScreen} name={MobileScreens.SessionsDebug} />
               <AppStack.Screen component={UniversalListDebugScreen} name={MobileScreens.UniversalListDebug} />

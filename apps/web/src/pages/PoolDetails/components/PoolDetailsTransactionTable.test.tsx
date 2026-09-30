@@ -1,4 +1,3 @@
-import { ApolloError } from '@apollo/client'
 import { useParams } from 'react-router'
 import { useAbbreviatedTimeString } from '~/components/Table/utils/useAbbreviatedTimeString'
 import {
@@ -48,7 +47,7 @@ describe('PoolDetailsTransactionsTable', () => {
   it('renders error state', () => {
     mocked(usePoolTransactions).mockReturnValue({
       loading: false,
-      error: new ApolloError({ errorMessage: 'error fetching data' }),
+      error: new Error('error fetching data'),
       transactions: [],
       loadMore: vi.fn(),
     })

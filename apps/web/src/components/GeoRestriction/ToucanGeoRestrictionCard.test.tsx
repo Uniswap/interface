@@ -1,6 +1,6 @@
 import { fireEvent } from '@testing-library/react'
+import { TestID } from '@universe/test'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { openUri } from 'uniswap/src/utils/linking'
 import { ToucanGeoRestrictionCard } from '~/components/GeoRestriction/ToucanGeoRestrictionCard'
 import { render, screen } from '~/test-utils/render'

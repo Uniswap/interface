@@ -1,6 +1,6 @@
 import { isWebApp } from '@universe/environment'
 import type { CategoryOption, SearchModalListOption, SearchModalOption } from 'uniswap/src/components/lists/items/types'
-import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { OnchainItemSectionName, type OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { NUMBER_OF_RESULTS_ALL_TAB } from 'uniswap/src/features/search/SearchModal/constants'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { noop } from 'utilities/src/react/noop'
@@ -70,6 +70,31 @@ export function getOptionsForActiveTab({
   options: SearchModalOption[]
 }): SearchModalOption[] {
   return activeTab === SearchTab.All ? options.slice(0, NUMBER_OF_RESULTS_ALL_TAB) : options
+}
+
+/** All tab only: the sections cut to `NUMBER_OF_RESULTS_ALL_TAB` rows, i.e. the ones with more to show in their own tab. */
+export function getTruncatedSectionKeys({
+  activeTab,
+  tokenOptionsLength,
+  poolOptionsLength,
+  auctionOptionsLength,
+}: {
+  activeTab: SearchTab
+  tokenOptionsLength: number
+  poolOptionsLength: number
+  auctionOptionsLength: number
+}): OnchainItemSectionName[] {
+  if (activeTab !== SearchTab.All) {
+    return []
+  }
+  const optionsLengthBySection: [OnchainItemSectionName, number][] = [
+    [OnchainItemSectionName.Tokens, tokenOptionsLength],
+    [OnchainItemSectionName.Pools, poolOptionsLength],
+    [OnchainItemSectionName.Auctions, auctionOptionsLength],
+  ]
+  return optionsLengthBySection
+    .filter(([, optionsLength]) => optionsLength > NUMBER_OF_RESULTS_ALL_TAB)
+    .map(([sectionKey]) => sectionKey)
 }
 
 function matchesCategoryName(category: CategoryOption['category'], normalizedQuery: string): boolean {
@@ -201,7 +226,7 @@ export function refetchAuctionsIfEnabled({
   refetchSearchAuctions: SearchModalSectionResult['refetch']
 }): void {
   if (auctionSearchEnabled) {
-    refetchSearchAuctions()
+    refetchSearchAuctions?.()
   }
 }
 

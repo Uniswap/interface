@@ -3,7 +3,6 @@
  * still render, with generic fallbacks. Adding an id here forces every exhaustive switch to handle it.
  */
 export const KNOWN_TOKEN_CATEGORY_IDS = [
-  'popular',
   'trending',
   'recently-launched',
   'top-gainers',

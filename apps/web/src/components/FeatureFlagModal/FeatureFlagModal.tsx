@@ -27,7 +27,7 @@ import {
   type TouchableAreaCompatProps,
 } from '@universe/mycelium'
 import type { PropsWithChildren, ReactNode } from 'react'
-import { forwardRef, memo, useMemo, useState } from 'react'
+import { forwardRef, Fragment, memo, useMemo, useState } from 'react'
 import { Pin } from 'ui/src/components/icons/Pin'
 import { ComplianceOverrides } from 'uniswap/src/components/gating/ComplianceOverrides'
 import { useLayerValue } from 'uniswap/src/components/gating/Rows'
@@ -35,7 +35,13 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
 import { FeatureFlagSelector } from '~/components/FeatureFlagModal/FeatureFlagSelector'
-import { buildFlagGroups } from '~/components/FeatureFlagModal/flagGroups'
+import {
+  type ExtraItemDef,
+  buildFlagGroups,
+  EMBEDDED_WALLET_ONBOARDING_LABEL,
+  EXTENSION_ID_LABEL,
+  NETWORK_REQUESTS_LABEL,
+} from '~/components/FeatureFlagModal/flagGroups'
 import { usePinnedExperiments, usePinnedFeatureFlags, usePinnedFlagGroups } from '~/dev/usePinnedFeatureFlags'
 import { useModalState } from '~/hooks/useModalState'
 import { useExternallyConnectableExtensionId } from '~/pages/ExtensionPasskeyAuthPopUp/useExternallyConnectableExtensionId'
@@ -348,7 +354,7 @@ export function FeatureFlagModal(): JSX.Element {
             parser={(id: string) => id}
             config={DynamicConfigs.ExternallyConnectableExtension}
             configKey={ExternallyConnectableExtensionConfigKey.ExtensionId}
-            label="Which Extension the web app will communicate with"
+            label={EXTENSION_ID_LABEL}
           />
         ),
         networkRequestsConfig: <NetworkRequestsConfig />,
@@ -357,17 +363,14 @@ export function FeatureFlagModal(): JSX.Element {
             <ExperimentToggleOption
               experiment={Experiments.EmbeddedWalletOnboarding}
               param={EmbeddedWalletOnboardingProperties.NewFlowEnabled}
-              label="newFlowEnabled: on = test (new onboarding UX), off = control (current flow)"
+              label={EMBEDDED_WALLET_ONBOARDING_LABEL}
             />
           </Flex>
         ),
-        layerOptions: (
+        layerOption: (layerName) => (
           <Flex ml="$padding8" gap="$gap8">
-            <FeatureFlagGroup name={Layers.SwapPage}>
-              <LayerOption layerName={Layers.SwapPage} />
-            </FeatureFlagGroup>
-            <FeatureFlagGroup name={Layers.Discovery}>
-              <LayerOption layerName={Layers.Discovery} />
+            <FeatureFlagGroup name={layerName}>
+              <LayerOption layerName={layerName} />
             </FeatureFlagGroup>
           </Flex>
         ),
@@ -420,30 +423,34 @@ export function FeatureFlagModal(): JSX.Element {
             const sortedFlagGroups = [...pinned, ...rest]
 
             const groups = sortedFlagGroups.map((group) => {
+              const extraItems: readonly ExtraItemDef[] = group.extraItems ?? []
               const matchingFlags = isSearching
                 ? group.flags.filter(({ flag, label }) => fuzzyMatch(searchQuery, getFeatureFlagName(flag), label))
                 : group.flags
+              const matchingExtraItems = isSearching
+                ? extraItems.filter(({ name, searchText }) => fuzzyMatch(searchQuery, name, searchText))
+                : extraItems
               const groupNameMatches = isSearching && fuzzyMatch(searchQuery, group.name)
 
-              if (matchingFlags.length === 0 && !groupNameMatches) {
-                // Groups with extra content (e.g. Network Requests, Layers) show when not searching,
-                // but hide during search if their name doesn't match
-                if (isSearching || !group.extra) {
-                  return null
-                }
+              if (matchingFlags.length === 0 && matchingExtraItems.length === 0 && !groupNameMatches) {
+                return null
               }
 
               hasResults = true
 
-              // If specific flags match, show only those. If only the group name matches, show all flags in the group.
-              const flagsToShow = matchingFlags.length > 0 ? matchingFlags : group.flags
+              // If specific rows match, show only those. If only the group name matches, show the whole group.
+              const anyRowMatches = matchingFlags.length > 0 || matchingExtraItems.length > 0
+              const flagsToShow = anyRowMatches ? matchingFlags : group.flags
+              const extraItemsToShow = anyRowMatches ? matchingExtraItems : extraItems
 
               return (
                 <FeatureFlagGroup key={group.name} name={group.name}>
                   {flagsToShow.map(({ flag, label }) => (
                     <FeatureFlagOption key={flag} flag={flag} label={label} />
                   ))}
-                  {group.extra}
+                  {extraItemsToShow.map(({ name, node }) => (
+                    <Fragment key={name}>{node}</Fragment>
+                  ))}
                 </FeatureFlagGroup>
               )
             })
@@ -485,7 +492,7 @@ function NetworkRequestsConfig() {
       parser={Number.parseInt}
       config={DynamicConfigs.NetworkRequests}
       configKey={NetworkRequestsConfigKey.BalanceMaxRefetchAttempts}
-      label="Max refetch attempts"
+      label={NETWORK_REQUESTS_LABEL}
     />
   )
 }

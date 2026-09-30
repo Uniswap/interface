@@ -2,6 +2,7 @@ import { useTheme } from '@react-navigation/core'
 import type { UniverseChainId } from '@universe/chains'
 import { Flex, iconSizes, spacing, Text, TouchableArea } from '@universe/mycelium'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import { memo, useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ViewStyle } from 'react-native'
@@ -10,7 +11,6 @@ import { useFlatListAutoScroll } from 'src/components/explore/hooks/useFlatListA
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { NetworkPill } from 'uniswap/src/components/network/NetworkPill'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useEvent } from 'utilities/src/react/hooks'
 
 const keyExtractor = (chainId: UniverseChainId): string => chainId.toString()

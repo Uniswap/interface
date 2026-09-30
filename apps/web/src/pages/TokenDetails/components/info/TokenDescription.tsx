@@ -1,15 +1,17 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import type { UniverseChainId } from '@universe/chains'
 import { Flex, Text } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getBlockExplorerIcon } from 'uniswap/src/components/chains/BlockExplorerIcon'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { getTranslatedDescription } from 'uniswap/src/features/dataApi/tokenDetails/tokenMetadataUtils'
 import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
+import { useCurrentLanguage } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -36,6 +38,7 @@ import { useTokenAddressCopy } from '~/pages/TokenDetails/hooks/useTokenAddressC
 export function TokenDescription() {
   const { t } = useTranslation()
   const trace = useTrace()
+  const currentLanguage = useCurrentLanguage()
   const { multiChainMap, selectedMultichainChainId } = useTDPStore((s) => ({
     multiChainMap: s.multiChainMap,
     selectedMultichainChainId: s.selectedMultichainChainId,
@@ -56,7 +59,11 @@ export function TokenDescription() {
 
   const displayAddress = effectiveCurrency.isNative ? NATIVE_CHAIN_ID : effectiveCurrency.address
 
-  const { description, homepageUrl, twitterName } = useTokenMetadata(currencyId(effectiveCurrency))
+  const { description, descriptionTranslations, homepageUrl, twitterName } = useTokenMetadata(
+    currencyId(effectiveCurrency),
+  )
+  const localizedDescription = getTranslatedDescription(descriptionTranslations, currentLanguage) ?? description
+
   const explorerUrl = getExplorerLink({
     chainId: effectiveCurrency.chainId,
     data: displayAddress,
@@ -136,7 +143,7 @@ export function TokenDescription() {
   return (
     <Flex testID={TestID.TokenDetailsAboutSection} gap="$gap20" width="100%" $md={{ gap: '$gap16' }}>
       <Text variant="heading3">{t('common.about')}</Text>
-      <DescriptionBody description={description} />
+      <DescriptionBody description={localizedDescription} />
       <Flex row flexWrap="wrap" gap="$gap12" alignItems="center" width="100%" testID={TestID.TokenDetailsAboutLinks}>
         {showVerifiedPill && (
           <>

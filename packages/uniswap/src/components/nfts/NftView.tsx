@@ -1,9 +1,9 @@
 import { Flex, type FlexProps } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { NFTViewer } from 'uniswap/src/components/nfts/NFTViewer'
 import { NftViewLongPressArea } from 'uniswap/src/components/nfts/NftViewLongPressArea'
 import { ESTIMATED_NFT_LIST_ITEM_SIZE } from 'uniswap/src/features/nfts/constants'
 import { type NFTItem } from 'uniswap/src/features/nfts/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export type NftViewProps = {
   item: NFTItem

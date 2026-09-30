@@ -9,6 +9,7 @@ import getNetworkLogoUrl from 'functions/utils/getNetworkLogoURL'
 import getPool from 'functions/utils/getPool'
 import { getRequest } from 'functions/utils/getRequest'
 import { type Context } from 'hono'
+import { URL_PARAM_TO_CHAIN_ID } from 'uniswap/src/features/chains/chainUrlParam'
 import { withTimeout } from 'uniswap/src/utils/polling'
 
 function UnknownTokenImage({ symbol }: { symbol?: string }) {
@@ -116,7 +117,7 @@ export async function renderPoolOgImage({
 }): Promise<Response> {
   const origin = new URL(c.req.url).origin
   const [fontData] = await Promise.all([getFont(origin, c.env)])
-  const networkLogo = getNetworkLogoUrl(networkName.toUpperCase(), origin)
+  const networkLogo = getNetworkLogoUrl(URL_PARAM_TO_CHAIN_ID[networkName.toLowerCase()], origin)
 
   return new ImageResponse(
     <div

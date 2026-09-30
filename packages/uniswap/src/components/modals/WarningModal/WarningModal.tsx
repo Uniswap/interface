@@ -1,6 +1,7 @@
 import { isMobileApp, isWebPlatform } from '@universe/environment'
 import { Flex, type FlexProps, Text, TouchableArea } from '@universe/mycelium'
 import { useShadowPropsShort } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import { type PropsWithChildren, type ReactNode, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ColorValue } from 'react-native'
@@ -24,7 +25,6 @@ import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constan
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import type { SwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/createSwapFormStore'
 import { SwapFormStoreContext } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContext'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 

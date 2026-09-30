@@ -1,5 +1,6 @@
 import { UniverseChainId } from '@universe/chains'
 import { Flex, iconSizes } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { memo } from 'react'
 import {
   DoubleLogo,
@@ -7,7 +8,6 @@ import {
   SingleLogo,
   TripleLogo,
 } from 'uniswap/src/components/network/NetworkPile/NetworkPileLayouts'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export type NetworkPileSize = 'default' | 'small'
 

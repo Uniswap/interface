@@ -2,6 +2,7 @@ import { UniverseChainId } from '@universe/chains'
 import { CoinConvert } from '@universe/mycelium/icons/CoinConvert'
 import { createElement } from 'react'
 import type { FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
+import { fetchCurrency } from 'uniswap/src/features/tokens/fetchCurrencyInfo'
 import { hasTradeType } from 'uniswap/src/features/transactions/swap/utils/trade'
 import type { InterfaceTransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -15,7 +16,6 @@ import {
   getActivityTitle,
   getCancelledTransactionTitleTable,
 } from '~/components/AccountDrawer/MiniPortfolio/Activity/constants'
-import { getCurrencyFromCurrencyId } from '~/components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
 import { parseApproval } from '~/components/AccountDrawer/MiniPortfolio/Activity/parseLocal/transactions/parseApproval'
 import { parseBridge } from '~/components/AccountDrawer/MiniPortfolio/Activity/parseLocal/transactions/parseBridge'
 import {
@@ -250,7 +250,7 @@ export async function forTransactionToActivity({
   }
 
   const chainId = Number(transaction.cryptoDetails?.chainId) as UniverseChainId
-  const currency = await getCurrencyFromCurrencyId(buildCurrencyId(chainId, transaction.sourceCurrencyCode))
+  const currency = await fetchCurrency(buildCurrencyId(chainId, transaction.sourceCurrencyCode))
   const status = statusToTransactionInfoStatus(transaction.status)
   const serviceProvider = transaction.serviceProviderDetails?.name ?? ''
   const tokenAmount = formatNumber({

@@ -5,7 +5,7 @@ import {
 import { TokenCategoryClass, type TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 
 function category(id: string): TokenCategory {
-  return { id, name: id, description: '', categoryClass: TokenCategoryClass.Market, topTokens: [] }
+  return { id, name: id, description: '', categoryClass: TokenCategoryClass.Market, grouped: false, topTokens: [] }
 }
 
 const categories = [category('stocks'), category('trending'), category('top-gainers')]

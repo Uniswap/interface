@@ -49,11 +49,13 @@ import {
   removeFlashbotsEnabledFromWalletSlice,
   removeLocalTypeAccounts,
   removeNonZeroDerivationIndexAccounts,
+  removePersistedApolloCache,
   removePersistedWalletConnectSlice,
   removeProviders,
   removeReplaceAccountOptions,
   removeShowSmallBalances,
   removeTokenListsAndCustomTokens,
+  removeTweaksSlice,
   removeTokensMetadataDisplayType,
   removeWalletConnectModalState,
   renameFollowedAddressesToWatchedAddresses,
@@ -208,6 +210,8 @@ export const migrations = {
   98: addEnableCustomGasFeeEntry,
   99: removeUniswapWrapped2025BehaviorHistory,
   100: markPoolsBalanceCoachmarkEligible,
+  101: removeTweaksSlice,
+  102: removePersistedApolloCache,
 }
 
-export const MOBILE_STATE_VERSION = 100
+export const MOBILE_STATE_VERSION = 102

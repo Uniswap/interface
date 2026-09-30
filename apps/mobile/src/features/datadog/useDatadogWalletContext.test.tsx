@@ -6,7 +6,7 @@ import {
   SAMPLE_SEED_ADDRESS_1,
   SAMPLE_SEED_ADDRESS_2,
   SAMPLE_SEED_ADDRESS_3,
-} from 'uniswap/src/test/fixtures/gql/assets/constants'
+} from 'uniswap/src/test/fixtures/assets/constants'
 import { setAttributesToDatadog } from 'utilities/src/logger/datadog/Datadog'
 import { logger } from 'utilities/src/logger/logger'
 import { initialTelemetryState } from 'wallet/src/features/telemetry/slice'

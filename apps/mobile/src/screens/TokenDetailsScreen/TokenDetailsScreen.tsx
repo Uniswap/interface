@@ -1,12 +1,9 @@
-import { useApolloClient } from '@apollo/client'
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
-import { GQLQueries, GraphQLApi } from '@universe/api'
 import { AddressStringFormat, normalizeAddress } from '@universe/chains'
 import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
-import React, { memo, useEffect, useMemo } from 'react'
+import React, { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
 import type { AppStackScreenProp } from 'src/app/navigation/types'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { useIsInModal } from 'src/components/modals/useIsInModal'
@@ -36,17 +33,13 @@ import { HeaderRightElement, HeaderTitleElement } from 'src/screens/TokenDetails
 import { TokenDetailsModals } from 'src/screens/TokenDetailsScreen/TokenDetailsModals'
 import { useMobileTDPHeartbeatCoordinator } from 'src/screens/TokenDetailsScreen/useMobileTDPHeartbeatCoordinator'
 import { Lock } from 'ui/src/components/icons/Lock'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { useTokenCategories } from 'uniswap/src/data/apiClients/dataApiService/categories/useTokenCategories'
 import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { PermissionedTokenInfoBottomSheet } from 'uniswap/src/features/permissionedTokens/PermissionedTokenInfoBottomSheet'
 import { useLogRWATokenDetailsViewed } from 'uniswap/src/features/rwa/useLogRWATokenDetailsViewed'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TokenWarningCard } from 'uniswap/src/features/tokens/warnings/TokenWarningCard'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { useDelayedRender } from 'utilities/src/react/useDelayedRender'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -90,35 +83,18 @@ function TokenDetailsWrapper(): JSX.Element {
     chainId,
   })
 
+  // The TDP heartbeat coordinator owns refreshing this screen's queries — none poll on their own.
+  // Balances (GetPortfolio, Zerion-backed) are intentionally off the tick; transaction sagas refetch them on change.
+  useMobileTDPHeartbeatCoordinator(Boolean(rwaMatch))
+
   return (
     <ReactNavigationPerformanceView interactive screenName={MobileScreens.TokenDetails}>
       <Trace directFromPage logImpression properties={traceProperties} screen={MobileScreens.TokenDetails}>
-        <TokenDetailsQuery isRWA={Boolean(rwaMatch)} />
+        <TokenDetails />
       </Trace>
     </ReactNavigationPerformanceView>
   )
 }
-
-const TokenDetailsQuery = memo(function TokenDetailsQueryInner({ isRWA }: { isRWA: boolean }): JSX.Element {
-  const { currencyId, setError } = useTokenDetailsContext()
-
-  // The TDP heartbeat coordinator owns refreshing this screen's queries — none poll on their own.
-  // Balances (GetPortfolio, Zerion-backed) are intentionally off the tick; transaction sagas refetch them on change.
-  useMobileTDPHeartbeatCoordinator(isRWA)
-
-  const { error } = GraphQLApi.useTokenDetailsScreenQuery({
-    variables: {
-      ...currencyIdToContractInput(currencyId),
-      multichain: true,
-    },
-    notifyOnNetworkStatusChange: true,
-    returnPartialData: true,
-  })
-
-  useEffect(() => setError(error), [error, setError])
-
-  return <TokenDetails />
-})
 
 const TokenDetails = memo(function TokenDetailsInner(): JSX.Element {
   const centerElement = useMemo(() => <HeaderTitleElement />, [])
@@ -152,8 +128,6 @@ const TokenDetails = memo(function TokenDetailsInner(): JSX.Element {
             <PriceExplorer />
             <OffHoursMarketWarning />
           </Flex>
-
-          <TokenDetailsErrorCard />
 
           <Flex gap="$spacing16" mb="$spacing8" px="$spacing16">
             <TokenWarningCardWrapper />
@@ -189,24 +163,6 @@ const TokenDetails = memo(function TokenDetailsInner(): JSX.Element {
       <TokenDetailsModals />
     </>
   )
-})
-
-const TokenDetailsErrorCard = memo(function TokenDetailsErrorCardInner(): JSX.Element | null {
-  const apolloClient = useApolloClient()
-  const { error, setError } = useTokenDetailsContext()
-
-  const onRetry = useEvent(() => {
-    setError(undefined)
-    apolloClient
-      .refetchQueries({ include: [GQLQueries.TokenDetailsScreen, GQLQueries.TokenPriceHistory] })
-      .catch((e) => setError(e))
-  })
-
-  return error ? (
-    <AnimatedFlex entering={FadeInDown} exiting={FadeOutDown} px="$spacing24">
-      <BaseCard.InlineErrorState onRetry={onRetry} />
-    </AnimatedFlex>
-  ) : null
 })
 
 const TokenBalancesWrapper = memo(function TokenBalancesWrapperInner(): JSX.Element | null {

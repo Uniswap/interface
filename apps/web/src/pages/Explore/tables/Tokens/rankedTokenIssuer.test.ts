@@ -1,7 +1,7 @@
 import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import type { RWAAsset } from 'uniswap/src/features/rwa/types'
-import { UNKNOWN_RWA_ISSUER } from 'uniswap/src/features/rwa/useRWAWhitelist'
+import { UNKNOWN_RWA_ISSUER } from 'uniswap/src/features/rwa/types'
 import { findRankedTokenRWAMatch } from '~/pages/Explore/tables/Tokens/rankedTokenIssuer'
 
 const MAINNET_ADDRESS = '0x1111111111111111111111111111111111111111'

@@ -19,6 +19,7 @@
     "@universe/environment": "workspace:^",
     "@universe/gating": "workspace:^",
     "@universe/mycelium": "workspace:^",
+    "@universe/test": "workspace:^",
     "@wagmi/core": "3.5.1",
     "hash-wasm": "4.12.0",
     "i18next": "23.10.0",

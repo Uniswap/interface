@@ -41,8 +41,8 @@ type HeaderProps = {
 function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps): JSX.Element {
   return (
     <TouchableArea
-      borderBottomColor="$surface3"
       borderBottomWidth={0.25}
+      borderColor="$surface3"
       px="$spacing16"
       py="$spacing12"
       onPress={onPress}

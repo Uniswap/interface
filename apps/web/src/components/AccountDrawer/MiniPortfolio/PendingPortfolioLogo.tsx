@@ -1,7 +1,7 @@
 import { Flex, zIndexes } from '@universe/mycelium'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import type { ComponentProps } from 'react'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { PortfolioLogo, PORTFOLIO_LOGO_DEFAULT_SIZE } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { StyledRotatingSVG } from '~/components/Icons/shared'
 

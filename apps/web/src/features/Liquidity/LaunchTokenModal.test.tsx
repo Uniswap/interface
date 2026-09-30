@@ -1,5 +1,5 @@
 import { fireEvent } from '@testing-library/react'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { LaunchTokenModal } from '~/features/Liquidity/LaunchTokenModal'
 import { render, screen } from '~/test-utils/render'

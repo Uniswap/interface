@@ -1,10 +1,10 @@
 import type { Currency } from '@uniswap/sdk-core'
 import { Flex } from '@universe/mycelium'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import { useMemo } from 'react'
 import type { ParsedToken } from 'uniswap/src/features/dataApi/utils/parsedToken'
 import { v2TokenToCurrency } from 'uniswap/src/features/dataApi/utils/parsedToken'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { DoubleCurrencyLogo, type ServedLogo } from '~/components/Logo/DoubleLogo'
 import { HEADER_LOGO_SIZE, HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constants'
 import {

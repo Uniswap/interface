@@ -3,19 +3,18 @@ import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { OptionItem } from 'uniswap/src/components/lists/items/OptionItem'
-import {
-  TokenOptionItemStats,
-  useSearchVolumeLabel,
-} from 'uniswap/src/components/lists/items/tokens/TokenOptionItem/TokenOptionItemStats'
+import { TokenOptionItemStats } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem/TokenOptionItemStats'
 import { tokenOptionTitleSuffix } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem/TokenOptionTitleSuffix'
 import {
   TokenContextMenuVariant,
   type TokenOptionItemProps,
 } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem/types'
 import { TokenOptionWarningBadge } from 'uniswap/src/components/lists/items/tokens/TokenOptionWarningBadge'
+import { useSearchFdvLabel } from 'uniswap/src/components/lists/items/useSearchFdvLabel'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -38,17 +37,21 @@ export const BaseTokenOptionItem = memo(function BaseTokenOptionItemInner(
     focusedRowControl,
     openContextMenu,
     displayName,
-    issuerLabel,
+    issuer,
+    showIssuerTag,
     modifierPressHref,
     onModifierPress,
     contextMenuVariant,
     searchStats,
+    earnApyPercent,
+    symbolMaxCharacters,
   } = props
   const titleCategoryTag = categoryTagPlacement === 'title' ? categoryTag : undefined
   const { currencyInfo } = option
   const { currency } = currencyInfo
   const { t } = useTranslation()
-  const volumeLabel = useSearchVolumeLabel(searchStats?.volume1dUsd)
+  const { formatPercent } = useLocalizationContext()
+  const fdvLabel = useSearchFdvLabel(searchStats?.fdvUsd)
 
   const isMultichain = networkCount !== undefined && networkCount > 1
   const isSingleChainMultichainResult = networkCount !== undefined && networkCount === 1
@@ -76,15 +79,21 @@ export const BaseTokenOptionItem = memo(function BaseTokenOptionItemInner(
         />
       }
       title={displayName ?? currency.name ?? currency.symbol ?? ''}
-      titleSuffix={tokenOptionTitleSuffix({ issuerLabel, categoryTag: titleCategoryTag })}
+      titleSuffix={tokenOptionTitleSuffix({ issuer, showIssuerTag, categoryTag: titleCategoryTag })}
       subtitle={
         <Flex row alignItems="center" gap="$spacing8">
-          <Text color="$neutral2" numberOfLines={1} variant="body3">
-            {getSymbolDisplayText(currency.symbol)}
-          </Text>
-          {volumeLabel ? (
+          {earnApyPercent != null ? (
+            <Text color="$accent1" numberOfLines={1} variant="body3">
+              {t('search.results.stats.apy', { apy: formatPercent(earnApyPercent) })}
+            </Text>
+          ) : (
+            <Text color="$neutral2" numberOfLines={1} variant="body3">
+              {getSymbolDisplayText(currency.symbol, symbolMaxCharacters)}
+            </Text>
+          )}
+          {fdvLabel ? (
             <Text color="$neutral3" numberOfLines={1} variant="body3">
-              {volumeLabel}
+              {fdvLabel}
             </Text>
           ) : isMultichain ? (
             <Text color="$neutral3" numberOfLines={1} variant="body3">

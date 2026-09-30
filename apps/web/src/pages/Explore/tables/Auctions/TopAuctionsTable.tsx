@@ -26,7 +26,7 @@ import { TABLE_PAGE_SIZE } from '~/features/Explore/state'
 import { AuctionQuickFilter, useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
 import { CommittedVolumeTooltipContent } from '~/features/Toucan/Auction/Banners/AuctionStatsBanner/CommittedVolumeTooltipContent'
 import { approximateNumberFromRaw, formatCompactFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
-import { buildTokenMarketPriceKey } from '~/features/Toucan/hooks/useTokenMarketPrices'
+import { buildTokenMarketPriceKey } from '~/features/Toucan/hooks/tokenMarketPriceKeys'
 import { useAuctionTokenPrices } from '~/features/Toucan/hooks/useTopAuctions/useAuctionTokenPrices'
 import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
 import {

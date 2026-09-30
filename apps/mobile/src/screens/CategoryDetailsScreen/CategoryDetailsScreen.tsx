@@ -1,4 +1,5 @@
 import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { TokensOrderBy } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { RankingType } from '@universe/api'
 import type { UniverseChainId } from '@universe/chains'
 import {
@@ -44,7 +45,7 @@ import { useExploreRwaRows } from 'uniswap/src/data/apiClients/dataApiService/rw
 import { getExpandableSearchRowHeightPx } from 'uniswap/src/features/expandableAsset/expandableAssetLayout'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { getRwaCategoryForTokenCategory } from 'uniswap/src/features/tokenCategories/rwaCategoryBridge'
+import { getGroupedRwaCategory } from 'uniswap/src/features/tokenCategories/groupedCategory'
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
@@ -108,10 +109,9 @@ function CategoryDetailsContent({ category }: { category: TokenCategory }): JSX.
   const listRef = useRef<UniversalListRef>(null)
   const [selectedNetwork, setSelectedNetwork] = useState<UniverseChainId | null>(null)
 
-  // Grouped categories (Stocks/ETFs/Commodities) render expandable token-grouping rows, matching the
-  // web category page; everything else lists ranked tokens. Which categories group is FE-derived and
-  // served by the RWA endpoints until ListTokensGrouped + a BE categoryUsesGroups signal land.
-  const rwaCategory = getRwaCategoryForTokenCategory(category)
+  // BE-grouped categories (Stocks/ETFs) render expandable token-grouping rows, matching the web category page;
+  // everything else lists ranked tokens.
+  const rwaCategory = getGroupedRwaCategory(category)
   const isGroupedCategory = rwaCategory !== RwaCategory.UNSPECIFIED
 
   const { topTokenItems, isLoading, isFetching, fetchNextPage, hasNextPage, error, refetch } = useExploreTokenItems({
@@ -127,9 +127,13 @@ function CategoryDetailsContent({ category }: { category: TokenCategory }): JSX.
     isLoading: isGroupingsLoading,
     isError: isGroupingsError,
     refetch: refetchGroupings,
+    fetchNextPage: fetchNextGroupingsPage,
+    hasNextPage: hasNextGroupingsPage,
+    isFetchingNextPage: isFetchingNextGroupingsPage,
   } = useExploreRwaRows({
     category: rwaCategory,
     chainIds: groupingChainIds,
+    volumeOrderBy: TokensOrderBy.VOLUME_1D,
     enabled: isGroupedCategory,
   })
 
@@ -147,7 +151,11 @@ function CategoryDetailsContent({ category }: { category: TokenCategory }): JSX.
   })
 
   const onEndReached = useEvent(() => {
-    if (!isGroupedCategory && hasNextPage && !isFetching) {
+    if (isGroupedCategory) {
+      if (hasNextGroupingsPage && !isFetchingNextGroupingsPage) {
+        fetchNextGroupingsPage()
+      }
+    } else if (hasNextPage && !isFetching) {
       fetchNextPage()
     }
   })
@@ -249,6 +257,7 @@ function CategoryDetailsContent({ category }: { category: TokenCategory }): JSX.
           eventName={MobileEventName.ExploreTokenItemSelected}
           index={index}
           metadataDisplayType={item.tokenMetadataDisplayType}
+          rowKey={item.key}
           tokenItemData={item.tokenItemData}
           containerProps={EXPLORE_TOKEN_CONTAINER_PROPS}
         />
@@ -311,6 +320,7 @@ function CategoryDetailsContent({ category }: { category: TokenCategory }): JSX.
       <UniversalList
         ref={listRef}
         recycleItems
+        trackRowViewability
         contentContainerStyle={contentContainerStyle}
         data={listData}
         drawDistance={dimensions.height * WINDOW_MULTIPLIER}

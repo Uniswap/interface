@@ -1,4 +1,3 @@
-import { MockedProvider } from '@apollo/client/testing'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { queries } from '@testing-library/dom'
 import { RenderHookOptions, RenderOptions, render, renderHook } from '@testing-library/react'
@@ -58,20 +57,18 @@ function MockedMismatchProvider({ children }: PropsWithChildren) {
 function CommonTestProviders({ children }: PropsWithChildren) {
   return (
     <ComplianceClientProvider client={complianceClientStub}>
-      <MockedProvider showWarnings={false}>
-        <TransactionWatcherProvider>
-          <ReactRouterUrlProvider>
-            <MockedBlockNumberProvider>
-              <ColorSchemeProvider>
-                <PriceServiceProvider queryClient={SharedQueryClient}>
-                  <WebAccountsStoreUpdater />
-                  <MockedMismatchProvider>{children}</MockedMismatchProvider>
-                </PriceServiceProvider>
-              </ColorSchemeProvider>
-            </MockedBlockNumberProvider>
-          </ReactRouterUrlProvider>
-        </TransactionWatcherProvider>
-      </MockedProvider>
+      <TransactionWatcherProvider>
+        <ReactRouterUrlProvider>
+          <MockedBlockNumberProvider>
+            <ColorSchemeProvider>
+              <PriceServiceProvider queryClient={SharedQueryClient}>
+                <WebAccountsStoreUpdater />
+                <MockedMismatchProvider>{children}</MockedMismatchProvider>
+              </PriceServiceProvider>
+            </ColorSchemeProvider>
+          </MockedBlockNumberProvider>
+        </ReactRouterUrlProvider>
+      </TransactionWatcherProvider>
     </ComplianceClientProvider>
   )
 }

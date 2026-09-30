@@ -1,9 +1,9 @@
 import { Button, Flex, Text, TouchableArea } from '@universe/mycelium'
 import { BackArrow } from '@universe/mycelium/icons/BackArrow'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { OnboardingScreenProps } from 'src/app/features/onboarding/OnboardingScreenProps'
 import i18n from 'uniswap/src/i18n'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export function OnboardingScreenFrame({
   Icon,

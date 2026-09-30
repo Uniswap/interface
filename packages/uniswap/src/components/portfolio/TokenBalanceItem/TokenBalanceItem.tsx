@@ -1,5 +1,5 @@
 import { UniverseChainId } from '@universe/chains'
-import { isExtensionApp, isMobileApp, isWebPlatform } from '@universe/environment'
+import { isExtensionApp, isWebPlatform } from '@universe/environment'
 import { Flex, Shine, Text } from '@universe/mycelium'
 import { ChevronsIn } from '@universe/mycelium/icons/ChevronsIn'
 import { ChevronsOut } from '@universe/mycelium/icons/ChevronsOut'
@@ -44,6 +44,8 @@ interface TokenBalanceItemProps {
   isLoading?: boolean
   padded?: boolean
   contextMenuActions?: TokenBalanceItemContextMenuConfig
+  /** See AnimatedNumberProps.suspendAnimations — pass for rows outside the list viewport. */
+  suspendAnimations?: boolean
 }
 
 const MULTICHAIN_BALANCES_SLOT_HEIGHT = 20
@@ -67,6 +69,7 @@ export const TokenBalanceItem = memo(function TokenBalanceItemInner({
   isLoading,
   padded,
   contextMenuActions,
+  suspendAnimations,
 }: TokenBalanceItemProps) {
   const { currency } = currencyInfo
   const { isTestnetModeEnabled } = useEnabledChains()
@@ -177,6 +180,7 @@ export const TokenBalanceItem = memo(function TokenBalanceItemInner({
           evmAddress={evmOwner}
           svmAddress={svmOwner}
           portfolioBalance={portfolioBalance}
+          suspendAnimations={suspendAnimations}
         />
       )}
     </Flex>
@@ -297,12 +301,14 @@ function TokenBalanceRightSideColumn({
   evmAddress,
   svmAddress,
   portfolioBalance,
+  suspendAnimations,
 }: {
   isLoading?: boolean
   currencyId: CurrencyId
   evmAddress?: string
   svmAddress?: string
   portfolioBalance?: PortfolioMultichainBalance
+  suspendAnimations?: boolean
 }): JSX.Element {
   const { t } = useTranslation()
   const { isTestnetModeEnabled } = useEnabledChains()
@@ -338,7 +344,7 @@ function TokenBalanceRightSideColumn({
           <Flex alignItems="flex-end" pl="$spacing8">
             <AnimatedNumber
               alignRight
-              disableAnimations={isMobileApp}
+              suspendAnimations={suspendAnimations}
               numericValue={balanceUSD}
               value={balanceFormatted}
               textVariant={isWebPlatform ? '$body2' : '$body1'}

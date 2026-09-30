@@ -1,10 +1,10 @@
 import { UniverseChainId } from '@universe/chains'
 import { useMemo } from 'react'
-import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { isWrappedNativeEarnVault } from 'uniswap/src/features/earn/utils'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { useMultichainCurrencyInfos } from 'uniswap/src/features/tokens/useMultichainCurrencyInfos'
 
 type UseEarnMainnetActionCurrencyResult = {
   actionsDisabled: boolean
@@ -14,7 +14,7 @@ type UseEarnMainnetActionCurrencyResult = {
 
 // Resolves the mainnet variant of a given currency. Wrapped-native vaults are a special case:
 // the user-facing actions (swap, on-ramp) operate on the native token directly, not the wrapped
-// one, so we return the display currency info instead of looking up via `useTokenProjects`.
+// one, so we return the display currency info instead of looking up the asset's mainnet deployment.
 export function useEarnMainnetActionCurrencyForVault({
   vault,
 }: {
@@ -56,7 +56,7 @@ export function useEarnMainnetActionCurrencyForToken({
 
 function useMainnetTokenProjectVariant(currencyId: string | undefined): CurrencyInfo | undefined {
   const projectQueryIds = useMemo(() => (currencyId ? [currencyId] : []), [currencyId])
-  const { data: tokenProject } = useTokenProjects(projectQueryIds)
+  const { data: tokenProject } = useMultichainCurrencyInfos(projectQueryIds)
   return useMemo(() => tokenProject?.find((info) => info.currency.chainId === UniverseChainId.Mainnet), [tokenProject])
 }
 

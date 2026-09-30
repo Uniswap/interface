@@ -741,6 +741,19 @@ describe('Popover.Trigger / Popover.Close — wrapper contracts', () => {
     expect(trigger.style['paddingTop']).toBe('8px')
   })
 
+  it('defaults the wrapper to a focusable button and lets role/tabIndex replace that', () => {
+    renderPopover()
+    const defaultTrigger = document.querySelector(TRIGGER_SELECTOR) as HTMLElement
+    expect(defaultTrigger.getAttribute('role')).toBe('button')
+    expect(defaultTrigger.tabIndex).toBe(0)
+    cleanup()
+
+    renderPopover({ triggerProps: { role: 'none', tabIndex: -1 } })
+    const trigger = document.querySelector(TRIGGER_SELECTOR) as HTMLElement
+    expect(trigger.getAttribute('role')).toBe('none')
+    expect(trigger.tabIndex).toBe(-1)
+  })
+
   it('asChild clones the child as the trigger, composing its onClick', () => {
     const childClick = vi.fn()
     renderThemed(

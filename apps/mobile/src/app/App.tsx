@@ -1,6 +1,4 @@
 import 'src/global.css'
-import { ApolloProvider } from '@apollo/client'
-import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev'
 import { DdRum, RumActionType } from '@datadog/mobile-react-native'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { PerformanceProfiler, type RenderPassReport } from '@shopify/react-native-performance'
@@ -30,7 +28,6 @@ import {
   createTurnstileMockSolver,
   type SessionInitializationService,
 } from '@universe/sessions'
-import { MMKVWrapper } from 'apollo3-cache-persist'
 import { default as React, StrictMode, useCallback, useEffect, useMemo, useRef } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { NativeModules, StatusBar } from 'react-native'
@@ -45,7 +42,6 @@ import { enableFreeze } from 'react-native-screens'
 import { useDispatch, useSelector } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ignoreFabricMountStateErrors } from 'src/app/ignoreFabricMountStateErrors'
-import { createMMKVApolloAdapter } from 'src/app/mmkvApolloAdapter'
 import { MobileWalletNavigationProvider } from 'src/app/MobileWalletNavigationProvider'
 import { AppModals } from 'src/app/modals/AppModals'
 import { useIsPartOfNavigationTree } from 'src/app/navigation/hooks'
@@ -72,7 +68,6 @@ import { PrivyProviderWrapper } from 'src/features/passkey/PrivyProviderWrapper'
 import { createHashcashWorkerChannel } from 'src/features/sessions/createHashcashWorkerChannel'
 import { statsigMMKVStorageProvider } from 'src/features/statsig/statsigMMKVStorageProvider'
 import { shouldLogScreen } from 'src/features/telemetry/directLogScreens'
-import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
 import { useSyncWidgetUserDefaults } from 'src/features/widgets/useSyncWidgetUserDefaults'
 import { SystemBannerPortalProvider } from 'src/notification-service/notification-renderer/SystemBannerPortal'
 import { initDynamicIntlPolyfills, loadIntlPolyfillsForLocale } from 'src/polyfills/intl-delayed'
@@ -102,8 +97,6 @@ import { reportAppStartTiming } from 'utilities/src/logger/datadog/reportAppStar
 import { getLogger, logger } from 'utilities/src/logger/logger'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
-// oxlint-disable-next-line no-restricted-imports -- Required for Apollo client initialization at app root
-import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { AccountsStoreContextProvider } from 'wallet/src/features/accounts/store/provider'
 import { StatsigUserIdentifiersUpdater } from 'wallet/src/features/gating/StatsigUserIdentifiersUpdater'
 import { useHeartbeatReporter } from 'wallet/src/features/telemetry/hooks/useHeartbeatReporter'
@@ -127,8 +120,6 @@ if (__DEV__ && !isTestEnv()) {
   configureReanimatedLogger({
     strict: false,
   })
-  loadDevMessages()
-  loadErrorMessages()
   // Surface uniwind class-map misses, which the store otherwise skips
   // silently. Module scope (uniwind's store is hydrated by the global.css
   // import above) so renders during the PersistGate loading phase are
@@ -258,8 +249,6 @@ function App(): JSX.Element | null {
   )
 }
 
-const MAX_CACHE_SIZE_IN_BYTES = 1024 * 1024 * 25 // 25 MB
-
 /**
  * Applies the persisted language from Redux to i18n on app launch.
  * Renders inside PersistGate so Redux is already rehydrated when this mounts.
@@ -280,12 +269,6 @@ function ApplyPersistedLanguage(): null {
 
 // Ensures redux state is available inside usePersistedApolloClient for the custom endpoint
 function AppOuter(): JSX.Element | null {
-  const customEndpoint = useSelector(selectCustomEndpoint)
-  const client = usePersistedApolloClient({
-    storageWrapper: new MMKVWrapper(createMMKVApolloAdapter()),
-    maxCacheSizeInBytes: MAX_CACHE_SIZE_IN_BYTES,
-    customEndpoint,
-  })
   const jsBundleLoadedRef = useRef(false)
 
   /**
@@ -339,51 +322,45 @@ function AppOuter(): JSX.Element | null {
     }
   }, [])
 
-  if (!client) {
-    return null
-  }
-
   return (
-    <ApolloProvider client={client}>
-      <PersistGate loading={null} persistor={getReduxPersistor()}>
-        <ErrorBoundaryWrapper>
-          <ApplyPersistedLanguage />
-          <BlankUrlProvider>
-            <LocalizationContextProvider>
-              <WalletContextProvider>
-                <PrivyProviderWrapper>
-                  <NavigationContainer>
-                    <MobileWalletNavigationProvider>
-                      <NativeWalletProvider>
-                        <RemotePriceProvider>
-                          <WalletUniswapProvider>
-                            <AccountsStoreContextProvider>
-                              <DataUpdaters />
-                              <FloatingOverlayProvider>
-                                <BottomSheetModalProvider>
-                                  <AppModals />
-                                  <PerformanceProfiler
-                                    errorHandler={ignoreFabricMountStateErrors}
-                                    onReportPrepared={onReportPrepared}
-                                  >
-                                    <AppInner />
-                                  </PerformanceProfiler>
-                                </BottomSheetModalProvider>
-                              </FloatingOverlayProvider>
-                              <NotificationToastWrapper />
-                            </AccountsStoreContextProvider>
-                          </WalletUniswapProvider>
-                        </RemotePriceProvider>
-                      </NativeWalletProvider>
-                    </MobileWalletNavigationProvider>
-                  </NavigationContainer>
-                </PrivyProviderWrapper>
-              </WalletContextProvider>
-            </LocalizationContextProvider>
-          </BlankUrlProvider>
-        </ErrorBoundaryWrapper>
-      </PersistGate>
-    </ApolloProvider>
+    <PersistGate loading={null} persistor={getReduxPersistor()}>
+      <ErrorBoundaryWrapper>
+        <ApplyPersistedLanguage />
+        <BlankUrlProvider>
+          <LocalizationContextProvider>
+            <WalletContextProvider>
+              <PrivyProviderWrapper>
+                <NavigationContainer>
+                  <MobileWalletNavigationProvider>
+                    <NativeWalletProvider>
+                      <RemotePriceProvider>
+                        <WalletUniswapProvider>
+                          <AccountsStoreContextProvider>
+                            <DataUpdaters />
+                            <FloatingOverlayProvider>
+                              <BottomSheetModalProvider>
+                                <AppModals />
+                                <PerformanceProfiler
+                                  errorHandler={ignoreFabricMountStateErrors}
+                                  onReportPrepared={onReportPrepared}
+                                >
+                                  <AppInner />
+                                </PerformanceProfiler>
+                              </BottomSheetModalProvider>
+                            </FloatingOverlayProvider>
+                            <NotificationToastWrapper />
+                          </AccountsStoreContextProvider>
+                        </WalletUniswapProvider>
+                      </RemotePriceProvider>
+                    </NativeWalletProvider>
+                  </MobileWalletNavigationProvider>
+                </NavigationContainer>
+              </PrivyProviderWrapper>
+            </WalletContextProvider>
+          </LocalizationContextProvider>
+        </BlankUrlProvider>
+      </ErrorBoundaryWrapper>
+    </PersistGate>
   )
 }
 

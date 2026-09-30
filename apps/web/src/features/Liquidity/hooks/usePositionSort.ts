@@ -1,12 +1,11 @@
 import { PositionSortBy } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
 import { useCallback, useState } from 'react'
-import { NOOP_SORT_FIELDS, type PositionSort, type PositionSortField } from '~/features/Liquidity/PositionsTableColumns'
+import { type PositionSort, type PositionSortField } from '~/features/Liquidity/PositionsTableColumns'
 
 const SORT_FIELD_TO_REQUEST: Record<PositionSortField, PositionSortBy> = {
   created_at: PositionSortBy.CREATED_AT,
   distribution: PositionSortBy.DISTRIBUTION,
   liquidity: PositionSortBy.LIQUIDITY,
-  fees: PositionSortBy.FEES,
   apr: PositionSortBy.APR,
 }
 
@@ -28,14 +27,11 @@ export interface UsePositionSortResult {
 }
 
 // Toggles a column's sort: a new field starts descending; re-selecting the active field flips
-// direction. fees/apr are no-ops until the backend serves those values.
+// direction.
 export function usePositionSort(): UsePositionSortResult {
   const [sort, setSort] = useState<PositionSort | undefined>({ field: 'liquidity', direction: 'desc' })
 
   const onSort = useCallback((field: PositionSortField) => {
-    if (NOOP_SORT_FIELDS.includes(field)) {
-      return
-    }
     setSort((prev) =>
       prev?.field === field
         ? { field, direction: prev.direction === 'desc' ? 'asc' : 'desc' }

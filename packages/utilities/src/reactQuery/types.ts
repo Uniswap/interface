@@ -12,5 +12,5 @@ export type DerivedQueryResult<TData, TError = Error> = Pick<
   UseQueryResult<TData, TError>,
   'data' | 'error' | 'isLoading'
 > & {
-  refetch: () => void
+  refetch?: () => void
 }

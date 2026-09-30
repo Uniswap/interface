@@ -1,9 +1,9 @@
 import { Flex, Text, TouchableArea, iconSizes } from '@universe/mycelium'
 import { useIsDarkMode } from '@universe/mycelium/theme-hooks-compat'
+import { TestIDType } from '@universe/test'
 import React from 'react'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 
 export function OptionCard({
   title,

@@ -102,6 +102,8 @@ describe('rotateRecoveryWithRecoveryAuth', () => {
       signingPayload: SWAP_PAYLOAD,
     })
     expect(call).not.toHaveProperty('credential')
+    // The Privy access token rides along as the SetupRecovery bearer.
+    expect(vi.mocked(EmbeddedWalletApiClient.fetchSetupRecovery).mock.calls[0]?.[1]).toBe('access-token')
   })
 
   it('zeros the recovered v1 key on success but not the returned v2 key', async () => {

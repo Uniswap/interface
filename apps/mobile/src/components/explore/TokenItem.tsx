@@ -1,5 +1,12 @@
-import { isMobileApp } from '@universe/environment'
-import { AnimatedFlex, Flex, type FlexCompatProps as FlexProps, spacing, Text, TouchableArea } from '@universe/mycelium'
+import {
+  AnimatedFlex,
+  Flex,
+  type FlexCompatProps as FlexProps,
+  spacing,
+  Text,
+  TouchableArea,
+  useIsRowViewable,
+} from '@universe/mycelium'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import React, { memo, ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -39,6 +46,8 @@ interface TokenItemProps {
   priceWrapperProps?: FlexProps
   showChart?: boolean
   overlay?: ReactNode
+  /** List row key when rendered by a `UniversalList` with `trackRowViewability`; unset outside a list. */
+  rowKey?: string
   onPriceWrapperLayout?: (layout: LayoutRectangle) => void
 }
 
@@ -53,12 +62,16 @@ export const TokenItem = memo(function TokenItemInner({
   priceWrapperProps,
   showChart,
   overlay,
+  rowKey,
   onPriceWrapperLayout,
 }: TokenItemProps) {
   const { t } = useTranslation()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const colors = useSporeColors()
+
+  // Rows stay mounted ~3 screens past the viewport; animating all of them exhausted native memory.
+  const isViewable = useIsRowViewable(rowKey)
 
   const {
     name,
@@ -159,8 +172,11 @@ export const TokenItem = memo(function TokenItemInner({
           {showChart && <TokenItemChart height={20} tokenItemData={tokenItemData} width={40} />}
           <Flex row alignItems="center" justifyContent="flex-end" onLayout={onLayout} {...priceWrapperProps}>
             <TokenMetadata>
+              {/* Recycled rows must remount here, or a reassigned row rolls every digit from the
+                  previous token's price. */}
               <AnimatedNumber
-                disableAnimations={isMobileApp}
+                key={_currencyId}
+                suspendAnimations={!isViewable}
                 numericValue={price}
                 value={convertFiatAmountFormatted(price, NumberType.FiatTokenPrice)}
                 textVariant="$body1"

@@ -1,5 +1,5 @@
 import { getRewards } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import { expect, getTest } from '~/playwright/fixtures'
 import { createTestUrlBuilder } from '~/playwright/fixtures/urls'
 import { Mocks } from '~/playwright/mocks/mocks'

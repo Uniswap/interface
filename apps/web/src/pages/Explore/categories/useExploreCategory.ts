@@ -2,7 +2,8 @@ import { useSearchParams } from 'react-router'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export enum ExploreCategory {
-  Popular = 'popular',
+  /** Frontend-owned paramless default (the unfiltered table); useExploreTokenCategories drops any backend category reusing this id. */
+  All = 'all',
   Trending = 'trending',
   Stocks = 'stocks',
   Commodities = 'commodities',
@@ -24,10 +25,10 @@ function isWellFormedCategorySlug(value: string): boolean {
 }
 
 /**
- * Resolves the `?category=` value: valid ids pass through, anything else reads as Popular. With
+ * Resolves the `?category=` value: valid ids pass through, anything else reads as All. With
  * `trustUnverifiedIds` (ListCategories still loading), a well-formed slug is trusted optimistically so
- * a deep link fetches its filtered table immediately instead of Popular first; it is re-validated,
- * and falls back to Popular, once the list resolves.
+ * a deep link fetches its filtered table immediately instead of All first; it is re-validated,
+ * and falls back to All, once the list resolves.
  */
 export function categoryFromParam({
   value,
@@ -39,15 +40,15 @@ export function categoryFromParam({
   trustUnverifiedIds?: boolean
 }): string {
   if (value === null) {
-    return ExploreCategory.Popular
+    return ExploreCategory.All
   }
   if (validCategoryIds.has(value) || (trustUnverifiedIds && isWellFormedCategorySlug(value))) {
     return value
   }
-  return ExploreCategory.Popular
+  return ExploreCategory.All
 }
 
-/** Explore Tokens tab with the default (Popular) category (all networks). */
+/** Explore Tokens tab with the default (All) category (all networks). */
 export function getExploreTokensURL(): string {
   return '/explore/tokens'
 }
@@ -67,8 +68,8 @@ export const EXPLORE_TOKEN_SECTION_ID = 'explore-token-section'
 
 /**
  * Reads/writes the Explore category from the `?category=` URL param.
- * `validCategoryIds` bounds the param values (chip ids minus Popular, which is the paramless default);
- * unknown params read as Popular without rewriting the URL, except that a well-formed slug is trusted
+ * `validCategoryIds` bounds the param values (chip ids minus All, which is the paramless default);
+ * unknown params read as All without rewriting the URL, except that a well-formed slug is trusted
  * while `trustUnverifiedIds` is set (see categoryFromParam).
  */
 export function useExploreCategory({

@@ -48,7 +48,7 @@ export function SendListV2({
 }): JSX.Element {
   const {
     data: sections,
-    loading,
+    isLoading,
     error,
     refetch,
   } = useTokenSectionsForSendV2({ chainFilter, chainIds, portfolioData })
@@ -60,7 +60,7 @@ export function SendListV2({
       chainFilter={chainFilter}
       emptyElement={emptyElement}
       hasError={Boolean(error)}
-      loading={loading}
+      loading={isLoading}
       refetch={refetch}
       sections={sections}
       showTokenWarnings={false}

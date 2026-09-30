@@ -2,8 +2,8 @@
 // we silence the error logs to keep the test output clean.
 import 'utilities/src/logger/mocks'
 import { UniverseChainId } from '@universe/chains'
+import { TestID } from '@universe/test'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { render } from 'uniswap/src/test/test-utils'
 
 const arbitrumNetworkLogoTestID = `${TestID.NetworkLogoPrefix}${UniverseChainId.ArbitrumOne}`

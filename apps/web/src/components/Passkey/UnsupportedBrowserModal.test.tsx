@@ -1,6 +1,6 @@
 import { fireEvent } from '@testing-library/react'
+import { TestID } from '@universe/test'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { UnsupportedBrowserModal } from '~/components/Passkey/UnsupportedBrowserModal'
 import { useModalState } from '~/hooks/useModalState'
 import store from '~/state'

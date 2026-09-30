@@ -1,6 +1,7 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
 import type { GeneratedIcon, IconProps } from '@universe/mycelium/icons'
 import { CopySheets } from '@universe/mycelium/icons/CopySheets'
+import { TestIDType } from '@universe/test'
 import React from 'react'
 import { SvgProps } from 'react-native-svg'
 import { useSelector } from 'react-redux'
@@ -8,7 +9,6 @@ import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetails
 import { selectHasViewedContractAddressExplainer } from 'uniswap/src/features/behaviorHistory/selectors'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { openUri } from 'uniswap/src/utils/linking'
 
 export enum LinkButtonType {

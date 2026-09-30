@@ -2,7 +2,7 @@ import { useIsTokenCategoriesEnabled } from '@universe/gating'
 
 /**
  * Single owner of the Explore section title treatment: standardized styling when
- * the token categories experiment arm is on, legacy styling when off. Delete the off branch
+ * the token categories flag is on, legacy styling when off. Delete the off branch
  * (and inline the constants) with the token categories cleanup.
  */
 export function useExploreSectionTitleProps(): {

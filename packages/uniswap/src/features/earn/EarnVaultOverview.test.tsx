@@ -1,7 +1,7 @@
+import { TestID } from '@universe/test'
 import { EarnVaultOverview } from 'uniswap/src/features/earn/EarnVaultOverview'
 import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { EarnEventName } from 'uniswap/src/features/telemetry/constants/features'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { fireEvent, render, screen } from 'uniswap/src/test/test-utils'
 
 const { mockLogEarnVaultCardShowMoreClicked, mockSendEvent } = vi.hoisted(() => ({

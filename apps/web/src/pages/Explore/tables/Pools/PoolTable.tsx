@@ -1,7 +1,6 @@
 /* oxlint-disable typescript/no-unnecessary-condition max-lines */
-
-import { ApolloError } from '@apollo/client'
 import { createColumnHelper, Row } from '@tanstack/react-table'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { HookEntry } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
 import { GraphQLApi } from '@universe/api'
 import { UniverseChainId, areEvmAddressesEqual } from '@universe/chains'
@@ -136,7 +135,9 @@ function buildV4CurrencyId(
   token0CurrencyId?: string
   token1CurrencyId?: string
 } {
-  if (pool.protocolVersion !== GraphQLApi.ProtocolVersion.V4) {
+  // Rows carry the lowercase label `convertPoolToPoolStat` stamps on them ('v4'), not the GraphQL
+  // enum's 'V4' — comparing against the enum directly never matched, so v4 rows lost their currency ids.
+  if (getProtocolVersionFromLabel(pool.protocolVersion?.toLowerCase()) !== ProtocolVersion.V4) {
     return {}
   }
   // A v4 native leg arrives as a falsy address, the 'NATIVE' sentinel, or the zero address
@@ -523,9 +524,9 @@ function ExploreTopPoolTableContent({
       sortBy: sortMethod,
       sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc,
     },
-    // With the advanced filter on, the modal's Network is the only chain source — don't also feed the
-    // URL chain, or a chain picked on another tab would silently scope Pools with no way to widen it.
-    chainId: isAdvancedPoolsFilteringEnabled ? undefined : chainId,
+    // The URL chain scopes the list under both filter UIs: with the advanced filter on, its Network control
+    // reads and writes that same path segment (see ExploreTableFilters), so the two can't disagree.
+    chainId,
     protocol: selectedProtocol,
     poolsFilter: isAdvancedPoolsFilteringEnabled ? poolsFilter : undefined,
   })
@@ -635,7 +636,7 @@ export function PoolsTable({
 }: {
   pools?: PoolStat[]
   loading: boolean
-  error?: ApolloError | boolean
+  error?: boolean
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
   maxWidth?: number
   maxHeight?: number

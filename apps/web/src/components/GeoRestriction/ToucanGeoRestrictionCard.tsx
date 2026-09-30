@@ -1,9 +1,9 @@
 import { InlineCard, Text, TouchableArea } from '@universe/mycelium'
 import { ExternalLink } from '@universe/mycelium/icons/ExternalLink'
 import { GlobeFilled } from '@universe/mycelium/icons/GlobeFilled'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { openUri } from 'uniswap/src/utils/linking'
 
 /**

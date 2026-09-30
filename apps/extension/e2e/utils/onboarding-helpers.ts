@@ -1,6 +1,6 @@
 import { expect, type BrowserContext, type Page } from '@playwright/test'
+import { TestID } from '@universe/test'
 import { isVisibleWithin } from 'e2e/utils/locator-helpers'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { sleep } from 'utilities/src/time/timing'
 

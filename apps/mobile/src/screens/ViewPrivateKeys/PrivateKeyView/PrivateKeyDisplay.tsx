@@ -1,11 +1,11 @@
 import { Flex } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useMemo, useState } from 'react'
 import { NativePrivateKeyDisplay } from 'src/screens/ViewPrivateKeys/PrivateKeyView/NativePrivateKeyDisplay'
 import {
   NativePrivateKeyDisplayInternalProps,
   NativePrivateKeyDisplayProps,
 } from 'src/screens/ViewPrivateKeys/PrivateKeyView/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 /**
  * For the given address, displays the private key in a native component so

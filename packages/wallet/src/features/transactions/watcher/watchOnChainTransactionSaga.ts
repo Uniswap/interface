@@ -1,6 +1,5 @@
 /* oxlint-disable typescript/explicit-function-return-type */
 /* oxlint-disable max-lines */
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { waitForFlashbotsProtectReceipt, UniverseChainId } from '@universe/chains'
 import { BigNumber, BigNumberish, providers } from 'ethers'
 import { call, cancel, delay, fork, put, race, spawn, take } from 'typed-redux-saga'
@@ -302,15 +301,7 @@ export function* checkIfTransactionInvalidated(
   return false
 }
 
-function* handleTimeout({
-  transaction,
-  apolloClient,
-  provider,
-}: {
-  transaction: TransactionDetails
-  apolloClient: ApolloClient<NormalizedCacheObject>
-  provider: providers.Provider
-}) {
+function* handleTimeout({ transaction, provider }: { transaction: TransactionDetails; provider: providers.Provider }) {
   if (
     isUniswapX(transaction) ||
     // TODO: SWAP-440/SWAP-441 - Handle Plan transaction timeout
@@ -343,7 +334,6 @@ function* handleTimeout({
     const failedTransaction = { ...transaction, status: TransactionStatus.Failed } as FinalizedTransactionDetails
     yield* call(finalizeTransaction, {
       transaction: failedTransaction,
-      apolloClient,
     })
   }
 }
@@ -445,19 +435,13 @@ function* waitForTxnInvalidated({ chainId, id, nonce }: WaitForParams): Generato
   return true
 }
 
-export function* watchTransaction({
-  transaction,
-  apolloClient,
-}: {
-  transaction: TransactionDetails
-  apolloClient: ApolloClient<NormalizedCacheObject>
-}): Generator<unknown> {
+export function* watchTransaction({ transaction }: { transaction: TransactionDetails }): Generator<unknown> {
   const { chainId, id, hash } = transaction
 
   logger.debug('watchOnChainTransactionSaga', 'watchTransaction', 'Watching for updates for tx:', { hash, id })
   const provider = yield* call(getProvider, chainId)
   const options = isUniswapX(transaction) ? undefined : transaction.options
-  const timeoutTask = yield* fork(handleTimeout, { transaction, apolloClient, provider })
+  const timeoutTask = yield* fork(handleTimeout, { transaction, provider })
   const listenForAppBackgrounded = options && !options.appBackgroundedWhilePending
 
   // Handle plan transactions with cancellation support
@@ -499,7 +483,7 @@ export function* watchTransaction({
 
     if (updatedTransaction) {
       if (isFinalizedTx(updatedTransaction)) {
-        yield* call(finalizeTransaction, { transaction: updatedTransaction, apolloClient })
+        yield* call(finalizeTransaction, { transaction: updatedTransaction })
         return
       } else {
         yield* put(transactionActions.updateTransaction(updatedTransaction))
@@ -523,7 +507,7 @@ export function* watchTransaction({
   // `cancelTx` and `updatedTransaction` conditions apply to both Classic and UniswapX transactions
   if (cancelTx) {
     // reset watcher for the current txn, as it can still be mined (or invalidated by the new txn)
-    yield* fork(watchTransaction, { transaction, apolloClient })
+    yield* fork(watchTransaction, { transaction })
     // Cancel the current txn, which submits a new txn on chain and monitored in state
     yield* call(attemptCancelTransaction, transaction, cancelTx)
     return
@@ -532,7 +516,7 @@ export function* watchTransaction({
   if (updatedTransaction) {
     if (isFinalizedTx(updatedTransaction)) {
       // Update the store with tx receipt details
-      yield* call(finalizeTransaction, { transaction: updatedTransaction, apolloClient })
+      yield* call(finalizeTransaction, { transaction: updatedTransaction })
       return
     } else {
       // Update transaction with the new status, which will trigger a new transaction watcher
@@ -547,7 +531,7 @@ export function* watchTransaction({
 
   if (replace) {
     // Same logic as cancelation, but skip directly to replacement
-    yield* fork(watchTransaction, { transaction, apolloClient })
+    yield* fork(watchTransaction, { transaction })
     yield* call(attemptReplaceTransaction, { transaction, newTxRequest: replace.newTxParams })
     return
   }

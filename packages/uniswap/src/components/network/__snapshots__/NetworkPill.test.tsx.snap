@@ -19,8 +19,8 @@ exports[`NetworkPill > renders a NetworkPill with border 1`] = `
 exports[`NetworkPill > renders a NetworkPill without image 1`] = `
 <DocumentFragment>
   <div
-    class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-center gap-[8px] px-[4px] py-[8px] border-[1px] rounded-[999999px]"
-    style="background-color: rgba(255, 255, 255, 0.102); border-color: transparent;"
+    class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-center gap-[8px] px-[4px] py-[8px] border-transparent border-[1px] rounded-[999999px]"
+    style="background-color: rgba(255, 255, 255, 0.102);"
   >
     <span
       class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
@@ -35,8 +35,8 @@ exports[`NetworkPill > renders a NetworkPill without image 1`] = `
 exports[`NetworkPill > renders an InlineNetworkPill 1`] = `
 <DocumentFragment>
   <div
-    class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-center gap-[8px] px-[4px] py-[0px] border-[1px] rounded-[8px]"
-    style="background-color: rgba(255, 255, 255, 0.102); border-color: transparent;"
+    class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-center gap-[8px] px-[4px] py-[0px] border-transparent border-[1px] rounded-[8px]"
+    style="background-color: rgba(255, 255, 255, 0.102);"
   >
     <span
       class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-medium)] text-[14px] [line-height:16.1px] [font-weight:535] [color:var(--stext-neutral1)]"

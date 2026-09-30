@@ -1,12 +1,12 @@
 import type { UniverseChainId } from '@universe/chains'
 import { Flex, iconSizes, Text } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useCallback } from 'react'
 import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
 import { MultichainOptionRow } from 'uniswap/src/components/MultichainTokenDetails/MultichainOptionRow'
 import { MultichainScrollableList } from 'uniswap/src/components/MultichainTokenDetails/MultichainScrollableList'
 import type { MultichainTokenEntry } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 interface MultichainExplorerListProps {

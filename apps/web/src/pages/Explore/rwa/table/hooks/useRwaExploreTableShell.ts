@@ -8,12 +8,21 @@ import type { StocksSortMethod } from '~/pages/Explore/rwa/table/stocksTableSort
 
 export function useRwaExploreTableShell({
   rows,
+  rowsKey,
   sortMethod,
   sortAscending,
+  hasNextPage,
+  isFetchingNextPage,
+  fetchNextPage,
 }: {
   rows: Rwa[]
+  rowsKey: string
+  /** Client-side sort; leave undefined when the rows already arrive in server order. */
   sortMethod?: StocksSortMethod
   sortAscending?: boolean
+  hasNextPage: boolean
+  isFetchingNextPage: boolean
+  fetchNextPage: () => void
 }): {
   visibleRows: Rwa[]
   rankByAsset: ReadonlyMap<Rwa, number>
@@ -36,7 +45,14 @@ export function useRwaExploreTableShell({
 
   const filteredRows = useMemo(() => filterRwaRowsBySearch(sortedRows, filterString), [sortedRows, filterString])
 
-  const { displayCount, loadMore } = useRwaTablePagination(filteredRows.length)
+  const { displayCount, loadMore } = useRwaTablePagination({
+    rowsKey,
+    loadedRowCount: rows.length,
+    filteredRowCount: filteredRows.length,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  })
   const visibleRows = useMemo(() => filteredRows.slice(0, displayCount), [filteredRows, displayCount])
 
   return { visibleRows, rankByAsset, loadMore }

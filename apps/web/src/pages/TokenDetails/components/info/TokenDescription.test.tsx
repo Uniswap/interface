@@ -1,10 +1,12 @@
 import userEvent from '@testing-library/user-event'
 import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
+import { TestID } from '@universe/test'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import type { UseTokenMetadataResult } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { Language } from 'uniswap/src/features/language/constants'
+import { useCurrentLanguage } from 'uniswap/src/features/language/hooks'
 import { ZERO_PERCENT } from '~/constants/misc'
 import { useCurrency } from '~/hooks/Tokens'
 import { useSwapTaxes } from '~/hooks/useSwapTaxes'
@@ -26,6 +28,11 @@ vi.mock('~/pages/TokenDetails/context/useTDPStore', () => ({
 vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData', async (importOriginal) => ({
   ...(await importOriginal<typeof import('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData')>()),
   useTokenMetadata: vi.fn(),
+}))
+
+vi.mock('uniswap/src/features/language/hooks', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/features/language/hooks')>()),
+  useCurrentLanguage: vi.fn(),
 }))
 
 const SINGLE_CHAIN_MAP = {
@@ -69,6 +76,36 @@ describe('TokenDescription', () => {
     mocked(useCurrency).mockReturnValue(validUSDCCurrency)
     mocked(useSwapTaxes).mockReturnValue({ inputTax: ZERO_PERCENT, outputTax: ZERO_PERCENT })
     mocked(useTokenMetadata).mockReturnValue(VALID_METADATA)
+    mocked(useCurrentLanguage).mockReturnValue(Language.English)
+  })
+
+  describe('translated description', () => {
+    const TRANSLATED_METADATA: UseTokenMetadataResult = {
+      ...VALID_METADATA,
+      description: 'Short English description.',
+      descriptionTranslations: { 'es-ES': 'Descripción corta en español.' },
+    }
+
+    it('shows the translation for the current language without interaction', () => {
+      mocked(useTokenMetadata).mockReturnValue(TRANSLATED_METADATA)
+      mocked(useCurrentLanguage).mockReturnValue(Language.SpanishSpain)
+      mockTDPState(USDC_STATE)
+
+      render(<TokenDescription />)
+
+      expect(screen.getByText('Descripción corta en español.')).toBeVisible()
+      expect(screen.queryByText('Short English description.')).toBeNull()
+    })
+
+    it('falls back to the original description when no translation matches', () => {
+      mocked(useTokenMetadata).mockReturnValue(TRANSLATED_METADATA)
+      mocked(useCurrentLanguage).mockReturnValue(Language.Japanese)
+      mockTDPState(USDC_STATE)
+
+      render(<TokenDescription />)
+
+      expect(screen.getByText('Short English description.')).toBeVisible()
+    })
   })
 
   it('renders token information correctly with defaults', () => {

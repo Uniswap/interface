@@ -1,6 +1,5 @@
 import 'src/app/tailwind.css'
 import { ApiInit, getEntryGatewayUrl, provideSessionService } from '@universe/api'
-import { getIsHashcashSolverEnabled } from '@universe/gating'
 import {
   type ChallengeSolver,
   ChallengeType,
@@ -15,11 +14,11 @@ import {
 } from '@universe/sessions'
 import { PropsWithChildren, useEffect } from 'react'
 import { I18nextProvider } from 'react-i18next'
-import { GraphqlProvider } from 'src/app/apollo'
 import { TraceUserProperties } from 'src/app/components/Trace/TraceUserProperties'
 import { ExtensionStatsigProvider } from 'src/app/core/StatsigProvider'
 import { type DatadogAppNameTag } from 'src/app/datadog'
 import { onHashcashSolveCompleted, sessionInitAnalytics } from 'src/app/features/sessions/analytics'
+import { createStatsigGatedHashcashSolver } from 'src/app/features/sessions/createStatsigGatedHashcashSolver'
 import { useOnCrashAppStateResetter } from 'src/store/appStateResetter'
 import { getReduxStore } from 'src/store/store'
 import { createHashcashWorker } from 'src/workers/hashcashWorker'
@@ -46,10 +45,10 @@ const provideSessionInitializationService = (): SessionInitializationService => 
   // Turnstile is web-only; the extension stubs it with a mock.
   solvers.set(ChallengeType.TURNSTILE, createTurnstileMockSolver())
 
-  if (getIsHashcashSolverEnabled()) {
-    solvers.set(
-      ChallengeType.HASHCASH,
-      createHashcashSolver({
+  solvers.set(
+    ChallengeType.HASHCASH,
+    createStatsigGatedHashcashSolver({
+      realSolver: createHashcashSolver({
         performanceTracker,
         // Vite dev serves workers from the dev-server origin, cross-origin to chrome-extension:// — Chrome kills
         // the renderer (DWH_INVALID_SCRIPT_URL_ORIGIN). Solve on the main thread in dev; builds bundle it same-origin.
@@ -69,10 +68,9 @@ const provideSessionInitializationService = (): SessionInitializationService => 
         onSolveCompleted: onHashcashSolveCompleted,
         getLogger,
       }),
-    )
-  } else {
-    solvers.set(ChallengeType.HASHCASH, createHashcashMockSolver())
-  }
+      mockSolver: createHashcashMockSolver(),
+    }),
+  )
 
   return createSessionInitializationService({
     getSessionService: () =>
@@ -103,17 +101,15 @@ function BaseAppContainerInner({ children }: PropsWithChildren): JSX.Element {
         <ErrorBoundaryWrapper>
           <LanguageSync />
           <TailwindThemeSync />
-          <GraphqlProvider>
-            <BlankUrlProvider>
-              <LocalizationContextProvider>
-                <TraceUserProperties />
-                <StatsigUserIdentifiersUpdater />
-                <PoolsBalanceCoachmarkStateInit />
-                <ApiInit getSessionInitService={provideSessionInitializationService} />
-                {children}
-              </LocalizationContextProvider>
-            </BlankUrlProvider>
-          </GraphqlProvider>
+          <BlankUrlProvider>
+            <LocalizationContextProvider>
+              <TraceUserProperties />
+              <StatsigUserIdentifiersUpdater />
+              <PoolsBalanceCoachmarkStateInit />
+              <ApiInit getSessionInitService={provideSessionInitializationService} />
+              {children}
+            </LocalizationContextProvider>
+          </BlankUrlProvider>
         </ErrorBoundaryWrapper>
       </SharedWalletProvider>
     </I18nextProvider>

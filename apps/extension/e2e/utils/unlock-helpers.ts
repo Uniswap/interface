@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test'
+import { TestID } from '@universe/test'
 import { isVisibleWithin } from 'e2e/utils/locator-helpers'
 import { TEST_PASSWORD } from 'e2e/utils/onboarding-helpers'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 /**

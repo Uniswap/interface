@@ -115,7 +115,7 @@ function pressUpdate(): void {
 describe(QrCodeSelectionHandler, () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    mockUseCurrencyInfoWithLoading.mockReturnValue({ currencyInfo, loading: false })
+    mockUseCurrencyInfoWithLoading.mockReturnValue({ data: currencyInfo, isLoading: false })
     mockGetTokenWarningSeverity.mockReturnValue(WarningSeverity.None)
   })
 
@@ -160,7 +160,7 @@ describe(QrCodeSelectionHandler, () => {
   })
 
   it('clears an unavailable initial QR selection', async () => {
-    mockUseCurrencyInfoWithLoading.mockReturnValue({ currencyInfo: undefined, loading: false })
+    mockUseCurrencyInfoWithLoading.mockReturnValue({ data: undefined, isLoading: false })
 
     renderInitialSelection()
 
@@ -169,10 +169,10 @@ describe(QrCodeSelectionHandler, () => {
   })
 
   it('does not auto-apply after a loading initial selection is reclassified as a change', () => {
-    mockUseCurrencyInfoWithLoading.mockReturnValue({ currencyInfo: undefined, loading: true })
+    mockUseCurrencyInfoWithLoading.mockReturnValue({ data: undefined, isLoading: true })
     const { rerender } = render(initialSelection())
 
-    mockUseCurrencyInfoWithLoading.mockReturnValue({ currencyInfo, loading: false })
+    mockUseCurrencyInfoWithLoading.mockReturnValue({ data: currencyInfo, isLoading: false })
     rerender(
       <QrCodeSelectionHandler
         selection={{
@@ -298,7 +298,7 @@ describe(QrCodeSelectionHandler, () => {
   })
 
   it('explains when the QR token cannot be loaded and keeps Update disabled', () => {
-    mockUseCurrencyInfoWithLoading.mockReturnValue({ currencyInfo: undefined, loading: false })
+    mockUseCurrencyInfoWithLoading.mockReturnValue({ data: undefined, isLoading: false })
     renderWarning(QrCodeSelectionChangeType.Token)
 
     expect(screen.getByText('send.qrCodeSelection.warning.token.unavailable')).toBeTruthy()

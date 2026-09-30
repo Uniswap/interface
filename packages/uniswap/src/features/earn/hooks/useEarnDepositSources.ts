@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
 import {
   getFreshPortfolioBalanceData,
   hasFreshEnoughPortfolioBalanceData,
@@ -10,6 +9,7 @@ import {
 } from 'uniswap/src/features/earn/depositSources'
 import type { EarnDepositSourceOption, EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
+import { useMultichainCurrencyInfos } from 'uniswap/src/features/tokens/useMultichainCurrencyInfos'
 import { areCurrencyIdsEqual } from 'uniswap/src/utils/currencyId'
 
 type UseEarnDepositSourcesParams = {
@@ -57,7 +57,7 @@ export function useEarnDepositSources({
     data: tokenProject,
     error: tokenProjectError,
     refetch: refetchTokenProjects,
-  } = useTokenProjects(projectQueryIds)
+  } = useMultichainCurrencyInfos(projectQueryIds)
   const projectCurrencyIds = useMemo(() => tokenProject?.map((info) => info.currencyId) ?? [], [tokenProject])
 
   const portfolio = usePortfolioBalances({
@@ -133,7 +133,7 @@ export function useEarnDepositSources({
 
   const balanceLookupHasData =
     !shouldSkipLookups && portfolio.data !== undefined && hasFreshEnoughPortfolioData && tokenProject !== undefined
-  const balanceLookupErrored = portfolio.error !== undefined || tokenProjectError !== undefined
+  const balanceLookupErrored = portfolio.error !== undefined || tokenProjectError !== null
   const canUseErroredLookupAsSettled = minimumBalanceDataUpdatedAtMs === undefined
   const balanceLookupSettled =
     balanceLookupHasData ||
@@ -142,7 +142,7 @@ export function useEarnDepositSources({
     shouldSkipLookups
   const refetchBalanceLookup = useCallback(() => {
     refetchPortfolioBalances()
-    refetchTokenProjects?.()
+    void refetchTokenProjects()
   }, [refetchPortfolioBalances, refetchTokenProjects])
 
   return {

@@ -105,6 +105,7 @@ describe('VirtualList (native)', () => {
         showsVerticalScrollIndicator={false}
         style={{ className: 'h-full', style: { flex: 1 } }}
         testID="universal-list"
+        trackRowViewability
       />,
     )
 
@@ -142,6 +143,7 @@ describe('VirtualList (native)', () => {
       showsVerticalScrollIndicator: false,
       style: { flex: 1 },
       testID: 'universal-list',
+      viewabilityConfig: { id: 'row', itemVisiblePercentThreshold: 0 },
     })
   })
 

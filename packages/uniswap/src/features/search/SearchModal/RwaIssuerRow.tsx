@@ -28,6 +28,8 @@ export type RwaIssuerRowProps = Omit<RenderIssuerRowArgs, 'issuer'> & {
    *  picker (web: RwaMultichainCopyButton; mobile: MultichainAddressSheet). Single chain or undefined →
    *  single-address Copy. RWAs are ERC-20 on every chain → entries are never native. */
   issuerChainTokens?: ChainToken[]
+  /** Render the plain row with no `…` / right-click / long-press menu even when `currencyInfo` has resolved. */
+  hideContextMenu?: boolean
 }
 
 // Not memo()'d: the parent passes a fresh `children` element + `onPress` (+ `menuControl`) every render, so a
@@ -38,6 +40,7 @@ export function RwaIssuerRow({
   ownsTouchable,
   currencyInfo,
   issuerChainTokens,
+  hideContextMenu = false,
   menuControl,
   children,
   modifierPressHref,
@@ -107,7 +110,7 @@ export function RwaIssuerRow({
     // are useCallback-stable; keep menuControl.closeMenu a bare setFalse reference to preserve this.
   }, [hasMultipleChains, closeMenu, openAddressSheet])
 
-  if (!currencyInfo) {
+  if (!currencyInfo || hideContextMenu) {
     // No menu: expanded sub-row still needs its own tap target; collapsed row's tap is the shell's.
     return ownsTouchable ? (
       <TouchableArea modifierPressHref={modifierPressHref} onModifierPress={onModifierPress} onPress={onPress}>

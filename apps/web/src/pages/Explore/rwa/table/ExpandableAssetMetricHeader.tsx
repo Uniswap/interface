@@ -1,9 +1,8 @@
 import { Text } from '@universe/mycelium'
-import { useTranslation } from 'react-i18next'
 import { HeaderCell } from '~/components/Table/styled'
 import type { OrderDirection } from '~/data/util'
 import { ExpandableAssetMetricHeaderTooltip } from '~/pages/Explore/rwa/table/ExpandableAssetMetricHeaderTooltip'
-import { getStocksSortMethodLabel } from '~/pages/Explore/rwa/table/stocksSortMethodLabels'
+import { useStocksSortMethodLabel } from '~/pages/Explore/rwa/table/stocksSortMethodLabels'
 import { StocksTableHeader } from '~/pages/Explore/rwa/table/StocksTableHeader'
 import type { StocksSortMethod } from '~/pages/Explore/rwa/table/stocksTableSortStore'
 
@@ -25,14 +24,14 @@ export function ExpandableAssetMetricHeader({
   /** Volume sort header omits justifyContent to match Tokens table layout. */
   omitSortableJustify?: boolean
 }): JSX.Element {
-  const { t } = useTranslation()
+  const label = useStocksSortMethodLabel(sortMethod)
 
   if (!enableSorting) {
     return (
       <HeaderCell justifyContent={justifyContent}>
         <ExpandableAssetMetricHeaderTooltip category={sortMethod}>
           <Text variant="body3" color="$neutral2" fontWeight="500">
-            {getStocksSortMethodLabel({ t, category: sortMethod })}
+            {label}
           </Text>
         </ExpandableAssetMetricHeaderTooltip>
       </HeaderCell>

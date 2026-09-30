@@ -82,7 +82,11 @@ const rwaArrayRow: RwaTokenOption[] = [
 
 describe('tagRwaTokenSelectorSections', () => {
   it('tags a matching single token row with its category, clean name, and issuer slug', () => {
-    const out = tagRwaTokenSelectorSections({ sections: [section([token(MAINNET, '0xa', 'TSLAON')])], rwaIndex: index })
+    const out = tagRwaTokenSelectorSections({
+      sections: [section([token(MAINNET, '0xa', 'TSLAON')])],
+      rwaIndex: index,
+      plainTokenNames: false,
+    })
     expect((out?.[0]?.data[0] as TokenOption).rwaCategory).toBe(RwaCategory.STOCKS)
     expect((out?.[0]?.data[0] as TokenOption).rwaName).toBe('Tesla')
     expect((out?.[0]?.data[0] as TokenOption).rwaIssuerSlug).toBe('ondo')
@@ -92,6 +96,7 @@ describe('tagRwaTokenSelectorSections', () => {
     const out = tagRwaTokenSelectorSections({
       sections: [section([token(MAINNET, '0xb', 'IVV')])],
       rwaIndex: etfsIndex,
+      plainTokenNames: false,
     })
     expect((out?.[0]?.data[0] as TokenOption).rwaCategory).toBe(RwaCategory.ETFS)
   })
@@ -100,6 +105,7 @@ describe('tagRwaTokenSelectorSections', () => {
     const out = tagRwaTokenSelectorSections({
       sections: [section([token(MAINNET, '0xc', 'RWA1')])],
       rwaIndex: uncategorizedIndex,
+      plainTokenNames: false,
     })
     expect((out?.[0]?.data[0] as TokenOption).rwaCategory).toBe(RwaCategory.UNSPECIFIED)
   })
@@ -108,13 +114,14 @@ describe('tagRwaTokenSelectorSections', () => {
     const out = tagRwaTokenSelectorSections({
       sections: [section([token(MAINNET, '0xa', 'TSLAON', 5)])],
       rwaIndex: index,
+      plainTokenNames: false,
     })
     expect((out?.[0]?.data[0] as TokenOption).rwaCategory).toBe(RwaCategory.STOCKS)
   })
 
   it('leaves a non-matching token untouched (same reference, no category)', () => {
     const generic = token(MAINNET, '0xother', 'PEPE')
-    const out = tagRwaTokenSelectorSections({ sections: [section([generic])], rwaIndex: index })
+    const out = tagRwaTokenSelectorSections({ sections: [section([generic])], rwaIndex: index, plainTokenNames: false })
     expect(out?.[0]?.data[0]).toBe(generic)
     expect((out?.[0]?.data[0] as TokenOption).rwaCategory).toBeUndefined()
   })
@@ -124,6 +131,7 @@ describe('tagRwaTokenSelectorSections', () => {
     const out = tagRwaTokenSelectorSections({
       sections: [section([token(MAINNET, '0xa', 'TSLAON'), rwaArrayRow, generic])],
       rwaIndex: index,
+      plainTokenNames: false,
     })
     expect((out?.[0]?.data[0] as TokenOption).rwaCategory).toBe(RwaCategory.STOCKS)
     expect(out?.[0]?.data[1]).toBe(rwaArrayRow) // array row untouched by reference
@@ -131,27 +139,33 @@ describe('tagRwaTokenSelectorSections', () => {
   })
 
   it('leaves array rows (token pills / stocks shelf) untouched by reference', () => {
-    const out = tagRwaTokenSelectorSections({ sections: [section([rwaArrayRow])], rwaIndex: index })
+    const out = tagRwaTokenSelectorSections({
+      sections: [section([rwaArrayRow])],
+      rwaIndex: index,
+      plainTokenNames: false,
+    })
     expect(out?.[0]?.data[0]).toBe(rwaArrayRow)
   })
 
   it('does not tag or throw on a native token', () => {
     const native = nativeToken(MAINNET)
-    const out = tagRwaTokenSelectorSections({ sections: [section([native])], rwaIndex: index })
+    const out = tagRwaTokenSelectorSections({ sections: [section([native])], rwaIndex: index, plainTokenNames: false })
     expect((out?.[0]?.data[0] as TokenOption).rwaCategory).toBeUndefined()
   })
 
   it('returns the same sections reference when a non-empty index matches nothing', () => {
     const sections = [section([token(MAINNET, '0xother', 'PEPE')])]
-    expect(tagRwaTokenSelectorSections({ sections, rwaIndex: index })).toBe(sections)
+    expect(tagRwaTokenSelectorSections({ sections, rwaIndex: index, plainTokenNames: false })).toBe(sections)
   })
 
   it('is a pass-through (same reference) when the index is empty', () => {
     const sections = [section([token(MAINNET, '0xa', 'TSLAON')])]
-    expect(tagRwaTokenSelectorSections({ sections, rwaIndex: EMPTY_INDEX })).toBe(sections)
+    expect(tagRwaTokenSelectorSections({ sections, rwaIndex: EMPTY_INDEX, plainTokenNames: false })).toBe(sections)
   })
 
   it('returns undefined sections unchanged', () => {
-    expect(tagRwaTokenSelectorSections({ sections: undefined, rwaIndex: index })).toBeUndefined()
+    expect(
+      tagRwaTokenSelectorSections({ sections: undefined, rwaIndex: index, plainTokenNames: false }),
+    ).toBeUndefined()
   })
 })

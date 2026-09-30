@@ -12,7 +12,9 @@ import { getGetTokenHistoryOHLCQueryOptions } from 'uniswap/src/data/apiClients/
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { toRestHistoryDuration } from 'uniswap/src/features/dataApi/tokenDetails/useTokenPriceHistoryRest'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { isQueryLoading } from 'utilities/src/reactQuery/isQueryLoading'
 import { PriceChartData } from '~/components/Charts/PriceChart'
 import {
   ChartQueryResult,
@@ -31,7 +33,7 @@ import { getTdpTokenPriceHistoryQueryOptions } from '~/pages/TokenDetails/tdpTok
 export type TokenPriceChartQueryVariables = {
   chain: GraphQLApi.Chain
   address?: string
-  duration: GraphQLApi.HistoryDuration
+  duration: HistoryDuration
   multichain: boolean
 }
 
@@ -84,6 +86,7 @@ export function useTokenPriceChartData({
   priceChartType,
   currentPriceOverride,
   disablePricePolling = false,
+  keepPreviousData = true,
 }: {
   variables: TokenPriceChartQueryVariables
   skip: boolean
@@ -91,6 +94,8 @@ export function useTokenPriceChartData({
   currentPriceOverride?: number
   /** Disables the legacy subgraph query's own 30s poll — pass true where a page heartbeat owns the price cadence (see useTokenPriceChartPanel). */
   disablePricePolling?: boolean
+  /** Set false to show a loading skeleton when the selected period changes. */
+  keepPreviousData?: boolean
 }): ChartQueryResult<PriceChartData, ChartType.PRICE> & { disableCandlestickUI: boolean } {
   const [fallback, enablePriceHistoryFallback] = useReducer(() => true, false)
   const isVisible = usePageVisibility()
@@ -123,29 +128,29 @@ export function useTokenPriceChartData({
   const restTarget = useRestHistoryTarget(variables)
   const useRestOhlc = priceChartType === PriceChartType.CANDLESTICK && !fallback
   const restCommonEnabled = !skip && !!restTarget
-  const {
-    data: restOhlcEntries,
-    isPending: restOhlcLoading,
-    isError: restOhlcError,
-  } = useQuery(
+  const restOhlcQuery = useQuery(
     getGetTokenHistoryOHLCQueryOptions({
       params: { target: restTarget, duration: toRestHistoryDuration(variables.duration) },
       enabled: restCommonEnabled && useRestOhlc,
+      keepPreviousData,
       select: selectOhlcChartData,
     }),
   )
-  const {
-    data: restPriceEntries,
-    isPending: restPriceLoading,
-    isError: restPriceError,
-  } = useQuery(
+  const restPriceQuery = useQuery(
     getTdpTokenPriceHistoryQueryOptions({
       target: restTarget,
       duration: variables.duration,
       enabled: restCommonEnabled && !useRestOhlc,
+      keepPreviousData,
       select: selectPriceChartData,
     }),
   )
+  const restOhlcEntries = restOhlcQuery.data
+  const restPriceEntries = restPriceQuery.data
+  const restOhlcLoading = isQueryLoading(restOhlcQuery)
+  const restPriceLoading = isQueryLoading(restPriceQuery)
+  const restOhlcError = restOhlcQuery.isError
+  const restPriceError = restPriceQuery.isError
 
   return useMemo(() => {
     let restEntries = useRestOhlc ? (restOhlcEntries ?? []) : (restPriceEntries ?? [])

@@ -13,7 +13,9 @@ function toChartData(points: readonly PlainMessage<ChartPoint>[] | undefined): C
   if (!points || points.length === 0) {
     return []
   }
-  return points.map((point) => ({ timestamp: Number(point.timestamp), value: point.value }))
+  return points
+    .map((point) => ({ timestamp: Number(point.timestamp), value: point.value }))
+    .sort((a, b) => a.timestamp - b.timestamp)
 }
 
 export function usePortfolioChartData({

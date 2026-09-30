@@ -1,4 +1,3 @@
-import { type ApolloClient, useApolloClient } from '@apollo/client'
 import { type Dispatch } from '@reduxjs/toolkit'
 import { type QueryClient, useQueryClient } from '@tanstack/react-query'
 import { useMemo } from 'react'
@@ -16,11 +15,9 @@ import { resetUser } from '~/state/user/reducer'
  */
 export function createWebAppStateResetter({
   dispatch,
-  apolloClient,
   queryClient,
 }: {
   dispatch: Dispatch
-  apolloClient: ApolloClient<unknown>
   queryClient: QueryClient
 }): AppStateResetter {
   const logger = createLogger('appResetter.tsx', 'createWebAppStateResetter')
@@ -39,21 +36,14 @@ export function createWebAppStateResetter({
     },
 
     onResetQueryCaches: async () => {
-      await Promise.all([
-        apolloClient.resetStore().then(() => logger.info('Apollo cache cleared successfully')),
-        queryClient.resetQueries().then(() => logger.info('React Query cache cleared successfully')),
-      ])
+      await queryClient.resetQueries().then(() => logger.info('React Query cache cleared successfully'))
     },
   })
 }
 
 export function useAppStateResetter(): AppStateResetter {
   const dispatch = useDispatch()
-  const apolloClient = useApolloClient()
   const queryClient = useQueryClient()
 
-  return useMemo(
-    () => createWebAppStateResetter({ dispatch, apolloClient, queryClient }),
-    [dispatch, apolloClient, queryClient],
-  )
+  return useMemo(() => createWebAppStateResetter({ dispatch, queryClient }), [dispatch, queryClient])
 }

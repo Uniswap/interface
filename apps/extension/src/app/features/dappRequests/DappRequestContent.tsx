@@ -3,6 +3,7 @@ import type { UniverseChainId } from '@universe/chains'
 import { Button, Flex, type SpaceTokens, Text } from '@universe/mycelium'
 import { ENTER_PRESET_CLASSES } from '@universe/mycelium/compat'
 import { Presence } from '@universe/mycelium/presence'
+import { TestID } from '@universe/test'
 import { type PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -18,7 +19,6 @@ import { DappRequestType } from 'uniswap/src/features/dappRequests/types'
 import { useChainGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToken'
 import { hasGasEstimationFailed, hasSufficientGasBalance } from 'uniswap/src/features/gas/utils'
 import { type TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { extractNameFromUrl } from 'utilities/src/format/extractNameFromUrl'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -26,6 +26,7 @@ import { useThrottledCallback } from 'utilities/src/react/useThrottledCallback'
 import { MAX_HIDDEN_CALLS_BY_DEFAULT } from 'wallet/src/components/BatchedTransactions/BatchedTransactionDetails'
 import { DappRequestHeader } from 'wallet/src/components/dappRequests/DappRequestHeader'
 import { WarningBox } from 'wallet/src/components/WarningBox/WarningBox'
+import { safeNormalizeSendCalls } from 'wallet/src/features/batchedTransactions/normalizeSendCalls'
 import { useSiteVerification } from 'wallet/src/features/dappRequests/hooks/useSiteVerification'
 import { type DappVerificationStatus } from 'wallet/src/features/dappRequests/types'
 import { AddressFooter } from 'wallet/src/features/transactions/TransactionRequest/AddressFooter'
@@ -141,6 +142,18 @@ export function DappRequestContent({
 
 const WINDOW_CLOSE_DELAY = 10
 
+function getNativeValueForBalanceCheck(request: DappRequest): string | undefined {
+  // Persisted requests can predate intake normalization (e.g. a bare '0x' value for zero).
+  const normalizedCalls = request.type === DappRequestType.SendCalls ? safeNormalizeSendCalls(request.calls) : undefined
+  const firstTransaction =
+    request.type === DappRequestType.SendTransaction
+      ? request.transaction
+      : normalizedCalls?.ok
+        ? normalizedCalls.calls[0]
+        : undefined
+  return firstTransaction?.value?.toString()
+}
+
 function DappRequestFooter({
   chainId,
   connectedAccountAddress,
@@ -185,10 +198,14 @@ function DappRequestFooter({
   const isRequestConfirming = useIsDappRequestConfirming(request.dappRequest.requestId)
   const isRequestStale = useIsRequestStale(request.createdAt)
 
+  const nativeValue = getNativeValueForBalanceCheck(request.dappRequest)
+
   const hasSufficientGas = hasSufficientGasBalance({
     chainId: currentChainId,
     gasBalance,
     gasFee: transactionGasFeeResult?.value,
+    // Later calls can spend funds received earlier in the batch.
+    spend: nativeValue ? { kind: 'raw-native-value', value: nativeValue } : undefined,
   })
 
   const shouldCloseSidebar = request.isSidebarClosed && totalRequestCount <= 1

@@ -8,7 +8,6 @@ export enum Experiments {
   EthAsErc20UniswapX = 'eth_as_erc20_uniswapx_experiment',
   NativeTokenPercentageBuffer = 'lp_native_buffer',
   SwapConfirmation = 'swap-confirmation',
-  TokenCategories = 'token_categories_experiment',
   V2EndpointsSearch = 'v2_endpoints_search_experiment',
 }
 
@@ -46,12 +45,7 @@ export enum SwapConfirmationProperties {
 // Discovery Layer experiment properties
 
 export enum DiscoveryLayerProperties {
-  TokenCategoriesEnabled = 'tokenCategoriesEnabled',
   V2EndpointsSearchEnabled = 'v2EndpointsSearchEnabled',
-}
-
-export enum TokenCategoriesProperties {
-  TokenCategoriesEnabled = DiscoveryLayerProperties.TokenCategoriesEnabled,
 }
 
 export enum V2EndpointsSearchProperties {
@@ -76,7 +70,6 @@ export type ExperimentProperties = {
   [Experiments.EthAsErc20UniswapX]: EthAsErc20UniswapXProperties
   [Experiments.NativeTokenPercentageBuffer]: NativeTokenPercentageBufferProperties
   [Experiments.SwapConfirmation]: SwapConfirmationProperties
-  [Experiments.TokenCategories]: TokenCategoriesProperties
   [Experiments.V2EndpointsSearch]: V2EndpointsSearchProperties
 }
 

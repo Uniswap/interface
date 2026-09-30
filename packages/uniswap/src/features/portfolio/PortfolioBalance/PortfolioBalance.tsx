@@ -3,6 +3,7 @@ import type { UniverseChainId } from '@universe/chains'
 import { isWebPlatform } from '@universe/environment'
 import { Flex, spacing, Text } from '@universe/mycelium'
 import { useIsDarkMode } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
@@ -27,7 +28,6 @@ import {
 } from 'uniswap/src/features/portfolio/PortfolioBalance/getPortfolioRelativeChangeDisplay'
 import { PortfolioBalanceRefreshButton } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioBalanceRefreshButton'
 import { PortfolioRelativeChange } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioRelativeChange'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 
 interface PortfolioBalanceProps {

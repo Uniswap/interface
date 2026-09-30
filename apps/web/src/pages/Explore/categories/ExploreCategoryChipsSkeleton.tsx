@@ -1,9 +1,9 @@
 import { Flex } from '@universe/mycelium'
 import { LoadingBubble } from '~/components/Tokens/loading'
 
-/** Approximate rendered widths of the default chip row (Popular + spotlit head), then the All chip. */
-const CHIP_SKELETON_WIDTHS = [104, 96, 88, 120, 80]
-const ALL_CHIP_SKELETON_WIDTH = 72
+/** Approximate rendered widths of the default chip row (All + spotlit head), then the More chip. */
+const CHIP_SKELETON_WIDTHS = [72, 96, 88, 120, 80]
+const MORE_CHIP_SKELETON_WIDTH = 88
 /** FilterChip's fixed height, so the row doesn't shift when the chips land. */
 const CHIP_HEIGHT = '$spacing36'
 
@@ -19,7 +19,7 @@ export function ExploreCategoryChipsSkeleton(): JSX.Element {
         <ChipSkeleton key={index} width={width} />
       ))}
       <Flex height="$spacing16" width={1} backgroundColor="$surface3" flexShrink={0} />
-      <ChipSkeleton width={ALL_CHIP_SKELETON_WIDTH} />
+      <ChipSkeleton width={MORE_CHIP_SKELETON_WIDTH} />
     </Flex>
   )
 }

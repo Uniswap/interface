@@ -76,7 +76,7 @@ const REST_ATTACK_TYPES: Partial<Record<RestAttackType, AttackType>> = {
 
 export function getCurrencySafetyInfo(
   safetyLevel?: GraphQLApi.SafetyLevel,
-  protectionInfo?: NonNullable<GraphQLApi.TokenQuery['token']>['protectionInfo'],
+  protectionInfo?: Maybe<Pick<GraphQLApi.ProtectionInfo, 'result' | 'attackTypes' | 'blockaidFees'>>,
 ): SafetyInfo {
   return {
     tokenList: getTokenListFromSafetyLevel(fromGraphQLSafetyLevel(safetyLevel)),

@@ -1,3 +1,4 @@
+import { TestID } from '@universe/test'
 import { useMemo } from 'react'
 import { OffHoursWarningCard } from 'uniswap/src/features/rwa/OffHoursWarningCard'
 import { getRWACandidatesFromCurrency } from 'uniswap/src/features/rwa/rwaCandidates'
@@ -5,7 +6,6 @@ import { useIsEquityOffHours } from 'uniswap/src/features/rwa/useIsEquityOffHour
 import { useRWAMatch } from 'uniswap/src/features/rwa/useRWAMatch'
 import { useGeoRestrictionMode } from 'uniswap/src/features/transactions/swap/hooks/useGeoRestrictionMode'
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 // Same off-hours card as the TDP, keyed off the tokens currently selected in the swap form.

@@ -82,11 +82,8 @@ const DEPLOYABLE_PROJECTS: DeployableProject[] = [
     vercelProject: 'dev-portal',
     projectId: 'prj_ZUGIdLPpK4CSWPXPhGBZhfdlDD1f',
   },
-  {
-    name: '@universe/mission-control',
-    vercelProject: 'mission-control',
-    projectId: 'prj_MUwyKPitZxg6x23tATdWj1MjtWHT',
-  },
+  // mission-control is intentionally absent: its session backend is only
+  // reachable from inside the VPC, so a Vercel preview cannot log in.
 ]
 
 // stdout is reserved for the JSON matrix

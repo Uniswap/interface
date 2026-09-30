@@ -2,10 +2,10 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import { UniverseChainId } from '@universe/chains'
 import { Button, Flex, Switch, Text, TouchableArea } from '@universe/mycelium'
 import { X } from '@universe/mycelium/icons/X'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NetworkFilter } from '~/components/NetworkFilter/NetworkFilter'
 import {
   PoolFilterChip,

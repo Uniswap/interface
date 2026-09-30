@@ -1,21 +1,21 @@
 import { ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import { GraphQLApi } from '@universe/api'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 
-export function chartPeriodToHistoryDuration(period: ChartPeriod): GraphQLApi.HistoryDuration {
+export function chartPeriodToHistoryDuration(period: ChartPeriod): HistoryDuration {
   switch (period) {
     case ChartPeriod.HOUR:
-      return GraphQLApi.HistoryDuration.Hour
+      return HistoryDuration.Hour
     case ChartPeriod.DAY:
-      return GraphQLApi.HistoryDuration.Day
+      return HistoryDuration.Day
     case ChartPeriod.WEEK:
-      return GraphQLApi.HistoryDuration.Week
+      return HistoryDuration.Week
     case ChartPeriod.MONTH:
-      return GraphQLApi.HistoryDuration.Month
+      return HistoryDuration.Month
     case ChartPeriod.YEAR:
-      return GraphQLApi.HistoryDuration.Year
+      return HistoryDuration.Year
     case ChartPeriod.MAX:
-      return GraphQLApi.HistoryDuration.Max
+      return HistoryDuration.Max
     default:
-      return GraphQLApi.HistoryDuration.Day
+      return HistoryDuration.Day
   }
 }

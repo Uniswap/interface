@@ -1,11 +1,8 @@
 import { useTranslation } from 'react-i18next'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { NotFoundModal } from '~/components/NotFoundModal/NotFoundModal'
-import { useModalState } from '~/hooks/useModalState'
 
-export function PoolNotFoundModal() {
+export function PoolNotFoundModal({ isOpen, closeModal }: { isOpen: boolean; closeModal: () => void }) {
   const { t } = useTranslation()
-  const { isOpen, closeModal } = useModalState(ModalName.PoolNotFound)
 
   return (
     <NotFoundModal
@@ -16,5 +13,3 @@ export function PoolNotFoundModal() {
     />
   )
 }
-
-export default PoolNotFoundModal

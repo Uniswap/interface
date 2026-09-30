@@ -203,7 +203,7 @@ function buildSpotlitCategorySection({
     sectionId: getSpotlitCategorySectionId(category.id),
     categoryId: category.id,
     name: category.name,
-    icon: <Icon color="$neutral2" size="$icon.16" />,
+    icon: <Icon color="$neutral2" size="$icon.20" />,
     data: options,
   }
 }

@@ -12,6 +12,7 @@ import {
 import { AnimatedFlexCompat } from '@universe/mycelium/animated-flex-compat'
 import { Presence } from '@universe/mycelium/presence'
 import { fonts, spacing } from '@universe/mycelium/tokens'
+import { TestID } from '@universe/test'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { LayoutChangeEvent } from 'react-native'
@@ -35,7 +36,6 @@ import { useCanClaimUnitagName } from 'uniswap/src/features/unitags/hooks/useCan
 import { UnitagInfoModal } from 'uniswap/src/features/unitags/UnitagInfoModal'
 import { UnitagName } from 'uniswap/src/features/unitags/UnitagName'
 import { getYourNameString, normalizeUnitagUsernameInput } from 'uniswap/src/features/unitags/utils'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import {
   OnboardingScreens,
   SharedUnitagScreenParams,

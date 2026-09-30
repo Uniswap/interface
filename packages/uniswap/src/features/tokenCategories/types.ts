@@ -30,6 +30,8 @@ export interface TokenCategory {
   name: string
   description: string
   categoryClass: TokenCategoryClass
+  /** BE-declared: rows group by underlying asset with issuers beneath (Stocks/ETFs) rather than one row per token. */
+  grouped: boolean
   stats?: TokenCategoryStats
   topTokens: TokenCategoryTopToken[]
 }

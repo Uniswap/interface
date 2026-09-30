@@ -11,6 +11,10 @@ export function getSectionHeaderRowKey(sectionRowId: string): string {
   return `section-${sectionRowId}`
 }
 
+export function getSectionFooterRowKey(sectionRowId: string): string {
+  return `section-footer-${sectionRowId}`
+}
+
 export function getSectionItemRowKey({
   sectionRowId,
   itemKey,

@@ -42,7 +42,7 @@ vi.mock('uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2', as
 }))
 
 function category(id: string, name: string): TokenCategory {
-  return { id, name, description: '', categoryClass: TokenCategoryClass.Market, topTokens: [] }
+  return { id, name, description: '', categoryClass: TokenCategoryClass.Market, grouped: false, topTokens: [] }
 }
 
 vi.mock('uniswap/src/data/apiClients/dataApiService/categories/useAllTokenCategories', () => ({

@@ -1,5 +1,5 @@
 import { FeatureFlags, getFeatureFlagName } from '@universe/gating'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import { expect, getTest } from '~/playwright/fixtures'
 import { seedEmbeddedWalletState } from '~/playwright/fixtures/account'
 import { getVisibleDropdownElementByTestId } from '~/playwright/fixtures/utils'

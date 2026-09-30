@@ -1,6 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import { Flex, type FlexCompatProps, TouchableArea } from '@universe/mycelium'
 import { styled } from '@universe/mycelium/styled'
+import { TestID } from '@universe/test'
 import { forwardRef, type ForwardRefExoticComponent, PropsWithChildren, type RefAttributes } from 'react'
 import { ModalCloseIcon, useSporeColors } from 'ui/src'
 import { ReactComponent as ForConnectingBackground } from 'ui/src/assets/backgrounds/for-connecting-v2.svg'
@@ -57,9 +58,9 @@ export function ConnectingViewWrapper({
         </>
       )}
       <Flex flexDirection="row-reverse" alignItems="center" justifyContent="space-between" zIndex={2}>
-        {closeModal && <ModalCloseIcon testId="ConnectingViewWrapper-close" onClose={closeModal} />}
+        {closeModal && <ModalCloseIcon testId={TestID.ConnectingViewWrapperClose} onClose={closeModal} />}
         {onBack && (
-          <TouchableArea data-testid="ConnectingViewWrapper-back" onPress={onBack}>
+          <TouchableArea data-testid={TestID.ConnectingViewWrapperBack} onPress={onBack}>
             <ArrowLeft color="$neutral2" size="$icon.24" hoverColor="$neutral2Hovered" />
           </TouchableArea>
         )}

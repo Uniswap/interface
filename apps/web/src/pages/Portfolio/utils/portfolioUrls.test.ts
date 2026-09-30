@@ -4,7 +4,7 @@ import {
   SAMPLE_SEED_ADDRESS_2,
   SAMPLE_SEED_ADDRESS_3,
   SAMPLE_SEED_ADDRESS_4,
-} from 'uniswap/src/test/fixtures/gql/assets/constants'
+} from 'uniswap/src/test/fixtures/assets/constants'
 import { PortfolioTab } from '~/pages/Portfolio/types'
 import { buildPortfolioUrl, pathToPortfolioTab } from '~/pages/Portfolio/utils/portfolioUrls'
 

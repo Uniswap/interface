@@ -1,7 +1,7 @@
 import { TradingApi, V1_TRADING_API_PATHS } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
+import { TestID } from '@universe/test'
 import { UNI } from 'uniswap/src/constants/tokens'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { assume0xAddress, parseEther } from '~/chains'
 import { expect, getTest } from '~/playwright/fixtures'
 import { stubTradingApiEndpoint, widenSwapRequestSlippage } from '~/playwright/fixtures/tradingApi'

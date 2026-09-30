@@ -1,5 +1,6 @@
 import { isWebApp, isWebPlatform } from '@universe/environment'
 import { Button, type ButtonVariant, Flex } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useIsShortMobileDevice } from 'ui/src'
@@ -20,7 +21,6 @@ import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/permi
 import type { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isChained, isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import type { AppTFunction } from 'utilities/src/i18n/types'
 
 interface SubmitSwapButtonProps {

@@ -2,7 +2,7 @@ import { toCategoryOptions } from 'uniswap/src/features/search/SearchModal/categ
 import { type TokenCategory, TokenCategoryClass } from 'uniswap/src/features/tokenCategories/types'
 
 function makeCategory(id: string): TokenCategory {
-  return { id, name: id, description: '', categoryClass: TokenCategoryClass.Sector, topTokens: [] }
+  return { id, name: id, description: '', categoryClass: TokenCategoryClass.Sector, grouped: false, topTokens: [] }
 }
 
 const categories = [makeCategory('defi'), makeCategory('stablecoins'), makeCategory('gaming')]

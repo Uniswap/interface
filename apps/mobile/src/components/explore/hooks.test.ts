@@ -1,4 +1,3 @@
-import { GraphQLApi } from '@universe/api'
 import { NativeSyntheticEvent, Share } from 'react-native'
 import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import configureMockStore from 'redux-mock-store'
@@ -24,12 +23,6 @@ const mockNavigate = navigate as MockedFunction<typeof navigate>
 const tokenId = SAMPLE_SEED_ADDRESS_1
 const currencyId = `1-${tokenId}`
 
-const resolvers: GraphQLApi.Resolvers = {
-  Token: {
-    id: () => tokenId,
-  },
-}
-
 const mockStore = configureMockStore([thunk])
 
 describe(useExploreTokenContextMenu, () => {
@@ -45,7 +38,7 @@ describe(useExploreTokenContextMenu, () => {
 
   describe('editing favorite tokens', () => {
     it('renders proper context menu items when onEditFavorites is not provided', async () => {
-      const { result } = renderHookWithProviders(() => useExploreTokenContextMenu(tokenMenuParams), { resolvers })
+      const { result } = renderHookWithProviders(() => useExploreTokenContextMenu(tokenMenuParams))
 
       expect(result.current.menuActions).toEqual([
         expect.objectContaining({
@@ -70,9 +63,8 @@ describe(useExploreTokenContextMenu, () => {
 
     it('renders proper context menu items when onEditFavorites is provided', async () => {
       const onEditFavorites = vi.fn()
-      const { result } = renderHookWithProviders(
-        () => useExploreTokenContextMenu({ ...tokenMenuParams, onEditFavorites }),
-        { resolvers },
+      const { result } = renderHookWithProviders(() =>
+        useExploreTokenContextMenu({ ...tokenMenuParams, onEditFavorites }),
       )
 
       expect(result.current.menuActions).toEqual([
@@ -98,9 +90,8 @@ describe(useExploreTokenContextMenu, () => {
 
     it('calls onEditFavorites when edit favorites is pressed', async () => {
       const onEditFavorites = vi.fn()
-      const { result } = renderHookWithProviders(
-        () => useExploreTokenContextMenu({ ...tokenMenuParams, onEditFavorites }),
-        { resolvers },
+      const { result } = renderHookWithProviders(() =>
+        useExploreTokenContextMenu({ ...tokenMenuParams, onEditFavorites }),
       )
 
       const editFavoritesActionIndex = result.current.menuActions.findIndex(
@@ -121,7 +112,6 @@ describe(useExploreTokenContextMenu, () => {
         preloadedState: {
           favorites: { tokens: [normalizeCurrencyIdForMapLookup(tokenMenuParams.currencyId)] } as FavoritesState,
         },
-        resolvers,
       })
 
       expect(result.current.menuActions).toEqual([
@@ -153,7 +143,6 @@ describe(useExploreTokenContextMenu, () => {
         wallet: { accounts: {}, activeAccountAddress: null },
       })
       const { result } = renderHookWithProviders(() => useExploreTokenContextMenu(tokenMenuParams), {
-        resolvers,
         store,
       })
 
@@ -180,7 +169,6 @@ describe(useExploreTokenContextMenu, () => {
         wallet: { accounts: {}, activeAccountAddress: null },
       })
       const { result } = renderHookWithProviders(() => useExploreTokenContextMenu(tokenMenuParams), {
-        resolvers,
         store,
       })
 
@@ -209,7 +197,6 @@ describe(useExploreTokenContextMenu, () => {
     })
     const { result } = renderHookWithProviders(() => useExploreTokenContextMenu(tokenMenuParams), {
       store,
-      resolvers,
     })
 
     const swapActionIndex = result.current.menuActions.findIndex(
@@ -233,9 +220,7 @@ describe(useExploreTokenContextMenu, () => {
   })
 
   it('opens share modal when share is pressed', async () => {
-    const { result } = renderHookWithProviders(() => useExploreTokenContextMenu(tokenMenuParams), {
-      resolvers,
-    })
+    const { result } = renderHookWithProviders(() => useExploreTokenContextMenu(tokenMenuParams))
 
     vi.spyOn(Share, 'share')
 

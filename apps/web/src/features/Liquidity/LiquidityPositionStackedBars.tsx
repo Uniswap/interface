@@ -1,12 +1,12 @@
 import { Percent } from '@uniswap/sdk-core'
 import { Flex, Text } from '@universe/mycelium'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import { scaleLinear } from 'd3'
 import { useMemo } from 'react'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useSrcColor } from '~/hooks/useColor'
 
 type Bar = {

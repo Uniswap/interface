@@ -1,4 +1,3 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { call, fork, put, select, take, takeEvery } from 'typed-redux-saga'
 import { FORTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
@@ -30,11 +29,7 @@ import { watchTransaction } from 'wallet/src/features/transactions/watcher/watch
  * Main transaction watcher saga.
  * Orchestrates watching for new/updated transactions and forks specific watchers based on transaction type.
  */
-export function* transactionWatcher({
-  apolloClient,
-}: {
-  apolloClient: ApolloClient<NormalizedCacheObject>
-}): Generator<unknown> {
+export function* transactionWatcher(): Generator<unknown> {
   logger.debug('transactionWatcherSaga', 'transactionWatcher', 'Starting transaction watcher')
 
   // Start the order watcher to allow off-chain order updates to propagate to watchTransaction
@@ -92,7 +87,7 @@ export function* transactionWatcher({
         continue
       }
 
-      yield* fork(watchTransaction, { transaction, apolloClient })
+      yield* fork(watchTransaction, { transaction })
     }
   }
 
@@ -105,7 +100,7 @@ export function* transactionWatcher({
       if (isFORTransaction(transaction)) {
         yield* fork(watchFiatOnRampTransaction, transaction as FORTransactionDetails)
       } else {
-        yield* fork(watchTransaction, { transaction, apolloClient })
+        yield* fork(watchTransaction, { transaction })
       }
     } catch (error) {
       logger.error(error, {

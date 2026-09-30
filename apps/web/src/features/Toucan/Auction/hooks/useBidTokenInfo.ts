@@ -30,7 +30,7 @@ interface UseBidTokenInfoOptions {
 export function useBidTokenInfo({ bidTokenAddress, chainId, skip }: UseBidTokenInfoOptions): {
   bidTokenInfo: BidTokenInfo | undefined
   loading: boolean
-  error?: Error
+  error: Error | null
 } {
   const currencyId = useMemo(
     () => (chainId && bidTokenAddress ? buildCurrencyId(chainId, bidTokenAddress) : undefined),
@@ -38,8 +38,8 @@ export function useBidTokenInfo({ bidTokenAddress, chainId, skip }: UseBidTokenI
   )
 
   const {
-    currencyInfo,
-    loading: currencyLoading,
+    data: currencyInfo,
+    isLoading: currencyLoading,
     error: currencyError,
   } = useCurrencyInfoWithLoading(currencyId, {
     skip,

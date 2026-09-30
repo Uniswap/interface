@@ -112,11 +112,36 @@ exports[`TokenItem > renders without error 1`] = `
               class="css-view-175oi2r"
               style="gap: 4px; min-width: 70px;"
             >
-              <span
+              <div
+                class="css-view-175oi2r"
                 data-testid="token-item/price"
               >
-                -
-              </span>
+                <div
+                  class="css-view-175oi2r r-position-bnwqim"
+                >
+                  <div
+                    class="css-view-175oi2r"
+                    style="position: relative;"
+                  >
+                    <div
+                      class="css-view-175oi2r"
+                    >
+                      <div
+                        class="css-text-146c3p1"
+                        dir="auto"
+                        style="font-size: 19px; font-weight: 400; line-height: 24px; top: 1px; height: 24px; font-family: Basel Grotesk; color: rgb(19, 19, 19);"
+                      >
+                        -
+                      </div>
+                    </div>
+                    <span
+                      style="opacity: 0; position: absolute;"
+                    >
+                      -
+                    </span>
+                  </div>
+                </div>
+              </div>
               <div
                 class="css-view-175oi2r"
                 data-testid="relative-change"

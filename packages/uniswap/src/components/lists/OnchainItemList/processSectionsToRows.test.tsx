@@ -6,6 +6,7 @@ import {
   processSectionsToRows,
   toFlatRowIndex,
 } from 'uniswap/src/components/lists/OnchainItemList/processSectionsToRows'
+import { hasWebHeaderRow, toWebListRows } from 'uniswap/src/components/lists/OnchainItemList/rowInfo'
 import { type OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { benignSafetyInfo } from 'uniswap/src/test/fixtures'
@@ -194,6 +195,32 @@ describe('processSectionsToRows', () => {
     expect(header.data.section.name).toBeUndefined()
     expect(result).toHaveLength(2) // Should still process header + item
   })
+
+  it('appends a footer row after the section items and keeps it across rebuilds', () => {
+    const footerElement = <div>footer</div>
+    const sections = [
+      { ...createMockTokenSection(OnchainItemSectionName.Tokens), footerElement },
+      createMockTokenSection(OnchainItemSectionName.Pools),
+    ]
+
+    const rows = processSectionsToRows({ sections })
+
+    expect(rows.map((row) => row.type)).toEqual([
+      ProcessedRowType.Header,
+      ProcessedRowType.Item,
+      ProcessedRowType.Footer,
+      ProcessedRowType.Header,
+      ProcessedRowType.Item,
+    ])
+    const footer = rows[2]
+    expect(footer?.type === ProcessedRowType.Footer && footer.data.footerElement).toBe(footerElement)
+    // The next section's items are stamped past the footer row.
+    const nextItem = rows[4]
+    expect(nextItem?.type === ProcessedRowType.Item && nextItem.data.rowIndex).toBe(4)
+
+    const rebuilt = processSectionsToRows({ sections: [...sections], previousRows: rows })
+    expect(rebuilt[2]).toBe(footer)
+  })
 })
 
 describe('toFlatRowIndex', () => {
@@ -260,6 +287,43 @@ describe('toFlatRowIndex', () => {
         }
       })
     })
+  })
+
+  it('counts a preceding section footer', () => {
+    const sections = [
+      { ...section(OnchainItemSectionName.Tokens, 2), footerElement: <div /> },
+      section(OnchainItemSectionName.Pools, 1),
+    ]
+    const rows = processSectionsToRows({ sections })
+
+    const flatIndex = toFlatRowIndex({ sections, sectionIndex: 1, itemIndex: 1 })
+    expect(flatIndex).toBe(5)
+    expect(rows[flatIndex]?.type).toBe(ProcessedRowType.Item)
+  })
+
+  it('matches the web rows when a header has no row', () => {
+    const sections = [
+      section(OnchainItemSectionName.SuggestedTokens, 2),
+      { ...section(OnchainItemSectionName.Tokens, 2), footerElement: <div /> },
+      section(OnchainItemSectionName.Pools, 1),
+    ]
+    const rows = toWebListRows({ sections, renderItem: () => null })
+
+    sections.forEach((s, sectionIndex) => {
+      s.data.forEach((_, itemOrdinal) => {
+        const flatIndex = toFlatRowIndex({
+          sections,
+          sectionIndex,
+          itemIndex: itemOrdinal + 1,
+          hasHeaderRow: hasWebHeaderRow,
+        })
+        const row = rows[flatIndex]
+        expect(row && 'index' in row && row.index).toBe(itemOrdinal)
+        expect(row && 'item' in row && row.section.sectionKey).toBe(s.sectionKey)
+      })
+    })
+    // The headerless section's own itemIndex 0 clamps to its first item rather than going negative.
+    expect(toFlatRowIndex({ sections, sectionIndex: 0, itemIndex: 0, hasHeaderRow: hasWebHeaderRow })).toBe(0)
   })
 
   it('treats an empty section as its header alone', () => {

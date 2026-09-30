@@ -9,7 +9,6 @@ import WidgetKit
 import SwiftUI
 import Intents
 import WidgetsCore
-import Apollo
 import Charts
 
 let placeholderPriceHistory = [
@@ -37,7 +36,7 @@ let previewEntry = TokenPriceEntry(
   backgroundColor: ColorExtraction.extractImageColorWithSpecialCase(
     imageURL: "https://token-icons.s3.amazonaws.com/eth.png"
   ),
-  tokenPriceHistory: TokenPriceHistoryResponse(priceHistory: placeholderPriceHistory, price: 2165, pricePercentChange24h: -9.87)
+  tokenPriceHistory: TokenPriceHistoryResponse(priceHistory: placeholderPriceHistory)
 )
 
 let placeholderEntry = TokenPriceEntry(
@@ -61,16 +60,17 @@ struct Provider: IntentTimelineProvider {
   
   func getEntry(configuration: TokenPriceConfigurationIntent, context: Context, isSnapshot: Bool) async throws -> TokenPriceEntry {
     let entryDate = Date()
-    async let tokenPriceRequest = isSnapshot ?
-      await DataQueries.fetchTokenPriceData(chain: WidgetConstants.ethereumChain, address: nil) :
-      await DataQueries.fetchTokenPriceData(chain: configuration.selectedToken?.chain ?? "", address: configuration.selectedToken?.address)
-    async let conversionRequest = await DataQueries.fetchCurrencyConversion(
+    let chain = isSnapshot ? WidgetConstants.ethereumChain : configuration.selectedToken?.chain ?? WidgetConstants.ethereumChain
+    let address = isSnapshot ? nil : configuration.selectedToken?.address
+    async let tokenPriceRequest = DataQueries.fetchTokenPriceData(chain: chain, address: address)
+    async let tokenPriceHistoryRequest = DataQueries.fetchTokenPriceHistoryData(chain: chain, address: address)
+    async let conversionRequest = DataQueries.fetchCurrencyConversion(
       toCurrency: UniswapUserDefaults.readI18n().currency)
-    
-    let (tokenPriceResponse, conversionResponse) = try await (tokenPriceRequest, conversionRequest)
-    
+
+    let (tokenPriceResponse, tokenPriceHistory, conversionResponse) = try await (tokenPriceRequest, tokenPriceHistoryRequest, conversionRequest)
+
     let spotPrice = tokenPriceResponse.spotPrice != nil ?
-    tokenPriceResponse.spotPrice! * conversionResponse.convertedAmount.value : nil 
+    tokenPriceResponse.spotPrice! * conversionResponse.convertedAmount.value : nil
     let pricePercentChange = tokenPriceResponse.pricePercentChange
     let symbol = tokenPriceResponse.symbol
     let logo = UIImage(url: URL(string: tokenPriceResponse.logoUrl ?? ""))
@@ -78,22 +78,13 @@ struct Provider: IntentTimelineProvider {
     if let logoUrl = tokenPriceResponse.logoUrl {
       backgroundColor = ColorExtraction.extractImageColorWithSpecialCase(imageURL: logoUrl)
     }
-    var tokenPriceHistory: TokenPriceHistoryResponse? = nil
-    
-    tokenPriceHistory = isSnapshot ?
-    try await DataQueries.fetchTokenPriceHistoryData(
-      chain: WidgetConstants.ethereumChain,
-      address: nil) :
-    try await DataQueries.fetchTokenPriceHistoryData(
-      chain: configuration.selectedToken?.chain ?? WidgetConstants.ethereumChain,
-      address: configuration.selectedToken?.address)
-    
+
     return TokenPriceEntry(
       date: entryDate,
       configuration: configuration,
       currency: fiatCurrencyCodeByInt[conversionResponse.convertedAmount.currency] ?? "USD",
-      spotPrice: tokenPriceHistory?.price ?? spotPrice,
-      pricePercentChange: tokenPriceHistory?.pricePercentChange24h ?? pricePercentChange,
+      spotPrice: spotPrice,
+      pricePercentChange: pricePercentChange,
       symbol: symbol,
       logo: logo,
       backgroundColor: backgroundColor,
@@ -101,21 +92,46 @@ struct Provider: IntentTimelineProvider {
     )
   }
   
+  /// Entry rendered when fetching fails (network error, or a chain the app hasn't synced to the widget yet).
+  /// Keeps the configured symbol and shows price placeholders; the timeline retries on its normal cadence.
+  func fallbackEntry(configuration: TokenPriceConfigurationIntent) -> TokenPriceEntry {
+    return TokenPriceEntry(
+      date: Date(),
+      configuration: configuration,
+      currency: UniswapUserDefaults.readI18n().currency,
+      spotPrice: nil,
+      pricePercentChange: nil,
+      symbol: configuration.selectedToken?.symbol ?? "",
+      logo: nil,
+      backgroundColor: nil,
+      tokenPriceHistory: nil
+    )
+  }
+
   func placeholder(in context: Context) -> TokenPriceEntry {
     return placeholderEntry
   }
-  
+
   func getSnapshot(for configuration: TokenPriceConfigurationIntent, in context: Context, completion: @escaping (TokenPriceEntry) -> ()) {
     Task {
-      let entry = try await getEntry(configuration: configuration, context: context, isSnapshot: true)
-      completion(entry)
+      do {
+        completion(try await getEntry(configuration: configuration, context: context, isSnapshot: true))
+      } catch {
+        completion(placeholderEntry)
+      }
     }
   }
-  
+
   func getTimeline(for configuration: TokenPriceConfigurationIntent, in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
     Metrics.logWidgetConfigurationChange()
     Task {
-      let entry = try await getEntry(configuration: configuration, context: context, isSnapshot: false)
+      // An uncaught throw here would leave completion uncalled and the widget frozen on stale content.
+      let entry: TokenPriceEntry
+      do {
+        entry = try await getEntry(configuration: configuration, context: context, isSnapshot: false)
+      } catch {
+        entry = fallbackEntry(configuration: configuration)
+      }
       let nextDate = Calendar.current.date(byAdding: .minute, value: refreshMinutes, to: entry.date)!
       let timeline = Timeline(entries: [entry], policy: .after(nextDate))
       completion(timeline)

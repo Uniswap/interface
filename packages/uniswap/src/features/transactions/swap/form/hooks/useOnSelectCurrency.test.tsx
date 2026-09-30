@@ -24,7 +24,6 @@ import { SwapFormStoreContext } from 'uniswap/src/features/transactions/swap/sto
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { uniswapReducer } from 'uniswap/src/state/uniswapReducer'
-import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
 import { mockUniswapContext } from 'uniswap/src/test/render'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
@@ -56,28 +55,26 @@ function makeWrapper(
   return function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     const store = configureStore({ reducer: uniswapReducer })
     return (
-      <AutoMockedApolloProvider>
-        <ReduxProvider store={store}>
-          <UniswapProvider {...mockUniswapContext}>
-            <UrlContext.Provider value={{ useParsedQueryString: () => ({}) as ParsedQs, usePathname: () => '' }}>
-              <SharedPersistQueryClientProvider>
-                <TransactionModalContext.Provider
-                  value={{
-                    bottomSheetViewStyles: {},
-                    onClose: () => {},
-                    screen: TransactionScreen.Form,
-                    setScreen: () => {},
-                    tdpCurrency,
-                    onCurrencyChange,
-                  }}
-                >
-                  <SwapFormStoreProvider>{children}</SwapFormStoreProvider>
-                </TransactionModalContext.Provider>
-              </SharedPersistQueryClientProvider>
-            </UrlContext.Provider>
-          </UniswapProvider>
-        </ReduxProvider>
-      </AutoMockedApolloProvider>
+      <ReduxProvider store={store}>
+        <UniswapProvider {...mockUniswapContext}>
+          <UrlContext.Provider value={{ useParsedQueryString: () => ({}) as ParsedQs, usePathname: () => '' }}>
+            <SharedPersistQueryClientProvider>
+              <TransactionModalContext.Provider
+                value={{
+                  bottomSheetViewStyles: {},
+                  onClose: () => {},
+                  screen: TransactionScreen.Form,
+                  setScreen: () => {},
+                  tdpCurrency,
+                  onCurrencyChange,
+                }}
+              >
+                <SwapFormStoreProvider>{children}</SwapFormStoreProvider>
+              </TransactionModalContext.Provider>
+            </SharedPersistQueryClientProvider>
+          </UrlContext.Provider>
+        </UniswapProvider>
+      </ReduxProvider>
     )
   }
 }

@@ -14,8 +14,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "Apple",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -31,8 +31,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "Google",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -48,8 +48,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "{{amount}} UNI",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -133,8 +133,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "Permit",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -150,8 +150,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "Uniswap v2",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -167,8 +167,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "Uniswap v3",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -184,8 +184,25 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "Uniswap v4",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ko-KR:i18next-json:dapp.request.amountUnavailable",
+      {
+        "unitId": "dapp.request.amountUnavailable",
+        "providerId": "i18next-json",
+        "locale": "ko-KR",
+        "domain": "product-ui",
+        "sourceHash": "6ea97c53df001e76387ca3cd2a57c61aa2ffa0e12d752ff4f445556b31edd0b1",
+        "glossaryHash": "f2d40aeb84e3afd761b18554926d9e85297f09a603c5442e9fcd5805b950a9f2",
+        "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
+        "translation": "금액 확인 불가",
+        "status": "clean",
+        "agentRunId": "ko-KR-2026-09-18T15-34-03Z",
+        "approvedAt": "2026-09-18T15:34:03.340Z",
         "approvedBy": "agent"
       }
     ],
@@ -218,8 +235,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -235,8 +252,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "Earn",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -252,8 +269,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -269,8 +286,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "v2 TVL",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -286,8 +303,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "v3 TVL",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -303,8 +320,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "v4 TVL",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -320,8 +337,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "Venmo",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -337,8 +354,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "API",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -388,8 +405,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -422,8 +439,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -439,8 +456,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "$100k – $1M",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -456,8 +473,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "$10M+",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -473,8 +490,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "<$100k",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -490,8 +507,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "DeFi",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -507,8 +524,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "The Badger",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -524,8 +541,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "Frontrunner",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -558,8 +575,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -711,8 +728,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -728,8 +745,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -745,8 +762,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "Crowd",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -762,8 +779,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "Instant",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -779,8 +796,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "ENS",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -1023,6 +1040,57 @@
       }
     ],
     [
+      "ko-KR:i18next-json:tokens.selector.categoryFilter.clear_one",
+      {
+        "unitId": "tokens.selector.categoryFilter.clear_one",
+        "providerId": "i18next-json",
+        "locale": "ko-KR",
+        "domain": "product-ui",
+        "sourceHash": "302e166d28e6486729e3034dbcac7dbcaa86f594e4acddb0a21c7433cc5186bd",
+        "glossaryHash": "f2d40aeb84e3afd761b18554926d9e85297f09a603c5442e9fcd5805b950a9f2",
+        "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
+        "translation": "활성 필터 지우기",
+        "status": "clean",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ko-KR:i18next-json:tokens.selector.categoryFilter.clear_other",
+      {
+        "unitId": "tokens.selector.categoryFilter.clear_other",
+        "providerId": "i18next-json",
+        "locale": "ko-KR",
+        "domain": "product-ui",
+        "sourceHash": "2dc1c0755c9ec2716cbacc0a40d7babc53c889496a89b8c4495d09e38b95a758",
+        "glossaryHash": "f2d40aeb84e3afd761b18554926d9e85297f09a603c5442e9fcd5805b950a9f2",
+        "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
+        "translation": "활성 필터 지우기",
+        "status": "clean",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ko-KR:i18next-json:tokens.selector.categoryFilter.myTokens",
+      {
+        "unitId": "tokens.selector.categoryFilter.myTokens",
+        "providerId": "i18next-json",
+        "locale": "ko-KR",
+        "domain": "product-ui",
+        "sourceHash": "16f6f49ce8ba3114b5b5495524ad01dc739a58e7405110fa38669d4d23443f0c",
+        "glossaryHash": "f2d40aeb84e3afd761b18554926d9e85297f09a603c5442e9fcd5805b950a9f2",
+        "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
+        "translation": "내 토큰",
+        "status": "clean",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ko-KR:i18next-json:toucan.auction.biddingClosed",
       {
         "unitId": "toucan.auction.biddingClosed",
@@ -1102,8 +1170,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "<value>{{fdv}}</value> FDV",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -1187,8 +1255,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "100% → 0.3% v4 LP",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -1374,8 +1442,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -1391,8 +1459,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -1510,8 +1578,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -1561,8 +1629,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "Custom Launch",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -1578,8 +1646,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "Pools.trade",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -1646,8 +1714,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "<icon /> <gradient>UniswapX</gradient> <info />",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ],
@@ -1663,8 +1731,8 @@
         "styleHash": "819c37567f3a38c8164435e23c3ff0f6b5df39dd8f98a029a07f019f2e20a839",
         "translation": "yourname",
         "status": "clean",
-        "agentRunId": "ko-KR-2026-09-17T17-30-07Z",
-        "approvedAt": "2026-09-17T17:30:07.163Z",
+        "agentRunId": "ko-KR-2026-09-23T16-11-08Z",
+        "approvedAt": "2026-09-23T16:11:08.465Z",
         "approvedBy": "agent"
       }
     ]

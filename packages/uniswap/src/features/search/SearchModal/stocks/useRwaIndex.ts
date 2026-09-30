@@ -8,14 +8,12 @@ import {
 
 const EMPTY_INDEX: RwaSearchIndex = { rwas: [], byChainAddress: new Map() }
 
-/** Builds the all-chains RWA grouping index from the `ListRwas` response, gated by `enabled`.
- *  Search always builds it; the token selector passes the region gate (ISSUER_SPECIFIC_RWA) as `enabled`.
+/** Builds the all-chains RWA grouping index from the `ListRwas` response. Search and the token selector
+ *  always build it; RWA tags are not region-gated (only the Stocks shelf is).
  *  Requests `includeCommodities: true` so commodities are tagged — this gives the index its own `ListRwas`
- *  cache entry (it sends `true`; `useRWAWhitelist` / `useIsRWAToken` omit it, proto-default `false`).
- *  The `enabled` guard in the memo (not just the query) keeps the index empty when disabled, so callers
- *  may gate on `rwas.length` / `byChainAddress.size` alone without leaking the feature. */
-export function useRwaIndex(enabled: boolean): RwaSearchIndex {
+ *  cache entry (it sends `true`; `useRWAWhitelist` / `useIsRWAToken` omit it, proto-default `false`). */
+export function useRwaIndex(): RwaSearchIndex {
   const { chains: chainIds } = useEnabledChains({ includeTestnets: true })
-  const { data } = useListRwasQuery({ chainIds, includeCommodities: true, enabled })
-  return useMemo(() => (enabled && data?.rwas ? buildRwaSearchIndex(data.rwas) : EMPTY_INDEX), [enabled, data?.rwas])
+  const { data } = useListRwasQuery({ chainIds, includeCommodities: true })
+  return useMemo(() => (data?.rwas ? buildRwaSearchIndex(data.rwas) : EMPTY_INDEX), [data?.rwas])
 }

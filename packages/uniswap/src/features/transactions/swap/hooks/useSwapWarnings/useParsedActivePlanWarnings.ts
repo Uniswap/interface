@@ -125,7 +125,7 @@ function getGasWarning({
     chainId,
     gasBalance,
     gasFee: totalGasFee,
-    gasTokenTransactionAmount,
+    spend: gasTokenTransactionAmount ? { kind: 'gas-token-amount', amount: gasTokenTransactionAmount } : undefined,
   })
 
   if (hasGasFunds) {

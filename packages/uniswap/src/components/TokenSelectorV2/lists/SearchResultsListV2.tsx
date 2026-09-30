@@ -1,9 +1,16 @@
 import { UniverseChainId } from '@universe/chains'
+import { Flex } from '@universe/mycelium'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TokenSelectorOption } from 'uniswap/src/components/lists/items/types'
 import { NoResultsFound } from 'uniswap/src/components/lists/NoResultsFound'
 import { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
+import {
+  CategoryFilterChipRow,
+  CategoryFilterChipRowSkeleton,
+} from 'uniswap/src/components/TokenSelector/categoryFilters/CategoryFilterChipRow'
+import { CategoryFilterEmptyState } from 'uniswap/src/components/TokenSelector/categoryFilters/CategoryFilterEmptyState'
+import { useCategoryFilterChips } from 'uniswap/src/components/TokenSelector/categoryFilters/useCategoryFilterChips'
 import { useAddToSearchHistory } from 'uniswap/src/components/TokenSelector/hooks/useAddToSearchHistory'
 import { useTokenSectionsForSearchResults } from 'uniswap/src/components/TokenSelector/hooks/useTokenSectionsForSearchResults'
 import { OnSelectCurrency, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/types'
@@ -48,7 +55,7 @@ export function SearchResultsListV2({
     parsedChainFilter && chainIds.includes(parsedChainFilter) ? parsedChainFilter : null
   const {
     data: sections,
-    loading,
+    isLoading: isDataLoading,
     error,
     refetch,
   } = useTokenSectionsForSearchResults({
@@ -60,9 +67,6 @@ export function SearchResultsListV2({
     input,
   })
 
-  // The legacy hook returns legacy-styled headers; swap in V2 headers so the pane doesn't mix styles.
-  const v2Sections = useSectionsWithV2Headers(sections)
-
   // Stable identity so TokenSelectorV2List's memo holds while the user types (searchFilter re-renders).
   const onSelectCurrency: OnSelectCurrency = useEvent(
     // oxlint-disable-next-line max-params
@@ -73,26 +77,53 @@ export function SearchResultsListV2({
   )
 
   const userIsTyping = Boolean(searchFilter && debouncedSearchFilter !== searchFilter)
+  const isLoading = userIsTyping || isDataLoading
+  const { chips, showSkeleton, activeIds, filteredSections, isFilteredEmpty, toggleChip, clearFilters } =
+    useCategoryFilterChips({
+      sections,
+      isLoading,
+      isBalancesOnlySearch,
+    })
+  // The legacy hook returns legacy-styled headers; swap in V2 headers so the pane doesn't mix styles.
+  const v2Sections = useSectionsWithV2Headers(filteredSections)
 
-  const emptyElement = useMemo(
-    () => (debouncedSearchFilter ? <NoResultsFound searchFilter={debouncedSearchFilter} /> : undefined),
-    [debouncedSearchFilter],
-  )
+  const emptyElement = useMemo(() => {
+    if (!debouncedSearchFilter) {
+      return undefined
+    }
+    if (!isFilteredEmpty) {
+      return <NoResultsFound searchFilter={debouncedSearchFilter} />
+    }
+    return (
+      <CategoryFilterEmptyState
+        activeFilterCount={activeIds.length}
+        searchFilter={debouncedSearchFilter}
+        onClearFilters={clearFilters}
+      />
+    )
+  }, [debouncedSearchFilter, isFilteredEmpty, activeIds.length, clearFilters])
 
   return (
-    <TokenSelectorV2List
-      showTokenAddress
-      chainFilter={chainFilter}
-      emptyElement={emptyElement}
-      errorText={t('token.selector.search.error')}
-      hasError={Boolean(error)}
-      loading={userIsTyping || loading}
-      refetch={refetch}
-      sections={v2Sections}
-      showTokenWarnings={true}
-      renderedInModal={renderedInModal}
-      suggestedTilesMaxCount={getSuggestedTilesMaxCount(variation)}
-      onSelectCurrency={onSelectCurrency}
-    />
+    <Flex fill>
+      {showSkeleton ? (
+        <CategoryFilterChipRowSkeleton />
+      ) : (
+        <CategoryFilterChipRow activeIds={activeIds} addresses={addresses} chips={chips} onToggle={toggleChip} />
+      )}
+      <TokenSelectorV2List
+        showTokenAddress
+        chainFilter={chainFilter}
+        emptyElement={emptyElement}
+        errorText={t('token.selector.search.error')}
+        hasError={Boolean(error)}
+        loading={isLoading}
+        refetch={refetch}
+        sections={v2Sections}
+        showTokenWarnings={true}
+        renderedInModal={renderedInModal}
+        suggestedTilesMaxCount={getSuggestedTilesMaxCount(variation)}
+        onSelectCurrency={onSelectCurrency}
+      />
+    </Flex>
   )
 }

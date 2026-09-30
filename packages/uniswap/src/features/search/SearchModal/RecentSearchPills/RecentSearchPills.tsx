@@ -12,7 +12,7 @@ import type {
   OnSelectSearchModalOption,
   SearchModalOptionSelection,
 } from 'uniswap/src/features/search/SearchModal/hooks/useSearchModalOptionSelection'
-import { PillPressProps } from 'uniswap/src/features/search/SearchModal/RecentSearchPills/Pill'
+import { PILL_ROW_PADDING_BOTTOM, PillPressProps } from 'uniswap/src/features/search/SearchModal/RecentSearchPills/Pill'
 import { PoolPill } from 'uniswap/src/features/search/SearchModal/RecentSearchPills/PoolPill'
 import { TokenPill } from 'uniswap/src/features/search/SearchModal/RecentSearchPills/TokenPill'
 import { WalletPill } from 'uniswap/src/features/search/SearchModal/RecentSearchPills/WalletPill'
@@ -47,7 +47,7 @@ export const RecentSearchPills = memo(function RecentSearchPills({
 
   return (
     <HorizontalFadeScroll>
-      <Flex row gap="$spacing8" pl="$spacing20" pr="$spacing12" py="$spacing4">
+      <Flex row gap="$spacing8" pl="$spacing20" pr="$spacing12" pt="$spacing4" pb={PILL_ROW_PADDING_BOTTOM}>
         {visibleOptions.map((option, index) => {
           const selection: SearchModalOptionSelection = { item: option, section, index, rowIndex }
           return (

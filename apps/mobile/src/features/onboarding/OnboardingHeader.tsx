@@ -1,8 +1,8 @@
 import { useNavigation } from '@react-navigation/native'
 import { Flex, spacing, TouchableArea } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 // Header bar height (below the status-bar inset). Wrappers add insets.top to offset content below it.
 export const ONBOARDING_HEADER_BAR_HEIGHT = spacing.spacing48

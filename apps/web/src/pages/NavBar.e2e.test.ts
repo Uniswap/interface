@@ -1,5 +1,5 @@
+import { TestID } from '@universe/test'
 import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { IN_APP_BROWSER_CHROME_PX } from '~/constants/inAppBrowser'
 import { expect, getTest } from '~/playwright/fixtures'
 

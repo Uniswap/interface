@@ -1,7 +1,7 @@
 import { ChartPeriod, WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { TestID } from '@universe/test'
 import { UTCTimestamp } from 'lightweight-charts'
 import type { PortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { withText } from 'uniswap/src/test/matchers'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
 import { PortfolioChartCategory } from '~/pages/Portfolio/Overview/hooks/usePortfolioChartSeries'

@@ -6,6 +6,7 @@ import { ContractInteraction } from '@universe/mycelium/icons/ContractInteractio
 import { DocumentList } from '@universe/mycelium/icons/DocumentList'
 import { Page } from '@universe/mycelium/icons/Page'
 import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
+import { TestID } from '@universe/test'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CopyHelper } from 'uniswap/src/components/CopyHelper/CopyHelper'
@@ -15,7 +16,6 @@ import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
 import {
   type FlagWarning,
@@ -76,23 +76,29 @@ function HookWarnings({ flags, hasDangerous }: { flags: FlagWarning[]; hasDanger
 export function HookModal({
   isOpen,
   onClose,
-  onClearHook,
+  onCancel,
+  cancelLabel,
+  isDismissible = true,
   onContinue,
   address,
 }: {
   address: Address
   isOpen: boolean
+  /** The header X, and the backdrop while `isDismissible`. Dismissal is never consent. */
   onClose: () => void
-  onClearHook: () => void
+  /**
+   * The user declines to proceed with this hook. What that means is the surface's call (the create
+   * flow drops the hook, the review gate goes back), and `cancelLabel` names it; the default is the
+   * create flow's "Remove hook".
+   */
+  onCancel: () => void
+  cancelLabel?: string
+  /** False locks the backdrop, for surfaces where this modal is the only review on the path. */
+  isDismissible?: boolean
   onContinue: () => void
 }) {
   const { t } = useTranslation()
   const [disclaimerChecked, setDisclaimerChecked] = useState(false)
-
-  const handleClearHook = () => {
-    onClearHook()
-    onClose()
-  }
 
   const onDisclaimerChecked = () => {
     setDisclaimerChecked((state) => !state)
@@ -128,10 +134,11 @@ export function HookModal({
   }, [address, t])
 
   const canContinue = !hasDangerous || disclaimerChecked
+  // Neither decision closes the modal itself: callers own that, because the add-liquidity route derives
+  // `isOpen` from the recorded approval and its `onClose` leaves the page.
   const handleContinue = () => {
     if (canContinue) {
       onContinue()
-      onClose()
     }
   }
 
@@ -145,11 +152,12 @@ export function HookModal({
       name={ModalName.Hook}
       onClose={onClose}
       isModalOpen={isOpen}
+      isDismissible={isDismissible}
       analyticsProperties={{ hook_address: address, hasDangerous }}
     >
       <HeightAnimator>
         <Flex gap="$spacing24">
-          <GetHelpHeader closeModal={onClose} />
+          <GetHelpHeader closeModal={onClose} closeDataTestId={TestID.HookModalClose} />
           <Flex>
             <Flex
               mx="auto"
@@ -206,8 +214,8 @@ export function HookModal({
 
           <Flex row gap="$gap8">
             <Trace logPress element={ElementName.Cancel}>
-              <Button size="small" emphasis="secondary" onPress={handleClearHook}>
-                {t('position.removeHook')}
+              <Button size="small" emphasis="secondary" onPress={onCancel}>
+                {cancelLabel ?? t('position.removeHook')}
               </Button>
             </Trace>
             <Trace logPress element={ElementName.Continue}>

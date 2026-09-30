@@ -78,3 +78,12 @@ export function mapIssuerMultichainToken({
     chainTokens,
   }
 }
+
+/** v2 `MultichainToken.addresses` (chainId -> address) as mainnet-first chain tokens. */
+export function mapAddressesToChainTokens(addresses: Record<string, string>): ChainToken[] {
+  return sortRwaChainTokens(
+    Object.entries(addresses)
+      .map(([chainId, address]) => ({ chainId: Number(chainId), address }))
+      .filter((chainToken) => !Number.isNaN(chainToken.chainId)),
+  )
+}

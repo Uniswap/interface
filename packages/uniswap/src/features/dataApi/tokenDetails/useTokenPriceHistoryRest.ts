@@ -4,33 +4,26 @@ import type {
   GetTokenHistoryPriceResponse,
   GetTokenHistoryVolumeRequest,
 } from '@uniswap/client-data-api/dist/data/v2/api_pb'
-import { HistoryDuration } from '@uniswap/client-data-api/dist/data/v2/types_pb'
-import { GraphQLApi } from '@universe/api'
+import { HistoryDuration as RestHistoryDuration } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { useMemo } from 'react'
 import { getGetTokenHistoryPriceQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { currencyIdToRestContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import type { CurrencyId } from 'uniswap/src/types/currency'
+import { isQueryLoading } from 'utilities/src/reactQuery/isQueryLoading'
 
-/** Maps the GraphQL HistoryDuration used by chart query variables to its V2 REST equivalent. */
-export function toRestHistoryDuration(duration: GraphQLApi.HistoryDuration): HistoryDuration {
-  switch (duration) {
-    case GraphQLApi.HistoryDuration.FiveMinute:
-      return HistoryDuration.HOUR
-    case GraphQLApi.HistoryDuration.Hour:
-      return HistoryDuration.HOUR
-    case GraphQLApi.HistoryDuration.Day:
-      return HistoryDuration.DAY
-    case GraphQLApi.HistoryDuration.Week:
-      return HistoryDuration.WEEK
-    case GraphQLApi.HistoryDuration.Month:
-      return HistoryDuration.MONTH
-    case GraphQLApi.HistoryDuration.Year:
-      return HistoryDuration.YEAR
-    case GraphQLApi.HistoryDuration.Max:
-      return HistoryDuration.MAX
-    default:
-      return HistoryDuration.DAY
-  }
+const REST_HISTORY_DURATION: Record<HistoryDuration, RestHistoryDuration> = {
+  [HistoryDuration.Hour]: RestHistoryDuration.HOUR,
+  [HistoryDuration.Day]: RestHistoryDuration.DAY,
+  [HistoryDuration.Week]: RestHistoryDuration.WEEK,
+  [HistoryDuration.Month]: RestHistoryDuration.MONTH,
+  [HistoryDuration.Year]: RestHistoryDuration.YEAR,
+  [HistoryDuration.Max]: RestHistoryDuration.MAX,
+}
+
+/** Maps the app-level HistoryDuration to the data-api V2 request enum. */
+export function toRestHistoryDuration(duration: HistoryDuration): RestHistoryDuration {
+  return REST_HISTORY_DURATION[duration]
 }
 
 /** Shared `target` oneof shape between GetTokenHistoryVolume/TVL/OHLC/Price requests (structurally identical). */
@@ -73,7 +66,7 @@ export interface UseTokenPriceHistoryRestOptions {
 export function useTokenPriceHistoryRest(
   currencyId: CurrencyId | undefined,
   options: UseTokenPriceHistoryRestOptions,
-): { entries: RestPriceHistoryPoint[]; isLoading: boolean } {
+): { entries: RestPriceHistoryPoint[]; isLoading: boolean; error: Error | null } {
   const { duration, isMultichainAggregateView = false } = options
 
   const target = useMemo(() => {
@@ -84,13 +77,15 @@ export function useTokenPriceHistoryRest(
     return toHistoryTarget({ chainId, address, multichain: isMultichainAggregateView })
   }, [currencyId, isMultichainAggregateView])
 
-  const { data: entries, isLoading } = useQuery(
+  const query = useQuery(
     getGetTokenHistoryPriceQueryOptions({
-      params: target ? { target, duration } : undefined,
+      params: target ? { target, duration: toRestHistoryDuration(duration) } : undefined,
       enabled: !!target,
+      // A period switch is a new chart, not a refetch: show the skeleton, not the previous period's line.
+      keepPreviousData: false,
       select: selectPriceHistoryEntries,
     }),
   )
 
-  return { entries: entries ?? [], isLoading }
+  return { entries: query.data ?? [], isLoading: isQueryLoading(query), error: query.error }
 }

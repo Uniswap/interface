@@ -1,6 +1,6 @@
+import { TestID } from '@universe/test'
 import { EarnBalanceErrorState } from 'uniswap/src/features/earn/EarnBalanceErrorState'
 import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { fireEvent, render, screen } from 'uniswap/src/test/test-utils'
 
 describe('EarnBalanceErrorState', () => {

@@ -1,6 +1,7 @@
 import { GraphQLApi } from '@universe/api'
 import type { ReactNode } from 'react'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { ChartType, DataQuality, PriceChartType } from '~/components/Charts/utils'
 import { TimePeriod } from '~/data/util'
 import { AuctionDisplayPhase } from '~/features/Toucan/Auction/utils/resolveAuctionDisplayState'
@@ -42,7 +43,7 @@ vi.mock('~/components/Charts/PriceChart', () => ({
 const variables = {
   chain: GraphQLApi.Chain.Ethereum,
   address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-  duration: GraphQLApi.HistoryDuration.Day,
+  duration: HistoryDuration.Day,
   multichain: false,
 }
 
@@ -110,6 +111,7 @@ describe('TDPPriceChartPanel', () => {
       />,
     )
     expect(screen.getByTestId('tdp-price-chart')).toBeInTheDocument()
+    expect(mockedUseTokenPriceChartPanel).toHaveBeenCalledWith(expect.objectContaining({ keepPreviousData: false }))
   })
 
   it('shows the no-data copy when the query succeeded but there is not enough data', () => {

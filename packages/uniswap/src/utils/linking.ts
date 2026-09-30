@@ -1,4 +1,3 @@
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { LIGHT_THEME_COLORS } from '@universe/mycelium/theme-hooks-compat'
 import * as WebBrowser from 'expo-web-browser'
@@ -281,7 +280,7 @@ export function getTokenDetailsURL({
   const adjustedInputAddress =
     inputAddress && isNativeCurrencyAddress(chain, inputAddress) ? NATIVE_TOKEN_PLACEHOLDER : inputAddress
 
-  const chainName = chainUrlParam || String(chainInfo).toLowerCase() || GraphQLApi.Chain.Ethereum.toLowerCase()
+  const chainName = chainUrlParam || String(chainInfo).toLowerCase() || 'ethereum'
   const params = new URLSearchParams()
   if (adjustedInputAddress) {
     params.set('inputCurrency', adjustedInputAddress)

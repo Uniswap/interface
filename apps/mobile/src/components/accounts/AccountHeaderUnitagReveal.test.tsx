@@ -1,10 +1,10 @@
+import { TestID } from '@universe/test'
 import { navigationRef } from 'src/app/navigation/navigationRef'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { fireEvent, render, screen, waitFor, within } from 'src/test/test-utils'
 import { DisplayName } from 'uniswap/src/features/accounts/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ACCOUNT, LOCAL_DISPLAY_NAME, UNITAG_DISPLAY_NAME, preloadedWalletPackageState } from 'wallet/src/test/fixtures'
 
 const mockUseDisplayName = vi.hoisted(() => vi.fn<() => DisplayName | undefined>())

@@ -1,4 +1,4 @@
-import { FeatureFlags, getFeatureFlag, getStatsigClient } from '@universe/gating'
+import { FeatureFlags, getFeatureFlag, getStatsigClient, isStatsigClientRegistered } from '@universe/gating'
 import { call, delay, fork, type SagaGenerator, select } from 'typed-redux-saga'
 import { makeSelectPlanTransaction } from 'uniswap/src/features/transactions/selectors'
 import {
@@ -41,7 +41,10 @@ export class PlanWatcher {
   }
 
   private static *waitForStatsigReady(): Generator<unknown> {
-    while (getStatsigClient().loadingStatus !== 'Ready') {
+    // Saga init can run before the Statsig provider mounts. `getStatsigClient()` on an empty registry
+    // creates a fallback client with an empty user, which the provider then reuses — so every gate
+    // evaluates as anonymous for the rest of the page's life. Peek the registry before touching it.
+    while (!isStatsigClientRegistered() || getStatsigClient().loadingStatus !== 'Ready') {
       yield* delay(ONE_SECOND_MS)
     }
   }

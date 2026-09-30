@@ -1,9 +1,9 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
 import { InfoCircle } from '@universe/mycelium/icons/InfoCircle'
 import { Lock } from '@universe/mycelium/icons/Lock'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { PermissionedTokenInfoBottomSheet } from 'uniswap/src/features/permissionedTokens/PermissionedTokenInfoBottomSheet'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 type PermissionedPoolBannerProps = {

@@ -13,7 +13,6 @@ import {
   getTxFixtures,
   transactionDetails as transactionDetailsFixture,
 } from 'uniswap/src/test/fixtures'
-import { mockApolloClient } from 'uniswap/src/test/mocks'
 import { sleep } from 'utilities/src/time/timing'
 import type { MockInstance } from 'vitest'
 import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
@@ -104,7 +103,7 @@ describe(watchTransaction, () => {
     }
 
     // --- Act / Assert ------------------------------------------------------
-    return expectSaga(watchTransaction, { transaction: pendingTx, apolloClient: mockApolloClient })
+    return expectSaga(watchTransaction, { transaction: pendingTx })
       .withState({
         wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
         userSettings: { isTestnetModeEnabled: false },
@@ -125,7 +124,6 @@ describe(watchTransaction, () => {
     const cancelRequest = { to: from, from, value: '0x0' }
     return expectSaga(watchTransaction, {
       transaction: txDetailsPending,
-      apolloClient: mockApolloClient,
     })
       .withState({
         wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
@@ -148,7 +146,6 @@ describe(watchTransaction, () => {
     }
     return expectSaga(watchTransaction, {
       transaction: txDetailsPending,
-      apolloClient: mockApolloClient,
     })
       .withState({
         wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
@@ -171,7 +168,6 @@ describe(watchTransaction, () => {
 
     return expectSaga(watchTransaction, {
       transaction: txWithAppBackgrounded,
-      apolloClient: mockApolloClient,
     })
       .withState({
         wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
@@ -189,7 +185,6 @@ describe(watchTransaction, () => {
   it('Invalidates stale transaction when another transaction with same nonce is finalized', () => {
     return expectSaga(watchTransaction, {
       transaction: txDetailsPending,
-      apolloClient: mockApolloClient,
     })
       .withState({
         wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
@@ -208,7 +203,6 @@ describe(watchTransaction, () => {
   it('Invalidates stale transaction when bridge send is confirmed with same nonce', () => {
     return expectSaga(watchTransaction, {
       transaction: txDetailsPending,
-      apolloClient: mockApolloClient,
     })
       .withState({
         wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
@@ -233,7 +227,6 @@ describe(watchTransaction, () => {
 
     return expectSaga(watchTransaction, {
       transaction,
-      apolloClient: mockApolloClient,
     })
       .withState({
         wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
@@ -393,7 +386,7 @@ describe('waitForRemoteUpdate flashbots_unknown (SWAP-2471)', () => {
       waitForTransaction: vi.fn(),
     } as unknown as providers.Provider
 
-    await expectSaga(watchTransaction, { transaction: flashbotsTx, apolloClient: mockApolloClient })
+    await expectSaga(watchTransaction, { transaction: flashbotsTx })
       .withState({
         wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
         userSettings: { isTestnetModeEnabled: false },
@@ -446,7 +439,7 @@ describe('waitForRemoteUpdate flashbots_unknown (SWAP-2471)', () => {
       waitForTransaction: vi.fn(),
     } as unknown as providers.Provider
 
-    await expectSaga(watchTransaction, { transaction: uniRpcTx, apolloClient: mockApolloClient })
+    await expectSaga(watchTransaction, { transaction: uniRpcTx })
       .withState({
         wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
         userSettings: { isTestnetModeEnabled: false },

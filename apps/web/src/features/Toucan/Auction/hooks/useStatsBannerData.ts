@@ -25,11 +25,8 @@ import {
   formatTokenAmountWithSymbol,
 } from '~/features/Toucan/Auction/utils/fixedPointFdv'
 import { getAuctionTokenDecimals } from '~/features/Toucan/Auction/utils/tokenMetadata'
-import {
-  buildContractInputForAddress,
-  buildTokenMarketPriceKey,
-  useTokenMarketPrices,
-} from '~/features/Toucan/hooks/useTokenMarketPrices'
+import { buildTokenMarketCurrencyId, buildTokenMarketPriceKey } from '~/features/Toucan/hooks/tokenMarketPriceKeys'
+import { useCurrencyKeyPriceMap } from '~/hooks/useCurrencyKeyPriceMap'
 
 // When above-floor % exceeds this threshold and hourly data is available, switch to hourly change display
 const HOURLY_CHANGE_THRESHOLD = 1000
@@ -82,21 +79,14 @@ export function useStatsBannerData(): StatsBannerData {
   const auctionChainId = auctionDetails?.chainId
   const bidTokenAddress = auctionDetails?.currency
 
-  const bidTokenContracts = useMemo(() => {
+  const bidTokenCurrencyIds = useMemo(() => {
     if (!auctionChainId || !bidTokenAddress) {
       return []
     }
-
-    return [
-      buildContractInputForAddress({
-        chainId: auctionChainId,
-        address: bidTokenAddress,
-        resolveNativeAddress: true,
-      }),
-    ]
+    return [buildTokenMarketCurrencyId({ chainId: auctionChainId, address: bidTokenAddress })]
   }, [auctionChainId, bidTokenAddress])
 
-  const { priceMap: bidTokenMarketPriceMap } = useTokenMarketPrices(bidTokenContracts)
+  const { priceMap: bidTokenMarketPriceMap } = useCurrencyKeyPriceMap(bidTokenCurrencyIds)
 
   // Use the same market price source as top auctions table/chips for committed volume consistency.
   const bidTokenMarketPriceUsd = useMemo(() => {

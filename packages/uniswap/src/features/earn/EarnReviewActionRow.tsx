@@ -1,6 +1,7 @@
 import type { DiscriminatedQuoteResponse } from '@universe/api'
 import { isMobileApp, isWebApp } from '@universe/environment'
 import { Button, Flex, IconButton } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import {
   EarnPlanProgressIndicator,
@@ -8,7 +9,6 @@ import {
 } from 'uniswap/src/features/earn/EarnPlanProgressIndicator'
 import { PendingSwapButtonContent } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewFooter/PendingSwapButtonContent'
 import { isChainedQuoteResponse } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { noop } from 'utilities/src/react/noop'
 
 /** Shared CTA gating for the Earn deposit/withdraw review views. */

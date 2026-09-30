@@ -72,6 +72,8 @@ export const OnchainItemList = memo(function OnchainItemListInner({
           return renderSectionHeader?.(item.data) ?? null
         case ProcessedRowType.Item:
           return renderItem(item.data)
+        case ProcessedRowType.Footer:
+          return item.data.footerElement
         default:
           return null
       }

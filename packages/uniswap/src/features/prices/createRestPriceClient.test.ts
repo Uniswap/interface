@@ -1,5 +1,5 @@
 import { createRestPriceClient } from 'uniswap/src/features/prices/createRestPriceClient'
-import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_1_LOWERCASE } from 'uniswap/src/test/fixtures/gql/assets/constants'
+import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_1_LOWERCASE } from 'uniswap/src/test/fixtures/assets/constants'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mocks = vi.hoisted(() => ({

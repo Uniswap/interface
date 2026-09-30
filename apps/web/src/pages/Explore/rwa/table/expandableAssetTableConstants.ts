@@ -8,13 +8,10 @@ export const EXPANDABLE_ASSET_TABLE_ROW_HEIGHT = 64
 export const EXPANDABLE_ASSET_TABLE_ROW_SLOT_HEIGHT =
   EXPANDABLE_ASSET_TABLE_ROW_HEIGHT + EXPANDABLE_ASSET_TABLE_SHELL_PADDING_PX * 2
 
-/** Hard cap on how many RWA rows infinite scroll will reveal. */
-export const RWA_TABLE_MAX_ROWS = 100
-
 /** Extra rows rendered beyond what fills the viewport on initial load. */
 export const RWA_TABLE_INITIAL_OVERSCAN_ROWS = 5
 
-/** Narrower than the Popular table's token column. */
+/** Narrower than the All table's token column. */
 export const EXPANDABLE_ASSET_TABLE_TOKEN_COLUMN_SIZE_MOBILE = 220
 
 export function getExpandableAssetTokenColumnSize(isLgBreakpoint: boolean): number {

@@ -1,5 +1,6 @@
 import { OptionRow } from '@universe/embedded-wallet/src/components/passkey/recovery/OptionRow'
 import { Button, Flex, iconSizes, ModalCloseIcon, Separator, SpinningLoader, Text } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import type { TFunction } from 'i18next'
 import type { ReactNode } from 'react'
 import { AppleLogo } from 'ui/src/components/icons/AppleLogo'
@@ -9,7 +10,6 @@ import { Passkey } from 'ui/src/components/icons/Passkey'
 import { Person } from 'ui/src/components/icons/Person'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 type OAuthProvider = 'google' | 'apple'
 

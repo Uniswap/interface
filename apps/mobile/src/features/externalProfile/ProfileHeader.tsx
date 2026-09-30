@@ -9,6 +9,7 @@ import {
   validColor,
 } from '@universe/mycelium'
 import { useIsDarkMode, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import React, { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StatusBar, StyleSheet } from 'react-native'
@@ -32,7 +33,6 @@ import { useToggleWatchedWalletCallback } from 'uniswap/src/features/favorites/h
 import { selectWatchedAddressSet } from 'uniswap/src/features/favorites/selectors'
 import { useTestnetModeBannerHeight } from 'uniswap/src/features/settings/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { openUri } from 'uniswap/src/utils/linking'
 import { RecipientSelectSpeedBumps } from 'wallet/src/components/RecipientSearch/RecipientSelectSpeedBumps'

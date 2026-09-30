@@ -1,6 +1,6 @@
+import { TestID } from '@universe/test'
 import type { ReactNode } from 'react'
 import type { PortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import {
   BalanceBreakdownPopover,
   buildBalanceBreakdownRows,

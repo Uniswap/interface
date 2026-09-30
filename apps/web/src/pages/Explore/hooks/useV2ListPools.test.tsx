@@ -5,7 +5,7 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import { PoolsOrderBy, PoolTokenLogicalOperator, type RankedPool } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { UniverseChainId } from '@universe/chains'
 import { DEFAULT_TICK_SPACING, DYNAMIC_FEE_AMOUNT } from 'uniswap/src/constants/pools'
-import { getListPoolsQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/pools/queries'
+import { getListPoolsInfiniteQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/pools/queries'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { PoolSortFields } from '~/data/pools/poolStats'
@@ -18,7 +18,7 @@ vi.mock('@tanstack/react-query', async (importOriginal) => {
 })
 
 vi.mock('uniswap/src/data/apiClients/dataApiService/pools/queries', () => ({
-  getListPoolsQueryOptions: vi.fn(() => ({
+  getListPoolsInfiniteQueryOptions: vi.fn(() => ({
     queryKey: [ReactQueryCacheKey.DataApiService, 'listPools'],
     queryFn: vi.fn(),
   })),
@@ -29,7 +29,7 @@ vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
 }))
 
 const useInfiniteQueryMock = vi.mocked(useInfiniteQuery)
-const listPoolsMock = vi.mocked(getListPoolsQueryOptions)
+const listPoolsMock = vi.mocked(getListPoolsInfiniteQueryOptions)
 
 const SORT_STATE = { sortBy: PoolSortFields.TVL, sortDirection: OrderDirection.Desc }
 

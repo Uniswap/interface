@@ -26,6 +26,11 @@ export function deriveRwaAggregates(rwa: Rwa): RwaAggregatedMetrics {
   }
 }
 
+/** `ListRwas`-built issuers with no ranked match carry zeroed metrics, so a zero price means "no data". */
+export function hasIssuerMetrics(issuer: IssuerToken): boolean {
+  return issuer.priceUsd > 0
+}
+
 export function getIssuerCount(rwa: Rwa): number {
   return rwa.issuerTokens.length
 }
@@ -38,6 +43,20 @@ export function getIssuerCount(rwa: Rwa): number {
 export function getNetworkCount(issuer: IssuerToken, enabledChainIds: readonly number[]): number {
   const enabled = new Set(enabledChainIds)
   return issuer.chainTokens.filter((chainToken) => enabled.has(chainToken.chainId)).length
+}
+
+/** Distinct enabled networks across every issuer of a grouped RWA (two issuers on Base count once). */
+export function getRwaNetworkCount(rwa: Rwa, enabledChainIds: readonly number[]): number {
+  const enabled = new Set(enabledChainIds)
+  const chainIds = new Set<number>()
+  for (const issuer of rwa.issuerTokens) {
+    for (const chainToken of issuer.chainTokens) {
+      if (enabled.has(chainToken.chainId)) {
+        chainIds.add(chainToken.chainId)
+      }
+    }
+  }
+  return chainIds.size
 }
 
 export type RwaPriceDisplay =

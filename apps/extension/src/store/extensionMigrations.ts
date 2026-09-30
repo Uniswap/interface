@@ -3,6 +3,7 @@ import type { DappRequestState } from 'src/app/features/dappRequests/slice'
 import { Language } from 'uniswap/src/features/language/constants'
 import { getCurrentLanguageFromNavigator } from 'uniswap/src/features/language/utils'
 import { createSafeMigrationFactory } from 'uniswap/src/state/createSafeMigration'
+import { logger } from 'utilities/src/logger/logger'
 import { type BackupType } from 'wallet/src/features/wallet/accounts/types'
 
 const createSafeMigration = createSafeMigrationFactory('extensionMigrations')
@@ -125,4 +126,21 @@ export const setLanguageToNavigatorLanguage = createSafeMigration({
       currentLanguage: Language.English,
     },
   }),
+})
+
+// apollo3-cache-persist's default key. The Apollo cache was persisted to chrome.storage.local
+// before the GraphQL codepath was removed; nothing reads it anymore, so reclaim the space
+// (extension local storage is capped at 10 MB).
+const APOLLO_CACHE_PERSIST_KEY = 'apollo-cache-persist'
+
+export const removePersistedApolloCache = createSafeMigration({
+  name: 'removePersistedApolloCache',
+  migrate: (state: any) => {
+    // Migrations are synchronous and the entry lives outside redux state, so the removal is fire-and-forget.
+    chrome.storage.local.remove(APOLLO_CACHE_PERSIST_KEY).catch((error: unknown) => {
+      logger.error(error, { tags: { file: 'extensionMigrations', function: 'removePersistedApolloCache' } })
+    })
+    return state
+  },
+  onError: (state: any) => state,
 })

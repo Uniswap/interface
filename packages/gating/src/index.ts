@@ -60,7 +60,6 @@ export {
   NativeTokenPercentageBufferProperties,
   SwapConfirmationProperties,
   SwapLayerProperties,
-  TokenCategoriesProperties,
   V2EndpointsSearchProperties,
 } from '@universe/gating/src/experiments'
 export {

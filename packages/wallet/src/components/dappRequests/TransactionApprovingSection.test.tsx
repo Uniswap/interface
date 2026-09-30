@@ -1,4 +1,5 @@
 import { UniverseChainId } from '@universe/chains'
+import { shortenAddress } from 'utilities/src/addresses'
 import {
   formatAssetDisplay,
   TransactionApprovingSection,
@@ -160,5 +161,26 @@ describe('TransactionApprovingSection ERC20 approvals', () => {
     )
 
     expect(screen.getByText('common.addresses.count')).toBeTruthy()
+  })
+})
+
+describe('TransactionApprovingSection NONERC exposures', () => {
+  it('shows the asset and spender under a neutral heading without an invented allowance', () => {
+    const asset: TransactionAsset = {
+      type: 'NONERC',
+      address: TOKEN_ADDRESS,
+      chainId: UniverseChainId.Arc,
+      spenderAddress: SPENDER_ADDRESS,
+      approvalAction: TransactionApprovalAction.Change,
+    }
+    render(<TransactionApprovingSection riskLevel={TransactionRiskLevel.None} assets={[asset]} />)
+
+    expect(screen.getByText('dapp.request.approve.permissionChange')).toBeTruthy()
+    expect(screen.getByText(shortenAddress({ address: TOKEN_ADDRESS }))).toBeTruthy()
+    expect(screen.getByText('dapp.request.amountUnavailable')).toBeTruthy()
+    expect(screen.getByText('common.addresses.count')).toBeTruthy()
+    expect(screen.queryByText('common.approving')).toBeNull()
+    expect(screen.queryByText('dapp.request.revoke.action')).toBeNull()
+    expect(screen.queryByText('transaction.amount.unlimited')).toBeNull()
   })
 })

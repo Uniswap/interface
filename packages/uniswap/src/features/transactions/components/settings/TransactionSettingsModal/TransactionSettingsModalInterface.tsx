@@ -1,7 +1,7 @@
+import { TestID } from '@universe/test'
 import { AdaptiveWebPopoverContent } from 'ui/src'
 import { TransactionSettingsModalContent } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/TransactionSettingsModalContent/TransactionSettingsModalContent'
 import { TransactionSettingsModalProps } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const POPOVER_WIDTH = 320
 

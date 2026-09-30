@@ -1,4 +1,3 @@
-import { GqlResult } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { GatedFeature, useIsFeatureGated } from '@universe/compliance'
 import { Flex } from '@universe/mycelium'
@@ -26,6 +25,7 @@ import { useBridgingTokensOptions } from 'uniswap/src/features/bridging/hooks/to
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { DataApiOutageBanner } from 'uniswap/src/features/dataApi/outage/DataApiOutageBanner'
 import { ClearRecentSearchesButton } from 'uniswap/src/features/search/ClearRecentSearchesButton'
+import type { DerivedQueryResult } from 'utilities/src/reactQuery/types'
 
 // Matches the default 40px section header plus the single-line outage banner and spacing on web.
 const PORTFOLIO_OUTAGE_SECTION_HEADER_ROW_HEIGHT = 104
@@ -37,7 +37,9 @@ export function useTokenSectionsForSwap({
   oppositeSelectedToken,
   variation,
   flow,
-}: TokenSectionsHookProps & { flow?: TokenSelectorFlow }): GqlResult<OnchainItemSection<TokenSelectorListOption>[]> {
+}: TokenSectionsHookProps & { flow?: TokenSelectorFlow }): DerivedQueryResult<
+  OnchainItemSection<TokenSelectorListOption>[]
+> {
   const { defaultChainId, isTestnetModeEnabled } = useEnabledChains()
 
   // Fetch portfolio balances once and share across all sub-hooks to avoid 5 redundant hook chain traversals
@@ -47,21 +49,21 @@ export function useTokenSectionsForSwap({
     data: portfolioTokenOptions,
     error: portfolioTokenOptionsError,
     refetch: refetchPortfolioTokenOptions,
-    loading: portfolioTokenOptionsLoading,
+    isLoading: portfolioTokenOptionsLoading,
   } = usePortfolioTokenOptions({ chainFilter, chainIds, portfolioData })
 
   const {
     data: trendingTokenOptions,
     error: trendingTokenOptionsError,
     refetch: refetchTrendingTokenOptions,
-    loading: trendingTokenOptionsLoading,
+    isLoading: trendingTokenOptionsLoading,
   } = useTrendingTokensOptions({ chainFilter, chainIds, portfolioData })
 
   const {
     data: commonTokenOptions,
     error: commonTokenOptionsError,
     refetch: refetchCommonTokenOptions,
-    loading: commonTokenOptionsLoading,
+    isLoading: commonTokenOptionsLoading,
     // if there is no chain filter, first check if the input token has a chainId, fallback to defaultChainId
   } = useCommonTokensOptionsWithFallback({
     chainFilter: chainFilter ?? oppositeSelectedToken?.chainId ?? defaultChainId,
@@ -72,7 +74,7 @@ export function useTokenSectionsForSwap({
     data: bridgingTokenOptions,
     error: bridgingTokenOptionsError,
     refetch: refetchBridgingTokenOptions,
-    loading: bridgingTokenOptionsLoading,
+    isLoading: bridgingTokenOptionsLoading,
     shouldNest: shouldNestBridgingTokens,
   } = useBridgingTokensOptions({ oppositeSelectedToken, chainFilter, chainIds, portfolioData })
 
@@ -209,8 +211,8 @@ export function useTokenSectionsForSwap({
   return useMemo(
     () => ({
       data: sections,
-      loading,
-      error: error || undefined,
+      isLoading: loading,
+      error: error || null,
       refetch,
     }),
     [error, loading, refetch, sections],
@@ -236,7 +238,7 @@ function TokenSelectorSwapListInner({
 }): JSX.Element {
   const {
     data: sections,
-    loading,
+    isLoading,
     error,
     refetch,
   } = useTokenSectionsForSwap({
@@ -256,7 +258,7 @@ function TokenSelectorSwapListInner({
         showTokenAddress
         chainFilter={chainFilter}
         hasError={hasError}
-        loading={loading}
+        loading={isLoading}
         refetch={refetch}
         sections={sections}
         showTokenWarnings={true}

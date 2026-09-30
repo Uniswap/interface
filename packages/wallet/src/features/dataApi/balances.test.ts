@@ -16,23 +16,19 @@ import {
   ARBITRUM_CURRENCY,
   BASE_CURRENCY,
   currencyInfo,
-  daiToken,
-  ethToken,
   MAINNET_CURRENCY,
   OPTIMISM_CURRENCY,
   POLYGON_CURRENCY,
   portfolioBalance,
   SAMPLE_SEED_ADDRESS_1,
   SAMPLE_SEED_ADDRESS_2,
-  tokenBalance,
 } from 'uniswap/src/test/fixtures'
+import { daiV2Token, ethV2Token } from 'uniswap/src/test/fixtures/dataApi/tokens'
 import { createArray } from 'uniswap/src/test/utils'
 import { renderHook } from 'wallet/src/test/test-utils'
 
-const daiTokenBalance = tokenBalance({ token: daiToken(), isHidden: true })
-const ethTokenBalance = tokenBalance({ token: ethToken(), isHidden: false })
-const daiPortfolioBalance = portfolioBalance({ fromBalance: daiTokenBalance })
-const ethPortfolioBalance = portfolioBalance({ fromBalance: ethTokenBalance })
+const daiPortfolioBalance = portfolioBalance({ fromToken: daiV2Token(), isHidden: true })
+const ethPortfolioBalance = portfolioBalance({ fromToken: ethV2Token(), isHidden: false })
 
 describe(usePortfolioValueModifiers, () => {
   const sharedModifier = {
@@ -337,7 +333,7 @@ describe(sortPortfolioBalances, () => {
   it('[prod mode] sorts balances with USD value by USD value in descending order', () => {
     const result = sortPortfolioBalances({ balances: balancesWithUSD, isTestnetModeEnabled: false })
 
-    expect(result).toEqual(balancesWithUSD.sort((a, b) => (b.balanceUSD ?? 0) - (a.balanceUSD ?? 0)))
+    expect(result).toEqual(balancesWithUSD.sort((a, b) => b.balanceUSD - a.balanceUSD))
   })
 
   it('[prod mode] sorts balances without USD value by name', () => {

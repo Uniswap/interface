@@ -1,9 +1,9 @@
 import userEvent from '@testing-library/user-event'
 import { useIsTokenCategoriesEnabled } from '@universe/gating'
-import { MOCK_TOKEN_CATEGORIES } from 'uniswap/src/data/apiClients/dataApiService/categories/mockTokenCategories'
+import { TestID } from '@universe/test'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { tokenCategory } from 'uniswap/src/test/fixtures/tokenCategory'
 import { TokenDetailsHeaderCategoryChips } from '~/pages/TokenDetails/components/header/TokenDetailsHeaderCategoryChips'
 import { useTDPTokenCategories } from '~/pages/TokenDetails/hooks/useTDPTokenCategories'
 import { mocked } from '~/test-utils/mocked'
@@ -28,7 +28,9 @@ vi.mock('react-router', async (importOriginal) => ({
   useNavigate: () => mockNavigate,
 }))
 
-const [FIRST, SECOND, THIRD] = MOCK_TOKEN_CATEGORIES
+const FIRST = tokenCategory({ id: 'trending', name: 'Trending' })
+const SECOND = tokenCategory({ id: 'stablecoins', name: 'Stablecoins' })
+const THIRD = tokenCategory({ id: 'defi', name: 'DeFi' })
 const CATEGORIES = [FIRST, SECOND, THIRD]
 
 const HOST = 'chips-host'
@@ -74,7 +76,7 @@ describe('TokenDetailsHeaderCategoryChips', () => {
     expect(mockNavigate).toHaveBeenCalledWith(`/explore/category/${SECOND.id}`)
   })
 
-  it('renders nothing when the experiment arm is off', () => {
+  it('renders nothing when the token categories flag is off', () => {
     mocked(useIsTokenCategoriesEnabled).mockReturnValue(false)
 
     expect(renderInHost()).toBeEmptyDOMElement()

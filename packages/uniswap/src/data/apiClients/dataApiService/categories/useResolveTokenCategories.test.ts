@@ -70,4 +70,11 @@ describe('useResolveTokenCategories', () => {
     expect(lookupLoading.result.current.isLoading).toBe(true)
     expect(lookupLoading.result.current.categories).toEqual([defi])
   })
+
+  it('does not count the lookup as loading for a token with no ids', () => {
+    mockAllCategories({ isLoading: true })
+
+    expect(renderHook(() => useResolveTokenCategories({ categoryIds: [] })).result.current.isLoading).toBe(false)
+    expect(renderHook(() => useResolveTokenCategories({ categoryIds: undefined })).result.current.isLoading).toBe(false)
+  })
 })

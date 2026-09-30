@@ -2,18 +2,19 @@ import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { TokenCategory, TokenCategoryClass } from 'uniswap/src/features/tokenCategories/types'
 import { describe, expect, it } from 'vitest'
 import {
-  isRankedRwaCategory,
   resolveGroupedRwaCategory,
+  resolveRwaDisclaimerCategory,
   showsRwaDisclaimer,
+  showsVolumeTimeFrameSelector,
 } from '~/pages/Explore/categories/exploreGroupedCategory'
 
-function makeCategory(id: string, categoryClass: TokenCategoryClass): TokenCategory {
-  return { id, name: id, description: '', categoryClass, topTokens: [] }
+function makeCategory(id: string, categoryClass: TokenCategoryClass, grouped = false): TokenCategory {
+  return { id, name: id, description: '', categoryClass, grouped, topTokens: [] }
 }
 
 const CATEGORIES = [
-  makeCategory('stocks', TokenCategoryClass.Asset),
-  makeCategory('etfs', TokenCategoryClass.Asset),
+  makeCategory('stocks', TokenCategoryClass.Asset, true),
+  makeCategory('etfs', TokenCategoryClass.Asset, true),
   makeCategory('commodities', TokenCategoryClass.Asset),
   makeCategory('stablecoins', TokenCategoryClass.Asset),
   makeCategory('trending', TokenCategoryClass.Market),
@@ -21,11 +22,14 @@ const CATEGORIES = [
 ]
 
 describe('resolveGroupedRwaCategory', () => {
-  it('maps fetched asset categories with RWA data to their grouped RwaCategory', () => {
+  it('maps fetched BE-grouped categories to their grouped RwaCategory', () => {
     expect(resolveGroupedRwaCategory({ categoryId: 'stocks', categories: CATEGORIES })).toBe(RwaCategory.STOCKS)
     expect(resolveGroupedRwaCategory({ categoryId: 'etfs', categories: CATEGORIES })).toBe(RwaCategory.ETFS)
+  })
+
+  it('renders a fetched flat category flat even when it has an RWA mapping (Commodities)', () => {
     expect(resolveGroupedRwaCategory({ categoryId: 'commodities', categories: CATEGORIES })).toBe(
-      RwaCategory.COMMODITIES,
+      RwaCategory.UNSPECIFIED,
     )
   })
 
@@ -43,19 +47,31 @@ describe('resolveGroupedRwaCategory', () => {
     expect(resolveGroupedRwaCategory({ categoryId: 'commodities', categories: [] })).toBe(RwaCategory.COMMODITIES)
   })
 
+  it('resolves Commodities flat while the first fetch is pending, so the table does not flip once it lands', () => {
+    expect(resolveGroupedRwaCategory({ categoryId: 'commodities', categories: [], categoriesPending: true })).toBe(
+      RwaCategory.UNSPECIFIED,
+    )
+    expect(resolveGroupedRwaCategory({ categoryId: 'stocks', categories: [], categoriesPending: true })).toBe(
+      RwaCategory.STOCKS,
+    )
+    expect(resolveGroupedRwaCategory({ categoryId: 'etfs', categories: [], categoriesPending: true })).toBe(
+      RwaCategory.ETFS,
+    )
+  })
+
   it('resolves unknown and default ids to UNSPECIFIED', () => {
-    expect(resolveGroupedRwaCategory({ categoryId: 'popular', categories: [] })).toBe(RwaCategory.UNSPECIFIED)
-    expect(resolveGroupedRwaCategory({ categoryId: 'popular', categories: CATEGORIES })).toBe(RwaCategory.UNSPECIFIED)
+    expect(resolveGroupedRwaCategory({ categoryId: 'all', categories: [] })).toBe(RwaCategory.UNSPECIFIED)
+    expect(resolveGroupedRwaCategory({ categoryId: 'all', categories: CATEGORIES })).toBe(RwaCategory.UNSPECIFIED)
     expect(resolveGroupedRwaCategory({ categoryId: 'gaming', categories: [] })).toBe(RwaCategory.UNSPECIFIED)
   })
 })
 
-describe('isRankedRwaCategory', () => {
-  it('identifies stocks and etfs as ListRankedRwas-served; commodities and flat are not', () => {
-    expect(isRankedRwaCategory(RwaCategory.STOCKS)).toBe(true)
-    expect(isRankedRwaCategory(RwaCategory.ETFS)).toBe(true)
-    expect(isRankedRwaCategory(RwaCategory.COMMODITIES)).toBe(false)
-    expect(isRankedRwaCategory(RwaCategory.UNSPECIFIED)).toBe(false)
+describe('resolveRwaDisclaimerCategory', () => {
+  it('keys the disclaimer on the category id alone', () => {
+    expect(resolveRwaDisclaimerCategory('stocks')).toBe(RwaCategory.STOCKS)
+    expect(resolveRwaDisclaimerCategory('etfs')).toBe(RwaCategory.ETFS)
+    expect(resolveRwaDisclaimerCategory('commodities')).toBe(RwaCategory.COMMODITIES)
+    expect(resolveRwaDisclaimerCategory('defi')).toBe(RwaCategory.UNSPECIFIED)
   })
 })
 
@@ -65,5 +81,21 @@ describe('showsRwaDisclaimer', () => {
     expect(showsRwaDisclaimer(RwaCategory.ETFS)).toBe(true)
     expect(showsRwaDisclaimer(RwaCategory.COMMODITIES)).toBe(false)
     expect(showsRwaDisclaimer(RwaCategory.UNSPECIFIED)).toBe(false)
+  })
+})
+
+describe('showsVolumeTimeFrameSelector', () => {
+  it('always shows for flat categories', () => {
+    expect(showsVolumeTimeFrameSelector({ rwaCategory: RwaCategory.UNSPECIFIED, tokenCategoriesEnabled: false })).toBe(
+      true,
+    )
+  })
+
+  it('shows for grouped categories only when token categories are on', () => {
+    expect(showsVolumeTimeFrameSelector({ rwaCategory: RwaCategory.STOCKS, tokenCategoriesEnabled: false })).toBe(false)
+    expect(showsVolumeTimeFrameSelector({ rwaCategory: RwaCategory.STOCKS, tokenCategoriesEnabled: true })).toBe(true)
+    expect(showsVolumeTimeFrameSelector({ rwaCategory: RwaCategory.COMMODITIES, tokenCategoriesEnabled: true })).toBe(
+      true,
+    )
   })
 })

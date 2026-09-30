@@ -33,6 +33,8 @@ export type OnchainItemSection<T extends OnchainItemListOption> = {
   onPress?: () => void
   rightElement?: JSX.Element
   endElement?: JSX.Element
+  /** Rendered as its own non-focusable row after the section's items. */
+  footerElement?: JSX.Element
   sectionHeader?: JSX.Element
   sectionHeaderHeight?: number
   /** Overrides the default section icon when provided. */

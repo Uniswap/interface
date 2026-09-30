@@ -1,3 +1,4 @@
+import type { UseQueryResult } from '@tanstack/react-query'
 import { fireEvent, waitFor } from '@testing-library/react-native'
 import { Token } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
@@ -91,10 +92,15 @@ const warnableCurrencyInfo: CurrencyInfo = {
   safetyInfo: { tokenList: TokenList.NonDefault, protectionResult: ProtectionResult.Benign },
 }
 
+// Only `data`/`isLoading` are read by the component; the rest of the query result is irrelevant here.
+function mockQueryResult(data: Maybe<CurrencyInfo>, isLoading = false): UseQueryResult<Maybe<CurrencyInfo>> {
+  return { data, isLoading } as UseQueryResult<Maybe<CurrencyInfo>>
+}
+
 const stockTestId = `stock-option-${warnableStock.chainId}-${warnableStock.symbol}`
 
 beforeEach(() => {
-  mockUseCurrencyInfoWithLoading.mockReturnValue({ currencyInfo: undefined, loading: false })
+  mockUseCurrencyInfoWithLoading.mockReturnValue(mockQueryResult(undefined))
   mockUseCurrencyInfos.mockReturnValue([])
   mockUseDismissedTokenWarnings.mockReturnValue({ tokenWarningDismissed: false, onDismissTokenWarning: vi.fn() })
 })
@@ -108,8 +114,23 @@ describe('StocksHorizontalRow.native', () => {
     })
   })
 
+  it('a tap resolves from the batched prefetch without a per-tap query', async () => {
+    mockUseCurrencyInfos.mockReturnValue([warnableCurrencyInfo])
+    const onSelect = vi.fn()
+    const { getByTestId, findByTestId } = render(
+      <StocksHorizontalRow tokens={[warnableStock]} showTokenWarnings={true} onSelectRwaToken={onSelect} />,
+    )
+
+    fireEvent.press(getByTestId(stockTestId))
+
+    expect(await findByTestId('warning-modal-title')).toBeDefined()
+    expect(onSelect).not.toHaveBeenCalled()
+    // The per-tap query stays skipped (undefined currencyId) because the batch already had this token.
+    expect(mockUseCurrencyInfoWithLoading).not.toHaveBeenCalledWith(expect.any(String))
+  })
+
   it('tapping a pill shows the warning modal without selecting', async () => {
-    mockUseCurrencyInfoWithLoading.mockReturnValue({ currencyInfo: warnableCurrencyInfo, loading: false })
+    mockUseCurrencyInfoWithLoading.mockReturnValue(mockQueryResult(warnableCurrencyInfo))
     const onSelect = vi.fn()
     const { getByTestId, findByTestId } = render(
       <StocksHorizontalRow tokens={[warnableStock]} showTokenWarnings={true} onSelectRwaToken={onSelect} />,
@@ -122,7 +143,7 @@ describe('StocksHorizontalRow.native', () => {
   })
 
   it('acknowledging the warning selects the token', async () => {
-    mockUseCurrencyInfoWithLoading.mockReturnValue({ currencyInfo: warnableCurrencyInfo, loading: false })
+    mockUseCurrencyInfoWithLoading.mockReturnValue(mockQueryResult(warnableCurrencyInfo))
     const onSelect = vi.fn()
     const { getByTestId, findByTestId } = render(
       <StocksHorizontalRow tokens={[warnableStock]} showTokenWarnings={true} onSelectRwaToken={onSelect} />,
@@ -135,7 +156,7 @@ describe('StocksHorizontalRow.native', () => {
   })
 
   it('"Go back" cancels without selecting', async () => {
-    mockUseCurrencyInfoWithLoading.mockReturnValue({ currencyInfo: warnableCurrencyInfo, loading: false })
+    mockUseCurrencyInfoWithLoading.mockReturnValue(mockQueryResult(warnableCurrencyInfo))
     const onSelect = vi.fn()
     const { getByTestId, findByTestId, queryByTestId } = render(
       <StocksHorizontalRow tokens={[warnableStock]} showTokenWarnings={true} onSelectRwaToken={onSelect} />,

@@ -1,10 +1,10 @@
 import { Flex, fonts, SpaceTokens, Text } from '@universe/mycelium'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import React, { useCallback, useReducer, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutChangeEvent } from 'react-native'
 import Markdown, { MarkdownProps } from 'react-native-markdown-display'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { openUri } from 'uniswap/src/utils/linking'
 
 type LongMarkdownTextProps = {

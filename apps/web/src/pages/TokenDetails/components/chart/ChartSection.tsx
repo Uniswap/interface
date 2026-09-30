@@ -76,7 +76,7 @@ function ChartSectionBody(): JSX.Element {
         <TDPVolumeChartPanel variables={variables} tokenColor={tokenColor} timePeriod={timePeriod} />
       )}
       {chartType === ChartType.TVL && <TDPTvlChartPanel variables={variables} tokenColor={tokenColor} />}
-      <ChartControls />
+      <ChartControls variables={variables} />
     </Flex>
   )
 }

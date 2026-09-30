@@ -1,4 +1,5 @@
 import { Flex, Text, iconSizes, spacing } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import React, { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn } from 'react-native-reanimated'
@@ -20,7 +21,6 @@ import {
   useTokenContextMenuOptions,
 } from 'uniswap/src/features/portfolio/balances/hooks/useTokenContextMenuOptions'
 import { ElementName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 

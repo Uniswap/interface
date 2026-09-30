@@ -1,10 +1,10 @@
 import { Flex, Text } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import {
   EXPLORE_STOCK_SHELF_COUNT,
   useExploreStocks,
 } from 'uniswap/src/data/apiClients/dataApiService/rwa/useExploreStocks'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CAROUSEL_FADE_WIDTH } from '~/components/TokenCardCarousel/constants'
 import { TokenCardCarousel } from '~/components/TokenCardCarousel/TokenCardCarousel'
 import { useHorizontalSnapCarousel } from '~/components/TokenCardCarousel/useHorizontalSnapCarousel'

@@ -1,12 +1,12 @@
 import { Flex, Text } from '@universe/mycelium'
 import { Clock } from '@universe/mycelium/icons/Clock'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import {
   FORMAT_DATE_TIME_SHORT,
   useFormattedDateTime,
   useLocalizedDayjs,
 } from 'uniswap/src/features/language/localizedDayjs'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useBlock } from 'wagmi'
 import { useAuctionDisplayState } from '~/features/Toucan/Auction/hooks/useAuctionDisplayState'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'

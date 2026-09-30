@@ -1,7 +1,7 @@
 import { Flex as MyceliumFlex, useMedia } from '@universe/mycelium'
 import { styled } from '@universe/mycelium/styled'
+import { TestID } from '@universe/test'
 import { memo } from 'react'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { BuyActionTile } from '~/components/ActionTiles/BuyActionTile'
 import { CopyAddressActionTile } from '~/components/ActionTiles/CopyAddressActionTile'
 import { MoreActionTile } from '~/components/ActionTiles/MoreActionTile'

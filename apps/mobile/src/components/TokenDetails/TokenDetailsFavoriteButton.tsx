@@ -1,9 +1,9 @@
 import { iconSizes, TouchableArea } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import React from 'react'
 import { Favorite } from 'src/components/icons/Favorite'
 import { useSelectHasTokenFavorited } from 'uniswap/src/features/favorites/hooks/useSelectHasTokenFavorited'
 import { useToggleFavoriteCallback } from 'uniswap/src/features/favorites/hooks/useToggleFavoriteCallback'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 
 export function TokenDetailsFavoriteButton({

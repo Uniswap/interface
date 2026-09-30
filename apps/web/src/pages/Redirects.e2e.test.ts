@@ -48,14 +48,14 @@ test.describe(
         '/add/v2/1-0x318400242bFdE3B20F49237a9490b8eBB6bdB761/1-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
       )
       await expect(page).toHaveURL(
-        /\/positions\/create\/v2\?currencyA=1-0x318400242bFdE3B20F49237a9490b8eBB6bdB761&currencyB=1-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/,
+        /\/positions\/add\/new\?protocolVersion=v2&currencyA=1-0x318400242bFdE3B20F49237a9490b8eBB6bdB761&currencyB=1-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/,
       )
     })
 
     test('should redirect add v3 liquidity to positions create page', async ({ page }) => {
       await page.goto('/add/1-0x318400242bFdE3B20F49237a9490b8eBB6bdB761/1-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48')
       await expect(page).toHaveURL(
-        /\/positions\/create\/v3\?currencyA=1-0x318400242bFdE3B20F49237a9490b8eBB6bdB761&currencyB=1-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/,
+        /\/positions\/add\/new\?protocolVersion=v3&currencyA=1-0x318400242bFdE3B20F49237a9490b8eBB6bdB761&currencyB=1-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/,
       )
     })
 

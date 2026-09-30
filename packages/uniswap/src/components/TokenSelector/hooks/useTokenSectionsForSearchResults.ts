@@ -1,4 +1,3 @@
-import { GqlResult } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -16,6 +15,7 @@ import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { useMultichainSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { isWSOL } from 'uniswap/src/utils/isWSOL'
+import type { DerivedQueryResult } from 'utilities/src/reactQuery/types'
 
 export function useTokenSectionsForSearchResults({
   addresses,
@@ -31,7 +31,7 @@ export function useTokenSectionsForSearchResults({
   searchFilter: string | null
   isBalancesOnlySearch: boolean
   input?: TradeableAsset
-}): GqlResult<OnchainItemSection<TokenOption>[]> {
+}): DerivedQueryResult<OnchainItemSection<TokenOption>[]> {
   const { t } = useTranslation()
 
   const portfolioData = usePortfolioBalancesForAddressById(addresses)
@@ -39,14 +39,14 @@ export function useTokenSectionsForSearchResults({
     data: portfolioBalancesById,
     error: portfolioBalancesByIdError,
     refetch: refetchPortfolioBalances,
-    loading: portfolioBalancesByIdLoading,
+    isLoading: portfolioBalancesByIdLoading,
   } = portfolioData
 
   const {
     data: portfolioTokenOptions,
     error: portfolioTokenOptionsError,
     refetch: refetchPortfolioTokenOptions,
-    loading: portfolioTokenOptionsLoading,
+    isLoading: portfolioTokenOptionsLoading,
   } = usePortfolioTokenOptions({ chainFilter, chainIds, searchFilter: searchFilter ?? undefined, portfolioData })
 
   // Bridging tokens are only shown if input is provided
@@ -54,7 +54,7 @@ export function useTokenSectionsForSearchResults({
     data: bridgingTokenOptions,
     error: bridgingTokenOptionsError,
     refetch: refetchBridgingTokenOptions,
-    loading: bridgingTokenOptionsLoading,
+    isLoading: bridgingTokenOptionsLoading,
   } = useBridgingTokensOptions({ oppositeSelectedToken: input, chainFilter, chainIds, portfolioData })
 
   // Only call search endpoint if isBalancesOnlySearch is false
@@ -155,8 +155,8 @@ export function useTokenSectionsForSearchResults({
   return useMemo(
     () => ({
       data: allSections,
-      loading,
-      error: error || undefined,
+      isLoading: loading,
+      error: error || null,
       refetch: refetchAll,
     }),
     [error, loading, refetchAll, allSections],

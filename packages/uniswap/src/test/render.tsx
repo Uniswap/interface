@@ -1,5 +1,4 @@
 import 'uniswap/src/i18n'
-import { InMemoryCache, Resolvers } from '@apollo/client'
 import type { EnhancedStore, PreloadedState } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
 import {
@@ -20,7 +19,6 @@ import { UrlContext } from 'uniswap/src/contexts/UrlContext'
 import { SharedPersistQueryClientProvider } from 'uniswap/src/data/reactQuery/SharedPersistQueryClientProvider'
 import { UniswapState, uniswapReducer } from 'uniswap/src/state/uniswapReducer'
 import { createMockFn } from 'uniswap/src/test/mockFn'
-import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
 
 export const mockUniswapContext = {
   navigateToBuyOrReceiveWithEmptyWallet: createMockFn(),
@@ -29,6 +27,7 @@ export const mockUniswapContext = {
   navigateToSendFlow: createMockFn(),
   navigateToReceive: createMockFn(),
   navigateToTokenDetails: createMockFn(),
+  navigateToCategoryDetails: createMockFn(),
   navigateToExternalProfile: createMockFn(),
   navigateToNftDetails: createMockFn(),
   navigateToPoolDetails: createMockFn(),
@@ -48,8 +47,6 @@ export const mockUniswapContext = {
 // This type extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
 type ExtendedRenderOptions = RenderOptions & {
-  cache?: InMemoryCache
-  resolvers?: Resolvers
   preloadedState?: PreloadedState<UniswapState>
   store?: EnhancedStore<UniswapState>
 }
@@ -64,8 +61,6 @@ type ExtendedRenderOptions = RenderOptions & {
 export function renderWithProviders(
   ui: React.ReactElement,
   {
-    cache,
-    resolvers,
     preloadedState = {},
     // Automatically create a store instance if no store was passed in
     store = configureStore({
@@ -80,11 +75,9 @@ export function renderWithProviders(
 } {
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
-      <AutoMockedApolloProvider cache={cache} resolvers={resolvers}>
-        <ReduxProvider store={store}>
-          <SharedUniswapProvider>{children}</SharedUniswapProvider>
-        </ReduxProvider>
-      </AutoMockedApolloProvider>
+      <ReduxProvider store={store}>
+        <SharedUniswapProvider>{children}</SharedUniswapProvider>
+      </ReduxProvider>
     )
   }
 
@@ -95,8 +88,6 @@ export function renderWithProviders(
 // This type extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
 type ExtendedRenderHookOptions<P> = RenderHookOptions<P> & {
-  cache?: InMemoryCache
-  resolvers?: Resolvers
   preloadedState?: PreloadedState<UniswapState>
   store?: EnhancedStore<UniswapState>
 }
@@ -133,8 +124,6 @@ export function renderHookWithProviders<P extends any[], R>(
   hookOptions?: ExtendedRenderHookOptions<P>,
 ): RenderHookWithProvidersResult<R, P> {
   const {
-    cache,
-    resolvers,
     preloadedState = {},
     // Automatically create a store instance if no store was passed in
     store = configureStore({
@@ -147,11 +136,9 @@ export function renderHookWithProviders<P extends any[], R>(
 
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
-      <AutoMockedApolloProvider cache={cache} resolvers={resolvers}>
-        <ReduxProvider store={store}>
-          <SharedUniswapProvider>{children}</SharedUniswapProvider>
-        </ReduxProvider>
-      </AutoMockedApolloProvider>
+      <ReduxProvider store={store}>
+        <SharedUniswapProvider>{children}</SharedUniswapProvider>
+      </ReduxProvider>
     )
   }
 

@@ -43,6 +43,9 @@
     },
     {
       "path": "../tailwind"
+    },
+    {
+      "path": "../test"
     }
   ],
   "compilerOptions": {

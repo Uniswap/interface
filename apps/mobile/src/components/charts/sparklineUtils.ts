@@ -115,20 +115,31 @@ function cubicBezierDeriv({ t, p }: { t: number; p: readonly [number, number, nu
 
 /**
  * Given parsed cubic Bézier segments and an x coordinate, returns the corresponding y value.
+ * Requires segments in non-decreasing x order.
  * Uses Newton's method to solve for t where B_x(t) = x, then evaluates B_y(t).
  */
 export function getYForX(segments: CubicSegment[], x: number): number | null {
   'worklet'
-  for (let i = 0; i < segments.length; i++) {
-    const seg = segments[i]
-    if (!seg) {
-      continue
+  // Chart segments are ordered by timestamp. Find the first candidate without
+  // walking the entire history on every UI-thread gesture update.
+  let low = 0
+  let high = segments.length
+  while (low < high) {
+    const mid = Math.floor((low + high) / 2)
+    const segment = segments[mid]
+    if (segment && segment.p3x + 1 < x) {
+      low = mid + 1
+    } else {
+      high = mid
     }
+  }
 
+  const seg = segments[low]
+  if (seg) {
     const minX = Math.min(seg.p0x, seg.p3x)
     const maxX = Math.max(seg.p0x, seg.p3x)
     if (x < minX - 1 || x > maxX + 1) {
-      continue
+      return null
     }
 
     const px: [number, number, number, number] = [seg.p0x, seg.p1x, seg.p2x, seg.p3x]
@@ -156,9 +167,25 @@ export function getYForX(segments: CubicSegment[], x: number): number | null {
   return null
 }
 
+/** Lower bound in the chart's chronologically ordered timestamps. */
+function findFirstTimestampIndex(values: number[], timestamp: number): number {
+  'worklet'
+  let low = 0
+  let high = values.length
+  while (low < high) {
+    const mid = Math.floor((low + high) / 2)
+    if ((values[mid] ?? 0) < timestamp) {
+      low = mid + 1
+    } else {
+      high = mid
+    }
+  }
+  return low
+}
+
 /**
  * Maps a normalized X position (0–1) to the nearest data point index
- * using actual timestamp values, correctly handling uneven time spacing.
+ * using chronologically ordered timestamps, correctly handling uneven time spacing.
  */
 export function findNearestIndex({
   timestamps,
@@ -169,14 +196,15 @@ export function findNearestIndex({
 }): number {
   'worklet'
   const scrubTimestamp = timestamps.minT + normalizedX * timestamps.rangeT
-  let nearestIndex = 0
-  let minDist = Math.abs((timestamps.values[0] ?? 0) - scrubTimestamp)
-  for (let i = 1; i < timestamps.values.length; i++) {
-    const dist = Math.abs((timestamps.values[i] ?? 0) - scrubTimestamp)
-    if (dist < minDist) {
-      minDist = dist
-      nearestIndex = i
-    }
+  const nextIndex = findFirstTimestampIndex(timestamps.values, scrubTimestamp)
+  if (nextIndex === 0) {
+    return 0
   }
-  return nearestIndex
+  const previousTimestamp = timestamps.values[nextIndex - 1] ?? 0
+  const nextTimestamp = timestamps.values[nextIndex]
+  if (nextTimestamp !== undefined && nextTimestamp - scrubTimestamp < scrubTimestamp - previousTimestamp) {
+    return nextIndex
+  }
+  // Preserve the earlier point on ties, including repeated timestamps.
+  return findFirstTimestampIndex(timestamps.values, previousTimestamp)
 }

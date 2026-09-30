@@ -14,7 +14,6 @@ import {
 } from 'uniswap/src/features/transactions/slice'
 import { TransactionDetails, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { approveTransactionInfo, transactionDetails as txDetailsFixture } from 'uniswap/src/test/fixtures'
-import { mockApolloClient } from 'uniswap/src/test/mocks'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { getPendingPrivateTxCount } from 'wallet/src/features/transactions/executeTransaction/tryGetNonce'
 import { transactionWatcher } from 'wallet/src/features/transactions/watcher/transactionWatcherSaga'
@@ -50,7 +49,7 @@ describe(transactionWatcher, () => {
     const hash1 = faker.datatype.uuid()
     const hash2 = faker.datatype.uuid()
 
-    return expectSaga(transactionWatcher, { apolloClient: mockApolloClient })
+    return expectSaga(transactionWatcher)
       .withState({
         transactions: {
           byChainId: {
@@ -68,17 +67,14 @@ describe(transactionWatcher, () => {
       ])
       .fork(watchTransaction, {
         transaction: approveTxDetailsPending,
-        apolloClient: mockApolloClient,
       })
       .dispatch(addTransaction({ ...approveTxDetailsPending, hash: hash1 }))
       .fork(watchTransaction, {
         transaction: { ...approveTxDetailsPending, hash: hash1 },
-        apolloClient: mockApolloClient,
       })
       .dispatch(updateTransaction({ ...approveTxDetailsPending, hash: hash2 }))
       .fork(watchTransaction, {
         transaction: { ...approveTxDetailsPending, hash: hash2 },
-        apolloClient: mockApolloClient,
       })
       .silentRun()
   })
@@ -111,7 +107,7 @@ describe(transactionWatcher, () => {
       options: { request: {}, submitViaPrivateRpc: false },
     })
 
-    return expectSaga(transactionWatcher, { apolloClient: mockApolloClient })
+    return expectSaga(transactionWatcher)
       .withState({
         transactions: {
           byChainId: {
@@ -159,7 +155,7 @@ describe(transactionWatcher, () => {
       addedTime: Date.now(),
     })
 
-    return expectSaga(transactionWatcher, { apolloClient: mockApolloClient })
+    return expectSaga(transactionWatcher)
       .withState({
         transactions: {
           [ACTIVE_ACCOUNT_ADDRESS]: {
@@ -177,8 +173,8 @@ describe(transactionWatcher, () => {
         [call(getProviderManager), mockProviderManager],
       ])
       .put(deleteTransaction({ address: staleTx.from, id: staleTx.id, chainId: staleTx.chainId }))
-      .fork(watchTransaction, { transaction: freshTx, apolloClient: mockApolloClient })
-      .not.fork(watchTransaction, { transaction: staleTx, apolloClient: mockApolloClient })
+      .fork(watchTransaction, { transaction: freshTx })
+      .not.fork(watchTransaction, { transaction: staleTx })
       .silentRun()
   })
 
@@ -210,7 +206,7 @@ describe(transactionWatcher, () => {
       routing: TradingApi.Routing.BRIDGE,
     } as TransactionDetails
 
-    return expectSaga(transactionWatcher, { apolloClient: mockApolloClient })
+    return expectSaga(transactionWatcher)
       .withState({
         transactions: {
           [ACTIVE_ACCOUNT_ADDRESS]: {
@@ -234,7 +230,7 @@ describe(transactionWatcher, () => {
           chainId: sendConfirmedBridgeTx.chainId,
         }),
       )
-      .fork(watchTransaction, { transaction: sendConfirmedBridgeTx, apolloClient: mockApolloClient })
+      .fork(watchTransaction, { transaction: sendConfirmedBridgeTx })
       .put(
         deleteTransaction({
           address: unconfirmedStaleBridgeTx.from,
@@ -242,7 +238,7 @@ describe(transactionWatcher, () => {
           chainId: unconfirmedStaleBridgeTx.chainId,
         }),
       )
-      .not.fork(watchTransaction, { transaction: unconfirmedStaleBridgeTx, apolloClient: mockApolloClient })
+      .not.fork(watchTransaction, { transaction: unconfirmedStaleBridgeTx })
       .silentRun()
   })
 
@@ -287,7 +283,7 @@ describe(transactionWatcher, () => {
       .run()
 
     // Run the watcher with a real transactions reducer so the cleanup actually mutates state
-    const { storeState } = await expectSaga(transactionWatcher, { apolloClient: mockApolloClient })
+    const { storeState } = await expectSaga(transactionWatcher)
       .withReducer(
         combineReducers({
           transactions: transactionReducer,
@@ -338,7 +334,7 @@ describe(transactionWatcher, () => {
       options: { request: {}, submitViaPrivateRpc: true },
     })
 
-    return expectSaga(transactionWatcher, { apolloClient: mockApolloClient })
+    return expectSaga(transactionWatcher)
       .withState({
         transactions: {
           [ACTIVE_ACCOUNT_ADDRESS]: {
@@ -361,8 +357,8 @@ describe(transactionWatcher, () => {
       .not.put(
         deleteTransaction({ address: freshPrivateTx.from, id: freshPrivateTx.id, chainId: freshPrivateTx.chainId }),
       )
-      .fork(watchTransaction, { transaction: stalePrivateTx, apolloClient: mockApolloClient })
-      .fork(watchTransaction, { transaction: freshPrivateTx, apolloClient: mockApolloClient })
+      .fork(watchTransaction, { transaction: stalePrivateTx })
+      .fork(watchTransaction, { transaction: freshPrivateTx })
       .silentRun()
   })
 })

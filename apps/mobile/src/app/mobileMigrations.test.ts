@@ -59,12 +59,14 @@ import {
   removeFlashbotsEnabledFromWalletSlice,
   removeLocalTypeAccounts,
   removeNonZeroDerivationIndexAccounts,
+  removePersistedApolloCache,
   removePersistedWalletConnectSlice,
   removeProviders,
   removeReplaceAccountOptions,
   removeShowSmallBalances,
   removeTokenListsAndCustomTokens,
   removeTokensMetadataDisplayType,
+  removeTweaksSlice,
   removeWalletConnectModalState,
   renameFollowedAddressesToWatchedAddresses,
   resetActiveChains,
@@ -91,6 +93,13 @@ import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 
 vi.mock('uniswap/src/i18n/utils', () => ({
   getWalletDeviceLanguage: vi.fn(),
+}))
+
+// The shared setup mock hands out a fresh store per `createMMKV()` call, so a single shared
+// instance is needed to observe what the migration removed.
+const { mockMMKVRemove } = vi.hoisted(() => ({ mockMMKVRemove: vi.fn() }))
+vi.mock('react-native-mmkv', () => ({
+  createMMKV: (): { remove: typeof mockMMKVRemove } => ({ remove: mockMMKVRemove }),
 }))
 
 describe('restructureTransactionsAndNotifications', () => {
@@ -1220,5 +1229,42 @@ describe('migrateAndRemoveCloudBackupSlice', () => {
     }
     const result = migrateAndRemoveCloudBackupSlice(state)
     expect(result.cloudBackup).toBeUndefined()
+  })
+})
+
+describe('removeTweaksSlice', () => {
+  it('removes tweaks from state', () => {
+    const state = { tweaks: { someTweak: true }, otherData: 'preserved' }
+    const result = removeTweaksSlice(state)
+    expect(result.tweaks).toBeUndefined()
+    expect(result.otherData).toBe('preserved')
+  })
+
+  it('handles missing tweaks state', () => {
+    const state = { otherData: 'preserved' }
+    const result = removeTweaksSlice(state)
+    expect(result).toEqual({ otherData: 'preserved' })
+  })
+})
+
+describe('removePersistedApolloCache', () => {
+  beforeEach(() => {
+    mockMMKVRemove.mockReset()
+  })
+
+  it('removes the apollo cache entry from MMKV and leaves state untouched', () => {
+    const state = { otherData: 'preserved' }
+    const result = removePersistedApolloCache(state)
+    expect(mockMMKVRemove).toHaveBeenCalledWith('apollo-cache-persist')
+    expect(result).toEqual({ otherData: 'preserved' })
+  })
+
+  it('returns state unchanged when MMKV throws', () => {
+    mockMMKVRemove.mockImplementation(() => {
+      throw new Error('mmkv unavailable')
+    })
+    const state = { otherData: 'preserved' }
+    const result = removePersistedApolloCache(state)
+    expect(result).toEqual({ otherData: 'preserved' })
   })
 })

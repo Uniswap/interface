@@ -1,8 +1,8 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
 import { UseSporeColorsReturn } from '@universe/mycelium/theme-hooks-compat'
 import * as d3 from 'd3'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { PriceChartData } from '~/components/Charts/PriceChart'
 import type { AnimateParams } from '~/features/Liquidity/charts/D3LiquidityChartShared/store/createChartActions'
 import type { LinearTickScale, Renderer } from '~/features/Liquidity/charts/D3LiquidityChartShared/types'
@@ -59,7 +59,7 @@ export type ChartState = {
   priceInverted: boolean
   protocolVersion: ProtocolVersion
   renderedBuckets?: BucketChartEntry[]
-  selectedHistoryDuration: GraphQLApi.HistoryDuration
+  selectedHistoryDuration: HistoryDuration
   selectedPriceStrategy?: DefaultPriceStrategy
   tickSpacing: number
   zoomLevel: number
@@ -132,7 +132,7 @@ export type ChartActions = {
   setChartError: (error: string) => void
   setChartState: (state: Omit<Partial<ChartState>, 'minPrice' | 'maxPrice'>) => void
   setPriceStrategy: ({ priceStrategy, animate }: { priceStrategy: DefaultPriceStrategy; animate: boolean }) => void
-  setTimePeriod: (timePeriod: GraphQLApi.HistoryDuration) => void
+  setTimePeriod: (timePeriod: HistoryDuration) => void
   syncCurrentTickFromParent: ({
     currentTick,
     currentPrice,

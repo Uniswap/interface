@@ -7,6 +7,7 @@ import getFont from 'functions/utils/getFont'
 import getNetworkLogoUrl from 'functions/utils/getNetworkLogoURL'
 import { getRequest } from 'functions/utils/getRequest'
 import { Context } from 'hono'
+import { URL_PARAM_TO_CHAIN_ID } from 'uniswap/src/features/chains/chainUrlParam'
 import { withTimeout } from 'uniswap/src/utils/polling'
 
 function AuctionTokenLogo({
@@ -101,7 +102,7 @@ export async function auctionImageHandler(c: Context) {
     }
 
     const [fontData] = await Promise.all([getFont(origin, c.env)])
-    const networkLogo = getNetworkLogoUrl(chainName.toUpperCase(), origin)
+    const networkLogo = getNetworkLogoUrl(URL_PARAM_TO_CHAIN_ID[chainName.toLowerCase()], origin)
     const logoUrl = data.auctionData?.tokenLogoUrl?.includes('.webp') ? undefined : data.auctionData?.tokenLogoUrl
     const tokenName = data.auctionData?.tokenName ?? data.name
     const tokenSymbol = data.auctionData?.tokenSymbol ?? 'TOKEN'

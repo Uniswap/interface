@@ -1,7 +1,7 @@
 import { fireEvent } from '@testing-library/react'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency } from '@uniswap/sdk-core'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import { SelectPriceRangeStep } from '~/features/Liquidity/Create/RangeSelectionStep'
 import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'

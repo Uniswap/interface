@@ -1,4 +1,3 @@
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId, areAddressesEqual } from '@universe/chains'
 import { useCallback } from 'react'
 import { useAllCommonBaseCurrencies } from 'uniswap/src/components/TokenSelector/hooks/useAllCommonBaseCurrencies'
@@ -7,37 +6,11 @@ import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { ProtectionResult } from 'uniswap/src/features/dataApi/safety'
 import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import { buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
-import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils/getCurrencySafetyInfo'
 import { FORSupportedToken } from 'uniswap/src/features/fiatOnRamp/types'
 import { currencyId } from 'uniswap/src/utils/currencyId'
-import { fiatOnRampToCurrency, gqlToCurrency, PricePoint } from '~/data/util'
+import { fiatOnRampToCurrency, PricePoint } from '~/data/util'
 
 // TODO(WEB-3839): replace all usage of Currency in the web app with CurrencyInfo
-
-// TODO: remove this function once we have it in the shared package
-export function gqlTokenToCurrencyInfo(token?: GraphQLApi.Token): CurrencyInfo | undefined {
-  if (!token) {
-    return undefined
-  }
-
-  const currency = gqlToCurrency(token)
-
-  if (!currency) {
-    return undefined
-  }
-
-  const currencyInfo: CurrencyInfo = buildCurrencyInfo({
-    currency,
-    currencyId: currencyId(currency),
-    logoUrl: token.project?.logo?.url ?? token.project?.logoUrl,
-    isSpam: token.project?.isSpam ?? false,
-    safetyInfo: getCurrencySafetyInfo(
-      token.project?.safetyLevel ?? GraphQLApi.SafetyLevel.StrongWarning,
-      token.protectionInfo,
-    ),
-  })
-  return currencyInfo
-}
 
 export function useMeldSupportedCurrencyToCurrencyInfo(): {
   meldSupportedCurrencyToCurrencyInfo?: (forCurrency: FORSupportedToken) => CurrencyInfo | undefined

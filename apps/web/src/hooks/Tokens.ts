@@ -108,7 +108,7 @@ function useCurrencyInfoWithLoading(
     shouldSkip,
     addressOrCurrency: processedAddress,
   } = useCurrencyPreprocessing({ addressOrCurrency, chainId, skip })
-  const { currencyInfo, loading } = useUniswapCurrencyInfoWithLoading(currencyId, { skip: shouldSkip })
+  const { data: currencyInfo, isLoading } = useUniswapCurrencyInfoWithLoading(currencyId, { skip: shouldSkip })
 
   const finalCurrencyInfo = useMemo(() => {
     if (!currencyInfo || !processedAddress || skip) {
@@ -117,7 +117,7 @@ function useCurrencyInfoWithLoading(
     return currencyInfo
   }, [processedAddress, skip, currencyInfo])
 
-  return { currencyInfo: finalCurrencyInfo, loading }
+  return { currencyInfo: finalCurrencyInfo, loading: isLoading }
 }
 
 export function checkIsNative(addressOrCurrency?: string | Currency): boolean {

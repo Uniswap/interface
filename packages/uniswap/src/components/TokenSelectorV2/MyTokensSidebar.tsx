@@ -1,6 +1,7 @@
 import { UniverseChainId } from '@universe/chains'
 import { Flex, iconSizes, LinearGradient, spacing, Text, TouchableArea } from '@universe/mycelium'
 import { Sidebar } from '@universe/mycelium/icons/Sidebar'
+import { TestID } from '@universe/test'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
@@ -25,7 +26,6 @@ import type { AddressGroup } from 'uniswap/src/features/accounts/store/types/Acc
 import { DataApiOutageBanner } from 'uniswap/src/features/dataApi/outage/DataApiOutageBanner'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
 
@@ -121,7 +121,7 @@ export const MyTokensSidebar = memo(function MyTokensSidebar({
 
   const {
     data: tokens,
-    loading,
+    isLoading,
     error,
     refetch,
   } = usePortfolioTokenOptions({
@@ -241,13 +241,13 @@ export const MyTokensSidebar = memo(function MyTokensSidebar({
           emptyElement={emptyElement}
           hasError={Boolean(error && !tokens)}
           keyExtractor={keyExtractor}
-          loading={loading}
+          loading={isLoading}
           refetch={refetch}
           renderItem={renderItem}
           renderedInModal={false}
           sections={isConnected ? sections : []}
         />
-        {Boolean(loading && !tokens?.length) && <TokenSelectorV2SkeletonOverlay backgroundColor="$surface2" />}
+        {Boolean(isLoading && !tokens?.length) && <TokenSelectorV2SkeletonOverlay backgroundColor="$surface2" />}
         {/* Rows fade out at the sidebar's bottom edge; fades to surface2, the sidebar's backdrop */}
         <LinearGradient
           colors={['transparent', '$surface2']}

@@ -5,7 +5,7 @@ import { Platform, areEvmAddressesEqual, getValidAddress } from '@universe/chain
 import type { Dispatch, SetStateAction } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { getListPoolsQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/pools/queries'
+import { getListPoolsInfiniteQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/pools/queries'
 import { usePermissionedSwapPair } from 'uniswap/src/features/permissionedTokens/usePermissionedSwapPair'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { useActiveAddress } from '~/features/accounts/store/hooks'
@@ -142,7 +142,7 @@ export function useRecommendedPermissionedHook({
     isLoading: isPoolsLoading,
     isError: isPoolsError,
   } = useInfiniteQuery(
-    getListPoolsQueryOptions({
+    getListPoolsInfiniteQueryOptions({
       params: listPoolsParams,
       pageSize: LIST_POOLS_PAGE_SIZE,
       enabled: shouldFetch,

@@ -1,4 +1,5 @@
 import { Button, Flex, Text } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { Complete } from 'src/app/features/onboarding/Complete'
@@ -11,7 +12,6 @@ import { navigate } from 'src/app/navigation/state'
 import { checksIfSupportsSidePanel } from 'src/app/utils/chrome'
 import { isOnboardedSelector } from 'src/app/utils/isOnboardedSelector'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
 import { useTimeout } from 'utilities/src/time/timing'
 

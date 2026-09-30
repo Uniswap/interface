@@ -1,6 +1,7 @@
 import { UniverseChainId } from '@universe/chains'
 import { Flex, iconSizes, Text, TouchableArea } from '@universe/mycelium'
 import { TooltipCompat as Tooltip } from '@universe/mycelium/tooltip-compat'
+import { TestID } from '@universe/test'
 import { memo, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -11,7 +12,6 @@ import {
 } from 'uniswap/src/components/TokenSelectorV2/constants'
 import { HorizontalFadeScroll } from 'uniswap/src/components/TokenSelectorV2/HorizontalFadeScroll'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const CHIP_TOOLTIP_DELAY = { close: 0, open: 0 }
 

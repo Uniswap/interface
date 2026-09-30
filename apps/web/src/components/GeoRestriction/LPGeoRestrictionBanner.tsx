@@ -1,9 +1,9 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
 import { GlobeFilled } from '@universe/mycelium/icons/GlobeFilled'
 import { InfoCircle } from '@universe/mycelium/icons/InfoCircle'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { openUri } from 'uniswap/src/utils/linking'
 
 /**

@@ -43,6 +43,14 @@ describe('getWebSocketUrl', () => {
     expect(getWebSocketUrl()).toBe(expected)
   })
 
+  it('follows the entry gateway override so the socket shares the REST host and its session cookie', () => {
+    setConfig({
+      enableEntryGatewayProxy: false,
+      entryGatewayApiUrlOverride: 'https://entry-gateway.api.corn-staging.com',
+    })
+    expect(getWebSocketUrl()).toBe('wss://entry-gateway.api.corn-staging.com/ws')
+  })
+
   it('uses the same-origin proxy path when the proxy is enabled', () => {
     setConfig({ enableEntryGatewayProxy: true })
     expect(getWebSocketUrl()).toBe('/ws')

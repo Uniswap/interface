@@ -57,12 +57,19 @@ export const PopoverTrigger = forwardRef<HTMLDivElement, PopoverTriggerProps>(fu
     onContextMenu,
     testID,
     'data-testid': dataTestId,
+    role,
+    tabIndex,
     ...styleProps
   } = props
   const colors = useSporeColors()
   const config = useContext(WebPopoverConfigContext)
   const resolvedCallerStyle = resolvePopoverWebStyle(colors, styleProps)
   const testId = dataTestId ?? testID
+  // Base UI's prop merge lets an explicit `undefined` beat its own `role="button"` / `tabIndex=0`, so only spread the props that are set.
+  const semanticsProps = {
+    ...(role !== undefined ? { role } : undefined),
+    ...(tabIndex !== undefined ? { tabIndex } : undefined),
+  }
 
   const hoverProps = config.openOnHover
     ? { openOnHover: true, delay: config.openDelayMs, closeDelay: config.closeDelayMs }
@@ -103,6 +110,7 @@ export const PopoverTrigger = forwardRef<HTMLDivElement, PopoverTriggerProps>(fu
         nativeButton={false}
         disabled={disabled}
         {...hoverProps}
+        {...semanticsProps}
         render={renderElement}
         onMouseDown={onMouseDown}
         onContextMenu={onContextMenu}
@@ -116,6 +124,7 @@ export const PopoverTrigger = forwardRef<HTMLDivElement, PopoverTriggerProps>(fu
       nativeButton={false}
       disabled={disabled}
       {...hoverProps}
+      {...semanticsProps}
       data-testid={testId}
       // The forwarded ref rides the render div: Base UI types the Trigger's own ref
       // as HTMLButtonElement, but the legacy trigger surface is a plain div.

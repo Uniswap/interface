@@ -17,21 +17,8 @@ export const Mocks = {
     expiredOrders: path.resolve(__dirname, '../mocks/rest/uniswapX/expired_orders.json'),
   },
   Token: {
-    token_warning: path.resolve(__dirname, '../mocks/graphql/Token/token_warning.json'),
     search_token_tether: path.resolve(__dirname, '../mocks/graphql/Token/search_token_tether.json'),
-    uni_token: path.resolve(__dirname, '../mocks/graphql/Token/uni_token.json'),
     uni_token_price: path.resolve(__dirname, '../mocks/graphql/Token/uni_token_price.json'),
-    sepolia_yay_token: path.resolve(__dirname, '../mocks/graphql/Token/sepolia_yay_token.json'),
-  },
-  TokenProjects: {
-    token_spam: path.resolve(__dirname, '../mocks/graphql/TokenProjects/token_warning.json'),
-  },
-  TokenProjectWeb: {
-    token_warning: path.resolve(__dirname, '../mocks/graphql/TokenProjectWeb/token_warning.json'),
-  },
-  TokenWeb: {
-    token_warning: path.resolve(__dirname, '../mocks/graphql/TokenWeb/token_warning.json'),
-    sepolia_yay_token: path.resolve(__dirname, '../mocks/graphql/TokenWeb/sepolia_yay_token.json'),
   },
   Search: {
     search_token_uni: path.resolve(__dirname, '../mocks/rest/search/search_token_uni.json'),
@@ -58,6 +45,8 @@ export const Mocks = {
       __dirname,
       '../mocks/dataApiService/get_portfolio_chart_pools_empty.json',
     ),
+    get_token_warning: path.resolve(__dirname, '../mocks/dataApiService/get_token_warning.json'),
+    get_token_sepolia_yay: path.resolve(__dirname, '../mocks/dataApiService/get_token_sepolia_yay.json'),
     get_rewards: path.resolve(__dirname, '../mocks/dataApiService/get_rewards.json'),
     get_rewards_empty: path.resolve(__dirname, '../mocks/dataApiService/get_rewards_empty.json'),
     list_launches: path.resolve(__dirname, '../mocks/dataApiService/list_launches.json'),

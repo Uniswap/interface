@@ -1,4 +1,5 @@
 import { findNearestIndex, getYForX, parseSvgPath } from 'src/components/charts/sparklineUtils'
+import { computeChartPaths } from 'uniswap/src/components/charts/computeChartPaths'
 
 describe('findNearestIndex', () => {
   it('returns 0 for normalizedX at the start', () => {
@@ -53,6 +54,46 @@ describe('findNearestIndex', () => {
     // normalizedX 0.7 → timestamp 70, closer to 100 than 0
     expect(findNearestIndex({ timestamps, normalizedX: 0.7 })).toBe(1)
   })
+
+  it('keeps the first duplicate on exact matches, ties, and out-of-range positions', () => {
+    const timestamps = { minT: 0, rangeT: 100, values: [0, 0, 50, 50, 100, 100] }
+    expect(findNearestIndex({ timestamps, normalizedX: -1 })).toBe(0)
+    expect(findNearestIndex({ timestamps, normalizedX: 0.5 })).toBe(2)
+    expect(findNearestIndex({ timestamps, normalizedX: 0.75 })).toBe(2)
+    expect(findNearestIndex({ timestamps, normalizedX: 2 })).toBe(4)
+  })
+
+  it('matches a full-resolution nearest-point search across an uneven history', () => {
+    const values = Array.from({ length: 1000 }, (_, index) => Math.floor(index / 3) ** 2)
+    const timestamps = { minT: 0, rangeT: values[999]!, values }
+    for (let step = 0; step <= 100; step++) {
+      const normalizedX = step / 100
+      const target = normalizedX * timestamps.rangeT
+      const expected = values.reduce(
+        (nearest, value, index) => (Math.abs(value - target) < Math.abs(values[nearest]! - target) ? index : nearest),
+        0,
+      )
+      expect(findNearestIndex({ timestamps, normalizedX })).toBe(expected)
+    }
+  })
+
+  it('does not scan a long history on each scrub movement', () => {
+    const visitedIndices = new Set<string>()
+    const values = new Proxy(
+      Array.from({ length: 10_000 }, (_, index) => index),
+      {
+        get(target, property, receiver) {
+          if (typeof property === 'string' && /^\d+$/.test(property)) {
+            visitedIndices.add(property)
+          }
+          return Reflect.get(target, property, receiver)
+        },
+      },
+    )
+    expect(findNearestIndex({ timestamps: { minT: 0, rangeT: 9999, values }, normalizedX: 0.9 })).toBe(8999)
+    // Count distinct candidates so repeated reads do not make this complexity guard brittle.
+    expect(visitedIndices.size).toBeLessThan(50)
+  })
 })
 
 describe('parseSvgPath', () => {
@@ -85,6 +126,28 @@ describe('parseSvgPath', () => {
 })
 
 describe('getYForX', () => {
+  it('tracks retained extrema on a sampled cubic chart with uneven timestamps', () => {
+    const data = [
+      { timestamp: 0, value: 10 },
+      { timestamp: 1, value: 12 },
+      { timestamp: 10, value: 0 },
+      { timestamp: 20, value: 30 },
+      { timestamp: 21, value: 15 },
+      { timestamp: 90, value: 25 },
+      { timestamp: 91, value: 12 },
+      { timestamp: 95, value: 5 },
+      { timestamp: 96, value: 17 },
+      { timestamp: 100, value: 10 },
+    ]
+    const { linePath } = computeChartPaths({ data, dataWidth: 200, height: 100, yGutter: 20, maxPoints: 6 })
+    const segments = parseSvgPath(linePath!)
+    expect(segments).toHaveLength(5)
+    for (const index of [0, 2, 3, 5, 7, 9]) {
+      const point = data[index]!
+      expect(getYForX(segments, point.timestamp * 2)).toBeCloseTo(20 + ((30 - point.value) / 30) * 60)
+    }
+  })
+
   it('interpolates Y for a straight line promoted from L command', () => {
     const segments = parseSvgPath('M0,0L100,100')
     // Midpoint should be ~50
@@ -96,5 +159,31 @@ describe('getYForX', () => {
   it('returns null for x outside all segments', () => {
     const segments = parseSvgPath('M10,0L20,100')
     expect(getYForX(segments, 500)).toBeNull()
+  })
+
+  it('keeps the same segment at shared boundaries and within the endpoint tolerance', () => {
+    const segments = parseSvgPath('M0,0L10,100L20,0')
+    expect(getYForX(segments, -1)).toBeCloseTo(0)
+    expect(getYForX(segments, 10)).toBeCloseTo(100)
+    expect(getYForX(segments, 11)).toBeCloseTo(100)
+    expect(getYForX(segments, 15)).toBeCloseTo(50)
+    expect(getYForX(segments, 21)).toBeCloseTo(0)
+    expect(getYForX(segments, -2)).toBeNull()
+    expect(getYForX([], 0)).toBeNull()
+  })
+
+  it('does not scan every curve segment near the end of a long history', () => {
+    const visitedIndices = new Set<string>()
+    const path = `M0,0${Array.from({ length: 10_000 }, (_, index) => `L${index + 1},${index + 1}`).join('')}`
+    const segments = new Proxy(parseSvgPath(path), {
+      get(target, property, receiver) {
+        if (typeof property === 'string' && /^\d+$/.test(property)) {
+          visitedIndices.add(property)
+        }
+        return Reflect.get(target, property, receiver)
+      },
+    })
+    expect(getYForX(segments, 9000)).toBeCloseTo(8999)
+    expect(visitedIndices.size).toBeLessThan(50)
   })
 })

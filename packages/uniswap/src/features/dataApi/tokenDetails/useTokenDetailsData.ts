@@ -46,11 +46,9 @@ export type { TokenMetadataData } from 'uniswap/src/features/dataApi/tokenDetail
  * instance rather than the caller's per-chain currencyId.
  */
 export interface UseTokenSpotPriceOptions {
-  /** True for the "all networks" aggregate view of a genuinely multichain asset. When true, V2 fetches spot price via GetTokenMultiChain instead of the single-chain GetToken. */
+  /** True for the "all networks" aggregate view of a genuinely multichain asset. When true,fetches spot price via GetTokenMultiChain instead of the single-chain GetToken. */
   isMultichainAggregateView?: boolean
-  /** Polls the V2 REST spot-price query at this cadence — without it the displayed price freezes, as REST token queries have no built-in polling. No effect on the legacy GraphQL path. */
   refetchInterval?: number
-  /** Disables the V2 REST queries entirely, e.g. while the consuming surface is hidden */
   skip?: boolean
 }
 
@@ -109,6 +107,8 @@ export interface UseTokenPriceChangeOptions {
   isMultichainAggregateView?: boolean
   /** Disables the V2 REST queries entirely, e.g. while the consuming surface is hidden */
   skip?: boolean
+  /** Polls the V2 REST query at this cadence — without it the displayed change freezes, as REST token queries have no built-in polling. */
+  refetchInterval?: number
 }
 
 /**
@@ -119,20 +119,22 @@ export function useTokenPriceChange(currencyId: CurrencyId, options?: UseTokenPr
   const enableQueries = !options?.skip
 
   const restTokenIdentifier = useMemo(() => currencyIdToRestContractInput(currencyId), [currencyId])
-  const { data: singleChainPercentChange1d } = useQuery(
-    getGetTokenQueryOptions({
+  const { data: singleChainPercentChange1d } = useQuery({
+    ...getGetTokenQueryOptions({
       params: restTokenIdentifier,
       enabled: enableQueries && !isMultichainAggregation,
       select: selectPercentChange1d,
     }),
-  )
-  const { data: multichainPercentChange1d } = useQuery(
-    getGetTokenMultiChainQueryOptions({
+    refetchInterval: options?.refetchInterval,
+  })
+  const { data: multichainPercentChange1d } = useQuery({
+    ...getGetTokenMultiChainQueryOptions({
       params: { identifier: { case: 'token', value: restTokenIdentifier } },
       enabled: enableQueries && isMultichainAggregation,
       select: selectMultichainPercentChange1d,
     }),
-  )
+    refetchInterval: options?.refetchInterval,
+  })
 
   return useMemo(() => {
     return isMultichainAggregation ? multichainPercentChange1d : singleChainPercentChange1d
@@ -243,6 +245,7 @@ function selectTokenMetadata(data: PlainMessage<GetTokenResponse> | undefined): 
     symbol: token.symbol,
     logoUrl: token.project?.logoUrl,
     description: token.project?.description,
+    descriptionTranslations: token.project?.descriptionTranslations,
     homepageUrl: token.project?.homepageUrl,
     twitterName: normalizeTwitterHandle(token.project?.twitterName),
     isSpam: token.safety?.isSpam,

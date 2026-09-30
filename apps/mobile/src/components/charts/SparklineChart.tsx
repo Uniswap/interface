@@ -4,22 +4,13 @@ import Animated, {
   SharedValue,
   useAnimatedProps,
   useAnimatedReaction,
+  useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
   withRepeat,
   withTiming,
 } from 'react-native-reanimated'
-import Svg, {
-  Circle,
-  ClipPath,
-  Defs,
-  G,
-  Line,
-  Path,
-  Rect,
-  Stop,
-  LinearGradient as SvgLinearGradient,
-} from 'react-native-svg'
+import Svg, { Circle, Defs, G, Line, Path, Stop, LinearGradient as SvgLinearGradient } from 'react-native-svg'
 import { scheduleOnRN } from 'react-native-worklets'
 import { findNearestIndex, getYForX, parseSvgPath } from 'src/components/charts/sparklineUtils'
 import { computeChartPaths, type ChartPoint } from 'uniswap/src/components/charts/computeChartPaths'
@@ -28,7 +19,6 @@ export type ChartData = ChartPoint[]
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle)
 const AnimatedLine = Animated.createAnimatedComponent(Line)
-const AnimatedRect = Animated.createAnimatedComponent(Rect)
 
 const STROKE_WIDTH = 1.5
 const DOT_RADIUS = 5
@@ -72,7 +62,6 @@ export const SparklineChart = memo(function SparklineChart({
   strokeWidth = STROKE_WIDTH,
 }: SparklineChartProps): JSX.Element | null {
   const gradientId = `sparkline-gradient-${useId()}`
-  const clipPathId = `sparkline-clip-${useId()}`
   // When showing the dot, reserve right padding so the pulse circle isn't clipped
   const rightPadding = showDot ? PULSE_MAX_RADIUS : 0
   const dataWidth = Math.max(width - rightPadding, 1)
@@ -83,8 +72,10 @@ export const SparklineChart = memo(function SparklineChart({
   const scrubIndex = providedScrubIndex ?? internalScrubIndex
   const scrubActive = providedScrubActive ?? internalScrubActive
 
+  // Preserve the min/max envelope per horizontal point, plus the endpoints.
+  // Scrub indices still address the full-resolution history.
   const { linePath, areaPath, lastPoint, timestamps } = useMemo(
-    () => computeChartPaths({ data, dataWidth, height, yGutter }),
+    () => computeChartPaths({ data, dataWidth, height, yGutter, maxPoints: 2 * Math.ceil(dataWidth) + 2 }),
     [data, dataWidth, height, yGutter],
   )
 
@@ -171,11 +162,8 @@ export const SparklineChart = memo(function SparklineChart({
     )
   }, [data.length, dataWidth, timestamps, handleScrubEnd, scrubActive, scrubIndex, scrubX])
 
-  const clipRectProps = useAnimatedProps(() => ({
-    height,
-    width: interactive && scrubActive.value ? scrubX.value : width,
-    x: 0,
-    y: 0,
+  const clipStyle = useAnimatedStyle(() => ({
+    width: scrubActive.value ? Math.max(0, Math.min(scrubX.value, dataWidth)) : width,
   }))
 
   const scrubLineProps = useAnimatedProps(() => ({
@@ -200,21 +188,65 @@ export const SparklineChart = memo(function SparklineChart({
     return null
   }
 
-  const chartContent = (
-    <Svg width={width} height={height}>
-      <Defs>
-        <SvgLinearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-          <Stop offset="0" stopColor={color} stopOpacity={0.16} />
-          <Stop offset="1" stopColor={color} stopOpacity={0} />
-        </SvgLinearGradient>
-        {interactive && (
-          <ClipPath id={clipPathId}>
-            <AnimatedRect animatedProps={clipRectProps} />
-          </ClipPath>
-        )}
-      </Defs>
-      {interactive && (
-        <>
+  const gradient = (
+    <Defs>
+      <SvgLinearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+        <Stop offset="0" stopColor={color} stopOpacity={0.16} />
+        <Stop offset="1" stopColor={color} stopOpacity={0} />
+      </SvgLinearGradient>
+    </Defs>
+  )
+
+  const brightPaths = (
+    <>
+      <Path d={areaPath} fill={`url(#${gradientId})`} />
+      <Path d={linePath} stroke={color} strokeWidth={strokeWidth} fill="none" />
+    </>
+  )
+
+  const livePoint = showDot && lastPoint && (
+    <>
+      <PulseDot cx={lastPoint.x} cy={lastPoint.y} color={color} hidden={interactive ? scrubActive : undefined} />
+      {interactive ? (
+        <AnimatedCircle
+          animatedProps={liveDotProps}
+          cx={lastPoint.x}
+          cy={lastPoint.y}
+          r={DOT_RADIUS}
+          fill={color}
+          stroke={dotStrokeColor}
+          strokeWidth={dotStrokeColor ? 2 : 0}
+        />
+      ) : (
+        <Circle
+          cx={lastPoint.x}
+          cy={lastPoint.y}
+          r={DOT_RADIUS}
+          fill={color}
+          stroke={dotStrokeColor}
+          strokeWidth={dotStrokeColor ? 2 : 0}
+        />
+      )}
+    </>
+  )
+
+  if (!interactive) {
+    return (
+      <Svg width={width} height={height}>
+        {gradient}
+        <G>
+          {brightPaths}
+          {livePoint}
+        </G>
+      </Svg>
+    )
+  }
+
+  return (
+    <GestureDetector gesture={longPressGesture}>
+      <Animated.View style={{ width, height }}>
+        <Svg pointerEvents="none" width={width} height={height}>
+          {gradient}
           <Path d={areaPath} fill={`url(#${gradientId})`} opacity={INACTIVE_AREA_OPACITY} />
           <Path
             d={linePath}
@@ -223,39 +255,20 @@ export const SparklineChart = memo(function SparklineChart({
             fill="none"
             strokeOpacity={INACTIVE_LINE_OPACITY}
           />
-        </>
-      )}
-      <G clipPath={interactive ? `url(#${clipPathId})` : undefined}>
-        <Path d={areaPath} fill={`url(#${gradientId})`} />
-        <Path d={linePath} stroke={color} strokeWidth={strokeWidth} fill="none" />
-        {showDot && lastPoint && (
-          <>
-            <PulseDot cx={lastPoint.x} cy={lastPoint.y} color={color} hidden={interactive ? scrubActive : undefined} />
-            {interactive ? (
-              <AnimatedCircle
-                animatedProps={liveDotProps}
-                cx={lastPoint.x}
-                cy={lastPoint.y}
-                r={DOT_RADIUS}
-                fill={color}
-                stroke={dotStrokeColor}
-                strokeWidth={dotStrokeColor ? 2 : 0}
-              />
-            ) : (
-              <Circle
-                cx={lastPoint.x}
-                cy={lastPoint.y}
-                r={DOT_RADIUS}
-                fill={color}
-                stroke={dotStrokeColor}
-                strokeWidth={dotStrokeColor ? 2 : 0}
-              />
-            )}
-          </>
-        )}
-      </G>
-      {interactive && (
-        <>
+        </Svg>
+        {/* Keep the SVG bounds fixed; only its native parent changes the visible width. */}
+        <Animated.View
+          pointerEvents="none"
+          style={[{ position: 'absolute', top: 0, left: 0, height, overflow: 'hidden' }, clipStyle]}
+        >
+          <Svg width={width} height={height}>
+            {gradient}
+            {brightPaths}
+          </Svg>
+        </Animated.View>
+        {/* Animated SVG nodes redraw this overlay without invalidating the chart paths. */}
+        <Svg pointerEvents="none" style={{ position: 'absolute', top: 0, left: 0 }} width={width} height={height}>
+          {livePoint}
           <AnimatedLine
             animatedProps={scrubLineProps}
             stroke={color}
@@ -269,20 +282,10 @@ export const SparklineChart = memo(function SparklineChart({
             stroke={dotStrokeColor}
             strokeWidth={dotStrokeColor ? 2 : 0}
           />
-        </>
-      )}
-    </Svg>
+        </Svg>
+      </Animated.View>
+    </GestureDetector>
   )
-
-  if (interactive) {
-    return (
-      <GestureDetector gesture={longPressGesture}>
-        <Animated.View style={{ width, height }}>{chartContent}</Animated.View>
-      </GestureDetector>
-    )
-  }
-
-  return chartContent
 })
 
 const PulseDot = memo(function PulseDot({

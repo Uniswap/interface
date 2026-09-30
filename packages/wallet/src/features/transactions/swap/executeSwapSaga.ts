@@ -24,7 +24,6 @@ import { isFinalizedTx } from 'uniswap/src/features/transactions/types/utils'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import type { Logger } from 'utilities/src/logger/logger'
-import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import type { TransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 import { createTransactionServices } from 'wallet/src/features/transactions/factories/createTransactionServices'
 import {
@@ -452,10 +451,8 @@ export function createExecuteSwapSaga(
       if (swapResult) {
         if (isFinalizedTx(swapResult.transaction)) {
           // Update the store with tx receipt details
-          const apolloClient = yield* call(apolloClientRef.onReady)
           yield* call(finalizeTransaction, {
             transaction: swapResult.transaction,
-            apolloClient,
           })
         } else {
           // Update transaction with the new status, which will trigger a new transaction watcher

@@ -43,10 +43,10 @@ vi.mock('@universe/mycelium', () => ({
   Flex: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }))
 
+import { TestID } from '@universe/test'
 // Real imports after the mocks are registered.
 import { ReviewButton } from 'src/app/features/send/SendFormScreen/ReviewButton'
 import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 
 const mockUseSendContext = vi.mocked(useSendContext)

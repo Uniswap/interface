@@ -1,4 +1,11 @@
-import { generateRandomBytes, derivePbkdf2, PBKDF2_PARAMS, AES_GCM_PARAMS } from '@universe/cryptography'
+import {
+  aesGcmDecrypt,
+  aesGcmEncrypt,
+  derivePbkdf2,
+  generateRandomBytes,
+  importAesGcmKey,
+  PBKDF2_PARAMS,
+} from '@universe/cryptography'
 import { base64ToUint8, uint8ToBase64, uint8ToUtf8, utf8ToUint8 } from '@universe/encoding'
 import { logger } from 'utilities/src/logger/logger'
 // Module self-reference to enable mocking of internal function calls in tests.
@@ -41,16 +48,13 @@ interface EncryptParams {
 }
 // encrypts and returns the cipher text
 export async function encrypt({ plaintext, encryptionKey, iv, additionalData }: EncryptParams): Promise<string> {
-  const ciphertext = await crypto.subtle.encrypt(
-    {
-      iv: iv as BufferSource,
-      ...AES_GCM_PARAMS,
-      additionalData: utf8ToUint8(additionalData ?? ''),
-    },
-    encryptionKey,
-    utf8ToUint8(plaintext),
-  )
-  return new Uint8Array(ciphertext).toString()
+  const ciphertext = await aesGcmEncrypt({
+    key: encryptionKey,
+    iv,
+    data: utf8ToUint8(plaintext),
+    additionalData: utf8ToUint8(additionalData ?? ''),
+  })
+  return ciphertext.toString()
 }
 
 interface DecryptParams {
@@ -68,16 +72,13 @@ export async function decrypt({
 }: DecryptParams): Promise<string | undefined> {
   try {
     // if this is successful, the password is correct. Otherwise it will throw an error
-    const result = await crypto.subtle.decrypt(
-      {
-        iv: iv as BufferSource,
-        ...AES_GCM_PARAMS,
-        additionalData: utf8ToUint8(additionalData ?? ''),
-      },
-      encryptionKey,
-      ciphertext as BufferSource,
-    )
-    return uint8ToUtf8(new Uint8Array(result))
+    const result = await aesGcmDecrypt({
+      key: encryptionKey,
+      iv,
+      ciphertext,
+      additionalData: utf8ToUint8(additionalData ?? ''),
+    })
+    return uint8ToUtf8(result)
   } catch (_error) {
     logger.debug('crypto', 'decryptPassword', 'incorrect password')
     return undefined
@@ -90,7 +91,7 @@ export async function exportKey(key: CryptoKey): Promise<string> {
 }
 
 export async function convertBytesToCryptoKey(bytes: BufferSource): Promise<CryptoKey> {
-  return window.crypto.subtle.importKey('raw', bytes, { name: 'AES-GCM' }, true, ['encrypt', 'decrypt'])
+  return importAesGcmKey(bytes)
 }
 
 export async function convertBase64SeedToCryptoKey(keyBase64: string): Promise<CryptoKey> {

@@ -1,5 +1,5 @@
 import { Flex, Skeleton } from '@universe/mycelium'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 
 export function TokenLaunchedBannerSkeleton() {
   return (

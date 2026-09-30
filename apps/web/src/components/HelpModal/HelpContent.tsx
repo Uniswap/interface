@@ -4,9 +4,9 @@ import { ExternalLink } from '@universe/mycelium/icons/ExternalLink'
 import { GraduationCap } from '@universe/mycelium/icons/GraduationCap'
 import { SpeechBubbles } from '@universe/mycelium/icons/SpeechBubbles'
 import { X } from '@universe/mycelium/icons/X'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { UniswapHelpUrls, UniswapStaticUrls } from 'uniswap/src/constants/urls'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 interface HelpContentProps {
   onClose?: () => void

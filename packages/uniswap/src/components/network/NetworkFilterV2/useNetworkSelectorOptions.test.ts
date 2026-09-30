@@ -40,8 +40,8 @@ const EMPTY_ADDRESSES = {}
 function setupMock(data: Record<string, PortfolioBalance> | undefined): void {
   vi.mocked(usePortfolioBalancesForAddressById).mockReturnValue({
     data,
-    loading: false,
-    error: undefined,
+    isLoading: false,
+    error: null,
     refetch: vi.fn(),
   })
 }

@@ -1,6 +1,6 @@
 import { getPortfolio, listTransactions } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
+import { TestID } from '@universe/test'
 import esES from 'uniswap/src/i18n/locales/translations/es-ES.json'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { expect, getTest, type Page } from '~/playwright/fixtures'
 import { getVisibleDropdownElementByTestId } from '~/playwright/fixtures/utils'
 import { HAYDEN_ADDRESS } from '~/playwright/fixtures/wallets'

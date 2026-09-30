@@ -1,7 +1,7 @@
 import { searchTokens } from '@uniswap/client-data-api/dist/data/v1/search-SearchService_connectquery'
+import { TestID } from '@universe/test'
 import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { UNI } from 'uniswap/src/constants/tokens'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { expect, getTest, type Page } from '~/playwright/fixtures'
 import { Mocks } from '~/playwright/mocks/mocks'
 

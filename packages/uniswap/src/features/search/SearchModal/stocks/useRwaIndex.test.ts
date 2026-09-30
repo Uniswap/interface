@@ -17,13 +17,8 @@ beforeEach(() => {
 })
 
 describe(useRwaIndex, () => {
-  it('requests commodities inline for the shared index when enabled', () => {
-    renderHook(() => useRwaIndex(true))
-    expect(mockUseListRwasQuery).toHaveBeenCalledWith({ chainIds: CHAIN_IDS, includeCommodities: true, enabled: true })
-  })
-
-  it('keeps the query disabled when the flag is off', () => {
-    renderHook(() => useRwaIndex(false))
-    expect(mockUseListRwasQuery).toHaveBeenCalledWith({ chainIds: CHAIN_IDS, includeCommodities: true, enabled: false })
+  it('requests commodities inline for the shared index', () => {
+    renderHook(() => useRwaIndex())
+    expect(mockUseListRwasQuery).toHaveBeenCalledWith({ chainIds: CHAIN_IDS, includeCommodities: true })
   })
 })

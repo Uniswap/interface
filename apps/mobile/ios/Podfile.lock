@@ -1190,9 +1190,6 @@ PODS:
   - abseil/xcprivacy (1.20240722.0)
   - amplitude-react-native (1.5.2):
     - React-Core
-  - Apollo (1.2.1):
-    - Apollo/Core (= 1.2.1)
-  - Apollo/Core (1.2.1)
   - AppsFlyerFramework (6.13.1):
     - AppsFlyerFramework/Main (= 6.13.1)
   - AppsFlyerFramework/Main (6.13.1)
@@ -5391,7 +5388,6 @@ PODS:
 
 DEPENDENCIES:
   - "amplitude-react-native (from `../../../node_modules/@amplitude/analytics-react-native`)"
-  - Apollo (= 1.2.1)
   - Argon2Swift (= 1.0.3)
   - boost (from `../../../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - "DatadogSDKReactNative (from `../../../node_modules/@datadog/mobile-react-native`)"
@@ -5561,7 +5557,6 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - abseil
-    - Apollo
     - AppsFlyerFramework
     - Argon2Swift
     - BoringSSL-GRPC
@@ -5934,7 +5929,6 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   abseil: a05cc83bf02079535e17169a73c5be5ba47f714b
   amplitude-react-native: 50e368347ce33489c93256b39c9a0487a31aa447
-  Apollo: fe380f40e55e501a2499dd5885fab0cdf082b2bb
   AppsFlyerFramework: 971521cf5b890c2afeab2f2c91734547b8b169ca
   Argon2Swift: 99482c1b8122a03524b61e41c4903a9548e7c33b
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
@@ -6139,6 +6133,6 @@ SPEC CHECKSUMS:
   YttriumWrapper: d7f63336830536f1da41b745ed8bacedb04228c4
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
-PODFILE CHECKSUM: 1cf2330fff19209d691f8dd77bf1603b5871a2e4
+PODFILE CHECKSUM: adb3120f2746cffdf974c2ef6f77deaafe604652
 
 COCOAPODS: 1.16.2

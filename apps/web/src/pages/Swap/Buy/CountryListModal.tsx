@@ -1,4 +1,5 @@
 import { Flex, type FlexCompatProps, Text, useMedia } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import {
   forwardRef,
   type ForwardRefExoticComponent,
@@ -92,7 +93,7 @@ export function CountryListModal({
         <HeaderContent>
           <Flex width="100%" row justifyContent="space-between">
             <Text variant="body2">{t('common.selectRegion.label')}</Text>
-            <ModalCloseIcon testId="CountryListModal-close" onClose={closeModal} />
+            <ModalCloseIcon testId={TestID.CountryListModalClose} onClose={closeModal} />
           </Flex>
           <Flex position="relative" width="100%" height="$spacing40">
             <Flex

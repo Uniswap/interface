@@ -1,10 +1,10 @@
-import { GqlResult } from '@universe/api'
 import { useMemo } from 'react'
 import type { AddressGroup } from 'uniswap/src/features/accounts/store/types/AccountsState'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
+import type { DerivedQueryResult } from 'utilities/src/reactQuery/types'
 
-export type PortfolioBalancesResult = GqlResult<Record<Address, PortfolioBalance> | undefined>
+export type PortfolioBalancesResult = DerivedQueryResult<Record<Address, PortfolioBalance> | undefined>
 
 export function usePortfolioBalancesForAddressById(addresses: AddressGroup): PortfolioBalancesResult {
   const {
@@ -20,9 +20,9 @@ export function usePortfolioBalancesForAddressById(addresses: AddressGroup): Por
   return useMemo(
     () => ({
       data: portfolioBalancesById,
-      error,
+      error: error ?? null,
       refetch,
-      loading,
+      isLoading: loading,
     }),
     [portfolioBalancesById, error, refetch, loading],
   )

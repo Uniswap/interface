@@ -4,7 +4,8 @@ import { ChartType, DataQuality } from '~/components/Charts/utils'
 import { VolumeChart } from '~/components/Charts/VolumeChart'
 import { TimePeriod } from '~/data/util'
 import { EXPLORE_CHART_HEIGHT_PX } from '~/features/Explore/constants'
-import { useTDPVolumeChartData, type TDPChartQueryVariables } from '~/pages/TokenDetails/components/chart/hooks'
+import { useTDPVolumeChartData } from '~/pages/TokenDetails/components/chart/hooks/useTDPVolumeChartData'
+import type { TDPChartQueryVariables } from '~/pages/TokenDetails/components/chart/TDPChartState'
 
 interface TDPVolumeChartPanelProps {
   variables: TDPChartQueryVariables

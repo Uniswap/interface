@@ -17,7 +17,7 @@ vi.mock('uniswap/src/features/permissionedTokens/PermissionedTokenInfoBottomShee
 }))
 
 import { fireEvent, render, screen } from '@testing-library/react'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import { PermissionedPoolBanner } from '~/components/PermissionedPool/PermissionedPoolBanner'
 
 describe('PermissionedPoolBanner', () => {

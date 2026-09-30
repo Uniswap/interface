@@ -5,14 +5,9 @@ import { useHeartbeatCoordinator } from 'src/utils/useHeartbeatCoordinator'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
-const mockApolloRefetchQueries = vi.fn().mockResolvedValue(undefined)
 const mockQueryClientRefetchQueries = vi.fn().mockResolvedValue(undefined)
 const mockQueryClient = { refetchQueries: mockQueryClientRefetchQueries }
 const mockRefetchGatedFeatures = vi.hoisted(() => vi.fn())
-
-vi.mock('@apollo/client', () => ({
-  useApolloClient: () => ({ refetchQueries: mockApolloRefetchQueries }),
-}))
 
 vi.mock('@react-navigation/native', () => ({
   useIsFocused: vi.fn(),
@@ -46,10 +41,22 @@ function createDeferred<T>(): { promise: Promise<T>; resolve: (value: T) => void
   return { promise, resolve }
 }
 
+type RefetchFilter = { queryKey: unknown[]; type: 'active' }
+
+function dataApiFilter(name: string): RefetchFilter {
+  return { queryKey: [ReactQueryCacheKey.DataApiService, name], type: 'active' }
+}
+
+const PRICE_FILTERS = [dataApiFilter('getTokenMultiChain'), dataApiFilter('getTokenHistoryPrice')]
+const EARN_FILTERS = [dataApiFilter('listEarnVaults'), dataApiFilter('listEarnPositions')]
+
+function isEarnFilter(filter: RefetchFilter): boolean {
+  return EARN_FILTERS.some((earnFilter) => earnFilter.queryKey[1] === filter.queryKey[1])
+}
+
 describe('useMobileTDPHeartbeatCoordinator', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    mockApolloRefetchQueries.mockReset().mockResolvedValue(undefined)
     mockQueryClientRefetchQueries.mockReset().mockResolvedValue(undefined)
     mockRefetchGatedFeatures.mockReset().mockResolvedValue(undefined)
     mockUseActiveAccountAddress.mockReturnValue(null)
@@ -71,15 +78,16 @@ describe('useMobileTDPHeartbeatCoordinator', () => {
     expect(mockUseHeartbeatCoordinator).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
   })
 
-  it('refetches token stats and price history, but not Zerion-backed balances, on refresh', async () => {
+  it('refetches price history, but not Zerion-backed balances, on refresh', async () => {
     mockUseActiveAccountAddress.mockReturnValue('0xabc')
     renderHook(() => useMobileTDPHeartbeatCoordinator(false))
 
     const { refresh } = mockUseHeartbeatCoordinator.mock.calls[0]![0]
     await refresh()
 
-    expect(mockApolloRefetchQueries).toHaveBeenCalledWith({ include: ['TokenDetailsScreen'] })
-    expect(mockApolloRefetchQueries).toHaveBeenCalledWith({ include: ['TokenPriceHistory'] })
+    for (const filter of PRICE_FILTERS) {
+      expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith(filter)
+    }
     expect(mockQueryClientRefetchQueries).not.toHaveBeenCalledWith(
       expect.objectContaining({ queryKey: [ReactQueryCacheKey.GetPortfolio] }),
     )
@@ -87,43 +95,39 @@ describe('useMobileTDPHeartbeatCoordinator', () => {
 
   it('refetches price only after everything else has settled', async () => {
     mockUseActiveAccountAddress.mockReturnValue('0xabc')
-    const tokenDetails = createDeferred<void>()
     const gatedFeatures = createDeferred<void>()
     const earnQueries = createDeferred<void>()
-    mockApolloRefetchQueries.mockImplementation(({ include }: { include: string[] }) => {
-      if (include[0] === 'TokenDetailsScreen') {
-        return tokenDetails.promise
-      }
-      return Promise.resolve(undefined)
-    })
     mockRefetchGatedFeatures.mockReturnValue(gatedFeatures.promise)
-    mockQueryClientRefetchQueries.mockReturnValue(earnQueries.promise)
+    mockQueryClientRefetchQueries.mockImplementation((filter: RefetchFilter) =>
+      isEarnFilter(filter) ? earnQueries.promise : Promise.resolve(undefined),
+    )
 
     renderHook(() => useMobileTDPHeartbeatCoordinator(true))
 
     const { refresh } = mockUseHeartbeatCoordinator.mock.calls[0]![0]
     const refreshPromise = refresh()
 
-    expect(mockApolloRefetchQueries).not.toHaveBeenCalledWith({ include: ['TokenPriceHistory'] })
+    for (const filter of PRICE_FILTERS) {
+      expect(mockQueryClientRefetchQueries).not.toHaveBeenCalledWith(filter)
+    }
 
-    tokenDetails.resolve(undefined)
     gatedFeatures.resolve(undefined)
     earnQueries.resolve(undefined)
     await refreshPromise
 
-    expect(mockApolloRefetchQueries).toHaveBeenLastCalledWith({ include: ['TokenPriceHistory'] })
+    const calledFilters = mockQueryClientRefetchQueries.mock.calls.map(([filter]) => filter as RefetchFilter)
+    expect(calledFilters.slice(-PRICE_FILTERS.length)).toEqual(PRICE_FILTERS)
   })
 
-  it('only refetches token price history on priceRefresh', async () => {
+  it('only refetches the REST price queries on priceRefresh', async () => {
     mockUseActiveAccountAddress.mockReturnValue('0xabc')
-    renderHook(() => useMobileTDPHeartbeatCoordinator(false))
+    renderHook(() => useMobileTDPHeartbeatCoordinator(true))
 
     const { priceRefresh } = mockUseHeartbeatCoordinator.mock.calls[0]![0]
     await priceRefresh?.()
 
-    expect(mockApolloRefetchQueries).toHaveBeenCalledWith({ include: ['TokenPriceHistory'] })
-    expect(mockApolloRefetchQueries).toHaveBeenCalledTimes(1)
-    expect(mockQueryClientRefetchQueries).not.toHaveBeenCalled()
+    expect(mockQueryClientRefetchQueries.mock.calls.map(([filter]) => filter)).toEqual(PRICE_FILTERS)
+    expect(mockRefetchGatedFeatures).not.toHaveBeenCalled()
   })
 
   it('skips region gating and earn queries for a non-RWA token with no active address', async () => {
@@ -134,7 +138,9 @@ describe('useMobileTDPHeartbeatCoordinator', () => {
     await refresh()
 
     expect(mockRefetchGatedFeatures).not.toHaveBeenCalled()
-    expect(mockQueryClientRefetchQueries).not.toHaveBeenCalled()
+    for (const filter of EARN_FILTERS) {
+      expect(mockQueryClientRefetchQueries).not.toHaveBeenCalledWith(filter)
+    }
   })
 
   it('refetches region gating for an RWA token', async () => {
@@ -153,13 +159,8 @@ describe('useMobileTDPHeartbeatCoordinator', () => {
     const { refresh } = mockUseHeartbeatCoordinator.mock.calls[0]![0]
     await refresh()
 
-    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({
-      queryKey: [ReactQueryCacheKey.DataApiService, 'listEarnVaults'],
-      type: 'active',
-    })
-    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith({
-      queryKey: [ReactQueryCacheKey.DataApiService, 'listEarnPositions'],
-      type: 'active',
-    })
+    for (const filter of EARN_FILTERS) {
+      expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith(filter)
+    }
   })
 })

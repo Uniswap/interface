@@ -2,6 +2,7 @@ import { useIsFocused } from '@react-navigation/core'
 import { Platform, areAddressesEqual } from '@universe/chains'
 import { isAndroid } from '@universe/environment'
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
@@ -22,7 +23,6 @@ import { ElementName, ModalName, WalletEventName } from 'uniswap/src/features/te
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { useBottomScreenGap } from 'uniswap/src/hooks/useBottomScreenGap'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { PlusCircle } from 'wallet/src/components/icons/PlusCircle'
@@ -188,7 +188,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         key: ElementName.CreateAccount,
         onPress: onPressCreateNewWallet,
         render: () => (
-          <Flex alignItems="center" borderBottomColor="$surface3" borderBottomWidth={1} p="$spacing16">
+          <Flex alignItems="center" borderBottomWidth={1} borderColor="$surface3" p="$spacing16">
             <Text variant="body1">{t('account.wallet.button.create')}</Text>
           </Flex>
         ),
@@ -206,7 +206,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         key: ElementName.ImportAccount,
         onPress: onPressImportWallet,
         render: () => (
-          <Flex alignItems="center" borderTopColor="$surface3" borderTopWidth={1} p="$spacing16">
+          <Flex alignItems="center" borderColor="$surface3" borderTopWidth={1} p="$spacing16">
             <Text variant="body1">{t('account.wallet.button.import')}</Text>
           </Flex>
         ),
@@ -218,7 +218,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         key: ElementName.RestoreFromCloud,
         onPress: onPressRestore,
         render: () => (
-          <Flex alignItems="center" borderTopColor="$surface3" borderTopWidth={1} p="$spacing16">
+          <Flex alignItems="center" borderColor="$surface3" borderTopWidth={1} p="$spacing16">
             <Text variant="body1">
               {isAndroid ? t('account.cloud.button.restore.android') : t('account.cloud.button.restore.ios')}
             </Text>

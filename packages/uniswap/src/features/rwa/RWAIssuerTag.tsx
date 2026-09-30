@@ -1,6 +1,7 @@
-import { Flex, Text, UniversalImage, iconSizes } from '@universe/mycelium'
+import { Flex, Text, iconSizes } from '@universe/mycelium'
 import { memo } from 'react'
 import { formatIssuerLabel } from 'uniswap/src/data/apiClients/dataApiService/rwa/formatIssuerDisplaySymbol'
+import { GrayscaleIssuerLogo } from 'uniswap/src/features/rwa/GrayscaleIssuerLogo'
 import type { RWAIssuer } from 'uniswap/src/features/rwa/types'
 import { useRWAIssuerLogoUrl } from 'uniswap/src/features/rwa/useRWAIssuerLogoUrl'
 
@@ -14,6 +15,7 @@ export const RWAIssuerTag = memo(function RWAIssuerTag({ issuer }: { issuer: RWA
     <Flex
       row
       alignItems="center"
+      alignSelf="center"
       gap="$spacing4"
       flexShrink={0}
       px="$spacing6"
@@ -24,14 +26,7 @@ export const RWAIssuerTag = memo(function RWAIssuerTag({ issuer }: { issuer: RWA
       backgroundColor="$surface2"
       borderRadius="$roundedFull"
     >
-      {logoUrl ? (
-        <UniversalImage
-          allowLocalUri
-          size={{ height: LOGO_SIZE, width: LOGO_SIZE }}
-          style={{ image: { borderRadius: LOGO_SIZE } }}
-          uri={logoUrl}
-        />
-      ) : null}
+      {logoUrl ? <GrayscaleIssuerLogo uri={logoUrl} size={LOGO_SIZE} /> : null}
       <Text color="$neutral2" variant="body4" numberOfLines={1}>
         {formatIssuerLabel(issuer)}
       </Text>

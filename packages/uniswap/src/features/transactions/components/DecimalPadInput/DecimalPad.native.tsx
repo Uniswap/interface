@@ -1,6 +1,7 @@
 import { Flex, fonts, iconSizes, spacing, Text } from '@universe/mycelium'
 import { ArrowLeft } from '@universe/mycelium/icons/ArrowLeft'
 import { ArrowRight } from '@universe/mycelium/icons/ArrowRight'
+import { TestID } from '@universe/test'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { I18nManager, LayoutChangeEvent } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
@@ -12,7 +13,6 @@ import {
   KeyAction,
   KeyLabel,
 } from 'uniswap/src/features/transactions/components/DecimalPadInput/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const KEY_PRESS_ANIMATION_DURATION_MS = 150
 

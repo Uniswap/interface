@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test'
 import { V1_TRADING_API_PATHS } from '@universe/api'
 import { normalizeTokenAddressForCache } from '@universe/chains'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import { expect, getTest } from '~/playwright/fixtures'
 import { getTradingApiEndpointPattern } from '~/playwright/fixtures/tradingApi'
 

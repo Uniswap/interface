@@ -1,4 +1,3 @@
-import { type ApolloClient, type NormalizedCacheObject } from '@apollo/client'
 import { TradeType } from '@uniswap/sdk-core'
 import { SharedQueryClient } from '@universe/api'
 import {
@@ -39,7 +38,6 @@ import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors
 export function* finalizeTransaction({
   transaction,
 }: {
-  apolloClient: ApolloClient<NormalizedCacheObject>
   transaction: FinalizedTransactionDetails
 }): Generator<unknown> {
   yield* put(transactionActions.finalizeTransaction(transaction))

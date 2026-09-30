@@ -1,10 +1,9 @@
 import type { JsonValue } from '@bufbuild/protobuf'
 import { TokenRankingsResponse } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
-import { CustomRankingType } from '@universe/api'
+import { CustomRankingType, GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { USDT } from 'uniswap/src/constants/tokens'
 import { tokenRankingsStatToCurrencyInfo } from 'uniswap/src/data/apiClients/dataApiService/exploreV1/tokenRankings'
-import { tokenProjectToCurrencyInfos } from 'uniswap/src/features/dataApi/tokenProjects/utils/tokenProjectToCurrencyInfos'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { buildNativeCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
 import { describe, expect, it } from 'vitest'
@@ -15,26 +14,24 @@ import {
   isTokenRankingsResponseHealthy,
 } from '~/playwright/fixtures/tokenDataFallbacks'
 
-type TokenProjects = Parameters<typeof tokenProjectToCurrencyInfos>[0]
-
 describe('buildTokenProjectsFallbackResponse', () => {
-  it('serves known contracts through the real app parser with production decimals', () => {
+  it('serves known contracts with production decimals', () => {
     const response = buildTokenProjectsFallbackResponse([
       currencyIdToContractInput(buildNativeCurrencyId(UniverseChainId.Mainnet)),
       currencyIdToContractInput(currencyId(USDT)),
     ])
 
-    const currencyInfos = tokenProjectToCurrencyInfos(response.data.tokenProjects as unknown as TokenProjects)
+    const tokens = response.data.tokenProjects.flatMap((project) => project.tokens)
 
-    const eth = currencyInfos.find((info) => info.currency.isNative)
-    expect(eth?.currency.chainId).toBe(UniverseChainId.Mainnet)
-    expect(eth?.currency.decimals).toBe(18)
+    const eth = tokens.find((token) => token.standard === GraphQLApi.TokenStandard.Native)
+    expect(eth?.chain).toBe(GraphQLApi.Chain.Ethereum)
+    expect(eth?.decimals).toBe(18)
 
-    const usdt = currencyInfos.find((info) => info.currency.symbol === 'USDT')
+    const usdt = tokens.find((token) => token.symbol === 'USDT')
     // The exact bug class this map exists to prevent: a guessed decimals value (18) would make
-    // buildCurrency silently mis-scale USDT amounts
-    expect(usdt?.currency.decimals).toBe(6)
-    expect(usdt?.currency.isToken && usdt.currency.address.toLowerCase()).toBe(USDT.address.toLowerCase())
+    // the app silently mis-scale USDT amounts
+    expect(usdt?.decimals).toBe(6)
+    expect(usdt?.address?.toLowerCase()).toBe(USDT.address.toLowerCase())
   })
 
   it('omits unknown contracts instead of guessing metadata', () => {

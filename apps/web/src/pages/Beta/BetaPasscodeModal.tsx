@@ -6,13 +6,13 @@ import {
   getOverrideAdapter,
 } from '@universe/gating'
 import { Flex, Text } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Image, Input } from 'ui/src'
 import { BETA_LOGO } from 'ui/src/assets'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useTimeout } from 'utilities/src/time/timing'
 
 export function BetaPasscodeModal(): JSX.Element {

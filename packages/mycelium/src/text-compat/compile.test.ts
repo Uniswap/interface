@@ -125,6 +125,13 @@ describe('textCompatClassName — typography props', () => {
     expect(has(defaultVariant, '[font-weight:600]')).toBe(true)
   })
 
+  it('treats a prop passed as undefined as unset so the default still applies', () => {
+    const resolved = resolveTextCompatDefaults({ loading: false, props: { color: undefined, variant: 'buttonLabel3' } })
+    expect(resolved.color).toBe('$neutral1')
+    expect(resolved.variant).toBe('buttonLabel3')
+    expect(resolveTextCompatDefaults({ loading: false, props: { color: '$neutral2' } }).color).toBe('$neutral2')
+  })
+
   it('compiles the Tamagui Text truncation variants', () => {
     const single = textCompatClassName({ numberOfLines: 1 })
     for (const cls of ['max-w-full', 'overflow-hidden', 'text-ellipsis', 'whitespace-nowrap']) {

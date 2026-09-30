@@ -1,11 +1,10 @@
 import { Flex } from '@universe/mycelium'
-import { useCallback, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
+import { useCallback } from 'react'
 import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from '~/components/Table/shared/SortableHeader'
 import { OrderDirection } from '~/data/util'
 import { scrollToExploreTokenSection } from '~/pages/Explore/categories/useExploreCategory'
 import { ExpandableAssetMetricHeaderTooltip } from '~/pages/Explore/rwa/table/ExpandableAssetMetricHeaderTooltip'
-import { getStocksSortMethodLabel } from '~/pages/Explore/rwa/table/stocksSortMethodLabels'
+import { useStocksSortMethodLabel } from '~/pages/Explore/rwa/table/stocksSortMethodLabels'
 import { StocksSortMethod, useStocksTableSortStoreActions } from '~/pages/Explore/rwa/table/stocksTableSortStore'
 
 export function StocksTableHeader({
@@ -17,8 +16,7 @@ export function StocksTableHeader({
   isCurrentSortMethod: boolean
   direction: OrderDirection
 }): JSX.Element {
-  const { t } = useTranslation()
-  const headerText = useMemo(() => getStocksSortMethodLabel({ t, category }), [t, category])
+  const headerText = useStocksSortMethodLabel(category)
   const { setSort } = useStocksTableSortStoreActions()
   const handleSortCategory = useCallback(() => {
     setSort(category)

@@ -141,7 +141,6 @@
       "inputs": [
         "{projectRoot}/codegen.ts",
         "{projectRoot}/src/**/schema.graphql",
-        "{projectRoot}/src/**/queries.graphql",
         "{projectRoot}/src/**/fragments.ts",
         "{projectRoot}/src/**/queries.ts",
         "{projectRoot}/src/graphql/**",

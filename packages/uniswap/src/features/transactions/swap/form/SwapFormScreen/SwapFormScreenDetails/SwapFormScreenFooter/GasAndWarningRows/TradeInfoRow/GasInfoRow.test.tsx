@@ -1,8 +1,8 @@
 import { type GasFeeResult } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
+import { TestID } from '@universe/test'
 import { GasInfoRow } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/TradeInfoRow/GasInfoRow'
 import { GasInfo } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { render } from 'uniswap/src/test/test-utils'
 
 describe('GasInfoRow', () => {

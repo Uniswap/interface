@@ -1,6 +1,12 @@
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { FeatureFlags, useFeatureFlagWithExposureLoggingDisabled } from '@universe/gating'
-import { Flex, UniversalList, type UniversalListRenderItemInfo, type UniversalListStyle } from '@universe/mycelium'
+import {
+  Flex,
+  UniversalList,
+  useIsRowViewable,
+  type UniversalListRenderItemInfo,
+  type UniversalListStyle,
+} from '@universe/mycelium'
 import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -72,7 +78,7 @@ export const ProfilePoolsTab = memo(function ProfilePoolsTabInner({
 
   const renderItem = useCallback(
     ({ item }: UniversalListRenderItemInfo<PositionInfo>): JSX.Element => (
-      <ProfilePoolPositionRow owner={owner} positionInfo={item} />
+      <ProfilePoolListRow owner={owner} positionInfo={item} rowKey={getPositionKey(item)} />
     ),
     [owner],
   )
@@ -138,9 +144,15 @@ export const ProfilePoolsTab = memo(function ProfilePoolsTabInner({
             />
           </Flex>
         )}
+        {/* Footer rows aren't virtualized or viewability-tracked; hidden positions stay static. */}
         {hiddenExpanded &&
           filteredHiddenPositions.map((position) => (
-            <ProfilePoolPositionRow key={getPositionKey(position)} owner={owner} positionInfo={position} />
+            <ProfilePoolPositionRow
+              key={getPositionKey(position)}
+              suspendAnimations
+              owner={owner}
+              positionInfo={position}
+            />
           ))}
       </>
     ),
@@ -156,6 +168,7 @@ export const ProfilePoolsTab = memo(function ProfilePoolsTabInner({
     // `fill` (flex:1) not `grow`: the list needs a parent with a definite height or it sizes to its content.
     <Flex fill backgroundColor="$surface1">
       <UniversalList
+        trackRowViewability
         contentContainerStyle={contentContainerStyle}
         data={hasErrorWithoutData || isLoadingFirstPage ? EMPTY_POSITIONS : visiblePositions}
         keyExtractor={getPositionKey}
@@ -173,12 +186,27 @@ export const ProfilePoolsTab = memo(function ProfilePoolsTabInner({
   )
 })
 
-const ProfilePoolPositionRow = memo(function ProfilePoolPositionRow({
+const ProfilePoolListRow = memo(function ProfilePoolListRow({
   owner,
   positionInfo,
+  rowKey,
 }: {
   owner: string
   positionInfo: PositionInfo
+  rowKey: string
+}): JSX.Element {
+  const isViewable = useIsRowViewable(rowKey)
+  return <ProfilePoolPositionRow owner={owner} positionInfo={positionInfo} suspendAnimations={!isViewable} />
+})
+
+const ProfilePoolPositionRow = memo(function ProfilePoolPositionRow({
+  owner,
+  positionInfo,
+  suspendAnimations,
+}: {
+  owner: string
+  positionInfo: PositionInfo
+  suspendAnimations: boolean
 }): JSX.Element {
   const navigation = useAppStackNavigation()
 
@@ -192,5 +220,7 @@ const ProfilePoolPositionRow = memo(function ProfilePoolPositionRow({
     })
   })
 
-  return <PositionItem hasOuterPadding positionInfo={positionInfo} onPress={onPress} />
+  return (
+    <PositionItem hasOuterPadding positionInfo={positionInfo} suspendAnimations={suspendAnimations} onPress={onPress} />
+  )
 })

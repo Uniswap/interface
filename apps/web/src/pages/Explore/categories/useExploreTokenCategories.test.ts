@@ -20,6 +20,7 @@ const DEFI: TokenCategory = {
   name: 'DeFi',
   description: '',
   categoryClass: TokenCategoryClass.Sector,
+  grouped: false,
   topTokens: [],
 }
 
@@ -42,6 +43,13 @@ function mockFlag({ value, isLoading = false }: { value: boolean; isLoading?: bo
 describe('useExploreTokenCategories', () => {
   beforeEach(() => {
     mockFlag({ value: true })
+  })
+
+  it('drops a backend category that reuses the frontend default id', () => {
+    mockQuery({ data: [{ ...DEFI, id: 'all', name: 'All' }, DEFI] })
+    const { result } = renderHook(() => useExploreTokenCategories())
+    expect(result.current.orderedCategories).toEqual([DEFI])
+    expect(result.current.validCategoryIds.has('all')).toBe(false)
   })
 
   it('is loading while Statsig has not reported the flag yet', () => {

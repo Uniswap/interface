@@ -2,12 +2,12 @@ import { isWebPlatform } from '@universe/environment'
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
 import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import { TooltipCompat as Tooltip } from '@universe/mycelium/tooltip-compat'
+import { TestID } from '@universe/test'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 /**
  * Localized "rewards value failed to load" indicator, shown in place of a lifetime-earnings / total

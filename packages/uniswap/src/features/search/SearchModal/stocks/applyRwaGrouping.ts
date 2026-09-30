@@ -52,12 +52,14 @@ export function applyRwaGroupingToSearchOptions({
   isAddressSearch,
   chainFilter,
   hoistRwaToTop,
+  plainTokenNames,
 }: {
   options: SearchModalOption[]
   index: RwaSearchIndex
   isAddressSearch: boolean
   chainFilter: UniverseChainId | null
   hoistRwaToTop: boolean
+  plainTokenNames: boolean
 }): SearchModalOption[] {
   const items: { option: SearchModalOption; isRwa: boolean }[] = []
   const seenCollectionKeys = new Set<string>()
@@ -86,9 +88,9 @@ export function applyRwaGroupingToSearchOptions({
       continue
     }
 
-    // Direct-CA search: never roll up; tag the single matched token with its RWA identity (clean name + issuer).
+    // Direct-CA search: never roll up; tag the single matched token with its RWA identity.
     if (isAddressSearch) {
-      items.push({ option: tagOptionAsRwa({ option, match }), isRwa: true })
+      items.push({ option: tagOptionAsRwa({ option, match, plainTokenNames }), isRwa: true })
       continue
     }
 
@@ -109,8 +111,8 @@ export function applyRwaGroupingToSearchOptions({
         isRwa: true,
       })
     } else {
-      // single issuer on-chain -> tagged token with its RWA identity (clean name + issuer)
-      items.push({ option: tagOptionAsRwa({ option, match }), isRwa: true })
+      // single issuer on-chain -> tagged token with its RWA identity
+      items.push({ option: tagOptionAsRwa({ option, match, plainTokenNames }), isRwa: true })
     }
   }
 

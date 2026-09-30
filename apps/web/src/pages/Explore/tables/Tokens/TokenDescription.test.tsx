@@ -1,6 +1,6 @@
 import { UniverseChainId } from '@universe/chains'
+import { TestID } from '@universe/test'
 import { TokenCategoryClass } from 'uniswap/src/features/tokenCategories/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { tokenCategory } from 'uniswap/src/test/fixtures/tokenCategory'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { TokenDescription } from '~/pages/Explore/tables/Tokens/TokenDescription'

@@ -1,5 +1,6 @@
 import { isWebPlatform } from '@universe/environment'
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import type { ComponentType } from 'react'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -14,7 +15,6 @@ import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { EarnEventName } from 'uniswap/src/features/telemetry/constants/features'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import type { EarnAnalyticsBaseProperties } from 'uniswap/src/features/telemetry/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { openUri } from 'uniswap/src/utils/linking'
 
 const WEB_CONTENT_MIN_HEIGHT = 384

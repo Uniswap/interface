@@ -1,9 +1,9 @@
 import { Flex } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useCallback, useRef, useState } from 'react'
 import { LayoutChangeEvent } from 'react-native'
 import { InputWithSuffixProps } from 'src/features/import/InputWIthSuffixProps'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const EPS = 1
 

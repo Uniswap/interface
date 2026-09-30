@@ -1,3 +1,4 @@
+import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { OrderDirection } from '~/data/util'
 import { StocksTableHeader } from '~/pages/Explore/rwa/table/StocksTableHeader'
 import {
@@ -5,6 +6,7 @@ import {
   StocksTableSortStoreContextProvider,
   useStocksTableSortSelection,
 } from '~/pages/Explore/rwa/table/stocksTableSortStore'
+import { mocked } from '~/test-utils/mocked'
 import { fireEvent, render, screen, waitFor } from '~/test-utils/render'
 
 function SortSelectionProbe(): JSX.Element {
@@ -27,11 +29,28 @@ const MARKET_CAP_TOOLTIP =
 const VOLUME_TOOLTIP =
   'Volume is the total amount of the asset that has been traded on all networks across multiple major exchanges over the last 24 hours.'
 
+vi.mock('@universe/gating', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@universe/gating')>()),
+  useIsTokenCategoriesEnabled: vi.fn(),
+}))
+
 describe('StocksTableHeader', () => {
+  beforeEach(() => {
+    mocked(useIsTokenCategoriesEnabled).mockReturnValue(false)
+  })
+
   it('labels the stocks volume column with its 1D timeframe', () => {
     renderHeader(StocksSortMethod.VOLUME)
 
     expect(screen.getByText('1D Volume')).toBeVisible()
+  })
+
+  it('drops the timeframe from the volume label when the selector is available', () => {
+    mocked(useIsTokenCategoriesEnabled).mockReturnValue(true)
+
+    renderHeader(StocksSortMethod.VOLUME)
+
+    expect(screen.getByText('Volume')).toBeVisible()
   })
 
   it('sorts when clicking the header while its tooltip is mounted', async () => {

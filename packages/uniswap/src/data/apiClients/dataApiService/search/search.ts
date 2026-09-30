@@ -1,4 +1,4 @@
-import { PartialMessage } from '@bufbuild/protobuf'
+import { PartialMessage, PlainMessage } from '@bufbuild/protobuf'
 import { ConnectError } from '@connectrpc/connect'
 import { useQuery } from '@connectrpc/connect-query'
 import { UseQueryResult } from '@tanstack/react-query'
@@ -35,7 +35,7 @@ export function useSearchQuery<TSelectType>({
   })
 }
 
-function buildPoolSearchStats(rankedPool: RankedPool): PoolSearchStats | undefined {
+function buildPoolSearchStats(rankedPool: RankedPool | PlainMessage<RankedPool>): PoolSearchStats | undefined {
   const stats: PoolSearchStats = {
     volume1dUsd: rankedPool.stats?.volume1d,
     apr: rankedPool.stats?.apr,
@@ -49,8 +49,11 @@ function buildPoolSearchStats(rankedPool: RankedPool): PoolSearchStats | undefin
  * Converts a data.v2 RankedPool into the app-layer PoolSearchResult (the persisted
  * PoolSearchHistoryResult identity shape plus volatile display stats). Returns undefined when the
  * pool is missing either token, has an unspecified protocol version, or has no resolvable fee tier.
+ * Accepts the plain shape too, so ListPools pages (stored as PlainMessage for persistence) convert as-is.
  */
-export function rankedPoolToPoolSearchResult(rankedPool: RankedPool): PoolSearchResult | undefined {
+export function rankedPoolToPoolSearchResult(
+  rankedPool: RankedPool | PlainMessage<RankedPool>,
+): PoolSearchResult | undefined {
   const pool = rankedPool.pool
   if (!pool?.token0 || !pool.token1 || pool.protocolVersion === ProtocolVersion.UNSPECIFIED) {
     return undefined

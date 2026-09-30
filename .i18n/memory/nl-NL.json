@@ -14,8 +14,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Apple",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -31,8 +31,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Google",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -48,8 +48,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Token 1",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -65,8 +65,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Token 2",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -82,8 +82,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{amount}} UNI",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -99,8 +99,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "~{{minutes}}min {{seconds}}s",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -116,8 +116,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "~{{minutes}}min",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -133,8 +133,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "~{{seconds}}s",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -150,8 +150,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{count}} tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -235,8 +235,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Open",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -252,8 +252,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "App",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -269,8 +269,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Route",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -286,8 +286,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Route via {{provider}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -303,8 +303,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Blog",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -320,8 +320,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "OK",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -337,8 +337,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Chain",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -354,8 +354,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Details",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -371,8 +371,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Explorer",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -388,8 +388,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Governance",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -405,8 +405,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Help",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -422,8 +422,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Links",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -439,8 +439,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Max",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -456,8 +456,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Min",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -473,8 +473,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "1 week",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -490,8 +490,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Open",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -507,8 +507,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Pool",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -524,8 +524,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Pools",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -541,8 +541,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Portfolio",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -558,8 +558,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Protocol",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -575,8 +575,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Uniswap v2",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -592,8 +592,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Uniswap v3",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -609,8 +609,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Uniswap v4",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -626,8 +626,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Recent",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -643,8 +643,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Socials",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -660,8 +660,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Status",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -677,8 +677,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Contract",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -694,8 +694,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -711,8 +711,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Token A",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -728,8 +728,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Token B",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -745,8 +745,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Trending",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -762,8 +762,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Type",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -779,8 +779,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Volume",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -796,8 +796,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Website",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -813,8 +813,25 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Euro",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:dapp.request.amountUnavailable",
+      {
+        "unitId": "dapp.request.amountUnavailable",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "6ea97c53df001e76387ca3cd2a57c61aa2ffa0e12d752ff4f445556b31edd0b1",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Bedrag niet beschikbaar",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-09-18T15-34-04Z",
+        "approvedAt": "2026-09-18T15:34:04.925Z",
         "approvedBy": "agent"
       }
     ],
@@ -830,8 +847,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{frameUrl}} via {{parentUrl}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -847,8 +864,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "(Code {{code}})",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -881,8 +898,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -898,8 +915,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Earn",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -915,8 +932,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Curator",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -932,8 +949,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Details",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -949,8 +966,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -966,8 +983,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{count}} tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -983,8 +1000,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Wallets",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1000,8 +1017,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Trending",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1017,8 +1034,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{number}} MCap",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1034,8 +1051,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Volume",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1051,8 +1068,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Swap tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1068,8 +1085,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Bank",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1085,8 +1102,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Venmo",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1102,8 +1119,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1119,8 +1136,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "API",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1170,8 +1187,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Trending",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1187,8 +1204,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Launchpad",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1204,8 +1221,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1221,8 +1238,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Pool",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1255,8 +1272,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1272,8 +1289,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Explorers",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1340,8 +1357,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Filters",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1357,8 +1374,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "$100k – $1M",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1374,8 +1391,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "$10M+",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1391,8 +1408,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "<$100k",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1408,8 +1425,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{tokenPair}} via {{dex}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1425,8 +1442,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Mints",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1442,8 +1459,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Swaps",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1459,8 +1476,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Wraps",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1476,8 +1493,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Type",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1493,8 +1510,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "DeFi",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1510,8 +1527,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{count}} tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1527,8 +1544,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Volume",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1548,18 +1565,18 @@
           {
             "category": "terminology",
             "severity": "major",
-            "detail": "Source 'Order' (column/label in the orders domain) is rendered 'inleg' (deposit/stake), which is both a mistranslation and an intra-slice term collision: every sibling string keeps 'order' verbatim ({{amount}} order/orders at i=2177/2178, Order {{n}} at i=2261, Orders at i=2845/2909, {{count}} order(s) at i=2780/2781). 'inleg' would make users believe this column shows their deposit rather than the order itself.",
+            "detail": "Source label 'Order' rendered as 'inleg' (deposit/stake), which both mistranslates the concept and collides with the run's other renderings that keep 'order' in English ('{{amount}} order' i2177, 'Order {{n}}' i2261, 'Orders' i2845/2909). Intra-run term collision on a financial label.",
             "evidence": {
               "sourceSpan": "Order",
               "targetSpan": "inleg",
-              "rule": "Intra-slice term collision: same source term must have one target rendering"
+              "rule": "Intra-slice term collision — same source term must have one rendering"
             },
             "alternative": "Order"
           },
           {
             "category": "accuracy",
             "severity": "major",
-            "detail": "Mistranslation: 'inleg' means a deposited amount/stake, not an order.",
+            "detail": "'Inleg' means a deposited stake, not an order; a user could believe this column shows their deposit rather than an order.",
             "evidence": {
               "sourceSpan": "Order",
               "targetSpan": "inleg"
@@ -1567,8 +1584,8 @@
             "alternative": "Order"
           }
         ],
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1584,8 +1601,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{amount}} order",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1601,8 +1618,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{amount}} orders",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1618,8 +1635,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1635,8 +1652,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "The Badger",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1652,8 +1669,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Frontrunner",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1669,8 +1686,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "First Splash",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1686,8 +1703,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Order {{n}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1703,8 +1720,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Max",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1720,8 +1737,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{amount}} volume",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1737,8 +1754,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Top",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1754,8 +1771,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Trending",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1771,8 +1788,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Volume",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1805,8 +1822,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1856,8 +1873,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{name}} is live",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -1901,8 +1918,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "demo",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2003,8 +2020,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2020,8 +2037,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2037,8 +2054,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Burn",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2054,8 +2071,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Crowd",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2071,8 +2088,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Instant",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2088,8 +2105,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Portfolio",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2105,8 +2122,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{count}} order",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2122,8 +2139,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{count}} orders",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2139,8 +2156,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Account {{address}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2156,8 +2173,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Account {{address}}, {{value}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2173,8 +2190,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Claims",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2190,8 +2207,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Orders",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2207,8 +2224,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2224,8 +2241,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Trending",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2241,8 +2258,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Orders",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2258,8 +2275,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Live",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2275,8 +2292,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Home",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2292,8 +2309,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Home",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2309,8 +2326,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Type",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2326,8 +2343,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Browser",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2343,8 +2360,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Chain",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2360,8 +2377,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Recent",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2377,8 +2394,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "OK",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2394,8 +2411,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "ENS",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2411,8 +2428,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "30 min",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2428,8 +2445,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "5 min",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2445,8 +2462,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Max",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2679,8 +2696,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Launchpad",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2713,8 +2730,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Links",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2730,8 +2747,59 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Website",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:tokens.selector.categoryFilter.clear_one",
+      {
+        "unitId": "tokens.selector.categoryFilter.clear_one",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "302e166d28e6486729e3034dbcac7dbcaa86f594e4acddb0a21c7433cc5186bd",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Actieve filter wissen",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:tokens.selector.categoryFilter.clear_other",
+      {
+        "unitId": "tokens.selector.categoryFilter.clear_other",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "2dc1c0755c9ec2716cbacc0a40d7babc53c889496a89b8c4495d09e38b95a758",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Actieve filters wissen",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:tokens.selector.categoryFilter.myTokens",
+      {
+        "unitId": "tokens.selector.categoryFilter.myTokens",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "16f6f49ce8ba3114b5b5495524ad01dc739a58e7405110fa38669d4d23443f0c",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Mijn tokens",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2747,8 +2815,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Recent",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2764,8 +2832,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Trending",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2849,8 +2917,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "<value>{{fdv}}</value> FDV",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2934,8 +3002,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Website",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2951,8 +3019,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{amount}} per token",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2968,8 +3036,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "per token",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -2985,8 +3053,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "ETH / native",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -3002,8 +3070,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Start",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -3298,8 +3366,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Permanent",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -3315,8 +3383,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -3332,8 +3400,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Details",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -3349,8 +3417,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Whitelist",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -3366,8 +3434,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Status",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -3383,8 +3451,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -3417,8 +3485,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Crowd Launches",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -3502,8 +3570,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -3536,8 +3604,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Instant Launches",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -3553,8 +3621,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Custom Launch",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -3570,8 +3638,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Pools.trade",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -3638,8 +3706,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "App",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -3655,8 +3723,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "<icon /> <gradient>UniswapX</gradient> <info />",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -3672,8 +3740,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Bio",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ],
@@ -3689,8 +3757,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-09-17T17-29-55Z",
-        "approvedAt": "2026-09-17T17:29:55.348Z",
+        "agentRunId": "nl-NL-2026-09-23T16-11-09Z",
+        "approvedAt": "2026-09-23T16:11:09.794Z",
         "approvedBy": "agent"
       }
     ]

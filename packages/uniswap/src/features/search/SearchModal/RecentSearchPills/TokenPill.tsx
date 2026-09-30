@@ -24,7 +24,6 @@ export function TokenPill({
           chainId={currency.chainId}
           hideNetworkLogo={isMultichain}
           name={currency.name}
-          networkCount={networkCount}
           size={iconSizes.icon24}
           symbol={currency.symbol}
           url={currencyInfo.logoUrl}

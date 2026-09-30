@@ -1,4 +1,3 @@
-import { GraphQLApi } from '@universe/api'
 import { opacify } from '@universe/mycelium/theme-hooks-compat'
 import {
   AreaData,
@@ -15,6 +14,7 @@ import {
   UTCTimestamp,
 } from 'lightweight-charts'
 import { getLowVarianceAxisDecimals, isLowVarianceRange } from 'uniswap/src/components/charts/utils'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import {
   ChartHoverData,
   ChartModel,
@@ -33,7 +33,7 @@ export type PriceChartData = CandlestickData<UTCTimestamp> & AreaData<UTCTimesta
 
 interface PriceChartModelParams extends ChartModelParams<PriceChartData> {
   type: PriceChartType
-  timePeriod?: GraphQLApi.HistoryDuration
+  timePeriod?: HistoryDuration
   hideYAxis?: boolean
   hideXAxis?: boolean
   yAxisFormatter?: (price: number) => string
@@ -73,7 +73,7 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
   private lowPriceRangeScaleFactor = 1
   private priceAxisDecimals: number | undefined
   private type: PriceChartType
-  private timePeriod?: GraphQLApi.HistoryDuration
+  private timePeriod?: HistoryDuration
   private minPriceLine: IPriceLine | undefined
   private maxPriceLine: IPriceLine | undefined
   private priceLineOptions: Partial<PriceLineOptions> | undefined

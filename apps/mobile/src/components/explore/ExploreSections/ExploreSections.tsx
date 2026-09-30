@@ -225,6 +225,7 @@ function ExploreSectionsInner({
         eventName={MobileEventName.ExploreTokenItemSelected}
         index={index}
         metadataDisplayType={item.tokenMetadataDisplayType}
+        rowKey={item.key}
         tokenItemData={item.tokenItemData}
         containerProps={EXPLORE_TOKEN_CONTAINER_PROPS}
       />
@@ -263,6 +264,7 @@ function ExploreSectionsInner({
       <UniversalList
         ref={universalListRef}
         recycleItems
+        trackRowViewability
         contentContainerStyle={contentContainerStyle}
         data={listData}
         drawDistance={dimensions.height * WINDOW_MULTIPLIER}

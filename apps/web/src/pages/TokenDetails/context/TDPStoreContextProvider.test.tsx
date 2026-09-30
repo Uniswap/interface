@@ -12,7 +12,6 @@ import { useCreateTDPContext } from '~/pages/TokenDetails/context/useCreateTDPCo
 import type { TokenDetailsAuctionSource } from '~/pages/TokenDetails/hooks/useTokenDetailsAuction'
 import { mocked } from '~/test-utils/mocked'
 import { render, waitFor } from '~/test-utils/render'
-import { validTokenProjectResponse } from '~/test-utils/tokens/fixtures'
 
 const TOKEN_A = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
 const TOKEN_B = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
@@ -31,10 +30,6 @@ function createDerivedState(overrides: {
       currencyChain: GraphQLApi.Chain.Ethereum,
       currencyChainId: UniverseChainId.Mainnet,
       address: overrides.address,
-      tokenQuery: overrides.tokenQuery ?? {
-        loading: false,
-        data: validTokenProjectResponse.data,
-      },
       multiChainMap: {},
       balanceError: overrides.balanceError,
       selectedMultichainChainId: undefined,
@@ -126,9 +121,7 @@ describe('TDPStoreContextProvider', () => {
   })
 
   it('applies partial updates when identity is unchanged but derived state changes', async () => {
-    const initialTokenQuery = { loading: false, data: validTokenProjectResponse.data }
-    const updatedTokenQuery = { loading: false, data: { ...validTokenProjectResponse.data } }
-    mockHeartbeat({ address: TOKEN_A, tokenQuery: initialTokenQuery })
+    mockHeartbeat({ address: TOKEN_A })
 
     const storeRef = { current: null as ReturnType<typeof createTDPStore> | null }
     const { rerender } = render(
@@ -143,7 +136,7 @@ describe('TDPStoreContextProvider', () => {
     expect(storeRef.current?.getState().address).toBe(TOKEN_A)
 
     // Same identity (params unchanged), but derived state has new tokenQuery reference
-    mockHeartbeat({ address: TOKEN_A, tokenQuery: updatedTokenQuery })
+    mockHeartbeat({ address: TOKEN_A })
     rerender(
       <TDPStoreContextProvider>
         <StoreCapture storeRef={storeRef} />

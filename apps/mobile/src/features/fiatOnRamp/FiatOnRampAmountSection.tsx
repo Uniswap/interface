@@ -1,6 +1,7 @@
 import { useFocusEffect } from '@react-navigation/core'
 import { ColorTokens, Flex, fonts, spacing, Text, TouchableArea } from '@universe/mycelium'
 import { useDeviceDimensions, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import React, { forwardRef, RefObject, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, TextInput as RNTextInput, TextInputSelectionChangeEventData } from 'react-native'
@@ -20,7 +21,6 @@ import { useMaxAmountSpend } from 'uniswap/src/features/gas/hooks/useMaxAmountSp
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { DEFAULT_DELAY, useDebounce } from 'utilities/src/time/timing'
 

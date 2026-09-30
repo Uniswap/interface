@@ -1,3 +1,4 @@
+import { isMobileApp } from '@universe/environment'
 import { spacing } from '@universe/mycelium'
 import type { ExpandableAssetGroupVariant } from 'uniswap/src/features/expandableAsset/types'
 
@@ -7,8 +8,9 @@ export const EXPANDABLE_ASSET_ROW_HEIGHT_TRANSITION_MS = 200
 /** Min height for one issuer row inside an expanded group (table variant). */
 export const EXPANDABLE_ASSET_ISSUER_ROW_MIN_HEIGHT_PX = 64
 
-/** Height for one issuer row inside an expanded search group (Figma `Name` row = 56px). */
-export const EXPANDABLE_ASSET_ISSUER_ROW_SEARCH_HEIGHT_PX = 56
+/** Height for one issuer row inside an expanded search group (Figma `Name` row = 56px). Mobile adds 4px of vertical
+ *  padding per side; content is vertically centered in the fixed-height row. */
+export const EXPANDABLE_ASSET_ISSUER_ROW_SEARCH_HEIGHT_PX = isMobileApp ? 64 : 56
 
 /** Gap between issuer divs inside the inner `$surface1` container (table variant). */
 export const EXPANDABLE_ASSET_ISSUER_GAP_PX = spacing.spacing4
@@ -42,7 +44,7 @@ export const EXPANDABLE_ASSET_SEARCH_SHELL_INSET_X_PX = spacing.spacing8
 
 /** Total horizontal inset (each side) from the search modal's row slot to an expanded issuer sub-row's content edge — keep in sync with `ExpandableSearchRow`/`ExpandableIssuerPanelContainer`/`ExpandableIssuerRows`. */
 export const EXPANDABLE_ASSET_SEARCH_ISSUER_ROW_RIGHT_INSET_PX =
-  spacing.spacing12 + EXPANDABLE_ASSET_SEARCH_SHELL_INSET_X_PX + spacing.spacing1 + spacing.spacing8
+  spacing.spacing12 + EXPANDABLE_ASSET_SEARCH_SHELL_INSET_X_PX + spacing.spacing1 + spacing.spacing12
 
 /**
  * Height of the inner issuer list (surface1 block only).

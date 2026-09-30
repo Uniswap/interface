@@ -1,4 +1,5 @@
 import { UniverseChainId } from '@universe/chains'
+import { TestID } from '@universe/test'
 import {
   DappLogoWithTxStatus,
   DappLogoWithWCBadge,
@@ -8,7 +9,6 @@ import {
 import { AssetType } from 'uniswap/src/entities/assets'
 import { ALL_EVM_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ETH_CURRENCY_INFO, ethCurrencyInfo } from 'uniswap/src/test/fixtures/wallet/currencies'
 import { render } from 'uniswap/src/test/test-utils'
 import { createFixture, randomChoice, randomEnumValue } from 'uniswap/src/test/utils'

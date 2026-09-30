@@ -135,17 +135,18 @@ describe('dataApiMultichainTokenToSearchResult', () => {
     ])
   })
 
-  it('should populate parent stats from price data and aggregate 1d volume', () => {
-    const token = createRankedMultichainToken({ price: 1.5, priceChange1d: -2.3, volume1d: 50_000 })
+  it('should populate parent stats from price data and aggregate FDV and 1d volume', () => {
+    const token = createRankedMultichainToken({ price: 1.5, priceChange1d: -2.3, fdv: 9_000_000, volume1d: 50_000 })
 
     const result = dataApiMultichainTokenToSearchResult(token)
 
-    expect(result?.stats).toEqual({ priceUsd: 1.5, pricePercentChange1d: -2.3, volume1dUsd: 50_000 })
+    expect(result?.stats).toEqual({ priceUsd: 1.5, pricePercentChange1d: -2.3, fdvUsd: 9_000_000, volume1dUsd: 50_000 })
   })
 
-  it('should use per-chain 1d volume on each CurrencyInfo searchStats, keeping parent price', () => {
+  it('should use per-chain 1d volume on each CurrencyInfo searchStats, keeping parent price and FDV', () => {
     const token = createRankedMultichainToken({
       price: 1.5,
+      fdv: 9_000_000,
       volume1d: 100_000,
       addresses: {
         '1': '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
@@ -163,6 +164,7 @@ describe('dataApiMultichainTokenToSearchResult', () => {
     expect(volumeByChain.get(1)).toBe(75_000)
     expect(volumeByChain.get(137)).toBe(25_000)
     expect(result?.tokens[0]?.searchStats?.priceUsd).toBe(1.5)
+    expect(result?.tokens.map((t) => t.searchStats?.fdvUsd)).toEqual([9_000_000, 9_000_000])
   })
 
   it('should fall back to the aggregate volume when a chain has no per-chain stats', () => {

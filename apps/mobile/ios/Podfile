@@ -226,7 +226,6 @@ end
 def prepare_target_commons
   use_frameworks! :linkage => :static
 
-  pod 'Apollo', '1.2.1'
   pod 'UIImageColors', '2.1.0'
 end
 

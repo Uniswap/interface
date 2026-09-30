@@ -1,16 +1,15 @@
+import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import type { UniverseChainId } from '@universe/chains'
-import type { ReactNode } from 'react'
+import { type ReactNode, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import type { FocusedRowControl } from 'uniswap/src/components/lists/items/OptionItem'
-import {
-  TokenOptionItemStats,
-  useSearchVolumeLabel,
-} from 'uniswap/src/components/lists/items/tokens/TokenOptionItem/TokenOptionItemStats'
+import { TokenOptionItemStats } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem/TokenOptionItemStats'
 import type { RwaCollectionOption, SearchModalListOption } from 'uniswap/src/components/lists/items/types'
+import { useSearchVolumeLabel } from 'uniswap/src/components/lists/items/useSearchVolumeLabel'
 import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { resolvePrimaryChain } from 'uniswap/src/data/apiClients/dataApiService/rwa/resolvePrimaryChain'
-import { getIssuerCount } from 'uniswap/src/data/apiClients/dataApiService/rwa/rwaMetrics'
+import { getIssuerCount, hasIssuerMetrics } from 'uniswap/src/data/apiClients/dataApiService/rwa/rwaMetrics'
 import type { IssuerToken } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
@@ -21,6 +20,8 @@ import { SearchHistoryResultType } from 'uniswap/src/features/search/SearchHisto
 import { addToSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
 import { sendSearchOptionItemClickedAnalytics } from 'uniswap/src/features/search/SearchModal/analytics/analytics'
 import type { SearchFilterContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
+import { withRwaIssuerMetrics } from 'uniswap/src/features/search/SearchModal/stocks/rwaIssuerMetrics'
+import { useRwaIssuerMetricsIndex } from 'uniswap/src/features/search/SearchModal/stocks/useRwaIssuerMetricsIndex'
 import { tdpChainFilterForTokenRow } from 'uniswap/src/features/search/SearchModal/utils/searchModalListItem'
 import type { CategoryTagPlacement } from 'uniswap/src/features/tokenCategories/CategoryTagPill'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -42,6 +43,8 @@ type RwaCollectionItemProps = {
   testID?: string
   searchStats?: SearchTokenStats
   categoryTagPlacement?: CategoryTagPlacement
+  showIssuerStats?: boolean
+  showIssuerTag?: boolean
 }
 
 export function RwaCollectionItem({
@@ -59,16 +62,29 @@ export function RwaCollectionItem({
   testID,
   searchStats,
   categoryTagPlacement,
+  showIssuerStats,
+  showIssuerTag,
 }: RwaCollectionItemProps): JSX.Element {
   const { navigateToTokenDetails, getTokenDetailsUrl } = useUniswapContext()
   const dispatch = useDispatch()
   const { chains: enabledChainIds } = useEnabledChains()
   const volumeDetail = useSearchVolumeLabel(searchStats?.volume1dUsd)
 
-  const { rwa } = item
+  const chainFilter = searchFilters.searchChainFilter ?? undefined
+  // Only expanded sub-rows show issuer metrics, so fetch them on expand; rows of one category share the query.
+  const metricsIndex = useRwaIssuerMetricsIndex({
+    category: item.rwa.categories?.[0] ?? RwaCategory.STOCKS,
+    chainFilter: chainFilter ?? null,
+    enabled: expanded && !!showIssuerStats,
+  })
+  const rwa = useMemo(
+    () => (metricsIndex ? withRwaIssuerMetrics({ rwa: item.rwa, metricsIndex }) : item.rwa),
+    [item.rwa, metricsIndex],
+  )
   const canExpand = getIssuerCount(rwa) > 1
   const soleIssuer = canExpand ? undefined : rwa.issuerTokens[0]
-  const chainFilter = searchFilters.searchChainFilter ?? undefined
+  // Hide the parent's "from" floor only when the expanded child rows show their own price.
+  const childRowsShowPrice = expanded && showIssuerStats && rwa.issuerTokens.every(hasIssuerMetrics)
 
   type IssuerNavigation = {
     chainId: UniverseChainId
@@ -196,7 +212,7 @@ export function RwaCollectionItem({
       isIssuerMenuReady={isIssuerMenuReady}
       getIssuerHref={issuerHref}
       rightElement={
-        searchStats?.priceUsd != null ? (
+        !childRowsShowPrice && searchStats?.priceUsd != null ? (
           <TokenOptionItemStats
             priceUsd={searchStats.priceUsd}
             pricePercentChange1d={searchStats.pricePercentChange1d}
@@ -205,6 +221,8 @@ export function RwaCollectionItem({
         ) : undefined
       }
       volumeDetail={volumeDetail}
+      showIssuerStats={showIssuerStats}
+      showIssuerTag={showIssuerTag}
       onToggle={onToggle}
       onParentPress={soleIssuer && (() => selectIssuer(soleIssuer))}
       onIssuerModifierPress={recordIssuerModifierPress}

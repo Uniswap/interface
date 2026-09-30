@@ -15790,4 +15790,34 @@
     <lastmod>2026-09-17T19:06:06.654Z</lastmod>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/ethereum/0x8e4318e2cb1ae291254b187001a59a1f8ac78cef</loc>
+    <lastmod>2026-09-24T19:05:51.648Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/bnb/0xc23a44f38634ced8ba6f71483bb5bd27012739f7</loc>
+    <lastmod>2026-09-24T19:05:51.648Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/bnb/0x8e5d9a6b24c33702182b65a7c2dcad53dd4f3c2f</loc>
+    <lastmod>2026-09-24T19:05:51.648Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/bnb/0x53c6291d0a5a02c76cedfa1b8f57a8ac3762f7a9</loc>
+    <lastmod>2026-09-24T19:05:51.648Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/bnb/0x8b53b3e4602f86ed5dd1d7fb76733aac8f386acd</loc>
+    <lastmod>2026-09-24T19:05:51.648Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/avalanche/0x6e3b566454bcf07ccbcf6bc0b6a77f172142868e</loc>
+    <lastmod>2026-09-24T19:05:51.648Z</lastmod>
+    <priority>0.8</priority>
+  </url>
 </urlset>

@@ -70,7 +70,7 @@ export function AnalyticsDebugFilterBar({
     filters.searchText.length > 0 || filters.selectedEventNames.size > 0 || filters.propertyFilters.length > 0
 
   return (
-    <Flex gap="$spacing4" px="$spacing8" py="$spacing4" borderBottomWidth={1} borderBottomColor="$surface3">
+    <Flex gap="$spacing4" px="$spacing8" py="$spacing4" borderBottomWidth={1} borderColor="$surface3">
       {/* Search input — native HTML input for reliable typing in portal */}
       <input
         type="text"

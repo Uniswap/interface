@@ -52,12 +52,10 @@ export function useDerivedSwapInfo({
 
   const currencyInInfo = useCurrencyInfo(
     currencyAssetIn ? buildCurrencyId(currencyAssetIn.chainId, currencyAssetIn.address) : undefined,
-    { refetch: true },
   )
 
   const currencyOutInfo = useCurrencyInfo(
     currencyAssetOut ? buildCurrencyId(currencyAssetOut.chainId, currencyAssetOut.address) : undefined,
-    { refetch: true },
   )
 
   const currencyIn = currencyInInfo?.currency

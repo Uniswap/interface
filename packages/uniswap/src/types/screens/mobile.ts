@@ -2,6 +2,7 @@ import type { ExtensionOnboardingFlow, ExtensionScreens } from 'uniswap/src/type
 
 export enum MobileScreens {
   Activity = 'Activity',
+  AnimatedNumberDebug = 'AnimatedNumberDebug',
   CategoryDetails = 'CategoryDetails',
   Collections = 'Collections',
   DebugScreens = 'DebugScreens',

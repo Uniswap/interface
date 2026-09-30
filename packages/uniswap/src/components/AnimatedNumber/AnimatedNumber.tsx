@@ -11,15 +11,13 @@ export type AnimatedNumberProps = {
   colorIndicationDuration?: number
   shouldFadeDecimals?: boolean
   warmLoading?: boolean
-  /**
-   * Renders the value static. List rows pass `isMobileApp`: each animated number costs ~6
-   * Reanimated shared values and 4 Animated.Text nodes per character plus its own SVG gradient,
-   * and a list keeps dozens mounted at once (Explore holds ~57 rows, the Home token list ~41),
-   * which native cannot absorb — it terminates the process. Web and extension keep animating.
-   * Rows can animate again once the native renderer no longer scales per row: no per-number SVG,
-   * and digit slots mounted lazily.
-   */
   disableAnimations?: boolean
+  /**
+   * Skip all animation work without changing layout: ticks apply statically and are consumed, so
+   * un-suspending never replays a stale roll. For list rows outside the viewport, where animating
+   * every mounted row exhausted native memory. Unlike `disableAnimations` nothing remounts. Native-only.
+   */
+  suspendAnimations?: boolean
   /** Overrides the computed up/down change direction (and its color) — e.g. for values like elapsed time that should always read as increasing. */
   forceDirection?: AnimatedNumberDirection
   /** Override text direction for digit stagger. Defaults to `i18next.dir() === 'rtl'`. */

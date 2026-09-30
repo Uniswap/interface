@@ -1,4 +1,4 @@
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import { AccountDrawer, MODAL_WIDTH } from '~/components/AccountDrawer'
 import { useIsUniswapExtensionConnected } from '~/hooks/useIsUniswapExtensionConnected'
 import { getOwnStyleProp } from '~/test-utils/getOwnStyleProp'

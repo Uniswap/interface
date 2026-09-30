@@ -435,6 +435,16 @@ export function parseApprovals({ exposures, chainId, calls = [] }: ParseApproval
         return
       }
 
+      // NONERC metadata does not identify the approval interface or token scale. Preserve the
+      // provider's spender exposure without inferring an amount, scope, or grant/revoke direction.
+      if (asset.type === 'NONERC') {
+        exposureAssets.push({
+          ...baseAsset,
+          approvalAction: TransactionApprovalAction.Change,
+        })
+        return
+      }
+
       const approvalQuantity = parseApprovalQuantity(spenderData.approval)
       // The API schema requires decimals; keep direct/internal callers fail-neutral rather than
       // guessing a token scale if malformed data still reaches this defense-in-depth boundary.

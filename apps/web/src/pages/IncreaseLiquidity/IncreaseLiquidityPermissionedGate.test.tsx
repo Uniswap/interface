@@ -17,7 +17,7 @@ vi.mock('uniswap/src/features/permissionedTokens/VerifyIdentityBottomSheet', () 
 // PermissionedPoolBanner waits on ui/src (Tamagui TouchableArea) and requires a theme provider;
 // mock it so the gate renders provider-free. The gate's contract here is only whether it mounts.
 vi.mock('~/components/PermissionedPool/PermissionedPoolBanner', async () => {
-  const { TestID } = await import('uniswap/src/test/fixtures/testIDs')
+  const { TestID } = await import('@universe/test')
   return {
     PermissionedPoolBanner: ({ tokenSymbol }: { tokenSymbol: string }) => (
       <div data-testid={TestID.PermissionedPoolBanner}>{tokenSymbol}</div>
@@ -35,7 +35,7 @@ vi.mock('~/hooks/useModalState', () => ({
 }))
 
 import { render, screen } from '@testing-library/react'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import { IncreaseLiquidityPermissionedGate } from '~/pages/IncreaseLiquidity/IncreaseLiquidityPermissionedGate'
 
 const baseProps = {

@@ -1,11 +1,11 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, Percent } from '@uniswap/sdk-core'
-import { AddressStringFormat, Platform, getValidAddress, normalizeAddress } from '@universe/chains'
+import { Platform, getValidAddress } from '@universe/chains'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BIPS_BASE, ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { getListPoolsQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/pools/queries'
+import { getListPoolsInfiniteQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/pools/queries'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import type { FeeData } from 'uniswap/src/features/positions/types'
 import { usePoolLookupTokenAddresses } from '~/features/Liquidity/hooks/usePoolLookupTokenAddresses'
@@ -18,6 +18,7 @@ import {
   toNewPoolFeeData,
 } from '~/features/Liquidity/utils/feeTiers'
 import { getPairListPoolsParams } from '~/features/Liquidity/utils/getPairListPoolsParams'
+import { normalizeHookForMatch } from '~/features/Liquidity/utils/normalizeHookForMatch'
 import { normalizeRankedPool } from '~/features/Liquidity/utils/normalizeRankedPool'
 import { NEW_TOKEN_PLACEHOLDER_ADDRESS } from '~/pages/Liquidity/CreateAuction/types'
 import { FeeTierData } from '~/types/liquidity'
@@ -25,16 +26,6 @@ import { FeeTierData } from '~/types/liquidity'
 // One TVL-sorted page covers a pair's fee-tier distribution in practice; see the pair-filter
 // exhaustiveness question tracked against the endpoint for the pathological case.
 const LIST_POOLS_PAGE_SIZE = 100
-
-// Hookless is represented differently per source (v1 filter: '' / zero address; v2 responses:
-// unset or zero address); normalize all of them to undefined for comparison.
-function normalizeHookForMatch(hookAddress: string | undefined): string | undefined {
-  if (!hookAddress) {
-    return undefined
-  }
-  const normalized = normalizeAddress(hookAddress, AddressStringFormat.Lowercase)
-  return normalized === ZERO_ADDRESS ? undefined : normalized
-}
 
 /**
  * @returns map of fee tier (in hundredths of bips) to more data about the Pool
@@ -117,7 +108,7 @@ export function useAllFeeTierPoolData({
     isLoading: isV2PoolsLoading,
     isError: isV2PoolsError,
   } = useInfiniteQuery(
-    getListPoolsQueryOptions({
+    getListPoolsInfiniteQueryOptions({
       params: listPoolsParams,
       pageSize: LIST_POOLS_PAGE_SIZE,
       enabled: shouldFetchPools && !!lookupAddress0 && !!lookupAddress1,

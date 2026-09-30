@@ -1,12 +1,14 @@
+import { Language, mapLanguageToLocale } from 'uniswap/src/features/language/constants'
+
 /**
- * Canonical token metadata shape, adapted from either V2 REST or legacy GraphQL data
- * (see legacyMetadataAdapters.ts). Used by useTokenMetadata.
+ * Canonical token metadata shape
  */
 export interface TokenMetadataData {
   name?: string
   symbol?: string
   logoUrl?: string
   description?: string
+  descriptionTranslations?: Record<string, string>
   homepageUrl?: string
   twitterName?: string
   isSpam?: boolean
@@ -42,4 +44,37 @@ export function normalizeTwitterHandle(raw: string | undefined): string | undefi
     handle = handle.slice(1)
   }
   return X_HANDLE_REGEX.test(handle) ? handle : undefined
+}
+
+function languageSubtag(localeKey: string): string {
+  return localeKey.split('-')[0]?.toLowerCase() ?? localeKey.toLowerCase()
+}
+
+/**
+ * Picks the description translation for `language` out of the REST translations map.
+ *
+ * The proto declares the map as `map<string, string>` without documenting the key format, so
+ * this assumes IETF locale tags matching the app's `Locale` values (`es-ES`, `zh-Hant`, ...).
+ * Lookup is case-insensitive and degrades gracefully: exact locale, then the bare language
+ * subtag (`es`), then any key sharing that subtag so regional variants like es-419 still get
+ * the one Spanish translation the backend has.
+ */
+export function getTranslatedDescription(
+  translations: Record<string, string> | undefined,
+  language: Language,
+): string | undefined {
+  if (!translations || language === Language.English) {
+    return undefined
+  }
+
+  const locale = mapLanguageToLocale[language].toLowerCase()
+  const subtag = languageSubtag(locale)
+  const keys = Object.keys(translations)
+
+  const matchedKey =
+    keys.find((key) => key.toLowerCase() === locale) ??
+    keys.find((key) => key.toLowerCase() === subtag) ??
+    keys.find((key) => languageSubtag(key) === subtag)
+
+  return matchedKey && translations[matchedKey] ? translations[matchedKey] : undefined
 }

@@ -3,6 +3,7 @@ import { Flex, Text } from '@universe/mycelium'
 import { ArrowRight } from '@universe/mycelium/icons/ArrowRight'
 import { StatusIndicatorCircle } from '@universe/mycelium/icons/StatusIndicatorCircle'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import type { TFunction } from 'i18next'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -14,7 +15,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { LiquidityPositionStatusIndicator } from 'uniswap/src/features/positions/components/LiquidityPositionStatusIndicator'
 import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { shouldReverseForWaterfall } from 'uniswap/src/features/tokens/waterfallPriority'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
 import { getDetailHeaderLogoSize } from '~/components/StickyCollapsibleHeader/getHeaderLogoSize'
@@ -221,6 +222,13 @@ export function LiquidityPositionInfo({
     currencyId(currency0Amount.currency),
     currencyId(currency1Amount.currency),
   ])
+  // Same base/quote orientation as the positions table row and the pool details header, so the pair
+  // reads the same on the list, the detail page, and the flows launched from it.
+  const reversed = shouldReverseForWaterfall(currency0Amount.currency, currency1Amount.currency)
+  const [baseCurrency, quoteCurrency] = reversed
+    ? [currency1Amount.currency, currency0Amount.currency]
+    : [currency0Amount.currency, currency1Amount.currency]
+  const [baseInfo, quoteInfo] = reversed ? [currency1Info, currency0Info] : [currency0Info, currency1Info]
 
   const includeNetworkInLogo = useMemo(() => !includeNetwork || media.lg, [includeNetwork, media.lg])
   const isDetailHeader = stackedLogo && !isMiniVersion
@@ -253,8 +261,8 @@ export function LiquidityPositionInfo({
   return (
     <Flex row gap="$gap16" $md={{ width: '100%' }} alignItems={isMiniVersion ? 'center' : 'flex-start'} minWidth={0}>
       <SplitLogo
-        inputCurrencyInfo={currency0Info}
-        outputCurrencyInfo={currency1Info}
+        inputCurrencyInfo={baseInfo}
+        outputCurrencyInfo={quoteInfo}
         size={isDetailHeader ? getDetailHeaderLogoSize({ media, restingSize: currencyLogoSize }) : currencyLogoSize}
         chainId={includeNetworkInLogo ? chainId : null}
         orientation={isDetailHeader ? 'stacked' : 'split'}
@@ -282,12 +290,12 @@ export function LiquidityPositionInfo({
                   // hover/press here, and color transitions must stay excluded (theme-toggle flash).
                   transition="opacity 0.2s"
                 >
-                  {currency0Amount.currency.symbol} / {currency1Amount.currency.symbol}
+                  {baseCurrency.symbol} / {quoteCurrency.symbol}
                 </Text>
               </Text>
             ) : (
               <Text variant="subheading1">
-                {currency0Amount.currency.symbol} / {currency1Amount.currency.symbol}
+                {baseCurrency.symbol} / {quoteCurrency.symbol}
               </Text>
             )}
           </Flex>

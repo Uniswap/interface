@@ -40,6 +40,7 @@ interface NFTMenuParams {
   isSpam?: boolean
   chainId?: UniverseChainId
   onCopySuccess?: () => void
+  onReportSuccess?: () => void
 }
 
 export function useNFTContextMenuItems({
@@ -51,6 +52,7 @@ export function useNFTContextMenuItems({
   isSpam,
   chainId,
   onCopySuccess,
+  onReportSuccess,
 }: NFTMenuParams): MenuOptionItem[] {
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -101,6 +103,7 @@ export function useNFTContextMenuItems({
           }),
         )
       }
+      onReportSuccess?.()
     } catch (e) {
       logger.error(e, {
         tags: { file: 'useNftContextMenu.tsx', function: 'onPressReport' },
@@ -124,7 +127,7 @@ export function useNFTContextMenuItems({
       }
       return
     }
-  }, [t, dispatch, contractAddress, isVisible, chainId, nftKey, showNotification])
+  }, [t, dispatch, contractAddress, isVisible, chainId, nftKey, showNotification, onReportSuccess])
 
   const onPressHiddenStatus = useCallback(() => {
     if (!nftKey) {

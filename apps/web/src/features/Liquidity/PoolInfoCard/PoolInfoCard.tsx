@@ -5,12 +5,12 @@ import { Button, Flex, iconSizes, Skeleton, Text, TouchableArea } from '@univers
 import { ChevronsIn } from '@universe/mycelium/icons/ChevronsIn'
 import { ChevronsOut } from '@universe/mycelium/icons/ChevronsOut'
 import { useMedia, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import { curveCardinal, scaleLinear } from 'd3'
 import { type ComponentProps, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { v2TokenToCurrency } from 'uniswap/src/features/dataApi/utils/parsedToken'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 import { getPriceBounds } from '~/components/Charts/PriceChart/utils'
 import { LineChart } from '~/components/Charts/SparklineChart/LineChart'
@@ -322,7 +322,7 @@ export function PoolInfoCard({
       <Flex row gap="$spacing18" alignItems="center">
         <DoubleCurrencyLogo currencies={[currency0, currency1]} servedLogos={servedLogos} size={48} />
         <Flex gap="$spacing4">
-          <Text variant="subheading1" color="$neutral1">
+          <Text variant="subheading1" color="$neutral1" testID={TestID.PoolPairLabel}>
             {poolData.token0.symbol} / {poolData.token1.symbol}
           </Text>
           <Flex row flexWrap="wrap" gap="$spacing2">

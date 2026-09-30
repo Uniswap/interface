@@ -5,10 +5,10 @@ import {
 } from '@uniswap/client-data-api/dist/data/v2/earn_pb'
 import { UniverseChainId } from '@universe/chains'
 import { getDynamicConfigValue } from '@universe/gating'
+import { TestID } from '@universe/test'
 import { getEarnVaultId } from 'uniswap/src/features/earn/utils'
 import { EarnEventName } from 'uniswap/src/features/telemetry/constants/features'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { PortfolioEarnSection } from './PortfolioEarnSection'
 import { fireEvent, render, screen } from '~/test-utils/render'
@@ -40,8 +40,8 @@ vi.mock('uniswap/src/features/portfolio/balances/hooks', () => ({
   usePortfolioBalances: mockUsePortfolioBalances,
 }))
 
-vi.mock('uniswap/src/features/dataApi/tokenProjects/tokenProjects', () => ({
-  useTokenProjectsByCurrencyId: mockUseTokenProjectsByCurrencyId,
+vi.mock('uniswap/src/features/tokens/useMultichainCurrencyInfos', () => ({
+  useMultichainCurrencyInfosByCurrencyId: mockUseTokenProjectsByCurrencyId,
 }))
 
 vi.mock('uniswap/src/features/telemetry/send', () => ({
@@ -309,8 +309,8 @@ describe('PortfolioEarnSection', () => {
     mockPortfolioBalances([])
     mockUseTokenProjectsByCurrencyId.mockReturnValue({
       data: new Map(),
-      error: undefined,
-      loading: false,
+      error: null,
+      isLoading: false,
       refetch: vi.fn(),
     })
   })
@@ -660,8 +660,8 @@ describe('PortfolioEarnSection', () => {
     })
     mockUseTokenProjectsByCurrencyId.mockReturnValue({
       data: undefined,
-      error: undefined,
-      loading: true,
+      error: null,
+      isLoading: true,
       refetch: vi.fn(),
     })
     mockEarnQueries({

@@ -1,6 +1,5 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, Price } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { Flex, Text } from '@universe/mycelium'
 import type { SegmentedControlOption } from '@universe/mycelium/segmented-control-compat'
@@ -8,6 +7,7 @@ import { UTCTimestamp } from 'lightweight-charts'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { ChartSkeleton } from '~/components/Charts/LoadingState'
 import { PriceChartData } from '~/components/Charts/PriceChart'
 import { ChartType } from '~/components/Charts/utils'
@@ -112,9 +112,7 @@ export function D3LiquidityRangeInput({
   const [internalChartError, setInternalChartError] = useState<string | undefined>(undefined)
 
   // TODO: consider moving this to the store - requires rearranging loading and error states
-  const [selectedHistoryDuration, setSelectedHistoryDuration] = useState<GraphQLApi.HistoryDuration>(
-    GraphQLApi.HistoryDuration.Month,
-  )
+  const [selectedHistoryDuration, setSelectedHistoryDuration] = useState<HistoryDuration>(HistoryDuration.Month)
 
   const hooks = hook ?? ZERO_ADDRESS
 

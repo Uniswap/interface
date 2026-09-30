@@ -8,7 +8,6 @@ import { lockScreenReducer } from 'src/features/lockScreen/lockScreenSlice'
 import { modalsReducer } from 'src/features/modals/modalSlice'
 import { pushNotificationsReducer } from 'src/features/notifications/slice'
 import { splashScreenReducer } from 'src/features/splashScreen/splashScreenSlice'
-import { tweaksReducer } from 'src/features/tweaks/slice'
 import { walletConnectReducer } from 'src/features/walletConnect/walletConnectSlice'
 import { walletPersistedStateList, walletReducers } from 'wallet/src/state/walletReducer'
 
@@ -20,7 +19,6 @@ const mobileReducers = {
   passwordLockout: passwordLockoutReducer,
   pushNotifications: pushNotificationsReducer,
   saga: monitoredSagaReducers,
-  tweaks: tweaksReducer,
   walletConnect: walletConnectReducer,
   appState: appStateReducer,
   splashScreen: splashScreenReducer,
@@ -33,7 +31,6 @@ export const mobilePersistedStateList: Array<keyof typeof mobileReducers> = [
   ...walletPersistedStateList,
   'biometricSettings',
   'passwordLockout',
-  'tweaks',
   'pushNotifications',
 ]
 

@@ -2,7 +2,7 @@ import type { PlainMessage } from '@bufbuild/protobuf'
 import { AuctionType, type Auction } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 import { Token } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import {
   type AuctionDisplayDataSources,
   useAuctionDisplayDataSources,

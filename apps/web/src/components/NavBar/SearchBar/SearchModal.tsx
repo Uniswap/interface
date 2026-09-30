@@ -1,11 +1,12 @@
-import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { Flex, spacing, Text, TouchableArea } from '@universe/mycelium'
 import { useMedia, useScrollbarStyles, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { type ComponentRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useUpdateScrollLock } from 'uniswap/src/components/modals/ScrollLock'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
-import { WEB_MODAL_ANIMATION_MS } from 'uniswap/src/constants/misc'
+import { NetworkFilterV2 } from 'uniswap/src/components/network/NetworkFilterV2/NetworkFilterV2'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { EXPANDABLE_ASSET_SEARCH_ISSUER_ROW_RIGHT_INSET_PX } from 'uniswap/src/features/expandableAsset/expandableAssetLayout'
 import { useFilterCallbacks } from 'uniswap/src/features/search/SearchModal/hooks/useFilterCallbacks'
@@ -32,24 +33,23 @@ const HOVER_CARD_OFFSET = 8
 // Compensates for the RWA issuer sub-row's extra nesting; imported (not hardcoded) to stay in sync with its layout.
 const RWA_ISSUER_ROW_HOVER_CARD_OFFSET = HOVER_CARD_OFFSET + EXPANDABLE_ASSET_SEARCH_ISSUER_ROW_RIGHT_INSET_PX
 
+const LIST_CONTENT_CONTAINER_STYLE = { paddingBottom: spacing.spacing24 }
+
 function useHoverCardWrapper({
   containerWidth,
   onNavigate,
-  isModalSettled,
 }: {
   containerWidth: number
   onNavigate: () => void
-  isModalSettled: boolean
 }): SearchModalRowWrapper {
   return useCallback<SearchModalRowWrapper>(
     (props): JSX.Element => {
-      const { element, isRowFocused } = props
-      const isFocused = isRowFocused && isModalSettled
+      const { element } = props
       if (props.variant === 'auction') {
         return (
           <AuctionHoverCard
             auction={props.auction}
-            isFocused={isFocused}
+            childOwnsPressFeedback
             placement="right-start"
             offset={HOVER_CARD_OFFSET}
             widthOffset={HOVER_CARD_OFFSET}
@@ -63,7 +63,7 @@ function useHoverCardWrapper({
       return (
         <TokenHoverCard
           currencyInfo={props.currencyInfo}
-          isFocused={isFocused}
+          childOwnsPressFeedback
           placement="right-start"
           offset={props.variant === 'rwaIssuerChild' ? RWA_ISSUER_ROW_HOVER_CARD_OFFSET : HOVER_CARD_OFFSET}
           widthOffset={HOVER_CARD_OFFSET}
@@ -74,7 +74,7 @@ function useHoverCardWrapper({
         </TokenHoverCard>
       )
     },
-    [containerWidth, onNavigate, isModalSettled],
+    [containerWidth, onNavigate],
   )
 }
 
@@ -103,17 +103,6 @@ export const SearchModal = memo(function SearchModalInner({
       return () => clearTimeout(timeoutId)
     }
     return undefined
-  }, [isModalOpen])
-
-  // A hover card opened mid-animation anchors where the row was, not where it lands.
-  const [isModalSettled, setIsModalSettled] = useState(false)
-  useEffect(() => {
-    if (!isModalOpen) {
-      setIsModalSettled(false)
-      return undefined
-    }
-    const timeoutId = setTimeout(() => setIsModalSettled(true), WEB_MODAL_ANIMATION_MS)
-    return () => clearTimeout(timeoutId)
   }, [isModalOpen])
 
   const [activeTab, setActiveTab] = useState<SearchTab>(SearchTab.All)
@@ -150,14 +139,11 @@ export const SearchModal = memo(function SearchModalInner({
   }, [onChangeText, onClose])
 
   const { chains: enabledChains } = useEnabledChains()
+  const isNetworkFilterV2Enabled = useFeatureFlag(FeatureFlags.NetworkFilterV2)
 
   const searchModalWidth = media.xxl ? SEARCH_MODAL_WIDTH.small : SEARCH_MODAL_WIDTH.default
 
-  const wrapWithHoverCard = useHoverCardWrapper({
-    containerWidth: searchModalWidth,
-    onNavigate: onSelect,
-    isModalSettled,
-  })
+  const wrapWithHoverCard = useHoverCardWrapper({ containerWidth: searchModalWidth, onNavigate: onSelect })
   const rowWrapper = !media.xl ? wrapWithHoverCard : undefined
 
   // Tamagui's lock doesn't block ArrowUp/Down key scrolling, so we lock scroll ourselves and disable
@@ -204,12 +190,21 @@ export const SearchModal = memo(function SearchModalInner({
             py="$none"
             endAdornment={
               <Flex row alignItems="center">
-                <NetworkFilter
-                  includeAllNetworks
-                  chainIds={enabledChains}
-                  selectedChain={chainFilter}
-                  onPressChain={onChangeChainFilter}
-                />
+                {isNetworkFilterV2Enabled ? (
+                  <NetworkFilterV2
+                    includeAllNetworks
+                    chainIds={enabledChains}
+                    selectedChain={chainFilter}
+                    onPressChain={onChangeChainFilter}
+                  />
+                ) : (
+                  <NetworkFilter
+                    includeAllNetworks
+                    chainIds={enabledChains}
+                    selectedChain={chainFilter}
+                    onPressChain={onChangeChainFilter}
+                  />
+                )}
               </Flex>
             }
             // The long placeholder hard-clips in the narrow $sm input, so fall back to the short header copy there
@@ -249,7 +244,9 @@ export const SearchModal = memo(function SearchModalInner({
               activeTab={activeTab}
               auctionSearchEnabled={isAuctionSearchEnabled}
               onSelect={onSelect}
+              onViewAll={setActiveTab}
               renderedInModal={false}
+              contentContainerStyle={LIST_CONTENT_CONTAINER_STYLE}
               rowWrapper={rowWrapper}
             />
           ) : (
@@ -258,7 +255,9 @@ export const SearchModal = memo(function SearchModalInner({
               activeTab={activeTab}
               auctionSearchEnabled={isAuctionSearchEnabled}
               onSelect={onSelect}
+              onViewAll={setActiveTab}
               renderedInModal
+              contentContainerStyle={LIST_CONTENT_CONTAINER_STYLE}
               rowWrapper={rowWrapper}
             />
           )}

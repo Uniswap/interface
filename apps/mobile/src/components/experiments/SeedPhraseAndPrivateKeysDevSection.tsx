@@ -1,10 +1,10 @@
 import { Flex } from '@universe/mycelium'
 import { Accordion } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import React from 'react'
 import { Alert } from 'react-native'
 import { GatingButton } from 'uniswap/src/components/gating/GatingButton'
 import { AccordionHeader } from 'uniswap/src/components/gating/GatingOverrides'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 export function SeedPhraseAndPrivateKeysDevSection(): JSX.Element {

@@ -2,7 +2,7 @@ import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import type { GasFeeResult, GasStrategy } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { DynamicConfigs, type GasStrategies, getStatsigClient } from '@universe/gating'
-import { DAI } from 'uniswap/src/constants/tokens'
+import { DAI, USDC_ARC } from 'uniswap/src/constants/tokens'
 import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/consts'
 import {
   applyNativeTokenPercentageBuffer,
@@ -124,6 +124,42 @@ function pathUsdBalance(raw: string): CurrencyAmount<Token> {
 }
 
 describe(hasSufficientGasBalance, () => {
+  it.each([
+    { currency: USDC_ARC, balance: '1001000', value: '1000000000000000000', expected: true },
+    { currency: USDC_ARC, balance: '1001000', value: '0xde0b6b3a7640000', expected: true },
+    { currency: USDC_ARC, balance: '1000000', value: '1000000000000000000', expected: false },
+    { currency: USDC_ARC, balance: '1001000', value: '1000000000000000001', expected: false },
+    { currency: MAINNET_CURRENCY, balance: '1001000000000000000', value: '1000000000000000000', expected: true },
+    { currency: MAINNET_CURRENCY, balance: '1000000000000000000', value: '1000000000000000000', expected: false },
+  ])(
+    'checks native value $value plus gas against $balance raw $currency.symbol',
+    ({ currency, balance, value, expected }) => {
+      expect(
+        hasSufficientGasBalance({
+          chainId: currency.chainId,
+          gasBalance: CurrencyAmount.fromRawAmount(currency, balance),
+          gasFee: '1000000000000000',
+          spend: { kind: 'raw-native-value', value },
+        }),
+      ).toBe(expected)
+    },
+  )
+
+  it.each([USDC_ARC, PATH_USD])('does not shift an amount already expressed in $symbol units', (gasToken) => {
+    const params = {
+      chainId: gasToken.chainId,
+      gasFee: '1000000000000000',
+      spend: { kind: 'gas-token-amount' as const, amount: CurrencyAmount.fromRawAmount(gasToken, '1000000') },
+    }
+
+    expect(hasSufficientGasBalance({ ...params, gasBalance: CurrencyAmount.fromRawAmount(gasToken, '1001000') })).toBe(
+      true,
+    )
+    expect(hasSufficientGasBalance({ ...params, gasBalance: CurrencyAmount.fromRawAmount(gasToken, '1000000') })).toBe(
+      false,
+    )
+  })
+
   it('delegates to hasSufficientFundsIncludingGas for non-Tempo chains', () => {
     expect(
       hasSufficientGasBalance({

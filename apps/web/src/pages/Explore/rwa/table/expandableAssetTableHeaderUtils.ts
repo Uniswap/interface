@@ -6,10 +6,12 @@ export function getExpandableAssetHeaderDescription({
   t,
   category,
   networkName,
+  volumeTimeframeSelectable = false,
 }: {
   t: TFunction
   category: StocksSortMethod
   networkName?: string
+  volumeTimeframeSelectable?: boolean
 }): ReactNode | undefined {
   switch (category) {
     case StocksSortMethod.PRICE:
@@ -19,7 +21,7 @@ export function getExpandableAssetHeaderDescription({
     case StocksSortMethod.MARKET_CAP:
       return t('explore.rwa.table.column.marketCap.tooltip')
     case StocksSortMethod.VOLUME:
-      return t('explore.rwa.table.column.volume.tooltip')
+      return volumeTimeframeSelectable ? t('stats.volume.description') : t('explore.rwa.table.column.volume.tooltip')
     case StocksSortMethod.HOUR_CHANGE:
     case StocksSortMethod.DAY_CHANGE:
       return undefined

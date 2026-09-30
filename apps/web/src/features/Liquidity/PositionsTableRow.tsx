@@ -90,10 +90,18 @@ export function PoolCellContent({ position }: { position: PositionInfo }): JSX.E
 
 const RANGE_STATUS_SLOT_HEIGHT = 20
 
-function CurrentPriceContent({ position }: { position: PositionInfo }): JSX.Element | null {
+function CurrentPriceContent({
+  position,
+  pricesInverted,
+}: {
+  position: PositionInfo
+  pricesInverted: boolean
+}): JSX.Element | null {
   const { t } = useTranslation()
   const { formatNumberOrString } = useLocalizationContext()
-  const currentPrice = position.poolOrPair?.token0Price as Price<Currency, Currency> | undefined
+  const token0Price = position.poolOrPair?.token0Price as Price<Currency, Currency> | undefined
+  // Quote in the same asset as the min → max range above it
+  const currentPrice = pricesInverted ? token0Price?.invert() : token0Price
 
   if (!currentPrice) {
     return null
@@ -177,7 +185,7 @@ export function RangeCellContent({ position }: { position: PositionInfo }): JSX.
             }
             hoverContent={
               <Flex height={RANGE_STATUS_SLOT_HEIGHT} justifyContent="center">
-                <CurrentPriceContent position={position} />
+                <CurrentPriceContent position={position} pricesInverted={pricesInverted} />
               </Flex>
             }
           />

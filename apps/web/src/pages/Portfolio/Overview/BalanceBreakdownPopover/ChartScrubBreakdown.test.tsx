@@ -1,5 +1,5 @@
+import { TestID } from '@universe/test'
 import { UTCTimestamp } from 'lightweight-charts'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
 import { ChartScrubBreakdown } from '~/pages/Portfolio/Overview/BalanceBreakdownPopover/ChartScrubBreakdown'
 import { render, screen } from '~/test-utils/render'

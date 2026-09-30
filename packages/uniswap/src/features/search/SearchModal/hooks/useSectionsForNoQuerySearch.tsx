@@ -1,6 +1,9 @@
+import type { PlainMessage } from '@bufbuild/protobuf'
+import { useQuery } from '@tanstack/react-query'
 import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import { ExploreStatsResponse, PoolStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
-import { ALL_NETWORKS_ARG } from '@universe/api'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import type { ListPoolsResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
+import { PoolsOrderBy } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { UniverseChainId } from '@universe/chains'
 import { GatedFeature, useIsFeatureGated } from '@universe/compliance'
 import { isMobileApp, isWebApp, isWebPlatform } from '@universe/environment'
@@ -8,20 +11,22 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TrendUp } from 'ui/src/components/icons/TrendUp'
-import { usePoolStatsToPoolOptions } from 'uniswap/src/components/lists/items/pools/usePoolStatsToPoolOptions'
+import { usePoolSearchResultsToPoolOptions } from 'uniswap/src/components/lists/items/pools/usePoolSearchResultsToPoolOptions'
 import type { SearchModalOption } from 'uniswap/src/components/lists/items/types'
 import { useFavoriteWalletOptions } from 'uniswap/src/components/lists/items/wallets/useFavoriteWalletOptions'
 import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
 import { NewTag } from 'uniswap/src/components/pill/NewTag'
-import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
-import { useMultichainSearchResultsToOptions } from 'uniswap/src/components/TokenSelector/hooks/useMultichainSearchResultsToOptions'
-import { useTrendingTokensCurrencyInfos } from 'uniswap/src/components/TokenSelector/hooks/useTrendingTokensCurrencyInfos'
-import { useExploreStatsQuery } from 'uniswap/src/data/apiClients/dataApiService/exploreV1/exploreStats'
+import { multichainSearchResultsToOptions } from 'uniswap/src/components/TokenSelector/hooks/useMultichainSearchResultsToOptions'
+import { getListPoolsQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/pools/queries'
 import { useListRankedRwasQuery } from 'uniswap/src/data/apiClients/dataApiService/rwa/listRankedRwas'
 import { mapRankedRwaList } from 'uniswap/src/data/apiClients/dataApiService/rwa/mapRankedRwa'
+import { rankedPoolToPoolSearchResult } from 'uniswap/src/data/apiClients/dataApiService/search/search'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useTopAuctionOptions } from 'uniswap/src/features/dataApi/searchAuctions'
+import { top1DVolumeResultsToTokenOptions, useTop1DVolumeTokens } from 'uniswap/src/features/dataApi/top1DVolumeTokens'
+import type { PoolSearchResult } from 'uniswap/src/features/dataApi/types'
 import {
   NUMBER_OF_RESULTS_LONG,
   NUMBER_OF_RESULTS_MEDIUM,
@@ -30,7 +35,6 @@ import {
   NUMBER_OF_SPOTLIT_CATEGORY_TOKENS_TOKENS_TAB,
 } from 'uniswap/src/features/search/SearchModal/constants'
 import { useRecentSearchSection } from 'uniswap/src/features/search/SearchModal/hooks/useRecentSearchSection'
-import { useSearchMultichainListTokens } from 'uniswap/src/features/search/SearchModal/hooks/useSearchMultichainListTokens'
 import type { SearchModalSectionResult } from 'uniswap/src/features/search/SearchModal/hooks/useSectionsForSearchResultsUtils'
 import {
   useSpotlitCategorySections,
@@ -75,7 +79,14 @@ function selectTokenShelfState({
     : { ...legacy, sections: undefined }
 }
 
-/** Both paths fall back to an empty list, so `data` is always present. */
+// Stable empty input so usePoolSearchResultsToPoolOptions' memos don't recompute while pools are pending.
+const EMPTY_POOL_SEARCH_RESULTS: PoolSearchResult[] = []
+
+function selectPoolSearchResults(data: PlainMessage<ListPoolsResponse>): PoolSearchResult[] {
+  return data.pools.map(rankedPoolToPoolSearchResult).filter((pool): pool is PoolSearchResult => pool !== undefined)
+}
+
+/** Falls back to an empty list, so `data` is always present. */
 type TrendingTokenResults = Omit<DerivedQueryResult<SearchModalOption[]>, 'data'> & {
   data: SearchModalOption[]
   /** First load only, unlike `isLoading`, which also covers background refetches. */
@@ -83,51 +94,31 @@ type TrendingTokenResults = Omit<DerivedQueryResult<SearchModalOption[]>, 'data'
 }
 
 /**
- * Trending token options for the no-query state, collapsing the flat (single-chain) and multichain
- * paths into one query-like result. Only the path selected by `isMultichainPath` is fetched.
+ * Trending token options for the no-query state. Unfiltered, rows render as multichain options;
+ * with a chain filter they flatten to one token option per token on that chain.
  */
 function useTrendingTokenResults({
   chainFilter,
-  isMultichainPath,
   pageSize,
   skip,
 }: {
   chainFilter: UniverseChainId | null
-  isMultichainPath: boolean
   pageSize: number
   skip: boolean
 }): TrendingTokenResults {
-  const {
-    data: tokens,
-    error: flatTokensError,
-    refetch: refetchFlatTokens,
-    isLoading: flatTokensInitialLoading,
-    isFetching: flatTokensFetching,
-  } = useTrendingTokensCurrencyInfos(chainFilter, { skip: skip || isMultichainPath })
+  const { data: results, error, refetch, isLoading } = useTop1DVolumeTokens({ chainFilter, pageSize, skip })
+  const isInitialLoading = isLoading && results === undefined && !error
 
-  const {
-    data: multichainResults,
-    error: multichainTokensError,
-    refetch: refetchMultichainTokens,
-    isLoading: multichainTokensInitialLoading,
-    isFetching: multichainTokensFetching,
-  } = useSearchMultichainListTokens({ pageSize, skip: skip || !isMultichainPath })
+  const options = useMemo((): SearchModalOption[] | undefined => {
+    if (!results) {
+      return undefined
+    }
+    return chainFilter
+      ? top1DVolumeResultsToTokenOptions(results, { chainFilter })
+      : multichainSearchResultsToOptions(results)
+  }, [chainFilter, results])
 
-  const flatTokenOptions = useCurrencyInfosToTokenOptions({ currencyInfos: tokens })
-  const multichainTokenOptions = useMultichainSearchResultsToOptions({ results: multichainResults })
-
-  // Background refetches count as loading on both paths so the retry button shows a spinner after an error:
-  // once a query has errored it is no longer pending, so `isLoading` stays false for the duration of the retry.
-  const flatTokensLoading = flatTokensInitialLoading || flatTokensFetching
-  const multichainTokensLoading = multichainTokensInitialLoading || multichainTokensFetching
-
-  return {
-    data: isMultichainPath ? (multichainTokenOptions ?? []) : (flatTokenOptions ?? []),
-    error: isMultichainPath ? multichainTokensError : flatTokensError,
-    isLoading: isMultichainPath ? multichainTokensLoading : flatTokensLoading,
-    isInitialLoading: isMultichainPath ? multichainTokensInitialLoading : flatTokensInitialLoading,
-    refetch: isMultichainPath ? refetchMultichainTokens : refetchFlatTokens,
-  }
+  return { data: options ?? [], error, isLoading, isInitialLoading, refetch }
 }
 
 export function useSectionsForNoQuerySearch({
@@ -141,13 +132,14 @@ export function useSectionsForNoQuerySearch({
 }): NoQuerySearchSections {
   const { t } = useTranslation()
   const isSearchV2UIEnabled = useFeatureFlag(FeatureFlags.SearchV2UI)
+  const { chains: enabledChainIds } = useEnabledChains()
+  const queryChainIds = useMemo(() => (chainFilter ? [chainFilter] : enabledChainIds), [chainFilter, enabledChainIds])
+
   // The "Stocks by 24H volume" section renders unless the caller's region is RWA-blocked; hidden while the
   // region is pending so blocked users never see it flash. Grouping/recents-tagging are not region-gated.
   const stocksSectionEnabled = !useIsFeatureGated(GatedFeature.ISSUER_SPECIFIC_RWA, { pendingValue: true })
 
   const { sections: recentSearchSection, skeletonPillCount } = useRecentSearchSection({ chainFilter, activeTab })
-
-  const isMultichainPath = chainFilter === null
 
   // Spotlit categories replace the Trending + Stocks shelves on the All/Tokens tabs; flag off leaves them untouched.
   const isTokenTab = activeTab === SearchTab.Tokens || activeTab === SearchTab.All
@@ -176,7 +168,6 @@ export function useSectionsForNoQuerySearch({
     refetch: refetchTokens,
   } = useTrendingTokenResults({
     chainFilter,
-    isMultichainPath,
     pageSize: numberOfTrendingTokens,
     skip: skipTrendingTokensQuery,
   })
@@ -214,26 +205,32 @@ export function useSectionsForNoQuerySearch({
     icon: STOCKS_SECTION_ICON,
   })
 
-  // Load trending pools by 24H volume
+  // Trending pools: the same default ListPools request as the Explore pools table (all enabled chains or
+  // the filtered one, every protocol version, spam and top-level filters applied, ranked by 24H volume),
+  // fetched as one page sized to the number of rows the tab shows.
   const numberOfTrendingPools = activeTab === SearchTab.All ? NUMBER_OF_RESULTS_SHORT : NUMBER_OF_RESULTS_LONG
-  const poolQueryVariables = useMemo(
-    () => ({
-      input: { chainId: chainFilter ? chainFilter.toString() : ALL_NETWORKS_ARG },
-      enabled: isWebPlatform && (activeTab === SearchTab.All || activeTab === SearchTab.Pools),
-      select: (data: ExploreStatsResponse): PoolStats[] | undefined =>
-        data.stats?.poolStats
-          .sort((a, b) => (b.volume1Day?.value ?? 0) - (a.volume1Day?.value ?? 0)) // Sort by 24h volume
-          .slice(0, numberOfTrendingPools),
-    }),
-    [activeTab, chainFilter, numberOfTrendingPools],
-  )
   const {
     data: topPools,
     isLoading: topPoolsLoading,
     error: topPoolsError,
     refetch: refetchPools,
-  } = useExploreStatsQuery<PoolStats[] | undefined>(poolQueryVariables)
-  const trendingPoolOptions = usePoolStatsToPoolOptions(topPools)
+  } = useQuery(
+    getListPoolsQueryOptions({
+      params: {
+        chainIds: queryChainIds,
+        sort: { orderBy: PoolsOrderBy.VOLUME_1D, ascending: false },
+        filter: {
+          protocolVersions: [ProtocolVersion.V2, ProtocolVersion.V3, ProtocolVersion.V4],
+          applyTopLevelFilters: true,
+          includeSpam: false,
+        },
+      },
+      pageSize: numberOfTrendingPools,
+      enabled: isWebPlatform && (activeTab === SearchTab.All || activeTab === SearchTab.Pools),
+      select: selectPoolSearchResults,
+    }),
+  )
+  const trendingPoolOptions = usePoolSearchResultsToPoolOptions(topPools ?? EMPTY_POOL_SEARCH_RESULTS)
   const trendingPoolSection = useOnchainItemListSection({
     sectionKey: OnchainItemSectionName.TrendingPools,
     options: trendingPoolOptions,

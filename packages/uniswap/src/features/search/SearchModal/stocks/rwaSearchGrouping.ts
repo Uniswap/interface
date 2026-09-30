@@ -15,12 +15,12 @@ export type RwaSearchIndex = { rwas: Rwa[]; byChainAddress: Map<string, RwaSearc
 
 const EMPTY_SPARKLINE = { points: [] }
 
-function indexKey(chainId: number, address: string): string {
+export function rwaChainAddressKey(chainId: number, address: string): string {
   return `${chainId}:${normalizeTokenAddressForCache(address)}`
 }
 
-/** Builds a canonical `Rwa` from a `ListRwas` asset. Metric fields are zeroed: the search/identity
- *  render path (ExpandableParentAssetIdentity / ExpandableIssuerIdentity) never reads price/volume. */
+/** Builds a canonical `Rwa` from a `ListRwas` asset. Metric fields are zeroed ("no data", see hasIssuerMetrics);
+ *  search fills them from the ranked list via withRwaIssuerMetrics. */
 export function buildRwaFromListRwasAsset(asset: ListRwasAssetSource): Rwa | undefined {
   if (!asset.symbol) {
     return undefined
@@ -91,7 +91,7 @@ export function buildRwaSearchIndex(assets: ListRwasAssetSource[]): RwaSearchInd
     rwas.push(rwa)
     for (const issuer of rwa.issuerTokens) {
       for (const chainToken of issuer.chainTokens) {
-        byChainAddress.set(indexKey(chainToken.chainId, chainToken.address), { rwa, issuer })
+        byChainAddress.set(rwaChainAddressKey(chainToken.chainId, chainToken.address), { rwa, issuer })
       }
     }
   }
@@ -105,7 +105,7 @@ export function findRwaForToken(
   if (!token.chainId || !token.address) {
     return undefined
   }
-  return index.byChainAddress.get(indexKey(token.chainId, token.address))
+  return index.byChainAddress.get(rwaChainAddressKey(token.chainId, token.address))
 }
 
 /** Lowest-priced entry's price + 24h change and the summed 1d volume; undefined when nothing contributes. Zeros

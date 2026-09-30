@@ -15,6 +15,7 @@ export function FilterChip({
   renderTrailingIcon,
   onPress,
   testID,
+  'aria-haspopup': ariaHasPopup,
 }: {
   active: boolean
   label?: string
@@ -22,6 +23,7 @@ export function FilterChip({
   renderTrailingIcon?: (color: FilterChipColor) => JSX.Element
   onPress: () => void
   testID?: string
+  'aria-haspopup'?: 'dialog'
 }): JSX.Element {
   // Hover state lives here rather than in `$group-hover` so the label and the caller-rendered icons
   // brighten together. Mouse events only fire on web.
@@ -41,6 +43,7 @@ export function FilterChip({
       py="$spacing8"
       height="$spacing36"
       testID={testID}
+      aria-haspopup={ariaHasPopup}
       $platform-web={{ minWidth: 'max-content', transition: CHIP_FADE_TRANSITION }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}

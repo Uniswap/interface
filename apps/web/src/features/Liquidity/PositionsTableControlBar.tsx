@@ -2,9 +2,9 @@ import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/d
 import type { UniverseChainId } from '@universe/chains'
 import { Flex } from '@universe/mycelium'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useDebouncedCallback } from 'utilities/src/react/useDebouncedCallback'
 import { ExpandableSearchInput } from '~/components/ExpandableSearchInput/ExpandableSearchInput'
 import {

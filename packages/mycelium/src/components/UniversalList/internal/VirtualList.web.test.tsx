@@ -65,6 +65,7 @@ describe('VirtualList (web)', () => {
         showsVerticalScrollIndicator={false}
         style={{ className: 'h-full' }}
         testID="universal-list"
+        trackRowViewability
       />,
     )
 
@@ -87,6 +88,7 @@ describe('VirtualList (web)', () => {
       scrollEventThrottle: 16,
       showsHorizontalScrollIndicator: false,
       showsVerticalScrollIndicator: false,
+      viewabilityConfig: { id: 'row', itemVisiblePercentThreshold: 0 },
     })
   })
 

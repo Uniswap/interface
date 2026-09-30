@@ -1,4 +1,3 @@
-import { GqlResult } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { useCallback, useMemo } from 'react'
 import { TokenOption } from 'uniswap/src/components/lists/items/types'
@@ -6,6 +5,7 @@ import { filter } from 'uniswap/src/components/TokenSelector/filter'
 import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { useFavoriteCurrencies } from 'uniswap/src/components/TokenSelector/hooks/useFavoriteCurrencies'
 import { type PortfolioBalancesResult } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
+import type { DerivedQueryResult } from 'utilities/src/reactQuery/types'
 
 export function useFavoriteTokensOptions({
   chainFilter,
@@ -13,19 +13,19 @@ export function useFavoriteTokensOptions({
 }: {
   chainFilter: UniverseChainId | null
   portfolioData: PortfolioBalancesResult
-}): GqlResult<TokenOption[] | undefined> {
+}): DerivedQueryResult<TokenOption[] | undefined> {
   const {
     data: portfolioBalancesById,
     error: portfolioBalancesByIdError,
     refetch: portfolioBalancesByIdRefetch,
-    loading: loadingPorfolioBalancesById,
+    isLoading: loadingPorfolioBalancesById,
   } = portfolioData
 
   const {
     data: favoriteCurrencies,
     error: favoriteCurrenciesError,
     refetch: refetchFavoriteCurrencies,
-    loading: loadingFavoriteCurrencies,
+    isLoading: loadingFavoriteCurrencies,
   } = useFavoriteCurrencies()
 
   const favoriteTokenOptions = useCurrencyInfosToTokenOptions({
@@ -36,7 +36,7 @@ export function useFavoriteTokensOptions({
 
   const refetch = useCallback(() => {
     portfolioBalancesByIdRefetch?.()
-    refetchFavoriteCurrencies?.()
+    void refetchFavoriteCurrencies()
   }, [portfolioBalancesByIdRefetch, refetchFavoriteCurrencies])
 
   const error =
@@ -50,7 +50,7 @@ export function useFavoriteTokensOptions({
   return {
     data: filteredFavoriteTokenOptions,
     refetch,
-    error: error || undefined,
-    loading: loadingPorfolioBalancesById || loadingFavoriteCurrencies,
+    error: error || null,
+    isLoading: loadingPorfolioBalancesById || loadingFavoriteCurrencies,
   }
 }

@@ -65,6 +65,7 @@ public struct WidgetDataChains: Decodable {
 public struct WidgetChain: Decodable {
   public var chainId: Int
   public var name: String
+  public var nativeAddress: String?
 }
 
 public struct WidgetDataConfiguration: Codable {

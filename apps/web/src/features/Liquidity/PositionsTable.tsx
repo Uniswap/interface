@@ -3,13 +3,13 @@
 import { createColumnHelper } from '@tanstack/react-table'
 import type { PositionStatus } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getPositionUrl } from 'uniswap/src/features/positions/getPositionUrl'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { getPositionKey } from 'uniswap/src/features/positions/utils'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
 import { useEvent } from 'utilities/src/react/hooks'
 import { Table } from '~/components/Table'
@@ -199,7 +199,7 @@ function usePositionsTableColumns({
       columnHelper.display({
         id: 'fees' satisfies ColumnId,
         size: 100,
-        header: () => <HeaderLabel id="fees" align="flex-end" sortField="fees" sort={sort} onSort={onSort} />,
+        header: () => <HeaderLabel id="fees" align="flex-end" />,
         cell: (info) => {
           const position = info.row?.original?.position
           return <Cell loading={loading}>{position ? <FeesCellContent position={position} /> : null}</Cell>

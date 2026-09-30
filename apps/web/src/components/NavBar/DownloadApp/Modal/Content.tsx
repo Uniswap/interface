@@ -1,11 +1,11 @@
 import { Flex, type FlexProps, Text, TouchableArea } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { PropsWithChildren, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, ModalCloseIcon } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { iconSizes } from 'ui/src/theme'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ExternalLink } from '~/theme/components/Links'
 
 export function ModalContent({

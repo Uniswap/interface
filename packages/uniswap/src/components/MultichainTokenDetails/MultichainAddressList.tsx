@@ -1,12 +1,12 @@
 import { UniverseChainId } from '@universe/chains'
 import { iconSizes, Text, type SpaceTokens } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnimatedCopyLabel } from 'ui/src'
 import { MultichainOptionRow } from 'uniswap/src/components/MultichainTokenDetails/MultichainOptionRow'
 import { MultichainScrollableList } from 'uniswap/src/components/MultichainTokenDetails/MultichainScrollableList'
 import type { MultichainTokenEntry } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
 
 export const COPY_FEEDBACK_RESET_MS = 750

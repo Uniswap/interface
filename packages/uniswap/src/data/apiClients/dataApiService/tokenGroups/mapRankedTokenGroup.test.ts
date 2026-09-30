@@ -2,6 +2,7 @@ import type { PartialMessage } from '@bufbuild/protobuf'
 import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { ListTokenGroupsResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { RankedTokenGroup } from '@uniswap/client-data-api/dist/data/v2/tokenGroups_pb'
+import { TokensOrderBy } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { UniverseChainId } from '@universe/chains'
 import {
   mapRankedTokenGroup,
@@ -43,7 +44,11 @@ function makeRankedTokenGroup(overrides?: PartialMessage<RankedTokenGroup>): Ran
 
 describe('mapRankedTokenGroup', () => {
   it('maps a ranked group and its members onto the Rwa row shape', () => {
-    const rwa = mapRankedTokenGroup({ rankedGroup: makeRankedTokenGroup(), category: RwaCategory.STOCKS })
+    const rwa = mapRankedTokenGroup({
+      rankedGroup: makeRankedTokenGroup(),
+      category: RwaCategory.STOCKS,
+      volumeOrderBy: TokensOrderBy.VOLUME_1D,
+    })
 
     expect(rwa).toMatchObject({
       symbol: 'TSLA',
@@ -63,6 +68,7 @@ describe('mapRankedTokenGroup', () => {
       name: 'Tesla (Ondo)',
       logoUrl: 'https://example.com/tslaon.png',
       issuer: 'ondo',
+      issuerDisplayName: 'Ondo',
       priceUsd: 247.9,
       priceChange1hPct: 0.1,
       priceChange24hPct: 1.3,
@@ -75,8 +81,38 @@ describe('mapRankedTokenGroup', () => {
     ])
   })
 
+  it('reads the volume window the list was ranked by on the group and its members', () => {
+    const rankedGroup = makeRankedTokenGroup({
+      stats: { volume1d: 12_400_000, volume7d: 80_000_000 },
+      members: [
+        {
+          multichainToken: {
+            symbol: 'TSLAON',
+            name: 'Tesla (Ondo)',
+            addresses: { [UniverseChainId.Mainnet]: '0xondo-mainnet' },
+            issuer: { id: 'ondo', displayName: 'Ondo', logoUrl: '' },
+          },
+          stats: { volume1d: 8_000_000, volume7d: 50_000_000 },
+        },
+      ],
+    })
+
+    const rwa = mapRankedTokenGroup({
+      rankedGroup,
+      category: RwaCategory.STOCKS,
+      volumeOrderBy: TokensOrderBy.VOLUME_7D,
+    })
+
+    expect(rwa?.volume24hUsd).toBe(80_000_000)
+    expect(rwa?.issuerTokens[0]?.volume24hUsd).toBe(50_000_000)
+  })
+
   it('orders member chain tokens mainnet-first then by chainId', () => {
-    const rwa = mapRankedTokenGroup({ rankedGroup: makeRankedTokenGroup(), category: RwaCategory.STOCKS })
+    const rwa = mapRankedTokenGroup({
+      rankedGroup: makeRankedTokenGroup(),
+      category: RwaCategory.STOCKS,
+      volumeOrderBy: TokensOrderBy.VOLUME_1D,
+    })
 
     expect(rwa?.issuerTokens[0]?.chainTokens).toEqual([
       { chainId: UniverseChainId.Mainnet, address: '0xondo-mainnet' },
@@ -85,7 +121,11 @@ describe('mapRankedTokenGroup', () => {
   })
 
   it('uses the primary member sparkline for the group row', () => {
-    const rwa = mapRankedTokenGroup({ rankedGroup: makeRankedTokenGroup(), category: RwaCategory.STOCKS })
+    const rwa = mapRankedTokenGroup({
+      rankedGroup: makeRankedTokenGroup(),
+      category: RwaCategory.STOCKS,
+      volumeOrderBy: TokensOrderBy.VOLUME_1D,
+    })
 
     expect(rwa?.sparkline1d).toEqual(rwa?.issuerTokens[0]?.sparkline1d)
   })
@@ -94,7 +134,11 @@ describe('mapRankedTokenGroup', () => {
     const rankedGroup = makeRankedTokenGroup()
     rankedGroup.members[0]!.multichainToken!.project = undefined
 
-    const rwa = mapRankedTokenGroup({ rankedGroup, category: RwaCategory.STOCKS })
+    const rwa = mapRankedTokenGroup({
+      rankedGroup,
+      category: RwaCategory.STOCKS,
+      volumeOrderBy: TokensOrderBy.VOLUME_1D,
+    })
 
     expect(rwa?.issuerTokens[0]?.logoUrl).toBe('https://example.com/tsla.png')
   })
@@ -109,7 +153,11 @@ describe('mapRankedTokenGroup', () => {
       ],
     })
 
-    const rwa = mapRankedTokenGroup({ rankedGroup, category: RwaCategory.STOCKS })
+    const rwa = mapRankedTokenGroup({
+      rankedGroup,
+      category: RwaCategory.STOCKS,
+      volumeOrderBy: TokensOrderBy.VOLUME_1D,
+    })
 
     expect(rwa?.issuerTokens.map((issuer) => issuer.symbol)).toEqual(['TSLAON'])
   })
@@ -120,7 +168,11 @@ describe('mapRankedTokenGroup', () => {
     rankedGroup.members[0]!.stats!.price = 250
     rankedGroup.members[0]!.stats!.priceChange1d = 2
 
-    const rwa = mapRankedTokenGroup({ rankedGroup, category: RwaCategory.STOCKS })
+    const rwa = mapRankedTokenGroup({
+      rankedGroup,
+      category: RwaCategory.STOCKS,
+      volumeOrderBy: TokensOrderBy.VOLUME_1D,
+    })
 
     expect(rwa?.issuerTokens[0]).toMatchObject({ priceUsd: 250, priceChange24hPct: 2, priceChange1hPct: undefined })
   })
@@ -137,19 +189,36 @@ describe('mapRankedTokenGroup', () => {
       ],
     })
 
-    expect(mapRankedTokenGroup({ rankedGroup, category: RwaCategory.STOCKS })).toBeNull()
+    expect(
+      mapRankedTokenGroup({ rankedGroup, category: RwaCategory.STOCKS, volumeOrderBy: TokensOrderBy.VOLUME_1D }),
+    ).toBeNull()
   })
 
   it('drops groups without a ticker', () => {
     const rankedGroup = makeRankedTokenGroup({ group: { id: 'x', displayName: 'X', ticker: '' } })
 
-    expect(mapRankedTokenGroup({ rankedGroup, category: RwaCategory.STOCKS })).toBeNull()
+    expect(
+      mapRankedTokenGroup({ rankedGroup, category: RwaCategory.STOCKS, volumeOrderBy: TokensOrderBy.VOLUME_1D }),
+    ).toBeNull()
+  })
+
+  it('falls back to the ticker when the group has no display name', () => {
+    const rankedGroup = makeRankedTokenGroup({ group: { id: 'tsla', ticker: 'TSLA', displayName: '' } })
+    expect(
+      mapRankedTokenGroup({ rankedGroup, category: RwaCategory.STOCKS, volumeOrderBy: TokensOrderBy.VOLUME_1D })?.name,
+    ).toBe('TSLA')
   })
 })
 
 describe('mapRankedTokenGroupList', () => {
   it('returns an empty list without a response', () => {
-    expect(mapRankedTokenGroupList({ response: undefined, category: RwaCategory.STOCKS })).toEqual([])
+    expect(
+      mapRankedTokenGroupList({
+        response: undefined,
+        category: RwaCategory.STOCKS,
+        volumeOrderBy: TokensOrderBy.VOLUME_1D,
+      }),
+    ).toEqual([])
   })
 
   it('maps every valid group and skips invalid ones', () => {
@@ -157,7 +226,11 @@ describe('mapRankedTokenGroupList', () => {
       tokenGroups: [makeRankedTokenGroup(), makeRankedTokenGroup({ group: { ticker: '' } })],
     })
 
-    const rows = mapRankedTokenGroupList({ response, category: RwaCategory.ETFS })
+    const rows = mapRankedTokenGroupList({
+      response,
+      category: RwaCategory.ETFS,
+      volumeOrderBy: TokensOrderBy.VOLUME_1D,
+    })
 
     expect(rows).toHaveLength(1)
     expect(rows[0]?.categories).toEqual([RwaCategory.ETFS])

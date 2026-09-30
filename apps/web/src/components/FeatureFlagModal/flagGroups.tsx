@@ -1,16 +1,46 @@
 import { isE2eTestEnv } from '@universe/environment'
-import { FeatureFlags, WEB_FEATURE_FLAG_NAMES } from '@universe/gating'
+import {
+  DynamicConfigs,
+  Experiments,
+  FeatureFlags,
+  LayerProperties,
+  Layers,
+  NetworkRequestsConfigKey,
+  WEB_FEATURE_FLAG_NAMES,
+} from '@universe/gating'
 import type { ReactNode } from 'react'
+
+// Shared by the row that renders each label and by the search text that matches it.
+export const EXTENSION_ID_LABEL = 'Which Extension the web app will communicate with'
+export const NETWORK_REQUESTS_LABEL = 'Max refetch attempts'
+export const EMBEDDED_WALLET_ONBOARDING_LABEL =
+  'newFlowEnabled: on = test (new onboarding UX), off = control (current flow)'
+
+const SEARCHABLE_LAYERS = [Layers.SwapPage, Layers.Discovery]
 
 export interface FlagDef {
   flag: FeatureFlags
   label?: string
 }
 
+/**
+ * A non-gate row in the modal: an experiment, a Statsig layer, or a dynamic config.
+ *
+ * Gates get their searchable identity from `FlagDef`; these rows carry their own so the
+ * search box filters all three sections off the same query. `node` renders its own title
+ * and label — `name` and `searchText` exist only for matching, and `name` doubles as the
+ * React key.
+ */
+export interface ExtraItemDef {
+  name: string
+  searchText?: string
+  node: ReactNode
+}
+
 export interface FlagGroupDef {
   name: string
   flags: FlagDef[]
-  extra?: ReactNode
+  extraItems?: readonly ExtraItemDef[]
 }
 
 /**
@@ -21,7 +51,7 @@ export function buildFlagGroups(extras: {
   extensionDropdown: ReactNode
   networkRequestsConfig: ReactNode
   experimentOptions: ReactNode
-  layerOptions: ReactNode
+  layerOption: (layerName: Layers) => ReactNode
   complianceOverrides: ReactNode
 }): FlagGroupDef[] {
   const groups: FlagGroupDef[] = [
@@ -116,7 +146,13 @@ export function buildFlagGroups(extras: {
           label: 'Advertise EIP-7677 paymaster sponsorship in wallet_getCapabilities',
         },
       ],
-      extra: extras.extensionDropdown,
+      extraItems: [
+        {
+          name: DynamicConfigs.ExternallyConnectableExtension,
+          searchText: EXTENSION_ID_LABEL,
+          node: extras.extensionDropdown,
+        },
+      ],
     },
     {
       name: 'New Chains',
@@ -132,7 +168,13 @@ export function buildFlagGroups(extras: {
     {
       name: 'Network Requests',
       flags: [],
-      extra: extras.networkRequestsConfig,
+      extraItems: [
+        {
+          name: DynamicConfigs.NetworkRequests,
+          searchText: `${NetworkRequestsConfigKey.BalanceMaxRefetchAttempts} ${NETWORK_REQUESTS_LABEL}`,
+          node: extras.networkRequestsConfig,
+        },
+      ],
     },
     {
       name: 'RPC',
@@ -159,6 +201,10 @@ export function buildFlagGroups(extras: {
       ],
     },
     {
+      name: 'Token Categories',
+      flags: [{ flag: FeatureFlags.TokenCategories, label: 'Enable Token Categories' }],
+    },
+    {
       name: 'Misc',
       flags: [{ flag: FeatureFlags.UnificationCopy, label: 'Enable Unification Copy' }],
     },
@@ -171,17 +217,29 @@ export function buildFlagGroups(extras: {
     {
       name: 'Experiments',
       flags: [],
-      extra: extras.experimentOptions,
+      extraItems: [
+        {
+          name: Experiments.EmbeddedWalletOnboarding,
+          searchText: EMBEDDED_WALLET_ONBOARDING_LABEL,
+          node: extras.experimentOptions,
+        },
+      ],
     },
     {
       name: 'Layers',
       flags: [],
-      extra: extras.layerOptions,
+      // One item per layer rather than per param: a layer's params are overridden as a set,
+      // so matching any of its param names surfaces that whole layer block.
+      extraItems: SEARCHABLE_LAYERS.map((layerName) => ({
+        name: layerName,
+        searchText: LayerProperties[layerName].join(' '),
+        node: extras.layerOption(layerName),
+      })),
     },
     {
       name: 'Compliance / Geo',
       flags: [],
-      extra: extras.complianceOverrides,
+      extraItems: [{ name: 'Compliance / Geo', node: extras.complianceOverrides }],
     },
   ]
 

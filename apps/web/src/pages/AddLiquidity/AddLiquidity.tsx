@@ -40,6 +40,7 @@ import { type FlowState, resolveAddLiquidityRenderGuard } from '~/pages/AddLiqui
 import { PoolBrowser } from '~/pages/AddLiquidity/PoolBrowser'
 import { ADD_LIQUIDITY_PATH } from '~/pages/AddLiquidity/poolLinkParams'
 import { useCreatePoolHrefFromSelection } from '~/pages/AddLiquidity/useCreatePoolHrefFromSelection'
+import { useSeedPositionFromPool } from '~/pages/AddLiquidity/useSeedPositionFromPool'
 import {
   CreateLiquidityContextProvider,
   useCreateLiquidityContext,
@@ -199,6 +200,7 @@ function AddLiquidityContent(): JSX.Element {
                 urlFee={urlFee}
                 urlHook={urlHook}
                 flowStep={flowStep ?? undefined}
+                onLeavePool={handleBack}
               />
             )}
           </Flex>
@@ -231,6 +233,7 @@ function AddLiquidityFormContent({
   urlFee,
   urlHook,
   flowStep,
+  onLeavePool,
 }: {
   chainId: UniverseChainId
   poolData?: PoolData
@@ -240,6 +243,8 @@ function AddLiquidityFormContent({
   urlFee?: FeeData
   urlHook?: string
   flowStep?: PositionFlowStep
+  // Where declining the pool's hook review sends the user: the same target as the header's back arrow.
+  onLeavePool: () => void
 }) {
   const protocolVersion = resolveSelectedProtocolVersion(poolData, urlProtocolVersion)
 
@@ -325,7 +330,7 @@ function AddLiquidityFormContent({
                 poolData={poolData}
               />
             </Flex>
-            <SharedCreateModals />
+            <SharedCreateModals onDeclineHookReview={onLeavePool} />
           </CreatePositionTxContextProvider>
         </CreateLiquidityContextProvider>
       </LPTransactionSettingsStoreContextProvider>
@@ -348,6 +353,7 @@ function AddLiquidityPoolForm({
     step,
     setStep,
   } = useCreateLiquidityContext()
+  useSeedPositionFromPool(poolData)
 
   const handleContinue = useCallback(() => {
     setStep(getNextFlowStep({ currentStep: step, protocolVersion, creatingPoolOrPair: Boolean(creatingPoolOrPair) }))

@@ -31,6 +31,7 @@ export function rankedCategoryToTokenCategory(ranked: RankedCategory): TokenCate
     name: category.name,
     description: category.description,
     categoryClass,
+    grouped: category.grouped,
     stats: ranked.stats
       ? {
           tokenCount: ranked.stats.tokenCount,

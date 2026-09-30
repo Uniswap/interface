@@ -4,6 +4,7 @@ import { useListCategoriesQuery } from 'uniswap/src/data/apiClients/dataApiServi
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { useTokenCategoryOrder } from 'uniswap/src/features/tokenCategories/useTokenCategoryOrder'
 import { GROUPED_EXPLORE_CATEGORIES } from '~/pages/Explore/categories/exploreGroupedCategory'
+import { ExploreCategory } from '~/pages/Explore/categories/useExploreCategory'
 
 const EMPTY_CATEGORIES: TokenCategory[] = []
 
@@ -12,8 +13,8 @@ const STATIC_CATEGORY_IDS: ReadonlySet<string> = new Set(GROUPED_EXPLORE_CATEGOR
 
 /**
  * The ordered category list backing the Explore chip row, plus the ids that are valid `?category=`
- * values (every fetched category — non-spotlit ones are reachable via deep link and the All dropdown;
- * Popular is the paramless default). `dynamicChipsEnabled` is false while the flag is off or
+ * values (every fetched category — non-spotlit ones are reachable via deep link and the More dropdown;
+ * All is the paramless default). `dynamicChipsEnabled` is false while the flag is off or
  * ListCategories is unresolved/empty, in which case the static chip set applies.
  */
 export function useExploreTokenCategories(): {
@@ -39,14 +40,19 @@ export function useExploreTokenCategories(): {
     }
   }, [flagLoading])
   const { data: categories, isFetching, failureCount } = useListCategoriesQuery()
-  const orderedCategories = useTokenCategoryOrder(categories ?? EMPTY_CATEGORIES)
+  // A backend category reusing the frontend default id would collide with the paramless default.
+  const backendCategories = useMemo(
+    () => categories?.filter((category) => category.id !== ExploreCategory.All) ?? EMPTY_CATEGORIES,
+    [categories],
+  )
+  const orderedCategories = useTokenCategoryOrder(backendCategories)
 
   return useMemo(() => {
     const dynamicChipsEnabled = tokenCategoriesEnabled && orderedCategories.length > 0
     // Only the first attempt counts: retries would otherwise hold an unverified deep link open for the whole backoff.
     const categoriesPending = tokenCategoriesEnabled && categories === undefined && isFetching && failureCount === 0
     // Static ids stay valid even when dynamic — a response missing one (e.g. dropped by the
-    // unmapped-class filter) must not degrade existing static deep links to Popular.
+    // unmapped-class filter) must not degrade existing static deep links to All.
     return {
       orderedCategories,
       validCategoryIds: dynamicChipsEnabled

@@ -1,5 +1,5 @@
+import { TestID } from '@universe/test'
 import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { fireEvent, render, screen } from 'uniswap/src/test/test-utils'
 
 describe('ExpandoRow', () => {

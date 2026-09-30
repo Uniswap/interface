@@ -1,8 +1,8 @@
 import { Flex, type FlexCompatProps, Text, zIndexes } from '@universe/mycelium'
 import { TooltipCompat as Tooltip } from '@universe/mycelium/tooltip-compat'
+import { TestID } from '@universe/test'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const DisabledOverlay = (props: FlexCompatProps): JSX.Element => (
   <Flex position="absolute" width="100%" height="100%" zIndex={zIndexes.overlay} {...props} />

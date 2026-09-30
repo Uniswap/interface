@@ -10,6 +10,8 @@ import { SearchModalListSkeleton } from 'uniswap/src/features/search/SearchModal
 import { useRwaIssuerCurrencyInfos } from 'uniswap/src/features/search/SearchModal/stocks/useRwaIssuerCurrencyInfos'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { useMultichainSearchModalMetricsAnalytics } from 'uniswap/src/features/search/SearchModal/useMultichainSearchModalMetricsAnalytics'
+import { withSectionGaps } from 'uniswap/src/features/search/SearchModal/viewAll/withSectionGaps'
+import { withViewAllFooters } from 'uniswap/src/features/search/SearchModal/viewAll/withViewAllFooters'
 import { useIsOffline } from 'utilities/src/connection/useIsOffline'
 import { usePreviousWithLayoutEffect } from 'utilities/src/react/usePreviousWithLayoutEffect'
 
@@ -26,6 +28,8 @@ interface SearchModalResultsListProps {
   auctionSearchEnabled?: boolean
   onSelect?: SearchModalListProps['onSelect']
   onResetFilters?: () => void
+  /** Search V2: shows "View all" under All-tab sections with more results; called with the section's tab. */
+  onViewAll?: (tab: SearchTab) => void
   renderedInModal: boolean
   contentContainerStyle?: StyleProp<ViewStyle>
   rowWrapper?: SearchModalListProps['rowWrapper']
@@ -41,6 +45,7 @@ function SearchModalResultsListInner({
   auctionSearchEnabled = false,
   onSelect,
   onResetFilters,
+  onViewAll,
   renderedInModal,
   contentContainerStyle,
   rowWrapper,
@@ -66,6 +71,7 @@ function SearchModalResultsListInner({
     isLoading,
     error,
     refetch,
+    truncatedSectionKeys,
   } = useSectionsForSearchResults({
     chainFilter: effectiveTokenSearchChainFilter,
     searchFilter: searchQuery,
@@ -97,7 +103,7 @@ function SearchModalResultsListInner({
   const hasReconnected = prevIsOffline && !isOffline
   useEffect(() => {
     if (hasReconnected) {
-      refetch()
+      refetch?.()
     }
   }, [hasReconnected, refetch])
 
@@ -113,6 +119,16 @@ function SearchModalResultsListInner({
       />
     ) : undefined
   }, [debouncedSearchFilter, isOfflineWithNoData, hasActiveFilters, onResetFilters])
+
+  const displayedSections = useMemo(() => {
+    if (isOfflineWithNoData) {
+      return []
+    }
+    if (!isSearchV2UIEnabled || activeTab !== SearchTab.All) {
+      return sections
+    }
+    return withSectionGaps(onViewAll ? withViewAllFooters({ sections, truncatedSectionKeys, onViewAll }) : sections)
+  }, [isOfflineWithNoData, isSearchV2UIEnabled, onViewAll, activeTab, sections, truncatedSectionKeys])
 
   const searchFilters = useMemo(
     (): SearchModalListProps['searchFilters'] => ({
@@ -131,7 +147,7 @@ function SearchModalResultsListInner({
       loading={!isOffline && (userIsTyping || isLoading)}
       loadingElement={isSearchV2UIEnabled ? RESULTS_LIST_SKELETON : undefined}
       refetch={refetch}
-      sections={isOfflineWithNoData ? [] : sections}
+      sections={displayedSections}
       searchFilters={searchFilters}
       renderedInModal={renderedInModal}
       contentContainerStyle={contentContainerStyle}

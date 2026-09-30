@@ -4,8 +4,8 @@ import { Flex, Text } from '@universe/mycelium'
 import type { IconSizeTokens } from '@universe/mycelium'
 import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import { TooltipCompat as Tooltip } from '@universe/mycelium/tooltip-compat'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 // Fixed display order for the concatenated label (earn before pools), matching the designs.
 const CATEGORY_DISPLAY_ORDER: WalletBalanceCategory[] = [WalletBalanceCategory.EARN_VAULTS, WalletBalanceCategory.POOLS]

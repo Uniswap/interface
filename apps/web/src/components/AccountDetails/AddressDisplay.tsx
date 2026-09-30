@@ -1,8 +1,8 @@
 import { Flex, Text } from '@universe/mycelium'
 import { Unitag } from '@universe/mycelium/icons/Unitag'
+import { TestID } from '@universe/test'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { useENSName } from 'uniswap/src/features/ens/api'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
 import { EllipsisTamaguiStyle } from '~/theme/components/styles'
 

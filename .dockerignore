@@ -15,11 +15,14 @@ node_modules
 **/.turbo
 **/.nx
 
-# Other apps (not needed for api-self-serve)
+# Other apps (not needed for api-self-serve). Their tsconfig.json stays: vite's
+# resolve.tsconfigPaths walks the root tsconfig's project references and
+# hard-errors on any that is missing.
 apps/web
 apps/mobile
 apps/extension
 apps/cli
+!apps/*/tsconfig.json
 
 # Mobile/native artifacts
 **/ios

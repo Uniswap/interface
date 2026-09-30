@@ -37,7 +37,7 @@ function TopTokensTableContent({ categoryId, categoryUnverified = false }: TopTo
   const { topTokens, tokenSortRank, isLoading, sparklines, isError, loadMore } = useListTokens(chainId, options)
 
   // An unverified category may be a bogus slug the BE rejects or empties; keep the skeleton up until
-  // ListCategories settles it, since a fallback to Popular is about to replace this table anyway.
+  // ListCategories settles it, since a fallback to All is about to replace this table anyway.
   const holdUnverifiedResult = categoryUnverified && (isError || topTokens.length === 0)
 
   return (

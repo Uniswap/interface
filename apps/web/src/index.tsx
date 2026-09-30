@@ -1,6 +1,5 @@
 // Ordering is intentional and must be preserved: sideEffects followed by functionality.
 import '~/sideEffects'
-import { ApolloProvider } from '@apollo/client'
 import { datadogRum } from '@datadog/browser-rum'
 import { PrivyProvider } from '@privy-io/react-auth'
 import { ApiInit, getEntryGatewayUrl, provideSessionService } from '@universe/api'
@@ -51,7 +50,6 @@ import { QueryClientPersistProvider } from '~/components/PersistQueryClient'
 import { createWeb3Provider, WalletCapabilitiesEffects } from '~/components/Web3Provider/createWeb3Provider'
 import { getConfig, getPrivyConfig } from '~/config'
 import { wagmiConfig } from '~/connection/wagmiConfig'
-import { apolloClient } from '~/data/apollo/client'
 import { AccountsStoreDevTool } from '~/features/accounts/store/devtools'
 import { WebAccountsStoreProvider } from '~/features/accounts/store/provider'
 import { TransactionWatcherProvider } from '~/features/transactions/TransactionWatcherProvider'
@@ -173,10 +171,6 @@ function Updaters() {
 // Production Web3Provider – always reconnects on mount and runs capability effects.
 const Web3Provider = createWeb3Provider({ wagmiConfig })
 
-function GraphqlProviders({ children }: { children: React.ReactNode }) {
-  return <ApolloProvider client={apolloClient}>{children}</ApolloProvider>
-}
-
 function StatsigProvider({ children }: PropsWithChildren) {
   const account = useAccount()
   const { deviceId, isDeviceIdPending, didTimeOut } = useAmplitudeDeviceId()
@@ -281,28 +275,26 @@ const RootApp = (): JSX.Element => {
                                 <ConnectWalletMutationProvider>
                                   <WebAccountsStoreProvider>
                                     <WebUniswapProvider>
-                                      <GraphqlProviders>
-                                        <TransactionWatcherProvider>
-                                          <LivePricesProvider>
-                                            <LocalizationContextProvider>
-                                              <BlockNumberProvider>
-                                                <Updaters />
-                                                <ColorSchemeProvider>
-                                                  <PortalProvider>
-                                                    <WebNotificationServiceManager />
-                                                    <App />
-                                                    {AgentationLazy && isDevEnv() && (
-                                                      <Suspense fallback={null}>
-                                                        <AgentationLazy />
-                                                      </Suspense>
-                                                    )}
-                                                  </PortalProvider>
-                                                </ColorSchemeProvider>
-                                              </BlockNumberProvider>
-                                            </LocalizationContextProvider>
-                                          </LivePricesProvider>
-                                        </TransactionWatcherProvider>
-                                      </GraphqlProviders>
+                                      <TransactionWatcherProvider>
+                                        <LivePricesProvider>
+                                          <LocalizationContextProvider>
+                                            <BlockNumberProvider>
+                                              <Updaters />
+                                              <ColorSchemeProvider>
+                                                <PortalProvider>
+                                                  <WebNotificationServiceManager />
+                                                  <App />
+                                                  {AgentationLazy && isDevEnv() && (
+                                                    <Suspense fallback={null}>
+                                                      <AgentationLazy />
+                                                    </Suspense>
+                                                  )}
+                                                </PortalProvider>
+                                              </ColorSchemeProvider>
+                                            </BlockNumberProvider>
+                                          </LocalizationContextProvider>
+                                        </LivePricesProvider>
+                                      </TransactionWatcherProvider>
                                     </WebUniswapProvider>
                                   </WebAccountsStoreProvider>
                                 </ConnectWalletMutationProvider>

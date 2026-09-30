@@ -1,4 +1,4 @@
-export { AES_GCM_PARAMS } from './aes'
+export { aesGcmDecrypt, aesGcmEncrypt, importAesGcmKey } from './aes'
 export { hkdfSha256 } from './hkdf'
 export { derivePbkdf2, PBKDF2_PARAMS } from './pbkdf2'
 export { generateRandomBytes } from './random'

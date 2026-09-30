@@ -248,6 +248,9 @@ export interface PopoverTriggerProps extends PopoverFrameStyleProps {
   onPress?(this: void, event?: unknown): void
   onMouseDown?(this: void, event?: unknown): void
   onContextMenu?(this: void, event?: unknown): void
+  /** Web only: replace the wrapper's default `role="button"` / `tabIndex=0` when the child is the interactive element. */
+  role?: string
+  tabIndex?: number
   ref?: Ref<HTMLElement>
 }
 

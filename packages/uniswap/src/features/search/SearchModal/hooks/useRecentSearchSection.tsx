@@ -1,5 +1,5 @@
 import { UniverseChainId } from '@universe/chains'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { FeatureFlags, useFeatureFlag, useIsTokenCategoriesEnabled } from '@universe/gating'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { SearchModalListOption } from 'uniswap/src/components/lists/items/types'
@@ -36,7 +36,8 @@ export function useRecentSearchSection({
 }): RecentSearchSection {
   const { t } = useTranslation()
   const isSearchV2UIEnabled = useFeatureFlag(FeatureFlags.SearchV2UI)
-  const rwaIndex = useRwaIndex(true)
+  const rwaIndex = useRwaIndex()
+  const plainTokenNames = useIsTokenCategoriesEnabled()
 
   // The V2 pill row is compact, so it surfaces more recents than the vertical rows did.
   const { options: recentlySearchedOptions, historyCount } = useRecentlySearchedOptions({
@@ -55,9 +56,9 @@ export function useRecentSearchSection({
       const match = optionChainAddresses(option)
         .map((ca) => findRwaForToken(rwaIndex, ca))
         .find(Boolean)
-      return match ? tagOptionAsRwa({ option, match }) : option
+      return match ? tagOptionAsRwa({ option, match, plainTokenNames }) : option
     })
-  }, [rwaIndex, recentlySearchedOptions])
+  }, [rwaIndex, recentlySearchedOptions, plainTokenNames])
 
   const sectionOptions: SearchModalListOption[] = useMemo(() => {
     if (!isSearchV2UIEnabled) {

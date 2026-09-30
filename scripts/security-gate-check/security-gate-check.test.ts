@@ -442,10 +442,10 @@ describe('draft PRs are not gated', () => {
   })
 
   test("an exempt automation author's draft is still gated", () => {
-    // Graphite's merge queue runs required checks on a throwaway draft PR. Skipping it would
-    // leave both contexts "Expected" and eject the real PR behind it (2026-08-11).
+    // Exempt automation opens draft PRs it expects required checks to report on; skipping
+    // would leave both contexts "Expected" forever.
     const run = runGate({
-      PR_AUTHOR: 'graphite-app[bot]',
+      PR_AUTHOR: 'dependabot[bot]',
       PR_AUTHOR_TYPE: 'Bot',
       PR_DRAFT: 'true',
     })
@@ -1684,9 +1684,9 @@ describe('bot-authored PRs: which approvals count', () => {
   })
 
   test('an exempt bot author is unaffected', () => {
-    // graphite's queue PRs carry no reviewers by construction; a count would eject the real PR
-    // behind them, which took down the universe merge queue on 2026-08-11.
-    const { calls } = runGate(botPr([], { PR_AUTHOR: 'graphite-app[bot]' }))
+    // Exempt automation's PRs carry no reviewers by construction, so a human count would
+    // permanently block them.
+    const { calls } = runGate(botPr([], { PR_AUTHOR: 'dependabot[bot]' }))
     expect(statusFor(calls, 'review-integrity')).toMatchObject({
       description: expect.stringContaining('Exempt bot author'),
       state: 'success',

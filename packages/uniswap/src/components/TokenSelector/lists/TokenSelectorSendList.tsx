@@ -1,4 +1,3 @@
-import { GqlResult } from '@universe/api'
 import { Flex } from '@universe/mycelium'
 import { memo, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -12,12 +11,13 @@ import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/Token
 import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioTokenOptions'
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import { OnSelectCurrency, TokenSectionsHookProps } from 'uniswap/src/components/TokenSelector/types'
+import type { DerivedQueryResult } from 'utilities/src/reactQuery/types'
 
 function useTokenSectionsForSend({
   addresses,
   chainFilter,
   chainIds,
-}: Omit<TokenSectionsHookProps, 'variation'>): GqlResult<OnchainItemSection<TokenOption>[]> {
+}: Omit<TokenSectionsHookProps, 'variation'>): DerivedQueryResult<OnchainItemSection<TokenOption>[]> {
   const { t } = useTranslation()
   const portfolioData = usePortfolioBalancesForAddressById(addresses)
   const {
@@ -25,7 +25,7 @@ function useTokenSectionsForSend({
     hiddenTokens: hiddenPortfolioTokenOptions,
     error: portfolioTokenOptionsError,
     refetch: refetchPortfolioTokenOptions,
-    loading: portfolioTokenOptionsLoading,
+    isLoading: portfolioTokenOptionsLoading,
   } = usePortfolioTokenOptions({ chainFilter, chainIds, includeHidden: true, portfolioData })
   const [hiddenTokensExpanded, setHiddenTokensExpanded] = useState(false)
   const expandoElement = useMemo(() => {
@@ -85,8 +85,8 @@ function useTokenSectionsForSend({
   return useMemo(
     () => ({
       data: sections,
-      loading,
-      error: error || undefined,
+      isLoading: loading,
+      error: error || null,
       refetch: refetchPortfolioTokenOptions,
     }),
     [error, loading, refetchPortfolioTokenOptions, sections],
@@ -127,7 +127,7 @@ function TokenSelectorSendListInner({
 }): JSX.Element {
   const {
     data: sections,
-    loading,
+    isLoading,
     error,
     refetch,
   } = useTokenSectionsForSend({
@@ -143,7 +143,7 @@ function TokenSelectorSendListInner({
       chainFilter={chainFilter}
       emptyElement={emptyElement}
       hasError={Boolean(error)}
-      loading={loading}
+      loading={isLoading}
       refetch={refetch}
       sections={sections}
       showTokenWarnings={false}

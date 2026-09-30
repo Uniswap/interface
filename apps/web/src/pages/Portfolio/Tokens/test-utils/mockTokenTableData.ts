@@ -1,6 +1,6 @@
 import { UniverseChainId } from '@universe/chains'
+import { TestID } from '@universe/test'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import type { TokenData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 import { TEST_TOKEN_1, TEST_TOKEN_1_INFO } from '~/test-utils/constants'
 

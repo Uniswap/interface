@@ -472,6 +472,32 @@ describe('blockaidUtils', () => {
 
       expect(result?.assets[0]?.amount).toBe('123.123457')
     })
+
+    it('passes a NONERC asset through as a generic asset keyed by its contract address, without ERC-20 handling', () => {
+      const assetsDiffs: Parameters<typeof parseSendingAssets>[0] = [
+        {
+          asset_type: 'ERC20',
+          asset: { type: 'NONERC', address: '0xffffFFFfFFffffffffffffffFfFFFfffFFFfFFfE' },
+          out: [{ raw_value: '0x3cb71f51fc5580000' }],
+          in: [],
+        },
+      ]
+
+      const result = parseSendingAssets(assetsDiffs, TEST_CHAIN_ID)
+
+      expect(result?.assets).toEqual([
+        {
+          type: 'NONERC',
+          symbol: undefined,
+          name: undefined,
+          amount: undefined,
+          usdValue: undefined,
+          logoUrl: undefined,
+          address: '0xffffFFFfFFffffffffffffffFfFFFfffFFFfFFfE',
+          chainId: TEST_CHAIN_ID,
+        },
+      ])
+    })
   })
 
   describe('parseReceivingAssets', () => {
@@ -2181,6 +2207,43 @@ describe('blockaidUtils', () => {
         ],
       })
     })
+
+    it.each(['0', '1000000', (2n ** 256n - 1n).toString()])(
+      'preserves a NONERC exposure with approval %s as a neutral change',
+      (approval) => {
+        const exposures: Parameters<typeof parseApprovals>[0]['exposures'] = [
+          {
+            asset_type: 'ERC20',
+            asset: { type: 'NONERC', address: '0xffffFFFfFFffffffffffffffFfFFFfffFFFfFFfE' },
+            spenders: {
+              [SPENDER_ADDRESS]: { approval, exposure: [{ raw_value: '0xf4240' }] },
+            },
+          },
+          {
+            asset_type: 'ERC20',
+            asset: {
+              type: 'ERC20',
+              address: '0x3600000000000000000000000000000000000000',
+              symbol: 'USDC',
+              decimals: 6,
+            },
+            spenders: { [SPENDER_ADDRESS]: { approval: '1000000' } },
+          },
+        ]
+
+        const result = parseApprovals({ exposures, chainId: TEST_CHAIN_ID })
+
+        expect(result?.assets.map((asset) => asset.type)).toEqual(['NONERC', 'ERC20'])
+        expect(result?.assets[0]).toMatchObject({
+          type: 'NONERC',
+          address: '0xffffFFFfFFffffffffffffffFfFFFfffFFFfFFfE',
+          spenderAddress: SPENDER_ADDRESS,
+          approvalAction: TransactionApprovalAction.Change,
+        })
+        expect(result?.assets[0]?.amount).toBeUndefined()
+        expect(result?.assets[0]?.approvalScope).toBeUndefined()
+      },
+    )
   })
 
   describe('parseTransactionSections - Security Critical Tests', () => {
@@ -2360,6 +2423,74 @@ describe('blockaidUtils', () => {
   })
 
   describe('parseTransactionSections - Transaction Parsing', () => {
+    it('retains NONERC spender exposure alongside a standard token transfer', () => {
+      const scanResult: BlockaidScanTransactionResponse = {
+        block: '12345',
+        chain: 'ethereum',
+        validation: {
+          status: 'Success',
+          classification: 'benign',
+          description: 'Safe transaction',
+          features: [],
+          reason: '',
+          result_type: 'benign',
+        },
+        simulation: {
+          status: 'Success',
+          assets_diffs: {},
+          exposures: {},
+          total_usd_diff: {},
+          total_usd_exposure: {},
+          address_details: {},
+          transaction_actions: ['token_transfer', 'approval'],
+          account_summary: {
+            assets_diffs: [
+              {
+                asset_type: 'ERC20',
+                asset: {
+                  type: 'ERC20',
+                  symbol: 'USDC',
+                  decimals: 6,
+                  address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+                },
+                out: [{ value: '1', raw_value: '1000000' }],
+                in: [],
+              },
+            ],
+            exposures: [
+              {
+                asset_type: 'ERC20',
+                asset: { type: 'NONERC', address: '0xffffFFFfFFffffffffffffffFfFFFfffFFFfFFfE' },
+                spenders: {
+                  [SPENDER_ADDRESS]: { approval: '1000000', exposure: [{ raw_value: '0xf4240' }] },
+                },
+              },
+            ],
+            traces: [],
+            total_usd_exposure: {},
+          },
+        },
+      }
+
+      const result = parseTransactionSections({ scanResult, chainId: TEST_CHAIN_ID })
+
+      expect(result.riskLevel).toBe(TransactionRiskLevel.None)
+      expect(result.sections).toMatchObject([
+        { type: TransactionSectionType.Sending, assets: [{ type: 'ERC20', amount: '1' }] },
+        {
+          type: TransactionSectionType.Approving,
+          assets: [
+            {
+              type: 'NONERC',
+              address: '0xffffFFFfFFffffffffffffffFfFFFfffFFFfFFfE',
+              spenderAddress: SPENDER_ADDRESS,
+              approvalAction: TransactionApprovalAction.Change,
+            },
+          ],
+        },
+      ])
+    })
+
     it('should parse sending assets correctly', () => {
       const scanResult: BlockaidScanTransactionResponse = {
         block: '12345',

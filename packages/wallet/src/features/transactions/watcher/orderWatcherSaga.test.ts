@@ -11,7 +11,6 @@ import {
   UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { uniswapXOrderDetails } from 'uniswap/src/test/fixtures'
-import { mockApolloClient } from 'uniswap/src/test/mocks'
 import { getOrderUpdate, OrderWatcher } from 'wallet/src/features/transactions/watcher/orderWatcherSaga'
 import { finalizeTransaction } from 'wallet/src/features/transactions/watcher/transactionFinalizationSaga'
 import { watchTransaction } from 'wallet/src/features/transactions/watcher/watchOnChainTransactionSaga'
@@ -170,10 +169,9 @@ function clearOrderListeners(): void {
 function* raceWatchersForSameOrder(params: {
   waitingOrder: UniswapXOrderDetails
   submittedOrder: UniswapXOrderDetails
-  apolloClient: typeof mockApolloClient
 }): Generator<unknown> {
-  yield fork(watchTransaction, { transaction: params.waitingOrder, apolloClient: params.apolloClient })
-  yield fork(watchTransaction, { transaction: params.submittedOrder, apolloClient: params.apolloClient })
+  yield fork(watchTransaction, { transaction: params.waitingOrder })
+  yield fork(watchTransaction, { transaction: params.submittedOrder })
 }
 
 describe(OrderWatcher.waitForOrderStatus, () => {
@@ -236,7 +234,6 @@ describe('watchTransaction pre-submission UniswapX double-finalization', () => {
     const { effects } = await expectSaga(raceWatchersForSameOrder, {
       waitingOrder,
       submittedOrder,
-      apolloClient: mockApolloClient,
     })
       .provide([
         [call(getProvider, waitingOrder.chainId), {}],

@@ -1,88 +1,73 @@
-import { GraphQLApi } from '@universe/api'
-
 /**
  * Canned gateway responses for the cloud-function tests.
  *
- * `gatewayFixtureResponses` holds GraphQL responses (getToken.ts), keyed by operation name + the
- * identifying variables the worker sends (chain + token address). `liquidityFixtureResponses` holds
- * liquidity v2 connect-RPC responses (getPool.ts's GetPool), keyed by RPC name + chain id +
- * identifier. The fixture server (gatewayFixtureServer.ts) replays these so the meta-tag and
- * OG-image tests don't depend on live gateway latency. Values mirror real gateway data for the
- * assets the tests exercise; only the fields the worker consumes are included. Logo URLs point at
- * assets the dev server serves itself to keep the tests off the network entirely.
+ * `dataApiFixtureResponses` holds data-api v2 connect-RPC responses (getToken.ts's GetToken), keyed
+ * by RPC name + chain id + token address. `liquidityFixtureResponses` holds liquidity v2 connect-RPC
+ * responses (getPool.ts's GetPool), keyed by RPC name + chain id + identifier. The fixture server
+ * (gatewayFixtureServer.ts) replays these so the meta-tag and OG-image tests don't depend on live
+ * gateway latency. Values mirror real gateway data for the assets the tests exercise; only the
+ * fields the worker consumes are included. Logo URLs point at assets the dev server serves itself
+ * to keep the tests off the network entirely.
  */
 
 // Served by the Vite dev server from apps/web/public — satori (OG image
 // rendering) and getRGBColor fetch this instead of an external logo CDN.
 const LOCAL_LOGO_URL = 'http://localhost:3000/images/192x192_App_Icon.png'
 
-interface TokenFixtureInput {
-  id: string
-  chain: GraphQLApi.Chain
-  address?: string
+function getTokenResponse({
+  chainId,
+  address,
+  symbol,
+  name,
+}: {
+  chainId: number
+  address: string
   symbol: string
   name: string
-}
-
-function tokenResponse({ id, chain, address, symbol, name }: TokenFixtureInput): { data: GraphQLApi.TokenWebQuery } {
+}): object {
   return {
-    data: {
-      token: {
-        __typename: 'Token',
-        id,
-        chain,
-        address,
-        symbol,
+    token: {
+      chainId,
+      address,
+      symbol,
+      name,
+      decimals: 18,
+      project: {
         name,
-        standard: address ? GraphQLApi.TokenStandard.Erc20 : GraphQLApi.TokenStandard.Native,
-        decimals: 18,
-        project: {
-          __typename: 'TokenProject',
-          id: `${id}-project`,
-          name,
-          logoUrl: LOCAL_LOGO_URL,
-          isSpam: false,
-          tokens: [],
-        },
+        logoUrl: LOCAL_LOGO_URL,
       },
     },
   }
 }
 
-const { Chain } = GraphQLApi
-
 /**
- * GraphQL fixtures keyed by `${operationName}:${chain}:${lowercased address}`.
- * The native-token TokenWeb query sends no address variable, so its key has an
- * empty address segment. Requests without a matching key get a null root field,
- * which is exactly how the live gateway answers for unknown assets — the
- * "invalid token" test cases rely on that.
+ * data-api v2 fixtures keyed by `GetToken:${chainId}:${lowercased address}`. The worker sends
+ * natives under their REST address (the zero address for most EVM chains; Polygon's real POL
+ * contract), so those keys carry that address. An unknown key gets an empty message — no `token`
+ * field — which the "invalid token" test cases rely on.
  */
-export const gatewayFixtureResponses: Record<string, { data: object }> = {
+export const dataApiFixtureResponses: Record<string, object> = {
   // ── Token meta-tag + OG-image cases (token.test.ts, tokenImage.test.ts) ──
-  'TokenWeb:ETHEREUM:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48': tokenResponse({
-    id: 'fixture-token-usdc',
-    chain: Chain.Ethereum,
+  'GetToken:1:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48': getTokenResponse({
+    chainId: 1,
     address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
     symbol: 'USDC',
     name: 'USDC',
   }),
-  'TokenWeb:ETHEREUM:': tokenResponse({
-    id: 'fixture-token-eth',
-    chain: Chain.Ethereum,
+  'GetToken:1:0x0000000000000000000000000000000000000000': getTokenResponse({
+    chainId: 1,
+    address: '0x0000000000000000000000000000000000000000',
     symbol: 'ETH',
     name: 'Ethereum',
   }),
-  'TokenWeb:POLYGON:0x0000000000000000000000000000000000001010': tokenResponse({
-    id: 'fixture-token-pol',
-    chain: Chain.Polygon,
+  'GetToken:137:0x0000000000000000000000000000000000001010': getTokenResponse({
+    chainId: 137,
     address: '0x0000000000000000000000000000000000001010',
     symbol: 'POL',
     name: 'Polygon Ecosystem Token',
   }),
-  'TokenWeb:ETHEREUM:0x6982508145454ce325ddbe47a25d4ec3d2311933': tokenResponse({
-    id: 'fixture-token-pepe',
-    chain: Chain.Ethereum,
+  'GetToken:1:0x6982508145454ce325ddbe47a25d4ec3d2311933': getTokenResponse({
+    chainId: 1,
     address: '0x6982508145454ce325ddbe47a25d4ec3d2311933',
     symbol: 'PEPE',
     name: 'Pepe',

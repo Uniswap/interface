@@ -4,7 +4,6 @@ import { Currency, Price } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { isMobileWeb } from '@universe/environment'
 import { ColorTokens, Flex, FlexCompatProps, Shine, zIndexes } from '@universe/mycelium'
@@ -22,6 +21,7 @@ import {
 } from 'lightweight-charts'
 import { useMemo, useState } from 'react'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import useResizeObserver from 'use-resize-observer'
 // Not using the formatters in a react context, so we need to import the formatter directly.
 // oxlint-disable-next-line no-restricted-imports -- Need direct formatter import for chart formatting outside React context
@@ -357,7 +357,7 @@ interface LiquidityPositionRangeChartProps {
   }
   width?: number | string
   height?: number
-  duration?: GraphQLApi.HistoryDuration
+  duration?: HistoryDuration
   showXAxis?: boolean
   showYAxis?: boolean
   interactive?: boolean
@@ -491,7 +491,7 @@ function LiquidityPositionRangeChart({
     ? {
         addressOrId: poolAddressOrId,
         chainId,
-        duration: duration ?? GraphQLApi.HistoryDuration.Month,
+        duration: duration ?? HistoryDuration.Month,
         isV4,
         isV3,
         isV2,

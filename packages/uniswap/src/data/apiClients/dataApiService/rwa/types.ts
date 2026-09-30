@@ -19,10 +19,13 @@ export type IssuerToken = {
   name: string
   logoUrl: string
   issuer: string
+  /** BE issuer brand name (v2 ListTokenGroups only); v1 leaves it unset and the label is derived from the slug. */
+  issuerDisplayName?: string
   priceUsd: number
   priceChange1hPct?: number
   priceChange24hPct?: number
   marketCapUsd?: number
+  /** Volume for the window the v2 list was ranked by; v1 sources only serve 1D. */
   volume24hUsd: number
   sparkline1d: RwaSparkline
   chainTokens: ChainToken[]
@@ -37,6 +40,7 @@ export type Rwa = {
   priceChange1hPct?: number
   priceChange24hPct?: number
   marketCapUsd?: number
+  /** Volume for the window the v2 list was ranked by; v1 sources only serve 1D. */
   volume24hUsd: number
   sparkline1d: RwaSparkline
   /** Max % deviation across issuer prices from parent priceUsd; ranked API only. */

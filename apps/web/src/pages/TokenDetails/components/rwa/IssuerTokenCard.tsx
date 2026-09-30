@@ -1,24 +1,24 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { Flex, Text, iconSizes } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { Separator } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { getRWAIssuerDisplayName } from 'uniswap/src/features/rwa/issuers'
+import { getRWAIssuerLabel } from 'uniswap/src/features/rwa/issuers'
 import type { RWAToken } from 'uniswap/src/features/rwa/types'
 import type { RWAIssuerMarketData } from 'uniswap/src/features/rwa/useRWAIssuerMarketData'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { getTokenDetailsURL } from '~/data/util'
 
 interface IssuerTokenCardProps {
   token: RWAToken
-  assetName: string
+  primaryName: string
   marketData: RWAIssuerMarketData
 }
 
@@ -35,10 +35,10 @@ function IssuerTokenCardStat({ label, value }: { label: string; value: string })
   )
 }
 
-export function IssuerTokenCard({ token, assetName, marketData }: IssuerTokenCardProps): JSX.Element {
+export function IssuerTokenCard({ token, primaryName, marketData }: IssuerTokenCardProps): JSX.Element {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
-  const displayName = getRWAIssuerDisplayName(token.issuer)
+  const issuerLabel = getRWAIssuerLabel(token)
   const { priceUsd, marketCapUsd, volume24hUsd } = marketData
   // Logo + symbol come from the token's own per-issuer RWA branding, not the shared RWA asset branding.
   const tokenSymbol = token.symbol
@@ -80,11 +80,13 @@ export function IssuerTokenCard({ token, assetName, marketData }: IssuerTokenCar
             <Flex flexShrink={1} minWidth={0}>
               <Flex row alignItems="baseline" gap="$gap8">
                 <Text variant="body2" color="$neutral1" numberOfLines={1}>
-                  {assetName}
+                  {primaryName}
                 </Text>
-                <Text variant="body3" color="$neutral2" numberOfLines={1}>
-                  {displayName}
-                </Text>
+                {issuerLabel ? (
+                  <Text variant="body3" color="$neutral2" numberOfLines={1}>
+                    {issuerLabel}
+                  </Text>
+                ) : null}
               </Flex>
               {tokenSymbol ? (
                 <Text variant="body3" color="$neutral2" numberOfLines={1}>

@@ -123,7 +123,7 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
                         <circle
                           cx="28"
                           cy="28"
-                          fill="var(--unicon-5)"
+                          fill="var(--unicon-1)"
                           opacity="var(--unicon-bg-opacity)"
                           r="28"
                         />
@@ -132,8 +132,26 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
                         >
                           <path
                             clip-rule="evenodd"
-                            d="M13.2 6C9.22355 6 6 9.22355 6 13.2V34.8C6 38.7765 9.22355 42 13.2 42H34.8C38.7765 42 42 38.7765 42 34.8V13.2C42 9.22355 38.7765 6 34.8 6H13.2ZM26.6414 16.9055C25.5087 14.8019 22.4913 14.8019 21.3586 16.9055L15.8812 27.0777C14.805 29.0764 16.2526 31.5 18.5227 31.5L29.4773 31.5C31.7474 31.5 33.195 29.0764 32.1188 27.0777L26.6414 16.9055Z"
-                            fill="var(--unicon-5)"
+                            d="M21 6C21 4.34315 22.3431 3 24 3C25.6569 3 27 4.34315 27 6V15C27 16.6569 25.6569 18 24 18C22.3431 18 21 16.6569 21 15V6Z"
+                            fill="var(--unicon-1)"
+                            fill-rule="evenodd"
+                          />
+                          <path
+                            clip-rule="evenodd"
+                            d="M21 33C21 31.3431 22.3431 30 24 30C25.6569 30 27 31.3431 27 33V42C27 43.6569 25.6569 45 24 45C22.3431 45 21 43.6569 21 42V33Z"
+                            fill="var(--unicon-1)"
+                            fill-rule="evenodd"
+                          />
+                          <path
+                            clip-rule="evenodd"
+                            d="M42 21C43.6569 21 45 22.3431 45 24C45 25.6569 43.6569 27 42 27H33C31.3431 27 30 25.6569 30 24C30 22.3431 31.3431 21 33 21H42Z"
+                            fill="var(--unicon-1)"
+                            fill-rule="evenodd"
+                          />
+                          <path
+                            clip-rule="evenodd"
+                            d="M15 21C16.6569 21 18 22.3431 18 24C18 25.6569 16.6569 27 15 27H6C4.34315 27 3 25.6569 3 24C3 22.3431 4.34315 21 6 21H15Z"
+                            fill="var(--unicon-1)"
                             fill-rule="evenodd"
                           />
                         </g>
@@ -175,7 +193,7 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
                           <span
                             class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[14px] [line-height:18px] [font-weight:485] [color:var(--stext-neutral2)]"
                           >
-                            0x​9EB67f...D9A2Ca
+                            0x​60eFEd...c11904
                           </span>
                         </div>
                         <div
@@ -379,7 +397,7 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
                       <circle
                         cx="28"
                         cy="28"
-                        fill="var(--unicon-5)"
+                        fill="var(--unicon-1)"
                         opacity="var(--unicon-bg-opacity)"
                         r="28"
                       />
@@ -388,8 +406,26 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
                       >
                         <path
                           clip-rule="evenodd"
-                          d="M13.2 6C9.22355 6 6 9.22355 6 13.2V34.8C6 38.7765 9.22355 42 13.2 42H34.8C38.7765 42 42 38.7765 42 34.8V13.2C42 9.22355 38.7765 6 34.8 6H13.2ZM26.6414 16.9055C25.5087 14.8019 22.4913 14.8019 21.3586 16.9055L15.8812 27.0777C14.805 29.0764 16.2526 31.5 18.5227 31.5L29.4773 31.5C31.7474 31.5 33.195 29.0764 32.1188 27.0777L26.6414 16.9055Z"
-                          fill="var(--unicon-5)"
+                          d="M21 6C21 4.34315 22.3431 3 24 3C25.6569 3 27 4.34315 27 6V15C27 16.6569 25.6569 18 24 18C22.3431 18 21 16.6569 21 15V6Z"
+                          fill="var(--unicon-1)"
+                          fill-rule="evenodd"
+                        />
+                        <path
+                          clip-rule="evenodd"
+                          d="M21 33C21 31.3431 22.3431 30 24 30C25.6569 30 27 31.3431 27 33V42C27 43.6569 25.6569 45 24 45C22.3431 45 21 43.6569 21 42V33Z"
+                          fill="var(--unicon-1)"
+                          fill-rule="evenodd"
+                        />
+                        <path
+                          clip-rule="evenodd"
+                          d="M42 21C43.6569 21 45 22.3431 45 24C45 25.6569 43.6569 27 42 27H33C31.3431 27 30 25.6569 30 24C30 22.3431 31.3431 21 33 21H42Z"
+                          fill="var(--unicon-1)"
+                          fill-rule="evenodd"
+                        />
+                        <path
+                          clip-rule="evenodd"
+                          d="M15 21C16.6569 21 18 22.3431 18 24C18 25.6569 16.6569 27 15 27H6C4.34315 27 3 25.6569 3 24C3 22.3431 4.34315 21 6 21H15Z"
+                          fill="var(--unicon-1)"
                           fill-rule="evenodd"
                         />
                       </g>
@@ -431,7 +467,7 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
                         <span
                           class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[14px] [line-height:18px] [font-weight:485] [color:var(--stext-neutral2)]"
                         >
-                          0x​9EB67f...D9A2Ca
+                          0x​60eFEd...c11904
                         </span>
                       </div>
                       <div

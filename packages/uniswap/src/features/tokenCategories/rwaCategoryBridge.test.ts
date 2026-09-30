@@ -1,10 +1,18 @@
 import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import {
   findTokenCategoryForRwaCategory,
+  getRwaCategoryForCategoryId,
   getRwaCategoryForTokenCategory,
 } from 'uniswap/src/features/tokenCategories/rwaCategoryBridge'
 import { TokenCategoryClass } from 'uniswap/src/features/tokenCategories/types'
 import { tokenCategory } from 'uniswap/src/test/fixtures/tokenCategory'
+
+describe(getRwaCategoryForCategoryId, () => {
+  it('maps backend group category ids to the RWA enum, UNSPECIFIED otherwise', () => {
+    expect(getRwaCategoryForCategoryId('commodities')).toBe(RwaCategory.COMMODITIES)
+    expect(getRwaCategoryForCategoryId('defi')).toBe(RwaCategory.UNSPECIFIED)
+  })
+})
 
 describe(getRwaCategoryForTokenCategory, () => {
   it.each([

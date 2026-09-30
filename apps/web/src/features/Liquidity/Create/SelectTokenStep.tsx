@@ -53,6 +53,7 @@ import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
 import { getCreateFeeTierOptions, getCreateFeeTierSearchData } from '~/features/Liquidity/utils/createFeeTiers'
 import { getDefaultFeeTiersWithData, getFeeTierKey } from '~/features/Liquidity/utils/feeTiers'
 import { hasLPFoTTransferError } from '~/features/Liquidity/utils/hasLPFoTTransferError'
+import { needsHookReview } from '~/features/Liquidity/utils/hookReview'
 import { isUnsupportedLPChain } from '~/features/Liquidity/utils/isUnsupportedLPChain'
 import { getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVersion'
 import { PageType, useIsPage } from '~/hooks/useIsPage'
@@ -103,7 +104,8 @@ export function SelectTokensStep({
   })
 
   const {
-    positionState: { hook, userApprovedHook, fee, migratingPosition },
+    positionState,
+    positionState: { hook, fee, migratingPosition },
     setPositionState,
     protocolVersion,
     creatingPoolOrPair,
@@ -277,6 +279,8 @@ export function SelectTokensStep({
       // Deliberately no `step`: the destination derives its first form step from the pool it loads.
       // Writing one here would land in the URL while this page is still mounted, animating it into
       // the range step — a visible double-render — before the route swaps.
+      // Also no hook review before the hop: the destination's HookReviewGate runs it on entry, which
+      // covers pool-browser rows and PDP links that never pass through this step.
       const search = params.toString()
       // `from` marks this as an in-app entry so the destination's back arrow pops here instead of
       // falling through to the pool browser.
@@ -289,7 +293,7 @@ export function SelectTokensStep({
       return
     }
 
-    if (hook !== userApprovedHook) {
+    if (needsHookReview(positionState)) {
       setHookModalOpen(true)
     } else {
       onContinue()
@@ -436,9 +440,13 @@ export function SelectTokensStep({
           isOpen={hookModalOpen}
           address={hook}
           onClose={() => setHookModalOpen(false)}
-          onClearHook={() => setPositionState((state) => ({ ...state, hook: undefined, fee: undefined }))}
+          onCancel={() => {
+            setPositionState((state) => ({ ...state, hook: undefined, fee: undefined }))
+            setHookModalOpen(false)
+          }}
           onContinue={() => {
             setPositionState((state) => ({ ...state, userApprovedHook: hook }))
+            setHookModalOpen(false)
             onContinue()
           }}
         />

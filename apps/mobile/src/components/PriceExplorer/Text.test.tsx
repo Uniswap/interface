@@ -2,7 +2,6 @@ import React from 'react'
 import { usePriceChart } from 'src/components/charts/PriceChartContext'
 import { DatetimeText, PriceText, RelativeChangeText } from 'src/components/PriceExplorer/Text'
 import { getNearestFiberProp, render, waitFor, within } from 'src/test/test-utils'
-import { amounts } from 'uniswap/src/test/fixtures'
 import type { Mock } from 'vitest'
 
 vi.mock('src/components/charts/PriceChartContext')
@@ -34,7 +33,7 @@ beforeEach(() => {
 describe(PriceText, () => {
   it('renders without error', () => {
     mockedUsePriceChart.mockReturnValue({
-      data: [{ timestamp: 0, value: amounts.md().value }],
+      data: [{ timestamp: 0, value: 55 }],
       currentIndex: { value: -1 },
       isActive: { value: false },
     })
@@ -46,7 +45,7 @@ describe(PriceText, () => {
 
   it('renders without error less than a dollar', () => {
     mockedUsePriceChart.mockReturnValue({
-      data: [{ timestamp: 0, value: amounts.xs().value }],
+      data: [{ timestamp: 0, value: 0.05 }],
       currentIndex: { value: -1 },
       isActive: { value: false },
     })
@@ -70,7 +69,7 @@ describe(PriceText, () => {
 
   it('shows active price when scrubbing', async () => {
     mockedUsePriceChart.mockReturnValue({
-      data: [{ timestamp: 0, value: amounts.sm().value }],
+      data: [{ timestamp: 0, value: 5 }],
       currentIndex: { value: 0 },
       isActive: { value: true },
     })
@@ -81,7 +80,7 @@ describe(PriceText, () => {
     const wholePart = await within(animatedText).findByTestId('wholePart')
     const decimalPart = await within(animatedText).findByTestId('decimalPart')
 
-    expect(getNearestFiberProp(wholePart, 'text')).toBe(`$${amounts.sm().value}`)
+    expect(getNearestFiberProp(wholePart, 'text')).toBe(`$5`)
     expect(getNearestFiberProp(decimalPart, 'text')).toBe(`.00`)
   })
 })

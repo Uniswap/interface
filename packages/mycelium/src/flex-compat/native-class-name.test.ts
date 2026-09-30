@@ -19,6 +19,7 @@
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { __resetNativeStyleWarnings } from '../compat/native-diagnostics'
+import { compatNativeStyle } from '../compat/native-style'
 import { flexCompatClassName, nativeFlexCompatClassName } from './compile'
 import type { FlexCompatProps } from './props'
 
@@ -153,6 +154,32 @@ describe('resolve-or-drop policy for tokens outside the compat maps', () => {
     const messages = warn.mock.calls.map((call) => String(call[0]))
     expect(messages.filter((message) => message.includes(UNMAPPABLE_TOKEN))).toHaveLength(1)
     expect(messages[0]).toMatch(/dropping the box-shadow declaration on native/)
+  })
+})
+
+/**
+ * The divider shape: a semantic colour on the `borderColor` SHORTHAND beside a
+ * single per-side width. Per-side colour longhands have no native class to ride
+ * (`native-style.ts`'s long-tail colour drop), so the shorthand is the only
+ * spelling that carries a theme-reactive divider colour to device — and the
+ * style lane must leave it alone rather than injecting the implicit black that
+ * a colourless width gets.
+ */
+describe('a semantic borderColor beside one per-side width (the native divider spelling)', () => {
+  const DIVIDER: FlexCompatProps = { borderColor: '$surface3', borderBottomWidth: 0.25 }
+
+  it('rides the semantic border class on the native lane', () => {
+    expect(nativeFlexCompatClassName(DIVIDER).split(' ')).toContain('border-surface3')
+  })
+
+  it('compiles byte-identical to the web lane, so web pixels are unchanged', () => {
+    expect(nativeFlexCompatClassName(DIVIDER)).toBe(flexCompatClassName(DIVIDER))
+  })
+
+  it('takes no implicit black on the style lane — the class lane owns the colour', () => {
+    const style = compatNativeStyle(DIVIDER).style as Record<string, unknown>
+    expect(Object.hasOwn(style, 'borderColor')).toBe(false)
+    expect(Object.hasOwn(style, 'borderBottomColor')).toBe(false)
   })
 })
 

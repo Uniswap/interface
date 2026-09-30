@@ -3,6 +3,7 @@ import { UTCTimestamp } from 'lightweight-charts'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
 import { ChartType, DataQuality, PriceChartType, type ChartQueryResult } from '~/components/Charts/utils'
 import { TimePeriod } from '~/data/util'
@@ -57,7 +58,7 @@ const basePriceQuery: PriceChartQueryMock = {
 const variables = {
   chain: GraphQLApi.Chain.Ethereum,
   address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-  duration: GraphQLApi.HistoryDuration.Day,
+  duration: HistoryDuration.Day,
   multichain: false,
 }
 
@@ -200,5 +201,21 @@ describe('useTokenPriceChartPanel', () => {
 
     expect(mockUseTokenSpotPrice).toHaveBeenCalledWith(expect.any(String), expect.objectContaining({ skip: true }))
     expect(mockUseTokenPriceChartData).toHaveBeenCalledWith(expect.objectContaining({ skip: true }))
+  })
+
+  it.each([undefined, false])('forwards keepPreviousData=%s to the chart query', (keepPreviousData) => {
+    renderHook(() =>
+      useTokenPriceChartPanel({
+        variables,
+        priceChartType: PriceChartType.LINE,
+        timePeriod: TimePeriod.WEEK,
+        currency: USDC_MAINNET,
+        keepPreviousData,
+      }),
+    )
+
+    expect(mockUseTokenPriceChartData).toHaveBeenCalledWith(
+      expect.objectContaining({ keepPreviousData: keepPreviousData ?? true }),
+    )
   })
 })

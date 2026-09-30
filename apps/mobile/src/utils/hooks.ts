@@ -1,26 +1,5 @@
-import { useFocusEffect } from '@react-navigation/core'
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useAppStackNavigation } from 'src/app/navigation/types'
-import { PollingInterval } from 'uniswap/src/constants/misc'
-
-export function usePollOnFocusOnly({
-  startPolling,
-  stopPolling,
-  pollingInterval,
-}: {
-  startPolling: (interval: PollingInterval) => void
-  stopPolling: () => void
-  pollingInterval: PollingInterval
-}): void {
-  useFocusEffect(
-    useCallback(() => {
-      startPolling(pollingInterval)
-      return () => {
-        stopPolling()
-      }
-    }, [startPolling, stopPolling, pollingInterval]),
-  )
-}
 
 /**
  * Adds a listener to the navigation transition end event with a delayed execution.

@@ -1,7 +1,8 @@
 import { TokenCategoryTag } from 'uniswap/src/features/tokenCategories/TokenCategoryTag'
 import { TokenCategoryClass } from 'uniswap/src/features/tokenCategories/types'
 import { tokenCategory } from 'uniswap/src/test/fixtures/tokenCategory'
-import { render } from 'uniswap/src/test/test-utils'
+import { mockUniswapContext } from 'uniswap/src/test/render'
+import { fireEvent, render } from 'uniswap/src/test/test-utils'
 
 describe('TokenCategoryTag', () => {
   it('renders the category name', () => {
@@ -21,5 +22,12 @@ describe('TokenCategoryTag', () => {
     const { queryByText, queryByTestId } = render(<TokenCategoryTag category={category} />)
     expect(queryByText('Gaming')).not.toBeNull()
     expect(queryByTestId('token-category-tag-icon')).toBeNull()
+  })
+
+  it('opens the category detail page on press', () => {
+    const category = tokenCategory({ id: 'defi', name: 'DeFi', categoryClass: TokenCategoryClass.Sector })
+    const { getByText } = render(<TokenCategoryTag category={category} />)
+    fireEvent.press(getByText('DeFi'))
+    expect(mockUniswapContext.navigateToCategoryDetails).toHaveBeenCalledWith({ categoryId: 'defi' })
   })
 })

@@ -298,27 +298,27 @@ const inkCurrencies = [
 
 // --- Mock helpers ---
 
-const defaultGqlResult = {
-  error: undefined,
-  loading: false,
+const defaultQueryResult = {
+  error: null,
+  isLoading: false,
   refetch: vi.fn(),
 }
 
-const skippedResult = { data: undefined, ...defaultGqlResult }
+const skippedResult = { data: undefined, ...defaultQueryResult }
 
 function makePortfolioData({
   portfolioError,
   portfolioLoading = false,
 }: { portfolioError?: Error; portfolioLoading?: boolean } = {}): {
   data: Record<string, never> | undefined
-  error: Error | undefined
-  loading: boolean
+  error: Error | null
+  isLoading: boolean
   refetch: ReturnType<typeof vi.fn>
 } {
   return {
     data: portfolioError ? undefined : {},
-    error: portfolioError,
-    loading: portfolioLoading,
+    error: portfolioError ?? null,
+    isLoading: portfolioLoading,
     refetch: vi.fn(),
   }
 }
@@ -378,8 +378,8 @@ function setupDefaultMocks({
 }): void {
   mockUseAllCommonBaseCurrencies.mockReturnValue({
     data: commonBase === null ? undefined : (commonBase ?? allCommonBaseCurrencies),
-    error: commonBaseError,
-    loading: commonBaseLoading,
+    error: commonBaseError ?? null,
+    isLoading: commonBaseLoading,
     refetch: vi.fn(),
   })
 
@@ -389,38 +389,38 @@ function setupDefaultMocks({
   mockUseCurrencyInfosWithLoading
     .mockReturnValueOnce(
       chainFilter === UniverseChainId.XLayer
-        ? { data: xLayerData, error: xLayerError, loading: xLayerLoading, refetch: vi.fn() }
-        : { ...skippedResult, loading: xLayerLoading },
+        ? { data: xLayerData, error: xLayerError, isLoading: xLayerLoading, refetch: vi.fn() }
+        : { ...skippedResult, isLoading: xLayerLoading },
     )
     .mockReturnValueOnce(
       chainFilter === UniverseChainId.Linea
-        ? { data: lineaData, error: lineaError, loading: lineaLoading, refetch: vi.fn() }
-        : { ...skippedResult, loading: lineaLoading },
+        ? { data: lineaData, error: lineaError, isLoading: lineaLoading, refetch: vi.fn() }
+        : { ...skippedResult, isLoading: lineaLoading },
     )
     .mockReturnValueOnce(
       chainFilter === UniverseChainId.Base
-        ? { data: baseData, error: baseError, loading: baseLoading, refetch: vi.fn() }
-        : { ...skippedResult, loading: baseLoading },
+        ? { data: baseData, error: baseError, isLoading: baseLoading, refetch: vi.fn() }
+        : { ...skippedResult, isLoading: baseLoading },
     )
     .mockReturnValueOnce(
       chainFilter === UniverseChainId.MegaETH
-        ? { data: megaEthData, error: megaEthError, loading: megaEthLoading, refetch: vi.fn() }
-        : { ...skippedResult, loading: megaEthLoading },
+        ? { data: megaEthData, error: megaEthError, isLoading: megaEthLoading, refetch: vi.fn() }
+        : { ...skippedResult, isLoading: megaEthLoading },
     )
     .mockReturnValueOnce(
       chainFilter === UniverseChainId.Robinhood
-        ? { data: robinhoodData, error: robinhoodError, loading: robinhoodLoading, refetch: vi.fn() }
-        : { ...skippedResult, loading: robinhoodLoading },
+        ? { data: robinhoodData, error: robinhoodError, isLoading: robinhoodLoading, refetch: vi.fn() }
+        : { ...skippedResult, isLoading: robinhoodLoading },
     )
     .mockReturnValueOnce(
       chainFilter === UniverseChainId.Arc
-        ? { data: arcData, error: arcError, loading: arcLoading, refetch: vi.fn() }
-        : { ...skippedResult, loading: arcLoading },
+        ? { data: arcData, error: arcError, isLoading: arcLoading, refetch: vi.fn() }
+        : { ...skippedResult, isLoading: arcLoading },
     )
     .mockReturnValueOnce(
       chainFilter === UniverseChainId.Ink
-        ? { data: inkData, error: inkError, loading: inkLoading, refetch: vi.fn() }
-        : { ...skippedResult, loading: inkLoading },
+        ? { data: inkData, error: inkError, isLoading: inkLoading, refetch: vi.fn() }
+        : { ...skippedResult, isLoading: inkLoading },
     )
 }
 
@@ -446,7 +446,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       // Should return Linea currencies, not common base
@@ -468,7 +468,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       // Should return MegaETH currencies, not common base
@@ -490,7 +490,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       // Should return Robinhood currencies, not common base
@@ -511,7 +511,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       // Should return Arc currencies, not common base
@@ -535,7 +535,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       // Should return Ink currencies, not common base. USDT0 in particular cannot come from the
@@ -558,7 +558,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       const currencyIds = result.current.data?.map((opt) => opt.currencyInfo.currencyId) ?? []
@@ -578,7 +578,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       const currencyIds = result.current.data?.map((opt) => opt.currencyInfo.currencyId) ?? []
@@ -599,7 +599,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       // Should return only Mainnet tokens from common base (not Linea, MegaETH, XLayer, or Unichain)
@@ -621,7 +621,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       const currencyIds = result.current.data?.map((opt) => opt.currencyInfo.currencyId) ?? []
@@ -639,7 +639,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       // Should keep Mainnet and Arbitrum tokens
@@ -662,7 +662,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       expect(result.current.data).toBeUndefined()
@@ -679,7 +679,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       expect(result.current.data).toEqual([])
@@ -696,7 +696,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       expect(result.current.data).toEqual([])
@@ -713,7 +713,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       expect(result.current.data).toEqual([])
@@ -730,7 +730,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       expect(result.current.data).toEqual([])
@@ -747,7 +747,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       expect(result.current.data).toEqual([])
@@ -767,7 +767,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       expect(result.current.error).toBeTruthy()
@@ -785,7 +785,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       expect(result.current.error).toBeTruthy()
@@ -803,7 +803,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       expect(result.current.error).toBeTruthy()
@@ -821,7 +821,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       expect(result.current.error).toBeTruthy()
@@ -839,7 +839,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       expect(result.current.error).toBeTruthy()
@@ -857,7 +857,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       expect(result.current.error).toBeTruthy()
@@ -875,7 +875,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       expect(result.current.error).toBeTruthy()
@@ -893,7 +893,7 @@ describe(useCommonTokensOptions, () => {
         }),
       )
 
-      expect(result.current.loading).toBe(true)
+      expect(result.current.isLoading).toBe(true)
     })
 
     it('is loading when portfolio is loading', async () => {
@@ -906,7 +906,7 @@ describe(useCommonTokensOptions, () => {
         }),
       )
 
-      expect(result.current.loading).toBe(true)
+      expect(result.current.isLoading).toBe(true)
     })
 
     it('is loading when Linea currencies are loading', async () => {
@@ -919,7 +919,7 @@ describe(useCommonTokensOptions, () => {
         }),
       )
 
-      expect(result.current.loading).toBe(true)
+      expect(result.current.isLoading).toBe(true)
     })
 
     it('is loading when MegaETH currencies are loading', async () => {
@@ -932,7 +932,7 @@ describe(useCommonTokensOptions, () => {
         }),
       )
 
-      expect(result.current.loading).toBe(true)
+      expect(result.current.isLoading).toBe(true)
     })
 
     it('is loading when XLayer currencies are loading', async () => {
@@ -945,7 +945,7 @@ describe(useCommonTokensOptions, () => {
         }),
       )
 
-      expect(result.current.loading).toBe(true)
+      expect(result.current.isLoading).toBe(true)
     })
 
     it('is loading when Base currencies are loading', async () => {
@@ -958,7 +958,7 @@ describe(useCommonTokensOptions, () => {
         }),
       )
 
-      expect(result.current.loading).toBe(true)
+      expect(result.current.isLoading).toBe(true)
     })
 
     it('is loading when Robinhood currencies are loading', async () => {
@@ -971,7 +971,7 @@ describe(useCommonTokensOptions, () => {
         }),
       )
 
-      expect(result.current.loading).toBe(true)
+      expect(result.current.isLoading).toBe(true)
     })
 
     it('is loading when Arc currencies are loading', async () => {
@@ -984,7 +984,7 @@ describe(useCommonTokensOptions, () => {
         }),
       )
 
-      expect(result.current.loading).toBe(true)
+      expect(result.current.isLoading).toBe(true)
     })
 
     it('is loading when Ink currencies are loading', async () => {
@@ -997,7 +997,7 @@ describe(useCommonTokensOptions, () => {
         }),
       )
 
-      expect(result.current.loading).toBe(true)
+      expect(result.current.isLoading).toBe(true)
     })
   })
 
@@ -1013,7 +1013,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       result.current.data?.forEach((option) => {
@@ -1034,7 +1034,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       // With empty portfolioBalancesById, all options should have null balances
@@ -1057,7 +1057,7 @@ describe(useCommonTokensOptions, () => {
       )
 
       await waitFor(() => {
-        expect(result.current.loading).toBe(false)
+        expect(result.current.isLoading).toBe(false)
       })
 
       expect(result.current.refetch).toBeDefined()

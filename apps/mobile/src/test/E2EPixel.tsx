@@ -1,6 +1,6 @@
+import { TestID } from '@universe/test'
 import { TouchableOpacity } from 'react-native'
 import { getConfig } from 'src/config'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 /**
  * Workaround for E2E tests for the runner to access actions that
  * are hard to get to.

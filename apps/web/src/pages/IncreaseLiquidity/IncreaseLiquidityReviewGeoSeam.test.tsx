@@ -1,6 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { type Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID } from '@universe/test'
 import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
 import { useIncreaseLiquidityContext } from '~/pages/IncreaseLiquidity/IncreaseLiquidityContext'
 import { IncreaseLiquidityReview } from '~/pages/IncreaseLiquidity/IncreaseLiquidityReview'

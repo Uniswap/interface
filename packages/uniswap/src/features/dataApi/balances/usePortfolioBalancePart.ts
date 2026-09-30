@@ -1,4 +1,3 @@
-import type { WatchQueryFetchPolicy } from '@apollo/client'
 import type { WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import type { UniverseChainId } from '@universe/chains'
 import { useMemo } from 'react'
@@ -15,14 +14,14 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import type { PortfolioTotalValueResult } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'
 import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/useRestPortfolioValueModifier'
 import type { BaseResult } from 'uniswap/src/features/dataApi/types'
-import { usePlatformBasedFetchPolicy } from 'uniswap/src/utils/usePlatformBasedFetchPolicy'
+import { FetchPolicy, usePlatformBasedFetchPolicy } from 'uniswap/src/utils/usePlatformBasedFetchPolicy'
 
 type UsePortfolioBalancePartParams = {
   part: PortfolioBalancePart
   evmAddress?: Address
   svmAddress?: Address
   pollInterval?: PollingInterval
-  fetchPolicy?: WatchQueryFetchPolicy
+  fetchPolicy?: FetchPolicy
   enabled?: boolean
   /** Cache-only read: never fetches, but still re-renders when another observer updates the cached data. */
   cacheOnly?: boolean

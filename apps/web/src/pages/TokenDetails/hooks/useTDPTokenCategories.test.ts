@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react'
-import { MOCK_TOKEN_CATEGORIES } from 'uniswap/src/data/apiClients/dataApiService/categories/mockTokenCategories'
 import { useResolveTokenCategories } from 'uniswap/src/data/apiClients/dataApiService/categories/useResolveTokenCategories'
+import { tokenCategory } from 'uniswap/src/test/fixtures/tokenCategory'
 import type { TDPState } from '~/pages/TokenDetails/context/createTDPStore'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { useTDPTokenCategories } from '~/pages/TokenDetails/hooks/useTDPTokenCategories'
@@ -14,7 +14,8 @@ vi.mock('uniswap/src/data/apiClients/dataApiService/categories/useResolveTokenCa
   useResolveTokenCategories: vi.fn(),
 }))
 
-const [FIRST, SECOND] = MOCK_TOKEN_CATEGORIES
+const FIRST = tokenCategory({ id: 'stablecoins', name: 'Stablecoins' })
+const SECOND = tokenCategory({ id: 'defi' })
 
 function mockTDPStore({ categoryIds, loaded }: { categoryIds: string[] | undefined; loaded: boolean }): void {
   const state = {
