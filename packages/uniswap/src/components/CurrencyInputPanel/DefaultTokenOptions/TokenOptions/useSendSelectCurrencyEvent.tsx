@@ -3,6 +3,7 @@ import { DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/evm/r
 import { type CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { getCurrencyInfoSafetyAnalytics } from 'uniswap/src/features/telemetry/tokenSafetyAnalytics'
 import { type CurrencyField } from 'uniswap/src/types/currency'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
@@ -30,6 +31,7 @@ export function useSendSelectCurrencyEvent({
         position,
         suggestion_count,
         preselect_asset: true,
+        ...getCurrencyInfoSafetyAnalytics(currencyInfo),
       })
     },
     [page, currencyField],

@@ -21,6 +21,7 @@ import {
   type BlockaidScanType,
   type EthMethod,
 } from 'uniswap/src/features/dappRequests/types'
+import type { ProtectionResult } from 'uniswap/src/features/dataApi/safety'
 import { type FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import type { PriceSourceTag } from 'uniswap/src/features/prices/getDisplayedPriceSource'
 import {
@@ -131,6 +132,11 @@ export type AssetDetailsBaseProperties = {
   domain?: string
   address?: string
   chain?: number
+}
+
+export type TokenSafetyAnalyticsProperties = {
+  blockaid_status?: ProtectionResult
+  is_suppressed?: boolean
 }
 
 export type SearchResultContextProperties = {
@@ -520,7 +526,8 @@ type InterfaceSearchResultSelectionProperties = {
 
   // Token specific properties
   token_type?: 'token' | 'multichain_token'
-} & ITraceContext
+} & TokenSafetyAnalyticsProperties &
+  ITraceContext
 
 type WrapProperties = {
   type: WrapType
@@ -1249,6 +1256,8 @@ export type UniverseEventProperties = {
   [InterfaceEventName.NavbarSearchExited]: {
     navbar_search_input_text: string
     hasInput: boolean
+    result_selected: boolean
+    results_shown: number
   } & ITraceContext
   [InterfaceEventName.ChainChanged]:
     | {
@@ -1430,7 +1439,8 @@ export type UniverseEventProperties = {
     networkChainId: number | 'all'
   }
   [MobileEventName.ExploreSearchResultClicked]: SearchResultContextProperties &
-    AssetDetailsBaseProperties & {
+    AssetDetailsBaseProperties &
+    TokenSafetyAnalyticsProperties & {
       type: 'collection' | 'token' | 'address' | 'multichain_token'
     }
   [MobileEventName.ExploreTokenItemSelected]: AssetDetailsBaseProperties & {
@@ -1821,7 +1831,8 @@ export type UniverseEventProperties = {
   [UniswapEventName.TokenSelected]:
     | (ITraceContext &
         AssetDetailsBaseProperties &
-        SearchResultContextProperties & {
+        SearchResultContextProperties &
+        TokenSafetyAnalyticsProperties & {
           field: CurrencyField
           preselect_asset: boolean
           tokenSection?: OnchainItemSectionName

@@ -12,6 +12,7 @@ import { SearchFilterContext } from 'uniswap/src/features/search/SearchModal/ana
 import { tdpChainFilterForTokenRow } from 'uniswap/src/features/search/SearchModal/utils/searchModalListItem'
 import { tdpChainSelectionFromFilter } from 'uniswap/src/utils/linking'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 export interface SearchModalOptionSelection {
   item: SearchModalOption
@@ -53,6 +54,7 @@ export function useSearchModalOptionSelection({
     getCategoryDetailsUrl,
   } = useUniswapContext()
   const { registerSearchItem } = useAddToSearchHistory()
+  const trace = useTrace()
 
   const tdpChain = (item: SearchModalOption): UniverseChainId | null | undefined => {
     switch (item.type) {
@@ -96,7 +98,7 @@ export function useSearchModalOptionSelection({
 
   const recordSelection = useEvent(({ item, section, index, rowIndex }: SearchModalOptionSelection): void => {
     registerSearchItem(item, { tdpChainFilter: tdpChain(item) })
-    sendSearchOptionItemClickedAnalytics({ item, section, sectionIndex: index, rowIndex, searchFilters })
+    sendSearchOptionItemClickedAnalytics({ item, section, sectionIndex: index, rowIndex, searchFilters, trace })
   })
 
   const selectOption = useEvent((selection: SearchModalOptionSelection): void => {

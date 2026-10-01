@@ -92,13 +92,19 @@ ENV SKIP_CONFIG_PULL=true
 # busts the vite layer whenever the pulled config changes.
 ARG WEB_ENV_SHA=
 
+# The version check keeps the bundle's version.json equal to the release VERSION:
+# Datadog matches sourcemaps on service + version, so a mismatch could never symbolicate.
 # --skip-sync: Dockerfile.dockerignore strips files the tsconfig-sync generator
 # scans (e.g. **/*.test.ts), so its verification can never be sound in this
 # truncated context. The checked-in tsconfigs are validated by PR CI.
 RUN --mount=type=secret,id=web_env,target=/app/apps/web/.env \
     export VITE_MODE=$([ "$DEPLOYMENT_ENV" = "production" ] && echo production || echo staging) && \
     echo "[web Dockerfile] nx build web -c ecs (mode=$VITE_MODE ASSET_BASE_URL=$ASSET_BASE_URL WEB_ENV_SHA=$WEB_ENV_SHA)" && \
-    NX_DAEMON=false NX_NO_CLOUD=true bun x nx build web -c ecs --skip-sync
+    NX_DAEMON=false NX_NO_CLOUD=true bun x nx build web -c ecs --skip-sync && \
+    if [ -n "$VERSION" ]; then \
+      BUILT=$(bun -e 'console.log(require("./apps/web/build/client/version.json").version)') && \
+      [ "$BUILT" = "$VERSION" ] || { echo "bundle version '$BUILT' != VERSION '$VERSION'"; exit 1; }; \
+    fi
 
 # CI re-builds with `--target sourcemaps --output type=local` (cache hit) to
 # extract .js + .map pairs for the Datadog upload (app_build_and_dispatch).

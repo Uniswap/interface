@@ -27,6 +27,7 @@ import type { CategoryTagPlacement } from 'uniswap/src/features/tokenCategories/
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { tdpChainSelectionFromFilter } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 type RwaCollectionItemProps = {
   item: RwaCollectionOption
@@ -67,6 +68,7 @@ export function RwaCollectionItem({
 }: RwaCollectionItemProps): JSX.Element {
   const { navigateToTokenDetails, getTokenDetailsUrl } = useUniswapContext()
   const dispatch = useDispatch()
+  const trace = useTrace()
   const { chains: enabledChainIds } = useEnabledChains()
   const volumeDetail = useSearchVolumeLabel(searchStats?.volume1dUsd)
 
@@ -168,6 +170,7 @@ export function RwaCollectionItem({
       rowIndex,
       searchFilters,
       rwaSelection: { chainId, address },
+      trace,
     })
   }
 

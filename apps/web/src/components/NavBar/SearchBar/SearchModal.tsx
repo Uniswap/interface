@@ -17,6 +17,7 @@ import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
 import { ElementName, InterfaceEventName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
+import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useDebounce } from 'utilities/src/time/timing'
 import { AuctionHoverCard } from '~/components/HoverCard/AuctionHoverCard/AuctionHoverCard'
@@ -122,21 +123,33 @@ export const SearchModal = memo(function SearchModalInner({
   const debouncedSearchFilter = useDebounce(searchFilter)
   const debouncedParsedSearchFilter = useDebounce(parsedSearchFilter)
 
+  // A ref, not state: the count only matters at exit, and re-rendering the modal per list update would be wasted.
+  const resultsShownRef = useRef(0)
+  const onResultsShownChange = useEvent((count: number): void => {
+    resultsShownRef.current = count
+  })
+
   const trace = useTrace({ section: SectionName.NavbarSearch })
-  const onClose = useCallback(() => {
-    toggleSearchModal()
-    sendAnalyticsEvent(InterfaceEventName.NavbarSearchExited, {
-      navbar_search_input_text: debouncedSearchFilter ?? '',
-      hasInput: Boolean(debouncedSearchFilter),
-      ...trace,
-    })
-  }, [toggleSearchModal, debouncedSearchFilter, trace])
+  const closeSearch = useCallback(
+    (resultSelected: boolean) => {
+      toggleSearchModal()
+      sendAnalyticsEvent(InterfaceEventName.NavbarSearchExited, {
+        navbar_search_input_text: debouncedSearchFilter ?? '',
+        hasInput: Boolean(debouncedSearchFilter),
+        result_selected: resultSelected,
+        results_shown: resultsShownRef.current,
+        ...trace,
+      })
+    },
+    [toggleSearchModal, debouncedSearchFilter, trace],
+  )
+  const onClose = useCallback(() => closeSearch(false), [closeSearch])
 
   const onSelect = useCallback(() => {
     // web handles select differently than wallet as we want to clear search input on selection
     onChangeText('')
-    onClose()
-  }, [onChangeText, onClose])
+    closeSearch(true)
+  }, [onChangeText, closeSearch])
 
   const { chains: enabledChains } = useEnabledChains()
   const isNetworkFilterV2Enabled = useFeatureFlag(FeatureFlags.NetworkFilterV2)
@@ -248,6 +261,7 @@ export const SearchModal = memo(function SearchModalInner({
               renderedInModal={false}
               contentContainerStyle={LIST_CONTENT_CONTAINER_STYLE}
               rowWrapper={rowWrapper}
+              onResultsShownChange={onResultsShownChange}
             />
           ) : (
             <SearchModalNoQueryList
@@ -259,6 +273,7 @@ export const SearchModal = memo(function SearchModalInner({
               renderedInModal
               contentContainerStyle={LIST_CONTENT_CONTAINER_STYLE}
               rowWrapper={rowWrapper}
+              onResultsShownChange={onResultsShownChange}
             />
           )}
         </Flex>

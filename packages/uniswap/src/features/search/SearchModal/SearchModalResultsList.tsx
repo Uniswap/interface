@@ -33,6 +33,7 @@ interface SearchModalResultsListProps {
   renderedInModal: boolean
   contentContainerStyle?: StyleProp<ViewStyle>
   rowWrapper?: SearchModalListProps['rowWrapper']
+  onResultsShownChange?: SearchModalListProps['onResultsShownChange']
 }
 
 function SearchModalResultsListInner({
@@ -49,6 +50,7 @@ function SearchModalResultsListInner({
   renderedInModal,
   contentContainerStyle,
   rowWrapper,
+  onResultsShownChange,
 }: SearchModalResultsListProps): JSX.Element {
   const { t } = useTranslation()
   const isOffline = useIsOffline()
@@ -154,6 +156,7 @@ function SearchModalResultsListInner({
       rowWrapper={rowWrapper}
       rwaIssuerCurrencyInfos={rwaIssuerCurrencyInfos}
       onSelect={onSelect}
+      onResultsShownChange={onResultsShownChange}
     />
   )
 }

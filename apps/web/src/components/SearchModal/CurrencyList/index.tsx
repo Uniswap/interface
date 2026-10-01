@@ -7,6 +7,7 @@ import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
+import { getCurrencyInfoSafetyAnalytics } from 'uniswap/src/features/telemetry/tokenSafetyAnalytics'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -198,7 +199,7 @@ export function CurrencyRow({
       logPress
       logKeyPress
       eventOnTrigger={UniswapEventName.TokenSelected}
-      properties={{ ...eventProperties, token_balance_usd: usdValue }}
+      properties={{ ...eventProperties, ...getCurrencyInfoSafetyAnalytics(currencyInfo), token_balance_usd: usdValue }}
       element={ElementName.TokenSelectorRow}
     >
       {tooltip ? (

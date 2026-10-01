@@ -36,6 +36,7 @@ interface SearchModalNoQueryListProps {
   renderedInModal: boolean
   contentContainerStyle?: StyleProp<ViewStyle>
   rowWrapper?: SearchModalListProps['rowWrapper']
+  onResultsShownChange?: SearchModalListProps['onResultsShownChange']
 }
 
 export const SearchModalNoQueryList = memo(function SearchModalNoQueryListInner({
@@ -47,6 +48,7 @@ export const SearchModalNoQueryList = memo(function SearchModalNoQueryListInner(
   renderedInModal,
   contentContainerStyle,
   rowWrapper,
+  onResultsShownChange,
 }: SearchModalNoQueryListProps): JSX.Element {
   const { t } = useTranslation()
 
@@ -123,6 +125,7 @@ export const SearchModalNoQueryList = memo(function SearchModalNoQueryListInner(
       rowWrapper={rowWrapper}
       rwaIssuerCurrencyInfos={rwaIssuerCurrencyInfos}
       onSelect={onSelect}
+      onResultsShownChange={onResultsShownChange}
     />
   )
 })

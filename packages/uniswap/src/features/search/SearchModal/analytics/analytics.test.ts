@@ -10,6 +10,8 @@ import {
   WalletOption,
 } from 'uniswap/src/components/lists/items/types'
 import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { ProtectionResult } from 'uniswap/src/features/dataApi/safety'
+import type { SafetyInfo } from 'uniswap/src/features/dataApi/types'
 import { sendSearchOptionItemClickedAnalytics } from 'uniswap/src/features/search/SearchModal/analytics/analytics'
 import { SearchFilterContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
@@ -223,6 +225,62 @@ describe('sendSearchOptionItemClickedAnalytics', () => {
       searchChainFilter: null,
       searchTabFilter: SearchTab.Tokens,
     })
+  })
+
+  it('carries the Blockaid verdict, suppressed bucket, and hosting page on a web token pick', () => {
+    mockPlatformState.isMobileApp = false
+
+    const spamToken: TokenOption = {
+      ...MOCK_TOKEN1,
+      currencyInfo: {
+        ...MOCK_TOKEN1.currencyInfo,
+        safetyInfo: { protectionResult: ProtectionResult.Spam } as SafetyInfo,
+        searchMultichainParent: { id: 'spam', tokenCurrencyIds: ['1_0x123'], isSuppressed: true },
+      },
+    }
+    sendSearchOptionItemClickedAnalytics({
+      item: spamToken,
+      section: { sectionKey: OnchainItemSectionName.Tokens, data: [spamToken] },
+      rowIndex: 1,
+      sectionIndex: 0,
+      searchFilters: { query: 'test', searchChainFilter: null, searchTabFilter: SearchTab.All },
+      trace: { page: 'swap-page', modal: 'search-modal' },
+    })
+
+    expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(
+      InterfaceEventName.NavbarResultSelected,
+      expect.objectContaining({
+        blockaid_status: ProtectionResult.Spam,
+        is_suppressed: true,
+        page: 'swap-page',
+        modal: 'search-modal',
+      }),
+    )
+  })
+
+  it('reads a multichain pick’s verdict and bucket off the parent result', () => {
+    mockPlatformState.isMobileApp = false
+
+    const suppressedMultichain: MultichainTokenOption = {
+      ...MOCK_MULTICHAIN_TOKEN,
+      multichainResult: {
+        ...MOCK_MULTICHAIN_TOKEN.multichainResult,
+        safetyInfo: { protectionResult: ProtectionResult.Warning } as SafetyInfo,
+        isSuppressed: true,
+      },
+    }
+    sendSearchOptionItemClickedAnalytics({
+      item: suppressedMultichain,
+      section: { sectionKey: OnchainItemSectionName.Tokens, data: [suppressedMultichain] },
+      rowIndex: 1,
+      sectionIndex: 0,
+      searchFilters: { query: 'usdc', searchChainFilter: null, searchTabFilter: SearchTab.All },
+    })
+
+    expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(
+      InterfaceEventName.NavbarResultSelected,
+      expect.objectContaining({ blockaid_status: ProtectionResult.Warning, is_suppressed: true }),
+    )
   })
 
   it('sends multichain token analytics event on web', () => {

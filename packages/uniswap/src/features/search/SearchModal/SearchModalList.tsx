@@ -2,7 +2,7 @@ import { isHoverable } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { ArrowRight } from '@universe/mycelium/icons/ArrowRight'
 import { TestID } from '@universe/test'
-import { memo, useCallback, useMemo, useState, type ReactNode } from 'react'
+import { memo, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 import type { StyleProp, ViewStyle } from 'react-native'
 import { AuctionOptionItem } from 'uniswap/src/components/lists/items/auctions/AuctionOptionItem'
 import { CategoryOptionItem } from 'uniswap/src/components/lists/items/categories/CategoryOptionItem'
@@ -23,6 +23,7 @@ import type { IssuerToken } from 'uniswap/src/data/apiClients/dataApiService/rwa
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import type { RenderIssuerRowArgs } from 'uniswap/src/features/expandableAsset/types'
+import { countSearchResultRows } from 'uniswap/src/features/search/SearchModal/analytics/countSearchResultRows'
 import { SearchFilterContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
 import { withCategoryHeaderActions } from 'uniswap/src/features/search/SearchModal/categories/withCategoryHeaderActions'
 import { SEARCH_V2_MAX_SYMBOL_CHARACTERS } from 'uniswap/src/features/search/SearchModal/constants'
@@ -63,6 +64,7 @@ export interface SearchModalListProps {
   /** Resolved primary-chain CurrencyInfos keyed by normalized currencyId, used by the RwaCollection rows' context
    *  menu. */
   rwaIssuerCurrencyInfos?: Map<string, CurrencyInfo>
+  onResultsShownChange?: (count: number) => void
 }
 
 export const SearchModalList = memo(function SearchModalListInner({
@@ -79,6 +81,7 @@ export const SearchModalList = memo(function SearchModalListInner({
   contentContainerStyle,
   rowWrapper,
   rwaIssuerCurrencyInfos,
+  onResultsShownChange,
 }: SearchModalListProps): JSX.Element {
   const { chains: enabledChainIds } = useEnabledChains()
   const isSearchV2UIEnabled = useFeatureFlag(FeatureFlags.SearchV2UI)
@@ -91,6 +94,11 @@ export const SearchModalList = memo(function SearchModalListInner({
 
   const [focusedRowIndex, setFocusedRowIndex] = useState<number | undefined>()
   const [expandedItems, setExpandedItems] = useState<string[]>([])
+
+  const resultsShown = useMemo(() => countSearchResultRows(sections), [sections])
+  useEffect(() => {
+    onResultsShownChange?.(resultsShown)
+  }, [onResultsShownChange, resultsShown])
 
   // Auction rows only get a hover card under Search V2 (token rows always do).
   // Not gated on the auction-search flag: that governs whether auction rows are fetched at all.

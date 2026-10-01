@@ -10,6 +10,7 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { SearchContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
 import { ElementName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { getCurrencyInfoSafetyAnalytics } from 'uniswap/src/features/telemetry/tokenSafetyAnalytics'
 import { isChainSupportedForChainedActions } from 'uniswap/src/features/transactions/swap/utils/chainedActions'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
@@ -81,6 +82,7 @@ export function useTokenSelectionHandler({
         query: searchContext.query,
         tokenSection: section.sectionKey,
         preselect_asset: false,
+        ...getCurrencyInfoSafetyAnalytics(currencyInfo),
       })
 
       const oppositeChainId = oppositeToken?.chainId

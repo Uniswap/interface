@@ -12,8 +12,13 @@ import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/componen
 import { SearchContext, SearchFilterContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
 import { InterfaceEventName, MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { NavBarSearchTypes } from 'uniswap/src/features/telemetry/types'
+import {
+  getCurrencyInfoSafetyAnalytics,
+  getTokenSafetyAnalytics,
+} from 'uniswap/src/features/telemetry/tokenSafetyAnalytics'
+import { NavBarSearchTypes, type TokenSafetyAnalyticsProperties } from 'uniswap/src/features/telemetry/types'
 import { logger } from 'utilities/src/logger/logger'
+import type { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 
 export function sendSearchOptionItemClickedAnalytics({
   item,
@@ -22,6 +27,7 @@ export function sendSearchOptionItemClickedAnalytics({
   sectionIndex,
   searchFilters,
   rwaSelection,
+  trace,
 }: {
   item: SearchModalOption
   section: OnchainItemSection<SearchModalListOption>
@@ -30,6 +36,7 @@ export function sendSearchOptionItemClickedAnalytics({
   searchFilters: SearchFilterContext
   /** The tapped issuer's chain + address in an RWA collection; when omitted, the event's chain/address are unset. */
   rwaSelection?: { chainId: UniverseChainId; address: string }
+  trace?: ITraceContext
 }): void {
   const searchContext: SearchContext = {
     ...searchFilters,
@@ -55,23 +62,37 @@ export function sendSearchOptionItemClickedAnalytics({
         return
       }
 
+      const safety = getTokenSafetyAnalytics({
+        safetyInfo: item.multichainResult.safetyInfo,
+        isSuppressed: item.multichainResult.isSuppressed,
+      })
       if (item.multichainResult.tokens.length === 1) {
-        sendTokenAnalyticsEvent({ searchContext, currency: firstCurrency })
+        sendTokenAnalyticsEvent({ searchContext, currency: firstCurrency, safety, trace })
       } else {
-        sendTokenAnalyticsEvent({ searchContext, currency: firstCurrency, multichain: true })
+        sendTokenAnalyticsEvent({ searchContext, currency: firstCurrency, safety, multichain: true, trace })
       }
       return
     }
     case OnchainItemListOptionType.Token: {
       const currency = item.currencyInfo.currency
-      sendTokenAnalyticsEvent({ searchContext, currency })
+      sendTokenAnalyticsEvent({
+        searchContext,
+        currency,
+        safety: getCurrencyInfoSafetyAnalytics(item.currencyInfo),
+        trace,
+      })
       return
     }
     case OnchainItemListOptionType.EarnVault: {
       // Earn row routes to the underlying asset's TDP — report that token.
-      const currency = item.underlyingCurrencyInfo?.currency
-      if (currency) {
-        sendTokenAnalyticsEvent({ searchContext, currency })
+      const { underlyingCurrencyInfo } = item
+      if (underlyingCurrencyInfo) {
+        sendTokenAnalyticsEvent({
+          searchContext,
+          currency: underlyingCurrencyInfo.currency,
+          safety: getCurrencyInfoSafetyAnalytics(underlyingCurrencyInfo),
+          trace,
+        })
       }
       return
     }
@@ -84,11 +105,13 @@ export function sendSearchOptionItemClickedAnalytics({
         chainId: rwaSelection?.chainId,
         address: rwaSelection?.address,
         resultType: 'token',
+        trace,
       })
       return
     }
     case OnchainItemListOptionType.Pool: {
       sendAnalyticsEvent(InterfaceEventName.NavbarResultSelected, {
+        ...trace,
         ...searchContext,
         chainId: item.chainId,
         suggestion_type: searchContext.isHistory
@@ -134,6 +157,7 @@ export function sendSearchOptionItemClickedAnalytics({
     }
     case OnchainItemListOptionType.Auction:
       sendAnalyticsEvent(InterfaceEventName.NavbarResultSelected, {
+        ...trace,
         ...searchContext,
         chainId: item.chainId,
         suggestion_type: searchContext.isHistory
@@ -153,6 +177,7 @@ export function sendSearchOptionItemClickedAnalytics({
         name: item.category.name,
         address: item.category.id,
         resultType: 'collection',
+        trace,
       })
       return
     default:
@@ -165,11 +190,15 @@ export function sendSearchOptionItemClickedAnalytics({
 function sendTokenAnalyticsEvent({
   searchContext,
   currency,
+  safety,
   multichain = false,
+  trace,
 }: {
   searchContext: SearchContext
   currency: Currency
+  safety: TokenSafetyAnalyticsProperties
   multichain?: boolean
+  trace?: ITraceContext
 }): void {
   sendSearchResultClickedAnalytics({
     searchContext,
@@ -177,6 +206,8 @@ function sendTokenAnalyticsEvent({
     chainId: currency.chainId,
     address: currency.isNative ? 'NATIVE' : currency.address,
     resultType: multichain ? 'multichain_token' : 'token',
+    safety,
+    trace,
   })
 }
 
@@ -205,16 +236,21 @@ function sendSearchResultClickedAnalytics({
   chainId,
   address,
   resultType,
+  safety,
+  trace,
 }: {
   searchContext: SearchContext
   name: string
   chainId?: UniverseChainId
   address?: string
   resultType: SearchResultType
+  safety?: TokenSafetyAnalyticsProperties
+  trace?: ITraceContext
 }): void {
   if (isMobileApp) {
     sendAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
       ...searchContext,
+      ...safety,
       name,
       chain: chainId,
       address,
@@ -222,7 +258,9 @@ function sendSearchResultClickedAnalytics({
     })
   } else {
     sendAnalyticsEvent(InterfaceEventName.NavbarResultSelected, {
+      ...trace,
       ...searchContext,
+      ...safety,
       chainId,
       suggestion_type: getWebSuggestionType(searchContext, resultType),
       total_suggestions: searchContext.suggestionCount,

@@ -108,6 +108,7 @@ describe('useSearchModalOptionSelection', () => {
       sectionIndex: 0,
       rowIndex: 1,
       searchFilters: noFilters,
+      trace: {},
     })
     expect(mockContext.navigateToTokenDetails).toHaveBeenCalledWith(tokenCurrencyInfo.currencyId, undefined)
     expect(onSelect).toHaveBeenCalledTimes(1)
