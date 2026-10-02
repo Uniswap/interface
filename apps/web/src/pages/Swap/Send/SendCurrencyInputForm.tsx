@@ -131,7 +131,7 @@ export function SendCurrencyInputForm({
   const { inputInFiat, exactAmountToken, exactAmountFiat, inputCurrency } = sendState
   const chainId = inputCurrency?.chainId
   const supportedChainId = useSupportedChainId(chainId)
-  const { currencyBalance, exactAmountOut, parsedTokenAmount } = derivedSendInfo
+  const { currencyBalance, exactAmountOut, parsedTokenAmount, inputCurrency: resolvedInputCurrency } = derivedSendInfo
   const maxInputAmount = useMaxAmountSpend({
     currencyAmount: currencyBalance,
     txType: TransactionType.Send,
@@ -284,7 +284,7 @@ export function SendCurrencyInputForm({
                   placeholder="0"
                   hasPrefix={inputInFiat}
                   fieldWidth={adjustedWidth}
-                  maxDecimals={inputInFiat ? 6 : inputCurrency?.decimals}
+                  maxDecimals={inputInFiat ? 6 : resolvedInputCurrency?.decimals}
                   numericalFontSize={fontSize}
                   lineHeight={lineHeight}
                   prefixWidth={prefixObserver.width}

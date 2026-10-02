@@ -125,8 +125,18 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
     // oxlint-disable-next-line react-hooks/exhaustive-deps -- only react to currency identity changes, callbacks are stable
   }, [inputCurrency, outputCurrency])
 
-  const { currencyBalances, parsedAmounts, parsedLimitPrice, limitOrderTrade, marketPrice, marketPriceRejected } =
-    derivedLimitInfo
+  const {
+    currencies,
+    currencyBalances,
+    parsedAmounts,
+    parsedLimitPrice,
+    limitOrderTrade,
+    marketPrice,
+    marketPriceRejected,
+  } = derivedLimitInfo
+  // Per-chain currencies for price and amount math; the selector's `inputCurrency`/`outputCurrency` are display-only.
+  const resolvedInputCurrency = currencies[CurrencyField.INPUT]
+  const resolvedOutputCurrency = currencies[CurrencyField.OUTPUT]
   const [showConfirm, setShowConfirm] = useState(false)
   const [limitOrderResult, setLimitOrderResult] = useState<LimitOrderResult>()
   const [limitOrderError, setLimitOrderError] = useState()
@@ -143,19 +153,21 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
   const { currentPriceAdjustment, priceError } = useCurrentPriceAdjustment({
     parsedLimitPrice,
     marketPrice: limitState.limitPriceInverted ? marketPrice?.invert() : marketPrice,
-    baseCurrency: limitState.limitPriceInverted ? outputCurrency : inputCurrency,
-    quoteCurrency: limitState.limitPriceInverted ? inputCurrency : outputCurrency,
+    baseCurrency: limitState.limitPriceInverted ? resolvedOutputCurrency : resolvedInputCurrency,
+    quoteCurrency: limitState.limitPriceInverted ? resolvedInputCurrency : resolvedOutputCurrency,
     limitPriceInverted: limitState.limitPriceInverted,
   })
 
   useEffect(() => {
-    if (limitState.limitPriceEdited || !marketPrice || !inputCurrency || !outputCurrency) {
+    if (limitState.limitPriceEdited || !marketPrice || !resolvedInputCurrency || !resolvedOutputCurrency) {
       return
     }
 
     const amount = limitState.limitPriceInverted
-      ? marketPrice.invert().quote(CurrencyAmount.fromRawAmount(outputCurrency, 10 ** outputCurrency.decimals))
-      : marketPrice.quote(CurrencyAmount.fromRawAmount(inputCurrency, 10 ** inputCurrency.decimals))
+      ? marketPrice
+          .invert()
+          .quote(CurrencyAmount.fromRawAmount(resolvedOutputCurrency, 10 ** resolvedOutputCurrency.decimals))
+      : marketPrice.quote(CurrencyAmount.fromRawAmount(resolvedInputCurrency, 10 ** resolvedInputCurrency.decimals))
 
     // This is being formatted to reduce the number of decimal places.
     // The value will be used for the internal state, so we want to always use `.` as decimal separator.
@@ -172,11 +184,11 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
       limitPrice: normalizedMarketPrice,
     }))
   }, [
-    inputCurrency,
+    resolvedInputCurrency,
     limitState.limitPriceEdited,
     limitState.limitPriceInverted,
     marketPrice,
-    outputCurrency,
+    resolvedOutputCurrency,
     setLimitState,
   ])
 
@@ -437,8 +449,8 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
       )}
       {isLimitSupportedChain &&
         priceError &&
-        inputCurrency &&
-        outputCurrency &&
+        resolvedInputCurrency &&
+        resolvedOutputCurrency &&
         shouldShowLimitPriceError({
           priceError,
           hasLimitOrderTrade: !!limitOrderTrade,
@@ -447,8 +459,8 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
           <LimitPriceError
             priceError={priceError}
             priceAdjustmentPercentage={currentPriceAdjustment}
-            inputCurrency={inputCurrency}
-            outputCurrency={outputCurrency}
+            inputCurrency={resolvedInputCurrency}
+            outputCurrency={resolvedOutputCurrency}
             priceInverted={limitState.limitPriceInverted}
           />
         )}
@@ -503,7 +515,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         <ConfirmLimitOrderModal
           allowance={allowance}
           trade={limitOrderTrade}
-          inputCurrency={inputCurrency}
+          inputCurrency={resolvedInputCurrency}
           clearSwapState={() => {
             setLimitOrderError(undefined)
             setLimitOrderResult(undefined)

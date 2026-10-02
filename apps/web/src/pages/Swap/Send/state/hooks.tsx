@@ -9,6 +9,8 @@ import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/u
 import { useUnitagsUsernameQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsUsernameQuery'
 import { useAddressFromEns, useENSName } from 'uniswap/src/features/ens/api'
 import { GasSpeed } from 'uniswap/src/features/gas/utils'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { isEVMAddressWithChecksum } from 'utilities/src/addresses/evm/evm'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { useCurrency } from '~/hooks/Tokens'
@@ -32,6 +34,8 @@ export enum SendInputError {
 }
 
 export type SendInfo = {
+  /** `SendState.inputCurrency` re-resolved through single-chain GetToken; undefined until it resolves. */
+  inputCurrency?: Currency
   currencyBalance?: CurrencyAmount<Currency>
   parsedTokenAmount?: CurrencyAmount<Currency>
   exactAmountOut?: string
@@ -45,9 +49,14 @@ export type SendInfo = {
 export function useDerivedSendInfo(state: SendState): SendInfo {
   const account = useAccount()
   const { provider } = useWeb3React()
-  const { exactAmountToken, exactAmountFiat, inputInFiat, inputCurrency, recipient, validatedRecipientData } = state
+  const { exactAmountToken, exactAmountFiat, inputInFiat, recipient, validatedRecipientData } = state
   // Send is single-currency — the input currency's chain is authoritative.
-  const chainId = inputCurrency?.chainId
+  const chainId = state.inputCurrency?.chainId
+  // The selector's currency can be built from multichain data, whose `decimals` is the parent token's
+  // rather than this deployment's (BNB USDT is 18, its parent 6). Amounts, balances and the transfer
+  // use the per-chain currency from GetToken, as mobile/extension send do; nothing parses until it resolves.
+  // TODO(CONS-3725): remove once data-api returns per-deployment decimals for multichain tokens.
+  const inputCurrency = useCurrencyInfo(currencyId(state.inputCurrency))?.currency
 
   // If we have validatedRecipientData, skip custom lookups
   // Otherwise, use raw `recipient` input from the user.
@@ -176,6 +185,7 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
 
   return useMemo(
     () => ({
+      inputCurrency,
       currencyBalance: inputCurrencyBalance,
       exactAmountOut,
       parsedTokenAmount,
@@ -189,6 +199,7 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
       exactAmountOut,
       gasFeeCurrencyAmount,
       gasFee,
+      inputCurrency,
       inputCurrencyBalance,
       inputError,
       parsedTokenAmount,

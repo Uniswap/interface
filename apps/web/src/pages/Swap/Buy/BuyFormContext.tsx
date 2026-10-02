@@ -30,7 +30,9 @@ import {
   isInvalidRequestAmountTooLow,
 } from 'uniswap/src/features/fiatOnRamp/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { useDebounce } from 'utilities/src/time/timing'
 import { v4 as uuidv4 } from 'uuid'
 import { useUSDTokenUpdater } from '~/hooks/useUSDTokenUpdater'
@@ -118,16 +120,21 @@ export function useBuyFormContext() {
 function useDerivedBuyFormInfo(state: BuyFormState): BuyInfo {
   const { t } = useTranslation()
   const inputAmount = useDebounce(state.inputAmount)
+  // The FOR token list is built from multichain data, whose `decimals` can be the parent token's rather
+  // than this deployment's. The fiat<->token conversion (which sets the sell amount sent to the provider)
+  // and the balance check use the per-chain currency from GetToken; both are withheld until it resolves.
+  // TODO(CONS-3725): remove once data-api returns per-deployment decimals for multichain tokens.
+  const resolvedQuoteCurrency = useCurrencyInfo(currencyId(state.quoteCurrency?.currencyInfo?.currency))?.currency
   const { formattedAmount: amountOut, loading: amountOutLoading } = useUSDTokenUpdater({
     isFiatInput: state.inputInFiat,
     exactAmount: inputAmount,
-    exactCurrency: state.quoteCurrency?.currencyInfo?.currency,
+    exactCurrency: resolvedQuoteCurrency,
   })
 
   const accountAddress = useActiveAddress(
     state.quoteCurrency?.currencyInfo?.currency.chainId ?? UniverseChainId.Mainnet,
   )
-  const balance = useCurrencyBalance(accountAddress, state.quoteCurrency?.currencyInfo?.currency)
+  const balance = useCurrencyBalance(accountAddress, resolvedQuoteCurrency)
 
   const { meldSupportedFiatCurrency, notAvailableInThisRegion } = useMeldFiatCurrencyInfo(state.selectedCountry)
   const appFiatCurrency = useAppFiatCurrency()

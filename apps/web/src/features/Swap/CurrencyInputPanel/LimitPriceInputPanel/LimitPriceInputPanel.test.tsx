@@ -7,6 +7,7 @@ vi.mock('uniswap/src/features/accounts/store/hooks', () => ({
 import { Price } from '@uniswap/sdk-core'
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { LimitPriceInputPanel } from '~/features/Swap/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceInputPanel'
@@ -49,6 +50,7 @@ const mockLimitContextValue = {
   },
   setLimitState: vi.fn(),
   derivedLimitInfo: {
+    currencies: { [CurrencyField.INPUT]: DAI },
     currencyBalances: {},
     parsedAmounts: {},
   },
@@ -174,6 +176,7 @@ describe('LimitPriceInputPanel', () => {
               ...mockLimitContextValue,
               derivedLimitInfo: {
                 ...mockLimitContextValue.derivedLimitInfo,
+                currencies: { [CurrencyField.INPUT]: DAI, [CurrencyField.OUTPUT]: USDC_MAINNET },
                 // 1 DAI = 1 USDC
                 marketPrice: new Price(DAI, USDC_MAINNET, '1000000000000000000', '1000000'),
               },

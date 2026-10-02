@@ -15,6 +15,7 @@ const mockLimitContextValue = {
   },
   setLimitState: vi.fn(),
   derivedLimitInfo: {
+    currencies: {},
     currencyBalances: {},
     parsedAmounts: {},
   },

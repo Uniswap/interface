@@ -5,6 +5,8 @@ import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { LimitOrderTrade, SwapFeeInfo } from '~/state/routing/types'
 
 export type LimitInfo = {
+  /** The selector's currencies re-resolved through single-chain GetToken; a leg is undefined until it resolves. */
+  currencies: { [field in CurrencyField]?: Currency }
   currencyBalances: { [field in CurrencyField]?: CurrencyAmount<Currency> }
   parsedAmounts: { [field in CurrencyField]?: CurrencyAmount<Currency> }
   parsedLimitPrice?: Price<Currency, Currency>

@@ -46,6 +46,8 @@ export function normalizeBackendNativeAddress({ chainId, address }: { chainId: n
  * v2 MultichainToken has a single top-level `decimals` shared by every deployment, which is wrong
  * for tokens whose decimals differ by chain (USDT is 6 on Ethereum but 18 on BNB). A token the app
  * already knows for this chain+address wins over the parent value.
+ *
+ * TODO(CONS-3725): remove once data-api returns per-deployment decimals for multichain tokens.
  */
 export function getMultichainDeploymentDecimals({
   chainId,

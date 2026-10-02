@@ -130,6 +130,8 @@ export function SelectTokensStep({
   const isToken1Unsupported = isUnsupportedLPChain(token1?.chainId, protocolVersion)
   const unsupportedChainId = isToken0Unsupported ? token0?.chainId : isToken1Unsupported ? token1?.chainId : undefined
   const isUnsupportedTokenSelected = isToken0Unsupported || isToken1Unsupported
+  // A selected leg is absent from `currencies` until its per-chain currency resolves.
+  const isResolvingCurrencies = Boolean(token0 && token1) && !(currencies.display.TOKEN0 && currencies.display.TOKEN1)
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
@@ -642,7 +644,10 @@ export function SelectTokensStep({
               onPress={handleOnContinue}
               loading={Boolean(poolOrPairLoading && token0 && token1 && fee)}
               disabled={
-                !(creatingPoolOrPair || poolOrPair) || hasError || (showWrappedNativeWarning && !!wrappedNativeWarning)
+                !(creatingPoolOrPair || poolOrPair) ||
+                isResolvingCurrencies ||
+                hasError ||
+                (showWrappedNativeWarning && !!wrappedNativeWarning)
               }
             >
               {t('common.button.continue')}

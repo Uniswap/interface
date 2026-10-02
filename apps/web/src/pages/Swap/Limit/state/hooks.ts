@@ -6,11 +6,13 @@ import { useEffect, useMemo, useState } from 'react'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { LIMIT_SUPPORTED_CHAINS } from 'uniswap/src/features/chains/chainInfo'
 import { getStablecoinsForChain, isUniverseChainId } from 'uniswap/src/features/chains/utils'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { useTrade } from 'uniswap/src/features/transactions/swap/hooks/useTrade'
 import { SwapFee, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { useSwapAndLimitContext } from '~/features/Swap/state/useSwapContext'
 import { useAccount } from '~/hooks/useAccount'
 import { useCurrencyBalances } from '~/lib/hooks/useCurrencyBalance'
@@ -45,9 +47,17 @@ export function getDefaultPriceInverted(inputCurrency?: Currency, outputCurrency
 export function useDerivedLimitInfo(state: LimitState): LimitInfo {
   const account = useAccount()
   const { inputAmount, outputAmount, limitPriceInverted } = state
-  const {
-    currencyState: { inputCurrency, outputCurrency },
-  } = useSwapAndLimitContext()
+  const { currencyState } = useSwapAndLimitContext()
+  // The selector's currencies can be built from multichain data, whose `decimals` is the parent token's
+  // rather than this deployment's. Every amount, price and the order itself use the per-chain currency
+  // from GetToken; a leg stays undefined (so nothing parses or quotes on it) until it resolves.
+  // TODO(CONS-3725): remove once data-api returns per-deployment decimals for multichain tokens.
+  const inputCurrency = useCurrencyInfo(currencyId(currencyState.inputCurrency))?.currency
+  const outputCurrency = useCurrencyInfo(currencyId(currencyState.outputCurrency))?.currency
+  const currencies = useMemo(
+    () => ({ [CurrencyField.INPUT]: inputCurrency, [CurrencyField.OUTPUT]: outputCurrency }),
+    [inputCurrency, outputCurrency],
+  )
 
   const relevantTokenBalances = useCurrencyBalances(
     account.address,
@@ -148,6 +158,7 @@ export function useDerivedLimitInfo(state: LimitState): LimitInfo {
   })
 
   return {
+    currencies,
     currencyBalances,
     parsedAmounts,
     parsedLimitPrice,

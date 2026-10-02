@@ -1,7 +1,11 @@
 import { renderHook } from '@testing-library/react'
+import { Token } from '@uniswap/sdk-core'
+import { UniverseChainId } from '@universe/chains'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { useUnitagsUsernameQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsUsernameQuery'
+import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useAddressFromEns, useENSName } from 'uniswap/src/features/ens/api'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import type { Mock } from 'vitest'
 import { getAddress } from '~/chains'
 import { useDerivedSendInfo } from '~/pages/Swap/Send/state/hooks'
@@ -39,10 +43,15 @@ vi.mock('~/hooks/useUSDTokenUpdater', () => ({
 vi.mock('~/lib/hooks/useCurrencyBalance', () => ({
   useCurrencyBalances: () => [undefined, undefined],
 }))
-const useCreateTransferTransactionMock = vi.fn((_transferInfo?: { chainId?: number }) => undefined)
+type TransferInfoArg = { chainId?: number; currencyAmount?: { quotient: { toString(): string } } }
+const useCreateTransferTransactionMock = vi.fn((_transferInfo?: TransferInfoArg) => undefined)
 vi.mock('~/utils/transfer', () => ({
-  useCreateTransferTransaction: (transferInfo?: { chainId?: number }) => useCreateTransferTransactionMock(transferInfo),
+  useCreateTransferTransaction: (transferInfo?: TransferInfoArg) => useCreateTransferTransactionMock(transferInfo),
 }))
+vi.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({
+  useCurrencyInfo: vi.fn(),
+}))
+const mockedUseCurrencyInfo = vi.mocked(useCurrencyInfo)
 vi.mock('uniswap/src/features/ens/api', () => ({
   useENSName: vi.fn(),
   useAddressFromEns: vi.fn(),
@@ -290,5 +299,50 @@ describe('useDerivedSendInfo', () => {
     expect(useCreateTransferTransactionMock).toHaveBeenCalled()
     const transferInfo = useCreateTransferTransactionMock.mock.calls.at(-1)?.[0]
     expect(transferInfo).toMatchObject({ chainId: 480 })
+  })
+
+  describe('currency resolution', () => {
+    const BNB_USDT_ADDRESS = '0x55d398326f99059fF775485246999027B3197955'
+    // What the token selector hands over for BNB USDT when it is built from a v2 multichain token: the
+    // parent's 6 decimals applied to the BNB deployment. Single-chain GetToken returns the real 18.
+    const MULTICHAIN_BNB_USDT = new Token(UniverseChainId.Bnb, BNB_USDT_ADDRESS, 6, 'USDT', 'Tether USD')
+    const GET_TOKEN_BNB_USDT = new Token(UniverseChainId.Bnb, BNB_USDT_ADDRESS, 18, 'USDT', 'Tether USD')
+
+    const sendState: SendState = {
+      ...defaultSendState,
+      exactAmountToken: '1',
+      inputCurrency: MULTICHAIN_BNB_USDT,
+    }
+
+    beforeEach(() => {
+      mockedUseCurrencyInfo.mockReset()
+    })
+
+    it('parses the amount with the per-chain decimals, not the decimals the selector handed over', () => {
+      mockedUseCurrencyInfo.mockReturnValue({ currency: GET_TOKEN_BNB_USDT } as CurrencyInfo)
+
+      const { result } = renderHook(() => useDerivedSendInfo(sendState))
+
+      expect(mockedUseCurrencyInfo).toHaveBeenCalledWith(`56-${BNB_USDT_ADDRESS}`)
+      expect(result.current.inputCurrency?.decimals).toBe(18)
+      // 1 USDT on BNB is 1e18 raw units. The selector's 6 decimals would have sent 1e6, i.e. 1e-12 USDT.
+      expect(result.current.parsedTokenAmount?.quotient.toString()).toBe('1000000000000000000')
+      expect(result.current.parsedTokenAmount?.currency.decimals).toBe(18)
+      const transferInfo = useCreateTransferTransactionMock.mock.calls.at(-1)?.[0]
+      expect(transferInfo?.chainId).toBe(56)
+      expect(transferInfo?.currencyAmount?.quotient.toString()).toBe('1000000000000000000')
+    })
+
+    it('withholds the amount and the transfer while the per-chain currency is still resolving', () => {
+      mockedUseCurrencyInfo.mockReturnValue(undefined)
+
+      const { result } = renderHook(() => useDerivedSendInfo(sendState))
+
+      expect(result.current.inputCurrency).toBeUndefined()
+      expect(result.current.parsedTokenAmount).toBeUndefined()
+      const transferInfo = useCreateTransferTransactionMock.mock.calls.at(-1)?.[0]
+      expect(transferInfo?.chainId).toBe(56)
+      expect(transferInfo?.currencyAmount).toBeUndefined()
+    })
   })
 })
