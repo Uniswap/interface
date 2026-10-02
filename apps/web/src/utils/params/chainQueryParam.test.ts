@@ -19,6 +19,14 @@ describe('getChainFilterFromSearchParams', () => {
     })
   })
 
+  it('returns parsed chain for a numeric chain ID', () => {
+    const params = new URLSearchParams(`${CHAIN_SEARCH_PARAM}=${UniverseChainId.Base}`)
+    expect(getChainFilterFromSearchParams(params)).toEqual({
+      chainUrlParam: String(UniverseChainId.Base),
+      chainId: UniverseChainId.Base,
+    })
+  })
+
   it('returns empty when param missing', () => {
     expect(getChainFilterFromSearchParams(new URLSearchParams())).toEqual({})
   })
@@ -60,6 +68,11 @@ describe('getTDPChainSearchParam', () => {
 
   it('returns parsed chain when a valid chain slug is present', () => {
     const params = new URLSearchParams(`${CHAIN_SEARCH_PARAM}=base`)
+    expect(getTDPChainSearchParam(params)).toEqual({ type: 'chain', chainId: UniverseChainId.Base })
+  })
+
+  it('returns parsed chain when a numeric chain ID is present', () => {
+    const params = new URLSearchParams(`${CHAIN_SEARCH_PARAM}=${UniverseChainId.Base}`)
     expect(getTDPChainSearchParam(params)).toEqual({ type: 'chain', chainId: UniverseChainId.Base })
   })
 
