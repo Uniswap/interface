@@ -313,6 +313,20 @@ describe('top auctions table sorting', () => {
       expect(sorted.map((auction) => auction.id)).toEqual(['high-fdv-raw', 'mid-fdv-raw', 'low-fdv-raw', 'no-fdv-data'])
     })
 
+    it('supports zero-decimal bid tokens when falling back to bid-token FDV', () => {
+      const lowFdvRaw = createAuctionTableValue({ id: 'low-fdv-raw', fdvRaw: 1n, currencyTokenDecimals: 0 })
+      const highFdvRaw = createAuctionTableValue({ id: 'high-fdv-raw', fdvRaw: 5n, currencyTokenDecimals: 0 })
+      const midFdvRaw = createAuctionTableValue({ id: 'mid-fdv-raw', fdvRaw: 3n, currencyTokenDecimals: 0 })
+
+      const sorted = sortAuctions({
+        auctions: [lowFdvRaw, highFdvRaw, midFdvRaw],
+        sortMethod: AuctionSortField.FDV,
+        sortAscending: false,
+      })
+
+      expect(sorted.map((auction) => auction.id)).toEqual(['high-fdv-raw', 'mid-fdv-raw', 'low-fdv-raw'])
+    })
+
     it('reverses order when ascending', () => {
       const sorted = sortAuctions({
         auctions: [midFdvUsd, lowFdvUsd, highFdvUsd],

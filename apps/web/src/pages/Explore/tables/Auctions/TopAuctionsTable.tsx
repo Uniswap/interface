@@ -69,7 +69,7 @@ export interface SortableTopAuctionTableValue {
 /** FDV in bid-token units; `raw` 0n means "no data" (see computeProjectedFdvTableValue fallback). */
 function getFdvBidTokenValue({ auction, projectedFdv }: SortableTopAuctionTableValue): number | undefined {
   const decimals = auction.auction?.currencyTokenDecimals
-  if (projectedFdv.raw === 0n || !decimals) {
+  if (projectedFdv.raw === 0n || decimals === undefined) {
     return undefined
   }
   return approximateNumberFromRaw({ raw: projectedFdv.raw, decimals })
