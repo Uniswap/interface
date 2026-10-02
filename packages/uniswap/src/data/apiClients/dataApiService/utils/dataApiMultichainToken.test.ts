@@ -72,6 +72,35 @@ describe('dataApiMultichainTokenToSearchResult', () => {
     expect(result?.tokens[0]?.currency.isNative).toBe(true)
   })
 
+  // Expected decimals are literals on purpose: deriving them from the app's token constants would
+  // make the assertion pass whatever the converter does.
+  it('should use the known per-chain decimals instead of the parent decimals for BNB USDT', () => {
+    const token = createRankedMultichainToken({
+      symbol: 'USDT',
+      decimals: 6,
+      addresses: {
+        [String(UniverseChainId.Mainnet)]: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+        [String(UniverseChainId.Bnb)]: '0x55d398326f99059fF775485246999027B3197955',
+      },
+    })
+
+    const result = dataApiMultichainTokenToSearchResult(token)
+    const decimalsByChain = Object.fromEntries(
+      (result?.tokens ?? []).map((t) => [t.currency.chainId, t.currency.decimals]),
+    )
+
+    expect(decimalsByChain).toEqual({ [UniverseChainId.Mainnet]: 6, [UniverseChainId.Bnb]: 18 })
+  })
+
+  it('should keep the parent decimals for a deployment the app has no known token for', () => {
+    const token = createRankedMultichainToken({
+      decimals: 9,
+      addresses: { [String(UniverseChainId.Bnb)]: '0x1111111111111111111111111111111111111111' },
+    })
+
+    expect(dataApiMultichainTokenToSearchResult(token)?.tokens[0]?.currency.decimals).toBe(9)
+  })
+
   it('should populate parent-level safetyInfo from v2 TokenSafety', () => {
     const token = createRankedMultichainToken({ isVerified: true })
 

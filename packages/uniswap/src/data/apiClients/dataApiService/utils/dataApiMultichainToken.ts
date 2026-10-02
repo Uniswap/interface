@@ -7,6 +7,7 @@ import type {
 import { SpamCode } from '@universe/api'
 import { chainIdToPlatform } from '@universe/chains'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
+import { getCommonBase } from 'uniswap/src/constants/routing'
 import {
   CurrencyInfo,
   MultichainSearchResult,
@@ -41,6 +42,23 @@ export function normalizeBackendNativeAddress({ chainId, address }: { chainId: n
   return address
 }
 
+/**
+ * v2 MultichainToken has a single top-level `decimals` shared by every deployment, which is wrong
+ * for tokens whose decimals differ by chain (USDT is 6 on Ethereum but 18 on BNB). A token the app
+ * already knows for this chain+address wins over the parent value.
+ */
+export function getMultichainDeploymentDecimals({
+  chainId,
+  address,
+  parentDecimals,
+}: {
+  chainId: number
+  address: string
+  parentDecimals: number
+}): number {
+  return getCommonBase(chainId, address)?.currency.decimals ?? parentDecimals
+}
+
 type ParentSafetyInfo = {
   safetyInfo: SafetyInfo
   isSpam: boolean
@@ -59,7 +77,7 @@ function deriveParentSafetyInfo(safety: MultichainToken['safety'], fees: Multich
 /**
  * Converts one chain deployment (from a v2 MultichainToken's `addresses` map) into a
  * CurrencyInfo. Unlike v1's `chainTokens: ChainToken[]`, v2 has no per-chain decimals/isBridged
- * — every deployment shares the parent's single top-level `decimals`.
+ * — see {@link getMultichainDeploymentDecimals}.
  */
 function dataApiChainAddressToCurrencyInfo({
   chainId,
@@ -72,10 +90,11 @@ function dataApiChainAddressToCurrencyInfo({
   parent: MultichainToken
   parentSafetyInfo: ParentSafetyInfo
 }): CurrencyInfo | null {
+  const normalizedAddress = normalizeBackendNativeAddress({ chainId, address })
   const currency = buildCurrency({
     chainId,
-    address: normalizeBackendNativeAddress({ chainId, address }),
-    decimals: parent.decimals,
+    address: normalizedAddress,
+    decimals: getMultichainDeploymentDecimals({ chainId, address: normalizedAddress, parentDecimals: parent.decimals }),
     symbol: parent.symbol,
     name: parent.name,
     buyFeeBps: fractionToBpsString(parent.fees?.buyFee),

@@ -1,6 +1,10 @@
 import { type PlainMessage } from '@bufbuild/protobuf'
 import { type MultichainToken, type Token } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { type UniverseChainId } from '@universe/chains'
+import {
+  getMultichainDeploymentDecimals,
+  normalizeBackendNativeAddress,
+} from 'uniswap/src/data/apiClients/dataApiService/utils/dataApiMultichainToken'
 
 /**
  * Derives the single-chain `Token` view of a `MultichainToken` for one of its deployments. Checks
@@ -23,7 +27,11 @@ export function deriveTokenFromMultichainToken({
     chainId,
     address,
     symbol: multichainToken.symbol,
-    decimals: multichainToken.decimals,
+    decimals: getMultichainDeploymentDecimals({
+      chainId,
+      address: normalizeBackendNativeAddress({ chainId, address }),
+      parentDecimals: multichainToken.decimals,
+    }),
     name: multichainToken.name,
     type: multichainToken.type,
     price: multichainToken.price,
