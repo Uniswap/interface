@@ -25,4 +25,4 @@ force_upgrade: {
 
 ## UI
 
-[ForceUpgradeModal](https://github.com/Uniswap/universe/blob/main/apps/mobile/src/components/forceUpgrade/ForceUpgradeModal.tsx)
+[ForceUpgradeModal](https://github.com/Uniswap/interface/blob/main/apps/mobile/src/components/forceUpgrade/ForceUpgradeModal.tsx)
