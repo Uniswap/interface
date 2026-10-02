@@ -1,6 +1,5 @@
 /* oxlint-disable max-lines */
 import { datadogRum } from '@datadog/browser-rum'
-import type { TransactionResponse } from '@ethersproject/abstract-provider'
 import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { TradeType } from '@uniswap/sdk-core'
 import { FetchError, TradingApi } from '@universe/api'
@@ -164,7 +163,6 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
   // Trigger UI prompting user to accept
   setCurrentStep({ step, accepted: false })
 
-  let transaction: InterfaceTransactionDetails
   const createTransaction = (hash: string): InterfaceTransactionDetails => ({
     id: hash,
     from: address,
@@ -196,29 +194,21 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
     defaultValue: defaultBlockedAsyncSubmissionChainIds,
   })
 
-  // Prompt wallet to submit transaction
-  // If should wait for confirmation, we block until the transaction is confirmed
-  // Otherwise, we submit the transaction and return the hash immediately and spawn a detection task to check for modifications
-  if (blockedAsyncSubmissionChainIds.includes(chainId) || shouldWaitForConfirmation) {
-    const { hash, data, nonce } = yield* call(submitTransaction, params)
-    transaction = createTransaction(hash)
+  // Prompt wallet to submit transaction. The signer path blocks on the modification check so
+  // onModification can abort the flow (e.g. ApprovalEditedInWalletError); the async path checks in the background.
+  const useSignerSubmission = blockedAsyncSubmissionChainIds.includes(chainId) || shouldWaitForConfirmation
+  const hash = yield* call(useSignerSubmission ? submitTransaction : submitTransactionAsync, params)
+  const transaction = createTransaction(hash)
 
-    // For plans, individual tx state and validation is handled by the backend
-    if (!planId) {
-      yield* put(addTransaction(transaction))
-      if (step.txRequest.data !== data && onModification) {
-        yield* call(onModification, { hash, data, nonce })
-      }
-    }
-  } else {
-    const hash = yield* call(submitTransactionAsync, params)
-    transaction = createTransaction(hash)
-
-    // For plans, individual tx state and validation is handled by the backend
-    if (!planId) {
-      yield* put(addTransaction(transaction))
-      if (onModification) {
-        yield* spawn(handleOnModificationAsync, { onModification, hash, step })
+  // For plans, individual tx state and validation is handled by the backend
+  if (!planId) {
+    yield* put(addTransaction(transaction))
+    if (onModification) {
+      const modificationCheck = { onModification, hash, step }
+      if (useSignerSubmission) {
+        yield* call(checkForModification, modificationCheck)
+      } else {
+        yield* spawn(checkForModification, modificationCheck)
       }
     }
   }
@@ -263,7 +253,8 @@ function* handleOnChainConfirmation(params: HandleOnChainStepParams, hash: strin
   return hash
 }
 
-function* handleOnModificationAsync({
+/** Calls onModification if the submitted tx differs from the request. Skips the check if the tx can't be found. */
+function* checkForModification({
   onModification,
   hash,
   step,
@@ -272,23 +263,41 @@ function* handleOnModificationAsync({
   hash: HexString
   step: OnChainTransactionStep
 }) {
-  const { data, nonce } = yield* call(recoverTransactionFromHash, hash, step)
+  const transaction = yield* call(pollForTransaction, hash, step.txRequest.chainId)
+  if (!transaction) {
+    logger.warn('sagas/transactions/utils', 'checkForModification', 'Submitted transaction not found', {
+      hash,
+      chainId: step.txRequest.chainId,
+    })
+    return
+  }
+
+  const { data, nonce } = transformTransaction(transaction)
   if (step.txRequest.data !== data) {
     yield* call(onModification, { hash, data, nonce })
   }
 }
 
-/** Submits a transaction and handles potential wallet errors */
-function* submitTransaction(params: HandleOnChainStepParams): SagaGenerator<VitalTxFields> {
+/**
+ * Submits through the ethers signer, which fills fields like gasLimit when missing.
+ * `sendUncheckedTransaction` skips ethers' pre-send block read, which some connectors fetch outside UniRPC.
+ */
+function* submitTransaction(params: HandleOnChainStepParams): SagaGenerator<HexString> {
   const { address, step } = params
   const signer = yield* call(getSigner, address)
 
   try {
-    const response = yield* call([signer, 'sendTransaction'], step.txRequest)
-    return transformTransactionResponse(response)
+    const hash = yield* call([signer, 'sendUncheckedTransaction'], step.txRequest)
+
+    if (!isValidHexString(hash)) {
+      throw new TransactionStepFailedError({ message: `Transaction failed, not a valid hex string: ${hash}`, step })
+    }
+
+    return hash
   } catch (error) {
     if (error && typeof error === 'object' && 'transactionHash' in error && isValidHexString(error.transactionHash)) {
-      return yield* recoverTransactionFromHash(error.transactionHash, step)
+      // oxlint-disable-next-line typescript/no-unsafe-return -- biome-parity: oxlint is stricter here
+      return error.transactionHash
     }
     throw error
   }
@@ -321,17 +330,6 @@ function* submitTransactionAsync(params: HandleOnChainStepParams): SagaGenerator
   }
 }
 
-/** Polls for transaction details when only hash is known */
-function* recoverTransactionFromHash(hash: HexString, step: OnChainTransactionStep): SagaGenerator<VitalTxFields> {
-  const transaction = yield* pollForTransaction(hash, step.txRequest.chainId)
-
-  if (!transaction) {
-    throw new TransactionStepFailedError({ message: `Transaction not found`, step })
-  }
-
-  return transformTransactionResponse(transaction)
-}
-
 /** Polls until transaction is found or timeout is reached */
 function* pollForTransaction(hash: HexString, chainId: number) {
   const POLL_INTERVAL = 2_000
@@ -349,12 +347,8 @@ function* pollForTransaction(hash: HexString, chainId: number) {
   return null
 }
 
-/** Transforms a TransactionResponse or a Transaction into { hash: string; data: string; nonce: number } */
-function transformTransactionResponse(response: TransactionResponse | Transaction): VitalTxFields {
-  if ('data' in response) {
-    return { hash: response.hash, data: response.data, nonce: response.nonce }
-  }
-  return { hash: response.hash, data: response.input, nonce: response.nonce }
+function transformTransaction(transaction: Transaction): VitalTxFields {
+  return { hash: transaction.hash, data: transaction.input, nonce: transaction.nonce }
 }
 
 export function* handlePermitTransactionStep(params: HandleOnChainPermit2TransactionStep) {

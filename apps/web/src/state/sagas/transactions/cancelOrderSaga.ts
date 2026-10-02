@@ -99,22 +99,20 @@ export async function handleCancelOrder(payload: CancelOrderPayload): Promise<vo
       id,
     })
 
-    const response = await signer.sendTransaction(cancelRequest)
+    const hash = await signer.sendUncheckedTransaction(cancelRequest)
 
     logger.debug('cancelOrderSaga', 'handleCancelOrder', 'Cancellation transaction submitted', {
       chainId,
       id,
-      hash: response.hash,
+      hash,
     })
 
     // Persist the broadcast: cancelTxHash + the T1 deadline (CAS — no-ops if the order left Cancelling)
-    store.dispatch(
-      orderCancelBroadcasted({ address, chainId, id, cancelTxHash: response.hash, broadcastTimeMs: Date.now() }),
-    )
+    store.dispatch(orderCancelBroadcasted({ address, chainId, id, cancelTxHash: hash, broadcastTimeMs: Date.now() }))
 
     if (getFeatureFlag(FeatureFlags.LimitCancelTimeout)) {
       if (order?.orderHash) {
-        registerTrackedCancelTx({ payload, hash: response.hash, orderHash: order.orderHash })
+        registerTrackedCancelTx({ payload, hash, orderHash: order.orderHash })
         sendAnalyticsEvent(InterfaceEventName.LimitCancelBroadcast, {
           order_hash: order.orderHash,
           chain_id: chainId,

@@ -74,8 +74,10 @@ export function TokenDetailsVaultShareBanner({
               t('tdp.vaultShareBanner.positionTitle')
             ) : (
               <Trans
+                shouldUnescape
                 i18nKey="tdp.vaultShareBanner.title"
                 values={{ apy: formattedApy, symbol }}
+                tOptions={{ interpolation: { escapeValue: true } }}
                 components={{
                   highlight: <Text tag="span" variant={titleVariant} color="$accent1" />,
                 }}

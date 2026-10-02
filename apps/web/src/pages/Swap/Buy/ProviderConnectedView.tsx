@@ -37,10 +37,12 @@ export function ProviderConnectedView({ closeModal, selectedServiceProvider }: P
         </Flex>
         <Text variant="body4" textAlign="center" color="$neutral3">
           <Trans
+            shouldUnescape
             i18nKey="fiatOnRamp.disclaimer"
             values={{
               serviceProvider: selectedServiceProvider.name,
             }}
+            tOptions={{ interpolation: { escapeValue: true } }}
             components={{
               tosLink: (
                 <TouchableTextLink

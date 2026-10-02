@@ -6,10 +6,12 @@ import { TransactionStepType } from 'uniswap/src/features/transactions/steps/typ
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 const mockSendTransaction = vi.fn()
+const mockSendUncheckedTransaction = vi.fn()
+const mockGetTransaction = vi.fn()
 
 vi.mock('wagmi/actions', () => ({
   getConnectorClient: vi.fn().mockResolvedValue({}),
-  getTransaction: vi.fn(),
+  getTransaction: (...args: unknown[]) => mockGetTransaction(...args),
 }))
 
 vi.mock('~/connection/wagmiConfig', () => ({
@@ -20,6 +22,7 @@ vi.mock('~/hooks/useEthersProvider', () => ({
   clientToProvider: vi.fn().mockReturnValue({
     getSigner: vi.fn().mockResolvedValue({
       sendTransaction: (...args: unknown[]) => mockSendTransaction(...args),
+      sendUncheckedTransaction: (...args: unknown[]) => mockSendUncheckedTransaction(...args),
     }),
   }),
 }))
@@ -100,12 +103,9 @@ describe('handleOnChainStep', () => {
     const gating = await import('@universe/gating')
     vi.mocked(gating.getDynamicConfigValue).mockReturnValue([chainId])
 
+    mockSendUncheckedTransaction.mockResolvedValue(hash)
     // Return modified data to trigger onModification path
-    mockSendTransaction.mockResolvedValue({
-      hash,
-      data: '0xmodified',
-      nonce: 1,
-    })
+    mockGetTransaction.mockResolvedValue({ hash, input: '0xmodified', nonce: 1 })
   })
 
   it('does not dispatch addTransaction or call onModification when planId is set', async () => {
@@ -146,6 +146,48 @@ describe('handleOnChainStep', () => {
 
     const addTxActions = dispatched.filter((a: unknown) => (a as { type: string }).type === addTransaction.type)
     expect(addTxActions).toHaveLength(1)
-    expect(onModification).toHaveBeenCalled()
+    expect(onModification).toHaveBeenCalledWith({ hash, data: '0xmodified', nonce: 1 })
+  })
+
+  it('aborts the flow when onModification throws on the signer path', async () => {
+    const editedError = new Error('approval edited in wallet')
+    const onModification = vi.fn(() => {
+      throw editedError
+    })
+
+    await expect(
+      runSaga(
+        { dispatch: vi.fn(), getState: () => ({ transactions: {} }), onError: vi.fn() },
+        handleOnChainStep,
+        createParams({ onModification }),
+      ).toPromise(),
+    ).rejects.toBe(editedError)
+  })
+
+  it('skips the modification check when the submitted tx cannot be found', async () => {
+    mockGetTransaction.mockResolvedValue(null)
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+    const onModification = vi.fn()
+
+    const result = await runSaga(
+      { dispatch: vi.fn(), getState: () => ({ transactions: {} }) },
+      handleOnChainStep,
+      createParams({ onModification }),
+    ).toPromise()
+
+    expect(result).toBe(hash)
+    expect(onModification).not.toHaveBeenCalled()
+    expect(warnSpy).toHaveBeenCalled()
+  })
+
+  it('submits without ethers sendTransaction, which reads the block number through the wallet provider', async () => {
+    await runSaga(
+      { dispatch: vi.fn(), getState: () => ({ transactions: {} }) },
+      handleOnChainStep,
+      createParams(),
+    ).toPromise()
+
+    expect(mockSendUncheckedTransaction).toHaveBeenCalledWith(step.txRequest)
+    expect(mockSendTransaction).not.toHaveBeenCalled()
   })
 })

@@ -173,15 +173,15 @@ async function handleRevertCancellation({
     }
 
     const signer = await getSigner(order.from)
-    const response = await signer.sendTransaction(cancelRequest)
+    const hash = await signer.sendUncheckedTransaction(cancelRequest)
 
     // 5. CAS record-swap on successful broadcast ONLY: refuses if the order left the timed-out
     //    state mid-prompt; the old hash moves to supersededCancelTxHashes and stays watched.
-    store.dispatch(revertCancelSwap({ ...orderId, newCancelTxHash: response.hash, broadcastTimeMs: Date.now() }))
+    store.dispatch(revertCancelSwap({ ...orderId, newCancelTxHash: hash, broadcastTimeMs: Date.now() }))
 
     const trackedCancelTx: InterfaceTransactionDetails = {
-      id: response.hash,
-      hash: response.hash,
+      id: hash,
+      hash,
       chainId: order.chainId,
       from: order.from,
       routing: TradingApi.Routing.CLASSIC,

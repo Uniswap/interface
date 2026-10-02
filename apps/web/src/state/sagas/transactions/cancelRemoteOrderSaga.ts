@@ -26,11 +26,11 @@ export async function handleCancelRemoteOrder(payload: CancelRemoteUniswapXOrder
 
   try {
     const signer = await getSigner(address)
-    const response = await signer.sendTransaction(cancelRequest)
+    const hash = await signer.sendUncheckedTransaction(cancelRequest)
     logger.debug('cancelRemoteOrderSaga', 'handleCancelRemoteOrder', 'Remote order cancellation submitted', {
       chainId,
       orderHash,
-      hash: response.hash,
+      hash,
     })
   } catch (error) {
     if (didUserReject(error)) {

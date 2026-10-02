@@ -79,8 +79,10 @@ export function TokenDetailsEarnBanner({
         <Flex flex={1} minWidth={0} gap="$spacing2" pr="$spacing24" {...(responsive ? { $sm: { pr: '$none' } } : {})}>
           <Text variant={titleVariant} color="$neutral1">
             <Trans
+              shouldUnescape
               i18nKey="tdp.earnBanner.title"
               values={{ apy: formattedApy, symbol: tokenSymbol }}
+              tOptions={{ interpolation: { escapeValue: true } }}
               components={{
                 highlight: <Text tag="span" variant={titleVariant} color="$accent1" />,
               }}

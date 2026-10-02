@@ -177,8 +177,10 @@ export function ExportStep({
       <Flex alignItems="center" px="$spacing40">
         <Text variant="body3" textAlign="center">
           <Trans
+            shouldUnescape
             i18nKey="extensionPasskeyLogInPopUp.importDescription"
             values={{ displayName }}
+            tOptions={{ interpolation: { escapeValue: true } }}
             components={{ accent: <Text variant="body3" color="$accent1" tag="span" /> }}
           />
         </Text>

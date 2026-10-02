@@ -451,12 +451,14 @@ export function BidReviewModal({
                 {!isQuickLaunch && maxFdvPreciseFormatted && maxFdvFiatFormatted ? (
                   <Text variant="body4" color="$neutral2">
                     <Trans
+                      shouldUnescape
                       i18nKey="toucan.bidReview.partialFillExplanation"
                       values={{
                         symbol: auctionDetails.tokenSymbol || auctionDetails.token?.currency.symbol || 'token',
                         maxFdv: maxFdvPreciseFormatted,
                         maxFdvFiat: maxFdvFiatFormatted,
                       }}
+                      tOptions={{ interpolation: { escapeValue: true } }}
                       components={{
                         highlight: <Text variant="body4" color="$neutral1" />,
                         fiat: <Text variant="body4" color="$neutral2" />,

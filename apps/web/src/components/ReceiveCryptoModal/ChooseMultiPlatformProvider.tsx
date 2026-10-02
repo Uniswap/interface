@@ -201,10 +201,12 @@ export function ChooseMultiPlatformProvider({
 
         <Text variant="body4" textAlign="center" color="$neutral3">
           <Trans
+            shouldUnescape
             i18nKey="fiatOnRamp.disclaimer"
             values={{
               serviceProvider: selectedServiceProvider.name,
             }}
+            tOptions={{ interpolation: { escapeValue: true } }}
             components={{
               tosLink: (
                 <ExternalLink color={colors.neutral3.val} href={UniswapStaticUrls.termsOfServiceUrl}>

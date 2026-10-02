@@ -89,15 +89,15 @@ function runRevert(order: UniswapXOrderDetails, selectChain = vi.fn().mockResolv
 }
 
 describe('revertCancellationSaga', () => {
-  const mockSendTransaction = vi.fn()
+  const mockSendUncheckedTransaction = vi.fn()
 
   beforeEach(() => {
     vi.clearAllMocks()
     vi.useFakeTimers({ shouldAdvanceTime: true })
     vi.setSystemTime(NOW)
     ;(getFeatureFlag as Mock).mockReturnValue(true)
-    mockGetSigner.mockResolvedValue({ sendTransaction: mockSendTransaction })
-    mockSendTransaction.mockResolvedValue({ hash: NEW_CANCEL_TX })
+    mockGetSigner.mockResolvedValue({ sendUncheckedTransaction: mockSendUncheckedTransaction })
+    mockSendUncheckedTransaction.mockResolvedValue(NEW_CANCEL_TX)
     ;(getOrders as Mock).mockResolvedValue({
       orders: [{ orderId: ORDER_HASH, orderStatus: TradingApi.OrderStatus.OPEN, encodedOrder: '0xencoded' }],
     })
@@ -215,14 +215,14 @@ describe('revertCancellationSaga', () => {
     await flush()
 
     expect(fetchCancelTxReceiptStatus).not.toHaveBeenCalled()
-    expect(mockSendTransaction).toHaveBeenCalled()
+    expect(mockSendUncheckedTransaction).toHaveBeenCalled()
     task.cancel()
   })
 
   it('broadcast rejection: record untouched — no CAS swap, no status write', async () => {
     const order = makeTimedOutOrder()
     setStoreOrder(order)
-    mockSendTransaction.mockRejectedValue({ code: 4001 })
+    mockSendUncheckedTransaction.mockRejectedValue({ code: 4001 })
 
     const { task, flush } = runRevert(order)
     await flush()

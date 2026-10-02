@@ -108,8 +108,8 @@ function dispatchCancel(
 const flush = () => new Promise((resolve) => setTimeout(resolve, 10))
 
 describe('cancelOrderSaga', () => {
-  const mockSendTransaction = vi.fn()
-  const mockSigner = { sendTransaction: mockSendTransaction }
+  const mockSendUncheckedTransaction = vi.fn()
+  const mockSigner = { sendUncheckedTransaction: mockSendUncheckedTransaction }
   let addPopupSpy: ReturnType<typeof vi.spyOn>
 
   beforeEach(() => {
@@ -126,14 +126,14 @@ describe('cancelOrderSaga', () => {
 
   describe('successful broadcast', () => {
     it('submits the cancellation and persists the broadcast fields', async () => {
-      mockSendTransaction.mockResolvedValue({ hash: CANCEL_TX_HASH })
+      mockSendUncheckedTransaction.mockResolvedValue(CANCEL_TX_HASH)
       const { store, task } = createTestStore()
 
       dispatchCancel(store)
       await flush()
 
       expect(mockGetSigner).toHaveBeenCalledWith(ADDRESS)
-      expect(mockSendTransaction).toHaveBeenCalled()
+      expect(mockSendUncheckedTransaction).toHaveBeenCalled()
 
       const broadcastAction = mockAppStore.dispatch.mock.calls
         .map(([action]) => action)
@@ -154,8 +154,8 @@ describe('cancelOrderSaga', () => {
       vi.useFakeTimers()
       try {
         const clickTime = Date.now()
-        let resolveSend: (value: { hash: string }) => void = () => undefined
-        mockSendTransaction.mockReturnValue(
+        let resolveSend: (value: string) => void = () => undefined
+        mockSendUncheckedTransaction.mockReturnValue(
           new Promise((resolve) => {
             resolveSend = resolve
           }),
@@ -164,7 +164,7 @@ describe('cancelOrderSaga', () => {
 
         dispatchCancel(store, { cancelInitiatedTimeMs: clickTime })
         await vi.advanceTimersByTimeAsync(90_000) // 90s in the wallet prompt
-        resolveSend({ hash: CANCEL_TX_HASH })
+        resolveSend(CANCEL_TX_HASH)
         await vi.advanceTimersByTimeAsync(10)
 
         const broadcastAction = mockAppStore.dispatch.mock.calls
@@ -179,7 +179,7 @@ describe('cancelOrderSaga', () => {
     })
 
     it('registers the tracked cancel tx as a plain-hash Pending tx (flag on)', async () => {
-      mockSendTransaction.mockResolvedValue({ hash: CANCEL_TX_HASH })
+      mockSendUncheckedTransaction.mockResolvedValue(CANCEL_TX_HASH)
       const { store, task } = createTestStore()
 
       dispatchCancel(store)
@@ -203,7 +203,7 @@ describe('cancelOrderSaga', () => {
 
     it('does not register a tracked cancel tx when the flag is off', async () => {
       ;(getFeatureFlag as Mock).mockReturnValue(false)
-      mockSendTransaction.mockResolvedValue({ hash: CANCEL_TX_HASH })
+      mockSendUncheckedTransaction.mockResolvedValue(CANCEL_TX_HASH)
       const { store, task } = createTestStore()
 
       dispatchCancel(store)
@@ -220,7 +220,7 @@ describe('cancelOrderSaga', () => {
 
   describe('error classification (rejection ≠ broadcast failure ≠ FailedCancel)', () => {
     it('user rejection (4001) reverts quietly to Pending — never FailedCancel, no error surface', async () => {
-      mockSendTransaction.mockRejectedValue({ code: 4001 })
+      mockSendUncheckedTransaction.mockRejectedValue({ code: 4001 })
       const { store, task } = createTestStore()
 
       dispatchCancel(store)
@@ -239,7 +239,7 @@ describe('cancelOrderSaga', () => {
     })
 
     it('restores a pre-cancel InsufficientFunds status on rejection, not blanket Pending', async () => {
-      mockSendTransaction.mockRejectedValue({ code: 'ACTION_REJECTED' })
+      mockSendUncheckedTransaction.mockRejectedValue({ code: 'ACTION_REJECTED' })
       const { store, task } = createTestStore()
 
       dispatchCancel(store, { revertToStatus: TransactionStatus.InsufficientFunds })
@@ -255,7 +255,7 @@ describe('cancelOrderSaga', () => {
 
     it('broadcast failure reverts to Pending with a "Try again" surface and the raw error logged — still no FailedCancel', async () => {
       const error = new Error('nonce too low')
-      mockSendTransaction.mockRejectedValue(error)
+      mockSendUncheckedTransaction.mockRejectedValue(error)
       const { store, task } = createTestStore()
 
       dispatchCancel(store)
@@ -275,7 +275,7 @@ describe('cancelOrderSaga', () => {
   })
 
   it('continues listening after processing an action', async () => {
-    mockSendTransaction.mockResolvedValue({ hash: '0xhash' })
+    mockSendUncheckedTransaction.mockResolvedValue('0xhash')
     const { store, task } = createTestStore()
 
     dispatchCancel(store, { id: 'order-1' })
@@ -283,7 +283,7 @@ describe('cancelOrderSaga', () => {
     dispatchCancel(store, { id: 'order-2' })
     await flush()
 
-    expect(mockSendTransaction).toHaveBeenCalledTimes(2)
+    expect(mockSendUncheckedTransaction).toHaveBeenCalledTimes(2)
 
     task.cancel()
   })
