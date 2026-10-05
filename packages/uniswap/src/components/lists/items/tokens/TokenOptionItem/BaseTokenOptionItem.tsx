@@ -28,6 +28,7 @@ export const BaseTokenOptionItem = memo(function BaseTokenOptionItemInner(
     onPress,
     showTokenAddress,
     networkCount,
+    hideNetworkCount,
     hideNetworkLogo,
     rightElement,
     categoryTag,
@@ -95,7 +96,7 @@ export const BaseTokenOptionItem = memo(function BaseTokenOptionItemInner(
             <Text color="$neutral3" numberOfLines={1} variant="body3">
               {fdvLabel}
             </Text>
-          ) : isMultichain ? (
+          ) : isMultichain && !hideNetworkCount ? (
             <Text color="$neutral3" numberOfLines={1} variant="body3">
               {t('search.results.networks', { count: networkCount })}
             </Text>

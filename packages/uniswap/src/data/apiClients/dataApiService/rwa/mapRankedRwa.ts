@@ -26,6 +26,7 @@ export function mapRankedRwa({ token, category }: { token: RankedRwa; category: 
     priceChange1hPct: token.priceChange1hPct,
     priceChange24hPct: token.priceChange24hPct,
     marketCapUsd: token.marketCapUsd,
+    fdvUsd: token.fdvUsd,
     volume24hUsd: token.volume24hUsd,
     sparkline1d: mapRwaSparkline(token.sparkline1d),
     priceDeviationPct: token.priceDeviationPct,

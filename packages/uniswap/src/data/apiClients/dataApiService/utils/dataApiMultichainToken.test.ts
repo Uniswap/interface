@@ -172,6 +172,23 @@ describe('dataApiMultichainTokenToSearchResult', () => {
     expect(result?.stats).toEqual({ priceUsd: 1.5, pricePercentChange1d: -2.3, fdvUsd: 9_000_000, volume1dUsd: 50_000 })
   })
 
+  it('should fall back to the token-level FDV when rank stats carry none, as Search v2 serves it', () => {
+    const token = createRankedMultichainToken({ price: 1.5, volume1d: 50_000 })
+    token.multichainToken!.fdv = 7_000_000
+
+    const result = dataApiMultichainTokenToSearchResult(token)
+
+    expect(result?.stats?.fdvUsd).toBe(7_000_000)
+    expect(result?.tokens.map((t) => t.searchStats?.fdvUsd)).toEqual([7_000_000])
+  })
+
+  it('should prefer the rank stats FDV over the token-level field', () => {
+    const token = createRankedMultichainToken({ fdv: 9_000_000 })
+    token.multichainToken!.fdv = 7_000_000
+
+    expect(dataApiMultichainTokenToSearchResult(token)?.stats?.fdvUsd).toBe(9_000_000)
+  })
+
   it('should use per-chain 1d volume on each CurrencyInfo searchStats, keeping parent price and FDV', () => {
     const token = createRankedMultichainToken({
       price: 1.5,

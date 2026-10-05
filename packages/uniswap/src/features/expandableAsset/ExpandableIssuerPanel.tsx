@@ -3,7 +3,6 @@ import { Flex, TouchableArea } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import type { ReactNode } from 'react'
 import { TokenOptionItemStats } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem/TokenOptionItemStats'
-import { useSearchVolumeLabelFormatter } from 'uniswap/src/components/lists/items/useSearchVolumeLabel'
 import { hasIssuerMetrics } from 'uniswap/src/data/apiClients/dataApiService/rwa/rwaMetrics'
 import type { IssuerToken, Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import {
@@ -92,13 +91,11 @@ export function ExpandableIssuerRows({
   showIssuerStats = false,
   showIssuerTag = false,
 }: ExpandableIssuerRowsProps): JSX.Element {
-  const formatVolumeLabel = useSearchVolumeLabelFormatter()
   return (
     <ExpandableIssuerPanelContainer variant={variant}>
       {asset.issuerTokens.map((issuer) => {
-        // Issuers without metrics keep the default address / network subline rather than showing "$0.00".
+        // Issuers without metrics show no price rather than "$0.00".
         const showStats = showIssuerStats && hasIssuerMetrics(issuer)
-        const volumeDetail = showStats ? formatVolumeLabel(issuer.volume24hUsd) : undefined
         const identity = (
           <ExpandableIssuerIdentity
             asset={asset}
@@ -106,7 +103,7 @@ export function ExpandableIssuerRows({
             enabledChainIds={enabledChainIds}
             variant={variant}
             chainFilter={chainFilter}
-            volumeDetail={volumeDetail}
+            hideSublineFallback={showIssuerStats}
             showIssuerTag={showIssuerTag}
           />
         )

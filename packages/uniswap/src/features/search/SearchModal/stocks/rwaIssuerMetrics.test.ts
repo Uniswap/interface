@@ -46,6 +46,7 @@ const rankedTesla: Rwa = {
       issuer: 'ondo',
       priceUsd: 249,
       priceChange24hPct: 0.8,
+      fdvUsd: 2_000,
       volume24hUsd: 125,
       sparkline1d: { points: [] },
       // Ranked row omits ondo's Mainnet deployment.
@@ -58,6 +59,7 @@ const rankedTesla: Rwa = {
       issuer: 'xstocks',
       priceUsd: 248.42,
       priceChange24hPct: -0.5,
+      fdvUsd: 1_000,
       volume24hUsd: 50,
       sparkline1d: { points: [] },
       chainTokens: [{ chainId: MAINNET, address: '0xc' }],
@@ -65,16 +67,21 @@ const rankedTesla: Rwa = {
   ],
 }
 
-function issuerMetrics(rwa: Rwa): { issuer: string; priceUsd: number; volume24hUsd: number }[] {
-  return rwa.issuerTokens.map(({ issuer, priceUsd, volume24hUsd }) => ({ issuer, priceUsd, volume24hUsd }))
+function issuerMetrics(rwa: Rwa): { issuer: string; priceUsd: number; fdvUsd?: number; volume24hUsd: number }[] {
+  return rwa.issuerTokens.map(({ issuer, priceUsd, fdvUsd, volume24hUsd }) => ({
+    issuer,
+    priceUsd,
+    fdvUsd,
+    volume24hUsd,
+  }))
 }
 
 describe(withRwaIssuerMetrics, () => {
   it('fills each issuer by any matching chain deployment, case-insensitively', () => {
     const filled = withRwaIssuerMetrics({ rwa: listRwasTesla, metricsIndex: buildRwaIssuerMetricsIndex([rankedTesla]) })
     expect(issuerMetrics(filled)).toEqual([
-      { issuer: 'ondo', priceUsd: 249, volume24hUsd: 125 },
-      { issuer: 'xstocks', priceUsd: 248.42, volume24hUsd: 50 },
+      { issuer: 'ondo', priceUsd: 249, fdvUsd: 2_000, volume24hUsd: 125 },
+      { issuer: 'xstocks', priceUsd: 248.42, fdvUsd: 1_000, volume24hUsd: 50 },
       // No ranked match: keeps its zeroed ("no data") metrics.
       { issuer: 'backed', priceUsd: 0, volume24hUsd: 0 },
     ])

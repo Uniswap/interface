@@ -37,6 +37,7 @@ export interface TokenOptionItemProps extends ModifierPressProps {
   onPress: () => void
   showTokenAddress?: boolean
   networkCount?: number
+  hideNetworkCount?: boolean
   hideNetworkLogo?: boolean
   rightElement?: JSX.Element
   categoryTag?: OptionItemProps['categoryTag']

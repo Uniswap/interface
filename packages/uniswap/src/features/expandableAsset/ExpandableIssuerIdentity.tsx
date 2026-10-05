@@ -32,7 +32,7 @@ export type ExpandableIssuerIdentityProps = {
   /** Flat single-issuer table row: show issuer token name instead of grouped asset name. */
   useIssuerNameAsPrimary?: boolean
   categoryTag?: ReactNode
-  volumeDetail?: string
+  hideSublineFallback?: boolean
   showIssuerTag?: boolean
 }
 
@@ -44,7 +44,7 @@ export function ExpandableIssuerIdentity({
   chainFilter,
   useIssuerNameAsPrimary = false,
   categoryTag,
-  volumeDetail,
+  hideSublineFallback = false,
   showIssuerTag = false,
 }: ExpandableIssuerIdentityProps): JSX.Element {
   const { t } = useTranslation()
@@ -98,15 +98,7 @@ export function ExpandableIssuerIdentity({
     </Text>
   ) : null
 
-  const searchSublineDetail = volumeDetail ? (
-    <Text variant="body3" color="$neutral3" numberOfLines={1}>
-      {volumeDetail}
-    </Text>
-  ) : chainIds.length > 1 ? (
-    networkSubline
-  ) : (
-    addressSubline
-  )
+  const searchSublineDetail = hideSublineFallback ? null : chainIds.length > 1 ? networkSubline : addressSubline
 
   return (
     <Flex row gap="$spacing12" alignItems="center" width="100%" minWidth={0}>

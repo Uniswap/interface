@@ -1,7 +1,7 @@
 import type { IssuerToken, Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { rwaChainAddressKey } from 'uniswap/src/features/search/SearchModal/stocks/rwaSearchGrouping'
 
-export type RwaIssuerMetrics = Pick<IssuerToken, 'priceUsd' | 'priceChange24hPct' | 'volume24hUsd'>
+export type RwaIssuerMetrics = Pick<IssuerToken, 'priceUsd' | 'priceChange24hPct' | 'fdvUsd' | 'volume24hUsd'>
 
 export type RwaIssuerMetricsIndex = Map<string, RwaIssuerMetrics>
 
@@ -13,6 +13,7 @@ export function buildRwaIssuerMetricsIndex(rwas: readonly Rwa[]): RwaIssuerMetri
       const metrics: RwaIssuerMetrics = {
         priceUsd: issuer.priceUsd,
         priceChange24hPct: issuer.priceChange24hPct,
+        fdvUsd: issuer.fdvUsd,
         volume24hUsd: issuer.volume24hUsd,
       }
       for (const chainToken of issuer.chainTokens) {

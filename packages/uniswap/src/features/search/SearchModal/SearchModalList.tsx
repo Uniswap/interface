@@ -256,7 +256,7 @@ export const SearchModalList = memo(function SearchModalListInner({
       case OnchainItemListOptionType.Token: {
         const tokenElement = (
           <TokenOptionItem
-            showTokenAddress
+            showTokenAddress={!isSearchV2UIEnabled}
             option={item}
             displayName={item.rwaName}
             issuer={item.rwaIssuerSlug}
@@ -306,6 +306,7 @@ export const SearchModalList = memo(function SearchModalListInner({
             issuer={item.rwaIssuerSlug}
             showIssuerTag={isSearchV2UIEnabled}
             networkCount={item.multichainResult.tokens.length}
+            hideNetworkCount={isSearchV2UIEnabled}
             categoryTag={getRowCategoryTag({
               rwaCategory: item.rwaCategory,
               categoryIds: item.primaryCurrencyInfo.categoryIds,

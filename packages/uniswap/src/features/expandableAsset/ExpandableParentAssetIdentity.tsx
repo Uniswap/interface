@@ -20,7 +20,6 @@ export type ExpandableParentAssetIdentityProps = {
   chainFilter?: UniverseChainId
   categoryTag?: ReactNode
   showNetworkCount?: boolean
-  volumeDetail?: string
   inlineChevron?: boolean
 }
 
@@ -33,7 +32,6 @@ export function ExpandableParentAssetIdentity({
   chainFilter,
   categoryTag,
   showNetworkCount = false,
-  volumeDetail,
   inlineChevron = true,
 }: ExpandableParentAssetIdentityProps): JSX.Element {
   const { t } = useTranslation()
@@ -74,33 +72,17 @@ export function ExpandableParentAssetIdentity({
     </Flex>
   )
 
-  const searchSubline = (
-    <Flex row alignItems="center" gap="$spacing8" minWidth={0}>
-      {expandableSubline}
-      {volumeDetail && !isExpanded && (
-        <Text variant="body3" color="$neutral3" numberOfLines={1}>
-          {volumeDetail}
-        </Text>
-      )}
-    </Flex>
+  const subline = canExpand ? (
+    expandableSubline
+  ) : variant === 'table' ? (
+    <Text variant="body3" color="$neutral2" numberOfLines={1} height={sublineHeight}>
+      {issuerCountLabel}
+    </Text>
+  ) : (
+    <Text variant="body3" color="$neutral2" numberOfLines={1}>
+      {asset.symbol}
+    </Text>
   )
-
-  const subline =
-    variant === 'table' ? (
-      canExpand ? (
-        expandableSubline
-      ) : (
-        <Text variant="body3" color="$neutral2" numberOfLines={1} height={sublineHeight}>
-          {issuerCountLabel}
-        </Text>
-      )
-    ) : canExpand ? (
-      searchSubline
-    ) : (
-      <Text variant="body3" color="$neutral2" numberOfLines={1}>
-        {asset.symbol}
-      </Text>
-    )
 
   return (
     <Flex row gap="$spacing12" alignItems="center" width="100%" minWidth={0}>

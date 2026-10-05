@@ -18,7 +18,14 @@ function makeRankedTokenGroup(overrides?: PartialMessage<RankedTokenGroup>): Ran
       categoryId: 'stocks',
       logoUrl: 'https://example.com/tsla.png',
     },
-    stats: { price: 248.42, priceChange1h: 0.12, priceChange1d: 1.31, marketCap: 44_200_000, volume1d: 12_400_000 },
+    stats: {
+      price: 248.42,
+      priceChange1h: 0.12,
+      priceChange1d: 1.31,
+      marketCap: 44_200_000,
+      fdv: 44_900_000,
+      volume1d: 12_400_000,
+    },
     priceDeviationPct: 0.4,
     members: [
       {
@@ -31,7 +38,7 @@ function makeRankedTokenGroup(overrides?: PartialMessage<RankedTokenGroup>): Ran
           price: { spotUsd: 247.9, percentChange1h: 0.1, percentChange1d: 1.3 },
         },
         // Member stats carry no price; that lives on multichainToken.price (see StubTokenGroupsBL).
-        stats: { marketCap: 22_000_000, volume1d: 8_000_000 },
+        stats: { marketCap: 22_000_000, fdv: 22_500_000, volume1d: 8_000_000 },
         sparkline: [
           { timestamp: BigInt(1_700_000_000), value: 245 },
           { timestamp: BigInt(1_700_003_600), value: 248.42 },
@@ -58,6 +65,7 @@ describe('mapRankedTokenGroup', () => {
       priceChange1hPct: 0.12,
       priceChange24hPct: 1.31,
       marketCapUsd: 44_200_000,
+      fdvUsd: 44_900_000,
       volume24hUsd: 12_400_000,
       priceDeviationPct: 0.4,
       categories: [RwaCategory.STOCKS],
@@ -74,11 +82,29 @@ describe('mapRankedTokenGroup', () => {
       priceChange24hPct: 1.3,
       volume24hUsd: 8_000_000,
       marketCapUsd: 22_000_000,
+      fdvUsd: 22_500_000,
     })
     expect(rwa?.issuerTokens[0]?.sparkline1d.points).toEqual([
       { timestampS: 1_700_000_000, value: 245 },
       { timestampS: 1_700_003_600, value: 248.42 },
     ])
+  })
+
+  it('prefers a member token-level FDV over its stats FDV, and falls back to stats when the token has none', () => {
+    const base = makeRankedTokenGroup()
+    const member = base.members[0]!
+    const withTokenFdv = makeRankedTokenGroup({
+      members: [{ ...member, multichainToken: { ...member.multichainToken, fdv: 23_000_000 } }],
+    })
+    const withoutTokenFdv = makeRankedTokenGroup({
+      members: [{ ...member, multichainToken: { ...member.multichainToken, fdv: undefined } }],
+    })
+    const map = (rankedGroup: RankedTokenGroup): number | undefined =>
+      mapRankedTokenGroup({ rankedGroup, category: RwaCategory.STOCKS, volumeOrderBy: TokensOrderBy.VOLUME_1D })
+        ?.issuerTokens[0]?.fdvUsd
+
+    expect(map(withTokenFdv)).toBe(23_000_000)
+    expect(map(withoutTokenFdv)).toBe(22_500_000)
   })
 
   it('reads the volume window the list was ranked by on the group and its members', () => {

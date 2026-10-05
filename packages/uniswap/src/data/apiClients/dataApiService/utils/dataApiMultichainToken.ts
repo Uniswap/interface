@@ -174,9 +174,8 @@ export function pickPrimaryDeployment({
 }
 
 /**
- * Builds parent-level display stats from a RankedMultichainToken: spot price and 1d change from
- * the token's price data (mirrors mobile's rankedMultichainTokenToTokenItemData), FDV and 1d volume
- * from the aggregate rank stats. Returns undefined when none are present.
+ * FDV falls back to the token-level field because Search v2 serves it only there (ListTokens serves both).
+ * Returns undefined when none are present.
  */
 function buildSearchTokenStats(
   rankedToken: RankedMultichainToken | PlainMessage<RankedMultichainToken>,
@@ -185,7 +184,7 @@ function buildSearchTokenStats(
   const stats: SearchTokenStats = {
     priceUsd: price?.spotUsd,
     pricePercentChange1d: price?.percentChange1d,
-    fdvUsd: rankedToken.stats?.fdv,
+    fdvUsd: rankedToken.stats?.fdv ?? rankedToken.multichainToken?.fdv,
     volume1dUsd: rankedToken.stats?.volume1d,
   }
   // Object.values drops `undefined` from optional props, so re-widen or the check looks always-true

@@ -73,6 +73,9 @@ export function mapIssuerMultichainToken({
     priceChange1hPct: issuer.priceChange1hPct,
     priceChange24hPct: issuer.priceChange24hPct,
     marketCapUsd: issuer.marketCapUsd,
+    // Zero market cap = failed supply lookup, and ListRankedRwas then serves a bogus fdv_usd (trillions for SPCX).
+    // TODO: remove once the BE stops serving fdv_usd for issuers with no market cap.
+    fdvUsd: issuer.marketCapUsd === 0 ? undefined : issuer.fdvUsd,
     volume24hUsd: issuer.volume24hUsd,
     sparkline1d: mapRwaSparkline(issuer.sparkline1d),
     chainTokens,

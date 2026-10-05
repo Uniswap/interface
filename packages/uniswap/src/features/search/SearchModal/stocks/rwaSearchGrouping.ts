@@ -108,8 +108,9 @@ export function findRwaForToken(
   return index.byChainAddress.get(rwaChainAddressKey(token.chainId, token.address))
 }
 
-/** Lowest-priced entry's price + 24h change and the summed 1d volume; undefined when nothing contributes. Zeros
- *  mean "no data" (zeroed `ListRwas` metrics, unpriced tokens), so they never become a "from $0.00" floor. */
+/** Lowest-priced entry's price + 24h change and the summed FDV and 1d volume; undefined when nothing contributes.
+ *  Zeros mean "no data" (zeroed `ListRwas` metrics, unpriced tokens), so they never become a "from $0.00" floor.
+ *  FDV sums because ListRankedRwas serves the collection's FDV as the sum of its issuers'. */
 export function aggregateRwaCollectionStats(statsList: SearchTokenStats[]): SearchTokenStats | undefined {
   const priced = statsList.filter(
     (stats): stats is SearchTokenStats & { priceUsd: number } => (stats.priceUsd ?? 0) > 0,
@@ -118,12 +119,14 @@ export function aggregateRwaCollectionStats(statsList: SearchTokenStats[]): Sear
     (min, stats) => (!min || stats.priceUsd < min.priceUsd ? stats : min),
     undefined,
   )
+  const fdvs = statsList.map((stats) => stats.fdvUsd ?? 0).filter((fdv) => fdv > 0)
   const volumes = statsList.map((stats) => stats.volume1dUsd ?? 0).filter((volume) => volume > 0)
-  if (!lowest && !volumes.length) {
+  if (!lowest && !fdvs.length && !volumes.length) {
     return undefined
   }
   return {
     ...(lowest && { priceUsd: lowest.priceUsd, pricePercentChange1d: lowest.pricePercentChange1d }),
+    ...(fdvs.length && { fdvUsd: fdvs.reduce((sum, fdv) => sum + fdv, 0) }),
     ...(volumes.length && { volume1dUsd: volumes.reduce((sum, volume) => sum + volume, 0) }),
   }
 }
@@ -133,6 +136,7 @@ export function getRwaCollectionSearchStats(rwa: Rwa): SearchTokenStats | undefi
     rwa.issuerTokens.map((issuer) => ({
       priceUsd: issuer.priceUsd,
       pricePercentChange1d: issuer.priceChange24hPct,
+      fdvUsd: issuer.fdvUsd,
       volume1dUsd: issuer.volume24hUsd,
     })),
   )

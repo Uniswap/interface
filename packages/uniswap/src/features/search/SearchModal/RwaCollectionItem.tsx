@@ -5,7 +5,6 @@ import { useDispatch } from 'react-redux'
 import type { FocusedRowControl } from 'uniswap/src/components/lists/items/OptionItem'
 import { TokenOptionItemStats } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem/TokenOptionItemStats'
 import type { RwaCollectionOption, SearchModalListOption } from 'uniswap/src/components/lists/items/types'
-import { useSearchVolumeLabel } from 'uniswap/src/components/lists/items/useSearchVolumeLabel'
 import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { resolvePrimaryChain } from 'uniswap/src/data/apiClients/dataApiService/rwa/resolvePrimaryChain'
@@ -70,7 +69,6 @@ export function RwaCollectionItem({
   const dispatch = useDispatch()
   const trace = useTrace()
   const { chains: enabledChainIds } = useEnabledChains()
-  const volumeDetail = useSearchVolumeLabel(searchStats?.volume1dUsd)
 
   const chainFilter = searchFilters.searchChainFilter ?? undefined
   // Only expanded sub-rows show issuer metrics, so fetch them on expand; rows of one category share the query.
@@ -223,7 +221,6 @@ export function RwaCollectionItem({
           />
         ) : undefined
       }
-      volumeDetail={volumeDetail}
       showIssuerStats={showIssuerStats}
       showIssuerTag={showIssuerTag}
       onToggle={onToggle}

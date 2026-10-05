@@ -77,6 +77,38 @@ describe('mapRankedRwa', () => {
   })
 })
 
+describe('mapRankedRwa issuer FDV', () => {
+  function issuerFdv(marketCapUsd: number | undefined): number | undefined {
+    const rwa = mapRankedRwa({
+      token: makeRankedRwa({
+        issuerTokens: [
+          {
+            symbol: 'SPCXD',
+            name: 'SpaceX (Dinari)',
+            issuer: 'dinari',
+            priceUsd: 164.57,
+            volume24hUsd: 621_699,
+            marketCapUsd,
+            fdvUsd: 30_358_350_709_685,
+            chainTokens: [{ chainId: UniverseChainId.Mainnet, address: '0xdinari' }],
+          },
+        ],
+      }),
+      category: RwaCategory.STOCKS,
+    })
+    return rwa?.issuerTokens[0]?.fdvUsd
+  }
+
+  it('keeps the issuer FDV when its market cap is positive or not served', () => {
+    expect(issuerFdv(48_761_950)).toBe(30_358_350_709_685)
+    expect(issuerFdv(undefined)).toBe(30_358_350_709_685)
+  })
+
+  it('drops the issuer FDV when its market cap is zero, since the backend then serves a bogus value', () => {
+    expect(issuerFdv(0)).toBeUndefined()
+  })
+})
+
 describe('mapRankedRwaList', () => {
   it('maps all ranked rows from the response', () => {
     const response = new ListRankedRwasResponse({

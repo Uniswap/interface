@@ -94,10 +94,9 @@ describe('ExpandableIssuerRows renderIssuerRow seam', () => {
 })
 
 describe('ExpandableIssuerRows issuer stats', () => {
-  const VOLUME_LABEL_KEY = 'search.results.stats.volume'
   const NETWORKS_LABEL_KEY = 'explore.tokens.table.networks'
 
-  it('shows each issuer 24h volume and price instead of its network count when showIssuerStats is set', () => {
+  it('shows each issuer price instead of its network count when showIssuerStats is set', () => {
     const { getByText, queryByText } = render(
       <ExpandableIssuerRows
         asset={singleIssuerRwa({ multichain: true, priceUsd: 248.42 })}
@@ -106,7 +105,6 @@ describe('ExpandableIssuerRows issuer stats', () => {
         showIssuerStats
       />,
     )
-    expect(getByText(VOLUME_LABEL_KEY)).toBeTruthy()
     expect(getByText('$248.42')).toBeTruthy()
     expect(queryByText(NETWORKS_LABEL_KEY)).toBeNull()
   })
@@ -120,11 +118,10 @@ describe('ExpandableIssuerRows issuer stats', () => {
       />,
     )
     expect(getByText(NETWORKS_LABEL_KEY)).toBeTruthy()
-    expect(queryByText(VOLUME_LABEL_KEY)).toBeNull()
     expect(queryByText('$248.42')).toBeNull()
   })
 
-  it('falls back to the network count, with no volume or price, for an issuer with zeroed metrics', () => {
+  it('shows no network count or price for an issuer with zeroed metrics when showIssuerStats is set', () => {
     const { getByText, queryByText } = render(
       <ExpandableIssuerRows
         asset={singleIssuerRwa({ multichain: true, volume24hUsd: 0, priceUsd: 0 })}
@@ -133,8 +130,7 @@ describe('ExpandableIssuerRows issuer stats', () => {
         showIssuerStats
       />,
     )
-    expect(queryByText(VOLUME_LABEL_KEY)).toBeNull()
-    expect(getByText(NETWORKS_LABEL_KEY)).toBeTruthy()
+    expect(queryByText(NETWORKS_LABEL_KEY)).toBeNull()
     expect(queryByText(/^\$/)).toBeNull()
   })
 })

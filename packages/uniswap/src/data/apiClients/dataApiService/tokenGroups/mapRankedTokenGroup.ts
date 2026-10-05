@@ -36,6 +36,7 @@ function mapGroupStats({
     priceChange1hPct: stats?.priceChange1h,
     priceChange24hPct: stats?.priceChange1d,
     marketCapUsd: stats?.marketCap,
+    fdvUsd: stats?.fdv,
     volume24hUsd: getVolumeForOrderBy(stats, volumeOrderBy) ?? 0,
     sparkline1d,
   }
@@ -59,6 +60,7 @@ function mapMemberStats({
     priceChange1hPct: token.price?.percentChange1h ?? stats?.priceChange1h,
     priceChange24hPct: token.price?.percentChange1d ?? stats?.priceChange1d,
     marketCapUsd: stats?.marketCap,
+    fdvUsd: token.fdv ?? stats?.fdv,
     volume24hUsd: getVolumeForOrderBy(stats, volumeOrderBy) ?? 0,
     sparkline1d,
   }

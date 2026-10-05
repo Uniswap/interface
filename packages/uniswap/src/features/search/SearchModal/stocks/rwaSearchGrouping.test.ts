@@ -213,7 +213,14 @@ describe('aggregateRwaCollectionStats', () => {
     ).toEqual({ priceUsd: 248.42, volume1dUsd: 150 })
   })
 
-  it('is undefined when no entry carries a price or volume', () => {
+  it('sums FDV across entries, ignoring entries without one or with zero', () => {
+    expect(
+      aggregateRwaCollectionStats([{ priceUsd: 250, fdvUsd: 100 }, { fdvUsd: 0 }, { fdvUsd: 50 }, { volume1dUsd: 5 }]),
+    ).toEqual({ priceUsd: 250, fdvUsd: 150, volume1dUsd: 5 })
+    expect(aggregateRwaCollectionStats([{ fdvUsd: 0 }])).toBeUndefined()
+  })
+
+  it('is undefined when no entry carries a price, FDV, or volume', () => {
     expect(aggregateRwaCollectionStats([{ pricePercentChange1d: 9 }])).toBeUndefined()
     expect(aggregateRwaCollectionStats([])).toBeUndefined()
   })
@@ -230,7 +237,7 @@ describe('aggregateRwaCollectionStats', () => {
 })
 
 describe('getRwaCollectionSearchStats', () => {
-  it('uses the lowest issuer price + that issuer’s 24h change, and the summed volume, on a ranked Rwa', () => {
+  it('uses the lowest issuer price + that issuer’s 24h change, and the summed FDV and volume, on a ranked Rwa', () => {
     const rwa: Rwa = {
       symbol: 'TSLA',
       name: 'Tesla',
@@ -239,13 +246,14 @@ describe('getRwaCollectionSearchStats', () => {
       volume24hUsd: 0,
       sparkline1d: { points: [] },
       issuerTokens: [
-        { ...ISSUER_BASE, issuer: 'xstocks', priceUsd: 250, priceChange24hPct: 1.2, volume24hUsd: 100 },
-        { ...ISSUER_BASE, issuer: 'ondo', priceUsd: 248.42, priceChange24hPct: -0.5, volume24hUsd: 50 },
+        { ...ISSUER_BASE, issuer: 'xstocks', priceUsd: 250, priceChange24hPct: 1.2, fdvUsd: 1_000, volume24hUsd: 100 },
+        { ...ISSUER_BASE, issuer: 'ondo', priceUsd: 248.42, priceChange24hPct: -0.5, fdvUsd: 500, volume24hUsd: 50 },
       ],
     }
     expect(getRwaCollectionSearchStats(rwa)).toEqual({
       priceUsd: 248.42,
       pricePercentChange1d: -0.5,
+      fdvUsd: 1_500,
       volume1dUsd: 150,
     })
   })

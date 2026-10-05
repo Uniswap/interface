@@ -241,32 +241,4 @@ describe('ExpandableParentAssetIdentity search group header', () => {
     expect(getByText('explore.tokens.table.networks')).toBeTruthy()
     expect(queryByText('explore.rwa.issuerTokenCount')).toBeNull()
   })
-
-  it('shows the volume detail while collapsed', () => {
-    const { getByText } = render(
-      <ExpandableParentAssetIdentity
-        asset={teslaRwa()}
-        enabledChainIds={ENABLED_CHAINS}
-        canExpand
-        isExpanded={false}
-        variant="search"
-        volumeDetail="$1.2M vol"
-      />,
-    )
-    expect(getByText('$1.2M vol')).toBeTruthy()
-  })
-
-  it('hides the volume detail while expanded (the sub-rows carry their own)', () => {
-    const { queryByText } = render(
-      <ExpandableParentAssetIdentity
-        asset={teslaRwa()}
-        enabledChainIds={ENABLED_CHAINS}
-        canExpand
-        isExpanded
-        variant="search"
-        volumeDetail="$1.2M vol"
-      />,
-    )
-    expect(queryByText('$1.2M vol')).toBeNull()
-  })
 })
