@@ -193,9 +193,9 @@ describe('PortfolioBalanceHeader', () => {
   it('passes stablecoin formatting for low-variance chart data', () => {
     render(
       <PortfolioBalanceHeader
-        portfolioTotalBalanceUSD={1.01}
-        series={makeSeries([1, 1.01])}
-        chartPercentChange={{ percentChange: 1, absoluteChangeUSD: 0.01 }}
+        portfolioTotalBalanceUSD={1.001}
+        series={makeSeries([1, 1.001])}
+        chartPercentChange={{ percentChange: 0.1, absoluteChangeUSD: 0.001 }}
         tokensPercentChange={undefined}
         poolsPercentChange={undefined}
         earnPercentChange={undefined}

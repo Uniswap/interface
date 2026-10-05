@@ -1,9 +1,9 @@
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 
-// Shorter timeframes use higher thresholds since stablecoins naturally show more price noise on smaller windows
+// Percent of min. Kept at 0.5% on 1H/1D too: 1.5% flattened majors like ETH/BTC on quiet days
 const STABLECOIN_VARIANCE_THRESHOLDS: Record<HistoryDuration, number> = {
-  [HistoryDuration.Hour]: 1.5,
-  [HistoryDuration.Day]: 1.5,
+  [HistoryDuration.Hour]: 0.5,
+  [HistoryDuration.Day]: 0.5,
   [HistoryDuration.Week]: 0.5,
   [HistoryDuration.Month]: 0.5,
   [HistoryDuration.Year]: 0.5,
