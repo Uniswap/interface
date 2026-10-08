@@ -91,7 +91,9 @@ function SlideoutChartCardContent({
 
   return (
     <CardShell {...shadowProps}>
+      {/* Remount per token so the chart/spot/percent-change queries start with no keepPreviousData placeholder from the other token */}
       <SlideoutChartCardBody
+        key={currencyId(selectedCurrency)}
         selectedCurrency={selectedCurrency}
         timePeriod={timePeriod}
         onTimePeriodChange={onTimePeriodChange}
