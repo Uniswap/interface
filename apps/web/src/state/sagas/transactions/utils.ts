@@ -67,6 +67,7 @@ import {
 import type { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getInterfaceTransaction, isInterfaceTransaction } from 'uniswap/src/features/transactions/types/utils'
 import { parseERC20ApproveCalldata } from 'uniswap/src/utils/approvals'
+import { getRequiredApprovalAmount } from '~/state/sagas/transactions/approvalAmount'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { interruptTransactionFlow } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
@@ -413,7 +414,7 @@ function getPermitTransactionInfo(approvalStep: Permit2TransactionStep): Permit2
 }
 
 function checkApprovalAmount(data: string, step: TokenApprovalTransactionStep | TokenRevocationTransactionStep) {
-  const requiredAmount = BigInt(`0x${parseInt(step.amount, 10).toString(16)}`)
+  const requiredAmount = getRequiredApprovalAmount(step.amount)
   const submitted = parseERC20ApproveCalldata(data)
   const approvedAmount = submitted.amount.toString(10)
 
