@@ -32,7 +32,7 @@ export function computeFdvBidTokenRaw({
   totalSupplyRaw: string | bigint
   auctionTokenDecimals?: number
 }): bigint {
-  if (!auctionTokenDecimals) {
+  if (auctionTokenDecimals === undefined) {
     return 0n
   }
 
