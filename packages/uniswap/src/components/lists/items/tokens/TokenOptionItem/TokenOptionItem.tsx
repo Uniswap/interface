@@ -1,5 +1,6 @@
 import { isHoverable, isMobileApp, isMobileWeb, isWebPlatform } from '@universe/environment'
 import { memo, useMemo, useRef } from 'react'
+import { useIsRowFocused } from 'uniswap/src/components/lists/focusedRowStore'
 import { BaseTokenOptionItem } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem/BaseTokenOptionItem'
 import { CONTEXT_MENU_ACTIONS } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem/contextMenuActions'
 import { LegacyTokenOptionItem } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem/LegacyTokenOptionItem'
@@ -62,9 +63,8 @@ export const TokenOptionItem = memo(function TokenOptionItemInner(
   // Built internally (not passed via rightElement) so the row's right-click below can ref it.
   const hasMultichainButton = isHoverable && Boolean(multichainData) && !hideContextMenu
   const focusedRowControl = !isLegacyTokenOptionItemProps(props) ? props.focusedRowControl : undefined
-  const isMultichainButtonVisible = focusedRowControl
-    ? focusedRowControl.rowIndex === focusedRowControl.focusedRowIndex
-    : undefined
+  const isRowFocused = useIsRowFocused(focusedRowControl?.rowIndex)
+  const isMultichainButtonVisible = focusedRowControl ? isRowFocused : undefined
 
   if (isLegacyTokenOptionItemProps(props)) {
     return <LegacyTokenOptionItem {...props} />
@@ -102,7 +102,14 @@ export const TokenOptionItem = memo(function TokenOptionItemInner(
     >
       {isWebPlatform ? (
         // oxlint-disable-next-line react/forbid-elements -- needed here
-        <div onContextMenu={openContextMenu}>
+        <div
+          onContextMenu={(e): void => {
+            // The menu's own trigger (which prevents the native menu) mounts only after the first open, so
+            // until then this is the only handler on the path.
+            e.preventDefault()
+            openContextMenu()
+          }}
+        >
           <BaseTokenOptionItem {...props} />
         </div>
       ) : (

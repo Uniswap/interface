@@ -28,9 +28,6 @@ vi.mock('~/state/multichain/useMultichainContext', () => ({
 vi.mock('~/features/Liquidity/hooks/useAllFeeTierPoolData', () => ({
   useAllFeeTierPoolData: () => ({ feeTierData: {}, hasExistingFeeTiers: false }),
 }))
-vi.mock('~/features/Liquidity/hooks/useSelectedFeeBreakdown', () => ({
-  useSelectedFeeBreakdown: () => ({ selectedFeeBreakdown: undefined }),
-}))
 vi.mock('~/components/SearchModal/CurrencySearchModal', () => ({ CurrencySearchModal: () => null }))
 vi.mock('~/features/Liquidity/HookModal', () => ({ HookModal: () => null }))
 vi.mock('~/features/Liquidity/Create/AddHook', () => ({ AddHook: () => <div data-testid="add-hook" /> }))
@@ -220,27 +217,5 @@ describe('SelectTokensStep existing-pool CTA', () => {
     fireEvent.click(screen.getByText('Continue'))
 
     expect(mockNavigate.mock.calls[0][1]).toEqual({ state: { from: expect.any(String) } })
-  })
-})
-
-describe('SelectTokensStep currency resolution gate', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-    mockGeoRestriction({})
-    mockedUseBlockedTokens.mockReturnValue({ hasBlockedToken: false, blockedTokenSymbols: [] })
-  })
-
-  // Both legs are selected, but the provider has not resolved one of them through GetToken yet. Even
-  // with pool state that would otherwise let the user advance, the CTA must stay inert.
-  it('keeps the CTA disabled while a selected leg is unresolved', () => {
-    mockCreateLiquidityContext(NEW_POOL)
-    mockedUseCreateLiquidityContext.mockReturnValue({
-      ...mockedUseCreateLiquidityContext(),
-      currencies: { display: { TOKEN0: AAPLX, TOKEN1: undefined }, sdk: { TOKEN0: AAPLX, TOKEN1: undefined } },
-    } as unknown as ReturnType<typeof useCreateLiquidityContext>)
-    const { onContinue } = renderStep()
-
-    fireEvent.click(screen.getByText('Continue'))
-    expect(onContinue).not.toHaveBeenCalled()
   })
 })

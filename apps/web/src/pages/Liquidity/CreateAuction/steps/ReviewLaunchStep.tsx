@@ -373,7 +373,7 @@ export function ReviewLaunchStep(): JSX.Element | null {
           />
 
           <ReviewRow label={t('fee.tier')}>
-            <Text variant="body1" color="$neutral1">
+            <Text variant="body1" $md={{ variant: 'body2' }} color="$neutral1">
               {feeTierDisplay}
             </Text>
           </ReviewRow>
@@ -386,7 +386,7 @@ export function ReviewLaunchStep(): JSX.Element | null {
             />
           ) : (
             <ReviewRow label={t('toucan.createAuction.step.customizePool.priceRange.title')}>
-              <Text variant="body1" color="$neutral1">
+              <Text variant="body1" $md={{ variant: 'body2' }} color="$neutral1">
                 {priceRangeDisplay}
               </Text>
             </ReviewRow>
@@ -394,7 +394,7 @@ export function ReviewLaunchStep(): JSX.Element | null {
 
           {showPoolOwner ? (
             <ReviewRow label={t('toucan.createAuction.step.reviewLaunch.poolOwner')}>
-              <Text variant="body1" color="$neutral1">
+              <Text variant="body1" $md={{ variant: 'body2' }} color="$neutral1">
                 {poolOwnerDisplay}
               </Text>
             </ReviewRow>
@@ -402,7 +402,7 @@ export function ReviewLaunchStep(): JSX.Element | null {
 
           {customizePool.timeLockEnabled ? (
             <ReviewRow label={t('toucan.createAuction.step.reviewLaunch.timeLock')}>
-              <Text variant="body1" color="$neutral1">
+              <Text variant="body1" $md={{ variant: 'body2' }} color="$neutral1">
                 {customizePool.timeLockPreset === TimeLockPreset.Permanent
                   ? t('toucan.createAuction.step.customizePool.timeLock.preset.permanent')
                   : t('common.day.count', { count: customizePool.timeLockDurationDays })}
@@ -412,7 +412,7 @@ export function ReviewLaunchStep(): JSX.Element | null {
 
           {customizePool.timeLockEnabled && customizePool.sendFeesEnabled && showFeesRecipient ? (
             <ReviewRow label={t('toucan.createAuction.step.reviewLaunch.sendFees')}>
-              <Text variant="body1" color="$neutral1">
+              <Text variant="body1" $md={{ variant: 'body2' }} color="$neutral1">
                 {feesRecipientDisplay}
               </Text>
             </ReviewRow>
@@ -420,7 +420,7 @@ export function ReviewLaunchStep(): JSX.Element | null {
 
           {customizePool.timeLockEnabled && customizePool.buybackAndBurnEnabled ? (
             <ReviewRow label={t('toucan.createAuction.step.reviewLaunch.buybackAndBurn')}>
-              <Text variant="body1" color="$neutral1">
+              <Text variant="body1" $md={{ variant: 'body2' }} color="$neutral1">
                 {t('toucan.createAuction.step.reviewLaunch.enabled')}
               </Text>
             </ReviewRow>

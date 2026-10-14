@@ -1,8 +1,21 @@
 import { ExpandedState } from '@tanstack/react-table'
 import { useCallback, useState } from 'react'
 
-export function useTableExpandedState(singleExpandedRow: boolean) {
+export function useTableExpandedState({
+  singleExpandedRow,
+  collapseExpandedRowsKey,
+}: {
+  singleExpandedRow: boolean
+  collapseExpandedRowsKey?: string
+}) {
   const [expanded, setExpanded] = useState<ExpandedState>({})
+  const [lastCollapseKey, setLastCollapseKey] = useState(collapseExpandedRowsKey)
+
+  // Collapse during render rather than in an effect so the table never paints a stale expansion.
+  if (collapseExpandedRowsKey !== lastCollapseKey) {
+    setLastCollapseKey(collapseExpandedRowsKey)
+    setExpanded({})
+  }
 
   const onExpandedChange = useCallback(
     (updaterOrValue: ExpandedState | ((old: ExpandedState) => ExpandedState)) => {

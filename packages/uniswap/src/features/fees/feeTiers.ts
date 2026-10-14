@@ -17,5 +17,3 @@ export const DEFAULT_FEE_TIER_PAIRS: readonly DefaultFeeTierPair[] = [
   { newBps: 25, protocolBps: 4, oldBps: 30 },
   { newBps: 90, protocolBps: 10, oldBps: 100 },
 ]
-
-export const NEW_DEFAULT_LP_FEE_TIERS_BPS: readonly number[] = DEFAULT_FEE_TIER_PAIRS.map((pair) => pair.newBps)

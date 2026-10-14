@@ -5,11 +5,15 @@ import {
   useSwapFormStore,
   useSwapFormStoreDerivedSwapInfo,
 } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import { SwapFormButtonAction } from 'uniswap/src/features/transactions/swap/types/swapFormButtonAction'
 
-const useTraceProperties = (): {
+const useTraceProperties = (
+  action: SwapFormButtonAction,
+): {
   chainId: number
   tokenAmount: string | undefined
   fiatAmount: string | undefined
+  action: SwapFormButtonAction
 } => {
   const { exactAmountToken, exactAmountFiat } = useSwapFormStore((s) => ({
     exactAmountToken: s.exactAmountToken,
@@ -22,13 +26,20 @@ const useTraceProperties = (): {
       chainId,
       tokenAmount: exactAmountToken,
       fiatAmount: exactAmountFiat,
+      action,
     }),
-    [chainId, exactAmountToken, exactAmountFiat],
+    [chainId, exactAmountToken, exactAmountFiat, action],
   )
 }
 
-export const SwapFormButtonTrace = ({ children }: { children: React.ReactNode }): JSX.Element => {
-  const traceProperties = useTraceProperties()
+export const SwapFormButtonTrace = ({
+  children,
+  action,
+}: {
+  children: React.ReactNode
+  action: SwapFormButtonAction
+}): JSX.Element => {
+  const traceProperties = useTraceProperties(action)
 
   return (
     <Trace logPress properties={traceProperties} element={ElementName.SwapReview}>

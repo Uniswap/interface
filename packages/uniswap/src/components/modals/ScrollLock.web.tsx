@@ -38,16 +38,25 @@ export function updateScrollLock({ isModalOpen }: { isModalOpen: boolean }): voi
     body.style.top = `-${currentScrollY}px`
   } else {
     const body = document.body
+    // The offset to restore lives only in `body.style.top`, and unlocking clears it. Without this
+    // guard a second unlock reads an empty `top` and scrolls the page to 0.
+    if (body.style.position !== 'fixed') {
+      return
+    }
     const scrollY = body.style.top
     body.style.position = ''
     body.style.top = ''
-    window.scrollTo(0, parseInt(scrollY || '0', 10) * -1)
+    // parseFloat: scrollY is fractional under browser zoom / high-DPI, and parseInt would drop it
+    window.scrollTo(0, parseFloat(scrollY || '0') * -1)
   }
 }
 
 export function useUpdateScrollLock({ isModalOpen }: { isModalOpen: boolean }): void {
   useEffect(() => {
-    updateScrollLock({ isModalOpen })
+    if (!isModalOpen) {
+      return undefined
+    }
+    updateScrollLock({ isModalOpen: true })
     return () => updateScrollLock({ isModalOpen: false })
   }, [isModalOpen])
 }

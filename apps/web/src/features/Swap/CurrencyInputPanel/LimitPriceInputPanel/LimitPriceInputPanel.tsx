@@ -9,7 +9,6 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 // oxlint-disable-next-line no-restricted-imports -- We need to import this directly so we can format with `en-US` locale
@@ -46,7 +45,7 @@ interface LimitPriceInputPanelProps {
 export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelProps) {
   const [currencySelectModalField, setCurrencySelectModalField] = useState<keyof CurrencyState | undefined>(undefined)
   const {
-    derivedLimitInfo: { currencies, parsedLimitPrice, marketPrice: tradeMarketPrice },
+    derivedLimitInfo: { parsedLimitPrice, marketPrice: tradeMarketPrice },
     setLimitState,
     limitState: { limitPrice, limitPriceInverted },
   } = useLimitContext()
@@ -68,14 +67,10 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
     currencyState: { inputCurrency, outputCurrency },
   } = useSwapAndLimitContext()
 
-  // Price math uses the per-chain currencies from `derivedLimitInfo`; the selector's objects are display-only.
   const [baseCurrency, quoteCurrency, marketPrice] = limitPriceInverted
-    ? [currencies[CurrencyField.OUTPUT], currencies[CurrencyField.INPUT], tradeMarketPrice?.invert()]
-    : [currencies[CurrencyField.INPUT], currencies[CurrencyField.OUTPUT], tradeMarketPrice]
-  const [displayBaseCurrency, displayQuoteCurrency] = limitPriceInverted
-    ? [outputCurrency, inputCurrency]
-    : [inputCurrency, outputCurrency]
-  const quoteCurrencyInfo = useCurrencyInfo(currencyId(displayQuoteCurrency))
+    ? [outputCurrency, inputCurrency, tradeMarketPrice?.invert()]
+    : [inputCurrency, outputCurrency, tradeMarketPrice]
+  const quoteCurrencyInfo = useCurrencyInfo(currencyId(quoteCurrency))
 
   const { formatCurrencyAmount } = useLocalizationContext()
 
@@ -195,7 +190,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
       <Flex flexDirection="column" gap="$gap4" width="100%">
         <Flex row width="100%" justifyContent="space-between" alignItems="center">
           <LimitPriceInputLabel
-            currency={displayBaseCurrency}
+            currency={baseCurrency}
             showCurrencyMessage={!!formattedLimitPriceOutputAmount}
             openCurrencySearchModal={() => setCurrencySelectModalField('inputCurrency')}
           />
@@ -209,7 +204,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
             value={formattedLimitPriceOutputAmount}
             onUserInput={changeLimitPrice}
           />
-          {displayQuoteCurrency && (
+          {quoteCurrency && (
             <Flex alignItems="center" justifyContent="center">
               <TouchableArea onPress={() => setCurrencySelectModalField('outputCurrency')}>
                 <Flex
@@ -233,7 +228,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
                     flexShrink={1}
                     minWidth={0}
                   >
-                    {formatCurrencySymbol(displayQuoteCurrency)}
+                    {formatCurrencySymbol(quoteCurrency)}
                   </Text>
                 </Flex>
               </TouchableArea>
@@ -287,8 +282,8 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
             currency,
           )
         }}
-        selectedCurrency={displayQuoteCurrency}
-        otherSelectedCurrency={displayBaseCurrency}
+        selectedCurrency={quoteCurrency}
+        otherSelectedCurrency={baseCurrency}
       />
     </InputPanel>
   )

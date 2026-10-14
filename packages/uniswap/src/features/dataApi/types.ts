@@ -2,6 +2,7 @@ import type { Contract } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import type { Currency } from '@uniswap/sdk-core'
 import type { SpamCode } from '@universe/api'
 import type { ProtectionResult } from 'uniswap/src/features/dataApi/safety'
+import type { RWAIssuerDisplay } from 'uniswap/src/features/rwa/types'
 import type { PoolSearchHistoryResult } from 'uniswap/src/features/search/SearchHistoryResult'
 import type { FoTPercent } from 'uniswap/src/features/tokens/warnings/TokenWarningModal'
 import type { CurrencyId } from 'uniswap/src/types/currency'
@@ -35,6 +36,8 @@ export interface BaseResult<T> {
   error?: Error
   /** Epoch ms when the underlying query last successfully fetched data. */
   dataUpdatedAt?: number
+  /** True while `data` is still the previous query key's result (e.g. the last wallet's portfolio). */
+  isPlaceholderData?: boolean
 }
 
 /** Outage state from data-fetching hooks — pairs an error with the last-known data timestamp. */
@@ -116,6 +119,9 @@ export type CurrencyInfo = {
   /** Backend category ids in BE ranking order, from v2 data-api token payloads; absent on v1/GraphQL-built
    *  CurrencyInfo. Hydrate via ListCategories. */
   categoryIds?: string[]
+  /** Backend issuer branding of a tokenized RWA, from v2 data-api token payloads; absent on v1/GraphQL-built
+   *  CurrencyInfo and on ordinary tokens. */
+  issuer?: RWAIssuerDisplay
 }
 
 // Portfolio balance as exposed to the app
@@ -203,6 +209,12 @@ export type MultichainSearchResult = {
 export type PoolSearchStats = {
   volume1dUsd?: number
   apr?: number
+}
+
+/** Display stats for a search result auction row (Search V2 UI: projected FDV over a live countdown). */
+export type AuctionSearchStats = {
+  fdvUsd?: number
+  endTimeMs?: number
 }
 
 /**

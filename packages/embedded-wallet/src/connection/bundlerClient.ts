@@ -1,6 +1,6 @@
 import { createFetchClient, getEntryGatewayUrl, provideSessionService } from '@universe/api'
+import { entryPoint08Address, type RpcUserOperation } from '@universe/chains'
 import { BASE_UNISWAP_HEADERS } from 'uniswap/src/data/apiClients/createUniswapFetchClient'
-import { entryPoint08Address, type RpcUserOperation } from 'viem/account-abstraction'
 
 /**
  * Fetch client for the ERC-4337 bundler RPC at EntryGateway (`/rpc/<chainId>`).

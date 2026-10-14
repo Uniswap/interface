@@ -101,7 +101,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
   }
 
   const finishCloudBackup = (): void => {
-    navigate(MobileScreens.MainTabs, { screen: MobileScreens.Home })
+    navigate(MobileScreens.MainTabs, { screen: MobileScreens.Home }, { pop: true })
   }
 
   useFocusEffect(
@@ -121,7 +121,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
     if (confirmContinueButtonPressed && hasBackup(BackupType.Manual, account)) {
       setShowSpeedBumpModal(false)
       if (params.entryPoint === OnboardingEntryPoint.BackupCard) {
-        navigate(MobileScreens.MainTabs, { screen: MobileScreens.Home })
+        navigate(MobileScreens.MainTabs, { screen: MobileScreens.Home }, { pop: true })
       } else {
         navigation.replace(OnboardingScreens.Notifications, params)
       }

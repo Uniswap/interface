@@ -1,4 +1,3 @@
-import type { TransactionRequest } from '@ethersproject/abstract-provider'
 import { UniverseChainId } from '@universe/chains'
 import { call, take } from 'typed-redux-saga'
 import { CancelableStepInfo } from 'uniswap/src/features/transactions/hooks/useIsCancelable'
@@ -6,6 +5,7 @@ import { cancelPlanStep } from 'uniswap/src/features/transactions/slice'
 import { activePlanStore } from 'uniswap/src/features/transactions/swap/review/stores/activePlan/activePlanStore'
 import { signalPlanCancellation } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
+import type { TransactionRequest } from '~/chains'
 import store from '~/state'
 import { handleCancelOrder } from '~/state/sagas/transactions/cancelOrderSaga'
 

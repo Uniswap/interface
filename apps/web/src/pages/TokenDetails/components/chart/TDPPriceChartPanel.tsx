@@ -19,6 +19,7 @@ interface TDPPriceChartPanelProps {
   tokenColor?: string
   timePeriod: TimePeriod
   currency: Currency
+  isStablecoin?: boolean
   /** Present only for a confirmed Custom auction with no pool. */
   auctionOnlyPhase?: AuctionDisplayPhase
 }
@@ -31,6 +32,7 @@ export function TDPPriceChartPanel({
   tokenColor,
   timePeriod,
   currency,
+  isStablecoin,
   auctionOnlyPhase,
 }: TDPPriceChartPanelProps): JSX.Element {
   const { t } = useTranslation()
@@ -86,6 +88,7 @@ export function TDPPriceChartPanel({
       timePeriod={toHistoryDuration(timePeriod)}
       pricePercentChange={pricePercentChange}
       overrideColor={tokenColor}
+      isStablecoin={isStablecoin}
     />
   )
 }

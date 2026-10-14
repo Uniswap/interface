@@ -4,6 +4,7 @@ import { ArrowRight } from '@universe/mycelium/icons/ArrowRight'
 import { TestID } from '@universe/test'
 import { memo, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 import type { StyleProp, ViewStyle } from 'react-native'
+import { FocusedRow, useCreateFocusedRowStore } from 'uniswap/src/components/lists/focusedRowStore'
 import { AuctionOptionItem } from 'uniswap/src/components/lists/items/auctions/AuctionOptionItem'
 import { CategoryOptionItem } from 'uniswap/src/components/lists/items/categories/CategoryOptionItem'
 import { EarnVaultOptionItem } from 'uniswap/src/components/lists/items/earn/EarnVaultOptionItem'
@@ -64,6 +65,8 @@ export interface SearchModalListProps {
   /** Resolved primary-chain CurrencyInfos keyed by normalized currencyId, used by the RwaCollection rows' context
    *  menu. */
   rwaIssuerCurrencyInfos?: Map<string, CurrencyInfo>
+  /** Mobile rows are too narrow for a secondary category pill beside the name. */
+  hideTokenCategoryTag?: boolean
   onResultsShownChange?: (count: number) => void
 }
 
@@ -81,6 +84,7 @@ export const SearchModalList = memo(function SearchModalListInner({
   contentContainerStyle,
   rowWrapper,
   rwaIssuerCurrencyInfos,
+  hideTokenCategoryTag = false,
   onResultsShownChange,
 }: SearchModalListProps): JSX.Element {
   const { chains: enabledChainIds } = useEnabledChains()
@@ -92,19 +96,23 @@ export const SearchModalList = memo(function SearchModalListInner({
   const { categories } = useAllTokenCategories()
   const getEarnApyPercent = useSearchEarnApy({ enabled: isSearchV2UIEnabled })
 
-  const [focusedRowIndex, setFocusedRowIndex] = useState<number | undefined>()
-  const [expandedItems, setExpandedItems] = useState<string[]>([])
-
   const resultsShown = useMemo(() => countSearchResultRows(sections), [sections])
   useEffect(() => {
     onResultsShownChange?.(resultsShown)
   }, [onResultsShownChange, resultsShown])
 
+  const focusedRowStore = useCreateFocusedRowStore()
+  const { setFocusedRowIndex } = focusedRowStore
+  const [expandedItems, setExpandedItems] = useState<string[]>([])
+
   // Auction rows only get a hover card under Search V2 (token rows always do).
   // Not gated on the auction-search flag: that governs whether auction rows are fetched at all.
   const auctionRowWrapper = isSearchV2UIEnabled ? rowWrapper : undefined
-  const wrapTokenRow = ({ element, currencyInfo }: { element: JSX.Element; currencyInfo: CurrencyInfo }): JSX.Element =>
-    rowWrapper ? rowWrapper({ element, currencyInfo, variant: 'token' }) : element
+  const wrapTokenRow = useCallback(
+    ({ element, currencyInfo }: { element: JSX.Element; currencyInfo: CurrencyInfo }): JSX.Element =>
+      rowWrapper ? rowWrapper({ element, currencyInfo, variant: 'token' }) : element,
+    [rowWrapper],
+  )
 
   // Reset expand-state during render (not in an effect, which would flash a stale expansion for one frame)
   // when the search context changes; a stale key would re-expand an unrelated same-keyed row, growing unbounded.
@@ -189,254 +197,265 @@ export const SearchModalList = memo(function SearchModalListInner({
     [sections, categories, navigateToCategoryDetails, openCategoryDetails],
   )
 
-  const renderItem = ({
-    item,
-    section,
-    rowIndex,
-    index,
-    expanded,
-  }: ItemRowInfo<SearchModalListOption>): JSX.Element => {
-    if (Array.isArray(item)) {
-      // Horizontal renderers dispatch on sectionKey (same mechanism as TokenSelectorV2List).
-      if (section.sectionKey !== OnchainItemSectionName.RecentSearches) {
-        return <></>
-      }
-      return (
-        <RecentSearchPills
-          getModifierPressHref={getModifierPressHref}
-          options={item}
-          rowIndex={rowIndex}
-          section={section}
-          onModifierPress={recordSelection}
-          onSelectOption={selectOption}
-        />
-      )
-    }
-
-    const selection: SearchModalOptionSelection = { item, section, index, rowIndex }
-    const onPress = (): void => selectOption(selection)
-    const onModifierPress = (): void => recordSelection(selection)
-    const modifierPressHref = getModifierPressHref(item)
-
-    switch (item.type) {
-      case OnchainItemListOptionType.Pool: {
+  // Memoized: the list rebuilds every row object when `renderItem` changes identity, which re-renders
+  // every mounted row. Deps are the values the rows actually read, so a category or issuer load still
+  // reaches them.
+  const renderItem = useCallback(
+    ({ item, section, rowIndex, index, expanded }: ItemRowInfo<SearchModalListOption>): JSX.Element => {
+      if (Array.isArray(item)) {
+        // Horizontal renderers dispatch on sectionKey (same mechanism as TokenSelectorV2List).
+        if (section.sectionKey !== OnchainItemSectionName.RecentSearches) {
+          return <></>
+        }
         return (
-          <PoolOptionItem
-            token0CurrencyInfo={item.token0CurrencyInfo}
-            token1CurrencyInfo={item.token1CurrencyInfo}
-            poolId={item.poolId}
-            chainId={item.chainId}
-            protocolVersion={item.protocolVersion}
-            hookAddress={item.hookAddress}
-            feeTier={item.feeTier}
-            identityPlacement={isSearchV2UIEnabled ? 'subtitle' : 'badge'}
-            searchStats={isSearchV2UIEnabled ? { volume1dUsd: item.volume1dUsd, apr: item.apr } : undefined}
-            focusedRowControl={{
-              rowIndex,
-              setFocusedRowIndex,
-              focusedRowIndex,
-            }}
-            rightElement={
-              // V2 gives the right edge to vol/APR, like the token rows; long-press/right-click still opens the menu.
-              !isSearchV2UIEnabled && isHoverable ? (
-                <PoolRowContextMenuButton
-                  poolId={item.poolId}
-                  chainId={item.chainId}
-                  protocolVersion={item.protocolVersion}
-                  isVisible={rowIndex === focusedRowIndex}
-                />
-              ) : undefined
-            }
-            modifierPressHref={modifierPressHref}
-            onPress={onPress}
-            onModifierPress={onModifierPress}
-          />
-        )
-      }
-      case OnchainItemListOptionType.Token: {
-        const tokenElement = (
-          <TokenOptionItem
-            showTokenAddress={!isSearchV2UIEnabled}
-            option={item}
-            displayName={item.rwaName}
-            issuer={item.rwaIssuerSlug}
-            showIssuerTag={isSearchV2UIEnabled}
-            categoryTag={getRowCategoryTag({
-              rwaCategory: item.rwaCategory,
-              categoryIds: item.currencyInfo.categoryIds,
-              categories,
-              scopedCategoryId: section.categoryId,
-            })}
-            categoryTagPlacement={categoryTagPlacement}
-            contextMenuVariant={TokenContextMenuVariant.Search}
-            focusedRowControl={{
-              focusedRowIndex,
-              setFocusedRowIndex,
-              rowIndex,
-            }}
-            searchStats={isSearchV2UIEnabled ? item.currencyInfo.searchStats : undefined}
-            earnApyPercent={getEarnApyPercent([item.currencyInfo.currencyId])}
-            symbolMaxCharacters={symbolMaxCharacters}
-            hideContextMenu={isSearchV2UIEnabled}
-            rightElement={
-              !isSearchV2UIEnabled && isHoverable ? (
-                <TokenRowContextMenuButton
-                  currency={item.currencyInfo.currency}
-                  isVisible={rowIndex === focusedRowIndex}
-                />
-              ) : undefined
-            }
-            modifierPressHref={modifierPressHref}
-            onPress={onPress}
-            onModifierPress={onModifierPress}
-          />
-        )
-        return wrapTokenRow({ element: tokenElement, currencyInfo: item.currencyInfo })
-      }
-      case OnchainItemListOptionType.MultichainToken: {
-        const multichainElement = (
-          <TokenOptionItem
-            option={{
-              type: OnchainItemListOptionType.Token,
-              currencyInfo: item.primaryCurrencyInfo,
-              quantity: null,
-              balanceUSD: undefined,
-            }}
-            displayName={item.rwaName ?? item.multichainResult.name}
-            issuer={item.rwaIssuerSlug}
-            showIssuerTag={isSearchV2UIEnabled}
-            networkCount={item.multichainResult.tokens.length}
-            hideNetworkCount={isSearchV2UIEnabled}
-            categoryTag={getRowCategoryTag({
-              rwaCategory: item.rwaCategory,
-              categoryIds: item.primaryCurrencyInfo.categoryIds,
-              categories,
-              scopedCategoryId: section.categoryId,
-            })}
-            categoryTagPlacement={categoryTagPlacement}
-            searchStats={isSearchV2UIEnabled ? item.multichainResult.stats : undefined}
-            earnApyPercent={getEarnApyPercent(item.multichainResult.tokens.map((token) => token.currencyId))}
-            symbolMaxCharacters={symbolMaxCharacters}
-            hideContextMenu={isSearchV2UIEnabled}
-            contextMenuVariant={TokenContextMenuVariant.Search}
-            multichainData={{
-              tokens: item.multichainResult.tokens,
-              primaryCurrencyInfo: item.primaryCurrencyInfo,
-            }}
-            focusedRowControl={{
-              focusedRowIndex,
-              setFocusedRowIndex,
-              rowIndex,
-            }}
-            modifierPressHref={modifierPressHref}
-            onPress={onPress}
-            onModifierPress={onModifierPress}
-          />
-        )
-        return wrapTokenRow({ element: multichainElement, currencyInfo: item.primaryCurrencyInfo })
-      }
-      case OnchainItemListOptionType.RwaCollection: {
-        const { rwa } = item
-        return (
-          <RwaCollectionItem
-            item={item}
-            expanded={Boolean(expanded)}
-            searchFilters={searchFilters}
-            section={section}
-            index={index}
+          <RecentSearchPills
+            getModifierPressHref={getModifierPressHref}
+            options={item}
             rowIndex={rowIndex}
-            focusedRowControl={{ rowIndex, setFocusedRowIndex, focusedRowIndex }}
-            renderIssuerRow={renderRwaIssuerRow}
-            isIssuerMenuReady={isRwaIssuerMenuReady}
-            testID={`${TestID.SearchRwaCollectionPrefix}${rwa.symbol}`}
-            searchStats={isSearchV2UIEnabled ? item.searchStats : undefined}
-            showIssuerStats={isSearchV2UIEnabled}
-            showIssuerTag={isSearchV2UIEnabled}
-            categoryTagPlacement={categoryTagPlacement}
-            onToggle={() => toggleExpanded(getRwaCollectionKey({ rwa }))}
-            onSelect={onSelect}
+            section={section}
+            onModifierPress={recordSelection}
+            onSelectOption={selectOption}
           />
         )
       }
-      case OnchainItemListOptionType.WalletByAddress:
-        return (
-          <WalletByAddressOptionItem
-            walletByAddressOption={item}
-            modifierPressHref={modifierPressHref}
-            onPress={onPress}
-            onModifierPress={onModifierPress}
-          />
-        )
-      case OnchainItemListOptionType.ENSAddress:
-        return (
-          <ENSAddressOptionItem
-            ensAddressOption={item}
-            modifierPressHref={modifierPressHref}
-            onPress={onPress}
-            onModifierPress={onModifierPress}
-          />
-        )
-      case OnchainItemListOptionType.EarnVault:
-        return (
-          <EarnVaultOptionItem
-            option={item}
-            focusedRowControl={{
-              focusedRowIndex,
-              setFocusedRowIndex,
-              rowIndex,
-            }}
-            rightElement={
-              isHoverable && rowIndex === focusedRowIndex ? <ArrowRight color="$neutral2" size="$icon.20" /> : undefined
-            }
-            onPress={onPress}
-          />
-        )
-      case OnchainItemListOptionType.Category:
-        return (
-          <CategoryOptionItem
-            option={item}
-            focusedRowControl={{ focusedRowIndex, setFocusedRowIndex, rowIndex }}
-            modifierPressHref={modifierPressHref}
-            onPress={onPress}
-            onModifierPress={onModifierPress}
-          />
-        )
-      case OnchainItemListOptionType.Unitag:
-        return (
-          <UnitagOptionItem
-            unitagOption={item}
-            modifierPressHref={modifierPressHref}
-            onPress={onPress}
-            onModifierPress={onModifierPress}
-          />
-        )
-      case OnchainItemListOptionType.Auction: {
-        const auctionElement = (
-          <AuctionOptionItem
-            option={item}
-            focusedRowControl={{
-              rowIndex,
-              setFocusedRowIndex,
-              focusedRowIndex,
-            }}
-            onPress={onPress}
-          />
-        )
-        return auctionRowWrapper
-          ? auctionRowWrapper({ element: auctionElement, variant: 'auction', auction: item })
-          : auctionElement
+
+      const selection: SearchModalOptionSelection = { item, section, index, rowIndex }
+      const onPress = (): void => selectOption(selection)
+      const onModifierPress = (): void => recordSelection(selection)
+      const modifierPressHref = getModifierPressHref(item)
+
+      switch (item.type) {
+        case OnchainItemListOptionType.Pool: {
+          return (
+            <PoolOptionItem
+              token0CurrencyInfo={item.token0CurrencyInfo}
+              token1CurrencyInfo={item.token1CurrencyInfo}
+              poolId={item.poolId}
+              chainId={item.chainId}
+              protocolVersion={item.protocolVersion}
+              hookAddress={item.hookAddress}
+              feeTier={item.feeTier}
+              identityPlacement={isSearchV2UIEnabled ? 'subtitle' : 'badge'}
+              searchStats={isSearchV2UIEnabled ? { volume1dUsd: item.volume1dUsd, apr: item.apr } : undefined}
+              focusedRowControl={{ rowIndex, setFocusedRowIndex }}
+              rightElement={
+                // V2 gives the right edge to vol/APR, like the token rows; long-press/right-click still opens the menu.
+                !isSearchV2UIEnabled && isHoverable ? (
+                  <FocusedRow rowIndex={rowIndex}>
+                    {(isRowFocused) => (
+                      <PoolRowContextMenuButton
+                        poolId={item.poolId}
+                        chainId={item.chainId}
+                        protocolVersion={item.protocolVersion}
+                        isVisible={isRowFocused}
+                      />
+                    )}
+                  </FocusedRow>
+                ) : undefined
+              }
+              modifierPressHref={modifierPressHref}
+              onPress={onPress}
+              onModifierPress={onModifierPress}
+            />
+          )
+        }
+        case OnchainItemListOptionType.Token: {
+          const tokenElement = (
+            <TokenOptionItem
+              showTokenAddress={!isSearchV2UIEnabled}
+              option={item}
+              displayName={item.rwaName}
+              issuer={item.rwaIssuer}
+              showIssuerTag={isSearchV2UIEnabled}
+              categoryTag={
+                hideTokenCategoryTag || section.categoryId
+                  ? undefined
+                  : getRowCategoryTag({
+                      rwaCategory: item.rwaCategory,
+                      categoryIds: item.currencyInfo.categoryIds,
+                      categories,
+                    })
+              }
+              categoryTagPlacement={categoryTagPlacement}
+              contextMenuVariant={TokenContextMenuVariant.Search}
+              focusedRowControl={{ rowIndex, setFocusedRowIndex }}
+              searchStats={isSearchV2UIEnabled ? item.currencyInfo.searchStats : undefined}
+              earnApyPercent={getEarnApyPercent([item.currencyInfo.currencyId])}
+              symbolMaxCharacters={symbolMaxCharacters}
+              hideContextMenu={isSearchV2UIEnabled}
+              rightElement={
+                !isSearchV2UIEnabled && isHoverable ? (
+                  <FocusedRow rowIndex={rowIndex}>
+                    {(isRowFocused) => (
+                      <TokenRowContextMenuButton currency={item.currencyInfo.currency} isVisible={isRowFocused} />
+                    )}
+                  </FocusedRow>
+                ) : undefined
+              }
+              modifierPressHref={modifierPressHref}
+              onPress={onPress}
+              onModifierPress={onModifierPress}
+            />
+          )
+          return wrapTokenRow({ element: tokenElement, currencyInfo: item.currencyInfo })
+        }
+        case OnchainItemListOptionType.MultichainToken: {
+          const multichainElement = (
+            <TokenOptionItem
+              option={{
+                type: OnchainItemListOptionType.Token,
+                currencyInfo: item.primaryCurrencyInfo,
+                quantity: null,
+                balanceUSD: undefined,
+              }}
+              displayName={item.rwaName ?? item.multichainResult.name}
+              issuer={item.rwaIssuer}
+              showIssuerTag={isSearchV2UIEnabled}
+              networkCount={item.multichainResult.tokens.length}
+              hideNetworkCount={isSearchV2UIEnabled}
+              categoryTag={
+                hideTokenCategoryTag || section.categoryId
+                  ? undefined
+                  : getRowCategoryTag({
+                      rwaCategory: item.rwaCategory,
+                      categoryIds: item.primaryCurrencyInfo.categoryIds,
+                      categories,
+                    })
+              }
+              categoryTagPlacement={categoryTagPlacement}
+              searchStats={isSearchV2UIEnabled ? item.multichainResult.stats : undefined}
+              earnApyPercent={getEarnApyPercent(item.multichainResult.tokens.map((token) => token.currencyId))}
+              symbolMaxCharacters={symbolMaxCharacters}
+              hideContextMenu={isSearchV2UIEnabled}
+              contextMenuVariant={TokenContextMenuVariant.Search}
+              multichainData={{
+                tokens: item.multichainResult.tokens,
+                primaryCurrencyInfo: item.primaryCurrencyInfo,
+              }}
+              focusedRowControl={{ rowIndex, setFocusedRowIndex }}
+              modifierPressHref={modifierPressHref}
+              onPress={onPress}
+              onModifierPress={onModifierPress}
+            />
+          )
+          return wrapTokenRow({ element: multichainElement, currencyInfo: item.primaryCurrencyInfo })
+        }
+        case OnchainItemListOptionType.RwaCollection: {
+          const { rwa } = item
+          return (
+            <RwaCollectionItem
+              item={item}
+              expanded={Boolean(expanded)}
+              searchFilters={searchFilters}
+              section={section}
+              index={index}
+              rowIndex={rowIndex}
+              focusedRowControl={{ rowIndex, setFocusedRowIndex }}
+              renderIssuerRow={renderRwaIssuerRow}
+              isIssuerMenuReady={isRwaIssuerMenuReady}
+              testID={`${TestID.SearchRwaCollectionPrefix}${rwa.symbol}`}
+              searchStats={isSearchV2UIEnabled ? item.searchStats : undefined}
+              showIssuerStats={isSearchV2UIEnabled}
+              showIssuerTag={isSearchV2UIEnabled}
+              categoryTagPlacement={categoryTagPlacement}
+              onToggle={() => toggleExpanded(getRwaCollectionKey({ rwa }))}
+              onSelect={onSelect}
+            />
+          )
+        }
+        case OnchainItemListOptionType.WalletByAddress:
+          return (
+            <WalletByAddressOptionItem
+              walletByAddressOption={item}
+              modifierPressHref={modifierPressHref}
+              onPress={onPress}
+              onModifierPress={onModifierPress}
+            />
+          )
+        case OnchainItemListOptionType.ENSAddress:
+          return (
+            <ENSAddressOptionItem
+              ensAddressOption={item}
+              modifierPressHref={modifierPressHref}
+              onPress={onPress}
+              onModifierPress={onModifierPress}
+            />
+          )
+        case OnchainItemListOptionType.EarnVault:
+          return (
+            <EarnVaultOptionItem
+              option={item}
+              focusedRowControl={{ rowIndex, setFocusedRowIndex }}
+              rightElement={
+                isHoverable ? (
+                  <FocusedRow rowIndex={rowIndex}>
+                    {(isRowFocused) => (isRowFocused ? <ArrowRight color="$neutral2" size="$icon.20" /> : null)}
+                  </FocusedRow>
+                ) : undefined
+              }
+              onPress={onPress}
+            />
+          )
+        case OnchainItemListOptionType.Category:
+          return (
+            <CategoryOptionItem
+              option={item}
+              focusedRowControl={{ rowIndex, setFocusedRowIndex }}
+              modifierPressHref={modifierPressHref}
+              onPress={onPress}
+              onModifierPress={onModifierPress}
+            />
+          )
+        case OnchainItemListOptionType.Unitag:
+          return (
+            <UnitagOptionItem
+              unitagOption={item}
+              modifierPressHref={modifierPressHref}
+              onPress={onPress}
+              onModifierPress={onModifierPress}
+            />
+          )
+        case OnchainItemListOptionType.Auction: {
+          const auctionElement = (
+            <AuctionOptionItem
+              option={item}
+              focusedRowControl={{ rowIndex, setFocusedRowIndex }}
+              searchStats={isSearchV2UIEnabled ? item.searchStats : undefined}
+              onPress={onPress}
+            />
+          )
+          return auctionRowWrapper
+            ? auctionRowWrapper({ element: auctionElement, variant: 'auction', auction: item })
+            : auctionElement
+        }
+        default:
+          return <></>
       }
-      default:
-        return <></>
-    }
-  }
+    },
+    [
+      auctionRowWrapper,
+      categories,
+      categoryTagPlacement,
+      getModifierPressHref,
+      getEarnApyPercent,
+      hideTokenCategoryTag,
+      isRwaIssuerMenuReady,
+      isSearchV2UIEnabled,
+      onSelect,
+      recordSelection,
+      renderRwaIssuerRow,
+      searchFilters,
+      selectOption,
+      setFocusedRowIndex,
+      symbolMaxCharacters,
+      toggleExpanded,
+      wrapTokenRow,
+    ],
+  )
 
   return (
     <SelectorBaseList<SearchModalListOption>
-      focusedRowControl={{
-        focusedRowIndex,
-        setFocusedRowIndex,
-      }}
+      focusedRowStore={focusedRowStore}
       autoFocusFirstRowKey={isSearchV2UIEnabled ? resetKey : undefined}
       renderItem={renderItem}
       sections={sectionsWithHeaderActions}

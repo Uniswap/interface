@@ -11,6 +11,7 @@ import {
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { getPortfolioChartPercentChange } from 'uniswap/src/features/portfolio/portfolioChartPercentChange'
+import { parseFiniteNumber } from 'utilities/src/primitives/number'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
 import { PriceChartType } from '~/components/Charts/utils'
 import { useTokenPriceChartData } from '~/hooks/useTokenPriceChartData'
@@ -23,14 +24,6 @@ async function getAuctionServiceClient(): Promise<
   const { AuctionServiceClient } =
     await import('uniswap/src/data/apiClients/dataApiService/auctions/AuctionServiceClient')
   return AuctionServiceClient
-}
-
-export function parseUsd(value: string | undefined): number | undefined {
-  if (!value) {
-    return undefined
-  }
-  const parsed = Number.parseFloat(value)
-  return Number.isFinite(parsed) ? parsed : undefined
 }
 
 export interface AuctionHoverCardData {
@@ -107,10 +100,10 @@ export function useAuctionHoverCardData({
   const auction = auctionResponse?.auctions[0]
 
   return {
-    fdvUsd: parseUsd(auction?.fdvUsd),
+    fdvUsd: parseFiniteNumber(auction?.fdvUsd),
     pricePercentChange,
     priceData,
-    committedVolumeUsd: parseUsd(auction?.totalBidVolumeUsd),
+    committedVolumeUsd: parseFiniteNumber(auction?.totalBidVolumeUsd),
     bidCount: checkpointResponse?.totalBidCount,
     // The checkpoint is the only source of `bidCount`, so the stats row waits for it too or participation pops in late.
     loading: isEnabled && (auctionLoading || (chartEnabled && chartLoading) || (fetchBidCount && checkpointLoading)),

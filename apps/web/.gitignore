@@ -56,8 +56,6 @@ package-lock.json
 
 .vercel
 
-.wrangler
-
 # Storybook
 *storybook.log
 storybook-static/

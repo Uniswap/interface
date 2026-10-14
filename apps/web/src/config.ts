@@ -75,9 +75,6 @@ const webConfigValues = {
   /** SKIP_CSP — skip CSP meta tag injection */
   skipCsp: process.env.SKIP_CSP,
 
-  /** CLOUDFLARE_ENV — wrangler environment name for CF deploys */
-  cloudflareEnv: process.env.CLOUDFLARE_ENV,
-
   // #endregion
 
   // #region Analytics & Monitoring
@@ -126,7 +123,6 @@ export const webConfigSchema = z.object({
   disableSourcemap: boolFromString.describe('Is sourcemap generation disabled'),
   debugProxy: boolFromString.describe('Is verbose entry-gateway proxy logging enabled'),
   skipCsp: boolFromString.describe('Is CSP meta tag injection skipped'),
-  cloudflareEnv: z.string().optional().describe('Cloudflare wrangler environment name'),
 
   // Analytics & Monitoring
   analyticsEnabled: boolFromString.describe('Is remote analytics reporting enabled'),

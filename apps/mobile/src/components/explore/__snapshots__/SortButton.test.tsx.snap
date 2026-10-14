@@ -5,7 +5,7 @@ exports[`SortButton > renders without error 1`] = `
   <div
     class="css-view-175oi2r"
     data-testid="explore-sort-button"
-    style="gap: 4px; padding-left: 16px; padding-right: 12px; border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px;"
+    style="gap: 4px;"
   >
     <button
       android_ripple="[object Object]"

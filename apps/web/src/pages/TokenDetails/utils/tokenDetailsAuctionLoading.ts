@@ -1,5 +1,5 @@
 import { getValidAddress } from '@universe/chains'
-import { AuctionLaunchMethod } from '~/features/Toucan/Auction/utils/auctionLaunchMethod'
+import { LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
 import { AuctionDisplayPhase, PoolAvailability } from '~/features/Toucan/Auction/utils/resolveAuctionDisplayState'
 import type { TokenDetailsAuctionDisplay } from '~/pages/TokenDetails/utils/tokenDetailsAuctionDisplay'
 
@@ -28,7 +28,7 @@ export function resolveInitialAuctionLoading({
 
   const pending =
     isOnline &&
-    display.launchMethod === AuctionLaunchMethod.Custom &&
+    display.launchMethod === LaunchProvenanceMethod.CustomAuction &&
     display.auction !== undefined &&
     display.chainId !== undefined &&
     getValidAddress({ address: display.auction.tokenAddress, chainId: display.chainId }) !== null &&

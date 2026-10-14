@@ -1,5 +1,5 @@
 import { computeIsGraduated } from '~/features/Toucan/Auction/utils/computeAuctionProgress'
-import { safeBigInt } from '~/features/Toucan/Auction/utils/safeBigInt'
+import { parseNonNegativeBigInt } from '~/features/Toucan/Auction/utils/safeBigInt'
 import type { TokenPoolState } from '~/types/tokenPool'
 
 export enum AuctionDisplayPhase {
@@ -51,7 +51,7 @@ export interface AuctionDisplayState {
   shouldShowSwap: boolean
 }
 
-function resolvePhase({
+export function resolveAuctionPhase({
   auction,
   currentBlock,
 }: Pick<ResolveAuctionDisplayStateInput, 'auction' | 'currentBlock'>): AuctionDisplayPhase {
@@ -67,9 +67,9 @@ function resolvePhase({
     return AuctionDisplayPhase.Unknown
   }
 
-  const startBlock = safeBigInt(auction.startBlock)
-  const endBlock = safeBigInt(auction.endBlock)
-  if (startBlock === null || startBlock < 0n || endBlock === null || endBlock < 0n || currentBlock.blockNumber < 0n) {
+  const startBlock = parseNonNegativeBigInt(auction.startBlock)
+  const endBlock = parseNonNegativeBigInt(auction.endBlock)
+  if (startBlock === null || endBlock === null || currentBlock.blockNumber < 0n) {
     return AuctionDisplayPhase.Unknown
   }
 
@@ -81,7 +81,7 @@ function resolvePhase({
   return blockNumber < endBlock ? AuctionDisplayPhase.Live : AuctionDisplayPhase.Ended
 }
 
-function resolveResult({
+export function resolveAuctionResult({
   phase,
   currencyRaised,
   requiredCurrencyRaised,
@@ -130,12 +130,12 @@ export function resolveAuctionDisplayState({
   currencyRaised,
   pools,
 }: ResolveAuctionDisplayStateInput): AuctionDisplayState {
-  const phase = resolvePhase({ auction, currentBlock })
+  const phase = resolveAuctionPhase({ auction, currentBlock })
   const poolAvailability = resolvePoolAvailability(pools)
 
   return {
     phase,
-    result: resolveResult({ phase, currencyRaised, requiredCurrencyRaised: auction?.requiredCurrencyRaised }),
+    result: resolveAuctionResult({ phase, currencyRaised, requiredCurrencyRaised: auction?.requiredCurrencyRaised }),
     poolAvailability,
     shouldShowSwap: !auction || poolAvailability !== PoolAvailability.NoPool,
   }

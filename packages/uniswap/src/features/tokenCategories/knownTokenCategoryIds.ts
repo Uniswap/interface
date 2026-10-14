@@ -7,16 +7,14 @@ export const KNOWN_TOKEN_CATEGORY_IDS = [
   'recently-launched',
   'top-gainers',
   'top-losers',
-  'high-volatility',
-  'low-volatility',
   'majors',
   'stablecoins',
   'stocks',
   'etfs',
   'commodities',
+  'meme',
   'defi',
   'gaming',
-  'ai-infra',
   'ai-agents',
 ] as const
 

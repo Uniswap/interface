@@ -1,19 +1,22 @@
 import { isTouchable } from '@universe/environment'
 import { Flex, Text, useMedia } from '@universe/mycelium'
 import { Presence } from '@universe/mycelium/presence'
-import { memo, useMemo } from 'react'
+import { Fragment, memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Popover, useShadowPropsMedium } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
+import { DeltaArrow } from '~/components/DeltaArrow/DeltaArrow'
+import { LoadingBubble } from '~/components/Tokens/loading'
 import { use24hProtocolVolume, useDailyTVLWithChange } from '~/features/Explore/state/protocolStats'
 
 interface ExploreStatSectionData {
   label: string
   value: string
   balance: number
+  percentChange?: number
   protocolPopoverFormattedData?: {
     label: string
     value?: number
@@ -25,19 +28,31 @@ export const ExploreStatsSection = ({ shouldHideStats = false }: { shouldHideSta
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
-  const { protocolVolumes, totalVolume, isLoading: isVolumeLoading } = use24hProtocolVolume()
-  const { totalTVL, protocolTVL, isLoading: isTVLLoading } = useDailyTVLWithChange()
+  const {
+    protocolVolumes,
+    totalVolume,
+    totalChangePercent: volumeChangePercent,
+    isLoading: isVolumeLoading,
+  } = use24hProtocolVolume()
+  const {
+    totalTVL,
+    protocolTVL,
+    totalChangePercent: tvlChangePercent,
+    protocolChangePercent,
+    isLoading: isTVLLoading,
+  } = useDailyTVLWithChange()
 
   const isStatDataLoading = isVolumeLoading || isTVLLoading
 
   const exploreStatsSectionData = useMemo(() => {
     const formatPrice = (price: number) => convertFiatAmountFormatted(price, NumberType.FiatTokenPrice)
 
-    const stats = [
+    const stats: ExploreStatSectionData[] = [
       {
         label: t('stats.volume.1d.long'),
         value: formatPrice(totalVolume),
         balance: totalVolume,
+        percentChange: volumeChangePercent,
         protocolPopoverFormattedData: [
           { label: t('common.protocol.v4'), value: protocolVolumes.v4 },
           { label: t('common.protocol.v3'), value: protocolVolumes.v3 },
@@ -48,21 +63,25 @@ export const ExploreStatsSection = ({ shouldHideStats = false }: { shouldHideSta
         label: t('common.totalUniswapTVL'),
         value: formatPrice(totalTVL),
         balance: totalTVL,
+        percentChange: tvlChangePercent,
       },
       {
         label: t('explore.v2TVL'),
         value: formatPrice(protocolTVL.v2),
         balance: protocolTVL.v2,
+        percentChange: protocolChangePercent.v2,
       },
       {
         label: t('explore.v3TVL'),
         value: formatPrice(protocolTVL.v3),
         balance: protocolTVL.v3,
+        percentChange: protocolChangePercent.v3,
       },
       {
         label: t('explore.v4TVL'),
         value: formatPrice(protocolTVL.v4),
         balance: protocolTVL.v4,
+        percentChange: protocolChangePercent.v4,
       },
     ]
 
@@ -72,13 +91,18 @@ export const ExploreStatsSection = ({ shouldHideStats = false }: { shouldHideSta
     t,
     convertFiatAmountFormatted,
     totalVolume,
+    volumeChangePercent,
     protocolVolumes.v4,
     protocolVolumes.v3,
     protocolVolumes.v2,
     totalTVL,
+    tvlChangePercent,
     protocolTVL.v2,
     protocolTVL.v3,
     protocolTVL.v4,
+    protocolChangePercent.v2,
+    protocolChangePercent.v3,
+    protocolChangePercent.v4,
   ])
 
   const visibleStats = media.md ? exploreStatsSectionData.slice(0, 2) : exploreStatsSectionData
@@ -122,12 +146,33 @@ interface StatDisplayProps {
 }
 
 const StatDisplay = memo(({ data, isLoading, isHoverable }: StatDisplayProps) => {
+  const { formatPercent } = useLocalizationContext()
+  const { t } = useTranslation()
+
   return (
-    <Flex transition="all 0.1s ease-in-out" group gap="$spacing4" minHeight={44}>
+    <Flex transition="all 0.1s ease-in-out" group gap="$spacing4" minHeight={60}>
       <Text variant="body4" color="$neutral2" $group-hover={{ color: isHoverable ? '$neutral2Hovered' : '$neutral2' }}>
         {data.label}
       </Text>
       <AnimatedNumber numericValue={data.balance} loading={isLoading} textVariant="$subheading1" value={data.value} />
+      <Flex row alignItems="center" gap="$spacing2" minHeight={16}>
+        {isLoading ? (
+          <LoadingBubble height={12} width={60} />
+        ) : (
+          data.percentChange !== undefined && (
+            <Fragment>
+              <DeltaArrow
+                delta={data.percentChange}
+                formattedDelta={formatPercent(Math.abs(data.percentChange))}
+                size={12}
+              />
+              <Text variant="body4" color="$neutral1">
+                {formatPercent(Math.abs(data.percentChange))} {t('common.today').toLocaleLowerCase()}
+              </Text>
+            </Fragment>
+          )
+        )}
+      </Flex>
     </Flex>
   )
 })

@@ -26,6 +26,11 @@ test.describe(
       await expect(page).toHaveURL(
         /\/positions\/add\/unichain\/0x740e789c2c770383feca96b0c38a952531711ef041b6e8300b47f0b2c9e3f3c8\?.*step=1/,
       )
+      // The hook review runs on the add-liquidity destination (LP-1778): this pool has a hook, so the
+      // dialog opens over the prefilled form and hides it from role queries until it is dismissed.
+      await expect(page.getByTestId(TestID.HookModalTitle)).toBeVisible()
+      await page.getByTestId(TestID.HookModalContinueButton).click()
+      await expect(page.getByTestId(TestID.HookModalContinueButton)).not.toBeVisible()
       await expect(page.getByRole('heading', { name: 'Set your position' })).toBeVisible()
       await expect(page.getByTestId(TestID.PoolPairLabel)).toHaveText(/ETH.*USDC/)
       await expect(page.getByText('Dynamic', { exact: true })).toBeVisible()

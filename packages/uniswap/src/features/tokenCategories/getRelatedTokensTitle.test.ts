@@ -14,7 +14,7 @@ describe(getRelatedTokensTitle, () => {
   })
 
   it('falls back to the plural name for unknown ids', () => {
-    const category = tokenCategory({ id: 'memes', name: 'Memes' })
-    expect(getRelatedTokensTitle({ t, category })).toBe('tdp.relatedTokens.single.fallback:Memes')
+    const category = tokenCategory({ id: 'unlisted-category', name: 'Unlisted' })
+    expect(getRelatedTokensTitle({ t, category })).toBe('tdp.relatedTokens.single.fallback:Unlisted')
   })
 })

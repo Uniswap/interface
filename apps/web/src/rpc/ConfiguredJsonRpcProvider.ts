@@ -1,8 +1,8 @@
-import { Networkish } from '@ethersproject/providers'
 import { UniverseChainId } from '@universe/chains'
 import { InstrumentedJsonRpcProvider } from 'uniswap/src/features/providers/observability/InstrumentedJsonRpcProvider'
 import { getRpcObserver } from 'uniswap/src/features/providers/observability/rpcObserver'
 import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
+import type { Networkish } from '~/chains'
 
 export default class ConfiguredJsonRpcProvider extends InstrumentedJsonRpcProvider {
   constructor({

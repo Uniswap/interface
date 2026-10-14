@@ -1,10 +1,11 @@
-import { Flex, Loader, ScrollView } from '@universe/mycelium'
-import { memo, useState } from 'react'
+import { Flex, Loader, UniversalList } from '@universe/mycelium'
+import { memo, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { activityItemsAreEqual, ON_END_REACHED_THRESHOLD } from 'uniswap/src/components/activity/activityListItems'
+import { getActivityItemType } from 'uniswap/src/components/activity/utils'
 import { DataApiOutageBanner } from 'uniswap/src/features/dataApi/outage/DataApiOutageBanner'
 import { DataApiOutageModalContent } from 'uniswap/src/features/dataApi/outage/DataApiOutageModalContent'
 import { useEvent } from 'utilities/src/react/hooks'
-import { useInfiniteScroll } from 'utilities/src/react/useInfiniteScroll'
 import { useActivityDataWallet } from 'wallet/src/features/activity/useActivityDataWallet'
 
 export const ActivityTab = memo(function ActivityTabInner({
@@ -22,6 +23,7 @@ export const ActivityTab = memo(function ActivityTabInner({
     maybeEmptyComponent,
     renderActivityItem,
     sectionData,
+    keyExtractor,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
@@ -37,36 +39,55 @@ export const ActivityTab = memo(function ActivityTabInner({
   const handleOutageBannerPress = useEvent(() => setIsOutageModalOpen(true))
   const handleOutageModalClose = useEvent(() => setIsOutageModalOpen(false))
 
-  const { sentinelRef } = useInfiniteScroll({
-    onLoadMore: fetchNextPage,
-    hasNextPage,
-    isFetching: isFetchingNextPage,
+  const handleEndReached = useEvent((): void => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage()
+    }
   })
+
+  const listHeader = useMemo(
+    () =>
+      shouldShowOutageBanner ? (
+        <Flex px="$spacing8">
+          <DataApiOutageBanner title={t('dataApi.outage.banner.activity.title')} onPress={handleOutageBannerPress} />
+        </Flex>
+      ) : null,
+    [shouldShowOutageBanner, t, handleOutageBannerPress],
+  )
+
+  const listFooter = useMemo(
+    () =>
+      isFetchingNextPage ? (
+        <Flex px="$spacing8">
+          <Loader.Transaction />
+        </Flex>
+      ) : null,
+    [isFetchingNextPage],
+  )
 
   return (
     <>
-      {maybeEmptyComponent ?? (
-        <ScrollView showsVerticalScrollIndicator={false} width="100%">
-          {shouldShowOutageBanner && (
-            <Flex px="$spacing8">
-              <DataApiOutageBanner
-                title={t('dataApi.outage.banner.activity.title')}
-                onPress={handleOutageBannerPress}
-              />
-            </Flex>
-          )}
-          {/* `sectionData` will be either an array of transactions or an array of loading skeletons */}
-          {sectionData.map((item, index) => renderActivityItem({ item, index }))}
-          {/* Show skeleton loading indicator while fetching next page */}
-          {isFetchingNextPage && (
-            <Flex px="$spacing8">
-              <Loader.Transaction />
-            </Flex>
-          )}
-          {/* Intersection observer sentinel for infinite scroll */}
-          <Flex ref={sentinelRef} height={1} my={10} />
-        </ScrollView>
-      )}
+      <UniversalList
+        // The sidepanel document is the scroller. Without this the DOM engine adds its own
+        // `overflow: auto` wrapper, and the unbounded parent leaves it sized to the full content —
+        // no virtualization, plus a second scrollbar gutter.
+        useWindowScroll
+        data={sectionData}
+        getItemType={getActivityItemType}
+        itemsAreEqual={activityItemsAreEqual}
+        keyExtractor={keyExtractor}
+        // Renders alongside the header, so an outage banner now survives an empty activity list —
+        // previously the empty state replaced the whole tree, hiding the banner exactly when the
+        // outage had left nothing to show.
+        ListEmptyComponent={maybeEmptyComponent}
+        ListFooterComponent={listFooter}
+        ListHeaderComponent={listHeader}
+        renderItem={renderActivityItem}
+        showsVerticalScrollIndicator={false}
+        style={{ className: 'w-full' }}
+        onEndReached={handleEndReached}
+        onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
+      />
       {/* Keep the modal mounted through activity recovery, including recovery to an empty state. */}
       <DataApiOutageModalContent
         isOpen={isOutageModalOpen}

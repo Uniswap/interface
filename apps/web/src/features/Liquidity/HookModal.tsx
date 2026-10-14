@@ -172,7 +172,7 @@ export function HookModal({
                 <DocumentList size="$icon.24" color="$neutral1" />
               )}
             </Flex>
-            <Text variant="subheading1" textAlign="center" mt="$padding16">
+            <Text variant="subheading1" textAlign="center" mt="$padding16" testID={TestID.HookModalTitle}>
               {hasDangerous ? t('position.hook.warningHeader') : t('position.addingHook')}
             </Text>
             <Text variant="body2" color="$neutral2" textAlign="center" my="$padding8">

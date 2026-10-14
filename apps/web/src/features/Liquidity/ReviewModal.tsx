@@ -34,7 +34,6 @@ import {
   WrappedLiquidityPositionRangeChart,
 } from '~/features/Liquidity/charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { PoolOutOfSyncError } from '~/features/Liquidity/Create/PoolOutOfSyncError'
-import { useSelectedFeeBreakdown } from '~/features/Liquidity/hooks/useSelectedFeeBreakdown'
 import { LiquidityPositionInfoBadges } from '~/features/Liquidity/LiquidityPositionInfoBadges'
 import { LowLPSlippageWarning } from '~/features/Liquidity/LowLPSlippageWarning'
 import { PartialMigrationWarning } from '~/features/Liquidity/PartialMigrationWarning'
@@ -145,7 +144,7 @@ export function ReviewModal({
     protocolVersion,
     creatingPoolOrPair,
     positionState: { fee, hook },
-    protocolFee,
+    selectedFeeBreakdown: feeBreakdown,
     currentTransactionStep,
     price,
     poolOrPair,
@@ -175,10 +174,6 @@ export function ReviewModal({
     }
     onConfirm()
   }, [isGeoRestricted, onConfirm])
-
-  // Breakdown for the fee badge below the pair header, from the context's served protocol fee (existing
-  // pool) or the curve (not-yet-created vanilla v4). Shared with the select step and edit summary.
-  const feeBreakdown = useSelectedFeeBreakdown({ protocolVersion, fee, servedProtocolFee: protocolFee, hook })
 
   const { formatNumberOrString, formatCurrencyAmount } = useLocalizationContext()
 

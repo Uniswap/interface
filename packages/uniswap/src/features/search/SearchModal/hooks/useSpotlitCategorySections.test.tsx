@@ -41,8 +41,8 @@ vi.mock('uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2', as
   dataApiServiceClientV2: { listTokens: mockV2ListTokens },
 }))
 
-function category(id: string, name: string): TokenCategory {
-  return { id, name, description: '', categoryClass: TokenCategoryClass.Market, grouped: false, topTokens: [] }
+function category(id: string, name: string, categoryClass = TokenCategoryClass.Market): TokenCategory {
+  return { id, name, englishName: name, description: '', categoryClass, grouped: false, topTokens: [], topGroups: [] }
 }
 
 vi.mock('uniswap/src/data/apiClients/dataApiService/categories/useAllTokenCategories', () => ({
@@ -51,6 +51,9 @@ vi.mock('uniswap/src/data/apiClients/dataApiService/categories/useAllTokenCatego
       category('stocks', 'Stocks'),
       category('trending', 'Trending'),
       category('top-gainers', 'Top Gainers'),
+      category('majors', 'Majors', TokenCategoryClass.Asset),
+      category('stablecoins', 'Stablecoins', TokenCategoryClass.Asset),
+      category('tokenized-bonds', 'Tokenized Bonds', TokenCategoryClass.Asset),
     ],
     isLoading: false,
   }),
@@ -112,7 +115,7 @@ describe('useSpotlitCategorySections', () => {
       Promise.resolve({
         multichainTokens:
           filter.categoryIds[0] === 'stocks'
-            ? [createRankedMultichainToken({ symbol: 'TSLAon', categoryIds: ['stocks', 'low-volatility'] })]
+            ? [createRankedMultichainToken({ symbol: 'TSLAon', categoryIds: ['stocks', 'unlisted-category'] })]
             : [],
       }),
     )
@@ -155,6 +158,22 @@ describe('useSpotlitCategorySections resilience', () => {
     await waitFor(() => expect(mockV2ListTokens).toHaveBeenCalledTimes(1))
     expect(mockV2ListTokens).toHaveBeenCalledWith(
       expect.objectContaining({ filter: expect.objectContaining({ categoryIds: ['trending'] }) }),
+    )
+  })
+
+  it('keeps non-RWA assets but drops unknown Asset categories for RWA-blocked regions', async () => {
+    mockUseIsFeatureGated.mockReturnValue(true)
+    mockUseDynamicConfigValue.mockReturnValue(['majors', 'tokenized-bonds', 'stablecoins'])
+    mockV2ListTokens.mockResolvedValue({ multichainTokens: [] })
+
+    renderHookWithProviders(() => useSpotlitCategorySections({ chainFilter: null, tokenCount: 5, skip: false }))
+
+    await waitFor(() => expect(mockV2ListTokens).toHaveBeenCalledTimes(2))
+    expect(mockV2ListTokens).toHaveBeenCalledWith(
+      expect.objectContaining({ filter: expect.objectContaining({ categoryIds: ['majors'] }) }),
+    )
+    expect(mockV2ListTokens).toHaveBeenCalledWith(
+      expect.objectContaining({ filter: expect.objectContaining({ categoryIds: ['stablecoins'] }) }),
     )
   })
 

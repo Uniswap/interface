@@ -1,6 +1,5 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { areAddressesEqual, Platform } from '@universe/chains'
 import { Flex } from '@universe/mycelium'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { Dispatch, ReactNode, SetStateAction } from 'react'
@@ -37,7 +36,6 @@ import { LoadingRow } from '~/features/Liquidity/Loader'
 import { ReviewModal } from '~/features/Liquidity/ReviewModal'
 import { getCurrencyForProtocol } from '~/features/Liquidity/utils/currency'
 import { useAccount } from '~/hooks/useAccount'
-import { usePositionOwnerV2 } from '~/hooks/usePositionOwnerV2'
 import { useSelectChain } from '~/hooks/useSelectChain'
 import {
   CreateLiquidityContextProvider,
@@ -45,8 +43,9 @@ import {
   DEFAULT_PRICE_RANGE_STATE,
   useCreateLiquidityContext,
 } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
-import { SharedCreateModals } from '~/pages/CreatePosition/CreatePosition'
+import { SharedCreateModals } from '~/pages/CreatePosition/SharedCreateModals'
 import { useMigratingPosition } from '~/pages/Migrate/hooks/useMigratingPosition'
+import { useRedirectIfNotPositionOwner } from '~/pages/Migrate/hooks/useRedirectIfNotPositionOwner'
 import { MigratePositionTxContextProvider, useMigrateTxContext } from '~/pages/Migrate/MigrateLiquidityTxContext'
 import { useMigrateGeoGate } from '~/pages/Migrate/useMigrateGeoGate'
 import { useSetOverrideOneClickSwapFlag } from '~/pages/Swap/Swap/settings/OneClickSwap'
@@ -88,7 +87,6 @@ function MigrateInner({
   const { t } = useTranslation()
 
   const { setStep, setCurrentTransactionStep, creatingPoolOrPair, poolId } = useCreateLiquidityContext()
-  const { version: initialProtocolVersion } = positionInfo
 
   const [transactionSteps, setTransactionSteps] = useState<TransactionStep[]>([])
   const selectChain = useSelectChain()
@@ -107,28 +105,12 @@ function MigrateInner({
     setTransactionError(false)
   }, [setTransactionError])
 
-  const { currency0Amount, currency1Amount, owner } = positionInfo
+  const { currency0Amount, currency1Amount } = positionInfo
 
   const currency0FiatAmount = useUSDCValue(currency0Amount)
   const currency1FiatAmount = useUSDCValue(currency1Amount)
 
-  const areAddressesEqualV3 = areAddressesEqual({
-    addressInput1: { address: account?.address, platform: Platform.EVM },
-    addressInput2: { address: owner, platform: Platform.EVM },
-  })
-
-  const isOwnerV2 = usePositionOwnerV2({
-    account: account?.address,
-    address: pairAddress,
-    chainId: positionInfo.chainId,
-  })
-
-  if (
-    (initialProtocolVersion === ProtocolVersion.V2 && !isOwnerV2) ||
-    (initialProtocolVersion === ProtocolVersion.V3 && !areAddressesEqualV3)
-  ) {
-    navigate('/positions')
-  }
+  useRedirectIfNotPositionOwner({ positionInfo, pairAddress })
 
   const handleConfirm = useCallback(() => {
     setTransactionError(false)

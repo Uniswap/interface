@@ -1,8 +1,12 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { useEffect, useMemo, useState } from 'react'
 import { RwaTokenOption } from 'uniswap/src/components/lists/items/types'
+import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { OnSelectRwaToken } from 'uniswap/src/components/TokenSelector/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useCurrencyInfos, useCurrencyInfoWithLoading } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { getTokenProtectionWarning, getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/warnings/slice/hooks'
@@ -35,7 +39,7 @@ export function useStocksSelectionWithWarning({
   onSelectRwaToken: OnSelectRwaToken
   showTokenWarnings: boolean
 }): {
-  onPressStock: OnSelectRwaToken
+  onPressStock: (option: RwaTokenOption) => void
   /** `getStockKey` of the tapped option while its token query is in flight, so the tile can show a pending state. */
   pendingTokenKey: string | null
   warningModal: JSX.Element | null
@@ -80,20 +84,35 @@ export function useStocksSelectionWithWarning({
   const isBlocked = severity === WarningSeverity.Blocked
   const shouldShowWarningModal = isBlocked || (severity !== WarningSeverity.None && !tokenWarningDismissed)
 
+  const selectionContext = useEvent((option: RwaTokenOption): Parameters<OnSelectRwaToken>[1] => ({
+    sectionKey: OnchainItemSectionName.Stocks,
+    position: tokens.findIndex((candidate) => getStockKey(candidate) === getStockKey(option)) + 1,
+    suggestionCount: tokens.length,
+  }))
+
   const commitSelection = useEvent(() => {
     const option = pendingOption
     setPendingOption(null)
     if (option) {
-      onSelectRwaToken(option)
+      onSelectRwaToken(option, selectionContext(option))
     }
   })
 
   const cancelSelection = useEvent(() => setPendingOption(null))
 
   const onPressStock = useEvent((option: RwaTokenOption) => {
+    const context = selectionContext(option)
+    // The press is logged separately from the selection because a warning modal can be cancelled in between, so
+    // the shelf's tap count and its selection count legitimately differ.
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.TokenSelectorStocksShelfTile,
+      token_address: option.address,
+      token_symbol: option.symbol,
+      chain_id: option.chainId,
+    })
     // Warnings gated off (e.g. Send flow) → select immediately, matching the vertical-row behavior.
     if (!showTokenWarnings) {
-      onSelectRwaToken(option)
+      onSelectRwaToken(option, context)
       return
     }
     setPendingOption(option)

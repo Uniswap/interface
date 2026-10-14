@@ -24,6 +24,7 @@ import {
   addLastBalancesReportValue,
   addModalsState,
   addPasswordLockout,
+  addPriceAlertsEnabledToPushNotifications,
   addPushNotifications,
   addPushNotificationsEnabledToAccounts,
   addReplaceAccountOptions,
@@ -1137,7 +1138,7 @@ describe('migrateDappRequestInfoTypes', () => {
     }
     const result = migrateDappRequestInfoTypes(state)
     const dappInfo = result.transactions['0x123']['1'].tx1.typeInfo.externalDappInfo
-    expect(dappInfo.requestType).toBe(DappRequestType.UwULink)
+    expect(dappInfo.requestType).toBe('uwulink')
     expect(dappInfo.source).toBeUndefined()
   })
 
@@ -1266,5 +1267,36 @@ describe('removePersistedApolloCache', () => {
     const state = { otherData: 'preserved' }
     const result = removePersistedApolloCache(state)
     expect(result).toEqual({ otherData: 'preserved' })
+  })
+})
+
+describe('addPriceAlertsEnabledToPushNotifications', () => {
+  const persistState = { version: 102, rehydrated: true }
+
+  it('enables price alerts without changing the general updates opt-out', () => {
+    const state = { _persist: persistState, pushNotifications: { generalUpdatesEnabled: false } }
+    expect(addPriceAlertsEnabledToPushNotifications(state)).toEqual({
+      ...state,
+      pushNotifications: { generalUpdatesEnabled: false, priceAlertsEnabled: true },
+    })
+  })
+
+  it('preserves an existing price alerts opt-out', () => {
+    const state = {
+      _persist: persistState,
+      pushNotifications: { generalUpdatesEnabled: true, priceAlertsEnabled: false },
+    }
+    expect(addPriceAlertsEnabledToPushNotifications(state)).toEqual(state)
+  })
+
+  it('initializes notification preferences when the slice is missing', () => {
+    expect(addPriceAlertsEnabledToPushNotifications({ _persist: persistState })).toEqual({
+      _persist: persistState,
+      pushNotifications: { generalUpdatesEnabled: true, priceAlertsEnabled: true },
+    })
+  })
+
+  it('handles missing persisted state', () => {
+    expect(addPriceAlertsEnabledToPushNotifications(undefined)).toBeUndefined()
   })
 })

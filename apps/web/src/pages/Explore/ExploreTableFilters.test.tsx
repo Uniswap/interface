@@ -1,7 +1,6 @@
 import { act, render, screen } from '@testing-library/react'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { UniverseChainId } from '@universe/chains'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import type { ComponentProps } from 'react'
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router'
 import {
@@ -12,14 +11,8 @@ import {
 } from '~/features/Explore/state/exploreTablesFilterStore'
 import type { PoolsFilter } from '~/features/Liquidity/PoolsFilter/PoolsFilter'
 import { ExploreTableFilters } from '~/pages/Explore/ExploreTableFilters'
-import { mocked } from '~/test-utils/mocked'
 import { ExploreTab } from '~/types/explore'
 import { EMPTY_POOLS_FILTER_STATE } from '~/types/poolsFilter'
-
-vi.mock('@universe/gating', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@universe/gating')>()),
-  useFeatureFlag: vi.fn(),
-}))
 
 // The filter UI itself is covered elsewhere; here only the wiring between it, the URL and the store matters.
 let filterProps: ComponentProps<typeof PoolsFilter> | undefined
@@ -79,10 +72,9 @@ function storedFilter(): unknown {
   return JSON.parse(screen.getByTestId('store').textContent)
 }
 
-describe('ExploreTableFilters (advanced pools filtering)', () => {
+describe('ExploreTableFilters (pools tab)', () => {
   beforeEach(() => {
     filterProps = undefined
-    mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.AdvancedPoolsFiltering)
   })
 
   it('reads the filter chain from the URL chain segment', () => {

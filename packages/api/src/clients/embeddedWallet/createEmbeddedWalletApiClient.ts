@@ -293,13 +293,18 @@ export function createEmbeddedWalletApiClient({
     })
   }
 
-  async function fetchExecuteRecovery(params: {
-    authMethodId: string
-    newCredential: string
-    authKeySignature: string
-    recoveryAuthSignature: string
-  }): Promise<ExecuteRecoveryResponse> {
-    return await rpcClient.executeRecovery(params)
+  async function fetchExecuteRecovery(
+    params: {
+      authMethodId: string
+      newCredential: string
+      authKeySignature: string
+      recoveryAuthSignature: string
+    },
+    accessToken: string,
+  ): Promise<ExecuteRecoveryResponse> {
+    return await rpcClient.executeRecovery(params, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
   }
 
   const fetchReportDecryptionResult = (
@@ -315,12 +320,18 @@ export function createEmbeddedWalletApiClient({
       headers: { Authorization: `Bearer ${accessToken}` },
     })
 
-  const fetchExportSeedPhraseWithRecovery = (params: {
-    authMethodId: string
-    encryptionKey: string
-    authKeySignature: string
-    recoveryAuthSignature: string
-  }): Promise<ExportSeedPhraseResponse> => rpcClient.exportSeedPhraseWithRecovery(params)
+  const fetchExportSeedPhraseWithRecovery = (
+    params: {
+      authMethodId: string
+      encryptionKey: string
+      authKeySignature: string
+      recoveryAuthSignature: string
+    },
+    accessToken: string,
+  ): Promise<ExportSeedPhraseResponse> =>
+    rpcClient.exportSeedPhraseWithRecovery(params, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
 
   async function fetchGetRecoveryConfig(
     params: { authMethodId: string },

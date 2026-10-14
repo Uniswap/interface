@@ -8,12 +8,12 @@
  * never from web bundles, which should import `@universe/tailwind/animations`
  * for the pure data instead.
  *
- * Exact-port contract: every function forwards precisely the keys the legacy
+ * Exact-port contract: the config getters forward precisely the keys the legacy
  * Tamagui moti driver forwards for the same preset — declared keys verbatim,
  * no defaults filled in, `delay` applied via `withDelay` outside the config —
  * so a converted call site animates byte-identically to its legacy
- * `animation="<name>"` counterpart. `curves.reanimated.test.ts` pins this
- * against the installed moti/reanimated sources.
+ * `animation="<name>"` counterpart. `withSporeCurve` is the exception: it adds
+ * `reduceMotion: ReduceMotion.System` so the OS setting jumps to the target.
  */
 import type {
   AnimationCallback,
@@ -23,7 +23,7 @@ import type {
   WithSpringConfig,
   WithTimingConfig,
 } from 'react-native-reanimated'
-import { Easing, withDelay, withSpring, withTiming } from 'react-native-reanimated'
+import { Easing, ReduceMotion, withDelay, withSpring, withTiming } from 'react-native-reanimated'
 import type {
   SporeAnimationCurve,
   SporeAnimationCurveName,
@@ -138,15 +138,19 @@ export function getSporeCurveDelayMs(name: SporeAnimationCurveName): number | un
  * arguments of its own APIs). A plain JS callback hard-crashes iOS Fabric
  * ("Tried to synchronously call a non-worklet function on the UI thread") —
  * found on device during INFRA-3344 QA.
+ *
+ * `reduceMotion: ReduceMotion.System` is the one key added on top of the legacy
+ * config, so an OS "reduce motion" setting snaps to `toValue` instead of
+ * playing the curve. The config getters stay key-for-key with the legacy driver.
  */
 // oxlint-disable-next-line max-params -- mirrors the (toValue, config, callback) shape of withTiming/withSpring
 export function withSporeCurve(name: SporeAnimationCurveName, toValue: number, callback?: AnimationCallback): number {
   'worklet'
   const curve = CURVES[name]
+  const config = curve.type === 'timing' ? timingConfigFromCurve(curve) : springConfigFromCurve(curve)
+  config.reduceMotion = ReduceMotion.System
   const animation =
-    curve.type === 'timing'
-      ? withTiming(toValue, timingConfigFromCurve(curve), callback)
-      : withSpring(toValue, springConfigFromCurve(curve), callback)
+    curve.type === 'timing' ? withTiming(toValue, config, callback) : withSpring(toValue, config, callback)
   return curve.delay === undefined ? animation : withDelay(curve.delay, animation)
 }
 

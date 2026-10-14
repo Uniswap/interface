@@ -1,5 +1,5 @@
 import { type PlainMessage, toPlainMessage } from '@bufbuild/protobuf'
-import { QueryKey } from '@tanstack/react-query'
+import { QueryKey, queryOptions } from '@tanstack/react-query'
 import {
   GetAuctionActivityRequest,
   GetAuctionActivityResponse,
@@ -92,7 +92,8 @@ function getBidsByWalletQueryOptions(
   client: AuctionServiceClient,
   { params, ...rest }: UseQueryApiHelperHookArgs<GetBidsByWalletRequest, PlainMessage<GetBidsByWalletResponse>>,
 ): QueryOptionsResult<PlainMessage<GetBidsByWalletResponse>, Error, PlainMessage<GetBidsByWalletResponse>, QueryKey> {
-  return persistableQueryOptions({
+  // Wallet-scoped allocations share an in-memory entry across surfaces, never disk persistence.
+  return queryOptions({
     queryKey: [ReactQueryCacheKey.AuctionApi, 'getBidsByWallet', params],
     queryFn: async () => {
       if (!params) {
@@ -103,6 +104,7 @@ function getBidsByWalletQueryOptions(
     staleTime: AuctionStaleTime.MODERATE,
     retry: AUCTION_DEFAULT_RETRY,
     ...rest,
+    meta: { ...rest.meta, persist: false },
   })
 }
 

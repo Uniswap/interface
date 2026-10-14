@@ -204,6 +204,7 @@ export function Table<T extends RowData>({
   compactRowHeight,
   subRowHeight,
   singleExpandedRow = false,
+  collapseExpandedRowsKey,
   centerArrows = false,
   headerTestId,
   getSubRows,
@@ -233,7 +234,7 @@ export function Table<T extends RowData>({
     maxWidth,
     forcePinning,
   })
-  const { expanded, onExpandedChange } = useTableExpandedState(singleExpandedRow)
+  const { expanded, onExpandedChange } = useTableExpandedState({ singleExpandedRow, collapseExpandedRowsKey })
   const tableBodyRef = useRef<HTMLDivElement>(null)
   const showBottomFade = useTableBottomFade(tableBodyRef, !!maxHeight)
 

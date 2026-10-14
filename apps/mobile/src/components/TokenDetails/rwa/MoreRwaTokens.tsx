@@ -1,7 +1,7 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import type { UniverseChainId } from '@universe/chains'
 import { useIsTokenCategoriesEnabled } from '@universe/gating'
-import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Flex, iconSizes, Text, TouchableArea } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -13,7 +13,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { getIssuerTokenPrimaryName } from 'uniswap/src/features/rwa/getIssuerTokenPrimaryName'
 import { useExpandRWASiblingHandler } from 'uniswap/src/features/rwa/hooks/useExpandRWASiblingHandler'
 import { useMoreRwaTokens } from 'uniswap/src/features/rwa/hooks/useMoreRwaTokens'
-import { getRWAIssuerLabel } from 'uniswap/src/features/rwa/issuers'
+import { RWAIssuerTag } from 'uniswap/src/features/rwa/RWAIssuerTag'
 import type { RWAToken } from 'uniswap/src/features/rwa/types'
 import type { RWAIssuerMarketData } from 'uniswap/src/features/rwa/useRWAIssuerMarketData'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -91,10 +91,11 @@ function IssuerTokenCard({
   const { t } = useTranslation()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
-  const issuerLabel = getRWAIssuerLabel(token)
+  const showIssuerLogo = useIsTokenCategoriesEnabled()
   const priceLabel = convertFiatAmountFormatted(marketData.priceUsd, NumberType.FiatTokenDetails)
   const marketCapLabel = convertFiatAmountFormatted(marketData.marketCapUsd, NumberType.FiatTokenStats)
   const volumeLabel = convertFiatAmountFormatted(marketData.volume24hUsd, NumberType.FiatTokenStats)
+  const hideNetworkLogo = (token.networkCount ?? 1) > 1
 
   const onPress = (): void => {
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
@@ -119,22 +120,25 @@ function IssuerTokenCard({
       testID={TestID.TokenDetailsRWAIssuerCard}
       onPress={onPress}
     >
-      {/* Issuer gets its own line (name / issuer / ticker) so no text has to yield space, and the
-          price top-aligns with the name instead of centering against the 3-line stack. */}
       <Flex row alignItems="flex-start" justifyContent="space-between" gap="$spacing8" pr="$spacing4">
         <Flex row shrink alignItems="center" gap="$spacing8" flex={1}>
-          <TokenLogo hideNetworkLogo url={token.logoUrl} symbol={token.symbol} name={token.name} size={40} />
+          <TokenLogo
+            chainId={token.chainId}
+            hideNetworkLogo={hideNetworkLogo}
+            url={token.logoUrl}
+            symbol={token.symbol}
+            name={token.name}
+            size={40}
+          />
           {/* flex={1} sizes this column from leftover space, so one very long line still
               ellipsizes instead of bleeding into the price */}
           <Flex shrink flex={1} gap="$spacing2">
-            <Text color="$neutral1" numberOfLines={1} variant="body2">
-              {primaryName}
-            </Text>
-            {issuerLabel ? (
-              <Text color="$neutral3" numberOfLines={1} variant="body3">
-                {issuerLabel}
+            <Flex row alignItems="center" gap="$spacing4">
+              <Text color="$neutral1" flexShrink={1} numberOfLines={1} variant="body2">
+                {primaryName}
               </Text>
-            ) : null}
+              <RWAIssuerTag issuer={token} showLogo={showIssuerLogo} size={iconSizes.icon12} />
+            </Flex>
             <Text color="$neutral2" numberOfLines={1} variant="body3">
               {token.symbol.toUpperCase()}
             </Text>

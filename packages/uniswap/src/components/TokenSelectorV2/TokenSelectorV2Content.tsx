@@ -121,13 +121,14 @@ export function TokenSelectorV2Content({
     enabled: true,
   })
 
-  const { currencyFieldName, onSelectCurrencyCallback } = useTokenSelectionHandler({
+  const { currencyFieldName, onSelectCurrencyCallback, onSelectRwaTokenCallback } = useTokenSelectionHandler({
     flow,
     currencyField,
     chainFilter,
     oppositeToken,
     debouncedSearchFilter,
     onSelectCurrency,
+    onSelectRwaToken,
   })
 
   const handlePaste = async (): Promise<void> => {
@@ -253,7 +254,7 @@ export function TokenSelectorV2Content({
               debouncedSearchFilter={debouncedSearchFilter}
               parsedChainFilter={parsedChainFilter}
               onSelectCurrency={onSelectCurrencyCallback}
-              onSelectRwaToken={onSelectRwaToken}
+              onSelectRwaToken={onSelectRwaTokenCallback}
               onSendEmptyActionPress={onSendEmptyActionPress}
             />
           </>

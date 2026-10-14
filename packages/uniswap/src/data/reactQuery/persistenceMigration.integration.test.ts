@@ -19,7 +19,6 @@
 import { PlainMessage, toPlainMessage } from '@bufbuild/protobuf'
 import { dehydrate, hydrate, QueryClient } from '@tanstack/react-query'
 import { type PersistedClient } from '@tanstack/react-query-persist-client'
-import { ListPositionsResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { Position, PositionStatus } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { createPersister } from 'uniswap/src/data/reactQuery/createPersister.web'
 import { sharedDehydrateOptions } from 'uniswap/src/data/reactQuery/sharedDehydrateOptions'
@@ -449,7 +448,7 @@ describe('persistence migration integration (dehydrate → persist → restore �
     const client = new QueryClient()
     const queryKey = [ReactQueryCacheKey.LiquidityService, 'getWalletPositions', {}] as const
 
-    const plain = toPlainMessage(new ListPositionsResponse({ positions: [buildV3Position()] }))
+    const plain = toPlainMessage(buildV3Position())
     primeQuery(client, { queryKey, meta: { persist: true } }, plain)
 
     const persister = createPersister('test-plain-protobuf-key')
@@ -465,8 +464,7 @@ describe('persistence migration integration (dehydrate → persist → restore �
     const hydratedClient = new QueryClient()
     hydrate(hydratedClient, restored!.clientState)
 
-    const data = hydratedClient.getQueryData<PlainMessage<ListPositionsResponse>>(queryKey)
-    const restoredPosition = data!.positions[0]!
+    const restoredPosition = hydratedClient.getQueryData<PlainMessage<Position>>(queryKey)!
 
     // oneof preserved as { case, value } (NOT flattened to a top-level key).
     expect(restoredPosition.position.case).toBe('v3Position')
@@ -480,11 +478,7 @@ describe('persistence migration integration (dehydrate → persist → restore �
     const queryKey = [ReactQueryCacheKey.LiquidityService, 'getWalletPositions', 'raw'] as const
 
     // Raw (unconverted) Message — what a queryFn missing toPlainMessage would cache.
-    primeQuery(
-      client,
-      { queryKey, meta: { persist: true } },
-      new ListPositionsResponse({ positions: [buildV3Position()] }),
-    )
+    primeQuery(client, { queryKey, meta: { persist: true } }, buildV3Position())
 
     const dehydrated = dehydrate(client, {
       shouldDehydrateQuery: sharedDehydrateOptions!.shouldDehydrateQuery!,
@@ -493,6 +487,6 @@ describe('persistence migration integration (dehydrate → persist → restore �
     expect(dehydrated.queries).toHaveLength(0)
     expect(loggerErrorMock).toHaveBeenCalledOnce()
     const [error] = loggerErrorMock.mock.calls[0] as [Error]
-    expect(error.message).toContain(ListPositionsResponse.typeName)
+    expect(error.message).toContain(Position.typeName)
   })
 })

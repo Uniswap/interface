@@ -7,18 +7,14 @@ import { TestID } from '@universe/test'
 import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
 import { useAccount } from '~/hooks/useAccount'
 import { PoolDetailsStatsButtons } from '~/pages/PoolDetails/components/PoolDetailsStatsButtons'
-import { useMultiChainPositions } from '~/pages/PoolDetails/Pools/hooks/useMultiChainPositions'
 import { USE_DISCONNECTED_ACCOUNT } from '~/test-utils/constants'
 import { mocked } from '~/test-utils/mocked'
 import { mockMediaSize } from '~/test-utils/mockMediaSize'
-import {
-  useMultiChainPositionsReturnValue,
-  validParsedPoolToken0,
-  validParsedPoolToken1,
-} from '~/test-utils/pools/fixtures'
+import { mockUseWalletPositions } from '~/test-utils/pools/feePositionFixtures'
+import { validParsedPoolToken0, validParsedPoolToken1 } from '~/test-utils/pools/fixtures'
 import { render, screen } from '~/test-utils/render'
 
-vi.mock('~/pages/PoolDetails/Pools/hooks/useMultiChainPositions')
+vi.mock('uniswap/src/features/positions/hooks/useWalletPositions')
 vi.mock('~/hooks/useAccount')
 vi.mock('uniswap/src/contexts/UniswapContext')
 vi.mock('uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContext')
@@ -63,7 +59,7 @@ describe('PoolDetailsStatsButtons geo gate on mobile (pool details CTA seam)', (
     mockMediaSize('md')
     window.history.pushState({}, '', '/explore/pools/ethereum/0xpool')
     mocked(useAccount).mockReturnValue(USE_DISCONNECTED_ACCOUNT)
-    mocked(useMultiChainPositions).mockReturnValue(useMultiChainPositionsReturnValue)
+    mockUseWalletPositions([])
   })
 
   it('drops the CTA and banners the region block when the pair is restricted', () => {

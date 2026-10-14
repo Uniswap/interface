@@ -81,7 +81,7 @@ describe('getEntryGatewayUrl', () => {
 
     it('prefers the proxy path over direct backend overrides for default traffic', () => {
       setConfig({
-        entryGatewayApiUrlOverride: 'https://entry-gateway.api.corn-staging.com',
+        entryGatewayApiUrlOverride: 'https://entry-gateway.example.test',
         enableEntryGatewayProxy: true,
       })
       expect(getEntryGatewayUrl()).toBe(ENTRY_GATEWAY_PROXY_PATH)
@@ -100,11 +100,11 @@ describe('getEntryGatewayUrl', () => {
 
     it('bypasses the override when env is pinned, so unitags-style services still hit the right backend', () => {
       // Reproduces INFRA-1798's staging-preview regression: with
-      // ENTRY_GATEWAY_API_URL_OVERRIDE set (e.g. corn-staging) and the
+      // ENTRY_GATEWAY_API_URL_OVERRIDE set and the
       // proxy enabled, env-pinned calls (`{ env: PROD }`) used to silently
       // return the override and route prod traffic to staging.
       setConfig({
-        entryGatewayApiUrlOverride: 'https://entry-gateway.api.corn-staging.com',
+        entryGatewayApiUrlOverride: 'https://entry-gateway.example.test',
         enableEntryGatewayProxy: true,
       })
       expect(getEntryGatewayUrl({ env: Environment.Production })).toBe(`${ENTRY_GATEWAY_PROXY_PATH}/prod`)

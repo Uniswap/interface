@@ -5,8 +5,8 @@ import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LongText } from 'src/components/text/LongText'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
-import { getTranslatedDescription } from 'uniswap/src/features/dataApi/tokenDetails/tokenMetadataUtils'
 import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
+import { getTranslation } from 'uniswap/src/features/language/getTranslation'
 import { useCurrentLanguage } from 'uniswap/src/features/language/hooks'
 
 /**
@@ -21,7 +21,7 @@ export const TokenDetailsAbout = memo(function TokenDetailsAboutInner(): JSX.Ele
   const { currencyId, tokenColor } = useTokenDetailsContext()
 
   const { name, description, descriptionTranslations } = useTokenMetadata(currencyId)
-  const currentDescription = getTranslatedDescription(descriptionTranslations, currentLanguage) ?? description
+  const currentDescription = getTranslation(descriptionTranslations, currentLanguage) ?? description
 
   if (!currentDescription) {
     return null
@@ -30,7 +30,7 @@ export const TokenDetailsAbout = memo(function TokenDetailsAboutInner(): JSX.Ele
   return (
     <Flex gap="$spacing4" px="$spacing16">
       {name && (
-        <Text color="$neutral1" testID={TestID.TokenDetailsAboutHeader} variant="subheading2">
+        <Text color="$neutral2" testID={TestID.TokenDetailsAboutHeader} variant="subheading2">
           {t('token.stats.section.about', { token: name })}
         </Text>
       )}
@@ -38,7 +38,7 @@ export const TokenDetailsAbout = memo(function TokenDetailsAboutInner(): JSX.Ele
       <Flex gap="$spacing16">
         <LongText
           gap="$spacing2"
-          color={colors.neutral2.val}
+          color={colors.neutral1.val}
           initialDisplayedLines={5}
           linkColor={tokenColor ?? colors.neutral1.val}
           readMoreOrLessColor={tokenColor ?? colors.neutral2.val}

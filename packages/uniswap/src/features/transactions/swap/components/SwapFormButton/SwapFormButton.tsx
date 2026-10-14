@@ -10,7 +10,9 @@ import {
 } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useGeoRestrictionModalStore } from 'uniswap/src/features/transactions/swap/components/GeoRestrictionCard/useGeoRestrictionModalStore'
+import { getSwapFormButtonAction } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/getSwapFormButtonAction'
 import { useIsBlockedByPermissionedPool } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsBlockedByPermissionedPool'
+import { useIsMissingPlatformWallet } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsMissingPlatformWallet'
 import { useIsSwapButtonDisabled } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsSwapButtonDisabled'
 import { useIsTradeIndicative } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsTradeIndicative'
 import { useOnReviewPress } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useOnReviewPress'
@@ -19,6 +21,10 @@ import { useSwapFormButtonText } from 'uniswap/src/features/transactions/swap/co
 import { SwapFormButtonTrace } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/SwapFormButtonTrace'
 import { useSwapFormWarningStoreActions } from 'uniswap/src/features/transactions/swap/form/stores/swapFormWarningStore/useSwapFormWarningStore'
 import { useNeedsGeoAcknowledgment } from 'uniswap/src/features/transactions/swap/hooks/useGeoRestrictionAcknowledgment'
+import { useReviewGateContext } from 'uniswap/src/features/transactions/swap/services/hooks/usePrepareSwap'
+import { getReviewGateActionType } from 'uniswap/src/features/transactions/swap/services/prepareSwapService'
+import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import { SwapFormButtonAction } from 'uniswap/src/features/transactions/swap/types/swapFormButtonAction'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export const SWAP_BUTTON_TEXT_VARIANT = 'buttonLabel1'
@@ -59,26 +65,36 @@ export const SwapFormButton = memo(function SwapFormButton({ tokenColor }: { tok
   const needsGeoAcknowledgment = useNeedsGeoAcknowledgment()
   const openGeoRestrictionModal = useGeoRestrictionModalStore((s) => s.open)
 
-  // Priority: permissioned-pool verify-identity > geo acknowledgement > web FOR-nudge > standard review.
+  const reviewGateContext = useReviewGateContext()
+  const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
+  const isMissingPlatformWallet = useIsMissingPlatformWallet(chainId)
+  const action = getSwapFormButtonAction({
+    shouldOpenVerifyIdentityModal,
+    needsGeoAcknowledgment,
+    promptWebFORNudge,
+    reviewGateActionType: getReviewGateActionType(reviewGateContext),
+    isMissingPlatformWallet,
+  })
+
   const onPress = useEvent(() => {
-    if (shouldOpenVerifyIdentityModal) {
-      handleShowVerifyIdentityModal()
-      return
+    switch (action) {
+      case SwapFormButtonAction.VerifyIdentity:
+        handleShowVerifyIdentityModal()
+        return
+      case SwapFormButtonAction.GeoAcknowledgment:
+        openGeoRestrictionModal()
+        return
+      case SwapFormButtonAction.AddFunds:
+        setIsShowingWebFORNudgeHandler()
+        return
+      default:
+        handleOnReviewPress()
     }
-    if (needsGeoAcknowledgment) {
-      openGeoRestrictionModal()
-      return
-    }
-    if (promptWebFORNudge) {
-      setIsShowingWebFORNudgeHandler()
-      return
-    }
-    handleOnReviewPress()
   })
 
   return (
     <Flex alignItems="center" gap={isShortMobileDevice ? '$spacing8' : '$spacing16'}>
-      <SwapFormButtonTrace>
+      <SwapFormButtonTrace action={action}>
         <Flex row alignSelf="stretch">
           <Button
             variant={buttonVariant}

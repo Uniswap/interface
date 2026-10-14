@@ -3,6 +3,7 @@ import { Flex } from '@universe/mycelium'
 import type { ReactNode } from 'react'
 import { ChevronsIn } from 'ui/src/components/icons/ChevronsIn'
 import { ChevronsOut } from 'ui/src/components/icons/ChevronsOut'
+import { useIsRowFocused } from 'uniswap/src/components/lists/focusedRowStore'
 import type { FocusedRowControl } from 'uniswap/src/components/lists/items/OptionItem'
 import { getRwaTagCategory } from 'uniswap/src/data/apiClients/dataApiService/rwa/getRwaTagCategory'
 import { getIssuerCount } from 'uniswap/src/data/apiClients/dataApiService/rwa/rwaMetrics'
@@ -76,9 +77,7 @@ export function ExpandableAssetGroup({
   // copyAddressOverride memo (which depends on it) stays stable.
   const { value: isMenuOpen, setTrue: openMenu, setFalse: closeMenu } = useBooleanState(false)
   const { hapticFeedback } = useHapticFeedback()
-  const isParentRowFocused = focusedRowControl
-    ? focusedRowControl.focusedRowIndex === focusedRowControl.rowIndex
-    : false
+  const isParentRowFocused = useIsRowFocused(focusedRowControl?.rowIndex)
 
   const isTitlePlacement = categoryTagPlacement === 'title'
   const categoryTag = showCategoryTag ? (

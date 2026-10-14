@@ -3,7 +3,7 @@ import { TradingApi } from '@universe/api'
 import type { UniverseChainId } from '@universe/chains'
 import { type ProposalTypes, type SessionTypes } from '@walletconnect/types'
 import { EthMethod, type EthSignMethod } from 'uniswap/src/features/dappRequests/types'
-import { type DappRequestInfo, type EthTransaction, UwULinkMethod } from 'uniswap/src/types/walletConnect'
+import { type DappRequestInfo, type EthTransaction } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import type { RpcUserOperation } from 'viem/account-abstraction'
 import { type Call, type Capability, type DappVerificationStatus } from 'wallet/src/features/dappRequests/types'
@@ -105,26 +105,9 @@ export interface WalletGetCallsStatusRequest extends BaseRequest {
   type: EthMethod.WalletGetCallsStatus
 }
 
-export interface UwuLinkErc20Request extends BaseRequest {
-  type: UwULinkMethod.Erc20Send
-  recipient: {
-    address: string
-    name: string
-    logo?: {
-      dark?: string
-      light?: string
-    }
-  }
-  tokenAddress: string
-  amount: string
-  isStablecoin: boolean
-  transaction: EthTransaction // the formatted transaction, prepared by the wallet
-}
-
 export type WalletConnectSigningRequest =
   | SignRequest
   | TransactionRequest
-  | UwuLinkErc20Request
   | WalletSendCallsEncodedRequest
   | WalletSendCallsUserOperationRequest
 
@@ -133,7 +116,7 @@ type PersonalSignRequest = SignRequest & {
 }
 
 export const isTransactionRequest = (request: WalletConnectSigningRequest): request is TransactionRequest =>
-  request.type === EthMethod.EthSendTransaction || request.type === UwULinkMethod.Erc20Send
+  request.type === EthMethod.EthSendTransaction
 
 export const isPersonalSignRequest = (request: WalletConnectSigningRequest): request is PersonalSignRequest =>
   request.type === EthMethod.PersonalSign || request.type === EthMethod.EthSign

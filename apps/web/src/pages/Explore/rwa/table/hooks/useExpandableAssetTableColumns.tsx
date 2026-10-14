@@ -136,6 +136,7 @@ export function useExpandableAssetTableColumns({
                 variant="table"
                 chainFilter={chainFilter}
                 useIssuerNameAsPrimary={isFlatIssuerRow}
+                showIssuerTag
               />
             )
           return (

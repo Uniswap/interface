@@ -173,6 +173,7 @@ describe(usePortfolioBalances, () => {
       refetch: expect.any(Function),
       error: undefined,
       dataUpdatedAt: undefined,
+      isPlaceholderData: false,
     })
   })
 })

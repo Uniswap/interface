@@ -43,6 +43,10 @@ export type NftsListProps = ForwardedListProps & {
   footerHeight?: SharedValue<number>
   isExternalProfile?: boolean
   renderedInModal?: boolean
+  /**
+   * Keep this stable (memoized). The web list feeds its identity into `extraData`, so an inline
+   * function invalidates every cell and re-lays out the grid on each render.
+   */
   renderNFTItem: (item: NFTItem, index: number) => JSX.Element
   onPressEmptyState?: () => void
   loadingStateStyle?: StyleProp<ViewStyle | CSSProperties | (ViewStyle & CSSProperties)>

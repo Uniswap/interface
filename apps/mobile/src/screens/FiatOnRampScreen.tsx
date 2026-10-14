@@ -25,6 +25,7 @@ import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheet
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { PillMultiToggle } from 'uniswap/src/components/pill/PillMultiToggle'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
+import { BlastShutdownSelectionModal } from 'uniswap/src/features/chains/blastShutdown/BlastShutdownSelectionModal'
 import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
 import {
   useFiatOnRampQuotes,
@@ -46,6 +47,7 @@ import UnsupportedTokenModal from 'uniswap/src/features/fiatOnRamp/UnsupportedTo
 import {
   getOptionalServiceProviderLogo,
   isSupportedFORCurrency,
+  normalizeBalancesByIdForLookup,
   organizeQuotesIntoSections,
 } from 'uniswap/src/features/fiatOnRamp/utils'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
@@ -64,7 +66,7 @@ import { useUSDTokenUpdater } from 'uniswap/src/features/transactions/hooks/useU
 import { useBottomScreenGap } from 'uniswap/src/hooks/useBottomScreenGap'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { FiatOnRampScreens } from 'uniswap/src/types/screens/mobile'
-import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
+import { currencyIdToAddress, normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
 import { logger } from 'utilities/src/logger/logger'
 import { usePrevious } from 'utilities/src/react/hooks'
@@ -188,7 +190,10 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
 
   const activeAccount = useActiveAccountWithThrow()
   const { data: balancesById } = usePortfolioBalances({ evmAddress: activeAccount.address })
-  const portfolioBalance = quoteCurrency.currencyInfo && balancesById?.[quoteCurrency.currencyInfo.currencyId]
+  const normalizedBalancesById = useMemo(() => normalizeBalancesByIdForLookup(balancesById), [balancesById])
+  const portfolioBalance =
+    quoteCurrency.currencyInfo &&
+    normalizedBalancesById?.[normalizeCurrencyIdForMapLookup(quoteCurrency.currencyInfo.currencyId)]
   const tokenMaxDecimals = Math.min(quoteCurrency.currencyInfo?.currency.decimals ?? 0, MAX_TOKEN_DECIMALS)
 
   const exceedsBalanceError = useMemo(() => {
@@ -683,6 +688,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
           }}
         />
       )}
+      <BlastShutdownSelectionModal currencies={[isOffRamp ? undefined : quoteCurrency.currencyInfo]} />
     </Screen>
   )
 }

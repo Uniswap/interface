@@ -3135,8 +3135,10 @@
         "description": "Indicates whether you want to receive a permit2 transaction to sign and submit onchain, or a permit message to sign. When set to `true`, the quote response returns the Permit2 as a calldata which the user signs and broadcasts. When set to `false` (the default), the quote response returns the Permit2 as a message which the user signs but does not need to broadcast. When using a 7702-delegated wallet, set this field to `true`. Except for this scenario, it is recommended that this field is set to false. Note that a Permit2 calldata (e.g. `true`), will provide indefinite permission for Permit2 to spend a token, in contrast to a Permit2 message (e.g. `false`) which is only valid for 30 days. Further, a Permit2 calldata (e.g. `true`) requires the user to pay gas to submit the transaction, whereas the Permit2 message (e.g. `false` ) does not require the user to submit a transaction and requires no gas."
       },
       "slippageTolerance": {
-        "description": "The slippage tolerance as a percentage up to a maximum of two decimal places. For Uniswap Protocols (v2, v3, v4), the slippage tolerance is the maximum amount the price can change between the time the transaction is submitted and the time it is executed. The slippage tolerance is a percentage of the total value of the swap.\n\nWhen submitting a quote, note that slippage tolerance works differently in UniswapX swaps where it does not set a limit on the Spread in an order. See [here](https://api-docs.uniswap.org/guides/faqs#why-do-uniswapx-quotes-have-more-slippage-than-the-tolerance-i-set) for more information.\n\nNote that if the trade type is `EXACT_INPUT`, then the slippage is in terms of the output token. If the trade type is `EXACT_OUTPUT`, then the slippage is in terms of the input token.\n\nWhen submitting a request, `slippageTolerance` may not be set when `autoSlippage` is defined. One of `slippageTolerance` or `autoSlippage` must be defined.",
+        "description": "The slippage tolerance as a percentage up to a maximum of two decimal places. For Uniswap Protocols (v2, v3, v4), the slippage tolerance is the maximum amount the price can change between the time the transaction is submitted and the time it is executed. The slippage tolerance is a percentage of the total value of the swap.\n\nWhen submitting a quote, note that slippage tolerance works differently in UniswapX swaps where it does not set a limit on the Spread in an order. See [here](https://api-docs.uniswap.org/guides/faqs#why-do-uniswapx-quotes-have-more-slippage-than-the-tolerance-i-set) for more information.\n\nNote that if the trade type is `EXACT_INPUT`, then the slippage is in terms of the output token. If the trade type is `EXACT_OUTPUT`, then the slippage is in terms of the input token.\n\nWhen submitting a request, `slippageTolerance` may not be set when `autoSlippage` is defined. One of `slippageTolerance` or `autoSlippage` must be defined.\n\nMust be between 0 and 100. A value outside that range, including a negative one, is rejected with a 400.",
         "type": "number",
+        "minimum": 0,
+        "maximum": 100,
         "pattern": "^[0-9]{0,3}\\.?[0-9]{0,2}$"
       },
       "SwapStatus": {
@@ -3389,6 +3391,12 @@
           },
           "urgency": {
             "$ref": "#/components/schemas/Urgency"
+          },
+          "swapSource": {
+            "$ref": "#/components/schemas/SwapSource"
+          },
+          "enforceExactIn": {
+            "$ref": "#/components/schemas/EnforceExactIn"
           }
         },
         "required": [
@@ -3438,7 +3446,7 @@
           },
           "approvalOnly": {
             "type": "boolean",
-            "description": "Return only the ERC-20 approval call(s) for the quote's input token — no swap transaction. Required (and only supported) for UniswapX quotes, whose swap is an off-chain signed order.",
+            "description": "Return only the ERC-20 approval call(s) for the quote's input token \u2014 no swap transaction. Required (and only supported) for UniswapX quotes, whose swap is an off-chain signed order.",
             "x-internal": true
           }
         },
@@ -3766,7 +3774,7 @@
           },
           "isTokenApprovalApplicable": {
             "type": "boolean",
-            "description": "Whether an ERC-20 token approval is applicable to this swap's input. `true` when the routing pulls the input token via an allowance, so an approval may be required — verify (or orchestrate) it via `/check_approval`. `false` when no approval is ever needed for this route (e.g. native-currency input, wrap/unwrap, or a native-gas-token input paid as native value). Reflects the routing mechanism, not the swapper's current on-chain allowance. If absent, assume an approval is applicable."
+            "description": "Whether an ERC-20 token approval is applicable to this swap's input. `true` when the routing pulls the input token via an allowance, so an approval may be required \u2014 verify (or orchestrate) it via `/check_approval`. `false` when no approval is ever needed for this route (e.g. native-currency input, wrap/unwrap, or a native-gas-token input paid as native value). Reflects the routing mechanism, not the swapper's current on-chain allowance. If absent, assume an approval is applicable."
           },
           "permitTransaction": {
             "$ref": "#/components/schemas/TransactionRequest"
@@ -3780,6 +3788,22 @@
           "sponsorshipInfo": {
             "$ref": "#/components/schemas/SponsorshipInfo",
             "x-internal": true
+          },
+          "swapTransaction": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TransactionRequest"
+              }
+            ],
+            "description": "Ready-to-send swap transaction, returned for CLASSIC quotes when no permit signature needs to be embedded in the calldata. That's the case when the request used `x-permit2-disabled: true`, the swapper already holds a valid permit (`permitData` is `null`), or the permit was requested as a transaction (`generatePermitAsTransaction: true`). The returned calldata is built with default settings (`safetyMode: SAFE`, deadline 30 minutes ahead); use `/swap` to customize them. Not returned when `txFailureReasons` is populated; call `/swap` to build the calldata anyway. With `swapSource: \"UNIVERSAL_ROUTER\"` a failed simulation returns a 422 instead of a quote without calldata, except for `TRANSFER_FROM_FAILED` and `SLIPPAGE_TOO_LOW`, which still return calldata. `/swap` is unchanged for these quotes."
+          },
+          "swapGasFee": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/gasFee"
+              }
+            ],
+            "description": "The estimated gas fee for `swapTransaction`, equal to the `gasFee` that `/swap` would return without gas refresh. Only present when `swapTransaction` is present."
           }
         },
         "required": [
@@ -3854,7 +3878,10 @@
         "properties": {
           "unit": {
             "type": "string",
-            "enum": ["FREE_SWAPS", "USD_CENT"],
+            "enum": [
+              "FREE_SWAPS",
+              "USD_CENT"
+            ],
             "description": "Unit the allowance is denominated in."
           },
           "total": {
@@ -4152,12 +4179,11 @@
           },
           "integratorFees": {
             "type": "array",
-            "description": "Optional integrator fee configuration. When provided, the specified fee is applied to the swap instead of the default partner fee service. Only one fee entry is currently supported.",
+            "description": "Your fee on the swap, as up to 4 entries of recipient plus `bips`, taken from the gross output. Each entry can be up to 500 bips and together they can't exceed 500 bips; recipients must be distinct. More than one entry needs Universal Router 2.1.1 or higher and an exact-input swap. An empty array means no fee. How split fees are paid out: /docs/trading/swapping-api/faqs#fees",
             "items": {
               "$ref": "#/components/schemas/IntegratorFee"
             },
-            "minItems": 1,
-            "maxItems": 1
+            "maxItems": 4
           },
           "walletExecutionContext": {
             "$ref": "#/components/schemas/WalletExecutionContext",
@@ -4166,6 +4192,12 @@
           "earnIntent": {
             "$ref": "#/components/schemas/EarnIntent",
             "x-internal": true
+          },
+          "swapSource": {
+            "$ref": "#/components/schemas/SwapSource"
+          },
+          "enforceExactIn": {
+            "$ref": "#/components/schemas/EnforceExactIn"
           }
         },
         "required": [
@@ -6123,6 +6155,10 @@
             "items": {
               "$ref": "#/components/schemas/SwapStep"
             }
+          },
+          "routeGraph": {
+            "x-internal": true,
+            "$ref": "#/components/schemas/RouteGraph"
           }
         }
       },
@@ -6952,6 +6988,94 @@
           "hooks"
         ]
       },
+      "RouteGraph": {
+        "x-internal": true,
+        "type": "object",
+        "description": "Pool-level graph of the quoted route: one entry per pool hop, in swap direction. Omitted whenever it cannot be built completely (unresolvable token, shares that do not reconcile, a revisited token), so it is either whole or absent.",
+        "properties": {
+          "pools": {
+            "type": "array",
+            "description": "One entry per pool hop (edge). The same pool traversed in both directions appears twice.",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/RouteGraphPool"
+            }
+          }
+        },
+        "required": [
+          "pools"
+        ]
+      },
+      "RouteGraphPool": {
+        "x-internal": true,
+        "type": "object",
+        "description": "One pool hop of the quoted route, oriented in swap direction (input -> output) regardless of tradeType. `tokenIn`/`tokenOut` carry `address` and `symbol`; `decimals` is present only for the native currency and its wrapped token, so do not do amount math on it. A graph node is a token plus its visit index (`tokenInVisit`/`tokenOutVisit`), so a token the route passes through more than once appears as several nodes.",
+        "properties": {
+          "protocol": {
+            "type": "string",
+            "enum": [
+              "V2",
+              "V3",
+              "V4",
+              "WRAP",
+              "OTHER"
+            ],
+            "description": "WRAP is the native <-> wrapped-native conversion step."
+          },
+          "address": {
+            "type": "string",
+            "description": "V2/V3 pool address (checksummed); V4 pool id (bytes32). Omitted for WRAP."
+          },
+          "hooks": {
+            "type": "string",
+            "description": "V4 hook contract. Omitted when the pool has no hook (never the zero address)."
+          },
+          "fee": {
+            "type": "string",
+            "description": "Pool fee in the same units as V3PoolInRoute.fee (hundredths of a bip). Omitted for WRAP and for dynamic-fee pools."
+          },
+          "isDynamicFee": {
+            "type": "boolean",
+            "description": "Set for V4 dynamic-fee pools."
+          },
+          "tokenIn": {
+            "$ref": "#/components/schemas/TokenInRoute"
+          },
+          "tokenInVisit": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Disambiguates repeated visits of the same token within the graph; absent means the first visit."
+          },
+          "tokenOut": {
+            "$ref": "#/components/schemas/TokenInRoute"
+          },
+          "tokenOutVisit": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Disambiguates repeated visits of the same token within the graph; absent means the first visit."
+          },
+          "shareOfInputBps": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000,
+            "description": "Share of the trade's total input VALUE routed through this pool (USD-equivalent), in bps. Downstream pools trade a different token, so an amount share is undefined there; edges leaving the input token's first visit and edges entering the output token's first visit each sum to 10000 (within rounding), and flow is conserved at every other node."
+          },
+          "usdIn": {
+            "type": "string",
+            "description": "USD value entering the pool, as a decimal string. Omitted when no USD valuation is available."
+          },
+          "usdOut": {
+            "type": "string",
+            "description": "USD value leaving the pool, as a decimal string. Omitted when no USD valuation is available."
+          }
+        },
+        "required": [
+          "protocol",
+          "tokenIn",
+          "tokenOut",
+          "shareOfInputBps"
+        ]
+      },
       "TransactionHash": {
         "type": "string",
         "description": "The unique hash of the transaction.",
@@ -7171,7 +7295,8 @@
             "$ref": "#/components/schemas/receiverWalletAddress"
           },
           "from": {
-            "$ref": "#/components/schemas/senderWalletAddress"
+            "$ref": "#/components/schemas/senderWalletAddress",
+            "description": "Present on every response except swapSource \"UNIVERSAL_ROUTER\" swapTransaction calldata, where the sender is the integrator's filler and unknown at quote time."
           },
           "data": {
             "type": "string",
@@ -7199,7 +7324,6 @@
         },
         "required": [
           "to",
-          "from",
           "data",
           "value",
           "chainId"
@@ -8922,6 +9046,20 @@
           "requestId",
           "tokens"
         ]
+      },
+      "SwapSource": {
+        "type": "string",
+        "enum": [
+          "UNIVERSAL_ROUTER",
+          "WALLET"
+        ],
+        "default": "WALLET",
+        "description": "Where the input tokens come from. Leave unset (or send \"WALLET\") to pull them from the swapper's wallet as usual. Send \"UNIVERSAL_ROUTER\" to get calldata that swaps whatever balance of the input token the Universal Router holds when it runs, for bridge-and-swap flows where a bridge deposits into the router and executes the swap in the same transaction. In this mode, quote on the destination chain, use `amount` as your estimate of what will arrive, and put the end user in `swapper`. Exact-input, single-chain swaps only; the returned transaction has no `from` and a `value` of \"0\". Works on both /quote and /swap. Read the guide before using it: /docs/trading/swapping-api/start-building/integration-guide#swapping-funds-already-in-the-universal-router"
+      },
+      "EnforceExactIn": {
+        "type": "boolean",
+        "default": false,
+        "description": "Only with swapSource \"UNIVERSAL_ROUTER\". Set it to true when your bridge guarantees how much will arrive; the calldata then checks the router's balance and reverts if it holds less than `amount`. Leave it off if `amount` is just an estimate, or a good fill can revert over a small shortfall. Details: /docs/trading/swapping-api/start-building/integration-guide#swapping-funds-already-in-the-universal-router"
       }
     },
     "parameters": {

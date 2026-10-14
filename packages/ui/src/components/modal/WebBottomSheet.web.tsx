@@ -36,6 +36,7 @@ export function WebBottomSheet({
   hideHandlebar,
   snapPointsMode = 'fit',
   snapPoints,
+  sheetFitHeight = 'ratchet',
   disableRemoveScroll = false,
   ...rest
 }: ModalProps): JSX.Element | null {
@@ -49,11 +50,10 @@ export function WebBottomSheet({
   const [frameNode, setFrameNode] = useState<HTMLDivElement | null>(null)
   useSheetDrag({ isOpen, isTouchDevice, onClose, frame: frameNode })
   useSheetEscapeToClose({ isOpen, onClose })
-  // Strict Tamagui Sheet parity (per review): fit mode measures the frame once at open and
-  // freezes it there; percent mode is owned by the snap point.
+  // Ratchet the tallest height. `content` shrinks; percent mode is snap-owned.
   useSheetFitHeightFreeze({
     isOpen,
-    enabled: snapPointsMode !== 'percent',
+    enabled: snapPointsMode !== 'percent' && sheetFitHeight !== 'content',
     frame: frameNode,
     isWebApp,
     interfaceNavHeight: INTERFACE_NAV_HEIGHT,

@@ -1,5 +1,6 @@
 import { TokenType } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import {
+  ChainDeployment,
   ChainTokenRankStats,
   MultichainToken,
   RankedMultichainToken,
@@ -24,10 +25,35 @@ interface RankedMultichainTokenOverrides
   priceChange1h: number
   priceChange1d: number
   chainStats: ChainTokenRankStats[]
+  /**
+   * chainId -> that deployment's decimals. Defaults to the parent `decimals` on every address;
+   * `{}` leaves `deployments` empty, like a row persisted before data-api served it.
+   */
+  deploymentDecimals: Record<string, number>
 }
 
 function buildAddresses(o: Partial<RankedMultichainTokenOverrides>): Record<string, string> {
   return o.addresses ?? { [String(o.chainId ?? 1)]: o.address ?? '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48' }
+}
+
+function buildDeployments({
+  o,
+  addresses,
+  parentDecimals,
+}: {
+  o: Partial<RankedMultichainTokenOverrides>
+  addresses: Record<string, string>
+  parentDecimals: number
+}): Record<string, ChainDeployment> {
+  if (o.deploymentDecimals && Object.keys(o.deploymentDecimals).length === 0) {
+    return {}
+  }
+  return Object.fromEntries(
+    Object.entries(addresses).map(([chainId, address]) => [
+      chainId,
+      new ChainDeployment({ address, decimals: o.deploymentDecimals?.[chainId] ?? parentDecimals }),
+    ]),
+  )
 }
 
 function buildChainStats(o: Partial<RankedMultichainTokenOverrides>): ChainTokenRankStats[] {
@@ -85,15 +111,18 @@ export function createRankedMultichainToken(
 ): RankedMultichainToken {
   const price = buildPrice(overrides)
   const stats = buildStats(overrides)
+  const decimals = overrides.decimals ?? 6
+  const addresses = buildAddresses(overrides)
 
   return new RankedMultichainToken({
     multichainToken: new MultichainToken({
       multichainId: overrides.multichainId ?? 'mc:1_0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
       symbol: overrides.symbol ?? 'USDC',
       name: overrides.name ?? 'USD Coin',
-      decimals: overrides.decimals ?? 6,
+      decimals,
       type: TokenType.ERC20,
-      addresses: buildAddresses(overrides),
+      addresses,
+      deployments: buildDeployments({ o: overrides, addresses, parentDecimals: decimals }),
       categoryIds: overrides.categoryIds ?? [],
       ...(price && { price }),
       safety: new TokenSafety({

@@ -53,10 +53,12 @@ export function useOnClickOutside<T extends HTMLElement>({
       handlerRef.current?.()
     }
 
-    document.addEventListener('mousedown', handleClickOutside)
+    // Capture phase: descendants that stop mousedown propagation (e.g. hover-card triggers) would
+    // otherwise keep the bubbling listener from ever seeing the click.
+    document.addEventListener('mousedown', handleClickOutside, { capture: true })
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('mousedown', handleClickOutside, { capture: true })
     }
   }, [node, ignoredNodes, ignoreDialogClicks])
 }

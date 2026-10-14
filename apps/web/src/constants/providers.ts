@@ -1,10 +1,10 @@
 import { tryProvideSession } from '@universe/api'
 import { EVMUniverseChainId } from '@universe/chains'
-import { providers as ethersProviders } from 'ethers/lib/ethers'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { RPCType } from 'uniswap/src/features/chains/types'
 import { createEthersProviderFactory } from 'uniswap/src/features/providers/createEthersProvider'
 import { defaultResolveRpcConfig } from 'uniswap/src/features/providers/resolveRpcConfig'
+import type { JsonRpcProvider } from '~/chains'
 import AppJsonRpcProvider from '~/rpc/AppJsonRpcProvider'
 import ConfiguredJsonRpcProvider from '~/rpc/ConfiguredJsonRpcProvider'
 
@@ -34,7 +34,7 @@ const createProvider = createEthersProviderFactory({
  * so we rebuild-on-transition instead.
  */
 interface CachedProvider {
-  provider: ethersProviders.JsonRpcProvider
+  provider: JsonRpcProvider
   /** Whether `provider` is the UniRPC provider (vs the legacy multi-URL fallback). */
   isUniRpc: boolean
 }
@@ -77,7 +77,7 @@ const providerCache = new Map<EVMUniverseChainId, CachedProvider>()
  * first call that beat Statsig init doesn't pin the chain to legacy for the
  * session.
  */
-export function getRpcProvider(chainId: EVMUniverseChainId): ethersProviders.JsonRpcProvider {
+export function getRpcProvider(chainId: EVMUniverseChainId): JsonRpcProvider {
   const cached = providerCache.get(chainId)
   if (cached) {
     // Already on UniRPC, or still legacy and the gate is still off → reuse.
@@ -90,8 +90,6 @@ export function getRpcProvider(chainId: EVMUniverseChainId): ethersProviders.Jso
   return built.provider
 }
 
-export function getInterfaceProvider(
-  chainId: EVMUniverseChainId | undefined,
-): ethersProviders.JsonRpcProvider | undefined {
+export function getInterfaceProvider(chainId: EVMUniverseChainId | undefined): JsonRpcProvider | undefined {
   return chainId ? getRpcProvider(chainId) : undefined
 }

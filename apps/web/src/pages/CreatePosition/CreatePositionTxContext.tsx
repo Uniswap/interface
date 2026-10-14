@@ -45,9 +45,11 @@ import { useIsLiquidityApprovalSimulationEnabled } from '~/features/Liquidity/ho
 import { useCreatePositionDependentAmountFallback } from '~/features/Liquidity/hooks/useDependentAmountFallback'
 import { generateLiquidityServiceCreateCalldataQueryParams } from '~/features/Liquidity/utils/generateLiquidityServiceCreateCalldata'
 import { getCheckLPApprovalRequestParams } from '~/features/Liquidity/utils/getCheckLPApprovalRequestParams'
+import { needsHookReview } from '~/features/Liquidity/utils/hookReview'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { useCreatePositionDepositInfo } from '~/pages/CreatePosition/hooks/useCreatePositionDepositInfo'
 import { useHookRejectsLiquidity } from '~/pages/CreatePosition/hooks/useHookRejectsLiquidity'
+import { isCreateCalldataQueryEnabled } from '~/pages/CreatePosition/isCreateCalldataQueryEnabled'
 import { PositionField } from '~/types/position'
 
 /** @internal - exported for testing */
@@ -296,15 +298,17 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     currentTransactionStep?.step.type === TransactionStepType.IncreasePositionTransaction ||
     currentTransactionStep?.step.type === TransactionStepType.IncreasePositionTransactionAsync
 
-  const isQueryEnabled =
-    !isUserCommittedToCreate &&
-    !inputError &&
-    !transactionError &&
-    !approvalLoading &&
-    !approvalError &&
-    !invalidRange &&
-    Boolean(approvalCalldata) &&
-    Boolean(createCalldataQueryParams)
+  const isQueryEnabled = isCreateCalldataQueryEnabled({
+    isUserCommittedToCreate,
+    hasInputError: Boolean(inputError),
+    hasTransactionError: Boolean(transactionError),
+    approvalLoading,
+    hasApprovalError: Boolean(approvalError),
+    invalidRange,
+    hasApprovalCalldata: Boolean(approvalCalldata),
+    hasCreateCalldataQueryParams: Boolean(createCalldataQueryParams),
+    hookNeedsReview: needsHookReview(positionState),
+  })
 
   const { createCalldata, createError, createRefetch } = useCreatePositionQuery({
     createCalldataQueryParams,

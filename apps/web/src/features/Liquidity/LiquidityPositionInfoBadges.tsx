@@ -238,7 +238,7 @@ export function LiquidityPositionInfoBadges({
               </CopyHelper>
             ) : (
               // FeeDisplay is a transparent wrapper without a breakdown: only the fee badge carries
-              // one (flag on), so only it gains the hover breakdown — every other badge renders plain.
+              // one, so only it gains the hover breakdown — every other badge renders plain.
               <FeeDisplay feeBreakdown={badge.feeBreakdown}>
                 <Text
                   variant={size === 'default' ? 'body3' : 'body4'}

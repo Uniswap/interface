@@ -3,8 +3,8 @@ import { OnchainItemSectionName, type OnchainItemSection } from 'uniswap/src/com
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { withViewAllFooters } from 'uniswap/src/features/search/SearchModal/viewAll/withViewAllFooters'
 
-function section(sectionKey: OnchainItemSectionName): OnchainItemSection<SearchModalListOption> {
-  return { sectionKey, data: [] }
+function section(sectionKey: OnchainItemSectionName, categoryId?: string): OnchainItemSection<SearchModalListOption> {
+  return { sectionKey, categoryId, data: [] }
 }
 
 describe('withViewAllFooters', () => {
@@ -26,8 +26,8 @@ describe('withViewAllFooters', () => {
 
     expect(recentsOut).toBe(recents)
     expect(walletsOut).toBe(wallets)
-    expect(category?.footerElement?.props.tab).toBe(SearchTab.Tokens)
-    expect(pools?.footerElement?.props.tab).toBe(SearchTab.Pools)
+    expect(category?.footerElement?.props.destination).toEqual({ type: 'tab', tab: SearchTab.Tokens })
+    expect(pools?.footerElement?.props.destination).toEqual({ type: 'tab', tab: SearchTab.Pools })
 
     pools?.footerElement?.props.onPress()
     expect(onViewAll).toHaveBeenCalledWith(SearchTab.Pools)
@@ -43,6 +43,35 @@ describe('withViewAllFooters', () => {
       }) ?? []
 
     expect(tokensOut).toBe(tokens)
-    expect(pools?.footerElement?.props.tab).toBe(SearchTab.Pools)
+    expect(pools?.footerElement?.props.destination).toEqual({ type: 'tab', tab: SearchTab.Pools })
+  })
+
+  it('category sections leave for Category Details when the host can navigate there', () => {
+    const onViewAll = vi.fn()
+    const onViewAllCategory = vi.fn()
+    const [category] =
+      withViewAllFooters({
+        sections: [section(OnchainItemSectionName.Category, 'trending')],
+        truncatedSectionKeys: 'all',
+        onViewAll,
+        onViewAllCategory,
+      }) ?? []
+
+    expect(category?.footerElement?.props.destination).toEqual({ type: 'category', categoryId: 'trending' })
+
+    category?.footerElement?.props.onPress()
+    expect(onViewAllCategory).toHaveBeenCalledWith('trending')
+    expect(onViewAll).not.toHaveBeenCalled()
+  })
+
+  it('category sections fall back to the Tokens tab without a Category Details host', () => {
+    const [category] =
+      withViewAllFooters({
+        sections: [section(OnchainItemSectionName.Category, 'trending')],
+        truncatedSectionKeys: 'all',
+        onViewAll: vi.fn(),
+      }) ?? []
+
+    expect(category?.footerElement?.props.destination).toEqual({ type: 'tab', tab: SearchTab.Tokens })
   })
 })

@@ -318,6 +318,17 @@ export const SelectPriceRangeStep = ({
 
   const controlOptions = useTokenControlOptions([TOKEN0, TOKEN1], 'small')
 
+  const fallbackPriceHistoryPool = useMemo(
+    () =>
+      positionInfo && {
+        poolId: positionInfo.poolId,
+        protocolVersion: positionInfo.version,
+        currency0: positionInfo.currency0Amount.currency,
+        currency1: positionInfo.currency1Amount.currency,
+      },
+    [positionInfo],
+  )
+
   const handleSelectToken = useCallback(
     (option: string) => {
       if (option === TOKEN0?.symbol) {
@@ -514,6 +525,7 @@ export const SelectPriceRangeStep = ({
               currentPrice={Number(price?.toSignificant())}
               inputMode={priceRangeState.inputMode}
               migratingPosition={migratingPosition}
+              fallbackPriceHistoryPool={fallbackPriceHistoryPool}
               minTick={priceRangeState.minTick}
               maxTick={priceRangeState.maxTick}
               isFullRange={priceRangeState.fullRange}

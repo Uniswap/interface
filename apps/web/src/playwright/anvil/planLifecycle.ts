@@ -1,6 +1,5 @@
 import { TradingApi } from '@universe/api'
-// oxlint-disable-next-line universe-custom/no-direct-viem-ethers-import -- Node-side mock must not load the feature-gated app adapter
-import type { Address } from 'viem'
+import type { Address } from '@universe/chains'
 
 /**
  * Machinery shared by the entry-gateway plan-lifecycle mocks (earn.ts and plan.ts).

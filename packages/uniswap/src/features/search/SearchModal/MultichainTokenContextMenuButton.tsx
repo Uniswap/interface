@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { CopyAlt } from 'ui/src/components/icons/CopyAlt'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
+import { rowPressExemptProps } from 'uniswap/src/components/lists/items/OptionItemPressableArea'
 import {
   TokenContextMenuAction,
   useSearchTokenMenuItems,
@@ -90,7 +91,35 @@ interface MultichainTokenContextMenuButtonProps {
   isVisible?: boolean
 }
 
+/**
+ * Renders a same-size, invisible trigger until the row is first focused or hovered, then mounts the real
+ * menu. Every search row carries this button, and the menu (a Popover with its floating tree, portal and
+ * menu-item memos) was a large share of each row's mount cost while never visible for most rows.
+ */
 function MultichainTokenContextMenuButtonInner(
+  props: MultichainTokenContextMenuButtonProps,
+  ref: React.ForwardedRef<ContextMenuHandle>,
+): JSX.Element | null {
+  const [hasEverShown, setHasEverShown] = useState(false)
+  // `isVisible` undefined means the caller has no row-focus wiring; those keep the eager mount.
+  // Set during render, not in an effect: an effect would commit a frame with the placeholder first.
+  if (props.isVisible !== false && !hasEverShown) {
+    setHasEverShown(true)
+  }
+  if (!isWebPlatform) {
+    return null
+  }
+  if (!hasEverShown) {
+    return (
+      <Flex opacity={0} pointerEvents="none">
+        <ContextMenuTriggerButton />
+      </Flex>
+    )
+  }
+  return <MountedMultichainTokenContextMenuButton {...props} ref={ref} />
+}
+
+const MountedMultichainTokenContextMenuButton = React.forwardRef(function MountedMultichainTokenContextMenuButton(
   { tokens, primaryCurrencyInfo, isVisible = true }: MultichainTokenContextMenuButtonProps,
   ref: React.ForwardedRef<ContextMenuHandle>,
 ): JSX.Element | null {
@@ -224,7 +253,7 @@ function MultichainTokenContextMenuButtonInner(
   const shouldShow = isVisible || isOpen
 
   return (
-    <Flex opacity={shouldShow ? 1 : 0} pointerEvents={shouldShow ? 'auto' : 'none'}>
+    <Flex opacity={shouldShow ? 1 : 0} pointerEvents={shouldShow ? 'auto' : 'none'} {...rowPressExemptProps}>
       <ContextMenu
         ref={ref}
         menuItems={[]}
@@ -241,6 +270,6 @@ function MultichainTokenContextMenuButtonInner(
       </ContextMenu>
     </Flex>
   )
-}
+})
 
 export const MultichainTokenContextMenuButton = React.memo(React.forwardRef(MultichainTokenContextMenuButtonInner))

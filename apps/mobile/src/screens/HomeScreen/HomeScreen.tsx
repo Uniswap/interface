@@ -7,6 +7,7 @@ import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
 import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { useWalletRestore } from 'src/features/wallet/useWalletRestore'
+import { BlastShutdownSheet } from 'src/screens/HomeScreen/BlastShutdownSheet'
 import { HomeScreenPortfolioScrollProvider } from 'src/screens/HomeScreen/portfolio/context/HomeScreenPortfolioScrollContext'
 import { HomeScreenPortfolio } from 'src/screens/HomeScreen/portfolio/HomeScreenPortfolio'
 import { SmartWalletModals } from 'src/screens/HomeScreen/SmartWalletModals'
@@ -106,6 +107,7 @@ export function WrappedHomeScreen(_props: TabsScreenProp<MobileScreens.Home>): J
     <>
       <HomeScreen key={activeAccount.address} isLayoutReady={isLayoutReady} setIsLayoutReady={setIsLayoutReady} />
       <SmartWalletModals isLayoutReady={isLayoutReady} />
+      <BlastShutdownSheet />
     </>
   )
 }

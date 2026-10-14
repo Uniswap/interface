@@ -2,6 +2,8 @@ import { SharedQueryClient, TradingApi } from '@universe/api'
 import { type UniverseChainId, Platform } from '@universe/chains'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { getRowTagCategoryId } from 'uniswap/src/data/apiClients/dataApiService/categories/getRowTagCategoryId'
+import { useAllTokenCategories } from 'uniswap/src/data/apiClients/dataApiService/categories/useAllTokenCategories'
 import { resolvePlatform } from 'uniswap/src/features/accounts/store/utils/flexibleInput'
 import { logEarnSwapUpsellConverted } from 'uniswap/src/features/earn/analytics'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -18,7 +20,7 @@ import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/permi
 import { type SwapCallback, type SwapCallbackParams } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
-import { getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
+import { currencyId, getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useAccountsStore, useActiveAccount } from '~/features/accounts/store/hooks'
@@ -59,6 +61,7 @@ export function useSwapCallback(): SwapCallback {
   const swapStartTimestamp = useSelector(selectSwapStartTimestamp)
   const selectChain = useSelectChain()
   const trace = useTrace()
+  const { categories } = useAllTokenCategories()
   const updateSwapForm = useSwapFormStore((s) => s.updateSwapForm)
   const earnSwapUpsellAnalyticsProperties = useSwapFormStore((s) => s.earnSwapUpsellAnalyticsProperties)
 
@@ -191,6 +194,8 @@ export function useSwapCallback(): SwapCallback {
         is_auto_slippage: isAutoSlippage,
         swap_flow_duration_milliseconds: swapStartTimestamp ? Date.now() - swapStartTimestamp : undefined,
         is_fiat_input_mode: isFiatInputMode,
+        token_in_category: getRowTagCategoryId({ currencyId: currencyId(trade.inputAmount.currency), categories }),
+        token_out_category: getRowTagCategoryId({ currencyId: currencyId(trade.outputAmount.currency), categories }),
       })
 
       // Reset swap start timestamp now that the swap has been submitted
@@ -210,6 +215,7 @@ export function useSwapCallback(): SwapCallback {
       earnSwapUpsellAnalyticsProperties,
       caip25Info,
       rwaWhitelist,
+      categories,
     ],
   )
 }

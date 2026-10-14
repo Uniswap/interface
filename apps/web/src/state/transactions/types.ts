@@ -1,4 +1,3 @@
-import type { TransactionResponse } from '@ethersproject/abstract-provider'
 import type { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import type {
   InterfaceTransactionDetails,
@@ -6,6 +5,7 @@ import type {
   TransactionStatus,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import type { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
+import type { TransactionResponse } from '~/chains'
 
 // Web-specific pending transaction details with guaranteed pending status
 export type PendingTransactionDetails = InterfaceTransactionDetails & {

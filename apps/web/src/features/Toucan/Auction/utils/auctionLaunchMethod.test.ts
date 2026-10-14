@@ -1,49 +1,53 @@
 import { Auction, AuctionType } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
-import type { TFunction } from 'i18next'
+import { LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
 import {
-  AuctionLaunchMethod,
   getAuctionLaunchMethod,
-  getAuctionLaunchMethodCopy,
+  getLaunchProvenanceFromAuction,
+  isCcaAuction,
 } from '~/features/Toucan/Auction/utils/auctionLaunchMethod'
 
-const t = ((key: string) => key) as unknown as TFunction
+const AUCTION_ADDRESS = '0x1111111111111111111111111111111111111111'
 
 describe('getAuctionLaunchMethod', () => {
   it.each([
-    [AuctionType.CUSTOM, AuctionLaunchMethod.Custom],
-    [AuctionType.CROWD, AuctionLaunchMethod.Crowd],
-    [AuctionType.UNSPECIFIED, undefined],
+    [AuctionType.CUSTOM, LaunchProvenanceMethod.CustomAuction],
+    [AuctionType.CROWD, LaunchProvenanceMethod.CrowdLaunch],
+    [AuctionType.UNSPECIFIED, LaunchProvenanceMethod.Unknown],
   ])('uses the served auction type %s', (auctionType, expected) => {
-    expect(getAuctionLaunchMethod({ auction: new Auction({ auctionType }) })).toBe(expected)
-  })
-
-  it.each([false, true])('does not infer a method from isQuickLaunch=%s', (isQuickLaunch) => {
-    expect(getAuctionLaunchMethod({ auction: new Auction({ isQuickLaunch }) })).toBeUndefined()
+    const auction = new Auction({ auctionType })
+    expect(getAuctionLaunchMethod({ auction })).toBe(expected)
+    expect(getLaunchProvenanceFromAuction({ auction }).method).toBe(expected)
   })
 })
 
-describe('getAuctionLaunchMethodCopy', () => {
-  it('returns the Crowd Launch copy keys', () => {
-    expect(getAuctionLaunchMethodCopy({ method: AuctionLaunchMethod.Crowd, t })).toEqual({
-      label: 'toucan.launchMethod.crowd',
-      explainerTitle: 'toucan.launchMethod.crowd.title',
-      explainerDescription: 'toucan.launchMethod.crowd.description',
+describe('isCcaAuction', () => {
+  it.each([
+    [AuctionType.CUSTOM, true],
+    [AuctionType.CROWD, true],
+    [AuctionType.UNSPECIFIED, false],
+  ])('classifies auction type %s as CCA: %s', (auctionType, expected) => {
+    expect(isCcaAuction({ auction: new Auction({ auctionType }) })).toBe(expected)
+  })
+})
+
+describe('getLaunchProvenanceFromAuction', () => {
+  it.each([false, true])('keeps the auction method unknown with isQuickLaunch=%s', (isQuickLaunch) => {
+    const auction = new Auction({ isQuickLaunch, createdAt: '2026-08-08T12:00:00Z', address: AUCTION_ADDRESS })
+
+    expect(getLaunchProvenanceFromAuction({ auction })).toEqual({
+      launchpad: { id: 'uniswap-cca', name: 'Uniswap' },
+      method: LaunchProvenanceMethod.Unknown,
+      launchedAt: new Date('2026-08-08T12:00:00Z'),
+      auctionAddress: AUCTION_ADDRESS,
     })
   })
 
-  it('returns the Instant Launch copy keys', () => {
-    expect(getAuctionLaunchMethodCopy({ method: AuctionLaunchMethod.Instant, t })).toEqual({
-      label: 'toucan.launchMethod.instant',
-      explainerTitle: 'toucan.launchMethod.instant.title',
-      explainerDescription: 'toucan.launchMethod.instant.description',
+  it('leaves the launch time and address unknown when the record is incomplete', () => {
+    const provenance = getLaunchProvenanceFromAuction({
+      auction: new Auction({ createdAt: 'not-a-date', address: '' }),
     })
-  })
 
-  it('returns the Custom auction copy keys', () => {
-    expect(getAuctionLaunchMethodCopy({ method: AuctionLaunchMethod.Custom, t })).toEqual({
-      label: 'toucan.launchMethod.custom',
-      explainerTitle: 'toucan.launchMethod.custom.title',
-      explainerDescription: 'toucan.launchMethod.custom.description',
-    })
+    expect(provenance.launchedAt).toBeUndefined()
+    expect(provenance.auctionAddress).toBeUndefined()
   })
 })

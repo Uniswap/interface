@@ -142,7 +142,9 @@ export function ExistingTokenForm({ existing }: { existing: ExistingTokenFormSta
   return (
     <Flex gap="$spacing24">
       <Flex gap="$spacing4">
-        <Text variant="subheading1">{t('toucan.createAuction.step.tokenInfo.title')}</Text>
+        <Text variant="subheading1" $md={{ variant: 'subheading2' }}>
+          {t('toucan.createAuction.step.tokenInfo.title')}
+        </Text>
         <Text variant="body3" color="$neutral2">
           {t('toucan.createAuction.step.tokenInfo.subtitleExisting')}
         </Text>

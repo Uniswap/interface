@@ -12,18 +12,14 @@ import * as useSwapFormStoreModule from 'uniswap/src/features/transactions/swap/
 import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
 import { useAccount } from '~/hooks/useAccount'
 import { PoolDetailsStatsButtons } from '~/pages/PoolDetails/components/PoolDetailsStatsButtons'
-import { useMultiChainPositions } from '~/pages/PoolDetails/Pools/hooks/useMultiChainPositions'
 import store from '~/state'
 import { USE_DISCONNECTED_ACCOUNT } from '~/test-utils/constants'
 import { mocked } from '~/test-utils/mocked'
-import {
-  useMultiChainPositionsReturnValue,
-  validParsedPoolToken0,
-  validParsedPoolToken1,
-} from '~/test-utils/pools/fixtures'
+import { buildFeePosition, mockUseWalletPositions } from '~/test-utils/pools/feePositionFixtures'
+import { validParsedPoolToken0, validParsedPoolToken1 } from '~/test-utils/pools/fixtures'
 import { act, render, screen } from '~/test-utils/render'
 
-vi.mock('~/pages/PoolDetails/Pools/hooks/useMultiChainPositions')
+vi.mock('uniswap/src/features/positions/hooks/useWalletPositions')
 
 vi.mock('~/hooks/useAccount')
 
@@ -114,7 +110,7 @@ describe('PoolDetailsStatsButton', () => {
       unavailableLabel: 'Not available in your region',
     })
     mocked(useAccount).mockReturnValue(USE_DISCONNECTED_ACCOUNT)
-    mocked(useMultiChainPositions).mockReturnValue(useMultiChainPositionsReturnValue)
+    mockUseWalletPositions([])
     mocked(useUniswapContext).mockReturnValue(useUniswapContextReturnValue)
 
     store.dispatch(
@@ -185,5 +181,22 @@ describe('PoolDetailsStatsButton', () => {
     expect(globalThis.window.location.href).toContain(
       '/positions/add/ethereum/0xpool?currencyA=0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2&currencyB=0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48&chain=ethereum&fee=%7B%22feeAmount%22%3A6200%2C%22tickSpacing%22%3A11%2C%22isDynamic%22%3Atrue%7D&protocolVersion=v3&step=1',
     )
+  })
+
+  it('clicking add liquidity opens the position', async () => {
+    mockUseWalletPositions([
+      buildFeePosition({ poolId: '0xother', tokenId: '1' }),
+      buildFeePosition({ poolId: '0xPOOL', tokenId: '42' }),
+    ])
+    render(<PoolDetailsStatsButtons {...mockProps} />)
+    await userEvent.click(screen.getByTestId(TestID.PoolDetailsAddLiquidityButton))
+    expect(globalThis.window.location.pathname).toBe('/positions/v3/ethereum/42')
+  })
+
+  it('clicking add liquidity ignores other chain positions', async () => {
+    mockUseWalletPositions([buildFeePosition({ poolId: '0xpool', tokenId: '42' })])
+    render(<PoolDetailsStatsButtons {...mockProps} chainId={UniverseChainId.Base} />)
+    await userEvent.click(screen.getByTestId(TestID.PoolDetailsAddLiquidityButton))
+    expect(globalThis.window.location.pathname).toBe('/positions/add/base/0xpool')
   })
 })

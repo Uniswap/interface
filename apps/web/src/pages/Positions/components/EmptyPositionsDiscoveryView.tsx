@@ -5,7 +5,6 @@ import { ArrowRight } from 'ui/src/components/icons/ArrowRight'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import { ExploreContextProvider } from '~/features/Explore/state'
 import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
 import { NoPositionsBanner } from '~/features/Liquidity/components/emptyStates/NoPositionsBanner'
 import { useAccount } from '~/hooks/useAccount'
@@ -45,11 +44,9 @@ export function EmptyPositionsDiscoveryView(): JSX.Element {
         <Text variant="subheading1" color="$neutral1">
           {t('pool.top.title')}
         </Text>
-        <ExploreContextProvider>
-          <ExploreTablesFilterStoreContextProvider>
-            <ExploreTopPoolTable staticSize pageSize={TOP_POOLS_ROW_COUNT} surface="positions-discovery" />
-          </ExploreTablesFilterStoreContextProvider>
-        </ExploreContextProvider>
+        <ExploreTablesFilterStoreContextProvider>
+          <ExploreTopPoolTable staticSize pageSize={TOP_POOLS_ROW_COUNT} surface="positions-discovery" />
+        </ExploreTablesFilterStoreContextProvider>
         <Trace logPress element={ElementName.PositionsEmptyStateExplorePools}>
           <Button
             tag="a"

@@ -8,15 +8,16 @@ export type TickAlignment = 'center' | 'top' | 'bottom'
 /**
  * Convert a price to Y position.
  *
- * Finds the closest tick in liquidityData for the given price, then converts that tick to Y using
- * the linear scale. A pool that is still being created has no liquidity data to look a tick up in,
- * so its prices are placed analytically instead (the price line is borrowed from a sibling pool and
- * the tick scale is the new pool's).
+ * Snaps to the liquidity entry with the closest price when that entry is within one tick spacing of
+ * the price's own tick, so the line sits on the distribution's ticks. Otherwise the price is placed
+ * analytically: a pool being created has no liquidity data, and one whose only ticks are far away (an
+ * emptied full-range position) would collapse every price onto the same entry.
  */
 export function priceToY({
   price,
   liquidityData,
   tickScale,
+  tickSpacing,
   baseCurrency,
   quoteCurrency,
   tickAlignment: _tickAlignment,
@@ -24,13 +25,15 @@ export function priceToY({
   price: number
   liquidityData: ChartEntry[]
   tickScale: LinearTickScale
-  /** Visual base/quote (already swapped when priceInverted); only read when there is no liquidity data. */
+  tickSpacing: number
+  /** Visual base/quote (already swapped when priceInverted). */
   baseCurrency?: Maybe<Currency>
   quoteCurrency?: Maybe<Currency>
   tickAlignment?: TickAlignment
 }): number {
+  const tick = priceToTick({ price, baseCurrency, quoteCurrency })
   if (liquidityData.length === 0) {
-    return tickScale.tickToAxis(priceToTick({ price, baseCurrency, quoteCurrency }))
+    return tickScale.tickToAxis(tick)
   }
 
   // Find the entry with the closest price
@@ -38,5 +41,5 @@ export function priceToY({
     Math.abs(curr.price0 - price) < Math.abs(prev.price0 - price) ? curr : prev,
   )
 
-  return tickScale.tickToAxis(closest.tick)
+  return tickScale.tickToAxis(Math.abs(closest.tick - tick) <= tickSpacing ? closest.tick : tick)
 }

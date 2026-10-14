@@ -7,8 +7,7 @@ export default async function getFont(
   },
 ) {
   try {
-    // Cloudflare Workers needs a full URL to fetch from,
-    // but will only use the pathname to fetch from the ASSETS binding.
+    // ASSETS resolves by pathname only; the host is a placeholder.
     const req = new Request('https://dummy.example/fonts/Inter-normal.var.ttf', {
       headers: { 'Accept-Encoding': 'identity' }, // prevent TTF → WOFF2 rewrite
     })

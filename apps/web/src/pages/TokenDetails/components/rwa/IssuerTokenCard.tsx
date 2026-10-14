@@ -1,4 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
+import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, Text, iconSizes } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
@@ -7,7 +8,7 @@ import { Separator } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { getRWAIssuerLabel } from 'uniswap/src/features/rwa/issuers'
+import { RWAIssuerTag } from 'uniswap/src/features/rwa/RWAIssuerTag'
 import type { RWAToken } from 'uniswap/src/features/rwa/types'
 import type { RWAIssuerMarketData } from 'uniswap/src/features/rwa/useRWAIssuerMarketData'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -38,7 +39,7 @@ function IssuerTokenCardStat({ label, value }: { label: string; value: string })
 export function IssuerTokenCard({ token, primaryName, marketData }: IssuerTokenCardProps): JSX.Element {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
-  const issuerLabel = getRWAIssuerLabel(token)
+  const showIssuerLogo = useIsTokenCategoriesEnabled()
   const { priceUsd, marketCapUsd, volume24hUsd } = marketData
   // Logo + symbol come from the token's own per-issuer RWA branding, not the shared RWA asset branding.
   const tokenSymbol = token.symbol
@@ -78,15 +79,11 @@ export function IssuerTokenCard({ token, primaryName, marketData }: IssuerTokenC
               hideNetworkLogo={hideNetworkLogo}
             />
             <Flex flexShrink={1} minWidth={0}>
-              <Flex row alignItems="baseline" gap="$gap8">
+              <Flex row alignItems="center" gap="$gap4">
                 <Text variant="body2" color="$neutral1" numberOfLines={1}>
                   {primaryName}
                 </Text>
-                {issuerLabel ? (
-                  <Text variant="body3" color="$neutral2" numberOfLines={1}>
-                    {issuerLabel}
-                  </Text>
-                ) : null}
+                <RWAIssuerTag issuer={token} showLogo={showIssuerLogo} />
               </Flex>
               {tokenSymbol ? (
                 <Text variant="body3" color="$neutral2" numberOfLines={1}>

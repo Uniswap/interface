@@ -1,12 +1,9 @@
-import { TokenCategory, TokenCategoryClass } from 'uniswap/src/features/tokenCategories/types'
-import { normalizeTextInput } from 'utilities/src/primitives/string'
+import type { KnownTokenCategoryId } from 'uniswap/src/features/tokenCategories/knownTokenCategoryIds'
+import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 
-const TRENDING_CATEGORY_NAME = 'trending'
+// Matched by id rather than name: `name` is localized, and the backend also translates "Trending".
+const TRENDING_CATEGORY_ID: KnownTokenCategoryId = 'trending'
 
 export function findTrendingCategory(categories: TokenCategory[] | undefined): TokenCategory | undefined {
-  return categories?.find(
-    (category) =>
-      category.categoryClass === TokenCategoryClass.Market &&
-      normalizeTextInput(category.name) === TRENDING_CATEGORY_NAME,
-  )
+  return categories?.find((category) => category.id === TRENDING_CATEGORY_ID)
 }

@@ -1,6 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import { Flex } from '@universe/mycelium'
 import { memo } from 'react'
+import { rowPressExemptProps } from 'uniswap/src/components/lists/items/OptionItemPressableArea'
 import { CONTEXT_MENU_ACTIONS } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem/contextMenuActions'
 import { TokenContextMenuVariant } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem/types'
 import { TokenOptionItemContextMenu } from 'uniswap/src/components/lists/items/tokens/TokenOptionItemContextMenu'
@@ -23,7 +24,7 @@ export const TokenRowContextMenuButton = memo(function TokenRowContextMenuButton
   const shouldShow = isVisible || isOpen
 
   return (
-    <Flex opacity={shouldShow ? 1 : 0} pointerEvents={shouldShow ? 'auto' : 'none'}>
+    <Flex opacity={shouldShow ? 1 : 0} pointerEvents={shouldShow ? 'auto' : 'none'} {...rowPressExemptProps}>
       <TokenOptionItemContextMenu
         actions={CONTEXT_MENU_ACTIONS[TokenContextMenuVariant.Search]}
         triggerMode={ContextMenuTriggerMode.Primary}

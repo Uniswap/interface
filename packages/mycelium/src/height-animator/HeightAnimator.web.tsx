@@ -114,12 +114,9 @@ export function HeightAnimator({
     }
 
     if (outer.style.height === 'auto') {
-      // Settled open: the container already reflowed to the new content
-      // height. Clamp back to the previous height and transition from there.
-      // The rAF deferral below means the new height can paint for one frame
-      // before the clamp — the accepted cost of staying out of the observer's
-      // notification window. The first measurement has no "before" value —
-      // stay settled.
+      // Reached only when the observer's pin did not run: the first
+      // measurement (stay settled), or a transition that settled to auto
+      // between the notification and this frame.
       if (previousHeight === null) {
         return
       }
@@ -149,12 +146,24 @@ export function HeightAnimator({
       // VIEW_CLASSES zeroes border and padding on the content wrapper (any
       // future padding there would make the two disagree).
       const measuredHeight = entry.borderBoxSize[0]?.blockSize ?? entry.contentRect.height
-      // Style writes + the forced reflow read must not run inside the
-      // observer's notification — that is the trigger for Chrome's
-      // "ResizeObserver loop completed with undelivered notifications" error
-      // (DynamicSizeText.web.tsx defers its RO-driven measurement the same
-      // way). Superseding any pending frame coalesces bursts to the latest
-      // measurement.
+      const outer = outerRef.current
+      const previousHeight = lastMeasuredHeightRef.current
+      // At height:auto the new size would paint for a frame before the rAF
+      // transition; pin to the previous height here, before paint. Safe inside
+      // the notification: it doesn't resize the observed wrapper. The
+      // transition itself stays on rAF, since resizing observed elements in
+      // here trips Chrome's "ResizeObserver loop completed with undelivered
+      // notifications" error — which a pin inside a nested animator can still do.
+      if (
+        !skipAnimation &&
+        outer &&
+        outer.style.height === 'auto' &&
+        previousHeight !== null &&
+        measuredHeight !== previousHeight
+      ) {
+        outer.style.height = `${previousHeight}px`
+      }
+      // Superseding any pending frame coalesces bursts to the latest measurement.
       if (frameId !== null) {
         cancelAnimationFrame(frameId)
       }
@@ -171,7 +180,7 @@ export function HeightAnimator({
         frameId = null
       }
     }
-  }, [handleContentResize])
+  }, [handleContentResize, skipAnimation])
 
   useLayoutEffect(() => {
     const outer = outerRef.current

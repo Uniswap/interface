@@ -1,6 +1,71 @@
 diff --git a/node_modules/react-native/.bun-tag-1f1dbb49f3ec71fa b/.bun-tag-1f1dbb49f3ec71fa
 new file mode 100644
 index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/node_modules/react-native/.bun-tag-309eb2906bb5c072 b/.bun-tag-309eb2906bb5c072
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/node_modules/react-native/.bun-tag-903d1218d2699ce6 b/.bun-tag-903d1218d2699ce6
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/node_modules/react-native/.bun-tag-ac83a3313839b126 b/.bun-tag-ac83a3313839b126
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/node_modules/react-native/.bun-tag-c93559098db1df87 b/.bun-tag-c93559098db1df87
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/Libraries/Text/TextInput/Singleline/RCTUITextField.mm b/Libraries/Text/TextInput/Singleline/RCTUITextField.mm
+index 052c003476d18c7c75b1ae2890d0d221af5b57e3..d19892b1d047c8cd9aa455234730c9721369d0fd 100644
+--- a/Libraries/Text/TextInput/Singleline/RCTUITextField.mm
++++ b/Libraries/Text/TextInput/Singleline/RCTUITextField.mm
+@@ -93,7 +93,16 @@ - (void)setDefaultTextAttributes:(NSDictionary<NSAttributedStringKey, id> *)defa
+   }
+ 
+   _defaultTextAttributes = defaultTextAttributes;
+-  [super setDefaultTextAttributes:defaultTextAttributes];
++  // UIKit merges into the field's existing attributes, so a recycled field keeps a previous owner's paragraph
++  // style (lineHeight) unless the replacement names one; reset it explicitly when the new attributes omit it.
++  if (defaultTextAttributes[NSParagraphStyleAttributeName] == nil) {
++    NSMutableDictionary<NSAttributedStringKey, id> *attributes =
++        [defaultTextAttributes mutableCopy] ?: [NSMutableDictionary new];
++    attributes[NSParagraphStyleAttributeName] = [NSParagraphStyle defaultParagraphStyle];
++    [super setDefaultTextAttributes:attributes];
++  } else {
++    [super setDefaultTextAttributes:defaultTextAttributes];
++  }
+   [self _updatePlaceholder];
+ }
+ 
+@@ -163,6 +172,12 @@ - (void)setDisableKeyboardShortcuts:(BOOL)disableKeyboardShortcuts
+   NSMutableDictionary<NSAttributedStringKey, id> *textAttributes =
+       [_defaultTextAttributes mutableCopy] ?: [NSMutableDictionary new];
+ 
++  // The placeholder label caches its last paragraph style; name one explicitly so a recycled field
++  // does not typeset the new placeholder with a previous owner's lineHeight.
++  if (textAttributes[NSParagraphStyleAttributeName] == nil) {
++    textAttributes[NSParagraphStyleAttributeName] = [NSParagraphStyle defaultParagraphStyle];
++  }
++
+   if (self.placeholderColor) {
+     [textAttributes setValue:self.placeholderColor forKey:NSForegroundColorAttributeName];
+   } else {
+diff --git a/ReactCommon/react/renderer/components/textinput/BaseTextInputShadowNode.h b/ReactCommon/react/renderer/components/textinput/BaseTextInputShadowNode.h
+index 8fef1a5f9571cbfe116a3527005c64b3dbf0d0a3..89a881e6ba9bb2cf951871640fd55ade20ac7db4 100644
+--- a/ReactCommon/react/renderer/components/textinput/BaseTextInputShadowNode.h
++++ b/ReactCommon/react/renderer/components/textinput/BaseTextInputShadowNode.h
+@@ -211,7 +211,12 @@ class BaseTextInputShadowNode
+       }
+     }
+ 
+-    auto attributedString = meaningfulState ? AttributedString{} : getAttributedString(layoutContext);
++    // Measure the props text whenever updateStateIfNeeded will push it (Android's rule); otherwise the
++    // empty native state wins, so an uncontrolled input the user cleared still measures as empty.
++    auto reactTreeAttributedString = getAttributedString(layoutContext);
++    bool stateIsCurrent = meaningfulState &&
++        BaseShadowNode::getStateData().reactTreeAttributedString.isContentEqual(reactTreeAttributedString);
++    auto attributedString = stateIsCurrent ? AttributedString{} : std::move(reactTreeAttributedString);
+ 
+     if (attributedString.isEmpty()) {
+       attributedString = getPlaceholderAttributedString(layoutContext);
 diff --git a/ReactCommon/react/renderer/components/view/YogaLayoutableShadowNode.cpp b/ReactCommon/react/renderer/components/view/YogaLayoutableShadowNode.cpp
 index bd327efc351234daee2ca569f2bd52fc0079c6ad..3b69d45a24fb8ab44a742576b6dc6dcb16199fa8 100644
 --- a/ReactCommon/react/renderer/components/view/YogaLayoutableShadowNode.cpp

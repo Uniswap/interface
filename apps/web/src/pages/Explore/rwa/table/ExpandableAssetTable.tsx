@@ -27,6 +27,7 @@ export type ExpandableAssetTableProps = {
   sortMethod?: StocksSortMethod
   orderDirection?: OrderDirection
   emptyState?: TableEmptyState
+  categoryId: string | undefined
 }
 
 /** Expandable asset table — parent rows expand to per-issuer breakdown.
@@ -41,6 +42,7 @@ export function ExpandableAssetTable({
   sortMethod,
   orderDirection,
   emptyState,
+  categoryId,
 }: ExpandableAssetTableProps): JSX.Element {
   const { chains: enabledChainIds } = useEnabledChains()
   const chainFilter = useChainIdFromUrlParam()
@@ -48,8 +50,8 @@ export function ExpandableAssetTable({
   const showLoadingSkeleton = isLoading
 
   const data = useMemo(
-    () => buildExpandableAssetTableRows({ assets, enabledChainIds, chainFilter, rankByAsset }),
-    [assets, enabledChainIds, chainFilter, rankByAsset],
+    () => buildExpandableAssetTableRows({ assets, enabledChainIds, chainFilter, rankByAsset, categoryId }),
+    [assets, enabledChainIds, chainFilter, rankByAsset, categoryId],
   )
 
   const columns = useExpandableAssetTableColumns({
@@ -61,7 +63,11 @@ export function ExpandableAssetTable({
     orderDirection: enableSorting ? orderDirection : undefined,
   })
 
-  const { rowWrapper, renderUnifiedExpandableRow } = useExpandableAssetTableExpandableRow()
+  const collapseExpandedRowsKey = enableSorting ? `${sortMethod}-${orderDirection}` : undefined
+
+  const { rowWrapper, renderUnifiedExpandableRow } = useExpandableAssetTableExpandableRow({
+    instantCollapseKey: collapseExpandedRowsKey,
+  })
 
   return (
     <Table<ExpandableAssetTableRow>
@@ -78,6 +84,7 @@ export function ExpandableAssetTable({
       getRowId={getExpandableAssetTableRowId}
       getSubRows={getExpandableAssetSubRows}
       singleExpandedRow
+      collapseExpandedRowsKey={collapseExpandedRowsKey}
       rowWrapper={rowWrapper}
       renderUnifiedExpandableRow={renderUnifiedExpandableRow}
     />

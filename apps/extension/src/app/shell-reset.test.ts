@@ -21,6 +21,7 @@ import { describe, expect, it } from 'vitest'
 
 const appDir = dirname(fileURLToPath(import.meta.url))
 const globalCss = readFileSync(join(appDir, 'Global.css'), 'utf8')
+const skeletonBoxCss = readFileSync(join(appDir, 'components', 'loading', 'SkeletonBox.css'), 'utf8')
 
 function baseLayerBlock(css: string): string {
   const start = css.indexOf('@layer base {')
@@ -72,6 +73,56 @@ const FORM_CONTROL_RESET: Record<string, string> = {
   color: 'inherit',
 }
 
+/** The stylesheet with every `@… { … }` block (layers, keyframes) removed, leaving only unlayered rules. */
+function withoutAtRuleBlocks(css: string): string {
+  let out = ''
+  let i = 0
+  while (i < css.length) {
+    const at = css.indexOf('@', i)
+    const open = at === -1 ? -1 : css.indexOf('{', at)
+    const semi = at === -1 ? -1 : css.indexOf(';', at)
+    if (at === -1 || open === -1) {
+      out += css.slice(i)
+      break
+    }
+    // An at-statement (`@layer a, b;`) has no block: skip it and keep scanning.
+    if (semi !== -1 && semi < open) {
+      out += css.slice(i, at)
+      i = semi + 1
+      continue
+    }
+    out += css.slice(i, at)
+    let depth = 0
+    for (i = open; i < css.length; i++) {
+      if (css[i] === '{') {
+        depth++
+      } else if (css[i] === '}' && --depth === 0) {
+        i++
+        break
+      }
+    }
+  }
+  return out
+}
+
+/** Every declaration Global.css applies to one selector outside any at-rule block. */
+function unlayeredDeclarationsFor(selector: string): Map<string, string> {
+  const body = withoutAtRuleBlocks(globalCss.replace(/\/\*[\s\S]*?\*\//g, ''))
+  const merged = new Map<string, string>()
+  for (const [, selectors = '', declarations = ''] of body.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+    if (!selectors.split(',').some((one) => one.trim() === selector)) {
+      continue
+    }
+    for (const declaration of declarations.split(';')) {
+      const [property, ...value] = declaration.split(':')
+      if (property !== undefined && value.length > 0) {
+        merged.set(property.trim(), value.join(':').trim())
+      }
+    }
+  }
+  return merged
+}
+
 const LIST_RESET: Record<string, string> = { margin: '0', padding: '0', 'list-style': 'none' }
 const MARGIN_RESET: Record<string, string> = { margin: '0' }
 
@@ -109,5 +160,37 @@ describe('Global.css shell reset', () => {
   it('keeps the reset layered so utilities still win', () => {
     expect(globalCss).toMatch(/@layer theme,\s*base,\s*components,\s*utilities;/)
     expect(globalCss.indexOf('@layer theme,')).toBeLessThan(globalCss.indexOf('@layer base {'))
+  })
+
+  // @universe/tailwind's base layer paints html/body with the shadcn
+  // `--background` placeholder (near-black in dark mode, not $surface1). The
+  // page background must stay unlayered to outrank it and must read the
+  // theme-reactive `--surface1`, which is what flips with html.dark.
+  it.each(['html', 'body'])('paints %s with the app surface, unlayered', (selector) => {
+    expect(unlayeredDeclarationsFor(selector).get('background-color')).toBe('var(--surface1)')
+    expect(declarationsFor(selector).has('background-color')).toBe(false)
+  })
+
+  // #root is a flex container; without a column direction the screen wrapper
+  // is stretched to exactly 100vh and its content overflows past it.
+  it('stacks #root as a column, unlayered', () => {
+    const root = unlayeredDeclarationsFor('#root')
+    expect(root.get('display')).toBe('flex')
+    expect(root.get('flex-direction')).toBe('column')
+    expect(declarationsFor('#root').has('flex-direction')).toBe(false)
+  })
+
+  // The theme is html.dark (applyInitialThemeClass / TailwindThemeSync); the
+  // Tamagui `.t_light` / `.t_dark` classes are never applied any more, so a
+  // rule keyed on them is dead.
+  it.each([
+    ['Global.css', globalCss],
+    ['SkeletonBox.css', skeletonBoxCss],
+  ])('%s keys nothing on the removed Tamagui theme classes', (_file, css) => {
+    expect(css).not.toMatch(/\.t_(light|dark)\b/)
+  })
+
+  it('themes the skeleton shimmer off html.dark', () => {
+    expect(skeletonBoxCss).toMatch(/^\.dark \.skeleton-box::after \{/m)
   })
 })

@@ -2,8 +2,6 @@
   "defaultSrc": ["https://vercel.live/", "https://vercel.com"],
   "scriptSrc": [
     "'sha256-jhb+qiJiVBxruYChJWIrsskRE2fAoV/F/B10cAoiSB0='",
-    "'sha256-NzvNrqk5jB9YZATwo5BF4JoRlJ02HsnFikbKXgEPdaQ='",
-    "https://static.cloudflareinsights.com"
-  ],
-  "connectSrc": ["https://*.corn-staging.com", "https://cloudflareinsights.com"]
+    "'sha256-NzvNrqk5jB9YZATwo5BF4JoRlJ02HsnFikbKXgEPdaQ='"
+  ]
 }

@@ -57,7 +57,7 @@ describe('tagOptionAsRwa', () => {
     const out = tagOptionAsRwa({ option: token(MAINNET, '0xa'), match, plainTokenNames: false })
     expect(out.rwaCategory).toBe(RwaCategory.STOCKS)
     expect(out.rwaName).toBe('Tesla')
-    expect(out.rwaIssuerSlug).toBe('ondo')
+    expect(out.rwaIssuer?.issuer).toBe('ondo')
   })
 
   it('preserves the original option fields and produces a new object', () => {
@@ -83,7 +83,7 @@ describe('tagOptionAsRwa', () => {
     expect(out.multichainResult).toBe(option.multichainResult)
     expect(out.rwaCategory).toBe(RwaCategory.STOCKS)
     expect(out.rwaName).toBe('Tesla')
-    expect(out.rwaIssuerSlug).toBe('ondo')
+    expect(out.rwaIssuer?.issuer).toBe('ondo')
   })
 
   it('leaves the clean name unset with plainTokenNames so the row keeps the token name', () => {
@@ -94,7 +94,7 @@ describe('tagOptionAsRwa', () => {
     const out = tagOptionAsRwa({ option: token(MAINNET, '0xa'), match, plainTokenNames: true })
     expect(out.rwaName).toBeUndefined()
     expect(out.rwaCategory).toBe(RwaCategory.STOCKS)
-    expect(out.rwaIssuerSlug).toBe('ondo')
+    expect(out.rwaIssuer?.issuer).toBe('ondo')
   })
 
   it('coalesces an empty asset name / issuer slug to undefined (so the title falls back, not blanks)', () => {
@@ -114,6 +114,24 @@ describe('tagOptionAsRwa', () => {
     }
     const out = tagOptionAsRwa({ option: token(MAINNET, '0xa'), match, plainTokenNames: false })
     expect(out.rwaName).toBeUndefined()
-    expect(out.rwaIssuerSlug).toBeUndefined()
+    expect(out.rwaIssuer).toBeUndefined()
+  })
+
+  it("fills display name and logo from the option's own v2 issuer when the v1 index carries only the slug", () => {
+    const match = findRwaForToken(index, { chainId: MAINNET, address: '0xa' })
+    if (!match) {
+      throw new Error('fixture match missing')
+    }
+    const option = token(MAINNET, '0xa')
+    option.currencyInfo = {
+      ...option.currencyInfo,
+      issuer: { issuer: 'ondo', issuerDisplayName: 'Ondo Finance', issuerLogoUrl: 'https://logo/ondo.svg' },
+    }
+    const out = tagOptionAsRwa({ option, match, plainTokenNames: true })
+    expect(out.rwaIssuer).toEqual({
+      issuer: 'ondo',
+      issuerDisplayName: 'Ondo Finance',
+      issuerLogoUrl: 'https://logo/ondo.svg',
+    })
   })
 })

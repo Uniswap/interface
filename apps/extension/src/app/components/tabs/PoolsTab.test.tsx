@@ -17,8 +17,10 @@ vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
   useEnabledChains: () => ({ chains: [1] }),
 }))
 
-vi.mock('utilities/src/react/useInfiniteScroll', () => ({
-  useInfiniteScroll: () => ({ sentinelRef: { current: null } }),
+// jsdom has no layout, so the real virtualizer measures a zero-height viewport and renders no rows.
+vi.mock('@universe/mycelium', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@universe/mycelium')>()),
+  UniversalList: (await import('@universe/mycelium/testing')).UniversalListTestDouble,
 }))
 
 vi.mock('uniswap/src/components/portfolio/PositionItem/PositionItem', async () => {
@@ -152,6 +154,35 @@ describe('PoolsTab', () => {
 
     expect(screen.getByText(/Hidden .*\(2\)/)).toBeDefined()
     expect(screen.queryByTestId('position-pool-hidden-1')).toBeNull()
+  })
+
+  it('keeps the hidden expando reachable when no visible position matches the filter', () => {
+    mockUseWalletPositions.mockReturnValue({
+      ...baseResult,
+      positions: [],
+      hiddenPositions: [position('pool-hidden-1')],
+    })
+
+    render(<PoolsTab address="0xabc" />)
+
+    // The flattened row list has to keep both: the empty-filter view is a row, not the list's empty
+    // slot, so it can't swallow the expando that follows it.
+    expect(screen.getByText(/Hidden .*\(1\)/)).toBeDefined()
+  })
+
+  it('keeps the status filter visible while the error state is showing', () => {
+    mockUseWalletPositions.mockReturnValue({
+      ...baseResult,
+      hasData: false,
+      error: new Error('positions failed'),
+    })
+
+    render(<PoolsTab address="0xabc" />)
+
+    // Filter chrome lives in the list header, so the error state renders below it rather than
+    // replacing the whole tab.
+    expect(screen.getByText('Status')).toBeDefined()
+    expect(screen.getByText('Pools balances currently unavailable')).toBeDefined()
   })
 
   it('filters out positions that do not match the active status filter (default open)', () => {

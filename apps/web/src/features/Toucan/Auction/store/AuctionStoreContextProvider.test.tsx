@@ -1,9 +1,16 @@
 import { act, render } from '@testing-library/react'
 import { useContext } from 'react'
 import { MemoryRouter, NavigateFunction, Route, Routes, useNavigate } from 'react-router'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { useLoadBidDistributionData } from '~/features/Toucan/Auction/hooks/useLoadBidDistributionData'
+import { useLoadTickDetails } from '~/features/Toucan/Auction/hooks/useLoadTickDetails'
+import { useLoadUserBids } from '~/features/Toucan/Auction/hooks/useLoadUserBids'
+import { useUpdateTokenColor } from '~/features/Toucan/Auction/hooks/useUpdateTokenColor'
 import { AuctionStoreContext } from '~/features/Toucan/Auction/store/AuctionStoreContext'
-import { AuctionStoreProvider } from '~/features/Toucan/Auction/store/AuctionStoreContextProvider'
+import {
+  AuctionStoreInstanceProvider,
+  AuctionStoreProvider,
+} from '~/features/Toucan/Auction/store/AuctionStoreContextProvider'
 import type { AuctionStore } from '~/features/Toucan/Auction/store/createAuctionStore'
 import type { AuctionDetails } from '~/features/Toucan/Auction/store/types'
 
@@ -51,6 +58,8 @@ function renderAtAuction(address: string) {
 }
 
 describe('AuctionStoreProvider', () => {
+  beforeEach(() => vi.clearAllMocks())
+
   it('initializes the store from the URL params', () => {
     renderAtAuction(AUCTION_A)
 
@@ -86,5 +95,27 @@ describe('AuctionStoreProvider', () => {
     })
 
     expect(capturedStore).toBe(storeA)
+  })
+
+  it('loads chart data on the ADP, but only transaction data in a standalone claim store', () => {
+    const page = renderAtAuction(AUCTION_A)
+    expect(useLoadBidDistributionData).toHaveBeenCalled()
+    expect(useLoadTickDetails).toHaveBeenCalled()
+    expect(useUpdateTokenColor).toHaveBeenCalled()
+    page.unmount()
+    vi.clearAllMocks()
+
+    const onWithdrawalConfirmed = vi.fn()
+    render(
+      <AuctionStoreInstanceProvider auctionAddress={AUCTION_A} onWithdrawalConfirmed={onWithdrawalConfirmed}>
+        <div />
+      </AuctionStoreInstanceProvider>,
+    )
+    expect(useLoadUserBids).toHaveBeenCalledWith(
+      expect.objectContaining({ auctionAddress: AUCTION_A, onWithdrawalConfirmed }),
+    )
+    expect(useLoadBidDistributionData).not.toHaveBeenCalled()
+    expect(useLoadTickDetails).not.toHaveBeenCalled()
+    expect(useUpdateTokenColor).not.toHaveBeenCalled()
   })
 })

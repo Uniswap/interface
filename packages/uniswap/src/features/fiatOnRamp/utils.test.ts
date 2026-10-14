@@ -1,11 +1,20 @@
-import { FORFilters, FORQuote, FORServiceProvider, InitialQuoteSelection } from 'uniswap/src/features/fiatOnRamp/types'
+import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import {
+  FiatOnRampCurrency,
+  FORFilters,
+  FORQuote,
+  FORServiceProvider,
+  InitialQuoteSelection,
+} from 'uniswap/src/features/fiatOnRamp/types'
 import {
   filterQuotesByPaymentMethod,
   getCountryFlagSvgUrl,
+  getUnsupportedFORTokensWithBalance,
   isFiatOnRampApiError,
   isInvalidRequestAmountTooHigh,
   isInvalidRequestAmountTooLow,
   isValidIsoCurrencyCode,
+  normalizeBalancesByIdForLookup,
   organizeQuotesIntoSections,
 } from 'uniswap/src/features/fiatOnRamp/utils'
 
@@ -479,5 +488,75 @@ describe('organizeQuotesIntoSections', () => {
       expect(result.sections[0]?.['type']).toBe(InitialQuoteSelection.MostRecent)
       expect(result.sections[1]?.data).toEqual([mostRecentQuote2, regularQuote])
     }
+  })
+})
+
+// Native USDC on Arbitrum, as data-api returns it (checksummed) and as the portfolio keys it (lowercase).
+const ARB_USDC_CHECKSUMMED_ID = '42161-0xaf88d065e77c8cC2239327C5EDB3A432268e5831'
+const ARB_USDC_LOWERCASE_ID = '42161-0xaf88d065e77c8cc2239327c5edb3a432268e5831'
+
+function forCurrency(currencyId: string): FiatOnRampCurrency {
+  return {
+    currencyInfo: { currencyId } as FiatOnRampCurrency['currencyInfo'],
+    meldCurrencyCode: 'USDC_ARBITRUM',
+  } as FiatOnRampCurrency
+}
+
+function portfolioBalance(currencyId: string): PortfolioBalance {
+  return { quantity: 10, balanceUSD: 10, currencyInfo: { currencyId } } as PortfolioBalance
+}
+
+describe('normalizeBalancesByIdForLookup', () => {
+  test('returns undefined when there are no balances', () => {
+    expect(normalizeBalancesByIdForLookup(undefined)).toBeUndefined()
+  })
+
+  test('re-keys an EVM balance so a checksummed currency id finds it', () => {
+    const balance = portfolioBalance(ARB_USDC_LOWERCASE_ID)
+
+    const normalized = normalizeBalancesByIdForLookup({ [ARB_USDC_LOWERCASE_ID]: balance })
+
+    expect(normalized?.[ARB_USDC_LOWERCASE_ID]).toBe(balance)
+    expect(Object.keys(normalized ?? {})).toEqual([ARB_USDC_LOWERCASE_ID])
+  })
+
+  test('lowercases a checksummed balance key', () => {
+    const balance = portfolioBalance(ARB_USDC_CHECKSUMMED_ID)
+
+    const normalized = normalizeBalancesByIdForLookup({ [ARB_USDC_CHECKSUMMED_ID]: balance })
+
+    expect(normalized?.[ARB_USDC_LOWERCASE_ID]).toBe(balance)
+  })
+
+  test('leaves case-sensitive Solana ids untouched', () => {
+    const solanaId = '501000101-EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
+    const balance = portfolioBalance(solanaId)
+
+    expect(normalizeBalancesByIdForLookup({ [solanaId]: balance })?.[solanaId]).toBe(balance)
+  })
+})
+
+describe('getUnsupportedFORTokensWithBalance', () => {
+  test('treats a held token as supported when the list and the portfolio disagree on address casing', () => {
+    const balance = portfolioBalance(ARB_USDC_LOWERCASE_ID)
+
+    const result = getUnsupportedFORTokensWithBalance([forCurrency(ARB_USDC_CHECKSUMMED_ID)], {
+      [ARB_USDC_LOWERCASE_ID]: balance,
+    })
+
+    expect(result).toEqual([])
+  })
+
+  test('returns held tokens missing from the supported list', () => {
+    const wbtcId = '1-0x2260fac5e5542a773aa44fbcfedf7c193bc2c599'
+    const balance = portfolioBalance(wbtcId)
+
+    const result = getUnsupportedFORTokensWithBalance([forCurrency(ARB_USDC_CHECKSUMMED_ID)], { [wbtcId]: balance })
+
+    expect(result).toEqual([balance])
+  })
+
+  test('returns nothing when there are no balances', () => {
+    expect(getUnsupportedFORTokensWithBalance([forCurrency(ARB_USDC_CHECKSUMMED_ID)], undefined)).toEqual([])
   })
 })

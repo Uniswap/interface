@@ -3,6 +3,7 @@ import { IMAGE_DATA_FETCH_TIMEOUT_MS } from 'functions/constants'
 import getPosition from 'functions/utils/getPosition'
 import { getRequest } from 'functions/utils/getRequest'
 import { type Context } from 'hono'
+import type { ProtocolVersionLabel } from 'uniswap/src/features/positions/utils'
 import { withTimeout } from 'uniswap/src/utils/polling'
 
 export async function positionImageHandler(c: Context) {
@@ -18,7 +19,7 @@ export async function positionImageHandler(c: Context) {
         url: cacheUrl,
         getData: () =>
           getPosition({
-            version: version as 'v2' | 'v3' | 'v4',
+            version: version as ProtocolVersionLabel,
             chainName,
             identifier,
             url: cacheUrl,

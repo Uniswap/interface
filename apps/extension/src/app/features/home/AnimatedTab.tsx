@@ -1,6 +1,6 @@
 import { Flex } from '@universe/mycelium'
 import { SPORE_ANIMATION_CURVE_CSS } from '@universe/tailwind/animations'
-import { type PropsWithChildren } from 'react'
+import { type PropsWithChildren, useState } from 'react'
 
 // The legacy 'quicker' preset meant transition: all; keep the transition scoped to the animated properties (color-flash rule).
 const TAB_TRANSITION = `opacity ${SPORE_ANIMATION_CURVE_CSS.quicker}, transform ${SPORE_ANIMATION_CURVE_CSS.quicker}`
@@ -12,6 +12,18 @@ export function AnimatedTab({
   children,
 }: PropsWithChildren<{ isActive: boolean; hideLeft?: boolean; hideRight?: boolean }>): JSX.Element {
   const hidden = hideLeft || hideRight
+
+  // Inactive tabs are hidden with `display: none`, so anything that measures itself on mount
+  // measures 0x0 — and going from hidden to visible fires neither a resize nor a scroll, so a
+  // virtualized list never recovers: every row stacks at offset 0 until the first scroll. Mount on
+  // first activation instead, then stay mounted so switching back is still instant. Costs nothing
+  // up front: every tab whose content is expensive is already passing `skip` while inactive.
+  const [hasBeenActive, setHasBeenActive] = useState(isActive)
+
+  if (isActive && !hasBeenActive) {
+    setHasBeenActive(true)
+  }
+
   return (
     <Flex
       width="100%"
@@ -24,7 +36,7 @@ export function AnimatedTab({
       pointerEvents={!isActive || hidden ? 'none' : 'auto'}
       style={{ transition: TAB_TRANSITION }}
     >
-      {children}
+      {hasBeenActive ? children : null}
     </Flex>
   )
 }

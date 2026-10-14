@@ -263,7 +263,6 @@ vi.mock('moti', () => ({
 // Mock moti/author specifically to fix ES module import issue
 vi.mock('moti/author', () => ({}))
 
-
 // Chainable no-op layout-animation builder (FadeIn.duration(...).delay(...) etc.)
 function makeMockLayoutAnimation(): any {
   const builder: any = {}
@@ -384,6 +383,11 @@ vi.mock('react-native-reanimated', () => {
       }
       return styleCache.get(key)
     }),
+    ReduceMotion: {
+      System: 'system',
+      Always: 'always',
+      Never: 'never',
+    },
     withTiming: vi.fn((toValue) => toValue),
     withSpring: vi.fn((toValue) => toValue),
     withSequence: vi.fn((...values) => values[values.length - 1]),

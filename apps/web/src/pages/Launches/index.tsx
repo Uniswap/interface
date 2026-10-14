@@ -72,7 +72,7 @@ function TrendingInfoTooltip(): JSX.Element {
   const { t } = useTranslation()
 
   return (
-    <Tooltip placement="top" delay={0}>
+    <Tooltip placement="top">
       <Tooltip.Trigger>
         <Flex alignItems="center">
           <InfoCircleFilled size="$icon.16" color="$neutral2" />

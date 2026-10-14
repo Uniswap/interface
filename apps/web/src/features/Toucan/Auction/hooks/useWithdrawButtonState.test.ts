@@ -69,6 +69,16 @@ describe('useWithdrawButtonState', () => {
     expect(result.current.isDisabled).toBe(false)
   })
 
+  it('keeps the refund open before the claim block, which only gates the token claim', () => {
+    const beforeClaimBlock = { claimBlock: '250', currentBlockNumber: 200 }
+    const failed = renderHook(() => useWithdrawButtonState({ outcome: AuctionOutcome.FAILED, ...beforeClaimBlock }))
+    const graduated = renderHook(() =>
+      useWithdrawButtonState({ outcome: AuctionOutcome.GRADUATED, ...beforeClaimBlock }),
+    )
+    expect(failed.result.current.isDisabled).toBe(false)
+    expect(graduated.result.current.isDisabled).toBe(true)
+  })
+
   // The bug this guards: UNKNOWN reached this hook as `isGraduated === false`, so a bidder on an
   // auction that DID graduate was offered "Withdraw funds" — a refund they were not entitled to.
   it('promises neither tokens nor a refund while the outcome is undecided', () => {

@@ -1,7 +1,9 @@
 import type { PlainMessage, Timestamp } from '@bufbuild/protobuf'
 import type { Auction } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 import type { EVMUniverseChainId } from '@universe/chains'
-import { AuctionLaunchMethod, getAuctionLaunchMethod } from '~/features/Toucan/Auction/utils/auctionLaunchMethod'
+import { timestampToMs } from 'uniswap/src/data/apiClients/dataApiService/utils/protoTimestamp'
+import { LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
+import { getAuctionLaunchMethod } from '~/features/Toucan/Auction/utils/auctionLaunchMethod'
 import {
   AuctionDisplayPhase,
   PoolAvailability,
@@ -16,8 +18,8 @@ export interface TokenDetailsAuctionDisplay {
   /** Present only when the TDP resolved an auction on an EVM chain; the other fields are inert without it. */
   auction: PlainMessage<Auction> | undefined
   chainId: EVMUniverseChainId | undefined
-  /** Classified by the served enum, never inferred from isQuickLaunch. */
-  launchMethod?: AuctionLaunchMethod
+  /** Classified by the served enum, never inferred from isQuickLaunch; `Unknown` without an auction. */
+  launchMethod: LaunchProvenanceMethod
   phase: AuctionDisplayPhase
   result: AuctionDisplayResult
   poolAvailability: PoolAvailability
@@ -26,10 +28,13 @@ export interface TokenDetailsAuctionDisplay {
   /** Optional start estimate while Upcoming or end estimate while Live. */
   phaseEndsAtMs: number | undefined
   currencyRaised: CurrencyRaisedState
+  /** The chain head every phase on the page is resolved from, including sibling auctions'. */
+  currentBlock: CurrentBlockState
 }
 
-function timestampToMs(timestamp: PlainMessage<Timestamp> | undefined): number | undefined {
-  return timestamp ? Number(timestamp.seconds) * 1000 + Math.floor(timestamp.nanos / 1_000_000) : undefined
+export function toSeconds(timestamp: PlainMessage<Timestamp> | undefined): bigint | undefined {
+  const ms = timestampToMs(timestamp)
+  return ms === undefined ? undefined : BigInt(Math.floor(ms / 1000))
 }
 
 export function resolveTokenDetailsAuctionDisplay({
@@ -57,9 +62,10 @@ export function resolveTokenDetailsAuctionDisplay({
     ...state,
     auction,
     chainId,
-    launchMethod: auction ? getAuctionLaunchMethod({ auction }) : undefined,
+    launchMethod: auction ? getAuctionLaunchMethod({ auction }) : LaunchProvenanceMethod.Unknown,
     phaseEndsAtMs,
     currencyRaised,
+    currentBlock,
   }
 }
 
@@ -69,7 +75,7 @@ export function shouldShowAuctionOnlyLayout({
   phase,
   shouldShowSwap,
 }: TokenDetailsAuctionDisplay): boolean {
-  return launchMethod === AuctionLaunchMethod.Custom && phase !== AuctionDisplayPhase.Ended && !shouldShowSwap
+  return launchMethod === LaunchProvenanceMethod.CustomAuction && phase !== AuctionDisplayPhase.Ended && !shouldShowSwap
 }
 
 /** Tradeable Custom auction tokens (pool exists) with a live auction get a banner pointing back at it. */
@@ -79,7 +85,7 @@ export function shouldShowLiveAuctionBanner({
   poolAvailability,
 }: TokenDetailsAuctionDisplay): boolean {
   return (
-    launchMethod === AuctionLaunchMethod.Custom &&
+    launchMethod === LaunchProvenanceMethod.CustomAuction &&
     phase === AuctionDisplayPhase.Live &&
     poolAvailability === PoolAvailability.HasPool
   )
@@ -91,7 +97,7 @@ export function shouldReserveLiveAuctionBannerSpace(
   return (
     shouldShowLiveAuctionBanner(display) ||
     (display.isInitialLoading &&
-      display.launchMethod === AuctionLaunchMethod.Custom &&
+      display.launchMethod === LaunchProvenanceMethod.CustomAuction &&
       display.phase === AuctionDisplayPhase.Live)
   )
 }

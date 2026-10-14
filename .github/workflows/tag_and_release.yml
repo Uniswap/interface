@@ -5,7 +5,7 @@ on:
       - 'main'
 
 jobs:
-  deploy-to-prod:
+  tag-and-release:
     runs-on: ubuntu-latest
     steps:
       - uses: bullfrogsec/bullfrog@dcde5841b19b7ef693224207a7fdec67fce604db # v0.8.3

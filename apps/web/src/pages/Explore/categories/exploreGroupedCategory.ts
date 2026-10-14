@@ -44,19 +44,11 @@ export function resolveGroupedRwaCategory({
 }
 
 /**
- * The RwaCategory whose legal disclaimer the selected category shows. Deliberately id-based rather than
- * `grouped`-based: the BE flipping how Stocks/ETFs render must never drop legal copy without an FE change.
+ * The RwaCategory whose disclaimer the selected category shows. Deliberately id-based rather than
+ * `grouped`-based: the BE flipping how Stocks/ETFs render must never drop the disclaimer without an FE change.
  */
 export function resolveRwaDisclaimerCategory(categoryId: string): RwaCategory {
   return RWA_CATEGORY_BY_STATIC_ID.get(categoryId) ?? RwaCategory.UNSPECIFIED
-}
-
-/**
- * Stocks and ETFs carry the legal disclaimer; Commodities and flat categories don't. Kept separate
- * from isGroupedRwaCategory so narrowing that for an endpoint migration can't drop legal copy.
- */
-export function showsRwaDisclaimer(rwaCategory: RwaCategory): boolean {
-  return rwaCategory === RwaCategory.STOCKS || rwaCategory === RwaCategory.ETFS
 }
 
 /**

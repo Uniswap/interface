@@ -128,7 +128,8 @@ export function queryParametersToCurrencyState(parsedQs: ParsedQs): SerializedCu
   )
   const parsedOutputCurrencyAddress = parseCurrencyFromURLParameter(
     parsedQs.outputCurrency || parsedQs.outputcurrency,
-    chainIdToPlatform(outputChainId ?? UniverseChainId.Mainnet),
+    // `outputChain` is omitted for same-chain swaps, so the output lives on the input chain.
+    chainIdToPlatform(outputChainId ?? chainId ?? UniverseChainId.Mainnet),
   )
   const outputCurrencyAddress =
     parsedOutputCurrencyAddress === parsedInputCurrencyAddress && outputChainId === chainId

@@ -1,4 +1,3 @@
-import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { UniverseChainId, Platform, getValidAddress } from '@universe/chains'
 import { createParser, parseAsJson } from 'nuqs'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
@@ -7,7 +6,6 @@ import { z } from 'zod'
 import { assume0xAddress } from '~/chains'
 import { PositionFlowStep, PriceRangeState, RangeAmountInputPriceMode } from '~/features/Liquidity/Create/types'
 import { parseFeeDataFromUrl } from '~/features/Liquidity/utils/feeTiers'
-import { getProtocolVersionFromLabel, getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVersion'
 import { checkIsNative } from '~/hooks/Tokens'
 import { DepositState } from '~/types/liquidity'
 import { PositionField } from '~/types/position'
@@ -104,19 +102,6 @@ export const parseAsChainId = createParser({
   serialize: (value: UniverseChainId | undefined) => {
     return value ? getChainUrlParam(value) : ''
   },
-})
-
-// Serialized as the display label (`v4`) rather than the numeric enum, matching the `protocolVersion`
-// param the pool links already write.
-export const parseAsProtocolVersion = createParser({
-  parse: (query: string) => {
-    if (!query || typeof query !== 'string') {
-      return null
-    }
-
-    return getProtocolVersionFromLabel(query) ?? null
-  },
-  serialize: (value: ProtocolVersion) => getProtocolVersionLabel(value) ?? '',
 })
 
 export const parseAsPositionFlowStep = createParser({

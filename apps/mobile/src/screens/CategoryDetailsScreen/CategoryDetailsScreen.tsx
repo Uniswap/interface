@@ -75,7 +75,7 @@ export function CategoryDetailsScreen({ route }: AppStackScreenProp<MobileScreen
   }
 
   return (
-    <Trace directFromPage logImpression properties={{ categoryId }} screen={MobileScreens.CategoryDetails}>
+    <Trace directFromPage logImpression properties={{ category_id: categoryId }} screen={MobileScreens.CategoryDetails}>
       <CategoryDetailsContent category={category} />
     </Trace>
   )
@@ -234,7 +234,7 @@ function CategoryDetailsContent({ category }: { category: TokenCategory }): JSX.
     ({ item, index }: UniversalListRenderItemInfo<CategoryListItem>): JSX.Element => {
       if (item.rowType === 'skeleton') {
         return (
-          <Flex height={EXPLORE_TOKEN_ROW_HEIGHT} justifyContent="center" px="$spacing24">
+          <Flex height={EXPLORE_TOKEN_ROW_HEIGHT} justifyContent="center" px="$spacing20">
             <Loader.Token />
           </Flex>
         )
@@ -244,6 +244,8 @@ function CategoryDetailsContent({ category }: { category: TokenCategory }): JSX.
         return (
           <CategoryGroupingRow
             grouping={item.grouping}
+            categoryId={category.id}
+            index={index}
             itemKey={item.key}
             isExpanded={item.isExpanded}
             onToggle={onToggleGroupingRow}
@@ -255,6 +257,7 @@ function CategoryDetailsContent({ category }: { category: TokenCategory }): JSX.
         <TokenItem
           hideNumberedList
           eventName={MobileEventName.ExploreTokenItemSelected}
+          categoryId={category.id}
           index={index}
           metadataDisplayType={item.tokenMetadataDisplayType}
           rowKey={item.key}
@@ -263,7 +266,7 @@ function CategoryDetailsContent({ category }: { category: TokenCategory }): JSX.
         />
       )
     },
-    [onToggleGroupingRow],
+    [onToggleGroupingRow, category.id],
   )
 
   const listHeader = useMemo(

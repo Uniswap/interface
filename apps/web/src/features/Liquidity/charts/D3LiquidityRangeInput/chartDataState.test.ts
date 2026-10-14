@@ -1,7 +1,12 @@
+import { Token } from '@uniswap/sdk-core'
+import { UniverseChainId } from '@universe/chains'
+import { nativeOnChain, USDC, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import {
   getChartDataState,
+  getFallbackPriceInverted,
   getPriceLineSource,
   getPriceStrategiesState,
+  usesFallbackPriceLine,
 } from '~/features/Liquidity/charts/D3LiquidityRangeInput/chartDataState'
 
 // Everything settled and present; each case flips the inputs it is about.
@@ -186,6 +191,26 @@ describe('getChartDataState', () => {
     })
   })
 
+  describe("for a migration drawing its source pool's series", () => {
+    it('renders off that series when the pool has no history of its own and no sibling', () => {
+      expect(getChartDataState({ ...SETTLED, ...BORROWS, hasSiblingPool: false, hasLiquidityData: false })).toEqual({
+        showChartErrorView: false,
+        isLoading: false,
+      })
+    })
+
+    it('still falls back to the inputs-only view when the source series is empty too', () => {
+      expect(
+        getChartDataState({
+          ...SETTLED,
+          poolHasNoActiveLiquidity: true,
+          hasPriceHistory: false,
+          hasLiquidityData: false,
+        }),
+      ).toEqual({ showChartErrorView: true, isLoading: false })
+    })
+  })
+
   it('surfaces a chart error and missing price data for either kind of pool', () => {
     for (const creatingPoolOrPair of [true, false]) {
       expect(getChartDataState({ ...SETTLED, creatingPoolOrPair, internalChartError: 'boom' })).toMatchObject({
@@ -309,5 +334,87 @@ describe('getPriceLineSource', () => {
         rawTicksLoading: true,
       }),
     ).toEqual({ priceHistoryPoolId: 'sibling', priceSourceLoading: false })
+  })
+})
+
+describe('getFallbackPriceInverted', () => {
+  const WETH = WRAPPED_NATIVE_CURRENCY[UniverseChainId.Mainnet] as Token
+  const ETH = nativeOnChain(UniverseChainId.Mainnet)
+  const WLD = new Token(UniverseChainId.Mainnet, '0x163f8C2467924be0ae7B5347228CABF260318753', 18, 'WLD')
+
+  it("keeps this chart's orientation when both pools sort the pair the same way", () => {
+    // WLD/USDC: two ERC20s sort identically in v3 and v4.
+    const sdkCurrencies = { TOKEN0: WLD, TOKEN1: USDC }
+    const fallbackCurrencies = { currency0: WLD, currency1: USDC }
+    expect(getFallbackPriceInverted({ fallbackCurrencies, sdkCurrencies, priceInverted: false })).toBe(false)
+    expect(getFallbackPriceInverted({ fallbackCurrencies, sdkCurrencies, priceInverted: true })).toBe(true)
+  })
+
+  it('flips the orientation when native ETH sorts the pair the other way round', () => {
+    // v3 sorts USDC (0xA0b8…) ahead of WETH (0xC02a…); v4 sorts native ETH (0x0) first.
+    const sdkCurrencies = { TOKEN0: ETH, TOKEN1: USDC }
+    const fallbackCurrencies = { currency0: USDC, currency1: WETH }
+    expect(getFallbackPriceInverted({ fallbackCurrencies, sdkCurrencies, priceInverted: false })).toBe(true)
+    expect(getFallbackPriceInverted({ fallbackCurrencies, sdkCurrencies, priceInverted: true })).toBe(false)
+  })
+
+  it('matches native ETH to WETH when both pools sort it to the same side', () => {
+    const sdkCurrencies = { TOKEN0: ETH, TOKEN1: WLD }
+    const fallbackCurrencies = { currency0: WETH, currency1: WLD }
+    expect(getFallbackPriceInverted({ fallbackCurrencies, sdkCurrencies, priceInverted: false })).toBe(false)
+  })
+
+  it("is undefined when the fallback pool isn't the same pair on the same chain", () => {
+    const usdcAddressOnBase = new Token(UniverseChainId.Base, USDC.address, 6, 'USDC')
+    expect(
+      getFallbackPriceInverted({
+        fallbackCurrencies: { currency0: WLD, currency1: WETH },
+        sdkCurrencies: { TOKEN0: WLD, TOKEN1: USDC },
+        priceInverted: false,
+      }),
+    ).toBeUndefined()
+    expect(
+      getFallbackPriceInverted({
+        fallbackCurrencies: { currency0: usdcAddressOnBase, currency1: WLD },
+        sdkCurrencies: { TOKEN0: USDC, TOKEN1: WLD },
+        priceInverted: false,
+      }),
+    ).toBeUndefined()
+  })
+
+  it("is undefined while either of this pool's tokens is unknown", () => {
+    expect(
+      getFallbackPriceInverted({
+        fallbackCurrencies: { currency0: WLD, currency1: USDC },
+        sdkCurrencies: { TOKEN0: WLD, TOKEN1: undefined },
+        priceInverted: false,
+      }),
+    ).toBeUndefined()
+  })
+})
+
+describe('usesFallbackPriceLine', () => {
+  it("prefers the fallback's series over a sibling's", () => {
+    expect(usesFallbackPriceLine({ borrowsSibling: true, hasPickedHistory: true, hasFallbackHistory: true })).toBe(true)
+  })
+
+  it("takes over when the pool's own series is empty", () => {
+    expect(usesFallbackPriceLine({ borrowsSibling: false, hasPickedHistory: false, hasFallbackHistory: true })).toBe(
+      true,
+    )
+  })
+
+  it("keeps the pool's own history when it has one", () => {
+    expect(usesFallbackPriceLine({ borrowsSibling: false, hasPickedHistory: true, hasFallbackHistory: true })).toBe(
+      false,
+    )
+  })
+
+  it('never swaps in an empty fallback series', () => {
+    for (const borrowsSibling of [true, false]) {
+      for (const hasPickedHistory of [true, false]) {
+        expect(usesFallbackPriceLine({ borrowsSibling, hasPickedHistory, hasFallbackHistory: false })).toBe(false)
+      }
+    }
   })
 })

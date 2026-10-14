@@ -1,4 +1,9 @@
-import { getUniswapServiceUrls, UNISWAP_WEB_HOSTNAME, UniswapHelpUrls } from 'uniswap/src/constants/urls'
+import {
+  getUniswapServiceUrls,
+  UNISWAP_STAGING_WEB_HOSTNAME,
+  UNISWAP_WEB_HOSTNAME,
+  UniswapHelpUrls,
+} from 'uniswap/src/constants/urls'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 // Drive the environment helpers per test so we can exercise the beta routing switch.
@@ -35,7 +40,7 @@ describe('getUniswapServiceUrls — beta API target', () => {
 
     const urls = getUniswapServiceUrls({})
 
-    expect(urls.embeddedWalletHostname).toBe('app.corn-staging.com')
+    expect(urls.embeddedWalletHostname).toBe(UNISWAP_STAGING_WEB_HOSTNAME)
     expect(urls.liquidityServiceUrl).toContain('backend-staging')
     expect(urls.privyEmbeddedWalletUrl).toContain('backend-staging')
   })
@@ -55,7 +60,7 @@ describe('getUniswapServiceUrls — beta API target', () => {
 
     const urls = getUniswapServiceUrls({ isBetaUsingProdApi: false })
 
-    expect(urls.embeddedWalletHostname).toBe('app.corn-staging.com')
+    expect(urls.embeddedWalletHostname).toBe(UNISWAP_STAGING_WEB_HOSTNAME)
     expect(urls.liquidityServiceUrl).toContain('backend-staging')
   })
 

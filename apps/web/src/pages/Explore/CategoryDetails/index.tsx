@@ -66,7 +66,7 @@ export default function CategoryDetailsPage(): JSX.Element {
   }
 
   return (
-    <Trace logImpression page={InterfacePageName.CategoryDetailsPage} properties={{ categorySlug }}>
+    <Trace logImpression page={InterfacePageName.CategoryDetailsPage} properties={{ category_id: category.id }}>
       <PageShell categoryName={category.name}>
         <CategoryDetailsHeader category={category} />
         <CategoryStatsRow categoryId={category.id} />

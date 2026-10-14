@@ -486,12 +486,17 @@ describe(handleDeepLink, () => {
       await expectSaga(handleDeepLink, { payload, type: '' })
         .withState(stateWithActiveAccountAddress)
         .put(closeAllModals())
-        .call(navigate, MobileScreens.MainTabs, {
-          screen: MobileScreens.Home,
-          params: {
-            earnCardExpansionRequestId: 1_786_557_600_000,
+        .call(
+          navigate,
+          MobileScreens.MainTabs,
+          {
+            screen: MobileScreens.Home,
+            params: {
+              earnCardExpansionRequestId: 1_786_557_600_000,
+            },
           },
-        })
+          { pop: true },
+        )
         .call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
           action: DeepLinkAction.EarnScreen,
           url: payload.url,

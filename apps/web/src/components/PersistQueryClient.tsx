@@ -8,8 +8,6 @@ import { MAX_REACT_QUERY_CACHE_TIME_MS } from 'utilities/src/time/time'
 
 const persistOptions: React.ComponentProps<typeof PersistQueryClientProvider>['persistOptions'] = {
   // Change this unique string whenever we want to bust the entire cache.
-  // Bumped to v1 with the blocklist→allowlist persistence migration: clears
-  // any data from the old regime so users start fresh under the new rules.
   buster: 'v1',
   maxAge: MAX_REACT_QUERY_CACHE_TIME_MS,
   // Match the web/native persisters: BigInt-aware (de)serialization via the `__bigint__:` prefix.

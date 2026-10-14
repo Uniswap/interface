@@ -5,14 +5,6 @@ import { useSwapAndLimitContext } from '~/features/Swap/state/useSwapContext'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { render } from '~/test-utils/render'
 
-vi.mock('~/hooks/useContract', async () => {
-  const actual = await vi.importActual('~/hooks/useContract')
-  return {
-    ...actual,
-    useContract: vi.fn(),
-  }
-})
-
 describe('SwapAndLimitContext', () => {
   test('should use context', () => {
     let swapAndLimitContext

@@ -12,6 +12,17 @@ function selectCategoryIds(data: PlainMessage<GetTokenResponse> | undefined): st
   return data?.token?.categoryIds
 }
 
+/** The token's GetToken `category_ids` tags, without resolving them to categories. */
+export function getTokenCategoryIdsQueryOptions(
+  currencyId: CurrencyId,
+): ReturnType<typeof getGetTokenQueryOptions<string[] | undefined>> {
+  return getGetTokenQueryOptions({
+    params: currencyIdToRestContractInput(currencyId),
+    keepPreviousData: false,
+    select: selectCategoryIds,
+  })
+}
+
 /** Categories the token belongs to, in canonical order, resolved from the GetToken `category_ids` tags. */
 export function useTokenCategories(currencyId: CurrencyId): { categories: TokenCategory[]; isLoading: boolean } {
   const params = useMemo(() => currencyIdToRestContractInput(currencyId), [currencyId])

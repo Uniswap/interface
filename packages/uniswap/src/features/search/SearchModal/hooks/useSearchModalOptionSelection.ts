@@ -9,7 +9,11 @@ import { useAddToSearchHistory } from 'uniswap/src/components/TokenSelector/hook
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { sendSearchOptionItemClickedAnalytics } from 'uniswap/src/features/search/SearchModal/analytics/analytics'
 import { SearchFilterContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
-import { tdpChainFilterForTokenRow } from 'uniswap/src/features/search/SearchModal/utils/searchModalListItem'
+import {
+  addressSearchMatchesMultipleChains,
+  tdpChainFilterForTokenRow,
+} from 'uniswap/src/features/search/SearchModal/utils/searchModalListItem'
+import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import { tdpChainSelectionFromFilter } from 'uniswap/src/utils/linking'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -71,6 +75,13 @@ export function useSearchModalOptionSelection({
           explicitTdpChain: item.tdpChainFilter,
           searchQuery: searchFilters.query,
           allowAggregate: true,
+          addressMatchesMultipleChains: addressSearchMatchesMultipleChains({
+            searchQuery: searchFilters.query,
+            deployments: item.multichainResult.tokens.map(({ currency }) => ({
+              chainId: currency.chainId,
+              address: currencyAddress(currency),
+            })),
+          }),
         })
       default:
         return undefined

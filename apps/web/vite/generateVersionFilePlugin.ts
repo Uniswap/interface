@@ -23,8 +23,6 @@ export function generateVersionFilePlugin(enabled: boolean, version: string, pro
   return {
     name: 'generate-version-file',
     apply: 'build',
-    // closeBundle, not writeBundle: with the Cloudflare plugin the client output dir is emitted by
-    // the plugin's own build, so it isn't guaranteed to exist during an earlier writeBundle.
     closeBundle() {
       if (!enabled) {
         return

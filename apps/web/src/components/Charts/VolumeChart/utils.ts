@@ -10,6 +10,11 @@ import { CustomData, UTCTimestamp } from 'lightweight-charts'
 export interface SingleHistogramData extends CustomData {
   value: number
   time: UTCTimestamp
+  /**
+   * The swap fees (USD) the bar's swaps actually paid, as served per bucket by the liquidity service.
+   * Only pool volume carries it; token volume has no per-bar fee figure.
+   */
+  feesUsd?: number
 }
 
 export interface StackedHistogramData extends CustomData {

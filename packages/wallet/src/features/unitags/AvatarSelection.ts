@@ -25,7 +25,7 @@ export function useAvatarSelectionHandler({
   const { chains } = useEnabledChains()
   const [showModal, setShowModal] = useState(false)
 
-  const { nfts } = useWalletNfts({
+  const { nfts, isPending, isError } = useWalletNfts({
     address,
     filterSpam: false,
     chainsFilter: chains,
@@ -33,6 +33,10 @@ export function useAvatarSelectionHandler({
   })
 
   const hasNFTs = nfts.length > 0
+  // A pending or errored eligibility check is not evidence the wallet has zero NFTs — falling
+  // through to camera roll here would be indistinguishable from a real empty wallet, so treat
+  // "we don't know yet" the same as "might have NFTs" and let the modal resolve once data lands.
+  const isNFTEligibilityUnknown = isPending || isError
   const hasAvatarImage = avatarImageUri && avatarImageUri !== ''
 
   const openModal = useCallback((): void => {
@@ -46,7 +50,7 @@ export function useAvatarSelectionHandler({
   }, [onCloseModal])
 
   const avatarSelectionHandler = useCallback(async (): Promise<void> => {
-    if (hasNFTs || hasAvatarImage) {
+    if (hasNFTs || hasAvatarImage || isNFTEligibilityUnknown) {
       openModal()
       return
     }
@@ -55,7 +59,7 @@ export function useAvatarSelectionHandler({
     if (selectedPhoto) {
       setAvatarImageUri(selectedPhoto)
     }
-  }, [hasAvatarImage, hasNFTs, openModal, setAvatarImageUri])
+  }, [hasAvatarImage, hasNFTs, isNFTEligibilityUnknown, openModal, setAvatarImageUri])
 
   return { avatarSelectionHandler, hasNFTs, showModal, openModal, closeModal }
 }

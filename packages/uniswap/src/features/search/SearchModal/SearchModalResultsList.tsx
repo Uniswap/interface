@@ -33,6 +33,7 @@ interface SearchModalResultsListProps {
   renderedInModal: boolean
   contentContainerStyle?: StyleProp<ViewStyle>
   rowWrapper?: SearchModalListProps['rowWrapper']
+  hideTokenCategoryTag?: SearchModalListProps['hideTokenCategoryTag']
   onResultsShownChange?: SearchModalListProps['onResultsShownChange']
 }
 
@@ -50,6 +51,7 @@ function SearchModalResultsListInner({
   renderedInModal,
   contentContainerStyle,
   rowWrapper,
+  hideTokenCategoryTag,
   onResultsShownChange,
 }: SearchModalResultsListProps): JSX.Element {
   const { t } = useTranslation()
@@ -145,7 +147,9 @@ function SearchModalResultsListInner({
     <SearchModalList
       emptyElement={emptyElement}
       errorText={t('token.selector.search.error')}
-      hasError={!isOffline && Boolean(error)}
+      // Suppressed while typing or loading: the debounced query lags the input, and a stale error under the
+      // lagging key (e.g. a cached 400 for an empty query) would otherwise replace the loading skeleton.
+      hasError={!isOffline && Boolean(error) && !userIsTyping && !isLoading}
       loading={!isOffline && (userIsTyping || isLoading)}
       loadingElement={isSearchV2UIEnabled ? RESULTS_LIST_SKELETON : undefined}
       refetch={refetch}
@@ -154,6 +158,7 @@ function SearchModalResultsListInner({
       renderedInModal={renderedInModal}
       contentContainerStyle={contentContainerStyle}
       rowWrapper={rowWrapper}
+      hideTokenCategoryTag={hideTokenCategoryTag}
       rwaIssuerCurrencyInfos={rwaIssuerCurrencyInfos}
       onSelect={onSelect}
       onResultsShownChange={onResultsShownChange}

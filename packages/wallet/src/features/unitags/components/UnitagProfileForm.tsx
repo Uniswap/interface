@@ -1,5 +1,5 @@
 import { isExtensionApp } from '@universe/environment'
-import { Flex, fonts, type InputProps, Text } from '@universe/mycelium'
+import { Flex, fonts, type InputProps, spacing, Text } from '@universe/mycelium'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { LayoutChangeEvent, TextLayoutEvent } from 'react-native'
@@ -16,6 +16,10 @@ interface UnitagProfileFormProps {
 }
 
 const INPUT_LINE_HEIGHT = fonts.subheading1.lineHeight
+// Settled heights of the two rows, used as a floor below. The bio row adds spacing4 above both
+// of its columns (the label's pt and the input's mt); the twitter row has no such offset.
+const BIO_ROW_MIN_HEIGHT = spacing.spacing4 + INPUT_LINE_HEIGHT
+const TWITTER_ROW_MIN_HEIGHT = INPUT_LINE_HEIGHT
 const LABEL_WIDTH = '35%'
 const INPUT_WIDTH = '65%'
 
@@ -61,7 +65,11 @@ export function UnitagProfileForm({
 
   return (
     <Flex gap="$spacing24" px={isExtensionApp ? '$none' : '$spacing16'} pt="$spacing16">
-      <Flex row>
+      {/* Both rows pin their settled height as a floor. The form is content-sized, so nothing here
+          has an outer height to fall back on: while Android relayouts the window for an IME hide,
+          a row can resolve to zero height for a few frames, which drops the intrinsically-sized
+          labels entirely and hoists the rows beneath it. */}
+      <Flex row minHeight={BIO_ROW_MIN_HEIGHT}>
         <Flex pr="$spacing24" pt="$spacing4" width={LABEL_WIDTH}>
           <Text color="$neutral2" variant="subheading1">
             {t('unitags.profile.bio.label')}
@@ -101,7 +109,7 @@ export function UnitagProfileForm({
           )}
         </Flex>
       </Flex>
-      <Flex row>
+      <Flex row minHeight={TWITTER_ROW_MIN_HEIGHT}>
         <Flex width={LABEL_WIDTH}>
           <Text color="$neutral2" variant="subheading1">
             {t('unitags.profile.links.twitter')}

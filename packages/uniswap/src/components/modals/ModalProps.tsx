@@ -2,6 +2,7 @@ import type { BottomSheetModal as BaseModal, BottomSheetView } from '@gorhom/bot
 import { type ColorTokens, type SheetSnapPointsMode, type SpaceTokens, type View } from '@universe/mycelium'
 import type { ComponentProps, PropsWithChildren, ReactNode } from 'react'
 import type { SharedValue } from 'react-native-reanimated'
+import type { SheetFitHeight } from 'ui/src/components/modal/AdaptiveWebModalShared'
 import type { HandleBarProps } from 'uniswap/src/components/modals/HandleBar'
 import type { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 
@@ -19,6 +20,8 @@ export type ModalProps = PropsWithChildren<{
   onClose?: () => void
   snapPointsMode?: SheetSnapPointsMode
   snapPoints?: Array<string | number>
+  // Web only.
+  sheetFitHeight?: SheetFitHeight
   stackBehavior?: ComponentProps<typeof BaseModal>['stackBehavior']
   containerComponent?: ComponentProps<typeof BaseModal>['containerComponent']
   footerComponent?: ComponentProps<typeof BaseModal>['footerComponent']

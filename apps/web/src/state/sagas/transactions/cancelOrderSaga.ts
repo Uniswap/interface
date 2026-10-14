@@ -1,4 +1,3 @@
-import type { TransactionRequest } from '@ethersproject/abstract-provider'
 import { TradingApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { FeatureFlags, getFeatureFlag } from '@universe/gating'
@@ -22,6 +21,7 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
+import type { TransactionRequest } from '~/chains'
 import store from '~/state'
 import { popupRegistry } from '~/state/popups/registry'
 import { PopupType } from '~/state/popups/types'

@@ -1,10 +1,11 @@
 import '~/features/Liquidity/PositionPageActionButtons.css'
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { Button, Flex } from '@universe/mycelium'
+import { Button, Flex, Text } from '@universe/mycelium'
 import { AdaptiveWebPopoverContentCompat, PopoverCompat as Popover } from '@universe/mycelium/popover-compat'
 import { useIsTouchDevice, useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Tooltip } from 'ui/src'
 import { IconButton } from 'ui/src/components/buttons/IconButton/IconButton'
 import { ArrowRight } from 'ui/src/components/icons/ArrowRight'
 import { Dollar } from 'ui/src/components/icons/Dollar'
@@ -21,11 +22,11 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { MobileBottomBar } from '~/components/NavBar/MobileBottomBar'
 import { MobileHeaderActions } from '~/components/StickyCollapsibleHeader/HeaderActions/MobileHeaderActions'
 import type { HeaderAction, HeaderActionSection } from '~/components/StickyCollapsibleHeader/HeaderActions/types'
-import { MouseoverTooltip } from '~/components/Tooltip'
 import { logCollectFeesClick } from '~/features/Liquidity/analytics'
 import { ScrollDirection, useScroll } from '~/hooks/useScroll'
 import { setOpenModal } from '~/state/application/reducer'
 import { useAppDispatch } from '~/state/hooks'
+import { isV2MigrationUnsupportedChain } from '~/utils/networkSupportsV2Migration'
 import { isV4UnsupportedChain } from '~/utils/networkSupportsV4'
 
 export function PositionPageActionButtons({
@@ -48,8 +49,12 @@ export function PositionPageActionButtons({
 
   const { status, fee0Amount, fee1Amount } = positionInfo ?? {}
 
-  const showV4UnsupportedTooltip =
+  const migrateDisabledReason =
     positionInfo?.version === ProtocolVersion.V3 && isV4UnsupportedChain(positionInfo.chainId)
+      ? t('pool.migrateLiquidityDisabledTooltip')
+      : positionInfo?.version === ProtocolVersion.V2 && isV2MigrationUnsupportedChain(positionInfo.chainId)
+        ? t('pool.migrateLiquidityV2DisabledTooltip')
+        : undefined
   const hasFees = fee0Amount?.greaterThan(0) || fee1Amount?.greaterThan(0)
 
   const { migrateOption, removeLiquidityOption, addLiquidityOption, collectFeesOption } = useMemo(() => {
@@ -121,10 +126,9 @@ export function PositionPageActionButtons({
     }
   }, [dispatch, hasFees, positionInfo, status, t, onMigrate, trace])
 
-  // On V4-unsupported chains the inline Migrate button renders disabled under a tooltip.
+  // Where migration is unsupported the inline Migrate button renders disabled under a tooltip.
   // A sheet row has no hover, so the reason rides as a subtitle instead — the row stays
   // visible but inert, rather than vanishing with no hint the action exists.
-  const migrateDisabledReason = showV4UnsupportedTooltip ? t('pool.migrateLiquidityDisabledTooltip') : undefined
 
   // '…' + bottom-sheet mechanism the pool detail header uses, with each action keeping its
   // inline-button handler. Used only for the mid-width band (see the media.lg branch below).
@@ -184,20 +188,26 @@ export function PositionPageActionButtons({
   // >768px: full inline action buttons.
   return (
     <Flex row gap="$gap12" alignItems="center" flexWrap="wrap">
-      {migrateOption && (
-        <MouseoverTooltip text={t('pool.migrateLiquidityDisabledTooltip')} disabled={!showV4UnsupportedTooltip}>
-          <Button
-            size="small"
-            emphasis="secondary"
-            fill={buttonFill}
-            disabled={showV4UnsupportedTooltip}
-            opacity={showV4UnsupportedTooltip ? 0.5 : 1}
-            onPress={migrateOption.onPress}
-          >
+      {migrateOption &&
+        (migrateDisabledReason ? (
+          // asChild keeps the Button itself as the row's flex item (a wrapper div would size differently
+          // from its siblings); onDisabledPress keeps pointer events so the hover still opens the tooltip.
+          <Tooltip placement="top">
+            <Tooltip.Trigger asChild>
+              <Button size="small" emphasis="secondary" fill={buttonFill} disabled onDisabledPress={noop}>
+                {migrateOption.label}
+              </Button>
+            </Tooltip.Trigger>
+            <Tooltip.Content maxWidth={280}>
+              <Tooltip.Arrow />
+              <Text variant="body4">{migrateDisabledReason}</Text>
+            </Tooltip.Content>
+          </Tooltip>
+        ) : (
+          <Button size="small" emphasis="secondary" fill={buttonFill} onPress={migrateOption.onPress}>
             {migrateOption.label}
           </Button>
-        </MouseoverTooltip>
-      )}
+        ))}
       <Button size="small" emphasis="secondary" fill={buttonFill} onPress={addLiquidityOption.onPress}>
         {addLiquidityOption.label}
       </Button>

@@ -7,8 +7,8 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Button, getContrastPassingTextColor, useColorsFromTokenColor } from 'ui/src'
 import { PulsingIndicatorDot } from '~/features/Toucan/Auction/Banners/AuctionIntro/PulsingIndicatorDot'
-import { getAuctionLaunchMethodCopy } from '~/features/Toucan/Auction/utils/auctionLaunchMethod'
 import { AuctionDisplayPhase } from '~/features/Toucan/Auction/utils/resolveAuctionDisplayState'
+import { getLaunchMethodCopy } from '~/features/Toucan/Shared/getLaunchMethodCopy'
 import { LaunchMethodExplainerModal } from '~/features/Toucan/Shared/LaunchMethodExplainerModal'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { useAuctionCountdown } from '~/pages/TokenDetails/hooks/useAuctionCountdown'
@@ -53,12 +53,17 @@ export function TokenDetailsAuctionCard(): JSX.Element | null {
   const { auction, chainId, launchMethod, phase, phaseEndsAtMs, refetchCurrentBlock } = useTokenDetailsAuctionDisplay()
   const countdown = useAuctionCountdown({ endsAtMs: phaseEndsAtMs, onComplete: refetchCurrentBlock })
 
-  if (!auction || chainId === undefined || launchMethod === undefined) {
+  if (!auction || chainId === undefined) {
+    return null
+  }
+
+  const methodCopy = getLaunchMethodCopy({ method: launchMethod, t })
+  if (!methodCopy) {
+    // Unclassified auctions fail closed instead of rendering the card without its method pill.
     return null
   }
 
   const auctionUrl = getAuctionDetailsURL({ chainId, auctionAddress: auction.address })
-  const { label: methodLabel } = getAuctionLaunchMethodCopy({ method: launchMethod, t })
   const title = getPhaseTitle({ phase, t })
   const countdownText =
     countdown === undefined
@@ -101,7 +106,7 @@ export function TokenDetailsAuctionCard(): JSX.Element | null {
           onPress={() => setIsExplainerOpen(true)}
         >
           <Text variant="buttonLabel4" color={accentColor}>
-            {methodLabel}
+            {methodCopy.label}
           </Text>
         </TouchableArea>
       </Flex>

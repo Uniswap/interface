@@ -4,6 +4,7 @@ import {
   fitHoverCardChartData,
   hasHoverCardChartData,
   HoverCardBody,
+  HoverCardStatsRow,
   isHoverCardNoData,
 } from '~/components/HoverCard/HoverCardContent'
 import { fireEvent, render, screen } from '~/test-utils/render'
@@ -131,5 +132,32 @@ describe(HoverCardBody, () => {
 
     expect(screen.queryByRole('button')).not.toBeInTheDocument()
     expect(screen.getByText('Token data unavailable')).toBeInTheDocument()
+  })
+})
+
+describe(HoverCardStatsRow, () => {
+  it('renders every present stat and drops the absent ones', () => {
+    render(
+      <HoverCardStatsRow
+        loading={false}
+        loadingPlaceholderText="…"
+        stats={['$1.2M 24H vol', undefined, '$3.4M TVL']}
+      />,
+    )
+
+    expect(screen.getByText('$1.2M 24H vol')).toBeInTheDocument()
+    expect(screen.getByText('$3.4M TVL')).toBeInTheDocument()
+  })
+
+  it('renders nothing once settled with no stats', () => {
+    const { container } = render(<HoverCardStatsRow loading={false} loadingPlaceholderText="…" stats={[undefined]} />)
+
+    expect(container).toBeEmptyDOMElement()
+  })
+
+  it('shows the placeholder instead of the stats while loading', () => {
+    render(<HoverCardStatsRow loading loadingPlaceholderText="…" stats={['$1.2M 24H vol']} />)
+
+    expect(screen.queryByText('$1.2M 24H vol')).not.toBeInTheDocument()
   })
 })

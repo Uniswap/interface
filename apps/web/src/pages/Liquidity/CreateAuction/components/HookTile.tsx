@@ -25,19 +25,25 @@ export function HookTile({
   selected: boolean
   title: string
   titleVariant?: TextProps['variant']
-  description: string
+  description?: string
   descriptionVariant?: TextProps['variant']
   onPress: () => void
 }) {
   return (
-    <HookTileContainer onPress={onPress} backgroundColor={selected ? '$surface3' : '$surface1'}>
+    <HookTileContainer
+      onPress={onPress}
+      backgroundColor={selected ? '$surface3' : '$surface1'}
+      $md={{ p: '$spacing12' }}
+    >
       <Flex row gap="$spacing8" justifyContent="space-between" alignItems="center">
         <Text variant={titleVariant}>{title}</Text>
         {selected && <CheckCircleFilled size="$icon.16" />}
       </Flex>
-      <Text variant={descriptionVariant} color="$neutral2">
-        {description}
-      </Text>
+      {description && (
+        <Text variant={descriptionVariant} color="$neutral2">
+          {description}
+        </Text>
+      )}
     </HookTileContainer>
   )
 }

@@ -155,12 +155,15 @@ export async function executeRecovery({
     const { signature: recoveryAuthSignature } = await generateAuthorizationSignature(payloadObject) // sig1
 
     // 3. Execute recovery with authorization signature + auth key signature
-    const response = await EmbeddedWalletApiClient.fetchExecuteRecovery({
-      authMethodId,
-      newCredential: newPasskeyCredential,
-      authKeySignature,
-      recoveryAuthSignature,
-    })
+    const response = await EmbeddedWalletApiClient.fetchExecuteRecovery(
+      {
+        authMethodId,
+        newCredential: newPasskeyCredential,
+        authKeySignature,
+        recoveryAuthSignature,
+      },
+      accessToken,
+    )
 
     if (!response.walletAddress || !response.credentialId || !response.walletId) {
       throw new Error('Recovery execution failed: missing walletAddress, credentialId, or walletId')
@@ -221,12 +224,15 @@ export async function executeRecoveryExport({
     const authKeySignature = signWithAuthKey(authPrivateKey, payloadBytes)
     const { signature: recoveryAuthSignature } = await generateAuthorizationSignature(payloadObject)
 
-    return await EmbeddedWalletApiClient.fetchExportSeedPhraseWithRecovery({
-      authMethodId,
-      encryptionKey,
-      authKeySignature,
-      recoveryAuthSignature,
-    })
+    return await EmbeddedWalletApiClient.fetchExportSeedPhraseWithRecovery(
+      {
+        authMethodId,
+        encryptionKey,
+        authKeySignature,
+        recoveryAuthSignature,
+      },
+      accessToken,
+    )
   } catch (error) {
     logger.error(error, {
       tags: { file: 'recoveryExecute.ts', function: 'executeRecoveryExport' },

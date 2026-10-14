@@ -1,7 +1,6 @@
-import { TokenRankingsResponse, TokenRankingsStat } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
-import { normalizeTokenAddressForCache } from '@universe/chains'
-import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
+import { normalizeTokenAddressForCache, UniverseChainId } from '@universe/chains'
+import { normalizeBackendNativeAddress } from 'uniswap/src/data/apiClients/dataApiService/utils/dataApiMultichainToken'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -13,84 +12,74 @@ export type FavoritesCanonicalLookup = {
   networkCountByKey: Map<string, number>
 }
 
-/**
- * Key used to look up a token in `FavoritesCanonicalLookup` maps. The `chainId` prefix avoids
- * collisions between native tokens on different chains that share the 0xeeee... placeholder.
- */
+type Deployment = { chainId: UniverseChainId; address: string }
+
 export function buildLookupKey({ chainId, address }: { chainId: number; address: string }): string {
   return `${chainId}-${normalizeTokenAddressForCache(address)}`
 }
 
-/** Flattens and dedupes tokens across TokenRankings categories (e.g. VOLUME, POPULARITY). */
-function mergeTokensAcrossCategories(data: TokenRankingsResponse): TokenRankingsStat[] {
-  const seen = new Set<string>()
-  const result: TokenRankingsStat[] = []
-  for (const category of Object.values(data.tokenRankings)) {
-    for (const token of category.tokens) {
-      const key = `${token.chain}-${normalizeTokenAddressForCache(token.address)}`
-      if (!seen.has(key)) {
-        seen.add(key)
-        result.push(token)
-      }
-    }
-  }
-  return result
+function getDeployments(addresses: Record<string, string>): Deployment[] {
+  return Object.entries(addresses).map(([chainIdKey, address]) => {
+    const chainId = Number(chainIdKey)
+    return { chainId, address: normalizeBackendNativeAddress({ chainId, address }) }
+  })
 }
 
 /**
- * Builds canonical + network-count lookup maps from a TokenRankings response.
+ * Canonical deployment is mainnet when present, else the lowest chainId. Deliberately not the
+ * highest-volume deployment Explore displays: the canonical CurrencyId is persisted as the stored
+ * favorite, so it must not drift as volumes shift between sessions.
+ */
+function pickCanonicalDeployment(deployments: Deployment[]): Deployment | undefined {
+  return (
+    deployments.find((deployment) => deployment.chainId === UniverseChainId.Mainnet) ??
+    deployments.reduce<Deployment | undefined>(
+      (lowest, deployment) => (lowest && lowest.chainId <= deployment.chainId ? lowest : deployment),
+      undefined,
+    )
+  )
+}
+
+/**
+ * Builds canonical + network-count lookup maps from v2 ListTokens results.
  *
- * When the response comes from `{ chainId: ALL_NETWORKS_ARG, multichain: true }`, the output is
- * stable regardless of any Explore network filter. This enables two favorite-token behaviors:
+ * When the tokens come from an all-enabled-chains request, the output is stable regardless of any
+ * Explore network filter. This enables two favorite-token behaviors:
  *  - `canonicalByKey` gives every chain-specific token the same canonical CurrencyId, preventing
  *    duplicate favorites for the same project across chains.
  *  - `networkCountByKey` lets us decide whether to hide the chain badge on a favorite card
  *    consistently (badge is hidden when a token exists on more than one chain).
  *
- * Tokens not represented in the response are intentionally absent from both maps; callers should
+ * Tokens not represented in the list are intentionally absent from both maps; callers should
  * fall back gracefully (e.g. use the input currencyId as-is, show the chain badge).
  */
-export function buildFavoritesCanonicalLookup(data: TokenRankingsResponse | undefined): FavoritesCanonicalLookup {
+export function buildFavoritesCanonicalLookup(
+  multichainTokens: readonly RankedMultichainToken[],
+): FavoritesCanonicalLookup {
   const canonicalByKey = new Map<string, CurrencyId>()
   const networkCountByKey = new Map<string, number>()
 
-  if (!data) {
-    return { canonicalByKey, networkCountByKey }
-  }
+  for (const rankedToken of multichainTokens) {
+    const addresses = rankedToken.multichainToken?.addresses
+    if (!addresses) {
+      continue
+    }
 
-  for (const stat of mergeTokensAcrossCategories(data)) {
-    const canonicalChainId = fromGraphQLChain(stat.chain)
-    const canonicalChainToken = canonicalChainId
-      ? // oxlint-disable-next-line typescript/no-unnecessary-condition -- chainTokens can be undefined at runtime despite protobuf typing
-        stat.chainTokens?.find((ct) => ct.chainId === canonicalChainId)
-      : undefined
-    const rawAddress = canonicalChainToken?.address || stat.address
-    const canonicalAddress = rawAddress || (canonicalChainId ? getNativeAddress(canonicalChainId) : undefined)
-
-    if (!canonicalChainId || !canonicalAddress) {
+    const deployments = getDeployments(addresses)
+    const canonical = pickCanonicalDeployment(deployments)
+    if (!canonical) {
       continue
     }
 
     // Always emit a normalized canonical CurrencyId so downstream equality checks work regardless
     // of the case returned by the backend.
-    const canonicalCurrencyId = normalizeCurrencyIdForMapLookup(buildCurrencyId(canonicalChainId, canonicalAddress))
-    // oxlint-disable-next-line typescript/no-unnecessary-condition -- chainTokens can be undefined at runtime despite protobuf typing
-    const chainTokens = stat.chainTokens ?? []
-    const networkCount = chainTokens.length
+    const canonicalCurrencyId = normalizeCurrencyIdForMapLookup(buildCurrencyId(canonical.chainId, canonical.address))
 
-    for (const ct of chainTokens) {
-      const addr = ct.address || getNativeAddress(ct.chainId)
-      if (!addr) {
-        continue
-      }
-      const key = buildLookupKey({ chainId: ct.chainId, address: addr })
+    for (const deployment of deployments) {
+      const key = buildLookupKey(deployment)
       canonicalByKey.set(key, canonicalCurrencyId)
-      networkCountByKey.set(key, networkCount)
+      networkCountByKey.set(key, deployments.length)
     }
-
-    // Also map the top-level canonical address so lookups work when chainTokens is missing entries.
-    const canonicalKey = buildLookupKey({ chainId: canonicalChainId, address: canonicalAddress })
-    canonicalByKey.set(canonicalKey, canonicalCurrencyId)
   }
 
   return { canonicalByKey, networkCountByKey }

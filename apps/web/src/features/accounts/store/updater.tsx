@@ -1,4 +1,3 @@
-import { ExternalProvider } from '@ethersproject/providers'
 import { UniverseChainId, Platform } from '@universe/chains'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useUpdateAtom } from 'jotai/utils'
@@ -17,6 +16,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 // oxlint-disable-next-line no-restricted-imports -- direct wagmi hooks needed so we can access user's chainId even if unsupported chain
 import { useAccount as useAccountWagmi } from 'wagmi'
+import type { ExternalProvider } from '~/chains'
 import { recentConnectorIdAtom } from '~/connection/constants'
 import { getRpcProvider } from '~/constants/providers'
 import { useActiveAddresses, useActiveWallet, useConnectionStatus } from '~/features/accounts/store/hooks'

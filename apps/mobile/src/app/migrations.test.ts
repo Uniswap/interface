@@ -176,6 +176,8 @@ import {
   v99Schema,
   v100Schema,
   v101Schema,
+  v102Schema,
+  v103Schema,
 } from 'src/app/schema'
 import { persistConfig } from 'src/app/store'
 import { initialBiometricsSettingsState } from 'src/features/biometricsSettings/slice'
@@ -789,5 +791,11 @@ describe('Redux state migrations', () => {
 
   it('migrates from v101 to v102', () => {
     testRemovePersistedApolloCache(migrations[102], v101Schema)
+  })
+
+  it('migrates from v102 to v103', () => {
+    const persistState = { version: 102, rehydrated: true }
+    const result = migrations[103]({ ...v102Schema, _persist: persistState })
+    expect(result).toEqual({ ...v103Schema, _persist: persistState })
   })
 })

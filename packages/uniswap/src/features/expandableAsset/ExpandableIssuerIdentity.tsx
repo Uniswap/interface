@@ -6,10 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { GroupHoverTransition } from 'uniswap/src/components/GroupHoverTransition'
 import { NetworkIconList } from 'uniswap/src/components/network/NetworkIconList/NetworkIconList'
-import {
-  formatIssuerDisplaySymbol,
-  getIssuerTokenLabel,
-} from 'uniswap/src/data/apiClients/dataApiService/rwa/formatIssuerDisplaySymbol'
+import { formatIssuerDisplaySymbol } from 'uniswap/src/data/apiClients/dataApiService/rwa/formatIssuerDisplaySymbol'
 import {
   pickDisplayChainToken,
   pickFilteredChainToken,
@@ -112,18 +109,16 @@ export function ExpandableIssuerIdentity({
         hideNetworkLogo={!showNetworkBadge}
       />
       <Flex flex={1} minWidth={0} gap={variant === 'search' ? '$spacing2' : undefined}>
-        <Flex row alignItems="baseline" gap="$spacing6" minWidth={0}>
+        <Flex row alignItems="baseline" gap="$spacing4" minWidth={0}>
           <Text variant={variant === 'search' ? 'body1' : 'body2'} color="$neutral1" numberOfLines={1} flexShrink={1}>
             {primaryName}
           </Text>
-          {showIssuerTag ? (
-            <RWAIssuerTag issuer={issuer.issuer} />
-          ) : (
-            <Text variant="body3" color="$neutral3" numberOfLines={1} flexShrink={0}>
-              {getIssuerTokenLabel(issuer)}
-            </Text>
-          )}
-          {categoryTag}
+          <RWAIssuerTag
+            issuer={issuer}
+            showLogo={showIssuerTag}
+            size={variant === 'table' ? iconSizes.icon12 : undefined}
+          />
+          {categoryTag ? <Flex ml="$spacing4">{categoryTag}</Flex> : null}
         </Flex>
         {showNetworkHover ? (
           <GroupHoverTransition

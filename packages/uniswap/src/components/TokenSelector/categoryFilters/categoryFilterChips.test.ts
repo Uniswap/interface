@@ -38,7 +38,7 @@ function option({
 }
 
 const ownedStock = option({ id: 'tslaon', categoryIds: ['stocks'], quantity: 22 })
-const stock = option({ id: 'tslax', categoryIds: ['stocks', 'low-volatility'] })
+const stock = option({ id: 'tslax', categoryIds: ['stocks', 'unlisted-category'] })
 const meme = option({ id: 'dogimus', categoryIds: ['memes'] })
 const untagged = option({ id: 'plain' })
 

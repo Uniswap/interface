@@ -6,8 +6,8 @@ import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getBlockExplorerIcon } from 'uniswap/src/components/chains/BlockExplorerIcon'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { getTranslatedDescription } from 'uniswap/src/features/dataApi/tokenDetails/tokenMetadataUtils'
 import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
+import { getTranslation } from 'uniswap/src/features/language/getTranslation'
 import { useCurrentLanguage } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -62,7 +62,7 @@ export function TokenDescription() {
   const { description, descriptionTranslations, homepageUrl, twitterName } = useTokenMetadata(
     currencyId(effectiveCurrency),
   )
-  const localizedDescription = getTranslatedDescription(descriptionTranslations, currentLanguage) ?? description
+  const localizedDescription = getTranslation(descriptionTranslations, currentLanguage) ?? description
 
   const explorerUrl = getExplorerLink({
     chainId: effectiveCurrency.chainId,

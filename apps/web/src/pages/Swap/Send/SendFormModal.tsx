@@ -19,6 +19,7 @@ import { SwapAndLimitContext } from '~/features/Swap/state/types'
 import { useCurrency } from '~/hooks/Tokens'
 import { SendForm, SendFormProps } from '~/pages/Swap/Send/SendForm'
 import { SendContextProvider } from '~/pages/Swap/Send/state/SendContext'
+import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
 
 type SendFormModalProps = {
@@ -51,19 +52,27 @@ export function SendFormModal(props: SendFormModalProps) {
           currencyState: { inputCurrency },
         }}
       >
-        <SendContextProvider initialRecipient={recipientParam}>
-          <TransactionModal modalName={ModalName.Send} onClose={noop}>
-            <Modal
-              name={ModalName.Send}
-              isModalOpen={isModalOpen}
-              onClose={onClose}
-              maxWidth={420}
-              padding="$padding16"
-            >
-              <SendFormModalInner {...props} />
-            </Modal>
-          </TransactionModal>
-        </SendContextProvider>
+        {/*
+          Without this, useMultichainContext() falls back to its default (isMultichainContext: false),
+          which makes the token/network selector resolve to the wallet's currently connected chain
+          instead of All Networks — this modal is opened outside the /swap page, which is the only
+          other place that provides this context (SWAP-3443).
+        */}
+        <MultichainContextProvider initialChainId={chainId}>
+          <SendContextProvider initialRecipient={recipientParam}>
+            <TransactionModal modalName={ModalName.Send} onClose={noop}>
+              <Modal
+                name={ModalName.Send}
+                isModalOpen={isModalOpen}
+                onClose={onClose}
+                maxWidth={420}
+                padding="$padding16"
+              >
+                <SendFormModalInner {...props} />
+              </Modal>
+            </TransactionModal>
+          </SendContextProvider>
+        </MultichainContextProvider>
       </SwapAndLimitContext.Provider>
     </Trace>
   )

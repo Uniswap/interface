@@ -174,13 +174,14 @@ function LegacyTokenSelectorContent({
 
   const { t } = useTranslation()
 
-  const { currencyFieldName, onSelectCurrencyCallback } = useTokenSelectionHandler({
+  const { currencyFieldName, onSelectCurrencyCallback, onSelectRwaTokenCallback } = useTokenSelectionHandler({
     flow,
     currencyField,
     chainFilter,
     oppositeToken,
     debouncedSearchFilter,
     onSelectCurrency,
+    onSelectRwaToken,
   })
 
   const handlePaste = async (): Promise<void> => {
@@ -302,7 +303,7 @@ function LegacyTokenSelectorContent({
                   debouncedSearchFilter={debouncedSearchFilter}
                   parsedChainFilter={parsedChainFilter}
                   onSelectCurrency={onSelectCurrencyCallback}
-                  onSelectRwaToken={onSelectRwaToken}
+                  onSelectRwaToken={onSelectRwaTokenCallback}
                   onSendEmptyActionPress={onSendEmptyActionPress}
                 />
               </>
@@ -354,7 +355,7 @@ function TokenSelectorModalInner(props: TokenSelectorProps): JSX.Element {
       // because Fabric doesn't reliably normalize percentage snap points in the nested portal.
       snapPoints={isMobileApp ? [windowHeight * HALF_SNAP_POINT_RATIO, windowHeight] : SNAP_POINTS}
       // The mobile-web sheet must take its height from the snap point, not content-fit: the
-      // virtualized token list sizes itself to its container (AutoSizer) so it has no intrinsic
+      // virtualized token list fills its container rather than its content, so it has no intrinsic
       // height, and a fit-mode sheet opened with cached data freezes at chrome height with an
       // empty list (SWAP-3250). Native ignores this prop.
       snapPointsMode={isMobileApp ? undefined : 'percent'}

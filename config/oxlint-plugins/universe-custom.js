@@ -1120,44 +1120,11 @@ const importBoundary = {
 // It's ok to update the allowlist if you're unable to use chains.
 
 const DIRECT_VIEM_ETHERS_IMPORT_ALLOWLIST = new Set([
-  'apps/web/src/connection/bundlerClient.ts',
-  'apps/web/src/connection/EmbeddedWalletConnector.ts',
-  'apps/web/src/connection/EmbeddedWalletProvider.ts',
-  'apps/web/src/connection/sendCalls.ts',
-  'apps/web/src/connection/userOpSigning.ts',
-  'apps/web/src/connection/rejectableConnector.ts',
-  'apps/web/src/connection/wagmiConfig.ts',
-  'apps/web/src/constants/providers.ts',
-  'apps/web/src/features/accounts/store/updater.tsx',
-  'apps/web/src/features/Swap/hooks/useSendCallback.ts',
-  'apps/web/src/pages/Swap/Send/state/hooks.tsx',
-  'apps/web/src/features/Toucan/Auction/BidForm/BidReviewModal/useBidPermit2Flow.ts',
-  'apps/web/src/hooks/useContract.ts',
   'apps/web/src/hooks/useEthersProvider.ts',
   'apps/web/src/hooks/useEthersSigner.ts',
-  'apps/web/src/hooks/useSelectChain.ts',
-  'apps/web/src/hooks/useTransactionGasFee.ts',
   'apps/web/src/hooks/useUniswapXSwapCallback.ts',
-  'apps/web/src/lib/utils/resolveENSContentHash.ts',
-  'apps/web/src/pages/PoolDetails/Pools/hooks/useContractMultichain.tsx',
-  'apps/web/src/pages/PoolDetails/Pools/hooks/useMultiChainPositions.tsx',
-  'apps/web/src/playwright/anvil/anvil-manager.ts',
-  'apps/web/src/playwright/anvil/utils.ts',
-  'apps/web/src/playwright/fixtures/anvil.ts',
-  'apps/web/src/rpc/AppJsonRpcProvider.ts',
-  'apps/web/src/rpc/ConfiguredJsonRpcProvider.ts',
-  'apps/web/src/state/activity/polling/batch.ts',
-  'apps/web/src/features/claim/hooks.ts',
   'apps/web/src/state/routing/types.ts',
   'apps/web/src/state/routing/utils.ts',
-  'apps/web/src/state/sagas/transactions/5792.ts',
-  'apps/web/src/state/sagas/transactions/cancelOrderSaga.ts',
-  'apps/web/src/state/sagas/transactions/cancelPlanStepSaga.ts',
-  'apps/web/src/state/sagas/transactions/utils.ts',
-  'apps/web/src/state/transactions/hooks.tsx',
-  'apps/web/src/state/transactions/types.ts',
-  'apps/web/src/utils/transfer.ts',
-  'apps/web/src/utils/walletMeta.ts',
 ])
 
 /**
@@ -1230,6 +1197,15 @@ const noDirectViemEthersImport = {
           return
         }
         reportIfDirect(node.source, node.source.value)
+      },
+      // `export { x } from 'viem'` re-introduces
+      // the dependency without an ImportDeclaration.
+      ExportNamedDeclaration(node) {
+        reportIfDirect(node, node.source?.value)
+      },
+      // `export * from 'viem'` and alike
+      ExportAllDeclaration(node) {
+        reportIfDirect(node, node.source?.value)
       },
     }
   },

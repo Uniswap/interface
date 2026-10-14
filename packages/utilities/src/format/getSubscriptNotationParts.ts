@@ -3,7 +3,6 @@ export interface GetSubscriptNotationParams {
   subscriptThreshold: number
   maxSigDigits: number
   minSigDigits?: number
-  precision?: number
   trimTrailingZeros?: boolean
 }
 
@@ -22,39 +21,27 @@ export function getSubscriptNotationParts({
   subscriptThreshold,
   maxSigDigits,
   minSigDigits = 0,
-  precision = 20,
   trimTrailingZeros = true,
 }: GetSubscriptNotationParams): SubscriptNotationResult | null {
   const absValue = Math.abs(value)
-  // Adaptively widen precision for ultra-small values so the leading-zero block plus
-  // sig-digit window all fit inside the formatted string. Without this, values below
-  // ~1e-20 collapse to "0.000…0" with no significant digit to display (rendering as
-  // "0.0₂₀" instead of "0.0₂₀10" etc). Capped at 100 — the upper bound of
-  // `Number.prototype.toFixed`.
-  const magnitude = absValue > 0 ? Math.floor(Math.log10(absValue)) : 0
-  const requiredPrecision = magnitude < 0 ? -magnitude + maxSigDigits + 1 : precision
-  const effectivePrecision = Math.min(100, Math.max(precision, requiredPrecision))
-  const str = absValue.toFixed(effectivePrecision)
-  const decimalIndex = str.indexOf('.')
-  if (decimalIndex === -1) {
+  if (!Number.isFinite(absValue) || absValue === 0) {
     return null
   }
 
-  let leadingZeros = 0
-  for (let i = decimalIndex + 1; i < str.length; i++) {
-    if (str[i] === '0') {
-      leadingZeros++
-    } else {
-      break
-    }
-  }
+  // Derive digits from a decimally-rounded representation. Slicing `toFixed(20)` truncates,
+  // and many floats sit one ulp below their decimal value (0.00007 → "0.0000699999…"),
+  // which corrupted the displayed digits (rendering "0.0₄6999" instead of "0.0₄70").
+  const [mantissa = '', expPart = ''] = absValue.toExponential(maxSigDigits - 1).split('e')
+  const exponent = Number(expPart)
+  // Rounding can carry into the next magnitude (0.000099999 → "1.000e-4"), so leading
+  // zeros must come from the rounded exponent, not from scanning the raw decimal string.
+  const leadingZeros = exponent < 0 ? -exponent - 1 : 0
 
   if (leadingZeros < subscriptThreshold) {
     return { usesSubscript: false, leadingZeros, significantPart: '' }
   }
 
-  const afterZeros = str.slice(decimalIndex + 1 + leadingZeros)
-  const sigDigits = afterZeros.slice(0, maxSigDigits)
+  const sigDigits = mantissa.replace('.', '')
   let trimmed = trimTrailingZeros ? sigDigits.replace(/0+$/, '') || '0' : sigDigits
 
   if (minSigDigits > 0 && trimmed.length < minSigDigits) {

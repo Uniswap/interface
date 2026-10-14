@@ -1,5 +1,5 @@
 import { TimestampedValue } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { ChainTokenRankStats, TokenRankStats } from '@uniswap/client-data-api/dist/data/v2/types_pb'
+import { ChainTokenRankStats, TokenIssuerInfo, TokenRankStats } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { rankedTokenToCardItem } from 'uniswap/src/data/apiClients/dataApiService/utils/rankedTokenCardItem'
 import { createRankedMultichainToken } from 'uniswap/src/test/fixtures/dataApi/rankedMultichainToken'
 
@@ -36,6 +36,25 @@ describe(rankedTokenToCardItem, () => {
     })
   })
 
+  it('carries backend issuer branding for tokenized RWAs', () => {
+    const token = createRankedMultichainToken({ address: UNI_MAINNET, symbol: 'TSLAon' })
+    token.multichainToken!.issuer = new TokenIssuerInfo({
+      id: 'Ondo',
+      displayName: 'Ondo',
+      logoUrl: 'https://example.com/ondo.png',
+    })
+
+    expect(rankedTokenToCardItem(token)?.issuer).toEqual({
+      issuer: 'ondo',
+      issuerDisplayName: 'Ondo',
+      issuerLogoUrl: 'https://example.com/ondo.png',
+    })
+  })
+
+  it('leaves issuer unset for ordinary tokens', () => {
+    expect(rankedTokenToCardItem(createRankedMultichainToken({ address: UNI_MAINNET }))?.issuer).toBeUndefined()
+  })
+
   it('returns undefined when the token has no deployments', () => {
     expect(rankedTokenToCardItem(createRankedMultichainToken({ addresses: {} }))).toBeUndefined()
   })
@@ -52,6 +71,11 @@ describe(rankedTokenToCardItem, () => {
     const card = rankedTokenToCardItem(token)
     expect(card?.chainId).toBe(10)
     expect(card?.address).toBe(UNI_OPTIMISM)
+    expect(card?.isMultichain).toBe(true)
+  })
+
+  it('marks a single-deployment token as not multichain', () => {
+    expect(rankedTokenToCardItem(createRankedMultichainToken({ address: UNI_MAINNET }))?.isMultichain).toBe(false)
   })
 
   it('drops deployments on unsupported chains', () => {
@@ -59,6 +83,8 @@ describe(rankedTokenToCardItem, () => {
     expect(rankedTokenToCardItem(unsupportedOnly)).toBeUndefined()
 
     const mixed = createRankedMultichainToken({ addresses: { '999999': UNI_OPTIMISM, '1': UNI_MAINNET } })
-    expect(rankedTokenToCardItem(mixed)?.chainId).toBe(1)
+    const mixedCard = rankedTokenToCardItem(mixed)
+    expect(mixedCard?.chainId).toBe(1)
+    expect(mixedCard?.isMultichain).toBe(false)
   })
 })

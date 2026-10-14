@@ -3,8 +3,7 @@ import type { Page } from '@playwright/test'
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v2/api_connect'
 import { ListEarnVaultsResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { TradingApi } from '@universe/api'
-// oxlint-disable-next-line universe-custom/no-direct-viem-ethers-import -- Node-side mock must not load the feature-gated app adapter
-import { encodeFunctionData, erc20Abi, type Address } from 'viem'
+import { type Address, erc20Abi, viemEncodeFunctionData } from '@universe/chains'
 import { assume0xAddress } from '~/chains'
 import {
   buildSendTxPlanStep,
@@ -177,7 +176,7 @@ function buildPlan({
           stepIndex: steps.length,
           stepType: TradingApi.PlanStepType.WRAP,
           to: underlyingAddress,
-          data: encodeFunctionData({ abi: WETH_ABI, functionName: 'deposit' }),
+          data: viemEncodeFunctionData({ abi: WETH_ABI, functionName: 'deposit' }),
           value: amount,
           tokenIn: quoteInputToken,
           tokenInAmount: amount,
@@ -193,7 +192,7 @@ function buildPlan({
         stepIndex: steps.length,
         stepType: TradingApi.PlanStepType.APPROVAL_TXN,
         to: underlyingAddress,
-        data: encodeFunctionData({ abi: erc20Abi, functionName: 'approve', args: [vault, MAX_UINT256] }),
+        data: viemEncodeFunctionData({ abi: erc20Abi, functionName: 'approve', args: [vault, MAX_UINT256] }),
         tokenIn: underlyingAddress,
         tokenInAmount: amount,
         tokenOut: underlyingAddress,
@@ -206,7 +205,7 @@ function buildPlan({
         stepIndex: steps.length,
         stepType: TradingApi.PlanStepType.VAULT_DEPOSIT,
         to: vault,
-        data: encodeFunctionData({
+        data: viemEncodeFunctionData({
           abi: ERC4626_ABI,
           functionName: 'deposit',
           args: [BigInt(amount), TEST_WALLET_ADDRESS],
@@ -224,7 +223,7 @@ function buildPlan({
         stepIndex: 0,
         stepType: TradingApi.PlanStepType.VAULT_WITHDRAW,
         to: vault,
-        data: encodeFunctionData({
+        data: viemEncodeFunctionData({
           abi: ERC4626_ABI,
           functionName: 'withdraw',
           args: [BigInt(amount), TEST_WALLET_ADDRESS, TEST_WALLET_ADDRESS],
@@ -242,7 +241,7 @@ function buildPlan({
           stepIndex: 1,
           stepType: TradingApi.PlanStepType.UNWRAP,
           to: underlyingAddress,
-          data: encodeFunctionData({ abi: WETH_ABI, functionName: 'withdraw', args: [BigInt(amount)] }),
+          data: viemEncodeFunctionData({ abi: WETH_ABI, functionName: 'withdraw', args: [BigInt(amount)] }),
           tokenIn: underlyingAddress,
           tokenInAmount: amount,
           tokenOut: quoteOutputToken,

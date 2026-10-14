@@ -14,8 +14,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Apple",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
-        "approvedAt": "2026-09-23T16:12:06.051Z",
+        "agentRunId": "ru-RU-2026-10-06T18-09-46Z",
+        "approvedAt": "2026-10-06T18:09:46.161Z",
         "approvedBy": "agent"
       }
     ],
@@ -31,8 +31,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Google",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
-        "approvedAt": "2026-09-23T16:12:06.051Z",
+        "agentRunId": "ru-RU-2026-10-06T18-09-46Z",
+        "approvedAt": "2026-10-06T18:09:46.161Z",
         "approvedBy": "agent"
       }
     ],
@@ -150,8 +150,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Earn",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
-        "approvedAt": "2026-09-23T16:12:06.051Z",
+        "agentRunId": "ru-RU-2026-10-06T18-09-46Z",
+        "approvedAt": "2026-10-06T18:09:46.161Z",
         "approvedBy": "agent"
       }
     ],
@@ -167,8 +167,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Venmo",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
-        "approvedAt": "2026-09-23T16:12:06.051Z",
+        "agentRunId": "ru-RU-2026-10-06T18-09-46Z",
+        "approvedAt": "2026-10-06T18:09:46.161Z",
         "approvedBy": "agent"
       }
     ],
@@ -184,8 +184,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "API",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
-        "approvedAt": "2026-09-23T16:12:06.051Z",
+        "agentRunId": "ru-RU-2026-10-06T18-09-46Z",
+        "approvedAt": "2026-10-06T18:09:46.161Z",
         "approvedBy": "agent"
       }
     ],
@@ -235,8 +235,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
-        "approvedAt": "2026-09-23T16:12:06.051Z",
+        "agentRunId": "ru-RU-2026-10-06T18-09-46Z",
+        "approvedAt": "2026-10-06T18:09:46.161Z",
         "approvedBy": "agent"
       }
     ],
@@ -269,8 +269,25 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
-        "approvedAt": "2026-09-23T16:12:06.051Z",
+        "agentRunId": "ru-RU-2026-10-06T18-09-46Z",
+        "approvedAt": "2026-10-06T18:09:46.161Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:pool.migrateLiquidityV2DisabledTooltip",
+      {
+        "unitId": "pool.migrateLiquidityV2DisabledTooltip",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "4489cb130e7c9aeed213fc1acaeb5925905fd6876095e3d2d840719e3ccc92c5",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Миграция на v3 не поддерживается в этой сети.",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-09-29T16-55-04Z",
+        "approvedAt": "2026-09-29T16:55:04.306Z",
         "approvedBy": "agent"
       }
     ],
@@ -286,8 +303,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "DeFi",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
-        "approvedAt": "2026-09-23T16:12:06.051Z",
+        "agentRunId": "ru-RU-2026-10-06T18-09-46Z",
+        "approvedAt": "2026-10-06T18:09:46.161Z",
         "approvedBy": "agent"
       }
     ],
@@ -320,8 +337,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
-        "approvedAt": "2026-09-23T16:12:06.051Z",
+        "agentRunId": "ru-RU-2026-10-06T18-09-46Z",
+        "approvedAt": "2026-10-06T18:09:46.161Z",
         "approvedBy": "agent"
       }
     ],
@@ -462,6 +479,23 @@
       }
     ],
     [
+      "ru-RU:i18next-json:rhcca.filter.clearActive",
+      {
+        "unitId": "rhcca.filter.clearActive",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "2dc1c0755c9ec2716cbacc0a40d7babc53c889496a89b8c4495d09e38b95a758",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Сбросить активные фильтры",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-01T21-27-23Z",
+        "approvedAt": "2026-10-01T21:27:23.014Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ru-RU:i18next-json:rhcca.filter.crowdLaunch",
       {
         "unitId": "rhcca.filter.crowdLaunch",
@@ -473,8 +507,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
-        "approvedAt": "2026-09-23T16:12:06.051Z",
+        "agentRunId": "ru-RU-2026-10-06T18-09-46Z",
+        "approvedAt": "2026-10-06T18:09:46.161Z",
         "approvedBy": "agent"
       }
     ],
@@ -490,8 +524,25 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
-        "approvedAt": "2026-09-23T16:12:06.051Z",
+        "agentRunId": "ru-RU-2026-10-06T18-09-46Z",
+        "approvedAt": "2026-10-06T18:09:46.161Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:rhcca.home.empty.noResults",
+      {
+        "unitId": "rhcca.home.empty.noResults",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "7d7e360586090927c7aeee67c8a46d8354694e7aa4b722ff5b421347f798057a",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Ничего не найдено",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-01T21-27-23Z",
+        "approvedAt": "2026-10-01T21:27:23.014Z",
         "approvedBy": "agent"
       }
     ],
@@ -507,8 +558,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Crowd",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
-        "approvedAt": "2026-09-23T16:12:06.051Z",
+        "agentRunId": "ru-RU-2026-10-06T18-09-46Z",
+        "approvedAt": "2026-10-06T18:09:46.161Z",
         "approvedBy": "agent"
       }
     ],
@@ -524,8 +575,59 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Instant",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
-        "approvedAt": "2026-09-23T16:12:06.051Z",
+        "agentRunId": "ru-RU-2026-10-06T18-09-46Z",
+        "approvedAt": "2026-10-06T18:09:46.161Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:search.results.auction.timeRemaining",
+      {
+        "unitId": "search.results.auction.timeRemaining",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "432b31f5ddfb9e4413ab9146cfd77639a106b7cc940280adb6b30e5cb065ab70",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Осталось {{time}}",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-09-30T16-16-45Z",
+        "approvedAt": "2026-09-30T16:16:45.700Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:search.results.stats.apr",
+      {
+        "unitId": "search.results.stats.apr",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "399e5130e4d208df7ae038b56cffa8f007c00974a639709a97d0cdd4bde10c0b",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "{{apr}} APR",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-06T18-09-46Z",
+        "approvedAt": "2026-10-06T18:09:46.161Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:search.results.stats.apy",
+      {
+        "unitId": "search.results.stats.apy",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "2893ffd5ee534dd0615007dd70af33d3a0c37197cf50a6592c563c6840d7e6bc",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "{{apy}} APY",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-09-24T15-11-34Z",
+        "approvedAt": "2026-09-24T15:11:34.537Z",
         "approvedBy": "agent"
       }
     ],
@@ -541,8 +643,42 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "ENS",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
-        "approvedAt": "2026-09-23T16:12:06.051Z",
+        "agentRunId": "ru-RU-2026-10-06T18-09-46Z",
+        "approvedAt": "2026-10-06T18:09:46.161Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:settings.setting.notifications.row.priceAlerts.description",
+      {
+        "unitId": "settings.setting.notifications.row.priceAlerts.description",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "c5aeb5d1f60eab4d0e5416efd645ee6de258fd86bc5ee90abca9bdbae858360a",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Значительные изменения цен токенов",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-05T16-59-46Z",
+        "approvedAt": "2026-10-05T16:59:46.695Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:settings.setting.notifications.row.priceAlerts.title",
+      {
+        "unitId": "settings.setting.notifications.row.priceAlerts.title",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "da1bea0919595b27553478f49c4fc929dc2a9e139573bada017d90cccf561802",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Оповещения о ценах",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-05T16-59-46Z",
+        "approvedAt": "2026-10-05T16:59:46.695Z",
         "approvedBy": "agent"
       }
     ],
@@ -683,6 +819,154 @@
       }
     ],
     [
+      "ru-RU:i18next-json:tdp.auctions.committed",
+      {
+        "unitId": "tdp.auctions.committed",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "dd9061853d8b1498557341a82186e1d9087de502101d830b5d1bc2d560399eb0",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Заявлено",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "terminology",
+            "severity": "minor",
+            "detail": "«Внесено» diverges from the shipped rendering of “committed” in auction copy («заявленный объём», «Топ аукционов по заявленному объёму»); same concept should use one rendering.",
+            "evidence": {
+              "rule": "shipped: Top auctions by committed volume → Топ аукционов по заявленному объёму",
+              "targetSpan": "Внесено"
+            },
+            "alternative": "Заявлено"
+          }
+        ],
+        "agentRunId": "ru-RU-2026-09-28T18-49-10Z",
+        "approvedAt": "2026-09-28T18:49:10.172Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:tdp.auctions.failedToLaunch",
+      {
+        "unitId": "tdp.auctions.failedToLaunch",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "7bcdf89acba1f37c3542c9fce70e5e3b303a104513ed0c5bab4f6b2eb333eee6",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Запуск не удался",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-09-28T18-49-10Z",
+        "approvedAt": "2026-09-28T18:49:10.172Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:tdp.auctions.modalTitle",
+      {
+        "unitId": "tdp.auctions.modalTitle",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "923215eead9085089ba0a2637a4752957d671ca0e01441ab5939041386667ec5",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Аукционы {{symbol}}",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-09-28T18-49-10Z",
+        "approvedAt": "2026-09-28T18:49:10.172Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:tdp.auctions.raised",
+      {
+        "unitId": "tdp.auctions.raised",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "b4a8bf1f6b295bba4c6f67f5e1a02db62acd5dac20aee193984d7d3ef7bea0fe",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Собрано",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-09-28T18-49-10Z",
+        "approvedAt": "2026-09-28T18:49:10.172Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:tdp.claim.action",
+      {
+        "unitId": "tdp.claim.action",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "4ca41db0282537009663db9b9ae8142e0e6b60812996d07075e5a9291d3d91bf",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Получить",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-09-28T18-49-10Z",
+        "approvedAt": "2026-09-28T18:49:10.172Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:tdp.claim.receivedFromAuction",
+      {
+        "unitId": "tdp.claim.receivedFromAuction",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "ed1de60dff6c30802d8300c8417b6f45c64c4a1c3d6b5fa4731942904692696d",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Получено с аукциона",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-09-28T18-49-10Z",
+        "approvedAt": "2026-09-28T18:49:10.172Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:tdp.claim.refundAvailable",
+      {
+        "unitId": "tdp.claim.refundAvailable",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "e5f4e63ae3c60cab9e3c74f766a9eaf9f9c0f8b068504569415c148ec9114743",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Доступен возврат по аукциону",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-09-28T18-49-10Z",
+        "approvedAt": "2026-09-28T18:49:10.172Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:tdp.claim.unavailable",
+      {
+        "unitId": "tdp.claim.unavailable",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "4dc5ccbce22b7b38115ff6589bb5c1497e3fd9680c18567cd70df0c00097dbf3",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Не удалось загрузить ваше распределение в аукционе",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-09-28T18-49-10Z",
+        "approvedAt": "2026-09-28T18:49:10.172Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ru-RU:i18next-json:tdp.provenance.auctionHistory",
       {
         "unitId": "tdp.provenance.auctionHistory",
@@ -785,6 +1069,40 @@
       }
     ],
     [
+      "ru-RU:i18next-json:tdp.relatedTokens.single.meme",
+      {
+        "unitId": "tdp.relatedTokens.single.meme",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "5d50c37d0e22df692382d024d383cd6de38e22892329896263ac00a939a2ff6b",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Другие мемкоины",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-09-30T16-05-32Z",
+        "approvedAt": "2026-09-30T16:05:32.413Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:token.hoverCard.volume24h",
+      {
+        "unitId": "token.hoverCard.volume24h",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "7f80d74af2310969ce5a164897f87c4bd5aedbae8dbdd7ce05e6ddc78f461d2a",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "{{amount}} объём за 24 ч.",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-09-30T20-37-01Z",
+        "approvedAt": "2026-09-30T20:37:01.780Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ru-RU:i18next-json:tokens.selector.categoryFilter.myTokens",
       {
         "unitId": "tokens.selector.categoryFilter.myTokens",
@@ -881,8 +1199,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "<value>{{fdv}}</value> FDV",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
-        "approvedAt": "2026-09-23T16:12:06.051Z",
+        "agentRunId": "ru-RU-2026-10-06T18-09-46Z",
+        "approvedAt": "2026-10-06T18:09:46.161Z",
         "approvedBy": "agent"
       }
     ],
@@ -951,6 +1269,74 @@
         "status": "clean",
         "agentRunId": "ru-RU-2026-09-16T16-27-14Z",
         "approvedAt": "2026-09-16T16:27:14.310Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:toucan.bidReview.networkErrorDescription",
+      {
+        "unitId": "toucan.bidReview.networkErrorDescription",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "5fca6f81a3bd9b9a7951a0a350833450dbd0a432f3cc3437a9d5af79c80d8093",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Не удалось связаться с сетью для проверки вашей ставки. Проверьте подключение и попробуйте ещё раз.",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-06T18-09-46Z",
+        "approvedAt": "2026-10-06T18:09:46.161Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:toucan.bidReview.networkErrorTitle",
+      {
+        "unitId": "toucan.bidReview.networkErrorTitle",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "2a33d984de88157305b38d8c13bc9d85880a40f84eec3683507785fdc2bfd48d",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Ошибка сети",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-06T18-09-46Z",
+        "approvedAt": "2026-10-06T18:09:46.161Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:toucan.bidReview.simulationErrorDescription",
+      {
+        "unitId": "toucan.bidReview.simulationErrorDescription",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "779665ad0b4bfa480e80812c9bc2eb823ff80f0aa140c83a8a7327bb7d51a17a",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Что-то пошло не так при проверке вашей ставки. Попробуйте ещё раз.",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-06T18-09-46Z",
+        "approvedAt": "2026-10-06T18:09:46.161Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:toucan.bidReview.simulationErrorTitle",
+      {
+        "unitId": "toucan.bidReview.simulationErrorTitle",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "f0ad46c32019b07dd91ad277ede77cee3201cd280c9517a97933cf033d90e85f",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Не удалось проверить ставку",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-06T18-09-46Z",
+        "approvedAt": "2026-10-06T18:09:46.161Z",
         "approvedBy": "agent"
       }
     ],
@@ -1136,8 +1522,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
-        "approvedAt": "2026-09-23T16:12:06.051Z",
+        "agentRunId": "ru-RU-2026-10-06T18-09-46Z",
+        "approvedAt": "2026-10-06T18:09:46.161Z",
         "approvedBy": "agent"
       }
     ],
@@ -1153,8 +1539,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
-        "approvedAt": "2026-09-23T16:12:06.051Z",
+        "agentRunId": "ru-RU-2026-10-06T18-09-46Z",
+        "approvedAt": "2026-10-06T18:09:46.161Z",
         "approvedBy": "agent"
       }
     ],
@@ -1165,13 +1551,25 @@
         "providerId": "i18next-json",
         "locale": "ru-RU",
         "domain": "product-ui",
-        "sourceHash": "a67b932a0dec795a199d9a2257a419d0a1865be7ec538969860f50c26cfc69c7",
+        "sourceHash": "1a29c138738225944360ee41d9d119899b1a5ae620536e730cec4e93b28ef158",
         "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
-        "translation": "Стандартизированные запуски, которые создают заблокированную ликвидность и честно распределяют токены через предстартовый краудфандинг. Запуск через Pools.xyz.",
-        "status": "clean",
-        "agentRunId": "ru-RU-2026-09-16T16-27-14Z",
-        "approvedAt": "2026-09-16T16:27:14.310Z",
+        "translation": "Стандартизированные запуски, которые создают заблокированную ликвидность и честно распределяют токены через предстартовый краудфандинг. Запуск через pools.xyz.",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "minor",
+            "detail": "Source domain “pools.xyz” was capitalized to «Pools.xyz»; product/domain names must be kept verbatim.",
+            "evidence": {
+              "sourceSpan": "pools.xyz",
+              "targetSpan": "Pools.xyz"
+            },
+            "alternative": "Запуск через pools.xyz."
+          }
+        ],
+        "agentRunId": "ru-RU-2026-09-28T18-49-10Z",
+        "approvedAt": "2026-09-28T18:49:10.172Z",
         "approvedBy": "agent"
       }
     ],
@@ -1282,8 +1680,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
-        "approvedAt": "2026-09-23T16:12:06.051Z",
+        "agentRunId": "ru-RU-2026-10-06T18-09-46Z",
+        "approvedAt": "2026-10-06T18:09:46.161Z",
         "approvedBy": "agent"
       }
     ],
@@ -1294,13 +1692,25 @@
         "providerId": "i18next-json",
         "locale": "ru-RU",
         "domain": "product-ui",
-        "sourceHash": "ee84b2aaa1fa62ed8679ebc0bb57466d03e3251df3d0fffe3a33c250d25cc505",
+        "sourceHash": "75c4c546d125f49141c3ec887e723a67a7d469da7affc62de5b2d720984d2dae",
         "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
-        "translation": "Стандартизированные запуски с немедленной торговлей. Цена определяется бондинговой кривой, а комиссии направляются в заблокированную ликвидность. Запуск через Pools.xyz.",
-        "status": "clean",
-        "agentRunId": "ru-RU-2026-09-16T16-27-14Z",
-        "approvedAt": "2026-09-16T16:27:14.310Z",
+        "translation": "Стандартизированные запуски с немедленной торговлей. Цена определяется бондинговой кривой, а комиссии направляются в заблокированную ликвидность. Запуск через pools.xyz.",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "minor",
+            "detail": "Source domain “pools.xyz” was capitalized to «Pools.xyz»; keep verbatim.",
+            "evidence": {
+              "sourceSpan": "pools.xyz",
+              "targetSpan": "Pools.xyz"
+            },
+            "alternative": "Запуск через pools.xyz."
+          }
+        ],
+        "agentRunId": "ru-RU-2026-09-28T18-49-10Z",
+        "approvedAt": "2026-09-28T18:49:10.172Z",
         "approvedBy": "agent"
       }
     ],
@@ -1344,8 +1754,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Pools.trade",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
-        "approvedAt": "2026-09-23T16:12:06.051Z",
+        "agentRunId": "ru-RU-2026-10-06T18-09-46Z",
+        "approvedAt": "2026-10-06T18:09:46.161Z",
         "approvedBy": "agent"
       }
     ],
@@ -1412,8 +1822,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "<icon /> <gradient>UniswapX</gradient> <info />",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
-        "approvedAt": "2026-09-23T16:12:06.051Z",
+        "agentRunId": "ru-RU-2026-10-06T18-09-46Z",
+        "approvedAt": "2026-10-06T18:09:46.161Z",
         "approvedBy": "agent"
       }
     ]

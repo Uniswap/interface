@@ -104,6 +104,7 @@ export function UnfundedEarnCard({
   const card = (
     <Flex
       {...EARNING_CARD_FRAME_PROPS}
+      gap="$none"
       mt={shouldPlayReveal ? undefined : mt}
       mb={shouldPlayReveal ? '$none' : (mb ?? EARNING_CARD_FRAME_PROPS.mb)}
       mx={shouldPlayReveal ? undefined : mx}
@@ -130,7 +131,7 @@ export function UnfundedEarnCard({
               <Trans
                 i18nKey="home.earn.upToApy"
                 values={{ apy: formattedApy }}
-                components={{ highlight: <Text tag="span" variant="subheading2" color="$accent1" /> }}
+                components={{ highlight: <Text key="highlight" tag="span" variant="subheading2" color="$accent1" /> }}
               />
             </Text>
             <Flex fill row alignItems="center" justifyContent="flex-end" gap="$spacing8">
@@ -141,13 +142,13 @@ export function UnfundedEarnCard({
         )}
       </TouchableArea>
 
-      {isExpanded && (
-        <Flex gap="$spacing12" pt="$spacing8">
+      <HeightAnimator unmountChildrenWhenCollapsed open={isExpanded} animation="300ms">
+        <Flex gap="$spacing12" pt="$spacing20">
           {vaults.map((vault) => (
             <DiscoveryVaultRow key={vault.id} vault={vault} onSelect={onSelectVault} />
           ))}
         </Flex>
-      )}
+      </HeightAnimator>
     </Flex>
   )
 

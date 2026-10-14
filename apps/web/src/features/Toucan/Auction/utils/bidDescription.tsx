@@ -40,10 +40,8 @@ export function getBidDescription({
     case 'inRangeInProgress':
       return (
         <Trans
-          shouldUnescape
           i18nKey="toucan.bidDetails.description.inRangeInProgress"
           values={{ tokenSymbol, valuationSummary }}
-          tOptions={{ interpolation: { escapeValue: true } }}
           components={COMPONENTS}
         />
       )
@@ -56,10 +54,8 @@ export function getBidDescription({
     case 'outOfRangeInProgress':
       return (
         <Trans
-          shouldUnescape
           i18nKey="toucan.bidDetails.description.outOfRangeInProgress"
           values={{ valuationSummary }}
-          tOptions={{ interpolation: { escapeValue: true } }}
           components={COMPONENTS}
         />
       )

@@ -101,12 +101,21 @@ export function useLiquidityUrlState() {
     history: 'replace',
   })
 
-  const { currencyA, currencyB, chain, fee, hook, protocolVersion, priceRangeState, depositState } = replaceState
+  // Deprecated params (`currencya`, `feeTier`, ...) are migrated during render, not only by the rewrite
+  // effect below: the effect's `setReplaceState` lands a render late, and consumers freeze these inputs
+  // on mount (CreatePositionContent), so a deep link using a deprecated spelling would otherwise latch an
+  // empty form before the migrated values ever reached it. Deriving them here makes a deprecated link take
+  // exactly the same first render as its canonical spelling; the effect still rewrites the URL.
+  // The copy keeps `applyUrlMigrations` — which folds each migration's output back into its argument — off
+  // the state object nuqs owns.
+  const migrationResult = useMemo(() => applyUrlMigrations({ ...replaceState }), [replaceState])
 
-  // Apply URL parameter migrations for backwards compatibility
+  const { chain, hook, protocolVersion, priceRangeState, depositState } = replaceState
+  const currencyA = migrationResult?.updatedParams.currencyA ?? replaceState.currencyA
+  const currencyB = migrationResult?.updatedParams.currencyB ?? replaceState.currencyB
+  const fee = migrationResult?.updatedParams.fee ?? replaceState.fee
+
   useEffect(() => {
-    const migrationResult = applyUrlMigrations(replaceState)
-
     if (migrationResult) {
       const { updatedParams, clearParams } = migrationResult
 
@@ -125,7 +134,7 @@ export function useLiquidityUrlState() {
     }
 
     setIsMigrated(true)
-  }, [replaceState, setReplaceState])
+  }, [migrationResult, replaceState, setReplaceState])
 
   const parsedChainId = chain ?? undefined
   const resolvedChainId = useSupportedChainId(parsedChainId)

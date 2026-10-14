@@ -1,69 +1,76 @@
+import { RankedMultichainToken, TokensOrderBy } from '@uniswap/client-data-api/dist/data/v2/types_pb'
+import { UniverseChainId } from '@universe/chains'
 import {
-  ChainToken,
-  TokenRankingsList,
-  TokenRankingsResponse,
-  TokenRankingsStat,
-} from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
-import { ALL_NETWORKS_ARG } from '@universe/api'
-import { useTokenRankingsQuery } from 'uniswap/src/data/apiClients/dataApiService/exploreV1/tokenRankings'
+  EXPLORE_LIST_TOKENS_PAGE_SIZE,
+  useExploreListTokens,
+} from 'uniswap/src/data/apiClients/dataApiService/explore/useExploreListTokens'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { buildLookupKey } from 'uniswap/src/features/favorites/canonicalFavoritesLookup'
 import { useMultichainFavoritesRankings } from 'uniswap/src/features/favorites/hooks/useMultichainFavoritesRankings'
 import { renderHook } from 'uniswap/src/test/test-utils'
 
-vi.mock('uniswap/src/data/apiClients/dataApiService/exploreV1/tokenRankings', () => ({
-  useTokenRankingsQuery: vi.fn(() => ({ data: undefined })),
+vi.mock('uniswap/src/data/apiClients/dataApiService/explore/useExploreListTokens', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/data/apiClients/dataApiService/explore/useExploreListTokens')>()),
+  useExploreListTokens: vi.fn(),
 }))
 
-function makeChainToken(chainId: number, address: string): ChainToken {
-  return { chainId, address, decimals: 18 } as unknown as ChainToken
-}
+vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
+  useEnabledChains: vi.fn(),
+}))
 
-function makeStat(chain: string, address: string, chainTokens: ChainToken[]): TokenRankingsStat {
-  return { chain, address, chainTokens } as unknown as TokenRankingsStat
-}
+const ENABLED_CHAIN_IDS = [UniverseChainId.Mainnet, UniverseChainId.ArbitrumOne]
 
-function makeResponse(tokens: TokenRankingsStat[]): TokenRankingsResponse {
-  return {
-    tokenRankings: {
-      VOLUME: { tokens } as unknown as TokenRankingsList,
-    },
-  } as unknown as TokenRankingsResponse
-}
-
-function setQueryData(data: TokenRankingsResponse | undefined): void {
-  vi.mocked(useTokenRankingsQuery).mockReturnValue({ data } as ReturnType<typeof useTokenRankingsQuery>)
+function setListTokens({
+  multichainTokens,
+  hasData,
+}: {
+  multichainTokens: RankedMultichainToken[]
+  hasData: boolean
+}): void {
+  vi.mocked(useExploreListTokens).mockReturnValue({
+    multichainTokens,
+    hasData,
+  } as unknown as ReturnType<typeof useExploreListTokens>)
 }
 
 describe(useMultichainFavoritesRankings, () => {
   beforeEach(() => {
-    setQueryData(undefined)
+    vi.mocked(useEnabledChains).mockReturnValue({
+      chains: ENABLED_CHAIN_IDS,
+    } as unknown as ReturnType<typeof useEnabledChains>)
+    setListTokens({ multichainTokens: [], hasData: false })
   })
 
-  it('always enables the query with ALL_NETWORKS_ARG + multichain: true', () => {
+  it('requests ListTokens with the Explore default parameters across every enabled chain', () => {
     renderHook(() => useMultichainFavoritesRankings())
 
-    expect(useTokenRankingsQuery).toHaveBeenCalledWith({ chainId: ALL_NETWORKS_ARG, multichain: true })
+    expect(useExploreListTokens).toHaveBeenCalledWith({
+      chainIds: ENABLED_CHAIN_IDS,
+      orderBy: TokensOrderBy.VOLUME_1D,
+      ascending: false,
+      pageSize: EXPLORE_LIST_TOKENS_PAGE_SIZE,
+    })
   })
 
-  it('returns empty maps but forwards undefined data while the query is pending', () => {
-    setQueryData(undefined)
-
+  it('returns empty maps and hasData: false while the query is pending', () => {
     const { result } = renderHook(() => useMultichainFavoritesRankings())
 
     expect(result.current.canonicalByKey.size).toBe(0)
     expect(result.current.networkCountByKey.size).toBe(0)
-    expect(result.current.tokenRankingsData).toBeUndefined()
+    expect(result.current.hasData).toBe(false)
   })
 
-  it('builds the canonical lookup and forwards data when the query resolves', () => {
-    const data = makeResponse([
-      makeStat('ETHEREUM', '0xAAA', [makeChainToken(1, '0xAAA'), makeChainToken(42161, '0xAAA')]),
-    ])
-    setQueryData(data)
+  it('builds the canonical lookup once the query resolves', () => {
+    setListTokens({
+      multichainTokens: [
+        new RankedMultichainToken({ multichainToken: { addresses: { '1': '0xAAA', '42161': '0xAAA' } } }),
+      ],
+      hasData: true,
+    })
 
     const { result } = renderHook(() => useMultichainFavoritesRankings())
 
-    expect(result.current.tokenRankingsData).toBe(data)
+    expect(result.current.hasData).toBe(true)
     expect(result.current.canonicalByKey.get(buildLookupKey({ chainId: 1, address: '0xAAA' }))).toBe('1-0xAAA')
     expect(result.current.canonicalByKey.get(buildLookupKey({ chainId: 42161, address: '0xAAA' }))).toBe('1-0xAAA')
     expect(result.current.networkCountByKey.get(buildLookupKey({ chainId: 42161, address: '0xAAA' }))).toBe(2)

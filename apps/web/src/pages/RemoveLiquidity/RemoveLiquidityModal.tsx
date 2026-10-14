@@ -18,7 +18,7 @@ import { RemoveLiquidityTxContextProvider } from '~/pages/RemoveLiquidity/Remove
 function RemoveLiquidityModalInner() {
   const { closeModal } = useModalState(ModalName.RemoveLiquidity)
   const { t } = useTranslation()
-  const { step, setStep, positionInfo } = useRemoveLiquidityModalContext()
+  const { step, backToInput, positionInfo } = useRemoveLiquidityModalContext()
   const autoSlippageTolerance = useLPSlippageValue({
     version: positionInfo?.version,
     currencyA: positionInfo?.currency0Amount.currency,
@@ -42,7 +42,7 @@ function RemoveLiquidityModalInner() {
           <LiquidityModalHeader
             title={t('pool.removeLiquidity')}
             closeModal={closeModal}
-            goBack={step === DecreaseLiquidityStep.Review ? () => setStep(DecreaseLiquidityStep.Input) : undefined}
+            goBack={step === DecreaseLiquidityStep.Review ? backToInput : undefined}
           />
           <HeightAnimator useInitialHeight>{modalContent}</HeightAnimator>
         </Modal>

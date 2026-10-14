@@ -1,10 +1,29 @@
-import { useVirtualizer, useWindowVirtualizer, Virtualizer } from '@tanstack/react-virtual'
+import { observeWindowOffset, useVirtualizer, useWindowVirtualizer, Virtualizer } from '@tanstack/react-virtual'
 import { isMobileWeb } from '@universe/environment'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 const OVERSCAN = isMobileWeb ? 3 : 10
 
 export type TableVirtualizationMode = 'window' | 'container'
+
+// TanStack re-applies its render-time window offset on attach, undoing route scroll resets. The no-op
+// also swallows `scrollToIndex`/`scrollToOffset` on window-mode tables, since TanStack routes them through
+// the same function with the same arguments. Nothing on web calls them; revisit before adding "scroll to row".
+const leaveWindowScrollToPage = (): void => {}
+
+// Modal scroll locks (ScrollLock, useIOSBodyScrollLock) pin the body with position: fixed and a negative top, so
+// until the lock releases window.scrollY reads 0 and document offsets are shifted by the locked scroll position.
+function isBodyScrollPinned(): boolean {
+  return document.body.style.position === 'fixed'
+}
+
+// Holds the last real offset while the body is pinned; the unlock's scroll restore reports the true one.
+const observeWindowOffsetUnlessPinned: typeof observeWindowOffset = (instance, onOffset) =>
+  observeWindowOffset(instance, (offset, isScrolling) => {
+    if (!isBodyScrollPinned()) {
+      onOffset(offset, isScrolling)
+    }
+  })
 
 function measureScrollMargin(node: HTMLDivElement | null): number {
   if (!node) {
@@ -61,7 +80,13 @@ export function useTableVirtualizer({
     if (mode !== 'window') {
       return undefined
     }
-    const resizeObserver = new ResizeObserver(() => setScrollMargin(measureScrollMargin(containerNodeRef.current)))
+    const resizeObserver = new ResizeObserver(() => {
+      // Pinning and unpinning both resize the body (the scrollbar comes and goes); the unpin resize re-measures.
+      if (isBodyScrollPinned()) {
+        return
+      }
+      setScrollMargin(measureScrollMargin(containerNodeRef.current))
+    })
     resizeObserver.observe(document.body)
     return () => resizeObserver.disconnect()
   }, [mode])
@@ -80,6 +105,8 @@ export function useTableVirtualizer({
     estimateSize,
     overscan: OVERSCAN,
     scrollMargin,
+    scrollToFn: leaveWindowScrollToPage,
+    observeElementOffset: observeWindowOffsetUnlessPinned,
   })
 
   return {

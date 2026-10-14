@@ -5,23 +5,16 @@ import {
   type AuctionWithStats,
   type ListTopAuctionsResponse,
 } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
-import type { SearchTokensResponse } from '@uniswap/client-data-api/dist/data/v1/search_pb'
-import { SearchType as SearchTypeV1 } from '@uniswap/client-data-api/dist/data/v1/searchTypes_pb'
-import { type SearchAuction, type SearchResponse, SearchType } from '@uniswap/client-data-api/dist/data/v2/search_pb'
+import type { SearchAuction } from '@uniswap/client-data-api/dist/data/v2/search_pb'
 import { type UniverseChainId, Platform } from '@universe/chains'
-import {
-  DynamicConfigs,
-  useDynamicConfigValue,
-  useIsV2EndpointsSearchEnabled,
-  VerifiedAuctionsConfigKey,
-} from '@universe/gating'
-import { useCallback, useMemo } from 'react'
+import { DynamicConfigs, useDynamicConfigValue, VerifiedAuctionsConfigKey } from '@universe/gating'
+import { useMemo } from 'react'
 import { type AuctionOption, OnchainItemListOptionType } from 'uniswap/src/components/lists/items/types'
-import { useSearchQuery } from 'uniswap/src/data/apiClients/dataApiService/search/search'
-import { fetchAuctionByAddress, useSearchV1Query } from 'uniswap/src/data/apiClients/dataApiService/search/searchV1'
+import { fetchAuctionByAddress } from 'uniswap/src/data/apiClients/dataApiService/search/search'
+import { timestampToMs } from 'uniswap/src/data/apiClients/dataApiService/utils/protoTimestamp'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
-import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import type { AuctionSearchStats, CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { NUMBER_OF_RESULTS_LONG } from 'uniswap/src/features/search/SearchModal/constants'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
@@ -30,14 +23,11 @@ import {
   getAuctionMetadata,
 } from 'uniswap/src/features/toucan/auctionMetadata'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { parseFiniteNumber } from 'utilities/src/primitives/number'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import type { DerivedQueryResult } from 'utilities/src/reactQuery/types'
 
-/**
- * Plain data.v2 auction shape, the canonical type for search auction results. v1 SearchAuction
- * messages carry the identical fields and satisfy it structurally, so results from either
- * endpoint flow through the same helpers.
- */
+/** Plain data.v2 auction shape, the canonical type for search auction results. */
 export type SearchAuctionResult = PlainMessage<SearchAuction>
 
 function lowercaseAscii(value: string): string {
@@ -88,13 +78,12 @@ function buildCurrencyInfoMap(
   return map
 }
 
-function parseVolumeUsd(totalBidVolumeUsd: string | undefined): number | undefined {
-  if (!totalBidVolumeUsd) {
-    return undefined
-  }
-
-  const parsedVolume = parseFloat(totalBidVolumeUsd)
-  return Number.isFinite(parsedVolume) ? parsedVolume : undefined
+function toAuctionSearchStats({
+  fdvUsd,
+  estimatedEndTime,
+}: Pick<SearchAuctionResult, 'fdvUsd' | 'estimatedEndTime'>): AuctionSearchStats | undefined {
+  const stats = { fdvUsd: parseFiniteNumber(fdvUsd), endTimeMs: timestampToMs(estimatedEndTime) }
+  return stats.fdvUsd === undefined && stats.endTimeMs === undefined ? undefined : stats
 }
 
 async function fetchOverrideMatchedAuctions(
@@ -172,8 +161,9 @@ export function searchAuctionToAuctionOption({
     tokenAddress: auction.tokenAddress,
     ...tokenMetadata,
     currencyInfo,
-    committedVolumeUsd: parseVolumeUsd(auction.totalBidVolumeUsd),
+    committedVolumeUsd: parseFiniteNumber(auction.totalBidVolumeUsd),
     isVerified,
+    searchStats: toAuctionSearchStats(auction),
   }
 }
 
@@ -207,72 +197,36 @@ export function auctionWithStatsToAuctionOption({
     tokenAddress: auction.tokenAddress,
     ...tokenMetadata,
     currencyInfo,
-    committedVolumeUsd: parseVolumeUsd(auction.totalBidVolumeUsd),
+    committedVolumeUsd: parseFiniteNumber(auction.totalBidVolumeUsd),
     uniqueBidderCount: auctionWithStats.uniqueBidderCount,
     isVerified,
+    searchStats: toAuctionSearchStats(auction),
   }
 }
 
-export function useSearchAuctions({
+/**
+ * Turns the auction bucket of a search response into row options: merges in the curated override
+ * auctions the query names, drops testnet rows outside testnet mode, and enriches with CurrencyInfo
+ * and the verified-auction config. The search request itself is made by `useSearchResults`.
+ */
+export function useSearchAuctionOptions({
+  auctions,
   searchQuery,
   chainFilter,
   skip,
-  size = NUMBER_OF_RESULTS_LONG,
 }: {
+  auctions: SearchAuctionResult[] | undefined
   searchQuery: string | null
   chainFilter: UniverseChainId | null
   skip: boolean
-  size?: number
-}): DerivedQueryResult<AuctionOption[]> {
+}): { data: AuctionOption[]; refetch: () => Promise<unknown> } {
   const { chains: enabledChainIds, isTestnetModeEnabled } = useEnabledChains({ platform: Platform.EVM })
-  const isSearchV2Enabled = useIsV2EndpointsSearchEnabled()
 
   const verifiedAuctionIds: string[] = useDynamicConfigValue({
     config: DynamicConfigs.VerifiedAuctions,
     key: VerifiedAuctionsConfigKey.VerifiedAuctionIds,
     defaultValue: DEFAULT_VERIFIED_AUCTION_IDS,
   })
-
-  const chainIds = useMemo(() => (chainFilter ? [chainFilter] : enabledChainIds), [chainFilter, enabledChainIds])
-
-  const inputV1 = useMemo(
-    () => ({
-      searchQuery: searchQuery ?? undefined,
-      chainIds,
-      searchType: SearchTypeV1.AUCTION,
-      page: 1,
-      size,
-    }),
-    [searchQuery, chainIds, size],
-  )
-
-  const selectAuctionsV1 = useCallback((response: SearchTokensResponse): SearchAuctionResult[] => response.auctions, [])
-
-  const v1Result = useSearchV1Query<SearchAuctionResult[]>({
-    input: inputV1,
-    enabled: !skip && Boolean(searchQuery) && !isSearchV2Enabled,
-    select: selectAuctionsV1,
-  })
-
-  const input = useMemo(
-    () => ({
-      searchQuery: searchQuery ?? undefined,
-      chainIds,
-      types: [SearchType.AUCTION],
-      maxResults: size,
-    }),
-    [searchQuery, chainIds, size],
-  )
-
-  const selectAuctions = useCallback((response: SearchResponse): SearchAuctionResult[] => response.auctions, [])
-
-  const v2Result = useSearchQuery<SearchAuctionResult[]>({
-    input,
-    enabled: !skip && Boolean(searchQuery) && isSearchV2Enabled,
-    select: selectAuctions,
-  })
-
-  const { data: auctions, error, isLoading, refetch: refetchPrimaryAuctions } = isSearchV2Enabled ? v2Result : v1Result
 
   // Restrict curated override matches to the active chain set so a chain-filtered search
   // doesn't surface an override auction from a chain the user filtered out.
@@ -284,21 +238,20 @@ export function useSearchAuctions({
     return findAuctionOverrideMatches(searchQuery).filter((match) => allowedChainIds.has(match.chainId))
   }, [searchQuery, chainFilter, enabledChainIds])
 
-  const { data: overrideAuctions, refetch: refetchOverrideAuctions } = useQuery<SearchAuctionResult[]>({
+  const { data: overrideAuctions, refetch } = useQuery<SearchAuctionResult[]>({
     queryKey: [ReactQueryCacheKey.DataApiService, 'auctionOverrideMatches', overrideMatches],
     queryFn: () => fetchOverrideMatchedAuctions(overrideMatches),
     enabled: !skip && Boolean(searchQuery) && overrideMatches.length > 0,
   })
 
-  const refetch = useCallback(async () => {
-    await Promise.all([refetchPrimaryAuctions(), refetchOverrideAuctions()])
-  }, [refetchPrimaryAuctions, refetchOverrideAuctions])
-
   const filteredAuctions = useMemo(() => {
+    if (skip) {
+      return []
+    }
     return mergeAuctions(auctions ?? [], overrideAuctions ?? []).filter(
       (auction) => isTestnetModeEnabled || !isTestnetChain(auction.chainId),
     )
-  }, [auctions, overrideAuctions, isTestnetModeEnabled])
+  }, [skip, auctions, overrideAuctions, isTestnetModeEnabled])
 
   // Enrich with currencyInfos for logos and safety info
   const currencyIds = useMemo(
@@ -329,10 +282,7 @@ export function useSearchAuctions({
     })
   }, [filteredAuctions, currencyInfoMap, verifiedAuctionIds])
 
-  return useMemo(
-    () => ({ data: auctionOptions, isLoading, error, refetch }),
-    [auctionOptions, isLoading, error, refetch],
-  )
+  return useMemo(() => ({ data: auctionOptions, refetch }), [auctionOptions, refetch])
 }
 
 export function useTopAuctionOptions({

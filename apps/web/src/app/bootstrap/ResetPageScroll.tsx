@@ -33,11 +33,16 @@ function getPortfolioScrollKey(pathname: string): string {
   return `/${segments.join('/')}`
 }
 
-// For TDP pages, use the full pathname as the scroll key so navigating to a different
-// token resets scroll even though currentPage stays the same (e.g. via Related Tokens).
-// For all other pages, track currentPage to avoid resetting scroll on intra-page URL changes.
+// Details pages keep one page name across many URLs, so they key on the full pathname: navigating to a
+// different token or category (e.g. via Related Tokens or a row category tag) must still reset scroll.
+const DETAILS_PAGES = new Set<InterfacePageName>([
+  InterfacePageName.TokenDetailsPage,
+  InterfacePageName.CategoryDetailsPage,
+])
+
+// All other pages key on currentPage to avoid resetting scroll on intra-page URL changes.
 function getScrollKey({ currentPage, pathname }: { currentPage?: InterfacePageName; pathname: string }): string {
-  if (currentPage === InterfacePageName.TokenDetailsPage) {
+  if (currentPage !== undefined && DETAILS_PAGES.has(currentPage)) {
     return pathname
   }
   if (currentPage !== undefined && PORTFOLIO_PAGES.has(currentPage)) {

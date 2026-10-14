@@ -1,4 +1,5 @@
 import { Flex, Text, TouchableArea, zIndexes } from '@universe/mycelium'
+import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
@@ -57,6 +58,7 @@ function DateInputCard({
   fieldOrder,
   locale,
   position,
+  stacked,
   activeBorderColor,
   traceElement,
 }: {
@@ -70,34 +72,39 @@ function DateInputCard({
   locale: string
   /** Determines which corners get the larger 16px radius vs the 4px "shared edge" radius. */
   position: 'start' | 'end'
+  /** Stacked (mWeb) cards are separate rows, so every corner gets the outer radius. */
+  stacked: boolean
   activeBorderColor: string
   traceElement: ElementName
 }) {
   const outerRadius = 16
   const innerRadius = 4
-  const cornerRadii = {
-    borderTopLeftRadius: position === 'start' ? outerRadius : innerRadius,
-    borderBottomLeftRadius: position === 'start' ? outerRadius : innerRadius,
-    borderTopRightRadius: position === 'end' ? outerRadius : innerRadius,
-    borderBottomRightRadius: position === 'end' ? outerRadius : innerRadius,
-  }
+  const cornerRadii = stacked
+    ? { borderRadius: outerRadius }
+    : {
+        borderTopLeftRadius: position === 'start' ? outerRadius : innerRadius,
+        borderBottomLeftRadius: position === 'start' ? outerRadius : innerRadius,
+        borderTopRightRadius: position === 'end' ? outerRadius : innerRadius,
+        borderBottomRightRadius: position === 'end' ? outerRadius : innerRadius,
+      }
   return (
     <Trace logPress element={traceElement}>
       <TouchableArea
-        flex={1}
-        flexBasis={0}
+        // Equal-width columns side by side; stacked rows size to their content.
+        {...(!stacked && { flex: 1, flexBasis: 0 })}
         backgroundColor="$surface2"
         borderWidth={2}
         borderColor={active ? activeBorderColor : '$transparent'}
         p="$spacing16"
         gap="$spacing4"
+        $md={{ px: '$spacing12' }}
         cursor="pointer"
         userSelect="none"
         aria-label={ariaLabel}
         onPress={onPress}
         {...cornerRadii}
       >
-        <Text variant="body3" color="$neutral2">
+        <Text variant="body3" color="$neutral2" $md={{ variant: 'buttonLabel4' }}>
           {label}
         </Text>
         <Flex row flexWrap="wrap" alignItems="center" minHeight={24} width="100%" gap="$spacing8">
@@ -111,7 +118,7 @@ function DateInputCard({
               </Text>
             </>
           ) : (
-            <Text flex={1} variant="subheading1" color="$neutral3">
+            <Text flex={1} variant="subheading1" $md={{ variant: 'body2' }} color="$neutral3">
               {placeholder}
             </Text>
           )}
@@ -145,6 +152,8 @@ export const DateRangePickerCard = forwardRef<DateRangePickerCardHandle, DateRan
     // Active input border uses the validated token accent when available, else the default accent token.
     const activeBorderColor = tokenColor ?? '$accent1'
     const { t } = useTranslation()
+    // mWeb: inputs stack full-width and the calendar docks as a bottom sheet instead of a popover.
+    const isSheet = useMedia().md
     const { locale } = useCurrentLanguageInfo()
     const fieldOrder = useMemo(() => getLocaleDateFieldOrder(locale), [locale])
     const utcOffset = useMemo(() => formatUtcOffset(), [])
@@ -314,7 +323,7 @@ export const DateRangePickerCard = forwardRef<DateRangePickerCardHandle, DateRan
     // When the popover opens, ensure its bottom is visible — scroll the page if needed so the user
     // doesn't have to manually scroll to see the calendar.
     useEffect(() => {
-      if (!calendarOpen) {
+      if (!calendarOpen || isSheet) {
         return
       }
       const node = popoverRef.current
@@ -324,11 +333,11 @@ export const DateRangePickerCard = forwardRef<DateRangePickerCardHandle, DateRan
       requestAnimationFrame(() => {
         node.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
       })
-    }, [calendarOpen])
+    }, [calendarOpen, isSheet])
 
     return (
       <Flex position="relative" width="100%">
-        <Flex ref={inputRowRef} row gap="$spacing4" width="100%">
+        <Flex ref={inputRowRef} row={!isSheet} gap={isSheet ? '$spacing8' : '$spacing4'} width="100%">
           <DateInputCard
             label={startLabel}
             date={startDate}
@@ -338,6 +347,7 @@ export const DateRangePickerCard = forwardRef<DateRangePickerCardHandle, DateRan
             fieldOrder={fieldOrder}
             locale={locale}
             position="start"
+            stacked={isSheet}
             activeBorderColor={activeBorderColor}
             traceElement={traceElementStart}
             onPress={handleOpenForStart}
@@ -351,11 +361,24 @@ export const DateRangePickerCard = forwardRef<DateRangePickerCardHandle, DateRan
             fieldOrder={fieldOrder}
             locale={locale}
             position="end"
+            stacked={isSheet}
             activeBorderColor={activeBorderColor}
             traceElement={traceElementEnd}
             onPress={handleOpenForEnd}
           />
         </Flex>
+        {calendarOpen && isSheet ? (
+          // The scrim sits outside popoverRef, so tapping it closes the sheet via the mousedown handler.
+          <Flex
+            $platform-web={{ position: 'fixed' }}
+            top={0}
+            left={0}
+            right={0}
+            bottom={0}
+            backgroundColor="$scrim"
+            zIndex={zIndexes.modalBackdrop}
+          />
+        ) : null}
         {calendarOpen ? (
           <Flex
             position="absolute"
@@ -365,6 +388,13 @@ export const DateRangePickerCard = forwardRef<DateRangePickerCardHandle, DateRan
             mt="$spacing12"
             alignItems="center"
             zIndex={zIndexes.dropdown}
+            {...(isSheet && {
+              '$platform-web': { position: 'fixed' },
+              top: 'auto',
+              bottom: 0,
+              mt: '$none',
+              zIndex: zIndexes.modal,
+            })}
           >
             <Flex
               ref={popoverRef}
@@ -374,6 +404,14 @@ export const DateRangePickerCard = forwardRef<DateRangePickerCardHandle, DateRan
               gap="$spacing12"
               width="max-content"
               maxWidth={512}
+              {...(isSheet && {
+                width: '100%',
+                maxWidth: '100%',
+                p: '$spacing16',
+                pb: '$spacing24',
+                borderBottomLeftRadius: '$none',
+                borderBottomRightRadius: '$none',
+              })}
               shadowColor="$shadowColor"
               shadowRadius={40}
               shadowOpacity={0.25}

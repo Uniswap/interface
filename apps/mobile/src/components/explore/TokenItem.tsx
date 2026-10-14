@@ -40,6 +40,7 @@ interface TokenItemProps {
   eventName: MobileEventName.ExploreTokenItemSelected | MobileEventName.HomeExploreTokenItemSelected
   /** Distinguishes taps on the same token across sections (e.g. Trending vs the ranked Top tokens list). */
   section?: SectionName
+  categoryId?: string
   metadataDisplayType?: TokenMetadataDisplayType
   containerProps?: FlexProps
   hideNumberedList?: boolean
@@ -58,6 +59,7 @@ export const TokenItem = memo(function TokenItemInner({
   containerProps,
   eventName,
   section,
+  categoryId,
   hideNumberedList,
   priceWrapperProps,
   showChart,
@@ -120,6 +122,7 @@ export const TokenItem = memo(function TokenItemInner({
       name: tokenItemData.name,
       position: index + 1,
       section,
+      category_id: categoryId,
     })
   })
 

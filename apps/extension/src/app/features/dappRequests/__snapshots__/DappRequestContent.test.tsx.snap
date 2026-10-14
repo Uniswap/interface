@@ -47,12 +47,12 @@ exports[`DappRequestContent - Stale Request Rendering > should match snapshot fo
             />
           </div>
           <div
-            class="[container-name:true] flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] rounded-[12px] [cursor:pointer] bg-transparent [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] active:opacity-[0.75] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
+            class="[container-name:true] flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] [container-type:normal] rounded-[12px] [cursor:pointer] bg-transparent shrink-[1] [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] active:opacity-[0.75] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
             role="button"
             tabindex="0"
           >
             <div
-              class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-start gap-[4px]"
+              class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] flex-row items-center justify-start shrink-[1] gap-[4px]"
             >
               <span
                 class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-medium)] text-[12px] [line-height:13.8px] [font-weight:535] [color:var(--stext-neutral1)] shrink-[1]"
@@ -151,12 +151,12 @@ exports[`DappRequestContent - Stale Request Rendering > should match snapshot fo
             />
           </div>
           <div
-            class="[container-name:true] flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] rounded-[12px] [cursor:pointer] bg-transparent [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] active:opacity-[0.75] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
+            class="[container-name:true] flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] [container-type:normal] rounded-[12px] [cursor:pointer] bg-transparent shrink-[1] [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] active:opacity-[0.75] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
             role="button"
             tabindex="0"
           >
             <div
-              class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-start gap-[4px]"
+              class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] flex-row items-center justify-start shrink-[1] gap-[4px]"
             >
               <span
                 class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-medium)] text-[12px] [line-height:13.8px] [font-weight:535] [color:var(--stext-neutral1)] shrink-[1]"

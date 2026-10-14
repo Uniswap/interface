@@ -3,7 +3,6 @@ import { memo } from 'react'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { RwaTokenOption } from 'uniswap/src/components/lists/items/types'
 import { TokenSelectorPill } from 'uniswap/src/components/TokenSelector/items/tokens/TokenSelectorPill'
-import { OnSelectRwaToken } from 'uniswap/src/components/TokenSelector/types'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 
 function StockPillInner({
@@ -12,7 +11,7 @@ function StockPillInner({
   isPending = false,
 }: {
   option: RwaTokenOption
-  onPressRwaToken: OnSelectRwaToken
+  onPressRwaToken: (option: RwaTokenOption) => void
   /** True while this pill's tap is waiting on the pre-selection token fetch. */
   isPending?: boolean
 }): JSX.Element {

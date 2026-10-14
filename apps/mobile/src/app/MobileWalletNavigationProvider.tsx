@@ -117,7 +117,8 @@ function useNavigateToActivity(): () => void {
   const { navigate } = useAppStackNavigation()
 
   return useCallback((): void => {
-    navigate(MobileScreens.MainTabs, { screen: MobileScreens.Activity })
+    // pop: v7 navigate pushes a second MainTabs when a modal is on top; pop back to the existing one instead.
+    navigate(MobileScreens.MainTabs, { screen: MobileScreens.Activity }, { pop: true })
   }, [navigate])
 }
 
@@ -126,10 +127,7 @@ function useNavigateToHomepageTab(tab: HomeScreenTabIndex): () => void {
 
   return useCallback((): void => {
     closeKeyboardBeforeCallback(() => {
-      navigate(MobileScreens.MainTabs, {
-        screen: MobileScreens.Home,
-        params: { tab },
-      })
+      navigate(MobileScreens.MainTabs, { screen: MobileScreens.Home, params: { tab } }, { pop: true })
     })
   }, [navigate, tab])
 }

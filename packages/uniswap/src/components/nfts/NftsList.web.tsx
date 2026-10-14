@@ -1,115 +1,75 @@
-import { useWindowVirtualizer, Virtualizer } from '@tanstack/react-virtual'
 import { isMobileWeb } from '@universe/environment'
-import { Flex, View } from '@universe/mycelium'
+import { Flex, UniversalList, type UniversalListRenderItemInfo, View } from '@universe/mycelium'
 import { NoNfts } from '@universe/mycelium/icons/NoNfts'
 import { TestID } from '@universe/test'
-import { Fragment, ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Loader } from 'ui/src'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
 import { useNftListRenderData } from 'uniswap/src/components/nfts/hooks/useNftListRenderData'
 import { useNftSearch } from 'uniswap/src/components/nfts/hooks/useNftSearch'
-import { NftsListProps } from 'uniswap/src/components/nfts/NftsList'
+import type { NftsListItem, NftsListProps } from 'uniswap/src/components/nfts/NftsList'
 import { NftsListEmptyState } from 'uniswap/src/components/nfts/NftsListEmptyState'
 import { NftListHeader } from 'uniswap/src/components/nfts/NftsListHeader'
 import { NftsListLoadingFooter } from 'uniswap/src/components/nfts/NftsListLoadingFooter'
 import { ShowNFTModal } from 'uniswap/src/components/nfts/ShowNFTModal'
 import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import {
+  HIDDEN_NFTS_ROW,
   NFT_GRID_DEFAULT_COLUMNS,
   NFT_GRID_MIN_COLUMN_WIDTH,
   NFT_GRID_ROW_HEIGHT,
 } from 'uniswap/src/features/nfts/constants'
-import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { getNFTAssetKey } from 'uniswap/src/features/nfts/utils'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useContainerWidth } from 'utilities/src/react/useContainerWidth'
 
-const estimateRowSize = (): number => NFT_GRID_ROW_HEIGHT
+// Off-screen buffer. Mobile web stays below desktop because each card is ~half the viewport wide,
+// but the previous two rows sat under one phone viewport, so a fling scrolled onto blank cells.
+const DRAW_DISTANCE = NFT_GRID_ROW_HEIGHT * (isMobileWeb ? 5 : 12)
 
-const GRID_OVERSCAN = isMobileWeb ? 2 : 12
+/**
+ * The hidden count grows as pages arrive. Routed through context rather than `extraData` so paging
+ * doesn't invalidate every cell — with `numColumns` and `getItemSpan` both set, an `extraData`
+ * change forces a full item-position recalculation, and mobile web pages more often than desktop.
+ */
+const HiddenNftsCountContext = createContext(0)
+// Trigger the next page while roughly three rows remain, matching the old lastVisibleRowIndex check.
+const END_REACHED_THRESHOLD = 0.3
 
-const keyExtractor = (item: NFTItem): string => getNFTAssetKey(item.contractAddress ?? '', item.tokenId ?? '')
+const keyExtractor = (item: NftsListItem): string =>
+  typeof item === 'string' ? item : getNFTAssetKey(item.contractAddress ?? '', item.tokenId ?? '')
 
-// Virtual grid rows render fresh on every virtualizer tick — intentionally not memoized.
-function renderGridRows({
-  virtualizer,
-  items,
-  itemIndexOffset,
-  numColumns,
-  renderNFTItem,
+/** Takes the count from context, so a newly-paged-in batch doesn't have to invalidate every cell. */
+function HiddenNftsExpander({
+  isExpanded,
+  onPress,
+  renderExpandoRow,
 }: {
-  virtualizer: Virtualizer<Window, Element>
-  items: NFTItem[]
-  itemIndexOffset: number
-  numColumns: number
-  renderNFTItem: NftsListProps['renderNFTItem']
-}): JSX.Element[] {
-  return virtualizer.getVirtualItems().map((virtualRow) => {
-    const startIndex = virtualRow.index * numColumns
-    const rowItems = items.slice(startIndex, startIndex + numColumns)
-    return (
-      <Flex
-        key={virtualRow.key}
-        position="absolute"
-        top={0}
-        left={0}
-        width="100%"
-        gap="$spacing12"
-        height={virtualRow.size}
-        // Inline style: column count and row offset are computed per render, so no static class exists for them.
-        style={{
-          display: 'grid',
-          gridTemplateColumns: `repeat(${numColumns}, minmax(0, 1fr))`,
-          transform: `translateY(${virtualRow.start - virtualizer.options.scrollMargin}px)`,
-          willChange: 'transform',
-          contain: 'strict',
-          contentVisibility: 'auto',
-        }}
-      >
-        {rowItems.map((item, i) => (
-          <Fragment key={keyExtractor(item)}>{renderNFTItem(item, itemIndexOffset + startIndex + i)}</Fragment>
-        ))}
-      </Flex>
-    )
-  })
-}
-
-// Mounted only when hidden NFTs are visible, so its virtualizer and offset-measure re-renders don't cost the main grid
-function HiddenNftsGrid({
-  items,
-  itemIndexOffset,
-  numColumns,
-  renderNFTItem,
-}: {
-  items: NFTItem[]
-  itemIndexOffset: number
-  numColumns: number
-  renderNFTItem: NftsListProps['renderNFTItem']
+  isExpanded: boolean
+  onPress: () => void
+  renderExpandoRow: NftsListProps['renderExpandoRow']
 }): JSX.Element {
-  const sectionRef = useRef<HTMLDivElement>(null)
-  const [sectionOffset, setSectionOffset] = useState(0)
-
-  // The window virtualizer needs this section's document offset; getBoundingClientRect over offsetTop because
-  // compat Flex views are position: relative, making offsetTop parent-relative
-  useLayoutEffect(() => {
-    if (sectionRef.current) {
-      setSectionOffset(sectionRef.current.getBoundingClientRect().top + window.scrollY)
-    }
-  }, [itemIndexOffset, numColumns])
-
-  const virtualizer = useWindowVirtualizer({
-    count: Math.ceil(items.length / numColumns),
-    estimateSize: estimateRowSize,
-    overscan: GRID_OVERSCAN,
-    scrollMargin: sectionOffset,
-  })
+  const { t } = useTranslation()
+  const numHidden = useContext(HiddenNftsCountContext)
+  const label = t('hidden.nfts.info.text.button', { numHidden })
 
   return (
-    <Flex ref={sectionRef} position="relative" style={{ height: virtualizer.getTotalSize() }}>
-      {renderGridRows({ virtualizer, items, itemIndexOffset, numColumns, renderNFTItem })}
+    <Flex grow>
+      {renderExpandoRow ? (
+        renderExpandoRow({ isExpanded, label, onPress })
+      ) : (
+        <ExpandoRow
+          isExpanded={isExpanded}
+          data-testid={TestID.HiddenNftsRow}
+          label={label}
+          mx="$spacing4"
+          onPress={onPress}
+        />
+      )}
+      {isExpanded && <ShowNFTModal />}
     </Flex>
   )
 }
@@ -249,27 +209,28 @@ export function NftsList({
         : NFT_GRID_DEFAULT_COLUMNS,
     [autoColumns, containerWidth],
   )
-  const shownRowCount = Math.ceil(filteredShownNfts.length / numColumns)
   // Hidden NFTs render below the expando; matches the buildNftsArray gate (showHidden && allPagesFetched)
   const showHiddenGrid = hiddenNftsExpanded && filteredHiddenNfts.length > 0
   const isFetchingMore = nfts.length > 0 && isFetchingMoreNfts
 
-  const rowVirtualizer = useWindowVirtualizer({
-    count: shownRowCount,
-    estimateSize: estimateRowSize,
-    overscan: GRID_OVERSCAN,
-  })
-
-  const lastVisibleRowIndex = rowVirtualizer.getVirtualItems().at(-1)?.index
-  useEffect(() => {
-    if (lastVisibleRowIndex === undefined) {
-      return
+  // One flat grid: shown NFTs, the full-width hidden-NFTs expander, then the hidden NFTs it reveals.
+  const listData = useMemo((): NftsListItem[] => {
+    const rows: NftsListItem[] = [...filteredShownNfts]
+    if (numHidden > 0) {
+      rows.push(HIDDEN_NFTS_ROW)
     }
-    if (lastVisibleRowIndex >= shownRowCount - 3 && hasNextPage && !isLoadingState && !isFetchingMore) {
+    if (showHiddenGrid) {
+      rows.push(...filteredHiddenNfts)
+    }
+    return rows
+  }, [filteredShownNfts, numHidden, showHiddenGrid, filteredHiddenNfts])
+
+  const handleEndReached = useCallback((): void => {
+    if (hasNextPage && !isLoadingState && !isFetchingMore) {
       // oxlint-disable-next-line typescript/no-floating-promises -- biome-parity: oxlint is stricter here
       onListEndReached()
     }
-  }, [lastVisibleRowIndex, shownRowCount, hasNextPage, isLoadingState, isFetchingMore, onListEndReached])
+  }, [hasNextPage, isLoadingState, isFetchingMore, onListEndReached])
 
   const onHiddenRowPressed = useCallback((): void => {
     setHiddenNftsExpanded(!hiddenNftsExpanded)
@@ -345,50 +306,68 @@ export function NftsList({
   // height would both land as dead space above the hidden-NFTs expando row
   const hasOnlyHiddenNfts = !showHeader && !nonNftContent
 
-  const nftListContent = (
-    <>
-      <Flex position="relative">
-        <Flex style={{ height: rowVirtualizer.getTotalSize() }}>
-          {renderGridRows({
-            virtualizer: rowVirtualizer,
-            items: filteredShownNfts,
-            itemIndexOffset: 0,
-            numColumns,
-            renderNFTItem,
-          })}
-        </Flex>
-        {!hasOnlyHiddenNfts && <NftsListLoadingFooter show={Boolean(search) && hasNextPage} />}
-      </Flex>
-      {isFetchingMore && !search && skeletonContent}
-      {numHidden > 0 && (
-        <Flex grow>
-          {renderExpandoRow ? (
-            renderExpandoRow({
-              isExpanded: hiddenNftsExpanded,
-              label: t('hidden.nfts.info.text.button', { numHidden }),
-              onPress: onHiddenRowPressed,
-            })
-          ) : (
-            <ExpandoRow
-              isExpanded={hiddenNftsExpanded}
-              data-testid={TestID.HiddenNftsRow}
-              label={t('hidden.nfts.info.text.button', { numHidden })}
-              mx="$spacing4"
-              onPress={onHiddenRowPressed}
-            />
-          )}
-          {hiddenNftsExpanded && <ShowNFTModal />}
-        </Flex>
-      )}
-      {showHiddenGrid && (
-        <HiddenNftsGrid
-          items={filteredHiddenNfts}
-          itemIndexOffset={filteredShownNfts.length}
-          numColumns={numColumns}
-          renderNFTItem={renderNFTItem}
+  // The expander spans the full grid width rather than sitting in one column.
+  const getItemSpan = useCallback(
+    (item: NftsListItem): number | undefined => (item === HIDDEN_NFTS_ROW ? numColumns : undefined),
+    [numColumns],
+  )
+
+  const renderItem = useCallback(
+    ({ item, index }: UniversalListRenderItemInfo<NftsListItem>): JSX.Element | null => {
+      if (typeof item !== 'string') {
+        return renderNFTItem(item, index)
+      }
+      if (item !== HIDDEN_NFTS_ROW) {
+        return null
+      }
+      return (
+        <HiddenNftsExpander
+          isExpanded={hiddenNftsExpanded}
+          renderExpandoRow={renderExpandoRow}
+          onPress={onHiddenRowPressed}
         />
-      )}
-    </>
+      )
+    },
+    [hiddenNftsExpanded, onHiddenRowPressed, renderExpandoRow, renderNFTItem],
+  )
+
+  // Both only ever render while more shown NFTs are still paging in, and hidden NFTs are gated on
+  // every page having been fetched — so neither can appear below the hidden grid.
+  const listFooter = useMemo(
+    () => (
+      <>
+        {!hasOnlyHiddenNfts && <NftsListLoadingFooter show={Boolean(search) && hasNextPage} />}
+        {isFetchingMore && !search && skeletonContent}
+      </>
+    ),
+    [hasOnlyHiddenNfts, search, hasNextPage, isFetchingMore, skeletonContent],
+  )
+
+  const nftListContent = (
+    <HiddenNftsCountContext.Provider value={numHidden}>
+      <UniversalList
+        // The page is the scroller: an inner container here would virtualize against an unbounded
+        // parent, grow to full content height and reserve a second scrollbar.
+        useWindowScroll
+        data={listData}
+        drawDistance={DRAW_DISTANCE}
+        estimatedItemSize={NFT_GRID_ROW_HEIGHT}
+        // A mounted cell invalidates only on (key, item, extraData), so everything `renderItem`
+        // closes over has to reach here — the expander is a constant string whose (key, item) never
+        // change. Keyed on the callback itself rather than a copy of its dependency list: its
+        // identity already aggregates them, so the two can't drift apart. `useCallback` keeps it
+        // stable, which matters because this list sets `numColumns` and `getItemSpan`, where a new
+        // identity forces a full item-position recalculation.
+        extraData={renderItem}
+        getItemSpan={getItemSpan}
+        keyExtractor={keyExtractor}
+        ListFooterComponent={listFooter}
+        numColumns={numColumns}
+        renderItem={renderItem}
+        onEndReached={handleEndReached}
+        onEndReachedThreshold={END_REACHED_THRESHOLD}
+      />
+    </HiddenNftsCountContext.Provider>
   )
 
   return (

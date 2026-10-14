@@ -90,6 +90,14 @@ it('formats fiat estimates for tokens correctly', () => {
 })
 
 it('formats fiat estimates for token stats correctly', () => {
+  expect(formatNumber({ input: 1e30, type: NumberType.FiatTokenStats, locale: 'en-US' })).toBe('>$999,999T')
+  expect(formatNumber({ input: 1e18, type: NumberType.FiatTokenStats, locale: 'en-US' })).toBe('>$999,999T')
+  expect(formatNumber({ input: 999_999.95e12, type: NumberType.FiatTokenStats, locale: 'en-US' })).toBe('>$999,999T')
+  // largest double below the cap
+  expect(formatNumber({ input: 999_999.95e12 - 128, type: NumberType.FiatTokenStats, locale: 'en-US' })).toBe(
+    '$999,999.9T',
+  )
+  expect(formatNumber({ input: 1e15, type: NumberType.FiatTokenStats, locale: 'en-US' })).toBe('$1000.0T')
   expect(formatNumber({ input: 1234576, type: NumberType.FiatTokenStats, locale: 'en-US' })).toBe('$1.2M')
   expect(formatNumber({ input: 234567, type: NumberType.FiatTokenStats, locale: 'en-US' })).toBe('$234.6K')
   expect(formatNumber({ input: 123.456, type: NumberType.FiatTokenStats, locale: 'en-US' })).toBe('$123.46')
@@ -97,6 +105,27 @@ it('formats fiat estimates for token stats correctly', () => {
   expect(formatNumber({ input: 0.123, type: NumberType.FiatTokenStats, locale: 'en-US' })).toBe('$0.12')
   expect(formatNumber({ input: 0.00123, type: NumberType.FiatTokenStats, locale: 'en-US' })).toBe('<$0.01')
   expect(formatNumber({ input: 0, type: NumberType.FiatTokenStats, locale: 'en-US' })).toBe('-')
+})
+
+it('formats high-denomination fiat token stats below the cap', () => {
+  expect(formatNumber({ input: 5.6e15, type: NumberType.FiatTokenStats, locale: 'en-US', currencyCode: 'KRW' })).toBe(
+    '₩5600.0T',
+  )
+  expect(formatNumber({ input: 5.6e15, type: NumberType.FiatTokenStats, locale: 'en-US', currencyCode: 'VND' })).toBe(
+    '₫5600.0T',
+  )
+})
+
+it('caps fiat token stats in the converted currency and locale', () => {
+  expect(formatNumber({ input: 2.6e19, type: NumberType.FiatTokenStats, locale: 'en-US', currencyCode: 'VND' })).toBe(
+    '>₫999,999T',
+  )
+  expect(formatNumber({ input: 2e18, type: NumberType.FiatTokenStats, locale: 'de-DE', currencyCode: 'EUR' })).toBe(
+    '>999.999\u00a0Bio.\u00a0€',
+  )
+  expect(formatNumber({ input: 2e18, type: NumberType.FiatTokenStats, locale: 'ja-JP', currencyCode: 'JPY' })).toBe(
+    '>￥100京',
+  )
 })
 
 it('formats gas USD prices correctly', () => {

@@ -65,17 +65,18 @@ export async function screenAddress(
  * breaking the `REQUIRES_ACKNOWLEDGEMENT` → `ACKNOWLEDGED` flip.
  *
  * Returns the response `TokenRef` (with populated `reasons`) when the token is
- * blocked or acknowledged, or `undefined` when the API omits it (clean token).
+ * blocked or acknowledged, or `null` when the API omits it (clean token). `null`
+ * rather than `undefined` because React Query rejects `undefined` query data.
  */
 export async function fetchFeatureGatedToken(
   client: ComplianceV2Client,
   { chainId, address }: ComplianceTokenInput,
-): Promise<TokenRef | undefined> {
+): Promise<TokenRef | null> {
   const response = await client.featureGatedTokens({
     tokens: [new TokenRef({ chainId: chainId as ChainId, address })],
     includeNonBlockingReasons: true,
   })
-  return response.tokens[0]
+  return response.tokens[0] ?? null
 }
 
 /**

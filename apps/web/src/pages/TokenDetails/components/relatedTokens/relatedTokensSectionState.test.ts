@@ -7,7 +7,16 @@ const t = ((key: string, options?: { category?: string }) =>
   options?.category ? `${key}:${options.category}` : key) as TFunction
 
 function makeCategory(id: string, name: string): TokenCategory {
-  return { id, name, description: '', categoryClass: TokenCategoryClass.Sector, grouped: false, topTokens: [] }
+  return {
+    id,
+    name,
+    englishName: name,
+    description: '',
+    categoryClass: TokenCategoryClass.Sector,
+    grouped: false,
+    topTokens: [],
+    topGroups: [],
+  }
 }
 
 const STOCKS = makeCategory('stocks', 'Stocks')

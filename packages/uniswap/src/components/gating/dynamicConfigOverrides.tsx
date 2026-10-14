@@ -10,8 +10,8 @@ export const EMBEDDED_WALLET_BASE_URL_OPTIONS: DynamicConfigOptions = [
     label: 'app.uniswap.org (prod)',
   },
   {
-    value: 'https://app.corn-staging.com',
-    label: 'app.corn-staging.com (staging)',
+    value: 'https://staging.app.uniswap.org',
+    label: 'staging.app.uniswap.org (staging)',
   },
   {
     value: 'https://dev.ew.unihq.org',

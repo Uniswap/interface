@@ -97,7 +97,7 @@ describe('TokenDescription', () => {
     expect(screen.queryByText('3 networks')).toBeNull()
   })
 
-  it('renders the first category tag next to the name on an unscoped table', () => {
+  it('renders the first category tag next to the name', () => {
     render(
       <TokenDescription
         name="Tesla"
@@ -113,23 +113,7 @@ describe('TokenDescription', () => {
     expect(screen.queryByText('DeFi')).toBeNull()
   })
 
-  it('suppresses the scoped category and falls through to the next one', () => {
-    render(
-      <TokenDescription
-        name="Tesla"
-        symbol="TSLAon"
-        address={USDC_OPTIMISM}
-        chainId={UniverseChainId.Optimism}
-        categoryIds={['stocks', 'defi']}
-        scopedCategoryId="stocks"
-      />,
-    )
-
-    expect(screen.getByText('DeFi')).toBeInTheDocument()
-    expect(screen.queryByText('Stocks')).toBeNull()
-  })
-
-  it('renders no tag when the scoped category is the only one', () => {
+  it('renders the issuer logo with an "Issued by" label before the category tag', () => {
     render(
       <TokenDescription
         name="Tesla"
@@ -137,31 +121,31 @@ describe('TokenDescription', () => {
         address={USDC_OPTIMISM}
         chainId={UniverseChainId.Optimism}
         categoryIds={['stocks']}
-        scopedCategoryId="stocks"
-      />,
-    )
-
-    expect(screen.queryByTestId(TestID.TokenRowCategoryTag)).toBeNull()
-  })
-
-  it('renders the issuer tag before the category tag', () => {
-    render(
-      <TokenDescription
-        name="Tesla"
-        symbol="TSLAon"
-        address={USDC_OPTIMISM}
-        chainId={UniverseChainId.Optimism}
-        categoryIds={['stocks']}
-        issuer="ondo"
+        issuer={{ issuer: 'ondo', issuerLogoUrl: 'https://example.com/ondo.png' }}
       />,
     )
 
     expect(screen.getByTestId(TestID.TokenName)).toHaveTextContent('Tesla')
     const issuerTag = screen.getByTestId(TestID.TokenRowIssuerTag)
-    expect(issuerTag).toHaveTextContent('Ondo')
+    expect(within(issuerTag).getByLabelText('Issued by Ondo')).toBeInTheDocument()
+    expect(issuerTag).not.toHaveTextContent('Ondo')
     expect(issuerTag.compareDocumentPosition(screen.getByTestId(TestID.TokenRowCategoryTag))).toBe(
       Node.DOCUMENT_POSITION_FOLLOWING,
     )
+  })
+
+  it('falls back to the issuer name when no issuer logo is available', () => {
+    render(
+      <TokenDescription
+        name="Tesla"
+        symbol="TSLAon"
+        address={USDC_OPTIMISM}
+        chainId={UniverseChainId.Optimism}
+        issuer={{ issuer: 'ondo' }}
+      />,
+    )
+
+    expect(screen.getByTestId(TestID.TokenRowIssuerTag)).toHaveTextContent('Ondo')
   })
 
   it('renders no issuer tag for a token that is not an issuer token', () => {

@@ -57,15 +57,15 @@ export function DevScreen(): JSX.Element {
     switch (s) {
       case MobileScreens.MainTabs:
       case MobileScreens.Home:
-        navigate(MobileScreens.MainTabs, { screen: MobileScreens.Home })
+        navigate(MobileScreens.MainTabs, { screen: MobileScreens.Home }, { pop: true })
         break
 
       case MobileScreens.Explore:
-        navigate(MobileScreens.MainTabs, { screen: MobileScreens.Explore })
+        navigate(MobileScreens.MainTabs, { screen: MobileScreens.Explore }, { pop: true })
         break
 
       case MobileScreens.Activity:
-        navigate(MobileScreens.MainTabs, { screen: MobileScreens.Activity })
+        navigate(MobileScreens.MainTabs, { screen: MobileScreens.Activity }, { pop: true })
         break
 
       case MobileScreens.SettingsCloudBackupPasswordCreate:

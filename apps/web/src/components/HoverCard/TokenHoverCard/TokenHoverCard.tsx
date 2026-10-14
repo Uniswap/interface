@@ -1,5 +1,6 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { useCallback } from 'react'
+import { TouchableArea } from '@universe/mycelium'
+import { useCallback, useState } from 'react'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -13,6 +14,7 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import {
   HoverCard,
   type HoverCardPlacement,
+  stopPressEventPropagation,
   useHoverCardMaxContentWidth,
   useHoverCardState,
 } from '~/components/HoverCard/HoverCard'
@@ -36,6 +38,8 @@ type TokenHoverCardProps = {
   children: ReactNode
   placement?: HoverCardPlacement
   offset?: number
+  /** See `HoverCard`. */
+  offsetFromScrollContainerEdge?: boolean
   widthOffset?: number
   containerWidth?: number
   onNavigate?: () => void
@@ -43,12 +47,42 @@ type TokenHoverCardProps = {
   childOwnsPressFeedback?: boolean
 } & ({ token: TokenHoverCardToken; currencyInfo?: never } | { token?: never; currencyInfo: CurrencyInfo })
 
-export function TokenHoverCard({
+/**
+ * Mounts the card (Popover, floating tree, portal, data hooks) only once a row is hovered. Rows are
+ * rendered by the dozen in virtualized lists, and the always-mounted card was the largest share of each row's cost.
+ * The bare wrapper matches the mounted trigger's element so arming doesn't shift layout.
+ */
+export function TokenHoverCard(props: TokenHoverCardProps): JSX.Element {
+  const [armedByPointer, setArmedByPointer] = useState(false)
+  const arm = useCallback((): void => setArmedByPointer(true), [])
+
+  if (!armedByPointer) {
+    return (
+      <TouchableArea
+        role="none"
+        variant="unstyled"
+        activeOpacity={1}
+        {...(props.childOwnsPressFeedback && { pressStyle: { scale: 1 }, focusVisibleStyle: { scaleX: 1, scaleY: 1 } })}
+        // Injection clones the row element with fresh color props every render, which would defeat its memo.
+        shouldAutomaticallyInjectColors={false}
+        {...stopPressEventPropagation}
+        onMouseEnter={arm}
+      >
+        {props.children}
+      </TouchableArea>
+    )
+  }
+
+  return <MountedTokenHoverCard {...props} />
+}
+
+function MountedTokenHoverCard({
   token,
   currencyInfo: currencyInfoProp,
   children,
   placement = 'bottom-start',
   offset,
+  offsetFromScrollContainerEdge,
   widthOffset = offset,
   containerWidth,
   onNavigate,
@@ -75,6 +109,10 @@ export function TokenHoverCard({
     price,
     pricePercentChange,
     priceAbsoluteChange,
+    statsEnabled,
+    volume24hUsd,
+    tvlUsd,
+    statsLoading,
   } = useTokenHoverCardData({ currencyInfoProp, currencyIdFromToken, gqlChain, rawAddress, hasOpenIntent, isOpen })
 
   const contractAddress = rawAddress && rawAddress !== NATIVE_CHAIN_ID ? rawAddress : undefined
@@ -83,7 +121,7 @@ export function TokenHoverCard({
 
   useFireOncePerOpen({
     isOpen,
-    ready: !chartLoading && !!currencyInfo,
+    ready: !chartLoading && !statsLoading && !!currencyInfo,
     fire: () =>
       sendAnalyticsEvent(InterfaceEventName.TokenHoverCardDataLoaded, {
         ...trace,
@@ -163,6 +201,7 @@ export function TokenHoverCard({
       isOpen={isOpen}
       placement={placement}
       offset={offset}
+      offsetFromScrollContainerEdge={offsetFromScrollContainerEdge}
       childOwnsPressFeedback={childOwnsPressFeedback}
       onOpenChange={handleOpenChange}
       content={
@@ -186,6 +225,9 @@ export function TokenHoverCard({
               priceAbsoluteChange={priceAbsoluteChange}
               priceData={entries}
               chartLoading={chartLoading}
+              volume24hUsd={volume24hUsd}
+              tvlUsd={tvlUsd}
+              statsLoading={statsLoading}
               isCopied={isCopied}
               onCopy={contractAddress ? handleCopy : undefined}
               onExpand={handleExpand}
@@ -194,7 +236,11 @@ export function TokenHoverCard({
           ) : (
             // Stays mounted when the fetch settles empty: unmounting mid-hover flickers, and an unmounted
             // Popover can't fire onOpenChange to reset isOpen.
-            <TokenHoverCardPlaceholder unavailable={currencyInfoUnavailable} maxWidth={maxContentWidth} />
+            <TokenHoverCardPlaceholder
+              unavailable={currencyInfoUnavailable}
+              showStats={statsEnabled}
+              maxWidth={maxContentWidth}
+            />
           )}
         </MultichainAddressTransitionPanel>
       }

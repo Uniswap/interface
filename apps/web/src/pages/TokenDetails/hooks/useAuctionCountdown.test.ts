@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { useAuctionCountdown } from '~/pages/TokenDetails/hooks/useAuctionCountdown'
 
 const mockUseSharedMachineTimeMs = vi.fn<() => number>()
-vi.mock('~/hooks/useMachineTime', () => ({
+vi.mock('utilities/src/time/useSharedMachineTimeMs', () => ({
   useSharedMachineTimeMs: () => mockUseSharedMachineTimeMs(),
 }))
 

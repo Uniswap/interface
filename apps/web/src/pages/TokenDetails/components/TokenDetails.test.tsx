@@ -10,7 +10,7 @@ import { TokenDetailsAuctionDisplayProvider } from '~/pages/TokenDetails/context
 import { TokenDetailsSourceState } from '~/pages/TokenDetails/context/tokenDetailsSourceState'
 import type { TokenDetailsAuctionSource } from '~/pages/TokenDetails/hooks/useTokenDetailsAuction'
 import { mockMediaSize } from '~/test-utils/mockMediaSize'
-import { render, screen, within } from '~/test-utils/render'
+import { fireEvent, render, screen, within } from '~/test-utils/render'
 import type { TokenPoolState } from '~/types/tokenPool'
 
 // `useMedia` drives `isDesktop`, which decides which of the two placements TokenDetailsContent
@@ -58,6 +58,7 @@ let mockAuctionSource: TokenDetailsAuctionSource = { status: TokenDetailsSourceS
 let mockPools: TokenPoolState = { status: 'loading' }
 let mockBannerShouldThrow = false
 let mockProvenanceShouldThrow = false
+let mockClaimShouldThrow = false
 const mockAuction = {
   address: '0x1111111111111111111111111111111111111111',
   tokenAddress: mockToken.address,
@@ -92,13 +93,22 @@ vi.mock('~/pages/TokenDetails/context/useTDPStore', () => ({
     }),
 }))
 
-vi.mock('~/features/Toucan/Auction/hooks/useAuctionDisplayDataSources', () => ({
+vi.mock('~/features/Toucan/Auction/hooks/useAuctionDisplayDataSources', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('~/features/Toucan/Auction/hooks/useAuctionDisplayDataSources')>()),
   useAuctionDisplayDataSources: () => ({
     currentBlock: { status: 'success', blockNumber: 150n },
     currencyRaised: { status: 'idle' },
     pools: mockPools,
     refetchCurrentBlock: vi.fn(),
+    refetchCheckpoint: vi.fn(),
   }),
+}))
+
+// The web Modal keeps closed children mounted for its exit animation, so a page with two
+// list entry points would match two selector modals; only the open one is under test.
+vi.mock('uniswap/src/components/modals/Modal', () => ({
+  Modal: ({ children, isModalOpen }: { children: ReactNode; isModalOpen: boolean }) =>
+    isModalOpen ? <div>{children}</div> : null,
 }))
 
 vi.mock('~/pages/TokenDetails/hooks/useMultichainTokenEntries', () => ({
@@ -162,6 +172,17 @@ vi.mock('~/pages/TokenDetails/components/earn/TokenDetailsVaultShareBanner', () 
 vi.mock('~/pages/TokenDetails/components/chart/ChartSection', () => ({
   ChartSection: () => <div>Token chart</div>,
 }))
+vi.mock('~/pages/TokenDetails/components/claim/TokenDetailsClaimCard', () => ({
+  TokenDetailsClaimCard: () => {
+    if (mockClaimShouldThrow) {
+      throw new Error('claim card failed')
+    }
+    return <div data-testid={TestID.TokenDetailsClaimCard} />
+  },
+}))
+vi.mock('~/pages/TokenDetails/components/claim/TokenDetailsClaimProvider', () => ({
+  TokenDetailsClaimProvider: ({ children }: { children: ReactNode }) => <>{children}</>,
+}))
 vi.mock('~/pages/TokenDetails/components/auction/TokenDetailsAuctionCard', () => ({
   TokenDetailsAuctionCard: () => <div data-testid={TestID.TokenDetailsAuctionCard} />,
 }))
@@ -224,6 +245,7 @@ describe('TokenDetailsContent', () => {
     mockPools = { status: 'loading' }
     mockBannerShouldThrow = false
     mockProvenanceShouldThrow = false
+    mockClaimShouldThrow = false
   })
 
   afterEach(() => {
@@ -235,6 +257,7 @@ describe('TokenDetailsContent', () => {
     mockAuctionSource = {
       status: TokenDetailsSourceState.Found,
       auction: { ...mockAuction, auctionType: AuctionType.CUSTOM },
+      auctions: [{ ...mockAuction, auctionType: AuctionType.CUSTOM }],
     }
     const { container, rerender } = render(<TokenDetailsWithDisplay />)
 
@@ -266,6 +289,32 @@ describe('TokenDetailsContent', () => {
     expect(screen.getByTestId('tdp-layout')).not.toHaveClass('mt-[24px]')
   })
 
+  it.each(['sm', 'xxl'] as const)('mounts one claim card in the appropriate %s placement', (mediaSize) => {
+    mockMediaSize(mediaSize)
+    render(<TokenDetailsWithDisplay />)
+    expect(screen.getAllByTestId(TestID.TokenDetailsClaimCard)).toHaveLength(1)
+    const claimCard = screen.getByTestId(TestID.TokenDetailsClaimCard)
+    const followingSection =
+      mediaSize === 'sm' ? screen.getByTestId('tdp-stats') : screen.getByTestId(TestID.TokenDetailsSwap)
+    expect(claimCard.compareDocumentPosition(followingSection)).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
+  })
+
+  it.each(['sm', 'xxl'] as const)(
+    'contains a failing claim card at %s without removing canonical content',
+    (mediaSize) => {
+      vi.spyOn(logger, 'error').mockImplementation(() => undefined)
+      vi.spyOn(console, 'error').mockImplementation(() => undefined)
+      mockMediaSize(mediaSize)
+      mockClaimShouldThrow = true
+      render(<TokenDetailsWithDisplay />)
+      expect(screen.queryByTestId(TestID.TokenDetailsClaimCard)).toBeNull()
+      expect(screen.getByText('Token chart')).toBeInTheDocument()
+      expect(screen.getByText('Token swap')).toBeInTheDocument()
+      expect(screen.getByTestId('tdp-stats')).toBeInTheDocument()
+      expect(screen.getByText('Token activity')).toBeInTheDocument()
+    },
+  )
+
   it('mounts exactly one warning card below desktop, in the left panel', () => {
     mockMediaSize('sm')
 
@@ -294,7 +343,11 @@ describe('TokenDetailsContent', () => {
 
   it.each([false, true])('preserves Swap and provenance for unknown method, isQuickLaunch=%s', (isQuickLaunch) => {
     mockMediaSize('sm')
-    mockAuctionSource = { status: TokenDetailsSourceState.Found, auction: { ...mockAuction, isQuickLaunch } }
+    mockAuctionSource = {
+      status: TokenDetailsSourceState.Found,
+      auction: { ...mockAuction, isQuickLaunch },
+      auctions: [{ ...mockAuction, isQuickLaunch }],
+    }
     mockPools = { status: 'success', poolCount: 0 }
 
     render(<TokenDetailsWithDisplay />)
@@ -313,6 +366,7 @@ describe('TokenDetailsContent', () => {
       mockAuctionSource = {
         status: TokenDetailsSourceState.Found,
         auction: { ...mockAuction, auctionType: AuctionType.CUSTOM, endBlock: '149' },
+        auctions: [{ ...mockAuction, auctionType: AuctionType.CUSTOM, endBlock: '149' }],
       }
       mockPools = { status: 'success', poolCount: 0 }
 
@@ -332,6 +386,7 @@ describe('TokenDetailsContent', () => {
     mockAuctionSource = {
       status: TokenDetailsSourceState.Found,
       auction: { ...mockAuction, auctionType: AuctionType.CUSTOM },
+      auctions: [{ ...mockAuction, auctionType: AuctionType.CUSTOM }],
     }
     mockPools = { status: 'success', poolCount: 0 }
 
@@ -350,11 +405,66 @@ describe('TokenDetailsContent', () => {
     }
   })
 
+  it.each([
+    ['sm', 'ended', AuctionType.CUSTOM],
+    ['xxl', 'ended', AuctionType.CUSTOM],
+    ['sm', 'upcoming', AuctionType.CUSTOM],
+    ['xxl', 'upcoming', AuctionType.CUSTOM],
+    ['sm', 'live', AuctionType.CROWD],
+    ['xxl', 'live', AuctionType.CROWD],
+  ] as const)(
+    'keeps other active custom auctions accessible at %s when the primary is %s with type %s',
+    (mediaSize, phase, auctionType) => {
+      mockMediaSize(mediaSize)
+      const nowSeconds = BigInt(Math.floor(Date.now() / 1000))
+      const primary = {
+        ...mockAuction,
+        auctionId: 'primary',
+        chainId: mockToken.chainId,
+        auctionType,
+        isQuickLaunch: auctionType === AuctionType.CROWD,
+        startBlock: phase === 'upcoming' ? '160' : '100',
+        endBlock: phase === 'ended' ? '149' : '200',
+        estimatedStartTime: { seconds: nowSeconds + (phase === 'upcoming' ? 3600n : -3600n), nanos: 0 },
+        estimatedEndTime: { seconds: nowSeconds + (phase === 'ended' ? -60n : 7200n), nanos: 0 },
+      }
+      const olderLiveAuction = {
+        ...primary,
+        auctionType: AuctionType.CUSTOM,
+        isQuickLaunch: false,
+        auctionId: 'older-live',
+        address: '0x2222222222222222222222222222222222222222',
+        startBlock: '90',
+        endBlock: '300',
+        estimatedStartTime: { seconds: nowSeconds - 7200n, nanos: 0 },
+        estimatedEndTime: { seconds: nowSeconds + 10800n, nanos: 0 },
+      }
+      mockAuctionSource = {
+        status: TokenDetailsSourceState.Found,
+        auction: primary,
+        auctions: [primary, olderLiveAuction],
+      }
+      mockPools = { status: 'success', poolCount: 1 }
+
+      render(<TokenDetailsWithDisplay />)
+
+      expect(screen.queryByTestId(TestID.TokenDetailsAuctionCard)).toBeNull()
+      expect(screen.queryByTestId(TestID.TokenDetailsAuctionBanner)).toBeNull()
+      expect(screen.getByText('Token swap')).toBeInTheDocument()
+      expect(screen.getAllByTestId(TestID.TokenDetailsOtherAuctionsRow)).toHaveLength(1)
+      fireEvent.click(screen.getByTestId(TestID.TokenDetailsOtherAuctionsRow))
+      expect(screen.getByTestId(TestID.TokenDetailsAuctionListModal)).toBeInTheDocument()
+      // Both CCA launch types list, so the crowd-launch primary is a row too.
+      expect(screen.getAllByTestId(TestID.TokenDetailsAuctionListRow)).toHaveLength(2)
+    },
+  )
+
   it('adds Live Custom context while preserving the full tradable page', () => {
     mockMediaSize('xxl')
     mockAuctionSource = {
       status: TokenDetailsSourceState.Found,
       auction: { ...mockAuction, auctionType: AuctionType.CUSTOM },
+      auctions: [{ ...mockAuction, auctionType: AuctionType.CUSTOM }],
     }
     mockPools = { status: 'success', poolCount: 1 }
 
@@ -385,6 +495,7 @@ describe('TokenDetailsContent', () => {
       mockAuctionSource = {
         status: TokenDetailsSourceState.Found,
         auction: { ...mockAuction, auctionType: AuctionType.CUSTOM },
+        auctions: [{ ...mockAuction, auctionType: AuctionType.CUSTOM }],
       }
       mockPools = { status: 'success', poolCount: 1 }
       mockBannerShouldThrow = failBanner

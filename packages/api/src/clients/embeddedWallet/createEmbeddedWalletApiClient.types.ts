@@ -58,7 +58,7 @@ export interface EmbeddedWalletClientContext {
       options?: CallOptions,
     ) => Promise<CheckRecoveryAvailabilityResponse>
     setupRecovery: (req: Record<string, unknown>, options?: CallOptions) => Promise<SetupRecoveryResponse>
-    executeRecovery: (req: Record<string, unknown>) => Promise<ExecuteRecoveryResponse>
+    executeRecovery: (req: Record<string, unknown>, options?: CallOptions) => Promise<ExecuteRecoveryResponse>
     reportDecryptionResult: (
       req: Record<string, unknown>,
       options?: CallOptions,
@@ -68,7 +68,10 @@ export interface EmbeddedWalletClientContext {
     sign7702Authorization: (req: Record<string, unknown>) => Promise<Sign7702AuthorizationResponse>
     sign7702Transaction: (req: Record<string, unknown>) => Promise<Sign7702TransactionResponse>
     exportSeedPhrase: (req: Record<string, unknown>) => Promise<ExportSeedPhraseResponse>
-    exportSeedPhraseWithRecovery: (req: Record<string, unknown>) => Promise<ExportSeedPhraseResponse>
+    exportSeedPhraseWithRecovery: (
+      req: Record<string, unknown>,
+      options?: CallOptions,
+    ) => Promise<ExportSeedPhraseResponse>
   }
   legacyRpcClient?: PromiseClient<typeof OldEmbeddedWalletService>
 }
@@ -190,12 +193,15 @@ export interface EmbeddedWalletApiClient {
     },
     accessToken: string,
   ) => Promise<SetupRecoveryResponse>
-  fetchExecuteRecovery: (params: {
-    authMethodId: string
-    newCredential: string
-    authKeySignature: string
-    recoveryAuthSignature: string
-  }) => Promise<ExecuteRecoveryResponse>
+  fetchExecuteRecovery: (
+    params: {
+      authMethodId: string
+      newCredential: string
+      authKeySignature: string
+      recoveryAuthSignature: string
+    },
+    accessToken: string,
+  ) => Promise<ExecuteRecoveryResponse>
   fetchReportDecryptionResult: (
     params: {
       success: boolean
@@ -209,12 +215,15 @@ export interface EmbeddedWalletApiClient {
   ) => Promise<ReportDecryptionResultResponse>
   fetchGetRecoveryConfig: (params: { authMethodId: string }, accessToken: string) => Promise<GetRecoveryConfigResponse>
   fetchDeleteRecovery: (params: { credential: string }) => Promise<DeleteRecoveryResponse>
-  fetchExportSeedPhraseWithRecovery: (params: {
-    authMethodId: string
-    encryptionKey: string
-    authKeySignature: string
-    recoveryAuthSignature: string
-  }) => Promise<ExportSeedPhraseResponse>
+  fetchExportSeedPhraseWithRecovery: (
+    params: {
+      authMethodId: string
+      encryptionKey: string
+      authKeySignature: string
+      recoveryAuthSignature: string
+    },
+    accessToken: string,
+  ) => Promise<ExportSeedPhraseResponse>
   fetchSign7702AuthorizationRequest: (params: Sign7702AuthorizationParams) => Promise<Sign7702AuthorizationResult>
   fetchSign7702TransactionRequest: (params: Sign7702TransactionParams) => Promise<{ signedTransaction: string }>
 }

@@ -1,4 +1,3 @@
-import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { UniverseChainId } from '@universe/chains'
 import { PoolTableSortState } from '~/data/pools/poolStats'
 import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
@@ -15,13 +14,11 @@ import type { PoolsFilterState } from '~/types/poolsFilter'
 export function useListPools({
   sortState,
   chainId,
-  protocol,
   poolsFilter,
 }: {
   sortState: PoolTableSortState
   chainId?: UniverseChainId
-  protocol?: ProtocolVersion
-  /** Advanced pools filter (behind AdvancedPoolsFiltering). */
+  /** Advanced pools filter. */
   poolsFilter?: PoolsFilterState
 }): {
   pools: PoolStat[] | undefined
@@ -34,7 +31,7 @@ export function useListPools({
   chainId?: UniverseChainId
 } {
   const filterString = useExploreTablesFilterStore((s) => s.filterString)
-  const result = useV2ListPools({ sortState, chainId, protocol, poolsFilter, filterString })
+  const result = useV2ListPools({ sortState, chainId, poolsFilter, filterString })
 
   useExploreQueryLatencyTracking({
     queryType: 'pools',

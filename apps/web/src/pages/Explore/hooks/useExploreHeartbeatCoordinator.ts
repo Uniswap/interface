@@ -1,4 +1,5 @@
 import { useQueryClient, type InfiniteData, type Query } from '@tanstack/react-query'
+import { GET_PROTOCOL_STATS_QUERY_KEY_PREFIX } from 'uniswap/src/data/apiClients/dataApiService/explore/useGetProtocolStatsQuery'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { useFixedIntervalHeartbeatCoordinator } from '~/lib/hooks/useHeartbeatCoordinator'
 import { ExploreTab } from '~/types/explore'
@@ -39,8 +40,8 @@ export function useExploreHeartbeatCoordinator({ tab, enabled }: UseExploreHeart
 
   const refresh = async (): Promise<void> => {
     const tasks: Promise<unknown>[] = [
-      // Stats section is always visible — refresh ExploreStats + ProtocolStats on every tick
-      queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.ExploreStatsService], type: 'active' }),
+      // Stats section is always visible — refresh protocol stats on every tick
+      queryClient.refetchQueries({ queryKey: [...GET_PROTOCOL_STATS_QUERY_KEY_PREFIX], type: 'active' }),
     ]
 
     switch (tab) {

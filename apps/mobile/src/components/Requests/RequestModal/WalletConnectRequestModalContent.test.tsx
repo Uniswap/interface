@@ -2,30 +2,20 @@ import type { GasFeeResult } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import type { ComponentProps, ComponentType } from 'react'
 import { WalletConnectRequestModalContent } from 'src/components/Requests/RequestModal/WalletConnectRequestModalContent'
-import type { SignRequest, UwuLinkErc20Request } from 'src/features/walletConnect/walletConnectSlice'
+import type { SignRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { renderWithProviders } from 'src/test/render'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
-import { DappRequestType, UwULinkMethod } from 'uniswap/src/types/walletConnect'
+import { DappRequestType } from 'uniswap/src/types/walletConnect'
 import type { DappSignTypedDataContent } from 'wallet/src/components/dappRequests/DappSignTypedDataContent'
-import type { DappTransactionScanningContent } from 'wallet/src/components/dappRequests/DappTransactionScanningContent'
 
 // Capture the params handed to the Blockaid typed-data scanner so we can assert the
 // scan order matches the signing order for both legacy and v4 typed-data requests.
 type DappSignTypedDataContentProps = ComponentProps<typeof DappSignTypedDataContent>
 const capturedProps: { current: DappSignTypedDataContentProps | undefined } = { current: undefined }
-type DappTransactionScanningContentProps = ComponentProps<typeof DappTransactionScanningContent>
-const capturedTransactionProps: { current: DappTransactionScanningContentProps | undefined } = { current: undefined }
 
 vi.mock('wallet/src/components/dappRequests/DappSignTypedDataContent', () => ({
   DappSignTypedDataContent: (props: DappSignTypedDataContentProps) => {
     capturedProps.current = props
-    return null
-  },
-}))
-
-vi.mock('wallet/src/components/dappRequests/DappTransactionScanningContent', () => ({
-  DappTransactionScanningContent: (props: DappTransactionScanningContentProps) => {
-    capturedTransactionProps.current = props
     return null
   },
 }))
@@ -108,52 +98,4 @@ describe('WalletConnectRequestModalContent typed-data Blockaid scan params', () 
       expect(capturedProps.current?.method).toBe(type)
     },
   )
-})
-
-describe('WalletConnectRequestModalContent transaction scanning', () => {
-  beforeEach(() => {
-    capturedTransactionProps.current = undefined
-  })
-
-  it('scans an ERC-20 send discriminant with external provenance instead of trusting the UwULink bypass', () => {
-    const transaction = {
-      from: ACCOUNT,
-      to: '0x1111111111111111111111111111111111111111',
-      data: '0x',
-      value: '0x0',
-    }
-    const request: UwuLinkErc20Request = {
-      type: UwULinkMethod.Erc20Send,
-      sessionId: 'session-1',
-      internalId: 'req-1',
-      account: ACCOUNT,
-      chainId: UniverseChainId.Mainnet,
-      dappRequestInfo: {
-        requestType: DappRequestType.WalletConnectSessionRequest,
-        name: 'External dapp',
-        url: 'https://dapp.example',
-        icon: null,
-      },
-      recipient: { address: transaction.to, name: 'Recipient' },
-      tokenAddress: '0x2222222222222222222222222222222222222222',
-      amount: '1',
-      isStablecoin: false,
-      transaction,
-    }
-
-    renderWithProviders(
-      <WalletConnectRequestModalContent
-        request={request}
-        hasSufficientFunds
-        gasFee={gasFee}
-        confirmedRisk={false}
-        onConfirmRisk={noop}
-        onRiskLevelChange={noop}
-        onCriticalRiskChange={noop}
-      />,
-    )
-
-    expect(capturedTransactionProps.current?.transaction).toEqual(transaction)
-    expect(capturedTransactionProps.current?.requestMethod).toBe(EthMethod.EthSendTransaction)
-  })
 })

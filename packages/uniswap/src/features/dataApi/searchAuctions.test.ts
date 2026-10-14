@@ -1,17 +1,17 @@
-import type { PlainMessage } from '@bufbuild/protobuf'
+import { Timestamp, type PlainMessage } from '@bufbuild/protobuf'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { act, renderHook, waitFor } from '@testing-library/react'
 import { Auction, AuctionWithStats } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
-import { SearchAuction } from '@uniswap/client-data-api/dist/data/v1/searchTypes_pb'
+import { SearchAuction } from '@uniswap/client-data-api/dist/data/v2/search_pb'
 import { UniverseChainId } from '@universe/chains'
 import { createElement, type PropsWithChildren } from 'react'
 import { OnchainItemListOptionType } from 'uniswap/src/components/lists/items/types'
-import { fetchAuctionByAddress, useSearchV1Query } from 'uniswap/src/data/apiClients/dataApiService/search/searchV1'
+import { fetchAuctionByAddress } from 'uniswap/src/data/apiClients/dataApiService/search/search'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
   auctionWithStatsToAuctionOption,
   searchAuctionToAuctionOption,
-  useSearchAuctions,
+  useSearchAuctionOptions,
   type SearchAuctionResult,
 } from 'uniswap/src/features/dataApi/searchAuctions'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -20,31 +20,18 @@ import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 type OverrideMatch = { chainId: number; tokenAddress: string }
 type FindAuctionOverrideMatches = (query: string) => OverrideMatch[]
 
-const {
-  actualFindAuctionOverrideMatches,
-  mockFindAuctionOverrideMatches,
-  mockUseIsV2EndpointsSearchEnabled,
-  mockUseSearchQuery,
-} = vi.hoisted(() => ({
+const { actualFindAuctionOverrideMatches, mockFindAuctionOverrideMatches } = vi.hoisted(() => ({
   actualFindAuctionOverrideMatches: { current: undefined as FindAuctionOverrideMatches | undefined },
   mockFindAuctionOverrideMatches: vi.fn<FindAuctionOverrideMatches>(),
-  mockUseIsV2EndpointsSearchEnabled: vi.fn(),
-  mockUseSearchQuery: vi.fn(),
 }))
 
 vi.mock('@universe/gating', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@universe/gating')>()),
   useDynamicConfigValue: vi.fn(() => []),
-  useIsV2EndpointsSearchEnabled: mockUseIsV2EndpointsSearchEnabled,
-}))
-
-vi.mock('uniswap/src/data/apiClients/dataApiService/search/searchV1', () => ({
-  fetchAuctionByAddress: vi.fn(),
-  useSearchV1Query: vi.fn(),
 }))
 
 vi.mock('uniswap/src/data/apiClients/dataApiService/search/search', () => ({
-  useSearchQuery: mockUseSearchQuery,
+  fetchAuctionByAddress: vi.fn(),
 }))
 
 vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
@@ -63,7 +50,6 @@ vi.mock('uniswap/src/features/toucan/auctionMetadata', async (importOriginal) =>
 })
 
 const mockFetchAuctionByAddress = vi.mocked(fetchAuctionByAddress)
-const mockUseSearchV1Query = vi.mocked(useSearchV1Query)
 const mockUseEnabledChains = vi.mocked(useEnabledChains)
 const mockUseCurrencyInfos = vi.mocked(useCurrencyInfos)
 
@@ -117,8 +103,6 @@ function createCurrencyInfo({
   } as unknown as CurrencyInfo
 }
 
-const mockPrimaryRefetch = vi.fn()
-
 describe('auction override search', () => {
   beforeEach(() => {
     mockFindAuctionOverrideMatches.mockReset()
@@ -126,13 +110,6 @@ describe('auction override search', () => {
       return actualFindAuctionOverrideMatches.current?.(query) ?? []
     })
     mockFetchAuctionByAddress.mockReset()
-    mockUseSearchV1Query.mockReset()
-    mockUseSearchV1Query.mockReturnValue({
-      data: [],
-      error: null,
-      isLoading: false,
-      refetch: mockPrimaryRefetch,
-    } as never)
     mockUseEnabledChains.mockReset()
     mockUseEnabledChains.mockReturnValue({
       chains: [UniverseChainId.Mainnet, UniverseChainId.Base],
@@ -140,16 +117,6 @@ describe('auction override search', () => {
     } as ReturnType<typeof useEnabledChains>)
     mockUseCurrencyInfos.mockReset()
     mockUseCurrencyInfos.mockReturnValue([])
-    mockUseIsV2EndpointsSearchEnabled.mockReset()
-    mockUseIsV2EndpointsSearchEnabled.mockReturnValue(false)
-    mockUseSearchQuery.mockReset()
-    mockUseSearchQuery.mockReturnValue({
-      data: undefined,
-      error: null,
-      isLoading: true,
-      refetch: vi.fn(),
-    } as never)
-    mockPrimaryRefetch.mockReset()
   })
 
   it('matches overridden names and symbols case-insensitively', () => {
@@ -173,7 +140,8 @@ describe('auction override search', () => {
 
     const { result } = renderHook(
       () =>
-        useSearchAuctions({
+        useSearchAuctionOptions({
+          auctions: [],
           searchQuery: 'octra',
           chainFilter: UniverseChainId.Mainnet,
           skip: false,
@@ -182,7 +150,7 @@ describe('auction override search', () => {
     )
 
     await waitFor(() =>
-      expect(result.current.data?.map((auction) => auction.auctionId)).toEqual([matchedAuction.auctionId]),
+      expect(result.current.data.map((auction) => auction.auctionId)).toEqual([matchedAuction.auctionId]),
     )
     expect(mockFetchAuctionByAddress).toHaveBeenCalledTimes(1)
     expect(mockFetchAuctionByAddress).toHaveBeenCalledWith({
@@ -204,12 +172,6 @@ describe('auction override search', () => {
       auctionId: '1_0x0000000000000000000000000000000000000002',
       tokenName: 'Supplementary auction',
     })
-    mockUseSearchV1Query.mockReturnValue({
-      data: [primaryAuction],
-      error: null,
-      isLoading: false,
-      refetch: mockPrimaryRefetch,
-    } as never)
     mockFindAuctionOverrideMatches.mockReturnValue([
       { chainId: UniverseChainId.Mainnet, tokenAddress: OCTRA_TOKEN_ADDRESS },
       { chainId: UniverseChainId.Mainnet, tokenAddress: OTHER_TOKEN_ADDRESS },
@@ -218,7 +180,8 @@ describe('auction override search', () => {
 
     const { result } = renderHook(
       () =>
-        useSearchAuctions({
+        useSearchAuctionOptions({
+          auctions: [primaryAuction],
           searchQuery: 'octra',
           chainFilter: null,
           skip: false,
@@ -227,7 +190,7 @@ describe('auction override search', () => {
     )
 
     await waitFor(() =>
-      expect(result.current.data?.map(({ auctionId, tokenName }) => ({ auctionId, tokenName }))).toEqual([
+      expect(result.current.data.map(({ auctionId, tokenName }) => ({ auctionId, tokenName }))).toEqual([
         { auctionId: primaryAuction.auctionId, tokenName: 'Primary auction' },
         { auctionId: supplementaryAuction.auctionId, tokenName: 'Supplementary auction' },
       ]),
@@ -246,7 +209,8 @@ describe('auction override search', () => {
 
     const { result } = renderHook(
       () =>
-        useSearchAuctions({
+        useSearchAuctionOptions({
+          auctions: [],
           searchQuery: 'auction',
           chainFilter: null,
           skip: false,
@@ -255,11 +219,11 @@ describe('auction override search', () => {
     )
 
     await waitFor(() =>
-      expect(result.current.data?.map((auction) => auction.auctionId)).toEqual([successfulAuction.auctionId]),
+      expect(result.current.data.map((auction) => auction.auctionId)).toEqual([successfulAuction.auctionId]),
     )
   })
 
-  it('returns a stable refetch callback that refreshes both auction queries', async () => {
+  it('returns a stable refetch callback that refreshes the override lookups', async () => {
     mockFindAuctionOverrideMatches.mockReturnValue([
       { chainId: UniverseChainId.Mainnet, tokenAddress: OCTRA_TOKEN_ADDRESS },
     ])
@@ -272,7 +236,8 @@ describe('auction override search', () => {
 
     const { result, rerender } = renderHook(
       () =>
-        useSearchAuctions({
+        useSearchAuctionOptions({
+          auctions: [],
           searchQuery: 'octra',
           chainFilter: null,
           skip: false,
@@ -286,25 +251,47 @@ describe('auction override search', () => {
     expect(result.current.refetch).toBe(initialRefetch)
 
     await act(async () => {
-      await result.current.refetch?.()
+      await result.current.refetch()
     })
-    expect(mockPrimaryRefetch).toHaveBeenCalledTimes(1)
     await waitFor(() => expect(mockFetchAuctionByAddress).toHaveBeenCalledTimes(2))
   })
 
-  it('routes to the v2 search endpoint when V2EndpointsSearch is enabled', async () => {
-    mockUseIsV2EndpointsSearchEnabled.mockReturnValue(true)
-    const v2Auction = createSearchAuction({ auctionId: '1_0x0000000000000000000000000000000000000009' })
-    mockUseSearchQuery.mockReturnValue({
-      data: [v2Auction],
-      error: null,
-      isLoading: false,
-      refetch: vi.fn(),
-    } as never)
+  it('skips the override lookup when auction search is skipped', () => {
+    mockFindAuctionOverrideMatches.mockReturnValue([
+      { chainId: UniverseChainId.Mainnet, tokenAddress: OCTRA_TOKEN_ADDRESS },
+    ])
 
     const { result } = renderHook(
       () =>
-        useSearchAuctions({
+        useSearchAuctionOptions({
+          auctions: undefined,
+          searchQuery: 'octra',
+          chainFilter: null,
+          skip: true,
+        }),
+      { wrapper: createWrapper() },
+    )
+
+    expect(mockFetchAuctionByAddress).not.toHaveBeenCalled()
+    expect(result.current.data).toEqual([])
+  })
+
+  it('carries the v2 payload FDV and end time onto the row options', async () => {
+    const endTime = new Date('2026-09-04T16:00:00Z')
+    const v2Auction = new SearchAuction({
+      auctionId: '1_0x0000000000000000000000000000000000000009',
+      auctionAddress: '0x0000000000000000000000000000000000000009',
+      chainId: UniverseChainId.Mainnet,
+      tokenAddress: OTHER_TOKEN_ADDRESS,
+      tokenSymbol: 'EX',
+      fdvUsd: '1234567.89',
+      estimatedEndTime: Timestamp.fromDate(endTime),
+    })
+
+    const { result } = renderHook(
+      () =>
+        useSearchAuctionOptions({
+          auctions: [v2Auction],
           searchQuery: 'example',
           chainFilter: null,
           skip: false,
@@ -312,22 +299,17 @@ describe('auction override search', () => {
       { wrapper: createWrapper() },
     )
 
-    expect(mockUseSearchQuery).toHaveBeenCalledWith(
-      expect.objectContaining({
-        enabled: true,
-        input: expect.objectContaining({ searchQuery: 'example', maxResults: expect.any(Number) }),
-      }),
-    )
-    expect(mockUseSearchV1Query).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
-    await waitFor(() => expect(result.current.data?.map((auction) => auction.auctionId)).toEqual([v2Auction.auctionId]))
+    await waitFor(() => expect(result.current.data).toHaveLength(1))
+    expect(result.current.data[0]?.searchStats).toEqual({ fdvUsd: 1234567.89, endTimeMs: endTime.getTime() })
   })
 })
 
 describe('searchAuctions', () => {
-  it('keeps the v1 SearchAuction proto field-identical to the v2 shape', () => {
+  it('keeps the v1 SearchAuction proto assignable to the v2 shape', () => {
     // SearchAuctionResult is the plain v2 shape; v1 messages flow through v2-typed helpers on
-    // structural assignability alone, so pin the two protos to each other. If either drifts,
-    // this literal stops typechecking.
+    // structural assignability alone, so pin the two protos to each other. v2 only adds the
+    // optional row stats (fdv_usd, estimated_end_time). If either drifts further, this literal
+    // stops typechecking.
     type MutuallyAssignable<A, B> = [A] extends [B] ? ([B] extends [A] ? true : false) : false
     const protosMatch: MutuallyAssignable<PlainMessage<SearchAuction>, SearchAuctionResult> = true
     expect(protosMatch).toBe(true)
@@ -442,6 +424,41 @@ describe('searchAuctions', () => {
       expect(option.tokenLogoUrl).toBe('https://example.com/currency-logo.png')
       expect(option.currencyInfo).toBe(currencyInfo)
     })
+
+    it('maps FDV and the estimated end time from the v2 payload into the row stats', () => {
+      const endTime = new Date('2026-09-04T16:00:00Z')
+      const option = searchAuctionToAuctionOption({
+        auction: new SearchAuction({
+          auctionId: '1_0x9084CB9a700a52909Cbef3113dB8BaC01C01EfD6',
+          chainId: UniverseChainId.Mainnet,
+          auctionAddress: '0x9084CB9a700a52909Cbef3113dB8BaC01C01EfD6',
+          tokenAddress: '0x9999B7E3cc6979223Ff1aF980b7D8B90B75d9999',
+          tokenSymbol: 'CAP',
+          fdvUsd: '1234567.89',
+          estimatedEndTime: Timestamp.fromDate(endTime),
+        }),
+        currencyInfo: null,
+        isVerified: false,
+      })
+
+      expect(option.searchStats).toEqual({ fdvUsd: 1234567.89, endTimeMs: endTime.getTime() })
+    })
+
+    it('leaves the row stats unset when the payload omits both', () => {
+      const option = searchAuctionToAuctionOption({
+        auction: new SearchAuction({
+          auctionId: '1_0x9084CB9a700a52909Cbef3113dB8BaC01C01EfD6',
+          chainId: UniverseChainId.Mainnet,
+          auctionAddress: '0x9084CB9a700a52909Cbef3113dB8BaC01C01EfD6',
+          tokenAddress: '0x9999B7E3cc6979223Ff1aF980b7D8B90B75d9999',
+          tokenSymbol: 'CAP',
+        }),
+        currencyInfo: null,
+        isVerified: false,
+      })
+
+      expect(option.searchStats).toBeUndefined()
+    })
   })
 
   describe(auctionWithStatsToAuctionOption, () => {
@@ -486,6 +503,45 @@ describe('searchAuctions', () => {
         uniqueBidderCount: 982,
         isVerified: true,
       })
+    })
+
+    it('maps FDV and the estimated end time into the row stats', () => {
+      const endTime = new Date('2026-09-04T16:00:00Z')
+      const option = auctionWithStatsToAuctionOption({
+        auctionWithStats: new AuctionWithStats({
+          auction: new Auction({
+            auctionId: '1_0x9084CB9a700a52909Cbef3113dB8BaC01C01EfD6',
+            chainId: UniverseChainId.Mainnet,
+            address: '0x9084CB9a700a52909Cbef3113dB8BaC01C01EfD6',
+            tokenAddress: '0x9999B7E3cc6979223Ff1aF980b7D8B90B75d9999',
+            tokenSymbol: 'CAP',
+            fdvUsd: '1234567.89',
+            estimatedEndTime: Timestamp.fromDate(endTime),
+          }),
+        }),
+        currencyInfo: null,
+        isVerified: false,
+      })
+
+      expect(option?.searchStats).toEqual({ fdvUsd: 1234567.89, endTimeMs: endTime.getTime() })
+    })
+
+    it('leaves the row stats unset when the listing omits both', () => {
+      const option = auctionWithStatsToAuctionOption({
+        auctionWithStats: new AuctionWithStats({
+          auction: new Auction({
+            auctionId: '1_0x9084CB9a700a52909Cbef3113dB8BaC01C01EfD6',
+            chainId: UniverseChainId.Mainnet,
+            address: '0x9084CB9a700a52909Cbef3113dB8BaC01C01EfD6',
+            tokenAddress: '0x9999B7E3cc6979223Ff1aF980b7D8B90B75d9999',
+            tokenSymbol: 'CAP',
+          }),
+        }),
+        currencyInfo: null,
+        isVerified: false,
+      })
+
+      expect(option?.searchStats).toBeUndefined()
     })
   })
 })

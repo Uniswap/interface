@@ -27,7 +27,6 @@ const AllNetworksPill = memo(function AllNetworksPill({
     <Flex
       centered
       row
-      ml="$spacing8"
       backgroundColor={selected ? '$surface3' : '$surface1'}
       borderColor="$surface3"
       borderRadius="$rounded12"
@@ -48,7 +47,7 @@ const AllNetworksPill = memo(function AllNetworksPill({
 const contentContainerStyle: ViewStyle = {
   alignItems: 'center',
   gap: spacing.spacing8,
-  paddingHorizontal: spacing.spacing8,
+  paddingHorizontal: spacing.spacing16,
 }
 
 const NetworkPillsRow = memo(function NetworkPillsRow({

@@ -8,8 +8,10 @@ vi.mock('wallet/src/features/activity/useActivityDataWallet', () => ({
   useActivityDataWallet: vi.fn(),
 }))
 
-vi.mock('utilities/src/react/useInfiniteScroll', () => ({
-  useInfiniteScroll: () => ({ sentinelRef: { current: null } }),
+// jsdom has no layout, so the real virtualizer measures a zero-height viewport and renders no rows.
+vi.mock('@universe/mycelium', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@universe/mycelium')>()),
+  UniversalList: (await import('@universe/mycelium/testing')).UniversalListTestDouble,
 }))
 
 vi.mock('uniswap/src/features/dataApi/outage/DataApiOutageModalContent', () => ({
@@ -37,7 +39,7 @@ const baseResult = {
   maybeEmptyComponent: null,
   renderActivityItem: ({ item }: { item: { id: string } }) => <Text key={item.id}>{item.id}</Text>,
   sectionData: [localActivityItem],
-  keyExtractor: vi.fn(),
+  keyExtractor: (item: { id: string }) => item.id,
   fetchNextPage: vi.fn(),
   hasNextPage: false,
   isFetchingNextPage: false,
@@ -68,6 +70,22 @@ describe('ActivityTab', () => {
     fireEvent.click(screen.getByText('Cannot load recent activity'))
 
     expect(screen.getByText('outage-modal-1710000000000')).toBeDefined()
+  })
+
+  it('still shows the outage banner when the outage left no activity to display', () => {
+    mockUseActivityDataWallet.mockReturnValue({
+      ...baseResult,
+      sectionData: [],
+      maybeEmptyComponent: <Text>no-activity-yet</Text>,
+      error: new Error('ListTransactions failed'),
+    })
+
+    render(<ActivityTab address="0xabc" canShowOutageBanner />)
+
+    // Previously the empty state replaced the whole tree, hiding the banner in exactly the case
+    // that produced it.
+    expect(screen.getByText('Cannot load recent activity')).toBeDefined()
+    expect(screen.getByText('no-activity-yet')).toBeDefined()
   })
 
   it('does not show the outage banner when fetching an older page fails', () => {

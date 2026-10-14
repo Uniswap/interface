@@ -120,4 +120,23 @@ describe('useLiquidityPositionDropdownOptions', () => {
 
     expect(mockNavigate).toHaveBeenCalledWith('/migrate/v2/ethereum/0xpair')
   })
+
+  it.each([UniverseChainId.Arc, UniverseChainId.Ink, UniverseChainId.Robinhood])(
+    'omits the migrate option for V2 positions on chain %s',
+    (chainId) => {
+      const { result } = renderHook(() =>
+        useLiquidityPositionDropdownOptions({
+          liquidityPosition: buildPosition({
+            version: ProtocolVersion.V2,
+            status: PositionStatus.IN_RANGE,
+            chainId,
+            liquidityToken: { isToken: true, address: '0xpair' },
+          } as unknown as Partial<PositionInfo>),
+          isVisible: true,
+        }),
+      )
+
+      expect(result.current.find((option) => option.label === 'Migrate liquidity')).toBeUndefined()
+    },
+  )
 })

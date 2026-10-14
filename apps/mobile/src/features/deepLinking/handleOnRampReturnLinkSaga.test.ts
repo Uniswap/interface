@@ -11,11 +11,11 @@ describe(handleOnRampReturnLink, () => {
     return expectSaga(handleOnRampReturnLink)
       .provide([
         [put(forceFetchFiatOnRampTransactions), undefined],
-        [call(navigate, MobileScreens.MainTabs, { screen: MobileScreens.Activity }), undefined],
+        [call(navigate, MobileScreens.MainTabs, { screen: MobileScreens.Activity }, { pop: true }), undefined],
         [call(dismissInAppBrowser), undefined],
       ])
       .put(forceFetchFiatOnRampTransactions())
-      .call(navigate, MobileScreens.MainTabs, { screen: MobileScreens.Activity })
+      .call(navigate, MobileScreens.MainTabs, { screen: MobileScreens.Activity }, { pop: true })
       .call(dismissInAppBrowser)
       .silentRun()
   })

@@ -306,6 +306,7 @@ export function EarnVaultModal({
       pt={isHowItWorksView ? '$spacing16' : undefined}
       gap="$spacing16"
       backgroundColor="$surface1"
+      sheetFitHeight="content"
       onClose={handleClose}
     >
       <HeightAnimator animation="quickLong">

@@ -1,6 +1,18 @@
 import { TradingApi } from '@universe/api'
-import { type Address, UniverseChainId } from '@universe/chains'
-import { assume0xAddress } from '@universe/chains'
+import {
+  type Address,
+  assume0xAddress,
+  formatUserOperationRequest,
+  getTypesForEIP712Domain,
+  hashTypedData,
+  type Hex,
+  pad,
+  type PublicClient,
+  type RpcUserOperation,
+  type SignedAuthorization,
+  type TypedDataDomain,
+  UniverseChainId,
+} from '@universe/chains'
 import { safeJSONStringify } from '@universe/embedded-wallet/src/connection/providerUtils'
 import { checkEmbeddedWalletDelegation } from '@universe/embedded-wallet/src/features/passkey/embeddedWalletDelegation'
 import {
@@ -10,16 +22,6 @@ import {
 import { isValidHexString, numberToHex, parseHex } from '@universe/encoding'
 import { buildPackedUserOpTypedData } from 'uniswap/src/features/smartWallet/userOp/buildUserOpTypedData'
 import { encodeCaliburUserOpSignature } from 'uniswap/src/features/smartWallet/userOp/caliburSignature'
-import {
-  getTypesForEIP712Domain,
-  hashTypedData,
-  type Hex,
-  pad,
-  type PublicClient,
-  type SignedAuthorization,
-  type TypedDataDomain,
-} from 'viem'
-import { formatUserOperationRequest, type RpcUserOperation } from 'viem/account-abstraction'
 
 /**
  * Sign an ERC-4337 PackedUserOperation for the embedded wallet on this device.

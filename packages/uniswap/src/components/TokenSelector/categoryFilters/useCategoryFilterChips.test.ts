@@ -8,7 +8,6 @@ import { act, renderHook } from 'uniswap/src/test/test-utils'
 vi.mock('@universe/gating', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@universe/gating')>()),
   useIsTokenCategoriesEnabled: () => true,
-  useIsV2EndpointsSearchEnabled: () => true,
   useDynamicConfigValue: ({ defaultValue }: { defaultValue: unknown }) => defaultValue,
 }))
 vi.mock('uniswap/src/data/apiClients/dataApiService/categories/useAllTokenCategories', () => ({

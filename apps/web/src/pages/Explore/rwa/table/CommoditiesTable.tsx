@@ -1,6 +1,7 @@
 import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { useMemo } from 'react'
 import { useExploreRwaTokens } from 'uniswap/src/data/apiClients/dataApiService/rwa/useExploreRwaTokens'
+import { RWA_CATEGORY_IDS } from 'uniswap/src/features/tokenCategories/rwaCategoryBridge'
 import { noop } from 'utilities/src/react/noop'
 import type { RwaChainScope } from '~/pages/Explore/rwa/table/RwaCategoryTable'
 import { RwaExploreTableShell } from '~/pages/Explore/rwa/table/RwaExploreTableShell'
@@ -22,6 +23,7 @@ export function CommoditiesTable({ chainScope }: { chainScope?: RwaChainScope } 
       hasNextPage={false}
       isFetchingNextPage={false}
       fetchNextPage={noop}
+      categoryId={RWA_CATEGORY_IDS[RwaCategory.COMMODITIES]}
     />
   )
 }

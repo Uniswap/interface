@@ -1,3 +1,4 @@
+import { getSubscriptNotationParts } from 'utilities/src/format/getSubscriptNotationParts'
 import { formatNumberWithSubscript } from 'utilities/src/format/subscriptNotation'
 import { describe, expect, it } from 'vitest'
 
@@ -50,5 +51,34 @@ describe('formatNumberWithSubscript', () => {
   it('handles negative values by formatting their absolute value', () => {
     // Chart y-axis values are non-negative in practice; this guards the path.
     expect(formatNumberWithSubscript({ value: -0.000052, locale: 'en-US' })).toBe('0.0₄52')
+  })
+
+  describe('floats one ulp below their decimal value (regression: toFixed truncation)', () => {
+    // These floats stringify via toFixed(20) as e.g. "0.0000699999…"; slicing that raw
+    // string truncated instead of rounding, corrupting the displayed digits.
+    it('formats 0.00007 as 0.0₄70, not 0.0₄6999', () => {
+      expect(formatNumberWithSubscript({ value: 0.00007, locale: 'en-US' })).toBe('0.0₄70')
+    })
+    it('formats 0.000099 as 0.0₄99, not 0.0₄9899', () => {
+      expect(formatNumberWithSubscript({ value: 0.000099, locale: 'en-US' })).toBe('0.0₄99')
+    })
+    it('formats 0.000065 as 0.0₄65, not 0.0₄6499', () => {
+      expect(formatNumberWithSubscript({ value: 0.000065, locale: 'en-US' })).toBe('0.0₄65')
+    })
+    it('formats 0.0000611 as 0.0₄611, not 0.0₄6109', () => {
+      expect(formatNumberWithSubscript({ value: 0.0000611, locale: 'en-US' })).toBe('0.0₄611')
+    })
+    it('carries into the next magnitude: 0.00009994 rounds to plain 0.0001', () => {
+      expect(formatNumberWithSubscript({ value: 0.00009994, locale: 'en-US' })).toBe('0.0001')
+    })
+  })
+})
+
+describe('getSubscriptNotationParts exponent carry', () => {
+  it('drops below the threshold when rounding bumps the magnitude', () => {
+    // 0.000099999 rounds to 1.000e-4 at 4 sig digits — 3 leading zeros, no subscript.
+    expect(
+      getSubscriptNotationParts({ value: 0.000099999, subscriptThreshold: 4, maxSigDigits: 4, minSigDigits: 2 }),
+    ).toEqual({ usesSubscript: false, leadingZeros: 3, significantPart: '' })
   })
 })

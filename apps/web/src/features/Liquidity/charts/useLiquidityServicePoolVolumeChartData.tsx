@@ -46,6 +46,7 @@ export function useLiquidityServicePoolVolumeChartData({
     const entries: SingleHistogramData[] =
       data?.buckets.map((bucket) => ({
         value: bucket.volumeUsd,
+        feesUsd: bucket.feeUsd,
         time: Number(bucket.timestamp) as UTCTimestamp,
       })) ?? []
 

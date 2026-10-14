@@ -7,7 +7,7 @@ import { getBlockNumberQueryOptions } from 'uniswap/src/features/providers/getBl
 import { useEvent, usePrevious } from 'utilities/src/react/hooks'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import type { CurrencyRaisedState, CurrentBlockState } from '~/features/Toucan/Auction/utils/resolveAuctionDisplayState'
-import { safeBigInt } from '~/features/Toucan/Auction/utils/safeBigInt'
+import { parseNonNegativeBigInt } from '~/features/Toucan/Auction/utils/safeBigInt'
 import { useTokenPoolState } from '~/hooks/useTokenPoolState'
 import type { TokenPoolState } from '~/types/tokenPool'
 import { getAverageBlockTimeMs, getPollingIntervalMs } from '~/utils/averageBlockTimeMs'
@@ -22,6 +22,8 @@ export interface AuctionDisplayDataSources {
   pools: TokenPoolState
   /** Re-reads the chain head on demand — the TDP countdown calls it when it reaches zero. */
   refetchCurrentBlock: () => void
+  /** Re-reads the raised total; a no-op while the checkpoint query is disabled. */
+  refetchCheckpoint: () => void
 }
 
 export function useAuctionDisplayDataSources({
@@ -30,6 +32,7 @@ export function useAuctionDisplayDataSources({
   auctionAddress,
   startBlock,
   endBlock,
+  watchUntilBlock,
   enabled,
   currentBlock: suppliedCurrentBlock,
 }: {
@@ -38,12 +41,14 @@ export function useAuctionDisplayDataSources({
   auctionAddress: string | undefined
   startBlock: string | undefined
   endBlock: string | undefined
+  /** A later boundary that still needs chain updates, such as the claim/indexing window. */
+  watchUntilBlock?: bigint
   enabled: boolean
   /** Reuse the ADP's block source, including loading and error states, without another poller. */
   currentBlock?: CurrentBlockState
 }): AuctionDisplayDataSources {
-  const parsedStartBlock = useMemo(() => safeBigInt(startBlock), [startBlock])
-  const parsedEndBlock = useMemo(() => safeBigInt(endBlock), [endBlock])
+  const parsedStartBlock = useMemo(() => parseNonNegativeBigInt(startBlock), [startBlock])
+  const parsedEndBlock = useMemo(() => parseNonNegativeBigInt(endBlock), [endBlock])
   const blockEnabled = enabled && chainId !== undefined && suppliedCurrentBlock === undefined
   const blockQuery = useQuery({
     ...getBlockNumberQueryOptions({ chainId, enabled: blockEnabled }),
@@ -52,6 +57,7 @@ export function useAuctionDisplayDataSources({
         blockNumber: query.state.data,
         startBlock: parsedStartBlock,
         endBlock: parsedEndBlock,
+        watchUntilBlock,
         chainId,
       }),
   })
@@ -60,9 +66,7 @@ export function useAuctionDisplayDataSources({
   const currentBlockNumber = currentBlock.status === 'success' ? currentBlock.blockNumber : undefined
   const isAtOrPastEndBlock =
     parsedStartBlock !== null &&
-    parsedStartBlock >= 0n &&
     parsedEndBlock !== null &&
-    parsedEndBlock >= 0n &&
     currentBlockNumber !== undefined &&
     currentBlockNumber >= parsedEndBlock
 
@@ -77,31 +81,19 @@ export function useAuctionDisplayDataSources({
   }, [isAtOrPastEndBlock, wasAtOrPastEndBlock, refetchPools])
 
   const checkpointEnabled = enabled && chainId !== undefined && Boolean(auctionAddress) && isAtOrPastEndBlock
-  const checkpointParams = useMemo(
-    () =>
-      checkpointEnabled && auctionAddress
-        ? new GetLatestCheckpointRequest({
-            chainId,
-            address: normalizeAddress(auctionAddress, AddressStringFormat.Lowercase),
-          })
-        : undefined,
-    [auctionAddress, chainId, checkpointEnabled],
-  )
   // TODO(CONS-3362): determine whether an auction graduated or failed on the backend instead of here.
   // A fresh request can still return a cached amount from before the auction ended.
-  const checkpointQuery = useQuery(
-    auctionQueries.getLatestCheckpoint({
-      params: checkpointParams,
-      enabled: checkpointEnabled,
-      // Refresh on mount before using a cached amount to resolve the ended auction.
-      staleTime: 0,
-    }),
-  )
+  const checkpointQuery = useQuery(getAuctionCheckpointQuery({ chainId, auctionAddress, enabled: checkpointEnabled }))
 
   const currencyRaised = deriveCurrencyRaisedState({ enabled: checkpointEnabled, checkpointQuery })
 
   const refetchCurrentBlock = useEvent((): void => {
     void blockQuery.refetch()
+  })
+  const refetchCheckpoint = useEvent((): void => {
+    if (checkpointEnabled) {
+      void checkpointQuery.refetch()
+    }
   })
 
   return {
@@ -109,6 +101,7 @@ export function useAuctionDisplayDataSources({
     currencyRaised,
     pools,
     refetchCurrentBlock,
+    refetchCheckpoint,
   }
 }
 
@@ -136,7 +129,8 @@ function deriveCurrentBlockState({
   return { status: 'loading' }
 }
 
-function deriveCurrencyRaisedState({
+/** Shared so a caller resolving several auctions at once derives each raise by the same rule. */
+export function deriveCurrencyRaisedState({
   enabled,
   checkpointQuery,
 }: {
@@ -156,30 +150,65 @@ function deriveCurrencyRaisedState({
   return { status: 'loading' }
 }
 
+/**
+ * The checkpoint read for one ended auction. `staleTime: 0` is the rule, not a preference: its partner
+ * `deriveCurrencyRaisedState` only accepts a raise once `isFetchedAfterMount`, so a warm cache that
+ * never refetches would leave the raise stuck at `loading` and the history total at `--`.
+ */
+export function getAuctionCheckpointQuery({
+  chainId,
+  auctionAddress,
+  enabled,
+}: {
+  chainId: EVMUniverseChainId | undefined
+  auctionAddress: string | undefined
+  enabled: boolean
+}): ReturnType<typeof auctionQueries.getLatestCheckpoint> {
+  return auctionQueries.getLatestCheckpoint({
+    // Keyed on the auction even while disabled, so a fan-out over siblings keeps one key each.
+    params:
+      chainId !== undefined && auctionAddress
+        ? new GetLatestCheckpointRequest({
+            chainId,
+            address: normalizeAddress(auctionAddress, AddressStringFormat.Lowercase),
+          })
+        : undefined,
+    enabled,
+    staleTime: 0,
+  })
+}
+
 /** Poll more often near a phase boundary and stop at the end. */
 function getBlockPollingInterval({
   blockNumber,
   startBlock,
   endBlock,
+  watchUntilBlock,
   chainId,
 }: {
   blockNumber: bigint | undefined
   startBlock: bigint | null
   endBlock: bigint | null
+  watchUntilBlock?: bigint
   chainId: EVMUniverseChainId | undefined
 }): number | false {
-  // Keep the initial query for Unknown, but there is no phase to poll without valid bounds.
-  if (startBlock === null || startBlock < 0n || endBlock === null || endBlock < 0n) {
+  // The bounds are the primary auction's alone and only phase it as a pair, but a sibling's ceiling
+  // still needs the head without them — otherwise a primary missing an endBlock freezes every sibling.
+  const phaseBoundaries = startBlock !== null && endBlock !== null ? [startBlock, endBlock] : []
+  const boundaries = watchUntilBlock === undefined ? phaseBoundaries : [...phaseBoundaries, watchUntilBlock]
+  // Keep the initial query for Unknown, but there is nothing to poll toward without a boundary.
+  if (boundaries.length === 0) {
     return false
   }
   if (blockNumber === undefined) {
     return FAR_FROM_BOUNDARY_POLL_INTERVAL_MS
   }
-  if (blockNumber >= endBlock) {
+  const upcoming = boundaries.filter((block) => block > blockNumber)
+  if (upcoming.length === 0) {
     return false
   }
 
-  const nextBoundary = blockNumber < startBlock ? startBlock : endBlock
+  const nextBoundary = upcoming.reduce((earliest, block) => (block < earliest ? block : earliest))
   const timeToBoundary = (nextBoundary - blockNumber) * BigInt(getAverageBlockTimeMs(chainId))
   return timeToBoundary <= BigInt(NEAR_BOUNDARY_WINDOW_MS)
     ? getPollingIntervalMs(chainId)

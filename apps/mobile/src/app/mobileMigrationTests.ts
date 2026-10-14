@@ -1291,7 +1291,7 @@ export function testMigrateDappRequestInfoTypes(migration: (state: any) => any, 
       name: 'testDapp',
     },
     externalDappInfo: {
-      requestType: DappRequestType.UwULink,
+      requestType: 'uwulink',
     },
   })
 

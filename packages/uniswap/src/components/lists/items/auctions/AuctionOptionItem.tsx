@@ -2,10 +2,12 @@ import { Flex, iconSizes, Text } from '@universe/mycelium'
 import { CheckmarkCircle } from '@universe/mycelium/icons/CheckmarkCircle'
 import { memo } from 'react'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { AuctionOptionItemStats } from 'uniswap/src/components/lists/items/auctions/AuctionOptionItemStats'
 import { FocusedRowControl, OptionItem } from 'uniswap/src/components/lists/items/OptionItem'
 import { AuctionOption } from 'uniswap/src/components/lists/items/types'
 import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
+import type { AuctionSearchStats } from 'uniswap/src/features/dataApi/types'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -15,9 +17,16 @@ interface AuctionOptionItemProps {
   onPress: () => void
   focusedRowControl?: FocusedRowControl
   rightElement?: JSX.Element
+  searchStats?: AuctionSearchStats
 }
 
-function _AuctionOptionItem({ option, onPress, focusedRowControl, rightElement }: AuctionOptionItemProps): JSX.Element {
+function AuctionOptionItemInner({
+  option,
+  onPress,
+  focusedRowControl,
+  rightElement,
+  searchStats,
+}: AuctionOptionItemProps): JSX.Element {
   const displayName = option.tokenName ?? option.tokenSymbol
 
   const severity = getTokenWarningSeverity(option.currencyInfo)
@@ -57,10 +66,10 @@ function _AuctionOptionItem({ option, onPress, focusedRowControl, rightElement }
       }
       badge={badge}
       focusedRowControl={focusedRowControl}
-      rightElement={rightElement}
+      rightElement={rightElement ?? (searchStats ? <AuctionOptionItemStats {...searchStats} /> : undefined)}
       onPress={onPress}
     />
   )
 }
 
-export const AuctionOptionItem = memo(_AuctionOptionItem)
+export const AuctionOptionItem = memo(AuctionOptionItemInner)

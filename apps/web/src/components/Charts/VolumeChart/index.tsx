@@ -3,7 +3,6 @@ import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { TFunction } from 'i18next'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
@@ -109,39 +108,43 @@ function VolumeChartHeader({
   )
 }
 
-function FeesTooltipDisplay({ data, feeTier }: { data: SingleHistogramData; feeTier?: number }) {
+function FeesTooltipDisplay({ data }: { data: SingleHistogramData }) {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
-  const fees = data.value * ((feeTier ?? 0) / BIPS_BASE / 100)
+
+  if (data.feesUsd === undefined) {
+    return null
+  }
 
   return (
-    <>
-      <Text variant="body3">
-        {t(`token.chart.tooltip`, {
-          amount: convertFiatAmountFormatted(fees, NumberType.FiatTokenStats),
-        })}
-      </Text>
-    </>
+    <Text variant="body3">
+      {t(`token.chart.tooltip`, {
+        amount: convertFiatAmountFormatted(data.feesUsd, NumberType.FiatTokenStats),
+      })}
+    </Text>
   )
 }
 
 interface VolumeChartProps {
   height: number
   data: SingleHistogramData[]
-  feeTier?: number
   timePeriod: TimePeriod
   TooltipBody?: React.FunctionComponent<{ data: SingleHistogramData }>
   stale: boolean
   overrideColor?: string
 }
 
-export function VolumeChart({ height, data, feeTier, timePeriod, stale, overrideColor }: VolumeChartProps) {
+export function VolumeChart({ height, data, timePeriod, stale, overrideColor }: VolumeChartProps) {
   const colors = useSporeColors()
 
   const params = useMemo(
     () => ({ data, chartColors: [colors.accent1.val], headerHeight: 75, stale }),
     [data, stale, colors],
   )
+
+  // Chart wraps TooltipBody in a bordered ChartTooltip whenever one is passed, so a token volume chart
+  // (no per-bar fees) must pass none rather than a body that renders nothing.
+  const hasFees = useMemo(() => data.some((bar) => bar.feesUsd !== undefined), [data])
 
   return (
     <Chart
@@ -150,12 +153,7 @@ export function VolumeChart({ height, data, feeTier, timePeriod, stale, override
       height={height}
       showDottedBackground={true}
       overrideColor={overrideColor}
-      TooltipBody={
-        feeTier === undefined // i.e. if is token volume chart
-          ? undefined
-          : // oxlint-disable-next-line no-shadow
-            ({ data }: { data: SingleHistogramData }) => <FeesTooltipDisplay data={data} feeTier={feeTier} />
-      }
+      TooltipBody={hasFees ? FeesTooltipDisplay : undefined}
     >
       {(crosshairData) => <VolumeChartHeader crosshairData={crosshairData} volumes={data} timePeriod={timePeriod} />}
     </Chart>

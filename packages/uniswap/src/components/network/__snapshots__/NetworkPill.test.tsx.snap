@@ -7,7 +7,7 @@ exports[`NetworkPill > renders a NetworkPill with border 1`] = `
     style="background-color: rgba(255, 255, 255, 0.102); border-color: #ffffff;"
   >
     <span
-      class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
+      class="[display:inline] box-border m-0 [word-wrap:break-word] [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)] max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
       style="color: rgb(255, 255, 255); padding-top: 1px;"
     >
       Ethereum
@@ -23,7 +23,7 @@ exports[`NetworkPill > renders a NetworkPill without image 1`] = `
     style="background-color: rgba(255, 255, 255, 0.102);"
   >
     <span
-      class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
+      class="[display:inline] box-border m-0 [word-wrap:break-word] [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)] max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
       style="color: rgb(255, 255, 255); padding-top: 1px;"
     >
       Ethereum
@@ -39,7 +39,7 @@ exports[`NetworkPill > renders an InlineNetworkPill 1`] = `
     style="background-color: rgba(255, 255, 255, 0.102);"
   >
     <span
-      class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-medium)] text-[14px] [line-height:16.1px] [font-weight:535] [color:var(--stext-neutral1)]"
+      class="[display:inline] box-border m-0 [word-wrap:break-word] [font-family:var(--stext-font-medium)] text-[14px] [line-height:16.1px] [font-weight:535] [color:var(--stext-neutral1)] max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
       style="color: rgb(255, 255, 255); padding-top: 1px;"
     >
       Ethereum

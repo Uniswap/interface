@@ -1,3 +1,4 @@
+import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, iconSizes, Text } from '@universe/mycelium'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
@@ -8,19 +9,22 @@ import {
 import { TokenCardSparkline } from 'uniswap/src/components/TokenCard/TokenCardSparkline'
 import type { TokenCardVerticalProps } from 'uniswap/src/components/TokenCard/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { RWAIssuerTag } from 'uniswap/src/features/rwa/RWAIssuerTag'
 import { NumberType } from 'utilities/src/format/types'
 
 export function TokenCardVertical({
   logoUrl,
+  chainId,
   name,
   symbol,
-  issuerLabel,
+  issuer,
   priceUsd,
   pricePercentChange1d,
   sparkline,
   hideNetworkLogo,
 }: TokenCardVerticalProps): JSX.Element {
   const { convertFiatAmountFormatted } = useLocalizationContext()
+  const showIssuerLogo = useIsTokenCategoriesEnabled()
   const priceLabel =
     priceUsd !== undefined ? convertFiatAmountFormatted(priceUsd, NumberType.FiatTokenPrice) : undefined
 
@@ -28,6 +32,7 @@ export function TokenCardVertical({
     <>
       <Flex row alignItems="center" justifyContent="space-between" width="100%">
         <TokenLogo
+          chainId={chainId}
           hideNetworkLogo={hideNetworkLogo}
           name={name}
           size={iconSizes.icon32}
@@ -42,15 +47,11 @@ export function TokenCardVertical({
         />
       </Flex>
       <Flex gap="$spacing2" width="100%">
-        <Flex row alignItems="baseline" gap="$spacing8">
+        <Flex row alignItems="center" gap="$spacing4">
           <Text color="$neutral1" flexShrink={1} numberOfLines={1} variant="body2">
             {name}
           </Text>
-          {issuerLabel !== undefined && (
-            <Text color="$neutral3" numberOfLines={1} variant="body4">
-              {issuerLabel}
-            </Text>
-          )}
+          {issuer && <RWAIssuerTag issuer={issuer} showLogo={showIssuerLogo} size={iconSizes.icon12} />}
         </Flex>
         <Flex row alignItems="center" gap="$spacing4">
           {priceLabel !== undefined && (

@@ -3,6 +3,7 @@ export enum InterfaceEventName {
   ApproveTokenTxnSubmitted = 'Approve Token Transaction Submitted',
   AuctionHoverCardDataLoaded = 'Auction Hover Card Data Loaded',
   AuctionHoverCardOpened = 'Auction Hover Card Opened',
+  CategoryDefinitionCardOpened = 'Category Definition Card Opened',
   ChainChanged = 'Chain Changed',
   ChartSettingSelected = 'Chart Setting Selected',
   CollectLiquidityFailed = 'Collect Liquidity Failed',

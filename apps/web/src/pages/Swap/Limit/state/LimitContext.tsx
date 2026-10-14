@@ -18,7 +18,6 @@ export const LimitContext = createContext<LimitContextType>({
   limitState: DEFAULT_LIMIT_STATE,
   setLimitState: () => undefined,
   derivedLimitInfo: {
-    currencies: {},
     currencyBalances: {},
     parsedAmounts: {},
   },

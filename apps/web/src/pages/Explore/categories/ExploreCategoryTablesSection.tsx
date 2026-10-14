@@ -16,7 +16,6 @@ import { ExploreCategoryChipsSkeleton } from '~/pages/Explore/categories/Explore
 import {
   resolveGroupedRwaCategory,
   resolveRwaDisclaimerCategory,
-  showsRwaDisclaimer,
   showsVolumeTimeFrameSelector,
 } from '~/pages/Explore/categories/exploreGroupedCategory'
 import { ExploreRwaDisclaimer } from '~/pages/Explore/categories/ExploreRwaDisclaimer'
@@ -62,7 +61,7 @@ function ExploreCategoryTable({
 /** Uniform vertical gap between stacked category controls, disclaimer, and table on desktop. */
 const CATEGORY_SECTION_GAP = '$spacing4'
 /** Matches the chips <-> filters column gap on mWeb so the controls and table read as one block. */
-const CATEGORY_SECTION_MWEB_GAP = '$spacing12'
+const CATEGORY_SECTION_MWEB_GAP = '$spacing16'
 
 /** Category filter chips and category tables on the Explore Tokens tab. */
 export function ExploreCategoryTablesSection(): JSX.Element {
@@ -89,8 +88,6 @@ export function ExploreCategoryTablesSection(): JSX.Element {
     categories: orderedCategories,
     categoriesPending,
   })
-  const disclaimerCategory = resolveRwaDisclaimerCategory(category)
-  const showRwaDisclaimer = showsRwaDisclaimer(disclaimerCategory)
   const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
   const showVolumeTimeFrameSelector = showsVolumeTimeFrameSelector({ rwaCategory, tokenCategoriesEnabled })
   const flatCategoryId =
@@ -140,6 +137,7 @@ export function ExploreCategoryTablesSection(): JSX.Element {
                   <MoreCategoriesDropdown
                     categories={orderedCategories}
                     selectedCategoryId={category}
+                    position={options.length}
                     onSelectCategory={setCategory}
                   />
                 </>
@@ -153,24 +151,16 @@ export function ExploreCategoryTablesSection(): JSX.Element {
           <SearchBar tab={ExploreTab.Tokens} />
         </Flex>
       </Flex>
-      {showRwaDisclaimer ? (
-        <Flex width="100%">
-          <Flex width="100%" maxWidth={MAX_WIDTH_MEDIA_BREAKPOINT} mx="auto" mb="$spacing4">
-            <ExploreRwaDisclaimer category={disclaimerCategory} />
-          </Flex>
-          <ExploreCategoryTable
-            rwaCategory={rwaCategory}
-            categoryId={flatCategoryId}
-            categoryUnverified={categoryUnverified}
-          />
-        </Flex>
-      ) : (
+      {/* Wrapped so the section gap doesn't apply between the disclaimer and its table. */}
+      <Flex width="100%">
+        {/* With token categories on, the disclaimer moves to the category details header. */}
+        {!tokenCategoriesEnabled && <ExploreRwaDisclaimer category={resolveRwaDisclaimerCategory(category)} />}
         <ExploreCategoryTable
           rwaCategory={rwaCategory}
           categoryId={flatCategoryId}
           categoryUnverified={categoryUnverified}
         />
-      )}
+      </Flex>
     </Flex>
   )
 }

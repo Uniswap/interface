@@ -7,18 +7,18 @@ import {
   type TextCompatProps as TextProps,
 } from '@universe/mycelium'
 import { memo, ReactNode, useCallback } from 'react'
+import { useIsRowFocused } from 'uniswap/src/components/lists/focusedRowStore'
 import { OptionItemPressableArea } from 'uniswap/src/components/lists/items/OptionItemPressableArea'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { KeyAction } from 'utilities/src/device/keyboard/types'
 import { useIsKeyboardOpen } from 'utilities/src/device/keyboard/useIsKeyboardOpen'
 import { useKeyDown } from 'utilities/src/device/keyboard/useKeyDown'
-import { noop } from 'utilities/src/react/noop'
 
 // Props for manually managing the focused row index of a list
-// i.e. via keyboard ArrowUp/ArrowDown navigation
+// i.e. via keyboard ArrowUp/ArrowDown navigation. Whether this row is the focused one is read with
+// `useIsRowFocused(rowIndex)`, so only the rows gaining and losing focus re-render.
 export interface FocusedRowControl {
   rowIndex: number // this item's row index
-  focusedRowIndex: number | undefined // index of the list's focused row
   setFocusedRowIndex: (index: number | undefined) => void
 }
 
@@ -91,14 +91,16 @@ function OptionItemInner({
   }, [modalShouldShow, modal, isKeyboardOpen, modalSetIsOpen, onPress])
 
   // Custom keyboard list nav behavior using arrow + enter keys
-  const { focusedRowIndex, rowIndex, setFocusedRowIndex } = focusedRowControl ?? {}
+  const { rowIndex, setFocusedRowIndex } = focusedRowControl ?? {}
   const keyboardNavEnabled = isWebPlatform && focusedRowControl && setFocusedRowIndex
-  const isFocused = focusedRowIndex !== undefined && focusedRowIndex === rowIndex
+  const isFocused = useIsRowFocused(rowIndex)
+  // Only the focused row listens: a listener per mounted row cost a document subscription each and
+  // re-subscribed on every focus change.
   useKeyDown({
     keys: ['Enter'],
     keyAction: KeyAction.UP,
-    disabled: !keyboardNavEnabled,
-    callback: isFocused ? onPressOption : noop,
+    disabled: !keyboardNavEnabled || !isFocused,
+    callback: onPressOption,
     shouldTriggerInInput: true,
   })
   const focusedStyleProps: FlexProps = keyboardNavEnabled
@@ -140,7 +142,7 @@ function OptionItemInner({
             <Flex shrink>
               <Flex row alignItems="center" gap="$spacing8">
                 {titleSuffix ? (
-                  <Flex row shrink alignItems="baseline" gap="$spacing6" minWidth={0}>
+                  <Flex row shrink alignItems="baseline" gap="$spacing4" minWidth={0}>
                     {typeof title === 'string' ? (
                       <Text
                         color="$neutral1"

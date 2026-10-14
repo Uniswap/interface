@@ -5,7 +5,7 @@ exports[`FavoriteHeaderRow > when editing > renders without error 1`] = `
   <div
     class="css-view-175oi2r"
     data-testid="favorite-token-header"
-    style="gap: 16px; margin-right: 8px; margin-left: 8px; margin-bottom: 8px;"
+    style="gap: 16px; margin-bottom: 8px;"
   >
     <div
       class="css-text-146c3p1"
@@ -38,7 +38,7 @@ exports[`FavoriteHeaderRow > when not editing > renders without error 1`] = `
   <div
     class="css-view-175oi2r"
     data-testid="favorite-token-header"
-    style="gap: 16px; margin-right: 8px; margin-left: 8px; margin-bottom: 8px;"
+    style="gap: 16px; margin-bottom: 8px;"
   >
     <div
       class="css-text-146c3p1"

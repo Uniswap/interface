@@ -1,5 +1,3 @@
-import { TransactionRequest } from '@ethersproject/abstract-provider'
-import type { Web3Provider } from '@ethersproject/providers'
 import { useQuery } from '@tanstack/react-query'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
@@ -9,6 +7,7 @@ import { Erc20 } from 'uniswap/src/abis/types'
 import { getContract } from 'utilities/src/contracts/getContract'
 import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import type { TransactionRequest, Web3Provider } from '~/chains'
 
 interface TransferInfo {
   provider?: Web3Provider

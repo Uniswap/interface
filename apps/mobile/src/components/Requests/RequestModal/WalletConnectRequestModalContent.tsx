@@ -17,7 +17,7 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import type { GasFeeOverrides } from 'uniswap/src/features/gas/types'
 import { hasGasEstimationFailed } from 'uniswap/src/features/gas/utils'
-import { isPrimaryTypePermit, UwULinkMethod } from 'uniswap/src/types/walletConnect'
+import { isPrimaryTypePermit } from 'uniswap/src/types/walletConnect'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { MAX_HIDDEN_CALLS_BY_DEFAULT } from 'wallet/src/components/BatchedTransactions/BatchedTransactionDetails'
@@ -36,9 +36,6 @@ import {
 
 const isPotentiallyUnsafe = (request: WalletConnectSigningRequest): boolean => request.type !== EthMethod.PersonalSign
 
-// Erc20Send is deliberately excluded: gas is re-estimated by the wallet at send time, so gating
-// Confirm on the scan-time gas estimate would let a transient gas-fee error permanently disable the
-// pay flow with no retry. The scan-based fail-closed gate still applies to non-wallet-built sends.
 export const getDoesMethodCostGas = (request: WalletConnectSigningRequest): boolean =>
   request.type === EthMethod.EthSendTransaction || request.type === EthMethod.WalletSendCalls
 
@@ -271,7 +268,6 @@ function ScanningContent({
 }): JSX.Element {
   switch (request.type) {
     case EthMethod.EthSendTransaction:
-    case UwULinkMethod.Erc20Send:
       return (
         <DappTransactionScanningContent
           transaction={request.transaction}
@@ -280,7 +276,7 @@ function ScanningContent({
           dappUrl={request.dappRequestInfo.url}
           siteVerificationStatus={siteVerificationStatus}
           gasFee={gasFee}
-          requestMethod={request.type === UwULinkMethod.Erc20Send ? EthMethod.EthSendTransaction : request.type}
+          requestMethod={request.type}
           showSmartWalletActivation={showSmartWalletActivation}
           confirmedRisk={confirmedRisk}
           gasOverrides={gasOverrides}

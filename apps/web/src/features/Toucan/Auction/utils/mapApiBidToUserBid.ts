@@ -29,3 +29,17 @@ export function mapApiBidToUserBid(bid: PlainMessage<ApiBid>): UserBid {
     currencySpent: bid.currencySpent,
   }
 }
+
+/** Match the ADP's first-bid-ID-wins rule before normalizing statuses. */
+export function mapApiBidsToUserBids(bids: PlainMessage<ApiBid>[]): UserBid[] {
+  const seenBidIds = new Set<string>()
+  return bids
+    .filter((bid) => {
+      if (seenBidIds.has(bid.bidId)) {
+        return false
+      }
+      seenBidIds.add(bid.bidId)
+      return true
+    })
+    .map(mapApiBidToUserBid)
+}

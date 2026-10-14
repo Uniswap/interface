@@ -25,6 +25,7 @@ export interface SwapFormProps {
   tokenColor?: string
   onCurrencyPanelsLayout?: (height: number) => void
   tdpCurrency?: Currency
+  hideBlastShutdownModal?: boolean
 }
 
 export function SwapFormSettingsButton(): JSX.Element {
@@ -49,6 +50,7 @@ export function SwapForm({
   tokenColor,
   onCurrencyPanelsLayout,
   tdpCurrency,
+  hideBlastShutdownModal,
 }: SwapFormProps): JSX.Element {
   const swapHandlers = useSwapHandlers()
   const swapSettings = useWebSwapSettings()
@@ -76,6 +78,7 @@ export function SwapForm({
           onSubmitSwap={resetDisableOneClickSwap}
           passkeyAuthStatus={passkeyAuthStatus}
           onCurrencyPanelsLayout={onCurrencyPanelsLayout}
+          hideBlastShutdownModal={hideBlastShutdownModal}
         />
       </SwapDependenciesStoreContextProvider>
       {isSwapPage && <SwapOffHoursBanner />}

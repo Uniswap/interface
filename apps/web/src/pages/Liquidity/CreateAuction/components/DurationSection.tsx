@@ -78,7 +78,7 @@ export const DurationSection = forwardRef<DurationSectionHandle, DurationSection
   return (
     <Flex gap="$spacing12">
       <Flex gap="$spacing4">
-        <Text variant="subheading1" color="$neutral1">
+        <Text variant="subheading1" $md={{ variant: 'subheading2' }} color="$neutral1">
           {t('toucan.createAuction.step.configureAuction.duration')}
         </Text>
         <Text variant="body3" color="$neutral2">

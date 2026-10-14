@@ -3,7 +3,7 @@ import { HookListResponse } from '@uniswap/client-liquidity/dist/uniswap/liquidi
 import { HookEntry } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
 import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { useFeatureFlag } from '@universe/gating'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { DEFAULT_TICK_SPACING, DYNAMIC_FEE_AMOUNT } from 'uniswap/src/constants/pools'
@@ -262,12 +262,11 @@ describe('PoolTable', () => {
     expect(mocked(useHookRegistryMap)).toHaveBeenCalledWith({ chainId: undefined, enabled: true })
   })
 
-  it('scopes the pools query to the URL chain with advanced filtering on', () => {
-    // The advanced filter's Network control reads and writes the URL chain segment, so a direct link like
-    // /explore/pools/ethereum must filter the table just as it does with the flag off. The chain travels on
-    // the `chainId` arg with `poolsFilter.chainId` unset; resolvePoolsListChainId (getPoolsListParams.test.ts)
-    // covers that the surface chain then scopes the request.
-    mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.AdvancedPoolsFiltering)
+  it('scopes the pools query to the URL chain', () => {
+    // The filter's Network control reads and writes the URL chain segment, so a direct link like
+    // /explore/pools/ethereum must filter the table. The chain travels on the `chainId` arg with
+    // `poolsFilter.chainId` unset; resolvePoolsListChainId (getPoolsListParams.test.ts) covers that the
+    // surface chain then scopes the request.
     mocked(useListPools).mockReturnValue({
       pools: [],
       isLoading: false,

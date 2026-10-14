@@ -38,7 +38,6 @@ function mockUrlState(state: {
       filterCurrencyB: '',
       filterTokenChain: null,
       filterChain: null,
-      filterProtocol: null,
       poolsFilter: {},
       ...state,
     },

@@ -6,6 +6,7 @@ import {
   type ExploreRwaRowsSort,
   useExploreRwaRows,
 } from 'uniswap/src/data/apiClients/dataApiService/rwa/useExploreRwaRows'
+import { RWA_CATEGORY_IDS } from 'uniswap/src/features/tokenCategories/rwaCategoryBridge'
 import { useSelectedVolumeOrderBy } from '~/features/Explore/hooks/useSelectedVolumeOrderBy'
 import { RwaExploreTableShell } from '~/pages/Explore/rwa/table/RwaExploreTableShell'
 import { stocksSortMethodToOrderBy } from '~/pages/Explore/rwa/table/stocksSortMethodToOrderBy'
@@ -68,6 +69,7 @@ function SortableRwaCategoryTable({ category, chainScope }: Omit<RwaCategoryTabl
       hasNextPage={hasNextPage}
       isFetchingNextPage={isFetchingNextPage}
       fetchNextPage={fetchNextPage}
+      categoryId={RWA_CATEGORY_IDS[category]}
       isSortedByServer={isSortedByServer}
       enableSorting
       sortMethod={sortMethod}
@@ -94,6 +96,7 @@ function NonSortableRwaCategoryTable({
       hasNextPage={hasNextPage}
       isFetchingNextPage={isFetchingNextPage}
       fetchNextPage={fetchNextPage}
+      categoryId={RWA_CATEGORY_IDS[category]}
     />
   )
 }

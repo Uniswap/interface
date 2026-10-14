@@ -34,6 +34,7 @@ import { CurrencySearchModal } from '~/components/SearchModal/CurrencySearchModa
 import { MouseoverTooltip } from '~/components/Tooltip'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { useActiveAddresses } from '~/features/accounts/store/hooks'
+import { BlastShutdownBanner } from '~/features/Liquidity/BlastShutdownBanner'
 import { AddHook } from '~/features/Liquidity/Create/AddHook'
 import { AdvancedButton } from '~/features/Liquidity/Create/AdvancedButton'
 import { CreatingPoolInfo, PoolAlreadyCreatedInfo } from '~/features/Liquidity/Create/CreatingPoolInfo'
@@ -46,7 +47,6 @@ import { CurrencySelector } from '~/features/Liquidity/CurrencySelector'
 import { FeeTierSelector } from '~/features/Liquidity/FeeTierSelector'
 import { HookModal } from '~/features/Liquidity/HookModal'
 import { useAllFeeTierPoolData } from '~/features/Liquidity/hooks/useAllFeeTierPoolData'
-import { useSelectedFeeBreakdown } from '~/features/Liquidity/hooks/useSelectedFeeBreakdown'
 import { useHeadlineRewardSymbol } from '~/features/Liquidity/LPIncentives/hooks/useHeadlineRewardSymbol'
 import { RewardAprBadge } from '~/features/Liquidity/LPIncentives/RewardAprBadge'
 import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
@@ -113,8 +113,8 @@ export function SelectTokensStep({
     poolOrPairLoading,
     poolOrPair,
     poolId,
-    protocolFee,
     setFeeTierSearchModalOpen,
+    selectedFeeBreakdown,
   } = useCreateLiquidityContext()
 
   const token0 = currencyInputs.tokenA
@@ -130,8 +130,6 @@ export function SelectTokensStep({
   const isToken1Unsupported = isUnsupportedLPChain(token1?.chainId, protocolVersion)
   const unsupportedChainId = isToken0Unsupported ? token0?.chainId : isToken1Unsupported ? token1?.chainId : undefined
   const isUnsupportedTokenSelected = isToken0Unsupported || isToken1Unsupported
-  // A selected leg is absent from `currencies` until its per-chain currency resolves.
-  const isResolvingCurrencies = Boolean(token0 && token1) && !(currencies.display.TOKEN0 && currencies.display.TOKEN1)
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
@@ -376,9 +374,8 @@ export function SelectTokensStep({
       return []
     }
 
-    // This component makes 2 API calls to ListPools -- one for current selected fee tier, and one to get all pools for all fee tiers
-    // to ensure the current selected fee tier rewards APR matches the same fee tier in the fee tier selector,
-    // grab the rewards tier from the fee tier directly
+    // Read off feeTierData rather than the selected pool's own row (served by PoolInfo, a different source
+    // than the selector's ListPools tiers) so the badge and the fee-tier selector can't disagree.
     const matchingFeeTier = Object.values(feeTierData).find(
       (tier) => getFeeTierKey({ feeTier: tier.fee.feeAmount, tickSpacing: tier.fee.tickSpacing }) === currentFeeTierKey,
     )
@@ -390,8 +387,12 @@ export function SelectTokensStep({
   const poolAlreadyExists =
     !migratingPosition && !creatingPoolOrPair && !!poolOrPair && !!poolId && !!token0 && !!token1 && !!fee
 
+  // Only the v2/v3 options are built from the pool-backed defaults; the v4 grid reads feeTierData directly.
   const defaultFeeTiers = useMemo(
-    () => getDefaultFeeTiersWithData({ chainId: token0?.chainId, feeTierData, protocolVersion }),
+    () =>
+      protocolVersion === ProtocolVersion.V4
+        ? []
+        : getDefaultFeeTiersWithData({ chainId: token0?.chainId, feeTierData, protocolVersion }),
     [token0?.chainId, feeTierData, protocolVersion],
   )
 
@@ -430,10 +431,6 @@ export function SelectTokensStep({
     }
     toggleShowMoreFeeTiersEnabled()
   }, [bestBoostedFeeTier, handleFeeTierSelect, protocolVersion, setFeeTierSearchModalOpen])
-
-  // Breakdown for the fee shown in the selector header (the collapsed "0.25% fee tier" summary), so it
-  // gets the same LP fee + hover tooltip as the tier boxes.
-  const selectedFeeBreakdown = useSelectedFeeBreakdown({ protocolVersion, fee, servedProtocolFee: protocolFee, hook })
 
   return (
     <>
@@ -503,6 +500,7 @@ export function SelectTokensStep({
               />
             )}
             {!hasError && protocolVersion === ProtocolVersion.V4 && <AddHook />}
+            {(token0?.chainId ?? token1?.chainId) === UniverseChainId.Blast && <BlastShutdownBanner />}
           </Flex>
         </Flex>
         <Flex gap="$spacing24">
@@ -644,10 +642,7 @@ export function SelectTokensStep({
               onPress={handleOnContinue}
               loading={Boolean(poolOrPairLoading && token0 && token1 && fee)}
               disabled={
-                !(creatingPoolOrPair || poolOrPair) ||
-                isResolvingCurrencies ||
-                hasError ||
-                (showWrappedNativeWarning && !!wrappedNativeWarning)
+                !(creatingPoolOrPair || poolOrPair) || hasError || (showWrappedNativeWarning && !!wrappedNativeWarning)
               }
             >
               {t('common.button.continue')}

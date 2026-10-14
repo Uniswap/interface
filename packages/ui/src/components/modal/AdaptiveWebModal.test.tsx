@@ -20,6 +20,7 @@ import {
   WebBottomSheet,
   WebModalWithBottomAttachment,
 } from 'ui/src/components/modal/AdaptiveWebModal'
+import type { SheetFitHeight } from 'ui/src/components/modal/AdaptiveWebModalShared'
 import { SharedUIUniswapProvider } from 'ui/src/test/render'
 import { zIndexes } from 'ui/src/theme'
 
@@ -656,6 +657,75 @@ describe('WebBottomSheet Escape arbitration across coexisting instances (web)', 
     await waitFor(() => expect(document.querySelector('.uw-sheet-frame')).not.toBeNull())
     fireEvent.keyDown(document.body, { key: 'Escape' })
     expect(onClose).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('WebBottomSheet fit height content mode', () => {
+  type ROCallback = (
+    entries: Array<{ borderBoxSize?: Array<{ blockSize: number; inlineSize: number }>; target: Element }>,
+    observer: unknown,
+  ) => void
+
+  class MockResizeObserver {
+    static instances: MockResizeObserver[] = []
+    callback: ROCallback
+    observed: Element[] = []
+    constructor(callback: ROCallback) {
+      this.callback = callback
+      MockResizeObserver.instances.push(this)
+    }
+    observe(el: Element): void {
+      this.observed.push(el)
+    }
+    unobserve(): void {}
+    disconnect(): void {}
+    report(height: number): void {
+      this.callback(
+        [{ borderBoxSize: [{ blockSize: height, inlineSize: 375 }], target: this.observed[0] as Element }],
+        this,
+      )
+    }
+  }
+
+  beforeEach(() => {
+    MockResizeObserver.instances = []
+    vi.stubGlobal('ResizeObserver', MockResizeObserver)
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  async function openFrame(
+    props: { sheetFitHeight?: SheetFitHeight } = {},
+  ): Promise<{ frame: HTMLElement; observer: MockResizeObserver | undefined }> {
+    render(
+      <WebBottomSheet isOpen sheetFitHeight={props.sheetFitHeight} onClose={vi.fn()}>
+        <span>fit body</span>
+      </WebBottomSheet>,
+      { wrapper: SharedUIUniswapProvider },
+    )
+    const frame = await waitFor(() => {
+      const node = document.querySelector('.uw-sheet-frame') as HTMLElement | null
+      expect(node).not.toBeNull()
+      return node as HTMLElement
+    })
+    return { frame, observer: MockResizeObserver.instances[MockResizeObserver.instances.length - 1] }
+  }
+
+  it('ratchet mode pins minHeight and keeps it when the layout shrinks', async () => {
+    const { frame, observer } = await openFrame()
+    expect(observer).toBeDefined()
+    observer?.report(528)
+    observer?.report(274)
+    expect(frame.style.minHeight).toBe('528px')
+  })
+
+  it('content mode does not pin minHeight, so a later shrink is not frozen as blank space', async () => {
+    const { frame } = await openFrame({ sheetFitHeight: 'content' })
+    expect(MockResizeObserver.instances).toHaveLength(0)
+    expect(frame.style.minHeight).toBe('')
+    expect(frame.hasAttribute('sheetFitHeight')).toBe(false)
   })
 })
 

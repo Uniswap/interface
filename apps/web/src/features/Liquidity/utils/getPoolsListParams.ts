@@ -13,10 +13,9 @@ const ALL_PROTOCOL_VERSIONS = [ProtocolVersion.V2, ProtocolVersion.V3, ProtocolV
 /**
  * The one chain a ranked pools list is scoped to, or `undefined` for all enabled networks.
  *
- * Precedence: the advanced filter's Network wins, then the surface's own chain (Explore's URL chain,
- * the pool browser's network filter), then a selected token's chain. That last fallback is what makes
- * a token filter valid at all: token addresses are chain-specific, so a token-filtered request must
- * target a single chain.
+ * Precedence: the advanced filter's Network wins, then the surface's own chain (Explore's URL chain),
+ * then a selected token's chain. That last fallback is what makes a token filter valid at all: token
+ * addresses are chain-specific, so a token-filtered request must target a single chain.
  */
 export function resolvePoolsListChainId({
   filterChainId,
@@ -36,14 +35,13 @@ export function resolvePoolsListChainId({
  * the add-liquidity pool browser. Both surfaces send the same request; they differ only in that the
  * browser can additionally scope the list to one or two selected tokens.
  *
- * Sorting, search, the protocol filter and the advanced TVL/APR/rewards filters are all applied by the
- * backend, so what a surface shows is entirely a function of this request.
+ * Sorting, search and the advanced protocol/TVL/APR/rewards filters are all applied by the backend,
+ * so what a surface shows is entirely a function of this request.
  */
 export function getPoolsListParams({
   chainId,
   fallbackChainIds,
   sort,
-  protocol,
   filterParams,
   currencies,
   searchQuery,
@@ -53,9 +51,7 @@ export function getPoolsListParams({
   /** Every enabled chain, used for an unscoped ("All networks") list. `chainIds` is required by the endpoint. */
   fallbackChainIds: UniverseChainId[]
   sort: { orderBy: PoolsOrderBy; ascending: boolean }
-  /** Single-select protocol filter. UNSPECIFIED (or absent) means all versions. */
-  protocol?: ProtocolVersion
-  /** Chain/protocol/stats filters contributed by the advanced pools filter, when it is on. */
+  /** Chain/protocol/stats filters contributed by the advanced pools filter. */
   filterParams?: PoolsFilterRequestParams
   /** Pool-browser token scope: one token matches either side, a pair matches that exact pair. */
   currencies?: readonly [Maybe<Currency>, Maybe<Currency>]
@@ -75,10 +71,7 @@ export function getPoolsListParams({
       }
     : undefined
 
-  // An empty advanced protocol selection means "all versions"; otherwise fall back to the single protocol prop.
-  const protocolVersions =
-    filterParams?.protocolVersions ??
-    (protocol !== undefined && protocol !== ProtocolVersion.UNSPECIFIED ? [protocol] : ALL_PROTOCOL_VERSIONS)
+  const protocolVersions = filterParams?.protocolVersions ?? ALL_PROTOCOL_VERSIONS
 
   return {
     chainIds: chainId ? [chainId] : fallbackChainIds,

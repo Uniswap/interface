@@ -1,5 +1,8 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { useIsTouchDevice } from '@universe/mycelium'
 import { TestID } from '@universe/test'
+import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { tokenCategory } from 'uniswap/src/test/fixtures/tokenCategory'
 import type { ExploreCategoryChipOption } from '~/pages/Explore/categories/exploreCategoryChipOptions'
@@ -91,5 +94,63 @@ describe('ExploreCategoryChips with a pointer', () => {
     fireEvent.click(screen.getByText('Stocks'))
     expect(onChange).not.toHaveBeenCalled()
     expect(screen.queryByTestId('definition-sheet')).not.toBeInTheDocument()
+  })
+})
+
+describe('ExploreCategoryChips selection analytics', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mocked(useIsTouchDevice).mockReturnValue(false)
+  })
+
+  it('logs a chip-row selection with its slot, not from the More menu', () => {
+    renderChips({ value: 'all' })
+
+    fireEvent.click(screen.getByText('ETFs'))
+
+    expect(sendAnalyticsEvent).toHaveBeenCalledWith(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.ExploreCategoryView,
+      section: SectionName.ExploreCategoryChips,
+      tab: 'etfs',
+      category_id: 'etfs',
+      is_from_more_menu: false,
+      tab_position: 2,
+    })
+  })
+
+  it('logs All at slot 0 with no category id', () => {
+    renderChips({ value: 'stocks' })
+
+    fireEvent.click(screen.getByText('All'))
+
+    expect(sendAnalyticsEvent).toHaveBeenCalledWith(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.ExploreCategoryView,
+      section: SectionName.ExploreCategoryChips,
+      tab: 'all',
+      category_id: undefined,
+      is_from_more_menu: false,
+      tab_position: 0,
+    })
+  })
+
+  it('logs the flex slot as a chip-row press, even when a More pick put its category there', () => {
+    const onChange = vi.fn()
+    const gaming = tokenCategory({ id: 'gaming', name: 'Gaming' })
+    render(
+      <ExploreCategoryChips
+        fadeSwapLastOption
+        options={[...options, { id: 'gaming', label: 'Gaming', category: gaming }]}
+        value="all"
+        onChange={onChange}
+      />,
+    )
+
+    fireEvent.click(screen.getByText('Gaming'))
+
+    expect(sendAnalyticsEvent).toHaveBeenCalledWith(
+      SharedEventName.ELEMENT_CLICKED,
+      expect.objectContaining({ category_id: 'gaming', is_from_more_menu: false, tab_position: 3 }),
+    )
+    expect(onChange).toHaveBeenCalledWith('gaming')
   })
 })

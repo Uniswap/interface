@@ -55,6 +55,9 @@ export interface LaunchItem {
 /** ListLaunches launchpad id for Uniswap CCA quick launches. */
 export const UNISWAP_CCA_LAUNCHPAD_ID = 'uniswap-cca'
 
+/** TODO(CONS-3228): drop once data.v2 serving is on and the registry's `uniswap-cca` row supplies the name. */
+export const UNISWAP_LAUNCHPAD_NAME = 'Uniswap'
+
 /** ListLaunches/ListLaunchpads id for the Uniswap bonding-curve (direct launch) launchpad. */
 export const UNISWAP_BONDING_CURVE_LAUNCHPAD_ID = 'uniswap-bonding-curve'
 
@@ -84,7 +87,7 @@ export const POOLS_LAUNCHPAD_MECHANISM_IDS: readonly string[] = [
  * this, cards and table rows fall through to the raw slug (`uniswap-cca`). Drop an entry once the
  * registry carries it.
  */
-const MISSING_LAUNCHPAD_NAMES = new Map<string, string>([[UNISWAP_CCA_LAUNCHPAD_ID, 'Uniswap']])
+const MISSING_LAUNCHPAD_NAMES = new Map<string, string>([[UNISWAP_CCA_LAUNCHPAD_ID, UNISWAP_LAUNCHPAD_NAME]])
 
 /**
  * Registry entry to borrow a logo from when a launchpad has no row of its own. CCA quick launches

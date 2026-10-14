@@ -1,58 +1,37 @@
+import type { PlainMessage } from '@bufbuild/protobuf'
 import { AuctionType, type Auction } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
-import { TFunction } from 'i18next'
+import { type LaunchProvenance, LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
+import { parseCreatedAt } from '~/features/Toucan/Auction/utils/parseCreatedAt'
+import { UNISWAP_CCA_LAUNCHPAD_ID, UNISWAP_LAUNCHPAD_NAME } from '~/pages/Launches/launchesModel'
 
-export enum AuctionLaunchMethod {
-  Custom = 'CUSTOM',
-  Crowd = 'CROWD',
-  Instant = 'INSTANT',
-}
-
-export function getAuctionLaunchMethod({
+// Auction fallback until canonical token provenance is served.
+export function getLaunchProvenanceFromAuction({
   auction,
 }: {
-  auction: Pick<Auction, 'auctionType'>
-}): AuctionLaunchMethod | undefined {
+  auction: Pick<PlainMessage<Auction>, 'createdAt' | 'address' | 'auctionType'>
+}): LaunchProvenance {
+  const { timestampMs } = parseCreatedAt(auction.createdAt)
+  return {
+    launchpad: { id: UNISWAP_CCA_LAUNCHPAD_ID, name: UNISWAP_LAUNCHPAD_NAME },
+    method: getAuctionLaunchMethod({ auction }),
+    launchedAt: timestampMs === undefined ? undefined : new Date(timestampMs),
+    auctionAddress: auction.address || undefined,
+  }
+}
+
+/** Launched through the CCA protocol on Uniswap or pools.xyz; an unclassified auction has no page to offer. */
+export function isCcaAuction({ auction }: { auction: Pick<Auction, 'auctionType'> }): boolean {
+  const method = getAuctionLaunchMethod({ auction })
+  return method === LaunchProvenanceMethod.CustomAuction || method === LaunchProvenanceMethod.CrowdLaunch
+}
+
+export function getAuctionLaunchMethod({ auction }: { auction: Pick<Auction, 'auctionType'> }): LaunchProvenanceMethod {
   switch (auction.auctionType) {
     case AuctionType.CUSTOM:
-      return AuctionLaunchMethod.Custom
+      return LaunchProvenanceMethod.CustomAuction
     case AuctionType.CROWD:
-      return AuctionLaunchMethod.Crowd
-    // TODO(CONS-3228): bonding-curve launches have no auction row; canonical token provenance classifies Instant.
+      return LaunchProvenanceMethod.CrowdLaunch
     default:
-      return undefined
+      return LaunchProvenanceMethod.Unknown
   }
-}
-
-export interface AuctionLaunchMethodCopy {
-  label: string
-  explainerTitle: string
-  explainerDescription: string
-}
-
-/** Row label and explainer-modal copy for a launch method, kept together so surfaces can't drift. */
-export function getAuctionLaunchMethodCopy({
-  method,
-  t,
-}: {
-  method: AuctionLaunchMethod
-  t: TFunction
-}): AuctionLaunchMethodCopy {
-  const copy: Record<AuctionLaunchMethod, AuctionLaunchMethodCopy> = {
-    [AuctionLaunchMethod.Custom]: {
-      label: t('toucan.launchMethod.custom'),
-      explainerTitle: t('toucan.launchMethod.custom.title'),
-      explainerDescription: t('toucan.launchMethod.custom.description'),
-    },
-    [AuctionLaunchMethod.Crowd]: {
-      label: t('toucan.launchMethod.crowd'),
-      explainerTitle: t('toucan.launchMethod.crowd.title'),
-      explainerDescription: t('toucan.launchMethod.crowd.description'),
-    },
-    [AuctionLaunchMethod.Instant]: {
-      label: t('toucan.launchMethod.instant'),
-      explainerTitle: t('toucan.launchMethod.instant.title'),
-      explainerDescription: t('toucan.launchMethod.instant.description'),
-    },
-  }
-  return copy[method]
 }

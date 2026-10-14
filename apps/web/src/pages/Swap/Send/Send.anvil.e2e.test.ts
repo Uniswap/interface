@@ -1,171 +1,22 @@
 import { V1_TRADING_API_PATHS } from '@universe/api'
 import { normalizeTokenAddressForCache } from '@universe/chains'
-import { HexString } from '@universe/encoding'
-import { FeatureFlags, getFeatureFlagName } from '@universe/gating'
 import { TestID } from '@universe/test'
 import { USDC } from 'uniswap/src/constants/tokens'
-import { privateKeyToAccount } from 'viem/accounts'
 import { assume0xAddress } from '~/chains'
-import { TEST_WALLET_PRIVATE_KEY } from '~/playwright/anvil/anvil-manager'
 import { expect, getTest, type Page } from '~/playwright/fixtures'
+import type { AnvilClient } from '~/playwright/fixtures/anvil'
+import { EMBEDDED_WALLET_URL_PARAMS, rpcSequence, setupEmbeddedWallet } from '~/playwright/fixtures/embeddedWallet'
 import { stubTradingApiEndpoint } from '~/playwright/fixtures/tradingApi'
-import { HAYDEN_ADDRESS, TEST_WALLET_ADDRESS } from '~/playwright/fixtures/wallets'
+import { HAYDEN_ADDRESS, HAYDEN_ENS, TEST_WALLET_ADDRESS } from '~/playwright/fixtures/wallets'
 
 const test = getTest({ withAnvil: true })
 
 const SEND_AMOUNT_ETH = '10' // $10 worth
 const SEND_AMOUNT_USDC = '10' // 10 USDC
-
-const EW_ENABLED = `featureFlagOverride=${getFeatureFlagName(FeatureFlags.EmbeddedWallet)}`
-
-const TEST_WALLET_ID = 'test-wallet-id'
-
-const CHALLENGE_URL = '**/uniswap.privyembeddedwallet.v1.EmbeddedWalletService/Challenge'
-const WALLET_SIGNIN_URL = '**/uniswap.privyembeddedwallet.v1.EmbeddedWalletService/WalletSignIn'
-const SIGN_TRANSACTION_URL = '**/uniswap.privyembeddedwallet.v1.EmbeddedWalletService/SignTransaction'
-
-/**
- * Standard passkey auth challenge — carries `challengeOptions` so the WebAuthn ceremony
- * (mocked via navigator.credentials) can complete during refreshNeckSession (WALLET_SIGNIN).
- */
-const AUTH_CHALLENGE_RESPONSE = JSON.stringify({
-  challengeOptions: JSON.stringify({
-    challenge: 'dGVzdC1jaGFsbGVuZ2U', // base64url "test-challenge"
-    timeout: 60000,
-    rpId: 'localhost',
-    allowCredentials: [{ id: 'Y3JlZC1pY2xvdWQtMQ', type: 'public-key' }],
-    userVerification: 'required',
-  }),
-})
-
-/**
- * NECK device-session challenge for SIGN_TRANSACTION. `sessionActive=true` lets
- * signWithDeviceSessionOrPasskey sign with the in-memory device key (no interactive
- * passkey); `signingPayload` is the base64url payload signWithDeviceKey signs.
- */
-const NECK_SIGN_TRANSACTION_CHALLENGE_RESPONSE = JSON.stringify({
-  sessionActive: true,
-  signingPayload: 'dGVzdC1zaWduaW5nLXBheWxvYWQ', // base64url "test-signing-payload"
-})
-
-/** Sets embedded wallet state in localStorage before page navigation */
-async function setupEmbeddedWalletState(page: Page): Promise<void> {
-  await page.addInitScript(
-    ({ walletId, walletAddress }) => {
-      localStorage.setItem(
-        'embedded-wallet',
-        JSON.stringify({
-          walletId,
-          walletAddress,
-          chainId: 1,
-          isConnected: true,
-        }),
-      )
-    },
-    { walletId: TEST_WALLET_ID, walletAddress: TEST_WALLET_ADDRESS },
-  )
-}
-
-/**
- * Mocks navigator.credentials at the browser level to simulate WebAuthn responses.
- * Uses page.addInitScript so it runs before any app code loads.
- */
-async function setupWebAuthnMock(page: Page, credentialId = 'cred-icloud-1'): Promise<void> {
-  await page.addInitScript((credId) => {
-    const emptyBuf = new Uint8Array([0]).buffer
-
-    const mockGetResult = {
-      id: credId,
-      rawId: emptyBuf,
-      type: 'public-key' as const,
-      authenticatorAttachment: 'platform' as const,
-      getClientExtensionResults: () => ({}),
-      response: {
-        clientDataJSON: emptyBuf,
-        authenticatorData: emptyBuf,
-        signature: emptyBuf,
-        userHandle: null,
-      },
-    }
-
-    Object.defineProperty(navigator, 'credentials', {
-      configurable: true,
-      value: {
-        get: async () => mockGetResult,
-        create: async () => mockGetResult,
-        preventSilentAccess: async () => {},
-      },
-    })
-  }, credentialId)
-}
-
-/**
- * NECK device-session mocks. listAuthenticators isn't reached here; the send flow only
- * needs WALLET_SIGNIN (registers the NECK) + the SIGN_TRANSACTION challenge/signing.
- */
-async function setupNeckMocks(page: Page): Promise<void> {
-  await setupWebAuthnMock(page)
-  await page.route(WALLET_SIGNIN_URL, async (route) => {
-    await route.fulfill({ contentType: 'application/json', body: JSON.stringify({}) })
-  })
-  await page.route(CHALLENGE_URL, async (route) => {
-    const body = route.request().postDataJSON() as Record<string, unknown>
-    if (body.action === 'SIGN_TRANSACTION') {
-      await route.fulfill({ contentType: 'application/json', body: NECK_SIGN_TRANSACTION_CHALLENGE_RESPONSE })
-    } else {
-      // WALLET_SIGNIN (NECK refresh) and any other action return the passkey ceremony options.
-      await route.fulfill({ contentType: 'application/json', body: AUTH_CHALLENGE_RESPONSE })
-    }
-  })
-}
-
-/**
- * Mocks the embedded-wallet SignTransaction RPC by locally signing the requested
- * transaction with the anvil test-wallet key. The provider forwards the returned
- * string straight to sendRawTransaction, so it must be a full serialized signed tx.
- */
-async function setupSignTransactionMock(page: Page): Promise<void> {
-  const account = privateKeyToAccount(TEST_WALLET_PRIVATE_KEY)
-  await page.route(SIGN_TRANSACTION_URL, async (route) => {
-    const { transaction } = route.request().postDataJSON() as { transaction: string }
-    const tx = JSON.parse(transaction) as {
-      to: string
-      data?: string
-      value?: string
-      chainId: number
-      maxFeePerGas: string
-      maxPriorityFeePerGas: string
-      gas: string
-      nonce: number
-    }
-    const signature = await account.signTransaction({
-      to: assume0xAddress(tx.to),
-      data: (tx.data ?? '0x') as HexString,
-      value: BigInt(tx.value ?? '0'),
-      chainId: Number(tx.chainId),
-      maxFeePerGas: BigInt(tx.maxFeePerGas),
-      maxPriorityFeePerGas: BigInt(tx.maxPriorityFeePerGas),
-      gas: BigInt(tx.gas),
-      nonce: Number(tx.nonce),
-      type: 'eip1559',
-    })
-    await route.fulfill({ contentType: 'application/json', body: JSON.stringify({ signature }) })
-  })
-}
-
-/**
- * Stubs the delegation check so the transfer takes the standard (non-7702) path:
- * empty delegationDetails → deriveEmbeddedWalletDelegationResult returns null →
- * sendStandardTransaction.
- */
-async function stubCheckDelegation(page: Page): Promise<void> {
-  await page.route('**/wallet/check_delegation', async (route) => {
-    await route.fulfill({
-      contentType: 'application/json',
-      body: JSON.stringify({ requestId: '', delegationDetails: {} }),
-    })
-  })
-}
+const USDC_ADDRESS = assume0xAddress(USDC.address)
+const SENDER = assume0xAddress(TEST_WALLET_ADDRESS)
+const RECIPIENT = assume0xAddress(HAYDEN_ADDRESS)
+const HAYDEN = { address: HAYDEN_ADDRESS, displayName: HAYDEN_ENS }
 
 /** 1x1 transparent PNG so token logos "load" and don't fall back to the pointer-capturing monogram. */
 const ONE_PX_PNG = Buffer.from(
@@ -246,6 +97,70 @@ async function stubSwapStatusPolling(page: Page): Promise<void> {
   })
 }
 
+/** Fills the form and confirms; resolves once the review modal closes, i.e. the tx was submitted. */
+async function submitSend({
+  page,
+  amount,
+  recipient,
+}: {
+  page: Page
+  amount: string
+  recipient: { address: string; displayName: string }
+}): Promise<void> {
+  await page.getByTestId(TestID.SendFormAmountInput).click()
+  await page.getByTestId(TestID.SendFormAmountInput).fill(amount)
+  const recipientInput = page.getByPlaceholder(/address or ens/i)
+  await recipientInput.click()
+  await recipientInput.fill(recipient.address)
+  await page.getByText(recipient.displayName).click()
+  const sendButton = page.getByRole('button', { name: /^send$/i })
+  await expect(sendButton).toBeEnabled()
+  await sendButton.click()
+  await page.getByRole('button', { name: /continue/i }).click()
+  await expect(page.getByTestId(TestID.SendReviewModal)).toBeVisible()
+  await page.getByRole('button', { name: /confirm send/i }).click()
+  await expect(page.getByTestId(TestID.SendReviewModal)).not.toBeVisible()
+}
+
+async function usdcBalances(anvil: AnvilClient): Promise<{ sender: bigint; recipient: bigint }> {
+  const [sender, recipient] = await Promise.all([
+    anvil.getErc20Balance(USDC_ADDRESS, SENDER),
+    anvil.getErc20Balance(USDC_ADDRESS, RECIPIENT),
+  ])
+  return { sender, recipient }
+}
+
+/**
+ * Funds 100 USDC and opens the send form with USDC preselected through SendFormModal's own URL params;
+ * the token-selector rows are unclickable headless. Returns the starting balances.
+ */
+async function openUsdcSendWithEmbeddedWallet({
+  page,
+  anvil,
+}: {
+  page: Page
+  anvil: AnvilClient
+}): Promise<{ sender: bigint; recipient: bigint }> {
+  await anvil.setErc20Balance({ address: USDC_ADDRESS, balance: 100_000_000n })
+  const initial = await usdcBalances(anvil)
+  await page.goto(`/send?sendCurrency=${USDC.address}&sendChain=ethereum&${EMBEDDED_WALLET_URL_PARAMS}`)
+  await expect(page.getByText('Balance: 100.00')).toBeVisible()
+  return initial
+}
+
+/** The embedded wallet broadcast resolves after the review modal closes, so poll until the transfer lands. */
+async function expectUsdcSent({
+  anvil,
+  initial,
+}: {
+  anvil: AnvilClient
+  initial: { sender: bigint; recipient: bigint }
+}): Promise<void> {
+  await expect.poll(() => anvil.getErc20Balance(USDC_ADDRESS, SENDER), { timeout: 30_000 }).toBeLessThan(initial.sender)
+  const final = await usdcBalances(anvil)
+  expect(initial.sender - final.sender).toBe(final.recipient - initial.recipient)
+}
+
 test.describe(
   'Send',
   {
@@ -268,129 +183,33 @@ test.describe(
     test('should send ETH to recipient', async ({ page, anvil }) => {
       await stubTradingApiEndpoint({ page, endpoint: V1_TRADING_API_PATHS.quote })
       await page.goto('/send')
+      const [initialSenderBalance, initialRecipientBalance] = await Promise.all([
+        anvil.getBalance({ address: TEST_WALLET_ADDRESS }),
+        anvil.getBalance({ address: HAYDEN_ADDRESS }),
+      ])
 
-      // Get initial balances
-      const initialSenderBalance = await anvil.getBalance({
-        address: TEST_WALLET_ADDRESS,
-      })
-      const initialRecipientBalance = await anvil.getBalance({
-        address: HAYDEN_ADDRESS,
-      })
-
-      // Fill in amount to send
-      await page.getByTestId(TestID.SendFormAmountInput).click()
-      await page.getByTestId(TestID.SendFormAmountInput).fill(SEND_AMOUNT_ETH)
-
-      // Fill in recipient address
-      const recipientInput = page.getByPlaceholder(/address or ens/i)
-      await recipientInput.click()
-      await recipientInput.fill(HAYDEN_ADDRESS)
-      await page.getByText('hayden.eth').click()
-
-      const sendButton = page.getByRole('button', { name: /^send$/i })
-      // Wait for send button to be enabled (indicates recipient is validated)
-      await expect(sendButton).toBeEnabled()
-      await sendButton.click()
-
-      // Click Continue on the new address confirmation modal
-      await page.getByRole('button', { name: /continue/i }).click()
-
-      // Wait for review modal to appear
-      await expect(page.getByTestId(TestID.SendReviewModal)).toBeVisible()
-
-      // Confirm send
-      await page.getByRole('button', { name: /confirm send/i }).click()
-
-      // Wait for the modal to close (indicates transaction was submitted)
-      await expect(page.getByTestId(TestID.SendReviewModal)).not.toBeVisible()
-
-      // Mine a block to confirm the transaction
+      await submitSend({ page, amount: SEND_AMOUNT_ETH, recipient: HAYDEN })
       await anvil.mine({ blocks: 1 })
 
-      // Verify sender balance decreased
-      const finalSenderBalance = await anvil.getBalance({
-        address: TEST_WALLET_ADDRESS,
-      })
-      await expect(finalSenderBalance).toBeLessThan(initialSenderBalance)
-
-      // Verify recipient balance increased
-      const finalRecipientBalance = await anvil.getBalance({
-        address: HAYDEN_ADDRESS,
-      })
-      await expect(finalRecipientBalance).toBeGreaterThan(initialRecipientBalance)
+      expect(await anvil.getBalance({ address: TEST_WALLET_ADDRESS })).toBeLessThan(initialSenderBalance)
+      expect(await anvil.getBalance({ address: HAYDEN_ADDRESS })).toBeGreaterThan(initialRecipientBalance)
     })
 
     test('should send USDC with an embedded wallet', async ({ page, anvil }) => {
-      const usdcAddress = assume0xAddress(USDC.address)
-      const sender = assume0xAddress(TEST_WALLET_ADDRESS)
-      const recipient = assume0xAddress(HAYDEN_ADDRESS)
-
-      // Embedded-wallet + NECK/passkey signing setup
-      await setupEmbeddedWalletState(page)
-      await setupNeckMocks(page)
-      await setupSignTransactionMock(page)
-      await stubCheckDelegation(page)
+      const embeddedWallet = await setupEmbeddedWallet(page)
       await stubTradingApiEndpoint({ page, endpoint: V1_TRADING_API_PATHS.quote })
+      const initial = await openUsdcSendWithEmbeddedWallet({ page, anvil })
 
-      // Fund the sender with USDC (6 decimals)
-      await anvil.setErc20Balance({ address: usdcAddress, balance: 100_000_000n })
+      await submitSend({ page, amount: SEND_AMOUNT_USDC, recipient: HAYDEN })
+      await expectUsdcSent({ anvil, initial })
 
-      const initialSenderBalance = await anvil.getErc20Balance(usdcAddress, sender)
-      const initialRecipientBalance = await anvil.getErc20Balance(usdcAddress, recipient)
-
-      // Preselect USDC on the Send modal via its own URL params (sendCurrency/sendChain, read by
-      // SendFormModal). The token-selector rows are unclickable in headless rendering, and the swap
-      // page's inputCurrency param drives the background swap widget, not the send modal.
-      await page.goto(`/send?sendCurrency=${USDC.address}&sendChain=ethereum&${EW_ENABLED}&eagerlyConnect=embedded`)
-
-      // Confirm the on-chain USDC balance is shown (indicates the connected embedded wallet resolved)
-      await expect(page.getByText('Balance: 100.00')).toBeVisible()
-
-      // Fill in amount to send
-      await page.getByTestId(TestID.SendFormAmountInput).click()
-      await page.getByTestId(TestID.SendFormAmountInput).fill(SEND_AMOUNT_USDC)
-
-      // Fill in recipient address
-      const recipientInput = page.getByPlaceholder(/address or ens/i)
-      await recipientInput.click()
-      await recipientInput.fill(HAYDEN_ADDRESS)
-      await page.getByText('hayden.eth').click()
-
-      const sendButton = page.getByRole('button', { name: /^send$/i })
-      await expect(sendButton).toBeEnabled()
-      await sendButton.click()
-
-      // Click Continue on the new address confirmation modal
-      await page.getByRole('button', { name: /continue/i }).click()
-
-      // Wait for review modal to appear
-      await expect(page.getByTestId(TestID.SendReviewModal)).toBeVisible()
-
-      // Confirm send
-      await page.getByRole('button', { name: /confirm send/i }).click()
-
-      // Wait for the modal to close (indicates transaction was submitted)
-      await expect(page.getByTestId(TestID.SendReviewModal)).not.toBeVisible()
-
-      // The embedded-wallet broadcast (Challenge → sign → sendRawTransaction) resolves after the
-      // review modal closes, so mine until the transfer lands rather than mining exactly once.
-      await expect
-        .poll(
-          async () => {
-            await anvil.mine({ blocks: 1 })
-            return await anvil.getErc20Balance(usdcAddress, sender)
-          },
-          { timeout: 15_000 },
-        )
-        .toBeLessThan(initialSenderBalance)
-
-      const finalSenderBalance = await anvil.getErc20Balance(usdcAddress, sender)
-      const finalRecipientBalance = await anvil.getErc20Balance(usdcAddress, recipient)
-
-      // ERC-20 transfers are gas-paid in ETH, so the sender's token decrease equals
-      // the recipient's token increase.
-      await expect(finalRecipientBalance).toBeGreaterThan(initialRecipientBalance)
-      expect(initialSenderBalance - finalSenderBalance).toBe(finalRecipientBalance - initialRecipientBalance)
+      expect(rpcSequence(embeddedWallet)).toEqual([
+        'Challenge:WALLET_SIGNIN',
+        'WalletSignIn',
+        'Challenge:SIGN_TRANSACTION',
+        'SignTransaction',
+      ])
+      expect(embeddedWallet.signedTransactions).toHaveLength(1)
     })
   },
 )

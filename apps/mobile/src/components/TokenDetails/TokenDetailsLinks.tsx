@@ -32,14 +32,13 @@ import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useT
 import { currencyIdToRestContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useBottomScreenGap } from 'uniswap/src/hooks/useBottomScreenGap'
 import { isDefaultNativeAddress, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink, getTwitterLink, openUri } from 'uniswap/src/utils/linking'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 const MIN_SHEET_HEIGHT = 520
 const INITIAL_SNAP_PERCENT = 0.65
-
-const SCROLL_CONTENT_STYLE = { paddingHorizontal: spacing.spacing24 }
 
 const ListHeaderSpacer = (): JSX.Element => <Flex width="$spacing16" />
 const ItemSeparatorComponent = (): JSX.Element => <Flex width="$spacing8" />
@@ -99,6 +98,15 @@ export function TokenDetailsLinks(): JSX.Element {
   const hasMultipleChains = multichainEntries.length > 1
 
   const { height: screenHeight } = useWindowDimensions()
+  const { bottomScreenTotalGap } = useBottomScreenGap()
+
+  // The sheet draws behind the bottom inset and renders no BottomSheetView, so nothing upstream
+  // applies `insets.bottom` — without this the last chain row sits under the Android navigation bar.
+  const scrollContentStyle = useMemo(
+    () => ({ paddingHorizontal: spacing.spacing24, paddingBottom: bottomScreenTotalGap }),
+    [bottomScreenTotalGap],
+  )
+
   const multichainSnapPoints = useMemo(() => {
     const percentHeight = INITIAL_SNAP_PERCENT * screenHeight
     const initialSnap = Math.min(Math.max(percentHeight, MIN_SHEET_HEIGHT), screenHeight)
@@ -229,11 +237,12 @@ export function TokenDetailsLinks(): JSX.Element {
         <Modal
           fullScreen
           overrideInnerContainer
+          renderBehindBottomInset
           name={ModalName.MultichainExplorerModal}
           snapPoints={multichainSnapPoints}
           onClose={() => setIsExplorerSheetOpen(false)}
         >
-          <BottomSheetScrollView contentContainerStyle={SCROLL_CONTENT_STYLE} showsVerticalScrollIndicator={false}>
+          <BottomSheetScrollView contentContainerStyle={scrollContentStyle} showsVerticalScrollIndicator={false}>
             <MultichainExplorerList renderedInModal chains={multichainEntries} onExplorerPress={handleExplorerPress} />
           </BottomSheetScrollView>
         </Modal>

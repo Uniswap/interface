@@ -27,7 +27,6 @@ export function FavoriteHeaderRow({
       gap="$spacing16"
       justifyContent="space-between"
       mb="$spacing8"
-      mx="$spacing8"
       testID={TestID.FavoriteTokensHeader}
     >
       <Text {...titleProps}>{isEditing ? editingTitle : title}</Text>

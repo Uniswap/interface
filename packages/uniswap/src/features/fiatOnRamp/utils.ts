@@ -10,6 +10,7 @@ import {
   FORQuote,
   InitialQuoteSelection,
 } from 'uniswap/src/features/fiatOnRamp/types'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 import { uuid } from 'utilities/src/primitives/uuid'
 
 const APPLE_PAY = 'Apple Pay'
@@ -176,13 +177,31 @@ export function isSupportedFORCurrency(currency: FORCurrencyOrBalance): currency
   return (currency as FiatOnRampCurrency).meldCurrencyCode !== undefined
 }
 
+/**
+ * Re-keys portfolio balances by normalized currency id. The FOR currency list and the portfolio can disagree
+ * on EVM address casing for the same token, so look these up with `normalizeCurrencyIdForMapLookup(id)`.
+ */
+export function normalizeBalancesByIdForLookup(
+  balancesById: Record<string, PortfolioBalance> | undefined,
+): Record<string, PortfolioBalance> | undefined {
+  if (!balancesById) {
+    return undefined
+  }
+
+  return Object.fromEntries(
+    Object.entries(balancesById).map(([currencyId, balance]) => [normalizeCurrencyIdForMapLookup(currencyId), balance]),
+  )
+}
+
 export function getUnsupportedFORTokensWithBalance(
   supportedCurrencies: FiatOnRampCurrency[],
   balancesById: Record<string, PortfolioBalance> | undefined,
 ): PortfolioBalance[] {
-  const offRampCurrencyIds = supportedCurrencies.map((currency) => currency.currencyInfo?.currencyId)
+  const offRampCurrencyIds = new Set(
+    supportedCurrencies.map((currency) => normalizeCurrencyIdForMapLookup(currency.currencyInfo?.currencyId)),
+  )
   return Object.values(balancesById || {}).filter(
-    (balance) => !offRampCurrencyIds.includes(balance.currencyInfo.currencyId),
+    (balance) => !offRampCurrencyIds.has(normalizeCurrencyIdForMapLookup(balance.currencyInfo.currencyId)),
   )
 }
 

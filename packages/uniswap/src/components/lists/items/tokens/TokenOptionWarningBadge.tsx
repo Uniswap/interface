@@ -1,4 +1,4 @@
-import { Flex, Text } from '@universe/mycelium'
+import { Flex, Text, type ColorTokens } from '@universe/mycelium'
 import { TooltipCompat as Tooltip } from '@universe/mycelium/tooltip-compat'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
@@ -8,22 +8,24 @@ import { useTokenWarningCardText } from 'uniswap/src/features/tokens/warnings/sa
 const TOOLTIP_MAX_WIDTH = 280
 
 /**
- * Warning icon badge for search result rows. On web/extension, hovering opens a tooltip with the
- * warning title and description (same copy as the TDP warning card). On native, `Tooltip` renders
- * only the icon (trigger children pass through; content is a no-op).
+ * Warning icon badge for search result and token selector rows. On web/extension, hovering opens a
+ * tooltip with the warning title and description (same copy as the TDP warning card). On native,
+ * `Tooltip` renders only the icon (trigger children pass through; content is a no-op).
  */
 export function TokenOptionWarningBadge({
   currencyInfo,
   severity,
+  strokeColorOverride,
 }: {
   currencyInfo: CurrencyInfo
   severity: WarningSeverity
+  strokeColorOverride?: ColorTokens
 }): JSX.Element {
   const { heading, description } = useTokenWarningCardText(currencyInfo)
 
   const icon = (
     <Flex>
-      <WarningIcon severity={severity} size="$icon.16" />
+      <WarningIcon severity={severity} size="$icon.16" strokeColorOverride={strokeColorOverride} />
     </Flex>
   )
 

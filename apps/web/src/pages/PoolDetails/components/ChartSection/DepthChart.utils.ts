@@ -19,6 +19,14 @@ type RawBar = { tick: number; liquidity: number; price0: string; amount0Locked: 
 
 export const STEP_WIDTH = 1000
 
+/**
+ * Leading-zero count at which depth-chart price displays (header, order book, tooltips)
+ * switch to subscript notation, e.g. 0.000034 → 0.0₄34. Matches the app-wide
+ * `SubscriptZeroPrice` default and the depth-chart axis, so small prices never render as
+ * a hard-to-parse run of zeros (LP-886, LP-888).
+ */
+export const DEPTH_CHART_SUBSCRIPT_THRESHOLD = 4
+
 // Find the closest depth point on the mirror side at the same % deviation from mid price.
 export function getMirrorPoint({
   point,

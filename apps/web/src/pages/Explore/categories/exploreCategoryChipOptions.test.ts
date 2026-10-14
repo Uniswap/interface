@@ -1,6 +1,7 @@
 import type { TFunction } from 'i18next'
 import { Briefcase } from 'ui/src/components/icons/Briefcase'
 import { Ranking } from 'ui/src/components/icons/Ranking'
+import { SwapCoin } from 'ui/src/components/icons/SwapCoin'
 import { Tag } from 'ui/src/components/icons/Tag'
 import { TokenCategory, TokenCategoryClass } from 'uniswap/src/features/tokenCategories/types'
 import { describe, expect, it } from 'vitest'
@@ -13,7 +14,16 @@ import { ExploreCategory } from '~/pages/Explore/categories/useExploreCategory'
 const t = ((key: string) => key) as TFunction
 
 function makeCategory(id: string, name: string): TokenCategory {
-  return { id, name, description: '', categoryClass: TokenCategoryClass.Sector, grouped: false, topTokens: [] }
+  return {
+    id,
+    name,
+    englishName: name,
+    description: '',
+    categoryClass: TokenCategoryClass.Sector,
+    grouped: false,
+    topTokens: [],
+    topGroups: [],
+  }
 }
 
 const CATEGORIES = [
@@ -184,6 +194,9 @@ describe('deriveCategoryChipOptions', () => {
     const options = deriveCategoryChipOptions({ categories: CATEGORIES, t })
     expect(options[0]?.icon).toBe(Ranking)
     expect(options[3]?.icon).toBe(Briefcase)
-    expect(options[4]?.icon).toBe(Tag)
+    expect(options[4]?.icon).toBe(SwapCoin)
+
+    const [, unmapped] = deriveCategoryChipOptions({ categories: [makeCategory('unmapped', 'Unmapped')], t })
+    expect(unmapped.icon).toBe(Tag)
   })
 })

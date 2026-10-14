@@ -1,9 +1,10 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
 import type { Auction } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 import { UniverseChainId } from '@universe/chains'
+import { opacifyRaw } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
+import { LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { AuctionLaunchMethod } from '~/features/Toucan/Auction/utils/auctionLaunchMethod'
 import {
   AuctionDisplayPhase,
   AuctionDisplayResult,
@@ -26,6 +27,12 @@ vi.mock('react-router', async (importOriginal) => ({
 vi.mock('~/pages/TokenDetails/hooks/useTokenDetailsAuctionDisplay', () => ({
   useTokenDetailsAuctionDisplay: vi.fn(),
 }))
+vi.mock('~/pages/TokenDetails/context/useTDPStore', () => ({
+  useTDPStore: (selector: (state: { tokenColor: string }) => unknown) => selector({ tokenColor: '#7482ff' }),
+}))
+vi.mock('~/pages/TokenDetails/components/auction/TokenDetailsAuctionListEntry', () => ({
+  TokenDetailsMoreAuctionsChip: () => <div data-testid={TestID.TokenDetailsMoreAuctionsChip} />,
+}))
 
 const AUCTION_ADDRESS = '0x1111111111111111111111111111111111111111'
 const AUCTION = {
@@ -42,7 +49,7 @@ function mockDisplay(overrides: Partial<TokenDetailsAuctionDisplayModel> = {}): 
   mocked(useTokenDetailsAuctionDisplay).mockReturnValue({
     auction: AUCTION,
     chainId: UniverseChainId.Mainnet,
-    launchMethod: AuctionLaunchMethod.Custom,
+    launchMethod: LaunchProvenanceMethod.CustomAuction,
     phase: AuctionDisplayPhase.Live,
     result: AuctionDisplayResult.Unknown,
     poolAvailability: PoolAvailability.HasPool,
@@ -50,6 +57,7 @@ function mockDisplay(overrides: Partial<TokenDetailsAuctionDisplayModel> = {}): 
     isInitialLoading: false,
     phaseEndsAtMs: Date.now() + SEVEN_DAYS_THIRTEEN_HOURS_MS - ONE_SECOND_MS,
     currencyRaised: { status: 'idle' },
+    currentBlock: { status: 'success', blockNumber: 150n },
     refetchCurrentBlock: vi.fn(),
     ...overrides,
   })
@@ -72,6 +80,32 @@ describe('TokenDetailsAuctionBanner', () => {
     expect(mockNavigate.mock.calls[0]?.[0]).toMatch(new RegExp(`^/explore/auctions/ethereum/${AUCTION_ADDRESS}$`, 'i'))
   })
 
+  it('renders the more-auctions chip beside the label once the banner is live', () => {
+    mockDisplay()
+
+    render(<TokenDetailsAuctionBanner />)
+
+    const chip = screen.getByTestId(TestID.TokenDetailsMoreAuctionsChip)
+    expect(chip.parentElement).toBe(screen.getByText('Auction in progress').parentElement)
+    expect(getOwnStyleProp(chip.parentElement!, 'gap')).toBe('$spacing16')
+  })
+
+  it('allows the countdown to wrap without shrinking it and uses the token accent', () => {
+    mockDisplay()
+
+    render(<TokenDetailsAuctionBanner />)
+
+    const banner = screen.getByTestId(TestID.TokenDetailsAuctionBanner)
+    const countdown = screen.getByText(/^7d 12h 59m$/)
+    expect(getOwnStyleProp(banner, 'flexWrap')).toBe('wrap')
+    expect(getOwnStyleProp(countdown.parentElement!, 'flexShrink')).toBe(0)
+    expect(getOwnStyleProp(countdown.parentElement!, 'ml')).toBe('auto')
+    expect(getOwnStyleProp(countdown, 'color')).toBe('#7482ff')
+    expect(getOwnStyleProp(banner, 'backgroundColor')).toBe(opacifyRaw(8, '#7482ff'))
+    expect(getOwnStyleProp(banner, 'borderColor')).toBe(opacifyRaw(8, '#7482ff'))
+    expect(getOwnStyleProp(banner, 'borderRadius')).toBe('$rounded16')
+  })
+
   it('reserves the initial live banner row without a button or navigation', () => {
     mockDisplay({ isInitialLoading: true, poolAvailability: PoolAvailability.Loading })
 
@@ -90,7 +124,7 @@ describe('TokenDetailsAuctionBanner', () => {
     const { rerender } = render(<TokenDetailsAuctionBanner />)
     const pendingRow = screen.getByTestId(TestID.TokenDetailsAuctionBanner)
     const spacing = ['px', 'py', 'gap'].map((prop) => getOwnStyleProp(pendingRow, prop))
-    expect(spacing).toEqual(['$spacing16', '$spacing12', '$spacing12'])
+    expect(spacing).toEqual(['$spacing16', '$spacing12', '$spacing16'])
 
     mockDisplay()
     rerender(<TokenDetailsAuctionBanner />)
@@ -134,7 +168,7 @@ describe('TokenDetailsAuctionBanner', () => {
   })
 
   it('renders nothing for quick launches', () => {
-    mockDisplay({ auction: { ...AUCTION, isQuickLaunch: true }, launchMethod: AuctionLaunchMethod.Crowd })
+    mockDisplay({ auction: { ...AUCTION, isQuickLaunch: true }, launchMethod: LaunchProvenanceMethod.CrowdLaunch })
 
     render(<TokenDetailsAuctionBanner />)
 
@@ -142,7 +176,7 @@ describe('TokenDetailsAuctionBanner', () => {
   })
 
   it('renders nothing when the service has not classified the launch method', () => {
-    mockDisplay({ launchMethod: undefined })
+    mockDisplay({ launchMethod: LaunchProvenanceMethod.Unknown })
 
     render(<TokenDetailsAuctionBanner />)
 
@@ -195,7 +229,7 @@ describe('TokenDetailsAuctionBanner', () => {
   it('renders nothing without a resolved auction', () => {
     mockDisplay({
       auction: undefined,
-      launchMethod: undefined,
+      launchMethod: LaunchProvenanceMethod.Unknown,
       phase: AuctionDisplayPhase.Unknown,
       poolAvailability: PoolAvailability.Loading,
       phaseEndsAtMs: undefined,

@@ -4,11 +4,11 @@ import { useTranslation } from 'react-i18next'
 import { Loader } from 'ui/src'
 import type { ChartPoint } from 'uniswap/src/components/charts/computeChartPaths'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { useGetCategoryQuery } from 'uniswap/src/data/apiClients/dataApiService/categories/useGetCategoryQuery'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { CategoryDescriptionText } from 'uniswap/src/features/tokenCategories/CategoryDescriptionText'
 import { getTokenCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
-import { getRwaCategoryForTokenCategory } from 'uniswap/src/features/tokenCategories/rwaCategoryBridge'
-import { hasRwaDisclaimer, RwaDisclaimerText } from 'uniswap/src/features/tokenCategories/RwaDisclaimerText'
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { calculateDelta } from 'uniswap/src/utils/calculateDelta'
 import { openUri } from 'uniswap/src/utils/linking'
@@ -17,28 +17,22 @@ import { useEvent } from 'utilities/src/react/hooks'
 
 const ICON_TILE_SIZE = 56
 
-/** Joins the last two words with a non-breaking space so the description never ends in a widow. */
-function preventWidow(text: string): string {
-  return text.replace(/ (?=\S+$)/, '\u00A0')
-}
-
 // Text onPress, not a wrapping TouchableArea: inline views inside a native <Text> don't reliably
 // receive touches on Android.
-function DisclaimerLearnMoreLink({ href }: { href: string }): JSX.Element {
-  const { t } = useTranslation()
+function LearnMoreLink({ label }: { label: string }): JSX.Element {
   const onPress = useEvent(() => {
-    void openUri({ uri: href })
+    void openUri({ uri: UniswapHelpUrls.articles.tokenCategoryDefinitions })
   })
 
   return (
     <Text variant="buttonLabel3" color="$neutral1" onPress={onPress}>
-      {t('common.button.learn')}
+      {label}
     </Text>
   )
 }
 
-function renderMobileDisclaimerLink(href: string): JSX.Element {
-  return <DisclaimerLearnMoreLink href={href} />
+function renderLearnMoreLink(label: string): JSX.Element {
+  return <LearnMoreLink label={label} />
 }
 
 // Mirrors CategoryStatRow's line height so the block doesn't shift when data lands.
@@ -101,8 +95,6 @@ export const CategoryDetailsHeader = memo(function CategoryDetailsHeader({
 }): JSX.Element {
   const { t } = useTranslation()
   const Icon = getTokenCategoryIcon(category)
-  const rwaCategory = getRwaCategoryForTokenCategory(category)
-  const showsDisclaimer = hasRwaDisclaimer(rwaCategory)
   const { data: detail, isLoading: isDetailLoading } = useGetCategoryQuery(category.id)
   const aggregates = detail?.category.stats
 
@@ -122,15 +114,7 @@ export const CategoryDetailsHeader = memo(function CategoryDetailsHeader({
           {category.name}
         </Text>
         <Text variant="body2" color="$neutral2">
-          {/* With a disclaimer appended, the description's last words aren't the paragraph end —
-              the nbsp would sit mid-paragraph, and the disclaimer's localized copy can't be widow-proofed. */}
-          {showsDisclaimer ? category.description : preventWidow(category.description)}
-          {showsDisclaimer && (
-            <>
-              {' '}
-              <RwaDisclaimerText category={rwaCategory} renderLink={renderMobileDisclaimerLink} />
-            </>
-          )}
+          <CategoryDescriptionText category={category} renderLink={renderLearnMoreLink} />
         </Text>
       </Flex>
       {isDetailLoading ? (

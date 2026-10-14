@@ -1,5 +1,7 @@
+import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex } from '@universe/mycelium'
 import { useMemo } from 'react'
+import { getIsStablecoin } from 'uniswap/src/components/charts/utils'
 import { ChartType } from '~/components/Charts/utils'
 import { toHistoryDuration } from '~/data/util'
 import { ChartControls } from '~/pages/TokenDetails/components/chart/ChartControls'
@@ -29,6 +31,7 @@ function ChartSectionBody(): JSX.Element {
     }))
 
   const { isMultichainAggregateView } = useTDPMultichainAggregate()
+  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
   const auctionDisplay = useTokenDetailsAuctionDisplay()
   const isAuctionOnly = shouldShowAuctionOnlyLayout(auctionDisplay)
 
@@ -69,6 +72,7 @@ function ChartSectionBody(): JSX.Element {
           tokenColor={tokenColor}
           timePeriod={timePeriod}
           currency={currency}
+          isStablecoin={getIsStablecoin({ tokenCategoriesEnabled, categoryIds: multichainToken?.categoryIds })}
           auctionOnlyPhase={isAuctionOnly ? auctionDisplay.phase : undefined}
         />
       )}

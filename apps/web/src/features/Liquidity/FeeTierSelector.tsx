@@ -85,8 +85,9 @@ function FeeTier({
     >
       <Flex gap="$spacing8">
         <Flex row gap={10} justifyContent="space-between">
-          {/* v4 tiers headline the LP fee and reveal protocol + all-in on hover via FeeDisplay's tooltip. */}
-          <FeeDisplay feeBreakdown={feeTier.value.isDynamic ? undefined : feeTier.feeBreakdown}>
+          {/* v4 tiers headline the LP fee and reveal protocol + all-in on hover via FeeDisplay's tooltip.
+              Producers never attach a breakdown to a dynamic tier, so no dynamic guard is needed here. */}
+          <FeeDisplay feeBreakdown={feeTier.feeBreakdown}>
             <Text variant="buttonLabel3">
               {feeTier.value.isDynamic ? t('common.dynamic') : formatPercent(feeTier.value.feeAmount / BIPS_BASE, 4)}
             </Text>
@@ -218,7 +219,6 @@ export function FeeTierSelector({
                 maxWidth="fit-content"
                 emphasis="secondary"
                 onPress={toggleShowMore}
-                $md={{ width: 32 }}
                 icon={<RotatableChevron direction={isShowMore ? 'up' : 'down'} size="$icon.20" color="currentColor" />}
                 iconPosition="after"
               >

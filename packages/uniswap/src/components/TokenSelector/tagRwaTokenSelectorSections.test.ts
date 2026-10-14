@@ -89,7 +89,7 @@ describe('tagRwaTokenSelectorSections', () => {
     })
     expect((out?.[0]?.data[0] as TokenOption).rwaCategory).toBe(RwaCategory.STOCKS)
     expect((out?.[0]?.data[0] as TokenOption).rwaName).toBe('Tesla')
-    expect((out?.[0]?.data[0] as TokenOption).rwaIssuerSlug).toBe('ondo')
+    expect((out?.[0]?.data[0] as TokenOption).rwaIssuer?.issuer).toBe('ondo')
   })
 
   it('threads a non-STOCKS category from the index through to the row', () => {

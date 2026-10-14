@@ -1,7 +1,7 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { TestID } from '@universe/test'
 import { useNavigate } from 'react-router'
-import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, InterfaceEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { tokenCategory } from 'uniswap/src/test/fixtures/tokenCategory'
 import { CategoryDefinitionSheet } from '~/components/CategoryDefinitionCard/CategoryDefinitionSheet'
@@ -36,6 +36,20 @@ describe('CategoryDefinitionSheet', () => {
       />,
     )
     expect(screen.queryByTestId(TestID.CategoryDefinitionSheet)).not.toBeInTheDocument()
+    expect(sendAnalyticsEvent).not.toHaveBeenCalled()
+  })
+
+  it('logs one tap-triggered definition open with its section when opened', () => {
+    render(
+      <CategoryDefinitionSheet category={stocks} isOpen section={SectionName.ExploreCategoryChips} onClose={vi.fn()} />,
+    )
+
+    expect(sendAnalyticsEvent).toHaveBeenCalledTimes(1)
+    expect(sendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.CategoryDefinitionCardOpened, {
+      section: SectionName.ExploreCategoryChips,
+      category_id: 'stocks',
+      trigger: 'tap',
+    })
   })
 
   it('shows the definition and closes from the Close button', () => {

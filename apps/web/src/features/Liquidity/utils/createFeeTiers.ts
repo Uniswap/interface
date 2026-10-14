@@ -190,17 +190,15 @@ function pinnedPoolFor(
 function toOption({
   feeData,
   pool,
-  title,
   hook,
 }: {
   feeData: FeeData
   pool: FeeTierData | undefined
-  title: string
   hook: string | undefined
 }): FeeTierOption {
   return {
     value: feeData,
-    title,
+    title: getFeeTierTitle(feeData.feeAmount, feeData.isDynamic),
     selectionPercent: pool?.percentage,
     tvl: pool?.tvl,
     boostedApr: pool?.boostedApr,
@@ -241,8 +239,7 @@ function repointOptionsToPinnedTickSpacing({
     if (!sameValue || option.value.tickSpacing === pinnedPool.fee.tickSpacing) {
       return option
     }
-    // Same fee value, so the box keeps its title (e.g. "Best for stable pairs").
-    return toOption({ feeData: pinnedPool.fee, pool: pinnedPool, title: option.title, hook })
+    return toOption({ feeData: pinnedPool.fee, pool: pinnedPool, hook })
   })
 }
 
@@ -250,9 +247,9 @@ function repointOptionsToPinnedTickSpacing({
  * Create-pool fee tier options.
  * - v2/v3: the pool-backed defaults, each with a breakdown (served, else the subtractive schedule) and a
  *   `created` flag so a not-yet-created tier renders "Not created".
- * - v4: a {@link V4_GRID_SIZE}-box grid — tiers worth joining (deep/incentivized) claim slots deepest-first,
- *   canonical new tiers backfill, a hook's dynamic pool is appended from `defaultFeeTiers`. `poolAtFee` and
- *   the top-by-TVL pick keep one pool per value; `selectedFee` re-points a box to a deep link.
+ * - v4: a {@link V4_GRID_SIZE}-box grid built from `feeTierData` — tiers worth joining (deep/incentivized)
+ *   claim slots deepest-first, canonical new tiers backfill, and a hook's deployed dynamic pool is appended.
+ *   `poolAtFee` and the worth-joining pick keep one pool per value; `selectedFee` re-points a box to a deep link.
  */
 export function getCreateFeeTierOptions({
   protocolVersion,
@@ -262,6 +259,7 @@ export function getCreateFeeTierOptions({
   selectedFee,
 }: {
   protocolVersion: ProtocolVersion
+  /** The v2/v3 pool-backed default tiers; the v4 grid doesn't read them. */
   defaultFeeTiers: FeeTierOption[]
   feeTierData: Record<string, FeeTierData>
   hook: string | undefined
@@ -291,24 +289,20 @@ export function getCreateFeeTierOptions({
       !claimedFeeAmounts.has(bpsToFeeAmount(pair.oldBps)) && !claimedFeeAmounts.has(bpsToFeeAmount(pair.newBps)),
   )
     .slice(0, V4_GRID_SIZE - poolTiers.length)
-    .map((pair) =>
-      toOption({
-        ...canonicalTier({ pair, feeTierData }),
-        title: getFeeTierTitle(bpsToFeeAmount(pair.oldBps)),
-        hook,
-      }),
-    )
+    .map((pair) => toOption({ ...canonicalTier({ pair, feeTierData }), hook }))
 
-  const gridTiers = [
-    ...poolTiers.map((pool) => toOption({ feeData: pool.fee, pool, title: getFeeTierTitle(pool.fee.feeAmount), hook })),
-    ...canonicalTiers,
-  ]
+  const gridTiers = [...poolTiers.map((pool) => toOption({ feeData: pool.fee, pool, hook })), ...canonicalTiers]
 
-  // A dynamic-fee pool has no numeric tier to rank or pair on, so it's excluded from the grid above — but
-  // it can still be the most-used tier (the pre-selected fee / "Highest TVL" header), so append its
-  // already-built option from defaultFeeTiers. Rendered only when a hook is present (allowDynamicFee).
-  const dynamicTier = defaultFeeTiers.find((tier) => isDynamicFeeTier(tier.value))
-  const gridWithDynamic = dynamicTier ? [...gridTiers, dynamicTier] : gridTiers
+  // A dynamic-fee pool has no numeric tier to rank or pair on, so it's kept off the grid above and appended
+  // on its own — the one worth joining if several share the hook. Only a deployed pool: `feeTierData` also
+  // seeds a not-yet-created dynamic default. Rendered only when a hook is present (allowDynamicFee).
+  const dynamicPool = Object.values(feeTierData)
+    .filter((data) => data.created && isDynamicFeeTier(data.fee))
+    .sort(byWorthJoining)
+    .at(0)
+  const gridWithDynamic = dynamicPool
+    ? [...gridTiers, toOption({ feeData: dynamicPool.fee, pool: dynamicPool, hook })]
+    : gridTiers
   return repointOptionsToPinnedTickSpacing({ options: gridWithDynamic, feeTierData, selectedFee, hook })
 }
 

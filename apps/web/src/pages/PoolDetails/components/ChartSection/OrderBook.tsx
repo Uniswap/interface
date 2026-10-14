@@ -12,6 +12,7 @@ import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
 import { useLiquidityBarData } from '~/features/Liquidity/charts/LiquidityChart'
 import { MIN_DEPTH_BARS_PER_SIDE } from '~/pages/PoolDetails/components/ChartSection/DepthChart'
 import {
+  DEPTH_CHART_SUBSCRIPT_THRESHOLD,
   getDisplayPair,
   priceFromTick,
   toDisplayPrice,
@@ -137,7 +138,7 @@ function BookRowItem({
             variant="body4"
             color={colorToken}
             value={row.displayPrice}
-            subscriptThreshold={6}
+            subscriptThreshold={DEPTH_CHART_SUBSCRIPT_THRESHOLD}
             maxSignificantDigits={6}
             disableTooltip
           />

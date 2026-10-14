@@ -1,5 +1,10 @@
 import { TestID } from '@universe/test'
-import { TokenCategoryClass, type TokenCategoryTopToken } from 'uniswap/src/features/tokenCategories/types'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
+import {
+  TokenCategoryClass,
+  type TokenCategoryTopGroup,
+  type TokenCategoryTopToken,
+} from 'uniswap/src/features/tokenCategories/types'
 import { tokenCategory } from 'uniswap/src/test/fixtures/tokenCategory'
 import {
   CategoryDefinitionCard,
@@ -9,6 +14,11 @@ import { fireEvent, render, screen } from '~/test-utils/render'
 
 function makeToken(symbol: string): TokenCategoryTopToken {
   return { chainId: 1, address: `0x${symbol}`, symbol, logoUrl: `https://logos.test/${symbol}.png` }
+}
+
+/** No logo url, so the pile renders the ticker as fallback text the test can find. */
+function makeGroup(ticker: string): TokenCategoryTopGroup {
+  return { id: ticker.toLowerCase(), displayName: ticker, ticker, logoUrl: '' }
 }
 
 const stocks = tokenCategory({
@@ -27,6 +37,7 @@ const stocks = tokenCategory({
     volume1y: 0,
   },
   topTokens: [makeToken('TSLA'), makeToken('AAPL'), makeToken('NVDA')],
+  topGroups: [],
 })
 
 const noop = (): void => {}
@@ -40,6 +51,19 @@ describe.each<CategoryDefinitionCardLayout>(['popover', 'sheet'])('CategoryDefin
     expect(screen.getAllByTestId(TestID.TokenLogo)).toHaveLength(3)
   })
 
+  it('piles the top groups over the top tokens when the backend serves them', () => {
+    const etfs = tokenCategory({
+      ...stocks,
+      id: 'etfs',
+      grouped: true,
+      topGroups: [makeGroup('SPY'), makeGroup('GLD'), makeGroup('QQQ')],
+    })
+    render(<CategoryDefinitionCard category={etfs} layout={layout} onPress={noop} />)
+    expect(screen.getAllByTestId(TestID.TokenLogo)).toHaveLength(3)
+    expect(screen.getByText('SPY')).toBeInTheDocument()
+    expect(screen.queryByText('TSLA')).not.toBeInTheDocument()
+  })
+
   it('omits the 24H change and logo pile when the category has no stats or top tokens', () => {
     const bare = tokenCategory({ id: 'gaming', name: 'Gaming', description: 'Games', topTokens: [] })
     render(<CategoryDefinitionCard category={bare} layout={layout} onPress={noop} />)
@@ -48,15 +72,12 @@ describe.each<CategoryDefinitionCardLayout>(['popover', 'sheet'])('CategoryDefin
     expect(screen.queryByTestId(TestID.TokenLogo)).not.toBeInTheDocument()
   })
 
-  it('shows "Learn more" only for categories with a help article', () => {
-    const { unmount } = render(
-      <CategoryDefinitionCard category={tokenCategory({ id: 'gaming' })} layout={layout} onPress={noop} />,
+  it('links "Learn more" to the category definitions article', () => {
+    render(<CategoryDefinitionCard category={tokenCategory({ id: 'gaming' })} layout={layout} onPress={noop} />)
+    expect(screen.getByText('Learn more').closest('a')).toHaveAttribute(
+      'href',
+      UniswapHelpUrls.articles.tokenCategoryDefinitions,
     )
-    expect(screen.queryByText('Learn more')).not.toBeInTheDocument()
-    unmount()
-
-    render(<CategoryDefinitionCard category={stocks} layout={layout} onPress={noop} />)
-    expect(screen.getByText('Learn more')).toBeInTheDocument()
   })
 
   it('does not press the card when "Learn more" is clicked', () => {

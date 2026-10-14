@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import type { StyleProp, ViewStyle } from 'react-native'
 import { Loader } from 'ui/src'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { FocusedRowControl } from 'uniswap/src/components/lists/items/OptionItem'
+import type { FocusedRowStore } from 'uniswap/src/components/lists/focusedRowStore'
 import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
 import {
   ItemRowInfo,
@@ -40,7 +40,7 @@ interface SelectorBaseListProps<T extends OnchainItemListOption> {
   renderItem: (info: ItemRowInfo<T>) => JSX.Element
   keyExtractor: (item: T, index: number) => string
   expandedItems?: string[]
-  focusedRowControl?: Omit<FocusedRowControl, 'rowIndex'>
+  focusedRowStore?: FocusedRowStore
   autoFocusFirstRowKey?: string
   renderedInModal: boolean
   contentContainerStyle?: StyleProp<ViewStyle>
@@ -59,7 +59,7 @@ function SelectorBaseListInner<T extends OnchainItemListOption>({
   errorText,
   keyExtractor,
   expandedItems,
-  focusedRowControl,
+  focusedRowStore,
   autoFocusFirstRowKey,
   renderedInModal,
   contentContainerStyle,
@@ -144,7 +144,7 @@ function SelectorBaseListInner<T extends OnchainItemListOption>({
         sectionListRef={sectionListRef}
         sections={sections ?? []}
         expandedItems={expandedItems}
-        focusedRowControl={focusedRowControl}
+        focusedRowStore={focusedRowStore}
         autoFocusFirstRowKey={autoFocusFirstRowKey}
         renderedInModal={renderedInModal}
         contentContainerStyle={contentContainerStyle}

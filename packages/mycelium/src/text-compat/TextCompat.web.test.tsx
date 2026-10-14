@@ -236,7 +236,7 @@ describe('anchor var lane vocabulary', () => {
 
     it('saw every variant emitted (a short read would pass the order check vacuously)', () => {
       expect(emittedPoolOrder).toHaveLength(PSEUDO_STYLE_KEYS.length)
-      expect([...emittedPoolOrder].sort()).toEqual([...Object.values(ANCHOR_PSEUDO_CODE)].sort())
+      expect([...emittedPoolOrder].sort()).toEqual(Object.values(ANCHOR_PSEUDO_CODE).sort())
     })
 
     it('lists the state rules in the order Tailwind emits them, so ties resolve like the class lane', () => {

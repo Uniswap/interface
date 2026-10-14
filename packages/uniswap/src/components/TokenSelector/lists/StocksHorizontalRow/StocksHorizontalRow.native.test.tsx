@@ -1,16 +1,23 @@
 import type { UseQueryResult } from '@tanstack/react-query'
 import { fireEvent, waitFor } from '@testing-library/react-native'
+import { SharedEventName } from '@uniswap/analytics-events'
 import { Token } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import { Fragment } from 'react'
 import { Text } from 'react-native'
 import { OnchainItemListOptionType, type RwaTokenOption } from 'uniswap/src/components/lists/items/types'
+import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { StocksHorizontalRow } from 'uniswap/src/components/TokenSelector/lists/StocksHorizontalRow/StocksHorizontalRow.native'
 import { ProtectionResult } from 'uniswap/src/features/dataApi/safety'
 import { TokenList, type CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useCurrencyInfos, useCurrencyInfoWithLoading } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/warnings/slice/hooks'
 import { render } from 'uniswap/src/test/test-utils'
+import type { Mock } from 'vitest'
+
+vi.mock('uniswap/src/features/telemetry/send')
 
 vi.mock('uniswap/src/features/tokens/useCurrencyInfo', async (importOriginal) => ({
   ...(await importOriginal<typeof import('uniswap/src/features/tokens/useCurrencyInfo')>()),
@@ -99,7 +106,23 @@ function mockQueryResult(data: Maybe<CurrencyInfo>, isLoading = false): UseQuery
 
 const stockTestId = `stock-option-${warnableStock.chainId}-${warnableStock.symbol}`
 
+const mockSendAnalyticsEvent = sendAnalyticsEvent as Mock
+
+// The shelf is one list row, so a single-token row reports position 1 of 1.
+const SINGLE_STOCK_CONTEXT = { sectionKey: OnchainItemSectionName.Stocks, position: 1, suggestionCount: 1 }
+
+/** The ELEMENT_CLICKED payloads logged for one element name, in call order. */
+function elementEvents(element: ElementName): Record<string, unknown>[] {
+  return mockSendAnalyticsEvent.mock.calls
+    .filter(
+      ([name, properties]) =>
+        name === SharedEventName.ELEMENT_CLICKED && (properties as { element?: string }).element === element,
+    )
+    .map(([, properties]) => properties as Record<string, unknown>)
+}
+
 beforeEach(() => {
+  mockSendAnalyticsEvent.mockClear()
   mockUseCurrencyInfoWithLoading.mockReturnValue(mockQueryResult(undefined))
   mockUseCurrencyInfos.mockReturnValue([])
   mockUseDismissedTokenWarnings.mockReturnValue({ tokenWarningDismissed: false, onDismissTokenWarning: vi.fn() })
@@ -152,7 +175,7 @@ describe('StocksHorizontalRow.native', () => {
     fireEvent.press(getByTestId(stockTestId))
     fireEvent.press(await findByTestId('warning-modal-continue'))
 
-    await waitFor(() => expect(onSelect).toHaveBeenCalledWith(warnableStock))
+    await waitFor(() => expect(onSelect).toHaveBeenCalledWith(warnableStock, SINGLE_STOCK_CONTEXT))
   })
 
   it('"Go back" cancels without selecting', async () => {
@@ -178,7 +201,47 @@ describe('StocksHorizontalRow.native', () => {
 
     fireEvent.press(getByTestId(stockTestId))
 
-    await waitFor(() => expect(onSelect).toHaveBeenCalledWith(warnableStock))
+    await waitFor(() => expect(onSelect).toHaveBeenCalledWith(warnableStock, SINGLE_STOCK_CONTEXT))
     expect(queryByTestId('warning-modal-title')).toBeNull()
+  })
+
+  it('a tap that commits logs the tile press once, then selects', async () => {
+    mockUseCurrencyInfoWithLoading.mockReturnValue(mockQueryResult(warnableCurrencyInfo))
+    const onSelect = vi.fn()
+    const { getByTestId, findByTestId } = render(
+      <StocksHorizontalRow tokens={[warnableStock]} showTokenWarnings={true} onSelectRwaToken={onSelect} />,
+    )
+
+    fireEvent.press(getByTestId(stockTestId))
+    expect(elementEvents(ElementName.TokenSelectorStocksShelfTile)).toEqual([
+      {
+        element: ElementName.TokenSelectorStocksShelfTile,
+        token_address: warnableStock.address,
+        token_symbol: 'GOOGLX',
+        chain_id: UniverseChainId.Bnb,
+      },
+    ])
+    expect(onSelect).not.toHaveBeenCalled()
+
+    fireEvent.press(await findByTestId('warning-modal-continue'))
+
+    await waitFor(() => expect(onSelect).toHaveBeenCalledWith(warnableStock, SINGLE_STOCK_CONTEXT))
+    // Committing is the selection, not a second press.
+    expect(elementEvents(ElementName.TokenSelectorStocksShelfTile)).toHaveLength(1)
+  })
+
+  it('a tap whose warning is cancelled logs the tile press and nothing else', async () => {
+    mockUseCurrencyInfoWithLoading.mockReturnValue(mockQueryResult(warnableCurrencyInfo))
+    const onSelect = vi.fn()
+    const { getByTestId, findByTestId, queryByTestId } = render(
+      <StocksHorizontalRow tokens={[warnableStock]} showTokenWarnings={true} onSelectRwaToken={onSelect} />,
+    )
+
+    fireEvent.press(getByTestId(stockTestId))
+    fireEvent.press(await findByTestId('warning-modal-goback'))
+
+    await waitFor(() => expect(queryByTestId('warning-modal-title')).toBeNull())
+    expect(elementEvents(ElementName.TokenSelectorStocksShelfTile)).toHaveLength(1)
+    expect(onSelect).not.toHaveBeenCalled()
   })
 })

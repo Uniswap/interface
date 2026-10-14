@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import type { StyleProp, ViewStyle } from 'react-native'
 import { GeneratedIcon } from 'ui/src'
 import { Person } from 'ui/src/components/icons'
+import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useSectionsForNoQuerySearch } from 'uniswap/src/features/search/SearchModal/hooks/useSectionsForNoQuerySearch'
 import { SearchModalList, SearchModalListProps } from 'uniswap/src/features/search/SearchModal/SearchModalList'
 import { SearchModalListSkeleton } from 'uniswap/src/features/search/SearchModal/SearchModalListSkeleton'
@@ -14,6 +15,7 @@ import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { useMultichainSearchModalMetricsAnalytics } from 'uniswap/src/features/search/SearchModal/useMultichainSearchModalMetricsAnalytics'
 import { withSectionGaps } from 'uniswap/src/features/search/SearchModal/viewAll/withSectionGaps'
 import { withViewAllFooters } from 'uniswap/src/features/search/SearchModal/viewAll/withViewAllFooters'
+import { useEvent } from 'utilities/src/react/hooks'
 
 function EmptyPretypeSection({ title, icon: Icon }: { title: string; icon: GeneratedIcon }): JSX.Element {
   return (
@@ -36,6 +38,7 @@ interface SearchModalNoQueryListProps {
   renderedInModal: boolean
   contentContainerStyle?: StyleProp<ViewStyle>
   rowWrapper?: SearchModalListProps['rowWrapper']
+  hideTokenCategoryTag?: SearchModalListProps['hideTokenCategoryTag']
   onResultsShownChange?: SearchModalListProps['onResultsShownChange']
 }
 
@@ -48,6 +51,7 @@ export const SearchModalNoQueryList = memo(function SearchModalNoQueryListInner(
   renderedInModal,
   contentContainerStyle,
   rowWrapper,
+  hideTokenCategoryTag,
   onResultsShownChange,
 }: SearchModalNoQueryListProps): JSX.Element {
   const { t } = useTranslation()
@@ -76,16 +80,23 @@ export const SearchModalNoQueryList = memo(function SearchModalNoQueryListInner(
     isSearchQueryPending: false,
   })
 
+  const { navigateToCategoryDetails } = useUniswapContext()
+  const viewAllCategory = useEvent((categoryId: string): void => {
+    navigateToCategoryDetails?.({ categoryId })
+    onSelect?.()
+  })
+  const onViewAllCategory = navigateToCategoryDetails ? viewAllCategory : undefined
+
   const displayedSections = useMemo(() => {
     if (activeTab !== SearchTab.All) {
       return sections
     }
     const withFooters =
       isTokenCategoriesEnabled && onViewAll
-        ? withViewAllFooters({ sections, truncatedSectionKeys: 'all', onViewAll })
+        ? withViewAllFooters({ sections, truncatedSectionKeys: 'all', onViewAll, onViewAllCategory })
         : sections
     return isSearchV2UIEnabled ? withSectionGaps(withFooters) : withFooters
-  }, [isSearchV2UIEnabled, isTokenCategoriesEnabled, onViewAll, activeTab, sections])
+  }, [isSearchV2UIEnabled, isTokenCategoriesEnabled, onViewAll, onViewAllCategory, activeTab, sections])
 
   // Element and object props are memoized so SearchModalList's memo isn't busted every render.
   const loadingElement = useMemo(
@@ -123,6 +134,7 @@ export const SearchModalNoQueryList = memo(function SearchModalNoQueryListInner(
       contentContainerStyle={contentContainerStyle}
       emptyElement={emptyElement}
       rowWrapper={rowWrapper}
+      hideTokenCategoryTag={hideTokenCategoryTag}
       rwaIssuerCurrencyInfos={rwaIssuerCurrencyInfos}
       onSelect={onSelect}
       onResultsShownChange={onResultsShownChange}

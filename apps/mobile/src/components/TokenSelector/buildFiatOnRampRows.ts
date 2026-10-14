@@ -1,7 +1,11 @@
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { FiatOnRampCurrency, FORCurrencyOrBalance } from 'uniswap/src/features/fiatOnRamp/types'
-import { getUnsupportedFORTokensWithBalance } from 'uniswap/src/features/fiatOnRamp/utils'
+import {
+  getUnsupportedFORTokensWithBalance,
+  normalizeBalancesByIdForLookup,
+} from 'uniswap/src/features/fiatOnRamp/utils'
 import { CurrencyId } from 'uniswap/src/types/currency'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 
 export enum FiatOnRampRowType {
   UnsupportedToggle = 'unsupportedToggle',
@@ -38,22 +42,18 @@ export function buildFiatOnRampRows({
   showMore: boolean
 }): FiatOnRampRow[] {
   const resolved = list.filter((c) => c.currencyInfo)
+  const normalizedBalancesById = normalizeBalancesByIdForLookup(balancesById)
+  const balanceOf = (c: FiatOnRampCurrency): PortfolioBalance | undefined =>
+    c.currencyInfo ? normalizedBalancesById?.[normalizeCurrencyIdForMapLookup(c.currencyInfo.currencyId)] : undefined
 
   // A true partition: a currency with a cached balance entry of `quantity: 0` — what a fully-sold
   // token leaves behind — belongs with the unheld ones, not nowhere. Testing the quantity on both
   // sides is what makes every resolved currency appear exactly once.
-  const isHeld = (c: FiatOnRampCurrency): boolean =>
-    c.currencyInfo ? (balancesById?.[c.currencyInfo.currencyId]?.quantity ?? 0) > 0 : false
+  const isHeld = (c: FiatOnRampCurrency): boolean => (balanceOf(c)?.quantity ?? 0) > 0
 
-  const sortedSupportedAssetsWithBalance = resolved.filter(isHeld).sort((a, b) => {
-    if (!a.currencyInfo || !b.currencyInfo) {
-      return 0
-    }
-
-    const aBalance = balancesById?.[a.currencyInfo.currencyId]?.balanceUSD ?? 0
-    const bBalance = balancesById?.[b.currencyInfo.currencyId]?.balanceUSD ?? 0
-    return bBalance - aBalance
-  })
+  const sortedSupportedAssetsWithBalance = resolved
+    .filter(isHeld)
+    .sort((a, b) => (balanceOf(b)?.balanceUSD ?? 0) - (balanceOf(a)?.balanceUSD ?? 0))
 
   const supportedAssetsWithoutBalance = resolved.filter((c) => !isHeld(c))
 

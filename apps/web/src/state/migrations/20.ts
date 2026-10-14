@@ -1,5 +1,6 @@
 import { PersistState } from 'redux-persist'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
+import { getDeviceFiatCurrency } from 'uniswap/src/features/fiatCurrency/utils'
 import { UserSettingsState } from 'uniswap/src/features/settings/slice'
 
 export type PersistAppStateV20 = {
@@ -20,7 +21,7 @@ export const migration20 = (state: PersistAppStateV20 | undefined) => {
   const atomLocalCurrencyAtomValue = localStorage.getItem(activeLocalCurrencyAtomName) as FiatCurrency
   const migratedAtomCurrency = Object.values(FiatCurrency).includes(atomLocalCurrencyAtomValue)
     ? atomLocalCurrencyAtomValue
-    : 'USD' // (FiatCurrency.UnitedStatesDollar)
+    : getDeviceFiatCurrency() // Also runs for first-time visitors, so this is the web default.
 
   // Add migrated value to the existing state
   const newState: any = {

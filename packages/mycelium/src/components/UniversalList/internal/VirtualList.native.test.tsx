@@ -6,7 +6,14 @@ import { VirtualList } from './VirtualList.native'
 
 const { captured, legendListStub } = vi.hoisted(() => ({
   captured: { props: {} as Record<string, unknown> },
-  legendListStub: { scrollToEnd: vi.fn(), scrollToIndex: vi.fn(), scrollToOffset: vi.fn() },
+  legendListStub: {
+    // Item 4 sits 20px below the viewport bottom, so scrollIndexIntoView must align its bottom edge.
+    getState: vi.fn(() => ({ scroll: 0, scrollLength: 400, positionAtIndex: () => 380, sizeAtIndex: () => 40 })),
+    scrollIndexIntoView: vi.fn(),
+    scrollToEnd: vi.fn(),
+    scrollToIndex: vi.fn(() => Promise.resolve()),
+    scrollToOffset: vi.fn(),
+  },
 }))
 
 // Legend List's native build needs a real host renderer. Stand in for it and assert the contract
@@ -228,12 +235,18 @@ describe('VirtualList (native)', () => {
 
     render(<VirtualList ref={ref} data={['Alpha']} keyExtractor={keyExtractor} renderItem={renderItem} />)
 
-    ref.current?.scrollToIndex({ index: 3, animated: true })
+    ref.current?.scrollToIndex({ index: 3, animated: true, viewPosition: 1 })
+    ref.current?.scrollIndexIntoView({ index: 4, animated: false })
     ref.current?.scrollToOffset({ offset: 120 })
     ref.current?.scrollToEnd({ animated: false })
     ref.current?.scrollToTop({ animated: false })
 
-    expect(legendListStub.scrollToIndex).toHaveBeenCalledWith({ index: 3, animated: true })
+    // viewPosition included deliberately: it reaches the engine only because the ref forwards the
+    // whole params object, so a destructuring "cleanup" here would silently drop it.
+    expect(legendListStub.scrollToIndex).toHaveBeenCalledWith({ index: 3, animated: true, viewPosition: 1 })
+    // scrollIndexIntoView is resolved here from engine state (see scrollIndexIntoView.test.ts), not delegated.
+    expect(legendListStub.scrollToIndex).toHaveBeenCalledWith({ index: 4, animated: false, viewPosition: 1 })
+    expect(legendListStub.scrollIndexIntoView).not.toHaveBeenCalled()
     expect(legendListStub.scrollToEnd).toHaveBeenCalledWith({ animated: false })
     expect(legendListStub.scrollToOffset).toHaveBeenNthCalledWith(1, { offset: 120 })
     // scrollToTop is our own addition — it maps onto scrollToOffset at offset 0.

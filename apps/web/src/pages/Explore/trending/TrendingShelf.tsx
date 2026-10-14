@@ -9,7 +9,6 @@ import type { RankedTokenCardItem } from 'uniswap/src/data/apiClients/dataApiSer
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { CategoryDefinitionTooltip } from 'uniswap/src/features/tokenCategories/CategoryDefinitionTooltip'
-import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { CategoryDefinitionSheet } from '~/components/CategoryDefinitionCard/CategoryDefinitionSheet'
 import { TokenCardCarousel } from '~/components/TokenCardCarousel/TokenCardCarousel'
@@ -51,27 +50,23 @@ export function TrendingShelf(): JSX.Element | null {
     })
   })
 
-  const logTrendingInfoPress = useEvent((category: TokenCategory): void => {
-    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-      element: ElementName.ExploreTrendingInfo,
-      section: SectionName.ExploreTrendingTokensSection,
-      category_id: category.id,
-    })
-  })
-
   const onPressCategoryDetails = useEvent((): void => {
     if (!trendingCategory) {
       return
     }
-    logTrendingInfoPress(trendingCategory)
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.ExploreTrendingInfo,
+      section: SectionName.ExploreTrendingTokensSection,
+      category_id: trendingCategory.id,
+    })
     navigate(getCategoryDetailsURL(trendingCategory.id))
   })
 
+  // The sheet logs its own open as Category Definition Card Opened, so the tap itself is not a click event.
   const openDefinition = useEvent((): void => {
     if (!trendingCategory) {
       return
     }
-    logTrendingInfoPress(trendingCategory)
     setIsDefinitionOpen(true)
   })
   const closeDefinition = useEvent((): void => setIsDefinitionOpen(false))
@@ -100,7 +95,11 @@ export function TrendingShelf(): JSX.Element | null {
               <InfoCircleFilled color="$neutral3" size="$icon.16" />
             </TouchableArea>
           ) : (
-            <CategoryDefinitionTooltip category={trendingCategory} onPressViewAll={onPressCategoryDetails} />
+            <CategoryDefinitionTooltip
+              category={trendingCategory}
+              section={SectionName.ExploreTrendingTokensSection}
+              onPressViewAll={onPressCategoryDetails}
+            />
           ))
         }
         onViewAll={onViewAll}

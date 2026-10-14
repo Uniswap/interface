@@ -1,12 +1,11 @@
 import { TradingApi } from '@universe/api'
-import { type Address, UniverseChainId, Platform, areAddressesEqual } from '@universe/chains'
+import { areAddressesEqual, type Address, Platform, type RpcUserOperation, UniverseChainId } from '@universe/chains'
 import { sendUserOperationToBundler } from '@universe/embedded-wallet/src/connection/bundlerClient'
 import type { EthTransactionParams } from '@universe/embedded-wallet/src/features/passkey/embeddedWalletDelegation'
 import { hexToNumber, isValidHexString } from '@universe/encoding'
 import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { transformTradingApiUserOpToRpcUserOp } from 'uniswap/src/features/smartWallet/userOp/transformTradingApiUserOp'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
-import type { RpcUserOperation } from 'viem/account-abstraction'
 
 /**
  * Subset of EIP-5792 v2.0.0 `wallet_sendCalls` request fields we read. `chainId`

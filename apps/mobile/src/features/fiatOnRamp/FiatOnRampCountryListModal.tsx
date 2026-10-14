@@ -21,12 +21,12 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { FOR_MODAL_SNAP_POINTS } from 'uniswap/src/features/fiatOnRamp/constants'
 import { useFiatOnRampAggregatorCountryListQuery } from 'uniswap/src/features/fiatOnRamp/hooks/useFiatOnRampQueries'
+import { useFilteredCountryData } from 'uniswap/src/features/fiatOnRamp/hooks/useFilteredCountryData'
 import { FORCountry, RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
 import { getCountryFlagSvgUrl } from 'uniswap/src/features/fiatOnRamp/utils'
 import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { bubbleToTop } from 'utilities/src/primitives/array'
 import { useDebounce } from 'utilities/src/time/timing'
 
 const ICON_SIZE = 32 // design prefers a custom value here
@@ -53,14 +53,11 @@ function CountrySelectorContent({ onSelectCountry, countryCode }: CountrySelecto
 
   const debouncedSearchText = useDebounce(searchText)
 
-  const filteredData: FORCountry[] = useMemo(() => {
-    if (!data) {
-      return []
-    }
-    return bubbleToTop(data.supportedCountries, (c) => c.countryCode === countryCode).filter(
-      (item) => !debouncedSearchText || item.displayName.toLowerCase().startsWith(debouncedSearchText.toLowerCase()),
-    )
-  }, [countryCode, data, debouncedSearchText])
+  const filteredData = useFilteredCountryData({
+    countries: data?.supportedCountries,
+    searchText: debouncedSearchText,
+    selectedCountryCode: countryCode,
+  })
 
   const renderItem = useCallback(
     ({ item }: UniversalListRenderItemInfo<FORCountry>): JSX.Element => {

@@ -1,6 +1,8 @@
 import { getWagmiConnectorV2 } from '@binance/w3w-wagmi-connector-v2'
 import { tryProvideSession } from '@universe/api'
 import {
+  type Chain,
+  createClient,
   createObservableTransport,
   createSessionGatedTransport,
   createUniRpcRoutedTransport,
@@ -20,8 +22,6 @@ import { isTestnetChain } from 'uniswap/src/features/chains/utils'
 import { defaultResolveRpcConfig } from 'uniswap/src/features/providers/resolveRpcConfig'
 import { logger } from 'utilities/src/logger/logger'
 import { getNonEmptyArrayOrThrow } from 'utilities/src/primitives/array'
-import type { Chain } from 'viem'
-import { createClient } from 'viem'
 import type { Config } from 'wagmi'
 import { createConfig, fallback, http } from 'wagmi'
 import { coinbaseWallet, injected, metaMask, safe } from 'wagmi/connectors'

@@ -41,7 +41,7 @@ exports[`TokenCard > renders a spacer instead of a sparkline for fewer than 2 po
       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 gap-[2px] w-[100%]"
     >
       <div
-        class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-baseline gap-[8px]"
+        class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[4px]"
       >
         <span
           class="[display:inline] box-border m-0 [word-wrap:break-word] [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)] max-w-full overflow-hidden text-ellipsis whitespace-nowrap shrink-[1]"
@@ -275,7 +275,7 @@ exports[`TokenCard > renders the vertical layout with a negative delta and no is
       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 gap-[2px] w-[100%]"
     >
       <div
-        class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-baseline gap-[8px]"
+        class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[4px]"
       >
         <span
           class="[display:inline] box-border m-0 [word-wrap:break-word] [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)] max-w-full overflow-hidden text-ellipsis whitespace-nowrap shrink-[1]"
@@ -396,7 +396,7 @@ exports[`TokenCard > renders the vertical layout with price, issuer label and po
       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 gap-[2px] w-[100%]"
     >
       <div
-        class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-baseline gap-[8px]"
+        class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[4px]"
       >
         <span
           class="[display:inline] box-border m-0 [word-wrap:break-word] [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)] max-w-full overflow-hidden text-ellipsis whitespace-nowrap shrink-[1]"
@@ -404,7 +404,7 @@ exports[`TokenCard > renders the vertical layout with price, issuer label and po
           Amazon
         </span>
         <span
-          class="[display:inline] box-border m-0 [word-wrap:break-word] [font-family:var(--stext-font-book)] text-[12px] [line-height:16px] [font-weight:485] [color:var(--stext-neutral3)] max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
+          class="[display:inline] box-border m-0 [word-wrap:break-word] [font-family:var(--stext-font-book)] text-[14px] [line-height:18px] [font-weight:485] [color:var(--stext-neutral3)] max-w-full overflow-hidden text-ellipsis whitespace-nowrap shrink-[0]"
         >
           Robinhood
         </span>

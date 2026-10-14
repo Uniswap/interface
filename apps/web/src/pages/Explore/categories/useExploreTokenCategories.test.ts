@@ -18,10 +18,12 @@ vi.mock('uniswap/src/data/apiClients/dataApiService/categories/useListCategories
 const DEFI: TokenCategory = {
   id: 'defi',
   name: 'DeFi',
+  englishName: 'DeFi',
   description: '',
   categoryClass: TokenCategoryClass.Sector,
   grouped: false,
   topTokens: [],
+  topGroups: [],
 }
 
 function mockQuery({

@@ -1,6 +1,7 @@
 // Enum value represents tag name in OneSignal
 export enum NotifSettingType {
   GeneralUpdates = 'settings_general_updates_enabled',
+  PriceAlerts = 'settings_price_alerts_enabled',
 }
 
 // Enum value represents tag name in OneSignal

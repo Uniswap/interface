@@ -1,5 +1,10 @@
-import { useSearchParams } from 'react-router'
+import { isSVMChain, type UniverseChainId } from '@universe/chains'
+import { useIsTokenCategoriesEnabled } from '@universe/gating'
+import { useNavigate, useSearchParams } from 'react-router'
 import { useEvent } from 'utilities/src/react/hooks'
+import { buildExploreUrl } from '~/features/Explore/utils/buildExploreUrl'
+import { ExploreTab } from '~/types/explore'
+import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 export enum ExploreCategory {
   /** Frontend-owned paramless default (the unfiltered table); useExploreTokenCategories drops any backend category reusing this id. */
@@ -19,6 +24,21 @@ const CATEGORY_PARAM = 'category'
 /** BE category ids are lowercase-kebab slugs; bounds what an unverified `?category=` may send to ListTokens. */
 const CATEGORY_SLUG_PATTERN = /^[a-z0-9][a-z0-9-]*$/
 const CATEGORY_SLUG_MAX_LENGTH = 64
+
+/**
+ * Solana tokens carry no category tags (their data comes from Codex, not our DB), so every category table
+ * is empty on SVM chains. With token categories on, an SVM scope only gets the All table.
+ */
+export function isCategoryUnsupportedChain(chainId: UniverseChainId | undefined): boolean {
+  return chainId !== undefined && isSVMChain(chainId)
+}
+
+/** Drops `?category=`, e.g. when the network filter moves to a chain without category coverage. */
+export function withoutCategoryParam(params: URLSearchParams): URLSearchParams {
+  const updated = new URLSearchParams(params)
+  updated.delete(CATEGORY_PARAM)
+  return updated
+}
 
 function isWellFormedCategorySlug(value: string): boolean {
   return value.length <= CATEGORY_SLUG_MAX_LENGTH && CATEGORY_SLUG_PATTERN.test(value)
@@ -71,6 +91,8 @@ export const EXPLORE_TOKEN_SECTION_ID = 'explore-token-section'
  * `validCategoryIds` bounds the param values (chip ids minus All, which is the paramless default);
  * unknown params read as All without rewriting the URL, except that a well-formed slug is trusted
  * while `trustUnverifiedIds` is set (see categoryFromParam).
+ * With token categories on, a chain without category coverage reads as All, and picking a category
+ * there resets the network filter to All networks rather than showing an empty table.
  */
 export function useExploreCategory({
   validCategoryIds,
@@ -80,7 +102,13 @@ export function useExploreCategory({
   trustUnverifiedIds: boolean
 }): [string, (category: string) => void] {
   const [params, setParams] = useSearchParams()
-  const category = categoryFromParam({ value: params.get(CATEGORY_PARAM), validCategoryIds, trustUnverifiedIds })
+  const navigate = useNavigate()
+  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
+  const chainId = useChainIdFromUrlParam()
+  const chainUnsupported = tokenCategoriesEnabled && isCategoryUnsupportedChain(chainId)
+  const category = chainUnsupported
+    ? ExploreCategory.All
+    : categoryFromParam({ value: params.get(CATEGORY_PARAM), validCategoryIds, trustUnverifiedIds })
 
   const setCategory = useEvent((next: string): void => {
     const updated = new URLSearchParams(params)
@@ -88,6 +116,12 @@ export function useExploreCategory({
       updated.set(CATEGORY_PARAM, next)
     } else {
       updated.delete(CATEGORY_PARAM)
+    }
+    if (chainUnsupported && next !== ExploreCategory.All) {
+      navigate(buildExploreUrl({ tabName: ExploreTab.Tokens, chainId: undefined, searchParams: updated }), {
+        replace: true,
+      })
+      return
     }
     setParams(updated, { replace: true })
   })

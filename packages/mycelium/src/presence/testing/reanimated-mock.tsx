@@ -158,6 +158,13 @@ export function runOnJS<T extends (...args: never[]) => unknown>(fn: T): T {
   return fn
 }
 
+/** Mirrors reanimated's `ReduceMotion` enum so worklet configs can read `.System`. */
+export const ReduceMotion = {
+  System: 'system',
+  Always: 'always',
+  Never: 'never',
+} as const
+
 export const Easing = {
   linear: (t: number): number => t,
   quad: (t: number): number => t,

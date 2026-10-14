@@ -3,8 +3,8 @@ import { TokenCategoryClass } from 'uniswap/src/features/tokenCategories/types'
 import { tokenCategory } from 'uniswap/src/test/fixtures/tokenCategory'
 
 describe(findTrendingCategory, () => {
-  it('resolves the Market-class category named Trending', () => {
-    const trending = tokenCategory({ id: 'trending', name: 'Trending', categoryClass: TokenCategoryClass.Market })
+  it('resolves the trending category by id regardless of its localized name', () => {
+    const trending = tokenCategory({ id: 'trending', name: 'Tendencias', categoryClass: TokenCategoryClass.Market })
     const categories = [tokenCategory({ id: 'defi' }), trending]
     expect(findTrendingCategory(categories)).toBe(trending)
   })

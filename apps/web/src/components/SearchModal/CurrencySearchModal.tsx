@@ -56,7 +56,7 @@ export const CurrencySearchModal = memo(function CurrencySearchModal({
       flex={1}
       name={ModalName.CurrencySearch}
       // The mobile-web sheet must take its height from the snap point, not content-fit: the
-      // virtualized token list sizes itself to its container (AutoSizer) so it has no intrinsic
+      // virtualized token list fills its container rather than its content, so it has no intrinsic
       // height, and a fit-mode sheet opened with cached data freezes at chrome height with an
       // empty list (SWAP-3250).
       snapPoints={SNAP_POINTS}

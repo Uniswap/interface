@@ -15,6 +15,7 @@ import { CATEGORY_PILL_HEIGHT, CategoryPill } from 'uniswap/src/features/tokenCa
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 const contentContainerStyle: ViewStyle = {
   gap: spacing.spacing8,
@@ -28,14 +29,19 @@ const SKELETON_PILL_WIDTHS = [88, 104, 96]
 export const TokenDetailsCollections = memo(function TokenDetailsCollections(): JSX.Element | null {
   const { t } = useTranslation()
   const navigation = useAppStackNavigation()
-  const { currencyId } = useTokenDetailsContext()
+  const { currencyId, address, chainId } = useTokenDetailsContext()
+  const trace = useTrace()
   const { categories, isLoading } = useTokenCategories(currencyId)
 
   const onPressCategory = useEvent((category: TokenCategory, index: number) => {
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      ...trace,
       element: ElementName.TDPCollectionsChip,
       category_id: category.id,
       category_index: index,
+      token_address: address,
+      chain_id: chainId,
+      tags_rendered_count: categories.length,
     })
     navigation.navigate(MobileScreens.CategoryDetails, { categoryId: category.id })
   })
@@ -88,5 +94,5 @@ const CollectionPill = memo(function CollectionPill({
 }): JSX.Element {
   const onPressPill = useEvent(() => onPress(category, index))
 
-  return <CategoryPill category={category} color="$neutral2" onPress={onPressPill} />
+  return <CategoryPill category={category} onPress={onPressPill} />
 })

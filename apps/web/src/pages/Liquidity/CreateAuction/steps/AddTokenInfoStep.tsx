@@ -1,5 +1,6 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { Flex } from '@universe/mycelium'
+import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { useTranslation } from 'react-i18next'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -24,6 +25,8 @@ export function AddTokenInfoStep() {
   // switch are hidden so the mode can't be toggled out of the preset.
   const isQuickLaunchModalFlow = useIsQuickLaunchModalFlow()
   const trace = useTrace()
+  // mWeb shows the source tiles title-only; the Token info copy below already explains the choice.
+  const showTileDescriptions = !useMedia().md
 
   // HookTile is a custom component that doesn't forward an injected onPress, so the source-toggle
   // ELEMENT_CLICKED is fired here rather than via a <Trace logPress> wrapper.
@@ -51,13 +54,17 @@ export function AddTokenInfoStep() {
           <HookTile
             selected={tokenForm.mode === TokenMode.CREATE_NEW}
             title={t('toucan.createAuction.step.tokenInfo.createNew')}
-            description={t('toucan.createAuction.step.tokenInfo.createNew.description')}
+            description={
+              showTileDescriptions ? t('toucan.createAuction.step.tokenInfo.createNew.description') : undefined
+            }
             onPress={switchToCreateNew}
           />
           <HookTile
             selected={tokenForm.mode === TokenMode.EXISTING}
             title={t('toucan.createAuction.step.tokenInfo.existing')}
-            description={t('toucan.createAuction.step.tokenInfo.existing.description')}
+            description={
+              showTileDescriptions ? t('toucan.createAuction.step.tokenInfo.existing.description') : undefined
+            }
             onPress={switchToExisting}
           />
         </Flex>

@@ -75,7 +75,7 @@ export const TokenDetailsHeader = memo(function TokenDetailsHeaderInner(): JSX.E
     <Flex row alignItems="flex-start" gap="$spacing12" mx="$spacing16">
       <TokenLogo
         chainId={chainId}
-        hideNetworkLogo={isMultichainToken || !!rwaMatch}
+        hideNetworkLogo={isMultichainToken}
         name={tokenName ?? undefined}
         symbol={rwaMatch?.asset.symbol ?? metadata.symbol ?? undefined}
         url={logoUrl}

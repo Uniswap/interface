@@ -21,7 +21,10 @@ import { sendSearchOptionItemClickedAnalytics } from 'uniswap/src/features/searc
 import type { SearchFilterContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
 import { withRwaIssuerMetrics } from 'uniswap/src/features/search/SearchModal/stocks/rwaIssuerMetrics'
 import { useRwaIssuerMetricsIndex } from 'uniswap/src/features/search/SearchModal/stocks/useRwaIssuerMetricsIndex'
-import { tdpChainFilterForTokenRow } from 'uniswap/src/features/search/SearchModal/utils/searchModalListItem'
+import {
+  addressSearchMatchesMultipleChains,
+  tdpChainFilterForTokenRow,
+} from 'uniswap/src/features/search/SearchModal/utils/searchModalListItem'
 import type { CategoryTagPlacement } from 'uniswap/src/features/tokenCategories/CategoryTagPill'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { tdpChainSelectionFromFilter } from 'uniswap/src/utils/linking'
@@ -126,6 +129,10 @@ export function RwaCollectionItem({
       rowChainId: chainId,
       searchQuery: searchFilters.query,
       allowAggregate: isMultichain,
+      addressMatchesMultipleChains: addressSearchMatchesMultipleChains({
+        searchQuery: searchFilters.query,
+        deployments: issuer.chainTokens,
+      }),
     })
     return { chainId, address: chainToken.address, primaryCurrencyId, tokenCurrencyIds, isMultichain, tdpChain }
   }

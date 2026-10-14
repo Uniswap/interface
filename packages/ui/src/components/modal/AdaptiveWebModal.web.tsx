@@ -128,6 +128,7 @@ export function AdaptiveWebModal({
   overlayOpacity,
   snapPointsMode,
   snapPoints,
+  sheetFitHeight = 'ratchet',
   disableRemoveScroll = false,
   ...rest
 }: ModalProps): JSX.Element {
@@ -171,6 +172,7 @@ export function AdaptiveWebModal({
         hideHandlebar={hideHandlebar}
         snapPointsMode={snapPointsMode}
         snapPoints={snapPoints}
+        sheetFitHeight={sheetFitHeight}
         zIndex={effectiveZIndex}
         disableRemoveScroll={disableRemoveScroll}
         onClose={onClose}
@@ -292,6 +294,7 @@ export function WebModalWithBottomAttachment({
   overlayOpacity,
   snapPointsMode,
   snapPoints,
+  sheetFitHeight = 'ratchet',
   disableRemoveScroll = false,
   ...rest
 }: ModalProps & { bottomAttachment?: ReactNode }): JSX.Element {
@@ -325,6 +328,7 @@ export function WebModalWithBottomAttachment({
         hideHandlebar={hideHandlebar}
         snapPointsMode={snapPointsMode}
         snapPoints={snapPoints}
+        sheetFitHeight={sheetFitHeight}
         zIndex={effectiveZIndex}
         disableRemoveScroll={disableRemoveScroll}
         onClose={onClose}

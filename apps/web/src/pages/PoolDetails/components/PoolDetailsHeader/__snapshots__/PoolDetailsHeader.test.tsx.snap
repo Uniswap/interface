@@ -334,8 +334,7 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
             tabindex="0"
           >
             <div
-              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 overflow-hidden text-ellipsis whitespace-nowrap"
-              style="max-width: calc(100% - 0px);"
+              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] shrink-[1] min-w-[0px] overflow-hidden text-ellipsis whitespace-nowrap"
             >
               <span
                 class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral2)]"

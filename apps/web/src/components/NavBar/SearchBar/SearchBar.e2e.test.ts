@@ -1,12 +1,12 @@
-import { searchTokens } from '@uniswap/client-data-api/dist/data/v1/search-SearchService_connectquery'
+import { search } from '@uniswap/client-data-api/dist/data/v2/search-SearchService_connectquery'
 import { TestID } from '@universe/test'
 import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { UNI } from 'uniswap/src/constants/tokens'
 import { expect, getTest, type Page } from '~/playwright/fixtures'
 import { Mocks } from '~/playwright/mocks/mocks'
 
-async function mockSearchTokensResponse({ page }: { page: Page }) {
-  await page.route(`**/${searchTokens.service.typeName}/${searchTokens.name}`, async (route) => {
+async function mockSearchResponse({ page }: { page: Page }) {
+  await page.route(`**/${search.service.typeName}/${search.name}`, async (route) => {
     await route.fulfill({ path: Mocks.Search.search_token_uni })
   })
 }
@@ -24,7 +24,7 @@ test.describe(
   },
   () => {
     test.beforeEach(async ({ page }) => {
-      await mockSearchTokensResponse({ page })
+      await mockSearchResponse({ page })
       await page.goto('/')
       await page.getByTestId(TestID.NavSearchIcon).click()
       await page.getByTestId(TestID.ExploreSearchInput).click()

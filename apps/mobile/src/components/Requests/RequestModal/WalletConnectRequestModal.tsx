@@ -10,11 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ModalWithOverlay } from 'src/components/Requests/ModalWithOverlay/ModalWithOverlay'
 import { ActionCannotBeCompletedContent } from 'src/components/Requests/RequestModal/ActionCannotBeCompletedContent'
 import { useHasSufficientFunds } from 'src/components/Requests/RequestModal/hooks'
-import { UwULinkErc20SendModal } from 'src/components/Requests/RequestModal/UwULinkErc20SendModal'
-import {
-  isWalletBuiltUwULinkErc20Send,
-  shouldDisableWalletConnectConfirmForSafety,
-} from 'src/components/Requests/RequestModal/walletConnectRequestGating'
+import { shouldDisableWalletConnectConfirmForSafety } from 'src/components/Requests/RequestModal/walletConnectRequestGating'
 import {
   getDoesMethodCostGas,
   WalletConnectRequestModalContent,
@@ -43,7 +39,7 @@ import type { GasFeeOverrides } from 'uniswap/src/features/gas/types'
 import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { DappRequestType, UwULinkMethod, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
+import { DappRequestType, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { TransactionRiskLevel } from 'wallet/src/features/dappRequests/types'
@@ -62,7 +58,6 @@ const VALID_REQUEST_TYPES = [
   EthMethod.SignTypedDataV4,
   EthMethod.EthSign,
   EthMethod.EthSendTransaction,
-  UwULinkMethod.Erc20Send,
   EthMethod.WalletSendCalls,
 ]
 
@@ -126,10 +121,8 @@ function ValidatedWalletConnectRequestModal({ onClose, request }: Props): JSX.El
   const { value: confirmedRisk, setValue: setConfirmedRisk } = useBooleanState(false)
   const [gasOverrides, setGasOverrides] = useState<GasFeeOverrides | undefined>(undefined)
   const enableCustomGasFeeEntry = useEnableCustomGasFeeEntry()
-  // 4337 sponsored userOps: paymaster pays. UwULinkErc20Send short-circuits to
-  // its own modal before this component renders, so we don't need to filter it
-  // here. The override row is hidden for sponsored userOps by withholding the
-  // setter from the content — matching the extension SendCalls gate.
+  // 4337 sponsored userOps: paymaster pays. The override row is hidden for sponsored
+  // userOps by withholding the setter from the content — matching the extension SendCalls gate.
   const isSponsoredUserOp = isUserOpRequest(request) && request.gasSponsored
   const isOverridesEligible = enableCustomGasFeeEntry && !isSponsoredUserOp
   const effectiveGasOverrides = isOverridesEligible ? gasOverrides : undefined
@@ -205,22 +198,12 @@ function ValidatedWalletConnectRequestModal({ onClose, request }: Props): JSX.El
   const hasMismatch = getHasMismatch(chainId)
   // When link mode is active we can sign messages through universal links on device
   const suppressOfflineWarning = request.isLinkModeSupported
-  const isWalletBuiltErc20Send = isWalletBuiltUwULinkErc20Send({
-    type: request.type,
-    requestType: request.dappRequestInfo.requestType,
-  })
 
   const checkConfirmEnabled = (): boolean => {
     if (
       shouldDisableWalletConnectConfirmForSafety({
         isInternetReachable: netInfo.isInternetReachable,
         isLinkModeSupported: suppressOfflineWarning,
-        // A wallet-built UwULink ERC-20 send waives the dapp scan; a spoofed Erc20Send with external
-        // provenance is not wallet-built, so it still requires a scan (fail closed). The UwULink allowlist
-        // constrains chainId + recipient only, not the token contract, so this waiver leaves an
-        // attacker-chosen token contract unscanned — tracked in CONS-3065 (scan these, or allowlist the
-        // token). Remove the waiver once that lands.
-        requiresScan: !isWalletBuiltErc20Send,
         riskLevel,
         confirmedRisk,
       })
@@ -291,11 +274,7 @@ function ValidatedWalletConnectRequestModal({ onClose, request }: Props): JSX.El
       return
     }
 
-    if (
-      request.type === EthMethod.EthSendTransaction ||
-      request.type === UwULinkMethod.Erc20Send ||
-      request.type === EthMethod.WalletSendCalls
-    ) {
+    if (request.type === EthMethod.EthSendTransaction || request.type === EthMethod.WalletSendCalls) {
       if (isUserOpRequest(request)) {
         dispatch(
           signWcRequestActions.trigger({
@@ -389,26 +368,7 @@ function ValidatedWalletConnectRequestModal({ onClose, request }: Props): JSX.El
     }
   }
 
-  if (isWalletBuiltErc20Send && request.type === UwULinkMethod.Erc20Send) {
-    return (
-      <UwULinkErc20SendModal
-        confirmEnabled={confirmEnabled}
-        gasFee={gasFee}
-        hasSufficientGasFunds={hasSufficientFunds}
-        request={request}
-        onClose={handleClose}
-        onConfirm={onConfirmPress}
-        onReject={onReject}
-      />
-    )
-  }
-
-  if (
-    enablePermitMismatchUx &&
-    hasMismatch &&
-    request.type !== UwULinkMethod.Erc20Send &&
-    isSignTypedDataRequest(request)
-  ) {
+  if (enablePermitMismatchUx && hasMismatch && isSignTypedDataRequest(request)) {
     return <ActionCannotBeCompletedContent request={request} onReject={onReject} />
   }
 

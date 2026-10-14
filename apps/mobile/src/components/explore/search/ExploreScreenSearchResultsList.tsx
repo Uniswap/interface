@@ -98,6 +98,7 @@ export const ExploreScreenSearchResultsList = memo(function ExploreScreenSearchR
         </Flex>
         {searchQuery && searchQuery.length > 0 ? (
           <SearchModalResultsList
+            hideTokenCategoryTag
             chainFilter={chainFilter}
             parsedChainFilter={parsedChainFilter}
             debouncedParsedSearchFilter={debouncedParsedSearchQuery}
@@ -110,6 +111,7 @@ export const ExploreScreenSearchResultsList = memo(function ExploreScreenSearchR
           />
         ) : (
           <SearchModalNoQueryList
+            hideTokenCategoryTag
             chainFilter={chainFilter}
             activeTab={activeTab}
             renderedInModal={false}

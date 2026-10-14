@@ -1,4 +1,60 @@
-import { appendLiveSpotPriceEntry, getLowVarianceAxisDecimals } from 'uniswap/src/components/charts/utils'
+import {
+  appendLiveSpotPriceEntry,
+  getIsStablecoin,
+  getLowVarianceAxisDecimals,
+  isLowVarianceRange,
+} from 'uniswap/src/components/charts/utils'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
+
+describe('isLowVarianceRange', () => {
+  // XAUt over a very quiet day: ~0.34%, under the 0.5% 1D cutoff
+  const flatGoldDay = { min: 4146, max: 4160, duration: HistoryDuration.Day }
+
+  it('judges on the range alone when isStablecoin is unknown', () => {
+    expect(isLowVarianceRange(flatGoldDay)).toBe(true)
+    expect(isLowVarianceRange({ min: 4000, max: 4200, duration: HistoryDuration.Day })).toBe(false)
+  })
+
+  it('does not flatten a quiet ETH day or hour', () => {
+    // ~1.3% range, which the old 1.5% 1H/1D cutoff flattened
+    const quietEth = { min: 4500, max: 4560 }
+    expect(isLowVarianceRange({ ...quietEth, duration: HistoryDuration.Day })).toBe(false)
+    expect(isLowVarianceRange({ ...quietEth, duration: HistoryDuration.Hour })).toBe(false)
+    // ~0.7%
+    expect(isLowVarianceRange({ min: 4500, max: 4530, duration: HistoryDuration.Day })).toBe(false)
+  })
+
+  it('never qualifies a non-stablecoin, however flat', () => {
+    expect(isLowVarianceRange({ ...flatGoldDay, isStablecoin: false })).toBe(false)
+  })
+
+  it('qualifies a flat stablecoin but not a depegged one', () => {
+    const stablecoin = { duration: HistoryDuration.Day, isStablecoin: true }
+    expect(isLowVarianceRange({ ...stablecoin, min: 0.9999, max: 1.0001 })).toBe(true)
+    expect(isLowVarianceRange({ ...stablecoin, min: 0.8, max: 1 })).toBe(false)
+  })
+
+  it('returns false without a duration', () => {
+    expect(isLowVarianceRange({ min: 1, max: 1 })).toBe(false)
+  })
+})
+
+describe('getIsStablecoin', () => {
+  it('is undefined with Token Categories off, keeping range-only behavior', () => {
+    expect(getIsStablecoin({ tokenCategoriesEnabled: false, categoryIds: ['stablecoins'] })).toBeUndefined()
+    expect(getIsStablecoin({ tokenCategoriesEnabled: false, categoryIds: ['commodities'] })).toBeUndefined()
+  })
+
+  it('is undefined until tags are known', () => {
+    expect(getIsStablecoin({ tokenCategoriesEnabled: true, categoryIds: undefined })).toBeUndefined()
+  })
+
+  it('reports stablecoin membership from the tags', () => {
+    expect(getIsStablecoin({ tokenCategoriesEnabled: true, categoryIds: ['majors', 'stablecoins'] })).toBe(true)
+    expect(getIsStablecoin({ tokenCategoriesEnabled: true, categoryIds: ['commodities'] })).toBe(false)
+    expect(getIsStablecoin({ tokenCategoriesEnabled: true, categoryIds: [] })).toBe(false)
+  })
+})
 
 describe('getLowVarianceAxisDecimals', () => {
   it('returns undefined for normal/wide ranges', () => {

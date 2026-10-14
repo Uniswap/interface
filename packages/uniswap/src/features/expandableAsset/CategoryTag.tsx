@@ -34,11 +34,13 @@ function useFallbackTokenCategory(rwaCategory: RwaCategory): TokenCategory | und
     return {
       id,
       name,
+      englishName: name,
       description: '',
       categoryClass: TokenCategoryClass.Asset,
       // Inert here: the tag only reads id + name. Table routing must come from the BE flag, never this stand-in.
       grouped: rwaCategory !== RwaCategory.COMMODITIES,
       topTokens: [],
+      topGroups: [],
     }
   }, [rwaCategory, t])
 }

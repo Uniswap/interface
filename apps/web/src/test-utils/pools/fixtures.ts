@@ -1,8 +1,6 @@
-import { Currency, WETH9 } from '@uniswap/sdk-core'
-import { FeeAmount, Pool, Position } from '@uniswap/v3-sdk'
+import { Currency } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
-import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import type { ParsedToken } from 'uniswap/src/features/dataApi/utils/parsedToken'
 import type { PoolData } from '~/data/pools/poolData'
 import type { PoolStat } from '~/types/explore'
@@ -85,53 +83,6 @@ export const validParsedPoolToken1: ParsedToken = {
   name: validPoolToken1.name,
   decimals: validPoolToken1.decimals,
   logoUrl: validPoolToken1.project.logo.url,
-}
-
-const owner = '0xf5b6bb25f5beaea03dd014c6ef9fa9f3926bf36c'
-
-const pool = new Pool(
-  USDC_MAINNET,
-  WETH9[UniverseChainId.Mainnet],
-  FeeAmount.MEDIUM,
-  '1851127709498178402383049949138810',
-  '7076437181775065414',
-  201189,
-)
-
-const position = new Position({
-  pool,
-  liquidity: 1341008833950736,
-  tickLower: 200040,
-  tickUpper: 202560,
-})
-const details = {
-  nonce: 0n,
-  tokenId: 0n,
-  operator: '0x0',
-  token0: USDC_MAINNET.address,
-  token1: WETH9[UniverseChainId.Mainnet].address,
-  fee: FeeAmount.MEDIUM,
-  tickLower: -100,
-  tickUpper: 100,
-  liquidity: 9000n,
-  feeGrowthInside0LastX128: 0n,
-  feeGrowthInside1LastX128: 0n,
-  tokensOwed0: 0n,
-  tokensOwed1: 0n,
-}
-export const useMultiChainPositionsReturnValue = {
-  positions: [
-    {
-      owner,
-      chainId: UniverseChainId.Mainnet,
-      position,
-      pool,
-      details,
-      inRange: true,
-      closed: false,
-    },
-  ],
-  loading: false,
 }
 
 export const usdcWethPoolAddress = '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640'

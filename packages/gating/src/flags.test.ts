@@ -59,7 +59,7 @@ describe('getFeatureFlagName', () => {
   it('resolves platform-specific flags for their client', () => {
     expect(getFeatureFlagName(FeatureFlags.AATestWeb, FeatureFlagClient.Web)).toBe('aatest_web')
     expect(getFeatureFlagName(FeatureFlags.TokenProvenance, FeatureFlagClient.Web)).toBe('token_provenance')
-    expect(getFeatureFlagName(FeatureFlags.UwULink, FeatureFlagClient.Wallet)).toBe('uwu-link')
+    expect(getFeatureFlagName(FeatureFlags.Scantastic, FeatureFlagClient.Wallet)).toBe('scantastic')
   })
 
   it('resolves every flag mapped for the requested client', () => {
@@ -82,8 +82,8 @@ describe('getFeatureFlagName', () => {
     expect(() => getFeatureFlagName(FeatureFlags.TokenProvenance, FeatureFlagClient.Wallet)).toThrow(
       'Feature TokenProvenance does not have a name mapped for this application',
     )
-    expect(() => getFeatureFlagName(FeatureFlags.UwULink, FeatureFlagClient.Web)).toThrow(
-      'Feature UwULink does not have a name mapped for this application',
+    expect(() => getFeatureFlagName(FeatureFlags.Scantastic, FeatureFlagClient.Web)).toThrow(
+      'Feature Scantastic does not have a name mapped for this application',
     )
   })
 })

@@ -1,3 +1,4 @@
+import { UniverseChainId } from '@universe/chains'
 import type { ChartPoint } from 'uniswap/src/components/charts/computeChartPaths'
 import { TokenCard } from 'uniswap/src/components/TokenCard/TokenCard'
 import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
@@ -40,7 +41,7 @@ describe('TokenCard', () => {
   it('renders the vertical layout with price, issuer label and positive delta', () => {
     const tree = render(
       <TokenCard
-        issuerLabel="Robinhood"
+        issuer={{ issuer: 'robinhood', issuerDisplayName: 'Robinhood' }}
         layout="vertical"
         logoUrl="https://example.com/logo.png"
         name="Amazon"
@@ -81,6 +82,35 @@ describe('TokenCard', () => {
       />,
     )
     expect(tree).toMatchSnapshot()
+  })
+
+  it('shows the network badge for the given chain, including mainnet', () => {
+    const tree = render(
+      <TokenCard
+        chainId={UniverseChainId.Mainnet}
+        layout="horizontal"
+        name="Uniswap"
+        sparkline={sparkline}
+        symbol="UNI"
+        width={280}
+      />,
+    )
+    expect(tree.getByTestId(`network-logo-${UniverseChainId.Mainnet}`)).toBeTruthy()
+  })
+
+  it('hides the network badge when hideNetworkLogo is set', () => {
+    const tree = render(
+      <TokenCard
+        hideNetworkLogo
+        chainId={UniverseChainId.Base}
+        layout="horizontal"
+        name="Uniswap"
+        sparkline={sparkline}
+        symbol="UNI"
+        width={280}
+      />,
+    )
+    expect(tree.queryByTestId(`network-logo-${UniverseChainId.Base}`)).toBeNull()
   })
 
   it('renders a spacer instead of a sparkline for fewer than 2 points', () => {

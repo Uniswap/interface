@@ -15,7 +15,7 @@ import { Context, Hono } from 'hono'
 import { proxy } from 'hono/proxy'
 
 type Bindings = {
-  ASSETS?: { fetch: typeof fetch } // Only present on Cloudflare Workers
+  ASSETS?: { fetch: typeof fetch } // Static-file reader supplied by the Node entry points
 }
 
 /**
@@ -140,13 +140,8 @@ export function createApp({
     const backendUrl = getEntryGatewayUrl(c, env)
     const query = new URL(c.req.url).search
 
-    // Forward the real client IP so the EGW authorizer (and downstream
-    // providers like Coinbase) see the user's IP, not the proxy's IP.
-    // Each platform provides a trusted IP source — Cloudflare sets
-    // cf-connecting-ip automatically; Vercel sets x-real-ip at the TCP
-    // level. We always overwrite cf-connecting-ip from the trusted source
-    // to prevent clients from spoofing it (especially on Vercel where
-    // there's no Cloudflare to sanitize headers).
+    // Forward the client IP under the header EGW reads (cf-connecting-ip), always
+    // overwriting it from the platform's trusted source so clients cannot spoof it.
     const clientIp = getTrustedClientIp(c)
 
     const targetUrl = `${backendUrl}${remainingPath}${query}`
@@ -180,9 +175,8 @@ export function createApp({
   // ── BFF proxy: WebSocket ────────────────────────────────────────────
   // In production, clients connect directly to the backend WebSocket
   // service — see getWebSocketUrl() in packages/api/src/getWebSocketUrl.ts.
-  // This proxy is used in local dev (Vite + @cloudflare/vite-plugin) and
-  // on Cloudflare Workers staging, where the CF Workers runtime handles
-  // the WebSocket upgrade natively via fetch().
+  // Node's fetch() cannot upgrade a WebSocket, so the dev server proxies
+  // /ws in Vite instead (vite/entry-gateway-proxy.ts).
   // Headers are stripped to avoid forwarding the local dev origin/host
   // to the backend, which would reject them.
   app.get('/ws', async (c) => {

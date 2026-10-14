@@ -1,6 +1,7 @@
 import { isWebPlatform } from '@universe/environment'
 import { Flex, type FlexCompatProps as FlexProps, type ModifierPressProps, TouchableArea } from '@universe/mycelium'
 import type { ReactNode } from 'react'
+import { useIsRowFocused } from 'uniswap/src/components/lists/focusedRowStore'
 import type { FocusedRowControl } from 'uniswap/src/components/lists/items/OptionItem'
 import { EXPANDABLE_ASSET_ISSUER_ROW_MIN_HEIGHT_PX } from 'uniswap/src/features/expandableAsset/expandableAssetLayout'
 import { KeyAction } from 'utilities/src/device/keyboard/types'
@@ -49,15 +50,15 @@ export function ExpandableSearchRow({
 }: ExpandableSearchRowProps): JSX.Element {
   // Mirror OptionItem's keyboard list-nav contract so an arrowed-to collection row shows focus and Enter
   // activates it (expand/collapse, or navigate for a single-issuer row). Web-only — native has no arrow-key nav.
-  const { focusedRowIndex, rowIndex, setFocusedRowIndex } = focusedRowControl ?? {}
+  const { rowIndex, setFocusedRowIndex } = focusedRowControl ?? {}
   const keyboardNavEnabled = isWebPlatform && focusedRowControl && setFocusedRowIndex
-  const isFocused = focusedRowIndex !== undefined && focusedRowIndex === rowIndex
+  const isFocused = useIsRowFocused(rowIndex)
   const onActivate = canExpand ? onToggle : (onParentPress ?? noop)
   useKeyDown({
     keys: ['Enter'],
     keyAction: KeyAction.UP,
-    disabled: !keyboardNavEnabled,
-    callback: isFocused ? onActivate : noop,
+    disabled: !keyboardNavEnabled || !isFocused,
+    callback: onActivate,
     shouldTriggerInInput: true,
   })
   const focusedStyleProps: FlexProps = keyboardNavEnabled

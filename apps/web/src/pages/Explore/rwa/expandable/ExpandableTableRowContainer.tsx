@@ -21,6 +21,9 @@ export type ExpandableTableRowContainerProps = {
    *  Disable when columns flex-grow (e.g. portfolio tokens) — otherwise the shell overflows the header/flat rows
    *  by the padding amount whenever the table scrolls horizontally. */
   extendShellBeyondRowContent?: boolean
+  /** Changing this snaps an open row shut in the same frame instead of playing the collapse transition.
+   *  Rows that close because the table reordered under them should disappear with the reorder, not after it. */
+  instantCollapseKey?: string
   onToggle: () => void
   parentRow: ReactNode
   issuerPanel: ReactNode
@@ -32,6 +35,7 @@ export function ExpandableTableRowContainer({
   collapsedIssuerHeightPx,
   expandedIssuerHeightPx,
   extendShellBeyondRowContent = true,
+  instantCollapseKey,
   onToggle,
   parentRow,
   issuerPanel,
@@ -40,6 +44,16 @@ export function ExpandableTableRowContainer({
   const [animatedIssuerHeightPx, setAnimatedIssuerHeightPx] = useState(targetIssuerHeightPx)
   const [retainIssuerPanel, setRetainIssuerPanel] = useState(isExpanded)
   const [isIssuerTransitioning, setIsIssuerTransitioning] = useState(false)
+  const [lastInstantCollapseKey, setLastInstantCollapseKey] = useState(instantCollapseKey)
+
+  // Drop the panel during render, not from an effect: the caller clears the expanded row in the same render
+  // that reorders the rows, so unmounting here keeps the close and the reorder in one commit — no exit
+  // transition playing against rows that already moved.
+  if (instantCollapseKey !== lastInstantCollapseKey) {
+    setLastInstantCollapseKey(instantCollapseKey)
+    setRetainIssuerPanel(false)
+    setIsIssuerTransitioning(false)
+  }
 
   // The clip div must mount in the SAME commit that flips `isExpanded`, so it gets a painted frame at the
   // collapsed height before the double-rAF below applies the expanded height. Mounting it from a passive

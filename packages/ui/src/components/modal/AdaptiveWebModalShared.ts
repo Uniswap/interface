@@ -42,6 +42,9 @@ export { stackingLayerAbove } from '@universe/mycelium/popover-compat'
 
 export type WebModalSnapPointsMode = 'fit' | 'percent' | 'constant' | 'mixed'
 
+/** Fit-mode frame height. `ratchet` holds the tallest height; `content` shrinks when content collapses. */
+export type SheetFitHeight = 'ratchet' | 'content'
+
 export type ModalProps = FlexProps &
   PropsWithChildren<{
     isOpen: boolean
@@ -51,6 +54,7 @@ export type ModalProps = FlexProps &
     hideHandlebar?: boolean
     snapPointsMode?: WebModalSnapPointsMode
     snapPoints?: Array<string | number>
+    sheetFitHeight?: SheetFitHeight
     overlayOpacity?: number
     borderColor?: string
     zIndex?: number

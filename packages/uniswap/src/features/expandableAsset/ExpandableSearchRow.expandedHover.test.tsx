@@ -1,5 +1,6 @@
 import { fireEvent } from '@testing-library/react'
 import { Flex } from '@universe/mycelium'
+import { createFocusedRowStore, FocusedRowStoreContext } from 'uniswap/src/components/lists/focusedRowStore'
 import type { FocusedRowControl } from 'uniswap/src/components/lists/items/OptionItem'
 import { ExpandableSearchRow } from 'uniswap/src/features/expandableAsset/ExpandableSearchRow'
 import { render } from 'uniswap/src/test/test-utils'
@@ -11,21 +12,25 @@ const HOVER_HIGHLIGHT = /hover:bg-\[color:var\(--ch-bg\)\]/
 
 const HEADER_TEST_ID = 'expandable-row-header'
 
-function renderRow({ showShell, focusedRowControl }: { showShell: boolean; focusedRowControl?: FocusedRowControl }): {
+type RenderRowArgs = { showShell: boolean; focusedRowControl?: FocusedRowControl; focusedRowIndex?: number }
+
+function renderRow({ showShell, focusedRowControl, focusedRowIndex }: RenderRowArgs): {
   headerElement: HTMLElement
   unmount: () => void
 } {
   const { getByTestId, unmount } = render(
-    <ExpandableSearchRow
-      showShell={showShell}
-      canExpand={true}
-      isExpanded={showShell}
-      onToggle={vi.fn()}
-      header={<Flex testID={HEADER_TEST_ID} />}
-      panelSlot={showShell ? <Flex testID="panel" /> : null}
-      focusedRowControl={focusedRowControl}
-      testID="row"
-    />,
+    <FocusedRowStoreContext.Provider value={createFocusedRowStore(focusedRowIndex)}>
+      <ExpandableSearchRow
+        showShell={showShell}
+        canExpand={true}
+        isExpanded={showShell}
+        onToggle={vi.fn()}
+        header={<Flex testID={HEADER_TEST_ID} />}
+        panelSlot={showShell ? <Flex testID="panel" /> : null}
+        focusedRowControl={focusedRowControl}
+        testID="row"
+      />
+    </FocusedRowStoreContext.Provider>,
   )
   // The header node is the consumer's own element; its parent is the styled Flex that carries the highlight.
   // This env renders mycelium to the DOM, but the RN-testing-library types still describe a ReactTestInstance.
@@ -36,7 +41,7 @@ function renderRow({ showShell, focusedRowControl }: { showShell: boolean; focus
   return { headerElement, unmount }
 }
 
-function headerClassName(args: { showShell: boolean; focusedRowControl?: FocusedRowControl }): string {
+function headerClassName(args: RenderRowArgs): string {
   const { headerElement, unmount } = renderRow(args)
   const className = headerElement.className
   unmount()
@@ -45,10 +50,10 @@ function headerClassName(args: { showShell: boolean; focusedRowControl?: Focused
 
 describe('ExpandableSearchRow header highlight', () => {
   it('highlights the focused collapsed row but not the expanded header (keyboard-nav path)', () => {
-    const focusedRowControl = { rowIndex: 0, focusedRowIndex: 0, setFocusedRowIndex: vi.fn() }
+    const focusedRowControl = { rowIndex: 0, setFocusedRowIndex: vi.fn() }
 
-    expect(headerClassName({ showShell: false, focusedRowControl })).toMatch(FOCUS_HIGHLIGHT)
-    expect(headerClassName({ showShell: true, focusedRowControl })).not.toMatch(FOCUS_HIGHLIGHT)
+    expect(headerClassName({ showShell: false, focusedRowControl, focusedRowIndex: 0 })).toMatch(FOCUS_HIGHLIGHT)
+    expect(headerClassName({ showShell: true, focusedRowControl, focusedRowIndex: 0 })).not.toMatch(FOCUS_HIGHLIGHT)
   })
 
   it('hovers the collapsed row but not the expanded header (no focusedRowControl → hoverStyle path)', () => {
@@ -60,7 +65,7 @@ describe('ExpandableSearchRow header highlight', () => {
     const setFocusedRowIndex = vi.fn()
     const { headerElement } = renderRow({
       showShell: true,
-      focusedRowControl: { rowIndex: 3, focusedRowIndex: undefined, setFocusedRowIndex },
+      focusedRowControl: { rowIndex: 3, setFocusedRowIndex },
     })
 
     fireEvent.mouseOver(headerElement)

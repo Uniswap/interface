@@ -13,9 +13,10 @@ import {
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
+import { getCategoryPileLogos } from 'uniswap/src/features/tokenCategories/getCategoryPileLogos'
 import { TokenLogoPile } from 'uniswap/src/features/tokenCategories/TokenLogoPile'
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
-import { getCategoryLearnMoreUrl } from '~/components/CategoryDefinitionCard/getCategoryLearnMoreUrl'
 
 /** `popover`: the left-aligned desktop hover card. `sheet`: the centered mobile web bottom-sheet body. */
 export type CategoryDefinitionCardLayout = 'popover' | 'sheet'
@@ -85,8 +86,8 @@ export const CategoryDefinitionCard = memo(function CategoryDefinitionCard({
 }: CategoryDefinitionCardProps): JSX.Element {
   const { t } = useTranslation()
   const style = LAYOUT_STYLES[layout]
-  const learnMoreUrl = getCategoryLearnMoreUrl(category)
   const centered = style.alignItems === 'center'
+  const pileLogos = getCategoryPileLogos(category)
 
   return (
     <TouchableArea
@@ -96,7 +97,7 @@ export const CategoryDefinitionCard = memo(function CategoryDefinitionCard({
       width={style.width}
       onPress={onPress}
     >
-      {category.topTokens.length > 0 && <TokenLogoPile size={style.pileSize} tokens={category.topTokens} />}
+      {pileLogos.length > 0 && <TokenLogoPile logos={pileLogos} size={style.pileSize} />}
       <Flex alignItems={style.alignItems} gap={style.nameRowGap} width="100%">
         <Flex row alignItems="center" gap={style.nameRowGap}>
           <Text color="$neutral1" variant={style.nameVariant}>
@@ -114,16 +115,14 @@ export const CategoryDefinitionCard = memo(function CategoryDefinitionCard({
           <Text color="$neutral2" textAlign={centered ? 'center' : undefined} variant={style.descriptionVariant}>
             {category.description}
           </Text>
-          {learnMoreUrl !== undefined && (
-            <TouchableTextLink
-              color="$neutral1"
-              link={learnMoreUrl}
-              variant={style.linkVariant}
-              onPress={stopPropagation}
-            >
-              {t('common.button.learn')}
-            </TouchableTextLink>
-          )}
+          <TouchableTextLink
+            color="$neutral1"
+            link={UniswapHelpUrls.articles.tokenCategoryDefinitions}
+            variant={style.linkVariant}
+            onPress={stopPropagation}
+          >
+            {t('common.button.learn')}
+          </TouchableTextLink>
         </Flex>
       </Flex>
     </TouchableArea>

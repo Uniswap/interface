@@ -115,7 +115,6 @@ export const DecimalPad = memo(function DecimalPad({
           label: '0',
           action: KeyAction.Insert,
           testID: TestID.DecimalPadNumber0,
-          align: 'center',
         },
         {
           label: 'backspace',
@@ -272,10 +271,10 @@ const KeyButton = memo(function KeyButton({
     // For a custom keyboard, we want to be able to detect each finger as a separate tap even when they are pressed at the same (or almost the same) time.
     <GestureDetector gesture={composedGesture}>
       <Flex
+        fill
         row
         $short={{ py: spacing.spacing16 * sizeMultiplier.padding }}
         alignItems="center"
-        flex={1}
         height="100%"
         px={spacing.spacing16 * sizeMultiplier.padding}
         py={spacing.spacing12 * sizeMultiplier.padding}

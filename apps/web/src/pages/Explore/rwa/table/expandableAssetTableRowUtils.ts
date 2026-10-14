@@ -8,13 +8,30 @@ import {
 } from 'uniswap/src/data/apiClients/dataApiService/rwa/rwaMetrics'
 import type { IssuerToken, Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { getTokenDetailsURL } from '~/data/util'
 import { TDP_MULTICHAIN_CHAIN_QUERY_VALUE } from '~/utils/params/chainQueryParam'
 
 /** `rank` is the 1-based Explore position; only top-level rows carry it, issuer sub-rows stay unranked. */
+type RowAnalytics = { elementName: ElementName; properties: Record<string, unknown> }
+
 export type ExpandableAssetTableRow =
-  | { type: 'parent'; asset: Rwa; subRows?: ExpandableAssetTableRow[]; link?: string; rank?: number }
-  | { type: 'issuer'; asset: Rwa; issuer: IssuerToken; link?: string; rank?: number }
+  | {
+      type: 'parent'
+      asset: Rwa
+      subRows?: ExpandableAssetTableRow[]
+      link?: string
+      rank?: number
+      analytics?: RowAnalytics
+    }
+  | {
+      type: 'issuer'
+      asset: Rwa
+      issuer: IssuerToken
+      link?: string
+      rank?: number
+      analytics?: RowAnalytics
+    }
 
 /**
  * @param chainFilter the active Explore network filter (e.g. `/explore/tokens/arbitrum`), if any. When present the
@@ -41,38 +58,77 @@ export function linkForIssuer({
   })
 }
 
+function buildIssuerRow({
+  asset,
+  issuer,
+  enabledChainIds,
+  chainFilter,
+  rank,
+  assetRank,
+  categoryId,
+}: {
+  asset: Rwa
+  issuer: IssuerToken
+  enabledChainIds: readonly UniverseChainId[]
+  chainFilter?: UniverseChainId
+  rank?: number
+  assetRank?: number
+  categoryId?: string
+}): ExpandableAssetTableRow {
+  const primary = resolvePrimaryChain({ issuer, enabledChainIds, chainFilter })
+  return {
+    type: 'issuer',
+    asset,
+    issuer,
+    link: linkForIssuer({ issuer, enabledChainIds, chainFilter }),
+    rank,
+    analytics: {
+      elementName: ElementName.TokensTableRow,
+      properties: {
+        token_address: primary?.chainToken.address,
+        chain_id: primary?.chainId,
+        token_symbol: issuer.symbol,
+        issuer: issuer.issuer,
+        token_list_rank: assetRank,
+        category_id: categoryId,
+      },
+    },
+  }
+}
+
 export function buildExpandableAssetTableRows({
   assets,
   enabledChainIds,
   chainFilter,
   rankByAsset,
+  categoryId,
 }: {
   assets: Rwa[]
   enabledChainIds: readonly UniverseChainId[]
   chainFilter?: UniverseChainId
   rankByAsset?: ReadonlyMap<Rwa, number>
+  categoryId?: string
 }): ExpandableAssetTableRow[] {
   return assets.flatMap((asset): ExpandableAssetTableRow[] => {
     const rank = rankByAsset?.get(asset)
     const soleIssuer = asset.issuerTokens.length === 1 ? asset.issuerTokens[0] : undefined
     if (soleIssuer) {
       return [
-        {
-          type: 'issuer',
+        buildIssuerRow({
           asset,
           issuer: soleIssuer,
-          link: linkForIssuer({ issuer: soleIssuer, enabledChainIds, chainFilter }),
+          enabledChainIds,
+          chainFilter,
           rank,
-        },
+          assetRank: rank,
+          categoryId,
+        }),
       ]
     }
 
-    const subRows = asset.issuerTokens.map((issuer) => ({
-      type: 'issuer' as const,
-      asset,
-      issuer,
-      link: linkForIssuer({ issuer, enabledChainIds, chainFilter }),
-    }))
+    const subRows = asset.issuerTokens.map((issuer) =>
+      buildIssuerRow({ asset, issuer, enabledChainIds, chainFilter, assetRank: rank, categoryId }),
+    )
 
     return [
       {
@@ -80,6 +136,14 @@ export function buildExpandableAssetTableRows({
         asset,
         subRows,
         rank,
+        analytics: {
+          elementName: ElementName.TokensTableGroupRow,
+          properties: {
+            token_symbol: asset.symbol,
+            token_list_rank: rank,
+            category_id: categoryId,
+          },
+        },
       },
     ]
   })

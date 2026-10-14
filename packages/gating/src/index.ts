@@ -9,8 +9,6 @@ export type {
   GasStrategyWithConditions,
   RWAIssuerLogo,
   RWAIssuerLogosMap,
-  UwULinkAllowlist,
-  UwULinkAllowlistItem,
 } from '@universe/gating/src/configs'
 export {
   AllowedV4WethHookAddressesConfigKey,
@@ -43,14 +41,12 @@ export {
   TokenCategoriesOrderConfigKey,
   TokenCategoriesSearchSpotlightConfigKey,
   UniswapBuiltHookAddressesConfigKey,
-  UwuLinkConfigKey,
   VerifiedAuctionsConfigKey,
 } from '@universe/gating/src/configs'
 export { StatsigCustomAppValue, TEST_STATSIG_SDK_KEY } from '@universe/gating/src/constants'
 export type { ExperimentProperties } from '@universe/gating/src/experiments'
 export {
   ArbitrumXV2SamplingProperties,
-  DiscoveryLayerProperties,
   EmbeddedWalletOnboardingProperties,
   EthAsErc20UniswapXProperties,
   Experiments,
@@ -60,7 +56,6 @@ export {
   NativeTokenPercentageBufferProperties,
   SwapConfirmationProperties,
   SwapLayerProperties,
-  V2EndpointsSearchProperties,
 } from '@universe/gating/src/experiments'
 export {
   FeatureFlagClient,
@@ -78,7 +73,6 @@ export {
   getIsTurnstileSolverEnabled,
   useIsTurnstileSolverEnabled,
 } from '@universe/gating/src/getIsTurnstileSolverEnabled'
-export { useIsV2EndpointsSearchEnabled } from '@universe/gating/src/useIsV2EndpointsSearchEnabled'
 export { getStatsigEnvName } from '@universe/gating/src/getStatsigEnvName'
 export {
   getDynamicConfigValue,

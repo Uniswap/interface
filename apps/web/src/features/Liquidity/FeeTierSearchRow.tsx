@@ -8,7 +8,6 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { NumberType } from 'utilities/src/format/types'
 import { useHeadlineRewardSymbol } from '~/features/Liquidity/LPIncentives/hooks/useHeadlineRewardSymbol'
 import { RewardAprBadge } from '~/features/Liquidity/LPIncentives/RewardAprBadge'
-import { isDynamicFeeTier } from '~/features/Liquidity/utils/feeTiers'
 import type { FeeTierData } from '~/types/liquidity'
 
 /** A single fee-tier row in the {@link FeeTierSearchModal} search list. */
@@ -47,8 +46,9 @@ export function FeeTierSearchRow({
     >
       <Flex>
         <Flex row alignItems="center">
-          {/* v4 rows headline the LP fee and reveal protocol + all-in on hover via FeeDisplay's tooltip. */}
-          <FeeDisplay feeBreakdown={isDynamicFeeTier(pool.fee) ? undefined : pool.feeBreakdown}>
+          {/* v4 rows headline the LP fee and reveal protocol + all-in on hover via FeeDisplay's tooltip.
+              Producers never attach a breakdown to a dynamic tier, so no dynamic guard is needed here. */}
+          <FeeDisplay feeBreakdown={pool.feeBreakdown}>
             <Text variant="subheading2">{pool.formattedFee}</Text>
           </FeeDisplay>
           {/* No tooltip without a symbol to name in it — the badge alone still shows the logo and APR. */}

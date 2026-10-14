@@ -73,7 +73,7 @@ export const TokenBalanceItem = memo(function TokenBalanceItemInner({
 }: TokenBalanceItemProps) {
   const { currency } = currencyInfo
   const { isTestnetModeEnabled } = useEnabledChains()
-  const { evmOwner, svmOwner, expandedCurrencyIds, multichainRowExpansionEnabled, onPressToken, hiddenBalanceRowIds } =
+  const { evmOwner, svmOwner, expandedCurrencyId, multichainRowExpansionEnabled, onPressToken, hiddenBalanceRowIds } =
     useTokenBalanceItemConfig()
 
   // Ensure items rerender when theme is switched
@@ -88,7 +88,7 @@ export const TokenBalanceItem = memo(function TokenBalanceItemInner({
     isExtensionApp && multichainRowExpansionEnabled && portfolioBalance && portfolioBalance.tokens.length > 1,
   )
 
-  const isMultichainRowExpanded = Boolean(portfolioBalance && expandedCurrencyIds.has(portfolioBalance.id))
+  const isMultichainRowExpanded = Boolean(portfolioBalance && expandedCurrencyId === portfolioBalance.id)
 
   const isHiddenSectionRow = Boolean(portfolioBalance && hiddenBalanceRowIds.has(portfolioBalance.id))
 

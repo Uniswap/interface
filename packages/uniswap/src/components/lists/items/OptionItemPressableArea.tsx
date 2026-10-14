@@ -8,6 +8,18 @@ export interface OptionItemPressableAreaProps extends ModifierPressProps {
   children: ReactNode
 }
 
+/**
+ * A press puts `:active` on the pressed element AND every DOM ancestor, so pressing a control inside a row
+ * (the search modal's "…" context-menu trigger) plays the row's press animation even though it never
+ * navigates. Such controls spread `rowPressExemptProps`, and EVERY pressable wrapping the row carries
+ * `rowPressExemptClassName` — a search-modal token row has two (this component and web's shared HoverCard
+ * trigger), and an unmarked one keeps animating the row on its own. `:has()` outranks the `active:` press
+ * classes on specificity, so no `!important`; both strings stay literals because Tailwind scans raw source.
+ */
+export const rowPressExemptProps = { 'data-row-press-exempt': '' } as const
+export const rowPressExemptClassName =
+  'has-[[data-row-press-exempt]:active]:[transform:none] has-[[data-row-press-exempt]:active]:opacity-100'
+
 /** Tappable/long-pressable wrapper for an OptionItem row. */
 export function OptionItemPressableArea({
   onPress,
@@ -19,6 +31,7 @@ export function OptionItemPressableArea({
 }: OptionItemPressableAreaProps): JSX.Element {
   return (
     <TouchableArea
+      className={rowPressExemptClassName}
       opacity={disabled ? 0.5 : 1}
       width="100%"
       px="$spacing12"

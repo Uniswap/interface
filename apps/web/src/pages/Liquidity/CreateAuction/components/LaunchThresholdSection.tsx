@@ -52,7 +52,7 @@ export function LaunchThresholdSection({
   return (
     <Flex gap="$spacing12">
       <Flex gap="$spacing8">
-        <Text variant="subheading1" color="$neutral1">
+        <Text variant="subheading1" $md={{ variant: 'subheading2' }} color="$neutral1">
           {t('toucan.createAuction.step.configureAuction.launchThreshold')}
         </Text>
         <Flex row alignItems="center" gap="$spacing8">

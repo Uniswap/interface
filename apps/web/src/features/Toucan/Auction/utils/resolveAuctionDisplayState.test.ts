@@ -80,8 +80,10 @@ describe('resolveAuctionDisplayState', () => {
     it.each([
       [{ ...AUCTION, startBlock: '' }],
       [{ ...AUCTION, startBlock: 'invalid' }],
+      [{ ...AUCTION, startBlock: '-1' }],
       [{ ...AUCTION, endBlock: '' }],
       [{ ...AUCTION, endBlock: 'invalid' }],
+      [{ ...AUCTION, endBlock: '-1' }],
     ])('is unknown when auction block bounds are missing or malformed', (auction) => {
       expect(resolve({ auction }).phase).toBe(AuctionDisplayPhase.Unknown)
     })

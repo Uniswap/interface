@@ -2,6 +2,7 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import { UniverseChainId } from '@universe/chains'
 import { Flex } from '@universe/mycelium'
 import { memo } from 'react'
+import { rowPressExemptProps } from 'uniswap/src/components/lists/items/OptionItemPressableArea'
 import {
   PoolContextMenuAction,
   PoolOptionItemContextMenu,
@@ -29,7 +30,7 @@ export const PoolRowContextMenuButton = memo(function PoolRowContextMenuButton({
   const shouldShow = isVisible || isOpen
 
   return (
-    <Flex opacity={shouldShow ? 1 : 0} pointerEvents={shouldShow ? 'auto' : 'none'}>
+    <Flex opacity={shouldShow ? 1 : 0} pointerEvents={shouldShow ? 'auto' : 'none'} {...rowPressExemptProps}>
       <PoolOptionItemContextMenu
         actions={[PoolContextMenuAction.CopyAddress, PoolContextMenuAction.Share]}
         isOpen={isOpen}

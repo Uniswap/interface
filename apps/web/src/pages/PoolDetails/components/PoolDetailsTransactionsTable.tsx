@@ -14,7 +14,7 @@ import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { useMemo, useReducer, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
-import type { ParsedToken } from 'uniswap/src/features/dataApi/utils/parsedToken'
+import { isNativeParsedToken, type ParsedToken } from 'uniswap/src/features/dataApi/utils/parsedToken'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -68,8 +68,8 @@ const PoolTransactionColumnWidth: { [key in PoolTransactionColumn]: number } = {
 }
 
 function comparePoolTokens(tokenA: PoolTableTransaction['pool']['token0'], tokenB?: ParsedToken) {
-  // Absent address = native on the parsed shape; swap legs trade as wrapped, so compare as wrapped.
-  if (tokenB && !tokenB.address) {
+  // Native (absent or zero-address) on the parsed shape; swap legs trade as wrapped, so compare as wrapped.
+  if (tokenB && isNativeParsedToken(tokenB)) {
     const chainId = tokenB.chainId
     return areAddressesEqual({
       addressInput1: { address: tokenA.id, chainId },

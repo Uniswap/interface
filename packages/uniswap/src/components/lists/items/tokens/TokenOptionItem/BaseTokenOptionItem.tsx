@@ -11,9 +11,7 @@ import {
 } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem/types'
 import { TokenOptionWarningBadge } from 'uniswap/src/components/lists/items/tokens/TokenOptionWarningBadge'
 import { useSearchFdvLabel } from 'uniswap/src/components/lists/items/useSearchFdvLabel'
-import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
-import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
@@ -61,11 +59,11 @@ export const BaseTokenOptionItem = memo(function BaseTokenOptionItemInner(
       <TokenOptionItemStats priceUsd={searchStats.priceUsd} pricePercentChange1d={searchStats.pricePercentChange1d} />
     ) : undefined
 
-  // search and token selector only badge >=Medium severity (Low/info-only warnings are too noisy to surface here)
+  // search and token selector only badge >=Medium severity (Low/info-only warnings are too noisy to surface here);
+  // colorSecondary is only defined for those severities. Search uses the standard severity colors.
   const severity = getTokenWarningSeverity(currencyInfo)
   const { colorSecondary: warningIconColor } = getWarningIconColors(severity)
-  const showSearchWarningBadge =
-    contextMenuVariant === TokenContextMenuVariant.Search && severity >= WarningSeverity.Medium
+  const isSearch = contextMenuVariant === TokenContextMenuVariant.Search
 
   return (
     <OptionItem
@@ -113,12 +111,12 @@ export const BaseTokenOptionItem = memo(function BaseTokenOptionItemInner(
         </Flex>
       }
       badge={
-        showSearchWarningBadge ? (
-          <TokenOptionWarningBadge currencyInfo={currencyInfo} severity={severity} />
-        ) : warningIconColor ? (
-          <Flex>
-            <WarningIcon severity={severity} size="$icon.16" strokeColorOverride={warningIconColor} />
-          </Flex>
+        warningIconColor ? (
+          <TokenOptionWarningBadge
+            currencyInfo={currencyInfo}
+            severity={severity}
+            strokeColorOverride={isSearch ? undefined : warningIconColor}
+          />
         ) : undefined
       }
       rightElement={rightElement ?? statsElement}

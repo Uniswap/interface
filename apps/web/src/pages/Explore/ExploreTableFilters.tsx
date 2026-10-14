@@ -1,5 +1,4 @@
 import { UniverseChainId } from '@universe/chains'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -11,16 +10,14 @@ import { buildExploreUrl } from '~/features/Explore/utils/buildExploreUrl'
 import { VolumeTimeFrameSelector } from '~/features/Explore/VolumeTimeFrameSelector'
 import { PoolsFilter } from '~/features/Liquidity/PoolsFilter/PoolsFilter'
 import { TableNetworkFilter } from '~/pages/Explore/NetworkFilter'
-import { ExploreProtocolFilter } from '~/pages/Explore/ProtocolFilter'
 import { SearchBar } from '~/pages/Explore/SearchBar'
 import { ExploreTab } from '~/types/explore'
 import type { PoolsFilterState } from '~/types/poolsFilter'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 /**
- * Filter controls in the Explore tables toolbar. On the Pools tab with the `AdvancedPoolsFiltering`
- * flag on, this collapses to the shared {@link PoolsFilter} (search + Filter modal); otherwise it
- * renders the existing per-tab network / protocol / search controls.
+ * Filter controls in the Explore tables toolbar. The Pools tab uses the shared {@link PoolsFilter}
+ * (search + Filter modal); the other tabs render their own network / search controls.
  */
 export function ExploreTableFilters({
   currentKey,
@@ -29,7 +26,6 @@ export function ExploreTableFilters({
   currentKey: ExploreTab
   tabSupportedNetworks: UniverseChainId[]
 }): JSX.Element {
-  const isAdvancedPoolsFilteringEnabled = useFeatureFlag(FeatureFlags.AdvancedPoolsFiltering)
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const urlChainId = useChainIdFromUrlParam()
@@ -38,8 +34,8 @@ export function ExploreTableFilters({
   const poolsAprRange = useExploreTablesFilterStore((s) => s.poolsAprRange)
   const { setPoolsFilter } = useExploreTablesFilterStoreActions()
 
-  // The chain lives in the URL path (`/explore/pools/<chain>`), where the flag-off TableNetworkFilter and
-  // the other tabs keep it, so a chain-filtered Pools view is linkable and the page title / stats header
+  // The chain lives in the URL path (`/explore/pools/<chain>`), where the other tabs' TableNetworkFilter
+  // keeps it too, so a chain-filtered Pools view is linkable and the page title / stats header
   // agree with the table. The store's type refuses a chain, so only the non-chain fields go there.
   const poolsFilterValue = useMemo(() => ({ ...poolsFilter, chainId: urlChainId }), [poolsFilter, urlChainId])
   const applyPoolsFilter = useEvent(({ chainId, ...rest }: PoolsFilterState) => {
@@ -49,7 +45,7 @@ export function ExploreTableFilters({
     }
   })
 
-  if (currentKey === ExploreTab.Pools && isAdvancedPoolsFilteringEnabled) {
+  if (currentKey === ExploreTab.Pools) {
     return (
       <PoolsFilter
         search={<SearchBar tab={currentKey} />}
@@ -65,7 +61,6 @@ export function ExploreTableFilters({
     <>
       {currentKey !== ExploreTab.Toucan && <TableNetworkFilter networks={tabSupportedNetworks} />}
       {currentKey === ExploreTab.Tokens && <VolumeTimeFrameSelector />}
-      {currentKey === ExploreTab.Pools && <ExploreProtocolFilter />}
       {currentKey !== ExploreTab.Toucan && <SearchBar tab={currentKey} />}
     </>
   )

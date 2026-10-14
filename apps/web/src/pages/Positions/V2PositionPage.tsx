@@ -18,6 +18,7 @@ import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from '~/components/BreadcrumbNav'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
+import { BlastShutdownBanner } from '~/features/Liquidity/BlastShutdownBanner'
 import { useEntryPointBreadcrumb } from '~/features/Liquidity/Create/hooks/useEntryPointBreadcrumb'
 import { useGetPoolTokenPercentage } from '~/features/Liquidity/hooks/useGetPoolTokenPercentage'
 import { LiquidityPositionInfo, LiquidityPositionInfoLoader } from '~/features/Liquidity/LiquidityPositionInfo'
@@ -133,11 +134,13 @@ function V2PositionPage() {
   const token1USDValue = useUSDCValue(currency1Amount)
   const poolTokenPercentage = useGetPoolTokenPercentage(positionInfo)
   const liquidityTokenAddress = positionInfo?.liquidityToken?.isToken ? positionInfo.liquidityToken.address : undefined
-  const isOwner = usePositionOwnerV2({
-    account: account.address,
-    address: liquidityTokenAddress,
-    chainId: positionInfo?.chainId,
-  })
+  // A pending owner read hides the actions rather than flashing them for a non-owner.
+  const isOwner =
+    usePositionOwnerV2({
+      account: account.address,
+      address: liquidityTokenAddress,
+      chainId: positionInfo?.chainId,
+    }) ?? false
 
   const onMigrate = useEvent(() => {
     navigate(`/migrate/v2/${chainInfo.urlParam}/${pairAddress}`, {
@@ -192,6 +195,7 @@ function V2PositionPage() {
               {positionInfo && <Text variant="subheading2">{shortenAddress({ address: positionInfo.poolId })}</Text>}
             </BreadcrumbNavContainer>
           </Flex>
+          {chainId === UniverseChainId.Blast && <BlastShutdownBanner />}
 
           {positionLoading || !positionInfo ? (
             <Shine>

@@ -12,7 +12,7 @@ import { NetworkIconList } from 'uniswap/src/components/network/NetworkIconList/
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { useResolveTokenCategories } from 'uniswap/src/data/apiClients/dataApiService/categories/useResolveTokenCategories'
 import { RWAIssuerTag } from 'uniswap/src/features/rwa/RWAIssuerTag'
-import type { RWAIssuer } from 'uniswap/src/features/rwa/types'
+import type { RWAIssuerDisplay } from 'uniswap/src/features/rwa/types'
 import { selectTokenRowCategoryTag } from 'uniswap/src/features/tokenCategories/selectTokenRowCategoryTag'
 import { TokenCategoryTag } from 'uniswap/src/features/tokenCategories/TokenCategoryTag'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -39,12 +39,10 @@ interface TokenDescriptionProps {
   chainIdsByVolume?: UniverseChainId[]
   /** Chain the explore route is filtered to, if any. Passed from table to avoid useParams in every row. */
   chainFilterId?: UniverseChainId | undefined
-  /** BE order; the first one not equal to `scopedCategoryId` becomes the row tag. */
+  /** BE order; the first resolvable one becomes the row tag. */
   categoryIds?: string[]
-  /** Category the hosting table is filtered to, if any; its own tag is suppressed on the row. */
-  scopedCategoryId?: string
-  /** Matched RWA issuer slug; adds the issuer tag after the name. */
-  issuer?: RWAIssuer
+  /** Resolved RWA issuer; adds the issuer tag after the name. */
+  issuer?: RWAIssuerDisplay
 }
 
 export function TokenDescription({
@@ -56,16 +54,12 @@ export function TokenDescription({
   chainIdsByVolume = [],
   chainFilterId,
   categoryIds,
-  scopedCategoryId,
   issuer,
 }: TokenDescriptionProps) {
   const { t } = useTranslation()
   const rowHovered = useContext(TableRowHoverContext)
   const { categories } = useResolveTokenCategories({ categoryIds })
-  const categoryTag = useMemo(
-    () => selectTokenRowCategoryTag({ categoryIds, categories, scopedCategoryId }),
-    [categoryIds, categories, scopedCategoryId],
-  )
+  const categoryTag = useMemo(() => selectTokenRowCategoryTag({ categoryIds, categories }), [categoryIds, categories])
   // A chain-filtered page's row is that chain's deployment only (its address, link and stats all
   // come from that leg), so it gets the same single-network treatment even for a multichain token.
   const isMultiNetworkRow = chainFilterId === undefined && chainIdsByVolume.length > 1
@@ -93,7 +87,7 @@ export function TokenDescription({
         />
       </View>
       <TokenDetailsContainer>
-        <Flex row alignItems="center" gap="$spacing6" minWidth={0}>
+        <Flex row alignItems="center" gap="$spacing4" minWidth={0}>
           <EllipsisText variant="body2" flexShrink={1} minWidth={0} data-testid={TestID.TokenName}>
             {name}
           </EllipsisText>
@@ -103,7 +97,7 @@ export function TokenDescription({
             </Flex>
           )}
           {categoryTag && (
-            <Flex testID={TestID.TokenRowCategoryTag}>
+            <Flex ml="$spacing4" testID={TestID.TokenRowCategoryTag}>
               <TokenCategoryTag category={categoryTag} />
             </Flex>
           )}

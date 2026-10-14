@@ -4,6 +4,8 @@ import { useCallback, useRef, useState } from 'react'
 import { AdaptiveWebPopoverContent, Popover } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { useShadowPropsMedium } from 'ui/src/theme/shadows'
+import { rowPressExemptClassName } from 'uniswap/src/components/lists/items/OptionItemPressableArea'
+import { getScrollContainerScrollbarWidth } from '~/components/HoverCard/getScrollContainerScrollbarWidth'
 import { useCloseOnOutsideScroll } from '~/hooks/useCloseOnOutsideScroll'
 
 const POPOVER_HORIZONTAL_PADDING = 16
@@ -74,6 +76,11 @@ interface HoverCardProps {
   onOpenChange: (open: boolean) => void
   placement?: HoverCardPlacement
   offset?: number
+  /**
+   * Measure `offset` from the trigger's scroll container edge rather than the trigger itself. A classic
+   * (always-visible) scrollbar sits between the two, so a side-placed card would otherwise land that much closer.
+   */
+  offsetFromScrollContainerEdge?: boolean
   /** The child already shrinks on press; opts the trigger's own shrink out so the two don't compound. */
   childOwnsPressFeedback?: boolean
   children: ReactNode
@@ -89,16 +96,31 @@ export function HoverCard({
   onOpenChange,
   placement = 'bottom-start',
   offset,
+  offsetFromScrollContainerEdge = false,
   childOwnsPressFeedback = false,
   children,
   content,
 }: HoverCardProps): JSX.Element {
   const popoverContentRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLDivElement>(null)
   const shadowProps = useShadowPropsMedium()
   const isTouchDevice = useIsTouchDevice()
 
   const close = useCallback((): void => onOpenChange(false), [onOpenChange])
   useCloseOnOutsideScroll({ contentRef: popoverContentRef, isOpen, onClose: close })
+
+  // Re-measured on each open: the container's scrollbar comes and goes with its content.
+  const [scrollbarInset, setScrollbarInset] = useState(0)
+  const handleOpenChange = useCallback(
+    (open: boolean): void => {
+      if (open && offsetFromScrollContainerEdge) {
+        setScrollbarInset(getScrollContainerScrollbarWidth(triggerRef.current))
+      }
+      onOpenChange(open)
+    },
+    [onOpenChange, offsetFromScrollContainerEdge],
+  )
+  const resolvedOffset = offsetFromScrollContainerEdge ? (offset ?? 0) + scrollbarInset : offset
 
   if (isTouchDevice) {
     return <>{children}</>
@@ -118,16 +140,17 @@ export function HoverCard({
       hoverable={HOVERABLE_PROPS}
       open={isOpen}
       placement={placement}
-      offset={offset}
+      offset={resolvedOffset}
       stayInFrame
       allowFlip
-      onOpenChange={onOpenChange}
+      onOpenChange={handleOpenChange}
     >
-      <Popover.Trigger role="none" tabIndex={-1}>
+      <Popover.Trigger ref={triggerRef} role="none" tabIndex={-1}>
         <TouchableArea
           role="none"
           variant="unstyled"
           activeOpacity={1}
+          className={rowPressExemptClassName}
           {...inertTriggerProps}
           {...stopPressEventPropagation}
         >

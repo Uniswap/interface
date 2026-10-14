@@ -2,10 +2,16 @@
 import { type ChildProcess, spawn } from 'child_process'
 import * as fs from 'fs'
 import * as path from 'path'
+import {
+  createClient,
+  createTestClient,
+  http,
+  mainnet,
+  privateKeyToAccount,
+  publicActions,
+  walletActions,
+} from '@universe/chains'
 import { promiseTimeout, sleep } from 'utilities/src/time/timing'
-import { createClient, createTestClient, http, publicActions, walletActions } from 'viem'
-import { privateKeyToAccount } from 'viem/accounts'
-import { mainnet } from 'viem/chains'
 import { loadTestRunnerEnv } from '../../../vite/resolveEnvConfigs'
 import {
   buildAnvilSpawnArgs,

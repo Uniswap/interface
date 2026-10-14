@@ -333,14 +333,14 @@ export function CustomizePoolStep() {
         $md={{ borderWidth: 0, borderRadius: '$none', p: '$none' }}
       >
         <Flex>
-          <Text variant="heading3" color="$neutral1" py="$spacing12">
+          <Text variant="heading3" $md={{ variant: 'subheading1' }} color="$neutral1" py="$spacing12">
             {t('toucan.createAuction.step.customizePool.title')}
           </Text>
           <Separator />
         </Flex>
         <Flex>
           <Flex pb="$spacing16">
-            <Text variant="subheading1" color="$neutral1">
+            <Text variant="subheading1" $md={{ variant: 'subheading2' }} color="$neutral1">
               {t('fee.tier')}
             </Text>
             <Text variant="body3" color="$neutral2">
@@ -397,7 +397,7 @@ export function CustomizePoolStep() {
 
         <Flex>
           <Flex pb="$spacing16">
-            <Text variant="subheading1" color="$neutral1">
+            <Text variant="subheading1" $md={{ variant: 'subheading2' }} color="$neutral1">
               {t('toucan.createAuction.step.customizePool.priceRange.title')}
             </Text>
             <Text variant="body3" color="$neutral2">

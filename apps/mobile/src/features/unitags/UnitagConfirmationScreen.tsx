@@ -62,7 +62,7 @@ export function UnitagConfirmationScreen({
   }
 
   const onPressDone = (): void => {
-    navigate(MobileScreens.MainTabs, { screen: MobileScreens.Home })
+    navigate(MobileScreens.MainTabs, { screen: MobileScreens.Home }, { pop: true })
   }
 
   const elementsToAnimate = useMemo(

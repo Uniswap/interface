@@ -1,12 +1,14 @@
 // oxlint-disable-next-line no-restricted-imports -- fallback helpers need direct Playwright types
 import type { APIResponse, Route } from '@playwright/test'
 import { Currency } from '@uniswap/sdk-core'
-import { ALL_NETWORKS_ARG, CustomRankingType, GraphQLApi } from '@universe/api'
+import { WETH_ADDRESS } from '@uniswap/universal-router-sdk'
+import { GraphQLApi } from '@universe/api'
 import { normalizeTokenAddressForCache, UniverseChainId } from '@universe/chains'
+import { DEFAULT_NATIVE_ADDRESS as NATIVE_TOKEN_ADDRESS } from '@universe/prices'
 import { DAI, nativeOnChain, USDC, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { currencyId } from 'uniswap/src/utils/currencyId'
+import { WEETH_ADDRESS } from '~/playwright/anvil/utils'
 
 /**
  * Deterministic responses served ONLY when the live gateway fails (non-2xx / network error) on
@@ -26,10 +28,10 @@ type ContractInputLike = { chain: string; address?: string | null }
 // forces the fallback path to make it testable end-to-end. Read once at fixture setup (module
 // load) — the deadline helper itself takes it as a parameter.
 // oxlint-disable-next-line eslint-js/no-restricted-syntax -- Node-side Playwright code: process.env is the config surface here (no app getConfig())
-const FORCE_TOKEN_DATA_FALLBACK = process.env.E2E_FORCE_TOKEN_DATA_FALLBACK === 'true'
+export const FORCE_TOKEN_DATA_FALLBACK = process.env.E2E_FORCE_TOKEN_DATA_FALLBACK === 'true'
 
 // A healthy live response answers in well under this; anything slower gets the fallback
-const LIVE_RESPONSE_TIMEOUT_MS = 5_000
+export const LIVE_RESPONSE_TIMEOUT_MS = 5_000
 
 /**
  * Forwards the routed request to the live backend, resolving undefined on failure OR after
@@ -111,31 +113,6 @@ export async function fulfillWithFallback({
   } catch (error) {
     // Page/test torn down mid-flight; nothing left to serve
     console.warn('Token data fallback fulfill error:', error)
-  }
-}
-
-/**
- * A TokenRankings response is healthy only when it is 2xx AND its parsed body carries at least
- * one ranking entry with a non-empty token list — gateway throttling can surface as a 2xx with
- * an empty trending list, which unmounts the trending section the specs target just like an
- * error would. A 2xx whose body doesn't parse is treated as unhealthy too (nothing servable).
- */
-export async function isTokenRankingsResponseHealthy(response: APIResponse): Promise<boolean> {
-  if (!response.ok()) {
-    return false
-  }
-  try {
-    const body = (await response.json()) as { tokenRankings?: Record<string, { tokens?: unknown[] }> } | null
-    const rankings = body?.tokenRankings
-    if (!rankings || typeof rankings !== 'object') {
-      return false
-    }
-    return Object.values(rankings).some((ranking) => {
-      const tokens = ranking.tokens
-      return Array.isArray(tokens) && tokens.length > 0
-    })
-  } catch {
-    return false
   }
 }
 
@@ -235,68 +212,110 @@ export function buildTokenProjectsFallbackResponse(contracts: ContractInputLike[
   return { data: { tokenProjects } }
 }
 
-type TokenRankingsFallbackResponse = {
-  tokenRankings: {
-    [rankingType: string]: {
-      tokens: Record<string, unknown>[]
-    }
-  }
+/**
+ * GetTokenPrices: live prices pass through, synthetic values only fill the gaps.
+ *
+ * These prices back `usePrice()`/`useUSDCPrice()` (packages/prices/src/hooks/usePrice.ts), which
+ * every fiat<->token conversion (e.g. Send's amount input) waits on, so a token must never come
+ * back unpriced — that is what the fallback values are for.
+ *
+ * They also have to agree with the market, which a fixed map cannot: the anvil suite serves
+ * /quote from the LIVE trading API (`stubTradingApiEndpoint` re-fetches upstream), and the limit
+ * form cross-checks its market-price reference against the ratio of the two tokens' USD prices,
+ * rejecting the reference on a >10% divergence (`MAX_MARKET_PRICE_USD_SPOT_DEVIATION` in
+ * pages/Swap/Limit/state/limitMarketPrice.ts). A constant that the real market has since moved
+ * away from therefore reads as a poisoned reference and disables the limit form outright. Live
+ * prices track the same market the quote does; a constant is only a last resort.
+ */
+
+// Rough USD anchors for the small set of tokens the anvil e2e suite actually uses (see
+// allowedErc20BalanceAddresses in fixtures/anvil.ts), served only for a token the live price
+// service did not price. Keyed by lowercased address so it's chain-agnostic — good enough for
+// these mainnet-only tests. Being finite and > 0 is all a fallback value guarantees; anything
+// compared against a live quote needs the live price instead.
+const FALLBACK_TOKEN_USD_PRICES: Record<string, number> = {
+  [normalizeTokenAddressForCache(NATIVE_TOKEN_ADDRESS)]: 3000,
+  [normalizeTokenAddressForCache(WETH_ADDRESS(UniverseChainId.Mainnet))]: 3000,
+  [normalizeTokenAddressForCache(WEETH_ADDRESS)]: 3120,
+  [normalizeTokenAddressForCache(USDC.address)]: 1,
+  [normalizeTokenAddressForCache(USDT.address)]: 1,
+  [normalizeTokenAddressForCache(DAI.address)]: 1,
+}
+const DEFAULT_FALLBACK_TOKEN_USD_PRICE = 3000
+
+export function fallbackPriceForToken(address: string): number {
+  return FALLBACK_TOKEN_USD_PRICES[normalizeTokenAddressForCache(address)] ?? DEFAULT_FALLBACK_TOKEN_USD_PRICE
 }
 
-// Trending must stay non-empty and include mainnet ETH + USDT: the TokenSelector specs assert
-// the trending section header, and TDP/Wrap click token-option-1-{USDT,ETH} from this list.
-const TRENDING_FALLBACK_MAINNET: Currency[] = [nativeOnChain(UniverseChainId.Mainnet), USDT, USDC, WBTC, DAI]
+export type TokenPriceRequest = { chainId: number; address: string }
 
-// Display-only; finite and > 0 is all that matters (mirrors MOCK_TOKEN_USD_PRICES in dataApi.ts)
-const FALLBACK_USD_PRICE_BY_SYMBOL: Record<string, number> = {
-  ETH: 3000,
-  USDT: 1,
-  USDC: 1,
-  DAI: 1,
-  WBTC: 60000,
+type TokenPrice = {
+  chainId: number
+  address: string
+  priceUsd: number
+  updatedAt: string
+}
+
+export type TokenPricesResponse = { tokenPrices: TokenPrice[] }
+
+function priceKey({ chainId, address }: { chainId: number; address: string }): string {
+  return `${chainId}:${normalizeTokenAddressForCache(address)}`
 }
 
 /**
- * Builds a TokenRankings Connect response (proto3 JSON) with a deterministic trending list:
- * the mainnet set for ALL_NETWORKS / mainnet requests, the chain's native asset otherwise.
+ * A live entry is only usable when its `priceUsd` is a finite number above zero: a missing, null,
+ * zero or NaN price leaves the app waiting on a conversion that never resolves, and the limit
+ * form's cross-check skips a zero price rather than validating against it.
  */
-export function buildTokenRankingsFallbackResponse(chainIdArg: string | undefined): TokenRankingsFallbackResponse {
-  return {
-    tokenRankings: {
-      [CustomRankingType.Trending]: {
-        tokens: trendingFallbackCurrencies(chainIdArg).map(toTokenRankingsStatJson),
-      },
-    },
-  }
+function isUsableLivePrice(price: { priceUsd?: unknown }): boolean {
+  return typeof price.priceUsd === 'number' && Number.isFinite(price.priceUsd) && price.priceUsd > 0
 }
 
-function trendingFallbackCurrencies(chainIdArg: string | undefined): Currency[] {
-  if (!chainIdArg || chainIdArg === ALL_NETWORKS_ARG) {
-    return TRENDING_FALLBACK_MAINNET
+/**
+ * Reads the usable entries out of a live GetTokenPrices body. An unparseable or wrongly shaped
+ * body yields none, which sends every requested token to its fallback value.
+ */
+export function parseLiveTokenPrices(body: unknown): TokenPrice[] {
+  const tokenPrices = (body as { tokenPrices?: unknown } | null)?.tokenPrices
+  if (!Array.isArray(tokenPrices)) {
+    return []
   }
-  const chainId = Number(chainIdArg) as UniverseChainId
-  if (chainId === UniverseChainId.Mainnet) {
-    return TRENDING_FALLBACK_MAINNET
-  }
-  try {
-    return [nativeOnChain(chainId)]
-  } catch {
-    // Unrecognized chain arg: a non-empty mainnet list still beats the selector's error state
-    return TRENDING_FALLBACK_MAINNET
-  }
+  return tokenPrices.filter(
+    (price): price is TokenPrice =>
+      typeof price === 'object' &&
+      price !== null &&
+      typeof (price as TokenPrice).chainId === 'number' &&
+      typeof (price as TokenPrice).address === 'string' &&
+      isUsableLivePrice(price as TokenPrice),
+  )
 }
 
-function toTokenRankingsStatJson(currency: Currency): Record<string, unknown> {
+/**
+ * Answers every token the request asked about: the live price where the service returned a usable
+ * one, the fallback anchor otherwise. Per-token rather than all-or-nothing on purpose — one
+ * unpriced long-tail token must not drag the majors it was requested alongside back onto stale
+ * constants, since that is exactly what breaks the limit form's USD cross-check.
+ */
+export function buildTokenPricesResponse({
+  requestedTokens,
+  livePrices,
+  updatedAt,
+}: {
+  requestedTokens: TokenPriceRequest[]
+  livePrices: TokenPrice[]
+  updatedAt: string
+}): TokenPricesResponse {
+  const liveByKey = new Map(livePrices.map((price) => [priceKey(price), price]))
+
   return {
-    chain: toGraphQLChain(currency.chainId as UniverseChainId),
-    // proto3 JSON: an omitted address is the default empty string, which the app reads as native
-    ...(currency.isToken ? { address: currency.address } : {}),
-    name: currency.name,
-    symbol: currency.symbol,
-    decimals: currency.decimals,
-    safetyLevel: 'VERIFIED',
-    price: { value: FALLBACK_USD_PRICE_BY_SYMBOL[currency.symbol ?? ''] ?? 1 },
-    pricePercentChange1Day: { value: 0 },
-    chainTokens: [],
+    tokenPrices: requestedTokens.map((token) => {
+      const live = liveByKey.get(priceKey(token))
+      return {
+        chainId: token.chainId,
+        address: token.address,
+        priceUsd: live?.priceUsd ?? fallbackPriceForToken(token.address),
+        updatedAt: live?.updatedAt ?? updatedAt,
+      }
+    }),
   }
 }

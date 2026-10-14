@@ -1,14 +1,16 @@
+import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, iconSizes, Text, TouchableArea } from '@universe/mycelium'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { tokenOptionTitleSuffix } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem/TokenOptionTitleSuffix'
+import { TokenOptionWarningBadge } from 'uniswap/src/components/lists/items/tokens/TokenOptionWarningBadge'
 import { TokenOption } from 'uniswap/src/components/lists/items/types'
 import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
-import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
-import { formatIssuerLabel } from 'uniswap/src/data/apiClients/dataApiService/rwa/formatIssuerDisplaySymbol'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useRowCategoryTag } from 'uniswap/src/features/tokenCategories/useRowCategoryTag'
+import { getRowCategoryTag } from 'uniswap/src/features/tokenCategories/getRowCategoryTag'
+import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
@@ -25,17 +27,20 @@ export const TokenSelectorV2Row = memo(function TokenSelectorV2Row({
   showTokenAddress,
   disabled,
   dimmed,
+  categories,
   onPress,
 }: {
   option: TokenOption
   showTokenAddress?: boolean
   disabled?: boolean
   dimmed?: boolean
+  categories: TokenCategory[]
   onPress: () => void
 }): JSX.Element {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted, formatNumberOrString, formatPercent } = useLocalizationContext()
   const { isTestnetModeEnabled } = useEnabledChains()
+  const showIssuerTag = useIsTokenCategoriesEnabled()
 
   const { currencyInfo, quantity, balanceUSD, priceUsd, pricePercentChange24h } = option
   const { currency } = currencyInfo
@@ -43,9 +48,13 @@ export const TokenSelectorV2Row = memo(function TokenSelectorV2Row({
   const networkCount = option.networkCount ?? currencyInfo.searchMultichainParent?.tokenCurrencyIds.length
 
   const hasBalance = Boolean(quantity && quantity !== 0)
-  const categoryTag = useRowCategoryTag({ rwaCategory: option.rwaCategory, categoryIds: currencyInfo.categoryIds })
+  // Categories come from the list: a per-row query observer made every row mount notify the whole query cache.
+  const categoryTag = useMemo(
+    () => getRowCategoryTag({ rwaCategory: option.rwaCategory, categoryIds: currencyInfo.categoryIds, categories }),
+    [option.rwaCategory, currencyInfo.categoryIds, categories],
+  )
 
-  // Pre-tap risk cue for Medium+ severity, mirroring legacy TokenOptionItem's badge.
+  // Pre-tap risk cue for Medium+ severity, mirroring legacy TokenOptionItem's badge (hover tooltip on web).
   const severity = getTokenWarningSeverity(currencyInfo)
   const { colorSecondary: warningIconColor } = getWarningIconColors(severity)
 
@@ -106,7 +115,6 @@ export const TokenSelectorV2Row = memo(function TokenSelectorV2Row({
   ])
 
   const displayName = option.rwaName ?? currency.name
-  const issuerLabel = option.rwaIssuerSlug ? formatIssuerLabel(option.rwaIssuerSlug) : undefined
 
   return (
     <TouchableArea
@@ -131,15 +139,13 @@ export const TokenSelectorV2Row = memo(function TokenSelectorV2Row({
             <Text color="$neutral1" numberOfLines={1} variant="body2">
               {displayName}
             </Text>
-            {issuerLabel && (
-              <Text color="$neutral2" numberOfLines={1} variant="body3">
-                {issuerLabel}
-              </Text>
-            )}
+            {tokenOptionTitleSuffix({ issuer: option.rwaIssuer, showIssuerTag })}
             {warningIconColor && (
-              <Flex>
-                <WarningIcon severity={severity} size="$icon.16" strokeColorOverride={warningIconColor} />
-              </Flex>
+              <TokenOptionWarningBadge
+                currencyInfo={currencyInfo}
+                severity={severity}
+                strokeColorOverride={warningIconColor}
+              />
             )}
           </Flex>
           <Flex row alignItems="center" gap="$spacing8">

@@ -1,11 +1,13 @@
 import type { UniverseChainId } from '@universe/chains'
 import { useMemo } from 'react'
-import { EXPLORE_LIST_TOKENS_V2_PAGE_SIZE } from 'src/components/explore/ExploreSections/exploreListItems'
 import { rankedMultichainTokenToTokenItemData } from 'src/components/explore/rankedMultichainTokenToTokenItemData'
 import { TokenItemData } from 'src/components/explore/TokenItemData'
 import { exploreOrderByToV2Sort } from 'src/features/explore/utils'
 import { getTokenMetadataDisplayType } from 'src/features/explore/utils'
-import { useExploreListTokens } from 'uniswap/src/data/apiClients/dataApiService/explore/useExploreListTokens'
+import {
+  EXPLORE_LIST_TOKENS_PAGE_SIZE,
+  useExploreListTokens,
+} from 'uniswap/src/data/apiClients/dataApiService/explore/useExploreListTokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { ExploreOrderBy, TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 
@@ -29,7 +31,7 @@ export function useExploreTokenItems({
   selectedNetwork,
   orderBy,
   categoryId,
-  pageSize = EXPLORE_LIST_TOKENS_V2_PAGE_SIZE,
+  pageSize = EXPLORE_LIST_TOKENS_PAGE_SIZE,
   skip,
 }: {
   selectedNetwork: UniverseChainId | null

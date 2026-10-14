@@ -63,10 +63,10 @@ export function getEntryGatewayUrl(options?: GetEntryGatewayUrlOptions): string 
   }
 
   // Env-pinned calls bypass the override. The override is meant to redirect
-  // *default* traffic to a chosen backend (e.g. corn-staging on a staging
-  // deployment). A caller saying `{ env: PROD }` has stated a hard
-  // requirement — silently rerouting it to the override would break services
-  // like unitags that need a specific env regardless of deployment.
+  // *default* traffic to a chosen backend (e.g. a local gateway). A caller
+  // saying `{ env: PROD }` has stated a hard requirement — silently rerouting
+  // it to the override would break services like unitags that need a specific
+  // env regardless of deployment.
   if (!options?.env) {
     const override: string = config.entryGatewayApiUrlOverride
     if (override) {

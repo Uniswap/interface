@@ -1,7 +1,7 @@
 import { UNI_ADDRESSES } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import { parse } from 'qs'
-import { DAI, nativeOnChain, UNI, USDC_OPTIMISM } from 'uniswap/src/constants/tokens'
+import { DAI, nativeOnChain, UNI, USDC_OPTIMISM, USDC_SOLANA } from 'uniswap/src/constants/tokens'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import {
@@ -167,6 +167,44 @@ describe('tradeQueryParams', () => {
         chainId: UniverseChainId.Mainnet,
         outputChainId: UniverseChainId.Optimism,
       })
+    })
+
+    test('same-chain Solana output currency is parsed on the input chain when outputChain is omitted', () => {
+      expect(
+        queryParametersToCurrencyState(
+          parse(`?chain=solana&inputCurrency=${NATIVE_CHAIN_ID}&outputCurrency=${USDC_SOLANA.address}&value=1`, {
+            parseArrays: false,
+            ignoreQueryPrefix: true,
+          }),
+        ),
+      ).toEqual({
+        inputCurrencyAddress: NATIVE_CHAIN_ID,
+        outputCurrencyAddress: USDC_SOLANA.address,
+        value: '1',
+        field: undefined,
+        chainId: UniverseChainId.Solana,
+        outputChainId: undefined,
+      })
+    })
+
+    test('round-trips a same-chain Solana swap through the URL', () => {
+      const url = serializeSwapStateToURLParameters({
+        chainId: UniverseChainId.Solana,
+        inputCurrency: nativeOnChain(UniverseChainId.Solana),
+        outputCurrency: USDC_SOLANA,
+        typedValue: '1',
+        independentField: CurrencyField.INPUT,
+      })
+
+      expect(url).not.toContain('outputChain')
+      expect(queryParametersToCurrencyState(parse(url, { parseArrays: false, ignoreQueryPrefix: true }))).toMatchObject(
+        {
+          chainId: UniverseChainId.Solana,
+          inputCurrencyAddress: NATIVE_CHAIN_ID,
+          outputCurrencyAddress: USDC_SOLANA.address,
+          value: '1',
+        },
+      )
     })
   })
 

@@ -1,5 +1,5 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { UniverseChainId, Platform, areAddressesEqual } from '@universe/chains'
+import { UniverseChainId, areEvmAddressesEqual } from '@universe/chains'
 import { Button, Flex, Flex as FlexCompat, type FlexCompatProps, Spacer } from '@universe/mycelium'
 import { useIsTouchDevice, useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
@@ -14,6 +14,7 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import type { ParsedToken } from 'uniswap/src/features/dataApi/utils/parsedToken'
 import { v2TokenToCurrency } from 'uniswap/src/features/dataApi/utils/parsedToken'
+import { useWalletPositions } from 'uniswap/src/features/positions/hooks/useWalletPositions'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { TokenWarningCard } from 'uniswap/src/features/tokens/warnings/TokenWarningCard'
@@ -30,8 +31,6 @@ import { getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVers
 import { useAccount } from '~/hooks/useAccount'
 import { ScrollDirection, useScroll } from '~/hooks/useScroll'
 import { buildPoolSearchParams } from '~/pages/AddLiquidity/poolLinkParams'
-import { PositionInfo } from '~/pages/PoolDetails/Pools/cache'
-import { useMultiChainPositions } from '~/pages/PoolDetails/Pools/hooks/useMultiChainPositions'
 import { Swap } from '~/pages/Swap'
 import { getChainUrlParam } from '~/utils/params/chainParams'
 
@@ -99,40 +98,6 @@ const PoolButton = ({ isOpen, icon, onPress, children, 'data-testid': dataTestId
   )
 }
 
-function findMatchingPosition({
-  positions,
-  token0,
-  token1,
-  feeTier,
-}: {
-  positions: PositionInfo[]
-  token0?: ParsedToken
-  token1?: ParsedToken
-  feeTier?: number
-}) {
-  return positions.find(
-    (position) =>
-      (areAddressesEqual({
-        addressInput1: { address: position.details.token0, platform: Platform.EVM },
-        addressInput2: { address: token0?.address, platform: Platform.EVM },
-      }) ||
-        areAddressesEqual({
-          addressInput1: { address: position.details.token0, platform: Platform.EVM },
-          addressInput2: { address: token1?.address, platform: Platform.EVM },
-        })) &&
-      (areAddressesEqual({
-        addressInput1: { address: position.details.token1, platform: Platform.EVM },
-        addressInput2: { address: token0?.address, platform: Platform.EVM },
-      }) ||
-        areAddressesEqual({
-          addressInput1: { address: position.details.token1, platform: Platform.EVM },
-          addressInput2: { address: token1?.address, platform: Platform.EVM },
-        })) &&
-      position.details.fee === feeTier &&
-      !position.closed,
-  )
-}
-
 export function PoolDetailsStatsButtons({
   chainId,
   poolIdOrAddress,
@@ -147,10 +112,21 @@ export function PoolDetailsStatsButtons({
 }: PoolDetailsStatsButtonsProps) {
   const account = useAccount()
   const { t } = useTranslation()
-  const { positions: userOwnedPositions } = useMultiChainPositions(account.address ?? '')
-  const position =
-    userOwnedPositions && findMatchingPosition({ positions: userOwnedPositions, token0, token1, feeTier })
-  const tokenId = position?.details.tokenId
+  // Default statuses are open-only positions, so a
+  // closed position falls through to the add flow.
+  const { allPositions: ownedPositions } = useWalletPositions({
+    account: account.address ?? '',
+    chainIds: chainId ? [chainId] : undefined,
+    liquiditySearch: poolIdOrAddress,
+  })
+  // V2 pairs carry no tokenId, fall through to the add flow.
+  const tokenId = ownedPositions.find(
+    (position) =>
+      (chainId === undefined || position.chainId === chainId) &&
+      // poolId and the URL param are both the service's poolAddressOrId
+      // (v2/v3 address, v4 id); areEvmAddressesEqual handles either.
+      areEvmAddressesEqual(position.poolId, poolIdOrAddress),
+  )?.tokenId
 
   const navigate = useNavigate()
   const location = useLocation()

@@ -528,7 +528,6 @@ vi.mock('@universe/gating', async (importOriginal) => {
     useExperimentValueFromLayer: vi.fn(),
     useIsTokenCategoriesEnabled: vi.fn(() => false),
     useIsTokenCategoriesEnabledWithLoading: vi.fn(() => ({ value: false, isLoading: false })),
-    useIsV2EndpointsSearchEnabled: vi.fn(() => false),
     checkTypeGuard: vi.fn(),
     useStatsigClientStatus: vi.fn(() => ({
       isStatsigLoading: false,

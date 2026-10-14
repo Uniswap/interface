@@ -36,7 +36,7 @@ export function SectionHeader({ title, onEdit }: { title: string; onEdit?: () =>
       borderBottomColor="$surface3"
       pb="$spacing12"
     >
-      <Text variant="heading3" color="$neutral1">
+      <Text variant="heading3" $md={{ variant: 'subheading1' }} color="$neutral1">
         {title}
       </Text>
       {onEdit ? <EditButton onPress={onEdit} /> : null}
@@ -47,7 +47,7 @@ export function SectionHeader({ title, onEdit }: { title: string; onEdit?: () =>
 export function ReviewRow({ label, children }: { label: string; children: React.ReactNode }): JSX.Element {
   return (
     <Flex row justifyContent="space-between" alignItems="center">
-      <Text variant="body1" color="$neutral2">
+      <Text variant="body1" $md={{ variant: 'body2' }} color="$neutral2">
         {label}
       </Text>
       {children}
@@ -63,10 +63,10 @@ export function ReviewAuctionDateTime({ date }: { date: Date }): JSX.Element {
   const timeLabel = formatTimeForDisplay({ date, locale })
   return (
     <Flex row alignItems="center" gap="$spacing6">
-      <Text variant="body1" color="$neutral1">
+      <Text variant="body1" $md={{ variant: 'body2' }} color="$neutral1">
         {dateLabel}
       </Text>
-      <Text variant="body1" color="$neutral2">
+      <Text variant="body1" $md={{ variant: 'body2' }} color="$neutral2">
         {timeLabel}
       </Text>
     </Flex>

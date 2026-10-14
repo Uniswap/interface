@@ -29,6 +29,8 @@ const SEARCH_MODAL_WIDTH = {
   small: 540,
 }
 
+// Measured from the results list edge: with always-visible OS scrollbars its scrollbar sits between the row
+// and the modal edge, and a row-relative offset would land the card inside the modal by that width.
 const HOVER_CARD_OFFSET = 8
 
 // Compensates for the RWA issuer sub-row's extra nesting; imported (not hardcoded) to stay in sync with its layout.
@@ -53,6 +55,7 @@ function useHoverCardWrapper({
             childOwnsPressFeedback
             placement="right-start"
             offset={HOVER_CARD_OFFSET}
+            offsetFromScrollContainerEdge
             widthOffset={HOVER_CARD_OFFSET}
             containerWidth={containerWidth}
             onNavigate={onNavigate}
@@ -67,6 +70,7 @@ function useHoverCardWrapper({
           childOwnsPressFeedback
           placement="right-start"
           offset={props.variant === 'rwaIssuerChild' ? RWA_ISSUER_ROW_HOVER_CARD_OFFSET : HOVER_CARD_OFFSET}
+          offsetFromScrollContainerEdge
           widthOffset={HOVER_CARD_OFFSET}
           containerWidth={containerWidth}
           onNavigate={onNavigate}

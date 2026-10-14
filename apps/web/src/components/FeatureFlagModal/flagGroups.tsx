@@ -16,7 +16,7 @@ export const NETWORK_REQUESTS_LABEL = 'Max refetch attempts'
 export const EMBEDDED_WALLET_ONBOARDING_LABEL =
   'newFlowEnabled: on = test (new onboarding UX), off = control (current flow)'
 
-const SEARCHABLE_LAYERS = [Layers.SwapPage, Layers.Discovery]
+const SEARCHABLE_LAYERS = [Layers.SwapPage]
 
 export interface FlagDef {
   flag: FeatureFlags
@@ -77,6 +77,7 @@ export function buildFlagGroups(extras: {
         { flag: FeatureFlags.UniquoteEnabled, label: 'Enable Uniquote' },
         { flag: FeatureFlags.UnirouteEnabled, label: 'Enable Uniroute' },
         { flag: FeatureFlags.RequestSwapSteps, label: 'Request SwapSteps in classic quotes' },
+        { flag: FeatureFlags.ComplexRouteDiagram, label: 'Show the complex route diagram on the Route row' },
         { flag: FeatureFlags.UseUniversalRouterVersion211, label: 'Use Universal Router v2.1.1' },
         { flag: FeatureFlags.ViemProviderEnabled, label: 'Enable Viem Provider' },
         { flag: FeatureFlags.LimitsFees, label: 'Enable Limits fees' },
@@ -104,7 +105,6 @@ export function buildFlagGroups(extras: {
     {
       name: 'LP',
       flags: [
-        { flag: FeatureFlags.AdvancedPoolsFiltering, label: 'Enable Advanced Pools Filtering' },
         { flag: FeatureFlags.LpPdpDepthChart, label: 'Enable LP PDP Depth Chart toggle' },
         { flag: FeatureFlags.LiquidityBatchedTransactions, label: 'Enable Batched Transactions for LP flow' },
       ],
@@ -155,9 +155,10 @@ export function buildFlagGroups(extras: {
       ],
     },
     {
-      name: 'New Chains',
+      name: 'Chains',
       flags: [
         { flag: FeatureFlags.Arc, label: 'Enable Arc' },
+        { flag: FeatureFlags.DisableBlast, label: 'Disable Blast' },
         { flag: FeatureFlags.Ink, label: 'Enable Ink' },
         { flag: FeatureFlags.Linea, label: 'Enable Linea' },
         { flag: FeatureFlags.MegaETH, label: 'Enable MegaETH' },
@@ -187,10 +188,6 @@ export function buildFlagGroups(extras: {
         { flag: FeatureFlags.AATestWeb, label: 'A/A Test for Web' },
         ...(isE2eTestEnv() ? [{ flag: FeatureFlags.DummyFlagTest, label: 'Dummy Flag Test' } satisfies FlagDef] : []),
       ],
-    },
-    {
-      name: 'V2 Endpoints',
-      flags: [{ flag: FeatureFlags.V2EndpointsPortfolio, label: 'Enable V2 Endpoints Portfolio' }],
     },
     {
       name: 'Portfolio',

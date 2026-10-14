@@ -129,7 +129,7 @@ export function TimeLockSection({
     <Flex gap="$spacing12">
       <Flex row alignItems="flex-start" justifyContent="space-between" gap="$spacing12">
         <Flex flex={1}>
-          <Text variant="subheading1" color="$neutral1">
+          <Text variant="subheading1" $md={{ variant: 'subheading2' }} color="$neutral1">
             {t('toucan.createAuction.step.customizePool.timeLock')}
           </Text>
           <Text variant="body3" color="$neutral2">

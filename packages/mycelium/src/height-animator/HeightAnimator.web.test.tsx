@@ -233,7 +233,7 @@ describe('HeightAnimator (web)', () => {
     expect(outer.style.height).toBe('auto')
   })
 
-  it('forces a reflow only on the first firing of a burst — in-flight firings retarget without a layout read', () => {
+  it('pins a settled container to the previous height before paint, then retargets without a layout read', () => {
     const { container } = render(
       <HeightAnimator>
         <span>content</span>
@@ -243,10 +243,12 @@ describe('HeightAnimator (web)', () => {
     fireContentResize(120)
     endHeightTransition(outer)
 
-    // Settled at auto: the first firing clamps back and forces one reflow.
     const reflowSpy = vi.spyOn(outer, 'getBoundingClientRect')
-    fireContentResize(200)
-    expect(reflowSpy).toHaveBeenCalledTimes(1)
+    queueContentResize(200)
+    // The notification itself clamps back, so the new height never paints.
+    expect(outer.style.height).toBe('120px')
+    flushAnimationFrames()
+    expect(reflowSpy).not.toHaveBeenCalled()
     expect(outer.style.height).toBe('200px')
 
     // Nested-transition shape (a descendant animator resizing the content
@@ -255,7 +257,7 @@ describe('HeightAnimator (web)', () => {
     // write handled by native CSS transition retargeting, no forced layout.
     fireContentResize(210)
     fireContentResize(220)
-    expect(reflowSpy).toHaveBeenCalledTimes(1)
+    expect(reflowSpy).not.toHaveBeenCalled()
     expect(outer.style.height).toBe('220px')
   })
 

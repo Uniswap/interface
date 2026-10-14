@@ -91,6 +91,7 @@ export function mapGroupMemberToIssuerToken({
     logoUrl: token.project?.logoUrl || parentLogoUrl,
     issuer: token.issuer.id,
     issuerDisplayName: token.issuer.displayName || undefined,
+    issuerLogoUrl: token.issuer.logoUrl || undefined,
     ...mapMemberStats({ token, stats: member.stats, sparkline1d: mapSparkline(member.sparkline), volumeOrderBy }),
     chainTokens,
   }

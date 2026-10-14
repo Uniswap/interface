@@ -1,7 +1,7 @@
 /* oxlint-disable react/rules-of-hooks -- Playwright fixtures use use() which is not a React hook */
 import { type BrowserContext, test as base } from '@playwright/test'
 import { createExtensionContext } from 'e2e/fixtures/extension-context'
-import { mockNoWalletDelegation } from 'e2e/utils/network-mock-helpers'
+import { mockNoWalletDelegation, mockStatsigInitializeFallback } from 'e2e/utils/network-mock-helpers'
 import { completeOnboardingViaImport } from 'e2e/utils/onboarding-helpers'
 import { waitForExtensionLoad } from 'e2e/utils/wait-for-extension'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -25,6 +25,7 @@ export const importedExtensionTest = base.extend<ImportedExtensionFixtures>({
 
     try {
       await mockNoWalletDelegation(context)
+      await mockStatsigInitializeFallback(context)
 
       const { onboardingPage } = await waitForExtensionLoad(context, {
         timeout: ONE_SECOND_MS * 10,

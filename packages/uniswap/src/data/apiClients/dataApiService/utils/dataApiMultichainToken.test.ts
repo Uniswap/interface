@@ -1,4 +1,9 @@
-import { ChainTokenRankStats, TokenRankStats } from '@uniswap/client-data-api/dist/data/v2/types_pb'
+import { type PlainMessage, toPlainMessage } from '@bufbuild/protobuf'
+import {
+  ChainTokenRankStats,
+  type RankedMultichainToken,
+  TokenRankStats,
+} from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { UniverseChainId } from '@universe/chains'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import {
@@ -74,14 +79,15 @@ describe('dataApiMultichainTokenToSearchResult', () => {
 
   // Expected decimals are literals on purpose: deriving them from the app's token constants would
   // make the assertion pass whatever the converter does.
-  it('should use the known per-chain decimals instead of the parent decimals for BNB USDT', () => {
+  it("should use each deployment's own decimals instead of the parent decimals", () => {
     const token = createRankedMultichainToken({
       symbol: 'USDT',
       decimals: 6,
       addresses: {
         [String(UniverseChainId.Mainnet)]: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
-        [String(UniverseChainId.Bnb)]: '0x55d398326f99059fF775485246999027B3197955',
+        [String(UniverseChainId.Bnb)]: '0x1111111111111111111111111111111111111111',
       },
+      deploymentDecimals: { [String(UniverseChainId.Bnb)]: 18 },
     })
 
     const result = dataApiMultichainTokenToSearchResult(token)
@@ -92,13 +98,22 @@ describe('dataApiMultichainTokenToSearchResult', () => {
     expect(decimalsByChain).toEqual({ [UniverseChainId.Mainnet]: 6, [UniverseChainId.Bnb]: 18 })
   })
 
-  it('should keep the parent decimals for a deployment the app has no known token for', () => {
+  it('should ignore `addresses` and return undefined for a row with an empty deployments map', () => {
     const token = createRankedMultichainToken({
-      decimals: 9,
-      addresses: { [String(UniverseChainId.Bnb)]: '0x1111111111111111111111111111111111111111' },
+      addresses: { [String(UniverseChainId.Bnb)]: '0x55d398326f99059fF775485246999027B3197955' },
+      deploymentDecimals: {},
     })
 
-    expect(dataApiMultichainTokenToSearchResult(token)?.tokens[0]?.currency.decimals).toBe(9)
+    expect(dataApiMultichainTokenToSearchResult(token)).toBeUndefined()
+  })
+
+  // Rows persisted by clients before data-api served `deployments` have no key at all.
+  it('should return undefined, not throw, for a persisted row without a deployments key', () => {
+    const { multichainToken, ...rest } = toPlainMessage(createRankedMultichainToken())
+    const { deployments: _omitted, ...rowWithoutDeployments } = multichainToken ?? {}
+    const persisted = { ...rest, multichainToken: rowWithoutDeployments } as PlainMessage<RankedMultichainToken>
+
+    expect(dataApiMultichainTokenToSearchResult(persisted)).toBeUndefined()
   })
 
   it('should populate parent-level safetyInfo from v2 TokenSafety', () => {

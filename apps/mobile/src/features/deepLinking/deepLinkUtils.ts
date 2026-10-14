@@ -1,5 +1,4 @@
 import { getScantasticQueryParams } from 'src/components/Requests/ScanSheet/util'
-import { UNISWAP_URL_SCHEME_UWU_LINK } from 'src/components/Requests/Uwulink/utils'
 import {
   UNISWAP_URL_SCHEME,
   UNISWAP_URL_SCHEME_E2E_OVERRIDE_GATES,
@@ -25,7 +24,6 @@ export enum DeepLinkAction {
   ShowTransactionAfterFiatOnRamp = 'fiatOnRamp',
   ShowTransactionAfterFiatOffRampScreen = 'fiatOffRamp',
   SwapScreen = 'swapScreen',
-  UwuLink = 'uwuLink',
   SkipNonWalletConnect = 'skipNonWalletConnect',
   UniversalWalletConnectLink = 'universalWalletConnectLink',
   WalletConnect = 'walletConnect',
@@ -91,7 +89,6 @@ export type DeepLinkActionResult =
   | { action: DeepLinkAction.UniswapWalletConnect; data: PayloadWithWcUri }
   | { action: DeepLinkAction.UniswapWidget; data: BasePayload }
   | { action: DeepLinkAction.Scantastic; data: PayloadWithScantasticParams }
-  | { action: DeepLinkAction.UwuLink; data: BasePayload }
   | { action: DeepLinkAction.ShowTransactionAfterFiatOnRamp; data: PayloadWithUserAddress }
   | { action: DeepLinkAction.ShowTransactionAfterFiatOffRampScreen; data: PayloadWithUserAddress }
   | { action: DeepLinkAction.TransactionScreen; data: PayloadWithUserAddress }
@@ -297,10 +294,6 @@ const handlers: Record<string, DeepLinkHandler> = {
           data,
         })
   },
-  [UNISWAP_URL_SCHEME_UWU_LINK]: (_, data) => ({
-    action: DeepLinkAction.UwuLink,
-    data,
-  }),
   [UNISWAP_URL_SCHEME_E2E_OVERRIDE_GATES]: (url, data) => {
     const enableParam = url.searchParams.get('enable') ?? url.searchParams.get('gates')
     const enable = enableParam ? enableParam.split(',').filter(Boolean) : []

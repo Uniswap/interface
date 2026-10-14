@@ -4,6 +4,8 @@
 import { UniverseChainId } from '@universe/chains'
 import dayjs from 'dayjs'
 import { createMMKV } from 'react-native-mmkv'
+import { type PersistedState } from 'redux-persist'
+import { type PushNotificationsState } from 'src/features/notifications/slice'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
@@ -1019,7 +1021,8 @@ export const migrateDappRequestInfoTypes = createSafeMigration({
                 ...details.typeInfo,
                 externalDappInfo: {
                   ...details.typeInfo.externalDappInfo,
-                  requestType: DappRequestType.UwULink,
+                  // Literal: the UwULink enum member no longer exists, but the migration must stay frozen.
+                  requestType: 'uwulink',
                 },
               },
             }
@@ -1134,4 +1137,25 @@ export const removeTweaksSlice = createSafeMigration({
     delete fallbackState.tweaks
     return fallbackState
   },
+})
+
+export const addPriceAlertsEnabledToPushNotifications = createSafeMigration<
+  (PersistedState & { pushNotifications?: Partial<PushNotificationsState> }) | undefined
+>({
+  name: 'addPriceAlertsEnabledToPushNotifications',
+  migrate: (state) => {
+    if (!state) {
+      return state
+    }
+
+    return {
+      ...state,
+      pushNotifications: {
+        generalUpdatesEnabled: true,
+        ...state.pushNotifications,
+        priceAlertsEnabled: state.pushNotifications?.priceAlertsEnabled ?? true,
+      },
+    }
+  },
+  onError: (state) => state,
 })

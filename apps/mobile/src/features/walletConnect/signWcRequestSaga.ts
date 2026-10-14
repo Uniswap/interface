@@ -6,12 +6,10 @@ import {
   isBatchedTransactionRequest,
   isUserOpRequest,
   TransactionRequest,
-  UwuLinkErc20Request,
   WalletSendCallsEncodedRequest,
   WalletSendCallsUserOperationRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { call, put } from 'typed-redux-saga'
-import { AssetType } from 'uniswap/src/entities/assets'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { EthMethod, EthSignMethod } from 'uniswap/src/features/dappRequests/types'
 import { isSignTypedDataMethod } from 'uniswap/src/features/dappRequests/utils'
@@ -22,7 +20,7 @@ import {
   TransactionType,
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { DappRequestInfo, DappRequestType, UwULinkMethod, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
+import { DappRequestInfo, DappRequestType, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
 import { addWalletCallTransaction } from 'wallet/src/features/batchedTransactions/slice'
@@ -57,11 +55,7 @@ type SignTransactionParams = {
   method: EthMethod.EthSendTransaction | EthMethod.WalletSendCalls
   dappRequestInfo: DappRequestInfo
   chainId: UniverseChainId
-  request:
-    | TransactionRequest
-    | UwuLinkErc20Request
-    | WalletSendCallsEncodedRequest
-    | WalletSendCallsUserOperationRequest
+  request: TransactionRequest | WalletSendCallsEncodedRequest | WalletSendCallsUserOperationRequest
 }
 
 function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
@@ -84,27 +78,6 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
         signerManager,
         expectedChainId: params.chainId,
       })
-    } else if (method === EthMethod.EthSendTransaction && params.request.type === UwULinkMethod.Erc20Send) {
-      // The session chain, not params.transaction.chainId. Deriving the expected chain from the
-      // dapp's own value made the service-level assert compare it against itself, and the
-      // defaultChainId fallback could silently pick Mainnet for a chainless request.
-      const txParams: ExecuteTransactionParams = {
-        chainId,
-        account,
-        options: {
-          request: params.transaction,
-        },
-        typeInfo: {
-          type: TransactionType.Send,
-          assetType: AssetType.Currency,
-          recipient: params.request.recipient.address,
-          tokenAddress: params.request.tokenAddress,
-          currencyAmountRaw: params.request.amount,
-        },
-        transactionOriginType: TransactionOriginType.External,
-      }
-      const { transactionHash } = yield* call(executeTransaction, txParams)
-      result = transactionHash
     } else if (method === EthMethod.EthSendTransaction) {
       const txParams: ExecuteTransactionParams = {
         chainId,
@@ -242,7 +215,7 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
         id: Number(sessionId),
         auths: [auth],
       })
-    } else if (params.dappRequestInfo.requestType === DappRequestType.WalletConnectSessionRequest) {
+    } else {
       yield* call(wcWeb3Wallet.respondSessionRequest, {
         topic: sessionId,
         response: {
@@ -251,21 +224,6 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
           result,
         },
       })
-      // oxlint-disable-next-line typescript/no-unnecessary-condition
-    } else if (params.dappRequestInfo.requestType === DappRequestType.UwULink && params.dappRequestInfo.webhook) {
-      fetch(params.dappRequestInfo.webhook, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ method: params.method, response: result, chainId }),
-        // TODO: consider adding analytics to track UwuLink usage
-      }).catch((error) =>
-        logger.error(error, {
-          tags: { file: 'walletConnect/saga', function: 'signWcRequest/uwulink' },
-        }),
-      )
     }
   } catch (error) {
     if (params.dappRequestInfo.requestType === DappRequestType.WalletConnectSessionRequest) {
@@ -277,7 +235,7 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
           error: { code: 5000, message: `Signing error: ${error}` },
         },
       })
-    } else if (params.dappRequestInfo.requestType === DappRequestType.WalletConnectAuthenticationRequest) {
+    } else {
       yield* call(wcWeb3Wallet.rejectSessionAuthenticate, {
         id: Number(sessionId),
         reason: getSdkError('USER_REJECTED'),

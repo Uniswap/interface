@@ -12,9 +12,9 @@ import {
   TokenContextMenuVariant,
 } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem/types'
 import { TokenOptionItemContextMenu } from 'uniswap/src/components/lists/items/tokens/TokenOptionItemContextMenu'
+import { TokenOptionWarningBadge } from 'uniswap/src/components/lists/items/tokens/TokenOptionWarningBadge'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
-import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
 import TokenWarningModal from 'uniswap/src/features/tokens/warnings/TokenWarningModal'
@@ -64,9 +64,11 @@ const LegacyBaseTokenOptionItem = memo(function LegacyBaseTokenOptionItem({
               {currency.name}
             </Text>
             {warningIconColor && (
-              <Flex>
-                <WarningIcon severity={severity} size="$icon.16" strokeColorOverride={warningIconColor} />
-              </Flex>
+              <TokenOptionWarningBadge
+                currencyInfo={currencyInfo}
+                severity={severity}
+                strokeColorOverride={warningIconColor}
+              />
             )}
           </Flex>
           <Flex row alignItems="center" gap="$spacing8">

@@ -23,8 +23,8 @@
     "https://verify.walletconnect.org/",
     "https://auth.privy.io",
     "https://privy.dev.ew.unihq.org",
-    "https://privy.app.corn-staging.com",
-    "https://privy.app.uniswap.org"
+    "https://privy.app.uniswap.org",
+    "https://privy.staging.app.uniswap.org"
   ],
   "mediaSrc": ["'self'", "*"],
   "formAction": ["'none'"],
@@ -111,8 +111,8 @@
     "https://beyondwickedmapping.org",
     "https://auth.privy.io",
     "https://privy.dev.ew.unihq.org",
-    "https://privy.app.corn-staging.com",
     "https://privy.app.uniswap.org",
+    "https://privy.staging.app.uniswap.org",
     "https://ipv4-check-perf.radar.cloudflare.com",
     "https://ipv6-check-perf.radar.cloudflare.com/",
     "https://performance.radar.cloudflare.com/",

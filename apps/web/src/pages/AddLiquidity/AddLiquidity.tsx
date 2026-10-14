@@ -45,8 +45,8 @@ import {
   CreateLiquidityContextProvider,
   useCreateLiquidityContext,
 } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
-import { SharedCreateModals } from '~/pages/CreatePosition/CreatePosition'
 import { CreatePositionTxContextProvider } from '~/pages/CreatePosition/CreatePositionTxContext'
+import { SharedCreateModals } from '~/pages/CreatePosition/SharedCreateModals'
 import { PoolTableStoreContextProvider } from '~/pages/Explore/tables/Pools/poolTableStore'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
@@ -102,6 +102,31 @@ function AddLiquidityContent(): JSX.Element {
   const urlFee = liquidityUrlState.fee ?? undefined
   const urlHook = liquidityUrlState.hook ?? undefined
   const urlProtocolVersion = getProtocolVersionFromLabel(liquidityUrlState.protocolVersion) ?? ProtocolVersion.V4
+  const protocolVersion = resolveSelectedProtocolVersion(poolData ?? undefined, urlProtocolVersion)
+  const { token0, token1 } = useMemo(() => {
+    // Both seeds carry the pool's canonical on-chain tokens — WETH for a v2/v3 native pool, since
+    // those pools are always WETH-denominated on-chain — and the pool-row / PDP links write that
+    // same WETH address into `currencyA`/`currencyB`. Unwrap back to the native currency Explore
+    // displayed so "ETH/USDC" doesn't land here as "WETH/USDC". The render guard lets the form
+    // mount from URL tokens before `poolData` resolves, and `currencyInputs` is seeded once from
+    // whichever arrives first, so the URL branch must unwrap too or the fix depends on a race.
+    // No-op for v4 (already native) and for plain ERC20/ERC20 pools.
+    const [rawToken0, rawToken1] = poolData
+      ? [v2TokenToCurrency(poolData.token0), v2TokenToCurrency(poolData.token1)]
+      : [urlToken0, urlToken1]
+    return {
+      token0:
+        getCurrencyWithOptionalUnwrap({
+          currency: rawToken0,
+          shouldUnwrap: canUnwrapCurrency(rawToken0, protocolVersion),
+        }) ?? undefined,
+      token1:
+        getCurrencyWithOptionalUnwrap({
+          currency: rawToken1,
+          shouldUnwrap: canUnwrapCurrency(rawToken1, protocolVersion),
+        }) ?? undefined,
+    }
+  }, [poolData, protocolVersion, urlToken0, urlToken1])
 
   // The header CTA sits above the pool browser, so it reads the browser's token selection off the
   // URL and carries it into the create form rather than opening it blank.
@@ -182,7 +207,14 @@ function AddLiquidityContent(): JSX.Element {
               {flowState === 'browse' && (
                 <PoolProgressIndicator steps={browseSteps} stickyTopOffset={STICKY_HEADER_TOP_GAP} />
               )}
-              {flowState === 'form' && <PoolInfoCard poolData={poolData ?? undefined} loading={poolLoading} />}
+              {flowState === 'form' && (
+                <PoolInfoCard
+                  poolData={poolData ?? undefined}
+                  loading={poolLoading}
+                  currency0={token0}
+                  currency1={token1}
+                />
+              )}
             </Flex>
           )}
 
@@ -194,9 +226,9 @@ function AddLiquidityContent(): JSX.Element {
               <AddLiquidityFormContent
                 chainId={chainIdFromUrl!}
                 poolData={poolData ?? undefined}
-                urlToken0={urlToken0}
-                urlToken1={urlToken1}
-                urlProtocolVersion={urlProtocolVersion}
+                token0={token0}
+                token1={token1}
+                protocolVersion={protocolVersion}
                 urlFee={urlFee}
                 urlHook={urlHook}
                 flowStep={flowStep ?? undefined}
@@ -227,9 +259,9 @@ function PoolBrowserPane({ browseSteps }: { browseSteps: { label: string; active
 function AddLiquidityFormContent({
   chainId,
   poolData,
-  urlToken0,
-  urlToken1,
-  urlProtocolVersion,
+  token0,
+  token1,
+  protocolVersion,
   urlFee,
   urlHook,
   flowStep,
@@ -237,17 +269,15 @@ function AddLiquidityFormContent({
 }: {
   chainId: UniverseChainId
   poolData?: PoolData
-  urlToken0?: Currency
-  urlToken1?: Currency
-  urlProtocolVersion: ProtocolVersion
+  token0?: Currency
+  token1?: Currency
+  protocolVersion: ProtocolVersion
   urlFee?: FeeData
   urlHook?: string
   flowStep?: PositionFlowStep
   // Where declining the pool's hook review sends the user: the same target as the header's back arrow.
   onLeavePool: () => void
 }) {
-  const protocolVersion = resolveSelectedProtocolVersion(poolData, urlProtocolVersion)
-
   // Entry points that already know the step (a pool browser row) put it in the URL. The create
   // flow's "Add liquidity" CTA deliberately doesn't, so derive it here from the loaded pool: v2
   // pairs skip straight to deposit, v3/v4 start on the range.
@@ -258,31 +288,6 @@ function AddLiquidityFormContent({
       protocolVersion,
       creatingPoolOrPair: false,
     })
-
-  const { token0, token1 } = useMemo(() => {
-    // Both seeds carry the pool's canonical on-chain tokens — WETH for a v2/v3 native pool, since
-    // those pools are always WETH-denominated on-chain — and the pool-row / PDP links write that
-    // same WETH address into `currencyA`/`currencyB`. Unwrap back to the native currency Explore
-    // displayed so "ETH/USDC" doesn't land here as "WETH/USDC". The render guard lets the form
-    // mount from URL tokens before `poolData` resolves, and `currencyInputs` is seeded once from
-    // whichever arrives first, so the URL branch must unwrap too or the fix depends on a race.
-    // No-op for v4 (already native) and for plain ERC20/ERC20 pools.
-    const [rawToken0, rawToken1] = poolData
-      ? [v2TokenToCurrency(poolData.token0), v2TokenToCurrency(poolData.token1)]
-      : [urlToken0, urlToken1]
-    return {
-      token0:
-        getCurrencyWithOptionalUnwrap({
-          currency: rawToken0,
-          shouldUnwrap: canUnwrapCurrency(rawToken0, protocolVersion),
-        }) ?? undefined,
-      token1:
-        getCurrencyWithOptionalUnwrap({
-          currency: rawToken1,
-          shouldUnwrap: canUnwrapCurrency(rawToken1, protocolVersion),
-        }) ?? undefined,
-    }
-  }, [poolData, protocolVersion, urlToken0, urlToken1])
 
   const [currencyInputs, setCurrencyInputs] = useState<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>({
     tokenA: token0,

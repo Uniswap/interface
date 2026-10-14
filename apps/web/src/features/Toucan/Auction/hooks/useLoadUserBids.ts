@@ -10,19 +10,27 @@ import { useActiveAddress } from '~/features/accounts/store/hooks'
 import { areUserBidsEqual, sortUserBidsById } from '~/features/Toucan/Auction/BidDistributionChart/utils/equality'
 import { AuctionBidStatus, AuctionProgressState } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore, useAuctionStoreActions } from '~/features/Toucan/Auction/store/useAuctionStore'
-import { mapApiBidToUserBid } from '~/features/Toucan/Auction/utils/mapApiBidToUserBid'
+import { mapApiBidsToUserBids } from '~/features/Toucan/Auction/utils/mapApiBidToUserBid'
+import { getUserBidsPollingEndBlock } from '~/features/Toucan/Auction/utils/userBidsPolling'
 import { useTransaction, useTransactions } from '~/state/transactions/hooks'
 import { getPollingIntervalMs } from '~/utils/averageBlockTimeMs'
 
-/**
- * Number of blocks to continue polling user bids after the auction ends.
- * This buffer accounts for potential API data lag in reflecting final bid states.
- */
-const USER_BIDS_POST_AUCTION_POLLING_BUFFER_BLOCKS = 200
+const EVM_ADDRESS_PATTERN = /0x[0-9a-fA-F]{40}/g
+
+/** Query errors can echo the wallet-bearing request; keep the status and message for diagnostics without it. */
+function sanitizeBidsError(error: Error): { name: string; message: string; status?: unknown } {
+  return {
+    name: error.name,
+    message: error.message.replace(EVM_ADDRESS_PATTERN, '[address]'),
+    ...('code' in error ? { status: error.code } : {}),
+  }
+}
 
 interface UseLoadUserBidsParams {
   auctionAddress: string | undefined
   chainId: EVMUniverseChainId | undefined
+  /** Fires after the hook's own bids refresh on a confirmed withdrawal receipt. */
+  onWithdrawalConfirmed?: () => void
 }
 
 /**
@@ -32,11 +40,11 @@ interface UseLoadUserBidsParams {
  * Polling behavior:
  * - Before start: No polling (no bids can exist yet)
  * - During auction: Poll every block to capture new bids
- * - After end: Continue polling for USER_BIDS_POST_AUCTION_POLLING_BUFFER_BLOCKS blocks
+ * - After end: Continue polling through `getUserBidsPollingEndBlock`, the shared indexing buffer,
  *   to account for potential API data lag in reflecting final bid states
- * - After buffer period: Manual refetch only via refetchUserBids() for withdrawals/claims
+ * - After buffer period: Poll while awaiting withdrawal indexing; otherwise manual/receipt refetch only
  */
-export function useLoadUserBids({ auctionAddress, chainId }: UseLoadUserBidsParams): void {
+export function useLoadUserBids({ auctionAddress, chainId, onWithdrawalConfirmed }: UseLoadUserBidsParams): void {
   const {
     setUserBids,
     setRefetchUserBids,
@@ -77,9 +85,8 @@ export function useLoadUserBids({ auctionAddress, chainId }: UseLoadUserBidsPara
         return false
       }
 
-      const endBlockNum = Number(endBlock)
-      const blocksSinceEnd = currentBlockNumber - endBlockNum
-      return blocksSinceEnd < USER_BIDS_POST_AUCTION_POLLING_BUFFER_BLOCKS
+      const pollingEndBlock = getUserBidsPollingEndBlock(endBlock)
+      return pollingEndBlock !== null && BigInt(currentBlockNumber) < pollingEndBlock
     }
 
     // Don't poll before auction starts or in UNKNOWN state
@@ -192,19 +199,7 @@ export function useLoadUserBids({ auctionAddress, chainId }: UseLoadUserBidsPara
       return
     }
 
-    // Deduplicate bids by bidId
-    const seenBidIds = new Set<string>()
-    const mappedBids = bids
-      .filter((bid) => {
-        if (seenBidIds.has(bid.bidId)) {
-          return false
-        }
-        seenBidIds.add(bid.bidId)
-        return true
-      })
-      .map(mapApiBidToUserBid)
-
-    const sortedMappedBids = sortUserBidsById(mappedBids)
+    const sortedMappedBids = sortUserBidsById(mapApiBidsToUserBids(bids))
     const sortedCurrentBids = sortUserBidsById(currentUserBids)
 
     // Only update store if bids have actually changed
@@ -245,12 +240,12 @@ export function useLoadUserBids({ auctionAddress, chainId }: UseLoadUserBidsPara
   // Log bid fetch errors
   useEffect(() => {
     if (bidsError) {
-      logger.error(bidsError, {
+      logger.error(new Error('Failed to load auction wallet bids', { cause: sanitizeBidsError(bidsError) }), {
         tags: { file: 'useLoadUserBids.ts', function: 'useLoadUserBids' },
-        extra: { walletId: normalizedWalletId, auctionAddress },
+        extra: { chainId, auctionAddress },
       })
     }
-  }, [auctionAddress, bidsError, normalizedWalletId])
+  }, [auctionAddress, bidsError, chainId])
 
   // Clear optimistic bid if its transaction fails on-chain
   // For success cases, wait for API to return the bid (handled in bids processing effect above)
@@ -346,6 +341,10 @@ export function useLoadUserBids({ auctionAddress, chainId }: UseLoadUserBidsPara
         for (const bidId of bidIdsForTx) {
           removePendingWithdrawalBid(bidId)
         }
+        // Submission-time reads can precede the receipt. Refresh again now; the awaiting set
+        // continues polling through API indexing lag, including beyond the normal end buffer.
+        stableRefetch()
+        onWithdrawalConfirmed?.()
       } else {
         // Tx failed or cancelled - clear all withdrawal state for these bids
         for (const bidId of bidIdsForTx) {
@@ -353,5 +352,13 @@ export function useLoadUserBids({ auctionAddress, chainId }: UseLoadUserBidsPara
         }
       }
     }
-  }, [clearAllWithdrawalStateForBid, removePendingWithdrawalBid, uniqueTxHashes, withdrawalTxHashes, withdrawalTxMap])
+  }, [
+    clearAllWithdrawalStateForBid,
+    onWithdrawalConfirmed,
+    removePendingWithdrawalBid,
+    stableRefetch,
+    uniqueTxHashes,
+    withdrawalTxHashes,
+    withdrawalTxMap,
+  ])
 }

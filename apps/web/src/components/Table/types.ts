@@ -99,6 +99,8 @@ export type TableProps<T extends RowData = unknown> = {
   subRowHeight?: number
   /** When true, only one row can be expanded at a time (accordion behavior). */
   singleExpandedRow?: boolean
+  /** Every change to this value collapses all expanded rows. Use it for sort/filter changes that reorder rows. */
+  collapseExpandedRowsKey?: string
   centerArrows?: boolean
   headerTestId?: string
   getSubRows?: (row: T) => T[] | undefined

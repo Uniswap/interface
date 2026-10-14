@@ -12,6 +12,7 @@ import { ROW_VIEWABILITY_CONFIG } from '../consts'
 import type { UniversalListPropsWithRef } from '../types'
 import { coalesceScrollEvents } from './coalesceScrollEvents'
 import { createItemTypeResolver, createOverrideItemLayout } from './itemLayout'
+import { resolveScrollIntoView } from './scrollIndexIntoView'
 
 // Native implementation backed by Legend List. `useWindowScroll` is web-only (there is no document
 // to scroll) and is intentionally not forwarded.
@@ -54,6 +55,7 @@ export function VirtualList<T>({
   scrollEventThrottle,
   showsHorizontalScrollIndicator,
   showsVerticalScrollIndicator,
+  stickyHeaderIndices,
   style,
   testID,
   trackRowViewability,
@@ -64,6 +66,18 @@ export function VirtualList<T>({
     ref,
     () => ({
       scrollToIndex: (params) => legendRef.current?.scrollToIndex(params),
+      scrollIndexIntoView: ({ index, animated, viewOffset }) => {
+        const legend = legendRef.current
+        if (!legend) {
+          return
+        }
+        const alignment = resolveScrollIntoView({ state: legend.getState(), index, viewOffset })
+        if (alignment) {
+          legend.scrollToIndex({ index, animated, ...alignment }).catch(() => {
+            // Ignore errors from trying to scroll to an index that is not rendered.
+          })
+        }
+      },
       scrollToOffset: (params) => legendRef.current?.scrollToOffset(params),
       scrollToEnd: (params) => legendRef.current?.scrollToEnd(params),
       scrollToTop: (params) => legendRef.current?.scrollToOffset({ offset: 0, animated: params?.animated }),
@@ -140,6 +154,7 @@ export function VirtualList<T>({
       scrollEventThrottle={scrollEventThrottle}
       showsHorizontalScrollIndicator={showsHorizontalScrollIndicator}
       showsVerticalScrollIndicator={showsVerticalScrollIndicator}
+      stickyHeaderIndices={stickyHeaderIndices}
       style={style?.style}
       testID={testID}
       viewabilityConfig={trackRowViewability ? ROW_VIEWABILITY_CONFIG : undefined}

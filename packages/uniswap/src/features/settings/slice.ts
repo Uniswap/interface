@@ -1,6 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { isMobileApp } from '@universe/environment'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
+import { getDeviceFiatCurrency } from 'uniswap/src/features/fiatCurrency/utils'
 import { Language } from 'uniswap/src/features/language/constants'
 import { getCurrentLanguageFromNavigator } from 'uniswap/src/features/language/utils'
 import { DEFAULT_DEVICE_ACCESS_TIMEOUT, type DeviceAccessTimeout } from 'uniswap/src/features/settings/constants'
@@ -25,7 +26,7 @@ export interface UserSettingsState {
 
 export const initialUserSettingsState: UserSettingsState = {
   currentLanguage: isMobileApp ? getWalletDeviceLanguage() : getCurrentLanguageFromNavigator(),
-  currentCurrency: FiatCurrency.UnitedStatesDollar,
+  currentCurrency: getDeviceFiatCurrency(),
   hideSmallBalances: true,
   hideSpamTokens: true,
   hideReportedActivity: true,

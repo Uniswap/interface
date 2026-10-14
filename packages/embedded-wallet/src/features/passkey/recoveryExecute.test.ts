@@ -263,6 +263,7 @@ describe('executeRecoveryExport', () => {
         authKeySignature: expect.any(String),
         recoveryAuthSignature: 'recovery-sig',
       }),
+      accessToken,
     )
   })
 

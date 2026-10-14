@@ -28,7 +28,6 @@
     ".swc",
     "test-results",
     ".vercel",
-    ".wrangler",
     "types",
     "dts"
   ]

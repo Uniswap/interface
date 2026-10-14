@@ -1,4 +1,6 @@
+import type { UniverseChainId } from '@universe/chains'
 import type { ChartPoint } from 'uniswap/src/components/charts/computeChartPaths'
+import type { RWAIssuerDisplay } from 'uniswap/src/features/rwa/types'
 
 interface TokenCardShellProps {
   onPress?: () => void
@@ -8,6 +10,7 @@ interface TokenCardShellProps {
 
 interface TokenCardContentBase {
   logoUrl?: string | null
+  chainId?: UniverseChainId
   name?: string
   symbol?: string
   pricePercentChange1d?: number
@@ -18,8 +21,7 @@ interface TokenCardContentBase {
 export type TokenCardHorizontalProps = TokenCardContentBase
 
 export interface TokenCardVerticalProps extends TokenCardContentBase {
-  /** Preformatted at the call site (e.g. `formatIssuerLabel`). */
-  issuerLabel?: string
+  issuer?: RWAIssuerDisplay
   /** Formatted internally as FiatTokenPrice. */
   priceUsd?: number
 }

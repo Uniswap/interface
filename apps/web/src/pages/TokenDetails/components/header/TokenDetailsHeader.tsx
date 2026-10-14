@@ -33,6 +33,10 @@ import { useModalState } from '~/hooks/useModalState'
 import { RWAIssuerHeaderDetails } from '~/pages/TokenDetails/components/header/RWAIssuerHeaderDetails'
 import { TokenDetailsHeaderAddressCopyMobile } from '~/pages/TokenDetails/components/header/TokenDetailsHeaderAddressCopyMobile'
 import { TokenDetailsHeaderCategoryChips } from '~/pages/TokenDetails/components/header/TokenDetailsHeaderCategoryChips'
+import {
+  TokenDetailsHeaderLaunchpad,
+  useTokenDetailsHeaderLaunchpad,
+} from '~/pages/TokenDetails/components/header/TokenDetailsHeaderLaunchpad'
 import { TokenDetailsNetworkFilter } from '~/pages/TokenDetails/components/header/TokenDetailsNetworkFilter'
 import { useTokenDetailsHeaderActions } from '~/pages/TokenDetails/components/header/useTokenDetailsHeaderActions'
 import { useTDPSelectedMultichainChain } from '~/pages/TokenDetails/context/useTDPSelectedMultichainChain'
@@ -142,6 +146,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
     plainTokenNames,
   })
   const showAddressCopy = getShowAddressCopy({ isNative, isMultiChainAsset, selectedChainId })
+  const launchpad = useTokenDetailsHeaderLaunchpad()
 
   const onBreadcrumbAddressCopied = useEvent(() => {
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
@@ -197,6 +202,8 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
                   iconSize={iconSizes.icon16}
                   iconColor="$neutral2"
                   color="$neutral2"
+                  // The hover-only icon still reserves its width, which would leave the launchpad divider off-center.
+                  alwaysShowIcon={launchpad !== undefined}
                   dataTestId={TestID.BreadcrumbHoverCopy}
                   onCopy={onBreadcrumbAddressCopied}
                 >
@@ -204,6 +211,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
                 </CopyHelper>
               </Flex>
             )}
+            {launchpad && <TokenDetailsHeaderLaunchpad launchpad={launchpad} />}
           </Flex>
         }
         actions={

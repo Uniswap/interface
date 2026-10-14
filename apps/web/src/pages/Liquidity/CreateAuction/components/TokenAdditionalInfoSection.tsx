@@ -66,8 +66,15 @@ export function TokenAdditionalInfoSection({
 
   return (
     <Flex gap="$spacing8">
-      <Flex backgroundColor="$surface2" borderRadius="$rounded20" p="$spacing16" gap="$spacing2" minHeight={120}>
-        <Text variant="body3" color="$neutral2">
+      <Flex
+        backgroundColor="$surface2"
+        borderRadius="$rounded20"
+        p="$spacing16"
+        gap="$spacing2"
+        minHeight={120}
+        $md={{ p: '$spacing12', borderRadius: '$rounded16' }}
+      >
+        <Text variant="body3" color="$neutral2" $md={{ variant: 'buttonLabel4' }}>
           {t('toucan.createAuction.step.tokenInfo.descriptionField')}
         </Text>
         <Trace logFocus element={ElementName.AuctionTokenDescription}>
@@ -90,7 +97,13 @@ export function TokenAdditionalInfoSection({
           />
         </Trace>
       </Flex>
-      <Flex backgroundColor="$surface2" borderRadius="$rounded20" p="$spacing16" gap="$spacing12">
+      <Flex
+        backgroundColor="$surface2"
+        borderRadius="$rounded20"
+        p="$spacing16"
+        gap="$spacing12"
+        $md={{ p: '$spacing12', borderRadius: '$rounded16' }}
+      >
         <Flex row alignItems="center" gap="$spacing4">
           <Text variant="body3" color="$neutral2">
             {t('toucan.createAuction.step.tokenInfo.xProfile')}

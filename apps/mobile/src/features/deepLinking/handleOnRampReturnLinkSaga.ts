@@ -7,6 +7,6 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 export function* handleOnRampReturnLink() {
   yield* put(forceFetchFiatOnRampTransactions())
 
-  yield* call(navigate, MobileScreens.MainTabs, { screen: MobileScreens.Activity } as const)
+  yield* call(navigate, MobileScreens.MainTabs, { screen: MobileScreens.Activity } as const, { pop: true })
   yield* call(dismissInAppBrowser)
 }

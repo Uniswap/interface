@@ -6,6 +6,7 @@ import { fireEvent, render } from 'uniswap/src/test/test-utils'
 const category: TokenCategory = {
   id: 'defi',
   name: 'DeFi',
+  englishName: 'DeFi',
   description: '',
   categoryClass: TokenCategoryClass.Sector,
   grouped: false,
@@ -22,6 +23,7 @@ const category: TokenCategory = {
     { chainId: 1, address: '0x1', symbol: 'UNI', logoUrl: 'https://logos.test/uni.png' },
     { chainId: 1, address: '0x2', symbol: 'AAVE', logoUrl: 'https://logos.test/aave.png' },
   ],
+  topGroups: [],
 }
 
 describe('CategoryOptionItem', () => {

@@ -76,9 +76,57 @@ export type {
   RpcErrorContext,
   RpcObserver,
 } from './rpc/observability/rpcObserver'
-export type { Abi, Address, Block, Hash, Hex, SignableMessage } from './types'
-export { erc20Abi, erc20Abi_bytes32, erc721Abi } from './types'
+export type {
+  Abi,
+  Account,
+  Address,
+  BaseContract,
+  Block,
+  Chain,
+  ContractTransaction,
+  ExternalProvider,
+  FallbackProvider,
+  Hash,
+  Hex,
+  JsonRpcProvider,
+  JsonRpcSigner,
+  Networkish,
+  ProviderConnectInfo,
+  PublicClient,
+  RpcUserOperation,
+  SignableMessage,
+  SignedAuthorization,
+  Transaction,
+  TransactionRequest,
+  TransactionResponse,
+  TypedDataDomain,
+  Web3Provider,
+} from './types'
+export {
+  createClient,
+  entryPoint08Address,
+  erc20Abi,
+  erc20Abi_bytes32,
+  erc721Abi,
+  formatUserOperationRequest,
+  getTypesForEIP712Domain,
+  hashTypedData,
+  pad,
+  ResourceUnavailableRpcError,
+  RpcError,
+  SwitchChainError,
+  UserRejectedRequestError,
+} from './types'
 export { createWalletClient, http, mainnet, privateKeyToAccount } from './other'
+export {
+  concat,
+  createTestClient,
+  keccak256,
+  publicActions,
+  toHex,
+  viemEncodeFunctionData,
+  walletActions,
+} from './testing'
 export { v3PoolStateAbi, type V3PoolStateAbi } from './abis/v3PoolStateAbi'
 export { feeOnTransferDetectorAbi, type FeeOnTransferDetectorAbi } from './abis/feeOnTransferDetectorAbi'
 export { ensRegistrarAbi, type EnsRegistrarAbi } from './abis/ensRegistrarAbi'

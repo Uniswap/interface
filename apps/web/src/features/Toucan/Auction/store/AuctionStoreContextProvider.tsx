@@ -18,7 +18,10 @@ import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
  * Inner provider component that manages all auction data loading
  * Uses custom hooks to separate concerns and improve maintainability
  */
-function AuctionStoreProviderInner({ children }: PropsWithChildren) {
+function AuctionStoreProviderInner({
+  children,
+  onWithdrawalConfirmed,
+}: PropsWithChildren<{ onWithdrawalConfirmed?: () => void }>) {
   const { chainId, auctionAddress } = useAuctionStore((state) => ({
     chainId: state.chainId,
     auctionAddress: state.auctionAddress,
@@ -34,7 +37,26 @@ function AuctionStoreProviderInner({ children }: PropsWithChildren) {
   useLoadUserBids({
     auctionAddress,
     chainId,
+    onWithdrawalConfirmed,
   })
+
+  const startBlock = useAuctionStore((state) => state.auctionDetails?.startBlock)
+  const endBlock = useAuctionStore((state) => state.auctionDetails?.endBlock)
+  useAuctionBlockPolling({
+    chainId,
+    startBlock: startBlock ? Number(startBlock) : undefined,
+    endBlock: endBlock ? Number(endBlock) : undefined,
+  })
+
+  return children
+}
+
+/** Chart data and page theming are only consumed by the Auction Details page. */
+function AuctionPageDataLoader(): null {
+  const { chainId, auctionAddress } = useAuctionStore((state) => ({
+    chainId: state.chainId,
+    auctionAddress: state.auctionAddress,
+  }))
 
   // Load bid distribution data (for stats banner and distribution chart)
   // This provides concentration band and total committed volume data
@@ -57,29 +79,25 @@ function AuctionStoreProviderInner({ children }: PropsWithChildren) {
   // Extract and update token color for theming
   useUpdateTokenColor()
 
-  // Poll for current block number and update auction progress
-  // Use chainId from URL params (available immediately) for initial block fetch,
-  // not chainIdFromStore (which requires API response) to avoid race condition
-  // where progressState is NOT_STARTED while timestamps show "X ago"
-  const startBlock = useAuctionStore((state) => state.auctionDetails?.startBlock)
-  const startBlockNum = startBlock ? Number(startBlock) : undefined
-  const endBlock = useAuctionStore((state) => state.auctionDetails?.endBlock)
-  const endBlockNum = endBlock ? Number(endBlock) : undefined
-  useAuctionBlockPolling({ chainId, startBlock: startBlockNum, endBlock: endBlockNum })
-
-  return children
+  return null
 }
 
-function AuctionStoreInstanceProvider({
+/** Creates the store once for its lifetime; remount with a `key` to switch auctions. */
+export function AuctionStoreInstanceProvider({
   auctionAddress,
   chainId,
   children,
-}: PropsWithChildren<{ auctionAddress?: string; chainId?: EVMUniverseChainId }>) {
+  onWithdrawalConfirmed,
+}: PropsWithChildren<{
+  auctionAddress?: string
+  chainId?: EVMUniverseChainId
+  onWithdrawalConfirmed?: () => void
+}>) {
   const [store] = useState(() => createAuctionStore(auctionAddress, chainId))
 
   return (
     <AuctionStoreContext.Provider value={store}>
-      <AuctionStoreProviderInner>{children}</AuctionStoreProviderInner>
+      <AuctionStoreProviderInner onWithdrawalConfirmed={onWithdrawalConfirmed}>{children}</AuctionStoreProviderInner>
     </AuctionStoreContext.Provider>
   )
 }
@@ -105,6 +123,7 @@ export function AuctionStoreProvider({ children }: PropsWithChildren) {
       auctionAddress={auctionAddress}
       chainId={chainId}
     >
+      <AuctionPageDataLoader />
       {children}
     </AuctionStoreInstanceProvider>
   )

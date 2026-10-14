@@ -128,14 +128,14 @@ function handleMobileNavigation(url: string, path: string): void {
 
   // Route exact tab URLs through their owning navigator.
   if (parts.length === 1 && isMainTabScreen(parts[0])) {
-    navigationRef.navigate(MobileScreens.MainTabs, { screen: parts[0] })
+    navigationRef.navigate(MobileScreens.MainTabs, { screen: parts[0] }, { pop: true })
     return
   }
 
   // Keep legacy mobile://Home/{Tab} URLs while targeting tabs through their owning navigator.
   if (parts[0] === MobileScreens.Home) {
     const tabScreen = isMainTabScreen(parts[1]) ? parts[1] : MobileScreens.Home
-    navigationRef.navigate(MobileScreens.MainTabs, { screen: tabScreen })
+    navigationRef.navigate(MobileScreens.MainTabs, { screen: tabScreen }, { pop: true })
     return
   }
 

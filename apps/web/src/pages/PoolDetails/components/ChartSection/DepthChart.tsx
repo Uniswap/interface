@@ -24,6 +24,7 @@ import { V2Reserves } from '~/features/Liquidity/utils/v2SyntheticTicks'
 import { ChartPriceText, PriceDisplayContainer } from '~/pages/PoolDetails/components/ChartSection/ChartPriceDisplay'
 import {
   buildDepthData,
+  DEPTH_CHART_SUBSCRIPT_THRESHOLD,
   DepthPoint,
   getDisplayPair,
   getGapTime,
@@ -252,7 +253,7 @@ export function DepthChart({
                     <SubscriptZeroPrice
                       variant="heading3"
                       value={displayPrice}
-                      subscriptThreshold={6}
+                      subscriptThreshold={DEPTH_CHART_SUBSCRIPT_THRESHOLD}
                       symbol={quoteDescriptor}
                     />
                   </Flex>

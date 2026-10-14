@@ -8,9 +8,11 @@ import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constan
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { CategoryDefinitionSheet } from '~/components/CategoryDefinitionCard/CategoryDefinitionSheet'
 import { CategoryHoverCard } from '~/components/HoverCard/CategoryHoverCard/CategoryHoverCard'
 import { ExploreCategoryChipOption } from '~/pages/Explore/categories/exploreCategoryChipOptions'
+import { ExploreCategory } from '~/pages/Explore/categories/useExploreCategory'
 
 const CHIP_FADE_MS = FILTER_CHIP_FADE_MS
 const CHIP_FADE_TRANSITION = `opacity ${CHIP_FADE_MS}ms ease`
@@ -29,6 +31,8 @@ interface ExploreCategoryChipsProps {
 
 interface CategoryChipProps {
   option: ExploreCategoryChipOption
+  /** Slot in the chip row, for analytics. */
+  position: number
   value: string
   onChange: (category: string) => void
   onOpenDefinition: (category: TokenCategory) => void
@@ -51,18 +55,24 @@ function ChipInfoIcon({ visible }: { visible: boolean }): JSX.Element {
   )
 }
 
-function CategoryChip({ option, value, onChange, onOpenDefinition }: CategoryChipProps): JSX.Element {
+function CategoryChip({ option, position, value, onChange, onOpenDefinition }: CategoryChipProps): JSX.Element {
   const active = option.id === value
   const Icon = option.icon
   const isTouchDevice = useIsTouchDevice()
+  const trace = useTrace()
   // Touch has no hover card, so the selected chip shows an info icon and its next tap opens the definition.
   const definitionCategory = isTouchDevice ? option.category : undefined
 
   const onPress = useEvent((): void => {
     if (!active) {
       sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-        element: ElementName.ExploreRwaCategoryView,
+        ...trace,
+        element: ElementName.ExploreCategoryView,
+        section: SectionName.ExploreCategoryChips,
         tab: option.id,
+        category_id: option.id === ExploreCategory.All ? undefined : option.id,
+        is_from_more_menu: false,
+        tab_position: position,
       })
       onChange(option.id)
       return
@@ -152,6 +162,7 @@ export function ExploreCategoryChips({
           <FlexSlotChip
             key="flex-slot"
             option={option}
+            position={index}
             value={value}
             onChange={onChange}
             onOpenDefinition={openDefinition}
@@ -160,6 +171,7 @@ export function ExploreCategoryChips({
           <CategoryChip
             key={option.id}
             option={option}
+            position={index}
             value={value}
             onChange={onChange}
             onOpenDefinition={openDefinition}

@@ -16,3 +16,11 @@ export const CHAIN_ROLLOUT_FLAGS = {
 } as const satisfies Partial<Record<UniverseChainId, FeatureFlags>>
 
 export type ChainRolloutFlaggedChainId = keyof typeof CHAIN_ROLLOUT_FLAGS
+
+/**
+ * Statsig kill switches for chains being shut down: gate on removes the chain. Inverted from rollout
+ * flags so a missing or not-yet-loaded gate keeps the chain, since users still need it to bridge out.
+ */
+export const CHAIN_SUNSET_FLAGS = {
+  [UniverseChainId.Blast]: FeatureFlags.DisableBlast,
+} as const satisfies Partial<Record<UniverseChainId, FeatureFlags>>

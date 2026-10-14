@@ -6,6 +6,7 @@ import { useNavigate, useSearchParams } from 'react-router'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
+import { BlastShutdownSelectionModal } from 'uniswap/src/features/chains/blastShutdown/BlastShutdownSelectionModal'
 import { useAppFiatCurrency, useFiatCurrencyComponents } from 'uniswap/src/features/fiatCurrency/hooks'
 import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
 import { useFiatOnRampAggregatorGetCountryQuery } from 'uniswap/src/features/fiatOnRamp/hooks/useFiatOnRampQueries'
@@ -472,6 +473,9 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
           }
         />
       )}
+      <BlastShutdownSelectionModal
+        currencies={[rampDirection === RampDirection.ON_RAMP ? quoteCurrency?.currencyInfo : undefined]}
+      />
       {offRampRequest && (
         <OffRampConfirmTransferModal
           isOpen

@@ -20,20 +20,20 @@ describe('Paths', () => {
   it('should have every path in the app RouteDefinitions', () => {
     const appPaths: string[] = routes.map((routeDef) => routeDef.path)
     appPaths.forEach((path) => {
-      // We don't want to expose these fallback routes to the Cloudflare function.
+      // We don't want to expose these fallback routes to the server functions.
       if (path === '*' || path === '/not-found') {
         return
       }
       if (path === `/explore/tokens/solana/${WRAPPED_SOL_ADDRESS_SOLANA}`) {
-        // Special case: WSOL is redirected to SOL TDP, so we don't want to expose it to the Cloudflare function.
+        // Special case: WSOL is redirected to SOL TDP, so we don't want to expose it to the server functions.
         return
       }
       if (path === `/explore/tokens/arc/${NATIVE_CHAIN_ID}`) {
-        // Special case: Arc NATIVE is redirected to its canonical USDC TDP, so don't expose it to Cloudflare.
+        // Special case: Arc NATIVE is redirected to its canonical USDC TDP, so don't expose it to the server functions.
         return
       }
       if (path === '/positions/create') {
-        // Special case: retired in favour of /positions/add/new, which it redirects to, so don't expose it to Cloudflare.
+        // Special case: retired in favour of /positions/add/new, which it redirects to, so don't expose it to the server functions.
         return
       }
       expect(paths).toContain(path)

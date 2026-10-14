@@ -11,8 +11,8 @@ const REVEAL_TRANSITION = `height ${EXPANDABLE_ASSET_ROW_HEIGHT_TRANSITION_MS}ms
 
 /**
  * Web: animate the issuer-panel reveal on expand/collapse. A clip wrapper animates its height between 0 and the
- * panel height; the search list's `ResizeObserver` (`useRowHeightObserver`) reports each intermediate height to
- * react-window, so the virtualized row grows in sync. The row must keep a stable key across toggle
+ * panel height; the list measures every cell with a ResizeObserver, so it sees each intermediate
+ * height and the virtualized row grows in sync. The row must keep a stable key across toggle
  * (measurementKey/itemKey exclude `expanded`) or it would remount and snap instead of animating.
  */
 export function ExpandableSearchRowContainer({

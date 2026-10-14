@@ -59,7 +59,8 @@ export function SwapBottomCard() {
       )
     }
 
-    if (!isBridgingSupportedChain && !isEmbeddedWallet) {
+    // Blast is shutting down; don't promote deposits into it.
+    if (!isBridgingSupportedChain && !isEmbeddedWallet && chainId !== UniverseChainId.Blast) {
       return <MaybeExternalBridgeCard chainId={chainId} />
     } else {
       return null

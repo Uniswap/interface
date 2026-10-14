@@ -1,8 +1,8 @@
 import { Platform } from '@universe/chains'
 import { FeatureFlags, useFeatureFlagWithExposureLoggingDisabled } from '@universe/gating'
-import { Flex, Loader, ScrollView } from '@universe/mycelium'
+import { Flex, Loader, UniversalList, type UniversalListRenderItemInfo } from '@universe/mycelium'
 import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
-import { memo, useMemo, useState } from 'react'
+import { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
@@ -19,15 +19,55 @@ import {
 } from 'uniswap/src/features/positions/components/PositionStatusFilter'
 import { usePoolsPositionsReport } from 'uniswap/src/features/positions/hooks/usePoolsPositionsReport'
 import { SORT_BY_USD_VALUE_DESC, useWalletPositions } from 'uniswap/src/features/positions/hooks/useWalletPositions'
+import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { filterAndSortPositions, getPositionKey } from 'uniswap/src/features/positions/utils'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
-import { useInfiniteScroll } from 'utilities/src/react/useInfiniteScroll'
 import { usePendingLiquidityTransactionsChangeListener } from 'wallet/src/features/transactions/hooks/usePendingLiquidityTransactionsChangeListener'
 
 const PAGE_SIZE = 25
 const FIRST_PAGE_LOADER_ROW_COUNT = 6
 const NEXT_PAGE_LOADER_ROW_COUNT = 2
+
+/**
+ * The tab's two position groups flattened into the single row array `UniversalList` takes: the
+ * visible positions (or the empty-filter view standing in for them), then the hidden-positions
+ * toggle and, while it's open, the hidden positions.
+ */
+type PoolsRow =
+  | { type: 'emptyFilter'; key: string }
+  | { type: 'hiddenToggle'; key: string }
+  | { type: 'position'; key: string; position: PositionInfo; isVisible: boolean }
+
+/**
+ * Resolves its own label rather than taking a string: the toggle row object is stable, so the cell
+ * memoizes on an unchanged `(key, item)` and a parent-resolved string would keep the old language
+ * after a locale switch. `useTranslation` re-renders this component directly on `languageChanged`.
+ * Same reason `HiddenTokensRow` does it this way.
+ */
+function HiddenPoolsRow({
+  isExpanded,
+  numHidden,
+  onPress,
+}: {
+  isExpanded: boolean
+  numHidden: number
+  onPress: () => void
+}): JSX.Element {
+  const { t } = useTranslation()
+
+  return (
+    <ExpandoRow isExpanded={isExpanded} label={t('hidden.pools.info.text.button', { numHidden })} onPress={onPress} />
+  )
+}
+
+function rowKey(row: PoolsRow): string {
+  return row.key
+}
+
+function rowType(row: PoolsRow): string {
+  return row.type
+}
 
 export const PoolsTab = memo(function PoolsTabInner({
   address,
@@ -75,14 +115,6 @@ export const PoolsTab = memo(function PoolsTabInner({
 
   usePendingLiquidityTransactionsChangeListener(refetch)
 
-  const { sentinelRef } = useInfiniteScroll({
-    onLoadMore: () => {
-      void fetchNextPage()
-    },
-    hasNextPage,
-    isFetching: isFetchingNextPage,
-  })
-
   const isFetchingFirstPage = isFetching && !isFetchingNextPage
   const isLoadingFirstPage = isFetchingFirstPage && !hasData
   const hasErrorWithoutData = !!error && !hasData && !isFetchingFirstPage
@@ -102,28 +134,126 @@ export const PoolsTab = memo(function PoolsTabInner({
     [hiddenPositions, filterStatuses],
   )
 
-  const renderPositions = (items: typeof positions, isVisible: boolean): JSX.Element[] =>
-    items.map((position) => (
-      <PositionItem
-        key={getPositionKey(position)}
-        positionInfo={position}
-        contextMenuActions={{ isVisible, onReportSuccess: refetch }}
-      />
-    ))
+  // Empty while the error card or first-page skeleton is showing, so those render through
+  // ListEmptyComponent and stay below the filter chrome in the header rather than replacing it.
+  const rows = useMemo<PoolsRow[]>(() => {
+    if (hasErrorWithoutData || isLoadingFirstPage) {
+      return []
+    }
 
-  return (
-    <ScrollView showsVerticalScrollIndicator={false} width="100%">
-      <Flex mb="$spacing8">
-        <PositionStatusFilter value={statusFilter} onChange={setStatusFilter} disabled={hasErrorWithoutData} />
-      </Flex>
+    const result: PoolsRow[] =
+      visiblePositions.length === 0
+        ? [{ type: 'emptyFilter', key: 'empty-filter' }]
+        : visiblePositions.map((position) => ({
+            type: 'position',
+            key: `visible-${getPositionKey(position)}`,
+            position,
+            isVisible: true,
+          }))
 
-      {outageBanner.isVisible && (
+    if (filteredHiddenPositions.length > 0) {
+      result.push({ type: 'hiddenToggle', key: 'hidden-toggle' })
+
+      if (hiddenExpanded) {
+        for (const position of filteredHiddenPositions) {
+          result.push({ type: 'position', key: `hidden-${getPositionKey(position)}`, position, isVisible: false })
+        }
+      }
+    }
+
+    return result
+  }, [hasErrorWithoutData, isLoadingFirstPage, visiblePositions, filteredHiddenPositions, hiddenExpanded])
+
+  // No `extraData` needed for the toggle row: `rows` is rebuilt when `hiddenExpanded` changes, so
+  // every row object is a fresh identity and the engine re-renders the cell on its own.
+  const renderItem = useCallback(
+    ({ item }: UniversalListRenderItemInfo<PoolsRow>): JSX.Element => {
+      switch (item.type) {
+        case 'emptyFilter':
+          return (
+            <PositionsEmptyFilterView
+              statusFilter={statusFilter}
+              openPositionsCount={openPositionsCount}
+              onViewOpenPositions={viewOpenPositions}
+            />
+          )
+        case 'hiddenToggle':
+          return (
+            <HiddenPoolsRow
+              isExpanded={hiddenExpanded}
+              numHidden={filteredHiddenPositions.length}
+              onPress={toggleHidden}
+            />
+          )
+        case 'position':
+          return (
+            <PositionItem
+              positionInfo={item.position}
+              contextMenuActions={{ isVisible: item.isVisible, onReportSuccess: refetch }}
+            />
+          )
+        default: {
+          // Defect guard: PoolsRow is a closed union, so a new member must be rendered explicitly.
+          const unreachable: never = item
+          throw new Error(`unknown pools row: ${JSON.stringify(unreachable)}`)
+        }
+      }
+    },
+    [
+      statusFilter,
+      openPositionsCount,
+      viewOpenPositions,
+      hiddenExpanded,
+      filteredHiddenPositions.length,
+      toggleHidden,
+      refetch,
+    ],
+  )
+
+  const handleEndReached = useEvent((): void => {
+    if (hasNextPage && !isFetchingNextPage) {
+      void fetchNextPage()
+    }
+  })
+
+  // `usePoolsOutageBanner` returns a fresh object each render, so depend on its fields, not on it.
+  const {
+    isVisible: isOutageBannerVisible,
+    message: outageBannerMessage,
+    onDismiss: onDismissOutageBanner,
+  } = outageBanner
+
+  const listHeader = useMemo(
+    () => (
+      <>
         <Flex mb="$spacing8">
-          <PoolsDataIssueBanner message={outageBanner.message} onDismiss={outageBanner.onDismiss} />
+          <PositionStatusFilter value={statusFilter} onChange={setStatusFilter} disabled={hasErrorWithoutData} />
         </Flex>
-      )}
+        {isOutageBannerVisible && (
+          <Flex mb="$spacing8">
+            <PoolsDataIssueBanner message={outageBannerMessage} onDismiss={onDismissOutageBanner} />
+          </Flex>
+        )}
+      </>
+    ),
+    [statusFilter, hasErrorWithoutData, isOutageBannerVisible, outageBannerMessage, onDismissOutageBanner],
+  )
 
-      {hasErrorWithoutData ? (
+  const listFooter = useMemo(
+    () =>
+      isFetchingNextPage ? (
+        <Flex px="$spacing8">
+          <Loader.Token withPrice repeat={NEXT_PAGE_LOADER_ROW_COUNT} />
+        </Flex>
+      ) : null,
+    [isFetchingNextPage],
+  )
+
+  // Both body states that replace the rows entirely; `rows` is empty for each, so they render here
+  // and stay below the header chrome instead of replacing it.
+  const listEmpty = useMemo(() => {
+    if (hasErrorWithoutData) {
+      return (
         <BaseCard.ErrorState
           icon={<AlertTriangleFilled color="$neutral3" size="$icon.36" />}
           description={t('pool.balances.unavailable')}
@@ -131,41 +261,33 @@ export const PoolsTab = memo(function PoolsTabInner({
           retryEnabled
           onRetry={refetch}
         />
-      ) : isLoadingFirstPage ? (
+      )
+    }
+    if (isLoadingFirstPage) {
+      return (
         <Flex px="$spacing8" testID="pools-loading-skeleton">
           <Loader.Token withPrice repeat={FIRST_PAGE_LOADER_ROW_COUNT} />
         </Flex>
-      ) : (
-        <>
-          {visiblePositions.length === 0 ? (
-            <PositionsEmptyFilterView
-              statusFilter={statusFilter}
-              openPositionsCount={openPositionsCount}
-              onViewOpenPositions={viewOpenPositions}
-            />
-          ) : (
-            renderPositions(visiblePositions, true)
-          )}
+      )
+    }
+    return null
+  }, [hasErrorWithoutData, isLoadingFirstPage, t, refetch])
 
-          {filteredHiddenPositions.length > 0 && (
-            <ExpandoRow
-              isExpanded={hiddenExpanded}
-              label={t('hidden.pools.info.text.button', { numHidden: filteredHiddenPositions.length })}
-              onPress={toggleHidden}
-            />
-          )}
-
-          {hiddenExpanded && renderPositions(filteredHiddenPositions, false)}
-
-          {isFetchingNextPage && (
-            <Flex px="$spacing8">
-              <Loader.Token withPrice repeat={NEXT_PAGE_LOADER_ROW_COUNT} />
-            </Flex>
-          )}
-          {/* infinite-scroll sentinel */}
-          <Flex ref={sentinelRef} height={1} my="$spacing12" />
-        </>
-      )}
-    </ScrollView>
+  return (
+    <UniversalList
+      // The sidepanel document is the scroller; an inner container here would stop virtualizing
+      // inside its unbounded parent and reserve a second scrollbar gutter.
+      useWindowScroll
+      data={rows}
+      getItemType={rowType}
+      keyExtractor={rowKey}
+      ListEmptyComponent={listEmpty}
+      ListFooterComponent={listFooter}
+      ListHeaderComponent={listHeader}
+      renderItem={renderItem}
+      showsVerticalScrollIndicator={false}
+      style={{ className: 'w-full' }}
+      onEndReached={handleEndReached}
+    />
   )
 })

@@ -4,12 +4,11 @@ import { describe, expect, it } from 'vitest'
 import {
   resolveGroupedRwaCategory,
   resolveRwaDisclaimerCategory,
-  showsRwaDisclaimer,
   showsVolumeTimeFrameSelector,
 } from '~/pages/Explore/categories/exploreGroupedCategory'
 
 function makeCategory(id: string, categoryClass: TokenCategoryClass, grouped = false): TokenCategory {
-  return { id, name: id, description: '', categoryClass, grouped, topTokens: [] }
+  return { id, name: id, englishName: id, description: '', categoryClass, grouped, topTokens: [], topGroups: [] }
 }
 
 const CATEGORIES = [
@@ -72,15 +71,6 @@ describe('resolveRwaDisclaimerCategory', () => {
     expect(resolveRwaDisclaimerCategory('etfs')).toBe(RwaCategory.ETFS)
     expect(resolveRwaDisclaimerCategory('commodities')).toBe(RwaCategory.COMMODITIES)
     expect(resolveRwaDisclaimerCategory('defi')).toBe(RwaCategory.UNSPECIFIED)
-  })
-})
-
-describe('showsRwaDisclaimer', () => {
-  it('shows the disclaimer for stocks and etfs only', () => {
-    expect(showsRwaDisclaimer(RwaCategory.STOCKS)).toBe(true)
-    expect(showsRwaDisclaimer(RwaCategory.ETFS)).toBe(true)
-    expect(showsRwaDisclaimer(RwaCategory.COMMODITIES)).toBe(false)
-    expect(showsRwaDisclaimer(RwaCategory.UNSPECIFIED)).toBe(false)
   })
 })
 

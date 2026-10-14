@@ -133,6 +133,38 @@ describe('useGetPositionInfo', () => {
     })
   })
 
+  describe('polling', () => {
+    it('forwards refetchInterval to the LS query so a flow can poll the position', () => {
+      renderHookWithProviders(() =>
+        useGetPositionInfo(
+          { owner: WALLET, chainId: 1, protocolVersion: ProtocolVersion.V4, tokenId: '7' },
+          { refetchInterval: 5000 },
+        ),
+      )
+
+      expect(mockGetPosition).toHaveBeenCalledWith(expect.objectContaining({ refetchInterval: 5000, enabled: true }))
+    })
+
+    it('forwards an explicit false so a flow can stop polling without unmounting', () => {
+      renderHookWithProviders(() =>
+        useGetPositionInfo(
+          { owner: WALLET, chainId: 1, protocolVersion: ProtocolVersion.V4, tokenId: '7' },
+          { refetchInterval: false },
+        ),
+      )
+
+      expect(mockGetPosition).toHaveBeenCalledWith(expect.objectContaining({ refetchInterval: false }))
+    })
+
+    it('leaves polling off by default', () => {
+      renderHookWithProviders(() =>
+        useGetPositionInfo({ owner: WALLET, chainId: 1, protocolVersion: ProtocolVersion.V4, tokenId: '7' }),
+      )
+
+      expect(mockGetPosition).toHaveBeenCalledWith(expect.objectContaining({ refetchInterval: undefined }))
+    })
+  })
+
   describe('position-key gating', () => {
     it('leaves the LS query disabled when neither tokenId nor pairAddress is present', () => {
       renderHookWithProviders(() =>

@@ -2,12 +2,9 @@ import { LiquidityService } from '@uniswap/client-liquidity/dist/uniswap/liquidi
 import { CHAIN_TO_ADDRESSES_MAP } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import { TestID } from '@universe/test'
-import { erc721Abi } from 'viem'
-import { mainnet } from 'viem/chains'
-import { assume0xAddress } from '~/chains'
+import { LIVE_V3_TOKEN_ID, transferPositionToTestWallet } from '~/playwright/anvil/positions'
 import { createExpectSingleTransaction } from '~/playwright/anvil/transactions'
 import { expect, getTest } from '~/playwright/fixtures'
-import type { AnvilClient } from '~/playwright/fixtures/anvil'
 import {
   mockGetPosition,
   stubGetPositionFields,
@@ -17,39 +14,6 @@ import { TEST_WALLET_ADDRESS } from '~/playwright/fixtures/wallets'
 import { Mocks } from '~/playwright/mocks/mocks'
 
 const MOCK_V4_TOKEN_ID = 13281n
-// Live mainnet WETH/USDT 0.3% position with liquidity + accrued fees. The collect reads the
-// position from live mainnet, so this must be a real funded position; refresh it if ever withdrawn.
-const LIVE_V3_TOKEN_ID = 1362704n
-
-/** Transfer a live mainnet position NFT to the test wallet so the collect executes on the fork. */
-async function transferPositionToTestWallet({
-  anvil,
-  positionManager,
-  tokenId,
-}: {
-  anvil: AnvilClient
-  positionManager: string
-  tokenId: bigint
-}): Promise<void> {
-  const realOwner = await anvil.readContract({
-    address: assume0xAddress(positionManager),
-    abi: erc721Abi,
-    functionName: 'ownerOf',
-    args: [tokenId],
-  })
-  await anvil.impersonateAccount({ address: realOwner })
-  await anvil.writeContract({
-    address: assume0xAddress(positionManager),
-    abi: erc721Abi,
-    functionName: 'transferFrom',
-    args: [realOwner, TEST_WALLET_ADDRESS, tokenId],
-    account: realOwner,
-    chain: mainnet,
-  })
-  // Impersonation is node config that survives evm_revert; stop it so it can't leak into later tests.
-  await anvil.stopImpersonatingAccount({ address: realOwner })
-}
-
 const test = getTest({ withAnvil: true })
 
 test.describe(
@@ -66,7 +30,7 @@ test.describe(
       // Transfer the position to the test wallet so the collect executes on-chain, and override its
       // owner on the read so the ownership-gated "Collect fees" action renders (the live read returns
       // the real owner). The position's real accrued fees drive the collect.
-      await transferPositionToTestWallet({
+      const liveOwner = await transferPositionToTestWallet({
         anvil,
         positionManager: CHAIN_TO_ADDRESSES_MAP[UniverseChainId.Mainnet].nonfungiblePositionManagerAddress!,
         tokenId: LIVE_V3_TOKEN_ID,
@@ -78,10 +42,16 @@ test.describe(
         options: { blocks: 2 },
       })
 
+      // ClaimFees derives v3 fees by simulating collect on live mainnet as walletAddress, and rejects a
+      // non-owner. Only the fork moved the NFT, so request as the live owner, then hand `from` back to
+      // the test wallet (the fork owner) that sends the tx. The calldata's fee recipient stays the live owner.
       await stubLiquidityServiceEndpoint({
         page,
         endpoint: LiquidityService.methods.claimFees,
         service: LiquidityService,
+        modifyRequestData: (data) => ({ ...data, walletAddress: liveOwner }),
+        modifyResponseData: (data) =>
+          data?.claim ? { ...data, claim: { ...data.claim, from: TEST_WALLET_ADDRESS } } : data,
       })
       await page.goto(`/positions/v3/ethereum/${LIVE_V3_TOKEN_ID}`)
 

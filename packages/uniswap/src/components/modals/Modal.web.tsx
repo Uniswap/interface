@@ -43,6 +43,7 @@ export function Modal({
   overlayOpacity,
   snapPointsMode,
   snapPoints,
+  sheetFitHeight,
   testID,
   disableRemoveScroll,
 }: ModalProps): JSX.Element {
@@ -96,6 +97,7 @@ export function Modal({
           hideHandlebar={hideHandlebar}
           snapPointsMode={snapPointsMode}
           snapPoints={snapPoints}
+          sheetFitHeight={sheetFitHeight}
           $md={{
             p: padding ?? '$spacing12',
             ...(isWebApp && {

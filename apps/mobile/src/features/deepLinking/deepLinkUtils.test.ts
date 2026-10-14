@@ -15,7 +15,6 @@ describe('getDeepLinkAction', () => {
     ${'uniswap://wc:123@2?relay-protocol=irn&symKey=51e'}                                                | ${DeepLinkAction.UniswapWalletConnect}
     ${'uniswap://widget/#/tokens/ethereum/0x...'}                                                        | ${DeepLinkAction.UniswapWidget}
     ${'uniswap://scantastic?param=value'}                                                                | ${DeepLinkAction.Scantastic}
-    ${'uniswap://uwulink?param=value'}                                                                   | ${DeepLinkAction.UwuLink}
     ${'https://uniswap.org/app?screen=transaction&fiatOnRamp=true&userAddress=0x123'}                    | ${DeepLinkAction.ShowTransactionAfterFiatOnRamp}
     ${'https://uniswap.org/app?screen=transaction&fiatOffRamp=true&userAddress=0x123'}                   | ${DeepLinkAction.ShowTransactionAfterFiatOffRampScreen}
     ${'https://uniswap.org/app?screen=transaction&userAddress=0x123'}                                    | ${DeepLinkAction.TransactionScreen}

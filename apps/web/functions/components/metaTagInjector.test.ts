@@ -240,22 +240,6 @@ describe('metaTagInjectionMiddleware', () => {
     )
   })
 
-  test('should pass through header blocked paths', async () => {
-    const c = createMockContext('http://localhost:3000/', { 'x-blocked-paths': '/' })
-    let nextCalled = false
-
-    const next = async () => {
-      nextCalled = true
-    }
-
-    const response = await metaTagInjectionMiddleware(c, next)
-
-    expect(nextCalled).toBe(true)
-    const responseText = await response.text()
-
-    expect(responseText).toContain('<meta property="x:blocked-paths" content="/"')
-  })
-
   test('blocks paths for a GB viewer behind CloudFront', async () => {
     const c = createMockContext('http://localhost:3000/', { 'cloudfront-viewer-country': 'GB' })
     let nextCalled = false
@@ -290,13 +274,11 @@ describe('metaTagInjectionMiddleware', () => {
     expect(responseText).not.toContain('x:blocked-paths')
   })
 
-  // The poisoning guard: x-blocked-paths is forgeable and unkeyed, so
-  // honouring it here would cache a restricted page under an ordinary key.
-  test('ignores a forged x-blocked-paths when CloudFront reports a non-GB viewer', async () => {
-    const c = createMockContext('http://localhost:3000/', {
-      'cloudfront-viewer-country': 'US',
-      'x-blocked-paths': '/',
-    })
+  // x-blocked-paths is an ordinary header any client can send and is not in the
+  // CDN cache key; honouring it would let one forged request cache the restricted
+  // page under an ordinary viewer's key.
+  test('ignores x-blocked-paths', async () => {
+    const c = createMockContext('http://localhost:3000/', { 'x-blocked-paths': '/' })
     let nextCalled = false
 
     const next = async () => {
@@ -311,27 +293,7 @@ describe('metaTagInjectionMiddleware', () => {
     expect(responseText).not.toContain('x:blocked-paths')
   })
 
-  // Authoritative in the restricting direction too.
-  test('blocks a GB viewer behind CloudFront even with a conflicting x-blocked-paths', async () => {
-    const c = createMockContext('http://localhost:3000/', {
-      'cloudfront-viewer-country': 'GB',
-      'x-blocked-paths': '',
-    })
-    let nextCalled = false
-
-    const next = async () => {
-      nextCalled = true
-    }
-
-    const response = await metaTagInjectionMiddleware(c, next)
-
-    expect(nextCalled).toBe(true)
-    const responseText = await response.text()
-
-    expect(responseText).toContain('<meta property="x:blocked-paths" content="/"')
-  })
-
-  test('does not block paths when neither edge header is present', async () => {
+  test('does not block paths when the viewer-country header is absent', async () => {
     const c = createMockContext('http://localhost:3000/')
     let nextCalled = false
 

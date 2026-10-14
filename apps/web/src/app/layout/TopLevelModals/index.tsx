@@ -9,6 +9,7 @@ import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { AnalyticsDebugOverlayLazy } from 'uniswap/src/features/telemetry/debug/AnalyticsDebugOverlayLazy'
 import { useEvent } from 'utilities/src/react/hooks'
+import { BlastShutdownConnectModal } from '~/app/layout/TopLevelModals/BlastShutdownConnectModal'
 import { ModalRenderer } from '~/app/layout/TopLevelModals/modalRegistry'
 import { OAuthRedirectProvider } from '~/components/Passkey/OAuthRedirectContext'
 import { useOAuthRedirectRouter } from '~/components/Passkey/useOAuthRedirectRouter'
@@ -117,6 +118,7 @@ export function TopLevelModals() {
       <ModalRenderer modalName={ModalName.UnitagRateLimitSpeedbump} />
       <ModalRenderer modalName={ModalName.UnsupportedBrowser} />
       <GlobalEarnVaultModal />
+      <BlastShutdownConnectModal />
     </OAuthRedirectProvider>
   )
 }

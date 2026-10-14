@@ -25,7 +25,10 @@ import {
   resolveSpotlitCategories,
 } from 'uniswap/src/features/search/SearchModal/categories/spotlitCategories'
 import { getTokenCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
-import { getRwaCategoryForTokenCategory } from 'uniswap/src/features/tokenCategories/rwaCategoryBridge'
+import {
+  getRwaCategoryForTokenCategory,
+  isNonRwaAssetCategory,
+} from 'uniswap/src/features/tokenCategories/rwaCategoryBridge'
 import { TokenCategoryClass, type TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
@@ -104,8 +107,8 @@ export function useSpotlitCategorySections({
     customTypeGuard: isStringArray,
   })
   // Same region gate as the Stocks shelf this replaces, treated as blocked while the region is pending so RWA
-  // categories never flash in. Fails closed: the id bridge only knows today's RWA ids, so the whole Asset class
-  // (where BE files tokenized equities/commodities) is dropped too.
+  // categories never flash in. Fails closed: the id bridge only knows today's RWA ids, so the rest of the Asset
+  // class (where BE files tokenized equities/commodities) is dropped too, except the known non-RWA assets.
   const rwaBlocked = useIsFeatureGated(GatedFeature.ISSUER_SPECIFIC_RWA, { pendingValue: true })
 
   const { categories: allCategories, isLoading: categoriesLoading } = useAllTokenCategories()
@@ -186,7 +189,7 @@ export function useSpotlitCategorySections({
 function isPossiblyRwaCategory(category: TokenCategory): boolean {
   return (
     getRwaCategoryForTokenCategory(category) !== RwaCategory.UNSPECIFIED ||
-    category.categoryClass === TokenCategoryClass.Asset
+    (category.categoryClass === TokenCategoryClass.Asset && !isNonRwaAssetCategory(category))
   )
 }
 

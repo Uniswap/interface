@@ -18,7 +18,9 @@ export function CreateAuctionSteps() {
   const isAddTokenInfoStep = step === CreateAuctionStep.ADD_TOKEN_INFO
 
   return (
-    <Flex width="100%" overflow="hidden">
+    // `clip` rather than `hidden` (here and on the HeightAnimator): a hidden box is still a scroll container,
+    // so focusing a control whose focus ring pokes past the edge (Switch, chevrons) scrolls the step sideways.
+    <Flex width="100%" className="overflow-clip">
       <Presence>
         {isAddTokenInfoStep && (
           // Presence resolves refs on direct children only, so the Flex must wrap Trace (a bare context provider)
@@ -30,7 +32,7 @@ export function CreateAuctionSteps() {
         )}
       </Presence>
       {!isAddTokenInfoStep && (
-        <HeightAnimator animation="200ms">
+        <HeightAnimator animation="200ms" styleProps={{ '$platform-web': { overflowX: 'clip', overflowY: 'clip' } }}>
           <Presence>
             {step === CreateAuctionStep.CONFIGURE_AUCTION && (
               <Flex className="data-exiting:animate-spore-exit-fade-out opacity-[1]">

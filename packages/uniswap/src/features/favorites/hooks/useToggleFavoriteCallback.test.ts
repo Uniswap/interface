@@ -9,7 +9,7 @@ vi.mock('uniswap/src/features/favorites/hooks/useMultichainFavoritesRankings', (
   useMultichainFavoritesRankings: vi.fn(() => ({
     canonicalByKey: new Map(),
     networkCountByKey: new Map(),
-    tokenRankingsData: undefined,
+    hasData: false,
   })),
 }))
 
@@ -25,7 +25,7 @@ function setCanonicalLookup(entries: Array<[string, string]>): void {
   vi.mocked(useMultichainFavoritesRankings).mockReturnValue({
     canonicalByKey: new Map(entries),
     networkCountByKey: new Map(),
-    tokenRankingsData: undefined,
+    hasData: false,
   })
 }
 
@@ -34,7 +34,7 @@ describe(useToggleFavoriteCallback, () => {
     vi.mocked(useMultichainFavoritesRankings).mockReturnValue({
       canonicalByKey: new Map(),
       networkCountByKey: new Map(),
-      tokenRankingsData: undefined,
+      hasData: false,
     })
   })
 

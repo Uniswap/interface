@@ -21,6 +21,7 @@ import { getRelatedTokensTitle } from 'uniswap/src/features/tokenCategories/getR
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 const CARD_WIDTH = 204
 const SKELETON_CARD_COUNT = 3
@@ -47,7 +48,8 @@ const tokenKeyExtractor = (token: RankedTokenCardItem): string => token.key
  */
 export const RelatedTokens = memo(function RelatedTokens(): JSX.Element | null {
   const { t } = useTranslation()
-  const { currencyId } = useTokenDetailsContext()
+  const { currencyId, address, chainId } = useTokenDetailsContext()
+  const trace = useTrace()
   const subject = useMemo(() => currencyIdToRestContractInput(currencyId), [currencyId])
 
   const { categories } = useTokenCategories(currencyId)
@@ -63,8 +65,12 @@ export const RelatedTokens = memo(function RelatedTokens(): JSX.Element | null {
       return
     }
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      ...trace,
       element: ElementName.TDPRelatedTokensCategoryChip,
       category_id: categoryId,
+      token_address: address,
+      chain_id: chainId,
+      tags_rendered_count: categories.length,
     })
     setPickedCategoryId(categoryId)
   })
@@ -160,9 +166,11 @@ const RelatedTokenCard = memo(function RelatedTokenCard({
   listLength: number
 }): JSX.Element {
   const tokenDetailsNavigation = useTokenDetailsNavigation()
+  const trace = useTrace()
 
   const onPress = useEvent((): void => {
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      ...trace,
       element: ElementName.TDPRelatedTokenCard,
       category_id: categoryId,
       token_address: token.address,
@@ -177,7 +185,10 @@ const RelatedTokenCard = memo(function RelatedTokenCard({
   return (
     <TokenCard
       layout="vertical"
+      issuer={token.issuer}
       logoUrl={token.logoUrl}
+      chainId={token.chainId}
+      hideNetworkLogo={token.isMultichain}
       name={token.name}
       pricePercentChange1d={token.pricePercentChange1d}
       priceUsd={token.priceUsd}

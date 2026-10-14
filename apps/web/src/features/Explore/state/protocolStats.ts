@@ -1,146 +1,88 @@
-import { TimestampedAmount } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import type { GetProtocolStatsResponse, ProtocolStats } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { useMemo } from 'react'
-import { logger } from 'utilities/src/logger/logger'
-import { useProtocolStats } from '~/features/Explore/state'
+import { useGetProtocolStatsQuery } from 'uniswap/src/data/apiClients/dataApiService/explore/useGetProtocolStatsQuery'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { ProtocolVersionLabel } from 'uniswap/src/features/positions/utils'
 
-/**
- * Extracts the latest and previous values for a protocol from timestamped data.
- * Uses the most recent data point available for each protocol, regardless of other protocols' timestamps.
- * This prevents showing 0 values when protocols have data at different timestamps due to sync delays.
- */
-function getLatestAndPreviousValues(
-  data: TimestampedAmount[] | undefined,
-  options?: { protocolName?: string; isLoading?: boolean },
-): {
-  latest: { value: number; timestamp: number }
-  previous: { value: number; timestamp: number }
-} {
-  if (!data || data.length === 0) {
-    // Only log warning if data is missing AND not currently loading
-    if (options?.protocolName && !options.isLoading) {
-      logger.warn(
-        'protocolStats',
-        'getLatestAndPreviousValues',
-        `No data available for protocol ${options.protocolName}`,
-      )
-    }
-    return {
-      latest: { value: 0, timestamp: 0 },
-      previous: { value: 0, timestamp: 0 },
-    }
-  }
-
-  const sorted = [...data].sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
-
+/** Splits the response's per-version entries back out by protocol; missing versions stay undefined. */
+function getStatsByProtocol(
+  data: GetProtocolStatsResponse | undefined,
+): Record<ProtocolVersionLabel, ProtocolStats | undefined> {
+  const byVersion = new Map(data?.protocolVersionStats.map((entry) => [entry.protocolVersion, entry.stats]))
   return {
-    latest: { value: Number(sorted[0].value), timestamp: Number(sorted[0].timestamp) },
-    previous:
-      sorted.length > 1
-        ? { value: Number(sorted[1].value), timestamp: Number(sorted[1].timestamp) }
-        : { value: 0, timestamp: 0 },
+    v2: byVersion.get(ProtocolVersion.V2),
+    v3: byVersion.get(ProtocolVersion.V3),
+    v4: byVersion.get(ProtocolVersion.V4),
   }
 }
 
-/**
- * Returns:
- * - total 24h volume (sum of all protocols for the latest day)
- * - each protocol’s 24h volume (v2, v3, and v4)
- * - 24hr total volume percentage change
- *
- * Each protocol uses its own latest available data point, preventing 0 values when timestamps differ.
- */
-export function use24hProtocolVolume() {
-  const { data, isLoading } = useProtocolStats()
-
-  const v2Data: TimestampedAmount[] | undefined = data?.historicalProtocolVolume?.Month?.v2
-  const v3Data: TimestampedAmount[] | undefined = data?.historicalProtocolVolume?.Month?.v3
-  const v4Data: TimestampedAmount[] | undefined = data?.historicalProtocolVolume?.Month?.v4
-
-  return useMemo(() => {
-    const v2 = getLatestAndPreviousValues(v2Data, { protocolName: 'V2', isLoading })
-    const v3 = getLatestAndPreviousValues(v3Data, { protocolName: 'V3', isLoading })
-    const v4 = getLatestAndPreviousValues(v4Data, { protocolName: 'V4', isLoading })
-
-    const totalLatest = v2.latest.value + v3.latest.value + v4.latest.value
-    const totalPrevious = v2.previous.value + v3.previous.value + v4.previous.value
-
-    const computeChangePercent = (latest: number, previous: number): number => {
-      // If previous is 0, treat change as 0% rather than showing misleading "infinite growth".
-      // This handles cases like new protocol launches where there's no meaningful baseline for comparison.
-      if (previous === 0) {
-        return 0
-      }
-      return ((latest - previous) / previous) * 100
-    }
-
-    const totalChangePercent = computeChangePercent(totalLatest, totalPrevious)
-
-    return {
-      isLoading,
-      totalVolume: totalLatest,
-      totalChangePercent,
-      protocolVolumes: {
-        v2: v2.latest.value,
-        v3: v3.latest.value,
-        v4: v4.latest.value,
-      },
-    }
-  }, [isLoading, v2Data, v3Data, v4Data])
+export function useProtocolStats() {
+  const { chains: enabledChainIds } = useEnabledChains()
+  return useGetProtocolStatsQuery({ chainIds: enabledChainIds })
 }
 
 /**
  * Returns:
- * - total 24h TVL (sum of all protocols for the latest day)
- * - each protocol’s 24h TVL (v2, v3, and v4)
- * - 24hr total TVL percentage change
- * - each protocol’s 24hr TVL percentage change (v2, v3, and v4)
- *
- * Each protocol uses its own latest available data point, preventing 0 values when timestamps differ.
+ * - total 1D volume over the requested chains
+ * - each protocol’s 1D volume (v2, v3, and v4)
+ * - server-computed 1D total volume percentage change (undefined when the endpoint omits it)
  */
-export function useDailyTVLWithChange() {
+export function use24hProtocolVolume(): {
+  isLoading: boolean
+  totalVolume: number
+  totalChangePercent: number | undefined
+  protocolVolumes: Record<ProtocolVersionLabel, number>
+} {
   const { data, isLoading } = useProtocolStats()
 
-  const v2Data: TimestampedAmount[] | undefined = data?.dailyProtocolTvl?.v2
-  const v3Data: TimestampedAmount[] | undefined = data?.dailyProtocolTvl?.v3
-  const v4Data: TimestampedAmount[] | undefined = data?.dailyProtocolTvl?.v4
-
   return useMemo(() => {
-    const v2 = getLatestAndPreviousValues(v2Data, { protocolName: 'V2', isLoading })
-    const v3 = getLatestAndPreviousValues(v3Data, { protocolName: 'V3', isLoading })
-    const v4 = getLatestAndPreviousValues(v4Data, { protocolName: 'V4', isLoading })
-
-    const protocolTVL = {
-      v2: v2.latest.value,
-      v3: v3.latest.value,
-      v4: v4.latest.value,
-    }
-
-    const totalTVL = v2.latest.value + v3.latest.value + v4.latest.value
-    const previousTotal = v2.previous.value + v3.previous.value + v4.previous.value
-
-    // If previous is 0, treat change as 0% rather than showing misleading "infinite growth".
-    // This handles cases like new protocol launches where there's no meaningful baseline for comparison.
-    const computeChangePercent = (latestVal: number, previousVal: number) =>
-      previousVal === 0 ? 0 : ((latestVal - previousVal) / previousVal) * 100
-
-    // Combined protocol changes
-    const totalChangePercent = computeChangePercent(totalTVL, previousTotal)
-
-    // Individual protocol changes
-    const v2Change = computeChangePercent(v2.latest.value, v2.previous.value)
-    const v3Change = computeChangePercent(v3.latest.value, v3.previous.value)
-    const v4Change = computeChangePercent(v4.latest.value, v4.previous.value)
-
+    const byProtocol = getStatsByProtocol(data)
     return {
       isLoading,
-      totalTVL,
-      protocolTVL,
-      totalChangePercent,
-      protocolChangePercent: {
-        v2: v2Change,
-        v3: v3Change,
-        v4: v4Change,
+      totalVolume: data?.stats?.volume1d ?? 0,
+      totalChangePercent: data?.stats?.volumeChange1d,
+      protocolVolumes: {
+        v2: byProtocol.v2?.volume1d ?? 0,
+        v3: byProtocol.v3?.volume1d ?? 0,
+        v4: byProtocol.v4?.volume1d ?? 0,
       },
     }
-  }, [isLoading, v2Data, v3Data, v4Data])
+  }, [data, isLoading])
+}
+
+/**
+ * Returns:
+ * - total TVL over the requested chains
+ * - each protocol’s TVL (v2, v3, and v4)
+ * - server-computed 1D total TVL percentage change (undefined when the endpoint omits it)
+ * - each protocol’s 1D TVL percentage change (v2, v3, and v4)
+ */
+export function useDailyTVLWithChange(): {
+  isLoading: boolean
+  totalTVL: number
+  protocolTVL: Record<ProtocolVersionLabel, number>
+  totalChangePercent: number | undefined
+  protocolChangePercent: Record<ProtocolVersionLabel, number | undefined>
+} {
+  const { data, isLoading } = useProtocolStats()
+
+  return useMemo(() => {
+    const byProtocol = getStatsByProtocol(data)
+    return {
+      isLoading,
+      totalTVL: data?.stats?.tvl ?? 0,
+      protocolTVL: {
+        v2: byProtocol.v2?.tvl ?? 0,
+        v3: byProtocol.v3?.tvl ?? 0,
+        v4: byProtocol.v4?.tvl ?? 0,
+      },
+      totalChangePercent: data?.stats?.tvlChange1d,
+      protocolChangePercent: {
+        v2: byProtocol.v2?.tvlChange1d,
+        v3: byProtocol.v3?.tvlChange1d,
+        v4: byProtocol.v4?.tvlChange1d,
+      },
+    }
+  }, [data, isLoading])
 }

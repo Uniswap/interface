@@ -9,6 +9,16 @@ export const RWA_CATEGORY_IDS: Partial<Record<RwaCategory, string>> = {
   [RwaCategory.COMMODITIES]: 'commodities',
 }
 
+/**
+ * Asset-class ids that aren't RWA. BE files them under Asset for the menu, so they're exempt from the
+ * Asset-class RWA geo-gate and lead the Asset bucket ahead of the RWA categories.
+ */
+const NON_RWA_ASSET_CATEGORY_IDS: ReadonlySet<string> = new Set(['majors', 'stablecoins'])
+
+export function isNonRwaAssetCategory(category: TokenCategory): boolean {
+  return NON_RWA_ASSET_CATEGORY_IDS.has(category.id)
+}
+
 const RWA_CATEGORY_BY_ID = new Map(
   Object.entries(RWA_CATEGORY_IDS).map(([rwaCategory, id]) => [id, Number(rwaCategory) as RwaCategory]),
 )

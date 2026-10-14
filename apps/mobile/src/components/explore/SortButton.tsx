@@ -123,16 +123,7 @@ function SortButtonInner({ orderBy, onOrderByChange }: FilterGroupProps): JSX.El
   }, [MenuItem, menuActions, handleOrderByChange])
 
   return (
-    <Flex
-      row
-      centered
-      backgroundColor="$surface3"
-      borderRadius="$rounded20"
-      gap="$spacing4"
-      pl="$spacing16"
-      pr="$spacing12"
-      testID={TestID.ExploreSortButton}
-    >
+    <Flex row centered gap="$spacing4" testID={TestID.ExploreSortButton}>
       <ActionSheetDropdown showArrow options={options} styles={{ alignment: 'right' }}>
         <Text ellipse color="$neutral2" flexShrink={1} numberOfLines={1} variant="buttonLabel3">
           {getTokensOrderBySelectedLabel(orderBy, t)}

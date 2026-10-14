@@ -1,17 +1,17 @@
+import {
+  type Address,
+  type ProviderConnectInfo,
+  ResourceUnavailableRpcError,
+  RpcError,
+  SwitchChainError,
+  UserRejectedRequestError,
+} from '@universe/chains'
 import type { EmbeddedWalletParameters } from '@universe/embedded-wallet/src/connection/EmbeddedWalletConnector'
 import type { EmbeddedWalletProviderApi, Listener } from '@universe/embedded-wallet/src/connection/types'
 import { getEmbeddedWalletState } from '@universe/embedded-wallet/src/state/embeddedWalletStore'
 import { HexString } from '@universe/encoding'
 import { CONNECTION_PROVIDER_IDS, CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
-import {
-  type Address,
-  getAddress,
-  ProviderConnectInfo,
-  ResourceUnavailableRpcError,
-  RpcError,
-  SwitchChainError,
-  UserRejectedRequestError,
-} from 'viem'
+import { getAddress } from 'viem'
 import { ChainNotConfiguredError, createConnector } from 'wagmi'
 
 export function embeddedWallet({ provider: embeddedWalletProvider }: EmbeddedWalletParameters) {

@@ -1,6 +1,7 @@
 import { areAddressesEqual, Platform } from '@universe/chains'
 import { isExtensionApp } from '@universe/environment'
 import { Flex, iconSizes, Separator, Skeleton, SpaceTokens, Text, TouchableArea } from '@universe/mycelium'
+import { HeightAnimator } from '@universe/mycelium/height-animator'
 import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import { ChevronsIn } from '@universe/mycelium/icons/ChevronsIn'
 import { ChevronsOut } from '@universe/mycelium/icons/ChevronsOut'
@@ -294,7 +295,7 @@ function EarningCard({
   }, [entries])
 
   return (
-    <Flex {...EARNING_CARD_FRAME_PROPS} mt={mt} mb={mb ?? EARNING_CARD_FRAME_PROPS.mb} mx={mx}>
+    <Flex {...EARNING_CARD_FRAME_PROPS} gap="$none" mt={mt} mb={mb ?? EARNING_CARD_FRAME_PROPS.mb} mx={mx}>
       <TouchableArea testID={TestID.HomeEarningToggle} onPress={toggleExpanded}>
         <Flex row alignItems="center" gap="$spacing8">
           <Text variant="subheading2" color="$neutral1">
@@ -323,8 +324,8 @@ function EarningCard({
         </Flex>
       </TouchableArea>
 
-      {isExpanded && (
-        <Flex gap="$spacing12">
+      <HeightAnimator unmountChildrenWhenCollapsed open={isExpanded} animation="300ms">
+        <Flex gap="$spacing12" pt="$spacing12">
           {entries.map((entry) => (
             <EarningRow key={entry.vault.id} entry={entry} onSelect={onSelectVault} />
           ))}
@@ -337,7 +338,7 @@ function EarningCard({
             </>
           )}
         </Flex>
-      )}
+      </HeightAnimator>
     </Flex>
   )
 }

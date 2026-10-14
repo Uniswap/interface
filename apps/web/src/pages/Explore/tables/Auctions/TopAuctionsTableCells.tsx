@@ -1,4 +1,3 @@
-import { UniverseChainId } from '@universe/chains'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex, useIsTouchDevice } from '@universe/mycelium'
 import { CheckmarkCircle } from '@universe/mycelium/icons/CheckmarkCircle'
@@ -14,6 +13,7 @@ import { OrderDirection } from '~/data/util'
 import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
 import { PoolsTradeBadge } from '~/features/Toucan/Shared/PoolsTradeBadge'
 import { isQuickLaunchAuction } from '~/features/Toucan/utils/quickLaunchClassification'
+import { isPoolsSupportedChain } from '~/features/Toucan/utils/quickLaunchLinks'
 import { scrollToExploreTokenSection } from '~/pages/Explore/categories/useExploreCategory'
 
 /**
@@ -86,14 +86,13 @@ export function AuctionTableHeader({
 export function TokenNameCell({ auction }: { auction: EnrichedAuction }) {
   const isTouchDevice = useIsTouchDevice()
   // QuickLaunch: pools.trade logo in the verified-icon slot; curated verified wins when both apply.
-  // Robinhood-only, mirroring getPoolsTradeBidPageUrl: pools.xyz serves Robinhood Chain launches
-  // exclusively, so the brand attribution would be false provenance on any other chain.
+  // Off a pools.xyz-served chain the brand attribution would be false provenance.
   const isQuickLaunchBadgeEnabled = useFeatureFlag(FeatureFlags.QuickLaunch)
   const showQuickLaunchBadge =
     isQuickLaunchBadgeEnabled &&
     !auction.verified &&
     isQuickLaunchAuction(auction) &&
-    auction.auction?.chainId === UniverseChainId.Robinhood
+    isPoolsSupportedChain(auction.auction?.chainId)
   return (
     <Flex row gap="$gap8" alignItems="center" justifyContent="flex-start">
       <Flex pr="$spacing4">

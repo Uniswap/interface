@@ -20,7 +20,6 @@ vi.mock('@universe/embedded-wallet', async (importOriginal) => ({
   }),
 }))
 vi.mock('uniswap/src/features/transactions/hooks/useUSDCPrice', () => ({ useUSDCValue: () => undefined }))
-vi.mock('~/features/Liquidity/hooks/useSelectedFeeBreakdown', () => ({ useSelectedFeeBreakdown: () => undefined }))
 // Presentation-only children: none of them carry any part of the geo decision, and stubbing them keeps
 // the modal mountable without a real pool/chart/tx graph.
 vi.mock('~/features/Liquidity/charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart', () => ({

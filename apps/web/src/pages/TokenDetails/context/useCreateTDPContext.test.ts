@@ -117,9 +117,22 @@ const restMultichainAddresses = {
   [String(UniverseChainId.Base)]: USDC_BASE_ADDRESS,
 }
 
+/** Builds the `addresses` + `deployments` pair the v2 backend serves for the same chain set. */
+function multichainDeploymentFields(addresses: Record<string, string>): {
+  addresses: Record<string, string>
+  deployments: Record<string, { address: string; decimals: number }>
+} {
+  return {
+    addresses,
+    deployments: Object.fromEntries(
+      Object.entries(addresses).map(([chainId, address]) => [chainId, { address, decimals: 6 }]),
+    ),
+  }
+}
+
 const restMultichainToken = {
   multichainId: 'mc-usdc',
-  addresses: restMultichainAddresses,
+  ...multichainDeploymentFields(restMultichainAddresses),
   symbol: 'USDC',
   decimals: 6,
   name: 'USD Coin',
@@ -237,6 +250,7 @@ describe('useCreateTDPContext', () => {
     mocked(useTokenDetailsAuction).mockReturnValue({
       status: TokenDetailsSourceState.Found,
       auction: { address: '0x1111111111111111111111111111111111111111' } as PlainMessage<Auction>,
+      auctions: [{ address: '0x1111111111111111111111111111111111111111' } as PlainMessage<Auction>],
     })
 
     const { result } = renderHookWithProviders(() => useCreateTDPContext())
@@ -247,6 +261,7 @@ describe('useCreateTDPContext', () => {
     expect(result.current.state.auctionSource).toMatchObject({
       status: TokenDetailsSourceState.Found,
       auction: { address: '0x1111111111111111111111111111111111111111' },
+      auctions: [{ address: '0x1111111111111111111111111111111111111111' }],
     })
   })
 
@@ -448,10 +463,10 @@ describe('core new endpoint functionality', () => {
     restMocks.getTokenMultiChainQueryFn.mockReset().mockResolvedValue({
       token: {
         ...restMultichainToken,
-        addresses: {
+        ...multichainDeploymentFields({
           ...restMultichainAddresses,
           [String(UniverseChainId.Polygon)]: '0x0000000000000000000000000000000000000000',
-        },
+        }),
       },
     })
     const polygonBalance = { quantity: 10 }
@@ -476,7 +491,10 @@ describe('core new endpoint functionality', () => {
   // genuinely single-chain token resolves with one address rather than erroring.
   it('handles a single-chain multichainToken resolved by GetTokenMultiChain', async () => {
     restMocks.getTokenMultiChainQueryFn.mockReset().mockResolvedValue({
-      token: { ...restMultichainToken, addresses: { [String(UniverseChainId.Mainnet)]: USDC_MAINNET.address } },
+      token: {
+        ...restMultichainToken,
+        ...multichainDeploymentFields({ [String(UniverseChainId.Mainnet)]: USDC_MAINNET.address }),
+      },
     })
 
     const { result } = renderHookWithProviders(() => useCreateTDPContext())
@@ -501,7 +519,7 @@ describe('core new endpoint functionality', () => {
       chainName: 'ethereum',
     })
     restMocks.getTokenMultiChainQueryFn.mockReset().mockResolvedValue({
-      token: { ...restMultichainToken, addresses: { [String(UniverseChainId.Mainnet)]: '' } },
+      token: { ...restMultichainToken, ...multichainDeploymentFields({ [String(UniverseChainId.Mainnet)]: '' }) },
     })
 
     const { result } = renderHookWithProviders(() => useCreateTDPContext())
@@ -555,6 +573,7 @@ describe('core new endpoint functionality', () => {
     mocked(useTokenDetailsAuction).mockReturnValue({
       status: TokenDetailsSourceState.Found,
       auction: { address: '0x1111111111111111111111111111111111111111' } as PlainMessage<Auction>,
+      auctions: [{ address: '0x1111111111111111111111111111111111111111' } as PlainMessage<Auction>],
     })
 
     rerender()
@@ -579,6 +598,7 @@ describe('core new endpoint functionality', () => {
     mocked(useTokenDetailsAuction).mockReturnValue({
       status: TokenDetailsSourceState.Found,
       auction: { address: '0x1111111111111111111111111111111111111111' } as PlainMessage<Auction>,
+      auctions: [{ address: '0x1111111111111111111111111111111111111111' } as PlainMessage<Auction>],
     })
 
     const { result } = renderHookWithProviders(() => useCreateTDPContext())
@@ -597,6 +617,7 @@ describe('core new endpoint functionality', () => {
     mocked(useTokenDetailsAuction).mockReturnValue({
       status: TokenDetailsSourceState.Found,
       auction: { address: '0x1111111111111111111111111111111111111111' } as PlainMessage<Auction>,
+      auctions: [{ address: '0x1111111111111111111111111111111111111111' } as PlainMessage<Auction>],
     })
 
     const { result } = renderHookWithProviders(() => useCreateTDPContext())

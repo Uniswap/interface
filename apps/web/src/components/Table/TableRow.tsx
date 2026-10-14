@@ -186,15 +186,17 @@ function TableRowComponent<T extends RowData>({
     ))
 
   const rowContent = (
-    <Trace
-      logPress
-      element={rowOriginal.analytics?.elementName}
-      properties={{
-        ...rowOriginal.analytics?.properties,
-        ...analyticsContext,
-      }}
-    >
-      <TableRowHoverContext.Provider value={embeddedInIssuerPanel ? undefined : rowHovered}>
+    // The hover Provider stays OUTSIDE the Trace: `logPress` clones its onClick onto its DIRECT
+    // child, so that child has to be the DOM-rendering `Flex` or the click event never fires.
+    <TableRowHoverContext.Provider value={embeddedInIssuerPanel ? undefined : rowHovered}>
+      <Trace
+        logPress
+        element={rowOriginal.analytics?.elementName}
+        properties={{
+          ...rowOriginal.analytics?.properties,
+          ...analyticsContext,
+        }}
+      >
         <Flex
           {...(embeddedInIssuerPanel
             ? {}
@@ -237,8 +239,8 @@ function TableRowComponent<T extends RowData>({
             </DataRow>
           )}
         </Flex>
-      </TableRowHoverContext.Provider>
-    </Trace>
+      </Trace>
+    </TableRowHoverContext.Provider>
   )
   return rowWrapper ? rowWrapper(row, rowContent) : rowContent
 }

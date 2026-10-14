@@ -1,5 +1,7 @@
 package com.uniswap
 
+import androidx.annotation.Keep
+
 /**
  * These functions are defined from an object to be used from a static context.
  * The Rust implementation contains JNI bindings that are generated from the definition here.
@@ -90,6 +92,7 @@ object EthersRs {
  * @property privateKey The private key.
  * @property address The address associated with the private key.
  */
+@Keep // Constructed by name from libethers_ffi via JNI.
 class PrivateKeyAndAddress(
   var privateKey: String,
   var address: String,
@@ -100,6 +103,7 @@ class PrivateKeyAndAddress(
  * @property mnemonic The mnemonic phrase.
  * @property address The address associated with the mnemonic.
  */
+@Keep // Constructed by name from libethers_ffi via JNI.
 class MnemonicAndAddress(
   var mnemonic: String,
   var address: String,

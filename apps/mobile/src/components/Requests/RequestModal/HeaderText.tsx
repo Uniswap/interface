@@ -5,7 +5,6 @@ import { Trans } from 'react-i18next'
 import { WalletConnectSigningRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { EthMethod, WalletConnectEthMethod } from 'uniswap/src/features/dappRequests/types'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { UwULinkMethod } from 'uniswap/src/types/walletConnect'
 
 export function HeaderText({
   request,
@@ -53,17 +52,13 @@ export function HeaderText({
     )
   }
 
-  const getReadableMethodName = (
-    ethMethod: WalletConnectEthMethod | UwULinkMethod,
-    dappNameOrUrl: string,
-  ): JSX.Element => {
+  const getReadableMethodName = (ethMethod: WalletConnectEthMethod, dappNameOrUrl: string): JSX.Element => {
     switch (ethMethod) {
       case EthMethod.PersonalSign:
       case EthMethod.EthSign:
       case EthMethod.SignTypedData:
         return <Trans i18nKey="qrScanner.request.method.signature" values={{ dappNameOrUrl }} />
       case EthMethod.EthSendTransaction:
-      case UwULinkMethod.Erc20Send:
         return <Trans i18nKey="qrScanner.request.method.transaction" values={{ dappNameOrUrl }} />
     }
 

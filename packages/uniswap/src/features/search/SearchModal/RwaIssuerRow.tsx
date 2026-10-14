@@ -1,6 +1,7 @@
 import { isHoverable, isMobileApp, isMobileWeb, isWebPlatform } from '@universe/environment'
 import { Flex, TouchableArea } from '@universe/mycelium'
 import { useMemo, useRef, useState } from 'react'
+import { rowPressExemptClassName } from 'uniswap/src/components/lists/items/OptionItemPressableArea'
 import { CONTEXT_MENU_ACTIONS } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem/contextMenuActions'
 import { TokenContextMenuVariant } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem/types'
 import { TokenOptionItemContextMenu } from 'uniswap/src/components/lists/items/tokens/TokenOptionItemContextMenu'
@@ -156,7 +157,12 @@ export function RwaIssuerRow({
   )
 
   const rowContent = ownsTouchable ? (
-    <TouchableArea modifierPressHref={modifierPressHref} onModifierPress={onModifierPress} onPress={onPress}>
+    <TouchableArea
+      className={rowPressExemptClassName}
+      modifierPressHref={modifierPressHref}
+      onModifierPress={onModifierPress}
+      onPress={onPress}
+    >
       {body}
     </TouchableArea>
   ) : (

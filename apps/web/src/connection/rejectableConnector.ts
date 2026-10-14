@@ -1,5 +1,5 @@
-import { UserRejectedRequestError } from 'viem'
 import { mock } from 'wagmi/connectors'
+import { UserRejectedRequestError } from '~/chains'
 import type { Page } from '~/playwright/fixtures'
 
 /**

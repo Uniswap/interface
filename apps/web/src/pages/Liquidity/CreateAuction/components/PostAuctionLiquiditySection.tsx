@@ -68,7 +68,7 @@ export function PostAuctionLiquiditySection({
   const { subtitle, showSubtitleTooltip } = useMemo(() => {
     const zeroSubtitle = t('toucan.createAuction.step.configureAuction.postAuctionLiquidity.subtitle', {
       amount: '0',
-      raiseCurrency,
+      raiseCurrency: raiseCurrencySymbol,
     })
     const zero = {
       subtitle: zeroSubtitle,
@@ -97,21 +97,30 @@ export function PostAuctionLiquiditySection({
     return {
       subtitle: t('toucan.createAuction.step.configureAuction.postAuctionLiquidity.subtitle', {
         amount: formatted,
-        raiseCurrency,
+        raiseCurrency: raiseCurrencySymbol,
       }),
       showSubtitleTooltip: true as const,
     }
-  }, [floorPrice, auctionSupplyAmount, postAuctionLiquidityAmount, raiseCurrency, chainId, formatNumberOrString, t])
+  }, [
+    floorPrice,
+    auctionSupplyAmount,
+    postAuctionLiquidityAmount,
+    raiseCurrency,
+    raiseCurrencySymbol,
+    chainId,
+    formatNumberOrString,
+    t,
+  ])
 
   return (
     <Flex gap="$spacing8">
       <Flex gap="$spacing4" py="$spacing2">
-        <Text variant="subheading1" color="$neutral1">
+        <Text variant="subheading1" $md={{ variant: 'subheading2' }} color="$neutral1">
           {t('toucan.details.postAuctionLiquidity')}
         </Text>
         <Text variant="body3" color="$neutral2">
           {t('toucan.createAuction.step.configureAuction.postAuctionLiquidity.description', {
-            raiseCurrency,
+            raiseCurrency: raiseCurrencySymbol,
             tokenSymbol,
           })}
         </Text>
@@ -136,7 +145,7 @@ export function PostAuctionLiquiditySection({
       <ExpandableHelpLink
         label={t('toucan.createAuction.step.configureAuction.postAuctionLiquidity.helpLink')}
         description={t('toucan.createAuction.step.configureAuction.postAuctionLiquidity.helpDescription', {
-          raiseCurrency,
+          raiseCurrency: raiseCurrencySymbol,
           tokenSymbol,
         })}
       />

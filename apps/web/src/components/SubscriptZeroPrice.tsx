@@ -32,8 +32,8 @@ interface SubscriptZeroPriceProps {
 /**
  * A component that displays small decimal numbers with subscript notation for leading zeros.
  *
- * For example, 0.00001024 ETH becomes "0.0₅1024 ETH" where ₅ is a subscript
- * indicating 5 zeros after the decimal point.
+ * For example, 0.00001024 ETH becomes "0.0₄1024 ETH" where ₄ is a subscript
+ * indicating 4 zeros after the decimal point.
  */
 export function SubscriptZeroPrice({
   value,

@@ -6,7 +6,7 @@ exports[`PredefinedAmount > renders correctly with amount= %p , disabled= %p 100
   style="--ch-bg: var(--surface1-hovered); --ch-bdc: var(--surface3-hovered); border-color: rgba(19, 19, 19, 0.08);"
 >
   <span
-    class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-medium)] text-[16px] [line-height:18.4px] [font-weight:535] [color:var(--stext-neutral1)]"
+    class="[display:inline] box-border m-0 [word-wrap:break-word] [font-family:var(--stext-font-medium)] text-[16px] [line-height:18.4px] [font-weight:535] [color:var(--stext-neutral1)] max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
     style="color: rgba(19, 19, 19, 0.63); padding-top: 1px;"
   >
     $100
@@ -21,7 +21,7 @@ exports[`PredefinedAmount > renders correctly with amount= %p , disabled= %p 300
   style="border-color: rgba(19, 19, 19, 0.08);"
 >
   <span
-    class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-medium)] text-[16px] [line-height:18.4px] [font-weight:535] [color:var(--stext-neutral1)]"
+    class="[display:inline] box-border m-0 [word-wrap:break-word] [font-family:var(--stext-font-medium)] text-[16px] [line-height:18.4px] [font-weight:535] [color:var(--stext-neutral1)] max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
     style="color: rgba(19, 19, 19, 0.35); padding-top: 1px;"
   >
     $300
@@ -35,7 +35,7 @@ exports[`PredefinedAmount > renders correctly with amount= %p , disabled= %p 100
   style="--ch-bg: var(--surface1-hovered); --ch-bdc: var(--surface3-hovered); border-color: rgba(19, 19, 19, 0.08);"
 >
   <span
-    class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-medium)] text-[16px] [line-height:18.4px] [font-weight:535] [color:var(--stext-neutral1)]"
+    class="[display:inline] box-border m-0 [word-wrap:break-word] [font-family:var(--stext-font-medium)] text-[16px] [line-height:18.4px] [font-weight:535] [color:var(--stext-neutral1)] max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
     style="color: rgba(19, 19, 19, 0.63); padding-top: 1px;"
   >
     $1000
@@ -50,7 +50,7 @@ exports[`PredefinedAmount > renders correctly with amount= %p , disabled= %p 100
   style="border-color: rgba(19, 19, 19, 0.08);"
 >
   <span
-    class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-medium)] text-[16px] [line-height:18.4px] [font-weight:535] [color:var(--stext-neutral1)]"
+    class="[display:inline] box-border m-0 [word-wrap:break-word] [font-family:var(--stext-font-medium)] text-[16px] [line-height:18.4px] [font-weight:535] [color:var(--stext-neutral1)] max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
     style="color: rgba(19, 19, 19, 0.35); padding-top: 1px;"
   >
     $1000

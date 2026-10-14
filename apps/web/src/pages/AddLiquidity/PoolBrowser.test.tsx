@@ -26,11 +26,6 @@ vi.mock('react-router', async (importOriginal) => {
   return { ...actual, useLocation: () => ({ state: null }), useNavigate: () => vi.fn(), useParams: () => ({}) }
 })
 
-vi.mock('@universe/gating', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@universe/gating')>()
-  return { ...actual, useFeatureFlag: () => false }
-})
-
 // Only the derivation and the handler are under test; everything the page renders around them is
 // stubbed so the assertions can't be perturbed by the table, the filters or currency resolution.
 vi.mock('~/pages/AddLiquidity/useCreatePoolHrefFromSelection', async (importOriginal) => {
@@ -54,8 +49,6 @@ vi.mock('~/pages/Explore/tables/Pools/poolTableStore', () => ({
   usePoolTableStore: (selector: (state: { sortMethod: string; sortAscending: boolean }) => unknown) =>
     selector({ sortMethod: 'TVL', sortAscending: false }),
 }))
-vi.mock('~/pages/Explore/ProtocolFilter', () => ({ ProtocolFilter: () => null }))
-vi.mock('~/components/NetworkFilter/NetworkFilter', () => ({ NetworkFilter: () => null }))
 vi.mock('~/components/ExpandableSearchInput/ExpandableSearchInput', () => ({ ExpandableSearchInput: () => null }))
 vi.mock('~/features/Liquidity/PoolsFilter/PoolsFilter', () => ({ PoolsFilter: () => null }))
 vi.mock('~/features/Liquidity/PoolsFilter/aprRange', () => ({ usePoolsAprRange: () => undefined }))
@@ -92,7 +85,6 @@ function setup(state: { filterCurrencyA?: string; filterCurrencyB?: string; filt
       filterCurrencyA: '',
       filterCurrencyB: '',
       filterChain: state.filterTokenChain,
-      filterProtocol: null,
       poolsFilter: {},
       ...state,
     },

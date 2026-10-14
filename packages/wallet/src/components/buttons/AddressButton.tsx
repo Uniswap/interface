@@ -24,6 +24,10 @@ export function AddressButton({ address, chainId, ...rest }: AddressButtonProps)
       size={iconSizes.icon16}
       textVariant="body3"
       url={getExplorerLink({ chainId: supportedChainId, data: address, type: ExplorerDataType.ADDRESS })}
+      // Explicit non-shrinking override: an address/ENS name is a short, fixed-width label that
+      // should keep extending rather than wrap, regardless of LinkButton's shrinkable default
+      // (added so a long dapp hostname can wrap in the connect-request header).
+      flexShrink={0}
       {...rest}
     />
   )

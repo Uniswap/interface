@@ -1,4 +1,6 @@
+import { useQuery } from '@tanstack/react-query'
 import { isAndroid } from '@universe/environment'
+import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, Text } from '@universe/mycelium'
 import { SegmentedControl } from '@universe/mycelium/segmented-control-compat'
 import { opacify, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
@@ -27,7 +29,8 @@ import { useLayoutAnimationOnChange } from 'ui/src/animations'
 import GraphCurve from 'ui/src/assets/backgrounds/graph-curve.svg'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
-import { isLowVarianceRange } from 'uniswap/src/components/charts/utils'
+import { getIsStablecoin, isLowVarianceRange } from 'uniswap/src/components/charts/utils'
+import { getTokenCategoryIdsQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/categories/useTokenCategories'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
@@ -206,6 +209,10 @@ const PriceExplorerContent = memo(function PriceExplorerContentInner(): JSX.Elem
     // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
   }, [data])
 
+  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
+  const { data: categoryIds } = useQuery(getTokenCategoryIdsQueryOptions(currencyId))
+  const isStablecoin = getIsStablecoin({ tokenCategoriesEnabled, categoryIds })
+
   // Zoom out y-axis for low variance assets
   const shouldZoomOut = useMemo(() => {
     if (convertedPriceHistory.length === 0) {
@@ -216,8 +223,8 @@ const PriceExplorerContent = memo(function PriceExplorerContentInner(): JSX.Elem
     const min = Math.min(...values)
     const max = Math.max(...values)
 
-    return isLowVarianceRange({ min, max, duration: selectedDuration })
-  }, [convertedPriceHistory, selectedDuration])
+    return isLowVarianceRange({ min, max, duration: selectedDuration, isStablecoin })
+  }, [convertedPriceHistory, selectedDuration, isStablecoin])
 
   const chartYGutter = shouldZoomOut ? LOW_VARIANCE_Y_PADDING : DEFAULT_Y_PADDING
 

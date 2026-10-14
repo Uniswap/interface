@@ -1,7 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency } from '@uniswap/sdk-core'
-import type { UniverseChainId } from '@universe/chains'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { UniverseChainId } from '@universe/chains'
 import { Flex } from '@universe/mycelium'
 import { createSerializer, useQueryStates } from 'nuqs'
 import { useCallback, useState } from 'react'
@@ -11,12 +10,12 @@ import { Button } from 'ui/src'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { ExpandableSearchInput } from '~/components/ExpandableSearchInput/ExpandableSearchInput'
-import { NetworkFilter } from '~/components/NetworkFilter/NetworkFilter'
 import { CurrencySearchModal } from '~/components/SearchModal/CurrencySearchModal'
 import { STICKY_HEADER_TOP_GAP } from '~/components/Table/constants'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { PoolSortFields } from '~/data/pools/poolStats'
 import { OrderDirection } from '~/data/util'
+import { BlastShutdownBanner } from '~/features/Liquidity/BlastShutdownBanner'
 import { getNextFlowStep } from '~/features/Liquidity/Create/flowSteps'
 import { PositionFlowStep } from '~/features/Liquidity/Create/types'
 import { CurrencySelector } from '~/features/Liquidity/CurrencySelector'
@@ -31,7 +30,6 @@ import {
   useResolvedBrowserSelection,
 } from '~/pages/AddLiquidity/useCreatePoolHrefFromSelection'
 import { useV2ListPools } from '~/pages/Explore/hooks/useV2ListPools'
-import { ProtocolFilter } from '~/pages/Explore/ProtocolFilter'
 import type { PoolLinkData } from '~/pages/Explore/tables/Pools/PoolTable'
 import { PoolsTable } from '~/pages/Explore/tables/Pools/PoolTable'
 import { usePoolTableStore } from '~/pages/Explore/tables/Pools/poolTableStore'
@@ -58,8 +56,6 @@ export function PoolBrowser(): JSX.Element {
   // Selected-row highlight.
   const { poolAddress: selectedPoolId } = useParams<{ poolAddress?: string }>()
   const selectedPoolChainId = useChainIdFromUrlParam()
-
-  const isAdvancedPoolsFilteringEnabled = useFeatureFlag(FeatureFlags.AdvancedPoolsFiltering)
 
   const [browserUrlState, setBrowserUrlState] = useQueryStates(BROWSER_FILTER_PARSERS, { history: 'replace' })
 
@@ -118,25 +114,12 @@ export function PoolBrowser(): JSX.Element {
     )
   }, [setBrowserUrlState, browserUrlState.filterCurrencyA])
 
-  const handleChainSelect = useCallback(
-    (chainId: UniverseChainId | undefined) => {
-      const hasTokens = Boolean(browserUrlState.filterCurrencyA || browserUrlState.filterCurrencyB)
-      if (hasTokens && chainId !== undefined && chainId !== tokenChainId) {
-        setBrowserUrlState({ filterChain: chainId, filterCurrencyA: '', filterCurrencyB: '', filterTokenChain: null })
-      } else {
-        setBrowserUrlState({ filterChain: chainId ?? null })
-      }
-    },
-    [setBrowserUrlState, tokenChainId, browserUrlState.filterCurrencyA, browserUrlState.filterCurrencyB],
-  )
-
   const handlePoolsFilterApply = useCallback(
     (next: PoolsFilterState) => {
       const hasTokens = Boolean(browserUrlState.filterCurrencyA || browserUrlState.filterCurrencyB)
       // Keep `filterChain` in sync with the filter's chain so `selectedChainId` — the currency
       // picker's default chain — tracks it; on a real chain switch also clear a token stranded on the
-      // old chain, along with the chain recorded for the selection. Mirrors the flag-off
-      // handleChainSelect.
+      // old chain, along with the chain recorded for the selection.
       if (hasTokens && next.chainId !== undefined && next.chainId !== tokenChainId) {
         setBrowserUrlState({
           poolsFilter: next,
@@ -150,16 +133,6 @@ export function PoolBrowser(): JSX.Element {
       }
     },
     [setBrowserUrlState, tokenChainId, browserUrlState.filterCurrencyA, browserUrlState.filterCurrencyB],
-  )
-
-  // UNSPECIFIED is "All", which clears the param rather than serializing a value.
-  const selectedProtocol = browserUrlState.filterProtocol ?? ProtocolVersion.UNSPECIFIED
-
-  const handleProtocolSelect = useCallback(
-    (protocol: ProtocolVersion) => {
-      setBrowserUrlState({ filterProtocol: protocol === ProtocolVersion.UNSPECIFIED ? null : protocol })
-    },
-    [setBrowserUrlState],
   )
 
   const [filterString, setFilterString] = useState('')
@@ -180,11 +153,9 @@ export function PoolBrowser(): JSX.Element {
   } = useV2ListPools({
     currency0,
     currency1,
-    // With the advanced filter on, its Network drives the chain (falling back to a selected token's chain);
-    // don't also feed `filterChain`, or a chain left over from a since-cleared token would keep scoping the table.
-    chainId: isAdvancedPoolsFilteringEnabled ? undefined : selectedChainId,
-    protocol: selectedProtocol,
-    poolsFilter: isAdvancedPoolsFilteringEnabled ? browserUrlState.poolsFilter : undefined,
+    // The filter's Network drives the chain (falling back to a selected token's chain); `filterChain` is
+    // deliberately not fed in, or a chain left over from a since-cleared token would keep scoping the table.
+    poolsFilter: browserUrlState.poolsFilter,
     filterString: debouncedFilterString,
     sortState: {
       sortBy: sortMethod,
@@ -264,44 +235,26 @@ export function PoolBrowser(): JSX.Element {
           />
         </Flex>
         <Flex row gap="$spacing8" alignItems="center" height="100%">
-          {isAdvancedPoolsFilteringEnabled ? (
-            <PoolsFilter
-              search={
-                <ExpandableSearchInput
-                  value={filterString}
-                  onChangeText={setFilterString}
-                  placeholder={t('tokens.table.search.placeholder.pools')}
-                />
-              }
-              value={browserUrlState.poolsFilter}
-              onApply={handlePoolsFilterApply}
-              aprRange={aprRange}
-            />
-          ) : (
-            <>
+          <PoolsFilter
+            search={
               <ExpandableSearchInput
                 value={filterString}
                 onChangeText={setFilterString}
                 placeholder={t('tokens.table.search.placeholder.pools')}
               />
-              <ProtocolFilter
-                selectedProtocol={selectedProtocol}
-                onSelectProtocol={handleProtocolSelect}
-                surface="add-liquidity-pool-browser"
-              />
-              {/* positionFixed: this row's `overflowX: 'auto'` (set above, under `$md`) forces overflow-y
-                  to compute as `auto` too, clipping an inline-absolute menu. adaptToSheet only portals
-                  below the `sm` breakpoint, so this trigger is still exposed between `sm` and `md`. */}
-              <NetworkFilter
-                position="right"
-                onPress={handleChainSelect}
-                currentChainId={selectedChainId}
-                positionFixed
-              />
-            </>
-          )}
+            }
+            value={browserUrlState.poolsFilter}
+            onApply={handlePoolsFilterApply}
+            aprRange={aprRange}
+          />
         </Flex>
       </Flex>
+
+      {listChainId === UniverseChainId.Blast && (
+        <Flex mb="$spacing16">
+          <BlastShutdownBanner />
+        </Flex>
+      )}
 
       {/* The table renders its own error state, and only when it has no rows to show — a failed
           load-more keeps the pools already listed. */}

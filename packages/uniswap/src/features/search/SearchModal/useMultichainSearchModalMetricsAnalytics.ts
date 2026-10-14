@@ -1,11 +1,19 @@
 import { useEffect, useMemo, useRef } from 'react'
-import type { SearchModalListOption } from 'uniswap/src/components/lists/items/types'
+import { OnchainItemListOptionType, type SearchModalListOption } from 'uniswap/src/components/lists/items/types'
 import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { getMultichainRowReductionMetricsFromChainCounts } from 'uniswap/src/features/portfolio/getMultichainPortfolioMetrics'
 import { getSearchModalTokenRowChainCounts } from 'uniswap/src/features/search/SearchModal/utils/getSearchModalTokenRowChainCounts'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+
+export function countCategoryResults(sections: OnchainItemSection<SearchModalListOption>[] | undefined): number {
+  return (sections ?? []).reduce(
+    (count, section) =>
+      count + section.data.flat().filter((option) => option.type === OnchainItemListOptionType.Category).length,
+    0,
+  )
+}
 
 /**
  * Emits {@link UniswapEventName.MultichainSearchMetrics} when search modal token row metrics change
@@ -26,6 +34,7 @@ export function useMultichainSearchModalMetricsAnalytics({
   traceRef.current = trace
 
   const rowChainCounts = useMemo(() => getSearchModalTokenRowChainCounts(sections), [sections])
+  const categoryResultCount = useMemo(() => countCategoryResults(sections), [sections])
 
   const searchTableMetrics = useMemo(
     () => getMultichainRowReductionMetricsFromChainCounts(rowChainCounts),
@@ -41,7 +50,8 @@ export function useMultichainSearchModalMetricsAnalytics({
       total_token_row_count: searchTableMetrics.totalTokenRowCount,
       multichain_row_reduction_count: searchTableMetrics.multichainRowReductionCount,
       multichain_asset_count: searchTableMetrics.multichainAssetCount,
+      category_result_count: categoryResultCount,
       ...traceRef.current,
     })
-  }, [isSearchQueryPending, isSearchResultsLoading, searchTableMetrics])
+  }, [isSearchQueryPending, isSearchResultsLoading, searchTableMetrics, categoryResultCount])
 }

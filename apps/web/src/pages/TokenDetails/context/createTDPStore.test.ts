@@ -14,10 +14,11 @@ describe('createTDPStore', () => {
     store.getState().actions.setAuctionSource({
       status: TokenDetailsSourceState.Found,
       auction: auction as PlainMessage<Auction>,
+      auctions: [auction as PlainMessage<Auction>],
     })
 
     expect(store.getState()).toMatchObject({
-      auctionSource: { status: TokenDetailsSourceState.Found, auction },
+      auctionSource: { status: TokenDetailsSourceState.Found, auction, auctions: [auction] },
     })
   })
 })

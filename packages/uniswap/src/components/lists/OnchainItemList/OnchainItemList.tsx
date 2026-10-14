@@ -1,6 +1,6 @@
 import { EffectCallback, MutableRefObject } from 'react'
 import type { StyleProp, ViewStyle } from 'react-native'
-import { FocusedRowControl } from 'uniswap/src/components/lists/items/OptionItem'
+import type { FocusedRowStore } from 'uniswap/src/components/lists/focusedRowStore'
 import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
 import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
 import type { SectionHeaderProps } from 'uniswap/src/components/lists/SectionHeader'
@@ -36,8 +36,9 @@ export interface OnchainItemListProps<T extends OnchainItemListOption> {
   sections: OnchainItemSection<T>[]
   expandedItems?: string[]
   renderedInModal: boolean
-  focusedRowControl?: Omit<FocusedRowControl, 'rowIndex'>
-  /** Web: focuses the first focusable row once per key value (e.g. the search context). Requires `focusedRowControl`. */
+  /** Web: enables arrow-key/hover row focus. The list provides it to rows via `FocusedRowStoreContext`. */
+  focusedRowStore?: FocusedRowStore
+  /** Web: focuses the first focusable row once per key value (e.g. the search context). Requires `focusedRowStore`. */
   autoFocusFirstRowKey?: string
   contentContainerStyle?: StyleProp<ViewStyle>
 }

@@ -82,6 +82,7 @@ describe('useAuctionDisplayState', () => {
       currencyRaised: { status: 'idle' },
       pools: { status: 'success', poolCount: 0 },
       refetchCurrentBlock: vi.fn(),
+      refetchCheckpoint: vi.fn(),
     })
 
     const { result } = renderHook(() => useAuctionDisplayState())

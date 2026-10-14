@@ -1,4 +1,3 @@
-import { JsonRpcSigner } from '@ethersproject/providers'
 import { TradingApi } from '@universe/api'
 import { numberToHex } from '@universe/encoding'
 import { getAccount } from '@wagmi/core'
@@ -15,6 +14,7 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 import { SendCallsResultSchema } from 'wallet/src/features/dappRequests/types'
+import type { JsonRpcSigner } from '~/chains'
 import { wagmiConfig } from '~/connection/wagmiConfig'
 import { getRoutingForTransaction } from '~/state/activity/utils'
 import { popupRegistry } from '~/state/popups/registry'

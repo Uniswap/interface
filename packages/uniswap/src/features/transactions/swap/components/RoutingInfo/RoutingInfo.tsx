@@ -2,6 +2,8 @@ import type { GasFeeResult } from '@universe/api'
 import type { UniverseChainId } from '@universe/chains'
 import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/components/RoutingInfo/AcrossRoutingInfo'
 import { PlanRoutingInfo } from 'uniswap/src/features/transactions/swap/components/RoutingInfo/ChainedRoutingInfo'
+import { RouteDiagramInfo } from 'uniswap/src/features/transactions/swap/components/RoutingInfo/RouteDiagram/RouteDiagramInfo'
+import { useRouteDiagram } from 'uniswap/src/features/transactions/swap/components/RoutingInfo/RouteDiagram/useRouteDiagram'
 import { RoutingHopInfo } from 'uniswap/src/features/transactions/swap/components/RoutingInfo/RoutingHopInfo'
 import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isBridge, isChained } from 'uniswap/src/features/transactions/swap/utils/routing'
@@ -19,11 +21,16 @@ export function RoutingInfo({
   chainId: UniverseChainId
   gasFee: GasFeeResult
 }): JSX.Element | null {
+  const routeDiagram = useRouteDiagram(trade)
+
   if (isChained(trade)) {
     return <PlanRoutingInfo trade={trade} />
   }
   if (isBridge(trade)) {
     return <AcrossRoutingInfo />
+  }
+  if (routeDiagram) {
+    return <RouteDiagramInfo trade={trade} gasFee={gasFee} {...routeDiagram} />
   }
 
   return <RoutingHopInfo trade={trade} chainId={chainId} gasFee={gasFee} />

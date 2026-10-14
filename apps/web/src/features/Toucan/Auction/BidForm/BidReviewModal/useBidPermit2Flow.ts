@@ -1,20 +1,17 @@
 /* oxlint-disable typescript/no-unnecessary-condition */
-import { Contract } from '@ethersproject/contracts'
 import { MaxAllowanceTransferAmount, permit2Address } from '@uniswap/permit2-sdk'
 import { Currency, CurrencyAmount, MaxUint256, Token } from '@uniswap/sdk-core'
-import { UniverseChainId } from '@universe/chains'
 import ms from 'ms'
 import { useMemo } from 'react'
-import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { PERMIT2_ABI } from 'uniswap/src/abis/permit2'
 import { createApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
 import { Permit2TransactionStep } from 'uniswap/src/features/transactions/steps/permit2Transaction'
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { useEvent } from 'utilities/src/react/hooks'
+import { assume0xAddress, encodeFunctionData, erc20Abi } from '~/chains'
 import { AuctionDetails } from '~/features/Toucan/Auction/store/types'
 import { useAccount } from '~/hooks/useAccount'
-import { useEthersProvider } from '~/hooks/useEthersProvider'
 import { usePermit2Allowance, Allowance, AllowanceState } from '~/hooks/usePermit2Allowance'
 import { usePermitAllowance } from '~/hooks/usePermitAllowance'
 import { useHasPendingPermit2Approval } from '~/state/transactions/hooks'
@@ -46,7 +43,6 @@ export function useBidPermit2Flow({
   auctionDetails,
 }: UseBidPermit2FlowParams): UseBidPermit2FlowResult {
   const account = useAccount()
-  const provider = useEthersProvider({ chainId: auctionDetails?.chainId as UniverseChainId | undefined })
 
   const isNativeBidToken = bidCurrency?.isNative ?? false
 
@@ -116,13 +112,7 @@ export function useBidPermit2Flow({
   }, [isNativeBidToken, allowance.state, needsPermit2Allowance])
 
   const buildPreBidSteps = useEvent(async (): Promise<TransactionStep[]> => {
-    if (
-      !provider ||
-      !bidTokenAmount ||
-      !auctionDetails?.chainId ||
-      !auctionDetails.address ||
-      !bidTokenAmount.currency.isToken
-    ) {
+    if (!bidTokenAmount || !auctionDetails?.chainId || !auctionDetails.address || !bidTokenAmount.currency.isToken) {
       return []
     }
 
@@ -131,9 +121,12 @@ export function useBidPermit2Flow({
     const token = bidTokenAmount.currency
 
     if (allowance.state === AllowanceState.REQUIRED && allowance.needsSetupApproval) {
-      const tokenContract = new Contract(token.address, ERC20_ABI, provider)
-      const approveTx = await tokenContract.populateTransaction.approve(permit2Address(chainId), MaxUint256.toString())
-      const approveTxRequest = validateTransactionRequest({ ...approveTx, to: token.address, chainId })
+      const approveData = encodeFunctionData({
+        abi: erc20Abi,
+        functionName: 'approve',
+        args: [assume0xAddress(permit2Address(chainId)), BigInt(MaxUint256.toString())],
+      })
+      const approveTxRequest = validateTransactionRequest({ to: token.address, data: approveData, chainId })
       const approvalStep = createApprovalTransactionStep({
         amount: bidTokenAmount.quotient.toString(),
         txRequest: approveTxRequest,
@@ -146,15 +139,18 @@ export function useBidPermit2Flow({
     }
 
     if (needsPermit2Allowance) {
-      const permit2Contract = new Contract(permit2Address(chainId), PERMIT2_ABI, provider)
       const expiration = Math.floor((Date.now() + ms('30d')) / 1000)
-      const permit2Tx = await permit2Contract.populateTransaction.approve(
-        token.address,
-        auctionDetails.address,
-        MaxAllowanceTransferAmount,
-        expiration,
-      )
-      const permit2TxRequest = validateTransactionRequest({ ...permit2Tx, to: permit2Address(chainId), chainId })
+      const permit2Data = encodeFunctionData({
+        abi: PERMIT2_ABI,
+        functionName: 'approve',
+        args: [
+          assume0xAddress(token.address),
+          assume0xAddress(auctionDetails.address),
+          BigInt(MaxAllowanceTransferAmount.toString()),
+          expiration,
+        ],
+      })
+      const permit2TxRequest = validateTransactionRequest({ to: permit2Address(chainId), data: permit2Data, chainId })
       if (permit2TxRequest) {
         const permit2Step: Permit2TransactionStep = {
           type: TransactionStepType.Permit2Transaction,

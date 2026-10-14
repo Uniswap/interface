@@ -1,0 +1,18 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="252" height="252" viewBox="0 0 252 252" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Icon" opacity="0.8" filter="url(#filter0_f_0_64)">
+<g clip-path="url(#clip0_0_64)">
+<path d="M66 126C66 92.8629 92.8629 66 126 66V66C159.137 66 186 92.8629 186 126V126C186 159.137 159.137 186 126 186V186C92.8629 186 66 159.137 66 126V126Z" fill="white"/>
+<circle id="Ethereum (ETH)" cx="126" cy="126" r="60" fill="#627EEA"/>
+</g>
+</g>
+<defs>
+<filter id="filter0_f_0_64" x="0" y="0" width="252" height="252" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="33" result="effect1_foregroundBlur_0_64"/>
+</filter>
+<clipPath id="clip0_0_64">
+<path d="M66 126C66 92.8629 92.8629 66 126 66V66C159.137 66 186 92.8629 186 126V126C186 159.137 159.137 186 126 186V186C92.8629 186 66 159.137 66 126V126Z" fill="white"/>
+</clipPath>
+</defs>
+</svg>

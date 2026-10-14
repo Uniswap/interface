@@ -6,7 +6,7 @@ function isAppUniswapOrg({ hostname }: { hostname: string }): boolean {
 }
 
 function isAppUniswapStagingOrg({ hostname }: { hostname: string }): boolean {
-  return hostname === 'app.corn-staging.com'
+  return hostname === 'staging.app.uniswap.org'
 }
 
 export function isBrowserRouterEnabled(): boolean {

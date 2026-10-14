@@ -8,16 +8,18 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { useListCategoriesQuery } from 'uniswap/src/data/apiClients/dataApiService/categories/useListCategoriesQuery'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { bucketTokenCategories } from 'uniswap/src/features/tokenCategories/bucketTokenCategories'
 import { getTokenCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
 import { getTokenCategoryClassLabel } from 'uniswap/src/features/tokenCategories/getTokenCategoryClassLabel'
 import { TokenCategory, TokenCategoryStats } from 'uniswap/src/features/tokenCategories/types'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { AdaptiveDropdown } from '~/components/Dropdowns/AdaptiveDropdown'
 import { InternalMenuItem } from '~/components/Dropdowns/Dropdown'
 import { ExploreFilterChip } from '~/pages/Explore/categories/ExploreCategoryChips'
+import { isCategoryUnsupportedChain } from '~/pages/Explore/categories/useExploreCategory'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 const DROPDOWN_WIDTH = 328
@@ -33,10 +35,13 @@ const EMPTY_CATEGORY_STATS: TokenCategoryStats = {
   volume1y: 0,
 }
 
-/** Category stats scoped to the Explore network filter; empty on those chains reads as zeroed stats. */
+/**
+ * Category stats scoped to the Explore network filter; empty on those chains reads as zeroed stats.
+ * A chain without category coverage shows All networks stats, since picking a category there resets the filter.
+ */
 function useNetworkScopedStats(): (category: TokenCategory) => TokenCategoryStats | undefined {
   const chainId = useChainIdFromUrlParam()
-  const chainIds = useMemo(() => (chainId ? [chainId] : undefined), [chainId])
+  const chainIds = useMemo(() => (chainId && !isCategoryUnsupportedChain(chainId) ? [chainId] : undefined), [chainId])
   const { data: scopedCategories, isPlaceholderData } = useListCategoriesQuery({ chainIds })
 
   return useMemo(() => {
@@ -96,18 +101,34 @@ function CategoryRow({
 export function MoreCategoriesDropdown({
   categories,
   selectedCategoryId,
+  position,
   onSelectCategory,
 }: {
   /** Ordered category list; buckets preserve this order. */
   categories: TokenCategory[]
   selectedCategoryId?: string
+  /** Slot of the More control in the chip row, for analytics. */
+  position: number
   onSelectCategory: (categoryId: string) => void
 }): JSX.Element {
   const { t } = useTranslation()
+  const trace = useTrace()
   const [isOpen, toggleOpen] = useState(false)
   const buckets = useMemo(() => bucketTokenCategories(categories), [categories])
   const getScopedStats = useNetworkScopedStats()
-  const onToggleOpen = useEvent(() => toggleOpen((open) => !open))
+
+  // Only the trigger opens the menu (outside clicks only close it), so this is the one place an open happens.
+  const onToggleOpen = useEvent((): void => {
+    if (!isOpen) {
+      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+        ...trace,
+        element: ElementName.ExploreCategoryViewMore,
+        section: SectionName.ExploreCategoryChips,
+        tab_position: position,
+      })
+    }
+    toggleOpen(!isOpen)
+  })
 
   const onSelect = useEvent((category: TokenCategory): void => {
     toggleOpen(false)
@@ -115,8 +136,13 @@ export function MoreCategoriesDropdown({
       return
     }
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-      element: ElementName.ExploreMoreCategoriesDropdown,
+      ...trace,
+      element: ElementName.ExploreCategoryView,
+      section: SectionName.ExploreCategoryChips,
       tab: category.id,
+      category_id: category.id,
+      is_from_more_menu: true,
+      tab_position: position,
     })
     onSelectCategory(category.id)
   })

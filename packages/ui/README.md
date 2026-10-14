@@ -24,7 +24,9 @@ bun ui build:icons
 bun ui build:icons:missing
 ```
 
-When adding an SVG, please ensure you replace color references as needed with `currentColor` to ensure the asset respects the color property when used.
+The generator rewrites every hex `fill` and `stroke` to `currentColor` and records the first fill as the component's default, so export SVGs with a single color and leave the values as they are.
+
+To skip the manual steps, use the `/add-icons` Claude skill with the SVG paths. It validates the files (kebab-case name, no existing icon with that name, a single color, a `viewBox`, no sub-pixel stray paths), runs both generators from `origin/main`, and opens the PR. The validator alone runs with `bun scripts/add-icons.ts --check <files.svg...>`. A name that already exists is rejected unless you are deliberately replacing that icon, in which case tell the skill so it passes `--replace`.
 
 Custom icons that take props can be added to the same icons import by adding the file in `packages/ui/src/components/icons/index.ts`.
 

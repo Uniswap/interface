@@ -23,6 +23,7 @@ export function D3LiquidityChartHeader({
       row
       justifyContent="space-between"
       alignItems="center"
+      gap="$gap12"
       p="$padding16"
       $sm={{ row: false, alignItems: 'flex-start', gap: '$gap8' }}
     >

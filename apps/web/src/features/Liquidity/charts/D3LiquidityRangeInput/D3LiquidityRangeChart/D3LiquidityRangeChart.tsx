@@ -122,7 +122,7 @@ export const D3LiquidityRangeChart = ({
       token0Color,
       token1Color,
       priceToY: ({ price, tickAlignment }: { price: number; tickAlignment?: TickAlignment }) =>
-        priceToY({ price, liquidityData, tickScale, baseCurrency, quoteCurrency, tickAlignment }),
+        priceToY({ price, liquidityData, tickScale, tickSpacing, baseCurrency, quoteCurrency, tickAlignment }),
       tickToY: ({ tick, tickAlignment }: { tick: number; tickAlignment?: TickAlignment }) =>
         tickToY({ tick, tickScale, tickSpacing, tickAlignment }),
       yToTick: (y: number) => yToTick({ y, tickScale }),

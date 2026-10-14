@@ -109,6 +109,26 @@ const currency = ['¥', '£', '€', '$']
 const suffixes = [' ', 'K', 'M', 'B', 'T']
 const delineators = [',', '.']
 
+// Picks the sprite "reel" a character belongs to. Falls back to a single-char charset for anything
+// outside the known sets (e.g. a multi-char currency symbol like the "H" in "HK$", or a locale's own
+// compact-notation unit like "万"/"亿") so that character still renders (statically, without the
+// digit-roll animation) instead of silently disappearing — see CONS-3499.
+export function getSpriteCharset(char: string): string[] {
+  if (numeric.includes(char)) {
+    return numeric
+  }
+  if (delineators.includes(char)) {
+    return delineators
+  }
+  if (currency.includes(char)) {
+    return currency
+  }
+  if (suffixes.includes(char)) {
+    return suffixes
+  }
+  return [char]
+}
+
 export function StatCard(props: StatCardProps) {
   const colors = useSporeColors()
 
@@ -149,14 +169,7 @@ function AnimatedStringInterpolation({ value, delay, inView, live }: Omit<StatCa
   return (
     <Mask>
       {chars.map((char: string, index: number) => {
-        // select charset based on char
-        const charset = numeric.includes(char)
-          ? numeric
-          : delineators.includes(char)
-            ? delineators
-            : currency.includes(char)
-              ? currency
-              : suffixes
+        const charset = getSpriteCharset(char)
 
         return (
           <NumberSprite

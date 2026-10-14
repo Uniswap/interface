@@ -5,6 +5,8 @@ import { Percent } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { UniverseChainId } from '@universe/chains'
 import { DYNAMIC_FEE_AMOUNT, MAX_LP_FEE } from 'uniswap/src/constants/pools'
+import { DEFAULT_FEE_TIER_PAIRS } from 'uniswap/src/features/fees/feeTiers'
+import { bpsToFeeAmount } from 'uniswap/src/features/fees/feeUnits'
 import type { FeeBreakdown } from 'uniswap/src/features/fees/types'
 import {
   DYNAMIC_FEE_DATA,
@@ -20,7 +22,6 @@ import { FeeTierData } from '~/types/liquidity'
 
 export const MAX_FEE_TIER_DECIMALS = 4
 const MAX_FEE_TIER_VALUE = 99.9999
-const MIN_FEE_TIER_TVL = 1000
 
 export function validateFeeTier(feeTier: string): string {
   const numValue = parseFloat(feeTier)
@@ -119,8 +120,18 @@ export function createdPoolsAtFeeAmount({
   )
 }
 
+/**
+ * The "Best for …" subtitle for a fee tier. A new default tier reads as the old tier it pairs with by all-in
+ * rate (0.25% LP + protocol ≈ the familiar 0.30%), so its label doesn't change when its pool grows deep
+ * enough to claim a box of its own. Any other fee has no subtitle.
+ */
 export function getFeeTierTitle(feeAmount: number, isDynamic?: boolean): string {
-  switch (feeAmount) {
+  // A dynamic tier's fee amount is a flag, not a rate, so it never pairs with a static tier.
+  if (isDynamic) {
+    return i18n.t(`fee.bestForCustomizability`)
+  }
+  const pair = DEFAULT_FEE_TIER_PAIRS.find((p) => bpsToFeeAmount(p.newBps) === feeAmount)
+  switch (pair ? bpsToFeeAmount(pair.oldBps) : feeAmount) {
     case FeeAmount.LOWEST:
       return i18n.t(`fee.bestForVeryStable`)
     case FeeAmount.LOW:
@@ -130,9 +141,6 @@ export function getFeeTierTitle(feeAmount: number, isDynamic?: boolean): string 
     case FeeAmount.HIGH:
       return i18n.t(`fee.bestForExotic`)
     default:
-      if (isDynamic) {
-        return i18n.t(`fee.bestForCustomizability`)
-      }
       return ''
   }
 }
@@ -220,8 +228,8 @@ export function getDefaultFeeTiersForChainWithDynamicFeeTier({
 
 /**
  * Returns the chain's common/default fee tiers, each annotated with whether a pool already exists
- * (`created`). Unlike {@link getDefaultFeeTiersWithData}, this always returns the common tiers
- * (not the top-N by TVL) — used by flows that must require a brand-new pool (e.g. CCA auctions).
+ * (`created`). Unlike {@link getDefaultFeeTiersWithData}, this returns every common tier, pool or not —
+ * used by flows that must require a brand-new pool (e.g. CCA auctions).
  */
 export function getCommonFeeTiersWithData({
   chainId,
@@ -268,6 +276,10 @@ export interface FeeTierOption {
   disabledReasonLearnMoreUrl?: string
 }
 
+/**
+ * The chain's default tiers that already have a pool in `feeTierData`, deepest first. The v2/v3 create
+ * options are built from these; the v4 grid builds from `feeTierData` directly (see `getCreateFeeTierOptions`).
+ */
 export function getDefaultFeeTiersWithData({
   chainId,
   feeTierData,
@@ -289,35 +301,6 @@ export function getDefaultFeeTiersWithData({
     protocolFee: feeTierData[key]?.protocolFee,
   }))
 
-  // For V4, include the top 8 fee tiers sorted by TVL
-  if (protocolVersion === ProtocolVersion.V4) {
-    return (
-      Object.entries(feeTierData)
-        .map(([, data]) => ({
-          value: data.fee,
-          title: getFeeTierTitle(data.fee.feeAmount, data.fee.isDynamic),
-          selectionPercent: data.percentage,
-          tvl: data.tvl,
-          boostedApr: data.boostedApr,
-          rewards: data.rewards,
-          protocolFee: data.protocolFee,
-        }))
-        // if tvl is less than MIN_FEE_TIER_TVL and not default fee tier, filter it out
-        // or if it is a default fee tier, include it
-        .filter((feeTier) => {
-          return (
-            parseFloat(feeTier.tvl) >= MIN_FEE_TIER_TVL ||
-            Object.keys(defaultFeeTiersForChain).includes(
-              getFeeTierKey({ feeTier: feeTier.value.feeAmount, tickSpacing: feeTier.value.tickSpacing }),
-            )
-          )
-        })
-        .sort(sortFeeTiersByTvl)
-        .slice(0, 4)
-    )
-  }
-
-  // For V2/V3, filter to only include default fee tiers and sort by TVL
   return feeTiers
     .filter(
       (feeTier) =>

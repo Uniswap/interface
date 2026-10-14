@@ -1,5 +1,4 @@
 import { AuthTypes } from '@walletconnect/types'
-import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 
 export enum WalletConnectEvent {
   Connected = 0,
@@ -7,10 +6,6 @@ export enum WalletConnectEvent {
   NetworkChanged = 2,
   TransactionConfirmed = 3,
   TransactionFailed = 4,
-}
-
-export enum UwULinkMethod {
-  Erc20Send = 'erc20_send',
 }
 
 export enum EthEvent {
@@ -33,47 +28,9 @@ export enum WCRequestOutcome {
   Reject = 'reject',
 }
 
-interface UwULinkRequestDappInfo {
-  name?: string
-  url?: string
-  icon?: string
-}
-
-interface UwULinkBaseRequest {
-  method: EthMethod.EthSendTransaction | EthMethod.PersonalSign | UwULinkMethod.Erc20Send
-  chainId: number
-  dapp?: UwULinkRequestDappInfo
-  webhook?: string
-}
-
-interface UwULinkPersonalSignRequest extends UwULinkBaseRequest {
-  method: EthMethod.PersonalSign
-  message: string
-  webhook: string
-}
-
-interface UwULinkGenericTransactionRequest extends UwULinkBaseRequest {
-  method: EthMethod.EthSendTransaction
-  value: EthTransaction
-}
-
-export interface UwULinkErc20SendRequest extends UwULinkBaseRequest {
-  method: UwULinkMethod.Erc20Send
-  type: UwULinkMethod.Erc20Send
-  recipient: string
-  tokenAddress: string
-  amount: string
-
-  // TODO: the wallet should determine stablecoin status
-  isStablecoin: false
-}
-
-export type UwULinkRequest = UwULinkGenericTransactionRequest | UwULinkErc20SendRequest | UwULinkPersonalSignRequest
-
 export enum DappRequestType {
   WalletConnectSessionRequest = 'walletconnect-session-request',
   WalletConnectAuthenticationRequest = 'walletconnect-authentication-request',
-  UwULink = 'uwulink',
 }
 
 // Standard WC session request
@@ -96,19 +53,7 @@ export interface WalletConnectAuthenticationRequestInfo {
   authPayload: AuthTypes.AuthRequestEventArgs['authPayload']
 }
 
-export interface UwULinkRequestInfo {
-  requestType: DappRequestType.UwULink
-  name: string
-  url: string
-  icon: string | null
-  chain_id: number
-  webhook?: string
-}
-
-export type DappRequestInfo =
-  | WalletConnectAuthenticationRequestInfo
-  | WalletConnectSessionRequestInfo
-  | UwULinkRequestInfo
+export type DappRequestInfo = WalletConnectAuthenticationRequestInfo | WalletConnectSessionRequestInfo
 
 export interface EthTransaction {
   to?: string

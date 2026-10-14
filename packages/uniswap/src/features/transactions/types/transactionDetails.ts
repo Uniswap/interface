@@ -28,7 +28,7 @@ export interface TransactionId {
 
 /**
  * Marks if a transaction was initiated natively within app, or from external source.
- * External transactions are initiated from dapps, WC, uwulink, etc.
+ * External transactions are initiated from dapps, WC, etc.
  */
 export enum TransactionOriginType {
   Internal = 'internal',

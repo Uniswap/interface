@@ -1,4 +1,3 @@
-import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { isDevEnv } from '@universe/environment'
 import { createContext, useContext, useState } from 'react'
 import type { StoreApi, UseBoundStore } from 'zustand'
@@ -41,7 +40,6 @@ interface ExploreTablesFilterActions {
   setFilterString: (value: string) => void
   setTimePeriod: (period: TimePeriod) => void
   setQuickFilter: (filter: AuctionQuickFilter) => void
-  setSelectedProtocol: (protocol: ProtocolVersion) => void
   setPoolsFilter: (filter: ExplorePoolsFilterState) => void
   setPoolsAprRange: (range: PoolsAprRange | undefined) => void
   setFlexSlotCategoryId: (categoryId: string) => void
@@ -51,8 +49,7 @@ interface ExploreTablesFilterState {
   filterString: string
   timePeriod: TimePeriod
   quickFilter: AuctionQuickFilter
-  selectedProtocol: ProtocolVersion
-  /** Advanced pools filter (behind the AdvancedPoolsFiltering flag), committed by the modal's Apply button. */
+  /** Advanced pools filter, committed by the modal's Apply button. */
   poolsFilter: ExplorePoolsFilterState
   /** APR range of the Pools table's loaded rows; the table publishes it so the filter modal can hint it. */
   poolsAprRange?: PoolsAprRange
@@ -69,7 +66,6 @@ type ExploreTablesFilterStore = UseBoundStore<StoreApi<ExploreTablesFilterState>
 const INITIAL_FILTER_STRING = ''
 const INITIAL_TIME_PERIOD = TimePeriod.DAY
 const INITIAL_QUICK_FILTER = AuctionQuickFilter.All
-const INITIAL_PROTOCOL = ProtocolVersion.UNSPECIFIED
 
 export function createExploreTablesFilterStore(initialQuickFilter?: AuctionQuickFilter): ExploreTablesFilterStore {
   return create<ExploreTablesFilterState>()(
@@ -78,7 +74,6 @@ export function createExploreTablesFilterStore(initialQuickFilter?: AuctionQuick
         filterString: INITIAL_FILTER_STRING,
         timePeriod: INITIAL_TIME_PERIOD,
         quickFilter: initialQuickFilter ?? INITIAL_QUICK_FILTER,
-        selectedProtocol: INITIAL_PROTOCOL,
         poolsFilter: EMPTY_EXPLORE_POOLS_FILTER_STATE,
         poolsAprRange: undefined,
         flexSlotCategoryId: undefined,
@@ -86,7 +81,6 @@ export function createExploreTablesFilterStore(initialQuickFilter?: AuctionQuick
           setFilterString: (value) => set({ filterString: value }),
           setTimePeriod: (period) => set({ timePeriod: period }),
           setQuickFilter: (filter) => set({ quickFilter: filter }),
-          setSelectedProtocol: (protocol) => set({ selectedProtocol: protocol }),
           setPoolsFilter: (filter) => set({ poolsFilter: filter }),
           setPoolsAprRange: (range) => set({ poolsAprRange: range }),
           setFlexSlotCategoryId: (categoryId) => set({ flexSlotCategoryId: categoryId }),

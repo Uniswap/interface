@@ -1,11 +1,13 @@
 import { EVMUniverseChainId } from '@universe/chains'
 import { useReadContract } from 'wagmi'
-import { type Address, erc20Abi } from '~/chains'
-// Since v2 positions are ERC20s, when they are closed, the liquidity token is burned.
-// Should do on-chain lookup to check account's balanceOf on the liquidity token to check for ownership
-// To check position ownership on V3 positions, should use owner from GetPositions query (positionInfo.owner)instead of on-chain call
-import { assume0xAddress } from '~/chains'
+import { type Address, assume0xAddress, erc20Abi } from '~/chains'
 
+/**
+ * Whether `account` holds any of the pair's liquidity tokens. V2 positions are ERC-20 balances (the
+ * token is burned on close), so ownership is an onchain `balanceOf` rather than the `owner` the
+ * position read returns for V3. Resolves to `undefined` until that read settles, or if it fails, so
+ * callers can tell "not the owner" from "not known yet".
+ */
 export function usePositionOwnerV2({
   account,
   address,
@@ -14,15 +16,15 @@ export function usePositionOwnerV2({
   account?: Address
   address?: string
   chainId?: EVMUniverseChainId
-}): boolean {
-  const resultBalance = useReadContract({
+}): boolean | undefined {
+  const { data: balance } = useReadContract({
     address: assume0xAddress(address),
     chainId,
     abi: erc20Abi,
     functionName: 'balanceOf',
     args: account ? [account] : undefined,
     query: { enabled: !!account },
-  }).data
+  })
 
-  return resultBalance ? resultBalance > 0 : false
+  return balance === undefined ? undefined : balance > 0n
 }

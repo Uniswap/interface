@@ -68,14 +68,39 @@ export function createEntryGatewayProxies(ctx: CreateProxyContext): Record<strin
       pathPrefix: `${ENTRY_GATEWAY_PROXY_PATH}/prod`,
     }),
     [ENTRY_GATEWAY_PROXY_PATH]: createEntryGatewayProxy(ctx, {
-      target:
-        process.env.BACKEND_URL ||
-        process.env.VITE_BACKEND_URL ||
-        ctx.env.BACKEND_URL ||
-        ctx.env.VITE_BACKEND_URL ||
-        getDefaultProxyTarget(ctx.env),
+      target: getBackendTarget(ctx.env),
       pathPrefix: ENTRY_GATEWAY_PROXY_PATH,
     }),
+  }
+}
+
+function getBackendTarget(env: Record<string, string>): string {
+  return (
+    process.env.BACKEND_URL ||
+    process.env.VITE_BACKEND_URL ||
+    env.BACKEND_URL ||
+    env.VITE_BACKEND_URL ||
+    getDefaultProxyTarget(env)
+  )
+}
+
+/**
+ * Same-origin `/ws` for the dev server, forwarded to the Entry Gateway's `/ws`. Lives here rather
+ * than in the Hono app: a fetch-based proxy cannot upgrade a WebSocket on Node.
+ */
+// oxlint-disable-next-line import/no-unused-modules -- used in vite.config.mts
+export function createWebSocketProxy(env: Record<string, string>): Record<string, ProxyOptions> {
+  return {
+    '^/ws(/|\\?|$)': {
+      target: getBackendTarget(env),
+      changeOrigin: true,
+      secure: true,
+      ws: true,
+      // The backend rejects the local dev origin.
+      configure: (proxy) => {
+        proxy.on('proxyReqWs', (proxyReq) => proxyReq.removeHeader('origin'))
+      },
+    },
   }
 }
 

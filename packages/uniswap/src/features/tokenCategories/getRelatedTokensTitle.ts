@@ -19,14 +19,14 @@ export function getRelatedTokensTitle({ t, category }: { t: TFunction; category:
       return t('tdp.relatedTokens.single.etfs')
     case 'commodities':
       return t('tdp.relatedTokens.single.commodities')
+    case 'meme':
+      return t('tdp.relatedTokens.single.meme')
     case 'stablecoins':
       return t('tdp.relatedTokens.single.stablecoins')
     case 'defi':
       return t('tdp.relatedTokens.single.defi')
     case 'gaming':
       return t('tdp.relatedTokens.single.gaming')
-    case 'ai-infra':
-      return t('tdp.relatedTokens.single.aiInfra')
     case 'ai-agents':
       return t('tdp.relatedTokens.single.aiAgents')
     case 'majors':
@@ -39,10 +39,6 @@ export function getRelatedTokensTitle({ t, category }: { t: TFunction; category:
       return t('tdp.relatedTokens.single.trending')
     case 'recently-launched':
       return t('tdp.relatedTokens.single.recentlyLaunched')
-    case 'high-volatility':
-      return t('tdp.relatedTokens.single.highVolatility')
-    case 'low-volatility':
-      return t('tdp.relatedTokens.single.lowVolatility')
     default: {
       const unhandled: never = category.id
       return t('tdp.relatedTokens.single.fallback', { category: String(unhandled) })

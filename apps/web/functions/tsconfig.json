@@ -9,7 +9,7 @@
       "functions/*": ["./*"]
     },
     "tsBuildInfoFile": "../node_modules/.cache/tsbuildinfo/functions", // avoid clobbering the build tsbuildinfo
-    "types": ["node", "@cloudflare/workers-types", "vitest/globals"]
+    "types": ["node", "vitest/globals"]
   },
   "include": ["../../../index.d.ts", "**/*.ts", "**/*.tsx"],
   "references": [

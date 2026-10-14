@@ -2,7 +2,7 @@ import { bucketTokenCategories } from 'uniswap/src/features/tokenCategories/buck
 import { TokenCategory, TokenCategoryClass } from 'uniswap/src/features/tokenCategories/types'
 
 function makeCategory(id: string, categoryClass: TokenCategoryClass): TokenCategory {
-  return { id, name: id, description: '', categoryClass, grouped: false, topTokens: [] }
+  return { id, name: id, englishName: id, description: '', categoryClass, grouped: false, topTokens: [], topGroups: [] }
 }
 
 describe('bucketTokenCategories', () => {
@@ -25,6 +25,21 @@ describe('bucketTokenCategories', () => {
       makeCategory('defi', TokenCategoryClass.Sector),
     ])
     expect(buckets[0]?.categories.map((category) => category.id)).toEqual(['gaming', 'defi'])
+  })
+
+  it('leads the Asset bucket with non-RWA assets, preserving the given order within each group', () => {
+    const buckets = bucketTokenCategories([
+      makeCategory('stocks', TokenCategoryClass.Asset),
+      makeCategory('stablecoins', TokenCategoryClass.Asset),
+      makeCategory('commodities', TokenCategoryClass.Asset),
+      makeCategory('majors', TokenCategoryClass.Asset),
+    ])
+    expect(buckets[0]?.categories.map((category) => category.id)).toEqual([
+      'stablecoins',
+      'majors',
+      'stocks',
+      'commodities',
+    ])
   })
 
   it('omits empty buckets', () => {

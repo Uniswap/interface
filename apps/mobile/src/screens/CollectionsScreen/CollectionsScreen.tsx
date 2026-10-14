@@ -1,3 +1,4 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import {
   Flex,
@@ -18,9 +19,12 @@ import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { useListCategoriesQuery } from 'uniswap/src/data/apiClients/dataApiService/categories/useListCategoriesQuery'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { bucketTokenCategories } from 'uniswap/src/features/tokenCategories/bucketTokenCategories'
 import { getTokenCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
+import { getCategoryPileLogos } from 'uniswap/src/features/tokenCategories/getCategoryPileLogos'
 import { getTokenCategoryClassLabel } from 'uniswap/src/features/tokenCategories/getTokenCategoryClassLabel'
 import { TokenLogoPile } from 'uniswap/src/features/tokenCategories/TokenLogoPile'
 import { TokenCategory, TokenCategoryClass } from 'uniswap/src/features/tokenCategories/types'
@@ -28,6 +32,7 @@ import { useTokenCategoryOrder } from 'uniswap/src/features/tokenCategories/useT
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 // `getFixedItemSize` force-sizes cells, so these must match the rendered layouts exactly.
 const CATEGORY_ROW_HEIGHT = 64
@@ -86,14 +91,14 @@ const CategoryRow = memo(function CategoryRow({
           </Text>
           {stats && (
             <Flex row alignItems="center" gap="$spacing6">
-              <RelativeChange semanticColor arrowSize="$icon.12" change={stats.priceChange24hPct} variant="body3" />
-              <Text color="$neutral2" variant="body3">
+              <RelativeChange arrowSize="$icon.12" change={stats.priceChange24hPct} variant="body3" />
+              <Text color="$neutral3" variant="body3">
                 {t('categoryDetails.tokenCount', { count: stats.tokenCount })}
               </Text>
             </Flex>
           )}
         </Flex>
-        <TokenLogoPile size={PILE_LOGO_SIZE} tokens={category.topTokens} />
+        <TokenLogoPile logos={getCategoryPileLogos(category)} size={PILE_LOGO_SIZE} />
       </Flex>
     </TouchableArea>
   )
@@ -146,9 +151,22 @@ function CollectionsContent({
   const insets = useAppInsets()
   const dimensions = useWindowDimensions()
   const navigation = useExploreStackNavigation()
+  const trace = useTrace()
   const getBucketLabel = useBucketLabel()
 
+  const buckets = useMemo(() => bucketTokenCategories(orderedCategories), [orderedCategories])
+  const categoryIndexById = useMemo(
+    () => new Map(buckets.flatMap((bucket) => bucket.categories).map((category, index) => [category.id, index])),
+    [buckets],
+  )
+
   const onCategoryPress = useEvent((category: TokenCategory) => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      ...trace,
+      element: ElementName.CollectionsCategoryRow,
+      category_id: category.id,
+      category_index: categoryIndexById.get(category.id),
+    })
     navigation.navigate(MobileScreens.CategoryDetails, { categoryId: category.id })
   })
 
@@ -156,13 +174,13 @@ function CollectionsContent({
     if (isLoading) {
       return SKELETON_ITEMS
     }
-    return bucketTokenCategories(orderedCategories).flatMap((bucket): CollectionsListItem[] => [
+    return buckets.flatMap((bucket): CollectionsListItem[] => [
       { rowType: 'header', key: `header-${bucket.categoryClass}`, categoryClass: bucket.categoryClass },
       ...bucket.categories.map(
         (category): CollectionsListItem => ({ rowType: 'category', key: category.id, category }),
       ),
     ])
-  }, [isLoading, orderedCategories])
+  }, [isLoading, buckets])
 
   const listEmptyComponent = useMemo(() => {
     if (isLoading) {

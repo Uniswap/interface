@@ -1,3 +1,4 @@
+import { SearchType } from '@uniswap/client-data-api/dist/data/v2/search_pb'
 import {
   type CategoryOption,
   OnchainItemListOptionType,
@@ -8,12 +9,19 @@ import { NUMBER_OF_RESULTS_ALL_TAB } from 'uniswap/src/features/search/SearchMod
 import {
   getAllSections,
   getSearchResultsForActiveTab,
+  getSearchTypes,
   getTruncatedSectionKeys,
   SearchResultsForActiveTabParams,
+  shouldSkipSearch,
   withCategoryOptions,
 } from 'uniswap/src/features/search/SearchModal/hooks/useSectionsForSearchResultsUtils'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { TokenCategoryClass } from 'uniswap/src/features/tokenCategories/types'
+
+vi.mock('@universe/environment', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@universe/environment')>()),
+  isWebApp: true,
+}))
 
 const mockRefetch = vi.fn()
 
@@ -33,10 +41,19 @@ function createAuctionOption(): SearchModalOption {
   }
 }
 
-function createCategoryOption(id: string, name: string): CategoryOption {
+function createCategoryOption(id: string, name: string, englishName = name): CategoryOption {
   return {
     type: OnchainItemListOptionType.Category,
-    category: { id, name, description: '', categoryClass: TokenCategoryClass.Sector, grouped: false, topTokens: [] },
+    category: {
+      id,
+      name,
+      englishName,
+      description: '',
+      categoryClass: TokenCategoryClass.Sector,
+      grouped: false,
+      topTokens: [],
+      topGroups: [],
+    },
   }
 }
 
@@ -59,17 +76,9 @@ function createSearchResultParams(
     poolSearchOptionsLength: 0,
     poolSearchResultsLength: undefined,
     poolSearchResultsSection: undefined,
-    refetchAll: mockRefetch,
-    refetchSearchAuctions: mockRefetch,
-    refetchSearchPools: mockRefetch,
-    refetchSearchTokens: mockRefetch,
-    searchAuctionsError: null,
-    searchAuctionsLoading: false,
-    searchCategoriesLoading: false,
-    searchPoolsError: null,
-    searchPoolsLoading: false,
-    searchTokensError: null,
-    searchTokensLoading: false,
+    refetch: mockRefetch,
+    searchError: null,
+    searchLoading: false,
     tokenOptionsLength: 0,
     tokenSearchResultsSection: undefined,
     walletSearchResultsLoading: false,
@@ -163,15 +172,15 @@ describe('useSectionsForSearchResultsUtils', () => {
 
   describe('getSearchResultsForActiveTab', () => {
     it('returns auction sections and query state for the Auctions tab', () => {
-      const error = new Error('auction search failed')
+      const error = new Error('search failed')
       const auctionSection = createSection(OnchainItemSectionName.Auctions)
 
       const result = getSearchResultsForActiveTab(
         createSearchResultParams({
           activeTab: SearchTab.Auctions,
           auctionSearchResultsSection: [auctionSection],
-          searchAuctionsError: error,
-          searchAuctionsLoading: true,
+          searchError: error,
+          searchLoading: true,
         }),
       )
 
@@ -188,13 +197,70 @@ describe('useSectionsForSearchResultsUtils', () => {
         createSearchResultParams({
           activeTab: SearchTab.Auctions,
           auctionSearchEnabled: false,
-          searchAuctionsError: new Error('auction search failed'),
-          searchAuctionsLoading: true,
+          searchError: new Error('search failed'),
+          searchLoading: true,
         }),
       )
 
       expect(result.isLoading).toBe(false)
       expect(result.error).toBeNull()
+    })
+
+    it('holds back the All tab sections while the combined search is loading', () => {
+      const result = getSearchResultsForActiveTab(
+        createSearchResultParams({
+          activeTab: SearchTab.All,
+          allSections: [createSection(OnchainItemSectionName.Tokens)],
+          searchLoading: true,
+        }),
+      )
+
+      expect(result.data).toEqual([])
+      expect(result.isLoading).toBe(true)
+    })
+
+    it('surfaces the search error on the Tokens tab only when no token rows rendered', () => {
+      const error = new Error('search failed')
+
+      expect(
+        getSearchResultsForActiveTab(
+          createSearchResultParams({ activeTab: SearchTab.Tokens, searchError: error, tokenOptionsLength: 0 }),
+        ).error,
+      ).toBe(error)
+      expect(
+        getSearchResultsForActiveTab(
+          createSearchResultParams({ activeTab: SearchTab.Tokens, searchError: error, tokenOptionsLength: 2 }),
+        ).error,
+      ).toBeNull()
+    })
+  })
+
+  describe('shouldSkipSearch', () => {
+    it('skips without a query or on the Wallets tab', () => {
+      expect(shouldSkipSearch({ activeTab: SearchTab.All, searchFilter: null })).toBe(true)
+      expect(shouldSkipSearch({ activeTab: SearchTab.All, searchFilter: '' })).toBe(true)
+      expect(shouldSkipSearch({ activeTab: SearchTab.Wallets, searchFilter: 'vitalik' })).toBe(true)
+    })
+
+    it('runs on every other tab with a query', () => {
+      for (const activeTab of [SearchTab.All, SearchTab.Tokens, SearchTab.Pools, SearchTab.Auctions]) {
+        expect(shouldSkipSearch({ activeTab, searchFilter: 'usdc' })).toBe(false)
+      }
+    })
+  })
+
+  describe('getSearchTypes', () => {
+    it('requests tokens and pools on web, adding auctions and categories when enabled', () => {
+      expect(getSearchTypes({ auctionSearchEnabled: false, categorySearchEnabled: false })).toEqual([
+        SearchType.TOKEN,
+        SearchType.POOL,
+      ])
+      expect(getSearchTypes({ auctionSearchEnabled: true, categorySearchEnabled: true })).toEqual([
+        SearchType.TOKEN,
+        SearchType.POOL,
+        SearchType.AUCTION,
+        SearchType.CATEGORY,
+      ])
     })
   })
 })
@@ -205,14 +271,24 @@ describe('withCategoryOptions', () => {
   const defi = createCategoryOption('defi', 'DeFi')
   const aiAgents = createCategoryOption('ai-agents', 'AI Agents')
 
-  it('leads with name matches and trails with member-only matches, keeping BE order in each bucket', () => {
+  it('leads with exact name matches and drops member-only and partial matches', () => {
     const result = withCategoryOptions({
       activeTab: SearchTab.All,
       categoryOptions: [defi, stablecoins, aiAgents],
       options: tokenOptions,
-      searchFilter: 'stable',
+      searchFilter: ' Stablecoins ',
     })
-    expect(result).toEqual([stablecoins, ...tokenOptions, defi, aiAgents])
+    expect(result).toEqual([stablecoins, ...tokenOptions])
+  })
+
+  it('drops partial name matches', () => {
+    const result = withCategoryOptions({
+      activeTab: SearchTab.All,
+      categoryOptions: [stablecoins, defi],
+      options: tokenOptions,
+      searchFilter: 's',
+    })
+    expect(result).toBe(tokenOptions)
   })
 
   it('matches the category id slug as well as the display name', () => {
@@ -223,6 +299,17 @@ describe('withCategoryOptions', () => {
       searchFilter: 'AI-AGENTS',
     })
     expect(result).toEqual([aiAgents, ...tokenOptions])
+  })
+
+  it('matches the English name when the display name is localized', () => {
+    const localizedAiAgents = createCategoryOption('ai-agents', 'Agentes de IA', 'AI Agents')
+    const result = withCategoryOptions({
+      activeTab: SearchTab.All,
+      categoryOptions: [localizedAiAgents],
+      options: tokenOptions,
+      searchFilter: 'ai agents',
+    })
+    expect(result).toEqual([localizedAiAgents, ...tokenOptions])
   })
 
   it('leaves the Tokens tab untouched', () => {

@@ -6,7 +6,16 @@ import { useFlexSlotCategoryId } from '~/pages/Explore/categories/exploreCategor
 import { ExploreCategory } from '~/pages/Explore/categories/useExploreCategory'
 
 function makeCategory(id: string): TokenCategory {
-  return { id, name: id, description: '', categoryClass: TokenCategoryClass.Sector, grouped: false, topTokens: [] }
+  return {
+    id,
+    name: id,
+    englishName: id,
+    description: '',
+    categoryClass: TokenCategoryClass.Sector,
+    grouped: false,
+    topTokens: [],
+    topGroups: [],
+  }
 }
 
 const CATEGORIES = ['trending', 'recently-launched', 'stocks', 'majors', 'defi'].map(makeCategory)

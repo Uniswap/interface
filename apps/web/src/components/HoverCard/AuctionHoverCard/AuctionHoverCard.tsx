@@ -34,6 +34,8 @@ interface AuctionHoverCardProps {
   children: ReactNode
   placement?: HoverCardPlacement
   offset?: number
+  /** See `HoverCard`. */
+  offsetFromScrollContainerEdge?: boolean
   widthOffset?: number
   containerWidth?: number
   onNavigate?: () => void
@@ -46,6 +48,7 @@ export function AuctionHoverCard({
   children,
   placement = 'bottom-start',
   offset,
+  offsetFromScrollContainerEdge,
   widthOffset = offset,
   containerWidth,
   onNavigate,
@@ -111,6 +114,7 @@ export function AuctionHoverCard({
       isOpen={isOpen}
       placement={placement}
       offset={offset}
+      offsetFromScrollContainerEdge={offsetFromScrollContainerEdge}
       childOwnsPressFeedback={childOwnsPressFeedback}
       onOpenChange={onOpenChange}
       content={

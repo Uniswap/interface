@@ -5,9 +5,8 @@ import { Pair } from '@uniswap/v2-sdk'
 import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { createContext, Dispatch, SetStateAction, useContext, useEffect, useMemo, useState } from 'react'
-import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import type { FeeBreakdown } from 'uniswap/src/features/fees/types'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
-import { currencyId } from 'uniswap/src/utils/currencyId'
 import { useEvent, usePrevious } from 'utilities/src/react/hooks'
 import { useDerivedPositionInfo } from '~/features/Liquidity/Create/hooks/useDerivedPositionInfo'
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
@@ -18,6 +17,7 @@ import {
   type PriceRangeState,
   RangeAmountInputPriceMode,
 } from '~/features/Liquidity/Create/types'
+import { useSelectedFeeBreakdown } from '~/features/Liquidity/hooks/useSelectedFeeBreakdown'
 import { getPriceRangeInfo } from '~/features/Liquidity/utils/priceRangeInfo'
 import type { DepositState } from '~/types/liquidity'
 import { PositionField } from '~/types/position'
@@ -53,6 +53,9 @@ interface BaseCreateLiquidityState {
   protocolFee?: number
   // See `useDerivedPositionInfo`.
   poolHasNoActiveLiquidity?: boolean
+  // LP/protocol/all-in breakdown for the currently selected tier, computed once here so every surface
+  // (selector header, review modal, edit summary) shares it; undefined for a dynamic tier.
+  selectedFeeBreakdown?: FeeBreakdown
   poolOrPairLoading?: boolean
   poolOrPair: V4Pool | V3Pool | Pair | undefined
   price: Price<Currency, Currency> | undefined
@@ -201,20 +204,9 @@ export function CreateLiquidityContextProvider({
     )
   }, [tokenChainId, previousTokenChainId, setSelectedHookEntry, setPositionState])
 
-  // Token-selector currencies can come from multichain data, whose `decimals` is the parent token's
-  // rather than this deployment's (BNB USDT is 18, its parent 6). Re-resolve each leg through
-  // single-chain GetToken, as swap does; a leg stays undefined until it resolves, which keeps the pool
-  // lookup, price math and tx building off until the per-chain currency is in hand.
-  // TODO(CONS-3725): remove once data-api returns per-deployment decimals for multichain tokens.
-  const tokenAInfo = useCurrencyInfo(currencyId(currencyInputs.tokenA))
-  const tokenBInfo = useCurrencyInfo(currencyId(currencyInputs.tokenB))
-  const resolvedCurrencyInputs = useMemo(
-    () => ({ tokenA: tokenAInfo?.currency, tokenB: tokenBInfo?.currency }),
-    [tokenAInfo?.currency, tokenBInfo?.currency],
-  )
   // Derived info — the poolInfo response carries the pool's protocol fee (integer pips), so the flow no
   // longer fetches it separately; it's undefined for a not-yet-created pool.
-  const derivedPositionInfo = useDerivedPositionInfo(resolvedCurrencyInputs, positionState)
+  const derivedPositionInfo = useDerivedPositionInfo(currencyInputs, positionState)
 
   // Get URL sync function from consolidated hook
   const { setHistoryState, syncToUrl } = useLiquidityUrlState()
@@ -310,12 +302,22 @@ export function CreateLiquidityContextProvider({
 
   const isNativeTokenAOnly = Boolean(currencyInputs.tokenA?.isNative && !currencyInputs.tokenB)
 
+  // Computed once here and shared via context so the selector header, review modal, and edit summary
+  // don't each recompute the same breakdown from the same inputs.
+  const selectedFeeBreakdown = useSelectedFeeBreakdown({
+    protocolVersion: protocolSpecificValues.protocolVersion,
+    fee: positionState.fee,
+    servedProtocolFee: derivedPositionInfo.protocolFee,
+    hook: positionState.hook,
+  })
+
   const value: CreateLiquidityContextType = {
     // State
     ...protocolSpecificValues,
     poolId: derivedPositionInfo.poolId,
     protocolFee: derivedPositionInfo.protocolFee,
     poolHasNoActiveLiquidity: derivedPositionInfo.poolHasNoActiveLiquidity,
+    selectedFeeBreakdown,
     poolOrPairLoading: derivedPositionInfo.poolOrPairLoading,
     creatingPoolOrPair: derivedPositionInfo.creatingPoolOrPair,
     price: derivedPriceRangeInfo?.price,

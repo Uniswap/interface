@@ -36,7 +36,7 @@ export function AuctionDistributionSection({
 
   return (
     <Flex gap="$spacing12">
-      <Text variant="subheading1" color="$neutral1">
+      <Text variant="subheading1" $md={{ variant: 'subheading2' }} color="$neutral1">
         {t('toucan.createAuction.step.configureAuction.distribution')}
       </Text>
       <Flex row alignItems="center" gap="$spacing8">

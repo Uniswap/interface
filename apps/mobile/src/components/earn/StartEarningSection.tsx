@@ -19,7 +19,7 @@ const SKELETON_CHIP_COUNT = 3
 function SectionTitle({ title }: { title: string }): JSX.Element {
   const titleProps = useExploreSectionTitleProps()
   return (
-    <Text {...titleProps} mx="$spacing20">
+    <Text {...titleProps} mx="$spacing16">
       {title}
     </Text>
   )
@@ -53,7 +53,7 @@ export function StartEarningSection(): JSX.Element | null {
   }
 
   return (
-    <Flex gap="$spacing8" pt="$spacing8" pb="$spacing16">
+    <Flex gap="$spacing8">
       <SectionTitle title={t('explore.earn.startEarning')} />
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         {exploreVaults.map((vault) => {
@@ -76,7 +76,7 @@ export function StartEarningSection(): JSX.Element | null {
 
 function StartEarningSectionSkeleton({ title }: { title: string }): JSX.Element {
   return (
-    <Flex gap="$spacing8" pt="$spacing8" pb="$spacing16" testID={TestID.StartEarningSectionSkeleton}>
+    <Flex gap="$spacing8" testID={TestID.StartEarningSectionSkeleton}>
       <SectionTitle title={title} />
       <ScrollView
         horizontal
@@ -97,6 +97,6 @@ function StartEarningSectionSkeleton({ title }: { title: string }): JSX.Element 
 const styles = StyleSheet.create({
   scrollContent: {
     gap: spacing.spacing8,
-    paddingHorizontal: spacing.spacing12,
+    paddingHorizontal: spacing.spacing16,
   },
 })

@@ -24,7 +24,6 @@ vi.mock('@universe/embedded-wallet', async (importOriginal) => ({
   }),
 }))
 vi.mock('uniswap/src/features/transactions/hooks/useUSDCPrice', () => ({ useUSDCValue: () => undefined }))
-vi.mock('~/features/Liquidity/hooks/useSelectedFeeBreakdown', () => ({ useSelectedFeeBreakdown: () => undefined }))
 // Presentation-only children with no bearing on the initial-price line; stubbing them keeps the modal
 // mountable without a real pool/chart/tx graph. BaseQuoteFiatAmount stays real — it's the surface under test.
 vi.mock('~/features/Liquidity/charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart', () => ({

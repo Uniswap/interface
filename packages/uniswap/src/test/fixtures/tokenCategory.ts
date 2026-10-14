@@ -5,8 +5,10 @@ import { createFixture } from 'uniswap/src/test/utils/factory'
 export const tokenCategory = createFixture<TokenCategory>()(() => ({
   id: faker.datatype.uuid(),
   name: 'DeFi',
+  englishName: 'DeFi',
   description: faker.lorem.sentence(),
   categoryClass: TokenCategoryClass.Sector,
   grouped: false,
   topTokens: [],
+  topGroups: [],
 }))

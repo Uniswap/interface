@@ -18,6 +18,7 @@ export function RwaExploreTableShell({
   sortMethod,
   sortAscending,
   orderDirection,
+  categoryId,
 }: {
   rows: Rwa[]
   /** Identity of the query serving `rows`; the row window restarts when it changes. */
@@ -33,6 +34,7 @@ export function RwaExploreTableShell({
   sortMethod?: StocksSortMethod
   sortAscending?: boolean
   orderDirection?: OrderDirection
+  categoryId: string | undefined
 }): JSX.Element {
   const sortOnClient = enableSorting && !isSortedByServer
   const { visibleRows, rankByAsset, loadMore } = useRwaExploreTableShell({
@@ -58,6 +60,7 @@ export function RwaExploreTableShell({
       sortMethod={enableSorting ? sortMethod : undefined}
       orderDirection={enableSorting ? orderDirection : undefined}
       emptyState={emptyState}
+      categoryId={categoryId}
     />
   )
 }

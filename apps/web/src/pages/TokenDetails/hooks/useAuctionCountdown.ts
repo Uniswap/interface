@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { getDurationRemainingString } from 'utilities/src/time/duration'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { useSharedMachineTimeMs } from '~/hooks/useMachineTime'
+import { useSharedMachineTimeMs } from 'utilities/src/time/useSharedMachineTimeMs'
 
 /**
  * Second-resolution "3h 59m 22s" string until `endsAtMs`, clamped at zero. `onComplete` fires once when the

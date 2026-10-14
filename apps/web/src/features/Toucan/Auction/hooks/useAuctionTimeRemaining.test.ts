@@ -3,7 +3,7 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useAuctionTimeRemaining } from '~/features/Toucan/Auction/hooks/useAuctionTimeRemaining'
 
 const mockUseSharedMachineTimeMs = vi.fn<(updateInterval: number) => number>()
-vi.mock('~/hooks/useMachineTime', () => ({
+vi.mock('utilities/src/time/useSharedMachineTimeMs', () => ({
   useSharedMachineTimeMs: (updateInterval: number) => mockUseSharedMachineTimeMs(updateInterval),
 }))
 

@@ -8,6 +8,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { NumberType } from 'utilities/src/format/types'
 import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
 import {
+  DEPTH_CHART_SUBSCRIPT_THRESHOLD,
   DepthPoint,
   getDisplayPair,
   toDisplayPrice,
@@ -103,10 +104,10 @@ export function DepthSideTooltipContent({
           <SubscriptZeroPrice
             variant="body4"
             value={displayPrice}
-            // Match the rest of the depth chart's subscript treatment: anything from
-            // 4 leading zeros onward (e.g. WBTC/USDC's ~9.67e-6) gets the subscript glyph,
+            // Shared depth-chart treatment: anything from DEPTH_CHART_SUBSCRIPT_THRESHOLD
+            // leading zeros onward (e.g. WBTC/USDC's ~9.67e-6) gets the subscript glyph,
             // and we keep 6 sig digits so adjacent depth ticks render as distinct strings.
-            subscriptThreshold={4}
+            subscriptThreshold={DEPTH_CHART_SUBSCRIPT_THRESHOLD}
             maxSignificantDigits={6}
             symbol={quoteSymbol}
             disableTooltip

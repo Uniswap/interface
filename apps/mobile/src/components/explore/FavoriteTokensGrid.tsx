@@ -9,7 +9,7 @@ import type { SortableGridDragEndCallback, SortableGridRenderItem } from 'react-
 import Sortable from 'react-native-sortables'
 import { useDispatch, useSelector } from 'react-redux'
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
-import { useReportFavoritesSorting } from 'src/components/explore/favoritesSortingStore'
+import { useFavoritesDragScrollLock } from 'src/components/explore/favoritesSortingStore'
 import FavoriteTokenCard from 'src/components/explore/FavoriteTokenCard'
 import { useFavoritesDraftOrder } from 'src/components/explore/useFavoritesDraftOrder'
 import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
@@ -37,9 +37,9 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
   const dispatch = useDispatch()
   // Pull multichain rankings independent of the Explore network filter so badge visibility and the
   // one-time migration see the same cross-chain data regardless of which chain pill is selected.
-  const { tokenRankingsData, networkCountByKey } = useMultichainFavoritesRankings()
+  const { canonicalByKey, networkCountByKey, hasData } = useMultichainFavoritesRankings()
 
-  useCanonicalFavoritesMigration({ tokenRankingsData })
+  useCanonicalFavoritesMigration({ canonicalByKey, hasData })
 
   const [showAll, setShowAll] = useState(false)
   const favoriteCurrencyIds = useSelector(selectFavoriteTokens)
@@ -63,7 +63,7 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
   const networkCountByKeyRef = useRef(networkCountByKey)
   networkCountByKeyRef.current = networkCountByKey
 
-  useReportFavoritesSorting('tokens', isEditing)
+  const { onDragStart: lockListScroll, onDragEnd: unlockListScroll } = useFavoritesDragScrollLock('tokens')
 
   useEffect(() => {
     if (isEditing) {
@@ -72,8 +72,9 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
   }, [isEditing])
 
   const handleDragStart = useCallback(async () => {
+    lockListScroll()
     await hapticFeedback.light()
-  }, [hapticFeedback])
+  }, [hapticFeedback, lockListScroll])
 
   const hasMoreTokens = orderedCurrencyIds.length > DEFAULT_TOKENS_TO_DISPLAY
   const visibleTokens =
@@ -83,10 +84,11 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
 
   const handleDragEnd = useCallback<SortableGridDragEndCallback<string>>(
     ({ data }) => {
+      unlockListScroll()
       void hapticFeedback.light()
       queueDraftOrder(data)
     },
-    [hapticFeedback, queueDraftOrder],
+    [hapticFeedback, queueDraftOrder, unlockListScroll],
   )
 
   const renderItem = useCallback<SortableGridRenderItem<string>>(

@@ -22,8 +22,6 @@ export enum ReactQueryCacheKey {
   DataApiService = 'DataApiService',
   DialogVisibility = 'DialogVisibility',
   DensityChartData = 'DensityChartData',
-  /** Must equal the connect-query service typeName (methodDescriptor.service.typeName) so refetchQueries prefix-matches its auto-generated queryKey. */
-  ExploreStatsService = 'uniswap.explore.v1.ExploreStatsService',
   ExtensionBiometricUnlockCredential = 'ExtensionBiometricUnlockCredential',
   ExtensionBuiltInBiometricCapabilities = 'ExtensionBuiltInBiometricCapabilities',
   ExtractedColors = 'ExtractedColors',

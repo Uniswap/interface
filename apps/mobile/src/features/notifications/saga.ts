@@ -1,7 +1,7 @@
 import { OneSignal } from 'react-native-onesignal'
 import { NotifSettingType, OneSignalUserTagField } from 'src/features/notifications/constants'
 import { selectAllPushNotificationSettings } from 'src/features/notifications/selectors'
-import { initNotifsForNewUser, updateNotifSettings } from 'src/features/notifications/slice'
+import { initNotifsForNewUser, resetPushNotifications, updateNotifSettings } from 'src/features/notifications/slice'
 import { call, select, takeEvery } from 'typed-redux-saga'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -15,6 +15,7 @@ export function* pushNotificationsWatcherSaga() {
 
   yield* takeEvery(initNotifsForNewUser.type, initNewUser)
   yield* takeEvery(updateNotifSettings.type, syncWithOneSignal)
+  yield* takeEvery(resetPushNotifications.type, syncWithOneSignal)
   yield* takeEvery(finalizeTransaction.type, processFinalizedTx)
   yield* takeEvery(setAccountAsActive.type, syncActiveWalletAddressTag)
   yield* takeEvery(removeAccounts.type, syncActiveWalletAddressTag)
@@ -30,17 +31,21 @@ function* syncWithOneSignal() {
   const finishedOnboarding = yield* select(selectFinishedOnboarding)
 
   if (finishedOnboarding) {
-    const { generalUpdatesEnabled } = yield* select(selectAllPushNotificationSettings)
+    const { generalUpdatesEnabled, priceAlertsEnabled } = yield* select(selectAllPushNotificationSettings)
 
     yield* call(OneSignal.User.addTags, {
       [NotifSettingType.GeneralUpdates]: generalUpdatesEnabled.toString(),
+      [NotifSettingType.PriceAlerts]: priceAlertsEnabled.toString(),
     })
   }
 }
 
 function* initNewUser() {
+  const { priceAlertsEnabled } = yield* select(selectAllPushNotificationSettings)
+
   yield* call(OneSignal.User.addTags, {
     [NotifSettingType.GeneralUpdates]: 'true',
+    [NotifSettingType.PriceAlerts]: priceAlertsEnabled.toString(),
   })
 }
 

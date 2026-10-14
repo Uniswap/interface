@@ -17,6 +17,7 @@ export interface PriceChartBodyProps {
   yAxisFormatter?: (price: number) => string
   sparkline?: boolean
   hideMinMaxLines?: boolean
+  isStablecoin?: boolean
   onCrosshairChange?: (crosshairData?: PriceChartData) => void
   /** Optional overlay render prop with access to the chart's crosshair data, hover pixel coordinates, and plot right edge. */
   children?: (crosshairData?: PriceChartData, hover?: ChartHoverCoordinates | null) => ReactElement | null
@@ -34,6 +35,7 @@ export function PriceChartBody({
   yAxisFormatter,
   sparkline,
   hideMinMaxLines,
+  isStablecoin,
   onCrosshairChange,
   children,
 }: PriceChartBodyProps) {
@@ -54,6 +56,7 @@ export function PriceChartBody({
           sparkline,
           hideMinMaxLines,
           v2HoverStyles,
+          isStablecoin,
         }),
         [
           data,
@@ -66,6 +69,7 @@ export function PriceChartBody({
           sparkline,
           hideMinMaxLines,
           v2HoverStyles,
+          isStablecoin,
         ],
       )}
       height={height}

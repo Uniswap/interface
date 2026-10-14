@@ -7,8 +7,8 @@ export const EXPLORE_TOKEN_ROW_HEIGHT = 67
 export const WINDOW_MULTIPLIER = isAndroid ? 3 : 2.5
 export const EXPLORE_SKELETON_ROW_COUNT = 12
 export const EXPLORE_LIST_TRAILING_SKELETON_COUNT = 3
-export const EXPLORE_LIST_TOKENS_V2_PAGE_SIZE = 100
-export const EXPLORE_TOKEN_CONTAINER_PROPS = { height: EXPLORE_TOKEN_ROW_HEIGHT } as const
+// Rows sit 4px inside the 16px page inset so the logo column reads as indented under the section titles.
+export const EXPLORE_TOKEN_CONTAINER_PROPS = { height: EXPLORE_TOKEN_ROW_HEIGHT, px: '$spacing20' } as const
 
 export type ExploreSkeletonRow = {
   rowType: 'skeleton'

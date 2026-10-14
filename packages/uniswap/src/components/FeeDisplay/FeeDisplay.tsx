@@ -15,8 +15,8 @@ const FEE_DISPLAY_MAX_DECIMALS = 4
 export interface FeeDisplayProps {
   /**
    * Fee breakdown from the engine (`getFeeBreakdown`). This component never recomputes fees.
-   * Omit it (flag off / dynamic tier / non-fee content) and the wrapper is transparent — it just
-   * renders `children` with no tooltip.
+   * Omit it (dynamic tier, non-fee content, or no breakdown available) and the wrapper is
+   * transparent — it just renders `children` with no tooltip.
    */
   feeBreakdown?: FeeBreakdown
   /** Tooltip placement for the hover breakdown (web only). */
@@ -27,8 +27,8 @@ export interface FeeDisplayProps {
  * Cross-version fee breakdown on hover. Wraps a caller-rendered fee headline (`children`) and, on
  * web, reveals the LP fee, protocol fee, and all-in total when hovered. It never renders the
  * headline itself — the caller owns that text and its styling, so the number matches its
- * surroundings and stays identical whether the feature is on or off; this component only decorates
- * it with the breakdown. Transparent (returns `children` untouched) when there is no breakdown,
+ * surroundings and looks the same whether or not a breakdown tooltip is attached; this component
+ * only decorates it with the breakdown. Transparent (returns `children` untouched) when there is no breakdown,
  * nothing to reveal (v4 fees-off, or the protocol fee is unavailable — e.g. hooked pools, which the
  * FE never computes), or on native (no InfoTooltip implementation). Driven entirely by the fee
  * engine: it handles the additive (v4) vs subtractive (v2/v3) semantics and suppresses the tooltip

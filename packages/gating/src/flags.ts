@@ -12,6 +12,8 @@ export enum FeatureFlags {
   Arc,
   BlockaidFotLogging,
   ChainedActions,
+  ComplexRouteDiagram,
+  DisableBlast,
   DisableSwap7702,
   DisableSessionsForPlan,
   EmbeddedWallet,
@@ -44,7 +46,6 @@ export enum FeatureFlags {
   UniRpcEnabled,
   UniswapX,
   UseUniversalRouterVersion211,
-  V2EndpointsPortfolio,
   ViemEnabled,
   ViemProviderEnabled,
   XLayer,
@@ -65,11 +66,9 @@ export enum FeatureFlags {
   SmartWalletSettings,
   SmartWalletUpgradeNotice,
   Support7677GasSponsorship,
-  UwULink,
 
   // Web
   AATestWeb,
-  AdvancedPoolsFiltering,
   AuctionSearch,
   BatchedSwaps,
   DisableV1EwRotation,
@@ -98,6 +97,8 @@ const SHARED_FEATURE_FLAG_NAMES_RECORD = {
   [FeatureFlags.Arc]: 'arc',
   [FeatureFlags.BlockaidFotLogging]: 'blockaid_fot_logging',
   [FeatureFlags.ChainedActions]: 'enable_chained_actions',
+  [FeatureFlags.ComplexRouteDiagram]: 'complex_route_diagram',
+  [FeatureFlags.DisableBlast]: 'disable_blast',
   [FeatureFlags.DisableSessionsForPlan]: 'disable_sessions_for_plan',
   [FeatureFlags.DisableSwap7702]: 'disable-swap-7702',
   [FeatureFlags.EmbeddedWallet]: 'embedded_wallet',
@@ -135,7 +136,6 @@ const SHARED_FEATURE_FLAG_NAMES_RECORD = {
   [FeatureFlags.UnirouteEnabled]: 'uniroute_rollout',
   [FeatureFlags.UniswapX]: 'uniswapx',
   [FeatureFlags.UseUniversalRouterVersion211]: 'use_ur_version_2.1.1',
-  [FeatureFlags.V2EndpointsPortfolio]: 'v2_endpoints_portfolio',
   [FeatureFlags.ViemEnabled]: 'viem_enabled',
   [FeatureFlags.ViemProviderEnabled]: 'viem_provider_enabled',
   [FeatureFlags.XLayer]: 'x_layer',
@@ -145,7 +145,6 @@ const SHARED_FEATURE_FLAG_NAMES_RECORD = {
 // Add in alphabetical order to decrease probability of merge conflicts.
 const WEB_ONLY_FEATURE_FLAG_NAMES_RECORD = {
   [FeatureFlags.AATestWeb]: 'aatest_web',
-  [FeatureFlags.AdvancedPoolsFiltering]: 'advanced_pools_filtering',
   [FeatureFlags.AuctionSearch]: 'auction_search',
   [FeatureFlags.BatchedSwaps]: 'batched_swaps',
   [FeatureFlags.DisableV1EwRotation]: 'disable_v1_ew_rotation',
@@ -177,7 +176,6 @@ const WALLET_ONLY_FEATURE_FLAG_NAMES_RECORD = {
   [FeatureFlags.NotificationService]: 'notification_system',
   [FeatureFlags.Scantastic]: 'scantastic',
   [FeatureFlags.SmartWalletSettings]: 'smart_wallet_settings',
-  [FeatureFlags.UwULink]: 'uwu-link',
 } as const satisfies Partial<Record<FeatureFlags, string>>
 
 const WEB_FEATURE_FLAG_NAMES_RECORD = {

@@ -3,9 +3,11 @@ import { navigationRef } from 'src/app/navigation/navigationRef'
 import { RootParamList } from 'src/app/navigation/types'
 import { logger } from 'utilities/src/logger/logger'
 
+type NavigateOptions = { merge?: boolean; pop?: boolean }
+
 type RootNavigationArgs<RouteName extends keyof RootParamList> = undefined extends RootParamList[RouteName]
-  ? [RouteName] | [RouteName, RootParamList[RouteName]]
-  : [RouteName, RootParamList[RouteName]]
+  ? [RouteName] | [RouteName, RootParamList[RouteName]] | [RouteName, RootParamList[RouteName], NavigateOptions]
+  : [RouteName, RootParamList[RouteName]] | [RouteName, RootParamList[RouteName], NavigateOptions]
 
 function isNavigationRefReady(): boolean {
   if (!navigationRef.isReady()) {
@@ -18,7 +20,7 @@ function isNavigationRefReady(): boolean {
 }
 
 export function navigate<RouteName extends keyof RootParamList>(...args: RootNavigationArgs<RouteName>): void {
-  const [routeName, params] = args
+  const [routeName, params, options] = args
   if (!isNavigationRefReady()) {
     return
   }
@@ -26,7 +28,12 @@ export function navigate<RouteName extends keyof RootParamList>(...args: RootNav
   // Type assignment to `any` is a workaround until we figure out how to
   // type `createNavigationContainerRef` in a way that's compatible
   // oxlint-disable-next-line typescript/no-explicit-any -- Navigation refs need flexible typing
-  navigationRef.navigate(routeName as any, params as never)
+  const name = routeName as any
+  if (options) {
+    navigationRef.navigate(name, params as never, options)
+  } else {
+    navigationRef.navigate(name, params as never)
+  }
 }
 
 export function dispatchNavigationAction(

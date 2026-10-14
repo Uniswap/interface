@@ -1,6 +1,6 @@
 import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
-import { RWAIssuerLogosMap, UwULinkAllowlist } from '@universe/gating'
+import { RWAIssuerLogosMap } from '@universe/gating'
 
 export const isRWAIssuerLogosMap = (x: unknown): x is RWAIssuerLogosMap => {
   if (x === null || typeof x !== 'object') {
@@ -13,19 +13,6 @@ export const isRWAIssuerLogosMap = (x: unknown): x is RWAIssuerLogosMap => {
     const { light, dark } = logo as { light?: unknown; dark?: unknown }
     return (light === undefined || typeof light === 'string') && (dark === undefined || typeof dark === 'string')
   })
-}
-
-export const isUwULinkAllowlistType = (x: unknown): x is UwULinkAllowlist => {
-  const hasFields =
-    x !== null && typeof x === 'object' && Object.hasOwn(x, 'contracts') && Object.hasOwn(x, 'tokenRecipients')
-
-  if (!hasFields) {
-    return false
-  }
-
-  const castedObj = x as { contracts: unknown; tokenRecipients: unknown }
-
-  return Array.isArray(castedObj.contracts) && Array.isArray(castedObj.tokenRecipients)
 }
 
 export const isUniverseChainIdArrayType = (x: unknown): x is UniverseChainId[] =>

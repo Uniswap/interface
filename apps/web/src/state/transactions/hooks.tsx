@@ -1,5 +1,3 @@
-/* oxlint-disable typescript/no-unnecessary-condition */
-import type { TransactionResponse } from '@ethersproject/providers'
 import type { Token } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import { useCallback, useEffect, useMemo } from 'react'
@@ -30,6 +28,8 @@ import { isUniswapXOrderPending } from 'uniswap/src/features/transactions/utils/
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
+/* oxlint-disable typescript/no-unnecessary-condition */
+import type { TransactionResponse } from '~/chains'
 import { useAccount } from '~/hooks/useAccount'
 import { useAppDispatch, useAppSelector } from '~/state/hooks'
 import { useAddTransaction } from '~/state/transactions/adder'

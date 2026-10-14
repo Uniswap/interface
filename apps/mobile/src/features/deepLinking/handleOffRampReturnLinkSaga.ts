@@ -107,7 +107,7 @@ function* _handleOffRampReturnLink(url: URL) {
   }
 
   yield* put(forceFetchFiatOnRampTransactions())
-  yield* call(navigate, MobileScreens.MainTabs, { screen: MobileScreens.Home } as const)
+  yield* call(navigate, MobileScreens.MainTabs, { screen: MobileScreens.Home } as const, { pop: true })
   yield* put(openModal({ name: ModalName.Send, initialState: initialSendState }))
   yield* call(dismissInAppBrowser)
 }

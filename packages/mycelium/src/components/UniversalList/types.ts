@@ -115,6 +115,14 @@ interface ListSlotProps<T, TStyle> {
   ListHeaderComponentStyle?: Pick<UniversalListStyle<TStyle>, 'style'>
   /** Style for the footer container (e.g. a negative zIndex so it sits behind the last rows). */
   ListFooterComponentStyle?: Pick<UniversalListStyle<TStyle>, 'style'>
+  /**
+   * Indices of rows that pin to the top of the viewport while their group scrolls under them — e.g.
+   * the section headers of a flattened section list. Must be ascending. Pass a stable reference.
+   *
+   * Native pins through the engine's own `Animated.ScrollView`, so headers silently never pin
+   * when `renderScrollComponent` replaces it (a bottom sheet's scrollable, say).
+   */
+  stickyHeaderIndices?: number[]
 }
 
 /** Infinite-scroll and prepend behavior. */
@@ -194,7 +202,21 @@ export type UniversalListProps<T, TStyle = UniversalListStyleValue> = ListDataPr
   ListPresentationProps<TStyle>
 
 export interface UniversalListRef {
-  scrollToIndex: (params: { index: number; animated?: boolean }) => void
+  /**
+   * `viewPosition` places the item within the viewport: 0 aligns its top to the viewport top
+   * (the default), 1 aligns its bottom to the viewport bottom — the equivalent of the DOM's
+   * `scrollIntoView({ block: 'end' })`.
+   */
+  scrollToIndex: (params: { index: number; animated?: boolean; viewPosition?: number }) => void
+  /**
+   * Scrolls only when any part of the item is outside the viewport, aligning it to whichever edge it
+   * fell off — the equivalent of the DOM's `scrollIntoView({ block: 'nearest' })`. Use this over
+   * `scrollToIndex` to follow a moving selection, which should not jump the list on every step.
+   *
+   * `viewOffset` reserves that many pixels at the top of the viewport, e.g. the height of the sticky
+   * header that would otherwise pin over the item once it is scrolled there.
+   */
+  scrollIndexIntoView: (params: { index: number; animated?: boolean; viewOffset?: number }) => void
   scrollToOffset: (params: { offset: number; animated?: boolean }) => void
   scrollToEnd: (params?: { animated?: boolean }) => void
   scrollToTop: (params?: { animated?: boolean }) => void

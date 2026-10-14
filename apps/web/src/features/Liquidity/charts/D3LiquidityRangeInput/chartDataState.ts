@@ -1,3 +1,5 @@
+import type { Currency } from '@uniswap/sdk-core'
+
 /**
  * Pure derivations behind the range chart's data states: which pool's history draws the price line,
  * and whether the chart can render, is still waiting, or has nothing to show. Kept out of
@@ -80,6 +82,54 @@ export function getPriceLineSource({
     priceHistoryPoolId: priceSourceLoading ? undefined : (siblingPoolId ?? poolId),
     priceSourceLoading,
   }
+}
+
+/**
+ * The `priceInverted` that orients another pool's series of the same pair to this chart's display, or
+ * `undefined` when the two pools aren't the same pair on the same chain. Tokens are matched wrapped:
+ * v4 sorts native ETH first while v2/v3 sort WETH by address, so the same pair can come back in the
+ * opposite token order, and that pool's series then has to be read the other way round.
+ */
+export function getFallbackPriceInverted({
+  fallbackCurrencies,
+  sdkCurrencies,
+  priceInverted,
+}: {
+  fallbackCurrencies: { currency0: Currency; currency1: Currency }
+  sdkCurrencies: { TOKEN0: Maybe<Currency>; TOKEN1: Maybe<Currency> }
+  priceInverted: boolean
+}): boolean | undefined {
+  const { TOKEN0, TOKEN1 } = sdkCurrencies
+  if (!TOKEN0 || !TOKEN1) {
+    return undefined
+  }
+  const fallback0 = fallbackCurrencies.currency0.wrapped
+  const fallback1 = fallbackCurrencies.currency1.wrapped
+  if (fallback0.equals(TOKEN0.wrapped) && fallback1.equals(TOKEN1.wrapped)) {
+    return priceInverted
+  }
+  if (fallback0.equals(TOKEN1.wrapped) && fallback1.equals(TOKEN0.wrapped)) {
+    return !priceInverted
+  }
+  return undefined
+}
+
+/**
+ * Whether the price line comes from the fallback pool (in the migration flow, the position's source
+ * pool) rather than from `getPriceLineSource`'s pick. Only a fallback series that has entries can take
+ * over, and then whenever the pick has no line of its own: it borrows a sibling, which is a weaker
+ * stand-in for this pair than the pool the liquidity is leaving, or its own series is empty.
+ */
+export function usesFallbackPriceLine({
+  borrowsSibling,
+  hasPickedHistory,
+  hasFallbackHistory,
+}: {
+  borrowsSibling: boolean
+  hasPickedHistory: boolean
+  hasFallbackHistory: boolean
+}): boolean {
+  return hasFallbackHistory && (borrowsSibling || !hasPickedHistory)
 }
 
 /**

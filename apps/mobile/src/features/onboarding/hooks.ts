@@ -65,7 +65,7 @@ export function useCompleteOnboardingCallback({
     dispatch(setFinishedOnboarding({ finishedOnboarding: true }))
     setOnboardingTimestamp()
     if (entryPoint === OnboardingEntryPoint.Sidebar) {
-      navigation.navigate(MobileScreens.MainTabs, { screen: MobileScreens.Home })
+      navigation.navigate(MobileScreens.MainTabs, { screen: MobileScreens.Home }, { pop: true })
     }
   }
 }

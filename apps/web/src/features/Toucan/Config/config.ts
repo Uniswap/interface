@@ -10,7 +10,7 @@ export {
 
 /** Key builder for the curated override maps below: "{chainId}-{address}". */
 function buildOverrideKey({ chainId, address }: { chainId: number; address: string }): string {
-  // oxlint-disable-next-line universe-custom/no-tolowercase-address-currencyid -- Keep this Cloudflare worker dependency-free (imported by functions/utils/getAuction.ts); normalizeTokenAddressForCache's import graph breaks the workerd dev runner.
+  // oxlint-disable-next-line universe-custom/no-tolowercase-address-currencyid -- Keep this dependency-free: functions/utils/getAuction.ts imports it into the server bundle, and normalizeTokenAddressForCache's import graph does not belong there.
   return `${chainId}-${address.toLowerCase()}`
 }
 

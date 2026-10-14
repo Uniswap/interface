@@ -12,11 +12,12 @@ import { TokenOptionItem } from 'uniswap/src/components/lists/items/tokens/Token
 import { OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/lists/items/types'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { FiatOnRampCurrency, FORCurrencyOrBalance } from 'uniswap/src/features/fiatOnRamp/types'
-import { isSupportedFORCurrency } from 'uniswap/src/features/fiatOnRamp/utils'
+import { isSupportedFORCurrency, normalizeBalancesByIdForLookup } from 'uniswap/src/features/fiatOnRamp/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getTokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/safetyUtils'
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/warnings/slice/hooks'
 import { ListSeparatorToggle } from 'uniswap/src/features/transactions/TransactionDetails/ListSeparatorToggle'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 
 interface Props {
@@ -92,6 +93,7 @@ function TokenFiatOnRampListInner({
     () => buildFiatOnRampRows({ list, balancesById, isOffRamp, showMore }),
     [list, balancesById, isOffRamp, showMore],
   )
+  const normalizedBalancesById = useMemo(() => normalizeBalancesByIdForLookup(balancesById), [balancesById])
 
   const renderItem = useCallback(
     ({ item }: UniversalListRenderItemInfo<FiatOnRampRow>): JSX.Element => {
@@ -112,7 +114,8 @@ function TokenFiatOnRampListInner({
 
       const { currency } = item
       const { currencyInfo } = currency
-      const currencyBalance = currencyInfo && balancesById?.[currencyInfo.currencyId]
+      const currencyBalance =
+        currencyInfo && normalizedBalancesById?.[normalizeCurrencyIdForMapLookup(currencyInfo.currencyId)]
 
       return (
         <TokenOptionItemWrapper
@@ -123,7 +126,7 @@ function TokenFiatOnRampListInner({
         />
       )
     },
-    [onSelectCurrency, balancesById, selectedCurrency, showMore, t],
+    [onSelectCurrency, normalizedBalancesById, selectedCurrency, showMore, t],
   )
 
   if (error) {

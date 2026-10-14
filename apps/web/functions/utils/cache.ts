@@ -33,28 +33,37 @@ export interface Data {
   positionStatus?: PositionStatus
 }
 
-const CACHE_NAME = 'functions-cache' as const
+// All runtimes are Node, so a process-local Map replaces the Workers Cache API.
+const MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000
+const MAX_ENTRIES = 1000
 
 class Cache {
+  private readonly entries = new Map<string, { data: Data; expiresAt: number }>()
+
   async match(request: string): Promise<Data | undefined> {
-    const cache = await caches.open(CACHE_NAME)
-    const response = await cache.match(request)
-    if (!response) {
+    const hit = this.entries.get(request)
+    if (!hit) {
       return undefined
     }
-    const data: Data = JSON.parse(await response.text())
+    if (hit.expiresAt < Date.now()) {
+      this.entries.delete(request)
+      return undefined
+    }
+    const { data } = hit
     if (!data.title || !data.image || !data.url) {
       return undefined
     }
     return data
   }
 
-  async put(data: Data, request: string) {
-    // Set max age to 1 week
-    const response = new Response(JSON.stringify(data))
-    response.headers.set('Cache-Control', 'max-age=604800')
-    const cache = await caches.open(CACHE_NAME)
-    await cache.put(request, response)
+  async put(data: Data, request: string): Promise<void> {
+    if (this.entries.size >= MAX_ENTRIES) {
+      const oldest = this.entries.keys().next().value
+      if (oldest !== undefined) {
+        this.entries.delete(oldest)
+      }
+    }
+    this.entries.set(request, { data, expiresAt: Date.now() + MAX_AGE_MS })
   }
 }
 

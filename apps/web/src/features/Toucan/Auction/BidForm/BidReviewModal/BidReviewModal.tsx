@@ -19,13 +19,11 @@ import {
 } from '~/features/Toucan/Auction/BidForm/BidReviewModal/BidProgressIndicator'
 import { BidReviewHeader } from '~/features/Toucan/Auction/BidForm/BidReviewModal/BidReviewHeader'
 import { ExpandableDisclaimer } from '~/features/Toucan/Auction/BidForm/BidReviewModal/ExpandableDisclaimer'
+import { getSimulationErrorContent } from '~/features/Toucan/Auction/BidForm/BidReviewModal/getSimulationErrorContent'
 import { useBidConfirmModalState } from '~/features/Toucan/Auction/BidForm/BidReviewModal/useBidConfirmModalState'
 import { useBidPermit2Flow } from '~/features/Toucan/Auction/BidForm/BidReviewModal/useBidPermit2Flow'
 import { useBidReviewData } from '~/features/Toucan/Auction/BidForm/BidReviewModal/useBidReviewData'
-import {
-  BidSimulationErrorType,
-  useBidSimulation,
-} from '~/features/Toucan/Auction/BidForm/BidReviewModal/useBidSimulation'
+import { useBidSimulation } from '~/features/Toucan/Auction/BidForm/BidReviewModal/useBidSimulation'
 import { useRefreshCheckpointOnOpen } from '~/features/Toucan/Auction/BidForm/BidReviewModal/useRefreshCheckpointOnOpen'
 import { BudgetFieldState } from '~/features/Toucan/Auction/hooks/useBidBudgetField'
 import { SubmitState } from '~/features/Toucan/Auction/hooks/useBidFormSubmit'
@@ -171,7 +169,15 @@ export function BidReviewModal({
   } = reviewData
 
   // Set up bid simulation
-  const { simulationError, isSimulating, simulate, retryWithMinBid, clearSimulationError } = useBidSimulation({
+  const {
+    simulationError,
+    isSimulating,
+    simulate,
+    retryWithMinBid,
+    clearSimulationError,
+    beginSimulationAttempt,
+    reportSimulationFailure,
+  } = useBidSimulation({
     preparedBid,
     chainId: auctionDetails?.chainId,
     accountAddress: account.address,
@@ -231,35 +237,45 @@ export function BidReviewModal({
       return
     }
 
-    // Clear any previous simulation errors
-    clearSimulationError()
+    // Clear any previous simulation error and mark this attempt as live. Note: this must NOT be
+    // `clearSimulationError()` here - that sets the abort flag, and the permit2-required path
+    // below never calls `simulate()` (the only place that resets it), so a `buildPreBidSteps()`
+    // rejection's `reportSimulationFailure` call would be silently swallowed as "aborted".
+    beginSimulationAttempt()
 
-    // Run pre-permit2 simulation if eligible (native token or already approved)
-    if (canSimulatePrePermit2) {
-      const simulationSuccess = await simulate()
-      if (!simulationSuccess) {
-        // Simulation failed - error state will be set by the hook
-        return
-      }
-    }
-
-    const preBidSteps = await buildPreBidSteps()
-
-    // Create post-permit2 simulation callback for non-native tokens with permit steps
-    const onPreBidStepsComplete = !canSimulatePrePermit2
-      ? async (): Promise<boolean> => {
-          const success = await simulate()
-          return success
+    try {
+      // Run pre-permit2 simulation if eligible (native token or already approved)
+      if (canSimulatePrePermit2) {
+        const simulationSuccess = await simulate()
+        if (!simulationSuccess) {
+          // Simulation failed - error state will be set by the hook
+          return
         }
-      : undefined
+      }
 
-    startBidFlow({
-      preBidSteps,
-      showProgressModal: preBidSteps.length > 0,
-      setSteps: setTransactionSteps,
-      setCurrentStep,
-      onPreBidStepsComplete,
-    })
+      const preBidSteps = await buildPreBidSteps()
+
+      // Create post-permit2 simulation callback for non-native tokens with permit steps
+      const onPreBidStepsComplete = !canSimulatePrePermit2
+        ? async (): Promise<boolean> => {
+            const success = await simulate()
+            return success
+          }
+        : undefined
+
+      startBidFlow({
+        preBidSteps,
+        showProgressModal: preBidSteps.length > 0,
+        setSteps: setTransactionSteps,
+        setCurrentStep,
+        onPreBidStepsComplete,
+      })
+    } catch (error) {
+      // buildPreBidSteps() (and, defensively, anything else in this chain) can reject outside
+      // startBidFlow's own try/catch - route it into the same simulation error banner instead of
+      // leaving an unhandled rejection with no UI feedback.
+      reportSimulationFailure(error)
+    }
   })
 
   // Reset submission status if an error occurs (including wallet rejections)
@@ -364,12 +380,15 @@ export function BidReviewModal({
     return swapErrorToUserReadableMessage(t, submitState.error)
   }, [submitState.error, t])
 
-  const showFlowError = Boolean(approvalError || submitState.error)
   const preparationErrorDetail = maxValuationField.error ?? preparationError?.message
 
-  // Show simulation error for below clearing price
-  const showSimulationBelowClearingError =
-    simulationError?.type === BidSimulationErrorType.BELOW_CLEARING_PRICE && isReviewing
+  // A post-permit2 simulation failure (any type) also reaches here as a generic saga error -
+  // once it's classified, show that specific banner instead of the generic one.
+  const simulationErrorContent = useMemo(
+    () => getSimulationErrorContent({ simulationError, isReviewing, t }),
+    [simulationError, isReviewing, t],
+  )
+  const showFlowError = Boolean(approvalError || submitState.error) && !simulationErrorContent
 
   // Early return if no auction details or missing chainId
   if (!auctionDetails?.chainId) {
@@ -451,14 +470,12 @@ export function BidReviewModal({
                 {!isQuickLaunch && maxFdvPreciseFormatted && maxFdvFiatFormatted ? (
                   <Text variant="body4" color="$neutral2">
                     <Trans
-                      shouldUnescape
                       i18nKey="toucan.bidReview.partialFillExplanation"
                       values={{
                         symbol: auctionDetails.tokenSymbol || auctionDetails.token?.currency.symbol || 'token',
                         maxFdv: maxFdvPreciseFormatted,
                         maxFdvFiat: maxFdvFiatFormatted,
                       }}
-                      tOptions={{ interpolation: { escapeValue: true } }}
                       components={{
                         highlight: <Text variant="body4" color="$neutral1" />,
                         fiat: <Text variant="body4" color="$neutral2" />,
@@ -544,8 +561,8 @@ export function BidReviewModal({
             </Flex>
           ) : null}
 
-          {/* Simulation error: bid below clearing price */}
-          {showSimulationBelowClearingError ? (
+          {/* Simulation error: below clearing price, network failure, or unknown failure */}
+          {simulationErrorContent ? (
             <Flex
               row
               gap="$spacing12"
@@ -557,12 +574,12 @@ export function BidReviewModal({
               <AlertTriangleFilled color="$statusCritical" size="$icon.20" />
               <Flex gap="$spacing2" flex={1}>
                 <Text variant="body3" color="$statusCritical">
-                  {t('toucan.bidReview.belowClearingTitle')}
+                  {simulationErrorContent.title}
                 </Text>
                 <Text variant="body3" color="$neutral2">
-                  {t('toucan.bidReview.belowClearingDescription')}
+                  {simulationErrorContent.description}
                 </Text>
-                {minValidBidDisplay && onSetMinBid ? (
+                {simulationErrorContent.showSetMinBidAction && minValidBidDisplay && onSetMinBid ? (
                   <Text variant="body3" color="$accent1" cursor="pointer" onPress={retryWithMinBid} mt="$spacing4">
                     {t('toucan.bidReview.setMinBid')}
                   </Text>
@@ -571,7 +588,7 @@ export function BidReviewModal({
             </Flex>
           ) : null}
 
-          {isPriceBelowClearing && !showSimulationBelowClearingError ? (
+          {isPriceBelowClearing && !simulationErrorContent?.showSetMinBidAction ? (
             <Flex
               row
               gap="$spacing12"
@@ -606,7 +623,10 @@ export function BidReviewModal({
                 isApprovalLoading ||
                 isSubmitting ||
                 isSimulating ||
-                showSimulationBelowClearingError ||
+                // Below-clearing-price needs the user to raise their bid (via "set minimum
+                // bid") before retrying - network/unknown failures don't, so leave the button
+                // enabled for those so pressing it again is a working retry, not a dead end.
+                Boolean(simulationErrorContent?.showSetMinBidAction) ||
                 isPriceBelowClearing
               }
               loading={isLoading || isSubmitting}

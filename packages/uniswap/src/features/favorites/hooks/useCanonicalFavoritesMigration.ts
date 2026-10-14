@@ -1,19 +1,16 @@
-import { TokenRankingsResponse } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { buildFavoritesCanonicalLookup } from 'uniswap/src/features/favorites/canonicalFavoritesLookup'
 import { selectFavoriteTokens, selectHasMigratedToMultichain } from 'uniswap/src/features/favorites/selectors'
 import { setFavoriteTokens, setHasMigratedToMultichain } from 'uniswap/src/features/favorites/slice'
+import { CurrencyId } from 'uniswap/src/types/currency'
 import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 
 /**
- * Given the TokenRankings response and a list of favorite CurrencyIds, maps each favorite
- * to its canonical CurrencyId and dedupes. Favorites not found in rankings are kept as-is.
+ * Given the canonical lookup and a list of favorite CurrencyIds, maps each favorite to its
+ * canonical CurrencyId and dedupes. Favorites not found in the lookup are kept as-is.
  * Exported for testing.
  */
-export function canonicalizeFavorites(favoriteIds: string[], tokenRankingsData: TokenRankingsResponse): string[] {
-  const { canonicalByKey } = buildFavoritesCanonicalLookup(tokenRankingsData)
-
+export function canonicalizeFavorites(favoriteIds: string[], canonicalByKey: Map<string, CurrencyId>): string[] {
   const seen = new Set<string>()
   const result: string[] = []
 
@@ -37,24 +34,26 @@ export function canonicalizeFavorites(favoriteIds: string[], tokenRankingsData: 
  * feature flag is enabled. Runs once per user when FavoriteTokensGrid renders,
  * then sets `hasMigratedToMultichain` so it never re-runs.
  *
- * Uses the TokenRankings ConnectRPC endpoint data (with multichain: true) which provides
- * `chainTokens` — cross-chain address grouping that handles different addresses across chains.
+ * Waits for `hasData` so the migration only runs against a resolved ListTokens response —
+ * running against the empty pre-fetch lookup would mark the migration done without canonicalizing.
  */
 export function useCanonicalFavoritesMigration({
-  tokenRankingsData,
+  canonicalByKey,
+  hasData,
 }: {
-  tokenRankingsData: TokenRankingsResponse | undefined
+  canonicalByKey: Map<string, CurrencyId>
+  hasData: boolean
 }): void {
   const dispatch = useDispatch()
   const favoriteTokens = useSelector(selectFavoriteTokens)
   const hasMigrated = useSelector(selectHasMigratedToMultichain)
 
   useEffect(() => {
-    if (hasMigrated || favoriteTokens.length === 0 || !tokenRankingsData) {
+    if (hasMigrated || favoriteTokens.length === 0 || !hasData) {
       return
     }
 
-    const canonicalized = canonicalizeFavorites(favoriteTokens, tokenRankingsData)
+    const canonicalized = canonicalizeFavorites(favoriteTokens, canonicalByKey)
 
     const hasChanges =
       canonicalized.length !== favoriteTokens.length || canonicalized.some((id, i) => id !== favoriteTokens[i])
@@ -64,5 +63,5 @@ export function useCanonicalFavoritesMigration({
     }
 
     dispatch(setHasMigratedToMultichain(true))
-  }, [hasMigrated, favoriteTokens, tokenRankingsData, dispatch])
+  }, [hasMigrated, favoriteTokens, canonicalByKey, hasData, dispatch])
 }

@@ -56,7 +56,7 @@ export function useTDPTVLChartData({
     }
     return chainId ? buildCurrencyId(chainId, variables.address) : undefined
   }, [chainId, variables.address])
-  const { tvl: currentTvlV2 } = useTokenMarketStats(currencyIdValue ?? '', {
+  const { tvl: currentTvlV2 } = useTokenMarketStats(currencyIdValue, {
     isMultichainAggregateView: variables.multichain,
   })
 

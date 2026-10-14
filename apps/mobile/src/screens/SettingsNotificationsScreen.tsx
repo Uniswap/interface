@@ -37,7 +37,7 @@ type AccountItem = {
 type SettingItem = {
   type: NotificationItemType.Setting
   /** Stable, translation-independent row id. */
-  id: 'updates' | 'activity'
+  id: 'updates' | 'priceAlerts' | 'activity'
   title: string
   description: string
   checked?: boolean
@@ -61,6 +61,16 @@ function SettingsNotificationsScreenInner(): JSX.Element {
     onToggle: onGeneralUpdatesToggle,
   })
 
+  const onPriceAlertsToggle = useCallback(
+    (enabled: boolean) => onPermissionChanged(enabled, NotifSettingType.PriceAlerts),
+    [],
+  )
+
+  const { isEnabled: priceAlertsNotifEnabled, toggle: togglePriceAlertsNotif } = useSettingNotificationToggle({
+    type: NotifSettingType.PriceAlerts,
+    onToggle: onPriceAlertsToggle,
+  })
+
   const data: NotificationItem[] = useMemo(() => {
     const items: NotificationItem[] = [
       {
@@ -70,6 +80,14 @@ function SettingsNotificationsScreenInner(): JSX.Element {
         description: t('settings.setting.notifications.row.updates.description'),
         checked: updatesNotifEnabled,
         onCheckedChange: toggleUpdatesNotif,
+      },
+      {
+        type: NotificationItemType.Setting,
+        id: 'priceAlerts',
+        title: t('settings.setting.notifications.row.priceAlerts.title'),
+        description: t('settings.setting.notifications.row.priceAlerts.description'),
+        checked: priceAlertsNotifEnabled,
+        onCheckedChange: togglePriceAlertsNotif,
       },
     ]
 
@@ -91,7 +109,7 @@ function SettingsNotificationsScreenInner(): JSX.Element {
     })
 
     return items
-  }, [t, updatesNotifEnabled, toggleUpdatesNotif, accounts])
+  }, [t, updatesNotifEnabled, toggleUpdatesNotif, priceAlertsNotifEnabled, togglePriceAlertsNotif, accounts])
 
   const contentContainerStyle = useMemo<UniversalListStyle>(
     () => ({ className: 'pt-3 px-6', style: { paddingBottom: bottomScreenTotalGap } }),

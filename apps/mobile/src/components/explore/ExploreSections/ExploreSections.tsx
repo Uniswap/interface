@@ -203,7 +203,7 @@ function ExploreSectionsInner({
     return (
       <Flex>
         {Array.from({ length: EXPLORE_LIST_TRAILING_SKELETON_COUNT }, (_, index) => (
-          <Flex key={index} height={EXPLORE_TOKEN_ROW_HEIGHT} justifyContent="center" px="$spacing24">
+          <Flex key={index} height={EXPLORE_TOKEN_ROW_HEIGHT} justifyContent="center" px="$spacing20">
             <Loader.Token />
           </Flex>
         ))}
@@ -214,7 +214,7 @@ function ExploreSectionsInner({
   const renderItem = useCallback(({ item, index }: { item: ExploreListItem; index: number }): JSX.Element => {
     if (item.rowType === 'skeleton') {
       return (
-        <Flex height={EXPLORE_TOKEN_ROW_HEIGHT} justifyContent="center" px={24}>
+        <Flex height={EXPLORE_TOKEN_ROW_HEIGHT} justifyContent="center" px="$spacing20">
           <Loader.Token />
         </Flex>
       )
@@ -316,35 +316,36 @@ const ListHeader = memo(function ListHeader({
   onOrderByChange,
 }: ListHeaderProps): JSX.Element {
   const { t } = useTranslation()
-  // Flag off preserves today's exact section layout; on switches to the standardized
-  // Favorites / Trending / Collections / Top tokens order and header treatment.
+  // Flag off keeps the legacy Top tokens header; on switches to the standardized header treatment.
   const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
 
   return (
     <Sortable.Layer>
-      {showFavorites && <FavoritesSection showLoading={showLoading} listRef={listRef} />}
-      <StartEarningSection />
-      <TrendingSection />
-      <CollectionsSection />
-      {tokenCategoriesEnabled ? (
-        <ExploreSectionHeader
-          title={t('explore.tokens.top.title')}
-          rightElement={
+      <Flex gap="$spacing28">
+        {showFavorites && <FavoritesSection showLoading={showLoading} listRef={listRef} />}
+        <StartEarningSection />
+        <TrendingSection />
+        <CollectionsSection />
+        {tokenCategoriesEnabled ? (
+          <ExploreSectionHeader
+            title={t('explore.tokens.top.title')}
+            rightElement={
+              <Flex flexShrink={1}>
+                <SortButton orderBy={orderBy} onOrderByChange={onOrderByChange} />
+              </Flex>
+            }
+          />
+        ) : (
+          <Flex row alignItems="center" justifyContent="space-between" px="$spacing12">
+            <Text color="$neutral2" flexShrink={0} paddingEnd="$spacing8" variant="subheading1">
+              {t('explore.tokens.top.title')}
+            </Text>
             <Flex flexShrink={1}>
               <SortButton orderBy={orderBy} onOrderByChange={onOrderByChange} />
             </Flex>
-          }
-        />
-      ) : (
-        <Flex row alignItems="center" justifyContent="space-between" px="$spacing12">
-          <Text color="$neutral2" flexShrink={0} paddingEnd="$spacing8" variant="subheading1">
-            {t('explore.tokens.top.title')}
-          </Text>
-          <Flex flexShrink={1}>
-            <SortButton orderBy={orderBy} onOrderByChange={onOrderByChange} />
           </Flex>
-        </Flex>
-      )}
+        )}
+      </Flex>
     </Sortable.Layer>
   )
 })

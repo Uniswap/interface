@@ -51,10 +51,10 @@ describe(fetchFeatureGatedToken, () => {
     expect(request.includeNonBlockingReasons).toBe(true)
   })
 
-  it('returns undefined when the response omits the token (clean token)', async () => {
+  it('returns null when the response omits the token (clean token)', async () => {
     featureGatedTokensMethod.mockResolvedValue({ tokens: [] })
 
-    expect(await fetchFeatureGatedToken(client, { chainId: 1, address: '0xabc' })).toBeUndefined()
+    expect(await fetchFeatureGatedToken(client, { chainId: 1, address: '0xabc' })).toBeNull()
   })
 })
 

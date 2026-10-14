@@ -12,6 +12,7 @@ import {
   hasHoverCardChartData,
   HoverCardBody,
   HoverCardChart,
+  HoverCardStatsRow,
   isHoverCardNoData,
 } from '~/components/HoverCard/HoverCardContent'
 
@@ -65,54 +66,6 @@ function FdvRow({
   )
 }
 
-function StatsRow({
-  loading,
-  formattedCommitted,
-  bidderCount,
-  bidCount,
-}: {
-  loading: boolean
-  formattedCommitted?: string
-  bidderCount?: number
-  bidCount?: number
-}): JSX.Element | null {
-  const { t } = useTranslation()
-  if (loading) {
-    return <Text variant="body3" color="$neutral2" loading loadingPlaceholderText="$000.0K committed · 000 bidders" />
-  }
-
-  const committed = formattedCommitted
-    ? t('toucan.auction.hoverCard.committed', { amount: formattedCommitted })
-    : undefined
-  const participation =
-    bidderCount !== undefined
-      ? t('toucan.auction.hoverCard.bidders', { count: bidderCount })
-      : bidCount !== undefined
-        ? t('toucan.auction.hoverCard.bids', { count: bidCount })
-        : undefined
-  if (!committed && !participation) {
-    return null
-  }
-
-  return (
-    <Flex row alignItems="center" gap="$spacing12">
-      {committed && (
-        <Text variant="body3" color="$neutral2" numberOfLines={1}>
-          {committed}
-        </Text>
-      )}
-      {committed && participation && (
-        <Flex width={4} height={4} borderRadius="$roundedFull" backgroundColor="$neutral3" />
-      )}
-      {participation && (
-        <Text variant="body3" color="$neutral2" numberOfLines={1}>
-          {participation}
-        </Text>
-      )}
-    </Flex>
-  )
-}
-
 function AuctionHoverCardContentInner({
   chainId,
   tokenAddress,
@@ -131,13 +84,22 @@ function AuctionHoverCardContentInner({
   onExpand,
   maxWidth,
 }: AuctionHoverCardContentProps): JSX.Element {
+  const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const formattedFdv = fdvUsd !== undefined ? convertFiatAmountFormatted(fdvUsd, NumberType.FiatTokenStats) : ''
-  const formattedCommitted =
+  const committed =
     committedVolumeUsd !== undefined
-      ? convertFiatAmountFormatted(committedVolumeUsd, NumberType.FiatTokenStats)
+      ? t('toucan.auction.hoverCard.committed', {
+          amount: convertFiatAmountFormatted(committedVolumeUsd, NumberType.FiatTokenStats),
+        })
       : undefined
+  const participation =
+    bidderCount !== undefined
+      ? t('toucan.auction.hoverCard.bidders', { count: bidderCount })
+      : bidCount !== undefined
+        ? t('toucan.auction.hoverCard.bids', { count: bidCount })
+        : undefined
   // Committed volume and bidders come from the search row, so they can stand alone when GetAuction and the
   // 1D series both come back empty (common for a pre-launch token).
   const hasStats = committedVolumeUsd !== undefined || bidderCount !== undefined || bidCount !== undefined
@@ -177,11 +139,10 @@ function AuctionHoverCardContentInner({
     >
       {hasHeadline && <FdvRow loading={loading} formattedFdv={formattedFdv} percentChange={pricePercentChange} />}
       {showChart && <HoverCardChart loading={loading} data={priceData} change={pricePercentChange} />}
-      <StatsRow
+      <HoverCardStatsRow
         loading={loading}
-        formattedCommitted={formattedCommitted}
-        bidderCount={bidderCount}
-        bidCount={bidCount}
+        loadingPlaceholderText="$000.0K committed · 000 bidders"
+        stats={[committed, participation]}
       />
     </HoverCardBody>
   )

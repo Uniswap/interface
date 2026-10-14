@@ -299,13 +299,13 @@ describe('handleNotificationNavigation', () => {
     ])('navigates tab paths through the tabs navigator: %s', (url, screen) => {
       handleNotificationNavigation(url)
 
-      expect(mockNavigate).toHaveBeenCalledWith('MainTabs', { screen })
+      expect(mockNavigate).toHaveBeenCalledWith('MainTabs', { screen }, { pop: true })
     })
 
     it.each(['Unknown', 'toString', 'constructor'])('falls back to Home for legacy Home child route %s', (screen) => {
       handleNotificationNavigation(`mobile://Home/${screen}`)
 
-      expect(mockNavigate).toHaveBeenCalledWith('MainTabs', { screen: 'Home' })
+      expect(mockNavigate).toHaveBeenCalledWith('MainTabs', { screen: 'Home' }, { pop: true })
     })
 
     it('handles paths with trailing slashes', () => {

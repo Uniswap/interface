@@ -8,7 +8,7 @@ import type { SortableGridDragEndCallback, SortableGridRenderItem } from 'react-
 import Sortable from 'react-native-sortables'
 import { useDispatch, useSelector } from 'react-redux'
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
-import { useReportFavoritesSorting } from 'src/components/explore/favoritesSortingStore'
+import { useFavoritesDragScrollLock } from 'src/components/explore/favoritesSortingStore'
 import FavoriteWalletCard from 'src/components/explore/FavoriteWalletCard'
 import { useFavoritesDraftOrder } from 'src/components/explore/useFavoritesDraftOrder'
 import { Loader } from 'src/components/loading/loaders'
@@ -47,13 +47,14 @@ export function FavoriteWalletsGrid({ showLoading, listRef, ...rest }: FavoriteW
     persist: persistFavoriteWallets,
   })
 
-  useReportFavoritesSorting('wallets', isEditing)
+  const { onDragStart: lockListScroll, onDragEnd: unlockListScroll } = useFavoritesDragScrollLock('wallets')
 
   const handleDragEnd = useCallback<SortableGridDragEndCallback<string>>(
     ({ data }) => {
+      unlockListScroll()
       queueDraftOrder(data)
     },
-    [queueDraftOrder],
+    [queueDraftOrder, unlockListScroll],
   )
 
   const renderItem = useCallback<SortableGridRenderItem<string>>(
@@ -84,6 +85,7 @@ export function FavoriteWalletsGrid({ showLoading, listRef, ...rest }: FavoriteW
           columns={NUM_COLUMNS}
           renderItem={renderItem}
           onDragEnd={handleDragEnd}
+          onDragStart={lockListScroll}
           onActiveItemDropped={settleDraftOrder}
         />
       )}

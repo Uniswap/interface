@@ -10,6 +10,9 @@ function buildMultichainToken(addresses: Record<string, string>): PlainMessage<M
   return {
     multichainId: 'mc-test',
     addresses,
+    deployments: Object.fromEntries(
+      Object.entries(addresses).map(([chainId, address]) => [chainId, { address, decimals: 18 }]),
+    ),
     symbol: 'TEST',
     decimals: 18,
     name: 'Test Token',

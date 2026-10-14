@@ -37,12 +37,27 @@ export interface UseGetPositionInfoParams {
   permissioned?: boolean
 }
 
+export interface UseGetPositionInfoOptions {
+  /**
+   * Poll the position on this cadence (ms) while the hook is mounted; `false`/unset reads once and
+   * relies on the shared query client's staleTime. For flows that quote a transaction from live state
+   * (remove liquidity refreshes its calldata every 5 s) the displayed position must be re-read on the
+   * same cadence, or the amounts shown can drift from what the transaction will actually settle.
+   */
+  refetchInterval?: number | false
+  /** `false` keeps the query dormant (no reads, no polling) while leaving the last result in place. */
+  enabled?: boolean
+}
+
 /**
  * Single-position read for the Position Details / Migrate pages, served by the liquidity-service
  * `GetPosition` RPC — permissioned reads included, selected via the chain's PermissionedPositionManager
  * address. Parsed into the shared `PositionInfo` domain model.
  */
-export function useGetPositionInfo(params?: UseGetPositionInfoParams): {
+export function useGetPositionInfo(
+  params?: UseGetPositionInfoParams,
+  options?: UseGetPositionInfoOptions,
+): {
   positionInfo?: PositionInfo
   isLoading: boolean
   refetch: () => void
@@ -81,10 +96,12 @@ export function useGetPositionInfo(params?: UseGetPositionInfoParams): {
       // request without a positionManagerAddress resolves the canonical PositionManager, and since
       // tokenIds are only unique per manager that could surface a different position sharing the id.
       enabled:
+        options?.enabled !== false &&
         !!params?.chainId &&
         version !== undefined &&
         hasPositionKey &&
         (!params.permissioned || !!permissionedManagerAddress),
+      refetchInterval: options?.refetchInterval,
     }),
   )
 

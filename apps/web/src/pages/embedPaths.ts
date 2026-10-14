@@ -1,4 +1,4 @@
-// Shared between the client router and the Cloudflare/Vercel worker
+// Shared between the client router and the Hono server app
 // (functions/app.ts). Do not add any imports to this file.
 
 export const EMBED_BASE_PATH = '/embed'

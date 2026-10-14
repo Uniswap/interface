@@ -15,6 +15,7 @@ import {
   addLastBalancesReportValue,
   addModalsState,
   addPasswordLockout,
+  addPriceAlertsEnabledToPushNotifications,
   addPushNotifications,
   addPushNotificationsEnabledToAccounts,
   addReplaceAccountOptions,
@@ -212,6 +213,7 @@ export const migrations = {
   100: markPoolsBalanceCoachmarkEligible,
   101: removeTweaksSlice,
   102: removePersistedApolloCache,
+  103: addPriceAlertsEnabledToPushNotifications,
 }
 
-export const MOBILE_STATE_VERSION = 102
+export const MOBILE_STATE_VERSION = 103

@@ -3,6 +3,7 @@ import { type CSSProperties, type ReactElement, useImperativeHandle, useMemo, us
 import { ROW_VIEWABILITY_CONFIG } from '../consts'
 import type { UniversalListPropsWithRef } from '../types'
 import { createItemTypeResolver, createOverrideItemLayout } from './itemLayout'
+import { resolveScrollIntoView } from './scrollIndexIntoView'
 
 // Web/extension implementation backed by Legend List's DOM-native build (no react-native-web).
 // Native-only props (refreshing/onRefresh/refreshIndicatorColor,
@@ -39,6 +40,7 @@ export function VirtualList<T>({
   scrollEventThrottle,
   showsHorizontalScrollIndicator,
   showsVerticalScrollIndicator,
+  stickyHeaderIndices,
   style,
   testID,
   trackRowViewability,
@@ -50,6 +52,18 @@ export function VirtualList<T>({
     ref,
     () => ({
       scrollToIndex: (params) => legendRef.current?.scrollToIndex(params),
+      scrollIndexIntoView: ({ index, animated, viewOffset }) => {
+        const legend = legendRef.current
+        if (!legend) {
+          return
+        }
+        const alignment = resolveScrollIntoView({ state: legend.getState(), index, viewOffset })
+        if (alignment) {
+          legend.scrollToIndex({ index, animated, ...alignment }).catch(() => {
+            // Ignore errors from trying to scroll to an index that is not rendered.
+          })
+        }
+      },
       scrollToOffset: (params) => legendRef.current?.scrollToOffset(params),
       scrollToEnd: (params) => legendRef.current?.scrollToEnd(params),
       scrollToTop: (params) => legendRef.current?.scrollToOffset({ offset: 0, animated: params?.animated }),
@@ -102,6 +116,7 @@ export function VirtualList<T>({
       renderItem={renderItem}
       showsHorizontalScrollIndicator={showsHorizontalScrollIndicator}
       showsVerticalScrollIndicator={showsVerticalScrollIndicator}
+      stickyHeaderIndices={stickyHeaderIndices}
       style={resolvedStyle}
       useWindowScroll={useWindowScroll}
       viewabilityConfig={trackRowViewability ? ROW_VIEWABILITY_CONFIG : undefined}

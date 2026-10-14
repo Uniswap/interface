@@ -1,5 +1,7 @@
 package com.margelo.nitro.hashcashnative
 
+import androidx.annotation.Keep
+import com.facebook.proguard.annotations.DoNotStrip
 import com.margelo.nitro.core.Promise
 import java.security.MessageDigest
 import java.util.Base64
@@ -18,6 +20,8 @@ import java.util.concurrent.atomic.AtomicBoolean
  * - AtomicBoolean provides thread-safe access to the cancellation flag
  * - Native MessageDigest is significantly faster than JS crypto
  */
+@DoNotStrip
+@Keep
 class HybridHashcash : HybridHashcashSpec() {
     /**
      * Thread-safe cancellation flag using AtomicBoolean.

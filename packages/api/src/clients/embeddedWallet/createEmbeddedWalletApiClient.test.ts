@@ -148,4 +148,43 @@ describe('createEmbeddedWalletApiClient', () => {
       expect(result).toEqual({ cooldownSeconds: 30 })
     })
   })
+  describe('fetchExecuteRecovery', () => {
+    it('attaches the Privy access token as a Bearer Authorization header', async () => {
+      const rpcClient = makeRpcClient()
+      vi.mocked(rpcClient.executeRecovery).mockResolvedValue({ walletAddress: '0xabc' } as never)
+      const client = createEmbeddedWalletApiClient({ rpcClient })
+
+      const params = {
+        authMethodId: 'amid',
+        newCredential: 'cred',
+        authKeySignature: 'sig2',
+        recoveryAuthSignature: 'sig1',
+      }
+      await client.fetchExecuteRecovery(params, 'fake-token')
+
+      expect(rpcClient.executeRecovery).toHaveBeenCalledWith(params, {
+        headers: { Authorization: 'Bearer fake-token' },
+      })
+    })
+  })
+
+  describe('fetchExportSeedPhraseWithRecovery', () => {
+    it('attaches the Privy access token as a Bearer Authorization header', async () => {
+      const rpcClient = makeRpcClient()
+      vi.mocked(rpcClient.exportSeedPhraseWithRecovery).mockResolvedValue({ ciphertext: 'ct' } as never)
+      const client = createEmbeddedWalletApiClient({ rpcClient })
+
+      const params = {
+        authMethodId: 'amid',
+        encryptionKey: 'ek',
+        authKeySignature: 'sig2',
+        recoveryAuthSignature: 'sig1',
+      }
+      await client.fetchExportSeedPhraseWithRecovery(params, 'fake-token')
+
+      expect(rpcClient.exportSeedPhraseWithRecovery).toHaveBeenCalledWith(params, {
+        headers: { Authorization: 'Bearer fake-token' },
+      })
+    })
+  })
 })

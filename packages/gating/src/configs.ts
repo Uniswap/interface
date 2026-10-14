@@ -86,7 +86,6 @@ export enum DynamicConfigs {
   GasStrategies = 'gas_strategy',
   HomeScreenExploreTokens = 'home_screen_explore_tokens',
   OnDeviceRecovery = 'on_device_recovery',
-  UwuLink = 'uwulink_config',
 
   // Web
   AllowedV4WethHookAddresses = 'allowed_v4_weth_hook_addresses',
@@ -209,10 +208,6 @@ export enum HomeScreenExploreTokensConfigKey {
 export enum OnDeviceRecoveryConfigKey {
   AppLoadingTimeoutMs = 'appLoadingTimeoutMs',
   MaxMnemonicsToLoad = 'maxMnemonicsToLoad',
-}
-
-export enum UwuLinkConfigKey {
-  Allowlist = 'allowlist',
 }
 
 export enum DatadogIgnoredErrorsConfigKey {
@@ -344,7 +339,6 @@ export type DynamicConfigKeys = {
   [DynamicConfigs.ForceUpgrade]: ForceUpgradeConfigKey
   [DynamicConfigs.HomeScreenExploreTokens]: HomeScreenExploreTokensConfigKey
   [DynamicConfigs.OnDeviceRecovery]: OnDeviceRecoveryConfigKey
-  [DynamicConfigs.UwuLink]: UwuLinkConfigKey
 
   // Web
   [DynamicConfigs.AllowedV4WethHookAddresses]: AllowedV4WethHookAddressesConfigKey
@@ -371,20 +365,3 @@ export type RWAIssuerLogo = {
 }
 
 export type RWAIssuerLogosMap = Record<string, RWAIssuerLogo>
-
-// This type must match the format in statsig dynamic config for uwulink
-// https://console.statsig.com/5HjUux4OvSGzgqWIfKFt8i/dynamic_configs/uwulink_config
-export type UwULinkAllowlistItem = {
-  chainId: number
-  address: string
-  name: string
-  logo?: {
-    dark?: string
-    light?: string
-  }
-}
-
-export type UwULinkAllowlist = {
-  contracts: UwULinkAllowlistItem[]
-  tokenRecipients: UwULinkAllowlistItem[]
-}

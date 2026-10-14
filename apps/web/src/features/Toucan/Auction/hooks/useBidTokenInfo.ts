@@ -4,7 +4,11 @@ import { isStablecoinAddress } from 'uniswap/src/features/chains/utils'
 import { useCurrencyInfoWithLoading } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { useEvent } from 'utilities/src/react/hooks'
 import { BidTokenInfo } from '~/features/Toucan/Auction/store/types'
+
+/** Marks "resolution finished with no currency"; callers render their own copy, never this message. */
+const BID_TOKEN_UNRESOLVED_MESSAGE = 'Bid token could not be resolved'
 
 interface UseBidTokenInfoOptions {
   bidTokenAddress?: string
@@ -25,12 +29,14 @@ interface UseBidTokenInfoOptions {
  * @param bidTokenAddress - The address of the bid token (or undefined for native token)
  * @param chainId - The chain ID where the token exists
  * @param skip - If true, skips fetching token data (returns undefined with loading: false)
- * @returns BidTokenInfo with loading and error states
+ * @returns BidTokenInfo with loading and error states, plus a refetch that re-runs the token lookup
  */
 export function useBidTokenInfo({ bidTokenAddress, chainId, skip }: UseBidTokenInfoOptions): {
   bidTokenInfo: BidTokenInfo | undefined
+  /** Also true when metadata is unavailable after a failed lookup; consumers with an error UI must check error first. */
   loading: boolean
-  error: Error | null
+  error?: Error
+  refetch: () => void
 } {
   const currencyId = useMemo(
     () => (chainId && bidTokenAddress ? buildCurrencyId(chainId, bidTokenAddress) : undefined),
@@ -41,6 +47,7 @@ export function useBidTokenInfo({ bidTokenAddress, chainId, skip }: UseBidTokenI
     data: currencyInfo,
     isLoading: currencyLoading,
     error: currencyError,
+    refetch: refetchCurrencyInfo,
   } = useCurrencyInfoWithLoading(currencyId, {
     skip,
   })
@@ -112,7 +119,21 @@ export function useBidTokenInfo({ bidTokenAddress, chainId, skip }: UseBidTokenI
   // Don't wait for price to load - return token info as soon as currency is available
   // Price will update reactively when it becomes available
   const loading = skip ? false : currencyLoading || !currencyInfo
-  const error = currencyError
+  // Settled with no currency (unknown or unbuildable token) is a bid currency failure, not an in-flight state.
+  // Memoized per hook instance so consumers can key effects on the error without sharing one module-level object.
+  const isUnresolved = Boolean(currencyId && !skip && !currencyLoading && !currencyInfo)
+  const unresolvedError = useMemo(
+    () => (isUnresolved ? new Error(BID_TOKEN_UNRESOLVED_MESSAGE) : undefined),
+    [isUnresolved],
+  )
+  const error = currencyError ?? unresolvedError
 
-  return { bidTokenInfo, loading, error }
+  // react-query's refetch ignores `enabled`, so a skipped lookup has to stay idle here.
+  const refetch = useEvent(() => {
+    if (!skip) {
+      void refetchCurrencyInfo()
+    }
+  })
+
+  return { bidTokenInfo, loading, error, refetch }
 }

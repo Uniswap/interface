@@ -20,7 +20,7 @@ export function FavoritesSection(props: FavoritesSectionProps): JSX.Element | nu
   }
 
   return (
-    <Flex gap="$spacing12" pb="$spacing12" px="$spacing12" zIndex={1}>
+    <Flex gap="$spacing12" px="$spacing16" zIndex={1}>
       {hasFavoritedTokens && <FavoriteTokensGrid {...props} />}
       {hasFavoritedWallets && <FavoriteWalletsGrid {...props} />}
     </Flex>

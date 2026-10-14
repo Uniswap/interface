@@ -144,6 +144,8 @@ export function useTokenPriceChange(currencyId: CurrencyId, options?: UseTokenPr
 export interface UseTokenMarketStatsParams {
   currentPriceOverride?: number
   isMultichainAggregateView?: boolean
+  /** Disables the REST queries entirely, e.g. until a hover card is actually open. */
+  skip?: boolean
 }
 
 function mapRestTokenMarketStats(stats: PlainMessage<RestTokenMarketStats> | undefined): MarketStatsData | undefined {
@@ -194,30 +196,41 @@ export interface UseTokenMarketStatsResult extends TokenMarketStats {
 }
 
 export function useTokenMarketStats(
-  currencyId: CurrencyId,
+  currencyId: CurrencyId | undefined,
   params?: UseTokenMarketStatsParams,
 ): UseTokenMarketStatsResult {
-  const { currentPriceOverride, isMultichainAggregateView } = params ?? {}
+  const { currentPriceOverride, isMultichainAggregateView, skip } = params ?? {}
   const isMultichainAggregation = isMultichainAggregateView ?? false
+  const enableQueries = !skip
 
   // on-chain market stats (TVL/volume/52w) from GetTokenMarkets, or from
   // GetTokenMarketsMultiChain (summed across chains) when showing the all-networks aggregate.
-  const restTokenIdentifier = useMemo(() => currencyIdToRestContractInput(currencyId), [currencyId])
+  // Without a currencyId (e.g. a hover card whose token hasn't resolved yet) both queries stay disabled.
+  const restTokenIdentifier = useMemo(
+    () => (currencyId ? currencyIdToRestContractInput(currencyId) : undefined),
+    [currencyId],
+  )
   const { data: singleChainRestMarket, isLoading: isSingleChainMarketLoading } = useQuery(
     getGetTokenMarketsQueryOptions({
-      params: isMultichainAggregation ? undefined : { tokens: [restTokenIdentifier], duration: HistoryDuration.DAY },
+      params:
+        isMultichainAggregation || !restTokenIdentifier
+          ? undefined
+          : { tokens: [restTokenIdentifier], duration: HistoryDuration.DAY },
+      enabled: enableQueries,
       select: selectMarketStatsData,
     }),
   )
   const marketsEnabledChainIds = useTokenMarketsEnabledChainIds()
   const { data: multichainRestMarket, isLoading: isMultichainMarketLoading } = useQuery(
     getGetTokenMarketsMultiChainQueryOptions({
-      params: {
-        identifier: { case: 'tokens', value: { tokens: [restTokenIdentifier] } },
-        duration: HistoryDuration.DAY,
-        chainIds: marketsEnabledChainIds,
-      },
-      enabled: isMultichainAggregation,
+      params: restTokenIdentifier
+        ? {
+            identifier: { case: 'tokens', value: { tokens: [restTokenIdentifier] } },
+            duration: HistoryDuration.DAY,
+            chainIds: marketsEnabledChainIds,
+          }
+        : undefined,
+      enabled: enableQueries && isMultichainAggregation,
       select: selectMultichainMarketStatsData,
     }),
   )

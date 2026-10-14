@@ -299,7 +299,7 @@ export function useBidsListData(): UseBidsListDataResult {
           auctionTokenSymbol: auctionDetails!.token?.currency.symbol ?? '',
         })
       } catch (error) {
-        logger.error(error, {
+        logger.error(new Error('Failed to format an auction bid', { cause: error }), {
           tags: { file: 'useBidsListData.ts', function: 'useBidsListData' },
           extra: { bidId: bid.bidId, maxPrice: bid.maxPrice },
         })

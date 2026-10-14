@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { CopyAlt } from 'ui/src/components/icons/CopyAlt'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
+import { rowPressExemptProps } from 'uniswap/src/components/lists/items/OptionItemPressableArea'
 import {
   TokenContextMenuAction,
   useSearchTokenMenuItems,
@@ -156,7 +157,7 @@ function RwaMultichainCopyButtonInner(
   const shouldShow = isVisible || isOpen
 
   return (
-    <Flex opacity={shouldShow ? 1 : 0} pointerEvents={shouldShow ? 'auto' : 'none'}>
+    <Flex opacity={shouldShow ? 1 : 0} pointerEvents={shouldShow ? 'auto' : 'none'} {...rowPressExemptProps}>
       <ContextMenu
         ref={ref}
         menuItems={[]}

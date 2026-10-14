@@ -10,6 +10,7 @@ import type { TokenCardHorizontalProps } from 'uniswap/src/components/TokenCard/
 
 export function TokenCardHorizontal({
   logoUrl,
+  chainId,
   name,
   symbol,
   pricePercentChange1d,
@@ -18,7 +19,14 @@ export function TokenCardHorizontal({
 }: TokenCardHorizontalProps): JSX.Element {
   return (
     <>
-      <TokenLogo hideNetworkLogo={hideNetworkLogo} name={name} size={iconSizes.icon32} symbol={symbol} url={logoUrl} />
+      <TokenLogo
+        chainId={chainId}
+        hideNetworkLogo={hideNetworkLogo}
+        name={name}
+        size={iconSizes.icon32}
+        symbol={symbol}
+        url={logoUrl}
+      />
       <Flex fill minWidth={0}>
         <Text color="$neutral1" numberOfLines={1} variant="body2">
           {name}

@@ -1,12 +1,6 @@
 import { Platform, UniverseChainId, getValidAddress } from '@universe/chains'
 import { parseUri } from '@walletconnect/utils'
 import {
-  isUwULinkDirectLink,
-  isUwuLinkUniswapDeepLink,
-  parseUwuLinkDataFromDeeplink,
-  UWULINK_PREFIX,
-} from 'src/components/Requests/Uwulink/utils'
-import {
   UNISWAP_URL_SCHEME,
   UNISWAP_URL_SCHEME_SCANTASTIC,
   UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM,
@@ -24,7 +18,6 @@ export enum URIType {
   EIP681 = 'eip-681',
   EasterEgg = 'easter-egg',
   Scantastic = 'scantastic',
-  UwULink = 'uwu-link',
 }
 
 type SimpleURIFormat = {
@@ -42,7 +35,6 @@ export type EIP681URI = {
 export type URIFormat = SimpleURIFormat | EIP681URI
 
 interface SupportedURIOptions {
-  isUwULinkEnabled?: boolean
   isScantasticEnabled?: boolean
   enabledChainIds?: UniverseChainId[]
 }
@@ -125,22 +117,6 @@ export async function getSupportedURI(uri: string, options?: SupportedURIOptions
 
   if (uri === EASTER_EGG_QR_CODE) {
     return { type: URIType.EasterEgg, value: uri }
-  }
-
-  if (isUwULinkDirectLink(uri)) {
-    // remove escape strings from the stringified JSON before parsing it
-    return {
-      type: URIType.UwULink,
-      value: uri.slice(UWULINK_PREFIX.length).replaceAll('\\', ''),
-    }
-  }
-
-  if (isUwuLinkUniswapDeepLink(uri)) {
-    return {
-      type: URIType.UwULink,
-      // remove escape strings from the stringified JSON before parsing it
-      value: parseUwuLinkDataFromDeeplink(uri),
-    }
   }
 
   return undefined

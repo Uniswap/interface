@@ -4,6 +4,7 @@ import { mapRankedRwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/map
 import { makeRankedRwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/rankedRwaTestHelpers'
 import { deriveRwaAggregates } from 'uniswap/src/data/apiClients/dataApiService/rwa/rwaMetrics'
 import type { IssuerToken } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import {
   buildExpandableAssetTableRows,
   getExpandableAssetRowMetrics,
@@ -112,6 +113,47 @@ describe('buildExpandableAssetTableRows', () => {
 
   it('leaves rows unranked when no rank map is supplied', () => {
     expect(makeMultiIssuerRows().every((row) => row.rank === undefined)).toBe(true)
+  })
+
+  it('gives issuer rows tokens-table-row and parent rows tokens-table-group-row click analytics', () => {
+    const assets = makeMultiIssuerAssets()
+    const rankByAsset = new Map(assets.map((asset, index) => [asset, index + 1]))
+    const rows = buildExpandableAssetTableRows({
+      assets,
+      enabledChainIds: enabledChains,
+      rankByAsset,
+      categoryId: 'stocks',
+    })
+
+    const aapl = rows.find((row) => row.type === 'issuer' && row.asset.symbol === 'AAPL')
+    expect(aapl?.type === 'issuer' && aapl.analytics).toEqual({
+      elementName: ElementName.TokensTableRow,
+      properties: {
+        token_address: '0x000000000000000000000000000000000000aa01',
+        chain_id: UniverseChainId.Mainnet,
+        token_symbol: 'AAPLon',
+        issuer: 'ondo',
+        token_list_rank: 2,
+        category_id: 'stocks',
+      },
+    })
+
+    const tsla = rows.find((row) => row.type === 'parent' && row.asset.symbol === 'TSLA')
+    if (tsla?.type !== 'parent') {
+      throw new Error('expected tsla parent row')
+    }
+    expect(tsla.analytics).toEqual({
+      elementName: ElementName.TokensTableGroupRow,
+      properties: { token_symbol: 'TSLA', token_list_rank: 1, category_id: 'stocks' },
+    })
+    const ondoSubRow = tsla.subRows?.find((subRow) => subRow.type === 'issuer' && subRow.issuer.issuer === 'ondo')
+    expect(ondoSubRow?.rank).toBeUndefined()
+    expect(ondoSubRow?.type === 'issuer' && ondoSubRow.analytics?.properties).toMatchObject({
+      token_symbol: 'TSLAON',
+      issuer: 'ondo',
+      token_list_rank: 1,
+      category_id: 'stocks',
+    })
   })
 
   it('getExpandableAssetSubRows returns issuer children for parent rows only', () => {

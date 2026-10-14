@@ -24,8 +24,7 @@ export function ExploreSectionHeader({
   )
 
   return (
-    // 20px inset lines the title up with the Favorites / Start earning headings.
-    <Flex row alignItems="center" justifyContent="space-between" px="$spacing20">
+    <Flex row alignItems="center" justifyContent="space-between" px="$spacing16">
       {onPress ? <TouchableArea onPress={onPress}>{titleContent}</TouchableArea> : titleContent}
       {rightElement}
     </Flex>

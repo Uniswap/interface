@@ -1,7 +1,7 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
 import { AuctionType, type Auction } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 import { UniverseChainId } from '@universe/chains'
-import { AuctionLaunchMethod } from '~/features/Toucan/Auction/utils/auctionLaunchMethod'
+import { LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
 import { AuctionDisplayPhase, PoolAvailability } from '~/features/Toucan/Auction/utils/resolveAuctionDisplayState'
 import { resolveInitialAuctionLoading } from '~/pages/TokenDetails/utils/tokenDetailsAuctionLoading'
 
@@ -11,7 +11,7 @@ const pendingAuction = {
     tokenAddress: '0x1111111111111111111111111111111111111111',
   } as PlainMessage<Auction>,
   chainId: UniverseChainId.Mainnet,
-  launchMethod: AuctionLaunchMethod.Custom,
+  launchMethod: LaunchProvenanceMethod.CustomAuction,
   phase: AuctionDisplayPhase.Live,
   poolAvailability: PoolAvailability.Loading,
 } satisfies Parameters<typeof resolveInitialAuctionLoading>[0]['display']
@@ -39,9 +39,9 @@ describe('resolveInitialAuctionLoading', () => {
 
   it.each([
     { ...pendingAuction, auction: undefined },
-    { ...pendingAuction, launchMethod: AuctionLaunchMethod.Crowd },
-    { ...pendingAuction, launchMethod: AuctionLaunchMethod.Instant },
-    { ...pendingAuction, launchMethod: undefined },
+    { ...pendingAuction, launchMethod: LaunchProvenanceMethod.CrowdLaunch },
+    { ...pendingAuction, launchMethod: LaunchProvenanceMethod.InstantLaunch },
+    { ...pendingAuction, launchMethod: LaunchProvenanceMethod.Unknown },
     { ...pendingAuction, auction: { ...pendingAuction.auction, tokenAddress: '' } },
     { ...pendingAuction, auction: { ...pendingAuction.auction, tokenAddress: 'invalid' } },
     { ...pendingAuction, chainId: undefined },

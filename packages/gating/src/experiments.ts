@@ -8,12 +8,9 @@ export enum Experiments {
   EthAsErc20UniswapX = 'eth_as_erc20_uniswapx_experiment',
   NativeTokenPercentageBuffer = 'lp_native_buffer',
   SwapConfirmation = 'swap-confirmation',
-  V2EndpointsSearch = 'v2_endpoints_search_experiment',
 }
 
 export enum Layers {
-  // Explore, token details, and search surfaces (web + mobile)
-  Discovery = 'discovery',
   SwapPage = 'swap-page',
 }
 
@@ -42,16 +39,6 @@ export enum SwapConfirmationProperties {
   WaitTimes = 'wait_times',
 }
 
-// Discovery Layer experiment properties
-
-export enum DiscoveryLayerProperties {
-  V2EndpointsSearchEnabled = 'v2EndpointsSearchEnabled',
-}
-
-export enum V2EndpointsSearchProperties {
-  V2EndpointsSearchEnabled = DiscoveryLayerProperties.V2EndpointsSearchEnabled,
-}
-
 // Swap Layer experiment properties
 
 export enum SwapLayerProperties {
@@ -70,11 +57,9 @@ export type ExperimentProperties = {
   [Experiments.EthAsErc20UniswapX]: EthAsErc20UniswapXProperties
   [Experiments.NativeTokenPercentageBuffer]: NativeTokenPercentageBufferProperties
   [Experiments.SwapConfirmation]: SwapConfirmationProperties
-  [Experiments.V2EndpointsSearch]: V2EndpointsSearchProperties
 }
 
 // will be a spread of all experiment properties in that layer
 export const LayerProperties: Record<Layers, string[]> = {
-  [Layers.Discovery]: Object.values(DiscoveryLayerProperties),
   [Layers.SwapPage]: Object.values(SwapLayerProperties),
 }

@@ -23,8 +23,7 @@ const keyExtractor = (category: TokenCategory): string => category.id
 const contentContainerStyle: ViewStyle = {
   alignItems: 'center',
   gap: spacing.spacing8,
-  // 8px outset from the 20px title inset, matching StartEarningSection's chip row.
-  paddingHorizontal: spacing.spacing12,
+  paddingHorizontal: spacing.spacing16,
 }
 
 const SKELETON_PILL_WIDTHS = [96, 112, 88, 104]
@@ -75,9 +74,9 @@ export const CollectionsSection = memo(function CollectionsSection(): JSX.Elemen
   // Reserve the section's space during the initial fetch so it doesn't push content down post-paint.
   if (isLoading && orderedCategories.length === 0) {
     return (
-      <Flex gap="$spacing12" pt="$spacing8" pb="$spacing24">
+      <Flex gap="$spacing12">
         {header}
-        <Flex row alignItems="center" gap="$spacing8" px="$spacing12">
+        <Flex row alignItems="center" gap="$spacing8" px="$spacing16">
           {SKELETON_PILL_WIDTHS.map((width) => (
             <Loader.Box key={width} borderRadius="$roundedFull" height={CATEGORY_PILL_HEIGHT} width={width} />
           ))}
@@ -91,7 +90,7 @@ export const CollectionsSection = memo(function CollectionsSection(): JSX.Elemen
   }
 
   return (
-    <Flex gap="$spacing12" pt="$spacing8" pb="$spacing24">
+    <Flex gap="$spacing12">
       {header}
       <FlatList
         horizontal

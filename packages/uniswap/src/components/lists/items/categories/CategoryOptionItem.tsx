@@ -6,6 +6,7 @@ import { GridView } from 'ui/src/components/icons/GridView'
 import { FocusedRowControl, OptionItem } from 'uniswap/src/components/lists/items/OptionItem'
 import type { CategoryOption } from 'uniswap/src/components/lists/items/types'
 import { getTokenCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
+import { getCategoryPileLogos } from 'uniswap/src/features/tokenCategories/getCategoryPileLogos'
 import { TokenLogoPile } from 'uniswap/src/features/tokenCategories/TokenLogoPile'
 
 const ICON_TILE_SIZE = iconSizes.icon40
@@ -58,7 +59,7 @@ function CategoryOptionItemInner({
               {t('categoryDetails.tokenCount', { count: tokenCount })}
             </Text>
           )}
-          <TokenLogoPile size={PILE_LOGO_SIZE} tokens={category.topTokens} />
+          <TokenLogoPile logos={getCategoryPileLogos(category)} size={PILE_LOGO_SIZE} />
         </Flex>
       }
       testID={`${TestID.SearchCategoryRowPrefix}${category.id}`}

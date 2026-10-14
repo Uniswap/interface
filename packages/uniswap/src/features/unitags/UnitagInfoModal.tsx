@@ -11,7 +11,7 @@ import { UNITAG_SUFFIX, UNITAG_SUFFIX_NO_LEADING_DOT } from 'uniswap/src/feature
 import { getYourNameString } from 'uniswap/src/features/unitags/utils'
 import { shortenAddress } from 'utilities/src/addresses'
 
-const FIXED_INFO_PILL_WIDTH = 128
+const MIN_INFO_PILL_WIDTH = 128
 
 export const UnitagInfoModal = ({
   isOpen,
@@ -35,7 +35,7 @@ export const UnitagInfoModal = ({
       rejectText={t('common.button.close')}
       severity={WarningSeverity.None}
       icon={
-        <Flex centered row gap="$spacing4">
+        <Flex centered row flexWrap="wrap" gap="$spacing4">
           <Pill
             customBackgroundColor={colors.surface1.val}
             foregroundColor={colors.neutral2.val}
@@ -45,7 +45,7 @@ export const UnitagInfoModal = ({
             shadowOpacity={0.4}
             shadowRadius="$spacing4"
             textVariant="buttonLabel3"
-            width={FIXED_INFO_PILL_WIDTH}
+            minWidth={MIN_INFO_PILL_WIDTH}
           />
           <Flex p="$spacing2" shadowColor="$accent1" shadowOpacity={1} shadowRadius="$spacing16">
             <LinkHorizontalAlt color="$neutral3" size="$icon.24" />

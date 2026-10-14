@@ -106,6 +106,20 @@ describe('buildFiatOnRampRows', () => {
     expect(rows.map((r) => r.key)).toEqual(['supported-1-eth'])
   })
 
+  it('finds a held ERC20 whose list currency id is checksummed while the portfolio key is lowercase', () => {
+    // Native USDC on Arbitrum: data-api returns the checksummed address, the portfolio keys by lowercase.
+    const arbUsdc = currency('42161-0xaf88d065e77c8cC2239327C5EDB3A432268e5831')
+    const lowercaseId = '42161-0xaf88d065e77c8cc2239327c5edb3a432268e5831'
+    const balancesById = { [lowercaseId]: balance(lowercaseId, 10, 10) }
+
+    const rows = buildFiatOnRampRows({ list: [USDC, arbUsdc], balancesById, isOffRamp: true, showMore: true })
+
+    expect(rows.map((r) => r.key)).toEqual([
+      'supported-42161-0xaf88d065e77c8cC2239327C5EDB3A432268e5831',
+      'supported-1-usdc',
+    ])
+  })
+
   it('produces unique keys across both groups', () => {
     const balancesById = {
       '1-eth': balance('1-eth', 1, 50),

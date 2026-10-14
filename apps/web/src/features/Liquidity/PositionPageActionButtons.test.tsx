@@ -79,6 +79,36 @@ describe('PositionPageActionButtons', () => {
     expect(onMigrate).not.toHaveBeenCalled()
   })
 
+  it.each([UniverseChainId.Arc, UniverseChainId.Ink, UniverseChainId.Robinhood])(
+    'disables Migrate with a tooltip for V2 positions on chain %s',
+    (chainId) => {
+      const onMigrate = vi.fn()
+      render(
+        <PositionPageActionButtons
+          isOwner
+          positionInfo={{ ...positionInfo, version: ProtocolVersion.V2, chainId } as PositionInfo}
+          onMigrate={onMigrate}
+        />,
+      )
+      screen.getByText('Migrate liquidity').click()
+      expect(onMigrate).not.toHaveBeenCalled()
+    },
+  )
+
+  it('keeps a disabled Migrate row with the V2 reason on unsupported chains (450–768px)', () => {
+    mockUseMedia.mockReturnValue({ lg: true })
+    render(
+      <PositionPageActionButtons
+        isOwner
+        positionInfo={
+          { ...positionInfo, version: ProtocolVersion.V2, chainId: UniverseChainId.Robinhood } as PositionInfo
+        }
+        onMigrate={() => {}}
+      />,
+    )
+    expect(screen.getByText('Migrating to v3 is not supported on this chain.')).toBeInTheDocument()
+  })
+
   // Pins tier 1 to `media.sm` specifically. The ≤450 case below has sm/md/lg all true, so on its own it
   // cannot tell which of the three gates the floating CTA is wired to — rewiring tier 1 to `media.md`
   // leaves it green while moving the CTA up to 640px. This case is one token away from that one: at

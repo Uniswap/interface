@@ -1,7 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency } from '@uniswap/sdk-core'
 import { parseRestProtocolVersion } from '@universe/api'
-import type { UniverseChainId } from '@universe/chains'
 import { cn, Flex as FlexCompat, type FlexCompatProps } from '@universe/mycelium'
 import { Button, Flex, Text, TouchableArea } from '@universe/mycelium'
 import type { Dispatch, SetStateAction } from 'react'
@@ -26,15 +25,12 @@ import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { Dropdown } from '~/components/Dropdowns/Dropdown'
-import { DynamicFeeTierSpeedbump } from '~/features/Liquidity/Create/DynamicFeeTierSpeedbump'
 import { getNextFlowStep } from '~/features/Liquidity/Create/flowSteps'
 import { FormStepsWrapper, FormWrapper } from '~/features/Liquidity/Create/FormWrapper'
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
 import { useLPSlippageValue } from '~/features/Liquidity/Create/hooks/useLPSlippageValues'
 import { ResetCreatePositionFormModal } from '~/features/Liquidity/Create/ResetCreatePositionsFormModal'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from '~/features/Liquidity/Create/types'
-import { FeeTierSearchModal } from '~/features/Liquidity/FeeTierSearchModal'
-import { HookSearchModal } from '~/features/Liquidity/HookSearchModal'
 import { LPSettings } from '~/features/Liquidity/LPSettings'
 import { getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVersion'
 import {
@@ -43,7 +39,7 @@ import {
   useCreateLiquidityContext,
 } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { CreatePositionTxContextProvider } from '~/pages/CreatePosition/CreatePositionTxContext'
-import { HookReviewGate } from '~/pages/CreatePosition/HookReviewGate'
+import { SharedCreateModals } from '~/pages/CreatePosition/SharedCreateModals'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 
@@ -225,78 +221,6 @@ const Toolbar = () => {
         </Flex>
       </ToolbarContainer>
     </Flex>
-  )
-}
-
-export const SharedCreateModals = ({
-  onDeclineHookReview,
-}: {
-  /**
-   * Where declining the hook review (Go back, the header X) sends the user. Defaults to the
-   * token-select step, which is right for the create and migrate flows; the existing-pool add route
-   * has no such step and leaves the pool instead.
-   */
-  onDeclineHookReview?: () => void
-}) => {
-  const {
-    positionState: { fee: selectedFee, protocolVersion, hook },
-    currencies,
-    setPositionState,
-    setSelectedHookEntry,
-    setStep,
-    feeTierSearchModalOpen,
-    setFeeTierSearchModalOpen,
-    hookSearchModalOpen,
-    setHookSearchModalOpen,
-    setDynamicFeeTierSpeedbumpData,
-  } = useCreateLiquidityContext()
-  const { chainId } = useMultichainContext()
-
-  const returnToSelectStep = useCallback(() => {
-    setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
-  }, [setStep])
-
-  return (
-    <>
-      <HookReviewGate onDecline={onDeclineHookReview ?? returnToSelectStep} />
-      <FeeTierSearchModal
-        isOpen={feeTierSearchModalOpen}
-        onClose={() => setFeeTierSearchModalOpen(false)}
-        chainId={chainId}
-        protocolVersion={protocolVersion}
-        hook={hook}
-        sdkCurrencies={currencies.sdk}
-        selectedFee={selectedFee}
-        onSelectFee={(fee) => setPositionState((prev) => ({ ...prev, fee }))}
-        onSelectDynamicFee={(fee) => setDynamicFeeTierSpeedbumpData({ open: true, wishFeeData: fee })}
-      />
-      <HookSearchModal
-        isOpen={hookSearchModalOpen}
-        onClose={() => setHookSearchModalOpen(false)}
-        // Hooks are chain-specific: use the chain of the tokens the user has selected, not the app-level chain
-        chainId={(currencies.display.TOKEN0?.chainId ?? currencies.display.TOKEN1?.chainId) as UniverseChainId}
-        selectedHook={hook}
-        onSelectHook={(entry) => {
-          // A different hook exposes a different set of pools/tiers, so drop the fee to let the
-          // fee-tier auto-select re-run (matches clear-hook / chain-change / recommended-hook).
-          setPositionState((prev) => ({
-            ...prev,
-            hook: entry.address,
-            fee: prev.hook === entry.address ? prev.fee : undefined,
-          }))
-          setSelectedHookEntry(entry)
-        }}
-        onSelectAddress={(address) => {
-          setPositionState((prev) => ({
-            ...prev,
-            hook: address,
-            fee: prev.hook === address ? prev.fee : undefined,
-          }))
-          setSelectedHookEntry(undefined)
-        }}
-      />
-      <DynamicFeeTierSpeedbump />
-    </>
   )
 }
 

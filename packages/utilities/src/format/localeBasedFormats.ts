@@ -224,6 +224,23 @@ export const ShorthandOneDecimalsCurrency: FormatCreator = {
   },
 }
 
+export const ShorthandNoDecimalsCurrency: FormatCreator = {
+  createFormat: (locale: string, currencyCode: string): Intl.NumberFormat => {
+    return getNumberFormat({
+      name: 'ShorthandNoDecimalsCurrency',
+      locale,
+      props: {
+        notation: 'compact',
+        maximumFractionDigits: 0,
+        // The Android Intl polyfill throws a RangeError without this for 2-decimal currencies.
+        minimumFractionDigits: 0,
+        currency: currencyCode,
+        style: 'currency',
+      },
+    })
+  },
+}
+
 export const OneSigFigCurrency: FormatCreator = {
   createFormat: (locale: string, currencyCode: string): Intl.NumberFormat => {
     return getNumberFormat({
@@ -491,6 +508,7 @@ export type Formatter = {
 }
 
 const lessThanPostFormatModifier: FormatterRule['postFormatModifier'] = (formatted: string) => `<${formatted}`
+const greaterThanPostFormatModifier: FormatterRule['postFormatModifier'] = (formatted: string) => `>${formatted}`
 
 // these formatter objects dictate which formatter rule to use based on the interval that
 // the number falls into. for example, based on the rule set below, if your number
@@ -598,7 +616,19 @@ export const fiatTokenStatsFormatter: Formatter = {
       postFormatModifier: lessThanPostFormatModifier,
     },
     { upperBound: 1000, formatter: TwoDecimalsCurrency },
-    { upperBound: Infinity, formatter: ShorthandOneDecimalsCurrency },
+    // Cap at ~1e18 in the displayed currency: KRW/VND stats legitimately reach thousands of trillions,
+    // so only garbage magnitudes should trip it. 999,999.95T would round up to "1,000,000.0T".
+    { upperBound: 999_999.95e12, formatter: ShorthandOneDecimalsCurrency },
+    // Built through Intl rather than a '>$999,999T' literal so the cap carries the converted
+    // currency's symbol and the locale's compact suffix. Known gap: the Android Intl polyfill
+    // (@formatjs/intl-numberformat 7.4.1) mis-formats compact values above 1e14, so on Android this
+    // reads '>$10,000'. The one-decimal rule above is equally off there past 1e14.
+    {
+      upperBound: Infinity,
+      overrideValue: 999_999e12,
+      formatter: ShorthandNoDecimalsCurrency,
+      postFormatModifier: greaterThanPostFormatModifier,
+    },
   ],
   defaultFormat: ShorthandOneDecimalsCurrency,
 }

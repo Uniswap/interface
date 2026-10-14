@@ -1,5 +1,6 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Flex, Text, View } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, SpinningLoader } from 'ui/src'
@@ -120,6 +121,7 @@ export default function AddressClaimModal({ isOpen, closeModal }: ModalState) {
                 borderRadius="$rounded12"
                 mt="$spacing16"
                 onPress={onClaim}
+                testID={TestID.ClaimUni}
               >
                 {t('addressClaim.cta')}
               </Button>
@@ -160,7 +162,7 @@ export default function AddressClaimModal({ isOpen, closeModal }: ModalState) {
           </Flex>
           <Flex gap={100} justifyContent="center">
             <Flex gap="$gap8" justifyContent="center" alignItems="center">
-              <Text variant="heading1" color="$black" textAlign="center">
+              <Text variant="heading1" color="$black" textAlign="center" testID={TestID.ClaimUniStatus}>
                 {claimConfirmed ? t('addressClaim.claimed') : t('addressClaim.claiming')}
               </Text>
               {!claimConfirmed && (

@@ -6,41 +6,19 @@ import {
   getTokenPrices,
   listTransactions,
 } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
-import { tokenRankings } from '@uniswap/client-explore/dist/uniswap/explore/v1/service-ExploreStatsService_connectquery'
-import { WETH_ADDRESS } from '@uniswap/universal-router-sdk'
-import { UniverseChainId, normalizeTokenAddressForCache } from '@universe/chains'
-import { DEFAULT_NATIVE_ADDRESS as NATIVE_TOKEN_ADDRESS } from '@universe/prices'
-import { DAI, USDC, USDT } from 'uniswap/src/constants/tokens'
-import { WEETH_ADDRESS } from '~/playwright/anvil/utils'
 import {
-  buildTokenRankingsFallbackResponse,
-  fulfillWithFallback,
-  isTokenRankingsResponseHealthy,
+  buildTokenPricesResponse,
+  fetchLiveResponseWithDeadline,
+  FORCE_TOKEN_DATA_FALLBACK,
+  LIVE_RESPONSE_TIMEOUT_MS,
+  parseLiveTokenPrices,
+  type TokenPriceRequest,
 } from '~/playwright/fixtures/tokenDataFallbacks'
 import { Mocks } from '~/playwright/mocks/mocks'
 
 // TransactionTypeFilter enum values from client-data-api (used in ListTransactions request filter)
 const TRANSACTION_TYPE_FILTER_SEND = 'TRANSACTION_TYPE_FILTER_SEND'
 const TRANSACTION_TYPE_FILTER_RECEIVE = 'TRANSACTION_TYPE_FILTER_RECEIVE'
-
-// Plausible USD prices for the small set of tokens the anvil e2e suite actually
-// uses (see allowedErc20BalanceAddresses in fixtures/anvil.ts). Keyed by
-// lowercased address so it's chain-agnostic — good enough for these mainnet-only
-// tests. Values don't need to track real markets, only be finite and > 0 so
-// fiat<->token conversion (e.g. useUSDCPrice) produces a sensible amount.
-const MOCK_TOKEN_USD_PRICES: Record<string, number> = {
-  [NATIVE_TOKEN_ADDRESS]: 3000,
-  [normalizeTokenAddressForCache(WETH_ADDRESS(UniverseChainId.Mainnet))]: 3000,
-  [normalizeTokenAddressForCache(WEETH_ADDRESS)]: 3120,
-  [normalizeTokenAddressForCache(USDC.address)]: 1,
-  [normalizeTokenAddressForCache(USDT.address)]: 1,
-  [normalizeTokenAddressForCache(DAI.address)]: 1,
-}
-const DEFAULT_MOCK_TOKEN_USD_PRICE = 3000
-
-function priceForToken(address: string): number {
-  return MOCK_TOKEN_USD_PRICES[normalizeTokenAddressForCache(address)] ?? DEFAULT_MOCK_TOKEN_USD_PRICE
-}
 
 /**
  * Parses a Connect RPC unary request body, regardless of whether the client sent
@@ -62,31 +40,45 @@ export function parseConnectRequestBody(request: { url(): string; postData(): st
 }
 
 type GetTokenPricesRequestBody = {
-  tokens?: { chainId: number; address: string }[]
+  tokens?: TokenPriceRequest[]
 }
 
 /**
- * Responds to GetTokenPrices with a price for every token the request actually
- * asked about. This backs `usePrice()`/`useUSDCPrice()`
- * (packages/prices/src/hooks/usePrice.ts), which the anvil browser context can't
- * otherwise reach — there's no live price service available in that
- * network-restricted environment. Without this, any flow that converts a fiat
- * amount to a token amount (e.g. Send) never resolves a price and stays disabled.
+ * Responds to GetTokenPrices with a price for every token the request actually asked about,
+ * taking the live price where the price service returns a usable one and a fallback anchor
+ * otherwise (see buildTokenPricesResponse for why live has to win). Every token gets answered:
+ * these prices back `usePrice()`/`useUSDCPrice()` (packages/prices/src/hooks/usePrice.ts), and a
+ * flow that converts a fiat amount to a token amount (e.g. Send) stays disabled without one.
  */
 async function fulfillGetTokenPrices(route: Route): Promise<void> {
   const body = parseConnectRequestBody(route.request()) as GetTokenPricesRequestBody | null
-  const tokens = body?.tokens ?? []
-  await route.fulfill({
-    contentType: 'application/json',
-    body: JSON.stringify({
-      tokenPrices: tokens.map((token) => ({
-        chainId: token.chainId,
-        address: token.address,
-        priceUsd: priceForToken(token.address),
-        updatedAt: new Date().toISOString(),
-      })),
-    }),
+  const requestedTokens = body?.tokens ?? []
+
+  const liveResponse = await fetchLiveResponseWithDeadline({
+    route,
+    timeoutMs: LIVE_RESPONSE_TIMEOUT_MS,
+    forceFallback: FORCE_TOKEN_DATA_FALLBACK,
   })
+  const liveBody = liveResponse?.ok() ? await liveResponse.json().catch(() => null) : null
+  const livePrices = parseLiveTokenPrices(liveBody)
+
+  // A token served from an anchor is the same state as the stale-constant failure this fixture
+  // replaced, and invisible in a trace otherwise — say so when it happens.
+  if (requestedTokens.length > 0 && livePrices.length < requestedTokens.length) {
+    console.warn(
+      `GetTokenPrices: ${requestedTokens.length - livePrices.length}/${requestedTokens.length} tokens served from fallback anchors (live status: ${liveResponse?.status() ?? 'none'})`,
+    )
+  }
+
+  // Build outside the try: a builder throw must fail the spec loudly, not hang the route.
+  const json = buildTokenPricesResponse({ requestedTokens, livePrices, updatedAt: new Date().toISOString() })
+
+  try {
+    await route.fulfill({ json })
+  } catch (error) {
+    // Page/test torn down mid-flight; nothing left to serve
+    console.warn('GetTokenPrices fulfill error:', error)
+  }
 }
 
 /** Method descriptor from Connect RPC (e.g. listTransactions, getPortfolio). Used so API changes fail at build time. */
@@ -104,7 +96,6 @@ export type DataApiIntercept = DataApiFixture['dataApi']
 type DataApiFixture = {
   interceptLongRunning: void
   interceptTokenPrices: void
-  interceptTokenRankingsFallback: void
   dataApi: {
     /**
      * Intercepts a Data API endpoint and responds with a mock response.
@@ -203,41 +194,14 @@ export const test = base.extend<DataApiFixture>({
     },
     { auto: true },
   ],
-  // Default GetTokenPrices mock. The anvil browser context has no route to the live
-  // price service (WS/REST) that packages/prices normally talks to (see usePrice.ts),
-  // so any fiat<->token conversion (e.g. Send's amount input) would otherwise hang
-  // forever. Response is generated per-request (not a static mock file) since the
-  // token list varies by flow.
+  // Default GetTokenPrices route: live-first, with a per-token fallback anchor so no requested
+  // token ever comes back unpriced (any fiat<->token conversion, e.g. Send's amount input, hangs
+  // forever on a missing price). Response is assembled per-request (not a static mock file) since
+  // the token list varies by flow, and it must stay live-first because the limit form rejects a
+  // market-price reference that diverges from these prices — see buildTokenPricesResponse.
   interceptTokenPrices: [
     async ({ page }, use) => {
       await page.route(`**/${getServiceMethodPath(getTokenPrices)}`, fulfillGetTokenPrices)
-      await use(undefined)
-    },
-    { auto: true },
-  ],
-  // Failure-scoped TokenRankings fallback: a healthy live 2xx passes through untouched; on
-  // non-2xx / network failure (the gateway 429-throttles CI traffic) OR a 2xx with an empty
-  // trending list, serve a deterministic non-empty trending list instead. The TokenSelector
-  // specs assert the trending section header and TDP/Wrap click token-option-1-{USDT,ETH} from
-  // that list, so an errored or empty response unmounts everything they target. Spec-registered
-  // routes still win (registered later).
-  interceptTokenRankingsFallback: [
-    async ({ page }, use) => {
-      // URL predicate rather than the glob used above: connect-query GETs carry the message in
-      // the query string, which globs would have to match explicitly
-      const tokenRankingsPath = getServiceMethodPath(tokenRankings)
-      await page.route(
-        (url) => url.href.includes(tokenRankingsPath),
-        async (route) =>
-          fulfillWithFallback({
-            route,
-            isHealthy: isTokenRankingsResponseHealthy,
-            buildFallback: () => {
-              const body = parseConnectRequestBody(route.request()) as { chainId?: string } | null
-              return buildTokenRankingsFallbackResponse(body?.chainId)
-            },
-          }),
-      )
       await use(undefined)
     },
     { auto: true },

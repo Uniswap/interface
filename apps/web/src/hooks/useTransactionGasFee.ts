@@ -1,10 +1,10 @@
-import { type TransactionRequest } from '@ethersproject/abstract-provider'
 import { Level } from '@uniswap/client-unirpc-v2/dist/uniswap/unirpc/v2/service_pb'
 import type { GasFeeResult } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { useGasFeeQuery } from 'uniswap/src/data/apiClients/gasService/useGasFeeQuery'
 import { GAS_SPEED_STRATEGIES, GasSpeed } from 'uniswap/src/features/gas/utils'
+import type { TransactionRequest } from '~/chains'
 
 const SPEED_TO_PROTO_LEVEL: Record<GasSpeed, Level> = {
   [GasSpeed.Normal]: Level.NORMAL,

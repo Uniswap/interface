@@ -69,6 +69,42 @@ describe('AnimatedTab', () => {
     expect(tab.classList.contains('[pointer-events:none]')).toBe(true)
   })
 
+  it('does not mount children until the tab is first activated', () => {
+    const { queryByText, rerender } = render(
+      <AnimatedTab isActive={false} hideRight>
+        <span>tab content</span>
+      </AnimatedTab>,
+    )
+
+    // A list that first measures itself inside display:none never recovers its row positions.
+    expect(queryByText('tab content')).toBeNull()
+
+    rerender(
+      <AnimatedTab isActive hideRight={false}>
+        <span>tab content</span>
+      </AnimatedTab>,
+    )
+    expect(queryByText('tab content')).not.toBeNull()
+  })
+
+  it('keeps children mounted after the tab is deactivated again', () => {
+    const { queryByText, rerender } = render(
+      <AnimatedTab isActive>
+        <span>tab content</span>
+      </AnimatedTab>,
+    )
+    expect(queryByText('tab content')).not.toBeNull()
+
+    rerender(
+      <AnimatedTab isActive={false} hideRight>
+        <span>tab content</span>
+      </AnimatedTab>,
+    )
+
+    // Switching back should be instant, so the subtree stays mounted behind display:none.
+    expect(queryByText('tab content')).not.toBeNull()
+  })
+
   it('scopes the transition to opacity and transform (color-flash rule)', () => {
     const tab = renderTab({ isActive: true })
     const quicker = SPORE_ANIMATION_CURVE_CSS.quicker

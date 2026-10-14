@@ -1,11 +1,10 @@
 import { UniverseChainId } from '@universe/chains'
-import { isExtensionApp, isWebApp } from '@universe/environment'
+import { isExtensionApp } from '@universe/environment'
 import {
   DynamicConfigs,
   useDynamicConfigValue,
   DisableWalletSearchTermsConfigKey,
   useIsTokenCategoriesEnabled,
-  useIsV2EndpointsSearchEnabled,
 } from '@universe/gating'
 import { useCallback, useMemo } from 'react'
 import { usePoolSearchResultsToPoolOptions } from 'uniswap/src/components/lists/items/pools/usePoolSearchResultsToPoolOptions'
@@ -15,10 +14,8 @@ import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
 import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { useMultichainSearchResultsToOptions } from 'uniswap/src/components/TokenSelector/hooks/useMultichainSearchResultsToOptions'
 import { useAllTokenCategories } from 'uniswap/src/data/apiClients/dataApiService/categories/useAllTokenCategories'
-import { useSearchAuctions } from 'uniswap/src/features/dataApi/searchAuctions'
-import { useSearchCategoryIds } from 'uniswap/src/features/dataApi/searchCategories'
-import { useSearchPools } from 'uniswap/src/features/dataApi/searchPools'
-import { useMultichainSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
+import { useSearchAuctionOptions } from 'uniswap/src/features/dataApi/searchAuctions'
+import { useSearchResults } from 'uniswap/src/features/dataApi/searchResults'
 import { toCategoryOptions } from 'uniswap/src/features/search/SearchModal/categories/toCategoryOptions'
 import { useEarnSearchResults } from 'uniswap/src/features/search/SearchModal/hooks/useEarnSearchResults'
 import {
@@ -27,11 +24,12 @@ import {
   getIsPoolAddressSearch,
   getOptionsForActiveTab,
   getSearchResultsForActiveTab,
+  getSearchTypes,
   getTokenAndPoolSections,
   getTokenOptions,
   getTruncatedSectionKeys,
   getWalletSearchQuery,
-  refetchAuctionsIfEnabled,
+  isActiveSearchTab,
   type SearchModalSectionResult,
   shouldShowWalletSearch,
   shouldSkipSearch,
@@ -58,27 +56,36 @@ export function useSectionsForSearchResults({
   shouldPrioritizePools: boolean
   shouldPrioritizeWallets: boolean
 }): SearchModalSectionResult & { truncatedSectionKeys: OnchainItemSectionName[] } {
-  // Token search results
   const useMultichainPath = chainFilter === null
 
   // RWA (tokenized stock) grouping
   const rwaIndex = useRwaIndex()
   const isAddressSearch = isAddressTokenSearchQuery(searchFilter)
-  const isSearchV2Enabled = useIsV2EndpointsSearchEnabled()
 
-  const skipTokenSearch = shouldSkipSearch({ activeTab, searchFilter, searchTab: SearchTab.Tokens })
+  // Category rows render on the All tab only, and never on the extension, which has no Category Details surface.
+  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
+  const categorySearchEnabled = tokenCategoriesEnabled && !isExtensionApp
 
+  // One SearchService request for every type this surface can show. Requesting them all regardless of the
+  // active tab keeps tab switches on the cached response instead of refetching per tab.
+  const searchTypes = useMemo(
+    () => getSearchTypes({ auctionSearchEnabled, categorySearchEnabled }),
+    [auctionSearchEnabled, categorySearchEnabled],
+  )
   const {
-    data: multichainData,
-    error: searchTokensError,
-    refetch: refetchSearchTokens,
-    isLoading: searchTokensLoading,
-  } = useMultichainSearchTokens({
+    data: searchResults,
+    error: searchError,
+    refetch: refetchSearchResults,
+    isLoading: searchLoading,
+  } = useSearchResults({
     searchQuery: searchFilter,
     chainFilter,
-    skip: skipTokenSearch,
+    types: searchTypes,
+    skip: shouldSkipSearch({ activeTab, searchFilter }),
   })
 
+  // Token search results
+  const multichainData = searchResults?.tokens
   const searchResultCurrencies = useMemo(
     () => (!useMultichainPath ? multichainData?.flatMap((r) => r.tokens) : undefined),
     [useMultichainPath, multichainData],
@@ -88,45 +95,19 @@ export function useSectionsForSearchResults({
   const tokenSearchResults = useCurrencyInfosToTokenOptions({ currencyInfos: searchResultCurrencies })
   const multichainSearchOptions = useMultichainSearchResultsToOptions({ results: multichainResults })
 
-  // Category search results: All tab only, and never on the extension, which has no Category Details surface.
-  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
-  const categorySearchEnabled = tokenCategoriesEnabled && !isExtensionApp
-  const skipCategorySearchQuery = !categorySearchEnabled || activeTab !== SearchTab.All || !searchFilter
-  const {
-    data: searchCategoryIds,
-    refetch: refetchSearchCategories,
-    isLoading: searchCategoriesQueryLoading,
-  } = useSearchCategoryIds({ searchQuery: searchFilter, chainFilter, skip: skipCategorySearchQuery })
-  // Guard the flag before trusting query state (as the auction path does) so a skipped query can't hold the spinner.
-  const searchCategoriesLoading = !skipCategorySearchQuery && searchCategoriesQueryLoading
+  // Category search results
   const { categories } = useAllTokenCategories()
   const categoryOptions = useMemo(
-    () => toCategoryOptions({ categoryIds: searchCategoryIds, categories }),
-    [searchCategoryIds, categories],
+    () => toCategoryOptions({ categoryIds: searchResults?.categoryIds, categories }),
+    [searchResults?.categoryIds, categories],
   )
 
   // Pool search results
-  const skipPoolSearchQuery = shouldSkipSearch({
-    activeTab,
-    enabled: isWebApp,
-    searchFilter,
-    searchTab: SearchTab.Pools,
-  })
-  const {
-    data: searchResultPools,
-    error: searchPoolsError,
-    refetch: refetchSearchPools,
-    isLoading: searchPoolsLoading,
-  } = useSearchPools({
-    searchQuery: searchFilter,
-    chainFilter,
-    skip: skipPoolSearchQuery,
-  })
-
-  const isPoolAddressSearch = getIsPoolAddressSearch({
-    searchFilter,
-    searchResultPoolsLength: searchResultPools?.length,
-  })
+  const searchResultPools = searchResults?.pools
+  // Pools arrive even on the Tokens tab now, so gate the pool-address special case to the tabs that show pools.
+  const isPoolAddressSearch =
+    isActiveSearchTab(activeTab, SearchTab.Pools) &&
+    getIsPoolAddressSearch({ searchFilter, searchResultPoolsLength: searchResultPools?.length })
 
   // Wallet search results
   const disableWalletSearchTerms = useDynamicConfigValue<
@@ -147,21 +128,14 @@ export function useSectionsForSearchResults({
   )
 
   // Auction search results
-  const skipAuctionSearchQuery = shouldSkipSearch({
-    activeTab,
-    enabled: auctionSearchEnabled && isWebApp,
-    searchFilter,
-    searchTab: SearchTab.Auctions,
-  })
-  const {
-    data: auctionSearchResults,
-    error: searchAuctionsError,
-    refetch: refetchSearchAuctions,
-    isLoading: searchAuctionsLoading,
-  } = useSearchAuctions({
+  const { data: auctionSearchResults, refetch: refetchAuctionOverrides } = useSearchAuctionOptions({
+    auctions: searchResults?.auctions,
     searchQuery: searchFilter,
     chainFilter,
-    skip: skipAuctionSearchQuery,
+    skip:
+      !auctionSearchEnabled ||
+      !isActiveSearchTab(activeTab, SearchTab.Auctions) ||
+      shouldSkipSearch({ activeTab, searchFilter }),
   })
 
   // Organized sections
@@ -183,11 +157,10 @@ export function useSectionsForSearchResults({
             index: rwaIndex,
             isAddressSearch,
             chainFilter,
-            hoistRwaToTop: !isSearchV2Enabled,
             plainTokenNames: tokenCategoriesEnabled,
           })
         : tokenOptions,
-    [rwaIndex, tokenOptions, isAddressSearch, chainFilter, isSearchV2Enabled, tokenCategoriesEnabled],
+    [rwaIndex, tokenOptions, isAddressSearch, chainFilter, tokenCategoriesEnabled],
   )
   const tokenSearchResultsSection = useOnchainItemListSection({
     sectionKey: OnchainItemSectionName.Tokens,
@@ -222,21 +195,12 @@ export function useSectionsForSearchResults({
     options: getAuctionOptions({ activeTab, auctionSearchEnabled, auctionSearchResults }),
   })
 
-  const refetchAll = useCallback(() => {
-    void refetchSearchTokens()
-    void refetchSearchPools()
-    if (categorySearchEnabled) {
-      void refetchSearchCategories()
+  const refetch = useCallback(() => {
+    void refetchSearchResults()
+    if (auctionSearchEnabled) {
+      void refetchAuctionOverrides()
     }
-    refetchAuctionsIfEnabled({ auctionSearchEnabled, refetchSearchAuctions })
-  }, [
-    auctionSearchEnabled,
-    categorySearchEnabled,
-    refetchSearchPools,
-    refetchSearchTokens,
-    refetchSearchCategories,
-    refetchSearchAuctions,
-  ])
+  }, [auctionSearchEnabled, refetchSearchResults, refetchAuctionOverrides])
 
   const tokenAndPoolSections = useMemo(() => {
     return getTokenAndPoolSections({ poolSearchResultsSection, shouldPrioritizePools, tokenSearchResultsSection })
@@ -260,7 +224,7 @@ export function useSectionsForSearchResults({
     shouldShowWallets,
   ])
 
-  const auctionOptionsLength = auctionSearchEnabled ? (auctionSearchResults?.length ?? 0) : 0
+  const auctionOptionsLength = auctionSearchEnabled ? auctionSearchResults.length : 0
   const truncatedSectionKeys = useMemo(
     () =>
       getTruncatedSectionKeys({
@@ -272,7 +236,7 @@ export function useSectionsForSearchResults({
     [activeTab, groupedTokenOptions.length, poolSearchOptions.length, auctionOptionsLength],
   )
 
-  const searchResults = useMemo((): SearchModalSectionResult => {
+  const sectionsForActiveTab = useMemo((): SearchModalSectionResult => {
     return getSearchResultsForActiveTab({
       activeTab,
       allSections,
@@ -282,17 +246,9 @@ export function useSectionsForSearchResults({
       poolSearchOptionsLength: poolSearchOptions.length,
       poolSearchResultsLength: searchResultPools?.length,
       poolSearchResultsSection,
-      refetchAll,
-      refetchSearchAuctions,
-      refetchSearchPools,
-      refetchSearchTokens,
-      searchAuctionsError,
-      searchAuctionsLoading,
-      searchCategoriesLoading,
-      searchPoolsError,
-      searchPoolsLoading,
-      searchTokensError,
-      searchTokensLoading,
+      refetch,
+      searchError,
+      searchLoading,
       tokenOptionsLength: tokenOptions.length,
       tokenSearchResultsSection,
       walletSearchResultsLoading,
@@ -303,26 +259,21 @@ export function useSectionsForSearchResults({
     allSections,
     auctionSearchEnabled,
     auctionSearchResultsSection,
+    earnSearchResultsSection,
     poolSearchOptions.length,
     poolSearchResultsSection,
-    refetchAll,
-    refetchSearchAuctions,
-    refetchSearchPools,
-    refetchSearchTokens,
-    searchAuctionsError,
-    searchAuctionsLoading,
-    searchCategoriesLoading,
-    searchPoolsError,
-    searchPoolsLoading,
+    refetch,
+    searchError,
+    searchLoading,
     searchResultPools?.length,
-    searchTokensError,
-    searchTokensLoading,
     tokenOptions.length,
     tokenSearchResultsSection,
     walletSearchResultsLoading,
     walletSearchResultsSection,
-    earnSearchResultsSection,
   ])
 
-  return useMemo(() => ({ ...searchResults, truncatedSectionKeys }), [searchResults, truncatedSectionKeys])
+  return useMemo(
+    () => ({ ...sectionsForActiveTab, truncatedSectionKeys }),
+    [sectionsForActiveTab, truncatedSectionKeys],
+  )
 }

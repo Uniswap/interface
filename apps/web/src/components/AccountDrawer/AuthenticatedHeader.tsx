@@ -205,11 +205,13 @@ export function AuthenticatedHeader({
             <EmptyWallet />
           ) : (
             <>
+              {/* flexBasis 0: `grow` alone leaves basis auto, so the tiles would be sized by their
+                  label widths ("Receive" wider than "Send") instead of splitting the row evenly. */}
               <Flex row gap="$gap8">
-                <Flex grow>
+                <Flex grow flexBasis={0}>
                   <SendActionTile />
                 </Flex>
-                <Flex grow>
+                <Flex grow flexBasis={0}>
                   <ReceiveActionTile />
                 </Flex>
               </Flex>
@@ -227,6 +229,7 @@ export function AuthenticatedHeader({
                 my="$spacing8"
                 fill={false}
                 onPress={toggleClaimModal}
+                testID={TestID.AccountDrawerClaimReward}
                 style={{
                   background: 'linear-gradient(to right, #9139b0 0%, #4261d6 100%)',
                 }}

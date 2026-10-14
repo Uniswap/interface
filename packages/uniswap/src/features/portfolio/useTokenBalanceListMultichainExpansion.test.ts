@@ -49,7 +49,7 @@ describe(useTokenBalanceListMultichainExpansion, () => {
       useTokenBalanceListMultichainExpansion({ sortedData: undefined, hiddenTokensExpanded: false }),
     )
     expect(result.current.rows).toEqual([])
-    expect(result.current.expandedCurrencyIds.size).toBe(0)
+    expect(result.current.expandedCurrencyId).toBeUndefined()
     expect(result.current.multichainRowExpansionEnabled).toBe(false)
   })
 
@@ -148,7 +148,7 @@ describe(useTokenBalanceListMultichainExpansion, () => {
       expect(result.current.rows).toEqual(['mc-parent'])
     })
 
-    it('keeps rows flat after toggleExpanded while expandedCurrencyIds updates', () => {
+    it('keeps rows flat after toggleExpanded while expandedCurrencyId updates', () => {
       const tHigh = createPortfolioChainBalance({
         chainId: CHAIN_ID_MAINNET,
         valueUsd: 200,
@@ -197,14 +197,14 @@ describe(useTokenBalanceListMultichainExpansion, () => {
         result.current.toggleExpanded(parentId)
       })
 
-      expect(result.current.expandedCurrencyIds.has(parentId)).toBe(true)
+      expect(result.current.expandedCurrencyId).toBe(parentId)
       expect(result.current.rows).toEqual([parentId])
 
       act(() => {
         result.current.toggleExpanded(parentId)
       })
 
-      expect(result.current.expandedCurrencyIds.has(parentId)).toBe(false)
+      expect(result.current.expandedCurrencyId).not.toBe(parentId)
       expect(result.current.rows).toEqual([parentId])
     })
 
@@ -267,16 +267,14 @@ describe(useTokenBalanceListMultichainExpansion, () => {
       act(() => {
         result.current.toggleExpanded(parentA)
       })
-      expect(result.current.expandedCurrencyIds.has(parentA)).toBe(true)
-      expect(result.current.expandedCurrencyIds.has(parentB)).toBe(false)
-      expect(result.current.expandedCurrencyIds.size).toBe(1)
+      expect(result.current.expandedCurrencyId).toBe(parentA)
+      expect(result.current.expandedCurrencyId).not.toBe(parentB)
 
       act(() => {
         result.current.toggleExpanded(parentB)
       })
-      expect(result.current.expandedCurrencyIds.has(parentA)).toBe(false)
-      expect(result.current.expandedCurrencyIds.has(parentB)).toBe(true)
-      expect(result.current.expandedCurrencyIds.size).toBe(1)
+      expect(result.current.expandedCurrencyId).not.toBe(parentA)
+      expect(result.current.expandedCurrencyId).toBe(parentB)
     })
 
     it('does not add per-chain rows for multichain balances with only one token even when expanded', () => {
@@ -340,7 +338,7 @@ describe(useTokenBalanceListMultichainExpansion, () => {
         result.current.toggleExpanded(parentId)
       })
 
-      expect(result.current.expandedCurrencyIds.has(parentId)).toBe(true)
+      expect(result.current.expandedCurrencyId).toBe(parentId)
       expect(result.current.rows).toEqual([parentId])
     })
   })
@@ -377,7 +375,7 @@ describe(useTokenBalanceListMultichainExpansion, () => {
         result.current.toggleExpanded('mc-parent')
       })
 
-      expect(result.current.expandedCurrencyIds.size).toBe(0)
+      expect(result.current.expandedCurrencyId).toBeUndefined()
       expect(result.current.rows).toEqual(['mc-parent'])
     })
   })

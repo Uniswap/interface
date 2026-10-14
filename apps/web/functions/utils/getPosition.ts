@@ -12,6 +12,7 @@ import {
 } from 'functions/utils/liquidityService'
 import { DYNAMIC_FEE_AMOUNT } from 'uniswap/src/constants/pools'
 import { URL_PARAM_TO_CHAIN_ID } from 'uniswap/src/features/chains/chainUrlParam'
+import type { ProtocolVersionLabel } from 'uniswap/src/features/positions/utils'
 
 interface LiquidityPosition {
   feeTier?: number
@@ -53,7 +54,7 @@ export default async function getPosition({
   identifier,
   url,
 }: {
-  version: 'v2' | 'v3' | 'v4'
+  version: ProtocolVersionLabel
   chainName: string
   identifier: string
   url: string

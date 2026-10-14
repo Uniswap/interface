@@ -3,6 +3,8 @@ import { Percent } from '@uniswap/sdk-core'
 import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import { UniverseChainId } from '@universe/chains'
 import { MAX_LP_FEE } from 'uniswap/src/constants/pools'
+import { DEFAULT_FEE_TIER_PAIRS } from 'uniswap/src/features/fees/feeTiers'
+import { bpsToFeeAmount } from 'uniswap/src/features/fees/feeUnits'
 import { DYNAMIC_FEE_DATA } from 'uniswap/src/features/positions/types'
 import { PercentNumberDecimals } from 'utilities/src/format/types'
 import { describe, expect, it } from 'vitest'
@@ -12,6 +14,7 @@ import {
   getDefaultFeeTiersForChainWithDynamicFeeTier,
   getDefaultFeeTiersWithData,
   getFeeTierKey,
+  getFeeTierTitle,
   isDynamicFeeTier,
   parseFeeDataFromUrl,
   mergeFeeTiers,
@@ -345,39 +348,6 @@ describe('getDefaultFeeTiersWithData', () => {
     expect(result).toEqual([])
   })
 
-  it('returns top 8 fee tiers sorted by TVL for V4', () => {
-    // Create 10 fee tiers with descending TVL
-    const v4FeeTierData: Record<number, FeeTierData> = {}
-    for (let i = 0; i < 10; i++) {
-      v4FeeTierData[1000 + i] = {
-        fee: { feeAmount: 1000 + i, isDynamic: false, tickSpacing: i },
-        formattedFee: `${i}%`,
-        totalLiquidityUsd: 1000 + i,
-        percentage: new Percent(i, 100),
-        created: true,
-        tvl: `${1000 + i}`,
-      }
-    }
-    // Shuffle TVL values to test sorting
-    v4FeeTierData[1005].tvl = '2000'
-    v4FeeTierData[1006].tvl = '3000'
-    v4FeeTierData[1007].tvl = '4000'
-    v4FeeTierData[1008].tvl = '5000'
-    v4FeeTierData[1009].tvl = '6000'
-
-    const result = getDefaultFeeTiersWithData({
-      chainId: UniverseChainId.Base,
-      feeTierData: v4FeeTierData,
-      protocolVersion: ProtocolVersion.V4,
-    })
-    // Should return top 8 by TVL, sorted descending
-    const sortedTiers = Object.entries(v4FeeTierData)
-      .sort((a, b) => parseFloat(b[1].tvl) - parseFloat(a[1].tvl))
-      .slice(0, 4)
-      .map(([feeAmount]) => Number(feeAmount))
-    expect(result.map((f) => f.value.feeAmount)).toEqual(sortedTiers)
-  })
-
   it('sorts V3 fee tiers by TVL descending', () => {
     // Use a subset of DEFAULT_FEE_TIERS with shuffled TVL
     const shuffledFeeTierData = {
@@ -410,6 +380,32 @@ describe('getDefaultFeeTiersWithData', () => {
       FeeAmount.HIGH, // 200
       FeeAmount.LOW, // 100
     ])
+  })
+})
+
+describe('getFeeTierTitle', () => {
+  it('names the four old default tiers', () => {
+    for (const feeAmount of [FeeAmount.LOWEST, FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH]) {
+      expect(getFeeTierTitle(feeAmount)).not.toBe('')
+    }
+  })
+
+  it('gives each new default tier the title of the old tier it pairs with', () => {
+    for (const { newBps, oldBps } of DEFAULT_FEE_TIER_PAIRS) {
+      expect(getFeeTierTitle(bpsToFeeAmount(newBps))).toBe(getFeeTierTitle(bpsToFeeAmount(oldBps)))
+    }
+  })
+
+  it('leaves any other fee amount without a title', () => {
+    expect(getFeeTierTitle(7)).toBe('')
+  })
+
+  it('titles a dynamic tier as customizable whatever its fee amount', () => {
+    const dynamicTitle = getFeeTierTitle(DYNAMIC_FEE_DATA.feeAmount, true)
+    expect(dynamicTitle).not.toBe('')
+    // A fee amount that would otherwise name a static tier doesn't override the dynamic flag.
+    expect(getFeeTierTitle(FeeAmount.MEDIUM, true)).toBe(dynamicTitle)
+    expect(getFeeTierTitle(2500, true)).toBe(dynamicTitle)
   })
 })
 

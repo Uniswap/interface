@@ -2,8 +2,8 @@ import type { PlainMessage } from '@bufbuild/protobuf'
 import type { Auction } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 import { UniverseChainId } from '@universe/chains'
 import { TestID } from '@universe/test'
+import { LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { AuctionLaunchMethod } from '~/features/Toucan/Auction/utils/auctionLaunchMethod'
 import {
   AuctionDisplayPhase,
   AuctionDisplayResult,
@@ -45,13 +45,14 @@ function mockDisplay(overrides: Partial<TokenDetailsAuctionDisplayModel> = {}): 
     isInitialLoading: false,
     auction: AUCTION,
     chainId: UniverseChainId.Mainnet,
-    launchMethod: AuctionLaunchMethod.Custom,
+    launchMethod: LaunchProvenanceMethod.CustomAuction,
     phase: AuctionDisplayPhase.Live,
     result: AuctionDisplayResult.Unknown,
     poolAvailability: PoolAvailability.NoPool,
     shouldShowSwap: false,
     phaseEndsAtMs: Date.now() + FOUR_HOURS_MS,
     currencyRaised: { status: 'idle' },
+    currentBlock: { status: 'success', blockNumber: 150n },
     refetchCurrentBlock: mockRefetchCurrentBlock,
     ...overrides,
   })
@@ -139,7 +140,11 @@ describe('TokenDetailsAuctionCard', () => {
   })
 
   it('renders nothing without a resolved auction', () => {
-    mockDisplay({ auction: undefined, launchMethod: undefined, phase: AuctionDisplayPhase.Unknown })
+    mockDisplay({
+      auction: undefined,
+      launchMethod: LaunchProvenanceMethod.Unknown,
+      phase: AuctionDisplayPhase.Unknown,
+    })
 
     render(<TokenDetailsAuctionCard />)
 
@@ -147,7 +152,7 @@ describe('TokenDetailsAuctionCard', () => {
   })
 
   it('renders nothing when the launch method is unknown', () => {
-    mockDisplay({ launchMethod: undefined })
+    mockDisplay({ launchMethod: LaunchProvenanceMethod.Unknown })
 
     render(<TokenDetailsAuctionCard />)
 

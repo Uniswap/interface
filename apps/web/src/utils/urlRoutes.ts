@@ -26,6 +26,8 @@ export function getCurrentPageFromLocation(locationPathname: string): InterfaceP
       return InterfacePageName.TokenDetailsPage
     case locationPathname.startsWith('/explore/pools') && locationPathname.includes('0x'):
       return InterfacePageName.PoolDetailsPage
+    case locationPathname.startsWith('/explore/category/'):
+      return InterfacePageName.CategoryDetailsPage
     case locationPathname.startsWith('/explore'):
       return InterfacePageName.ExplorePage
     case locationPathname.startsWith('/vote'):

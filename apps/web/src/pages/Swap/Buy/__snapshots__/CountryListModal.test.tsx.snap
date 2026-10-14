@@ -1,3 +1,190 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`CountryListModal > should render options and call select callback 1`] = `null`;
+exports[`CountryListModal > should render options and call select callback 1`] = `
+<body
+  style="pointer-events: none;"
+>
+  <span
+    aria-hidden="true"
+    data-aria-hidden="true"
+    data-radix-focus-guard=""
+    style="outline: none; opacity: 0; position: fixed; pointer-events: none;"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="true"
+    data-aria-hidden="true"
+  />
+  <div
+    aria-hidden="true"
+    class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 bg-scrim opacity-[0.5] top-[0px] right-[0px] bottom-[0px] left-[0px] z-[var(--c-z)] [pointer-events:auto] fixed uw-modal-overlay"
+    data-aria-hidden="true"
+    data-state="open"
+    style="--c-z: 1060;"
+  />
+  <div
+    class="flex flex-col basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 items-center justify-center top-[0px] right-[0px] bottom-[0px] left-[0px] z-[var(--c-z)] [pointer-events:auto] fixed uw-modal-positioner"
+    data-state="open"
+    style="--c-z: 1060;"
+  >
+    <div
+      class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow justify-center max-h-[var(--c-max-h)] rounded-[16px] overflow-hidden"
+      style="--c-max-h: 700px;"
+    >
+      <div
+        aria-labelledby="radix-_r_1_"
+        class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 gap-[4px] m-[16px] mx-[0px] my-[0px] px-[0px] py-[0px] w-[var(--c-w)] h-[100%] max-w-[var(--c-max-w)] max-h-[var(--c-max-h)] bg-surface1 border-surface3 border-[1px] rounded-[16px] overflow-auto media-md:p-[var(--cE-p)] media-md:h-[var(--cE-h)] media-md:max-h-[var(--cE-max-h)] uw-modal-content-center"
+        data-overlay-portal-container=""
+        data-state="open"
+        id="radix-_r_0_"
+        role="dialog"
+        style="--c-w: calc(100vw - 32px); --c-max-w: 420px; --c-max-h: 700px; --cE-p: 0px; --cE-h: 100%; --cE-max-h: calc(100dvh - 72px); pointer-events: auto;"
+        tabindex="-1"
+      >
+        <h2
+          id="radix-_r_1_"
+          style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
+        />
+        <div
+          class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] grow-[1] shrink w-[100%] bg-surface1 relative"
+        >
+          <div
+            class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-[1] gap-[12px] p-[20px] media-sm:pt-[var(--cF-pt)]"
+            style="--cF-pt: 0px;"
+          >
+            <div
+              class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row justify-between w-[100%]"
+            >
+              <span
+                class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
+              >
+                Select your region
+              </span>
+              <div
+                class="[container-name:true] flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] rounded-[12px] [cursor:pointer] bg-transparent [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] active:opacity-[0.75] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
+                data-testid="CountryListModal-close"
+                role="button"
+                tabindex="0"
+              >
+                <div
+                  style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0; min-width: 0; flex-shrink: 0;"
+                >
+                  <svg
+                    fill="none"
+                    stroke-width="8"
+                    style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div
+              class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[100%] h-[40px] relative"
+            >
+              <div
+                class="flex flex-col basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 items-center justify-center absolute top-[0px] bottom-[0px] left-[12px] [pointer-events:none]"
+              >
+                <svg
+                  fill="none"
+                  stroke-width="8"
+                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+                  viewBox="0 0 26 26"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M11.9166 2.16663C6.53185 2.16663 2.16663 6.53185 2.16663 11.9166C2.16663 17.3014 6.53185 21.6666 11.9166 21.6666C14.2203 21.6666 16.3374 20.8677 18.0059 19.5318L22.2462 23.7783C22.669 24.2017 23.3549 24.2022 23.7783 23.7794C24.2017 23.3566 24.2022 22.6707 23.7794 22.2473L19.5373 17.999C20.8699 16.3316 21.6666 14.2171 21.6666 11.9166C21.6666 6.53185 17.3014 2.16663 11.9166 2.16663ZM11.9166 4.33329C7.72847 4.33329 4.33329 7.72847 4.33329 11.9166C4.33329 16.1048 7.72847 19.5 11.9166 19.5C16.1048 19.5 19.5 16.1048 19.5 11.9166C19.5 7.72847 16.1048 4.33329 11.9166 4.33329Z"
+                    fill="currentColor"
+                    fill-opacity="0.63"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </div>
+              <input
+                data-uds-placeholder=""
+                dir="auto"
+                placeholder="Search by country or region"
+                style="box-sizing: border-box; margin: 0px; padding: 16px 16px 16px 40px; border-width: 1px; border-style: solid; appearance: none; resize: none; outline-width: 0; outline-style: solid; background-color: rgb(249, 249, 249); color: rgb(19, 19, 19); border-color: rgba(19, 19, 19, 0.08); outline-color: transparent; height: 40px; min-width: 0; border-radius: 12px; font-family: Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 500; line-height: 22px; align-items: center; white-space: nowrap; width: 100%; --uds-input-placeholder: rgba(19, 19, 19, 0.35);"
+                value=""
+                virtualkeyboardpolicy="auto"
+              />
+            </div>
+          </div>
+          <div
+            class="flex flex-col items-stretch box-border relative min-h-[0px] min-w-[0px] grow shrink basis-[0px]"
+          >
+            <div
+              class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-col justify-start"
+            >
+              <div
+                class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-col justify-start"
+              >
+                <div
+                  class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-between px-[20px] h-[60px] [cursor:pointer] hover:bg-[color:var(--ch-bg)]"
+                  style="--ch-bg: var(--surface2); height: 56px;"
+                >
+                  <div
+                    class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[12px]"
+                  >
+                    <div
+                      class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[32px] h-[32px] bg-neutral3 rounded-[999999px] overflow-hidden"
+                    >
+                      <img
+                        alt="US"
+                        aria-label="Country flag"
+                        height="32"
+                        src="https://images-country.meld.io/US/flag.svg"
+                        style="object-fit: cover;"
+                        width="32"
+                      />
+                    </div>
+                    <span
+                      class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
+                    >
+                      United States
+                    </span>
+                  </div>
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-width="8"
+                    style="width: 24px; height: 24px; color: rgb(19, 19, 19);"
+                    viewBox="0 0 48 48"
+                  >
+                    <line
+                      stroke="currentColor"
+                      x1="11"
+                      x2="18"
+                      y1="26"
+                      y2="33"
+                    />
+                    <line
+                      stroke="currentColor"
+                      x1="18"
+                      x2="38"
+                      y1="33"
+                      y2="14"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span
+    aria-hidden="true"
+    data-aria-hidden="true"
+    data-radix-focus-guard=""
+    style="outline: none; opacity: 0; position: fixed; pointer-events: none;"
+    tabindex="0"
+  />
+</body>
+`;

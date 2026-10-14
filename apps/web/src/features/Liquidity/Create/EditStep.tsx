@@ -13,7 +13,6 @@ import { useDefaultInitialPrice } from '~/features/Liquidity/Create/hooks/useDef
 import { usePoolDisplayCurrencies } from '~/features/Liquidity/Create/hooks/usePoolDisplayCurrencies'
 import { PositionFlowStep } from '~/features/Liquidity/Create/types'
 import { DisplayCurrentPrice } from '~/features/Liquidity/DisplayCurrentPrice'
-import { useSelectedFeeBreakdown } from '~/features/Liquidity/hooks/useSelectedFeeBreakdown'
 import { LiquidityPositionInfoBadges } from '~/features/Liquidity/LiquidityPositionInfoBadges'
 import { ExpandablePoolInfo } from '~/features/Liquidity/PoolInfoCard/PoolInfoCard'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
@@ -27,7 +26,7 @@ export const EditSelectTokensStep = ({ poolData }: { poolData?: PoolData }) => {
     creatingPoolOrPair,
     currencies: { display },
     positionState,
-    protocolFee,
+    selectedFeeBreakdown: feeBreakdown,
     resetDeposit: resetDepositState,
     resetPriceRange: resetPriceRangeState,
   } = useCreateLiquidityContext()
@@ -36,10 +35,6 @@ export const EditSelectTokensStep = ({ poolData }: { poolData?: PoolData }) => {
   const { TOKEN0, TOKEN1 } = display
   const chainId = (TOKEN0?.chainId ?? TOKEN1?.chainId) as UniverseChainId | undefined
   const media = useMedia()
-
-  // Same fee-badge tooltip as the review modal / select step: the context's served protocol fee for an
-  // existing tier, else the curve for a not-yet-created vanilla v4 pool.
-  const feeBreakdown = useSelectedFeeBreakdown({ protocolVersion, fee, servedProtocolFee: protocolFee, hook })
 
   const handleEdit = useCallback(() => {
     resetPriceRangeState()

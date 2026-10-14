@@ -77,22 +77,16 @@ html {
   max-width: 100vw;
   font-feature-settings: 'liga' 0;
   font-variant-ligatures: no-contextual;
-}
-
-/* Theme-aware background colors using Tamagui theme classes */
-.t_light body,
-.t_light html {
-  background-color: #fff;
-}
-
-.t_dark body,
-.t_dark html {
-  background-color: #131313;
+  /* Unlayered so it outranks @universe/tailwind's `@layer base` html/body
+     rule, which paints the shadcn `--background` placeholder rather than the
+     app surface. `--surface1` follows html.dark, so no per-theme selectors. */
+  background-color: var(--surface1);
 }
 
 #root {
   height: 100vh;
   display: flex;
+  flex-direction: column;
 
   scrollbar-width: 'thin';
 }

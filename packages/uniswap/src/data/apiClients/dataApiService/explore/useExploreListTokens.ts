@@ -7,6 +7,9 @@ import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApiServi
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 
+/** Page size Explore requests from v2 ListTokens; shared so other all-networks consumers dedupe onto the same query. */
+export const EXPLORE_LIST_TOKENS_PAGE_SIZE = 100
+
 export interface UseExploreListTokensParams {
   chainIds: number[]
   orderBy: TokensOrderBy

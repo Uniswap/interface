@@ -24,6 +24,7 @@ interface PriceChartProps {
   hideYAxis?: boolean
   hidePercentDelta?: boolean
   yAxisFormatter?: (price: number) => string
+  isStablecoin?: boolean
   /** Additional content rendered next to the price delta in the chart header.
    *  Can be a ReactNode or a render function receiving { isHovering }. */
   additionalHeaderContent?: ReactNode | (({ isHovering }: { isHovering: boolean }) => ReactNode)
@@ -42,6 +43,7 @@ export function PriceChart({
   yAxisFormatter,
   additionalHeaderContent,
   hidePercentDelta,
+  isStablecoin,
 }: PriceChartProps) {
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const startingPrice = data[0]
@@ -51,6 +53,7 @@ export function PriceChart({
     min,
     max,
     duration: timePeriod,
+    isStablecoin,
   })
   return (
     <PriceChartBody
@@ -62,6 +65,7 @@ export function PriceChart({
       overrideColor={overrideColor}
       hideYAxis={hideYAxis}
       yAxisFormatter={yAxisFormatter}
+      isStablecoin={isStablecoin}
     >
       {(crosshairData) => {
         const headerValue = crosshairData ? crosshairData.value : (headerTotalValueOverride ?? lastPrice.value)

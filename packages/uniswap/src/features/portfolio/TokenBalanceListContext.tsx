@@ -28,7 +28,7 @@ export type TokenBalancePressOptions = {
 
 type TokenBalanceListContextState = {
   balancesById: Record<string, PortfolioMultichainBalance> | undefined
-  expandedCurrencyIds: Set<string>
+  expandedCurrencyId: string | undefined
   multichainRowExpansionEnabled: boolean
   refetch: (() => void) | undefined
   isPending: boolean
@@ -206,7 +206,7 @@ export function useTokenBalanceRowBalance(rowId: string): PortfolioMultichainBal
 export type TokenBalanceItemConfig = {
   evmOwner?: Address
   svmOwner?: Address
-  expandedCurrencyIds: Set<string>
+  expandedCurrencyId: string | undefined
   multichainRowExpansionEnabled: boolean
   hiddenBalanceRowIds: Set<string>
   onPressToken?: (currencyId: CurrencyId, options?: TokenBalancePressOptions) => void
@@ -264,7 +264,7 @@ export function TokenBalanceListContextProvider({
 
   const [hiddenTokensExpanded, setHiddenTokensExpanded] = useState(shouldShowHiddenTokens)
 
-  const { rows, expandedCurrencyIds, toggleExpanded, multichainRowExpansionEnabled } =
+  const { rows, expandedCurrencyId, toggleExpanded, multichainRowExpansionEnabled } =
     useTokenBalanceListMultichainExpansion({
       sortedData: sortedDataForList,
       hiddenTokensExpanded,
@@ -310,7 +310,7 @@ export function TokenBalanceListContextProvider({
   const state = useMemo<TokenBalanceListContextState>(
     (): TokenBalanceListContextState => ({
       balancesById: stableBalancesById,
-      expandedCurrencyIds,
+      expandedCurrencyId,
       multichainRowExpansionEnabled,
       hiddenTokensCount,
       hiddenTokensExpanded,
@@ -331,7 +331,7 @@ export function TokenBalanceListContextProvider({
     }),
     [
       stableBalancesById,
-      expandedCurrencyIds,
+      expandedCurrencyId,
       multichainRowExpansionEnabled,
       hiddenTokensCount,
       hiddenTokensExpanded,
@@ -355,7 +355,7 @@ export function TokenBalanceListContextProvider({
     () => ({
       evmOwner,
       svmOwner,
-      expandedCurrencyIds,
+      expandedCurrencyId,
       multichainRowExpansionEnabled,
       hiddenBalanceRowIds,
       onPressToken,
@@ -365,7 +365,7 @@ export function TokenBalanceListContextProvider({
     [
       evmOwner,
       svmOwner,
-      expandedCurrencyIds,
+      expandedCurrencyId,
       multichainRowExpansionEnabled,
       hiddenBalanceRowIds,
       onPressToken,

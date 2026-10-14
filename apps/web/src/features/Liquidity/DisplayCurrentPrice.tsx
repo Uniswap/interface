@@ -20,7 +20,9 @@ export function DisplayCurrentPrice({ price, isLoading }: { price?: Price<Curren
           {t('common.marketPrice.fetching')}
         </Text>
       ) : price ? (
-        <Flex>
+        // Flex defaults to shrink-0 + min-width:auto, so a very long price would hold its full width and push
+        // sibling controls (e.g. the chart's token toggle) out of the card instead of wrapping.
+        <Flex flexShrink={1} minWidth={0}>
           <Text variant="body3" color="$neutral2">
             {t('common.currentPrice')}
           </Text>

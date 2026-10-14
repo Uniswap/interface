@@ -1,5 +1,5 @@
-import type { ExternalProvider, FallbackProvider, JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
 import type WalletConnectProvider from '@walletconnect/ethereum-provider'
+import type { ExternalProvider, FallbackProvider, JsonRpcProvider, Web3Provider } from '~/chains'
 
 function isWeb3Provider(provider: JsonRpcProvider | FallbackProvider): provider is Web3Provider {
   return 'provider' in provider

@@ -28,6 +28,11 @@ export function LinkButton({
   isSafeUri = false,
   size = iconSizes.icon20,
   justifyContent = 'center',
+  // Defaults to shrinkable so a long label (e.g. a dapp hostname) can be constrained to
+  // the available row width and wrap onto multiple lines, instead of overflowing its row
+  // and getting clipped by an ancestor's overflow — no part of the label is ever hidden.
+  // Callers that need a fixed-width, non-shrinking link can opt out via the `flexShrink` prop.
+  flexShrink = 1,
   ...rest
 }: LinkButtonProps & Pick<FlexCompatProps, 'justifyContent'>): JSX.Element {
   const colors = useSporeColors()
@@ -39,8 +44,12 @@ export function LinkButton({
   }, [color])
 
   return (
-    <TouchableArea onPress={() => openUri({ uri: url, openExternalBrowser, isSafeUri })} {...rest}>
-      <Flex row alignItems="center" gap="$spacing4" justifyContent={justifyContent}>
+    <TouchableArea
+      flexShrink={flexShrink}
+      onPress={() => openUri({ uri: url, openExternalBrowser, isSafeUri })}
+      {...rest}
+    >
+      <Flex row alignItems="center" gap="$spacing4" justifyContent={justifyContent} flexShrink={1}>
         <Text {...colorStyles} flexShrink={1} variant={textVariant ?? 'body2'}>
           {label}
         </Text>

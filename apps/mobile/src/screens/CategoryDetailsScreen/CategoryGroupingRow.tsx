@@ -1,3 +1,4 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { Flex } from '@universe/mycelium'
 import React from 'react'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
@@ -5,9 +6,12 @@ import { resolvePrimaryChain } from 'uniswap/src/data/apiClients/dataApiService/
 import type { IssuerToken, Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { ExpandableAssetGroup } from 'uniswap/src/features/expandableAsset/ExpandableAssetGroup'
+import { ElementName, MobileEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 /**
  * One token-grouping row on the category screen: parent ticker row that expands to per-issuer
@@ -16,12 +20,16 @@ import { useEvent } from 'utilities/src/react/hooks'
  */
 export function CategoryGroupingRow({
   grouping,
+  categoryId,
+  index,
   itemKey,
   isExpanded,
   onToggle,
 }: {
   // Served by the RWA endpoints until ListTokensGrouped lands; only the data type should change then.
   grouping: Rwa
+  categoryId: string
+  index: number
   itemKey: string
   isExpanded: boolean
   // Keyed callback so the parent can pass one stable handler to every row — an inline arrow per
@@ -30,6 +38,7 @@ export function CategoryGroupingRow({
 }): JSX.Element {
   const { chains: enabledChainIds } = useEnabledChains()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
+  const trace = useTrace()
 
   const selectIssuer = useEvent((issuer: IssuerToken): void => {
     const resolved = resolvePrimaryChain({ issuer, enabledChainIds })
@@ -40,10 +49,27 @@ export function CategoryGroupingRow({
       })
       return
     }
+    sendAnalyticsEvent(MobileEventName.ExploreTokenItemSelected, {
+      address: resolved.chainToken.address,
+      chain: resolved.chainId,
+      name: issuer.name,
+      position: index + 1,
+      category_id: categoryId,
+      issuer: issuer.issuer,
+    })
     tokenDetailsNavigation.navigate(buildCurrencyId(resolved.chainId, resolved.chainToken.address))
   })
 
-  const handleToggle = useEvent(() => onToggle(itemKey))
+  const handleToggle = useEvent(() => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      ...trace,
+      element: ElementName.TokensTableGroupRow,
+      token_symbol: grouping.symbol,
+      token_list_rank: index + 1,
+      category_id: categoryId,
+    })
+    onToggle(itemKey)
+  })
 
   const canExpand = grouping.issuerTokens.length > 1
   const soleIssuer = canExpand ? undefined : grouping.issuerTokens[0]
@@ -52,6 +78,7 @@ export function CategoryGroupingRow({
     // 12 + the row's internal 12 = 24, matching TokenItem's inset so grouped rows align with token rows.
     <Flex px="$spacing12">
       <ExpandableAssetGroup
+        showIssuerTag
         asset={grouping}
         enabledChainIds={enabledChainIds}
         isExpanded={isExpanded}

@@ -1,5 +1,7 @@
 import { GraphQLApi } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
+import { useTokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { getPortfolioChartPercentChange } from 'uniswap/src/features/portfolio/portfolioChartPercentChange'
@@ -11,9 +13,9 @@ import { useTokenPriceChartData } from '~/hooks/useTokenPriceChartData'
 import { getNativeTokenDBAddress } from '~/utils/nativeTokens'
 
 /**
- * Resolves the card's CurrencyInfo (deferred until first open on the `token` path) and the 1D price
- * chart that depends on it. The visible trigger renders entirely from row/prop data, so nothing here
- * is needed before the popover opens.
+ * Resolves the card's CurrencyInfo (deferred until first open on the `token` path), the 1D price
+ * chart that depends on it, and the 24H volume / TVL stats. The visible trigger renders entirely from
+ * row/prop data, so nothing here is needed before the popover opens.
  */
 export function useTokenHoverCardData({
   currencyInfoProp,
@@ -38,7 +40,12 @@ export function useTokenHoverCardData({
   price?: number
   pricePercentChange?: number
   priceAbsoluteChange?: number
+  statsEnabled: boolean
+  volume24hUsd?: number
+  tvlUsd?: number
+  statsLoading: boolean
 } {
+  const statsEnabled = useFeatureFlag(FeatureFlags.SearchV2UI)
   // Only fetch currencyInfo when using the token prop path (and only once the card is actually
   // hovered open); use the prop directly otherwise.
   const { data: derivedCurrencyInfo, isLoading: currencyInfoLoading } = useCurrencyInfoWithLoading(
@@ -76,6 +83,18 @@ export function useTokenHoverCardData({
     priceChartType: PriceChartType.LINE,
   })
 
+  // Same query and multichain flag as the TDP stats section, so the cache entry is shared with it.
+  // Gated like the chart: `isMultichainAggregateView` derives from currencyInfo, so fetching earlier
+  // would issue the single-chain query and refire once the token resolves as multichain.
+  const {
+    volume: volume24hUsd,
+    tvl: tvlUsd,
+    isLoading: statsLoading,
+  } = useTokenMarketStats(currencyInfo?.currencyId, {
+    isMultichainAggregateView: isMultichainAsset,
+    skip: !statsEnabled || !isOpen,
+  })
+
   const price = entries.length > 0 ? entries[entries.length - 1].value : undefined
 
   const priceChange = useMemo(() => {
@@ -102,5 +121,9 @@ export function useTokenHoverCardData({
     price,
     pricePercentChange: priceChange?.percentChange,
     priceAbsoluteChange,
+    statsEnabled,
+    volume24hUsd,
+    tvlUsd,
+    statsLoading,
   }
 }

@@ -1,4 +1,4 @@
-// Vercel serverless function entry point (bundled by build-vercel.ts)
+// Vercel serverless function entry point (bundled by vite.server.config.mts)
 import { handle } from '@hono/node-server/vercel'
 import { createApp, ENTRY_GATEWAY_URLS, WEBSOCKET_URLS } from 'functions/app'
 

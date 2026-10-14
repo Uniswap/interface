@@ -154,6 +154,7 @@ function usePortfolioDataQueryWithSelect<T>(
     error: restError,
     isPending: restPending,
     isError: restIsError,
+    isPlaceholderData,
     dataUpdatedAt,
   } = useGetPortfolioQuery({
     input: {
@@ -178,6 +179,7 @@ function usePortfolioDataQueryWithSelect<T>(
     refetch: restRefetch,
     error: restError || undefined,
     dataUpdatedAt: dataUpdatedAt || undefined,
+    isPlaceholderData,
   }
 }
 

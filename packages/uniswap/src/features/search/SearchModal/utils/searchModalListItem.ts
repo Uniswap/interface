@@ -1,4 +1,4 @@
-import { UniverseChainId } from '@universe/chains'
+import { areAddressesEqual, UniverseChainId } from '@universe/chains'
 import {
   OnchainItemListOptionType,
   SearchModalListOption,
@@ -10,7 +10,8 @@ import { isAddressTokenSearchQuery } from 'uniswap/src/features/search/utils'
 
 /**
  * Resolves TDP network intent: recents override, then search network filter, then (only for **address** searches)
- * the row’s chain so symbol/name searches still open the aggregated multichain view.
+ * the row’s chain so symbol/name searches still open the aggregated multichain view. An address deployed on several
+ * of the row's chains has no single matching chain, so it opens the aggregate view for the user to pick from.
  */
 export function tdpChainFilterForTokenRow({
   searchChainFilter,
@@ -18,12 +19,14 @@ export function tdpChainFilterForTokenRow({
   explicitTdpChain,
   searchQuery,
   allowAggregate,
+  addressMatchesMultipleChains,
 }: {
   searchChainFilter: UniverseChainId | null
   rowChainId: number
   explicitTdpChain?: UniverseChainId
   searchQuery?: string
   allowAggregate?: boolean
+  addressMatchesMultipleChains?: boolean
 }): UniverseChainId | null | undefined {
   if (explicitTdpChain != null) {
     return explicitTdpChain
@@ -31,10 +34,37 @@ export function tdpChainFilterForTokenRow({
   if (searchChainFilter != null) {
     return searchChainFilter
   }
-  if (isAddressTokenSearchQuery(searchQuery)) {
+  if (isAddressTokenSearchQuery(searchQuery) && !addressMatchesMultipleChains) {
     return isUniverseChainId(rowChainId) ? rowChainId : undefined
   }
   return allowAggregate ? null : undefined
+}
+
+/** True when the searched address is deployed on more than one of the row's chains (e.g. CREATE2 deployments). */
+export function addressSearchMatchesMultipleChains({
+  searchQuery,
+  deployments,
+}: {
+  searchQuery?: string
+  deployments: { chainId: number; address: string }[]
+}): boolean {
+  const query = searchQuery?.trim()
+  if (!query) {
+    return false
+  }
+  let matches = 0
+  for (const { chainId, address } of deployments) {
+    if (!isUniverseChainId(chainId)) {
+      continue
+    }
+    if (areAddressesEqual({ addressInput1: { address, chainId }, addressInput2: { address: query, chainId } })) {
+      matches++
+      if (matches > 1) {
+        return true
+      }
+    }
+  }
+  return false
 }
 
 export function toggleKeyInList(list: string[], itemKey: string): string[] {

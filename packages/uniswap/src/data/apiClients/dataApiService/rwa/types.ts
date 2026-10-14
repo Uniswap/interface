@@ -21,6 +21,7 @@ export type IssuerToken = {
   issuer: string
   /** BE issuer brand name (v2 ListTokenGroups only); v1 leaves it unset and the label is derived from the slug. */
   issuerDisplayName?: string
+  issuerLogoUrl?: string
   priceUsd: number
   priceChange1hPct?: number
   priceChange24hPct?: number

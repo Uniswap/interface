@@ -1,19 +1,21 @@
 import { Currency } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import { useCallback } from 'react'
-import { TokenSelectorOption } from 'uniswap/src/components/lists/items/types'
+import { RwaTokenOption, TokenSelectorOption } from 'uniswap/src/components/lists/items/types'
 import { type OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
-import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
-import { flowToModalName } from 'uniswap/src/components/TokenSelector/utils'
+import { sendTokenSelectedAnalytics } from 'uniswap/src/components/TokenSelector/analytics/sendTokenSelectedAnalytics'
+import { OnSelectRwaToken, TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
+import { getRowTagCategoryId } from 'uniswap/src/data/apiClients/dataApiService/categories/getRowTagCategoryId'
+import { useAllTokenCategories } from 'uniswap/src/data/apiClients/dataApiService/categories/useAllTokenCategories'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { SearchContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
-import { ElementName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { getCurrencyInfoSafetyAnalytics } from 'uniswap/src/features/telemetry/tokenSafetyAnalytics'
 import { isChainSupportedForChainedActions } from 'uniswap/src/features/transactions/swap/utils/chainedActions'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { currencyAddress } from 'uniswap/src/utils/currencyId'
+import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
+import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 export function useTokenSelectionHandler({
@@ -23,6 +25,7 @@ export function useTokenSelectionHandler({
   oppositeToken,
   debouncedSearchFilter,
   onSelectCurrency,
+  onSelectRwaToken,
 }: {
   flow: TokenSelectorFlow
   currencyField: CurrencyField
@@ -35,6 +38,7 @@ export function useTokenSelectionHandler({
     allowCrossChainPair: boolean
     isPreselectedAsset: boolean
   }) => void
+  onSelectRwaToken?: OnSelectRwaToken
 }): {
   currencyFieldName: ElementName | undefined
   // oxlint-disable-next-line max-params
@@ -43,8 +47,11 @@ export function useTokenSelectionHandler({
     section: OnchainItemSection<TokenSelectorOption>,
     index: number,
   ) => void
+  /** Undefined when the caller wires no RWA handler, so the Stocks shelf can't log a selection that never happens. */
+  onSelectRwaTokenCallback: OnSelectRwaToken | undefined
 } {
   const { page } = useTrace()
+  const { categories } = useAllTokenCategories()
 
   // Log currency field only for swap as for send it's always input
   const currencyFieldName =
@@ -68,21 +75,24 @@ export function useTokenSelectionHandler({
       // log event that a currency was selected
       const tokenOption = section.data[index]
       const balanceUSD = Array.isArray(tokenOption) ? undefined : (tokenOption?.balanceUSD ?? undefined)
-      sendAnalyticsEvent(UniswapEventName.TokenSelected, {
+      sendTokenSelectedAnalytics({
         name: currencyInfo.currency.name,
         address: currencyAddress(currencyInfo.currency),
-        chain: currencyInfo.currency.chainId,
-        modal: flowToModalName(flow),
+        chainId: currencyInfo.currency.chainId,
+        flow,
         page,
-        field: currencyField,
-        token_balance_usd: balanceUSD,
-        category: searchContext.category,
+        currencyField,
+        sectionKey: section.sectionKey,
         position: searchContext.position,
-        suggestion_count: searchContext.suggestionCount,
+        suggestionCount: searchContext.suggestionCount,
         query: searchContext.query,
-        tokenSection: section.sectionKey,
-        preselect_asset: false,
-        ...getCurrencyInfoSafetyAnalytics(currencyInfo),
+        tokenBalanceUsd: balanceUSD,
+        tokenCategory: getRowTagCategoryId({
+          currencyId: currencyInfo.currencyId,
+          categoryIds: currencyInfo.categoryIds,
+          categories,
+        }),
+        safety: getCurrencyInfoSafetyAnalytics(currencyInfo),
       })
 
       const oppositeChainId = oppositeToken?.chainId
@@ -100,8 +110,42 @@ export function useTokenSelectionHandler({
         isPreselectedAsset: false,
       })
     },
-    [debouncedSearchFilter, chainFilter, flow, page, currencyField, onSelectCurrency, oppositeToken?.chainId],
+    [
+      debouncedSearchFilter,
+      chainFilter,
+      flow,
+      page,
+      currencyField,
+      onSelectCurrency,
+      oppositeToken?.chainId,
+      categories,
+    ],
   )
 
-  return { currencyFieldName, onSelectCurrencyCallback }
+  const onSelectRwaTokenCallback = useEvent(
+    (option: RwaTokenOption, context: Parameters<OnSelectRwaToken>[1]): void => {
+      if (!onSelectRwaToken) {
+        return
+      }
+      sendTokenSelectedAnalytics({
+        name: option.name,
+        address: option.address,
+        chainId: option.chainId,
+        flow,
+        page,
+        currencyField,
+        sectionKey: context.sectionKey,
+        position: context.position,
+        suggestionCount: context.suggestionCount,
+        tokenCategory: getRowTagCategoryId({ currencyId: buildCurrencyId(option.chainId, option.address), categories }),
+      })
+      onSelectRwaToken(option, context)
+    },
+  )
+
+  return {
+    currencyFieldName,
+    onSelectCurrencyCallback,
+    onSelectRwaTokenCallback: onSelectRwaToken ? onSelectRwaTokenCallback : undefined,
+  }
 }

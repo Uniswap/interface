@@ -7,8 +7,8 @@ import { HIDDEN_TOKEN_BALANCES_ROW, TokenBalanceListRow } from 'uniswap/src/feat
 
 /**
  * Builds token balance list row ids. When {@link isExtensionApp} is true, multichain parents stay a
- * single row; {@link expandedCurrencyIds} drives per-chain breakdown UI rendered under the parent
- * (see TokenBalanceItems + HeightAnimator). At most one multichain parent is expanded at a time
+ * single row; {@link expandedCurrencyId} drives per-chain breakdown UI rendered under the parent
+ * (see TokenBalanceItemRow + HeightAnimator). At most one multichain parent is expanded at a time
  * (accordion). Non-extension builds never expand.
  */
 export function useTokenBalanceListMultichainExpansion({
@@ -19,25 +19,21 @@ export function useTokenBalanceListMultichainExpansion({
   hiddenTokensExpanded: boolean
 }): {
   rows: TokenBalanceListRow[]
-  expandedCurrencyIds: Set<string>
+  /** The one expanded multichain parent, if any — expansion is an accordion. */
+  expandedCurrencyId: string | undefined
   toggleExpanded: (currencyId: string) => void
   multichainRowExpansionEnabled: boolean
 } {
   const multichainRowExpansionEnabled = isExtensionApp
 
-  const [expandedCurrencyIds, setExpandedCurrencyIds] = useState<Set<string>>(() => new Set())
+  const [expandedCurrencyId, setExpandedCurrencyId] = useState<string | undefined>(undefined)
 
   const toggleExpanded = useCallback(
     (currencyId: string) => {
       if (!multichainRowExpansionEnabled) {
         return
       }
-      setExpandedCurrencyIds((prev) => {
-        if (prev.has(currencyId)) {
-          return new Set()
-        }
-        return new Set([currencyId])
-      })
+      setExpandedCurrencyId((prev) => (prev === currencyId ? undefined : currencyId))
     },
     [multichainRowExpansionEnabled],
   )
@@ -74,7 +70,7 @@ export function useTokenBalanceListMultichainExpansion({
 
   return {
     rows,
-    expandedCurrencyIds,
+    expandedCurrencyId,
     toggleExpanded,
     multichainRowExpansionEnabled,
   }

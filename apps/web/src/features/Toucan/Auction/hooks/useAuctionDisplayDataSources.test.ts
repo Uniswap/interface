@@ -44,6 +44,7 @@ function renderSources(
     tokenAddress?: string
     auctionAddress?: string
     currentBlock?: CurrentBlockState
+    watchUntilBlock?: bigint
   } = {},
 ) {
   return renderHook(() =>
@@ -457,6 +458,19 @@ describe('useAuctionDisplayDataSources', () => {
     expect(result.current.currentBlock).toEqual({ status: 'success', blockNumber: 50n })
   })
 
+  it.each([{ startBlock: undefined }, { endBlock: undefined }])(
+    'still polls toward a sibling ceiling when the primary auction has no usable bounds %#',
+    (overrides) => {
+      mockUseBlockQuery.mockReturnValue({ data: 50n, isError: false } as ReturnType<typeof useQuery>)
+
+      renderSources(true, { ...overrides, watchUntilBlock: 300n })
+
+      expect(getPollingInterval(50n)).toBe(120_000)
+      expect(getPollingInterval(295n)).toBe(12_000)
+      expect(getPollingInterval(300n)).toBe(false)
+    },
+  )
+
   it('polls the chain head slowly away from a phase boundary', () => {
     mockUseBlockQuery.mockReturnValue({ data: 50n, isError: false } as ReturnType<typeof useQuery>)
 
@@ -502,8 +516,9 @@ describe('useAuctionDisplayDataSources', () => {
     mockUseBlockQuery.mockReturnValue({ data: 99n, isError: false } as ReturnType<typeof useQuery>)
     const { rerender, result } = renderSources()
 
+    // Keyed on the auction even while disabled, so a sibling fan-out cannot collide on one key.
     expect(mockGetLatestCheckpoint).toHaveBeenLastCalledWith({
-      params: undefined,
+      params: expect.objectContaining({ chainId: UniverseChainId.Mainnet, address: AUCTION_ADDRESS }),
       enabled: false,
       staleTime: 0,
     })
@@ -597,12 +612,28 @@ describe('useAuctionDisplayDataSources', () => {
     expect(result.current.currencyRaised).toEqual({ status: 'error' })
   })
 
-  it.each([undefined, ''])('keeps pool refresh disabled without a token address (%s)', (tokenAddress) => {
-    renderSources(true, { tokenAddress })
+  it.each([undefined, ''])(
+    'reads checkpoints without requesting pools when the token address is absent (%s)',
+    (tokenAddress) => {
+      mockUseBlockQuery.mockReturnValue({ data: 100n, isError: false } as ReturnType<typeof useQuery>)
+      mockUseCheckpointQuery.mockReturnValue({
+        isSuccess: true,
+        isFetchedAfterMount: true,
+        data: { currencyRaised: '500' },
+      } as ReturnType<typeof useQuery>)
 
-    expect(mockUseV2ListTokenPools).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
-    expect(mockRefetchPools).not.toHaveBeenCalled()
-  })
+      const { result } = renderSources(true, { tokenAddress })
+
+      expect(mockUseV2ListTokenPools).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
+      expect(mockRefetchPools).not.toHaveBeenCalled()
+      expect(mockGetLatestCheckpoint).toHaveBeenLastCalledWith({
+        params: { chainId: UniverseChainId.Mainnet, address: AUCTION_ADDRESS },
+        enabled: true,
+        staleTime: 0,
+      })
+      expect(result.current.currencyRaised).toEqual({ status: 'success', currencyRaised: '500' })
+    },
+  )
 
   it.each([undefined, ''])('keeps checkpoint reads disabled without an auction address (%s)', (auctionAddress) => {
     mockUseBlockQuery.mockReturnValue({ data: 100n, isError: false } as ReturnType<typeof useQuery>)
@@ -632,7 +663,7 @@ describe('useAuctionDisplayDataSources', () => {
     expect(mockRefetchPools).not.toHaveBeenCalled()
     expect(mockUseBlockQuery).toHaveBeenCalledWith(expect.objectContaining({ enabled: false, queryFn: skipToken }))
     expect(mockGetLatestCheckpoint).toHaveBeenCalledWith({
-      params: undefined,
+      params: expect.objectContaining({ chainId: UniverseChainId.Mainnet, address: AUCTION_ADDRESS }),
       enabled: false,
       staleTime: 0,
     })
@@ -641,6 +672,29 @@ describe('useAuctionDisplayDataSources', () => {
       currencyRaised: { status: 'idle' },
       pools: { status: 'loading' },
       refetchCurrentBlock: expect.any(Function),
+      refetchCheckpoint: expect.any(Function),
     })
+  })
+
+  it('refetches the checkpoint on demand only while its query is enabled', () => {
+    const mockRefetchCheckpoint = vi.fn()
+    mockUseBlockQuery.mockReturnValue({ data: 100n, isError: false } as ReturnType<typeof useQuery>)
+    mockUseCheckpointQuery.mockReturnValue({ refetch: mockRefetchCheckpoint } as unknown as ReturnType<typeof useQuery>)
+
+    renderSources(true).result.current.refetchCheckpoint()
+    expect(mockRefetchCheckpoint).toHaveBeenCalledOnce()
+
+    renderSources(false).result.current.refetchCheckpoint()
+    expect(mockRefetchCheckpoint).toHaveBeenCalledOnce()
+  })
+
+  it('keeps polling through the claim boundary and stops there', () => {
+    mockUseBlockQuery.mockReturnValue({ data: 110n, isError: false } as ReturnType<typeof useQuery>)
+    renderSources(true, { watchUntilBlock: 300n })
+
+    expect(getPollingInterval(95n)).toBe(12_000)
+    expect(getPollingInterval(110n)).toBe(120_000)
+    expect(getPollingInterval(295n)).toBe(12_000)
+    expect(getPollingInterval(300n)).toBe(false)
   })
 })

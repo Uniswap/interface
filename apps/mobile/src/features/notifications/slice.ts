@@ -3,10 +3,12 @@ import { NotifSettingType } from 'src/features/notifications/constants'
 
 export interface PushNotificationsState {
   generalUpdatesEnabled: boolean
+  priceAlertsEnabled: boolean
 }
 
 export const initialPushNotificationsState: PushNotificationsState = {
   generalUpdatesEnabled: true,
+  priceAlertsEnabled: true,
 }
 
 type SettingsUpdatePayload = {
@@ -20,6 +22,9 @@ const slice = createSlice({
     updateNotifSettings: (state, action: PayloadAction<SettingsUpdatePayload>) => {
       if (action.payload[NotifSettingType.GeneralUpdates] !== undefined) {
         state.generalUpdatesEnabled = action.payload[NotifSettingType.GeneralUpdates]
+      }
+      if (action.payload[NotifSettingType.PriceAlerts] !== undefined) {
+        state.priceAlertsEnabled = action.payload[NotifSettingType.PriceAlerts]
       }
     },
     initNotifsForNewUser: (state) => {

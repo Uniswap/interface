@@ -12,10 +12,10 @@
 	<array>
 		<string>applinks:uniswap.org</string>
 		<string>applinks:app.uniswap.org</string>
-		<string>applinks:app.corn-staging.com</string>
+		<string>applinks:staging.app.uniswap.org</string>
 		<string>webcredentials:app.uniswap.org</string>
 		<string>webcredentials:uniswap.org</string>
-		<string>webcredentials:app.corn-staging.com</string>
+		<string>webcredentials:staging.app.uniswap.org</string>
 		<string>webcredentials:unihq.org</string>
 		<string>webcredentials:dev.ew.unihq.org</string>
 	</array>

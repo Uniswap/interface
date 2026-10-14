@@ -1,4 +1,4 @@
-// Section-scoped row identity for OnchainItemList, shared by the web (react-window) and native (Legend List) lists.
+// Section-scoped row identity for OnchainItemList, shared by both of its platform legs.
 // Position-independent so a row keeps its identity when sibling rows are inserted/removed/reordered (e.g. Recents
 // cleared, or a stock entering Recents).
 

@@ -153,6 +153,7 @@ export function Swap({
   swapRedirectCallback,
   tokenColor,
   tdpCurrency,
+  hideBlastShutdownModal,
 }: {
   initialInputChainId?: UniverseChainId
   onCurrencyChange?: (selected: CurrencyState, selectedCurrency?: Currency) => void
@@ -170,6 +171,7 @@ export function Swap({
   passkeyAuthStatus?: PasskeyAuthStatus
   /** When Swap is embedded in Token Details Page, pass the TDP token currency for Buy/Sell prefill */
   tdpCurrency?: Currency
+  hideBlastShutdownModal?: boolean
 }) {
   const { isSwapTokenSelectorOpen, swapOutputChainId } = useUniswapContext()
   const media = useMedia()
@@ -222,6 +224,7 @@ export function Swap({
                     prefilledState={prefilledState}
                     tokenColor={tokenColor}
                     tdpCurrency={tdpCurrency}
+                    hideBlastShutdownModal={hideBlastShutdownModal}
                   />
                 </Flex>
               </SwapFormStoreContextProvider>
@@ -270,6 +273,7 @@ function UniversalSwapFlow({
   swapRedirectCallback,
   tokenColor,
   tdpCurrency,
+  hideBlastShutdownModal,
 }: {
   hideHeader?: boolean
   hideFooter?: boolean
@@ -282,6 +286,7 @@ function UniversalSwapFlow({
   tokenColor?: string
   /** When Swap is embedded in TDP, the TDP token currency for Buy/Sell prefill */
   tdpCurrency?: Currency
+  hideBlastShutdownModal?: boolean
 }) {
   const { currentTab, setCurrentTab, currencyState } = useSwapAndLimitContext()
   const tdpCurrencyAsset = currencyToAsset(tdpCurrency)
@@ -474,6 +479,7 @@ function UniversalSwapFlow({
             tokenColor={tokenColor}
             tdpCurrency={tdpCurrency}
             onCurrencyPanelsLayout={onCurrencyPanelsLayout}
+            hideBlastShutdownModal={hideBlastShutdownModal}
           />
         )}
         {currentTab === SwapTab.Limit && LimitFormWrapper && (

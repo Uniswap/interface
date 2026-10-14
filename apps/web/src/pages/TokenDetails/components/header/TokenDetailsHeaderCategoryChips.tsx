@@ -9,10 +9,16 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getTokenCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { CategoryHoverCard } from '~/components/HoverCard/CategoryHoverCard/CategoryHoverCard'
 import { LoadingBubble } from '~/components/Tokens/loading'
 import { rightEdgeFadeStyle, useWheelHorizontalScroll } from '~/pages/Explore/categories/useWheelHorizontalScroll'
+import {
+  type CategoryDetailsNavState,
+  createCategoryDetailsNavState,
+} from '~/pages/Explore/CategoryDetails/categoryDetailsEntryPoint'
 import { getCategoryDetailsURL } from '~/pages/Explore/CategoryDetails/getCategoryDetailsURL'
+import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { useTDPTokenCategories } from '~/pages/TokenDetails/hooks/useTDPTokenCategories'
 
 // Fixed to the Figma frame (16px icon + 6px padding, border drawn inside) so the skeleton reserves the exact
@@ -56,19 +62,30 @@ function ChipRow({ testID, children }: { testID?: TestIDType; children: ReactNod
 
 function CategoryChipRow({ categories }: { categories: TokenCategory[] }): JSX.Element {
   const navigate = useNavigate()
+  const trace = useTrace()
+  const { tokenSymbol, address, currencyChainId } = useTDPStore((s) => ({
+    tokenSymbol: s.currency?.symbol,
+    address: s.address,
+    currencyChainId: s.currencyChainId,
+  }))
   const { scrollerRef, showRightFade } = useWheelHorizontalScroll()
+  const getNavigationState = useEvent(() => createCategoryDetailsNavState({ tokenSymbol }))
 
   const logCategoryPress = useEvent((category: TokenCategory, index: number): void => {
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      ...trace,
       element: ElementName.TDPCollectionsChip,
       category_id: category.id,
       category_index: index,
+      token_address: address,
+      chain_id: currencyChainId,
+      tags_rendered_count: categories.length,
     })
   })
 
   const onPressCategory = useEvent((category: TokenCategory, index: number): void => {
     logCategoryPress(category, index)
-    navigate(getCategoryDetailsURL(category.id))
+    navigate(getCategoryDetailsURL(category.id), { state: getNavigationState() })
   })
 
   return (
@@ -85,6 +102,7 @@ function CategoryChipRow({ categories }: { categories: TokenCategory[] }): JSX.E
             key={category.id}
             category={category}
             index={index}
+            getNavigationState={getNavigationState}
             onPress={onPressCategory}
             onModifierPress={logCategoryPress}
           />
@@ -97,11 +115,13 @@ function CategoryChipRow({ categories }: { categories: TokenCategory[] }): JSX.E
 const CategoryChip = memo(function CategoryChip({
   category,
   index,
+  getNavigationState,
   onPress,
   onModifierPress,
 }: {
   category: TokenCategory
   index: number
+  getNavigationState: () => CategoryDetailsNavState | undefined
   onPress: (category: TokenCategory, index: number) => void
   onModifierPress: (category: TokenCategory, index: number) => void
 }): JSX.Element {
@@ -110,7 +130,7 @@ const CategoryChip = memo(function CategoryChip({
   const onModifierPressChip = useEvent(() => onModifierPress(category, index))
 
   return (
-    <CategoryHoverCard category={category} section={SectionName.TokenDetails}>
+    <CategoryHoverCard category={category} section={SectionName.TokenDetails} getNavigationState={getNavigationState}>
       <TouchableArea
         row
         alignItems="center"

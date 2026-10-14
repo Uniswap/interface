@@ -72,8 +72,7 @@
     "react-native-nitro-modules",
     "ssh2",
     "unrs-resolver",
-    "utf-8-validate",
-    "workerd"
+    "utf-8-validate"
   ],
   "patchedDependenciesComments": {
     "immer": "this fixes typecheck in mobile app, see https://github.com/reduxjs/redux-toolkit/issues/1806",
@@ -88,7 +87,7 @@
     "zod@4.3.6": "Enables jitless mode by default to avoid CSP unsafe-eval violations in browser extension content scripts. See https://github.com/colinhacks/zod/issues/4461",
     "@ethersproject/providers@5.7.2": "ENS v2 support adapted from @ensdomains/ethers-patch-v5 with tunneling batch gateway",
     "webpack@5.90.0": "Pinned for Storybook compatibility — webpack 5.105.4 breaks Storybook module bundling. Webpack security CVEs (GHSA-4vvj-4cpr-p986, GHSA-8fgc-7cc6-rx7x, GHSA-38r7-794h-5758) are accepted risk for this dev-only build tool",
-    "react-native@0.85.3": "1) Makes the hermesc path in hermes-engine.podspec relative to PODS_ROOT so the absolute home-dir path isn't baked into Podfile.lock checksums (per-machine/CI drift). See https://github.com/facebook/react-native/issues/54891. 2) Skips layout-metrics consumption for yoga children owned by another shadow-tree generation (Reanimated clones share child yoga nodes): consuming them cleared hasNewLayout on the owning tree, leaving views invisible but mounted (ghost bottom sheets) and tripping the dev-only YGNodeGetOwner assert / SIGABRT (INFRA-2390). Drop when https://github.com/facebook/react-native/issues/52349 is fixed upstream.",
+    "react-native@0.85.3": "1) Makes the hermesc path in hermes-engine.podspec relative to PODS_ROOT so the absolute home-dir path isn't baked into Podfile.lock checksums (per-machine/CI drift). See https://github.com/facebook/react-native/issues/54891. 2) Skips layout-metrics consumption for yoga children owned by another shadow-tree generation (Reanimated clones share child yoga nodes): consuming them cleared hasNewLayout on the owning tree, leaving views invisible but mounted (ghost bottom sheets) and tripping the dev-only YGNodeGetOwner assert / SIGABRT (INFRA-2390). Drop when https://github.com/facebook/react-native/issues/52349 is fixed upstream. 3) BaseTextInputShadowNode measures the props text whenever it differs from state.reactTreeAttributedString (the same comparison updateStateIfNeeded uses to push it, and Android's rule); only an unchanged props text lets the empty native state win. Otherwise a paste into a field the user had cleared was laid out at zero width on iOS Fabric (INFRA-4248), while uncontrolled inputs (defaultValue) the user cleared still measure as empty. Guard unchanged upstream since at least RN 0.73 Fabric iOS and still on main as of 2026-09-29; Android already compares props against state and is unaffected. No upstream issue yet; add one here as the drop condition when filed. 4) RCTUITextField names an explicit default NSParagraphStyle in defaultTextAttributes and in the attributed placeholder whenever the attributes omit one: UIKit merges the setter into the field's existing attributes and the placeholder label caches its last paragraph style, so a recycled field kept a previous owner's lineHeight and drew text/placeholder low and clipped in any TextInput without an explicit lineHeight (INFRA-4247). Upstream main (2026-09-29) still has the unpatched RCTUITextField and no issue tracks the recycling case; related: facebook/react-native#37465 (Paper lineHeight alignment) and #53092 (new-arch lineHeight alignment). Drop when upstream RCTUITextField sets an explicit paragraph style, or when an upstream issue we file is fixed.",
     "@gorhom/bottom-sheet@5.2.13": "Seeds containerHeight from the first measured layout when still INITIAL_LAYOUT_VALUE, fixing zero-height sheets under the new architecture (Fabric).",
     "expo-constants@18.0.13": "Xcode 26's shallow bundle format doesn't pre-create EXConstants.bundle before the :before_compile script runs; mkdir -p the destination dir to avoid an ENOENT on the JS config write.",
     "expo-modules-core@56.0.16": "vite 8's rolldown bundler errors with MISSING_EXPORT on value imports of the declare-only classes in src/ts-declarations/global.ts (esbuild silently allowed them); switch them to type-only imports. Should be upstreamed to Expo.",
@@ -120,7 +119,7 @@
     "@swc/helpers": "0.5.11",
     "@types/react": "19.2.16",
     "@uniswap/router-sdk": "2.10.3",
-    "@uniswap/sdk-core": "7.19.1",
+    "@uniswap/sdk-core": "7.19.4",
     "@uniswap/v2-sdk": "4.20.3",
     "@uniswap/v3-sdk": "3.31.0",
     "@uniswap/v4-sdk": "2.3.0",

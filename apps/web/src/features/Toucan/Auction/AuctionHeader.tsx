@@ -1,4 +1,4 @@
-import { UniverseChainId, type EVMUniverseChainId } from '@universe/chains'
+import type { EVMUniverseChainId } from '@universe/chains'
 import { DynamicConfigs, useDynamicConfigValue, VerifiedAuctionsConfigKey } from '@universe/gating'
 import { Flex, Text } from '@universe/mycelium'
 import { CheckmarkCircle } from '@universe/mycelium/icons/CheckmarkCircle'
@@ -33,6 +33,7 @@ import {
   getAuctionTokenWarningSeverity,
   shouldShowAuctionTokenWarning,
 } from '~/features/Toucan/utils/auctionTokenProtection'
+import { isPoolsSupportedChain } from '~/features/Toucan/utils/quickLaunchLinks'
 import { useWheelHorizontalScroll } from '~/pages/Explore/categories/useWheelHorizontalScroll'
 import { TokenDetailsHeaderAddressCopyMobile } from '~/pages/TokenDetails/components/header/TokenDetailsHeaderAddressCopyMobile'
 import { usePrefetchTokenDetailsAuction } from '~/pages/TokenDetails/hooks/usePrefetchTokenDetailsAuction'
@@ -417,9 +418,8 @@ export const AuctionHeader = ({ isCompact = false }: { isCompact?: boolean }) =>
     return verifiedAuctionIds.includes(auctionDetails.auctionId)
   }, [auctionDetails?.auctionId, verifiedAuctionIds])
 
-  // Robinhood-only, mirroring getPoolsTradeBidPageUrl: pools.xyz serves Robinhood Chain launches
-  // exclusively, so the brand attribution would be false provenance on any other chain.
-  const isQuickLaunch = useIsQuickLaunchAuction() && auctionDetails?.chainId === UniverseChainId.Robinhood
+  // Off a pools.xyz-served chain the brand attribution would be false provenance.
+  const isQuickLaunch = useIsQuickLaunchAuction() && isPoolsSupportedChain(auctionDetails?.chainId)
 
   // Get the token details URL
   const tokenDetailsUrl = useMemo(() => {

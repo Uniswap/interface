@@ -9,8 +9,8 @@ or visit [app.uniswap.org](https://app.uniswap.org).
 ## Tech Stack
 
 - **Build**: Vite with experimental Rolldown support
-- **Deployment**: Cloudflare Workers via `@cloudflare/vite-plugin`
-- **Edge Functions**: Hono.js for SSR meta tags and OG image generation
+- **Deployment**: AWS ECS (Node, `functions/ecs-entry.ts`) behind CloudFront
+- **Server**: Hono.js for SSR meta tags, OG image generation and BFF proxies (also runs under `bun web dev`)
 
 ## Prerequisites
 

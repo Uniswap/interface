@@ -48,14 +48,14 @@ import {
 import { useExploreParams } from '~/pages/Explore/redirects'
 import { LivePriceCell } from '~/pages/Explore/tables/Tokens/LivePriceCell'
 import { getNativeBrandingChainId } from '~/pages/Explore/tables/Tokens/nativeBrandingChainId'
-import { findRankedTokenRWAMatch } from '~/pages/Explore/tables/Tokens/rankedTokenIssuer'
+import { resolveRankedTokenIssuer } from '~/pages/Explore/tables/Tokens/rankedTokenIssuer'
 import { getTokenDescriptionColumnSize, TokenDescription } from '~/pages/Explore/tables/Tokens/TokenDescription'
 import { TokenTableHeader } from '~/pages/Explore/tables/Tokens/TokenTableHeader'
 import { useTokenTableSortStore } from '~/pages/Explore/tables/Tokens/tokenTableSortStore'
 import type { TokenTableValue } from '~/pages/Explore/tables/Tokens/tokenTableTypes'
 import { hasVolumeBreakdown } from '~/pages/Explore/tables/Tokens/VolumeByNetworkPopover/utils'
 import { VolumeByNetworkPopover } from '~/pages/Explore/tables/Tokens/VolumeByNetworkPopover/VolumeByNetworkPopover'
-import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
+import { getChainIdFromChainUrlParam, getChainUrlParam } from '~/utils/params/chainParams'
 import { TDP_MULTICHAIN_CHAIN_QUERY_VALUE } from '~/utils/params/chainQueryParam'
 
 const VOLUME_INFO_ICON_WIDTH = 16
@@ -70,6 +70,7 @@ export function TokenTable({
   error,
   loadMore,
   categoryId,
+  chainId: chainIdProp,
 }: {
   tokens?: readonly RankedMultichainToken[]
   tokenSortRank: Record<string, number>
@@ -78,6 +79,8 @@ export function TokenTable({
   error?: boolean
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
   categoryId?: string
+  /** Chain filter for hosts that don't keep it in the Explore path (Category Detail Page). */
+  chainId?: UniverseChainId
 }) {
   const { t } = useTranslation()
   const trace = useTrace()
@@ -92,7 +95,8 @@ export function TokenTable({
     filterString: s.filterString,
     timePeriod: s.timePeriod,
   }))
-  const chainFilter = useExploreParams().chainName
+  const exploreChainName = useExploreParams().chainName
+  const chainFilter = chainIdProp !== undefined ? getChainUrlParam(chainIdProp) : exploreChainName
   const exploreChainId = chainFilter ? getChainIdFromChainUrlParam(chainFilter) : undefined
   const featureFlaggedChainIds = useFeatureFlaggedChainIds()
   const rwaWhitelist = useRWAWhitelist()
@@ -139,7 +143,7 @@ export function TokenTable({
         )
         const chainIdsByVolume =
           getChainIdsByVolume({ rankedToken, timePeriod, allowedChainIds: featureFlaggedChainIds }) ?? []
-        const rwaMatch = findRankedTokenRWAMatch({ multichainToken: mc, rwaWhitelist })
+        const { rwaMatch, issuer } = resolveRankedTokenIssuer({ multichainToken: mc, rwaWhitelist })
         const { name } = getRWAHeaderIdentity({ rwaMatch, fallbackName: unwrappedToken.name, plainTokenNames })
         // Count and TDP link mode derive from the same filtered set as the "N networks" label,
         // or a flag-disabled leg desyncs them. The volume cell's info affordance gates separately
@@ -169,9 +173,8 @@ export function TokenTable({
                 address={unwrappedToken.address}
                 chainId={chainId as UniverseChainId}
                 logoUrl={mc.project?.logoUrl}
-                categoryIds={mc.categoryIds}
-                scopedCategoryId={categoryId}
-                issuer={rwaMatch?.token.issuer}
+                categoryIds={categoryId === undefined ? mc.categoryIds : undefined}
+                issuer={issuer}
               />
             ),
             testId: `${TestID.TokenTableRowPrefix}${unwrappedToken.address}`,
@@ -217,6 +220,7 @@ export function TokenTable({
                 token_list_length: tokens.length,
                 time_frame: timePeriod,
                 search_token_address_input: filterString,
+                category_id: categoryId,
               },
             },
             linkState: { preloadedLogoSrc: mc.project?.logoUrl },

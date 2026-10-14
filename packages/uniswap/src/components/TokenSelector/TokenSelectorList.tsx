@@ -18,15 +18,17 @@ import { SelectorBaseList } from 'uniswap/src/components/lists/SelectorBaseList'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { TOKEN_SELECTOR_LOADING_ROWS } from 'uniswap/src/components/TokenSelector/constants'
 import { HorizontalTokenList } from 'uniswap/src/components/TokenSelector/lists/HorizontalTokenList/HorizontalTokenList'
-import { StocksHorizontalRow } from 'uniswap/src/components/TokenSelector/lists/StocksHorizontalRow/StocksHorizontalRow'
+import { StocksShelfRow } from 'uniswap/src/components/TokenSelector/lists/StocksHorizontalRow/StocksShelfRow'
 import { tagRwaTokenSelectorSections } from 'uniswap/src/components/TokenSelector/tagRwaTokenSelectorSections'
 import { useTokenSelectorHoverConfig } from 'uniswap/src/components/TokenSelector/TokenSelectorHoverConfig'
 import { OnSelectCurrency, OnSelectRwaToken } from 'uniswap/src/components/TokenSelector/types'
+import { useAllTokenCategories } from 'uniswap/src/data/apiClients/dataApiService/categories/useAllTokenCategories'
 import { setHasSeenBridgingTooltip } from 'uniswap/src/features/behaviorHistory/slice'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useRwaIndex } from 'uniswap/src/features/search/SearchModal/stocks/useRwaIndex'
-import { useRowCategoryTag } from 'uniswap/src/features/tokenCategories/useRowCategoryTag'
+import { getRowCategoryTag } from 'uniswap/src/features/tokenCategories/getRowCategoryTag'
+import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { getTokenProtectionWarning, getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
 import {
   useDismissedBridgedAssetWarnings,
@@ -54,12 +56,14 @@ const TokenOptionItem = memo(function TokenOptionItemInner({
   index,
   showWarnings,
   showTokenAddress,
+  categories,
 }: {
   tokenOption: TokenOption
   section: OnchainItemSection<TokenOption>
   index: number
   showWarnings: boolean
   showTokenAddress?: boolean
+  categories: TokenCategory[]
   onSelectCurrency: OnSelectCurrency
 }): JSX.Element {
   const { currencyInfo } = tokenOption
@@ -147,7 +151,13 @@ const TokenOptionItem = memo(function TokenOptionItemInner({
   }, [onPress, showWarningModal, showBridgedAssetWarningModal, shouldShowBridgedAssetWarningModalOnPress])
 
   const hasBalance = Boolean(tokenOption.quantity && tokenOption.quantity !== 0)
-  const categoryTag = useRowCategoryTag({ rwaCategory: tokenOption.rwaCategory, categoryIds: currencyInfo.categoryIds })
+  const showIssuerTag = useIsTokenCategoriesEnabled()
+  // Categories come from the list: a per-row query observer made every row mount notify the whole query cache.
+  const categoryTag = useMemo(
+    () =>
+      getRowCategoryTag({ rwaCategory: tokenOption.rwaCategory, categoryIds: currencyInfo.categoryIds, categories }),
+    [tokenOption.rwaCategory, currencyInfo.categoryIds, categories],
+  )
 
   // Stable identities so SharedTokenOptionItem's React.memo holds — otherwise every row re-renders on each list commit.
   const rightElement = useMemo(
@@ -165,8 +175,14 @@ const TokenOptionItem = memo(function TokenOptionItemInner({
     [hasBalance, balanceText, quantityText],
   )
 
-  const modalInfo = useMemo(
-    () => ({
+  // Undefined for the common warning-free row: `OptionItem` renders `modal` unconditionally, so this
+  // otherwise mounts a closed TokenWarningModal (and its Trace) in every row of the list. Kept while a
+  // modal is open so a "don't show again" dismissal closes it instead of unmounting it mid-exit.
+  const modalInfo = useMemo(() => {
+    if (!hasWarningModals && !showWarningModal && !showBridgedAssetWarningModal) {
+      return undefined
+    }
+    return {
       modal: showBridgedAssetWarningModal ? (
         <BridgedAssetModal
           currencyInfo0={currencyInfo}
@@ -184,22 +200,22 @@ const TokenOptionItem = memo(function TokenOptionItemInner({
       ),
       modalShouldShow: hasWarningModals,
       modalSetIsOpen: setWarningModalVisible,
-    }),
-    [
-      showBridgedAssetWarningModal,
-      currencyInfo,
-      onAcceptTokenWarning,
-      showWarningModal,
-      hasWarningModals,
-      setWarningModalVisible,
-    ],
-  )
+    }
+  }, [
+    showBridgedAssetWarningModal,
+    currencyInfo,
+    onAcceptTokenWarning,
+    showWarningModal,
+    hasWarningModals,
+    setWarningModalVisible,
+  ])
 
   return (
     <SharedTokenOptionItem
       option={tokenOption}
       displayName={tokenOption.rwaName}
-      issuer={tokenOption.rwaIssuerSlug}
+      issuer={tokenOption.rwaIssuer}
+      showIssuerTag={showIssuerTag}
       showTokenAddress={showTokenAddress}
       contextMenuVariant={TokenContextMenuVariant.TokenSelector}
       categoryTag={hasBalance ? undefined : categoryTag}
@@ -250,6 +266,7 @@ function TokenSelectorListInner({
     () => tagRwaTokenSelectorSections({ sections, rwaIndex, plainTokenNames }),
     [sections, rwaIndex, plainTokenNames],
   )
+  const { categories } = useAllTokenCategories()
 
   usePerformanceLogger(DDRumManualTiming.TokenSelectorListRender, [chainFilter])
 
@@ -261,42 +278,57 @@ function TokenSelectorListInner({
     return expandedItems.includes(key(item))
   })
 
-  const renderItem = useEvent(({ item, section, index }: ItemRowInfo<TokenSelectorListOption>): JSX.Element => {
-    if (isStocksRowItem(item)) {
-      return (
-        <StocksHorizontalRow
-          tokens={item}
-          expanded={isExpandedItem(item)}
-          showTokenWarnings={showTokenWarnings}
-          onSelectRwaToken={onSelectRwaToken ?? noop}
-          onExpand={handleExpand}
-        />
-      )
-    }
-    if (isHorizontalListTokenItem(item)) {
-      return (
-        <HorizontalTokenList
-          tokens={item}
-          section={section as OnchainItemSection<TokenOption[]>}
+  // `useCallback`, not `useEvent`: rows re-render only when this identity changes, so list-level data they
+  // read (`categories`) has to be in the deps or rows keep the first-render value.
+  const renderItem = useCallback(
+    ({ item, section, index }: ItemRowInfo<TokenSelectorListOption>): JSX.Element => {
+      if (isStocksRowItem(item)) {
+        return (
+          <StocksShelfRow
+            tokens={item}
+            expanded={isExpandedItem(item)}
+            showTokenWarnings={showTokenWarnings}
+            onSelectRwaToken={onSelectRwaToken ?? noop}
+            onExpand={handleExpand}
+          />
+        )
+      }
+      if (isHorizontalListTokenItem(item)) {
+        return (
+          <HorizontalTokenList
+            tokens={item}
+            section={section as OnchainItemSection<TokenOption[]>}
+            index={index}
+            expanded={isExpandedItem(item)}
+            onSelectCurrency={onSelectCurrency}
+            onExpand={handleExpand}
+          />
+        )
+      }
+      const tokenRow = (
+        <TokenOptionItem
           index={index}
-          expanded={isExpandedItem(item)}
+          categories={categories}
+          section={section as OnchainItemSection<TokenOption>}
+          showTokenAddress={showTokenAddress}
+          showWarnings={showTokenWarnings}
+          tokenOption={item}
           onSelectCurrency={onSelectCurrency}
-          onExpand={handleExpand}
         />
       )
-    }
-    const tokenRow = (
-      <TokenOptionItem
-        index={index}
-        section={section as OnchainItemSection<TokenOption>}
-        showTokenAddress={showTokenAddress}
-        showWarnings={showTokenWarnings}
-        tokenOption={item}
-        onSelectCurrency={onSelectCurrency}
-      />
-    )
-    return wrapTokenRow ? wrapTokenRow(tokenRow, item.currencyInfo) : tokenRow
-  })
+      return wrapTokenRow ? wrapTokenRow(tokenRow, item.currencyInfo) : tokenRow
+    },
+    [
+      categories,
+      handleExpand,
+      isExpandedItem,
+      onSelectCurrency,
+      onSelectRwaToken,
+      showTokenAddress,
+      showTokenWarnings,
+      wrapTokenRow,
+    ],
+  )
 
   return (
     <SelectorBaseList

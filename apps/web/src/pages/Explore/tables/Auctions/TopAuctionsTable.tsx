@@ -22,7 +22,7 @@ import { TableText } from '~/components/Table/shared/TableText'
 import { HeaderCell } from '~/components/Table/styled'
 import { MouseoverTooltip } from '~/components/Tooltip'
 import { OrderDirection } from '~/data/util'
-import { TABLE_PAGE_SIZE } from '~/features/Explore/state'
+import { EXPLORE_API_PAGE_SIZE } from '~/features/Explore/state/constants'
 import { AuctionQuickFilter, useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
 import { CommittedVolumeTooltipContent } from '~/features/Toucan/Auction/Banners/AuctionStatsBanner/CommittedVolumeTooltipContent'
 import { approximateNumberFromRaw, formatCompactFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
@@ -354,13 +354,16 @@ export const ToucanTable = memo(function ToucanTable({
 
   // Client-side pagination over already-loaded auctions; useSimplePagination paces the reveal so the
   // load-more indicator shows, and gates loadMore once all auctions are displayed.
-  const { page, loadMore } = useSimplePagination({ totalCount: filteredAuctions.length, pageSize: TABLE_PAGE_SIZE })
+  const { page, loadMore } = useSimplePagination({
+    totalCount: filteredAuctions.length,
+    pageSize: EXPLORE_API_PAGE_SIZE,
+  })
 
   return (
     <TableWrapper testID="toucan-explore-table">
       <ToucanTableComponent
         auctions={filteredAuctions}
-        visibleAuctionLimit={page * TABLE_PAGE_SIZE}
+        visibleAuctionLimit={page * EXPLORE_API_PAGE_SIZE}
         loading={isLoading}
         loadMore={loadMore}
         error={isError}

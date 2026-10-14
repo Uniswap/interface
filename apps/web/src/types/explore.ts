@@ -1,5 +1,3 @@
-import type { PlainMessage } from '@bufbuild/protobuf'
-import { Amount, ChainToken, PoolStats, TokenStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import type { FeeData as CreatePositionFeeData, PositionRewardApr } from 'uniswap/src/features/positions/types'
 
 /** Explore URL tab segments — shared routing / URL surface (not feature-local). */
@@ -12,17 +10,64 @@ export enum ExploreTab {
 
 type PricePoint = { timestamp: number; value: number }
 
-export type LegacyExploreStatChainToken = Pick<
-  PlainMessage<ChainToken>,
-  'chainId' | 'address' | 'decimals' | 'isBridged'
-> &
-  Partial<Pick<PlainMessage<ChainToken>, 'volume1h' | 'volume1d' | 'volume7d' | 'volume30d' | 'volume1y'>>
+// The shapes below were once derived from the v1 ExploreStats protobuf messages. That client is
+// gone, so they are kept as plain data types with the same field names, which is all the Explore
+// tables and `gqlToCurrency` ever read from them.
+
+export type Amount = {
+  currency?: string
+  value: number
+}
+
+type PriceHistory = {
+  start: number
+  end: number
+  step: number
+  values: number[]
+}
+
+type TokenStatProject = {
+  logo?: { url?: string }
+  name?: string
+  url?: string
+  isSpam?: boolean
+  safetyLevel?: string
+}
+
+export type LegacyExploreStatChainToken = {
+  chainId: number
+  address: string
+  decimals?: number
+  isBridged?: boolean
+  volume1h?: number
+  volume1d?: number
+  volume7d?: number
+  volume30d?: number
+  volume1y?: number
+}
 
 /** Data-only shape for token stats (display/API). Plain type so plain objects satisfy it without cast. */
-export type TokenStat = Omit<
-  PlainMessage<TokenStats>,
-  'volume1Hour' | 'volume1Day' | 'volume1Week' | 'volume1Month' | 'volume1Year' | 'chainTokens'
-> & {
+export type TokenStat = {
+  chain: string
+  address: string
+  name?: string
+  symbol?: string
+  logo?: string
+  price?: Amount
+  fullyDilutedValuation?: Amount
+  pricePercentChange1Hour?: Amount
+  pricePercentChange1Day?: Amount
+  pricePercentChange1Week?: Amount
+  pricePercentChange1Month?: Amount
+  pricePercentChange1Year?: Amount
+  decimals?: number
+  project?: TokenStatProject
+  standard?: string
+  priceHistoryHour?: PriceHistory
+  priceHistoryDay?: PriceHistory
+  priceHistoryWeek?: PriceHistory
+  priceHistoryMonth?: PriceHistory
+  priceHistoryYear?: PriceHistory
   volume?: Amount
   priceHistory?: PricePoint[]
   /** Stable key for sparkline/cache/row: multichainId when from multichain, normalized address when single-chain. */
@@ -30,21 +75,22 @@ export type TokenStat = Omit<
   chainTokens?: LegacyExploreStatChainToken[]
 }
 
-type PoolStatWithoutMethods = Omit<
-  PoolStats,
-  | 'clone'
-  | 'toBinary'
-  | 'toJson'
-  | 'equals'
-  | 'fromBinary'
-  | 'fromJson'
-  | 'fromJsonString'
-  | 'toJsonString'
-  | 'getType'
-  | 'feeTier'
->
+type PoolStatBase = {
+  id: string
+  chain: string
+  totalLiquidity?: Amount
+  txCount?: number
+  volume1Day?: Amount
+  volume1Week?: Amount
+  volume30Day?: Amount
+  token0?: TokenStat
+  token1?: TokenStat
+  protocolVersion?: string
+  hook?: { address: string }
+  boostedApr?: number
+}
 
-export interface PoolStat extends PoolStatWithoutMethods {
+export interface PoolStat extends PoolStatBase {
   /** Backend-served fee APR in percent units (4.99 = 4.99%), from `PoolRankStats.apr`. */
   apr?: number
   /** Backend-summed fee + reward APR, from `PoolRankStats.totalApr`. Never recomposed here. */

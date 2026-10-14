@@ -1,21 +1,17 @@
-import type { TransactionResponse } from '@ethersproject/providers'
-import MerkleDistributorJSON from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
 import { CurrencyAmount, MERKLE_DISTRIBUTOR_ADDRESS, Token } from '@uniswap/sdk-core'
 import { getValidAddress, normalizeTokenAddressForCache, Platform, UniverseChainId } from '@universe/chains'
-import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { UNI } from 'uniswap/src/constants/tokens'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 import { useReadContract } from 'wagmi'
-import { assume0xAddress } from '~/chains'
+import { assume0xAddress, type ChainContract, createContract, getAddress, type Hash } from '~/chains'
 import { useAccount } from '~/hooks/useAccount'
-import { useContract } from '~/hooks/useContract'
-import { useTransactionAdder } from '~/state/transactions/hooks'
-import { calculateGasMargin } from '~/utils/calculateGasMargin'
+import { useEthersProvider, useEthersWeb3Provider } from '~/hooks/useEthersProvider'
+import { useTransactionAdderFromHash } from '~/state/transactions/adder'
 
-const claimAbi = [
+const merkleDistributorAbi = [
   {
     inputs: [
       {
@@ -35,14 +31,62 @@ const claimAbi = [
     stateMutability: 'view',
     type: 'function',
   },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'index',
+        type: 'uint256',
+      },
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+      {
+        internalType: 'bytes32[]',
+        name: 'merkleProof',
+        type: 'bytes32[]',
+      },
+    ],
+    name: 'claim',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
 ] as const
 
-function useMerkleDistributorContract() {
+function useMerkleDistributorContract(): ChainContract<typeof merkleDistributorAbi> | null {
   const account = useAccount()
-  return useContract({
-    address: account.chainId ? MERKLE_DISTRIBUTOR_ADDRESS[account.chainId] : undefined,
-    ABI: MerkleDistributorJSON.abi,
-  })
+  const chainId = account.chainId
+  const readProvider = useEthersProvider({ chainId })
+  // Writes sign through the wallet's provider; reads stay on the app's read
+  // provider (UniRPC) so they never route through connector RPC endpoints.
+  const walletProvider = useEthersWeb3Provider({ chainId })
+  const distributorAddress = chainId ? MERKLE_DISTRIBUTOR_ADDRESS[chainId] : undefined
+
+  return useMemo(() => {
+    const provider = readProvider ?? walletProvider
+    if (!distributorAddress || !provider) {
+      return null
+    }
+    const address = getAddress(distributorAddress)
+    if (walletProvider && account.address) {
+      return createContract({
+        address,
+        abi: merkleDistributorAbi,
+        provider,
+        signer: walletProvider.getSigner(account.address),
+        signerAddress: account.address,
+      })
+    }
+    return createContract({ address, abi: merkleDistributorAbi, provider })
+  }, [distributorAddress, account.address, walletProvider, readProvider])
 }
 
 interface UserClaimData {
@@ -174,7 +218,7 @@ export function useUserHasAvailableClaim(account: string | null | undefined): bo
   const { data: isClaimed, isLoading: isClaimedLoading } = useReadContract({
     address: assume0xAddress(MERKLE_DISTRIBUTOR_ADDRESS[UniverseChainId.Mainnet]),
     chainId: UniverseChainId.Mainnet,
-    abi: claimAbi,
+    abi: merkleDistributorAbi,
     functionName: 'isClaimed',
     args: userClaimData ? [BigInt(userClaimData.index)] : undefined,
     query: { enabled: !!userClaimData },
@@ -200,39 +244,39 @@ export function useUserUnclaimedAmount(account: string | null | undefined): Curr
 }
 
 export function useClaimCallback(address: string | null | undefined): {
-  claimCallback: () => Promise<string>
+  claimCallback: () => Promise<string | undefined>
 } {
   // get claim data for this account
   const account = useAccount()
-  const { provider } = useWeb3React()
   const claimData = useUserClaimData(address)
 
   // used for popup summary
   const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(address)
-  const addTransaction = useTransactionAdder()
+  const addTransaction = useTransactionAdderFromHash()
   const distributorContract = useMerkleDistributorContract()
 
-  const claimCallback = async function () {
-    if (!claimData || !address || !provider || !account.chainId || !distributorContract) {
+  const claimCallback = async function (): Promise<string | undefined> {
+    // `account.address` gates on a connected wallet (the seam attaches a signer
+    // only when it's present), so `write.claim` always has signing capability.
+    if (!claimData || !address || !account.chainId || !account.address || !distributorContract) {
       return undefined
     }
 
-    const args = [claimData.index, address, claimData.amount, claimData.proof]
-
-    // oxlint-disable-next-line typescript/no-unsafe-return -- biome-parity: oxlint is stricter here
-    return distributorContract.estimateGas.claim(...args, {}).then((estimatedGasLimit) => {
-      // oxlint-disable-next-line typescript/no-unsafe-return -- biome-parity: oxlint is stricter here
-      return distributorContract
-        .claim(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit.toBigInt()) })
-        .then((response: TransactionResponse) => {
-          addTransaction(response, {
-            type: TransactionType.ClaimUni,
-            recipient: address,
-            uniAmountRaw: unclaimedAmount?.quotient.toString(),
-          })
-          return response.hash
-        })
-    })
+    const hash = await distributorContract.write.claim([
+      BigInt(claimData.index),
+      assume0xAddress(address),
+      BigInt(claimData.amount),
+      claimData.proof as Hash[],
+    ])
+    addTransaction(
+      { hash, chainId: account.chainId },
+      {
+        type: TransactionType.ClaimUni,
+        recipient: address,
+        uniAmountRaw: unclaimedAmount?.quotient.toString(),
+      },
+    )
+    return hash
   }
 
   return { claimCallback }

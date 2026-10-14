@@ -2,6 +2,7 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import { Token } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import {
+  MultichainTokenOption,
   OnchainItemListOptionType,
   PoolOption,
   SearchModalListOption,
@@ -18,7 +19,7 @@ import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { benignSafetyInfo } from 'uniswap/src/test/fixtures/wallet/currencies'
 import { renderHook } from 'uniswap/src/test/test-utils'
 import { currencyId } from 'uniswap/src/utils/currencyId'
-import { tdpChainSelectionFromFilter } from 'uniswap/src/utils/linking'
+import { tdpChainSelectionFromFilter, TdpChainSelectionType } from 'uniswap/src/utils/linking'
 
 const { mockContext, mockRegisterSearchItem } = vi.hoisted(() => ({
   mockContext: {
@@ -64,6 +65,28 @@ const tokenOption: TokenOption = {
   currencyInfo: tokenCurrencyInfo,
   quantity: null,
   balanceUSD: undefined,
+}
+
+// Same CREATE2 address on several chains (the shape of the ticket's WBTC search).
+const SHARED_ADDRESS = '0x0555E30da8f98308EdB960aa94C0Db47230d2B9c'
+const OTHER_ADDRESS = '0x3333333333333333333333333333333333333333'
+
+function deployment(chainId: UniverseChainId, address: string): ReturnType<typeof buildCurrencyInfo> {
+  const token = new Token(chainId, address, 8, 'WBTC', 'Wrapped BTC')
+  return buildCurrencyInfo({
+    currencyId: currencyId(token),
+    currency: token,
+    logoUrl: null,
+    safetyInfo: benignSafetyInfo,
+  })
+}
+
+function multichainOption(tokens: ReturnType<typeof buildCurrencyInfo>[]): MultichainTokenOption {
+  return {
+    type: OnchainItemListOptionType.MultichainToken,
+    multichainResult: { id: 'wbtc', name: 'Wrapped BTC', symbol: 'WBTC', logoUrl: null, tokens },
+    primaryCurrencyInfo: tokens[0]!,
+  }
 }
 
 const poolOption: PoolOption = {
@@ -130,6 +153,64 @@ describe('useSearchModalOptionSelection', () => {
       tokenCurrencyInfo.currencyId,
       tdpChainSelectionFromFilter(UniverseChainId.ArbitrumOne),
     )
+  })
+
+  it('filters an address search to the primary chain when the address is deployed on one chain', () => {
+    const option = multichainOption([
+      deployment(UniverseChainId.Mainnet, SHARED_ADDRESS),
+      deployment(UniverseChainId.Base, OTHER_ADDRESS),
+    ])
+    const searchFilters: SearchFilterContext = { ...noFilters, query: SHARED_ADDRESS }
+    const { result } = renderHook(() => useSearchModalOptionSelection({ searchFilters }))
+
+    result.current.selectOption(selectionFor(option))
+
+    expect(mockRegisterSearchItem).toHaveBeenCalledWith(option, { tdpChainFilter: UniverseChainId.Mainnet })
+    expect(mockContext.navigateToTokenDetails).toHaveBeenCalledWith(option.primaryCurrencyInfo.currencyId, {
+      type: TdpChainSelectionType.Chain,
+      chainId: UniverseChainId.Mainnet,
+    })
+  })
+
+  it('opens the multichain view when the searched address is deployed on several chains', () => {
+    const option = multichainOption([
+      deployment(UniverseChainId.Mainnet, SHARED_ADDRESS),
+      deployment(UniverseChainId.Base, SHARED_ADDRESS),
+      deployment(UniverseChainId.ArbitrumOne, OTHER_ADDRESS),
+    ])
+    const searchFilters: SearchFilterContext = { ...noFilters, query: SHARED_ADDRESS.toLowerCase() }
+    const { result } = renderHook(() => useSearchModalOptionSelection({ searchFilters }))
+
+    result.current.selectOption(selectionFor(option))
+
+    expect(mockRegisterSearchItem).toHaveBeenCalledWith(option, { tdpChainFilter: null })
+    expect(mockContext.navigateToTokenDetails).toHaveBeenCalledWith(option.primaryCurrencyInfo.currencyId, {
+      type: TdpChainSelectionType.Multichain,
+    })
+    expect(result.current.getModifierPressHref(option)).toBe('token-url')
+    expect(mockContext.getTokenDetailsUrl).toHaveBeenCalledWith(option.primaryCurrencyInfo.currencyId, {
+      type: TdpChainSelectionType.Multichain,
+    })
+  })
+
+  it('keeps the search chain filter over a multichain address match', () => {
+    const option = multichainOption([
+      deployment(UniverseChainId.Mainnet, SHARED_ADDRESS),
+      deployment(UniverseChainId.Base, SHARED_ADDRESS),
+    ])
+    const searchFilters: SearchFilterContext = {
+      ...noFilters,
+      query: SHARED_ADDRESS,
+      searchChainFilter: UniverseChainId.Base,
+    }
+    const { result } = renderHook(() => useSearchModalOptionSelection({ searchFilters }))
+
+    result.current.selectOption(selectionFor(option))
+
+    expect(mockContext.navigateToTokenDetails).toHaveBeenCalledWith(option.primaryCurrencyInfo.currencyId, {
+      type: TdpChainSelectionType.Chain,
+      chainId: UniverseChainId.Base,
+    })
   })
 
   it('navigates pools and wallets to their destinations', () => {

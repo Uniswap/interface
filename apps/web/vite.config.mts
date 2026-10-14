@@ -4,7 +4,6 @@ import { createHash } from 'node:crypto'
 import path from 'path'
 import process from 'process'
 import { fileURLToPath } from 'url'
-import { cloudflare } from '@cloudflare/vite-plugin'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig, type ViteDevServer } from 'vite'
@@ -12,10 +11,9 @@ import bundlesize from 'vite-plugin-bundlesize'
 import commonjs from 'vite-plugin-commonjs'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import svgr from 'vite-plugin-svgr'
-import { enableDebugRoutes } from './scripts/debug-routes'
-import { createEntryGatewayProxies } from './vite/entry-gateway-proxy'
-import { generateAssetsIgnorePlugin } from './vite/generateAssetsIgnorePlugin.js'
+import { createEntryGatewayProxies, createWebSocketProxy } from './vite/entry-gateway-proxy'
 import { generateVersionFilePlugin } from './vite/generateVersionFilePlugin.js'
+import { honoDevServerPlugin } from './vite/honoDevServerPlugin'
 import { resolveEnvConfigs } from './vite/resolveEnvConfigs'
 import { cspMetaTagPlugin } from './vite/vite.plugins.js'
 
@@ -167,17 +165,11 @@ export default defineConfig(({ mode, command, isPreview }) => {
     overrideProcessEnv: true,
   })
 
-  // Stop the Cloudflare plugin's bundled Wrangler from auto-loading .env / .env.local
-  // (and emitting "Using vars defined in ..." logs). The .env values are forwarded
-  // to the Worker below via the plugin's `config` customizer.
-  process.env.CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV = 'false'
-
   // Log environment loading for CI verification
   console.log(`ENV_LOADED: mode=${mode} AWS_API_ENDPOINT=${env.AWS_API_ENDPOINT ?? env.REACT_APP_AWS_API_ENDPOINT}`)
 
   const isProduction = mode === 'production'
   const isVercelDeploy = DEPLOY_TARGET === 'vercel'
-  const isCloudflareDeploy = DEPLOY_TARGET === 'cloudflare'
   const isEcsDeploy = DEPLOY_TARGET === 'ecs'
   const isIpfsDeploy = DEPLOY_TARGET === 'ipfs'
   if (isIpfsDeploy) {
@@ -187,20 +179,10 @@ export default defineConfig(({ mode, command, isPreview }) => {
   }
   const isOptimizedBuild = isProduction || isEcsDeploy
   const isMinifiedBuild = isOptimizedBuild && !isVercelDeploy
-  // A CI build whose sourcemaps the deploy uploads to Datadog — i.e. the production deploy, the
-  // only build that leaves DISABLE_SOURCEMAP unset (web_production_deploy.yml:172-176). Every
-  // other cloudflare build sets it: e2e (project.json:54), staging deploy
-  // (web_staging_deploy.yml:148), quality checks (web_quality_checks.yml:50 and :88). Gating on
-  // GITHUB_ACTIONS (the same CI signal project.json:48 uses) keeps local `build:production` on
-  // the dev path.
-  const isSourcemapUploadBuild = isCloudflareDeploy && isMinifiedBuild && !DISABLE_SOURCEMAP && IS_GITHUB_ACTIONS
-  // CF plugin runs for cloudflare deploys and local dev. Skipped during `vite preview` —
-  // preview only serves static assets, doesn't need worker bindings, and the plugin's
-  // getWorkerConfigs enumerates every env in wrangler-vite-worker.jsonc and chokes when
-  // one env's build dir is missing (e.g. after switching between build:production and
-  // build:staging). See INFRA-1874.
-  // Also determines `build.outDir`: the plugin owns the build/ output split.
-  const useCloudflarePlugin = (isCloudflareDeploy || mode === 'development') && !isPreview
+  // A CI static client build whose sourcemaps a workflow uploads to Datadog
+  // (web_test_sourcemap_upload.yml); every other CI static build sets DISABLE_SOURCEMAP.
+  // Prod sourcemaps ship from the ECS image build. Local builds skip GITHUB_ACTIONS.
+  const isSourcemapUploadBuild = !DEPLOY_TARGET && isMinifiedBuild && !DISABLE_SOURCEMAP && IS_GITHUB_ACTIONS
   const root = path.resolve(__dirname)
 
   // External package aliases only
@@ -239,7 +221,7 @@ export default defineConfig(({ mode, command, isPreview }) => {
     throw new Error(
       'VERSION is unset for a deployed web build. Refusing to derive one from git tags: the bundle ' +
         'would report a version matching no release, and Datadog could not symbolicate any stack ' +
-        '(INFRA-3219). Set VERSION on the build step in .github/workflows/web_production_deploy.yml ' +
+        '(INFRA-3219). Set VERSION on the build step in .github/workflows/web_test_sourcemap_upload.yml ' +
         'to the same value passed to `datadog-ci sourcemaps upload --release-version`.',
     )
   }
@@ -264,12 +246,9 @@ export default defineConfig(({ mode, command, isPreview }) => {
     // Must come after envDefines: also emitted to build/client/version.json so the deploy can
     // assert it against the release tag before uploading sourcemaps.
     'process.env.VERSION': JSON.stringify(bundleVersion),
-    // Worker + local dev; build-{ecs,vercel}.ts define this for their own bundles.
-    'process.env.ENABLE_DEBUG_ROUTES': JSON.stringify(enableDebugRoutes(mode)),
-    // Serving stack this artifact is built for; tags DD RUM + Amplitude events so the ECS
-    // rollout is observable per cohort. Local dev serves via the CF plugin → 'workers'.
+    // Serving stack this artifact is built for; tags DD RUM + Amplitude events per cohort.
     'process.env.WEB_BUILD_TYPE': JSON.stringify(
-      isEcsDeploy ? 'ecs' : isVercelDeploy ? 'vercel' : isIpfsDeploy ? 'ipfs' : 'workers',
+      isEcsDeploy ? 'ecs' : isVercelDeploy ? 'vercel' : isIpfsDeploy ? 'ipfs' : 'local',
     ),
   }
 
@@ -375,10 +354,7 @@ export default defineConfig(({ mode, command, isPreview }) => {
       portWarningPlugin(isProduction),
       reactPlugin(),
       // Tailwind v4 — compiles @import "tailwindcss" + @universe/tailwind tokens.
-      // Client environment only: CSS is generated exclusively for the browser bundle, and
-      // Tailwind's scan/generate transforms must stay out of the Cloudflare Worker
-      // environments (app*), where their module-graph work can invalidate worker modules
-      // while requests are in flight.
+      // Client environment only: CSS is generated exclusively for the browser bundle.
       ...tailwindcss().map((plugin) => ({
         ...plugin,
         applyToEnvironment: (environment: { name: string }) => environment.name === 'client',
@@ -470,8 +446,7 @@ export default defineConfig(({ mode, command, isPreview }) => {
               { name: '**/*', limit: Infinity, mode: 'uncompressed' },
             ],
           }),
-      generateAssetsIgnorePlugin(isMinifiedBuild && !DISABLE_SOURCEMAP, __dirname),
-      generateVersionFilePlugin(isCloudflareDeploy || isEcsDeploy, bundleVersion, __dirname),
+      generateVersionFilePlugin(!isVercelDeploy, bundleVersion, __dirname),
       {
         name: 'copy-twist-config',
         writeBundle() {
@@ -502,26 +477,7 @@ export default defineConfig(({ mode, command, isPreview }) => {
           }
         },
       },
-      useCloudflarePlugin
-        ? cloudflare({
-            configPath: './wrangler-vite-worker.jsonc',
-            // Forward .env values to the Worker as vars (the dotenv auto-loader is
-            // disabled above). Return only the `vars` patch — the plugin uses defu() to
-            // merge, which concatenates arrays. Returning the full workerConfig would
-            // duplicate fields like compatibility_flags and crash the Workers runtime at
-            // startup. Skip empty strings so any wrangler-defined defaults are preserved.
-            config: () => ({
-              vars: Object.fromEntries(Object.entries(env).filter(([, value]) => value !== '')),
-            }),
-            // Workaround for cloudflare plugin bug: explicitly set environment name based on CLOUDFLARE_ENV
-            viteEnvironment:
-              process.env.CLOUDFLARE_ENV === 'production'
-                ? { name: 'app' }
-                : process.env.CLOUDFLARE_ENV === 'staging'
-                  ? { name: 'app_staging' }
-                  : undefined,
-          })
-        : undefined,
+      honoDevServerPlugin(),
     ].filter(Boolean as unknown as <T>(x: T) => x is NonNullable<T>),
 
     optimizeDeps: {
@@ -590,14 +546,14 @@ export default defineConfig(({ mode, command, isPreview }) => {
           rewrite: (path) => path.replace(/^\/config/, '/v1/statsig-proxy'),
         },
         ...(ENABLE_PROXY ? createEntryGatewayProxies({ getLogger, env }) : {}),
+        // Dev only: `vite preview` (which inherits server.proxy) serves e2e without a live socket.
+        ...(isPreview ? {} : createWebSocketProxy(env)),
       },
     },
 
     build: {
-      // With the CF plugin, it owns the build/ output split (emits build/client itself).
-      // Without it, ECS and IPFS emit straight to build/client (ECS: read by ecs-entry.ts,
-      // synced to S3; IPFS: pinned by the deploy workflow); Vercel reads build/ directly.
-      outDir: !useCloudflarePlugin && (isEcsDeploy || isIpfsDeploy) ? 'build/client' : 'build',
+      // build/server holds the ECS bundle (vite.server.config.mts); Vercel reads build/ directly.
+      outDir: isVercelDeploy ? 'build' : 'build/client',
       sourcemap: DISABLE_SOURCEMAP ? false : isMinifiedBuild ? 'hidden' : true,
       minify: isMinifiedBuild ? 'esbuild' : undefined,
       rollupOptions: {

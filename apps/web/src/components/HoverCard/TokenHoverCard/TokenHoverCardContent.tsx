@@ -11,6 +11,7 @@ import {
   HoverCardBody,
   HoverCardChart,
   HoverCardChartSkeleton,
+  HoverCardStatsRow,
   isHoverCardNoData,
 } from '~/components/HoverCard/HoverCardContent'
 
@@ -22,18 +23,25 @@ export interface TokenHoverCardContentProps {
   priceAbsoluteChange?: number | null
   priceData?: PriceChartData[]
   chartLoading?: boolean
+  volume24hUsd?: number
+  tvlUsd?: number
+  statsLoading?: boolean
   isCopied?: boolean
   onCopy?: () => void
   onExpand?: () => void
   maxWidth?: number
 }
 
+const STATS_LOADING_PLACEHOLDER = '$000.0K 24H vol · $0.0M TVL'
+
 /** Body while the deferred CurrencyInfo fetch is in flight, or the no-data treatment once it settles empty. */
 export function TokenHoverCardPlaceholder({
   unavailable,
+  showStats = false,
   maxWidth,
 }: {
   unavailable: boolean
+  showStats?: boolean
   maxWidth?: number
 }): JSX.Element {
   return (
@@ -46,6 +54,7 @@ export function TokenHoverCardPlaceholder({
     >
       <PriceAndChangeRow loading formattedPrice="" hasChange={false} />
       <HoverCardChartSkeleton />
+      {showStats && <HoverCardStatsRow loading loadingPlaceholderText={STATS_LOADING_PLACEHOLDER} stats={[]} />}
     </HoverCardBody>
   )
 }
@@ -100,12 +109,16 @@ function TokenHoverCardContentInner({
   priceAbsoluteChange,
   priceData,
   chartLoading = false,
+  volume24hUsd,
+  tvlUsd,
+  statsLoading = false,
   isCopied = false,
   onCopy,
   onExpand,
   maxWidth,
 }: TokenHoverCardContentProps): JSX.Element {
-  const { formatNumberOrString } = useLocalizationContext()
+  const { t } = useTranslation()
+  const { formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
 
   const formattedPrice = formatNumberOrString({
     value: price ?? undefined,
@@ -115,6 +128,19 @@ function TokenHoverCardContentInner({
   const hasPrice = price != null
   const hasChange = pricePercentChange != null || priceAbsoluteChange != null
   const change = pricePercentChange ?? priceAbsoluteChange
+
+  const volumeStat =
+    volume24hUsd !== undefined
+      ? t('token.hoverCard.volume24h', { amount: convertFiatAmountFormatted(volume24hUsd, NumberType.FiatTokenStats) })
+      : undefined
+  const tvlStat =
+    tvlUsd !== undefined
+      ? t('token.hoverCard.tvl', { amount: convertFiatAmountFormatted(tvlUsd, NumberType.FiatTokenStats) })
+      : undefined
+  // Volume and TVL come from a separate query, so they can stand alone when the price series is empty.
+  const hasStats = volumeStat !== undefined || tvlStat !== undefined
+  const isNoData =
+    !hasStats && isHoverCardNoData({ loading: chartLoading || statsLoading, headline: price, change, data: priceData })
 
   return (
     <HoverCardBody
@@ -129,7 +155,7 @@ function TokenHoverCardContentInner({
       isCopied={isCopied}
       onCopy={onCopy}
       onExpand={onExpand}
-      isNoData={isHoverCardNoData({ loading: chartLoading, headline: price, change, data: priceData })}
+      isNoData={isNoData}
       maxWidth={maxWidth}
     >
       {(chartLoading || hasPrice || hasChange) && (
@@ -142,6 +168,11 @@ function TokenHoverCardContentInner({
         />
       )}
       <HoverCardChart loading={chartLoading} data={priceData} change={change} />
+      <HoverCardStatsRow
+        loading={statsLoading}
+        loadingPlaceholderText={STATS_LOADING_PLACEHOLDER}
+        stats={[volumeStat, tvlStat]}
+      />
     </HoverCardBody>
   )
 }

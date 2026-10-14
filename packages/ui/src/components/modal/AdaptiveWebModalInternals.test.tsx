@@ -405,6 +405,13 @@ describe('useSheetFitHeightFreeze (Tamagui max-ratchet parity)', () => {
     expect(MockResizeObserver.instances).toHaveLength(0)
   })
 
+  it('content mode (freeze disabled) never writes minHeight, so a shrink cannot pin blank space', () => {
+    const { getByTestId } = render(<FreezeHarness isOpen enabled={false} />)
+    const frame = getByTestId('freeze-frame')
+    expect(MockResizeObserver.instances).toHaveLength(0)
+    expect(frame.style.minHeight).toBe('')
+  })
+
   it('falls back to a single post-layout measure when ResizeObserver is unavailable', async () => {
     vi.unstubAllGlobals()
     const hadRO = 'ResizeObserver' in globalThis

@@ -11,7 +11,7 @@ export interface PoolsAprRange {
 }
 
 /**
- * State for the advanced pools filter (behind the AdvancedPoolsFiltering flag). Lives in `~/types` rather
+ * State for the advanced pools filter. Lives in `~/types` rather
  * than the Liquidity feature so both the Liquidity filter component and the Explore filter store can share
  * it without crossing the Liquidity import boundary.
  */

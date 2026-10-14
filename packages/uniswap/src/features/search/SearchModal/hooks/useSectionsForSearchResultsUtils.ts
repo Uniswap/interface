@@ -1,3 +1,4 @@
+import { SearchType } from '@uniswap/client-data-api/dist/data/v2/search_pb'
 import { isWebApp } from '@universe/environment'
 import type { CategoryOption, SearchModalListOption, SearchModalOption } from 'uniswap/src/components/lists/items/types'
 import { OnchainItemSectionName, type OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
@@ -14,18 +15,36 @@ export function isActiveSearchTab(activeTab: SearchTab, searchTab: SearchTab): b
   return activeTab === searchTab || activeTab === SearchTab.All
 }
 
+/** The Wallets tab is served by ENS / Unitag lookups alone, so the SearchService request is skipped there. */
 export function shouldSkipSearch({
   activeTab,
-  enabled = true,
   searchFilter,
-  searchTab,
 }: {
   activeTab: SearchTab
-  enabled?: boolean
   searchFilter: string | null
-  searchTab: SearchTab
 }): boolean {
-  return !enabled || !searchFilter || !isActiveSearchTab(activeTab, searchTab)
+  return !searchFilter || activeTab === SearchTab.Wallets
+}
+
+/** Result types one SearchService request should cover on this surface; pools and auctions are web-only. */
+export function getSearchTypes({
+  auctionSearchEnabled,
+  categorySearchEnabled,
+}: {
+  auctionSearchEnabled: boolean
+  categorySearchEnabled: boolean
+}): SearchType[] {
+  const types = [SearchType.TOKEN]
+  if (isWebApp) {
+    types.push(SearchType.POOL)
+    if (auctionSearchEnabled) {
+      types.push(SearchType.AUCTION)
+    }
+  }
+  if (categorySearchEnabled) {
+    types.push(SearchType.CATEGORY)
+  }
+  return types
 }
 
 export function shouldShowWalletSearch(searchFilter: string | null, lowercasedDisabledTerms: string[]): boolean {
@@ -97,15 +116,19 @@ export function getTruncatedSectionKeys({
     .map(([sectionKey]) => sectionKey)
 }
 
-function matchesCategoryName(category: CategoryOption['category'], normalizedQuery: string): boolean {
-  return category.name.toLowerCase().includes(normalizedQuery) || category.id.includes(normalizedQuery)
+function isExactCategoryMatch(category: CategoryOption['category'], normalizedQuery: string): boolean {
+  return (
+    category.englishName.toLowerCase() === normalizedQuery ||
+    category.name.toLowerCase() === normalizedQuery ||
+    category.id === normalizedQuery
+  )
 }
 
 /**
- * All tab only. Category rows whose name matches the query lead the token section; categories the BE matched
- * only through member tokens (e.g. "USDC" → Stablecoins) trail it. BE order is kept within each bucket — the
- * response lists category ids apart from tokens, so the FE places the buckets but never re-ranks them.
- * TODO: drop the name matching once the Search response says which bucket each category id belongs in.
+ * All tab only. Category rows lead the token section, but only for categories whose English name, localized
+ * name, or id the query matches exactly. The BE also returns categories matched through member tokens (e.g. "USDC" → Stablecoins)
+ * and partial name matches ("s" → Stocks, Stablecoins, ...); those are dropped since they make short
+ * queries noisy. BE order is kept among the rows that remain.
  */
 export function withCategoryOptions({
   activeTab,
@@ -122,9 +145,8 @@ export function withCategoryOptions({
     return options
   }
   const normalizedQuery = searchFilter?.trim().toLowerCase() ?? ''
-  const nameMatches = categoryOptions.filter((option) => matchesCategoryName(option.category, normalizedQuery))
-  const memberMatches = categoryOptions.filter((option) => !matchesCategoryName(option.category, normalizedQuery))
-  return [...nameMatches, ...options, ...memberMatches]
+  const exactMatches = categoryOptions.filter((option) => isExactCategoryMatch(option.category, normalizedQuery))
+  return exactMatches.length ? [...exactMatches, ...options] : options
 }
 
 export function getTokenOptions({
@@ -218,18 +240,6 @@ export function getAllSections({
   ]
 }
 
-export function refetchAuctionsIfEnabled({
-  auctionSearchEnabled,
-  refetchSearchAuctions,
-}: {
-  auctionSearchEnabled: boolean
-  refetchSearchAuctions: SearchModalSectionResult['refetch']
-}): void {
-  if (auctionSearchEnabled) {
-    refetchSearchAuctions?.()
-  }
-}
-
 export type SearchResultsForActiveTabParams = {
   activeTab: SearchTab
   allSections: OnchainItemSection<SearchModalOption>[]
@@ -239,17 +249,10 @@ export type SearchResultsForActiveTabParams = {
   poolSearchOptionsLength: number
   poolSearchResultsLength: number | undefined
   poolSearchResultsSection: OnchainItemSection<SearchModalOption>[] | undefined
-  refetchAll: SearchModalSectionResult['refetch']
-  refetchSearchAuctions: SearchModalSectionResult['refetch']
-  refetchSearchPools: SearchModalSectionResult['refetch']
-  refetchSearchTokens: SearchModalSectionResult['refetch']
-  searchAuctionsError: SearchModalSectionResult['error']
-  searchAuctionsLoading: boolean
-  searchCategoriesLoading: boolean
-  searchPoolsError: SearchModalSectionResult['error']
-  searchPoolsLoading: boolean
-  searchTokensError: SearchModalSectionResult['error']
-  searchTokensLoading: boolean
+  refetch: SearchModalSectionResult['refetch']
+  /** State of the single SearchService request that serves tokens, pools, auctions and categories. */
+  searchError: SearchModalSectionResult['error']
+  searchLoading: boolean
   tokenOptionsLength: number
   tokenSearchResultsSection: OnchainItemSection<SearchModalOption>[] | undefined
   walletSearchResultsLoading: boolean
@@ -265,17 +268,9 @@ export function getSearchResultsForActiveTab({
   poolSearchOptionsLength,
   poolSearchResultsLength,
   poolSearchResultsSection,
-  refetchAll,
-  refetchSearchAuctions,
-  refetchSearchPools,
-  refetchSearchTokens,
-  searchAuctionsError,
-  searchCategoriesLoading,
-  searchAuctionsLoading,
-  searchPoolsError,
-  searchPoolsLoading,
-  searchTokensError,
-  searchTokensLoading,
+  refetch,
+  searchError,
+  searchLoading,
   tokenOptionsLength,
   tokenSearchResultsSection,
   walletSearchResultsLoading,
@@ -284,24 +279,24 @@ export function getSearchResultsForActiveTab({
   switch (activeTab) {
     case SearchTab.All:
       return {
-        data: !searchTokensLoading ? allSections : [],
-        isLoading: searchTokensLoading || searchCategoriesLoading || walletSearchResultsLoading,
-        error: (!tokenOptionsLength && searchTokensError) || null,
-        refetch: refetchAll,
+        data: !searchLoading ? allSections : [],
+        isLoading: searchLoading || walletSearchResultsLoading,
+        error: (!tokenOptionsLength && searchError) || null,
+        refetch,
       }
     case SearchTab.Tokens:
       return {
         data: [...(earnSearchResultsSection ?? []), ...(tokenSearchResultsSection ?? [])],
-        isLoading: searchTokensLoading,
-        error: (!tokenOptionsLength && searchTokensError) || null,
-        refetch: refetchSearchTokens,
+        isLoading: searchLoading,
+        error: (!tokenOptionsLength && searchError) || null,
+        refetch,
       }
     case SearchTab.Pools:
       return {
         data: poolSearchResultsSection ?? [],
-        isLoading: searchPoolsLoading || (poolSearchOptionsLength === 0 && poolSearchResultsLength !== 0),
-        error: (!poolSearchResultsSection && searchPoolsError) || null,
-        refetch: refetchSearchPools,
+        isLoading: searchLoading || (poolSearchOptionsLength === 0 && poolSearchResultsLength !== 0),
+        error: (!poolSearchResultsSection && searchError) || null,
+        refetch,
       }
     case SearchTab.Wallets:
       return {
@@ -313,9 +308,9 @@ export function getSearchResultsForActiveTab({
     case SearchTab.Auctions:
       return {
         data: auctionSearchResultsSection ?? [],
-        isLoading: auctionSearchEnabled && searchAuctionsLoading,
-        error: auctionSearchEnabled ? searchAuctionsError : null,
-        refetch: refetchSearchAuctions,
+        isLoading: auctionSearchEnabled && searchLoading,
+        error: auctionSearchEnabled ? searchError : null,
+        refetch,
       }
     default:
       return {

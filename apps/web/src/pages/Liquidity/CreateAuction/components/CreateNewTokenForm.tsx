@@ -5,6 +5,7 @@ import { Button, Flex, fonts, iconSizes, Input, Text, TouchableArea } from '@uni
 import { CheckCircleFilled } from '@universe/mycelium/icons/CheckCircleFilled'
 import { Edit } from '@universe/mycelium/icons/Edit'
 import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
+import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { type ComponentRef, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AdaptiveWebPopoverContent, Popover } from 'ui/src'
@@ -55,15 +56,21 @@ export function NetworkSelector({
   return (
     <Popover placement="bottom-start" open={isOpen} onOpenChange={setIsOpen}>
       <Popover.Trigger>
-        <TouchableArea gap="$spacing2" p="$spacing16" borderRadius="$rounded20" backgroundColor="$surface2">
+        <TouchableArea
+          gap="$spacing2"
+          p="$spacing16"
+          borderRadius="$rounded20"
+          backgroundColor="$surface2"
+          $md={{ p: '$spacing12', borderRadius: '$rounded16' }}
+        >
           {label && (
-            <Text variant="body3" color="$neutral2">
+            <Text variant="body3" color="$neutral2" $md={{ variant: 'buttonLabel4' }}>
               {label}
             </Text>
           )}
           <Flex row alignItems="center" gap="$spacing8">
             <NetworkLogo chainId={network} size={iconSizes.icon20} />
-            <Text variant="body1" flex={1}>
+            <Text variant="body1" $md={{ variant: 'body2' }} flex={1} minWidth={0} numberOfLines={1}>
               {chainInfo.label}
             </Text>
             <RotatableChevron direction="down" color="$neutral2" size="$icon.16" />
@@ -131,6 +138,8 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
   const { updateCreateNewTokenField, commitTokenFormAndAdvance } = useCreateAuctionStoreActions()
   const [isEditingName, setIsEditingName] = useState(false)
   const symbolInputRef = useRef<ComponentRef<typeof Input> | null>(null)
+  const media = useMedia()
+  const nameFont = media.md ? fonts.heading3 : fonts.heading2
 
   const canContinue = useIsStepValid(CreateAuctionStep.ADD_TOKEN_INFO)
   const allowedNetworks = useCreateNewTokenAllowedNetworks()
@@ -201,15 +210,20 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
   return (
     <Flex gap="$spacing24">
       <Flex gap="$spacing4">
-        {!isQuickLaunchModalFlow && <Text variant="subheading1">{t('toucan.createAuction.step.tokenInfo.title')}</Text>}
+        {!isQuickLaunchModalFlow && (
+          <Text variant="subheading1" $md={{ variant: 'subheading2' }}>
+            {t('toucan.createAuction.step.tokenInfo.title')}
+          </Text>
+        )}
         <Text variant="body3" color="$neutral2">
           {t('toucan.createAuction.step.tokenInfo.subtitleCreateNew')}
         </Text>
       </Flex>
       <Flex gap="$spacing16">
-        <Flex row alignItems="center" gap="$spacing24" height={88} overflow="visible">
+        <Flex row alignItems="center" gap="$spacing24" height={88} overflow="visible" $md={{ gap: '$spacing12' }}>
           <Flex alignItems="center" gap="$spacing4">
             <TokenImageUploadButton
+              size={media.md ? 64 : undefined}
               displayImageUri={displayImageUri}
               isProcessing={isImageProcessing}
               onPress={startImageUpload}
@@ -220,7 +234,7 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
               </Text>
             )}
           </Flex>
-          <Flex flex={1} gap="$spacing4" justifyContent="center">
+          <Flex flex={1} minWidth={0} gap="$spacing4" justifyContent="center">
             <Text variant="body3" color="$neutral2">
               {t('toucan.createAuction.step.tokenInfo.name')}
             </Text>
@@ -235,15 +249,20 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
                 placeholder={t('toucan.createAuction.step.tokenInfo.namePlaceholder')}
                 placeholderTextColor="$neutral3"
                 fontFamily="$heading"
-                fontSize={fonts.heading2.fontSize}
-                lineHeight={fonts.heading2.lineHeight}
-                fontWeight={fonts.heading2.fontWeight}
+                fontSize={nameFont.fontSize}
+                lineHeight={nameFont.lineHeight}
+                fontWeight={nameFont.fontWeight}
                 color="$neutral1"
               />
             ) : (
               <Flex row alignItems="center" justifyContent="space-between">
                 <TouchableArea flex={1} minWidth={0} onPress={handleEnterNameEdit}>
-                  <Text variant="heading2" color={createNew.name ? '$neutral1' : '$neutral3'}>
+                  <Text
+                    variant="heading2"
+                    $md={{ variant: 'heading3' }}
+                    numberOfLines={1}
+                    color={createNew.name ? '$neutral1' : '$neutral3'}
+                  >
                     {createNew.name || t('toucan.createAuction.step.tokenInfo.namePlaceholder')}
                   </Text>
                 </TouchableArea>
@@ -261,9 +280,16 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
         )}
         <Flex gap="$spacing8">
           <Flex row gap="$spacing8">
-            <Flex flex={3} backgroundColor="$surface2" borderRadius="$rounded20" p="$spacing16" gap="$spacing2">
+            <Flex
+              flex={3}
+              backgroundColor="$surface2"
+              borderRadius="$rounded20"
+              p="$spacing16"
+              gap="$spacing2"
+              $md={{ flex: 1, flexBasis: 0, minWidth: 0, p: '$spacing12', borderRadius: '$rounded16' }}
+            >
               <Flex row alignItems="center" justifyContent="space-between">
-                <Text variant="body3" color="$neutral2">
+                <Text variant="body3" color="$neutral2" $md={{ variant: 'buttonLabel4' }}>
                   {t('toucan.createAuction.step.tokenInfo.ticker')}
                 </Text>
                 {isQuickLaunchFlagEnabled && createNew.symbol.length > 0 && (
@@ -291,7 +317,7 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
                 />
               </Trace>
             </Flex>
-            <Flex flex={2}>
+            <Flex flex={2} $md={{ flex: 1, flexBasis: 0, minWidth: 0 }}>
               <NetworkSelector
                 network={createNew.network}
                 allowedNetworks={allowedNetworks}

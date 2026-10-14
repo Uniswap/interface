@@ -1,10 +1,12 @@
 import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import type { UniverseChainId } from '@universe/chains'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
+import { Platform, type UniverseChainId } from '@universe/chains'
+import { FeatureFlags, useFeatureFlag, useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, Text } from '@universe/mycelium'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import { getGroupedRwaCategory } from 'uniswap/src/features/tokenCategories/groupedCategory'
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
@@ -17,6 +19,7 @@ import {
 import { useListTokens } from '~/features/Explore/state/listTokens/useListTokens'
 import { VolumeTimeFrameSelector } from '~/features/Explore/VolumeTimeFrameSelector'
 import { showsVolumeTimeFrameSelector } from '~/pages/Explore/categories/exploreGroupedCategory'
+import { isCategoryUnsupportedChain } from '~/pages/Explore/categories/useExploreCategory'
 import { RwaCategoryTable } from '~/pages/Explore/rwa/table/RwaCategoryTable'
 import { SearchBar } from '~/pages/Explore/SearchBar'
 import { TokenTable } from '~/pages/Explore/tables/Tokens/TokensTable'
@@ -25,6 +28,7 @@ import {
   useTokenTableSortStore,
 } from '~/pages/Explore/tables/Tokens/tokenTableSortStore'
 import { ExploreTab } from '~/types/explore'
+import { getChainFilterFromSearchParams, withChainSearchParam } from '~/utils/params/chainQueryParam'
 
 function CategoryTokensTable({
   categoryId,
@@ -54,6 +58,7 @@ function CategoryTokensTable({
       loadMore={loadMore}
       error={isError}
       categoryId={categoryId}
+      chainId={chainId}
     />
   )
 }
@@ -67,7 +72,8 @@ function CategoryTable({
   categoryId: string
   chainId: UniverseChainId | undefined
 }): JSX.Element {
-  // Explicit chainScope: this page has no chain URL param, so "All networks" must not fall back to it.
+  // Explicit chainScope: this page keeps its chain in `?chain=`, not the path, so "All networks" must not
+  // fall back to the path param the RWA tables otherwise read.
   const chainScope = { chainId }
   if (rwaCategory !== RwaCategory.UNSPECIFIED) {
     // Client-side column sorting is stocks-only, matching the Explore tables.
@@ -85,8 +91,15 @@ function CategoryTable({
 export function CategoryTokensSection({ category }: { category: TokenCategory }): JSX.Element {
   const { t } = useTranslation()
   const media = useMedia()
-  const [chainId, setChainId] = useState<UniverseChainId | undefined>(undefined)
-  const onNetworkPress = useEvent((newChainId: UniverseChainId | undefined) => setChainId(newChainId))
+  const isNetworkFilterV2Enabled = useFeatureFlag(FeatureFlags.NetworkFilterV2)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const { chainId: chainIdParam } = getChainFilterFromSearchParams(searchParams)
+  // Categories only cover EVM chains: offer only those, and read a deep link to another chain as All networks.
+  const chainId = isCategoryUnsupportedChain(chainIdParam) ? undefined : chainIdParam
+  const { chains: networks } = useEnabledChains({ platform: Platform.EVM, includeTestnets: true })
+  const onNetworkPress = useEvent((newChainId: UniverseChainId | undefined) =>
+    setSearchParams(withChainSearchParam(searchParams, newChainId), { replace: true }),
+  )
   const tokenCount = category.stats?.tokenCount
   const rwaCategory = getGroupedRwaCategory(category)
   const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
@@ -115,7 +128,9 @@ export function CategoryTokensSection({ category }: { category: TokenCategory })
                 position={media.lg ? 'left' : 'right'}
                 onPress={onNetworkPress}
                 currentChainId={chainId}
+                networks={networks}
                 tracePage={InterfacePageName.CategoryDetailsPage}
+                showSearch={isNetworkFilterV2Enabled}
               />
               <SearchBar tab={ExploreTab.Tokens} />
             </Flex>

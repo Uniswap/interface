@@ -1,8 +1,21 @@
+import { SharedEventName } from '@uniswap/analytics-events'
+import { ElementName, InterfacePageName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TokenCategoryTag } from 'uniswap/src/features/tokenCategories/TokenCategoryTag'
 import { TokenCategoryClass } from 'uniswap/src/features/tokenCategories/types'
 import { tokenCategory } from 'uniswap/src/test/fixtures/tokenCategory'
 import { mockUniswapContext } from 'uniswap/src/test/render'
 import { fireEvent, render } from 'uniswap/src/test/test-utils'
+
+vi.mock('uniswap/src/features/telemetry/send', () => ({ sendAnalyticsEvent: vi.fn() }))
+vi.mock('utilities/src/telemetry/trace/TraceContext', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('utilities/src/telemetry/trace/TraceContext')>()),
+  useTrace: () => ({
+    page: InterfacePageName.ExplorePage,
+    section: SectionName.NavbarSearch,
+    element: ElementName.TokensTableRow,
+  }),
+}))
 
 describe('TokenCategoryTag', () => {
   it('renders the category name', () => {
@@ -29,5 +42,17 @@ describe('TokenCategoryTag', () => {
     const { getByText } = render(<TokenCategoryTag category={category} />)
     fireEvent.press(getByText('DeFi'))
     expect(mockUniswapContext.navigateToCategoryDetails).toHaveBeenCalledWith({ categoryId: 'defi' })
+  })
+
+  it('logs the press with the enclosing surface and its own element', () => {
+    const category = tokenCategory({ id: 'defi', name: 'DeFi', categoryClass: TokenCategoryClass.Sector })
+    const { getByText } = render(<TokenCategoryTag category={category} />)
+    fireEvent.press(getByText('DeFi'))
+    expect(sendAnalyticsEvent).toHaveBeenCalledWith(SharedEventName.ELEMENT_CLICKED, {
+      page: InterfacePageName.ExplorePage,
+      section: SectionName.NavbarSearch,
+      element: ElementName.TokenRowCategoryTag,
+      category_id: 'defi',
+    })
   })
 })

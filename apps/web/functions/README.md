@@ -1,8 +1,8 @@
-# Cloudflare Cloud Functions
+# Server Functions
 
 ## Purpose
 
-These functions utilize Cloudflare Functions to dynamically inject meta tags server-side for richer link sharing capabilities.
+A Hono app (`app.ts`, `createApp`) that dynamically injects meta tags server-side for richer link sharing capabilities, serves OG images, and proxies the BFF routes (`/entry-gateway`, `/config`).
 
 Search engines and social media platforms' crawlers read the initial HTML of a page to index and understand its content. These crawlers often do not execute JavaScript, meaning dynamically added client-side content, including metatags, may not be indexed or recognized. This is why we render our metatags on server-side.
 
@@ -10,9 +10,9 @@ However, these server-side injected metatags do not automatically update during 
 
 ## Functions
 
-Currently, there are 2 types of cloudflare functions developed
+Currently, there are 2 types of functions developed
 
-- Meta Data Injectors - Workers that inject [Open Graph](https://ogp.me/) standardized meta tags into the `header` of specific webpages.
+- Meta Data Injectors - Middleware that injects [Open Graph](https://ogp.me/) standardized meta tags into the `header` of specific webpages.
   - Currently we support this functionality for Token Detail Pages, Pool Detail Pages, Position Pages, and Auction Detail Pages
   - These functions query data from GraphQL/Data API and then formats them into HTML `meta` tags to be injected
 - Dynamically Generated Images - Utilizes Vercel's [Open Graph Image Generation Library](https://vercel.com/docs/concepts/functions/edge-functions/og-image-generation) to create custom thumbnails for specific webpages
@@ -20,21 +20,29 @@ Currently, there are 2 types of cloudflare functions developed
   - These functions query data from GraphQL, and utilize `Satori` to convert HTML into a png image response which is then returned when the api is called.
   - Can be found in the `api/image` folder.
 
+## Entry points
+
+Each entry point supplies the platform-specific pieces `createApp` needs (SPA HTML, upstream URLs, trusted client IP):
+
+- `ecs-entry.ts` — production (AWS ECS, Node), bundled to `build/server/index.mjs` by `vite.server.config.mts`
+- `vercel-entry.ts` — Vercel previews, bundled by the same config
+- `dev-entry.ts` — `bun run dev`: `vite/honoDevServerPlugin.ts` mounts it behind the Vite dev server, serving `index.html` through Vite's HTML transform. Vite's own proxy answers `/config`, `/ws` and (with `ENABLE_ENTRY_GATEWAY_PROXY=true`) `/entry-gateway` before the Hono app sees them.
+
 ## Testing
 
-Testing is done utilizing a custom vitest environment as well as Cloudflare's local tester: `wrangler`. Wrangler enables testing locally by running a proxy ("Miniflare") to wrap `localhost`. Tests run against a proxy server, so you'll need to start it before running tests:
+Testing is done utilizing a custom vitest environment. The meta-tag and OG-image tests fetch pages from the dev server, so you'll need to start it before running tests:
 
-- Run `bun run dev` to use wrangler and run the Functions code
+- Run `bun run dev` to serve the functions code on localhost:3000
 - Run unit tests with `bun run test:cloud`
 
 TODO(WEB-5914): as of 12/19/24, tests pass locally but fail on CI. Notes on investigation in issue
 
 ### Deterministic gateway responses (gateway fixtures)
 
-The meta-tag and OG-image tests fetch pages from the dev server, whose worker
+The meta-tag and OG-image tests fetch pages from the dev server, whose Hono app
 queries the data-api and liquidity backends. To keep CI deterministic, the
 `cloud-tests` job sets `CLOUD_FUNCTIONS_DATA_API_ENDPOINT_OVERRIDE` and
-`CLOUD_FUNCTIONS_LIQUIDITY_ENDPOINT_OVERRIDE` to a local URL: the worker
+`CLOUD_FUNCTIONS_LIQUIDITY_ENDPOINT_OVERRIDE` to a local URL: the server
 (`functions/utils/dataApiService.ts`, `functions/utils/liquidityService.ts`) sends
 its requests there, and the vitest global setup (`functions/fixtures/globalSetup.ts`)
 serves checked-in responses from `functions/fixtures/gatewayResponses.ts` on that port.
@@ -53,21 +61,14 @@ adding a test for a new token/pool, add a matching fixture entry to
 
 ## Deployment
 
-Functions will be deployed to Cloudflare where they will be ran automatically when the appropriate route is hit.
+The app is deployed to AWS ECS as part of the web image (`apps/web/Dockerfile`, `bun web build:ecs`).
 
 ## Miscellaneous
 
-- Caching: In order to speed up webpage requests, repeated GraphQL queries will be saved and pulled using Cloudflare's Cache API.
+- Caching: In order to speed up webpage requests, repeated GraphQL queries are cached in a process-local map (`utils/cache.ts`).
 
-## Scripts
+## Additional Documents
 
-- `bun run dev` script to start local wrangler environment
-  - `wrangler-vite-worker.jsonc` is the Wrangler config file
-
-  ## Additional Documents
-
-  - [Open Graph Protocol](https://ogp.me/)
-  - [Open Graph Image Generation](https://vercel.com/docs/concepts/functions/edge-functions/og-image-generation)
-  - [Cloudflare Workers](https://developers.cloudflare.com/workers/)
-  - [HTML Rewriter](https://developers.cloudflare.com/workers/runtime-apis/html-rewriter/)
-  - [Cache API](https://developers.cloudflare.com/workers/runtime-apis/cache/)
+- [Open Graph Protocol](https://ogp.me/)
+- [Open Graph Image Generation](https://vercel.com/docs/concepts/functions/edge-functions/og-image-generation)
+- [Hono](https://hono.dev/)

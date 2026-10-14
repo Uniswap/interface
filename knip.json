@@ -32,8 +32,7 @@
         "moti",
         "react-router",
         "semver",
-        "typanion",
-        "wrangler"
+        "typanion"
       ]
     },
     "apps/cli": {
@@ -141,7 +140,6 @@
       "vite": false,
       "ignoreDependencies": [
         "@babel/preset-env",
-        "@cloudflare/vite-plugin",
         "@tailwindcss/vite",
         "vite-plugin-bundlesize",
         "vite-plugin-commonjs",
@@ -149,7 +147,6 @@
         "vite-plugin-svgr",
         "vite-tsconfig-paths",
         "@chromatic-com/storybook",
-        "@cloudflare/workers-types",
         "@datadog/datadog-ci",
         "@ethersproject/.+",
         "@graphql-codegen/.+",
@@ -171,7 +168,6 @@
         "agentation-mcp",
         "ajv-formats",
         "babel-plugin-react-compiler",
-        "browser-cache-mock",
         "buffer",
         "case-sensitive-paths-webpack-plugin",
         "concurrently",
@@ -202,7 +198,6 @@
         "wait-on",
         "workbox-expiration",
         "workbox-strategies",
-        "wrangler",
         "ws"
       ]
     },

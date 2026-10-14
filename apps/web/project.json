@@ -45,19 +45,19 @@
       "outputs": ["{projectRoot}/build"],
       "configurations": {
         "production": {
-          "command": "NODE_OPTIONS=\"--max-old-space-size=$([ -n \\\"$GITHUB_ACTIONS\\\" ] && echo 32768 || echo 16384)\" DEPLOY_TARGET=cloudflare CLOUDFLARE_ENV=production vite build"
+          "command": "NODE_OPTIONS=\"--max-old-space-size=$([ -n \\\"$GITHUB_ACTIONS\\\" ] && echo 32768 || echo 16384)\" vite build"
         },
         "staging": {
-          "command": "NODE_OPTIONS=\"--max-old-space-size=$([ -n \\\"$GITHUB_ACTIONS\\\" ] && echo 32768 || echo 16384)\" ENABLE_ENTRY_GATEWAY_PROXY=true DEPLOY_TARGET=cloudflare CLOUDFLARE_ENV=staging vite build --mode staging"
+          "command": "NODE_OPTIONS=\"--max-old-space-size=$([ -n \\\"$GITHUB_ACTIONS\\\" ] && echo 32768 || echo 16384)\" ENABLE_ENTRY_GATEWAY_PROXY=true vite build --mode staging"
         },
         "e2e": {
-          "command": "SKIP_CSP=1 IS_E2E_TEST=true DISABLE_SOURCEMAP=true NODE_OPTIONS=\"--max-old-space-size=$([ -n \\\"$GITHUB_ACTIONS\\\" ] && echo 32768 || echo 16384)\" DEPLOY_TARGET=cloudflare CLOUDFLARE_ENV=production vite build"
+          "command": "SKIP_CSP=1 IS_E2E_TEST=true DISABLE_SOURCEMAP=true NODE_OPTIONS=\"--max-old-space-size=$([ -n \\\"$GITHUB_ACTIONS\\\" ] && echo 32768 || echo 16384)\" vite build"
         },
         "vercel": {
-          "command": "ENABLE_ENTRY_GATEWAY_PROXY=true NODE_OPTIONS=\"--max-old-space-size=$([ -n \\\"$GITHUB_ACTIONS\\\" ] && echo 32768 || echo 16384)\" DISABLE_SOURCEMAP=true DEPLOY_TARGET=vercel vite build --mode staging && bun scripts/build-vercel.ts"
+          "command": "ENABLE_ENTRY_GATEWAY_PROXY=true NODE_OPTIONS=\"--max-old-space-size=$([ -n \\\"$GITHUB_ACTIONS\\\" ] && echo 32768 || echo 16384)\" DISABLE_SOURCEMAP=true DEPLOY_TARGET=vercel vite build --mode staging && DEPLOY_TARGET=vercel vite build -c vite.server.config.mts && bun scripts/build-vercel.ts"
         },
         "ecs": {
-          "command": "NODE_OPTIONS=\"--max-old-space-size=$([ -n \\\"$GITHUB_ACTIONS\\\" ] && echo 32768 || echo 16384)\" DEPLOY_TARGET=ecs vite build --mode ${VITE_MODE:-staging} && bun scripts/build-ecs.ts"
+          "command": "NODE_OPTIONS=\"--max-old-space-size=$([ -n \\\"$GITHUB_ACTIONS\\\" ] && echo 32768 || echo 16384)\" DEPLOY_TARGET=ecs vite build --mode ${VITE_MODE:-staging} && DEPLOY_TARGET=ecs vite build -c vite.server.config.mts"
         },
         "ipfs": {
           "command": "NODE_OPTIONS=\"--max-old-space-size=$([ -n \\\"$GITHUB_ACTIONS\\\" ] && echo 32768 || echo 16384)\" DISABLE_SOURCEMAP=true DEPLOY_TARGET=ipfs vite build"
@@ -67,12 +67,6 @@
     "check": {},
     "check:client-build": {
       "command": "bun ./scripts/check-client-build.ts",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "parity": {
-      "command": "bun ./functions/parity/runParity.ts",
       "options": {
         "cwd": "{projectRoot}"
       }

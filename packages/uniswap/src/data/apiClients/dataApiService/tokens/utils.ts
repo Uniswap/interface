@@ -1,37 +1,29 @@
 import { type PlainMessage } from '@bufbuild/protobuf'
-import { type MultichainToken, type Token } from '@uniswap/client-data-api/dist/data/v2/types_pb'
+import { type Token } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { type UniverseChainId } from '@universe/chains'
 import {
-  getMultichainDeploymentDecimals,
-  normalizeBackendNativeAddress,
+  type DataApiMultichainToken,
+  getMultichainDeployment,
 } from 'uniswap/src/data/apiClients/dataApiService/utils/dataApiMultichainToken'
 
-/**
- * Derives the single-chain `Token` view of a `MultichainToken` for one of its deployments. Checks
- * key presence, not truthiness — a native deployment's address is a real but falsy entry, so a
- * truthiness check would misread it as no deployment on this chain.
- */
+/** Derives the single-chain `Token` view of a `MultichainToken` for one of its deployments. */
 export function deriveTokenFromMultichainToken({
   multichainToken,
   chainId,
 }: {
-  multichainToken: PlainMessage<MultichainToken> | undefined
+  multichainToken: DataApiMultichainToken | undefined
   chainId: UniverseChainId
 }): PlainMessage<Token> | undefined {
-  const chainKey = String(chainId)
-  if (!multichainToken || !(chainKey in multichainToken.addresses)) {
+  const deployment = multichainToken && getMultichainDeployment({ multichainToken, chainId })
+  if (!multichainToken || !deployment) {
     return undefined
   }
-  const address = multichainToken.addresses[chainKey] ?? ''
   return {
     chainId,
-    address,
+    // As served, matching GetToken; `deployment.address` is normalized for the app.
+    address: deployment.rawAddress,
     symbol: multichainToken.symbol,
-    decimals: getMultichainDeploymentDecimals({
-      chainId,
-      address: normalizeBackendNativeAddress({ chainId, address }),
-      parentDecimals: multichainToken.decimals,
-    }),
+    decimals: deployment.decimals,
     name: multichainToken.name,
     type: multichainToken.type,
     price: multichainToken.price,
@@ -40,6 +32,7 @@ export function deriveTokenFromMultichainToken({
     project: multichainToken.project,
     fdv: multichainToken.fdv,
     categoryIds: multichainToken.categoryIds,
+    issuer: multichainToken.issuer,
     multichain: { id: multichainToken.multichainId, addresses: multichainToken.addresses },
   }
 }

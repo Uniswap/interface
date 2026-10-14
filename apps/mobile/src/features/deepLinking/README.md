@@ -239,12 +239,6 @@ Custom protocol for QR code scanning functionality.
 
 Format: `uniswap://scantastic?{queryParams}`
 
-### UwU Link
-
-Custom protocol for transaction requests.
-
-Format: `uniswap://uwu?{encodedData}`
-
 ### Widget Links
 
 Deep links from embedded Uniswap widgets.
@@ -307,5 +301,4 @@ The app supports fiat on-ramp deep links through the `handleBuyLink()` function,
 - Invalid or malformed deep links will be logged and ignored
 - Missing required parameters will result in navigation to the Home screen
 - Unsupported WalletConnect v1 links show an error alert
-- Invalid UwU Link requests show appropriate error messages
 - Korea-specific restrictions apply to fiat on-ramp links

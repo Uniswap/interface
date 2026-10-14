@@ -11,6 +11,7 @@ import { type ComponentProps, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { v2TokenToCurrency } from 'uniswap/src/features/dataApi/utils/parsedToken'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { getWrappedTokenIfExists } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { getPriceBounds } from '~/components/Charts/PriceChart/utils'
 import { LineChart } from '~/components/Charts/SparklineChart/LineChart'
@@ -197,10 +198,41 @@ function PoolInfoCardLoading() {
   )
 }
 
-export function PoolStatsContent({ poolData, sparklineWidth }: { poolData: PoolData; sparklineWidth?: number }) {
+export function PoolStatsContent({
+  poolData,
+  currency0,
+  currency1,
+  sparklineWidth,
+}: {
+  poolData: PoolData
+  /** The pool's tokens as the flow displays them (e.g. ETH for a v2/v3 WETH leg), in either order; served tokens when absent. */
+  currency0?: Maybe<Currency>
+  currency1?: Maybe<Currency>
+  sparklineWidth?: number
+}) {
   const { t } = useTranslation()
   const { formatNumberOrString, formatPercent } = useLocalizationContext()
   const rewards = toPoolRewardAprEntries(poolData.rewardTokens)
+  const [servedCurrency0, servedCurrency1] = useServedLogos(poolData).map((logo) => logo.currency)
+
+  // The price below is token1 per token0, so its labels must follow pool order even when the pair
+  // arrives in display order. Exact identity outranks a shared wrapped form so an ETH/WETH pool
+  // still orients correctly.
+  const wrappedServed0 = getWrappedTokenIfExists(servedCurrency0)
+  const rankAsToken0 = (currency: Currency): number => {
+    if (servedCurrency0 && currency.equals(servedCurrency0)) {
+      return 2
+    }
+    return wrappedServed0 && getWrappedTokenIfExists(currency)?.equals(wrappedServed0) ? 1 : 0
+  }
+  const [labelCurrency0, labelCurrency1] =
+    currency0 && currency1
+      ? rankAsToken0(currency1) > rankAsToken0(currency0)
+        ? [currency1, currency0]
+        : [currency0, currency1]
+      : [servedCurrency0, servedCurrency1]
+  const symbol0 = labelCurrency0?.symbol ?? poolData.token0.symbol
+  const symbol1 = labelCurrency1?.symbol ?? poolData.token1.symbol
 
   const currentPrice =
     poolData.token1Price && poolData.token0Price ? poolData.token1Price / poolData.token0Price : undefined
@@ -222,7 +254,7 @@ export function PoolStatsContent({ poolData, sparklineWidth }: { poolData: PoolD
         </Text>
         <Text variant="subheading1" color="$neutral1">
           {currentPrice
-            ? `${formatNumberOrString({ value: currentPrice, type: NumberType.TokenNonTx })} ${poolData.token0.symbol} / ${poolData.token1.symbol}`
+            ? `${formatNumberOrString({ value: currentPrice, type: NumberType.TokenNonTx })} ${symbol0} / ${symbol1}`
             : '-'}
         </Text>
       </Flex>
@@ -289,16 +321,24 @@ export function PoolInfoCard({
   poolData,
   loading,
   onAddLiquidity,
+  currency0: displayCurrency0,
+  currency1: displayCurrency1,
 }: {
   poolData?: PoolData
   loading?: boolean
   onAddLiquidity?: () => void
+  /** The pool's token0/token1 as the surrounding flow displays them (e.g. ETH for a v2/v3 WETH leg). */
+  currency0?: Maybe<Currency>
+  currency1?: Maybe<Currency>
 }) {
   const { t } = useTranslation()
   const headerHeight = useAppHeaderHeight()
-  const currency0 = useMemo(() => (poolData ? v2TokenToCurrency(poolData.token0) : undefined), [poolData])
-  const currency1 = useMemo(() => (poolData ? v2TokenToCurrency(poolData.token1) : undefined), [poolData])
   const servedLogos = useServedLogos(poolData)
+  // All-or-nothing: a half-passed pair would render one leg as ETH and the other as served WETH.
+  const [currency0, currency1] =
+    displayCurrency0 && displayCurrency1
+      ? [displayCurrency0, displayCurrency1]
+      : servedLogos.map((logo) => logo.currency)
   const chainId = (currency0?.chainId ?? currency1?.chainId) as UniverseChainId | undefined
 
   if (!poolData) {
@@ -323,7 +363,7 @@ export function PoolInfoCard({
         <DoubleCurrencyLogo currencies={[currency0, currency1]} servedLogos={servedLogos} size={48} />
         <Flex gap="$spacing4">
           <Text variant="subheading1" color="$neutral1" testID={TestID.PoolPairLabel}>
-            {poolData.token0.symbol} / {poolData.token1.symbol}
+            {currency0?.symbol} / {currency1?.symbol}
           </Text>
           <Flex row flexWrap="wrap" gap="$spacing2">
             <LiquidityPositionInfoBadges
@@ -338,7 +378,7 @@ export function PoolInfoCard({
         </Flex>
       </Flex>
 
-      <PoolStatsContent poolData={poolData} />
+      <PoolStatsContent poolData={poolData} currency0={currency0} currency1={currency1} />
       {onAddLiquidity && (
         <Button variant="branded" emphasis="primary" fill={false} onPress={onAddLiquidity}>
           <Button.Text>{t('common.addLiquidity')}</Button.Text>
@@ -409,56 +449,13 @@ export function ExpandablePoolInfo({
       </Flex>
 
       <Flex display={isExpanded ? 'flex' : 'none'} gap="$spacing24" mt="$spacing16">
-        <PoolStatsContent poolData={poolData} sparklineWidth={sparklineWidth || undefined} />
+        <PoolStatsContent
+          poolData={poolData}
+          currency0={currency0}
+          currency1={currency1}
+          sparklineWidth={sparklineWidth || undefined}
+        />
       </Flex>
-    </Flex>
-  )
-}
-
-export function PoolInfoCardMobileHeader({ poolData, loading }: { poolData?: PoolData; loading?: boolean }) {
-  const currency0 = useMemo(() => (poolData ? v2TokenToCurrency(poolData.token0) : undefined), [poolData])
-  const currency1 = useMemo(() => (poolData ? v2TokenToCurrency(poolData.token1) : undefined), [poolData])
-
-  if (!poolData) {
-    if (loading) {
-      return (
-        <Flex
-          borderRadius="$rounded20"
-          borderColor="$surface3"
-          borderWidth="$spacing1"
-          p="$padding16"
-          mb="$spacing16"
-          row
-          gap="$gap12"
-          alignItems="center"
-        >
-          <Skeleton>
-            <Flex
-              width={iconSizes.icon32}
-              height={iconSizes.icon32}
-              borderRadius="$roundedFull"
-              backgroundColor="$surface3"
-            />
-          </Skeleton>
-          <Skeleton>
-            <Flex height={20} width={120} borderRadius="$rounded8" backgroundColor="$surface3" />
-          </Skeleton>
-        </Flex>
-      )
-    }
-    return null
-  }
-
-  return (
-    <Flex borderRadius="$rounded20" borderColor="$surface3" borderWidth="$spacing1" p="$padding16" mb="$spacing16">
-      <ExpandablePoolInfo
-        currency0={currency0}
-        currency1={currency1}
-        version={poolData.protocolVersion}
-        v4hook={poolData.hookAddress}
-        feeTier={poolData.feeTier}
-        poolData={poolData}
-      />
     </Flex>
   )
 }

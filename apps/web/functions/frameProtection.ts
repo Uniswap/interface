@@ -2,8 +2,8 @@ import { isEmbedPath } from '~/pages/embedPaths'
 
 // ── Frame protection ─────────────────────────────────────────────────
 // frame-ancestors cannot be enforced via <meta> CSP tags (W3C spec) — it
-// must be an HTTP response header. Cloudflare Workers returns responses
-// with immutable headers, so we clone into a mutable Response.
+// must be an HTTP response header. fetch() responses have immutable
+// headers, so we clone into a mutable Response.
 // Origins allowed to iframe-embed the app. Whitelisting an embedder
 // relaxes clickjacking protection for that origin — treat additions as a
 // deliberate product/security tradeoff.
@@ -35,6 +35,11 @@ export function withFrameProtection(res: Response): Response {
 // vetted third-party sites can iframe the embed surface. The client mounts the
 // full app for these documents under an embedded context (see src/App.tsx);
 // Send and the embedded wallet frame-bust out on use (see src/utils/isIFramed.ts).
+
+// Separate from ALLOWED_FRAME_ANCESTORS: that is the strict policy for every other route, this is
+// the /embed partner allowlist. Deployed envs supply it via EMBED_FRAME_ANCESTORS; dev defaults here.
+export const DEV_EMBED_FRAME_ANCESTORS =
+  'https://dexscreener.com https://*.dexscreener.com https://omen.town https://*.omen.town http://localhost:*'
 
 /**
  * Parses the configured embed frame-ancestors source list into the value used

@@ -25,6 +25,7 @@ import { useAccount } from '~/hooks/useAccount'
 import { useSelectChain } from '~/hooks/useSelectChain'
 import { setOpenModal } from '~/state/application/reducer'
 import { useAppDispatch } from '~/state/hooks'
+import { isV2MigrationUnsupportedChain } from '~/utils/networkSupportsV2Migration'
 import { isV4UnsupportedChain } from '~/utils/networkSupportsV4'
 
 export function useLiquidityPositionDropdownOptions({
@@ -54,6 +55,8 @@ export function useLiquidityPositionDropdownOptions({
     const chainInfo = getChainInfo(liquidityPosition.chainId)
     const isV2Position = liquidityPosition.version === ProtocolVersion.V2
     const isV3Position = liquidityPosition.version === ProtocolVersion.V3
+    const showMigrateV2Option =
+      isV2Position && isOpenLiquidityPosition && !isV2MigrationUnsupportedChain(liquidityPosition.chainId)
     const showMigrateV3Option =
       isV3Position && isOpenLiquidityPosition && !isV4UnsupportedChain(liquidityPosition.chainId)
     const hasFees = liquidityPosition.fee0Amount?.greaterThan(0) || liquidityPosition.fee1Amount?.greaterThan(0)
@@ -116,7 +119,7 @@ export function useLiquidityPositionDropdownOptions({
 
     // Add migration options if relevant
 
-    if (isV2Position && isOpenLiquidityPosition) {
+    if (showMigrateV2Option) {
       options.push({
         onPress: async () => {
           if (liquidityPosition.chainId !== account.chainId) {

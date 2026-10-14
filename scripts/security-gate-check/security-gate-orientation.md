@@ -97,7 +97,7 @@ The single most useful thing to know, because it is invisible in a diff:
 | path | runs where | implication |
 | --- | --- | --- |
 | `apps/web/src/**` | user's browser | ships publicly; anything reachable here is readable by anyone |
-| `apps/web/functions/**` | **Cloudflare Workers, server-side** | receives secrets at runtime as bindings — never as committed literals; a leak here crosses a real boundary |
+| `apps/web/functions/**` | **AWS ECS (Node), server-side** | receives secrets at runtime as environment variables — never as committed literals; a leak here crosses a real boundary |
 | `apps/extension/**` | browser extension | host permissions and content scripts; extension-specific escalation applies |
 | `apps/mobile/**` | user's device | native, with device-local storage |
 | `.github/workflows/**` | privileged CI | repository-level credentials |
@@ -129,7 +129,7 @@ For secrets specifically, the axis is **literal vs binding**, not which director
 Named so the gate knows they are present, and so a change that *weakens* one is recognised as
 security-relevant rather than cosmetic. Their absence from an unrelated diff is not a finding.
 
-- **CSP** — `apps/web/public/csp.json`, response headers in `apps/web/public/_headers`.
+- **CSP** — `apps/web/public/csp.json` (and `staging-csp.json`), rendered into the `<meta http-equiv="Content-Security-Policy">` tag by `apps/web/vite/vite.plugins.ts`.
 - **Clickjacking** — `apps/web/functions/frameProtection.ts` sets `frame-ancestors` as an HTTP
   header (it cannot be enforced via a `<meta>` tag). It carries an explicit
   `ALLOWED_FRAME_ANCESTORS` allowlist: **adding an origin there relaxes clickjacking protection

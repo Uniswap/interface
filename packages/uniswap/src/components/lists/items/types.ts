@@ -2,8 +2,14 @@ import type { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { UniverseChainId } from '@universe/chains'
 import type { Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
-import { CurrencyInfo, MultichainSearchResult, SearchTokenStats } from 'uniswap/src/features/dataApi/types'
+import {
+  type AuctionSearchStats,
+  CurrencyInfo,
+  MultichainSearchResult,
+  SearchTokenStats,
+} from 'uniswap/src/features/dataApi/types'
 import type { EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/types'
+import type { RWAIssuerDisplay } from 'uniswap/src/features/rwa/types'
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 
 /* Types of list item options */
@@ -53,8 +59,8 @@ export interface TokenOption extends BaseOption {
   rwaCategory?: RwaCategory
   /** Clean RWA asset name (e.g. "Tesla"), set by RWA grouping so the row matches the TDP; absent on non-RWA tokens. */
   rwaName?: string
-  /** Raw issuer slug (e.g. "ondo"), set by RWA grouping; formatted with formatIssuerLabel at render. Absent on non-RWA. */
-  rwaIssuerSlug?: string
+  /** Issuer branding (slug plus BE display name/logo when served), set by RWA grouping. Absent on non-RWA. */
+  rwaIssuer?: RWAIssuerDisplay
 }
 
 export interface RwaTokenOption extends BaseOption {
@@ -84,8 +90,8 @@ export interface MultichainTokenOption extends BaseOption {
   rwaCategory?: RwaCategory
   /** Clean RWA asset name (e.g. "Tesla"), set by RWA grouping so the row matches the TDP; absent on non-RWA tokens. */
   rwaName?: string
-  /** Raw issuer slug (e.g. "ondo"), set by RWA grouping; formatted with formatIssuerLabel at render. Absent on non-RWA. */
-  rwaIssuerSlug?: string
+  /** Issuer branding (slug plus BE display name/logo when served), set by RWA grouping. Absent on non-RWA. */
+  rwaIssuer?: RWAIssuerDisplay
 }
 
 /** A vault share token surfaced as an Earn opportunity. Renders the vault's underlying asset (e.g. USDC) +
@@ -160,6 +166,7 @@ export interface AuctionOption extends BaseOption {
   /** Distinct all-time bidders. Only the top-auctions listing serves it; text-search results leave it unset. */
   uniqueBidderCount?: number
   isVerified: boolean
+  searchStats?: AuctionSearchStats
 }
 
 // Union of item types for different list use cases

@@ -1,3 +1,4 @@
+import { isNonRwaAssetCategory } from 'uniswap/src/features/tokenCategories/rwaCategoryBridge'
 import { TokenCategory, TokenCategoryClass } from 'uniswap/src/features/tokenCategories/types'
 
 /**
@@ -18,7 +19,9 @@ export interface TokenCategoryBucket {
 
 /**
  * Buckets categories by class in display order, preserving the given order within each bucket
- * (pass the useTokenCategoryOrder output). Empty buckets are omitted.
+ * (pass the useTokenCategoryOrder output), except that non-RWA assets lead the Asset bucket. The
+ * same ordered list drives the Explore chip row, so this can't be expressed in the Statsig order
+ * without changing which categories get chips. Empty buckets are omitted.
  */
 export function bucketTokenCategories(categories: TokenCategory[]): TokenCategoryBucket[] {
   const buckets = new Map<TokenCategoryClass, TokenCategory[]>()
@@ -32,5 +35,15 @@ export function bucketTokenCategories(categories: TokenCategory[]): TokenCategor
   }
   return [...buckets.entries()]
     .sort(([classA], [classB]) => TOKEN_CATEGORY_CLASS_ORDER[classA] - TOKEN_CATEGORY_CLASS_ORDER[classB])
-    .map(([categoryClass, bucketCategories]) => ({ categoryClass, categories: bucketCategories }))
+    .map(([categoryClass, bucketCategories]) => ({
+      categoryClass,
+      categories: categoryClass === TokenCategoryClass.Asset ? nonRwaAssetsFirst(bucketCategories) : bucketCategories,
+    }))
+}
+
+function nonRwaAssetsFirst(categories: TokenCategory[]): TokenCategory[] {
+  return [
+    ...categories.filter(isNonRwaAssetCategory),
+    ...categories.filter((category) => !isNonRwaAssetCategory(category)),
+  ]
 }

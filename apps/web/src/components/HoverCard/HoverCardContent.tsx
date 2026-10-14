@@ -3,7 +3,7 @@ import { AlertTriangle } from '@universe/mycelium/icons/AlertTriangle'
 import { ArrowsExpand } from '@universe/mycelium/icons/ArrowsExpand'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import type { ReactNode } from 'react'
-import { useMemo } from 'react'
+import { Fragment, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ChartUnavailableOverlay } from '~/components/Charts/ChartUnavailableOverlay'
 import { ChartSkeleton } from '~/components/Charts/LoadingState'
@@ -107,6 +107,44 @@ export function HoverCardBody({
         </Flex>
       )}
       {isNoData ? <HoverCardNoDataState /> : children}
+    </Flex>
+  )
+}
+
+/**
+ * Dot-separated body3 stats under the chart (e.g. "$1.2M 24H vol · $3.4M TVL"). Absent entries are
+ * dropped rather than rendered empty, so callers pass whatever they have and the row hides itself
+ * when nothing is known.
+ */
+export function HoverCardStatsRow({
+  loading,
+  loadingPlaceholderText,
+  stats,
+}: {
+  loading: boolean
+  loadingPlaceholderText: string
+  stats: (string | undefined)[]
+}): JSX.Element | null {
+  if (loading) {
+    return <Text variant="body3" color="$neutral2" loading loadingPlaceholderText={loadingPlaceholderText} />
+  }
+
+  const presentStats = stats.filter((stat): stat is string => !!stat)
+  if (presentStats.length === 0) {
+    return null
+  }
+
+  return (
+    <Flex row alignItems="center" gap="$spacing12">
+      {presentStats.map((stat, index) => (
+        // Positional: the row is a short fixed list, and two stats can legitimately format to the same string.
+        <Fragment key={index}>
+          {index > 0 && <Flex width={4} height={4} borderRadius="$roundedFull" backgroundColor="$neutral3" />}
+          <Text variant="body3" color="$neutral2" numberOfLines={1}>
+            {stat}
+          </Text>
+        </Fragment>
+      ))}
     </Flex>
   )
 }

@@ -185,7 +185,7 @@ function makeBackground(): void {
   // every build is intentional: the manifest is the real gate (it only registers them in
   // non-prod), so prod builds reject staging origins because the popup can't connect at
   // all. Keeping a single set here avoids drift between build flavors.
-  const ALLOWED_POPUP_HOSTS = new Set(['app.uniswap.org', 'app.corn-staging.com', 'dev.ew.unihq.org'])
+  const ALLOWED_POPUP_HOSTS = new Set(['app.uniswap.org', 'staging.app.uniswap.org', 'dev.ew.unihq.org'])
   // The chrome.runtime.onMessageExternal API requires the (message, sender, sendResponse)
   // signature for sync replies, so the channel pattern in messageChannels.ts can't carry
   // it. Same reason for the chrome.runtime.sendMessage relay below: TypedRuntimeMessageChannel

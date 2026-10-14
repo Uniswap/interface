@@ -1,4 +1,4 @@
-import { createContext, createElement, type ReactNode, useContext, useEffect, useState } from 'react'
+import { createContext, createElement, type ReactNode, useCallback, useContext, useEffect, useState } from 'react'
 import { useStore } from 'zustand'
 import { createStore, type StoreApi } from 'zustand/vanilla'
 
@@ -46,18 +46,22 @@ function useFavoritesSortingStore<T>(selector: (state: FavoritesSortingState) =>
 }
 
 /**
- * Keeps the surrounding list from scrolling while a favorites grid is being reordered.
- *
- * The grids render inside a virtualized list header, so an active scroll competes with the drag
- * gesture for the touch and shifts the offsets the reorder math is based on.
+ * Locks the surrounding list only while a tile is actively dragged: the grids render inside a
+ * virtualized list header, so a competing scroll shifts the offsets the reorder math is based on.
+ * Edit mode itself stays scrollable so the Done row and the full grid remain reachable.
  */
-export function useReportFavoritesSorting(gridId: FavoritesGridId, isSorting: boolean): void {
+export function useFavoritesDragScrollLock(gridId: FavoritesGridId): {
+  onDragStart: () => void
+  onDragEnd: () => void
+} {
   const setGridSorting = useFavoritesSortingStore((state) => state.setGridSorting)
 
-  useEffect(() => {
-    setGridSorting(gridId, isSorting)
-    return () => setGridSorting(gridId, false)
-  }, [gridId, isSorting, setGridSorting])
+  useEffect(() => () => setGridSorting(gridId, false), [gridId, setGridSorting])
+
+  const onDragStart = useCallback(() => setGridSorting(gridId, true), [gridId, setGridSorting])
+  const onDragEnd = useCallback(() => setGridSorting(gridId, false), [gridId, setGridSorting])
+
+  return { onDragStart, onDragEnd }
 }
 
 export function useIsSortingFavorites(): boolean {

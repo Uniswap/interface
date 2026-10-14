@@ -9,17 +9,13 @@ import type { AccountsStore } from 'uniswap/src/features/accounts/store/types/Ac
 import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
 import { useAccount } from '~/hooks/useAccount'
 import { PoolDetailsStatsButtons } from '~/pages/PoolDetails/components/PoolDetailsStatsButtons'
-import { useMultiChainPositions } from '~/pages/PoolDetails/Pools/hooks/useMultiChainPositions'
 import { USE_DISCONNECTED_ACCOUNT } from '~/test-utils/constants'
 import { mocked } from '~/test-utils/mocked'
-import {
-  useMultiChainPositionsReturnValue,
-  validParsedPoolToken0,
-  validParsedPoolToken1,
-} from '~/test-utils/pools/fixtures'
+import { mockUseWalletPositions } from '~/test-utils/pools/feePositionFixtures'
+import { validParsedPoolToken0, validParsedPoolToken1 } from '~/test-utils/pools/fixtures'
 import { render, screen } from '~/test-utils/render'
 
-vi.mock('~/pages/PoolDetails/Pools/hooks/useMultiChainPositions')
+vi.mock('uniswap/src/features/positions/hooks/useWalletPositions')
 vi.mock('~/hooks/useAccount')
 vi.mock('uniswap/src/contexts/UniswapContext')
 vi.mock('uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContext')
@@ -57,7 +53,7 @@ describe('PoolDetailsStatsButtons geo gate (pool details CTA seam)', () => {
     vi.clearAllMocks()
     window.history.pushState({}, '', '/explore/pools/ethereum/0xpool')
     mocked(useAccount).mockReturnValue(USE_DISCONNECTED_ACCOUNT)
-    mocked(useMultiChainPositions).mockReturnValue(useMultiChainPositionsReturnValue)
+    mockUseWalletPositions([])
     mocked(useUniswapContext).mockReturnValue({
       navigateToFiatOnRamp: () => {},
       navigateToSwapFlow: () => {},

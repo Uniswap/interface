@@ -16,6 +16,7 @@ import { getTokenCategoryIcon } from 'uniswap/src/features/tokenCategories/categ
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { CAROUSEL_CARD_GAP, CAROUSEL_FADE_WIDTH } from '~/components/TokenCardCarousel/constants'
 import { TokenCardCarousel } from '~/components/TokenCardCarousel/TokenCardCarousel'
 import { TokenCardSkeletonRow } from '~/components/TokenCardCarousel/TokenCardSkeleton'
@@ -44,7 +45,12 @@ export function RelatedTokensSection({
   isLoading: boolean
 }): JSX.Element | null {
   const { t } = useTranslation()
-  const currency = useTDPStore((s) => s.currency!)
+  const trace = useTrace()
+  const { currency, address, currencyChainId } = useTDPStore((s) => ({
+    currency: s.currency!,
+    address: s.address,
+    currencyChainId: s.currencyChainId,
+  }))
   const subject = useMemo(() => currencyIdToRestContractInput(currencyId(currency)), [currency])
 
   const [pickedCategoryId, setPickedCategoryId] = useState<string | undefined>()
@@ -67,8 +73,12 @@ export function RelatedTokensSection({
       return
     }
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      ...trace,
       element: ElementName.TDPRelatedTokensCategoryChip,
       category_id: categoryId,
+      token_address: address,
+      chain_id: currencyChainId,
+      tags_rendered_count: categories.length,
     })
     setPickedCategoryId(categoryId)
   })
@@ -185,9 +195,11 @@ const RelatedTokenCard = memo(function RelatedTokenCard({
   listLength: number
 }): JSX.Element {
   const navigate = useNavigate()
+  const trace = useTrace()
 
   const onPress = useEvent((): void => {
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      ...trace,
       element: ElementName.TDPRelatedTokenCard,
       category_id: categoryId,
       token_address: token.address,
@@ -206,7 +218,10 @@ const RelatedTokenCard = memo(function RelatedTokenCard({
   return (
     <TokenCard
       layout="vertical"
+      issuer={token.issuer}
       logoUrl={token.logoUrl}
+      chainId={token.chainId}
+      hideNetworkLogo={token.isMultichain}
       name={token.name}
       pricePercentChange1d={token.pricePercentChange1d}
       priceUsd={token.priceUsd}

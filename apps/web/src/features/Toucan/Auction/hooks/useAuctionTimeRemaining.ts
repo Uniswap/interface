@@ -2,8 +2,8 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getDurationRemainingString } from 'utilities/src/time/duration'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { useSharedMachineTimeMs } from 'utilities/src/time/useSharedMachineTimeMs'
 import { useAbbreviatedTimeString } from '~/components/Table/utils/useAbbreviatedTimeString'
-import { useSharedMachineTimeMs } from '~/hooks/useMachineTime'
 
 export type AuctionPhase = 'notStarted' | 'preBid' | 'live' | 'completed'
 

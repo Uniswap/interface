@@ -6,7 +6,7 @@ import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { getListTransactionsQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/transactions/queries'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import type { ParsedToken } from 'uniswap/src/features/dataApi/utils/parsedToken'
+import { isNativeParsedToken, type ParsedToken } from 'uniswap/src/features/dataApi/utils/parsedToken'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { parseUniswapTransaction, type PoolTransaction } from '~/data/transactions/poolTransaction'
 import {
@@ -21,10 +21,10 @@ export type { PoolTableTransaction }
 
 const TRANSACTIONS_PAGE_SIZE = 25
 
-/** A native leg's `address` is undefined (see `ParsedToken`); resolve it to the wrapped-native
- * address so it can be matched against `token0Address`, which uses the same wrapped convention. */
+/** A native leg arrives with an absent or zero-address `address` (see `ParsedToken`); resolve it to the
+ * wrapped-native address so it can be matched against `token0Address`, which uses the same wrapped convention. */
 function resolvePoolTransactionLegAddress(token: ParsedToken): string | undefined {
-  return token.address ?? WRAPPED_NATIVE_CURRENCY[token.chainId]?.address
+  return isNativeParsedToken(token) ? WRAPPED_NATIVE_CURRENCY[token.chainId]?.address : token.address
 }
 
 interface UsePoolTransactionsResult {

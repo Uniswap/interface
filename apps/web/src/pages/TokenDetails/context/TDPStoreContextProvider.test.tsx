@@ -221,7 +221,7 @@ describe('TDPStoreContextProvider', () => {
     const auction = { address: '0x1111111111111111111111111111111111111111' } as PlainMessage<Auction>
     mockHeartbeat({
       address: TOKEN_A,
-      auctionSource: { status: TokenDetailsSourceState.Found, auction },
+      auctionSource: { status: TokenDetailsSourceState.Found, auction, auctions: [auction] },
     })
     rerender(
       <TDPStoreContextProvider>
@@ -230,7 +230,11 @@ describe('TDPStoreContextProvider', () => {
     )
 
     await waitFor(() => {
-      expect(storeRef.current?.getState().auctionSource).toEqual({ status: TokenDetailsSourceState.Found, auction })
+      expect(storeRef.current?.getState().auctionSource).toEqual({
+        status: TokenDetailsSourceState.Found,
+        auction,
+        auctions: [auction],
+      })
     })
   })
 

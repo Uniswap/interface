@@ -65,12 +65,32 @@ describe('ExploreStatsSection', () => {
     // Should show formatted volume and TVL values
     expect(screen.getByText(/1D volume/i)).toBeInTheDocument()
     expect(screen.getByText(/Total Uniswap TVL/i)).toBeInTheDocument()
-    expect(screen.queryByText(/today/i)).not.toBeInTheDocument()
-    expect(screen.queryByText(/5\.2/)).not.toBeInTheDocument()
 
     // Should not show loading bubbles
     const loadingBubbles = container.querySelectorAll('[style*="animation-name: myc-shimmer"]')
     expect(loadingBubbles.length).toBe(0)
+  })
+
+  it('shows the 1D % change for each stat', () => {
+    render(<ExploreStatsSection />)
+
+    expect(screen.getAllByText(/today/i).length).toBeGreaterThan(0)
+    expect(screen.getByText(/5\.2/)).toBeInTheDocument()
+    expect(screen.getByText(/15\.3/)).toBeInTheDocument()
+  })
+
+  it('hides the % change row for stats without a change', () => {
+    mockUseDailyTVLWithChange.mockReturnValue({
+      ...mockTVLData,
+      totalChangePercent: undefined,
+      protocolChangePercent: { v4: undefined, v3: undefined, v2: undefined },
+    })
+
+    render(<ExploreStatsSection />)
+
+    // Only the volume stat still carries a change.
+    expect(screen.getAllByText(/today/i)).toHaveLength(1)
+    expect(screen.getByText(/5\.2/)).toBeInTheDocument()
   })
 
   it('transitions from loading to loaded state properly', () => {

@@ -1,11 +1,10 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useFiatTokenConversion } from 'uniswap/src/features/transactions/hooks/useFiatTokenConversion'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { useEvent } from 'utilities/src/react/hooks'
 import { priceToQ96WithDecimals, q96ToPriceString } from '~/features/Toucan/Auction/BidDistributionChart/utils/q96'
+import type { UseBidMaxValuationFieldParams } from '~/features/Toucan/Auction/hooks/useBidMaxValuationField.types'
 import {
   capTokenDisplayValue,
   computeBidMaxPriceQ96,
@@ -15,48 +14,7 @@ import { evaluateMaxPrice, type MinValuationErrorDetails } from '~/features/Touc
 import { snapToNearestTick } from '~/features/Toucan/Auction/utils/ticks'
 import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
 
-export interface MaxValuationFieldState {
-  currencyAmount: CurrencyAmount<Currency> | undefined
-  currencyBalance: CurrencyAmount<Currency> | undefined
-  currencyInfo: ReturnType<typeof useCurrencyInfo>
-  usdValue: CurrencyAmount<Currency> | null
-  value: string
-  tokenValue: string
-  tokenValueQ96: bigint | undefined
-  snappedTokenValue: string
-  bidTokenSymbol: string
-  error?: string
-  errorDetails?: MinValuationErrorDetails
-  /** The last entry asked for more than the ceiling allows and was capped to it. */
-  wasCappedToMax: boolean
-  isFiatMode: boolean
-  onChange: (amount: string) => void
-  onTokenValueChange: (amount: string) => void
-  onTokenValueQ96Change: (q96: bigint) => void
-  onBlur: () => void
-  onToggleFiatMode: () => void
-  setSkipBlurSnap: (skip: boolean) => void
-}
-
-interface UseBidMaxValuationFieldParams {
-  bidCurrency: Currency | undefined
-  currencyBalance: CurrencyAmount<Currency> | undefined
-  currencyInfo: ReturnType<typeof useCurrencyInfo>
-  bidTokenDecimals: number | undefined
-  auctionTokenDecimals: number | undefined
-  bidTokenSymbol: string
-  clearingPriceQ96: bigint | undefined
-  floorPriceQ96: bigint | undefined
-  tickSizeQ96: bigint | undefined
-  minMaxPriceQ96: bigint | undefined
-  /** The auction's bid price ceiling, when a validation hook imposes one. */
-  maxBidPriceQ96?: bigint
-  /** The minimum valid bid, formatted for the below-minimum error copy. */
-  minValidPriceDisplay: string | undefined
-  minValidPriceDisplayFormatted: string | undefined
-  defaultMaxValuationDisplay: string
-  onInputChange?: () => void
-}
+export type { MaxValuationFieldState } from '~/features/Toucan/Auction/hooks/useBidMaxValuationField.types'
 
 export function useBidMaxValuationField({
   bidCurrency,
@@ -93,6 +51,11 @@ export function useBidMaxValuationField({
 
   const [hasInitializedDefault, setHasInitializedDefault] = useState(false)
   const [displayValueOverride, setDisplayValueOverride] = useState<string | null>(null)
+
+  // Whether the user has actually entered a max valuation (typed, dragged the slider, or clicked a chart tick).
+  // The field is pre-filled with a default before any interaction, so downstream consumers (e.g. the chart's
+  // "Your bid" indicator) must not treat the default as user input.
+  const [hasUserSetMaxValuation, setHasUserSetMaxValuation] = useState(false)
 
   // Ref to track when blur snap should be skipped (e.g., when modal is opening on mobile)
   const skipBlurSnapRef = useRef(false)
@@ -260,6 +223,7 @@ export function useBidMaxValuationField({
   }, [snappedTokenValue, bidTokenToFiat, exactMaxValuationAmountFiat])
 
   const handleMaxValuationChange = useEvent((amount: string) => {
+    setHasUserSetMaxValuation(true)
     setWasCappedToMax(false)
     setDisplayValueOverride(amount)
     setTokenPriceQ96(undefined)
@@ -288,9 +252,10 @@ export function useBidMaxValuationField({
     onInputChange?.()
   })
 
-  // Handler that always sets the token value directly, bypassing fiat mode
-  // Used by chart clicks which always work in token units
-  const handleTokenValueChange = useEvent((amount: string) => {
+  // Sets the token value directly, bypassing fiat mode, without claiming user authorship.
+  // Programmatic writers (the ceiling recap, the QuickLaunch peg) must use this path: flipping
+  // hasUserSetMaxValuation would draw a "Your bid" indicator for a value the user never entered.
+  const applyTokenValueWithoutUserIntent = useEvent((amount: string) => {
     setDisplayValueOverride(null)
 
     // This path suppresses the blur snap, so a charted tick above the ceiling would stay
@@ -325,12 +290,19 @@ export function useBidMaxValuationField({
     onInputChange?.()
   })
 
+  // Used by chart tick clicks, which always work in token units and are real user input
+  const handleTokenValueChange = useEvent((amount: string) => {
+    setHasUserSetMaxValuation(true)
+    applyTokenValueWithoutUserIntent(amount)
+  })
+
   // Handler for slider Q96 changes — stores Q96 directly to avoid precision loss
   const handleTokenValueQ96Change = useEvent((q96: bigint) => {
     if (bidTokenDecimals === undefined || auctionTokenDecimals === undefined) {
       return
     }
 
+    setHasUserSetMaxValuation(true)
     setWasCappedToMax(false)
     setTokenPriceQ96(q96)
     const displayValue = q96ToPriceString({ q96Value: q96, bidTokenDecimals, auctionTokenDecimals })
@@ -435,6 +407,7 @@ export function useBidMaxValuationField({
   })
 
   const resetMaxValuationField = useEvent(() => {
+    setHasUserSetMaxValuation(false)
     setWasCappedToMax(false)
     setDisplayValueOverride(null)
     setMaxPriceError(undefined)
@@ -487,6 +460,8 @@ export function useBidMaxValuationField({
       setSkipBlurSnap,
     },
     exactMaxValuationAmount: exactMaxValuationAmountToken,
+    hasUserSetMaxValuation,
+    applyTokenValueWithoutUserIntent,
     maxValuationCurrencyAmount,
     maxPriceAmountIsZero,
     maxPriceQ96,

@@ -76,8 +76,10 @@ export function CreateAuctionFormWrapper({ children }: { children: React.ReactNo
         maxWidth: '100%',
         mx: 'auto',
       }}
-      $sm={{
-        px: '$spacing20',
+      // The app shell already pads 10px at $md; together this lands on the 16px mWeb gutter.
+      $md={{
+        px: '$spacing6',
+        mt: '$spacing12',
       }}
     >
       <BreadcrumbNavContainer aria-label="breadcrumb-nav">
@@ -96,7 +98,7 @@ export function CreateAuctionFormWrapper({ children }: { children: React.ReactNo
         mr="auto"
         mb={media.xl ? '$spacing16' : '$spacing32'}
       >
-        <Text variant="heading2">
+        <Text variant="heading2" $md={{ variant: 'heading3' }}>
           {step === CreateAuctionStep.REVIEW_LAUNCH
             ? t('toucan.createAuction.review.title')
             : t('toucan.createAuction.title')}

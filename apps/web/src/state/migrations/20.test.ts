@@ -1,5 +1,6 @@
 import { createMigrate } from 'redux-persist'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
+import { getDeviceFiatCurrency } from 'uniswap/src/features/fiatCurrency/utils'
 import { Language } from 'uniswap/src/features/language/constants'
 import { DeviceAccessTimeout } from 'uniswap/src/features/settings/constants'
 import { migration1 } from '~/state/migrations/1'
@@ -22,6 +23,10 @@ import { migration17 } from '~/state/migrations/17'
 import { migration18 } from '~/state/migrations/18'
 import { migration19 } from '~/state/migrations/19'
 import { activeLocalCurrencyAtomName, migration20, PersistAppStateV20 } from '~/state/migrations/20'
+
+vi.mock('uniswap/src/features/fiatCurrency/utils', () => ({
+  getDeviceFiatCurrency: vi.fn(() => 'USD'),
+}))
 
 const previousState: PersistAppStateV20 = {
   _persist: {
@@ -66,9 +71,10 @@ const migrator = createMigrate(
 )
 
 describe('migration to v20', () => {
-  it('should set currency to default value when unset', async () => {
+  it('should set currency to the device currency when unset', async () => {
+    vi.mocked(getDeviceFiatCurrency).mockReturnValueOnce(FiatCurrency.Euro)
     const result: any = await migrator(previousState, 20)
-    expect(result.userSettings.currentCurrency).toEqual(FiatCurrency.UnitedStatesDollar)
+    expect(result.userSettings.currentCurrency).toEqual(FiatCurrency.Euro)
   })
   it('should set user settings currency based on atom value', async () => {
     localStorage.setItem(activeLocalCurrencyAtomName, FiatCurrency.NigerianNaira)

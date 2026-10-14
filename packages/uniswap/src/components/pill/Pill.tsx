@@ -43,7 +43,10 @@ export function Pill({
     >
       {icon ?? null}
       {label ? (
-        <Text style={{ color: foregroundColor, paddingTop: 1 }} variant={textVariant}>
+        // A pill is a single-line chip, so the label must never reflow. Callers needing a size
+        // floor use minWidth, not width: a fixed width turns this into an ellipsis that silently
+        // drops characters once the label outgrows it (e.g. at a >1x OS font scale).
+        <Text numberOfLines={1} style={{ color: foregroundColor, paddingTop: 1 }} variant={textVariant}>
           {label}
         </Text>
       ) : null}

@@ -1,4 +1,4 @@
-import { useIsTokenCategoriesEnabled, useIsV2EndpointsSearchEnabled } from '@universe/gating'
+import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { useEffect, useMemo, useState } from 'react'
 import type { TokenOption } from 'uniswap/src/components/lists/items/types'
 import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
@@ -37,10 +37,7 @@ export function useCategoryFilterChips({
   isLoading: boolean
   isBalancesOnlySearch: boolean
 }): CategoryFilterChipsState {
-  const isTokenCategoriesEnabled = useIsTokenCategoriesEnabled()
-  // Only v2 search results carry categoryIds; on the v1 arm no chips can ever appear.
-  const isSearchV2Enabled = useIsV2EndpointsSearchEnabled()
-  const enabled = isTokenCategoriesEnabled && isSearchV2Enabled
+  const enabled = useIsTokenCategoriesEnabled()
   const { categories, isLoading: isCategoriesLoading } = useAllTokenCategories()
   const orderedCategories = useTokenCategoryOrder(categories)
   const [selectedIds, setSelectedIds] = useState<string[]>(NO_IDS)

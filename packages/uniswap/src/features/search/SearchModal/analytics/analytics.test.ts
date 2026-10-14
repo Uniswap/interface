@@ -2,6 +2,7 @@ import { Token } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import {
   AuctionOption,
+  CategoryOption,
   MultichainTokenOption,
   OnchainItemListOptionType,
   RwaCollectionOption,
@@ -17,6 +18,7 @@ import { SearchFilterContext } from 'uniswap/src/features/search/SearchModal/ana
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { InterfaceEventName, MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { tokenCategory } from 'uniswap/src/test/fixtures/tokenCategory'
 import type { Mock } from 'vitest'
 
 // Use vi.hoisted to create a mutable mock value that can be changed between tests
@@ -140,6 +142,11 @@ const MOCK_AUCTION: AuctionOption = {
   currencyInfo: null,
   committedVolumeUsd: undefined,
   isVerified: true,
+}
+
+const MOCK_CATEGORY: CategoryOption = {
+  type: OnchainItemListOptionType.Category,
+  category: tokenCategory({ id: 'stablecoins', name: 'Stablecoins' }),
 }
 
 describe('sendSearchOptionItemClickedAnalytics', () => {
@@ -476,6 +483,115 @@ describe('sendSearchOptionItemClickedAnalytics', () => {
       query_text: '',
       selected_search_result_name: 'Auction Token',
       selected_search_result_address: '0xauction',
+      searchChainFilter: null,
+      searchTabFilter: SearchTab.All,
+    })
+  })
+
+  it('sends a query-matched category row as a category suggestion on web, with the category id', () => {
+    mockPlatformState.isMobileApp = false
+
+    const mockSection: OnchainItemSection<CategoryOption | TokenOption> = {
+      sectionKey: OnchainItemSectionName.Tokens,
+      data: [MOCK_CATEGORY, MOCK_TOKEN1],
+    }
+    const mockSearchFilters: SearchFilterContext = {
+      query: 'stable',
+      searchChainFilter: null,
+      searchTabFilter: SearchTab.All,
+    }
+
+    sendSearchOptionItemClickedAnalytics({
+      item: MOCK_CATEGORY,
+      section: mockSection,
+      rowIndex: 1,
+      sectionIndex: 0,
+      searchFilters: mockSearchFilters,
+    })
+
+    expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.NavbarResultSelected, {
+      category: OnchainItemSectionName.Tokens,
+      isHistory: false,
+      position: 1,
+      sectionPosition: 1,
+      suggestionCount: 2,
+      query: 'stable',
+      suggestion_type: 'category-suggestion',
+      total_suggestions: 2,
+      query_text: 'stable',
+      selected_search_result_name: 'Stablecoins',
+      selected_search_result_address: 'stablecoins',
+      category_id: 'stablecoins',
+      searchChainFilter: null,
+      searchTabFilter: SearchTab.All,
+    })
+  })
+
+  it('sends a resting-state spotlit header press as a category spotlight pick on web', () => {
+    mockPlatformState.isMobileApp = false
+
+    const mockSection: OnchainItemSection<CategoryOption | TokenOption> = {
+      sectionKey: OnchainItemSectionName.Category,
+      categoryId: 'stablecoins',
+      data: [MOCK_TOKEN1, MOCK_TOKEN2],
+    }
+    const mockSearchFilters: SearchFilterContext = {
+      searchChainFilter: null,
+      searchTabFilter: SearchTab.All,
+    }
+
+    sendSearchOptionItemClickedAnalytics({
+      item: MOCK_CATEGORY,
+      section: mockSection,
+      rowIndex: 2,
+      sectionIndex: -1,
+      searchFilters: mockSearchFilters,
+    })
+
+    expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(
+      InterfaceEventName.NavbarResultSelected,
+      expect.objectContaining({
+        category: OnchainItemSectionName.Category,
+        sectionPosition: 0,
+        suggestion_type: 'category-spotlight',
+        query_text: '',
+        category_id: 'stablecoins',
+      }),
+    )
+  })
+
+  it('sends a category row with type category on mobile, with the category id', () => {
+    mockPlatformState.isMobileApp = true
+
+    const mockSection: OnchainItemSection<CategoryOption | TokenOption> = {
+      sectionKey: OnchainItemSectionName.Tokens,
+      data: [MOCK_CATEGORY, MOCK_TOKEN1],
+    }
+    const mockSearchFilters: SearchFilterContext = {
+      query: 'stable',
+      searchChainFilter: null,
+      searchTabFilter: SearchTab.All,
+    }
+
+    sendSearchOptionItemClickedAnalytics({
+      item: MOCK_CATEGORY,
+      section: mockSection,
+      rowIndex: 1,
+      sectionIndex: 0,
+      searchFilters: mockSearchFilters,
+    })
+
+    expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(MobileEventName.ExploreSearchResultClicked, {
+      category: OnchainItemSectionName.Tokens,
+      isHistory: false,
+      position: 1,
+      sectionPosition: 1,
+      suggestionCount: 2,
+      query: 'stable',
+      name: 'Stablecoins',
+      address: 'stablecoins',
+      category_id: 'stablecoins',
+      type: 'category',
       searchChainFilter: null,
       searchTabFilter: SearchTab.All,
     })

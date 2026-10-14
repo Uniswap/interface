@@ -246,8 +246,28 @@ describe('getCreateFeeTierOptions', () => {
     expect(result.map((option) => option.value.feeAmount)).toEqual([FeeAmount.MEDIUM, 2500, 75, 375])
   })
 
+  it("keeps a new tier's subtitle once its pool is deep enough to claim its own box", () => {
+    // The 0.25% placeholder borrows the 0.30% subtitle; the same tier backed by a deep pool must read the same.
+    const placeholder = getCreateFeeTierOptions({
+      protocolVersion: ProtocolVersion.V4,
+      defaultFeeTiers: [],
+      feeTierData: {},
+      hook: undefined,
+    }).find((option) => option.value.feeAmount === 2500)
+    const result = getCreateFeeTierOptions({
+      protocolVersion: ProtocolVersion.V4,
+      defaultFeeTiers: [],
+      feeTierData: record(tierData(2500, '12345')),
+      hook: undefined,
+    })
+    expect(result[0].value.feeAmount).toBe(2500)
+    expect(result[0].tvl).toBe('12345')
+    expect(placeholder?.title).not.toBe('')
+    expect(result[0].title).toBe(placeholder?.title)
+  })
+
   it('leaves a non-canonical tier without a "Best for …" subtitle', () => {
-    // getFeeTierTitle only names the four old default fee amounts, so a pool at any other fee renders a
+    // getFeeTierTitle only names the default tiers (old and new), so a pool at any other fee renders a
     // blank subtitle — as it did before the canonical grid, when v4 showed the top four tiers by TVL.
     const feeTierData = record(tierData(7, '9251405.85'), tierData(100, '650091.16'))
     const result = getCreateFeeTierOptions({
@@ -332,14 +352,12 @@ describe('getCreateFeeTierOptions', () => {
     })
   })
 
-  it('appends the dynamic-fee box from defaultFeeTiers after the canonical tiers', () => {
-    // getDefaultFeeTiersWithData already builds the dynamic option (top-by-TVL); the v4 grid reuses it.
-    const dynamicOption = { value: DYNAMIC_FEE_DATA, title: 'dynamic', tvl: '50000', boostedApr: 7 }
-    const feeTierData = record(tierData(DYNAMIC_FEE_DATA.feeAmount, '50000', { isDynamic: true, boostedApr: 7 }))
+  it('appends the deployed dynamic-fee pool after the canonical tiers', () => {
+    const dynamicPool = tierData(DYNAMIC_FEE_DATA.feeAmount, '50000', { isDynamic: true, boostedApr: 7 })
     const result = getCreateFeeTierOptions({
       protocolVersion: ProtocolVersion.V4,
-      defaultFeeTiers: [dynamicOption],
-      feeTierData,
+      defaultFeeTiers: [],
+      feeTierData: record(dynamicPool),
       hook: '0x0000000000000000000000000000000000000088',
     })
     // The four canonical tiers, then the dynamic tier appended last.
@@ -347,9 +365,55 @@ describe('getCreateFeeTierOptions', () => {
       ...NEW_TIER_FEE_AMOUNTS,
       DYNAMIC_FEE_DATA.feeAmount,
     ])
-    // Reused verbatim from defaultFeeTiers — not reconstructed (no fee breakdown to hang a tooltip on).
-    expect(result[result.length - 1]).toBe(dynamicOption)
-    expect(result[result.length - 1].feeBreakdown).toBeUndefined()
+    const dynamicBox = result[result.length - 1]
+    expect(dynamicBox.value).toEqual(dynamicPool.fee)
+    expect(dynamicBox.tvl).toBe('50000')
+    expect(dynamicBox.boostedApr).toBe(7)
+    expect(dynamicBox.created).toBe(true)
+    // A dynamic tier has no fixed rate to break down.
+    expect(dynamicBox.feeBreakdown).toBeUndefined()
+  })
+
+  it('appends a dynamic pool however shallow it is', () => {
+    // The v4 grid used to inherit a $1k TVL floor (and a top-4-by-TVL cut) from the list it read the
+    // dynamic option out of; a hook's only dynamic pool now gets its box regardless of depth.
+    const dustDynamic = tierData(DYNAMIC_FEE_DATA.feeAmount, '12', { isDynamic: true })
+    const result = getCreateFeeTierOptions({
+      protocolVersion: ProtocolVersion.V4,
+      defaultFeeTiers: [],
+      feeTierData: record(dustDynamic),
+      hook: '0x0000000000000000000000000000000000000088',
+    })
+    expect(result.at(-1)?.value).toEqual(dustDynamic.fee)
+  })
+
+  it('skips the not-yet-created dynamic default seeded into feeTierData', () => {
+    const seeded = tierData(DYNAMIC_FEE_DATA.feeAmount, '0', { isDynamic: true, created: false })
+    const result = getCreateFeeTierOptions({
+      protocolVersion: ProtocolVersion.V4,
+      defaultFeeTiers: [],
+      feeTierData: record(seeded),
+      hook: '0x0000000000000000000000000000000000000088',
+    })
+    expect(result.every((option) => !option.value.isDynamic)).toBe(true)
+  })
+
+  it('prefers an incentivized dynamic pool over a deeper one on the same hook', () => {
+    const deep: FeeTierData = {
+      ...tierData(450, '1700000', { isDynamic: true }),
+      fee: { feeAmount: 450, isDynamic: true, tickSpacing: 60 },
+    }
+    const boosted: FeeTierData = {
+      ...tierData(14800, '900', { isDynamic: true, boostedApr: 12 }),
+      fee: { feeAmount: 14800, isDynamic: true, tickSpacing: 8 },
+    }
+    const result = getCreateFeeTierOptions({
+      protocolVersion: ProtocolVersion.V4,
+      defaultFeeTiers: [],
+      feeTierData: { '450-60': deep, '14800-8': boosted },
+      hook: '0x0000000000000000000000000000000000000088',
+    })
+    expect(result.at(-1)?.value).toEqual(boosted.fee)
   })
 
   it('re-points the dynamic box to the URL-pinned tick spacing, else shows the deepest', () => {
@@ -365,13 +429,11 @@ describe('getCreateFeeTierOptions', () => {
       fee: { feeAmount: 14800, isDynamic: true, tickSpacing: 8 },
     }
     const feeTierData = { '450-60': deepDynamic, '14800-8': dustDynamic }
-    // The grid reuses the top-by-TVL dynamic option from defaultFeeTiers (the deep pool).
-    const dynamicOption = { value: deepDynamic.fee, title: 'dynamic', tvl: '1700000' }
     const hook = '0x0000000000000000000000000000000000000088'
 
     const withoutPin = getCreateFeeTierOptions({
       protocolVersion: ProtocolVersion.V4,
-      defaultFeeTiers: [dynamicOption],
+      defaultFeeTiers: [],
       feeTierData,
       hook,
     })
@@ -380,7 +442,7 @@ describe('getCreateFeeTierOptions', () => {
     // Deep-linking the shallow pool's tick spacing re-points the box at it, stranding the deeper sibling.
     const withPin = getCreateFeeTierOptions({
       protocolVersion: ProtocolVersion.V4,
-      defaultFeeTiers: [dynamicOption],
+      defaultFeeTiers: [],
       feeTierData,
       hook,
       selectedFee: dustDynamic.fee,
@@ -391,7 +453,7 @@ describe('getCreateFeeTierOptions', () => {
     expect(withPin.at(-1)?.feeBreakdown).toBeUndefined()
   })
 
-  it('does not append a dynamic box when defaultFeeTiers has none (vanilla v4 pair)', () => {
+  it('does not append a dynamic box when no dynamic pool exists (vanilla v4 pair)', () => {
     const feeTierData = record(tierData(FeeAmount.MEDIUM, '10000'))
     const result = getCreateFeeTierOptions({
       protocolVersion: ProtocolVersion.V4,
@@ -673,12 +735,11 @@ describe('URL-pinned tick spacing (PDP deep link)', () => {
     expect(dynamics[0].fee.tickSpacing).toBe(8)
   })
 
-  it('grid box resolves to the linked tick spacing even when its TVL would filter it out', () => {
-    // The dust pool is below the grid's TVL floor, so defaultFeeTiers only carries the deep dynamic option;
-    // the pin re-points the box anyway by sourcing the linked pool straight from feeTierData.
+  it('grid box resolves to the linked tick spacing over its deeper sibling', () => {
+    // Unpinned, the box shows the deep pool; the pin re-points it at the linked (dust) pool.
     const result = getCreateFeeTierOptions({
       protocolVersion: ProtocolVersion.V4,
-      defaultFeeTiers: [{ value: deepDynamic.fee, title: 'dynamic', tvl: '1700000' }],
+      defaultFeeTiers: [],
       feeTierData,
       hook,
       selectedFee: pdpDeepLinkFee,

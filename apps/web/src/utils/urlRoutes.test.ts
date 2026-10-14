@@ -25,6 +25,11 @@ describe('getCurrentPageFromLocation', () => {
     expect(result).toBe(InterfacePageName.PoolDetailsPage)
   })
 
+  it('should return CATEGORY_DETAILS_PAGE when location pathname starts with "/explore/category/"', () => {
+    const result = getCurrentPageFromLocation('/explore/category/defi')
+    expect(result).toBe(InterfacePageName.CategoryDetailsPage)
+  })
+
   it('should return EXPLORE_PAGE when location pathname starts with "/explore" but does not match detail-page routes', () => {
     let result = getCurrentPageFromLocation('/explore/tokens/ethereum')
     expect(result).toBe(InterfacePageName.ExplorePage)

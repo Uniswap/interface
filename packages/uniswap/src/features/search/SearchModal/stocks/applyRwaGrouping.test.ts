@@ -51,29 +51,11 @@ describe('applyRwaGroupingToSearchOptions', () => {
       index,
       isAddressSearch: false,
       chainFilter: null,
-      hoistRwaToTop: false,
       plainTokenNames: false,
     })
     expect(out[0]).toBe(generic)
     expect(out[1]?.type).toBe(OnchainItemListOptionType.RwaCollection)
     expect(out).toHaveLength(2)
-  })
-
-  it('hoistRwaToTop (legacy UI) floats RWA rows above generic tokens, keeping relative order within each group', () => {
-    const first = token(MAINNET, '0xfirst', 'PEPE')
-    const middle = token(MAINNET, '0xmiddle', 'DOGE')
-    const out = applyRwaGroupingToSearchOptions({
-      options: [first, token(MAINNET, '0xa', 'TSLAON'), middle],
-      index,
-      isAddressSearch: false,
-      chainFilter: null,
-      hoistRwaToTop: true,
-      plainTokenNames: false,
-    })
-    expect(out[0]?.type).toBe(OnchainItemListOptionType.RwaCollection)
-    expect(out[1]).toBe(first)
-    expect(out[2]).toBe(middle)
-    expect(out).toHaveLength(3)
   })
 
   it('preserves backend ranking: a later duplicate issuer token is dropped, not moved', () => {
@@ -84,7 +66,6 @@ describe('applyRwaGroupingToSearchOptions', () => {
       index,
       isAddressSearch: false,
       chainFilter: null,
-      hoistRwaToTop: false,
       plainTokenNames: false,
     })
     expect(out.map((o) => o.type)).toEqual([
@@ -102,7 +83,6 @@ describe('applyRwaGroupingToSearchOptions', () => {
       index,
       isAddressSearch: false,
       chainFilter: null,
-      hoistRwaToTop: false,
       plainTokenNames: false,
     })
     expect(out.filter((o) => o.type === OnchainItemListOptionType.RwaCollection)).toHaveLength(1)
@@ -115,13 +95,12 @@ describe('applyRwaGroupingToSearchOptions', () => {
       index,
       isAddressSearch: true,
       chainFilter: null,
-      hoistRwaToTop: false,
       plainTokenNames: false,
     })
     expect(out[0]?.type).toBe(OnchainItemListOptionType.Token)
     expect((out[0] as TokenOption).rwaCategory).toBe(RwaCategory.STOCKS)
     expect((out[0] as TokenOption).rwaName).toBe('Tesla')
-    expect((out[0] as TokenOption).rwaIssuerSlug).toBe('ondo')
+    expect((out[0] as TokenOption).rwaIssuer?.issuer).toBe('ondo')
   })
 
   it('network filter demotes to a single tagged token when only one issuer is on-chain', () => {
@@ -130,14 +109,13 @@ describe('applyRwaGroupingToSearchOptions', () => {
       index,
       isAddressSearch: false,
       chainFilter: BNB as never,
-      hoistRwaToTop: false,
       plainTokenNames: false,
     })
     // only ondo is on BNB -> single issuer on-chain -> tagged token, not a collection
     expect(out[0]?.type).toBe(OnchainItemListOptionType.Token)
     expect((out[0] as TokenOption).rwaCategory).toBe(RwaCategory.STOCKS)
     expect((out[0] as TokenOption).rwaName).toBe('Tesla')
-    expect((out[0] as TokenOption).rwaIssuerSlug).toBe('ondo')
+    expect((out[0] as TokenOption).rwaIssuer?.issuer).toBe('ondo')
   })
 
   it('threads a non-STOCKS category from the matched asset onto the tagged token', () => {
@@ -156,7 +134,6 @@ describe('applyRwaGroupingToSearchOptions', () => {
       index: etfsIndex,
       isAddressSearch: true,
       chainFilter: null,
-      hoistRwaToTop: false,
       plainTokenNames: false,
     })
     expect(out[0]?.type).toBe(OnchainItemListOptionType.Token)
@@ -183,7 +160,6 @@ describe('applyRwaGroupingToSearchOptions', () => {
       index,
       isAddressSearch: false,
       chainFilter: null,
-      hoistRwaToTop: false,
       plainTokenNames: false,
     })
     expect(out[0]?.type).toBe(OnchainItemListOptionType.RwaCollection)
@@ -199,7 +175,6 @@ describe('applyRwaGroupingToSearchOptions', () => {
       index,
       isAddressSearch: false,
       chainFilter: null,
-      hoistRwaToTop: false,
       plainTokenNames: false,
     })
     expect(out).toHaveLength(1)
@@ -219,7 +194,6 @@ describe('applyRwaGroupingToSearchOptions', () => {
       index,
       isAddressSearch: false,
       chainFilter: MAINNET as never,
-      hoistRwaToTop: false,
       plainTokenNames: false,
     })
     expect(out).toHaveLength(1)
@@ -237,10 +211,31 @@ describe('applyRwaGroupingToSearchOptions', () => {
       index,
       isAddressSearch: false,
       chainFilter: null,
-      hoistRwaToTop: false,
       plainTokenNames: false,
     })
     expect(out[0]?.type).toBe(OnchainItemListOptionType.RwaCollection)
     expect(out[0]).not.toHaveProperty('searchStats')
+  })
+
+  it('fills collection issuers with the backend branding carried by matched v2 results', () => {
+    const ondo = token(MAINNET, '0xa', 'TSLAON')
+    ondo.currencyInfo = {
+      ...ondo.currencyInfo,
+      issuer: { issuer: 'coingecko-ondo', issuerDisplayName: 'Ondo Finance', issuerLogoUrl: 'https://logo/ondo.svg' },
+    }
+    const out = applyRwaGroupingToSearchOptions({
+      options: [ondo],
+      index,
+      isAddressSearch: false,
+      chainFilter: null,
+      plainTokenNames: true,
+    })
+    const collection = out[0] as RwaCollectionOption
+    expect(collection.type).toBe(OnchainItemListOptionType.RwaCollection)
+    const byIssuer = Object.fromEntries(collection.rwa.issuerTokens.map((issuer) => [issuer.issuer, issuer]))
+    expect(byIssuer['ondo']?.issuerDisplayName).toBe('Ondo Finance')
+    expect(byIssuer['ondo']?.issuerLogoUrl).toBe('https://logo/ondo.svg')
+    // Issuers absent from the results keep the slug-only v1 entry.
+    expect(byIssuer['xstocks']?.issuerLogoUrl).toBeUndefined()
   })
 })

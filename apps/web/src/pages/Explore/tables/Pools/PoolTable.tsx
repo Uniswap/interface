@@ -4,7 +4,6 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import type { HookEntry } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
 import { GraphQLApi } from '@universe/api'
 import { UniverseChainId, areEvmAddressesEqual } from '@universe/chains'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex, type FlexCompatProps, Text, useMedia } from '@universe/mycelium'
 import {
   forwardRef,
@@ -55,7 +54,7 @@ import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { supportedChainIdFromGQLChain } from '~/data/chainUtils'
 import { PoolSortFields } from '~/data/pools/poolStats'
 import { gqlToCurrency, OrderDirection } from '~/data/util'
-import { TABLE_PAGE_SIZE } from '~/features/Explore/state'
+import { EXPLORE_API_PAGE_SIZE } from '~/features/Explore/state/constants'
 import {
   useExploreTablesFilterStore,
   useExploreTablesFilterStoreActions,
@@ -503,11 +502,9 @@ function ExploreTopPoolTableContent({
     sortAscending: s.sortAscending,
   }))
   const { resetSort } = usePoolTableStoreActions()
-  const selectedProtocol = useExploreTablesFilterStore((s) => s.selectedProtocol)
   const poolsFilter = useExploreTablesFilterStore((s) => s.poolsFilter)
   const filterString = useExploreTablesFilterStore((s) => s.filterString)
   const { setPoolsAprRange } = useExploreTablesFilterStoreActions()
-  const isAdvancedPoolsFilteringEnabled = useFeatureFlag(FeatureFlags.AdvancedPoolsFiltering)
 
   useEffect(() => {
     resetSort()
@@ -524,11 +521,10 @@ function ExploreTopPoolTableContent({
       sortBy: sortMethod,
       sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc,
     },
-    // The URL chain scopes the list under both filter UIs: with the advanced filter on, its Network control
-    // reads and writes that same path segment (see ExploreTableFilters), so the two can't disagree.
+    // The filter's Network control reads and writes this same URL path segment (see ExploreTableFilters),
+    // so the two can't disagree.
     chainId,
-    protocol: selectedProtocol,
-    poolsFilter: isAdvancedPoolsFilteringEnabled ? poolsFilter : undefined,
+    poolsFilter,
   })
 
   // The toolbar's filter modal sits outside this table's sort store, so it can't run the same query; publish the
@@ -576,7 +572,7 @@ export const ExploreTopPoolTable = memo(function ExploreTopPoolTable({
 
 const TopPoolTable = memo(function TopPoolTable({
   topPoolData,
-  pageSize = TABLE_PAGE_SIZE,
+  pageSize = EXPLORE_API_PAGE_SIZE,
   staticSize = false,
   surface,
 }: {

@@ -126,40 +126,23 @@ describe('getPoolsListParams', () => {
     expect(params.filter?.tokenFilter).toBeUndefined()
   })
 
-  it('narrows to the single selected protocol version', () => {
-    const params = getPoolsListParams({ fallbackChainIds: ENABLED_CHAINS, sort: SORT, protocol: ProtocolVersion.V4 })
-    expect(params.filter?.protocolVersions).toEqual([ProtocolVersion.V4])
-  })
-
-  it('treats UNSPECIFIED as every version', () => {
+  it('narrows to the advanced filter protocol selection', () => {
     const params = getPoolsListParams({
       fallbackChainIds: ENABLED_CHAINS,
       sort: SORT,
-      protocol: ProtocolVersion.UNSPECIFIED,
-    })
-    expect(params.filter?.protocolVersions).toEqual(ALL_PROTOCOL_VERSIONS)
-  })
-
-  // The advanced filter is the more specific control, so its selection wins over the dropdown's.
-  it('lets the advanced filter protocol selection override the single protocol', () => {
-    const params = getPoolsListParams({
-      fallbackChainIds: ENABLED_CHAINS,
-      sort: SORT,
-      protocol: ProtocolVersion.V4,
       filterParams: { protocolVersions: [ProtocolVersion.V2] },
     })
     expect(params.filter?.protocolVersions).toEqual([ProtocolVersion.V2])
   })
 
-  // An empty advanced selection means "all", so it must not blank out the dropdown's choice.
-  it('keeps the single protocol when the advanced filter selects no versions', () => {
+  // An empty advanced selection means "all".
+  it('sends every version when the advanced filter selects none', () => {
     const params = getPoolsListParams({
       fallbackChainIds: ENABLED_CHAINS,
       sort: SORT,
-      protocol: ProtocolVersion.V4,
       filterParams: { protocolVersions: undefined },
     })
-    expect(params.filter?.protocolVersions).toEqual([ProtocolVersion.V4])
+    expect(params.filter?.protocolVersions).toEqual(ALL_PROTOCOL_VERSIONS)
   })
 
   it('passes the advanced stats and rewards filters through', () => {

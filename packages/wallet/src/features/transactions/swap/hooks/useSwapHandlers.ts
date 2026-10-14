@@ -2,6 +2,8 @@ import { TradingApi } from '@universe/api'
 import { Platform } from '@universe/chains'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { getRowTagCategoryId } from 'uniswap/src/data/apiClients/dataApiService/categories/getRowTagCategoryId'
+import { useAllTokenCategories } from 'uniswap/src/data/apiClients/dataApiService/categories/useAllTokenCategories'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { logEarnSwapUpsellConverted } from 'uniswap/src/features/earn/analytics'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -24,6 +26,7 @@ import {
   isUserOpSwap,
 } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { toStringish } from 'uniswap/src/utils/number'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useAccountsStore, useActiveAddress } from 'wallet/src/features/accounts/store/hooks'
@@ -42,6 +45,7 @@ export function useSwapHandlers(): SwapHandlers {
   const formatter = useLocalizationContext()
   const swapStartTimestamp = useSelector(selectSwapStartTimestamp)
   const trace = useTrace()
+  const { categories } = useAllTokenCategories()
   const evmAddress = useActiveAddress(Platform.EVM)
 
   const { data: portfolioData } = usePortfolioTotalValue({ evmAddress, fetchPolicy: 'cache-first' })
@@ -141,6 +145,8 @@ export function useSwapHandlers(): SwapHandlers {
         is_auto_slippage: isAutoSlippage,
         swap_flow_duration_milliseconds: swapStartTimestamp ? Date.now() - swapStartTimestamp : undefined,
         is_fiat_input_mode: isFiatInputMode,
+        token_in_category: getRowTagCategoryId({ currencyId: currencyId(trade.inputAmount.currency), categories }),
+        token_out_category: getRowTagCategoryId({ currencyId: currencyId(trade.outputAmount.currency), categories }),
       })
 
       // Reset swap start timestamp
@@ -156,6 +162,7 @@ export function useSwapHandlers(): SwapHandlers {
       signing,
       swapStartTimestamp,
       trace,
+      categories,
     ],
   )
 

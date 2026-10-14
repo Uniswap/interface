@@ -142,7 +142,6 @@ export function CopyHelper({
     isIconOnly ||
     alwaysShowIcon ||
     Boolean(iconPosition === 'left' || isHover || externalHover || isTouchable || isCopied)
-  const offset = !isIconOnly && showIcon ? gap + iconSize : 0
   // With children the visible text already names the button; icon-only would otherwise announce unlabeled.
   const accessibleName = isIconOnly ? (ariaLabel ?? t('common.button.copy')) : undefined
 
@@ -172,11 +171,10 @@ export function CopyHelper({
           dataTestId={dataTestId}
         />
       )}
+      {/* Shrinks rather than `maxWidth: calc(100% - icon)`: in a shrink-to-fit parent that calc
+          equals the text's own width, and sub-pixel rounding at fractional browser zoom wrapped it. */}
       {!isIconOnly && (
-        <Flex
-          className="overflow-hidden text-ellipsis whitespace-nowrap"
-          style={{ maxWidth: `calc(100% - ${offset}px)` }}
-        >
+        <Flex className="overflow-hidden text-ellipsis whitespace-nowrap" minWidth={0} flexShrink={1}>
           {isCopied && iconPosition === 'left' ? (
             <Text variant="body3" color="$neutral3" {...textProps}>
               {t('common.copied')}

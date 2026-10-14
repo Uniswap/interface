@@ -63,11 +63,16 @@ export function mergeCurrencyInfosWithBalances({
     if (!portfolioBalance) {
       return createEmptyBalanceOption(currencyInfo)
     }
-    // The balance's currencyInfo wins, but only search results carry categoryIds, so keep those.
-    // Lookups always send the field (often empty), so only a non-empty list is worth carrying over.
-    const mergedCurrencyInfo =
+    // The balance's currencyInfo wins, but only search results carry categoryIds and issuer branding, so keep
+    // those. Lookups always send categoryIds (often empty), so only a non-empty list is worth carrying over.
+    const categoryIds =
       currencyInfo.categoryIds?.length && !portfolioBalance.currencyInfo.categoryIds?.length
-        ? { ...portfolioBalance.currencyInfo, categoryIds: currencyInfo.categoryIds }
+        ? currencyInfo.categoryIds
+        : undefined
+    const issuer = portfolioBalance.currencyInfo.issuer ? undefined : currencyInfo.issuer
+    const mergedCurrencyInfo =
+      categoryIds || issuer
+        ? { ...portfolioBalance.currencyInfo, ...(categoryIds && { categoryIds }), ...(issuer && { issuer }) }
         : portfolioBalance.currencyInfo
     return { type: OnchainItemListOptionType.Token, ...portfolioBalance, currencyInfo: mergedCurrencyInfo }
   })

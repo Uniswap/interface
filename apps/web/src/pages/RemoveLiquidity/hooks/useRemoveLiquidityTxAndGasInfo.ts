@@ -15,14 +15,15 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { useLogLiquidityTxError } from 'uniswap/src/features/transactions/liquidity/useLogLiquidityTxError'
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
-import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { getWrappedTokenIfExists } from 'uniswap/src/utils/currency'
 import { logger } from 'utilities/src/logger/logger'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { LP_GAS_URGENCY } from '~/features/Liquidity/constants'
 import { getTokenOrZeroAddress } from '~/features/Liquidity/utils/currency'
 import { getProtocols } from '~/features/Liquidity/utils/protocolVersion'
-import { useRemoveLiquidityModalContext } from '~/pages/RemoveLiquidity/RemoveLiquidityModalContext'
+import {
+  REMOVE_LIQUIDITY_REFETCH_INTERVAL_MS,
+  useRemoveLiquidityModalContext,
+} from '~/pages/RemoveLiquidity/RemoveLiquidityModalContext'
 import type { RemoveLiquidityTxInfo } from '~/pages/RemoveLiquidity/RemoveLiquidityTxContext'
 
 function buildCheckApprovalLPRequest({
@@ -64,7 +65,7 @@ function buildCheckApprovalLPRequest({
 
 // oxlint-disable-next-line complexity
 export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }): RemoveLiquidityTxInfo {
-  const { positionInfo, percent, percentInvalid, currencies, currentTransactionStep, unwrapNativeCurrency } =
+  const { positionInfo, percent, percentInvalid, currencies, committedDecrease, unwrapNativeCurrency } =
     useRemoveLiquidityModalContext()
   const { customDeadline, customSlippageTolerance } = useTransactionSettingsStore((s) => ({
     customDeadline: s.customDeadline,
@@ -125,19 +126,31 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
 
   const approvalsNeeded = !v2ApprovalLoading && Boolean(v2LpTokenApproval?.positionTokenApproval)
 
+  // `positionInfo` and `currencies` are rebuilt from every GetPosition poll (protobuf responses defeat
+  // structural sharing), so build the request from the primitives it carries. Rebuilding on identity
+  // would re-stamp a now-based custom `deadline` each poll, re-keying the query and dropping the calldata
+  // (and with it the Confirm button) while the refetch is in flight.
+  const hasPosition = Boolean(positionInfo)
+  const protocol = positionInfo ? getProtocols(positionInfo.version) : undefined
+  const nftTokenId = positionInfo?.tokenId
+  const permissioned = positionInfo ? getIsPermissioned(positionInfo) : undefined
+  const chainId = currency0?.chainId
+  const token0Address = getTokenOrZeroAddress(currency0)
+  const token1Address = getTokenOrZeroAddress(currency1)
+
   const decreaseCalldataQueryParams = useMemo((): DecreasePositionRequest | undefined => {
-    if (!positionInfo || !account || percentInvalid || !currency0 || !currency1) {
+    if (!hasPosition || !account || percentInvalid || chainId === undefined || !token0Address || !token1Address) {
       return undefined
     }
 
     return new DecreasePositionRequest({
       walletAddress: account,
-      chainId: currency0.chainId,
-      protocol: getProtocols(positionInfo.version),
-      token0Address: getTokenOrZeroAddress(currency0),
-      token1Address: getTokenOrZeroAddress(currency1),
-      nftTokenId: positionInfo.tokenId,
-      permissioned: getIsPermissioned(positionInfo),
+      chainId,
+      protocol,
+      token0Address,
+      token1Address,
+      nftTokenId,
+      permissioned,
       liquidityPercentageToDecrease: Number(percent),
       slippageTolerance: customSlippageTolerance,
       deadline: getTradeSettingsDeadline(customDeadline),
@@ -145,22 +158,26 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
       withdrawAsWeth: !unwrapNativeCurrency,
     })
   }, [
-    positionInfo,
+    hasPosition,
     account,
-    percent,
-    customDeadline,
-    unwrapNativeCurrency,
-    approvalsNeeded,
-    customSlippageTolerance,
     percentInvalid,
-    currency0,
-    currency1,
+    chainId,
+    protocol,
+    token0Address,
+    token1Address,
+    nftTokenId,
+    permissioned,
+    percent,
+    customSlippageTolerance,
+    customDeadline,
+    approvalsNeeded,
+    unwrapNativeCurrency,
   ])
 
-  const isUserCommittedToDecrease =
-    currentTransactionStep?.step.type === TransactionStepType.DecreasePositionTransaction
+  // Once the user has committed the saga holds its calldata; a fresher quote could only disagree with it.
+  const hasCommitted = committedDecrease !== undefined
   const isQueryEnabled =
-    !isUserCommittedToDecrease &&
+    !hasCommitted &&
     ((!percentInvalid && !approvalQueryParams) || (!v2ApprovalLoading && !approvalError && Boolean(v2LpTokenApproval)))
 
   const {
@@ -171,7 +188,7 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
   } = useQuery(
     liquidityQueries.decreasePosition({
       params: decreaseCalldataQueryParams,
-      refetchInterval: transactionError ? false : 5 * ONE_SECOND_MS,
+      refetchInterval: transactionError ? false : REMOVE_LIQUIDITY_REFETCH_INTERVAL_MS,
       retry: false,
       enabled: isQueryEnabled && Boolean(decreaseCalldataQueryParams),
     }),

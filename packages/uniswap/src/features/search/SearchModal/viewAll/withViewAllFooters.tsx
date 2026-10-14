@@ -7,6 +7,7 @@ import { SearchSectionViewAllButton } from 'uniswap/src/features/search/SearchMo
 const SECTION_VIEW_ALL_TAB: Partial<Record<OnchainItemSectionName, SearchTab>> = {
   [OnchainItemSectionName.Tokens]: SearchTab.Tokens,
   [OnchainItemSectionName.TrendingTokens]: SearchTab.Tokens,
+  // Fallback for hosts without a Category Details page (`onViewAllCategory` unset).
   [OnchainItemSectionName.Category]: SearchTab.Tokens,
   [OnchainItemSectionName.Pools]: SearchTab.Pools,
   [OnchainItemSectionName.TrendingPools]: SearchTab.Pools,
@@ -17,24 +18,39 @@ const SECTION_VIEW_ALL_TAB: Partial<Record<OnchainItemSectionName, SearchTab>> =
 /**
  * All tab: gives trimmed sections a "View all" footer that opens their tab. `truncatedSectionKeys` names the sections
  * that actually have more results (search results), or `'all'` when every trimmed section does (resting state).
+ * Category sections leave the modal for Category Details instead when `onViewAllCategory` is provided.
  */
 export function withViewAllFooters({
   sections,
   truncatedSectionKeys,
   onViewAll,
+  onViewAllCategory,
 }: {
   sections: OnchainItemSection<SearchModalListOption>[] | undefined
   truncatedSectionKeys: OnchainItemSectionName[] | 'all'
   onViewAll: (tab: SearchTab) => void
+  onViewAllCategory?: (categoryId: string) => void
 }): OnchainItemSection<SearchModalListOption>[] | undefined {
   return sections?.map((section) => {
     const tab = SECTION_VIEW_ALL_TAB[section.sectionKey]
     if (!tab || (truncatedSectionKeys !== 'all' && !truncatedSectionKeys.includes(section.sectionKey))) {
       return section
     }
+    const { categoryId } = section
+    if (categoryId && onViewAllCategory) {
+      return {
+        ...section,
+        footerElement: (
+          <SearchSectionViewAllButton
+            destination={{ type: 'category', categoryId }}
+            onPress={() => onViewAllCategory(categoryId)}
+          />
+        ),
+      }
+    }
     return {
       ...section,
-      footerElement: <SearchSectionViewAllButton tab={tab} onPress={() => onViewAll(tab)} />,
+      footerElement: <SearchSectionViewAllButton destination={{ type: 'tab', tab }} onPress={() => onViewAll(tab)} />,
     }
   })
 }

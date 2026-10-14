@@ -24,9 +24,8 @@ const FETCH_TIMEOUT_MS = 5_000
  * The URL flows in from the backend GraphQL response (`project.logoUrl`), so
  * it isn't directly user-controlled — but the same Bun-fetch / SSRF class
  * documented by Cantina #715 / #747 applies if the upstream ever returns a
- * `file://` / `data:` URL or an IP-literal hostname. Cloudflare Workers
- * restricts schemes to http/https in practice, but we enforce it explicitly
- * so the property holds regardless of runtime behavior.
+ * `file://` / `data:` URL or an IP-literal hostname, so we enforce
+ * http/https explicitly rather than rely on runtime behavior.
  */
 function isSafeImageUrl(url: URL): boolean {
   if (url.protocol !== 'https:') {

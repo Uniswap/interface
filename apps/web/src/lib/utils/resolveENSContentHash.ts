@@ -1,6 +1,12 @@
-import type { JsonRpcProvider } from '@ethersproject/providers'
 import { ensure0xHex } from '@universe/encoding'
-import { type Address, createContract, ensPublicResolverAbi, ensRegistrarAbi, namehash } from '~/chains'
+import {
+  type Address,
+  createContract,
+  ensPublicResolverAbi,
+  ensRegistrarAbi,
+  type JsonRpcProvider,
+  namehash,
+} from '~/chains'
 import { safeNamehash } from '~/utils/safeNamehash'
 
 const REGISTRAR_ADDRESS = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e' as const

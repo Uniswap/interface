@@ -1,18 +1,21 @@
-import { Flex, Text } from '@universe/mycelium'
+import { Flex, fonts, Text } from '@universe/mycelium'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
+import { CategoryDescriptionText } from 'uniswap/src/features/tokenCategories/CategoryDescriptionText'
 import { getTokenCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
-import { getRwaCategoryForTokenCategory } from 'uniswap/src/features/tokenCategories/rwaCategoryBridge'
-import { hasRwaDisclaimer, RwaDisclaimerText } from 'uniswap/src/features/tokenCategories/RwaDisclaimerText'
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { LoadingBubble } from '~/components/Tokens/loading'
-import { renderWebDisclaimerLink } from '~/pages/Explore/categories/ExploreRwaDisclaimer'
+import { InlineLearnMoreLink } from '~/pages/Explore/categories/InlineLearnMoreLink'
 
 const ICON_TILE_SIZE = 64
 const DESCRIPTION_MAX_WIDTH = 680
 
+function renderLearnMoreLink(label: string): JSX.Element {
+  return <InlineLearnMoreLink href={UniswapHelpUrls.articles.tokenCategoryDefinitions} label={label} />
+}
+
 export function CategoryDetailsHeader({ category }: { category: TokenCategory }): JSX.Element {
   const Icon = getTokenCategoryIcon(category)
-  const rwaCategory = getRwaCategoryForTokenCategory(category)
 
   return (
     <Flex row gap="$spacing16" alignItems="flex-start" width="100%">
@@ -39,13 +42,7 @@ export function CategoryDetailsHeader({ category }: { category: TokenCategory })
           />
         </Flex>
         <Text variant="body2" color="$neutral2" maxWidth={DESCRIPTION_MAX_WIDTH}>
-          {category.description}
-          {hasRwaDisclaimer(rwaCategory) && (
-            <>
-              {' '}
-              <RwaDisclaimerText category={rwaCategory} renderLink={renderWebDisclaimerLink} />
-            </>
-          )}
+          <CategoryDescriptionText category={category} renderLink={renderLearnMoreLink} />
         </Text>
       </Flex>
     </Flex>
@@ -55,10 +52,18 @@ export function CategoryDetailsHeader({ category }: { category: TokenCategory })
 export function CategoryDetailsHeaderSkeleton(): JSX.Element {
   return (
     <Flex row gap="$spacing16" alignItems="flex-start" width="100%">
-      <LoadingBubble width={ICON_TILE_SIZE} height={ICON_TILE_SIZE} />
-      <Flex gap="$spacing8" flexShrink={1} pt="$spacing4">
-        <LoadingBubble width={220} height="$spacing24" />
-        <LoadingBubble width={360} height="$spacing16" />
+      <LoadingBubble
+        width={ICON_TILE_SIZE}
+        height={ICON_TILE_SIZE}
+        containerProps={{ width: ICON_TILE_SIZE, flexShrink: 0 }}
+      />
+      <Flex gap="$spacing4" flex={1} minWidth={0}>
+        <Flex height={fonts.heading3.lineHeight} justifyContent="center">
+          <LoadingBubble width={220} height={fonts.heading3.fontSize} />
+        </Flex>
+        <Flex height={fonts.body2.lineHeight} justifyContent="center">
+          <LoadingBubble width={360} height={fonts.body2.fontSize} />
+        </Flex>
       </Flex>
     </Flex>
   )

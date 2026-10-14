@@ -2,6 +2,7 @@ import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { UniverseChainId } from '@universe/chains'
 import { Flex } from '@universe/mycelium'
 import type { ReactNode } from 'react'
+import { createFocusedRowStore, FocusedRowStoreContext } from 'uniswap/src/components/lists/focusedRowStore'
 import { mapRankedRwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/mapRankedRwa'
 import { makeRankedRwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/rankedRwaTestHelpers'
 import type { Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
@@ -44,15 +45,17 @@ describe('ExpandableAssetGroup renderIssuerRow wiring', () => {
       return <Flex testID="injected">{args.children}</Flex>
     })
     render(
-      <ExpandableAssetGroup
-        asset={rwa}
-        enabledChainIds={ENABLED_CHAINS}
-        isExpanded={false}
-        onToggle={vi.fn()}
-        onParentPress={vi.fn()}
-        focusedRowControl={{ rowIndex: 2, focusedRowIndex: 2, setFocusedRowIndex: vi.fn() }}
-        renderIssuerRow={renderIssuerRow}
-      />,
+      <FocusedRowStoreContext.Provider value={createFocusedRowStore(2)}>
+        <ExpandableAssetGroup
+          asset={rwa}
+          enabledChainIds={ENABLED_CHAINS}
+          isExpanded={false}
+          onToggle={vi.fn()}
+          onParentPress={vi.fn()}
+          focusedRowControl={{ rowIndex: 2, setFocusedRowIndex: vi.fn() }}
+          renderIssuerRow={renderIssuerRow}
+        />
+      </FocusedRowStoreContext.Provider>,
     )
     expect(renderIssuerRow).toHaveBeenCalledTimes(1)
     expect(captured?.ownsTouchable).toBe(false)
@@ -106,18 +109,20 @@ describe('ExpandableAssetGroup renderIssuerRow wiring', () => {
     const rwa = rwaWithIssuers([['ondo', 'TSLAON']])
     let captured: RenderIssuerRowArgs | undefined
     render(
-      <ExpandableAssetGroup
-        asset={rwa}
-        enabledChainIds={ENABLED_CHAINS}
-        isExpanded={false}
-        onToggle={vi.fn()}
-        onParentPress={vi.fn()}
-        focusedRowControl={{ rowIndex: 3, focusedRowIndex: 1, setFocusedRowIndex: vi.fn() }}
-        renderIssuerRow={(args) => {
-          captured = args
-          return <Flex testID="injected">{args.children}</Flex>
-        }}
-      />,
+      <FocusedRowStoreContext.Provider value={createFocusedRowStore(1)}>
+        <ExpandableAssetGroup
+          asset={rwa}
+          enabledChainIds={ENABLED_CHAINS}
+          isExpanded={false}
+          onToggle={vi.fn()}
+          onParentPress={vi.fn()}
+          focusedRowControl={{ rowIndex: 3, setFocusedRowIndex: vi.fn() }}
+          renderIssuerRow={(args) => {
+            captured = args
+            return <Flex testID="injected">{args.children}</Flex>
+          }}
+        />
+      </FocusedRowStoreContext.Provider>,
     )
     expect(captured?.isRowFocused).toBe(false)
   })

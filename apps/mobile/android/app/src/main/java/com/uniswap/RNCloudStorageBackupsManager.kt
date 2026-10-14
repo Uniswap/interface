@@ -12,6 +12,7 @@ import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
 import decrypt
 import encrypt
 import generateSalt
@@ -38,13 +39,14 @@ import java.util.Collections
  * @property encryptionNonce The nonce used for encryption.
  * @property createdAt The time the backup was created, in seconds since the epoch.
  */
+// Pins the stored JSON keys; existing Drive backups depend on these exact names.
 data class CloudStorageMnemonicBackup(
-  val mnemonicId: String,
-  val encryptedMnemonic: String,
-  val encryptionSalt: String,
-  val encryptionNonce: ByteArray,
-  val createdAt: Double,
-  val googleDriveEmail: String? = null
+  @SerializedName("mnemonicId") val mnemonicId: String,
+  @SerializedName("encryptedMnemonic") val encryptedMnemonic: String,
+  @SerializedName("encryptionSalt") val encryptionSalt: String,
+  @SerializedName("encryptionNonce") val encryptionNonce: ByteArray,
+  @SerializedName("createdAt") val createdAt: Double,
+  @SerializedName("googleDriveEmail") val googleDriveEmail: String? = null
 )
 
 /**

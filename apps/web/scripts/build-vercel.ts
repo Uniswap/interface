@@ -1,75 +1,36 @@
 /**
  * Post-build packaging for Vercel Build Output API v3.
  *
- * Run AFTER the Vite SPA build (via NX in vercel.json buildCommand).
+ * Run AFTER the Vite client build and the vite.server.config.mts server build
+ * (which emits .vercel/output/functions/api.func/index.mjs):
  *
- * 1. Creates .vercel/output/ directory structure
- * 2. Copies static assets from build/ -> .vercel/output/static/
- * 3. Bundles the Hono serverless function -> .vercel/output/functions/api.func/index.mjs
- * 4. Writes .vc-config.json and config.json
+ * 1. Copies static assets from build/ -> .vercel/output/static/
+ * 2. Writes .vc-config.json and config.json
  *
  * Usage: see vercel.json buildCommand
  */
-import { cpSync, existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs'
+import { cpSync, existsSync, rmSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { copyOgAssets, inlineAssetPlugin, tsconfigPathsPlugin } from './bun-server-build'
-import { enableDebugRoutes } from './debug-routes'
 
 const ROOT = resolve(import.meta.dirname, '..')
 const OUTPUT_DIR = resolve(ROOT, '.vercel/output')
 const STATIC_DIR = resolve(OUTPUT_DIR, 'static')
 const FUNC_DIR = resolve(OUTPUT_DIR, 'functions/api.func')
 
-// ── Step 1: Clean and create output directory ───────────────────────────
-console.log('[build-vercel] Creating .vercel/output/ directory structure...')
-if (existsSync(OUTPUT_DIR)) {
-  rmSync(OUTPUT_DIR, { recursive: true })
+if (!existsSync(resolve(FUNC_DIR, 'index.mjs'))) {
+  throw new Error('Server bundle not found at ' + FUNC_DIR + ' (run the vite.server.config.mts build first)')
 }
-mkdirSync(FUNC_DIR, { recursive: true })
 
-// ── Step 2: Copy Vite build output to static/ ──────────────────────────
+// ── Step 1: Copy Vite build output to static/ ──────────────────────────
 console.log('[build-vercel] Copying static assets...')
 const buildDir = resolve(ROOT, 'build')
 if (!existsSync(buildDir)) {
   throw new Error('Vite build output not found at ' + buildDir)
 }
+rmSync(STATIC_DIR, { recursive: true, force: true })
 cpSync(buildDir, STATIC_DIR, { recursive: true })
 
-// ── Step 3: Bundle the Hono serverless function ─────────────────────────
-console.log('[build-vercel] Bundling serverless function...')
-const entryPoint = resolve(ROOT, 'functions/vercel-entry.ts')
-if (!existsSync(entryPoint)) {
-  throw new Error('Serverless function entry point not found at ' + entryPoint)
-}
-
-const bundleResult = await Bun.build({
-  entrypoints: [entryPoint],
-  outdir: FUNC_DIR,
-  naming: 'index.mjs',
-  target: 'node',
-  format: 'esm',
-  // Vite's define never reaches this bundle (functions/app.ts).
-  define: {
-    'process.env.ENABLE_DEBUG_ROUTES': JSON.stringify(enableDebugRoutes(process.env.VERCEL_ENV)),
-  },
-  plugins: [tsconfigPathsPlugin, inlineAssetPlugin],
-})
-
-if (!bundleResult.success) {
-  console.error('[build-vercel] Bundle errors:')
-  for (const log of bundleResult.logs) {
-    console.error(log)
-  }
-  throw new Error('Failed to bundle serverless function')
-}
-
-console.log('[build-vercel] Serverless function bundled successfully')
-
-// ── Step 3b: Copy @vercel/og runtime assets ─────────────────────────────
-copyOgAssets(FUNC_DIR)
-console.log('[build-vercel] Copied @vercel/og runtime assets')
-
-// ── Step 4: Write .vc-config.json ───────────────────────────────────────
+// ── Step 2: Write .vc-config.json ───────────────────────────────────────
 console.log('[build-vercel] Writing .vc-config.json...')
 writeFileSync(
   resolve(FUNC_DIR, '.vc-config.json'),
@@ -85,7 +46,7 @@ writeFileSync(
   ) + '\n',
 )
 
-// ── Step 5: Write config.json ───────────────────────────────────────────
+// ── Step 3: Write config.json ───────────────────────────────────────────
 console.log('[build-vercel] Writing config.json...')
 writeFileSync(
   resolve(OUTPUT_DIR, 'config.json'),

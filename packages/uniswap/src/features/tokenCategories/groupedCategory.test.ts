@@ -7,7 +7,16 @@ import { type TokenCategory, TokenCategoryClass } from 'uniswap/src/features/tok
 import { logger } from 'utilities/src/logger/logger'
 
 function makeCategory(id: string, grouped: boolean): TokenCategory {
-  return { id, name: id, description: '', categoryClass: TokenCategoryClass.Asset, grouped, topTokens: [] }
+  return {
+    id,
+    name: id,
+    englishName: id,
+    description: '',
+    categoryClass: TokenCategoryClass.Asset,
+    grouped,
+    topTokens: [],
+    topGroups: [],
+  }
 }
 
 describe('getGroupedRwaCategory', () => {

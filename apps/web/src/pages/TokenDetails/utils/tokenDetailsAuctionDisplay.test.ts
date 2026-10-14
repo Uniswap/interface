@@ -1,6 +1,7 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
 import { AuctionType, type Auction } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 import { UniverseChainId } from '@universe/chains'
+import { LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
 import { describe, expect, it } from 'vitest'
 import {
   AuctionDisplayPhase,
@@ -12,6 +13,7 @@ import {
   shouldReserveLiveAuctionBannerSpace,
   shouldShowAuctionOnlyLayout,
   shouldShowLiveAuctionBanner,
+  toSeconds,
 } from '~/pages/TokenDetails/utils/tokenDetailsAuctionDisplay'
 import type { TokenPoolState } from '~/types/tokenPool'
 
@@ -54,7 +56,7 @@ describe('resolveTokenDetailsAuctionDisplay', () => {
       phaseEndsAtMs: undefined,
       shouldShowSwap: true,
     })
-    expect(display.launchMethod).toBeUndefined()
+    expect(display.launchMethod).toBe(LaunchProvenanceMethod.Unknown)
     expect(shouldShowAuctionOnlyLayout(display)).toBe(false)
     expect(shouldShowLiveAuctionBanner(display)).toBe(false)
   })
@@ -95,7 +97,7 @@ describe('resolveTokenDetailsAuctionDisplay', () => {
   it.each([false, true])('does not classify the wire boolean isQuickLaunch=%s', (isQuickLaunch) => {
     const display = resolve({ auction: { ...AUCTION, auctionType: AuctionType.UNSPECIFIED, isQuickLaunch } })
 
-    expect(display.launchMethod).toBeUndefined()
+    expect(display.launchMethod).toBe(LaunchProvenanceMethod.Unknown)
     expect(shouldShowAuctionOnlyLayout(display)).toBe(false)
     expect(
       shouldShowLiveAuctionBanner(
@@ -139,5 +141,12 @@ describe('resolveTokenDetailsAuctionDisplay', () => {
   it('has no countdown target once ended or without an end estimate', () => {
     expect(resolve({ currentBlock: { status: 'success', blockNumber: 250n } }).phaseEndsAtMs).toBeUndefined()
     expect(resolve({ auction: { ...AUCTION, estimatedEndTime: undefined } }).phaseEndsAtMs).toBeUndefined()
+  })
+})
+
+describe('toSeconds', () => {
+  it('converts a timestamp to whole seconds', () => {
+    expect(toSeconds({ seconds: 1_002_000n, nanos: 0 })).toBe(1_002_000n)
+    expect(toSeconds(undefined)).toBeUndefined()
   })
 })

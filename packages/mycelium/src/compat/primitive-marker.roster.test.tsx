@@ -192,6 +192,7 @@ describe('compat web legs (filesystem-derived): every component export carries t
   // Registered conditionally: `it.each` errors on an empty table, and the
   // ledger's intended terminal state is exactly that — every leg triaged and
   // the set emptied, at which point there is nothing left to pin.
+  // oxlint-disable-next-line vitest/no-conditional-tests
   if (KNOWN_UNMARKED_COMPAT_WEB_LEGS.size > 0) {
     it.each([...KNOWN_UNMARKED_COMPAT_WEB_LEGS].sort())(
       '%s is still unmarked — marking it forces its entry out of the ledger',

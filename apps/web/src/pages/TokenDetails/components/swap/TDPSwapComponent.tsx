@@ -169,6 +169,7 @@ export function TDPSwapComponent({ warningCard }: { warningCard?: ReactNode }) {
             onCurrencyChange={handleCurrencyChange}
             tokenColor={tokenColor}
             tdpCurrency={swapCurrency}
+            hideBlastShutdownModal={media.xl}
           />
         </UniswapContext.Provider>
       </div>

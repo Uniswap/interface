@@ -176,7 +176,8 @@ export function sendSearchOptionItemClickedAnalytics({
         searchContext,
         name: item.category.name,
         address: item.category.id,
-        resultType: 'collection',
+        categoryId: item.category.id,
+        resultType: 'category',
         trace,
       })
       return
@@ -211,30 +212,32 @@ function sendTokenAnalyticsEvent({
   })
 }
 
-type SearchResultType = 'token' | 'multichain_token' | 'collection'
+type SearchResultType = 'token' | 'multichain_token' | 'category'
 
 function getWebSuggestionType(searchContext: SearchContext, resultType: SearchResultType): NavBarSearchTypes {
   if (searchContext.isHistory) {
     return NavBarSearchTypes.RecentSearch
   }
-  if (resultType === 'collection') {
-    return NavBarSearchTypes.CategorySuggestion
+  const hasQuery = Boolean(searchContext.query && searchContext.query.length > 0)
+  if (resultType === 'category') {
+    // Query-matched category rows vs resting-state spotlit section headers (whatever categories those are).
+    return hasQuery ? NavBarSearchTypes.CategorySuggestion : NavBarSearchTypes.CategorySpotlight
   }
-  return searchContext.query && searchContext.query.length > 0
-    ? NavBarSearchTypes.TokenSuggestion
-    : NavBarSearchTypes.TokenTrending
+  return hasQuery ? NavBarSearchTypes.TokenSuggestion : NavBarSearchTypes.TokenTrending
 }
 
 /**
  * Emits the search-result-clicked event in the right shape per platform (mobile `ExploreSearchResultClicked` vs
  * web `NavbarResultSelected`). Shared by the token, multichain-token, tokenized-stock, and category paths so
- * the two payload shapes never drift. For a category, `address` carries the category id.
+ * the two payload shapes never drift. For a category, `address` carries the category id and `category_id` is
+ * set so the click joins the other category events.
  */
 function sendSearchResultClickedAnalytics({
   searchContext,
   name,
   chainId,
   address,
+  categoryId,
   resultType,
   safety,
   trace,
@@ -243,6 +246,7 @@ function sendSearchResultClickedAnalytics({
   name: string
   chainId?: UniverseChainId
   address?: string
+  categoryId?: string
   resultType: SearchResultType
   safety?: TokenSafetyAnalyticsProperties
   trace?: ITraceContext
@@ -254,6 +258,7 @@ function sendSearchResultClickedAnalytics({
       name,
       chain: chainId,
       address,
+      category_id: categoryId,
       type: resultType,
     })
   } else {
@@ -267,7 +272,8 @@ function sendSearchResultClickedAnalytics({
       query_text: searchContext.query ?? '',
       selected_search_result_name: name,
       selected_search_result_address: address,
-      token_type: resultType === 'collection' ? undefined : resultType,
+      category_id: categoryId,
+      token_type: resultType === 'category' ? undefined : resultType,
     })
   }
 }

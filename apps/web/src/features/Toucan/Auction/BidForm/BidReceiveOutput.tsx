@@ -180,14 +180,12 @@ export function BidReceiveOutput({
           <Divider my="$spacing4" />
           <Text variant="body4" color="$neutral2">
             <Trans
-              shouldUnescape
               i18nKey="toucan.bidReview.partialFillExplanation"
               values={{
                 symbol: tokenSymbol,
                 maxFdv: maxFdvFormatted,
                 maxFdvFiat: `${pricePerToken} ${bidTokenSymbol}/token`,
               }}
-              tOptions={{ interpolation: { escapeValue: true } }}
               components={{
                 highlight: <Text variant="body4" color="$neutral1" tag="span" />,
                 fiat: <Text variant="body4" color="$neutral2" tag="span" />,

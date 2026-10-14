@@ -1,18 +1,46 @@
 {
   "tokens": [
     {
-      "tokenId": "TOKEN:1:0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
-      "chainId": 1,
-      "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
-      "decimals": 18,
-      "symbol": "UNI",
-      "name": "Uniswap",
-      "standard": "ERC20",
-      "projectName": "Uniswap",
-      "logoUrl": "https://token-icons.s3.amazonaws.com/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984.png",
-      "isSpam": "false",
-      "safetyLevel": "VERIFIED"
+      "multichainToken": {
+        "multichainId": "4295bf14-1259-4acc-9cbd-0d8075afc8e2",
+        "addresses": {
+          "1": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984"
+        },
+        "symbol": "UNI",
+        "decimals": 18,
+        "name": "Uniswap",
+        "type": "TOKEN_TYPE_ERC20",
+        "price": {
+          "spotUsd": 8.70226607528079,
+          "percentChange1d": -4.210543969841519,
+          "percentChange1h": 0.5165211168119449,
+          "price24hAgoUsd": 9.084784939733822
+        },
+        "safety": {
+          "isVerified": true,
+          "verdict": "Benign"
+        },
+        "fees": {
+          "buyFee": 0,
+          "sellFee": 0,
+          "transferFee": 0
+        },
+        "project": {
+          "logoUrl": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png"
+        },
+        "fdv": 7546608146.336292,
+        "canonicalChainId": 1,
+        "deployments": {
+          "1": {
+            "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+            "decimals": 18
+          }
+        }
+      },
+      "stats": {
+        "volume1d": 9632837.188154079
+      }
     }
   ],
-  "pools": []
+  "suppressedTokens": []
 }

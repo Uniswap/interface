@@ -751,6 +751,14 @@ export const v101Schema = v101SchemaIntermediate
 
 export const v102Schema = v101Schema
 
+export const v103Schema = {
+  ...v102Schema,
+  pushNotifications: {
+    ...v102Schema.pushNotifications,
+    priceAlertsEnabled: true,
+  },
+}
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v102Schema => v102Schema
+export const getSchema = (): typeof v103Schema => v103Schema

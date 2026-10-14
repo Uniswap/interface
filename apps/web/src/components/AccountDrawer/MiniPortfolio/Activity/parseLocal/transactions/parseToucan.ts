@@ -115,10 +115,25 @@ export async function parseWithdrawBidAndClaimTokens({
         })
       : i18n.t('common.unknown')
 
-    descriptor = i18n.t('activity.transaction.withdrawAndClaim.descriptor', {
-      withdrawnAmount: `${formattedBid} ${bidCurrency?.symbol}`,
-      claimedAmount: `${formattedAuction} ${auctionCurrency?.symbol}`,
-    })
+    const withdrawnAmount = i18n
+      .t('activity.transaction.token.descriptor', {
+        amount: formattedBid,
+        symbol: bidCurrency?.symbol ?? '',
+      })
+      .trim()
+    const claimedAmount = i18n
+      .t('activity.transaction.token.descriptor', {
+        amount: formattedAuction,
+        symbol: auctionCurrency?.symbol ?? '',
+      })
+      .trim()
+    descriptor =
+      status === TransactionStatus.Success
+        ? i18n.t('activity.transaction.withdrawAndClaim.descriptor', { withdrawnAmount, claimedAmount })
+        : i18n.t('activity.transaction.tokens.descriptor', {
+            amountWithSymbolA: withdrawnAmount,
+            amountWithSymbolB: claimedAmount,
+          })
   } else if (hasBidTokens) {
     // Refund only - user bid but didn't win any tokens
     const formattedBid = bidCurrency
@@ -136,9 +151,16 @@ export async function parseWithdrawBidAndClaimTokens({
         : status === TransactionStatus.Failed
           ? i18n.t('transaction.status.refund.failed')
           : i18n.t('transaction.status.refund.success')
-    descriptor = i18n.t('activity.transaction.refund.descriptor', {
-      amountWithSymbol: `${formattedBid} ${bidCurrency?.symbol ?? ''}`,
-    })
+    const amountWithSymbol = i18n
+      .t('activity.transaction.token.descriptor', {
+        amount: formattedBid,
+        symbol: bidCurrency?.symbol ?? '',
+      })
+      .trim()
+    descriptor =
+      status === TransactionStatus.Success
+        ? i18n.t('activity.transaction.refund.descriptor', { amountWithSymbol })
+        : amountWithSymbol
   } else if (hasAuctionTokens) {
     // Only auction tokens - use claim title
     title = getActivityTitle({ type: TransactionType.AuctionClaimed, status })
@@ -151,9 +173,16 @@ export async function parseWithdrawBidAndClaimTokens({
         })
       : i18n.t('common.unknown')
 
-    descriptor = i18n.t('activity.transaction.claim.descriptor', {
-      amountWithSymbol: `${formattedAuction} ${auctionCurrency?.symbol}`,
-    })
+    const amountWithSymbol = i18n
+      .t('activity.transaction.token.descriptor', {
+        amount: formattedAuction,
+        symbol: auctionCurrency?.symbol ?? '',
+      })
+      .trim()
+    descriptor =
+      status === TransactionStatus.Success
+        ? i18n.t('activity.transaction.claim.descriptor', { amountWithSymbol })
+        : amountWithSymbol
   } else {
     // Fallback for edge case
     title = getActivityTitle({ type: TransactionType.ToucanWithdrawBidAndClaimTokens, status })

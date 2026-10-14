@@ -3,6 +3,7 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import type { UniswapTransaction } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { TransactionEventType } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { UniverseChainId } from '@universe/chains'
+import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { parseUniswapTransaction } from '~/data/transactions/poolTransaction'
 import {
@@ -112,6 +113,46 @@ describe('usePoolTransactions buy/sell derivation', () => {
     // comparePoolTokens); leaving it null here — the raw, unresolved leg address — would make
     // that comparison always false and swap the amount columns even though the label is correct.
     expect(result.current.transactions[0]?.pool.token0.id).toBe(WETH)
+  })
+
+  // The data API sends a v4 native leg with the zero address, not an absent one.
+  describe('v4 native leg with the zero address', () => {
+    const nativeLeg = { address: ZERO_ADDRESS, symbol: 'ETH', decimals: 18 }
+    const makeNativeSwap = ({ amount0, amount1 }: { amount0: string; amount1: string }) =>
+      ({
+        ...makeSwap({ amount0, amount1 }),
+        protocolVersion: ProtocolVersion.V4,
+        token0: { token: nativeLeg, amount: amount0, amountUsd: 0 },
+        token1: { token: { address: USDC, symbol: 'USDC', decimals: 6 }, amount: amount1, amountUsd: 0 },
+      }) as unknown as UniswapTransaction
+
+    it('resolves the native leg id to the wrapped-native address', () => {
+      const { result } = renderWithTransactions(
+        [makeNativeSwap({ amount0: '0.0238', amount1: '-58.686798' })],
+        NATIVE_CHAIN_ID,
+      )
+
+      expect(result.current.transactions[0]?.pool.token0.id).toBe(WETH)
+      expect(result.current.transactions[0]?.pool.token1.id).toBe(USDC)
+    })
+
+    it('labels ETH sold into the pool as SELL', () => {
+      const { result } = renderWithTransactions(
+        [makeNativeSwap({ amount0: '0.0238', amount1: '-58.686798' })],
+        NATIVE_CHAIN_ID,
+      )
+
+      expect(result.current.transactions[0]?.type).toBe(PoolTableTransactionType.SELL)
+    })
+
+    it('labels ETH bought from the pool as BUY', () => {
+      const { result } = renderWithTransactions(
+        [makeNativeSwap({ amount0: '-0.0238', amount1: '58.686798' })],
+        NATIVE_CHAIN_ID,
+      )
+
+      expect(result.current.transactions[0]?.type).toBe(PoolTableTransactionType.BUY)
+    })
   })
 })
 

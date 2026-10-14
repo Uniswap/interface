@@ -24,7 +24,7 @@ export function EditUnitagProfileScreen({ route }: UnitagStackScreenProp<UnitagS
   const [showChangeUnitagModal, setShowChangeUnitagModal] = useState(false)
 
   const onNavigate = (): void => {
-    navigate(MobileScreens.MainTabs, { screen: MobileScreens.Home })
+    navigate(MobileScreens.MainTabs, { screen: MobileScreens.Home }, { pop: true })
   }
 
   const onBack = (): void => {
@@ -84,7 +84,7 @@ export function EditUnitagProfileScreen({ route }: UnitagStackScreenProp<UnitagS
           onPressBack={
             // If entering from confirmation screen, back btn navigates to home
             entryPoint === UnitagScreens.UnitagConfirmation
-              ? (): void => navigate(MobileScreens.MainTabs, { screen: MobileScreens.Home })
+              ? (): void => navigate(MobileScreens.MainTabs, { screen: MobileScreens.Home }, { pop: true })
               : undefined
           }
         >

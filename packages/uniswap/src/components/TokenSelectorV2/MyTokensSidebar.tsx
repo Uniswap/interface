@@ -190,7 +190,8 @@ export const MyTokensSidebar = memo(function MyTokensSidebar({
   }, [searchFilter, isConnected, t])
 
   return (
-    // `fill` is load-bearing: without flex:1 the sidebar's height collapses to auto and AutoSizer measures 0 rows.
+    // `fill` is load-bearing: without flex:1 the sidebar collapses to content height, leaving the
+    // virtualized list nothing to bound against — it grows to full height instead of scrolling.
     <Flex
       fill
       gap="$spacing4"

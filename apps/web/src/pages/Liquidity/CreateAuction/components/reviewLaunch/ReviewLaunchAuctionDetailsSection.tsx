@@ -1,6 +1,7 @@
 import { UniverseChainId } from '@universe/chains'
 import { Flex, iconSizes, Text, TouchableArea } from '@universe/mycelium'
 import { ExternalLink as ExternalLinkIcon } from '@universe/mycelium/icons/ExternalLink'
+import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { useTranslation } from 'react-i18next'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -68,6 +69,8 @@ export function ReviewLaunchAuctionDetailsSection({
   const { formatNumberOrString, formatPercent } = useLocalizationContext()
   const { symbol: fiatSymbol } = useAppFiatCurrencyInfo()
   const raiseCurrencySymbol = raiseCurrencyInfo.currency.symbol ?? ''
+  // SubscriptZeroPrice takes no media props, so its variant is picked here to match ReviewRow's $md scale.
+  const valueVariant = useMedia().md ? 'body2' : 'body1'
 
   // Same gate as the request builder: this is the last screen before signing, so it has to
   // describe the auction that will be sent, not a window the request drops.
@@ -136,7 +139,7 @@ export function ReviewLaunchAuctionDetailsSection({
 
       {isNewToken ? (
         <ReviewRow label={t('toucan.auction.totalSupply')}>
-          <Text variant="body1" color="$neutral1">
+          <Text variant="body1" $md={{ variant: 'body2' }} color="$neutral1">
             {formatNumberOrString({ value: committed.totalSupply.toExact(), type: NumberType.TokenNonTx })}{' '}
             {tokenSymbol}
           </Text>
@@ -144,7 +147,7 @@ export function ReviewLaunchAuctionDetailsSection({
       ) : null}
 
       <ReviewRow label={t('toucan.createAuction.step.reviewLaunch.auctionAmount')}>
-        <Text variant="body1" color="$neutral1">
+        <Text variant="body1" $md={{ variant: 'body2' }} color="$neutral1">
           {formattedAuctionAmount} {tokenSymbol}
         </Text>
       </ReviewRow>
@@ -152,7 +155,7 @@ export function ReviewLaunchAuctionDetailsSection({
       <ReviewRow label={t('toucan.details.raiseCurrency')}>
         <Flex row alignItems="center" gap="$spacing6">
           <CurrencyLogo hideNetworkLogo currencyInfo={raiseCurrencyInfo} size={CURRENCY_LOGO_SIZE} />
-          <Text variant="body1" color="$neutral1">
+          <Text variant="body1" $md={{ variant: 'body2' }} color="$neutral1">
             {raiseCurrencySymbol}
           </Text>
         </Flex>
@@ -165,33 +168,33 @@ export function ReviewLaunchAuctionDetailsSection({
               <SubscriptZeroPrice
                 value={floorPriceNum}
                 symbol={raiseCurrencySymbol}
-                variant="body1"
+                variant={valueVariant}
                 color="$neutral1"
                 minSignificantDigits={1}
                 maxSignificantDigits={3}
                 subscriptThreshold={SUBSCRIPT_THRESHOLD}
               />
             ) : (
-              <Text variant="body1" color="$neutral1">
+              <Text variant="body1" $md={{ variant: 'body2' }} color="$neutral1">
                 {configureAuction.floorPrice} {raiseCurrencySymbol}
               </Text>
             )}
             {floorFiatAmount !== undefined ? (
               <Flex row alignItems="baseline" gap="$spacing2">
-                <Text variant="body1" color="$neutral2">
+                <Text variant="body1" $md={{ variant: 'body2' }} color="$neutral2">
                   (
                 </Text>
                 <SubscriptZeroPrice
                   value={floorFiatAmount}
                   prefix={fiatSymbol}
-                  variant="body1"
+                  variant={valueVariant}
                   color="$neutral2"
                   minSignificantDigits={1}
                   maxSignificantDigits={4}
                   subscriptThreshold={SUBSCRIPT_THRESHOLD}
                   disableTooltip
                 />
-                <Text variant="body1" color="$neutral2">
+                <Text variant="body1" $md={{ variant: 'body2' }} color="$neutral2">
                   )
                 </Text>
               </Flex>
@@ -206,7 +209,7 @@ export function ReviewLaunchAuctionDetailsSection({
             <SubscriptZeroPrice
               value={fdv}
               symbol={raiseCurrencySymbol}
-              variant="body1"
+              variant={valueVariant}
               color="$neutral1"
               minSignificantDigits={1}
               maxSignificantDigits={3}
@@ -214,20 +217,20 @@ export function ReviewLaunchAuctionDetailsSection({
             />
             {fdvFiatAmount !== undefined ? (
               <Flex row alignItems="baseline" gap="$spacing2">
-                <Text variant="body1" color="$neutral2">
+                <Text variant="body1" $md={{ variant: 'body2' }} color="$neutral2">
                   (
                 </Text>
                 <SubscriptZeroPrice
                   value={fdvFiatAmount}
                   prefix={fiatSymbol}
-                  variant="body1"
+                  variant={valueVariant}
                   color="$neutral2"
                   minSignificantDigits={1}
                   maxSignificantDigits={4}
                   subscriptThreshold={SUBSCRIPT_THRESHOLD}
                   disableTooltip
                 />
-                <Text variant="body1" color="$neutral2">
+                <Text variant="body1" $md={{ variant: 'body2' }} color="$neutral2">
                   )
                 </Text>
               </Flex>
@@ -239,7 +242,7 @@ export function ReviewLaunchAuctionDetailsSection({
       {postAuctionLiquidityAllocation.type === PostAuctionLiquidityAllocationType.SINGLE ? (
         <>
           <ReviewRow label={t('toucan.details.postAuctionLiquidity')}>
-            <Text variant="body1" color="$neutral1">
+            <Text variant="body1" $md={{ variant: 'body2' }} color="$neutral1">
               {formatPercent(postAuctionLiquidityPercentDisplay)}
             </Text>
           </ReviewRow>
@@ -255,7 +258,7 @@ export function ReviewLaunchAuctionDetailsSection({
             <ReviewRow label={t('toucan.createAuction.step.configureAuction.launchThreshold')}>
               <Flex row alignItems="center" gap="$spacing6">
                 <CurrencyLogo hideNetworkLogo currencyInfo={raiseCurrencyInfo} size={CURRENCY_LOGO_SIZE} />
-                <Text variant="body1" color="$neutral1">
+                <Text variant="body1" $md={{ variant: 'body2' }} color="$neutral1">
                   {formattedLaunchThreshold} {raiseCurrencySymbol}
                 </Text>
               </Flex>
@@ -276,14 +279,14 @@ export function ReviewLaunchAuctionDetailsSection({
         {configureAuction.kycValidationHookAddress ? (
           <TouchableArea onPress={onOpenKycHookExplorer}>
             <Flex row alignItems="center" gap="$spacing4">
-              <Text variant="body1" color="$neutral1">
+              <Text variant="body1" $md={{ variant: 'body2' }} color="$neutral1">
                 {shortenAddress({ address: configureAuction.kycValidationHookAddress, chars: 6 })}
               </Text>
               <ExternalLinkIcon color="$neutral3" size="$icon.16" />
             </Flex>
           </TouchableArea>
         ) : (
-          <Text variant="body1" color="$neutral1">
+          <Text variant="body1" $md={{ variant: 'body2' }} color="$neutral1">
             {t('toucan.details.no')}
           </Text>
         )}

@@ -4,6 +4,8 @@ import {
   type TimeSeriesPoint,
 } from '@uniswap/client-data-api/dist/data/v2/categories_pb'
 import type { ChartPoint } from 'uniswap/src/components/charts/computeChartPaths'
+import type { Language } from 'uniswap/src/features/language/constants'
+import { getTranslation } from 'uniswap/src/features/language/getTranslation'
 import { TokenCategory, TokenCategoryClass } from 'uniswap/src/features/tokenCategories/types'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -29,7 +31,10 @@ export function rankedCategoryToTokenCategory(ranked: RankedCategory): TokenCate
   return {
     id: category.id,
     name: category.name,
+    englishName: category.name,
     description: category.description,
+    nameTranslations: category.nameTranslations,
+    descriptionTranslations: category.descriptionTranslations,
     categoryClass,
     grouped: category.grouped,
     stats: ranked.stats
@@ -51,7 +56,26 @@ export function rankedCategoryToTokenCategory(ranked: RankedCategory): TokenCate
       symbol: token.symbol,
       logoUrl: token.logoUrl,
     })),
+    topGroups: ranked.topGroups.map((group) => ({
+      id: group.id,
+      displayName: group.displayName,
+      ticker: group.ticker,
+      logoUrl: group.logoUrl,
+    })),
   }
+}
+
+/**
+ * Every response carries all locales, so the cache stays language-free and the query hooks apply
+ * this in `select`. The English fields are the fallback for a locale the backend has no copy for.
+ */
+export function localizeTokenCategory(category: TokenCategory, language: Language): TokenCategory {
+  const name = getTranslation(category.nameTranslations, language)
+  const description = getTranslation(category.descriptionTranslations, language)
+  if (name === undefined && description === undefined) {
+    return category
+  }
+  return { ...category, name: name ?? category.name, description: description ?? category.description }
 }
 
 /** Proto timestamps are unix seconds (bucket start); ChartPoint uses ms epoch. */

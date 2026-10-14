@@ -33,11 +33,12 @@ const sources = {
   currencyRaised: { status: 'idle' },
   pools: { status: 'loading' },
   refetchCurrentBlock: vi.fn(),
+  refetchCheckpoint: vi.fn(),
 } as const
 
 function createPageState({
   token = tokenA,
-  auctionSource = { status: TokenDetailsSourceState.Found, auction },
+  auctionSource = { status: TokenDetailsSourceState.Found, auction, auctions: [auction] },
   isPageReady = true,
 }: {
   token?: Token
@@ -150,7 +151,7 @@ describe('TokenDetailsAuctionDisplayProvider', () => {
       store.setState(
         createPageState({
           token: tokenB,
-          auctionSource: { status: TokenDetailsSourceState.Found, auction: auctionB },
+          auctionSource: { status: TokenDetailsSourceState.Found, auction: auctionB, auctions: [auctionB] },
           isPageReady: false,
         }),
       ),
@@ -175,6 +176,28 @@ describe('TokenDetailsAuctionDisplayProvider', () => {
       expect(snapshot.auctionToken).toBe(snapshot.address)
       expect(snapshot.auctionChainId).toBe(snapshot.chainId)
     }
+  })
+
+  it('keeps the chain head advancing until the last sibling auction ends', () => {
+    const primary = { ...auction, chainId: UniverseChainId.Mainnet }
+    const sibling = { ...primary, address: '0x4444444444444444444444444444444444444444', endBlock: '500' }
+    const malformed = { ...primary, address: '0x5555555555555555555555555555555555555555', endBlock: 'later' }
+    const store = createTDPStore(
+      createPageState({
+        auctionSource: {
+          status: TokenDetailsSourceState.Found,
+          auction: primary,
+          auctions: [primary, sibling, malformed],
+        },
+      }),
+    )
+    renderHook(() => useTokenDetailsAuctionDisplay(), { wrapper: createWrapper(store) })
+
+    // Without this the head freezes at the primary's end block and the ended sibling stays Live,
+    // dropping silently out of the token-level raise.
+    expect(useAuctionDisplayDataSources).toHaveBeenLastCalledWith(
+      expect.objectContaining({ endBlock: '200', watchUntilBlock: 500n }),
+    )
   })
 
   it('does not rearm initial loading when canonical metadata only checksums the same address', () => {

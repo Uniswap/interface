@@ -4,6 +4,7 @@ import {
   TokenSelectorHoverConfigProvider,
   useTokenSelectorHoverConfig,
 } from 'uniswap/src/components/TokenSelector/TokenSelectorHoverConfig'
+import { BlastShutdownSwapModal } from 'uniswap/src/features/chains/blastShutdown/BlastShutdownSwapModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import {
   TransactionSettingsStoreContext,
@@ -35,6 +36,8 @@ export interface SwapFlowProps extends Omit<TransactionModalProps, 'fullscreen' 
   onSubmitSwap?: () => Promise<void> | void
   tokenColor?: string
   onCurrencyPanelsLayout?: (height: number) => void
+  /** For a swap widget that's mounted but hidden, so its Blast selection doesn't pop a modal nobody asked for. */
+  hideBlastShutdownModal?: boolean
 }
 
 function useSwapFlowOnClose({
@@ -72,6 +75,7 @@ export function SwapFlow({
   onSubmitSwap,
   tokenColor,
   onCurrencyPanelsLayout,
+  hideBlastShutdownModal = false,
   ...transactionModalProps
 }: SwapFlowProps): JSX.Element {
   const transactionSettingsContext = useGetTransactionSettingsContextValue()
@@ -104,6 +108,7 @@ export function SwapFlow({
               {/* Re-create TokenSelectorHoverConfigProvider since rendering within a Portal causes its children to be in a separate component tree. */}
               <TokenSelectorHoverConfigProvider wrapTokenRow={wrapTokenRow}>
                 <ActivePlanUpdater />
+                {!hideBlastShutdownModal && <BlastShutdownSwapModal />}
                 <CurrentScreen
                   settings={settings}
                   tokenColor={tokenColor}

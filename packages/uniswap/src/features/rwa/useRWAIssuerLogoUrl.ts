@@ -3,6 +3,7 @@ import {
   type RWAIssuerLogosMap,
   RWAIssuerLogosConfigKey,
   useDynamicConfigValue,
+  useIsTokenCategoriesEnabled,
 } from '@universe/gating'
 import { useIsDarkMode } from '@universe/mycelium/theme-hooks-compat'
 import { isRWAIssuerLogosMap } from 'uniswap/src/features/gating/typeGuards'
@@ -10,9 +11,13 @@ import type { RWAIssuer } from 'uniswap/src/features/rwa/types'
 
 const EMPTY_LOGOS: RWAIssuerLogosMap = {}
 
-// Returns undefined when the issuer has no configured logo, so callers render no logo.
+/**
+ * Statsig-configured issuer logo; undefined when none is configured, so callers render no logo. With token
+ * categories on, issuer branding is backend-served (`TokenIssuerInfo`) and the config is bypassed entirely.
+ */
 export function useRWAIssuerLogoUrl(issuer: RWAIssuer | undefined): string | undefined {
   const isDarkMode = useIsDarkMode()
+  const isTokenCategoriesEnabled = useIsTokenCategoriesEnabled()
   const logos = useDynamicConfigValue({
     config: DynamicConfigs.RWAIssuerLogos,
     key: RWAIssuerLogosConfigKey.Logos,
@@ -20,7 +25,7 @@ export function useRWAIssuerLogoUrl(issuer: RWAIssuer | undefined): string | und
     customTypeGuard: isRWAIssuerLogosMap,
   })
 
-  if (!issuer) {
+  if (!issuer || isTokenCategoriesEnabled) {
     return undefined
   }
 

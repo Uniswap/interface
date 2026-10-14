@@ -7,7 +7,7 @@ import { ItemRowInfo } from 'uniswap/src/components/lists/OnchainItemList/Onchai
 import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { SelectorBaseList } from 'uniswap/src/components/lists/SelectorBaseList'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { StocksHorizontalRow } from 'uniswap/src/components/TokenSelector/lists/StocksHorizontalRow/StocksHorizontalRow'
+import { StocksShelfRow } from 'uniswap/src/components/TokenSelector/lists/StocksHorizontalRow/StocksShelfRow'
 import { tagRwaTokenSelectorSections } from 'uniswap/src/components/TokenSelector/tagRwaTokenSelectorSections'
 import { useTokenSelectorHoverConfig } from 'uniswap/src/components/TokenSelector/TokenSelectorHoverConfig'
 import { isStocksRowItem, key } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
@@ -20,7 +20,9 @@ import { RecentSearchPillRow } from 'uniswap/src/components/TokenSelectorV2/item
 import { SuggestedTokenTileRow } from 'uniswap/src/components/TokenSelectorV2/items/SuggestedTokenTileRow'
 import { TokenSelectorV2Row } from 'uniswap/src/components/TokenSelectorV2/items/TokenSelectorV2Row'
 import { TokenSelectorV2SkeletonOverlay } from 'uniswap/src/components/TokenSelectorV2/TokenSelectorV2Skeleton'
+import { useAllTokenCategories } from 'uniswap/src/data/apiClients/dataApiService/categories/useAllTokenCategories'
 import { useRwaIndex } from 'uniswap/src/features/search/SearchModal/stocks/useRwaIndex'
+import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
 import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
@@ -35,6 +37,7 @@ const TokenSelectorV2RowItem = memo(function TokenSelectorV2RowItem({
   index,
   showTokenWarnings,
   showTokenAddress,
+  categories,
   onSelectToken,
 }: {
   option: TokenOption
@@ -42,6 +45,7 @@ const TokenSelectorV2RowItem = memo(function TokenSelectorV2RowItem({
   index: number
   showTokenWarnings: boolean
   showTokenAddress?: boolean
+  categories: TokenCategory[]
   onSelectToken: OnSelectTokenOption
 }): JSX.Element {
   const onPress = useCallback(() => onSelectToken(option, section, index), [onSelectToken, option, section, index])
@@ -52,6 +56,7 @@ const TokenSelectorV2RowItem = memo(function TokenSelectorV2RowItem({
   return (
     <TokenSelectorV2Row
       dimmed={isBlocked || Boolean(option.isUnsupported)}
+      categories={categories}
       disabled={Boolean(option.isUnsupported)}
       option={option}
       showTokenAddress={showTokenAddress}
@@ -109,6 +114,7 @@ export const TokenSelectorV2List = memo(function TokenSelectorV2List({
     () => tagRwaTokenSelectorSections({ sections, rwaIndex, plainTokenNames }),
     [sections, rwaIndex, plainTokenNames],
   )
+  const { categories } = useAllTokenCategories()
 
   const [expandedItems, setExpandedItems] = useState<string[]>([])
 
@@ -120,59 +126,75 @@ export const TokenSelectorV2List = memo(function TokenSelectorV2List({
     return expandedItems.includes(key(item))
   })
 
-  const renderItem = useEvent(({ item, section, index }: ItemRowInfo<TokenSelectorListOption>) => {
-    if (isStocksRowItem(item)) {
-      return (
-        <StocksHorizontalRow
-          expanded={isExpandedItem(item)}
+  // `useCallback`, not `useEvent`: rows re-render only when this identity changes, so list-level data they
+  // read (`categories`) has to be in the deps or rows keep the first-render value.
+  const renderItem = useCallback(
+    ({ item, section, index }: ItemRowInfo<TokenSelectorListOption>) => {
+      if (isStocksRowItem(item)) {
+        return (
+          <StocksShelfRow
+            expanded={isExpandedItem(item)}
+            showTokenWarnings={showTokenWarnings}
+            tokens={item}
+            onExpand={handleExpand}
+            onSelectRwaToken={onSelectRwaToken ?? noop}
+          />
+        )
+      }
+
+      if (Array.isArray(item)) {
+        // Horizontal renderers dispatch on sectionKey (not array shape) — the shared mechanism of SWAP-3042/3043.
+        const tokenSection = section as OnchainItemSection<TokenOption[]>
+        switch (section.sectionKey) {
+          case OnchainItemSectionName.RecentSearches:
+            return (
+              <RecentSearchPillRow
+                section={tokenSection}
+                showTokenWarnings={showTokenWarnings}
+                tokens={item}
+                onSelectToken={handleTokenPress}
+              />
+            )
+          case OnchainItemSectionName.SuggestedTokens:
+          default:
+            return (
+              <SuggestedTokenTileRow
+                maxCount={suggestedTilesMaxCount}
+                section={tokenSection}
+                showTokenWarnings={showTokenWarnings}
+                tokens={item}
+                onSelectToken={handleTokenPress}
+              />
+            )
+        }
+      }
+
+      const row = (
+        <TokenSelectorV2RowItem
+          index={index}
+          categories={categories}
+          option={item}
+          section={section as OnchainItemSection<TokenOption>}
+          showTokenAddress={showTokenAddress}
           showTokenWarnings={showTokenWarnings}
-          tokens={item}
-          onExpand={handleExpand}
-          onSelectRwaToken={onSelectRwaToken ?? noop}
+          onSelectToken={handleTokenPress}
         />
       )
-    }
 
-    if (Array.isArray(item)) {
-      // Horizontal renderers dispatch on sectionKey (not array shape) — the shared mechanism of SWAP-3042/3043.
-      const tokenSection = section as OnchainItemSection<TokenOption[]>
-      switch (section.sectionKey) {
-        case OnchainItemSectionName.RecentSearches:
-          return (
-            <RecentSearchPillRow
-              section={tokenSection}
-              showTokenWarnings={showTokenWarnings}
-              tokens={item}
-              onSelectToken={handleTokenPress}
-            />
-          )
-        case OnchainItemSectionName.SuggestedTokens:
-        default:
-          return (
-            <SuggestedTokenTileRow
-              maxCount={suggestedTilesMaxCount}
-              section={tokenSection}
-              showTokenWarnings={showTokenWarnings}
-              tokens={item}
-              onSelectToken={handleTokenPress}
-            />
-          )
-      }
-    }
-
-    const row = (
-      <TokenSelectorV2RowItem
-        index={index}
-        option={item}
-        section={section as OnchainItemSection<TokenOption>}
-        showTokenAddress={showTokenAddress}
-        showTokenWarnings={showTokenWarnings}
-        onSelectToken={handleTokenPress}
-      />
-    )
-
-    return wrapTokenRow ? wrapTokenRow(row, item.currencyInfo) : row
-  })
+      return wrapTokenRow ? wrapTokenRow(row, item.currencyInfo) : row
+    },
+    [
+      categories,
+      handleExpand,
+      handleTokenPress,
+      isExpandedItem,
+      onSelectRwaToken,
+      showTokenAddress,
+      showTokenWarnings,
+      suggestedTilesMaxCount,
+      wrapTokenRow,
+    ],
+  )
 
   const showLoadingSkeleton = Boolean(loading && !sections?.length && !hasError)
 

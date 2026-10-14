@@ -78,7 +78,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
 
   const onPressNext = (): void => {
     if (fromBackupCard) {
-      navigation.navigate(MobileScreens.MainTabs, { screen: MobileScreens.Home })
+      navigation.navigate(MobileScreens.MainTabs, { screen: MobileScreens.Home }, { pop: true })
     } else {
       navigation.navigate({
         name: OnboardingScreens.Notifications,

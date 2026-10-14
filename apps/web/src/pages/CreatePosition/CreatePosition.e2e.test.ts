@@ -175,13 +175,13 @@ test.describe(
         await expect(page).toHaveURL(
           /\/positions\/add\/unichain\/0x[0-9a-fA-F]{64}\?.*hook=0x09DEA99D714A3a19378e3D80D1ad22Ca46085080/,
         )
-        await expect(page.getByText('Adding hook')).toBeVisible()
+        await expect(page.getByTestId(TestID.HookModalTitle)).toHaveText('Adding hook')
         await page.getByTestId(TestID.HookModalContinueButton).click()
         await expect(page.getByTestId(TestID.HookModalContinueButton)).not.toBeVisible()
 
         await page.goto(buildUrl({ subPath: '/v4', queryParams: { ...queryParams, step: '1' } }))
         // A deep link straight to the range step still owes the user the hook review (SECURE-333).
-        await expect(page.getByText('Adding hook')).toBeVisible()
+        await expect(page.getByTestId(TestID.HookModalTitle)).toHaveText('Adding hook')
         await page.getByTestId(TestID.HookModalContinueButton).click()
         const minPriceInput = page.getByTestId(TestID.RangeInput + '-0').first()
         const maxPriceInput = page.getByTestId(TestID.RangeInput + '-1').first()
@@ -560,8 +560,9 @@ test.describe(
             }),
           )
           await page.getByRole('button', { name: 'Continue' }).click()
-          await expect(page.getByTestId(TestID.PoolPairLabel)).toHaveText(/WETH.*USDT/)
-          await expect(page.getByTestId(TestID.PoolPairLabel)).not.toHaveText(/USDT.*WETH/)
+          // The pool card labels a v3 WETH leg with its display currency, so a WETH URL param reads as ETH.
+          await expect(page.getByTestId(TestID.PoolPairLabel)).toHaveText(/^ETH \/ USDT$/)
+          await expect(page.getByTestId(TestID.PoolPairLabel)).not.toHaveText(/USDT.*ETH/)
         })
 
         test('non-native token0 and token1 are sorted correctly', async ({ page }) => {

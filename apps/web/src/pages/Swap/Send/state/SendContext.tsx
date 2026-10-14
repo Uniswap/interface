@@ -62,7 +62,6 @@ export const SendContext = createContext<SendContextType>({
   sendState: DEFAULT_SEND_STATE,
   setSendState: () => undefined,
   derivedSendInfo: {
-    inputCurrency: undefined,
     currencyBalance: undefined,
     parsedTokenAmount: undefined,
     exactAmountOut: undefined,

@@ -1,21 +1,9 @@
-import { DappRequestType, UwULinkMethod } from 'uniswap/src/types/walletConnect'
 import { TransactionRiskLevel } from 'wallet/src/features/dappRequests/types'
 import { shouldDisableConfirm } from 'wallet/src/features/dappRequests/utils/riskUtils'
-
-interface WalletConnectRequestProvenance {
-  type: string
-  requestType: DappRequestType
-}
-
-/** True only for the allowlisted deep-link flow whose transaction is constructed by the wallet. */
-export function isWalletBuiltUwULinkErc20Send({ type, requestType }: WalletConnectRequestProvenance): boolean {
-  return type === UwULinkMethod.Erc20Send && requestType === DappRequestType.UwULink
-}
 
 interface ShouldDisableWalletConnectConfirmForSafetyParams {
   isInternetReachable: boolean | null
   isLinkModeSupported: boolean | undefined
-  requiresScan: boolean
   riskLevel: TransactionRiskLevel | null
   confirmedRisk: boolean
 }
@@ -24,7 +12,6 @@ interface ShouldDisableWalletConnectConfirmForSafetyParams {
 export function shouldDisableWalletConnectConfirmForSafety({
   isInternetReachable,
   isLinkModeSupported,
-  requiresScan,
   riskLevel,
   confirmedRisk,
 }: ShouldDisableWalletConnectConfirmForSafetyParams): boolean {
@@ -32,5 +19,5 @@ export function shouldDisableWalletConnectConfirmForSafety({
     return true
   }
 
-  return requiresScan && shouldDisableConfirm({ riskLevel, confirmedRisk })
+  return shouldDisableConfirm({ riskLevel, confirmedRisk })
 }

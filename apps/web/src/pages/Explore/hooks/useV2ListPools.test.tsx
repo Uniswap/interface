@@ -11,6 +11,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { PoolSortFields } from '~/data/pools/poolStats'
 import { OrderDirection } from '~/data/util'
 import { useV2ListPools } from '~/pages/Explore/hooks/useV2ListPools'
+import { EMPTY_POOLS_FILTER_STATE } from '~/types/poolsFilter'
 
 vi.mock('@tanstack/react-query', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@tanstack/react-query')>()
@@ -333,7 +334,13 @@ describe('useV2ListPools protocol filter', () => {
 
   it('narrows the request to the selected protocol version', () => {
     mockPools([buildPool()])
-    renderHook(() => useV2ListPools({ protocol: ProtocolVersion.V4, sortState: SORT_STATE, filterString: '' }))
+    renderHook(() =>
+      useV2ListPools({
+        poolsFilter: { ...EMPTY_POOLS_FILTER_STATE, protocols: [ProtocolVersion.V4] },
+        sortState: SORT_STATE,
+        filterString: '',
+      }),
+    )
     expect(listPoolsMock).toHaveBeenCalledWith(
       expect.objectContaining({
         params: expect.objectContaining({
@@ -348,7 +355,7 @@ describe('useV2ListPools protocol filter', () => {
   // both surfaces instead of letting each rely on a different default.
   it('sends every protocol version when none is selected', () => {
     mockPools([buildPool()])
-    renderHook(() => useV2ListPools({ protocol: ProtocolVersion.UNSPECIFIED, sortState: SORT_STATE, filterString: '' }))
+    renderHook(() => useV2ListPools({ poolsFilter: EMPTY_POOLS_FILTER_STATE, sortState: SORT_STATE, filterString: '' }))
     expect(listPoolsMock).toHaveBeenCalledWith(
       expect.objectContaining({
         params: expect.objectContaining({

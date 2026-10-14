@@ -218,6 +218,8 @@ export function useBidFormController({
   const {
     maxValuationField,
     exactMaxValuationAmount,
+    hasUserSetMaxValuation,
+    applyTokenValueWithoutUserIntent,
     maxPriceAmountIsZero,
     maxPriceQ96,
     isMaxPriceBelowMinimum,
@@ -248,7 +250,7 @@ export function useBidFormController({
     maxValidBidQ96: maxBidPrice.maxValidBidQ96,
     tokenValueQ96: maxValuationField.tokenValueQ96,
     tokenValue: maxValuationField.tokenValue,
-    onRecap: maxValuationField.onTokenValueChange,
+    onRecap: applyTokenValueWithoutUserIntent,
   })
 
   // QuickLaunch: the max-valuation field is hidden, so keep it pegged to the ceiling.
@@ -274,9 +276,15 @@ export function useBidFormController({
       maxValuationField.tokenValueQ96 === quickLaunchMaxBidQ96 ||
       maxValuationField.tokenValue === quickLaunchMaxValuationDisplay
     if (!isPegged) {
-      maxValuationField.onTokenValueChange(quickLaunchMaxValuationDisplay)
+      applyTokenValueWithoutUserIntent(quickLaunchMaxValuationDisplay)
     }
-  }, [isQuickLaunch, quickLaunchMaxBidQ96, quickLaunchMaxValuationDisplay, maxValuationField])
+  }, [
+    isQuickLaunch,
+    quickLaunchMaxBidQ96,
+    quickLaunchMaxValuationDisplay,
+    maxValuationField,
+    applyTokenValueWithoutUserIntent,
+  ])
 
   // Check if user has any balance of the bid token
   const hasBidToken = Boolean(currencyBalance && !currencyBalance.equalTo(0))
@@ -394,10 +402,13 @@ export function useBidFormController({
   // We snap the price to the nearest tick to ensure the bid line always aligns with a valid tick,
   // even when fiat mode introduces floating-point precision errors during currency conversion
   useEffect(() => {
-    // Only update if we have a valid, non-zero max valuation and required parameters.
+    // Only update if the user actually entered a max valuation (the field is pre-filled with a
+    // default before any interaction, which must not render a bid indicator) and we have a valid,
+    // non-zero max valuation and required parameters.
     // QuickLaunch: no bid line — the user never chose a max FDV, so drawing the synthetic
     // ceiling (the 25,000 ETH FDV cap) on the chart would only confuse.
     if (
+      hasUserSetMaxValuation &&
       !isQuickLaunch &&
       maxPriceQ96 &&
       !maxPriceAmountIsZero &&
@@ -430,6 +441,7 @@ export function useBidFormController({
     }
   }, [
     auctionTokenDecimals,
+    hasUserSetMaxValuation,
     maxPriceQ96,
     maxPriceAmountIsZero,
     isMaxPriceBelowMinimum,

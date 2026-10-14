@@ -597,23 +597,36 @@ describe('useLiquidityUrlState', () => {
   })
 
   describe('backwards compatibility', () => {
+    // Frozen because nuqs owns this object: the migrated values have to be derived, not written back
+    // into the state nuqs handed out. See useLiquidityUrlState.migration.test.tsx for the ordering this
+    // protects — a wholesale `useQueryStates` mock cannot reproduce it.
     it('handles currencya and currencyb', () => {
+      const mockSetReplaceState = vi.fn()
       useQueryStatesMock.mockReturnValue([
-        {
+        Object.freeze({
           currencya: NATIVE_CHAIN_ID,
           currencyb: USDC.address,
+          currencyA: '',
+          currencyB: '',
           chain: null,
           fee: DEFAULT_FEE_DATA,
           hook: null,
           priceRangeState: {},
           depositState: {},
-        },
-        vi.fn(),
+        }),
+        mockSetReplaceState,
       ])
-      const { result, rerender } = renderHook(() => useLiquidityUrlState())
-      rerender()
+      const { result } = renderHook(() => useLiquidityUrlState())
       expect(result.current.tokenA).toEqual(defaultInitialToken)
       expect(result.current.tokenB).toEqual(USDC)
+      expect(mockSetReplaceState).toHaveBeenCalledWith(
+        expect.objectContaining({
+          currencyA: NATIVE_CHAIN_ID,
+          currencyB: USDC.address,
+          currencya: null,
+          currencyb: null,
+        }),
+      )
     })
 
     // isDynamic wins over a disagreeing feeTier, and the fee amount is pulled to the pool key's fee.

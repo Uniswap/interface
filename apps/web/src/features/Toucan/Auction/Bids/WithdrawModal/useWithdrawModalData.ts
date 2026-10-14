@@ -9,8 +9,10 @@ import { fromQ96ToDecimalWithTokenDecimals } from '~/features/Toucan/Auction/Bid
 import { useBidTokenInfo } from '~/features/Toucan/Auction/hooks/useBidTokenInfo'
 import { AuctionBidStatus, AuctionOutcome, AuctionProgressState } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
+import { sumBidBudgets } from '~/features/Toucan/Auction/utils/bidBudgets'
 import { getClearingPrice } from '~/features/Toucan/Auction/utils/clearingPrice'
 import { approximateNumberFromRaw, computeFdvBidTokenRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
+import { sumUnclaimedTokensReceived } from '~/features/Toucan/Auction/utils/tokensReceived'
 
 interface UseWithdrawModalDataParams {
   bidId?: string
@@ -110,18 +112,10 @@ export function useWithdrawModalData({ bidId }: UseWithdrawModalDataParams): Wit
   }, [userBids, bidId])
 
   // Calculate auction tokens to claim (tokens filled from auction)
-  // Only applicable when auction is graduated - sum of UserBid `amount` where status != 'claimed'
-  const auctionTokensToClaim = useMemo(() => {
-    if (!isGraduated) {
-      return 0n
-    }
-    return targetBids.reduce((acc, bid) => {
-      if (bid.status !== AuctionBidStatus.Claimed) {
-        return acc + BigInt(bid.amount)
-      }
-      return acc
-    }, 0n)
-  }, [targetBids, isGraduated])
+  const auctionTokensToClaim = useMemo(
+    () => (isGraduated ? sumUnclaimedTokensReceived(targetBids) : 0n),
+    [targetBids, isGraduated],
+  )
 
   // Calculate bid tokens to refund
   // - If NOT graduated: Full refund of baseTokenInitial (entire bid amount)
@@ -132,16 +126,13 @@ export function useWithdrawModalData({ bidId }: UseWithdrawModalDataParams): Wit
     if (outcome === AuctionOutcome.UNKNOWN) {
       return 0n
     }
-    return targetBids.reduce((acc, bid) => {
-      if (bid.status === AuctionBidStatus.Submitted) {
-        if (!isGraduated) {
-          return acc + BigInt(bid.baseTokenInitial)
-        } else {
-          const unusedBudget = BigInt(bid.baseTokenInitial) - BigInt(bid.currencySpent)
-          return acc + unusedBudget
-        }
-      }
-      return acc
+    const submittedBids = targetBids.filter((bid) => bid.status === AuctionBidStatus.Submitted)
+    if (!isGraduated) {
+      return sumBidBudgets(submittedBids)
+    }
+    return submittedBids.reduce((acc, bid) => {
+      const unusedBudget = BigInt(bid.baseTokenInitial) - BigInt(bid.currencySpent)
+      return acc + unusedBudget
     }, 0n)
   }, [targetBids, isGraduated, outcome])
 
@@ -157,7 +148,7 @@ export function useWithdrawModalData({ bidId }: UseWithdrawModalDataParams): Wit
 
   // Format auction tokens for display
   const formattedAuctionTokens = useMemo(() => {
-    if (!auctionDetails?.token?.currency.decimals) {
+    if (auctionDetails?.token?.currency.decimals === undefined) {
       return '0'
     }
     const decimal = formatUnits(auctionTokensToClaim, auctionDetails.token.currency.decimals)
@@ -166,7 +157,7 @@ export function useWithdrawModalData({ bidId }: UseWithdrawModalDataParams): Wit
 
   // Format bid tokens for display
   const formattedBidTokens = useMemo(() => {
-    if (!bidTokenInfo?.decimals || !bidTokenInfo.symbol) {
+    if (bidTokenInfo?.decimals === undefined || !bidTokenInfo.symbol) {
       return '0'
     }
     const decimal = formatUnits(bidTokensToClaim, bidTokenInfo.decimals)
@@ -175,7 +166,7 @@ export function useWithdrawModalData({ bidId }: UseWithdrawModalDataParams): Wit
 
   // Calculate fiat value of bid tokens (formatted string for display)
   const bidTokensFiatValue = useMemo(() => {
-    if (!bidTokenInfo?.decimals || !bidTokenInfo.priceFiat || bidTokensToClaim === 0n) {
+    if (bidTokenInfo?.decimals === undefined || !bidTokenInfo.priceFiat || bidTokensToClaim === 0n) {
       return null
     }
     const decimal = Number(formatUnits(bidTokensToClaim, bidTokenInfo.decimals))
@@ -185,7 +176,7 @@ export function useWithdrawModalData({ bidId }: UseWithdrawModalDataParams): Wit
 
   // Calculate numeric USD value of bid tokens (for analytics)
   const bidTokenAmountUsd = useMemo(() => {
-    if (!bidTokenInfo?.decimals || !bidTokenInfo.priceFiat || bidTokensToClaim === 0n) {
+    if (bidTokenInfo?.decimals === undefined || !bidTokenInfo.priceFiat || bidTokensToClaim === 0n) {
       return undefined
     }
     const decimal = Number(formatUnits(bidTokensToClaim, bidTokenInfo.decimals))
@@ -195,7 +186,7 @@ export function useWithdrawModalData({ bidId }: UseWithdrawModalDataParams): Wit
   // Calculate numeric USD value of auction tokens (for analytics)
   // Uses hybrid approach: market price first, then clearing price fallback
   const auctionTokenAmountUsd = useMemo(() => {
-    if (!auctionDetails?.token?.currency.decimals || auctionTokensToClaim === 0n) {
+    if (auctionDetails?.token?.currency.decimals === undefined || auctionTokensToClaim === 0n) {
       return undefined
     }
 
@@ -205,7 +196,7 @@ export function useWithdrawModalData({ bidId }: UseWithdrawModalDataParams): Wit
       return auctionTokensDecimal * auctionTokenPriceFiat
     }
 
-    if (!bidTokenInfo?.decimals || !bidTokenInfo.priceFiat) {
+    if (bidTokenInfo?.decimals === undefined || !bidTokenInfo.priceFiat) {
       return undefined
     }
 
@@ -226,7 +217,11 @@ export function useWithdrawModalData({ bidId }: UseWithdrawModalDataParams): Wit
 
   // Calculate average cost per auction token
   const averageCostPerToken = useMemo(() => {
-    if (auctionTokensToClaim === 0n || !auctionDetails?.token?.currency.decimals || !bidTokenInfo?.decimals) {
+    if (
+      auctionTokensToClaim === 0n ||
+      auctionDetails?.token?.currency.decimals === undefined ||
+      bidTokenInfo?.decimals === undefined
+    ) {
       return null
     }
 

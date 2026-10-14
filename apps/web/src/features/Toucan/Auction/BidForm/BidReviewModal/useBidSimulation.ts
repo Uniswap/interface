@@ -11,7 +11,7 @@ export enum BidSimulationErrorType {
   UNKNOWN = 'UNKNOWN',
 }
 
-interface BidSimulationError {
+export interface BidSimulationError {
   type: BidSimulationErrorType
   message: string
   minBidDisplay?: string // For "set minimum bid" action
@@ -35,6 +35,19 @@ interface UseBidSimulationResult {
   simulate: () => Promise<boolean>
   retryWithMinBid: () => void
   clearSimulationError: () => void
+  /**
+   * Clears any previous error and marks a new attempt as live, for use right before starting a
+   * fresh submit attempt. Unlike `clearSimulationError`, this does not set the abort flag, so a
+   * failure reported via `reportSimulationFailure` immediately after (e.g. `buildPreBidSteps()`
+   * rejecting on the permit2-required path, which never calls `simulate()`) is not swallowed.
+   */
+  beginSimulationAttempt: () => void
+  /**
+   * Classifies and records a failure that happened outside `simulate()` itself (e.g. building
+   * the permit2 pre-bid steps) so it surfaces through the same error-display path instead of
+   * being lost as an unhandled rejection.
+   */
+  reportSimulationFailure: (error: unknown) => void
 }
 
 /**
@@ -109,6 +122,35 @@ export function useBidSimulation({
   // Tracks whether simulation was aborted (e.g., modal closed or error cleared)
   const isAbortedRef = useRef(false)
 
+  const reportSimulationFailure = useCallback(
+    (error: unknown) => {
+      if (isAbortedRef.current) {
+        return
+      }
+
+      logger.warn('useBidSimulation', 'reportSimulationFailure', 'Simulation failed', {
+        error: error instanceof Error ? error.message : String(error),
+        maxPriceQ96: preparedBid?.info.maxPriceQ96,
+        amountRaw: preparedBid?.info.amountRaw,
+      })
+
+      const parsedError = parseBidSimulationError(error, minValidBidDisplay)
+      setSimulationError(parsedError)
+      setIsSimulating(false)
+
+      // Refresh checkpoint data on error to get latest clearing price. Best-effort: a failure
+      // here shouldn't surface as an unhandled rejection on top of the simulation error itself.
+      // Wrapped in Promise.resolve() so this never throws synchronously even if the callback
+      // doesn't return a promise.
+      Promise.resolve(onRefreshCheckpoint?.()).catch((refreshError: unknown) => {
+        logger.warn('useBidSimulation', 'reportSimulationFailure', 'Failed to refresh checkpoint', {
+          error: refreshError instanceof Error ? refreshError.message : String(refreshError),
+        })
+      })
+    },
+    [minValidBidDisplay, onRefreshCheckpoint, preparedBid],
+  )
+
   const simulate = useCallback(async (): Promise<boolean> => {
     if (!preparedBid || !chainId || !accountAddress || !auctionContractAddress) {
       return false
@@ -137,37 +179,12 @@ export function useBidSimulation({
       setIsSimulating(false)
       return true
     } catch (error) {
-      // oxlint-disable-next-line typescript/no-unnecessary-condition -- ref may be set during await
-      if (isAbortedRef.current) {
-        return false
-      }
-
-      logger.warn('useBidSimulation', 'simulate', 'Simulation failed', {
-        error: error instanceof Error ? error.message : String(error),
-        maxPriceQ96: preparedBid.info.maxPriceQ96,
-        amountRaw: preparedBid.info.amountRaw,
-      })
-
-      const parsedError = parseBidSimulationError(error, minValidBidDisplay)
-      setSimulationError(parsedError)
-      setIsSimulating(false)
-
-      // Refresh checkpoint data on error to get latest clearing price
-      if (onRefreshCheckpoint) {
-        onRefreshCheckpoint()
-      }
-
+      // Route through the same classify-and-store path buildPreBidSteps() rejections use (it
+      // performs its own abort check), so the two can't diverge.
+      reportSimulationFailure(error)
       return false
     }
-  }, [
-    preparedBid,
-    chainId,
-    accountAddress,
-    auctionContractAddress,
-    minValidBidDisplay,
-    submitBidMutation,
-    onRefreshCheckpoint,
-  ])
+  }, [preparedBid, chainId, accountAddress, auctionContractAddress, submitBidMutation, reportSimulationFailure])
 
   const retryWithMinBid = useCallback(() => {
     if (minValidBidDisplay && onSetMinBid) {
@@ -184,11 +201,19 @@ export function useBidSimulation({
     setIsSimulating(false)
   }, [])
 
+  const beginSimulationAttempt = useCallback(() => {
+    isAbortedRef.current = false
+    setSimulationError(undefined)
+    setIsSimulating(false)
+  }, [])
+
   return {
     simulationError,
     isSimulating,
     simulate,
     retryWithMinBid,
     clearSimulationError,
+    beginSimulationAttempt,
+    reportSimulationFailure,
   }
 }

@@ -23,7 +23,7 @@
   content: '';
 }
 
-.t_dark .skeleton-box::after {
+.dark .skeleton-box::after {
   background-image: linear-gradient(
     -75deg,
     rgba(30, 30, 30, 0) 0,

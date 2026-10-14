@@ -121,7 +121,7 @@ const TokenDetails = memo(function TokenDetailsInner(): JSX.Element {
         // Delay rendering to avoid mounting context menu to the previous screen
         rightElement={isContentHidden ? undefined : rightElement}
       >
-        <Flex gap="$spacing16" pb="$spacing16">
+        <Flex gap="$spacing28" pb="$spacing16">
           <Flex gap="$spacing16">
             <TokenDetailsHeader />
             {showVaultShare && <TokenDetailsVaultShareBanner vaultShareData={vaultShareData} />}
@@ -129,7 +129,7 @@ const TokenDetails = memo(function TokenDetailsInner(): JSX.Element {
             <OffHoursMarketWarning />
           </Flex>
 
-          <Flex gap="$spacing16" mb="$spacing8" px="$spacing16">
+          <Flex gap="$spacing16" px="$spacing16">
             <TokenWarningCardWrapper />
 
             <TokenBalancesWrapper />
@@ -141,20 +141,14 @@ const TokenDetails = memo(function TokenDetailsInner(): JSX.Element {
             {showEarn && <TokenDetailsEarnBanner activeAddress={activeAddress} earnData={earnData} />}
           </Flex>
           {tokenCategoriesEnabled && <TokenDetailsCollections />}
-          <Flex gap="$spacing24">
-            <TokenPerformance />
-            <Flex gap="$spacing16">
-              <PermissionedPillRow />
-              <Flex gap="$spacing24">
-                <TokenDetailsAbout />
-                {tokenCategoriesEnabled && <RelatedTokens />}
-                <TokenDetailsStats />
-              </Flex>
-            </Flex>
-            <TokenDetailsLinks />
-            <MoreRwaTokens />
-            {showOtherStocks && <OtherStocks />}
-          </Flex>
+          <TokenPerformance />
+          <PermissionedPillRow />
+          <TokenDetailsAbout />
+          {tokenCategoriesEnabled && <RelatedTokens />}
+          <TokenDetailsStats />
+          <TokenDetailsLinks />
+          <MoreRwaTokens />
+          {showOtherStocks && <OtherStocks />}
         </Flex>
       </HeaderScrollScreen>
 

@@ -74,7 +74,10 @@ export function getIsPermissioned(position: PositionInfo): boolean | undefined {
   return position.version === ProtocolVersion.V4 ? position.isPermissioned : undefined
 }
 
-export function getProtocolVersionLabel(version: ProtocolVersion): string | undefined {
+/** Lowercase protocol label as it appears in URLs and explore payloads (`/positions/v3/...`). */
+export type ProtocolVersionLabel = 'v2' | 'v3' | 'v4'
+
+export function getProtocolVersionLabel(version: ProtocolVersion): ProtocolVersionLabel | undefined {
   switch (version) {
     case ProtocolVersion.V2:
       return 'v2'

@@ -1,12 +1,19 @@
-import { Flex, iconSizes, ModalCloseIcon, Text } from '@universe/mycelium'
+import {
+  Flex,
+  iconSizes,
+  ModalCloseIcon,
+  Text,
+  UniversalList,
+  type UniversalListRenderItemInfo,
+  type UniversalListStyle,
+} from '@universe/mycelium'
 import { GraduationCap } from '@universe/mycelium/icons/GraduationCap'
 import { useIsDarkMode, useMedia, useScrollbarStyles } from '@universe/mycelium/theme-hooks-compat'
-import { CSSProperties, useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import AutoSizer from 'react-virtualized-auto-sizer'
-import { VariableSizeList as List } from 'react-window'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { SNAP_POINTS } from 'uniswap/src/components/TokenSelector/TokenSelector'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { useIsWebFORNudgeEnabled } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -17,6 +24,86 @@ import { HeaderContent } from '~/pages/Swap/Buy/CountryListModal'
 import { ContentWrapper } from '~/pages/Swap/Buy/shared'
 
 const ROW_ITEM_SIZE = 56
+
+enum FiatOnRampCurrencyRowType {
+  Info = 'info',
+  UnsupportedToggle = 'unsupportedToggle',
+  Currency = 'currency',
+}
+
+type FiatOnRampCurrencyRow =
+  | { type: FiatOnRampCurrencyRowType.Info; key: string }
+  | { type: FiatOnRampCurrencyRowType.UnsupportedToggle; key: string }
+  | {
+      type: FiatOnRampCurrencyRowType.Currency
+      key: string
+      currency: FiatOnRampCurrency
+      currencyInfo: CurrencyInfo
+      isSupported: boolean
+    }
+
+function rowKey(row: FiatOnRampCurrencyRow): string {
+  return row.key
+}
+
+/**
+ * `meldCurrencyCode` identifies the FOR-supported currencies, but the unsupported ones are built
+ * from portfolio balances (`BuyForm.tsx`: `({ currencyInfo: balancesById[id].currencyInfo })`) and
+ * carry no code at all — so they need the currency id instead, or every one of them keys the same.
+ * Prefixed by group because a currency can legitimately appear in both lists.
+ */
+function currencyRowKey(prefix: string, currency: FiatOnRampCurrency): string {
+  return `${prefix}-${currency.meldCurrencyCode ?? currency.currencyInfo?.currencyId}`
+}
+
+/**
+ * A currency the data layer couldn't resolve has nothing to render, so it never becomes a row —
+ * otherwise the list sizes a slot for it and leaves a blank gap. Dropping them here also keeps the
+ * unsupported toggle counting only rows that will actually appear beneath it.
+ */
+function toCurrencyRows({
+  prefix,
+  currencies,
+  isSupported,
+}: {
+  prefix: string
+  currencies: FiatOnRampCurrency[]
+  isSupported: boolean
+}): FiatOnRampCurrencyRow[] {
+  const rows: FiatOnRampCurrencyRow[] = []
+  for (const currency of currencies) {
+    const { currencyInfo } = currency
+    if (!currencyInfo) {
+      continue
+    }
+    rows.push({
+      type: FiatOnRampCurrencyRowType.Currency,
+      key: currencyRowKey(prefix, currency),
+      currency,
+      currencyInfo,
+      isSupported,
+    })
+  }
+  return rows
+}
+
+function rowType(row: FiatOnRampCurrencyRow): FiatOnRampCurrencyRowType {
+  return row.type
+}
+
+/**
+ * Resolves its own label: the toggle row object only rebuilds when `expanded` or the currency lists
+ * change, so a parent-resolved string would keep the previous language after a locale switch.
+ */
+function UnsupportedCurrenciesToggle({ expanded, onToggle }: { expanded: boolean; onToggle: () => void }) {
+  const { t } = useTranslation()
+
+  return (
+    <DropdownController open={expanded} onClick={onToggle}>
+      {t('fiatOffRamp.unsupportedToken.divider')}
+    </DropdownController>
+  )
+}
 
 function FiatOnRampInfo() {
   const { t } = useTranslation()
@@ -71,36 +158,77 @@ export function FiatOnRampCurrencyModal({
   const isWebFORNudgeEnabled = useIsWebFORNudgeEnabled()
 
   const [expanded, setExpanded] = useState(true)
-  const getItemSize = useCallback(
-    (index: number) => {
-      if (isWebFORNudgeEnabled && index === 0) {
-        return 88
-      }
+  const toggleExpanded = useCallback(() => setExpanded((current) => !current), [])
 
-      if (index === currencies.length) {
-        return 40
-      }
+  const rows = useMemo<FiatOnRampCurrencyRow[]>(() => {
+    const result: FiatOnRampCurrencyRow[] = []
 
-      return ROW_ITEM_SIZE
+    if (isWebFORNudgeEnabled) {
+      result.push({ type: FiatOnRampCurrencyRowType.Info, key: 'for-info' })
+    }
+
+    result.push(...toCurrencyRows({ prefix: 'supported', currencies, isSupported: true }))
+
+    const unsupportedRows = toCurrencyRows({
+      prefix: 'unsupported',
+      currencies: unsupportedCurrencies,
+      isSupported: false,
+    })
+    if (unsupportedRows.length > 0) {
+      result.push({ type: FiatOnRampCurrencyRowType.UnsupportedToggle, key: 'unsupported-toggle' })
+
+      if (expanded) {
+        result.push(...unsupportedRows)
+      }
+    }
+
+    return result
+  }, [currencies, unsupportedCurrencies, expanded, isWebFORNudgeEnabled])
+
+  const renderItem = useCallback(
+    ({ item }: UniversalListRenderItemInfo<FiatOnRampCurrencyRow>): JSX.Element | null => {
+      switch (item.type) {
+        case FiatOnRampCurrencyRowType.Info:
+          return <FiatOnRampInfo />
+        case FiatOnRampCurrencyRowType.UnsupportedToggle:
+          return <UnsupportedCurrenciesToggle expanded={expanded} onToggle={toggleExpanded} />
+        case FiatOnRampCurrencyRowType.Currency:
+          return (
+            <CurrencyRow
+              // `RowWrapper` defaults to 60; these rows render at 56.
+              style={{ height: ROW_ITEM_SIZE }}
+              currencyInfo={item.currencyInfo}
+              showUsdValue
+              showCurrencyAmount
+              onSelect={() => {
+                if (item.isSupported) {
+                  onSelectCurrency(item.currency)
+                  onDismiss()
+                } else {
+                  setBuyFormState((state) => ({ ...state, selectedUnsupportedCurrency: item.currency }))
+                }
+              }}
+              // Unsupported rows carry no meld code, so a bare `===` marks all of them selected
+              // whenever nothing is selected yet — reachable when neither token defaulting branch fires.
+              isSelected={
+                !!selectedCurrency?.meldCurrencyCode &&
+                selectedCurrency.meldCurrencyCode === item.currency.meldCurrencyCode
+              }
+              eventProperties={{}}
+              otherSelected={false}
+            />
+          )
+        default: {
+          // Defect guard: FiatOnRampCurrencyRow is a closed union.
+          const unreachable: never = item
+          throw new Error(`unknown fiat on-ramp currency row: ${JSON.stringify(unreachable)}`)
+        }
+      }
     },
-    [currencies.length, isWebFORNudgeEnabled],
+    [expanded, toggleExpanded, onSelectCurrency, onDismiss, setBuyFormState, selectedCurrency?.meldCurrencyCode],
   )
 
-  const [items, separatorIndex] = useMemo(() => {
-    let _separatorIndex = -1
-    let _items: (FiatOnRampCurrency | null)[] = [...currencies]
-    if (isWebFORNudgeEnabled) {
-      _items.unshift(null)
-    }
-    if (unsupportedCurrencies.length > 0) {
-      _separatorIndex = currencies.length
-      _items = _items.concat(null)
-    }
-    if (expanded) {
-      _items = _items.concat(unsupportedCurrencies)
-    }
-    return [_items, _separatorIndex]
-  }, [currencies, expanded, unsupportedCurrencies, isWebFORNudgeEnabled])
+  const listStyle = useMemo<UniversalListStyle>(() => ({ style: scrollbarStyles }), [scrollbarStyles])
 
   return (
     <Modal
@@ -109,7 +237,7 @@ export function FiatOnRampCurrencyModal({
       height={media.sm ? '100vh' : '100%'}
       maxHeight={700}
       // The mobile-web sheet must take its height from the snap point, not content-fit: the
-      // virtualized currency list sizes itself to its container (AutoSizer) so it has no intrinsic
+      // virtualized currency list fills its container rather than its content, so it has no intrinsic
       // height, and a fit-mode sheet freezes at chrome height with an empty list. See (SWAP-3250)
       snapPoints={SNAP_POINTS}
       snapPointsMode="percent"
@@ -124,82 +252,20 @@ export function FiatOnRampCurrencyModal({
             <ModalCloseIcon testId="FiatOnRampCurrencyModal-close" onClose={onDismiss} />
           </Flex>
         </HeaderContent>
-        <Flex grow>
-          <AutoSizer disableWidth>
-            {({ height }: { height: number }) => (
-              <Flex data-testid="for-currency-list-wrapper">
-                <List
-                  height={height}
-                  width="100%"
-                  itemData={items}
-                  itemCount={items.length}
-                  itemSize={getItemSize}
-                  itemKey={(index: number, data: typeof items) => data[index]?.meldCurrencyCode ?? index}
-                  style={scrollbarStyles}
-                >
-                  {({
-                    style,
-                    data,
-                    index,
-                  }: {
-                    data: (FiatOnRampCurrency | null)[]
-                    index: number
-                    style: CSSProperties
-                  }) => {
-                    if (isWebFORNudgeEnabled && index === 0) {
-                      return <FiatOnRampInfo />
-                    }
-
-                    if (index === separatorIndex) {
-                      return (
-                        <Flex style={{ ...style }}>
-                          <DropdownController
-                            open={expanded}
-                            onClick={() => {
-                              // oxlint-disable-next-line no-shadow
-                              setExpanded((expanded) => !expanded)
-                            }}
-                          >
-                            {t('fiatOffRamp.unsupportedToken.divider')}
-                          </DropdownController>
-                        </Flex>
-                      )
-                    }
-
-                    const currencyInfo = data[index]?.currencyInfo
-                    if (!currencyInfo) {
-                      return null
-                    }
-
-                    return (
-                      <CurrencyRow
-                        style={style}
-                        currencyInfo={currencyInfo}
-                        showUsdValue
-                        showCurrencyAmount
-                        onSelect={() => {
-                          const currency = data[index]
-                          if (!currency) {
-                            return
-                          }
-
-                          if (currencies.includes(currency)) {
-                            onSelectCurrency(currency)
-                            onDismiss()
-                          } else {
-                            setBuyFormState((state) => ({ ...state, selectedUnsupportedCurrency: currency }))
-                          }
-                        }}
-                        isSelected={selectedCurrency?.meldCurrencyCode === data[index]?.meldCurrencyCode}
-                        eventProperties={{}}
-                        otherSelected={false}
-                      />
-                    )
-                  }}
-                </List>
-              </Flex>
-            )}
-          </AutoSizer>
+        {/* Web `fill` is `flex: 1 1 auto`, so without a 0 basis the content height squeezes the header. */}
+        <Flex fill flexBasis={0}>
+          <UniversalList
+            data={rows}
+            estimatedItemSize={ROW_ITEM_SIZE}
+            // `rows` doesn't change when the selection does, so without this the cells stay memoized
+            // and the highlight never moves. Reachable via a wallet-initiated chain switch.
+            extraData={selectedCurrency?.meldCurrencyCode}
+            getItemType={rowType}
+            keyExtractor={rowKey}
+            renderItem={renderItem}
+            style={listStyle}
+            testID="for-currency-list-wrapper"
+          />
         </Flex>
       </ContentWrapper>
     </Modal>

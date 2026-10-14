@@ -66,7 +66,6 @@ describe('FeatureFlagModal search', () => {
     await searchFor(SwapLayerProperties.EthAsErc20UniswapXEnabled)
 
     expect(screen.getByText(Layers.SwapPage)).toBeInTheDocument()
-    expect(screen.queryByText(Layers.Discovery)).not.toBeInTheDocument()
   })
 
   it('matches experiment and config names case-insensitively, like gates', async () => {

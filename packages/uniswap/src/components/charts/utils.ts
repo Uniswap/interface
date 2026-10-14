@@ -1,4 +1,7 @@
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
+import type { KnownTokenCategoryId } from 'uniswap/src/features/tokenCategories/knownTokenCategoryIds'
+
+const STABLECOINS_CATEGORY_ID: KnownTokenCategoryId = 'stablecoins'
 
 // Percent of min. Kept at 0.5% on 1H/1D too: 1.5% flattened majors like ETH/BTC on quiet days
 const STABLECOIN_VARIANCE_THRESHOLDS: Record<HistoryDuration, number> = {
@@ -15,18 +18,21 @@ const STABLECOIN_VARIANCE_THRESHOLDS: Record<HistoryDuration, number> = {
  * @param min - The minimum price value
  * @param max - The maximum price value
  * @param duration - The time period for the chart data (optional)
+ * @param isStablecoin - False rules the chart out however flat its range; leave undefined when unknown
  * @returns true if the price variance is below the threshold
  */
 export function isLowVarianceRange({
   min,
   max,
   duration,
+  isStablecoin,
 }: {
   min: number
   max: number
   duration?: HistoryDuration
+  isStablecoin?: boolean
 }): boolean {
-  if (min <= 0) {
+  if (isStablecoin === false || min <= 0) {
     return false
   }
 
@@ -38,6 +44,17 @@ export function isLowVarianceRange({
   const priceVariancePercent = (priceRange / min) * 100
 
   return priceVariancePercent < STABLECOIN_VARIANCE_THRESHOLDS[duration]
+}
+
+/** Undefined with Token Categories off or until the token's category tags are known. */
+export function getIsStablecoin({
+  tokenCategoriesEnabled,
+  categoryIds,
+}: {
+  tokenCategoriesEnabled: boolean
+  categoryIds: readonly string[] | undefined
+}): boolean | undefined {
+  return tokenCategoriesEnabled ? categoryIds?.includes(STABLECOINS_CATEGORY_ID) : undefined
 }
 
 // A range is "low variance" once it spans less than this fraction of its own magnitude.

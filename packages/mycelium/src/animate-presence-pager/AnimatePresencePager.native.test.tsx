@@ -4,7 +4,6 @@
  * mid-exit direction re-point (the legacy `custom` contract), and the instant
  * test-env lane. Flushable reanimated stand-in; see Presence.native.test.tsx.
  */
-import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { isTestEnv } from '@universe/environment'
 import { useRef, type ComponentType, type JSX } from 'react'
@@ -17,6 +16,7 @@ import {
   __resetAnimations,
   type RecordedAnimation,
 } from '../presence/testing/reanimated-mock'
+import { expectWithSporeCurveCallbacksAreWorklets } from '../presence/testing/withSporeCurveWorklet'
 import { AnimatedPager, AnimateTransition, TransitionItem } from './AnimatePresencePager.native'
 
 vi.mock('react-native-reanimated', () => import('../presence/testing/reanimated-mock'))
@@ -35,8 +35,8 @@ const isTestEnvMock = vi.mocked(isTestEnv)
 
 const Probe = 'probe' as unknown as ComponentType<{ id: string }>
 
-/** The legacy `fastHeavy` spring, the pager's default curve. */
-const FAST_HEAVY_CONFIG = { damping: 75, stiffness: 1000, mass: 1.4 }
+/** The legacy `fastHeavy` spring, plus `reduceMotion` from `withSporeCurve`. */
+const FAST_HEAVY_CONFIG = { damping: 75, stiffness: 1000, mass: 1.4, reduceMotion: 'system' }
 
 function probeIds(tree: ReactTestRenderer): string[] {
   return tree.root.findAllByType(Probe).map((instance) => instance.props['id'] as string)
@@ -371,61 +371,17 @@ describe('TransitionItem', () => {
       </TransitionItem>,
     )
     // '200ms' is a timing curve: the exit runs through withTiming.
-    expect(__recordedAnimations).toContainEqual({ kind: 'timing', toValue: 0, config: { duration: 200 } })
+    expect(__recordedAnimations).toContainEqual({
+      kind: 'timing',
+      toValue: 0,
+      config: { duration: 200, reduceMotion: 'system' },
+    })
   })
 })
 
 describe('worklet directives (iOS Fabric hard-crash regression, INFRA-3344 device QA)', () => {
   it('marks every completion callback routed through withSporeCurve as a worklet', () => {
-    // Reanimated's babel plugin auto-workletizes callbacks passed DIRECTLY
-    // to its own APIs (withSpring/withTiming/...), but NOT ones routed
-    // through a user-land helper like withSporeCurve. The completion
-    // callback runs on the UI runtime when the animation settles; without a
-    // 'worklet' directive it is a plain JS function there, and invoking it
-    // hard-crashes iOS Fabric (reproduced 2/2 on an iPhone 16 Pro: advancing
-    // the pager crashed the app to the home screen). vitest cannot observe
-    // the babel transform, so this pins the directive at the source level.
-    const source = readFileSync(join(__dirname, 'AnimatePresencePager.native.tsx'), 'utf-8')
-    // Walk each call's own argument list (balanced parens), so a later
-    // call's arrow can't bleed into a callback-less call's window.
-    const argListOf = (from: number): string => {
-      let depth = 1
-      for (let i = from; i < source.length; i += 1) {
-        const char = source[i]
-        if (char === '(') {
-          depth += 1
-        } else if (char === ')') {
-          depth -= 1
-          if (depth === 0) {
-            return source.slice(from, i)
-          }
-        }
-      }
-      throw new Error('unbalanced withSporeCurve call')
-    }
-    const marker = 'withSporeCurve('
-    let cursor = source.indexOf(marker)
-    let callSites = 0
-    let callbackSites = 0
-    while (cursor !== -1) {
-      callSites += 1
-      const args = argListOf(cursor + marker.length)
-      if (args.includes('=>')) {
-        callbackSites += 1
-        // The directive must be the first STATEMENT of the callback body
-        // (comments before it are fine).
-        const body = args.slice(args.indexOf('=>'))
-        const firstStatement = body
-          .split('\n')
-          .slice(1) // drop the `=> {` line itself
-          .map((line) => line.trim())
-          .filter((line) => line !== '' && !line.startsWith('//'))[0]
-        expect(firstStatement).toBe("'worklet'")
-      }
-      cursor = source.indexOf(marker, cursor + marker.length)
-    }
-    expect(callSites).toBeGreaterThan(0)
-    expect(callbackSites).toBeGreaterThan(0)
+    expectWithSporeCurveCallbacksAreWorklets(join(__dirname, 'AnimatePresencePager.native.tsx'))
   })
 })
 

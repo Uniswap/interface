@@ -387,6 +387,7 @@ export default defineConfig({
     'no-extra-boolean-cast': 'error',
     'no-useless-catch': 'error',
     'no-useless-escape': 'error',
+    'unicorn/no-useless-spread': 'error',
     'no-lone-blocks': 'error',
     'typescript/no-unnecessary-type-constraint': 'error',
     // `void promise` statements are the idiom no-floating-promises requires for

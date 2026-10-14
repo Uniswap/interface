@@ -7,7 +7,7 @@ interface UseCeilingRecapParams {
   tokenValueQ96: bigint | undefined
   /** That same value as the field's display string, to feed back through the write path. */
   tokenValue: string
-  /** The field's clamping write path — `onTokenValueChange`. */
+  /** The field's clamping write path. Must not record the write as user input. */
   onRecap: (tokenValue: string) => void
 }
 

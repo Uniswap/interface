@@ -66,13 +66,13 @@ export const TrendingSection = memo(function TrendingSection(): JSX.Element | nu
   }
 
   return (
-    <Flex pb="$spacing8">
+    <Flex>
       {/* Always pass onPress so the chevron doesn't pop in when categories resolve; the
           handler no-ops until trendingCategory is available. */}
       <ExploreSectionHeader title={t('explore.section.trending')} onPress={onPressHeader} />
       {showSkeleton
         ? Array.from({ length: TRENDING_SECTION_ROW_COUNT }, (_, index) => (
-            <Flex key={index} height={EXPLORE_TOKEN_ROW_HEIGHT} justifyContent="center" px="$spacing24">
+            <Flex key={index} height={EXPLORE_TOKEN_ROW_HEIGHT} justifyContent="center" px="$spacing20">
               <Loader.Token />
             </Flex>
           ))

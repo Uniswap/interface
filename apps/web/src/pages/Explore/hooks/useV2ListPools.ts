@@ -1,4 +1,3 @@
-import type { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency } from '@uniswap/sdk-core'
 import type { UniverseChainId } from '@universe/chains'
 import { useMemo } from 'react'
@@ -17,8 +16,7 @@ import type { PoolsFilterState } from '~/types/poolsFilter'
 
 /**
  * The ranked, filterable data.v2 `ListPools` list behind both the Explore pools tab and the
- * add-liquidity pool browser. Sorting, search, the protocol filter, the advanced TVL/APR/rewards
- * filters and pagination are all handled by the backend.
+ * add-liquidity pool browser. Sorting, search, the advanced protocol/TVL/APR/rewards filters and pagination are all handled by the backend.
  *
  * The two surfaces differ only in where their filter values live — Explore in its tables filter
  * store, the browser in URL params — so this hook takes them as arguments and reads no store of its
@@ -28,7 +26,6 @@ import type { PoolsFilterState } from '~/types/poolsFilter'
 export function useV2ListPools({
   sortState,
   chainId,
-  protocol,
   poolsFilter,
   currency0,
   currency1,
@@ -36,9 +33,7 @@ export function useV2ListPools({
 }: {
   sortState: PoolTableSortState
   chainId?: UniverseChainId
-  /** UNSPECIFIED (or absent) leaves the request unfiltered, i.e. all protocol versions. */
-  protocol?: ProtocolVersion
-  /** Advanced pools filter (behind AdvancedPoolsFiltering); when set, drives chain/protocol/stats filters. */
+  /** Advanced pools filter; when set, drives chain/protocol/stats filters. */
   poolsFilter?: PoolsFilterState
   /** Scopes the list to this token. Token addresses are chain-specific, so this pins the list to one chain. */
   currency0?: Currency
@@ -77,22 +72,11 @@ export function useV2ListPools({
         chainId: effectiveChainId,
         fallbackChainIds: enabledChains.chains,
         sort: { orderBy, ascending },
-        protocol,
         filterParams,
         currencies: [currency0, currency1],
         searchQuery,
       }),
-    [
-      effectiveChainId,
-      enabledChains.chains,
-      orderBy,
-      ascending,
-      protocol,
-      filterParams,
-      currency0,
-      currency1,
-      searchQuery,
-    ],
+    [effectiveChainId, enabledChains.chains, orderBy, ascending, filterParams, currency0, currency1, searchQuery],
   )
 
   const hasTokenFilter = Boolean(currency0 || currency1)

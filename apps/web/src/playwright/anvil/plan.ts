@@ -2,8 +2,8 @@
 import type { Page } from '@playwright/test'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { TradingApi } from '@universe/api'
-// oxlint-disable-next-line universe-custom/no-direct-viem-ethers-import -- Node-side mock must not load the feature-gated app adapter
-import { encodeFunctionData, erc20Abi, getAddress, type Address } from 'viem'
+import { type Address, erc20Abi, viemEncodeFunctionData } from '@universe/chains'
+import { getAddress } from '~/chains'
 import {
   completePlanStep,
   getPlanPath,
@@ -22,16 +22,16 @@ export function encodeApproveCalldata({
   spender: Address
   amount?: bigint
 }): `0x${string}` {
-  return encodeFunctionData({ abi: erc20Abi, functionName: 'approve', args: [spender, amount] })
+  return viemEncodeFunctionData({ abi: erc20Abi, functionName: 'approve', args: [spender, amount] })
 }
 
 export function encodeTransferCalldata({ recipient, amount }: { recipient: Address; amount: bigint }): `0x${string}` {
-  return encodeFunctionData({ abi: erc20Abi, functionName: 'transfer', args: [recipient, amount] })
+  return viemEncodeFunctionData({ abi: erc20Abi, functionName: 'transfer', args: [recipient, amount] })
 }
 
 /** WETH9 deposit — pair with a `value` above the wallet balance to force a wallet-side submission failure. */
 export function encodeWethDepositCalldata(): `0x${string}` {
-  return encodeFunctionData({ abi: WETH_ABI, functionName: 'deposit' })
+  return viemEncodeFunctionData({ abi: WETH_ABI, functionName: 'deposit' })
 }
 
 function requireString(value: string | undefined, label: string): string {

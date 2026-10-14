@@ -7,6 +7,7 @@ import { InterfacePageName, SectionName } from 'uniswap/src/features/telemetry/c
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useIsMissingPlatformWallet } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsMissingPlatformWallet'
 import { APP_BODY_MOBILE_GUTTER_PX } from '~/app/layout/constants'
+import { BlastShutdownPositionsBanner } from '~/features/Liquidity/BlastShutdownBanner'
 import { PoolsUnavailableOnSolanaView } from '~/features/Liquidity/components/emptyStates/PoolsUnavailableOnSolanaView'
 import { LiquidityLearnMoreTiles } from '~/features/Liquidity/components/LearnMoreTiles'
 import { usePositionSort } from '~/features/Liquidity/hooks/usePositionSort'
@@ -159,6 +160,7 @@ export function Pool() {
             <PositionsSummaryChips walletAddress={account.address} bleedGutters={SUMMARY_CHIPS_BLEED_GUTTERS} />
           )}
           {!showDiscoveryEmptyState && <Text variant="heading3">{t('pool.positions.title')}</Text>}
+          <BlastShutdownPositionsBanner />
           {connectedWithoutEVM ? (
             <>
               <PoolsUnavailableOnSolanaView withBorder />

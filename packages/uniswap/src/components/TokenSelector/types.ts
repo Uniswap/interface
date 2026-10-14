@@ -1,6 +1,6 @@
 import { UniverseChainId } from '@universe/chains'
 import { RwaTokenOption, TokenSelectorOption } from 'uniswap/src/components/lists/items/types'
-import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
+import type { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import type { AddressGroup } from 'uniswap/src/features/accounts/store/types/AccountsState'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -13,7 +13,10 @@ export type OnSelectCurrency = (
   index: number,
 ) => void
 
-export type OnSelectRwaToken = (option: RwaTokenOption) => void
+export type OnSelectRwaToken = (
+  option: RwaTokenOption,
+  context: { sectionKey: OnchainItemSectionName; position: number; suggestionCount: number },
+) => void
 
 export type TokenSectionsHookProps = {
   addresses: AddressGroup

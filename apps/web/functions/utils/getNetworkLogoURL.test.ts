@@ -3,7 +3,7 @@ import getNetworkLogoUrl, { OG_NETWORK_BADGE_CHAINS } from 'functions/utils/getN
 
 /**
  * Guardrail: OG network badges depend on Vite inlining `*.png?inline` from `packages/ui`
- * into the Cloudflare worker bundle. Missing assets, path refactors, or broken asset
+ * into the server bundle. Missing assets, path refactors, or broken asset
  * handling regress to empty/wrong URLs at runtime — this fails early in CI.
  */
 describe('getNetworkLogoUrl — UI ?inline / worker build coupling', () => {

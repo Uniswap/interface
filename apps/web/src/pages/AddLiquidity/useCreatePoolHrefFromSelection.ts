@@ -2,7 +2,7 @@ import type { UniverseChainId } from '@universe/chains'
 import { useQueryStates } from 'nuqs'
 import { useMemo } from 'react'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { parseAsChainId, parseAsCurrencyAddress, parseAsProtocolVersion } from '~/features/Liquidity/parsers/urlParsers'
+import { parseAsChainId, parseAsCurrencyAddress } from '~/features/Liquidity/parsers/urlParsers'
 import { parseAsPoolsFilter } from '~/features/Liquidity/PoolsFilter/urlParam'
 import { useCurrencyInfo } from '~/hooks/Tokens'
 import { buildCreatePoolHrefFromCurrencies } from '~/pages/AddLiquidity/poolLinkParams'
@@ -19,8 +19,7 @@ export const BROWSER_FILTER_PARSERS = {
   // Held in the URL rather than component state so it survives a reload and is readable by the
   // page header, which renders outside `PoolBrowser`.
   filterTokenChain: parseAsChainId,
-  filterProtocol: parseAsProtocolVersion,
-  // Advanced pools filter (behind AdvancedPoolsFiltering), serialized as one JSON param.
+  // Advanced pools filter, serialized as one JSON param.
   poolsFilter: parseAsPoolsFilter,
 }
 
@@ -30,7 +29,7 @@ export const BROWSER_FILTER_PARSERS = {
  * impossible rather than merely unlikely.
  *
  * The chain comes from `filterTokenChain`, not `filterChain`: the latter is the *table's* network
- * filter and both `handleChainSelect` and `handlePoolsFilterApply` null it for Network = "All"
+ * filter and `handlePoolsFilterApply` nulls it for Network = "All"
  * while leaving the tokens selected, so reading it yielded a token with no chain. It stays as a
  * fallback for a URL written before `filterTokenChain` existed. Unlike the mount-seeded state it
  * replaced, the param survives a reload.

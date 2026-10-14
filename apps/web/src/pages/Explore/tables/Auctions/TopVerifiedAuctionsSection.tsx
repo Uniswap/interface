@@ -23,7 +23,7 @@ export function TopVerifiedAuctionsSection() {
         <Text variant="subheading1" color="$neutral1">
           {t('toucan.topVerifiedAuctions.title')}
         </Text>
-        <Tooltip placement="top" delay={0}>
+        <Tooltip placement="top">
           <Tooltip.Trigger>
             <Anchor
               href={UniswapHelpUrls.articles.toucanVerifiedAuctionsHelp}
