@@ -116,19 +116,34 @@ export function getTruncatedSectionKeys({
     .map(([sectionKey]) => sectionKey)
 }
 
-function isExactCategoryMatch(category: CategoryOption['category'], normalizedQuery: string): boolean {
-  return (
-    category.englishName.toLowerCase() === normalizedQuery ||
-    category.name.toLowerCase() === normalizedQuery ||
-    category.id === normalizedQuery
-  )
+const MIN_CATEGORY_PREFIX_QUERY_LENGTH = 3
+
+// Lowercase, one space between words: "AI-Agents" and "ai agents" compare the same way.
+function normalizeWords(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, ' ')
+    .trim()
+}
+
+// Typeahead: the query must start a word ("stable" hits Stablecoins, "coins" does not).
+function startsAWordOf(text: string, query: string): boolean {
+  return text.startsWith(query) || text.includes(` ${query}`)
+}
+
+// A whole name always matches, so "ai" finds AI; a prefix needs a few letters to keep short queries quiet.
+function isCategoryNameMatch(category: CategoryOption['category'], query: string): boolean {
+  const names = [category.englishName, category.name, category.id].map(normalizeWords)
+  if (names.includes(query)) {
+    return true
+  }
+  return query.length >= MIN_CATEGORY_PREFIX_QUERY_LENGTH && names.some((name) => startsAWordOf(name, query))
 }
 
 /**
- * All tab only. Category rows lead the token section, but only for categories whose English name, localized
- * name, or id the query matches exactly. The BE also returns categories matched through member tokens (e.g. "USDC" → Stablecoins)
- * and partial name matches ("s" → Stocks, Stablecoins, ...); those are dropped since they make short
- * queries noisy. BE order is kept among the rows that remain.
+ * All tab only. Category rows lead the token section for categories whose English name, localized name, or id
+ * the query equals or starts a word of ("stable" → Stablecoins). The BE also returns categories matched only
+ * through member tokens ("USDC" → Stablecoins); those are dropped. BE order is kept among the rows that remain.
  */
 export function withCategoryOptions({
   activeTab,
@@ -144,9 +159,12 @@ export function withCategoryOptions({
   if (activeTab !== SearchTab.All || !categoryOptions.length) {
     return options
   }
-  const normalizedQuery = searchFilter?.trim().toLowerCase() ?? ''
-  const exactMatches = categoryOptions.filter((option) => isExactCategoryMatch(option.category, normalizedQuery))
-  return exactMatches.length ? [...exactMatches, ...options] : options
+  const query = normalizeWords(searchFilter ?? '')
+  if (!query) {
+    return options
+  }
+  const nameMatches = categoryOptions.filter((option) => isCategoryNameMatch(option.category, query))
+  return nameMatches.length ? [...nameMatches, ...options] : options
 }
 
 export function getTokenOptions({

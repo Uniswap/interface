@@ -270,8 +270,9 @@ describe('withCategoryOptions', () => {
   const stablecoins = createCategoryOption('stablecoins', 'Stablecoins')
   const defi = createCategoryOption('defi', 'DeFi')
   const aiAgents = createCategoryOption('ai-agents', 'AI Agents')
+  const ai = createCategoryOption('ai-agents', 'AI')
 
-  it('leads with exact name matches and drops member-only and partial matches', () => {
+  it('leads with whole-name matches and drops member-only hits', () => {
     const result = withCategoryOptions({
       activeTab: SearchTab.All,
       categoryOptions: [defi, stablecoins, aiAgents],
@@ -281,14 +282,48 @@ describe('withCategoryOptions', () => {
     expect(result).toEqual([stablecoins, ...tokenOptions])
   })
 
-  it('drops partial name matches', () => {
+  it('leads with word-start prefix matches and drops member-only hits', () => {
+    for (const searchFilter of ['Stablecoin', 'stable', 'sta']) {
+      const result = withCategoryOptions({
+        activeTab: SearchTab.All,
+        categoryOptions: [defi, stablecoins, aiAgents],
+        options: tokenOptions,
+        searchFilter,
+      })
+      expect(result).toEqual([stablecoins, ...tokenOptions])
+    }
+  })
+
+  it('drops categories matched only through member tokens', () => {
     const result = withCategoryOptions({
       activeTab: SearchTab.All,
       categoryOptions: [stablecoins, defi],
       options: tokenOptions,
-      searchFilter: 's',
+      searchFilter: 'usdc',
     })
     expect(result).toBe(tokenOptions)
+  })
+
+  it('drops prefixes shorter than three letters', () => {
+    for (const searchFilter of ['s', 'st']) {
+      const result = withCategoryOptions({
+        activeTab: SearchTab.All,
+        categoryOptions: [stablecoins, defi],
+        options: tokenOptions,
+        searchFilter,
+      })
+      expect(result).toBe(tokenOptions)
+    }
+  })
+
+  it('matches a whole name shorter than the prefix minimum', () => {
+    const result = withCategoryOptions({
+      activeTab: SearchTab.All,
+      categoryOptions: [ai, defi],
+      options: tokenOptions,
+      searchFilter: 'ai',
+    })
+    expect(result).toEqual([ai, ...tokenOptions])
   })
 
   it('matches the category id slug as well as the display name', () => {
