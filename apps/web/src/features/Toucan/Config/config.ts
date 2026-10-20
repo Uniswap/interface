@@ -97,6 +97,8 @@ const AUCTION_LP_PERCENT_OVERRIDES: Record<string, number> = {
   '1-0xfa63c5b9220a7f0d21e156490ec0b296838e6605': 25,
   // Umia — Base CCA. Auction contract 0x2dDa…4a9b.
   '8453-0x2ddafa49cdd62864ab2e2aad66cc294cc7ef4a9b': 34.6,
+  // Balances (BALANCE) — Ethereum CCA. Auction contract 0xA938…9226.
+  '1-0xa93807cd89a99bb564c7a887ab49cc4ecc3c9226': 100,
 }
 
 /**

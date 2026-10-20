@@ -59,6 +59,10 @@ const AUCTION_METADATA_OVERRIDES: Record<string, AuctionMetadataOverride> = {
   '8453-0x56ab53b77f07da3af732150e8aec4783eb5bba7d': {
     logoUrl: '/images/logos/umia-token-launch-logo.jpeg',
   },
+  // Balances (BALANCE) — Ethereum mainnet auction token
+  '1-0x3620540c994433d7b4a628c46d2ed5f92572ea07': {
+    logoUrl: '/images/logos/balance-token-launch-logo.jpeg',
+  },
 }
 
 /**
@@ -142,4 +146,5 @@ export const DEFAULT_VERIFIED_AUCTION_IDS = [
   '1_0x687Cc38d8279dF3352b64cF3EC1fe8e033933595', // Interfold (FOLD)
   '1_0xfA63c5B9220a7f0D21e156490eC0b296838e6605', // Interfold (FOLD) — second CCA
   '1_0x74D1fbC555D8888b0AD87f5822dD1666498459e4', // Boardwalk (BWLK)
+  '1_0xA93807cD89A99bB564C7A887ab49Cc4EcC3c9226', // Balances (BALANCE)
 ]
