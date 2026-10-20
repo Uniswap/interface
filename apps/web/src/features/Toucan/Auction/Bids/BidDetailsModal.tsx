@@ -53,7 +53,7 @@ export function BidDetailsModal({
     checkpointData: state.checkpointData,
     onchainCheckpoint: state.onchainCheckpoint,
     outcome: state.progress.outcome,
-    hasMetThreshold: state.progress.isGraduated,
+    hasMetThreshold: state.progress.hasMetThreshold,
     auctionProgressState: state.progress.state,
     currentBlockNumber: state.currentBlockNumber,
   }))
@@ -130,7 +130,7 @@ interface BidDetailsModalContentProps {
   clearingPrice: string
   onchainClearingPrice: string
   outcome: AuctionOutcome
-  hasMetThreshold: boolean
+  hasMetThreshold: boolean | undefined
   isInPreClaimWindow: boolean
   auctionProgressState: AuctionProgressState
   isOpen: boolean

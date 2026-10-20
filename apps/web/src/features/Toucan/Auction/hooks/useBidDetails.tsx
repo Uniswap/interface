@@ -27,6 +27,7 @@ import {
   computeFractionFromRaw,
   formatCompactFromRaw,
 } from '~/features/Toucan/Auction/utils/fixedPointFdv'
+import { safeBigInt } from '~/features/Toucan/Auction/utils/safeBigInt'
 import { getAuctionTokenDecimals } from '~/features/Toucan/Auction/utils/tokenMetadata'
 import { hasTokenTotalSupply } from '~/features/Toucan/Auction/utils/tokenTotalSupply'
 
@@ -41,8 +42,9 @@ interface UseBidDetailsParams {
   /**
    * Whether the graduation threshold is already met. Unlike `outcome` this can be true while the
    * auction is still running, which is what gates the mid-auction "refund unused budget" action.
+   * `undefined` while undecided: the refund action stays hidden and the copy makes no threshold claim.
    */
-  hasMetThreshold: boolean
+  hasMetThreshold: boolean | undefined
   auctionProgressState: AuctionProgressState
 }
 
@@ -124,8 +126,9 @@ export function useBidDetails({
         isAuctionInProgress,
         outcome,
         isInPreClaimWindow,
+        hasMetThreshold,
       }),
-    [bid.status, isInRange, isFullyFilled, isAuctionInProgress, outcome, isInPreClaimWindow],
+    [bid.status, isInRange, isFullyFilled, isAuctionInProgress, outcome, isInPreClaimWindow, hasMetThreshold],
   )
 
   const spentFraction = useMemo(
@@ -257,6 +260,15 @@ export function useBidDetails({
     return `${formatted} ${bidTokenInfo.symbol}`
   }, [bidTokenInfo.decimals, bidTokenInfo.symbol, currentFdvBidTokenRaw])
 
+  const launchThresholdDisplay = useMemo(() => {
+    const requiredRaw = safeBigInt(auctionDetails.requiredCurrencyRaised)
+    if (requiredRaw === null) {
+      return '-'
+    }
+    const formatted = formatCompactFromRaw({ raw: requiredRaw, decimals: bidTokenInfo.decimals })
+    return `${formatted} ${bidTokenInfo.symbol}`
+  }, [auctionDetails.requiredCurrencyRaised, bidTokenInfo.decimals, bidTokenInfo.symbol])
+
   // ─────────────────────────────────────────────────────────────────
   // Button State & UI Logic
   // ─────────────────────────────────────────────────────────────────
@@ -280,7 +292,7 @@ export function useBidDetails({
     }
 
     // State 3: In progress + out of range + graduation threshold already met
-    if (isAuctionInProgress && !isInRange && hasMetThreshold) {
+    if (isAuctionInProgress && !isInRange && hasMetThreshold === true) {
       // Check if THIS specific bid is pending withdrawal, not global state
       const isBidPending = pendingWithdrawalBidIds.has(bid.bidId) || awaitingConfirmationBidIds.has(bid.bidId)
       return {
@@ -312,8 +324,9 @@ export function useBidDetails({
         descriptionState,
         tokenSymbol: auctionDetails.token?.currency.symbol,
         valuationSummary: maxFdvDisplay,
+        launchThresholdSummary: launchThresholdDisplay,
       }),
-    [descriptionState, maxFdvDisplay, auctionDetails.token?.currency.symbol],
+    [descriptionState, maxFdvDisplay, launchThresholdDisplay, auctionDetails.token?.currency.symbol],
   )
 
   const showUnusedBudgetCard = !isInRange

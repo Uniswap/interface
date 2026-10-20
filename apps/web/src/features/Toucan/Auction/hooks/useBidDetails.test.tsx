@@ -44,6 +44,7 @@ const auctionDetails = {
   claimBlock: CLAIM_BLOCK,
   tokenSymbol: 'TKN',
   tokenTotalSupply: '1000000000000000000000',
+  requiredCurrencyRaised: '2687499999999999999',
   token: { currency: { symbol: 'TKN', name: 'Token', decimals: 18 } },
 } as unknown as AuctionDetails
 
@@ -74,7 +75,7 @@ function renderBidDetails({
   outcome: AuctionOutcome
   auctionProgressState?: AuctionProgressState
   /** Stated by every case rather than derived from `outcome`: the two are independent inputs. */
-  hasMetThreshold: boolean
+  hasMetThreshold: boolean | undefined
   isInRange?: boolean
   bid?: UserBid
   details?: AuctionDetails
@@ -224,7 +225,7 @@ describe('useBidDetails', () => {
       expect(descriptionKey(result.current.description)).toBe('toucan.bidDetails.description.outOfRangeInProgress')
     })
 
-    it('hides the refund action while the threshold is unmet', () => {
+    it('hides the refund action while the threshold is unmet, and says why', () => {
       const { result } = renderBidDetails({
         outcome: AuctionOutcome.ACTIVE,
         auctionProgressState: AuctionProgressState.IN_PROGRESS,
@@ -233,6 +234,37 @@ describe('useBidDetails', () => {
       })
 
       expect(result.current.buttonState.isVisible).toBe(false)
+      expect(descriptionKey(result.current.description)).toBe(
+        'toucan.bidDetails.description.outOfRangeInProgressAwaitingThreshold',
+      )
+      expect(descriptionValues(result.current.description)).toMatchObject({ launchThreshold: '2.69 ETH' })
+      expect(descriptionValues(result.current.description)).toHaveProperty('valuationSummary')
+    })
+
+    // Undecided (checkpoint loading or errored) must not claim the threshold is unmet: the auction
+    // may already have graduated.
+    it('keeps the default copy and hides the refund action while the threshold is undecided', () => {
+      const { result } = renderBidDetails({
+        outcome: AuctionOutcome.ACTIVE,
+        auctionProgressState: AuctionProgressState.IN_PROGRESS,
+        hasMetThreshold: undefined,
+        isInRange: false,
+      })
+
+      expect(result.current.buttonState.isVisible).toBe(false)
+      expect(descriptionKey(result.current.description)).toBe('toucan.bidDetails.description.outOfRangeInProgress')
+    })
+
+    it('falls back to a placeholder when the launch threshold is missing', () => {
+      const { result } = renderBidDetails({
+        outcome: AuctionOutcome.ACTIVE,
+        auctionProgressState: AuctionProgressState.IN_PROGRESS,
+        hasMetThreshold: false,
+        isInRange: false,
+        details: { ...auctionDetails, requiredCurrencyRaised: '' } as AuctionDetails,
+      })
+
+      expect(descriptionValues(result.current.description)).toMatchObject({ launchThreshold: '-' })
     })
 
     it('keeps the refund action hidden for an in-range bid even with the threshold met', () => {

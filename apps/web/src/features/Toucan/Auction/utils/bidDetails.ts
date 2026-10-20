@@ -46,6 +46,7 @@ export type BidDescriptionState =
   | 'inRangeOver'
   | 'inRangeOutOfRangeClaimed'
   | 'outOfRangeInProgress'
+  | 'outOfRangeInProgressAwaitingThreshold' // Unused budget is locked until the auction graduates
   | 'outOfRangePreClaim'
   | 'outOfRangePreClaimExited'
   | 'outOfRangeOver'
@@ -82,6 +83,13 @@ interface GetBidDisplayInfoParams {
    */
   outcome: AuctionOutcome
   isInPreClaimWindow?: boolean
+  /**
+   * Whether currencyRaised has reached requiredCurrencyRaised. The contract won't refund an outbid
+   * bid's unused budget until then, so a live out-of-range bid needs different copy when this is
+   * `false`. `undefined` (undecided, or omitted by the bids list, which renders no description)
+   * keeps the default copy.
+   */
+  hasMetThreshold?: boolean
 }
 
 /**
@@ -95,6 +103,7 @@ export function getBidDisplayInfo({
   isAuctionInProgress,
   outcome,
   isInPreClaimWindow = false,
+  hasMetThreshold,
 }: GetBidDisplayInfoParams): BidDisplayInfo {
   // GRADUATED and FAILED only exist once the auction is over, so deriving ended-ness from `outcome`
   // means a caller cannot pass an ended state alongside an undecided outcome.
@@ -116,6 +125,7 @@ export function getBidDisplayInfo({
     isAuctionInProgress,
     outcome,
     isInPreClaimWindow,
+    hasMetThreshold,
   })
 
   return {
@@ -178,6 +188,7 @@ function computeDescriptionState({
   isAuctionInProgress,
   outcome,
   isInPreClaimWindow,
+  hasMetThreshold,
 }: {
   bidStatus: AuctionBidStatus
   isInRange: boolean
@@ -185,6 +196,7 @@ function computeDescriptionState({
   isAuctionInProgress: boolean
   outcome: AuctionOutcome
   isInPreClaimWindow: boolean
+  hasMetThreshold: boolean | undefined
 }): BidDescriptionState {
   const isExited = bidStatus === AuctionBidStatus.Exited
   const isClaimed = bidStatus === AuctionBidStatus.Claimed
@@ -205,7 +217,8 @@ function computeDescriptionState({
     if (isInRange) {
       return 'inRangeInProgress'
     }
-    return 'outOfRangeInProgress'
+    // An exited bid already got its refund, which the contract only allows after graduation.
+    return hasMetThreshold === false && !isExited ? 'outOfRangeInProgressAwaitingThreshold' : 'outOfRangeInProgress'
   }
 
   // Handle pre-claim window (after auction ends, before claim period starts)

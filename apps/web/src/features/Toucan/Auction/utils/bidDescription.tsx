@@ -16,10 +16,12 @@ export function getBidDescription({
   descriptionState,
   tokenSymbol,
   valuationSummary,
+  launchThresholdSummary,
 }: {
   descriptionState: BidDescriptionState
   tokenSymbol: string | undefined
   valuationSummary: string
+  launchThresholdSummary: string
 }): ReactNode {
   switch (descriptionState) {
     // The auction's outcome is not known yet, so there is nothing truthful to say about this bid.
@@ -56,6 +58,14 @@ export function getBidDescription({
         <Trans
           i18nKey="toucan.bidDetails.description.outOfRangeInProgress"
           values={{ valuationSummary }}
+          components={COMPONENTS}
+        />
+      )
+    case 'outOfRangeInProgressAwaitingThreshold':
+      return (
+        <Trans
+          i18nKey="toucan.bidDetails.description.outOfRangeInProgressAwaitingThreshold"
+          values={{ valuationSummary, launchThreshold: launchThresholdSummary }}
           components={COMPONENTS}
         />
       )

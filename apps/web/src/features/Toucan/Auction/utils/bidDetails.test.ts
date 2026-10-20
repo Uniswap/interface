@@ -9,6 +9,7 @@ function displayInfo({
   isInRange = true,
   isFullyFilled = false,
   isInPreClaimWindow = false,
+  hasMetThreshold,
 }: {
   outcome: AuctionOutcome
   isAuctionInProgress?: boolean
@@ -16,6 +17,7 @@ function displayInfo({
   isInRange?: boolean
   isFullyFilled?: boolean
   isInPreClaimWindow?: boolean
+  hasMetThreshold?: boolean
 }) {
   return getBidDisplayInfo({
     bidStatus,
@@ -24,6 +26,7 @@ function displayInfo({
     isAuctionInProgress,
     outcome,
     isInPreClaimWindow,
+    hasMetThreshold,
   })
 }
 
@@ -114,6 +117,65 @@ describe('getBidDisplayInfo', () => {
       expect(displayState).toBe('outOfRange')
       expect(descriptionState).toBe('outOfRangeInProgress')
       expect(isAuctionEnded).toBe(false)
+    })
+
+    // The contract rejects an early exit until the auction graduates, so the copy must not
+    // imply the unused budget is withdrawable yet.
+    it('says the unused budget waits on the launch threshold when it is unmet', () => {
+      const { displayState, descriptionState } = displayInfo({
+        outcome: AuctionOutcome.ACTIVE,
+        isAuctionInProgress: true,
+        isInRange: false,
+        hasMetThreshold: false,
+      })
+
+      expect(displayState).toBe('outOfRange')
+      expect(descriptionState).toBe('outOfRangeInProgressAwaitingThreshold')
+    })
+
+    it('uses the regular out-of-range copy once the threshold is met', () => {
+      const { descriptionState } = displayInfo({
+        outcome: AuctionOutcome.ACTIVE,
+        isAuctionInProgress: true,
+        isInRange: false,
+        hasMetThreshold: true,
+      })
+
+      expect(descriptionState).toBe('outOfRangeInProgress')
+    })
+
+    it('uses the regular out-of-range copy while the threshold is undecided', () => {
+      const { descriptionState } = displayInfo({
+        outcome: AuctionOutcome.ACTIVE,
+        isAuctionInProgress: true,
+        isInRange: false,
+        hasMetThreshold: undefined,
+      })
+
+      expect(descriptionState).toBe('outOfRangeInProgress')
+    })
+
+    it('never tells an already-refunded bid it is waiting on the threshold', () => {
+      const { descriptionState } = displayInfo({
+        outcome: AuctionOutcome.ACTIVE,
+        isAuctionInProgress: true,
+        isInRange: false,
+        bidStatus: AuctionBidStatus.Exited,
+        hasMetThreshold: false,
+      })
+
+      expect(descriptionState).toBe('outOfRangeInProgress')
+    })
+
+    it('keeps in-range copy regardless of the threshold', () => {
+      const { descriptionState } = displayInfo({
+        outcome: AuctionOutcome.ACTIVE,
+        isAuctionInProgress: true,
+        isInRange: true,
+        hasMetThreshold: false,
+      })
+
+      expect(descriptionState).toBe('inRangeInProgress')
     })
   })
 })
