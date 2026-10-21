@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test'
-import { getToken } from '@uniswap/client-data-api/dist/data/v2/api-DataApiService_connectquery'
+import { getToken, getTokenMultiChain } from '@uniswap/client-data-api/dist/data/v2/api-DataApiService_connectquery'
+import { FeatureFlags } from '@universe/gating'
 import { TestID } from '@universe/test'
 import { expect, getTest } from '~/playwright/fixtures'
 import { getVisibleDropdownElementByTestId } from '~/playwright/fixtures/utils'
@@ -12,6 +13,14 @@ const test = getTest()
 function waitForGetTokenResponse(page: Page): Promise<unknown> {
   return page.waitForResponse((response) => response.url().includes(`${getToken.service.typeName}/${getToken.name}`))
 }
+
+function waitForGetTokenMultiChainResponse(page: Page): Promise<unknown> {
+  return page.waitForResponse((response) =>
+    response.url().includes(`${getTokenMultiChain.service.typeName}/${getTokenMultiChain.name}`),
+  )
+}
+
+const NOT_FOUND_EXPLORE_URL = '/explore?type=tokens&result=not-found'
 
 test.describe(
   'Token Details',
@@ -27,13 +36,14 @@ test.describe(
       page,
       dataApi,
     }) => {
-      // GetToken gates the page and powers the header name. Without this mock the live API
-      // responds with an empty name for this token, so 'test token' only ever appeared in the
-      // transient loading skeleton — making the assertion a timing race.
+      // GetTokenMultiChain gates the page (no mainnet deployment redirects to "Token not found") and
+      // GetToken powers the header name. Without these mocks the live API has no usable data for this
+      // token, so 'test token' only ever appeared in the transient loading skeleton.
+      await dataApi.intercept(getTokenMultiChain, Mocks.DataApiService.get_token_multichain_warning)
       await dataApi.intercept(getToken, Mocks.DataApiService.get_token_warning)
-      const getTokenResponse = waitForGetTokenResponse(page)
+      const getTokenMultiChainResponse = waitForGetTokenMultiChainResponse(page)
       await page.goto('/explore/tokens/ethereum/0x1eFBB78C8b917f67986BcE54cE575069c0143681')
-      await getTokenResponse
+      await getTokenMultiChainResponse
       // .first(): the loaded page renders the name in both the breadcrumb and the header
       await expect(page.getByText('test token').first()).toBeVisible()
       await expect(page.getByText('No pricing data available')).toBeVisible()
@@ -68,13 +78,17 @@ test.describe(
 
     test('redirect to explore if token is not found', async ({ page }) => {
       await page.goto('/explore/tokens/ethereum/0x123')
-      await expect(page).toHaveURL('/explore')
+      await expect(page).toHaveURL(NOT_FOUND_EXPLORE_URL)
     })
 
-    test('redirect to explore for a feature-gated chain (Arc)', async ({ page }) => {
-      // Arc is gated behind FeatureFlags.Arc (off by default), so the TDP must not load.
-      await page.goto('/explore/tokens/arc/0xbef5f6d51cb62b58e6a8f77868681825c6fe21c1')
-      await expect(page).toHaveURL('/explore')
+    test.describe('feature-gated chain', () => {
+      // Pin the chain flag off: the TDP must redirect while the chain is gated, whatever the live rollout is.
+      test.use({ pinnedFeatureFlags: { [FeatureFlags.Arc]: false } })
+
+      test('redirect to explore for a feature-gated chain (Arc)', async ({ page }) => {
+        await page.goto('/explore/tokens/arc/0xbef5f6d51cb62b58e6a8f77868681825c6fe21c1')
+        await expect(page).toHaveURL(NOT_FOUND_EXPLORE_URL)
+      })
     })
   },
 )

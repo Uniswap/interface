@@ -1,5 +1,5 @@
 /* oxlint-disable max-lines */
-import type { AuctionStep } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import type { AuctionStep } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import type { EVMUniverseChainId } from '@universe/chains'
 import { Flex, Text, zIndexes } from '@universe/mycelium'
 import { opacify, useSporeColors } from '@universe/mycelium/theme-hooks-compat'

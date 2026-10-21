@@ -1,7 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi, TradingApi } from '@universe/api'
 import { UniverseChainId, Platform } from '@universe/chains'
-import { OKB_LOGO, XLAYER_LOGO } from 'ui/src/assets'
+import { OKB_LOGO, XLAYER_LOGO } from '@universe/mycelium/assets'
 import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
 import {

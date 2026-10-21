@@ -3,7 +3,7 @@ import {
   AuctionActivityEntry,
   GetAuctionActivityRequest,
   GetAuctionActivityResponse,
-} from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+} from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { EVMUniverseChainId, AddressStringFormat, normalizeAddress } from '@universe/chains'
 import { useCallback, useEffect, useMemo } from 'react'
 import { AuctionServiceClient } from 'uniswap/src/data/apiClients/dataApiService/auctions/AuctionServiceClient'

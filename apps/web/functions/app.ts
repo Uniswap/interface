@@ -10,7 +10,7 @@ import { positionImageHandler } from 'functions/api/image/positions'
 import { tokenImageHandler } from 'functions/api/image/tokens'
 import { metaTagInjectionMiddleware } from 'functions/components/metaTagInjector'
 import { rewriteProxiedCookies } from 'functions/cookie-utils'
-import { resolveFramePolicy } from 'functions/frameProtection'
+import { resolveFramePolicy, withNosniff } from 'functions/frameProtection'
 import { Context, Hono } from 'hono'
 import { proxy } from 'hono/proxy'
 
@@ -42,7 +42,6 @@ interface AppConfig {
    * regardless of the deployment default.
    */
   getEntryGatewayUrl: (c: Context, env?: Environment) => string
-  getWebSocketUrl: (c: Context) => string
   getTrustedClientIp: (c: Context) => string | undefined
   /**
    * Space-separated CSP source list allowed to frame documents under
@@ -76,14 +75,6 @@ function upstreamHeaders(c: Context): Record<string, string | undefined> {
   }
 }
 
-// Development targets the staging WS host until a dev websockets deployment exists
-// (keep in sync with DEV_WEBSOCKET_BASE_URL in @universe/api).
-export const WEBSOCKET_URLS = {
-  development: 'https://websockets.backend-staging.api.uniswap.org',
-  staging: 'https://websockets.backend-staging.api.uniswap.org',
-  production: 'https://websockets.backend-prod.api.uniswap.org',
-} as const
-
 export const CLIENT_IP_HEADERS = ['cf-connecting-ip', 'cloudfront-viewer-address', 'x-forwarded-for', 'x-real-ip']
 
 // ── Cache-Control middleware for image routes ───────────────────────────
@@ -110,14 +101,14 @@ function resolveEnvFromPath(path: string): { env: Environment | undefined; remai
   return { env: ENTRY_GATEWAY_ENV_BY_SEGMENT[match[1]], remainingPath: match[2] || '/' }
 }
 
-export function createApp({
-  fetchSpaHtml,
-  getEntryGatewayUrl,
-  getWebSocketUrl,
-  getTrustedClientIp,
-  getEmbedFrameAncestors,
-}: AppConfig) {
+export function createApp({ fetchSpaHtml, getEntryGatewayUrl, getTrustedClientIp, getEmbedFrameAncestors }: AppConfig) {
   const app = new Hono<{ Bindings: Bindings }>()
+
+  // Every response, including routes added later, refuses to be sniffed into a script.
+  app.use('*', async (c, next) => {
+    await next()
+    c.res = withNosniff(c.res)
+  })
 
   // ── OG image routes ────────────────────────────────────────────────────
   app.get('/api/image/tokens/:networkName/:tokenAddress', cacheControl(604800), tokenImageHandler)
@@ -172,25 +163,6 @@ export function createApp({
     })
   })
 
-  // ── BFF proxy: WebSocket ────────────────────────────────────────────
-  // In production, clients connect directly to the backend WebSocket
-  // service — see getWebSocketUrl() in packages/api/src/getWebSocketUrl.ts.
-  // Node's fetch() cannot upgrade a WebSocket, so the dev server proxies
-  // /ws in Vite instead (vite/entry-gateway-proxy.ts).
-  // Headers are stripped to avoid forwarding the local dev origin/host
-  // to the backend, which would reject them.
-  app.get('/ws', async (c) => {
-    const wsUrl = getWebSocketUrl(c)
-    const headers = new Headers(c.req.raw.headers)
-    headers.delete('host')
-    headers.delete('origin')
-    try {
-      return await fetch(wsUrl, { headers })
-    } catch (err) {
-      return c.text(`WebSocket proxy error: ${err}`, 502)
-    }
-  })
-
   // ── Debug: client IP discovery (non-prod only) ──────────────────────
   // Set by each bundler via scripts/debug-routes.ts. Keep the read inline:
   // hoisting it to a `const` stops the bundlers folding the block out.
@@ -221,14 +193,17 @@ export function createApp({
       c.res = response
     }
 
-    // API routes should not be processed by meta tag injection
+    // Assigned to c.res (not returned): the context is already finalized by `next`,
+    // so Hono's compose would drop a returned Response before the nosniff middleware sees it.
     if (url.pathname.startsWith('/api/')) {
+      // API routes should not be processed by meta tag injection
       await next()
-      return applyFramePolicy(c.res)
+      c.res = applyFramePolicy(c.res)
+      return c.res
     }
 
-    // For non-API routes, use meta tag injection middleware
-    return applyFramePolicy(await metaTagInjectionMiddleware(c, next))
+    c.res = applyFramePolicy(await metaTagInjectionMiddleware(c, next))
+    return c.res
   })
 
   return app

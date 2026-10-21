@@ -13,6 +13,7 @@ import { Body } from '~/app/layout/Body'
 import { AppLayout } from '~/app/layout/Layout'
 import { ErrorBoundary } from '~/components/ErrorBoundary'
 import { useFeatureFlagUrlOverrides } from '~/featureFlags/useFeatureFlagUrlOverrides'
+import { DatadogContextUpdater } from '~/features/datadog/DatadogContextUpdater'
 import { useDynamicMetatags } from '~/pages/metatags'
 import { findRouteByPath } from '~/pages/RouteDefinitions'
 import { useEmbedSession } from '~/pages/Swap/embedContext'
@@ -90,6 +91,7 @@ export function App() {
           `}</style>
         </Helmet>
         <UserPropertyUpdater />
+        <DatadogContextUpdater />
         <ResetPageScrollEffect />
         <ResetPortfolioChainOnEntryEffect />
         {embedded ? (

@@ -31,7 +31,8 @@ export function PortfolioPageInner({ mb }: PortfolioPageInnerProps): JSX.Element
         pt="$none"
         position="relative"
         mb={mb}
-        $sm={{ p: '$spacing8' }}
+        $md={{ px: '$none' }}
+        $sm={{ py: '$spacing8' }}
       >
         {showDemoView && <PortfolioConnectWalletBanner />}
         {showDemoView && <ConnectWalletFixedBottomButton />}

@@ -207,7 +207,7 @@ export function StatsSection() {
     )
   }
   return (
-    <Text color="$neutral3" pt="$spacing40" data-cy="token-details-no-stats-data">
+    <Text color="$neutral3" data-cy="token-details-no-stats-data">
       {t('stats.noStatsAvailable')}
     </Text>
   )

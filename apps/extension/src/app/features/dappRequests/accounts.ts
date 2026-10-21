@@ -79,7 +79,7 @@ function sendAccountResponseAnalyticsEvent({
  */
 export function* getAccount({
   dappRequest,
-  senderTabInfo: { id, url },
+  senderTabInfo,
   dappInfo,
 }: {
   dappRequest: GetAccountRequest | RequestAccountRequest
@@ -90,18 +90,18 @@ export function* getAccount({
   const provider = yield* call(getProvider, chainId)
 
   const response = getAccountResponse({ chainId, dappRequest, provider, dappInfo })
-  sendAccountResponseAnalyticsEvent({ senderUrl: url, chainId, dappInfo, accountResponse: response })
+  sendAccountResponseAnalyticsEvent({ senderUrl: senderTabInfo.frameUrl, chainId, dappInfo, accountResponse: response })
 
-  yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
+  yield* call(dappResponseMessageChannel.sendMessageToFrame, senderTabInfo, response)
 }
 
 /**
  * Saves the active account as connected to the dapp and parses out necessary data
  * Triggers a notification for new connections
  */
-export function* saveAccount({ url, favIconUrl }: SenderTabInfo) {
+export function* saveAccount({ frameUrl, favIconUrl }: SenderTabInfo) {
   const activeAccount = yield* select(selectActiveAccount)
-  const dappUrl = extractBaseUrl(url)
+  const dappUrl = extractBaseUrl(frameUrl)
   const dappInfo = yield* call(dappStore.getDappInfo, dappUrl)
   const { defaultChainId } = yield* call(getEnabledChainIdsSaga, Platform.EVM)
 
@@ -155,7 +155,7 @@ export function* getAccountRequest(request: RequestAccountRequest, senderTabInfo
       requestId: request.requestId,
     }
 
-    yield* call(dappResponseMessageChannel.sendMessageToTab, senderTabInfo.id, errorResponse)
+    yield* call(dappResponseMessageChannel.sendMessageToFrame, senderTabInfo, errorResponse)
   } else {
     const { dappUrl, connectedAddresses, chainId, providerUrl } = accountInfo
 
@@ -167,7 +167,7 @@ export function* getAccountRequest(request: RequestAccountRequest, senderTabInfo
       providerUrl,
     }
 
-    yield* call(dappResponseMessageChannel.sendMessageToTab, senderTabInfo.id, accountResponse)
+    yield* call(dappResponseMessageChannel.sendMessageToFrame, senderTabInfo, accountResponse)
 
     // Track that a connection was established
     sendAnalyticsEvent(ExtensionEventName.DappConnect, {

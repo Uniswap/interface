@@ -25,7 +25,7 @@ import {
 } from './add-icons'
 
 const DIRS: TargetDirs = {
-  svgDir: '/repo/packages/ui/src/assets/icons',
+  svgDir: '/repo/packages/mycelium/src/assets/icons',
   componentDirs: ['/repo/packages/ui/src/components/icons', '/repo/packages/mycelium/src/components/icons'],
 }
 
@@ -306,7 +306,7 @@ describe('targetDirs', () => {
   it('covers both generators for icons and only ui for logos', () => {
     expect(targetDirs('/repo', 'icons')).toEqual(DIRS)
     expect(targetDirs('/repo', 'logos')).toEqual({
-      svgDir: '/repo/packages/ui/src/assets/logos/svg',
+      svgDir: '/repo/packages/mycelium/src/assets/logos/svg',
       componentDirs: ['/repo/packages/ui/src/components/logos'],
     })
   })

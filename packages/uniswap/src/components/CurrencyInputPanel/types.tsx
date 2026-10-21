@@ -11,6 +11,8 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 export type CurrencyInputPanelRef = {
   textInputRef: RefObject<TextInput | null>
   triggerShakeAnimation: () => void
+  /** Moves the caret, applied in the render that carries `value` (the value the caret belongs to). */
+  setSelection: (selection: { start: number; end?: number; value?: string }) => void
 }
 
 export type CurrencyInputPanelProps = {
@@ -41,7 +43,7 @@ export type CurrencyInputPanelProps = {
   disabled?: boolean
   onPressDisabled?: () => void
   onBlur?: TextInputProps['onBlur']
-  resetSelection?: (args: { start: number; end?: number; currencyField?: CurrencyField }) => void
+  resetSelection?: (args: { start: number; end?: number; currencyField?: CurrencyField; value?: string }) => void
   tokenColor?: string
   customPanelStyle?: FlexProps
   /** Hide all preset buttons (both standard percentage presets and max button) */

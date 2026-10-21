@@ -1,9 +1,11 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
-import type { Auction } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import type { Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { UniverseChainId } from '@universe/chains'
 import { TouchableArea } from '@universe/mycelium'
 import { opacifyRaw } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
+import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   TokenDetailsMoreAuctionsChip,
@@ -18,6 +20,7 @@ import { mocked } from '~/test-utils/mocked'
 import { fireEvent, render, screen } from '~/test-utils/render'
 
 const mockNavigate = vi.fn()
+vi.mock('uniswap/src/features/telemetry/send', () => ({ sendAnalyticsEvent: vi.fn() }))
 vi.mock('~/hooks/useNavigateToAuctionDetails', async (importOriginal) => ({
   ...(await importOriginal<typeof import('~/hooks/useNavigateToAuctionDetails')>()),
   useNavigateToAuctionDetails: () => mockNavigate,
@@ -74,6 +77,7 @@ function mockAuctions(auctions: PlainMessage<Auction>[]): void {
 describe('TokenDetailsAuctionListEntry', () => {
   beforeEach(() => {
     mockNavigate.mockReset()
+    vi.mocked(sendAnalyticsEvent).mockClear()
   })
 
   it('renders nothing when the primary auction is the only active one', () => {
@@ -103,6 +107,11 @@ describe('TokenDetailsAuctionListEntry', () => {
 
     expect(screen.getByTestId(TestID.TokenDetailsAuctionListModal)).toBeInTheDocument()
     expect(screen.getAllByTestId(TestID.TokenDetailsAuctionListRow)).toHaveLength(4)
+    expect(sendAnalyticsEvent).toHaveBeenCalledWith(AuctionEventName.AuctionSelectorOpened, {
+      chain_id: UniverseChainId.Mainnet,
+      auction_count: 4,
+      entry_point: 'tdp_other_auctions',
+    })
   })
 
   it('uses the token accent for both entries and the taller count chip', () => {
@@ -154,8 +163,14 @@ describe('TokenDetailsAuctionListEntry', () => {
 
     const chip = screen.getByTestId(TestID.TokenDetailsMoreAuctionsChip)
     expect(chip).toHaveTextContent('+1 more')
+    expect(sendAnalyticsEvent).not.toHaveBeenCalled()
 
     fireEvent.click(chip)
+    expect(sendAnalyticsEvent).toHaveBeenCalledWith(AuctionEventName.AuctionSelectorOpened, {
+      chain_id: UniverseChainId.Mainnet,
+      auction_count: 2,
+      entry_point: 'tdp_auction_banner',
+    })
     expect(screen.getByTestId(TestID.TokenDetailsAuctionListModal)).toBeInTheDocument()
 
     fireEvent.click(screen.getAllByTestId(TestID.TokenDetailsAuctionListRow)[1]!)

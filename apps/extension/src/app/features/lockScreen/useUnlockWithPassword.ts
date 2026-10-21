@@ -1,25 +1,15 @@
-import { UseMutationResult, useMutation } from '@tanstack/react-query'
 import { logger } from 'utilities/src/logger/logger'
-import { useEvent } from 'utilities/src/react/hooks'
+import { useSecretMutation, UseSecretMutationResult } from 'utilities/src/security/useSecretMutation'
 import { InvalidPasswordError, unlockWallet } from 'wallet/src/features/auth/unlockWallet'
 
 /**
- * Unlock lives in a mutation, not a redux saga, so the password never becomes an action payload.
- * Unlocked state itself is read from session storage by `useIsWalletUnlocked`.
- *
- * The password comes from the closure, not from `mutate`'s variables: react-query keeps
- * `state.variables` on the cached Mutation until gc (5 minutes by default), readable by anything
- * holding the QueryClient. With `void` variables the cache never sees the password.
+ * Unlock lives in `useSecretMutation`, not a redux saga or `useMutation`, so the password is never an
+ * action payload and never a cached mutation argument. Unlocked state itself is read from session
+ * storage by `useIsWalletUnlocked`.
  */
-export function useUnlockWithPassword(password: string): UseMutationResult<void, Error, void> {
-  const unlock = useEvent(() => unlockWallet({ password }))
-
-  return useMutation({
-    mutationFn: unlock,
-    retry: false,
-    // Local crypto only. 'online' would pause the mutation while offline, and paused mutations are
-    // what react-query dehydrates into the persisted cache.
-    networkMode: 'always',
+export function useUnlockWithPassword(): UseSecretMutationResult<string, void, Error> {
+  return useSecretMutation({
+    mutationFn: (password: string) => unlockWallet({ password }),
     onError: (error) => {
       if (error instanceof InvalidPasswordError) {
         return

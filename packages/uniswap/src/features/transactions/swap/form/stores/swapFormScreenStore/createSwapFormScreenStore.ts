@@ -35,7 +35,7 @@ export type SwapFormScreenStoreState = {
   exactFieldIsInput: boolean
   exactFieldIsOutput: boolean
   exactOutputDisabled: boolean
-  resetSelection: (params: { start: number; end?: number; currencyField?: CurrencyField }) => void
+  resetSelection: (params: { start: number; end?: number; currencyField?: CurrencyField; value?: string }) => void
   currencyAmountsUSDValue: { [field in CurrencyField]: Maybe<CurrencyAmount<Currency>> }
   exactValue: string | undefined
   formattedDerivedValue: string

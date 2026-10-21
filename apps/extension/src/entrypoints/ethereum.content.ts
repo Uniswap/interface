@@ -29,7 +29,7 @@ function makeEthereum(): void {
   if (isSandboxedFrame()) {
     return
   }
-  // TODO(xtine): Get this working by importing the svg file directly. The svg text comes from packages/ui/src/assets/icons/uniswap-logo.svg
+  // TODO(xtine): Get this working by importing the svg file directly. The svg text comes from packages/mycelium/src/assets/icons/uniswap-logo.svg
   const UNISWAP_LOGO = `data:image/svg+xml,${encodeURIComponent(`<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect width="96" height="96" rx="18" fill="#FEF4FF"/>
 <g filter="url(#filter0_d_12393_20043)">

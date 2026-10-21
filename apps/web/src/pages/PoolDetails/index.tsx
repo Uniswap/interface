@@ -35,8 +35,9 @@ import { getPoolDetailPageTitle } from '~/pages/PoolDetails/utils'
 import { ExploreTab } from '~/types/explore'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
-// Extra bottom padding so content (e.g. pool address links) can scroll above the fixed Swap/Add Liquidity CTA bar
-const STICKY_CTA_CLEARANCE = `calc(${MOBILE_BAR_MAX_HEIGHT}px + env(safe-area-inset-bottom))` as const
+// Extra bottom padding so content (e.g. pool address links) can scroll above the fixed Swap/Add Liquidity
+// CTA bar. Only the bar's own height: the bottom inset the bar also grows by is already on AppBody.
+const STICKY_CTA_CLEARANCE = MOBILE_BAR_MAX_HEIGHT
 
 const PageWrapper = forwardRef<HTMLDivElement, FlexCompatProps>(function PageWrapper(
   { $lg: lg, $xl: xl, ...props },
@@ -55,6 +56,7 @@ const PageWrapper = forwardRef<HTMLDivElement, FlexCompatProps>(function PageWra
       alignItems="flex-start"
       // Merge, don't spread: Tamagui deep-merged a caller's object-valued prop into the config's value for the same key.
       $lg={{ px: 20, pb: STICKY_CTA_CLEARANCE, ...lg }}
+      $md={{ px: 0 }}
       $xl={{
         flexDirection: 'column',
         alignItems: 'center',

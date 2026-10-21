@@ -1,5 +1,5 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
-import type { Bid as ApiBid } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import type { Bid as ApiBid } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { AuctionBidStatus, UserBid } from '~/features/Toucan/Auction/store/types'
 
 function normalizeBidStatus(status?: string): AuctionBidStatus {

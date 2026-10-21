@@ -7,7 +7,13 @@ import type { ChartHoverCoordinates } from '~/components/Charts/ChartModel'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
 import { PortfolioChartCategory } from '~/pages/Portfolio/Overview/hooks/usePortfolioChartSeries'
 import { PortfolioChart } from '~/pages/Portfolio/Overview/PortfolioChart'
+import { mockMediaSize } from '~/test-utils/mockMediaSize'
 import { fireEvent, render, screen } from '~/test-utils/render'
+
+vi.mock('@universe/mycelium/theme-hooks-compat', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@universe/mycelium/theme-hooks-compat')>()
+  return { ...actual, useMedia: vi.fn() }
+})
 
 const mockPriceChartBodyCrosshairData = vi.hoisted(
   (): {
@@ -92,6 +98,7 @@ const earnWithBalance: PortfolioTotalValue = { balanceUSD: 512.34, percentChange
 describe('PortfolioChart', () => {
   beforeEach(() => {
     mockPriceChartBodyCrosshairData.data = undefined
+    mockMediaSize('xxxl')
   })
 
   it('renders the balance header before the chart body', () => {
@@ -291,5 +298,54 @@ describe('PortfolioChart', () => {
     )
 
     expect(screen.queryByTestId(TestID.BalanceBreakdownRowTokens)).not.toBeInTheDocument()
+  })
+
+  describe('timeframe control', () => {
+    it('renders the segmented control on desktop', () => {
+      render(<PortfolioChart {...defaultProps} />)
+
+      expect(screen.getByTestId(`${TestID.PortfolioChartPeriodPrefix}1w`)).toBeInTheDocument()
+      expect(screen.queryByTestId(TestID.PortfolioChartPeriodSelector)).not.toBeInTheDocument()
+    })
+
+    it('renders a timeframe dropdown on mobile and selects a period from it', async () => {
+      mockMediaSize('md')
+      const setSelectedPeriod = vi.fn()
+      render(<PortfolioChart {...defaultProps} setSelectedPeriod={setSelectedPeriod} />)
+
+      const trigger = screen.getByTestId(TestID.PortfolioChartPeriodSelector)
+      expect(trigger).toHaveTextContent('1D')
+
+      fireEvent.click(trigger)
+      // AdaptiveDropdown also mounts a hidden measuring copy of the menu under [data-testid-ignore].
+      const options = await screen.findAllByTestId(`${TestID.PortfolioChartPeriodPrefix}1w`)
+      const visibleOption = options.find((option) => !option.closest('[data-testid-ignore]'))
+      fireEvent.click(visibleOption!)
+
+      expect(setSelectedPeriod).toHaveBeenCalledWith(ChartPeriod.WEEK)
+    })
+
+    it('keeps the pill category trigger on desktop and uses the dropdown trigger on mobile', () => {
+      const { unmount } = render(<PortfolioChart {...defaultProps} hasCategoryBreakdown />)
+      expect(screen.getByTestId(TestID.PortfolioChartCategorySelector)).not.toHaveAttribute('aria-label')
+      unmount()
+
+      mockMediaSize('md')
+      render(<PortfolioChart {...defaultProps} hasCategoryBreakdown />)
+      expect(screen.getByTestId(TestID.PortfolioChartCategorySelector)).toHaveAttribute(
+        'aria-label',
+        TestID.PortfolioChartCategorySelector,
+      )
+    })
+
+    it('puts the category selector before the timeframe dropdown on mobile', () => {
+      mockMediaSize('md')
+      render(<PortfolioChart {...defaultProps} hasCategoryBreakdown />)
+
+      const category = screen.getByTestId(TestID.PortfolioChartCategorySelector)
+      const period = screen.getByTestId(TestID.PortfolioChartPeriodSelector)
+
+      expect(category.compareDocumentPosition(period) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    })
   })
 })

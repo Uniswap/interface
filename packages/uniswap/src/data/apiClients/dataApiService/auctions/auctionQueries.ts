@@ -17,7 +17,7 @@ import {
   GetTickDetailsResponse,
   ListTopAuctionsRequest,
   ListTopAuctionsResponse,
-} from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+} from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import type { AuctionServiceClient, UseQueryApiHelperHookArgs } from '@universe/api'
 import { AuctionServiceClient as AuctionServiceClientInstance } from 'uniswap/src/data/apiClients/dataApiService/auctions/AuctionServiceClient'
 import {

@@ -1,5 +1,5 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
-import { type Auction, AuctionType } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { type Auction, AuctionType } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { UniverseChainId } from '@universe/chains'
 import {
   AuctionDisplayPhase,
@@ -83,13 +83,13 @@ describe('getTotalAuctionRaisedUsd', () => {
     ).toBe(10000)
   })
 
-  it('reports nothing when every settled auction raised zero, as the single-auction path does', () => {
+  it('totals a settled zero across every auction rather than reporting nothing', () => {
     expect(
       getTotalAuctionRaisedUsd([
         ended(makeAuction(), { status: 'success', currencyRaised: '0' }),
         ended(makeAuction(), { status: 'success', currencyRaised: '0' }),
       ]),
-    ).toBeUndefined()
+    ).toBe(0)
   })
 
   it('leaves out the refunded raise of an auction that did not graduate', () => {
@@ -104,16 +104,27 @@ describe('getTotalAuctionRaisedUsd', () => {
     ).toBe(10000)
   })
 
-  it('reports nothing when every settled auction failed', () => {
-    expect(
-      getTotalAuctionRaisedUsd([ended(makeAuction({ requiredCurrencyRaised: '9000000000000000000' }))]),
-    ).toBeUndefined()
+  it('totals zero when every settled auction refunded its raise', () => {
+    expect(getTotalAuctionRaisedUsd([ended(makeAuction({ requiredCurrencyRaised: '9000000000000000000' }))])).toBe(0)
   })
 
-  it('does not sum an auction that is still live', () => {
+  it('adds what bidders have committed to an auction that is still live', () => {
     expect(
-      getTotalAuctionRaisedUsd([ended(makeAuction()), { ...ended(makeAuction()), phase: AuctionDisplayPhase.Live }]),
-    ).toBe(10000)
+      getTotalAuctionRaisedUsd([
+        ended(makeAuction()),
+        { ...ended(makeAuction({ totalBidVolumeUsd: '29' })), phase: AuctionDisplayPhase.Live },
+      ]),
+    ).toBe(10029)
+  })
+
+  it('counts a live auction with no committed volume as zero', () => {
+    expect(
+      getTotalAuctionRaisedUsd([
+        { ...ended(makeAuction({ totalBidVolumeUsd: '29' })), phase: AuctionDisplayPhase.Live },
+        { ...ended(makeAuction({ totalBidVolumeUsd: '0' })), phase: AuctionDisplayPhase.Live },
+        { ...ended(makeAuction()), phase: AuctionDisplayPhase.Live },
+      ]),
+    ).toBe(29)
   })
 
   it.each([AuctionDisplayPhase.Unknown, AuctionDisplayPhase.Loading])(
@@ -123,7 +134,7 @@ describe('getTotalAuctionRaisedUsd', () => {
     },
   )
 
-  it('does not sum an auction that has not started', () => {
+  it('adds nothing for an auction that has not started and taken a bid', () => {
     expect(
       getTotalAuctionRaisedUsd([
         ended(makeAuction()),
@@ -147,7 +158,7 @@ describe('getTotalAuctionRaisedUsd', () => {
 })
 
 describe('getTokenProvenanceData', () => {
-  it('links a valid X handle with its verified mark and avatar', () => {
+  it('links a valid X handle with its verified mark and avatar, keeping the launching wallet', () => {
     const { creator } = provenanceOf({ auction: makeAuction(), ...ENDED_SUCCESS })
 
     expect(creator).toEqual({
@@ -155,6 +166,8 @@ describe('getTokenProvenanceData', () => {
       href: 'https://x.com/uniswap',
       verified: true,
       avatarUrl: 'https://pbs.twimg.com/profile.jpg',
+      address: CREATOR_ADDRESS,
+      chainId: UniverseChainId.Mainnet,
     })
   })
 
@@ -186,7 +199,14 @@ describe('getTokenProvenanceData', () => {
       ...ENDED_SUCCESS,
     })
 
-    expect(creator).toEqual({ name: '--', href: undefined, verified: false, avatarUrl: undefined })
+    expect(creator).toEqual({
+      name: '--',
+      href: undefined,
+      verified: false,
+      avatarUrl: undefined,
+      address: undefined,
+      chainId: UniverseChainId.Mainnet,
+    })
   })
 
   it('prices the ended raise from the checkpoint and links the auction details page', () => {
@@ -199,14 +219,30 @@ describe('getTokenProvenanceData', () => {
     })
   })
 
-  it('shows no amount for an auction that did not graduate but keeps its Details link', () => {
+  it('names the outcome of a lone auction that did not graduate, and keeps its Details link', () => {
     const { raised } = provenanceOf({
       auction: makeAuction({ requiredCurrencyRaised: '9000000000000000000' }),
       ...ENDED_SUCCESS,
     })
 
+    expect(raised?.failed).toBe(true)
     expect(raised?.usd).toBeUndefined()
     expect(raised?.destination?.href).toBe(`/explore/auctions/ethereum/${AUCTION_ADDRESS}`)
+  })
+
+  it('does not call a lone auction failed while its outcome is unresolved', () => {
+    const { raised } = provenanceOf({
+      auction: makeAuction(),
+      ...ENDED_SUCCESS,
+      currencyRaised: { status: 'loading' },
+    })
+
+    expect(raised?.failed).toBe(false)
+    expect(raised?.usd).toBeUndefined()
+  })
+
+  it('badges nothing when the token has one auction', () => {
+    expect(provenanceOf({ auction: makeAuction(), ...ENDED_SUCCESS }).raised?.count).toBe(1)
   })
 
   it('links the token rather than auction address on pools.xyz for a crowd launch', () => {
@@ -258,7 +294,7 @@ describe('getTokenProvenanceData', () => {
         currencyRaised: ENDED_SUCCESS.currencyRaised,
       }))
 
-    it('sums only the auctions that have ended', () => {
+    it('adds the committed volume of a live auction to the settled raises', () => {
       const { raised } = getTokenProvenanceData({
         auction,
         chainId: UniverseChainId.Mainnet,
@@ -268,6 +304,34 @@ describe('getTokenProvenanceData', () => {
       expect(raised?.usd).toBeCloseTo(10_000)
     })
 
+    it('badges every auction on the token, whatever each one raised', () => {
+      const { raised } = getTokenProvenanceData({
+        auction,
+        chainId: UniverseChainId.Mainnet,
+        entries: [
+          ended(auction),
+          ended(other, { status: 'success', currencyRaised: '0' }),
+          { ...ended(other), phase: AuctionDisplayPhase.Live },
+        ],
+      })
+
+      expect(raised?.count).toBe(3)
+      expect(raised?.failed).toBe(false)
+    })
+
+    it('names the outcome rather than a $0 total when every auction refunded', () => {
+      const { raised } = getTokenProvenanceData({
+        auction,
+        chainId: UniverseChainId.Mainnet,
+        entries: [
+          ended(auction, { status: 'success', currencyRaised: '0' }),
+          ended(other, { status: 'success', currencyRaised: '0' }),
+        ],
+      })
+
+      expect(raised).toMatchObject({ usd: undefined, failed: true, count: 2 })
+    })
+
     it('keeps the history row reachable before any auction has ended', () => {
       const { raised } = getTokenProvenanceData({
         auction,
@@ -275,7 +339,7 @@ describe('getTokenProvenanceData', () => {
         entries: entriesFor([AuctionDisplayPhase.Live, AuctionDisplayPhase.Live]),
       })
 
-      expect(raised).toEqual({ usd: undefined, destination: undefined })
+      expect(raised).toEqual({ usd: 0, failed: false, count: 2, destination: undefined })
     })
 
     it('sends "Details" to the selector rather than to one of the auctions', () => {
@@ -313,7 +377,7 @@ describe('getTokenProvenanceData', () => {
         ],
       })
 
-      expect(raised).toEqual({ usd: 20_000, destination: undefined })
+      expect(raised).toEqual({ usd: 20_000, failed: false, count: 2, destination: undefined })
     })
   })
 

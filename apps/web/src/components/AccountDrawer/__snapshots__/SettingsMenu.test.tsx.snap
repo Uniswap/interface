@@ -106,12 +106,6 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
                   </svg>
                 </div>
               </button>
-              <div
-                aria-hidden="true"
-                class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 absolute left-0 top-0 z-10 rounded-full cursor-pointer bg-surface3 animate-spore-enter-fade-in data-exiting:animate-spore-exit-fade-out opacity-[1]"
-                data-testid="segmented-control-indicator"
-                style="width: 0px; height: 0px; transform: translate(0px, 0px); transition: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1), width 100ms cubic-bezier(0.17, 0.67, 0.45, 1), height 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
-              />
             </div>
           </div>
         </div>
@@ -688,12 +682,6 @@ exports[`SettingsMenu > renders for standard wallet user 1`] = `
                   </svg>
                 </div>
               </button>
-              <div
-                aria-hidden="true"
-                class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 absolute left-0 top-0 z-10 rounded-full cursor-pointer bg-surface3 animate-spore-enter-fade-in data-exiting:animate-spore-exit-fade-out opacity-[1]"
-                data-testid="segmented-control-indicator"
-                style="width: 0px; height: 0px; transform: translate(0px, 0px); transition: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1), width 100ms cubic-bezier(0.17, 0.67, 0.45, 1), height 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
-              />
             </div>
           </div>
         </div>

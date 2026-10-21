@@ -1,5 +1,5 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
-import type { TickDetail } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import type { TickDetail } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 
 /**
  * Returns the `currencyRequiredQ96` for a given `tickQ96`, linearly interpolated in price space

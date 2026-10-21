@@ -1034,6 +1034,43 @@ describe('getFieldsDisabled', () => {
     })
   })
 
+  // A swap that lands exactly on a tick going down leaves the pool's tick one below the tick its
+  // sqrt price sits on. The range already holds no token0 there, so token0 must be disabled to match
+  // getDependentAmount, which zeroes the dependent amount at that sqrt price.
+  it('disables token0 when the sqrt price sits on the upper tick but the pool tick is one below it', () => {
+    const upperTick = -197940
+    const poolOnUpperEdge = new V3Pool(
+      WETH,
+      USDT,
+      FeeAmount.MEDIUM,
+      TickMath.getSqrtRatioAtTick(upperTick),
+      '7201247293608325509',
+      upperTick - 1,
+    )
+
+    expect(getFieldsDisabled({ ticks: [-198300, upperTick], poolOrPair: poolOnUpperEdge })).toEqual({
+      TOKEN0: true,
+      TOKEN1: false,
+    })
+  })
+
+  it('keeps both sides enabled one sqrt step inside the upper edge', () => {
+    const upperTick = -197940
+    const poolInsideUpperEdge = new V3Pool(
+      WETH,
+      USDT,
+      FeeAmount.MEDIUM,
+      JSBI.subtract(TickMath.getSqrtRatioAtTick(upperTick), JSBI.BigInt(1)),
+      '7201247293608325509',
+      upperTick - 1,
+    )
+
+    expect(getFieldsDisabled({ ticks: [-198300, upperTick], poolOrPair: poolInsideUpperEdge })).toEqual({
+      TOKEN0: false,
+      TOKEN1: false,
+    })
+  })
+
   it('returns all false when ticks is undefined', () => {
     expect(getFieldsDisabled({ ticks: undefined, poolOrPair: pool })).toEqual({
       TOKEN0: false,

@@ -1,7 +1,7 @@
 import { Flex, Text } from '@universe/mycelium'
+import { UNICHAIN_LOGO } from '@universe/mycelium/assets'
 import { useTranslation } from 'react-i18next'
 import { Image } from 'ui/src'
-import { UNICHAIN_LOGO } from 'ui/src/assets'
 
 const UNICHAIN_LOGO_SIZE = 14
 const UNICHAIN_LOGO_BORDER_RADIUS = 4.2

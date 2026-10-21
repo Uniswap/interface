@@ -1,9 +1,9 @@
 import type { BottomSheetView } from '@gorhom/bottom-sheet'
 import { Currency } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
-import { isExtensionApp, isMobileApp, isMobileWeb, isWebApp, isWebIOS, isWebPlatform } from '@universe/environment'
+import { isMobileApp, isMobileWeb, isWebApp, isWebIOS, isWebPlatform } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { Flex, ModalCloseIcon, spacing, Text, zIndexes } from '@universe/mycelium'
+import { Flex, ModalCloseIcon, spacing, Text } from '@universe/mycelium'
 import { InfoCircleFilled } from '@universe/mycelium/icons/InfoCircleFilled'
 import { useMedia, useScrollbarStyles, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { ComponentProps, memo, useCallback, useEffect, useMemo, useState } from 'react'
@@ -13,10 +13,8 @@ import PasteButton from 'uniswap/src/components/buttons/PasteButton'
 import { SelectorBaseListSkeleton } from 'uniswap/src/components/lists/SelectorBaseList'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
-import { NetworkFilterV2 } from 'uniswap/src/components/network/NetworkFilterV2/NetworkFilterV2'
-import type { TieredNetworkOptions } from 'uniswap/src/components/network/NetworkFilterV2/types'
-import { useNetworkSelectorOptions } from 'uniswap/src/components/network/NetworkFilterV2/useNetworkSelectorOptions'
+import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter/NetworkFilter'
+import { useNetworkSelectorOptions } from 'uniswap/src/components/network/NetworkFilter/useNetworkSelectorOptions'
 import { TOKEN_SELECTOR_LOADING_ROWS } from 'uniswap/src/components/TokenSelector/constants'
 import { CrosschainSwapsPromoBanner } from 'uniswap/src/components/TokenSelector/CrosschainSwapsPromoBanner'
 import { useClipboardCheck } from 'uniswap/src/components/TokenSelector/hooks/useClipboardCheck'
@@ -78,22 +76,6 @@ export interface TokenSelectorProps {
     isPreselectedAsset: boolean
   }) => void
   onSelectRwaToken?: OnSelectRwaToken
-}
-
-function TokenSelectorNetworkFilter({
-  tieredOptions,
-  networkFilterV2Enabled,
-  styles,
-  ...props
-}: {
-  tieredOptions: TieredNetworkOptions | undefined
-  networkFilterV2Enabled: boolean
-} & ComponentProps<typeof NetworkFilter>): JSX.Element {
-  if (networkFilterV2Enabled) {
-    return <NetworkFilterV2 {...props} tieredOptions={tieredOptions} />
-  }
-
-  return <NetworkFilter {...props} styles={styles} />
 }
 
 /**
@@ -158,18 +140,18 @@ function LegacyTokenSelectorContent({
 
   const { chains: enabledChains, isTestnetModeEnabled } = useEnabledChains()
 
-  const isNetworkFilterV2FlagEnabled = useFeatureFlag(FeatureFlags.NetworkFilterV2)
-  const networkFilterV2Enabled =
-    isNetworkFilterV2FlagEnabled &&
-    [TokenSelectorVariation.SwapInput, TokenSelectorVariation.SwapOutput, TokenSelectorVariation.BalancesOnly].includes(
-      variation,
-    )
+  // "Your networks" only makes sense where the user's balances are being chosen from.
+  const showTieredNetworkOptions = [
+    TokenSelectorVariation.SwapInput,
+    TokenSelectorVariation.SwapOutput,
+    TokenSelectorVariation.BalancesOnly,
+  ].includes(variation)
   const effectiveChainIds = chainIds ?? enabledChains
 
   const tieredNetworkOptions = useNetworkSelectorOptions({
     addresses,
     chainIds: effectiveChainIds,
-    enabled: networkFilterV2Enabled,
+    enabled: showTieredNetworkOptions,
   })
 
   const { t } = useTranslation()
@@ -243,13 +225,12 @@ function LegacyTokenSelectorContent({
               endAdornment={
                 <Flex row alignItems="center">
                   {hasClipboardString && <PasteButton inline textVariant="buttonLabel3" onPress={handlePaste} />}
-                  <TokenSelectorNetworkFilter
+                  <NetworkFilter
+                    dropdownOnMobile
                     tieredOptions={tieredNetworkOptions}
-                    networkFilterV2Enabled={networkFilterV2Enabled}
                     includeAllNetworks={!isTestnetModeEnabled && effectiveChainIds.length > 1}
                     chainIds={effectiveChainIds}
                     selectedChain={chainFilter}
-                    styles={isExtensionApp || media.md ? { dropdownZIndex: zIndexes.overlay } : undefined}
                     onPressChain={(newChainId) => {
                       onChangeChainFilter(newChainId)
                       onSelectChain?.(newChainId)

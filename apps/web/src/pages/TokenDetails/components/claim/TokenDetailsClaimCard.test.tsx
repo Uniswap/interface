@@ -4,7 +4,8 @@ import { TestID } from '@universe/test'
 import { createContext, type PropsWithChildren, useContext, useEffect } from 'react'
 import { LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
 import { logger } from 'utilities/src/logger/logger'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { analytics } from 'utilities/src/telemetry/analytics/analytics'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useActiveAddress } from '~/features/accounts/store/hooks'
 import { useBidTokenInfo } from '~/features/Toucan/Auction/hooks/useBidTokenInfo'
 import { useWithdrawButtonState } from '~/features/Toucan/Auction/hooks/useWithdrawButtonState'
@@ -23,8 +24,13 @@ import { act, fireEvent, render, screen } from '~/test-utils/render'
 const mockStoreProvider = vi.fn()
 const mockStoreUnmount = vi.fn()
 const mockModalUnmount = vi.fn()
+const mockNavigate = vi.fn()
 const MockSourceUpdates = createContext<object>({})
 
+vi.mock('react-router', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('react-router')>()),
+  useNavigate: () => mockNavigate,
+}))
 vi.mock('~/features/accounts/store/hooks', async (importOriginal) => ({
   ...(await importOriginal<typeof import('~/features/accounts/store/hooks')>()),
   useActiveAddress: vi.fn(),
@@ -122,6 +128,10 @@ function mockWithdrawButton({ isDisabled }: { isDisabled: boolean }): void {
 }
 
 describe('TokenDetailsClaimCard', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   beforeEach(() => {
     vi.clearAllMocks()
     mockUserBidsInitialized = true
@@ -221,6 +231,35 @@ describe('TokenDetailsClaimCard', () => {
     render(<ClaimCardTestTree />)
 
     expect(screen.getByTestId(TestID.TokenDetailsClaimButton)).toBeDisabled()
+  })
+
+  it.each([
+    [ClaimableAllocationState.Claimable, TestID.TokenDetailsClaimButton],
+    [ClaimableAllocationState.Refundable, TestID.TokenDetailsRefundButton],
+  ] as const)('does not report %s impressions, amounts or card clicks', (status, testId) => {
+    const sendEvent = vi.spyOn(analytics, 'sendEvent').mockImplementation(() => undefined)
+    mockAllocation({ status, amountRaw: 1500n * 10n ** 18n })
+
+    render(<ClaimCardTestTree />)
+    expect(sendEvent).not.toHaveBeenCalled()
+    fireEvent.click(screen.getByTestId(testId))
+
+    expect(screen.getByTestId('withdraw-modal')).toBeInTheDocument()
+    expect(sendEvent).not.toHaveBeenCalled()
+  })
+
+  it('keeps unavailable-card Retry and View auction functional without sending card telemetry', () => {
+    const sendEvent = vi.spyOn(analytics, 'sendEvent').mockImplementation(() => undefined)
+    mockAllocation({ status: ClaimableAllocationState.Unavailable, error: new Error('Wallet request failed') })
+
+    render(<ClaimCardTestTree />)
+    expect(sendEvent).not.toHaveBeenCalled()
+    fireEvent.click(screen.getByTestId(TestID.TokenDetailsClaimRetryButton))
+    fireEvent.click(screen.getByTestId(TestID.TokenDetailsClaimViewAuctionButton))
+
+    expect(retry).toHaveBeenCalledTimes(1)
+    expect(mockNavigate).toHaveBeenCalledWith(`/explore/auctions/ethereum/${AUCTION.address.toLowerCase()}`)
+    expect(sendEvent).not.toHaveBeenCalled()
   })
 
   it('keeps the modal closed while the ADP would disable withdrawing', () => {

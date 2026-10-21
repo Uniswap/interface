@@ -8,6 +8,7 @@
 
 // Foundations
 export { createFetchClient } from '@universe/api/src/clients/base/createFetchClient'
+export { setFirstPartyFetchOverride } from '@universe/api/src/clients/base/fetchImplProvider'
 export { FetchError, is401Error, is404Error, isRateLimitFetchError } from '@universe/api/src/clients/base/errors'
 export type { CustomOptions, FetchClient, StandardFetchOptions } from '@universe/api/src/clients/base/types'
 export { SharedQueryClient } from '@universe/api/src/clients/base/SharedQueryClient'
@@ -195,6 +196,19 @@ export {
   getGetWalletsBalancesQueryOptions,
   type GetWalletsBalancesQueryParams,
 } from '@universe/api/src/clients/dataApi/getGetWalletsBalancesQueryOptions'
+export {
+  getGetWalletProfitLossQueryOptions,
+  type GetWalletProfitLossQueryParams,
+} from '@universe/api/src/clients/dataApi/getGetWalletProfitLossQueryOptions'
+export {
+  getGetWalletTokenProfitLossQueryOptions,
+  type GetWalletTokenProfitLossQueryParams,
+} from '@universe/api/src/clients/dataApi/getGetWalletTokenProfitLossQueryOptions'
+export {
+  getGetWalletTokensProfitLossQueryOptions,
+  type GetWalletTokensProfitLossQueryParams,
+} from '@universe/api/src/clients/dataApi/getGetWalletTokensProfitLossQueryOptions'
+export { type WalletAddressKey } from '@universe/api/src/clients/dataApi/walletAddressKey'
 export {
   TokensOrderBy,
   type BalanceComponent,

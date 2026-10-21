@@ -34,7 +34,9 @@ import {
   WrappedLiquidityPositionRangeChart,
 } from '~/features/Liquidity/charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { PoolOutOfSyncError } from '~/features/Liquidity/Create/PoolOutOfSyncError'
+import { useIsLiquiditySagaRunning } from '~/features/Liquidity/hooks/useIsLiquiditySagaRunning'
 import { LiquidityPositionInfoBadges } from '~/features/Liquidity/LiquidityPositionInfoBadges'
+import { LiquiditySagaPendingMessage } from '~/features/Liquidity/LiquiditySagaPendingMessage'
 import { LowLPSlippageWarning } from '~/features/Liquidity/LowLPSlippageWarning'
 import { PartialMigrationWarning } from '~/features/Liquidity/PartialMigrationWarning'
 import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
@@ -165,6 +167,7 @@ export function ReviewModal({
   // Re-reading inside the modal is what catches that window — a restriction resolving now kills the
   // confirm under the user instead of leaving a live signable transaction.
   const { isGeoRestricted, restrictedTokenSymbol, unavailableLabel } = useLPGeoRestriction({ token0, token1 })
+  const isLiquiditySagaRunning = useIsLiquiditySagaRunning()
 
   // Guards both callers' submit handlers (`handleCreate`, migration's `handleConfirm`) at the
   // boundary, so neither can dispatch a liquidity saga while the block is up.
@@ -429,20 +432,23 @@ export function ReviewModal({
                 {isSignedInWithPasskey ? t('swap.button.submitting.passkey') : t('common.confirmWallet')}
               </Button>
             ) : (
-              <Button
-                size="large"
-                variant="branded"
-                onPress={handleConfirm}
-                disabled={isDisabled || isGeoRestricted}
-                fill={false}
-                icon={needsPasskeySignin && !isGeoRestricted ? <Passkey size="$icon.24" color="$white" /> : undefined}
-              >
-                {isGeoRestricted
-                  ? unavailableLabel
-                  : isSignedInWithPasskey && isSessionAuthenticated
-                    ? t('position.create.confirm')
-                    : confirmButtonText}
-              </Button>
+              <>
+                <LiquiditySagaPendingMessage />
+                <Button
+                  size="large"
+                  variant="branded"
+                  onPress={handleConfirm}
+                  disabled={isDisabled || isGeoRestricted || isLiquiditySagaRunning}
+                  fill={false}
+                  icon={needsPasskeySignin && !isGeoRestricted ? <Passkey size="$icon.24" color="$white" /> : undefined}
+                >
+                  {isGeoRestricted
+                    ? unavailableLabel
+                    : isSignedInWithPasskey && isSessionAuthenticated
+                      ? t('position.create.confirm')
+                      : confirmButtonText}
+                </Button>
+              </>
             )}
           </>
         )}

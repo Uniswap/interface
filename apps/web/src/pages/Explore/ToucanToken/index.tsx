@@ -1,6 +1,7 @@
 import { isEVMChain, Platform } from '@universe/chains'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex } from '@universe/mycelium'
+import { spacing } from '@universe/mycelium/tokens'
 //! tamagui-ignore
 // tamagui-ignore
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -61,15 +62,53 @@ import { ToucanActionButton } from '~/features/Toucan/Shared/ToucanActionButton'
 import { ToucanContainer } from '~/features/Toucan/Shared/ToucanContainer'
 import { ToucanIntroModal } from '~/features/Toucan/ToucanIntroModal'
 import { useScrollCompact } from '~/hooks/useScrollCompact'
+import { useStateRehydrated } from '~/hooks/useStateRehydrated'
 import { useDynamicMetatags } from '~/pages/metatags'
 import { NotFound } from '~/pages/NotFound'
 import { LeftPanel, RightPanel, TokenDetailsLayout } from '~/pages/TokenDetails/components/skeleton/Skeleton'
 import { formatAuctionMetatagTitleName } from '~/shared-cloud/metatags'
 import { useAppDispatch, useAppSelector } from '~/state/hooks'
 import { InterfaceState } from '~/state/webReducer'
+import { MWEB_BOTTOM_INSET } from '~/utils/mwebBottomInset'
 import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
 
 const TOUCAN_INTRO_MODAL_SESSION_KEY = 'toucan-intro-modal-seen-session'
+
+function seenToucanIntroThisSession(): boolean {
+  try {
+    return Boolean(sessionStorage.getItem(TOUCAN_INTRO_MODAL_SESSION_KEY))
+  } catch {
+    // sessionStorage unavailable; the persisted flags still answer for this visitor.
+    return false
+  }
+}
+
+/**
+ * The explainer is shown once, so it only opens when every source that could record a prior view
+ * agrees there was none. Both persisted flags read false until redux-persist rehydrates, so a
+ * pre-rehydration answer re-shows the modal to someone who already dismissed it. The wallet is
+ * likewise undefined for the first frames of a reconnect, which is why dismissing also sets the
+ * disconnected flag (see `handleCloseModal`) — a wallet that has never seen it still gets its own
+ * first view once the address resolves.
+ */
+export function shouldShowToucanIntroModal({
+  rehydrated,
+  seenThisSession,
+  walletAddress,
+  hasSeenDisconnected,
+  hasWalletSeen,
+}: {
+  rehydrated: boolean
+  seenThisSession: boolean
+  walletAddress: string | undefined
+  hasSeenDisconnected: boolean
+  hasWalletSeen: boolean
+}): boolean {
+  if (!rehydrated || seenThisSession) {
+    return false
+  }
+  return walletAddress ? !hasWalletSeen : !hasSeenDisconnected
+}
 
 function usePageMetatags(auctionDetails: AuctionDetails | null) {
   const { chainName, auctionAddress } = useParams<{ chainName: string; auctionAddress: string }>()
@@ -284,11 +323,7 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
         <TokenDetailsLayout toucan topSpacing={isProvenanceAuctionEnded ? '16' : undefined}>
           <LeftPanel clamped>
             {/* On mobile/tablet ($xl), surface the post-auction panel above the chart once the auction ends */}
-            {isAuctionEnded && (
-              <Flex display="none" $xl={{ display: 'flex', flexDirection: 'column' }}>
-                <PostAuctionPanel />
-              </Flex>
-            )}
+            {isAuctionEnded && <PostAuctionPanel inline />}
             <AuctionChartContainer
               activeTab={chartActiveTab}
               onTabChange={setChartActiveTab}
@@ -308,7 +343,7 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
 
           <RightPanel toucan>
             {isAuctionEnded ? (
-              <PostAuctionPanel />
+              <PostAuctionPanel inline={false} />
             ) : (
               <Flex gap="$spacing12">
                 <BidForm />
@@ -335,7 +370,7 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
             left: 0,
             right: 0,
             p: '$spacing16',
-            pb: '$spacing24',
+            pb: `calc(${spacing.spacing24}px + ${MWEB_BOTTOM_INSET})`,
             zIndex: '$fixed',
           }}
         >
@@ -381,38 +416,20 @@ export function ToucanToken() {
   const dispatch = useAppDispatch()
 
   // Redux selectors for persisted state
+  const rehydrated = useStateRehydrated()
   const hasSeenDisconnected = useAppSelector(selectHasSeenToucanIntroModal)
   const hasWalletSeen = useAppSelector((state: InterfaceState) =>
     walletAddress ? selectHasSeenToucanIntroModalForWallet(state, walletAddress) : false,
   )
 
-  // Three-layer check for showing intro modal
   useEffect(() => {
-    // Layer 1: Session check - blocks everything in same session
-    try {
-      const seenThisSession = sessionStorage.getItem(TOUCAN_INTRO_MODAL_SESSION_KEY)
-      if (seenThisSession) {
-        return
-      }
-    } catch {
-      // sessionStorage not available, continue with other checks
+    const seenThisSession = seenToucanIntroThisSession()
+    if (
+      shouldShowToucanIntroModal({ rehydrated, seenThisSession, walletAddress, hasSeenDisconnected, hasWalletSeen })
+    ) {
+      setIsModalOpen(true)
     }
-
-    // Layer 2 & 3: Persisted checks
-    if (walletAddress) {
-      // Connected: check per-wallet flag
-      if (hasWalletSeen) {
-        return
-      }
-    } else {
-      // Disconnected: check global flag
-      if (hasSeenDisconnected) {
-        return
-      }
-    }
-
-    setIsModalOpen(true)
-  }, [walletAddress, hasSeenDisconnected, hasWalletSeen])
+  }, [rehydrated, walletAddress, hasSeenDisconnected, hasWalletSeen])
 
   const handleCloseModal = () => {
     setIsModalOpen(false)
@@ -424,11 +441,12 @@ export function ToucanToken() {
       // sessionStorage not available, silently fail
     }
 
-    // Set appropriate persisted flag
+    // The wallet is still undefined for the first frames of a reconnect, when the effect above reads
+    // the global flag, so dismissing always sets it. The per-wallet flag still gives a newly
+    // connected wallet its own first view.
+    dispatch(setHasSeenToucanIntroModal(true))
     if (walletAddress) {
       dispatch(setToucanIntroModalSeenByWallet({ walletAddress }))
-    } else {
-      dispatch(setHasSeenToucanIntroModal(true))
     }
   }
 

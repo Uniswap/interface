@@ -40,6 +40,8 @@ import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { ErrorCallout } from '~/components/ErrorCallout'
 import { getLPBaseAnalyticsProperties } from '~/features/Liquidity/analytics'
+import { useIsLiquiditySagaRunning } from '~/features/Liquidity/hooks/useIsLiquiditySagaRunning'
+import { LiquiditySagaPendingMessage } from '~/features/Liquidity/LiquiditySagaPendingMessage'
 import { canUnwrapCurrency, getCurrencyWithOptionalUnwrap } from '~/features/Liquidity/utils/currency'
 import { getProtocols } from '~/features/Liquidity/utils/protocolVersion'
 import { useAccount } from '~/hooks/useAccount'
@@ -151,6 +153,7 @@ export function ClaimFeeModal() {
     { step: TransactionStep; accepted: boolean } | undefined
   >()
   const [unwrapNativeCurrency, setUnwrapNativeCurrency] = useState(true)
+  const isLiquiditySagaRunning = useIsLiquiditySagaRunning()
 
   const { currency0Amount, currency1Amount, chainId } = positionInfo || {}
   const canUnwrap0 = canUnwrapCurrency(currency0Amount?.currency, positionInfo?.version)
@@ -335,11 +338,12 @@ export function ClaimFeeModal() {
           </Flex>
         )}
         <ErrorCallout errorMessage={getErrorMessageToDisplay({ calldataError: error })} onPress={refetch} />
+        {!currentTransactionStep && <LiquiditySagaPendingMessage />}
         <Flex row>
           <Button
             testID={TestID.ClaimFees}
             key="LoaderButton-animation-ClaimFeeModal-button"
-            disabled={!data?.claim || Boolean(currentTransactionStep)}
+            disabled={!data?.claim || Boolean(currentTransactionStep) || isLiquiditySagaRunning}
             loading={calldataLoading || Boolean(currentTransactionStep)}
             size="large"
             variant="branded"

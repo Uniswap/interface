@@ -1,3 +1,11 @@
+import { readFileSync } from 'node:fs'
+import { createRequire } from 'node:module'
+import { dirname, join, resolve } from 'node:path'
+import { renderToStaticMarkup } from 'react-dom/server'
+import { compile } from 'tailwindcss'
+import { beforeAll, describe, expect, it } from 'vitest'
+import { groupStatePropKey } from '../compat/group'
+import { PSEUDO_STYLE_KEYS, PSEUDO_VARIANT, type PseudoStyleKey } from '../compat/pseudo'
 /**
  * Anchor color contract (INFRA-3115 QA finding F1): a Text rendered as an
  * anchor must carry its resolved base color on the style attribute — legacy
@@ -7,14 +15,7 @@
  * markup (renderToStaticMarkup) because jsdom's CSSOM drops var()-valued
  * declarations (see createIcon.test.tsx precedent).
  */
-import { readFileSync } from 'node:fs'
-import { createRequire } from 'node:module'
-import { dirname, join, resolve } from 'node:path'
-import { renderToStaticMarkup } from 'react-dom/server'
-import { compile } from 'tailwindcss'
-import { beforeAll, describe, expect, it } from 'vitest'
-import { groupStatePropKey } from '../compat/group'
-import { PSEUDO_STYLE_KEYS, PSEUDO_VARIANT, type PseudoStyleKey } from '../compat/pseudo'
+import type { SafeCompatTag } from '../compat/safe-tags'
 import { ANCHOR_BASE_VAR, ANCHOR_PSEUDO_CODE, anchorPseudoVar } from './anchor-vars'
 import type { TextCompatProps } from './props'
 import { TextCompat } from './TextCompat.web'
@@ -266,5 +267,34 @@ describe('anchor var lane vocabulary', () => {
   it('pressStyle + focusStyle: press wins while the link is pressed', () => {
     expect(poolAt('a'), 'active must follow focus').toBeGreaterThan(poolAt('f'))
     expect(poolAt('a'), 'active must follow focus-visible').toBeGreaterThan(poolAt('v'))
+  })
+})
+
+// Hostile tags arrive as runtime strings from parsed markup, never through the prop type.
+const untrusted = (tag: string): SafeCompatTag => tag as unknown as SafeCompatTag
+
+describe('TextCompat untrusted tag/href containment', () => {
+  it.each(['script', 'iframe', 'object', 'embed', 'base', 'link', 'style', 'svg', 'img', 'form', 'input'])(
+    'renders the div fallback instead of a smuggled <%s>',
+    (hostileTag) => {
+      const tag = renderedTag({ tag: untrusted(hostileTag), href: 'https://evil.example/payload' })
+      expect(tag.startsWith('<div')).toBe(true)
+      expect(tag).not.toContain('href')
+    },
+  )
+
+  it('drops href (and link companions) on non-anchor tags', () => {
+    const tag = renderedTag({ tag: 'span', href: 'https://evil.example', target: '_blank', rel: 'x', download: 'f' })
+    expect(tag.startsWith('<span')).toBe(true)
+    expect(tag).not.toContain('href')
+    expect(tag).not.toContain('target')
+    expect(tag).not.toContain('download')
+  })
+
+  it('keeps href/target/rel on a real anchor', () => {
+    const tag = renderedTag({ tag: 'a', href: 'https://app.uniswap.org', target: '_blank', rel: 'noreferrer' })
+    expect(tag.startsWith('<a ')).toBe(true)
+    expect(tag).toContain('href="https://app.uniswap.org"')
+    expect(tag).toContain('rel="noreferrer"')
   })
 })

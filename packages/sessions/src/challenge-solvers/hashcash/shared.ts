@@ -51,6 +51,17 @@ export function checkDifficulty(hash: Uint8Array, difficulty: number): boolean {
   return true
 }
 
+const SEARCH_BUDGET_MULTIPLIER = 32
+
+// max_proof_length bounds the solution string length, not the counter.
+export function getHashcashSearchRangeSize(challenge: HashcashChallenge): number {
+  const counterDigits = challenge.max_proof_length - `${challenge.subject}:${challenge.nonce}:`.length
+  if (counterDigits <= 0) {
+    return 0
+  }
+  return Math.min(10 ** counterDigits, SEARCH_BUDGET_MULTIPLIER * 256 ** challenge.difficulty, Number.MAX_SAFE_INTEGER)
+}
+
 /**
  * Format a proof into hashcash string format for submission.
  * Format: version:bits:date:resource:extension:counter:hash

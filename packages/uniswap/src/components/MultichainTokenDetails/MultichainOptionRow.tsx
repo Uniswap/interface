@@ -12,7 +12,7 @@ interface MultichainOptionRowProps {
   testID?: string
   /** Web-only: render as an anchor tag */
   href?: string
-  tag?: string
+  tag?: 'a'
   target?: string
   rel?: string
   addressMenuPadding?: SpaceTokens | number

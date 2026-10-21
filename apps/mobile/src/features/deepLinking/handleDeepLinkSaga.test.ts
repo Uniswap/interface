@@ -1,4 +1,6 @@
+import { fetchIsFeatureGated } from '@universe/compliance'
 import { expectSaga, RunResult } from 'redux-saga-test-plan'
+import * as matchers from 'redux-saga-test-plan/matchers'
 import { call, delay } from 'redux-saga/effects'
 import { navigationRef } from 'src/app/navigation/navigationRef'
 import { navigate } from 'src/app/navigation/rootNavigation'
@@ -44,7 +46,7 @@ vi.mock('expo-web-browser', () => ({
 vi.mock('@universe/gating', async () => ({
   ...(await vi.importActual('@universe/gating')),
   getStatsigClient: vi.fn(() => ({
-    checkGate: vi.fn(() => false), // Always return false to avoid Korea gate redirects
+    checkGate: vi.fn(() => false),
   })),
   getFeatureFlag: vi.fn(() => false), // Default to false for feature flags
 }))
@@ -521,7 +523,10 @@ describe(handleDeepLink, () => {
       type: '',
     })
       .withState(stateWithActiveAccountAddress)
-      .provide([[delay(ONRAMP_DEEPLINK_DELAY), undefined]])
+      .provide([
+        [matchers.call.fn(fetchIsFeatureGated), false],
+        [delay(ONRAMP_DEEPLINK_DELAY), undefined],
+      ])
       .call(parseAndValidateUserAddress, account.address)
       .put(setAccountAsActive(account.address))
       .call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
@@ -535,6 +540,23 @@ describe(handleDeepLink, () => {
       .silentRun()
   })
 
+  it('Shows the CEX transfer modal when the fiat onramp is region-blocked', async () => {
+    const payload = {
+      url: `uniswap://app/fiatonramp?userAddress=${account.address}&source=push`,
+      coldStart: false,
+    }
+    await expectSaga(handleDeepLink, {
+      payload,
+      type: '',
+    })
+      .withState(stateWithActiveAccountAddress)
+      .provide([[matchers.call.fn(fetchIsFeatureGated), true]])
+      .not.put.actionType(openModal.type)
+      .silentRun()
+
+    expect(navigationRef.navigate).toHaveBeenCalledWith(ModalName.CexTransferInfoModal, undefined)
+  })
+
   it('Handles MoonPay exclusive fiat onramp deeplink', () => {
     const payload = {
       url: `uniswap://app/fiatonramp?moonpayOnly=true&source=moonpay-ad`,
@@ -545,7 +567,10 @@ describe(handleDeepLink, () => {
       type: '',
     })
       .withState(stateWithActiveAccountAddress)
-      .provide([[delay(ONRAMP_DEEPLINK_DELAY), undefined]])
+      .provide([
+        [matchers.call.fn(fetchIsFeatureGated), false],
+        [delay(ONRAMP_DEEPLINK_DELAY), undefined],
+      ])
       .put(
         openModal({
           name: ModalName.FiatOnRampAggregator,
@@ -577,7 +602,10 @@ describe(handleDeepLink, () => {
       type: '',
     })
       .withState(stateWithActiveAccountAddress)
-      .provide([[delay(ONRAMP_DEEPLINK_DELAY), undefined]])
+      .provide([
+        [matchers.call.fn(fetchIsFeatureGated), false],
+        [delay(ONRAMP_DEEPLINK_DELAY), undefined],
+      ])
       .put(
         openModal({
           name: ModalName.FiatOnRampAggregator,

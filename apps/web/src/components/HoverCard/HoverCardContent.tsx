@@ -1,6 +1,7 @@
 import { AnimatableCopyIcon, Flex, iconSizes, Text, TouchableArea } from '@universe/mycelium'
 import { AlertTriangle } from '@universe/mycelium/icons/AlertTriangle'
 import { ArrowsExpand } from '@universe/mycelium/icons/ArrowsExpand'
+import { BlockExplorer } from '@universe/mycelium/icons/BlockExplorer'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import type { ReactNode } from 'react'
 import { Fragment, useMemo } from 'react'
@@ -19,27 +20,118 @@ export function getHoverCardContentWidth(maxWidth?: number): number {
     : HOVER_CARD_CONTENT_WIDTH
 }
 
+const HEADER_ACTION_SIZE = 28
+
+function HoverCardHeaderAction({
+  testID,
+  onPress,
+  children,
+}: {
+  testID?: string
+  onPress: () => void
+  children: ReactNode
+}): JSX.Element {
+  return (
+    <TouchableArea
+      testID={testID}
+      width={HEADER_ACTION_SIZE}
+      height={HEADER_ACTION_SIZE}
+      alignItems="center"
+      justifyContent="center"
+      borderRadius="$rounded6"
+      hoverStyle={{ opacity: 0.7 }}
+      onPress={onPress}
+    >
+      {children}
+    </TouchableArea>
+  )
+}
+
 export function HoverCardHeaderActions({
   isCopied = false,
   onCopy,
   onExpand,
+  onOpenExplorer,
+  explorerTestID,
 }: {
   isCopied?: boolean
   onCopy?: () => void
   onExpand?: () => void
+  onOpenExplorer?: () => void
+  explorerTestID?: string
 }): JSX.Element {
   return (
-    <Flex row gap="$spacing8" alignItems="center">
+    <Flex row alignItems="center">
       {onCopy && (
-        <TouchableArea hoverStyle={{ opacity: 0.7 }} onPress={onCopy}>
+        <HoverCardHeaderAction onPress={onCopy}>
           <AnimatableCopyIcon isCopied={isCopied} size={iconSizes.icon16} textColor="$neutral2" />
-        </TouchableArea>
+        </HoverCardHeaderAction>
+      )}
+      {onOpenExplorer && (
+        <HoverCardHeaderAction testID={explorerTestID} onPress={onOpenExplorer}>
+          <BlockExplorer color="$neutral2" size="$icon.16" />
+        </HoverCardHeaderAction>
       )}
       {onExpand && (
-        <TouchableArea hoverStyle={{ opacity: 0.7 }} onPress={onExpand}>
-          <ArrowsExpand color="$neutral2" size={iconSizes.icon12} />
-        </TouchableArea>
+        <HoverCardHeaderAction onPress={onExpand}>
+          <ArrowsExpand color="$neutral2" size="$icon.16" />
+        </HoverCardHeaderAction>
       )}
+    </Flex>
+  )
+}
+
+export function HoverCardIdentity({
+  logo,
+  title,
+  subtitle,
+  loading = false,
+}: {
+  logo: ReactNode
+  title: ReactNode
+  subtitle?: ReactNode
+  loading?: boolean
+}): JSX.Element {
+  return (
+    <>
+      {logo}
+      <Flex shrink minWidth={0}>
+        <Text variant="body3" color="$neutral1" numberOfLines={1} loading={loading} loadingPlaceholderText="TOKEN">
+          {title}
+        </Text>
+        {(loading || subtitle !== undefined) && (
+          <Text
+            variant="body3"
+            color="$neutral2"
+            numberOfLines={1}
+            loading={loading}
+            loadingPlaceholderText="0x0000...0000"
+          >
+            {subtitle}
+          </Text>
+        )}
+      </Flex>
+    </>
+  )
+}
+
+export function HoverCardHeadline({
+  loading,
+  loadingPlaceholderText,
+  value,
+  caption,
+}: {
+  loading: boolean
+  loadingPlaceholderText: string
+  value: string
+  caption?: ReactNode
+}): JSX.Element {
+  return (
+    <Flex row alignItems="baseline" gap="$spacing8" pt="$spacing4">
+      <Text variant="heading3" color="$neutral1" loading={loading} loadingPlaceholderText={loadingPlaceholderText}>
+        {value}
+      </Text>
+      {!loading && caption}
     </Flex>
   )
 }
@@ -82,6 +174,8 @@ interface HoverCardBodyProps {
   isCopied?: boolean
   onCopy?: () => void
   onExpand?: () => void
+  onOpenExplorer?: () => void
+  explorerTestID?: string
   isNoData?: boolean
   maxWidth?: number
   children: ReactNode
@@ -92,6 +186,8 @@ export function HoverCardBody({
   isCopied,
   onCopy,
   onExpand,
+  onOpenExplorer,
+  explorerTestID,
   isNoData = false,
   maxWidth,
   children,
@@ -99,16 +195,26 @@ export function HoverCardBody({
   return (
     <Flex gap="$spacing8" width={getHoverCardContentWidth(maxWidth)}>
       {identity !== undefined && (
-        <Flex row justifyContent="space-between" alignItems="center" gap="$spacing8">
+        <Flex row justifyContent="space-between" alignItems="flex-start" gap="$spacing8">
           <Flex row gap="$spacing8" alignItems="center" flex={1} minWidth={0}>
             {identity}
           </Flex>
-          <HoverCardHeaderActions isCopied={isCopied} onCopy={onCopy} onExpand={onExpand} />
+          <HoverCardHeaderActions
+            isCopied={isCopied}
+            onCopy={onCopy}
+            onExpand={onExpand}
+            onOpenExplorer={onOpenExplorer}
+            explorerTestID={explorerTestID}
+          />
         </Flex>
       )}
       {isNoData ? <HoverCardNoDataState /> : children}
     </Flex>
   )
+}
+
+export function HoverCardDotSeparator(): JSX.Element {
+  return <Flex width={4} height={4} borderRadius="$roundedFull" backgroundColor="$neutral3" />
 }
 
 /**
@@ -139,7 +245,7 @@ export function HoverCardStatsRow({
       {presentStats.map((stat, index) => (
         // Positional: the row is a short fixed list, and two stats can legitimately format to the same string.
         <Fragment key={index}>
-          {index > 0 && <Flex width={4} height={4} borderRadius="$roundedFull" backgroundColor="$neutral3" />}
+          {index > 0 && <HoverCardDotSeparator />}
           <Text variant="body3" color="$neutral2" numberOfLines={1}>
             {stat}
           </Text>

@@ -1,4 +1,3 @@
-import { UseMutationResult, useMutation } from '@tanstack/react-query'
 import {
   authenticateWithBiometricCredential,
   encryptPasswordWithBiometricData,
@@ -7,12 +6,13 @@ import { BiometricUnlockStorage } from 'src/app/features/biometricUnlock/Biometr
 import { startNavigatorCredentialRequest } from 'src/app/features/biometricUnlock/useNavigatorCredentialAbortSignal'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useSecretMutation, UseSecretMutationResult } from 'utilities/src/security/useSecretMutation'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 export function useChangePasswordWithBiometricMutation(options?: {
   onSuccess?: () => void
   onError?: (error: Error) => void
-}): UseMutationResult<void, Error, string> {
+}): UseSecretMutationResult<string, void, Error> {
   const changePasswordWithBiometric = useEvent(async (newPassword: string): Promise<void> => {
     const { abortSignal } = startNavigatorCredentialRequest('Password change with biometric re-encryption initiated')
 
@@ -44,9 +44,8 @@ export function useChangePasswordWithBiometricMutation(options?: {
     await BiometricUnlockStorage.set(newBiometricData)
   })
 
-  return useMutation({
+  return useSecretMutation({
     mutationFn: changePasswordWithBiometric,
-    retry: false,
     onSuccess: options?.onSuccess,
     onError: (error) => {
       logger.error(error, {

@@ -2,6 +2,7 @@ import { Flex, type FlexCompatProps } from '@universe/mycelium'
 import { forwardRef, ReactNode, RefObject } from 'react'
 import { Popover, useScrollbarStyles, WebBottomSheet } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
+import { MWEB_BOTTOM_INSET } from '~/utils/mwebBottomInset'
 
 type NavDropdownContentProps = FlexCompatProps & { padded?: boolean }
 
@@ -22,7 +23,7 @@ const NavDropdownContent = forwardRef<HTMLDivElement, NavDropdownContentProps>(f
         borderRadius: '$none',
         borderWidth: 0,
         shadowColor: '$transparent',
-        maxHeight: `calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)`,
+        maxHeight: `calc(100dvh - ${INTERFACE_NAV_HEIGHT}px - ${MWEB_BOTTOM_INSET})`,
       }}
       // Replace-not-merge is deliberate, and differs from the plain spread used for the same
       // problem in MobileBottomBar. react-native-web normalizes an `overflow` shorthand into both

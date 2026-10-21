@@ -3,7 +3,6 @@ import type { InfiniteData } from '@tanstack/react-query'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { ChainId, Protocols } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
-import type { GetWalletPositionsResponse } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_pb'
 import type {
   PositionModifier,
   PositionSortBy,
@@ -12,6 +11,7 @@ import type {
 } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
 import { useCallback, useMemo } from 'react'
 import { liquidityQueries } from 'uniswap/src/data/apiClients/liquidityService/liquidityQueries'
+import type { GetWalletPositions } from 'uniswap/src/data/apiClients/liquidityService/queries/positionQueries'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useAutoDrainPages } from 'uniswap/src/features/positions/hooks/useAutoDrainPages'
 import type {
@@ -157,7 +157,7 @@ export function useLiquidityServiceWalletPositions({
 
   // persistableInfiniteQueryOptions erases the InfiniteData wrapper from the inferred data type;
   // restore it explicitly (same approach as the listPools consumers).
-  const infiniteData = data as InfiniteData<GetWalletPositionsResponse> | undefined
+  const infiniteData = data as InfiniteData<GetWalletPositions> | undefined
 
   const { positions, hiddenPositions, allPositions } = useMemo(() => {
     const visible: PositionInfo[] = []
@@ -166,7 +166,7 @@ export function useLiquidityServiceWalletPositions({
     // Sorted requests page by offset, so pages can overlap; keep the first occurrence.
     const seenKeys = new Set<string>()
 
-    const loadedPositions = infiniteData?.pages.flatMap((page: GetWalletPositionsResponse) => page.positions) ?? []
+    const loadedPositions = infiniteData?.pages.flatMap((page: GetWalletPositions) => page.positions) ?? []
     for (const position of loadedPositions) {
       const parsed = parseLiquidityServicePosition(position)
       if (!parsed) {

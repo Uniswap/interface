@@ -1,4 +1,5 @@
 import { FetchError } from '@universe/api/src/clients/base/errors'
+import { resolveFirstPartyFetch } from '@universe/api/src/clients/base/fetchImplProvider'
 import type {
   CustomOptions,
   FetchClient,
@@ -31,7 +32,9 @@ export function createFetchClient({
     if (sessionState?.sessionId) {
       headers.set('x-session-id', sessionState.sessionId)
     }
-    return fetch(input, { ...init, headers })
+    // First-party traffic honors an installed fetch override (e.g. nitro-fetch
+    // behind its gate on mobile); everything else uses the platform stack.
+    return resolveFirstPartyFetch(input)(input, { ...init, headers })
   }
 
   // No-op when getSession returns null; awaits ready + retries once on 401 otherwise.

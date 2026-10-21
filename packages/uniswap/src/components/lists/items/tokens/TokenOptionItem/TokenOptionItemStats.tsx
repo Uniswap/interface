@@ -1,6 +1,6 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex, Text } from '@universe/mycelium'
-import { Trans } from 'react-i18next'
+import { Trans } from 'ui/src'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'

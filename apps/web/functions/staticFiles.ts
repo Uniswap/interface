@@ -37,7 +37,7 @@ export function staticFiles(clientDir: string): MiddlewareHandler {
     if (!(res instanceof Response)) {
       return undefined
     }
-    for (const [name, value] of Object.entries(headers)) {
+    for (const [name, value] of Object.entries({ ...headers, 'X-Content-Type-Options': 'nosniff' })) {
       res.headers.set(name, value)
     }
     return res

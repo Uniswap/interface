@@ -159,16 +159,26 @@ export async function mockTradingApiEndpoint({
 }
 
 /**
- * Fulfills the /swaps status-polling endpoint offline with a terminal status (default SUCCESS),
- * echoing the polled tx hash. Overrides the live `txPolling` fixture for fully-offline specs.
+ * Fulfills the /swaps status poll offline with a terminal status (default SUCCESS). Echoes the polled
+ * hash unless `txHash` is given, which sponsored (userOp) batches need since the polled id is not a tx.
  */
-export async function mockTradingApiSwapsStatus({ page, status = 'SUCCESS' }: { page: Page; status?: string }) {
-  await page.route(`${getUniswapServiceUrls().tradingApiUrl}/${TRADING_API_PATHS.swaps}?txHashes=*`, async (route) => {
-    const txHash = new URL(route.request().url()).searchParams.get('txHashes')
+export async function mockTradingApiSwapsStatus({
+  page,
+  status = 'SUCCESS',
+  hashType = 'TX',
+  txHash,
+}: {
+  page: Page
+  status?: string
+  hashType?: 'TX' | 'USER_OP'
+  txHash?: string
+}) {
+  await page.route(getTradingApiEndpointPattern(V1_TRADING_API_PATHS.swaps), async (route) => {
+    const polledHash = new URL(route.request().url()).searchParams.get('txHashes')
     await route.fulfill({
       body: JSON.stringify({
         requestId: 'mock-swaps-request-id',
-        swaps: [{ swapType: 'CLASSIC', status, txHash, hashType: 'TX' }],
+        swaps: [{ swapType: 'CLASSIC', status, txHash: txHash ?? polledHash, hashType }],
       }),
     })
   })

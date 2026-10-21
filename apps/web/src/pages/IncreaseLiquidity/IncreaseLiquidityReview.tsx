@@ -25,6 +25,8 @@ import { LPGeoRestrictionBanner } from '~/components/GeoRestriction/LPGeoRestric
 import { getLPBaseAnalyticsProperties } from '~/features/Liquidity/analytics'
 import { useUpdatedAmountsFromDependentAmount } from '~/features/Liquidity/hooks/useDependentAmountFallback'
 import { useGetPoolTokenPercentage } from '~/features/Liquidity/hooks/useGetPoolTokenPercentage'
+import { useIsLiquiditySagaRunning } from '~/features/Liquidity/hooks/useIsLiquiditySagaRunning'
+import { LiquiditySagaPendingMessage } from '~/features/Liquidity/LiquiditySagaPendingMessage'
 import { TokenInfo } from '~/features/Liquidity/TokenInfo'
 import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
 import { useCurrencyInfo } from '~/hooks/Tokens'
@@ -46,6 +48,7 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
   const account = useWallet().evmAccount
   const trace = useTrace()
   const { needsPasskeySignin } = useGetPasskeyAuthStatus(connectedAccount.connector?.id)
+  const isLiquiditySagaRunning = useIsLiquiditySagaRunning()
   const disableOneClickSwap = useSetOverrideOneClickSwapFlag()
 
   const { formatCurrencyAmount, formatPercent, convertFiatAmountFormatted } = useLocalizationContext()
@@ -371,12 +374,13 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
           </Flex>
           {/* Owns the message when up: a dead confirm with no stated reason is the failure mode. */}
           {isGeoRestricted && <LPGeoRestrictionBanner tokenSymbol={restrictedTokenSymbol} />}
+          <LiquiditySagaPendingMessage />
           <Flex row>
             <Button
               variant="branded"
               size="large"
               onPress={onIncreaseLiquidity}
-              disabled={isGeoRestricted}
+              disabled={isGeoRestricted || isLiquiditySagaRunning}
               icon={needsPasskeySignin && !isGeoRestricted ? <Passkey size="$icon.24" color="$white" /> : undefined}
             >
               {isGeoRestricted

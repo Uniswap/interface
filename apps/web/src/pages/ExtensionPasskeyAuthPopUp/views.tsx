@@ -10,7 +10,8 @@ import {
   useRecoveryFlow,
 } from '@universe/embedded-wallet'
 import { Anchor, Button, Flex, SpinningLoader, Text } from '@universe/mycelium'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
+import { Trans } from 'ui/src'
 import { EnvelopeHeart } from 'ui/src/components/icons/EnvelopeHeart'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'

@@ -29,7 +29,7 @@ export function TDPBreadcrumb() {
       mb="$spacing8"
       $xxl={{ px: '$spacing40' }}
       $lg={{ px: '$padding20' }}
-      $md={{ pt: '$none' }}
+      $md={{ pt: '$none', px: '$none' }}
     >
       <BreadcrumbNavLink to={tokensExploreUrl}>
         {showLaunchesBreadcrumb ? t('common.launches') : t('common.token.plural')}

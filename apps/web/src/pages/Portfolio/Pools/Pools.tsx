@@ -5,7 +5,7 @@ import {
   SynchronizedHeartbeatsConfigKey,
   useFeatureFlagWithExposureLoggingDisabled,
 } from '@universe/gating'
-import { Flex, spacing } from '@universe/mycelium'
+import { Flex } from '@universe/mycelium'
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PortfolioBalancePart } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
@@ -44,12 +44,9 @@ import { PortfolioTab } from '~/pages/Portfolio/types'
 import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
 import { buildCreatePositionHref } from '~/utils/createPositionRoute'
 
-// Right gutters the summary carousel cancels to bleed to the viewport edge on mWeb:
-// PortfolioPageInner's p + AppBody's gutter below the md breakpoint.
-const SUMMARY_CHIPS_BLEED_GUTTERS = {
-  md: spacing.spacing24 + APP_BODY_MOBILE_GUTTER_PX,
-  sm: spacing.spacing8 + APP_BODY_MOBILE_GUTTER_PX,
-}
+// Right gutter the summary carousel cancels to bleed to the viewport edge on mWeb: AppBody's gutter,
+// the only one below the md breakpoint.
+const SUMMARY_CHIPS_BLEED_GUTTERS = { md: APP_BODY_MOBILE_GUTTER_PX }
 
 const PoolsPositionCountIndicator = memo(function PoolsPositionCountIndicator({ count }: { count?: number }) {
   const { t } = useTranslation()

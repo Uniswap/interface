@@ -32,7 +32,7 @@ export type ExpandableSearchRowContainerProps = {
 
 /**
  * Search-variant grouped-RWA row. Platform-split: `.web` animates the issuer-panel reveal on expand/collapse,
- * `.native` routes it through Mycelium's `HeightAnimator`, whose native leg is instant per INFRA-3289. The base
+ * `.native` routes it through Mycelium's `HeightAnimator` with `animationDisabled` (instant reveal). The base
  * file is a stub so the extensionless import resolves under `moduleResolution: "bundler"` (the bundlers pick
  * `.web`/`.native`).
  */

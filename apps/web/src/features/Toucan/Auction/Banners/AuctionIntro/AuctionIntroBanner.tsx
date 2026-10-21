@@ -19,7 +19,7 @@ export function AuctionIntroBanner({ onLearnMorePress }: AuctionIntroBannerProps
     variant,
     durationRemaining,
     durationLabel,
-    isAuctionEndCountdown,
+    oneLineCountdown,
     tokenAccentColor,
     backgroundGradientStyle,
     isColorLoading,
@@ -52,9 +52,9 @@ export function AuctionIntroBanner({ onLearnMorePress }: AuctionIntroBannerProps
     >
       <Flex row alignItems="center" gap="$spacing12">
         <PulsingIndicatorDot color={tokenAccentColor} isPulsing={!isNotStarted} />
-        {isTokenProvenanceEnabled && isAuctionEndCountdown ? (
+        {isTokenProvenanceEnabled && oneLineCountdown !== undefined ? (
           <Text variant="body1" color="$neutral1">
-            {durationRemaining ? t('toucan.auction.introBanner.remaining', { time: durationRemaining }) : durationLabel}
+            {oneLineCountdown}
           </Text>
         ) : (
           <Flex>

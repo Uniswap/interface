@@ -7,9 +7,9 @@ import { AccountSwitcherModal } from 'src/app/modals/AccountSwitcherModal'
 import { BackupReminderModal } from 'src/app/modals/BackupReminderModal'
 import { BackupWarningModal } from 'src/app/modals/BackupWarningModal'
 import { BridgedAssetWarningWrapper } from 'src/app/modals/BridgedAssetWarningWrapper'
+import { CexTransferInfoModal } from 'src/app/modals/CexTransferInfoModal'
 import { ExperimentsModal } from 'src/app/modals/ExperimentsModal'
 import { ExploreModal } from 'src/app/modals/ExploreModal'
-import { KoreaCexTransferInfoModal } from 'src/app/modals/KoreaCexTransferInfoModal'
 import { NotificationsOSSettingsModal } from 'src/app/modals/NotificationsOSSettingsModal'
 import { SmartWalletInfoModal } from 'src/app/modals/SmartWalletInfoModal'
 import { SwapModal } from 'src/app/modals/SwapModal'
@@ -327,7 +327,7 @@ export function AppStackNavigator(): JSX.Element {
         <AppStack.Screen component={NotificationsOSSettingsModal} name={ModalName.NotificationsOSSettings} />
         <AppStack.Screen component={FiatOnRampActionModal} name={ModalName.FiatOnRampAction} />
         <AppStack.Screen component={FundWalletModal} name={ModalName.FundWallet} />
-        <AppStack.Screen component={KoreaCexTransferInfoModal} name={ModalName.KoreaCexTransferInfoModal} />
+        <AppStack.Screen component={CexTransferInfoModal} name={ModalName.CexTransferInfoModal} />
         <AppStack.Screen component={SmartWalletInfoModal} name={ModalName.SmartWalletInfoModal} />
         <AppStack.Screen component={ExchangeTransferModal} name={ModalName.ExchangeTransferModal} />
         <AppStack.Screen component={TestnetSwitchModal} name={ModalName.TestnetSwitchModal} />

@@ -41,6 +41,7 @@ export function getWithdrawQuoteRequestBase({
     swapper: accountAddress,
     recipient: accountAddress,
     routingPreference: TradingApi.RoutingPreference.BEST_PRICE,
+    autoSlippage: TradingApi.AutoSlippage.DEFAULT,
     ...buildEarnQuoteGasParams(),
   }
 }

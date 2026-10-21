@@ -1,12 +1,10 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex, spacing, Text, TouchableArea } from '@universe/mycelium'
 import { useMedia, useScrollbarStyles, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { type ComponentRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useUpdateScrollLock } from 'uniswap/src/components/modals/ScrollLock'
-import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
-import { NetworkFilterV2 } from 'uniswap/src/components/network/NetworkFilterV2/NetworkFilterV2'
+import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter/NetworkFilter'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { EXPANDABLE_ASSET_SEARCH_ISSUER_ROW_RIGHT_INSET_PX } from 'uniswap/src/features/expandableAsset/expandableAssetLayout'
 import { useFilterCallbacks } from 'uniswap/src/features/search/SearchModal/hooks/useFilterCallbacks'
@@ -21,7 +19,9 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useDebounce } from 'utilities/src/time/timing'
 import { AuctionHoverCard } from '~/components/HoverCard/AuctionHoverCard/AuctionHoverCard'
+import { PoolHoverCard } from '~/components/HoverCard/PoolHoverCard/PoolHoverCard'
 import { TokenHoverCard } from '~/components/HoverCard/TokenHoverCard/TokenHoverCard'
+import { WalletHoverCard } from '~/components/HoverCard/WalletHoverCard/WalletHoverCard'
 import { useModalState } from '~/hooks/useModalState'
 
 const SEARCH_MODAL_WIDTH = {
@@ -36,6 +36,12 @@ const HOVER_CARD_OFFSET = 8
 // Compensates for the RWA issuer sub-row's extra nesting; imported (not hardcoded) to stay in sync with its layout.
 const RWA_ISSUER_ROW_HOVER_CARD_OFFSET = HOVER_CARD_OFFSET + EXPANDABLE_ASSET_SEARCH_ISSUER_ROW_RIGHT_INSET_PX
 
+const SEARCH_HOVER_CARD_PROPS = {
+  childOwnsPressFeedback: true,
+  placement: 'right-start',
+  offsetFromScrollContainerEdge: true,
+} as const
+
 const LIST_CONTENT_CONTAINER_STYLE = { paddingBottom: spacing.spacing24 }
 
 function useHoverCardWrapper({
@@ -45,6 +51,7 @@ function useHoverCardWrapper({
   containerWidth: number
   onNavigate: () => void
 }): SearchModalRowWrapper {
+  const { defaultChainId } = useEnabledChains()
   return useCallback<SearchModalRowWrapper>(
     (props): JSX.Element => {
       const { element } = props
@@ -52,10 +59,8 @@ function useHoverCardWrapper({
         return (
           <AuctionHoverCard
             auction={props.auction}
-            childOwnsPressFeedback
-            placement="right-start"
+            {...SEARCH_HOVER_CARD_PROPS}
             offset={HOVER_CARD_OFFSET}
-            offsetFromScrollContainerEdge
             widthOffset={HOVER_CARD_OFFSET}
             containerWidth={containerWidth}
             onNavigate={onNavigate}
@@ -64,13 +69,36 @@ function useHoverCardWrapper({
           </AuctionHoverCard>
         )
       }
+      if (props.variant === 'pool') {
+        return (
+          <PoolHoverCard
+            pool={props.pool}
+            {...SEARCH_HOVER_CARD_PROPS}
+            offset={HOVER_CARD_OFFSET}
+            containerWidth={containerWidth}
+          >
+            {element}
+          </PoolHoverCard>
+        )
+      }
+      if (props.variant === 'wallet') {
+        return (
+          <WalletHoverCard
+            address={props.address}
+            // Search wallets are EVM addresses; the balance query spans chains, so this only picks the explorer.
+            chainId={defaultChainId}
+            {...SEARCH_HOVER_CARD_PROPS}
+            offset={HOVER_CARD_OFFSET}
+          >
+            {element}
+          </WalletHoverCard>
+        )
+      }
       return (
         <TokenHoverCard
           currencyInfo={props.currencyInfo}
-          childOwnsPressFeedback
-          placement="right-start"
+          {...SEARCH_HOVER_CARD_PROPS}
           offset={props.variant === 'rwaIssuerChild' ? RWA_ISSUER_ROW_HOVER_CARD_OFFSET : HOVER_CARD_OFFSET}
-          offsetFromScrollContainerEdge
           widthOffset={HOVER_CARD_OFFSET}
           containerWidth={containerWidth}
           onNavigate={onNavigate}
@@ -79,7 +107,7 @@ function useHoverCardWrapper({
         </TokenHoverCard>
       )
     },
-    [containerWidth, onNavigate],
+    [containerWidth, defaultChainId, onNavigate],
   )
 }
 
@@ -156,7 +184,6 @@ export const SearchModal = memo(function SearchModalInner({
   }, [onChangeText, closeSearch])
 
   const { chains: enabledChains } = useEnabledChains()
-  const isNetworkFilterV2Enabled = useFeatureFlag(FeatureFlags.NetworkFilterV2)
 
   const searchModalWidth = media.xxl ? SEARCH_MODAL_WIDTH.small : SEARCH_MODAL_WIDTH.default
 
@@ -207,21 +234,12 @@ export const SearchModal = memo(function SearchModalInner({
             py="$none"
             endAdornment={
               <Flex row alignItems="center">
-                {isNetworkFilterV2Enabled ? (
-                  <NetworkFilterV2
-                    includeAllNetworks
-                    chainIds={enabledChains}
-                    selectedChain={chainFilter}
-                    onPressChain={onChangeChainFilter}
-                  />
-                ) : (
-                  <NetworkFilter
-                    includeAllNetworks
-                    chainIds={enabledChains}
-                    selectedChain={chainFilter}
-                    onPressChain={onChangeChainFilter}
-                  />
-                )}
+                <NetworkFilter
+                  includeAllNetworks
+                  chainIds={enabledChains}
+                  selectedChain={chainFilter}
+                  onPressChain={onChangeChainFilter}
+                />
               </Flex>
             }
             // The long placeholder hard-clips in the narrow $sm input, so fall back to the short header copy there

@@ -1,12 +1,13 @@
 import { Flex, Text } from '@universe/mycelium'
 import { useDeviceDimensions } from '@universe/mycelium/theme-hooks-compat'
 import React, { ComponentProps, ReactNode, useCallback, useContext, useMemo } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import { scheduleOnRN } from 'react-native-worklets'
 import { OnboardingStackBaseParams, useOnboardingStackNavigation } from 'src/app/navigation/types'
 import { CloseButton } from 'src/components/buttons/CloseButton'
 import { CarouselContext } from 'src/components/carousel/Carousel'
+import { Trans } from 'ui/src'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 
 // oxlint-disable-next-line no-unused-vars -- biome-parity: oxlint is stricter here

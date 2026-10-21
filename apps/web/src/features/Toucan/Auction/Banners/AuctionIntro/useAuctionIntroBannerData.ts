@@ -30,14 +30,14 @@ function getAuctionBannerConfig({
   variant: AuctionIntroBannerVariant
   targetBlock: string | bigint | number | undefined
   durationLabel: string
-  isAuctionEndCountdown: boolean
+  /** Set for the countdowns that read as one sentence once the time resolves; the rest stack label over time. */
+  getOneLineCountdown?: (time: string) => string
 } {
   if (isPreBidPeriod) {
     return {
       variant: 'in-progress',
       targetBlock: auctionDetails?.preBidEndBlock,
       durationLabel: t('toucan.auction.introBanner.preBiddingEndsIn'),
-      isAuctionEndCountdown: false,
     }
   }
 
@@ -46,7 +46,7 @@ function getAuctionBannerConfig({
       variant: 'not-started',
       targetBlock: auctionDetails?.startBlock,
       durationLabel: t('toucan.auction.introBanner.auctionStartsIn'),
-      isAuctionEndCountdown: false,
+      getOneLineCountdown: (time) => t('toucan.auction.introBanner.auctionStartsInTime', { time }),
     }
   }
 
@@ -55,7 +55,6 @@ function getAuctionBannerConfig({
       variant: 'in-progress',
       targetBlock: allowlistEndBlock,
       durationLabel: t('toucan.auction.introBanner.generalSaleStartsIn'),
-      isAuctionEndCountdown: false,
     }
   }
 
@@ -63,7 +62,7 @@ function getAuctionBannerConfig({
     variant: 'in-progress',
     targetBlock: auctionDetails?.endBlock,
     durationLabel: t('toucan.auction.introBanner.auctionEndsIn'),
-    isAuctionEndCountdown: true,
+    getOneLineCountdown: (time) => t('toucan.auction.introBanner.remaining', { time }),
   }
 }
 
@@ -72,7 +71,8 @@ interface UseAuctionIntroBannerDataResult {
   variant: AuctionIntroBannerVariant
   durationRemaining: string | undefined
   durationLabel: string
-  isAuctionEndCountdown: boolean
+  /** One-sentence countdown (falls back to `durationLabel` until the time resolves); undefined for stacked countdowns */
+  oneLineCountdown: string | undefined
   /** Token accent color - used for indicator dot */
   tokenAccentColor: string
   backgroundGradientStyle: CSSProperties
@@ -146,7 +146,7 @@ export function useAuctionIntroBannerData(): UseAuctionIntroBannerDataResult {
     currentBlockNumber < allowlistEndBlock
 
   // Determine the variant, target block, and duration label based on progress state
-  const { variant, targetBlock, durationLabel, isAuctionEndCountdown } = getAuctionBannerConfig({
+  const { variant, targetBlock, durationLabel, getOneLineCountdown } = getAuctionBannerConfig({
     isPreBidPeriod,
     isNotStarted,
     isAllowlistOnlyWindow,
@@ -156,6 +156,11 @@ export function useAuctionIntroBannerData(): UseAuctionIntroBannerDataResult {
   })
 
   const durationRemaining = useDurationRemaining(auctionDetails?.chainId, Number(targetBlock))
+  const oneLineCountdown = getOneLineCountdown
+    ? durationRemaining
+      ? getOneLineCountdown(durationRemaining)
+      : durationLabel
+    : undefined
 
   // Show banner when auction is either not started or in progress
   // Only show banner once we have ALL data needed to compute accurate progress state:
@@ -179,7 +184,7 @@ export function useAuctionIntroBannerData(): UseAuctionIntroBannerDataResult {
     variant,
     durationRemaining,
     durationLabel,
-    isAuctionEndCountdown,
+    oneLineCountdown,
     tokenAccentColor,
     backgroundGradientStyle,
     isColorLoading,

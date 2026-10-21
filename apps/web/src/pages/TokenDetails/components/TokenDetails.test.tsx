@@ -1,10 +1,11 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
-import { AuctionType, type Auction } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { AuctionType, type Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { Token } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import { TestID } from '@universe/test'
 import type { ComponentProps, ReactNode } from 'react'
 import { logger } from 'utilities/src/logger/logger'
+import type { CurrentBlockState } from '~/features/Toucan/Auction/utils/resolveAuctionDisplayState'
 import { TokenDetailsContent } from '~/pages/TokenDetails/components/TokenDetails'
 import { TokenDetailsAuctionDisplayProvider } from '~/pages/TokenDetails/context/TokenDetailsAuctionDisplayProvider'
 import { TokenDetailsSourceState } from '~/pages/TokenDetails/context/tokenDetailsSourceState'
@@ -56,6 +57,7 @@ const mockToken = new Token(
 )
 let mockAuctionSource: TokenDetailsAuctionSource = { status: TokenDetailsSourceState.Disabled }
 let mockPools: TokenPoolState = { status: 'loading' }
+let mockCurrentBlock: CurrentBlockState = { status: 'success', blockNumber: 150n }
 let mockBannerShouldThrow = false
 let mockProvenanceShouldThrow = false
 let mockClaimShouldThrow = false
@@ -96,7 +98,7 @@ vi.mock('~/pages/TokenDetails/context/useTDPStore', () => ({
 vi.mock('~/features/Toucan/Auction/hooks/useAuctionDisplayDataSources', async (importOriginal) => ({
   ...(await importOriginal<typeof import('~/features/Toucan/Auction/hooks/useAuctionDisplayDataSources')>()),
   useAuctionDisplayDataSources: () => ({
-    currentBlock: { status: 'success', blockNumber: 150n },
+    currentBlock: mockCurrentBlock,
     currencyRaised: { status: 'idle' },
     pools: mockPools,
     refetchCurrentBlock: vi.fn(),
@@ -243,6 +245,7 @@ describe('TokenDetailsContent', () => {
   beforeEach(() => {
     mockAuctionSource = { status: TokenDetailsSourceState.Disabled }
     mockPools = { status: 'loading' }
+    mockCurrentBlock = { status: 'success', blockNumber: 150n }
     mockBannerShouldThrow = false
     mockProvenanceShouldThrow = false
     mockClaimShouldThrow = false
@@ -271,10 +274,12 @@ describe('TokenDetailsContent', () => {
     expect(screen.getByText('Token swap')).toBeInTheDocument()
     expect(container.querySelector('[aria-busy="true"]')).toBeNull()
 
+    // A pool lookup that goes back to loading keeps the banner it already confirmed, so its impression
+    // does not fire twice for one auction, and Swap is not unmounted again.
     mockPools = { status: 'loading' }
     rerender(<TokenDetailsWithDisplay />)
     expect(screen.getByText('Token swap')).toBeInTheDocument()
-    expect(container.querySelector('[aria-busy="true"]')).toBeNull()
+    expect(screen.getByTestId(TestID.TokenDetailsAuctionBanner)).not.toHaveAttribute('aria-busy', 'true')
   })
 
   it('keeps the normal chart and swap without provenance when the auction resolves as not found', () => {
@@ -456,6 +461,36 @@ describe('TokenDetailsContent', () => {
       expect(screen.getByTestId(TestID.TokenDetailsAuctionListModal)).toBeInTheDocument()
       // Both CCA launch types list, so the crowd-launch primary is a row too.
       expect(screen.getAllByTestId(TestID.TokenDetailsAuctionListRow)).toHaveLength(2)
+    },
+  )
+
+  it.each(['sm', 'xxl'] as const)(
+    'holds the skeleton rather than flashing either layout when pools resolve before the phase at %s',
+    (mediaSize) => {
+      mockMediaSize(mediaSize)
+      mockAuctionSource = {
+        status: TokenDetailsSourceState.Found,
+        auction: { ...mockAuction, auctionType: AuctionType.CUSTOM },
+        auctions: [{ ...mockAuction, auctionType: AuctionType.CUSTOM }],
+      }
+      mockPools = { status: 'success', poolCount: 0 }
+      mockCurrentBlock = { status: 'loading' }
+
+      const { container, rerender } = render(<TokenDetailsWithDisplay />)
+
+      // NoPool alone cannot pick a layout: an Upcoming/Live phase would take trading away, so the
+      // skeleton holds until the chain head says which.
+      expect(screen.queryByTestId(TestID.TokenDetailsAuctionCard)).toBeNull()
+      expect(screen.queryByText('Token swap')).toBeNull()
+      expect(container.querySelector('[aria-busy="true"]')).not.toBeNull()
+
+      mockCurrentBlock = { status: 'success', blockNumber: 250n }
+      rerender(<TokenDetailsWithDisplay />)
+
+      expect(screen.queryByTestId(TestID.TokenDetailsAuctionCard)).toBeNull()
+      expect(screen.getByText('Token swap')).toBeInTheDocument()
+      expect(screen.getByText('Buy or sell token')).toBeInTheDocument()
+      expect(container.querySelector('[aria-busy="true"]')).toBeNull()
     },
   )
 

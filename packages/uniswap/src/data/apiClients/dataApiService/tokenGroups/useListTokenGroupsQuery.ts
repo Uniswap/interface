@@ -22,23 +22,37 @@ export function useListTokenGroupsQuery({
   chainIds,
   orderBy,
   ascending = false,
+  searchQuery,
   enabled = true,
 }: {
   categoryId: string | undefined
   chainIds: number[]
   orderBy: TokensOrderBy
   ascending?: boolean
+  /**
+   * Server-side search over the category's groups (name, ticker, member name or symbol; a `0x` query matches
+   * member addresses). Callers drop blank input so an empty search box shares the unsearched query.
+   */
+  searchQuery?: string
   enabled?: boolean
 }): UseInfiniteQueryResult<InfiniteData<ListTokenGroupsResponse>> {
   const { chains: enabledChainIds } = useEnabledChains()
   const resolvedChainIds = chainIds.length > 0 ? chainIds : enabledChainIds
 
   return useInfiniteQuery({
-    queryKey: [ReactQueryCacheKey.DataApiService, 'listTokenGroups', categoryId, resolvedChainIds, orderBy, ascending],
+    queryKey: [
+      ReactQueryCacheKey.DataApiService,
+      'listTokenGroups',
+      categoryId,
+      resolvedChainIds,
+      orderBy,
+      ascending,
+      searchQuery,
+    ],
     queryFn: ({ pageParam }) =>
       dataApiServiceClientV2.listTokenGroups({
         chainIds: resolvedChainIds,
-        filter: { categoryIds: categoryId ? [categoryId] : [] },
+        filter: { categoryIds: categoryId ? [categoryId] : [], ...(searchQuery !== undefined && { searchQuery }) },
         sort: { orderBy, ascending },
         page: { pageSize: TOKEN_GROUPS_PAGE_SIZE, pageToken: pageParam },
         sparklineDuration: HistoryDuration.DAY,

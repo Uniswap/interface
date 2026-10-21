@@ -1,14 +1,16 @@
-import type { AuctionOption } from 'uniswap/src/components/lists/items/types'
+import type { AuctionOption, PoolOption } from 'uniswap/src/components/lists/items/types'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 
 /** `rwaIssuerChild` is the RwaCollection's expanded issuer sub-rows (the collection's child rows) — distinguished
  *  from `token` because those rows sit deeper in the expandable shell's nesting and need a different offset. */
 export type SearchModalRowVariant = 'token' | 'rwaIssuerChild'
 
-/** Web: wraps a row with its hover card — the token price chart card for token rows, the auction card for auction rows. */
+/** Web: wraps a row with its matching hover card (token, auction, pool, or wallet). */
 export type SearchModalRowWrapperProps = { element: JSX.Element } & (
   | { variant: SearchModalRowVariant; currencyInfo: CurrencyInfo }
   | { variant: 'auction'; auction: AuctionOption }
+  | { variant: 'pool'; pool: PoolOption }
+  | { variant: 'wallet'; address: Address }
 )
 
 export type SearchModalRowWrapper = (props: SearchModalRowWrapperProps) => JSX.Element

@@ -23,7 +23,8 @@ interface DappRequestQueueContextValue {
   request: WithMetadata<DappRequestStoreItem> | undefined
   currentAccount: Account // Account the request is going to (not necessarily the active account)
   dappUrl: string
-  frameUrl?: string
+  tabUrl: string
+  isCrossOriginFrame: boolean
   dappIconUrl: string
   currentIndex: number
   totalRequestCount: number
@@ -68,8 +69,9 @@ export function DappRequestQueueProvider({ children }: PropsWithChildren): JSX.E
     setPrevTotalRequestCount(totalRequestCount)
   }
 
-  const dappUrl = extractBaseUrl(request?.senderTabInfo.url) || ''
-  const frameUrl = extractBaseUrl(request?.senderTabInfo.frameUrl) || undefined
+  const dappUrl = extractBaseUrl(request?.senderTabInfo.frameUrl) || ''
+  const tabUrl = extractBaseUrl(request?.senderTabInfo.tabUrl) || ''
+  const isCrossOriginFrame = request?.senderTabInfo.isCrossOriginFrame ?? false
   const dappIconUrl = request?.senderTabInfo.favIconUrl || ''
 
   let currentAccount = activeAccount
@@ -101,7 +103,7 @@ export function DappRequestQueueProvider({ children }: PropsWithChildren): JSX.E
         sendAnalyticsEvent(ExtensionEventName.DappRequest, {
           action: DappRequestAction.Accept,
           requestType: request.dappRequest.type,
-          dappUrl: extractBaseUrl(request.senderTabInfo.url),
+          dappUrl: extractBaseUrl(request.senderTabInfo.frameUrl),
           chainId: lastChainId,
           activeConnectedAddress,
           connectedAddresses,
@@ -134,7 +136,7 @@ export function DappRequestQueueProvider({ children }: PropsWithChildren): JSX.E
         sendAnalyticsEvent(ExtensionEventName.DappRequest, {
           action: DappRequestAction.Reject,
           requestType: requestToCancel.dappRequest.type,
-          dappUrl: extractBaseUrl(requestToCancel.senderTabInfo.url),
+          dappUrl: extractBaseUrl(requestToCancel.senderTabInfo.frameUrl),
           chainId: lastChainId,
           activeConnectedAddress,
           connectedAddresses,
@@ -173,7 +175,8 @@ export function DappRequestQueueProvider({ children }: PropsWithChildren): JSX.E
     totalRequestCount,
     request,
     dappUrl,
-    frameUrl,
+    tabUrl,
+    isCrossOriginFrame,
     dappIconUrl,
     currentAccount,
     onConfirm,

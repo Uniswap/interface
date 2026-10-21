@@ -1,5 +1,6 @@
 import type { Currency } from '@uniswap/sdk-core'
 import { SynchronizedHeartbeatsConfigKey } from '@universe/gating'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ChartSkeleton } from '~/components/Charts/LoadingState'
 import { PriceChart } from '~/components/Charts/PriceChart'
@@ -22,6 +23,9 @@ interface TDPPriceChartPanelProps {
   isStablecoin?: boolean
   /** Present only for a confirmed Custom auction with no pool. */
   auctionOnlyPhase?: AuctionDisplayPhase
+  /** True while the token could still resolve to auction-only, so neither empty-chart copy is known to be right yet. */
+  isAuctionOnlyPending?: boolean
+  onPriceDiscoveryViewed?: () => void
 }
 
 export function TDPPriceChartPanel({
@@ -34,6 +38,8 @@ export function TDPPriceChartPanel({
   currency,
   isStablecoin,
   auctionOnlyPhase,
+  isAuctionOnlyPending,
+  onPriceDiscoveryViewed,
 }: TDPPriceChartPanelProps): JSX.Element {
   const { t } = useTranslation()
   // The heartbeat's price tick refetches these queries — a self-poll would double it.
@@ -51,15 +57,40 @@ export function TDPPriceChartPanel({
     disablePricePolling: isSynchronizedHeartbeatsEnabled,
     keepPreviousData: false,
   })
+  // Before and during the auction there is no price to plot, so the empty chart explains the wait
+  // instead of reporting missing data. A token that already has history keeps its real chart, and a
+  // failed query keeps the error framing so an outage is not mistaken for price discovery.
+  const isPriceDiscoveryPhase =
+    auctionOnlyPhase === AuctionDisplayPhase.Upcoming || auctionOnlyPhase === AuctionDisplayPhase.Live
+  const showPriceDiscovery = showInvalidSkeleton && isPriceDiscoveryPhase && !priceQuery.loading && !isError
+  // The price query settles before the auction lookup, its pool, and the chain head do, so naming the
+  // chart empty on its own would print the no-data copy and then swap it for price discovery a moment
+  // later. Until the auction-only question is answered, hold the same bare skeleton a pending price
+  // query shows rather than narrate a state that is still in flight. A failed query can never become
+  // price discovery, so it reports the error straight away.
+  const isResolving = priceQuery.loading || (Boolean(isAuctionOnlyPending) && !isError)
+
+  useEffect(() => {
+    if (showPriceDiscovery) {
+      onPriceDiscoveryViewed?.()
+    }
+  }, [onPriceDiscoveryViewed, showPriceDiscovery])
 
   if (showInvalidSkeleton) {
-    if (auctionOnlyPhase === AuctionDisplayPhase.Live && !priceQuery.loading) {
+    if (showPriceDiscovery) {
       return (
         <ChartSkeleton
           type={ChartType.PRICE}
           height={EXPLORE_CHART_HEIGHT_PX}
-          errorTitle={t('tdp.auction.chart.priceDiscovery')}
+          errorTitle={
+            auctionOnlyPhase === AuctionDisplayPhase.Live
+              ? t('tdp.auction.chart.priceDiscovery')
+              : t('tdp.auction.chart.waitingForPriceDiscovery')
+          }
           errorText={t('tdp.auction.chart.checkBack', { symbol: currency.symbol ?? t('tdp.symbolNotFound') })}
+          errorBackgroundColor="$surface2"
+          errorBorderColor="transparent"
+          hideErrorIcon
         />
       )
     }
@@ -72,9 +103,7 @@ export function TDPPriceChartPanel({
         type={ChartType.PRICE}
         height={EXPLORE_CHART_HEIGHT_PX}
         errorTitle={isNoData ? t('chart.noData.price.title') : t('chart.missingData')}
-        errorText={
-          priceQuery.loading ? undefined : isNoData ? t('chart.noData.tokens.description') : t('chart.error.tokens')
-        }
+        errorText={isResolving ? undefined : isNoData ? t('chart.noData.tokens.description') : t('chart.error.tokens')}
       />
     )
   }

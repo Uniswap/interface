@@ -36,7 +36,7 @@ export function DappRequestHeader({
           ? colors.neutral2.val
           : colors.neutral1.val
 
-  const urlLabel = useRequestUrlLabel(dappInfo.url, dappInfo.frameUrl)
+  const urlLabel = useRequestUrlLabel(dappInfo)
 
   return (
     <Flex gap="$spacing8">
@@ -68,19 +68,18 @@ export function DappRequestHeader({
 }
 
 /**
- * Formats the request url for display, showing iframe context when applicable
- * @param dappUrl - The top-level page URL
- * @param frameUrl - The actual frame URL (if in iframe)
+ * Formats the request url for display. A cross-origin iframe reads "frame via parent" so the user
+ * sees both the origin asking and the page embedding it.
  */
-function useRequestUrlLabel(dappUrl: string, frameUrl?: string): string {
+function useRequestUrlLabel({ url, tabUrl, isCrossOriginFrame }: DappConnectionInfo): string {
   const { t } = useTranslation()
 
-  if (!frameUrl) {
-    return formatDappURL(dappUrl)
+  if (!isCrossOriginFrame || !tabUrl) {
+    return formatDappURL(url)
   }
 
   return t('dapp.request.url.viaFormat', {
-    frameUrl: formatDappURL(frameUrl),
-    parentUrl: formatDappURL(dappUrl),
+    frameUrl: formatDappURL(url),
+    parentUrl: formatDappURL(tabUrl),
   })
 }

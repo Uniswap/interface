@@ -15,7 +15,7 @@ describe('AuctionIntroBanner', () => {
       variant: 'in-progress',
       durationRemaining: '3h 59m',
       durationLabel: 'Auction ends in',
-      isAuctionEndCountdown: true,
+      oneLineCountdown: '3h 59m remaining',
       tokenAccentColor: '#7482FF',
       backgroundGradientStyle: {},
       isColorLoading: false,
@@ -38,7 +38,7 @@ describe('AuctionIntroBanner', () => {
       variant: 'in-progress',
       durationRemaining: undefined,
       durationLabel: 'Auction ends in',
-      isAuctionEndCountdown: true,
+      oneLineCountdown: 'Auction ends in',
       tokenAccentColor: '#7482FF',
       backgroundGradientStyle: {},
       isColorLoading: false,
@@ -57,13 +57,31 @@ describe('AuctionIntroBanner', () => {
     expect(screen.getByText('See full details')).toBeInTheDocument()
   })
 
-  it('keeps the label for a presale or upcoming countdown', () => {
+  it('shows the upcoming countdown on one line', () => {
     vi.mocked(useAuctionIntroBannerData).mockReturnValue({
       shouldShowBanner: true,
       variant: 'not-started',
       durationRemaining: '3h 59m',
       durationLabel: 'Auction starts in',
-      isAuctionEndCountdown: false,
+      oneLineCountdown: 'Auction starts in 3h 59m',
+      tokenAccentColor: '#7482FF',
+      backgroundGradientStyle: {},
+      isColorLoading: false,
+    })
+    render(<AuctionIntroBanner onLearnMorePress={vi.fn()} />)
+
+    expect(screen.getByText('Auction starts in 3h 59m')).toBeInTheDocument()
+    expect(screen.queryByText('Auction starts in')).toBeNull()
+    expect(screen.queryByText('3h 59m')).toBeNull()
+  })
+
+  it('falls back to the label until the start countdown resolves', () => {
+    vi.mocked(useAuctionIntroBannerData).mockReturnValue({
+      shouldShowBanner: true,
+      variant: 'not-started',
+      durationRemaining: undefined,
+      durationLabel: 'Auction starts in',
+      oneLineCountdown: 'Auction starts in',
       tokenAccentColor: '#7482FF',
       backgroundGradientStyle: {},
       isColorLoading: false,
@@ -71,6 +89,23 @@ describe('AuctionIntroBanner', () => {
     render(<AuctionIntroBanner onLearnMorePress={vi.fn()} />)
 
     expect(screen.getByText('Auction starts in')).toBeInTheDocument()
+  })
+
+  it('keeps the stacked label for a presale countdown', () => {
+    vi.mocked(useAuctionIntroBannerData).mockReturnValue({
+      shouldShowBanner: true,
+      variant: 'in-progress',
+      durationRemaining: '3h 59m',
+      durationLabel: 'General sale starts in',
+      oneLineCountdown: undefined,
+      tokenAccentColor: '#7482FF',
+      backgroundGradientStyle: {},
+      isColorLoading: false,
+    })
+    render(<AuctionIntroBanner onLearnMorePress={vi.fn()} />)
+
+    expect(screen.getByText('General sale starts in')).toBeInTheDocument()
+    expect(screen.getByText('3h 59m')).toBeInTheDocument()
     expect(screen.queryByText('3h 59m remaining')).toBeNull()
   })
 })

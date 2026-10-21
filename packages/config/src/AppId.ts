@@ -11,5 +11,6 @@ export enum AppId {
   Extension = 'extension',
   MissionControl = 'mission-control',
   Mobile = 'mobile',
+  Unilens = 'unilens',
   Web = 'web',
 }

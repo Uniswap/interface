@@ -10,7 +10,7 @@ import { getEarnPlanTransactionType } from 'uniswap/src/features/earn/planActivi
 import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isPlanTransactionInfo } from 'uniswap/src/features/transactions/types/utils'
 import { shortenHash } from 'utilities/src/addresses'
-import { AddressHoverCard, useShowsAddressHoverCard } from '~/components/AddressHoverCard/AddressHoverCard'
+import { useShowsWalletHoverCard, WalletHoverCard } from '~/components/HoverCard/WalletHoverCard/WalletHoverCard'
 import { InternalLink } from '~/components/InternalLink'
 import type { ActivityProtocolInfo } from '~/pages/Portfolio/Activity/ActivityTable/activityTableModels'
 import { AddressWithAvatar } from '~/pages/Portfolio/Activity/ActivityTable/AddressWithAvatar'
@@ -143,7 +143,7 @@ function PrioritizedContent({
   content: ActivityAddressContent | undefined
   t: TFunction
 }): JSX.Element | null {
-  const showsHoverCard = useShowsAddressHoverCard(content?.type === 'address' ? content.address : undefined)
+  const showsHoverCard = useShowsWalletHoverCard(content?.type === 'address' ? content.address : undefined)
 
   if (!content) {
     return null
@@ -203,14 +203,14 @@ function PrioritizedContent({
     case 'address': {
       return (
         <Flex row alignItems="center" gap="$gap4">
-          <AddressHoverCard address={content.address} chainId={content.chainId}>
+          <WalletHoverCard address={content.address} chainId={content.chainId}>
             <InternalLink
               to={buildPortfolioUrl({ externalAddress: content.address })}
               hoverStyle={ClickableTamaguiStyle.hoverStyle}
             >
               <AddressWithAvatar address={content.address} />
             </InternalLink>
-          </AddressHoverCard>
+          </WalletHoverCard>
           {!showsHoverCard && (
             <Flex onPress={stopPropagation}>
               <CopyHelper

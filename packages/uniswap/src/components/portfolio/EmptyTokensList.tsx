@@ -23,7 +23,7 @@ export const EmptyTokensList = memo(function EmptyTokensListInner({
   if (isLoadingWithoutCachedValues) {
     return (
       <Flex px={isMobileApp ? '$spacing24' : undefined}>
-        <Loader.Token withPrice repeat={6} />
+        <Loader.Token withPrice gap={isMobileApp ? '$none' : undefined} repeat={6} />
       </Flex>
     )
   }

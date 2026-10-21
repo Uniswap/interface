@@ -26,6 +26,9 @@
       "path": "./apps/extension"
     },
     {
+      "path": "./apps/unilens"
+    },
+    {
       "path": "./packages/config"
     },
     {

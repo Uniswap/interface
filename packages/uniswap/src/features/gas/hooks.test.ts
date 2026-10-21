@@ -1,5 +1,52 @@
-import type { GasStrategy } from '@universe/api'
+import { type Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { type GasStrategy, SharedQueryClient } from '@universe/api'
+import { UniverseChainId } from '@universe/chains'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
+import { PATHUSD_TEMPO, USDC_E_TEMPO } from 'uniswap/src/constants/tokens'
 import { convertGasFeeToDisplayValue } from 'uniswap/src/features/gas/convertGasFeeToDisplayValue'
+import { useTransactionGasWarning } from 'uniswap/src/features/gas/hooks'
+import { type DerivedSendInfo } from 'uniswap/src/features/transactions/send/types'
+import { renderHook, waitFor } from 'uniswap/src/test/test-utils'
+import { CurrencyField } from 'uniswap/src/types/currency'
+
+const mockFetchTempoFeeTokenPreference = vi.fn<(accountAddress?: Address) => Promise<Address | null>>()
+
+vi.mock('@universe/gating', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@universe/gating')>()
+  return { ...actual, useFeatureFlag: vi.fn() }
+})
+
+vi.mock('uniswap/src/features/gas/tempoFeeToken/tempoFeeToken', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('uniswap/src/features/gas/tempoFeeToken/tempoFeeToken')>()
+  return {
+    ...actual,
+    getTempoFeeTokenPreferenceQueryOptions: (
+      accountAddress?: Address,
+    ): ReturnType<typeof actual.getTempoFeeTokenPreferenceQueryOptions> => ({
+      ...actual.getTempoFeeTokenPreferenceQueryOptions(accountAddress),
+      queryFn: (): Promise<Address | null> => mockFetchTempoFeeTokenPreference(accountAddress),
+    }),
+  }
+})
+
+vi.mock('uniswap/src/features/address/useIsSmartContractAddress', () => ({
+  useIsSmartContractAddress: (): unknown => ({ isSmartContractAddress: false, loading: false }),
+}))
+
+vi.mock('uniswap/src/features/portfolio/api', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('uniswap/src/features/portfolio/api')>()
+  return {
+    ...actual,
+    useOnChainCurrencyBalance: (currency: Currency | undefined): unknown => ({
+      balance: currency
+        ? CurrencyAmount.fromRawAmount(currency, currency.equals(USDC_E_TEMPO) ? '100000000' : '0')
+        : undefined,
+      isLoading: false,
+      error: undefined,
+    }),
+  }
+})
 
 const strategy: GasStrategy = {
   limitInflationFactor: 1.15,
@@ -39,5 +86,44 @@ describe(convertGasFeeToDisplayValue, () => {
 
   it('applies the ratio when hasOverrides is omitted (defaults to inflation-adjusted path)', () => {
     expect(convertGasFeeToDisplayValue({ gasFee: '1150', gasStrategy: strategy })).toBe('1000')
+  })
+})
+
+describe(useTransactionGasWarning, () => {
+  const ACCOUNT = '0x889b6fb6af37bfaa257e1fcf2913afe0b42313cf'
+  const derivedSendInfo = {
+    chainId: UniverseChainId.Tempo,
+    currencyAmounts: { [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(USDC_E_TEMPO, '50000000') },
+    currencyBalances: { [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(USDC_E_TEMPO, '100000000') },
+  } as unknown as DerivedSendInfo
+
+  beforeEach(() => {
+    SharedQueryClient.clear()
+    mockFetchTempoFeeTokenPreference.mockResolvedValue(null)
+    vi.mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.TempoFeeTokenPreference)
+  })
+
+  it('does not block a USDC.e send from an account with no pathUSD and no stored fee token', async () => {
+    const { result } = renderHook(() =>
+      useTransactionGasWarning({
+        accountAddress: ACCOUNT,
+        derivedInfo: derivedSendInfo,
+        gasFee: '1000000000000000',
+        sendCurrency: USDC_E_TEMPO,
+      }),
+    )
+
+    await waitFor(() => expect(mockFetchTempoFeeTokenPreference).toHaveBeenCalled())
+    await waitFor(() => expect(SharedQueryClient.isFetching()).toBe(0))
+    expect(result.current).toBeUndefined()
+  })
+
+  it('checks pathUSD when the transaction is not a plain send', async () => {
+    const { result } = renderHook(() =>
+      useTransactionGasWarning({ accountAddress: ACCOUNT, derivedInfo: derivedSendInfo, gasFee: '1000000000000000' }),
+    )
+
+    await waitFor(() => expect(result.current?.type).toBe(WarningLabel.InsufficientGasFunds))
+    expect(result.current?.currency).toBe(PATHUSD_TEMPO)
   })
 })

@@ -25,15 +25,12 @@ export const TRIGGER_BUTTON_VARIANT_CLASS_NAMES = {
   disabled: 'cursor-default opacity-60',
 } as const
 
-/**
- * NETWORK_FILTER_BUTTON_STYLES, mirrored per size (heights 48/40/32/28;
- * small/xsmall tighten radius and gap exactly like the legacy record).
- */
+// No per-size gap: legacy `Dropdown` wraps label + chevron in its own 8px-gap row, so its size gaps never applied.
 export const TRIGGER_BUTTON_SIZE_CLASS_NAMES: Record<TriggerButtonCompatSize, string> = {
   large: 'h-[48px] pl-[16px] pr-[12px]',
   medium: 'h-[40px] pl-[12px] pr-[6px]',
-  small: 'h-[32px] rounded-[12px] pl-[12px] pr-[6px] gap-[6px]',
-  xsmall: 'h-[28px] rounded-[12px] pl-[6px] pr-[6px] gap-[4px]',
+  small: 'h-[32px] rounded-[12px] pl-[12px] pr-[6px]',
+  xsmall: 'h-[28px] rounded-[12px] pl-[6px] pr-[6px]',
 }
 
 /** The rotating chevron (legacy RotatableChevron animation="200ms"): transform-only transition. */

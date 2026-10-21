@@ -20,4 +20,6 @@ export type SwitchProps = {
   backgroundColor?: string
   /** Web only: extra inline styles merged in while disabled (legacy Tamagui `disabledStyle`). */
   disabledStyle?: CSSProperties
+  /** Web only: accessible name, for when the visible label beside the switch is shortened. */
+  'aria-label'?: string
 }

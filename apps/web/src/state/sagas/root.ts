@@ -23,7 +23,6 @@ import { wrapSaga } from '~/state/sagas/transactions/wrapSaga'
 const sagas = [
   wrapSaga,
   revertCancellationSaga,
-  liquiditySaga,
   watchTransactionsSaga,
   lpIncentivesClaimSaga,
   submitAuctionLaunchSaga,
@@ -45,6 +44,7 @@ const monitoredSagas: Record<string, MonitoredSaga> = {
     reducer: planReducer,
     actions: planActions,
   },
+  [liquiditySaga.name]: liquiditySaga,
 }
 export const monitoredSagaReducers = getMonitoredSagaReducers(monitoredSagas)
 

@@ -1,9 +1,13 @@
 import { Flex, Text } from '@universe/mycelium'
+import {
+  FOR_CONNECTING_BACKGROUND_DARK,
+  FOR_CONNECTING_BACKGROUND_LIGHT,
+  UNISWAP_LOGO_LARGE,
+} from '@universe/mycelium/assets'
 import { useTranslation } from 'react-i18next'
 import { Image, ImageBackground, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useIsDarkMode } from 'ui/src'
-import { FOR_CONNECTING_BACKGROUND_DARK, FOR_CONNECTING_BACKGROUND_LIGHT, UNISWAP_LOGO_LARGE } from 'ui/src/assets'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
 import {

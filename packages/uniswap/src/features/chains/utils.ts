@@ -1,10 +1,12 @@
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
-import { areEvmAddressesEqual, Platform, UniverseChainId } from '@universe/chains'
+import { areEvmAddressesEqual, isSVMChain, Platform, UniverseChainId } from '@universe/chains'
 import { AppId, getConfig } from '@universe/config'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { ALL_CHAIN_IDS, getChainInfo, ORDERED_CHAINS } from 'uniswap/src/features/chains/chainInfo'
+import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/defaults'
+import { DEFAULT_NATIVE_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
 import { EnabledChainsInfo, GqlChainId, NetworkLayer } from 'uniswap/src/features/chains/types'
 // Some code from the web app uses chainId types as numbers
 // This validates them as coerces into SupportedChainId
@@ -337,6 +339,11 @@ function getDefaultChainId({
   }
 
   return isTestnetModeEnabled ? UniverseChainId.Sepolia : UniverseChainId.Mainnet
+}
+
+/** Platform-wide native sentinel the data API accepts for any chain: zero address on EVM, system program on SVM. */
+export function getDefaultNativeAddress(chainId: UniverseChainId): string {
+  return isSVMChain(chainId) ? DEFAULT_NATIVE_ADDRESS_SOLANA : DEFAULT_NATIVE_ADDRESS
 }
 
 /** Returns all stablecoins for a given chainId. */

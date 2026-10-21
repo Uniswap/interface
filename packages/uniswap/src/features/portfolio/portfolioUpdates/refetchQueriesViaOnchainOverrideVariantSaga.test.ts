@@ -1,13 +1,16 @@
 import 'utilities/src/logger/mocks'
-import { PartialMessage } from '@bufbuild/protobuf'
+import { isMessage, PartialMessage, type PlainMessage, toPlainMessage } from '@bufbuild/protobuf'
 import { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { Balance } from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import { SharedQueryClient } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
-import { OnChainMap } from 'uniswap/src/features/portfolio/portfolioUpdates/fetchOnChainBalances'
+import { runSaga } from 'redux-saga'
+import { fetchOnChainBalances, OnChainMap } from 'uniswap/src/features/portfolio/portfolioUpdates/fetchOnChainBalances'
 import {
   getBalanceOverridesToApply,
   getCurrenciesToUpdate,
   mergeOnChainBalances,
+  updatePortfolioCache,
 } from 'uniswap/src/features/portfolio/portfolioUpdates/refetchQueriesViaOnchainOverrideVariantSaga'
 import {
   TransactionDetails,
@@ -15,6 +18,12 @@ import {
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+
+// Network-backed; the rest of the module stays real.
+vi.mock('uniswap/src/features/portfolio/portfolioUpdates/fetchOnChainBalances', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/features/portfolio/portfolioUpdates/fetchOnChainBalances')>()),
+  fetchOnChainBalances: vi.fn(),
+}))
 
 const MOCK_TOKEN_ADDRESS = '0x1234567890123456789012345678901234567890'
 const MOCK_OTHER_ADDRESS = '0x9876543210987654321098765432109876543210'
@@ -410,5 +419,48 @@ describe('getCurrenciesToUpdate', () => {
 
     const result = getCurrenciesToUpdate(mockTransaction, null)
     expect(result).toBeNull()
+  })
+})
+
+describe('updatePortfolioCache', () => {
+  const queryKey = ['GetPortfolio', { evmAddress: MOCK_OTHER_ADDRESS }]
+  const currencyId = buildCurrencyId(UniverseChainId.Mainnet, MOCK_TOKEN_ADDRESS).toLowerCase()
+
+  afterEach(() => {
+    SharedQueryClient.removeQueries({ queryKey })
+  })
+
+  it('writes plain data back to the persisted portfolio query', async () => {
+    // The GetPortfolio queryFn caches plain data; the saga re-wraps it in Messages to merge.
+    SharedQueryClient.setQueryData(
+      queryKey,
+      toPlainMessage(
+        new GetPortfolioResponse({
+          portfolio: {
+            balances: [
+              {
+                token: { chainId: UniverseChainId.Mainnet, address: MOCK_TOKEN_ADDRESS },
+                amount: { amount: 2, raw: MOCK_BALANCE_2_ETH },
+                valueUsd: 20,
+              },
+            ],
+          },
+        }),
+      ),
+    )
+    vi.mocked(fetchOnChainBalances).mockResolvedValue(
+      new Map([[currencyId, { amount: { amount: 4, raw: MOCK_BALANCE_4_ETH } }]]),
+    )
+
+    await runSaga({}, updatePortfolioCache, {
+      ownerAddress: MOCK_OTHER_ADDRESS,
+      currencyIds: new Set([currencyId]),
+      queryKey,
+    }).toPromise()
+
+    const cached = SharedQueryClient.getQueryData<PlainMessage<GetPortfolioResponse>>(queryKey)
+    // A raw Message here is skipped by the dev persister and saved as wire-format JSON in prod.
+    expect(isMessage(cached)).toBe(false)
+    expect(cached?.portfolio?.balances[0]?.amount).toEqual({ amount: 4, raw: MOCK_BALANCE_4_ETH })
   })
 })

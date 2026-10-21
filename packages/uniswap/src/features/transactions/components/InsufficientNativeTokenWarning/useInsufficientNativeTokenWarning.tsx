@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Text } from '@universe/mycelium'
 import { ComponentProps, useMemo } from 'react'
-import { Trans } from 'react-i18next'
+import { Trans } from 'ui/src'
 import { Warning, WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -57,7 +57,7 @@ export function useInsufficientNativeTokenWarning({
   const nativeCurrency = warning?.currency
   const chainId = nativeCurrency?.chainId ?? defaultChainId
 
-  const gasToken = getChainGasToken(chainId)
+  const gasToken = nativeCurrency?.isToken ? nativeCurrency : getChainGasToken(chainId)
 
   const defaultNativeCurrencyInfo = useNativeCurrencyInfo(chainId)
   // On chains where gas is paid in a non-native token (e.g. pathUSD on Tempo), use its currency info

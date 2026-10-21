@@ -1,20 +1,17 @@
 import type { UniverseChainId } from '@universe/chains'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex, Text, iconSizes } from '@universe/mycelium'
 import { useTranslation } from 'react-i18next'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { useNetworkSelectorOptions } from 'uniswap/src/components/network/NetworkFilterV2/useNetworkSelectorOptions'
+import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter/NetworkFilter'
+import { useNetworkSelectorOptions } from 'uniswap/src/components/network/NetworkFilter/useNetworkSelectorOptions'
 import { NetworkPile } from 'uniswap/src/components/network/NetworkPile/NetworkPile'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
-import { NetworkFilter } from '~/components/NetworkFilter/NetworkFilter'
-import { useFilteredChainIds } from '~/components/NetworkFilter/useFilteredChains'
+import { useEvent } from 'utilities/src/react/hooks'
+import { useNetworkFilterChainIds } from '~/components/NetworkFilter/useFilteredChains'
 import { HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constants'
 import { HeaderDivider } from '~/components/StickyCollapsibleHeader/HeaderDivider'
 import { useActiveAddresses } from '~/features/accounts/store/hooks'
-
-// Per-axis so it beats the size preset's `pl`/`pr`.
-const UNPADDED_TRIGGER_STYLE = { height: 'auto', pt: 0, pb: 0, pl: 0, pr: 0 } as const
 
 interface TokenDetailsNetworkFilterProps {
   chainIds: UniverseChainId[]
@@ -36,15 +33,12 @@ export function TokenDetailsNetworkFilter({
   position = 'left',
 }: TokenDetailsNetworkFilterProps) {
   const { t } = useTranslation()
-  const isNetworkFilterV2Enabled = useFeatureFlag(FeatureFlags.NetworkFilterV2)
   const activeAddresses = useActiveAddresses()
-  const tieredNetworkOptions = useNetworkSelectorOptions({
-    addresses: activeAddresses,
-    chainIds,
-    enabled: isNetworkFilterV2Enabled,
-  })
-  const allSupportedChainIds = useFilteredChainIds()
-  const isNetworkSubset = !isChainDataLoading && chainIds.length > 0 && chainIds.length < allSupportedChainIds.length
+  const tieredNetworkOptions = useNetworkSelectorOptions({ addresses: activeAddresses, chainIds })
+  const { chainIds: selectableChainIds, allNetworksChainIds } = useNetworkFilterChainIds(chainIds)
+  const isNetworkSubset = !isChainDataLoading && chainIds.length > 0 && allNetworksChainIds !== undefined
+
+  const onPressChain = useEvent((chainId: UniverseChainId | null) => setSelectedChainId(chainId ?? undefined))
 
   if (chainIds.length <= 1) {
     return null
@@ -52,40 +46,39 @@ export function TokenDetailsNetworkFilter({
 
   return (
     <Flex row alignItems="stretch">
-      {/* Dropdown wraps its inline-flex trigger in a block div; leading-none stops that line box inflating the row. */}
-      <Flex alignSelf="center" className="leading-none">
+      <Flex alignSelf="center">
         <NetworkFilter
-          networks={chainIds}
-          currentChainId={selectedChainId}
-          size="xsmall"
-          tracePage={InterfacePageName.TokenDetailsPage}
-          transition={HEADER_TRANSITION}
-          showSearch={isNetworkFilterV2Enabled}
-          tieredOptions={isNetworkFilterV2Enabled ? tieredNetworkOptions : undefined}
-          isTriggerStyled={false}
-          buttonStyle={UNPADDED_TRIGGER_STYLE}
-          customTrigger={
-            <Flex row alignItems="center" gap="$spacing6">
-              {selectedChainId ? (
-                <NetworkLogo chainId={selectedChainId} size={iconSizes.icon16} transition={HEADER_TRANSITION} />
-              ) : isNetworkSubset ? (
-                <NetworkPile chainIds={chainIds} size="small" />
-              ) : (
-                <NetworkLogo chainId={null} size={iconSizes.icon16} transition={HEADER_TRANSITION} />
-              )}
-              {showNetworkName && (
-                <Text variant="buttonLabel3" color="$neutral2" transition={HEADER_TRANSITION}>
-                  {selectedChainId
-                    ? getChainInfo(selectedChainId).label
-                    : isNetworkSubset
-                      ? t('explore.tokens.table.networks', { count: chainIds.length })
-                      : t('transaction.network.all')}
-                </Text>
-              )}
-            </Flex>
-          }
-          position={position}
-          onPress={setSelectedChainId}
+          includeAllNetworks
+          chainIds={selectableChainIds}
+          allNetworksChainIds={allNetworksChainIds}
+          selectedChain={selectedChainId ?? null}
+          tieredOptions={tieredNetworkOptions}
+          placement={position === 'left' ? 'bottom-start' : 'bottom-end'}
+          selectionAnalytics={{ page: InterfacePageName.TokenDetailsPage }}
+          trigger={{
+            variant: 'custom',
+            content: (
+              <Flex row alignItems="center" gap="$spacing6">
+                {selectedChainId ? (
+                  <NetworkLogo chainId={selectedChainId} size={iconSizes.icon16} transition={HEADER_TRANSITION} />
+                ) : isNetworkSubset ? (
+                  <NetworkPile chainIds={chainIds} size="small" />
+                ) : (
+                  <NetworkLogo chainId={null} size={iconSizes.icon16} transition={HEADER_TRANSITION} />
+                )}
+                {showNetworkName && (
+                  <Text variant="buttonLabel3" color="$neutral2" transition={HEADER_TRANSITION}>
+                    {selectedChainId
+                      ? getChainInfo(selectedChainId).label
+                      : isNetworkSubset
+                        ? t('explore.tokens.table.networks', { count: chainIds.length })
+                        : t('transaction.network.all')}
+                  </Text>
+                )}
+              </Flex>
+            ),
+          }}
+          onPressChain={onPressChain}
         />
       </Flex>
       {showAddressCopy && <HeaderDivider />}

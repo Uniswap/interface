@@ -8,7 +8,7 @@ import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 /** Header selections have no row of their own. */
 const HEADER_SELECTION_INDEX = -1
 
-/** Category section headers open Category Details, from the header itself or from "View all" in its tooltip. */
+/** Category section headers open Category Details, from the header itself or from "View collection" in its tooltip. */
 export function withCategoryHeaderActions({
   sections,
   categories,

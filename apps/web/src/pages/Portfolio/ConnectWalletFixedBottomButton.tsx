@@ -9,6 +9,7 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { useScrollCompact } from '~/hooks/useScrollCompact'
 import { CONNECT_WALLET_FIXED_BOTTOM_SECTION_HEIGHT } from '~/pages/Portfolio/constants'
+import { MWEB_BOTTOM_INSET } from '~/utils/mwebBottomInset'
 
 function useBackgroundGradient() {
   const colors = useSporeColors()
@@ -51,10 +52,11 @@ const FIXED_BOTTOM_BUTTON_VARIANTS = {
   },
 } as const
 
+// The button and the fade behind it both rise by the in-app-browser chrome / safe-area band.
 const FixedBottomButton = styled(Flex, {
-  base: 'items-center justify-center w-[100%] z-header fixed right-[0px] bottom-[40px] left-[0px]',
+  base: 'items-center justify-center w-[100%] z-header fixed right-[0px] left-[0px]',
   variants: FIXED_BOTTOM_BUTTON_VARIANTS,
-  inlineStyle: () => VISIBILITY_TRANSITION_STYLE,
+  inlineStyle: () => ({ ...VISIBILITY_TRANSITION_STYLE, bottom: `calc(40px + ${MWEB_BOTTOM_INSET})` }),
 })
 
 export function ConnectWalletFixedBottomButton(): JSX.Element {
@@ -84,7 +86,7 @@ export function ConnectWalletFixedBottomButton(): JSX.Element {
       {/* Bottom fade overlay */}
       <FadeOverlay
         visible={showAfterMount}
-        height={CONNECT_WALLET_FIXED_BOTTOM_SECTION_HEIGHT}
+        height={`calc(${CONNECT_WALLET_FIXED_BOTTOM_SECTION_HEIGHT}px + ${MWEB_BOTTOM_INSET})`}
         background={backgroundGradient}
         cursor="not-allowed"
         pointerEvents={showAfterMount ? 'auto' : 'none'}

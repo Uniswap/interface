@@ -16,6 +16,7 @@ type ChartSkeletonProps = {
   errorColor?: string
   errorBackgroundColor?: string
   errorBorderColor?: string
+  hideErrorIcon?: boolean
   type: ChartType
   disabled?: boolean
   hideYAxis?: boolean
@@ -23,12 +24,18 @@ type ChartSkeletonProps = {
   hidePriceIndicators?: boolean
 } & Omit<FlexProps, 'children' | 'height' | 'disabled'>
 
-function ChartErrorView({
+export function ChartErrorView({
   title,
   backgroundColor = '$surface1',
   borderColor = '$surface3',
+  hideIcon,
   children,
-}: PropsWithChildren<{ title?: ReactNode; backgroundColor?: string; borderColor?: string }>) {
+}: PropsWithChildren<{
+  title?: ReactNode
+  backgroundColor?: string
+  borderColor?: string
+  hideIcon?: boolean
+}>) {
   const { t } = useTranslation()
   return (
     <Flex
@@ -47,12 +54,12 @@ function ChartErrorView({
       borderColor={borderColor}
       backgroundColor={backgroundColor}
       p="$spacing12"
-      pr="$spacing20"
+      pr={hideIcon ? '$spacing12' : '$spacing20'}
       gap="$gap12"
       zIndex={1}
       className="animate-spore-enter-fade-in opacity-[1]"
     >
-      <ChartBarCrossedWithBackground />
+      {!hideIcon && <ChartBarCrossedWithBackground />}
       <Flex shrink gap="$gap4">
         <Text variant="subheading2" color="$neutral1">
           {title ?? t('chart.missingData')}
@@ -194,6 +201,7 @@ export function ChartSkeleton({
   errorColor,
   errorBackgroundColor,
   errorBorderColor,
+  hideErrorIcon,
   height,
   type,
   disabled = false,
@@ -232,7 +240,12 @@ export function ChartSkeleton({
             hidePriceIndicators={hidePriceIndicators}
           />
           {hasError && (
-            <ChartErrorView title={errorTitle} backgroundColor={errorBackgroundColor} borderColor={errorBorderColor}>
+            <ChartErrorView
+              title={errorTitle}
+              backgroundColor={errorBackgroundColor}
+              borderColor={errorBorderColor}
+              hideIcon={hideErrorIcon}
+            >
               {errorText}
             </ChartErrorView>
           )}

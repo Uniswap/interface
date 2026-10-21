@@ -89,9 +89,9 @@ datadog {
     checkProjectDependencies = "none"
 }
 
-def devVersionName = "1.85"
-def betaVersionName = "1.85"
-def prodVersionName = "1.85"
+def devVersionName = "1.86"
+def betaVersionName = "1.86"
+def prodVersionName = "1.86"
 
 android {
     ndkVersion rootProject.ext.ndkVersion

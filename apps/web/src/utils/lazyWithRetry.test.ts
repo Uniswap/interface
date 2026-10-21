@@ -109,6 +109,12 @@ describe('lazyWithRetry', () => {
           { message: 'loading chunk failed', expected: true },
           { message: 'loading css chunk failed', expected: true },
           { message: 'networkerror when attempting to fetch resource', expected: true },
+          { message: 'Importing a module script failed.', expected: true },
+          {
+            message: 'error loading dynamically imported module: https://cdn.app.uniswap.org/assets/a.js',
+            expected: true,
+          },
+          { message: 'Unable to preload CSS for https://cdn.app.uniswap.org/assets/a.css', expected: true },
 
           // Uppercase
           { message: 'FAILED TO FETCH DYNAMICALLY IMPORTED MODULE', expected: true },

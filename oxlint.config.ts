@@ -88,6 +88,12 @@ export const rootIgnorePatterns = [
 // root definition entirely — so the override must spread these arrays.
 export const sharedRestrictedImportPaths = [
   {
+    name: 'react-i18next',
+    importNames: ['Trans', 'TransWithoutContext'],
+    message:
+      'Import `Trans` from `ui/src/i18n/Trans`: it escapes interpolated values so untrusted strings cannot become markup.',
+  },
+  {
     name: 'utilities/src/telemetry/analytics/analytics',
     message:
       'Please only use this for initialization, tests, flushing, and internal usage. Otherwise use `packages/uniswap/src/features/telemetry`',
@@ -256,9 +262,9 @@ export const universalListRestrictedImportPattern = {
 
 export const sharedRestrictedImportPatterns = [
   {
-    group: ['ui/src/assets/icons/*.svg'],
+    group: ['@universe/mycelium/assets/icons/*.svg'],
     message:
-      'Please do not import SVG files directly from `ui/src/assets/icons/*.svg`. Use generated icon components instead.',
+      'Please do not import SVG files directly from `@universe/mycelium/assets/icons/*.svg`. Use generated icon components instead.',
   },
   crossPackageDeepImportPattern,
   labsRestrictedImportPattern,
@@ -655,6 +661,7 @@ export default defineConfig({
       'universe-custom/no-platform-gate-in-chain-flags': 'error',
       'universe-custom/styled-factory-literal-classes': 'error',
       'universe-custom/prefer-use-is-mounted': 'error',
+      'universe-custom/no-wallet-secrets-in-state': 'error',
       // typed-redux-saga
       '@jambit/typed-redux-saga/use-typed-effects': 'error',
       '@jambit/typed-redux-saga/delegate-effects': 'error',
@@ -864,6 +871,36 @@ export default defineConfig({
           },
         ]
       : []),
+
+    // ── apps/unilens ──────────────────────────────────────────────────
+    {
+      files: ['apps/unilens/**'],
+      rules: {
+        // A plain MV3 extension: `chrome` and `window.location` are the platform, not a hazard.
+        'no-restricted-globals': 'off',
+      },
+    },
+    {
+      // The GitHub token is background-only; every other context talks to it through src/lib/messaging.ts.
+      files: [
+        'apps/unilens/src/features/**',
+        'apps/unilens/src/entrypoints/github.content/**',
+        'apps/unilens/src/entrypoints/sidepanel/**',
+      ],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: [
+              {
+                name: 'src/lib/github/auth',
+                message: 'Token handling is background-only. Send a message through src/lib/messaging.ts instead.',
+              },
+            ],
+          },
+        ],
+      },
+    },
 
     // ── apps/extension ────────────────────────────────────────────────
     {

@@ -25,6 +25,7 @@ import { useIsMobile } from '~/hooks/screenSize/useIsMobile'
 import { useModalState } from '~/hooks/useModalState'
 import { useSignInWithPasskey } from '~/hooks/useSignInWithPasskey'
 import { useEmbeddedWalletLoginViewStore } from '~/state/embeddedWallet/loginViewStore'
+import { MWEB_BOTTOM_INSET } from '~/utils/mwebBottomInset'
 
 interface RecentlyConnectedModalUIProps {
   isOpen: boolean
@@ -104,7 +105,14 @@ function RecentlyConnectedModalUI({
         {/* oxlint-disable-next-line react/forbid-elements -- needed so the click-outside ref attaches to a real DOM node */}
         <div
           ref={modalRef}
-          style={{ position: 'fixed', bottom: 8, left: 8, right: 8, pointerEvents: 'auto', zIndex: zIndexes.toast }}
+          style={{
+            position: 'fixed',
+            bottom: `calc(8px + ${MWEB_BOTTOM_INSET})`,
+            left: 8,
+            right: 8,
+            pointerEvents: 'auto',
+            zIndex: zIndexes.toast,
+          }}
         >
           <Flex
             row

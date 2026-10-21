@@ -2,6 +2,13 @@
    things go here, but stuff like keyframe CSS animations that Tamagui doesn't
    support can be added here. Be sure to try `$platform-web` style prop first as
    that should avoid needing to add here.  */
+
+/* In-app browser toolbars draw over the WebView and are invisible to viewport units;
+   applyMwebBottomInset() raises this there. */
+:root {
+  --mweb-bottom-inset: env(safe-area-inset-bottom, 0px);
+}
+
 html {
   overscroll-behavior: none;
   overflow-x: hidden;

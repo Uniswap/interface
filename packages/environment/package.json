@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "dependencies": {
     "@universe/config": "workspace:^",
-    "react-native": "0.85.3",
+    "react-native": "0.86.0",
     "react-native-device-info": "10.11.0"
   },
   "devDependencies": {

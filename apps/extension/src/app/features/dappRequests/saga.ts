@@ -88,7 +88,7 @@ export function* dappRequestWatcher() {
 
     if (payload.dappRequest.type === DappRequestType.GetCapabilities) {
       const { senderTabInfo } = payload
-      const dappUrl = extractBaseUrl(senderTabInfo.url)
+      const dappUrl = extractBaseUrl(senderTabInfo.frameUrl)
       if (dappUrl) {
         yield* put(dappRequestActions.setMostRecent5792DappUrl(dappUrl))
       }
@@ -166,7 +166,7 @@ function* handleRequest(requestParams: DappRequestNoDappInfo) {
     return
   }
 
-  const dappUrl = extractBaseUrl(requestParams.senderTabInfo.url)
+  const dappUrl = extractBaseUrl(requestParams.senderTabInfo.frameUrl)
   const dappInfo = yield* call(dappStore.getDappInfo, dappUrl)
 
   const isConnectedToDapp = dappInfo && dappInfo.connectedAccounts.length > 0
@@ -433,7 +433,7 @@ function* assertDappChainUnchanged({ url, reviewedChainId }: { url: string; revi
 
 export function* handleSendTransaction({
   request,
-  senderTabInfo: { id, url },
+  senderTabInfo,
   dappInfo,
   transactionTypeInfo,
   preSignedTransaction,
@@ -454,7 +454,7 @@ export function* handleSendTransaction({
     }
   }
 
-  yield* call(assertDappChainUnchanged, { url, reviewedChainId: lastChainId })
+  yield* call(assertDappChainUnchanged, { url: senderTabInfo.frameUrl, reviewedChainId: lastChainId })
 
   const provider = yield* call(getProvider, lastChainId)
 
@@ -493,7 +493,7 @@ export function* handleSendTransaction({
     transactionHash,
     requestId: request.requestId,
   }
-  yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
+  yield* call(dappResponseMessageChannel.sendMessageToFrame, senderTabInfo, response)
 }
 
 // TODO(EXT-976): Fix chrome notifications to work when the sidepanel is asleep.
@@ -512,10 +512,10 @@ async function onTransactionSentToChain(transactionHash: string, provider: Provi
   }
 }
 
-export function* changeChainSaga(request: ChangeChainRequest, { id, url }: SenderTabInfo) {
+export function* changeChainSaga(request: ChangeChainRequest, senderTabInfo: SenderTabInfo) {
   const updatedChainId = toSupportedChainId(hexadecimalStringToInt(request.chainId))
   const provider = updatedChainId ? yield* call(getProvider, updatedChainId) : undefined
-  const dappUrl = extractBaseUrl(url)
+  const dappUrl = extractBaseUrl(senderTabInfo.frameUrl)
   const activeAccount = yield* select(selectActiveAccount)
   const response = changeChain({
     provider,
@@ -524,12 +524,12 @@ export function* changeChainSaga(request: ChangeChainRequest, { id, url }: Sende
     requestId: request.requestId,
     activeConnectedAddress: activeAccount?.address,
   })
-  yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
+  yield* call(dappResponseMessageChannel.sendMessageToFrame, senderTabInfo, response)
 }
 
 export function* handleSignMessage({
   request,
-  senderTabInfo: { id },
+  senderTabInfo,
   dappInfo,
 }: {
   request: SignMessageRequest
@@ -551,7 +551,7 @@ export function* handleSignMessage({
     signature,
   }
 
-  yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
+  yield* call(dappResponseMessageChannel.sendMessageToFrame, senderTabInfo, response)
 }
 
 export function* handleSignTypedData({
@@ -581,7 +581,7 @@ export function* handleSignTypedData({
       throw new Error(`Mismatched chainId - expected active chain: ${lastChainId}, received: ${chainId}`)
     }
 
-    yield* call(assertDappChainUnchanged, { url: senderTabInfo.url, reviewedChainId: lastChainId })
+    yield* call(assertDappChainUnchanged, { url: senderTabInfo.frameUrl, reviewedChainId: lastChainId })
 
     const currentAccount = getActiveSignerConnectedAccount(connectedAccounts, activeConnectedAddress)
     const signerManager = yield* call(getSignerManager)
@@ -601,7 +601,7 @@ export function* handleSignTypedData({
       signature,
     }
 
-    yield* call(dappResponseMessageChannel.sendMessageToTab, senderTabInfo.id, response)
+    yield* call(dappResponseMessageChannel.sendMessageToFrame, senderTabInfo, response)
   } catch (error) {
     if (error instanceof Error) {
       const errorParams: DappRequestRejectParams = {
@@ -620,7 +620,7 @@ export function* handleSignTypedData({
         function: 'handleSignTypedData',
       },
       extra: {
-        dappUrl: senderTabInfo.url,
+        dappUrl: senderTabInfo.frameUrl,
       },
     })
   }
@@ -639,7 +639,7 @@ export function* handleUniswapOpenSidebarRequest(request: UniswapOpenSidebarRequ
     type: DappResponseType.UniswapOpenSidebarResponse,
     requestId: request.requestId,
   }
-  yield* call(dappResponseMessageChannel.sendMessageToTab, senderTabInfo.id, response)
+  yield* call(dappResponseMessageChannel.sendMessageToFrame, senderTabInfo, response)
 }
 
 /**
@@ -657,7 +657,7 @@ export function* handleGetCapabilities(request: GetCapabilitiesRequest, senderTa
     hasSmartWalletConsent,
   })
 
-  yield* call(dappResponseMessageChannel.sendMessageToTab, senderTabInfo.id, response)
+  yield* call(dappResponseMessageChannel.sendMessageToFrame, senderTabInfo, response)
 }
 
 /**
@@ -666,7 +666,7 @@ export function* handleGetCapabilities(request: GetCapabilitiesRequest, senderTa
  */
 export function* handleSendCalls({
   request,
-  senderTabInfo: { id, url },
+  senderTabInfo,
   dappInfo,
   transactionTypeInfo,
   preSignedTransaction,
@@ -684,7 +684,7 @@ export function* handleSendCalls({
       error: serializeError(rpcErrors.invalidInput()),
       requestId: request.requestId,
     }
-    yield* call(dappResponseMessageChannel.sendMessageToTab, id, errorResponse)
+    yield* call(dappResponseMessageChannel.sendMessageToFrame, senderTabInfo, errorResponse)
     return
   }
 
@@ -698,7 +698,7 @@ export function* handleSendCalls({
       error: serializeError(rpcErrors.invalidInput()),
       requestId: request.requestId,
     }
-    yield* call(dappResponseMessageChannel.sendMessageToTab, id, errorResponse)
+    yield* call(dappResponseMessageChannel.sendMessageToFrame, senderTabInfo, errorResponse)
     return
   }
 
@@ -710,7 +710,7 @@ export function* handleSendCalls({
         error: serializeError(rpcErrors.invalidParams('Invalid chainId')),
         requestId: request.requestId,
       }
-      yield* call(dappResponseMessageChannel.sendMessageToTab, id, errorResponse)
+      yield* call(dappResponseMessageChannel.sendMessageToFrame, senderTabInfo, errorResponse)
       return
     }
 
@@ -720,7 +720,7 @@ export function* handleSendCalls({
     if (dappInfo.lastChainId !== chainId) {
       throw new Error(`Mismatched chainId - expected active chain: ${dappInfo.lastChainId}, received: ${chainId}`)
     }
-    yield* call(assertDappChainUnchanged, { url, reviewedChainId: chainId })
+    yield* call(assertDappChainUnchanged, { url: senderTabInfo.frameUrl, reviewedChainId: chainId })
 
     const activeAccount = getActiveSignerConnectedAccount(dappInfo.connectedAccounts, dappInfo.activeConnectedAddress)
     const batchId = request.id || generateBatchId()
@@ -772,7 +772,7 @@ export function* handleSendCalls({
         response: { id: batchId },
       }
 
-      yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
+      yield* call(dappResponseMessageChannel.sendMessageToFrame, senderTabInfo, response)
     } else if (is7702) {
       // 7702 encoded transaction path
       const sendTransactionParams: ExecuteTransactionParams = {
@@ -820,7 +820,7 @@ export function* handleSendCalls({
         },
       }
 
-      yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
+      yield* call(dappResponseMessageChannel.sendMessageToFrame, senderTabInfo, response)
     }
   } catch (error) {
     logger.error(error, {
@@ -833,7 +833,7 @@ export function* handleSendCalls({
       error: serializeError(rpcErrors.internal(error instanceof Error ? error.message : 'Failed to send calls')),
       requestId: request.requestId,
     }
-    yield* call(dappResponseMessageChannel.sendMessageToTab, id, errorResponse)
+    yield* call(dappResponseMessageChannel.sendMessageToFrame, senderTabInfo, errorResponse)
   }
 }
 
@@ -843,7 +843,7 @@ export function* handleSendCalls({
  */
 export function* handleGetCallsStatus({
   request,
-  senderTabInfo: { id },
+  senderTabInfo,
 }: {
   request: GetCallsStatusRequest
   senderTabInfo: SenderTabInfo
@@ -856,7 +856,7 @@ export function* handleGetCallsStatus({
       error: serializeError(rpcErrors.internal('No active account found')),
       requestId: request.requestId,
     }
-    yield* call(dappResponseMessageChannel.sendMessageToTab, id, errorResponse)
+    yield* call(dappResponseMessageChannel.sendMessageToFrame, senderTabInfo, errorResponse)
     return
   }
 
@@ -868,7 +868,7 @@ export function* handleGetCallsStatus({
       error: serializeError(rpcErrors.invalidParams(error)),
       requestId: request.requestId,
     }
-    yield* call(dappResponseMessageChannel.sendMessageToTab, id, errorResponse)
+    yield* call(dappResponseMessageChannel.sendMessageToFrame, senderTabInfo, errorResponse)
     return
   }
 
@@ -878,7 +878,7 @@ export function* handleGetCallsStatus({
     response: data,
   }
 
-  yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
+  yield* call(dappResponseMessageChannel.sendMessageToFrame, senderTabInfo, response)
 }
 
 function* isRequestConfirming(requestId: string) {

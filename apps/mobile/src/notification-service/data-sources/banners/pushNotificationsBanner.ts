@@ -7,9 +7,9 @@ import {
 } from '@uniswap/client-notification-service/dist/uniswap/notificationservice/v1/api_pb'
 import { BackgroundType, ContentStyle, type InAppNotification, OnClickAction } from '@universe/api'
 import { FeatureFlags, getFeatureFlag } from '@universe/gating'
+import { PUSH_NOTIFICATIONS_CARD_BANNER } from '@universe/mycelium/assets'
 import { checkNotifications, type PermissionStatus } from 'react-native-permissions'
 import { BannerId } from 'src/notification-service/data-sources/banners/types'
-import { PUSH_NOTIFICATIONS_CARD_BANNER } from 'ui/src/assets'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import i18n from 'uniswap/src/i18n'
 

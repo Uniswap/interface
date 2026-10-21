@@ -83,7 +83,6 @@ export function buildFlagGroups(extras: {
         { flag: FeatureFlags.LimitsFees, label: 'Enable Limits fees' },
         { flag: FeatureFlags.LimitCancelTimeout, label: 'Enable limit order cancellation timeout + revert flow' },
         { flag: FeatureFlags.EnablePermitMismatchUX, label: 'Enable Permit2 mismatch detection' },
-        { flag: FeatureFlags.NetworkFilterV2, label: 'Enable Network Filter V2' },
         {
           flag: FeatureFlags.ForcePermitTransactions,
           label: 'Force Permit2 transaction instead of signatures, always',

@@ -1,6 +1,6 @@
 import { isMobileApp } from '@universe/environment'
 import { Flex, Text } from '@universe/mycelium'
-import { Trans } from 'react-i18next'
+import { Trans } from 'ui/src'
 import { BlockaidLogo } from 'ui/src/components/logos/BlockaidLogo'
 
 const BLOCKAID_LOGO_WIDTH = 50

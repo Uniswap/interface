@@ -50,6 +50,7 @@ function TokenDetailsPoolsTableContent({
   return (
     <Flex testID={`tdp-pools-table-${normalizeAddress(referenceToken.address, AddressStringFormat.Lowercase)}`}>
       <PoolsTable
+        mobileFullBleed
         pools={pools}
         loading={allDataStillLoading}
         error={isError}

@@ -1,13 +1,15 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import JSBI from 'jsbi'
-import { DAI, nativeOnChain, PATHUSD_TEMPO, USDC_E_TEMPO } from 'uniswap/src/constants/tokens'
+import { DAI, nativeOnChain, OUSD_TEMPO, PATHUSD_TEMPO, USDC_E_TEMPO } from 'uniswap/src/constants/tokens'
+import { getChainGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToken'
 import { useMaxAmountSpend } from 'uniswap/src/features/gas/hooks/useMaxAmountSpend'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { MAINNET_CURRENCY } from 'uniswap/src/test/fixtures/wallet/currencies'
 
 const mockUseDynamicConfigValue = vi.fn()
 const mockUseUniswapContextSelector = vi.fn()
+const mockAccountGasToken = vi.fn()
 
 vi.mock('@universe/gating', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@universe/gating')>()
@@ -22,6 +24,19 @@ vi.mock('uniswap/src/contexts/UniswapContext', () => ({
   useUniswapContextSelector: (selector: (ctx: unknown) => unknown): unknown => mockUseUniswapContextSelector(selector),
 }))
 
+vi.mock('uniswap/src/features/accounts/store/hooks', () => ({
+  useActiveAddress: (): string => '0x889b6fb6af37bfaa257e1fcf2913afe0b42313cf',
+}))
+
+vi.mock('uniswap/src/features/gas/hooks/useChainGasToken', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('uniswap/src/features/gas/hooks/useChainGasToken')>()
+  return {
+    ...actual,
+    useAccountGasToken: (params: { chainId?: UniverseChainId; accountAddress?: Address }): unknown =>
+      mockAccountGasToken(params),
+  }
+})
+
 // Get Solana currency with 9 decimals
 const SOLANA_CURRENCY = nativeOnChain(UniverseChainId.Solana)
 
@@ -29,6 +44,10 @@ describe(useMaxAmountSpend, () => {
   beforeEach(() => {
     mockUseDynamicConfigValue.mockImplementation(({ defaultValue }) => defaultValue)
     mockUseUniswapContextSelector.mockReturnValue(undefined)
+    mockAccountGasToken.mockImplementation(({ chainId }: { chainId?: UniverseChainId }) => ({
+      gasToken: chainId === undefined ? undefined : getChainGasToken(chainId),
+      isLoading: false,
+    }))
   })
 
   it('handles undefined and null inputs', () => {
@@ -231,6 +250,75 @@ describe(useMaxAmountSpend, () => {
 
       expect(spendable).toBeDefined()
       expect(spendable!.quotient.toString()).toBe('999999999')
+    })
+  })
+
+  describe('Tempo account with an OUSD fee token preference', () => {
+    beforeEach(() => {
+      mockAccountGasToken.mockReturnValue({ gasToken: OUSD_TEMPO, isLoading: false })
+    })
+
+    it('asks for the active account gas token', () => {
+      useMaxAmountSpend({ currencyAmount: CurrencyAmount.fromRawAmount(OUSD_TEMPO, '1000000000') })
+
+      expect(mockAccountGasToken).toHaveBeenCalledWith({
+        chainId: UniverseChainId.Tempo,
+        accountAddress: '0x889b6fb6af37bfaa257e1fcf2913afe0b42313cf',
+      })
+    })
+
+    it('reserves gas when spending OUSD', () => {
+      const ousdAmount = CurrencyAmount.fromRawAmount(OUSD_TEMPO, '1000000000')
+      const spendable = useMaxAmountSpend({ currencyAmount: ousdAmount, actualGasFee: '1000000000000000' })
+
+      expect(spendable!.quotient.toString()).toBe('999998900')
+    })
+
+    it('lets the account spend all of its pathUSD', () => {
+      const pathUsdAmount = CurrencyAmount.fromRawAmount(PATHUSD_TEMPO, '1000000000')
+
+      expect(useMaxAmountSpend({ currencyAmount: pathUsdAmount })).toBe(pathUsdAmount)
+    })
+
+    it('returns no max while the fee token preference is loading', () => {
+      mockAccountGasToken.mockReturnValue({ gasToken: PATHUSD_TEMPO, isLoading: true })
+      const ousdAmount = CurrencyAmount.fromRawAmount(OUSD_TEMPO, '1000000000')
+
+      expect(useMaxAmountSpend({ currencyAmount: ousdAmount })).toBeUndefined()
+    })
+  })
+
+  describe('Tempo account without a stored fee token', () => {
+    beforeEach(() => {
+      mockAccountGasToken.mockImplementation(
+        ({ chainId, sendCurrency }: { chainId?: UniverseChainId; sendCurrency?: Currency }) => ({
+          gasToken: sendCurrency ?? (chainId === undefined ? undefined : getChainGasToken(chainId)),
+          isLoading: false,
+        }),
+      )
+    })
+
+    it('reserves gas when max-sending USDC.e, which pays its own transfer fee', () => {
+      const usdceAmount = CurrencyAmount.fromRawAmount(USDC_E_TEMPO, '1000000000')
+      const spendable = useMaxAmountSpend({
+        currencyAmount: usdceAmount,
+        txType: TransactionType.Send,
+        actualGasFee: '1000000000000000',
+      })
+
+      expect(mockAccountGasToken).toHaveBeenCalledWith({
+        chainId: UniverseChainId.Tempo,
+        accountAddress: '0x889b6fb6af37bfaa257e1fcf2913afe0b42313cf',
+        sendCurrency: USDC_E_TEMPO,
+      })
+      expect(spendable!.quotient.toString()).toBe('999998900')
+    })
+
+    it('does not treat the spent token as the fee token outside sends', () => {
+      const usdceAmount = CurrencyAmount.fromRawAmount(USDC_E_TEMPO, '1000000000')
+
+      expect(useMaxAmountSpend({ currencyAmount: usdceAmount, txType: TransactionType.Swap })).toBe(usdceAmount)
+      expect(mockAccountGasToken).toHaveBeenLastCalledWith(expect.objectContaining({ sendCurrency: undefined }))
     })
   })
 

@@ -6,7 +6,7 @@ import {
   AuctionType,
   GetBidsByWalletRequest,
   GetBidsByWalletResponse,
-} from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+} from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { UniverseChainId } from '@universe/chains'
 import type { PropsWithChildren } from 'react'
 import { auctionQueries } from 'uniswap/src/data/apiClients/dataApiService/auctions/auctionQueries'

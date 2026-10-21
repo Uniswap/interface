@@ -193,12 +193,14 @@ export function useTransactionGasWarning({
   derivedInfo,
   gasFee,
   isGasSponsored,
+  sendCurrency,
 }: {
   accountAddress?: Address
   derivedInfo: DerivedSwapInfo | DerivedSendInfo
   gasFee?: string
   /** When gas is sponsored we skip the native gas-token balance check entirely. */
   isGasSponsored?: boolean
+  sendCurrency?: Currency
 }): Warning | undefined {
   const { chainId, currencyAmounts, currencyBalances } = derivedInfo
   const { t } = useTranslation()
@@ -207,7 +209,7 @@ export function useTransactionGasWarning({
   const hasAlternateGasFees = useUniswapContextSelector((ctx) => ctx.getHasAlternateGasFees?.(chainId)) ?? false
   const skipGasBalanceCheck = hasAlternateGasFees || Boolean(isGasSponsored)
 
-  const { gasToken, gasBalance } = useChainGasToken({ chainId, accountAddress })
+  const { gasToken, gasBalance } = useChainGasToken({ chainId, accountAddress, sendCurrency })
 
   const { isSmartContractAddress } = useIsSmartContractAddress(accountAddress, chainId)
 
@@ -215,7 +217,7 @@ export function useTransactionGasWarning({
   const currencyBalanceIn = currencyBalances[CurrencyField.INPUT]
 
   // Include input amount in gas check when spending the gas token
-  // (pathUSD on Tempo, native currency on other chains)
+  // (the account's fee token on Tempo, native currency on other chains)
   const gasTokenAmountIn = currencyAmountIn?.currency.equals(gasToken)
     ? (currencyAmountIn as CurrencyAmount<Currency>)
     : undefined

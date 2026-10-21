@@ -112,6 +112,13 @@ export interface ContextMenuCompatProps {
   menuItems: MenuOptionItemCompat[]
   /** When provided, renders this content instead of the default MenuContent built from menuItems. */
   contentOverride?: React.ReactNode
+  /**
+   * Web only: extra styles for the default MenuContent frame, e.g. a maxHeight + scroll on a long
+   * list. The legacy prop is Tamagui `FlexProps`, whose branded members cannot be named without the
+   * Tamagui runtime — so, exactly like `MenuCompatColorValue` above, the type accepts the wider shape
+   * and only the container keys the compat understands are applied.
+   */
+  menuContentStyles?: MenuContentContainerStyles | object
   isPlacementAbove?: boolean
   isPlacementRight?: boolean
   offsetX?: number

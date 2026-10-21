@@ -24,6 +24,7 @@ export function SwapHeaderTabRow({
   onTabClick,
   getTabLabel,
   chartToggle,
+  trailingContent,
   onHeightChange,
 }: {
   options: readonly SegmentedControlOption<SwapTab>[]
@@ -31,6 +32,7 @@ export function SwapHeaderTabRow({
   onTabClick: (tab: SwapTab) => void
   getTabLabel: (tab: SwapTab) => string
   chartToggle?: JSX.Element
+  trailingContent?: JSX.Element
   onHeightChange: (height: number) => void
 }): JSX.Element {
   const { i18n } = useTranslation()
@@ -69,6 +71,7 @@ export function SwapHeaderTabRow({
       <Flex ref={rightContentRef} row gap="$spacing8" alignItems="center">
         {chartToggle}
         {currentTab === SwapTab.Swap && <SwapFormSettingsButton />}
+        {trailingContent}
       </Flex>
     </Flex>
   )

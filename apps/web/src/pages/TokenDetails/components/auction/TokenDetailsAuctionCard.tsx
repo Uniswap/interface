@@ -6,6 +6,8 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Button, getContrastPassingTextColor, useColorsFromTokenColor } from 'ui/src'
+import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
+import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { PulsingIndicatorDot } from '~/features/Toucan/Auction/Banners/AuctionIntro/PulsingIndicatorDot'
 import { AuctionDisplayPhase } from '~/features/Toucan/Auction/utils/resolveAuctionDisplayState'
 import { getLaunchMethodCopy } from '~/features/Toucan/Shared/getLaunchMethodCopy'
@@ -13,6 +15,11 @@ import { LaunchMethodExplainerModal } from '~/features/Toucan/Shared/LaunchMetho
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { useAuctionCountdown } from '~/pages/TokenDetails/hooks/useAuctionCountdown'
 import { useTokenDetailsAuctionDisplay } from '~/pages/TokenDetails/hooks/useTokenDetailsAuctionDisplay'
+import { useTokenDetailsCcaAuctions } from '~/pages/TokenDetails/hooks/useTokenDetailsCcaAuctions'
+import {
+  getTokenDetailsProvenanceProperties,
+  sendTokenDetailsProvenanceEvent,
+} from '~/pages/TokenDetails/utils/tokenDetailsProvenanceAnalytics'
 import { getAuctionDetailsURL } from '~/utils/auctionDetailsUrl'
 
 function getPhaseTitle({ phase, t }: { phase: AuctionDisplayPhase; t: TFunction }): string | undefined {
@@ -50,7 +57,11 @@ export function TokenDetailsAuctionCard(): JSX.Element | null {
   const { validTokenColor } = useColorsFromTokenColor(tokenColor)
   const accentColor = validTokenColor ?? colors.accent1.val
   const [isExplainerOpen, setIsExplainerOpen] = useState(false)
-  const { auction, chainId, launchMethod, phase, phaseEndsAtMs, refetchCurrentBlock } = useTokenDetailsAuctionDisplay()
+  const display = useTokenDetailsAuctionDisplay()
+  // One denominator for every auction event on the page: the selector's CCA population, not the
+  // claimable subset, so an impression and the selector-open it leads to can share a funnel.
+  const auctionCount = useTokenDetailsCcaAuctions().length
+  const { auction, chainId, launchMethod, phase, phaseEndsAtMs, refetchCurrentBlock } = display
   const countdown = useAuctionCountdown({ endsAtMs: phaseEndsAtMs, onComplete: refetchCurrentBlock })
 
   if (!auction || chainId === undefined) {
@@ -86,6 +97,15 @@ export function TokenDetailsAuctionCard(): JSX.Element | null {
         backgroundImage: `linear-gradient(180deg, ${opacifyRaw(0, accentColor)} 0%, ${opacifyRaw(20, accentColor)} 100%)`,
       }}
     >
+      <Trace
+        key={auction.address}
+        logImpression={phase === AuctionDisplayPhase.Live || phase === AuctionDisplayPhase.Upcoming}
+        eventOnTrigger={AuctionEventName.AuctionBannerViewed}
+        properties={getTokenDetailsProvenanceProperties(display, {
+          entry_point: 'tdp_countdown_module',
+          auction_count: auctionCount,
+        })}
+      />
       <Flex row alignItems="center" justifyContent="space-between" gap="$spacing8">
         {title ? (
           <Text variant="body4" color="$neutral2">
@@ -148,7 +168,15 @@ export function TokenDetailsAuctionCard(): JSX.Element | null {
           width="100%"
           backgroundColor={accentColor}
           testID={TestID.TokenDetailsAuctionCardViewAuction}
-          onPress={() => navigate(auctionUrl)}
+          onPress={() => {
+            sendTokenDetailsProvenanceEvent({
+              eventName: AuctionEventName.TokenDetailsToAuctionDetailsClicked,
+              display,
+              entry_point: 'tdp_countdown_module',
+              auction_count: auctionCount,
+            })
+            navigate(auctionUrl)
+          }}
         >
           <Button.Text color={getContrastPassingTextColor(accentColor)}>{t('tdp.auction.viewAuction')}</Button.Text>
         </Button>

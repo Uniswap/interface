@@ -22,14 +22,14 @@ const createAssetModuleMock = (filename: string) => {
   return { default: staticPath }
 }
 
-vi.mock('ui/src/assets/backgrounds/for-connecting-v2.svg', () => createAssetModuleMock('svg'))
-vi.mock('ui/src/assets/logos/png/polygon-logo.png', () => createAssetModuleMock('png'))
-vi.mock('ui/src/assets/logos/png/uniswap-logo.png', () => createAssetModuleMock('png'))
-vi.mock('ui/src/assets/logos/png/arbitrum-logo.png', () => createAssetModuleMock('png'))
-vi.mock('ui/src/assets/logos/png/eth-logo.png', () => createAssetModuleMock('png'))
-vi.mock('ui/src/assets/logos/png/ethereum-logo.png', () => createAssetModuleMock('png'))
-vi.mock('ui/src/assets/graphics/unitag-light-small.png', () => createAssetModuleMock('png'))
-vi.mock('ui/src/assets/logos/png/uniswap-logo-large.png', () => createAssetModuleMock('png'))
+vi.mock('@universe/mycelium/assets/backgrounds/for-connecting-v2.svg', () => createAssetModuleMock('svg'))
+vi.mock('@universe/mycelium/assets/logos/png/polygon-logo.png', () => createAssetModuleMock('png'))
+vi.mock('@universe/mycelium/assets/logos/png/uniswap-logo.png', () => createAssetModuleMock('png'))
+vi.mock('@universe/mycelium/assets/logos/png/arbitrum-logo.png', () => createAssetModuleMock('png'))
+vi.mock('@universe/mycelium/assets/logos/png/eth-logo.png', () => createAssetModuleMock('png'))
+vi.mock('@universe/mycelium/assets/logos/png/ethereum-logo.png', () => createAssetModuleMock('png'))
+vi.mock('@universe/mycelium/assets/graphics/unitag-light-small.png', () => createAssetModuleMock('png'))
+vi.mock('@universe/mycelium/assets/logos/png/uniswap-logo-large.png', () => createAssetModuleMock('png'))
 vi.mock('ui/src/components/Unicon', () => ({
   Unicon: ({ ..._props }: any) => {
     return React.createElement('span', { 'data-testid': 'unicon' }, '🔵')
@@ -44,7 +44,7 @@ vi.mock('@universe/mycelium', async (importOriginal) => ({
   },
 }))
 
-vi.mock('ui/src/assets', () => ({
+vi.mock('@universe/mycelium/assets', () => ({
   ALL_NETWORKS_LOGO: 'all-networks-logo.png',
   ETHEREUM_LOGO: 'ethereum-logo.png',
   OPTIMISM_LOGO: 'optimism-logo.png',
@@ -69,19 +69,18 @@ vi.mock('ui/src/assets', () => ({
   TEMPO_LOGO: 'tempo-logo.png',
   XLAYER_LOGO: 'xlayer-logo.png',
   OKB_LOGO: 'okb-logo.png',
+  GNOSIS_LOGO: 'gnosis-logo.png',
+  MOONBEAM_LOGO: 'moonbeam-logo.png',
+  BOBA_LOGO: 'boba-logo.png',
+  FILECOIN_LOGO: 'filecoin-logo.png',
   UNICHAIN_LOGO: 'unichain-logo.png',
   UNICHAIN_SEPOLIA_LOGO: 'unichain-sepolia-logo.png',
   UNISWAP_LOGO: 'uniswap-logo.png',
   UNISWAP_LOGO_LARGE: 'uniswap-logo-large.png',
   UNISWAP_MONO_LOGO_LARGE: 'uniswap-mono-logo-large.png',
-  UNISWAP_APP_ICON: 'uniswap-app-icon.png',
   BINANCE_WALLET_ICON: 'binance-wallet-icon.png',
-  ONBOARDING_QR_ETCHING_VIDEO_LIGHT: 'light-etching.mp4',
-  ONBOARDING_QR_ETCHING_VIDEO_DARK: 'dark-etching.mp4',
   AVATARS_LIGHT: 'avatars-light.png',
   AVATARS_DARK: 'avatars-dark.png',
-  APP_SCREENSHOT_LIGHT: 'app-screenshot-light.png',
-  APP_SCREENSHOT_DARK: 'app-screenshot-dark.png',
   DOT_GRID: 'dot-grid.png',
   UNITAGS_BANNER_VERTICAL_LIGHT: 'unitags-banner-v-light.png',
   UNITAGS_BANNER_VERTICAL_DARK: 'unitags-banner-v-dark.png',
@@ -109,7 +108,6 @@ vi.mock('ui/src/assets', () => ({
   CRYPTO_PURCHASE_BACKGROUND_DARK: 'crypto-purchase-background-dark.png',
   SECURITY_SCREEN_BACKGROUND_DARK: 'security-screen-background-dark.png',
   SECURITY_SCREEN_BACKGROUND_LIGHT: 'security-screen-background-light.png',
-  DEAD_LUNI: 'dead-luni.png',
   PASSKEY_ICON: 'passkey.svg',
   UNITAGS_ADRIAN_LIGHT: 'unitags-adrian-light.png',
   UNITAGS_ADRIAN_DARK: 'unitags-adrian-dark.png',

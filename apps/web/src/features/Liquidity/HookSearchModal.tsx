@@ -13,6 +13,7 @@ import { Check } from '@universe/mycelium/icons/Check'
 import { DocumentList } from '@universe/mycelium/icons/DocumentList'
 import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { UniswapLogo } from '@universe/mycelium/icons/UniswapLogo'
+import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -212,6 +213,7 @@ export function HookSearchModal({
   selectedHook,
 }: HookSearchModalProps) {
   const { t } = useTranslation()
+  const media = useMedia()
   const [searchValue, setSearchValue] = useState('')
   const getUniswapHookProvenance = useUniswapHookProvenance()
 
@@ -269,8 +271,9 @@ export function HookSearchModal({
           <ModalCloseIcon onClose={onClose} />
         </Flex>
 
+        {/* On small screens autofocus raises the keyboard while the sheet opens, which scrolls the sheet away */}
         <SearchTextInput
-          autoFocus
+          autoFocus={!media.sm}
           backgroundColor="$surface2"
           placeholder={t('hook.search.placeholder')}
           mx="$spacing16"

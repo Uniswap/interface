@@ -246,7 +246,7 @@ function resolveFinalSource({
     finalSource = (finalSource as { default: ImageSourcePropType }).default
   }
   // A Metro require() asset id in the uri slot (UnitagBanner passes
-  // `{ uri: UNITAGS_BANNER_* }` from ui/src/assets) MUST unwrap on native: Android's host
+  // `{ uri: UNITAGS_BANNER_* }` from @universe/mycelium/assets) MUST unwrap on native: Android's host
   // reads uri as a string, so a numeric uri crashes the bridge
   // (UnexpectedNativeTypeException). Web bundlers deliver string URLs, so the web leg never
   // sees this shape — legacy kept the unwrap native-only. Backfill dimensions from the

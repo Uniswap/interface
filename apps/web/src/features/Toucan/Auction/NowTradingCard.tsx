@@ -1,49 +1,54 @@
 import { useQuery } from '@tanstack/react-query'
 import { HistoryDuration } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { areEvmAddressesEqual, normalizeTokenAddressForCache } from '@universe/chains'
-import { Flex, Text } from '@universe/mycelium'
+import { Flex, Shimmer, Text } from '@universe/mycelium'
 import { opacifyRaw, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
-import { useCallback, useMemo } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
+import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
   getGetTokenHistoryPriceQueryOptions,
   getGetTokenMarketsQueryOptions,
 } from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { AuctionEventName, ElementName } from 'uniswap/src/features/telemetry/constants'
+import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import useResizeObserver from 'use-resize-observer'
-import { NumberType } from 'utilities/src/format/types'
 import { SparklineChart } from '~/components/Charts/SparklineChart'
-import { getTokenDetailsURL } from '~/data/util'
-import { useShouldShowNowTradingCard } from '~/features/Toucan/Auction/hooks/useShouldShowNowTradingCard'
+import { useAuctionTradingTokenInfo } from '~/features/Toucan/Auction/hooks/useAuctionTradingTokenInfo'
+import { useNavigateToAuctionTokenDetails } from '~/features/Toucan/Auction/hooks/useNavigateToAuctionTokenDetails'
+import { useNowTradingCardVisibility } from '~/features/Toucan/Auction/hooks/useNowTradingCardVisibility'
+import { NowTradingCardStats } from '~/features/Toucan/Auction/NowTradingCardStats'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { ToucanActionButton } from '~/features/Toucan/Shared/ToucanActionButton'
-import { usePrefetchTokenDetailsAuction } from '~/pages/TokenDetails/hooks/usePrefetchTokenDetailsAuction'
-import { getChainUrlParam } from '~/utils/params/chainParams'
 
 const SPARKLINE_HEIGHT = 111
 const SPARKLINE_KEY = 'auction-token'
 
 export function NowTradingCard(): JSX.Element | null {
   const { t } = useTranslation()
-  const navigate = useNavigate()
-  const prefetchAuction = usePrefetchTokenDetailsAuction()
   const colors = useSporeColors()
-  const { convertFiatAmountFormatted } = useLocalizationContext()
   const { ref: chartRef, width: chartWidth } = useResizeObserver<HTMLElement>()
   const { auctionDetails, tokenColor } = useAuctionStore((state) => ({
     auctionDetails: state.auctionDetails,
     tokenColor: state.tokenColor,
   }))
-  const isVisible = useShouldShowNowTradingCard()
-  const tokenIdentifier = auctionDetails
-    ? { chainId: auctionDetails.chainId, address: normalizeTokenAddressForCache(auctionDetails.tokenAddress) }
-    : undefined
-  const { data: marketData, isLoading } = useQuery({
+  const { isVisible, mayBecomeVisible } = useNowTradingCardVisibility()
+  const { prefetchTokenDetails, navigateToTokenDetails, analyticsProperties } = useNavigateToAuctionTokenDetails({
+    enabled: isVisible,
+    entryPoint: 'auction_now_trading_card',
+  })
+  const tradingToken = useAuctionTradingTokenInfo({ enabled: isVisible })
+  const tokenIdentifier =
+    auctionDetails && tradingToken.address
+      ? { chainId: auctionDetails.chainId, address: normalizeTokenAddressForCache(tradingToken.address) }
+      : undefined
+  const {
+    data: marketData,
+    isLoading: marketLoading,
+    isFetched: marketFetched,
+  } = useQuery({
     ...getGetTokenMarketsQueryOptions({
       params: tokenIdentifier ? { tokens: [tokenIdentifier], duration: HistoryDuration.DAY } : undefined,
       enabled: isVisible,
@@ -51,7 +56,11 @@ export function NowTradingCard(): JSX.Element | null {
     placeholderData: undefined,
     refetchInterval: PollingInterval.KindaFast,
   })
-  const { data: priceHistory } = useQuery({
+  const {
+    data: priceHistory,
+    isLoading: historyLoading,
+    isFetched: historyFetched,
+  } = useQuery({
     ...getGetTokenHistoryPriceQueryOptions({
       params: tokenIdentifier
         ? {
@@ -76,101 +85,89 @@ export function NowTradingCard(): JSX.Element | null {
     [priceHistory?.points],
   )
   const sparklineMap = useMemo(() => ({ [SPARKLINE_KEY]: sparklinePoints }), [sparklinePoints])
-  const prefetchTokenDetails = useCallback(() => {
-    if (auctionDetails) {
-      prefetchAuction({ chainId: auctionDetails.chainId, tokenAddress: auctionDetails.tokenAddress })
-    }
-  }, [auctionDetails, prefetchAuction])
 
-  const onPress = useCallback(() => {
-    if (!auctionDetails) {
-      return
-    }
-    prefetchTokenDetails()
-    navigate(
-      getTokenDetailsURL({
-        address: auctionDetails.tokenAddress,
-        chainUrlParam: getChainUrlParam(auctionDetails.chainId),
-      }),
-    )
-  }, [auctionDetails, navigate, prefetchTokenDetails])
-
-  if (!isVisible || !auctionDetails) {
+  if (!mayBecomeVisible || !auctionDetails) {
     return null
   }
 
-  const symbol = auctionDetails.token?.currency.symbol ?? auctionDetails.tokenSymbol
+  const symbol = tradingToken.symbol ?? t('common.token')
   const accentColor = tokenColor ?? colors.accent1.val
 
-  const marketFdv = stats?.fullyDilutedValuationUsd
-  const volume24h = stats?.volumeUsd
-  const formatFiat = (value: number): string => convertFiatAmountFormatted(value, NumberType.FiatTokenStats)
-  const showFdv = marketFdv !== undefined && Number.isFinite(marketFdv) && marketFdv > 0
-  // FiatTokenStats renders 0 as "-", so treat it as missing.
-  const showVolume = volume24h !== undefined && Number.isFinite(volume24h) && volume24h > 0
+  // Reveal the content when the card's own gates and its queries settle; a newly available chart
+  // measures independently.
+  const initialQueriesLoading =
+    !isVisible ||
+    !tradingToken.address ||
+    tradingToken.loading ||
+    (marketLoading && !marketFetched) ||
+    (historyLoading && !historyFetched)
+  const hasChart = sparklinePoints.length > 1
+  const chartIsMeasured = chartWidth !== undefined && chartWidth > 0
 
   return (
     <Flex
       testID={TestID.ToucanNowTradingCard}
+      aria-busy={initialQueriesLoading}
       onMouseEnter={prefetchTokenDetails}
       onFocus={prefetchTokenDetails}
       gap="$spacing16"
       p="$spacing16"
       borderRadius="$rounded24"
       borderWidth="$spacing1"
+      borderColor="$surface3"
       backgroundColor="$surface1"
-      style={{
-        borderColor: opacifyRaw(8, accentColor),
-        backgroundClip: 'padding-box',
-        backgroundImage: `linear-gradient(0deg, ${opacifyRaw(18, accentColor)} 0%, ${opacifyRaw(0, accentColor)} 100%)`,
-      }}
+      style={
+        initialQueriesLoading
+          ? undefined
+          : {
+              borderColor: opacifyRaw(8, accentColor),
+              backgroundClip: 'padding-box',
+              backgroundImage: `linear-gradient(0deg, ${opacifyRaw(18, accentColor)} 0%, ${opacifyRaw(0, accentColor)} 100%)`,
+            }
+      }
     >
-      <Flex row alignItems="center" gap="$spacing12">
-        <TokenLogo
-          url={auctionDetails.token?.logoUrl ?? auctionDetails.tokenImageUrl}
-          chainId={auctionDetails.chainId}
-          symbol={symbol}
-          size={48}
-          hideNetworkLogo
+      {!initialQueriesLoading && analyticsProperties && (
+        <Trace
+          key={auctionDetails.address}
+          logImpression
+          eventOnTrigger={AuctionEventName.AuctionBannerViewed}
+          properties={analyticsProperties}
         />
-        <Flex gap="$spacing4" flex={1}>
-          <Text variant="subheading1" color="$neutral1">
-            {t('toucan.auction.nowTradingCard.title', { symbol })}
-          </Text>
-          {isLoading ? (
-            <Flex height={16} width={180} borderRadius="$rounded4" backgroundColor="$surface3" />
-          ) : (
-            (showFdv || showVolume) && (
-              <Flex row alignItems="center" gap="$spacing8" flexWrap="wrap">
-                {showFdv && (
-                  <Text variant="body3" color="$neutral3">
-                    <Trans
-                      i18nKey="toucan.auction.nowTradingCard.fdv"
-                      values={{ fdv: formatFiat(marketFdv) }}
-                      components={{ value: <Text variant="body3" color="$neutral2" tag="span" /> }}
-                    />
-                  </Text>
-                )}
-                {showFdv && showVolume && (
-                  <Flex width={4} height={4} borderRadius="$roundedFull" backgroundColor="$neutral3" />
-                )}
-                {showVolume && (
-                  <Text variant="body3" color="$neutral3">
-                    <Trans
-                      i18nKey="toucan.auction.nowTradingCard.volume24h"
-                      values={{ volume: formatFiat(volume24h) }}
-                      components={{ value: <Text variant="body3" color="$neutral2" tag="span" /> }}
-                    />
-                  </Text>
-                )}
-              </Flex>
-            )
-          )}
+      )}
+      {initialQueriesLoading ? (
+        <Shimmer>
+          <Flex row alignItems="center" gap="$spacing12">
+            <Flex width={48} height={48} borderRadius="$roundedFull" backgroundColor="$surface3" />
+            <Flex flex={1} gap="$spacing4">
+              <Flex height={24} width="80%" borderRadius="$rounded4" backgroundColor="$surface3" />
+              <Flex height={16} width="90%" borderRadius="$rounded4" backgroundColor="$surface3" />
+            </Flex>
+          </Flex>
+        </Shimmer>
+      ) : (
+        <Flex row alignItems="center" gap="$spacing12">
+          <TokenLogo
+            url={tradingToken.logoUrl}
+            chainId={auctionDetails.chainId}
+            symbol={symbol}
+            size={48}
+            hideNetworkLogo
+          />
+          <Flex gap="$spacing4" flex={1}>
+            <Text variant="subheading1" color="$neutral1">
+              {t('toucan.auction.nowTradingCard.title', { symbol })}
+            </Text>
+            <NowTradingCardStats stats={stats} />
+          </Flex>
         </Flex>
-      </Flex>
-      {sparklinePoints.length > 1 && (
+      )}
+      {(initialQueriesLoading || hasChart) && (
         <Flex ref={chartRef} width="100%" height={SPARKLINE_HEIGHT}>
-          {chartWidth !== undefined && chartWidth > 0 && (
+          {initialQueriesLoading || !chartIsMeasured ? (
+            <Shimmer>
+              <Flex height={SPARKLINE_HEIGHT} borderRadius="$rounded12" backgroundColor="$surface3" />
+            </Shimmer>
+          ) : (
             <SparklineChart
               width={chartWidth}
               height={SPARKLINE_HEIGHT}
@@ -184,11 +181,17 @@ export function NowTradingCard(): JSX.Element | null {
           )}
         </Flex>
       )}
-      <ToucanActionButton
-        label={t('toucan.auction.nowTradingCard.trade', { symbol })}
-        elementName={ElementName.AuctionNowTradingCardTradeButton}
-        onPress={onPress}
-      />
+      {initialQueriesLoading ? (
+        <Shimmer>
+          <Flex height={48} borderRadius="$rounded16" backgroundColor="$surface3" />
+        </Shimmer>
+      ) : (
+        <ToucanActionButton
+          label={t('toucan.auction.nowTradingCard.trade', { symbol })}
+          elementName={ElementName.AuctionNowTradingCardTradeButton}
+          onPress={navigateToTokenDetails}
+        />
+      )}
     </Flex>
   )
 }

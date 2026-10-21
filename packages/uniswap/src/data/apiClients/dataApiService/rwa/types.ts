@@ -1,4 +1,5 @@
 import type { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import type { RWAIssuerLogos } from 'uniswap/src/features/rwa/types'
 
 export type RwaSparklinePoint = {
   timestampS: number
@@ -22,6 +23,7 @@ export type IssuerToken = {
   /** BE issuer brand name (v2 ListTokenGroups only); v1 leaves it unset and the label is derived from the slug. */
   issuerDisplayName?: string
   issuerLogoUrl?: string
+  issuerLogos?: RWAIssuerLogos
   priceUsd: number
   priceChange1hPct?: number
   priceChange24hPct?: number

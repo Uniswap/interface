@@ -87,21 +87,25 @@ test.describe(
       // (updateOrders never lets a Cancelling order exit on non-final statuses, and the flag-on
       // receipt path only fires after the 120s cancel deadline). The live poller 400s on the same
       // 20-byte hash, so the order stays Cancelling forever. Statefully mock it: open until the
-      // pre-check fires (Proceed clicked, cancel tx follows immediately), cancelled after.
+      // pre-check fires (Proceed clicked, cancel tx follows immediately), cancelled after. Only a
+      // GET after Proceed counts: gas-estimate paths also hit /orders, and flipping on those lets
+      // the poller cancel the order before Proceed renders.
+      let proceedClicked = false
       let cancelRequested = false
       await page.route(getTradingApiEndpointPattern(V1_TRADING_API_PATHS.orders), async (route) => {
-        cancelRequested = true
+        cancelRequested ||= proceedClicked
         await route.fulfill({ path: Mocks.UniswapX.openOrders })
       })
       await page.route(UNISWAP_X_ORDERS_ENDPOINT, async (route) => {
         await route.fulfill({ path: cancelRequested ? Mocks.UniswapX.cancelledOrders : Mocks.UniswapX.openOrders })
       })
 
-      await page.getByTestId(TestID.Web3StatusConnected).click()
-      // Scoped to the drawer: the transient pending-activity popup also renders 'Swapping',
-      // making the page-wide locator ambiguous under strict mode
-      await page.getByTestId(TestID.AccountDrawer).getByText('Swapping').first().click()
-      await page.getByText('Cancel').click()
+      // The order popup is the entry to OffchainActivityModal (Proceed / "Cancellation successful").
+      // The account-drawer row opens the shared TransactionDetailsModal instead, whose cancel view
+      // has no Proceed button. The popup auto-dismisses after 10s, so click it straight away.
+      await page.getByTestId(TestID.ActivityPopup).getByText('Swapping').click()
+      await page.getByRole('button', { name: 'Cancel order' }).click()
+      proceedClicked = true
       await page.getByRole('button', { name: 'Proceed' }).click()
 
       // Poller backoff reaches 30s between ticks by cancel time; the default 15s expect

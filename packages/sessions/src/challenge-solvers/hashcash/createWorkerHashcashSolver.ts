@@ -6,6 +6,7 @@
  */
 import { parseHashcashChallenge } from '@universe/sessions/src/challenge-solvers/createHashcashSolver'
 import type { HashcashChallenge } from '@universe/sessions/src/challenge-solvers/hashcash/core'
+import { getHashcashSearchRangeSize } from '@universe/sessions/src/challenge-solvers/hashcash/shared'
 import type { HashcashWorkerChannelFactory } from '@universe/sessions/src/challenge-solvers/hashcash/worker/types'
 import type { ChallengeData, ChallengeSolver } from '@universe/sessions/src/challenge-solvers/types'
 
@@ -63,6 +64,8 @@ function createWorkerHashcashSolver(ctx: CreateWorkerHashcashSolverContext): Cha
       challenge = parseHashcashChallenge(challengeDataStr)
     }
 
+    const rangeSize = getHashcashSearchRangeSize(challenge)
+
     // Create worker channel
     const channel = ctx.createChannel()
 
@@ -87,7 +90,7 @@ function createWorkerHashcashSolver(ctx: CreateWorkerHashcashSolverContext): Cha
       const proof = await channel.api.findProof({
         challenge,
         rangeStart: 0,
-        rangeSize: challenge.max_proof_length,
+        rangeSize,
       })
 
       if (!proof) {
@@ -97,7 +100,7 @@ function createWorkerHashcashSolver(ctx: CreateWorkerHashcashSolverContext): Cha
         }
 
         throw new Error(
-          `Failed to find valid proof within allowed range (0-${challenge.max_proof_length}). ` +
+          `Failed to find valid proof within allowed range (0-${rangeSize}). ` +
             'Challenge may have expired or difficulty may be too high.',
         )
       }

@@ -62,8 +62,8 @@ export function Locked(): JSX.Element {
     [onChangePasswordText],
   )
 
-  const { mutate: unlockWithPassword, error: unlockError } = useUnlockWithPassword(enteredPassword)
-  const onPressUnlockWithPassword = useEvent(() => unlockWithPassword())
+  const { mutate: unlockWithPassword, error: unlockError } = useUnlockWithPassword()
+  const onPressUnlockWithPassword = useEvent(() => unlockWithPassword(enteredPassword))
 
   const { mutate: unlockWithBiometricCredential, error: biometricUnlockError } =
     useUnlockWithBiometricCredentialMutation()

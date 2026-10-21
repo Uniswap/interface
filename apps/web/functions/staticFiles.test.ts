@@ -25,6 +25,9 @@ beforeAll(() => {
   writeClientFile('fonts/Basel.woff2', 'woff2')
   writeClientFile('embed.html', '<html>embed</html>')
   writeClientFile('.well-known/apple-app-site-association', '{"applinks":{}}')
+  writeClientFile('robots.txt', 'User-agent: *')
+  writeClientFile('logo.svg', '<svg xmlns="http://www.w3.org/2000/svg"></svg>')
+  writeClientFile('tokenlist.schema.json', '{}')
 
   app = new Hono()
   app.use('*', staticFiles(clientDir))
@@ -92,6 +95,7 @@ describe('staticFiles', () => {
     for (const [name, value] of Object.entries(FRAME_PROTECTION_HEADERS)) {
       expect(res.headers.get(name)).toBe(value)
     }
+    expect(res.headers.get('X-Content-Type-Options')).toBe('nosniff')
   })
 
   it('serves the extensionless well-known doc as JSON', async () => {
@@ -105,5 +109,17 @@ describe('staticFiles', () => {
     const res = await app.request('/assets/index-STALE.js', { method: 'POST' })
     expect(res.status).toBe(200)
     expect(await res.text()).toBe(SPA_HTML)
+  })
+
+  it.each([
+    '/robots.txt',
+    '/logo.svg',
+    '/tokenlist.schema.json',
+    '/.well-known/apple-app-site-association',
+    '/assets/index-abc123.js',
+  ])('serves %s with nosniff', async (path) => {
+    const res = await app.request(path)
+    expect(res.status).toBe(200)
+    expect(res.headers.get('X-Content-Type-Options')).toBe('nosniff')
   })
 })

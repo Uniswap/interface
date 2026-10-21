@@ -1,6 +1,6 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
 import { useQuery } from '@tanstack/react-query'
-import type { Auction, GetAuctionResponse } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import type { Auction, GetAuctionResponse } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import type { UniverseChainId } from '@universe/chains'
 import { FeatureFlags, useFeatureFlag, useStatsigClientStatus } from '@universe/gating'
 import { useMemo } from 'react'

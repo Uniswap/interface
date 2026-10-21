@@ -389,6 +389,17 @@
         "@tailwindcss/node",
         "@tailwindcss/oxide"
       ]
+    },
+    "apps/unilens": {
+      "entry": [
+        "src/entrypoints/**/*.{ts,tsx}"
+      ],
+      "ignoreDependencies": [
+        "@tailwindcss/vite",
+        "@wxt-dev/module-react",
+        "react-native-web",
+        "vite"
+      ]
     }
   }
 }

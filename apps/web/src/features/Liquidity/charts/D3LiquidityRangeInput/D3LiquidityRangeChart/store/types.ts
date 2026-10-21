@@ -61,6 +61,10 @@ export type ChartState = {
   renderedBuckets?: BucketChartEntry[]
   selectedHistoryDuration: HistoryDuration
   selectedPriceStrategy?: DefaultPriceStrategy
+  /** The range a preset last wrote via handleTickRangeChange. While min/max still equal it the user hasn't edited it. */
+  presetTicks?: { minTick: number; maxTick: number }
+  /** Mirrors the parent's lock while a transaction is in flight; see syncCurrentTickFromParent. */
+  isRangeLocked?: boolean
   tickSpacing: number
   zoomLevel: number
 }
@@ -107,6 +111,9 @@ export type RenderingContext = {
   liquidityScaleSmoothing: LiquidityScaleSmoothing
 }
 
+/** A whole range sent to the parent. `presetStrategy` is set only when a preset, not the user, wrote it. */
+export type TickRangeChange = { minTick?: number; maxTick?: number; presetStrategy?: DefaultPriceStrategy }
+
 export enum DefaultPriceStrategy {
   STABLE = 'stable',
   WIDE = 'wide',
@@ -138,16 +145,18 @@ export type ChartActions = {
     currentPrice,
     tickSpacing,
     isInitialPriceDirty,
+    isRangeLocked,
   }: {
     currentTick: number
     currentPrice?: number
     tickSpacing: number
     isInitialPriceDirty?: boolean
+    isRangeLocked?: boolean
   }) => void
   syncIsFullRangeFromParent: (isFullRange: boolean) => void
   updateDimensions: (dimensions: { width: number; height: number }) => void
   handleTickChange: ({ changeType, tick }: { changeType: 'min' | 'max'; tick?: number }) => void
-  handleTickRangeChange: ({ minTick, maxTick }: { minTick?: number; maxTick?: number }) => void
+  handleTickRangeChange: (range: TickRangeChange) => void
   initializeView: () => void
   initializeRenderers: ({
     g,

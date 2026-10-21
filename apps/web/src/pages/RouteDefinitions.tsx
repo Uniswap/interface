@@ -70,14 +70,16 @@ export function useRouterConfig(): RouterConfig {
   const browserRouterEnabled = isBrowserRouterEnabled()
   const { hash } = useLocation()
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
+  const isMarginEnabled = useFeatureFlag(FeatureFlags.Margin)
 
   return useMemo(
     () => ({
       browserRouterEnabled,
       hash,
       isEmbeddedWalletEnabled,
+      isMarginEnabled,
     }),
-    [browserRouterEnabled, hash, isEmbeddedWalletEnabled],
+    [browserRouterEnabled, hash, isEmbeddedWalletEnabled, isMarginEnabled],
   )
 }
 
@@ -264,6 +266,12 @@ export const routes: RouteDefinition[] = [
     path: '/swap',
     getElement: () => <SwapPage />,
     getTitle: () => StaticTitlesAndDescriptions.SwapTitle,
+  }),
+  createRouteDefinition({
+    path: '/margin',
+    getElement: () => <SwapPage />,
+    getTitle: () => StaticTitlesAndDescriptions.SwapTitle,
+    enabled: (args) => Boolean(args.isMarginEnabled),
   }),
   // Refreshed pool routes
   createRouteDefinition({

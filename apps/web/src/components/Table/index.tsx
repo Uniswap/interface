@@ -3,12 +3,13 @@ import { Flex, type FlexCompatProps, Separator, Text, TouchableArea, zIndexes } 
 import { HeightAnimator } from '@universe/mycelium/height-animator'
 import { ChevronsIn } from '@universe/mycelium/icons/ChevronsIn'
 import { ChevronsOut } from '@universe/mycelium/icons/ChevronsOut'
-import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { useMedia, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import useParentSize from '@visx/responsive/lib/hooks/useParentSize'
-import { forwardRef, PropsWithChildren, useMemo, useRef, useState } from 'react'
+import { CSSProperties, forwardRef, PropsWithChildren, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
 import { useEvent } from 'utilities/src/react/hooks'
+import { APP_BODY_MOBILE_GUTTER_PX } from '~/app/layout/constants'
 import { useTableBodyRenderMode, TableBodyRenderMode } from '~/components/Table/hooks/useTableBodyRenderMode'
 import { useTableBottomFade } from '~/components/Table/hooks/useTableBottomFade'
 import { useTableExpandedState } from '~/components/Table/hooks/useTableExpandedState'
@@ -27,6 +28,10 @@ import { TableProps } from '~/components/Table/types'
 import { computeBodyMaxHeight } from '~/components/Table/utils/computeBodyMaxHeight'
 import { getPinnedRegionRightEdgePx } from '~/components/Table/utils/getColumnSizingStyles'
 import { useAppHeaderHeight } from '~/hooks/useAppHeaderHeight'
+
+// Set on TableContainer only while bleeding, so the last column's scroll-end gutter drops out otherwise.
+const TRAILING_GUTTER_VAR = '--table-trailing-gutter'
+const BLEED_STYLE = { [TRAILING_GUTTER_VAR]: `${APP_BODY_MOBILE_GUTTER_PX}px` } as CSSProperties
 
 const TableContainer = forwardRef<HTMLDivElement, FlexCompatProps>(function TableContainer(props, ref) {
   // No margin on purpose: the legacy `m: '0 auto 24px auto'` was invalid per-side CSS browsers dropped,
@@ -213,6 +218,7 @@ export function Table<T extends RowData>({
   hideHiddenRowsLabel,
   showScrollbar,
   pinnedWidthOverride,
+  mobileFullBleed = false,
   virtualized = false,
   // Window virtualization (virtualized + no maxHeight) resolves to the 'window' scroll variant, which
   // needs the wrapper's vertical overflow clipped to avoid the wheel trap. Keep the two in sync by
@@ -221,6 +227,7 @@ export function Table<T extends RowData>({
   stickyTopOffset = 0,
 }: TableProps<T>) {
   const colors = useSporeColors()
+  const media = useMedia()
   const { t } = useTranslation()
 
   const [areHiddenRowsShown, setAreHiddenRowsShown] = useState(false)
@@ -251,8 +258,19 @@ export function Table<T extends RowData>({
     error,
   })
 
+  const tableColumns = useMemo(() => {
+    const lastColumn = columns.at(-1)
+    if (!mobileFullBleed || !lastColumn) {
+      return columns
+    }
+    return [
+      ...columns.slice(0, -1),
+      { ...lastColumn, meta: { ...lastColumn.meta, trailingMarginCss: `var(${TRAILING_GUTTER_VAR}, 0px)` } },
+    ]
+  }, [columns, mobileFullBleed])
+
   const table = useReactTable({
-    columns,
+    columns: tableColumns,
     data,
     state: {
       columnPinning: { left: pinnedColumns },
@@ -269,7 +287,7 @@ export function Table<T extends RowData>({
 
   const hiddenTable = useReactTable({
     data: hiddenRows ?? [],
-    columns,
+    columns: tableColumns,
     state: {
       columnPinning: { left: pinnedColumns },
     },
@@ -294,6 +312,9 @@ export function Table<T extends RowData>({
   })
 
   const rowContentMinWidthPx = table.getTotalSize()
+  // Bleeding widens the container and the rows by the same gutter, so it never flips scrollability back.
+  const bleedsRight =
+    mobileFullBleed && media.md && (sideScrollButtons.showScrollLeftButton || sideScrollButtons.showScrollRightButton)
 
   const tableSize = useMemo(() => ({ width, height, top, left }), [width, height, top, left])
   const computedBodyMaxHeight = useMemo(() => {
@@ -325,7 +346,13 @@ export function Table<T extends RowData>({
   })
 
   const content = (
-    <TableContainer maxWidth={maxWidth} maxHeight={maxHeight} position="relative" ref={parentRef}>
+    <TableContainer
+      maxWidth={maxWidth}
+      maxHeight={maxHeight}
+      position="relative"
+      ref={parentRef}
+      {...(bleedsRight && { mr: -APP_BODY_MOBILE_GUTTER_PX, style: BLEED_STYLE })}
+    >
       {showPinnedColumnDivider ? (
         <TablePinnedColumnOverlay
           leftPx={pinnedColumnOverlayLeftPx}

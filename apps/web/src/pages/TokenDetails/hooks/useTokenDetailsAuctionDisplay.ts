@@ -4,6 +4,10 @@ import type { TokenDetailsAuctionDisplay } from '~/pages/TokenDetails/utils/toke
 
 export interface TokenDetailsAuctionDisplayModel extends TokenDetailsAuctionDisplay {
   isInitialLoading: boolean
+  /** True until the token is known not to be auction-only: the auction lookup, its pool, or its phase is still in flight. */
+  isAuctionOnlyPending: boolean
+  /** Latches once this auction's pool is confirmed, so a later refetch cannot retract what is already on screen. */
+  hasConfirmedPool: boolean
   /** Re-reads the chain head so the phase flips from blocks, never from the browser clock. */
   refetchCurrentBlock: () => void
 }

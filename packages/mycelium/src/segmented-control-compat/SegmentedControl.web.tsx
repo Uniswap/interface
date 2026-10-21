@@ -70,6 +70,22 @@ function sameRect(a: IndicatorRect | null, b: IndicatorRect | null): boolean {
   return a.left === b.left && a.top === b.top && a.width === b.width && a.height === b.height
 }
 
+// offset* values ignore ancestor transforms (e.g. a popover's scale-in); getBoundingClientRect doesn't.
+function measureOptionRect(container: HTMLElement, node: HTMLElement): IndicatorRect | null {
+  let left = node.offsetLeft
+  let top = node.offsetTop
+  let parent = node.offsetParent
+  while (parent instanceof HTMLElement && parent !== container) {
+    left += parent.offsetLeft + parent.clientLeft
+    top += parent.offsetTop + parent.clientTop
+    parent = parent.offsetParent
+  }
+  if (parent !== container) {
+    return null
+  }
+  return { left, top, width: node.offsetWidth, height: node.offsetHeight }
+}
+
 /**
  * Spore segmented control, for selecting between multiple options — the
  * INFRA-3518 web leg, a pixel-parity port of the legacy Tamagui component
@@ -112,21 +128,7 @@ export function SegmentedControl<T extends string = string>({
   const measureIndicator = useEvent((): void => {
     const container = containerRef.current
     const node = optionNodesRef.current.get(selectedOption)
-    if (!container || !node) {
-      setIndicatorRect(null)
-      return
-    }
-    // Rect relative to the container's padding box (where the pill's
-    // `left/top: 0` resolves): subtracting clientLeft/Top keeps the pill
-    // aligned whether or not `outlined` renders the container border.
-    const containerBox = container.getBoundingClientRect()
-    const optionBox = node.getBoundingClientRect()
-    const next: IndicatorRect = {
-      left: optionBox.left - containerBox.left - container.clientLeft,
-      top: optionBox.top - containerBox.top - container.clientTop,
-      width: optionBox.width,
-      height: optionBox.height,
-    }
+    const next = container && node ? measureOptionRect(container, node) : null
     setIndicatorRect((prev) => (sameRect(prev, next) ? prev : next))
   })
 

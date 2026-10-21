@@ -7,12 +7,13 @@ import {
   UniversalImage,
   useIsShortMobileDevice,
 } from '@universe/mycelium'
+import { UNITAGS_BANNER_VERTICAL_DARK, UNITAGS_BANNER_VERTICAL_LIGHT } from '@universe/mycelium/assets'
 import { useDeviceDimensions, useIsDarkMode } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import React, { useCallback } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { UNITAGS_BANNER_VERTICAL_DARK, UNITAGS_BANNER_VERTICAL_LIGHT } from 'ui/src/assets'
+import { Trans } from 'ui/src'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'uniswap/src/features/unitags/constants'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'

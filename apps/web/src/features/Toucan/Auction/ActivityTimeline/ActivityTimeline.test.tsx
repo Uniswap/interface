@@ -48,7 +48,8 @@ function graduated(poolAvailability: PoolAvailability): AuctionDisplayState {
     phase: AuctionDisplayPhase.Ended,
     result: AuctionDisplayResult.Successful,
     poolAvailability,
-    shouldShowSwap: poolAvailability === PoolAvailability.HasPool,
+    // Mirrors resolveAuctionDisplayState: only a confirmed missing pool takes the swap away.
+    shouldShowSwap: poolAvailability !== PoolAvailability.NoPool,
   }
 }
 
@@ -57,15 +58,25 @@ describe('ActivityTimeline', () => {
     vi.mocked(isTradingRestrictedUntilTge).mockReturnValue(false)
   })
 
-  it.each([PoolAvailability.Loading, PoolAvailability.Error, PoolAvailability.NoPool])(
-    'only promises claiming when a graduated auction has pool availability %s',
+  it('only promises claiming once a graduated auction is confirmed to have no pool', () => {
+    vi.mocked(useAuctionDisplayState).mockReturnValue(graduated(PoolAvailability.NoPool))
+
+    render(<ActivityTimeline />)
+
+    expect(screen.getByText('Token available to claim')).toBeInTheDocument()
+    expect(screen.queryByText('Token available to trade')).toBeNull()
+  })
+
+  // shouldShowSwap still offers trading in both, so claim-only copy would contradict the same page.
+  it.each([PoolAvailability.Loading, PoolAvailability.Error])(
+    'keeps the trading copy while pool availability is %s',
     (poolAvailability) => {
       vi.mocked(useAuctionDisplayState).mockReturnValue(graduated(poolAvailability))
 
       render(<ActivityTimeline />)
 
-      expect(screen.getByText('Token available to claim')).toBeInTheDocument()
-      expect(screen.queryByText('Token available to trade')).toBeNull()
+      expect(screen.getByText('Token available to trade')).toBeInTheDocument()
+      expect(screen.queryByText('Token available to claim')).toBeNull()
     },
   )
 

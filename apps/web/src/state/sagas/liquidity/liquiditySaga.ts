@@ -1,5 +1,6 @@
+import ms from 'ms'
 import invariant from 'tiny-invariant'
-import { call } from 'typed-redux-saga'
+import { call, cancelled, type SagaGenerator } from 'typed-redux-saga'
 import { InterfaceEventName, LiquidityEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
@@ -31,7 +32,7 @@ import type {
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { SignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { currencyId } from 'uniswap/src/utils/currencyId'
-import { createSaga } from 'uniswap/src/utils/saga'
+import { createMonitoredSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
 import { popupRegistry } from '~/state/popups/registry'
 import { PopupType } from '~/state/popups/types'
@@ -290,6 +291,13 @@ function* liquidity(params: LiquidityParams) {
   const steps = yield* call(generateLPTransactionSteps, liquidityTxContext)
   params.setSteps(steps)
 
+  // Review modals read a running saga with no current step as another flow's pending request. Report the
+  // first step now so that never covers this run: the chain switch below waits on the wallet before any
+  // step handler runs, and handleAtomicSendCalls never reports a step at all.
+  if (steps.length > 0) {
+    params.setCurrentStep({ step: steps[0], accepted: false })
+  }
+
   // Switch chains if needed
   const token0ChainId = liquidityTxContext.action.currency0Amount.currency.chainId
   const token1ChainId = liquidityTxContext.action.currency1Amount.currency.chainId
@@ -316,10 +324,28 @@ function* liquidity(params: LiquidityParams) {
   })
 }
 
-// restartOnRetrigger: the confirm button stays pressable until a transaction step starts, so a
-// retry while the saga is stuck awaiting a chain switch (e.g. a wallet prompt dismissed natively
-// without settling the request) must cancel the stalled run and start over instead of being dropped.
-export const liquiditySaga = createSaga(liquidity, 'liquiditySaga', { restartOnRetrigger: true })
+function withCancellationCleanup<Params, Result>(
+  saga: (params: Params) => SagaGenerator<Result>,
+  cleanup: (params: Params) => void,
+): (params: Params) => SagaGenerator<Result> {
+  return function* (params: Params) {
+    try {
+      return yield* call(saga, params)
+    } finally {
+      if (yield* cancelled()) {
+        yield* call(cleanup, params)
+      }
+    }
+  }
+}
+
+// The monitored saga's timeout and cancel action stop the run without reaching onFailure, which
+// would leave the modal showing a pending step.
+export const liquiditySaga = createMonitoredSaga({
+  saga: withCancellationCleanup(liquidity, (params) => params.onFailure()),
+  name: 'liquiditySaga',
+  options: { timeoutDuration: ms('30m'), showErrorNotification: false },
+})
 
 function getLiquidityTransactionInfo(
   action: LiquidityAction,

@@ -71,6 +71,7 @@ export function ExpandableAssetTable({
 
   return (
     <Table<ExpandableAssetTableRow>
+      mobileFullBleed
       columns={columns}
       data={data}
       loading={isLoading}

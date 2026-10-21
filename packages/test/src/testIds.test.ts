@@ -9,54 +9,7 @@ import { TestID } from './testIds'
  */
 const MAESTRO_ONLY = ['ExploreFilterChainAll', 'SearchTokensAndWallets']
 
-/**
- * Unreferenced TestIds we want the usage checker test to ignore.
- * TODO: Remove when #40887 lands.
- */
-const USAGE_CHECK_EXCEPTIONS = [
-  'MarginAddCta',
-  'MarginAdjustBeforeAfterBlock',
-  'MarginAdjustBeforeAfterSkeleton',
-  'MarginAdjustLockLeverage',
-  'MarginAdjustPositionCta',
-  'MarginChangeLeverageCta',
-  'MarginChartGlossaryClose',
-  'MarginChartLegendChip',
-  'MarginChartLegendStaleDot',
-  'MarginChartSettingsGear',
-  'MarginChartSettingsGlossaryLink',
-  'MarginChartSkeleton',
-  'MarginChartStyleCandles',
-  'MarginChartStyleLine',
-  'MarginChartZoomIn',
-  'MarginChartZoomOut',
-  'MarginChartZoomReset',
-  'MarginEntryPriceTrigger',
-  'MarginEquityTrigger',
-  'MarginEstPnlTrigger',
-  'MarginMarketsEmpty',
-  'MarginMarketsError',
-  'MarginMarketsLoading',
-  'MarginModalTitle',
-  'MarginPairRow',
-  'MarginPnlHeaderInfo',
-  'MarginPnlSuppressed',
-  'MarginPnlTrigger',
-  'MarginPositionVenueExcluded',
-  'MarginRealizedTrigger',
-  'MarginReviewRouteChanged',
-  'MarginRoutedVenueChip',
-  'MarginShowMoreQuoteRows',
-  'MarginVenueDefaultToggle',
-  'MarginVenueLogo',
-  'MarginVenueRow',
-  'MarginVenuesEmpty',
-  'MarginVenuesNotice',
-  'MarginVenuesSettingsEntry',
-  'MarginWithdrawCta',
-]
-
-const ALLOWED_UNUSED = new Set([...MAESTRO_ONLY, ...USAGE_CHECK_EXCEPTIONS])
+const ALLOWED_UNUSED = new Set(MAESTRO_ONLY)
 
 let cachedKeys: Set<string> | undefined
 
@@ -117,7 +70,8 @@ describe('TestID', () => {
     expect(duplicates).toEqual([])
   })
 
-  it('defines no id that nothing references', () => {
+  // The repo-wide grep can run well past vitest's 10s default on a loaded CI runner.
+  it('defines no id that nothing references', { timeout: 60_000 }, () => {
     const referenced = referencedKeys()
     const unused = Object.keys(TestID).filter((key) => !referenced.has(key) && !ALLOWED_UNUSED.has(key))
 
@@ -125,7 +79,7 @@ describe('TestID', () => {
   })
 
   // Without this the allowlist silently becomes a graveyard.
-  it('has no stale allowlist entries', () => {
+  it('has no stale allowlist entries', { timeout: 60_000 }, () => {
     const referenced = referencedKeys()
     const stale = [...ALLOWED_UNUSED].filter((key) => !(key in TestID) || referenced.has(key))
 

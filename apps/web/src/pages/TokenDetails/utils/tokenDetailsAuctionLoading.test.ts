@@ -1,9 +1,12 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
-import { AuctionType, type Auction } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { AuctionType, type Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { UniverseChainId } from '@universe/chains'
 import { LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
 import { AuctionDisplayPhase, PoolAvailability } from '~/features/Toucan/Auction/utils/resolveAuctionDisplayState'
-import { resolveInitialAuctionLoading } from '~/pages/TokenDetails/utils/tokenDetailsAuctionLoading'
+import {
+  resolveAuctionPoolConfirmation,
+  resolveInitialAuctionLoading,
+} from '~/pages/TokenDetails/utils/tokenDetailsAuctionLoading'
 
 const pendingAuction = {
   auction: {
@@ -37,6 +40,24 @@ describe('resolveInitialAuctionLoading', () => {
     expect(resolve({ display: { ...pendingAuction, phase: AuctionDisplayPhase.Upcoming } }).pending).toBe(true)
   })
 
+  // Either signal alone leaves the layout undecided, so the skeleton has to cover both.
+  it.each([
+    { ...pendingAuction, phase: AuctionDisplayPhase.Loading },
+    { ...pendingAuction, phase: AuctionDisplayPhase.Loading, poolAvailability: PoolAvailability.NoPool },
+  ])('reserves the sidebar while the chain head is still resolving: %j', (display) => {
+    expect(resolve({ display }).pending).toBe(true)
+  })
+
+  // A confirmed pool rules out the auction-only layout whatever the phase turns out to be.
+  it.each([PoolAvailability.HasPool, PoolAvailability.Error])(
+    'keeps the normal layout with an unresolved phase once pools settle as %s',
+    (poolAvailability) => {
+      expect(
+        resolve({ display: { ...pendingAuction, phase: AuctionDisplayPhase.Loading, poolAvailability } }).pending,
+      ).toBe(false)
+    },
+  )
+
   it.each([
     { ...pendingAuction, auction: undefined },
     { ...pendingAuction, launchMethod: LaunchProvenanceMethod.CrowdLaunch },
@@ -45,7 +66,6 @@ describe('resolveInitialAuctionLoading', () => {
     { ...pendingAuction, auction: { ...pendingAuction.auction, tokenAddress: '' } },
     { ...pendingAuction, auction: { ...pendingAuction.auction, tokenAddress: 'invalid' } },
     { ...pendingAuction, chainId: undefined },
-    { ...pendingAuction, phase: AuctionDisplayPhase.Loading },
     { ...pendingAuction, phase: AuctionDisplayPhase.Unknown },
     { ...pendingAuction, phase: AuctionDisplayPhase.Ended },
     { ...pendingAuction, poolAvailability: PoolAvailability.HasPool },
@@ -82,5 +102,29 @@ describe('resolveInitialAuctionLoading', () => {
       pending: undefined,
     })
     expect(resolve({ previous, pageKey: 'base:token-b' }).pending).toBe(true)
+  })
+})
+
+describe('resolveAuctionPoolConfirmation', () => {
+  const none = { key: 'auction-a', confirmed: false }
+
+  it('confirms a pool once and holds it through a refetch that reports none', () => {
+    const confirmed = resolveAuctionPoolConfirmation({ previous: none, key: 'auction-a', hasPool: true })
+
+    expect(confirmed.confirmed).toBe(true)
+    expect(resolveAuctionPoolConfirmation({ previous: confirmed, key: 'auction-a', hasPool: false })).toBe(confirmed)
+  })
+
+  it('keeps the same object while nothing has been confirmed', () => {
+    expect(resolveAuctionPoolConfirmation({ previous: none, key: 'auction-a', hasPool: false })).toBe(none)
+  })
+
+  it('starts over on a different auction', () => {
+    const confirmed = resolveAuctionPoolConfirmation({ previous: none, key: 'auction-a', hasPool: true })
+
+    expect(resolveAuctionPoolConfirmation({ previous: confirmed, key: 'auction-b', hasPool: false })).toEqual({
+      key: 'auction-b',
+      confirmed: false,
+    })
   })
 })

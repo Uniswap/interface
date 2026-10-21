@@ -51,6 +51,7 @@ export function Switch({
   id,
   testID,
   pointerEvents,
+  'aria-label': ariaLabel,
 }: SwitchProps): JSX.Element {
   const [checked, setChecked] = useState<boolean>(checkedProp ?? defaultChecked ?? false)
   const [hovered, setHovered] = useState(false)
@@ -246,6 +247,7 @@ export function Switch({
       aria-disabled={disabled}
       // Transcribed from the legacy implementation, which set aria-selected alongside aria-checked.
       aria-selected={checked}
+      aria-label={ariaLabel}
       data-testid={testID}
       id={id}
       role="switch"

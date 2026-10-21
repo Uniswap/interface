@@ -18,7 +18,7 @@ import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
-import { AddressHoverCard } from '~/components/AddressHoverCard/AddressHoverCard'
+import { WalletHoverCard } from '~/components/HoverCard/WalletHoverCard/WalletHoverCard'
 import { InternalLink } from '~/components/InternalLink'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
@@ -250,11 +250,11 @@ export const RecentTransactionsTable = memo(function RecentTransactions() {
 
           return (
             <Cell loading={showLoadingSkeleton}>
-              <AddressHoverCard address={address} chainId={row?.chainId ?? chainInfo.id}>
+              <WalletHoverCard address={address} chainId={row?.chainId ?? chainInfo.id}>
                 <InternalLink to={buildPortfolioUrl({ externalAddress: address })}>
                   <TableText>{shortenedAddress}</TableText>
                 </InternalLink>
-              </AddressHoverCard>
+              </WalletHoverCard>
             </Cell>
           )
         },
@@ -276,6 +276,7 @@ export const RecentTransactionsTable = memo(function RecentTransactions() {
   return (
     <Trace section={SectionName.ExploreRecentTransactions}>
       <Table
+        mobileFullBleed
         virtualized
         columns={columns}
         data={filteredTransactionsWithFiat}

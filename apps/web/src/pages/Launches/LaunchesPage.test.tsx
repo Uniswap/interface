@@ -398,7 +398,7 @@ describe('LaunchesPage', () => {
       // catch drift away from the Trending tab's shape, which is the whole point of this feed.
       expect(findHeroCall()).toMatchObject({
         launchpadIds: ['pools'],
-        chainIds: [UniverseChainId.Robinhood],
+        chainIds: [UniverseChainId.Robinhood, UniverseChainId.Arc],
         sortBy: LaunchesOrderBy.TRENDING,
         pageSize: 100,
       })
@@ -406,17 +406,39 @@ describe('LaunchesPage', () => {
       expect(findHeroCall()?.launchpadId).toBeUndefined()
     })
 
-    it('widens the hero feed to Arc alongside Robinhood when the Arc flag is on', () => {
-      mockPromoFlags({ banner: true, teaser: false, arc: true })
+    it('scopes the table and hero feeds to Robinhood and Arc by default, regardless of the Arc flag', () => {
+      mockPromoFlags({ banner: false, teaser: false, arc: false })
 
       renderLaunchesPage()
 
-      expect(findHeroCall()).toMatchObject({
-        launchpadIds: ['pools'],
-        chainIds: [UniverseChainId.Robinhood, UniverseChainId.Arc],
-        sortBy: LaunchesOrderBy.TRENDING,
-        pageSize: 100,
-      })
+      // No network is selected by default, so the table asks for every allowed chain.
+      const tableCall = mockUseLaunches.mock.calls.find(([params]) => params && 'ascending' in params)?.[0]
+      expect(tableCall?.chainIds).toEqual([UniverseChainId.Robinhood, UniverseChainId.Arc])
+      expect(findHeroCall()?.chainIds).toEqual([UniverseChainId.Robinhood, UniverseChainId.Arc])
+    })
+
+    it('offers every allowed chain in the network filter, even with no launches on it yet', () => {
+      // Both chains sit behind their own rollout flags, both on in production; the filter options
+      // themselves come from config, not from the launches the feed happens to return.
+      mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.Arc || flag === FeatureFlags.Robinhood)
+      mockUseLaunches.mockReturnValue(
+        mockLaunchesResult({
+          launches: [
+            createLaunch({
+              launchpadId: 'pons',
+              name: 'Robin Token',
+              symbol: 'ROB',
+              chainId: UniverseChainId.Robinhood,
+            }),
+          ],
+        }),
+      )
+
+      renderLaunchesPage()
+      fireEvent.click(screen.getByTestId(TestID.TokensNetworkFilterTrigger))
+
+      expect(screen.getByTestId(`network-button-${UniverseChainId.Robinhood}`)).toBeInTheDocument()
+      expect(screen.getByTestId(`network-button-${UniverseChainId.Arc}`)).toBeInTheDocument()
     })
 
     it('admits both Pools launch mechanisms into the hero marquee, and no other launchpad', () => {

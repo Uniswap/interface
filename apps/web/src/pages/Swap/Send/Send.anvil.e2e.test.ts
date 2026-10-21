@@ -5,7 +5,14 @@ import { USDC } from 'uniswap/src/constants/tokens'
 import { assume0xAddress } from '~/chains'
 import { expect, getTest, type Page } from '~/playwright/fixtures'
 import type { AnvilClient } from '~/playwright/fixtures/anvil'
-import { EMBEDDED_WALLET_URL_PARAMS, rpcSequence, setupEmbeddedWallet } from '~/playwright/fixtures/embeddedWallet'
+import {
+  CALIBUR_DELEGATION_ADDRESS,
+  DELEGATE_TO_CALIBUR_ON_MAINNET,
+  EMBEDDED_WALLET_URL_PARAMS,
+  rpcSequence,
+  setupEmbeddedWallet,
+  stubDelegatedGasEstimate,
+} from '~/playwright/fixtures/embeddedWallet'
 import { stubTradingApiEndpoint } from '~/playwright/fixtures/tradingApi'
 import { HAYDEN_ADDRESS, HAYDEN_ENS, TEST_WALLET_ADDRESS } from '~/playwright/fixtures/wallets'
 
@@ -204,6 +211,64 @@ test.describe(
       await expectUsdcSent({ anvil, initial })
 
       expect(rpcSequence(embeddedWallet)).toEqual([
+        'Challenge:WALLET_SIGNIN',
+        'WalletSignIn',
+        'Challenge:SIGN_TRANSACTION',
+        'SignTransaction',
+      ])
+      expect(embeddedWallet.signedTransactions).toHaveLength(1)
+    })
+
+    test('should send USDC with an embedded wallet through the 7702 delegated path', async ({ page, anvil }) => {
+      // With Calibur reported as the delegation target, the provider signs an EIP-7702 authorization and
+      // a type-4 transaction that delegates the account and runs the transfer through Calibur in one go.
+      const embeddedWallet = await setupEmbeddedWallet(page, { delegationDetails: DELEGATE_TO_CALIBUR_ON_MAINNET })
+      await stubDelegatedGasEstimate(page)
+      await stubTradingApiEndpoint({ page, endpoint: V1_TRADING_API_PATHS.quote })
+      const initial = await openUsdcSendWithEmbeddedWallet({ page, anvil })
+
+      await submitSend({ page, amount: SEND_AMOUNT_USDC, recipient: HAYDEN })
+      await expectUsdcSent({ anvil, initial })
+
+      expect(await anvil.getCode({ address: SENDER })).toBe(`0xef0100${CALIBUR_DELEGATION_ADDRESS.slice(2)}`)
+      expect(rpcSequence(embeddedWallet)).toEqual([
+        'Challenge:WALLET_SIGNIN',
+        'WalletSignIn',
+        'Challenge:SIGN_7702_AUTHORIZATION',
+        'Sign7702Authorization',
+        'Challenge:SIGN_7702_TRANSACTION',
+        'Sign7702Transaction',
+      ])
+      expect(embeddedWallet.signedTransactions).toHaveLength(0)
+      expect(embeddedWallet.signed7702Transactions).toHaveLength(1)
+
+      // The authorization uses the nonce after the transaction's own (EIP-7702), and the type-4 tx is a self-call.
+      const authorization = embeddedWallet.rpcCalls.find((call) => call.rpc === 'Sign7702Authorization')?.body
+      const transaction = embeddedWallet.rpcCalls.find((call) => call.rpc === 'Sign7702Transaction')?.body
+      expect(String(authorization?.contractAddress)).toBe(CALIBUR_DELEGATION_ADDRESS)
+      // Number(undefined) is NaN and NaN equals NaN under toBe, so pin the fields before comparing them.
+      expect(Number(transaction?.nonce)).not.toBeNaN()
+      expect(Number(authorization?.nonce)).not.toBeNaN()
+      expect(Number(transaction?.authorizationNonce)).not.toBeNaN()
+      expect(Number(authorization?.nonce)).toBe(Number(transaction?.nonce) + 1)
+      expect(Number(transaction?.authorizationNonce)).toBe(Number(authorization?.nonce))
+      expect(String(transaction?.to)).toBe(SENDER)
+    })
+
+    test('should send USDC with an embedded wallet whose device session has expired', async ({ page, anvil }) => {
+      // The first signing challenge reports the NECK session expired, so the client re-runs the passkey
+      // ceremony and challenges again before it can sign.
+      const embeddedWallet = await setupEmbeddedWallet(page, { neckSession: 'expiredOnce' })
+      await stubTradingApiEndpoint({ page, endpoint: V1_TRADING_API_PATHS.quote })
+      const initial = await openUsdcSendWithEmbeddedWallet({ page, anvil })
+
+      await submitSend({ page, amount: SEND_AMOUNT_USDC, recipient: HAYDEN })
+      await expectUsdcSent({ anvil, initial })
+
+      expect(rpcSequence(embeddedWallet)).toEqual([
+        'Challenge:WALLET_SIGNIN',
+        'WalletSignIn',
+        'Challenge:SIGN_TRANSACTION',
         'Challenge:WALLET_SIGNIN',
         'WalletSignIn',
         'Challenge:SIGN_TRANSACTION',

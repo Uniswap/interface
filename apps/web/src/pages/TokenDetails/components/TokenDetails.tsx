@@ -4,6 +4,7 @@ import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import type { ReactNode } from 'react'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLogRWATokenDetailsViewed } from 'uniswap/src/features/rwa/useLogRWATokenDetailsViewed'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -11,6 +12,7 @@ import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { MobileBottomBar, TDPActionTabs } from '~/components/NavBar/MobileBottomBar'
 import { StickyCollapsibleHeader } from '~/components/StickyCollapsibleHeader/StickyCollapsibleHeader'
+import { shouldShowAuctionOnlyLayout } from '~/features/Toucan/Auction/utils/auctionDisplayVisibility'
 import { ScrollDirection, useScroll } from '~/hooks/useScroll'
 import { ActivitySection } from '~/pages/TokenDetails/components/activity/ActivitySection'
 import { TokenDetailsAuctionBanner } from '~/pages/TokenDetails/components/auction/TokenDetailsAuctionBanner'
@@ -49,10 +51,31 @@ import { useTDPRWAMatch } from '~/pages/TokenDetails/hooks/useTDPRWAMatch'
 import { useTDPTokenCategories } from '~/pages/TokenDetails/hooks/useTDPTokenCategories'
 import { useTDPTokenWarningDisplay } from '~/pages/TokenDetails/hooks/useTDPTokenWarningDisplay'
 import { useTokenDetailsAuctionDisplay } from '~/pages/TokenDetails/hooks/useTokenDetailsAuctionDisplay'
-import {
-  shouldShowAuctionOnlyLayout,
-  shouldReserveLiveAuctionBannerSpace,
-} from '~/pages/TokenDetails/utils/tokenDetailsAuctionDisplay'
+import { shouldReserveLiveAuctionBannerSpace } from '~/pages/TokenDetails/utils/tokenDetailsAuctionDisplay'
+
+/**
+ * Balance and bridged-asset blocks where they stack under the chart. Returning null rather than an
+ * empty wrapper matters: the left column is a gapped flex, so a childless wrapper still opens a gap.
+ */
+function StackedTokenInfo({
+  showBalance,
+  currencyInfo,
+  isBridgedAsset,
+}: {
+  showBalance: boolean
+  currencyInfo: Maybe<CurrencyInfo>
+  isBridgedAsset: boolean
+}): JSX.Element | null {
+  if (!showBalance && !isBridgedAsset) {
+    return null
+  }
+  return (
+    <Flex gap="$gap24">
+      {showBalance && <BalanceSummary />}
+      <BridgedAssetSection currencyInfo={currencyInfo} isBridgedAsset={isBridgedAsset} />
+    </Flex>
+  )
+}
 
 export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
   const media = useMedia()
@@ -156,10 +179,11 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
             {showEarn && <TokenDetailsEarnBanner earnData={earnData} />}
 
             {!showBalanceInfo && (
-              <Flex gap="$gap24">
-                {!!pageChainBalance && <BalanceSummary />}
-                <BridgedAssetSection currencyInfo={currencyInfo} isBridgedAsset={isBridgedAsset} />
-              </Flex>
+              <StackedTokenInfo
+                showBalance={!!pageChainBalance}
+                currencyInfo={currencyInfo}
+                isBridgedAsset={isBridgedAsset}
+              />
             )}
 
             <StatsSection />

@@ -36,8 +36,11 @@ vi.mock('@universe/gating', async (importOriginal) => ({
 }))
 
 const SENDER_TAB_INFO: SenderTabInfo = {
-  id: 1,
-  url: 'https://dapp.example/swap',
+  tabId: 1,
+  frameId: 0,
+  frameUrl: 'https://dapp.example/swap',
+  tabUrl: 'https://dapp.example/swap',
+  isCrossOriginFrame: false,
   favIconUrl: 'https://dapp.example/favicon.ico',
 }
 
@@ -328,7 +331,7 @@ describe('wallet_sendCalls chain binding', () => {
       [matchers.call.fn(dappStore.getDappInfo), currentDappInfo],
       [matchers.call.fn(createTransactionServices), { transactionService: { executeUserOp } }],
       [matchers.call.fn(executeTransaction), { transactionHash: '0xhash' }],
-      [matchers.call.fn(dappResponseMessageChannel.sendMessageToTab), undefined],
+      [matchers.call.fn(dappResponseMessageChannel.sendMessageToFrame), undefined],
     ]
 
     // handleSendCalls reports failure to the dapp rather than rethrowing.
@@ -336,7 +339,7 @@ describe('wallet_sendCalls chain binding', () => {
       call: Array<{ payload: { fn: unknown; args: unknown[] } }>
     }): unknown[] {
       return effects.call
-        .filter((effect) => effect.payload.fn === dappResponseMessageChannel.sendMessageToTab)
+        .filter((effect) => effect.payload.fn === dappResponseMessageChannel.sendMessageToFrame)
         .map((effect) => (effect.payload.args[1] as { type: unknown }).type)
     }
 

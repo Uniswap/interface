@@ -62,6 +62,15 @@ finalConfig.resolver.resolveRequest = (context, moduleName, platform) => {
   if (mapped) {
     return { type: 'sourceFile', filePath: mapped }
   }
+  // react-native-nitro-fetch side-effect-imports `web-streams-polyfill/polyfill`, whose 4.x
+  // build unconditionally reassigns globalThis.ReadableStream/WritableStream/TransformStream
+  // even when they already exist. Expo's runtime already provides these, and nitro-fetch is
+  // installed lazily (at Statsig init), so letting the polyfill run would swap the stream
+  // classes mid-session and break `instanceof`/`pipeThrough` checks on streams created
+  // earlier. Invariant: the app always uses the runtime's built-in stream classes.
+  if (moduleName === 'web-streams-polyfill/polyfill') {
+    return { type: 'empty' }
+  }
   // jose is pulled in transitively by `@privy-io/js-sdk-core` (used by
   // `@privy-io/expo`). It ships Node CJS (uses `zlib`, `util`) and browser
   // (uses WebCrypto) builds. Metro's default resolver picks CJS via the

@@ -1,12 +1,13 @@
 import { SpinningLoader } from '@universe/mycelium'
-import { lazy, memo, Suspense } from 'react'
+import { memo, Suspense } from 'react'
 import { Route, Routes } from 'react-router'
 import { EMBED_ENTRY_ROUTES, RouteDefinition, routes, useRouterConfig } from '~/pages/RouteDefinitions'
 import { EmbedProvider, type EmbedView } from '~/pages/Swap/embedContext'
+import { createLazyNoReload } from '~/utils/lazyWithRetry'
 
 // The Chrome is always loaded, but is lazy-loaded because it is not needed without user interaction.
 // Annotating it with webpackPreload allows it to be ready when requested.
-const AppChrome = lazy(() => import(/* webpackPreload: true */ './Chrome'))
+const AppChrome = createLazyNoReload(() => import(/* webpackPreload: true */ './Chrome'))
 
 export const Body = memo(function Body({
   shouldRenderAppChrome = true,

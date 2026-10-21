@@ -22,7 +22,7 @@ export interface FilterSelectCompatProps {
   options: Record<string, FilterSelectOptionCompat>
   selectedValue: string
   onSelect: (value: string) => void
-  ButtonIcon: MenuCompatIconComponent
+  ButtonIcon?: MenuCompatIconComponent
   /** Test ID for the trigger button. */
   dataTestId?: string
   /** When set, each option gets data-testid={`${optionTestIdPrefix}${value}`}. */

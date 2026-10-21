@@ -57,7 +57,6 @@ export function VolumeTimeFrameSelector() {
           // Longest label across locales is vi-VN "Mọi thời điểm khối lượng", so cap rather than let it run wide.
           maxWidth: 'min(320px, calc(100vw - 32px))',
         }}
-        adaptToSheet
         allowFlip
         alignRight={!media.lg}
       >

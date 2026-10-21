@@ -31,4 +31,19 @@ describe('ProfitLossRow', () => {
     const { getByText } = renderWithProviders(<ProfitLossRow label="Average cost" value={0} />)
     expect(getByText('$0.00')).toBeTruthy()
   })
+
+  it('renders a dust-level residual (e.g. unrealized return on an effectively-zero balance) as $0.00, not subscript', () => {
+    const { getByText, queryByText } = renderWithProviders(
+      <ProfitLossRow showArrow label="Unrealized return" value={0.0000000000292} percent={10.03} />,
+    )
+    expect(getByText('$0.00')).toBeTruthy()
+    expect(queryByText(/0\.0₁/)).toBeFalsy()
+    expect(queryByText(/10\.03/)).toBeFalsy()
+  })
+
+  it('does not apply the dust floor to Average cost, which keeps subscript notation below the dust threshold', () => {
+    const { getByText, queryByText } = renderWithProviders(<ProfitLossRow label="Average cost" value={0.0000005} />)
+    expect(getByText('$0.0₆50')).toBeTruthy()
+    expect(queryByText('$0.00')).toBeFalsy()
+  })
 })

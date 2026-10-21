@@ -3,8 +3,8 @@
 exports[`PortfolioPageInner > connected user view > should render correctly with banner hidden 1`] = `
 <div>
   <div
-    class="flex items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 flex-col gap-[40px] p-[24px] pt-[0px] w-[100%] max-w-[var(--c-max-w)] relative media-sm:p-[var(--cF-p)]"
-    style="--c-max-w: 1200px; --cF-p: 8px;"
+    class="flex items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 flex-col gap-[40px] p-[24px] pt-[0px] w-[100%] max-w-[var(--c-max-w)] relative media-md:px-[var(--cE-px)] media-sm:py-[var(--cF-py)]"
+    style="--c-max-w: 1200px; --cE-px: 0px; --cF-py: 8px;"
   >
     <div
       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 gap-[24px]"
@@ -27,8 +27,8 @@ exports[`PortfolioPageInner > connected user view > should render correctly with
 exports[`PortfolioPageInner > connected user view > should render correctly with banner visible 1`] = `
 <div>
   <div
-    class="flex items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 flex-col gap-[40px] p-[24px] pt-[0px] w-[100%] max-w-[var(--c-max-w)] relative media-sm:p-[var(--cF-p)]"
-    style="--c-max-w: 1200px; --cF-p: 8px;"
+    class="flex items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 flex-col gap-[40px] p-[24px] pt-[0px] w-[100%] max-w-[var(--c-max-w)] relative media-md:px-[var(--cE-px)] media-sm:py-[var(--cF-py)]"
+    style="--c-max-w: 1200px; --cE-px: 0px; --cF-py: 8px;"
   >
     <div
       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 gap-[24px]"
@@ -51,8 +51,8 @@ exports[`PortfolioPageInner > connected user view > should render correctly with
 exports[`PortfolioPageInner > demo view (disconnected) > should render demo view with bottom margin 1`] = `
 <div>
   <div
-    class="flex items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 flex-col gap-[40px] mb-[var(--c-mb)] p-[24px] pt-[0px] w-[100%] max-w-[var(--c-max-w)] relative media-sm:p-[var(--cF-p)]"
-    style="--c-mb: 100px; --c-max-w: 1200px; --cF-p: 8px;"
+    class="flex items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 flex-col gap-[40px] mb-[var(--c-mb)] p-[24px] pt-[0px] w-[100%] max-w-[var(--c-max-w)] relative media-md:px-[var(--cE-px)] media-sm:py-[var(--cF-py)]"
+    style="--c-mb: 100px; --c-max-w: 1200px; --cE-px: 0px; --cF-py: 8px;"
   >
     <div
       data-testid="connect-wallet-banner"
@@ -90,8 +90,8 @@ exports[`PortfolioPageInner > demo view (disconnected) > should render demo view
 exports[`PortfolioPageInner > demo view (disconnected) > should render demo view with connect wallet banner 1`] = `
 <div>
   <div
-    class="flex items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 flex-col gap-[40px] p-[24px] pt-[0px] w-[100%] max-w-[var(--c-max-w)] relative media-sm:p-[var(--cF-p)]"
-    style="--c-max-w: 1200px; --cF-p: 8px;"
+    class="flex items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 flex-col gap-[40px] p-[24px] pt-[0px] w-[100%] max-w-[var(--c-max-w)] relative media-md:px-[var(--cE-px)] media-sm:py-[var(--cF-py)]"
+    style="--c-max-w: 1200px; --cE-px: 0px; --cF-py: 8px;"
   >
     <div
       data-testid="connect-wallet-banner"

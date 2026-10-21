@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { GetTickDetailsRequest } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { GetTickDetailsRequest } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { EVMUniverseChainId } from '@universe/chains'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useEffect, useMemo } from 'react'

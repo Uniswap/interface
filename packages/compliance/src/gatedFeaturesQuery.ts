@@ -1,9 +1,15 @@
-import { queryOptions, type QueryClient, useQuery } from '@tanstack/react-query'
+import { type QueryClient, useQuery } from '@tanstack/react-query'
 import type { GatedFeature } from '@uniswap/client-compliancev2/dist/uniswap/compliance/v1/api_pb'
 import { type ComplianceV2Client, fetchGatedFeatures } from '@universe/compliance/src/client'
-import { useGatedFeaturesOverride } from '@universe/compliance/src/devComplianceOverride'
+import {
+  getComplianceOverrideState,
+  resolveGatedFeaturesOverride,
+  useGatedFeaturesOverride,
+} from '@universe/compliance/src/devComplianceOverride'
 import { useComplianceClient } from '@universe/compliance/src/useComplianceClient'
+import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 import type { QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 
@@ -14,7 +20,8 @@ const GATED_FEATURES_QUERY_KEY = [ReactQueryCacheKey.Compliance, 'gatedFeatures'
 export function gatedFeaturesQueryOptions(
   client: ComplianceV2Client,
 ): QueryOptionsResult<GatedFeature[], Error, GatedFeature[], typeof GATED_FEATURES_QUERY_KEY> {
-  return queryOptions({
+  // Persisted so a returning session has its region answer on first render; a stale restore refetches.
+  return persistableQueryOptions({
     queryKey: GATED_FEATURES_QUERY_KEY,
     queryFn: () => fetchGatedFeatures(client),
     staleTime: FIVE_MINUTES_MS,
@@ -24,6 +31,34 @@ export function gatedFeaturesQueryOptions(
 /** Refetches gated features only when at least one mounted reader is active. */
 export function refetchGatedFeatures(queryClient: QueryClient): Promise<void> {
   return queryClient.refetchQueries({ queryKey: GATED_FEATURES_QUERY_KEY, type: 'active' })
+}
+
+/**
+ * Non-React counterpart of `useIsFeatureGated` for imperative callers (e.g. sagas). Answers from the
+ * shared cache entry like the hook (a stale entry refetches in the background) and only waits on the
+ * network for a cache miss. Fails open on error.
+ */
+export async function fetchIsFeatureGated(
+  feature: GatedFeature,
+  ctx: { queryClient: QueryClient; client: ComplianceV2Client },
+): Promise<boolean> {
+  const override = resolveGatedFeaturesOverride(getComplianceOverrideState())
+  if (override !== undefined) {
+    return override.includes(feature)
+  }
+  try {
+    const features = await ctx.queryClient.ensureQueryData({
+      ...gatedFeaturesQueryOptions(ctx.client),
+      revalidateIfStale: true,
+    })
+    return features.includes(feature)
+  } catch (error) {
+    logger.warn('gatedFeaturesQuery', 'fetchIsFeatureGated', 'Gated features request failed; failing open', {
+      error,
+      feature,
+    })
+    return false
+  }
 }
 
 /**

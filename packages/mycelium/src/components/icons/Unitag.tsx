@@ -1,7 +1,7 @@
 import { memo, useSyncExternalStore } from 'react'
 import type { ReactElement } from 'react'
-import UNITAG_DARK_SMALL from './assets/unitag-dark-small.png'
-import UNITAG_LIGHT_SMALL from './assets/unitag-light-small.png'
+import UNITAG_DARK_SMALL from '../../assets/graphics/unitag-dark-small.png'
+import UNITAG_LIGHT_SMALL from '../../assets/graphics/unitag-light-small.png'
 
 // Theme source of truth on the web is the `dark` class on the root element
 // (see @universe/tailwind base.css `@custom-variant dark`).

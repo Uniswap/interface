@@ -1,7 +1,8 @@
 import { ChartPeriod, WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import { Flex, Separator, Text, useMedia, useSporeColors } from '@universe/mycelium'
+import { Flex, Separator, Text, useSporeColors } from '@universe/mycelium'
 import { SegmentedControl, type SegmentedControlOption } from '@universe/mycelium/segmented-control-compat'
 import { styled } from '@universe/mycelium/styled'
+import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -23,6 +24,12 @@ import { useChartAnimatedColor } from '~/components/Charts/hooks/useChartAnimate
 import { ChartSkeleton } from '~/components/Charts/LoadingState'
 import { PriceChart, PriceChartBody, PriceChartData } from '~/components/Charts/PriceChart'
 import { ChartType, PriceChartType } from '~/components/Charts/utils'
+import {
+  DropdownSelector,
+  type SelectOption,
+  SMALL_DROPDOWN_BUTTON_STYLE,
+  SMALL_DROPDOWN_MENU_STYLE,
+} from '~/components/Dropdowns/DropdownSelector'
 import { useShowDemoView } from '~/pages/Portfolio/hooks/useShowDemoView'
 import { ChartScrubBreakdown } from '~/pages/Portfolio/Overview/BalanceBreakdownPopover/ChartScrubBreakdown'
 import { chartPeriodToHistoryDuration } from '~/pages/Portfolio/Overview/chartPeriodToHistoryDuration'
@@ -144,6 +151,18 @@ export function PortfolioChart({
       ),
     }))
   }, [selectedPeriod, t])
+  const [isPeriodDropdownOpen, setIsPeriodDropdownOpen] = useState(false)
+  // Keyed by test-id suffix so optionTestIdPrefix yields the same test IDs as the desktop segmented control.
+  const periodDropdownOptions = useMemo<Record<string, SelectOption>>(
+    () =>
+      Object.fromEntries(
+        CHART_PERIOD_OPTIONS.map((period) => [
+          chartPeriodToTestIdSuffix(period),
+          { label: chartPeriodToLabel(t, period), traceElement: chartPeriodToElementName(period) },
+        ]),
+      ),
+    [t],
+  )
 
   // Scrub-aware target: while scrubbing, color by the hovered point vs the period start.
   const scrubAwareColorTarget = useMemo(
@@ -183,6 +202,16 @@ export function PortfolioChart({
 
   // Kept visible on error (grayed out below) so the controls row layout is stable; only hidden when there's no breakdown.
   const showCategorySelector = shouldShowBalanceHeader && hasCategoryBreakdown && !isLoading && !isChartEmpty
+
+  const categorySelector = showCategorySelector && (
+    <Flex opacity={error ? 0.4 : 1} pointerEvents={error || isDemoView ? 'none' : 'auto'}>
+      <PortfolioChartCategorySelector
+        value={selectedCategory}
+        availableCategories={availableCategories}
+        onChange={setSelectedCategory}
+      />
+    </Flex>
+  )
 
   useEffect(() => {
     if (!shouldShowBalanceHeader || error || isLoading || isChartEmpty) {
@@ -279,38 +308,44 @@ export function PortfolioChart({
           )}
         </Flex>
       )}
-      <Flex
-        row
-        alignItems="center"
-        justifyContent="space-between"
-        gap="$spacing8"
-        $md={{ flexDirection: 'column', alignItems: 'stretch' }}
-      >
+      <Flex row alignItems="center" justifyContent="space-between" gap="$spacing8">
+        {media.md && categorySelector}
         <Flex
-          $md={{ width: '100%' }}
+          $md={{ ml: 'auto' }}
           opacity={error ? 0.4 : isPortfolioZero ? 0.5 : 1}
           pointerEvents={error || isPortfolioZero || isDemoView ? 'none' : 'auto'}
         >
-          <SegmentedControl
-            disabled={isDisabled}
-            fullWidth={media.md}
-            options={periodOptions}
-            selectedOption={String(selectedPeriod)}
-            onSelectOption={(periodStr: string) => setSelectedPeriod(Number(periodStr) as ChartPeriod)}
-            onHoverOption={
-              onHoverPeriod ? (periodStr: string) => onHoverPeriod(Number(periodStr) as ChartPeriod) : undefined
-            }
-          />
-        </Flex>
-        {showCategorySelector && (
-          <Flex opacity={error ? 0.4 : 1} pointerEvents={error || isDemoView ? 'none' : 'auto'}>
-            <PortfolioChartCategorySelector
-              value={selectedCategory}
-              availableCategories={availableCategories}
-              onChange={setSelectedCategory}
+          {media.md ? (
+            <DropdownSelector
+              options={periodDropdownOptions}
+              selectedValue={chartPeriodToTestIdSuffix(selectedPeriod)}
+              onSelect={(suffix) => {
+                const period = CHART_PERIOD_OPTIONS.find((p) => chartPeriodToTestIdSuffix(p) === suffix)
+                if (period !== undefined) {
+                  setSelectedPeriod(period)
+                }
+              }}
+              isOpen={isPeriodDropdownOpen}
+              toggleOpen={setIsPeriodDropdownOpen}
+              dataTestId={TestID.PortfolioChartPeriodSelector}
+              optionTestIdPrefix={TestID.PortfolioChartPeriodPrefix}
+              buttonStyle={SMALL_DROPDOWN_BUTTON_STYLE}
+              dropdownStyle={SMALL_DROPDOWN_MENU_STYLE}
+              alignRight
             />
-          </Flex>
-        )}
+          ) : (
+            <SegmentedControl
+              disabled={isDisabled}
+              options={periodOptions}
+              selectedOption={String(selectedPeriod)}
+              onSelectOption={(periodStr: string) => setSelectedPeriod(Number(periodStr) as ChartPeriod)}
+              onHoverOption={
+                onHoverPeriod ? (periodStr: string) => onHoverPeriod(Number(periodStr) as ChartPeriod) : undefined
+              }
+            />
+          )}
+        </Flex>
+        {!media.md && categorySelector}
       </Flex>
     </Flex>
   )

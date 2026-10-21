@@ -179,6 +179,7 @@ export const MiniActivityTable = memo(function MiniActivityTable({
       >
         {hasData ? (
           <Table
+            mobileFullBleed
             hideHeader
             columns={columns}
             data={transactionData.slice(0, maxActivities)}
@@ -190,7 +191,14 @@ export const MiniActivityTable = memo(function MiniActivityTable({
             compactRowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
           />
         ) : (
-          <Flex row alignItems="center" height={PORTFOLIO_TABLE_ROW_HEIGHT} gap="$gap8" p="$spacing8">
+          <Flex
+            row
+            alignItems="center"
+            height={PORTFOLIO_TABLE_ROW_HEIGHT}
+            gap="$gap8"
+            p="$spacing8"
+            $md={{ px: '$none' }}
+          >
             <InfoCircleFilled color="$neutral2" size="$icon.20" />
             <Text variant="buttonLabel3" color="$neutral1">
               {t('portfolio.overview.activity.table.empty', {

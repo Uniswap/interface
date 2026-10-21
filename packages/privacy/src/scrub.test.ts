@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import type { ScrubPattern } from './scrub'
-import { createScrubber, DEFAULT_REDACT_PATHS, DEFAULT_SCRUB_PATTERNS } from './scrub'
+import {
+  createScrubber,
+  createSensitiveFieldFinder,
+  DEFAULT_REDACT_PATHS,
+  DEFAULT_SCRUB_PATTERNS,
+  WALLET_SECRET_REDACT_PATHS,
+} from './scrub'
 
 const REDACTED = '[REDACTED]'
 
@@ -491,5 +497,83 @@ describe('exports', () => {
   it('the default scrubber uses the default paths and patterns', () => {
     const scrub = createScrubber()
     expect(scrub({ password: 'p', note: 'a@b.com' })).toEqual({ password: REDACTED, note: '[EMAIL_REDACTED]' })
+  })
+})
+
+describe('WALLET_SECRET_REDACT_PATHS', () => {
+  const scrub = createScrubber({ patterns: [], redactPaths: WALLET_SECRET_REDACT_PATHS })
+
+  it('redacts every password spelling a form uses, plus the phrase and key names', () => {
+    expect(
+      scrub({
+        password: 'a',
+        newPassword: 'b',
+        oldPassword: 'c',
+        currentPassword: 'd',
+        confirmPassword: 'e',
+        passphrase: 'f',
+        pin: 'g',
+        mnemonic: 'h',
+        seedPhrase: 'i',
+        seed_phrase: 'j',
+        recoveryPhrase: 'k',
+        privateKey: 'l',
+        mnemonicId: 'kept',
+      }),
+    ).toEqual({
+      password: REDACTED,
+      newPassword: REDACTED,
+      oldPassword: REDACTED,
+      currentPassword: REDACTED,
+      confirmPassword: REDACTED,
+      passphrase: REDACTED,
+      pin: REDACTED,
+      mnemonic: REDACTED,
+      seedPhrase: REDACTED,
+      seed_phrase: REDACTED,
+      recoveryPhrase: REDACTED,
+      privateKey: REDACTED,
+      mnemonicId: 'kept',
+    })
+  })
+})
+
+describe('createSensitiveFieldFinder', () => {
+  const findWalletSecret = createSensitiveFieldFinder({ redactPaths: WALLET_SECRET_REDACT_PATHS })
+
+  it('returns undefined when no sensitive key is present', () => {
+    expect(findWalletSecret({ address: '0xabc', mnemonicId: 'm1', nested: { count: 2 } })).toBeUndefined()
+    expect(findWalletSecret('a bare string')).toBeUndefined()
+    expect(findWalletSecret(undefined)).toBeUndefined()
+  })
+
+  it('reports the dotted path of the first sensitive key at any depth', () => {
+    expect(findWalletSecret({ password: 'hunter2' })).toBe('password')
+    expect(findWalletSecret({ variables: { newPassword: 'x' } })).toBe('variables.newPassword')
+    expect(findWalletSecret({ accounts: [{ address: '0xabc' }, { mnemonic: 'words' }] })).toBe('accounts.1.mnemonic')
+  })
+
+  it('ignores a sensitive key whose value is null or undefined, like the scrubber does', () => {
+    expect(findWalletSecret({ password: null, privateKey: undefined })).toBeUndefined()
+  })
+
+  it('honours the default PII list and positional paths when asked', () => {
+    expect(createSensitiveFieldFinder()({ user: { email: 'a@b.c' } })).toBe('user.email')
+    expect(createSensitiveFieldFinder({ redactPaths: ['headers.cookie'] })({ headers: { cookie: 'x' } })).toBe(
+      'headers.cookie',
+    )
+    expect(createSensitiveFieldFinder({ redactPaths: ['headers.cookie'] })({ other: { cookie: 'x' } })).toBeUndefined()
+  })
+
+  it('walks Maps, class instances, and Errors, and survives cycles', () => {
+    expect(findWalletSecret(new Map([['seedPhrase', 'words']]))).toBe('seedPhrase')
+    class Vault {
+      privateKey = '0xkey'
+    }
+    expect(findWalletSecret({ vault: new Vault() })).toBe('vault.privateKey')
+    const child: Record<string, unknown> = {}
+    const cyclic = { child }
+    child['parent'] = cyclic
+    expect(findWalletSecret(cyclic)).toBeUndefined()
   })
 })

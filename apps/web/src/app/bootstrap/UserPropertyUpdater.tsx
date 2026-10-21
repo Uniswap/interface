@@ -1,4 +1,3 @@
-import { datadogRum } from '@datadog/browser-rum'
 import { useQuery } from '@tanstack/react-query'
 import { getBrowser, SharedEventName } from '@uniswap/analytics-events'
 import { provideUniswapIdentifierService } from '@universe/api'
@@ -37,7 +36,6 @@ export function UserPropertyUpdater() {
   useEffect(() => {
     if (uniswapIdentifier) {
       setUserProperty(InterfaceUserPropertyName.UniswapIdentifier, uniswapIdentifier)
-      datadogRum.setUserProperty(InterfaceUserPropertyName.UniswapIdentifier, uniswapIdentifier)
     }
   }, [uniswapIdentifier])
 

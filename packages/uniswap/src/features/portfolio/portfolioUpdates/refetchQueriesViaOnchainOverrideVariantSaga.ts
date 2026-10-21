@@ -1,3 +1,4 @@
+import { type PlainMessage, toPlainMessage } from '@bufbuild/protobuf'
 import { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { Balance } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { Portfolio } from '@uniswap/client-data-api/dist/data/v1/types_pb.d'
@@ -16,6 +17,7 @@ import {
   storeBalanceOverrideSnapshots,
 } from 'uniswap/src/data/apiClients/dataApiService/balances/portfolioBalanceOverrides'
 import { NFT_QUERY_KEY_PREFIX } from 'uniswap/src/data/apiClients/dataApiService/nfts/queries'
+import { doesProfitLossQueryMatchAddress } from 'uniswap/src/data/apiClients/dataApiService/performance/profitLossQueryUtils'
 import {
   fetchOnChainBalances,
   type OnChainMap,
@@ -27,7 +29,6 @@ import { CurrencyId } from 'uniswap/src/types/currency'
 import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 import { buildCurrencyId, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { createLogger } from 'utilities/src/logger/logger'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 // This delay is arbitrary but enough time for our endpoints to reflect updated balances
@@ -198,7 +199,7 @@ export async function fetchAndMergeOnchainBalances({
   currencyIds,
   balanceOverrideSnapshots,
 }: {
-  cachedPortfolio: Portfolio
+  cachedPortfolio: PlainMessage<Portfolio>
   accountAddress: string
   currencyIds: Set<CurrencyId>
   balanceOverrideSnapshots: BalanceOverrideSnapshots
@@ -319,10 +320,10 @@ export function* refetchQueriesViaOnchainOverrideVariant({
       doesGetWalletBalancesQueryMatchAddress({ queryKey: query.queryKey, address: activeAddress, platform }),
   })
 
-  // Invalidate token profit/loss queries for this address so the TDP Performance section updates after swaps
+  // Invalidate wallet, tokens and per-token PnL for this address so Performance sections update after swaps
   yield* call([SharedQueryClient, SharedQueryClient.invalidateQueries], {
     predicate: (query: { queryKey: readonly unknown[] }) =>
-      query.queryKey[0] === ReactQueryCacheKey.GetWalletTokenProfitLoss && query.queryKey[1] === activeAddress,
+      doesProfitLossQueryMatchAddress({ queryKey: query.queryKey, address: activeAddress, platform }),
   })
 
   // Invalidate NFTs queries so the NFTs tab updates after swaps
@@ -332,7 +333,7 @@ export function* refetchQueriesViaOnchainOverrideVariant({
 }
 
 // oxlint-disable-next-line typescript/explicit-function-return-type
-function* updatePortfolioCache({
+export function* updatePortfolioCache({
   ownerAddress,
   currencyIds,
   queryKey,
@@ -344,7 +345,7 @@ function* updatePortfolioCache({
   const log = createLogger(FILE_NAME, 'updatePortfolioCache', '[ITBU]')
   log.debug(`updatePortfolioCache with ${currencyIds.size} currencyIds`, { currencyIds })
 
-  const cachedPortfolioData = SharedQueryClient.getQueryData<GetPortfolioResponse>(queryKey)
+  const cachedPortfolioData = SharedQueryClient.getQueryData<PlainMessage<GetPortfolioResponse>>(queryKey)
 
   if (!cachedPortfolioData?.portfolio) {
     log.warn('No cached portfolio data found')
@@ -362,7 +363,7 @@ function* updatePortfolioCache({
 
   if (reconciliation) {
     log.debug('Updating cached portfolio balances')
-    SharedQueryClient.setQueryData(queryKey, () => reconciliation.mergedData)
+    SharedQueryClient.setQueryData(queryKey, () => toPlainMessage(reconciliation.mergedData))
     log.debug('Successfully updated react-query cache with fresh balances')
 
     yield* call(storeBalanceOverrideSnapshots, {

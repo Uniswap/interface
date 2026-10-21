@@ -30,6 +30,7 @@ import {
   executeProviderDirectMethod,
   isProviderDirectExecutableMethod,
 } from 'src/background/utils/providerDirectMethods'
+import { getSenderTabInfo, isValidSender } from 'src/background/utils/senderTabInfo'
 import { getFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
 import { getEnabledChains, hexadecimalStringToInt, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { DappRequestType, DappResponseType, EthMethod } from 'uniswap/src/features/dappRequests/types'
@@ -99,7 +100,7 @@ export function initMessageBridge(): void {
 
     // Validate sender has required information
     if (!isValidSender(sender)) {
-      logger.error(new Error('sender.tab id or url is not defined'), {
+      logger.error(new Error('Dapp request sender is missing its tab, frame url or frame id'), {
         tags: {
           file: 'backgroundDappRequests.ts',
           function: 'dappMessageListener',
@@ -153,12 +154,7 @@ export function initMessageBridge(): void {
           queueMessageForPanel({
             windowId,
             message,
-            senderTabInfo: {
-              id: sender.tab.id,
-              url: sender.tab.url,
-              frameUrl: getFrameUrl(sender),
-              favIconUrl: sender.tab.favIconUrl,
-            },
+            senderTabInfo: getSenderTabInfo(sender),
           })
         },
       })
@@ -220,7 +216,7 @@ export function initMessageBridge(): void {
  * @returns true if the request was handled, false otherwise
  */
 async function handleSilentBackgroundRequest(request: DappRequest, senderTabInfo: SenderTabInfo): Promise<boolean> {
-  const dappUrl = extractBaseUrl(senderTabInfo.url)
+  const dappUrl = extractBaseUrl(senderTabInfo.frameUrl)
 
   if (!dappUrl) {
     return false
@@ -243,26 +239,26 @@ async function handleSilentBackgroundRequest(request: DappRequest, senderTabInfo
       handleChainChange({
         request,
         dappUrl,
-        tabId: senderTabInfo.id,
+        senderTabInfo,
       }).catch(() => {})
       return true
     case DappRequestType.RevokePermissions:
       handleRevokePermissions({
         request,
         dappUrl,
-        tabId: senderTabInfo.id,
+        senderTabInfo,
       }).catch(() => {})
       return true
     case DappRequestType.GetCapabilities:
       handleGetCapabilities({
         request,
-        tabId: senderTabInfo.id,
+        senderTabInfo,
       }).catch(() => {})
       return true
     case DappRequestType.ProviderDirect:
       handleProviderDirectRequest({
         request,
-        tabId: senderTabInfo.id,
+        senderTabInfo,
       }).catch(() => {})
       return true
     default:
@@ -273,11 +269,11 @@ async function handleSilentBackgroundRequest(request: DappRequest, senderTabInfo
 async function handleChainChange({
   request,
   dappUrl,
-  tabId,
+  senderTabInfo,
 }: {
   request: ChangeChainRequest
   dappUrl: string
-  tabId: number
+  senderTabInfo: SenderTabInfo
 }): Promise<void> {
   await dappStore.init()
   const { activeConnectedAddress } = dappStore.getDappInfo(dappUrl) ?? {}
@@ -291,29 +287,29 @@ async function handleChainChange({
     activeConnectedAddress,
   })
 
-  await dappResponseMessageChannel.sendMessageToTab(tabId, response)
+  await dappResponseMessageChannel.sendMessageToFrame(senderTabInfo, response)
 }
 
 async function handleRevokePermissions({
   request,
   dappUrl,
-  tabId,
+  senderTabInfo,
 }: {
   request: RevokePermissionsRequest
   dappUrl: string
-  tabId: number
+  senderTabInfo: SenderTabInfo
 }): Promise<void> {
   await dappStore.init()
   const revokedPermissions = Object.keys(request.permissions)
 
   if (revokedPermissions.includes(EthMethod.EthAccounts)) {
     await removeDappConnection(dappUrl)
-    await dappResponseMessageChannel.sendMessageToTab(tabId, {
+    await dappResponseMessageChannel.sendMessageToFrame(senderTabInfo, {
       type: DappResponseType.RevokePermissionsResponse,
       requestId: request.requestId,
     })
   } else {
-    await dappResponseMessageChannel.sendMessageToTab(tabId, {
+    await dappResponseMessageChannel.sendMessageToFrame(senderTabInfo, {
       type: DappResponseType.ErrorResponse,
       error: serializeError(rpcErrors.methodNotFound()),
       requestId: request.requestId,
@@ -323,10 +319,10 @@ async function handleRevokePermissions({
 
 async function handleGetCapabilities({
   request,
-  tabId,
+  senderTabInfo,
 }: {
   request: GetCapabilitiesRequest
-  tabId: number
+  senderTabInfo: SenderTabInfo
 }): Promise<void> {
   try {
     // Get enabled chains using the same logic as the saga
@@ -346,7 +342,7 @@ async function handleGetCapabilities({
       hasSmartWalletConsent,
     })
 
-    await dappResponseMessageChannel.sendMessageToTab(tabId, response)
+    await dappResponseMessageChannel.sendMessageToFrame(senderTabInfo, response)
   } catch (error) {
     logger.error(error, {
       tags: { file: 'backgroundDappRequests.ts', function: 'handleGetCapabilities' },
@@ -354,7 +350,7 @@ async function handleGetCapabilities({
     })
 
     // Send error response on failure
-    await dappResponseMessageChannel.sendMessageToTab(tabId, {
+    await dappResponseMessageChannel.sendMessageToFrame(senderTabInfo, {
       type: DappResponseType.ErrorResponse,
       error: serializeError(rpcErrors.internal()),
       requestId: request.requestId,
@@ -370,10 +366,10 @@ async function handleGetCapabilities({
  */
 async function handleProviderDirectRequest({
   request,
-  tabId,
+  senderTabInfo,
 }: {
   request: ProviderDirectRequest
-  tabId: number
+  senderTabInfo: SenderTabInfo
 }): Promise<void> {
   try {
     if (!isProviderDirectExecutableMethod(request.method)) {
@@ -382,7 +378,7 @@ async function handleProviderDirectRequest({
     const chainId = toSupportedChainId(hexadecimalStringToInt(request.chainId))
     const provider = chainId ? walletContextValue.providers.getProvider(chainId) : undefined
     if (!provider) {
-      await dappResponseMessageChannel.sendMessageToTab(tabId, {
+      await dappResponseMessageChannel.sendMessageToFrame(senderTabInfo, {
         type: DappResponseType.ProviderDirectResponse,
         requestId: request.requestId,
         error: serializeError(rpcErrors.internal({ message: `No provider for chain ${request.chainId}` })),
@@ -391,13 +387,13 @@ async function handleProviderDirectRequest({
     }
 
     const result = await executeProviderDirectMethod({ provider, method: request.method, params: request.params })
-    await dappResponseMessageChannel.sendMessageToTab(tabId, {
+    await dappResponseMessageChannel.sendMessageToFrame(senderTabInfo, {
       type: DappResponseType.ProviderDirectResponse,
       requestId: request.requestId,
       result,
     })
   } catch (error) {
-    await dappResponseMessageChannel.sendMessageToTab(tabId, {
+    await dappResponseMessageChannel.sendMessageToFrame(senderTabInfo, {
       type: DappResponseType.ProviderDirectResponse,
       requestId: request.requestId,
       error: serializeError(error),
@@ -428,17 +424,14 @@ async function handleRequestAsync({
         hasTab: !!sender.tab,
         hasId: sender.tab?.id !== undefined,
         hasUrl: !!sender.tab?.url,
+        hasFrameUrl: !!sender.url,
+        hasFrameId: sender.frameId !== undefined,
       },
     })
     return
   }
 
-  const senderTabInfo: SenderTabInfo = {
-    id: sender.tab.id,
-    url: sender.tab.url,
-    frameUrl: getFrameUrl(sender),
-    favIconUrl: sender.tab.favIconUrl,
-  }
+  const senderTabInfo = getSenderTabInfo(sender)
 
   const windowId = sender.tab.windowId
   const windowIdString = windowId.toString()
@@ -510,15 +503,6 @@ function requiresSidePanel(requestType: DappRequestType): boolean {
 }
 
 /**
- * Validates that the sender has all required tab information
- */
-function isValidSender(sender?: chrome.runtime.MessageSender): sender is chrome.runtime.MessageSender & {
-  tab: chrome.tabs.Tab & { id: number; url: string }
-} {
-  return sender?.tab?.id !== undefined && sender.tab.url !== undefined
-}
-
-/**
  * Opens the side panel synchronously to preserve user gesture context.
  * Must be called within ~1ms of user gesture.
  * Falls back to opening a popup window if side panel fails.
@@ -586,30 +570,4 @@ function queueMessageForPanel({
   }
 
   windowIdToPendingRequestsMap.get(windowIdString)?.push(queuedMessage)
-}
-
-/**
- * Gets the frame URL from the message sender if the request is from an iframe with a different origin than the top-level page
- * @param sender - The message sender
- * @returns The frame URL if applicable, undefined otherwise
- */
-function getFrameUrl(sender: chrome.runtime.MessageSender): string | undefined {
-  if (!sender.tab?.url || !sender.url) {
-    return undefined
-  }
-
-  try {
-    const tabOrigin = new URL(sender.tab.url).origin
-    const senderOrigin = new URL(sender.url).origin
-    const isFrame = tabOrigin !== senderOrigin
-    return isFrame ? sender.url : undefined
-  } catch (error) {
-    logger.error(error, {
-      tags: {
-        file: 'backgroundDappRequests.ts',
-        function: 'getFrameUrl',
-      },
-    })
-    return undefined
-  }
 }

@@ -2,7 +2,7 @@ import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi, TradingApi } from '@universe/api'
 import { UniverseChainId, Platform } from '@universe/chains'
 import { SwapConfigKey } from '@universe/gating'
-import { TEMPO_LOGO } from 'ui/src/assets'
+import { TEMPO_LOGO } from '@universe/mycelium/assets'
 import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
 import {
   DEFAULT_MS_BEFORE_WARNING,
@@ -17,11 +17,15 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 const PATHUSD_ADDRESS = '0x20c0000000000000000000000000000000000000'
 const USDC_E_ADDRESS = '0x20c000000000000000000000b9537d11c60e8b50'
+const OUSD_ADDRESS = '0x20c0000000000000000000006a37da5c996874be'
+
+export const TIP20_DECIMALS = 6
 
 const tempoTokens = buildChainTokens({
   stables: {
-    pathUSD: new Token(UniverseChainId.Tempo, PATHUSD_ADDRESS, 6, 'pathUSD', 'pathUSD'),
-    'USDC.e': new Token(UniverseChainId.Tempo, USDC_E_ADDRESS, 6, 'USDC.e', 'Bridged USDC (Stargate)'),
+    pathUSD: new Token(UniverseChainId.Tempo, PATHUSD_ADDRESS, TIP20_DECIMALS, 'pathUSD', 'pathUSD'),
+    'USDC.e': new Token(UniverseChainId.Tempo, USDC_E_ADDRESS, TIP20_DECIMALS, 'USDC.e', 'Bridged USDC (Stargate)'),
+    OUSD: new Token(UniverseChainId.Tempo, OUSD_ADDRESS, TIP20_DECIMALS, 'OUSD', 'OpenUSD'),
   },
 })
 
@@ -43,9 +47,9 @@ export const TEMPO_CHAIN_INFO = {
   logo: TEMPO_LOGO,
   name: 'Tempo',
   // Virtual "USD" native currency placeholder.
-  // Tempo has no native gas token — gas is paid in pathUSD (or other USD stablecoins, but we don't support them yet).
+  // Tempo has no native gas token — gas is paid in a USD TIP-20 fee token (pathUSD unless the account set a preference).
   // eth_getBalance returns a large sentinel value (~4.2e75) on mainnet, not a real balance.
-  // EVM opcodes BALANCE/SELFBALANCE return 0. Gas checks use pathUSD balance instead (see useChainGasToken).
+  // EVM opcodes BALANCE/SELFBALANCE return 0. Gas checks use the fee token balance instead (see useChainGasToken).
   // This virtual token must NEVER appear in token selectors or be used in transactions.
   nativeCurrency: {
     name: 'USD',
@@ -55,7 +59,7 @@ export const TEMPO_CHAIN_INFO = {
     logo: TEMPO_LOGO,
   },
   wrappedNativeCurrency: null,
-  // Tempo pays gas in pathUSD (6-decimal ERC-20), not a native token.
+  // Tempo pays gas in pathUSD by default (6-decimal ERC-20), not a native token.
   gasTokenOverride: tempoTokens.pathUSD,
   networkLayer: NetworkLayer.L1,
   blockTimeMs: 500,

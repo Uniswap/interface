@@ -80,6 +80,66 @@ export function toStrictlyAscendingByTime(entries: PriceChartData[]): PriceChart
   return result
 }
 
+export const CANDLESTICK_FALLBACK_THRESHOLD = 0.1
+
+/**
+ * Merges adjacent candles pairwise, halving the series when OHLC data is too granular.
+ * An odd-length series drops its leading candle to keep the pairs aligned — at length 1 that is the
+ * whole series, so a single-candle input returns empty.
+ */
+export function combineCandlesByHalving({ candles }: { candles: PriceChartData[] }): PriceChartData[] {
+  const combinedEntries: PriceChartData[] = []
+
+  const startIndex = candles.length % 2 // If the length is odd, start at the second entry
+  for (let i = startIndex; i < candles.length; i += 2) {
+    const first = candles[i]
+    const second = candles[i + 1]
+    const combined = {
+      time: first.time,
+      open: first.open,
+      high: Math.max(first.high, second.high),
+      low: Math.min(first.low, second.low),
+      close: second.close,
+      value: second.close,
+    }
+    combinedEntries.push(combined)
+  }
+  return combinedEntries
+}
+
+/**
+ * Appends the current spot price as a new trailing bar, or patches the last bar's close if it
+ * falls within the same time window — keeps the chart fresh and ending at the live price.
+ * Callers must pass a strictly time-ascending series (toStrictlyAscendingByTime): a duplicate
+ * trailing timestamp makes the derived granularity 0 and forces the append branch.
+ */
+export function appendOrPatchSpotBar({
+  candles,
+  spotPrice,
+}: {
+  candles: PriceChartData[]
+  spotPrice: number | undefined
+}): PriceChartData[] {
+  if (!spotPrice || candles.length <= 1) {
+    return candles
+  }
+
+  const lastEntry = candles[candles.length - 1]
+  const secondToLastEntry = candles[candles.length - 2]
+  const granularity = lastEntry.time - secondToLastEntry.time
+
+  const now = getCurrentUTCTimestamp()
+  // If the current price falls within the last entry's time window, update the last entry's close price
+  if (now - lastEntry.time < granularity) {
+    return [...candles.slice(0, -1), { ...lastEntry, time: now, value: spotPrice, close: spotPrice }]
+  }
+
+  // If the current price falls outside the last entry's time window, add it as a new entry
+  return [
+    ...candles,
+    { time: now, value: spotPrice, open: spotPrice, high: spotPrice, low: spotPrice, close: spotPrice },
+  ]
+}
 export function useTokenPriceChartData({
   variables,
   skip,

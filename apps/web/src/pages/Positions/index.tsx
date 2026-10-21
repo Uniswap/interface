@@ -2,7 +2,6 @@ import { Platform } from '@universe/chains'
 import { Flex, Text } from '@universe/mycelium'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { spacing } from 'ui/src/theme/spacing'
 import { InterfacePageName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useIsMissingPlatformWallet } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsMissingPlatformWallet'
@@ -52,9 +51,9 @@ function getPositionsViewState({
   return { showDiscoveryEmptyState }
 }
 
-// Right gutter the summary carousel cancels to bleed to the viewport edge on mWeb: the page's
-// $lg px + AppBody's gutter below the md breakpoint.
-const SUMMARY_CHIPS_BLEED_GUTTERS = { md: spacing.spacing20 + APP_BODY_MOBILE_GUTTER_PX }
+// Right gutter the summary carousel cancels to bleed to the viewport edge on mWeb: AppBody's gutter,
+// the only one below the md breakpoint.
+const SUMMARY_CHIPS_BLEED_GUTTERS = { md: APP_BODY_MOBILE_GUTTER_PX }
 
 export function Pool() {
   const account = useAccount()
@@ -154,6 +153,7 @@ export function Pool() {
         py="$spacing24"
         px="$spacing40"
         $lg={{ px: '$spacing20' }}
+        $md={{ px: '$none' }}
       >
         <Flex grow shrink gap="$spacing24" maxWidth="100%" $xl={{ maxWidth: '100%' }}>
           {showSummaryChips && (

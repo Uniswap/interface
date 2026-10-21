@@ -14,6 +14,9 @@ import { usePrevious } from 'utilities/src/react/hooks'
 // notation is safe inside AnimatedNumber: it only rolls ASCII digits, so ₄ renders as plain text.
 const SUBSCRIPT_FIAT_THRESHOLD = 0.01
 
+// Below this, a return is float noise (e.g. residual on a zero balance), not a real amount.
+const DUST_THRESHOLD = 0.000001
+
 interface ProfitLossRowProps {
   label: string
   value?: number
@@ -41,8 +44,16 @@ export function ProfitLossRow({
   const previousValue = usePrevious(value)
   const previousPercent = usePrevious(percent)
 
-  const displayValue = isLoading ? previousValue : value
+  const rawDisplayValue = isLoading ? previousValue : value
   const displayPercent = isLoading ? previousPercent : percent
+
+  // Snap to zero (real-zero path). showArrow-only: sub-dust average costs are real.
+  const isDust =
+    showArrow &&
+    rawDisplayValue !== undefined &&
+    Math.abs(rawDisplayValue) > 0 &&
+    Math.abs(rawDisplayValue) < DUST_THRESHOLD
+  const displayValue = isDust ? 0 : rawDisplayValue
 
   const { hasReasonableValue, isPositive, arrowColor } = getValueSignInfo(displayValue)
 
@@ -64,7 +75,7 @@ export function ProfitLossRow({
         })
 
   const formattedPercent =
-    hasReasonableValue && displayPercent !== undefined ? formatPercent(Math.abs(displayPercent)) : undefined
+    hasReasonableValue && !isDust && displayPercent !== undefined ? formatPercent(Math.abs(displayPercent)) : undefined
 
   return (
     <Flex row justifyContent="space-between" alignItems="center" pointerEvents="none">

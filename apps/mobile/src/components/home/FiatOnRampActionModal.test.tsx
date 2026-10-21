@@ -29,6 +29,11 @@ vi.mock('@universe/gating', async () => ({
   useFeatureFlagWithExposureLoggingDisabled: vi.fn().mockReturnValue(false),
 }))
 
+const mockUseIsForRegionBlocked = vi.hoisted(() => vi.fn().mockReturnValue(false))
+vi.mock('uniswap/src/features/fiatOnRamp/useIsForRegionBlocked', () => ({
+  useIsForRegionBlocked: mockUseIsForRegionBlocked,
+}))
+
 const mockDispatch = vi.fn()
 vi.mock('react-redux', async () => ({
   ...(await vi.importActual('react-redux')),
@@ -133,6 +138,24 @@ describe('FiatOnRampActionModal', () => {
           }),
         }),
       )
+    })
+  })
+
+  describe('region-blocked', () => {
+    it.each(['onramp', 'offramp'] as const)('routes %s to the CEX transfer modal', (entry) => {
+      mockUseIsForRegionBlocked.mockReturnValue(true)
+      const { getByText } = renderWithProviders(<FiatOnRampActionModal {...createProps(entry)} />, {
+        preloadedState: preloadedMobileState({}),
+      })
+
+      fireEvent.press(
+        getByText(entry === 'offramp' ? 'fiatOnRamp.action.sellForCash' : 'fiatOnRamp.action.buyWithCash'),
+        ON_PRESS_EVENT_PAYLOAD,
+      )
+
+      expect(mockUseIsForRegionBlocked).toHaveBeenCalledWith({ isOfframp: entry === 'offramp' })
+      expect(navigate).toHaveBeenCalledWith(ModalName.CexTransferInfoModal)
+      expect(mockDispatch).not.toHaveBeenCalled()
     })
   })
 })

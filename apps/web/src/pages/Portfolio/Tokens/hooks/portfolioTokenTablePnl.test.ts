@@ -1,7 +1,8 @@
 import { GetWalletTokensProfitLossResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { Token } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { nativeOnChain, USDC_SOLANA } from 'uniswap/src/constants/tokens'
+import { DEFAULT_NATIVE_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
 import type { CurrencyInfo, PortfolioChainBalance } from 'uniswap/src/features/dataApi/types'
 import { createPortfolioChainBalance } from 'uniswap/src/test/fixtures/dataApi/portfolioMultichainBalances'
 import { describe, expect, it } from 'vitest'
@@ -186,6 +187,73 @@ describe('buildPnlLookupsFromProfitLoss', () => {
       unrealizedPnl: -0.2,
       unrealizedPnlPercent: -10,
     })
+  })
+
+  it('joins the native SOL row to the system-program address and keeps SPL mints case-sensitive', () => {
+    const data = {
+      tokenProfitLosses: [
+        {
+          token: { address: DEFAULT_NATIVE_ADDRESS_SOLANA, chainId: UniverseChainId.Solana },
+          averageCostUsd: 150,
+          unrealizedReturnUsd: 25,
+          unrealizedReturnPercent: 16,
+        },
+        {
+          token: { address: USDC_SOLANA.address, chainId: UniverseChainId.Solana },
+          averageCostUsd: 1,
+          unrealizedReturnUsd: 0,
+          unrealizedReturnPercent: 0,
+        },
+      ],
+      multichainTokenProfitLoss: [],
+    } as unknown as GetWalletTokensProfitLossResponse
+
+    const { perChainPnlLookup } = buildPnlLookupsFromProfitLoss(data)
+
+    const solLeg = createChainBalanceForPnlTest(
+      { currency: nativeOnChain(UniverseChainId.Solana), currencyId: 'SOL' } as CurrencyInfo,
+      { chainId: UniverseChainId.Solana, address: DEFAULT_NATIVE_ADDRESS_SOLANA },
+    )
+    const usdcLeg = createChainBalanceForPnlTest(
+      { currency: USDC_SOLANA, currencyId: `${UniverseChainId.Solana}-${USDC_SOLANA.address}` } as CurrencyInfo,
+      { chainId: UniverseChainId.Solana, address: USDC_SOLANA.address },
+    )
+
+    expect(pnlLookupKeyFromPortfolioChainBalance(solLeg)).toBe(
+      `${DEFAULT_NATIVE_ADDRESS_SOLANA}-${UniverseChainId.Solana}`,
+    )
+    expect(perChainPnlLookup.get(pnlLookupKeyFromPortfolioChainBalance(solLeg))).toEqual({
+      avgCost: 150,
+      unrealizedPnl: 25,
+      unrealizedPnlPercent: 16,
+    })
+    expect(pnlLookupKeyFromPortfolioChainBalance(usdcLeg)).toBe(`${USDC_SOLANA.address}-${UniverseChainId.Solana}`)
+    expect(perChainPnlLookup.get(pnlLookupKeyFromPortfolioChainBalance(usdcLeg))).toEqual({
+      avgCost: 1,
+      unrealizedPnl: 0,
+      unrealizedPnlPercent: 0,
+    })
+  })
+
+  it('does not join a Solana native row to the EVM zero address', () => {
+    const data = {
+      tokenProfitLosses: [
+        {
+          token: { address: '0x0000000000000000000000000000000000000000', chainId: UniverseChainId.Solana },
+          averageCostUsd: 1,
+          unrealizedReturnUsd: 1,
+          unrealizedReturnPercent: 1,
+        },
+      ],
+      multichainTokenProfitLoss: [],
+    } as unknown as GetWalletTokensProfitLossResponse
+
+    const { perChainPnlLookup } = buildPnlLookupsFromProfitLoss(data)
+    const solLeg = createChainBalanceForPnlTest(
+      { currency: nativeOnChain(UniverseChainId.Solana), currencyId: 'SOL' } as CurrencyInfo,
+      { chainId: UniverseChainId.Solana, address: DEFAULT_NATIVE_ADDRESS_SOLANA },
+    )
+    expect(perChainPnlLookup.get(pnlLookupKeyFromPortfolioChainBalance(solLeg))).toBeUndefined()
   })
 
   it('does not collapse Arc USDC ERC-20 into the native key (distinct 6-decimal token)', () => {

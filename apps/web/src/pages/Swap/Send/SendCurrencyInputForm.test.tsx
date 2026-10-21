@@ -3,6 +3,7 @@ vi.mock('~/hooks/Tokens')
 // Mock only what's needed for tests to pass
 vi.mock('uniswap/src/features/accounts/store/hooks', () => {
   return {
+    useActiveAddress: () => undefined,
     useActiveAddresses: () => ({
       evmAddress: undefined,
       svmAddress: undefined,

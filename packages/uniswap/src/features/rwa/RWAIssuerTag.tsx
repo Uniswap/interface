@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { getIssuerTokenLabel } from 'uniswap/src/data/apiClients/dataApiService/rwa/formatIssuerDisplaySymbol'
 import { GrayscaleIssuerLogo } from 'uniswap/src/features/rwa/GrayscaleIssuerLogo'
 import { type RWAIssuerDisplay, UNKNOWN_RWA_ISSUER } from 'uniswap/src/features/rwa/types'
-import { useRWAIssuerLogoUrl } from 'uniswap/src/features/rwa/useRWAIssuerLogoUrl'
+import { useRWAIssuerLogo } from 'uniswap/src/features/rwa/useRWAIssuerLogoUrl'
 import { useEvent } from 'utilities/src/react/hooks'
 
 // 12px beside body2 titles (web), 16px beside body1 titles (mobile rows); body2 rows on mobile pass `size`.
@@ -27,7 +27,8 @@ export const RWAIssuerTag = memo(function RWAIssuerTag({
 }): JSX.Element | null {
   const { t } = useTranslation()
   const isTouchDevice = useIsTouchDevice()
-  const configLogoUrl = useRWAIssuerLogoUrl(issuer.issuer)
+  // The grayscale set may be a CoinGecko color fallback, so GrayscaleIssuerLogo keeps its filter on regardless.
+  const themedLogoUrl = useRWAIssuerLogo({ issuer, variant: 'grayscale' })
   const label = getIssuerTokenLabel(issuer)
   // On touch the tooltip opens on tap, so the tap must not also fire the enclosing row link/press.
   const onTriggerPress = useEvent((event: { preventDefault: () => void; stopPropagation: () => void }): void => {
@@ -41,8 +42,7 @@ export const RWAIssuerTag = memo(function RWAIssuerTag({
   if (!label || issuer.issuer === UNKNOWN_RWA_ISSUER) {
     return null
   }
-  // Backend branding wins: commodity issuer ids are CoinGecko slugs with no Statsig logo entry.
-  const logoUrl = showLogo ? issuer.issuerLogoUrl || configLogoUrl : undefined
+  const logoUrl = showLogo ? themedLogoUrl : undefined
   if (!logoUrl) {
     return (
       <Text color="$neutral3" variant="body3" numberOfLines={1} flexShrink={0}>

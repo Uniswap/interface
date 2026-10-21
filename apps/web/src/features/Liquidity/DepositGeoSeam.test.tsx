@@ -56,6 +56,7 @@ const mockedUseLPGeoRestriction = vi.mocked(useLPGeoRestriction)
 const mockedUseLPPermissionedGating = vi.mocked(useLPPermissionedGating)
 const mockedUseBlockedTokens = vi.mocked(useBlockedTokens)
 const mockedUseCreateLiquidityContext = vi.mocked(useCreateLiquidityContext)
+const setIsReviewModalOpen = vi.fn()
 const mockedUseCreatePositionTxContext = vi.mocked(useCreatePositionTxContext)
 
 const AAPLX = { symbol: 'AAPLX', chainId: 1, address: '0xaaplx', isNative: false } as Currency
@@ -86,6 +87,8 @@ function mockDepositReady(): void {
     depositState: { exactField: 'TOKEN0', exactAmounts: {} },
     setDepositState: vi.fn(),
     refetch: vi.fn(),
+    isReviewModalOpen: false,
+    setIsReviewModalOpen,
   } as unknown as ReturnType<typeof useCreateLiquidityContext>)
 
   mockedUseCreatePositionTxContext.mockReturnValue({
@@ -177,6 +180,8 @@ describe('DepositStep geo gate (deposit seam)', () => {
     expect(cta).not.toBeNull()
     fireEvent.click(cta as HTMLButtonElement)
 
+    // The review modal's open state lives in the context, where it also holds the range still.
+    expect(setIsReviewModalOpen).toHaveBeenCalledWith(true)
     // The geo gate did not intercept: the CTA stayed the review CTA and is still actionable.
     expect(screen.queryByTestId(TestID.LPGeoRestrictionBanner)).toBeNull()
     expect(screen.getByText(REVIEW_LABEL)).toBeInTheDocument()

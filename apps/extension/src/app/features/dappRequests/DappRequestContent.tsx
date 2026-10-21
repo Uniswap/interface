@@ -87,7 +87,7 @@ export function DappRequestContent({
   showAddressFooter = true,
   contentHorizontalPadding = '$spacing12',
 }: PropsWithChildren<DappRequestContentProps>): JSX.Element {
-  const { forwards, currentIndex, dappIconUrl, dappUrl, frameUrl } = useDappRequestQueueContext()
+  const { forwards, currentIndex, dappIconUrl, dappUrl, tabUrl, isCrossOriginFrame } = useDappRequestQueueContext()
   const hostname = extractNameFromUrl(dappUrl).toUpperCase()
 
   // Site verification applies to every request type; flows that compute their own
@@ -102,7 +102,8 @@ export function DappRequestContent({
             name: hostname,
             url: dappUrl,
             icon: dappIconUrl,
-            frameUrl,
+            tabUrl,
+            isCrossOriginFrame,
           }}
           title={title}
           verificationStatus={verificationStatus ?? siteVerification.verificationStatus}

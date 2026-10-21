@@ -1,7 +1,7 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import toucanIntroBackground from '@universe/mycelium/assets/backgrounds/toucan-intro.png'
 import { useTranslation } from 'react-i18next'
 import { Button, Image, useSporeColors } from 'ui/src'
-import toucanIntroBackground from 'ui/src/assets/backgrounds/toucan-intro.png'
 import { Rocket } from 'ui/src/components/icons/Rocket'
 import { X } from 'ui/src/components/icons/X'
 import { Modal } from 'uniswap/src/components/modals/Modal'

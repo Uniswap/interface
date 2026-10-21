@@ -24,6 +24,7 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionRequests'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
+import { SWAP_PRICE_COMPACT_THRESHOLD } from 'utilities/src/format/localeBasedFormats'
 import { NumberType } from 'utilities/src/format/types'
 
 export function tradeToTransactionInfo({
@@ -193,6 +194,16 @@ export function calculateRateLine({
   return latestFiatPriceFormatted
 }
 
+export interface RateToDisplay {
+  rate: string
+  /**
+   * Set only when `rate`'s numeric portion was abbreviated (e.g. "1.24B") -- the same string but
+   * with the exact, un-abbreviated value, for a hover tooltip. `undefined` when `rate` already
+   * shows the full value, so callers can skip rendering a tooltip entirely.
+   */
+  fullPrecisionRate?: string
+}
+
 export function getRateToDisplay({
   formatter,
   trade,
@@ -201,25 +212,38 @@ export function getRateToDisplay({
   formatter: LocalizationContextState
   trade: Trade | IndicativeTrade
   showInverseRate: boolean
-}): string {
+}): RateToDisplay {
   const price = showInverseRate ? trade.executionPrice.invert() : trade.executionPrice
-
+  let significantPrice: string
   let formattedPrice: string
   try {
+    significantPrice = price.toSignificant()
     formattedPrice = formatter.formatNumberOrString({
-      value: price.toSignificant(),
+      value: significantPrice,
       type: NumberType.SwapPrice,
     })
   } catch (_error) {
     // This means the price impact is so high that the rate is basically 0 (an error is thrown because we try to divide by 0)
+    significantPrice = '0'
     formattedPrice = '0'
   }
 
   const quoteCurrencySymbol = getSymbolDisplayText(trade.executionPrice.quoteCurrency.symbol)
   const baseCurrencySymbol = getSymbolDisplayText(trade.executionPrice.baseCurrency.symbol)
-  const rate = `1 ${quoteCurrencySymbol} = ${formattedPrice} ${baseCurrencySymbol}`
-  const inverseRate = `1 ${baseCurrencySymbol} = ${formattedPrice} ${quoteCurrencySymbol}`
-  return showInverseRate ? rate : inverseRate
+  // showInverseRate picks which currency leads the "1 X = Y Z" string; the full-precision
+  // fallback below mirrors whichever ordering was picked here.
+  const [leadingSymbol, trailingSymbol] = showInverseRate
+    ? [quoteCurrencySymbol, baseCurrencySymbol]
+    : [baseCurrencySymbol, quoteCurrencySymbol]
+  const rate = `1 ${leadingSymbol} = ${formattedPrice} ${trailingSymbol}`
+
+  const numericPrice = Number(significantPrice)
+  const wasAbbreviated = Number.isFinite(numericPrice) && numericPrice >= SWAP_PRICE_COMPACT_THRESHOLD
+  const fullPrecisionRate = wasAbbreviated
+    ? `1 ${leadingSymbol} = ${formatter.formatNumberOrString({ value: significantPrice, type: NumberType.SwapPriceFull })} ${trailingSymbol}`
+    : undefined
+
+  return { rate, fullPrecisionRate }
 }
 
 /**

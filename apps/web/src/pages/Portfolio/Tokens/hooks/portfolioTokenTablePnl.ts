@@ -3,7 +3,7 @@ import { GetWalletTokensProfitLossResponse } from '@uniswap/client-data-api/dist
 import { normalizeTokenAddressForCache } from '@universe/chains'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { DEFAULT_NATIVE_ADDRESS, DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/evm/rpc'
-import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
+import { getDefaultNativeAddress, isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import type { PortfolioChainBalance } from 'uniswap/src/features/dataApi/types'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
 
@@ -46,7 +46,8 @@ export type TokenPnlSnapshot = {
 /** Per-chain / API leg key (aligned with {@link normalizeAddressForPnlLookupKey}). */
 export function pnlLookupKeyFromPortfolioChainBalance(t: PortfolioChainBalance): string {
   const rawAddr = currencyAddress(t.currencyInfo.currency)
-  const addr = t.currencyInfo.currency.isNative ? DEFAULT_NATIVE_ADDRESS : rawAddr
+  const addr =
+    t.currencyInfo.currency.isNative && isUniverseChainId(t.chainId) ? getDefaultNativeAddress(t.chainId) : rawAddr
   return `${normalizeAddressForPnlLookupKey({ address: addr, chainId: t.chainId })}-${t.chainId}`
 }
 

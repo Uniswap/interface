@@ -1,6 +1,7 @@
 import { Flex } from '@universe/mycelium'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { ComponentProps } from 'react'
+import { APP_BODY_MOBILE_GUTTER_PX } from '~/app/layout/constants'
 import { HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constants'
 import { useAppHeaderHeight } from '~/hooks/useAppHeaderHeight'
 
@@ -26,6 +27,13 @@ export function StickyCollapsibleHeader({
       width="100%"
       px="$spacing40"
       $lg={{ px: '$padding20' }}
+      // Bleeds over AppBody's gutter so content scrolling under the header can't show beside it.
+      $md={{
+        alignSelf: 'stretch',
+        width: 'auto',
+        mx: -APP_BODY_MOBILE_GUTTER_PX,
+        px: APP_BODY_MOBILE_GUTTER_PX,
+      }}
       backgroundColor="$surface1"
       transition={HEADER_TRANSITION}
       zIndex="$header"

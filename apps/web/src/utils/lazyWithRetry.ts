@@ -51,6 +51,9 @@ function isDynamicImportError(error: Error): boolean {
 
   const dynamicImportErrorPatterns = [
     'failed to fetch dynamically imported module',
+    'importing a module script failed', // Safari
+    'error loading dynamically imported module', // Firefox
+    'unable to preload css',
     'loading chunk failed',
     'loading css chunk failed',
     'failed to fetch',

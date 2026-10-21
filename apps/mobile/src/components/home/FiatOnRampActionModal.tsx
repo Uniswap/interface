@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
 import type { GeneratedIcon } from '@universe/mycelium/icons'
 import { ArrowUpCircle } from '@universe/mycelium/icons/ArrowUpCircle'
@@ -12,6 +11,7 @@ import { AppStackScreenProp } from 'src/app/navigation/types'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { useIsForRegionBlocked } from 'uniswap/src/features/fiatOnRamp/useIsForRegionBlocked'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 
@@ -29,12 +29,12 @@ export function FiatOnRampActionModal({ route }: AppStackScreenProp<typeof Modal
   const dispatch = useDispatch()
   const { onClose } = useReactNavigationModal()
   const isOfframp = entry === 'offramp'
-  const disableForKorea = useFeatureFlag(FeatureFlags.DisableFiatOnRampKorea)
+  const isForRegionBlocked = useIsForRegionBlocked({ isOfframp })
 
   const onPressFiatOption = useCallback((): void => {
     onClose()
-    if (disableForKorea) {
-      navigate(ModalName.KoreaCexTransferInfoModal)
+    if (isForRegionBlocked) {
+      navigate(ModalName.CexTransferInfoModal)
       return
     }
     dispatch(
@@ -43,7 +43,7 @@ export function FiatOnRampActionModal({ route }: AppStackScreenProp<typeof Modal
         ...(isOfframp && { initialState: { isOfframp: true } }),
       }),
     )
-  }, [onClose, dispatch, isOfframp, disableForKorea])
+  }, [onClose, dispatch, isOfframp, isForRegionBlocked])
 
   const onPressSwap = useCallback((): void => {
     onClose()

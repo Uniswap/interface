@@ -1,5 +1,5 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
-import type { Checkpoint } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import type { Checkpoint } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { useMemo } from 'react'
 import { FiatNumberType } from 'utilities/src/format/types'
 import { AuctionDetails, BidDistributionData, BidTokenInfo } from '~/features/Toucan/Auction/store/types'

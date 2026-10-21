@@ -43,7 +43,7 @@ export function PortfolioTabs() {
 
   return (
     <Flex>
-      <Flex row gap="$spacing24" $sm={{ gap: '$spacing12', justifyContent: 'space-around' }}>
+      <Flex row gap="$spacing24" $sm={{ gap: '$spacing12', justifyContent: 'space-between' }}>
         {portfolioTabs.map((tab: PortfolioTabInfo) => {
           const portfolioTab = pathToPortfolioTab(tab.path)
           const tabPath = buildPortfolioUrl({ tab: portfolioTab, chainId, externalAddress: externalAddress?.address })

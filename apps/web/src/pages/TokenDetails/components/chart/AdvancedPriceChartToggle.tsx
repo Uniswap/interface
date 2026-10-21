@@ -2,7 +2,6 @@ import { Flex, type IconSizeTokens } from '@universe/mycelium'
 import { CandlestickChart } from '@universe/mycelium/icons/CandlestickChart'
 import { LineChartDots } from '@universe/mycelium/icons/LineChartDots'
 import { SegmentedControl } from '@universe/mycelium/segmented-control-compat'
-import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { useTranslation } from 'react-i18next'
 import { PriceChartType } from '~/components/Charts/utils'
 import { MouseoverTooltip } from '~/components/Tooltip'
@@ -17,7 +16,6 @@ export function AdvancedPriceChartToggle({
   disableCandlestickUI?: boolean
 }): JSX.Element {
   const { t } = useTranslation()
-  const media = useMedia()
 
   const options = [
     {
@@ -40,7 +38,6 @@ export function AdvancedPriceChartToggle({
 
   return (
     <SegmentedControl
-      fullWidth={media.md}
       options={options}
       selectedOption={currentChartType}
       onSelectOption={(selectedValue) => {

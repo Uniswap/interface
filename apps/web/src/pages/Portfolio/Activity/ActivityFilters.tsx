@@ -16,6 +16,8 @@ const DROPDOWN_MIN_WIDTH = {
   timePeriod: 200,
 }
 
+const HALF_WIDTH_ON_MOBILE = { flex: 1, minWidth: 0 }
+
 interface ActivityFiltersProps {
   selectedTransactionType: string
   onTransactionTypeChange: (value: string) => void
@@ -53,7 +55,7 @@ function ActivityFiltersInner({
         gap: '$spacing16',
       }}
     >
-      <Flex row gap="$spacing12" $md={{ flexDirection: 'column' }}>
+      <Flex row gap="$spacing12">
         {/* Transaction Type Filter */}
         <Trace logPress element={ElementName.ActivityFilterTransactionType}>
           <DropdownSelector
@@ -67,7 +69,8 @@ function ActivityFiltersInner({
             optionTestIdPrefix={TestID.PortfolioActivityFilterOptionPrefix}
             // buttonStyle crosses into DropdownSelector, which is still Tamagui, so this $md is Tamagui's, not mycelium's.
             // Both resolve to 640px — they must stay equal or the container stacks at a different width than the buttons.
-            buttonStyle={{ minWidth: 140, $md: { width: '100%' } }}
+            buttonStyle={{ minWidth: 140, $md: { width: '100%', minWidth: 0 } }}
+            containerStyle={media.md ? HALF_WIDTH_ON_MOBILE : undefined}
             dropdownStyle={{ minWidth: DROPDOWN_MIN_WIDTH.transactionType }}
           />
         </Trace>
@@ -80,7 +83,11 @@ function ActivityFiltersInner({
             isOpen={timePeriodExpanded}
             toggleOpen={setTimePeriodExpanded}
             ButtonIcon={Calendar}
-            buttonStyle={{ minWidth: 140, $md: { width: '100%' } }}
+            buttonStyle={{ minWidth: 140, $md: { width: '100%', minWidth: 0 } }}
+            containerStyle={media.md ? HALF_WIDTH_ON_MOBILE : undefined}
+            // The panel is wider than the half-width trigger and AdaptiveDropdown only flips vertically,
+            // so the trailing filter anchors right or it runs past the viewport edge.
+            alignRight={media.md}
             dropdownStyle={{ minWidth: DROPDOWN_MIN_WIDTH.timePeriod }}
           />
         </Trace>

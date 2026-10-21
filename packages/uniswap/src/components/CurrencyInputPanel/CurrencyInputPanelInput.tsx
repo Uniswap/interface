@@ -13,6 +13,7 @@ import {
   MIN_INPUT_FONT_SIZE,
   useCurrencyInputFontSize,
 } from 'uniswap/src/components/CurrencyInputPanel/hooks/useCurrencyInputFontSize'
+import { useDeferredCaret } from 'uniswap/src/components/CurrencyInputPanel/hooks/useDeferredCaret'
 import type { PanelTextDisplay } from 'uniswap/src/components/CurrencyInputPanel/hooks/useIndicativeQuoteTextDisplay'
 import { useInputFocusSync } from 'uniswap/src/components/CurrencyInputPanel/hooks/useInputFocusSync/useInputFocusSync'
 import { useRefetchAnimationStyle } from 'uniswap/src/components/CurrencyInputPanel/hooks/useRefetchAnimationStyle'
@@ -97,11 +98,14 @@ export const CurrencyInputPanelInput = memo(
 
       const inputRef = useRef<TextInput | null>(null)
 
+      const { selection, followNativeSelection, setCaret } = useDeferredCaret(value)
+
       const { shakeStyle, triggerShakeAnimation } = shakeAnimation
 
       useImperativeHandle(forwardedRef, () => ({
         textInputRef: inputRef,
         triggerShakeAnimation,
+        setSelection: setCaret,
       }))
 
       const isOutput = currencyField === CurrencyField.OUTPUT
@@ -121,8 +125,12 @@ export const CurrencyInputPanelInput = memo(
           nativeEvent: {
             selection: { start, end },
           },
-        }: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => selectionChange?.(start, end),
-        [selectionChange],
+        }: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => {
+          // Follow the caret the user moved, or the controlled `selection` would push ours back.
+          followNativeSelection({ start, end })
+          selectionChange?.(start, end)
+        },
+        [selectionChange, followNativeSelection],
       )
 
       const refetchAnimationStyle = useRefetchAnimationStyle(props)
@@ -193,6 +201,7 @@ export const CurrencyInputPanelInput = memo(
                   px="$none"
                   py="$none"
                   returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
+                  selection={isWebPlatform ? undefined : selection}
                   showSoftInputOnFocus={showSoftInputOnFocus}
                   testID={isOutput ? TestID.AmountInputOut : TestID.AmountInputIn}
                   value={value}

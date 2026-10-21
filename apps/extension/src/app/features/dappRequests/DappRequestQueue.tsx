@@ -5,7 +5,7 @@ import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { Presence, type PresenceExitProps } from '@universe/mycelium/presence'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { memo } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { isImpersonatedAccount } from 'src/app/features/accounts/impersonation'
 import { rejectAllRequests } from 'src/app/features/dappRequests/actions'
@@ -33,6 +33,7 @@ import {
   isSignMessageRequest,
   isSignTypedDataRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
+import { Trans } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 

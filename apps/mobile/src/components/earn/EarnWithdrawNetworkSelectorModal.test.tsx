@@ -20,7 +20,7 @@ vi.mock('uniswap/src/components/modals/Modal', () => ({
   Modal: ({ children }: { children: ReactNode }) => children,
 }))
 
-vi.mock('uniswap/src/components/network/NetworkFilterV2/NetworkFilterContent', async () => {
+vi.mock('uniswap/src/components/network/NetworkFilter/NetworkFilterContent', async () => {
   const { Pressable, Text } = await vi.importActual<typeof import('react-native')>('react-native')
   const { getChainInfo: getActualChainInfo } = await vi.importActual<
     typeof import('uniswap/src/features/chains/chainInfo')
@@ -41,11 +41,11 @@ vi.mock('uniswap/src/components/network/NetworkFilterV2/NetworkFilterContent', a
   }
 })
 
-vi.mock('uniswap/src/components/network/NetworkFilterV2/NetworkSearchBar', () => ({
+vi.mock('uniswap/src/components/network/NetworkFilter/NetworkSearchBar', () => ({
   NetworkSearchBar: () => null,
 }))
 
-vi.mock('uniswap/src/components/network/NetworkFilterV2/useNetworkFilterSearch', () => ({
+vi.mock('uniswap/src/components/network/NetworkFilter/useNetworkFilterSearch', () => ({
   useNetworkFilterSearch: ({ chainIds, tieredOptions }: { chainIds: UniverseChainId[]; tieredOptions: unknown }) => ({
     searchQuery: '',
     setSearchQuery: vi.fn(),

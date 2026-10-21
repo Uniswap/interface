@@ -3,8 +3,8 @@ import { TestID } from '@universe/test'
 import { BetaPasscodeModal } from '~/pages/Beta/BetaPasscodeModal'
 import { act, fireEvent, render, screen } from '~/test-utils/render'
 
-vi.mock('ui/src/assets', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('ui/src/assets')>()
+vi.mock('@universe/mycelium/assets', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@universe/mycelium/assets')>()
   return {
     ...actual,
     BETA_LOGO: 'beta-logo-mock',

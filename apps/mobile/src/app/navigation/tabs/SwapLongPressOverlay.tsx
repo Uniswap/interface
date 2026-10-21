@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex, Text, TouchableArea, useIsDarkMode, useSporeColors } from '@universe/mycelium'
 import { BlurView } from 'expo-blur'
 import { type ReactNode, useMemo } from 'react'
@@ -14,6 +13,7 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { Bank, Buy, ReceiveAlt, SendAction } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useIsForRegionBlocked } from 'uniswap/src/features/fiatOnRamp/useIsForRegionBlocked'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
@@ -76,7 +76,8 @@ export function SwapLongPressOverlay({
 
   const openReceiveModal = useOpenReceiveModal()
   const { isTestnetModeEnabled } = useEnabledChains()
-  const disableForKorea = useFeatureFlag(FeatureFlags.DisableFiatOnRampKorea)
+  const isOnrampBlocked = useIsForRegionBlocked({ isOfframp: false })
+  const isOfframpBlocked = useIsForRegionBlocked({ isOfframp: true })
 
   const onBuyPress = useEvent(async (): Promise<void> => {
     sendAnalyticsEvent(MobileEventName.SwapLongPress, { element: 'buy' })
@@ -88,8 +89,8 @@ export function SwapLongPressOverlay({
       })
       return
     }
-    disableForKorea
-      ? navigate(ModalName.KoreaCexTransferInfoModal)
+    isOnrampBlocked
+      ? navigate(ModalName.CexTransferInfoModal)
       : dispatch(
           openModal({
             name: ModalName.FiatOnRampAggregator,
@@ -109,8 +110,8 @@ export function SwapLongPressOverlay({
       })
       return
     }
-    disableForKorea
-      ? navigate(ModalName.KoreaCexTransferInfoModal)
+    isOfframpBlocked
+      ? navigate(ModalName.CexTransferInfoModal)
       : dispatch(
           openModal({
             name: ModalName.FiatOnRampAggregator,

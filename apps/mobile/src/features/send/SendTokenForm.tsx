@@ -138,12 +138,7 @@ export function SendTokenForm(): JSX.Element {
   const decimalPadRef = useRef<DecimalPadInputRef>(null)
   const maxDecimals = isFiatInput ? MAX_FIAT_INPUT_DECIMALS : (currencyIn?.decimals ?? 0)
   const selectionRef = useRef<TextInputProps['selection']>(undefined)
-  const pendingSelectionTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined)
   const amountUpdatedTimeRef = useRef(0)
-
-  useEffect(() => {
-    return () => clearTimeout(pendingSelectionTimeoutRef.current)
-  }, [])
 
   const onInputSelectionChange = useCallback(
     (start: number, end: number) => {
@@ -163,22 +158,11 @@ export function SendTokenForm(): JSX.Element {
   )
 
   const resetSelection = useCallback(
-    ({ start, end }: { start: number; end?: number; currencyField?: CurrencyField }) => {
-      // Update refs first to have the latest selection state available in the DecimalPadInput
-      // component and properly update disabled keys of the decimal pad.
-      // We reset the native selection on the next tick because we need to wait for the native input to be updated.
-      // This is needed because of the combination of state (delayed update) + ref (instant update) to improve performance.
+    ({ start, end, value }: { start: number; end?: number; currencyField?: CurrencyField; value?: string }) => {
+      // The ref is updated synchronously so the DecimalPadInput reads the new caret on the next
+      // keypress; the panel applies it to the native input once the value that moved it has rendered.
       selectionRef.current = { start, end }
-      const inputFieldRef = currencyInputPanelRef.current?.textInputRef
-
-      if (inputFieldRef) {
-        // Cancel any pending native selection update to prevent stale cursor positions
-        // when typing fast (the previous timeout would set the cursor to an outdated position).
-        clearTimeout(pendingSelectionTimeoutRef.current)
-        pendingSelectionTimeoutRef.current = setTimeout(() => {
-          inputFieldRef.current?.setNativeProps({ selection: { start, end } })
-        }, 0)
-      }
+      currencyInputPanelRef.current?.setSelection({ start, end, value })
     },
     [],
   )

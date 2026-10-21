@@ -165,6 +165,8 @@ export type TransactionStatusResult = {
   txHash?: string
   sponsorInfo?: TradingApi.SponsorMetadata
   paymaster?: string
+  /** True when /swaps never reported a terminal status within the polling window; `status` is then a Failed fallback, not an observed outcome */
+  pollExhausted?: boolean
 }
 
 /**
@@ -281,10 +283,10 @@ export function* waitForTransactionStatus(transaction: TransactionDetails): Saga
 
   logger.debug('watchTransactionSaga', `[${transaction.id}] waitForTransactionStatus`, 'final swapStatus:', swapStatus)
 
-  // SWAP-2471: distinguish a force-Failed (polling exhausted with NO terminal status) from a genuine
-  // FAILED — a force-Failed tx may still mine later, leaving local state out of sync.
+  // SWAP-2471: distinguish polling exhausted with NO terminal status from a genuine FAILED — the tx
+  // may still mine later.
   if (!swapStatus) {
-    logger.warn('watchTransactionSaga', 'waitForTransactionStatus', 'Polling exhausted; defaulting to Failed', {
+    logger.warn('watchTransactionSaga', 'waitForTransactionStatus', 'Polling exhausted without a terminal status', {
       transactionId: transaction.id,
       txHash: resolvedTxHash,
       isUserOp,
@@ -307,12 +309,13 @@ export function* waitForTransactionStatus(transaction: TransactionDetails): Saga
     }
   }
 
-  // If we didn't get a status after polling, assume it's failed.
-  // Classic swaps still have provider.waitForTransaction(hash) if the tx lands on-chain later, which will override this status
+  // No terminal status after polling: callers that have a hash should fall back to the on-chain receipt
+  // (see `pollExhausted`); UserOps have no such fallback, so they finalize as Failed.
   return {
     status: swapStatus ? SWAP_STATUS_TO_TX_STATUS[swapStatus] : TransactionStatus.Failed,
     txHash: resolvedTxHash,
     sponsorInfo: resolvedSponsorInfo,
     paymaster: resolvedPaymaster,
+    pollExhausted: !swapStatus,
   }
 }

@@ -2,6 +2,7 @@ import {
   findProof as defaultFindProof,
   type HashcashChallenge,
 } from '@universe/sessions/src/challenge-solvers/hashcash/core'
+import { getHashcashSearchRangeSize } from '@universe/sessions/src/challenge-solvers/hashcash/shared'
 import { HashcashWorkerBootError } from '@universe/sessions/src/challenge-solvers/hashcash/worker/hashcashWorkerErrors'
 import type { HashcashWorkerChannelFactory } from '@universe/sessions/src/challenge-solvers/hashcash/worker/types'
 import type { ChallengeData, ChallengeSolver } from '@universe/sessions/src/challenge-solvers/types'
@@ -209,11 +210,12 @@ function createHashcashSolver(ctx: CreateHashcashSolverContext): ChallengeSolver
       }
 
       difficulty = challenge.difficulty
+      const rangeSize = getHashcashSearchRangeSize(challenge)
 
       const findProofParams = {
         challenge,
         rangeStart: 0,
-        rangeSize: challenge.max_proof_length,
+        rangeSize,
       }
 
       // Use worker if provided, otherwise fall back to main thread
@@ -232,7 +234,7 @@ function createHashcashSolver(ctx: CreateHashcashSolverContext): ChallengeSolver
 
       if (!proof) {
         throw new HashcashNoProofError(
-          `Failed to find valid proof within allowed range (0-${challenge.max_proof_length}). ` +
+          `Failed to find valid proof within allowed range (0-${rangeSize}). ` +
             'Challenge may have expired or difficulty may be too high.',
         )
       }

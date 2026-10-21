@@ -27,6 +27,7 @@ import { DefaultPriceStrategies } from '~/features/Liquidity/charts/D3LiquidityR
 import { LiquidityRangeActionButtons } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/LiquidityRangeActionButtons/LiquidityRangeActionButtons'
 import { D3LiquidityRangeChart } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/D3LiquidityRangeChart'
 import { LiquidityChartStoreProvider } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/LiquidityChartStoreProvider'
+import type { TickRangeChange } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 import { toDisplayCurrentPrice } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/toDisplayCurrentPrice'
 import { useDensityChartData } from '~/features/Liquidity/charts/LiquidityRangeInput/hooks'
 import { ChartEntry } from '~/features/Liquidity/charts/LiquidityRangeInput/types'
@@ -62,6 +63,7 @@ export function D3LiquidityRangeInput({
   creatingPoolOrPair,
   poolHasNoActiveLiquidity,
   isInitialPriceDirty,
+  isRangeLocked,
   price,
   hook,
   currentPrice,
@@ -97,6 +99,7 @@ export function D3LiquidityRangeInput({
   /** An initialized pool with no distribution at the current tick. */
   poolHasNoActiveLiquidity?: boolean
   isInitialPriceDirty?: boolean
+  isRangeLocked?: boolean
   price?: Price<Currency, Currency>
   currentPrice?: number
   isFullRange?: boolean
@@ -118,7 +121,7 @@ export function D3LiquidityRangeInput({
   setInputMode: (inputMode: RangeAmountInputPriceMode) => void
   setMinTick: (tick?: number) => void
   setMaxTick: (tick?: number) => void
-  setMinMaxTick: (ticks: { minTick?: number; maxTick?: number }) => void
+  setMinMaxTick: (range: TickRangeChange) => void
   setIsFullRange: (isFullRange: boolean) => void
   handleSelectToken: (option: string) => void
 }) {
@@ -346,6 +349,7 @@ export function D3LiquidityRangeInput({
         currentPrice={displayCurrentPrice}
         creatingPoolOrPair={creatingPoolOrPair}
         isInitialPriceDirty={isInitialPriceDirty}
+        isRangeLocked={isRangeLocked}
         baseCurrency={sdkBaseCurrency}
         quoteCurrency={sdkQuoteCurrency}
         priceInverted={priceInverted}

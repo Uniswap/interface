@@ -104,6 +104,7 @@ const BodyWrapper = forwardRef<HTMLElement, FlexCompatProps>(function BodyWrappe
       px="$spacing40"
       // Merge, don't spread: Tamagui deep-merged a caller's object-valued prop into the config's value for the same key.
       $lg={{ px: '$padding20', ...lg }}
+      $md={{ px: '$none' }}
       {...props}
     />
   )

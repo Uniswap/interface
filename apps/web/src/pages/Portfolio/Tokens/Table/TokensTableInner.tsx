@@ -206,6 +206,7 @@ export function TokensTableInner({
       )}
       <HiddenTokenInfoModal isOpen={isModalVisible} onClose={closeModal} />
       <Table<TokenTableRow>
+        mobileFullBleed
         columns={columns as ColumnDef<TokenTableRow, unknown>[]}
         data={rows}
         loading={loading}

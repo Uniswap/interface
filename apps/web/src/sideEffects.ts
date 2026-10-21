@@ -10,6 +10,7 @@ import * as WalletConnect from '@walletconnect/ethereum-provider'
 import { setupi18n } from 'uniswap/src/i18n/i18n-setup-interface'
 import { setupWagmiAutoConnect } from '~/components/Web3Provider/wagmiAutoConnect'
 import { registerMetaMaskSolanaWallet } from '~/connection/registerMetaMaskSolana'
+import { applyMwebBottomInset } from '~/utils/mwebBottomInset'
 import { setupTurnstileCSPErrorFilter } from '~/utils/setupTurnstileCSPErrorFilter'
 import { setupVitePreloadErrorHandler } from '~/utils/setupVitePreloadErrorHandler'
 
@@ -24,3 +25,4 @@ registerMetaMaskSolanaWallet()
 setupWagmiAutoConnect()
 setupVitePreloadErrorHandler()
 setupTurnstileCSPErrorFilter()
+applyMwebBottomInset()

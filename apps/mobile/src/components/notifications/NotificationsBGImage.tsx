@@ -1,8 +1,8 @@
 import { Flex } from '@universe/mycelium'
+import { ONBOARDING_NOTIFICATIONS_DARK, ONBOARDING_NOTIFICATIONS_LIGHT } from '@universe/mycelium/assets'
 import { useLayoutEffect, useState } from 'react'
 import { Dimensions, Image, Platform } from 'react-native'
 import { useIsDarkMode } from 'ui/src'
-import { ONBOARDING_NOTIFICATIONS_DARK, ONBOARDING_NOTIFICATIONS_LIGHT } from 'ui/src/assets'
 import { breakpoints } from 'ui/src/theme'
 
 /**

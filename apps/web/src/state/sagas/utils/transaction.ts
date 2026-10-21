@@ -94,7 +94,8 @@ export const createUniverseTransaction = ({
         outputCurrencyId: info.quoteCurrencyId,
       })
       break
-    // Native token spend cases which are already handled in the refetchGQLQueries saga
+    // Native token spends already handled in the refetchGQLQueries saga, plus the four margin types —
+    // not native spends, but they need no special mapping either, so they share the base shape.
     case TransactionType.Approve:
     case TransactionType.ClaimUni:
     case TransactionType.LPIncentivesClaimRewards:
@@ -105,6 +106,10 @@ export const createUniverseTransaction = ({
     case TransactionType.AuctionExited:
     case TransactionType.AuctionLaunch:
     case TransactionType.Permit2Approve:
+    case TransactionType.MarginOpenPosition:
+    case TransactionType.MarginClosePosition:
+    case TransactionType.MarginDecreasePosition:
+    case TransactionType.MarginAddCollateral:
       return { ...baseTransaction, ...info } as UniswapTransactionDetails
     // NFT and other transaction types that don't need special mapping
     case TransactionType.Receive:

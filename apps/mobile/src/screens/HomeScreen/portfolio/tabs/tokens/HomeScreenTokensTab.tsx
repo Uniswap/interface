@@ -78,17 +78,17 @@ export const HomeScreenTokensTab = memo(function HomeScreenTokensTabInner({
           return <TokenBalanceItemRow key={row.rowId} item={row.rowId} />
         })
       ) : (
-        <Flex px="$spacing24">
-          <EmptyTokensList
-            emptyCondition
-            emptyTokensComponent={
+        <EmptyTokensList
+          emptyCondition
+          emptyTokensComponent={
+            <Flex px="$spacing24">
               <Flex centered pt="$spacing48" px="$spacing36" style={emptyComponentStyle}>
                 <WalletPortfolioEmptyState />
               </Flex>
-            }
-            errorCardContainerStyle={{ pt: '$spacing24' }}
-          />
-        </Flex>
+            </Flex>
+          }
+          errorCardContainerStyle={{ pt: '$spacing24', px: '$spacing24' }}
+        />
       )}
     </TabMeasuredLayout>
   )

@@ -11,8 +11,7 @@ export const ToucanContainer = ({ children, ...props }: PropsWithChildren<Compon
       $xxl={{ px: 80 }}
       $xl={{ px: '$spacing48' }}
       $lg={{ px: '$spacing48' }}
-      $md={{ px: '$spacing32' }}
-      $sm={{ px: '$spacing16' }}
+      $md={{ px: '$none' }}
       {...props}
     >
       {children}

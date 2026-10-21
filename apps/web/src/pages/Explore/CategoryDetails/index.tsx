@@ -24,7 +24,7 @@ function PageShell({ categoryName, children }: { categoryName?: string; children
         gap="$spacing24"
         pt="$spacing48"
         px="$spacing40"
-        $md={{ px: '$spacing16', pt: '$spacing24' }}
+        $md={{ px: '$none', pt: '$spacing24' }}
       >
         <CategoryDetailsBreadcrumb categoryName={categoryName} />
         {children}

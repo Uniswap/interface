@@ -143,6 +143,11 @@ function useGqlCurrencyBalances(
 
       // oxlint-disable-next-line typescript/no-unnecessary-condition
       if (balance) {
+        // The float `balance` can round above the onchain amount for high-decimal tokens, making Max revert.
+        const rawAmount = getCurrencyAmount({ value: balance.rawBalance, valueType: ValueType.Raw, currency })
+        if (rawAmount) {
+          return rawAmount
+        }
         const currencyAmount = getCurrencyAmount({
           value: balance.balance.toString(),
           valueType: ValueType.Exact,

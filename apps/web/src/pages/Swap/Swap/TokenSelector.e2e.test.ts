@@ -99,13 +99,7 @@ test.describe(
     test('output - should NOT show crosschain swaps promo banner when filtering to unsupported chain', async ({
       page,
     }) => {
-      // Pin NetworkFilterV2 on via URL override: the tokens-network-filter-trigger testid below
-      // only renders when the flag is on, and the live statsig fetch is not reliable in CI.
-      await page.goto(
-        buildSwapUrl({
-          featureFlags: { [FeatureFlags.ChainedActions]: true, [FeatureFlags.NetworkFilterV2]: true },
-        }),
-      )
+      await page.goto(buildSwapUrl({ featureFlags: { [FeatureFlags.ChainedActions]: true } }))
       await page.getByTestId(TestID.ChooseOutputToken).click()
 
       // Verify token selector is open and banner is initially visible

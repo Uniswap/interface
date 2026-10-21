@@ -8,6 +8,8 @@ import {
 } from 'uniswap/src/data/apiClients/dataApiService/rwa/useExploreRwaRows'
 import { RWA_CATEGORY_IDS } from 'uniswap/src/features/tokenCategories/rwaCategoryBridge'
 import { useSelectedVolumeOrderBy } from '~/features/Explore/hooks/useSelectedVolumeOrderBy'
+import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
+import { toSearchQueryParam } from '~/features/Explore/utils/toSearchQueryParam'
 import { RwaExploreTableShell } from '~/pages/Explore/rwa/table/RwaExploreTableShell'
 import { stocksSortMethodToOrderBy } from '~/pages/Explore/rwa/table/stocksSortMethodToOrderBy'
 import {
@@ -44,9 +46,13 @@ function useRwaCategoryTableRows({
   const chainId = chainScope ? chainScope.chainId : urlChainId
   const chainIds = useMemo(() => (chainId ? [chainId] : []), [chainId])
   const volumeOrderBy = useSelectedVolumeOrderBy()
-  const result = useExploreRwaRows({ category, chainIds, volumeOrderBy, sort })
+  const filterString = useExploreTablesFilterStore((s) => s.filterString)
+  const searchQuery = toSearchQueryParam(filterString)
+  const result = useExploreRwaRows({ category, chainIds, volumeOrderBy, sort, searchQuery })
   // Mirrors the dimensions of the query key: the timeframe only changes the query when it is the ranking.
-  const rowsKey = [category, chainId, sort?.orderBy ?? volumeOrderBy, sort?.ascending ?? false].join(':')
+  const rowsKey = [category, chainId, sort?.orderBy ?? volumeOrderBy, sort?.ascending ?? false, searchQuery ?? ''].join(
+    ':',
+  )
   return { ...result, rowsKey }
 }
 
@@ -57,8 +63,17 @@ function SortableRwaCategoryTable({ category, chainScope }: Omit<RwaCategoryTabl
     () => ({ orderBy: stocksSortMethodToOrderBy({ sortMethod, volumeOrderBy }), ascending: sortAscending }),
     [sortMethod, sortAscending, volumeOrderBy],
   )
-  const { rows, rowsKey, isLoading, isError, hasNextPage, isFetchingNextPage, fetchNextPage, isSortedByServer } =
-    useRwaCategoryTableRows({ category, chainScope, sort })
+  const {
+    rows,
+    rowsKey,
+    isLoading,
+    isError,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    isSortedByServer,
+    isSearchedByServer,
+  } = useRwaCategoryTableRows({ category, chainScope, sort })
 
   return (
     <RwaExploreTableShell
@@ -71,6 +86,7 @@ function SortableRwaCategoryTable({ category, chainScope }: Omit<RwaCategoryTabl
       fetchNextPage={fetchNextPage}
       categoryId={RWA_CATEGORY_IDS[category]}
       isSortedByServer={isSortedByServer}
+      isSearchedByServer={isSearchedByServer}
       enableSorting
       sortMethod={sortMethod}
       sortAscending={sortAscending}
@@ -83,9 +99,8 @@ function NonSortableRwaCategoryTable({
   category,
   chainScope,
 }: Omit<RwaCategoryTableProps, 'enableSorting'>): JSX.Element {
-  const { rows, rowsKey, isLoading, isError, hasNextPage, isFetchingNextPage, fetchNextPage } = useRwaCategoryTableRows(
-    { category, chainScope },
-  )
+  const { rows, rowsKey, isLoading, isError, hasNextPage, isFetchingNextPage, fetchNextPage, isSearchedByServer } =
+    useRwaCategoryTableRows({ category, chainScope })
 
   return (
     <RwaExploreTableShell
@@ -97,6 +112,7 @@ function NonSortableRwaCategoryTable({
       isFetchingNextPage={isFetchingNextPage}
       fetchNextPage={fetchNextPage}
       categoryId={RWA_CATEGORY_IDS[category]}
+      isSearchedByServer={isSearchedByServer}
     />
   )
 }

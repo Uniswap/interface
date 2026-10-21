@@ -1,5 +1,5 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
-import type { Auction } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import type { Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
 import { Rocket } from '@universe/mycelium/icons/Rocket'
 import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
@@ -8,7 +8,8 @@ import { TestID } from '@universe/test'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useColorsFromTokenColor } from 'ui/src'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { AuctionEventName, ElementName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { useEvent } from 'utilities/src/react/hooks'
 import { stopPropagationPressProps } from 'utilities/src/react/stopPropagation'
@@ -67,8 +68,16 @@ function TokenDetailsAuctionListEntry({ variant }: { variant: 'chip' | 'row' }):
   const accentColor = validTokenColor ?? colors.accent1.val
   const auctions = useTokenDetailsCcaAuctions()
   const count = useOtherActiveAuctionCount({ auctions })
+  const chainId = useTDPStore((state) => state.currencyChainId)
   const [isOpen, setIsOpen] = useState(false)
-  const open = useEvent(() => setIsOpen(true))
+  const open = useEvent(() => {
+    sendAnalyticsEvent(AuctionEventName.AuctionSelectorOpened, {
+      chain_id: chainId,
+      auction_count: auctions.length,
+      entry_point: variant === 'chip' ? 'tdp_auction_banner' : 'tdp_other_auctions',
+    })
+    setIsOpen(true)
+  })
   const close = useEvent(() => setIsOpen(false))
 
   // Keep an open list mounted when the last other active auction ends.

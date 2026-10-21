@@ -10,14 +10,16 @@ import { load } from 'cheerio'
 // @ts-expect-error
 import uppercamelcase from 'uppercamelcase'
 
-// Generates .tsx from src/assets/icons/*.svg and re-exports hand-written icons in components/icons
-// without a matching SVG (does not create or overwrite hand-written .tsx files).
+// Generates .tsx from packages/mycelium/src/assets/icons/*.svg and re-exports hand-written icons in components/icons
+// without a matching SVG (does not create or overwrite hand-written .tsx files). Logos whose solid colors would be
+// flattened are skipped, so the SVG stays usable as an image without generating a broken component.
 
 // Types
 
 interface DirectoryPair {
   input: string
   output: string
+  skipMultiColor: boolean
 }
 
 const TAG_MAP: Record<string, string> = {
@@ -52,16 +54,18 @@ async function run(): Promise<void> {
   const skipExisting = args.includes('--skip-existing')
   const silent = args.includes('--silent')
   const srcDir = join(__dirname, '..')
-  const assetsDir = join(srcDir, 'assets')
+  const assetsDir = join(srcDir, '..', '..', 'mycelium', 'src', 'assets')
 
   const svgDirPairs: DirectoryPair[] = [
     {
       input: join(assetsDir, 'icons'),
       output: join(srcDir, 'components', 'icons'),
+      skipMultiColor: false,
     },
     {
       input: join(assetsDir, 'logos', 'svg'),
       output: join(srcDir, 'components', 'logos'),
+      skipMultiColor: true,
     },
   ]
 
@@ -74,7 +78,23 @@ async function createSVGComponents(dirs: DirectoryPair, skipExisting: boolean, s
   // Ensure output directory exists
   await mkdir(dirs.output, { recursive: true })
 
-  const fileNames = (await readdir(dirs.input)).filter((name: string) => name.endsWith('.svg')).sort()
+  const svgFileNames = (await readdir(dirs.input)).filter((name: string) => name.endsWith('.svg')).sort()
+  const svgs = new Map(
+    await Promise.all(
+      svgFileNames.map(async (fileName) => [fileName, await readFile(join(dirs.input, fileName), 'utf-8')] as const),
+    ),
+  )
+  const fileNames = svgFileNames.filter((fileName) => {
+    // oxlint-disable-next-line typescript/no-non-null-assertion -- every listed file was read above
+    const colors = flattenedColors(svgs.get(fileName)!)
+    if (dirs.skipMultiColor && colors.length > 1) {
+      if (!silent) {
+        console.log(`⏭️  ${fileName}: skipped, would flatten ${colors.join(', ')} into one color`)
+      }
+      return false
+    }
+    return true
+  })
 
   // Parse + write every SVG in parallel; libuv handles the disk fanout fine for a few hundred files.
   await Promise.all(
@@ -86,9 +106,8 @@ async function createSVGComponents(dirs: DirectoryPair, skipExisting: boolean, s
         return
       }
 
-      const inputPath = join(dirs.input, fileName)
-      const svg = await readFile(inputPath, 'utf-8')
-      const element = generateSVGComponentString(svg, fileName)
+      // oxlint-disable-next-line typescript/no-non-null-assertion -- every listed file was read above
+      const element = generateSVGComponentString(svgs.get(fileName)!, fileName)
       if (element) {
         if (!silent) {
           console.log(`🦄 ${fileName}`)
@@ -226,6 +245,30 @@ ${defaultFill ? `defaultFill: '${defaultFill}'` : ''}
 }
 
 // Helpers
+
+/**
+ * Distinct solid colors the generator rewrites to `currentColor`: every hex `fill` and every `stroke`.
+ * Gradient stops are left alone, so a logo whose color lives in gradients plus one solid fill still
+ * renders correctly (e.g. google-chrome-logo).
+ */
+function flattenedColors(svg: string): string[] {
+  const colors = new Set<string>()
+  for (const [, attribute = '', value = ''] of svg.matchAll(/\b(fill|stroke)="([^"]+)"/gi)) {
+    const color = value.trim().toLowerCase()
+    const isHexFill = attribute.toLowerCase() === 'fill' && /^#[0-9a-f]+$/.test(color)
+    const isPaintedStroke =
+      attribute.toLowerCase() === 'stroke' && !['none', 'currentcolor', 'transparent'].includes(color)
+    if (isHexFill || isPaintedStroke) {
+      colors.add(expandHex(color))
+    }
+  }
+  return [...colors].sort()
+}
+
+/** `#abc` and `#aabbcc` are the same color. */
+function expandHex(color: string): string {
+  return /^#[0-9a-f]{3}$/.test(color) ? `#${[...color.slice(1)].map((c) => c + c).join('')}` : color
+}
 
 function generateClassName(fileName: string): string {
   return uppercamelcase(path.basename(fileName, '.svg')) as string

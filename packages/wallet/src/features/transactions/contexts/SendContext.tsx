@@ -129,6 +129,7 @@ export function SendContextProvider({
     accountAddress: account.address,
     derivedInfo: derivedSendInfo,
     gasFee: gasFee.value,
+    sendCurrency: derivedSendInfo.currencyInInfo?.currency,
   })
   const allSendWarnings = useMemo(() => {
     return !gasWarning ? warnings : [...warnings, gasWarning]

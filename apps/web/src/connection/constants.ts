@@ -1,10 +1,9 @@
-import { atomWithStorage, useAtomValue } from 'jotai/utils'
-import { UNISWAP_LOGO } from 'ui/src/assets'
+import { GNOSIS_LOGO, UNISWAP_LOGO } from '@universe/mycelium/assets'
 // oxlint-disable-next-line no-restricted-imports -- Provider constants need direct ethers imports
-import PASSKEY_ICON from 'ui/src/assets/icons/passkey.svg'
+import PASSKEY_ICON from '@universe/mycelium/assets/icons/passkey.svg'
+import { atomWithStorage, useAtomValue } from 'jotai/utils'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import { CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
-import GNOSIS_ICON from '~/assets/images/gnosis.png'
 import COINBASE_ICON from '~/assets/wallets/coinbase-icon.svg'
 import METAMASK_ICON from '~/assets/wallets/metamask-icon.svg'
 import PHANTOM_ICON from '~/assets/wallets/phantom-icon.png'
@@ -17,7 +16,7 @@ export const CONNECTOR_ICON_OVERRIDE_MAP: { [name in string]?: string } = {
   [CONNECTION_PROVIDER_NAMES.EMBEDDED_WALLET]: PASSKEY_ICON,
   [CONNECTION_PROVIDER_NAMES.COINBASE_SDK]: COINBASE_ICON,
   [CONNECTION_PROVIDER_NAMES.WALLET_CONNECT]: WALLET_CONNECT_ICON,
-  [CONNECTION_PROVIDER_NAMES.SAFE]: GNOSIS_ICON,
+  [CONNECTION_PROVIDER_NAMES.SAFE]: GNOSIS_LOGO,
   [CONNECTION_PROVIDER_NAMES.PHANTOM]: PHANTOM_ICON,
 }
 

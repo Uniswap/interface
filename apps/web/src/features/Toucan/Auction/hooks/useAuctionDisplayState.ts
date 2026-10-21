@@ -1,5 +1,6 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useAuctionDisplayDataSources } from '~/features/Toucan/Auction/hooks/useAuctionDisplayDataSources'
+import { useAuctionTradingToken } from '~/features/Toucan/Auction/hooks/useAuctionTradingToken'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import {
   resolveAuctionDisplayState,
@@ -16,9 +17,14 @@ export function useAuctionDisplayState(): AuctionDisplayState | undefined {
     auctionDetails: state.auctionDetails,
     currentBlockNumber: state.currentBlockNumber,
   }))
-  const { currentBlock, currencyRaised, pools } = useAuctionDisplayDataSources({
+  const { tradingTokenAddress, loading: tradingTokenLoading } = useAuctionTradingToken({
     chainId: auctionDetails?.chainId,
     tokenAddress: auctionDetails?.tokenAddress,
+    enabled: isEnabled,
+  })
+  const { currentBlock, currencyRaised, pools } = useAuctionDisplayDataSources({
+    chainId: auctionDetails?.chainId,
+    tokenAddress: tradingTokenAddress,
     auctionAddress: auctionDetails?.address,
     startBlock: auctionDetails?.startBlock,
     endBlock: auctionDetails?.endBlock,
@@ -33,5 +39,16 @@ export function useAuctionDisplayState(): AuctionDisplayState | undefined {
     return undefined
   }
 
-  return resolveAuctionDisplayState({ auction: auctionDetails, currentBlock, currencyRaised, pools })
+  // A redeemable whose underlying read failed (or returned the zero address) has no token to look pools
+  // up for, so the lookup would stay Loading forever and hide both the now-trading card and the legacy
+  // banner. Settle it as a confirmed missing pool rather than a failed lookup: there is nothing to
+  // trade, and `error` would leave the timeline promising trading that no surface here can offer.
+  const tradingTokenUnresolved = auctionDetails !== null && tradingTokenAddress === undefined && !tradingTokenLoading
+
+  return resolveAuctionDisplayState({
+    auction: auctionDetails,
+    currentBlock,
+    currencyRaised,
+    pools: tradingTokenUnresolved ? { status: 'success', poolCount: 0 } : pools,
+  })
 }

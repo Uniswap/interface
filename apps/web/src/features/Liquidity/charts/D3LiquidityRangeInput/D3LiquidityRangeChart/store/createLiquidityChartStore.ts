@@ -12,6 +12,7 @@ import { createViewActions } from '~/features/Liquidity/charts/D3LiquidityRangeI
 import {
   ChartState,
   ChartStoreState,
+  TickRangeChange,
 } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 import { ChartEntry } from '~/features/Liquidity/charts/LiquidityRangeInput/types'
 import { RangeAmountInputPriceMode } from '~/features/Liquidity/Create/types'
@@ -93,7 +94,7 @@ export const createLiquidityChartStore = ({
   onInputModeChange: (inputMode: RangeAmountInputPriceMode) => void
   onMinTickChange: (tick?: number) => void
   onMaxTickChange: (tick?: number) => void
-  onMinMaxTickChange: (ticks: { minTick?: number; maxTick?: number }) => void
+  onMinMaxTickChange: (range: TickRangeChange) => void
   onTimePeriodChange?: (timePeriod: HistoryDuration) => void
   setIsFullRange: (isFullRange: boolean) => void
 }) => {

@@ -83,11 +83,35 @@ describe('syncCurrentTickFromParent', () => {
     expect(parent.state.maxTick).toBeLessThan(960)
   })
 
-  it('does not re-anchor a selected preset on an existing pool when the live price moves', () => {
+  it('re-anchors an untouched preset on an existing pool when the live price moves', () => {
     // An established pool (creatingPoolOrPair: false) whose current tick moves because the poolInfo
-    // query polls. The user's chosen range must never be moved by the poll — including a typed range
-    // left under a still-lit preset chip, which a re-anchor would clobber before the user signs. The
-    // store still tracks the fresh tick for the price line.
+    // query polls. A preset the user picked and never edited follows the price, so a tight range
+    // can't strand out of range under the user's typed deposit amount.
+    // Expected ticks are literals on purpose — not derived from calculateStrategyTicks.
+    const parent = createParent({ minTick: undefined, maxTick: undefined })
+    const store = createStore({ currentTick: 0, currentPrice: 1, creatingPoolOrPair: false, parent })
+
+    store.getState().actions.setPriceStrategy({ priceStrategy: DefaultPriceStrategy.STABLE, animate: false })
+    expect(parent.state).toEqual({ minTick: -180, maxTick: 180 })
+
+    // Tick 125 sits in the [120, 180) bucket, so STABLE recenters to 120 ± 3 spacings.
+    store
+      .getState()
+      .actions.syncCurrentTickFromParent({ currentTick: 125, currentPrice: 1.0126, tickSpacing: TICK_SPACING })
+
+    expect(parent.state).toEqual({ minTick: -60, maxTick: 300 })
+    expect(store.getState()).toMatchObject({ minTick: -60, maxTick: 300, currentTick: 125 })
+    expect(store.getState().selectedPriceStrategy).toBe(DefaultPriceStrategy.STABLE)
+
+    // And it keeps following on the next poll.
+    store
+      .getState()
+      .actions.syncCurrentTickFromParent({ currentTick: -61, currentPrice: 0.9939, tickSpacing: TICK_SPACING })
+
+    expect(parent.state).toEqual({ minTick: -300, maxTick: 60 })
+  })
+
+  it('re-anchors an untouched one-sided preset on an existing pool when the price jumps clear across it', () => {
     const parent = createParent({ minTick: undefined, maxTick: undefined })
     const store = createStore({ currentTick: 0, currentPrice: 1, creatingPoolOrPair: false, parent })
 
@@ -95,16 +119,142 @@ describe('syncCurrentTickFromParent', () => {
       priceStrategy: DefaultPriceStrategy.ONE_SIDED_UPPER,
       animate: false,
     })
-    const rangeBefore = { ...parent.state }
+    expect(parent.state).toEqual({ minTick: 60, maxTick: 6960 })
 
-    // A jump that clears the whole range — under the create flow this would re-anchor.
     store
       .getState()
-      .actions.syncCurrentTickFromParent({ currentTick: 9000, currentPrice: 3, tickSpacing: TICK_SPACING })
+      .actions.syncCurrentTickFromParent({ currentTick: 9000, currentPrice: 2.46, tickSpacing: TICK_SPACING })
 
+    // Still one-sided above the new price instead of left sitting below it.
+    expect(parent.state).toEqual({ minTick: 9060, maxTick: 15960 })
     expect(store.getState().selectedPriceStrategy).toBe(DefaultPriceStrategy.ONE_SIDED_UPPER)
-    expect(store.getState().currentTick).toBe(9000) // tracked for the price line
-    expect(parent.state).toEqual(rangeBefore) // but the range held
+  })
+
+  it('holds a range the user edited after picking a preset on an existing pool', () => {
+    // Pick STABLE, then nudge the max with the +/- control. The user's bounds must survive the poll.
+    const parent = createParent({ minTick: undefined, maxTick: undefined })
+    const store = createStore({ currentTick: 0, currentPrice: 1, creatingPoolOrPair: false, parent })
+
+    store.getState().actions.setPriceStrategy({ priceStrategy: DefaultPriceStrategy.STABLE, animate: false })
+    store.getState().actions.setChartState({ maxTick: 240 })
+    store.getState().actions.handleTickChange({ changeType: 'max', tick: 240 })
+    expect(parent.state).toEqual({ minTick: -180, maxTick: 240 })
+
+    store
+      .getState()
+      .actions.syncCurrentTickFromParent({ currentTick: 125, currentPrice: 1.0126, tickSpacing: TICK_SPACING })
+
+    expect(parent.state).toEqual({ minTick: -180, maxTick: 240 })
+    expect(store.getState().currentTick).toBe(125) // tracked for the price line
+  })
+
+  it('holds a range nudged with +/- and stepped back onto the preset ticks on an existing pool', () => {
+    // Any +/- is the user's edit, even one that returns to exactly the ticks the preset wrote.
+    const parent = createParent({ minTick: undefined, maxTick: undefined })
+    const store = createStore({ currentTick: 0, currentPrice: 1, creatingPoolOrPair: false, parent })
+
+    store.getState().actions.setPriceStrategy({ priceStrategy: DefaultPriceStrategy.STABLE, animate: false })
+    store.getState().actions.setChartState({ maxTick: 240 })
+    store.getState().actions.handleTickChange({ changeType: 'max', tick: 240 })
+    store.getState().actions.setChartState({ maxTick: 180 })
+    store.getState().actions.handleTickChange({ changeType: 'max', tick: 180 })
+    expect(parent.state).toEqual({ minTick: -180, maxTick: 180 })
+
+    store
+      .getState()
+      .actions.syncCurrentTickFromParent({ currentTick: 125, currentPrice: 1.0126, tickSpacing: TICK_SPACING })
+
+    expect(parent.state).toEqual({ minTick: -180, maxTick: 180 })
+  })
+
+  it('holds a typed range left under a still-lit preset chip on an existing pool', () => {
+    // Pick STABLE, then type WIDE's exact bounds: the chip re-detects to WIDE, but the user typed these
+    // values, so a poll must not re-anchor WIDE over them before the user signs.
+    const parent = createParent({ minTick: undefined, maxTick: undefined })
+    const store = createStore({ currentTick: 0, currentPrice: 1, creatingPoolOrPair: false, parent })
+
+    store.getState().actions.setPriceStrategy({ priceStrategy: DefaultPriceStrategy.STABLE, animate: false })
+    store.getState().actions.handleTickRangeChange({ minTick: -6960, maxTick: 6960 })
+    expect(store.getState().selectedPriceStrategy).toBe(DefaultPriceStrategy.WIDE)
+
+    store
+      .getState()
+      .actions.syncCurrentTickFromParent({ currentTick: 9000, currentPrice: 2.46, tickSpacing: TICK_SPACING })
+
+    expect(parent.state).toEqual({ minTick: -6960, maxTick: 6960 })
+  })
+
+  it('holds an untouched preset while a transaction is in flight', () => {
+    const parent = createParent({ minTick: undefined, maxTick: undefined })
+    const store = createStore({ currentTick: 0, currentPrice: 1, creatingPoolOrPair: false, parent })
+
+    store.getState().actions.setPriceStrategy({ priceStrategy: DefaultPriceStrategy.STABLE, animate: false })
+    store.getState().actions.syncCurrentTickFromParent({
+      currentTick: 125,
+      currentPrice: 1.0126,
+      tickSpacing: TICK_SPACING,
+      isRangeLocked: true,
+    })
+
+    expect(parent.state).toEqual({ minTick: -180, maxTick: 180 })
+    expect(store.getState().currentTick).toBe(125)
+  })
+
+  it('catches an untouched preset up to the current tick once the transaction lock lifts', () => {
+    // Pool quiet after the transaction: the tick doesn't move again, so the release itself must re-anchor.
+    const parent = createParent({ minTick: undefined, maxTick: undefined })
+    const store = createStore({ currentTick: 0, currentPrice: 1, creatingPoolOrPair: false, parent })
+
+    store.getState().actions.setPriceStrategy({ priceStrategy: DefaultPriceStrategy.STABLE, animate: false })
+    store.getState().actions.syncCurrentTickFromParent({
+      currentTick: 125,
+      currentPrice: 1.0126,
+      tickSpacing: TICK_SPACING,
+      isRangeLocked: true,
+    })
+    expect(parent.state).toEqual({ minTick: -180, maxTick: 180 })
+
+    store.getState().actions.syncCurrentTickFromParent({
+      currentTick: 125,
+      currentPrice: 1.0126,
+      tickSpacing: TICK_SPACING,
+      isRangeLocked: false,
+    })
+
+    expect(parent.state).toEqual({ minTick: -60, maxTick: 300 })
+  })
+
+  it('tells the parent which ranges a preset wrote, so it can follow them, and which the user wrote', () => {
+    const parent = createParent({ minTick: undefined, maxTick: undefined })
+    const emitted: (DefaultPriceStrategy | undefined)[] = []
+    const { onMinMaxTickChange } = parent
+    parent.onMinMaxTickChange = (range) => {
+      emitted.push(range.presetStrategy)
+      onMinMaxTickChange(range)
+    }
+    const store = createStore({ currentTick: 0, currentPrice: 1, creatingPoolOrPair: false, parent })
+
+    store.getState().actions.setPriceStrategy({ priceStrategy: DefaultPriceStrategy.STABLE, animate: false })
+    store
+      .getState()
+      .actions.syncCurrentTickFromParent({ currentTick: 125, currentPrice: 1.0126, tickSpacing: TICK_SPACING })
+    store.getState().actions.handleTickRangeChange({ minTick: -600, maxTick: 600 })
+    store.getState().actions.setPriceStrategy({ priceStrategy: DefaultPriceStrategy.FULL_RANGE, animate: false })
+
+    expect(emitted).toEqual([DefaultPriceStrategy.STABLE, DefaultPriceStrategy.STABLE, undefined, undefined])
+  })
+
+  it('does not re-anchor an existing-pool preset on a sub-tick price move', () => {
+    const parent = createParent({ minTick: undefined, maxTick: undefined })
+    const store = createStore({ currentTick: 0, currentPrice: 1, creatingPoolOrPair: false, parent })
+
+    store.getState().actions.setPriceStrategy({ priceStrategy: DefaultPriceStrategy.STABLE, animate: false })
+    store
+      .getState()
+      .actions.syncCurrentTickFromParent({ currentTick: 0, currentPrice: 1.00001, tickSpacing: TICK_SPACING })
+
+    expect(parent.state).toEqual({ minTick: -180, maxTick: 180 })
+    expect(store.getState().currentPrice).toBe(1.00001)
   })
 
   it('re-anchors a preset on a streamed re-seed that jumps clear across it in a single move', () => {
@@ -367,6 +517,57 @@ describe('setPriceStrategy with a mounted chart', () => {
     expect(detectTickStrategy({ ...parent.state, currentTick: 0, tickSpacing: TICK_SPACING })).toBe(
       DefaultPriceStrategy.ONE_SIDED_UPPER,
     )
+  })
+})
+
+describe('syncCurrentTickFromParent with a mounted chart on an existing pool', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  // The harness scale maps a tick to -tick px before the pan is added, so a band edge sits at
+  // panY - tick on screen.
+  function mountedStoreWithStable() {
+    const parent = createParent({ minTick: undefined, maxTick: undefined })
+    const store = createStore({ currentTick: 0, currentPrice: 1, creatingPoolOrPair: false, parent })
+    store.setState({ renderingContext: createRenderingContext({ currentTick: 0 }), zoomLevel: 2, panY: 500 })
+    store.getState().actions.setPriceStrategy({ priceStrategy: DefaultPriceStrategy.STABLE, animate: false })
+    vi.runAllTimers()
+    store.setState({ zoomLevel: 2, panY: 500 })
+    return { parent, store }
+  }
+
+  it('pans the view with a followed preset so the band holds its place on screen', () => {
+    const { parent, store } = mountedStoreWithStable()
+    expect(store.getState()).toMatchObject({ minTick: -180, maxTick: 180 })
+
+    store
+      .getState()
+      .actions.syncCurrentTickFromParent({ currentTick: 125, currentPrice: 1.0126, tickSpacing: TICK_SPACING })
+    vi.runAllTimers()
+
+    // STABLE moved up 120 ticks; the view panned the same 120 so the band's screen position held.
+    expect(store.getState()).toMatchObject({ minTick: -60, maxTick: 300, zoomLevel: 2, panY: 620 })
+    expect(store.getState().panY - store.getState().minTick!).toBe(500 - -180)
+    expect(parent.state).toEqual({ minTick: -60, maxTick: 300 })
+  })
+
+  it('leaves the view untouched when the price moves under a range the user edited', () => {
+    const { parent, store } = mountedStoreWithStable()
+    store.getState().actions.setChartState({ maxTick: 240 })
+    store.getState().actions.handleTickChange({ changeType: 'max', tick: 240 })
+
+    store
+      .getState()
+      .actions.syncCurrentTickFromParent({ currentTick: 125, currentPrice: 1.0126, tickSpacing: TICK_SPACING })
+    vi.runAllTimers()
+
+    expect(store.getState()).toMatchObject({ minTick: -180, maxTick: 240, zoomLevel: 2, panY: 500, currentTick: 125 })
+    expect(parent.state).toEqual({ minTick: -180, maxTick: 240 })
   })
 })
 

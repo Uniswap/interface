@@ -35,6 +35,7 @@ import {
 } from '../popover-compat/position'
 import { EffectiveOverlayZIndexContext, OVERLAY_Z_INDEXES, useStackingLayerAbove } from '../popover-compat/z-index'
 import { DropdownMenu, DropdownMenuContent } from '../shadcn/dropdown-menu'
+import type { MenuContentContainerStyles } from './compile'
 import { useBlockOutsideScroll, useOnClickOutsideCompat, useStableCallback } from './internal'
 import { MenuCompatHostContext, MenuContentCompat } from './MenuContentCompat'
 import type { ContextMenuCompatHandle, ContextMenuCompatProps } from './types'
@@ -65,6 +66,7 @@ export const ContextMenuCompat = React.forwardRef<ContextMenuCompatHandle, Conte
     const {
       menuItems,
       contentOverride,
+      menuContentStyles,
       isPlacementAbove = false,
       isPlacementRight = false,
       offsetX = 0,
@@ -315,6 +317,7 @@ export const ContextMenuCompat = React.forwardRef<ContextMenuCompatHandle, Conte
               {contentOverride ?? (
                 <MenuContentCompat
                   items={menuItems}
+                  containerStyles={menuContentStyles as MenuContentContainerStyles | undefined}
                   handleCloseMenu={handleCloseMenu}
                   elementName={elementName}
                   sectionName={sectionName}

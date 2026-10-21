@@ -1,5 +1,5 @@
 import { type FetchStatus, useQuery, useQueryClient } from '@tanstack/react-query'
-import { GetBidsByWalletRequest } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { GetBidsByWalletRequest } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { AddressStringFormat, normalizeAddress } from '@universe/chains'
 import { useCallback, useMemo } from 'react'
 import { auctionQueries } from 'uniswap/src/data/apiClients/dataApiService/auctions/auctionQueries'

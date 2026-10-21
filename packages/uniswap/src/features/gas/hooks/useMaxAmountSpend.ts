@@ -1,11 +1,12 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { UniverseChainId } from '@universe/chains'
+import { Platform, UniverseChainId } from '@universe/chains'
 import { DynamicConfigs, SwapConfigKey, useDynamicConfigValue } from '@universe/gating'
 import JSBI from 'jsbi'
 import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
+import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { GENERIC_L2_GAS_CONFIG } from 'uniswap/src/features/chains/gasDefaults'
-import { getChainGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToken'
+import { useAccountGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToken'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 
@@ -34,17 +35,22 @@ export function useMaxAmountSpend({
   isGasCovered?: boolean
 }): Maybe<CurrencyAmount<Currency>> {
   const chainId = currencyAmount?.currency.chainId
-  const gasToken = chainId !== undefined ? getChainGasToken(chainId) : undefined
+  const accountAddress = useActiveAddress(Platform.EVM)
+  const { gasToken, isLoading: isGasTokenLoading } = useAccountGasToken({
+    chainId,
+    accountAddress,
+    sendCurrency: txType === TransactionType.Send ? currencyAmount?.currency : undefined,
+  })
   const minAmountPerTx = useMinGasAmount({ chainId, txType, gasTokenDecimals: gasToken?.decimals })
   const multiplierAsPercent = useLowBalanceWarningGasPercentage()
   // Wallets that pay gas via a non-native method don't need a native reservation.
   const hasAlternateGasFees = useUniswapContextSelector((ctx) => ctx.getHasAlternateGasFees?.(chainId)) ?? false
 
-  if (!currencyAmount) {
+  if (!currencyAmount || isGasTokenLoading) {
     return undefined
   }
 
-  // Only reserve gas when spending the chain's gas token (native on most chains, pathUSD on Tempo).
+  // Only reserve gas when spending the account's gas token (native on most chains, the account's fee token on Tempo).
   // The chainId guard is redundant (gasToken is only set when chainId !== undefined) but
   // included so TypeScript narrows both variables for the branches below.
   if (!gasToken || chainId === undefined || !currencyAmount.currency.equals(gasToken)) {
@@ -94,7 +100,7 @@ export function useMaxAmountSpend({
 /**
  * Convert a gas fee from native currency units to gas token units.
  * On most chains these are the same (both 18-decimal). On Tempo, gas fees arrive in
- * 18-decimal "attodollars" but the gas token (pathUSD) is 6-decimal.
+ * 18-decimal "attodollars" but the gas token (e.g. pathUSD) is 6-decimal.
  * Uses ceiling division so we never underestimate the reservation.
  */
 function convertGasFeeToGasTokenUnits({
@@ -107,6 +113,7 @@ function convertGasFeeToGasTokenUnits({
   gasToken: Currency
 }): JSBI {
   const nativeDecimals = getChainInfo(chainId).nativeCurrency.decimals
+  // Every TIP-20 fee token has 6 decimals, so this matches getGasFeeDecimalsShift for any account fee token.
   const gasTokenDecimals = gasToken.decimals
   const gasFeeBI = JSBI.BigInt(gasFee)
 

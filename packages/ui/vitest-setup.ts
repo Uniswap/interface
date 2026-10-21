@@ -14,8 +14,7 @@ vi.mock('ui/src/components/Unicon/UniconSVGs', () => ({
   },
 }))
 
-// Mock ui/src/assets
-vi.mock('ui/src/assets', async (importOriginal) => {
+vi.mock('@universe/mycelium/assets', async (importOriginal) => {
   const assets = (await importOriginal()) as Record<string, unknown>
   const mockedAssets: Record<string, string> = {}
 

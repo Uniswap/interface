@@ -12,6 +12,8 @@ import { EffectiveModalOrSheetZIndexContext, stackingLayerAbove } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
 import { getDropdownAvailableSpace, getDropdownVerticalLayout } from '~/components/Dropdowns/dropdownLayoutUtils'
 
+const SCROLL_SETTLE_MS = 150
+
 interface UseFixedDropdownLayoutParams {
   alignRight?: boolean
   allowFlip?: boolean
@@ -73,65 +75,79 @@ export function useFixedDropdownLayout({
   const [dropdownMaxHeight, setDropdownMaxHeight] = useState<number | undefined>(undefined)
   const [fixedStyle, setFixedStyle] = useState<CSSProperties | undefined>(undefined)
   const animationFrameRef = useRef<number | undefined>(undefined)
+  // Mirrors `flipVertical` for reposition-only frames, which must not wait a render to read the side.
+  const flipVerticalRef = useRef(false)
+  const pendingReflowRef = useRef(false)
 
-  const updateLayout = useCallback(() => {
-    if (!enabled || !isOpen || isSheet || !triggerRef.current) {
-      return
-    }
+  // Scroll frames pass `reflow: false` and only re-anchor; side and height are re-decided once
+  // scrolling pauses, since doing it per frame flipped and reshaped the menu as the trigger drifted.
+  const updateLayout = useCallback(
+    ({ reflow }: { reflow: boolean }) => {
+      if (!enabled || !isOpen || isSheet || !triggerRef.current) {
+        return
+      }
 
-    const rect = triggerRef.current.getBoundingClientRect()
-    const viewportHeight = window.innerHeight
-    const viewportWidth = window.innerWidth
-    const { spaceAbove, spaceBelow } = getDropdownAvailableSpace({
-      dropdownOffset,
-      triggerRect: rect,
-      viewportHeight,
-      topInset,
-    })
-    const dropdownHeight = measuringDropdownRef.current?.offsetHeight ?? 0
-    const { dropdownMaxHeight: nextDropdownMaxHeight, flipVertical: shouldFlip } = getDropdownVerticalLayout({
+      const rect = triggerRef.current.getBoundingClientRect()
+      const viewportHeight = window.innerHeight
+      const viewportWidth = window.innerWidth
+
+      if (reflow) {
+        const { spaceAbove, spaceBelow } = getDropdownAvailableSpace({
+          dropdownOffset,
+          triggerRect: rect,
+          viewportHeight,
+          topInset,
+        })
+        const dropdownHeight = measuringDropdownRef.current?.offsetHeight ?? 0
+        const { dropdownMaxHeight: nextDropdownMaxHeight, flipVertical: shouldFlip } = getDropdownVerticalLayout({
+          allowFlip,
+          dropdownHeight,
+          forceFlipUp,
+          spaceAbove,
+          spaceBelow,
+        })
+
+        flipVerticalRef.current = shouldFlip
+        setFlipVertical((prev) => (prev === shouldFlip ? prev : shouldFlip))
+        setDropdownMaxHeight((prev) => (prev === nextDropdownMaxHeight ? prev : nextDropdownMaxHeight))
+      }
+
+      const shouldFlip = flipVerticalRef.current
+      const dropdownWidth = matchTriggerWidth ? rect.width : (measuringDropdownRef.current?.offsetWidth ?? rect.width)
+      const minLeft = dropdownOffset
+      const maxLeft = Math.max(minLeft, viewportWidth - dropdownWidth - dropdownOffset)
+      const alignedLeft = alignRight ? rect.right - dropdownWidth : rect.left
+      const left = Math.min(Math.max(alignedLeft, minLeft), maxLeft)
+
+      const nextFixedStyle = {
+        bottom: shouldFlip ? viewportHeight - rect.top + dropdownOffset : 'unset',
+        left,
+        maxWidth: viewportWidth - dropdownOffset * 2,
+        pointerEvents: 'auto',
+        position: 'fixed',
+        top: shouldFlip ? 'unset' : rect.bottom + dropdownOffset,
+        width: matchTriggerWidth ? rect.width : undefined,
+      } satisfies CSSProperties
+
+      setFixedStyle((prev) => (areFixedStylesEqual(prev, nextFixedStyle) ? prev : nextFixedStyle))
+    },
+    [
+      alignRight,
       allowFlip,
-      dropdownHeight,
+      dropdownOffset,
+      enabled,
       forceFlipUp,
-      spaceAbove,
-      spaceBelow,
-    })
-
-    setFlipVertical((prev) => (prev === shouldFlip ? prev : shouldFlip))
-    setDropdownMaxHeight((prev) => (prev === nextDropdownMaxHeight ? prev : nextDropdownMaxHeight))
-
-    const dropdownWidth = matchTriggerWidth ? rect.width : (measuringDropdownRef.current?.offsetWidth ?? rect.width)
-    const minLeft = dropdownOffset
-    const maxLeft = Math.max(minLeft, viewportWidth - dropdownWidth - dropdownOffset)
-    const alignedLeft = alignRight ? rect.right - dropdownWidth : rect.left
-    const left = Math.min(Math.max(alignedLeft, minLeft), maxLeft)
-
-    const nextFixedStyle = {
-      bottom: shouldFlip ? viewportHeight - rect.top + dropdownOffset : 'unset',
-      left,
-      maxWidth: viewportWidth - dropdownOffset * 2,
-      pointerEvents: 'auto',
-      position: 'fixed',
-      top: shouldFlip ? 'unset' : rect.bottom + dropdownOffset,
-      width: matchTriggerWidth ? rect.width : undefined,
-    } satisfies CSSProperties
-
-    setFixedStyle((prev) => (areFixedStylesEqual(prev, nextFixedStyle) ? prev : nextFixedStyle))
-  }, [
-    alignRight,
-    allowFlip,
-    dropdownOffset,
-    enabled,
-    forceFlipUp,
-    isOpen,
-    isSheet,
-    matchTriggerWidth,
-    measuringDropdownRef,
-    triggerRef,
-    topInset,
-  ])
+      isOpen,
+      isSheet,
+      matchTriggerWidth,
+      measuringDropdownRef,
+      triggerRef,
+      topInset,
+    ],
+  )
 
   const cancelScheduledLayoutUpdate = useCallback(() => {
+    pendingReflowRef.current = false
     if (animationFrameRef.current === undefined) {
       return
     }
@@ -140,19 +156,28 @@ export function useFixedDropdownLayout({
     animationFrameRef.current = undefined
   }, [])
 
-  const scheduleLayoutUpdate = useCallback(() => {
-    if (animationFrameRef.current !== undefined) {
-      return
-    }
+  const scheduleLayoutUpdate = useCallback(
+    ({ reflow }: { reflow: boolean }) => {
+      pendingReflowRef.current = pendingReflowRef.current || reflow
+      if (animationFrameRef.current !== undefined) {
+        return
+      }
 
-    animationFrameRef.current = window.requestAnimationFrame(() => {
-      animationFrameRef.current = undefined
-      updateLayout()
-    })
-  }, [updateLayout])
+      animationFrameRef.current = window.requestAnimationFrame(() => {
+        animationFrameRef.current = undefined
+        const shouldReflow = pendingReflowRef.current
+        pendingReflowRef.current = false
+        updateLayout({ reflow: shouldReflow })
+      })
+    },
+    [updateLayout],
+  )
+
+  const scheduleReflow = useCallback(() => scheduleLayoutUpdate({ reflow: true }), [scheduleLayoutUpdate])
+  const scheduleReposition = useCallback(() => scheduleLayoutUpdate({ reflow: false }), [scheduleLayoutUpdate])
 
   useLayoutEffect(() => {
-    updateLayout()
+    updateLayout({ reflow: true })
   }, [updateLayout])
 
   useEffect(() => cancelScheduledLayoutUpdate, [cancelScheduledLayoutUpdate])
@@ -169,26 +194,34 @@ export function useFixedDropdownLayout({
       return undefined
     }
 
-    window.addEventListener('resize', scheduleLayoutUpdate)
-    window.addEventListener('scroll', scheduleLayoutUpdate, true)
+    let scrollSettleTimeout: number | undefined
+    const handleScroll = (): void => {
+      scheduleReposition()
+      window.clearTimeout(scrollSettleTimeout)
+      scrollSettleTimeout = window.setTimeout(scheduleReflow, SCROLL_SETTLE_MS)
+    }
+
+    window.addEventListener('resize', scheduleReflow)
+    window.addEventListener('scroll', handleScroll, true)
 
     return () => {
-      window.removeEventListener('resize', scheduleLayoutUpdate)
-      window.removeEventListener('scroll', scheduleLayoutUpdate, true)
+      window.clearTimeout(scrollSettleTimeout)
+      window.removeEventListener('resize', scheduleReflow)
+      window.removeEventListener('scroll', handleScroll, true)
       cancelScheduledLayoutUpdate()
     }
-  }, [cancelScheduledLayoutUpdate, enabled, isOpen, isSheet, scheduleLayoutUpdate])
+  }, [cancelScheduledLayoutUpdate, enabled, isOpen, isSheet, scheduleReflow, scheduleReposition])
 
   useEffect(() => {
     if (!enabled || !isOpen || isSheet || !measuringDropdownRef.current || typeof ResizeObserver === 'undefined') {
       return undefined
     }
 
-    const observer = new ResizeObserver(scheduleLayoutUpdate)
+    const observer = new ResizeObserver(scheduleReflow)
     observer.observe(measuringDropdownRef.current)
 
     return () => observer.disconnect()
-  }, [enabled, isOpen, isSheet, measuringDropdownRef, scheduleLayoutUpdate])
+  }, [enabled, isOpen, isSheet, measuringDropdownRef, scheduleReflow])
 
   // Keep the last fixed position until exit completes so portaled dropdowns can animate closed.
   const onExitComplete = useCallback(() => {

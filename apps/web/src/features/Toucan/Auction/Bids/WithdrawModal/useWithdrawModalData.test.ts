@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react'
-import { Auction } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { Token } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import { beforeEach, describe, expect, it, vi } from 'vitest'

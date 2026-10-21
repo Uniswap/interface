@@ -13,14 +13,16 @@ vi.mock('~/components/Charts/LoadingState', () => ({
   ChartSkeleton: function MockChartSkeleton({
     errorTitle,
     errorText,
+    hideErrorIcon,
   }: {
     errorTitle?: ReactNode
     errorText?: ReactNode
+    hideErrorIcon?: boolean
   }) {
     return (
       <div data-testid="mock-chart-skeleton">
         {errorText ? (
-          <div data-cy="chart-error-view">
+          <div data-cy="chart-error-view" data-hide-error-icon={String(Boolean(hideErrorIcon))}>
             <div data-testid="chart-error-title">{errorTitle}</div>
             <div data-testid="chart-error-text">{errorText}</div>
           </div>
@@ -70,7 +72,15 @@ function mockInvalid({ isError, loading = false }: { isError: boolean; loading?:
   })
 }
 
-function renderPanel() {
+function renderPanel({
+  auctionOnlyPhase,
+  isAuctionOnlyPending,
+  onPriceDiscoveryViewed,
+}: {
+  auctionOnlyPhase?: AuctionDisplayPhase
+  isAuctionOnlyPending?: boolean
+  onPriceDiscoveryViewed?: () => void
+} = {}) {
   render(
     <TDPPriceChartPanel
       variables={variables}
@@ -79,6 +89,9 @@ function renderPanel() {
       setDisableCandlestickUI={vi.fn()}
       timePeriod={TimePeriod.DAY}
       currency={USDC_MAINNET}
+      auctionOnlyPhase={auctionOnlyPhase}
+      isAuctionOnlyPending={isAuctionOnlyPending}
+      onPriceDiscoveryViewed={onPriceDiscoveryViewed}
     />,
   )
 }
@@ -147,31 +160,79 @@ describe('TDPPriceChartPanel', () => {
   })
 
   it.each([
-    [AuctionDisplayPhase.Live, true],
-    [AuctionDisplayPhase.Ended, false],
-    [AuctionDisplayPhase.Upcoming, false],
-    [AuctionDisplayPhase.Unknown, false],
-  ])('shows price discovery only during a live auction: phase=%s', (phase, showsPriceDiscovery) => {
+    [AuctionDisplayPhase.Live, 'Price discovery in progress'],
+    [AuctionDisplayPhase.Upcoming, 'Waiting for price discovery'],
+  ])('explains the empty chart for an auction-only token: phase=%s', (phase, title) => {
     mockInvalid({ isError: false })
 
-    render(
-      <TDPPriceChartPanel
-        variables={variables}
-        priceChartType={PriceChartType.LINE}
-        displayPriceChartType={PriceChartType.LINE}
-        setDisableCandlestickUI={vi.fn()}
-        timePeriod={TimePeriod.DAY}
-        currency={USDC_MAINNET}
-        auctionOnlyPhase={phase}
-      />,
-    )
-    if (showsPriceDiscovery) {
-      expect(screen.getByText('Price discovery in progress')).toBeInTheDocument()
-      expect(screen.getByText('Check back once USDC’s auction ends')).toBeInTheDocument()
-    } else {
-      expect(screen.queryByText('Price discovery in progress')).toBeNull()
-      expect(screen.queryByText('Check back once USDC’s auction ends')).toBeNull()
-      expect(document.querySelector('[data-cy="chart-error-view"]')).toBeInTheDocument()
-    }
+    renderPanel({ auctionOnlyPhase: phase })
+
+    expect(screen.getByText(title)).toBeInTheDocument()
+    expect(screen.getByText('Check back once USDC’s auction ends')).toBeInTheDocument()
+    expect(document.querySelector('[data-cy="chart-error-view"]')).toHaveAttribute('data-hide-error-icon', 'true')
   })
+
+  it('holds the bare skeleton while the auction-only question is still open', () => {
+    mockInvalid({ isError: false })
+
+    renderPanel({ isAuctionOnlyPending: true })
+
+    expect(screen.getByTestId('mock-chart-skeleton')).toBeInTheDocument()
+    expect(document.querySelector('[data-cy="chart-error-view"]')).not.toBeInTheDocument()
+  })
+
+  it('reports a failed query while the auction-only question is still open', () => {
+    mockInvalid({ isError: true })
+
+    renderPanel({ isAuctionOnlyPending: true })
+
+    expect(screen.getByTestId('chart-error-title')).toHaveTextContent('Missing chart data')
+  })
+
+  it('names the chart empty once the auction lookup rules out an auction', () => {
+    mockInvalid({ isError: false })
+
+    renderPanel({ isAuctionOnlyPending: false })
+
+    expect(screen.getByTestId('chart-error-title')).toHaveTextContent('No pricing data available')
+  })
+
+  it('keeps the error framing when the price query fails during a live auction', () => {
+    mockInvalid({ isError: true })
+    const onPriceDiscoveryViewed = vi.fn()
+
+    renderPanel({ auctionOnlyPhase: AuctionDisplayPhase.Live, onPriceDiscoveryViewed })
+
+    expect(screen.getByTestId('chart-error-title')).toHaveTextContent('Missing chart data')
+    expect(screen.getByTestId('chart-error-text')).toHaveTextContent(
+      'Unable to display historical data for the current token.',
+    )
+    expect(screen.queryByText('Price discovery in progress')).toBeNull()
+    expect(onPriceDiscoveryViewed).not.toHaveBeenCalled()
+  })
+
+  it.each([AuctionDisplayPhase.Ended, AuctionDisplayPhase.Unknown])(
+    'keeps the generic no-data copy outside price discovery: phase=%s',
+    (phase) => {
+      mockInvalid({ isError: false })
+
+      renderPanel({ auctionOnlyPhase: phase })
+
+      expect(screen.queryByText('Price discovery in progress')).toBeNull()
+      expect(screen.queryByText('Waiting for price discovery')).toBeNull()
+      expect(screen.queryByText('Check back once USDC’s auction ends')).toBeNull()
+      expect(screen.getByTestId('chart-error-title')).toHaveTextContent('No pricing data available')
+      expect(document.querySelector('[data-cy="chart-error-view"]')).toHaveAttribute('data-hide-error-icon', 'false')
+    },
+  )
+
+  it.each([AuctionDisplayPhase.Live, AuctionDisplayPhase.Upcoming])(
+    'renders the real chart when an auction-only token already has price history: phase=%s',
+    (phase) => {
+      renderPanel({ auctionOnlyPhase: phase })
+
+      expect(screen.getByTestId('tdp-price-chart')).toBeInTheDocument()
+      expect(screen.queryByText('Check back once USDC’s auction ends')).toBeNull()
+    },
+  )
 })

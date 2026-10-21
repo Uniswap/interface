@@ -4,8 +4,10 @@ import { CheckmarkCircle } from '@universe/mycelium/icons/CheckmarkCircle'
 import { Ranking } from '@universe/mycelium/icons/Ranking'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter/NetworkFilter'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
-import { NetworkFilter } from '~/components/NetworkFilter/NetworkFilter'
+import { useEvent } from 'utilities/src/react/hooks'
+import { useNetworkFilterChainIds } from '~/components/NetworkFilter/useFilteredChains'
 import {
   AuctionQuickFilter,
   ExploreTablesFilterStoreContextProvider,
@@ -59,6 +61,8 @@ function LiveAuctionsQuickSelects(): JSX.Element {
 function LiveAuctionsInner(): JSX.Element {
   const [chainId, setChainId] = useState<UniverseChainId | undefined>(undefined)
   const auctionSupportedChains = useToucanAuctionSupportedChains()
+  const { chainIds, allNetworksChainIds } = useNetworkFilterChainIds(auctionSupportedChains)
+  const onPressChain = useEvent((nextChainId: UniverseChainId | null) => setChainId(nextChainId ?? undefined))
 
   // Every live auction is a Uniswap CCA auction, so the table's Launchpad column shows one
   // launchpad — resolved through the same ListLaunchpads registry lookup the launch feed uses.
@@ -89,11 +93,13 @@ function LiveAuctionsInner(): JSX.Element {
         <LiveAuctionsQuickSelects />
         <Flex row gap="$spacing8" justifyContent="flex-start" $md={{ width: '100%' }}>
           <NetworkFilter
-            position="right"
-            currentChainId={chainId}
-            networks={auctionSupportedChains}
-            tracePage={InterfacePageName.LaunchesPage}
-            onPress={setChainId}
+            trigger={{ variant: 'pill' }}
+            includeAllNetworks
+            chainIds={chainIds}
+            allNetworksChainIds={allNetworksChainIds}
+            selectedChain={chainId ?? null}
+            selectionAnalytics={{ page: InterfacePageName.LaunchesPage }}
+            onPressChain={onPressChain}
           />
         </Flex>
       </Flex>

@@ -11,7 +11,7 @@ import uppercamelcase from 'uppercamelcase'
 import { assertNotHandwritten } from './handwritten-icons'
 
 // Plain-React port of packages/ui/src/scripts/componentize-icons.ts (INFRA-2956).
-// Consumes the SAME SVG sources (packages/ui/src/assets/icons) and generates
+// Consumes the SAME SVG sources (src/assets/icons) and generates
 // .tsx components into src/components/icons under the SAME export names, but
 // emits platform-agnostic markup: capitalized host components imported from
 // `../factories/svg-elements`, whose platform split (DOM tags on web,
@@ -69,11 +69,11 @@ async function run(): Promise<void> {
   const silent = args.includes('--silent')
   const srcDir = join(__dirname, '..')
   // Same SVG sources as the legacy generator — the icon set has a single source of truth.
-  const uiAssetsDir = join(srcDir, '..', '..', 'ui', 'src', 'assets')
+  const assetsDir = join(srcDir, 'assets')
 
   const svgDirPairs: DirectoryPair[] = [
     {
-      input: join(uiAssetsDir, 'icons'),
+      input: join(assetsDir, 'icons'),
       output: join(srcDir, 'components', 'icons'),
     },
   ]
@@ -157,6 +157,11 @@ function generateSVGComponentString(svg: string, fileName: string): string {
   // oxlint-disable-next-line typescript/no-non-null-assertion -- SVG element is guaranteed to exist after cheerio parsing
   const svgAttribs = $('svg')[0]!.attribs
   delete svgAttribs['xmlns']
+  // Size comes from createIcon via style, and react-native-svg lets a root
+  // width/height prop beat style, so a hardcoded root size would pin the icon
+  // on device. Stripped here rather than by regex so any unit (24px, 100%) goes.
+  delete svgAttribs['width']
+  delete svgAttribs['height']
   const attribsOfInterest: Record<string, string> = {}
 
   for (const key of Object.keys(svgAttribs)) {
@@ -188,7 +193,7 @@ function generateSVGComponentString(svg: string, fileName: string): string {
   })
 
   const rawSerialized = $('svg').toString()
-  // Quirks below (first-hex defaultFill, non-global width/height strip, global /px/g)
+  // Quirks below (first-hex defaultFill, global /px/g)
   // are byte-parity-coupled with packages/ui/src/scripts/componentize-icons.ts —
   // change both together or the icons path-data parity suite goes red.
   // Capture first explicit fill color before we rewrite all fills to currentColor.
@@ -201,8 +206,6 @@ function generateSVGComponentString(svg: string, fileName: string): string {
   const parsedSvgToReact = rawSerialized
     .replace(/ class="[^"]+"/g, '')
     .replace(/ version="[^"]+"/g, '')
-    .replace(/width="[0-9]+"/, '')
-    .replace(/height="[0-9]+"/, '')
     .replace(/<(\/?)([a-zA-Z-]+)(?=[\s>/])/g, (m, slash, tag) => {
       const mapped = TAG_MAP[tag as string]
       if (!mapped) {

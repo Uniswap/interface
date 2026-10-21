@@ -13,8 +13,8 @@
       "inputs": [
         "lintConfig",
         "{projectRoot}/src/scripts/componentize-icons.ts",
-        "{projectRoot}/src/assets/icons/**",
-        "{projectRoot}/src/assets/logos/**",
+        "{workspaceRoot}/packages/mycelium/src/assets/icons/**",
+        "{workspaceRoot}/packages/mycelium/src/assets/logos/svg/**",
         "ciCacheBust"
       ],
       "outputs": ["{projectRoot}/src/components/icons/**", "{projectRoot}/src/components/logos/**"]
@@ -27,8 +27,8 @@
       "cache": true,
       "inputs": [
         "{projectRoot}/src/scripts/componentize-icons.ts",
-        "{projectRoot}/src/assets/icons/**",
-        "{projectRoot}/src/assets/logos/**",
+        "{workspaceRoot}/packages/mycelium/src/assets/icons/**",
+        "{workspaceRoot}/packages/mycelium/src/assets/logos/svg/**",
         "ciCacheBust"
       ],
       "outputs": ["{projectRoot}/src/components/icons/**", "{projectRoot}/src/components/logos/**"]

@@ -1,4 +1,5 @@
 import {
+  clearPendingDappRequests,
   migratePendingDappRequestsToRecord,
   migrateUnknownBackupAccountsToMaybeManualBackup,
   removeDappInfoToChromeLocalStorage,
@@ -78,6 +79,7 @@ export const migrations = {
   33: removeUniswapWrapped2025BehaviorHistory,
   34: markPoolsBalanceCoachmarkEligible,
   35: removePersistedApolloCache,
+  36: clearPendingDappRequests,
 }
 
-export const EXTENSION_STATE_VERSION = 35
+export const EXTENSION_STATE_VERSION = 36

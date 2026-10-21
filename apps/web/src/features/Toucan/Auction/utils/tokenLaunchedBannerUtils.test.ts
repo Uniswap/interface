@@ -53,6 +53,15 @@ describe('shouldShowTokenLaunchedBanner', () => {
     ).toBe(false)
   })
 
+  it('yields to the card skeleton while the post-end checkpoint is pending', () => {
+    expect(
+      shouldShowTokenLaunchedBanner({
+        ...graduatedWithPool,
+        displayState: endedSuccessfully({ result: AuctionDisplayResult.Unknown, resultPending: true }),
+      }),
+    ).toBe(false)
+  })
+
   it.each([PoolAvailability.NoPool, PoolAvailability.Error])(
     'stays when the card cannot show: %s',
     (poolAvailability) => {

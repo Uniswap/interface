@@ -1,6 +1,6 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { UniverseChainId } from '@universe/chains'
-import { Flex, iconSizes, Text } from '@universe/mycelium'
+import { Flex, type FlexCompatProps, iconSizes, Text, type TextCompatProps } from '@universe/mycelium'
 import { GridView } from '@universe/mycelium/icons/GridView'
 import { Ranking } from '@universe/mycelium/icons/Ranking'
 import { Sparkle } from '@universe/mycelium/icons/Sparkle'
@@ -9,19 +9,29 @@ import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter/NetworkFilter'
 import { NetworkOption } from 'uniswap/src/components/network/NetworkOption'
 import { ElementName, InterfacePageName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Dropdown } from '~/components/Dropdowns/Dropdown'
-import {
-  DropdownSizeVariants,
-  NETWORK_FILTER_BUTTON_STYLES,
-  NETWORK_FILTER_DROPDOWN_STYLE,
-  NetworkFilter,
-} from '~/components/NetworkFilter/NetworkFilter'
+import { useNetworkFilterChainIds } from '~/components/NetworkFilter/useFilteredChains'
 import { ExploreFilterChip } from '~/pages/Explore/categories/ExploreCategoryChips'
 import { getLaunchpadLogoBorderRadius, LaunchpadLogo } from '~/pages/Launches/LaunchpadLogo'
 import { LaunchQuickFilter } from '~/pages/Launches/useLaunchesList'
+
+// Launchpad menu chrome, matching the 40px network filter pill it sits next to.
+const LAUNCHPAD_DROPDOWN_STYLE = {
+  maxHeight: 350,
+  minWidth: 272,
+  px: 0,
+  py: 0,
+  flexDirection: 'column',
+  minHeight: 0,
+  paddingTop: '$spacing4',
+  borderRadius: '$rounded20',
+} satisfies FlexCompatProps
+const LAUNCHPAD_BUTTON_STYLE = { height: 40, pl: '$spacing12' } satisfies TextCompatProps
 
 export interface LaunchpadOption {
   value: string
@@ -191,10 +201,11 @@ function LaunchpadMultiSelect({
             <LaunchpadLogoStack options={selectedOptions} totalCount={selected.size} />
           )
         }
-        dropdownStyle={NETWORK_FILTER_DROPDOWN_STYLE}
-        buttonStyle={NETWORK_FILTER_BUTTON_STYLES[DropdownSizeVariants.Medium]}
+        dropdownStyle={LAUNCHPAD_DROPDOWN_STYLE}
+        buttonStyle={LAUNCHPAD_BUTTON_STYLE}
         allowFlip
         alignRight={!media.lg}
+        adaptToSheet
       >
         <Flex p="$spacing8">
           <Flex
@@ -245,6 +256,21 @@ function LaunchpadMultiSelect({
   )
 }
 
+function ComingSoonNetworkRow(): JSX.Element {
+  const { t } = useTranslation()
+
+  return (
+    <Flex cursor="default" opacity={0.6}>
+      <NetworkOption
+        chainId={null}
+        isNew={false}
+        customLogo={<NetworkLogo chainId={null} size={iconSizes.icon24} />}
+        customLabel={t('common.comingSoon')}
+      />
+    </Flex>
+  )
+}
+
 export interface LaunchFilterBarProps {
   launchpadOptions: LaunchpadOption[]
   networks: UniverseChainId[]
@@ -272,6 +298,7 @@ export function LaunchFilterBar({
   onSelectNetwork,
 }: LaunchFilterBarProps): JSX.Element {
   const { t } = useTranslation()
+  const { chainIds, allNetworksChainIds } = useNetworkFilterChainIds(networks)
 
   return (
     <Flex row gap="$spacing8" justifyContent="flex-start" $md={{ width: '100%' }}>
@@ -283,12 +310,14 @@ export function LaunchFilterBar({
         onClear={onClearSources}
       />
       <NetworkFilter
-        position="right"
-        currentChainId={networkChainId}
-        networks={networks}
-        showComingSoonOption={showComingSoonNetworks}
-        tracePage={InterfacePageName.LaunchesPage}
-        onPress={onSelectNetwork}
+        trigger={{ variant: 'pill' }}
+        includeAllNetworks
+        chainIds={chainIds}
+        allNetworksChainIds={allNetworksChainIds}
+        selectedChain={networkChainId ?? null}
+        footer={showComingSoonNetworks ? <ComingSoonNetworkRow /> : undefined}
+        selectionAnalytics={{ page: InterfacePageName.LaunchesPage }}
+        onPressChain={(chainId) => onSelectNetwork(chainId ?? undefined)}
       />
     </Flex>
   )

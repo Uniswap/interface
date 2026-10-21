@@ -26,6 +26,7 @@ export function getGasFeeDecimalsShift(chainId: UniverseChainId): bigint {
   if (!gasTokenOverride) {
     return BigInt(1)
   }
+  // Every TIP-20 fee token has 6 decimals, so the chain's default gas token decimals hold for any account fee token.
   return BigInt(10) ** BigInt(GAS_FEE_REPORTING_DECIMALS - gasTokenOverride.decimals)
 }
 

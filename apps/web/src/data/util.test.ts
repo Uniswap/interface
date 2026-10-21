@@ -1,13 +1,75 @@
 import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { DAI, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
+import { DAI, USDC_BASE, USDC_SOLANA, USDG_ROBINHOOD, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { MELD_NATIVE_SOL_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
+import { FORSupportedToken } from 'uniswap/src/features/fiatOnRamp/types'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { gqlToCurrency, getTokenDetailsURL, unwrapToken } from '~/data/util'
+import { fiatOnRampToCurrency, gqlToCurrency, getTokenDetailsURL, unwrapToken } from '~/data/util'
 import { CHAIN_SEARCH_PARAM } from '~/utils/params/chainQueryParam'
 
 const PATHUSD_ADDRESS = '0x20c0000000000000000000000000000000000000'
+
+const FOR_TOKEN: FORSupportedToken = {
+  cryptoCurrencyCode: 'TEST',
+  displayName: 'Test token',
+  cryptoCurrencyChain: 'test',
+  chainId: String(UniverseChainId.Mainnet),
+  symbol: 'TEST',
+}
+
+describe('fiatOnRampToCurrency', () => {
+  it('uses chain-config decimals for USDG on Robinhood instead of the hardcoded 18', () => {
+    const result = fiatOnRampToCurrency({
+      ...FOR_TOKEN,
+      chainId: String(UniverseChainId.Robinhood),
+      address: USDG_ROBINHOOD.address,
+    })
+    expect(result?.isToken).toBe(true)
+    expect(result?.decimals).toBe(6)
+  })
+
+  it('uses chain-config decimals for USDC on Base', () => {
+    const result = fiatOnRampToCurrency({
+      ...FOR_TOKEN,
+      chainId: String(UniverseChainId.Base),
+      address: USDC_BASE.address,
+    })
+    expect(result?.isToken).toBe(true)
+    expect(result?.decimals).toBe(6)
+  })
+
+  it('uses chain-config decimals for USDC on Solana (SVM address)', () => {
+    const result = fiatOnRampToCurrency({
+      ...FOR_TOKEN,
+      chainId: String(UniverseChainId.Solana),
+      address: USDC_SOLANA.address,
+    })
+    expect(result?.isToken).toBe(true)
+    expect(result?.decimals).toBe(6)
+  })
+
+  it('falls back to 18 decimals for a token not in chain config', () => {
+    const result = fiatOnRampToCurrency({
+      ...FOR_TOKEN,
+      chainId: String(UniverseChainId.Mainnet),
+      address: PATHUSD_ADDRESS,
+    })
+    expect(result?.isToken).toBe(true)
+    expect(result?.decimals).toBe(18)
+  })
+
+  it('returns native currency when address is missing', () => {
+    const result = fiatOnRampToCurrency({ ...FOR_TOKEN, chainId: String(UniverseChainId.Robinhood) })
+    expect(result?.isNative).toBe(true)
+    expect(result?.chainId).toBe(UniverseChainId.Robinhood)
+  })
+
+  it('returns undefined for an unsupported chain', () => {
+    const result = fiatOnRampToCurrency({ ...FOR_TOKEN, chainId: '0' })
+    expect(result).toBeUndefined()
+  })
+})
 
 describe('gqlToCurrency', () => {
   describe('Tempo chain handling', () => {

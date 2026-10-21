@@ -1,4 +1,4 @@
-import type { Auction } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import type { Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
 import { isQuickLaunchAuction, isQuickLaunchAuctionData } from '~/features/Toucan/utils/quickLaunchClassification'
 

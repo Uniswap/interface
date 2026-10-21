@@ -93,8 +93,11 @@ export function TokenNameCell({ auction }: { auction: EnrichedAuction }) {
     !auction.verified &&
     isQuickLaunchAuction(auction) &&
     isPoolsSupportedChain(auction.auction?.chainId)
+  const tokenName = auction.auction?.tokenName ?? auction.auction?.tokenSymbol ?? auction.auction?.tokenAddress ?? '—'
   return (
-    <Flex row gap="$gap8" alignItems="center" justifyContent="flex-start">
+    // shrink + the name's minWidth 0 let a long name ellipsize instead of overflowing the
+    // overflow-hidden Cell, which would clip the symbol and badges off the end.
+    <Flex row shrink gap="$gap8" alignItems="center" justifyContent="flex-start">
       <Flex pr="$spacing4">
         {/* logoUrl already resolves API image -> config override -> indexed logo (see useTopAuctions) */}
         <TokenLogo
@@ -105,9 +108,10 @@ export function TokenNameCell({ auction }: { auction: EnrichedAuction }) {
           name={auction.auction?.tokenName}
         />
       </Flex>
-      <EllipsisText>
-        {auction.auction?.tokenName ?? auction.auction?.tokenSymbol ?? auction.auction?.tokenAddress ?? '—'}
-      </EllipsisText>
+      <MouseoverTooltip text={tokenName} placement="top" size={TooltipSize.Small} style={{ minWidth: 0 }}>
+        {/* The tooltip's wrapper forces cursor: default; restore the row's link cursor. */}
+        <EllipsisText cursor="pointer">{tokenName}</EllipsisText>
+      </MouseoverTooltip>
       <EllipsisText $platform-web={{ minWidth: 'fit-content' }} $lg={{ display: 'none' }} color="$neutral2">
         {auction.auction?.tokenSymbol}
       </EllipsisText>

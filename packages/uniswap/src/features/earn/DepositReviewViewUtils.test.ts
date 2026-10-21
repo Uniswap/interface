@@ -46,6 +46,12 @@ describe('getDepositQuoteRequestBase — gas params', () => {
     )
   })
 
+  it('sends autoSlippage DEFAULT and no slippageTolerance', () => {
+    const result = getDepositQuoteRequestBase(baseParams)
+    expect(result?.autoSlippage).toBe(TradingApi.AutoSlippage.DEFAULT)
+    expect(result?.slippageTolerance).toBeUndefined()
+  })
+
   it('returns undefined when a required field is missing', () => {
     expect(getDepositQuoteRequestBase({ ...baseParams, accountAddress: undefined })).toBeUndefined()
   })

@@ -5,7 +5,7 @@ import { TestID } from '@universe/test'
 import { memo, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import type { TieredNetworkOptions } from 'uniswap/src/components/network/NetworkFilterV2/types'
+import type { TieredNetworkOptions } from 'uniswap/src/components/network/NetworkFilter/types'
 import {
   NETWORK_CHIP_BORDER_RADIUS,
   NETWORK_CHIP_COMPACT_VISIBLE_COUNT,

@@ -39,7 +39,7 @@ const baseProps: AuctionHoverCardContentProps = {
 }
 
 describe('AuctionHoverCardContent', () => {
-  it('shows FDV as the headline with the daily change, the price chart, committed volume, and bidders', () => {
+  it('shows FDV as the labelled headline, the price chart, committed volume, and bidders', () => {
     render(<AuctionHoverCardContent {...baseProps} />)
 
     // The symbol also appears as the logo's fallback text.
@@ -47,8 +47,8 @@ describe('AuctionHoverCardContent', () => {
     expect(screen.getByText('0x9999...9999')).toBeInTheDocument()
     // FiatTokenStats formatting, the same as the Explore auctions table's FDV column.
     expect(screen.getByText('$1.2M')).toBeInTheDocument()
-    expect(screen.getByText('8.33%')).toBeInTheDocument()
-    expect(screen.getByText('today')).toBeInTheDocument()
+    expect(screen.getByText('FDV')).toBeInTheDocument()
+    expect(screen.queryByText('today')).not.toBeInTheDocument()
     expect(screen.getByText('$188.8K committed')).toBeInTheDocument()
     expect(screen.getByText('982 bidders')).toBeInTheDocument()
     expect(screen.getByTestId('hover-card-chart')).toHaveAttribute('data-points', '2')
@@ -59,13 +59,6 @@ describe('AuctionHoverCardContent', () => {
 
     expect(screen.getByText('1 bid')).toBeInTheDocument()
     expect(screen.queryByText(/bidders/)).not.toBeInTheDocument()
-  })
-
-  it('omits the change label when no daily change is known', () => {
-    render(<AuctionHoverCardContent {...baseProps} pricePercentChange={undefined} />)
-
-    expect(screen.getByText('$1.2M')).toBeInTheDocument()
-    expect(screen.queryByText('today')).not.toBeInTheDocument()
   })
 
   it('renders the no-data treatment under the identity when nothing came back to show', () => {

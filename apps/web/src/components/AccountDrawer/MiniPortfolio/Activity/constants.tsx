@@ -209,6 +209,26 @@ const getTransactionTitleTable = (): {
     [TransactionStatus.Success]: i18n.t('toucan.createAuction.transaction.success'),
     [TransactionStatus.Failed]: i18n.t('toucan.createAuction.transaction.failed'),
   },
+  [TransactionType.MarginOpenPosition]: {
+    [TransactionStatus.Pending]: i18n.t('transaction.status.margin.pending'),
+    [TransactionStatus.Success]: i18n.t('transaction.status.margin.success'),
+    [TransactionStatus.Failed]: i18n.t('transaction.status.margin.failed'),
+  },
+  [TransactionType.MarginClosePosition]: {
+    [TransactionStatus.Pending]: i18n.t('transaction.status.marginClose.pending'),
+    [TransactionStatus.Success]: i18n.t('transaction.status.marginClose.success'),
+    [TransactionStatus.Failed]: i18n.t('transaction.status.marginClose.failed'),
+  },
+  [TransactionType.MarginDecreasePosition]: {
+    [TransactionStatus.Pending]: i18n.t('transaction.status.marginDecrease.pending'),
+    [TransactionStatus.Success]: i18n.t('transaction.status.marginDecrease.success'),
+    [TransactionStatus.Failed]: i18n.t('transaction.status.marginDecrease.failed'),
+  },
+  [TransactionType.MarginAddCollateral]: {
+    [TransactionStatus.Pending]: i18n.t('transaction.status.marginAdd.pending'),
+    [TransactionStatus.Success]: i18n.t('transaction.status.marginAdd.success'),
+    [TransactionStatus.Failed]: i18n.t('transaction.status.marginAdd.failed'),
+  },
   [TransactionType.Withdraw]: {
     [TransactionStatus.Pending]: i18n.t('transaction.status.withdraw.pending'),
     [TransactionStatus.Success]: i18n.t('transaction.status.withdraw.success'),
@@ -300,6 +320,10 @@ export const getCancelledTransactionTitleTable = (): { [key in TransactionType]:
   [TransactionType.AuctionClaimed]: i18n.t('transaction.status.claim.canceled'),
   [TransactionType.AuctionExited]: i18n.t('transaction.status.withdrawBid.canceled'),
   [TransactionType.AuctionLaunch]: i18n.t('toucan.createAuction.transaction.canceled'),
+  [TransactionType.MarginOpenPosition]: i18n.t('transaction.status.margin.canceled'),
+  [TransactionType.MarginClosePosition]: i18n.t('transaction.status.marginClose.canceled'),
+  [TransactionType.MarginDecreasePosition]: i18n.t('transaction.status.marginDecrease.canceled'),
+  [TransactionType.MarginAddCollateral]: i18n.t('transaction.status.marginAdd.canceled'),
   [TransactionType.Withdraw]: i18n.t('transaction.status.withdraw.canceled'),
 })
 

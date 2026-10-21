@@ -1,4 +1,4 @@
-import { GetAuctionRequest } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { GetAuctionRequest } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { getValidAddress, isEVMChain, type UniverseChainId } from '@universe/chains'
 import { auctionQueries } from 'uniswap/src/data/apiClients/dataApiService/auctions/auctionQueries'
 import { AuctionStaleTime } from 'uniswap/src/data/apiClients/dataApiService/auctions/queryTypes'

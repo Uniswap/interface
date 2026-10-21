@@ -15,8 +15,12 @@ import {
   resetPasswordAttempts,
   setLockoutEndTime,
 } from 'src/features/CloudBackup/passwordLockoutSlice'
-import { restoreMnemonicFromCloudStorage } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
+import {
+  getCloudBackupErrorCode,
+  restoreMnemonicFromCloudStorage,
+} from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { selectLockoutEndTime, selectPasswordAttempts } from 'src/features/CloudBackup/selectors'
+import { CloudBackupErrorCode } from 'src/features/CloudBackup/types'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { onRestoreComplete } from 'src/screens/Import/onRestoreComplete'
@@ -128,8 +132,14 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
           navigation,
           screen: OnboardingScreens.RestoreCloudBackupPassword,
         })
-      } catch {
+      } catch (error) {
         setIsLoading(false)
+        if (getCloudBackupErrorCode(error) === CloudBackupErrorCode.UploadNotConfirmed) {
+          setErrorMessage(
+            t('settings.setting.backup.error.message.unconfirmed', { cloudProviderName: getCloudProviderName() }),
+          )
+          return
+        }
         dispatch(incrementPasswordAttempts())
         const updatedLockoutEndTime = calculateLockoutEndTime(passwordAttemptCount + 1)
         if (updatedLockoutEndTime) {

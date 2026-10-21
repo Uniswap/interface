@@ -7,6 +7,7 @@ import { MEDIA_VARIANT } from '../compat/media'
 import { markMyceliumPrimitive } from '../compat/primitive-marker'
 import type { MediaPropKey } from '../compat/props'
 import { PSEUDO_STYLE_KEYS } from '../compat/pseudo'
+import type { SafeCompatTag } from '../compat/safe-tags'
 import { RESET_CLASSES } from '../compat/style-classes'
 import { ANCHOR_BASE_VAR, ANCHOR_PSEUDO_CODE, anchorPseudoVar } from './anchor-vars'
 import { TEXT_PLACEHOLDER_OVERLAY_CLASSES, textCompatEmission } from './compile'
@@ -25,7 +26,7 @@ import { colorCssExpression } from './tokens'
  * Text in `components/text.tsx` is deprecated.
  */
 
-const VARIANT_TAG: Partial<Record<string, keyof React.JSX.IntrinsicElements>> = {
+const VARIANT_TAG: Partial<Record<string, SafeCompatTag>> = {
   heading1: 'h1',
   heading2: 'h2',
   heading3: 'h3',

@@ -27,6 +27,7 @@ import {
   V4PriceRangeInfo,
 } from '~/features/Liquidity/Create/types'
 import { getBaseAndQuoteCurrencies } from '~/features/Liquidity/utils/currency'
+import { isTokenSideExhausted } from '~/features/Liquidity/utils/getDependentAmount'
 import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
 import { tryParsePrice } from '~/state/mint/v3/utils'
 import { PositionField } from '~/types/position'
@@ -206,8 +207,15 @@ export function getFieldsDisabled({
 
   const [tickLower, tickUpper] = ticks
 
-  const deposit0Disabled = Boolean(typeof tickUpper === 'number' && poolOrPair.tickCurrent >= tickUpper)
-  const deposit1Disabled = Boolean(typeof tickLower === 'number' && poolOrPair.tickCurrent <= tickLower)
+  // Agrees with the dependent-amount math, which zeroes a side once its edge is reached by sqrt price.
+  const deposit0Disabled =
+    typeof tickUpper === 'number' &&
+    (poolOrPair.tickCurrent >= tickUpper ||
+      isTokenSideExhausted({ pool: poolOrPair, edgeTick: tickUpper, isToken0: true }))
+  const deposit1Disabled =
+    typeof tickLower === 'number' &&
+    (poolOrPair.tickCurrent <= tickLower ||
+      isTokenSideExhausted({ pool: poolOrPair, edgeTick: tickLower, isToken0: false }))
 
   return {
     TOKEN0: deposit0Disabled,

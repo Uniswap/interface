@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import type { Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
-import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
 import { filterRwaRowsBySearch } from '~/pages/Explore/rwa/table/filterRwaRowsBySearch'
 import { useRwaTablePagination } from '~/pages/Explore/rwa/table/hooks/useRwaTablePagination'
 import { sortRankedRwaRows } from '~/pages/Explore/rwa/table/sortRankedRwaRows'
@@ -11,6 +10,7 @@ export function useRwaExploreTableShell({
   rowsKey,
   sortMethod,
   sortAscending,
+  filterString,
   hasNextPage,
   isFetchingNextPage,
   fetchNextPage,
@@ -20,6 +20,8 @@ export function useRwaExploreTableShell({
   /** Client-side sort; leave undefined when the rows already arrive in server order. */
   sortMethod?: StocksSortMethod
   sortAscending?: boolean
+  /** Client-side search; leave undefined when the rows already arrive searched by the server. */
+  filterString?: string
   hasNextPage: boolean
   isFetchingNextPage: boolean
   fetchNextPage: () => void
@@ -28,8 +30,6 @@ export function useRwaExploreTableShell({
   rankByAsset: ReadonlyMap<Rwa, number>
   loadMore: ((params: { onComplete?: () => void }) => void) | undefined
 } {
-  const filterString = useExploreTablesFilterStore((s) => s.filterString)
-
   const sortedRows = useMemo(() => {
     if (sortMethod === undefined || sortAscending === undefined) {
       return rows
@@ -43,7 +43,10 @@ export function useRwaExploreTableShell({
     [sortedRows],
   )
 
-  const filteredRows = useMemo(() => filterRwaRowsBySearch(sortedRows, filterString), [sortedRows, filterString])
+  const filteredRows = useMemo(
+    () => (filterString === undefined ? sortedRows : filterRwaRowsBySearch(sortedRows, filterString)),
+    [sortedRows, filterString],
+  )
 
   const { displayCount, loadMore } = useRwaTablePagination({
     rowsKey,

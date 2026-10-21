@@ -84,7 +84,7 @@ function ActivitySectionTabs({ isAuctionEnded }: { isAuctionEnded: boolean }) {
           >
             <Flex width={8} height={8} borderRadius="$roundedFull" backgroundColor="$statusSuccess" />
             <Text variant="body3" color="$neutral1">
-              {t('toucan.auction.bidCount', { bidCount: totalBidCount.toLocaleString() })}
+              {t('toucan.auction.bidCount', { count: totalBidCount, bidCount: totalBidCount.toLocaleString() })}
             </Text>
           </Flex>
         )}

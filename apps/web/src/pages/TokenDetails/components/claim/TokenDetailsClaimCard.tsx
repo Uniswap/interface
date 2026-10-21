@@ -5,8 +5,6 @@ import { TestID } from '@universe/test'
 import { Fragment, memo, type PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import claimGlowLarge from '~/assets/svg/auction-claim-glow/large.svg'
@@ -148,29 +146,25 @@ function ClaimCardContent({
           {t('tdp.claim.unavailable')}
         </Text>
         <Flex row flexWrap="wrap" alignItems="center" gap="$spacing8">
-          <Trace logPress element={ElementName.TokenDetailsClaimViewAuctionButton}>
-            <TouchableArea
-              px="$spacing8"
-              py="$spacing4"
-              testID={TestID.TokenDetailsClaimViewAuctionButton}
-              onPress={onViewAuction}
-            >
-              <Text variant="buttonLabel3" color="$white">
-                {t('tdp.auction.viewAuction')}
-              </Text>
-            </TouchableArea>
-          </Trace>
-          <Trace logPress element={ElementName.TokenDetailsClaimRetryButton}>
-            <Button
-              size="small"
-              emphasis="primary"
-              fill={false}
-              testID={TestID.TokenDetailsClaimRetryButton}
-              onPress={retry}
-            >
-              {t('common.button.retry')}
-            </Button>
-          </Trace>
+          <TouchableArea
+            px="$spacing8"
+            py="$spacing4"
+            testID={TestID.TokenDetailsClaimViewAuctionButton}
+            onPress={onViewAuction}
+          >
+            <Text variant="buttonLabel3" color="$white">
+              {t('tdp.auction.viewAuction')}
+            </Text>
+          </TouchableArea>
+          <Button
+            size="small"
+            emphasis="primary"
+            fill={false}
+            testID={TestID.TokenDetailsClaimRetryButton}
+            onPress={retry}
+          >
+            {t('common.button.retry')}
+          </Button>
         </Flex>
       </ClaimCardFrame>
     )
@@ -288,21 +282,16 @@ function WithdrawalControls({
           bidTokenInfo={bidTokenInfo}
           bidTokenError={bidTokenError}
         >
-          <Trace
-            logPress
-            element={isRefundable ? ElementName.TokenDetailsRefundButton : ElementName.TokenDetailsClaimButton}
+          <Button
+            size="small"
+            emphasis="primary"
+            fill={false}
+            disabled={isDisabled || !userBidsInitialized || (isRefundable && !bidTokenInfo)}
+            testID={isRefundable ? TestID.TokenDetailsRefundButton : TestID.TokenDetailsClaimButton}
+            onPress={openModal}
           >
-            <Button
-              size="small"
-              emphasis="primary"
-              fill={false}
-              disabled={isDisabled || !userBidsInitialized || (isRefundable && !bidTokenInfo)}
-              testID={isRefundable ? TestID.TokenDetailsRefundButton : TestID.TokenDetailsClaimButton}
-              onPress={openModal}
-            >
-              {t('tdp.claim.action')}
-            </Button>
-          </Trace>
+            {t('tdp.claim.action')}
+          </Button>
         </ClaimCardContent>
       </ClaimPresentation>
       <WithdrawModal isOpen={isModalOpen && isWithdrawable} onClose={closeModal} />

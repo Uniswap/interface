@@ -176,3 +176,23 @@ export function testSetLanguageToNavigatorLanguage(migration: (state: any) => an
   expect(resultWithoutUserSettings.userSettings).toBeUndefined()
   expect(resultWithoutUserSettings.otherData).toBe('preserved')
 }
+
+export function testClearPendingDappRequests(migration: (state: any) => any, prevSchema: any): void {
+  const result = migration({
+    ...prevSchema,
+    dappRequests: {
+      ...prevSchema.dappRequests,
+      requests: {
+        'req-1': {
+          dappRequest: { type: 'SendTransaction', requestId: 'req-1' },
+          senderTabInfo: { id: 1, url: 'https://dapp.example' },
+        },
+      },
+      mostRecent5792DappUrl: 'https://dapp.example',
+    },
+  })
+
+  expect(result.dappRequests.requests).toEqual({})
+  expect(result.dappRequests.mostRecent5792DappUrl).toBe('https://dapp.example')
+  expect(result.dapp).toEqual(prevSchema.dapp)
+}

@@ -18,7 +18,7 @@ vi.mock('@universe/gating', async (importOriginal) => ({
 
 vi.mock('uniswap/src/components/CurrencyLogo/TokenLogo', () => ({ TokenLogo: () => null }))
 
-vi.mock('uniswap/src/components/network/NetworkFilterV2/useNetworkSelectorOptions', () => ({
+vi.mock('uniswap/src/components/network/NetworkFilter/useNetworkSelectorOptions', () => ({
   useNetworkSelectorOptions: () => mockTieredNetworkOptions,
 }))
 
@@ -56,15 +56,14 @@ vi.mock('~/components/AlternateCurrencyDisplay/AlternateCurrencyDisplay', () => 
   AlternateCurrencyDisplay: () => null,
 }))
 
-vi.mock('~/components/NetworkFilter/NetworkFilter', () => ({
+vi.mock('uniswap/src/components/network/NetworkFilter/NetworkFilter', () => ({
   NetworkFilter: (props: {
-    customTrigger: ReactNode
-    showSearch?: boolean
+    trigger: { variant: 'custom'; content: ReactNode }
     showSearchInput?: boolean
     tieredOptions?: { withBalances: unknown[]; otherNetworks: unknown[] }
   }) => {
     mockNetworkFilter(props)
-    return props.customTrigger
+    return props.trigger.content
   },
 }))
 
@@ -126,7 +125,6 @@ describe(WithdrawAmountView, () => {
 
     expect(mockNetworkFilter).toHaveBeenCalledWith(
       expect.objectContaining({
-        showSearch: true,
         showSearchInput: false,
         tieredOptions: mockTieredNetworkOptions,
       }),

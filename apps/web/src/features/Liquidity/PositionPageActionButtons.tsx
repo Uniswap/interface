@@ -130,8 +130,8 @@ export function PositionPageActionButtons({
   // A sheet row has no hover, so the reason rides as a subtitle instead — the row stays
   // visible but inert, rather than vanishing with no hint the action exists.
 
-  // '…' + bottom-sheet mechanism the pool detail header uses, with each action keeping its
-  // inline-button handler. Used only for the mid-width band (see the media.lg branch below).
+  // Rows for the mid-width '…' sheet (see the media.lg branch below), each keeping its
+  // inline-button handler.
   const actionSections: HeaderActionSection[] = useMemo(() => {
     const iconProps = { size: '$icon.18', color: '$neutral2' } as const
     const entries: { option: MenuOptionItem | undefined; icon: JSX.Element; disabledReason?: string }[] = [
@@ -180,9 +180,10 @@ export function PositionPageActionButtons({
     )
   }
 
-  // 450–768px (media.lg && !media.sm): the '…' header menu, mirroring the pool detail page.
+  // 450–768px (media.lg && !media.sm): the '…' header menu. A sheet, unlike the TDP/PDP overflow
+  // dropdown, because these are the page's primary liquidity actions.
   if (media.lg) {
-    return <MobileHeaderActions actionSections={actionSections} />
+    return <MobileHeaderActions actionSections={actionSections} presentation="sheet" />
   }
 
   // >768px: full inline action buttons.

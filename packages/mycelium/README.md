@@ -31,6 +31,19 @@ cn('text-sm', 'text-body-1') // => 'text-body-1'
 cn('bg-red-500', isActive && 'bg-blue-500') // => conditional classes
 ```
 
+### Images and icons
+
+Shared images live in `src/assets/` and are imported through `@universe/mycelium/assets`:
+
+```typescript
+import { UNISWAP_LOGO } from '@universe/mycelium/assets'
+import baseLogo from '@universe/mycelium/assets/logos/png/base-logo.png?inline'
+```
+
+Check here before adding an image to an app. Put an image in an app's own directory only when no other app will ever use it.
+
+`src/assets/icons/` and `src/assets/logos/svg/` hold the SVG sources for the generated icon and logo components. Import those components (`@universe/mycelium/icons`) rather than the SVG files. To add icons, use the `/add-icons` Claude skill or see the icon workflow in `packages/ui/README.md`.
+
 ## What's Included
 
 ### Typography Scale

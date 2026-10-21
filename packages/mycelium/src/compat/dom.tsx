@@ -1,3 +1,4 @@
+/* oxlint-disable max-lines -- at the cap; splitting the file would bury the one-line containment change */
 /**
  * The component-agnostic DOM wrapper for compat components: forwards aria /
  * legacy-a11y / event / behavioral props to the rendered element. The press
@@ -22,6 +23,7 @@ import type {
   CompatEventProps,
   CompatLegacyA11yProps,
 } from './props'
+import { containUntrustedTag } from './safe-tags'
 
 /** The prop surface the DOM wrapper reads (everything except styling). */
 export type CompatDomProps = CompatAriaProps & CompatLegacyA11yProps & CompatEventProps & CompatBehavioralProps
@@ -479,10 +481,12 @@ export function createCompatComponent<P extends CompatDomProps & CompatAnimation
     // owns the ref, so the style-bearing shape is still P.
     const emission = computeEmission(emissionProps as P)
     const mergedStyle = mergeCompatStyle(emission.style, style)
+    const forwardedDomProps = domProps(props)
+    const resolvedTag = containUntrustedTag(tag, forwardedDomProps)
     return React.createElement(
-      tag ?? 'div',
+      resolvedTag,
       {
-        ...domProps(props),
+        ...forwardedDomProps,
         ref: setRef,
         className: emission.className,
         ...domTestId(testID),

@@ -1,6 +1,5 @@
 // Ordering is intentional and must be preserved: sideEffects followed by functionality.
 import '~/sideEffects'
-import { datadogRum } from '@datadog/browser-rum'
 import { PrivyProvider } from '@privy-io/react-auth'
 import { ApiInit, getEntryGatewayUrl, provideSessionService } from '@universe/api'
 import { ComplianceClientProvider } from '@universe/compliance'
@@ -27,7 +26,7 @@ import {
 import hashcashWorkerUrl from '@universe/sessions/src/challenge-solvers/hashcash/worker/hashcash.worker.ts?worker&url'
 import { NuqsAdapter } from 'nuqs/adapters/react-router/v7'
 import type { PropsWithChildren, ReactNode } from 'react'
-import { lazy, StrictMode, Suspense, useEffect, useMemo } from 'react'
+import { lazy, StrictMode, Suspense, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Helmet, HelmetProvider } from 'react-helmet-async/lib/index'
 import { I18nextProvider } from 'react-i18next'
@@ -146,11 +145,11 @@ const provideSessionInitService = () => {
 function Updaters() {
   const location = useLocation()
 
-  const ListsUpdater = useDeferredComponent(loadListsUpdater)
-  const ApplicationUpdater = useDeferredComponent(loadApplicationUpdater)
-  const ActivityStateUpdater = useDeferredComponent(loadActivityStateUpdater)
-  const FiatOnRampTransactionsUpdater = useDeferredComponent(loadFiatOnRampTransactionsUpdater)
-  const WebAccountsStoreUpdater = useDeferredComponent(loadWebAccountsStoreUpdater)
+  const ListsUpdater = useDeferredComponent({ importFn: loadListsUpdater })
+  const ApplicationUpdater = useDeferredComponent({ importFn: loadApplicationUpdater })
+  const ActivityStateUpdater = useDeferredComponent({ importFn: loadActivityStateUpdater })
+  const FiatOnRampTransactionsUpdater = useDeferredComponent({ importFn: loadFiatOnRampTransactionsUpdater })
+  const WebAccountsStoreUpdater = useDeferredComponent({ importFn: loadWebAccountsStoreUpdater })
 
   return (
     <>
@@ -187,16 +186,6 @@ function StatsigProvider({ children }: PropsWithChildren) {
     }),
     [deviceId, account.address],
   )
-
-  useEffect(() => {
-    datadogRum.setUserProperty('connection', {
-      type: account.connector?.type,
-      name: account.connector?.name,
-      rdns: account.connector?.id,
-      address: account.address,
-      status: account.status,
-    })
-  }, [account])
 
   // Stable identity: `StatsigProviderWrapper` lists `onInit` in its effect deps, so a fresh
   // function every render re-runs the effect — and re-initializes Datadog — on every re-render.

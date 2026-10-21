@@ -4,7 +4,8 @@ import { EyeOff } from '@universe/mycelium/icons/EyeOff'
 import { Key } from '@universe/mycelium/icons/Key'
 import { PencilDetailed } from '@universe/mycelium/icons/PencilDetailed'
 import { FunctionComponent } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
+import { Trans } from 'ui/src'
 
 export function BackupWarningBulletPoints(): JSX.Element {
   const { t } = useTranslation()

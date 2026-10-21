@@ -103,6 +103,36 @@ describe('useExploreRwaRows', () => {
     expect(mockUseListTokenGroupsQuery).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
   })
 
+  it('forwards the search query to ListTokenGroups and reports the rows as server-searched', () => {
+    mockUseIsTokenCategoriesEnabled.mockReturnValue(true)
+
+    const { result } = renderHook(() =>
+      useExploreRwaRows({
+        category: RwaCategory.STOCKS,
+        volumeOrderBy: TokensOrderBy.VOLUME_1D,
+        searchQuery: 'tesla',
+      }),
+    )
+
+    expect(mockUseListTokenGroupsQuery).toHaveBeenCalledWith(expect.objectContaining({ searchQuery: 'tesla' }))
+    expect(result.current.isSearchedByServer).toBe(true)
+  })
+
+  it('does not claim a server search on the v1 source, which ignores the query', () => {
+    mockUseIsTokenCategoriesEnabled.mockReturnValue(false)
+
+    const { result } = renderHook(() =>
+      useExploreRwaRows({
+        category: RwaCategory.STOCKS,
+        volumeOrderBy: TokensOrderBy.VOLUME_1D,
+        searchQuery: 'tesla',
+      }),
+    )
+
+    expect(mockUseListRankedRwasQuery).toHaveBeenCalledWith(expect.not.objectContaining({ searchQuery: 'tesla' }))
+    expect(result.current.isSearchedByServer).toBe(false)
+  })
+
   it('does not claim server order when no sort was requested', () => {
     mockUseIsTokenCategoriesEnabled.mockReturnValue(true)
 

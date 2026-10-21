@@ -1,7 +1,10 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency } from '@uniswap/sdk-core'
 import { createLiquidityChartStore } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/createLiquidityChartStore'
-import type { RenderingContext } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
+import type {
+  RenderingContext,
+  TickRangeChange,
+} from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 import { clampMaxTick, clampMinTick, setMinMaxTickRange } from '~/features/Liquidity/utils/clampTickRange'
 
 export const TICK_SPACING = 60
@@ -32,8 +35,8 @@ export function createParent({
     onMaxTickChange: (tick?: number) => {
       state.maxTick = clampMaxTick({ tick, minTick: state.minTick, tickSpacing })
     },
-    onMinMaxTickChange: (ticks: { minTick?: number; maxTick?: number }) => {
-      Object.assign(state, setMinMaxTickRange({ prev: state, ...ticks }))
+    onMinMaxTickChange: ({ minTick: nextMinTick, maxTick: nextMaxTick }: TickRangeChange) => {
+      Object.assign(state, setMinMaxTickRange({ prev: state, minTick: nextMinTick, maxTick: nextMaxTick }))
     },
   }
 }

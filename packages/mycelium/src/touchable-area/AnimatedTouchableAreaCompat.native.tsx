@@ -1,4 +1,5 @@
 import Animated from 'react-native-reanimated'
+import type { FirstOverloadReturn } from '../compat/first-overload-return'
 import { TouchableAreaCompat } from './TouchableAreaCompat'
 
 /**
@@ -13,8 +14,10 @@ import { TouchableAreaCompat } from './TouchableAreaCompat'
 // Explicit annotation: the inferred AnimatedComponentType names
 // mycelium-internal prop types the touchable-area subpath does not export
 // (TS2883 under declaration emit); the instantiation expression keeps the
-// exact same type.
-export const AnimatedTouchableAreaCompat: ReturnType<
+// exact same type. FirstOverloadReturn targets the overload ReturnType<>
+// stopped resolving in reanimated 4.5 — rationale in
+// ../compat/first-overload-return.
+export const AnimatedTouchableAreaCompat: FirstOverloadReturn<
   typeof Animated.createAnimatedComponent<typeof TouchableAreaCompat>
 > = Animated.createAnimatedComponent(TouchableAreaCompat)
 

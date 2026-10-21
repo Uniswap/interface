@@ -15,7 +15,7 @@ import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
-import { AddressHoverCard } from '~/components/AddressHoverCard/AddressHoverCard'
+import { WalletHoverCard } from '~/components/HoverCard/WalletHoverCard/WalletHoverCard'
 import { InternalLink } from '~/components/InternalLink'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
@@ -295,11 +295,11 @@ export function TransactionsTable({
 
           return (
             <Cell loading={showLoadingSkeleton} justifyContent="flex-end">
-              <AddressHoverCard address={address} chainId={tx?.chainId ?? chainId}>
+              <WalletHoverCard address={address} chainId={tx?.chainId ?? chainId}>
                 <InternalLink to={buildPortfolioUrl({ externalAddress: address })}>
                   <TableText>{shortenedAddress}</TableText>
                 </InternalLink>
-              </AddressHoverCard>
+              </WalletHoverCard>
             </Cell>
           )
         },
@@ -320,6 +320,7 @@ export function TransactionsTable({
   return (
     <Flex position="relative" minHeight={158}>
       <Table
+        mobileFullBleed
         columns={columns}
         data={data}
         loading={dataStillLoading}

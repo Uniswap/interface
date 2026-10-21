@@ -1,4 +1,4 @@
-import type { AuctionActivityEntry } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import type { AuctionActivityEntry } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { UniverseChainId } from '@universe/chains'
 import type { PropsWithChildren } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'

@@ -81,7 +81,7 @@ vi.mock('uniswap/src/data/apiClients/tradingApi/useTradingApiSwapQuery', () => (
   })),
 }))
 
-function setupMockRequestAndContext(createdAt: number, options?: { frameUrl?: string }): void {
+function setupMockRequestAndContext(createdAt: number, options?: { parentUrl?: string }): void {
   const request: WithMetadata<DappRequestStoreItem> = {
     dappRequest: {
       type: DappRequestType.SendTransaction,
@@ -94,9 +94,12 @@ function setupMockRequestAndContext(createdAt: number, options?: { frameUrl?: st
       },
     },
     senderTabInfo: {
-      id: 1,
-      url: 'https://example.com',
-      frameUrl: options?.frameUrl,
+      tabId: 1,
+      frameId: 0,
+      frameUrl: 'https://example.com',
+      ...(options?.parentUrl
+        ? { tabUrl: options.parentUrl, isCrossOriginFrame: true as const }
+        : { tabUrl: 'https://example.com', isCrossOriginFrame: false as const }),
     },
     dappInfo: {
       activeConnectedAddress: '0x123',
@@ -126,7 +129,8 @@ function setupMockRequestAndContext(createdAt: number, options?: { frameUrl?: st
       pushNotificationsEnabled: false,
     },
     dappUrl: 'https://example.com',
-    frameUrl: options?.frameUrl,
+    tabUrl: options?.parentUrl ?? 'https://example.com',
+    isCrossOriginFrame: Boolean(options?.parentUrl),
     dappIconUrl: '',
     currentIndex: 0,
     totalRequestCount: 1,
@@ -137,9 +141,9 @@ function setupMockRequestAndContext(createdAt: number, options?: { frameUrl?: st
   }
 }
 
-function renderDappRequestContent(options: { createdAt: number; isRequestStale: boolean; frameUrl?: string }) {
+function renderDappRequestContent(options: { createdAt: number; isRequestStale: boolean; parentUrl?: string }) {
   mockUseIsRequestStale.mockReturnValue(options.isRequestStale)
-  setupMockRequestAndContext(options.createdAt, { frameUrl: options.frameUrl })
+  setupMockRequestAndContext(options.createdAt, { parentUrl: options.parentUrl })
   return render(<DappRequestContent title="Transaction request" confirmText="Confirm" />)
 }
 
@@ -326,20 +330,20 @@ describe('DappRequestContent - Stale Request Rendering', () => {
     expect(container).toMatchSnapshot()
   })
 
-  it('should display iframe URL with "via" when frameUrl differs from url', async () => {
+  it('should display the frame URL "via" the top-level URL when the request came from a cross-origin iframe', async () => {
     const freshCreatedAt = Date.now() - 1000
 
     renderDappRequestContent({
       createdAt: freshCreatedAt,
       isRequestStale: false,
-      frameUrl: 'https://app.uniswap.org',
+      parentUrl: 'https://app.uniswap.org',
     })
 
-    // Should show "app.uniswap.org via example.com" in the URL label
-    expect(screen.queryByText(/app\.uniswap\.org via example\.com/i)).not.toBeNull()
+    // The requesting frame is example.com, embedded in app.uniswap.org
+    expect(screen.queryByText(/example\.com via app\.uniswap\.org/i)).not.toBeNull()
   })
 
-  it('should display only top-level URL when frameUrl is not present', async () => {
+  it('should display only the dapp URL when the request did not come from a cross-origin iframe', async () => {
     const freshCreatedAt = Date.now() - 1000
 
     renderDappRequestContent({ createdAt: freshCreatedAt, isRequestStale: false })

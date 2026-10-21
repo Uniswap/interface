@@ -40,7 +40,7 @@ import { RwaIssuerRow } from 'uniswap/src/features/search/SearchModal/RwaIssuerR
 import { getRwaCollectionKey } from 'uniswap/src/features/search/SearchModal/stocks/rwaSearchGrouping'
 import { getRwaIssuerCurrencyInfo } from 'uniswap/src/features/search/SearchModal/stocks/useRwaIssuerCurrencyInfos'
 import { TokenRowContextMenuButton } from 'uniswap/src/features/search/SearchModal/TokenRowContextMenuButton'
-import type { SearchModalRowWrapper } from 'uniswap/src/features/search/SearchModal/types'
+import type { SearchModalRowWrapper, SearchModalRowWrapperProps } from 'uniswap/src/features/search/SearchModal/types'
 import {
   searchModalListOptionKey,
   toggleKeyInList,
@@ -105,13 +105,18 @@ export const SearchModalList = memo(function SearchModalListInner({
   const { setFocusedRowIndex } = focusedRowStore
   const [expandedItems, setExpandedItems] = useState<string[]>([])
 
-  // Auction rows only get a hover card under Search V2 (token rows always do).
-  // Not gated on the auction-search flag: that governs whether auction rows are fetched at all.
-  const auctionRowWrapper = isSearchV2UIEnabled ? rowWrapper : undefined
   const wrapTokenRow = useCallback(
     ({ element, currencyInfo }: { element: JSX.Element; currencyInfo: CurrencyInfo }): JSX.Element =>
       rowWrapper ? rowWrapper({ element, currencyInfo, variant: 'token' }) : element,
     [rowWrapper],
+  )
+
+  // Auction, pool, and wallet rows only get a hover card under Search V2 (token rows always do).
+  // Not gated on the auction-search flag: that governs whether auction rows are fetched at all.
+  const wrapSearchV2Row = useCallback(
+    (props: SearchModalRowWrapperProps): JSX.Element =>
+      isSearchV2UIEnabled && rowWrapper ? rowWrapper(props) : props.element,
+    [isSearchV2UIEnabled, rowWrapper],
   )
 
   // Reset expand-state during render (not in an effect, which would flash a stale expansion for one frame)
@@ -226,7 +231,7 @@ export const SearchModalList = memo(function SearchModalListInner({
 
       switch (item.type) {
         case OnchainItemListOptionType.Pool: {
-          return (
+          const poolElement = (
             <PoolOptionItem
               token0CurrencyInfo={item.token0CurrencyInfo}
               token1CurrencyInfo={item.token1CurrencyInfo}
@@ -258,6 +263,7 @@ export const SearchModalList = memo(function SearchModalListInner({
               onModifierPress={onModifierPress}
             />
           )
+          return wrapSearchV2Row({ element: poolElement, pool: item, variant: 'pool' })
         }
         case OnchainItemListOptionType.Token: {
           const tokenElement = (
@@ -364,23 +370,31 @@ export const SearchModalList = memo(function SearchModalListInner({
           )
         }
         case OnchainItemListOptionType.WalletByAddress:
-          return (
-            <WalletByAddressOptionItem
-              walletByAddressOption={item}
-              modifierPressHref={modifierPressHref}
-              onPress={onPress}
-              onModifierPress={onModifierPress}
-            />
-          )
+          return wrapSearchV2Row({
+            variant: 'wallet',
+            element: (
+              <WalletByAddressOptionItem
+                walletByAddressOption={item}
+                modifierPressHref={modifierPressHref}
+                onPress={onPress}
+                onModifierPress={onModifierPress}
+              />
+            ),
+            address: item.address,
+          })
         case OnchainItemListOptionType.ENSAddress:
-          return (
-            <ENSAddressOptionItem
-              ensAddressOption={item}
-              modifierPressHref={modifierPressHref}
-              onPress={onPress}
-              onModifierPress={onModifierPress}
-            />
-          )
+          return wrapSearchV2Row({
+            variant: 'wallet',
+            element: (
+              <ENSAddressOptionItem
+                ensAddressOption={item}
+                modifierPressHref={modifierPressHref}
+                onPress={onPress}
+                onModifierPress={onModifierPress}
+              />
+            ),
+            address: item.address,
+          })
         case OnchainItemListOptionType.EarnVault:
           return (
             <EarnVaultOptionItem
@@ -407,14 +421,18 @@ export const SearchModalList = memo(function SearchModalListInner({
             />
           )
         case OnchainItemListOptionType.Unitag:
-          return (
-            <UnitagOptionItem
-              unitagOption={item}
-              modifierPressHref={modifierPressHref}
-              onPress={onPress}
-              onModifierPress={onModifierPress}
-            />
-          )
+          return wrapSearchV2Row({
+            variant: 'wallet',
+            element: (
+              <UnitagOptionItem
+                unitagOption={item}
+                modifierPressHref={modifierPressHref}
+                onPress={onPress}
+                onModifierPress={onModifierPress}
+              />
+            ),
+            address: item.address,
+          })
         case OnchainItemListOptionType.Auction: {
           const auctionElement = (
             <AuctionOptionItem
@@ -424,16 +442,13 @@ export const SearchModalList = memo(function SearchModalListInner({
               onPress={onPress}
             />
           )
-          return auctionRowWrapper
-            ? auctionRowWrapper({ element: auctionElement, variant: 'auction', auction: item })
-            : auctionElement
+          return wrapSearchV2Row({ element: auctionElement, variant: 'auction', auction: item })
         }
         default:
           return <></>
       }
     },
     [
-      auctionRowWrapper,
       categories,
       categoryTagPlacement,
       getModifierPressHref,
@@ -450,6 +465,7 @@ export const SearchModalList = memo(function SearchModalListInner({
       symbolMaxCharacters,
       toggleExpanded,
       wrapTokenRow,
+      wrapSearchV2Row,
     ],
   )
 

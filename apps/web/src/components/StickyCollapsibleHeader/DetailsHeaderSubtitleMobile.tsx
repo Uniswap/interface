@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { iconSizes } from 'ui/src/theme'
 import { getRWAIssuerLabel } from 'uniswap/src/features/rwa/issuers'
 import type { RWAIssuerDisplay } from 'uniswap/src/features/rwa/types'
-import { useRWAIssuerLogoUrl } from 'uniswap/src/features/rwa/useRWAIssuerLogoUrl'
+import { useRWAIssuerLogo } from 'uniswap/src/features/rwa/useRWAIssuerLogoUrl'
 
 interface DetailsHeaderSubtitleMobileProps {
   issuer?: RWAIssuerDisplay
@@ -22,7 +22,7 @@ export function DetailsHeaderSubtitleMobile({
 }: DetailsHeaderSubtitleMobileProps): JSX.Element | null {
   const { t } = useTranslation()
   const media = useMedia()
-  const configLogoUrl = useRWAIssuerLogoUrl(issuer?.issuer)
+  const issuerLogoUrl = useRWAIssuerLogo({ issuer, variant: 'color' })
   const issuerLabel = issuer && getRWAIssuerLabel(issuer)
 
   if (!media.sm) {
@@ -39,7 +39,6 @@ export function DetailsHeaderSubtitleMobile({
     )
   }
 
-  const issuerLogoUrl = issuer.issuerLogoUrl ?? configLogoUrl
   const logoSize = iconSizes.icon16
 
   return (

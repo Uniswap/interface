@@ -1,10 +1,53 @@
-import { QueryClient } from '@tanstack/react-query'
+import { type Mutation, MutationCache, QueryCache, QueryClient } from '@tanstack/react-query'
 import { FetchError } from '@universe/api/src/clients/base/errors'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { hashKey } from 'utilities/src/reactQuery/hashKey'
+import { assertNoSecretsInPersistedSink, surfacePersistedSinkError } from 'utilities/src/security/persistedSinkTripwire'
 import { ONE_DAY_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 
+// The label lands in the thrown message and in logger.error, so it must never carry key values: only
+// the leading cache-key name, which is a constant by convention, is safe to repeat.
+function describeKey(key: readonly unknown[] | undefined, fallback: string): string {
+  const head = key?.[0]
+  return typeof head === 'string' ? head : fallback
+}
+
+function describeMutation(mutation: Mutation<unknown, unknown, unknown, unknown>): string {
+  return describeKey(mutation.options.mutationKey, 'unkeyed mutation')
+}
+
 export const SharedQueryClient = new QueryClient({
+  // Dev/test tripwires for wallet secrets entering the cache (see utilities/src/security). Both
+  // MutationCache callbacks are awaited inside the mutation's try block, so a throw fails that
+  // mutation cleanly; QueryCache.onSuccess runs inside the fetch promise chain, where a throw would
+  // hang the query, so it surfaces the error asynchronously instead.
+  mutationCache: new MutationCache({
+    onMutate: (variables, mutation) =>
+      assertNoSecretsInPersistedSink({
+        sink: 'react-query mutation variables',
+        value: variables,
+        label: describeMutation(mutation),
+      }),
+    onSuccess: (...args) => {
+      const [data, , , mutation] = args
+      assertNoSecretsInPersistedSink({
+        sink: 'react-query mutation data',
+        value: data,
+        label: describeMutation(mutation),
+      })
+    },
+  }),
+  queryCache: new QueryCache({
+    onSuccess: (data, query) => {
+      const label = describeKey(query.queryKey, 'unnamed query')
+      try {
+        assertNoSecretsInPersistedSink({ sink: 'react-query query key', value: query.queryKey, label })
+        assertNoSecretsInPersistedSink({ sink: 'react-query query data', value: data, label })
+      } catch (error) {
+        surfacePersistedSinkError(error)
+      }
+    },
+  }),
   defaultOptions: {
     queries: {
       // Ideally, these default values should never be used.

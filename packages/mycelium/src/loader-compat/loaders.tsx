@@ -7,6 +7,8 @@ import type { FlexCompatProps } from '../flex-compat/props'
 import { TextCompat } from '../text-compat/TextCompat'
 import { iconSizes } from '../tokens'
 
+const TOKEN_LOADER_LOGO_SIZE = isWebPlatform ? iconSizes.icon36 : iconSizes.icon40
+
 interface TokenLoaderProps {
   opacity: number
   withPrice?: boolean
@@ -25,8 +27,8 @@ export function TokenLoader({ opacity, withPrice = false }: TokenLoaderProps): J
         <FlexCompat
           backgroundColor="$neutral3"
           borderRadius="$roundedFull"
-          height={iconSizes.icon36}
-          width={iconSizes.icon36}
+          height={TOKEN_LOADER_LOGO_SIZE}
+          width={TOKEN_LOADER_LOGO_SIZE}
         />
 
         <FlexCompat grow alignItems="flex-start">
@@ -50,7 +52,12 @@ export function TokenLoader({ opacity, withPrice = false }: TokenLoaderProps): J
           <FlexCompat alignItems="flex-end">
             <TextCompat loading="no-shimmer" loadingPlaceholderText="$XX.XX" numberOfLines={1} variant="body1" />
             <FlexCompat row alignItems="center" gap="$spacing8" minHeight={20}>
-              <TextCompat loading="no-shimmer" loadingPlaceholderText="X.XX%" numberOfLines={1} variant="subheading2" />
+              <TextCompat
+                loading="no-shimmer"
+                loadingPlaceholderText="X.XX%"
+                numberOfLines={1}
+                variant={isWebPlatform ? 'subheading2' : 'body2'}
+              />
             </FlexCompat>
           </FlexCompat>
         )}

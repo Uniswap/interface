@@ -1,6 +1,5 @@
 /* oxlint-disable max-lines complexity */
 import { type NativeStackScreenProps } from '@react-navigation/native-stack'
-import { isWebPlatform } from '@universe/environment'
 import { Flex } from '@universe/mycelium'
 import { useIsDarkMode } from '@universe/mycelium/theme-hooks-compat'
 import { Image } from 'expo-image'
@@ -159,24 +158,16 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     inputRef.current?.triggerShakeAnimation()
   }, [])
 
-  const pendingSelectionTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined)
-
-  useEffect(() => {
-    return () => clearTimeout(pendingSelectionTimeoutRef.current)
-  }, [])
-
   // passed to memo(...) component
-  const resetSelection = useCallback(({ start, end }: { start: number; end?: number }): void => {
-    selectionRef.current = { start, end }
-    if (!isWebPlatform && inputRef.current) {
-      // Cancel any pending native selection update to prevent stale cursor positions
-      // when typing fast (the previous timeout would set the cursor to an outdated position).
-      clearTimeout(pendingSelectionTimeoutRef.current)
-      pendingSelectionTimeoutRef.current = setTimeout(() => {
-        inputRef.current?.textInputRef.current?.setNativeProps({ selection: { start, end } })
-      }, 0)
-    }
-  }, [])
+  const resetSelection = useCallback(
+    ({ start, end, value: forValue }: { start: number; end?: number; value?: string }): void => {
+      // The ref is updated synchronously so the DecimalPadInput reads the new caret on the next
+      // keypress; the section applies it to the native input once the value that moved it has rendered.
+      selectionRef.current = { start, end }
+      inputRef.current?.setSelection({ start, end, value: forValue })
+    },
+    [],
+  )
 
   const { appFiatCurrencySupportedInMeld, meldSupportedFiatCurrency, supportedFiatCurrencies } =
     useMeldFiatCurrencySupportInfo({

@@ -1,6 +1,6 @@
 import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { cloneElement, type ReactElement } from 'react'
-import { Trans } from 'react-i18next'
+import { Trans } from 'ui/src'
 
 /** Stocks and ETFs carry the disclaimer; Commodities has none, by design. */
 export function hasRwaDisclaimer(category: RwaCategory): boolean {

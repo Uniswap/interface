@@ -2,8 +2,9 @@ import { readFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { serve } from '@hono/node-server'
-import { createApp, ENTRY_GATEWAY_URLS, WEBSOCKET_URLS } from 'functions/app'
+import { createApp, ENTRY_GATEWAY_URLS } from 'functions/app'
 import { createDiskAssets } from 'functions/diskAssets'
+import { withNosniff } from 'functions/frameProtection'
 import { requestLogger } from 'functions/requestLogger'
 import { staticFiles } from 'functions/staticFiles'
 import { resolveTrustedClientIp } from 'functions/trustedClientIp'
@@ -49,14 +50,13 @@ const app = createApp({
     }
     return process.env.ENTRY_GATEWAY_API_URL || ENTRY_GATEWAY_URLS[DEFAULT_ENV]
   },
-  getWebSocketUrl: () => process.env.WEBSOCKET_URL || WEBSOCKET_URLS[DEFAULT_ENV],
   getEmbedFrameAncestors: () => process.env.EMBED_FRAME_ANCESTORS,
   getTrustedClientIp: (c) => resolveTrustedClientIp((name) => c.req.header(name)),
 })
 
 const root = new Hono()
 // Register /health before compress() so the every-few-seconds ALB probe isn't gzipped.
-root.get('/health', (c) => c.text('ok'))
+root.get('/health', (c) => withNosniff(c.text('ok')))
 
 // Registered after /health so ALB probes stay out of the request log.
 root.use('*', requestLogger())
@@ -96,9 +96,6 @@ root.all('*', (c) => {
 if (process.env.DEPLOYMENT_ENV === 'production') {
   if (!process.env.ENTRY_GATEWAY_API_URL) {
     throw new Error('[ecs-entry] ENTRY_GATEWAY_API_URL is required when DEPLOYMENT_ENV=production')
-  }
-  if (!process.env.WEBSOCKET_URL) {
-    throw new Error('[ecs-entry] WEBSOCKET_URL is required when DEPLOYMENT_ENV=production')
   }
 }
 

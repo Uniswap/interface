@@ -5,8 +5,7 @@ import localForage from 'localforage'
 import { type PersistConfig, persistReducer, persistStore } from 'redux-persist'
 import createSagaMiddleware from 'redux-saga'
 import { delegationListenerMiddleware } from 'uniswap/src/features/smartWallet/delegation/slice'
-import { createDatadogReduxEnhancer } from 'utilities/src/logger/datadog/Datadog'
-import { ALLOW_ANALYTICS_ATOM_KEY } from 'utilities/src/telemetry/analytics/constants'
+import { persistedSinkTripwireMiddleware } from 'utilities/src/security/persistedSinkTripwireMiddleware'
 import { updateVersion } from '~/state/global/actions'
 import { customCreateMigrate, INDEXED_DB_REDUX_TABLE_NAME, migrations, PERSIST_VERSION } from '~/state/migrations'
 import { rootWebSaga, sagaTriggerActions } from '~/state/sagas/root'
@@ -35,18 +34,9 @@ const persistedReducer = persistReducer(persistConfig, interfaceReducer)
 
 const sagaMiddleware = createSagaMiddleware()
 
-const dataDogReduxEnhancer = createDatadogReduxEnhancer({
-  shouldLogReduxState: (): boolean => {
-    const allowAnalytics = window.localStorage.getItem(ALLOW_ANALYTICS_ATOM_KEY) !== 'false'
-    // Do not log the state if a user has opted out of analytics.
-    return !!allowAnalytics
-  },
-})
-
 export function createDefaultStore() {
   const store = configureStore({
     reducer: persistedReducer,
-    enhancers: (defaultEnhancers) => defaultEnhancers.concat(dataDogReduxEnhancer),
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         thunk: true,
@@ -61,7 +51,10 @@ export function createDefaultStore() {
               warnAfter: 128,
               // meta.arg and meta.baseQueryMeta are defaults. payload.trade is a nonserializable return value, but that's ok
               // because we are not adding it into any persisted store that requires serialization (e.g. localStorage)
-              ignoredActionPaths: ['meta.arg', 'meta.baseQueryMeta', 'payload.trade'],
+              // payload.initialState / application.openModal.initialState: liquidity modals receive PositionInfo (SDK
+              // Pool/Position/CurrencyAmount instances); fine since the application slice is never persisted.
+              ignoredActionPaths: ['meta.arg', 'meta.baseQueryMeta', 'payload.trade', 'payload.initialState'],
+              ignoredPaths: ['application.openModal.initialState'],
               ignoredActions: [
                 // ignore saga trigger actions
                 ...sagaTriggerActions,
@@ -73,6 +66,7 @@ export function createDefaultStore() {
               ],
             },
       })
+        .prepend(persistedSinkTripwireMiddleware)
         .concat(sagaMiddleware)
         .concat(walletCapabilitiesListenerMiddleware.middleware)
         .concat(delegationListenerMiddleware.middleware),

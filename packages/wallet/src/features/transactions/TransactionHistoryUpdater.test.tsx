@@ -30,7 +30,7 @@ import {
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { readOnlyAccount, receiveCurrencyTxNotification, signerMnemonicAccount } from 'wallet/src/test/fixtures'
-import { faker, render } from 'wallet/src/test/test-utils'
+import { faker, render, waitFor } from 'wallet/src/test/test-utils'
 
 vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
   // UniverseChainId.Mainnet — literal for Jest mock factory scope rules
@@ -288,6 +288,72 @@ describe(TransactionHistoryUpdater, () => {
     const notificationStatusState = tree.store.getState().notifications.notificationStatus
     expect(notificationStatusState[account1.address]).toBeFalsy()
     expect(notificationStatusState[account2.address]).toBeFalsy()
+  })
+
+  it('pushes a receive notification once when a new receive is found', async () => {
+    const receiveResponse = listResponseFromOnChain([
+      makeReceiveOnChain({
+        transactionHash: RECEIVE_TX_HASH,
+        timestampMillis: BigInt(Date.now() - ONE_MINUTE_MS * 5),
+        recipient: account1.address,
+      }),
+    ])
+    // Own key so the shared test query client can't serve another test's cached response
+    ;(getListTransactionsQuery as Mock).mockImplementation(() => ({
+      queryKey: [ReactQueryCacheKey.ListTransactions, 'receive'],
+      queryFn: async (): Promise<ListTransactionsResponse> => receiveResponse,
+    }))
+
+    const reduxState = {
+      wallet: {
+        ...walletSlice,
+        activeAccountAddress: account1.address,
+      },
+      notifications: {
+        notificationQueue: [],
+        notificationStatus: {},
+        lastTxNotificationUpdate: {
+          [account1.address]: past.valueOf(),
+        },
+      },
+    }
+
+    const tree = render(<TransactionHistoryUpdater />, {
+      preloadedState: reduxState,
+    })
+
+    await waitFor(() => expect(tree.store.getState().notifications.notificationQueue).toHaveLength(1))
+    expect(getListTransactionsQuery).toHaveBeenCalledTimes(1)
+  })
+
+  it('keeps rendering and still flags new transactions when the receive check throws', async () => {
+    ;(getListTransactionsQuery as Mock).mockImplementation(() => {
+      throw new TypeError("Cannot read property 'catch' of undefined")
+    })
+
+    const reduxState = {
+      wallet: {
+        ...walletSlice,
+        activeAccountAddress: account1.address,
+      },
+      notifications: {
+        notificationQueue: [],
+        notificationStatus: {},
+        lastTxNotificationUpdate: {
+          [account1.address]: past.valueOf(),
+        },
+      },
+    }
+
+    const tree = render(<TransactionHistoryUpdater />, {
+      preloadedState: reduxState,
+    })
+
+    const element = await tree.findByTestId(`AddressTransactionHistoryUpdater/${account1.address}`)
+    expect(element).toBeDefined()
+
+    await waitFor(() => expect(getListTransactionsQuery).toHaveBeenCalled())
+    expect(tree.store.getState().notifications.notificationStatus[account1.address]).toBeTruthy()
   })
 })
 

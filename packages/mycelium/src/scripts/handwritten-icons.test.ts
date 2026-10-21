@@ -17,7 +17,7 @@ describe('generator hand-written guard', () => {
 
   it('the guard set is exactly the on-disk hand-written files (icons without an SVG source)', async () => {
     const iconsDir = join(__dirname, '..', 'components', 'icons')
-    const svgDir = join(__dirname, '..', '..', '..', 'ui', 'src', 'assets', 'icons')
+    const svgDir = join(__dirname, '..', 'assets', 'icons')
 
     const generated = new Set(
       (await readdir(svgDir))

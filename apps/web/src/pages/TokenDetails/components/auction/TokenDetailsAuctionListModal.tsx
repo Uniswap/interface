@@ -1,5 +1,5 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
-import type { Auction } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import type { Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { AddressStringFormat, type EVMUniverseChainId, isEVMChain, normalizeAddress } from '@universe/chains'
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
 import { X } from '@universe/mycelium/icons/X'
@@ -7,8 +7,10 @@ import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { timestampToMs } from 'uniswap/src/data/apiClients/dataApiService/utils/protoTimestamp'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { AuctionEventName, ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -56,11 +58,13 @@ function AuctionListRow({
   auction,
   chainId,
   logoUrl,
+  positionRank,
   onSelect,
 }: {
   auction: PlainMessage<Auction>
   chainId: EVMUniverseChainId | undefined
   logoUrl: string | undefined
+  positionRank: number
   onSelect: (auction: PlainMessage<Auction>) => void
 }): JSX.Element {
   const { t } = useTranslation()
@@ -78,7 +82,16 @@ function AuctionListRow({
   const amount = amountUsd === undefined ? '—' : convertFiatAmountFormatted(amountUsd, NumberType.FiatTokenStats)
   const amountColor = isUpcoming ? '$neutral3' : failed ? '$neutral2' : '$neutral1'
 
-  const onPress = useEvent(() => onSelect(auction))
+  const onPress = useEvent(() => {
+    const endTime = timestampToMs(auction.estimatedEndTime)
+    sendAnalyticsEvent(AuctionEventName.AuctionSelectorAuctionClicked, {
+      chain_id: auction.chainId,
+      position_rank: positionRank,
+      auction_status: phase === undefined ? undefined : isUpcoming ? 'upcoming' : isEnded ? 'ended' : 'live',
+      time_remaining_seconds: endTime === undefined ? undefined : Math.max(0, Math.ceil((endTime - Date.now()) / 1000)),
+    })
+    onSelect(auction)
+  })
 
   return (
     <Trace logPress element={ElementName.TokenDetailsAuctionListRow}>
@@ -215,12 +228,13 @@ export function TokenDetailsAuctionListModal({
           </TouchableArea>
         </Flex>
         <Flex>
-          {sorted.map((auction) => (
+          {sorted.map((auction, index) => (
             <AuctionListRow
               key={normalizeAddress(auction.address, AddressStringFormat.Lowercase)}
               auction={auction}
               chainId={evmChainId}
               logoUrl={logoUrl ?? undefined}
+              positionRank={index + 1}
               onSelect={onSelect}
             />
           ))}

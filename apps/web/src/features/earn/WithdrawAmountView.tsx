@@ -6,7 +6,8 @@ import { useTranslation } from 'react-i18next'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import { useNetworkSelectorOptions } from 'uniswap/src/components/network/NetworkFilterV2/useNetworkSelectorOptions'
+import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter/NetworkFilter'
+import { useNetworkSelectorOptions } from 'uniswap/src/components/network/NetworkFilter/useNetworkSelectorOptions'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
@@ -31,7 +32,6 @@ import { isSafeNumber } from 'utilities/src/primitives/integer'
 import { useDebounce } from 'utilities/src/time/timing'
 import { AlternateCurrencyDisplay } from '~/components/AlternateCurrencyDisplay/AlternateCurrencyDisplay'
 import { ChainLogo } from '~/components/Logo/ChainLogo'
-import { NetworkFilter } from '~/components/NetworkFilter/NetworkFilter'
 import {
   NumericalInputMimic,
   NumericalInputSymbolContainer,
@@ -275,7 +275,7 @@ export function WithdrawAmountView({
     })
   }, [amount, fiatToToken, onSetFontSize, tokenToFiat])
 
-  const handleNetworkChange = useCallback((next: UniverseChainId | undefined) => {
+  const handleNetworkChange = useCallback((next: UniverseChainId | null) => {
     if (next) {
       setSelectedChainId(next)
     }
@@ -430,25 +430,23 @@ export function WithdrawAmountView({
           </Text>
           {/* TODO(CONS-2905): Re-enable the search input once the portaled dropdown can retain focus in this modal. */}
           <NetworkFilter
-            networks={withdrawDestinationChainIds}
-            currentChainId={chainId}
-            isTriggerStyled={false}
-            showMultichainOption={false}
-            position="right"
-            positionFixed
-            showSearch
+            chainIds={withdrawDestinationChainIds}
+            selectedChain={chainId ?? null}
             showSearchInput={false}
             tieredOptions={tieredNetworkOptions}
-            dropdownStyle={{ maxHeight: EARN_SELECTOR_DROPDOWN_MAX_HEIGHT }}
-            onPress={handleNetworkChange}
-            customTrigger={
-              <Flex row alignItems="center" gap="$spacing6">
-                {chainId && <ChainLogo chainId={chainId} size={iconSizes.icon20} />}
-                <Text variant="body2" color="$neutral1">
-                  {chainLabel}
-                </Text>
-              </Flex>
-            }
+            contentMaxHeight={EARN_SELECTOR_DROPDOWN_MAX_HEIGHT}
+            trigger={{
+              variant: 'custom',
+              content: (
+                <Flex row alignItems="center" gap="$spacing6">
+                  {chainId && <ChainLogo chainId={chainId} size={iconSizes.icon20} />}
+                  <Text variant="body2" color="$neutral1">
+                    {chainLabel}
+                  </Text>
+                </Flex>
+              ),
+            }}
+            onPressChain={handleNetworkChange}
           />
         </Flex>
       </Flex>

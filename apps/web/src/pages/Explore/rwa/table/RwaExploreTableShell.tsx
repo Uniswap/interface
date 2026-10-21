@@ -1,5 +1,6 @@
 import type { Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { type OrderDirection } from '~/data/util'
+import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
 import { ExpandableAssetTable } from '~/pages/Explore/rwa/table/ExpandableAssetTable'
 import { useRwaExploreTableShell } from '~/pages/Explore/rwa/table/hooks/useRwaExploreTableShell'
 import { useRwaTableFilterEmptyState } from '~/pages/Explore/rwa/table/hooks/useRwaTableFilterEmptyState'
@@ -14,6 +15,7 @@ export function RwaExploreTableShell({
   isFetchingNextPage,
   fetchNextPage,
   isSortedByServer = false,
+  isSearchedByServer = false,
   enableSorting = false,
   sortMethod,
   sortAscending,
@@ -30,6 +32,8 @@ export function RwaExploreTableShell({
   fetchNextPage: () => void
   /** Rows already arrive in `sortMethod` order, so only the header indicators are needed. */
   isSortedByServer?: boolean
+  /** Rows already match the search box, so the client filter is skipped. */
+  isSearchedByServer?: boolean
   enableSorting?: boolean
   sortMethod?: StocksSortMethod
   sortAscending?: boolean
@@ -37,11 +41,13 @@ export function RwaExploreTableShell({
   categoryId: string | undefined
 }): JSX.Element {
   const sortOnClient = enableSorting && !isSortedByServer
+  const filterString = useExploreTablesFilterStore((s) => s.filterString)
   const { visibleRows, rankByAsset, loadMore } = useRwaExploreTableShell({
     rows,
     rowsKey,
     sortMethod: sortOnClient ? sortMethod : undefined,
     sortAscending: sortOnClient ? sortAscending : undefined,
+    filterString: isSearchedByServer ? undefined : filterString,
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,

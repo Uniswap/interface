@@ -7,7 +7,7 @@ import { ColorTokens } from '@universe/mycelium'
 import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { MELD_NATIVE_SOL_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
 import { GqlChainId } from 'uniswap/src/features/chains/types'
-import { isBackendSupportedChain, isUniverseChainId } from 'uniswap/src/features/chains/utils'
+import { getStablecoinsForChain, isBackendSupportedChain, isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency } from 'uniswap/src/features/dataApi/utils/buildCurrency'
 import { FORSupportedToken } from 'uniswap/src/features/fiatOnRamp/types'
@@ -92,16 +92,28 @@ export function fiatOnRampToCurrency(forCurrency: FORSupportedToken): Currency |
 
   if (!forCurrency.address) {
     return nativeOnChain(supportedChainId)
-  } else {
-    // The Meld code may not match the currency's symbol (e.g. codes like USDC_BASE), so these should not be used for display.
-    return buildCurrency({
-      chainId: supportedChainId,
-      address: forCurrency.address,
-      decimals: 18,
-      symbol: forCurrency.cryptoCurrencyCode,
-      name: forCurrency.displayName,
-    })
   }
+
+  // Prefer chain-config metadata when the address is a known stablecoin (e.g. USDG is 6 decimals, not 18).
+  // Use the platform-aware comparison so SVM stablecoins (e.g. USDC on Solana) match too, not just EVM ones.
+  const chainToken = getStablecoinsForChain(supportedChainId).find((token) =>
+    areAddressesEqual({
+      addressInput1: { address: token.address, chainId: supportedChainId },
+      addressInput2: { address: forCurrency.address, chainId: supportedChainId },
+    }),
+  )
+  if (chainToken) {
+    return chainToken
+  }
+
+  // The Meld code may not match the currency's symbol (e.g. codes like USDC_BASE), so these should not be used for display.
+  return buildCurrency({
+    chainId: supportedChainId,
+    address: forCurrency.address,
+    decimals: 18,
+    symbol: forCurrency.cryptoCurrencyCode,
+    name: forCurrency.displayName,
+  })
 }
 
 export function getTokenExploreURL({ tab, chainUrlParam }: { tab: ExploreTab; chainUrlParam?: string }) {

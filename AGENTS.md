@@ -82,6 +82,13 @@ bun i18n:extract                # Extract localized strings (run after changing 
 - Use theme tokens instead of hardcoded values
 - Platform-specific files: `Component.ios.tsx`, `Component.android.tsx`, `Component.web.tsx`, `Component.native.tsx` (with stub files for platforms where specific implementation isn't needed)
 
+#### Images and Icons
+
+- Search `packages/mycelium/src/assets` and the generated icon components (`@universe/mycelium/icons`, `ui/src/components/icons`) before adding an image or icon
+- Shared images go in `packages/mycelium/src/assets`, imported from `@universe/mycelium/assets`; an app's own directory is fine for an image only that app uses
+- Import generated icon components instead of `.svg` files; add new icons with `bun scripts/add-icons.ts` and the `build:icons` targets
+- Don't inline SVG markup in component files unless it needs something a static icon can't do, like per-path animation or data-driven geometry
+
 #### State Management
 
 - **Redux** for complex global state

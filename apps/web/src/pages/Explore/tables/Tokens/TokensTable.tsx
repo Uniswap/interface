@@ -483,6 +483,7 @@ export function TokenTable({
 
   return (
     <Table
+      mobileFullBleed
       virtualized
       columns={columns}
       data={tokenTableValues}

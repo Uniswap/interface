@@ -24,6 +24,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { type PortfolioBalance, TokenList } from 'uniswap/src/features/dataApi/types'
 import { useIsSupportedFiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/hooks'
+import { useIsForRegionBlocked } from 'uniswap/src/features/fiatOnRamp/useIsForRegionBlocked'
 import { useChainGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToken'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
@@ -110,6 +111,11 @@ export const TokenDetailsActionButtonsWrapper = memo(
     const highestBalanceCurrencyId = highestBalanceEntry?.currencyInfo.currencyId ?? currencyId
 
     const { currency: highestBalanceFiatCurrency } = useIsSupportedFiatOnRampCurrency(highestBalanceCurrencyId)
+    const hasFiatOnRampCurrency = Boolean(highestBalanceFiatCurrency || fiatOnRampCurrency)
+
+    // Blocked regions get no supported FOR currency, so show the cash actions anyway and route them to CEX guidance.
+    const isOnrampBlocked = useIsForRegionBlocked({ isOfframp: false })
+    const isOfframpBlocked = useIsForRegionBlocked({ isOfframp: true })
 
     const { chainId: highestTvlChainId, address: highestTvlAddress } = useTDPHighestTvlChain({
       accountAddress: activeAddress,
@@ -181,10 +187,18 @@ export const TokenDetailsActionButtonsWrapper = memo(
     })
 
     const onPressBuyWithCash = useEvent(() => {
+      if (isOnrampBlocked) {
+        navigate(ModalName.CexTransferInfoModal)
+        return
+      }
       navigateToFiatOnRamp({ prefilledCurrency: highestBalanceFiatCurrency ?? fiatOnRampCurrency })
     })
 
     const onPressSellForCash = useEvent(() => {
+      if (isOfframpBlocked) {
+        navigate(ModalName.CexTransferInfoModal)
+        return
+      }
       navigateToFiatOnRamp({ prefilledCurrency: highestBalanceFiatCurrency ?? fiatOnRampCurrency, isOfframp: true })
     })
 
@@ -218,11 +232,11 @@ export const TokenDetailsActionButtonsWrapper = memo(
 
       actions.push({ label: t('common.button.receive'), Icon: QrCode, onPress: navigateToReceive })
 
-      if (highestBalanceFiatCurrency || fiatOnRampCurrency) {
+      if (hasFiatOnRampCurrency || isOnrampBlocked) {
         actions.push({ label: t('fiatOnRamp.action.buyWithCash'), Icon: Bank, onPress: onPressBuyWithCash })
       }
 
-      if (hasTokenBalance && (highestBalanceFiatCurrency || fiatOnRampCurrency)) {
+      if (hasTokenBalance && (hasFiatOnRampCurrency || isOfframpBlocked)) {
         actions.push({ label: t('fiatOnRamp.action.sellForCash'), Icon: ArrowUpCircle, onPress: onPressSellForCash })
       }
 
@@ -242,8 +256,9 @@ export const TokenDetailsActionButtonsWrapper = memo(
       t,
       hasTokenBalance,
       bridgedWithdrawalInfo,
-      highestBalanceFiatCurrency,
-      fiatOnRampCurrency,
+      hasFiatOnRampCurrency,
+      isOnrampBlocked,
+      isOfframpBlocked,
       onPressSend,
       navigateToReceive,
       onPressBuyWithCash,

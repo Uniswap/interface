@@ -44,8 +44,8 @@ describe('useUnlockWithPassword', () => {
     vi.mocked(Keyring.unlock).mockResolvedValue(true)
     const { store, dispatched } = createRecordingStore()
 
-    const { result } = renderHookWithProviders(() => useUnlockWithPassword(PASSWORD), { store })
-    result.current.mutate()
+    const { result } = renderHookWithProviders(() => useUnlockWithPassword(), { store })
+    result.current.mutate(PASSWORD)
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
@@ -54,47 +54,27 @@ describe('useUnlockWithPassword', () => {
     expect(JSON.stringify(store.getState())).not.toContain(PASSWORD)
   })
 
-  it('keeps the password out of the react-query mutation cache', async () => {
+  it('never creates a react-query mutation and keeps the password out of the hook result', async () => {
     vi.mocked(Keyring.unlock).mockResolvedValue(true)
 
     const { result } = renderHookWithProviders(() => ({
-      unlock: useUnlockWithPassword(PASSWORD),
+      unlock: useUnlockWithPassword(),
       queryClient: useQueryClient(),
     }))
-    result.current.unlock.mutate()
+    result.current.unlock.mutate(PASSWORD)
 
     await waitFor(() => expect(result.current.unlock.isSuccess).toBe(true))
 
-    // Mutation variables outlive the lock screen (default gcTime is 5 minutes), so nothing sensitive may be in them.
-    const cachedStates = result.current.queryClient
-      .getMutationCache()
-      .getAll()
-      .map((mutation) => mutation.state)
-    expect(cachedStates.length).toBeGreaterThan(0)
-    expect(JSON.stringify(cachedStates)).not.toContain(PASSWORD)
-    expect(result.current.unlock.variables).toBeUndefined()
-  })
-
-  it('unlocks with the password from the latest render', async () => {
-    vi.mocked(Keyring.unlock).mockResolvedValue(true)
-
-    const { result, rerender } = renderHookWithProviders((password: string) => useUnlockWithPassword(password), {
-      initialProps: 'first-attempt',
-    })
-    rerender(PASSWORD)
-    result.current.mutate()
-
-    await waitFor(() => expect(result.current.isSuccess).toBe(true))
-
-    expect(Keyring.unlock).toHaveBeenCalledTimes(1)
-    expect(Keyring.unlock).toHaveBeenCalledWith(PASSWORD)
+    // A cached mutation would keep its variables until gc (5 minutes by default). There must be none.
+    expect(result.current.queryClient.getMutationCache().getAll()).toHaveLength(0)
+    expect(JSON.stringify(result.current.unlock)).not.toContain(PASSWORD)
   })
 
   it('surfaces a wrong password as InvalidPasswordError and does not log it', async () => {
     vi.mocked(Keyring.unlock).mockResolvedValue(false)
 
-    const { result } = renderHookWithProviders(() => useUnlockWithPassword(PASSWORD))
-    result.current.mutate()
+    const { result } = renderHookWithProviders(() => useUnlockWithPassword())
+    result.current.mutate(PASSWORD)
 
     await waitFor(() => expect(result.current.isError).toBe(true))
 
@@ -106,8 +86,8 @@ describe('useUnlockWithPassword', () => {
     const failure = new Error('storage unavailable')
     vi.mocked(Keyring.unlock).mockRejectedValue(failure)
 
-    const { result } = renderHookWithProviders(() => useUnlockWithPassword(PASSWORD))
-    result.current.mutate()
+    const { result } = renderHookWithProviders(() => useUnlockWithPassword())
+    result.current.mutate(PASSWORD)
 
     await waitFor(() => expect(result.current.isError).toBe(true))
 

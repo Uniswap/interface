@@ -129,6 +129,23 @@ describe('createHashcashSolver', () => {
     await expect(solver.solve(challengeData)).rejects.toThrow('Failed to find valid proof within allowed range')
   })
 
+  it('finds a proof whose counter is not below max_proof_length', async () => {
+    const challenge = {
+      ...backendExample,
+      nonce: 'UAgVoVTmjO6Ye7NbwiqTUD3GscDQ0+es6Bnbat0MZ7Q=',
+      max_proof_length: 1000,
+    }
+
+    const solution = await solver.solve({
+      challengeId: 'test-challenge-123',
+      challengeType: ChallengeType.HASHCASH,
+      extra: { challengeData: JSON.stringify(challenge) },
+    })
+
+    expect(solution).toBe('Uniswap:UAgVoVTmjO6Ye7NbwiqTUD3GscDQ0+es6Bnbat0MZ7Q=:1012')
+    expect(solution.length).toBeLessThanOrEqual(challenge.max_proof_length)
+  })
+
   it('handles missing extra field gracefully', async () => {
     const challengeData: ChallengeData = {
       challengeId: 'test-challenge-123',
@@ -290,7 +307,7 @@ describe('createHashcashSolver', () => {
       expect(mockFindProof).toHaveBeenCalledWith({
         challenge: backendExample,
         rangeStart: 0,
-        rangeSize: backendExample.max_proof_length,
+        rangeSize: 8192,
       })
       expect(mockTerminate).toHaveBeenCalled()
       expect(solution).toBe(`Uniswap:${backendExample.nonce}:42`)

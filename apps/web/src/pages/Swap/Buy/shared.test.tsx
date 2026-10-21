@@ -25,7 +25,7 @@ vi.mock('@universe/mycelium/styled', () => ({
 }))
 
 // Mock SVG
-vi.mock('ui/src/assets/backgrounds/for-connecting-v2.svg', () => ({
+vi.mock('@universe/mycelium/assets/backgrounds/for-connecting-v2.svg', () => ({
   ReactComponent: 'svg',
 }))
 

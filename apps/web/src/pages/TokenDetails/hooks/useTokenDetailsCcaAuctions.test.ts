@@ -1,6 +1,6 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
 import { renderHook } from '@testing-library/react'
-import { type Auction, AuctionType } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { type Auction, AuctionType } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { UniverseChainId } from '@universe/chains'
 import { describe, expect, it, vi } from 'vitest'
 import type { TDPStoreState } from '~/pages/TokenDetails/context/createTDPStore'

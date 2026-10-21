@@ -1,5 +1,5 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
-import type { Auction, Bid } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import type { Auction, Bid } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import type { AuctionDisplayDataSources } from '~/features/Toucan/Auction/hooks/useAuctionDisplayDataSources'
 import { AuctionBidStatus, type UserBid } from '~/features/Toucan/Auction/store/types'
 import { sumBidBudgets } from '~/features/Toucan/Auction/utils/bidBudgets'

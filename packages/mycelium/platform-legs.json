@@ -65,6 +65,15 @@
       "native": "missing",
       "nativeNote": "mycelium logos have no native leg: the sole logo GoogleChromeLogo renders raw lowercase SVG tags (<defs>, <linearGradient>, <stop>, <circle>, <path>) that react-native-svg cannot draw. Use ui/src logos in native-reachable code."
     },
+    "./assets": {
+      "web": "real",
+      "native": "real"
+    },
+    "./assets/*": {
+      "web": "real",
+      "native": "real",
+      "nativeNote": "A direct .svg import resolves to a react-native-svg-transformer component on native but a URL on web (apps/web's svg-import-fix plugin). Import the generated icon/logo component instead."
+    },
     "./components": {
       "web": "real",
       "native": "missing",

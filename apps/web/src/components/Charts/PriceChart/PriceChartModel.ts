@@ -71,7 +71,7 @@ export function getLowPriceRangeScaleFactor({ min, max }: { min: number; max: nu
 export class PriceChartModel extends ChartModel<PriceChartData> {
   protected series: ISeriesApi<'Area'> | ISeriesApi<'Custom'>
   private originalData: PriceChartData[]
-  private lowPriceRangeScaleFactor = 1
+  protected lowPriceRangeScaleFactor = 1
   private priceAxisDecimals: number | undefined
   private type: PriceChartType
   private timePeriod?: HistoryDuration

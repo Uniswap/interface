@@ -1,4 +1,4 @@
-import { AuctionStep } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { AuctionStep } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { EVMUniverseChainId } from '@universe/chains'
 import type { UTCTimestamp } from 'lightweight-charts'
 import { calibratedBlockToTimestamp } from '~/utils/blockToTimestamp'

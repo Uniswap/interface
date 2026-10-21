@@ -39,6 +39,7 @@ export function resolveRankedTokenIssuer({
       issuer: registryIssuer.issuer,
       issuerDisplayName: registryIssuer.issuerDisplayName ?? backendIssuer.issuerDisplayName,
       issuerLogoUrl: registryIssuer.issuerLogoUrl ?? backendIssuer.issuerLogoUrl,
+      issuerLogos: registryIssuer.issuerLogos ?? backendIssuer.issuerLogos,
     },
   }
 }

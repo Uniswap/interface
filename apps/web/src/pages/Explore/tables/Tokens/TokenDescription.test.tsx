@@ -16,7 +16,7 @@ const defi = tokenCategory({ id: 'defi', name: 'DeFi', categoryClass: TokenCateg
 const knownCategories = new Map([defi, stocks].map((category) => [category.id, category]))
 
 vi.mock('uniswap/src/features/rwa/useRWAIssuerLogoUrl', () => ({
-  useRWAIssuerLogoUrl: () => undefined,
+  useRWAIssuerLogo: ({ issuer }: { issuer?: { issuerLogoUrl?: string } }) => issuer?.issuerLogoUrl,
 }))
 
 vi.mock('uniswap/src/data/apiClients/dataApiService/categories/useResolveTokenCategories', () => ({

@@ -1,54 +1,10 @@
 // oxlint-disable typescript/no-var-requires
-/* oxlint-disable typescript/no-explicit-any -- Third-party types not available */
-import { DdLogs, DdRum, DdSdkReactNative, ErrorSource, RumActionType } from '@datadog/mobile-react-native'
-import dayjs from 'dayjs'
-import { Action, AnyAction, PreloadedState, Reducer, StoreEnhancerStoreCreator } from 'redux'
-import { ReduxEnhancerConfig } from 'utilities/src/logger/datadog/Datadog'
-import { getRedactedReduxActionContext, handleReduxAction } from 'utilities/src/logger/datadog/reduxUtils'
+import { DdLogs, DdRum, DdSdkReactNative, ErrorSource } from '@datadog/mobile-react-native'
 import { addErrorExtras } from 'utilities/src/logger/logger'
 import { LoggerErrorContext, LogLevel } from 'utilities/src/logger/types'
 
-let reduxState: Record<string, unknown> | undefined
-
-// Inspired by Sentry createReduxEnhancer
-// https://github.com/getsentry/sentry-javascript/blob/master/packages/react/src/redux.ts
-export function createDatadogReduxEnhancer({
-  shouldLogReduxState,
-}: ReduxEnhancerConfig): (next: StoreEnhancerStoreCreator) => StoreEnhancerStoreCreator {
-  return (next: StoreEnhancerStoreCreator): StoreEnhancerStoreCreator =>
-    // oxlint-disable-next-line typescript/no-explicit-any -- biome-parity: oxlint is stricter here
-    <S = any, A extends Action = AnyAction>(reducer: Reducer<S, A>, initialState?: PreloadedState<S>) => {
-      const enhancedReducer: Reducer<S, A> = (state, action): S => {
-        const newState = reducer(state, action)
-
-        const { shouldLogAction, reduxStateToLog } = handleReduxAction({
-          newState,
-          shouldLogState: shouldLogReduxState(newState),
-        })
-
-        // Cleared, not merely left stale, on opt-out: the error paths below read this cache.
-        reduxState = reduxStateToLog
-
-        if (shouldLogAction) {
-          DdRum.addAction(
-            RumActionType.CUSTOM,
-            `Redux Action: ${action.type}`,
-            getRedactedReduxActionContext(action),
-            dayjs().valueOf(),
-          ).catch(() => undefined)
-        }
-
-        return newState
-      }
-
-      return next(enhancedReducer, initialState)
-    }
-}
-
 export function logErrorToDatadog(error: Error, context: LoggerErrorContext): void {
-  DdRum.addError(error.message, ErrorSource.SOURCE, error.stack ?? '', { ...context, reduxState }, Date.now()).catch(
-    () => {},
-  )
+  DdRum.addError(error.message, ErrorSource.SOURCE, error.stack ?? '', context, Date.now()).catch(() => {})
 }
 
 export function logWarningToDatadog(

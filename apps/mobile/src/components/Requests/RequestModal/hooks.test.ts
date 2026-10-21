@@ -1,9 +1,35 @@
-import { renderHook } from '@testing-library/react-native'
-import { CurrencyAmount } from '@uniswap/sdk-core'
+import { type Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { SharedQueryClient } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
+import { FeatureFlags } from '@universe/gating'
 import { useHasSufficientFunds } from 'src/components/Requests/RequestModal/hooks'
+import { renderHook, waitFor } from 'src/test/test-utils'
+import { OUSD_TEMPO, PATHUSD_TEMPO } from 'uniswap/src/constants/tokens'
 import { getChainGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToken'
 import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
+
+const { mockUseFeatureFlag, mockFetchTempoFeeTokenPreference } = vi.hoisted(() => ({
+  mockUseFeatureFlag: vi.fn(),
+  mockFetchTempoFeeTokenPreference: vi.fn<(accountAddress?: Address) => Promise<Address | null>>(),
+}))
+
+vi.mock('@universe/gating', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@universe/gating')>()),
+  useFeatureFlag: mockUseFeatureFlag,
+}))
+
+vi.mock('uniswap/src/features/gas/tempoFeeToken/tempoFeeToken', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('uniswap/src/features/gas/tempoFeeToken/tempoFeeToken')>()
+  return {
+    ...actual,
+    getTempoFeeTokenPreferenceQueryOptions: (
+      accountAddress?: Address,
+    ): ReturnType<typeof actual.getTempoFeeTokenPreferenceQueryOptions> => ({
+      ...actual.getTempoFeeTokenPreferenceQueryOptions(accountAddress),
+      queryFn: (): Promise<Address | null> => mockFetchTempoFeeTokenPreference(accountAddress),
+    }),
+  }
+})
 
 vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
   useEnabledChains: () => ({ defaultChainId: UniverseChainId.Mainnet }),
@@ -119,5 +145,49 @@ describe(useHasSufficientFunds, () => {
     )
 
     expect(result.current).toBe(expected)
+  })
+})
+
+describe('useHasSufficientFunds with a Tempo fee token preference', () => {
+  const ACCOUNT = '0x1234567890123456789012345678901234567890'
+  const OUSD_ADDRESS = '0x20c0000000000000000000006a37da5c996874be'
+
+  beforeEach(() => {
+    SharedQueryClient.clear()
+    mockFetchTempoFeeTokenPreference.mockReset()
+    mockFetchTempoFeeTokenPreference.mockResolvedValue(OUSD_ADDRESS)
+    vi.mocked(useOnChainCurrencyBalance).mockImplementation((currency?: Currency | null) => ({
+      balance: currency
+        ? CurrencyAmount.fromRawAmount(currency, currency.equals(OUSD_TEMPO) ? '1000000' : '0')
+        : undefined,
+      isLoading: false,
+      error: undefined,
+    }))
+  })
+
+  const tempoRequest = {
+    account: ACCOUNT,
+    chainId: UniverseChainId.Tempo,
+    value: '0',
+    gasFee: { value: '1000000000000000', isLoading: false, error: null },
+  }
+
+  it('pays gas from the stored OUSD fee token when the account holds no pathUSD', async () => {
+    mockUseFeatureFlag.mockImplementation((flag: FeatureFlags) => flag === FeatureFlags.TempoFeeTokenPreference)
+
+    const { result } = renderHook(() => useHasSufficientFunds(tempoRequest))
+
+    await waitFor(() => expect(useOnChainCurrencyBalance).toHaveBeenLastCalledWith(OUSD_TEMPO, ACCOUNT))
+    expect(result.current).toBe(true)
+  })
+
+  it('checks pathUSD when the flag is off', () => {
+    mockUseFeatureFlag.mockReturnValue(false)
+
+    const { result } = renderHook(() => useHasSufficientFunds(tempoRequest))
+
+    expect(useOnChainCurrencyBalance).toHaveBeenLastCalledWith(PATHUSD_TEMPO, ACCOUNT)
+    expect(mockFetchTempoFeeTokenPreference).not.toHaveBeenCalled()
+    expect(result.current).toBe(false)
   })
 })

@@ -1,9 +1,12 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
-import type { Auction } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import type { Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { UniverseChainId } from '@universe/chains'
 import { TestID } from '@universe/test'
 import { LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { analytics } from 'utilities/src/telemetry/analytics/analytics'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   AuctionDisplayPhase,
   AuctionDisplayResult,
@@ -15,7 +18,15 @@ import {
   useTokenDetailsAuctionDisplay,
 } from '~/pages/TokenDetails/hooks/useTokenDetailsAuctionDisplay'
 import { mocked } from '~/test-utils/mocked'
-import { fireEvent, render, screen } from '~/test-utils/render'
+import { act, fireEvent, render, screen } from '~/test-utils/render'
+
+vi.unmock('uniswap/src/features/telemetry/Trace')
+// Trace's web path does not use React Navigation; avoid loading its native ESM dependency tree.
+vi.mock('@react-navigation/core', () => ({ useFocusEffect: vi.fn() }))
+
+vi.mock('~/pages/TokenDetails/hooks/useTokenDetailsCcaAuctions', () => ({
+  useTokenDetailsCcaAuctions: () => [AUCTION, AUCTION, AUCTION],
+}))
 
 const mockNavigate = vi.fn()
 vi.mock('react-router', async (importOriginal) => ({
@@ -27,6 +38,9 @@ vi.mock('~/pages/TokenDetails/hooks/useTokenDetailsAuctionDisplay', () => ({
 }))
 vi.mock('~/pages/TokenDetails/context/useTDPStore', () => ({
   useTDPStore: (selector: (state: { tokenColor: string }) => unknown) => selector({ tokenColor: '#7482ff' }),
+}))
+vi.mock('uniswap/src/features/telemetry/send', () => ({
+  sendAnalyticsEvent: vi.fn(),
 }))
 
 const AUCTION_ADDRESS = '0x1111111111111111111111111111111111111111'
@@ -43,9 +57,12 @@ const mockRefetchCurrentBlock = vi.fn()
 function mockDisplay(overrides: Partial<TokenDetailsAuctionDisplayModel> = {}): void {
   mocked(useTokenDetailsAuctionDisplay).mockReturnValue({
     isInitialLoading: false,
+    isAuctionOnlyPending: false,
+    hasConfirmedPool: false,
     auction: AUCTION,
     chainId: UniverseChainId.Mainnet,
     launchMethod: LaunchProvenanceMethod.CustomAuction,
+    provenance: undefined,
     phase: AuctionDisplayPhase.Live,
     result: AuctionDisplayResult.Unknown,
     poolAvailability: PoolAvailability.NoPool,
@@ -59,9 +76,14 @@ function mockDisplay(overrides: Partial<TokenDetailsAuctionDisplayModel> = {}): 
 }
 
 describe('TokenDetailsAuctionCard', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   beforeEach(() => {
     mockNavigate.mockReset()
     mockRefetchCurrentBlock.mockReset()
+    vi.mocked(sendAnalyticsEvent).mockClear()
   })
 
   it('shows the live title, launch method pill and countdown, and links to the auction', () => {
@@ -70,13 +92,61 @@ describe('TokenDetailsAuctionCard', () => {
     render(<TokenDetailsAuctionCard />)
 
     expect(screen.getByText('Launch in progress')).toBeInTheDocument()
-    expect(screen.getByText('Custom auction')).toBeInTheDocument()
+    expect(screen.getByText('Custom Auction')).toBeInTheDocument()
     expect(screen.getByText(/^3h 59m 5\ds remaining$/)).toBeInTheDocument()
     expect(mockRefetchCurrentBlock).not.toHaveBeenCalled()
 
     fireEvent.click(screen.getByTestId(TestID.TokenDetailsAuctionCardViewAuction))
     expect(mockNavigate).toHaveBeenCalledWith(`/explore/auctions/ethereum/${AUCTION_ADDRESS}`)
+    expect(sendAnalyticsEvent).toHaveBeenCalledWith(AuctionEventName.TokenDetailsToAuctionDetailsClicked, {
+      surface: 'tdp',
+      chain_id: UniverseChainId.Mainnet,
+      auction_type: 'custom',
+      launch_method: 'custom',
+      entry_point: 'tdp_countdown_module',
+      auction_count: 3,
+      auction_phase: 'live',
+      pool_availability: 'no_pool',
+      page_layout: 'auction_only',
+    })
   })
+
+  it.each([AuctionDisplayPhase.Live, AuctionDisplayPhase.Upcoming])(
+    'records one countdown impression when loading resolves to %s',
+    async (phase) => {
+      const sendEvent = vi.spyOn(analytics, 'sendEvent').mockImplementation(() => undefined)
+      mockDisplay({ phase: AuctionDisplayPhase.Loading, phaseEndsAtMs: undefined })
+      const { rerender } = render(<TokenDetailsAuctionCard />)
+      expect(sendEvent).not.toHaveBeenCalledWith(AuctionEventName.AuctionBannerViewed, expect.anything())
+
+      mockDisplay({ phase })
+      rerender(<TokenDetailsAuctionCard />)
+      // Let Trace's 50ms development dedupe expire before checking subsequent renders.
+      await act(() => new Promise<void>((resolve) => setTimeout(resolve, 51)))
+      rerender(<TokenDetailsAuctionCard />)
+
+      const impressions = sendEvent.mock.calls.filter(([event]) => event === AuctionEventName.AuctionBannerViewed)
+      expect(impressions).toHaveLength(1)
+      expect(impressions[0]?.[1]).toMatchObject({
+        surface: 'tdp',
+        entry_point: 'tdp_countdown_module',
+        auction_phase: phase.toLowerCase(),
+        auction_count: 3,
+      })
+    },
+  )
+
+  it.each([AuctionDisplayPhase.Unknown, AuctionDisplayPhase.Ended])(
+    'does not report an active countdown impression for %s',
+    (phase) => {
+      const sendEvent = vi.spyOn(analytics, 'sendEvent').mockImplementation(() => undefined)
+      mockDisplay({ phase, phaseEndsAtMs: undefined })
+
+      render(<TokenDetailsAuctionCard />)
+
+      expect(sendEvent).not.toHaveBeenCalledWith(AuctionEventName.AuctionBannerViewed, expect.anything())
+    },
+  )
 
   it('re-reads the chain head once the countdown reaches zero instead of flipping the phase itself', () => {
     mockDisplay({ phaseEndsAtMs: Date.now() - 1 })

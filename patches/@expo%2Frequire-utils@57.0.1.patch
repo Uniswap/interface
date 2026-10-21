@@ -1,0 +1,27 @@
+diff --git a/build/load.js b/build/load.js
+index 4c14635b4ac122b966d187a18c5dcb9401ab2086..f38b4d0ea73c80989b78a2bd68b1f2a7327f8f7c 100644
+--- a/build/load.js
++++ b/build/load.js
+@@ -75,12 +75,21 @@ function loadTypescript() {
+     try {
+       _ts = require('typescript');
+     } catch (error) {
+-      if (error.code !== 'MODULE_NOT_FOUND') {
++      // typescript >= 7 exposes no "." export, so require('typescript') throws
++      // ERR_PACKAGE_PATH_NOT_EXPORTED; treat it as unavailable so the
++      // module.stripTypeScriptTypes fallback in evalModule handles TS config files.
++      if (error.code !== 'MODULE_NOT_FOUND' && error.code !== 'ERR_PACKAGE_PATH_NOT_EXPORTED') {
+         throw error;
+       } else {
+         _ts = null;
+       }
+     }
++    // typescript >= 7.0.2 resolves its "." export to a version-only stub with no
++    // transpileModule (no compiler API); treat it as unavailable so the
++    // module.stripTypeScriptTypes fallback in evalModule handles TS config files.
++    if (_ts && typeof _ts.transpileModule !== 'function') {
++      _ts = null;
++    }
+   }
+   return _ts;
+ }

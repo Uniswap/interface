@@ -1,7 +1,7 @@
 import { AnimatedFlex as MyceliumAnimatedFlex, Flex } from '@universe/mycelium'
 import { Children, isValidElement, type ReactNode, useMemo } from 'react'
-import { Trans } from 'react-i18next'
 import { AnimatedFlex as UiAnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { Trans } from 'ui/src/i18n/Trans'
 /**
  * Function to check if a child is either a direct Trans component or if it's a function component that resolves to render Trans
  **/

@@ -1,6 +1,6 @@
 import type { TradingApi } from '@universe/api'
 import { isWebApp } from '@universe/environment'
-import { UNISWAP_LOGO } from 'ui/src/assets'
+import { UNISWAP_LOGO } from '@universe/mycelium/assets'
 import { isSponsorableSwap } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import type { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 

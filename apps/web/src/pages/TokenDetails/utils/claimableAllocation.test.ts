@@ -1,5 +1,5 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
-import type { Auction, Bid } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import type { Auction, Bid } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { describe, expect, it } from 'vitest'
 import {
   type ClaimableAllocation,

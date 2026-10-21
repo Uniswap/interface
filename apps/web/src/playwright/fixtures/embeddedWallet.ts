@@ -1,7 +1,9 @@
+import { Chacha20Poly1305 } from '@hpke/chacha20poly1305'
+import { CipherSuite, DhkemP256HkdfSha256, HkdfSha256 } from '@hpke/core'
 import { EmbeddedWalletService } from '@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_connect'
 import { Action } from '@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_pb'
 import { privateKeyToAccount } from '@universe/chains'
-import type { HexString } from '@universe/encoding'
+import { base64ToUint8, type HexString, uint8ToBase64 } from '@universe/encoding'
 import { FeatureFlags, getFeatureFlagName } from '@universe/gating'
 import { assume0xAddress } from '~/chains'
 import { TEST_WALLET_PRIVATE_KEY } from '~/playwright/anvil/anvil-manager'
@@ -17,6 +19,9 @@ import { TEST_WALLET_ADDRESS } from '~/playwright/fixtures/wallets'
  */
 
 const TEST_EMBEDDED_WALLET_ID = 'test-wallet-id'
+
+/** Calibur, the Uniswap EIP-7702 delegation target (the Trading API's `latestDelegationAddress`); live on the fork. */
+export const CALIBUR_DELEGATION_ADDRESS = '0x000000009b1d0af20d8c6d0a44e162d11f9b8f00'
 
 /** `eagerlyConnect=embedded` makes the e2e bootstrap connect the EW connector (see setupWagmiAutoConnect). */
 export const EMBEDDED_WALLET_URL_PARAMS = `featureFlagOverride=${getFeatureFlagName(FeatureFlags.EmbeddedWallet)}&eagerlyConnect=embedded`
@@ -67,6 +72,7 @@ export interface EmbeddedWalletHarness {
   rpcCalls: { rpc: RpcName; action?: string; body: Record<string, unknown> }[]
   signedTypedData: { typedData: TypedDataPayload; signature: HexString }[]
   signedTransactions: HexString[]
+  signed7702Transactions: HexString[]
 }
 
 const LIST_AUTHENTICATORS = EmbeddedWalletService.methods.listAuthenticators.name
@@ -89,8 +95,23 @@ type DelegationDetails = {
 }
 type DelegationDetailsByChain = Record<string, Record<string, DelegationDetails>>
 
+/** `check_delegation` details that make the provider delegate the wallet to Calibur on mainnet. */
+export const DELEGATE_TO_CALIBUR_ON_MAINNET: DelegationDetailsByChain = {
+  [TEST_WALLET_ADDRESS]: {
+    '1': {
+      isWalletDelegatedToUniswap: false,
+      currentDelegationAddress: null,
+      latestDelegationAddress: CALIBUR_DELEGATION_ADDRESS,
+    },
+  },
+}
+
 interface SetupEmbeddedWalletOptions {
-  /** `expiredOnce` fails the first signing challenge so the client re-runs the passkey ceremony before signing. */
+  /**
+   * `expiredOnce` answers the first signing challenge with `sessionActive: false`. The client then
+   * refreshes the NECK session (a WALLET_SIGNIN challenge, the WebAuthn ceremony, WalletSignIn) and
+   * challenges again before it signs. Background LIST_AUTHENTICATORS traffic never consumes it.
+   */
   neckSession?: 'active' | 'expiredOnce'
   /** `check_delegation` details by wallet address then chain id; none forces the standard (non-7702) path. */
   delegationDetails?: DelegationDetailsByChain
@@ -162,7 +183,7 @@ async function setupNeckMocks({
   ])
 }
 
-interface SerializedTransactionRequest {
+type SerializedTransactionRequest = {
   to?: string
   data?: string
   value?: string
@@ -215,6 +236,125 @@ async function setupSigningMocks(page: Page, harness: EmbeddedWalletHarness): Pr
   ])
 }
 
+type Sign7702AuthorizationRequest = {
+  contractAddress: string
+  chainId: number | string
+  nonce: number | string
+}
+
+type Sign7702TransactionRequest = SerializedTransactionRequest & {
+  authorizationContractAddress: string
+  authorizationChainId: number | string
+  authorizationNonce: number | string
+  authorizationR: string
+  authorizationS: string
+  authorizationYParity: number | string
+}
+
+async function setupSign7702Mocks(page: Page, harness: EmbeddedWalletHarness): Promise<void> {
+  await Promise.all([
+    page.route(rpcUrl('sign7702Authorization'), async (route) => {
+      const request = recordRpc<Sign7702AuthorizationRequest>({ harness, rpc: 'sign7702Authorization', route })
+      const authorization = await harness.account.signAuthorization({
+        address: assume0xAddress(request.contractAddress),
+        chainId: Number(request.chainId),
+        nonce: Number(request.nonce),
+      })
+      await fulfillJson(route, {
+        contractAddress: request.contractAddress,
+        chainId: String(request.chainId),
+        nonce: String(request.nonce),
+        r: authorization.r,
+        s: authorization.s,
+        yParity: authorization.yParity,
+      })
+    }),
+    page.route(rpcUrl('sign7702Transaction'), async (route) => {
+      const tx = recordRpc<Sign7702TransactionRequest>({ harness, rpc: 'sign7702Transaction', route })
+      const signedTransaction = await harness.account.signTransaction({
+        type: 'eip7702',
+        to: tx.to ? assume0xAddress(tx.to) : undefined,
+        data: (tx.data ?? '0x') as HexString,
+        value: BigInt(tx.value ?? '0'),
+        chainId: Number(tx.chainId),
+        maxFeePerGas: BigInt(tx.maxFeePerGas),
+        maxPriorityFeePerGas: BigInt(tx.maxPriorityFeePerGas),
+        gas: BigInt(tx.gas),
+        nonce: Number(tx.nonce),
+        authorizationList: [
+          {
+            address: assume0xAddress(tx.authorizationContractAddress),
+            chainId: Number(tx.authorizationChainId),
+            nonce: Number(tx.authorizationNonce),
+            r: tx.authorizationR as HexString,
+            s: tx.authorizationS as HexString,
+            yParity: Number(tx.authorizationYParity),
+          },
+        ],
+      })
+      harness.signed7702Transactions.push(signedTransaction)
+      await fulfillJson(route, { signedTransaction })
+    }),
+  ])
+}
+
+const DELEGATED_GAS_LIMIT = 600_000n
+const STUB_MAX_FEE_PER_GAS = 100_000_000_000n
+const STUB_MAX_PRIORITY_FEE_PER_GAS = 1_000_000_000n
+
+/**
+ * Fixed gas estimate for the delegated path. The live gas service simulates against mainnet tip and
+ * cannot see the fork, and the client fallback estimates a self-call on a not-yet-delegated account,
+ * which starves the real Calibur execution of gas.
+ */
+export async function stubDelegatedGasEstimate(page: Page): Promise<void> {
+  await page.route('**/uniswap.unirpc.v2.UniRpcService/EstimateGasFee', async (route) => {
+    await fulfillJson(route, {
+      gasEstimates: [
+        {
+          type: 'eip1559',
+          gasLimit: DELEGATED_GAS_LIMIT.toString(),
+          gasFee: (DELEGATED_GAS_LIMIT * STUB_MAX_FEE_PER_GAS).toString(),
+          maxFeePerGas: STUB_MAX_FEE_PER_GAS.toString(),
+          maxPriorityFeePerGas: STUB_MAX_PRIORITY_FEE_PER_GAS.toString(),
+        },
+      ],
+    })
+  })
+}
+
+/**
+ * Answers `ExportSeedPhrase` like the service: HPKE-seals the phrase (DHKEM P-256, HKDF-SHA256,
+ * ChaCha20-Poly1305) to the ephemeral SPKI public key the client sends as `encryptionKey`.
+ */
+export async function setupExportSeedPhraseMock({
+  page,
+  harness,
+  seedPhrase,
+}: {
+  page: Page
+  harness: EmbeddedWalletHarness
+  seedPhrase: string
+}): Promise<void> {
+  const suite = new CipherSuite({ kem: new DhkemP256HkdfSha256(), kdf: new HkdfSha256(), aead: new Chacha20Poly1305() })
+  await page.route(rpcUrl('exportSeedPhrase'), async (route) => {
+    const { encryptionKey } = recordRpc<{ encryptionKey: string }>({ harness, rpc: 'exportSeedPhrase', route })
+    const recipientPublicKey = await crypto.subtle.importKey(
+      'spki',
+      base64ToUint8(encryptionKey),
+      { name: 'ECDH', namedCurve: 'P-256' },
+      true,
+      [],
+    )
+    const { ct, enc } = await suite.seal({ recipientPublicKey }, new TextEncoder().encode(seedPhrase))
+    await fulfillJson(route, {
+      encryptionType: 'hpke',
+      ciphertext: uint8ToBase64(new Uint8Array(ct)),
+      encapsulatedKey: uint8ToBase64(new Uint8Array(enc)),
+    })
+  })
+}
+
 async function stubCheckDelegation(page: Page, delegationDetails: DelegationDetailsByChain = {}): Promise<void> {
   await page.route('**/wallet/check_delegation', async (route) => {
     await fulfillJson(route, { requestId: '', delegationDetails })
@@ -231,12 +371,14 @@ export async function setupEmbeddedWallet(
     rpcCalls: [],
     signedTypedData: [],
     signedTransactions: [],
+    signed7702Transactions: [],
   }
   await Promise.all([
     seedEmbeddedWalletState({ page, walletId: TEST_EMBEDDED_WALLET_ID, walletAddress: TEST_WALLET_ADDRESS }),
     setupWebAuthnMock(page),
     setupNeckMocks({ page, harness, neckSession: options.neckSession }),
     setupSigningMocks(page, harness),
+    setupSign7702Mocks(page, harness),
     stubCheckDelegation(page, options.delegationDetails),
   ])
   return harness

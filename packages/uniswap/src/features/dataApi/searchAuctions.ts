@@ -1,11 +1,11 @@
 import { toPlainMessage, type PlainMessage } from '@bufbuild/protobuf'
 import { useQuery } from '@tanstack/react-query'
+import type { SearchAuction } from '@uniswap/client-data-api/dist/data/v2/search_pb'
 import {
   ListTopAuctionsRequest,
   type AuctionWithStats,
   type ListTopAuctionsResponse,
-} from '@uniswap/client-data-api/dist/data/v1/auction_pb'
-import type { SearchAuction } from '@uniswap/client-data-api/dist/data/v2/search_pb'
+} from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { type UniverseChainId, Platform } from '@universe/chains'
 import { DynamicConfigs, useDynamicConfigValue, VerifiedAuctionsConfigKey } from '@universe/gating'
 import { useMemo } from 'react'

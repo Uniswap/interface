@@ -46,6 +46,7 @@ export const Mocks = {
       '../mocks/dataApiService/get_portfolio_chart_pools_empty.json',
     ),
     get_token_warning: path.resolve(__dirname, '../mocks/dataApiService/get_token_warning.json'),
+    get_token_multichain_warning: path.resolve(__dirname, '../mocks/dataApiService/get_token_multichain_warning.json'),
     get_token_sepolia_yay: path.resolve(__dirname, '../mocks/dataApiService/get_token_sepolia_yay.json'),
     get_rewards: path.resolve(__dirname, '../mocks/dataApiService/get_rewards.json'),
     get_rewards_empty: path.resolve(__dirname, '../mocks/dataApiService/get_rewards_empty.json'),

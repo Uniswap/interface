@@ -47,6 +47,7 @@ import { useIsLiquidityApprovalSimulationEnabled } from '~/features/Liquidity/ho
 import { useIncreasePositionDependentAmountFallback } from '~/features/Liquidity/hooks/useDependentAmountFallback'
 import { getTokenOrZeroAddress } from '~/features/Liquidity/utils/currency'
 import { getCheckLPApprovalRequestParams } from '~/features/Liquidity/utils/getCheckLPApprovalRequestParams'
+import { isImpossibleDependentAmount } from '~/features/Liquidity/utils/getDependentAmount'
 import { hasLPFoTTransferError } from '~/features/Liquidity/utils/hasLPFoTTransferError'
 import { getProtocols } from '~/features/Liquidity/utils/protocolVersion'
 import { useModalInitialState } from '~/hooks/useModalInitialState'
@@ -296,13 +297,15 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     exactField,
   })
 
-  const dependentAmount = useMemo(() => {
+  const quotedDependentAmount = useMemo(() => {
     if (calldataError && fallbackDependentAmount) {
       return fallbackDependentAmount
     }
     const dependentToken = exactField === PositionField.TOKEN0 ? increaseCalldata?.token1 : increaseCalldata?.token0
     return dependentToken?.amount
   }, [increaseCalldata, calldataError, fallbackDependentAmount, exactField])
+  const isQuoteImpossible = isImpossibleDependentAmount(quotedDependentAmount)
+  const dependentAmount = isQuoteImpossible ? undefined : quotedDependentAmount
 
   // Use pre-estimated gas fee as fallback until real estimate is available
   const effectiveGasFee = actualGasFee ?? preEstimatedGasFee
@@ -336,6 +339,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       approvalLoading ||
       isCalldataLoading ||
       !increaseCalldata ||
+      isQuoteImpossible ||
       !currencyAmounts?.TOKEN0 ||
       !currencyAmounts.TOKEN1
     ) {
@@ -392,6 +396,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     approvalLoading,
     isCalldataLoading,
     increaseCalldata,
+    isQuoteImpossible,
     currencyAmounts?.TOKEN0,
     currencyAmounts?.TOKEN1,
     token0Approval,

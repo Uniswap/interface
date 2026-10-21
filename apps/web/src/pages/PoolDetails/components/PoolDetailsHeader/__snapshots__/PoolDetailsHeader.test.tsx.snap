@@ -83,8 +83,8 @@ exports[`PoolDetailsHeader > renders breadcrumb text correctly 1`] = `
 <DocumentFragment>
   <div
     aria-label="breadcrumb-nav"
-    class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[4px] mb-[8px] px-[40px] pt-[48px] w-[100%] media-lg:px-[var(--cD-px)] media-md:pt-[var(--cE-pt)]"
-    style="--cD-px: 20px; --cE-pt: 0px;"
+    class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[4px] mb-[8px] px-[40px] pt-[48px] w-[100%] media-lg:px-[var(--cD-px)] media-md:px-[var(--cE-px)] media-md:pt-[var(--cE-pt)]"
+    style="--cD-px: 20px; --cE-px: 0px; --cE-pt: 0px;"
   >
     <a
       data-discover="true"

@@ -2,9 +2,9 @@ import { vi } from 'vitest'
 
 export function mockUIAssets(): void {
   // oxlint-disable-next-line vitest/hoisted-apis-on-top -- suppressed
-  vi.mock('ui/src/assets', () => {
+  vi.mock('@universe/mycelium/assets', () => {
     const assets: Record<string, unknown> = {
-      ...vi.importActual('ui/src/assets'),
+      ...vi.importActual('@universe/mycelium/assets'),
     }
 
     Object.keys(assets).map((key) => {

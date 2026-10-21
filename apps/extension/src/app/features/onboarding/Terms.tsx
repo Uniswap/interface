@@ -1,7 +1,7 @@
 import { Text } from '@universe/mycelium'
 import { PropsWithChildren } from 'react'
-import { Trans } from 'react-i18next'
 import { Link, LinkProps } from 'react-router'
+import { Trans } from 'ui/src'
 import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 
 export function Terms(): JSX.Element {

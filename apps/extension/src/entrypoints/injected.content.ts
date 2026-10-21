@@ -40,7 +40,7 @@ import {
   WindowEthereumRequest,
 } from 'src/contentScript/types'
 import { logContentScriptError } from 'src/contentScript/utils'
-import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
+import { chainIdToHexadecimalString, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
@@ -74,7 +74,16 @@ function makeInjected(): void {
     return _chainId
   }
 
-  const getProvider = (): JsonRpcProvider | undefined => _provider
+  // Derived from the stored chain like getChainId, so a frame that loaded before its origin
+  // connected (a same-origin iframe, say) gets a provider once the store syncs.
+  const getProvider = (): JsonRpcProvider | undefined => {
+    const chainId = getChainId()
+    if (!_provider && chainId) {
+      const supportedChainId = toSupportedChainId(hexToNumber(chainId))
+      _provider = (supportedChainId && walletContextValue.providers.tryGetProvider(supportedChainId)) || undefined
+    }
+    return _provider
+  }
   const getConnectedAddresses = (): Address[] | undefined => {
     const storedDappInfo = dappStore.getDappInfo(dappUrl)
     const storedConnectedAddresses =
@@ -217,7 +226,14 @@ function makeInjected(): void {
     },
   })
 
+  // Background broadcasts reach every frame in the tab, so an update meant for the top-level page
+  // would otherwise also land in a cross-origin iframe. Act only on updates addressed to this origin.
+  const isAddressedToThisOrigin = (message: { dappUrl: string }): boolean => message.dappUrl === dappUrl
+
   externalDappMessageChannel.addMessageListener(ExtensionToDappRequestType.SwitchChain, async (message) => {
+    if (!isAddressedToThisOrigin(message)) {
+      return
+    }
     setChainIdAndMaybeEmit(message.chainId)
     // Route through the wallet's ProviderManager so chain switches inherit the
     // same UniRPC + observability wiring as the init path below. Constructing a
@@ -245,21 +261,15 @@ function makeInjected(): void {
   })
 
   externalDappMessageChannel.addMessageListener(ExtensionToDappRequestType.UpdateConnections, (message) => {
+    if (!isAddressedToThisOrigin(message)) {
+      return
+    }
     setConnectedAddressesAndMaybeEmit(message.addresses)
   })
 
   async function init(): Promise<void> {
     try {
       await Promise.all([backgroundStore.init(), dappStore.init()])
-
-      const chainId = getChainId()
-      const provider = getProvider()
-
-      if (chainId && !provider) {
-        const chainIdNum = hexToNumber(chainId)
-        const defaultProvider = walletContextValue.providers.getProvider(chainIdNum)
-        setProvider(defaultProvider)
-      }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error'
       await logContentScriptError({

@@ -1,6 +1,6 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
 import { type RenderHookResult, renderHook } from '@testing-library/react'
-import { type Auction, GetBidsByWalletRequest } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { type Auction, GetBidsByWalletRequest } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { type EVMUniverseChainId, UniverseChainId } from '@universe/chains'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { beforeEach, describe, expect, it, vi } from 'vitest'

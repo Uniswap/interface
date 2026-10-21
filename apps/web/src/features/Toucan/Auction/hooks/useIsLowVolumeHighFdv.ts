@@ -1,5 +1,5 @@
 import { PlainMessage } from '@bufbuild/protobuf'
-import { Checkpoint } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { Checkpoint } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { useMemo } from 'react'
 import { computeCurrentValuationUsd } from '~/features/Toucan/Auction/hooks/computeCurrentValuationFiat'
 import { AuctionDetails, AuctionProgressState, BidTokenInfo } from '~/features/Toucan/Auction/store/types'

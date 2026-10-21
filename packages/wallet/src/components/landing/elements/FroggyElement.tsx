@@ -1,6 +1,6 @@
 import { Flex } from '@universe/mycelium'
+import { FROGGY } from '@universe/mycelium/assets'
 import { Image } from 'ui/src'
-import { FROGGY } from 'ui/src/assets'
 import { imageSizes } from 'ui/src/theme'
 
 export const FroggyElement = (): JSX.Element => {

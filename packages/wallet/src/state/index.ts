@@ -1,6 +1,7 @@
 import type { Middleware, PreloadedState, Reducer, StoreEnhancer } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
 import createSagaMiddleware, { Saga, SagaIterator, SagaMiddleware } from 'redux-saga'
+import { persistedSinkTripwireMiddleware } from 'utilities/src/security/persistedSinkTripwireMiddleware'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
 import { createSagaEffectRunner } from 'wallet/src/state/createSagaEffectRunner'
 import { rootWalletSaga } from 'wallet/src/state/saga'
@@ -84,7 +85,7 @@ export function createStore({
         // slows down dev build considerably
         immutableCheck: false,
       })
-        .prepend(middlewareBefore)
+        .prepend([persistedSinkTripwireMiddleware, ...middlewareBefore])
         .concat(sagaMiddleware)
         .concat(middlewareAfter),
     devTools: __DEV__,

@@ -1,6 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { TouchableArea } from '@universe/mycelium'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -13,8 +12,8 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import {
   HoverCard,
+  HoverCardArmOnHover,
   type HoverCardPlacement,
-  stopPressEventPropagation,
   useHoverCardMaxContentWidth,
   useHoverCardState,
 } from '~/components/HoverCard/HoverCard'
@@ -47,33 +46,15 @@ type TokenHoverCardProps = {
   childOwnsPressFeedback?: boolean
 } & ({ token: TokenHoverCardToken; currencyInfo?: never } | { token?: never; currencyInfo: CurrencyInfo })
 
-/**
- * Mounts the card (Popover, floating tree, portal, data hooks) only once a row is hovered. Rows are
- * rendered by the dozen in virtualized lists, and the always-mounted card was the largest share of each row's cost.
- * The bare wrapper matches the mounted trigger's element so arming doesn't shift layout.
- */
 export function TokenHoverCard(props: TokenHoverCardProps): JSX.Element {
-  const [armedByPointer, setArmedByPointer] = useState(false)
-  const arm = useCallback((): void => setArmedByPointer(true), [])
-
-  if (!armedByPointer) {
-    return (
-      <TouchableArea
-        role="none"
-        variant="unstyled"
-        activeOpacity={1}
-        {...(props.childOwnsPressFeedback && { pressStyle: { scale: 1 }, focusVisibleStyle: { scaleX: 1, scaleY: 1 } })}
-        // Injection clones the row element with fresh color props every render, which would defeat its memo.
-        shouldAutomaticallyInjectColors={false}
-        {...stopPressEventPropagation}
-        onMouseEnter={arm}
-      >
-        {props.children}
-      </TouchableArea>
-    )
-  }
-
-  return <MountedTokenHoverCard {...props} />
+  return (
+    <HoverCardArmOnHover
+      childOwnsPressFeedback={props.childOwnsPressFeedback}
+      renderMounted={() => <MountedTokenHoverCard {...props} />}
+    >
+      {props.children}
+    </HoverCardArmOnHover>
+  )
 }
 
 function MountedTokenHoverCard({

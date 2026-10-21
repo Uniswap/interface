@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { NumberType } from 'utilities/src/format/types'
+import { APP_BODY_MOBILE_GUTTER_PX } from '~/app/layout/constants'
 import { DeltaArrow } from '~/components/DeltaArrow/DeltaArrow'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
@@ -58,14 +59,10 @@ const ROW_HEIGHT = 64
 const LAUNCH_TABLE_LAUNCHPAD_WIDTH = LAUNCHPAD_COLUMN_WIDTH + 25
 
 // Horizontal page gutters the mobile full-bleed breakout has to cancel, and the same distance the
-// trailing scroll-end margin restores. Two nested gutters stack under md: the page's own
-// px: $spacing16 (pages/Launches/index.tsx) sits inside AppBody's 10px padding
-// (app/layout/Layout.tsx, `max-width: breakpoints.md` — the same boundary as Tamagui's `$md`), so
-// the real gutter there is 26px, not 16. Above md AppBody has no padding and the page uses
-// $spacing40. Both values must come from here or the breakout and the gutter drift apart.
-const APP_BODY_GUTTER_MD_PX = 10
+// trailing scroll-end margin restores. Under md the page drops its own padding and AppBody's gutter
+// (app/layout/Layout.tsx) is the only one; above md AppBody has none and the page uses $spacing40.
 const PAGE_GUTTER_PX = 40
-const PAGE_GUTTER_MD_PX = 16 + APP_BODY_GUTTER_MD_PX
+const PAGE_GUTTER_MD_PX = APP_BODY_MOBILE_GUTTER_PX
 
 function HeaderLabel({
   children,
@@ -187,7 +184,7 @@ export function LaunchTable({
   )
   // Mobile full-bleed: the table breaks out of the full page gutter on the right, and the last
   // column carries that same distance as trailing margin, so the scroll end rests with the normal
-  // content margin. Both come from PAGE_GUTTER_*_PX — see the note there on the two stacked gutters.
+  // content margin. Both come from PAGE_GUTTER_*_PX.
   const trailingGutterCss = media.lg ? `${media.md ? PAGE_GUTTER_MD_PX : PAGE_GUTTER_PX}px` : undefined
 
   // Bridge the API's fetch-next-page to the shared Table's scroll trigger; onComplete fires once the

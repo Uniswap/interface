@@ -17,6 +17,7 @@ import { I18nextProvider } from 'react-i18next'
 import { TraceUserProperties } from 'src/app/components/Trace/TraceUserProperties'
 import { ExtensionStatsigProvider } from 'src/app/core/StatsigProvider'
 import { type DatadogAppNameTag } from 'src/app/datadog'
+import { DatadogContextUpdater } from 'src/app/features/datadog/DatadogContextUpdater'
 import { onHashcashSolveCompleted, sessionInitAnalytics } from 'src/app/features/sessions/analytics'
 import { createStatsigGatedHashcashSolver } from 'src/app/features/sessions/createStatsigGatedHashcashSolver'
 import { useOnCrashAppStateResetter } from 'src/store/appStateResetter'
@@ -104,6 +105,7 @@ function BaseAppContainerInner({ children }: PropsWithChildren): JSX.Element {
           <BlankUrlProvider>
             <LocalizationContextProvider>
               <TraceUserProperties />
+              <DatadogContextUpdater />
               <StatsigUserIdentifiersUpdater />
               <PoolsBalanceCoachmarkStateInit />
               <ApiInit getSessionInitService={provideSessionInitializationService} />

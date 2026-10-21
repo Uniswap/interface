@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { GetLatestCheckpointRequest } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { GetLatestCheckpointRequest } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { EVMUniverseChainId, AddressStringFormat, normalizeAddress } from '@universe/chains'
 import { useEffect, useMemo } from 'react'
 import { auctionQueries } from 'uniswap/src/data/apiClients/dataApiService/auctions/auctionQueries'

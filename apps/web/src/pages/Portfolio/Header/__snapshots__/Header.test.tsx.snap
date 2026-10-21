@@ -3,9 +3,9 @@
 exports[`PortfolioHeader > connected user > should render header for own wallet 1`] = `
 <div>
   <div
-    class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 gap-[12px] mt-[8px] pt-[16px] bg-surface1 z-[var(--c-z)] [transition:var(--c-t)] sticky top-[var(--c-top)]"
+    class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 gap-[12px] mt-[8px] pt-[16px] bg-surface1 z-[var(--c-z)] [transition:var(--c-t)] sticky top-[var(--c-top)] media-md:mx-[var(--cE-mx)] media-md:px-[var(--cE-px)]"
     data-testid="portfolio-header"
-    style="--c-z: 980; --c-t: gap 200ms ease; --c-top: 72px;"
+    style="--c-z: 980; --c-t: gap 200ms ease; --c-top: 72px; --cE-mx: -16px; --cE-px: 16px;"
   >
     <div
       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 gap-[16px]"
@@ -57,9 +57,9 @@ exports[`PortfolioHeader > connected user > should render header for own wallet 
 exports[`PortfolioHeader > connected user > should render header in expanded state 1`] = `
 <div>
   <div
-    class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 gap-[40px] mt-[8px] pt-[16px] bg-surface1 z-[var(--c-z)] [transition:var(--c-t)] sticky top-[var(--c-top)]"
+    class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 gap-[40px] mt-[8px] pt-[16px] bg-surface1 z-[var(--c-z)] [transition:var(--c-t)] sticky top-[var(--c-top)] media-md:mx-[var(--cE-mx)] media-md:px-[var(--cE-px)]"
     data-testid="portfolio-header"
-    style="--c-z: 980; --c-t: gap 200ms ease; --c-top: 72px;"
+    style="--c-z: 980; --c-t: gap 200ms ease; --c-top: 72px; --cE-mx: -16px; --cE-px: 16px;"
   >
     <div
       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 gap-[16px]"
@@ -111,9 +111,9 @@ exports[`PortfolioHeader > connected user > should render header in expanded sta
 exports[`PortfolioHeader > external wallet view > should render header with share button for external wallet 1`] = `
 <div>
   <div
-    class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 gap-[40px] mt-[8px] pt-[16px] bg-surface1 z-[var(--c-z)] [transition:var(--c-t)] sticky top-[var(--c-top)]"
+    class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 gap-[40px] mt-[8px] pt-[16px] bg-surface1 z-[var(--c-z)] [transition:var(--c-t)] sticky top-[var(--c-top)] media-md:mx-[var(--cE-mx)] media-md:px-[var(--cE-px)]"
     data-testid="portfolio-header"
-    style="--c-z: 980; --c-t: gap 200ms ease; --c-top: 72px;"
+    style="--c-z: 980; --c-t: gap 200ms ease; --c-top: 72px; --cE-mx: -16px; --cE-px: 16px;"
   >
     <div
       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 gap-[16px]"

@@ -10,13 +10,13 @@ const trending = tokenCategory({
 })
 
 describe('CategoryDefinitionTooltipContent', () => {
-  it('renders the description only when there is no "View all" handler', () => {
+  it('renders the description only when there is no "View collection" handler', () => {
     const { getByText, queryByTestId } = render(<CategoryDefinitionTooltipContent category={trending} />)
     expect(getByText(trending.description)).toBeTruthy()
     expect(queryByTestId(TestID.CategoryDefinitionViewAll)).toBeNull()
   })
 
-  it('renders "View all" and forwards its press', () => {
+  it('renders "View collection" and forwards its press', () => {
     const onPressViewAll = vi.fn()
     const { getByTestId } = render(
       <CategoryDefinitionTooltipContent category={trending} onPressViewAll={onPressViewAll} />,

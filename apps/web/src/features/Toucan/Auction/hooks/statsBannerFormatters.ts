@@ -1,5 +1,5 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
-import { ClearingPriceChange } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { ClearingPriceChange } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { NumberType } from 'utilities/src/format/types'
 import { ONE_HOUR_MS } from 'utilities/src/time/time'
 import { fromQ96ToDecimalWithTokenDecimals } from '~/features/Toucan/Auction/BidDistributionChart/utils/q96'

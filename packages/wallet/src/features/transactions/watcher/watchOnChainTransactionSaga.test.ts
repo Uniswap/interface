@@ -2,6 +2,7 @@ import { waitForFlashbotsProtectReceipt, Platform } from '@universe/chains'
 import { providers } from 'ethers'
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
+import { throwError } from 'redux-saga-test-plan/providers'
 import { call } from 'redux-saga/effects'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
@@ -25,7 +26,10 @@ import {
   waitForSameNonceFinalized,
   watchTransaction,
 } from 'wallet/src/features/transactions/watcher/watchOnChainTransactionSaga'
-import { waitForTransactionStatus } from 'wallet/src/features/transactions/watcher/watchTransactionSaga'
+import {
+  waitForReceiptWithSmartPolling,
+  waitForTransactionStatus,
+} from 'wallet/src/features/transactions/watcher/watchTransactionSaga'
 import { getProvider } from 'wallet/src/features/wallet/context'
 
 vi.mock('@universe/api', async () => ({
@@ -118,6 +122,56 @@ describe(watchTransaction, () => {
       ])
       .put.like({ action: { type: transactionActions.finalizeTransaction.type } })
       .silentRun()
+  })
+
+  describe('when Trading API polling exhausts without a terminal status', () => {
+    const submittedTx = {
+      ...txDetailsPending,
+      options: { ...txDetailsPending.options, rpcSubmissionTimestampMs: Date.now(), appBackgroundedWhilePending: true },
+    }
+    const providerMock = {
+      getTransactionReceipt: vi.fn(),
+      getBlockNumber: vi.fn(),
+      waitForTransaction: vi.fn(),
+    } as unknown as providers.Provider
+
+    const state = {
+      wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
+      userSettings: { isTestnetModeEnabled: false },
+      transactions: getTransactionsState(submittedTx),
+    }
+    const sagaProviders = (receiptResult: unknown): Parameters<ReturnType<typeof expectSaga>['provide']>[0] => [
+      [call(getProvider, chainId), providerMock],
+      [matchers.call.fn(waitForTransactionStatus), { status: TransactionStatus.Failed, pollExhausted: true }],
+      [matchers.call.fn(waitForReceiptWithSmartPolling), receiptResult],
+      [call(getEnabledChainIdsSaga, Platform.EVM), { chains: [] }],
+    ]
+
+    it('finalizes from the on-chain receipt instead of defaulting to Failed', () => {
+      return expectSaga(watchTransaction, { transaction: submittedTx })
+        .withState(state)
+        .provide(sagaProviders(ethersTxReceipt))
+        .put.like({
+          action: {
+            type: transactionActions.finalizeTransaction.type,
+            payload: { id: submittedTx.id, status: TransactionStatus.Success },
+          },
+        })
+        .silentRun()
+    })
+
+    it('finalizes as Failed when no receipt arrives', () => {
+      return expectSaga(watchTransaction, { transaction: submittedTx })
+        .withState(state)
+        .provide(sagaProviders(throwError(new Error('Timed out'))))
+        .put.like({
+          action: {
+            type: transactionActions.finalizeTransaction.type,
+            payload: { id: submittedTx.id, status: TransactionStatus.Failed },
+          },
+        })
+        .silentRun()
+    })
   })
 
   it('Cancels transaction', () => {

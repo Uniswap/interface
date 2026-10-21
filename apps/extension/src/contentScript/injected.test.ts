@@ -1,5 +1,6 @@
 import { isSandboxedFrame as isSandboxedFrameImport } from 'src/contentScript/isSandboxedFrame'
 import type { Mock } from 'vitest'
+import type { ContentScriptContext } from 'wxt/utils/content-script-context'
 
 vi.mock('src/background/messagePassing/messageChannels')
 vi.mock('wxt/utils/define-content-script', () => ({
@@ -43,5 +44,36 @@ describe('injected - sandboxed frame', () => {
     // Note: since the module was already imported above, this test verifies the module
     // loads without error when the sandbox check is active.
     expect(addWindowMessageListener).toBeDefined()
+  })
+})
+
+describe('injected - broadcasts from the extension', () => {
+  it('only applies connection updates addressed to this frame origin', async () => {
+    const { externalDappMessageChannel } =
+      (await import('src/background/messagePassing/messageChannels')) as unknown as {
+        externalDappMessageChannel: { addMessageListener: Mock }
+      }
+    const { ExtensionToDappRequestType } = await import('src/background/messagePassing/types/requests')
+    const injected = await import('../entrypoints/injected.content')
+    injected.default.main({} as ContentScriptContext)
+
+    const listener = externalDappMessageChannel.addMessageListener.mock.calls
+      .filter(([type]) => type === ExtensionToDappRequestType.UpdateConnections)
+      .at(-1)?.[1] as ((message: unknown) => void) | undefined
+    expect(listener).toBeDefined()
+
+    const postMessage = vi.spyOn(window, 'postMessage').mockImplementation(() => {})
+    const addresses = ['0x0000000000000000000000000000000000000001']
+
+    // A cross-origin iframe in the same tab receives the parent's broadcast and must drop it.
+    listener?.({ type: ExtensionToDappRequestType.UpdateConnections, dappUrl: 'https://attacker.example', addresses })
+    expect(postMessage).not.toHaveBeenCalledWith(expect.objectContaining({ emitKey: 'accountsChanged' }))
+
+    listener?.({ type: ExtensionToDappRequestType.UpdateConnections, dappUrl: window.origin, addresses })
+    expect(postMessage).toHaveBeenCalledWith(
+      expect.objectContaining({ emitKey: 'accountsChanged', emitValue: addresses }),
+    )
+
+    postMessage.mockRestore()
   })
 })

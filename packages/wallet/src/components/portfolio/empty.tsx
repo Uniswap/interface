@@ -1,8 +1,8 @@
 import { borderRadii } from '@universe/mycelium'
+import { CRYPTO_PURCHASE_BACKGROUND_DARK, CRYPTO_PURCHASE_BACKGROUND_LIGHT } from '@universe/mycelium/assets'
 import { useIsDarkMode } from '@universe/mycelium/theme-hooks-compat'
 import React from 'react'
 import { ImageBackground, ImageSourcePropType } from 'react-native'
-import { CRYPTO_PURCHASE_BACKGROUND_DARK, CRYPTO_PURCHASE_BACKGROUND_LIGHT } from 'ui/src/assets'
 
 export function usePortfolioEmptyStateBackground(): React.FC<{ children: React.ReactNode }> {
   const isDarkMode = useIsDarkMode()

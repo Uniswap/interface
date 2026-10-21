@@ -1,9 +1,8 @@
-import { useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Transaction } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { Flex } from '@universe/mycelium'
 import dayjs from 'dayjs'
-import { useEffect } from 'react'
-import { batch, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { getListTransactionsQuery } from 'uniswap/src/data/apiClients/dataApiService/activity/listTransactions'
 import { parseToTransactionDetails } from 'uniswap/src/features/activity/parseToTransactionDetails'
@@ -23,6 +22,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { buildReceiveNotification } from 'wallet/src/features/notifications/buildReceiveNotification'
 import { shouldSuppressNotification } from 'wallet/src/features/notifications/notificationWatcherSaga'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
@@ -76,8 +76,17 @@ function AddressTransactionHistoryUpdater({
 
   const localTransactions = useSelectAddressTransactions({ evmAddress: address })
 
-  useEffect(() => {
-    batch(async () => {
+  // Keyed on the inputs that decide the outcome; a run that finds new txns moves the timestamp (new key),
+  // so this runs once per poll result. `gcTime: 0` re-runs on remount like an effect would, and
+  // `networkMode: 'always'` keeps the local redux updates from waiting on connectivity.
+  useQuery({
+    queryKey: [
+      ReactQueryCacheKey.TransactionHistoryUpdater,
+      address,
+      lastTxNotificationUpdateTimestamp,
+      transactions.map((transaction) => [transaction.hash, transaction.addedTime]),
+    ],
+    queryFn: async (): Promise<null> => {
       let newTransactionsFound = false
 
       // Parse txns and address from portfolio.
@@ -94,10 +103,7 @@ function AddressTransactionHistoryUpdater({
           dispatch(setLastTxNotificationUpdate({ address, timestamp: updatedTimestampMs }))
 
           // Dont flag notification status for txns submitted from app, this is handled in transactionWatcherSaga.
-          const confirmedLocally = localTransactions?.some(
-            // oxlint-disable-next-line max-nested-callbacks
-            (localTx) => localTx.hash === transaction.hash,
-          )
+          const confirmedLocally = localTransactions?.some((localTx) => localTx.hash === transaction.hash)
           if (!confirmedLocally) {
             dispatch(setNotificationStatus({ address, hasNotifications: true }))
           }
@@ -116,17 +122,13 @@ function AddressTransactionHistoryUpdater({
           hideSpamTokens,
         })
       }
-    }).catch(() => undefined)
-  }, [
-    activeAccountAddress,
-    address,
-    dispatch,
-    fetchAndDispatchReceiveNotification,
-    hideSpamTokens,
-    lastTxNotificationUpdateTimestamp,
-    localTransactions,
-    transactions,
-  ])
+      return null
+    },
+    staleTime: Infinity,
+    gcTime: 0,
+    retry: false,
+    networkMode: 'always',
+  })
 
   return null
 }

@@ -1,3 +1,4 @@
+import { FlexProps } from '@universe/mycelium'
 import type { GeneratedIcon, GeneratedIconProps } from '@universe/mycelium/icons'
 import { forwardRef, PropsWithChildren, ReactNode } from 'react'
 import { DropdownMenuSheetItemProps, IconProps } from 'ui/src'
@@ -51,6 +52,8 @@ export type ContextMenuProps = {
   menuItems: MenuOptionItem[]
   /** When provided, renders this content instead of the default MenuContent built from menuItems. */
   contentOverride?: ReactNode
+  /** Web only: extra styles for the default MenuContent frame, e.g. a maxHeight + scroll on a long list. */
+  menuContentStyles?: FlexProps
   isPlacementAbove?: boolean
   isPlacementRight?: boolean
   offsetX?: number

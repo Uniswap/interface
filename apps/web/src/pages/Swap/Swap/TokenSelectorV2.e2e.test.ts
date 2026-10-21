@@ -27,6 +27,12 @@ const buildLimitUrl = createTestUrlBuilder({
   defaultFeatureFlags: { [FeatureFlags.TokenSelectorUxRevamp]: true },
 })
 
+// The collapsed sidebar stays mounted (width 0, inert) so the collapse animates, which keeps it
+// "visible" to Playwright; what the user sees is a zero-width pane clipped out of the viewport.
+async function expectSidebarCollapsed(page: Page): Promise<void> {
+  await expect(page.getByTestId(TestID.TokenSelectorV2Sidebar)).not.toBeInViewport()
+}
+
 test.describe(
   'TokenSelectorV2 (UX revamp flag ON)',
   {
@@ -63,7 +69,7 @@ test.describe(
       // Collapse via the sidebar-header collapse button: sidebar disappears,
       // the avatar + balance toggle appears next to the search field
       await page.getByTestId(TestID.TokenSelectorV2SidebarCollapse).click()
-      await expect(page.getByTestId(TestID.TokenSelectorV2Sidebar)).not.toBeVisible()
+      await expectSidebarCollapsed(page)
 
       // Re-expand from the inline toggle next to the search field
       await page.getByTestId(TestID.TokenSelectorV2SidebarToggle).click()
@@ -75,7 +81,7 @@ test.describe(
       await page.getByTestId(TestID.ChooseOutputToken).click()
 
       await expect(page.getByTestId(TestID.TokenSelectorV2NetworkChipRow)).toBeVisible()
-      await expect(page.getByTestId(TestID.TokenSelectorV2Sidebar)).not.toBeVisible()
+      await expectSidebarCollapsed(page)
       await expect(page.getByTestId(TestID.TokenSelectorV2SidebarToggle)).toBeVisible()
 
       await page.getByTestId(TestID.TokenSelectorV2SidebarToggle).click()

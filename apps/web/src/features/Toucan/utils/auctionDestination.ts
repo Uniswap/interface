@@ -1,5 +1,5 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
-import type { Auction } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import type { Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { isPoolsLaunchMethod } from 'uniswap/src/features/dataApi/launchProvenance'
 import { getAuctionLaunchMethod } from '~/features/Toucan/Auction/utils/auctionLaunchMethod'
 import { getPoolsTokenPageUrl } from '~/features/Toucan/utils/quickLaunchLinks'

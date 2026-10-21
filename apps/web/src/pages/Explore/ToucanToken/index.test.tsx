@@ -1,6 +1,6 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useParams } from 'react-router'
-import { ToucanToken } from '~/pages/Explore/ToucanToken'
+import { ToucanToken, shouldShowToucanIntroModal } from '~/pages/Explore/ToucanToken'
 import { mocked } from '~/test-utils/mocked'
 import { render, screen, waitFor } from '~/test-utils/render'
 
@@ -245,5 +245,41 @@ describe('ToucanToken live countdown banner placement', () => {
 
     expect(getProbeOrder()).toEqual([INTRO_BANNER_PROBE, HEADER_PROBE, STATS_BANNER_PROBE])
     expect(screen.getByTestId(STATS_BANNER_PROBE).parentElement?.style.overflowAnchor).not.toBe('none')
+  })
+})
+
+describe('shouldShowToucanIntroModal', () => {
+  const WALLET = '0x1111111111111111111111111111111111111111'
+  const base = {
+    rehydrated: true,
+    seenThisSession: false,
+    walletAddress: undefined as string | undefined,
+    hasSeenDisconnected: false,
+    hasWalletSeen: false,
+  }
+
+  it('opens for a first-time visitor', () => {
+    expect(shouldShowToucanIntroModal(base)).toBe(true)
+  })
+
+  it('stays closed until redux-persist has rehydrated, when both flags still read false', () => {
+    expect(shouldShowToucanIntroModal({ ...base, rehydrated: false })).toBe(false)
+  })
+
+  it('stays closed for the rest of the session once dismissed', () => {
+    expect(shouldShowToucanIntroModal({ ...base, seenThisSession: true })).toBe(false)
+  })
+
+  // The address is undefined for the first frames of a reconnect, so a visitor who dismissed while
+  // connected is only recognised here by the disconnected flag.
+  it('stays closed while a returning visitor reconnects', () => {
+    expect(shouldShowToucanIntroModal({ ...base, hasSeenDisconnected: true })).toBe(false)
+  })
+
+  it('opens for a wallet that has not seen it, even once the disconnected flag is set', () => {
+    expect(shouldShowToucanIntroModal({ ...base, walletAddress: WALLET, hasSeenDisconnected: true })).toBe(true)
+    expect(
+      shouldShowToucanIntroModal({ ...base, walletAddress: WALLET, hasSeenDisconnected: true, hasWalletSeen: true }),
+    ).toBe(false)
   })
 })

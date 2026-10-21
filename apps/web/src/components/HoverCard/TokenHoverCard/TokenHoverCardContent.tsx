@@ -5,12 +5,15 @@ import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
 import {
   HoverCardBody,
   HoverCardChart,
   HoverCardChartSkeleton,
+  HoverCardHeadline,
+  HoverCardIdentity,
   HoverCardStatsRow,
   isHoverCardNoData,
 } from '~/components/HoverCard/HoverCardContent'
@@ -47,12 +50,25 @@ export function TokenHoverCardPlaceholder({
   return (
     <HoverCardBody
       identity={
-        unavailable ? undefined : <Text variant="body2" color="$neutral2" loading loadingPlaceholderText="TOKEN" />
+        unavailable ? undefined : (
+          <HoverCardIdentity
+            loading
+            logo={
+              <Flex
+                width={iconSizes.icon32}
+                height={iconSizes.icon32}
+                borderRadius="$roundedFull"
+                backgroundColor="$surface2"
+              />
+            }
+            title=""
+          />
+        )
       }
       isNoData={unavailable}
       maxWidth={maxWidth}
     >
-      <PriceAndChangeRow loading formattedPrice="" hasChange={false} />
+      <PriceAndChangeRow loading formattedPrice="" />
       <HoverCardChartSkeleton />
       {showStats && <HoverCardStatsRow loading loadingPlaceholderText={STATS_LOADING_PLACEHOLDER} stats={[]} />}
     </HoverCardBody>
@@ -62,42 +78,33 @@ export function TokenHoverCardPlaceholder({
 function PriceAndChangeRow({
   loading,
   formattedPrice,
-  hasChange,
   pricePercentChange,
-  priceAbsoluteChange,
 }: {
   loading: boolean
   formattedPrice: string
-  hasChange: boolean
   pricePercentChange?: number | null
-  priceAbsoluteChange?: number | null
 }): JSX.Element {
   const { t } = useTranslation()
   return (
-    <Flex gap="$spacing4">
-      <Text variant="heading3" color="$neutral1" loading={loading} loadingPlaceholderText="$0,000.00">
-        {formattedPrice}
-      </Text>
-      {loading ? (
-        <Text variant="body3" color="$neutral2" loading loadingPlaceholderText="+0.00% today" />
-      ) : hasChange ? (
-        <Flex row gap="$spacing4" alignItems="center">
-          <RelativeChange
-            change={pricePercentChange ?? undefined}
-            absoluteChange={priceAbsoluteChange ?? undefined}
-            arrowSize="$icon.12"
-            variant="body3"
-          />
+    <HoverCardHeadline
+      loading={loading}
+      loadingPlaceholderText="$0,000.00"
+      value={formattedPrice}
+      caption={
+        pricePercentChange != null ? (
+          <Flex row gap="$spacing4" alignItems="center">
+            <RelativeChange change={pricePercentChange} arrowSize="$icon.12" variant="body3" />
+            <Text variant="body3" color="$neutral2">
+              {t('common.today').toLocaleLowerCase()}
+            </Text>
+          </Flex>
+        ) : (
           <Text variant="body3" color="$neutral2">
-            {t('common.today').toLocaleLowerCase()}
+            -
           </Text>
-        </Flex>
-      ) : (
-        <Text variant="body3" color="$neutral2">
-          -
-        </Text>
-      )}
-    </Flex>
+        )
+      }
+    />
   )
 }
 
@@ -145,12 +152,18 @@ function TokenHoverCardContentInner({
   return (
     <HoverCardBody
       identity={
-        <>
-          <CurrencyLogo currencyInfo={currencyInfo} size={iconSizes.icon24} hideNetworkLogo={isMultichainAsset} />
-          <Text variant="body2" color="$neutral2" numberOfLines={1}>
-            {currencyInfo.currency.symbol}
-          </Text>
-        </>
+        <HoverCardIdentity
+          logo={
+            <CurrencyLogo currencyInfo={currencyInfo} size={iconSizes.icon32} hideNetworkLogo={isMultichainAsset} />
+          }
+          title={currencyInfo.currency.symbol}
+          // Multichain assets have an address per chain (listed by copy), so show the name instead.
+          subtitle={
+            currencyInfo.currency.isToken && !isMultichainAsset
+              ? shortenAddress({ address: currencyInfo.currency.address })
+              : currencyInfo.currency.name
+          }
+        />
       }
       isCopied={isCopied}
       onCopy={onCopy}
@@ -162,9 +175,7 @@ function TokenHoverCardContentInner({
         <PriceAndChangeRow
           loading={chartLoading}
           formattedPrice={formattedPrice}
-          hasChange={hasChange}
           pricePercentChange={pricePercentChange}
-          priceAbsoluteChange={priceAbsoluteChange}
         />
       )}
       <HoverCardChart loading={chartLoading} data={priceData} change={change} />

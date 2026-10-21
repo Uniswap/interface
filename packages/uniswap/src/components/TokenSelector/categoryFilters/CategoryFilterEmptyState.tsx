@@ -1,7 +1,8 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
 import { Search } from '@universe/mycelium/icons/Search'
 import { TestID } from '@universe/test'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
+import { Trans } from 'ui/src'
 
 /** Clearing resets the chips and keeps the query. */
 export function CategoryFilterEmptyState({

@@ -30,6 +30,8 @@ describe('devComplianceOverride', () => {
       expect(GATED_FEATURE_OPTIONS).toEqual([
         { value: GatedFeature.TOKEN_LAUNCHER, label: 'TOKEN_LAUNCHER' },
         { value: GatedFeature.ISSUER_SPECIFIC_RWA, label: 'ISSUER_SPECIFIC_RWA' },
+        { value: GatedFeature.FIAT_ONRAMP, label: 'FIAT_ONRAMP' },
+        { value: GatedFeature.FIAT_OFFRAMP, label: 'FIAT_OFFRAMP' },
       ])
     })
 

@@ -54,13 +54,14 @@ import { initAppsFlyer } from 'src/features/analytics/appsflyer'
 import { useLogMissingMnemonic } from 'src/features/analytics/useLogMissingMnemonic'
 import { useLogUnexpectedOnboardingReset } from 'src/features/analytics/useLogUnexpectedOnboardingReset'
 import { useAppStateResetter } from 'src/features/appState/appStateResetter'
+import { useDatadogStatus } from 'src/features/datadog/DatadogContext'
 import {
   DatadogProviderWrapper,
   MOBILE_DEFAULT_DATADOG_SESSION_SAMPLE_RATE,
 } from 'src/features/datadog/DatadogProviderWrapper'
-import { useDatadogWalletContext } from 'src/features/datadog/useDatadogWalletContext'
 import { setDatadogUserWithUniqueId } from 'src/features/datadog/user'
 import { setupExpoImageMemoryWatcher } from 'src/features/images/expoImageCacheSetup'
+import { installNitroFetchIfEnabled } from 'src/features/nitroFetch/installNitroFetch'
 import { OneSignalUserTagField } from 'src/features/notifications/constants'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
 import { initOneSignal } from 'src/features/notifications/Onesignal'
@@ -98,6 +99,7 @@ import { getLogger, logger } from 'utilities/src/logger/logger'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
 import { AccountsStoreContextProvider } from 'wallet/src/features/accounts/store/provider'
+import { useDatadogWalletContext } from 'wallet/src/features/datadog/useDatadogWalletContext'
 import { StatsigUserIdentifiersUpdater } from 'wallet/src/features/gating/StatsigUserIdentifiersUpdater'
 import { useHeartbeatReporter } from 'wallet/src/features/telemetry/hooks/useHeartbeatReporter'
 import { useLastBalancesReporter } from 'wallet/src/features/telemetry/hooks/useLastBalancesReporter'
@@ -210,6 +212,7 @@ function App(): JSX.Element | null {
   )
 
   const onStatsigInit = (): void => {
+    installNitroFetchIfEnabled()
     setDatadogSessionSampleRate(
       getDynamicConfigValue({
         config: DynamicConfigs.DatadogSessionSampleRate,
@@ -423,9 +426,10 @@ function AppInner(): JSX.Element {
  */
 function DataUpdaters(): JSX.Element {
   const finishedOnboarding = useSelector(selectFinishedOnboarding)
+  const { isInitialized: isDatadogInitialized } = useDatadogStatus()
 
   useDatadogUserAttributesTracking({ isOnboarded: !!finishedOnboarding })
-  useDatadogWalletContext()
+  useDatadogWalletContext({ isInitialized: isDatadogInitialized })
   useHeartbeatReporter({ isOnboarded: !!finishedOnboarding })
   useLastBalancesReporter({ isOnboarded: !!finishedOnboarding })
   useTestnetModeForLoggingAndAnalytics()

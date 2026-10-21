@@ -1,7 +1,7 @@
 import { Flex, Text } from '@universe/mycelium'
+import { UNISWAP_LOGO_LARGE } from '@universe/mycelium/assets'
 import { useTranslation } from 'react-i18next'
 import { Image } from 'ui/src'
-import { UNISWAP_LOGO_LARGE } from 'ui/src/assets'
 import { iconSizes } from 'ui/src/theme'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'

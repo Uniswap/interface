@@ -4,6 +4,7 @@ import { calculateRangeViewport } from '~/features/Liquidity/charts/D3LiquidityC
 import type {
   ChartStoreState,
   TickNavigationParams,
+  TickRangeChange,
 } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 import { DefaultPriceStrategy } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 import {
@@ -16,10 +17,27 @@ import {
 } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/tickUtils'
 import { clampMaxTick } from '~/features/Liquidity/utils/clampTickRange'
 
+/** The pan that keeps a range edge at the same screen position when the range moves from one min tick to another. */
+function getPanFollowingRange({
+  state: { renderingContext, panY },
+  fromMinTick,
+  toMinTick,
+}: {
+  state: Pick<ChartStoreState, 'renderingContext' | 'panY'>
+  fromMinTick: number | undefined
+  toMinTick: number
+}): number {
+  if (!renderingContext || fromMinTick === undefined) {
+    return panY
+  }
+  const { tickToAxis } = renderingContext.tickScale
+  return panY + tickToAxis(fromMinTick) - tickToAxis(toMinTick)
+}
+
 interface PriceActionCallbacks {
   onMinTickChange: (tick?: number) => void
   onMaxTickChange: (tick?: number) => void
-  onMinMaxTickChange: (ticks: { minTick?: number; maxTick?: number }) => void
+  onMinMaxTickChange: (range: TickRangeChange) => void
 }
 
 // Every strategy except these is positioned relative to the current tick, so it has to be
@@ -72,6 +90,9 @@ export const createPriceActions = ({
   // Use this sparingly when a user action is complete (i.e drag ends).
   // This function should not react to min/max state changes.
   handleTickChange: ({ changeType, tick }: { changeType: 'min' | 'max'; tick?: number }) => {
+    // Only the +/- buttons edit one edge, so this is a manual edit: the range stops following its
+    // preset even if it steps back onto the preset's ticks.
+    set((state) => ({ ...state, presetTicks: undefined }))
     if (changeType === 'min') {
       callbacks.onMinTickChange(tick)
     } else {
@@ -101,7 +122,7 @@ export const createPriceActions = ({
    * two of those is lossy whenever the new range clears the old one: the first edge gets clamped
    * against a bound that the second edge is about to replace. Ranges therefore go out together.
    */
-  handleTickRangeChange: ({ minTick, maxTick }: { minTick?: number; maxTick?: number }) => {
+  handleTickRangeChange: ({ minTick, maxTick, presetStrategy }: TickRangeChange) => {
     const { actions, selectedPriceStrategy, tickSpacing, currentTick } = get()
 
     // The parent's per-edge clamps were what kept the bounds ordered; an atomic update bypasses
@@ -109,8 +130,15 @@ export const createPriceActions = ({
     // emitter that knows which edge moved still has to keep its own bounds apart.
     const orderedMaxTick = clampMaxTick({ tick: maxTick, minTick, tickSpacing })
 
-    actions.setChartState({ minTick, maxTick: orderedMaxTick })
-    callbacks.onMinMaxTickChange({ minTick, maxTick: orderedMaxTick })
+    actions.setChartState({
+      minTick,
+      maxTick: orderedMaxTick,
+      presetTicks:
+        presetStrategy && minTick !== undefined && orderedMaxTick !== undefined
+          ? { minTick, maxTick: orderedMaxTick }
+          : undefined,
+    })
+    callbacks.onMinMaxTickChange({ minTick, maxTick: orderedMaxTick, presetStrategy })
 
     const detectedStrategy = detectTickStrategy({ minTick, maxTick: orderedMaxTick, currentTick, tickSpacing })
     if (detectedStrategy !== selectedPriceStrategy) {
@@ -141,10 +169,11 @@ export const createPriceActions = ({
       defaultMinTick,
       defaultMaxTick,
     })
+    const presetStrategy = isCurrentTickAnchored(priceStrategy) ? priceStrategy : undefined
 
     // Without a mounted chart (e.g. creating a new pool) there's no viewport to animate — set ticks directly
     if (!renderingContext) {
-      actions.handleTickRangeChange({ minTick: targetMinTick, maxTick: targetMaxTick })
+      actions.handleTickRangeChange({ minTick: targetMinTick, maxTick: targetMaxTick, presetStrategy })
       return
     }
 
@@ -196,7 +225,7 @@ export const createPriceActions = ({
       // oxlint-disable-next-line no-shadow
       const { renderingContext } = get()
       if (renderingContext) {
-        actions.handleTickRangeChange({ minTick: targetMinTick, maxTick: targetMaxTick })
+        actions.handleTickRangeChange({ minTick: targetMinTick, maxTick: targetMaxTick, presetStrategy })
       }
     }, CHART_BEHAVIOR.ANIMATION_DURATION)
   },
@@ -306,11 +335,13 @@ export const createPriceActions = ({
     currentPrice,
     tickSpacing,
     isInitialPriceDirty,
+    isRangeLocked,
   }: {
     currentTick: number
     currentPrice?: number
     tickSpacing: number
     isInitialPriceDirty?: boolean
+    isRangeLocked?: boolean
   }) => {
     const {
       actions,
@@ -322,27 +353,73 @@ export const createPriceActions = ({
       minTick,
       maxTick,
       selectedPriceStrategy,
+      presetTicks,
+      isRangeLocked: wasRangeLocked = false,
     } = get()
+    const rangeLocked = Boolean(isRangeLocked)
+    // The parent's followed range catches up as soon as a lock lifts, so the store has to as well.
+    const lockLifted = !creatingPoolOrPair && wasRangeLocked && !rangeLocked
 
     // Object.is, not ===: the parent passes Number(price?.toSignificant()), which is NaN while the
     // initial price is unset, and NaN === NaN is false.
     if (
       Object.is(currentTick, prevCurrentTick) &&
       Object.is(currentPrice, prevCurrentPrice) &&
-      tickSpacing === prevTickSpacing
+      tickSpacing === prevTickSpacing &&
+      rangeLocked === wasRangeLocked
     ) {
       return
     }
 
-    set((state) => ({ ...state, currentTick, currentPrice, tickSpacing }))
+    set((state) => ({ ...state, currentTick, currentPrice, tickSpacing, isRangeLocked: rangeLocked }))
 
-    // Only the create flow has a current tick/spacing that moves under the range: the tick follows the
-    // typed initial price (or the streamed re-seed), and the spacing follows the fee tier without
-    // remounting. An existing pool's tick/spacing are fixed for the store's life, and its polled live
-    // price must never move or relabel the range the user chose — so bail (matching pre-streaming
-    // behavior). We still update currentTick/currentPrice above so the chart's price line stays fresh.
-    // A sub-tick change alone (same tick and spacing) also never re-anchors.
-    if (!creatingPoolOrPair || (Object.is(currentTick, prevCurrentTick) && tickSpacing === prevTickSpacing)) {
+    // A sub-tick change alone (same tick and spacing) never re-anchors.
+    if (!lockLifted && Object.is(currentTick, prevCurrentTick) && tickSpacing === prevTickSpacing) {
+      return
+    }
+
+    // An existing pool's tick moves with its polled live price. A preset the user picked and left
+    // untouched follows it — a tight range would otherwise strand out of range — while a range the
+    // user typed or dragged (min/max no longer what the preset wrote) is never moved or relabeled.
+    if (!creatingPoolOrPair) {
+      const presetUntouched =
+        presetTicks !== undefined && presetTicks.minTick === minTick && presetTicks.maxTick === maxTick
+      if (
+        rangeLocked ||
+        isFullRange ||
+        !presetUntouched ||
+        !selectedPriceStrategy ||
+        !isCurrentTickAnchored(selectedPriceStrategy)
+      ) {
+        return
+      }
+
+      const { minTick: targetMinTick, maxTick: targetMaxTick } = calculateStrategyTicks({
+        priceStrategy: selectedPriceStrategy,
+        currentTick,
+        tickSpacing,
+      })
+      if (targetMinTick === minTick && targetMaxTick === maxTick) {
+        return
+      }
+
+      // Pan the view by the same tick delta in the same update, so the band, its handles and the price
+      // marker hold their place on screen and the price history and liquidity shift under them —
+      // instead of the band jumping and, poll by poll, walking out of view. (A glide would need
+      // fractional ticks mid-animation, which the tick-to-price math rejects.)
+      actions.setChartState({
+        minTick: targetMinTick,
+        maxTick: targetMaxTick,
+        panY: getPanFollowingRange({ state: get(), fromMinTick: minTick, toMinTick: targetMinTick }),
+      })
+
+      actions.handleTickRangeChange({
+        minTick: targetMinTick,
+        maxTick: targetMaxTick,
+        presetStrategy: selectedPriceStrategy,
+      })
+      // handleTickRangeChange re-detects with tolerance; the user's pick stays the selected preset.
+      set((state) => ({ ...state, selectedPriceStrategy }))
       return
     }
 

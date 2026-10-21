@@ -1,11 +1,15 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
 import { onlineManager } from '@tanstack/react-query'
 import { act, renderHook } from '@testing-library/react'
-import { AuctionType, type Auction } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { AuctionType, type Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
+import { useFeatureFlag } from '@universe/gating'
 import type { ReactNode } from 'react'
+import { LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
+import { useTokenLaunchProvenance } from 'uniswap/src/features/dataApi/useTokenLaunchProvenance'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { useAuctionDisplayDataSources } from '~/features/Toucan/Auction/hooks/useAuctionDisplayDataSources'
 import { createTDPStore, type TDPState } from '~/pages/TokenDetails/context/createTDPStore'
 import { TDPStoreContext } from '~/pages/TokenDetails/context/TDPContext'
@@ -17,6 +21,10 @@ import { useTokenDetailsAuctionDisplay } from '~/pages/TokenDetails/hooks/useTok
 
 vi.mock('~/features/Toucan/Auction/hooks/useAuctionDisplayDataSources', () => ({
   useAuctionDisplayDataSources: vi.fn(),
+}))
+
+vi.mock('uniswap/src/features/dataApi/useTokenLaunchProvenance', () => ({
+  useTokenLaunchProvenance: vi.fn(),
 }))
 
 const tokenA = new Token(UniverseChainId.Mainnet, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 18)
@@ -77,6 +85,7 @@ describe('TokenDetailsAuctionDisplayProvider', () => {
     vi.clearAllMocks()
     onlineManager.setOnline(true)
     vi.mocked(useAuctionDisplayDataSources).mockReturnValue(sources)
+    vi.mocked(useTokenLaunchProvenance).mockReturnValue(undefined)
   })
 
   afterEach(() => onlineManager.setOnline(true))
@@ -99,6 +108,44 @@ describe('TokenDetailsAuctionDisplayProvider', () => {
     expect(result.current[0]?.isInitialLoading).toBe(false)
     act(() => onlineManager.setOnline(true))
     expect(result.current[0]?.isInitialLoading).toBe(false)
+  })
+
+  it('holds the auction-only question open across the lookup, then the pool and phase', () => {
+    const store = createTDPStore(
+      createPageState({ auctionSource: { status: TokenDetailsSourceState.Loading }, isPageReady: false }),
+    )
+    const { result, rerender } = renderHook(() => useTokenDetailsAuctionDisplay(), { wrapper: createWrapper(store) })
+
+    // Nothing to replace before the page has content, and offline the lookup will not settle at all.
+    expect(result.current.isAuctionOnlyPending).toBe(false)
+
+    act(() => store.setState({ currency: tokenA, pageQueryLoading: false }))
+    expect(result.current.isAuctionOnlyPending).toBe(true)
+    expect(result.current.isInitialLoading).toBe(false)
+
+    act(() => onlineManager.setOnline(false))
+    expect(result.current.isAuctionOnlyPending).toBe(false)
+    act(() => onlineManager.setOnline(true))
+
+    // The auction lands, so the lookup closes and the still-loading pool keeps the question open.
+    // `isInitialLoading` has already latched false by now, which is exactly why it cannot be reused.
+    act(() =>
+      store.setState({ auctionSource: { status: TokenDetailsSourceState.Found, auction, auctions: [auction] } }),
+    )
+    expect(result.current.isInitialLoading).toBe(false)
+    expect(result.current.isAuctionOnlyPending).toBe(true)
+
+    // A confirmed missing pool with a resolved head answers the question, so the wait ends.
+    vi.mocked(useAuctionDisplayDataSources).mockReturnValue({ ...sources, pools: { status: 'success', poolCount: 0 } })
+    rerender()
+    expect(result.current.isAuctionOnlyPending).toBe(false)
+  })
+
+  it('closes the auction-only question when the lookup finds no auction', () => {
+    const store = createTDPStore(createPageState({ auctionSource: { status: TokenDetailsSourceState.NotFound } }))
+    const { result } = renderHook(() => useTokenDetailsAuctionDisplay(), { wrapper: createWrapper(store) })
+
+    expect(result.current.isAuctionOnlyPending).toBe(false)
   })
 
   it('leaves display queries disabled without an eligible auction', () => {
@@ -176,6 +223,51 @@ describe('TokenDetailsAuctionDisplayProvider', () => {
       expect(snapshot.auctionToken).toBe(snapshot.address)
       expect(snapshot.auctionChainId).toBe(snapshot.chainId)
     }
+  })
+
+  it('leaves the launch unattributed until the provenance flag is on', () => {
+    const store = createTDPStore(createPageState({ auctionSource: { status: TokenDetailsSourceState.Disabled } }))
+    const { result, rerender } = renderHook(() => useTokenDetailsAuctionDisplay(), { wrapper: createWrapper(store) })
+
+    expect(useTokenLaunchProvenance).toHaveBeenLastCalledWith(undefined)
+    expect(result.current.provenance).toBeUndefined()
+
+    vi.mocked(useFeatureFlag).mockReturnValue(true)
+    rerender()
+
+    expect(useTokenLaunchProvenance).toHaveBeenLastCalledWith(currencyId(tokenA))
+  })
+
+  it('attributes a served launch the lookup found no auction for', () => {
+    vi.mocked(useFeatureFlag).mockReturnValue(true)
+    vi.mocked(useTokenLaunchProvenance).mockReturnValue({
+      launchpad: { id: 'pons', name: 'Pons' },
+      method: LaunchProvenanceMethod.ThirdParty,
+    })
+    const store = createTDPStore(createPageState({ auctionSource: { status: TokenDetailsSourceState.NotFound } }))
+    const { result } = renderHook(() => useTokenDetailsAuctionDisplay(), { wrapper: createWrapper(store) })
+
+    expect(result.current.auction).toBeUndefined()
+    expect(result.current.provenance).toEqual({
+      launchpad: { id: 'pons', name: 'Pons' },
+      method: LaunchProvenanceMethod.ThirdParty,
+    })
+  })
+
+  it.each([
+    ['an auction launch', LaunchProvenanceMethod.CustomAuction, true],
+    ['a launch with no auction', LaunchProvenanceMethod.InstantLaunch, false],
+  ])('reads pools alongside an unresolved auction lookup for %s', (_name, method, poolLookupEnabled) => {
+    vi.mocked(useFeatureFlag).mockReturnValue(true)
+    vi.mocked(useTokenLaunchProvenance).mockReturnValue({ launchpad: { id: 'pools', name: 'pools.xyz' }, method })
+    const store = createTDPStore(createPageState({ auctionSource: { status: TokenDetailsSourceState.Loading } }))
+
+    renderHook(() => useTokenDetailsAuctionDisplay(), { wrapper: createWrapper(store) })
+
+    expect(useAuctionDisplayDataSources).toHaveBeenLastCalledWith(
+      // The auction has not landed, so everything it keys stays closed; the page's own token opens the pool read.
+      expect.objectContaining({ enabled: false, poolLookupEnabled, tokenAddress: tokenA.address }),
+    )
   })
 
   it('keeps the chain head advancing until the last sibling auction ends', () => {

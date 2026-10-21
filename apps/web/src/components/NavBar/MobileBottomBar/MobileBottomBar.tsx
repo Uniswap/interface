@@ -1,7 +1,15 @@
 import { Flex, type FlexCompatProps } from '@universe/mycelium'
+import { spacing } from '@universe/mycelium/tokens'
 import { forwardRef, type ForwardRefExoticComponent, type RefAttributes } from 'react'
+import { MWEB_BOTTOM_INSET } from '~/utils/mwebBottomInset'
 
 export const MOBILE_BAR_MAX_HEIGHT = 100 // ensure that it's translated out of view on scroll
+
+// Bottom padding, height cap and hidden offset all grow by the in-app-browser chrome / safe-area
+// inset, so the buttons clear the band and the hidden bar still leaves the viewport fully.
+const HIDDEN_OFFSET = `calc(-${MOBILE_BAR_MAX_HEIGHT}px - ${MWEB_BOTTOM_INSET})` as const
+const MAX_HEIGHT = `calc(${MOBILE_BAR_MAX_HEIGHT}px + ${MWEB_BOTTOM_INSET})` as const
+const PADDING_BOTTOM = `calc(${spacing.spacing12}px + ${MWEB_BOTTOM_INSET})` as const
 
 type MobileBottomBarProps = FlexCompatProps & { hide?: boolean }
 
@@ -15,14 +23,15 @@ export const MobileBottomBar: ForwardRefExoticComponent<MobileBottomBarProps & R
         ref={ref}
         zIndex="$dropdown"
         position="fixed"
-        bottom={hide ? -MOBILE_BAR_MAX_HEIGHT : 0}
+        bottom={hide ? HIDDEN_OFFSET : 0}
         right={0}
         left={0}
         justifyContent="space-between"
         gap="$gap8"
         width="100%"
-        maxHeight={MOBILE_BAR_MAX_HEIGHT}
+        maxHeight={MAX_HEIGHT}
         py="$padding12"
+        pb={PADDING_BOTTOM}
         px="$padding16"
         display="none"
         // The legacy config revealed as `block`, not `flex`, so `justifyContent`/`gap` above are

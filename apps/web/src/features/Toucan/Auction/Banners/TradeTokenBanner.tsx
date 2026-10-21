@@ -3,59 +3,54 @@ import { CoinConvert } from '@universe/mycelium/icons/CoinConvert'
 import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { opacifyRaw, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
-import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { AuctionEventName, ElementName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
-import { getTokenDetailsURL } from '~/data/util'
 import { useAuctionDisplayState } from '~/features/Toucan/Auction/hooks/useAuctionDisplayState'
+import { useAuctionTradingTokenInfo } from '~/features/Toucan/Auction/hooks/useAuctionTradingTokenInfo'
+import { useNavigateToAuctionTokenDetails } from '~/features/Toucan/Auction/hooks/useNavigateToAuctionTokenDetails'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { shouldShowTradeTokenBanner } from '~/features/Toucan/Auction/utils/auctionDisplayVisibility'
-import { usePrefetchTokenDetailsAuction } from '~/pages/TokenDetails/hooks/usePrefetchTokenDetailsAuction'
-import { getChainUrlParam } from '~/utils/params/chainParams'
 
 /** "Buy or sell {symbol} ›" row under the bid form, linking to the TDP once the token has a pool. */
 export function TradeTokenBanner(): JSX.Element | null {
   const { t } = useTranslation()
-  const navigate = useNavigate()
-  const prefetchAuction = usePrefetchTokenDetailsAuction()
   const colors = useSporeColors()
   const { auctionDetails, tokenColor } = useAuctionStore((state) => ({
     auctionDetails: state.auctionDetails,
     tokenColor: state.tokenColor,
   }))
   const displayState = useAuctionDisplayState()
-  const prefetchTokenDetails = useCallback(() => {
-    if (auctionDetails) {
-      prefetchAuction({ chainId: auctionDetails.chainId, tokenAddress: auctionDetails.tokenAddress })
-    }
-  }, [auctionDetails, prefetchAuction])
+  const isVisible = shouldShowTradeTokenBanner(displayState)
+  const { prefetchTokenDetails, navigateToTokenDetails, analyticsProperties } = useNavigateToAuctionTokenDetails({
+    enabled: isVisible,
+    entryPoint: 'adp_trade_token_banner',
+  })
+  const tradingToken = useAuctionTradingTokenInfo({ enabled: isVisible })
 
-  const onPress = useCallback(() => {
-    if (!auctionDetails) {
-      return
-    }
-    prefetchTokenDetails()
-    navigate(
-      getTokenDetailsURL({
-        address: auctionDetails.tokenAddress,
-        chainUrlParam: getChainUrlParam(auctionDetails.chainId),
-      }),
-    )
-  }, [auctionDetails, navigate, prefetchTokenDetails])
-
-  if (!auctionDetails || !shouldShowTradeTokenBanner(displayState)) {
+  if (!auctionDetails || !isVisible || !tradingToken.address || tradingToken.loading) {
     return null
   }
 
-  const symbol = auctionDetails.token?.currency.symbol ?? auctionDetails.tokenSymbol
+  const symbol = tradingToken.symbol ?? t('common.token')
   const accentColor = tokenColor ?? colors.accent1.val
   const backgroundColor = opacifyRaw(8, accentColor)
 
   return (
     <Trace logPress element={ElementName.AuctionTradeTokenBanner}>
-      <TouchableArea onPress={onPress} onMouseEnter={prefetchTokenDetails} onFocus={prefetchTokenDetails}>
+      <TouchableArea
+        onPress={navigateToTokenDetails}
+        onMouseEnter={prefetchTokenDetails}
+        onFocus={prefetchTokenDetails}
+      >
+        {analyticsProperties && (
+          <Trace
+            key={auctionDetails.address}
+            logImpression
+            eventOnTrigger={AuctionEventName.AuctionBannerViewed}
+            properties={analyticsProperties}
+          />
+        )}
         <Flex
           testID={TestID.ToucanTradeTokenBanner}
           row

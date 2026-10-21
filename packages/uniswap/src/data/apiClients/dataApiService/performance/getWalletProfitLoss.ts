@@ -1,18 +1,11 @@
-import { PartialMessage, PlainMessage, toPlainMessage } from '@bufbuild/protobuf'
-import { UseQueryResult, useQuery } from '@tanstack/react-query'
-import { GetWalletProfitLossRequest, GetWalletProfitLossResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import { transformInput, WithoutWalletAccount } from '@universe/api'
+import { type PlainMessage } from '@bufbuild/protobuf'
+import { queryOptions, type UseQueryResult, useQuery } from '@tanstack/react-query'
+import { type GetWalletProfitLossResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { getGetWalletProfitLossQueryOptions, type GetWalletProfitLossQueryParams } from '@universe/api'
 import { dataApiServiceClientV1 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClient'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
-import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 
-type GetWalletProfitLossInput = {
-  input?: WithoutWalletAccount<PartialMessage<GetWalletProfitLossRequest>> & {
-    evmAddress?: string
-    svmAddress?: string
-  }
+type GetWalletProfitLossInput = GetWalletProfitLossQueryParams & {
   enabled?: boolean
   refetchInterval?: number | false
 }
@@ -23,26 +16,13 @@ export function useGetWalletProfitLossQuery({
   refetchInterval,
 }: GetWalletProfitLossInput): UseQueryResult<PlainMessage<GetWalletProfitLossResponse> | undefined> {
   const { isTestnetModeEnabled } = useEnabledChains()
-  const transformedInput = transformInput(input)
-  const address = transformedInput ? transformedInput.walletAccount.platformAddresses[0]?.address : undefined
+  const hasAddress = !!input?.evmAddress || !!input?.svmAddress
 
   return useQuery(
-    persistableQueryOptions({
-      queryKey: [
-        ReactQueryCacheKey.GetWalletProfitLoss,
-        address,
-        input?.chainIds,
-        input?.since?.toString(),
-        input?.till?.toString(),
-        input?.modifier,
-      ] as const,
-      queryFn: async () =>
-        transformedInput
-          ? toPlainMessage(await dataApiServiceClientV1.getWalletProfitLoss(transformedInput))
-          : undefined,
-      enabled: !!address && !isTestnetModeEnabled && enabled !== false,
+    queryOptions({
+      ...getGetWalletProfitLossQueryOptions(dataApiServiceClientV1, { input }),
+      enabled: hasAddress && !isTestnetModeEnabled && enabled !== false,
       refetchInterval,
-      staleTime: ONE_MINUTE_MS,
     }),
   )
 }

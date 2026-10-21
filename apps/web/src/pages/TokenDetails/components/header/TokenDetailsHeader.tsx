@@ -146,7 +146,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
     plainTokenNames,
   })
   const showAddressCopy = getShowAddressCopy({ isNative, isMultiChainAsset, selectedChainId })
-  const launchpad = useTokenDetailsHeaderLaunchpad()
+  const headerLaunchpad = useTokenDetailsHeaderLaunchpad()
 
   const onBreadcrumbAddressCopied = useEvent(() => {
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
@@ -203,7 +203,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
                   iconColor="$neutral2"
                   color="$neutral2"
                   // The hover-only icon still reserves its width, which would leave the launchpad divider off-center.
-                  alwaysShowIcon={launchpad !== undefined}
+                  alwaysShowIcon={headerLaunchpad !== undefined}
                   dataTestId={TestID.BreadcrumbHoverCopy}
                   onCopy={onBreadcrumbAddressCopied}
                 >
@@ -211,7 +211,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
                 </CopyHelper>
               </Flex>
             )}
-            {launchpad && <TokenDetailsHeaderLaunchpad launchpad={launchpad} />}
+            {headerLaunchpad && <TokenDetailsHeaderLaunchpad {...headerLaunchpad} />}
           </Flex>
         }
         actions={

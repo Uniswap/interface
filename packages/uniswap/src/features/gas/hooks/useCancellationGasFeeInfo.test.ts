@@ -24,7 +24,7 @@ vi.mock('@tanstack/react-query', () => ({
   useQuery: vi.fn(),
 }))
 
-vi.mock('ui/src/assets/logos/png/all-networks-icon.png', () => ({ default: 'mocked-image' }))
+vi.mock('@universe/mycelium/assets/logos/png/all-networks-icon.png', () => ({ default: 'mocked-image' }))
 
 vi.mock('uniswap/src/features/gas/hooks', () => ({
   useTransactionGasFee: vi.fn(),

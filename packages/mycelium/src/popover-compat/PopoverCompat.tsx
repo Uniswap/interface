@@ -17,6 +17,7 @@
  * behavior contract.
  */
 import * as React from 'react'
+import { cn } from '../cn'
 import { Popover as PopoverRecipe, PopoverTrigger as PopoverRecipeTrigger } from '../shadcn/popover'
 import { mapHoverableToDelays, type PopoverCompatHoverDelays } from './hover'
 import type {
@@ -192,6 +193,7 @@ function PopoverCompatRoot({
  * the open interaction and aria attributes onto it. A caller `ref` receives
  * that div, like the legacy trigger forwards its element (consumers measure
  * it — the compat contract types it as the wider legacy `HTMLElement`).
+ * `shrink-0`: Chrome under-measures a block wrapper around nested flex content and shrinks it.
  */
 function PopoverCompatTrigger({ children, className, ref, ...handlers }: PopoverCompatTriggerProps): React.JSX.Element {
   const internals = React.useContext(PopoverCompatInternalsContext)
@@ -226,7 +228,7 @@ function PopoverCompatTrigger({ children, className, ref, ...handlers }: Popover
       nativeButton={false}
       {...hoverProps}
       // oxlint-disable-next-line react/forbid-elements -- the compat trigger IS the raw DOM boundary (no Tamagui Flex here)
-      render={<div ref={forwardTriggerRef} className={className} {...handlers} />}
+      render={<div ref={forwardTriggerRef} className={cn('shrink-0', className)} {...handlers} />}
     >
       {children}
     </PopoverRecipeTrigger>

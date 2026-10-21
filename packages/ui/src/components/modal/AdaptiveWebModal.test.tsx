@@ -229,6 +229,24 @@ describe('WebBottomSheet (web)', () => {
     })
   })
 
+  it('pads the content scroller by --mweb-bottom-inset regardless of the frame pb', async () => {
+    render(
+      <WebBottomSheet isOpen pb="$spacing24" onClose={vi.fn()}>
+        <span>inset</span>
+      </WebBottomSheet>,
+      { wrapper: SharedUIUniswapProvider },
+    )
+    const frame = await waitFor(() => {
+      const node = document.querySelector('.uw-sheet-frame')
+      expect(node).not.toBeNull()
+      return node as HTMLElement
+    })
+    const content = frame.querySelector('[data-sheet-content]') as HTMLElement
+    expect(frame.classList.contains('pb-[24px]')).toBe(true)
+    expect(content.classList.contains('pb-[var(--c-pb)]')).toBe(true)
+    expect(content.style.getPropertyValue('--c-pb')).toBe('var(--mweb-bottom-inset, 0px)')
+  })
+
   it('keeps children mounted with closed presence state while closed (Tamagui Sheet parity)', async () => {
     render(
       <WebBottomSheet isOpen={false} onClose={vi.fn()}>

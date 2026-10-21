@@ -1,6 +1,6 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
 import { renderHook } from '@testing-library/react'
-import type { Auction } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import type { Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { UniverseChainId } from '@universe/chains'
 import { FeatureFlags } from '@universe/gating'
 import { AuctionStaleTime } from 'uniswap/src/data/apiClients/dataApiService/auctions/queryTypes'

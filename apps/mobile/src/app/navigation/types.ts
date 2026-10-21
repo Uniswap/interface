@@ -221,7 +221,7 @@ export type AppStackParamList = {
   [ModalName.NotificationsOSSettings]: undefined
   [ModalName.FiatOnRampAction]: { entry: 'onramp' | 'offramp' }
   [ModalName.FundWallet]: undefined
-  [ModalName.KoreaCexTransferInfoModal]: undefined
+  [ModalName.CexTransferInfoModal]: undefined
   [ModalName.ExchangeTransferModal]: { initialState: { serviceProvider: FORServiceProvider } }
   [ModalName.Experiments]: undefined
   [ModalName.TestnetSwitchModal]: TestnetSwitchModalState

@@ -13,12 +13,14 @@ export function SwapAndLimitContextProvider({
   children,
   initialInputCurrency,
   initialOutputCurrency,
+  initialTab,
 }: PropsWithChildren<{
   initialInputCurrency?: Currency
   initialOutputCurrency?: Currency
+  initialTab?: SwapTab
 }>) {
   const { initialChainId, isUserSelectedToken, setSelectedChainId } = useMultichainContext()
-  const [currentTab, setCurrentTab] = useState<SwapTab>(SwapTab.Swap)
+  const [currentTab, setCurrentTab] = useState<SwapTab>(initialTab ?? SwapTab.Swap)
   const [currencyState, setCurrencyState] = useState<CurrencyState>({
     inputCurrency: initialInputCurrency,
     outputCurrency: initialOutputCurrency,

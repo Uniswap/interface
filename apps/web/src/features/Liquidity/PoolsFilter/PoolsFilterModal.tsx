@@ -5,8 +5,9 @@ import { X } from '@universe/mycelium/icons/X'
 import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter/NetworkFilter'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { NetworkFilter } from '~/components/NetworkFilter/NetworkFilter'
+import { useNetworkFilterChainIds } from '~/components/NetworkFilter/useFilteredChains'
 import {
   PoolFilterChip,
   PoolFilterRangeInput,
@@ -66,7 +67,8 @@ export function PoolsFilterModal({
     onChange({ ...value, protocols })
   }
 
-  const selectChain = (chainId: UniverseChainId | undefined): void => onChange({ ...value, chainId })
+  const { chainIds, allNetworksChainIds } = useNetworkFilterChainIds(networks)
+  const selectChain = (chainId: UniverseChainId | null): void => onChange({ ...value, chainId: chainId ?? undefined })
   const selectTvlBucket = (id: PoolsFilterTvlBucketId): void =>
     onChange({ ...value, tvlBucketId: value.tvlBucketId === id ? undefined : id })
 
@@ -102,15 +104,13 @@ export function PoolsFilterModal({
         {/* Network */}
         <PoolFilterSection title={t('common.network')} orientation="horizontal">
           <NetworkFilter
-            currentChainId={value.chainId}
-            onPress={selectChain}
-            showMultichainOption
-            showDisplayName
-            position="right"
-            positionFixed
-            networks={networks}
-            // Shorten the dropdown so its bottom leaves the same ~16px gap to the modal edge as the sides.
-            dropdownStyle={{ maxHeight: NETWORK_DROPDOWN_MAX_HEIGHT }}
+            trigger={{ variant: 'pill', showLabel: true }}
+            includeAllNetworks
+            chainIds={chainIds}
+            allNetworksChainIds={allNetworksChainIds}
+            selectedChain={value.chainId ?? null}
+            contentMaxHeight={NETWORK_DROPDOWN_MAX_HEIGHT}
+            onPressChain={selectChain}
           />
         </PoolFilterSection>
 

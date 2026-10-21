@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@universe/environment": "workspace:^",
-    "react-native-reanimated": "4.4.3"
+    "react-native-reanimated": "4.5.1"
   },
   "peerDependencies": {
     "tailwindcss": ">=4.0.0"

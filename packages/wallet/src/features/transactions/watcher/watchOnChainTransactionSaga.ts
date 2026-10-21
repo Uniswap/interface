@@ -206,11 +206,41 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
   }
 
   // For non-bridge transactions, use Trading API polling
+  const { status: classicStatus, pollExhausted } = yield* call(waitForTransactionStatus, { ...transaction, hash })
+
+  if (pollExhausted) {
+    // /swaps can lag inclusion (a Mainnet tx often waits longer than the poll window for its block), so
+    // finalizing Failed here shows a Failed toast for a tx that then lands. Let the receipt decide instead.
+    return yield* call(waitForClassicReceipt, { ...transaction, hash }, provider)
+  }
+
   // Trading API returns status but not receipt/networkFee, so update the transaction with these after the transaction is confirmed
   yield* spawn(updateTransactionWithReceipt, { ...transaction, hash }, provider)
-  const { status: classicStatus } = yield* call(waitForTransactionStatus, { ...transaction, hash })
 
   return { ...transaction, status: classicStatus, hash }
+}
+
+function* waitForClassicReceipt(
+  transaction: RequireNonNullable<TransactionDetails, 'hash'>,
+  provider: providers.Provider,
+) {
+  try {
+    const ethersReceipt = yield* call(waitForReceiptWithSmartPolling, { hash: transaction.hash, provider, transaction })
+    return processTransactionReceipt({ ethersReceipt, transaction })
+  } catch (error) {
+    // A throw here would abort the root transaction watcher, so keep the previous Failed fallback
+    logger.warn(
+      'watchOnChainTransactionSaga',
+      'waitForClassicReceipt',
+      'No receipt after polling; defaulting to Failed',
+      {
+        transactionId: transaction.id,
+        hash: transaction.hash,
+        error,
+      },
+    )
+    return { ...transaction, status: TransactionStatus.Failed }
+  }
 }
 
 // SWAP-2471: emit the unsampled stuck-tx analytics event (the recovery-hole + Flashbots-UNKNOWN signals).

@@ -45,10 +45,10 @@ export function LowNativeBalanceModal({ isOpen, onClose, onAcknowledge }: LowNat
       onClose={onClose}
       onReject={onClose}
     >
-      <TouchableArea>
+      <TouchableArea onPress={toggleDoNotShowAgain}>
         <Flex row alignItems="center" gap="$spacing4">
           <Checkbox size="$icon.20" checked={doNotShowAgainSelected} onPress={toggleDoNotShowAgain} />
-          <Text variant="body3" color="$neutral2" py="$spacing8" onPress={toggleDoNotShowAgain}>
+          <Text variant="body3" color="$neutral2" py="$spacing8">
             {t('common.dontShowAgain')}
           </Text>
         </Flex>

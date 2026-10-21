@@ -15,7 +15,7 @@ Components that are shared between all applications but encode Uniswap business 
 
 ## Icons and Logos
 
-Icons and logos are placed in `ui/src/components/{icons|logos}`. These files are generated from placing the file in `packages/ui/src/assets/icons` or `packages/ui/src/assets/logos/svg` and running the generate command(s):
+Icons and logos are placed in `ui/src/components/{icons|logos}`. These files are generated from placing the file in `packages/mycelium/src/assets/icons` or `packages/mycelium/src/assets/logos/svg` and running the generate command(s):
 
 ```bash
 # Generate all icons

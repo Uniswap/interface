@@ -238,6 +238,7 @@ exports[`PasskeyMenu > shows authenticators and Add passkey button after loading
               <div
                 aria-expanded="false"
                 aria-haspopup="dialog"
+                class="shrink-0"
                 data-base-ui-click-trigger=""
                 data-slot="popover-compat-trigger"
                 id="base-ui-_r_1_"
@@ -331,6 +332,7 @@ exports[`PasskeyMenu > shows authenticators and Add passkey button after loading
               <div
                 aria-expanded="false"
                 aria-haspopup="dialog"
+                class="shrink-0"
                 data-base-ui-click-trigger=""
                 data-slot="popover-compat-trigger"
                 id="base-ui-_r_3_"

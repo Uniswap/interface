@@ -1,11 +1,7 @@
-/* oxlint-disable typescript/no-explicit-any -- Third-party types not available */
 import { datadogLogs } from '@datadog/browser-logs'
 import { datadogRum } from '@datadog/browser-rum'
 import { isExtensionApp, isWebApp, isTestEnv } from '@universe/environment'
-import { Action, AnyAction, PreloadedState, Reducer, StoreEnhancerStoreCreator } from 'redux'
 import { NotImplementedError } from 'utilities/src/errors'
-import { ReduxEnhancerConfig } from 'utilities/src/logger/datadog/Datadog'
-import { getRedactedReduxActionContext, handleReduxAction } from 'utilities/src/logger/datadog/reduxUtils'
 import { LoggerErrorContext, LogLevel } from 'utilities/src/logger/types'
 
 export function logToDatadog(
@@ -23,11 +19,7 @@ export function logToDatadog(
   if (isTestEnv()) {
     return
   }
-  if (isExtensionApp) {
-    datadogLogs.logger[level](message, { ...options, reduxState })
-  } else {
-    datadogLogs.logger[level](message, options)
-  }
+  datadogLogs.logger[level](message, options)
 }
 
 export function logWarningToDatadog(
@@ -39,7 +31,7 @@ export function logWarningToDatadog(
     functionName: string
   },
 ): void {
-  datadogLogs.logger.warn(message, { ...options, ...(isExtensionApp ? { reduxState } : {}) })
+  datadogLogs.logger.warn(message, options)
 }
 
 export function logErrorToDatadog(error: Error, context?: LoggerErrorContext): void {
@@ -48,7 +40,7 @@ export function logErrorToDatadog(error: Error, context?: LoggerErrorContext): v
   }
 
   if (isExtensionApp || isWebApp) {
-    datadogRum.addError(error, { ...context, reduxState })
+    datadogRum.addError(error, context)
     return
   }
 
@@ -74,38 +66,14 @@ export function attachUnhandledRejectionHandler(): void {
   throw new NotImplementedError('attachUnhandledRejectionHandler')
 }
 
-export async function setAttributesToDatadog(_attributes: { [key: string]: unknown }): Promise<void> {
-  throw new NotImplementedError('setAttributes')
-}
-
-let reduxState: Record<string, unknown> | undefined
-
-// Inspired by Sentry createReduxEnhancer
-// https://github.com/getsentry/sentry-javascript/blob/master/packages/react/src/redux.ts
-export function createDatadogReduxEnhancer({
-  shouldLogReduxState,
-}: ReduxEnhancerConfig): (next: StoreEnhancerStoreCreator) => StoreEnhancerStoreCreator {
-  return (next: StoreEnhancerStoreCreator): StoreEnhancerStoreCreator =>
-    // oxlint-disable-next-line typescript/no-explicit-any -- biome-parity: oxlint is stricter here
-    <S = any, A extends Action = AnyAction>(reducer: Reducer<S, A>, initialState?: PreloadedState<S>) => {
-      const enhancedReducer: Reducer<S, A> = (state, action): S => {
-        const newState = reducer(state, action)
-
-        const { shouldLogAction, reduxStateToLog } = handleReduxAction({
-          newState,
-          shouldLogState: shouldLogReduxState(newState),
-        })
-
-        // Cleared, not merely left stale, on opt-out: the error paths below read this cache.
-        reduxState = reduxStateToLog
-
-        if (shouldLogAction) {
-          datadogRum.addAction(`Redux Action: ${action.type}`, getRedactedReduxActionContext(action))
-        }
-
-        return newState
-      }
-
-      return next(enhancedReducer, initialState)
-    }
+/**
+ * Global context for every RUM event and log line from here on. The browser SDKs keep context set
+ * before `init`, so web callers need no readiness gate. The fields that reach here are the Datadog
+ * allowlist; their call sites are owned by @uniswap/security in CODEOWNERS.
+ */
+export async function setAttributesToDatadog(attributes: { [key: string]: unknown }): Promise<void> {
+  for (const [key, value] of Object.entries(attributes)) {
+    datadogRum.setGlobalContextProperty(key, value)
+    datadogLogs.setGlobalContextProperty(key, value)
+  }
 }

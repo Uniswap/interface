@@ -1,5 +1,6 @@
 import { Flex, type FlexProps, Text, TouchableArea } from '@universe/mycelium'
 import { AnimatedPager } from '@universe/mycelium/animate-presence-pager'
+import { UNISWAP_LOGO } from '@universe/mycelium/assets'
 import { styled } from '@universe/mycelium/styled'
 import {
   type ComponentPropsWithoutRef,
@@ -14,7 +15,6 @@ import {
 } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, Loader, ModalCloseIcon } from 'ui/src'
-import { UNISWAP_LOGO } from 'ui/src/assets'
 import { AndroidLogo } from 'ui/src/components/icons/AndroidLogo'
 import { AppleLogo } from 'ui/src/components/icons/AppleLogo'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'

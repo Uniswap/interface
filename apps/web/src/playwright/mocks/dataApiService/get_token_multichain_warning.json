@@ -1,0 +1,28 @@
+{
+  "token": {
+    "multichainId": "e2e-warning-token",
+    "addresses": {
+      "1": "0x1eFBB78C8b917f67986BcE54cE575069c0143681"
+    },
+    "symbol": "test",
+    "decimals": 9,
+    "name": "test token",
+    "type": "TOKEN_TYPE_ERC20",
+    "project": {
+      "name": "test token",
+      "logoUrl": "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1eFBB78C8b917f67986BcE54cE575069c0143681/logo.png"
+    },
+    "safety": {
+      "isSpam": false,
+      "isVerified": false,
+      "isBlocked": false
+    },
+    "canonicalChainId": 1,
+    "deployments": {
+      "1": {
+        "address": "0x1eFBB78C8b917f67986BcE54cE575069c0143681",
+        "decimals": 9
+      }
+    }
+  }
+}

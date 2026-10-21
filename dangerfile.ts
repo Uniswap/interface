@@ -200,7 +200,6 @@ async function processAddChanges() {
     `'ui/src/theme'`,
     `'ui/src/theme/sizing'`,
     `'ui/src/loading'`,
-    `'ui/src/assets'`,
     `'ui/src/components/icons'`,
     `'ui/src/icons'`,
     `'ui/src/animations'`,

@@ -24,8 +24,9 @@ export function ExpandableSearchRowContainer({
       canExpand={canExpand}
       isExpanded={isExpanded}
       header={header}
+      // Instant: Legend List doesn't pick up the animated height, so rows below overlap the panel on mobile.
       panelSlot={
-        <HeightAnimator unmountChildrenWhenCollapsed open={showShell}>
+        <HeightAnimator animationDisabled unmountChildrenWhenCollapsed open={showShell}>
           <Flex pt={EXPANDABLE_ASSET_SHELL_HEADER_GAP_PX} width="100%">
             {issuerPanel}
           </Flex>

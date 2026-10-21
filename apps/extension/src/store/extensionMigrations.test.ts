@@ -8,6 +8,7 @@
  */
 import { DappRequestStatus } from 'src/app/features/dappRequests/shared'
 import {
+  clearPendingDappRequests,
   migratePendingDappRequestsToRecord,
   migrateUnknownBackupAccountsToMaybeManualBackup,
   removeDappInfoToChromeLocalStorage,
@@ -211,5 +212,25 @@ describe('removePersistedApolloCache', () => {
     const state = { otherData: 'preserved' }
     const result = removePersistedApolloCache(state)
     expect(result).toEqual({ otherData: 'preserved' })
+  })
+})
+
+describe('clearPendingDappRequests', () => {
+  it('drops queued requests and keeps the rest of the slice and state', () => {
+    const state = {
+      dappRequests: { requests: { 'req-1': { requestId: 'req-1' } }, mostRecent5792DappUrl: 'https://dapp.example' },
+      otherData: 'preserved',
+    }
+    expect(clearPendingDappRequests(state)).toEqual({
+      dappRequests: { requests: {}, mostRecent5792DappUrl: 'https://dapp.example' },
+      otherData: 'preserved',
+    })
+  })
+
+  it('handles state without the slice', () => {
+    expect(clearPendingDappRequests({ otherData: 'preserved' })).toEqual({
+      dappRequests: { requests: {} },
+      otherData: 'preserved',
+    })
   })
 })

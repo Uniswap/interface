@@ -2,7 +2,8 @@ import { GetWalletTokensProfitLossResponse } from '@uniswap/client-data-api/dist
 import { Token } from '@uniswap/sdk-core'
 import { UniverseChainId, normalizeTokenAddressForCache } from '@universe/chains'
 import { TestID } from '@universe/test'
-import { USDC_ARBITRUM, USDC_MAINNET } from 'uniswap/src/constants/tokens'
+import { nativeOnChain, USDC_ARBITRUM, USDC_MAINNET } from 'uniswap/src/constants/tokens'
+import { DEFAULT_NATIVE_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
 import type {
   CurrencyInfo,
   PortfolioChainBalance,
@@ -565,6 +566,57 @@ describe('useTransformTokenTableData', () => {
     expect(row.tokens).toHaveLength(1)
     expect(row.tokens[0].avgCost).toBeUndefined()
     expect(row.tokens[0].unrealizedPnl).toBeUndefined()
+  })
+
+  it('joins Solana native PnL for an SVM-only wallet', () => {
+    mockUsePortfolioAddresses.mockReturnValue({
+      evmAddress: undefined,
+      svmAddress: '59ZTUZS5DDmPx5n8kBUuJbR9awKoGxiA3J6wGbux76V8',
+      isExternalWallet: false,
+    })
+    const solInfo = {
+      currency: nativeOnChain(UniverseChainId.Solana),
+      currencyId: `${UniverseChainId.Solana}-${DEFAULT_NATIVE_ADDRESS_SOLANA}`,
+      logoUrl: null,
+    } as CurrencyInfo
+    const solLeg = createPortfolioTableChainBalance(solInfo, {
+      chainId: UniverseChainId.Solana,
+      address: DEFAULT_NATIVE_ADDRESS_SOLANA,
+      decimals: 9,
+    })
+    const solRow = createPortfolioTableMultichainBalance(solInfo, { id: 'sol-native', symbol: 'SOL', tokens: [solLeg] })
+
+    const tokenProfitLossData = {
+      tokenProfitLosses: [
+        {
+          token: { address: DEFAULT_NATIVE_ADDRESS_SOLANA, chainId: UniverseChainId.Solana },
+          averageCostUsd: 150,
+          unrealizedReturnUsd: 25,
+          unrealizedReturnPercent: 16,
+        },
+      ],
+      multichainTokenProfitLoss: [],
+    } as unknown as GetWalletTokensProfitLossResponse
+
+    mockUseSortedPortfolioBalancesMultichain.mockReturnValue({
+      data: { balances: [solRow], hiddenBalances: [] },
+      balancesById: undefined,
+      loading: false,
+      error: undefined,
+      refetch: vi.fn(),
+      isPending: false,
+      isError: false,
+    } as ReturnType<typeof useSortedPortfolioBalancesMultichain>)
+
+    const { result } = renderHook(() => useTransformTokenTableData({ tokenProfitLossData }))
+
+    expect(result.current.visible).toHaveLength(1)
+    const row = result.current.visible![0]
+    expect(row.isStablecoin).toBe(false)
+    expect(row.avgCost).toBe(150)
+    expect(row.unrealizedPnl).toBe(25)
+    expect(row.unrealizedPnlPercent).toBe(16)
+    expect(row.tokens[0].avgCost).toBe(150)
   })
 
   it('marks hidden spam token rows as isSpamHidden', () => {

@@ -4,10 +4,9 @@ import { rootExtensionSaga } from 'src/app/saga'
 import { loggerMiddleware } from 'src/background/utils/loggerMiddleware'
 import { PERSIST_KEY } from 'src/store/constants'
 import { enhancePersistReducer } from 'src/store/enhancePersistReducer'
-import { ExtensionState, extensionPersistedStateList, extensionReducer } from 'src/store/extensionReducer'
+import { extensionPersistedStateList, extensionReducer } from 'src/store/extensionReducer'
 import { EXTENSION_STATE_VERSION, migrations } from 'src/store/migrations'
 import { delegationListenerMiddleware } from 'uniswap/src/features/smartWallet/delegation/slice'
-import { createDatadogReduxEnhancer } from 'utilities/src/logger/datadog/Datadog'
 import { logger } from 'utilities/src/logger/logger'
 import { createStore } from 'wallet/src/state'
 import { createMigrate } from 'wallet/src/state/createMigrate'
@@ -23,20 +22,12 @@ const persistConfig = {
 
 const persistedReducer = enhancePersistReducer(persistReducer(persistConfig, extensionReducer))
 
-const dataDogReduxEnhancer = createDatadogReduxEnhancer({
-  shouldLogReduxState: (state: ExtensionState): boolean => {
-    // Do not log the state if a user has opted out of analytics.
-    return !!state.telemetry.allowAnalytics
-  },
-})
-
 const setupStore = (): ReturnType<typeof createStore> => {
   return createStore({
     reducer: persistedReducer,
     additionalSagas: [rootExtensionSaga],
     middlewareBefore: __DEV__ ? [loggerMiddleware] : [],
     middlewareAfter: [delegationListenerMiddleware.middleware],
-    enhancers: [dataDogReduxEnhancer],
   })
 }
 

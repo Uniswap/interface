@@ -1,4 +1,4 @@
-import { PartialMessage } from '@bufbuild/protobuf'
+import { PartialMessage, type PlainMessage } from '@bufbuild/protobuf'
 import { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
 import { Balance } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { CurrencyAmount, NativeCurrency, Token } from '@uniswap/sdk-core'
@@ -28,7 +28,7 @@ export async function fetchOnChainBalances({
   accountAddress,
   currencyIds,
 }: {
-  cachedPortfolio: NonNullable<GetPortfolioResponse['portfolio']>
+  cachedPortfolio: NonNullable<PlainMessage<GetPortfolioResponse>['portfolio']>
   accountAddress: Address
   currencyIds: Set<CurrencyId>
 }): Promise<OnChainMap> {
@@ -145,8 +145,8 @@ async function getDenominatedValue({
 }: {
   accountAddress: Address
   onchainQuantityCurrencyAmount: CurrencyAmount<NativeCurrency | Token>
-  cachedBalance?: Balance
-  cachedPortfolio: NonNullable<GetPortfolioResponse['portfolio']>
+  cachedBalance?: PlainMessage<Balance>
+  cachedPortfolio: NonNullable<PlainMessage<GetPortfolioResponse>['portfolio']>
   currencyId: CurrencyId
 }): Promise<DenominatedValue | undefined> {
   const log = createLogger(FILE_NAME, 'getDenominatedValue', '[ITBU]')
@@ -217,8 +217,8 @@ function getInferredCachedDenominatedValue({
   onchainQuantityCurrencyAmount,
   currencyId: _currencyId,
 }: {
-  cachedPortfolio: NonNullable<GetPortfolioResponse['portfolio']>
-  cachedBalance?: Balance
+  cachedPortfolio: NonNullable<PlainMessage<GetPortfolioResponse>['portfolio']>
+  cachedBalance?: PlainMessage<Balance>
   onchainQuantityCurrencyAmount: CurrencyAmount<NativeCurrency | Token>
   currencyId: CurrencyId
 }): DenominatedValue | undefined {
@@ -255,10 +255,10 @@ function findCachedBalance({
   chainId,
   currencyAddress,
 }: {
-  cachedPortfolio: NonNullable<GetPortfolioResponse['portfolio']>
+  cachedPortfolio: NonNullable<PlainMessage<GetPortfolioResponse>['portfolio']>
   chainId: UniverseChainId
   currencyAddress: string
-}): Balance | undefined {
+}): PlainMessage<Balance> | undefined {
   return cachedPortfolio.balances.find((balance) => {
     if (!balance.token) {
       return false
@@ -280,7 +280,7 @@ function findCachedBalance({
 }
 
 function getCurrencyFromCache(
-  token: Balance['token'],
+  token: PlainMessage<Balance>['token'],
   currencyId: CurrencyId,
 ): { currency: Token | SolanaToken; tokenInfo: null } | null {
   if (!token) {
@@ -306,7 +306,7 @@ async function resolveCurrency({
   token,
   currencyId,
 }: {
-  token?: Balance['token']
+  token?: PlainMessage<Balance>['token']
   currencyId: CurrencyId
 }): Promise<{ currency: Token | SolanaToken; tokenInfo: CurrencyInfo | null } | null> {
   const log = createLogger(FILE_NAME, 'resolveCurrency', '[ITBU]')

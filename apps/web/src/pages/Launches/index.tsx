@@ -42,8 +42,8 @@ import { preloadTokenDetailsChunk } from '~/pages/Launches/usePrefetchLaunchToke
 import { useTrendingMarquee } from '~/pages/Launches/useTrendingMarquee'
 
 const TRENDING_COUNT = 10
-// Chains offered in the launches network filter. Statsig-configurable; defaults to Robinhood Chain only.
-const DEFAULT_LAUNCHES_NETWORK_FILTER_CHAIN_IDS = [UniverseChainId.Robinhood] as number[]
+// Chains the launches surface covers when Statsig doesn't override them.
+const LAUNCH_CHAIN_IDS = [UniverseChainId.Robinhood, UniverseChainId.Arc]
 
 /**
  * Hero marquee page size, matching the Trending feed Pools renders. The server ranks the whole
@@ -254,12 +254,12 @@ export default function LaunchesPage(): JSX.Element {
     setNetworkChainId,
   } = useLaunchesFilters()
 
-  // Chains this surface is scoped to (Statsig-driven; defaults to Robinhood Chain only). Applied to
-  // every launches request so the feed never fetches launches on unlisted chains.
+  // Chains this surface is scoped to (Statsig-overridable). Applied to every launches request so the
+  // feed never fetches launches on unlisted chains.
   const allowedNetworkChainIds = useDynamicConfigValue({
     config: DynamicConfigs.LaunchesNetworkFilterChainIds,
     key: LaunchesNetworkFilterChainIdsConfigKey.ChainIds,
-    defaultValue: DEFAULT_LAUNCHES_NETWORK_FILTER_CHAIN_IDS,
+    defaultValue: LAUNCH_CHAIN_IDS as number[],
   }) as UniverseChainId[]
 
   // All filters, sort, and the quick-select recency window (All = 24h, Recently launched = 1h) are
@@ -284,19 +284,14 @@ export default function LaunchesPage(): JSX.Element {
   // under the Trending chip) needs the same logging as the shelf below to stay distinguishable
   // from a genuinely empty feed.
   useLogFeedError(launchesError, 'tableFeed')
-  // Feed backing the network-filter options, scoped to the surface's allowed chains. A failure
-  // silently thins the network-filter options, so log it.
-  const { launches: allLaunches, error: allLaunchesError } = useLaunches({ chainIds: allowedNetworkChainIds })
-  useLogFeedError(allLaunchesError, 'networkOptionsFeed')
   // Dedicated Pools-chains feed for the hero marquee, requested with the same params as the
-  // Trending tab Pools renders: the `pools` group (both launch mechanisms), the chains pinned (Arc
-  // joins Robinhood once its rollout flag is on), and the server's TRENDING ranking, which backfills
+  // Trending tab Pools renders: the `pools` group (both launch mechanisms), the chains pinned
+  // (Robinhood and Arc), and the server's TRENDING ranking, which backfills
   // its page by 24h volume so the page is never thin. Asking CCA-only, newest-first for 25 rows was
   // what starved the marquee. A failure just empties the marquee, so log it.
-  const isArcEnabled = useFeatureFlag(FeatureFlags.Arc)
   const { launches: poolsLaunches, error: poolsLaunchesError } = useLaunches({
     launchpadIds: [POOLS_LAUNCHPAD_GROUP_ID],
-    chainIds: isArcEnabled ? [UniverseChainId.Robinhood, UniverseChainId.Arc] : [UniverseChainId.Robinhood],
+    chainIds: LAUNCH_CHAIN_IDS,
     sortBy: LaunchesOrderBy.TRENDING,
     pageSize: HERO_PAGE_SIZE,
   })
@@ -324,10 +319,6 @@ export default function LaunchesPage(): JSX.Element {
     () => toLaunchItems({ launches, launchpadById, auctionAddressByToken }),
     [launches, launchpadById, auctionAddressByToken],
   )
-  const allItems = useMemo(
-    () => toLaunchItems({ launches: allLaunches, launchpadById, auctionAddressByToken }),
-    [allLaunches, launchpadById, auctionAddressByToken],
-  )
 
   const trending = useMemo(
     () => toLaunchItems({ launches: trendingLaunches, launchpadById, auctionAddressByToken }).slice(0, TRENDING_COUNT),
@@ -349,13 +340,6 @@ export default function LaunchesPage(): JSX.Element {
     () => launchpads.map((launchpad) => ({ value: launchpad.id, label: launchpad.name, logoUrl: launchpad.logoUrl })),
     [launchpads],
   )
-  const networks = useMemo(() => {
-    const chainIds = allItems
-      .map((item) => item.logoChainId)
-      .filter((chainId): chainId is NonNullable<typeof chainId> => chainId !== undefined)
-      .filter((chainId) => allowedNetworkChainIds.includes(chainId))
-    return Array.from(new Set(chainIds))
-  }, [allItems, allowedNetworkChainIds])
 
   // Trending "View all" (Explore stocks-shelf pattern): open the launch feed on the Trending
   // category — same params as the carousel feed, table-paged — and scroll the table into view.
@@ -377,7 +361,7 @@ export default function LaunchesPage(): JSX.Element {
           gap="$spacing36"
           pt="$spacing24"
           px="$spacing40"
-          $md={{ px: '$spacing16' }}
+          $md={{ px: '$none' }}
         >
           {/* Banner wins outright; the teaser only stands in when the banner is off. */}
           {enablePoolsXyzBanner ? (
@@ -411,7 +395,7 @@ export default function LaunchesPage(): JSX.Element {
               {/* Upcoming chains teaser: one disabled multichain "Coming soon" row in the selector. */}
               <LaunchFilterBar
                 launchpadOptions={launchpadOptions}
-                networks={networks}
+                networks={allowedNetworkChainIds}
                 showComingSoonNetworks
                 selectedSources={sources}
                 networkChainId={networkChainId}

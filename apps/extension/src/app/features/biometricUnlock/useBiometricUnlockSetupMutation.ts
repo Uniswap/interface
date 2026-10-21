@@ -1,4 +1,4 @@
-import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { uint8ToBase64 } from '@universe/encoding'
 import { encryptPasswordWithBiometricData } from 'src/app/features/biometricUnlock/biometricAuthUtils'
 import { biometricUnlockCredentialQuery } from 'src/app/features/biometricUnlock/biometricUnlockCredentialQuery'
@@ -10,6 +10,7 @@ import { startNavigatorCredentialRequest } from 'src/app/features/biometricUnloc
 import { assertPublicKeyCredential } from 'src/app/features/biometricUnlock/utils/assertPublicKeyCredential'
 import { isUserVerifyingPlatformAuthenticatorAvailable } from 'src/app/utils/device/builtInBiometricCapabilitiesQuery'
 import { logger } from 'utilities/src/logger/logger'
+import { useSecretMutation, UseSecretMutationResult } from 'utilities/src/security/useSecretMutation'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import {
   createEmptySecretPayload,
@@ -25,10 +26,10 @@ interface PublicKeyCredentialCreationOptionsWithHints extends PublicKeyCredentia
 export function useBiometricUnlockSetupMutation(options?: {
   onSuccess?: () => void
   onError?: (error: Error) => void
-}): UseMutationResult<void, Error, string> {
+}): UseSecretMutationResult<string, void, Error> {
   const queryClient = useQueryClient()
 
-  return useMutation({
+  return useSecretMutation({
     mutationFn: async (password: string) => {
       const { abortSignal } = startNavigatorCredentialRequest('New biometric setup request initiated')
 
@@ -39,7 +40,6 @@ export function useBiometricUnlockSetupMutation(options?: {
       })
       await BiometricUnlockStorage.set(biometricStorageData)
     },
-    retry: false,
     onSettled: () => {
       // oxlint-disable-next-line typescript/no-floating-promises -- biome-parity: oxlint is stricter here
       queryClient.invalidateQueries(biometricUnlockCredentialQuery())

@@ -22,6 +22,8 @@ export interface ExploreRwaRowsResult {
   isFetchingNextPage: boolean
   /** True when a `sort` was requested and the v2 source served `rows` in that order; v1 ignores `sort`. */
   isSortedByServer: boolean
+  /** True when the v2 source served `rows` with `searchQuery` applied; v1 serves the whole list and ignores it. */
+  isSearchedByServer: boolean
 }
 
 export interface ExploreRwaRowsSort {
@@ -39,6 +41,7 @@ export function useExploreRwaRows({
   chainIds = [],
   volumeOrderBy,
   sort,
+  searchQuery,
   enabled = true,
 }: {
   category: RwaCategory
@@ -47,6 +50,8 @@ export function useExploreRwaRows({
   volumeOrderBy: VolumeOrderBy
   /** Server ranking for the v2 source, so paged rows arrive already ordered. */
   sort?: ExploreRwaRowsSort
+  /** Server search for the v2 source, already trimmed; undefined = unsearched. */
+  searchQuery?: string
   enabled?: boolean
 }): ExploreRwaRowsResult {
   const isTokenGroupsSource = useIsTokenCategoriesEnabled()
@@ -56,6 +61,7 @@ export function useExploreRwaRows({
     chainIds,
     orderBy: sort?.orderBy ?? volumeOrderBy,
     ascending: sort?.ascending ?? false,
+    searchQuery,
     enabled: enabled && isTokenGroupsSource,
   })
   const rankedRwasQuery = useListRankedRwasQuery({
@@ -89,6 +95,7 @@ export function useExploreRwaRows({
       hasNextPage,
       isFetchingNextPage,
       isSortedByServer: sort !== undefined,
+      isSearchedByServer: true,
     }
   }
 
@@ -102,5 +109,6 @@ export function useExploreRwaRows({
     hasNextPage: false,
     isFetchingNextPage: false,
     isSortedByServer: false,
+    isSearchedByServer: false,
   }
 }

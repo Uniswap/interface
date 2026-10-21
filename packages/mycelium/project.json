@@ -14,7 +14,7 @@
       "inputs": [
         "lintConfig",
         "{projectRoot}/src/scripts/componentize-icons.ts",
-        "{workspaceRoot}/packages/ui/src/assets/icons/**",
+        "{projectRoot}/src/assets/icons/**",
         "{projectRoot}/src/components/icons/**",
         "ciCacheBust"
       ],
@@ -29,7 +29,7 @@
       "inputs": [
         "lintConfig",
         "{projectRoot}/src/scripts/componentize-icons.ts",
-        "{workspaceRoot}/packages/ui/src/assets/icons/**",
+        "{projectRoot}/src/assets/icons/**",
         "{projectRoot}/src/components/icons/**",
         "ciCacheBust"
       ],

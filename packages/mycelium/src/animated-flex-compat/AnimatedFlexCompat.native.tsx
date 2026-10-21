@@ -1,4 +1,5 @@
 import Animated from 'react-native-reanimated'
+import type { FirstOverloadReturn } from '../compat/first-overload-return'
 import { FlexCompat } from '../flex-compat/FlexCompat'
 
 /**
@@ -9,7 +10,9 @@ import { FlexCompat } from '../flex-compat/FlexCompat'
 // mycelium-internal prop types the animated-flex-compat subpath does not
 // export (TS2883 under declaration emit); the instantiation expression keeps
 // the exact same type. Same shape as the legacy native leg.
-export const AnimatedFlexCompat: ReturnType<typeof Animated.createAnimatedComponent<typeof FlexCompat>> =
+// FirstOverloadReturn targets the overload ReturnType<> stopped resolving in
+// reanimated 4.5 — rationale in ../compat/first-overload-return.
+export const AnimatedFlexCompat: FirstOverloadReturn<typeof Animated.createAnimatedComponent<typeof FlexCompat>> =
   Animated.createAnimatedComponent(FlexCompat)
 
 // Reanimated v4 returns a function-style AnimatedComponentType that doesn't

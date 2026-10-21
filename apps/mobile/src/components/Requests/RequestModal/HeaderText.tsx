@@ -1,8 +1,8 @@
 import { Currency } from '@uniswap/sdk-core'
 import { Text } from '@universe/mycelium'
 import React from 'react'
-import { Trans } from 'react-i18next'
 import { WalletConnectSigningRequest } from 'src/features/walletConnect/walletConnectSlice'
+import { Trans } from 'ui/src'
 import { EthMethod, WalletConnectEthMethod } from 'uniswap/src/features/dappRequests/types'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 

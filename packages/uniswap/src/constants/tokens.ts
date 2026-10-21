@@ -51,7 +51,7 @@ export const { USDT0: USDT0_INK, USDC: USDC_INK } = INK_CHAIN_INFO.tokens
 
 export const { USDC: USDC_SONEIUM } = SONEIUM_CHAIN_INFO.tokens
 
-export const { pathUSD: PATHUSD_TEMPO, 'USDC.e': USDC_E_TEMPO } = TEMPO_CHAIN_INFO.tokens
+export const { pathUSD: PATHUSD_TEMPO, 'USDC.e': USDC_E_TEMPO, OUSD: OUSD_TEMPO } = TEMPO_CHAIN_INFO.tokens
 
 export const { USDC: USDC_XLAYER, USDT0: USDT0_XLAYER } = XLAYER_CHAIN_INFO.tokens
 

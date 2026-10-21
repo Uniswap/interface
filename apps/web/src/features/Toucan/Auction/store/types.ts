@@ -1,5 +1,5 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
-import { Auction, Checkpoint, TickDetail } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { Auction, Checkpoint, TickDetail } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { EVMUniverseChainId } from '@universe/chains'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import type { ChartMode } from '~/features/Toucan/ToucanChart/renderer'

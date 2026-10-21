@@ -2,7 +2,7 @@ import { Flex, Text, UniversalImage, iconSizes } from '@universe/mycelium'
 import { useTranslation } from 'react-i18next'
 import { getRWAIssuerLabel } from 'uniswap/src/features/rwa/issuers'
 import type { RWAIssuerDisplay } from 'uniswap/src/features/rwa/types'
-import { useRWAIssuerLogoUrl } from 'uniswap/src/features/rwa/useRWAIssuerLogoUrl'
+import { useRWAIssuerLogo } from 'uniswap/src/features/rwa/useRWAIssuerLogoUrl'
 import { HeaderDivider } from '~/components/StickyCollapsibleHeader/HeaderDivider'
 
 interface RWAIssuerHeaderDetailsProps {
@@ -11,14 +11,13 @@ interface RWAIssuerHeaderDetailsProps {
 
 export function RWAIssuerHeaderDetails({ issuer }: RWAIssuerHeaderDetailsProps): JSX.Element | null {
   const { t } = useTranslation()
-  const configLogoUrl = useRWAIssuerLogoUrl(issuer?.issuer)
+  const issuerLogoUrl = useRWAIssuerLogo({ issuer, variant: 'color' })
   const issuerLabel = issuer && getRWAIssuerLabel(issuer)
 
   if (!issuer || !issuerLabel) {
     return null
   }
 
-  const issuerLogoUrl = issuer.issuerLogoUrl ?? configLogoUrl
   const logoSize = iconSizes.icon20
 
   return (

@@ -55,13 +55,23 @@ export function useCreateTDPContext(): {
 
   // getTdpTokenMultiChainQueryOptions cache-normalizes the address, so this query key matches the ones
   // the shared token hooks (and the Launches hover-prefetch) build — GetTokenMultiChain never double-fetches.
-  const getTokenMultiChainQuery = useQuery(
-    getTdpTokenMultiChainQueryOptions({
-      chainId: currencyChainInfo.id,
-      address: tokenAddress,
-      isNative,
-    }),
-  )
+  const tokenMultiChainQueryOptions = getTdpTokenMultiChainQueryOptions({
+    chainId: currencyChainInfo.id,
+    address: tokenAddress,
+    isNative,
+  })
+  // Legacy rows without deployments must refetch on mount and when navigating between tokens.
+  const staleTime: typeof tokenMultiChainQueryOptions.staleTime = (query) => {
+    const persistedToken = query.state.data?.token
+    // `deployments` is typed required, so widen it to see the key an older client's row lacks.
+    if (persistedToken && !(persistedToken as Partial<typeof persistedToken>).deployments) {
+      return 0
+    }
+    return typeof tokenMultiChainQueryOptions.staleTime === 'function'
+      ? tokenMultiChainQueryOptions.staleTime(query)
+      : (tokenMultiChainQueryOptions.staleTime ?? 0)
+  }
+  const getTokenMultiChainQuery = useQuery({ ...tokenMultiChainQueryOptions, staleTime })
 
   const token = useMemo(
     () =>
@@ -108,7 +118,12 @@ export function useCreateTDPContext(): {
   const { pageQueryLoading, chainDataLoading, multichainTokenLoaded } = useMemo(() => {
     // keepPreviousData can serve a stale, chain-mismatched token with isLoading: false during a nav,
     // so isPlaceholderData must count as unsettled too — it's false again on a same-key refetch.
-    const isRestTokenUnsettled = getTokenMultiChainQuery.isLoading || getTokenMultiChainQuery.isPlaceholderData
+    // A persisted row without a usable deployment gives no currency but isLoading: false, so a refetch in flight
+    // with no currency must also count as unsettled, or the page redirects to "Token not found" before it lands.
+    const isRestTokenUnsettled =
+      getTokenMultiChainQuery.isLoading ||
+      getTokenMultiChainQuery.isPlaceholderData ||
+      (getTokenMultiChainQuery.isFetching && !currency)
     return {
       pageQueryLoading: isRestTokenUnsettled,
       chainDataLoading: isRestTokenUnsettled,
@@ -117,8 +132,10 @@ export function useCreateTDPContext(): {
   }, [
     getTokenMultiChainQuery.isLoading,
     getTokenMultiChainQuery.isPlaceholderData,
+    getTokenMultiChainQuery.isFetching,
     getTokenMultiChainQuery.isSuccess,
     getTokenMultiChainQuery.isError,
+    currency,
   ])
 
   const queryClient = useQueryClient()

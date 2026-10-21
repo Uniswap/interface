@@ -1,7 +1,8 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
 import { Code, ConnectError } from '@connectrpc/connect'
-import { keepPreviousData } from '@tanstack/react-query'
-import type { Auction } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { keepPreviousData, useQueryClient } from '@tanstack/react-query'
+import type { GetTokenMultiChainResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
+import type { Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { GraphQLApi } from '@universe/api'
 import { normalizeTokenAddressForCache, UniverseChainId } from '@universe/chains'
 import { useFeatureFlag } from '@universe/gating'
@@ -13,6 +14,7 @@ import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { TokenDetailsSourceState } from '~/pages/TokenDetails/context/tokenDetailsSourceState'
 import { useCreateTDPContext } from '~/pages/TokenDetails/context/useCreateTDPContext'
 import { useTokenDetailsAuction } from '~/pages/TokenDetails/hooks/useTokenDetailsAuction'
+import { getTdpTokenMultiChainQueryOptions } from '~/pages/TokenDetails/tdpTokenQueryOptions'
 import { mocked } from '~/test-utils/mocked'
 import { renderHook as renderHookWithProviders, waitFor } from '~/test-utils/render'
 import { createMockTDPChartState } from '~/test-utils/tokenDetails/fixtures'
@@ -33,6 +35,7 @@ vi.mock('uniswap/src/data/apiClients/dataApiService/tokens/queries', async (impo
       queryFn: restMocks.getTokenMultiChainQueryFn,
       enabled,
       retry: false,
+      staleTime: 30_000,
       // Matches the real query options' policy so navigation tests exercise the same
       // stale-placeholder-during-refetch behavior the production hook has to handle.
       placeholderData: keepPreviousData,
@@ -556,6 +559,120 @@ describe('core new endpoint functionality', () => {
     expect(result.current.state.chainDataLoading).toBe(true)
 
     mocked(useChainIdFromUrlParam).mockReturnValue(UniverseChainId.Mainnet)
+  })
+
+  it('refetches a fresh persisted row without deployments on mount, stays unsettled, then resolves the currency', async () => {
+    const { queryKey } = getTdpTokenMultiChainQueryOptions({
+      chainId: UniverseChainId.Mainnet,
+      address: normalizeTokenAddressForCache(USDC_MAINNET.address),
+      isNative: false,
+    })
+    const legacyRow = {
+      token: { ...restMultichainToken, deployments: undefined },
+    } as unknown as PlainMessage<GetTokenMultiChainResponse>
+    let resolveRefetch: (value: { token: typeof restMultichainToken }) => void = () => {}
+    restMocks.getTokenMultiChainQueryFn.mockReturnValue(
+      new Promise((resolve) => {
+        resolveRefetch = resolve
+      }),
+    )
+
+    const { result } = renderHookWithProviders(() => {
+      // Seeds a row an older client persisted without `deployments`, fresh within staleTime: restored as success data,
+      // so isLoading is false and only the refetchOnMount override can trigger a refetch.
+      const queryClient = useQueryClient()
+      if (!queryClient.getQueryData(queryKey)) {
+        queryClient.setQueryData(queryKey, legacyRow, { updatedAt: Date.now() })
+      }
+      return useCreateTDPContext()
+    })
+
+    await waitFor(() => expect(restMocks.getTokenMultiChainQueryFn).toHaveBeenCalled())
+    expect(result.current.state.currency).toBeUndefined()
+    expect(result.current.state.pageQueryLoading).toBe(true)
+    expect(result.current.state.chainDataLoading).toBe(true)
+
+    resolveRefetch({ token: restMultichainToken })
+
+    await waitFor(() => expect(result.current.state.currency).toBeDefined())
+    expect(result.current.state.pageQueryLoading).toBe(false)
+    expect(result.current.state.chainDataLoading).toBe(false)
+  })
+
+  it('refetches a fresh persisted row without deployments when navigating between tokens without remounting', async () => {
+    const nextMultichainToken = {
+      ...restMultichainToken,
+      categoryIds: [],
+      ...multichainDeploymentFields({ [String(UniverseChainId.Mainnet)]: USDC_BASE_ADDRESS }),
+    }
+    const { queryKey } = getTdpTokenMultiChainQueryOptions({
+      chainId: UniverseChainId.Mainnet,
+      address: normalizeTokenAddressForCache(USDC_BASE_ADDRESS),
+      isNative: false,
+    })
+    const { result, rerender } = renderHookWithProviders(() => ({
+      context: useCreateTDPContext(),
+      queryClient: useQueryClient(),
+    }))
+
+    await waitFor(() => expect(result.current.context.state.currency?.wrapped.address).toBe(USDC_MAINNET.address))
+
+    result.current.queryClient.setQueryData(
+      queryKey,
+      {
+        token: { ...nextMultichainToken, deployments: undefined },
+      } as unknown as PlainMessage<GetTokenMultiChainResponse>,
+      { updatedAt: Date.now() },
+    )
+    let resolveRefetch: (value: { token: typeof nextMultichainToken }) => void = () => {}
+    restMocks.getTokenMultiChainQueryFn.mockReturnValue(
+      new Promise((resolve) => {
+        resolveRefetch = resolve
+      }),
+    )
+    mocked(useParams).mockReturnValue({ tokenAddress: USDC_BASE_ADDRESS, chainName: 'ethereum' })
+
+    rerender()
+
+    expect(result.current.context.state.currency).toBeUndefined()
+    expect(result.current.context.state.pageQueryLoading).toBe(true)
+    expect(result.current.context.state.chainDataLoading).toBe(true)
+    await waitFor(() => expect(restMocks.getTokenMultiChainQueryFn).toHaveBeenCalledTimes(2))
+
+    resolveRefetch({ token: nextMultichainToken })
+
+    await waitFor(() => expect(result.current.context.state.currency?.wrapped.address).toBe(USDC_BASE_ADDRESS))
+    expect(result.current.context.state.pageQueryLoading).toBe(false)
+    expect(result.current.context.state.chainDataLoading).toBe(false)
+  })
+
+  it('uses a fresh healthy cached token immediately when navigating without remounting', async () => {
+    const nextMultichainToken = {
+      ...restMultichainToken,
+      categoryIds: [],
+      ...multichainDeploymentFields({ [String(UniverseChainId.Mainnet)]: USDC_BASE_ADDRESS }),
+    }
+    const { queryKey } = getTdpTokenMultiChainQueryOptions({
+      chainId: UniverseChainId.Mainnet,
+      address: normalizeTokenAddressForCache(USDC_BASE_ADDRESS),
+      isNative: false,
+    })
+    const { result, rerender } = renderHookWithProviders(() => ({
+      context: useCreateTDPContext(),
+      queryClient: useQueryClient(),
+    }))
+
+    await waitFor(() => expect(result.current.context.state.currency?.wrapped.address).toBe(USDC_MAINNET.address))
+
+    result.current.queryClient.setQueryData(queryKey, { token: nextMultichainToken }, { updatedAt: Date.now() })
+    mocked(useParams).mockReturnValue({ tokenAddress: USDC_BASE_ADDRESS, chainName: 'ethereum' })
+
+    rerender()
+
+    expect(result.current.context.state.currency?.wrapped.address).toBe(USDC_BASE_ADDRESS)
+    expect(result.current.context.state.pageQueryLoading).toBe(false)
+    expect(result.current.context.state.chainDataLoading).toBe(false)
+    expect(restMocks.getTokenMultiChainQueryFn).toHaveBeenCalledOnce()
   })
 
   it('keeps the page loading when an auction resolves before a same-chain token navigation', async () => {

@@ -1,4 +1,4 @@
-import type { GetAuctionRequest, GetLatestCheckpointRequest } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import type { GetAuctionRequest, GetLatestCheckpointRequest } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 

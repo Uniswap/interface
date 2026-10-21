@@ -23,6 +23,8 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { DetailLineItem } from '~/components/DetailLineItem'
 import { getLPBaseAnalyticsProperties } from '~/features/Liquidity/analytics'
 import { useGetPoolTokenPercentage } from '~/features/Liquidity/hooks/useGetPoolTokenPercentage'
+import { useIsLiquiditySagaRunning } from '~/features/Liquidity/hooks/useIsLiquiditySagaRunning'
+import { LiquiditySagaPendingMessage } from '~/features/Liquidity/LiquiditySagaPendingMessage'
 import { TokenInfo } from '~/features/Liquidity/TokenInfo'
 import { useCurrencyInfo } from '~/hooks/Tokens'
 import { useAccount } from '~/hooks/useAccount'
@@ -52,6 +54,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
   const dispatch = useDispatch()
   const trace = useTrace()
   const { needsPasskeySignin } = useGetPasskeyAuthStatus(connectedAccount.connector?.id)
+  const isLiquiditySagaRunning = useIsLiquiditySagaRunning()
 
   const {
     txContext,
@@ -294,10 +297,12 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
               }}
             />
           </Flex>
+          <LiquiditySagaPendingMessage />
           <Flex row>
             <Button
               size="large"
               onPress={onDecreaseLiquidity}
+              disabled={isLiquiditySagaRunning}
               icon={needsPasskeySignin ? <Passkey size="$icon.24" color="$white" /> : undefined}
             >
               {needsPasskeySignin ? t('pool.removeLiquidity') : t('common.confirm')}

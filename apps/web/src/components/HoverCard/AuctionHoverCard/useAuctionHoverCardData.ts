@@ -1,6 +1,6 @@
 import { toPlainMessage } from '@bufbuild/protobuf'
 import { useQuery } from '@tanstack/react-query'
-import { GetAuctionRequest, GetLatestCheckpointRequest } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { GetAuctionRequest, GetLatestCheckpointRequest } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { AddressStringFormat, normalizeAddress, type UniverseChainId } from '@universe/chains'
 import { useMemo } from 'react'
 import {

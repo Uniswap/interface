@@ -338,6 +338,19 @@ describe('WebBottomSheet compat', () => {
     expect(document.querySelector(OVERLAY)?.classList.contains('consumer-probe')).toBe(false)
   })
 
+  it('pads the content scroller by --mweb-bottom-inset regardless of the frame pb', () => {
+    render(
+      <WebBottomSheet isOpen pb="$spacing24">
+        <span>inset</span>
+      </WebBottomSheet>,
+    )
+    const frame = document.querySelector('.mc-sheet-frame') as HTMLElement
+    const content = frame.querySelector('[data-sheet-content]') as HTMLElement
+    expect(frame.classList.contains('pb-[24px]')).toBe(true)
+    expect(content.classList.contains('pb-[var(--c-pb)]')).toBe(true)
+    expect(content.style.getPropertyValue('--c-pb')).toBe('var(--mweb-bottom-inset, 0px)')
+  })
+
   it('accepts the popover-compat webBottomSheetProps call-site shape', () => {
     // Compile-time coverage: the NetworkFilterV2-style call site
     // (`webBottomSheetProps={{ onClose, snapPoints: [60], snapPointsMode: 'percent' }}`)

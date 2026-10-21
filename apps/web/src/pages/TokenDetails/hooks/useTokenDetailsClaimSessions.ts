@@ -1,5 +1,5 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
-import type { Auction } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import type { Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { AddressStringFormat, type EVMUniverseChainId, isEVMChain, normalizeAddress, Platform } from '@universe/chains'
 import { useMemo } from 'react'
 import { useActiveAddress } from '~/features/accounts/store/hooks'

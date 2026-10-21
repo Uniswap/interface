@@ -9,6 +9,7 @@ import {
   getDependentAmountFromV2Pair,
   getDependentAmountFromV3Position,
   getDependentAmountFromV4Position,
+  isImpossibleDependentAmount,
 } from '~/features/Liquidity/utils/getDependentAmount'
 import { PositionField } from '~/types/position'
 
@@ -20,6 +21,30 @@ const tickSpaceLimits = [
   nearestUsableTick(TickMath.MIN_TICK, TICK_SPACINGS[FeeAmount.MEDIUM]),
   nearestUsableTick(TickMath.MAX_TICK, TICK_SPACINGS[FeeAmount.MEDIUM]),
 ]
+
+// A tight WETH/USDT range three spacings wide, and pools priced exactly on each of its edges. WETH sorts
+// before USDT, so WETH is token0.
+const TIGHT_TICK_LOWER = -194160
+const TIGHT_TICK_UPPER = -193980
+const POOL_LIQUIDITY = '6661209530036967407'
+const MAX_UINT_256 = (1n << 256n) - 1n
+
+function v3PoolAtTick(tick: number): V3Pool {
+  return new V3Pool(WETH, USDT, FeeAmount.MEDIUM, TickMath.getSqrtRatioAtTick(tick), POOL_LIQUIDITY, tick)
+}
+
+function v4PoolAtTick(tick: number): V4Pool {
+  return new V4Pool(
+    ETH_MAINNET,
+    USDT,
+    FeeAmount.MEDIUM,
+    TICK_SPACINGS[FeeAmount.MEDIUM],
+    ZERO_ADDRESS,
+    TickMath.getSqrtRatioAtTick(tick),
+    POOL_LIQUIDITY,
+    tick,
+  )
+}
 
 describe('getDependentAmountFromV2Pair', () => {
   it('returns undefined', () => {
@@ -136,7 +161,79 @@ describe('getDependentAmountFromV3Position', () => {
   })
 })
 
+describe('getDependentAmountFromV3Position at a tight range edge', () => {
+  it('returns zero, not ~MaxUint256, when the price reaches the upper edge and token0 is independent', () => {
+    expect(
+      getDependentAmountFromV3Position({
+        independentAmount: CurrencyAmount.fromRawAmount(WETH, '1000000000000000000'),
+        pool: v3PoolAtTick(TIGHT_TICK_UPPER),
+        tickLower: TIGHT_TICK_LOWER,
+        tickUpper: TIGHT_TICK_UPPER,
+      }),
+    ).toEqual(CurrencyAmount.fromRawAmount(USDT, 0))
+  })
+
+  it('returns zero when the price is above the range and token0 is independent', () => {
+    expect(
+      getDependentAmountFromV3Position({
+        independentAmount: CurrencyAmount.fromRawAmount(WETH, '1000000000000000000'),
+        pool: v3PoolAtTick(TIGHT_TICK_UPPER + 1),
+        tickLower: TIGHT_TICK_LOWER,
+        tickUpper: TIGHT_TICK_UPPER,
+      }),
+    ).toEqual(CurrencyAmount.fromRawAmount(USDT, 0))
+  })
+
+  it('returns zero, not ~MaxUint256, when the price sits on the lower edge and token1 is independent', () => {
+    expect(
+      getDependentAmountFromV3Position({
+        independentAmount: CurrencyAmount.fromRawAmount(USDT, '1000000000'),
+        pool: v3PoolAtTick(TIGHT_TICK_LOWER),
+        tickLower: TIGHT_TICK_LOWER,
+        tickUpper: TIGHT_TICK_UPPER,
+      }),
+    ).toEqual(CurrencyAmount.fromRawAmount(WETH, 0))
+  })
+
+  it('still prices a real dependent amount one tick inside the upper edge', () => {
+    const dependent = getDependentAmountFromV3Position({
+      independentAmount: CurrencyAmount.fromRawAmount(WETH, '1000000000000000000'),
+      pool: v3PoolAtTick(TIGHT_TICK_UPPER - 1),
+      tickLower: TIGHT_TICK_LOWER,
+      tickUpper: TIGHT_TICK_UPPER,
+    })
+
+    expect(dependent?.currency.equals(USDT)).toBe(true)
+    const raw = BigInt(dependent?.quotient.toString() ?? '0')
+    // Nearly all of the range is below the price, so 1 WETH pairs with a large but finite USDT amount.
+    expect(raw).toBeGreaterThan(0n)
+    expect(raw).toBeLessThan(10n ** 18n)
+  })
+})
+
 describe('getDependentAmountFromV4Position', () => {
+  it('returns zero, not ~MaxUint256, when the price reaches the upper edge and token0 is independent', () => {
+    expect(
+      getDependentAmountFromV4Position({
+        independentAmount: CurrencyAmount.fromRawAmount(ETH_MAINNET, '1000000000000000000'),
+        pool: v4PoolAtTick(TIGHT_TICK_UPPER),
+        tickLower: TIGHT_TICK_LOWER,
+        tickUpper: TIGHT_TICK_UPPER,
+      }),
+    ).toEqual(CurrencyAmount.fromRawAmount(USDT, 0))
+  })
+
+  it('returns zero when the price sits on the lower edge and token1 is independent', () => {
+    expect(
+      getDependentAmountFromV4Position({
+        independentAmount: CurrencyAmount.fromRawAmount(USDT, '1000000000'),
+        pool: v4PoolAtTick(TIGHT_TICK_LOWER),
+        tickLower: TIGHT_TICK_LOWER,
+        tickUpper: TIGHT_TICK_UPPER,
+      }),
+    ).toEqual(CurrencyAmount.fromRawAmount(ETH_MAINNET, 0))
+  })
+
   it('returns dependent amount', () => {
     const pool = new V4Pool(
       ETH_MAINNET,
@@ -203,5 +300,29 @@ describe('getDependentAmountFromV4Position', () => {
         tickUpper: tickSpaceLimits[0],
       }),
     ).toBeUndefined()
+  })
+})
+
+describe('isImpossibleDependentAmount', () => {
+  it('flags the SDK MaxUint256 placeholder', () => {
+    expect(isImpossibleDependentAmount(MAX_UINT_256.toString())).toBe(true)
+  })
+
+  it('flags anything past uint128', () => {
+    expect(isImpossibleDependentAmount((1n << 128n).toString())).toBe(true)
+  })
+
+  it('accepts real amounts up to uint128', () => {
+    expect(isImpossibleDependentAmount(((1n << 128n) - 1n).toString())).toBe(false)
+    expect(isImpossibleDependentAmount('3766763261')).toBe(false)
+    expect(isImpossibleDependentAmount('0')).toBe(false)
+  })
+
+  it('treats a missing amount as nothing to reject', () => {
+    expect(isImpossibleDependentAmount(undefined)).toBe(false)
+  })
+
+  it('flags an unparseable amount', () => {
+    expect(isImpossibleDependentAmount('not-a-number')).toBe(true)
   })
 })

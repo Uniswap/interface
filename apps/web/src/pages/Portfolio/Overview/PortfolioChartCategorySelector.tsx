@@ -1,9 +1,15 @@
 import { Flex, Text } from '@universe/mycelium'
 import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
+import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SingleSelectContextMenu, type SingleSelectOption } from 'uniswap/src/components/menus/SingleSelectContextMenu'
+import {
+  DropdownSelector,
+  type SelectOption,
+  SMALL_DROPDOWN_BUTTON_STYLE,
+} from '~/components/Dropdowns/DropdownSelector'
 import { PortfolioChartCategory } from '~/pages/Portfolio/Overview/hooks/usePortfolioChartSeries'
 
 /** Dropdown that picks which series the portfolio chart shows. */
@@ -18,6 +24,8 @@ export function PortfolioChartCategorySelector({
   onChange: (value: PortfolioChartCategory) => void
 }): JSX.Element {
   const { t } = useTranslation()
+  const media = useMedia()
+  const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false)
 
   const labelByValue = useMemo<Record<PortfolioChartCategory, string>>(
     () => ({
@@ -36,6 +44,23 @@ export function PortfolioChartCategorySelector({
     ],
     [labelByValue, availableCategories],
   )
+
+  // Mobile matches the timeframe dropdown it shares a row with; desktop keeps the pill.
+  if (media.md) {
+    return (
+      <DropdownSelector
+        options={Object.fromEntries(
+          options.map((option) => [option.value, { label: option.label } satisfies SelectOption]),
+        )}
+        selectedValue={value}
+        onSelect={(selected) => onChange(selected as PortfolioChartCategory)}
+        isOpen={isMobileDropdownOpen}
+        toggleOpen={setIsMobileDropdownOpen}
+        dataTestId={TestID.PortfolioChartCategorySelector}
+        buttonStyle={SMALL_DROPDOWN_BUTTON_STYLE}
+      />
+    )
+  }
 
   return (
     <SingleSelectContextMenu dimBackground options={options} selectedValue={value} onSelect={onChange}>

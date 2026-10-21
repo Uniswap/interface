@@ -1,4 +1,5 @@
-import { FeatureFlags, getFeatureFlagName } from '@universe/gating'
+import type { Locator, Page } from '@playwright/test'
+import { UniverseChainId } from '@universe/chains'
 import { TestID } from '@universe/test'
 import { USDT_ARBITRUM_ONE } from 'uniswap/src/constants/tokens'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -6,9 +7,9 @@ import { expect, getTest } from '~/playwright/fixtures'
 
 const test = getTest()
 
-// The `network-button-<chainId>` locators below only render when the network_filter_v2
-// gate is ON, so pin the flag to keep live rollout bucketing from flipping the DOM.
-const networkFilterV2Override = `featureFlagOverride=${getFeatureFlagName(FeatureFlags.NetworkFilterV2)}`
+function selectedNetworkLogo(page: Page, chainId: UniverseChainId): Locator {
+  return page.getByTestId(TestID.TokensNetworkFilterTrigger).getByTestId(`${TestID.NetworkLogoPrefix}${chainId}`)
+}
 
 test.describe(
   'Token explore',
@@ -63,34 +64,32 @@ test.describe(
     test('should update when global network changed', async ({ page }) => {
       await page.goto('/explore/tokens/ethereum')
 
-      const ethereumNetworkLogo = page.getByTestId(TestID.TokensNetworkFilterSelected)
-      await expect(ethereumNetworkLogo).toHaveAttribute('alt', 'Ethereum logo')
+      await expect(selectedNetworkLogo(page, UniverseChainId.Mainnet)).toBeVisible()
       await expect(page.getByTestId(`${TestID.TokenTableRowPrefix}NATIVE`)).toBeVisible()
 
       await page.goto('/explore/tokens/optimism')
 
-      const optimismNetworkLogo = page.getByTestId(TestID.TokensNetworkFilterSelected)
-      await expect(optimismNetworkLogo).toHaveAttribute('alt', 'OP Mainnet logo')
+      await expect(selectedNetworkLogo(page, UniverseChainId.Optimism)).toBeVisible()
 
       const nameCell = page.getByTestId(`${TestID.TokenTableRowPrefix}NATIVE`).getByTestId(TestID.NameCell)
       await expect(nameCell).toContainText('Optimistic ETH')
     })
 
     test('should update when token explore table network changed', async ({ page }) => {
-      await page.goto(`/explore/tokens/ethereum?${networkFilterV2Override}`)
-      await page.getByTestId(TestID.TokensNetworkFilterSelected).click()
-      await page.getByTestId(`${ElementName.NetworkButton}-10`).last().click()
-      await expect(page.getByTestId(TestID.TokensNetworkFilterSelected)).toHaveAttribute('alt', 'OP Mainnet logo')
+      await page.goto('/explore/tokens/ethereum')
+      await page.getByTestId(TestID.TokensNetworkFilterTrigger).click()
+      await page.getByTestId(`${ElementName.NetworkButton}-${UniverseChainId.Optimism}`).last().click()
+      await expect(selectedNetworkLogo(page, UniverseChainId.Optimism)).toBeVisible()
     })
 
     test('should show a L2 token even if the user is connected to a different network', async ({ page }) => {
       await page.setViewportSize({ width: 1200, height: 800 })
-      await page.goto(`/explore/tokens/ethereum?${networkFilterV2Override}`)
+      await page.goto('/explore/tokens/ethereum')
 
-      await page.getByTestId(TestID.TokensNetworkFilterSelected).click()
-      await page.getByTestId(`${ElementName.NetworkButton}-42161`).last().click()
+      await page.getByTestId(TestID.TokensNetworkFilterTrigger).click()
+      await page.getByTestId(`${ElementName.NetworkButton}-${UniverseChainId.ArbitrumOne}`).last().click()
 
-      await expect(page.getByTestId(TestID.TokensNetworkFilterSelected)).toHaveAttribute('alt', 'Arbitrum logo')
+      await expect(selectedNetworkLogo(page, UniverseChainId.ArbitrumOne)).toBeVisible()
 
       await page.getByTestId(`${TestID.TokenTableRowPrefix}${USDT_ARBITRUM_ONE.address}`).click()
 

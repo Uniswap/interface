@@ -98,10 +98,14 @@ export function PositionsTableControlBar({
     debouncedSearchChange(text)
   }
 
-  const networkFilter = showNetworkFilter && (
-    <PositionsNetworkFilter selectedChain={chainFilter} onChainChange={setChainFilter} />
-  )
   const menuAlignRight = shouldStackControls ? false : undefined
+  const networkFilter = showNetworkFilter && (
+    <PositionsNetworkFilter
+      selectedChain={chainFilter}
+      alignRight={!shouldStackControls}
+      onChainChange={setChainFilter}
+    />
+  )
   const statusDropdown = (
     <StatusFilterDropdown
       selectedStatuses={statusFilter}

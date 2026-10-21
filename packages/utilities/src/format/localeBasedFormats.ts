@@ -556,6 +556,11 @@ export const swapTradeAmountFormatter: Formatter = {
   defaultFormat: SixSigFigsTwoDecimalsNoCommas,
 }
 
+// Above this magnitude, `swapPriceFormatter` abbreviates (e.g. "1.24B") instead of printing the
+// full digit string. Matches `tokenNonTxFormatter`'s own tier boundary. Exported so callers can
+// tell whether a given rate was abbreviated (see `getRateToDisplay`'s tooltip fallback).
+export const SWAP_PRICE_COMPACT_THRESHOLD = 1e6
+
 export const swapPriceFormatter: Formatter = {
   rules: [
     { exact: 0, formatter: '0' },
@@ -565,9 +570,29 @@ export const swapPriceFormatter: Formatter = {
       formatter: FiveDecimals,
       postFormatModifier: lessThanPostFormatModifier,
     },
-    ...swapTradeAmountFormatter.rules,
+    { upperBound: 0.1, formatter: SixSigFigsNoCommas },
+    { upperBound: 1, formatter: FiveDecimalsMaxTwoDecimalsMinNoCommas },
+    { upperBound: SWAP_PRICE_COMPACT_THRESHOLD, formatter: SixSigFigsTwoDecimalsNoCommas },
+    // Above the threshold the full digit string (e.g. a low-value memecoin's ETH-denominated rate)
+    // gets long enough to overlap adjacent UI, so switch to the same compact-notation convention
+    // used for large token quantities elsewhere (see `tokenNonTxFormatter`'s use of
+    // `ShorthandTwoDecimals`).
+    { upperBound: Infinity, formatter: ShorthandTwoDecimals },
   ],
-  defaultFormat: SixSigFigsTwoDecimalsNoCommas,
+  defaultFormat: ShorthandTwoDecimals,
+}
+
+// Full-precision counterpart to `swapPriceFormatter`, used only to render the exact value in a
+// hover tooltip once the main display abbreviates. Only ever invoked above
+// `SWAP_PRICE_COMPACT_THRESHOLD` (see `getRateToDisplay`), so it needs no lower tiers -- just the
+// same non-compact, comma-grouped formatting `swapPriceFormatter` used before it gained the
+// `ShorthandTwoDecimals` tier.
+export const swapPriceFullFormatter: Formatter = {
+  rules: [
+    { exact: 0, formatter: '0' },
+    { upperBound: Infinity, formatter: SixSigFigsTwoDecimals },
+  ],
+  defaultFormat: SixSigFigsTwoDecimals,
 }
 
 export const fiatTokenDetailsFormatter: Formatter = {
@@ -751,6 +776,7 @@ export const TYPE_TO_FORMATTER_RULES = {
   [NumberType.TokenTx]: tokenTxFormatter,
   [NumberType.TokenQuantityStats]: tokenQuantityStatsFormatter,
   [NumberType.SwapPrice]: swapPriceFormatter,
+  [NumberType.SwapPriceFull]: swapPriceFullFormatter,
   [NumberType.SwapTradeAmount]: swapTradeAmountFormatter,
   [NumberType.FiatStandard]: fiatStandardFormatter,
   [NumberType.FiatTokenQuantity]: fiatTokenQuantityFormatter,

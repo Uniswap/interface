@@ -25,7 +25,7 @@ describe('useDeferredComponent', () => {
   })
 
   it('should return null initially', () => {
-    const { result } = renderHook(() => useDeferredComponent(mockImportFn))
+    const { result } = renderHook(() => useDeferredComponent({ importFn: mockImportFn }))
     expect(result.current).toBeNull()
   })
 
@@ -33,7 +33,7 @@ describe('useDeferredComponent', () => {
     const mockComponent = () => <div>Test Component</div>
     mockImportFn.mockResolvedValue({ default: mockComponent })
 
-    renderHook(() => useDeferredComponent(mockImportFn))
+    renderHook(() => useDeferredComponent({ importFn: mockImportFn }))
 
     expect(mockRequestIdleCallback).toHaveBeenCalledWith(expect.any(Function), { timeout: 100 })
   })
@@ -44,7 +44,7 @@ describe('useDeferredComponent', () => {
     const mockComponent = () => <div>Test Component</div>
     mockImportFn.mockResolvedValue({ default: mockComponent })
 
-    renderHook(() => useDeferredComponent(mockImportFn))
+    renderHook(() => useDeferredComponent({ importFn: mockImportFn }))
 
     expect(mockSetTimeout).toHaveBeenCalledWith(expect.any(Function), 1)
   })
@@ -53,7 +53,7 @@ describe('useDeferredComponent', () => {
     const mockComponent = () => <div>Test Component</div>
     mockImportFn.mockResolvedValue({ default: mockComponent })
 
-    const { result } = renderHook(() => useDeferredComponent(mockImportFn))
+    const { result } = renderHook(() => useDeferredComponent({ importFn: mockImportFn }))
 
     expect(result.current).toBeNull()
 
@@ -71,7 +71,7 @@ describe('useDeferredComponent', () => {
     const mockComponent = () => <div>Test Component</div>
     mockImportFn.mockResolvedValue({ default: mockComponent })
 
-    const { result } = renderHook(() => useDeferredComponent(mockImportFn))
+    const { result } = renderHook(() => useDeferredComponent({ importFn: mockImportFn }))
 
     expect(result.current).toBeNull()
 
@@ -87,7 +87,7 @@ describe('useDeferredComponent', () => {
     const error = new Error('Import failed')
     mockImportFn.mockRejectedValue(error)
 
-    const { result } = renderHook(() => useDeferredComponent(mockImportFn))
+    const { result } = renderHook(() => useDeferredComponent({ importFn: mockImportFn }))
 
     expect(result.current).toBeNull()
 
@@ -111,8 +111,8 @@ describe('useDeferredComponent', () => {
 
     mockImportFn.mockResolvedValueOnce({ default: mockComponent1 }).mockResolvedValueOnce({ default: mockComponent2 })
 
-    const { result: result1 } = renderHook(() => useDeferredComponent(mockImportFn))
-    const { result: result2 } = renderHook(() => useDeferredComponent(mockImportFn))
+    const { result: result1 } = renderHook(() => useDeferredComponent({ importFn: mockImportFn }))
+    const { result: result2 } = renderHook(() => useDeferredComponent({ importFn: mockImportFn }))
 
     expect(result1.current).toBeNull()
     expect(result2.current).toBeNull()
@@ -130,5 +130,53 @@ describe('useDeferredComponent', () => {
     })
 
     expect(result2.current).toBe(mockComponent2)
+  })
+
+  describe('enabled gate', () => {
+    it('should not schedule or import when disabled', () => {
+      const { result } = renderHook(() => useDeferredComponent({ importFn: mockImportFn, enabled: false }))
+
+      expect(mockRequestIdleCallback).not.toHaveBeenCalled()
+      expect(mockImportFn).not.toHaveBeenCalled()
+      expect(result.current).toBeNull()
+    })
+
+    it('should not fall back to setTimeout when disabled and requestIdleCallback is unavailable', () => {
+      delete (window as any).requestIdleCallback
+
+      renderHook(() => useDeferredComponent({ importFn: mockImportFn, enabled: false }))
+
+      expect(mockSetTimeout).not.toHaveBeenCalled()
+      expect(mockImportFn).not.toHaveBeenCalled()
+    })
+
+    it('should schedule when explicitly enabled', () => {
+      renderHook(() => useDeferredComponent({ importFn: mockImportFn, enabled: true }))
+
+      expect(mockRequestIdleCallback).toHaveBeenCalledWith(expect.any(Function), { timeout: 100 })
+    })
+
+    // A feature flag can resolve after mount — the import has to kick off on the flip, not be lost.
+    it('should schedule once the gate flips from disabled to enabled', async () => {
+      const mockComponent = () => <div>Test Component</div>
+      mockImportFn.mockResolvedValue({ default: mockComponent })
+
+      const { result, rerender } = renderHook(
+        ({ enabled }: { enabled: boolean }) => useDeferredComponent({ importFn: mockImportFn, enabled }),
+        { initialProps: { enabled: false } },
+      )
+
+      expect(mockRequestIdleCallback).not.toHaveBeenCalled()
+
+      rerender({ enabled: true })
+      expect(mockRequestIdleCallback).toHaveBeenCalledTimes(1)
+
+      await act(async () => {
+        const callback = mockRequestIdleCallback.mock.calls[0][0]
+        await callback()
+      })
+
+      expect(result.current).toBe(mockComponent)
+    })
   })
 })

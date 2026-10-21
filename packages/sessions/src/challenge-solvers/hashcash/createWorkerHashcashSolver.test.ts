@@ -72,7 +72,7 @@ describe('createWorkerHashcashSolver', () => {
         nonce: backendExample.nonce,
       }),
       rangeStart: 0,
-      rangeSize: 10000,
+      rangeSize: 8192,
     })
 
     // Verify channel was terminated

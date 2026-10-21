@@ -383,6 +383,12 @@ export enum TransactionType {
   AuctionExited = 'auction-exited',
   AuctionLaunch = 'auction-launch',
 
+  // Margin
+  MarginOpenPosition = 'margin-open-position',
+  MarginClosePosition = 'margin-close-position',
+  MarginDecreasePosition = 'margin-decrease-position',
+  MarginAddCollateral = 'margin-add-collateral',
+
   // Smart Wallet
   RemoveDelegation = 'remove-delegation',
 
@@ -828,6 +834,44 @@ export interface AuctionLaunchTransactionInfo extends BaseTransactionInfo {
   analytics?: AuctionCreateAnalyticsProperties
 }
 
+export interface MarginOpenPositionTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.MarginOpenPosition
+  marketKey: string
+  collateralToken: string
+  debtToken: string
+  // Raw equity supplied by the user, in collateral token units (native ETH for the ETH market).
+  marginAmount: string
+  leverageX18: string
+  // Sized by the /margin/quote response.
+  collateralToBuy: string
+  maxDebtIn: string
+}
+
+export interface MarginClosePositionTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.MarginClosePosition
+  marketKey: string
+  collateralToken: string
+  debtToken: string
+}
+
+export interface MarginDecreasePositionTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.MarginDecreasePosition
+  marketKey: string
+  collateralToken: string
+  debtToken: string
+  // Raw debt token amount repaid by this reduction.
+  debtToRepay: string
+}
+
+export interface MarginAddCollateralTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.MarginAddCollateral
+  marketKey: string
+  collateralToken: string
+  debtToken: string
+  // Raw collateral amount added (native ETH for the ETH market, else collateral token units).
+  amount: string
+}
+
 export interface MigrateV2LiquidityToV3TransactionInfo extends BaseTransactionInfo {
   type: TransactionType.MigrateLiquidityV2ToV3
   baseCurrencyId: string
@@ -854,6 +898,9 @@ export interface PlanTransactionInfo extends BaseTransactionInfo {
   tradeType: TradeType.EXACT_INPUT
   transactionHashes?: string[]
   earnAction?: TradingApi.EarnAction
+  // Margin's own plan — a chained plan, but not routed through the swap/earn plan sagas
+  // (margin never enters prod planSaga). Lets plan-row consumers avoid swap/earn framing.
+  isMarginPlan?: boolean
 }
 
 export type TransactionTypeInfo =
@@ -897,6 +944,10 @@ export type TransactionTypeInfo =
   | AuctionExitedTransactionInfo
   | AuctionLaunchTransactionInfo
   | UniswapXCancelTransactionInfo
+  | MarginOpenPositionTransactionInfo
+  | MarginClosePositionTransactionInfo
+  | MarginDecreasePositionTransactionInfo
+  | MarginAddCollateralTransactionInfo
 
 /**
  * Typeguard to check if a `TransactionTypeInfo` has a specific attribute.

@@ -20,12 +20,7 @@ import {
  * rollout graduates or is rolled back. Specs that need a different value pin it per-spec via
  * `test.use({ pinnedFeatureFlags: { ... } })`.
  */
-export const PINNED_FEATURE_FLAGS: Partial<Record<FeatureFlags, boolean>> = {
-  // Renders the V2 (search + tiered) network filter dropdown, whose `network-button-<chainId>`
-  // options the Portfolio Header/Overview network-filter specs drive. The V1 dropdown uses that
-  // string as a React key only, so it emits no matching testid and those specs time out.
-  [FeatureFlags.NetworkFilterV2]: true,
-}
+export const PINNED_FEATURE_FLAGS: Partial<Record<FeatureFlags, boolean>> = {}
 
 type FeatureFlagsFixture = {
   /**

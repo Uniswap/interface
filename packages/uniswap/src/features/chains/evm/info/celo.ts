@@ -1,7 +1,7 @@
 import { GraphQLApi, TradingApi } from '@universe/api'
 import { UniverseChainId, Platform } from '@universe/chains'
 import { SwapConfigKey } from '@universe/gating'
-import { CELO_LOGO } from 'ui/src/assets'
+import { CELO_LOGO } from '@universe/mycelium/assets'
 import { config } from 'uniswap/src/config'
 import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'

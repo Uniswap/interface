@@ -55,7 +55,7 @@ vi.mock('~/pages/Portfolio/Header/PortfolioMoreMenu', () => ({
   PortfolioMoreMenu: () => <div data-testid="more-menu">More Menu Mock</div>,
 }))
 
-vi.mock('~/components/NetworkFilter/NetworkFilter', () => ({
+vi.mock('uniswap/src/components/network/NetworkFilter/NetworkFilter', () => ({
   NetworkFilter: () => <div data-testid="network-filter">Network Filter Mock</div>,
 }))
 

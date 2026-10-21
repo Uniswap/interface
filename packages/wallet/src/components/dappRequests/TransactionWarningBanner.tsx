@@ -41,10 +41,10 @@ interface TransactionWarningBannerProps {
   confirmedRisk?: boolean
   onConfirmRisk?: (confirmed: boolean) => void
   /**
-   * When set, the request could not be usably scanned. The banner shows a "couldn't verify" caution
+   * When set, the request could not be usably scanned. The banner shows a "couldn't verify" warning
    * instead of a malicious verdict, and takes precedence over `riskLevel` for the copy and styling it
    * renders. `ScanUnavailable` is a permanent failure (gated behind an acknowledgement); `ScanFailed`
-   * is a transient one (informational, no gate).
+   * is a transient one (informational, no gate). Both share the same warning treatment.
    */
   scanFailureError?: TransactionErrorType
 }
@@ -73,19 +73,10 @@ export function TransactionWarningBanner({
   )
 
   const config = useMemo<BannerConfig | null>(() => {
-    // A scan failure is unverifiable, not known-malicious: render it as a "couldn't verify" caution
-    // with no Blockaid attribution, and let it win over whatever risk level is threaded in. A
-    // permanent failure (retry cannot help) is raised to a high-severity red treatment; a transient
-    // one stays a medium amber caution.
+    // A scan failure is unverifiable, not known-malicious: render it as a "couldn't verify" warning
+    // with no Blockaid attribution, and let it win over whatever risk level is threaded in. Permanent
+    // and transient failures share the amber treatment; only the acknowledgement gate differs.
     if (scanFailureError) {
-      if (scanFailureError === TransactionErrorType.ScanUnavailable) {
-        return {
-          color: '$statusCritical',
-          icon: AlertCircleFilled,
-          title: t('dapp.request.scanIncomplete.title'),
-          description: t('dapp.request.scanIncomplete.permanent.description'),
-        }
-      }
       return {
         color: '$statusWarning',
         icon: AlertTriangleFilled,
@@ -111,7 +102,7 @@ export function TransactionWarningBanner({
   }
 
   // A genuine critical Blockaid verdict keeps its red treatment and attribution; a scan failure
-  // borrows the acknowledgement flow but stays a neutral caution.
+  // borrows the acknowledgement flow but stays an amber warning.
   const isCriticalVerdict = !scanFailureError && riskLevel === TransactionRiskLevel.Critical
   // Only a permanent scan failure (retry can't help) is gated behind an acknowledgement; a transient
   // one is an informational caution, so it shows without a checkbox and leaves confirmation enabled.

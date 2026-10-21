@@ -5,7 +5,8 @@ import { PoolsLogo } from '@universe/mycelium/icons/PoolsLogo'
 import { useIsDarkMode, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import { type FocusEvent, type ReactNode, useEffect, useMemo, useState } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
+import { Trans } from 'ui/src'
 import { gap } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -308,17 +309,16 @@ export function LaunchesHero({ launches }: { launches: LaunchItem[] }): JSX.Elem
             {/* <Trans> rather than t(): the wordmark is a component the copy positions itself, so
                   each locale decides where in its own sentence the lockup belongs. */}
             <Text variant="body2" color="$neutral2">
-              {/* Trans splices the interpolated element into an array of text nodes, so it needs its own key.
-                    Two literal i18nKeys rather than one computed key: the extractor only sees string literals. */}
+              {/* Two literal i18nKeys rather than one computed key: the extractor only sees string literals. */}
               {isArcEnabled ? (
                 <Trans
                   i18nKey="launches.hero.subtitleArcRobinhoodWithWordmark"
-                  components={{ wordmark: <PoolsWordmark key="wordmark" /> }}
+                  components={{ wordmark: <PoolsWordmark /> }}
                 />
               ) : (
                 <Trans
                   i18nKey="launches.hero.subtitleRobinhoodWithWordmark"
-                  components={{ wordmark: <PoolsWordmark key="wordmark" /> }}
+                  components={{ wordmark: <PoolsWordmark /> }}
                 />
               )}
             </Text>

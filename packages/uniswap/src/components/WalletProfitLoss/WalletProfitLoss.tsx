@@ -10,7 +10,6 @@ interface WalletProfitLossProps {
   realizedReturn?: number
   totalReturn?: number
   isLoading?: boolean
-  disclaimer?: string
   periodSelector: JSX.Element
   /** Earn is EVM-only; used to surface the Earn exclusion note in the info tooltip. */
   evmAddress?: string
@@ -22,7 +21,6 @@ export function WalletProfitLoss({
   realizedReturn,
   totalReturn,
   isLoading,
-  disclaimer,
   periodSelector,
   evmAddress,
 }: WalletProfitLossProps): JSX.Element {
@@ -67,11 +65,6 @@ export function WalletProfitLoss({
           isLoading={isLoading}
         />
       </Flex>
-      {disclaimer && (
-        <Text variant="body4" color="$neutral3" pointerEvents="none">
-          {disclaimer}
-        </Text>
-      )}
     </Flex>
   )
 }

@@ -1,8 +1,10 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
-import type { TokenIssuerInfo } from '@uniswap/client-data-api/dist/data/v2/types_pb'
+import type { ThemedLogoUrls, TokenIssuerInfo } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import {
   type RWAIssuer,
   type RWAIssuerDisplay,
+  type RWAIssuerLogos,
+  type RWAThemedLogoUrls,
   type RWAToken,
   UNKNOWN_RWA_ISSUER,
 } from 'uniswap/src/features/rwa/types'
@@ -18,7 +20,25 @@ export function mapTokenIssuerInfo(issuer: PlainMessage<TokenIssuerInfo> | undef
     issuer: normalizeRWAIssuer(issuer?.id ?? ''),
     issuerDisplayName: issuer?.displayName || undefined,
     issuerLogoUrl: issuer?.logoUrl || undefined,
+    issuerLogos: mapTokenIssuerLogos(issuer),
   }
+}
+
+function mapThemedLogoUrls(urls: PlainMessage<ThemedLogoUrls> | undefined): RWAThemedLogoUrls | undefined {
+  if (!urls?.light && !urls?.dark) {
+    return undefined
+  }
+  return { light: urls.light || undefined, dark: urls.dark || undefined }
+}
+
+/** Themed logo sets from the backend issuer; undefined when it serves neither set. */
+export function mapTokenIssuerLogos(issuer: PlainMessage<TokenIssuerInfo> | undefined): RWAIssuerLogos | undefined {
+  const color = mapThemedLogoUrls(issuer?.colorLogoUrls)
+  const grayscale = mapThemedLogoUrls(issuer?.grayscaleLogoUrls)
+  if (!color && !grayscale) {
+    return undefined
+  }
+  return { color, grayscale }
 }
 
 // Capitalize the data-API issuer string so new issuers need no front-end change.

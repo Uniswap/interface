@@ -172,7 +172,7 @@ export const PortfolioEarnSection = memo(function PortfolioEarnSection({
 
   return (
     <>
-      <Flex gap="$spacing16" px="$spacing8" testID={TestID.PortfolioOverviewEarnSection}>
+      <Flex gap="$spacing16" px="$spacing8" $md={{ px: '$none' }} testID={TestID.PortfolioOverviewEarnSection}>
         <Flex gap="$spacing4">
           <Flex row alignItems="center" gap="$spacing4">
             <Text variant="subheading1" color="$neutral1">
@@ -358,7 +358,11 @@ function PortfolioEarnVaultRows({
           />
         )
       })}
-      {shouldShowVaultDivider ? <Separator mx="$spacing8" /> : null}
+      {shouldShowVaultDivider ? (
+        <Flex px="$spacing8" $md={{ px: '$none' }}>
+          <Separator />
+        </Flex>
+      ) : null}
       {ineligibleVaults.map((vault) => (
         <PortfolioEarnVaultGetTokenRow key={vault.id} vault={vault} onPress={() => onGetTokenPress(vault)} />
       ))}
@@ -370,7 +374,7 @@ function PortfolioEarnErrorState({ onRetry }: { onRetry: () => void }): JSX.Elem
   const { t } = useTranslation()
 
   return (
-    <Flex gap="$spacing4" px="$spacing8" testID={TestID.PortfolioOverviewEarnError}>
+    <Flex gap="$spacing4" px="$spacing8" $md={{ px: '$none' }} testID={TestID.PortfolioOverviewEarnError}>
       <Flex row alignItems="center" gap="$spacing4">
         <Text variant="subheading1" color="$neutral1">
           {t('explore.earn.title')}
@@ -427,6 +431,7 @@ function PortfolioEarnVaultGetTokenRow({ vault, onPress }: { vault: EarnVaultInf
       gap="$spacing8"
       width="100%"
       px="$spacing8"
+      $md={{ px: '$none' }}
       py="$spacing6"
       borderRadius="$rounded12"
       cursor="pointer"

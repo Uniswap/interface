@@ -27,7 +27,7 @@ const NavItemsRow = forwardRef<HTMLDivElement, FlexCompatProps>(function NavItem
       flexWrap="nowrap"
       justifyContent="flex-start"
       gap="$spacing12"
-      $md={{ gap: '$spacing4', ...md }}
+      $md={{ gap: '$spacing2', ...md }}
       {...props}
     />
   )
@@ -50,6 +50,7 @@ export function Navbar() {
       tag="nav"
       position="unset"
       px="$padding12"
+      $md={{ px: '$padding16' }}
       width="100%"
       height={INTERFACE_NAV_HEIGHT}
       zIndex={zIndexes.sticky}

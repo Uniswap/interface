@@ -1,5 +1,5 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
-import type { Checkpoint } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import type { Checkpoint } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import type { AuctionDetails, AuctionProgressData } from '~/features/Toucan/Auction/store/types'
 import { AuctionCheckpointLoadState, AuctionOutcome, AuctionProgressState } from '~/features/Toucan/Auction/store/types'
 import { safeBigInt } from '~/features/Toucan/Auction/utils/safeBigInt'

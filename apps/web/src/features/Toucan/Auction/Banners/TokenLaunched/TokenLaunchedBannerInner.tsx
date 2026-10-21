@@ -54,21 +54,25 @@ export function TokenLaunchedBannerInner({
 
   const canPress = Boolean(auctionDetails && isTradeAvailable)
 
+  const content = (
+    <TokenLaunchedBannerContent
+      tokenName={tokenName}
+      tokenTotalSupply={tokenTotalSupply}
+      auctionTokenDecimals={auctionTokenDecimals}
+      accentColor={accentColor}
+      currentTickValue={priceData?.currentTickValue}
+      isTradeAvailable={isTradeAvailable}
+      tradeAvailabilityDurationRemaining={tradeAvailabilityDurationRemaining}
+      fdvUsdOverride={fdvUsdOverride}
+      tokenDetailsAddress={tokenDetailsAddress}
+    />
+  )
+
   return (
     <TokenLaunchedBannerWrapper bannerGradient={bannerGradient}>
-      <TouchableArea onPress={canPress ? onBannerPress : undefined} cursor={canPress ? 'pointer' : 'default'}>
-        <TokenLaunchedBannerContent
-          tokenName={tokenName}
-          tokenTotalSupply={tokenTotalSupply}
-          auctionTokenDecimals={auctionTokenDecimals}
-          accentColor={accentColor}
-          currentTickValue={priceData?.currentTickValue}
-          isTradeAvailable={isTradeAvailable}
-          tradeAvailabilityDurationRemaining={tradeAvailabilityDurationRemaining}
-          fdvUsdOverride={fdvUsdOverride}
-          tokenDetailsAddress={tokenDetailsAddress}
-        />
-      </TouchableArea>
+      {/* Until the token trades there is nowhere to go, and a `TouchableArea` would still read and
+          focus as a button, so the banner is only wrapped in one once it leads somewhere. */}
+      {canPress ? <TouchableArea onPress={onBannerPress}>{content}</TouchableArea> : content}
     </TokenLaunchedBannerWrapper>
   )
 }

@@ -6,7 +6,7 @@ import { LabeledCheckboxCompat as LabeledCheckbox } from '@universe/mycelium/che
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Separator, Switch } from 'ui/src'
-import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
+import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter/NetworkFilter'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -64,11 +64,12 @@ export function ProtocolFilterDropdown({
   return (
     <Dropdown
       isOpen={isOpen}
-      toggleOpen={() => setIsOpen((prev) => !prev)}
+      toggleOpen={setIsOpen}
       menuLabel={<Text variant="buttonLabel3">{t('common.protocol')}</Text>}
       dropdownStyle={{ width: 160 }}
       containerStyle={filterContainerStyle({ fullWidth, fitContent })}
       alignRight={alignRight}
+      adaptToSheet
       buttonStyle={{ ...POSITION_FILTER_BUTTON_STYLE, width: fullWidth ? '100%' : undefined }}
     >
       {LP_POSITION_PROTOCOL_VERSIONS.map((version) => (
@@ -119,11 +120,12 @@ export function StatusFilterDropdown({
   return (
     <Dropdown
       isOpen={isOpen}
-      toggleOpen={() => setIsOpen((prev) => !prev)}
+      toggleOpen={setIsOpen}
       menuLabel={<Text variant="buttonLabel3">{t('common.status')}</Text>}
       dropdownStyle={{ width: 160 }}
       containerStyle={filterContainerStyle({ fullWidth, fitContent })}
       alignRight={alignRight}
+      adaptToSheet
       buttonStyle={{ ...POSITION_FILTER_BUTTON_STYLE, width: fullWidth ? '100%' : undefined }}
     >
       <>
@@ -156,28 +158,24 @@ export function StatusFilterDropdown({
 export function PositionsNetworkFilter({
   selectedChain,
   onChainChange,
+  alignRight,
 }: {
   selectedChain: UniverseChainId | null
   onChainChange: (chain: UniverseChainId | null) => void
+  alignRight?: boolean
 }): JSX.Element {
   const { chains } = useEnabledChains({ platform: Platform.EVM })
 
   return (
-    <Flex
-      centered
-      px="$padding12"
-      borderWidth="$spacing1"
-      borderColor="$surface3"
-      borderRadius="$rounded12"
-      hoverStyle={{ backgroundColor: '$surface2' }}
-    >
-      <NetworkFilter
-        includeAllNetworks
-        selectedChain={selectedChain}
-        onPressChain={(c) => onChainChange(c ?? null)}
-        chainIds={chains}
-        styles={{ buttonPaddingY: '$spacing8' }}
-      />
-    </Flex>
+    <NetworkFilter
+      trigger={{ variant: 'icon', outlined: true }}
+      includeAllNetworks
+      // Positions are EVM-only, so the chains are a subset; the row should still read "All networks".
+      forceAllNetworksLabel
+      placement={alignRight ? 'bottom-end' : 'bottom-start'}
+      selectedChain={selectedChain}
+      chainIds={chains}
+      onPressChain={onChainChange}
+    />
   )
 }

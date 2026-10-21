@@ -31,7 +31,7 @@ export const TableSectionHeader = memo(function TableSectionHeader({
 
   return (
     <Flex gap={contentGap} testID={testId}>
-      <Flex gap="$gap4" pl="$spacing8">
+      <Flex gap="$gap4" pl="$spacing8" $md={{ pl: '$none' }}>
         <Flex row alignItems="center" gap="$spacing6">
           <Text variant="subheading1" color="$neutral1">
             {title}

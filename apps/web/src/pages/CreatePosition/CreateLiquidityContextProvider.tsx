@@ -8,6 +8,7 @@ import { createContext, Dispatch, SetStateAction, useContext, useEffect, useMemo
 import type { FeeBreakdown } from 'uniswap/src/features/fees/types'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { useEvent, usePrevious } from 'utilities/src/react/hooks'
+import { getFollowedPresetTicks } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/priceStrategies'
 import { useDerivedPositionInfo } from '~/features/Liquidity/Create/hooks/useDerivedPositionInfo'
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
 import {
@@ -66,6 +67,9 @@ interface BaseCreateLiquidityState {
   positionState: PositionState
   step: PositionFlowStep
   currentTransactionStep?: { step: TransactionStep; accepted: boolean }
+  isReviewModalOpen: boolean
+  /** The review modal is open or a transaction is in flight, so the range must hold still. */
+  isRangeLocked: boolean
   feeTierSearchModalOpen: boolean
   hookSearchModalOpen: boolean
   selectedHookEntry?: HookEntry
@@ -119,6 +123,7 @@ type CreateLiquidityContextType = CreateLiquidityState & {
   setCurrentTransactionStep: React.Dispatch<
     React.SetStateAction<{ step: TransactionStep; accepted: boolean } | undefined>
   >
+  setIsReviewModalOpen: (isOpen: boolean) => void
   setFeeTierSearchModalOpen: React.Dispatch<React.SetStateAction<boolean>>
   setHookSearchModalOpen: React.Dispatch<React.SetStateAction<boolean>>
   setSelectedHookEntry: React.Dispatch<React.SetStateAction<HookEntry | undefined>>
@@ -221,10 +226,37 @@ export function CreateLiquidityContextProvider({
     })
   }, [currencyInputs, positionState, priceRangeState, depositState, syncToUrl])
 
+  // Remembered with the step it was opened on, so it can't outlive that step — e.g. browser back off the
+  // deposit step unmounts the modal without closing it, which would otherwise lock the range for good.
+  const [reviewModalStep, setReviewModalStep] = useState<PositionFlowStep | undefined>(undefined)
+  if (reviewModalStep !== undefined && reviewModalStep !== step) {
+    setReviewModalStep(undefined)
+  }
+  const isReviewModalOpen = reviewModalStep === step
+  const setIsReviewModalOpen = useEvent((isOpen: boolean) => setReviewModalStep(isOpen ? step : undefined))
+  const isRangeLocked = isReviewModalOpen || Boolean(currentTransactionStep)
+
+  // An existing pool's followed preset is re-derived from the polled tick in this render, so the deposit
+  // step never sees the new price against the previous range (which would clear the typed amount).
+  const effectivePriceRangeState = useMemo(() => {
+    const pool = derivedPositionInfo.protocolVersion === ProtocolVersion.V2 ? undefined : derivedPositionInfo.pool
+    if (!pool || derivedPositionInfo.creatingPoolOrPair || priceRangeState.fullRange || isRangeLocked) {
+      return priceRangeState
+    }
+    const followedTicks = getFollowedPresetTicks({
+      followedPreset: priceRangeState.followedPreset,
+      minTick: priceRangeState.minTick,
+      maxTick: priceRangeState.maxTick,
+      currentTick: priceRangeState.priceInverted ? -pool.tickCurrent : pool.tickCurrent,
+      tickSpacing: pool.tickSpacing,
+    })
+    return followedTicks ? { ...priceRangeState, ...followedTicks } : priceRangeState
+  }, [derivedPositionInfo, priceRangeState, isRangeLocked])
+
   // Derived price range info
   const derivedPriceRangeInfo = useMemo(() => {
-    return getPriceRangeInfo({ derivedPositionInfo, state: priceRangeState, positionState })
-  }, [derivedPositionInfo, priceRangeState, positionState])
+    return getPriceRangeInfo({ derivedPositionInfo, state: effectivePriceRangeState, positionState })
+  }, [derivedPositionInfo, effectivePriceRangeState, positionState])
 
   const poolOrPair = useMemo(() => {
     if (!derivedPriceRangeInfo) {
@@ -265,6 +297,7 @@ export function CreateLiquidityContextProvider({
       tokenA: defaultInitialToken,
       tokenB: undefined,
     })
+    setReviewModalStep(undefined)
     setHistoryState(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
   })
 
@@ -329,6 +362,8 @@ export function CreateLiquidityContextProvider({
     positionState,
     step,
     currentTransactionStep,
+    isReviewModalOpen,
+    isRangeLocked,
     feeTierSearchModalOpen,
     hookSearchModalOpen,
     selectedHookEntry,
@@ -341,6 +376,7 @@ export function CreateLiquidityContextProvider({
     setPositionState,
     setStep: setHistoryState,
     setCurrentTransactionStep,
+    setIsReviewModalOpen,
     setFeeTierSearchModalOpen,
     setHookSearchModalOpen,
     setSelectedHookEntry,

@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { renderHook, waitFor } from '@testing-library/react'
-import { Auction, GetAuctionResponse } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { Auction, GetAuctionResponse } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { UniverseChainId } from '@universe/chains'
 import type { PropsWithChildren } from 'react'
 import { describe, expect, it, vi } from 'vitest'

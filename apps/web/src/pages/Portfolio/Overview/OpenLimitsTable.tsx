@@ -264,6 +264,7 @@ export const OpenLimitsTable = memo(function OpenLimitsTable({
       contentGap="$spacing2"
     >
       <Table
+        mobileFullBleed
         hideHeader
         columns={columns}
         data={limitedOrders}

@@ -103,6 +103,29 @@ export function calculateStrategyTicks({
   }
 }
 
+/**
+ * The range a followed preset holds at `currentTick`, or undefined once the range no longer matches what
+ * the preset wrote (the user edited it, or something else replaced it).
+ */
+export function getFollowedPresetTicks({
+  followedPreset,
+  minTick,
+  maxTick,
+  currentTick,
+  tickSpacing,
+}: {
+  followedPreset?: { strategy: DefaultPriceStrategy; minTick: number; maxTick: number }
+  minTick?: number
+  maxTick?: number
+  currentTick: number
+  tickSpacing: number
+}): { minTick: number; maxTick: number } | undefined {
+  if (!followedPreset || followedPreset.minTick !== minTick || followedPreset.maxTick !== maxTick) {
+    return undefined
+  }
+  return calculateStrategyTicks({ priceStrategy: followedPreset.strategy, currentTick, tickSpacing })
+}
+
 // Detect which strategy matches the current min/max ticks
 export function detectTickStrategy({
   minTick,

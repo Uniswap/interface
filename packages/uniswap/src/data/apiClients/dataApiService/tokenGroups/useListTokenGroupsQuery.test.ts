@@ -59,6 +59,36 @@ describe('useListTokenGroupsQuery', () => {
     )
   })
 
+  it('sends the search query in the filter and keys the query on it', async () => {
+    renderHook(() =>
+      useListTokenGroupsQuery({
+        categoryId: 'stocks',
+        chainIds: [UniverseChainId.Base],
+        orderBy: TokensOrderBy.VOLUME_1D,
+        searchQuery: 'tesla',
+      }),
+    )
+
+    await waitFor(() => expect(mockListTokenGroups).toHaveBeenCalledTimes(1))
+    expect(mockListTokenGroups).toHaveBeenCalledWith(
+      expect.objectContaining({ filter: { categoryIds: ['stocks'], searchQuery: 'tesla' } }),
+    )
+
+    renderHook(() =>
+      useListTokenGroupsQuery({
+        categoryId: 'stocks',
+        chainIds: [UniverseChainId.Base],
+        orderBy: TokensOrderBy.VOLUME_1D,
+        searchQuery: 'nvda',
+      }),
+    )
+
+    await waitFor(() => expect(mockListTokenGroups).toHaveBeenCalledTimes(2))
+    expect(mockListTokenGroups).toHaveBeenLastCalledWith(
+      expect.objectContaining({ filter: { categoryIds: ['stocks'], searchQuery: 'nvda' } }),
+    )
+  })
+
   it('falls back to the enabled chains when no chainIds are given', async () => {
     renderHook(() => useListTokenGroupsQuery({ categoryId: 'etfs', chainIds: [], orderBy: TokensOrderBy.VOLUME_1D }))
 

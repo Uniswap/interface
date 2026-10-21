@@ -3,6 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { UniverseChainId } from '@universe/chains'
 import { toIncludeSameMembers } from 'jest-extended'
 import {
+  testClearPendingDappRequests,
   testMigratePendingDappRequestsToRecord,
   testMigrateUnknownBackupAccountsToMaybeManualBackup,
   testRemoveDappInfoToChromeLocalStorage,
@@ -47,6 +48,7 @@ import {
   v32Schema,
   v33Schema,
   v34Schema,
+  v35Schema,
 } from 'src/store/schema'
 import { USDC } from 'uniswap/src/constants/tokens'
 import { initialAppearanceSettingsState } from 'uniswap/src/features/appearance/slice'
@@ -403,5 +405,9 @@ describe('Redux state migrations', () => {
 
   it('migrates from v34 to v35', () => {
     testRemovePersistedApolloCache(migrations[35], v34Schema)
+  })
+
+  it('migrates from v35 to v36', () => {
+    testClearPendingDappRequests(migrations[36], v35Schema)
   })
 })

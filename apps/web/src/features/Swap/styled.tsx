@@ -16,7 +16,7 @@ export const PageWrapper: ForwardRefExoticComponent<FlexCompatProps & RefAttribu
       pb="$spacing40"
       // Merged explicitly, not spread: a plain spread would replace this base wholesale.
       $lg={{ pt: '$spacing48', ...lg }}
-      $md={{ pt: '$spacing20', ...md }}
+      $md={{ pt: '$spacing20', px: '$none', ...md }}
       {...props}
     />
   )

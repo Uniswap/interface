@@ -1,20 +1,24 @@
 import { Protocol } from '@uniswap/router-sdk'
-import { TradeType } from '@uniswap/sdk-core'
+import { CurrencyAmount, Price, TradeType } from '@uniswap/sdk-core'
 import { type ClassicQuoteResponse, TradingApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { UNI, WBTC } from 'uniswap/src/constants/tokens'
+import { Locale } from 'uniswap/src/features/language/constants'
 import {
   createBridgeTrade,
   createClassicTrade as createClassicTradeFromQuote,
   type BridgeTrade,
   type ClassicTrade,
+  type Trade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
   getProtocolVersionFromTrade,
+  getRateToDisplay,
   requireAcceptNewTrade,
   tradeToTransactionInfo,
 } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { mockLocalizedFormatter } from 'uniswap/src/test/mocks/locale'
 
 const INPUT_TOKEN = UNI[UniverseChainId.Mainnet]
 
@@ -299,5 +303,53 @@ describe(tradeToTransactionInfo, () => {
 
     expect(typeInfo.isSponsored).toBeUndefined()
     expect(typeInfo.sponsorshipCampaignId).toBeUndefined()
+  })
+})
+
+describe(getRateToDisplay, () => {
+  const formatter = mockLocalizedFormatter(Locale.EnglishUnitedStates)
+
+  // Builds a bare-minimum "trade" carrying only the `executionPrice` field `getRateToDisplay`
+  // actually reads, rather than a full quote-derived trade -- lets the test amounts be chosen
+  // directly instead of reverse-engineered from a quote response.
+  function tradeWithPrice(baseRawAmount: bigint, quoteRawAmount: bigint): Trade {
+    const executionPrice = new Price({
+      baseAmount: CurrencyAmount.fromRawAmount(INPUT_TOKEN, baseRawAmount.toString()),
+      quoteAmount: CurrencyAmount.fromRawAmount(WBTC, quoteRawAmount.toString()),
+    })
+    return { executionPrice } as unknown as Trade
+  }
+
+  it('abbreviates a large rate and returns the exact value for a tooltip', () => {
+    const trade = tradeWithPrice(10n ** 18n, 1241790000n * 10n ** 8n) // 1 UNI = 1,241,790,000 WBTC
+    const result = getRateToDisplay({ formatter, trade, showInverseRate: false })
+
+    expect(result.rate).toBe('1 UNI = 1.24B WBTC')
+    expect(result.fullPrecisionRate).toBe('1 UNI = 1,241,790,000 WBTC')
+  })
+
+  it('does not abbreviate, and omits the tooltip value, for a common-magnitude rate', () => {
+    const trade = tradeWithPrice(10n ** 18n, 3500n * 10n ** 8n) // 1 UNI = 3500 WBTC
+    const result = getRateToDisplay({ formatter, trade, showInverseRate: false })
+
+    expect(result.rate).toBe('1 UNI = 3500 WBTC')
+    expect(result.fullPrecisionRate).toBeUndefined()
+  })
+
+  it('abbreviates the inverted rate the same way when toggled', () => {
+    // Inverting 1 UNI = 1/1,241,790,000 WBTC gives 1 WBTC = 1,241,790,000 UNI.
+    const trade = tradeWithPrice(1241790000n * 10n ** 18n, 1n * 10n ** 8n)
+    const result = getRateToDisplay({ formatter, trade, showInverseRate: true })
+
+    expect(result.rate).toBe('1 WBTC = 1.24B UNI')
+    expect(result.fullPrecisionRate).toBe('1 WBTC = 1,241,790,000 UNI')
+  })
+
+  it('shows 0 instead of throwing when the inverted price divides by zero', () => {
+    const trade = tradeWithPrice(10n ** 18n, 0n)
+    const result = getRateToDisplay({ formatter, trade, showInverseRate: true })
+
+    expect(result.rate).toBe('1 WBTC = 0 UNI')
+    expect(result.fullPrecisionRate).toBeUndefined()
   })
 })

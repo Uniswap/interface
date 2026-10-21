@@ -69,8 +69,6 @@ export const PortfolioPerformance = memo(function PortfolioPerformance() {
     return null
   }
 
-  const showDisclaimer = !chainId && !!svmAddress
-
   const periodSelector = (
     <Dropdown
       isOpen={isDropdownOpen}
@@ -100,7 +98,6 @@ export const PortfolioPerformance = memo(function PortfolioPerformance() {
         realizedReturn={profitLoss?.realizedReturnUsd}
         totalReturn={profitLoss?.totalReturnUsd}
         isLoading={isPending}
-        disclaimer={showDisclaimer ? t('pnl.noSolana') : undefined}
         periodSelector={periodSelector}
         evmAddress={evmAddress}
       />

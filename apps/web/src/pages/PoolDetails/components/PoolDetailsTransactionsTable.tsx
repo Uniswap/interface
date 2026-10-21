@@ -314,6 +314,7 @@ export function PoolDetailsTransactionsTable({
   return (
     <TableWrapper data-testid="pool-details-transactions-table">
       <Table
+        mobileFullBleed
         columns={columns}
         data={transactions}
         loading={loading}

@@ -1,10 +1,11 @@
 import { UniverseChainId } from '@universe/chains'
-import { FeatureFlags, useFeatureFlag, useIsTokenCategoriesEnabled } from '@universe/gating'
+import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { useNavigate, useSearchParams } from 'react-router'
+import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter/NetworkFilter'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
-import { NetworkFilter } from '~/components/NetworkFilter/NetworkFilter'
+import { useNetworkFilterChainIds } from '~/components/NetworkFilter/useFilteredChains'
 import { buildExploreUrl } from '~/features/Explore/utils/buildExploreUrl'
 import { isCategoryUnsupportedChain, withoutCategoryParam } from '~/pages/Explore/categories/useExploreCategory'
 import { useExploreParams } from '~/pages/Explore/redirects'
@@ -15,12 +16,13 @@ export function TableNetworkFilter({ networks }: { networks?: UniverseChainId[] 
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const media = useMedia()
-  const isNetworkFilterV2Enabled = useFeatureFlag(FeatureFlags.NetworkFilterV2)
   const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
   const { tab: tabName, chainName } = useExploreParams()
   const currentChainId = chainName ? getChainIdFromChainUrlParam(chainName) : undefined
+  const { chainIds, allNetworksChainIds } = useNetworkFilterChainIds(networks)
 
-  const onNetworkPress = useEvent((chainId: UniverseChainId | undefined) => {
+  const onPressChain = useEvent((pressedChainId: UniverseChainId | null) => {
+    const chainId = pressedChainId ?? undefined
     // Leaving an unsupported chain drops it too: there the category read as All, so a stale param would resurface.
     const dropCategory =
       tokenCategoriesEnabled && (isCategoryUnsupportedChain(chainId) || isCategoryUnsupportedChain(currentChainId))
@@ -35,20 +37,16 @@ export function TableNetworkFilter({ networks }: { networks?: UniverseChainId[] 
 
   return (
     <NetworkFilter
+      trigger={{ variant: 'pill' }}
       forceAllNetworksLabel
-      showMultichainOption={tabName !== ExploreTab.Transactions}
-      position={media.lg ? 'left' : 'right'}
-      // The toolbar row this trigger sits in stacks to a column at different breakpoints depending on
-      // which Explore layout is active (see ExploreCategoryTablesSection vs. the classic tab nav row),
-      // so a single `position` breakpoint can't reliably predict the trigger's on-screen edge. Clamp
-      // against the real viewport instead of guessing from `position` alone.
-      positionFixed
-      onPress={onNetworkPress}
-      currentChainId={currentChainId}
-      networks={networks}
-      tab={tabName}
-      tracePage={InterfacePageName.ExplorePage}
-      showSearch={isNetworkFilterV2Enabled}
+      includeAllNetworks={tabName !== ExploreTab.Transactions}
+      // Explore layouts stack the toolbar at different breakpoints, so this only picks the preferred edge.
+      placement={media.lg ? 'bottom-start' : 'bottom-end'}
+      chainIds={chainIds}
+      allNetworksChainIds={allNetworksChainIds}
+      selectedChain={currentChainId ?? null}
+      selectionAnalytics={{ page: InterfacePageName.ExplorePage, tab: tabName }}
+      onPressChain={onPressChain}
     />
   )
 }

@@ -1,4 +1,5 @@
 import { Flex } from '@universe/mycelium'
+import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { AuctionGraduated } from '~/features/Toucan/Auction/Bids/AuctionGraduated'
 import { CreatorSweepCard } from '~/features/Toucan/Auction/CreatorActions/CreatorSweepCard'
 import { MigrateCard } from '~/features/Toucan/Auction/CreatorActions/MigrateCard'
@@ -17,9 +18,17 @@ import { NowTradingCard } from '~/features/Toucan/Auction/NowTradingCard'
  * and the page shows the collapsed disabled "Auction Concluded" fixed button on mobile instead
  * (see ToucanToken/index.tsx). CreatorSweepCard and MigrateCard self-gate to null when they don't
  * apply to the viewer.
+ *
+ * `inline` is the left-column copy shown below $xl. Only the copy for the current breakpoint mounts,
+ * since a CSS-hidden one would still log its cards' impressions.
  */
-export function PostAuctionPanel(): JSX.Element {
+export function PostAuctionPanel({ inline }: { inline: boolean }): JSX.Element | null {
+  const isBelowXl = useMedia().xl
   const { showAuctionGraduated } = useBidFormState()
+
+  if (inline !== isBelowXl) {
+    return null
+  }
 
   return (
     <Flex gap="$spacing24">

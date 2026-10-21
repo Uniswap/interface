@@ -12,6 +12,7 @@ import { ArrowDownArrowUp } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
+import { useDeferredCaret } from 'uniswap/src/components/CurrencyInputPanel/hooks/useDeferredCaret'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { Pill } from 'uniswap/src/components/pill/Pill'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
@@ -69,6 +70,8 @@ interface FiatOnRampAmountSectionProps {
 export type FiatOnRampAmountSectionRef = {
   textInputRef: RefObject<RNTextInput | null>
   triggerShakeAnimation: () => void
+  /** Moves the caret, applied in the render that carries `value` (the value the caret belongs to). */
+  setSelection: (selection: { start: number; end?: number; value?: string }) => void
 }
 
 export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, FiatOnRampAmountSectionProps>(
@@ -111,9 +114,12 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
 
     const inputRef = useRef<RNTextInput>(null)
 
+    const { selection, followNativeSelection, setCaret } = useDeferredCaret(value)
+
     useImperativeHandle(forwardedRef, () => ({
       textInputRef: inputRef,
       triggerShakeAnimation,
+      setSelection: setCaret,
     }))
 
     // This is needed to ensure that the text resizes when modified from outside the component (e.g. custom numpad)
@@ -131,8 +137,12 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
         nativeEvent: {
           selection: { start, end },
         },
-      }: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => selectionChange?.(start, end),
-      [selectionChange],
+      }: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => {
+        // Follow the caret the user moved, or the controlled `selection` would push ours back.
+        followNativeSelection({ start, end })
+        selectionChange?.(start, end)
+      },
+      [selectionChange, followNativeSelection],
     )
 
     const { shakeStyle: inputAnimatedStyle, triggerShakeAnimation } = useShakeAnimation()
@@ -261,6 +271,7 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
               py="$none"
               minWidth={calculatedInputWidth}
               returnKeyType={undefined}
+              selection={selection}
               showSoftInputOnFocus={false}
               textAlign={isTokenInputMode ? 'right' : 'left'}
               value={value}

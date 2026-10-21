@@ -4,8 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { TokenProfitLoss } from 'uniswap/src/components/TokenProfitLoss/TokenProfitLoss'
 import { useGetWalletTokenProfitLossQuery } from 'uniswap/src/data/apiClients/dataApiService/performance/getWalletTokenProfitLoss'
 import { useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
-import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/rpc'
-import { isStablecoinAddress } from 'uniswap/src/features/chains/utils'
+import { getDefaultNativeAddress, isStablecoinAddress } from 'uniswap/src/features/chains/utils'
 import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -37,7 +36,7 @@ export function TokenPerformance(): JSX.Element | null {
   const modifier = useRestPortfolioValueModifier(evmAddress ?? svmAddress)
 
   const chainId = effectiveCurrency.chainId as UniverseChainId
-  const tokenAddress = effectiveCurrency.isNative ? DEFAULT_NATIVE_ADDRESS : effectiveCurrency.address
+  const tokenAddress = effectiveCurrency.isNative ? getDefaultNativeAddress(chainId) : effectiveCurrency.address
   const isStablecoin = isStablecoinAddress(chainId, tokenAddress)
 
   const { data, isError } = useGetWalletTokenProfitLossQuery({

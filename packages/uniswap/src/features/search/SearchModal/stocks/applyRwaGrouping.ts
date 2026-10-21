@@ -77,6 +77,7 @@ function withRwaIssuerBranding({
             ...issuer,
             issuerDisplayName: issuer.issuerDisplayName ?? branding.issuerDisplayName,
             issuerLogoUrl: issuer.issuerLogoUrl ?? branding.issuerLogoUrl,
+            issuerLogos: issuer.issuerLogos ?? branding.issuerLogos,
           }
         }
       }

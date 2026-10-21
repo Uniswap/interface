@@ -13,6 +13,12 @@ import { Mocks } from '~/playwright/mocks/mocks'
 
 const MOCK_V4_TOKEN_ID = 13281n
 
+// The decrease executes on the pinned fork, but the liquidity service prices the calldata's minimum
+// amounts against LIVE mainnet. The ETH price gap between the two grows as the pin ages and trips the
+// v4 decrease's MinimumAmountInsufficient guard. Force a generous — but sub-critical (see
+// SLIPPAGE_CRITICAL_TOLERANCE = 20) — slippage so fork-vs-live drift can't fail the decrease.
+const E2E_DECREASE_SLIPPAGE_TOLERANCE = 15
+
 const test = getTest({ withAnvil: true })
 
 test.describe(
@@ -51,10 +57,11 @@ test.describe(
         page,
         endpoint: LiquidityService.methods.decreasePosition,
         service: LiquidityService,
+        modifyRequestData: (data) => ({ ...data, slippageTolerance: E2E_DECREASE_SLIPPAGE_TOLERANCE }),
       })
       // Serve the position read from a fixture (test wallet as owner, known liquidity) so the
-      // ownership-gated "Remove liquidity" action renders and the 50% removal amount is deterministic;
-      // the live read returns the position's real mainnet owner.
+      // ownership-gated "Remove liquidity" action renders; the live read returns the position's real
+      // mainnet owner.
       await mockGetPosition({ page, mockPath: Mocks.LiquidityService.get_v4_position_multi_token_rewards })
       await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
       // Target the position that was transferred to the test wallet above, so the decrease executes on-chain.
@@ -64,7 +71,8 @@ test.describe(
 
       await page.getByRole('button', { name: 'Review' }).click()
       await page.getByRole('button', { name: 'Confirm' }).click()
-      await expect(page.getByText('1.000 USDT').first()).toBeVisible()
+      // The amounts shown are the service's live quote, so assert the decrease settled rather than a fixed amount.
+      await expect(page.getByText('Removed liquidity').first()).toBeVisible()
     })
   },
 )

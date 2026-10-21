@@ -136,9 +136,9 @@ export function useDerivedPositionInfo(
       }),
       enabled: validCurrencyInput && protocol !== undefined && isFeeValid && !isChainUnsupported,
       // Keep an existing pool's current price/tick fresh so the chart's price line tracks the market.
-      // The range itself never re-anchors off this poll — syncCurrentTickFromParent bails for existing
-      // pools. Only polls once a pool exists — a not-yet-created pool returns no pools, so the interval
-      // resolves to false and no polling happens while creating.
+      // Only an untouched preset range follows this poll (see syncCurrentTickFromParent); a range the
+      // user typed or dragged never moves. Only polls once a pool exists — a not-yet-created pool
+      // returns no pools, so the interval resolves to false and no polling happens while creating.
       refetchInterval: (query) => (query.state.data?.pools.length ? PollingInterval.Fast : false),
     }),
   )

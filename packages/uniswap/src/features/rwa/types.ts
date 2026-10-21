@@ -5,6 +5,21 @@ export type RWAIssuer = string
 /** Issuer slug for registry tokens with no issuer (e.g. commodities); not a real issuer to display. */
 export const UNKNOWN_RWA_ISSUER: RWAIssuer = 'unknown'
 
+/** A logo as light- and dark-theme URLs; either may be empty when the backend has no file for that theme. */
+export type RWAThemedLogoUrls = {
+  light?: string
+  dark?: string
+}
+
+/**
+ * Backend issuer logo sets. Curated sets are drawn per theme; without one the backend fills every slot with the
+ * issuer's CoinGecko image, so `grayscale` may still be a color file and callers keep their grayscale filter on.
+ */
+export type RWAIssuerLogos = {
+  color?: RWAThemedLogoUrls
+  grayscale?: RWAThemedLogoUrls
+}
+
 export type RWAToken = {
   chainId: number
   address: string
@@ -12,6 +27,7 @@ export type RWAToken = {
   // Backend-served issuer branding (GetTokenGroup); absent on the v1 ListRwas path.
   issuerDisplayName?: string
   issuerLogoUrl?: string
+  issuerLogos?: RWAIssuerLogos
   /** Present when this preferred TDP display token represents an issuer available on multiple chains. */
   networkCount?: number
   // Display data for this specific tokenized asset (e.g. an `XX.on` token), resolved per token by
@@ -24,7 +40,7 @@ export type RWAToken = {
 }
 
 /** The issuer branding fields of an RWA token, also derivable from GetToken's `issuer` for ungrouped RWAs. */
-export type RWAIssuerDisplay = Pick<RWAToken, 'issuer' | 'issuerDisplayName' | 'issuerLogoUrl'>
+export type RWAIssuerDisplay = Pick<RWAToken, 'issuer' | 'issuerDisplayName' | 'issuerLogoUrl' | 'issuerLogos'>
 
 export type RWAAsset = {
   symbol: string

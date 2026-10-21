@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { GetClearingPriceHistoryRequest } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { GetClearingPriceHistoryRequest } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { useMemo } from 'react'
 import { auctionQueries } from 'uniswap/src/data/apiClients/dataApiService/auctions/auctionQueries'
@@ -11,6 +11,7 @@ import { TokenRestrictedBannerContent } from '~/features/Toucan/Auction/Banners/
 import { useRealTokenMarketInfo } from '~/features/Toucan/Auction/Banners/TokenLaunched/useRealTokenMarketInfo'
 import { useTokenLaunchedBannerColorData } from '~/features/Toucan/Auction/Banners/TokenLaunched/useTokenLaunchedBannerColorData'
 import { useTokenLaunchedBannerPriceData } from '~/features/Toucan/Auction/Banners/TokenLaunched/useTokenLaunchedBannerPriceData'
+import { useTokenLaunchedTradeAvailability } from '~/features/Toucan/Auction/Banners/TokenLaunched/useTokenLaunchedTradeAvailability'
 import { fromQ96ToDecimalWithTokenDecimals } from '~/features/Toucan/Auction/BidDistributionChart/utils/q96'
 import { useAuctionRedemption } from '~/features/Toucan/Auction/hooks/useAuctionRedemption'
 import { useBidTokenInfo } from '~/features/Toucan/Auction/hooks/useBidTokenInfo'
@@ -18,7 +19,6 @@ import { useDurationRemaining } from '~/features/Toucan/Auction/hooks/useDuratio
 import { AuctionOutcome } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { getClearingPrice } from '~/features/Toucan/Auction/utils/clearingPrice'
-import { isTokenLaunchTradeLive } from '~/features/Toucan/Auction/utils/tokenLaunchedBannerUtils'
 import { getAuctionTokenDecimals } from '~/features/Toucan/Auction/utils/tokenMetadata'
 import { isTradingRestrictedUntilTge } from '~/features/Toucan/Config/config'
 
@@ -27,8 +27,8 @@ interface TokenLaunchedBannerProps {
   tokenColor?: string
   tokenTotalSupply?: string
   auctionTokenDecimals?: number
-  // Whether the auction status permits trading. The banner additionally requires a live market
-  // price before showing "Trade now" — see isTokenLaunchTradeLive.
+  // Whether the auction status permits trading. Redeemable tokens also require an underlying
+  // pool; ordinary tokens require a live market price before showing "Trade now".
   isTradeAvailableFromStatus: boolean
   tradeAvailabilityBlock: number | undefined
 }
@@ -166,13 +166,14 @@ export function TokenLaunchedBanner({
   const effectivePriceData = priceData ?? fallbackPriceData
   const effectiveChartSeries = priceData?.priceSeries ?? fallbackChartSeries
 
-  // "Trade now" requires both the auction status to permit trading AND a live market price (a pool
-  // with liquidity). Without the market-price gate, a graduated auction that committed 0% to LP —
-  // which never creates a pool — would advertise "Trade now" and link to an un-tradeable token page.
-  // The clearing-price fallback still drives the FDV, so such auctions fall back to "available soon".
-  const isTradeAvailable = isTokenLaunchTradeLive({
+  const { isTradeAvailable, loading: tradeAvailabilityLoading } = useTokenLaunchedTradeAvailability({
+    chainId,
+    realTokenAddress,
+    isRedeemable,
+    isGraduated,
     isTradeAvailableFromStatus,
-    hasLiveMarketPrice: hasMarketPrice,
+    tradingRestrictedUntilTge,
+    hasMarketPrice,
   })
 
   // Show failure state if auction didn't graduate
@@ -203,6 +204,7 @@ export function TokenLaunchedBanner({
     bidTokenLoading ||
     auctionTokenDecimals === undefined ||
     (needsFallback && clearingHistoryLoading) ||
+    tradeAvailabilityLoading ||
     (isRedeemable && (redemptionLoading || realTokenInfoLoading))
   if (isLoading) {
     return <TokenLaunchedBannerSkeleton />

@@ -24,7 +24,7 @@ export function ExploreSectionHeader({
   )
 
   return (
-    <Flex row alignItems="center" justifyContent="space-between" px="$spacing16">
+    <Flex row alignItems="center" justifyContent="space-between" gap="$spacing12" px="$spacing16">
       {onPress ? <TouchableArea onPress={onPress}>{titleContent}</TouchableArea> : titleContent}
       {rightElement}
     </Flex>

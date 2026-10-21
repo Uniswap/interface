@@ -30,6 +30,20 @@ export function withFrameProtection(res: Response): Response {
   return new Response(res.body, { status: res.status, statusText: res.statusText, headers })
 }
 
+// ── Response hardening ───────────────────────────────────────────────
+// nosniff makes the browser refuse to execute a <script src> whose response is
+// not a JavaScript MIME type, so a same-origin proxied body an attacker shapes
+// (on-chain token metadata serialized by the gateway) can never run as script.
+export function withNosniff(res: Response): Response {
+  // Response() rejects 1xx statuses, and there is nothing to harden on them.
+  if (res.status < 200) {
+    return res
+  }
+  const headers = new Headers(res.headers)
+  headers.set('X-Content-Type-Options', 'nosniff')
+  return new Response(res.body, { status: res.status, statusText: res.statusText, headers })
+}
+
 // ── Embed frame policy ───────────────────────────────────────────────
 // Documents under /embed carry a partner-scoped frame-ancestors policy so
 // vetted third-party sites can iframe the embed surface. The client mounts the

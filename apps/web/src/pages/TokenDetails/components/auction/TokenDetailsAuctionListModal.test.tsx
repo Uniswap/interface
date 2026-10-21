@@ -1,7 +1,9 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
-import { type Auction, AuctionType } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { type Auction, AuctionType } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { UniverseChainId } from '@universe/chains'
 import { TestID } from '@universe/test'
+import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { CurrencyRaisedState } from '~/features/Toucan/Auction/utils/resolveAuctionDisplayState'
@@ -12,6 +14,7 @@ import { getOwnStyleProp } from '~/test-utils/getOwnStyleProp'
 import { fireEvent, render, screen, within } from '~/test-utils/render'
 
 const mockNavigate = vi.fn()
+vi.mock('uniswap/src/features/telemetry/send', () => ({ sendAnalyticsEvent: vi.fn() }))
 vi.mock('~/hooks/useNavigateToAuctionDetails', async (importOriginal) => ({
   ...(await importOriginal<typeof import('~/hooks/useNavigateToAuctionDetails')>()),
   useNavigateToAuctionDetails: () => mockNavigate,
@@ -114,6 +117,7 @@ describe('TokenDetailsAuctionListModal', () => {
 
   beforeEach(() => {
     mockNavigate.mockReset()
+    vi.mocked(sendAnalyticsEvent).mockClear()
   })
 
   it('lists every CCA auction live-first with its status column', () => {
@@ -173,6 +177,24 @@ describe('TokenDetailsAuctionListModal', () => {
 
     expect(mockNavigate).toHaveBeenCalledWith({ auctionAddress: UPCOMING.address, chainId: UniverseChainId.Mainnet })
     expect(onClose).toHaveBeenCalledTimes(1)
+    expect(sendAnalyticsEvent).toHaveBeenCalledExactlyOnceWith(AuctionEventName.AuctionSelectorAuctionClicked, {
+      chain_id: UniverseChainId.Mainnet,
+      position_rank: 2,
+      auction_status: 'upcoming',
+      time_remaining_seconds: expect.any(Number),
+    })
+    expect(JSON.stringify(vi.mocked(sendAnalyticsEvent).mock.calls)).not.toContain(UPCOMING.address)
+  })
+
+  it('reports zero remaining seconds for an ended selection without bid or wallet details', () => {
+    render(<TokenDetailsAuctionListModal auctions={ALL} isOpen onClose={vi.fn()} />)
+    fireEvent.click(screen.getAllByTestId(TestID.TokenDetailsAuctionListRow)[2]!)
+    expect(sendAnalyticsEvent).toHaveBeenCalledExactlyOnceWith(AuctionEventName.AuctionSelectorAuctionClicked, {
+      chain_id: UniverseChainId.Mainnet,
+      position_rank: 3,
+      auction_status: 'ended',
+      time_remaining_seconds: 0,
+    })
   })
 
   it('opens a quick launch on its pools.xyz token page instead of an in-app auction page', () => {

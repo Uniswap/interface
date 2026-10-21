@@ -20,8 +20,11 @@ describe('Paths', () => {
   it('should have every path in the app RouteDefinitions', () => {
     const appPaths: string[] = routes.map((routeDef) => routeDef.path)
     appPaths.forEach((path) => {
-      // We don't want to expose these fallback routes to the server functions.
-      if (path === '*' || path === '/not-found') {
+      // Fallback routes we deliberately keep out of the Cloudflare paths / public sitemap. Flag-gating
+      // is NOT the rule — the other flag-gated routes are listed. '/margin' is out only while margin is
+      // unlaunched.
+      // TODO(SWAP-3307): drop the '/margin' exclusion when the Margin flag is removed.
+      if (path === '*' || path === '/not-found' || path === '/margin') {
         return
       }
       if (path === `/explore/tokens/solana/${WRAPPED_SOL_ADDRESS_SOLANA}`) {

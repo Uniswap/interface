@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { AnimatedFlex, Flex, UniversalImage, UniversalImageResizeMode } from '@universe/mycelium'
 import { useShadowPropsShort } from '@universe/mycelium/theme-hooks-compat'
 import { fadeInQuick } from '@universe/tailwind/animations/reanimated'
@@ -15,6 +14,7 @@ import { borderRadii, iconSizes, spacing } from 'ui/src/theme'
 import { ActionCard, type ActionCardItem } from 'uniswap/src/components/misc/ActionCard'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
+import { useIsForRegionBlocked } from 'uniswap/src/features/fiatOnRamp/useIsForRegionBlocked'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { usePortfolioEmptyStateBackground } from 'wallet/src/components/portfolio/empty'
 
@@ -27,20 +27,20 @@ export function FundWalletModal(): JSX.Element {
 
   const { onClose } = useReactNavigationModal()
 
-  const disableForKorea = useFeatureFlag(FeatureFlags.DisableFiatOnRampKorea)
+  const isForRegionBlocked = useIsForRegionBlocked({ isOfframp: false })
 
   const backgroundImageWrapperCallback = usePortfolioEmptyStateBackground()
 
   const onPressBuy = useCallback(() => {
     onClose()
-    disableForKorea
-      ? navigate(ModalName.KoreaCexTransferInfoModal)
+    isForRegionBlocked
+      ? navigate(ModalName.CexTransferInfoModal)
       : dispatch(
           openModal({
             name: ModalName.FiatOnRampAggregator,
           }),
         )
-  }, [disableForKorea, onClose, dispatch])
+  }, [isForRegionBlocked, onClose, dispatch])
 
   const onPressReceive = useCallback(() => {
     onClose()

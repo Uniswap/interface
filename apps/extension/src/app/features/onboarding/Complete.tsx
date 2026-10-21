@@ -1,4 +1,5 @@
 import { Flex, iconSizes, Text } from '@universe/mycelium'
+import { UNISWAP_LOGO } from '@universe/mycelium/assets'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { OpenSidebarButton } from 'src/app/components/buttons/OpenSidebarButton'
@@ -9,7 +10,6 @@ import { KeyboardKey } from 'src/app/features/onboarding/KeyboardKey'
 import { useOpeningKeyboardShortCut } from 'src/app/hooks/useOpeningKeyboardShortCut'
 import { terminateStoreSynchronization } from 'src/store/storeSynchronization'
 import { Image } from 'ui/src'
-import { UNISWAP_LOGO } from 'ui/src/assets'
 import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 

@@ -4,6 +4,7 @@ import { PropsWithChildren, ReactNode, useContext, useEffect, useState } from 'r
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { createLiquidityChartStore } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/createLiquidityChartStore'
 import { LiquidityChartStoreContext } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/LiquidityChartStoreContext'
+import type { TickRangeChange } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 import { useLiquidityChartStoreActions } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/useLiquidityChartStore'
 import { RangeAmountInputPriceMode } from '~/features/Liquidity/Create/types'
 
@@ -20,6 +21,8 @@ interface LiquidityChartStoreProviderProps {
   /** True once the user has edited the initial-price field — distinguishes a deliberate price edit
    * from the streamed reference re-seeding on its own, so a preset only recenters on the former. */
   isInitialPriceDirty?: boolean
+  /** True while a transaction is in flight, so a followed preset can't move the range being signed. */
+  isRangeLocked?: boolean
   isFullRange?: boolean
   baseCurrency: Maybe<Currency>
   quoteCurrency: Maybe<Currency>
@@ -30,7 +33,7 @@ interface LiquidityChartStoreProviderProps {
   onInputModeChange: (inputMode: RangeAmountInputPriceMode) => void
   onMinTickChange: (tick?: number) => void
   onMaxTickChange: (tick?: number) => void
-  onMinMaxTickChange: (ticks: { minTick?: number; maxTick?: number }) => void
+  onMinMaxTickChange: (range: TickRangeChange) => void
   onTimePeriodChange?: (timePeriod: HistoryDuration) => void
   setIsFullRange: (isFullRange: boolean) => void
 }
@@ -44,10 +47,18 @@ function LiquidityChartStoreProviderInner({
   tickSpacing,
   isFullRange,
   isInitialPriceDirty,
+  isRangeLocked,
 }: PropsWithChildren<
   Pick<
     LiquidityChartStoreProviderProps,
-    'minTick' | 'maxTick' | 'currentTick' | 'currentPrice' | 'tickSpacing' | 'isFullRange' | 'isInitialPriceDirty'
+    | 'minTick'
+    | 'maxTick'
+    | 'currentTick'
+    | 'currentPrice'
+    | 'tickSpacing'
+    | 'isFullRange'
+    | 'isInitialPriceDirty'
+    | 'isRangeLocked'
   >
 >) {
   const store = useContext(LiquidityChartStoreContext)
@@ -69,8 +80,8 @@ function LiquidityChartStoreProviderInner({
   // initial-price edit and the spacing changes with the fee tier, none of which remount the store.
   // isInitialPriceDirty rides along so the action can tell a user edit from a self-moving re-seed.
   useEffect(() => {
-    syncCurrentTickFromParent({ currentTick, currentPrice, tickSpacing, isInitialPriceDirty })
-  }, [currentTick, currentPrice, tickSpacing, isInitialPriceDirty, syncCurrentTickFromParent])
+    syncCurrentTickFromParent({ currentTick, currentPrice, tickSpacing, isInitialPriceDirty, isRangeLocked })
+  }, [currentTick, currentPrice, tickSpacing, isInitialPriceDirty, isRangeLocked, syncCurrentTickFromParent])
 
   // Sync isFullRange
   useEffect(() => {
@@ -89,6 +100,7 @@ export function LiquidityChartStoreProvider({
   currentPrice,
   creatingPoolOrPair,
   isInitialPriceDirty,
+  isRangeLocked,
   tickSpacing,
   baseCurrency,
   quoteCurrency,
@@ -139,6 +151,7 @@ export function LiquidityChartStoreProvider({
         tickSpacing={tickSpacing}
         isFullRange={isFullRange}
         isInitialPriceDirty={isInitialPriceDirty}
+        isRangeLocked={isRangeLocked}
       >
         {children}
       </LiquidityChartStoreProviderInner>

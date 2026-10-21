@@ -60,7 +60,7 @@ const slice = createSlice({
         for (const request of requests) {
           // Remove existing connection requests from the same tab and of the same type
           if (
-            request.senderTabInfo.id === action.payload.senderTabInfo.id &&
+            request.senderTabInfo.tabId === action.payload.senderTabInfo.tabId &&
             request.dappRequest.type === action.payload.dappRequest.type
           ) {
             delete state.requests[request.dappRequest.requestId]

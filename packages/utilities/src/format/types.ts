@@ -12,6 +12,10 @@ export enum NumberType {
   // below the input/output amounts
   SwapPrice = 'swap-price',
 
+  // full-precision (non-abbreviated) counterpart to SwapPrice, used only for the
+  // hover tooltip that reveals the exact value behind an abbreviated swap rate
+  SwapPriceFull = 'swap-price-full',
+
   // this formatter is only used for displaying the swap trade output amount
   // in the text input boxes. Output amounts on review screen should use the above TokenTx formatter
   SwapTradeAmount = 'swap-trade-amount',

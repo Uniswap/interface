@@ -18,9 +18,12 @@ const virtualErc20Abi = [
 export function useAuctionTradingToken({
   chainId,
   tokenAddress,
+  enabled = true,
 }: {
   chainId: UniverseChainId | undefined
   tokenAddress: string | undefined
+  /** Disables the contract read and withholds cached or configured destinations. */
+  enabled?: boolean
 }): { tradingTokenAddress: string | undefined; loading: boolean } {
   const token = chainId && tokenAddress ? { chainId, tokenAddress } : undefined
   const override = token ? getAuctionTradingTokenOverride(token) : undefined
@@ -32,8 +35,12 @@ export function useAuctionTradingToken({
     abi: virtualErc20Abi,
     functionName: 'UNDERLYING_TOKEN_ADDRESS',
     // The underlying is immutable. Never call this getter on ordinary tokens or disbursement receipts.
-    query: { enabled: isRedeemable && !override, staleTime: Infinity },
+    query: { enabled: enabled && isRedeemable && !override, staleTime: Infinity },
   })
+
+  if (!enabled) {
+    return { tradingTokenAddress: undefined, loading: false }
+  }
 
   return {
     tradingTokenAddress:

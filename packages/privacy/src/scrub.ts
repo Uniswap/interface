@@ -11,6 +11,7 @@
  *
  * Explicit contract: configurable patterns, injectable into logger pipeline.
  */
+import walletSecretKeys from './wallet-secret-keys.json'
 
 /** Pattern definition for regex-based string scanning */
 export interface ScrubPattern {
@@ -52,6 +53,15 @@ export const DEFAULT_REDACT_PATHS: string[] = [
   '**.email',
   '**.identifier',
 ]
+
+/**
+ * Keys whose values can decrypt or spend a wallet. Unlike the PII in `DEFAULT_REDACT_PATHS`, these
+ * may never sit in app state at all, so the dev/test tripwires throw on them where they only warn
+ * on the rest. Exact-key matching means every spelling a form uses has to be listed, in
+ * wallet-secret-keys.json: the lint rule config/oxlint-plugins/no-wallet-secrets-in-state.js reads
+ * the same file, so adding a key there covers both the runtime scrubber and the review-time check.
+ */
+export const WALLET_SECRET_REDACT_PATHS: string[] = walletSecretKeys.map((key) => `**.${key}`)
 
 export const DEFAULT_SCRUB_PATTERNS: ScrubPattern[] = [
   {
@@ -100,6 +110,11 @@ type MatchStep = { censor: boolean; next: PathMatcher[] }
 interface WalkState {
   matchers: PathMatcher[]
   seen: Set<object>
+}
+
+interface FindState extends WalkState {
+  /** Dotted location of the value being inspected, '' at the root. */
+  path: string
 }
 
 const PATH_TOKEN_RX = /[^.[\]]+|\[(?:.*?)\]/g
@@ -227,6 +242,27 @@ function scrubString(value: string, patterns: ScrubPattern[]): string {
 }
 
 /**
+ * `**.key` — one literal key at any depth — carries no positional state, so it collapses to a set
+ * lookup per key instead of a matcher that has to be advanced and reallocated at every level.
+ */
+function compileRedactPaths(paths: string[]): { deepKeys: Set<string>; rootMatchers: PathMatcher[] } {
+  const parsed = Array.from(new Set(paths))
+    .map(parseRedactPath)
+    .filter((tokens) => tokens.length > 0)
+  const deepKeys = new Set<string>()
+  const rootMatchers: PathMatcher[] = []
+  for (const tokens of parsed) {
+    const [first, second] = tokens
+    if (tokens.length === 2 && first && second && 'deep' in first && 'key' in second) {
+      deepKeys.add(second.key)
+    } else {
+      rootMatchers.push({ tokens, index: 0 })
+    }
+  }
+  return { deepKeys, rootMatchers }
+}
+
+/**
  * Create a scrubber function with the given options.
  *
  * A single non-mutating pass does both jobs:
@@ -242,22 +278,7 @@ function scrubString(value: string, patterns: ScrubPattern[]): string {
  */
 export function createScrubber(options?: ScrubberOptions): Scrubber {
   const patterns = options?.patterns ?? DEFAULT_SCRUB_PATTERNS
-  const parsed = Array.from(new Set(options?.redactPaths ?? DEFAULT_REDACT_PATHS))
-    .map(parseRedactPath)
-    .filter((tokens) => tokens.length > 0)
-
-  // `**.key` — one literal key at any depth — carries no positional state, so it collapses to a set
-  // lookup per key instead of a matcher that has to be advanced and reallocated at every level.
-  const deepKeys = new Set<string>()
-  const rootMatchers: PathMatcher[] = []
-  for (const tokens of parsed) {
-    const [first, second] = tokens
-    if (tokens.length === 2 && first && second && 'deep' in first && 'key' in second) {
-      deepKeys.add(second.key)
-    } else {
-      rootMatchers.push({ tokens, index: 0 })
-    }
-  }
+  const { deepKeys, rootMatchers } = compileRedactPaths(options?.redactPaths ?? DEFAULT_REDACT_PATHS)
   const hasDeepKeys = deepKeys.size > 0
 
   /** Redact a matched leaf, else recurse. Present-but-falsey values are still censored. */
@@ -345,4 +366,91 @@ export function createScrubber(options?: ScrubberOptions): Scrubber {
 
   return (obj: Record<string, unknown>): Record<string, unknown> =>
     walk(obj, { matchers: rootMatchers, seen: new Set<object>() }) as Record<string, unknown>
+}
+
+/** Returns the dotted path of the first key a redactor would censor, or undefined when there is none. */
+export type SensitiveFieldFinder = (value: unknown) => string | undefined
+
+/**
+ * Read-only twin of `createScrubber`'s path layer: walks a value with the same `redactPaths` semantics
+ * and reports where the first sensitive key sits (`variables.password`, `accounts.0.mnemonic`) instead
+ * of rebuilding a censored copy. Strings are not pattern-scanned; this answers "is a sensitive key
+ * present", which is what a guardrail needs to decide whether to fail.
+ */
+export function createSensitiveFieldFinder(options?: Pick<ScrubberOptions, 'redactPaths'>): SensitiveFieldFinder {
+  const { deepKeys, rootMatchers } = compileRedactPaths(options?.redactPaths ?? DEFAULT_REDACT_PATHS)
+  const hasDeepKeys = deepKeys.size > 0
+
+  function stepInto([key, child]: [string, unknown], state: FindState): string | undefined {
+    const path = state.path ? `${state.path}.${key}` : key
+    const present = child !== null && child !== undefined
+    if (hasDeepKeys && present && deepKeys.has(key)) {
+      return path
+    }
+    const { censor, next } = advanceMatchers(state.matchers, key)
+    if (censor && present) {
+      return path
+    }
+    return find(child, { path, matchers: next, seen: state.seen })
+  }
+
+  function findInContainer(value: object, state: FindState): string | undefined {
+    if (Array.isArray(value)) {
+      for (const [index, item] of value.entries()) {
+        const found = stepInto([String(index), item], state)
+        if (found) {
+          return found
+        }
+      }
+      return undefined
+    }
+    if (value instanceof Map) {
+      for (const [key, child] of value) {
+        const found = typeof key === 'string' ? stepInto([key, child], state) : find(child, { ...state, matchers: [] })
+        if (found) {
+          return found
+        }
+      }
+      return undefined
+    }
+    if (value instanceof Set) {
+      for (const item of value) {
+        const found = find(item, { ...state, matchers: [] })
+        if (found) {
+          return found
+        }
+      }
+      return undefined
+    }
+    const keys = isPlainObject(value) ? Object.keys(value) : Object.getOwnPropertyNames(value)
+    for (const key of keys) {
+      const descriptor = resolveOwnProperty(value, key)
+      if (!descriptor || !('value' in descriptor)) {
+        continue
+      }
+      const found = stepInto([key, descriptor.value], state)
+      if (found) {
+        return found
+      }
+    }
+    return undefined
+  }
+
+  function find(value: unknown, state: FindState): string | undefined {
+    if (value === null || typeof value !== 'object') {
+      return undefined
+    }
+    if (state.seen.has(value) || isOpaqueObject(value)) {
+      return undefined
+    }
+    state.seen.add(value)
+    try {
+      return findInContainer(value, state)
+    } finally {
+      state.seen.delete(value)
+    }
+  }
+
+  return (value: unknown): string | undefined =>
+    find(value, { path: '', matchers: rootMatchers, seen: new Set<object>() })
 }

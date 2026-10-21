@@ -1,6 +1,7 @@
 import { Flex, Text, TouchableTextLink } from '@universe/mycelium'
 import { useIsDarkMode } from '@universe/mycelium/theme-hooks-compat'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
+import { Trans } from 'ui/src'
 import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'

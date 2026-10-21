@@ -21,7 +21,7 @@ export function CategoryDefinitionTooltipContent({
       {onPressViewAll !== undefined && (
         <TouchableArea alignSelf="flex-start" testID={TestID.CategoryDefinitionViewAll} onPress={onPressViewAll}>
           <Text color="$neutral1" variant="buttonLabel4">
-            {t('common.viewAll')}
+            {t('explore.collections.view')}
           </Text>
         </TouchableArea>
       )}

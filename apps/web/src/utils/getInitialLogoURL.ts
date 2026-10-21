@@ -1,5 +1,5 @@
 import { UniverseChainId, getValidAddress } from '@universe/chains'
-import { CELO_LOGO } from 'ui/src/assets'
+import { CELO_LOGO } from '@universe/mycelium/assets'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'

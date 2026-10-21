@@ -1,6 +1,6 @@
 import { toPlainMessage } from '@bufbuild/protobuf'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
-import { GetBidsByWalletRequest, GetBidsByWalletResponse } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { GetBidsByWalletRequest, GetBidsByWalletResponse } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { SharedQueryClient } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { auctionQueries } from 'uniswap/src/data/apiClients/dataApiService/auctions/auctionQueries'

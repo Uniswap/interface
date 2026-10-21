@@ -229,7 +229,10 @@ function setupDefaults(): void {
 
 function setInputCurrency(
   currency: unknown,
-  { withValidAmountAndRecipient = false }: { withValidAmountAndRecipient?: boolean } = {},
+  {
+    withValidAmountAndRecipient = false,
+    gasFee,
+  }: { withValidAmountAndRecipient?: boolean; gasFee?: { isLoading: boolean; error: Error | null } } = {},
 ): void {
   mockUseSendContext.mockReturnValue({
     sendState: {
@@ -244,7 +247,7 @@ function setInputCurrency(
       recipientData: withValidAmountAndRecipient ? ({ address: '0xRecipient' } as unknown) : undefined,
       inputError: undefined,
       transaction: undefined,
-      gasFee: undefined,
+      gasFee,
     },
     setSendState: vi.fn(),
   })
@@ -331,5 +334,24 @@ describe('SendForm: permissioned gating (sender + recipient allowlist)', () => {
     renderWithTheme(<SendForm />)
 
     expect(screen.getByText('permissionedPool.send.recipientNotAllowlisted.message:TPT')).toBeTruthy()
+  })
+})
+
+describe('SendForm: gas estimate', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    setupDefaults()
+  })
+
+  it('disables the Send button while the gas estimate is loading', () => {
+    setInputCurrency(nonPermissionedCurrency, {
+      withValidAmountAndRecipient: true,
+      gasFee: { isLoading: true, error: null },
+    })
+
+    renderWithTheme(<SendForm />)
+
+    const sendButton = document.querySelector('[dd-action-name="common.send.button"]')
+    expect(sendButton?.getAttribute('aria-disabled')).toBe('true')
   })
 })

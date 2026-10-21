@@ -144,3 +144,13 @@ export const removePersistedApolloCache = createSafeMigration({
   },
   onError: (state: any) => state,
 })
+
+// Pending requests now carry the sending frame's identity (frameUrl, tabUrl, frameId and
+// isCrossOriginFrame). A request persisted by an older build lacks it, and its dapp-side promise
+// died with that page, so the queue is dropped rather than answered through a shape the
+// frame-targeted send cannot route.
+export const clearPendingDappRequests = createSafeMigration({
+  name: 'clearPendingDappRequests',
+  migrate: (state: any) => ({ ...state, dappRequests: { ...state.dappRequests, requests: {} } }),
+  onError: (state: any) => state,
+})

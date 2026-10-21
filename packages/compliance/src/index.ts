@@ -22,8 +22,14 @@ export {
 } from '@universe/compliance/src/devComplianceOverride'
 export { useComplianceClient } from '@universe/compliance/src/useComplianceClient'
 export { useSetTokenAcknowledgement, useTokenComplianceStatus } from '@universe/compliance/src/featureGatedTokenQuery'
-export { refetchGatedFeatures, useGatedFeatures, useIsFeatureGated } from '@universe/compliance/src/gatedFeaturesQuery'
+export {
+  fetchIsFeatureGated,
+  refetchGatedFeatures,
+  useGatedFeatures,
+  useIsFeatureGated,
+} from '@universe/compliance/src/gatedFeaturesQuery'
 export { useIsBlockedAddress } from '@universe/compliance/src/screenAddressQuery'
+export { createComplianceV2Transport } from '@universe/compliance/src/transport'
 export {
   hasUnrecognizedReason,
   isAckGated,

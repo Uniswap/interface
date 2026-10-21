@@ -687,6 +687,37 @@ export type LiquidityAnalyticsProperties = ITraceContext & {
   is_permissioned: boolean | undefined
 }
 
+/**
+ * Token Provenance surfaces (Auction Info module, TDP <-> ADP navigation). Bounded display dimensions on
+ * purpose: wallet addresses, bid or claim amounts and claim eligibility must never be attached.
+ */
+export type TokenProvenanceAnalyticsProperties = {
+  surface: 'tdp' | 'adp'
+  chain_id: number
+  auction_type: 'crowd' | 'custom' | 'unknown'
+  auction_phase: 'loading' | 'unknown' | 'upcoming' | 'live' | 'ended'
+  pool_availability: 'has_pool' | 'loading' | 'error' | 'no_pool'
+  page_layout: 'auction_only' | 'trading'
+  launch_method?: 'instant' | 'crowd' | 'custom' | 'third_party' | 'unknown'
+  entry_point?:
+    | 'tdp_auction_banner'
+    | 'tdp_countdown_module'
+    | 'tdp_provenance_module'
+    | 'auction_now_trading_card'
+    | 'adp_trade_token_banner'
+    | 'chart_empty_state'
+    | 'tdp_header_launchpad'
+  auction_count?: number
+  has_auction_history?: boolean
+  destination?: 'auction_details' | 'pools' | 'explore_auctions'
+}
+
+export type AuctionSelectorAnalyticsProperties = {
+  chain_id: number
+  auction_count: number
+  entry_point: 'tdp_auction_banner' | 'tdp_other_auctions' | 'tdp_provenance_module'
+}
+
 export type AuctionWithdrawAnalyticsProperties = ITraceContext & {
   transaction_hash: string
   chain_id: number
@@ -1415,6 +1446,22 @@ export type UniverseEventProperties = {
   [AuctionEventName.AuctionCreateCompleted]: AuctionCreateAnalyticsProperties & {
     transaction_hash: string
   }
+  [AuctionEventName.AuctionBannerViewed]: TokenProvenanceAnalyticsProperties
+  [AuctionEventName.ProvenanceModuleViewed]: TokenProvenanceAnalyticsProperties
+  [AuctionEventName.ChartEmptyStateViewed]: TokenProvenanceAnalyticsProperties
+  [AuctionEventName.AuctionTypeExplainerOpened]: {
+    launch_method: NonNullable<TokenProvenanceAnalyticsProperties['launch_method']>
+  }
+  [AuctionEventName.AuctionSelectorOpened]: AuctionSelectorAnalyticsProperties
+  [AuctionEventName.AuctionSelectorAuctionClicked]: {
+    chain_id: number
+    position_rank: number
+    time_remaining_seconds?: number
+    auction_status?: 'upcoming' | 'live' | 'ended'
+  }
+  [AuctionEventName.TokenDetailsToAuctionDetailsClicked]: TokenProvenanceAnalyticsProperties
+  [AuctionEventName.TokenDetailsToLaunchesClicked]: TokenProvenanceAnalyticsProperties
+  [AuctionEventName.AuctionDetailsToTokenDetailsClicked]: TokenProvenanceAnalyticsProperties
   [MobileEventName.AutomatedOnDeviceRecoveryTriggered]: {
     showNotificationScreen: boolean
     showBiometricsScreen: boolean
@@ -1543,9 +1590,13 @@ export type UniverseEventProperties = {
     /** NetworkBalanceBreakdown accordion on token details */
     balanceToggleState?: 'open' | 'close'
     /** ElementName.NetworkBalanceRow — multichain balance row on token details (web) */
-    chain_id?: UniverseChainId
+    chain_id?: UniverseChainId | typeof ALL_NETWORKS_LABEL
     multichainTokenRowState?: 'open' | 'close'
     chain_name?: string
+    chain?: string
+    previous_connected_chain?: string
+    previous_chain_id?: UniverseChainId | typeof ALL_NETWORKS_LABEL
+    previous_chain_name?: string
     /** ElementName.ExploreCategoryView — selected Explore category id (`all` for the default) */
     tab?: string
     /** ElementName.ExploreCategoryView — true when picked inside the More menu, false when pressed in the chip row */

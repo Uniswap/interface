@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { GetClearingPriceHistoryRequest } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { GetClearingPriceHistoryRequest } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { useMemo } from 'react'
 import { auctionQueries } from 'uniswap/src/data/apiClients/dataApiService/auctions/auctionQueries'
 import type { AuctionDetails, BidTokenInfo } from '~/features/Toucan/Auction/store/types'

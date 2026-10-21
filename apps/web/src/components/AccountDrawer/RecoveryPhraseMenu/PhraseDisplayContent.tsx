@@ -5,6 +5,7 @@ import { Eye } from '@universe/mycelium/icons/Eye'
 import { EyeSlash } from '@universe/mycelium/icons/EyeSlash'
 import { FileListLock } from '@universe/mycelium/icons/FileListLock'
 import { GraduationCap } from '@universe/mycelium/icons/GraduationCap'
+import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { MNEMONIC_LENGTH_EW } from 'wallet/src/constants/accounts'
 
@@ -39,7 +40,7 @@ function WordGrid({ words }: { words: string[] }) {
             <Text variant="body3" color="$neutral2" width={20}>
               {i + 1}
             </Text>
-            <Text variant="body3" color="$neutral1">
+            <Text variant="body3" color="$neutral1" testID={`${TestID.RecoveryPhraseWordPrefix}${i}`}>
               {word}
             </Text>
           </Flex>
@@ -51,7 +52,7 @@ function WordGrid({ words }: { words: string[] }) {
             <Text variant="body3" color="$neutral2" width={20}>
               {half + i + 1}
             </Text>
-            <Text variant="body3" color="$neutral1">
+            <Text variant="body3" color="$neutral1" testID={`${TestID.RecoveryPhraseWordPrefix}${half + i}`}>
               {word}
             </Text>
           </Flex>

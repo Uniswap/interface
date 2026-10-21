@@ -1,9 +1,12 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
-import { markHoverable, styled } from '@universe/mycelium/styled'
 import { useState } from 'react'
 import { Dropdown } from '~/components/Dropdowns/Dropdown'
 import { ActionButtonStyle } from '~/components/StickyCollapsibleHeader/HeaderActions/ActionButtonStyle'
-import { HeaderActionRowContent } from '~/components/StickyCollapsibleHeader/HeaderActions/HeaderActionRowContent'
+import {
+  DROPDOWN_MIN_WIDTH,
+  HeaderActionDropdownRow,
+  HeaderActionRowContent,
+} from '~/components/StickyCollapsibleHeader/HeaderActions/HeaderActionRowContent'
 import {
   type HeaderAction,
   type HeaderActionWithDropdown,
@@ -12,20 +15,9 @@ import {
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { openExternalLink } from '~/utils/openExternalLink'
 
-// The empty variants table pins the factory's variant generic: a hover-only
-// config has no other inference site, so V falls back to its open constraint
-// and the index signature collapses the base component's prop surface.
-const DropdownAction = styled(markHoverable(TouchableArea), {
-  variants: {},
-  base: 'flex flex-row items-center p-2 rounded-8 gap-3 h-10',
-  hover: [{ class: 'bg-surface2-hovered' }],
-})
-
 interface DesktopHeaderActionsProps {
   actions: HeaderAction[]
 }
-
-const DROPDOWN_MIN_WIDTH = 200
 
 function DropdownHeaderAction({ action }: { action: HeaderActionWithDropdown }): JSX.Element {
   const [isOpen, setIsOpen] = useState(false)
@@ -42,14 +34,10 @@ function DropdownHeaderAction({ action }: { action: HeaderActionWithDropdown }):
       alignRight
     >
       {visibleItems.map((item) => (
-        <DropdownAction
+        <HeaderActionDropdownRow
           key={item.title}
-          {...(item.href
-            ? {
-                tag: 'a',
-                onPress: () => openExternalLink(item.href!),
-              }
-            : { onPress: item.onPress })}
+          isLink={!!item.href}
+          onPress={item.href ? () => openExternalLink(item.href!) : item.onPress}
         >
           <HeaderActionRowContent
             title={item.title}
@@ -58,7 +46,7 @@ function DropdownHeaderAction({ action }: { action: HeaderActionWithDropdown }):
             subtitle={item.subtitle}
             trailingIcon={item.trailingIcon}
           />
-        </DropdownAction>
+        </HeaderActionDropdownRow>
       ))}
     </Dropdown>
   )

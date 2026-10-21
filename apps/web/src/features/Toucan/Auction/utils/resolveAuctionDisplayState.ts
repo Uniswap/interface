@@ -49,6 +49,12 @@ export interface AuctionDisplayState {
   result: AuctionDisplayResult
   poolAvailability: PoolAvailability
   shouldShowSwap: boolean
+  /**
+   * The result is still on its way rather than settled: `Unknown` also covers a failed checkpoint,
+   * which must not be mistaken for one that is about to answer. Optional so a hand-built state
+   * defaults to "not pending", which is the safe reading everywhere it is consulted.
+   */
+  resultPending?: boolean
 }
 
 export function resolveAuctionPhase({
@@ -108,7 +114,8 @@ export function resolveAuctionResult({
   return AuctionDisplayResult.Failed
 }
 
-function resolvePoolAvailability(pools: TokenPoolState): PoolAvailability {
+/** The single reading of a pool count: every surface that gates on "has a pool" must go through this. */
+export function resolvePoolAvailability(pools: TokenPoolState): PoolAvailability {
   if (pools.status === 'loading') {
     return PoolAvailability.Loading
   }
@@ -138,5 +145,7 @@ export function resolveAuctionDisplayState({
     result: resolveAuctionResult({ phase, currencyRaised, requiredCurrencyRaised: auction?.requiredCurrencyRaised }),
     poolAvailability,
     shouldShowSwap: !auction || poolAvailability !== PoolAvailability.NoPool,
+    // 'loading' only occurs once the checkpoint query is enabled, which needs a head past the end block.
+    resultPending: phase === AuctionDisplayPhase.Loading || currencyRaised.status === 'loading',
   }
 }

@@ -24,7 +24,6 @@ function buildApp({ fetchSpy, onResolveEntryGateway, trustedClientIp }: BuildApp
       }
       return ENTRY_GATEWAY_URLS.production
     },
-    getWebSocketUrl: () => 'https://websockets.backend-prod.api.uniswap.org',
     getTrustedClientIp: () => trustedClientIp,
     getEmbedFrameAncestors: () => undefined,
   })
@@ -139,6 +138,11 @@ describe('/debug/my-ip-address', () => {
     vi.unstubAllEnvs()
   })
 
+  it('is nosniff like every other route', async () => {
+    const res = await buildApp({ trustedClientIp: '203.0.113.9' }).request('/debug/my-ip-address')
+    expect(res.headers.get('x-content-type-options')).toBe('nosniff')
+  })
+
   it('reports whatever the platform resolver returned', async () => {
     const res = await buildApp({ trustedClientIp: '203.0.113.9' }).request('/debug/my-ip-address')
 
@@ -192,4 +196,45 @@ describe('/debug/my-ip-address', () => {
     expect(res.headers.get('content-type')).toContain('text/html')
     expect(await res.text()).not.toContain('203.0.113.9')
   })
+})
+
+describe('nosniff', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  // A same-origin body whose bytes an attacker shapes on-chain (GetPosition token metadata)
+  // must never load as <script src>.
+  it('stamps nosniff on proxied entry-gateway responses', async () => {
+    const fetchSpy = vi.fn(
+      async () => new Response('proto-bytes', { headers: { 'content-type': 'application/proto' } }),
+    )
+    const app = buildApp({ fetchSpy: fetchSpy as unknown as typeof fetch })
+
+    const res = await app.request('/entry-gateway/v1/sessions', { method: 'POST' })
+
+    expect(res.status).toBe(200)
+    expect(await res.text()).toBe('proto-bytes')
+    expect(res.headers.get('x-content-type-options')).toBe('nosniff')
+  })
+
+  it('stamps nosniff on proxied config responses', async () => {
+    const fetchSpy = vi.fn(async () => new Response('{"ok":true}', { headers: { 'content-type': 'application/json' } }))
+    const app = buildApp({ fetchSpy: fetchSpy as unknown as typeof fetch })
+
+    const res = await app.request('/config/v1/initialize')
+
+    expect(res.headers.get('x-content-type-options')).toBe('nosniff')
+  })
+
+  it.each(['/swap', '/', '/api/not-an-image-route'])(
+    'keeps nosniff and frame protection on the SPA document at %s',
+    async (path) => {
+      const res = await buildApp().request(path)
+
+      expect(res.headers.get('content-type')).toContain('text/html')
+      expect(res.headers.get('x-content-type-options')).toBe('nosniff')
+      expect(res.headers.get('content-security-policy')).toContain('frame-ancestors')
+    },
+  )
 })

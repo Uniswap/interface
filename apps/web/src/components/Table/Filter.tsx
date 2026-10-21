@@ -2,9 +2,15 @@ import { Flex, type FlexCompatProps, Text } from '@universe/mycelium'
 import { CheckboxCompat } from '@universe/mycelium/checkbox-compat'
 import { ChevronsOut } from '@universe/mycelium/icons/ChevronsOut'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
+import { spacing } from '@universe/mycelium/tokens'
 import { forwardRef, RefObject, useCallback, useRef } from 'react'
 import { Portal } from '~/components/Popups/Portal'
 import { useOnClickOutside } from '~/hooks/useOnClickOutside'
+import { MWEB_BOTTOM_INSET } from '~/utils/mwebBottomInset'
+
+// The mobile panel is fixed to the viewport bottom, so its padding (not its offset) grows by the
+// in-app-browser chrome / safe-area inset: the last row clears the band and the surface still meets the edge.
+const MOBILE_PADDING_BOTTOM = `calc(${spacing.spacing8}px + ${MWEB_BOTTOM_INSET})` as const
 
 const FilterDropdown = forwardRef<HTMLDivElement, FlexCompatProps>(function FilterDropdown(props, ref) {
   return (
@@ -28,6 +34,7 @@ const FilterDropdown = forwardRef<HTMLDivElement, FlexCompatProps>(function Filt
         left: 0,
         top: 'unset',
         width: '100vw',
+        pb: MOBILE_PADDING_BOTTOM,
       }}
       {...props}
     />

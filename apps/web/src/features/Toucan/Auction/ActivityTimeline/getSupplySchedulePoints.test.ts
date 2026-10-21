@@ -1,4 +1,4 @@
-import { AuctionStep } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { AuctionStep } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import type { EVMUniverseChainId } from '@universe/chains'
 import { vi } from 'vitest'
 import { getSupplySchedulePoints } from '~/features/Toucan/Auction/ActivityTimeline/getSupplySchedulePoints'

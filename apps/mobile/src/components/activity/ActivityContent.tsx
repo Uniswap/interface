@@ -2,7 +2,7 @@ import { useScrollToTop } from '@react-navigation/native'
 import { Flex, Loader, UniversalList, type UniversalListRef } from '@universe/mycelium'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
-import { memo, useEffect, useRef, useState } from 'react'
+import { memo, useEffect, useMemo, useRef, useState } from 'react'
 import { useWindowDimensions } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
@@ -15,6 +15,7 @@ import {
   SCREEN_DRAW_MULTIPLIER,
   ACTIVITY_ROW_HEIGHT,
   activityItemsAreEqual,
+  getActivityItemSize,
   ON_END_REACHED_THRESHOLD,
 } from 'uniswap/src/components/activity/activityListItems'
 import { getActivityItemType } from 'uniswap/src/components/activity/utils'
@@ -60,7 +61,9 @@ export const ActivityContent = memo(function ActivityTabInner({
     keyExtractor,
     fetchNextPage,
     hasNextPage,
+    isFetching,
     isFetchingNextPage,
+    isFetchNextPageError,
     refetch,
     error: activityError,
     dataUpdatedAt,
@@ -106,6 +109,27 @@ export const ActivityContent = memo(function ActivityTabInner({
       fetchNextPage()
     }
   })
+
+  // Client-side filters (spam, hidden tokens, limit orders) can shrink a page to a few rows or none.
+  // onEndReached won't re-fire for that: the adaptive footer pads the list to full height, so keep
+  // paging until the real content covers the screen. Gate on isFetching (not just isFetchingNextPage):
+  // fetchNextPage cancels an in-flight page-1 refetch, which would drop the newest transactions.
+  const estimatedContentHeight = useMemo(
+    () => sectionData.reduce((height, item) => height + getActivityItemSize(item), 0),
+    [sectionData],
+  )
+  const shouldFillScreen =
+    !isExternalProfile &&
+    hasNextPage &&
+    !isFetching &&
+    !isFetchNextPageError &&
+    estimatedContentHeight < dimensions.height
+
+  useEffect(() => {
+    if (shouldFillScreen) {
+      fetchNextPage()
+    }
+  }, [shouldFillScreen, fetchNextPage])
 
   return (
     <Flex grow px="$spacing24" testID={TestID.ActivityContent}>

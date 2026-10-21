@@ -1,7 +1,7 @@
 import { UniverseChainId } from '@universe/chains'
 import { isWebPlatform } from '@universe/environment'
 import { Flex, Text } from '@universe/mycelium'
-import { Trans } from 'react-i18next'
+import { Trans } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
 import { INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/constants'
@@ -19,11 +19,7 @@ export function InsufficientNativeTokenBaseComponent({
   const shouldShowNetworkName = nativeCurrency.symbol === 'ETH' && nativeCurrency.chainId !== UniverseChainId.Mainnet
 
   const textComponentWithNetworkColor = (
-    <Text
-      key="highlight"
-      style={{ color: networkColors.foreground }}
-      variant={INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT}
-    />
+    <Text style={{ color: networkColors.foreground }} variant={INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT} />
   )
 
   return (

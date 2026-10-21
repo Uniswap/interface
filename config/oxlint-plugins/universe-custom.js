@@ -10,6 +10,7 @@ import { readFileSync } from 'node:fs'
 import { dirname, join, relative, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import noThrowingStubImports from './no-throwing-stub-imports.js'
+import noWalletSecretsInState from './no-wallet-secrets-in-state.js'
 import preferUseIsMounted from './prefer-use-is-mounted.js'
 import styledFactoryLiteralClasses from './styled-factory-literal-classes.js'
 
@@ -1233,6 +1234,7 @@ const plugin = {
     'no-throwing-stub-imports': noThrowingStubImports,
     'styled-factory-literal-classes': styledFactoryLiteralClasses,
     'prefer-use-is-mounted': preferUseIsMounted,
+    'no-wallet-secrets-in-state': noWalletSecretsInState,
   },
 }
 

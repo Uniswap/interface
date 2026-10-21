@@ -41,7 +41,13 @@ describe('createExtensionAppStateResetter', () => {
             messageHex: '0x123',
             address: '0x123',
           },
-          senderTabInfo: { id: 1, url: 'https://test.com' },
+          senderTabInfo: {
+            tabId: 1,
+            frameId: 0,
+            frameUrl: 'https://test.com',
+            tabUrl: 'https://test.com',
+            isCrossOriginFrame: false,
+          },
           isSidebarClosed: false,
         }),
       )

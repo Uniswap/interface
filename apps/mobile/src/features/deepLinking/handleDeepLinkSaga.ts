@@ -1,5 +1,12 @@
 import { createAction } from '@reduxjs/toolkit'
+import { SharedQueryClient } from '@universe/api'
 import { areEvmAddressesEqual } from '@universe/chains'
+import {
+  createComplianceV2Client,
+  createComplianceV2Transport,
+  fetchIsFeatureGated,
+  GatedFeature,
+} from '@universe/compliance'
 import { isAndroid } from '@universe/environment'
 import { FeatureFlags, getFeatureFlagName, getOverrideAdapter, getStatsigClient } from '@universe/gating'
 import { parseUri } from '@walletconnect/utils'
@@ -34,6 +41,8 @@ import { logger } from 'utilities/src/logger/logger'
 import { ScantasticParams } from 'wallet/src/features/scantastic/types'
 import { selectAccounts, selectActiveAccount } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
+
+const complianceClient = createComplianceV2Client(createComplianceV2Transport())
 
 interface DeepLink {
   url: string
@@ -188,9 +197,12 @@ function* _sendAnalyticsEvent(deepLinkAction: DeepLinkActionResult, coldStart: b
 }
 
 function* handleGoToFiatOnRampDeepLink(data: PayloadWithFiatOnRampParams) {
-  const disableForKorea = getStatsigClient().checkGate(getFeatureFlagName(FeatureFlags.DisableFiatOnRampKorea))
-  if (disableForKorea) {
-    navigate(ModalName.KoreaCexTransferInfoModal)
+  const isForRegionBlocked = yield* call(fetchIsFeatureGated, GatedFeature.FIAT_ONRAMP, {
+    queryClient: SharedQueryClient,
+    client: complianceClient,
+  })
+  if (isForRegionBlocked) {
+    navigate(ModalName.CexTransferInfoModal)
   } else {
     const { moonpayOnly, amount, moonpayCurrencyCode } = data
 

@@ -297,6 +297,7 @@ vi.mock('uniswap/src/features/telemetry/Trace', () => ({
 }))
 
 vi.mock('uniswap/src/features/accounts/store/hooks', () => ({
+  useActiveAddress: vi.fn(() => undefined),
   useConnectionStatus: vi.fn(() => ({ isConnecting: false })),
 }))
 

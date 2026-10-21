@@ -1,14 +1,26 @@
 import { TestID } from '@universe/test'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
+import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
+import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { LaunchMethodExplainerModal } from '~/features/Toucan/Shared/LaunchMethodExplainerModal'
-import { fireEvent, render, screen } from '~/test-utils/render'
+import { act, fireEvent, render, screen } from '~/test-utils/render'
+
+vi.unmock('uniswap/src/features/telemetry/Trace')
+// Trace's web path does not use React Navigation; avoid loading its native ESM dependency tree.
+vi.mock('@react-navigation/core', () => ({ useFocusEffect: vi.fn() }))
 
 const mockNavigate = vi.fn()
 vi.mock('react-router', async (importOriginal) => ({
   ...(await importOriginal<typeof import('react-router')>()),
   useNavigate: () => mockNavigate,
 }))
+
+function explainerOpenedPayloads(sendEvent: ReturnType<typeof vi.spyOn>): unknown[] {
+  return sendEvent.mock.calls
+    .filter(([event]) => event === AuctionEventName.AuctionTypeExplainerOpened)
+    .map(([, properties]) => properties)
+}
 
 describe('LaunchMethodExplainerModal', () => {
   beforeEach(() => {
@@ -69,6 +81,37 @@ describe('LaunchMethodExplainerModal', () => {
     )
 
     expect(screen.queryByText('Custom Auctions')).toBeNull()
+  })
+
+  it.each([
+    [LaunchProvenanceMethod.CustomAuction, 'custom'],
+    [LaunchProvenanceMethod.CrowdLaunch, 'crowd'],
+    [LaunchProvenanceMethod.InstantLaunch, 'instant'],
+  ])('records opening %s once, with only its bounded launch method', async (method, launch_method) => {
+    const sendEvent = vi.spyOn(analytics, 'sendEvent').mockImplementation(() => undefined)
+
+    const { rerender } = render(<LaunchMethodExplainerModal method={method} isOpen onClose={vi.fn()} />)
+    expect(explainerOpenedPayloads(sendEvent)).toEqual([expect.objectContaining({ launch_method })])
+
+    // Let Trace's 50ms development dedupe expire so a re-render would be free to send again.
+    await act(() => new Promise<void>((resolve) => setTimeout(resolve, 51)))
+    rerender(<LaunchMethodExplainerModal method={method} isOpen onClose={vi.fn()} />)
+    expect(explainerOpenedPayloads(sendEvent)).toHaveLength(1)
+
+    sendEvent.mockRestore()
+  })
+
+  it.each([
+    ['closed', LaunchProvenanceMethod.CustomAuction, false],
+    ['unsupported', LaunchProvenanceMethod.ThirdParty, true],
+    ['unsupported', LaunchProvenanceMethod.Unknown, true],
+  ] as const)('records nothing for a %s explainer', (_state, method, isOpen) => {
+    const sendEvent = vi.spyOn(analytics, 'sendEvent').mockImplementation(() => undefined)
+
+    render(<LaunchMethodExplainerModal method={method} isOpen={isOpen} onClose={vi.fn()} />)
+
+    expect(explainerOpenedPayloads(sendEvent)).toEqual([])
+    sendEvent.mockRestore()
   })
 
   it('closes from the Close button and navigates to Explore auctions', () => {

@@ -1,8 +1,8 @@
 import { renderHook } from '@testing-library/react'
 import { AnimatedFlex as MyceliumAnimatedFlex, Flex as MyceliumFlex, Text } from '@universe/mycelium'
-import { Trans } from 'react-i18next'
 import { useIsStringOrTransTag } from 'ui/src/components/buttons/Button/hooks/useIsStringOrTransTag'
 import { AnimatedFlex as UiAnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { Trans } from 'ui/src/i18n/Trans'
 
 describe('useIsStringOrTransTag', () => {
   it('is true for a plain string child', () => {

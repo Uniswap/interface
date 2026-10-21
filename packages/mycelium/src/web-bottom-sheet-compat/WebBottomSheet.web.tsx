@@ -248,6 +248,8 @@ export function WebBottomSheet({
   const contentEmission = flexCompatEmission({
     flex: 1,
     gap,
+    // On the scroller so a consumer frame pb adds to it. Declared in apps/web/src/global.css; keep the name in sync.
+    pb: 'var(--mweb-bottom-inset, 0px)',
     '$platform-web': { overflow: 'auto' },
     ...sheetHeightStyles,
   })

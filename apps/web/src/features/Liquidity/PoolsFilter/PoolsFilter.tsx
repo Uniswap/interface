@@ -5,8 +5,9 @@ import { TestID } from '@universe/test'
 import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter/NetworkFilter'
 import { COLLAPSED_SEARCH_WIDTH } from '~/components/ExpandableSearchInput/ExpandableSearchInput'
-import { NetworkFilter } from '~/components/NetworkFilter/NetworkFilter'
+import { useNetworkFilterChainIds } from '~/components/NetworkFilter/useFilteredChains'
 import { PoolsFilterModal } from '~/features/Liquidity/PoolsFilter/PoolsFilterModal'
 import { countActivePoolsFilters } from '~/features/Liquidity/PoolsFilter/toRequest'
 import { EMPTY_POOLS_FILTER_STATE, type PoolsAprRange, type PoolsFilterState } from '~/types/poolsFilter'
@@ -60,19 +61,18 @@ export function PoolsFilter({
     onApply(draft)
     setIsOpen(false)
   }
+  const { chainIds, allNetworksChainIds } = useNetworkFilterChainIds(networks)
 
   return (
     <Flex row gap="$spacing8" alignItems="center">
       {/* Network stays a top-level filter (also in the modal); changing it commits immediately. */}
-      {/* `medium` = 40px, matching the search input. `networks` restricts to the surface's supported */}
-      {/* (non-SVM) chains; `positionFixed` clamps the dropdown against the viewport, as TableNetworkFilter does. */}
       <NetworkFilter
-        currentChainId={value.chainId}
-        onPress={(chainId) => onApply({ ...value, chainId })}
-        showMultichainOption
-        size="medium"
-        networks={networks}
-        positionFixed
+        trigger={{ variant: 'pill' }}
+        includeAllNetworks
+        chainIds={chainIds}
+        allNetworksChainIds={allNetworksChainIds}
+        selectedChain={value.chainId ?? null}
+        onPressChain={(chainId) => onApply({ ...value, chainId: chainId ?? undefined })}
       />
       <Flex position="relative">
         {/* Explicit box so the icon button isn't padding-squished; it borrows the collapsed search's

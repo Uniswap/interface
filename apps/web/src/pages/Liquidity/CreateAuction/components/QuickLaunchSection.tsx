@@ -5,8 +5,8 @@ import { ArrowRight } from '@universe/mycelium/icons/ArrowRight'
 import { Rocket } from '@universe/mycelium/icons/Rocket'
 import { TooltipCompat as Tooltip } from '@universe/mycelium/tooltip-compat'
 import { useState } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
-import { Separator, Switch } from 'ui/src'
+import { useTranslation } from 'react-i18next'
+import { Separator, Switch, Trans } from 'ui/src'
 import { AdvancedSettingsSeparator } from '~/pages/Liquidity/CreateAuction/components/AdvancedSettingsSeparator'
 import {
   useCreateAuctionStore,

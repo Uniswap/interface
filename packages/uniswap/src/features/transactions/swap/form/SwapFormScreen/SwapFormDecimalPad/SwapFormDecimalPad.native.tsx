@@ -71,10 +71,12 @@ type SwapFormDecimalPadProps = {
     start,
     end,
     currencyField,
+    value,
   }: {
     start: number
     end?: number
     currencyField?: CurrencyField
+    value?: string
   }) => void
   inputSelectionRef: MutableRefObject<TextInputProps['selection']>
   outputSelectionRef: MutableRefObject<TextInputProps['selection']>

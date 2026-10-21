@@ -92,7 +92,10 @@ export interface DappConnectionInfo {
   name: string
   url: string
   icon: string | null
-  frameUrl?: string
+  /** Top-level page of the browser tab the request came from. Absent for mobile WalletConnect sessions, which have no tab. */
+  tabUrl?: string
+  /** True when `url` is an iframe whose origin differs from `tabUrl`. Absent for mobile WalletConnect sessions. */
+  isCrossOriginFrame?: boolean
 }
 
 /**

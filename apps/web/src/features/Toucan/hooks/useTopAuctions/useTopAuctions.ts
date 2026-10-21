@@ -4,7 +4,7 @@ import {
   AuctionWithStats,
   GetAuctionRequest,
   ListTopAuctionsRequest,
-} from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+} from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { EVMUniverseChainId, UniverseChainId } from '@universe/chains'
 import { DynamicConfigs, useDynamicConfigValue, VerifiedAuctionsConfigKey } from '@universe/gating'
 import { useMemo } from 'react'

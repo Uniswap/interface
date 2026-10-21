@@ -92,6 +92,10 @@ function DropdownContainer({ children }: PropsWithChildren): JSX.Element {
 
 export interface SharedDropdownProps {
   isOpen: boolean
+  /**
+   * Must apply the argument, not flip. The sheet's `onClose` requests `false` directly, and two
+   * dismissals in one tick (drag plus overlay press) would cancel each other out under a toggle.
+   */
   toggleOpen: (open: boolean) => void
   dropdownTestId?: string
   adaptToSheet?: boolean

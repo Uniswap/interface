@@ -1,7 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import type { Position as LiquidityServicePosition } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
 import { type Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import type { PositionInfo } from 'uniswap/src/features/positions/types'
+import type { LiquidityServicePosition, PositionInfo } from 'uniswap/src/features/positions/types'
 import { logger } from 'utilities/src/logger/logger'
 
 type ParsedUncollectedFees = Pick<

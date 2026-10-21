@@ -49,6 +49,8 @@ describe('TokenHoverCardContent', () => {
 
     expect(screen.getByText('$1.23')).toBeInTheDocument()
     expect(screen.getByText('today')).toBeInTheDocument()
+    expect(screen.getByText('8.33%')).toBeInTheDocument()
+    expect(screen.queryByText(/\$0\.09/)).not.toBeInTheDocument()
     expect(screen.getByTestId('hover-card-chart')).toHaveAttribute('data-points', '2')
     // FiatTokenStats formatting, the same as the TDP stats section.
     expect(screen.getByText('$188.8K 24H vol')).toBeInTheDocument()

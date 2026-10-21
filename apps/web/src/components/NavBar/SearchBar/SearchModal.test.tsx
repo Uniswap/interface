@@ -23,7 +23,7 @@ vi.mock('uniswap/src/components/modals/ScrollLock', () => ({
   useUpdateScrollLock: vi.fn(),
 }))
 
-vi.mock('uniswap/src/components/network/NetworkFilter', () => ({
+vi.mock('uniswap/src/components/network/NetworkFilter/NetworkFilter', () => ({
   NetworkFilter: () => null,
 }))
 

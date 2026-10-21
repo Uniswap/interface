@@ -27,6 +27,7 @@ import type { MenuCompatIconComponent } from '../menu-compat/types'
 import { CheckmarkCircleGlyph } from '../option-list-compat/icons'
 import { EffectiveOverlayZIndexContext, OVERLAY_Z_INDEXES, useStackingLayerAbove } from '../popover-compat/z-index'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../shadcn/dropdown-menu'
+import { SINGLE_LINE_ELLIPSIS } from '../text-compat/typography-classes'
 import { TriggerButtonCompat } from '../trigger-button-compat/TriggerButtonCompat'
 import {
   FILTER_SELECT_CHECK_CLASS_NAME,
@@ -120,10 +121,10 @@ export function FilterSelectCompat({
           />
         }
       >
-        <span className="flex w-max flex-row items-center gap-[8px]">
-          {renderIcon(ButtonIcon, ICON_SIZE)}
+        <span className="flex min-w-0 shrink flex-row items-center gap-[8px]">
+          {ButtonIcon !== undefined && <span className="flex shrink-0">{renderIcon(ButtonIcon, ICON_SIZE)}</span>}
           {selectedOption !== undefined && (
-            <span className={filterSelectItemLabelClassName()}>{selectedOption.label}</span>
+            <span className={cn(filterSelectItemLabelClassName(), SINGLE_LINE_ELLIPSIS)}>{selectedOption.label}</span>
           )}
         </span>
       </DropdownMenuTrigger>

@@ -17,11 +17,14 @@ import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'
 import { ACCOUNT, ACCOUNT2 } from 'wallet/src/test/fixtures'
 
 const SENDER_TAB_INFO: SenderTabInfo = {
-  id: 1,
-  url: 'https://app.uniswap.org/swap',
+  tabId: 1,
+  frameId: 0,
+  frameUrl: 'https://app.uniswap.org/swap',
+  tabUrl: 'https://app.uniswap.org/swap',
+  isCrossOriginFrame: false,
   favIconUrl: 'https://app.uniswap.org/favicon.ico',
 }
-const DAPP_URL = extractBaseUrl(SENDER_TAB_INFO.url)
+const DAPP_URL = extractBaseUrl(SENDER_TAB_INFO.frameUrl)
 const PROVIDER_URL = 'https://rpc.example/'
 
 function getProviders({

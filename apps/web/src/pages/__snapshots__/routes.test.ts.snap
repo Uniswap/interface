@@ -204,6 +204,14 @@ exports[`Routes > router definition should match snapshot 1`] = `
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": [],
+    "path": "/margin",
+  },
+  {
+    "enabled": [Function],
+    "getDescription": [Function],
+    "getElement": [Function],
+    "getTitle": [Function],
+    "nestedPaths": [],
     "path": "/positions/add/new",
   },
   {

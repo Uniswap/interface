@@ -21,6 +21,7 @@ function ContextMenuWebInner(
   {
     menuItems,
     contentOverride,
+    menuContentStyles,
     isPlacementAbove = false,
     isPlacementRight = false,
     offsetX = 0,
@@ -227,7 +228,7 @@ function ContextMenuWebInner(
       >
         {contentOverride ?? (
           <MenuContent
-            containerStyles={isSheet ? MENU_CONTENT_SHEET_CONTAINER_STYLES : undefined}
+            containerStyles={isSheet ? MENU_CONTENT_SHEET_CONTAINER_STYLES : menuContentStyles}
             items={menuItems}
             handleCloseMenu={handleCloseMenu}
             elementName={elementName}

@@ -1,9 +1,8 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { areEvmAddressesEqual, UniverseChainId } from '@universe/chains'
+import { UniverseChainId } from '@universe/chains'
 import { Flex, iconSizes, type ModifierPressProps, Text } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { memo } from 'react'
-import { useTranslation } from 'react-i18next'
 import Badge from 'uniswap/src/components/badge/Badge'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { FocusedRowControl, OptionItem } from 'uniswap/src/components/lists/items/OptionItem'
@@ -12,13 +11,8 @@ import {
   PoolOptionItemContextMenu,
 } from 'uniswap/src/components/lists/items/pools/PoolOptionItemContextMenu'
 import { hasPoolSearchStats, PoolOptionItemStats } from 'uniswap/src/components/lists/items/pools/PoolOptionItemStats'
-import { UniswapBuiltHookMark } from 'uniswap/src/components/logos/UniswapBuiltHookMark'
-import { BIPS_BASE, ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { DYNAMIC_FEE_AMOUNT } from 'uniswap/src/constants/pools'
+import { shortenPoolId, usePoolIdentityLabels } from 'uniswap/src/components/lists/items/pools/usePoolIdentityLabels'
 import { CurrencyInfo, PoolSearchStats } from 'uniswap/src/features/dataApi/types'
-import { getHookRegistryKey, useHookRegistryMap } from 'uniswap/src/features/poolHooks/hooks/useHookRegistryMap'
-import { useUniswapHookProvenance } from 'uniswap/src/features/poolHooks/hooks/useUniswapHookProvenance'
-import { ellipseMiddle, shortenAddress } from 'utilities/src/addresses'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 /**
@@ -74,29 +68,13 @@ function PoolOptionItemInner({
   modifierPressHref,
   onModifierPress,
 }: PoolOptionItemProps): JSX.Element {
-  const { t } = useTranslation()
   const poolName = `${token0CurrencyInfo.currency.symbol}/${token1CurrencyInfo.currency.symbol}`
-  const getUniswapHookProvenance = useUniswapHookProvenance()
-  const versionLabel = ProtocolVersion[protocolVersion].toLowerCase()
-  // v4 dynamic-fee pools arrive with the DYNAMIC_FEE_AMOUNT sentinel in fee_tier, which would otherwise
-  // format as ~838%. The search payload carries no isDynamic flag.
-  const feeLabel = feeTier === DYNAMIC_FEE_AMOUNT ? t('common.dynamic') : `${feeTier / BIPS_BASE}%`
-
-  // A zero hook address means "no hook" (the search/stats payloads don't all filter it out upstream).
-  const poolHookAddress = hookAddress && !areEvmAddressesEqual(hookAddress, ZERO_ADDRESS) ? hookAddress : undefined
-  const hookRegistry = useHookRegistryMap({ chainId, enabled: !!poolHookAddress })
-  const hookName = poolHookAddress
-    ? hookRegistry?.get(getHookRegistryKey({ chainId, hookAddress: poolHookAddress }))?.name
-    : undefined
-  // Registry membership alone isn't Uniswap authorship — a third-party hook can be registry-known too.
-  // The mark only appears when the provenance config actually attributes this hook to Uniswap, matching
-  // the pool detail page's split (`LiquidityPositionInfoBadges`/`useUniswapHookProvenance`).
-  const isUniswapBuiltHook =
-    !!poolHookAddress && getUniswapHookProvenance({ chainId, address: poolHookAddress }) !== undefined
-  // A raw-address fallback, and a registry-known hook Uniswap didn't build or configure, both get no mark —
-  // matching the detail page's Uniswap-built-vs-not split.
-  const hookMark = hookName && isUniswapBuiltHook ? <UniswapBuiltHookMark /> : undefined
-  const hookLabel = poolHookAddress ? hookName || shortenAddress({ address: poolHookAddress, chars: 4 }) : undefined
+  const { versionLabel, feeLabel, hookLabel, isNamedHook, hookMark } = usePoolIdentityLabels({
+    chainId,
+    protocolVersion,
+    hookAddress,
+    feeTier,
+  })
 
   const identityBadge = (
     <Flex row gap="$spacing2" alignItems="center">
@@ -109,7 +87,7 @@ function PoolOptionItemInner({
           size="small"
           placement="middle"
           icon={hookMark}
-          {...(hookName && { maxWidth: HOOK_LABEL_MAX_WIDTH, numberOfLines: 1 })}
+          {...(isNamedHook && { maxWidth: HOOK_LABEL_MAX_WIDTH, numberOfLines: 1 })}
         >
           {hookLabel}
         </Badge>
@@ -145,9 +123,7 @@ function PoolOptionItemInner({
 
   const addressSubtitle = (
     <Text color="$neutral2" numberOfLines={1} variant="body3">
-      {protocolVersion !== ProtocolVersion.V4
-        ? shortenAddress({ address: poolId })
-        : ellipseMiddle({ str: poolId, charsStart: 6 })}
+      {shortenPoolId({ poolId, protocolVersion })}
     </Text>
   )
 

@@ -1,4 +1,4 @@
-import { TickDetail } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { TickDetail } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { interpolateCurrencyRequiredQ96 } from '~/features/Toucan/Auction/BidDistributionChart/utils/interpolateCurrencyRequired'
 
 function makeTick(priceQ96: string, currencyRequiredQ96: string): TickDetail {

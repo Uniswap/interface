@@ -66,4 +66,23 @@ describe('useRwaExploreTableShell', () => {
     expect(result.current.visibleRows.map((row) => row.symbol)).toEqual(['LOW', 'HIGH', 'MID'])
     expect(result.current.rankByAsset.get(rows[2]!)).toBe(3)
   })
+
+  it('filters on the client when a filter string is given, keeping the unfiltered ranks', () => {
+    const { result } = renderHook(
+      () => useRwaExploreTableShell({ rows, rowsKey: 'stocks', filterString: 'hi', ...paging }),
+      { wrapper },
+    )
+
+    expect(result.current.visibleRows.map((row) => row.symbol)).toEqual(['HIGH'])
+    expect(result.current.rankByAsset.get(rows[1]!)).toBe(2)
+  })
+
+  it('keeps every row when the rows already arrive searched by the server', () => {
+    const { result } = renderHook(
+      () => useRwaExploreTableShell({ rows, rowsKey: 'stocks', filterString: undefined, ...paging }),
+      { wrapper },
+    )
+
+    expect(result.current.visibleRows.map((row) => row.symbol)).toEqual(['LOW', 'HIGH', 'MID'])
+  })
 })

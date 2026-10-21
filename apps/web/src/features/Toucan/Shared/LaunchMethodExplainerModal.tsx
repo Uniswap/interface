@@ -7,7 +7,9 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { isPoolsLaunchMethod, LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { AuctionEventName, ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { Trace } from 'uniswap/src/features/telemetry/Trace'
+import { getAnalyticsLaunchMethod } from '~/features/Toucan/Auction/utils/provenanceAnalytics'
 import { getLaunchMethodCopy } from '~/features/Toucan/Shared/getLaunchMethodCopy'
 import { LaunchMethodIcon, useLaunchMethodAccentColor } from '~/features/Toucan/Shared/LaunchMethodIcon'
 import { POOLS_BASE_URL, POOLS_HOSTNAME } from '~/features/Toucan/utils/quickLaunchLinks'
@@ -52,6 +54,11 @@ export function LaunchMethodExplainerModal({
         gap="$spacing24"
         testID={TestID.LaunchMethodExplainerModal}
       >
+        <Trace
+          logImpression={isOpen}
+          eventOnTrigger={AuctionEventName.AuctionTypeExplainerOpened}
+          properties={{ launch_method: getAnalyticsLaunchMethod(method) }}
+        />
         <TouchableArea
           position="absolute"
           top="$spacing16"
@@ -87,35 +94,47 @@ export function LaunchMethodExplainerModal({
           </Flex>
 
           {copy.learnMoreUrl !== footerHref && (
-            <Anchor
-              href={copy.learnMoreUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              variant="buttonLabel3"
-              color="$neutral1"
-              textDecorationLine="none"
+            <Trace
+              logPress
+              element={ElementName.LaunchMethodLearnMore}
+              properties={{ launch_method: getAnalyticsLaunchMethod(method), destination: 'help' }}
             >
-              {t('common.button.learn')}
-            </Anchor>
+              <Anchor
+                href={copy.learnMoreUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="buttonLabel3"
+                color="$neutral1"
+                textDecorationLine="none"
+              >
+                {t('common.button.learn')}
+              </Anchor>
+            </Trace>
           )}
         </Flex>
 
         <Flex row gap="$spacing12" width="100%">
           {footerHref && (
-            <Button
-              tag="a"
-              href={footerHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              variant="default"
-              emphasis="tertiary"
-              size="medium"
-              icon={<ExternalLink color="$neutral3" />}
-              iconPosition="after"
-              $platform-web={{ textDecoration: 'none' }}
+            <Trace
+              logPress
+              element={ElementName.LaunchMethodPoolsLink}
+              properties={{ launch_method: getAnalyticsLaunchMethod(method), destination: 'pools' }}
             >
-              {POOLS_HOSTNAME}
-            </Button>
+              <Button
+                tag="a"
+                href={footerHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="default"
+                emphasis="tertiary"
+                size="medium"
+                icon={<ExternalLink color="$neutral3" />}
+                iconPosition="after"
+                $platform-web={{ textDecoration: 'none' }}
+              >
+                {POOLS_HOSTNAME}
+              </Button>
+            </Trace>
           )}
           {method === LaunchProvenanceMethod.CustomAuction && (
             <Button variant="default" emphasis="tertiary" size="medium" onPress={onExploreAuctions}>

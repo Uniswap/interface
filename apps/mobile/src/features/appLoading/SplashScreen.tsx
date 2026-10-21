@@ -1,9 +1,9 @@
 import { isAndroid } from '@universe/environment'
 import { Flex } from '@universe/mycelium'
+import { UNISWAP_MONO_LOGO_LARGE } from '@universe/mycelium/assets'
 import { useDeviceDimensions, useIsDarkMode } from '@universe/mycelium/theme-hooks-compat'
 import React from 'react'
 import { Image, StyleSheet } from 'react-native'
-import { UNISWAP_MONO_LOGO_LARGE } from 'ui/src/assets'
 
 export const SPLASH_SCREEN_IMAGE_SIZE = 150
 

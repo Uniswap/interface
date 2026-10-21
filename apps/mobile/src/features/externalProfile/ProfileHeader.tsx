@@ -8,6 +8,7 @@ import {
   TouchableArea,
   validColor,
 } from '@universe/mycelium'
+import { ENS_LOGO } from '@universe/mycelium/assets'
 import { useIsDarkMode, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import React, { memo, useCallback, useMemo, useState } from 'react'
@@ -21,7 +22,6 @@ import { LongText } from 'src/components/text/LongText'
 import { ProfileContextMenu } from 'src/features/externalProfile/ProfileContextMenu'
 import { openModal } from 'src/features/modals/modalSlice'
 import { getUniconColors, Image, useExtractedColors } from 'ui/src'
-import { ENS_LOGO } from 'ui/src/assets'
 import { SendAction, XTwitter } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { DEP_accentColors, imageSizes } from 'ui/src/theme'

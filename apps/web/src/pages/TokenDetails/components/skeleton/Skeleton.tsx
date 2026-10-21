@@ -3,9 +3,10 @@ import { UniverseChainId } from '@universe/chains'
 import { Anchor, type AnchorProps, Flex, Text, TextProps, useMedia } from '@universe/mycelium'
 import { styled, type StyledComponent } from '@universe/mycelium/styled'
 import { ComponentProps, forwardRef, useMemo } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 import { capitalize } from 'tsafe'
+import { Trans } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { zIndexes } from 'ui/src/theme'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -34,7 +35,7 @@ const TOKEN_DETAILS_LAYOUT_VARIANTS = {
 // so the TDP body gets the full expected content width
 export const TokenDetailsLayout: StyledComponent<typeof Flex, typeof TOKEN_DETAILS_LAYOUT_VARIANTS> = styled(Flex, {
   platform: 'web',
-  base: 'flex-row justify-center gap-[80px] mt-[32px] pb-[48px] w-[100%] media-xxl:px-[40px] media-xl:flex-col media-xl:items-center media-xl:gap-[0px] media-lg:px-[20px] media-lg:pt-[0px] media-lg:pb-[52px]',
+  base: 'flex-row justify-center gap-[80px] mt-[32px] pb-[48px] w-[100%] media-xxl:px-[40px] media-xl:flex-col media-xl:items-center media-xl:gap-[0px] media-lg:px-[20px] media-lg:pt-[0px] media-lg:pb-[52px] media-md:px-[0px]',
   variants: TOKEN_DETAILS_LAYOUT_VARIANTS,
 })
 
@@ -240,7 +241,7 @@ function TokenDetailsSkeleton() {
 
 const BreadcrumbWrapper = styled(Flex, {
   platform: 'web',
-  base: 'pt-[48px] w-[100%] media-xxl:px-[40px] media-lg:px-[20px]',
+  base: 'pt-[48px] w-[100%] media-xxl:px-[40px] media-lg:px-[20px] media-md:px-[0px]',
 })
 
 export function TokenDetailsPageSkeleton({ isCompact }: { isCompact: boolean }) {

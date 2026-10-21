@@ -8,7 +8,8 @@ import { Flex, Text } from '@universe/mycelium'
 import { FlexCompat, type FlexCompatProps } from '@universe/mycelium/flex-compat'
 import type { SegmentedControlOption } from '@universe/mycelium/segmented-control-compat'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
-import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react'
+import { SPORE_ANIMATION_CURVE_CSS } from '@universe/tailwind/animations'
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router'
 import { stackingLayerAbove, Tooltip, WidthAnimator } from 'ui/src'
@@ -29,6 +30,8 @@ import type {
   PasskeyAuthStatus,
   SwapRedirectFn,
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { MarginFormStoreContextProvider } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/MarginFormStoreContextProvider'
+import { useMarginFormStoreBase } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/useMarginFormStore'
 import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapPrefilledState'
 import { SwapFormStoreContextProvider } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContextProvider'
 import type { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
@@ -45,10 +48,18 @@ import type { CurrencyState } from '~/features/Swap/state/types'
 import { useSwapAndLimitContext } from '~/features/Swap/state/useSwapContext'
 import { PAGE_WRAPPER_MAX_WIDTH, PageWrapper, SwapModuleWrapper } from '~/features/Swap/styled'
 import { useHasInjectedWallets } from '~/features/wallet/connection/hooks/useOrderedWalletConnectors'
+import { useAccount } from '~/hooks/useAccount'
 import { useDeferredComponent } from '~/hooks/useDeferredComponent'
 import { PageType, useIsPage } from '~/hooks/useIsPage'
 import { useModalState } from '~/hooks/useModalState'
+import { usePrefersReducedMotion } from '~/hooks/usePrefersReducedMotion'
 import { useEmbedView } from '~/pages/Swap/embedContext'
+import {
+  MARGIN_FORM_RAIL_WIDTH,
+  MarginTerminalLayout,
+  useIsMarginTerminal,
+  useMarginMorphAnimation,
+} from '~/pages/Swap/Margin/MarginTerminalLayout'
 import { buildSwapTabOptions, isTabPermissionedBlocked } from '~/pages/Swap/permissionedTabs'
 import { PermissionedTabWrapper } from '~/pages/Swap/PermissionedTabWrapper'
 import { ReturnToAuctionBanner } from '~/pages/Swap/ReturnToAuctionBanner'
@@ -78,6 +89,12 @@ export function SwapPage() {
   useFeatureFlag(FeatureFlags.AATestWeb)
 
   const accountDrawer = useAccountDrawer()
+  const media = useMedia()
+  const prefersReducedMotion = usePrefersReducedMotion()
+  const isMarginEnabled = useFeatureFlag(FeatureFlags.Margin)
+  // pathname drives the collapse — it flips in the same commit as `currentTab`
+  // via `navigate`, and SwapPage sits above the tab context.
+  const isTerminalRoute = isMarginEnabled && location.pathname === '/margin' && !media.xl
 
   // Same shared SwapPage for every surface. The embed `view` (from context) picks the
   // capabilities so the swap-only surface (`/embed?view=swap`) can strip itself instead of
@@ -103,7 +120,21 @@ export function SwapPage() {
 
   return (
     <Trace logImpression page={InterfacePageName.SwapPage}>
-      <PageWrapper>
+      <PageWrapper
+        // Flag-scoped, not route-scoped: the transition has to stay mounted through the EXIT morph, so
+        // gating it on isTerminalRoute would clear it in the same commit the padding reverts and snap
+        // the way out. The cost is that a flag-on user on swap/limit/buy/sell also eases PageWrapper's
+        // responsive padding across a breakpoint change — visual only, nothing measures off it.
+        style={{
+          transition:
+            isMarginEnabled && !prefersReducedMotion ? `padding ${SPORE_ANIMATION_CURVE_CSS.quickLong}` : undefined,
+        }}
+        // Only override padding in the full-screen terminal; otherwise inherit
+        // PageWrapper's responsive defaults ($spacing60/$lg/$md). Passing an
+        // explicit `undefined` would clobber those defaults and flatten the
+        // header→module gap on every non-terminal tab (swap/limit/buy/sell).
+        {...(isTerminalRoute ? { pt: 10, px: '$none', pb: '$none' } : {})}
+      >
         <WebFORNudgeProvider>
           <Swap
             initialInputChainId={initialInputChainId}
@@ -175,6 +206,7 @@ export function Swap({
 }) {
   const { isSwapTokenSelectorOpen, swapOutputChainId } = useUniswapContext()
   const media = useMedia()
+  const location = useLocation()
 
   const isExplorePage = useIsPage(PageType.EXPLORE)
   const isModeMismatch = useIsModeMismatch(initialInputChainId)
@@ -210,23 +242,28 @@ export function Swap({
             <SwapAndLimitContextProvider
               initialInputCurrency={initialInputCurrency}
               initialOutputCurrency={initialOutputCurrency}
+              initialTab={syncTabToUrl ? PATHNAME_TO_TAB[location.pathname] : undefined}
             >
               <SwapFormStoreContextProvider prefilledState={prefilledState} hideFooter={hideFooter}>
-                <Flex position="relative" gap="$spacing16" opacity={isSharedSwapDisabled ? 0.6 : 1}>
-                  {isSharedSwapDisabled && <DisabledSwapOverlay />}
-                  <UniversalSwapFlow
-                    hideHeader={hideHeader}
-                    hideFooter={hideFooter}
-                    hideChart={hideChart}
-                    syncTabToUrl={syncTabToUrl}
-                    swapRedirectCallback={swapRedirectCallback}
-                    onCurrencyChange={onCurrencyChange}
-                    prefilledState={prefilledState}
-                    tokenColor={tokenColor}
-                    tdpCurrency={tdpCurrency}
-                    hideBlastShutdownModal={hideBlastShutdownModal}
-                  />
-                </Flex>
+                {/* Hoisted above UniversalSwapFlow so margin form state survives the terminal
+                    morph and the 1024px breakpoint switch; margin-inert on other tabs. */}
+                <MarginFormStoreContextProvider>
+                  <Flex position="relative" gap="$spacing16" opacity={isSharedSwapDisabled ? 0.6 : 1}>
+                    {isSharedSwapDisabled && <DisabledSwapOverlay />}
+                    <UniversalSwapFlow
+                      hideHeader={hideHeader}
+                      hideFooter={hideFooter}
+                      hideChart={hideChart}
+                      syncTabToUrl={syncTabToUrl}
+                      swapRedirectCallback={swapRedirectCallback}
+                      onCurrencyChange={onCurrencyChange}
+                      prefilledState={prefilledState}
+                      tokenColor={tokenColor}
+                      tdpCurrency={tdpCurrency}
+                      hideBlastShutdownModal={hideBlastShutdownModal}
+                    />
+                  </Flex>
+                </MarginFormStoreContextProvider>
               </SwapFormStoreContextProvider>
             </SwapAndLimitContextProvider>
           </SwapTransactionSettingsStoreContextProvider>
@@ -244,6 +281,7 @@ const TAB_TYPE_TO_LABEL = {
   [SwapTab.Send]: (t: AppTFunction) => t('send.title'),
   [SwapTab.Buy]: (t: AppTFunction) => t('common.buy.label'),
   [SwapTab.Sell]: (t: AppTFunction) => t('common.sell.label'),
+  [SwapTab.Margin]: (t: AppTFunction) => t('margin.tab.label'),
 }
 
 const PATHNAME_TO_TAB: { [key: string]: SwapTab } = {
@@ -251,6 +289,7 @@ const PATHNAME_TO_TAB: { [key: string]: SwapTab } = {
   '/limit': SwapTab.Limit,
   '/buy': SwapTab.Buy,
   '/sell': SwapTab.Sell,
+  '/margin': SwapTab.Margin,
 }
 
 const CHART_CARD_HEIGHT = 288
@@ -262,6 +301,7 @@ function isChartEligibleTab(tab: SwapTab): boolean {
   return CHART_ELIGIBLE_TABS.has(tab)
 }
 
+// oxlint-disable-next-line complexity -- tab dispatcher (swap/limit/buy/sell/margin) + chart + margin side-panel
 function UniversalSwapFlow({
   hideHeader = false,
   hideFooter = false,
@@ -291,11 +331,38 @@ function UniversalSwapFlow({
   const { currentTab, setCurrentTab, currencyState } = useSwapAndLimitContext()
   const tdpCurrencyAsset = currencyToAsset(tdpCurrency)
   const { inputCurrency, outputCurrency } = useSlideoutChartCardCurrencies()
+  const isMarginEnabled = useFeatureFlag(FeatureFlags.Margin)
   const [showChart, setShowChart] = useState(false)
   const [tabsRowHeight, setTabsRowHeight] = useState(0)
   const [swapFlowPanelsHeight, setSwapFlowPanelsHeight] = useState(0)
   const onCurrencyPanelsLayout = useCallback((height: number) => setSwapFlowPanelsHeight(height), [])
   const media = useMedia()
+  const account = useAccount()
+  const isTerminal = useIsMarginTerminal()
+  // Morph motion only after a user tab click — never on first paint / deep link. State rather than a
+  // ref because it is READ DURING RENDER (passed to MarginTerminalLayout and used in an inline style):
+  // a ref write is invisible to React, and this only worked because onTabClick happens to navigate or
+  // setCurrentTab immediately after. It flips at most once per mount, so the extra render is free.
+  const [hasInteracted, setHasInteracted] = useState(false)
+  const animateMorph = useMarginMorphAnimation(hasInteracted)
+  const marginFormStore = useMarginFormStoreBase()
+
+  // Keyed on the TAB, not on `isTerminal`. isTerminal folds in `!media.xl`, so a resize across the
+  // 1024px breakpoint flips it false and back true without the user ever leaving /margin — which would
+  // re-send on every crossing and inflate the entry funnel (dragging a window emits repeatedly).
+  const hasSentTerminalEnteredRef = useRef(false)
+  useEffect(() => {
+    if (currentTab !== SwapTab.Margin) {
+      hasSentTerminalEnteredRef.current = false
+      return
+    }
+    if (isTerminal && !hasSentTerminalEnteredRef.current) {
+      hasSentTerminalEnteredRef.current = true
+      sendAnalyticsEvent(InterfaceEventName.MarginTerminalEntered, {
+        pairKey: marginFormStore.getState().pairKey,
+      })
+    }
+  }, [isTerminal, currentTab, marginFormStore])
 
   useEffect(() => {
     if (media.lg) {
@@ -336,16 +403,42 @@ function UniversalSwapFlow({
   const limitTabBlocked = isPermissionedBlocked || isPermissionedLoading
   const buySellTabBlocked = isBuySellPermissionedBlocked || isBuySellPermissionedLoading
 
-  const LimitFormWrapper = useDeferredComponent(() =>
-    import('~/pages/Swap/Limit/LimitForm').then((module) => ({
-      default: module.LimitFormWrapper,
-    })),
-  )
-  const BuyForm = useDeferredComponent(() =>
-    import('~/pages/Swap/Buy/BuyForm').then((module) => ({
-      default: module.BuyForm,
-    })),
-  )
+  const LimitFormWrapper = useDeferredComponent({
+    importFn: () =>
+      import('~/pages/Swap/Limit/LimitForm').then((module) => ({
+        default: module.LimitFormWrapper,
+      })),
+  })
+  const BuyForm = useDeferredComponent({
+    importFn: () =>
+      import('~/pages/Swap/Buy/BuyForm').then((module) => ({
+        default: module.BuyForm,
+      })),
+  })
+  // The four margin panes stay off the wire entirely while the flag is off — including
+  // lightweight-charts, which rides MarginChartPane.
+  const MarginForm = useDeferredComponent({
+    enabled: isMarginEnabled,
+    importFn: () =>
+      import('~/pages/Swap/Margin/MarginForm').then((module) => ({
+        default: module.MarginForm,
+      })),
+  })
+  const MarginChartPane = useDeferredComponent({
+    enabled: isMarginEnabled,
+    importFn: () => import('~/pages/Swap/Margin/MarginChartPane').then((m) => ({ default: m.MarginChartPane })),
+  })
+  // Margin-scoped ⚙︎ popover (slippage only) — deliberately NOT the swap-wide settings UI.
+  const MarginSettingsPopover = useDeferredComponent({
+    enabled: isMarginEnabled,
+    importFn: () =>
+      import('~/pages/Swap/Margin/components/MarginRateRows').then((m) => ({ default: m.MarginSettingsPopover })),
+  })
+  const MarginPositionsTable = useDeferredComponent({
+    enabled: isMarginEnabled,
+    importFn: () =>
+      import('~/pages/Swap/Margin/MarginPositionsTable').then((m) => ({ default: m.MarginPositionsTable })),
+  })
 
   const { openModal: openSendFormModal } = useModalState(ModalName.Send)
 
@@ -384,6 +477,7 @@ function UniversalSwapFlow({
       if (isTabBlocked(tab)) {
         return
       }
+      setHasInteracted(true)
       sendAnalyticsEvent(InterfaceEventName.SwapTabClicked, { tab })
       if (!isChartEligibleTab(tab)) {
         setShowChart(false)
@@ -425,40 +519,83 @@ function UniversalSwapFlow({
   }, [media.lg, showChart, hideChart, currentTab, inputCurrency, outputCurrency])
 
   const getTabLabel = useCallback((tab: SwapTab) => TAB_TYPE_TO_LABEL[tab](t), [t])
+  // Margin only renders where a /margin route exists: flag on and not embedded (syncTabToUrl).
+  const swapTabs = useMemo(
+    () => (isMarginEnabled && syncTabToUrl ? [...SWAP_TABS, SwapTab.Margin] : SWAP_TABS),
+    [isMarginEnabled, syncTabToUrl],
+  )
 
   const SWAP_TAB_OPTIONS: readonly SegmentedControlOption<SwapTab>[] = useMemo(
     () =>
       buildSwapTabOptions({
-        tabs: SWAP_TABS,
+        tabs: swapTabs,
         currentTab,
         syncTabToUrl,
         getTabLabel,
         isTabBlocked,
       }),
-    [getTabLabel, currentTab, syncTabToUrl, isTabBlocked],
+    [getTabLabel, currentTab, syncTabToUrl, isTabBlocked, swapTabs],
   )
 
-  return (
-    <Flex row alignItems="flex-start" maxWidth="calc(100vw - 16px)">
-      {/* Chart card animates in from the left.
-          Not mounted on pages that hide the header (e.g. landing page) since the chart
-          toggle lives in the header and the collapsed animator would still consume gap space.
-          Also not shown when hideChart is set (e.g. TDP embedded swap). */}
-      {!hideHeader && !hideChart && (
-        <WidthAnimator
-          open={isChartVisible}
-          height={swapFlowPanelsHeight || CHART_CARD_HEIGHT}
-          mt={tabsRowHeight}
-          contentWidth={PAGE_WRAPPER_MAX_WIDTH + CHART_CARD_GAP}
-          styleProps={{ '$platform-web': { flexShrink: 1, minWidth: 0 } }}
-        >
-          <Flex width="100%" height="100%" pr="$spacing24">
-            <SlideoutChartCard isChartOpen={isChartVisible} />
-          </Flex>
-        </WidthAnimator>
-      )}
+  // On wide screens, lift the margin positions panel into a right-side column (form on the left).
+  // Gated on a connected wallet so we never reserve an empty column; narrow screens keep it inline.
+  const showMarginSidePanel = isMarginEnabled && currentTab === SwapTab.Margin && !media.lg && Boolean(account.address)
 
-      <SwapModuleWrapper $platform-web={{ flexShrink: 1, minWidth: 0 }}>
+  return (
+    <MarginTerminalLayout
+      isTerminal={isTerminal}
+      hasInteracted={hasInteracted}
+      chartPane={MarginChartPane ? <MarginChartPane /> : null}
+      positionsTable={MarginPositionsTable ? <MarginPositionsTable /> : null}
+      nonTerminalChartAnimator={
+        // Chart card animates in from the left.
+        // Not mounted on pages that hide the header (e.g. landing page) since the chart
+        // toggle lives in the header and the collapsed animator would still consume gap space.
+        // Also not shown when hideChart is set (e.g. TDP embedded swap).
+        !hideHeader && !hideChart ? (
+          <WidthAnimator
+            open={isChartVisible}
+            height={swapFlowPanelsHeight || CHART_CARD_HEIGHT}
+            mt={tabsRowHeight}
+            contentWidth={PAGE_WRAPPER_MAX_WIDTH + CHART_CARD_GAP}
+            styleProps={{ '$platform-web': { flexShrink: 1, minWidth: 0 } }}
+          >
+            <Flex width="100%" height="100%" pr="$spacing24">
+              <SlideoutChartCard isChartOpen={isChartVisible} />
+            </Flex>
+          </WidthAnimator>
+        ) : null
+      }
+      nonTerminalSidePanel={
+        showMarginSidePanel && MarginPositionsTable ? (
+          <Flex
+            mt={tabsRowHeight}
+            ml="$spacing12"
+            width={360}
+            p="$spacing20"
+            borderRadius="$rounded24"
+            backgroundColor="$surface1"
+            borderWidth="$spacing1"
+            borderColor="$surface3"
+            $platform-web={{ flexShrink: 0 }}
+          >
+            <MarginPositionsTable />
+          </Flex>
+        ) : null
+      }
+    >
+      <SwapModuleWrapper
+        width={isTerminal ? MARGIN_FORM_RAIL_WIDTH : PAGE_WRAPPER_MAX_WIDTH}
+        style={{
+          // The SAME hook MarginTerminalLayout's animateMorph uses: these gate two halves of one morph
+          // (this rail's width, the wrapper's geometry), and spelling the predicate twice is what let a
+          // term be added to one and not the other, snapping one side while the other glides.
+          transition: animateMorph ? `width ${SPORE_ANIMATION_CURVE_CSS.quickLong}` : undefined,
+        }}
+        // Terminal: pinned rail so only the chart flexes. Non-terminal: still
+        // shrinks to make room for the slideout chart card in the narrow band.
+        $platform-web={{ flexShrink: isTerminal ? 0 : 1, minWidth: 0 }}
+      >
         {!hideHeader && (
           <SwapHeaderTabRow
             options={SWAP_TAB_OPTIONS}
@@ -466,6 +603,9 @@ function UniversalSwapFlow({
             onTabClick={onTabClick}
             getTabLabel={getTabLabel}
             chartToggle={isChartEligibleTab(currentTab) ? chartSettingsLeftContent : undefined}
+            trailingContent={
+              currentTab === SwapTab.Margin && MarginSettingsPopover ? <MarginSettingsPopover /> : undefined
+            }
             onHeightChange={setTabsRowHeight}
           />
         )}
@@ -507,8 +647,13 @@ function UniversalSwapFlow({
         )}
         {/* VerifyIdentityModal is now mounted in-form via SwapFormWarningModals
             (shared `VerifyIdentityBottomSheet` renders as Dialog on web). */}
+        {/* Inline table only when neither the terminal slot nor the side panel already shows it —
+            it renders a Connect CTA when disconnected. */}
+        {currentTab === SwapTab.Margin && MarginForm && (
+          <MarginForm showInlinePositions={!showMarginSidePanel && !isTerminal} />
+        )}
       </SwapModuleWrapper>
-    </Flex>
+    </MarginTerminalLayout>
   )
 }
 

@@ -3,7 +3,6 @@ import { useIsFocused, useNavigation, useRoute, useScrollToTop } from '@react-na
 import { SharedEventName } from '@uniswap/analytics-events'
 import type { UniverseChainId } from '@universe/chains'
 import { isAndroid } from '@universe/environment'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex } from '@universe/mycelium'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -17,8 +16,7 @@ import { ExploreScreenSearchResultsList } from 'src/components/explore/search/Ex
 import { Screen } from 'src/components/layout/Screen'
 import { useLayoutAnimationOnChange } from 'ui/src'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
-import { NetworkFilter, type NetworkFilterProps } from 'uniswap/src/components/network/NetworkFilter'
-import { NetworkFilterV2 } from 'uniswap/src/components/network/NetworkFilterV2/NetworkFilterV2'
+import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter/NetworkFilter'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useFilterCallbacks } from 'uniswap/src/features/search/SearchModal/hooks/useFilterCallbacks'
 import { CancelBehaviorType, SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
@@ -34,11 +32,8 @@ const MIN_SEARCH_INPUT_HEIGHT = 52
 const androidBottomInset: Edge[] = isAndroid ? ['bottom'] : []
 const edges: Edge[] = ['top', ...androidBottomInset]
 
-const networkFilterStyles: NetworkFilterProps['styles'] = { buttonPaddingY: '$none' }
-
 export function ExploreScreen(): JSX.Element {
   const { chains } = useEnabledChains()
-  const isNetworkFilterV2Enabled = useFeatureFlag(FeatureFlags.NetworkFilterV2)
   const navigation = useNavigation()
   const route = useRoute<RouteProp<ExploreStackParamList, MobileScreens.Explore>>()
   // oxlint-disable-next-line typescript/no-unnecessary-condition -- route.params can be null
@@ -155,22 +150,12 @@ export function ExploreScreen(): JSX.Element {
           endAdornment={
             isSearchMode ? (
               <Flex row alignItems="center" animateEnterExit="fadeInDownOutUp">
-                {isNetworkFilterV2Enabled ? (
-                  <NetworkFilterV2
-                    includeAllNetworks
-                    chainIds={chains}
-                    selectedChain={chainFilter}
-                    onPressChain={onPressChain}
-                  />
-                ) : (
-                  <NetworkFilter
-                    includeAllNetworks
-                    chainIds={chains}
-                    selectedChain={chainFilter}
-                    styles={networkFilterStyles}
-                    onPressChain={onPressChain}
-                  />
-                )}
+                <NetworkFilter
+                  includeAllNetworks
+                  chainIds={chains}
+                  selectedChain={chainFilter}
+                  onPressChain={onPressChain}
+                />
               </Flex>
             ) : null
           }

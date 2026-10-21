@@ -1,5 +1,6 @@
 import { Environment } from '@universe/config'
 import { ENTRY_GATEWAY_URLS, createApp } from 'functions/app'
+import { withNosniff } from 'functions/frameProtection'
 
 const mockHtml = `<!DOCTYPE html><html><head><title>Uniswap</title></head><body></body></html>`
 
@@ -19,7 +20,6 @@ function buildApp({ embedFrameAncestors }: BuildAppOptions = {}) {
       }
       return ENTRY_GATEWAY_URLS.production
     },
-    getWebSocketUrl: () => 'https://websockets.backend-prod.api.uniswap.org',
     getTrustedClientIp: () => undefined,
     getEmbedFrameAncestors: () => embedFrameAncestors,
   })
@@ -118,4 +118,22 @@ describe('embed frame policy', () => {
       expect(res.headers.get('X-Frame-Options')).toBe('SAMEORIGIN')
     },
   )
+})
+
+describe('withNosniff', () => {
+  it('stamps nosniff and leaves the CSP alone', () => {
+    const res = withNosniff(new Response('doc', { headers: { 'Content-Security-Policy': "frame-ancestors 'self'" } }))
+    expect(res.headers.get('X-Content-Type-Options')).toBe('nosniff')
+    expect(res.headers.get('Content-Security-Policy')).toBe("frame-ancestors 'self'")
+  })
+
+  it('preserves status, body and other headers', async () => {
+    const res = withNosniff(
+      new Response('proto-bytes', { status: 502, statusText: 'Bad Gateway', headers: { 'x-upstream': '1' } }),
+    )
+    expect(res.status).toBe(502)
+    expect(res.statusText).toBe('Bad Gateway')
+    expect(res.headers.get('x-upstream')).toBe('1')
+    expect(await res.text()).toBe('proto-bytes')
+  })
 })

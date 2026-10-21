@@ -4,6 +4,12 @@ import { logger } from 'utilities/src/logger/logger'
 
 const EXTENSION_CONTEXT_INVALIDATED_CHROMIUM_ERROR = 'Extension context invalidated.'
 
+/** A frame within a tab, matching the sender info attached to dapp requests. */
+export interface FrameTarget {
+  tabId: number
+  frameId: number
+}
+
 type MessageListener<T> = (message: T, sender?: chrome.runtime.MessageSender) => void
 class ChromeMessageChannel {
   protected readonly channelName: string
@@ -51,7 +57,7 @@ class ChromeMessageChannel {
     }
 
     this.sendMessage = this.sendMessage.bind(this)
-    this.sendMessageToTab = this.sendMessageToTab.bind(this)
+    this.sendMessageToFrame = this.sendMessageToFrame.bind(this)
     this.sendMessageToTabUrl = this.sendMessageToTabUrl.bind(this)
     this.addMessageListener = this.addMessageListener.bind(this)
     this.removeMessageListener = this.removeMessageListener.bind(this)
@@ -68,9 +74,10 @@ class ChromeMessageChannel {
   }
 
   // oxlint-disable-next-line typescript/no-explicit-any -- biome-parity: oxlint is stricter here
-  async sendMessageToTab(tabId: number, message: any): Promise<void> {
+  async sendMessageToFrame({ tabId, frameId }: FrameTarget, message: any): Promise<void> {
+    // frameId scopes delivery; a tab-wide send would also reach cross-origin iframes in the tab.
     // oxlint-disable-next-line eslint-js/no-restricted-syntax
-    await chrome.tabs.sendMessage(tabId, { [this.channelName]: message })
+    await chrome.tabs.sendMessage(tabId, { [this.channelName]: message }, { frameId })
   }
 
   // oxlint-disable-next-line typescript/no-explicit-any -- biome-parity: oxlint is stricter here
@@ -159,7 +166,7 @@ abstract class TypedMessageChannel<
     })
 
     this.sendMessage = this.sendMessage.bind(this)
-    this.sendMessageToTab = this.sendMessageToTab.bind(this)
+    this.sendMessageToFrame = this.sendMessageToFrame.bind(this)
     this.sendMessageToTabUrl = this.sendMessageToTabUrl.bind(this)
     this.addMessageListener = this.addMessageListener.bind(this)
     this.removeMessageListener = this.removeMessageListener.bind(this)
@@ -204,17 +211,17 @@ abstract class TypedMessageChannel<
     }
   }
 
-  async sendMessageToTab<T1 extends T>(tabId: number, message: R[T1]): Promise<boolean> {
+  async sendMessageToFrame<T1 extends T>(target: FrameTarget, message: R[T1]): Promise<boolean> {
     const { type } = message
 
     try {
-      await this.chromeMessageChannel.sendMessageToTab(tabId, message)
+      await this.chromeMessageChannel.sendMessageToFrame(target, message)
       return true
     } catch (error) {
-      logger.error(new Error(`Error sending message to tab for type ${type}`, { cause: error }), {
+      logger.error(new Error(`Error sending message to frame for type ${type}`, { cause: error }), {
         tags: {
           file: 'platform.ts',
-          function: 'TypedMessageChannel.sendMessageToTab',
+          function: 'TypedMessageChannel.sendMessageToFrame',
         },
       })
       return false

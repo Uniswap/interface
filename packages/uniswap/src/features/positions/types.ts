@@ -1,5 +1,6 @@
 import { PlainMessage } from '@bufbuild/protobuf'
 import { PositionStatus, ProtocolVersion, RewardBalance } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import type { Position as LiquidityServicePositionMessage } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
 import { Currency, CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool as V3Pool, Position as V3Position } from '@uniswap/v3-sdk'
@@ -131,3 +132,6 @@ export type V4PositionInfo = BasePositionInfo & {
 }
 
 export type PositionInfo = V2PairInfo | V3PositionInfo | V4PositionInfo
+
+// Plain shape: wallet positions arrive as toPlainMessage output (persisted query); a raw Message still satisfies it.
+export type LiquidityServicePosition = PlainMessage<LiquidityServicePositionMessage>

@@ -1,7 +1,7 @@
 import { Currency, Token, WETH9 } from '@uniswap/sdk-core'
 import { UniverseChainId, Platform, areAddressesEqual } from '@universe/chains'
+import { CELO_LOGO, ETH_LOGO } from '@universe/mycelium/assets'
 import type { ImageSourcePropType } from 'react-native'
-import { CELO_LOGO, ETH_LOGO } from 'ui/src/assets'
 import {
   ARB,
   AUSD_MONAD,

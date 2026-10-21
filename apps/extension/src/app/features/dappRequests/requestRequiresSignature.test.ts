@@ -28,7 +28,13 @@ const NON_SIGNING_TYPES = [
 function requestOfType(type: DappRequestType): WithMetadata<DappRequestStoreItem> {
   return {
     dappRequest: { type, requestId: '1' },
-    senderTabInfo: { id: 1, url: 'http://example.com' },
+    senderTabInfo: {
+      tabId: 1,
+      frameId: 0,
+      frameUrl: 'http://example.com',
+      tabUrl: 'http://example.com',
+      isCrossOriginFrame: false,
+    },
   } as unknown as WithMetadata<DappRequestStoreItem>
 }
 

@@ -1,5 +1,5 @@
 /**
- * Validates SVGs for `packages/ui/src/assets/{icons,logos/svg}` and copies them in.
+ * Validates SVGs for `packages/mycelium/src/assets/{icons,logos/svg}` and copies them in.
  *
  *   bun scripts/add-icons.ts [--target icons|logos] [--check] [--replace] [--allow-tiny-paths] [--repo <checkout>] <files.svg...>
  *
@@ -61,14 +61,15 @@ const HREF_ATTRIBUTES = ['href', 'xlink:href'] as const
 
 export function targetDirs(repoRoot: string, target: IconTarget): TargetDirs {
   const ui = join(repoRoot, 'packages', 'ui', 'src')
+  const assets = join(repoRoot, 'packages', 'mycelium', 'src', 'assets')
   if (target === 'logos') {
     return {
-      svgDir: join(ui, 'assets', 'logos', 'svg'),
+      svgDir: join(assets, 'logos', 'svg'),
       componentDirs: [join(ui, 'components', 'logos')],
     }
   }
   return {
-    svgDir: join(ui, 'assets', 'icons'),
+    svgDir: join(assets, 'icons'),
     componentDirs: [
       join(ui, 'components', 'icons'),
       join(repoRoot, 'packages', 'mycelium', 'src', 'components', 'icons'),
@@ -497,7 +498,7 @@ function parseArgs(argv: readonly string[]): ParsedArgs {
       allowTinyPaths = true
     } else if (arg === '--repo') {
       const value = argv[++i]
-      if (!value || !existsSync(join(value, 'packages', 'ui', 'src', 'assets'))) {
+      if (!value || !existsSync(join(value, 'packages', 'mycelium', 'src', 'assets'))) {
         throw new Error(`--repo must point at a universe checkout, got '${value ?? ''}'\n${USAGE}`)
       }
       repo = value

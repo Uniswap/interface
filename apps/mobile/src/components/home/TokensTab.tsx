@@ -1,5 +1,4 @@
 import { useStartProfiler } from '@shopify/react-native-performance'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex, type UniversalListRef } from '@universe/mycelium'
 import React, { forwardRef, memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -14,6 +13,7 @@ import { NoTokens } from 'ui/src/components/icons'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { PortfolioEmptyState } from 'uniswap/src/components/portfolio/PortfolioEmptyState'
 import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
+import { useIsForRegionBlocked } from 'uniswap/src/features/fiatOnRamp/useIsForRegionBlocked'
 import { TokenBalancePressOptions } from 'uniswap/src/features/portfolio/TokenBalanceListContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyId } from 'uniswap/src/types/currency'
@@ -32,7 +32,7 @@ export const TokensTab = memo(
     const onPressReceive = useOpenReceiveModal()
     const backgroundImageWrapperCallback = usePortfolioEmptyStateBackground()
 
-    const disableForKorea = useFeatureFlag(FeatureFlags.DisableFiatOnRampKorea)
+    const isForRegionBlocked = useIsForRegionBlocked({ isOfframp: false })
 
     const onPressToken = useCallback(
       (currencyId: CurrencyId, options?: TokenBalancePressOptions): void => {
@@ -47,14 +47,14 @@ export const TokensTab = memo(
     }, [dispatch])
 
     const onPressBuy = useCallback(() => {
-      disableForKorea
-        ? navigate(ModalName.KoreaCexTransferInfoModal)
+      isForRegionBlocked
+        ? navigate(ModalName.CexTransferInfoModal)
         : dispatch(
             openModal({
               name: ModalName.FiatOnRampAggregator,
             }),
           )
-    }, [disableForKorea, dispatch])
+    }, [isForRegionBlocked, dispatch])
 
     const onPressImport = useCallback(() => {
       navigate(ModalName.AccountSwitcher)

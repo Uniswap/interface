@@ -101,6 +101,7 @@ export const MiniPoolsTable = memo(function MiniPoolsTable({ account, maxPools, 
         {...sectionTotalValue}
       >
         <Table
+          mobileFullBleed
           columns={columns}
           data={positions}
           loading={showLoading}

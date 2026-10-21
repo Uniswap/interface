@@ -5,6 +5,7 @@ import { FeeAmount, TICK_SPACINGS, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import type { FeeData } from 'uniswap/src/features/positions/types'
+import type { DefaultPriceStrategy } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 import { PositionField } from '~/types/position'
 
 export enum PositionFlowStep {
@@ -113,6 +114,8 @@ export interface PriceRangeState {
   minTick?: number
   maxTick?: number
   inputMode?: RangeAmountInputPriceMode
+  /** The preset that wrote minTick/maxTick. While they still match, an existing pool's range follows its live tick. */
+  followedPreset?: { strategy: DefaultPriceStrategy; minTick: number; maxTick: number }
 }
 
 type BasePriceRangeInfo = {

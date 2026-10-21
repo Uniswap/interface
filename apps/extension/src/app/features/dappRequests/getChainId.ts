@@ -11,7 +11,7 @@ import { DappResponseType } from 'uniswap/src/features/dappRequests/types'
 
 export function* getChainId({
   request,
-  senderTabInfo: { id },
+  senderTabInfo,
   dappInfo,
 }: {
   request: GetChainIdRequest
@@ -24,12 +24,12 @@ export function* getChainId({
     chainId: chainIdToHexadecimalString(dappInfo.lastChainId),
   }
 
-  yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
+  yield* call(dappResponseMessageChannel.sendMessageToFrame, senderTabInfo, response)
 }
 
 export function* getChainIdNoDappInfo({
   request,
-  senderTabInfo: { id },
+  senderTabInfo,
   defaultChainId,
 }: {
   request: GetChainIdRequest
@@ -43,5 +43,5 @@ export function* getChainIdNoDappInfo({
     chainId: chainIdToHexadecimalString(defaultChainId),
   }
 
-  yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
+  yield* call(dappResponseMessageChannel.sendMessageToFrame, senderTabInfo, response)
 }

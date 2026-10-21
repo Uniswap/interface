@@ -26,7 +26,6 @@ export enum FeatureFlags {
   LimitCancelTimeout,
   Linea,
   MegaETH,
-  NetworkFilterV2,
   NoUniswapInterfaceFees,
   PermissionedPositions,
   PortfolioPoolsBalances,
@@ -38,6 +37,7 @@ export enum FeatureFlags {
   SmartWallet,
   SmartWalletDisableVideo,
   Tempo,
+  TempoFeeTokenPreference,
   TokenCategories,
   TokenSelectorUxRevamp,
   TurnstileSolverEnabled,
@@ -51,12 +51,12 @@ export enum FeatureFlags {
   XLayer,
 
   // Wallet
-  DisableFiatOnRampKorea,
   Eip5792Methods,
   EnableExportPrivateKeys,
   EnableRestoreSeedPhrase,
   EnableTransactionSpacingForDelegatedAccounts,
 
+  NitroFetchEnabled,
   NotificationApiDataSource,
   NotificationOnboardingCard,
   NotificationService,
@@ -111,7 +111,6 @@ const SHARED_FEATURE_FLAG_NAMES_RECORD = {
   [FeatureFlags.LimitCancelTimeout]: 'limit_cancel_timeout',
   [FeatureFlags.Linea]: 'linea',
   [FeatureFlags.MegaETH]: 'megaeth',
-  [FeatureFlags.NetworkFilterV2]: 'network_filter_v2',
   [FeatureFlags.NoUniswapInterfaceFees]: 'no_uniswap_interface_fees',
   [FeatureFlags.NotificationApiDataSource]: 'notification_api_data_source',
   [FeatureFlags.PermissionedPositions]: 'permissioned_positions',
@@ -127,6 +126,7 @@ const SHARED_FEATURE_FLAG_NAMES_RECORD = {
   [FeatureFlags.SmartWalletUpgradeNotice]: 'smart_wallet_upgrade_notice',
   [FeatureFlags.Support7677GasSponsorship]: 'support_7677_gas_sponsorship',
   [FeatureFlags.Tempo]: 'tempo',
+  [FeatureFlags.TempoFeeTokenPreference]: 'tempo_fee_token_preference',
   [FeatureFlags.TokenCategories]: 'token_categories',
   [FeatureFlags.TokenSelectorUxRevamp]: 'token_selector_ux_revamp',
   [FeatureFlags.TurnstileSolverEnabled]: 'sessions_turnstile_solver_enabled',
@@ -167,11 +167,11 @@ const WEB_ONLY_FEATURE_FLAG_NAMES_RECORD = {
 // These names must match the gate name on statsig.
 // Add in alphabetical order to decrease probability of merge conflicts.
 const WALLET_ONLY_FEATURE_FLAG_NAMES_RECORD = {
-  [FeatureFlags.DisableFiatOnRampKorea]: 'disable-fiat-onramp-korea',
   [FeatureFlags.Eip5792Methods]: 'eip_5792_methods',
   [FeatureFlags.EnableExportPrivateKeys]: 'enable-export-private-keys',
   [FeatureFlags.EnableRestoreSeedPhrase]: 'enable-restore-seed-phrase',
   [FeatureFlags.EnableTransactionSpacingForDelegatedAccounts]: 'enable_transaction_spacing_for_delegated_accounts',
+  [FeatureFlags.NitroFetchEnabled]: 'nitro_fetch_enabled',
   [FeatureFlags.NotificationOnboardingCard]: 'notification_onboarding_card',
   [FeatureFlags.NotificationService]: 'notification_system',
   [FeatureFlags.Scantastic]: 'scantastic',

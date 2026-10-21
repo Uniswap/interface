@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { SPORE_ANIMATION_CURVE_CSS } from '@universe/tailwind/animations'
 import { useState, type JSX } from 'react'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { VARIANT_METRICS } from '../text-compat/tokens'
 import { SegmentedControl } from './SegmentedControl.web'
 import { LABEL_CLASSES_LARGE, LABEL_CLASSES_SMALL } from './style-classes'
@@ -27,7 +27,63 @@ function getIndicator(): HTMLElement {
   return screen.getByTestId('segmented-control-indicator')
 }
 
+interface FakeBox {
+  left: number
+  top: number
+  width: number
+  height: number
+  clientLeft?: number
+  clientTop?: number
+  offsetParent: HTMLElement | null
+}
+
+function fakeLayout(boxFor: (el: HTMLElement) => FakeBox | undefined): void {
+  const read = <K extends keyof FakeBox>(key: K, fallback: FakeBox[K]) =>
+    function (this: HTMLElement): FakeBox[K] {
+      return boxFor(this)?.[key] ?? fallback
+    }
+  vi.spyOn(HTMLElement.prototype, 'offsetLeft', 'get').mockImplementation(read('left', 0))
+  vi.spyOn(HTMLElement.prototype, 'offsetTop', 'get').mockImplementation(read('top', 0))
+  vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockImplementation(read('width', 0))
+  vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockImplementation(read('height', 0))
+  vi.spyOn(HTMLElement.prototype, 'offsetParent', 'get').mockImplementation(read('offsetParent', null))
+  vi.spyOn(Element.prototype, 'clientLeft', 'get').mockImplementation(function (this: Element) {
+    return this instanceof HTMLElement ? (boxFor(this)?.clientLeft ?? 0) : 0
+  })
+  vi.spyOn(Element.prototype, 'clientTop', 'get').mockImplementation(function (this: Element) {
+    return this instanceof HTMLElement ? (boxFor(this)?.clientTop ?? 0) : 0
+  })
+  vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (this: Element) {
+    const box = this instanceof HTMLElement ? boxFor(this) : undefined
+    const scale = 0.95
+    const left = 300 + (box?.left ?? 0) * scale
+    const top = 120 + (box?.top ?? 0) * scale
+    const width = (box?.width ?? 0) * scale
+    const height = (box?.height ?? 0) * scale
+    return { x: left, y: top, left, top, width, height, right: left + width, bottom: top + height, toJSON: () => ({}) }
+  })
+}
+
+function tablistOf(el: HTMLElement): HTMLElement | null {
+  return el.closest<HTMLElement>('[role="tablist"]')
+}
+
 describe('SegmentedControl (web)', () => {
+  beforeEach(() => {
+    fakeLayout((el) => {
+      const tablist = tablistOf(el)
+      if (!tablist || !el.matches('button, a')) {
+        return undefined
+      }
+      const index = Array.from(tablist.querySelectorAll('button, a')).indexOf(el)
+      return { left: 4 + index * 50, top: 4, width: 42, height: 24, offsetParent: tablist }
+    })
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   it('renders each option as a <button type="button" role="button"> inside the tablist', () => {
     renderControl()
     const tablist = screen.getByRole('tablist')
@@ -253,6 +309,56 @@ describe('SegmentedControl (web)', () => {
     fireEvent.click(getOption('three'))
     expect(getOption('three').getAttribute('aria-selected')).toBe('true')
     expect(getOption('one').getAttribute('aria-selected')).toBe('false')
+  })
+
+  it('places the pill from layout offsets, not ancestor-transformed client rects', () => {
+    const optionBoxes: Record<string, Omit<FakeBox, 'offsetParent'>> = {
+      one: { left: 4, top: 4, width: 42, height: 24 },
+      two: { left: 54, top: 4, width: 36, height: 24 },
+      three: { left: 98, top: 4, width: 36, height: 24 },
+    }
+    fakeLayout((el) => {
+      if (el.getAttribute('role') === 'tablist') {
+        return { left: 0, top: 0, width: 140, height: 34, clientLeft: 1, clientTop: 1, offsetParent: null }
+      }
+      const box = el.matches('button') ? optionBoxes[el.textContent] : undefined
+      return box && { ...box, offsetParent: tablistOf(el) }
+    })
+
+    const { rerender } = renderControl({ selectedOption: 'two' })
+    expect(getIndicator().style.width).toBe('36px')
+    expect(getIndicator().style.height).toBe('24px')
+    expect(getIndicator().style.transform).toBe('translate(54px, 4px)')
+
+    rerender(<SegmentedControl options={OPTIONS} selectedOption="three" onSelectOption={() => undefined} />)
+    expect(getIndicator().style.transform).toBe('translate(98px, 4px)')
+  })
+
+  it('sums the offset chain through a positioned wrapper up to the container', () => {
+    fakeLayout((el) => {
+      if (el.getAttribute('data-testid') === 'positioned-wrapper') {
+        return { left: 48, top: 3, width: 40, height: 28, clientLeft: 1, clientTop: 1, offsetParent: tablistOf(el) }
+      }
+      if (el.matches('button') && el.textContent === 'two') {
+        return { left: 2, top: 1, width: 36, height: 24, offsetParent: el.parentElement }
+      }
+      return undefined
+    })
+
+    renderControl({
+      selectedOption: 'two',
+      options: [{ value: 'one' }, { value: 'two', wrapper: <div data-testid="positioned-wrapper" /> }],
+    })
+    expect(getIndicator().style.transform).toBe('translate(51px, 5px)')
+    expect(getIndicator().style.width).toBe('36px')
+  })
+
+  it('renders no pill while the selected option is not laid out under the container', () => {
+    fakeLayout((el) =>
+      el.matches('button') ? { left: 4, top: 4, width: 42, height: 24, offsetParent: null } : undefined,
+    )
+    renderControl()
+    expect(screen.queryByTestId('segmented-control-indicator')).toBeNull()
   })
 
   it('applies container variants: outlined border, fullWidth, gap override, variableOptionWidths', () => {

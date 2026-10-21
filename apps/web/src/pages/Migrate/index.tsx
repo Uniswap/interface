@@ -44,6 +44,7 @@ import {
   useCreateLiquidityContext,
 } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { SharedCreateModals } from '~/pages/CreatePosition/SharedCreateModals'
+import { useMigrateReviewModal } from '~/pages/Migrate/hooks/useMigrateReviewModal'
 import { useMigratingPosition } from '~/pages/Migrate/hooks/useMigratingPosition'
 import { useRedirectIfNotPositionOwner } from '~/pages/Migrate/hooks/useRedirectIfNotPositionOwner'
 import { MigratePositionTxContextProvider, useMigrateTxContext } from '~/pages/Migrate/MigrateLiquidityTxContext'
@@ -98,12 +99,11 @@ function MigrateInner({
   const navigate = useNavigate()
   const overrideBatchedTransactions = useSetOverrideOneClickSwapFlag()
 
-  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
-
-  const onClose = useCallback(() => {
-    setIsReviewModalOpen(false)
-    setTransactionError(false)
-  }, [setTransactionError])
+  const {
+    isReviewModalOpen,
+    openReviewModal,
+    closeReviewModal: onClose,
+  } = useMigrateReviewModal({ setTransactionError })
 
   const { currency0Amount, currency1Amount } = positionInfo
 
@@ -197,11 +197,9 @@ function MigrateInner({
       positionInfo,
       disableContinue: !txInfo || Boolean(transactionError) || disableContinueForGeo,
       geoRestriction,
-      onContinue: () => {
-        setIsReviewModalOpen(true)
-      },
+      onContinue: openReviewModal,
     }
-  }, [txInfo, transactionError, positionInfo, setIsReviewModalOpen, disableContinueForGeo, geoRestriction])
+  }, [txInfo, transactionError, positionInfo, openReviewModal, disableContinueForGeo, geoRestriction])
 
   return (
     <>

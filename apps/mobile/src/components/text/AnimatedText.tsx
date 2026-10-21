@@ -1,12 +1,12 @@
 import { Flex, type TextProps as TamaTextProps, TextLoaderWrapper, useSporeColors } from '@universe/mycelium'
 import type { SporeColor } from '@universe/mycelium/theme-hooks-compat'
 import React from 'react'
-import { TextProps as RNTextProps, StyleSheet, TextInput, TextInputProps, useWindowDimensions } from 'react-native'
+import { StyleProp, StyleSheet, TextInput, TextInputProps, TextStyle, useWindowDimensions } from 'react-native'
 import Animated, {
-  AnimatedProps,
   createAnimatedPropAdapter,
   SharedValue,
   useAnimatedProps,
+  useAnimatedStyle,
 } from 'react-native-reanimated'
 import { fonts } from 'ui/src/theme'
 // base animated text component using a TextInput
@@ -15,9 +15,17 @@ import { fonts } from 'ui/src/theme'
 
 type TextPropsBase = TamaTextProps & Omit<TextInputProps, 'value' | 'style'>
 
+// reanimated 4.5 added the CSS-transition union (CSSStyle) to AnimatedProps<Props>['style'];
+// combined with the StyleProp<TextStyle> nested inside it, comparing the composed
+// [base, font, style] array against it exceeds tsc's type-comparison complexity limit
+// (TS2859) and the CSSProperties branch (string fontSize etc.) rejects plain TextStyle
+// composition (TS2322). Narrow to what this component actually accepts: plain text styles
+// and useAnimatedStyle handles. Re-verify on reanimated bumps touching AnimatedProps.
+type AnimatedTextStyleProp = StyleProp<TextStyle | ReturnType<typeof useAnimatedStyle<TextStyle>>>
+
 type TextProps = TextPropsBase & {
   text?: SharedValue<string>
-  style?: AnimatedProps<RNTextProps>['style']
+  style?: AnimatedTextStyleProp
   loading?: boolean | 'no-shimmer'
   loadingPlaceholderText?: string
 }

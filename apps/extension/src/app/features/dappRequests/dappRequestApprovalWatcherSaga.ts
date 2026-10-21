@@ -88,7 +88,7 @@ function* dappRequestApproval({
         requestId: existingRequest.dappRequest.requestId,
       }
 
-      yield* call(dappResponseMessageChannel.sendMessageToTab, existingRequest.senderTabInfo.id, errorResponse)
+      yield* call(dappResponseMessageChannel.sendMessageToFrame, existingRequest.senderTabInfo, errorResponse)
     }
 
     yield* put(dappRequestActions.removeAll())
@@ -98,7 +98,7 @@ function* dappRequestApproval({
   const requestId =
     ('dappRequest' in request && request.dappRequest.requestId) ||
     ('errorResponse' in request && request.errorResponse.requestId)
-  const { id: senderTabId } = request.senderTabInfo
+  const { tabId: senderTabId } = request.senderTabInfo
 
   if (!senderTabId) {
     throw new Error('senderTabId is required')
@@ -298,7 +298,7 @@ function* dappRequestApproval({
         requestId: rejectedRequest.errorResponse.requestId,
       }
 
-      yield* call(dappResponseMessageChannel.sendMessageToTab, rejectedRequest.senderTabInfo.id, errorResponse)
+      yield* call(dappResponseMessageChannel.sendMessageToFrame, rejectedRequest.senderTabInfo, errorResponse)
     }
   } catch (error) {
     if (isImpersonatedSigningError(error)) {
@@ -321,7 +321,7 @@ function* dappRequestApproval({
       error: serializeError(error),
     }
 
-    yield* call(dappResponseMessageChannel.sendMessageToTab, senderTabId, errorResponse)
+    yield* call(dappResponseMessageChannel.sendMessageToFrame, request.senderTabInfo, errorResponse)
   } finally {
     yield* put(dappRequestActions.remove(requestId))
   }

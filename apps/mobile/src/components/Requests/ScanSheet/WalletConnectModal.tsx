@@ -184,6 +184,8 @@ export function WalletConnectModal({
   return (
     <Modal
       fullScreen
+      // fullScreen covers the backdrop, so without content panning only a drag on the handle dismisses this sheet.
+      enableContentPanningGesture
       handlebarColor={colors.surface3.val}
       backgroundColor={colors.surface1.val}
       name={ModalName.WalletConnectScan}

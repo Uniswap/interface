@@ -1,11 +1,11 @@
 import { UniverseChainId } from '@universe/chains'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex } from '@universe/mycelium'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import { useNetworkSelectorOptions } from 'uniswap/src/components/network/NetworkFilterV2/useNetworkSelectorOptions'
+import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter/NetworkFilter'
+import { useNetworkSelectorOptions } from 'uniswap/src/components/network/NetworkFilter/useNetworkSelectorOptions'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { usePortfolioData } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { DataApiOutageBanner } from 'uniswap/src/features/dataApi/outage/DataApiOutageBanner'
@@ -14,7 +14,7 @@ import { ElementName, InterfacePageName, UniswapEventName } from 'uniswap/src/fe
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { buildNetworkFilterSelectedChainFields } from 'uniswap/src/features/telemetry/utils/buildNetworkFilterSelectedChainFields'
 import { useEvent } from 'utilities/src/react/hooks'
-import { NetworkFilter } from '~/components/NetworkFilter/NetworkFilter'
+import { APP_BODY_MOBILE_GUTTER_PX } from '~/app/layout/constants'
 import { HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constants'
 import { useActiveAddresses } from '~/features/accounts/store/hooks'
 import { useAppHeaderHeight } from '~/hooks/useAppHeaderHeight'
@@ -92,12 +92,10 @@ export function PortfolioHeader({ enableScrollCompact = false, isCompact: isComp
   const hasConnectedAddresses = Boolean(activeAddresses.evmAddress || activeAddresses.svmAddress)
   const showShareButton = !showDemoView && (isExternalWallet || hasConnectedAddresses)
 
-  const isNetworkFilterV2Enabled = useFeatureFlag(FeatureFlags.NetworkFilterV2)
   const { chains: enabledChains } = useEnabledChains()
   const tieredNetworkOptions = useNetworkSelectorOptions({
     addresses: activeAddresses,
     chainIds: enabledChains,
-    enabled: isNetworkFilterV2Enabled,
   })
 
   const { error: portfolioError, dataUpdatedAt: portfolioDataUpdatedAt } = usePortfolioData({
@@ -123,7 +121,7 @@ export function PortfolioHeader({ enableScrollCompact = false, isCompact: isComp
     dataUpdatedAt: outageDataUpdatedAt,
   })
 
-  const onNetworkPress = useEvent((chainId: UniverseChainId | undefined) => {
+  const onNetworkPress = useEvent((chainId: UniverseChainId | null) => {
     const currentPageName = getPageNameFromTab(tab)
     const networkFilterChainFields = buildNetworkFilterSelectedChainFields(chainId)
 
@@ -133,7 +131,7 @@ export function PortfolioHeader({ enableScrollCompact = false, isCompact: isComp
       ...networkFilterChainFields,
     })
 
-    navigate(buildPortfolioUrl({ tab, chainId, externalAddress: externalAddress?.address }))
+    navigate(buildPortfolioUrl({ tab, chainId: chainId ?? undefined, externalAddress: externalAddress?.address }))
   })
 
   return (
@@ -142,6 +140,7 @@ export function PortfolioHeader({ enableScrollCompact = false, isCompact: isComp
       backgroundColor="$surface1"
       mt="$spacing8"
       pt="$spacing16"
+      $md={{ mx: -APP_BODY_MOBILE_GUTTER_PX, px: APP_BODY_MOBILE_GUTTER_PX }}
       zIndex="$header"
       $platform-web={{
         position: 'sticky',
@@ -160,16 +159,13 @@ export function PortfolioHeader({ enableScrollCompact = false, isCompact: isComp
               <SharePortfolioButton size={buttonSize} showLabel={!media.sm} transition={HEADER_TRANSITION} />
             )}
             <NetworkFilter
-              showMultichainOption
-              showDisplayName={!media.md}
-              position="right"
-              onPress={onNetworkPress}
-              currentChainId={currentChainId}
-              size={buttonSize}
-              tracePage={getPageNameFromTab(tab)}
-              transition={HEADER_TRANSITION}
-              showSearch={isNetworkFilterV2Enabled}
-              tieredOptions={isNetworkFilterV2Enabled ? tieredNetworkOptions : undefined}
+              trigger={{ variant: 'pill', size: buttonSize, showLabel: !media.md, transition: HEADER_TRANSITION }}
+              includeAllNetworks
+              chainIds={enabledChains}
+              selectedChain={currentChainId ?? null}
+              tieredOptions={tieredNetworkOptions}
+              selectionAnalytics={{ page: getPageNameFromTab(tab) }}
+              onPressChain={onNetworkPress}
             />
           </Flex>
         </Flex>

@@ -1,6 +1,6 @@
 import { Text } from '@universe/mycelium'
 import type { ReactNode } from 'react'
-import { Trans } from 'react-i18next'
+import { Trans } from 'ui/src'
 import type { BidDescriptionState } from '~/features/Toucan/Auction/utils/bidDetails'
 
 // Module-level constants for description highlighting (no deps, never change)

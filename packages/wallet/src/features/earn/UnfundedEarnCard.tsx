@@ -2,8 +2,9 @@ import { Flex, type SpaceTokens, Text, TouchableArea } from '@universe/mycelium'
 import { HeightAnimator } from '@universe/mycelium/height-animator'
 import { TestID } from '@universe/test'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
+import { Trans } from 'ui/src'
 import { ChevronsIn } from 'ui/src/components/icons/ChevronsIn'
 import { ChevronsOut } from 'ui/src/components/icons/ChevronsOut'
 import { iconSizes } from 'ui/src/theme/iconSizes'
@@ -131,7 +132,7 @@ export function UnfundedEarnCard({
               <Trans
                 i18nKey="home.earn.upToApy"
                 values={{ apy: formattedApy }}
-                components={{ highlight: <Text key="highlight" tag="span" variant="subheading2" color="$accent1" /> }}
+                components={{ highlight: <Text tag="span" variant="subheading2" color="$accent1" /> }}
               />
             </Text>
             <Flex fill row alignItems="center" justifyContent="flex-end" gap="$spacing8">

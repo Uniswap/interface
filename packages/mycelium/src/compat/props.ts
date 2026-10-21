@@ -13,11 +13,11 @@ import type * as React from 'react'
 import type { GestureResponderEvent, StyleProp, ViewStyle } from 'react-native'
 import type { AnimateEnterExitPreset, AnimateEnterPreset, AnimateExitPreset } from './animations'
 import type { CompatAriaProps } from './aria-props'
-// Value legs (Spore tokens + the non-token legacy family) live beside their
-// runtime resolvers in css-values.ts — INFRA-3232/3258.
+// Value legs (Spore tokens + the non-token legacy family) live beside their runtime resolvers in css-values.ts.
 import type { BorderWidthValue, ColorValue, RadiusValue, SizeValue, SpaceValue, ZIndexValue } from './css-values'
 import type { CompatGestureResponderProps } from './gesture-responder-props'
 import type { InheritedTextStyleProps } from './inherited-text-props'
+import type { SafeCompatTag } from './safe-tags'
 import type { LongTailStyleProp } from './style-props'
 import type { TamaguiVariable } from './tokens'
 
@@ -444,8 +444,8 @@ export interface CompatBehavioralProps {
   [dataAttr: `data-${string}`]: unknown
   /** HTML title attribute (hover tooltip), forwarded to the DOM element. */
   title?: string
-  /** Rendered element tag, `div` by default (Tamagui `tag`). */
-  tag?: keyof React.JSX.IntrinsicElements | (string & {})
+  /** Rendered element tag, `div` by default (Tamagui `tag`). Limited to SAFE_COMPAT_TAGS. */
+  tag?: SafeCompatTag
   role?: React.AriaRole
   tabIndex?: string | number
   /** Forwarded to the DOM element (with `tag="a"` this is the anchor href). */

@@ -48,6 +48,8 @@ export const DepositStep = () => {
     depositState,
     setDepositState,
     refetch,
+    isReviewModalOpen,
+    setIsReviewModalOpen,
   } = useCreateLiquidityContext()
 
   const { t } = useTranslation()
@@ -67,7 +69,6 @@ export const DepositStep = () => {
     token1: gatingToken1,
   })
   const { openModal: openVerifyIdentityModal } = useModalState(ModalName.VerifyIdentity)
-  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
   const [isSlippageWarningModalOpen, setIsSlippageWarningModalOpen] = useState(false)
   const { customSlippageTolerance, slippageWarningModalSeen } = useTransactionSettingsStore((s) => ({
@@ -148,7 +149,7 @@ export const DepositStep = () => {
     }
 
     setIsReviewModalOpen(true)
-  }, [customSlippageTolerance, slippageWarningModalSeen])
+  }, [customSlippageTolerance, slippageWarningModalSeen, setIsReviewModalOpen])
 
   const handleReview = useCallback(() => {
     if (priceDifference?.warning === WarningSeverity.High) {

@@ -1,6 +1,6 @@
 import { Flex } from '@universe/mycelium'
+import { OPENSEA_LOGO } from '@universe/mycelium/assets'
 import { Image } from 'ui/src'
-import { OPENSEA_LOGO } from 'ui/src/assets'
 import { DEP_accentColors, imageSizes, validColor } from 'ui/src/theme'
 
 export const OpenseaElement = (): JSX.Element => {

@@ -1,5 +1,5 @@
 import { PromiseClient } from '@connectrpc/connect'
-import { AuctionService } from '@uniswap/client-data-api/dist/data/v1/auction_connect'
+import { AuctionService } from '@uniswap/client-launches/dist/data/v1/auction_connect'
 import {
   GetAuctionActivityRequest,
   GetAuctionActivityResponse,
@@ -17,7 +17,7 @@ import {
   GetTickDetailsResponse,
   ListTopAuctionsRequest,
   ListTopAuctionsResponse,
-} from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+} from '@uniswap/client-launches/dist/data/v1/auction_pb'
 
 interface AuctionServiceClientContext {
   rpcClient: PromiseClient<typeof AuctionService>

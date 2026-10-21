@@ -124,7 +124,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
     [SendSpeedBump.COMPATIBLE_ADDRESS]: false,
   })
   const { sendState, derivedSendInfo } = useSendContext()
-  const { inputError, recipientData } = derivedSendInfo
+  const { inputError, recipientData, gasFee } = derivedSendInfo
   const inputCurrencyId = currencyId(sendState.inputCurrency)
   const inputCurrencyInfo = useCurrencyInfo(inputCurrencyId)
   const chainId = sendState.inputCurrency?.chainId ?? defaultChainId
@@ -278,8 +278,10 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
     [handleModalState],
   )
 
+  // Until the estimate settles we can't know whether the user can cover gas.
   const buttonDisabled =
     !!inputError ||
+    !!gasFee?.isLoading ||
     loadingSmartContractAddress ||
     transfersLoading ||
     sendButtonState.disabled ||

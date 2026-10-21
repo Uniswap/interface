@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { ListTopAuctionsRequest } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { ListTopAuctionsRequest } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { useEffect, useMemo } from 'react'
 import { auctionQueries } from 'uniswap/src/data/apiClients/dataApiService/auctions/auctionQueries'
 import { logger } from 'utilities/src/logger/logger'

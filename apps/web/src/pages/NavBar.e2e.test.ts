@@ -1,5 +1,7 @@
+import type { Locator, Page } from '@playwright/test'
 import { TestID } from '@universe/test'
 import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { IN_APP_BROWSER_CHROME_PX } from '~/constants/inAppBrowser'
 import { expect, getTest } from '~/playwright/fixtures'
 
@@ -66,6 +68,24 @@ const socialMediaLinks = ['https://github.com/Uniswap', 'https://x.com/Uniswap',
 const IN_APP_BROWSER_USER_AGENT =
   'Mozilla/5.0 (Linux; Android 13; SM-G991B Build/TP1A.220624.014; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/120.0.6099.230 Mobile Safari/537.36'
 
+/** The open sheet's content scroller, on either sheet leg (`.uw-sheet-frame` is ui/src, `.mc-sheet-frame` mycelium). */
+function openSheetContent(page: Page): Locator {
+  return page
+    .locator('.uw-sheet-frame[data-state="open"], .mc-sheet-frame[data-state="open"]')
+    .last()
+    .locator('[data-sheet-content]')
+}
+
+async function scrollEveryScrollerToEnd(root: Locator): Promise<void> {
+  await root.evaluate((el) => {
+    for (const node of [el, ...el.querySelectorAll('*')]) {
+      if (/(auto|scroll)/.test(window.getComputedStyle(node).overflowY)) {
+        node.scrollTo({ top: node.scrollHeight })
+      }
+    }
+  })
+}
+
 test.describe(
   'NavBar',
   {
@@ -128,6 +148,25 @@ test.describe(
       }
     })
 
+    test.describe('in-app browser bottom chrome on the explore network filter', () => {
+      test.use({ userAgent: IN_APP_BROWSER_USER_AGENT, hasTouch: true, viewport: { width: 449, height: 900 } })
+
+      test('keeps the last network option above the chrome band', async ({ page }) => {
+        await page.goto('/explore/tokens/ethereum')
+        await page.getByTestId(TestID.TokensNetworkFilterTrigger).tap()
+        const content = openSheetContent(page)
+        await expect(content).toHaveCSS('padding-bottom', `${IN_APP_BROWSER_CHROME_PX}px`)
+
+        await scrollEveryScrollerToEnd(content)
+        const lastOption = content.locator(`[data-testid^="${ElementName.NetworkButton}-"]`).last()
+        const { bottom, innerHeight } = await lastOption.evaluate((el) => ({
+          bottom: el.getBoundingClientRect().bottom,
+          innerHeight: window.innerHeight,
+        }))
+        expect(bottom).toBeLessThanOrEqual(innerHeight - IN_APP_BROWSER_CHROME_PX)
+      })
+    })
+
     test.describe('Mobile navigation', () => {
       test.beforeEach(async ({ page }) => {
         // Set a mobile viewport
@@ -177,7 +216,7 @@ test.describe(
       test.describe('in-app browser bottom chrome', () => {
         test.use({ userAgent: IN_APP_BROWSER_USER_AGENT })
 
-        test('reserves scrollable clearance below the last row with Company expanded', async ({ page }) => {
+        test('keeps every footer row above the chrome band with Company expanded', async ({ page }) => {
           const drawer = page.getByTestId(TestID.CompanyMenuMobileDrawer)
           await expect(drawer).toBeVisible()
 
@@ -191,16 +230,15 @@ test.describe(
           // The accordion animates open; measure settled geometry.
           await page.waitForTimeout(300)
 
-          const pane = await drawer.evaluate((el) => {
-            // A collapsed accordion section (e.g. "Legal & Privacy", which this test never
-            // expands) sets `height: 0` + `overflow: hidden` on its HeightAnimator wrapper but
-            // keeps its children mounted — and a zero-height ancestor does not compress its
-            // children's own layout box, so `getBoundingClientRect()` on those children still
-            // reports the position they'd occupy if expanded. Left unfiltered, the querySelector
-            // below picks up those phantom rows and can report one of them as "the last row",
-            // even though it renders nowhere near the visible pane — undercounting the real
-            // clearance by however tall the collapsed section would be. Skip any row sitting
-            // under a zero-size ancestor.
+          // Headless env(safe-area-inset-bottom) is 0, so the padding equals the allowance. The real
+          // band needs device QA.
+          const content = openSheetContent(page)
+          await expect(content).toHaveCSS('padding-bottom', `${IN_APP_BROWSER_CHROME_PX}px`)
+
+          await scrollEveryScrollerToEnd(content)
+          const footer = await drawer.evaluate((el) => {
+            // Collapsed sections keep their rows mounted under a zero-height wrapper, and those rows
+            // still report the rect they would have when expanded. Skip rows under a zero-size ancestor.
             const isRowRendered = (row: Element): boolean => {
               for (let node: Element | null = row; node && node !== el; node = node.parentElement) {
                 const rect = node.getBoundingClientRect()
@@ -211,33 +249,24 @@ test.describe(
               return true
             }
             const rows = Array.from(el.querySelectorAll('a, button, [role="button"]')).filter(isRowRendered)
-            // Pane-content coordinates: viewport y - pane top + current scroll offset.
-            const contentTop = el.getBoundingClientRect().top - el.scrollTop
-            const lastRowBottom = Math.max(...rows.map((row) => row.getBoundingClientRect().bottom - contentTop))
             return {
-              overflowY: window.getComputedStyle(el).overflowY,
               rowCount: rows.length,
-              clearanceBelowLastRow: el.scrollHeight - lastRowBottom,
+              lowestRowBottom: Math.max(...rows.map((row) => row.getBoundingClientRect().bottom)),
+              innerHeight: window.innerHeight,
             }
           })
 
-          expect(pane.rowCount).toBeGreaterThan(0)
-          expect(pane.overflowY).toBe('auto')
-          // Lower bound, not equality: the drawer's own bottom padding adds to the shared allowance.
-          expect(pane.clearanceBelowLastRow).toBeGreaterThanOrEqual(IN_APP_BROWSER_CHROME_PX)
-          // Upper bound so `isRowRendered` over-excluding rows (e.g. a real, visible row that
-          // happens to sit under a zero-size ancestor for some unrelated reason) can't inflate
-          // `lastRowBottom`'s absence into a vacuous pass.
-          expect(pane.clearanceBelowLastRow).toBeLessThan(IN_APP_BROWSER_CHROME_PX * 2)
-
-          // Headless Chromium draws no overlay chrome, so this asserts only that the footer rows are
-          // reachable at the end of the pane; the real band needs device QA.
-          await drawer.evaluate((el) => el.scrollTo({ top: el.scrollHeight }))
+          expect(footer.rowCount).toBeGreaterThan(0)
+          expect(footer.lowestRowBottom).toBeLessThanOrEqual(footer.innerHeight - IN_APP_BROWSER_CHROME_PX)
           for (const link of socialMediaLinks) {
             await expect(drawer.locator(`a[href='${link}']`)).toBeInViewport()
           }
           await expect(drawer.getByText('Legal & Privacy')).toBeInViewport()
         })
+      })
+
+      test('reserves no bottom inset in a standalone mobile browser', async ({ page }) => {
+        await expect(openSheetContent(page)).toHaveCSS('padding-bottom', '0px')
       })
 
       test('displays mobile-specific UI elements', async ({ page }) => {

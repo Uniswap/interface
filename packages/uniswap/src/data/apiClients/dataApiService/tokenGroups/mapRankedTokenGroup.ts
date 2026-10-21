@@ -17,6 +17,7 @@ import {
   getVolumeForOrderBy,
   type VolumeOrderBy,
 } from 'uniswap/src/data/apiClients/dataApiService/utils/tokenRankStatsVolume'
+import { mapTokenIssuerLogos } from 'uniswap/src/features/rwa/issuers'
 
 function mapSparkline(points: RankedMultichainToken['sparkline']): RwaSparkline {
   return { points: points.map((point) => ({ timestampS: Number(point.timestamp), value: point.value })) }
@@ -92,6 +93,7 @@ export function mapGroupMemberToIssuerToken({
     issuer: token.issuer.id,
     issuerDisplayName: token.issuer.displayName || undefined,
     issuerLogoUrl: token.issuer.logoUrl || undefined,
+    issuerLogos: mapTokenIssuerLogos(token.issuer),
     ...mapMemberStats({ token, stats: member.stats, sparkline1d: mapSparkline(member.sparkline), volumeOrderBy }),
     chainTokens,
   }

@@ -34,7 +34,6 @@ export const UniswapHelpUrls = {
     batchedSwapsFailure: `${createHelpArticleUrl('36393697148045')}#error-messages-and-troubleshooting`,
     batchedSwapsReview: createHelpArticleUrl('36394497329933'),
     caliburUpgrades: createHelpArticleUrl('47047111847053-Upgrades-to-smart-wallet-contracts'),
-    cexTransferKorea: createHelpArticleUrl('29425131525901-How-to-transfer-crypto-to-a-Uniswap-Wallet-in-Korea'),
     contractAddressExplainer: createHelpArticleUrl('26757826138637-What-is-a-token-contract-address'),
     dappProtectionInfo: createHelpArticleUrl('37781087046029'),
     earnHelp: createHelpArticleUrl(EARN_HELP_ARTICLE),

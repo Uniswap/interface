@@ -35,6 +35,7 @@ import {
   DEFAULT_BOTTOM_PRICE_SCALE_MARGIN,
   DEFAULT_TOP_PRICE_SCALE_MARGIN,
 } from '~/components/Charts/ChartModel'
+import { ChartUnavailableOverlay } from '~/components/Charts/ChartUnavailableOverlay'
 import { PriceChartData } from '~/components/Charts/PriceChart'
 import { DataQuality, formatTickMarks, PriceChartType } from '~/components/Charts/utils'
 import { ErrorBoundary } from '~/components/ErrorBoundary'
@@ -591,6 +592,7 @@ function LiquidityPositionRangeChart({
           ml="$spacing4"
         />
       )}
+      {dataUnavailable && <ChartUnavailableOverlay height={height} />}
       {shouldRenderChart && (
         <Flex
           width={showLiquidityBars ? chartWidth - Y_AXIS_WIDTH + 2 : chartWidth}

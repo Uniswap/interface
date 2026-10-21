@@ -48,6 +48,7 @@ export function tagOptionAsRwa<T extends SearchModalOption>({
           issuer: match.issuer.issuer,
           issuerDisplayName: match.issuer.issuerDisplayName ?? optionIssuer?.issuerDisplayName,
           issuerLogoUrl: match.issuer.issuerLogoUrl ?? optionIssuer?.issuerLogoUrl,
+          issuerLogos: match.issuer.issuerLogos ?? optionIssuer?.issuerLogos,
         }
       : undefined,
   } as T

@@ -3,7 +3,7 @@
 exports[`TDP Skeleton > should render correctly 1`] = `
 <DocumentFragment>
   <div
-    class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 pt-[48px] w-[100%] media-xxl:px-[40px] media-lg:px-[20px]"
+    class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 pt-[48px] w-[100%] media-xxl:px-[40px] media-lg:px-[20px] media-md:px-[0px]"
   >
     <div
       aria-label="breadcrumb-nav"
@@ -51,8 +51,8 @@ exports[`TDP Skeleton > should render correctly 1`] = `
     </div>
   </div>
   <div
-    class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 self-center px-[0px] w-[100%] bg-surface1 z-[var(--c-z)] [transition:var(--c-t)] sticky top-[var(--c-top)] media-xxl:px-[var(--cB-px)] media-lg:px-[var(--cD-px)]"
-    style="--c-z: 980; --c-t: opacity 0.2s ease, transform 0.2s ease, width 0.2s ease, height 0.2s ease, gap 0.2s ease, padding-top 0.2s ease, padding-bottom 0.2s ease, font-size 0.2s ease, line-height 0.2s ease; --c-top: 72px; --cB-px: 40px; --cD-px: 20px;"
+    class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 self-center px-[0px] w-[100%] bg-surface1 z-[var(--c-z)] [transition:var(--c-t)] sticky top-[var(--c-top)] media-xxl:px-[var(--cB-px)] media-lg:px-[var(--cD-px)] media-md:[align-self:var(--cE-as)] media-md:mx-[var(--cE-mx)] media-md:px-[var(--cE-px)] media-md:w-[var(--cE-w)]"
+    style="--c-z: 980; --c-t: opacity 0.2s ease, transform 0.2s ease, width 0.2s ease, height 0.2s ease, gap 0.2s ease, padding-top 0.2s ease, padding-bottom 0.2s ease, font-size 0.2s ease, line-height 0.2s ease; --c-top: 72px; --cB-px: 40px; --cD-px: 20px; --cE-as: stretch; --cE-mx: -16px; --cE-px: 16px; --cE-w: auto;"
   >
     <div
       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 py-[20px] w-[100%] border-surface3 border-b-[1px] [transition:var(--c-t)]"
@@ -127,7 +127,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
     </div>
   </div>
   <div
-    class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row justify-center gap-[80px] mt-[32px] pb-[48px] w-[100%] media-xxl:px-[40px] media-xl:flex-col media-xl:items-center media-xl:gap-[0px] media-lg:px-[20px] media-lg:pt-[0px] media-lg:pb-[52px]"
+    class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row justify-center gap-[80px] mt-[32px] pb-[48px] w-[100%] media-xxl:px-[40px] media-xl:flex-col media-xl:items-center media-xl:gap-[0px] media-lg:px-[20px] media-lg:pt-[0px] media-lg:pb-[52px] media-md:px-[0px]"
   >
     <div
       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] grow-[1] shrink-[1] gap-[40px] w-[100%] media-lg:gap-[32px]"

@@ -1,6 +1,5 @@
-import { isWebPlatform } from '@universe/environment'
 import type { RefObject } from 'react'
-import { type MutableRefObject, useEffect, useRef } from 'react'
+import { type MutableRefObject } from 'react'
 import type { TextInputProps } from 'react-native'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
 import { isMaxPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/utils'
@@ -41,7 +40,7 @@ export function useSwapFormScreenCallbacks({
   inputSelectionRef: MutableRefObject<TextInputProps['selection']>
   outputSelectionRef: MutableRefObject<TextInputProps['selection']>
 }): {
-  resetSelection: (args: { start: number; end?: number; currencyField?: CurrencyField }) => void
+  resetSelection: (args: { start: number; end?: number; currencyField?: CurrencyField; value?: string }) => void
   moveCursorToEnd: (args: { targetInputRef: MutableRefObject<string> }) => void
   onDecimalPadTriggerInputShake: () => void
   onInputSelectionChange: (start: number, end: number) => void
@@ -81,33 +80,27 @@ export function useSwapFormScreenCallbacks({
 
   const decimalPadControlledField = useDecimalPadControlledField()
 
-  const pendingSelectionTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined)
-
-  useEffect(() => {
-    return () => clearTimeout(pendingSelectionTimeoutRef.current)
-  }, [])
-
   const resetSelection = useEvent(
-    ({ start, end, currencyField }: { start: number; end?: number; currencyField?: CurrencyField }) => {
-      // Update refs first to have the latest selection state available in the DecimalPadInput
-      // component and properly update disabled keys of the decimal pad.
-      // We reset the native selection on the next tick because we need to wait for the native input to be updated.
-      // This is needed because of the combination of state (delayed update) + ref (instant update) to improve performance.
+    ({
+      start,
+      end,
+      currencyField,
+      value,
+    }: {
+      start: number
+      end?: number
+      currencyField?: CurrencyField
+      value?: string
+    }) => {
+      // The ref is updated synchronously so the DecimalPadInput reads the new caret on the next
+      // keypress and can update its disabled keys; the panel applies it to the native input once the
+      // value that moved it has rendered.
       const _currencyField = currencyField ?? decimalPadControlledField
       const selectionRef = _currencyField === CurrencyField.INPUT ? inputSelectionRef : outputSelectionRef
-      const inputFieldRef =
-        _currencyField === CurrencyField.INPUT ? inputRef.current?.textInputRef : outputRef.current?.textInputRef
+      const panelRef = _currencyField === CurrencyField.INPUT ? inputRef : outputRef
 
       selectionRef.current = { start, end }
-
-      if (!isWebPlatform && inputFieldRef) {
-        // Cancel any pending native selection update to prevent stale cursor positions
-        // when typing fast (the previous timeout would set the cursor to an outdated position).
-        clearTimeout(pendingSelectionTimeoutRef.current)
-        pendingSelectionTimeoutRef.current = setTimeout(() => {
-          inputFieldRef.current?.setNativeProps({ selection: { start, end } })
-        }, 0)
-      }
+      panelRef.current?.setSelection({ start, end, value })
     },
   )
 
@@ -115,6 +108,7 @@ export function useSwapFormScreenCallbacks({
     resetSelection({
       start: targetInputRef.current.length,
       end: targetInputRef.current.length,
+      value: targetInputRef.current,
     })
   })
 

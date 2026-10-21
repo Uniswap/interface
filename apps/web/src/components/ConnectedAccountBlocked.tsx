@@ -1,6 +1,7 @@
 import { Anchor, Flex, Text } from '@universe/mycelium'
 import { Blocked } from '@universe/mycelium/icons/Blocked'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
+import { Trans } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useModalInitialState } from '~/hooks/useModalInitialState'

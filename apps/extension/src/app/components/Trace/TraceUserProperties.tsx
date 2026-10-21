@@ -1,8 +1,4 @@
-import { datadogRum } from '@datadog/browser-rum'
-import { useQuery } from '@tanstack/react-query'
-import { provideUniswapIdentifierService } from '@universe/api'
 import { useIsDarkMode } from '@universe/mycelium/theme-hooks-compat'
-import { uniswapIdentifierQuery } from '@universe/sessions'
 import { useEffect } from 'react'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -20,7 +16,7 @@ import {
   useViewOnlyAccounts,
 } from 'wallet/src/features/wallet/hooks'
 
-/** Component that tracks UserProperties during the lifetime of the app */
+/** Amplitude user properties for the lifetime of the app. Datadog fields live in `DatadogContextUpdater`. */
 export function TraceUserProperties(): null {
   const isDarkMode = useIsDarkMode()
   const viewOnlyAccounts = useViewOnlyAccounts()
@@ -33,21 +29,7 @@ export function TraceUserProperties(): null {
   const { isTestnetModeEnabled } = useEnabledChains()
   const displayName = useDisplayName(activeAccount?.address)
 
-  const { data: uniswapIdentifier } = useQuery(uniswapIdentifierQuery(provideUniswapIdentifierService))
-
   useGatingUserPropertyUsernames()
-
-  // Set user properties for datadog
-
-  useEffect(() => {
-    datadogRum.setUserProperty(ExtensionUserPropertyName.ActiveWalletAddress, activeAccount?.address)
-  }, [activeAccount?.address])
-
-  useEffect(() => {
-    if (uniswapIdentifier) {
-      datadogRum.setUserProperty(ExtensionUserPropertyName.UniswapIdentifier, uniswapIdentifier)
-    }
-  }, [uniswapIdentifier])
 
   // Set user properties for amplitude
 

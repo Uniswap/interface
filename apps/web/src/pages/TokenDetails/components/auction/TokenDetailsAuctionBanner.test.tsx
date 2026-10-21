@@ -1,9 +1,12 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
-import type { Auction } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import type { Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { UniverseChainId } from '@universe/chains'
 import { opacifyRaw } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import { LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
+import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   AuctionDisplayPhase,
@@ -17,7 +20,15 @@ import {
 } from '~/pages/TokenDetails/hooks/useTokenDetailsAuctionDisplay'
 import { getOwnStyleProp } from '~/test-utils/getOwnStyleProp'
 import { mocked } from '~/test-utils/mocked'
-import { fireEvent, render, screen } from '~/test-utils/render'
+import { act, fireEvent, render, screen } from '~/test-utils/render'
+
+vi.unmock('uniswap/src/features/telemetry/Trace')
+// Trace's web path does not use React Navigation; avoid loading its native ESM dependency tree.
+vi.mock('@react-navigation/core', () => ({ useFocusEffect: vi.fn() }))
+
+vi.mock('~/pages/TokenDetails/hooks/useTokenDetailsCcaAuctions', () => ({
+  useTokenDetailsCcaAuctions: () => [AUCTION, AUCTION, AUCTION],
+}))
 
 const mockNavigate = vi.fn()
 vi.mock('react-router', async (importOriginal) => ({
@@ -32,6 +43,9 @@ vi.mock('~/pages/TokenDetails/context/useTDPStore', () => ({
 }))
 vi.mock('~/pages/TokenDetails/components/auction/TokenDetailsAuctionListEntry', () => ({
   TokenDetailsMoreAuctionsChip: () => <div data-testid={TestID.TokenDetailsMoreAuctionsChip} />,
+}))
+vi.mock('uniswap/src/features/telemetry/send', () => ({
+  sendAnalyticsEvent: vi.fn(),
 }))
 
 const AUCTION_ADDRESS = '0x1111111111111111111111111111111111111111'
@@ -50,11 +64,14 @@ function mockDisplay(overrides: Partial<TokenDetailsAuctionDisplayModel> = {}): 
     auction: AUCTION,
     chainId: UniverseChainId.Mainnet,
     launchMethod: LaunchProvenanceMethod.CustomAuction,
+    provenance: undefined,
     phase: AuctionDisplayPhase.Live,
     result: AuctionDisplayResult.Unknown,
     poolAvailability: PoolAvailability.HasPool,
     shouldShowSwap: true,
     isInitialLoading: false,
+    isAuctionOnlyPending: false,
+    hasConfirmedPool: false,
     phaseEndsAtMs: Date.now() + SEVEN_DAYS_THIRTEEN_HOURS_MS - ONE_SECOND_MS,
     currencyRaised: { status: 'idle' },
     currentBlock: { status: 'success', blockNumber: 150n },
@@ -66,6 +83,7 @@ function mockDisplay(overrides: Partial<TokenDetailsAuctionDisplayModel> = {}): 
 describe('TokenDetailsAuctionBanner', () => {
   beforeEach(() => {
     mockNavigate.mockReset()
+    vi.mocked(sendAnalyticsEvent).mockClear()
   })
 
   it('shows the live auction countdown and links to the auction page', () => {
@@ -78,6 +96,17 @@ describe('TokenDetailsAuctionBanner', () => {
     fireEvent.click(screen.getByTestId(TestID.TokenDetailsAuctionBanner))
     expect(mockNavigate).toHaveBeenCalledTimes(1)
     expect(mockNavigate.mock.calls[0]?.[0]).toMatch(new RegExp(`^/explore/auctions/ethereum/${AUCTION_ADDRESS}$`, 'i'))
+    expect(sendAnalyticsEvent).toHaveBeenCalledWith(AuctionEventName.TokenDetailsToAuctionDetailsClicked, {
+      surface: 'tdp',
+      chain_id: UniverseChainId.Mainnet,
+      auction_type: 'custom',
+      launch_method: 'custom',
+      entry_point: 'tdp_auction_banner',
+      auction_count: 3,
+      auction_phase: 'live',
+      pool_availability: 'has_pool',
+      page_layout: 'trading',
+    })
   })
 
   it('renders the more-auctions chip beside the label once the banner is live', () => {
@@ -88,6 +117,23 @@ describe('TokenDetailsAuctionBanner', () => {
     const chip = screen.getByTestId(TestID.TokenDetailsMoreAuctionsChip)
     expect(chip.parentElement).toBe(screen.getByText('Auction in progress').parentElement)
     expect(getOwnStyleProp(chip.parentElement!, 'gap')).toBe('$spacing16')
+  })
+
+  it('records the banner once after the initial placeholder, with its selector count', async () => {
+    const sendEvent = vi.spyOn(analytics, 'sendEvent').mockImplementation(() => undefined)
+    mockDisplay({ poolAvailability: PoolAvailability.Loading, isInitialLoading: true })
+    const { rerender } = render(<TokenDetailsAuctionBanner />)
+    expect(sendEvent).not.toHaveBeenCalledWith(AuctionEventName.AuctionBannerViewed, expect.anything())
+
+    mockDisplay()
+    rerender(<TokenDetailsAuctionBanner />)
+    // Let Trace's 50ms development dedupe expire before checking subsequent renders.
+    await act(() => new Promise<void>((resolve) => setTimeout(resolve, 51)))
+    rerender(<TokenDetailsAuctionBanner />)
+    const impressions = sendEvent.mock.calls.filter(([event]) => event === AuctionEventName.AuctionBannerViewed)
+    expect(impressions).toHaveLength(1)
+    expect(impressions[0]?.[1]).toMatchObject({ entry_point: 'tdp_auction_banner', auction_count: 3 })
+    sendEvent.mockRestore()
   })
 
   it('allows the countdown to wrap without shrinking it and uses the token accent', () => {
@@ -106,8 +152,8 @@ describe('TokenDetailsAuctionBanner', () => {
     expect(getOwnStyleProp(banner, 'borderRadius')).toBe('$rounded16')
   })
 
-  it('reserves the initial live banner row without a button or navigation', () => {
-    mockDisplay({ isInitialLoading: true, poolAvailability: PoolAvailability.Loading })
+  it('reserves the live banner row while the pool lookup resolves, without a button or navigation', () => {
+    mockDisplay({ poolAvailability: PoolAvailability.Loading, isInitialLoading: true })
 
     render(<TokenDetailsAuctionBanner />)
 
@@ -120,7 +166,7 @@ describe('TokenDetailsAuctionBanner', () => {
   })
 
   it('keeps the same row spacing when the initial placeholder becomes the tradeable banner', () => {
-    mockDisplay({ isInitialLoading: true, poolAvailability: PoolAvailability.Loading })
+    mockDisplay({ poolAvailability: PoolAvailability.Loading, isInitialLoading: true })
     const { rerender } = render(<TokenDetailsAuctionBanner />)
     const pendingRow = screen.getByTestId(TestID.TokenDetailsAuctionBanner)
     const spacing = ['px', 'py', 'gap'].map((prop) => getOwnStyleProp(pendingRow, prop))
@@ -136,19 +182,32 @@ describe('TokenDetailsAuctionBanner', () => {
     expect(mockNavigate).toHaveBeenCalledTimes(1)
   })
 
-  it('does not insert a placeholder for a late pool lookup after ordinary content has rendered', () => {
-    mockDisplay({ isInitialLoading: false, poolAvailability: PoolAvailability.Loading })
+  it.each([PoolAvailability.Loading, PoolAvailability.Error])(
+    'holds the confirmed banner and its single impression when the pool lookup regresses to %s',
+    async (poolAvailability) => {
+      const sendEvent = vi.spyOn(analytics, 'sendEvent').mockImplementation(() => undefined)
+      mockDisplay({ hasConfirmedPool: true })
+      const { rerender } = render(<TokenDetailsAuctionBanner />)
+      // Let Trace's 50ms development dedupe expire so a genuine remount would be recorded.
+      await act(() => new Promise<void>((resolve) => setTimeout(resolve, 51)))
 
-    render(<TokenDetailsAuctionBanner />)
+      mockDisplay({ poolAvailability, hasConfirmedPool: true })
+      rerender(<TokenDetailsAuctionBanner />)
 
-    expect(screen.queryByTestId(TestID.TokenDetailsAuctionBanner)).toBeNull()
-  })
+      const banner = screen.getByTestId(TestID.TokenDetailsAuctionBanner)
+      expect(banner).not.toHaveAttribute('aria-busy', 'true')
+      fireEvent.click(banner)
+      expect(mockNavigate).toHaveBeenCalledTimes(1)
+      expect(sendEvent.mock.calls.filter(([event]) => event === AuctionEventName.AuctionBannerViewed)).toHaveLength(1)
+      sendEvent.mockRestore()
+    },
+  )
 
   it('does not reserve a live-banner placeholder for an upcoming auction', () => {
     mockDisplay({
-      isInitialLoading: true,
       phase: AuctionDisplayPhase.Upcoming,
       poolAvailability: PoolAvailability.Loading,
+      isInitialLoading: true,
     })
 
     render(<TokenDetailsAuctionBanner />)
@@ -157,7 +216,7 @@ describe('TokenDetailsAuctionBanner', () => {
   })
 
   it('removes the initial placeholder when a fresh response confirms there is no pool', () => {
-    mockDisplay({ isInitialLoading: true, poolAvailability: PoolAvailability.Loading })
+    mockDisplay({ poolAvailability: PoolAvailability.Loading, isInitialLoading: true })
     const { rerender } = render(<TokenDetailsAuctionBanner />)
     expect(screen.getByTestId(TestID.TokenDetailsAuctionBanner)).toHaveAttribute('aria-busy', 'true')
 

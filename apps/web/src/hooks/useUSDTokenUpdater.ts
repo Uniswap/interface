@@ -22,7 +22,9 @@ export function useUSDTokenUpdater({
   formattedAmount?: string
   loading: boolean
 } {
-  const { price, isLoading } = useUSDCPrice(exactCurrency)
+  const { price, isLoading: isPriceLoading, isStaleRefreshing } = useUSDCPrice(exactCurrency)
+  // A withheld stale price being refetched is pending, not missing.
+  const isLoading = isPriceLoading || isStaleRefreshing
   const { convertFiatAmount, formatCurrencyAmount } = useLocalizationContext()
   const conversionRate = convertFiatAmount(1).amount
   const supportedChainId = useSupportedChainId(exactCurrency?.chainId)

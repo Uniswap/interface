@@ -1,5 +1,4 @@
 // oxlint-disable typescript/no-duplicate-type-constituents
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
 import { ArrowDownCircle } from '@universe/mycelium/icons/ArrowDownCircle'
 import { CoinConvert } from '@universe/mycelium/icons/CoinConvert'
@@ -16,6 +15,7 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { useOpenReceiveModal } from 'src/features/modals/hooks/useOpenReceiveModal'
 import { openModal } from 'src/features/modals/modalSlice'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useIsForRegionBlocked } from 'uniswap/src/features/fiatOnRamp/useIsForRegionBlocked'
 import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/portfolio/balances/hooks'
 import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
 import { ElementName, MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -62,7 +62,8 @@ export function HomeScreenQuickActions(): JSX.Element {
   const { hapticFeedback } = useHapticFeedback()
   const openReceiveModal = useOpenReceiveModal()
   const { isTestnetModeEnabled, defaultChainId } = useEnabledChains()
-  const disableForKorea = useFeatureFlag(FeatureFlags.DisableFiatOnRampKorea)
+  const isOnrampBlocked = useIsForRegionBlocked({ isOfframp: false })
+  const isOfframpBlocked = useIsForRegionBlocked({ isOfframp: true })
   const isPortfolioZero = useIsPortfolioZero()
 
   const activeAccountAddress = useActiveAccountAddressWithThrow()
@@ -110,8 +111,8 @@ export function HomeScreenQuickActions(): JSX.Element {
         navigate(ModalName.FiatOnRampAction, { entry })
         return
       }
-      if (disableForKorea) {
-        navigate(ModalName.KoreaCexTransferInfoModal)
+      if (entry === 'offramp' ? isOfframpBlocked : isOnrampBlocked) {
+        navigate(ModalName.CexTransferInfoModal)
         return
       }
       dispatch(
@@ -121,7 +122,7 @@ export function HomeScreenQuickActions(): JSX.Element {
         }),
       )
     },
-    [triggerHaptics, isTestnetModeEnabled, disableForKorea, isPortfolioZero, dispatch, t],
+    [triggerHaptics, isTestnetModeEnabled, isOnrampBlocked, isOfframpBlocked, isPortfolioZero, dispatch, t],
   )
 
   // PR #4621 Necessary to declare these as direct dependencies due to race

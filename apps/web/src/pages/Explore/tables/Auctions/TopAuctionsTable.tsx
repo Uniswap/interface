@@ -781,6 +781,7 @@ function ToucanTableComponent({
   return (
     <Flex gap="$spacing12">
       <Table
+        mobileFullBleed
         virtualized
         columns={columns}
         data={sortedVisibleAuctionTableValues.slice(0, visibleAuctionLimit)}

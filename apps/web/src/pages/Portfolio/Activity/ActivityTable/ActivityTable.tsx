@@ -176,6 +176,7 @@ function ActivityTableInner({ data, loading = false, error = false, rowWrapper }
 
   return (
     <Table
+      mobileFullBleed
       columns={columns}
       data={data}
       loading={loading}

@@ -1,8 +1,8 @@
 import { Flex, Text } from '@universe/mycelium'
 import { ArrowRight } from '@universe/mycelium/icons/ArrowRight'
 import { WifiError } from '@universe/mycelium/icons/WifiError'
-import { Trans, useTranslation } from 'react-i18next'
-import { ClickableWithinGesture } from 'ui/src'
+import { useTranslation } from 'react-i18next'
+import { ClickableWithinGesture, Trans } from 'ui/src'
 
 export function NoResultsFound({
   searchFilter,

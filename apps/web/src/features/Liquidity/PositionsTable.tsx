@@ -328,6 +328,7 @@ function PositionsTableBase({
       <Flex ref={contentRef} gap="$gap24">
         {controlBarProps && <PositionsTableControlBar {...controlBarProps} setRangeFilter={setRangeFilterAnchored} />}
         <Table
+          mobileFullBleed
           columns={columns}
           data={data}
           loading={loading}

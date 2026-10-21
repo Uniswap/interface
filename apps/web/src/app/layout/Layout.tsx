@@ -5,6 +5,7 @@ import { GRID_AREAS } from '~/app/layout/gridAreas'
 import { Header } from '~/app/layout/Header'
 import type { EmbedView } from '~/pages/Swap/embedContext'
 import { MAX_CONTENT_WIDTH_PX } from '~/theme'
+import { MWEB_BOTTOM_INSET } from '~/utils/mwebBottomInset'
 
 const AppContainer = styled('div', {
   platform: 'web',
@@ -20,6 +21,8 @@ const AppBody = styled('div', {
   inlineStyle: () => ({
     gridArea: GRID_AREAS.MAIN,
     maxWidth: `${MAX_CONTENT_WIDTH_PX}px`,
+    // Every page tail scrolls clear of the in-app-browser chrome / safe-area band; 0 on desktop.
+    paddingBottom: MWEB_BOTTOM_INSET,
     '--app-body-gutter': `${APP_BODY_MOBILE_GUTTER_PX}px`,
   }),
 })

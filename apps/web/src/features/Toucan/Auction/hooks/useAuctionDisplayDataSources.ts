@@ -1,5 +1,5 @@
 import { useQuery, type UseQueryResult } from '@tanstack/react-query'
-import { GetLatestCheckpointRequest } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { GetLatestCheckpointRequest } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { AddressStringFormat, type EVMUniverseChainId, normalizeAddress } from '@universe/chains'
 import { useEffect, useMemo } from 'react'
 import { auctionQueries } from 'uniswap/src/data/apiClients/dataApiService/auctions/auctionQueries'
@@ -34,6 +34,7 @@ export function useAuctionDisplayDataSources({
   endBlock,
   watchUntilBlock,
   enabled,
+  poolLookupEnabled = false,
   currentBlock: suppliedCurrentBlock,
 }: {
   chainId: EVMUniverseChainId | undefined
@@ -44,6 +45,12 @@ export function useAuctionDisplayDataSources({
   /** A later boundary that still needs chain updates, such as the claim/indexing window. */
   watchUntilBlock?: bigint
   enabled: boolean
+  /**
+   * Opens the pool read ahead of `enabled`, for a token already known to have launched by auction
+   * before its auction resolves. Nothing else here starts early: a head that is still `loading`
+   * would resolve a phase, and a phase is what tells the page to reserve the auction-only layout.
+   */
+  poolLookupEnabled?: boolean
   /** Reuse the ADP's block source, including loading and error states, without another poller. */
   currentBlock?: CurrentBlockState
 }): AuctionDisplayDataSources {
@@ -70,7 +77,11 @@ export function useAuctionDisplayDataSources({
     currentBlockNumber !== undefined &&
     currentBlockNumber >= parsedEndBlock
 
-  const { poolState: pools, refetch: refetchPools } = useTokenPoolState({ chainId, tokenAddress, enabled })
+  const { poolState: pools, refetch: refetchPools } = useTokenPoolState({
+    chainId,
+    tokenAddress,
+    enabled: enabled || poolLookupEnabled,
+  })
   const wasAtOrPastEndBlock = usePrevious(isAtOrPastEndBlock)
 
   useEffect(() => {

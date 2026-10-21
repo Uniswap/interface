@@ -1,6 +1,7 @@
 import { TouchableArea, useIsTouchDevice } from '@universe/mycelium'
 import type { ComponentProps, ReactNode } from 'react'
 import { useCallback, useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { AdaptiveWebPopoverContent, Popover } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { useShadowPropsMedium } from 'ui/src/theme/shadows'
@@ -91,6 +92,42 @@ interface HoverCardProps {
  * Popover shell shared by the hover cards. Consumers own the open state via `useHoverCardState` to gate fetches on it.
  * The wrapped child is the interactive element, so neither trigger wrapper is a button or a tab stop of its own.
  */
+/** Mounts the card only once its trigger is hovered: always-mounted cards were most of a virtualized row's cost.
+ *  The bare wrapper matches `HoverCard`'s trigger element so arming doesn't shift layout. */
+export function HoverCardArmOnHover({
+  childOwnsPressFeedback,
+  children,
+  renderMounted,
+}: {
+  childOwnsPressFeedback?: boolean
+  children: ReactNode
+  renderMounted: () => JSX.Element
+}): JSX.Element {
+  const [armedByPointer, setArmedByPointer] = useState(false)
+  // Arming remounts the row. Committed sync so it lands inside mouseenter: a scheduled commit can land mid-press,
+  // and the browser drops a click whose mousedown target was detached.
+  const arm = useCallback((): void => flushSync(() => setArmedByPointer(true)), [])
+
+  if (armedByPointer) {
+    return renderMounted()
+  }
+
+  return (
+    <TouchableArea
+      role="none"
+      variant="unstyled"
+      activeOpacity={1}
+      {...(childOwnsPressFeedback && { pressStyle: { scale: 1 }, focusVisibleStyle: { scaleX: 1, scaleY: 1 } })}
+      // Injection clones the row element with fresh color props every render, which would defeat its memo.
+      shouldAutomaticallyInjectColors={false}
+      {...stopPressEventPropagation}
+      onMouseEnter={arm}
+    >
+      {children}
+    </TouchableArea>
+  )
+}
+
 export function HoverCard({
   isOpen,
   onOpenChange,
@@ -166,7 +203,7 @@ export function HoverCard({
         placement={placement}
         backgroundColor="$surface1"
         borderColor="$surface3"
-        borderRadius="$rounded20"
+        borderRadius="$rounded24"
         borderWidth="$spacing1"
         p="$spacing16"
         overflow="hidden"

@@ -596,6 +596,7 @@ const TopPoolTable = memo(function TopPoolTable({
   return (
     <TableWrapper data-testid="top-pools-explore-table">
       <PoolsTable
+        mobileFullBleed
         pools={displayedPools}
         loading={isLoading}
         error={isError}
@@ -627,6 +628,7 @@ export function PoolsTable({
   surface,
   virtualized,
   stickyTopOffset,
+  mobileFullBleed,
   chainId: listChainId,
   filterString,
 }: {
@@ -656,6 +658,8 @@ export function PoolsTable({
   virtualized?: boolean
   /** Extra clearance between the app header and the sticky header row; see `TableProps`. */
   stickyTopOffset?: number
+  /** See `TableProps.mobileFullBleed`. */
+  mobileFullBleed?: boolean
   // The one chain every listed pool is on, when the list is chain-filtered. Scopes the hook-registry
   // fetch to that chain. Required so the full cross-chain registry is an explicit `undefined` for an
   // all-networks list, never the default a new consumer falls into by forgetting the prop.
@@ -932,6 +936,7 @@ export function PoolsTable({
 
   return (
     <Table
+      mobileFullBleed={mobileFullBleed}
       columns={columns}
       data={poolTableValues}
       loading={loading}

@@ -1,7 +1,7 @@
 /**
  * Inline twins of the two `ui/src` generated icons the legacy
  * DropdownMenuSheetItem renders (`CheckCircleFilled`, `ExternalLink`), copied
- * from their SVG sources in `packages/ui/src/assets/icons/`. mycelium cannot
+ * from their SVG sources in `src/assets/icons/`. mycelium cannot
  * import the Tamagui icon pipeline; these carry the identical paths and take
  * a raw pixel size + CSS color expression instead of theme tokens.
  */
@@ -14,7 +14,7 @@ interface MenuGlyphProps {
   'data-slot'?: string
 }
 
-/** packages/ui/src/assets/icons/check-circle-filled.svg */
+/** src/assets/icons/check-circle-filled.svg */
 export function CheckCircleFilledGlyph({ size, color, ...rest }: MenuGlyphProps): JSX.Element {
   return (
     <svg
@@ -35,7 +35,7 @@ export function CheckCircleFilledGlyph({ size, color, ...rest }: MenuGlyphProps)
   )
 }
 
-/** packages/ui/src/assets/icons/external-link.svg */
+/** src/assets/icons/external-link.svg */
 export function ExternalLinkGlyph({ size, color, ...rest }: MenuGlyphProps): JSX.Element {
   return (
     <svg

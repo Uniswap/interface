@@ -233,7 +233,14 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
       }}
     >
       <ExploreTablesFilterStoreContextProvider initialQuickFilter={initialQuickFilter}>
-        <Flex width="100%" minWidth={320} pt="$spacing24" pb="$spacing48" px="$spacing40" $md={{ p: '$spacing16' }}>
+        <Flex
+          width="100%"
+          minWidth={320}
+          pt="$spacing24"
+          pb="$spacing48"
+          px="$spacing40"
+          $md={{ py: '$spacing16', px: '$none' }}
+        >
           <ExploreStatsSection shouldHideStats={isSolanaChain} />
           {showTrendingShelf && <ExploreTrendingShelfSection />}
           {showAssetShelf && <ExploreAssetShelfSection />}

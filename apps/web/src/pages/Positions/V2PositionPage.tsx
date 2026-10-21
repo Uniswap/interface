@@ -48,6 +48,7 @@ function BodyWrapper({ children }: { children: ReactNode }): JSX.Element {
       $lg={{
         px: '$padding20',
       }}
+      $md={{ px: '$none' }}
     >
       {children}
     </View>

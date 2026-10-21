@@ -1,138 +1,125 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { UniverseChainId } from '@universe/chains'
 import { TestID } from '@universe/test'
-import type { ReactNode } from 'react'
-import type { TieredNetworkOptions } from 'uniswap/src/components/network/NetworkFilterV2/types'
-import { NetworkFilter } from './NetworkFilter'
-import { fireEvent, render, screen } from '~/test-utils/render'
+import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter/NetworkFilter'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { fireEvent, render, screen, waitFor } from '~/test-utils/render'
 
-vi.mock('~/components/Dropdowns/Dropdown', () => ({
-  Dropdown: ({
-    children,
-    menuLabel,
-    toggleOpen,
-  }: {
-    children: ReactNode
-    menuLabel: ReactNode
-    toggleOpen: (open: boolean) => void
-  }) => (
-    <div>
-      <button type="button" onClick={() => toggleOpen(true)}>
-        {menuLabel}
-      </button>
-      {children}
-    </div>
-  ),
+vi.mock('uniswap/src/features/telemetry/send', () => ({
+  sendAnalyticsEvent: vi.fn(),
 }))
 
-const SUBSET_NETWORKS = [UniverseChainId.Mainnet, UniverseChainId.Base]
-const ALL_NETWORKS = [UniverseChainId.Mainnet, UniverseChainId.Base, UniverseChainId.ArbitrumOne]
+const CHAINS = [UniverseChainId.Mainnet, UniverseChainId.Base]
+const COMING_SOON = 'coming-soon-row'
 
-vi.mock('~/components/NetworkFilter/useFilteredChains', () => ({
-  useFilteredChainIds: (chains?: UniverseChainId[]) => chains ?? ALL_NETWORKS,
-}))
-
-const TIERED_OPTIONS = {
-  withBalances: [{ chainId: UniverseChainId.Mainnet, label: 'Ethereum', balanceUSD: 100 }],
-  otherNetworks: [{ chainId: UniverseChainId.Base, label: 'Base', balanceUSD: 0 }],
-} satisfies TieredNetworkOptions
+async function openMenu(): Promise<void> {
+  fireEvent.click(screen.getByTestId(TestID.TokensNetworkFilterTrigger))
+  await screen.findByTestId(TestID.ExploreSearchInput)
+}
 
 describe(NetworkFilter, () => {
-  it('hides the search input in the searchable menu when disabled', () => {
-    render(
-      <NetworkFilter
-        showSearch
-        showSearchInput={false}
-        networks={SUBSET_NETWORKS}
-        currentChainId={UniverseChainId.Mainnet}
-        onPress={vi.fn()}
-      />,
-    )
-
-    expect(screen.queryByTestId(TestID.ExploreSearchInput)).not.toBeInTheDocument()
+  beforeEach(() => {
+    vi.clearAllMocks()
   })
 
-  it('renders a searchable tiered menu without the all networks option', () => {
-    const onPress = vi.fn()
-
+  it('renders the pill trigger with the selected network name', () => {
     render(
       <NetworkFilter
-        showSearch
-        showMultichainOption={false}
-        networks={[UniverseChainId.Mainnet, UniverseChainId.Base]}
-        tieredOptions={TIERED_OPTIONS}
-        currentChainId={UniverseChainId.Mainnet}
-        onPress={onPress}
+        trigger={{ variant: 'pill', showLabel: true }}
+        includeAllNetworks
+        chainIds={CHAINS}
+        selectedChain={UniverseChainId.Base}
+        onPressChain={vi.fn()}
       />,
     )
 
-    expect(screen.getByText('Your networks')).toBeInTheDocument()
-    expect(screen.getByText('Other networks')).toBeInTheDocument()
-    expect(screen.queryByText('All networks')).not.toBeInTheDocument()
+    expect(screen.getByTestId(TestID.TokensNetworkFilterTrigger)).toHaveTextContent('Base')
+  })
+
+  it('opens a searchable list and reports the picked chain with its analytics', async () => {
+    const onPressChain = vi.fn()
+    render(
+      <NetworkFilter
+        includeAllNetworks
+        chainIds={CHAINS}
+        selectedChain={UniverseChainId.Mainnet}
+        selectionAnalytics={{ page: 'explore-page' }}
+        onPressChain={onPressChain}
+      />,
+    )
+
+    await openMenu()
+    expect(screen.getByText('All networks')).toBeInTheDocument()
 
     fireEvent.change(screen.getByTestId(TestID.ExploreSearchInput), { target: { value: 'base' } })
-
     expect(screen.queryByText('Ethereum')).not.toBeInTheDocument()
-    expect(screen.getByText('Base')).toBeInTheDocument()
 
-    fireEvent.click(screen.getByText('Base'))
+    fireEvent.click(screen.getByTestId(`${ElementName.NetworkButton}-${UniverseChainId.Base}`))
 
-    expect(onPress).toHaveBeenCalledWith(UniverseChainId.Base)
+    expect(onPressChain).toHaveBeenCalledWith(UniverseChainId.Base)
+    expect(sendAnalyticsEvent).toHaveBeenCalledWith(
+      SharedEventName.ELEMENT_CLICKED,
+      expect.objectContaining({
+        page: 'explore-page',
+        modal: ModalName.NetworkSelector,
+        chain_id: UniverseChainId.Base,
+        previous_chain_id: UniverseChainId.Mainnet,
+      }),
+    )
   })
 
-  describe('all networks option label', () => {
-    it('shows a network count for subset all-networks options by default', () => {
-      render(<NetworkFilter networks={SUBSET_NETWORKS} currentChainId={undefined} onPress={vi.fn()} />)
+  it('sends no selection event without selectionAnalytics', async () => {
+    const onPressChain = vi.fn()
+    render(
+      <NetworkFilter
+        includeAllNetworks
+        chainIds={CHAINS}
+        selectedChain={UniverseChainId.Mainnet}
+        onPressChain={onPressChain}
+      />,
+    )
 
-      expect(screen.getByText('2 networks')).toBeInTheDocument()
-    })
+    await openMenu()
+    fireEvent.click(screen.getByTestId(`${ElementName.NetworkButton}-${UniverseChainId.Base}`))
 
-    it('shows a network count for subset all-networks options in the searchable menu by default', () => {
-      render(<NetworkFilter showSearch networks={SUBSET_NETWORKS} currentChainId={undefined} onPress={vi.fn()} />)
+    expect(onPressChain).toHaveBeenCalledWith(UniverseChainId.Base)
+    expect(sendAnalyticsEvent).not.toHaveBeenCalledWith(
+      SharedEventName.ELEMENT_CLICKED,
+      expect.objectContaining({ modal: ModalName.NetworkSelector }),
+    )
+  })
 
-      expect(screen.getByText('2 networks')).toBeInTheDocument()
-    })
+  it('shows the footer only while the list is unfiltered', async () => {
+    render(
+      <NetworkFilter
+        includeAllNetworks
+        chainIds={CHAINS}
+        selectedChain={null}
+        footer={<div data-testid={COMING_SOON}>Coming soon</div>}
+        onPressChain={vi.fn()}
+      />,
+    )
 
-    it('shows "All networks" when the full network list is available', () => {
-      render(<NetworkFilter networks={ALL_NETWORKS} currentChainId={undefined} onPress={vi.fn()} />)
+    await openMenu()
+    expect(screen.getByTestId(COMING_SOON)).toBeInTheDocument()
 
-      expect(screen.getByText('All networks')).toBeInTheDocument()
-      expect(screen.queryByText('3 networks')).not.toBeInTheDocument()
-    })
+    fireEvent.change(screen.getByTestId(TestID.ExploreSearchInput), { target: { value: 'base' } })
+    await waitFor(() => expect(screen.queryByTestId(COMING_SOON)).not.toBeInTheDocument())
+  })
 
-    it('shows "All networks" for subset all-networks options when forceAllNetworksLabel is true', () => {
-      const onPress = vi.fn()
+  it('drops the all networks row when only one chain is selectable', async () => {
+    render(
+      <NetworkFilter
+        includeAllNetworks
+        chainIds={[UniverseChainId.Base]}
+        selectedChain={null}
+        onPressChain={vi.fn()}
+      />,
+    )
 
-      render(
-        <NetworkFilter forceAllNetworksLabel networks={SUBSET_NETWORKS} currentChainId={undefined} onPress={onPress} />,
-      )
-
-      expect(screen.getByText('All networks')).toBeInTheDocument()
-      expect(screen.queryByText('2 networks')).not.toBeInTheDocument()
-
-      fireEvent.click(screen.getByText('All networks'))
-
-      expect(onPress).toHaveBeenCalledWith(undefined)
-    })
-
-    it('shows "All networks" for subset all-networks options in the searchable menu when forceAllNetworksLabel is true', () => {
-      const onPress = vi.fn()
-
-      render(
-        <NetworkFilter
-          showSearch
-          forceAllNetworksLabel
-          networks={SUBSET_NETWORKS}
-          currentChainId={undefined}
-          onPress={onPress}
-        />,
-      )
-
-      expect(screen.getByText('All networks')).toBeInTheDocument()
-      expect(screen.queryByText('2 networks')).not.toBeInTheDocument()
-
-      fireEvent.click(screen.getByText('All networks'))
-
-      expect(onPress).toHaveBeenCalledWith(undefined)
-    })
+    await openMenu()
+    expect(screen.queryByText('All networks')).not.toBeInTheDocument()
+    expect(screen.getByTestId(`${ElementName.NetworkButton}-${UniverseChainId.Base}`)).toBeInTheDocument()
   })
 })

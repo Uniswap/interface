@@ -57,10 +57,19 @@ export function tokenPriceQueryOptions({ chainId, address, restBatcher, queryCli
           return fresh
         }
       : skipToken,
-    staleTime: Infinity,
     /**
-     * `'always'`, not `true`: `staleTime` is Infinity, so `true` would never
-     * fire. Covers the gap the interval below cannot: interval fetches are
+     * Infinity while the entry is fresh: WS ticks keep it current and the poll
+     * below is the safety net. An aged entry (e.g. rehydrated from disk) reads
+     * as stale so an observer switching ONTO its key fetches immediately —
+     * `refetchOnMount` does not run on a key change, and without this the
+     * withheld price waits out a full poll interval (e.g. the Buy form
+     * switching from mainnet ETH to ETH on Arbitrum).
+     */
+    staleTime:
+      restBatcher && queryClient ? (query): number => (isCachedPriceFresh(query.state.data) ? Infinity : 0) : Infinity,
+    /**
+     * `'always'`, not `true`: `staleTime` is Infinity while the entry is
+     * fresh, so `true` would not fire. Covers the gap the interval below cannot: interval fetches are
      * paused while the tab is unfocused, so the return to the foreground is
      * refreshed here. Cheap, because the `queryFn` skips the wire while the
      * cached entry is younger than `REST_FRESHNESS_WINDOW_MS`. Gated on BOTH

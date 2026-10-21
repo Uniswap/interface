@@ -165,7 +165,10 @@ it('formats Swap text input/output numbers correctly', () => {
 })
 
 it('formats Swap prices correctly', () => {
-  expect(formatNumber({ input: 1234567.8901, type: NumberType.SwapPrice, locale: 'en-US' })).toBe('1234570')
+  // Above 1e6 the rate abbreviates (compact notation) instead of printing the full digit string,
+  // matching the convention used for large token quantities elsewhere (`tokenNonTxFormatter`).
+  expect(formatNumber({ input: 1241790000, type: NumberType.SwapPrice, locale: 'en-US' })).toBe('1.24B')
+  expect(formatNumber({ input: 1234567.8901, type: NumberType.SwapPrice, locale: 'en-US' })).toBe('1.23M')
   expect(formatNumber({ input: 765432.1, type: NumberType.SwapPrice, locale: 'en-US' })).toBe('765432')
 
   expect(formatNumber({ input: 7654.321, type: NumberType.SwapPrice, locale: 'en-US' })).toBe('7654.32')
@@ -181,4 +184,10 @@ it('formats Swap prices correctly', () => {
   expect(formatNumber({ input: 0.901000123, type: NumberType.SwapPrice, locale: 'en-US' })).toBe('0.901')
   expect(formatNumber({ input: 1e-9, type: NumberType.SwapPrice, locale: 'en-US' })).toBe('<0.00001')
   expect(formatNumber({ input: 0, type: NumberType.SwapPrice, locale: 'en-US' })).toBe('0')
+})
+
+it('formats the full-precision swap price (tooltip fallback for an abbreviated rate) correctly', () => {
+  expect(formatNumber({ input: 1241790000, type: NumberType.SwapPriceFull, locale: 'en-US' })).toBe('1,241,790,000')
+  expect(formatNumber({ input: 1234567.8901, type: NumberType.SwapPriceFull, locale: 'en-US' })).toBe('1,234,570')
+  expect(formatNumber({ input: 0, type: NumberType.SwapPriceFull, locale: 'en-US' })).toBe('0')
 })
