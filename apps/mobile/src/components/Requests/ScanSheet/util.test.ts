@@ -156,6 +156,16 @@ describe('getSupportedURI', () => {
     })
   })
 
+  it('should return undefined for ERC681 URI with malformed chain identifier', async () => {
+    const malformedChainUri = 'ethereum:0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359@8453abc?value=1e16'
+    expect(await getSupportedURI(malformedChainUri)).toBeUndefined()
+  })
+
+  it('should return undefined for ERC681 URI with unsupported numeric chain identifier', async () => {
+    const unsupportedChainUri = 'ethereum:0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359@99999999?value=1e16'
+    expect(await getSupportedURI(unsupportedChainUri)).toBeUndefined()
+  })
+
   describe('URL and HTML encoded URIs', () => {
     it('should handle percent-encoded WalletConnect v2 URI', async () => {
       // Simulate a URI that has been percent-encoded (& becomes %26)

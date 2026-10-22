@@ -101,6 +101,17 @@ describe('parseERC681URI', () => {
     expect(parseERC681URI('ethereum:0x123/transfer?address=invalid_recipient')).toBeUndefined()
   })
 
+  it('returns undefined for malformed chain identifiers', () => {
+    expect(parseERC681URI(`ethereum:${TEST_RECIPIENT}@8453abc?value=1e16`)).toBeUndefined()
+    expect(parseERC681URI(`ethereum:${TEST_USDC}@8453abc/transfer?address=${TEST_RECIPIENT_2}&uint256=1e6`)).toBeUndefined()
+    expect(parseERC681URI(`ethereum:${TEST_RECIPIENT}@?value=1e16`)).toBeUndefined()
+  })
+
+  it('returns undefined for unsupported numeric chain identifiers', () => {
+    expect(parseERC681URI(`ethereum:${TEST_RECIPIENT}@99999999?value=1e16`)).toBeUndefined()
+    expect(parseERC681URI(`ethereum:${TEST_USDC}@99999999/transfer?address=${TEST_RECIPIENT_2}&uint256=1e6`)).toBeUndefined()
+  })
+
   it('returns undefined for unsupported smart contract functions', () => {
     const uri = `ethereum:${TEST_USDC}/approve?address=${TEST_RECIPIENT}&uint256=1000`
     expect(parseERC681URI(uri)).toBeUndefined()

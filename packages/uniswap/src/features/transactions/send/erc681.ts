@@ -1,5 +1,6 @@
 import { formatUnits } from '@ethersproject/units'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
@@ -119,7 +120,21 @@ export function parseERC681URI(uri?: string): ERC681TransferRequest | undefined 
 
     const atIndex = targetAndChain.indexOf('@')
     const rawAddress = atIndex !== -1 ? targetAndChain.slice(0, atIndex) : targetAndChain
-    const rawChainId = atIndex !== -1 ? parseInt(targetAndChain.slice(atIndex + 1), 10) : NaN
+
+    let chainId: UniverseChainId
+    if (atIndex !== -1) {
+      const rawChainIdStr = targetAndChain.slice(atIndex + 1)
+      if (!/^\d+$/.test(rawChainIdStr)) {
+        return undefined
+      }
+      const supportedChainId = toSupportedChainId(parseInt(rawChainIdStr, 10))
+      if (!supportedChainId) {
+        return undefined
+      }
+      chainId = supportedChainId
+    } else {
+      chainId = UniverseChainId.Mainnet
+    }
 
     const targetAddress = getValidAddress({
       address: rawAddress,
@@ -131,7 +146,6 @@ export function parseERC681URI(uri?: string): ERC681TransferRequest | undefined 
       return undefined
     }
 
-    const chainId = (!isNaN(rawChainId) && rawChainId > 0 ? rawChainId : UniverseChainId.Mainnet) as UniverseChainId
     const searchParams = new URLSearchParams(queryPart)
 
     // Case 1: Native currency transfer (no function specified, or explicit "pay" function)
