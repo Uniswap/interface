@@ -13,8 +13,8 @@ RUN apk add --no-cache libstdc++ libgcc curl unzip
 # Checksum-verified release download (musl build for alpine); never `curl | bash`
 # an unpinned installer. Bumping: keep in step with .bun-version; sha is
 # bun-linux-x64-musl.zip's line in the release's SHASUMS256.txt.
-ARG BUN_VERSION=1.3.14
-ARG BUN_SHA256=14bd9aedeebf1dba67e8def9531c89bc989ecfdf1de42e5bfcaf1b8cd9294719
+ARG BUN_VERSION=1.4.4
+ARG BUN_SHA256=a5a8ccc5e74dcb883fe974f125a7bdb3b41e5195ed1b870e73f17effd3eb2b2d
 RUN curl -fsSL "https://github.com/oven-sh/bun/releases/download/bun-v${BUN_VERSION}/bun-linux-x64-musl.zip" -o /tmp/bun.zip && \
     echo "${BUN_SHA256}  /tmp/bun.zip" | sha256sum -c - && \
     unzip -q /tmp/bun.zip -d /tmp && \
