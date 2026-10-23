@@ -1,6 +1,12 @@
 import { UniverseChainId } from '@universe/chains'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { getChainIdFromBackendChain, getChainIdFromChainUrlParam, getChainUrlParam } from '~/utils/params/chainParams'
+import { CurrencyField } from 'uniswap/src/types/currency'
+import {
+  getChainIdFromBackendChain,
+  getChainIdFromChainUrlParam,
+  getChainUrlParam,
+  getParsedChainId,
+} from '~/utils/params/chainParams'
 
 describe('getChainFromChainUrlParam', () => {
   it('should return true for valid chain slug', () => {
@@ -18,9 +24,37 @@ describe('getChainFromChainUrlParam', () => {
     expect(getChainIdFromChainUrlParam(invalidChainName)).toBe(undefined)
   })
 
+  it('should return the chain for a valid numeric chain ID', () => {
+    expect(getChainIdFromChainUrlParam(String(UniverseChainId.Base))).toBe(UniverseChainId.Base)
+  })
+
+  it('should return undefined for an unknown numeric chain ID', () => {
+    expect(getChainIdFromChainUrlParam('999999999')).toBeUndefined()
+  })
+
   it('should return false for a misconfigured chain slug', () => {
     const invalidChainName = 'eThErEuM'
     expect(getChainIdFromChainUrlParam(invalidChainName)).toBe(undefined)
+  })
+})
+
+describe('getParsedChainId', () => {
+  it('should parse a chain interface name', () => {
+    expect(getParsedChainId({ chain: 'base' })).toBe(UniverseChainId.Base)
+  })
+
+  it('should parse a numeric chain ID', () => {
+    expect(getParsedChainId({ chain: String(UniverseChainId.Base) })).toBe(UniverseChainId.Base)
+  })
+
+  it('should parse a numeric output chain ID', () => {
+    expect(getParsedChainId({ outputChain: String(UniverseChainId.ArbitrumOne) }, CurrencyField.OUTPUT)).toBe(
+      UniverseChainId.ArbitrumOne,
+    )
+  })
+
+  it('should not parse a non-canonical numeric value', () => {
+    expect(getParsedChainId({ chain: `0${UniverseChainId.Base}` })).toBeUndefined()
   })
 })
 
