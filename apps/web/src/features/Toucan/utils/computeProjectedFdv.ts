@@ -103,7 +103,7 @@ export function computeProjectedFdvTableValue({
     }
 
     // For active auctions (or completed without market price), use clearing price
-    if (!bidTokenDecimals || !bidTokenSymbol) {
+    if (bidTokenDecimals === undefined || !bidTokenSymbol) {
       return fallback
     }
 

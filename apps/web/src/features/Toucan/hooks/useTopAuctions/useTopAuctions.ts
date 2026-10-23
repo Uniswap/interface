@@ -40,7 +40,7 @@ export function compareDescendingMissingLast(a: number | undefined, b: number | 
 }
 
 function getBidTokenVolume(auction: EnrichedAuction['auction']): number | undefined {
-  if (!auction?.totalBidVolume || !auction.currencyTokenDecimals) {
+  if (!auction?.totalBidVolume || auction.currencyTokenDecimals === undefined) {
     return undefined
   }
   return approximateNumberFromRaw({ raw: BigInt(auction.totalBidVolume), decimals: auction.currencyTokenDecimals })
