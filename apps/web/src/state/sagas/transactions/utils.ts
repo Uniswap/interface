@@ -363,9 +363,15 @@ export function* handleApprovalTransactionStep(params: HandleApprovalStepParams)
     ...params,
     info,
     *onModification({ hash, data }: VitalTxFields) {
+      // Relayed/smart-account wallets wrap approve in an outer call. Their calldata is not
+      // ERC-20 approve, so parsing it as one false-triggers ApprovalEditedInWalletError.
+      if (!isErc20ApproveCalldata(data)) {
+        return
+      }
+
       const { isInsufficient, approvedAmount } = checkApprovalAmount(data, step)
 
-      // Update state to reflect hte actual approval amount submitted on-chain
+      // Update state to reflect the actual approval amount submitted on-chain
       yield* put(
         interfaceUpdateTransactionInfo({
           chainId: step.txRequest.chainId,
@@ -409,6 +415,12 @@ function getPermitTransactionInfo(approvalStep: Permit2TransactionStep): Permit2
     spender: approvalStep.spender,
     amount: approvalStep.amount,
   }
+}
+
+const ERC20_APPROVE_SELECTOR = '0x095ea7b3'
+
+function isErc20ApproveCalldata(data: string): boolean {
+  return data.toLowerCase().startsWith(ERC20_APPROVE_SELECTOR)
 }
 
 function checkApprovalAmount(data: string, step: TokenApprovalTransactionStep | TokenRevocationTransactionStep) {
