@@ -63,7 +63,7 @@ export function Dropdown({
         transition={transition}
       >
         <Flex row justifyContent="space-between" alignItems="center" gap="$gap8" width="100%">
-          {typeof menuLabel === 'string' ? <Text>{menuLabel}</Text> : menuLabel}
+          {typeof menuLabel === 'string' ? <Text whiteSpace="nowrap">{menuLabel}</Text> : menuLabel}
           {!hideChevron && (
             <RotatableChevron
               color="$neutral2"

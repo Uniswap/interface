@@ -87,7 +87,7 @@ export function PositionsRangeFilterDropdown({ statusFilter, setStatusFilter }: 
       isOpen={isOpen}
       toggleOpen={() => setIsOpen((prev) => !prev)}
       menuLabel={
-        <Text variant="buttonLabel3" color="$neutral1">
+        <Text variant="buttonLabel3" color="$neutral1" whiteSpace="nowrap">
           {options.find((o) => o.value === activeFilter)?.displayText}
         </Text>
       }
