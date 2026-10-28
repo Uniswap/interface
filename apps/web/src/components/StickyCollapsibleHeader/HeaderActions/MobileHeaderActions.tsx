@@ -96,7 +96,10 @@ export function MobileHeaderActions({
         alignRight
         positionFixed
       >
-        <Flex gap="$spacing12">{sections}</Flex>
+        {/* Rows carry their own vertical padding but section titles don't; this evens out the top inset. */}
+        <Flex gap="$spacing12" pt="$spacing4">
+          {sections}
+        </Flex>
       </Dropdown>
     )
   }

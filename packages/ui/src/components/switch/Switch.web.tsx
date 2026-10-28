@@ -1,3 +1,5 @@
+import { useSporeColors } from '@universe/mycelium'
+import { type UseSporeColorsReturn } from '@universe/mycelium/theme-hooks-compat'
 import { type CSSProperties, type FocusEvent, useEffect, useState } from 'react'
 import { Check } from 'ui/src/components/icons'
 import {
@@ -7,7 +9,6 @@ import {
   SWITCH_TRACK_WIDTH,
 } from 'ui/src/components/switch/shared'
 import type { SwitchProps } from 'ui/src/components/switch/types'
-import { type UseSporeColorsReturn, useSporeColors } from 'ui/src/hooks/useSporeColors'
 import { spacing } from 'ui/src/theme'
 
 // Same endpoints the native leg interpolates between: thumb rests at the left

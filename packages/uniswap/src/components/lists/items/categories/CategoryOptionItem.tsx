@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { GridView } from 'ui/src/components/icons/GridView'
 import { FocusedRowControl, OptionItem } from 'uniswap/src/components/lists/items/OptionItem'
 import type { CategoryOption } from 'uniswap/src/components/lists/items/types'
-import { getTokenCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
+import { getCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
 import { getCategoryPileLogos } from 'uniswap/src/features/tokenCategories/getCategoryPileLogos'
 import { TokenLogoPile } from 'uniswap/src/features/tokenCategories/TokenLogoPile'
 
@@ -27,7 +27,7 @@ function CategoryOptionItemInner({
 }: CategoryOptionItemProps): JSX.Element {
   const { t } = useTranslation()
   const { category } = option
-  const Icon = getTokenCategoryIcon(category)
+  const Icon = getCategoryIcon(category)
   const tokenCount = category.stats?.tokenCount
 
   return (

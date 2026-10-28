@@ -4,9 +4,6 @@ import type { ReactNode } from 'react'
  * Public prop surface of the portal primitive, shared by the platformless
  * base leg and the `.web` / `.native` legs so all three expose one contract.
  *
- * Mirrors the `ui/src/components/portal/Portal` surface it replaces, so a
- * call site moves by changing its import and nothing else.
- *
  * The prop surface is identical across legs; the RENDERING is not, in three
  * respects worth knowing before you rely on it. The web leg keeps children in
  * the React tree (`createPortal` moves them only in the DOM), so React context

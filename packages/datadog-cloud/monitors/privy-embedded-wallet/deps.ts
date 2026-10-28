@@ -1,25 +1,34 @@
 import { settings } from '../../config'
 import { MonitorDefinition } from '../../types'
 import {
+  DEP_LATENCY_ROLLUP_ADJECTIVE,
+  DEP_LATENCY_ROLLUP_SECONDS,
+  DEP_LATENCY_WINDOW,
+  DEP_LATENCY_WINDOW_LABEL,
+  LATENCY_AGGREGATION,
   MIN_REQUESTS_5M,
+  MIN_REQUESTS_DEP_LATENCY,
+  minFailuresToAlert,
   PRIVY_EMBEDDED_WALLET_RUNBOOK,
   SERVICE_README_URL,
   TEAM,
   apmTagFilter,
   rateDenominatorFloor,
+  volumeGatedPercentile,
 } from './constants'
 
 const env = settings.environment
 const apmFilter = apmTagFilter(env)
 
-// Request-volume floor for both Privy API monitors. api.privy.io traffic is 2-18 req/min, so a
-// lone 5xx or a lone ~60s hung request would otherwise page on its own. At 50, one 5xx stays
-// under the 2% warning and one 60s request adds ~1.2s to the gated p95.
-const privyApiVolumeFloor = rateDenominatorFloor(2, MIN_REQUESTS_5M)
+// Denominator floor for the error-rate monitor: one 5xx stays under the 2% warning.
+const privyApiErrorFloor = rateDenominatorFloor(2, MIN_REQUESTS_5M)
+const privyApiMinFailures = minFailuresToAlert(2, privyApiErrorFloor)
 
-// Hit count for the p95 gate below (same idiom as latency.ts). Datadog sums as_count() over the
-// whole window before the arithmetic, so the floor is a 10m total, not a per-bucket count.
-const privyApiHits = `sum:trace.http.request.hits{${apmFilter},peer.hostname:api.privy.io}.as_count()`
+// No `.as_count()`; see volumeGatedPercentile.
+const privyApiHits = `sum:trace.http.request.hits{${apmFilter},peer.hostname:api.privy.io}`
+
+// Shared with the alert copy, which renders one body for both warn and alert.
+const privyApiLatencyThresholds = { critical: 3, warning: 2 }
 
 /**
  * Dependency monitors. Each external system this service talks to is a failure
@@ -49,8 +58,8 @@ export const privyEmbeddedWalletDepsMonitors: MonitorDefinition[] = [
     id: 'privy_embedded_wallet_dep_privy_api_error_rate',
     name: 'Privy API error rate elevated',
     type: 'query alert',
-    query: `sum(last_10m):( sum:trace.http.request.hits.by_http_status{${apmFilter},peer.hostname:api.privy.io,http.status_code:5*}.as_count() / clamp_min(sum:trace.http.request.hits{${apmFilter},peer.hostname:api.privy.io}.as_count(), ${privyApiVolumeFloor}) ) * 100 > 5`,
-    alertBody: `Outbound HTTP error rate to api.privy.io is above 5% over the last 10 minutes. Every signing operation and wallet creation routes through Privy, so sustained failures here translate to user-visible auth/signing failures.\n\nCheck: Privy status page, recent deploys, IAM/network changes that could affect outbound HTTPS.\n\nRequires at least ${privyApiVolumeFloor} requests in the window before the rate can alert.`,
+    query: `sum(last_10m):( sum:trace.http.request.hits.by_http_status{${apmFilter},peer.hostname:api.privy.io,http.status_code:5*}.as_count() / clamp_min(sum:trace.http.request.hits{${apmFilter},peer.hostname:api.privy.io}.as_count(), ${privyApiErrorFloor}) ) * 100 > 5`,
+    alertBody: `Outbound HTTP error rate to api.privy.io is above 5% over the last 10 minutes. Every signing operation and wallet creation routes through Privy, so sustained failures here translate to user-visible auth/signing failures.\n\nCheck: Privy status page, recent deploys, IAM/network changes that could affect outbound HTTPS.\n\nThe denominator is floored at ${privyApiErrorFloor} requests, so one outbound fault in a quiet window cannot reach 5% — it takes at least ${privyApiMinFailures}.`,
     recoveryBody: 'Privy API error rate has recovered.',
     team: TEAM,
     priority: 1,
@@ -65,12 +74,14 @@ export const privyEmbeddedWalletDepsMonitors: MonitorDefinition[] = [
     id: 'privy_embedded_wallet_dep_privy_api_p95_latency',
     name: 'Privy API P95 latency elevated',
     type: 'query alert',
-    query: `avg(last_10m):( p95:trace.http.request{${apmFilter},peer.hostname:api.privy.io} * ${privyApiHits} / clamp_min(${privyApiHits}, ${privyApiVolumeFloor}) ) > 3`,
-    alertBody: `P95 latency on outbound calls to api.privy.io is above 3s over the last 10 minutes. Privy slowness propagates directly to user-visible latency on CreateWallet, SignMessage, SignTransaction, SignTypedData, and Sign7702Authorization.\n\nRequires at least ${privyApiVolumeFloor} requests in the window before it can alert.`,
+    // The old clamp_min floor of 50 rescaled the threshold (api.privy.io clears it in ~3% of 10m
+    // buckets) instead of gating; cutoff_min drops sub-floor buckets.
+    query: `${LATENCY_AGGREGATION}(${DEP_LATENCY_WINDOW}):${volumeGatedPercentile(`p95:trace.http.request{${apmFilter},peer.hostname:api.privy.io}`, { hits: privyApiHits, floor: MIN_REQUESTS_DEP_LATENCY, rollupSeconds: DEP_LATENCY_ROLLUP_SECONDS })} > ${privyApiLatencyThresholds.critical}`,
+    alertBody: `P95 latency on outbound calls to api.privy.io crossed a latency threshold (warning ${privyApiLatencyThresholds.warning}s, critical ${privyApiLatencyThresholds.critical}s) over a ${DEP_LATENCY_ROLLUP_ADJECTIVE} window within the last ${DEP_LATENCY_WINDOW_LABEL}, across at least ${MIN_REQUESTS_DEP_LATENCY} requests. Privy slowness propagates directly to user-visible latency on CreateWallet, SignMessage, SignTransaction, SignTypedData, and Sign7702Authorization.\n\nBaseline over 30 days of prod is a 0.22s median and a 0.53s p99, so this is a real excursion, not variance. Buckets under ${MIN_REQUESTS_DEP_LATENCY} requests report no data instead of alerting.`,
     recoveryBody: 'Privy API latency has recovered.',
     team: TEAM,
     priority: 2,
-    thresholds: { critical: 3, warning: 2 },
+    thresholds: privyApiLatencyThresholds,
     logQuery: 'service:privy-embedded-wallet @peer.hostname:api.privy.io',
     runbookUrl: PRIVY_EMBEDDED_WALLET_RUNBOOK,
     readmeUrl: SERVICE_README_URL,

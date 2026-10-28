@@ -1,6 +1,6 @@
 /* oxlint-disable max-lines */
+import { useSporeColors } from '@universe/mycelium'
 import { ComponentProps } from 'react'
-import { useSporeColors } from 'ui/src'
 
 // NOTE: until this view is simplified / optimized, it must stay out of the initial bundle!
 export const WalletOneLinkQR = (props: ComponentProps<'svg'>) => {

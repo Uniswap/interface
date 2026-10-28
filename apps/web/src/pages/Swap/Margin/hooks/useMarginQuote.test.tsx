@@ -1,4 +1,5 @@
 import { act, renderHook } from '@testing-library/react'
+import { TradingApi } from '@universe/api'
 import {
   MARGIN_NATIVE_TOKEN_ADDRESS,
   type MarginActivePosition,
@@ -8,7 +9,7 @@ import {
   isSameMarginQuoteSubject,
   MARGIN_QUOTE_QUERY_KEY,
 } from 'uniswap/src/data/apiClients/tradingApi/useMarginQuoteQuery'
-import type { MarginPaymentToken } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection, type MarginPaymentToken } from 'uniswap/src/features/transactions/margin/types'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { MARGIN_CHAIN_ID, MARGIN_DEBOUNCE_MS } from '~/constants/margin'
 import { getDefaultMarginMarket } from '~/pages/Swap/Margin/__fixtures__/marginCatalog'
@@ -46,7 +47,7 @@ function positionFixture(overrides: Partial<MarginActivePosition> = {}): MarginA
   return {
     status: 'ACTIVE',
     positionId: POSITION_ID,
-    direction: 'LONG',
+    direction: MarginDirection.LONG,
     exposureToken: {
       address: MARKET.collateral.address,
       chainId: MARGIN_CHAIN_ID,
@@ -95,6 +96,76 @@ function lastParams(): MarginQuoteRequest | undefined {
   return call?.[0].params
 }
 
+// The request is a discriminated union; these read a member's fields through `in` narrowing (the
+// production accessors do the same) so the new wire shape is asserted without a cast. walletToken /
+// walletChainId ride the envelope, the equity amount rides the action object, and swapConfig carries
+// only the pay-in swap's slippage.
+type Params = MarginQuoteRequest | undefined
+function walletTokenOf(p: Params): string | undefined {
+  return p && 'walletToken' in p ? p.walletToken : undefined
+}
+function walletChainIdOf(p: Params): number | undefined {
+  return p && 'walletChainId' in p ? p.walletChainId : undefined
+}
+function railSlippageOf(p: Params): number | undefined {
+  return p && 'swapConfig' in p ? p.swapConfig.slippageTolerance : undefined
+}
+function leverageLegToleranceOf(p: Params): number | undefined {
+  return p && 'slippageTolerance' in p ? p.slippageTolerance : undefined
+}
+// The equity magnitude moved by whichever amount-bearing key the request carries.
+function fundingAmountOf(p: Params): string | undefined {
+  if (!p) {
+    return undefined
+  }
+  if ('open' in p) {
+    return p.open.amount
+  }
+  if ('addEquity' in p) {
+    return p.addEquity.amount
+  }
+  if ('withdrawEquity' in p) {
+    return p.withdrawEquity.amount
+  }
+  if ('addEquityAndIncreaseLeverage' in p) {
+    return p.addEquityAndIncreaseLeverage.amount
+  }
+  if ('addEquityAndDecreaseLeverage' in p) {
+    return p.addEquityAndDecreaseLeverage.amount
+  }
+  if ('withdrawEquityAndIncreaseLeverage' in p) {
+    return p.withdrawEquityAndIncreaseLeverage.amount
+  }
+  if ('withdrawEquityAndDecreaseLeverage' in p) {
+    return p.withdrawEquityAndDecreaseLeverage.amount
+  }
+  return undefined
+}
+function leverageTargetOf(p: Params): string | undefined {
+  if (!p) {
+    return undefined
+  }
+  if ('increaseLeverage' in p) {
+    return p.increaseLeverage.leverageTarget
+  }
+  if ('decreaseLeverage' in p) {
+    return p.decreaseLeverage.leverageTarget
+  }
+  if ('addEquityAndIncreaseLeverage' in p) {
+    return p.addEquityAndIncreaseLeverage.leverageTarget
+  }
+  if ('addEquityAndDecreaseLeverage' in p) {
+    return p.addEquityAndDecreaseLeverage.leverageTarget
+  }
+  if ('withdrawEquityAndIncreaseLeverage' in p) {
+    return p.withdrawEquityAndIncreaseLeverage.leverageTarget
+  }
+  if ('withdrawEquityAndDecreaseLeverage' in p) {
+    return p.withdrawEquityAndDecreaseLeverage.leverageTarget
+  }
+  return undefined
+}
+
 type PlaceholderFn = (previous: unknown, previousQuery?: { queryKey: readonly unknown[] }) => unknown
 
 function lastPlaceholderData(): PlaceholderFn {
@@ -131,8 +202,8 @@ describe('useMarginQuote — combined-key debouncing', () => {
         targetLeverageX18: L1,
       }),
     })
-    expect(lastParams()?.swapConfig?.amount).toBe('AAA')
-    expect(lastParams()?.addEquityAndIncreaseLeverage?.leverageTarget).toBe('2')
+    expect(fundingAmountOf(lastParams())).toBe('AAA')
+    expect(leverageTargetOf(lastParams())).toBe('2')
 
     // Change funding only; leverage untouched.
     rerender(baseProps({ funding: { kind: 'deposit', paymentAmountRaw: 'BBB' }, targetLeverageX18: L1 }))
@@ -148,15 +219,15 @@ describe('useMarginQuote — combined-key debouncing', () => {
     })
     // 100ms after the first edit's original 300ms mark, 100ms after the second edit. Neither value
     // should have landed yet: proof the two fields share one clock, not two.
-    expect(lastParams()?.swapConfig?.amount).toBe('AAA')
-    expect(lastParams()?.addEquityAndIncreaseLeverage?.leverageTarget).toBe('2')
+    expect(fundingAmountOf(lastParams())).toBe('AAA')
+    expect(leverageTargetOf(lastParams())).toBe('2')
 
     // Now clear the full delay from the SECOND edit.
     act(() => {
       vi.advanceTimersByTime(MARGIN_DEBOUNCE_MS - 100)
     })
-    expect(lastParams()?.swapConfig?.amount).toBe('BBB')
-    expect(lastParams()?.addEquityAndIncreaseLeverage?.leverageTarget).toBe('2.5')
+    expect(fundingAmountOf(lastParams())).toBe('BBB')
+    expect(leverageTargetOf(lastParams())).toBe('2.5')
   })
 
   it('exposes the combined key for visible-matches-submitted checks', () => {
@@ -198,7 +269,7 @@ describe('useMarginQuote — combined-key debouncing', () => {
     expect(result.current.debouncedKey).toBe(
       `deposit:100::${ERC20_PAYMENT_TOKEN.address}:${ERC20_PAYMENT_TOKEN.chainId}`,
     )
-    expect(lastParams()?.swapConfig?.token).toBe(ERC20_PAYMENT_TOKEN.address)
+    expect(walletTokenOf(lastParams())).toBe(ERC20_PAYMENT_TOKEN.address)
   })
 
   // The request must be built ENTIRELY from debounced values. Pairing a debounced amount with a live
@@ -214,13 +285,13 @@ describe('useMarginQuote — combined-key debouncing', () => {
     })
     rerender(baseProps({ funding, paymentToken: ERC20_PAYMENT_TOKEN }))
     // Mid-debounce: the request must still describe the OLD token, not a mix.
-    expect(lastParams()?.swapConfig?.token).toBe(MARGIN_NATIVE_TOKEN_ADDRESS)
-    expect(lastParams()?.swapConfig?.chainId).toBe(NATIVE_PAYMENT_TOKEN.chainId)
+    expect(walletTokenOf(lastParams())).toBe(MARGIN_NATIVE_TOKEN_ADDRESS)
+    expect(walletChainIdOf(lastParams())).toBe(NATIVE_PAYMENT_TOKEN.chainId)
     act(() => {
       vi.advanceTimersByTime(MARGIN_DEBOUNCE_MS)
     })
-    expect(lastParams()?.swapConfig?.token).toBe(ERC20_PAYMENT_TOKEN.address)
-    expect(lastParams()?.swapConfig?.chainId).toBe(ERC20_PAYMENT_TOKEN.chainId)
+    expect(walletTokenOf(lastParams())).toBe(ERC20_PAYMENT_TOKEN.address)
+    expect(walletChainIdOf(lastParams())).toBe(ERC20_PAYMENT_TOKEN.chainId)
   })
 })
 
@@ -235,20 +306,17 @@ describe('useMarginQuote — request mapping per funding kind', () => {
       ),
     )
     const params = lastParams()
+    // The wire fans the rail out: walletToken/walletChainId on the envelope, the amount on the action
+    // key (addEquity.amount), and only the pay-in swap's slippage on swapConfig.
     expect(params).toMatchObject({
       swapper: SWAPPER,
       exposureToken: MARKET.collateral.address,
       counterToken: MARKET.debt.address,
-      direction: 'LONG',
-      swapConfig: {
-        token: MARGIN_NATIVE_TOKEN_ADDRESS,
-        amount: '500000000000000000',
-        chainId: MARGIN_CHAIN_ID,
-        // The rail's own tolerance: exactly one of slippageTolerance/autoSlippage is required, even
-        // where the leverage leg's is forbidden.
-        slippageTolerance: 0.5,
-      },
-      addEquity: { positionId: POSITION_ID },
+      direction: MarginDirection.LONG,
+      walletToken: MARGIN_NATIVE_TOKEN_ADDRESS,
+      walletChainId: MARGIN_CHAIN_ID,
+      swapConfig: { slippageTolerance: 0.5 },
+      addEquity: { positionId: POSITION_ID, amount: '500000000000000000' },
     })
     // addEquity carries no leverage swap — the leverage-leg tolerance bounds nothing on it.
     expect(params).not.toHaveProperty('slippageTolerance')
@@ -265,8 +333,8 @@ describe('useMarginQuote — request mapping per funding kind', () => {
         }),
       ),
     )
-    expect(lastParams()?.swapConfig?.token).toBe(ERC20_PAYMENT_TOKEN.address)
-    expect(lastParams()?.swapConfig?.chainId).toBe(ERC20_PAYMENT_TOKEN.chainId)
+    expect(walletTokenOf(lastParams())).toBe(ERC20_PAYMENT_TOKEN.address)
+    expect(walletChainIdOf(lastParams())).toBe(ERC20_PAYMENT_TOKEN.chainId)
   })
 
   it('withdraw-only: sends the amount in COLLATERAL units, and forbids the leverage-leg tolerance', () => {
@@ -274,29 +342,29 @@ describe('useMarginQuote — request mapping per funding kind', () => {
       useMarginQuote(baseProps({ funding: { kind: 'withdraw', withdrawAmountRaw: '250000000000000000' } })),
     )
     const params = lastParams()
-    expect(params?.withdrawEquity).toEqual({ positionId: POSITION_ID })
-    // `token` is unconditional on the wire, but on a withdrawal the server DISCARDS it and reads the
-    // amount as collateral — the action key alone decides the denomination (MarginQuoteBL's
-    // toAdjustQuoteRequest). The rail still carries a tolerance of its own, independent of the (here
-    // forbidden) leverage leg's.
-    expect(params?.swapConfig).toEqual({
-      token: MARGIN_NATIVE_TOKEN_ADDRESS,
-      chainId: MARGIN_CHAIN_ID,
-      amount: '250000000000000000',
-      slippageTolerance: 0.5,
+    // The wire names the pay/receive token at the envelope on a withdrawal too (the server discards it
+    // and reads the amount as collateral — the action key decides the denomination), the amount on the
+    // action key, and leaves only the rail's own tolerance on swapConfig.
+    expect(params).toMatchObject({
+      walletToken: MARGIN_NATIVE_TOKEN_ADDRESS,
+      walletChainId: MARGIN_CHAIN_ID,
+      swapConfig: { slippageTolerance: 0.5 },
+      withdrawEquity: { positionId: POSITION_ID, amount: '250000000000000000' },
     })
-    expect(params).not.toHaveProperty('slippageTolerance')
+    expect(fundingAmountOf(params)).toBe('250000000000000000')
+    expect(leverageLegToleranceOf(params)).toBeUndefined()
     expect(params).not.toHaveProperty('addEquity')
   })
 
   it('leverage-only: funding none + a real target builds an increaseLeverage request', () => {
     renderHook(() => useMarginQuote(baseProps({ funding: { kind: 'none' }, targetLeverageX18: '3000000000000000000' })))
     const params = lastParams()
-    expect(params?.increaseLeverage).toEqual({ positionId: POSITION_ID, leverageTarget: '3' })
+    expect(params).toMatchObject({ increaseLeverage: { positionId: POSITION_ID, leverageTarget: '3' } })
     expect(params).not.toHaveProperty('swapConfig')
+    expect(params).not.toHaveProperty('walletToken')
     expect(params).not.toHaveProperty('withdrawEquity')
     // The leverage leg DOES swap here, so its tolerance is required.
-    expect(params?.slippageTolerance).toBeDefined()
+    expect(leverageLegToleranceOf(params)).toBeDefined()
   })
 })
 
@@ -351,12 +419,15 @@ describe('useMarginQuote — close', () => {
       swapper: SWAPPER,
       exposureToken: MARKET.collateral.address,
       counterToken: MARKET.debt.address,
-      direction: 'LONG',
+      direction: MarginDirection.LONG,
       slippageTolerance: 0.5,
+      // close pays out through a swap, so it names the payout token (the long's collateral) + a rail.
+      walletToken: MARKET.collateral.address,
+      walletChainId: MARGIN_CHAIN_ID,
+      swapConfig: { slippageTolerance: 0.5 },
       close: { positionId: POSITION_ID },
     })
-    // The close carries no wallet-side rail: the proceeds land in the position's own account.
-    expect(params).not.toHaveProperty('swapConfig')
+    expect(fundingAmountOf(params)).toBeUndefined()
     expect(params).not.toHaveProperty('withdrawEquity')
   })
 
@@ -373,7 +444,7 @@ describe('useMarginQuote — close', () => {
       ),
     )
     const params = lastParams()
-    expect(params?.close).toEqual({ positionId: POSITION_ID })
+    expect(params).toMatchObject({ close: { positionId: POSITION_ID } })
     expect(params).not.toHaveProperty('addEquityAndIncreaseLeverage')
   })
 
@@ -402,9 +473,9 @@ describe('useMarginQuote — close', () => {
   })
 
   it('flips direction legs for a SHORT position', () => {
-    renderHook(() => useMarginQuote(closeProps({ position: positionFixture({ direction: 'SHORT' }) })))
+    renderHook(() => useMarginQuote(closeProps({ position: positionFixture({ direction: MarginDirection.SHORT }) })))
     expect(lastParams()).toMatchObject({
-      direction: 'SHORT',
+      direction: MarginDirection.SHORT,
       exposureToken: MARKET.debt.address,
       counterToken: MARKET.collateral.address,
     })
@@ -465,14 +536,24 @@ describe('useMarginQuote — placeholder bridge', () => {
     if (!params) {
       throw new Error('no params were built')
     }
-    const previous = {
-      ...params,
-      close: undefined,
-      increaseLeverage: { positionId: POSITION_ID, leverageTarget: '2' },
+    // Same envelope, same action key, only the leverage target differs — a pure increaseLeverage pair
+    // (built without the close key, so the subject's position accessor reads a real member). The
+    // envelope fields live on every union member (MarginQuoteRequestBase), so they read without a cast.
+    const envelope = {
+      positionChainId: MARGIN_CHAIN_ID,
+      exposureToken: params.exposureToken,
+      counterToken: params.counterToken,
+      direction: params.direction,
+      swapper: params.swapper,
+      slippageTolerance: 0.5,
     }
-    const next = { ...params, close: undefined, increaseLeverage: { positionId: POSITION_ID, leverageTarget: '3' } }
+    const previous = { ...envelope, increaseLeverage: { positionId: POSITION_ID, leverageTarget: '2' } }
+    const next = { ...envelope, increaseLeverage: { positionId: POSITION_ID, leverageTarget: '3' } }
     expect(
-      isSameMarginQuoteSubject({ previous: previous as MarginQuoteRequest, next: next as MarginQuoteRequest }),
+      isSameMarginQuoteSubject({
+        previous: previous as unknown as MarginQuoteRequest,
+        next: next as unknown as MarginQuoteRequest,
+      }),
     ).toBe(true)
   })
 
@@ -494,13 +575,13 @@ describe('useMarginQuote — placeholder bridge', () => {
   // this hook's debounce key, so a deposit-funded adjust re-keys on a token switch and would otherwise
   // bridge a quote priced in the previous token's decimals into the before/after rows.
   it('drops it across a payment-token switch', () => {
-    expect(bridge({ swapConfig: { token: ERC20_PAYMENT_TOKEN.address, chainId: MARGIN_CHAIN_ID } })).toBeUndefined()
+    expect(bridge({ walletToken: ERC20_PAYMENT_TOKEN.address })).toBeUndefined()
   })
 
   it('drops it across a market or direction switch', () => {
     expect(bridge({ exposureToken: FOREIGN_TOKEN })).toBeUndefined()
     expect(bridge({ counterToken: FOREIGN_TOKEN })).toBeUndefined()
-    expect(bridge({ direction: 'SHORT' })).toBeUndefined()
+    expect(bridge({ direction: TradingApi.MarginDirection.SHORT })).toBeUndefined()
   })
 
   it('drops it when the key is not one this query built', () => {

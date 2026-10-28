@@ -11,6 +11,7 @@ import { getCommonBase } from 'uniswap/src/constants/routing'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { getFeeBreakdown } from 'uniswap/src/features/fees/getFeeBreakdown'
 import { buildHookRegistryMap, useHookRegistryMap } from 'uniswap/src/features/poolHooks/hooks/useHookRegistryMap'
+import { COLLAPSE_PROGRESS_VAR, COLLAPSE_TEXT_VISIBILITY_VAR } from '~/components/Table/PinnedColumns/collapse/utils'
 import {
   EMPTY_EXPLORE_POOLS_FILTER_STATE,
   ExploreTablesFilterStoreContextProvider,
@@ -239,6 +240,11 @@ describe('PoolTable', () => {
     expect(screen.getAllByText('TestHook').length).toBeGreaterThan(0)
     // A chain-filtered list scopes the hook-registry fetch to that chain instead of loading every chain's
     expect(mocked(useHookRegistryMap)).toHaveBeenCalledWith({ chainId: UniverseChainId.Mainnet, enabled: true })
+    // The pair's text fades with the mobile pinned-column collapse (jsdom drops the calc() opacity),
+    // leaving the pair logo; the logo gap closes from 8px.
+    const poolText = screen.getAllByText('v3')[0].closest<HTMLElement>(`[style*="${COLLAPSE_TEXT_VISIBILITY_VAR}"]`)
+    expect(poolText).not.toBeNull()
+    expect(poolText?.parentElement?.style.columnGap).toBe(`calc((1 - var(${COLLAPSE_PROGRESS_VAR}, 0)) * 8px)`)
     expect(asFragment()).toMatchSnapshot()
 
     // The dialog's extra details are not rendered until the hook name is clicked

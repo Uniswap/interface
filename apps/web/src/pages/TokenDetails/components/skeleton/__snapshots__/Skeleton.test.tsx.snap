@@ -41,12 +41,16 @@ exports[`TDP Skeleton > should render correctly 1`] = `
       </a>
       <div
         class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row w-[100%]"
-        style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
       >
         <div
-          class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
-          style="--c-w: 169px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-        />
+          class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+          style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+        >
+          <div
+            class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
+            style="--c-w: 169px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -66,12 +70,17 @@ exports[`TDP Skeleton > should render correctly 1`] = `
         >
           <div
             class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row w-[100%] max-w-[var(--c-max-w)]"
-            style="--c-max-w: 56px; animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+            style="--c-max-w: 56px;"
           >
             <div
-              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] rounded-[999999px] [background:var(--c-b)]"
-              style="--c-w: 56px; --c-h: 56px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-            />
+              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+              style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+            >
+              <div
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] rounded-[999999px] [background:var(--c-b)]"
+                style="--c-w: 56px; --c-h: 56px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+              />
+            </div>
           </div>
           <div
             class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 gap-[8px]"
@@ -82,22 +91,30 @@ exports[`TDP Skeleton > should render correctly 1`] = `
             >
               <div
                 class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row w-[max-content]"
-                style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
               >
                 <div
-                  class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[28px] rounded-[12px] [background:var(--c-b)]"
-                  style="--c-w: 136px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-                />
+                  class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+                  style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                >
+                  <div
+                    class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[28px] rounded-[12px] [background:var(--c-b)]"
+                    style="--c-w: 136px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+                  />
+                </div>
               </div>
             </div>
             <div
               class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row w-[100%]"
-              style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
             >
               <div
-                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
-                style="--c-w: 120px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-              />
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              >
+                <div
+                  class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
+                  style="--c-w: 120px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -106,21 +123,31 @@ exports[`TDP Skeleton > should render correctly 1`] = `
         >
           <div
             class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row w-[100%] max-w-[var(--c-max-w)]"
-            style="--c-max-w: 42px; animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+            style="--c-max-w: 42px;"
           >
             <div
-              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] rounded-[999999px] [background:var(--c-b)]"
-              style="--c-w: 42px; --c-h: 34px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-            />
+              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+              style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+            >
+              <div
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] rounded-[999999px] [background:var(--c-b)]"
+                style="--c-w: 42px; --c-h: 34px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+              />
+            </div>
           </div>
           <div
             class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row w-[100%] max-w-[var(--c-max-w)]"
-            style="--c-max-w: 42px; animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+            style="--c-max-w: 42px;"
           >
             <div
-              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] rounded-[999999px] [background:var(--c-b)]"
-              style="--c-w: 42px; --c-h: 34px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-            />
+              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+              style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+            >
+              <div
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] rounded-[999999px] [background:var(--c-b)]"
+                style="--c-w: 42px; --c-h: 34px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -136,8 +163,8 @@ exports[`TDP Skeleton > should render correctly 1`] = `
         class="flex basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 flex-row items-center w-[100%] relative"
       >
         <div
-          class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] grow shrink"
-          style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+          class="flex flex-col items-stretch box-border relative min-h-[0px] min-w-[0px] flex-1"
+          style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
         >
           <div
             class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
@@ -338,12 +365,16 @@ exports[`TDP Skeleton > should render correctly 1`] = `
       >
         <div
           class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row w-[100%]"
-          style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
         >
           <div
-            class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[32px] rounded-[8px] [background:var(--c-b)]"
-            style="--c-w: 120px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-          />
+            class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+            style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+          >
+            <div
+              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[32px] rounded-[8px] [background:var(--c-b)]"
+              style="--c-w: 120px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+            />
+          </div>
         </div>
         <div
           class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row flex-wrap gap-y-[24px] w-[100%]"
@@ -354,21 +385,29 @@ exports[`TDP Skeleton > should render correctly 1`] = `
           >
             <div
               class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row mb-[4px] w-[100%]"
-              style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
             >
               <div
-                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
-                style="--c-w: 80px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-              />
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              >
+                <div
+                  class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
+                  style="--c-w: 80px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+                />
+              </div>
             </div>
             <div
               class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row w-[100%]"
-              style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
             >
               <div
-                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[32px] rounded-[8px] [background:var(--c-b)]"
-                style="--c-w: 116px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-              />
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              >
+                <div
+                  class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[32px] rounded-[8px] [background:var(--c-b)]"
+                  style="--c-w: 116px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+                />
+              </div>
             </div>
           </div>
           <div
@@ -377,21 +416,29 @@ exports[`TDP Skeleton > should render correctly 1`] = `
           >
             <div
               class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row mb-[4px] w-[100%]"
-              style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
             >
               <div
-                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
-                style="--c-w: 80px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-              />
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              >
+                <div
+                  class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
+                  style="--c-w: 80px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+                />
+              </div>
             </div>
             <div
               class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row w-[100%]"
-              style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
             >
               <div
-                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[32px] rounded-[8px] [background:var(--c-b)]"
-                style="--c-w: 116px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-              />
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              >
+                <div
+                  class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[32px] rounded-[8px] [background:var(--c-b)]"
+                  style="--c-w: 116px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+                />
+              </div>
             </div>
           </div>
           <div
@@ -400,21 +447,29 @@ exports[`TDP Skeleton > should render correctly 1`] = `
           >
             <div
               class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row mb-[4px] w-[100%]"
-              style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
             >
               <div
-                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
-                style="--c-w: 80px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-              />
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              >
+                <div
+                  class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
+                  style="--c-w: 80px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+                />
+              </div>
             </div>
             <div
               class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row w-[100%]"
-              style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
             >
               <div
-                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[32px] rounded-[8px] [background:var(--c-b)]"
-                style="--c-w: 116px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-              />
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              >
+                <div
+                  class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[32px] rounded-[8px] [background:var(--c-b)]"
+                  style="--c-w: 116px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+                />
+              </div>
             </div>
           </div>
           <div
@@ -423,21 +478,29 @@ exports[`TDP Skeleton > should render correctly 1`] = `
           >
             <div
               class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row mb-[4px] w-[100%]"
-              style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
             >
               <div
-                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
-                style="--c-w: 80px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-              />
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              >
+                <div
+                  class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
+                  style="--c-w: 80px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+                />
+              </div>
             </div>
             <div
               class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row w-[100%]"
-              style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
             >
               <div
-                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[32px] rounded-[8px] [background:var(--c-b)]"
-                style="--c-w: 116px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-              />
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              >
+                <div
+                  class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[32px] rounded-[8px] [background:var(--c-b)]"
+                  style="--c-w: 116px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+                />
+              </div>
             </div>
           </div>
           <div
@@ -446,21 +509,29 @@ exports[`TDP Skeleton > should render correctly 1`] = `
           >
             <div
               class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row mb-[4px] w-[100%]"
-              style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
             >
               <div
-                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
-                style="--c-w: 80px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-              />
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              >
+                <div
+                  class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
+                  style="--c-w: 80px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+                />
+              </div>
             </div>
             <div
               class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row w-[100%]"
-              style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
             >
               <div
-                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[32px] rounded-[8px] [background:var(--c-b)]"
-                style="--c-w: 116px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-              />
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              >
+                <div
+                  class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[32px] rounded-[8px] [background:var(--c-b)]"
+                  style="--c-w: 116px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+                />
+              </div>
             </div>
           </div>
           <div
@@ -469,21 +540,29 @@ exports[`TDP Skeleton > should render correctly 1`] = `
           >
             <div
               class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row mb-[4px] w-[100%]"
-              style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
             >
               <div
-                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
-                style="--c-w: 80px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-              />
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              >
+                <div
+                  class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
+                  style="--c-w: 80px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+                />
+              </div>
             </div>
             <div
               class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row w-[100%]"
-              style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
             >
               <div
-                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[32px] rounded-[8px] [background:var(--c-b)]"
-                style="--c-w: 116px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-              />
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              >
+                <div
+                  class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[32px] rounded-[8px] [background:var(--c-b)]"
+                  style="--c-w: 116px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -499,57 +578,51 @@ exports[`TDP Skeleton > should render correctly 1`] = `
         >
           <div
             class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row w-[100%]"
-            style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
           >
             <div
-              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[32px] rounded-[8px] [background:var(--c-b)]"
-              style="--c-w: 120px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-            />
+              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+              style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+            >
+              <div
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[32px] rounded-[8px] [background:var(--c-b)]"
+                style="--c-w: 120px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+              />
+            </div>
           </div>
         </h2>
       </div>
       <div
         class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row mb-[6px] w-[100%]"
-        style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
       >
         <div
-          class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[100%] h-[16px] rounded-[12px] [background:var(--c-b)]"
-          style="--c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-        />
+          class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+          style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+        >
+          <div
+            class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[100%] h-[16px] rounded-[12px] [background:var(--c-b)]"
+            style="--c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+          />
+        </div>
       </div>
       <div
         class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row mb-[6px] w-[100%]"
-        style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
       >
         <div
-          class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[100%] h-[16px] rounded-[12px] [background:var(--c-b)]"
-          style="--c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-        />
+          class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+          style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+        >
+          <div
+            class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[100%] h-[16px] rounded-[12px] [background:var(--c-b)]"
+            style="--c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+          />
+        </div>
       </div>
       <div
         class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row mb-[24px] w-[100%]"
-        style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
       >
         <div
-          class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
-          style="--c-w: 50%; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-        />
-      </div>
-      <div
-        class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row pt-[24px]"
-      >
-        <div
-          class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row mb-[6px] w-[100%]"
-          style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
-        >
-          <div
-            class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
-            style="--c-w: 120px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-          />
-        </div>
-        <div
-          class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row mb-[6px] w-[100%]"
-          style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+          class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+          style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
         >
           <div
             class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -562,21 +635,59 @@ exports[`TDP Skeleton > should render correctly 1`] = `
       >
         <div
           class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row mb-[6px] w-[100%]"
-          style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
         >
           <div
-            class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
-            style="--c-w: 120px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-          />
+            class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+            style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+          >
+            <div
+              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
+              style="--c-w: 120px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+            />
+          </div>
         </div>
         <div
           class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row mb-[6px] w-[100%]"
-          style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
         >
           <div
-            class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
-            style="--c-w: 50%; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-          />
+            class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+            style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+          >
+            <div
+              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
+              style="--c-w: 50%; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row pt-[24px]"
+      >
+        <div
+          class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row mb-[6px] w-[100%]"
+        >
+          <div
+            class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+            style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+          >
+            <div
+              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
+              style="--c-w: 120px; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+            />
+          </div>
+        </div>
+        <div
+          class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row mb-[6px] w-[100%]"
+        >
+          <div
+            class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+            style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+          >
+            <div
+              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
+              style="--c-w: 50%; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+            />
+          </div>
         </div>
       </div>
     </div>

@@ -78,6 +78,9 @@ struct Provider: IntentTimelineProvider {
     if let logoUrl = tokenPriceResponse.logoUrl {
       backgroundColor = ColorExtraction.extractImageColorWithSpecialCase(imageURL: logoUrl)
     }
+    if !isSnapshot, let backgroundColor = backgroundColor {
+      UniswapUserDefaults.writeTokenColor(chain: chain, address: address, color: backgroundColor)
+    }
 
     return TokenPriceEntry(
       date: entryDate,
@@ -93,8 +96,9 @@ struct Provider: IntentTimelineProvider {
   }
   
   /// Entry rendered when fetching fails (network error, or a chain the app hasn't synced to the widget yet).
-  /// Keeps the configured symbol and shows price placeholders; the timeline retries on its normal cadence.
+  /// Keeps the configured symbol and last known token color, and shows price placeholders; the timeline retries on its normal cadence.
   func fallbackEntry(configuration: TokenPriceConfigurationIntent) -> TokenPriceEntry {
+    let chain = configuration.selectedToken?.chain ?? WidgetConstants.ethereumChain
     return TokenPriceEntry(
       date: Date(),
       configuration: configuration,
@@ -103,7 +107,7 @@ struct Provider: IntentTimelineProvider {
       pricePercentChange: nil,
       symbol: configuration.selectedToken?.symbol ?? "",
       logo: nil,
-      backgroundColor: nil,
+      backgroundColor: UniswapUserDefaults.readTokenColor(chain: chain, address: configuration.selectedToken?.address),
       tokenPriceHistory: nil
     )
   }

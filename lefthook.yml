@@ -20,6 +20,14 @@ pre-commit:
     env-files:
       run: ./scripts/check-env-files.sh
 
+    # Casebook catalogs are not an Nx project, so fast-checks never sees them. Reorder
+    # frontmatter into canonical key order at commit time instead of failing in CI.
+    casebook-fix:
+      glob: "packages/casebook/*/scenarios/*.md"
+      run: bun scripts/casebook.ts --fix
+      fail_text: "Casebook --fix failed. In a fresh worktree run 'bun install' first; otherwise fix the reported catalog error."
+      stage_fixed: true
+
     dep-specs:
       glob: "**/package.json"
       run: bun scripts/check-dependency-specs.ts

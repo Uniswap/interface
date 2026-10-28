@@ -1,11 +1,15 @@
 import type { Contract } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import type { Currency } from '@uniswap/sdk-core'
 import type { SpamCode } from '@universe/api'
+import type { TokenColorOverrides } from '@universe/mycelium'
 import type { ProtectionResult } from 'uniswap/src/features/dataApi/safety'
+import { AttackType, TokenList } from 'uniswap/src/features/dataApi/safetyEnums'
 import type { RWAIssuerDisplay } from 'uniswap/src/features/rwa/types'
 import type { PoolSearchHistoryResult } from 'uniswap/src/features/search/SearchHistoryResult'
 import type { FoTPercent } from 'uniswap/src/features/tokens/warnings/TokenWarningModal'
 import type { CurrencyId } from 'uniswap/src/types/currency'
+
+export { AttackType, TokenList }
 
 /** How to withdraw a bridged asset to its native chain (`chain` is a display name, not an id). */
 export type BridgedWithdrawalInfo = {
@@ -71,21 +75,6 @@ export enum HistoryDuration {
   Max = 'MAX',
 }
 
-export enum TokenList {
-  Default = 'default',
-  NonDefault = 'non_default',
-  Blocked = 'blocked',
-}
-
-export enum AttackType {
-  Honeypot = 'honeypot',
-  ExitScamRisk = 'exit-scam-risk',
-  Airdrop = 'airdrop',
-  Impersonator = 'impersonator',
-  HighFees = 'high-fees',
-  Other = 'other',
-}
-
 export type SafetyInfo = {
   tokenList: TokenList
   attackType?: AttackType
@@ -99,6 +88,7 @@ export type CurrencyInfo = {
   safetyInfo?: Maybe<SafetyInfo>
   spamCode?: Maybe<SpamCode>
   logoUrl: Maybe<string>
+  colorOverrides?: TokenColorOverrides
   isSpam?: Maybe<boolean>
   // Indicates if this currency is from another chain than user searched
   isFromOtherNetwork?: boolean
@@ -182,6 +172,7 @@ export type PortfolioMultichainBalance = {
 export type SearchTokenStats = {
   priceUsd?: number
   pricePercentChange1d?: number
+  priceConfidenceScore?: number
   fdvUsd?: number
   volume1dUsd?: number
 }
@@ -211,10 +202,18 @@ export type PoolSearchStats = {
   apr?: number
 }
 
-/** Display stats for a search result auction row (Search V2 UI: projected FDV over a live countdown). */
+/** Display stats for a search result auction row (Search V2 UI: committed volume over the auction's phase countdown). */
 export type AuctionSearchStats = {
-  fdvUsd?: number
+  committedVolumeUsd?: number
+  startTimeMs?: number
   endTimeMs?: number
+  /**
+   * BE-reported end (lifecycle GRADUATED/FAILED, or the COMPLETED top-auctions listing); overrides the time
+   * estimates. Only ever true or unset.
+   */
+  isEnded?: boolean
+  /** BE-reported UPCOMING lifecycle; marks a row upcoming when there is no start estimate. Only ever true or unset. */
+  isUpcoming?: boolean
 }
 
 /**

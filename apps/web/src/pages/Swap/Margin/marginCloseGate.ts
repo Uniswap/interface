@@ -1,5 +1,5 @@
 // Confirm-gate decision for the close modal, extracted so the fund-safety guards are unit-testable.
-import type { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { collateralHeld, rawToNumber } from '~/pages/Swap/Margin/marginFormat'
 
 // The exit swap sells collateral to buy back the debt; if the slippage-padded collateral it may spend
@@ -29,7 +29,7 @@ export function isCloseUnderwater(input: {
     // is a landmine for whoever next touches collateralHeld.
     exposure: rawToNumber({
       raw: input.size,
-      decimals: input.direction === 'SHORT' ? input.debtDecimals : input.collateralDecimals,
+      decimals: input.direction === MarginDirection.SHORT ? input.debtDecimals : input.collateralDecimals,
     }),
     equity: rawToNumber({ raw: input.equity, decimals: input.collateralDecimals }),
     debt: rawToNumber({ raw: input.debt, decimals: input.debtDecimals }),

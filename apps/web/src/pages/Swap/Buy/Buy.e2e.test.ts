@@ -38,8 +38,10 @@ test.describe(
       await page.getByTestId(TestID.Web3StatusConnected).waitFor()
 
       await page.getByTestId(TestID.ChooseInputToken).click()
-      // oxlint-disable-next-line eslint-js/no-restricted-syntax
-      await page.getByTestId('for-currency-list-wrapper').getByText('Ethereum').click()
+      // Rows are keyed by the provider's currency code: selecting by visible name is ambiguous, since
+      // "Ethereum" is a substring of the WETH row's name ("Wrapped Ethereum").
+      await page.getByTestId(`${TestID.FiatOnRampCurrencyRowPrefix}supported-ETH`).click()
+      await expect(page.getByTestId(TestID.ChooseInputToken).getByText('ETH', { exact: true })).toBeVisible()
     })
 
     test('quick amount select', async ({ page }) => {
@@ -57,8 +59,8 @@ test.describe(
 
     test('change input token', async ({ page }) => {
       await page.getByTestId(TestID.ChooseInputToken).click()
-      // oxlint-disable-next-line eslint-js/no-restricted-syntax
-      await page.getByTestId('for-currency-list-wrapper').getByText('DAI').nth(1).click()
+      await page.getByTestId(`${TestID.FiatOnRampCurrencyRowPrefix}supported-DAI`).click()
+      await expect(page.getByTestId(TestID.ChooseInputToken).getByText('DAI', { exact: true })).toBeVisible()
       await page.getByTestId(TestID.BuyFormAmountInput).fill('123')
       await page.getByRole('button', { name: 'Continue' }).click()
       await expect(page.getByTestId(TestID.BuyFormChooseProvider)).toBeVisible()

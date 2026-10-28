@@ -51,10 +51,3 @@ describe('export parity across the legs', () => {
     expect(native.SwitchCompat as unknown).not.toBe(web.SwitchCompat)
   })
 })
-
-describe('the subpath barrel resolves every symbol', () => {
-  it('exports the component', async () => {
-    const barrel = await import('./index')
-    expect(barrel.SwitchCompat).toBe(web.SwitchCompat)
-  })
-})

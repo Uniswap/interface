@@ -11,16 +11,18 @@ export function useUpdateTokenColor(): void {
   const colors = useSporeColors()
 
   const { setTokenColor, setTokenColorLoading } = useAuctionStoreActions()
-  const { token, logoUrl, tokenName } = useAuctionStore((state) => ({
+  const { token, logoUrl, tokenName, colorOverrides } = useAuctionStore((state) => ({
     token: state.auctionDetails?.token,
     logoUrl: state.auctionDetails?.token?.logoUrl ?? undefined,
     tokenName: state.auctionDetails?.token?.currency.name ?? undefined,
+    colorOverrides: state.auctionDetails?.token?.colorOverrides,
   }))
 
   const { tokenColor, tokenColorLoading } = useSrcColor({
     src: logoUrl,
     currencyName: tokenName,
     backgroundColor: colors.surface2.val,
+    colorOverrides,
   })
 
   useLayoutEffect(() => {

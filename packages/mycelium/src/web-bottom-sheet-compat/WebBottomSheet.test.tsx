@@ -5,7 +5,13 @@ import { markRadixEscapePreventedBySheet } from 'utilities/src/react/useSheetEsc
 import { describe, expect, it, vi } from 'vitest'
 import type { WebBottomSheetCompatProps } from '../popover-compat/props'
 import { EffectiveOverlayZIndexContext } from '../popover-compat/z-index'
-import { getPercentSnapHeight, getSheetHeightStyles, SHEET_ANIMATION_DURATION, stripConsumerHeight } from './internals'
+import {
+  getPercentSnapHeight,
+  getSheetHeightStyles,
+  SHEET_ANIMATION_DURATION,
+  stripConsumerHeight,
+  useSheetDrag,
+} from './internals'
 import { WEB_BOTTOM_SHEET_OVERLAY_TEST_ID, type WebBottomSheetProps } from './props'
 import { WebBottomSheet } from './WebBottomSheet'
 
@@ -403,5 +409,53 @@ describe('sheet sizing internals', () => {
         interfaceNavHeight: 72,
       }),
     ).toEqual({ height: '60dvh', maxHeight: '100dvh' })
+  })
+})
+
+function DragHarness({ isOpen }: { isOpen: boolean }): React.JSX.Element {
+  const [frame, setFrame] = React.useState<HTMLDivElement | null>(null)
+  useSheetDrag({ isOpen, isTouchDevice: true, onClose: () => {}, frame })
+  return (
+    <div ref={setFrame}>
+      <div data-sheet-handle data-testid="handle" />
+      <div data-sheet-content data-testid="content" />
+    </div>
+  )
+}
+
+function touchPointer(target: EventTarget, type: string): void {
+  const event = new MouseEvent(type, { bubbles: true, cancelable: true, button: 0, clientY: 100 })
+  Object.defineProperty(event, 'pointerType', { value: 'touch' })
+  target.dispatchEvent(event)
+}
+
+function touchMoveConsumed(target: EventTarget): boolean {
+  const event = new Event('touchmove', { bubbles: true, cancelable: true })
+  target.dispatchEvent(event)
+  return event.defaultPrevented
+}
+
+describe('useSheetDrag touch fling suppression', () => {
+  it('consumes touchmoves only while a handlebar touch drag is in flight', () => {
+    const { getByTestId } = render(<DragHarness isOpen />)
+    const handle = getByTestId('handle')
+    expect(touchMoveConsumed(handle)).toBe(false)
+    touchPointer(handle, 'pointerdown')
+    expect(touchMoveConsumed(handle)).toBe(true)
+    touchPointer(window, 'pointerup')
+    expect(touchMoveConsumed(handle)).toBe(false)
+  })
+
+  it('leaves content touchmoves alone so the sheet body still scrolls', () => {
+    const { getByTestId } = render(<DragHarness isOpen />)
+    touchPointer(getByTestId('content'), 'pointerdown')
+    expect(touchMoveConsumed(getByTestId('content'))).toBe(false)
+  })
+
+  it('unbinds the touchmove handler when the sheet closes mid-drag', () => {
+    const { getByTestId, rerender } = render(<DragHarness isOpen />)
+    touchPointer(getByTestId('handle'), 'pointerdown')
+    rerender(<DragHarness isOpen={false} />)
+    expect(touchMoveConsumed(getByTestId('handle'))).toBe(false)
   })
 })

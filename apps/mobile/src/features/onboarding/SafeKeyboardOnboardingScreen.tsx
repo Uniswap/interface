@@ -1,6 +1,6 @@
 import { useFocusEffect } from '@react-navigation/core'
 import { useNavigation } from '@react-navigation/native'
-import { Flex, SpaceTokens, Text, TouchableArea } from '@universe/mycelium'
+import { Flex, SpaceTokens, Text, TouchableArea, AnimatedFlex } from '@universe/mycelium'
 import type { GeneratedIcon } from '@universe/mycelium/icons'
 import { opacify, useMedia, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -10,7 +10,6 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { HeaderSkipButton } from 'src/app/navigation/components'
 import { SafeKeyboardScreen } from 'src/components/layout/SafeKeyboardScreen'
 import { ONBOARDING_HEADER_BAR_HEIGHT, OnboardingHeader } from 'src/features/onboarding/OnboardingHeader'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 
 type OnboardingScreenProps = {

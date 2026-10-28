@@ -9,4 +9,5 @@ export interface NetworkSelectorOption {
 export interface TieredNetworkOptions {
   withBalances: NetworkSelectorOption[]
   otherNetworks: NetworkSelectorOption[]
+  lowLiquidity?: NetworkSelectorOption[]
 }

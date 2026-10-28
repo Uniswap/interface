@@ -1,7 +1,7 @@
 import { isExtensionApp, isIOS, isMobileApp } from '@universe/environment'
+import { useSporeColors } from '@universe/mycelium'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSporeColors } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useForceUpgradeStatus } from 'uniswap/src/features/forceUpgrade/hooks/useForceUpgradeStatus'
 import { useForceUpgradeTranslations } from 'uniswap/src/features/forceUpgrade/hooks/useForceUpgradeTranslations'

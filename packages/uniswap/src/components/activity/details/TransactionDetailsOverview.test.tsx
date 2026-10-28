@@ -30,10 +30,6 @@ vi.mock('uniswap/src/features/language/localizedDayjs', () => ({
   FORMAT_DATE_TIME_MEDIUM: 'MMMM D, YYYY h:mm A',
 }))
 
-vi.mock('ui/src/loading/Skeleton', () => ({
-  Skeleton: (): JSX.Element => <></>,
-}))
-
 // Controlled per-test via `mockCurrencyInfo`, so we can simulate a token whose metadata never resolves
 // (the Revoke.cash / Permit2Approve scenario that produced the double-divider bug).
 let mockCurrencyInfo: Maybe<CurrencyInfo> = ETH_CURRENCY_INFO

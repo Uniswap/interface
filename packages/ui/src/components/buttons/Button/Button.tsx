@@ -1,10 +1,12 @@
-import { ButtonFrameCompat } from '@universe/mycelium/button-frame-compat'
+import {
+  ButtonFrameCompat,
+  ButtonTextCompat,
+  ThemedIconCompat,
+  ThemedSpinnerCompat,
+} from '@universe/mycelium/button-frame-compat'
 import { forwardRef, type ForwardedRef, type ForwardRefExoticComponent, type RefAttributes } from 'react'
 // Deep import, not the barrel: the barrel still reaches Tamagui via AnimatePresencePager.
 import { useLayoutAnimationOnChange } from 'ui/src/animations/layout/useLayoutAnimationOnChange'
-import { CustomButtonText } from 'ui/src/components/buttons/Button/components/CustomButtonText/CustomButtonText'
-import { ThemedIcon } from 'ui/src/components/buttons/Button/components/ThemedIcon'
-import { ThemedSpinningLoader } from 'ui/src/components/buttons/Button/components/ThemedSpinnerLoader'
 import { useIsStringOrTransTag } from 'ui/src/components/buttons/Button/hooks/useIsStringOrTransTag'
 import type { ButtonProps } from 'ui/src/components/buttons/Button/types'
 import { getIconPosition } from 'ui/src/components/buttons/Button/utils/getIconPosition'
@@ -37,7 +39,7 @@ function ButtonComponent(
   const handleOnPress = isDisabled ? (props.onDisabledPress ? props.onDisabledPress : undefined) : onPress
   const iconPosition = getIconPosition(propIconPosition)
 
-  // We need to check if the children is a string, a Trans tag, or a custom component that likely renders a Trans tag, in which case we will pass it as a child to the `CustomButtonText` component
+  // We need to check if the children is a string, a Trans tag, or a custom component that likely renders a Trans tag, in which case we will pass it as a child to the `ButtonTextCompat` component
   const isStringOrTransTag = useIsStringOrTransTag(children)
   const customBackgroundColor = props.backgroundColor
 
@@ -57,7 +59,7 @@ function ButtonComponent(
       {...props}
       onPress={handleOnPress}
     >
-      <ThemedIcon
+      <ThemedIconCompat
         custom-background-color={customBackgroundColor}
         isDisabled={isDisabled}
         emphasis={emphasis}
@@ -66,11 +68,11 @@ function ButtonComponent(
         typeOfButton="button"
       >
         {loading ? undefined : icon}
-      </ThemedIcon>
+      </ThemedIconCompat>
 
       {/* `iconPosition` takes care of setting flexDirection: 'row' | 'row-reverse', so we don't need to worry about it here */}
       {loading ? (
-        <ThemedSpinningLoader
+        <ThemedSpinnerCompat
           isDisabled={isDisabled}
           emphasis={emphasis}
           size={size}
@@ -80,7 +82,7 @@ function ButtonComponent(
       ) : null}
 
       {isStringOrTransTag ? (
-        <CustomButtonText line-height-disabled={lineHeightDisabled.toString()}>{children}</CustomButtonText>
+        <ButtonTextCompat line-height-disabled={lineHeightDisabled.toString()}>{children}</ButtonTextCompat>
       ) : (
         children
       )}
@@ -121,12 +123,12 @@ ButtonWithoutStatics.displayName = 'Button'
  * @returns {JSX.Element} The rendered Button component.
  */
 type ButtonComponentType = typeof ButtonWithoutStatics & {
-  Text: typeof CustomButtonText
-  Icon: typeof ThemedIcon
+  Text: typeof ButtonTextCompat
+  Icon: typeof ThemedIconCompat
 }
 
 const ButtonWithStatics = ButtonWithoutStatics as ButtonComponentType
-ButtonWithStatics.Text = CustomButtonText
-ButtonWithStatics.Icon = ThemedIcon
+ButtonWithStatics.Text = ButtonTextCompat
+ButtonWithStatics.Icon = ThemedIconCompat
 
 export const Button = ButtonWithStatics

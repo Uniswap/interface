@@ -1,5 +1,5 @@
 import { isAndroid } from '@universe/environment'
-import { Button, Flex, spacing, TouchableArea, zIndexes } from '@universe/mycelium'
+import { Button, Flex, spacing, TouchableArea, zIndexes, flexStyles, AnimatedFlex } from '@universe/mycelium'
 import { UNISWAP_MONO_LOGO_LARGE } from '@universe/mycelium/assets'
 import { useDeviceDimensions, useIsDarkMode } from '@universe/mycelium/theme-hooks-compat'
 import { BlurView } from 'expo-blur'
@@ -14,8 +14,6 @@ import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/useDevic
 import { useOsBiometricAuthEnabled } from 'src/features/biometrics/useOsBiometricAuthEnabled'
 import { useBiometricName, useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { useLockScreenState } from 'src/features/lockScreen/hooks/useLockScreenState'
-import { flexStyles } from 'ui/src'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { useEvent } from 'utilities/src/react/hooks'
 

@@ -2,8 +2,9 @@
  * Shimmer support CSS: import once from the Tailwind entry stylesheet,
  * alongside `@import "@universe/mycelium/tailwind"`.
  *
- * Matches ui/src/loading/Shine.web.tsx's `shine` keyframes exactly
- * (the sweep animates the wrapper's -webkit-mask-position).
+ * Same keyframes as the legacy ui `Shine` this replaced (the sweep animates
+ * the wrapper's -webkit-mask-position); `stext-shine` in text-compat.css
+ * mirrors them.
  */
 @keyframes myc-shimmer {
   from {

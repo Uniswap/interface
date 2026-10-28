@@ -245,7 +245,7 @@ const slice = createSlice({
     },
     resetTransactions: () => initialTransactionsState,
     // FOR transactions re-use this slice to store (off-chain) pending txs
-    upsertFiatOnRampTransaction: (state, { payload: transaction }: PayloadAction<FORTransactionDetails>) => {
+    upsertFORTransaction: (state, { payload: transaction }: PayloadAction<FORTransactionDetails>) => {
       const {
         chainId,
         id,
@@ -265,8 +265,11 @@ const slice = createSlice({
 
       state[from] ??= {}
       state[from]![chainId] ??= {}
+      // Keep the original stamp: each poll re-derives addedTime from the backend's createdAt, which can drift
+      const existingAddedTime = state[from]![chainId]![id]?.addedTime
       state[from]![chainId]![id] = {
         ...transaction,
+        addedTime: existingAddedTime ?? transaction.addedTime,
         typeInfo: { ...transaction.typeInfo },
       }
     },
@@ -408,7 +411,7 @@ export const {
   revertCancelSwap,
   replaceTransaction,
   resetTransactions,
-  upsertFiatOnRampTransaction,
+  upsertFORTransaction,
   updateTransaction,
   updateTransactionWithoutWatch,
   interfaceClearAllTransactions,

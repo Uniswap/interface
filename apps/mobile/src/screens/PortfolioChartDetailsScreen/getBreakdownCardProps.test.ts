@@ -14,6 +14,7 @@ const NO_SCRUB = { total: undefined, tokens: undefined, pools: undefined, earn: 
 const baseInput = {
   poolsEnabled: true,
   poolsUnavailable: false,
+  chartUnavailable: false,
   breakdown: breakdown(8368, 7373),
   scrub: NO_SCRUB,
   tokensData: [
@@ -100,6 +101,15 @@ describe('getBreakdownCardProps', () => {
     const result = getBreakdownCardProps({ ...baseInput, isAllTimePeriod: true })
     expect(result?.tokens).toEqual({ valueUSD: 8368, percentChange: undefined })
     expect(result?.pools).toEqual({ valueUSD: 7373, percentChange: undefined })
+  })
+
+  it('uses the wallet-balances 1D percent at rest when the chart is unavailable, on any period', () => {
+    for (const isAllTimePeriod of [false, true]) {
+      const result = getBreakdownCardProps({ ...baseInput, chartUnavailable: true, isAllTimePeriod })
+
+      expect(result?.tokens).toEqual({ valueUSD: 8368, percentChange: -6.09 })
+      expect(result?.pools).toEqual({ valueUSD: 7373, percentChange: 1.02 })
+    }
   })
 
   it('shows scrubbed values with semantic color and a period-start delta while scrubbing', () => {

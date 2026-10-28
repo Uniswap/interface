@@ -13,10 +13,11 @@ import { Tag } from 'ui/src/components/icons/Tag'
 import { TrendDown } from 'ui/src/components/icons/TrendDown'
 import { TrendUp } from 'ui/src/components/icons/TrendUp'
 import { WavePulse } from 'ui/src/components/icons/WavePulse'
-import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
+import type { CategoryBase } from 'uniswap/src/features/tokenCategories/types'
 
 // Keyed on backend ids — the locale-independent ListCategories contract; names are display-only
-// and may arrive localized. Categories without an entry fall back to a generic tag icon.
+// and may arrive localized. Ids are unique across kinds. Categories without an entry fall back to a
+// generic tag icon.
 const CATEGORY_ICONS_BY_ID: Record<string, GeneratedIcon> = {
   trending: WavePulse,
   'recently-launched': RocketLaunch,
@@ -31,10 +32,21 @@ const CATEGORY_ICONS_BY_ID: Record<string, GeneratedIcon> = {
   defi: SwapCoin,
   'ai-agents': Robot,
   gaming: GameController,
+  // Pool categories reuse their token twin's icon; accruing and correlated have no twin yet.
+  'major-pools': Diamond,
+  'stable-pools': DollarCircle,
+  'stock-pools': Briefcase,
+  'etf-pools': Etf,
+  'commodity-pools': Nut,
+  'trending-pools': WavePulse,
+  'new-pools': RocketLaunch,
+  'defi-pools': SwapCoin,
+  'ai-pools': Robot,
+  'meme-pools': FaceLaughRelaxed,
 }
 
 export const FALLBACK_CATEGORY_ICON: GeneratedIcon = Tag
 
-export function getTokenCategoryIcon(category: TokenCategory): GeneratedIcon {
+export function getCategoryIcon(category: CategoryBase): GeneratedIcon {
   return CATEGORY_ICONS_BY_ID[category.id] ?? FALLBACK_CATEGORY_ICON
 }

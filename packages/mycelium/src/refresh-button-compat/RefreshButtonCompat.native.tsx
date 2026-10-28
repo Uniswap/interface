@@ -8,10 +8,10 @@ import type { RefreshButtonCompatProps } from './props'
  * web-guards the render (`isWebPlatform`), so no native code path can reach
  * this component today. Throwing keeps an accidental native render loud
  * instead of silently rendering nothing (the TooltipCompat / INFRA-3021
- * precedent). Build a real native leg (legacy reference:
- * `ui/src/components/RefreshButton/RefreshButton.native.tsx`, the bare
- * animated icon without tooltip or keyboard shortcut) before removing any
- * consumer's web guard.
+ * precedent). Mobile refreshes the portfolio balance with pull-to-refresh, so
+ * nothing needs this yet. A real native leg must be built for touch, not
+ * ported from the old ui one (an unanimated icon behind a hover-only reveal,
+ * invisible on touch): always visible, with the one-turn spin in Reanimated.
  */
 export function RefreshButtonCompat(_props: RefreshButtonCompatProps): JSX.Element {
   throw new Error(

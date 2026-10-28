@@ -1,4 +1,5 @@
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { describe, expect, it } from 'vitest'
 import {
   marginAdjustSwapSide,
@@ -27,7 +28,7 @@ describe('marginPriceImpactBps', () => {
           execPriceX18: BUY_ADVERSE.exec,
           markPriceX18: BUY_ADVERSE.mark,
           swapSide: 'BUY_COLLATERAL',
-          direction: 'LONG',
+          direction: MarginDirection.LONG,
         }),
       ).toBe(BUY_ADVERSE.bps)
     })
@@ -38,7 +39,7 @@ describe('marginPriceImpactBps', () => {
           execPriceX18: reciprocated(BUY_ADVERSE.exec),
           markPriceX18: reciprocated(BUY_ADVERSE.mark),
           swapSide: 'BUY_COLLATERAL',
-          direction: 'SHORT',
+          direction: MarginDirection.SHORT,
         }),
       ).toBe(BUY_ADVERSE.bps)
     })
@@ -49,7 +50,7 @@ describe('marginPriceImpactBps', () => {
           execPriceX18: x18(1900),
           markPriceX18: x18(1912),
           swapSide: 'BUY_COLLATERAL',
-          direction: 'LONG',
+          direction: MarginDirection.LONG,
         }),
       ).toBe(0)
     })
@@ -60,7 +61,7 @@ describe('marginPriceImpactBps', () => {
           execPriceX18: reciprocated(x18(1900)),
           markPriceX18: reciprocated(x18(1912)),
           swapSide: 'BUY_COLLATERAL',
-          direction: 'SHORT',
+          direction: MarginDirection.SHORT,
         }),
       ).toBe(0)
     })
@@ -73,7 +74,7 @@ describe('marginPriceImpactBps', () => {
           execPriceX18: SELL_ADVERSE.exec,
           markPriceX18: SELL_ADVERSE.mark,
           swapSide: 'SELL_COLLATERAL',
-          direction: 'LONG',
+          direction: MarginDirection.LONG,
         }),
       ).toBe(SELL_ADVERSE.bps)
     })
@@ -84,7 +85,7 @@ describe('marginPriceImpactBps', () => {
           execPriceX18: reciprocated(SELL_ADVERSE.exec),
           markPriceX18: reciprocated(SELL_ADVERSE.mark),
           swapSide: 'SELL_COLLATERAL',
-          direction: 'SHORT',
+          direction: MarginDirection.SHORT,
         }),
       ).toBe(SELL_ADVERSE.bps)
     })
@@ -95,7 +96,7 @@ describe('marginPriceImpactBps', () => {
           execPriceX18: x18(1930),
           markPriceX18: x18(1912),
           swapSide: 'SELL_COLLATERAL',
-          direction: 'LONG',
+          direction: MarginDirection.LONG,
         }),
       ).toBe(0)
     })
@@ -106,7 +107,7 @@ describe('marginPriceImpactBps', () => {
           execPriceX18: reciprocated(x18(1930)),
           markPriceX18: reciprocated(x18(1912)),
           swapSide: 'SELL_COLLATERAL',
-          direction: 'SHORT',
+          direction: MarginDirection.SHORT,
         }),
       ).toBe(0)
     })
@@ -122,7 +123,12 @@ describe('marginPriceImpactBps', () => {
       ['a zero exec', '0', x18(1912)],
     ])('returns undefined when there is %s', (_label, execPriceX18, markPriceX18) => {
       expect(
-        marginPriceImpactBps({ execPriceX18, markPriceX18, swapSide: 'BUY_COLLATERAL', direction: 'LONG' }),
+        marginPriceImpactBps({
+          execPriceX18,
+          markPriceX18,
+          swapSide: 'BUY_COLLATERAL',
+          direction: MarginDirection.LONG,
+        }),
       ).toBeUndefined()
     })
   })

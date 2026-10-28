@@ -3,7 +3,7 @@ import { FlexCompat } from '../flex-compat/FlexCompat'
 import type { FlexLoaderProps } from './props'
 
 /**
- * Drop-in replacement for the legacy `ui/src/loading/FlexLoader`: a column of
+ * Replacement for the legacy ui `FlexLoader`: a column of
  * `repeat` solid placeholder blocks. It carries no sweep of its own — call
  * sites wrap it in `Shimmer` (legacy `Skeleton`/`Shine`) for the animation,
  * exactly like the legacy `Loader.Box`.

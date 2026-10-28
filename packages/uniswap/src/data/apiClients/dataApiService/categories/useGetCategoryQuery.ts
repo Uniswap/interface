@@ -2,7 +2,7 @@ import { useQuery, type UseQueryResult } from '@tanstack/react-query'
 import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { useCallback } from 'react'
 import {
-  localizeTokenCategory,
+  localizeCategory,
   rankedCategoryToTokenCategory,
   timeSeriesToChartPoints,
 } from 'uniswap/src/data/apiClients/dataApiService/categories/categoryMappers'
@@ -19,7 +19,7 @@ export function useGetCategoryQuery(categoryId: string | undefined): UseQueryRes
   const language = useCurrentLanguage()
 
   return useQuery({
-    queryKey: [ReactQueryCacheKey.DataApiService, 'getCategory', categoryId, chainIds],
+    queryKey: [ReactQueryCacheKey.DataApiService, 'getCategory', 'token', categoryId, chainIds],
     queryFn: async (): Promise<TokenCategoryDetail | null> => {
       const response = await dataApiServiceClientV2.getCategory({
         categoryId: categoryId ?? '',
@@ -38,7 +38,7 @@ export function useGetCategoryQuery(categoryId: string | undefined): UseQueryRes
     },
     select: useCallback(
       (detail: TokenCategoryDetail | null) =>
-        detail && { ...detail, category: localizeTokenCategory(detail.category, language) },
+        detail && { ...detail, category: localizeCategory(detail.category, language) },
       [language],
     ),
     enabled: tokenCategoriesEnabled && !!categoryId,

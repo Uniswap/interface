@@ -1,15 +1,13 @@
 import { isExtensionApp } from '@universe/environment'
-import { Flex } from '@universe/mycelium'
+import { Flex, useIsDarkMode, useSporeColors } from '@universe/mycelium'
 import { ENTER_PRESET_CLASSES } from '@universe/mycelium/compat'
-import { useShadowPropsShort } from '@universe/mycelium/theme-hooks-compat'
+import { useShadowPropsShort, useDeviceDimensions } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import { useIsDarkMode, useSporeColors } from 'ui/src'
 import { ArrowDownCircle } from 'ui/src/components/icons/ArrowDownCircle'
 import { Buy } from 'ui/src/components/icons/Buy'
-import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import type { ActionCardItem } from 'uniswap/src/components/misc/ActionCard'
 import { ActionCard } from 'uniswap/src/components/misc/ActionCard'
 import type { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
@@ -20,6 +18,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { useCexTransferProviderPress } from '~/components/ReceiveCryptoModal/useCexTransferProviderPress'
 import { useOpenReceiveCryptoModal } from '~/components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
+import { edgeFadeMaskStyle, useHorizontalScrollFades } from '~/hooks/useHorizontalScrollFades'
 import { ReceiveModalState } from '~/types/receiveCryptoModal'
 
 const ICON_SIZE = 28
@@ -89,6 +88,7 @@ export const EmptyWalletCards = (
   const navigate = useNavigate()
   const { fullWidth } = useDeviceDimensions()
   const shadowProps = useShadowPropsShort()
+  const { scrollerRef, edgeFades } = useHorizontalScrollFades()
 
   const handleBuyCryptoClick = useEvent(() => {
     accountDrawer.close()
@@ -172,12 +172,14 @@ export const EmptyWalletCards = (
         overflowX: 'scroll' as const,
         scrollbarWidth: 'none' as const,
         paddingBottom: 6,
+        ...edgeFadeMaskStyle(edgeFades),
       }
     : undefined
 
   return (
     <Flex position="relative" width="100%" className={ENTER_PRESET_CLASSES.fadeInDown}>
       <Flex
+        ref={isScrollableLayout ? scrollerRef : undefined}
         row
         left={needsLeftOffset ? -APP_PADDING : undefined}
         width={outerContainerWidth}

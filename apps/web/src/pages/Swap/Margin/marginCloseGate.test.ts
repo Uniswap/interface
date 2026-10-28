@@ -1,3 +1,4 @@
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { describe, expect, it } from 'vitest'
 import { getCloseConfirmDisabled, isCloseUnderwater } from '~/pages/Swap/Margin/marginCloseGate'
 
@@ -67,7 +68,7 @@ describe('isCloseUnderwater', () => {
   // equity/debt are '0' so they pin the branch: were the SHORT formula (equity + debt×mark) used for a
   // long, held would read 0 and `0.95 > 0` would flip the first assertion — the long branch is required.
   const LONG = {
-    direction: 'LONG' as const,
+    direction: MarginDirection.LONG,
     size: '2000000000000000000', // 2 WETH held
     equity: '0',
     debt: '0',
@@ -79,7 +80,7 @@ describe('isCloseUnderwater', () => {
   // A short's collateral is the STABLE counter leg (6dp), recovered as equity + debt×mark: 1000 USDC
   // equity + 1 WETH debt × $2000 = 3000 USDC held. `size` is the 18dp WETH debt leg, NOT the collateral.
   const SHORT = {
-    direction: 'SHORT' as const,
+    direction: MarginDirection.SHORT,
     size: '1000000000000000000', // 1 WETH exposure (the debt leg)
     equity: '1000000000', // 1000 USDC
     debt: '1000000000000000000', // 1 WETH debt

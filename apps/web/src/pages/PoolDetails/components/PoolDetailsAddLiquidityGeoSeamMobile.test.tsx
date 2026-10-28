@@ -49,8 +49,8 @@ function mockGeoRestriction(overrides: Partial<ReturnType<typeof useLPGeoRestric
 }
 
 /**
- * Seam E on touch. The gate itself is viewport-independent — the CTA is dropped and the banner
- * explains why on every size — but mobile swaps the buttons row for `MobileBottomBar`, a fixed strip
+ * Seam E on touch. The gate itself is viewport-independent — the CTA stays and the banner explains
+ * the block on every size — but mobile swaps the buttons row for `MobileBottomBar`, a fixed strip
  * that translates away on scroll, so this file pins where the banner lands relative to it.
  */
 describe('PoolDetailsStatsButtons geo gate on mobile (pool details CTA seam)', () => {
@@ -62,13 +62,15 @@ describe('PoolDetailsStatsButtons geo gate on mobile (pool details CTA seam)', (
     mockUseWalletPositions([])
   })
 
-  it('drops the CTA and banners the region block when the pair is restricted', () => {
+  it('keeps the CTA and banners the region block when the pair is restricted', () => {
     mockGeoRestriction({ isGeoRestricted: true, restrictedTokenSymbol: 'USDC' })
     render(<PoolDetailsStatsButtons {...PROPS} />)
 
-    expect(screen.queryByTestId(TestID.PoolDetailsAddLiquidityButton)).toBeNull()
     expect(screen.getByTestId(TestID.LPGeoRestrictionBanner)).toBeVisible()
     expect(screen.getByText(BANNER_TOKEN_HEADING)).toBeInTheDocument()
+
+    fireEvent.click(screen.getByTestId(TestID.PoolDetailsAddLiquidityButton))
+    expect(globalThis.window.location.pathname).toBe('/positions/add/ethereum/0xpool')
   })
 
   it('keeps the banner out of the bottom bar, which scrolls out of view', () => {

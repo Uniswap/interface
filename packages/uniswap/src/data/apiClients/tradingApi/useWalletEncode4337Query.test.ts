@@ -1,5 +1,5 @@
 import { waitFor } from '@testing-library/react-native'
-import { TradingApi } from '@universe/api'
+import { SharedQueryClient, TradingApi } from '@universe/api'
 import { useWalletEncode4337Query } from 'uniswap/src/data/apiClients/tradingApi/useWalletEncode4337Query'
 import { renderHook } from 'uniswap/src/test/test-utils'
 import { vi } from 'vitest'
@@ -88,5 +88,39 @@ describe('useWalletEncode4337Query — sponsorship delivery', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(result.current.data?.userOperation).toBeDefined()
+  })
+})
+
+describe('useWalletEncode4337Query call-order cache identity', () => {
+  type Call = TradingApi.Encode4337Request['calls'][number]
+  const call = (data: string): Call =>
+    ({ chainId: 1, from: baseParams.sender, to: baseParams.sender, data, value: '0x0' }) as unknown as Call
+  const grant = call('0x01')
+  const pull = call('0x02')
+  const revoke = call('0x03')
+
+  beforeEach(() => {
+    SharedQueryClient.clear()
+    mockFetchWalletEncoding4337.mockReset()
+  })
+
+  it('fetches a reordered batch instead of reusing the previous encoding', async () => {
+    mockFetchWalletEncoding4337
+      .mockResolvedValueOnce({ requestId: 'op-A', userOperation: baseUserOperation, gasSponsored: false })
+      .mockResolvedValueOnce({ requestId: 'op-B', userOperation: baseUserOperation, gasSponsored: false })
+
+    const a = renderHook(() =>
+      useWalletEncode4337Query({ params: { ...baseParams, calls: [grant, pull, revoke] }, retry: false }),
+    )
+    await waitFor(() => expect(a.result.current.isSuccess).toBe(true))
+    a.unmount()
+
+    const b = renderHook(() =>
+      useWalletEncode4337Query({ params: { ...baseParams, calls: [grant, revoke, pull] }, retry: false }),
+    )
+    await waitFor(() => expect(b.result.current.isSuccess).toBe(true))
+
+    expect(mockFetchWalletEncoding4337).toHaveBeenCalledTimes(2)
+    expect(b.result.current.data?.requestId).toBe('op-B')
   })
 })

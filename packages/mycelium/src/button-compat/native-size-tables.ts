@@ -1,9 +1,7 @@
 /**
  * ButtonCompat's NATIVE buttonFont scale — the label text/leading classes and
  * the icon/spinner box, per size, TWO columns (INFRA-3297) picked once at
- * module init by mycelium's own `needsSmallFont` copy (../segmented-control-
- * compat — mycelium must never import `ui/src`; the copy is pinned against
- * legacy's condition by text-compat's needs-small-font-drift.test.ts):
+ * module init by `needsSmallFont` (../text-compat/needs-small-font):
  *
  *   DEFAULT (non-CJK): fontSize f + 1, box (l + 1) * 1.15
  *   CJK (zh/ja):       fontSize f,     box  l      * 1.15
@@ -23,7 +21,7 @@
  * (vitest.native.config.ts) pins device locale to en-US for every case, so
  * that suite deterministically measures the DEFAULT column.
  */
-import { needsSmallFont } from '../segmented-control-compat/needs-small-font'
+import { needsSmallFont } from '../text-compat/needs-small-font'
 import type { ButtonSize } from './compile'
 
 const SMALL_FONT = needsSmallFont()

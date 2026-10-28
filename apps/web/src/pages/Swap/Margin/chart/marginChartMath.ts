@@ -1,4 +1,5 @@
 import type { MarginPosition } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import type { MarginMarket } from '~/constants/margin'
 import {
   hasMarginPositionBasis,
@@ -17,7 +18,7 @@ export interface PositionEconomics {
   collateral: number
   collateralAtOpen: number // size at open, before any partial close (current `collateral` drifts down)
   debt: number
-  direction: 'LONG' | 'SHORT'
+  direction: MarginDirection
 }
 
 // undefined when the position isn't ACTIVE or the server can't attribute a cost basis, which is where
@@ -41,13 +42,14 @@ export function positionEconomics({
   // including its refusal: the mark is load-bearing on that branch, and the wire's '0' sentinel would
   // collapse the solve to equity alone, understating the position by its whole debt leg).
   const mark = marginPositionMark({ position })
-  if (direction === 'SHORT' && mark === undefined) {
+  if (direction === MarginDirection.SHORT && mark === undefined) {
     return undefined
   }
   const exposureAmount =
-    Number(position.size) / 10 ** (direction === 'SHORT' ? market.debt.decimals : market.collateral.decimals)
+    Number(position.size) /
+    10 ** (direction === MarginDirection.SHORT ? market.debt.decimals : market.collateral.decimals)
   const collateral =
-    direction === 'SHORT'
+    direction === MarginDirection.SHORT
       ? Number(position.equity) / 10 ** market.collateral.decimals + exposureAmount * (mark ?? 0)
       : exposureAmount
   return {

@@ -14,8 +14,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Apple",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -31,8 +31,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Google",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -48,8 +48,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Token 1",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -65,8 +65,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Token 2",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -82,8 +82,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{amount}} UNI",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -99,8 +99,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "~{{minutes}}min {{seconds}}s",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -116,8 +116,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "~{{minutes}}min",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -133,8 +133,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "~{{seconds}}s",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -150,8 +150,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{count}} tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -167,8 +167,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Bridge",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -371,8 +371,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Open",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -388,8 +388,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "App",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -405,8 +405,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Route",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -422,8 +422,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Route via {{provider}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -439,8 +439,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Blog",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -456,8 +456,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "OK",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -473,8 +473,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Chain",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -490,8 +490,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Details",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -507,8 +507,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Explorer",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -524,8 +524,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Governance",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -541,8 +541,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Help",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -558,8 +558,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Links",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -575,8 +575,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Max",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -592,8 +592,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Min",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -609,8 +609,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "1 week",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -626,8 +626,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Open",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -643,8 +643,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Pool",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -660,8 +660,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Pools",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -677,8 +677,42 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Portfolio",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:common.privacyChoices.optOut",
+      {
+        "unitId": "common.privacyChoices.optOut",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "5d1160c8a782fcfc275fe20ba2a3055c30316c1f7544530db94824fb986c5a53",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Waar dit volgens toepasselijke wetgeving geldt als verkopen, delen of gerichte advertenties, kun je je afmelden door de schakelaar “{{settingName}}” in je instellingen uit te zetten.",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-16T19-33-26Z",
+        "approvedAt": "2026-10-16T19:33:26.221Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:common.privacyChoices.policy",
+      {
+        "unitId": "common.privacyChoices.policy",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "5109ab4492e4bed49a87e4aa498a04262721ad8e42c81975e8a854e6d4e976cc",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Raadpleeg voor meer informatie over onze privacypraktijken ons <privacyLink>Privacybeleid</privacyLink>.",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-16T19-33-26Z",
+        "approvedAt": "2026-10-16T19:33:26.221Z",
         "approvedBy": "agent"
       }
     ],
@@ -694,8 +728,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Protocol",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -711,8 +745,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Uniswap v2",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -728,8 +762,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Uniswap v3",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -745,8 +779,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Uniswap v4",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -762,8 +796,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Recent",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -779,8 +813,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Socials",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -796,8 +830,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Status",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -813,8 +847,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Contract",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -830,8 +864,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -847,8 +881,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Token A",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -864,8 +898,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Token B",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -881,8 +915,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Trending",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -898,8 +932,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Type",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -915,8 +949,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Volume",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -932,8 +966,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Website",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -949,8 +983,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Euro",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -983,8 +1017,324 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{frameUrl}} via {{parentUrl}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:disclosures.autoRouter",
+      {
+        "unitId": "disclosures.autoRouter",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "1769525d3c38507cb4b1bdc3cb4a598af59b2e5d1a004c2bcb302a769bf8b857",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "De Auto Router is een algoritme voor transactiepaden dat door de Producten wordt gebruikt om potentiële paden voor een transactie met digitale assets via in aanmerking komende Integraties te analyseren, en dat de gebruiker informatie geeft over het transactiepad dat op dat moment naar schatting het grootste aantal ontvangen digitale assets oplevert, op basis van gesimuleerde uitvoering onder de bekendgemaakte objectieve routeringsparameters.",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-15T22-12-00Z",
+        "approvedAt": "2026-10-15T22:12:00.586Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:disclosures.autoRouterParameters",
+      {
+        "unitId": "disclosures.autoRouterParameters",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "aeb91f7c1ff41c721069194cc98de27e3bfaeca2025f1b791b5c01a955b18f35",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "De volgende parameters zijn hard gecodeerd in de routeringssoftware van de Producten (de “Auto Router”): (i) schatting van gas-kosten via simulatie (waardoor routes met hoge netwerkkosten een lagere prioriteit kunnen krijgen); (ii) schatting van slippage via simulatie (waardoor een transactie wordt teruggedraaid die niet voldoet aan het door de gebruiker opgegeven maximale slippage-bedrag of beter); (iii) poolliquiditeit, gemeten als de totale vergrendelde waarde over alle liquiditeitsbronnen (waardoor pools onder een bepaalde drempel een lagere prioriteit krijgen of worden uitgesloten); (iv) het maximale aantal keren dat de swap van een gebruiker kan worden “gesplitst”, zodat de router kan beoordelen of het splitsen van de swap van de gebruiker over meerdere liquiditeitsbronnen een betere prijs kan opleveren; (v) het maximale aantal “hops”, oftewel mogelijke reeksen conversies van digitale assets die eindigen met de ontvangst van de gewenste output-token door de gebruiker; en (vi) het maximale aantal potentiële routeringspaden dat het Auto Router-algoritme evalueert bij het genereren van een voorgestelde route. De Auto Router verkent geen pools met kosten hoger dan 11%, als maatregel om gebruikers te beschermen tegen onverwachte prijsimpact door ongewoon hoge LP-kosten. Deze parameters van de routeringssoftware zijn geen door de gebruiker configureerbare standaardparameters op transactieniveau. De routeringssoftware van de Producten past deze routeringsparameters op uniforme wijze toe en de code kan <uniRouteLink>hier</uniRouteLink> worden bekeken.",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-15T22-12-00Z",
+        "approvedAt": "2026-10-15T22:12:00.586Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:disclosures.customization",
+      {
+        "unitId": "disclosures.customization",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "62979328997006241effade715257423f44996c1f2899ab5f7e15b31851362ab",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "De standaardparameters op transactieniveau zijn volledig aanpasbaar door gebruikers van de Producten. Door deze parameters te wijzigen, kan een gebruiker extra routes voor zijn handel zien. Zie voor meer informatie over het wijzigen van de standaardparameters <slippageLink>Hoe wijzig je slippage in de Uniswap Web app</slippageLink>, <swapDeadlinesLink>Hoe wijzig je swap-deadlines in de Uniswap-interface</swapDeadlinesLink> en <tradeOptionsLink>Hoe wijzig je standaard handelsopties</tradeOptionsLink>. Uniswap Labs hanteert interne beleidslijnen en procedures voor de standaardparameters en herbeoordeelt de standaardparameters periodiek om naleving van die beleidslijnen en procedures te waarborgen. Uniswap Labs is niet op de hoogte van enig wezenlijk belangenconflict tussen Uniswap Labs en gebruikers van de Producten dat voortvloeit uit de standaardparameters. Uniswap Labs ontvangt geen vergoeding van enige liquiditeitsbron voor opname in de routeringsanalyse. Activiteiten op het gebied van businessdevelopment, waaronder ecosysteemondersteuning voor integraties van derden, ondersteuning van marketmakers (zoals leningen of incentiveprogramma’s), API-toegang en co-marketing, staan los van en beïnvloeden de routeringsanalyse niet.",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "terminology",
+            "severity": "minor",
+            "detail": "The product name \"Uniswap Web App\" is marked do-not-translate/keep verbatim, but the translation re-spells it with a Dutch-style hyphen (\"Uniswap Web-app\"), altering the protected name.",
+            "evidence": {
+              "rule": "Uniswap Web App — DO NOT TRANSLATE (keep verbatim)",
+              "sourceSpan": "the Uniswap Web app",
+              "targetSpan": "de Uniswap Web-app"
+            },
+            "alternative": "de Uniswap Web app"
+          }
+        ],
+        "agentRunId": "nl-NL-2026-10-15T22-12-00Z",
+        "approvedAt": "2026-10-15T22:12:00.586Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:disclosures.defaultParameters",
+      {
+        "unitId": "disclosures.defaultParameters",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "6384103f15d7e3393252e304756e6c94b8f8a5a33326c3024bae82defe2771a2",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "De volgende standaardparameters op transactieniveau zijn momenteel van kracht op de Producten: slippage-tolerantie; swap-deadline; in aanmerking komende pools en handelsplatformen of distributed-ledger-handelssystemen; en prioriteitskosten. De standaardparameters kunnen van tijd tot tijd veranderen. De standaardparameters worden vastgesteld aan de hand van objectieve criteria en zijn over het algemeen zo geconfigureerd dat het risico voor gebruikers wordt beperkt.",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-15T22-12-00Z",
+        "approvedAt": "2026-10-15T22:12:00.586Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:disclosures.feeCalculation",
+      {
+        "unitId": "disclosures.feeCalculation",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "40c78c254e0b59dd6e93159cc60e13ee83bd2cf876440febf93320a598fb304c",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Met een objectief, uniform toegepast algoritme tonen de Producten voor elke transactie automatisch berekende Gas-kosten en prioriteitskosten. Deze algoritmische berekeningen zijn ontworpen om transactiesnelheid en betaalde kosten in balans te houden.",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-15T22-12-00Z",
+        "approvedAt": "2026-10-15T22:12:00.586Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:disclosures.gasFees",
+      {
+        "unitId": "disclosures.gasFees",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "537acd8dfac10d9eec9e024bf4664b063e4804e4664d00d5daaf21d3bcf9e4f6",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Gas-kosten worden voor elke transactie betaald aan blockchain-validators en zijn vereist door elk toepasselijk blockchain-netwerk. Gebruikers zijn door elk netwerk verplicht om bij elke transactie Gas-kosten te betalen.",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-15T22-12-00Z",
+        "approvedAt": "2026-10-15T22:12:00.586Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:disclosures.gasLimit",
+      {
+        "unitId": "disclosures.gasLimit",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "e2996676536051b909f7239dab48bda7c4273c64c13fd6d22569c6e1f196def1",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "De Gas-limiet is de maximale hoeveelheid gas die de transactie van de gebruiker mag verbruiken.",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "fluency",
+            "severity": "minor",
+            "detail": "\"gas\" is capitalized mid-sentence (\"hoeveelheid Gas\") where the source uses lowercase \"unit of gas\"; the kept-English term should stay lowercase in running prose.",
+            "evidence": {
+              "sourceSpan": "the maximum unit of gas",
+              "targetSpan": "de maximale hoeveelheid Gas"
+            },
+            "alternative": "de maximale hoeveelheid gas"
+          }
+        ],
+        "agentRunId": "nl-NL-2026-10-15T22-12-00Z",
+        "approvedAt": "2026-10-15T22:12:00.586Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:disclosures.integrations",
+      {
+        "unitId": "disclosures.integrations",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "0eae2dac9b2b0532da6271502d9dfedc5863c5cff281fa85a4f38949d44fbe43",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "De Producten zijn geïntegreerd met de volgende handelsplatformen of distributed-ledger-handelssystemen: UniswapX; het Uniswap Protocol (v4, v3, v2); Tempo; en Jupiter (gezamenlijk de “Integraties”). Uniswap Labs hanteert interne beleidslijnen en procedures voor Integraties, waaronder controles om Integraties en voorgestelde integraties te evalueren, te onboarden en te auditen. Op grond van die beleidslijnen en procedures worden Integraties geëvalueerd op basis van objectieve criteria, waaronder liquiditeit, beveiliging, transparantie, verifieerbaarheid, neutraliteit, auditeerbaarheid en latentie. Integraties kunnen van tijd tot tijd veranderen. Voordat een nieuwe liquiditeitsbron in de Producten wordt geïntegreerd, moet deze aan deze criteria worden getoetst. Alle geïntegreerde liquiditeitsbronnen – waaronder het Uniswap Protocol (v4, v3, v2) en UniswapX – worden periodiek herbeoordeeld om te bepalen of ze opgenomen moeten blijven of verwijderd moeten worden. Een herbeoordeling wordt ook gestart bij een wezenlijke verandering in het risicoprofiel van de liquiditeitsbron. Een liquiditeitsbron kan onmiddellijk uit de routeringsberekening worden verwijderd als er een beveiligingsprobleem ontstaat, zonder te wachten op de volgende periodieke herbeoordeling.",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-15T22-12-00Z",
+        "approvedAt": "2026-10-15T22:12:00.586Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:disclosures.liquiditySources",
+      {
+        "unitId": "disclosures.liquiditySources",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "416f99fc4657215fea96c3ac83bf83227def10efe5a873ea9c6802607dc6d174",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Zie voor aanvullende informatie over de liquiditeitsbronnen die via de Producten toegankelijk zijn en de criteria waarmee ze worden geëvalueerd <tradeOptionsLink>Hoe wijzig je standaard handelsopties</tradeOptionsLink>.",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-15T22-12-00Z",
+        "approvedAt": "2026-10-15T22:12:00.586Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:disclosures.maxBaseFee",
+      {
+        "unitId": "disclosures.maxBaseFee",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "f3c3237a31031b1b4c4fae6f63b8a4406d6efa21087f5ce1348f569204603681",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "De maximale basiskosten zijn de hoogste basiskosten per eenheid gas die een gebruiker bereid is te betalen. De basiskosten worden per blok door het netwerk vastgesteld.",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-15T22-12-00Z",
+        "approvedAt": "2026-10-15T22:12:00.586Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:disclosures.priorityFees",
+      {
+        "unitId": "disclosures.priorityFees",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "ffef081c895ce81ee27feb4dfbfa63d9a91f9850c6a66727de0c4b8a84fde1b9",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Prioriteitskosten zijn, waar van toepassing, optionele kosten die gebruikers aan validators kunnen betalen om hun transacties sneller te laten verwerken.",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-15T22-12-00Z",
+        "approvedAt": "2026-10-15T22:12:00.586Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:disclosures.products",
+      {
+        "unitId": "disclosures.products",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "76f70bc50491b1d2da127941c761d2bdeaac620c5f29f5ca37444147c5b46389",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Uniswap Labs ontwikkelt en beheert (a) een op een website gehoste gebruikersinterface op <appLink>app.uniswap.org</appLink> (de “Interface”), (b) een mobiele wallet-applicatie (de “Uniswap Wallet”) en (c) een API en andere producten en diensten (gezamenlijk de “Producten”) waarmee gebruikers transacties op openbare blockchains kunnen voorbereiden en indienen met hun eigen self-custodial wallets. Uniswap Labs hanteert interne procedures om de beveiliging van de Producten te waarborgen, waaronder het snel onderzoeken van vermoedelijke incidenten en het voorkomen van ongeautoriseerde toegang door middel van medewerkersauthenticatie en andere beveiligingsmaatregelen. Uniswap Labs draagt bij aan de ontwikkeling van het Uniswap Protocol (v4, v3, v2) en UniswapX, elk een autonome, open-source set slimme contracten die op openbare blockchains is geïmplementeerd, maar bezit, controleert of beheert het Uniswap Protocol (v4, v3, v2) of UniswapX niet. Uniswap Labs is geen broker-dealer en is niet geregistreerd bij of gereguleerd door de Amerikaanse Securities and Exchange Commission in verband met het creëren, aanbieden of beheren van de Producten. Bepaalde assets zijn mogelijk niet beschikbaar op de Producten, en bepaalde assets zijn mogelijk niet beschikbaar in bepaalde jurisdicties. Zie voor meer informatie het <unsupportedTokenPolicyLink>beleid voor niet-ondersteunde tokens</unsupportedTokenPolicyLink>.",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "fluency",
+            "severity": "minor",
+            "detail": "The link label \"beleid voor niet-ondersteunde Token\" is ungrammatical Dutch: \"Token\" is singular and capitalized mid-phrase while the source \"Unsupported Token Policy\" refers to tokens in general. Should be lowercase plural \"tokens\".",
+            "evidence": {
+              "sourceSpan": "Unsupported Token Policy",
+              "targetSpan": "beleid voor niet-ondersteunde Token"
+            },
+            "alternative": "beleid voor niet-ondersteunde tokens"
+          }
+        ],
+        "agentRunId": "nl-NL-2026-10-15T22-12-00Z",
+        "approvedAt": "2026-10-15T22:12:00.586Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:disclosures.routing",
+      {
+        "unitId": "disclosures.routing",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "8cb99ca1a941d16151b298eb5e476d4271bc551d192b817a5213d9dd04b92979",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Bij het voorbereiden van de transactie van een gebruiker analyseert de routeringssoftware van de Producten de potentiële paden voor een transactie op de Integraties en geeft deze de gebruiker informatie over het transactiepad dat op dat moment naar schatting het grootste aantal ontvangen digitale assets oplevert, op basis van gesimuleerde uitvoeringsresultaten. Daartoe nemen de Producten standaard de beschikbare liquiditeitsbronnen binnen de Integraties in overweging. Een gebruiker behoudt de volledige vrijheid om de standaardconfiguratie aan te passen en in te stellen welke liquiditeitsbronnen de routeringssoftware van de Producten in overweging neemt. Door de liquiditeitsbronnen te wijzigen die de Producten in overweging nemen, kan een gebruiker extra routes voor zijn handel zien.",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-15T22-12-00Z",
+        "approvedAt": "2026-10-15T22:12:00.586Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:disclosures.slippage",
+      {
+        "unitId": "disclosures.slippage",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "1f3379ed1d4df8d857eb8c4b099890188f9c71ca13bc2c9f933de0e37014de4c",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Slippage is het verschil tussen de verwachte prijs van een swap op het moment van indienen en de daadwerkelijke uitvoeringsprijs wanneer de swap onchain wordt uitgevoerd. Slippage kan ontstaan door gewone prijsbewegingen, veranderingen in beschikbare liquiditeit, netwerklatentie en -congestie, of de marktimpact van de swap van de gebruiker. Slippage is een inherent risico van handelen. Als de slippage-tolerantie te hoog is ingesteld, ontvangt een gebruiker mogelijk niet de verwachte waarde van een trade en/of kan de waarde van de trade door andere partijen worden afgevangen. Omgekeerd kan een gebruiker, als de slippage-tolerantie te laag is ingesteld, een trade mogelijk niet uitvoeren. Met een uniform toegepast algoritme tonen de Producten een automatisch berekende maximale slippage-tolerantie, die doorgaans binnen een bereik van ongeveer 0,5% tot 5,5% valt, afhankelijk van factoren zoals het geselecteerde netwerk en de omvang van de swap.",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "fluency",
+            "severity": "minor",
+            "detail": "Inconsistent casing within the string: \"slippage\" is lowercase in the opening sentences but capitalized mid-sentence later (\"Slippage-tolerantie\" three times) where the source uses lowercase \"slippage tolerance\".",
+            "evidence": {
+              "sourceSpan": "slippage tolerance",
+              "targetSpan": "Als de Slippage-tolerantie"
+            },
+            "alternative": "slippage-tolerantie"
+          }
+        ],
+        "agentRunId": "nl-NL-2026-10-15T22-12-00Z",
+        "approvedAt": "2026-10-15T22:12:00.586Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:disclosures.swapDeadline",
+      {
+        "unitId": "disclosures.swapDeadline",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "05679769a825cb1b067e25c3b12d9dfa5db5e336a897e9ea58e2d754819f3670",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "De Swap-deadline is de tijd die een swap onchain in behandeling mag blijven voordat deze wordt teruggedraaid. De Producten hanteren een standaard transactiedeadline van 30 minuten, wat betekent dat een swap wordt teruggedraaid als deze 30 minuten na indiening nog niet is uitgevoerd. Dit is bedoeld om gebruikers extra bescherming te bieden tegen onbedoelde aanzienlijke prijsbewegingen.",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "fluency",
+            "severity": "minor",
+            "detail": "\"swap\" is capitalized mid-sentence (\"een Swap\", twice) where the source uses lowercase \"a swap\"; only the defined term \"Swap-deadline\" (source \"Swap Deadline\") should carry the capital.",
+            "evidence": {
+              "sourceSpan": "a swap is permitted to remain pending",
+              "targetSpan": "een Swap onchain in behandeling"
+            },
+            "alternative": "een swap"
+          }
+        ],
+        "agentRunId": "nl-NL-2026-10-15T22-12-00Z",
+        "approvedAt": "2026-10-15T22:12:00.586Z",
         "approvedBy": "agent"
       }
     ],
@@ -1000,8 +1350,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "(Code {{code}})",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -1051,8 +1401,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -1068,8 +1418,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Earn",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -1085,8 +1435,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Curator",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -1102,8 +1452,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Details",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -1119,8 +1469,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -1136,8 +1486,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{count}} tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -1153,8 +1503,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Wallets",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -1170,8 +1520,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Trending",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -1187,8 +1537,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{number}} MCap",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -1204,8 +1554,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Volume",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -1221,8 +1571,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Swap tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -1238,8 +1588,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Bank",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -1255,8 +1605,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Venmo",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -1272,8 +1622,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -1289,8 +1639,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "API",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -1340,8 +1690,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Trending",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -1357,8 +1707,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Launchpad",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -1374,8 +1724,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -1391,8 +1741,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Pool",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -2128,8 +2478,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "PnL {{value}} ({{pct}})",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -2145,8 +2495,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Break-even",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -2213,8 +2563,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Liq.",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -2230,8 +2580,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Liq. {{distance}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -2485,8 +2835,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Privacy",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -2553,8 +2903,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Volume",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -3331,8 +3681,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Route",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -3847,8 +4197,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{venue}} · {{lltv}}% LLTV",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -5306,8 +5656,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Break-even",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -5403,8 +5753,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "RoE",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -5420,8 +5770,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "PnL",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -5682,8 +6032,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Route via {{provider}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -5948,8 +6298,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Long",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -5965,8 +6315,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Short",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -6113,8 +6463,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "LLTV {{lltv}}% · Max {{max}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -6147,8 +6497,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Max {{max}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -6511,8 +6861,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "PnL/RoE",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7189,6 +7539,23 @@
       }
     ],
     [
+      "nl-NL:i18next-json:network.filter.lowLiquidity",
+      {
+        "unitId": "network.filter.lowLiquidity",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "05a25d34314db561ef070b425ba6015bd5c105d2dda3c7da3082d5a742c3267f",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Lage liquiditeit",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-19T20-14-06Z",
+        "approvedAt": "2026-10-19T20:14:06.549Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "nl-NL:i18next-json:notification.auction.open.failed",
       {
         "unitId": "notification.auction.open.failed",
@@ -7217,8 +7584,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7234,8 +7601,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Explorers",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7302,8 +7669,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Filters",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7319,8 +7686,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "$100k – $1M",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7336,8 +7703,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "$10M+",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7353,8 +7720,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "<$100k",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7368,23 +7735,23 @@
         "sourceHash": "5c9daa3b7cd347f9737ce51db9dde88f4828245553b0f5327889ea5d83c76ec8",
         "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
-        "translation": "1D vol",
+        "translation": "1D vol.",
         "status": "finalized",
         "judgeIssues": [
           {
             "category": "style",
             "severity": "minor",
-            "detail": "The compact stat label '1D vol' was reformatted to 'Vol. (1 d)', breaking the compact stat-abbreviation pattern used consistently elsewhere in the run ('{{number}} MCap', '30D vol' i=2240, '1D vol' i=3722 in corpus) and adding width in a fixed-width tile context.",
+            "detail": "The proposal reformats the compact stat label '1D vol' into 'Vol. (1 d)', expanding a source-compact tile abbreviation with parentheses and a spaced lowercase time unit. This diverges from the app-wide compact pattern ('1D', '1D chart', '30D vol' elsewhere in the corpus) and risks bloating fixed-width UI; the compact-buttons triage ruling says source-compact abbreviations stay compact.",
             "evidence": {
-              "rule": "Max / Min (compact buttons): source-compact abbreviations stay compact; keep the pattern",
+              "rule": "Max / Min (compact buttons) ruling — source-compact abbreviations stay compact",
               "sourceSpan": "1D vol",
               "targetSpan": "Vol. (1 d)"
             },
-            "alternative": "1D vol"
+            "alternative": "1D vol."
           }
         ],
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-15T20-59-02Z",
+        "approvedAt": "2026-10-15T20:59:02.300Z",
         "approvedBy": "agent"
       }
     ],
@@ -7406,6 +7773,40 @@
       }
     ],
     [
+      "nl-NL:i18next-json:pool.position.earned.suffix",
+      {
+        "unitId": "pool.position.earned.suffix",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "4844fdfbc864ac106bb9742de65edfbcb5257a4e7ee2d8c500b80cdafa148524",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "verdiend",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-21T15-24-56Z",
+        "approvedAt": "2026-10-21T15:24:56.242Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:pool.position.liquidity.suffix",
+      {
+        "unitId": "pool.position.liquidity.suffix",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "ead2523743ee17aed6605ba71358fd4820c5102cefa92b72d4574db2cddf575e",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "liq.",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "nl-NL:i18next-json:pool.via",
       {
         "unitId": "pool.via",
@@ -7417,8 +7818,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{tokenPair}} via {{dex}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7434,8 +7835,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Mints",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7451,8 +7852,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Swaps",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7468,8 +7869,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Wraps",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7485,8 +7886,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Type",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7502,8 +7903,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "DeFi",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7519,8 +7920,25 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{count}} tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:position.initialPrice.marketUpdated",
+      {
+        "unitId": "position.initialPrice.marketUpdated",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "a54fccb1b9e62fcbf3c5d1b992c9dc12bf09b76415f09564ce0adde7d922d185",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Marktprijs bijgewerkt",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-15T20-59-02Z",
+        "approvedAt": "2026-10-15T20:59:02.300Z",
         "approvedBy": "agent"
       }
     ],
@@ -7553,8 +7971,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Volume",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7574,9 +7992,9 @@
           {
             "category": "terminology",
             "severity": "major",
-            "detail": "Intra-slice term collision: the same source term 'order' is kept as 'order' in sibling strings (i=2502 '{{amount}} order', i=2586 'Order {{n}}', i=3119 corpus) but rendered 'inleg' here. 'Order' is the established rendering across the run.",
+            "detail": "Intra-run term collision: 'order' is kept as 'order' everywhere else in this run (i=2520 '{{amount}} order', 2521, 2604 'Order {{n}}', 3120/3121, shipped 'order uitgevoerd' glossary phrase), but rendered 'inleg' here. Same source term must get one rendering.",
             "evidence": {
-              "rule": "intra-slice term consistency for 'order'",
+              "rule": "order filled → order uitgevoerd (glossary); run-level consistency",
               "sourceSpan": "Order",
               "targetSpan": "inleg"
             },
@@ -7585,7 +8003,7 @@
           {
             "category": "accuracy",
             "severity": "major",
-            "detail": "'inleg' means 'stake/deposit (amount put in)', not 'Order'. In the recent-orders table this header mislabels the column and misleads the user about what the data represents.",
+            "detail": "Source 'Order' (orders-table column header) is rendered as 'inleg' (deposit/stake), which conveys a different concept — an order is a placed trade request, not the money put in. This misleads users reading the orders table.",
             "evidence": {
               "sourceSpan": "Order",
               "targetSpan": "inleg"
@@ -7595,14 +8013,15 @@
           {
             "category": "style",
             "severity": "minor",
-            "detail": "Lowercase 'inleg' breaks label capitalization; sibling table headers in the run are capitalized.",
+            "reviewDimension": "cta-affordance",
+            "detail": "Lowercase 'inleg' breaks label casing for a column header/label; sibling labels in the slice are capitalized.",
             "evidence": {
               "targetSpan": "inleg"
             }
           }
         ],
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7618,8 +8037,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{amount}} order",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7635,8 +8054,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{amount}} orders",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7652,8 +8071,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7669,8 +8088,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "The Badger",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7686,8 +8105,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Frontrunner",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7703,8 +8122,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "First Splash",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7720,8 +8139,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Order {{n}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7737,8 +8156,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Max",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7754,8 +8173,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{amount}} volume",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7771,8 +8190,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Top",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7788,8 +8207,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Trending",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7805,8 +8224,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Volume",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7839,8 +8258,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7890,8 +8309,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{name}} is live",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -7935,8 +8354,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "demo",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8088,8 +8507,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8105,8 +8524,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8122,8 +8541,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Burn",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8156,8 +8575,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Crowd",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8173,8 +8592,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Instant",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8190,8 +8609,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Portfolio",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8207,8 +8626,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{count}} order",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8224,8 +8643,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{count}} orders",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8241,8 +8660,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Account {{address}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8258,8 +8677,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Account {{address}}, {{value}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8275,8 +8694,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Claims",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8292,8 +8711,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Orders",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8309,8 +8728,36 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:rhcca.position.priceUnavailable",
+      {
+        "unitId": "rhcca.position.priceUnavailable",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "abc5fecda607e617b5af85dd8280f49b97736d30dcf49ad622118c302b123465",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Prijsgegevens van tokens zijn momenteel niet beschikbaar",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "fluency",
+            "severity": "minor",
+            "detail": "'Token' is capitalized mid-sentence and the phrasing 'Prijsgegevens van Token' is unidiomatic — Dutch prefers a compound or lowercase plural.",
+            "evidence": {
+              "targetSpan": "Prijsgegevens van Token"
+            },
+            "alternative": "Prijsgegevens van tokens zijn momenteel niet beschikbaar"
+          }
+        ],
+        "agentRunId": "nl-NL-2026-10-20T20-08-44Z",
+        "approvedAt": "2026-10-20T20:08:44.109Z",
         "approvedBy": "agent"
       }
     ],
@@ -8326,8 +8773,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Trending",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8343,8 +8790,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Orders",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8360,8 +8807,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Live",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8377,8 +8824,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Home",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8394,8 +8841,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Home",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8411,8 +8858,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Type",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8428,8 +8875,25 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Browser",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:search.results.auction.startsIn",
+      {
+        "unitId": "search.results.auction.startsIn",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "f63d3a93c65b2b7e8c6b1a29a7efe1834ae62f4887bd58edfb759de7b6b15f1c",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Begint over {{time}}",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-20T18-19-01Z",
+        "approvedAt": "2026-10-20T18:19:01.618Z",
         "approvedBy": "agent"
       }
     ],
@@ -8462,8 +8926,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{apr}} APR",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8479,8 +8943,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8496,8 +8960,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Chain",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8513,8 +8977,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Recent",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8530,8 +8994,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "OK",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8547,8 +9011,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "ENS",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8598,8 +9062,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "30 min",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8615,8 +9079,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "5 min",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8668,6 +9132,40 @@
       }
     ],
     [
+      "nl-NL:i18next-json:settings.setting.shareDeviceIdentifiers.message",
+      {
+        "unitId": "settings.setting.shareDeviceIdentifiers.message",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "e2ba15a1a8521d2d7db3051027b805d819f8bcd2e8e7d9700b0edc9cea9b2f74",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "We kunnen apparaat-ID’s delen met onze advertentiepartners om onze diensten op andere websites en platforms te promoten.",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-16T19-33-26Z",
+        "approvedAt": "2026-10-16T19:33:26.221Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:settings.setting.shareDeviceIdentifiers.title",
+      {
+        "unitId": "settings.setting.shareDeviceIdentifiers.title",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "ef41776a003a42bf066f2cb1cc0886b40fef5dfea0420467b3af57f131d66b59",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Apparaat-ID’s delen",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-16T19-33-26Z",
+        "approvedAt": "2026-10-16T19:33:26.221Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "nl-NL:i18next-json:swap.button.max",
       {
         "unitId": "swap.button.max",
@@ -8679,8 +9177,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Max",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8764,8 +9262,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{count}} hop",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8781,8 +9279,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{count}} hops",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -8815,8 +9313,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Via {{provider}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -9364,8 +9862,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Launchpad",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -9445,8 +9943,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Links",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -9462,8 +9960,79 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Website",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:token.price.lowConfidence.tag",
+      {
+        "unitId": "token.price.lowConfidence.tag",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "29e142b8be7d28e49cc799fb06f36a7121919415c29811315c90594e4c4ffc60",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Lage betrouwbaarheid",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:token.price.lowConfidence.title",
+      {
+        "unitId": "token.price.lowConfidence.title",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "ef586d27ebbd87e6bfa32e637715042e8d9e8f612ea9de3124b29361e235f99d",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Lage prijsbetrouwbaarheid",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:token.price.lowConfidence.tooltip",
+      {
+        "unitId": "token.price.lowConfidence.tooltip",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "2a666cdba05106c279a946878c66c546f38ddd6e4f754ea3212935e61a271a1a",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "De tokenprijs is gebaseerd op beperkte of mogelijk kwalitatief slechte marktgegevens.",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "major",
+            "detail": "\"De prijs van Token\" misreads the generic noun phrase \"Token price\" as if \"Token\" were a proper name; a user would read it as the price of a token literally named \"Token\".",
+            "evidence": {
+              "sourceSpan": "Token price",
+              "targetSpan": "De prijs van Token"
+            },
+            "alternative": "De tokenprijs is gebaseerd op beperkte of mogelijk kwalitatief slechte marktgegevens."
+          },
+          {
+            "category": "fluency",
+            "severity": "minor",
+            "detail": "Even if intended generically, the missing article/compound makes the sentence read unnaturally in Dutch; the standard rendering is a compound \"tokenprijs\".",
+            "evidence": {
+              "targetSpan": "De prijs van Token"
+            }
+          }
+        ],
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -9530,8 +10099,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Recent",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -9547,8 +10116,25 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Trending",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:toucan.allAuctions",
+      {
+        "unitId": "toucan.allAuctions",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "a6d3fee9c816e67519ea5a4ff5371433980d102f27650c5b854c671857a6200d",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Alle veilingen",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-19T14-31-53Z",
+        "approvedAt": "2026-10-19T14:31:53.331Z",
         "approvedBy": "agent"
       }
     ],
@@ -9621,6 +10207,23 @@
       }
     ],
     [
+      "nl-NL:i18next-json:toucan.auction.finalFdv",
+      {
+        "unitId": "toucan.auction.finalFdv",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "67e17d632a561ea1d2f2f936e394bfe8f9f05219f620b70d8f3e160a866c4b03",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Definitieve FDV",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-21T16-44-47Z",
+        "approvedAt": "2026-10-21T16:44:47.204Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "nl-NL:i18next-json:toucan.auction.introBanner.auctionStartsInTime",
       {
         "unitId": "toucan.auction.introBanner.auctionStartsInTime",
@@ -9683,8 +10286,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "<value>{{fdv}}</value> FDV",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -9768,8 +10371,39 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Website",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:toucan.bidDetails.description.outOfRangeInProgressAwaitingThreshold",
+      {
+        "unitId": "toucan.bidDetails.description.outOfRangeInProgressAwaitingThreshold",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "c9e6b4e257d95f81a7ea9c178152998f40e0db3bf41df207c687a579fa60174f",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Deze order is gestopt met uitvoeren omdat de prijs je maximale FDV van <highlight>{{valuationSummary}}</highlight> overschreed. Je kunt je ongebruikte budget terugvragen zodra het uitgevoerde volume van de veiling de lanceringsdrempel van <highlight>{{launchThreshold}}</highlight> bereikt, en de tokens die je hebt ontvangen opnemen aan het einde van de veiling. Als de drempel nooit wordt bereikt, kun je je volledige budget opnemen wanneer de veiling eindigt.",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "style",
+            "severity": "minor",
+            "detail": "Opening clause \"Deze order wordt niet verder uitgevoerd omdat…\" diverges from the shipped sibling string (i=4388) which renders the identical source clause as \"Deze order is gestopt met uitvoeren omdat…\"; it also shifts the source's past tense (\"stopped filling\") to present. Sibling strings sharing a clause should read identically.",
+            "reviewDimension": "register-consistency",
+            "evidence": {
+              "rule": "Shipped translation of i=4388 first sentence",
+              "sourceSpan": "This order stopped filling because the price exceeded your maximum FDV of <highlight>{{valuationSummary}}</highlight>.",
+              "targetSpan": "Deze order wordt niet verder uitgevoerd omdat de prijs je maximale FDV van <highlight>{{valuationSummary}}</highlight> overschreed."
+            },
+            "alternative": "Deze order is gestopt met uitvoeren omdat de prijs je maximale FDV van <highlight>{{valuationSummary}}</highlight> overschreed."
+          }
+        ],
+        "agentRunId": "nl-NL-2026-10-20T16-08-12Z",
+        "approvedAt": "2026-10-20T16:08:12.913Z",
         "approvedBy": "agent"
       }
     ],
@@ -9819,8 +10453,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{amount}} per token",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -9836,8 +10470,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "per token",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -9887,8 +10521,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "ETH / native",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -9904,8 +10538,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Start",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -10200,8 +10834,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Permanent",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -10217,8 +10851,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -10251,8 +10885,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Details",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -10268,8 +10902,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Whitelist",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -10285,8 +10919,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Status",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -10302,8 +10936,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -10336,8 +10970,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Crowd Launches",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -10352,22 +10986,9 @@
         "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Custom Auction",
-        "status": "finalized",
-        "judgeIssues": [
-          {
-            "category": "terminology",
-            "severity": "major",
-            "detail": "Launch-model family labels (Crowd Launch, Instant Launch, Custom Launch — all shipped in English) stay English; translating the sibling label 'Custom Auction' as 'Aangepaste veiling' breaks the product-label family within the run.",
-            "evidence": {
-              "rule": "shipped: 'Custom Launch' → 'Custom Launch'; run keeps Crowd/Instant Launch(es) English",
-              "sourceSpan": "Custom Auction",
-              "targetSpan": "Aangepaste veiling"
-            },
-            "alternative": "Custom Auction"
-          }
-        ],
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -10434,8 +11055,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -10468,8 +11089,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Instant Launches",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -10485,8 +11106,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Custom Launch",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -10502,8 +11123,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Pools.trade",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -10570,8 +11191,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "App",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -10859,8 +11480,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "<icon /> <gradient>UniswapX</gradient> <info />",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -10876,8 +11497,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Bio",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ],
@@ -10893,8 +11514,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-15T16-27-20Z",
-        "approvedAt": "2026-10-15T16:27:20.289Z",
+        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
+        "approvedAt": "2026-10-21T17:35:25.212Z",
         "approvedBy": "agent"
       }
     ]

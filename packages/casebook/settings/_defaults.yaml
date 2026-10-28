@@ -1,0 +1,21 @@
+product_area: settings
+platforms: [mobile, extension, web]
+nxProjects: [uniswap, wallet, "@uniswap/extension", "@uniswap/mobile", "@universe/web"]
+owners: ["@uniswap/consumer-engagement-fe"]
+
+# Casebook area-registry metadata (read by the engine in apps/cli/src/casebook).
+# These drive Testlio suite naming, the PR-comment label, and CI routing.
+label: Settings
+suiteNamePrefix: Settings
+ghLabel: "casebook:settings"
+# Reviewer GitHub team for the auto-opened catalog companion PR.
+# NOTE: unverified — .github/CODEOWNERS is silent on packages/uniswap/src/features/settings.
+# `wallet-fe` follows the LP catalog convention and MUST be confirmed with the pod lead
+# before the assembly phase requests reviews (fall back to nearest CODEOWNERS match if rejected).
+reviewerTeam: consumer-engagement-fe
+
+# Test-wallet aliases referenced by this area's cases. Symbolic only: real mnemonics live in
+# the QA vault / Testlio TL handoff, keyed by the same alias. Never put a secret here.
+wallets:
+  TW-SETTINGS-01: "mobile/extension wallet imported from a 12-word phrase, backed up, small ETH balance on mainnet, at least one active dapp connection and one saved WalletConnect/injected session; editable nickname"
+  TW-SETTINGS-02: "view-only account added by ENS name, no signing keys"

@@ -17,7 +17,10 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { LPGeoRestrictionBanner } from '~/components/GeoRestriction/LPGeoRestrictionBanner'
 import type { TickRangeChange } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 import { D3LiquidityRangeInput } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeInput'
-import { useDefaultInitialPrice } from '~/features/Liquidity/Create/hooks/useDefaultInitialPrice'
+import {
+  formatDefaultInitialPrice,
+  useDefaultInitialPrice,
+} from '~/features/Liquidity/Create/hooks/useDefaultInitialPrice'
 import { usePoolDisplayCurrencies } from '~/features/Liquidity/Create/hooks/usePoolDisplayCurrencies'
 import { useTokenControlOptions } from '~/features/Liquidity/Create/hooks/useTokenControlOptions'
 import { PoolOutOfSyncError } from '~/features/Liquidity/Create/PoolOutOfSyncError'
@@ -52,6 +55,7 @@ const InitialPriceInput = () => {
     protocolVersion,
     priceRangeState: { initialPrice, priceInverted, isInitialPriceDirty },
     setPriceRangeState,
+    isRangeLocked,
   } = useCreateLiquidityContext()
   const poolCurrencies = usePoolDisplayCurrencies()
 
@@ -65,13 +69,10 @@ const InitialPriceInput = () => {
     skip: !creatingPoolOrPair && protocolVersion === ProtocolVersion.V2,
   })
 
-  const formattedDefaultInitialPrice = useMemo(() => {
-    if (!defaultInitialPrice) {
-      return ''
-    }
-
-    return priceInverted ? defaultInitialPrice.invert().toSignificant(8) : defaultInitialPrice.toSignificant(8)
-  }, [defaultInitialPrice, priceInverted])
+  const formattedDefaultInitialPrice = useMemo(
+    () => formatDefaultInitialPrice({ price: defaultInitialPrice, priceInverted }),
+    [defaultInitialPrice, priceInverted],
+  )
 
   const priceDifference = useMemo(
     () =>
@@ -83,14 +84,17 @@ const InitialPriceInput = () => {
     [initialPrice, defaultInitialPrice, priceInverted],
   )
 
+  // The price under review is the one signed, so it holds still while the review screen is open or a
+  // transaction is in flight; moving it then goes through the review's accept (useInitialPriceAcceptance).
+  // Once that lock lifts it catches up to the market right away.
   useEffect(() => {
-    if (formattedDefaultInitialPrice && !isInitialPriceDirty) {
+    if (formattedDefaultInitialPrice && !isInitialPriceDirty && !isRangeLocked) {
       setPriceRangeState((prevState) => ({
         ...prevState,
         initialPrice: formattedDefaultInitialPrice,
       }))
     }
-  }, [formattedDefaultInitialPrice, isInitialPriceDirty, setPriceRangeState])
+  }, [formattedDefaultInitialPrice, isInitialPriceDirty, isRangeLocked, setPriceRangeState])
 
   const { baseCurrency, quoteCurrency } = getBaseAndQuoteCurrencies(poolCurrencies, priceInverted)
   useEffect(() => {

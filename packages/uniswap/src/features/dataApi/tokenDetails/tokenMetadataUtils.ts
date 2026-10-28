@@ -1,3 +1,5 @@
+import type { TokenColorOverrides } from '@universe/mycelium'
+
 /**
  * Canonical token metadata shape
  */
@@ -5,6 +7,7 @@ export interface TokenMetadataData {
   name?: string
   symbol?: string
   logoUrl?: string
+  colorOverrides?: TokenColorOverrides
   description?: string
   descriptionTranslations?: Record<string, string>
   homepageUrl?: string

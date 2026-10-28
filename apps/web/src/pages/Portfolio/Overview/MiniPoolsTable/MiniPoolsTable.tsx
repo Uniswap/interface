@@ -3,6 +3,7 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { UniverseChainId } from '@universe/chains'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex, TouchableArea } from '@universe/mycelium'
+import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import { memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -61,7 +62,11 @@ export const MiniPoolsTable = memo(function MiniPoolsTable({ account, maxPools, 
       })
     : '/positions'
 
-  const columns = useMiniPoolsTableColumns({ isLoading: showLoading, readOnly: isExternalWallet })
+  const media = useMedia()
+  const columns = useMiniPoolsTableColumns({
+    isLoading: showLoading,
+    readOnly: isExternalWallet,
+  })
 
   const handleRowPress = useCallback(
     (position: PositionInfo) => {
@@ -113,6 +118,7 @@ export const MiniPoolsTable = memo(function MiniPoolsTable({ account, maxPools, 
           maxWidth={POOLS_TABLE_MAX_WIDTH}
           centerArrows
           maxHeight={POOLS_TABLE_MAX_HEIGHT}
+          collapsiblePinnedColumnId={media.lg ? 'poolInfo' : undefined}
         />
       </TableSectionHeader>
       <ViewAllButton

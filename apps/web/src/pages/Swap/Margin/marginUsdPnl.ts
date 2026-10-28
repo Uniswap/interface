@@ -1,5 +1,5 @@
 import type { MarginActivePosition } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
-import type { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import type { MarginMarket } from '~/constants/margin'
 import {
   collateralHeld,
@@ -66,7 +66,7 @@ export function marginUsdDecimals({
   market: MarginUsdMarket
   direction: MarginDirection
 }): number {
-  return direction === 'SHORT' ? market.collateral.decimals : market.debt.decimals
+  return direction === MarginDirection.SHORT ? market.collateral.decimals : market.debt.decimals
 }
 
 // A raw USD-denominated wire amount (costBasisUsd, realizedPnlUsd, notionalUsd) as a display number.
@@ -125,7 +125,7 @@ export function marginUsdBasis({
   // exactly 0 is real here (a debt-free short, a fully reduced long) and must not be refused.
   const exposureAmount = usableWireBalance({
     raw: position.size,
-    decimals: direction === 'SHORT' ? market.debt.decimals : market.collateral.decimals,
+    decimals: direction === MarginDirection.SHORT ? market.debt.decimals : market.collateral.decimals,
   })
   const equityAmount = usableWireBalance({
     raw: position.equity,
@@ -144,7 +144,7 @@ export function marginUsdBasis({
   // figure below is built on it — equity would omit the borrowed leg and break-even would collapse to
   // costBasis/collateral. Reporting nothing sends the row through marginPnlSuppression, which says why.
   let debt: number
-  if (direction === 'SHORT') {
+  if (direction === MarginDirection.SHORT) {
     debt = exposureAmount
   } else {
     const longDebtRaw = marginPositionLegDebt(position)
@@ -195,7 +195,9 @@ export function marginUsdBasis({
 // Mark-to-market equity in USD at a volatile-leg price. LONG: collateral is volatile (× P) against
 // stable debt. SHORT: the mirror — collateral is already ≈USD, the debt is volatile.
 export function marginUsdEquityAtPrice({ basis, price }: { basis: MarginUsdBasis; price: number }): number {
-  return basis.direction === 'SHORT' ? basis.collateral - basis.debt * price : basis.collateral * price - basis.debt
+  return basis.direction === MarginDirection.SHORT
+    ? basis.collateral - basis.debt * price
+    : basis.collateral * price - basis.debt
 }
 
 // undefined at a non-positive price: a zero close on a thin candle would otherwise print a confident
@@ -236,7 +238,7 @@ export function marginUsdPnlNow({
 // price would be non-positive.
 export function marginUsdBreakEvenPrice({ basis }: { basis: MarginUsdBasis }): number | undefined {
   const price =
-    basis.direction === 'SHORT'
+    basis.direction === MarginDirection.SHORT
       ? (basis.collateral - basis.costBasisUsd) / basis.debt
       : (basis.costBasisUsd + basis.debt) / basis.collateral
   return Number.isFinite(price) && price > 0 ? price : undefined

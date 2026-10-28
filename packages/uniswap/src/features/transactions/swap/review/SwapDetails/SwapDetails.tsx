@@ -1,17 +1,15 @@
 import type { GasFeeResult } from '@universe/api'
 import { type TradingApi } from '@universe/api'
 import { isMobileApp, isMobileWeb } from '@universe/environment'
-import { Flex, Text } from '@universe/mycelium'
 import { HeightAnimator } from '@universe/mycelium/height-animator'
+import { EstimatedSwapTime } from '@universe/swap-ui'
 import { useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 import { type Warning, WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { EstimatedSwapTime } from 'uniswap/src/features/transactions/swap/components/EstimatedBridgeTime'
 import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/MaxSlippageRow'
 import { PriceDifferenceRow } from 'uniswap/src/features/transactions/swap/components/PriceDifferenceRow/PriceDifferenceRow'
 import { RoutingInfo } from 'uniswap/src/features/transactions/swap/components/RoutingInfo/RoutingInfo'
-import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/components/SwapRateRatio'
+import { SwapRateRow } from 'uniswap/src/features/transactions/swap/components/SwapRateRow'
 import { AcceptNewQuoteRow } from 'uniswap/src/features/transactions/swap/review/SwapDetails/AcceptNewQuoteRow'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import type { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
@@ -73,8 +71,6 @@ export function SwapDetails({
   NetworkCostRowSlot,
   sponsorshipInfo,
 }: SwapDetailsProps): JSX.Element {
-  const { t } = useTranslation()
-
   const acceptedTrade = acceptedDerivedSwapInfo.trade.trade ?? acceptedDerivedSwapInfo.trade.indicativeTrade
   const routedTrade = derivedSwapInfo.trade.trade
   const trade = derivedSwapInfo.trade.trade ?? derivedSwapInfo.trade.indicativeTrade
@@ -156,14 +152,7 @@ export function SwapDetails({
         CollapsedInfoRow={
           showCollapsedPriceImpactRow ? <PriceDifferenceRow derivedSwapInfo={acceptedDerivedSwapInfo} /> : undefined
         }
-        RateInfo={
-          <Flex row alignItems="center" justifyContent="space-between">
-            <Text color="$neutral2" variant="body3">
-              {t('swap.details.rate')}
-            </Text>
-            <SwapRateRatio trade={trade} derivedSwapInfo={acceptedDerivedSwapInfo} justifyContent="flex-end" />
-          </Flex>
-        }
+        RateInfo={<SwapRateRow trade={trade} derivedSwapInfo={acceptedDerivedSwapInfo} />}
         onShowWarning={onShowWarning}
       >
         <EstimatedSwapTime showIfLongerThanCutoff={false} timeMs={estimatedSwapTime} />

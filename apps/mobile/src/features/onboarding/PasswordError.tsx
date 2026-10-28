@@ -1,7 +1,6 @@
-import { Flex, Text } from '@universe/mycelium'
+import { Flex, Text, AnimatedFlex } from '@universe/mycelium'
 import React from 'react'
 import { StyleProp, ViewStyle } from 'react-native'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 
 interface PasswordErrorProps {
   errorText: string

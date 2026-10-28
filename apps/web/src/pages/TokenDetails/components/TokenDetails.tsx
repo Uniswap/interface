@@ -1,4 +1,4 @@
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
+import { FeatureFlags, useFeatureFlag, useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, useIsTouchDevice } from '@universe/mycelium'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
@@ -51,7 +51,7 @@ import { useTDPRWAMatch } from '~/pages/TokenDetails/hooks/useTDPRWAMatch'
 import { useTDPTokenCategories } from '~/pages/TokenDetails/hooks/useTDPTokenCategories'
 import { useTDPTokenWarningDisplay } from '~/pages/TokenDetails/hooks/useTDPTokenWarningDisplay'
 import { useTokenDetailsAuctionDisplay } from '~/pages/TokenDetails/hooks/useTokenDetailsAuctionDisplay'
-import { shouldReserveLiveAuctionBannerSpace } from '~/pages/TokenDetails/utils/tokenDetailsAuctionDisplay'
+import { shouldReserveAuctionBannerSpace } from '~/pages/TokenDetails/utils/tokenDetailsAuctionDisplay'
 
 /**
  * Balance and bridged-asset blocks where they stack under the chart. Returning null rather than an
@@ -74,6 +74,50 @@ function StackedTokenInfo({
       {showBalance && <BalanceSummary />}
       <BridgedAssetSection currencyInfo={currencyInfo} isBridgedAsset={isBridgedAsset} />
     </Flex>
+  )
+}
+
+/** If provenance crashes, the section falls back to plain About instead of an empty Info heading. */
+function TokenDescriptionWithoutLaunchInfo(): JSX.Element {
+  return <TokenDescription />
+}
+
+/** Stats and the left-panel sections under it. With provenance on, launch info joins About as one Info module right under Stats; off, About keeps its old slot. */
+function TokenDetailsLowerSections(): JSX.Element {
+  const auctionDisplay = useTokenDetailsAuctionDisplay()
+  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
+  const isTokenProvenanceEnabled = useFeatureFlag(FeatureFlags.TokenProvenance)
+  const { categories, isLoading: isCategoriesLoading } = useTDPTokenCategories()
+
+  // The boundary is always there with the flag on, so late provenance doesn't remount the section.
+  const tokenDescription = isTokenProvenanceEnabled ? (
+    <TokenDetailsAuctionErrorBoundary fallback={TokenDescriptionWithoutLaunchInfo}>
+      <TokenDescription launchInfo={auctionDisplay.provenance && <TokenProvenance />} />
+    </TokenDetailsAuctionErrorBoundary>
+  ) : (
+    <TokenDescription />
+  )
+
+  return (
+    <>
+      <StatsSection />
+      {tokenCategoriesEnabled ? (
+        <>
+          {isTokenProvenanceEnabled && tokenDescription}
+          <MoreWaysToTrade />
+          {!isTokenProvenanceEnabled && tokenDescription}
+          <RelatedTokensSection categories={categories} isLoading={isCategoriesLoading} />
+          <ActivitySection />
+        </>
+      ) : (
+        <>
+          {tokenDescription}
+          <ActivitySection />
+          <MoreWaysToTrade />
+          <RelatedTokens />
+        </>
+      )}
+    </>
   )
 }
 
@@ -111,10 +155,7 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
   const auctionDisplay = useTokenDetailsAuctionDisplay()
   const showAuctionCard = shouldShowAuctionOnlyLayout(auctionDisplay)
   const hideSwap = showAuctionCard || auctionDisplay.isInitialLoading
-  const showAuctionBanner = shouldReserveLiveAuctionBannerSpace(auctionDisplay)
-
-  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
-  const { categories, isLoading: isCategoriesLoading } = useTDPTokenCategories()
+  const showAuctionBanner = shouldReserveAuctionBannerSpace(auctionDisplay)
 
   const rwaMatch = useTDPRWAMatch()
   useLogRWATokenDetailsViewed({
@@ -186,26 +227,7 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
               />
             )}
 
-            <StatsSection />
-            <TokenDetailsAuctionErrorBoundary>
-              <TokenProvenance />
-            </TokenDetailsAuctionErrorBoundary>
-
-            {tokenCategoriesEnabled ? (
-              <>
-                <MoreWaysToTrade />
-                <TokenDescription />
-                <RelatedTokensSection categories={categories} isLoading={isCategoriesLoading} />
-                <ActivitySection />
-              </>
-            ) : (
-              <>
-                <TokenDescription />
-                <ActivitySection />
-                <MoreWaysToTrade />
-                <RelatedTokens />
-              </>
-            )}
+            <TokenDetailsLowerSections />
           </LeftPanel>
           <RightPanel>
             {isDesktop && (

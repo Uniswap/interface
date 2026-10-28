@@ -1,0 +1,30 @@
+{
+  "name": "@universe/cca",
+  "version": "0.0.0",
+  "dependencies": {
+    "viem": "2.49.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.17",
+    "@vitest/coverage-v8": "3.2.1",
+    "vitest": "3.2.1",
+    "vitest-presets": "workspace:^"
+  },
+  "scripts": {
+    "typecheck": "nx typecheck cca",
+    "check": "nx check cca",
+    "check:fast": "nx check:fast cca",
+    "check:deps:usage": "nx check:deps:usage cca",
+    "test": "nx test cca",
+    "format": "nx format cca",
+    "format:check": "nx format:check cca",
+    "lint": "nx lint cca",
+    "lint:fix": "nx lint:fix cca"
+  },
+  "nx": {
+    "includedScripts": []
+  },
+  "main": "src/index.ts",
+  "private": true,
+  "sideEffects": false
+}

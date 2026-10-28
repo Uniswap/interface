@@ -1,4 +1,11 @@
-import { type QueryFunction, type QueryKey, skipToken, type UseQueryResult, useQuery } from '@tanstack/react-query'
+import {
+  hashKey,
+  type QueryFunction,
+  type QueryKey,
+  skipToken,
+  type UseQueryResult,
+  useQuery,
+} from '@tanstack/react-query'
 import { V1_TRADING_API_PATHS, type TradingApi, type UseQueryApiHelperHookArgs } from '@universe/api'
 import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
@@ -16,6 +23,8 @@ export function useWalletEncode7702Query({
     queryKey,
     queryFn: params ? walletEncode7702QueryFn(params) : skipToken,
     ...rest,
+    // `calls` is an ordered batch, so the shared array-sorting hasher must not decide cache identity here.
+    queryKeyHashFn: hashKey,
   })
 }
 

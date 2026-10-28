@@ -1,4 +1,4 @@
-import { Flex } from '@universe/mycelium'
+import { Flex, AnimatedFlex } from '@universe/mycelium'
 import { PropsWithChildren, useEffect } from 'react'
 import {
   cancelAnimation,
@@ -8,7 +8,6 @@ import {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 
 export function SpinningBorderIcon({
   children,

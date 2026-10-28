@@ -1,0 +1,20 @@
+product_area: activity
+platforms: [web, extension, mobile]
+nxProjects: [uniswap, wallet, "@uniswap/extension", "@uniswap/mobile"]
+owners: ["@uniswap/consumer-engagement-fe"]
+
+# Casebook area-registry metadata (read by the engine in apps/cli/src/casebook).
+# These drive Testlio suite naming, the PR-comment label, and CI routing.
+label: Activity
+suiteNamePrefix: Activity
+ghLabel: casebook:activity
+# Reviewer GitHub team for the auto-opened catalog companion PR.
+# Convention/best-guess — CODEOWNERS is silent on the activity/notifications dirs
+# (see area-blueprint.md "CODEOWNERS resolution notes"). Confirm with the pod lead.
+reviewerTeam: consumer-engagement-fe
+
+# Test-wallet aliases referenced by this area's cases. Symbolic only: real mnemonics live in
+# the QA vault / Testlio TL handoff, keyed by the same alias. Never put a secret here.
+wallets:
+  TW-ACTIVITY-01: "funded wallet: ETH + USDC on mainnet, with prior confirmed transaction history"
+  TW-ACTIVITY-02: "fresh wallet: connected, zero transaction history (empty-state cases)"

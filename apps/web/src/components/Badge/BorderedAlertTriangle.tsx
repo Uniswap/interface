@@ -1,5 +1,5 @@
+import { useSporeColorsForTheme } from '@universe/mycelium'
 import React, { type ComponentProps } from 'react'
-import { useSporeColorsForTheme } from 'ui/src/hooks/useSporeColors'
 
 export const BorderedAlertTriangle = React.memo((props: ComponentProps<'svg'>) => {
   const colors = useSporeColorsForTheme()

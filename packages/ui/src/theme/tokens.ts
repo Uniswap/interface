@@ -1,5 +1,5 @@
 import { isProdEnv } from '@universe/environment'
-import type { DynamicColor } from 'ui/src/hooks/useSporeColors'
+import { type DynamicColor } from '@universe/mycelium/theme-hooks-compat'
 import { borderRadii } from 'ui/src/theme/borderRadii'
 import { colors as color } from 'ui/src/theme/color/colors'
 import type { SporeColorToken } from 'ui/src/theme/color/types'
@@ -34,14 +34,6 @@ const iconSize = {
 }
 
 export type IconSizeTokens = `$icon.${keyof typeof iconSize}`
-
-export function getIconSizeToken(numberSize: number): IconSizeTokens | null {
-  if (numberSize in iconSize) {
-    return `$icon.${numberSize as keyof typeof iconSize}`
-  }
-
-  return null
-}
 
 const fontSize = {
   heading1: fonts.heading1.fontSize,
@@ -90,9 +82,7 @@ export const tokens = {
  */
 
 // it would be a bit nicer if this was cast to Token
-// but we'd need another new Tamagui release to support that (coming soon)
-
-type ColorValue = DynamicColor | string | undefined | null
+type ColorValue = DynamicColor | undefined | null
 
 // Exported for testing
 export const getIsTokenFormat = (value: string): boolean => {

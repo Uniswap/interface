@@ -1,10 +1,17 @@
 import { TradingApi } from '@universe/api'
-import { Flex, Text } from '@universe/mycelium'
-import { Fragment, useMemo } from 'react'
+import { useSporeColors, zIndexes } from '@universe/mycelium'
+import {
+  BestRouteLabel,
+  PLAN_STEP_ICON_SIZE,
+  PlanRoutingCaption,
+  PlanStepLogo,
+  PlanStepLogoKind,
+  RoutingInfoRow,
+} from '@universe/swap-ui'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { HorizontalDottedLineSeparator, useSporeColors } from 'ui/src'
-import { CheckCircleFilled, Shuffle } from 'ui/src/components/icons'
-import { iconSizes, zIndexes } from 'ui/src/theme'
+import { HorizontalDottedLineSeparator } from 'ui/src'
+import { Shuffle } from 'ui/src/components/icons'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
@@ -19,7 +26,8 @@ import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 const STEPS_TO_HIDE = [TradingApi.PlanStepType.APPROVAL_PERMIT]
 
 /**
- * Component that displays the routing information for the given plan.
+ * Adapter for the plan routing row: resolves the plan steps into logos and owns the info shell.
+ * The row and caption layout come from swap-ui.
  */
 export function PlanRoutingInfo({ trade }: { trade: ChainedActionTrade }): JSX.Element {
   const sporeColors = useSporeColors()
@@ -31,63 +39,40 @@ export function PlanRoutingInfo({ trade }: { trade: ChainedActionTrade }): JSX.E
 
   const caption = useMemo(() => {
     return (
-      <Flex width="100%" gap="$spacing8">
-        <Flex row alignItems="center" width="100%" gap="$spacing8" justifyContent="space-between">
-          {stepsToShow?.map((step, idx) => (
-            <Fragment key={'steplogo-' + idx}>
-              <Flex alignItems="center" justifyContent="center">
-                <StepLogo step={step} />
-              </Flex>
-              {idx < stepsToShow.length - 1 && (
-                <Flex flex={1} justifyContent="center">
-                  <HorizontalDottedLineSeparator strokeColor={sporeColors.neutral3.val} strokeWidth={2} />
-                </Flex>
-              )}
-            </Fragment>
-          ))}
-        </Flex>
-        <Text color="$neutral2" variant="body3">
-          {t('swap.details.routingInfo.plan')}
-        </Text>
-      </Flex>
+      <PlanRoutingCaption
+        stepLogos={stepsToShow?.map((step, idx) => <StepLogo key={'steplogo-' + idx} step={step} />) ?? []}
+        stepSeparator={<HorizontalDottedLineSeparator strokeColor={sporeColors.neutral3.val} strokeWidth={2} />}
+      />
     )
-  }, [stepsToShow, sporeColors.neutral3.val, t])
+  }, [stepsToShow, sporeColors.neutral3.val])
 
   return (
-    <Flex row alignItems="center" justifyContent="space-between">
-      <WarningInfo
-        modalProps={{
-          modalName: ModalName.SwapReview,
-          captionComponent: caption,
-          rejectText: t('common.button.close'),
-          icon: <Shuffle color="$neutral1" size="$icon.24" />,
-          severity: WarningSeverity.None,
-          title: t('swap.tradeRoutes'),
-          zIndex: zIndexes.popover,
-        }}
-        tooltipProps={{
-          text: caption,
-          placement: 'top',
-          maxWidth: 350,
-        }}
-        analyticsTitle="Order routing"
-      >
-        <Flex centered row gap="$spacing4">
-          <Text color="$neutral2" variant="body3">
-            {t('common.bestRoute')}
-          </Text>
-        </Flex>
-      </WarningInfo>
-      <Flex row shrink justifyContent="flex-end">
-        <RoutingLabel trade={trade} />
-      </Flex>
-    </Flex>
+    <RoutingInfoRow
+      info={
+        <WarningInfo
+          modalProps={{
+            modalName: ModalName.SwapReview,
+            captionComponent: caption,
+            rejectText: t('common.button.close'),
+            icon: <Shuffle color="$neutral1" size="$icon.24" />,
+            severity: WarningSeverity.None,
+            title: t('swap.tradeRoutes'),
+            zIndex: zIndexes.popover,
+          }}
+          tooltipProps={{
+            text: caption,
+            placement: 'top',
+            maxWidth: 350,
+          }}
+          analyticsTitle="Order routing"
+        >
+          <BestRouteLabel />
+        </WarningInfo>
+      }
+      label={<RoutingLabel trade={trade} />}
+    />
   )
 }
-
-const ICON_SIZE = iconSizes.icon20
-const halfIconSize = ICON_SIZE / 2
-const offset = -halfIconSize / 4
 
 const StepLogo = ({ step }: { step: TradingApi.TruncatedPlanStep }): JSX.Element | null => {
   const chainIdIn = toSupportedChainId(step.tokenInChainId)
@@ -110,35 +95,28 @@ const StepLogo = ({ step }: { step: TradingApi.TruncatedPlanStep }): JSX.Element
           chainId={chainIdIn}
           inputCurrencyInfo={currencyInfoIn}
           outputCurrencyInfo={currencyInfoOut}
-          size={ICON_SIZE}
+          size={PLAN_STEP_ICON_SIZE}
         />
       )
     case TradingApi.PlanStepType.BRIDGE:
       return (
-        <Flex row alignItems="center" gap="$spacing8">
-          <CurrencyLogo currencyInfo={currencyInfoIn} size={ICON_SIZE} hideNetworkLogo={false} />
-          <Shuffle color="$neutral3" size="$icon.12" />
-          <CurrencyLogo currencyInfo={currencyInfoOut} size={ICON_SIZE} hideNetworkLogo={false} />
-        </Flex>
+        <PlanStepLogo
+          kind={PlanStepLogoKind.Bridge}
+          inputLogo={<CurrencyLogo currencyInfo={currencyInfoIn} size={PLAN_STEP_ICON_SIZE} hideNetworkLogo={false} />}
+          outputLogo={
+            <CurrencyLogo currencyInfo={currencyInfoOut} size={PLAN_STEP_ICON_SIZE} hideNetworkLogo={false} />
+          }
+        />
       )
     case TradingApi.PlanStepType.APPROVAL_PERMIT:
     case TradingApi.PlanStepType.APPROVAL_TXN:
     case TradingApi.PlanStepType.RESET_APPROVAL_TXN:
     default: {
       return (
-        <Flex>
-          <CurrencyLogo currencyInfo={currencyInfoIn} size={ICON_SIZE} hideNetworkLogo={true} />
-          <Flex
-            bottom={offset}
-            position="absolute"
-            right={offset}
-            zIndex={zIndexes.mask}
-            backgroundColor="$background"
-            borderRadius="$roundedFull"
-          >
-            <CheckCircleFilled color="$statusSuccess" size={halfIconSize} />
-          </Flex>
-        </Flex>
+        <PlanStepLogo
+          kind={PlanStepLogoKind.Approval}
+          inputLogo={<CurrencyLogo currencyInfo={currencyInfoIn} size={PLAN_STEP_ICON_SIZE} hideNetworkLogo={true} />}
+        />
       )
     }
   }

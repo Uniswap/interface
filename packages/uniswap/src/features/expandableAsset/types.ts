@@ -1,10 +1,13 @@
 import { type ModifierPressProps } from '@universe/mycelium'
-import type { ReactNode } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 import type { IssuerToken } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 
 export type ExpandableAssetGroupVariant = 'table' | 'search'
 
 export const TABLE_SUBLINE_HEIGHT = 18
+
+/** Web-only inline styles for an identity's row, logo wrapper and text block (e.g. a scroll-linked table column collapse). */
+export type IdentityLayoutStyles = { row?: CSSProperties; logo?: CSSProperties; text?: CSSProperties }
 
 /** Controlled menu open-state shared between the shell (native long-press) and the row (web …/right-click). */
 export type IssuerMenuControl = {

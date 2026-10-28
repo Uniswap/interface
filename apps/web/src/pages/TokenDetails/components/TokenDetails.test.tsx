@@ -2,16 +2,20 @@ import type { PlainMessage } from '@bufbuild/protobuf'
 import { AuctionType, type Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { Token } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { TestID } from '@universe/test'
 import type { ComponentProps, ReactNode } from 'react'
+import type { LaunchProvenance } from 'uniswap/src/features/dataApi/launchProvenance'
 import { logger } from 'utilities/src/logger/logger'
 import type { CurrentBlockState } from '~/features/Toucan/Auction/utils/resolveAuctionDisplayState'
 import { TokenDetailsContent } from '~/pages/TokenDetails/components/TokenDetails'
 import { TokenDetailsAuctionDisplayProvider } from '~/pages/TokenDetails/context/TokenDetailsAuctionDisplayProvider'
 import { TokenDetailsSourceState } from '~/pages/TokenDetails/context/tokenDetailsSourceState'
 import type { TokenDetailsAuctionSource } from '~/pages/TokenDetails/hooks/useTokenDetailsAuction'
+import { mocked } from '~/test-utils/mocked'
 import { mockMediaSize } from '~/test-utils/mockMediaSize'
 import { fireEvent, render, screen, within } from '~/test-utils/render'
+import { SERVED_CUSTOM_CCA_PROVENANCE } from '~/test-utils/tokenDetails/fixtures'
 import type { TokenPoolState } from '~/types/tokenPool'
 
 // `useMedia` drives `isDesktop`, which decides which of the two placements TokenDetailsContent
@@ -61,6 +65,7 @@ let mockCurrentBlock: CurrentBlockState = { status: 'success', blockNumber: 150n
 let mockBannerShouldThrow = false
 let mockProvenanceShouldThrow = false
 let mockClaimShouldThrow = false
+let mockServedProvenance: LaunchProvenance | undefined
 const mockAuction = {
   address: '0x1111111111111111111111111111111111111111',
   tokenAddress: mockToken.address,
@@ -93,6 +98,10 @@ vi.mock('~/pages/TokenDetails/context/useTDPStore', () => ({
       pageQueryLoading: false,
       auctionSource: mockAuctionSource,
     }),
+}))
+
+vi.mock('uniswap/src/features/dataApi/useTokenLaunchProvenance', () => ({
+  useTokenLaunchProvenance: () => mockServedProvenance,
 }))
 
 vi.mock('~/features/Toucan/Auction/hooks/useAuctionDisplayDataSources', async (importOriginal) => ({
@@ -220,7 +229,14 @@ vi.mock('~/pages/TokenDetails/components/info/BridgedAssetSection', () => ({ Bri
 vi.mock('~/pages/TokenDetails/components/info/StatsSection', () => ({
   StatsSection: () => <div data-testid="tdp-stats" />,
 }))
-vi.mock('~/pages/TokenDetails/components/info/TokenDescription', () => ({ TokenDescription: () => null }))
+vi.mock('~/pages/TokenDetails/components/info/TokenDescription', () => ({
+  TokenDescription: ({ launchInfo }: { launchInfo?: ReactNode }) => (
+    <>
+      {launchInfo ? 'Info heading' : 'About heading'}
+      {launchInfo}
+    </>
+  ),
+}))
 vi.mock('~/pages/TokenDetails/components/activity/ActivitySection', () => ({
   ActivitySection: () => <div>Token activity</div>,
 }))
@@ -243,11 +259,13 @@ function TokenDetailsWithDisplay(): JSX.Element {
 
 describe('TokenDetailsContent', () => {
   beforeEach(() => {
+    mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.TokenProvenance)
     mockAuctionSource = { status: TokenDetailsSourceState.Disabled }
     mockPools = { status: 'loading' }
     mockCurrentBlock = { status: 'success', blockNumber: 150n }
     mockBannerShouldThrow = false
     mockProvenanceShouldThrow = false
+    mockServedProvenance = SERVED_CUSTOM_CCA_PROVENANCE
     mockClaimShouldThrow = false
   })
 
@@ -285,6 +303,7 @@ describe('TokenDetailsContent', () => {
   it('keeps the normal chart and swap without provenance when the auction resolves as not found', () => {
     mockMediaSize('xxl')
     mockAuctionSource = { status: TokenDetailsSourceState.NotFound }
+    mockServedProvenance = undefined
 
     render(<TokenDetailsWithDisplay />)
 
@@ -413,8 +432,6 @@ describe('TokenDetailsContent', () => {
   it.each([
     ['sm', 'ended', AuctionType.CUSTOM],
     ['xxl', 'ended', AuctionType.CUSTOM],
-    ['sm', 'upcoming', AuctionType.CUSTOM],
-    ['xxl', 'upcoming', AuctionType.CUSTOM],
     ['sm', 'live', AuctionType.CROWD],
     ['xxl', 'live', AuctionType.CROWD],
   ] as const)(
@@ -428,9 +445,9 @@ describe('TokenDetailsContent', () => {
         chainId: mockToken.chainId,
         auctionType,
         isQuickLaunch: auctionType === AuctionType.CROWD,
-        startBlock: phase === 'upcoming' ? '160' : '100',
+        startBlock: '100',
         endBlock: phase === 'ended' ? '149' : '200',
-        estimatedStartTime: { seconds: nowSeconds + (phase === 'upcoming' ? 3600n : -3600n), nanos: 0 },
+        estimatedStartTime: { seconds: nowSeconds - 3600n, nanos: 0 },
         estimatedEndTime: { seconds: nowSeconds + (phase === 'ended' ? -60n : 7200n), nanos: 0 },
       }
       const olderLiveAuction = {
@@ -494,6 +511,46 @@ describe('TokenDetailsContent', () => {
     },
   )
 
+  it.each(['sm', 'xxl'] as const)(
+    'shows the upcoming banner with other active auctions behind its chip at %s',
+    (mediaSize) => {
+      mockMediaSize(mediaSize)
+      const nowSeconds = BigInt(Math.floor(Date.now() / 1000))
+      const upcoming = {
+        ...mockAuction,
+        auctionId: 'upcoming',
+        chainId: mockToken.chainId,
+        auctionType: AuctionType.CUSTOM,
+        startBlock: '160',
+        estimatedStartTime: { seconds: nowSeconds + 3600n, nanos: 0 },
+        estimatedEndTime: { seconds: nowSeconds + 7200n, nanos: 0 },
+      }
+      const upcomingLater = {
+        ...upcoming,
+        auctionId: 'upcomingLater',
+        address: '0x2222222222222222222222222222222222222222',
+        startBlock: '200',
+        estimatedStartTime: { seconds: nowSeconds + 10800n, nanos: 0 },
+        estimatedEndTime: { seconds: nowSeconds + 14400n, nanos: 0 },
+      }
+      mockAuctionSource = {
+        status: TokenDetailsSourceState.Found,
+        auction: upcoming,
+        auctions: [upcoming, upcomingLater],
+      }
+      mockPools = { status: 'success', poolCount: 1 }
+
+      render(<TokenDetailsWithDisplay />)
+
+      expect(screen.getByTestId(TestID.TokenDetailsAuctionBanner)).toHaveTextContent('Upcoming auction')
+      expect(screen.queryByTestId(TestID.TokenDetailsAuctionCard)).toBeNull()
+      expect(screen.queryByTestId(TestID.TokenDetailsOtherAuctionsRow)).toBeNull()
+      expect(screen.getByText('Token swap')).toBeInTheDocument()
+      fireEvent.click(screen.getByTestId(TestID.TokenDetailsMoreAuctionsChip))
+      expect(screen.getAllByTestId(TestID.TokenDetailsAuctionListRow)).toHaveLength(2)
+    },
+  )
+
   it('adds Live Custom context while preserving the full tradable page', () => {
     mockMediaSize('xxl')
     mockAuctionSource = {
@@ -542,6 +599,8 @@ describe('TokenDetailsContent', () => {
       const survivingSection = failBanner ? TestID.TokenDetailsProvenance : TestID.TokenDetailsAuctionBanner
       expect(screen.queryByTestId(failedSection)).toBeNull()
       expect(screen.getByTestId(survivingSection)).toBeInTheDocument()
+      // A crashed provenance must not leave an Info heading with nothing under it.
+      expect(screen.getByText(failBanner ? 'Info heading' : 'About heading')).toBeInTheDocument()
       expect(screen.getByText('Token chart')).toBeInTheDocument()
       expect(screen.getByText('Token swap')).toBeInTheDocument()
       expect(screen.getByTestId('tdp-stats')).toBeInTheDocument()

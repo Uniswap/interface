@@ -23,6 +23,7 @@ import {
   IS_SHEET_READY_FALLBACK_TIMEOUT,
 } from 'uniswap/src/components/modals/modalConstants'
 import type { ModalProps } from 'uniswap/src/components/modals/ModalProps'
+import { useBottomInsetCoverFooter } from 'uniswap/src/components/modals/useBottomInsetCoverFooter'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { useKeyboardLayout } from 'uniswap/src/utils/useKeyboardLayout'
@@ -133,6 +134,7 @@ function BottomSheetModalContents({
   overrideInnerContainer = false,
   renderBehindTopInset = false,
   renderBehindBottomInset = false,
+  coverBottomInsetOnAndroid,
   hideKeyboardOnDismiss = false,
   hideKeyboardOnSwipeDown = false,
   keyboardBlurBehavior,
@@ -349,6 +351,12 @@ function BottomSheetModalContents({
     dimensions.fullHeight,
   ])
 
+  const footer = useBottomInsetCoverFooter({
+    footerComponent,
+    renderBehindBottomInset,
+    coverBottomInsetOnAndroid,
+    backgroundColor: backgroundColorValue,
+  })
   const containerStyle = useMemo(() => {
     return { zIndex: fullScreen ? undefined : zIndex ? zIndex : zIndexes.modal }
   }, [fullScreen, zIndex])
@@ -369,7 +377,7 @@ function BottomSheetModalContents({
       enableHandlePanningGesture={isDismissible}
       // gorhom defaults this to true, so without it a drag could close a sheet the caller marked non-dismissible.
       enablePanDownToClose={isDismissible}
-      footerComponent={footerComponent}
+      footerComponent={footer}
       handleComponent={renderHandleBar}
       keyboardBehavior={keyboardBehavior}
       keyboardBlurBehavior={keyboardBlurBehavior}

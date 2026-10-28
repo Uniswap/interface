@@ -2,7 +2,7 @@ import { Flex, Text } from '@universe/mycelium'
 import { useTranslation } from 'react-i18next'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { FORMAT_DATE_MEDIUM, useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
-import type { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { NumberType } from 'utilities/src/format/types'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
 import type { PositionEconomics } from '~/pages/Swap/Margin/chart/marginChartMath'
@@ -76,7 +76,9 @@ export function MarginChartTooltip({
         }
         // Hoisted out of the outer t() options — the i18n extractor misses t() calls nested there.
         const liqDirection =
-          direction === 'SHORT' ? t('margin.chart.explain.liq.rises') : t('margin.chart.explain.liq.falls')
+          direction === MarginDirection.SHORT
+            ? t('margin.chart.explain.liq.rises')
+            : t('margin.chart.explain.liq.falls')
         return t('margin.chart.explain.liq', { direction: liqDirection, price: fiat(overlay.price) })
       }
       case 'zone':

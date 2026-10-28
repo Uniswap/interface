@@ -1,8 +1,6 @@
 /**
  * Behavior contract for the `AnimatableCopyIcon` compat web leg (INFRA-3653),
- * asserted on the rendered DOM. The legacy reference is
- * `ui/src/components/AnimatableCopyIcon/AnimatableCopyIcon.tsx`. Layer class
- * assertions compare against a directly rendered `FlexCompat` instead of
+ * asserted on the rendered DOM. Layer class assertions compare against a directly rendered `FlexCompat` instead of
  * literal class strings (the FlexLoader-compat approach), so the contract is
  * "same emission as the flex compat", not a copy of its class manifest.
  */

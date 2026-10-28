@@ -1,7 +1,6 @@
 import { isMobileWeb, isWebPlatform } from '@universe/environment'
-import { Flex, Text } from '@universe/mycelium'
+import { Flex, Text, useExtractedTokenColor, useSporeColors } from '@universe/mycelium'
 import { useTranslation } from 'react-i18next'
-import { useExtractedTokenColor, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { colors as palette, iconSizes, zIndexes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
@@ -254,6 +253,7 @@ function useExposureColor({
     tokenName: currency?.symbol ?? currency?.name,
     backgroundColor: colors.surface1.val,
     defaultColor: fallbackColor,
+    colorOverrides: currencyInfo?.colorOverrides,
   })
 
   return resolveExposureColor({ imageUrl, extractedColor: tokenColor, fallbackColor })

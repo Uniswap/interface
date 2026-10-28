@@ -7,6 +7,7 @@ import { useMemo } from 'react'
 import { isHiddenAuction } from 'uniswap/src/features/toucan/hiddenAuctions'
 import { TokenDetailsSourceState } from '~/pages/TokenDetails/context/tokenDetailsSourceState'
 import { getTdpAuctionQueryOptions, getTdpAuctionRequest } from '~/pages/TokenDetails/tdpAuctionQueryOptions'
+import { sortTokenDetailsAuctions } from '~/pages/TokenDetails/utils/tokenDetailsAuctionList'
 
 export type TokenDetailsAuctionSource =
   | { status: TokenDetailsSourceState.Disabled | TokenDetailsSourceState.Loading | TokenDetailsSourceState.NotFound }
@@ -38,9 +39,9 @@ function resolveTokenDetailsAuctionSource({
     }
   }
 
-  // Backend order is preserved; index 0 is treated as the page's primary auction.
   const auctions = data?.auctions.filter((candidate) => !isHiddenAuction({ auctionId: candidate.auctionId })) ?? []
-  const auction = auctions.at(0)
+  // The backend lists newest-created first, so a relaunch that already ended can sit ahead of a live one.
+  const auction = sortTokenDetailsAuctions({ auctions, nowMs: Date.now() }).at(0)
   if (auction) {
     return { status: TokenDetailsSourceState.Found, auction, auctions }
   }

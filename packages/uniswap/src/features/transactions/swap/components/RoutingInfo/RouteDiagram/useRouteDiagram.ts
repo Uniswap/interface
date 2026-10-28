@@ -1,6 +1,7 @@
 import type { UniverseChainId } from '@universe/chains'
 import { isWebApp } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import type { TokenColorOverrides } from '@universe/mycelium'
 import { useMemo } from 'react'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import type { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
@@ -12,6 +13,8 @@ export interface RouteDiagramData {
   diagram: RouteDiagram
   /** Keyed by token key (shared by every visit of a token); a token without a logo falls back to a text label. */
   logoUrlByTokenKey: ReadonlyMap<string, string>
+  /** Keyed like `logoUrlByTokenKey`; only tokens with backend-curated colors have an entry. */
+  colorOverridesByTokenKey: ReadonlyMap<string, TokenColorOverrides>
 }
 
 /**
@@ -32,11 +35,16 @@ export function useRouteDiagram(trade: Trade): RouteDiagramData | undefined {
       return undefined
     }
     const logoUrlByTokenKey = new Map<string, string>()
+    const colorOverridesByTokenKey = new Map<string, TokenColorOverrides>()
     for (const info of currencyInfos) {
-      if (info?.logoUrl) {
-        logoUrlByTokenKey.set(normalizeCurrencyIdForMapLookup(info.currencyId), info.logoUrl)
+      const tokenKey = info ? normalizeCurrencyIdForMapLookup(info.currencyId) : undefined
+      if (tokenKey && info?.logoUrl) {
+        logoUrlByTokenKey.set(tokenKey, info.logoUrl)
+      }
+      if (tokenKey && info?.colorOverrides) {
+        colorOverridesByTokenKey.set(tokenKey, info.colorOverrides)
       }
     }
-    return { diagram, logoUrlByTokenKey }
+    return { diagram, logoUrlByTokenKey, colorOverridesByTokenKey }
   }, [diagram, currencyInfos])
 }

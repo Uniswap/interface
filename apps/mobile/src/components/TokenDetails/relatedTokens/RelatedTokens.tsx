@@ -16,7 +16,7 @@ import type { RankedTokenCardItem } from 'uniswap/src/data/apiClients/dataApiSer
 import { currencyIdToRestContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { getTokenCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
+import { getCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
 import { getRelatedTokensTitle } from 'uniswap/src/features/tokenCategories/getRelatedTokensTitle'
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -149,7 +149,7 @@ const CategoryChip = memo(function CategoryChip({
   selected: boolean
   onSelect: (categoryId: string) => void
 }): JSX.Element {
-  const Icon = getTokenCategoryIcon(category)
+  const Icon = getCategoryIcon(category)
   const onPress = useEvent(() => onSelect(category.id))
   const renderIcon = useCallback((color: FilterChipColor) => <Icon color={color} size="$icon.16" />, [Icon])
 

@@ -214,6 +214,77 @@ describe('useSheetDrag mid-drag re-render hardening (review finding 5)', () => {
   })
 })
 
+/** Stamps `pointerType` onto a MouseEvent-based pointer dispatch (jsdom's MouseEvent lacks it). */
+function dispatchTouchPointer(target: EventTarget, type: string, init: { clientY: number }): void {
+  const event = new MouseEvent(type, { bubbles: true, cancelable: true, button: 0, ...init })
+  Object.defineProperty(event, 'pointerType', { value: 'touch' })
+  target.dispatchEvent(event)
+}
+
+/** Returns whether the sheet's touchmove handler consumed the move (i.e. suppressed the browser's
+ * own pan/fling gesture for it). */
+function dispatchTouchMove(target: EventTarget, { cancelable = true }: { cancelable?: boolean } = {}): boolean {
+  const event = new Event('touchmove', { bubbles: true, cancelable })
+  target.dispatchEvent(event)
+  return event.defaultPrevented
+}
+
+describe('useSheetDrag touch fling suppression', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('consumes touchmoves while a touch drag from the handlebar is in flight', () => {
+    const { handle, setNow } = setupDrag({ isTouchDevice: true })
+    dispatchTouchPointer(handle, 'pointerdown', { clientY: 100 })
+    setNow(1_016)
+    expect(dispatchTouchMove(handle)).toBe(true)
+  })
+
+  it('stops consuming touchmoves once the drag ends, so the next gesture is untouched', () => {
+    const { handle, onClose, setNow } = setupDrag({ isTouchDevice: true })
+    dispatchTouchPointer(handle, 'pointerdown', { clientY: 100 })
+    setNow(1_100)
+    dispatchPointer(window, 'pointermove', { clientY: 400 })
+    dispatchPointer(window, 'pointerup', { clientY: 400 })
+    expect(onClose).toHaveBeenCalledTimes(1)
+    expect(dispatchTouchMove(handle)).toBe(false)
+  })
+
+  it('stops consuming touchmoves after a pointercancel', () => {
+    const { handle } = setupDrag({ isTouchDevice: true })
+    dispatchTouchPointer(handle, 'pointerdown', { clientY: 100 })
+    dispatchPointer(window, 'pointercancel', { clientY: 100 })
+    expect(dispatchTouchMove(handle)).toBe(false)
+  })
+
+  it('leaves content touchmoves alone so the sheet body still scrolls', () => {
+    const { content } = setupDrag({ isTouchDevice: true })
+    dispatchTouchPointer(content, 'pointerdown', { clientY: 100 })
+    expect(dispatchTouchMove(content)).toBe(false)
+  })
+
+  it('does not consume touchmoves for a mouse drag', () => {
+    const { handle } = setupDrag({})
+    dispatchPointer(handle, 'pointerdown', { clientY: 100 })
+    expect(dispatchTouchMove(handle)).toBe(false)
+  })
+
+  it('ignores touchmoves the browser has already made uncancelable', () => {
+    const { handle } = setupDrag({ isTouchDevice: true })
+    dispatchTouchPointer(handle, 'pointerdown', { clientY: 100 })
+    expect(dispatchTouchMove(handle, { cancelable: false })).toBe(false)
+  })
+
+  it('unbinds the touchmove handler when the sheet closes mid-drag', () => {
+    vi.spyOn(performance, 'now').mockImplementation(() => 1_000)
+    const { getByTestId, rerender } = render(<Harness isOpen isTouchDevice onClose={() => {}} />)
+    dispatchTouchPointer(getByTestId('handle'), 'pointerdown', { clientY: 100 })
+    rerender(<Harness isOpen={false} isTouchDevice onClose={() => {}} />)
+    expect(dispatchTouchMove(getByTestId('handle'))).toBe(false)
+  })
+})
+
 describe('getSheetHeightStyles', () => {
   it('fit mode sizes to content: no frame height, viewport cap on the web app', () => {
     // Tamagui Sheet parity: fit mode must ignore consumer height plumbing (e.g. the token

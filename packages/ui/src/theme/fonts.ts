@@ -1,7 +1,7 @@
 import { isAndroid, isWebApp, isWebPlatform } from '@universe/environment'
+import { needsSmallFont } from '@universe/mycelium/text-compat'
 // Needed for the _Pin drift check below despite the re-export near the bottom (which creates no local binding) — both lines are required
 import type { FontVariantToken } from 'ui/src/theme/fontVariants'
-import { needsSmallFont } from 'ui/src/utils/needs-small-font'
 
 // TODO(EXT-148): remove this type and use Tamagui's FontTokens
 export type TextVariantTokens = keyof typeof fonts

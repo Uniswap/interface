@@ -1,7 +1,7 @@
 import { normalizeTokenAddressForCache } from '@universe/chains'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import type { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { buildCurrencyId, buildNativeCurrencyId, normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 import { shortenAddress } from 'utilities/src/addresses'
 import {
@@ -49,8 +49,8 @@ export function isMarginQuoteToken(input: { address: string }): boolean {
 // MarginPosition also has `collateral`/`debt`, but those hold raw amounts, not addresses.
 export function marginMarketDirection(input: { collateralToken: string; debtToken: string }): MarginDirection {
   return isMarginQuoteToken({ address: input.debtToken }) && !isMarginQuoteToken({ address: input.collateralToken })
-    ? 'LONG'
-    : 'SHORT'
+    ? MarginDirection.LONG
+    : MarginDirection.SHORT
 }
 
 // Direction for any wire row that carries the field: the server's classification when present, the
@@ -78,7 +78,7 @@ export function marginPairLegs(input: {
       ? { base: input.debt, quote: input.collateral }
       : { base: input.collateral, quote: input.debt }
   }
-  return input.direction === 'SHORT'
+  return input.direction === MarginDirection.SHORT
     ? { base: input.debt, quote: input.collateral }
     : { base: input.collateral, quote: input.debt }
 }
@@ -90,7 +90,7 @@ export function marginExposureLeg(input: {
   market: Pick<MarginMarket, 'collateral' | 'debt'>
   direction: MarginDirection
 }): MarginTokenInfo {
-  return input.direction === 'SHORT' ? input.market.debt : input.market.collateral
+  return input.direction === MarginDirection.SHORT ? input.market.debt : input.market.collateral
 }
 
 // "<base> / <quote>" — the stable leg always second, both unwrapped for display.

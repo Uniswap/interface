@@ -1,5 +1,7 @@
+import type { UniverseChainId } from '@universe/chains'
 import { isDevEnv } from '@universe/environment'
 import { createContext, useContext, useState } from 'react'
+import type { CategoryKind } from 'uniswap/src/features/tokenCategories/types'
 import type { StoreApi, UseBoundStore } from 'zustand'
 import { create, useStore } from 'zustand'
 import { devtools } from 'zustand/middleware'
@@ -42,7 +44,10 @@ interface ExploreTablesFilterActions {
   setQuickFilter: (filter: AuctionQuickFilter) => void
   setPoolsFilter: (filter: ExplorePoolsFilterState) => void
   setPoolsAprRange: (range: PoolsAprRange | undefined) => void
-  setFlexSlotCategoryId: (categoryId: string) => void
+  setFlexSlotCategoryId: (args: { kind: CategoryKind; categoryId: string }) => void
+  setCategoryCheckChainId: (chainId: UniverseChainId) => void
+  /** No-op if a newer pick replaced the check. */
+  clearCategoryCheckChainId: (chainId: UniverseChainId) => void
 }
 
 interface ExploreTablesFilterState {
@@ -54,10 +59,12 @@ interface ExploreTablesFilterState {
   /** APR range of the Pools table's loaded rows; the table publishes it so the filter modal can hint it. */
   poolsAprRange?: PoolsAprRange
   /**
-   * Most recent non-spotlit Explore category selection, shown in the chip row's flex slot. Lives here so the
-   * slot survives the Tokens section unmounting on a tab switch.
+   * Most recent non-spotlit Explore category selection per list kind, shown in that chip row's flex slot.
+   * Lives here so the slot survives the section unmounting on a tab switch.
    */
-  flexSlotCategoryId?: string
+  flexSlotCategoryIds: Partial<Record<CategoryKind, string>>
+  /** Network just picked in the network filter, whose stats the selected category is checked against. */
+  categoryCheckChainId?: UniverseChainId
   actions: ExploreTablesFilterActions
 }
 
@@ -76,14 +83,19 @@ export function createExploreTablesFilterStore(initialQuickFilter?: AuctionQuick
         quickFilter: initialQuickFilter ?? INITIAL_QUICK_FILTER,
         poolsFilter: EMPTY_EXPLORE_POOLS_FILTER_STATE,
         poolsAprRange: undefined,
-        flexSlotCategoryId: undefined,
+        flexSlotCategoryIds: {},
+        categoryCheckChainId: undefined,
         actions: {
           setFilterString: (value) => set({ filterString: value }),
           setTimePeriod: (period) => set({ timePeriod: period }),
           setQuickFilter: (filter) => set({ quickFilter: filter }),
           setPoolsFilter: (filter) => set({ poolsFilter: filter }),
           setPoolsAprRange: (range) => set({ poolsAprRange: range }),
-          setFlexSlotCategoryId: (categoryId) => set({ flexSlotCategoryId: categoryId }),
+          setFlexSlotCategoryId: ({ kind, categoryId }) =>
+            set((state) => ({ flexSlotCategoryIds: { ...state.flexSlotCategoryIds, [kind]: categoryId } })),
+          setCategoryCheckChainId: (chainId) => set({ categoryCheckChainId: chainId }),
+          clearCategoryCheckChainId: (chainId) =>
+            set((state) => (state.categoryCheckChainId === chainId ? { categoryCheckChainId: undefined } : state)),
         },
       }),
       {

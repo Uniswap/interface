@@ -1,4 +1,4 @@
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
+import { DynamicConfigs, useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, spacing, Text } from '@universe/mycelium'
 import { ArrowRight } from '@universe/mycelium/icons/ArrowRight'
 import { memo, useCallback } from 'react'
@@ -13,7 +13,7 @@ import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { CATEGORY_PILL_HEIGHT, CategoryPill, Pill } from 'uniswap/src/features/tokenCategories/CategoryPill'
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
-import { useTokenCategoryOrder } from 'uniswap/src/features/tokenCategories/useTokenCategoryOrder'
+import { useCategoryOrder } from 'uniswap/src/features/tokenCategories/useCategoryOrder'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 
 const EMPTY_CATEGORIES: TokenCategory[] = []
@@ -45,7 +45,10 @@ export const CollectionsSection = memo(function CollectionsSection(): JSX.Elemen
   const navigation = useExploreStackNavigation()
   const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
   const { data: categories, isLoading } = useListCategoriesQuery()
-  const orderedCategories = useTokenCategoryOrder(categories ?? EMPTY_CATEGORIES)
+  const orderedCategories = useCategoryOrder({
+    categories: categories ?? EMPTY_CATEGORIES,
+    config: DynamicConfigs.TokenCategoriesOrder,
+  })
 
   const onViewAllPress = useCallback(() => {
     sendAnalyticsEvent(MobileEventName.ExploreCollectionsViewAllSelected)

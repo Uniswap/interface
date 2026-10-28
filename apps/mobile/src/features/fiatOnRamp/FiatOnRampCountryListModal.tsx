@@ -8,6 +8,7 @@ import {
   UniversalList,
   type UniversalListRenderItemInfo,
   type UniversalListStyle,
+  AnimatedFlex,
 } from '@universe/mycelium'
 import { useDeviceDimensions, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import React, { useCallback, useMemo, useState } from 'react'
@@ -17,7 +18,6 @@ import { SvgUri } from 'react-native-svg'
 import { Loader } from 'src/components/loading/loaders'
 import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
 import { Check } from 'ui/src/components/icons'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { FOR_MODAL_SNAP_POINTS } from 'uniswap/src/features/fiatOnRamp/constants'
 import { useFiatOnRampAggregatorCountryListQuery } from 'uniswap/src/features/fiatOnRamp/hooks/useFiatOnRampQueries'

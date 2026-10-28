@@ -184,10 +184,10 @@ describe('getChainIdsByVolume', () => {
 })
 
 describe('pickAllowedPrimaryDeployment', () => {
-  it('resolves to the best allowed leg when the highest-volume leg is outside the allowed set', () => {
+  it('resolves to an allowed leg when the highest-volume leg is outside the allowed set', () => {
     // Stale cached response shape: stats fetched while a rollout flag was on outrank every
     // allowed leg. The row identity (chain, address, TDP link target) must still come from the
-    // filtered set, so the pick falls to the highest-volume ALLOWED leg.
+    // filtered set.
     const token = new RankedMultichainToken({
       multichainToken: new MultichainToken({
         multichainId: 'mc:x',
@@ -236,5 +236,73 @@ describe('pickAllowedPrimaryDeployment', () => {
         allowedChainIds: [UniverseChainId.Mainnet, UniverseChainId.Optimism],
       }),
     ).toEqual({ chainId: 1, address: '0xa' })
+  })
+
+  // Base out-trades mainnet, but mainnet is the canonical member the served price comes from
+  const makeToken = (canonicalChainId: number | undefined): RankedMultichainToken =>
+    new RankedMultichainToken({
+      multichainToken: new MultichainToken({
+        multichainId: 'mc:usdc',
+        addresses: { '1': '0xa', '8453': '0xb' },
+        canonicalChainId,
+      }),
+      chainStats: [chainStat(8453, 1000), chainStat(1, 100)],
+    })
+  const allowedChainIds = [UniverseChainId.Mainnet, UniverseChainId.Base]
+
+  it('prices from the canonical chain over the highest-volume leg', () => {
+    expect(
+      pickAllowedPrimaryDeployment({
+        rankedToken: makeToken(UniverseChainId.Mainnet),
+        chainId: undefined,
+        allowedChainIds,
+      }),
+    ).toEqual({ chainId: 1, address: '0xa' })
+  })
+
+  it('falls back to the lowest chain id, not the highest-volume leg, when canonicalChainId is unset', () => {
+    expect(
+      pickAllowedPrimaryDeployment({ rankedToken: makeToken(undefined), chainId: undefined, allowedChainIds }),
+    ).toEqual({ chainId: 1, address: '0xa' })
+  })
+
+  it('falls back to the lowest allowed chain id when the canonical chain is not allowed', () => {
+    expect(
+      pickAllowedPrimaryDeployment({
+        rankedToken: makeToken(UniverseChainId.Mainnet),
+        chainId: undefined,
+        allowedChainIds: [UniverseChainId.Base],
+      }),
+    ).toEqual({ chainId: 8453, address: '0xb' })
+  })
+
+  it('falls back to the lowest chain id when the canonical chain has no deployment', () => {
+    expect(
+      pickAllowedPrimaryDeployment({
+        rankedToken: makeToken(UniverseChainId.Optimism),
+        chainId: undefined,
+        allowedChainIds: [...allowedChainIds, UniverseChainId.Optimism],
+      }),
+    ).toEqual({ chainId: 1, address: '0xa' })
+  })
+
+  it('returns undefined when no leg is allowed', () => {
+    expect(
+      pickAllowedPrimaryDeployment({
+        rankedToken: makeToken(undefined),
+        chainId: undefined,
+        allowedChainIds: [UniverseChainId.Optimism],
+      }),
+    ).toBeUndefined()
+  })
+
+  it('keeps the filtered chain on a chain-filtered page', () => {
+    expect(
+      pickAllowedPrimaryDeployment({
+        rankedToken: makeToken(UniverseChainId.Mainnet),
+        chainId: UniverseChainId.Base,
+        allowedChainIds,
+      }),
+    ).toEqual({ chainId: 8453, address: '0xb' })
   })
 })

@@ -1,5 +1,6 @@
 import { TokensOrderBy } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { CustomRankingType, RankingType } from '@universe/api'
+import type { TokenCategoryDefaultSort } from 'uniswap/src/features/tokenCategories/types'
 import { AppTFunction } from 'utilities/src/i18n/types'
 import { logger } from 'utilities/src/logger/logger'
 import { ExploreOrderBy, TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
@@ -28,6 +29,27 @@ export function exploreOrderByToV2Sort(orderBy: ExploreOrderBy): V2TokensSort {
     default:
       throw new Error('Unexpected order by value ' + orderBy)
   }
+}
+
+const EXPLORE_ORDER_BYS: ExploreOrderBy[] = [
+  RankingType.Volume,
+  RankingType.MarketCap,
+  RankingType.TotalValueLocked,
+  CustomRankingType.PricePercentChange1DayDesc,
+  CustomRankingType.PricePercentChange1DayAsc,
+]
+
+export function exploreOrderByFromCategoryDefaultSort(
+  defaultSort: TokenCategoryDefaultSort | undefined,
+): ExploreOrderBy {
+  if (!defaultSort) {
+    return RankingType.Volume
+  }
+  const orderBy = EXPLORE_ORDER_BYS.find((candidate) => {
+    const sort = exploreOrderByToV2Sort(candidate)
+    return sort.orderBy === defaultSort.orderBy && sort.ascending === defaultSort.ascending
+  })
+  return orderBy ?? RankingType.Volume
 }
 
 export function getTokenMetadataDisplayType(orderBy: ExploreOrderBy): TokenMetadataDisplayType | null {

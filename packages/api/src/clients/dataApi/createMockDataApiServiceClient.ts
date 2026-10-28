@@ -14,7 +14,6 @@ export function createMockDataApiServiceClient(overrides: Partial<DataApiService
     listTransactions: notMocked('listTransactions'),
     getWalletBalances: notMocked('getWalletBalances'),
     getWalletsBalances: notMocked('getWalletsBalances'),
-    listTokens: notMocked('listTokens'),
     getWalletProfitLoss: notMocked('getWalletProfitLoss'),
     getWalletTokenProfitLoss: notMocked('getWalletTokenProfitLoss'),
     getWalletTokensProfitLoss: notMocked('getWalletTokensProfitLoss'),

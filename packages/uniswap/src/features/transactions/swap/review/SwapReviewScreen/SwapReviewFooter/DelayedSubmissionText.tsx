@@ -1,9 +1,9 @@
 import { isWebPlatform } from '@universe/environment'
+import { AnimatedFlex } from '@universe/mycelium'
 import { withSporeCurve } from '@universe/tailwind/animations/reanimated'
 import { type ComponentType, type ReactNode, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { EntryExitAnimationFunction } from 'react-native-reanimated'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 const KEEP_OPEN_MSG_DELAY = 3 * ONE_SECOND_MS

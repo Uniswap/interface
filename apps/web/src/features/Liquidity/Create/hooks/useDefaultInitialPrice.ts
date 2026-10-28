@@ -19,6 +19,20 @@ interface DefaultInitialPriceResult {
   price: Price<Currency, Currency> | undefined
 }
 
+/** The market price as the initial-price field holds it, in the field's base/quote orientation. */
+export function formatDefaultInitialPrice({
+  price,
+  priceInverted,
+}: {
+  price: Price<Currency, Currency> | undefined
+  priceInverted: boolean
+}): string {
+  if (!price) {
+    return ''
+  }
+  return priceInverted ? price.invert().toSignificant(8) : price.toSignificant(8)
+}
+
 /**
  * Seeds the "current market price" reference for the create-pool range step
  * (token1 per token0), derived from each token's live streaming USD price

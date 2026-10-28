@@ -1,4 +1,8 @@
-import type { MarginSwapConfig } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
+import { TradingApi } from '@universe/api'
+
+// The pay-in swap's wire config: only the leg's own slippage rides here now (walletToken/walletChainId
+// hoisted to the envelope, amount onto the action key). Generated from the spec — SWAP-3352.
+type MarginSwapConfig = TradingApi.MarginSwapConfig
 
 // Exactly one tolerance, as a type rather than a runtime check: the wire xors the
 // two, so "both" and "neither" are equally a 400 — and "neither" would leave a
@@ -8,19 +12,20 @@ type MarginRailSlippage =
   | { slippageTolerance?: never; autoSlippage: string }
 
 // The wallet-side rail as a REQUEST may carry it. Narrower than the wire type on
-// purpose: `token` and `amount` are unconditional (the wire requires both on
-// every key that takes a rail), the server-authored floors are absent, and the
-// tolerance pair is a xor. An illegal rail does not typecheck.
+// purpose: `token` is unconditional, the server-authored floors are absent, and
+// the tolerance pair is a xor. An illegal rail does not typecheck.
 export type MarginQuoteSwapConfig = {
-  // What you pay with on a pay-in, and what you want back on a withdrawal — so
+  // What you pay with on a pay-in, and what you want back on a withdrawal / close — so
   // it is named in BOTH directions, never only when funding flows in.
   token: string
   // Cross-chain funding source. Meaningless without `token`, which is why the
   // type keeps them together.
   chainId?: number
   type?: 'EXACT_INPUT' | 'EXACT_OUTPUT'
-  // THE equity magnitude, raw units of `token`.
-  amount: string
+  // THE equity magnitude, raw units of `token`. Absent on `close`, which moves the
+  // whole position and names a payout token but no amount; the builder enforces its
+  // presence on the keys (MARGIN_EQUITY_ACTION_KEYS) that do carry one.
+  amount?: string
   protocols?: string[]
 } & MarginRailSlippage
 
@@ -68,18 +73,29 @@ export function buildMarginSwapConfig({
     : { ...base, slippageTolerance: bpsToSlippagePercent(slippageToleranceBps) }
 }
 
-// Rebuilt field by field rather than spread through: the wire rejects an
-// unrecognized key outright, so a response's server-authored floors
-// (minAmount/minBridgeOut) reaching a request would 400 the whole quote.
-export function toRequestSwapConfig(swapConfig: MarginQuoteSwapConfig): MarginSwapConfig {
+// The wallet-side rail split into its wire pieces. The current contract carries the pay/receive
+// token and its chain at the TOP LEVEL (`walletToken`/`walletChainId`), the equity magnitude inside
+// the action key (`open.amount` etc.), and leaves only the pay-in swap's own slippage on
+// `swapConfig` — so the single FE rail object fans out across three wire locations. `amount` is
+// returned separately because it lands on the action key, not here.
+export interface MarginRailWireParts {
+  walletToken: string
+  walletChainId?: number
+  amount?: string
+  swapConfig: MarginSwapConfig
+}
+
+// `undefined` when the rail carries no concrete slippage (auto mode) — margin's wire forbids
+// autoSlippage on the pay-in swap, so an auto-only rail is not a legal margin request and disables
+// the quote rather than sending an unbounded swap.
+export function toRailWireParts(rail: MarginQuoteSwapConfig): MarginRailWireParts | undefined {
+  if (rail.slippageTolerance === undefined) {
+    return undefined
+  }
   return {
-    token: swapConfig.token,
-    ...(swapConfig.chainId !== undefined ? { chainId: swapConfig.chainId } : {}),
-    ...(swapConfig.type ? { type: swapConfig.type } : {}),
-    amount: swapConfig.amount,
-    ...(swapConfig.autoSlippage !== undefined
-      ? { autoSlippage: swapConfig.autoSlippage }
-      : { slippageTolerance: swapConfig.slippageTolerance }),
-    ...(swapConfig.protocols ? { protocols: swapConfig.protocols } : {}),
+    walletToken: rail.token,
+    ...(rail.chainId !== undefined ? { walletChainId: rail.chainId } : {}),
+    ...(rail.amount !== undefined ? { amount: rail.amount } : {}),
+    swapConfig: { slippageTolerance: rail.slippageTolerance },
   }
 }

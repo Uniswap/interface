@@ -44,9 +44,9 @@ function mockGeoRestriction(overrides: Partial<ReturnType<typeof useLPGeoRestric
 }
 
 /**
- * Seam E: the PDP's "Add liquidity" CTA. It navigates rather than signing, so a restricted user who
- * gets through lands in the create flow with the pair already committed — the block has to happen
- * here as well as downstream.
+ * Seam E: the PDP's "Add liquidity" CTA. It only navigates, so it stays visible for a restricted pair
+ * (block the action, not the product): the add flow it lands in opens the region modal and keeps its
+ * CTA disabled. The banner here states the restriction up front.
  */
 describe('PoolDetailsStatsButtons geo gate (pool details CTA seam)', () => {
   beforeEach(() => {
@@ -86,14 +86,16 @@ describe('PoolDetailsStatsButtons geo gate (pool details CTA seam)', () => {
     expect(screen.queryByTestId(TestID.LPGeoRestrictionBanner)).toBeNull()
   })
 
-  it('drops the CTA and explains the region block when the pair is restricted', () => {
+  it('keeps the CTA and explains the region block when the pair is restricted', () => {
     mockGeoRestriction({ isGeoRestricted: true, restrictedTokenSymbol: 'USDC' })
     render(<PoolDetailsStatsButtons {...PROPS} />)
 
-    // Gone rather than disabled: a dead half of the row says nothing the banner does not.
-    expect(screen.queryByTestId(TestID.PoolDetailsAddLiquidityButton)).toBeNull()
     expect(screen.getByTestId(TestID.LPGeoRestrictionBanner)).toBeVisible()
     expect(screen.getByText(BANNER_TOKEN_HEADING)).toBeInTheDocument()
+
+    // Still navigates: the add flow, not this button, is where the restriction blocks the action.
+    fireEvent.click(screen.getByTestId(TestID.PoolDetailsAddLiquidityButton))
+    expect(globalThis.window.location.pathname).toBe('/positions/add/ethereum/0xpool')
   })
 
   it('falls back to the generic banner heading when the restricted token has no symbol', () => {
@@ -124,17 +126,11 @@ describe('PoolDetailsStatsButtons geo gate (pool details CTA seam)', () => {
       return Array.from(row.children)
     }
 
-    it('leaves Swap alone in the row when the pair is restricted', () => {
-      mockGeoRestriction({ isGeoRestricted: true, restrictedTokenSymbol: 'USDC' })
-      render(<PoolDetailsStatsButtons {...PROPS} />)
-
-      const swap = screen.getByTestId(TestID.PoolDetailsSwapButton)
-      expect(swap).toHaveTextContent('Swap')
-      expect(rowChildren()).toEqual([swap])
-    })
-
-    it('hands both CTAs straight to the row when the pair is clean', () => {
-      mockGeoRestriction({})
+    it.each([
+      ['clean', {}],
+      ['restricted', { isGeoRestricted: true, restrictedTokenSymbol: 'USDC' }],
+    ])('hands both CTAs straight to the row when the pair is %s', (_, geoRestriction) => {
+      mockGeoRestriction(geoRestriction)
       render(<PoolDetailsStatsButtons {...PROPS} />)
 
       const swap = screen.getByTestId(TestID.PoolDetailsSwapButton)

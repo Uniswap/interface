@@ -13,6 +13,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { buildMarginQuoteRequest } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/buildMarginQuoteRequest'
 import { useMarginFormStore } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/useMarginFormStore'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -264,7 +265,7 @@ export function MarginCloseModal({
       ? rawToNumber({ raw: quote.display.collateralReturned, decimals: collateralDecimals })
       : undefined
   const estReceiveUsd =
-    estReceive === undefined || (usableMark === undefined && direction !== 'SHORT')
+    estReceive === undefined || (usableMark === undefined && direction !== MarginDirection.SHORT)
       ? undefined
       : // A SHORT's collateral is the stable leg, so its USD value never reads the mark — which is why
         // the fallback below is unreachable for the only branch that could see it.
@@ -343,13 +344,22 @@ export function MarginCloseModal({
     }
     const quoteRequest = buildMarginQuoteRequest({
       actionKey: 'close',
-      chainId: MARGIN_CHAIN_ID,
+      positionChainId: MARGIN_CHAIN_ID,
       exposureToken: position.exposureToken.address,
       counterToken: position.counterToken.address,
       direction: position.direction,
       swapper,
       positionId: position.positionId,
       slippageTolerance: bpsToPercent(slippageToleranceBps),
+      // Close pays OUT through a swap, so it names the payout token (the position's collateral — the
+      // volatile leg on a long, the stable on a short) and a swapConfig, like the equity keys. No
+      // amount: the server closes in full.
+      swapConfig: {
+        token:
+          position.direction === MarginDirection.SHORT ? position.counterToken.address : position.exposureToken.address,
+        chainId: MARGIN_CHAIN_ID,
+        slippageTolerance: bpsToPercent(slippageToleranceBps),
+      },
     })
     if (!quoteRequest) {
       return
@@ -358,7 +368,9 @@ export function MarginCloseModal({
     setIsFetchingDebtFreeQuote(true)
     void (async (): Promise<void> => {
       try {
-        const debtFreeQuote = await MarginApiClient.fetchMarginQuote(quoteRequest)
+        const debtFreeQuote = await MarginApiClient.fetchMarginQuote(quoteRequest, {
+          tokenDecimals: { exposure: position.exposureToken.decimals, counter: position.counterToken.decimals },
+        })
         startDebtFreeClose({ swapper, quote: debtFreeQuote })
       } catch (e) {
         logger.error(e, { tags: { file: 'MarginCloseModal', function: 'onConfirm' } })

@@ -3,7 +3,7 @@ import { useAbbreviatedTimeString } from '~/components/Table/utils/useAbbreviate
 
 /**
  * Hook to get the formatted time ago string with "ago" suffix
- * Returns undefined placeholder if timestamp is undefined
+ * Returns a bare "-" placeholder if timestamp is missing or unparseable
  */
 export function useTimeAgo(timestamp: string | number | undefined): string {
   const { t } = useTranslation()
@@ -12,7 +12,7 @@ export function useTimeAgo(timestamp: string | number | undefined): string {
   const timestampMs = typeof timestamp === 'string' ? new Date(timestamp).getTime() : timestamp
   const timeAgo = useAbbreviatedTimeString(timestampMs ?? 0)
 
-  if (timestamp === undefined || timestampMs === undefined) {
+  if (timestampMs === undefined || !Number.isFinite(timestampMs)) {
     return '-'
   }
 

@@ -7,6 +7,7 @@ const test = getTest()
 test.use({ hasTouch: true, viewport: { width: 449, height: 900 } })
 
 const OPEN_SHEET = '.mc-sheet-frame[data-state="open"]'
+const SCRIM_TEST_ID = 'mycelium-web-bottom-sheet-overlay'
 
 test.describe(
   'Network filter WebBottomSheet dismissal on touch devices (SWAP-3262)',
@@ -35,9 +36,18 @@ test.describe(
         const box = await frame.boundingBox()
         expect(box).not.toBeNull()
         if (box) {
-          // Derive the tap x-coordinate from the sheet's bounding box (like the test below)
-          // instead of a hardcoded value coupled to the 449px viewport set above.
-          await page.touchscreen.tap(box.x + box.width / 2, Math.max(100, box.y - 40))
+          // A tall sheet (e.g. NetworkFilterV2's full list) grows to its viewport cap, leaving only
+          // a nav-height strip of scrim above the frame, so tap the middle of whatever scrim is
+          // exposed rather than a fixed offset that can land inside the sheet.
+          expect(box.y).toBeGreaterThan(0)
+          const x = box.x + box.width / 2
+          const y = box.y / 2
+          const tapTarget = await page.evaluate(
+            ([px, py]) => document.elementFromPoint(px, py)?.getAttribute('data-testid') ?? null,
+            [x, y] as const,
+          )
+          expect(tapTarget).toBe(SCRIM_TEST_ID)
+          await page.touchscreen.tap(x, y)
         }
         await expect(page.locator(OPEN_SHEET)).toHaveCount(0, { timeout: 1000 })
       }).toPass({ timeout: 10_000 })

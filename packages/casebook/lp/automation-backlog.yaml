@@ -1,0 +1,106 @@
+# LP automation backlog — rendered by `bun scripts/casebook.ts --automation-backlog --area lp.add_remove`.
+# Each row's id must be a case in this catalog; the engine annotates it with live link status.
+tiers:
+  - title: Tier A — High value, easy/stable
+    rows:
+      - id: lp-remove-v4-25-percent
+        suggestedTest: Parametrize `RemoveLiquidity.anvil.e2e`
+        effort: Low
+        runFrequency: pr-check*
+        notes: Today test uses 50% only
+      - id: lp-remove-v4-75-percent
+        suggestedTest: Same file, 75% preset
+        effort: Low
+        runFrequency: pr-check*
+      - id: lp-remove-v4-max
+        suggestedTest: Same file, Max + closed position
+        effort: Low
+        runFrequency: pr-check*
+      - id: lp-remove-review-displays-amounts
+        suggestedTest: "Unit: `RemoveLiquidityReview`"
+        effort: Low
+        runFrequency: pr-check
+        notes: No chain
+      - id: lp-increase-insufficient-balance
+        suggestedTest: "Unit: deposit validation hooks"
+        effort: Low
+        runFrequency: pr-check
+      - id: lp-increase-tx-context
+        suggestedTest: "`IncreaseLiquidityTxContext.test.ts`"
+        effort: Medium
+        runFrequency: pr-check
+        notes: Mirror create TxContext test
+      - id: lp-remove-tx-context
+        suggestedTest: "`RemoveLiquidityTxContext.test.ts`"
+        effort: Medium
+        runFrequency: pr-check
+      - id: lp-remove-slider-custom-percent
+        suggestedTest: Unit or Anvil custom %
+        effort: Medium
+        runFrequency: release
+        notes: Watch float assertions
+  - title: Tier B — Medium
+    rows:
+      - id: lp-increase-native-eth
+        suggestedTest: Extend `IncreaseLiquidity.anvil`
+        effort: Medium
+        runFrequency: release
+        notes: Wrap path
+      - id: lp-remove-native-eth-unwrap
+        suggestedTest: Extend `RemoveLiquidity.anvil`
+        effort: Medium
+        runFrequency: release
+        notes: Unwrap toggle
+      - id: lp-remove-receive-as-weth
+        suggestedTest: Same file, WETH toggle ON
+        effort: Medium
+        runFrequency: release
+      - id: lp-increase-v2-add-back
+        suggestedTest: Anvil two-step V2
+        effort: Medium
+        runFrequency: release
+      - id: lp-remove-v3-position
+        suggestedTest: Anvil V3 fixture
+        effort: Medium–High
+        runFrequency: release
+      - id: lp-remove-v2-position
+        suggestedTest: Anvil V2
+        effort: Medium
+        runFrequency: release
+      - id: lp-remove-error-tx-failure
+        suggestedTest: Stub failure like increase error suite
+        effort: Medium
+        runFrequency: release
+      - id: lp-liquidity-service-client
+        suggestedTest: Unit + mocked RPC
+        effort: Medium
+        runFrequency: pr-check
+      - id: lp-liquidity-saga
+        suggestedTest: Integration / saga test
+        effort: High
+        runFrequency: release
+        notes: Flaky risk
+      - id: lp-create-v3-position
+        suggestedTest: Anvil e2e alongside `CreatePosition.anvil.e2e` (V3 pool, NFT mint)
+        effort: Medium
+        runFrequency: scheduled
+manualFirst:
+  - id: lp-add-remove-embedded-wallet
+    recommendation: Stays manual (already `automatable: false`)
+    notes: Passkey flow cannot be driven headlessly; waiver metadata planned
+  - id: lp-add-remove-p2-chains
+    recommendation: Manual / staging matrix
+    notes: 11 chains
+  - id: lp-add-remove-hooked-pool
+    recommendation: Manual or special fixture
+    notes: Hook pools
+  - id: lp-lifecycle-full-round-trip
+    recommendation: Anvil multi-step, release only
+    notes: High value, long
+  - id: lp-create-fot-token-warning
+    recommendation: Unit if UI-only else manual
+  - id: lp-create-insufficient-gas
+    recommendation: Unit disable state
+suggestedOrder: TxContext units → remove % parametrization → insufficient balance + review unit → native ETH Anvil → lifecycle Anvil → defer medium-priority chains / hooked / embedded.
+notes:
+  - LP Anvil e2e runs on `web/staging` push + weekday cron, not on every PR.

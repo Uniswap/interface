@@ -1,0 +1,22 @@
+product_area: send
+platforms: [web, extension, mobile]
+nxProjects: [uniswap, wallet, "@universe/web", "@uniswap/extension", "@uniswap/mobile"]
+owners: ["@uniswap/consumer-engagement-fe"]
+
+# Casebook area-registry metadata (read by the engine in apps/cli/src/casebook).
+# These drive Testlio suite naming, the PR-comment label, and CI routing.
+label: Send
+suiteNamePrefix: Send
+ghLabel: "casebook:send"
+# Reviewer GitHub team for the auto-opened catalog companion PR.
+# NOTE: .github/CODEOWNERS is silent on the send feature dirs; `wallet-fe` follows
+# the blueprint convention and MUST be confirmed with the pod lead before assembly
+# requests reviews (teamResolved: false).
+reviewerTeam: consumer-engagement-fe
+
+# Test-wallet aliases referenced by this area's cases. Symbolic only: real mnemonics live in
+# the QA vault / Testlio TL handoff, keyed by the same alias. Never put a secret here.
+wallets:
+  TW-SEND-01: "funded sender: native ETH + at least one ERC-20 (DAI/USDC) on Ethereum mainnet and Base"
+  TW-SEND-02: "recipient wallet with a resolvable ENS name and a unitag; never controls the app under test (recipient resolution, self-send detection)"
+  TW-SEND-03: "holder of a permissioned (allowlist-gated) token; allowlist membership toggled per case"

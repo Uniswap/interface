@@ -23,7 +23,7 @@
     "@connectrpc/connect": "1.5.0",
     "@connectrpc/connect-web": "1.5.0",
     "@tanstack/react-query": "5.90.20",
-    "@uniswap/client-data-api": "0.0.271",
+    "@uniswap/client-data-api": "0.0.279",
     "@uniswap/client-embeddedwallet": "0.0.16",
     "@uniswap/client-for": "0.1.5",
     "@uniswap/client-launches": "0.0.5",
@@ -57,6 +57,24 @@
     "vitest": "3.2.1",
     "vitest-presets": "workspace:^",
     "zod": "4.3.6"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./entry-gateway-urls": "./src/clients/base/entryGatewayUrls.ts",
+    "./fetch": "./src/entries/fetch.ts",
+    "./session": "./src/entries/session.ts",
+    "./trading": "./src/entries/trading.ts",
+    "./trading/openapi.json": "./src/clients/trading/api.json",
+    "./src": "./src/index.ts",
+    "./src/*": {
+      "types": [
+        "./src/*.ts",
+        "./src/*.tsx",
+        "./src/*/index.ts",
+        "./src/*"
+      ],
+      "default": "./src/*"
+    }
   },
   "main": "src/index.ts",
   "private": true,

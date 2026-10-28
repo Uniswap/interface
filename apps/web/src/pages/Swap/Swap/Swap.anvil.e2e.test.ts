@@ -4,6 +4,10 @@ import { TradingApi, V1_TRADING_API_PATHS } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { TestID } from '@universe/test'
 import { USDT } from 'uniswap/src/constants/tokens'
+import {
+  PRICE_DIFFERENCE_CRITICAL_THRESHOLD,
+  PRICE_DIFFERENCE_WARNING_THRESHOLD,
+} from 'uniswap/src/constants/transactions'
 import { parseEther } from '~/chains'
 import { assume0xAddress } from '~/chains'
 import { getUniswapServiceUrls } from '~/config'
@@ -13,6 +17,9 @@ import { stubTradingApiEndpoint, widenSwapRequestSlippage } from '~/playwright/f
 import { TEST_WALLET_ADDRESS } from '~/playwright/fixtures/wallets'
 
 const test = getTest({ withAnvil: true })
+
+const PINNED_MEDIUM_PRICE_DIFFERENCE_PERCENT =
+  (PRICE_DIFFERENCE_WARNING_THRESHOLD + PRICE_DIFFERENCE_CRITICAL_THRESHOLD) / 2
 
 test.describe(
   'Swap',
@@ -83,7 +90,19 @@ test.describe(
     })
 
     test('should be able to swap token with FOT warning via TDP', async ({ page, anvil }) => {
-      await stubTradingApiEndpoint({ page, endpoint: V1_TRADING_API_PATHS.quote })
+      // The quote is priced live against mainnet, so whether 10 ETH of NEURAL crosses the
+      // price-impact warning threshold drifts with that pool's liquidity (it fell to ~4.6%,
+      // under the 5% threshold, on 2026-09-29). Pin the price difference inside the Medium band so
+      // the price-impact confirm below is always exercised; the indicative (FASTEST) quote carries
+      // no priceDifference and is left untouched.
+      await stubTradingApiEndpoint({
+        page,
+        endpoint: V1_TRADING_API_PATHS.quote,
+        modifyResponseData: (data) =>
+          data.quote?.priceDifference === undefined
+            ? data
+            : { ...data, quote: { ...data.quote, priceDifference: PINNED_MEDIUM_PRICE_DIFFERENCE_PERCENT } },
+      })
 
       await page.route(`${getUniswapServiceUrls().tradingApiUrl}/swap`, async (route) => {
         const request = route.request()

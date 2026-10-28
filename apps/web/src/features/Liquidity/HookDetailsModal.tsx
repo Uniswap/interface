@@ -136,7 +136,7 @@ export function HookDetailsModal({ hookEntry, chainId, isOpen, onClose }: HookDe
             <DetailRow icon={<Person size="$icon.16" color="$neutral2" />} label={t('hook.details.configuredBy')}>
               <Text variant="body3" color="$neutral1">
                 {isEVMAddress(hookEntry.deployer)
-                  ? shortenAddress({ address: hookEntry.deployer })
+                  ? shortenAddress({ address: hookEntry.deployer, chars: 6, charsEnd: 6 })
                   : hookEntry.deployer}
               </Text>
             </DetailRow>
@@ -145,7 +145,7 @@ export function HookDetailsModal({ hookEntry, chainId, isOpen, onClose }: HookDe
           <DetailRow icon={<LayerGroup size="$icon.16" color="$neutral2" />} label={t('common.address')}>
             <CopyHelper toCopy={hookEntry.address} iconSize={14} iconPosition="right" alwaysShowIcon>
               <Text variant="body3" color="$neutral1" numberOfLines={1}>
-                {shortenAddress({ address: hookEntry.address, chars: 14, charsEnd: 8 })}
+                {shortenAddress({ address: hookEntry.address, chars: 10, charsEnd: 8 })}
               </Text>
             </CopyHelper>
           </DetailRow>

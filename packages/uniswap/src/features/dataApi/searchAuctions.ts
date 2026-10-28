@@ -1,34 +1,27 @@
-import { toPlainMessage, type PlainMessage } from '@bufbuild/protobuf'
-import { useQuery } from '@tanstack/react-query'
-import type { SearchAuction } from '@uniswap/client-data-api/dist/data/v2/search_pb'
-import {
-  ListTopAuctionsRequest,
-  type AuctionWithStats,
-  type ListTopAuctionsResponse,
-} from '@uniswap/client-launches/dist/data/v1/auction_pb'
+import type { PlainMessage } from '@bufbuild/protobuf'
+import { AuctionLifecycle, type SearchAuction } from '@uniswap/client-data-api/dist/data/v2/search_pb'
+import type { AuctionWithStats } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { type UniverseChainId, Platform } from '@universe/chains'
-import { DynamicConfigs, useDynamicConfigValue, VerifiedAuctionsConfigKey } from '@universe/gating'
 import { useMemo } from 'react'
 import { type AuctionOption, OnchainItemListOptionType } from 'uniswap/src/components/lists/items/types'
-import { fetchAuctionByAddress } from 'uniswap/src/data/apiClients/dataApiService/search/search'
 import { timestampToMs } from 'uniswap/src/data/apiClients/dataApiService/utils/protoTimestamp'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
+import { getAuctionLaunchMethod, toLaunchProvenance } from 'uniswap/src/features/dataApi/launchProvenance'
 import type { AuctionSearchStats, CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { NUMBER_OF_RESULTS_LONG } from 'uniswap/src/features/search/SearchModal/constants'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import {
-  DEFAULT_VERIFIED_AUCTION_IDS,
-  findAuctionOverrideMatches,
-  getAuctionMetadata,
-} from 'uniswap/src/features/toucan/auctionMetadata'
+import { getAuctionMetadata } from 'uniswap/src/features/toucan/auctionMetadata'
+import { isHiddenAuction } from 'uniswap/src/features/toucan/hiddenAuctions'
+import { useVerifiedAuctionIds } from 'uniswap/src/features/toucan/useVerifiedAuctionIds'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { parseFiniteNumber } from 'utilities/src/primitives/number'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import type { DerivedQueryResult } from 'utilities/src/reactQuery/types'
 
 /** Plain data.v2 auction shape, the canonical type for search auction results. */
 export type SearchAuctionResult = PlainMessage<SearchAuction>
+
+function isEndedLifecycle(lifecycle: AuctionLifecycle): boolean {
+  return lifecycle === AuctionLifecycle.GRADUATED || lifecycle === AuctionLifecycle.FAILED
+}
 
 function lowercaseAscii(value: string): string {
   return value.replace(/[A-Z]/g, (char) => String.fromCharCode(char.charCodeAt(0) + 32))
@@ -64,7 +57,7 @@ function getSearchAuctionAddress(auction: SearchAuctionResult): string {
   return getAuctionAddressFromAuctionId(auction.auctionId) ?? ''
 }
 
-function buildCurrencyInfoMap(
+export function buildCurrencyInfoMap(
   currencyIds: string[],
   currencyInfos: Array<Maybe<CurrencyInfo>>,
 ): Map<string, CurrencyInfo> {
@@ -79,39 +72,24 @@ function buildCurrencyInfoMap(
 }
 
 function toAuctionSearchStats({
-  fdvUsd,
+  totalBidVolumeUsd,
+  estimatedStartTime,
   estimatedEndTime,
-}: Pick<SearchAuctionResult, 'fdvUsd' | 'estimatedEndTime'>): AuctionSearchStats | undefined {
-  const stats = { fdvUsd: parseFiniteNumber(fdvUsd), endTimeMs: timestampToMs(estimatedEndTime) }
-  return stats.fdvUsd === undefined && stats.endTimeMs === undefined ? undefined : stats
-}
-
-async function fetchOverrideMatchedAuctions(
-  matches: Array<{ chainId: number; tokenAddress: string }>,
-): Promise<SearchAuctionResult[]> {
-  // allSettled so one failed match doesn't drop the rest (supplementary results, graceful degradation).
-  const results = await Promise.allSettled(
-    matches.map((match) => fetchAuctionByAddress({ chainId: match.chainId, address: match.tokenAddress })),
-  )
-  const auctions: SearchAuctionResult[] = []
-  for (const result of results) {
-    if (result.status === 'fulfilled' && result.value !== undefined) {
-      auctions.push(result.value)
-    }
+  isEnded,
+  isUpcoming,
+}: Pick<SearchAuctionResult, 'estimatedStartTime' | 'estimatedEndTime'> & {
+  totalBidVolumeUsd: string | undefined
+  isEnded: boolean
+  isUpcoming?: boolean
+}): AuctionSearchStats | undefined {
+  const stats = {
+    committedVolumeUsd: parseFiniteNumber(totalBidVolumeUsd),
+    startTimeMs: timestampToMs(estimatedStartTime),
+    endTimeMs: timestampToMs(estimatedEndTime),
+    isEnded: isEnded || undefined,
+    isUpcoming: isUpcoming || undefined,
   }
-  return auctions
-}
-
-function mergeAuctions(primary: SearchAuctionResult[], supplementary: SearchAuctionResult[]): SearchAuctionResult[] {
-  const seen = new Set(primary.map((auction) => auction.auctionId))
-  const merged = [...primary]
-  for (const auction of supplementary) {
-    if (!seen.has(auction.auctionId)) {
-      seen.add(auction.auctionId)
-      merged.push(auction)
-    }
-  }
-  return merged
+  return Object.values(stats).every((value) => value === undefined) ? undefined : stats
 }
 
 function getAuctionOptionTokenMetadata({
@@ -162,8 +140,16 @@ export function searchAuctionToAuctionOption({
     ...tokenMetadata,
     currencyInfo,
     committedVolumeUsd: parseFiniteNumber(auction.totalBidVolumeUsd),
+    uniqueBidderCount: auction.bidderCount,
+    launchMethod: toLaunchProvenance({ provenance: auction.launchProvenance })?.method,
     isVerified,
-    searchStats: toAuctionSearchStats(auction),
+    searchStats: toAuctionSearchStats({
+      totalBidVolumeUsd: auction.totalBidVolumeUsd,
+      estimatedStartTime: auction.estimatedStartTime,
+      estimatedEndTime: auction.estimatedEndTime,
+      isEnded: isEndedLifecycle(auction.lifecycle),
+      isUpcoming: auction.lifecycle === AuctionLifecycle.UPCOMING,
+    }),
   }
 }
 
@@ -171,10 +157,12 @@ export function auctionWithStatsToAuctionOption({
   auctionWithStats,
   currencyInfo,
   isVerified,
+  isEnded,
 }: {
   auctionWithStats: AuctionWithStats | PlainMessage<AuctionWithStats>
   currencyInfo: Maybe<CurrencyInfo>
   isVerified: boolean
+  isEnded: boolean
 }): AuctionOption | undefined {
   const auction = auctionWithStats.auction
   if (!auction) {
@@ -199,59 +187,48 @@ export function auctionWithStatsToAuctionOption({
     currencyInfo,
     committedVolumeUsd: parseFiniteNumber(auction.totalBidVolumeUsd),
     uniqueBidderCount: auctionWithStats.uniqueBidderCount,
+    launchMethod: getAuctionLaunchMethod({ auction }),
     isVerified,
-    searchStats: toAuctionSearchStats(auction),
+    searchStats: toAuctionSearchStats({
+      totalBidVolumeUsd: auction.totalBidVolumeUsd,
+      estimatedStartTime: auction.estimatedStartTime,
+      estimatedEndTime: auction.estimatedEndTime,
+      isEnded,
+    }),
   }
 }
 
 /**
- * Turns the auction bucket of a search response into row options: merges in the curated override
- * auctions the query names, drops testnet rows outside testnet mode, and enriches with CurrencyInfo
- * and the verified-auction config. The search request itself is made by `useSearchResults`.
+ * Turns the auction bucket of a search response into row options: drops testnet rows outside testnet mode, and
+ * enriches with CurrencyInfo and the verified-auction config. The search request itself is made by
+ * `useSearchResults`; the BE indexes curated display names, so override names match there.
+ *
+ * `alongsideTokens` (All tab): only in-flight auctions show.
  */
 export function useSearchAuctionOptions({
   auctions,
-  searchQuery,
-  chainFilter,
+  alongsideTokens,
   skip,
 }: {
   auctions: SearchAuctionResult[] | undefined
-  searchQuery: string | null
-  chainFilter: UniverseChainId | null
+  alongsideTokens: boolean
   skip: boolean
-}): { data: AuctionOption[]; refetch: () => Promise<unknown> } {
-  const { chains: enabledChainIds, isTestnetModeEnabled } = useEnabledChains({ platform: Platform.EVM })
+}): AuctionOption[] {
+  const { isTestnetModeEnabled } = useEnabledChains({ platform: Platform.EVM })
 
-  const verifiedAuctionIds: string[] = useDynamicConfigValue({
-    config: DynamicConfigs.VerifiedAuctions,
-    key: VerifiedAuctionsConfigKey.VerifiedAuctionIds,
-    defaultValue: DEFAULT_VERIFIED_AUCTION_IDS,
-  })
-
-  // Restrict curated override matches to the active chain set so a chain-filtered search
-  // doesn't surface an override auction from a chain the user filtered out.
-  const overrideMatches = useMemo(() => {
-    if (!searchQuery) {
-      return []
-    }
-    const allowedChainIds = new Set<number>(chainFilter ? [chainFilter] : enabledChainIds)
-    return findAuctionOverrideMatches(searchQuery).filter((match) => allowedChainIds.has(match.chainId))
-  }, [searchQuery, chainFilter, enabledChainIds])
-
-  const { data: overrideAuctions, refetch } = useQuery<SearchAuctionResult[]>({
-    queryKey: [ReactQueryCacheKey.DataApiService, 'auctionOverrideMatches', overrideMatches],
-    queryFn: () => fetchOverrideMatchedAuctions(overrideMatches),
-    enabled: !skip && Boolean(searchQuery) && overrideMatches.length > 0,
-  })
+  const verifiedAuctionIds = useVerifiedAuctionIds()
 
   const filteredAuctions = useMemo(() => {
     if (skip) {
       return []
     }
-    return mergeAuctions(auctions ?? [], overrideAuctions ?? []).filter(
-      (auction) => isTestnetModeEnabled || !isTestnetChain(auction.chainId),
+    return (auctions ?? []).filter(
+      (auction) =>
+        (!alongsideTokens || !isEndedLifecycle(auction.lifecycle)) &&
+        (isTestnetModeEnabled || !isTestnetChain(auction.chainId)) &&
+        !isHiddenAuction({ auctionId: auction.auctionId }),
     )
-  }, [skip, auctions, overrideAuctions, isTestnetModeEnabled])
+  }, [skip, auctions, alongsideTokens, isTestnetModeEnabled])
 
   // Enrich with currencyInfos for logos and safety info
   const currencyIds = useMemo(
@@ -265,7 +242,7 @@ export function useSearchAuctionOptions({
 
   const currencyInfoMap = useMemo(() => buildCurrencyInfoMap(currencyIds, currencyInfos), [currencyIds, currencyInfos])
 
-  const auctionOptions = useMemo<AuctionOption[]>(() => {
+  return useMemo<AuctionOption[]>(() => {
     if (!filteredAuctions.length) {
       return []
     }
@@ -281,97 +258,4 @@ export function useSearchAuctionOptions({
       })
     })
   }, [filteredAuctions, currencyInfoMap, verifiedAuctionIds])
-
-  return useMemo(() => ({ data: auctionOptions, refetch }), [auctionOptions, refetch])
-}
-
-export function useTopAuctionOptions({
-  chainFilter,
-  skip,
-  size = NUMBER_OF_RESULTS_LONG,
-}: {
-  chainFilter: UniverseChainId | null
-  skip: boolean
-  size?: number
-}): DerivedQueryResult<AuctionOption[]> {
-  const { isTestnetModeEnabled } = useEnabledChains()
-
-  const verifiedAuctionIds: string[] = useDynamicConfigValue({
-    config: DynamicConfigs.VerifiedAuctions,
-    key: VerifiedAuctionsConfigKey.VerifiedAuctionIds,
-    defaultValue: DEFAULT_VERIFIED_AUCTION_IDS,
-  })
-
-  const params = useMemo(
-    () =>
-      new ListTopAuctionsRequest({
-        pageSize: size,
-        chainIds: chainFilter ? [chainFilter] : [],
-      }),
-    [chainFilter, size],
-  )
-
-  const {
-    data: topAuctions,
-    error,
-    isLoading,
-    refetch,
-  } = useQuery<PlainMessage<ListTopAuctionsResponse>, Error>({
-    queryKey: [ReactQueryCacheKey.AuctionApi, 'listTopAuctions', params],
-    queryFn: async () => {
-      const { AuctionServiceClient } =
-        await import('uniswap/src/data/apiClients/dataApiService/auctions/AuctionServiceClient')
-      return toPlainMessage(await AuctionServiceClient.listTopAuctions(params))
-    },
-    enabled: !skip,
-    meta: { persist: true },
-  })
-
-  const auctions = useMemo(
-    () =>
-      topAuctions?.auctions.filter((auctionWithStats) => {
-        const chainId = auctionWithStats.auction?.chainId
-        return chainId !== undefined && (isTestnetModeEnabled || !isTestnetChain(chainId))
-      }) ?? [],
-    [topAuctions?.auctions, isTestnetModeEnabled],
-  )
-
-  const currencyIds = useMemo(
-    () =>
-      auctions
-        .map((auctionWithStats) => {
-          const auction = auctionWithStats.auction
-          return auction ? buildCurrencyId(auction.chainId, auction.tokenAddress) : undefined
-        })
-        .filter((currencyId): currencyId is string => currencyId !== undefined),
-    [auctions],
-  )
-
-  const currencyInfos = useCurrencyInfos(currencyIds, {
-    skip: auctions.length === 0,
-  })
-
-  const currencyInfoMap = useMemo(() => buildCurrencyInfoMap(currencyIds, currencyInfos), [currencyIds, currencyInfos])
-
-  const auctionOptions = useMemo<AuctionOption[]>(() => {
-    const verifiedSet = new Set(verifiedAuctionIds)
-
-    return auctions
-      .map((auctionWithStats) => {
-        const auction = auctionWithStats.auction
-        const currencyId = auction ? buildCurrencyId(auction.chainId, auction.tokenAddress) : undefined
-
-        return auctionWithStatsToAuctionOption({
-          auctionWithStats,
-          currencyInfo: currencyId ? (currencyInfoMap.get(currencyId) ?? null) : null,
-          isVerified: auction ? verifiedSet.has(auction.auctionId) : false,
-        })
-      })
-      .filter((option): option is AuctionOption => option !== undefined)
-  }, [auctions, currencyInfoMap, verifiedAuctionIds])
-
-  return useMemo(
-    () => ({ data: auctionOptions, isLoading, error, refetch }),
-    [auctionOptions, isLoading, error, refetch],
-  )
 }

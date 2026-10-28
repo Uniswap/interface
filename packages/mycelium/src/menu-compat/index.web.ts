@@ -1,6 +1,6 @@
 /**
  * Web entry for the menu compat — mirrors the base index.ts (web is the
- * real platform for mycelium; the native leg is a throwing stub, see
+ * real platform for mycelium; the native leg is mostly throwing stubs, see
  * index.native.ts). Keep the export list in sync with index.ts.
  */
 export {

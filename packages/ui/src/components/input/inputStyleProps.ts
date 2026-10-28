@@ -4,9 +4,9 @@
  * the pick/omit helpers that split style props from the passthrough prop bag. Resolution to
  * concrete values lives in ./inputStyleResolution.ts.
  */
+import { type UseSporeColorsReturn } from '@universe/mycelium/theme-hooks-compat'
 import type { CSSProperties } from 'react'
 import type { DimensionValue, TextStyle } from 'react-native'
-import type { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
 import { baselBook, baselMedium, borderRadii, gap, monospaceFontFamily, padding, spacing } from 'ui/src/theme'
 
 export const spacingTokens = { ...spacing, ...padding, ...gap }

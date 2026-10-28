@@ -6,6 +6,7 @@ import {
   type MarginActivePosition,
   type MarginQuoteResponse,
 } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { MARGIN_CHAIN_ID } from '~/constants/margin'
 import { getDefaultMarginMarket } from '~/pages/Swap/Margin/__fixtures__/marginCatalog'
@@ -84,7 +85,7 @@ function positionFixture(overrides: Partial<MarginActivePosition> = {}): MarginA
   return {
     positionId: SUB_ID,
     status: 'ACTIVE',
-    direction: 'LONG',
+    direction: MarginDirection.LONG,
     exposureToken: {
       address: MARKET.collateral.address,
       chainId: MARGIN_CHAIN_ID,
@@ -117,7 +118,7 @@ function quoteFixture(overrides: Partial<MarginQuoteResponse> = {}): MarginQuote
     action: 'withdrawEquity',
     chainId: MARGIN_CHAIN_ID,
     swapper: SWAPPER,
-    direction: 'LONG',
+    direction: MarginDirection.LONG,
     exposureToken: {
       address: MARKET.collateral.address,
       chainId: MARGIN_CHAIN_ID,

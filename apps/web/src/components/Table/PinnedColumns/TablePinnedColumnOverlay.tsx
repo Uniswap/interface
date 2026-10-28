@@ -7,7 +7,7 @@ export function TablePinnedColumnOverlay({
   color,
 }: {
   leftPx: number
-  /** CSS width expression tracking an overridden pinned-region width (see TableProps.pinnedWidthOverride). */
+  /** CSS width expression tracking an overridden pinned-region width (see getPinnedRegionWidthCss). */
   leftOverride?: string
   color: string
 }): JSX.Element | null {

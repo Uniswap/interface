@@ -1,6 +1,6 @@
 import type { FetchClient } from '@universe/api'
 import type { TokenSubscriptionParams } from '@universe/prices/src/types'
-import type { SubscriptionHandler } from '@universe/websocket'
+import { ConnectionGoneError, type SubscriptionHandler } from '@universe/websocket'
 
 const EVENT_SUBSCRIPTION_TYPE_TOKEN_PRICE = 'EVENT_SUBSCRIPTION_TYPE_TOKEN_PRICE'
 const EVENT_SUBSCRIPTION_TYPE_TOKEN_PRICE_REALTIME = 'EVENT_SUBSCRIPTION_TYPE_TOKEN_PRICE_REALTIME'
@@ -13,7 +13,6 @@ type EventSubscriptionType =
 
 export interface SubscriptionApiOptions {
   client: FetchClient
-  onError?: (error: unknown, operation: string) => void
   /**
    * Chains subscribed on the realtime channel (tokenRealtime event arm)
    * instead of the legacy USD channel. Injected by the app — the package
@@ -39,18 +38,28 @@ function toEvent(params: TokenSubscriptionParams, type: EventSubscriptionType): 
   return type === EVENT_SUBSCRIPTION_TYPE_TOKEN_PRICE_REALTIME ? { tokenRealtime: token } : { token }
 }
 
+/** True for the Connect NotFound the subscription service returns once a connection id has expired. */
+function isConnectionNotFoundError(error: unknown): boolean {
+  if (typeof error !== 'object' || error === null || !('response' in error) || !('data' in error)) {
+    return false
+  }
+  const { response, data } = error as { response?: { status?: unknown }; data?: { code?: unknown } }
+  return response?.status === 404 && data?.code === 'not_found'
+}
+
 /**
  * Creates a subscription handler for token price subscriptions.
  * This implements the SubscriptionHandler interface from @universe/websocket.
  *
  * Params are routed per token to the pool_price channel (poolRoute set),
  * the realtime channel (realtimeChainIds), or the legacy channel; a mixed
- * batch fans out into one RPC per channel.
+ * batch fans out into one RPC per channel. RPC failures reject, and an
+ * expired connection id rejects as ConnectionGoneError.
  */
 export function createPriceSubscriptionHandler(
   options: SubscriptionApiOptions,
 ): SubscriptionHandler<TokenSubscriptionParams> {
-  const { client, onError, realtimeChainIds } = options
+  const { client, realtimeChainIds } = options
 
   function typeFor(params: TokenSubscriptionParams): EventSubscriptionType {
     if (params.poolRoute) {
@@ -61,18 +70,24 @@ export function createPriceSubscriptionHandler(
       : EVENT_SUBSCRIPTION_TYPE_TOKEN_PRICE
   }
 
+  async function post(connectionId: string, path: string, body: Record<string, unknown>): Promise<void> {
+    try {
+      await client.post(path, { body: JSON.stringify(body) })
+    } catch (error) {
+      throw isConnectionNotFoundError(error) ? new ConnectionGoneError(connectionId, { cause: error }) : error
+    }
+  }
+
   async function callSubscriptionRpc(input: {
     method: 'Subscribe' | 'Unsubscribe'
     connectionId: string
     type: EventSubscriptionType
     paramsList: TokenSubscriptionParams[]
   }): Promise<void> {
-    await client.post(`/uniswap.notificationservice.v1.EventSubscriptionService/${input.method}`, {
-      body: JSON.stringify({
-        eventSubscriptionType: input.type,
-        connectionId: input.connectionId,
-        events: input.paramsList.map((p) => toEvent(p, input.type)),
-      }),
+    await post(input.connectionId, `/uniswap.notificationservice.v1.EventSubscriptionService/${input.method}`, {
+      eventSubscriptionType: input.type,
+      connectionId: input.connectionId,
+      events: input.paramsList.map((p) => toEvent(p, input.type)),
     })
   }
 
@@ -80,7 +95,6 @@ export function createPriceSubscriptionHandler(
     method: 'Subscribe' | 'Unsubscribe'
     connectionId: string
     paramsList: TokenSubscriptionParams[]
-    operation: string
   }): Promise<void> {
     const byType = new Map<EventSubscriptionType, TokenSubscriptionParams[]>()
     for (const params of input.paramsList) {
@@ -89,52 +103,42 @@ export function createPriceSubscriptionHandler(
       group.push(params)
       byType.set(type, group)
     }
-    try {
-      await Promise.all(
-        [...byType.entries()].map(([type, paramsList]) =>
-          callSubscriptionRpc({ method: input.method, connectionId: input.connectionId, type, paramsList }),
-        ),
-      )
-    } catch (error) {
-      onError?.(error, input.operation)
-    }
+    await Promise.all(
+      [...byType.entries()].map(([type, paramsList]) =>
+        callSubscriptionRpc({ method: input.method, connectionId: input.connectionId, type, paramsList }),
+      ),
+    )
   }
 
   async function subscribe(connectionId: string, params: TokenSubscriptionParams): Promise<void> {
-    await callPerChannel({ method: 'Subscribe', connectionId, paramsList: [params], operation: 'subscribe' })
+    await callPerChannel({ method: 'Subscribe', connectionId, paramsList: [params] })
   }
 
   async function unsubscribe(connectionId: string, params: TokenSubscriptionParams): Promise<void> {
-    await callPerChannel({ method: 'Unsubscribe', connectionId, paramsList: [params], operation: 'unsubscribe' })
+    await callPerChannel({ method: 'Unsubscribe', connectionId, paramsList: [params] })
   }
 
   async function subscribeBatch(connectionId: string, paramsList: TokenSubscriptionParams[]): Promise<void> {
     if (paramsList.length === 0) {
       return
     }
-    await callPerChannel({ method: 'Subscribe', connectionId, paramsList, operation: 'subscribeBatch' })
+    await callPerChannel({ method: 'Subscribe', connectionId, paramsList })
   }
 
   async function unsubscribeBatch(connectionId: string, paramsList: TokenSubscriptionParams[]): Promise<void> {
     if (paramsList.length === 0) {
       return
     }
-    await callPerChannel({ method: 'Unsubscribe', connectionId, paramsList, operation: 'unsubscribeBatch' })
+    await callPerChannel({ method: 'Unsubscribe', connectionId, paramsList })
   }
 
   async function refreshSession(connectionId: string): Promise<void> {
-    try {
-      // The server refreshes the connection's entire forward index regardless
-      // of the type sent — one call covers every channel, pool_price included.
-      await client.post('/uniswap.notificationservice.v1.EventSubscriptionService/RefreshSession', {
-        body: JSON.stringify({
-          eventSubscriptionType: EVENT_SUBSCRIPTION_TYPE_TOKEN_PRICE,
-          connectionId,
-        }),
-      })
-    } catch (error) {
-      onError?.(error, 'refreshSession')
-    }
+    // The server refreshes the connection's entire forward index regardless
+    // of the type sent — one call covers every channel, pool_price included.
+    await post(connectionId, '/uniswap.notificationservice.v1.EventSubscriptionService/RefreshSession', {
+      eventSubscriptionType: EVENT_SUBSCRIPTION_TYPE_TOKEN_PRICE,
+      connectionId,
+    })
   }
 
   return {

@@ -1,6 +1,7 @@
 import { renderHook } from '@testing-library/react'
 import type { MarginActivePosition } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { getDefaultMarginMarket } from '~/pages/Swap/Margin/__fixtures__/marginCatalog'
 import { useMarginPositionActions } from '~/pages/Swap/Margin/hooks/useMarginPositionActions'
@@ -19,7 +20,7 @@ vi.mock('uniswap/src/features/telemetry/send', () => ({ sendAnalyticsEvent: mock
 const POSITION: MarginActivePosition = {
   status: 'ACTIVE',
   positionId: 'position-7',
-  direction: 'LONG',
+  direction: MarginDirection.LONG,
   exposureToken: { address: MARKET.collateral.address, chainId: 1, decimals: MARKET.collateral.decimals },
   counterToken: { address: MARKET.debt.address, chainId: 1, decimals: MARKET.debt.decimals },
   size: '2000000000000000000',

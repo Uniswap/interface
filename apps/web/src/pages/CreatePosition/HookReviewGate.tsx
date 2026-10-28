@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PositionFlowStep } from '~/features/Liquidity/Create/types'
 import { HookModal } from '~/features/Liquidity/HookModal'
+import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
 import { needsHookReview } from '~/features/Liquidity/utils/hookReview'
 import { normalizeHookForMatch } from '~/features/Liquidity/utils/normalizeHookForMatch'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
@@ -15,17 +16,29 @@ import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidit
  *
  * The exits are Continue and declining. Declining (Go back, the header X) means whatever the surface
  * says it means; the backdrop is locked because this is the only review on these paths.
+ *
+ * Held back while the pair is geo-restricted: nothing can be deposited, so there is no hook to
+ * approve, and the add route's region modal owns the screen. It returns if the restriction lifts.
  */
 export function HookReviewGate({ onDecline }: { onDecline: () => void }): JSX.Element | null {
   const { t } = useTranslation()
-  const { positionState, setPositionState, step } = useCreateLiquidityContext()
+  const { positionState, setPositionState, step, currencies } = useCreateLiquidityContext()
   const { hook } = positionState
+  const { isGeoRestricted } = useLPGeoRestriction({
+    token0: currencies.display.TOKEN0,
+    token1: currencies.display.TOKEN1,
+  })
 
   const approveHook = useCallback(() => {
     setPositionState((state) => ({ ...state, userApprovedHook: state.hook }))
   }, [setPositionState])
 
-  if (step === PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER || !hook || !normalizeHookForMatch(hook)) {
+  if (
+    step === PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER ||
+    isGeoRestricted ||
+    !hook ||
+    !normalizeHookForMatch(hook)
+  ) {
     return null
   }
 

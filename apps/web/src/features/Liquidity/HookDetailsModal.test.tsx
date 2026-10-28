@@ -70,7 +70,7 @@ describe('HookDetailsModal', () => {
 
   it('renders the address middle-ellipsized, not in full', () => {
     renderModal(BASE_HOOK)
-    const ellipsized = shortenAddress({ address: BASE_HOOK.address, chars: 14, charsEnd: 8 })
+    const ellipsized = shortenAddress({ address: BASE_HOOK.address, chars: 10, charsEnd: 8 })
     expect(ellipsized).toContain('...')
     expect(screen.getByText(ellipsized)).toBeTruthy()
     expect(screen.queryByText(BASE_HOOK.address)).toBeNull()
@@ -139,6 +139,13 @@ describe('HookDetailsModal', () => {
       listHookUnder(UniswapBuiltHookAddressesConfigKey.Built)
       render(<HookDetailsModal hookEntry={BASE_HOOK} chainId={1} isOpen onClose={vi.fn()} />)
       expect(screen.queryByText(/by Uniswap/)).toBeNull()
+    })
+
+    it('renders the configuring deployer shortened to 6/6 characters', () => {
+      listHookUnder(UniswapBuiltHookAddressesConfigKey.Configured)
+      const deployer = '0xabcdefabcdefabcdefabcdefabcdefabcdefabcd'
+      renderModal(new HookEntry({ ...BASE_HOOK, deployer }))
+      expect(screen.getByText(shortenAddress({ address: deployer, chars: 6, charsEnd: 6 }))).toBeTruthy()
     })
 
     it.each([

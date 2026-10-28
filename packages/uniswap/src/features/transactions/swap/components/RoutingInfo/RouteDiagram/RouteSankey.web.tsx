@@ -1,5 +1,5 @@
 import { Flex } from '@universe/mycelium'
-import { useExtractedTokenColor, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { type TokenColorOverrides, useExtractedTokenColor, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
@@ -121,10 +121,12 @@ function getLabelPlacement({
 function TokenColorProbe({
   node,
   logoUrl,
+  colorOverrides,
   onColor,
 }: {
   node: RouteDiagramNode
   logoUrl: string | undefined
+  colorOverrides: TokenColorOverrides | undefined
   onColor: (tokenKey: string, color: string) => void
 }): null {
   const colors = useSporeColors()
@@ -133,6 +135,7 @@ function TokenColorProbe({
     tokenName: node.symbol,
     backgroundColor: colors.surface1.val,
     defaultColor: colors.neutral3.val,
+    colorOverrides,
   })
   useEffect(() => {
     if (tokenColor) {
@@ -148,6 +151,7 @@ export function RouteSankey({
   height,
   iconSize,
   logoUrlByTokenKey,
+  colorOverridesByTokenKey,
   onNavigate,
 }: RouteSankeyProps): JSX.Element | null {
   const { t } = useTranslation()
@@ -276,6 +280,7 @@ export function RouteSankey({
       key={node.tokenKey}
       node={node}
       logoUrl={logoUrlByTokenKey.get(node.tokenKey)}
+      colorOverrides={colorOverridesByTokenKey.get(node.tokenKey)}
       onColor={onTokenColor}
     />
   ))

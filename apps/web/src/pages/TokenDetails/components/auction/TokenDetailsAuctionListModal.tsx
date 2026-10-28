@@ -13,8 +13,8 @@ import { AuctionEventName, ElementName, ModalName } from 'uniswap/src/features/t
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { formatCommittedUsd } from 'uniswap/src/features/toucan/formatCommittedUsd'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { parseFiniteNumber } from 'utilities/src/primitives/number'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -79,13 +79,14 @@ function AuctionListRow({
   const launched = isEnded && result === AuctionDisplayResult.Successful
   const failed = isEnded && result === AuctionDisplayResult.Failed
   const amountUsd = launched ? raisedUsd : parseFiniteNumber(auction.totalBidVolumeUsd)
-  const amount = amountUsd === undefined ? '—' : convertFiatAmountFormatted(amountUsd, NumberType.FiatTokenStats)
+  const amount = amountUsd === undefined ? '—' : formatCommittedUsd({ usd: amountUsd, convertFiatAmountFormatted })
   const amountColor = isUpcoming ? '$neutral3' : failed ? '$neutral2' : '$neutral1'
 
   const onPress = useEvent(() => {
     const endTime = timestampToMs(auction.estimatedEndTime)
     sendAnalyticsEvent(AuctionEventName.AuctionSelectorAuctionClicked, {
       chain_id: auction.chainId,
+      auction_address: auction.address,
       position_rank: positionRank,
       auction_status: phase === undefined ? undefined : isUpcoming ? 'upcoming' : isEnded ? 'ended' : 'live',
       time_remaining_seconds: endTime === undefined ? undefined : Math.max(0, Math.ceil((endTime - Date.now()) / 1000)),

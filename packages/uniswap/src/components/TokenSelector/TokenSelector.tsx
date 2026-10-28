@@ -326,6 +326,7 @@ function TokenSelectorModalInner(props: TokenSelectorProps): JSX.Element {
       hideKeyboardOnDismiss
       hideKeyboardOnSwipeDown
       renderBehindBottomInset
+      coverBottomInsetOnAndroid
       backgroundColor={colors.surface1.val}
       isModalOpen={isModalOpen}
       maxWidth={isWebPlatform ? webMaxWidth : undefined}

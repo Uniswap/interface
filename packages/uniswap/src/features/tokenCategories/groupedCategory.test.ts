@@ -12,6 +12,7 @@ function makeCategory(id: string, grouped: boolean): TokenCategory {
     name: id,
     englishName: id,
     description: '',
+    kind: 'token',
     categoryClass: TokenCategoryClass.Asset,
     grouped,
     topTokens: [],

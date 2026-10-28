@@ -1,8 +1,10 @@
 import { AnimatableCopyIcon, Flex, iconSizes, Text, TouchableArea } from '@universe/mycelium'
 import { AlertTriangle } from '@universe/mycelium/icons/AlertTriangle'
+import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import { ArrowsExpand } from '@universe/mycelium/icons/ArrowsExpand'
 import { BlockExplorer } from '@universe/mycelium/icons/BlockExplorer'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import type { ReactNode } from 'react'
 import { Fragment, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -119,18 +121,35 @@ export function HoverCardHeadline({
   loading,
   loadingPlaceholderText,
   value,
+  lowPricingConfidence = false,
   caption,
 }: {
   loading: boolean
   loadingPlaceholderText: string
   value: string
+  lowPricingConfidence?: boolean
   caption?: ReactNode
 }): JSX.Element {
+  const showLowConfidenceWarning = !loading && lowPricingConfidence
   return (
-    <Flex row alignItems="baseline" gap="$spacing8" pt="$spacing4">
-      <Text variant="heading3" color="$neutral1" loading={loading} loadingPlaceholderText={loadingPlaceholderText}>
-        {value}
-      </Text>
+    // A prefix icon can push the caption past the card's width, so let it drop to its own line.
+    <Flex
+      row
+      alignItems="baseline"
+      gap="$spacing8"
+      pt="$spacing4"
+      flexWrap="wrap"
+      rowGap={lowPricingConfidence ? '$spacing2' : undefined}
+    >
+      <Flex row alignItems="center" gap="$spacing4">
+        {/* No tooltip here: one nested in the hover card popover renders behind the card. */}
+        {showLowConfidenceWarning && (
+          <AlertTriangleFilled testID={TestID.LowPriceConfidenceIcon} color="$neutral3" size="$icon.20" />
+        )}
+        <Text variant="heading3" color="$neutral1" loading={loading} loadingPlaceholderText={loadingPlaceholderText}>
+          {value}
+        </Text>
+      </Flex>
       {!loading && caption}
     </Flex>
   )

@@ -1,4 +1,5 @@
 import { GraphQLApi } from '@universe/api'
+import { TestID } from '@universe/test'
 import type { ReactNode } from 'react'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
@@ -36,9 +37,24 @@ vi.mock('~/hooks/useTokenPriceChartPanel', () => ({
   useTokenPriceChartPanel: vi.fn(),
 }))
 
+type HeaderContent = ReactNode | (({ isHovering }: { isHovering: boolean }) => ReactNode)
+const priceChartHeader = vi.hoisted(() => ({ isHovering: false }))
+
 vi.mock('~/components/Charts/PriceChart', () => ({
-  PriceChart: function MockPriceChart() {
-    return <div data-testid="tdp-price-chart" />
+  PriceChart: function MockPriceChart({
+    additionalHeaderContent,
+    blocksChartHover,
+  }: {
+    additionalHeaderContent?: HeaderContent
+    blocksChartHover?: boolean
+  }) {
+    return (
+      <div data-testid="tdp-price-chart" data-blocks-chart-hover={String(Boolean(blocksChartHover))}>
+        {typeof additionalHeaderContent === 'function'
+          ? additionalHeaderContent({ isHovering: priceChartHeader.isHovering })
+          : additionalHeaderContent}
+      </div>
+    )
   },
 }))
 
@@ -53,6 +69,7 @@ const mockedUseTokenPriceChartPanel = vi.mocked(useTokenPriceChartPanel)
 
 const basePanel = {
   pricePercentChange: undefined as number | undefined,
+  priceConfidenceScore: undefined as number | undefined,
   stale: false,
 }
 
@@ -96,8 +113,25 @@ function renderPanel({
   )
 }
 
+function mockValid({ priceConfidenceScore }: { priceConfidenceScore?: number } = {}) {
+  mockedUseTokenPriceChartPanel.mockReturnValue({
+    ...basePanel,
+    priceConfidenceScore,
+    showInvalidSkeleton: false,
+    isError: false,
+    priceQuery: {
+      chartType: ChartType.PRICE,
+      entries: [],
+      loading: false,
+      dataQuality: DataQuality.VALID,
+      disableCandlestickUI: false,
+    },
+  })
+}
+
 describe('TDPPriceChartPanel', () => {
   beforeEach(() => {
+    priceChartHeader.isHovering = false
     mockedUseTokenPriceChartPanel.mockReturnValue({
       ...basePanel,
       showInvalidSkeleton: false,
@@ -125,6 +159,39 @@ describe('TDPPriceChartPanel', () => {
     )
     expect(screen.getByTestId('tdp-price-chart')).toBeInTheDocument()
     expect(mockedUseTokenPriceChartPanel).toHaveBeenCalledWith(expect.objectContaining({ keepPreviousData: false }))
+  })
+
+  it('shows the low confidence tag when the displayed price has a low confidence score', () => {
+    mockValid({ priceConfidenceScore: 0.001 })
+
+    renderPanel()
+
+    expect(screen.getByTestId(TestID.LowPriceConfidenceTag)).toHaveTextContent('Low confidence')
+    expect(screen.getByTestId(TestID.LowPriceConfidenceTag).closest('.hidden')).toBeNull()
+    // So the tag's tooltip can be reached across the resting header.
+    expect(screen.getByTestId('tdp-price-chart')).toHaveAttribute('data-blocks-chart-hover', 'true')
+  })
+
+  it('hides the low confidence tag while scrubbing the chart, keeping its tooltip trigger mounted', () => {
+    mockValid({ priceConfidenceScore: 0.001 })
+    priceChartHeader.isHovering = true
+
+    renderPanel()
+
+    // jsdom has no Tailwind stylesheet to compute `display: none` from, so check for its class.
+    expect(screen.getByTestId(TestID.LowPriceConfidenceTag).closest('.hidden')).toBeInTheDocument()
+  })
+
+  it.each([
+    ['confident', 0.9],
+    ['unscored', undefined],
+  ])('does not show the low confidence tag when the price is %s', (_, priceConfidenceScore) => {
+    mockValid({ priceConfidenceScore })
+
+    renderPanel()
+
+    expect(screen.queryByTestId(TestID.LowPriceConfidenceTag)).not.toBeInTheDocument()
+    expect(screen.getByTestId('tdp-price-chart')).toHaveAttribute('data-blocks-chart-hover', 'false')
   })
 
   it('shows the no-data copy when the query succeeded but there is not enough data', () => {

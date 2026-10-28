@@ -6,8 +6,9 @@ import {
   type TextCompatProps as TextProps,
   type TouchableTextLinkProps,
 } from '@universe/mycelium'
-import { Fragment } from 'react'
-import { DISCLOSURES, type DisclosureLink as DisclosureLinkData } from 'uniswap/src/components/disclosures/disclosures'
+import { useTranslation } from 'react-i18next'
+import { Trans } from 'ui/src'
+import { DISCLOSURE_URLS } from 'uniswap/src/components/disclosures/disclosures'
 
 type DisclosuresBodyProps = {
   variant?: TextProps['variant']
@@ -22,39 +23,100 @@ export function DisclosuresBody({
   linkColor = '$accent1',
   paragraphGap = '$spacing12',
 }: DisclosuresBodyProps): JSX.Element {
+  const { t } = useTranslation()
+  const linkVariant = variant as TouchableTextLinkProps['variant']
+
+  // Trans splices these into its children array, so each needs a key.
+  const link = (key: string, href: string): JSX.Element => (
+    <DisclosureLink key={key} href={href} variant={linkVariant} color={linkColor} />
+  )
+
+  // i18n keys stay literal so i18next-parser can extract them.
   return (
     <Flex gap={paragraphGap}>
-      {DISCLOSURES.map((paragraph, paragraphIndex) => (
-        <Text key={paragraphIndex} variant={variant} color={color}>
-          {paragraph.map((node, nodeIndex) => {
-            if (typeof node === 'string') {
-              return <Fragment key={nodeIndex}>{node}</Fragment>
-            }
-            return <DisclosureLink key={nodeIndex} link={node} variant={variant} color={linkColor} />
-          })}
-        </Text>
-      ))}
+      <Text variant={variant} color={color}>
+        <Trans
+          i18nKey="disclosures.products"
+          components={{
+            appLink: link('appLink', DISCLOSURE_URLS.app),
+            unsupportedTokenPolicyLink: link('unsupportedTokenPolicyLink', DISCLOSURE_URLS.unsupportedTokenPolicy),
+          }}
+        />
+      </Text>
+      <Text variant={variant} color={color}>
+        {t('disclosures.integrations')}
+      </Text>
+      <Text variant={variant} color={color}>
+        <Trans
+          i18nKey="disclosures.liquiditySources"
+          components={{ tradeOptionsLink: link('tradeOptionsLink', DISCLOSURE_URLS.tradeOptions) }}
+        />
+      </Text>
+      <Text variant={variant} color={color}>
+        {t('disclosures.routing')}
+      </Text>
+      <Text variant={variant} color={color}>
+        <Trans
+          i18nKey="disclosures.autoRouterParameters"
+          components={{ uniRouteLink: link('uniRouteLink', DISCLOSURE_URLS.uniRouteRepo) }}
+        />
+      </Text>
+      <Text variant={variant} color={color}>
+        {t('disclosures.defaultParameters')}
+      </Text>
+      <Text variant={variant} color={color}>
+        {t('disclosures.slippage')}
+      </Text>
+      <Text variant={variant} color={color}>
+        {t('disclosures.swapDeadline')}
+      </Text>
+      <Text variant={variant} color={color}>
+        {t('disclosures.autoRouter')}
+      </Text>
+      <Text variant={variant} color={color}>
+        {t('disclosures.gasFees')}
+      </Text>
+      <Text variant={variant} color={color}>
+        {t('disclosures.maxBaseFee')}
+      </Text>
+      <Text variant={variant} color={color}>
+        {t('disclosures.priorityFees')}
+      </Text>
+      <Text variant={variant} color={color}>
+        {t('disclosures.gasLimit')}
+      </Text>
+      <Text variant={variant} color={color}>
+        {t('disclosures.feeCalculation')}
+      </Text>
+      <Text variant={variant} color={color}>
+        <Trans
+          i18nKey="disclosures.customization"
+          components={{
+            slippageLink: link('slippageLink', DISCLOSURE_URLS.slippage),
+            swapDeadlinesLink: link('swapDeadlinesLink', DISCLOSURE_URLS.swapDeadlines),
+            tradeOptionsLink: link('tradeOptionsLink', DISCLOSURE_URLS.tradeOptions),
+          }}
+        />
+      </Text>
     </Flex>
   )
 }
 
 function DisclosureLink({
-  link,
+  href,
   variant,
   color,
+  children,
 }: {
-  link: DisclosureLinkData
-  variant: TextProps['variant']
+  href: string
+  variant: TouchableTextLinkProps['variant']
   color: TouchableTextLinkProps['color']
+  /** Injected by Trans: the link label from the translated string. */
+  children?: string
 }): JSX.Element {
   return (
-    <TouchableTextLink
-      onlyUseText
-      link={link.href}
-      color={color}
-      variant={variant as TouchableTextLinkProps['variant']}
-    >
-      {link.text}
+    <TouchableTextLink onlyUseText link={href} color={color} variant={variant}>
+      {children ?? ''}
     </TouchableTextLink>
   )
 }

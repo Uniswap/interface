@@ -1,7 +1,8 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { useScrollbarStyles } from '@universe/mycelium/theme-hooks-compat'
 import { useRef, useState } from 'react'
 import { useLockScroll } from 'src/app/hooks/useLockScroll'
-import { animationPresets, Popover, useScrollbarStyles } from 'ui/src'
+import { animationPresets, Popover } from 'ui/src'
 import { Check, RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes, zIndexes } from 'ui/src/theme'
 type DropdownItem = {

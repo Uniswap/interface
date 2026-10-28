@@ -25,6 +25,7 @@ import { RwaCategoryTable } from '~/pages/Explore/rwa/table/RwaCategoryTable'
 import { SearchBar } from '~/pages/Explore/SearchBar'
 import { TokenTable } from '~/pages/Explore/tables/Tokens/TokensTable'
 import {
+  getTokenTableSort,
   TokenTableSortStoreContextProvider,
   useTokenTableSortStore,
 } from '~/pages/Explore/tables/Tokens/tokenTableSortStore'
@@ -97,7 +98,7 @@ export function CategoryTokensSection({ category }: { category: TokenCategory })
   // Categories only cover EVM chains: offer only those, and read a deep link to another chain as All networks.
   const chainId = isCategoryUnsupportedChain(chainIdParam) ? undefined : chainIdParam
   const { chains: networks } = useEnabledChains({ platform: Platform.EVM, includeTestnets: true })
-  const { chainIds, allNetworksChainIds } = useNetworkFilterChainIds(networks)
+  const { chainIds, allNetworksChainIds } = useNetworkFilterChainIds(networks, { singleModeNetworks: true })
   const onNetworkPress = useEvent((newChainId: UniverseChainId | null) =>
     setSearchParams(withChainSearchParam(searchParams, newChainId ?? undefined), { replace: true }),
   )
@@ -108,7 +109,7 @@ export function CategoryTokensSection({ category }: { category: TokenCategory })
 
   return (
     <ExploreTablesFilterStoreContextProvider>
-      <TokenTableSortStoreContextProvider>
+      <TokenTableSortStoreContextProvider key={category.id} initialSort={getTokenTableSort(category.defaultSort)}>
         <Flex width="100%" gap="$spacing4">
           <Flex
             row

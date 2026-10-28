@@ -15,6 +15,7 @@ export { IssuerTableRowHoverContext } from 'uniswap/src/features/expandableAsset
 export { CategoryTag } from 'uniswap/src/features/expandableAsset/CategoryTag'
 export type {
   ExpandableAssetGroupVariant,
+  IdentityLayoutStyles,
   IssuerMenuControl,
   RenderIssuerRowArgs,
 } from 'uniswap/src/features/expandableAsset/types'

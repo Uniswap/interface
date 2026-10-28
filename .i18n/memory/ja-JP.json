@@ -14,8 +14,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Apple",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -31,8 +31,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Google",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -48,8 +48,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "{{amount}} UNI",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -269,8 +269,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "OK",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -286,8 +286,42 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Permit",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:common.privacyChoices.optOut",
+      {
+        "unitId": "common.privacyChoices.optOut",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "5d1160c8a782fcfc275fe20ba2a3055c30316c1f7544530db94824fb986c5a53",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "適用される法律の下でこれが販売、共有、またはターゲティング広告に該当する場合、設定で「{{settingName}}」の切り替えをオフにすることでオプトアウトできます。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-16T19-33-21Z",
+        "approvedAt": "2026-10-16T19:33:21.048Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:common.privacyChoices.policy",
+      {
+        "unitId": "common.privacyChoices.policy",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "5109ab4492e4bed49a87e4aa498a04262721ad8e42c81975e8a854e6d4e976cc",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "当社のプライバシー慣行の詳細については、<privacyLink>プライバシーポリシー</privacyLink>をご覧ください。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-16T19-33-21Z",
+        "approvedAt": "2026-10-16T19:33:21.048Z",
         "approvedBy": "agent"
       }
     ],
@@ -303,8 +337,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Uniswap v2",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -320,8 +354,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Uniswap v3",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -337,8 +371,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Uniswap v4",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -356,6 +390,261 @@
         "status": "clean",
         "agentRunId": "ja-JP-2026-09-18T15-34-05Z",
         "approvedAt": "2026-09-18T15:34:05.453Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:disclosures.autoRouter",
+      {
+        "unitId": "disclosures.autoRouter",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "1769525d3c38507cb4b1bdc3cb4a598af59b2e5d1a004c2bcb302a769bf8b857",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "オートルーターは、本製品が使用する取引経路アルゴリズムであり、対象のインテグレーション全体にわたりデジタル資産取引の潜在的な経路を分析し、開示された客観的ルーティングパラメータの下でのシミュレーション実行に基づき、その時点で受け取れるデジタル資産の数量が最大になると推定される取引経路に関する情報をユーザーに提供します。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-15T22-12-01Z",
+        "approvedAt": "2026-10-15T22:12:01.275Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:disclosures.autoRouterParameters",
+      {
+        "unitId": "disclosures.autoRouterParameters",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "aeb91f7c1ff41c721069194cc98de27e3bfaeca2025f1b791b5c01a955b18f35",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "以下のパラメータは、本製品のルーティングソフトウェア（「オートルーター」）にハードコードされています：(i) シミュレーションによる gas コストの推定（ネットワーク手数料の高い経路の優先度を下げる場合があります）、(ii) シミュレーションによるスリッページの推定（ユーザーが指定した最大スリッページ以内に収まらない取引は取り消されます）、(iii) 流動性ソース全体のロックされた総価値で測定されるプールの流動性（指定されたしきい値を下回るプールの優先度を下げるか除外します）、(iv) 複数の流動性ソースに分割することでより良い価格が得られるかをルーターが評価できるようにするための、ユーザーのスワップを「分割」できる最大回数、(v) ユーザーが希望する出力トークンを受け取るまでのデジタル資産変換の潜在的なシーケンスを意味する「ホップ」の最大数、(vi) オートルーターのアルゴリズムが提案経路の生成時に評価する潜在的なルーティング経路の最大数。オートルーターは、異常に高い LP 手数料による予期しない価格インパクトからユーザーを保護するため、手数料が 11% を超えるプールを探索しません。これらのルーティングソフトウェアのパラメータは、ユーザーが設定可能な取引レベルのデフォルトパラメータではありません。本製品のルーティングソフトウェアはこれらのルーティングパラメータを一律に適用しており、コードは<uniRouteLink>こちら</uniRouteLink>で確認できます。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-15T22-12-01Z",
+        "approvedAt": "2026-10-15T22:12:01.275Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:disclosures.customization",
+      {
+        "unitId": "disclosures.customization",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "62979328997006241effade715257423f44996c1f2899ab5f7e15b31851362ab",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "取引レベルのデフォルトパラメータは、本製品のユーザーが自由にカスタマイズできます。これらのパラメータを変更すると、取引に追加の経路が表示される場合があります。デフォルトパラメータの変更方法の詳細については、<slippageLink>Uniswap Web アプリでスリッページを変更する方法</slippageLink>、<swapDeadlinesLink>Uniswap インターフェースでスワップ期限を変更する方法</swapDeadlinesLink>、および<tradeOptionsLink>デフォルトの取引オプションを変更する方法</tradeOptionsLink>をご覧ください。Uniswap Labs はデフォルトパラメータに関する社内ポリシーと手順を維持しており、これらのポリシーと手順の遵守を確保するため、デフォルトパラメータを定期的に再評価しています。Uniswap Labs は、デフォルトパラメータの結果として Uniswap Labs と本製品のユーザーとの間に生じる重大な利益相反を認識していません。Uniswap Labs は、ルーティング分析への組み入れに関していかなる流動性ソースからも報酬を受け取っていません。サードパーティ統合へのエコシステム支援、マーケットメイカー支援（ローンやインセンティブプログラムなど）、API アクセス、共同マーケティングを含む事業開発活動は、ルーティング分析とは別個のものであり、影響を与えません。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-15T22-12-01Z",
+        "approvedAt": "2026-10-15T22:12:01.275Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:disclosures.defaultParameters",
+      {
+        "unitId": "disclosures.defaultParameters",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "6384103f15d7e3393252e304756e6c94b8f8a5a33326c3024bae82defe2771a2",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "現在、本製品では以下の取引レベルのデフォルトパラメータが適用されています：スリッページ許容値、スワップ期限、対象となるプールおよび取引場所または分散型台帳取引システム、優先手数料。デフォルトパラメータは随時変更される場合があります。デフォルトパラメータは客観的な基準に基づいて設定され、一般にユーザーのリスクを低減するよう構成されています。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-15T22-12-01Z",
+        "approvedAt": "2026-10-15T22:12:01.275Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:disclosures.feeCalculation",
+      {
+        "unitId": "disclosures.feeCalculation",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "40c78c254e0b59dd6e93159cc60e13ee83bd2cf876440febf93320a598fb304c",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "本製品は、客観的かつ一律に適用されるアルゴリズムを用いて、各取引に対して自動計算された Gas 手数料と優先手数料を提示します。これらのアルゴリズムによる計算は、取引速度と支払う手数料のバランスを取るよう設計されています。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-15T22-12-01Z",
+        "approvedAt": "2026-10-15T22:12:01.275Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:disclosures.gasFees",
+      {
+        "unitId": "disclosures.gasFees",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "537acd8dfac10d9eec9e024bf4664b063e4804e4664d00d5daaf21d3bcf9e4f6",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "Gas 手数料は取引ごとにブロックチェーンのバリデータに支払われ、適用されるすべてのブロックチェーンネットワークで必須です。ユーザーは各ネットワークにより、すべての取引で Gas 手数料の支払いを求められます。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-15T22-12-01Z",
+        "approvedAt": "2026-10-15T22:12:01.275Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:disclosures.gasLimit",
+      {
+        "unitId": "disclosures.gasLimit",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "e2996676536051b909f7239dab48bda7c4273c64c13fd6d22569c6e1f196def1",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "Gas リミットは、ユーザーの取引が消費できる Gas の上限です。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-15T22-12-01Z",
+        "approvedAt": "2026-10-15T22:12:01.275Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:disclosures.integrations",
+      {
+        "unitId": "disclosures.integrations",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "0eae2dac9b2b0532da6271502d9dfedc5863c5cff281fa85a4f38949d44fbe43",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "本製品は、以下の取引場所または分散型台帳取引システムと統合されています：UniswapX、Uniswap Protocol（v4、v3、v2）、Tempo、Jupiter（総称して「インテグレーション」）。Uniswap Labs はインテグレーションに関する社内ポリシーと手順を維持しており、これにはインテグレーションおよび統合候補を評価、導入、監査するための管理体制が含まれます。これらのポリシーと手順に従い、インテグレーションは流動性、セキュリティ、透明性、検証可能性、中立性、監査可能性、レイテンシなどの客観的な基準に基づいて評価されます。インテグレーションは随時変更される場合があります。新しい流動性ソースが本製品に統合される前に、これらの基準に照らして評価される必要があります。Uniswap Protocol（v4、v3、v2）と UniswapX を含むすべての統合済み流動性ソースは、継続して含めるべきか除外すべきかを判断するため、定期的に再評価されます。流動性ソースのリスクプロファイルに重大な変化があった場合にも再評価が行われます。セキュリティ上の懸念が生じた場合は、次回の定期再評価を待たずに、流動性ソースをルーティング計算から直ちに除外することがあります。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-15T22-12-01Z",
+        "approvedAt": "2026-10-15T22:12:01.275Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:disclosures.liquiditySources",
+      {
+        "unitId": "disclosures.liquiditySources",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "416f99fc4657215fea96c3ac83bf83227def10efe5a873ea9c6802607dc6d174",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "本製品からアクセスできる流動性ソースとその評価基準の詳細については、<tradeOptionsLink>デフォルトの取引オプションを変更する方法</tradeOptionsLink>をご覧ください。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-15T22-12-01Z",
+        "approvedAt": "2026-10-15T22:12:01.275Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:disclosures.maxBaseFee",
+      {
+        "unitId": "disclosures.maxBaseFee",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "f3c3237a31031b1b4c4fae6f63b8a4406d6efa21087f5ce1348f569204603681",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "最大ベース料金は、ユーザーが支払ってもよいとする gas 単位あたりのベース料金の上限です。ベース料金はネットワークによりブロックごとに設定されます。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-15T22-12-01Z",
+        "approvedAt": "2026-10-15T22:12:01.275Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:disclosures.priorityFees",
+      {
+        "unitId": "disclosures.priorityFees",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "ffef081c895ce81ee27feb4dfbfa63d9a91f9850c6a66727de0c4b8a84fde1b9",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "優先手数料（該当する場合）は、取引をより速く処理してもらうためにユーザーがバリデータに支払える任意の手数料です。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-15T22-12-01Z",
+        "approvedAt": "2026-10-15T22:12:01.275Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:disclosures.products",
+      {
+        "unitId": "disclosures.products",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "76f70bc50491b1d2da127941c761d2bdeaac620c5f29f5ca37444147c5b46389",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "Uniswap Labs は、(a) <appLink>app.uniswap.org</appLink> にあるウェブサイト上のユーザーインターフェース（「インターフェース」）、(b) モバイルウォレットアプリケーション（「Uniswap Wallet」）、および (c) API その他の製品・サービス（総称して「本製品」）を作成・運営しており、これらによりユーザーは自身のセルフカストディ型ウォレットを使用してパブリックブロックチェーン上で取引を準備・送信できます。Uniswap Labs は、疑わしいインシデントの迅速な調査や、従業員の資格認証その他のセキュリティ対策による不正アクセスの防止を含め、本製品のセキュリティを保護するための社内手順を維持しています。Uniswap Labs は、それぞれパブリックブロックチェーン上にデプロイされた自律的なオープンソースのスマートコントラクト群である Uniswap Protocol（v4、v3、v2）および UniswapX の開発に貢献していますが、Uniswap Protocol（v4、v3、v2）または UniswapX を所有、管理、運営していません。Uniswap Labs はブローカーディーラーではなく、本製品の作成、提供、運営に関して米国証券取引委員会に登録されておらず、その規制も受けていません。一部の資産は本製品で利用できない場合があり、また特定の法域では利用できない資産もあります。詳細については、<unsupportedTokenPolicyLink>非対応トークンポリシー</unsupportedTokenPolicyLink>をご覧ください。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-15T22-12-01Z",
+        "approvedAt": "2026-10-15T22:12:01.275Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:disclosures.routing",
+      {
+        "unitId": "disclosures.routing",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "8cb99ca1a941d16151b298eb5e476d4271bc551d192b817a5213d9dd04b92979",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "ユーザーの取引を準備する際、本製品のルーティングソフトウェアはインテグレーション上の取引の潜在的な経路を分析し、シミュレーション実行結果に基づき、その時点で受け取れるデジタル資産の数量が最大になると推定される取引経路に関する情報をユーザーに提供します。そのために、本製品はデフォルトでインテグレーション全体の利用可能な流動性ソースを考慮します。ユーザーは、デフォルト設定を調整し、本製品のルーティングソフトウェアが考慮する流動性ソースを切り替える完全な裁量を保持します。本製品が考慮する流動性ソースを変更すると、取引に追加の経路が表示される場合があります。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-15T22-12-01Z",
+        "approvedAt": "2026-10-15T22:12:01.275Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:disclosures.slippage",
+      {
+        "unitId": "disclosures.slippage",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "1f3379ed1d4df8d857eb8c4b099890188f9c71ca13bc2c9f933de0e37014de4c",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "スリッページとは、スワップの送信時点で予想される価格と、スワップがオンチェーンで実行される際の実際の執行価格との差です。スリッページは、通常の価格変動、利用可能な流動性の変化、ネットワークの遅延や混雑、またはユーザーのスワップによる市場インパクトから生じることがあります。スリッページは取引に内在するリスクです。スリッページ許容値を高く設定しすぎると、取引から期待した価値を得られなかったり、取引の価値が第三者に奪われたりする可能性があります。逆に、スリッページ許容値を低く設定しすぎると、取引を執行できない場合があります。本製品は、一律に適用されるアルゴリズムを用いて、自動計算された最大スリッページ許容値を提示します。これは、選択したネットワークやスワップの規模などの要因に応じて、一般におよそ 0.5% から 5.5% の範囲に収まります。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-15T22-12-01Z",
+        "approvedAt": "2026-10-15T22:12:01.275Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:disclosures.swapDeadline",
+      {
+        "unitId": "disclosures.swapDeadline",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "05679769a825cb1b067e25c3b12d9dfa5db5e336a897e9ea58e2d754819f3670",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "スワップ期限とは、スワップが取り消されるまでにオンチェーンで保留状態を維持できる時間です。本製品はデフォルトで 30 分の取引期限を適用しており、送信から 30 分以内に執行されなかったスワップは取り消されます。これは、意図しない大幅な価格変動からユーザーを追加的に保護するためのものです。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-15T22-12-01Z",
+        "approvedAt": "2026-10-15T22:12:01.275Z",
         "approvedBy": "agent"
       }
     ],
@@ -405,8 +694,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Earn",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -422,8 +711,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "v2 TVL",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -439,8 +728,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "v3 TVL",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -456,8 +745,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "v4 TVL",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -473,8 +762,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Venmo",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -490,8 +779,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "API",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -541,8 +830,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -4364,8 +4653,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "RoE",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -4381,8 +4670,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "PnL",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -5413,8 +5702,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "PnL/RoE",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -6031,6 +6320,23 @@
       }
     ],
     [
+      "ja-JP:i18next-json:network.filter.lowLiquidity",
+      {
+        "unitId": "network.filter.lowLiquidity",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "05a25d34314db561ef070b425ba6015bd5c105d2dda3c7da3082d5a742c3267f",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "低流動性",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-19T20-14-07Z",
+        "approvedAt": "2026-10-19T20:14:07.836Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ja-JP:i18next-json:notification.auction.open.failed",
       {
         "unitId": "notification.auction.open.failed",
@@ -6059,8 +6365,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -6099,6 +6405,53 @@
       }
     ],
     [
+      "ja-JP:i18next-json:pool.position.earned.suffix",
+      {
+        "unitId": "pool.position.earned.suffix",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "4844fdfbc864ac106bb9742de65edfbcb5257a4e7ee2d8c500b80cdafa148524",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "獲得済み",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-21T15-24-54Z",
+        "approvedAt": "2026-10-21T15:24:54.691Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:pool.position.liquidity.suffix",
+      {
+        "unitId": "pool.position.liquidity.suffix",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "ead2523743ee17aed6605ba71358fd4820c5102cefa92b72d4574db2cddf575e",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "流動性",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "major",
+            "detail": "In this pool-position context (neighbors: i=2224 'Position', i=2225 'earned', i=2227 'Your position'), 'liq.' abbreviates 'liquidity', not 'liquidation'. 清算 (liquidation) tells the user their pool position relates to a liquidation event, a false and alarming reading in an LP stats row. The shipped 'Liq.→清算' pair belongs to the leveraged-perps context (liquidation price) and does not apply here.",
+            "evidence": {
+              "sourceSpan": "liq.",
+              "targetSpan": "清算"
+            },
+            "alternative": "流動性",
+            "reviewDimension": "term-type-agreement"
+          }
+        ],
+        "agentRunId": "ja-JP-2026-10-21T15-24-54Z",
+        "approvedAt": "2026-10-21T15:24:54.691Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ja-JP:i18next-json:portfolio.defi.title",
       {
         "unitId": "portfolio.defi.title",
@@ -6110,8 +6463,25 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "DeFi",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:position.initialPrice.marketUpdated",
+      {
+        "unitId": "position.initialPrice.marketUpdated",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "a54fccb1b9e62fcbf3c5d1b992c9dc12bf09b76415f09564ce0adde7d922d185",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "市場価格が更新されました",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-15T20-59-06Z",
+        "approvedAt": "2026-10-15T20:59:06.775Z",
         "approvedBy": "agent"
       }
     ],
@@ -6144,8 +6514,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "The Badger",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -6212,8 +6582,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -6429,8 +6799,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -6446,8 +6816,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -6513,6 +6883,40 @@
         "status": "clean",
         "agentRunId": "ja-JP-2026-09-16T16-25-30Z",
         "approvedAt": "2026-09-16T16:25:30.335Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:rhcca.position.priceUnavailable",
+      {
+        "unitId": "rhcca.position.priceUnavailable",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "abc5fecda607e617b5af85dd8280f49b97736d30dcf49ad622118c302b123465",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "トークンの価格データは現在利用できません",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-20T20-08-42Z",
+        "approvedAt": "2026-10-20T20:08:42.014Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:search.results.auction.startsIn",
+      {
+        "unitId": "search.results.auction.startsIn",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "f63d3a93c65b2b7e8c6b1a29a7efe1834ae62f4887bd58edfb759de7b6b15f1c",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "{{time}} 後に開始",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-20T18-19-00Z",
+        "approvedAt": "2026-10-20T18:19:00.024Z",
         "approvedBy": "agent"
       }
     ],
@@ -6592,8 +6996,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "OK",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -6609,8 +7013,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "ENS",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -6683,6 +7087,40 @@
       }
     ],
     [
+      "ja-JP:i18next-json:settings.setting.shareDeviceIdentifiers.message",
+      {
+        "unitId": "settings.setting.shareDeviceIdentifiers.message",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "e2ba15a1a8521d2d7db3051027b805d819f8bcd2e8e7d9700b0edc9cea9b2f74",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "他のウェブサイトやプラットフォームで当社のサービスを宣伝するため、デバイス識別子を広告パートナーと共有する場合があります。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-16T19-33-21Z",
+        "approvedAt": "2026-10-16T19:33:21.048Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:settings.setting.shareDeviceIdentifiers.title",
+      {
+        "unitId": "settings.setting.shareDeviceIdentifiers.title",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "ef41776a003a42bf066f2cb1cc0886b40fef5dfea0420467b3af57f131d66b59",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "デバイス識別子を共有",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-16T19-33-21Z",
+        "approvedAt": "2026-10-16T19:33:21.048Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ja-JP:i18next-json:swap.routing.guidestar.copyPool",
       {
         "unitId": "swap.routing.guidestar.copyPool",
@@ -6711,8 +7149,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Uniswap API",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -7394,6 +7832,57 @@
       }
     ],
     [
+      "ja-JP:i18next-json:token.price.lowConfidence.tag",
+      {
+        "unitId": "token.price.lowConfidence.tag",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "29e142b8be7d28e49cc799fb06f36a7121919415c29811315c90594e4c4ffc60",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "低信頼度",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:token.price.lowConfidence.title",
+      {
+        "unitId": "token.price.lowConfidence.title",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "ef586d27ebbd87e6bfa32e637715042e8d9e8f612ea9de3124b29361e235f99d",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "価格の信頼度が低い",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:token.price.lowConfidence.tooltip",
+      {
+        "unitId": "token.price.lowConfidence.tooltip",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "2a666cdba05106c279a946878c66c546f38ddd6e4f754ea3212935e61a271a1a",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "トークン価格は、限られた、または品質が低い可能性のある市場データに基づいています。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ja-JP:i18next-json:tokens.selector.categoryFilter.clear_one",
       {
         "unitId": "tokens.selector.categoryFilter.clear_one",
@@ -7441,6 +7930,23 @@
         "status": "clean",
         "agentRunId": "ja-JP-2026-09-23T16-11-12Z",
         "approvedAt": "2026-09-23T16:11:12.885Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:toucan.allAuctions",
+      {
+        "unitId": "toucan.allAuctions",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "a6d3fee9c816e67519ea5a4ff5371433980d102f27650c5b854c671857a6200d",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "すべてのオークション",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-19T14-31-50Z",
+        "approvedAt": "2026-10-19T14:31:50.761Z",
         "approvedBy": "agent"
       }
     ],
@@ -7513,6 +8019,23 @@
       }
     ],
     [
+      "ja-JP:i18next-json:toucan.auction.finalFdv",
+      {
+        "unitId": "toucan.auction.finalFdv",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "67e17d632a561ea1d2f2f936e394bfe8f9f05219f620b70d8f3e160a866c4b03",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "最終 FDV",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-21T16-44-44Z",
+        "approvedAt": "2026-10-21T16:44:44.849Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ja-JP:i18next-json:toucan.auction.introBanner.auctionStartsInTime",
       {
         "unitId": "toucan.auction.introBanner.auctionStartsInTime",
@@ -7575,8 +8098,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "<value>{{fdv}}</value> FDV",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -7645,6 +8168,23 @@
         "status": "clean",
         "agentRunId": "ja-JP-2026-09-16T16-25-30Z",
         "approvedAt": "2026-09-16T16:25:30.335Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:toucan.bidDetails.description.outOfRangeInProgressAwaitingThreshold",
+      {
+        "unitId": "toucan.bidDetails.description.outOfRangeInProgressAwaitingThreshold",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "c9e6b4e257d95f81a7ea9c178152998f40e0db3bf41df207c687a579fa60174f",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "価格が設定した最大 FDV <highlight>{{valuationSummary}}</highlight> を超えたため、この注文の約定は停止しました。オークションの約定量がローンチしきい値 <highlight>{{launchThreshold}}</highlight> に達すると未使用の予算を払い戻すことができ、受け取ったトークンはオークション終了時に引き出せます。しきい値に達しなかった場合は、オークション終了時に予算全額を引き出せます。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-20T16-08-09Z",
+        "approvedAt": "2026-10-20T16:08:09.285Z",
         "approvedBy": "agent"
       }
     ],
@@ -7728,8 +8268,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "100% → 0.3% v4 LP",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -7915,8 +8455,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -7949,8 +8489,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -8080,8 +8620,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -8148,8 +8688,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Pools.trade",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -8488,8 +9028,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "<icon /> <gradient>UniswapX</gradient> <info />",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ],
@@ -8505,8 +9045,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "yourname",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-15T16-27-16Z",
-        "approvedAt": "2026-10-15T16:27:16.672Z",
+        "agentRunId": "ja-JP-2026-10-21T17-35-27Z",
+        "approvedAt": "2026-10-21T17:35:27.350Z",
         "approvedBy": "agent"
       }
     ]

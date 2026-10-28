@@ -7,6 +7,7 @@ import {
   Text,
   TouchableArea,
   type ColorTokens,
+  AnimatedFlex,
 } from '@universe/mycelium'
 import { useDeviceDimensions } from '@universe/mycelium/theme-hooks-compat'
 import { fonts, iconSizes, spacing } from '@universe/mycelium/tokens'
@@ -20,7 +21,6 @@ import type { EntryExitAnimationFunction } from 'react-native-reanimated'
 import { useAnimatedStyle } from 'react-native-reanimated'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { Search } from 'ui/src/components/icons/Search'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { SHADOW_OFFSET_SMALL } from 'uniswap/src/components/BaseCard/BaseCard'
 import { ViewGestureHandler } from 'uniswap/src/components/ViewGestureHandler/ViewGestureHandler'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'

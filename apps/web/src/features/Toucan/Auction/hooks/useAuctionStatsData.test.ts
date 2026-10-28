@@ -7,6 +7,7 @@ import { AuctionDetails, BidTokenInfo } from '~/features/Toucan/Auction/store/ty
 
 const mockUseStatsBannerData = vi.fn()
 const mockUseQuery = vi.fn()
+const mockLpPercentOverrides = vi.fn<() => Record<string, number>>()
 const mockStoreState = { auctionDetails: null as AuctionDetails | null, checkpointData: null }
 
 vi.mock('~/features/Toucan/Auction/hooks/useStatsBannerData', () => ({
@@ -35,9 +36,14 @@ vi.mock('~/hooks/useBlockTimestamp', () => ({
   useBlockTimestamp: () => undefined,
 }))
 
+vi.mock('@universe/gating', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@universe/gating')>()),
+  useDynamicConfigValue: () => mockLpPercentOverrides(),
+}))
+
 vi.mock('~/features/Toucan/Config/config', () => ({
   getAuctionMetadata: () => undefined,
-  getAuctionLpPercentOverride: () => undefined,
+  DEFAULT_AUCTION_LP_PERCENT_OVERRIDES: {},
 }))
 
 const CHAIN_ID = 1
@@ -112,6 +118,7 @@ describe('useAuctionStatsData', () => {
     vi.clearAllMocks()
     mockStatsBanner()
     mockUseQuery.mockReturnValue({ data: undefined })
+    mockLpPercentOverrides.mockReturnValue({})
   })
 
   it('formats supplies and implied price with resolved decimals (18)', () => {
@@ -190,5 +197,33 @@ describe('useAuctionStatsData', () => {
     const { result } = renderHook(() => useAuctionStatsData())
 
     expect(result.current.percentCommittedToLpFormatted).toBeNull()
+  })
+
+  it('pins the LP percent to the Statsig override keyed by auction id', () => {
+    mockStoreState.auctionDetails = buildAuctionDetails({
+      token: buildToken({ decimals: 18, symbol: 'TCAN', name: 'Toucan' }),
+      totalSupply: AUCTION_SLICE_SUPPLY_RAW,
+      tokenTotalSupply: FULL_SUPPLY_RAW,
+    })
+    mockUseQuery.mockReturnValue({ data: { tokenCountAllocatedToLp: LP_ALLOCATION_RAW } })
+    mockLpPercentOverrides.mockReturnValue({ 'auction-1': 100 })
+
+    const { result } = renderHook(() => useAuctionStatsData())
+
+    expect(result.current.percentCommittedToLpFormatted).toBe('100%')
+  })
+
+  it('computes the LP percent when the override config has no entry for the auction', () => {
+    mockStoreState.auctionDetails = buildAuctionDetails({
+      token: buildToken({ decimals: 18, symbol: 'TCAN', name: 'Toucan' }),
+      totalSupply: AUCTION_SLICE_SUPPLY_RAW,
+      tokenTotalSupply: FULL_SUPPLY_RAW,
+    })
+    mockUseQuery.mockReturnValue({ data: { tokenCountAllocatedToLp: LP_ALLOCATION_RAW } })
+    mockLpPercentOverrides.mockReturnValue({ 'some-other-auction': 25 })
+
+    const { result } = renderHook(() => useAuctionStatsData())
+
+    expect(result.current.percentCommittedToLpFormatted).toBe('91%')
   })
 })

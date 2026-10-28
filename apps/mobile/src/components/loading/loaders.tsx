@@ -1,9 +1,9 @@
-import { Flex } from '@universe/mycelium'
-import { getTokenValue } from '@universe/mycelium'
+import { Flex, FlexLoader, getTokenValue, type FlexLoaderProps, Skeleton } from '@universe/mycelium'
 import React, { memo } from 'react'
 import { TransactionLoader } from 'src/components/loading/parts/TransactionLoader'
 import { useChartDimensions } from 'src/components/PriceExplorer/useChartDimensions'
-import { FlexLoader, FlexLoaderProps, Skeleton, WaveLoader } from 'ui/src'
+import { WaveLoader } from 'ui/src'
+
 function Graph(): JSX.Element {
   const { chartHeight } = useChartDimensions()
 
@@ -45,13 +45,9 @@ function Image(): JSX.Element {
   )
 }
 
-function Favorite({
-  height,
-  contrast,
-  ...props
-}: { height?: number; contrast?: boolean } & FlexLoaderProps): JSX.Element {
+function Favorite({ height, ...props }: { height?: number } & FlexLoaderProps): JSX.Element {
   return (
-    <Skeleton contrast={contrast}>
+    <Skeleton>
       {/* surface3 because these only show up on explore modal which has a blurred bg that makes neutral3 look weird */}
       <FlexLoader
         backgroundColor="$surface3"

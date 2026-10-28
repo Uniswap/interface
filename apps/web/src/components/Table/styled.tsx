@@ -1,4 +1,4 @@
-import { clickableStyle, Flex, type FlexCompatProps } from '@universe/mycelium'
+import { clickableStyle, Flex, type FlexCompatProps, zIndexes } from '@universe/mycelium'
 import {
   type ComponentPropsWithoutRef,
   type ComponentRef,
@@ -67,6 +67,31 @@ export const CellContainer: ForwardRefExoticComponent<FlexCompatProps & RefAttri
   FlexCompatProps
 >(function CellContainer(props, ref) {
   return <Flex ref={ref} grow className="first-child-flex-grow-0 last-child-justify-end" {...props} />
+})
+
+export const TableSeparatorRow: ForwardRefExoticComponent<FlexCompatProps & RefAttributes<HTMLDivElement>> = forwardRef<
+  HTMLDivElement,
+  FlexCompatProps
+>(function TableSeparatorRow(props, ref) {
+  return (
+    <Flex
+      ref={ref}
+      centered
+      row
+      gap="$spacing12"
+      py="$spacing8"
+      px="$spacing16"
+      borderStyle="solid"
+      borderWidth={0}
+      width="100%"
+      // Opaque and above TablePinnedColumnOverlay so the full-height pinned divider breaks here
+      // instead of striking through the toggle label.
+      position="relative"
+      zIndex={zIndexes.default + 2}
+      backgroundColor="$surface1"
+      {...props}
+    />
+  )
 })
 
 export type FilterHeaderRowProps = FlexCompatProps

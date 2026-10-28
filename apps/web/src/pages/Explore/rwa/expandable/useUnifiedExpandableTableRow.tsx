@@ -17,9 +17,6 @@ export type UnifiedExpandableTableRowConfig<TRow extends RowData> = {
   getExpandedPanelHeightPx?: (subRowCount: number) => number
   onParentToggle?: (row: Row<TRow>, nextExpanded: boolean) => void
   wrapEmbeddedSubRow?: (row: Row<TRow>, content: JSX.Element) => JSX.Element
-  /** Widen the shell by its horizontal padding (RWA Explore card-width match). Disable when table columns
-   *  flex-grow, so the shell min-width stays equal to the header/flat rows and doesn't overflow on scroll. */
-  extendShellBeyondRowContent?: boolean
   /** Pass the table's `collapseExpandedRowsKey` so externally-closed rows snap shut with the reorder
    *  instead of animating afterwards. */
   instantCollapseKey?: string
@@ -31,16 +28,14 @@ export function useUnifiedExpandableTableRow<TRow extends RowData>({
   getExpandedPanelHeightPx = (subRowCount) => getExpandableIssuerPanelHeightPx({ issuerCount: subRowCount }),
   onParentToggle,
   wrapEmbeddedSubRow,
-  extendShellBeyondRowContent = true,
   instantCollapseKey,
 }: UnifiedExpandableTableRowConfig<TRow>): {
   rowWrapper: (row: Row<TRow>, content: JSX.Element) => JSX.Element
   renderUnifiedExpandableRow: RenderUnifiedExpandableRow<TRow>
 } {
   // Bleed issuer sub-rows outward by the full shell + inner-panel padding so their columns line up with the
-  // parent metrics row, which bleeds to the shell edge. The inner `$surface1` panel always sits this far
-  // (shell + inner padding) inside the shell edge, whether or not the shell is widened
-  // (`extendShellBeyondRowContent`), so the sub-rows must cancel both insets to match the parent.
+  // parent metrics row, which bleeds to the shell edge. The inner `$surface1` panel sits this far
+  // (shell + inner padding) inside the shell edge, so the sub-rows must cancel both insets to match the parent.
   const subRowBleedPx = EXPANDABLE_ASSET_ISSUER_ROW_ALIGNMENT_INSET_X_PX
 
   const rowWrapper = useCallback(
@@ -83,7 +78,6 @@ export function useUnifiedExpandableTableRow<TRow extends RowData>({
           isExpanded={isExpanded}
           collapsedIssuerHeightPx={0}
           expandedIssuerHeightPx={getExpandedPanelHeightPx(row.subRows.length)}
-          extendShellBeyondRowContent={extendShellBeyondRowContent}
           instantCollapseKey={instantCollapseKey}
           onToggle={() => {
             const nextExpanded = !row.getIsExpanded()
@@ -95,7 +89,7 @@ export function useUnifiedExpandableTableRow<TRow extends RowData>({
         />
       )
     },
-    [isExpandableParentRow, getExpandedPanelHeightPx, onParentToggle, extendShellBeyondRowContent, instantCollapseKey],
+    [isExpandableParentRow, getExpandedPanelHeightPx, onParentToggle, instantCollapseKey],
   )
 
   return { rowWrapper, renderUnifiedExpandableRow }

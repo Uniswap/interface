@@ -5,7 +5,7 @@ import { OVERLAY_PORTAL_CONTAINER_ATTRIBUTE } from '@universe/mycelium/popover-c
 // The compat useMedia evaluates the same `ui/src/theme/media.ts` breakpoints (max-width,
 // desktop-first) through an SSR-safe matchMedia store, so the sheet-adapt/close-icon
 // thresholds keep their exact legacy values.
-import { useMedia } from '@universe/mycelium/theme-hooks-compat'
+import { useMedia, useScrollbarStyles, useShadowPropsShort } from '@universe/mycelium/theme-hooks-compat'
 import { type ReactNode, useCallback, useContext, useMemo } from 'react'
 import { type CloseIconProps, CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
 import {
@@ -25,9 +25,7 @@ import {
 } from 'ui/src/components/modal/AdaptiveWebModalShared'
 import { WebBottomSheet } from 'ui/src/components/modal/WebBottomSheet.web'
 import { RemoveScroll } from 'ui/src/components/RemoveScroll/RemoveScroll'
-import { useScrollbarStyles } from 'ui/src/styles/ScrollbarStyles'
 import { zIndexes } from 'ui/src/theme'
-import { useShadowPropsShort } from 'ui/src/theme/shadows'
 import { useInjectSingleStylesheet } from 'utilities/src/react/useInjectSingleStylesheet'
 
 export {

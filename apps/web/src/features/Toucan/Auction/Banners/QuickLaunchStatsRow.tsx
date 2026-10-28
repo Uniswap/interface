@@ -8,7 +8,7 @@ import { NumberType } from 'utilities/src/format/types'
 import { fromQ96ToDecimalWithTokenDecimals } from '~/features/Toucan/Auction/BidDistributionChart/utils/q96'
 import { useDurationRemaining } from '~/features/Toucan/Auction/hooks/useDurationRemaining'
 import { useStatsBannerData } from '~/features/Toucan/Auction/hooks/useStatsBannerData'
-import { AuctionProgressState } from '~/features/Toucan/Auction/store/types'
+import { AuctionOutcome, AuctionProgressState } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { approximateNumberFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
 import { hasTokenTotalSupply } from '~/features/Toucan/Auction/utils/tokenTotalSupply'
@@ -72,12 +72,15 @@ export function QuickLaunchStatsRow() {
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
   const media = useMedia()
 
-  const { auctionDetails, auctionProgressState, checkpointData, onchainCheckpoint } = useAuctionStore((state) => ({
-    auctionDetails: state.auctionDetails,
-    auctionProgressState: state.progress.state,
-    checkpointData: state.checkpointData,
-    onchainCheckpoint: state.onchainCheckpoint,
-  }))
+  const { auctionDetails, auctionProgressState, auctionOutcome, checkpointData, onchainCheckpoint } = useAuctionStore(
+    (state) => ({
+      auctionDetails: state.auctionDetails,
+      auctionProgressState: state.progress.state,
+      auctionOutcome: state.progress.outcome,
+      checkpointData: state.checkpointData,
+      onchainCheckpoint: state.onchainCheckpoint,
+    }),
+  )
 
   const { bidTokenInfo, currentValuationFormatted, currentValuationFiatFormatted, currencyRaisedFormatted, hasData } =
     useStatsBannerData()
@@ -130,10 +133,31 @@ export function QuickLaunchStatsRow() {
   const effectiveCheckpoint = isAuctionActive ? onchainCheckpoint : checkpointData
   const bidCount = effectiveCheckpoint?.totalBidCount
 
+  // "Launched" only once graduation is confirmed: a failed launch never launched, and the outcome
+  // stays UNKNOWN until the final checkpoint settles.
+  const getEndedLabel = (outcome: AuctionOutcome): string => {
+    switch (outcome) {
+      case AuctionOutcome.GRADUATED:
+        return t('toucan.auction.timeRemaining.completed')
+      case AuctionOutcome.FAILED:
+        return t('tdp.auctions.failedToLaunch')
+      default:
+        return t('common.ended')
+    }
+  }
+
   const timeRemainingLabel = isAuctionNotStarted
     ? t('toucan.auction.status.startingSoon')
     : t('toucan.auction.stats.timeRemaining')
-  const timeRemainingValue = isAuctionEnded ? t('toucan.auction.timeRemaining.completed') : (durationRemaining ?? '--')
+  const timeRemainingValue = isAuctionEnded ? getEndedLabel(auctionOutcome) : (durationRemaining ?? '--')
+
+  // Same rule as the time-remaining cell: "at launch" only once graduation is confirmed.
+  const getValuationLabel = (): string => {
+    if (!isAuctionEnded) {
+      return t('toucan.statsBanner.currentValuation')
+    }
+    return auctionOutcome === AuctionOutcome.GRADUATED ? t('toucan.auction.fdvAtLaunch') : t('toucan.auction.finalFdv')
+  }
 
   const valuationPrimary =
     currentValuationFiatFormatted !== '--' ? currentValuationFiatFormatted : currentValuationFormatted
@@ -169,10 +193,7 @@ export function QuickLaunchStatsRow() {
 
       <Divider />
 
-      <StatCell
-        label={isAuctionEnded ? t('toucan.auction.fdvAtLaunch') : t('toucan.statsBanner.currentValuation')}
-        hasData={hasData}
-      >
+      <StatCell label={getValuationLabel()} hasData={hasData}>
         <FadeOnUpdate value={valuationPrimary}>
           <Text variant={primaryVariant} color="$neutral1">
             {valuationPrimary}

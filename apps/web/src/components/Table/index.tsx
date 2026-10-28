@@ -8,15 +8,18 @@ import useParentSize from '@visx/responsive/lib/hooks/useParentSize'
 import { CSSProperties, forwardRef, PropsWithChildren, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
+import { useComposedRefs } from 'utilities/src/react/composeRefs'
 import { useEvent } from 'utilities/src/react/hooks'
 import { APP_BODY_MOBILE_GUTTER_PX } from '~/app/layout/constants'
 import { useTableBodyRenderMode, TableBodyRenderMode } from '~/components/Table/hooks/useTableBodyRenderMode'
 import { useTableBottomFade } from '~/components/Table/hooks/useTableBottomFade'
 import { useTableExpandedState } from '~/components/Table/hooks/useTableExpandedState'
+import { resolveCollapsiblePinnedColumn } from '~/components/Table/PinnedColumns/collapse/resolveCollapsiblePinnedColumn'
+import { useTableCollapsiblePinnedColumn } from '~/components/Table/PinnedColumns/collapse/useTableCollapsiblePinnedColumn'
 import { getCommonPinningStyles } from '~/components/Table/PinnedColumns/getCommonPinningStyles'
 import { TablePinnedColumnOverlay } from '~/components/Table/PinnedColumns/TablePinnedColumnOverlay'
 import { usePinnedColumns } from '~/components/Table/PinnedColumns/usePinnedColumns'
-import { CellContainer, TableRowBase, type TableRowBaseProps } from '~/components/Table/styled'
+import { CellContainer, TableRowBase, type TableRowBaseProps, TableSeparatorRow } from '~/components/Table/styled'
 import { TableBody } from '~/components/Table/TableBody'
 import { TableLoadMoreIndicator } from '~/components/Table/TableLoadMore/TableLoadMoreIndicator'
 import { useTableLoadMore } from '~/components/Table/TableLoadMore/useTableLoadMore'
@@ -26,7 +29,11 @@ import { useTableSideScrollButtons } from '~/components/Table/TableSideScrollBut
 import { TableSizeProvider } from '~/components/Table/TableSizeProvider'
 import { TableProps } from '~/components/Table/types'
 import { computeBodyMaxHeight } from '~/components/Table/utils/computeBodyMaxHeight'
-import { getPinnedRegionRightEdgePx } from '~/components/Table/utils/getColumnSizingStyles'
+import {
+  getPinnedRegionRightEdgePx,
+  getPinnedRegionWidthCss,
+  getRowContentMinWidthCss,
+} from '~/components/Table/utils/getColumnSizingStyles'
 import { useAppHeaderHeight } from '~/hooks/useAppHeaderHeight'
 
 // Set on TableContainer only while bleeding, so the last column's scroll-end gutter drops out otherwise.
@@ -107,23 +114,6 @@ const HiddenTableScrollContainer = forwardRef<HTMLDivElement, HiddenTableScrollC
     )
   },
 )
-
-const TableSeparatorRow = forwardRef<HTMLDivElement, FlexCompatProps>(function TableSeparatorRow(props, ref) {
-  return (
-    <Flex
-      ref={ref}
-      centered
-      row
-      gap="$spacing12"
-      py="$spacing8"
-      px="$spacing16"
-      borderStyle="solid"
-      borderWidth={0}
-      width="100%"
-      {...props}
-    />
-  )
-})
 
 const TableHead = (
   props: PropsWithChildren<{
@@ -217,7 +207,6 @@ export function Table<T extends RowData>({
   showHiddenRowsLabel,
   hideHiddenRowsLabel,
   showScrollbar,
-  pinnedWidthOverride,
   mobileFullBleed = false,
   virtualized = false,
   // Window virtualization (virtualized + no maxHeight) resolves to the 'window' scroll variant, which
@@ -225,6 +214,7 @@ export function Table<T extends RowData>({
   // default; still overridable by an explicit prop.
   windowScrollY = virtualized && !maxHeight,
   stickyTopOffset = 0,
+  collapsiblePinnedColumnId,
 }: TableProps<T>) {
   const colors = useSporeColors()
   const media = useMedia()
@@ -248,6 +238,16 @@ export function Table<T extends RowData>({
   const isSticky = useMemo(() => !maxHeight, [maxHeight])
 
   const { parentRef, width, height, top, left } = useParentSize()
+  // The collapse root wraps both scroll panes (header and body) and is always mounted, so the
+  // hook sees every scroll and the empty/error states don't detach it.
+  const collapseRootRef = useRef<HTMLDivElement>(null)
+  const tableContainerRef = useComposedRefs<HTMLDivElement>(parentRef, collapseRootRef)
+
+  // Both tanstack instances get the collapse meta so the hidden-rows table paints the same column.
+  const { columns: resolvedColumns, widths: collapsibleColumnWidths } = useMemo(
+    () => resolveCollapsiblePinnedColumn({ columns, collapsiblePinnedColumnId }),
+    [columns, collapsiblePinnedColumnId],
+  )
 
   const { loadingMore } = useTableLoadMore({
     tableBodyRef,
@@ -259,15 +259,15 @@ export function Table<T extends RowData>({
   })
 
   const tableColumns = useMemo(() => {
-    const lastColumn = columns.at(-1)
+    const lastColumn = resolvedColumns.at(-1)
     if (!mobileFullBleed || !lastColumn) {
-      return columns
+      return resolvedColumns
     }
     return [
-      ...columns.slice(0, -1),
+      ...resolvedColumns.slice(0, -1),
       { ...lastColumn, meta: { ...lastColumn.meta, trailingMarginCss: `var(${TRAILING_GUTTER_VAR}, 0px)` } },
     ]
-  }, [columns, mobileFullBleed])
+  }, [resolvedColumns, mobileFullBleed])
 
   const table = useReactTable({
     columns: tableColumns,
@@ -297,6 +297,13 @@ export function Table<T extends RowData>({
     getSubRows,
   })
 
+  useTableCollapsiblePinnedColumn({
+    table,
+    collapsiblePinnedColumnId,
+    widths: collapsibleColumnWidths,
+    rootRef: collapseRootRef,
+  })
+
   const headerHeight = useAppHeaderHeight()
 
   const sideScrollButtons = useTableSideScrollButtons({
@@ -311,7 +318,7 @@ export function Table<T extends RowData>({
     headerHeight,
   })
 
-  const rowContentMinWidthPx = table.getTotalSize()
+  const totalColumnSizePx = table.getTotalSize()
   // Bleeding widens the container and the rows by the same gutter, so it never flips scrollability back.
   const bleedsRight =
     mobileFullBleed && media.md && (sideScrollButtons.showScrollLeftButton || sideScrollButtons.showScrollRightButton)
@@ -342,15 +349,16 @@ export function Table<T extends RowData>({
   const pinnedColumnOverlayLeftPx = getPinnedRegionRightEdgePx({
     table,
     containerWidthPx: width,
-    totalColumnSizePx: rowContentMinWidthPx,
+    totalColumnSizePx,
   })
+  const pinnedWidthOverride = getPinnedRegionWidthCss(table)
 
   const content = (
     <TableContainer
       maxWidth={maxWidth}
       maxHeight={maxHeight}
       position="relative"
-      ref={parentRef}
+      ref={tableContainerRef}
       {...(bleedsRight && { mr: -APP_BODY_MOBILE_GUTTER_PX, style: BLEED_STYLE })}
     >
       {showPinnedColumnDivider ? (
@@ -482,7 +490,7 @@ export function Table<T extends RowData>({
   )
 
   return (
-    <TableSizeProvider size={tableSize} rowContentMinWidthPx={rowContentMinWidthPx}>
+    <TableSizeProvider size={tableSize} rowContentMinWidthCss={getRowContentMinWidthCss(table)}>
       {externalScrollSync ? content : <ScrollSync horizontal>{content}</ScrollSync>}
     </TableSizeProvider>
   )

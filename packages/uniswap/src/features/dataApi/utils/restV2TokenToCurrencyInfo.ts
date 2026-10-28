@@ -3,6 +3,7 @@ import type { Token } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { UniverseChainId } from '@universe/chains'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency, buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
+import { formatColorOverrides } from 'uniswap/src/features/dataApi/utils/formatColorOverrides'
 import { fractionToBpsString, getV2CurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils/getCurrencySafetyInfo'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
@@ -43,6 +44,7 @@ export function restV2TokenToCurrencyInfo(token: PlainMessage<Token>): CurrencyI
     currency,
     currencyId: currencyId(currency),
     logoUrl: project?.logoUrl,
+    colorOverrides: formatColorOverrides(project?.colors),
     safetyInfo: getV2CurrencySafetyInfo(safety, fees),
     // defaulting to not spam. currently this flow triggers when a user is searching
     // for a token, in which case the user probably doesn't expect the token to be spam

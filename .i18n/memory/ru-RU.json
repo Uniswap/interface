@@ -14,8 +14,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Apple",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-10-15T16-28-44Z",
-        "approvedAt": "2026-10-15T16:28:44.831Z",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
         "approvedBy": "agent"
       }
     ],
@@ -31,8 +31,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Google",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-10-15T16-28-44Z",
-        "approvedAt": "2026-10-15T16:28:44.831Z",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
         "approvedBy": "agent"
       }
     ],
@@ -253,6 +253,40 @@
       }
     ],
     [
+      "ru-RU:i18next-json:common.privacyChoices.optOut",
+      {
+        "unitId": "common.privacyChoices.optOut",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "5d1160c8a782fcfc275fe20ba2a3055c30316c1f7544530db94824fb986c5a53",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Там, где это считается продажей, передачей данных или целевой рекламой согласно применимому законодательству, вы можете отказаться, отключив переключатель «{{settingName}}» в настройках.",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-16T19-34-36Z",
+        "approvedAt": "2026-10-16T19:34:36.069Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:common.privacyChoices.policy",
+      {
+        "unitId": "common.privacyChoices.policy",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "5109ab4492e4bed49a87e4aa498a04262721ad8e42c81975e8a854e6d4e976cc",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Подробнее о наших практиках конфиденциальности — в нашей <privacyLink>Политике конфиденциальности</privacyLink>.",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-16T19-34-36Z",
+        "approvedAt": "2026-10-16T19:34:36.069Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ru-RU:i18next-json:dapp.request.amountUnavailable",
       {
         "unitId": "dapp.request.amountUnavailable",
@@ -266,6 +300,274 @@
         "status": "clean",
         "agentRunId": "ru-RU-2026-09-18T15-34-59Z",
         "approvedAt": "2026-09-18T15:34:59.207Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:disclosures.autoRouter",
+      {
+        "unitId": "disclosures.autoRouter",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "1769525d3c38507cb4b1bdc3cb4a598af59b2e5d1a004c2bcb302a769bf8b857",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Auto Router — это алгоритм выбора пути транзакции, используемый Продуктами для анализа возможных путей транзакции с цифровыми активами через допустимые Интеграции; он предоставляет пользователю информацию о пути транзакции, который, по оценке на основе смоделированного исполнения с применением раскрытых объективных параметров маршрутизации, принесёт наибольшее количество цифровых активов на тот момент.",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-15T22-15-05Z",
+        "approvedAt": "2026-10-15T22:15:05.439Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:disclosures.autoRouterParameters",
+      {
+        "unitId": "disclosures.autoRouterParameters",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "aeb91f7c1ff41c721069194cc98de27e3bfaeca2025f1b791b5c01a955b18f35",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "В программное обеспечение маршрутизации Продуктов («Auto Router») жёстко заданы следующие параметры: (i) оценка затрат gas посредством симуляции (что может понижать приоритет маршрутов с высокой сетевой комиссией); (ii) оценка проскальзывания посредством симуляции (транзакция, не удовлетворяющая указанному пользователем максимальному проскальзыванию или лучшему значению, будет отменена); (iii) ликвидность пула, измеряемая общей заблокированной стоимостью по источникам ликвидности (пулы ниже установленного порога получают пониженный приоритет или исключаются); (iv) максимальное число «разделений» обмена пользователя, позволяющее маршрутизатору оценить, может ли разделение обмена между несколькими источниками ликвидности дать лучшую цену; (v) максимальное число «хопов» — возможных последовательностей конвертаций цифровых активов, в результате которых пользователь получает нужный выходной токен; и (vi) максимальное число возможных путей маршрутизации, которые алгоритм Auto Router оценивает при формировании предлагаемого маршрута. Auto Router не рассматривает пулы с комиссией выше 11% — это мера защиты пользователей от неожиданного влияния на цену из-за необычно высоких комиссий LP. Эти параметры программного обеспечения маршрутизации не являются настраиваемыми пользователем параметрами по умолчанию уровня транзакции. Программное обеспечение маршрутизации Продуктов применяет эти параметры единообразно; код можно посмотреть <uniRouteLink>здесь</uniRouteLink>.",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-15T22-15-05Z",
+        "approvedAt": "2026-10-15T22:15:05.439Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:disclosures.customization",
+      {
+        "unitId": "disclosures.customization",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "62979328997006241effade715257423f44996c1f2899ab5f7e15b31851362ab",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Параметры по умолчанию уровня транзакции полностью настраиваются пользователями Продуктов. Изменив эти параметры, пользователь может увидеть дополнительные маршруты для своей сделки. Подробнее об изменении параметров по умолчанию см. <slippageLink>Как изменить проскальзывание в веб-приложении Uniswap</slippageLink>, <swapDeadlinesLink>Как изменить сроки обмена в интерфейсе Uniswap</swapDeadlinesLink> и <tradeOptionsLink>Как изменить настройки сделок по умолчанию</tradeOptionsLink>. Uniswap Labs поддерживает внутренние политики и процедуры в отношении параметров по умолчанию и периодически пересматривает их для обеспечения соответствия этим политикам и процедурам. Uniswap Labs не известно о каком-либо существенном конфликте интересов между Uniswap Labs и пользователями Продуктов, возникающем из-за параметров по умолчанию. Uniswap Labs не получает вознаграждения от каких-либо источников ликвидности за включение в анализ маршрутизации. Деятельность по развитию бизнеса, включая поддержку экосистемы для сторонних интеграций, поддержку маркетмейкеров (например, займы или программы стимулирования), доступ к API и совместный маркетинг, отделена от анализа маршрутизации и не влияет на него.",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-15T22-15-05Z",
+        "approvedAt": "2026-10-15T22:15:05.439Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:disclosures.defaultParameters",
+      {
+        "unitId": "disclosures.defaultParameters",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "6384103f15d7e3393252e304756e6c94b8f8a5a33326c3024bae82defe2771a2",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "В настоящее время в Продуктах действуют следующие параметры по умолчанию уровня транзакции: допустимое проскальзывание; срок обмена; допустимые пулы и торговые площадки или торговые системы на основе распределённого реестра; а также приоритетные комиссии. Параметры по умолчанию могут время от времени меняться. Они устанавливаются на основе объективных критериев и, как правило, настроены так, чтобы снижать риски для пользователей.",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-15T22-15-05Z",
+        "approvedAt": "2026-10-15T22:15:05.439Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:disclosures.feeCalculation",
+      {
+        "unitId": "disclosures.feeCalculation",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "40c78c254e0b59dd6e93159cc60e13ee83bd2cf876440febf93320a598fb304c",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Используя объективный, единообразно применяемый алгоритм, Продукты показывают автоматически рассчитанные комиссию Gas и приоритетную комиссию для каждой транзакции. Эти алгоритмические расчёты призваны сбалансировать скорость транзакции и уплачиваемые комиссии.",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-15T22-15-05Z",
+        "approvedAt": "2026-10-15T22:15:05.439Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:disclosures.gasFees",
+      {
+        "unitId": "disclosures.gasFees",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "537acd8dfac10d9eec9e024bf4664b063e4804e4664d00d5daaf21d3bcf9e4f6",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Комиссии Gas выплачиваются валидаторам блокчейна за каждую транзакцию и требуются каждой применимой блокчейн-сетью. Каждая сеть требует от пользователей оплачивать комиссии Gas за каждую транзакцию.",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-15T22-15-05Z",
+        "approvedAt": "2026-10-15T22:15:05.439Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:disclosures.gasLimit",
+      {
+        "unitId": "disclosures.gasLimit",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "e2996676536051b909f7239dab48bda7c4273c64c13fd6d22569c6e1f196def1",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Лимит Gas — это максимальное количество gas, которое может израсходовать транзакция пользователя.",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "terminology",
+            "severity": "minor",
+            "detail": "Second mention capitalizes «Gas» where the source has lowercase “gas”; the shipped sibling (A gas limit is…) uses lowercase «gas» in both positions — inconsistent casing for the same DNT term.",
+            "evidence": {
+              "rule": "gas — DO NOT TRANSLATE (keep verbatim)",
+              "sourceSpan": "maximum unit of gas",
+              "targetSpan": "максимальное количество Gas"
+            },
+            "alternative": "максимальное количество gas"
+          }
+        ],
+        "agentRunId": "ru-RU-2026-10-15T22-15-05Z",
+        "approvedAt": "2026-10-15T22:15:05.439Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:disclosures.integrations",
+      {
+        "unitId": "disclosures.integrations",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "0eae2dac9b2b0532da6271502d9dfedc5863c5cff281fa85a4f38949d44fbe43",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Продукты интегрированы со следующими торговыми площадками или торговыми системами на основе распределённого реестра: UniswapX; протокол Uniswap (v4, v3, v2); Tempo; и Jupiter (совместно — «Интеграции»). Uniswap Labs поддерживает внутренние политики и процедуры в отношении Интеграций, включающие механизмы оценки, подключения и аудита Интеграций и предлагаемых интеграций. В соответствии с этими политиками и процедурами Интеграции оцениваются по объективным критериям, включая ликвидность, безопасность, прозрачность, проверяемость, нейтральность, пригодность к аудиту и задержку. Интеграции могут время от времени меняться. Прежде чем любой новый источник ликвидности будет интегрирован в Продукты, он должен быть оценён по этим критериям. Все интегрированные источники ликвидности — включая протокол Uniswap (v4, v3, v2) и UniswapX — периодически переоцениваются, чтобы определить, следует ли их сохранить или исключить. Переоценка также проводится при существенном изменении профиля риска источника ликвидности. При возникновении проблемы безопасности источник ликвидности может быть немедленно исключён из расчёта маршрутизации, не дожидаясь следующей периодической переоценки.",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-15T22-15-05Z",
+        "approvedAt": "2026-10-15T22:15:05.439Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:disclosures.liquiditySources",
+      {
+        "unitId": "disclosures.liquiditySources",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "416f99fc4657215fea96c3ac83bf83227def10efe5a873ea9c6802607dc6d174",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Дополнительную информацию об источниках ликвидности, доступных через Продукты, и критериях их оценки см. в разделе <tradeOptionsLink>Как изменить настройки сделок по умолчанию</tradeOptionsLink>.",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-15T22-15-05Z",
+        "approvedAt": "2026-10-15T22:15:05.439Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:disclosures.maxBaseFee",
+      {
+        "unitId": "disclosures.maxBaseFee",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "f3c3237a31031b1b4c4fae6f63b8a4406d6efa21087f5ce1348f569204603681",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Максимальная базовая комиссия — это наибольшая базовая комиссия за единицу gas, которую пользователь готов заплатить. Базовая комиссия устанавливается сетью для каждого блока.",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-15T22-15-05Z",
+        "approvedAt": "2026-10-15T22:15:05.439Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:disclosures.priorityFees",
+      {
+        "unitId": "disclosures.priorityFees",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "ffef081c895ce81ee27feb4dfbfa63d9a91f9850c6a66727de0c4b8a84fde1b9",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Приоритетные комиссии, где применимо, — это необязательная комиссия, которую пользователи могут платить валидаторам, чтобы их транзакции обрабатывались быстрее.",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-15T22-15-05Z",
+        "approvedAt": "2026-10-15T22:15:05.439Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:disclosures.products",
+      {
+        "unitId": "disclosures.products",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "76f70bc50491b1d2da127941c761d2bdeaac620c5f29f5ca37444147c5b46389",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Uniswap Labs создаёт и обслуживает (a) размещённый на сайте пользовательский интерфейс по адресу <appLink>app.uniswap.org</appLink> («Интерфейс»), (b) мобильное приложение-кошелёк («Uniswap Wallet») и (c) API и другие продукты и услуги (совместно — «Продукты»), позволяющие пользователям готовить и отправлять транзакции в публичных блокчейнах с использованием собственных некастодиальных кошельков. Uniswap Labs поддерживает внутренние процедуры для обеспечения безопасности Продуктов, включая оперативное расследование предполагаемых инцидентов и предотвращение несанкционированного доступа с помощью системы учётных данных сотрудников и других мер безопасности. Uniswap Labs участвует в разработке протокола Uniswap (v4, v3, v2) и UniswapX — каждый из которых представляет собой автономный набор умных контрактов с открытым исходным кодом, развёрнутых в публичных блокчейнах, — но не владеет протоколом Uniswap (v4, v3, v2) или UniswapX, не контролирует их и не управляет ими. Uniswap Labs не является брокером-дилером и не зарегистрирована в Комиссии по ценным бумагам и биржам США и не регулируется ею в связи с созданием, предложением или обслуживанием Продуктов. Некоторые активы могут быть недоступны в Продуктах, а некоторые активы могут быть недоступны в отдельных юрисдикциях. Подробнее см. <unsupportedTokenPolicyLink>Политику неподдерживаемых токенов</unsupportedTokenPolicyLink>.",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-15T22-15-05Z",
+        "approvedAt": "2026-10-15T22:15:05.439Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:disclosures.routing",
+      {
+        "unitId": "disclosures.routing",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "8cb99ca1a941d16151b298eb5e476d4271bc551d192b817a5213d9dd04b92979",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "При подготовке транзакции пользователя программное обеспечение маршрутизации Продуктов анализирует возможные пути транзакции в Интеграциях и предоставляет пользователю информацию о пути транзакции, который, по оценке на основе результатов смоделированного исполнения, принесёт наибольшее количество цифровых активов на тот момент. Для этого Продукты по умолчанию учитывают доступные источники ликвидности во всех Интеграциях. Пользователь сохраняет полное право изменять конфигурацию по умолчанию и выбирать, какие источники ликвидности будет учитывать программное обеспечение маршрутизации Продуктов. Изменив учитываемые Продуктами источники ликвидности, пользователь может увидеть дополнительные маршруты для своей сделки.",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-15T22-15-05Z",
+        "approvedAt": "2026-10-15T22:15:05.439Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:disclosures.slippage",
+      {
+        "unitId": "disclosures.slippage",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "1f3379ed1d4df8d857eb8c4b099890188f9c71ca13bc2c9f933de0e37014de4c",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Проскальзывание — это разница между ожидаемой ценой обмена в момент его отправки и фактической ценой исполнения, когда обмен выполняется ончейн. Проскальзывание может возникать из-за обычного движения цены, изменений доступной ликвидности, задержек и загруженности сети или рыночного влияния самого обмена пользователя. Проскальзывание — неотъемлемый риск торговли. Если допустимое проскальзывание установлено слишком высоким, пользователь может не получить ожидаемую стоимость от сделки, и/или стоимость сделки может быть перехвачена другими сторонами. И наоборот, если допустимое проскальзывание установлено слишком низким, пользователь может не суметь выполнить сделку. Используя единообразно применяемый алгоритм, Продукты показывают автоматически рассчитанное максимальное допустимое проскальзывание, которое обычно находится в диапазоне примерно от 0,5% до 5,5% в зависимости от таких факторов, как выбранная сеть и размер обмена.",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-15T22-15-05Z",
+        "approvedAt": "2026-10-15T22:15:05.439Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:disclosures.swapDeadline",
+      {
+        "unitId": "disclosures.swapDeadline",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "05679769a825cb1b067e25c3b12d9dfa5db5e336a897e9ea58e2d754819f3670",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Срок обмена — это время, в течение которого обмен может оставаться в ожидании ончейн, прежде чем будет отменён. Продукты применяют срок транзакции по умолчанию в 30 минут: обмен будет отменён, если не исполнится в течение 30 минут после отправки. Это даёт пользователям дополнительную защиту от непреднамеренных значительных движений цены.",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-15T22-15-05Z",
+        "approvedAt": "2026-10-15T22:15:05.439Z",
         "approvedBy": "agent"
       }
     ],
@@ -315,8 +617,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Earn",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-10-15T16-28-44Z",
-        "approvedAt": "2026-10-15T16:28:44.831Z",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
         "approvedBy": "agent"
       }
     ],
@@ -332,8 +634,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Venmo",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-10-15T16-28-44Z",
-        "approvedAt": "2026-10-15T16:28:44.831Z",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
         "approvedBy": "agent"
       }
     ],
@@ -349,8 +651,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "API",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-10-15T16-28-44Z",
-        "approvedAt": "2026-10-15T16:28:44.831Z",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
         "approvedBy": "agent"
       }
     ],
@@ -400,8 +702,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-10-15T16-28-44Z",
-        "approvedAt": "2026-10-15T16:28:44.831Z",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
         "approvedBy": "agent"
       }
     ],
@@ -1029,8 +1331,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "PnL {{value}} ({{pct}})",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-10-15T16-28-44Z",
-        "approvedAt": "2026-10-15T16:28:44.831Z",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
         "approvedBy": "agent"
       }
     ],
@@ -2730,8 +3032,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "{{venue}} · {{lltv}}% LLTV",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-10-15T16-28-44Z",
-        "approvedAt": "2026-10-15T16:28:44.831Z",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
         "approvedBy": "agent"
       }
     ],
@@ -4166,8 +4468,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "RoE",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-10-15T16-28-44Z",
-        "approvedAt": "2026-10-15T16:28:44.831Z",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
         "approvedBy": "agent"
       }
     ],
@@ -4183,8 +4485,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "PnL",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-10-15T16-28-44Z",
-        "approvedAt": "2026-10-15T16:28:44.831Z",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
         "approvedBy": "agent"
       }
     ],
@@ -5169,8 +5471,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "PnL/RoE",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-10-15T16-28-44Z",
-        "approvedAt": "2026-10-15T16:28:44.831Z",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
         "approvedBy": "agent"
       }
     ],
@@ -5825,6 +6127,23 @@
       }
     ],
     [
+      "ru-RU:i18next-json:network.filter.lowLiquidity",
+      {
+        "unitId": "network.filter.lowLiquidity",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "05a25d34314db561ef070b425ba6015bd5c105d2dda3c7da3082d5a742c3267f",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Низкая ликвидность",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-19T20-15-22Z",
+        "approvedAt": "2026-10-19T20:15:22.543Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ru-RU:i18next-json:notification.auction.open.failed",
       {
         "unitId": "notification.auction.open.failed",
@@ -5853,8 +6172,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-10-15T16-28-44Z",
-        "approvedAt": "2026-10-15T16:28:44.831Z",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
         "approvedBy": "agent"
       }
     ],
@@ -5906,6 +6225,52 @@
       }
     ],
     [
+      "ru-RU:i18next-json:pool.position.earned.suffix",
+      {
+        "unitId": "pool.position.earned.suffix",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "4844fdfbc864ac106bb9742de65edfbcb5257a4e7ee2d8c500b80cdafa148524",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "заработано",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-21T15-26-07Z",
+        "approvedAt": "2026-10-21T15:26:07.449Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:pool.position.liquidity.suffix",
+      {
+        "unitId": "pool.position.liquidity.suffix",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "ead2523743ee17aed6605ba71358fd4820c5102cefa92b72d4574db2cddf575e",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "ликв.",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "style",
+            "severity": "minor",
+            "detail": "Source 'liq.' is lowercase (sibling stat label of lowercase 'earned' → 'заработано'), but the translation is capitalized 'Ликв.', breaking casing consistency within the label pair.",
+            "evidence": {
+              "sourceSpan": "liq.",
+              "targetSpan": "Ликв."
+            },
+            "alternative": "ликв."
+          }
+        ],
+        "agentRunId": "ru-RU-2026-10-21T15-26-07Z",
+        "approvedAt": "2026-10-21T15:26:07.449Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ru-RU:i18next-json:portfolio.defi.title",
       {
         "unitId": "portfolio.defi.title",
@@ -5917,8 +6282,25 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "DeFi",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-10-15T16-28-44Z",
-        "approvedAt": "2026-10-15T16:28:44.831Z",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:position.initialPrice.marketUpdated",
+      {
+        "unitId": "position.initialPrice.marketUpdated",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "a54fccb1b9e62fcbf3c5d1b992c9dc12bf09b76415f09564ce0adde7d922d185",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Рыночная цена обновлена",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-15T21-00-23Z",
+        "approvedAt": "2026-10-15T21:00:23.895Z",
         "approvedBy": "agent"
       }
     ],
@@ -5968,8 +6350,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-10-15T16-28-44Z",
-        "approvedAt": "2026-10-15T16:28:44.831Z",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
         "approvedBy": "agent"
       }
     ],
@@ -6172,8 +6554,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-10-15T16-28-44Z",
-        "approvedAt": "2026-10-15T16:28:44.831Z",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
         "approvedBy": "agent"
       }
     ],
@@ -6189,8 +6571,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-10-15T16-28-44Z",
-        "approvedAt": "2026-10-15T16:28:44.831Z",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
         "approvedBy": "agent"
       }
     ],
@@ -6246,6 +6628,40 @@
       }
     ],
     [
+      "ru-RU:i18next-json:rhcca.position.priceUnavailable",
+      {
+        "unitId": "rhcca.position.priceUnavailable",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "abc5fecda607e617b5af85dd8280f49b97736d30dcf49ad622118c302b123465",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Данные о цене токена сейчас недоступны",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-20T20-09-55Z",
+        "approvedAt": "2026-10-20T20:09:55.086Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:search.results.auction.startsIn",
+      {
+        "unitId": "search.results.auction.startsIn",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "f63d3a93c65b2b7e8c6b1a29a7efe1834ae62f4887bd58edfb759de7b6b15f1c",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Начало через {{time}}",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-20T18-20-07Z",
+        "approvedAt": "2026-10-20T18:20:07.591Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ru-RU:i18next-json:search.results.auction.timeRemaining",
       {
         "unitId": "search.results.auction.timeRemaining",
@@ -6274,8 +6690,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "{{apr}} APR",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-10-15T16-28-44Z",
-        "approvedAt": "2026-10-15T16:28:44.831Z",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
         "approvedBy": "agent"
       }
     ],
@@ -6308,8 +6724,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "ENS",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-10-15T16-28-44Z",
-        "approvedAt": "2026-10-15T16:28:44.831Z",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
         "approvedBy": "agent"
       }
     ],
@@ -6382,6 +6798,40 @@
       }
     ],
     [
+      "ru-RU:i18next-json:settings.setting.shareDeviceIdentifiers.message",
+      {
+        "unitId": "settings.setting.shareDeviceIdentifiers.message",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "e2ba15a1a8521d2d7db3051027b805d819f8bcd2e8e7d9700b0edc9cea9b2f74",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Мы можем передавать идентификаторы устройств нашим рекламным партнёрам для продвижения наших сервисов на других сайтах и платформах.",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-16T19-34-36Z",
+        "approvedAt": "2026-10-16T19:34:36.069Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:settings.setting.shareDeviceIdentifiers.title",
+      {
+        "unitId": "settings.setting.shareDeviceIdentifiers.title",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "ef41776a003a42bf066f2cb1cc0886b40fef5dfea0420467b3af57f131d66b59",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Передавать идентификаторы устройств",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-16T19-34-36Z",
+        "approvedAt": "2026-10-16T19:34:36.069Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ru-RU:i18next-json:swap.routing.guidestar.copyPool",
       {
         "unitId": "swap.routing.guidestar.copyPool",
@@ -6410,8 +6860,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Uniswap API",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-10-15T16-28-44Z",
-        "approvedAt": "2026-10-15T16:28:44.831Z",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
         "approvedBy": "agent"
       }
     ],
@@ -6989,6 +7439,57 @@
       }
     ],
     [
+      "ru-RU:i18next-json:token.price.lowConfidence.tag",
+      {
+        "unitId": "token.price.lowConfidence.tag",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "29e142b8be7d28e49cc799fb06f36a7121919415c29811315c90594e4c4ffc60",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Низкая достоверность",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:token.price.lowConfidence.title",
+      {
+        "unitId": "token.price.lowConfidence.title",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "ef586d27ebbd87e6bfa32e637715042e8d9e8f612ea9de3124b29361e235f99d",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Низкая достоверность цены",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:token.price.lowConfidence.tooltip",
+      {
+        "unitId": "token.price.lowConfidence.tooltip",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "2a666cdba05106c279a946878c66c546f38ddd6e4f754ea3212935e61a271a1a",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Цена токена основана на ограниченных или потенциально некачественных рыночных данных.",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ru-RU:i18next-json:tokens.selector.categoryFilter.myTokens",
       {
         "unitId": "tokens.selector.categoryFilter.myTokens",
@@ -7002,6 +7503,23 @@
         "status": "clean",
         "agentRunId": "ru-RU-2026-09-23T16-12-06Z",
         "approvedAt": "2026-09-23T16:12:06.051Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:toucan.allAuctions",
+      {
+        "unitId": "toucan.allAuctions",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "a6d3fee9c816e67519ea5a4ff5371433980d102f27650c5b854c671857a6200d",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Все аукционы",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-19T14-33-11Z",
+        "approvedAt": "2026-10-19T14:33:11.250Z",
         "approvedBy": "agent"
       }
     ],
@@ -7036,6 +7554,23 @@
         "status": "clean",
         "agentRunId": "ru-RU-2026-09-16T16-27-14Z",
         "approvedAt": "2026-09-16T16:27:14.310Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:toucan.auction.finalFdv",
+      {
+        "unitId": "toucan.auction.finalFdv",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "67e17d632a561ea1d2f2f936e394bfe8f9f05219f620b70d8f3e160a866c4b03",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Финальная FDV",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-21T16-45-51Z",
+        "approvedAt": "2026-10-21T16:45:51.763Z",
         "approvedBy": "agent"
       }
     ],
@@ -7102,8 +7637,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "<value>{{fdv}}</value> FDV",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-10-15T16-28-44Z",
-        "approvedAt": "2026-10-15T16:28:44.831Z",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
         "approvedBy": "agent"
       }
     ],
@@ -7172,6 +7707,23 @@
         "status": "clean",
         "agentRunId": "ru-RU-2026-09-16T16-27-14Z",
         "approvedAt": "2026-09-16T16:27:14.310Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ru-RU:i18next-json:toucan.bidDetails.description.outOfRangeInProgressAwaitingThreshold",
+      {
+        "unitId": "toucan.bidDetails.description.outOfRangeInProgressAwaitingThreshold",
+        "providerId": "i18next-json",
+        "locale": "ru-RU",
+        "domain": "product-ui",
+        "sourceHash": "c9e6b4e257d95f81a7ea9c178152998f40e0db3bf41df207c687a579fa60174f",
+        "glossaryHash": "d2367f6f01d952276e2c0514ba34a2a6d06707246916c4189ca7f8d5e013cb1e",
+        "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
+        "translation": "Этот ордер перестал исполняться, потому что цена превысила вашу максимальную FDV <highlight>{{valuationSummary}}</highlight>. Вы сможете вернуть неиспользованный бюджет, когда заполненный объём аукциона достигнет порога запуска <highlight>{{launchThreshold}}</highlight>, и вывести полученные токены по окончании аукциона. Если порог так и не будет достигнут, вы сможете вывести весь бюджет после завершения аукциона.",
+        "status": "clean",
+        "agentRunId": "ru-RU-2026-10-20T16-09-36Z",
+        "approvedAt": "2026-10-20T16:09:36.851Z",
         "approvedBy": "agent"
       }
     ],
@@ -7425,8 +7977,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-10-15T16-28-44Z",
-        "approvedAt": "2026-10-15T16:28:44.831Z",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
         "approvedBy": "agent"
       }
     ],
@@ -7459,8 +8011,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-10-15T16-28-44Z",
-        "approvedAt": "2026-10-15T16:28:44.831Z",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
         "approvedBy": "agent"
       }
     ],
@@ -7600,8 +8152,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-10-15T16-28-44Z",
-        "approvedAt": "2026-10-15T16:28:44.831Z",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
         "approvedBy": "agent"
       }
     ],
@@ -7674,8 +8226,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "Pools.trade",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-10-15T16-28-44Z",
-        "approvedAt": "2026-10-15T16:28:44.831Z",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
         "approvedBy": "agent"
       }
     ],
@@ -8025,8 +8577,8 @@
         "styleHash": "f3505dabe65470ea0d468afe28ea94a45e607b5ffacdaa8f526fdcd664bb0a95",
         "translation": "<icon /> <gradient>UniswapX</gradient> <info />",
         "status": "clean",
-        "agentRunId": "ru-RU-2026-10-15T16-28-44Z",
-        "approvedAt": "2026-10-15T16:28:44.831Z",
+        "agentRunId": "ru-RU-2026-10-21T17-36-47Z",
+        "approvedAt": "2026-10-21T17:36:47.919Z",
         "approvedBy": "agent"
       }
     ]

@@ -1,4 +1,4 @@
-import { skipToken, type UseQueryResult, useQuery } from '@tanstack/react-query'
+import { hashKey, skipToken, type UseQueryResult, useQuery } from '@tanstack/react-query'
 import { TradingApi, V1_TRADING_API_PATHS, type UseQueryApiHelperHookArgs } from '@universe/api'
 import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { GasSponsorshipNotAppliedError } from 'uniswap/src/features/transactions/swap/errors'
@@ -27,5 +27,6 @@ export function useWalletEncode4337Query({
         }
       : skipToken,
     ...rest,
+    queryKeyHashFn: hashKey,
   })
 }

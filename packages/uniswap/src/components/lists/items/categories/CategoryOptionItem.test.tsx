@@ -8,6 +8,7 @@ const category: TokenCategory = {
   name: 'DeFi',
   englishName: 'DeFi',
   description: '',
+  kind: 'token',
   categoryClass: TokenCategoryClass.Sector,
   grouped: false,
   stats: {

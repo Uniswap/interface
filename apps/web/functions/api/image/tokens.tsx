@@ -35,7 +35,10 @@ export async function tokenImageHandler(c: Context) {
       return new Response('Token not found.', { status: 404 })
     }
 
-    const [fontData, palette] = await Promise.all([getFont(origin, c.env), getRGBColor(data.ogImage, true)])
+    const [fontData, palette] = await Promise.all([
+      getFont(origin, c.env),
+      getRGBColor(data.ogImage, true, data.tokenData?.overrideColor),
+    ])
 
     const networkLogo = getNetworkLogoUrl(URL_PARAM_TO_CHAIN_ID[networkName.toLowerCase()], origin)
 

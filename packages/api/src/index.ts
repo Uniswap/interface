@@ -1,15 +1,22 @@
 /**
  * @universe/api - Unified data layer for Uniswap Universe
  *
- * This is the ONLY public entry point for the API package.
- * All exports must be explicitly listed here.
+ * The package root entry point. All exports must be explicitly listed here.
+ * Apps that must not load this barrel's Apollo graph import a subpath entry
+ * instead (`src/entries/`, mapped in package.json `exports`).
  * Deep imports are forbidden and will be blocked by lint.
  */
 
 // Foundations
 export { createFetchClient } from '@universe/api/src/clients/base/createFetchClient'
 export { setFirstPartyFetchOverride } from '@universe/api/src/clients/base/fetchImplProvider'
-export { FetchError, is401Error, is404Error, isRateLimitFetchError } from '@universe/api/src/clients/base/errors'
+export {
+  FetchError,
+  is401Error,
+  is403Error,
+  is404Error,
+  isRateLimitFetchError,
+} from '@universe/api/src/clients/base/errors'
 export type { CustomOptions, FetchClient, StandardFetchOptions } from '@universe/api/src/clients/base/types'
 export { SharedQueryClient } from '@universe/api/src/clients/base/SharedQueryClient'
 
@@ -210,22 +217,15 @@ export {
 } from '@universe/api/src/clients/dataApi/getGetWalletTokensProfitLossQueryOptions'
 export { type WalletAddressKey } from '@universe/api/src/clients/dataApi/walletAddressKey'
 export {
-  TokensOrderBy,
   type BalanceComponent,
   type GetPortfolioRequest,
   type GetPortfolioResponse,
   type GetWalletBalancesRequest,
   type GetWalletBalancesResponse,
-  type ListTokensResponse,
   type WalletBalance,
 } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 export { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-export {
-  type ChainToken as DataApiChainToken,
-  type MultichainToken as DataApiMultichainToken,
-  type Token as DataApiToken,
-  TokenReportEventType,
-} from '@uniswap/client-data-api/dist/data/v1/types_pb'
+export { type Token as DataApiToken, TokenReportEventType } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 
 // Data API Service V2
 export {

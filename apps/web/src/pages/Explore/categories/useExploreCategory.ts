@@ -1,6 +1,9 @@
 import { isSVMChain, type UniverseChainId } from '@universe/chains'
 import { useIsTokenCategoriesEnabled } from '@universe/gating'
+import { useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import type { CategoryKind } from 'uniswap/src/features/tokenCategories/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { buildExploreUrl } from '~/features/Explore/utils/buildExploreUrl'
 import { ExploreTab } from '~/types/explore'
@@ -87,17 +90,21 @@ export function getExploreTrendingTableURL(): string {
 export const EXPLORE_TOKEN_SECTION_ID = 'explore-token-section'
 
 /**
- * Reads/writes the Explore category from the `?category=` URL param.
- * `validCategoryIds` bounds the param values (chip ids minus All, which is the paramless default);
- * unknown params read as All without rewriting the URL, except that a well-formed slug is trusted
- * while `trustUnverifiedIds` is set (see categoryFromParam).
- * With token categories on, a chain without category coverage reads as All, and picking a category
- * there resets the network filter to All networks rather than showing an empty table.
+ * Reads/writes the selected category from the `?category=` URL param on the current path, for the
+ * token or pool list of `kind`. `validCategoryIds` bounds the param values (chip ids minus All, which
+ * is the paramless default); unknown params read as All without rewriting the URL, except that a
+ * well-formed slug is trusted while `trustUnverifiedIds` is set (see categoryFromParam).
+ * Tokens only: with token categories on, a chain without category coverage reads as All, and picking a
+ * category there resets the network filter to All networks rather than showing an empty table. Pools
+ * have no SVM leg, so the pool branch never touches the path.
+ * Testnet mode drops `?category=` from the URL, landing on All.
  */
 export function useExploreCategory({
+  kind,
   validCategoryIds,
   trustUnverifiedIds,
 }: {
+  kind: CategoryKind
   validCategoryIds: ReadonlySet<string>
   trustUnverifiedIds: boolean
 }): [string, (category: string) => void] {
@@ -105,7 +112,7 @@ export function useExploreCategory({
   const navigate = useNavigate()
   const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
   const chainId = useChainIdFromUrlParam()
-  const chainUnsupported = tokenCategoriesEnabled && isCategoryUnsupportedChain(chainId)
+  const chainUnsupported = kind === 'token' && tokenCategoriesEnabled && isCategoryUnsupportedChain(chainId)
   const category = chainUnsupported
     ? ExploreCategory.All
     : categoryFromParam({ value: params.get(CATEGORY_PARAM), validCategoryIds, trustUnverifiedIds })
@@ -125,6 +132,19 @@ export function useExploreCategory({
     }
     setParams(updated, { replace: true })
   })
+
+  // Category tables are mainnet data. Runs on toggle (and mount), so a category can still be picked in testnet mode.
+  const { isTestnetModeEnabled } = useEnabledChains()
+  const resetCategory = useEvent((): void => {
+    if (params.has(CATEGORY_PARAM)) {
+      setParams(withoutCategoryParam(params), { replace: true })
+    }
+  })
+  useEffect(() => {
+    if (isTestnetModeEnabled) {
+      resetCategory()
+    }
+  }, [isTestnetModeEnabled, resetCategory])
 
   return [category, setCategory]
 }

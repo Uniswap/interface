@@ -57,12 +57,3 @@ describe('export parity across the legs', () => {
     expect(Object.keys(nativeHooks).sort()).toEqual(Object.keys(webHooks).sort())
   })
 })
-
-describe('the subpath barrel resolves every symbol', () => {
-  it('exports the component plus the legacy inputStyles helper', async () => {
-    const barrel = await import('./index')
-    expect(barrel.InputCompat).toBe(web.InputCompat)
-    expect(barrel.inputStyles.inputFocus.borderColor).toBe('$surface3')
-    expect(barrel.INPUT_STYLE_PROP_KEYS.length).toBeGreaterThan(60)
-  })
-})

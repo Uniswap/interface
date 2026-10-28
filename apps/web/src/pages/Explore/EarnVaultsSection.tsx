@@ -1,5 +1,5 @@
 import { Platform } from '@universe/chains'
-import { Flex, Text } from '@universe/mycelium'
+import { Flex, Text, useMedia } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -15,6 +15,9 @@ import { useEarnVaults } from 'uniswap/src/features/earn/hooks/useEarnVaults'
 import { useLogEarnSurfaceViewed } from 'uniswap/src/features/earn/hooks/useLogEarnSurfaceViewed'
 import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { getEarnVaultsSortedForExplore } from 'uniswap/src/features/earn/utils'
+import { CAROUSEL_FADE_WIDTH_SMALL } from '~/components/TokenCardCarousel/constants'
+import { TokenCardCarousel } from '~/components/TokenCardCarousel/TokenCardCarousel'
+import { useHorizontalSnapCarousel } from '~/components/TokenCardCarousel/useHorizontalSnapCarousel'
 import { LoadingBubble } from '~/components/Tokens/loading'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
 import { useActiveAddress } from '~/features/accounts/store/hooks'
@@ -28,6 +31,7 @@ const EARN_VAULT_CHIP_GRID_MIN_WIDTH = 220
 const EARN_VAULT_CHIP_SKELETON_TITLE_HEIGHT = 18
 const EARN_VAULT_CHIP_SKELETON_SUBTITLE_HEIGHT = 16
 const EARN_COACHMARK_WIDTH = 215
+const EARN_VAULT_CAROUSEL_CARD_WIDTH = 120
 
 export function EarnVaultsSection() {
   const { t } = useTranslation()
@@ -36,6 +40,12 @@ export function EarnVaultsSection() {
   const { isLoadingVaults, positionsByVaultId, vaults } = useEarnVaults({ account: evmAccountAddress })
   const exploreVaults = useMemo(() => getEarnVaultsSortedForExplore(vaults), [vaults])
   const { closeModal, openModal, selectedVaultState } = useEarnVaultModalState()
+  const media = useMedia()
+  const carousel = useHorizontalSnapCarousel({
+    cardWidth: EARN_VAULT_CAROUSEL_CARD_WIDTH,
+    itemCount: exploreVaults.length,
+    isLoading: isLoadingVaults,
+  })
   useLogEarnSurfaceViewed({
     entryPoint: EarnEntryPoint.ExploreChip,
     isVisible: !isLoadingVaults && exploreVaults.length > 0,
@@ -60,6 +70,7 @@ export function EarnVaultsSection() {
       <Flex
         width="100%"
         my="$spacing24"
+        $md={{ my: '$spacing12' }}
         maxWidth={MAX_WIDTH_MEDIA_BREAKPOINT}
         mx="auto"
         row
@@ -78,7 +89,7 @@ export function EarnVaultsSection() {
             width={EARN_COACHMARK_WIDTH}
             testID={TestID.ExploreEarnCoachmark}
           >
-            <Text variant="heading3" color="$neutral1">
+            <Text variant="heading3" $md={{ variant: 'subheading1' }} color="$neutral1">
               {t('explore.earn.title')}
             </Text>
           </Coachmark>
@@ -86,26 +97,46 @@ export function EarnVaultsSection() {
             {t('explore.earn.subtitle')}
           </Text>
         </Flex>
-        <Flex
-          flex={1}
-          gap="$spacing12"
-          justifyContent="flex-end"
-          $platform-web={{
-            display: 'grid',
-            gridTemplateColumns: `repeat(auto-fill, minmax(${EARN_VAULT_CHIP_GRID_MIN_WIDTH}px, ${EARN_VAULT_CHIP_MAX_WIDTH}px))`,
-            justifyContent: 'flex-end',
-          }}
-          $xl={{ width: '100%', '$platform-web': { justifyContent: 'flex-start' } }}
-          $md={{ '$platform-web': { gridTemplateColumns: '1fr' } }}
-        >
-          {isLoadingVaults
-            ? Array.from({ length: EARN_VAULT_CHIP_SKELETON_COUNT }, (_, index) => (
-                <EarnVaultChipSkeleton key={index} index={index} />
-              ))
-            : exploreVaults.map((vault) => (
-                <EarnVaultChip key={vault.id} vault={vault} onPress={() => openModal(vault)} />
-              ))}
-        </Flex>
+        {media.md ? (
+          <Flex width="100%">
+            <TokenCardCarousel
+              items={exploreVaults}
+              getItemKey={(vault) => vault.id}
+              renderItem={(vault) => (
+                <Flex width={EARN_VAULT_CAROUSEL_CARD_WIDTH}>
+                  <EarnVaultChip layout="vertical" vault={vault} onPress={() => openModal(vault)} />
+                </Flex>
+              )}
+              isLoading={isLoadingVaults}
+              skeletonCount={EARN_VAULT_CHIP_SKELETON_COUNT}
+              skeletonLayout="vertical"
+              carousel={carousel}
+              cardWidth={EARN_VAULT_CAROUSEL_CARD_WIDTH}
+              fadeWidth={CAROUSEL_FADE_WIDTH_SMALL}
+              showArrowButtons={false}
+            />
+          </Flex>
+        ) : (
+          <Flex
+            flex={1}
+            gap="$spacing12"
+            justifyContent="flex-end"
+            $platform-web={{
+              display: 'grid',
+              gridTemplateColumns: `repeat(auto-fill, minmax(${EARN_VAULT_CHIP_GRID_MIN_WIDTH}px, ${EARN_VAULT_CHIP_MAX_WIDTH}px))`,
+              justifyContent: 'flex-end',
+            }}
+            $xl={{ width: '100%', '$platform-web': { justifyContent: 'flex-start' } }}
+          >
+            {isLoadingVaults
+              ? Array.from({ length: EARN_VAULT_CHIP_SKELETON_COUNT }, (_, index) => (
+                  <EarnVaultChipSkeleton key={index} index={index} />
+                ))
+              : exploreVaults.map((vault) => (
+                  <EarnVaultChip key={vault.id} vault={vault} onPress={() => openModal(vault)} />
+                ))}
+          </Flex>
+        )}
       </Flex>
       <EarnVaultModal
         analyticsEntryPoint={EarnEntryPoint.ExploreChip}

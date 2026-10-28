@@ -18,6 +18,7 @@ import { ChartEntry } from '~/features/Liquidity/charts/LiquidityRangeInput/type
 import { useAllPoolTicks } from '~/features/Liquidity/hooks/usePoolTickData'
 import { buildV2SyntheticPool, V2Reserves } from '~/features/Liquidity/utils/v2SyntheticTicks'
 import { useColor } from '~/hooks/useColor'
+import { DEPTH_CHART_SUBSCRIPT_THRESHOLD } from '~/pages/PoolDetails/components/ChartSection/DepthChart.utils'
 import { usePdpPool } from '~/pages/PoolDetails/components/ChartSection/usePdpPool'
 import { unwrappedToken } from '~/utils/unwrappedToken'
 
@@ -111,7 +112,7 @@ function PriceHeader({
             <SubscriptZeroPrice
               variant="heading3"
               value={displayPrice0}
-              subscriptThreshold={6}
+              subscriptThreshold={DEPTH_CHART_SUBSCRIPT_THRESHOLD}
               symbol={quoteDescriptor}
             />
           ) : (
@@ -126,7 +127,7 @@ function PriceHeader({
             <SubscriptZeroPrice
               variant="heading3"
               value={displayPrice1}
-              subscriptThreshold={6}
+              subscriptThreshold={DEPTH_CHART_SUBSCRIPT_THRESHOLD}
               symbol={baseDescriptor}
             />
           ) : (

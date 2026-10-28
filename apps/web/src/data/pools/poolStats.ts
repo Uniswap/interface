@@ -2,6 +2,7 @@ import { ProtocolVersion } from '@universe/api'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { feeAmountToBps } from 'uniswap/src/features/fees/feeUnits'
 import { getFeeBreakdown } from 'uniswap/src/features/fees/getFeeBreakdown'
+import type { PoolData } from '~/data/pools/poolData'
 import { OrderDirection } from '~/data/util'
 
 export interface PoolFeeArgs {
@@ -43,6 +44,17 @@ export function calculate24hLpFeesUsd({
     servedProtocolFeeBps: protocolFeePips !== undefined ? feeAmountToBps(protocolFeePips) : undefined,
   })
   return (volume24h * lpFeeBps) / BIPS_BASE
+}
+
+/** {@link calculate24hLpFeesUsd} for a served pool row, which carries every input itself. */
+export function get24hLpFeesUsd(poolData: PoolData): number | undefined {
+  return calculate24hLpFeesUsd({
+    volume24h: poolData.volumeUSD24H,
+    feeTier: poolData.feeTier?.feeAmount,
+    isDynamic: poolData.feeTier?.isDynamic,
+    protocolVersion: poolData.protocolVersion,
+    protocolFeePips: poolData.protocolFeePips,
+  })
 }
 
 export enum PoolSortFields {

@@ -26,25 +26,35 @@ export function shouldSkipSearch({
   return !searchFilter || activeTab === SearchTab.Wallets
 }
 
-/** Result types one SearchService request should cover on this surface; pools and auctions are web-only. */
+/**
+ * Pools and auctions are web-only. TOKEN + AUCTION in one request makes the BE pick one primary per CCA token,
+ * so with auction search each tab sends its own types and a tab switch refetches.
+ */
 export function getSearchTypes({
+  activeTab,
   auctionSearchEnabled,
   categorySearchEnabled,
+  tokenGroupSearchEnabled,
 }: {
+  activeTab: SearchTab
   auctionSearchEnabled: boolean
   categorySearchEnabled: boolean
+  tokenGroupSearchEnabled: boolean
 }): SearchType[] {
-  const types = [SearchType.TOKEN]
-  if (isWebApp) {
-    types.push(SearchType.POOL)
-    if (auctionSearchEnabled) {
-      types.push(SearchType.AUCTION)
-    }
+  const categoryTypes = categorySearchEnabled ? [SearchType.CATEGORY] : []
+  const tokenGroupTypes = tokenGroupSearchEnabled ? [SearchType.TOKEN_GROUP] : []
+  if (!isWebApp || !auctionSearchEnabled) {
+    // One request shared by every tab, so a tab switch is served from cache.
+    return [SearchType.TOKEN, ...(isWebApp ? [SearchType.POOL] : []), ...categoryTypes, ...tokenGroupTypes]
   }
-  if (categorySearchEnabled) {
-    types.push(SearchType.CATEGORY)
+  switch (activeTab) {
+    case SearchTab.Auctions:
+      return [SearchType.AUCTION]
+    case SearchTab.All:
+      return [SearchType.TOKEN, SearchType.POOL, SearchType.AUCTION, ...categoryTypes, ...tokenGroupTypes]
+    default:
+      return [SearchType.TOKEN, SearchType.POOL, ...tokenGroupTypes]
   }
-  return types
 }
 
 export function shouldShowWalletSearch(searchFilter: string | null, lowercasedDisabledTerms: string[]): boolean {
@@ -118,16 +128,16 @@ export function getTruncatedSectionKeys({
 
 const MIN_CATEGORY_PREFIX_QUERY_LENGTH = 3
 
-// Lowercase, one space between words: "AI-Agents" and "ai agents" compare the same way.
-function normalizeWords(text: string): string {
+/** Lowercase, one space between words: "AI-Agents" and "ai agents" compare the same way. */
+export function normalizeWords(text: string): string {
   return text
     .toLowerCase()
     .replace(/[^\p{L}\p{N}]+/gu, ' ')
     .trim()
 }
 
-// Typeahead: the query must start a word ("stable" hits Stablecoins, "coins" does not).
-function startsAWordOf(text: string, query: string): boolean {
+/** Typeahead: the query must start a word ("stable" hits Stablecoins, "coins" does not). Both sides normalized. */
+export function startsAWordOf(text: string, query: string): boolean {
   return text.startsWith(query) || text.includes(` ${query}`)
 }
 
@@ -237,25 +247,19 @@ export function getAllSections({
   // Earn always leads when present (vault share token searched by address).
   const earnSections = earnSearchResultsSection ?? []
 
+  // Auctions lead per design. On All the BE returns one primary result per CCA token, and only in-flight auctions
+  // reach this list (see useSearchAuctionOptions).
+  const auctionTokenAndPoolSections = [...(auctionSearchResultsSection ?? []), ...tokenAndPoolSections]
+
   if (!shouldShowWallets) {
-    return [...earnSections, ...tokenAndPoolSections, ...(auctionSearchResultsSection ?? [])]
+    return [...earnSections, ...auctionTokenAndPoolSections]
   }
 
   if (shouldPrioritizeWallets) {
-    return [
-      ...earnSections,
-      ...(walletSearchResultsSection ?? []),
-      ...tokenAndPoolSections,
-      ...(auctionSearchResultsSection ?? []),
-    ]
+    return [...earnSections, ...(walletSearchResultsSection ?? []), ...auctionTokenAndPoolSections]
   }
 
-  return [
-    ...earnSections,
-    ...tokenAndPoolSections,
-    ...(walletSearchResultsSection ?? []),
-    ...(auctionSearchResultsSection ?? []),
-  ]
+  return [...earnSections, ...auctionTokenAndPoolSections, ...(walletSearchResultsSection ?? [])]
 }
 
 export type SearchResultsForActiveTabParams = {

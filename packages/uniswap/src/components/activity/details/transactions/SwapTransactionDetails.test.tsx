@@ -66,10 +66,6 @@ vi.mock('@universe/gating', async (importOriginal) => {
   }
 })
 
-vi.mock('ui/src/loading/Skeleton', () => ({
-  Skeleton: (): JSX.Element => <></>,
-}))
-
 const swapTypeInfo = {
   type: 'swap',
   inputCurrencyId: '9920dbad-ff24-47c8-814a-094566fc45ff',

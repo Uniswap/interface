@@ -2,11 +2,11 @@
  * Native leg of Separator: a React Native `View`. The only place Separator
  * imports react-native at runtime.
  */
+import { useSporeColors } from '@universe/mycelium'
 import { useSyncExternalStore } from 'react'
 import { Dimensions, View, type ViewStyle } from 'react-native'
 import type { SeparatorProps } from 'ui/src/components/layout/Separator'
 import { buildSeparatorPropStyle, getFalse, subscribeNoop } from 'ui/src/components/layout/separatorStyles'
-import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 import { breakpoints } from 'ui/src/theme'
 
 export type { SeparatorProps } from 'ui/src/components/layout/Separator'

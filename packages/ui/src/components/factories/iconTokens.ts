@@ -1,3 +1,4 @@
+import { isWebPlatform } from '@universe/environment'
 /**
  * Tamagui-free token tables and style-prop resolution for the icon factory.
  *
@@ -6,8 +7,7 @@
  * `ui/src/theme/tokens.ts` (`createTokens`), so the numbers cannot drift; the key sets are
  * pinned compile-time (`satisfies Record<IconSizeTokens, number>`).
  */
-import { isWebPlatform } from '@universe/environment'
-import type { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
+import { type UseSporeColorsReturn } from '@universe/mycelium/theme-hooks-compat'
 import { borderRadii } from 'ui/src/theme/borderRadii'
 import { colors } from 'ui/src/theme/color/colors'
 import { iconSizes } from 'ui/src/theme/iconSizes'

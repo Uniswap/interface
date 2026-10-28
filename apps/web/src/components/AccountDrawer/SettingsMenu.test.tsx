@@ -10,9 +10,6 @@ vi.mock('~/hooks/useIsEmbeddedWallet')
 vi.mock('~/components/AccountDrawer/DisconnectButton', () => ({
   useOnDisconnect: vi.fn().mockReturnValue(vi.fn()),
 }))
-vi.mock('~/components/AccountDrawer/AnalyticsToggle', () => ({
-  AnalyticsToggle: () => null,
-}))
 vi.mock('~/components/AccountDrawer/SlideOutMenu', () => ({
   SlideOutMenu: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }))

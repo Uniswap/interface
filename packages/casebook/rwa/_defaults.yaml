@@ -1,0 +1,20 @@
+product_area: rwa
+platforms: [web, extension, mobile]
+nxProjects: ["@universe/web", "@uniswap/extension", "@uniswap/mobile", uniswap]
+owners: ["@uniswap/consumer-engagement-fe"]
+
+# Casebook area-registry metadata (read by the engine in apps/cli/src/casebook).
+# These drive Testlio suite naming, the PR-comment label, and CI routing.
+label: RWA
+suiteNamePrefix: RWA
+ghLabel: "casebook:rwa"
+# Reviewer GitHub team for the auto-opened catalog companion PR.
+# CONVENTION / BEST-GUESS: .github/CODEOWNERS is silent on packages/uniswap/src/features/rwa
+# and permissionedTokens. `web` follows the blueprint convention (teamResolved=false) and MUST be
+# confirmed with the pod lead before requesting reviews; fall back to nearest CODEOWNERS match if rejected.
+reviewerTeam: consumer-engagement-fe
+
+# Test-wallet aliases referenced by this area's cases. Symbolic only: real mnemonics live in
+# the QA vault / Testlio TL handoff, keyed by the same alias. Never put a secret here.
+wallets:
+  TW-RWA-01: "funded wallet holding a tradable RWA/stock token and a stablecoin on Ethereum mainnet; region-neutral - each case's Given states the required region"

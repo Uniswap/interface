@@ -20,6 +20,10 @@ exports[`DatetimeText > renders without error 1`] = `
       virtualkeyboardpolicy="auto"
     />
   </div>
+  <div
+    class="css-view-175oi2r r-bottom-1p0dtai r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-pointerEvents-12vffkv"
+    data-testid="portal-layer"
+  />
 </DocumentFragment>
 `;
 
@@ -44,6 +48,10 @@ exports[`PriceText > renders loading state 1`] = `
       virtualkeyboardpolicy="auto"
     />
   </div>
+  <div
+    class="css-view-175oi2r r-bottom-1p0dtai r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-pointerEvents-12vffkv"
+    data-testid="portal-layer"
+  />
 </DocumentFragment>
 `;
 
@@ -82,6 +90,10 @@ exports[`PriceText > renders without error 1`] = `
       virtualkeyboardpolicy="auto"
     />
   </div>
+  <div
+    class="css-view-175oi2r r-bottom-1p0dtai r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-pointerEvents-12vffkv"
+    data-testid="portal-layer"
+  />
 </DocumentFragment>
 `;
 
@@ -120,6 +132,10 @@ exports[`PriceText > renders without error less than a dollar 1`] = `
       virtualkeyboardpolicy="auto"
     />
   </div>
+  <div
+    class="css-view-175oi2r r-bottom-1p0dtai r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-pointerEvents-12vffkv"
+    data-testid="portal-layer"
+  />
 </DocumentFragment>
 `;
 
@@ -128,7 +144,7 @@ exports[`RelativeChangeText > renders loading state 1`] = `
   <div
     class="css-view-175oi2r"
     data-testid="relative-price-change"
-    style="gap: 2px; margin-top: 2px;"
+    style="gap: 2px;"
   >
     <div
       class="css-view-175oi2r"
@@ -185,6 +201,10 @@ exports[`RelativeChangeText > renders loading state 1`] = `
       </div>
     </div>
   </div>
+  <div
+    class="css-view-175oi2r r-bottom-1p0dtai r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-pointerEvents-12vffkv"
+    data-testid="portal-layer"
+  />
 </DocumentFragment>
 `;
 
@@ -193,7 +213,7 @@ exports[`RelativeChangeText > renders without error 1`] = `
   <div
     class="css-view-175oi2r"
     data-testid="relative-price-change"
-    style="gap: 2px; margin-top: 2px;"
+    style="gap: 2px;"
   >
     <div
       style="opacity: 0;"
@@ -224,5 +244,9 @@ exports[`RelativeChangeText > renders without error 1`] = `
       </div>
     </div>
   </div>
+  <div
+    class="css-view-175oi2r r-bottom-1p0dtai r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-pointerEvents-12vffkv"
+    data-testid="portal-layer"
+  />
 </DocumentFragment>
 `;

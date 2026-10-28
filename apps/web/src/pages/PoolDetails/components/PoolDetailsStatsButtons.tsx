@@ -136,8 +136,8 @@ export function PoolDetailsStatsButtons({
   const currencyInfo0 = useCurrencyInfo(currency0 && currencyId(currency0))
   const currencyInfo1 = useCurrencyInfo(currency1 && currencyId(currency1))
 
-  // Fails open while the check is in flight, as swap does: this CTA only navigates, and the
-  // add-liquidity flow it lands in gates again on the same hook before anything is signed.
+  // Drives the banner only. The CTA below only navigates; the add-liquidity flow it lands in gates on
+  // the same hook before anything is signed.
   const { isGeoRestricted, restrictedTokenSymbol } = useLPGeoRestriction({
     token0: currency0,
     token1: currency1,
@@ -223,17 +223,14 @@ export function PoolDetailsStatsButtons({
           >
             {swapModalOpen ? t('common.close') : t('common.swap')}
           </PoolButton>
-          {/* Dropped rather than disabled — the banner above already states the restriction, so a
-              dead half of the row would only repeat it. */}
-          {!isGeoRestricted && (
-            <PoolButton
-              icon={<Plus size="$icon.20" />}
-              onPress={handleAddLiquidity}
-              data-testid={TestID.PoolDetailsAddLiquidityButton}
-            >
-              {t('common.addLiquidity')}
-            </PoolButton>
-          )}
+          {/* Shown even when restricted: the add flow opens on the region modal and keeps its CTA disabled. */}
+          <PoolButton
+            icon={<Plus size="$icon.20" />}
+            onPress={handleAddLiquidity}
+            data-testid={TestID.PoolDetailsAddLiquidityButton}
+          >
+            {t('common.addLiquidity')}
+          </PoolButton>
         </Flex>
       </PoolButtonsWrapper>
       <Modal

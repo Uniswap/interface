@@ -7,6 +7,7 @@ import {
   type MarginPlanStep,
   type MarginPlanStepType,
 } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { beforeEach, describe, expect, it } from 'vitest'
 import type { MarginMarket } from '~/constants/margin'
 import { __resetMemoryProofsForTest, writeStepProof } from '~/pages/Swap/Margin/hooks/marginStepProofCache'
@@ -77,15 +78,15 @@ describe('planTitle', () => {
   })
 
   it('returns the existing open title key for OPEN + LONG', () => {
-    expect(planTitle({ intent: 'OPEN', direction: 'LONG', t: mockT })).toBe('margin.plan.title.open')
+    expect(planTitle({ intent: 'OPEN', direction: MarginDirection.LONG, t: mockT })).toBe('margin.plan.title.open')
   })
 
   it('returns the short title key for OPEN + SHORT', () => {
-    expect(planTitle({ intent: 'OPEN', direction: 'SHORT', t: mockT })).toBe('margin.cta.openShort')
+    expect(planTitle({ intent: 'OPEN', direction: MarginDirection.SHORT, t: mockT })).toBe('margin.cta.openShort')
   })
 
   it('leaves non-OPEN intents unaffected by direction', () => {
-    expect(planTitle({ intent: 'CLOSE', direction: 'SHORT', t: mockT })).toBe('margin.plan.title.close')
+    expect(planTitle({ intent: 'CLOSE', direction: MarginDirection.SHORT, t: mockT })).toBe('margin.plan.title.close')
   })
 
   it('maps ADJUST to its own title key', () => {
@@ -389,18 +390,22 @@ describe('planReviewDirection', () => {
 
   it('classifies off the PLAN when the market has not resolved', () => {
     // Debt is the stable leg ⇒ LONG; collateral stable and debt volatile ⇒ SHORT.
-    expect(planReviewDirection({ market: undefined, plan: { collateralToken: WETH, debtToken: USDC } })).toBe('LONG')
-    expect(planReviewDirection({ market: undefined, plan: { collateralToken: USDC, debtToken: WETH } })).toBe('SHORT')
+    expect(planReviewDirection({ market: undefined, plan: { collateralToken: WETH, debtToken: USDC } })).toBe(
+      MarginDirection.LONG,
+    )
+    expect(planReviewDirection({ market: undefined, plan: { collateralToken: USDC, debtToken: WETH } })).toBe(
+      MarginDirection.SHORT,
+    )
   })
 
   it("prefers the resolved market's own stated direction", () => {
-    const market = { direction: 'SHORT', collateral: { address: WETH }, debt: { address: USDC } }
+    const market = { direction: MarginDirection.SHORT, collateral: { address: WETH }, debt: { address: USDC } }
     expect(
       planReviewDirection({
         market: market as unknown as Parameters<typeof planReviewDirection>[0]['market'],
         plan: { collateralToken: WETH, debtToken: USDC },
       }),
-    ).toBe('SHORT')
+    ).toBe(MarginDirection.SHORT)
   })
 })
 

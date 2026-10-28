@@ -43,6 +43,7 @@ import { useTDPSelectedMultichainChain } from '~/pages/TokenDetails/context/useT
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultichainTokenEntries'
 import { useTDPEffectiveCurrency } from '~/pages/TokenDetails/hooks/useTDPEffectiveCurrency'
+import { useTDPLowLiquidityChainIds } from '~/pages/TokenDetails/hooks/useTDPLowLiquidityChainIds'
 import { useTDPPermissionedState } from '~/pages/TokenDetails/hooks/useTDPPermissionedState'
 import { useIsTDPRWAMatchLoading, useTDPRWAMatch } from '~/pages/TokenDetails/hooks/useTDPRWAMatch'
 import { popupRegistry } from '~/state/popups/registry'
@@ -84,6 +85,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
   const multichainEntries = useMultichainTokenEntries(multiChainMap)
   const isMultiChainAsset = multichainEntries.length > 1
   const multichainChainIds = useMemo(() => multichainEntries.map((entry) => entry.chainId), [multichainEntries])
+  const lowLiquidityChainIds = useTDPLowLiquidityChainIds()
 
   const { selectedMultichainChainId: selectedChainId, setSelectedMultichainChainId: onSelectedChainChange } =
     useTDPSelectedMultichainChain()
@@ -168,6 +170,9 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
         logoName={effectiveCurrency.name ?? undefined}
         chainId={!isMultiChainAsset ? effectiveCurrency.chainId : null}
         dataTestId={TestID.TokenDetailsInfoContainer}
+        truncateTitleColumn
+        // Mobile only: the title has room above $md, where the tooltip would just repeat what is on screen.
+        titleTooltip={isMobileScreen ? tokenName : undefined}
         titleAdornments={
           <>
             <TokenDetailsHeaderAddressCopyMobile
@@ -189,6 +194,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
             <RWAIssuerHeaderDetails issuer={heldRwaIssuer} />
             <TokenDetailsNetworkFilter
               chainIds={multichainChainIds}
+              lowLiquidityChainIds={lowLiquidityChainIds}
               selectedChainId={selectedChainId}
               setSelectedChainId={onSelectedChainChange}
               showAddressCopy={showAddressCopy}
@@ -224,6 +230,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
             {metadataRowHidden && (
               <TokenDetailsNetworkFilter
                 chainIds={multichainChainIds}
+                lowLiquidityChainIds={lowLiquidityChainIds}
                 selectedChainId={selectedChainId}
                 setSelectedChainId={onSelectedChainChange}
                 showAddressCopy={false}

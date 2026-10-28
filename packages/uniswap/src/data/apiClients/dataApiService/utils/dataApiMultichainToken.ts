@@ -16,6 +16,7 @@ import {
   SearchTokenStats,
 } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency, buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
+import { formatColorOverrides } from 'uniswap/src/features/dataApi/utils/formatColorOverrides'
 import {
   fractionToBpsString,
   getRestCurrencySafetyInfoV2,
@@ -132,6 +133,7 @@ function dataApiChainAddressToCurrencyInfo({
     currency,
     currencyId: currencyId(currency),
     logoUrl: parent.project?.logoUrl || undefined,
+    colorOverrides: formatColorOverrides(parent.project?.colors),
     safetyInfo: parentSafetyInfo.safetyInfo,
     isSpam: parentSafetyInfo.isSpam,
     spamCode: parentSafetyInfo.spamCode,
@@ -164,7 +166,7 @@ export function pickPrimaryDeployment({
 }: {
   addresses: Record<string, string>
   chainId: number | undefined
-  chainStats?: readonly ChainTokenRankStats[]
+  chainStats?: readonly PlainMessage<ChainTokenRankStats>[]
 }): { chainId: number; address: string } | undefined {
   const entries = Object.entries(addresses)
   if (entries.length === 0) {
@@ -199,6 +201,7 @@ function buildSearchTokenStats(
   const stats: SearchTokenStats = {
     priceUsd: price?.spotUsd,
     pricePercentChange1d: price?.percentChange1d,
+    priceConfidenceScore: price?.confidenceScore,
     fdvUsd: rankedToken.stats?.fdv ?? rankedToken.multichainToken?.fdv,
     volume1dUsd: rankedToken.stats?.volume1d,
   }

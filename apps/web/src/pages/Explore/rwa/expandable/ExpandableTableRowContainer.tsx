@@ -6,7 +6,7 @@ import {
   EXPANDABLE_ASSET_SHELL_HEADER_GAP_PX,
   EXPANDABLE_ASSET_TABLE_SHELL_PADDING_PX,
 } from 'uniswap/src/features/expandableAsset/expandableAssetLayout'
-import { useTableRowContentMinWidthPx } from '~/components/Table/TableSizeProvider'
+import { useTableRowContentMinWidthCss } from '~/components/Table/TableSizeProvider'
 import { IssuerTableRowHoverProvider } from '~/pages/Explore/rwa/expandable/IssuerTableRowHoverProvider'
 
 const EXPANDABLE_TABLE_ROW_HEIGHT_TRANSITION = `height ${EXPANDABLE_ASSET_ROW_HEIGHT_TRANSITION_MS}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`
@@ -17,10 +17,6 @@ export type ExpandableTableRowContainerProps = {
   collapsedIssuerHeightPx: number
   /** Issuer panel height when fully expanded (`getExpandableIssuerPanelHeightPx`). */
   expandedIssuerHeightPx: number
-  /** RWA Explore only: widen the shell by its horizontal padding so the card matches the All table row width.
-   *  Disable when columns flex-grow (e.g. portfolio tokens) — otherwise the shell overflows the header/flat rows
-   *  by the padding amount whenever the table scrolls horizontally. */
-  extendShellBeyondRowContent?: boolean
   /** Changing this snaps an open row shut in the same frame instead of playing the collapse transition.
    *  Rows that close because the table reordered under them should disappear with the reorder, not after it. */
   instantCollapseKey?: string
@@ -34,7 +30,6 @@ export function ExpandableTableRowContainer({
   isExpanded,
   collapsedIssuerHeightPx,
   expandedIssuerHeightPx,
-  extendShellBeyondRowContent = true,
   instantCollapseKey,
   onToggle,
   parentRow,
@@ -63,11 +58,9 @@ export function ExpandableTableRowContainer({
   // transition (unset on transitionend) so the reveal can animate shut before unmount.
   const shouldRenderIssuerPanel = isExpanded || retainIssuerPanel
 
-  const rowContentMinWidthPx = useTableRowContentMinWidthPx()
-
-  /** Match expanded card outer width at every breakpoint (column sum + shell horizontal padding when extended). */
-  const shellMinWidthPx =
-    rowContentMinWidthPx + (extendShellBeyondRowContent ? EXPANDABLE_ASSET_TABLE_SHELL_PADDING_PX * 2 : 0)
+  // Same min width as the header and flat rows: a wider shell gives the body more scroll room than the
+  // header, and the proportional header/body scroll sync then drifts the columns apart.
+  const shellMinWidth = useTableRowContentMinWidthCss()
   const shellHorizontalBleedPx = EXPANDABLE_ASSET_TABLE_SHELL_PADDING_PX * 2
 
   useLayoutEffect(() => {
@@ -111,12 +104,12 @@ export function ExpandableTableRowContainer({
   const issuerClipOverflow = isExpanded && !isIssuerTransitioning ? 'visible' : 'hidden'
 
   return (
-    <TouchableArea minWidth={shellMinWidthPx} pressStyle={{ scale: 1 }} width="100%" onPress={onToggle}>
+    <TouchableArea minWidth={shellMinWidth} pressStyle={{ scale: 1 }} width="100%" onPress={onToggle}>
       <Flex
         backgroundColor={isExpanded ? '$surface2' : '$surface1'}
         borderRadius="$rounded16"
         gap={EXPANDABLE_ASSET_SHELL_HEADER_GAP_PX}
-        minWidth={shellMinWidthPx}
+        minWidth={shellMinWidth}
         p="$spacing4"
         width="100%"
       >

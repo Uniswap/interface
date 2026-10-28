@@ -1,8 +1,5 @@
-import { type ColorTokens, Flex, type FlexCompatProps } from '@universe/mycelium'
+import { type ColorTokens, Flex, type FlexCompatProps, Shine } from '@universe/mycelium'
 import { type ComponentRef, forwardRef } from 'react'
-// Shine stays on ui/src: mycelium Shimmer's width/height types reject the
-// calc() strings this file passes (legacy accepted them).
-import { Shine } from 'ui/src'
 
 const HEIGHT = 10
 interface ProgressBarProps {
@@ -93,25 +90,26 @@ export const ProgressBar = ({
       {showEndDots && <Flex width={8} height={8} backgroundColor="$neutral1" borderRadius="$roundedFull" />}
       <ProgressContainer grow height={height} borderColor={borderColor}>
         {hasProgress && (
-          <Shine
-            shimmerDurationSeconds={2}
+          // Shine only takes simple sizes, so the calc() geometry lives on this wrapper and Shine fills it.
+          <Flex
             height="calc(100% + 2px)"
             top={-1}
             left={-1}
             borderRadius="$roundedFull"
             width={`calc(${clampedPercentage}% + 2px)`}
-            disabled={!shouldAnimate}
           >
-            <FilledPortion
-              backgroundColor={color}
-              style={customFillStyle}
-              borderColor={fillBorderColor}
-              borderWidth={fillBorderColor ? 1 : 0}
-              height={height}
-            >
-              {showWhiteDot && <WhiteDot width={height - 2} height={height - 2} />}
-            </FilledPortion>
-          </Shine>
+            <Shine shimmerDurationSeconds={2} disabled={!shouldAnimate} width="100%" height="100%">
+              <FilledPortion
+                backgroundColor={color}
+                style={customFillStyle}
+                borderColor={fillBorderColor}
+                borderWidth={fillBorderColor ? 1 : 0}
+                height={height}
+              >
+                {showWhiteDot && <WhiteDot width={height - 2} height={height - 2} />}
+              </FilledPortion>
+            </Shine>
+          </Flex>
         )}
       </ProgressContainer>
       {showEndDots && (

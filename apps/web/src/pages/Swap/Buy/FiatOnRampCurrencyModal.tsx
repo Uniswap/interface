@@ -9,6 +9,7 @@ import {
 } from '@universe/mycelium'
 import { GraduationCap } from '@universe/mycelium/icons/GraduationCap'
 import { useIsDarkMode, useMedia, useScrollbarStyles } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -198,6 +199,7 @@ export function FiatOnRampCurrencyModal({
               // `RowWrapper` defaults to 60; these rows render at 56.
               style={{ height: ROW_ITEM_SIZE }}
               currencyInfo={item.currencyInfo}
+              testId={`${TestID.FiatOnRampCurrencyRowPrefix}${item.key}`}
               showUsdValue
               showCurrencyAmount
               onSelect={() => {

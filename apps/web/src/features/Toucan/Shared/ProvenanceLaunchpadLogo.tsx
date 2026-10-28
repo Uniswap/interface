@@ -1,8 +1,8 @@
 import { UniswapLogo } from '@universe/mycelium/icons/UniswapLogo'
 import { PoolsLogo } from 'ui/src/components/icons/PoolsLogo'
 import type { LaunchProvenance } from 'uniswap/src/features/dataApi/launchProvenance'
+import { resolveIpfsGatewayUrl } from 'utilities/src/format/gatewayUrls'
 import { usePoolsBrandGreen } from '~/hooks/usePoolsBrandGreen'
-import { resolveLaunchIpfsImageUrl } from '~/pages/Launches/data/resolveLaunchIpfsImageUrl'
 import { POOLS_LAUNCHPAD_GROUP_ID, UNISWAP_CCA_LAUNCHPAD_ID } from '~/pages/Launches/launchesModel'
 import { LaunchpadLogo } from '~/pages/Launches/LaunchpadLogo'
 
@@ -23,5 +23,5 @@ export function ProvenanceLaunchpadLogo({
       return <PoolsLogo size={size} color={poolsBrandGreen} />
     }
   }
-  return <LaunchpadLogo url={resolveLaunchIpfsImageUrl(launchpad.logoUrl)} name={launchpad.name} size={size} />
+  return <LaunchpadLogo url={resolveIpfsGatewayUrl(launchpad.logoUrl)} name={launchpad.name} size={size} />
 }

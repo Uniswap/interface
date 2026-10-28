@@ -1,5 +1,6 @@
 import type { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { marginPairKey } from 'uniswap/src/features/transactions/margin/marginPairKey'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { NumberType } from 'utilities/src/format/types'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { MarginMarket } from '~/constants/margin'
@@ -22,7 +23,7 @@ vi.mock('~/pages/Swap/Margin/hooks/useDerivedMarginInfo', () => ({
     }) as unknown as DerivedMarginInfo,
 }))
 vi.mock('uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel', () => ({ CurrencyInputPanel: () => null }))
-vi.mock('~/pages/Swap/Margin/components/MarginPaymentTokenSelector', () => ({ MarginPaymentTokenSelector: () => null }))
+vi.mock('~/pages/Swap/Margin/components/MarginPayWith', () => ({ MarginPayWith: () => null }))
 vi.mock('~/pages/Swap/Margin/components/MarginSizeBlock', () => ({ MarginSizeBlock: () => null }))
 vi.mock('~/pages/Swap/Margin/components/MarginRateRows', () => ({ MarginRateRows: () => null }))
 vi.mock('~/pages/Swap/Margin/components/MarginOpenButton', () => ({ MarginOpenButton: () => null }))
@@ -75,7 +76,7 @@ const SHORT_MARKET: MarginMarket = {
   collateral: { address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', symbol: 'USDC', decimals: 6 },
   debt: { address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', symbol: 'WETH', decimals: 18 },
   venue: 'MORPHO',
-  direction: 'SHORT',
+  direction: MarginDirection.SHORT,
   lltvWad: '860000000000000000',
   shouldUseNativeEquity: false,
 }
@@ -98,7 +99,7 @@ describe('MarginForm adopt-first-market effect', () => {
         debtToken: SHORT_MARKET.debt.address,
       }),
       paymentToken: undefined,
-      side: 'short',
+      side: MarginDirection.SHORT,
     })
   })
 
@@ -114,7 +115,7 @@ describe('MarginForm adopt-first-market effect', () => {
         debtToken: SHORT_MARKET.debt.address,
       }),
       paymentToken: undefined,
-      side: 'short',
+      side: MarginDirection.SHORT,
     })
   })
 

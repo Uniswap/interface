@@ -1,8 +1,6 @@
 /**
  * Native leg of the `ElementAfterText` compat (INFRA-3601), reproducing the
- * legacy component's device rendering
- * (`ui/src/components/text/ElementAfterText.tsx` +
- * `ui/src/utils/layout.ts`):
+ * legacy ui component's device rendering:
  *
  * - Android: the element renders inline after the Text. The legacy comment's
  *   reason carries over — Fabric's `onTextLayout` line metrics are unreliable

@@ -9,6 +9,8 @@ import { I18nManager, StyleSheet } from 'react-native'
 import { DotGrid } from 'src/components/charts/DotGrid'
 import { type ChartData, SparklineChart } from 'src/components/charts/SparklineChart'
 import { Loader } from 'src/components/loading/loaders'
+import { WaveLoader } from 'ui/src'
+import { ChartBarCrossed } from 'ui/src/components/icons/ChartBarCrossed'
 import {
   CHART_PERIOD_OPTIONS,
   chartPeriodToElementName,
@@ -18,6 +20,7 @@ import {
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 
 const EXPANDED_CHART_HEIGHT = 180
+const UNAVAILABLE_BANNER_HEIGHT = 44
 const COLLAPSED_CHART_VISIBLE_HEIGHT = 70
 const COLLAPSED_CHART_TOP_OFFSET = -5
 const COLLAPSED_CHART_WIDTH = 100
@@ -34,6 +37,7 @@ interface PortfolioChartProps {
   onChartPeriodChange: (period: ChartPeriod) => void
   onScrub?: (point: ChartData[number] | null) => void
   isTotalValueMatch: boolean
+  isUnavailable?: boolean
 }
 
 export const PortfolioChart = memo(function PortfolioChart({
@@ -45,6 +49,7 @@ export const PortfolioChart = memo(function PortfolioChart({
   onChartPeriodChange,
   onScrub,
   isTotalValueMatch,
+  isUnavailable = false,
 }: PortfolioChartProps): JSX.Element | null {
   const { t } = useTranslation()
   const colors = useSporeColors()
@@ -92,6 +97,8 @@ export const PortfolioChart = memo(function PortfolioChart({
       <Flex height={EXPANDED_CHART_HEIGHT} overflow="hidden">
         {loading && data.length === 0 ? (
           <Loader.Graph />
+        ) : isUnavailable ? (
+          <ChartUnavailable />
         ) : (
           <>
             <DotGrid width={chartWidth} height={EXPANDED_CHART_HEIGHT} />
@@ -110,13 +117,15 @@ export const PortfolioChart = memo(function PortfolioChart({
             </Flex>
           </>
         )}
-        <LinearGradient
-          pointerEvents="none"
-          colors={[colors.surface1.val, opacify(0, colors.surface1.val)]}
-          end={{ x: 1, y: 0 }}
-          start={{ x: 0, y: 0 }}
-          style={styles.leftGradient}
-        />
+        {!isUnavailable && (
+          <LinearGradient
+            pointerEvents="none"
+            colors={[colors.surface1.val, opacify(0, colors.surface1.val)]}
+            end={{ x: 1, y: 0 }}
+            start={{ x: 0, y: 0 }}
+            style={styles.leftGradient}
+          />
+        )}
       </Flex>
 
       {/* Time range selector */}
@@ -155,6 +164,31 @@ export const PortfolioChart = memo(function PortfolioChart({
     </Flex>
   )
 })
+
+function ChartUnavailable(): JSX.Element {
+  const { t } = useTranslation()
+  const colors = useSporeColors()
+
+  return (
+    <Flex fill justifyContent="space-between">
+      <WaveLoader disabled color={colors.surface3.val} height={EXPANDED_CHART_HEIGHT - UNAVAILABLE_BANNER_HEIGHT} />
+      <Flex
+        row
+        alignItems="center"
+        gap="$spacing12"
+        height={UNAVAILABLE_BANNER_HEIGHT}
+        px="$spacing16"
+        borderRadius="$rounded12"
+        backgroundColor="$surface2"
+      >
+        <ChartBarCrossed color="$neutral2" size="$icon.20" />
+        <Text color="$neutral2" variant="body3">
+          {t('chart.unavailable')}
+        </Text>
+      </Flex>
+    </Flex>
+  )
+}
 
 const styles = StyleSheet.create({
   leftGradient: {

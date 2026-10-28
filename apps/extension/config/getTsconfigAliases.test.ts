@@ -15,13 +15,13 @@ describe('getTsconfigAliases', () => {
 
     // Verify we got aliases for some known packages
     expect(result).toHaveProperty('uniswap')
-    expect(result).toHaveProperty('@universe/api')
+    expect(result).toHaveProperty('@universe/config')
 
     // Verify paths are absolute and point to the packages directory
     expect(result['uniswap']).toContain('packages/uniswap')
-    expect(result['@universe/api']).toContain('packages/api')
+    expect(result['@universe/config']).toContain('packages/config')
     expect(path.isAbsolute(result['uniswap']!)).toBe(true)
-    expect(path.isAbsolute(result['@universe/api']!)).toBe(true)
+    expect(path.isAbsolute(result['@universe/config']!)).toBe(true)
   })
 
   it('should not alias packages whose exports map is the resolution contract', () => {
@@ -33,6 +33,7 @@ describe('getTsconfigAliases', () => {
     expect(result).not.toHaveProperty('@universe/mycelium')
     expect(result).not.toHaveProperty('@universe/logger')
     expect(result).not.toHaveProperty('@universe/tailwind')
+    expect(result).not.toHaveProperty('@universe/api')
   })
 
   it('should derive the skip set from each mapped package.json exports field', () => {

@@ -16,6 +16,7 @@ import { forwardRef, type ForwardRefExoticComponent, type ReactNode, type RefAtt
 import { useTranslation } from 'react-i18next'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes } from 'ui/src/theme'
+import { useCurrencyInputFontSize } from 'uniswap/src/components/CurrencyInputPanel/hooks/useCurrencyInputFontSize'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -160,6 +161,7 @@ export function SwapCurrencyInputPanel({
   const currencyInfo = useCurrencyInfo(currencyId(currency))
   const { formatCurrencyAmount } = useLocalizationContext()
   const { t } = useTranslation()
+  const { fontSize, lineHeight, onLayout } = useCurrencyInputFontSize({ value })
 
   const isInputDisabled = !chainAllowed
 
@@ -170,7 +172,7 @@ export function SwapCurrencyInputPanel({
           {label}
         </Text>
         <Flex row flexWrap="nowrap" alignItems="center" justifyContent="space-between" mt="$spacing4">
-          <Flex fill minWidth={0}>
+          <Flex fill minWidth={0} onLayout={onLayout}>
             <SwapCurrencyInput
               testId={currencyField === CurrencyField.INPUT ? TestID.AmountInputIn : TestID.AmountInputOut}
               value={value}
@@ -179,6 +181,9 @@ export function SwapCurrencyInputPanel({
               id={id}
               maxDecimals={currency?.decimals}
               width="100%"
+              fontSize={fontSize}
+              lineHeight={lineHeight}
+              maxHeight={lineHeight}
             />
           </Flex>
           <Flex ml="$spacing12" width="fit-content">

@@ -9,8 +9,7 @@ import { zIndexes } from 'ui/src/theme'
  * The non-web leg of the AdaptiveWebModal cluster. Native modals are gorhom-based via
  * `uniswap/src/components/modals/Modal.native.tsx` and never render the web branches, so the
  * components here are inert pass-throughs; `ModalCloseIcon` and the z-index hook are the only
- * living exports. The base `AdaptiveWebModal.tsx` re-exports this file (same idiom as
- * `CustomButtonFrame.tsx` / `TouchableAreaFrame.tsx`, which re-export their `.web` leg), so
+ * living exports. The base `AdaptiveWebModal.tsx` re-exports this file, so
  * non-platform resolvers get the identical implementation without a hand-kept copy.
  */
 

@@ -25,7 +25,6 @@ import {
   addressSearchMatchesMultipleChains,
   tdpChainFilterForTokenRow,
 } from 'uniswap/src/features/search/SearchModal/utils/searchModalListItem'
-import type { CategoryTagPlacement } from 'uniswap/src/features/tokenCategories/CategoryTagPill'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { tdpChainSelectionFromFilter } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
@@ -45,9 +44,6 @@ type RwaCollectionItemProps = {
   onSelect?: () => void
   testID?: string
   searchStats?: SearchTokenStats
-  categoryTagPlacement?: CategoryTagPlacement
-  showIssuerStats?: boolean
-  showIssuerTag?: boolean
 }
 
 export function RwaCollectionItem({
@@ -64,9 +60,6 @@ export function RwaCollectionItem({
   onSelect,
   testID,
   searchStats,
-  categoryTagPlacement,
-  showIssuerStats,
-  showIssuerTag,
 }: RwaCollectionItemProps): JSX.Element {
   const { navigateToTokenDetails, getTokenDetailsUrl } = useUniswapContext()
   const dispatch = useDispatch()
@@ -78,7 +71,7 @@ export function RwaCollectionItem({
   const metricsIndex = useRwaIssuerMetricsIndex({
     category: item.rwa.categories?.[0] ?? RwaCategory.STOCKS,
     chainFilter: chainFilter ?? null,
-    enabled: expanded && !!showIssuerStats,
+    enabled: expanded,
   })
   const rwa = useMemo(
     () => (metricsIndex ? withRwaIssuerMetrics({ rwa: item.rwa, metricsIndex }) : item.rwa),
@@ -87,7 +80,7 @@ export function RwaCollectionItem({
   const canExpand = getIssuerCount(rwa) > 1
   const soleIssuer = canExpand ? undefined : rwa.issuerTokens[0]
   // Hide the parent's "from" floor only when the expanded child rows show their own price.
-  const childRowsShowPrice = expanded && showIssuerStats && rwa.issuerTokens.every(hasIssuerMetrics)
+  const childRowsShowPrice = expanded && rwa.issuerTokens.every(hasIssuerMetrics)
 
   type IssuerNavigation = {
     chainId: UniverseChainId
@@ -208,12 +201,14 @@ export function RwaCollectionItem({
 
   return (
     <ExpandableAssetGroup
+      showIssuerStats
+      showIssuerTag
       asset={rwa}
       enabledChainIds={enabledChainIds}
       chainFilter={chainFilter}
       isExpanded={expanded}
       showCategoryTag={item.showCategoryTag ?? true}
-      categoryTagPlacement={categoryTagPlacement}
+      categoryTagPlacement="title"
       focusedRowControl={focusedRowControl}
       testID={testID}
       renderIssuerRow={renderIssuerRow}
@@ -228,8 +223,6 @@ export function RwaCollectionItem({
           />
         ) : undefined
       }
-      showIssuerStats={showIssuerStats}
-      showIssuerTag={showIssuerTag}
       onToggle={onToggle}
       onParentPress={soleIssuer && (() => selectIssuer(soleIssuer))}
       onIssuerModifierPress={recordIssuerModifierPress}

@@ -14,7 +14,11 @@ import {
 import { getNetworkCount } from 'uniswap/src/data/apiClients/dataApiService/rwa/rwaMetrics'
 import type { IssuerToken, Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { IssuerTableRowHoverContext } from 'uniswap/src/features/expandableAsset/IssuerTableRowHoverContext'
-import { TABLE_SUBLINE_HEIGHT, type ExpandableAssetGroupVariant } from 'uniswap/src/features/expandableAsset/types'
+import {
+  TABLE_SUBLINE_HEIGHT,
+  type ExpandableAssetGroupVariant,
+  type IdentityLayoutStyles,
+} from 'uniswap/src/features/expandableAsset/types'
 import { getIssuerTokenDisplayName } from 'uniswap/src/features/rwa/getIssuerTokenDisplayName'
 import { getIssuerTokenPrimaryName } from 'uniswap/src/features/rwa/getIssuerTokenPrimaryName'
 import { RWAIssuerTag } from 'uniswap/src/features/rwa/RWAIssuerTag'
@@ -31,6 +35,7 @@ export type ExpandableIssuerIdentityProps = {
   categoryTag?: ReactNode
   hideSublineFallback?: boolean
   showIssuerTag?: boolean
+  layoutStyles?: IdentityLayoutStyles
 }
 
 export function ExpandableIssuerIdentity({
@@ -43,6 +48,7 @@ export function ExpandableIssuerIdentity({
   categoryTag,
   hideSublineFallback = false,
   showIssuerTag = false,
+  layoutStyles,
 }: ExpandableIssuerIdentityProps): JSX.Element {
   const { t } = useTranslation()
   const issuerTableRowHovered = useContext(IssuerTableRowHoverContext)
@@ -97,18 +103,22 @@ export function ExpandableIssuerIdentity({
 
   const searchSublineDetail = hideSublineFallback ? null : chainIds.length > 1 ? networkSubline : addressSubline
 
+  const logo = (
+    <TokenLogo
+      url={issuer.logoUrl}
+      symbol={displaySymbol}
+      name={issuer.name}
+      chainId={primaryChain?.chainId as UniverseChainId | undefined}
+      size={logoSize}
+      alwaysShowNetworkLogo={showNetworkBadge}
+      hideNetworkLogo={!showNetworkBadge}
+    />
+  )
+
   return (
-    <Flex row gap="$spacing12" alignItems="center" width="100%" minWidth={0}>
-      <TokenLogo
-        url={issuer.logoUrl}
-        symbol={displaySymbol}
-        name={issuer.name}
-        chainId={primaryChain?.chainId as UniverseChainId | undefined}
-        size={logoSize}
-        alwaysShowNetworkLogo={showNetworkBadge}
-        hideNetworkLogo={!showNetworkBadge}
-      />
-      <Flex flex={1} minWidth={0} gap={variant === 'search' ? '$spacing2' : undefined}>
+    <Flex row gap="$spacing12" alignItems="center" width="100%" minWidth={0} style={layoutStyles?.row}>
+      {layoutStyles?.logo ? <Flex style={layoutStyles.logo}>{logo}</Flex> : logo}
+      <Flex flex={1} minWidth={0} gap={variant === 'search' ? '$spacing2' : undefined} style={layoutStyles?.text}>
         <Flex row alignItems="baseline" gap="$spacing4" minWidth={0}>
           <Text variant={variant === 'search' ? 'body1' : 'body2'} color="$neutral1" numberOfLines={1} flexShrink={1}>
             {primaryName}

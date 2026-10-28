@@ -10,6 +10,7 @@ import {
   useMarginFormStore,
   useMarginFormStoreActions,
 } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/useMarginFormStore'
+import type { MarginPaymentToken } from 'uniswap/src/features/transactions/margin/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -21,8 +22,9 @@ import { MarginFormMarketsState } from '~/pages/Swap/Margin/components/MarginFor
 import { MarginMarketSelector } from '~/pages/Swap/Margin/components/MarginMarketSelector'
 import { MarginOpenButton } from '~/pages/Swap/Margin/components/MarginOpenButton'
 import { MarginOpenReviewModal } from '~/pages/Swap/Margin/components/MarginOpenReviewModal'
-import { MarginPaymentTokenSelector } from '~/pages/Swap/Margin/components/MarginPaymentTokenSelector'
+import { MarginPayWith } from '~/pages/Swap/Margin/components/MarginPayWith'
 import { MarginRateRows } from '~/pages/Swap/Margin/components/MarginRateRows'
+import { MarginFormSideToggle } from '~/pages/Swap/Margin/components/MarginSideToggle'
 import { MarginSizeBlock } from '~/pages/Swap/Margin/components/MarginSizeBlock'
 import { type DerivedMarginInfo, useDerivedMarginInfo } from '~/pages/Swap/Margin/hooks/useDerivedMarginInfo'
 import { useMarginMarkets } from '~/pages/Swap/Margin/hooks/useMarginMarkets'
@@ -84,6 +86,9 @@ function MarginFormBody({ market }: { market: MarginMarket }): JSX.Element {
   // Fiat entry mode is not supported for the margin equity input.
   const onToggleIsFiatMode = useEvent(() => {})
   const onShowTokenSelector = useEvent(() => setMarginFormState({ selectingPaymentToken: true }))
+  const onSelectPaymentToken = useEvent((paymentToken: MarginPaymentToken | undefined) => {
+    setMarginFormState({ paymentToken })
+  })
 
   return (
     <Flex gap="$spacing8">
@@ -100,6 +105,7 @@ function MarginFormBody({ market }: { market: MarginMarket }): JSX.Element {
         onToggleIsFiatMode={onToggleIsFiatMode}
         onShowTokenSelector={onShowTokenSelector}
       />
+      <MarginPayWith derivedMarginInfo={derivedMarginInfo} onSelectPaymentToken={onSelectPaymentToken} />
       {conversionEquity !== undefined ? (
         <Text variant="body4" color="$neutral2" px="$spacing16">
           {t('margin.payment.conversion', {
@@ -110,7 +116,6 @@ function MarginFormBody({ market }: { market: MarginMarket }): JSX.Element {
           })}
         </Text>
       ) : null}
-      <MarginPaymentTokenSelector />
       <MarginSizeBlock derivedMarginInfo={derivedMarginInfo} />
       <MarginRateRows derivedMarginInfo={derivedMarginInfo} />
       <MarginOpenButton derivedMarginInfo={derivedMarginInfo} onRequestReview={openReview} />
@@ -120,6 +125,17 @@ function MarginFormBody({ market }: { market: MarginMarket }): JSX.Element {
         {t('margin.disclaimer')}
       </Text>
     </Flex>
+  )
+}
+
+/** Its own component because the age ticks every second, which must not re-render the form. */
+function MarketsStaleCaption({ dataUpdatedAt }: { dataUpdatedAt: number }): JSX.Element {
+  const { t } = useTranslation()
+  const staleTimeAgo = useAbbreviatedTimeString(dataUpdatedAt)
+  return (
+    <Text variant="body4" color="$neutral2">
+      {t('margin.market.stale', { time: staleTimeAgo })}
+    </Text>
   )
 }
 
@@ -136,7 +152,6 @@ function MarginFormContent({ showInlinePositions }: { showInlinePositions: boole
   // effect below catches up. The effect itself stays keyed on the un-fallen-back `market` so it still
   // fires for that exact case.
   const displayMarket = market ?? markets.at(0)
-  const staleTimeAgo = useAbbreviatedTimeString(dataUpdatedAt)
 
   // Adopts the first available pair group once the registry resolves, replacing a stored key that no
   // longer matches any pair (server markets can change). Writes `side` alongside `pairKey` —
@@ -150,7 +165,7 @@ function MarginFormContent({ showInlinePositions }: { showInlinePositions: boole
       setMarginFormState({
         pairKey: first.pairKey,
         paymentToken: undefined,
-        side: first.direction === 'SHORT' ? 'short' : 'long',
+        side: first.direction,
       })
     }
   })
@@ -162,6 +177,7 @@ function MarginFormContent({ showInlinePositions }: { showInlinePositions: boole
 
   return (
     <Flex gap="$spacing8">
+      {displayMarket ? <MarginFormSideToggle market={displayMarket} /> : null}
       <MarginMarketSelector />
       {displayMarket ? (
         <>
@@ -181,9 +197,7 @@ function MarginFormContent({ showInlinePositions }: { showInlinePositions: boole
             // Query retains its cached data), so this is a caption + retry alongside the still-live
             // form, never a replacement for it.
             <Flex row alignItems="center" justifyContent="space-between" gap="$spacing8">
-              <Text variant="body4" color="$neutral2">
-                {t('margin.market.stale', { time: staleTimeAgo })}
-              </Text>
+              <MarketsStaleCaption dataUpdatedAt={dataUpdatedAt} />
               <Button size="small" variant="branded" emphasis="secondary" onPress={refetch}>
                 {t('common.button.retry')}
               </Button>

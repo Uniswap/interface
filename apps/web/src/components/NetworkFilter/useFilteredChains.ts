@@ -3,28 +3,45 @@ import { useMemo } from 'react'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { isBackendSupportedChainId, isTestnetChain } from 'uniswap/src/features/chains/utils'
 
+export interface FilterChainIdsOptions {
+  singleModeNetworks?: boolean
+}
+
 function orderFilterChainIds({
   chains,
   enabledChainIds,
   isTestnetModeEnabled,
+  singleModeNetworks,
 }: {
   chains: UniverseChainId[] | undefined
   enabledChainIds: UniverseChainId[]
   isTestnetModeEnabled: boolean
-}): UniverseChainId[] {
+} & FilterChainIdsOptions): UniverseChainId[] {
   const enabledChainIdSet = new Set(enabledChainIds)
   const chainsToFilter = (chains ?? enabledChainIds).filter((c) => enabledChainIdSet.has(c))
-  const mainnetChainIds = chainsToFilter.filter(isBackendSupportedChainId).filter((c) => !isTestnetChain(c))
   const testnetChainIds = chainsToFilter.filter(isBackendSupportedChainId).filter(isTestnetChain)
+  if (isTestnetModeEnabled && singleModeNetworks) {
+    return testnetChainIds
+  }
+  const mainnetChainIds = chainsToFilter.filter(isBackendSupportedChainId).filter((c) => !isTestnetChain(c))
   const unsupportedMainnetChainIds = chainsToFilter.filter((c) => !isBackendSupportedChainId(c) && !isTestnetChain(c))
   return [...mainnetChainIds, ...(isTestnetModeEnabled ? testnetChainIds : []), ...unsupportedMainnetChainIds]
 }
 
-export function useFilteredChainIds(chains?: UniverseChainId[]): UniverseChainId[] {
+export function useFilteredChainIds(
+  chains?: UniverseChainId[],
+  { singleModeNetworks }: FilterChainIdsOptions = {},
+): UniverseChainId[] {
   const { chains: enabledChainIds, isTestnetModeEnabled } = useEnabledChains({ includeTestnets: true })
   return useMemo(
-    () => orderFilterChainIds({ chains, enabledChainIds, isTestnetModeEnabled }),
-    [chains, enabledChainIds, isTestnetModeEnabled],
+    () =>
+      orderFilterChainIds({
+        chains,
+        enabledChainIds,
+        isTestnetModeEnabled,
+        singleModeNetworks,
+      }),
+    [chains, enabledChainIds, isTestnetModeEnabled, singleModeNetworks],
   )
 }
 
@@ -33,11 +50,15 @@ export interface NetworkFilterChainIds {
   allNetworksChainIds: UniverseChainId[] | undefined
 }
 
-export function useNetworkFilterChainIds(networks?: UniverseChainId[]): NetworkFilterChainIds {
+export function useNetworkFilterChainIds(
+  networks?: UniverseChainId[],
+  { singleModeNetworks }: FilterChainIdsOptions = {},
+): NetworkFilterChainIds {
   const { chains: enabledChainIds, isTestnetModeEnabled } = useEnabledChains({ includeTestnets: true })
   return useMemo(() => {
-    const chainIds = orderFilterChainIds({ chains: networks, enabledChainIds, isTestnetModeEnabled })
-    const allChainIds = orderFilterChainIds({ chains: undefined, enabledChainIds, isTestnetModeEnabled })
+    const options = { enabledChainIds, isTestnetModeEnabled, singleModeNetworks }
+    const chainIds = orderFilterChainIds({ chains: networks, ...options })
+    const allChainIds = orderFilterChainIds({ chains: undefined, ...options })
     return { chainIds, allNetworksChainIds: chainIds.length < allChainIds.length ? chainIds : undefined }
-  }, [enabledChainIds, isTestnetModeEnabled, networks])
+  }, [enabledChainIds, isTestnetModeEnabled, networks, singleModeNetworks])
 }

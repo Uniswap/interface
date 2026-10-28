@@ -1,5 +1,6 @@
 import { screen } from '@testing-library/react'
 import type { MarginActivePosition, MarginQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { describe, expect, it, vi } from 'vitest'
 import { MARGIN_CHAIN_ID } from '~/constants/margin'
 import {
@@ -25,7 +26,7 @@ const USDC_META = { address: USDC, chainId: MARGIN_CHAIN_ID, decimals: 6 }
 const POSITION: MarginActivePosition = {
   positionId: '7',
   status: 'ACTIVE',
-  direction: 'LONG',
+  direction: MarginDirection.LONG,
   exposureToken: WETH_META,
   counterToken: USDC_META,
   size: '2000000000000000000',
@@ -48,7 +49,7 @@ const QUOTE: MarginQuoteResponse = {
   action: 'addEquityAndIncreaseLeverage',
   chainId: MARGIN_CHAIN_ID,
   swapper: '0x00000000000000000000000000000000000000A1',
-  direction: 'LONG',
+  direction: MarginDirection.LONG,
   exposureToken: WETH_META,
   counterToken: USDC_META,
   display: {
@@ -74,10 +75,10 @@ const QUOTE: MarginQuoteResponse = {
 // A short's exposure IS its debt leg: exposure = WETH (18dp), counter/collateral = USDC (6dp).
 const SHORT_POSITION: MarginActivePosition = {
   ...POSITION,
-  direction: 'SHORT',
+  direction: MarginDirection.SHORT,
   legs: [{ ...POSITION.legs[0]!, debt: '2000000000000000000' }],
 }
-const SHORT_QUOTE: MarginQuoteResponse = { ...QUOTE, direction: 'SHORT' }
+const SHORT_QUOTE: MarginQuoteResponse = { ...QUOTE, direction: MarginDirection.SHORT }
 
 const BASE = {
   markIsStale: false,

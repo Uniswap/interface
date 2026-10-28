@@ -14,8 +14,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "Apple",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -31,8 +31,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "Google",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -48,8 +48,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "{{amount}} UNI",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -269,8 +269,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "Beta",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -286,8 +286,42 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "Permit",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:common.privacyChoices.optOut",
+      {
+        "unitId": "common.privacyChoices.optOut",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "5d1160c8a782fcfc275fe20ba2a3055c30316c1f7544530db94824fb986c5a53",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "在适用法律将此认定为出售、共享或定向广告的情形下，你可以在设置中关闭“{{settingName}}”开关来选择退出。",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-16T19-35-33Z",
+        "approvedAt": "2026-10-16T19:35:33.489Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:common.privacyChoices.policy",
+      {
+        "unitId": "common.privacyChoices.policy",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "5109ab4492e4bed49a87e4aa498a04262721ad8e42c81975e8a854e6d4e976cc",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "有关我们隐私保护实践的更多信息，请查阅我们的<privacyLink>隐私政策</privacyLink>。",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-16T19-35-33Z",
+        "approvedAt": "2026-10-16T19:35:33.489Z",
         "approvedBy": "agent"
       }
     ],
@@ -303,8 +337,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "Uniswap v2",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -320,8 +354,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "Uniswap v3",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -337,8 +371,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "Uniswap v4",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -356,6 +390,261 @@
         "status": "clean",
         "agentRunId": "zh-CN-2026-09-18T15-36-07Z",
         "approvedAt": "2026-09-18T15:36:07.576Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:disclosures.autoRouter",
+      {
+        "unitId": "disclosures.autoRouter",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "1769525d3c38507cb4b1bdc3cb4a598af59b2e5d1a004c2bcb302a769bf8b857",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "自动路由器（Auto Router）是本产品使用的一种交易路径算法，用于分析数字资产交易在符合条件的集成渠道中的潜在路径，并根据所披露的客观路由参数下的模拟执行结果，向用户提供预计当时可获得最多数字资产的交易路径信息。",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-15T22-16-23Z",
+        "approvedAt": "2026-10-15T22:16:23.803Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:disclosures.autoRouterParameters",
+      {
+        "unitId": "disclosures.autoRouterParameters",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "aeb91f7c1ff41c721069194cc98de27e3bfaeca2025f1b791b5c01a955b18f35",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "以下参数已硬编码到本产品的路由软件（“自动路由器”）中：(i) 通过模拟估算 gas 成本（可能降低高网络费用路径的优先级）；(ii) 通过模拟估算滑点（若交易无法达到用户指定的最大滑点或更优水平，交易将回滚）；(iii) 池流动性，以各流动性来源的总锁仓量衡量（低于指定阈值的池将被降低优先级或排除）；(iv) 用户兑换可被“拆分”的最大次数，以便路由器评估将用户的兑换拆分至多个流动性来源是否可能获得更好的价格；(v) “跳数”上限，即以用户收到其所需输出代币为终点的潜在数字资产转换序列的最大数量；以及 (vi) 自动路由器算法在生成建议路径时评估的潜在路由路径的最大数量。为保护用户免受异常高 LP 费用导致的意外价格影响，自动路由器不会探索费用高于 11% 的池。这些路由软件参数并非用户可配置的交易级默认参数。本产品的路由软件以统一方式应用这些路由参数，代码可在<uniRouteLink>此处</uniRouteLink>查看。",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-15T22-16-23Z",
+        "approvedAt": "2026-10-15T22:16:23.803Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:disclosures.customization",
+      {
+        "unitId": "disclosures.customization",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "62979328997006241effade715257423f44996c1f2899ab5f7e15b31851362ab",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "交易级默认参数可由本产品的用户完全自定义。更改这些参数后，用户可能会看到更多交易路径。有关如何更改默认参数的更多信息，请参阅<slippageLink>如何在 Uniswap Web 应用上更改滑点</slippageLink>、<swapDeadlinesLink>如何在 Uniswap 界面上更改兑换截止时间</swapDeadlinesLink>和<tradeOptionsLink>如何更改默认交易选项</tradeOptionsLink>。Uniswap Labs 就默认参数制定了内部政策和程序，并定期重新评估默认参数以确保符合这些政策和程序。Uniswap Labs 未发现 Uniswap Labs 与本产品用户之间因默认参数而产生任何重大利益冲突。Uniswap Labs 不会因将任何流动性来源纳入路由分析而从其获得报酬。业务拓展活动，包括对第三方集成的生态支持、做市商支持（如贷款或激励计划）、API 访问和联合营销，均与路由分析相互独立，不会对其产生影响。",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-15T22-16-23Z",
+        "approvedAt": "2026-10-15T22:16:23.803Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:disclosures.defaultParameters",
+      {
+        "unitId": "disclosures.defaultParameters",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "6384103f15d7e3393252e304756e6c94b8f8a5a33326c3024bae82defe2771a2",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "本产品当前生效的交易级默认参数包括：滑点容忍度；兑换截止时间；符合条件的池和交易场所或分布式账本交易系统；以及优先费用。默认参数可能不时变更。默认参数参照客观标准设定，通常以降低用户风险为目的进行配置。",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-15T22-16-23Z",
+        "approvedAt": "2026-10-15T22:16:23.803Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:disclosures.feeCalculation",
+      {
+        "unitId": "disclosures.feeCalculation",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "40c78c254e0b59dd6e93159cc60e13ee83bd2cf876440febf93320a598fb304c",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "本产品使用客观、统一应用的算法，为每笔交易呈现自动计算的 Gas 费用和优先费用。这些算法计算旨在平衡交易速度与所付费用。",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-15T22-16-23Z",
+        "approvedAt": "2026-10-15T22:16:23.803Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:disclosures.gasFees",
+      {
+        "unitId": "disclosures.gasFees",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "537acd8dfac10d9eec9e024bf4664b063e4804e4664d00d5daaf21d3bcf9e4f6",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "Gas 费用在每笔交易中支付给区块链验证者，是每个适用区块链网络的强制要求。各网络要求用户在每笔交易中支付 Gas 费用。",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-15T22-16-23Z",
+        "approvedAt": "2026-10-15T22:16:23.803Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:disclosures.gasLimit",
+      {
+        "unitId": "disclosures.gasLimit",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "e2996676536051b909f7239dab48bda7c4273c64c13fd6d22569c6e1f196def1",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "Gas 上限是用户交易允许消耗的 Gas 的最大单位数。",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-15T22-16-23Z",
+        "approvedAt": "2026-10-15T22:16:23.803Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:disclosures.integrations",
+      {
+        "unitId": "disclosures.integrations",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "0eae2dac9b2b0532da6271502d9dfedc5863c5cff281fa85a4f38949d44fbe43",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "本产品集成了以下交易场所或分布式账本交易系统：UniswapX；Uniswap Protocol（v4、v3、v2）；Tempo；以及 Jupiter（统称“集成渠道”）。Uniswap Labs 就集成渠道制定了内部政策和程序，其中包括评估、接入和审核集成渠道及拟议集成的管控措施。根据这些政策和程序，集成渠道按客观标准进行评估，包括流动性、安全性、透明度、可验证性、中立性、可审计性和延迟。集成渠道可能不时变更。任何新的流动性来源在集成到本产品之前，都必须按这些标准进行评估。所有已集成的流动性来源——包括 Uniswap Protocol（v4、v3、v2）和 UniswapX——都会定期重新评估，以确定应继续保留还是移除。若流动性来源的风险状况发生重大变化，也将触发重新评估。如出现安全问题，流动性来源可被立即从路由计算中移除，无需等待下一次定期重新评估。",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-15T22-16-23Z",
+        "approvedAt": "2026-10-15T22:16:23.803Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:disclosures.liquiditySources",
+      {
+        "unitId": "disclosures.liquiditySources",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "416f99fc4657215fea96c3ac83bf83227def10efe5a873ea9c6802607dc6d174",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "有关可通过本产品访问的流动性来源及其评估标准的更多信息，请参阅<tradeOptionsLink>如何更改默认交易选项</tradeOptionsLink>。",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-15T22-16-23Z",
+        "approvedAt": "2026-10-15T22:16:23.803Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:disclosures.maxBaseFee",
+      {
+        "unitId": "disclosures.maxBaseFee",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "f3c3237a31031b1b4c4fae6f63b8a4406d6efa21087f5ce1348f569204603681",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "最高基础费用是用户愿意为每单位 gas 支付的最高基础费用。基础费用由网络按区块设定。",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-15T22-16-23Z",
+        "approvedAt": "2026-10-15T22:16:23.803Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:disclosures.priorityFees",
+      {
+        "unitId": "disclosures.priorityFees",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "ffef081c895ce81ee27feb4dfbfa63d9a91f9850c6a66727de0c4b8a84fde1b9",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "优先费用（如适用）是用户可向验证者支付的可选费用，以加快交易处理速度。",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-15T22-16-23Z",
+        "approvedAt": "2026-10-15T22:16:23.803Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:disclosures.products",
+      {
+        "unitId": "disclosures.products",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "76f70bc50491b1d2da127941c761d2bdeaac620c5f29f5ca37444147c5b46389",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "Uniswap Labs 创建并运营 (a) 位于 <appLink>app.uniswap.org</appLink> 的网站托管用户界面（“界面”）、(b) 移动钱包应用程序（“Uniswap Wallet”）以及 (c) API 和其他产品与服务（统称“本产品”），使用户能够使用自己的自托管钱包在公共区块链上准备和提交交易。Uniswap Labs 制定了内部程序以保障本产品的安全，包括及时调查疑似事件，并通过员工凭证管理及其他安全措施防止越权访问。Uniswap Labs 为 Uniswap Protocol（v4、v3、v2）和 UniswapX 的开发做出贡献——二者均为部署在公共区块链上的自治、开源智能合约集——但并不拥有、控制或运营 Uniswap Protocol（v4、v3、v2）或 UniswapX。Uniswap Labs 不是经纪自营商，其创建、提供或运营本产品的行为未在美国证券交易委员会注册，也不受其监管。某些资产可能无法在本产品上提供，且某些资产可能在某些司法管辖区不可用。更多信息请参阅<unsupportedTokenPolicyLink>不支持代币政策</unsupportedTokenPolicyLink>。",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-15T22-16-23Z",
+        "approvedAt": "2026-10-15T22:16:23.803Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:disclosures.routing",
+      {
+        "unitId": "disclosures.routing",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "8cb99ca1a941d16151b298eb5e476d4271bc551d192b817a5213d9dd04b92979",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "在准备用户交易时，本产品的路由软件会分析交易在各集成渠道上的潜在路径，并根据模拟执行结果，向用户提供预计当时可获得最多数字资产的交易路径信息。为此，本产品默认会考虑各集成渠道中可用的流动性来源。用户保留完全的自主权，可调整默认配置并切换本产品路由软件考虑的流动性来源。更改本产品考虑的流动性来源后，用户可能会看到更多交易路径。",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-15T22-16-23Z",
+        "approvedAt": "2026-10-15T22:16:23.803Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:disclosures.slippage",
+      {
+        "unitId": "disclosures.slippage",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "1f3379ed1d4df8d857eb8c4b099890188f9c71ca13bc2c9f933de0e37014de4c",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "滑点是指兑换提交时的预期价格与兑换在链上执行时的实际成交价格之间的差额。滑点可能源于正常的价格变动、可用流动性的变化、网络延迟和拥堵，或用户兑换本身对市场的影响。滑点是交易的固有风险。如果滑点容忍度设置过高，用户可能无法从交易中获得预期价值，和/或交易价值可能被其他方捕获。相反，如果滑点容忍度设置过低，用户可能无法执行交易。本产品使用统一应用的算法呈现自动计算的滑点上限，通常在约 0.5% 至 5.5% 的范围内，具体取决于所选网络和兑换规模等因素。",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-15T22-16-23Z",
+        "approvedAt": "2026-10-15T22:16:23.803Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:disclosures.swapDeadline",
+      {
+        "unitId": "disclosures.swapDeadline",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "05679769a825cb1b067e25c3b12d9dfa5db5e336a897e9ea58e2d754819f3670",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "兑换截止时间是指兑换在回滚前允许在链上保持待处理状态的时间。本产品应用 30 分钟的默认交易截止时间，即如果兑换在提交后 30 分钟内未执行，交易将回滚。这旨在为用户提供额外保护，防止意外的大幅价格变动。",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-15T22-16-23Z",
+        "approvedAt": "2026-10-15T22:16:23.803Z",
         "approvedBy": "agent"
       }
     ],
@@ -405,8 +694,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -422,8 +711,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "Earn",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -439,8 +728,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -456,8 +745,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "Venmo",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -473,8 +762,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "API",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -524,8 +813,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "Launchpad",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -541,8 +830,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -2858,8 +3147,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "{{venue}} · {{lltv}}% LLTV",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -4276,8 +4565,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "RoE",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -4293,8 +4582,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "PnL",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -5339,8 +5628,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "PnL/RoE",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -5971,6 +6260,23 @@
       }
     ],
     [
+      "zh-CN:i18next-json:network.filter.lowLiquidity",
+      {
+        "unitId": "network.filter.lowLiquidity",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "05a25d34314db561ef070b425ba6015bd5c105d2dda3c7da3082d5a742c3267f",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "流动性低",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-19T20-16-05Z",
+        "approvedAt": "2026-10-19T20:16:05.436Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "zh-CN:i18next-json:notification.auction.open.failed",
       {
         "unitId": "notification.auction.open.failed",
@@ -5999,8 +6305,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -6016,8 +6322,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "$100k – $1M",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -6033,8 +6339,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "$10M+",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -6050,8 +6356,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "<$100k",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -6090,6 +6396,40 @@
       }
     ],
     [
+      "zh-CN:i18next-json:pool.position.earned.suffix",
+      {
+        "unitId": "pool.position.earned.suffix",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "4844fdfbc864ac106bb9742de65edfbcb5257a4e7ee2d8c500b80cdafa148524",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "已赚取",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-21T15-27-04Z",
+        "approvedAt": "2026-10-21T15:27:04.196Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:pool.position.liquidity.suffix",
+      {
+        "unitId": "pool.position.liquidity.suffix",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "ead2523743ee17aed6605ba71358fd4820c5102cefa92b72d4574db2cddf575e",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "清算",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-21T15-27-04Z",
+        "approvedAt": "2026-10-21T15:27:04.196Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "zh-CN:i18next-json:portfolio.defi.title",
       {
         "unitId": "portfolio.defi.title",
@@ -6101,8 +6441,25 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "DeFi",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:position.initialPrice.marketUpdated",
+      {
+        "unitId": "position.initialPrice.marketUpdated",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "a54fccb1b9e62fcbf3c5d1b992c9dc12bf09b76415f09564ce0adde7d922d185",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "市场价格已更新",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-15T21-01-43Z",
+        "approvedAt": "2026-10-15T21:01:43.858Z",
         "approvedBy": "agent"
       }
     ],
@@ -6152,8 +6509,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -6356,8 +6713,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -6373,8 +6730,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -6430,6 +6787,40 @@
       }
     ],
     [
+      "zh-CN:i18next-json:rhcca.position.priceUnavailable",
+      {
+        "unitId": "rhcca.position.priceUnavailable",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "abc5fecda607e617b5af85dd8280f49b97736d30dcf49ad622118c302b123465",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "代币价格数据暂时不可用",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-20T20-10-51Z",
+        "approvedAt": "2026-10-20T20:10:51.166Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:search.results.auction.startsIn",
+      {
+        "unitId": "search.results.auction.startsIn",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "f63d3a93c65b2b7e8c6b1a29a7efe1834ae62f4887bd58edfb759de7b6b15f1c",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "{{time}} 后开始",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-20T18-21-13Z",
+        "approvedAt": "2026-10-20T18:21:13.830Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "zh-CN:i18next-json:search.results.auction.timeRemaining",
       {
         "unitId": "search.results.auction.timeRemaining",
@@ -6458,8 +6849,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "{{apr}} APR",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -6475,8 +6866,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -6492,8 +6883,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "ENS",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -6566,6 +6957,40 @@
       }
     ],
     [
+      "zh-CN:i18next-json:settings.setting.shareDeviceIdentifiers.message",
+      {
+        "unitId": "settings.setting.shareDeviceIdentifiers.message",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "e2ba15a1a8521d2d7db3051027b805d819f8bcd2e8e7d9700b0edc9cea9b2f74",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "我们可能与广告合作伙伴共享设备标识符，以便在其他网站和平台上推广我们的服务。",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-16T19-35-33Z",
+        "approvedAt": "2026-10-16T19:35:33.489Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:settings.setting.shareDeviceIdentifiers.title",
+      {
+        "unitId": "settings.setting.shareDeviceIdentifiers.title",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "ef41776a003a42bf066f2cb1cc0886b40fef5dfea0420467b3af57f131d66b59",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "共享设备标识符",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-16T19-35-33Z",
+        "approvedAt": "2026-10-16T19:35:33.489Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "zh-CN:i18next-json:swap.routing.guidestar.copyPool",
       {
         "unitId": "swap.routing.guidestar.copyPool",
@@ -6594,8 +7019,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "Uniswap API",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -7206,8 +7631,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "Launchpad",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -7257,8 +7682,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "{{amount}} TVL",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -7276,6 +7701,57 @@
         "status": "clean",
         "agentRunId": "zh-CN-2026-09-30T20-38-06Z",
         "approvedAt": "2026-09-30T20:38:06.517Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:token.price.lowConfidence.tag",
+      {
+        "unitId": "token.price.lowConfidence.tag",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "29e142b8be7d28e49cc799fb06f36a7121919415c29811315c90594e4c4ffc60",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "置信度低",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:token.price.lowConfidence.title",
+      {
+        "unitId": "token.price.lowConfidence.title",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "ef586d27ebbd87e6bfa32e637715042e8d9e8f612ea9de3124b29361e235f99d",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "价格置信度低",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:token.price.lowConfidence.tooltip",
+      {
+        "unitId": "token.price.lowConfidence.tooltip",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "2a666cdba05106c279a946878c66c546f38ddd6e4f754ea3212935e61a271a1a",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "代币价格基于有限或可能质量较低的市场数据。",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -7327,6 +7803,23 @@
         "status": "clean",
         "agentRunId": "zh-CN-2026-09-23T16-13-15Z",
         "approvedAt": "2026-09-23T16:13:15.091Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:toucan.allAuctions",
+      {
+        "unitId": "toucan.allAuctions",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "a6d3fee9c816e67519ea5a4ff5371433980d102f27650c5b854c671857a6200d",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "全部拍卖",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-19T14-33-59Z",
+        "approvedAt": "2026-10-19T14:33:59.924Z",
         "approvedBy": "agent"
       }
     ],
@@ -7399,6 +7892,23 @@
       }
     ],
     [
+      "zh-CN:i18next-json:toucan.auction.finalFdv",
+      {
+        "unitId": "toucan.auction.finalFdv",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "67e17d632a561ea1d2f2f936e394bfe8f9f05219f620b70d8f3e160a866c4b03",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "最终 FDV",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-21T16-46-48Z",
+        "approvedAt": "2026-10-21T16:46:48.455Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "zh-CN:i18next-json:toucan.auction.introBanner.auctionStartsInTime",
       {
         "unitId": "toucan.auction.introBanner.auctionStartsInTime",
@@ -7461,8 +7971,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "<value>{{fdv}}</value> FDV",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -7531,6 +8041,23 @@
         "status": "clean",
         "agentRunId": "zh-CN-2026-09-16T16-28-16Z",
         "approvedAt": "2026-09-16T16:28:16.098Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-CN:i18next-json:toucan.bidDetails.description.outOfRangeInProgressAwaitingThreshold",
+      {
+        "unitId": "toucan.bidDetails.description.outOfRangeInProgressAwaitingThreshold",
+        "providerId": "i18next-json",
+        "locale": "zh-CN",
+        "domain": "product-ui",
+        "sourceHash": "c9e6b4e257d95f81a7ea9c178152998f40e0db3bf41df207c687a579fa60174f",
+        "glossaryHash": "60c0f9d8afc10903db8f7794c008ca68d02907c0506cd4d2007010b9793aabab",
+        "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
+        "translation": "由于价格超过了你设置的最高 FDV <highlight>{{valuationSummary}}</highlight>，此订单已停止成交。当拍卖的成交量达到其发行门槛 <highlight>{{launchThreshold}}</highlight> 后，你可以退回未使用的预算，并在拍卖结束后提取你收到的代币。如果始终未达到该门槛，你可以在拍卖结束时提取全部预算。",
+        "status": "clean",
+        "agentRunId": "zh-CN-2026-10-20T16-10-43Z",
+        "approvedAt": "2026-10-20T16:10:43.474Z",
         "approvedBy": "agent"
       }
     ],
@@ -7614,8 +8141,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "100% → 0.3% v4 LP",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -7801,8 +8328,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -7835,8 +8362,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -7954,8 +8481,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -8005,8 +8532,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "Pools.trade",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -8345,8 +8872,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "<icon /> <gradient>UniswapX</gradient> <info />",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ],
@@ -8362,8 +8889,8 @@
         "styleHash": "294d2a954ea53ced3f2c3f54aa47979451f0b71131991506ada6a86b44387adc",
         "translation": "yourname",
         "status": "clean",
-        "agentRunId": "zh-CN-2026-10-15T16-29-45Z",
-        "approvedAt": "2026-10-15T16:29:45.108Z",
+        "agentRunId": "zh-CN-2026-10-21T17-37-43Z",
+        "approvedAt": "2026-10-21T17:37:43.939Z",
         "approvedBy": "agent"
       }
     ]

@@ -92,6 +92,32 @@
       "message": "Swap views (files under a views/ directory in the swap tree) are presentational: data in via props, actions out via callbacks. No store reads, analytics, feature flags, data fetching, or modal shells; keep those in the adapter and pass the result down as props. See scripts/swap-ui/POLICIES.md."
     },
     {
+      "id": "swap-ui-package",
+      "mode": "importerDenylist",
+      "deniedImporterPathMarkers": ["/packages/swap-ui/src/"],
+      "importPrefixes": [
+        "uniswap/src",
+        "ui/src",
+        "wallet/src",
+        "utilities/src/telemetry",
+        "@universe/gating/",
+        "@tanstack/react-query",
+        "@universe/environment",
+        "zustand/"
+      ],
+      "bareModuleSources": [
+        "ui/src",
+        "@universe/gating",
+        "@universe/compliance",
+        "@universe/environment",
+        "react-redux",
+        "redux",
+        "@tanstack/react-query",
+        "zustand"
+      ],
+      "message": "@universe/swap-ui is presentational: nothing from uniswap/src, ui/src, wallet/src, gating, telemetry, redux, zustand, react-query or platform constants, including type imports. Data in via props, actions out via callbacks; the adapter in packages/uniswap does the rest. See packages/swap-ui/CLAUDE.md."
+    },
+    {
       "id": "web-state-import-denylist",
       "mode": "importerDenylist",
       "deniedImporterPathMarkers": ["/apps/web/src/state/"],

@@ -57,13 +57,25 @@
     },
     "./logos": {
       "web": "real",
-      "native": "missing",
-      "nativeNote": "mycelium logos have no native leg: the sole logo GoogleChromeLogo renders raw lowercase SVG tags (<defs>, <linearGradient>, <stop>, <circle>, <path>) that react-native-svg cannot draw. Use ui/src logos in native-reachable code."
+      "native": "real",
+      "nativeNote": "Logos built on the createIcon factory (AcrossLogo) render through its react-native-svg leg. GoogleChromeLogo is the exception below.",
+      "namedExports": {
+        "GoogleChromeLogo": {
+          "native": "missing",
+          "nativeNote": "GoogleChromeLogo renders raw lowercase SVG tags (<defs>, <linearGradient>, <stop>, <circle>, <path>) that react-native-svg cannot draw. Use the ui/src logo in native-reachable code."
+        }
+      }
     },
     "./logos/*": {
       "web": "real",
-      "native": "missing",
-      "nativeNote": "mycelium logos have no native leg: the sole logo GoogleChromeLogo renders raw lowercase SVG tags (<defs>, <linearGradient>, <stop>, <circle>, <path>) that react-native-svg cannot draw. Use ui/src logos in native-reachable code."
+      "native": "real",
+      "nativeNote": "Logos built on the createIcon factory (AcrossLogo) render through its react-native-svg leg. GoogleChromeLogo is the exception below.",
+      "namedExports": {
+        "GoogleChromeLogo": {
+          "native": "missing",
+          "nativeNote": "GoogleChromeLogo renders raw lowercase SVG tags (<defs>, <linearGradient>, <stop>, <circle>, <path>) that react-native-svg cannot draw. Use the ui/src logo in native-reachable code."
+        }
+      }
     },
     "./assets": {
       "web": "real",
@@ -81,10 +93,7 @@
     },
     "./animate-presence-pager": { "web": "real", "native": "real" },
     "./animated-flex-compat": { "web": "real", "native": "real" },
-    "./dynamic-size-text": { "web": "real", "native": "real" },
     "./flex-compat": { "web": "real", "native": "real" },
-    "./flex-loader-compat": { "web": "real", "native": "real" },
-    "./loader-compat": { "web": "real", "native": "real" },
     "./floating-overlay": {
       "web": "throws",
       "native": "real",
@@ -94,7 +103,6 @@
     "./width-animator": { "web": "real", "native": "real" },
     "./touchable-area": { "web": "real", "native": "real" },
     "./view-compat": { "web": "real", "native": "real" },
-    "./scroll-view-compat": { "web": "real", "native": "real" },
     "./shadcn": {
       "web": "real",
       "native": "missing",
@@ -129,13 +137,13 @@
     "./presence": { "web": "real", "native": "real" },
     "./portal": {
       "web": "real",
-      "native": "throws",
-      "nativeNote": "The native leg is real code but throws until a PortalProvider is mounted, and no native app mounts one yet (INFRA-2958). Native portals keep the legacy ui/src/components/portal/Portal implementation until that provider lands; this leg renders through the same primitive (@rn-primitives/portal into a provider-owned host), so repointing them is an import swap rather than a behavior change."
+      "native": "real",
+      "nativeNote": "Throws unless a PortalProvider is mounted above it. Mobile and the extension get one from wallet's SharedWalletProvider; another native root must mount its own."
     },
     "./menu-compat": {
       "web": "real",
       "native": "throws",
-      "nativeNote": "Native leg deferred per INFRA-3021 (tracked in INFRA-3514); native keeps the legacy ContextMenu.native implementation."
+      "nativeNote": "Metro resolves this subpath to the web barrel (exact exports target, no platform extensions). On native, import DropdownMenuSheetItem and getMenuItemColor from the package root instead."
     },
     "./option-list-compat": {
       "web": "real",
@@ -158,9 +166,7 @@
       "nativeNote": "Native leg deferred per INFRA-3021 (tracked in INFRA-3514); native keeps ActionSheetDropdown."
     },
     "./compat": { "web": "real", "native": "real" },
-    "./compat/native-style": { "web": "real", "native": "real" },
     "./compat/primitive-marker": { "web": "real", "native": "real" },
-    "./anchor-compat": { "web": "real", "native": "real" },
     "./web-bottom-sheet-compat": { "web": "real", "native": "real" },
     "./segmented-control-compat": { "web": "real", "native": "real" },
     "./shimmer": { "web": "real", "native": "real" },
@@ -169,30 +175,23 @@
       "native": "real",
       "nativeNote": "`fonts` is platform-resolved (src/font-tokens.{ts,web.ts,native.ts}): the native leg applies ui's +1px adjustedSize ramp and names the real RN font family. Every other family here is platform-invariant. Recorded because these statuses cannot express 'resolves but returns the wrong platform's values'. Device columns (iOS and Android): packages/tailwind/src/parity/fonts-token/native-parity.test.ts."
     },
-    "./touchable-text-link": { "web": "real", "native": "real" },
     "./universal-image": { "web": "real", "native": "real" },
     "./universal-image/testing": { "web": "real", "native": "real" },
     "./styled": { "web": "real", "native": "real" },
     "./tooltip-compat": { "web": "real", "native": "real" },
     "./text-compat": { "web": "real", "native": "real" },
-    "./text-loader-wrapper": { "web": "real", "native": "real" },
-    "./element-after-text": { "web": "real", "native": "real" },
     "./theme-hooks-compat": { "web": "real", "native": "real" },
     "./button-compat": { "web": "real", "native": "real" },
     "./button-frame-compat": { "web": "real", "native": "real" },
     "./checkbox-compat": { "web": "real", "native": "real" },
     "./avatar-compat": { "web": "real", "native": "real" },
-    "./input-compat": { "web": "real", "native": "real" },
-    "./separator-compat": { "web": "real", "native": "real" },
-    "./switch-compat": { "web": "real", "native": "real" },
-    "./spinning-loader-compat": { "web": "real", "native": "real" },
     "./linear-gradient-compat": { "web": "real", "native": "real" },
     "./modal-close-icon": { "web": "real", "native": "real" },
     "./animatable-copy-icon-compat": { "web": "real", "native": "real" },
     "./refresh-button-compat": {
       "web": "real",
       "native": "throws",
-      "nativeNote": "Native leg deferred (INFRA-3489); the sole consumer web-guards the render. Legacy reference: ui/src/components/RefreshButton/RefreshButton.native.tsx."
+      "nativeNote": "Native leg deferred (INFRA-3489); the sole consumer web-guards the render, and mobile uses pull-to-refresh instead."
     }
   }
 }

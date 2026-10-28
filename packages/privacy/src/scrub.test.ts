@@ -238,6 +238,24 @@ describe('createScrubber — pattern scrubbing', () => {
     })
   })
 
+  it('redacts a 64-hex value whole (tx hash, private key), not just its first 40 chars', () => {
+    const hash = `0x${'a1'.repeat(32)}`
+    expect(scrub({ msg: `tx ${hash} reverted` })).toEqual({ msg: 'tx [HEX_REDACTED] reverted' })
+  })
+
+  it('redacts longer hex blobs (signatures, calldata) whole', () => {
+    const signature = `0x${'Ab'.repeat(65)}`
+    const scrubbed = scrub({ msg: `sig=${signature}` })
+    expect(scrubbed).toEqual({ msg: 'sig=[HEX_REDACTED]' })
+    expect(JSON.stringify(scrubbed)).not.toMatch(/[a-fA-F0-9]{24,}/)
+  })
+
+  it('still redacts a plain address as a wallet', () => {
+    expect(scrub({ msg: '0x1234567890abcdef1234567890ABCDEF12345678 and 0x' + 'f'.repeat(41) })).toEqual({
+      msg: '[WALLET_REDACTED] and [HEX_REDACTED]',
+    })
+  })
+
   it('redacts IPv4 addresses', () => {
     expect(scrub({ from: 'client 192.168.1.100 connected' })).toEqual({ from: 'client [IP_REDACTED] connected' })
   })

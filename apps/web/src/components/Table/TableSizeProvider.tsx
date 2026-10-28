@@ -10,16 +10,17 @@ const defaultTableSize: ParentSizeState = {
 
 const TableSizeContext = createContext<ParentSizeState>(defaultTableSize)
 
-const TableRowContentMinWidthContext = createContext<number | undefined>(undefined)
+const TableRowContentMinWidthContext = createContext<string | undefined>(undefined)
 
 export const useTableSize = (): ParentSizeState => {
   return useContext(TableSizeContext)
 }
 
-export const useTableRowContentMinWidthPx = (): number => {
+/** CSS min width of a row's cells (see `getRowContentMinWidthCss`). */
+export const useTableRowContentMinWidthCss = (): string => {
   const value = useContext(TableRowContentMinWidthContext)
   if (value === undefined) {
-    throw new Error('useTableRowContentMinWidthPx must be used within TableSizeProvider')
+    throw new Error('useTableRowContentMinWidthCss must be used within TableSizeProvider')
   }
   return value
 }
@@ -27,15 +28,15 @@ export const useTableRowContentMinWidthPx = (): number => {
 export function TableSizeProvider({
   children,
   size,
-  rowContentMinWidthPx,
+  rowContentMinWidthCss,
 }: {
   children: ReactNode
   size: ParentSizeState
-  rowContentMinWidthPx: number
+  rowContentMinWidthCss: string
 }): JSX.Element {
   return (
     <TableSizeContext.Provider value={size}>
-      <TableRowContentMinWidthContext.Provider value={rowContentMinWidthPx}>
+      <TableRowContentMinWidthContext.Provider value={rowContentMinWidthCss}>
         {children}
       </TableRowContentMinWidthContext.Provider>
     </TableSizeContext.Provider>

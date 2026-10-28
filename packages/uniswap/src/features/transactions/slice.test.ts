@@ -1,6 +1,7 @@
 import { configureStore, Store } from '@reduxjs/toolkit'
 import { TradingApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
+import { FORTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
 import { ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import {
   CANCEL_TX_TIMEOUT_MS,
@@ -27,6 +28,7 @@ import {
   TransactionsState,
   transactionReducer,
   updateTransaction,
+  upsertFORTransaction,
 } from 'uniswap/src/features/transactions/slice'
 import {
   ApproveTransactionInfo,
@@ -176,6 +178,32 @@ describe('transaction reducer', () => {
       } catch (error) {
         expect(error).toEqual(Error(`addTransaction: Attempted to overwrite tx with id ${id}`))
       }
+    })
+  })
+
+  describe('upsertFORTransaction', () => {
+    const localOffRampTx: FORTransactionDetails = {
+      ...baseApproveTx,
+      id: 'for-session-id',
+      hash: '',
+      options: { request: {} },
+      typeInfo: { type: TransactionType.LocalOffRamp },
+      addedTime: 1_000,
+    }
+
+    it('stores a new FOR transaction with its own addedTime', () => {
+      store.dispatch(upsertFORTransaction(localOffRampTx))
+
+      expect(store.getState()[address]?.[UniverseChainId.Mainnet]?.['for-session-id']?.addedTime).toEqual(1_000)
+    })
+
+    it('preserves the original addedTime when the backend reports a different createdAt', () => {
+      store.dispatch(upsertFORTransaction(localOffRampTx))
+      store.dispatch(upsertFORTransaction({ ...localOffRampTx, status: TransactionStatus.Success, addedTime: 9_999 }))
+
+      const tx = store.getState()[address]?.[UniverseChainId.Mainnet]?.['for-session-id']
+      expect(tx?.status).toEqual(TransactionStatus.Success)
+      expect(tx?.addedTime).toEqual(1_000)
     })
   })
 

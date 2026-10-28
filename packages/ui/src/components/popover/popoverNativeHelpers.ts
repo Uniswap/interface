@@ -1,6 +1,6 @@
+import { type UseSporeColorsReturn } from '@universe/mycelium/theme-hooks-compat'
 import type { ViewStyle } from 'react-native'
 import { resolvePopoverStyleProps } from 'ui/src/components/popover/popoverStyleResolution'
-import type { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
 
 /**
  * Native-leg style resolution for the rebuilt Popover (INFRA-3318). Platform-neutral

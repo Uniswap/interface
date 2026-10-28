@@ -28,6 +28,7 @@ interface PriceChartProps {
   /** Additional content rendered next to the price delta in the chart header.
    *  Can be a ReactNode or a render function receiving { isHovering }. */
   additionalHeaderContent?: ReactNode | (({ isHovering }: { isHovering: boolean }) => ReactNode)
+  blocksChartHover?: boolean
 }
 
 export function PriceChart({
@@ -44,6 +45,7 @@ export function PriceChart({
   additionalHeaderContent,
   hidePercentDelta,
   isStablecoin,
+  blocksChartHover,
 }: PriceChartProps) {
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const startingPrice = data[0]
@@ -98,6 +100,7 @@ export function PriceChart({
               </Flex>
             }
             time={crosshairData?.time}
+            blocksChartHover={blocksChartHover}
           />
         )
       }}

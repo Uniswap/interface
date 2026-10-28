@@ -24,7 +24,7 @@ import {
   getSpotlitCategorySectionId,
   resolveSpotlitCategories,
 } from 'uniswap/src/features/search/SearchModal/categories/spotlitCategories'
-import { getTokenCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
+import { getCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
 import {
   getRwaCategoryForTokenCategory,
   isNonRwaAssetCategory,
@@ -200,7 +200,7 @@ function buildSpotlitCategorySection({
   category: TokenCategory
   options: SearchModalOption[]
 }): OnchainItemSection<SearchModalOption> {
-  const Icon = getTokenCategoryIcon(category)
+  const Icon = getCategoryIcon(category)
   return {
     sectionKey: OnchainItemSectionName.Category,
     sectionId: getSpotlitCategorySectionId(category.id),

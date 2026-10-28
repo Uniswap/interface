@@ -5,7 +5,6 @@ import { useActivityData } from 'uniswap/src/features/activity/hooks/useActivity
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useInfiniteScroll } from 'utilities/src/react/useInfiniteScroll'
 import { ONE_DAY_MS } from 'utilities/src/time/time'
-import { ActivityFilterType } from '~/pages/Portfolio/Activity/Filters/activityFilterTypes'
 import {
   filterTransactionDetailsFromActivityItems,
   getServerTransactionTypesForFilter,
@@ -81,9 +80,8 @@ interface UseActivityFilteringResult {
 /**
  * Hook that manages activity data fetching with intelligent server-side vs client-side filtering.
  *
- * Server-side filtering is used for EVM-only wallets when a type filter is applied.
- * For wallets with Solana addresses, we fall back to client-side filtering since
- * server-side filtering would exclude Solana transactions.
+ * Server-side filtering is used when the type filter maps to a single server type;
+ * otherwise we fall back to client-side filtering.
  *
  * Also handles loading state transitions when chain or filter changes, ensuring
  * proper skeleton display instead of stale data.
@@ -96,17 +94,7 @@ export function useActivityFiltering({
   selectedTimePeriod,
   searchText,
 }: UseActivityFilteringParams): UseActivityFilteringResult {
-  // Determine if we can use server-side filtering (EVM-only wallet)
-  // Server-side filtering only works for EVM and will filter out all Solana transactions
-  const canUseServerSideFiltering = !!evmAddress && !svmAddress
-
-  // Get server filter types only if applicable (EVM-only and filter is not 'All')
-  const serverFilterTypes = useMemo(() => {
-    if (!canUseServerSideFiltering || selectedTransactionType === ActivityFilterType.All) {
-      return undefined
-    }
-    return getServerTransactionTypesForFilter(selectedTransactionType)
-  }, [canUseServerSideFiltering, selectedTransactionType])
+  const serverFilterTypes = getServerTransactionTypesForFilter(selectedTransactionType)
 
   const { sectionData, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isFetching, error, dataUpdatedAt } =
     useActivityData({

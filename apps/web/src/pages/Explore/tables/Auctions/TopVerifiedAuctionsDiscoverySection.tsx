@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useTopVerifiedAuctions } from '~/features/Toucan/hooks/useTopAuctions/useTopVerifiedAuctions'
-import { rightEdgeFadeStyle, useWheelHorizontalScroll } from '~/pages/Explore/categories/useWheelHorizontalScroll'
+import { edgeFadeMaskStyle, useHorizontalScrollFades } from '~/hooks/useHorizontalScrollFades'
 import { AuctionChip } from '~/pages/Explore/tables/Auctions/AuctionChip'
 
 const EXPLORE_AUCTIONS_HREF = '/explore/auctions'
@@ -19,7 +19,7 @@ export function TopVerifiedAuctionsDiscoverySection(): JSX.Element | null {
   const { t } = useTranslation()
   const media = useMedia()
   const { auctions, isLoading, getAuctionTokenUsdPrice } = useTopVerifiedAuctions()
-  const { scrollerRef, showRightFade } = useWheelHorizontalScroll()
+  const { scrollerRef, edgeFades } = useHorizontalScrollFades()
 
   if (isLoading || auctions.length === 0) {
     return null
@@ -45,7 +45,7 @@ export function TopVerifiedAuctionsDiscoverySection(): JSX.Element | null {
               '$platform-web': {
                 overflowX: 'auto',
                 overscrollBehaviorX: 'none',
-                ...rightEdgeFadeStyle(showRightFade),
+                ...edgeFadeMaskStyle(edgeFades),
               },
             }
           : {

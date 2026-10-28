@@ -23,6 +23,16 @@ import { InternalLink } from '~/components/InternalLink'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
 import { Filter } from '~/components/Table/Filter'
+import {
+  COLLAPSIBLE_CELL_STYLES,
+  CollapsibleCellLayout,
+} from '~/components/Table/PinnedColumns/collapse/CollapsibleCellLayout'
+import {
+  EXPANDED_LOGO_SIZE,
+  FLUSH_CELL_PADDING,
+  FLUSH_COLLAPSED_COLUMN_WIDTH,
+  FLUSH_HEADER_CELL_PADDING,
+} from '~/components/Table/PinnedColumns/collapse/utils'
 import { TableText } from '~/components/Table/shared/TableText'
 import { TimestampCell } from '~/components/Table/shared/TimestampCell'
 import { TokenLinkCell } from '~/components/Table/shared/TokenLinkCell'
@@ -42,6 +52,8 @@ const TableRow = styled(Flex, {
 })
 
 type RecentTransactionType = PoolTransaction & { usdValueFormatted: string }
+
+const MOBILE_SWAP_TYPE_COLUMN_SIZE_PX = 180
 
 export const RecentTransactionsTable = memo(function RecentTransactions() {
   const activeLocalCurrency = useAppFiatCurrency()
@@ -118,9 +130,10 @@ export const RecentTransactionsTable = memo(function RecentTransactions() {
         : null,
       columnHelper.accessor((transaction) => transaction, {
         id: 'swap-type',
-        size: media.lg ? 180 : 320,
+        size: media.lg ? MOBILE_SWAP_TYPE_COLUMN_SIZE_PX : 320,
+        meta: { collapsedWidth: FLUSH_COLLAPSED_COLUMN_WIDTH },
         header: () => (
-          <HeaderCell justifyContent="flex-start">
+          <HeaderCell justifyContent="flex-start" {...(media.lg ? FLUSH_HEADER_CELL_PADDING : undefined)}>
             <FilterHeaderRow onPress={() => !filterModalIsOpen && toggleFilterModal()} ref={filterAnchorRef}>
               <Filter
                 allFilters={Object.values(TransactionType).map((type) => ({
@@ -134,36 +147,56 @@ export const RecentTransactionsTable = memo(function RecentTransactions() {
                 anchorRef={filterAnchorRef}
                 minSelected={1}
               />
-              <Text variant="body3" color="$neutral2">
+              {/* Fades with the collapse like the cell text; the filter icon stays as the collapsed header. */}
+              <Text variant="body3" color="$neutral2" style={COLLAPSIBLE_CELL_STYLES.text}>
                 {t('common.type.label')}
               </Text>
             </FilterHeaderRow>
           </HeaderCell>
         ),
-        cell: (transaction) => (
-          <Cell loading={showLoadingSkeleton} justifyContent="flex-start">
+        cell: (transaction) => {
+          const row = transaction.getValue?.()
+          const pair = (
             <Text variant="body2" display="flex" flexDirection="row" gap="$spacing8" alignItems="center">
-              {media.lg && (
-                <PortfolioLogo
-                  chainId={chainInfo.id}
-                  images={[transaction.getValue?.().token0.logoUrl, transaction.getValue?.().token1.logoUrl]}
-                  fallbackSymbols={[transaction.getValue?.().token0.symbol, transaction.getValue?.().token1.symbol]}
-                  size={22}
-                />
-              )}
               <TableText color="$neutral2" $lg={{ display: 'none' }}>
-                {BETypeToTransactionType[transaction.getValue?.().eventType]}
+                {BETypeToTransactionType[row?.eventType]}
               </TableText>
-              <TokenLinkCell token={transaction.getValue?.().token0} hideLogo={media.lg} />
+              <TokenLinkCell token={row?.token0} hideLogo={media.lg} />
               <Text color="$neutral2">
-                {transaction.getValue?.().eventType === TransactionEventType.SWAP
+                {row?.eventType === TransactionEventType.SWAP
                   ? t('common.for').toLowerCase()
                   : t('common.and').toLowerCase()}
               </Text>
-              <TokenLinkCell token={transaction.getValue?.().token1} hideLogo={media.lg} />
+              <TokenLinkCell token={row?.token1} hideLogo={media.lg} />
             </Text>
-          </Cell>
-        ),
+          )
+          return (
+            <Cell
+              loading={showLoadingSkeleton}
+              justifyContent="flex-start"
+              {...(media.lg ? FLUSH_CELL_PADDING : undefined)}
+            >
+              {media.lg ? (
+                <CollapsibleCellLayout
+                  flush
+                  gapPx={8}
+                  logo={
+                    <PortfolioLogo
+                      chainId={chainInfo.id}
+                      images={[row?.token0.logoUrl, row?.token1.logoUrl]}
+                      fallbackSymbols={[row?.token0.symbol, row?.token1.symbol]}
+                      size={EXPANDED_LOGO_SIZE}
+                    />
+                  }
+                >
+                  {pair}
+                </CollapsibleCellLayout>
+              ) : (
+                pair
+              )}
+            </Cell>
+          )
+        },
       }),
       columnHelper.accessor((transaction) => transaction, {
         id: 'fiat-value',
@@ -286,6 +319,8 @@ export const RecentTransactionsTable = memo(function RecentTransactions() {
         maxWidth={1200}
         defaultPinnedColumns={['timestamp', 'swap-type']}
         getRowId={(row) => row.id}
+        // Mobile: the pinned type column (the only pinned one once `timestamp` is hidden) collapses to its pair logo on horizontal scroll.
+        collapsiblePinnedColumnId={media.lg ? 'swap-type' : undefined}
       />
     </Trace>
   )
