@@ -2,7 +2,7 @@ import { isNonRwaAssetCategory } from 'uniswap/src/features/tokenCategories/rwaC
 import { type CategoryBase, TokenCategoryClass } from 'uniswap/src/features/tokenCategories/types'
 
 /**
- * Display order of the class buckets on the mobile Collections page and web All dropdown.
+ * Display order of the class buckets on the mobile Categories page and web All dropdown.
  * Keyed on the full enum so adding a TokenCategoryClass member is a build error here rather
  * than a silently missing bucket.
  */

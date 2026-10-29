@@ -63,6 +63,7 @@ interface PostPinArgs {
 interface UseRecoveryFlowOptions {
   privy: RecoveryPrivyAuth
   privyAppId: string
+  privyClientId: string
   /**
    * Fired once the user has successfully decrypted their auth key. Implementations do the
    * platform-specific post-auth work (export seed phrase, register a new passkey, etc.)
@@ -106,6 +107,7 @@ interface UseRecoveryFlowOptions {
 export function useRecoveryFlow({
   privy,
   privyAppId,
+  privyClientId,
   onPinDecryptSuccess,
   setOauthError,
   showAddPasskeyStep = false,
@@ -200,6 +202,7 @@ export function useRecoveryFlow({
         accessToken: token,
         keyId: recoveryConfig.encryptedKeyId,
         privyAppId,
+        privyClientId,
       })
       if (isActive && !isActive()) {
         return
@@ -304,6 +307,7 @@ export function useRecoveryFlow({
         accessToken: token,
         keyId: recoveryConfig.encryptedKeyId,
         privyAppId,
+        privyClientId,
       })
       setEncryptedBlob(blob)
 
@@ -451,6 +455,7 @@ export function useRecoveryFlow({
         email: effectiveEmail,
         accessToken,
         privyAppId,
+        privyClientId,
         walletId,
         privyUserId,
         authMethodType: toRecoveryAuthMethodType(oauthProvider),

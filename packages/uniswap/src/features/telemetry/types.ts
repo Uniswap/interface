@@ -1620,7 +1620,7 @@ export type UniverseEventProperties = {
     is_from_more_menu?: boolean
     /** Explore category row slot, 0-based: All is 0, More is last. Selections made inside More carry More's slot. */
     tab_position?: number
-    /** Token category chips on the TDP (Collections pills, Related tokens), in the token selector, and row category tags */
+    /** Token category chips on the TDP (Categories pills, Related tokens), in the token selector, and row category tags */
     category_id?: string
     /** ElementName.TokenRowCategoryTag — which taxonomy the tagged category belongs to */
     category_kind?: CategoryKind
